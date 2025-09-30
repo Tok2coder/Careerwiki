@@ -192,29 +192,32 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
             ${content}
         </main>
         
-        <!-- Footer -->
-        <footer class="glass-card border-t border-wiki-border mt-16">
-            <div class="container mx-auto px-4 py-8">
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div>
-                        <h3 class="text-xl font-bold mb-4 gradient-text">Careerwiki</h3>
-                        <p class="text-wiki-muted text-sm">AI 기반 개인 맞춤형 진로 분석 플랫폼</p>
+        <!-- Footer - Minimal & Trendy -->
+        <footer class="border-t border-wiki-border mt-16">
+            <div class="container mx-auto px-4 py-6">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <!-- Left: Logo & Links -->
+                    <div class="flex items-center gap-6">
+                        <span class="font-bold text-lg gradient-text">Careerwiki</span>
+                        <div class="hidden md:flex items-center gap-4 text-sm">
+                            <a href="/analyzer" class="text-wiki-muted hover:text-wiki-primary transition">AI 분석</a>
+                            <span class="text-wiki-border">·</span>
+                            <a href="/job" class="text-wiki-muted hover:text-wiki-primary transition">직업</a>
+                            <span class="text-wiki-border">·</span>
+                            <a href="/major" class="text-wiki-muted hover:text-wiki-primary transition">전공</a>
+                            <span class="text-wiki-border">·</span>
+                            <a href="/about" class="text-wiki-muted hover:text-wiki-primary transition">소개</a>
+                        </div>
                     </div>
-                    <div>
-                        <h4 class="text-lg font-semibold mb-3">바로가기</h4>
-                        <ul class="space-y-2 text-sm">
-                            <li><a href="/analyzer" class="wiki-link">AI 진로 분석기</a></li>
-                            <li><a href="/job" class="wiki-link">직업 백과</a></li>
-                            <li><a href="/major" class="wiki-link">전공 백과</a></li>
-                        </ul>
+                    
+                    <!-- Right: Contact & Copyright -->
+                    <div class="flex items-center gap-4 text-sm text-wiki-muted">
+                        <a href="mailto:contact@careerwiki.org" class="hover:text-wiki-primary transition">
+                            <i class="fas fa-envelope mr-1"></i>contact@careerwiki.org
+                        </a>
+                        <span class="hidden md:inline text-wiki-border">|</span>
+                        <span>© 2024 Careerwiki</span>
                     </div>
-                    <div>
-                        <h4 class="text-lg font-semibold mb-3">문의</h4>
-                        <p class="text-sm text-wiki-muted">contact@careerwiki.org</p>
-                    </div>
-                </div>
-                <div class="mt-8 pt-8 border-t border-wiki-border text-center text-sm text-wiki-muted">
-                    <p>© 2024 Careerwiki. All rights reserved. | careerwiki.org</p>
                 </div>
             </div>
         </footer>
