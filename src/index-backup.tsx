@@ -23,30 +23,8 @@ app.use('*', renderer)
 // Serve static files
 app.use('/static/*', serveStatic({ root: './public' }))
 
-// Helper function for logo SVG (옵션 7: 플레이풀 둥근 폰트)
-const getLogoSVG = (size: 'large' | 'small' = 'large') => {
-  const fontSize = size === 'large' ? '48' : '28';
-  const width = size === 'large' ? '320' : '180';
-  const height = size === 'large' ? '80' : '40';
-  
-  return `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-      <defs>
-        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#4361ee;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:1" />
-        </linearGradient>
-      </defs>
-      <text x="${parseInt(width)/2}" y="${parseInt(height)/2 + 10}" 
-            font-family="'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive" 
-            font-size="${fontSize}" font-weight="bold" 
-            fill="url(#logoGrad)" text-anchor="middle">CareerWiki</text>
-    </svg>
-  `;
-}
-
 // Helper function to render layout
-const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 플랫폼', description = 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', isHomepage = false) => {
+const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 플랫폼', description = 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼') => {
   return `
     <!DOCTYPE html>
     <html lang="ko">
@@ -58,9 +36,7 @@ const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 �
         <meta property="og:title" content="${title}">
         <meta property="og:description" content="${description}">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://careerwiki.org">
         <meta name="robots" content="index, follow">
-        <link rel="canonical" href="https://careerwiki.org">
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <script>
@@ -109,54 +85,29 @@ const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 �
             color: #4361ee;
             text-decoration: underline;
           }
-          .google-search {
-            max-width: 600px;
-            margin: 0 auto;
-          }
-          .google-search input {
-            width: 100%;
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 1px solid rgba(67, 97, 238, 0.3);
-            border-radius: 24px;
-            background: rgba(26, 26, 46, 0.6);
-            color: #e0e0e0;
-          }
-          .google-search input:focus {
-            outline: none;
-            border-color: #4361ee;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-          }
         </style>
     </head>
     <body class="bg-wiki-bg text-wiki-text min-h-screen">
-        ${!isHomepage ? `
-        <!-- Navigation (Not on homepage) -->
+        <!-- Navigation -->
         <nav class="glass-card sticky top-0 z-50 border-b border-wiki-border">
             <div class="container mx-auto px-4 py-4">
                 <div class="flex items-center justify-between">
-                    <a href="/" class="flex items-center">
-                        ${getLogoSVG('small')}
+                    <a href="/" class="flex items-center space-x-3">
+                        <i class="fas fa-graduation-cap text-2xl text-wiki-primary"></i>
+                        <span class="text-2xl font-bold gradient-text">CareerWiki</span>
                     </a>
-                    
-                    <!-- Search bar in header -->
-                    <div class="flex-1 max-w-xl mx-8 hidden md:block">
-                        <form action="/search" method="get">
-                            <input type="text" name="q" 
-                                   placeholder="직업, 전공, 진로를 검색하세요..." 
-                                   class="w-full px-4 py-2 bg-wiki-bg rounded-full border border-wiki-border focus:border-wiki-primary focus:outline-none text-sm">
-                        </form>
-                    </div>
-                    
                     <div class="hidden md:flex items-center space-x-6">
                         <a href="/analyzer" class="text-wiki-text hover:text-wiki-primary transition">
-                            <i class="fas fa-brain mr-2"></i>AI 분석
+                            <i class="fas fa-brain mr-2"></i>AI 진로 분석
                         </a>
                         <a href="/job" class="text-wiki-text hover:text-wiki-primary transition">
-                            <i class="fas fa-briefcase mr-2"></i>직업
+                            <i class="fas fa-briefcase mr-2"></i>직업 백과
                         </a>
                         <a href="/major" class="text-wiki-text hover:text-wiki-primary transition">
-                            <i class="fas fa-university mr-2"></i>전공
+                            <i class="fas fa-university mr-2"></i>전공 백과
+                        </a>
+                        <a href="/about" class="text-wiki-text hover:text-wiki-primary transition">
+                            <i class="fas fa-info-circle mr-2"></i>소개
                         </a>
                     </div>
                     <button id="mobile-menu-btn" class="md:hidden text-wiki-text">
@@ -169,11 +120,6 @@ const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 �
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden glass-card border-b border-wiki-border">
             <div class="container mx-auto px-4 py-4 space-y-3">
-                <form action="/search" method="get" class="mb-4">
-                    <input type="text" name="q" 
-                           placeholder="검색..." 
-                           class="w-full px-4 py-2 bg-wiki-bg rounded-full border border-wiki-border focus:border-wiki-primary focus:outline-none text-sm">
-                </form>
                 <a href="/analyzer" class="block text-wiki-text hover:text-wiki-primary transition">
                     <i class="fas fa-brain mr-2"></i>AI 진로 분석
                 </a>
@@ -183,12 +129,14 @@ const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 �
                 <a href="/major" class="block text-wiki-text hover:text-wiki-primary transition">
                     <i class="fas fa-university mr-2"></i>전공 백과
                 </a>
+                <a href="/about" class="block text-wiki-text hover:text-wiki-primary transition">
+                    <i class="fas fa-info-circle mr-2"></i>소개
+                </a>
             </div>
         </div>
-        ` : ''}
         
         <!-- Main Content -->
-        <main class="${isHomepage ? '' : 'container mx-auto px-4 py-8'}">
+        <main class="container mx-auto px-4 py-8">
             ${content}
         </main>
         
@@ -210,71 +158,151 @@ const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 �
                     </div>
                     <div>
                         <h4 class="text-lg font-semibold mb-3">문의</h4>
-                        <p class="text-sm text-wiki-muted">contact@careerwiki.org</p>
+                        <p class="text-sm text-wiki-muted">contact@careerwiki.com</p>
                     </div>
                 </div>
                 <div class="mt-8 pt-8 border-t border-wiki-border text-center text-sm text-wiki-muted">
-                    <p>© 2024 CareerWiki. All rights reserved. | careerwiki.org</p>
+                    <p>© 2024 CareerWiki. All rights reserved.</p>
                 </div>
             </div>
         </footer>
         
         <script>
             // Mobile menu toggle
-            const menuBtn = document.getElementById('mobile-menu-btn');
-            if(menuBtn) {
-                menuBtn.addEventListener('click', () => {
-                    document.getElementById('mobile-menu').classList.toggle('hidden');
-                });
-            }
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
         </script>
     </body>
     </html>
   `
 }
 
-// Homepage - Google style simplicity
+// Homepage
 app.get('/', (c) => {
   const content = `
-    <div class="min-h-screen flex flex-col items-center justify-center px-4">
-        <!-- Logo -->
-        <div class="mb-12">
-            ${getLogoSVG('large')}
-        </div>
+    <!-- Hero Section -->
+    <section class="py-16 text-center">
+        <h1 class="text-5xl md:text-6xl font-bold mb-6">
+            <span class="gradient-text">AI가 분석하는</span><br>
+            <span class="text-wiki-text">나만의 진로 로드맵</span>
+        </h1>
+        <p class="text-xl text-wiki-muted mb-12 max-w-2xl mx-auto">
+            이력서와 경험을 분석하여 맞춤형 진로 전략과<br>
+            시장 적합도, 성장 경로를 제시합니다
+        </p>
         
         <!-- Search Bar -->
-        <div class="google-search w-full mb-8">
-            <form action="/search" method="get">
-                <input type="text" name="q" 
-                       placeholder="직업, 전공, 진로를 검색하세요..." 
-                       autofocus
-                       class="google-search-input">
-            </form>
+        <div class="max-w-3xl mx-auto mb-8">
+            <div class="glass-card p-2 rounded-2xl hover-glow">
+                <form action="/search" method="get" class="flex">
+                    <input type="text" name="q" 
+                           placeholder="직업, 전공, 진로를 검색해보세요..." 
+                           class="flex-1 px-6 py-4 bg-transparent text-wiki-text search-input focus:outline-none">
+                    <button type="submit" 
+                            class="px-8 py-4 bg-wiki-primary text-white rounded-xl hover:bg-blue-600 transition">
+                        <i class="fas fa-search mr-2"></i>검색
+                    </button>
+                </form>
+            </div>
         </div>
         
-        <!-- Quick Actions -->
-        <div class="flex gap-4 mb-12">
-            <a href="/analyzer" 
-               class="px-6 py-3 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
-                <i class="fas fa-brain mr-2"></i>AI 진로 분석
+        <!-- CTA Button -->
+        <a href="/analyzer" 
+           class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-xl hover-glow transition transform hover:scale-105">
+            <i class="fas fa-rocket mr-3"></i>
+            AI 진로 분석 시작하기
+        </a>
+    </section>
+    
+    <!-- Features -->
+    <section class="py-16">
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- AI Analysis -->
+            <div class="glass-card p-8 rounded-2xl hover-glow">
+                <div class="text-4xl mb-4 text-wiki-primary">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">AI 커리어 분석</h3>
+                <p class="text-wiki-muted mb-4">
+                    이력서와 경험을 바탕으로 포지션 추천, 
+                    스킬 갭 진단, 학습 경로를 제안합니다
+                </p>
+                <ul class="space-y-2 text-sm">
+                    <li><i class="fas fa-check text-wiki-secondary mr-2"></i>맞춤형 진로 추천</li>
+                    <li><i class="fas fa-check text-wiki-secondary mr-2"></i>시장 적합도 분석</li>
+                    <li><i class="fas fa-check text-wiki-secondary mr-2"></i>급여 예측 리포트</li>
+                </ul>
+            </div>
+            
+            <!-- Wiki Database -->
+            <div class="glass-card p-8 rounded-2xl hover-glow">
+                <div class="text-4xl mb-4 text-wiki-primary">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">진로 위키백과</h3>
+                <p class="text-wiki-muted mb-4">
+                    1,000+ 직업과 전공 정보를 체계적으로 정리한 
+                    국내 최대 진로 데이터베이스
+                </p>
+                <ul class="space-y-2 text-sm">
+                    <li><i class="fas fa-check text-wiki-secondary mr-2"></i>직업별 상세 정보</li>
+                    <li><i class="fas fa-check text-wiki-secondary mr-2"></i>전공별 진로 경로</li>
+                    <li><i class="fas fa-check text-wiki-secondary mr-2"></i>실시간 업데이트</li>
+                </ul>
+            </div>
+            
+            <!-- Community -->
+            <div class="glass-card p-8 rounded-2xl hover-glow">
+                <div class="text-4xl mb-4 text-wiki-primary">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">커뮤니티 인사이트</h3>
+                <p class="text-wiki-muted mb-4">
+                    현직자와 전문가의 생생한 경험과 조언을 
+                    댓글과 수정 제안으로 공유합니다
+                </p>
+                <ul class="space-y-2 text-sm">
+                    <li><i class="fas fa-check text-wiki-secondary mr-2"></i>현직자 댓글</li>
+                    <li><i class="fas fa-check text-wiki-secondary mr-2"></i>전문가 검증</li>
+                    <li><i class="fas fa-check text-wiki-secondary mr-2"></i>실무 노하우</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Popular Jobs -->
+    <section class="py-16">
+        <h2 class="text-3xl font-bold mb-8 text-center gradient-text">인기 직업 정보</h2>
+        <div class="grid md:grid-cols-4 gap-4">
+            <a href="/job/software-engineer" class="glass-card p-6 rounded-xl hover-glow block">
+                <i class="fas fa-code text-wiki-primary text-2xl mb-3"></i>
+                <h4 class="font-semibold mb-2">소프트웨어 엔지니어</h4>
+                <p class="text-sm text-wiki-muted">평균 연봉: 6,500만원</p>
             </a>
-            <a href="/job" 
-               class="px-6 py-3 border border-wiki-primary text-wiki-primary rounded-lg hover:bg-wiki-primary hover:text-white transition">
-                직업 탐색
+            <a href="/job/data-scientist" class="glass-card p-6 rounded-xl hover-glow block">
+                <i class="fas fa-chart-bar text-wiki-primary text-2xl mb-3"></i>
+                <h4 class="font-semibold mb-2">데이터 사이언티스트</h4>
+                <p class="text-sm text-wiki-muted">평균 연봉: 7,000만원</p>
+            </a>
+            <a href="/job/product-manager" class="glass-card p-6 rounded-xl hover-glow block">
+                <i class="fas fa-tasks text-wiki-primary text-2xl mb-3"></i>
+                <h4 class="font-semibold mb-2">프로덕트 매니저</h4>
+                <p class="text-sm text-wiki-muted">평균 연봉: 8,000만원</p>
+            </a>
+            <a href="/job/ux-designer" class="glass-card p-6 rounded-xl hover-glow block">
+                <i class="fas fa-palette text-wiki-primary text-2xl mb-3"></i>
+                <h4 class="font-semibold mb-2">UX 디자이너</h4>
+                <p class="text-sm text-wiki-muted">평균 연봉: 5,500만원</p>
             </a>
         </div>
-        
-        <!-- Simple Stats -->
-        <div class="text-center text-wiki-muted text-sm">
-            <p>1,000+ 직업 정보 · 500+ 전공 정보 · AI 기반 맞춤 분석</p>
-        </div>
-    </div>
+    </section>
   `
   
-  return c.html(renderLayout(content, 'CareerWiki - AI 진로 분석 플랫폼', 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', true))
+  return c.html(renderLayout(content))
 })
 
-// AI Analyzer Page - Updated pricing
+// AI Analyzer Page
 app.get('/analyzer', (c) => {
   const content = `
     <div class="max-w-4xl mx-auto">
@@ -365,38 +393,47 @@ app.get('/analyzer', (c) => {
             </form>
         </div>
         
-        <!-- Updated Pricing - 2 tiers -->
+        <!-- Pricing -->
         <div class="glass-card p-8 rounded-2xl">
             <h3 class="text-2xl font-bold mb-6 text-center">요금제</h3>
-            <div class="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-                <!-- Free Tier -->
+            <div class="grid md:grid-cols-3 gap-6">
                 <div class="bg-wiki-bg p-6 rounded-xl text-center">
-                    <h4 class="text-xl font-bold mb-3">무료 버전</h4>
-                    <p class="text-3xl font-bold gradient-text mb-4">₩0</p>
-                    <ul class="space-y-2 text-sm text-wiki-muted mb-6 text-left">
-                        <li><i class="fas fa-check text-wiki-secondary mr-2"></i>기본 진로 분석</li>
-                        <li><i class="fas fa-check text-wiki-secondary mr-2"></i>포지션 추천 3개</li>
-                        <li><i class="fas fa-check text-wiki-secondary mr-2"></i>PDF 리포트</li>
+                    <h4 class="text-xl font-bold mb-3">Basic</h4>
+                    <p class="text-3xl font-bold gradient-text mb-4">₩9,900</p>
+                    <ul class="space-y-2 text-sm text-wiki-muted mb-6">
+                        <li>기본 진로 분석</li>
+                        <li>포지션 추천 3개</li>
+                        <li>PDF 리포트</li>
                     </ul>
                     <button class="w-full py-3 border border-wiki-primary text-wiki-primary rounded-lg hover:bg-wiki-primary hover:text-white transition">
-                        무료 시작하기
+                        선택하기
                     </button>
                 </div>
-                
-                <!-- Pro Tier -->
                 <div class="bg-wiki-bg p-6 rounded-xl text-center border-2 border-wiki-primary">
-                    <span class="bg-wiki-primary text-white px-3 py-1 rounded-full text-sm">추천</span>
-                    <h4 class="text-xl font-bold mb-3 mt-2">Pro 버전</h4>
-                    <p class="text-3xl font-bold gradient-text mb-4">₩9,900</p>
-                    <ul class="space-y-2 text-sm text-wiki-muted mb-6 text-left">
-                        <li><i class="fas fa-check text-wiki-secondary mr-2"></i>심층 진로 분석</li>
-                        <li><i class="fas fa-check text-wiki-secondary mr-2"></i>포지션 추천 10개</li>
-                        <li><i class="fas fa-check text-wiki-secondary mr-2"></i>스킬 갭 상세 분석</li>
-                        <li><i class="fas fa-check text-wiki-secondary mr-2"></i>맞춤형 학습 로드맵</li>
-                        <li><i class="fas fa-check text-wiki-secondary mr-2"></i>1:1 전문가 피드백 (예정)</li>
+                    <span class="bg-wiki-primary text-white px-3 py-1 rounded-full text-sm">인기</span>
+                    <h4 class="text-xl font-bold mb-3 mt-2">Professional</h4>
+                    <p class="text-3xl font-bold gradient-text mb-4">₩19,900</p>
+                    <ul class="space-y-2 text-sm text-wiki-muted mb-6">
+                        <li>심층 진로 분석</li>
+                        <li>포지션 추천 10개</li>
+                        <li>스킬 갭 상세 분석</li>
+                        <li>맞춤형 학습 로드맵</li>
                     </ul>
                     <button class="w-full py-3 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
-                        Pro 시작하기
+                        선택하기
+                    </button>
+                </div>
+                <div class="bg-wiki-bg p-6 rounded-xl text-center">
+                    <h4 class="text-xl font-bold mb-3">Premium</h4>
+                    <p class="text-3xl font-bold gradient-text mb-4">₩29,900</p>
+                    <ul class="space-y-2 text-sm text-wiki-muted mb-6">
+                        <li>프리미엄 분석</li>
+                        <li>무제한 포지션 추천</li>
+                        <li>1:1 전문가 피드백</li>
+                        <li>3개월 팔로우업</li>
+                    </ul>
+                    <button class="w-full py-3 border border-wiki-primary text-wiki-primary rounded-lg hover:bg-wiki-primary hover:text-white transition">
+                        선택하기
                     </button>
                 </div>
             </div>
@@ -426,6 +463,17 @@ app.get('/job/:slug?', async (c) => {
           <h1 class="text-4xl font-bold mb-8 gradient-text text-center">
               <i class="fas fa-briefcase mr-3"></i>직업 백과사전
           </h1>
+          
+          <div class="glass-card p-6 rounded-2xl mb-8">
+              <form action="/search" method="get" class="flex gap-4">
+                  <input type="text" name="q" placeholder="직업명으로 검색..." 
+                         class="flex-1 px-4 py-3 bg-wiki-bg rounded-lg border border-wiki-border focus:border-wiki-primary focus:outline-none">
+                  <input type="hidden" name="type" value="job">
+                  <button type="submit" class="px-6 py-3 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
+                      <i class="fas fa-search"></i> 검색
+                  </button>
+              </form>
+          </div>
           
           <div class="grid md:grid-cols-3 gap-6">
               <!-- Sample job cards -->
@@ -633,6 +681,17 @@ app.get('/major/:slug?', async (c) => {
               <i class="fas fa-university mr-3"></i>전공 백과사전
           </h1>
           
+          <div class="glass-card p-6 rounded-2xl mb-8">
+              <form action="/search" method="get" class="flex gap-4">
+                  <input type="text" name="q" placeholder="전공명으로 검색..." 
+                         class="flex-1 px-4 py-3 bg-wiki-bg rounded-lg border border-wiki-border focus:border-wiki-primary focus:outline-none">
+                  <input type="hidden" name="type" value="major">
+                  <button type="submit" class="px-6 py-3 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
+                      <i class="fas fa-search"></i> 검색
+                  </button>
+              </form>
+          </div>
+          
           <div class="grid md:grid-cols-3 gap-6">
               <a href="/major/computer-science" class="glass-card p-6 rounded-xl hover-glow block">
                   <h3 class="text-xl font-bold mb-2">컴퓨터공학과</h3>
@@ -756,7 +815,7 @@ app.get('/about', (c) => {
             <section>
                 <h2 class="text-2xl font-bold mb-4">연락처</h2>
                 <p class="text-wiki-text">
-                    문의사항이 있으시면 <a href="mailto:contact@careerwiki.org" class="wiki-link">contact@careerwiki.org</a>로 연락주세요.
+                    문의사항이 있으시면 <a href="mailto:contact@careerwiki.com" class="wiki-link">contact@careerwiki.com</a>으로 연락주세요.
                 </p>
             </section>
         </div>
@@ -764,214 +823,6 @@ app.get('/about', (c) => {
   `
   
   return c.html(renderLayout(content, 'CareerWiki 소개'))
-})
-
-// Logo options page
-app.get('/logo-options', (c) => {
-  const logoOptionsHTML = `
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareerWiki 로고 옵션</title>
-    <style>
-        body { 
-            background: #0f0f23; 
-            color: #e0e0e0; 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            padding: 40px;
-        }
-        .logo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .logo-option {
-            background: rgba(26, 26, 46, 0.8);
-            padding: 30px;
-            border-radius: 16px;
-            text-align: center;
-            border: 1px solid rgba(67, 97, 238, 0.2);
-        }
-        .logo-option:hover {
-            box-shadow: 0 0 30px rgba(67, 97, 238, 0.3);
-        }
-        .option-number {
-            color: #64b5f6;
-            font-size: 18px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        .logo-container {
-            background: #0f0f23;
-            padding: 40px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            min-height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        h1 {
-            text-align: center;
-            color: #4361ee;
-            margin-bottom: 40px;
-        }
-    </style>
-</head>
-<body>
-    <h1>CareerWiki 로고 옵션들</h1>
-    
-    <div class="logo-grid">
-        <!-- Option 1: 그라디언트 텍스트 + 아이콘 -->
-        <div class="logo-option">
-            <div class="option-number">옵션 1: 그라디언트 + 졸업 모자</div>
-            <div class="logo-container">
-                <svg width="280" height="80" viewBox="0 0 280 80">
-                    <defs>
-                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#4361ee;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <!-- 졸업 모자 아이콘 -->
-                    <path d="M15 35 L40 25 L65 35 L40 45 Z" fill="url(#grad1)"/>
-                    <path d="M40 45 L40 55" stroke="url(#grad1)" stroke-width="3"/>
-                    <circle cx="40" cy="55" r="3" fill="url(#grad1)"/>
-                    <!-- 텍스트 -->
-                    <text x="85" y="45" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="url(#grad1)">CareerWiki</text>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Option 2: 단순 굵은 텍스트 -->
-        <div class="logo-option">
-            <div class="option-number">옵션 2: 깔끔한 단색 (구글 스타일)</div>
-            <div class="logo-container">
-                <svg width="280" height="80" viewBox="0 0 280 80">
-                    <text x="140" y="50" font-family="Arial, sans-serif" font-size="36" font-weight="bold" 
-                          fill="#4361ee" text-anchor="middle">CareerWiki</text>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Option 3: 책 아이콘 + 텍스트 -->
-        <div class="logo-option">
-            <div class="option-number">옵션 3: 책 아이콘 + 텍스트</div>
-            <div class="logo-container">
-                <svg width="280" height="80" viewBox="0 0 280 80">
-                    <defs>
-                        <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#4361ee;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <!-- 책 아이콘 -->
-                    <rect x="20" y="25" width="40" height="30" fill="none" stroke="url(#grad3)" stroke-width="3" rx="2"/>
-                    <line x1="40" y1="25" x2="40" y2="55" stroke="url(#grad3)" stroke-width="2"/>
-                    <!-- 텍스트 -->
-                    <text x="75" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="600" fill="url(#grad3)">CareerWiki</text>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Option 4: CW 이니셜 -->
-        <div class="logo-option">
-            <div class="option-number">옵션 4: CW 모노그램</div>
-            <div class="logo-container">
-                <svg width="280" height="80" viewBox="0 0 280 80">
-                    <defs>
-                        <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#4361ee;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <!-- CW 모노그램 -->
-                    <circle cx="40" cy="40" r="25" fill="none" stroke="url(#grad4)" stroke-width="3"/>
-                    <text x="40" y="50" font-family="Arial, sans-serif" font-size="24" font-weight="bold" 
-                          fill="url(#grad4)" text-anchor="middle">CW</text>
-                    <!-- 텍스트 -->
-                    <text x="85" y="45" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="#4361ee">CareerWiki</text>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Option 5: 미니멀 타이포 -->
-        <div class="logo-option">
-            <div class="option-number">옵션 5: 미니멀 타이포그래피</div>
-            <div class="logo-container">
-                <svg width="280" height="80" viewBox="0 0 280 80">
-                    <text x="140" y="38" font-family="Georgia, serif" font-size="32" font-weight="300" 
-                          fill="#4361ee" text-anchor="middle">Career</text>
-                    <text x="140" y="58" font-family="Georgia, serif" font-size="32" font-weight="700" 
-                          fill="#64b5f6" text-anchor="middle">Wiki</text>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Option 6: 나침반 아이콘 (진로 상징) -->
-        <div class="logo-option">
-            <div class="option-number">옵션 6: 나침반 + 텍스트</div>
-            <div class="logo-container">
-                <svg width="280" height="80" viewBox="0 0 280 80">
-                    <defs>
-                        <linearGradient id="grad6" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#4361ee;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <!-- 나침반 아이콘 -->
-                    <circle cx="40" cy="40" r="20" fill="none" stroke="url(#grad6)" stroke-width="2.5"/>
-                    <path d="M40 30 L45 40 L40 50 L35 40 Z" fill="url(#grad6)"/>
-                    <circle cx="40" cy="40" r="3" fill="url(#grad6)"/>
-                    <!-- 텍스트 -->
-                    <text x="75" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="600" fill="#4361ee">CareerWiki</text>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Option 7: 플레이풀 -->
-        <div class="logo-option">
-            <div class="option-number">옵션 7: 플레이풀 (둥근 폰트)</div>
-            <div class="logo-container">
-                <svg width="280" height="80" viewBox="0 0 280 80">
-                    <defs>
-                        <linearGradient id="grad7" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#4361ee;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <text x="140" y="50" font-family="Comic Sans MS, cursive" font-size="36" font-weight="bold" 
-                          fill="url(#grad7)" text-anchor="middle">CareerWiki</text>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Option 8: 한글 조합 -->
-        <div class="logo-option">
-            <div class="option-number">옵션 8: 한글 포함</div>
-            <div class="logo-container">
-                <svg width="280" height="80" viewBox="0 0 280 80">
-                    <text x="140" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="400" 
-                          fill="#64b5f6" text-anchor="middle">커리어위키</text>
-                    <text x="140" y="55" font-family="Arial, sans-serif" font-size="30" font-weight="bold" 
-                          fill="#4361ee" text-anchor="middle">CareerWiki</text>
-                </svg>
-            </div>
-        </div>
-    </div>
-
-    <div style="margin-top: 60px; text-align: center; color: #64b5f6;">
-        <p style="font-size: 18px;">정우님, 어떤 로고가 마음에 드시나요?</p>
-        <p style="color: #9ca3af;">번호를 알려주시면 해당 로고로 사이트를 업데이트하겠습니다.</p>
-    </div>
-</body>
-</html>
-  `
-  return c.html(logoOptionsHTML)
 })
 
 export default app
