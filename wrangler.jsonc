@@ -5,7 +5,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "pages_build_output_dir": "./dist",
   
-  // D1 Database configuration for wiki content
+  // D1 Database configuration for wiki content  
   "d1_databases": [
     {
       "binding": "DB",
@@ -14,7 +14,7 @@
     }
   ],
   
-  // KV Namespace for caching and session storage
+  // KV Namespace for caching and session storage  
   "kv_namespaces": [
     {
       "binding": "KV",

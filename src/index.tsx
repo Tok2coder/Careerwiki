@@ -40,13 +40,13 @@ const getLogoSVG = (size: 'large' | 'small' = 'large') => {
       <text x="${parseInt(width)/2}" y="${parseInt(height)/2 + 10}" 
             font-family="'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive" 
             font-size="${fontSize}" font-weight="bold" 
-            fill="url(#logoGrad)" text-anchor="middle">CareerWiki</text>
+            fill="url(#logoGrad)" text-anchor="middle">Careerwiki</text>
     </svg>
   `;
 }
 
 // Helper function to render layout
-const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 플랫폼', description = 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', isHomepage = false) => {
+const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 플랫폼', description = 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', isHomepage = false) => {
   return `
     <!DOCTYPE html>
     <html lang="ko">
@@ -197,7 +197,7 @@ const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 �
             <div class="container mx-auto px-4 py-8">
                 <div class="grid md:grid-cols-3 gap-8">
                     <div>
-                        <h3 class="text-xl font-bold mb-4 gradient-text">CareerWiki</h3>
+                        <h3 class="text-xl font-bold mb-4 gradient-text">Careerwiki</h3>
                         <p class="text-wiki-muted text-sm">AI 기반 개인 맞춤형 진로 분석 플랫폼</p>
                     </div>
                     <div>
@@ -214,7 +214,7 @@ const renderLayout = (content: string, title = 'CareerWiki - AI 진로 분석 �
                     </div>
                 </div>
                 <div class="mt-8 pt-8 border-t border-wiki-border text-center text-sm text-wiki-muted">
-                    <p>© 2024 CareerWiki. All rights reserved. | careerwiki.org</p>
+                    <p>© 2024 Careerwiki. All rights reserved. | careerwiki.org</p>
                 </div>
             </div>
         </footer>
@@ -271,7 +271,7 @@ app.get('/', (c) => {
     </div>
   `
   
-  return c.html(renderLayout(content, 'CareerWiki - AI 진로 분석 플랫폼', 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', true))
+  return c.html(renderLayout(content, 'Careerwiki - AI 진로 분석 플랫폼', 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', true))
 })
 
 // AI Analyzer Page - Updated pricing
@@ -412,7 +412,7 @@ app.get('/analyzer', (c) => {
     </script>
   `
   
-  return c.html(renderLayout(content, 'AI 커리어 분석기 - CareerWiki', 'AI 기반 개인 맞춤형 진로 분석과 커리어 전략 리포트'))
+  return c.html(renderLayout(content, 'AI 커리어 분석기 - Careerwiki', 'AI 기반 개인 맞춤형 진로 분석과 커리어 전략 리포트'))
 })
 
 // Job Wiki Page
@@ -456,7 +456,7 @@ app.get('/job/:slug?', async (c) => {
           </div>
       </div>
     `
-    return c.html(renderLayout(content, '직업 백과사전 - CareerWiki'))
+    return c.html(renderLayout(content, '직업 백과사전 - Careerwiki'))
   }
   
   // Individual job page (example: software-engineer)
@@ -618,7 +618,7 @@ app.get('/job/:slug?', async (c) => {
     </div>
   `
   
-  return c.html(renderLayout(content, `${job.title} - 직업 정보 | CareerWiki`))
+  return c.html(renderLayout(content, `${job.title} - 직업 정보 | Careerwiki`))
 })
 
 // Major Wiki Page
@@ -658,7 +658,7 @@ app.get('/major/:slug?', async (c) => {
           </div>
       </div>
     `
-    return c.html(renderLayout(content, '전공 백과사전 - CareerWiki'))
+    return c.html(renderLayout(content, '전공 백과사전 - Careerwiki'))
   }
   
   // Individual major page
@@ -673,7 +673,7 @@ app.get('/major/:slug?', async (c) => {
     </div>
   `
   
-  return c.html(renderLayout(content, '컴퓨터공학과 - 전공 정보 | CareerWiki'))
+  return c.html(renderLayout(content, '컴퓨터공학과 - 전공 정보 | Careerwiki'))
 })
 
 // Search API
@@ -714,7 +714,7 @@ app.get('/search', (c) => {
     </div>
   `
   
-  return c.html(renderLayout(content, `"${query}" 검색 결과 - CareerWiki`))
+  return c.html(renderLayout(content, `"${query}" 검색 결과 - Careerwiki`))
 })
 
 // About Page
@@ -722,12 +722,12 @@ app.get('/about', (c) => {
   const content = `
     <div class="max-w-4xl mx-auto">
         <div class="glass-card p-8 rounded-2xl">
-            <h1 class="text-4xl font-bold mb-6 gradient-text">CareerWiki 소개</h1>
+            <h1 class="text-4xl font-bold mb-6 gradient-text">Careerwiki 소개</h1>
             
             <section class="mb-8">
                 <h2 class="text-2xl font-bold mb-4">우리의 미션</h2>
                 <p class="text-wiki-text leading-relaxed mb-4">
-                    CareerWiki는 AI 기술을 활용하여 개인 맞춤형 진로 분석과 전략을 제공하는 플랫폼입니다. 
+                    Careerwiki는 AI 기술을 활용하여 개인 맞춤형 진로 분석과 전략을 제공하는 플랫폼입니다. 
                     우리는 모든 사람이 자신에게 맞는 최적의 커리어 경로를 찾을 수 있도록 돕습니다.
                 </p>
             </section>
@@ -763,7 +763,7 @@ app.get('/about', (c) => {
     </div>
   `
   
-  return c.html(renderLayout(content, 'CareerWiki 소개'))
+  return c.html(renderLayout(content, 'Careerwiki 소개'))
 })
 
 // Logo options page
@@ -774,7 +774,7 @@ app.get('/logo-options', (c) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareerWiki 로고 옵션</title>
+    <title>Careerwiki 로고 옵션</title>
     <style>
         body { 
             background: #0f0f23; 
@@ -823,7 +823,7 @@ app.get('/logo-options', (c) => {
     </style>
 </head>
 <body>
-    <h1>CareerWiki 로고 옵션들</h1>
+    <h1>Careerwiki 로고 옵션들</h1>
     
     <div class="logo-grid">
         <!-- Option 1: 그라디언트 텍스트 + 아이콘 -->
@@ -842,7 +842,7 @@ app.get('/logo-options', (c) => {
                     <path d="M40 45 L40 55" stroke="url(#grad1)" stroke-width="3"/>
                     <circle cx="40" cy="55" r="3" fill="url(#grad1)"/>
                     <!-- 텍스트 -->
-                    <text x="85" y="45" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="url(#grad1)">CareerWiki</text>
+                    <text x="85" y="45" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="url(#grad1)">Careerwiki</text>
                 </svg>
             </div>
         </div>
@@ -853,7 +853,7 @@ app.get('/logo-options', (c) => {
             <div class="logo-container">
                 <svg width="280" height="80" viewBox="0 0 280 80">
                     <text x="140" y="50" font-family="Arial, sans-serif" font-size="36" font-weight="bold" 
-                          fill="#4361ee" text-anchor="middle">CareerWiki</text>
+                          fill="#4361ee" text-anchor="middle">Careerwiki</text>
                 </svg>
             </div>
         </div>
@@ -873,7 +873,7 @@ app.get('/logo-options', (c) => {
                     <rect x="20" y="25" width="40" height="30" fill="none" stroke="url(#grad3)" stroke-width="3" rx="2"/>
                     <line x1="40" y1="25" x2="40" y2="55" stroke="url(#grad3)" stroke-width="2"/>
                     <!-- 텍스트 -->
-                    <text x="75" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="600" fill="url(#grad3)">CareerWiki</text>
+                    <text x="75" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="600" fill="url(#grad3)">Careerwiki</text>
                 </svg>
             </div>
         </div>
@@ -894,7 +894,7 @@ app.get('/logo-options', (c) => {
                     <text x="40" y="50" font-family="Arial, sans-serif" font-size="24" font-weight="bold" 
                           fill="url(#grad4)" text-anchor="middle">CW</text>
                     <!-- 텍스트 -->
-                    <text x="85" y="45" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="#4361ee">CareerWiki</text>
+                    <text x="85" y="45" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="#4361ee">Careerwiki</text>
                 </svg>
             </div>
         </div>
@@ -928,7 +928,7 @@ app.get('/logo-options', (c) => {
                     <path d="M40 30 L45 40 L40 50 L35 40 Z" fill="url(#grad6)"/>
                     <circle cx="40" cy="40" r="3" fill="url(#grad6)"/>
                     <!-- 텍스트 -->
-                    <text x="75" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="600" fill="#4361ee">CareerWiki</text>
+                    <text x="75" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="600" fill="#4361ee">Careerwiki</text>
                 </svg>
             </div>
         </div>
@@ -945,7 +945,7 @@ app.get('/logo-options', (c) => {
                         </linearGradient>
                     </defs>
                     <text x="140" y="50" font-family="Comic Sans MS, cursive" font-size="36" font-weight="bold" 
-                          fill="url(#grad7)" text-anchor="middle">CareerWiki</text>
+                          fill="url(#grad7)" text-anchor="middle">Careerwiki</text>
                 </svg>
             </div>
         </div>
@@ -958,7 +958,7 @@ app.get('/logo-options', (c) => {
                     <text x="140" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="400" 
                           fill="#64b5f6" text-anchor="middle">커리어위키</text>
                     <text x="140" y="55" font-family="Arial, sans-serif" font-size="30" font-weight="bold" 
-                          fill="#4361ee" text-anchor="middle">CareerWiki</text>
+                          fill="#4361ee" text-anchor="middle">Careerwiki</text>
                 </svg>
             </div>
         </div>
