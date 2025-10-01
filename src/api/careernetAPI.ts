@@ -111,19 +111,108 @@ export interface SearchParams {
 // 학과 정보 검색
 export async function searchMajors(params: SearchParams, env?: any): Promise<Major[]> {
   try {
-    // 학과 API가 현재 데이터를 반환하지 않으므로 Mock 데이터 사용
-    console.log('학과 API 응답 없음, Mock 데이터 사용');
-    return getMockMajors(params.keyword);
+    const url = new URL(`${API_BASE_URL}/getOpenApi`);
+    url.searchParams.append('apiKey', getApiKey(env));
+    url.searchParams.append('svcType', 'api');
+    url.searchParams.append('svcCode', 'MAJOR');
+    url.searchParams.append('contentType', 'xml');
+    url.searchParams.append('gubun', 'univ_list'); // 이 값이 작동함!
+    
+    if (params.keyword) {
+      url.searchParams.append('searchTitle', params.keyword);
+    }
+    if (params.thisPage) {
+      url.searchParams.append('thisPage', params.thisPage.toString());
+    }
+    if (params.perPage) {
+      url.searchParams.append('perPage', params.perPage.toString());
+    }
+    
+    const response = await fetch(url.toString());
+    
+    if (!response.ok) {
+      throw new Error(`API 요청 실패: ${response.statusText}`);
+    }
+    
+    const xmlData = await response.text();
+    
+    // XML 파싱
+    const majors = parseXMLToJSON(xmlData);
+    
+    // 필드 매핑 (XML -> 표준 형식)
+    return majors.map(major => ({
+      majorSeq: major.majorSeq || '',
+      major: major.mClass || major.facilName || '',
+      summary: major.facilName || '',
+      university: '',
+      department: major.lClass || '',
+      salaryAfterGraduation: '',
+      employmentRate: '',
+      relatedJob: '',
+      aptitude: '',
+      
+      // 원본 XML 필드도 포함
+      ...major
+    }));
+    
   } catch (error) {
     console.error('학과정보 검색 오류:', error);
+    // API 오류 시 더미 데이터 반환
+    console.error('학과정보 검색 실패, Mock 데이터 사용');
     return getMockMajors(params.keyword);
   }
 }
 
 // 학과 상세 정보 조회
 export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major | null> {
-  // 학과 API가 현재 데이터를 반환하지 않으므로 Mock 데이터 사용
-  return getMockMajorDetail(majorSeq);
+  try {
+    const url = new URL(`${API_BASE_URL}/getOpenApi`);
+    url.searchParams.append('apiKey', getApiKey(env));
+    url.searchParams.append('svcType', 'api');
+    url.searchParams.append('svcCode', 'MAJOR_VIEW');
+    url.searchParams.append('contentType', 'xml');
+    url.searchParams.append('gubun', 'univ_list');
+    url.searchParams.append('majorSeq', majorSeq);
+    
+    const response = await fetch(url.toString());
+    
+    if (!response.ok) {
+      throw new Error(`API 요청 실패: ${response.statusText}`);
+    }
+    
+    const xmlData = await response.text();
+    
+    // XML 파싱
+    const majors = parseXMLToJSON(xmlData);
+    
+    if (majors.length === 0) {
+      return null;
+    }
+    
+    const major = majors[0];
+    
+    // 필드 매핑
+    return {
+      majorSeq: major.majorSeq || majorSeq,
+      major: major.mClass || major.facilName || '',
+      summary: major.facilName || major.summary || '',
+      university: major.university || '',
+      department: major.lClass || major.department || '',
+      salaryAfterGraduation: '',
+      employmentRate: major.employment || '',
+      relatedJob: '',
+      aptitude: '',
+      
+      // 원본 XML 필드도 포함
+      ...major
+    };
+    
+  } catch (error) {
+    console.error('학과 상세정보 조회 오류:', error);
+    // API 오류 시 더미 데이터 반환
+    console.error('학과 상세정보 조회 실패, Mock 데이터 사용');
+    return getMockMajorDetail(majorSeq);
+  }
 }
 
 // 직업 정보 검색
