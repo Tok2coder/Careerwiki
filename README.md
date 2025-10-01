@@ -1,147 +1,204 @@
-# Careerwiki - AI 진로 분석 플랫폼
+# CareerWiki - AI 진로 분석 플랫폼
 
 ## 프로젝트 개요
-- **이름**: Careerwiki
-- **목표**: AI 기반 개인 맞춤형 진로 분석과 커뮤니티 기반 진로 정보 위키
+- **이름**: CareerWiki (careerwiki.org)
+- **목표**: AI 기반 개인 맞춤형 진로 분석과 전공/직업 위키 플랫폼
 - **주요 기능**: 
-  - AI 진로 분석 (직업 추천/전공 추천)
-  - 직업위키 (커뮤니티 기반 직업 정보)
-  - 전공위키 (대학 전공 상세 정보)
-  - HowTo 가이드
-  - 구글 스타일 미니멀 디자인
+  - AI 진로 분석기 (직업 추천 / 전공 추천)
+  - 직업 위키 (1000+ 직업 정보)
+  - 전공 위키 (500+ 전공 정보)
+  - HowTo 가이드 (진로 설정 방법론)
+  - 실시간 검색 및 데이터 연동
 
-## URLs
+## 🌐 서비스 URL
 - **개발 서버**: https://3000-iy8xtwcphw6exxjb1hgnf-6532622b.e2b.dev
-- **프로덕션 (예정)**: https://careerwiki.org
-- **GitHub**: https://github.com/username/careerwiki (예정)
+- **프로덕션**: https://careerwiki.org (배포 예정)
+- **GitHub**: https://github.com/[username]/careerwiki (연동 예정)
 
-## 현재 구현된 기능 ✅
-1. **홈페이지** (`/`)
-   - 5개 메인 메뉴 버튼 (AI 분석, 직업위키, 전공위키, HowTo, 도움말)
-   - 검색 바
-   - 인기 직업/전공 카드
-   - 다크 테마 토글
+## 📊 데이터 아키텍처
 
-2. **고급 검색 기능** (`/search?q=검색어`)
-   - 검색어 유지 (상단 검색창에 표시)
-   - 섹션별 검색 결과 (직업위키, 전공위키, HowTo)
-   - 관련도 기반 정렬 (제목, 설명, 키워드 매칭)
-   - 결과 없는 섹션 자동 숨김
-   - 예시: "코딩" 검색 → 소프트웨어 엔지니어, 컴퓨터공학과 등
+### 데이터 모델
+```typescript
+// 학과 정보
+interface Major {
+  majorSeq: string;        // 학과 코드
+  major: string;           // 학과명
+  summary: string;         // 학과 소개
+  university?: string;     // 대학 목록
+  department?: string;     // 학과 계열
+  salaryAfterGraduation?: string;  // 졸업 후 평균 연봉
+  employmentRate?: string; // 취업률
+  relatedJob?: string;     // 관련 직업
+  aptitude?: string;       // 적성 유형
+}
 
-3. **AI 분석 메인** (`/analyzer`)
-   - 직업 추천과 전공 추천 선택 화면
-   - 각 분석 설명 및 장점 안내
+// 직업 정보
+interface Job {
+  jobdicSeq: string;       // 직업 코드
+  jobName: string;         // 직업명
+  summary: string;         // 직업 소개
+  aptdType?: string;       // 적성유형
+  jobCategoryName?: string; // 직업 분류
+  avgSalary?: string;      // 평균 연봉
+  salaryRange?: string;    // 연봉 범위
+  jobOutlook?: string;     // 직업 전망
+  relatedMajor?: string;   // 관련 학과
+  requiredEducation?: string; // 요구 학력
+  requiredCertification?: string; // 필요 자격증
+  employmentTrend?: string; // 고용 동향
+}
+```
 
-4. **AI 직업 추천** (`/analyzer/job`)
-   - 다단계 입력 폼 (기본정보, 성격, 관심사, 경험)
-   - 무료/Pro 요금제 선택 (폼 마지막)
-   - 제출 시 알림 메시지
+### 스토리지 서비스
+- **Cloudflare D1**: 사용자 데이터, 분석 결과 저장 (예정)
+- **Cloudflare KV**: 캐싱, 세션 관리 (예정)
+- **External API**: 한국교육개발원 커리어넷 오픈API 연동
+  - 학과정보 API: 실시간 학과 정보 제공
+  - 직업정보 API: 실시간 직업 정보 제공
 
-5. **AI 전공 추천** (`/analyzer/major`)
-   - 다단계 입력 폼 (기본정보, 학업, 관심분야, 목표)
-   - 무료/Pro 요금제 선택 (폼 마지막)
-   - 제출 시 알림 메시지
+## 🚀 현재 완료된 기능
 
-6. **직업위키** (`/job`)
-   - 직업 카테고리별 탐색
-   - 직업 검색
-   - 직업 상세 페이지 (`/job/[id]`)
-   - 커뮤니티 댓글
+### ✅ 핵심 기능
+1. **홈페이지**
+   - Google 스타일 미니멀 검색 UI
+   - 인기 직업/전공 동적 표시
+   - 메뉴 네비게이션
 
-7. **전공위키** (`/major`)
-   - 전공 카테고리별 탐색
-   - 전공 검색
-   - 전공 상세 페이지 (`/major/[id]`)
-   - 교과과정, 관련 직업, 유사 전공
-   - 커뮤니티 댓글
+2. **API 시스템**
+   - `/api/majors` - 학과 정보 검색
+   - `/api/majors/:id` - 학과 상세 정보
+   - `/api/jobs` - 직업 정보 검색
+   - `/api/jobs/:id` - 직업 상세 정보
+   - `/api/categories` - 카테고리 정보
 
-8. **HowTo 가이드** (`/howto`)
-   - 진로 탐색 가이드
-   - 입시 전략 가이드
-   - 취업 준비 가이드
-   - 각 가이드 상세 페이지
+3. **프론트엔드**
+   - 반응형 디자인 (모바일/태블릿/PC)
+   - 다크 테마 + 그라디언트 UI
+   - Glass morphism 디자인
+   - 동적 데이터 로딩
 
-9. **도움말** (`/help`)
-   - FAQ
-   - 문의하기 폼
+### ✅ 기술 스택
+- **Backend**: Hono Framework on Cloudflare Workers
+- **Frontend**: Vanilla JavaScript + TailwindCSS
+- **API**: CareerNet OpenAPI 통합
+- **Development**: PM2, Wrangler, Vite
 
-## 미구현 기능 ⏳
-1. **AI API 연동**
-   - Claude/GPT API 실제 연동
-   - 분석 결과 생성 및 표시
-   - 결과 저장 및 히스토리
+## 📌 주요 API 엔드포인트
 
-2. **결제 시스템**
-   - 토스페이먼츠/포트원 연동
-   - Pro 플랜 (₩9,900) 결제 처리
-   - 구독 관리
+### 학과 정보 API
+```bash
+# 학과 검색
+GET /api/majors?keyword=컴퓨터&page=1&perPage=20
 
-3. **사용자 시스템**
-   - 로그인/회원가입
-   - 프로필 관리
-   - 분석 결과 저장
+# 학과 상세
+GET /api/majors/1001
+```
 
-4. **위키 편집 기능**
-   - 직업/전공 정보 추가/수정
-   - 버전 관리
-   - 승인 시스템
+### 직업 정보 API
+```bash
+# 직업 검색
+GET /api/jobs?keyword=개발&category=100060&page=1&perPage=20
 
-5. **검색 최적화**
-   - 전체 텍스트 검색
-   - 필터링 및 정렬
-   - 자동완성
+# 직업 상세
+GET /api/jobs/2001
 
-## 데이터 아키텍처
-- **데이터베이스**: Cloudflare D1 (SQLite)
-- **테이블**:
-  - `pages`: 위키 페이지 (직업/전공)
-  - `comments`: 댓글
-  - `career_analyses`: AI 분석 결과
-  - `search_index`: 검색 인덱스
-- **스토리지**: 
-  - KV: 세션, 캐시
-  - R2: 파일 업로드 (미래)
+# 카테고리 목록
+GET /api/categories
+```
 
-## 사용 가이드
-1. 홈페이지에서 원하는 서비스 선택
-2. AI 분석: 정보 입력 → 요금제 선택 → 결과 확인
-3. 직업/전공위키: 카테고리 탐색 또는 검색
-4. HowTo: 필요한 가이드 선택하여 학습
+## 🔄 미구현 기능 및 다음 단계
 
-## 기술 스택
-- **백엔드**: Hono + TypeScript
-- **프론트엔드**: Tailwind CSS + Vanilla JS
-- **플랫폼**: Cloudflare Pages/Workers
-- **데이터베이스**: Cloudflare D1
-- **개발도구**: Wrangler, Vite, PM2
+### 🔜 구현 예정
+1. **AI 분석 기능**
+   - Claude/GPT API 통합
+   - 사용자 입력 폼 구현
+   - 맞춤형 분석 리포트 생성
 
-## 추천 다음 단계
-1. **AI API 연동** (우선순위 높음)
-   - OpenAI/Claude API 키 설정
-   - 프롬프트 엔지니어링
-   - 응답 파싱 및 표시
+2. **데이터베이스**
+   - Cloudflare D1 데이터베이스 설정
+   - 사용자 분석 결과 저장
+   - 검색 히스토리 관리
 
-2. **사용자 인증 구현**
-   - Cloudflare Access 또는 Auth0
-   - 세션 관리 (KV 사용)
+3. **사용자 기능**
+   - 로그인/회원가입 (OAuth)
+   - 마이페이지
+   - 분석 결과 저장/공유
 
-3. **결제 시스템 통합**
-   - 토스페이먼츠 API 연동
-   - 웹훅 처리
+4. **위키 기능**
+   - 직업/전공 상세 페이지
+   - 사용자 기여 시스템
+   - 편집 이력 관리
 
-4. **SEO 최적화**
-   - 동적 메타태그
-   - 사이트맵 생성
-   - 구조화된 데이터
+5. **프리미엄 기능**
+   - 결제 시스템 (Stripe)
+   - Pro 플랜 (₩9,900/월)
+   - 고급 AI 분석
 
-5. **프로덕션 배포**
-   - Cloudflare Pages 배포
-   - 커스텀 도메인 연결
-   - 모니터링 설정
+## 💻 개발 환경 설정
 
-## 배포 상태
-- **플랫폼**: Cloudflare Pages
-- **상태**: ⏳ 개발 중
-- **최종 업데이트**: 2025-01-30
-- **변경사항**: 랜덤 생성기 기능 제거 (직업위키, 전공위키, HowTo)
+### 로컬 개발
+```bash
+# 의존성 설치
+npm install
+
+# 개발 서버 실행
+npm run build
+pm2 start ecosystem.config.cjs
+
+# API 키 설정 (.env)
+CAREER_NET_API_KEY=your_api_key_here
+```
+
+### 배포
+```bash
+# Cloudflare Pages 배포
+npm run deploy
+
+# 프로덕션 배포
+npm run deploy:prod
+```
+
+## 🛠️ 기술 스택
+
+- **Runtime**: Cloudflare Workers/Pages
+- **Framework**: Hono 4.0
+- **Language**: TypeScript
+- **Styling**: TailwindCSS
+- **Icons**: Font Awesome
+- **Build**: Vite
+- **Deploy**: Wrangler
+- **Process Manager**: PM2
+
+## 📈 프로젝트 상태
+
+- **개발 진행률**: 40%
+- **API 통합**: ✅ 완료
+- **UI/UX**: ✅ 기본 완료
+- **AI 기능**: ⏳ 예정
+- **데이터베이스**: ⏳ 예정
+- **배포**: ⏳ 예정
+
+## 🎯 추천 다음 작업
+
+1. **긴급도 높음**
+   - CareerNet API 키 발급 및 환경변수 설정
+   - Cloudflare Pages 프로젝트 생성 및 배포
+   - 도메인 (careerwiki.org) 연결
+
+2. **중요도 높음**
+   - AI API (Claude/GPT) 통합
+   - D1 데이터베이스 스키마 설계
+   - 사용자 인증 시스템
+
+3. **향후 개선**
+   - 성능 최적화 (캐싱)
+   - SEO 최적화
+   - 분석 대시보드
+
+## 📞 연락처
+
+프로젝트 관련 문의: [이메일 주소]
+
+---
+
+*Last Updated: 2025-10-01*

@@ -2,11 +2,13 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
+import { searchMajors, searchJobs, getMajorDetail, getJobDetail, JOB_CATEGORIES, APTITUDE_TYPES } from './api/careernetAPI'
 
 // Types
 type Bindings = {
   DB: D1Database;
   KV: KVNamespace;
+  CAREER_NET_API_KEY?: string; // Cloudflare 환경 변수
 }
 
 type Variables = {
@@ -258,6 +260,7 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
                 });
             }
         </script>
+        <script src="/static/api-client.js"></script>
     </body>
     </html>
   `
@@ -304,6 +307,31 @@ app.get('/', (c) => {
                 <i class="fas fa-question-circle text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
                 <div class="text-sm">도움말</div>
             </a>
+        </div>
+        
+        <!-- Popular Jobs and Majors Section -->
+        <div class="mt-16 max-w-6xl w-full px-4">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Popular Jobs -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-6 gradient-text">
+                        <i class="fas fa-fire mr-2"></i>인기 직업
+                    </h2>
+                    <div id="popular-jobs" class="min-h-[200px]">
+                        <!-- Jobs will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Popular Majors -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-6 gradient-text">
+                        <i class="fas fa-star mr-2"></i>인기 전공
+                    </h2>
+                    <div id="popular-majors" class="min-h-[200px]">
+                        <!-- Majors will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Simple Stats -->
@@ -1196,6 +1224,124 @@ app.get('/major/:slug', (c) => {
   `
   
   return c.html(renderLayout(content, '화학공학 - 전공 정보 | Careerwiki'))
+})
+
+// API 엔드포인트들
+
+// 학과정보 검색 API
+app.get('/api/majors', async (c) => {
+  try {
+    const keyword = c.req.query('keyword') || ''
+    const page = parseInt(c.req.query('page') || '1')
+    const perPage = parseInt(c.req.query('perPage') || '20')
+    
+    const majors = await searchMajors({
+      keyword,
+      thisPage: page,
+      perPage
+    })
+    
+    return c.json({
+      success: true,
+      data: majors,
+      page,
+      perPage
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '학과 정보 검색 실패'
+    }, 500)
+  }
+})
+
+// 학과 상세 정보 API
+app.get('/api/majors/:id', async (c) => {
+  try {
+    const majorSeq = c.req.param('id')
+    const major = await getMajorDetail(majorSeq)
+    
+    if (!major) {
+      return c.json({
+        success: false,
+        error: '학과 정보를 찾을 수 없습니다'
+      }, 404)
+    }
+    
+    return c.json({
+      success: true,
+      data: major
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '학과 정보 조회 실패'
+    }, 500)
+  }
+})
+
+// 직업정보 검색 API
+app.get('/api/jobs', async (c) => {
+  try {
+    const keyword = c.req.query('keyword') || ''
+    const category = c.req.query('category') || ''
+    const page = parseInt(c.req.query('page') || '1')
+    const perPage = parseInt(c.req.query('perPage') || '20')
+    
+    const jobs = await searchJobs({
+      keyword,
+      category,
+      thisPage: page,
+      perPage
+    })
+    
+    return c.json({
+      success: true,
+      data: jobs,
+      page,
+      perPage,
+      categories: JOB_CATEGORIES
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '직업 정보 검색 실패'
+    }, 500)
+  }
+})
+
+// 직업 상세 정보 API
+app.get('/api/jobs/:id', async (c) => {
+  try {
+    const jobdicSeq = c.req.param('id')
+    const job = await getJobDetail(jobdicSeq)
+    
+    if (!job) {
+      return c.json({
+        success: false,
+        error: '직업 정보를 찾을 수 없습니다'
+      }, 404)
+    }
+    
+    return c.json({
+      success: true,
+      data: job
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '직업 정보 조회 실패'
+    }, 500)
+  }
+})
+
+// 직업 카테고리 목록 API
+app.get('/api/categories', async (c) => {
+  return c.json({
+    success: true,
+    jobCategories: JOB_CATEGORIES,
+    aptitudeTypes: APTITUDE_TYPES
+  })
 })
 
 export default app
