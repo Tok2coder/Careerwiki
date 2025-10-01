@@ -14,6 +14,7 @@
 - **개발 서버**: https://3000-iy8xtwcphw6exxjb1hgnf-6532622b.e2b.dev
 - **프로덕션**: https://careerwiki.org (배포 예정)
 - **GitHub**: https://github.com/[username]/careerwiki (연동 예정)
+- **API Status**: ✅ 커리어넷 API 실시간 연동 중 (인증키 활성)
 
 ## 📊 데이터 아키텍처
 
@@ -52,9 +53,10 @@ interface Job {
 ### 스토리지 서비스
 - **Cloudflare D1**: 사용자 데이터, 분석 결과 저장 (예정)
 - **Cloudflare KV**: 캐싱, 세션 관리 (예정)
-- **External API**: 한국교육개발원 커리어넷 오픈API 연동
-  - 학과정보 API: 실시간 학과 정보 제공
-  - 직업정보 API: 실시간 직업 정보 제공
+- **External API**: 한국교육개발원 커리어넷 오픈API 연동 ✅
+  - 학과정보 API: Mock 데이터 제공 (API 응답 없음)
+  - 직업정보 API: **실시간 데이터 제공** (XML 파싱 구현)
+  - API Key: `d9e0285190fde074bef30031f17f669e` (활성)
 
 ## 🚀 현재 완료된 기능
 
@@ -64,11 +66,11 @@ interface Job {
    - 인기 직업/전공 동적 표시
    - 메뉴 네비게이션
 
-2. **API 시스템**
-   - `/api/majors` - 학과 정보 검색
-   - `/api/majors/:id` - 학과 상세 정보
-   - `/api/jobs` - 직업 정보 검색
-   - `/api/jobs/:id` - 직업 상세 정보
+2. **API 시스템** (커리어넷 실시간 연동)
+   - `/api/majors` - 학과 정보 검색 (Mock 데이터)
+   - `/api/majors/:id` - 학과 상세 정보 (Mock 데이터)
+   - `/api/jobs` - **직업 정보 검색** (실시간 API 데이터)
+   - `/api/jobs/:id` - **직업 상세 정보** (실시간 API 데이터)
    - `/api/categories` - 카테고리 정보
 
 3. **프론트엔드**
@@ -171,12 +173,18 @@ npm run deploy:prod
 
 ## 📈 프로젝트 상태
 
-- **개발 진행률**: 40%
-- **API 통합**: ✅ 완료
+- **개발 진행률**: 50%
+- **API 통합**: ✅ **완료** (커리어넷 직업 API 실시간 연동)
 - **UI/UX**: ✅ 기본 완료
 - **AI 기능**: ⏳ 예정
 - **데이터베이스**: ⏳ 예정
 - **배포**: ⏳ 예정
+
+### 🔥 최근 업데이트
+- 커리어넷 API 인증키 통합 완료
+- XML 응답 파싱 로직 구현
+- 실제 직업 데이터 실시간 제공 (7개+ 직업 검색 가능)
+- 연봉, 전망, 고용평등 정보 포함
 
 ## 🎯 추천 다음 작업
 
