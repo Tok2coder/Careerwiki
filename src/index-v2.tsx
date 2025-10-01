@@ -502,7 +502,7 @@ app.get('/analyzer/job', (c) => {
         document.getElementById('job-analyzer-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const pricing = document.querySelector('input[name="pricing"]:checked').value;
-            alert('AI ' + (pricing === 'pro' ? 'Pro' : '무료') + ' 직업 분석이 시작되었습니다. 2-3분 내에 결과를 받아보실 수 있습니다.');
+            alert(`AI ${pricing === 'pro' ? 'Pro' : '무료'} 직업 분석이 시작되었습니다. 2-3분 내에 결과를 받아보실 수 있습니다.`);
         });
     </script>
   `
@@ -658,7 +658,7 @@ app.get('/analyzer/major', (c) => {
         document.getElementById('major-analyzer-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const pricing = document.querySelector('input[name="pricing"]:checked').value;
-            alert('AI ' + (pricing === 'pro' ? 'Pro' : '무료') + ' 전공 분석이 시작되었습니다. 2-3분 내에 결과를 받아보실 수 있습니다.');
+            alert(`AI ${pricing === 'pro' ? 'Pro' : '무료'} 전공 분석이 시작되었습니다. 2-3분 내에 결과를 받아보실 수 있습니다.`);
         });
     </script>
   `
@@ -674,7 +674,15 @@ app.get('/job', async (c) => {
             <i class="fas fa-briefcase mr-3"></i>직업위키
         </h1>
         
-
+        <!-- Random Job Generator -->
+        <div class="glass-card p-6 rounded-2xl mb-8">
+            <h3 class="text-xl font-bold mb-4">랜덤 직업 생성기</h3>
+            <p class="text-wiki-muted mb-4">새로고침 버튼으로 직업을 랜덤하게 생성할 수 있습니다.</p>
+            <button class="px-6 py-3 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
+                <i class="fas fa-dice mr-2"></i>랜덤 직업
+            </button>
+        </div>
+        
         <div class="grid md:grid-cols-3 gap-6">
             <a href="/job/software-engineer" class="glass-card p-6 rounded-xl hover-glow block">
                 <h3 class="text-xl font-bold mb-2">소프트웨어 엔지니어</h3>
@@ -714,7 +722,15 @@ app.get('/major', async (c) => {
             <i class="fas fa-university mr-3"></i>전공위키
         </h1>
         
-
+        <!-- Random Major Generator -->
+        <div class="glass-card p-6 rounded-2xl mb-8">
+            <h3 class="text-xl font-bold mb-4">랜덤 전공 생성기</h3>
+            <p class="text-wiki-muted mb-4">새로고침 버튼으로 전공을 랜덤하게 생성할 수 있습니다.</p>
+            <button class="px-6 py-3 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
+                <i class="fas fa-dice mr-2"></i>랜덤 전공
+            </button>
+        </div>
+        
         <div class="grid md:grid-cols-3 gap-6">
             <a href="/major/computer-science" class="glass-card p-6 rounded-xl hover-glow block">
                 <h3 class="text-xl font-bold mb-2">컴퓨터공학과</h3>
@@ -751,7 +767,15 @@ app.get('/howto', (c) => {
             <i class="fas fa-route mr-3"></i>HowTo 시리즈
         </h1>
         
-
+        <!-- Random HowTo Generator -->
+        <div class="glass-card p-6 rounded-2xl mb-8">
+            <h3 class="text-xl font-bold mb-4">랜덤 HowTo 생성기</h3>
+            <p class="text-wiki-muted mb-4">새로고침 버튼으로 HowTo를 랜덤하게 생성할 수 있습니다.</p>
+            <button class="px-6 py-3 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
+                <i class="fas fa-dice mr-2"></i>랜덤 HowTo
+            </button>
+        </div>
+        
         <div class="grid md:grid-cols-2 gap-6">
             <a href="/howto/law-school" class="glass-card p-6 rounded-xl hover-glow block">
                 <h3 class="text-xl font-bold mb-2">로스쿨 들어가는 법</h3>
@@ -843,156 +867,25 @@ app.get('/help', (c) => {
   return c.html(renderLayout(content, '도움말 - Careerwiki'))
 })
 
-// Search Page with Relevance-based Results
+// Search Page
 app.get('/search', (c) => {
   const query = c.req.query('q') || ''
-  const normalizedQuery = query.toLowerCase()
-  
-  // Mock data with relevance scoring
-  const jobs = [
-    { id: 'software-engineer', title: '소프트웨어 엔지니어', desc: '소프트웨어를 설계, 개발, 테스트하는 전문가. 프로그래밍, 코딩, 알고리즘 활용', keywords: ['코딩', '프로그래밍', '개발', '소프트웨어', '엔지니어', '알고리즘', 'IT'] },
-    { id: 'data-scientist', title: '데이터 사이언티스트', desc: '데이터 분석과 머신러닝으로 인사이트를 도출하는 전문가. 파이썬 코딩 활용', keywords: ['데이터', '분석', '머신러닝', 'AI', '통계', '코딩', '파이썬'] },
-    { id: 'security-consultant', title: '보안 컨설턴트', desc: '시스템 보안 취약점 분석 및 해결. 보안 코딩과 침투 테스트 수행', keywords: ['보안', '해킹', '네트워크', '시스템', '코딩', '취약점'] },
-    { id: 'frontend-engineer', title: '프론트엔드 엔지니어', desc: '웹 인터페이스 개발 전문가. HTML, CSS, JavaScript 코딩', keywords: ['프론트엔드', '웹', 'UI', 'UX', '코딩', '자바스크립트', '리액트'] },
-    { id: 'chemical-engineer', title: '화학공학 엔지니어', desc: '화학 공정 설계와 최적화를 담당하는 전문가', keywords: ['화학', '공정', '제조', '플랜트', '엔지니어'] },
-  ]
-  
-  const majors = [
-    { id: 'computer-science', title: '컴퓨터공학과', desc: '컴퓨터 시스템과 소프트웨어 개발을 배우는 학과. 프로그래밍과 코딩이 핵심', keywords: ['컴퓨터', '프로그래밍', '코딩', '알고리즘', '소프트웨어', 'IT'] },
-    { id: 'information-science', title: '정보과학과', desc: '정보 시스템과 데이터 처리를 다루는 학과. 코딩과 데이터베이스 학습', keywords: ['정보', '데이터', '시스템', '코딩', '데이터베이스'] },
-    { id: 'design', title: '디자인학과', desc: '시각 디자인과 UX/UI 디자인을 배우는 학과. 웹 코딩 기초 포함', keywords: ['디자인', 'UI', 'UX', '그래픽', '웹디자인', '코딩'] },
-    { id: 'chemical-engineering', title: '화학공학과', desc: '화학 원리를 산업에 응용하는 공학 분야', keywords: ['화학', '공학', '공정', '재료', '에너지'] },
-    { id: 'electrical-engineering', title: '전기전자공학과', desc: '전기, 전자 시스템과 임베디드 시스템 개발. 펌웨어 코딩 포함', keywords: ['전기', '전자', '회로', '임베디드', '코딩', '펌웨어'] },
-  ]
-  
-  const howtos = [
-    { id: 'career-exploration', title: '진로 탐색 가이드', desc: 'IT 직업과 코딩 교육 포함한 진로 탐색 방법', keywords: ['진로', '탐색', '직업', '코딩', 'IT', '교육'] },
-    { id: 'coding-bootcamp', title: '코딩 부트캠프 선택 가이드', desc: '코딩 부트캠프 비교와 선택 방법', keywords: ['코딩', '부트캠프', '교육', '프로그래밍', '취업'] },
-    { id: 'interview-prep', title: '기술 면접 준비하기', desc: '코딩 테스트와 기술 면접 준비 전략', keywords: ['면접', '코딩', '테스트', '알고리즘', '기술'] },
-  ]
-  
-  // Calculate relevance score
-  const calculateScore = (item) => {
-    let score = 0
-    const itemText = (item.title + ' ' + item.desc + ' ' + item.keywords.join(' ')).toLowerCase()
-    
-    // Exact match in title
-    if (item.title.toLowerCase().includes(normalizedQuery)) score += 10
-    
-    // Match in description
-    if (item.desc.toLowerCase().includes(normalizedQuery)) score += 5
-    
-    // Match in keywords
-    item.keywords.forEach(keyword => {
-      if (keyword.toLowerCase().includes(normalizedQuery)) score += 3
-      if (normalizedQuery.includes(keyword.toLowerCase())) score += 2
-    })
-    
-    return score
-  }
-  
-  // Filter and sort results
-  const jobResults = jobs
-    .map(job => ({ ...job, score: calculateScore(job) }))
-    .filter(job => job.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5)
-  
-  const majorResults = majors
-    .map(major => ({ ...major, score: calculateScore(major) }))
-    .filter(major => major.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5)
-  
-  const howtoResults = howtos
-    .map(howto => ({ ...howto, score: calculateScore(howto) }))
-    .filter(howto => howto.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
   
   const content = `
     <div class="max-w-4xl mx-auto">
-        <!-- Search Bar with Query -->
-        <div class="mb-8">
-            <form action="/search" method="get" class="relative">
-                <input 
-                    type="text" 
-                    name="q" 
-                    value="${query}"
-                    placeholder="검색어를 입력하세요" 
-                    class="w-full px-6 py-4 bg-wiki-bg border border-wiki-border rounded-full text-lg focus:outline-none focus:border-wiki-primary transition"
-                >
-                <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white rounded-full hover:scale-105 transition">
-                    <i class="fas fa-search mr-2"></i>검색
-                </button>
-            </form>
-        </div>
+        <h1 class="text-3xl font-bold mb-6">검색 결과: "${query}"</h1>
         
-        ${jobResults.length > 0 ? `
-        <!-- Job Results Section -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <span class="w-2 h-6 bg-wiki-primary mr-3"></span>
-                직업위키
-            </h2>
-            <div class="space-y-3">
-                ${jobResults.map(job => `
-                    <a href="/job/${job.id}" class="glass-card p-4 rounded-lg hover-glow block transition">
-                        <h3 class="text-lg font-semibold text-wiki-text">${job.title}</h3>
-                        <p class="text-sm text-wiki-muted mt-1">${job.desc}</p>
-                    </a>
-                `).join('')}
-            </div>
+        <div class="space-y-4">
+            <a href="/job/software-engineer" class="glass-card p-6 rounded-xl hover-glow block">
+                <span class="text-sm text-wiki-secondary">직업</span>
+                <h3 class="text-xl font-bold mt-1">소프트웨어 엔지니어</h3>
+                <p class="text-wiki-muted mt-2">소프트웨어를 설계, 개발, 테스트하는 전문가</p>
+            </a>
         </div>
-        ` : ''}
-        
-        ${majorResults.length > 0 ? `
-        <!-- Major Results Section -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <span class="w-2 h-6 bg-wiki-secondary mr-3"></span>
-                전공위키
-            </h2>
-            <div class="space-y-3">
-                ${majorResults.map(major => `
-                    <a href="/major/${major.id}" class="glass-card p-4 rounded-lg hover-glow block transition">
-                        <h3 class="text-lg font-semibold text-wiki-text">${major.title}</h3>
-                        <p class="text-sm text-wiki-muted mt-1">${major.desc}</p>
-                    </a>
-                `).join('')}
-            </div>
-        </div>
-        ` : ''}
-        
-        ${howtoResults.length > 0 ? `
-        <!-- HowTo Results Section -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <span class="w-2 h-6 bg-green-500 mr-3"></span>
-                HowTo
-            </h2>
-            <div class="space-y-3">
-                ${howtoResults.map(howto => `
-                    <a href="/howto/${howto.id}" class="glass-card p-4 rounded-lg hover-glow block transition">
-                        <h3 class="text-lg font-semibold text-wiki-text">${howto.title}</h3>
-                        <p class="text-sm text-wiki-muted mt-1">${howto.desc}</p>
-                    </a>
-                `).join('')}
-            </div>
-        </div>
-        ` : ''}
-        
-        ${jobResults.length === 0 && majorResults.length === 0 && howtoResults.length === 0 ? `
-        <div class="glass-card p-8 rounded-xl text-center">
-            <i class="fas fa-search text-4xl text-wiki-muted mb-4"></i>
-            <p class="text-lg text-wiki-muted">"${query}"에 대한 검색 결과가 없습니다.</p>
-            <p class="text-sm text-wiki-muted mt-2">다른 검색어를 시도해보세요.</p>
-        </div>
-        ` : ''}
     </div>
   `
   
-  return c.html(renderLayout(content, `${query ? query + ' - ' : ''}검색 - Careerwiki`))
+  return c.html(renderLayout(content, `"${query}" 검색 결과 - Careerwiki`))
 })
 
 // Major Detail Page (Based on design file)
