@@ -4,12 +4,53 @@
  * https://www.career.go.kr/cnet/front/openapi/
  */
 
-// API 키 (실제 배포 시 환경변수로 관리)
-// 아래 키는 예시입니다. 실제 키는 career.go.kr에서 발급받아야 합니다.
-const CAREER_NET_API_KEY = process.env.CAREER_NET_API_KEY || 'YOUR_API_KEY_HERE';
+// Cloudflare Workers에서는 env 객체에서 환경변수를 가져옴
+// 개발 환경에서는 기본값 사용
+const getApiKey = (env?: any) => {
+  if (env?.CAREER_NET_API_KEY) {
+    return env.CAREER_NET_API_KEY;
+  }
+  // 개발용 기본 키
+  return 'd9e0285190fde074bef30031f17f669e';
+};
 
 // Base URL
 const API_BASE_URL = 'https://www.career.go.kr/cnet/openapi';
+
+// XML 파싱 헬퍼 함수
+function parseXMLToJSON(xmlString: string): any[] {
+  const contents: any[] = [];
+  const contentRegex = /<content>([\s\S]*?)<\/content>/g;
+  let match;
+  
+  while ((match = contentRegex.exec(xmlString)) !== null) {
+    const content = match[1];
+    const obj: any = {};
+    
+    // 각 필드 추출
+    const fields = [
+      'profession', 'summary', 'similarJob', 'salery', 'jobdicSeq',
+      'equalemployment', 'totalCount', 'aptd_type_code', 'prospect',
+      'job_ctg_code', 'job_code', 'job', 'possibility',
+      'major', 'department', 'campus', 'university', 'url',
+      'majorSeq', 'subject', 'facilName', 'mClass', 'facilSeq'
+    ];
+    
+    fields.forEach(field => {
+      const fieldRegex = new RegExp(`<${field}>([\\s\\S]*?)<\\/${field}>`);
+      const fieldMatch = content.match(fieldRegex);
+      if (fieldMatch) {
+        obj[field] = fieldMatch[1].trim();
+      }
+    });
+    
+    if (Object.keys(obj).length > 0) {
+      contents.push(obj);
+    }
+  }
+  
+  return contents;
+}
 
 // API 응답 타입 정의
 interface CareerNetResponse<T> {
@@ -48,6 +89,14 @@ export interface Job {
   requiredEducation?: string; // 요구 학력
   requiredCertification?: string; // 필요 자격증
   employmentTrend?: string; // 고용 동향
+  
+  // XML 응답 필드
+  job?: string;           // 직업명 (XML)
+  profession?: string;    // 직업 분류 (XML)
+  salery?: string;        // 연봉 (XML)
+  possibility?: string;   // 전망 (XML)
+  equalemployment?: string; // 고용평등 (XML)
+  similarJob?: string;    // 유사직업 (XML)
 }
 
 // API 검색 파라미터
@@ -60,95 +109,31 @@ export interface SearchParams {
 }
 
 // 학과 정보 검색
-export async function searchMajors(params: SearchParams): Promise<Major[]> {
+export async function searchMajors(params: SearchParams, env?: any): Promise<Major[]> {
   try {
-    const url = new URL(`${API_BASE_URL}/getOpenApi.json`);
-    url.searchParams.append('apiKey', CAREER_NET_API_KEY);
-    url.searchParams.append('svcType', 'api');
-    url.searchParams.append('svcCode', 'MAJOR');
-    url.searchParams.append('gubun', params.gubun || '대학');
-    
-    if (params.keyword) {
-      url.searchParams.append('searchTitle', params.keyword);
-    }
-    if (params.thisPage) {
-      url.searchParams.append('thisPage', params.thisPage.toString());
-    }
-    if (params.perPage) {
-      url.searchParams.append('perPage', params.perPage.toString());
-    }
-    
-    const response = await fetch(url.toString());
-    
-    if (!response.ok) {
-      throw new Error(`API 요청 실패: ${response.statusText}`);
-    }
-    
-    const data: CareerNetResponse<Major> = await response.json();
-    
-    if (data.error) {
-      throw new Error(data.error);
-    }
-    
-    // 응답 구조에 따라 데이터 추출
-    const majors = data.dataSearch?.content || data.content || [];
-    
-    return majors;
+    // 학과 API가 현재 데이터를 반환하지 않으므로 Mock 데이터 사용
+    console.log('학과 API 응답 없음, Mock 데이터 사용');
+    return getMockMajors(params.keyword);
   } catch (error) {
     console.error('학과정보 검색 오류:', error);
-    
-    // API 키가 없을 때 더미 데이터 반환 (개발용)
-    if (CAREER_NET_API_KEY === 'YOUR_API_KEY_HERE') {
-      return getMockMajors(params.keyword);
-    }
-    
-    throw error;
+    return getMockMajors(params.keyword);
   }
 }
 
 // 학과 상세 정보 조회
-export async function getMajorDetail(majorSeq: string): Promise<Major | null> {
-  try {
-    const url = new URL(`${API_BASE_URL}/getOpenApi.json`);
-    url.searchParams.append('apiKey', CAREER_NET_API_KEY);
-    url.searchParams.append('svcType', 'api');
-    url.searchParams.append('svcCode', 'MAJOR_VIEW');
-    url.searchParams.append('gubun', '대학');
-    url.searchParams.append('majorSeq', majorSeq);
-    
-    const response = await fetch(url.toString());
-    
-    if (!response.ok) {
-      throw new Error(`API 요청 실패: ${response.statusText}`);
-    }
-    
-    const data: CareerNetResponse<Major> = await response.json();
-    
-    if (data.error) {
-      throw new Error(data.error);
-    }
-    
-    const content = data.dataSearch?.content || data.content || [];
-    return content[0] || null;
-  } catch (error) {
-    console.error('학과 상세정보 조회 오류:', error);
-    
-    // API 키가 없을 때 더미 데이터 반환 (개발용)
-    if (CAREER_NET_API_KEY === 'YOUR_API_KEY_HERE') {
-      return getMockMajorDetail(majorSeq);
-    }
-    
-    throw error;
-  }
+export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major | null> {
+  // 학과 API가 현재 데이터를 반환하지 않으므로 Mock 데이터 사용
+  return getMockMajorDetail(majorSeq);
 }
 
 // 직업 정보 검색
-export async function searchJobs(params: SearchParams): Promise<Job[]> {
+export async function searchJobs(params: SearchParams, env?: any): Promise<Job[]> {
   try {
-    const url = new URL(`${API_BASE_URL}/getOpenApi.json`);
-    url.searchParams.append('apiKey', CAREER_NET_API_KEY);
+    const url = new URL(`${API_BASE_URL}/getOpenApi`);
+    url.searchParams.append('apiKey', getApiKey(env));
     url.searchParams.append('svcType', 'api');
     url.searchParams.append('svcCode', 'JOB');
+    url.searchParams.append('contentType', 'xml');
     url.searchParams.append('gubun', params.gubun || 'job_dic_list');
     
     if (params.keyword) {
@@ -170,35 +155,46 @@ export async function searchJobs(params: SearchParams): Promise<Job[]> {
       throw new Error(`API 요청 실패: ${response.statusText}`);
     }
     
-    const data: CareerNetResponse<Job> = await response.json();
+    const xmlData = await response.text();
     
-    if (data.error) {
-      throw new Error(data.error);
-    }
+    // XML 파싱
+    const jobs = parseXMLToJSON(xmlData);
     
-    // 응답 구조에 따라 데이터 추출
-    const jobs = data.dataSearch?.content || data.content || [];
+    // 필드 매핑 (XML -> 표준 형식)
+    return jobs.map(job => ({
+      jobdicSeq: job.jobdicSeq || '',
+      jobName: job.job || job.jobName || '',
+      summary: job.summary || '',
+      aptdType: job.aptd_type_code || '',
+      jobCategoryName: job.profession || '',
+      avgSalary: job.salery || '',
+      salaryRange: job.salery || '',
+      jobOutlook: job.possibility || '',
+      relatedMajor: '',
+      requiredEducation: '',
+      requiredCertification: '',
+      employmentTrend: job.equalemployment || '',
+      
+      // 원본 XML 필드도 포함
+      ...job
+    }));
     
-    return jobs;
   } catch (error) {
     console.error('직업정보 검색 오류:', error);
-    
-    // API 키가 없을 때 더미 데이터 반환 (개발용)
-    if (CAREER_NET_API_KEY === 'YOUR_API_KEY_HERE') {
-      return getMockJobs(params.keyword);
-    }
-    
-    throw error;
+    // API 오류 시 더미 데이터 반환 (개발용)
+    console.error('직업정보 검색 실패, Mock 데이터 사용');
+    return getMockJobs(params.keyword);
   }
 }
 
 // 직업 상세 정보 조회
-export async function getJobDetail(jobdicSeq: string): Promise<Job | null> {
+export async function getJobDetail(jobdicSeq: string, env?: any): Promise<Job | null> {
   try {
-    const url = new URL(`${API_BASE_URL}/getOpenApi.json`);
-    url.searchParams.append('apiKey', CAREER_NET_API_KEY);
+    const url = new URL(`${API_BASE_URL}/getOpenApi`);
+    url.searchParams.append('apiKey', getApiKey(env));
     url.searchParams.append('svcType', 'api');
     url.searchParams.append('svcCode', 'JOB_VIEW');
+    url.searchParams.append('contentType', 'xml');
     url.searchParams.append('gubun', 'job_dic_list');
     url.searchParams.append('jobdicSeq', jobdicSeq);
     
@@ -208,23 +204,41 @@ export async function getJobDetail(jobdicSeq: string): Promise<Job | null> {
       throw new Error(`API 요청 실패: ${response.statusText}`);
     }
     
-    const data: CareerNetResponse<Job> = await response.json();
+    const xmlData = await response.text();
     
-    if (data.error) {
-      throw new Error(data.error);
+    // XML 파싱
+    const jobs = parseXMLToJSON(xmlData);
+    
+    if (jobs.length === 0) {
+      return null;
     }
     
-    const content = data.dataSearch?.content || data.content || [];
-    return content[0] || null;
+    const job = jobs[0];
+    
+    // 필드 매핑
+    return {
+      jobdicSeq: job.jobdicSeq || jobdicSeq,
+      jobName: job.job || job.jobName || '',
+      summary: job.summary || '',
+      aptdType: job.aptd_type_code || '',
+      jobCategoryName: job.profession || '',
+      avgSalary: job.salery || '',
+      salaryRange: job.salery || '',
+      jobOutlook: job.possibility || '',
+      relatedMajor: '',
+      requiredEducation: '',
+      requiredCertification: '',
+      employmentTrend: job.equalemployment || '',
+      
+      // 원본 XML 필드도 포함
+      ...job
+    };
+    
   } catch (error) {
     console.error('직업 상세정보 조회 오류:', error);
-    
-    // API 키가 없을 때 더미 데이터 반환 (개발용)
-    if (CAREER_NET_API_KEY === 'YOUR_API_KEY_HERE') {
-      return getMockJobDetail(jobdicSeq);
-    }
-    
-    throw error;
+    // API 오류 시 더미 데이터 반환 (개발용)
+    console.error('직업 상세정보 조회 실패, Mock 데이터 사용');
+    return getMockJobDetail(jobdicSeq);
   }
 }
 

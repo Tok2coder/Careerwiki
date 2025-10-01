@@ -21,5 +21,12 @@
       "id": "local-kv", // Will be replaced with actual ID after creation
       "preview_id": "local-kv-preview"
     }
-  ]
+  ],
+  
+  // Environment variables (secrets should be set via wrangler secret)
+  // For production: wrangler pages secret put CAREER_NET_API_KEY
+  "vars": {
+    // Public variables (non-sensitive)
+    "ENVIRONMENT": "production"
+  }
 }

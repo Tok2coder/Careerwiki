@@ -1239,7 +1239,7 @@ app.get('/api/majors', async (c) => {
       keyword,
       thisPage: page,
       perPage
-    })
+    }, c.env)
     
     return c.json({
       success: true,
@@ -1259,7 +1259,7 @@ app.get('/api/majors', async (c) => {
 app.get('/api/majors/:id', async (c) => {
   try {
     const majorSeq = c.req.param('id')
-    const major = await getMajorDetail(majorSeq)
+    const major = await getMajorDetail(majorSeq, c.env)
     
     if (!major) {
       return c.json({
@@ -1293,7 +1293,7 @@ app.get('/api/jobs', async (c) => {
       category,
       thisPage: page,
       perPage
-    })
+    }, c.env)
     
     return c.json({
       success: true,
@@ -1314,7 +1314,7 @@ app.get('/api/jobs', async (c) => {
 app.get('/api/jobs/:id', async (c) => {
   try {
     const jobdicSeq = c.req.param('id')
-    const job = await getJobDetail(jobdicSeq)
+    const job = await getJobDetail(jobdicSeq, c.env)
     
     if (!job) {
       return c.json({
