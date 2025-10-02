@@ -9,39 +9,79 @@ const API_BASE = window.location.origin + '/api';
 // API 호출 함수들
 const CareerAPI = {
   // 학과 검색
-  async searchMajors(keyword = '', page = 1, perPage = 20) {
+  async searchMajors(keyword = '', page = 1, perPage = 20, options = {}) {
     try {
       const params = new URLSearchParams({
         keyword,
-        page: page.toString(),
-        perPage: perPage.toString()
+        page: String(page),
+        perPage: String(perPage)
       });
-      
-      const response = await fetch(`${API_BASE}/majors?${params}`);
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || '학과 검색 실패');
+
+      if (options.sources && options.sources.length) {
+        params.set('sources', options.sources.join(','));
       }
-      
-      return data.data || [];
+
+      const response = await fetch(`${API_BASE}/majors?${params}`);
+      const payload = await response.json();
+
+      if (!payload.success) {
+        throw new Error(payload.error || '학과 검색 실패');
+      }
+
+      return {
+        items: Array.isArray(payload.data) ? payload.data : [],
+        meta: payload.meta || {}
+      };
     } catch (error) {
       console.error('학과 검색 오류:', error);
-      return [];
+      return {
+        items: [],
+        meta: {
+          error: error instanceof Error ? error.message : '학과 검색 실패'
+        }
+      };
     }
   },
 
   // 학과 상세 정보
-  async getMajorDetail(majorSeq) {
+  async getMajorDetail(id, options = {}) {
     try {
-      const response = await fetch(`${API_BASE}/majors/${majorSeq}`);
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || '학과 정보 조회 실패');
+      if (!id) {
+        throw new Error('학과 식별자가 필요합니다.');
       }
-      
-      return data.data;
+
+      const params = new URLSearchParams();
+
+      if (options.careernetId) {
+        params.set('careernetId', options.careernetId);
+      }
+
+      if (options.goyong24) {
+        const { majorGb, departmentId, majorId } = options.goyong24;
+        if (majorGb && departmentId && majorId) {
+          params.set('goyongMajorGb', majorGb);
+          params.set('goyongDepartmentId', departmentId);
+          params.set('goyongMajorId', majorId);
+        }
+      }
+
+      if (options.sources && options.sources.length) {
+        params.set('sources', options.sources.join(','));
+      }
+
+      const query = params.toString();
+      const response = await fetch(`${API_BASE}/majors/${encodeURIComponent(id)}${query ? `?${query}` : ''}`);
+      const payload = await response.json();
+
+      if (!payload.success) {
+        throw new Error(payload.error || '학과 정보 조회 실패');
+      }
+
+      return {
+        profile: payload.data,
+        partials: payload.partials || {},
+        sources: payload.sources || {}
+      };
     } catch (error) {
       console.error('학과 정보 조회 오류:', error);
       return null;
@@ -49,40 +89,81 @@ const CareerAPI = {
   },
 
   // 직업 검색
-  async searchJobs(keyword = '', category = '', page = 1, perPage = 20) {
+  async searchJobs(keyword = '', category = '', page = 1, perPage = 20, options = {}) {
     try {
       const params = new URLSearchParams({
         keyword,
         category,
-        page: page.toString(),
-        perPage: perPage.toString()
+        page: String(page),
+        perPage: String(perPage)
       });
-      
-      const response = await fetch(`${API_BASE}/jobs?${params}`);
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || '직업 검색 실패');
+
+      if (!category) {
+        params.delete('category');
       }
-      
-      return data.data || [];
+
+      if (options.sources && options.sources.length) {
+        params.set('sources', options.sources.join(','));
+      }
+
+      const response = await fetch(`${API_BASE}/jobs?${params}`);
+      const payload = await response.json();
+
+      if (!payload.success) {
+        throw new Error(payload.error || '직업 검색 실패');
+      }
+
+      return {
+        items: Array.isArray(payload.data) ? payload.data : [],
+        meta: payload.meta || {},
+        categories: payload.categories || {}
+      };
     } catch (error) {
       console.error('직업 검색 오류:', error);
-      return [];
+      return {
+        items: [],
+        meta: {
+          error: error instanceof Error ? error.message : '직업 검색 실패'
+        },
+        categories: {}
+      };
     }
   },
 
   // 직업 상세 정보
-  async getJobDetail(jobdicSeq) {
+  async getJobDetail(id, options = {}) {
     try {
-      const response = await fetch(`${API_BASE}/jobs/${jobdicSeq}`);
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || '직업 정보 조회 실패');
+      if (!id) {
+        throw new Error('직업 식별자가 필요합니다.');
       }
-      
-      return data.data;
+
+      const params = new URLSearchParams();
+
+      if (options.careernetId) {
+        params.set('careernetId', options.careernetId);
+      }
+
+      if (options.goyong24JobId) {
+        params.set('goyongJobId', options.goyong24JobId);
+      }
+
+      if (options.sources && options.sources.length) {
+        params.set('sources', options.sources.join(','));
+      }
+
+      const query = params.toString();
+      const response = await fetch(`${API_BASE}/jobs/${encodeURIComponent(id)}${query ? `?${query}` : ''}`);
+      const payload = await response.json();
+
+      if (!payload.success) {
+        throw new Error(payload.error || '직업 정보 조회 실패');
+      }
+
+      return {
+        profile: payload.data,
+        partials: payload.partials || {},
+        sources: payload.sources || {}
+      };
     } catch (error) {
       console.error('직업 정보 조회 오류:', error);
       return null;
@@ -93,22 +174,159 @@ const CareerAPI = {
   async getCategories() {
     try {
       const response = await fetch(`${API_BASE}/categories`);
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error('카테고리 정보 조회 실패');
+      const payload = await response.json();
+
+      if (!payload.success) {
+        throw new Error(payload.error || '카테고리 정보 조회 실패');
       }
-      
-      return data;
+
+      return payload;
     } catch (error) {
       console.error('카테고리 조회 오류:', error);
-      return { jobCategories: {}, aptitudeTypes: {} };
+      return {
+        jobCategories: {},
+        aptitudeTypes: {},
+        error: error instanceof Error ? error.message : '카테고리 조회 실패'
+      };
     }
   }
 };
 
 // DOM 조작 유틸리티
 const DOMUtils = {
+  buildMajorUrl(entry) {
+    if (!entry) return '#';
+    const profile = entry.profile || entry;
+    const sourceMeta = entry.sourceMeta || {};
+    const sourceIds = profile.sourceIds || {};
+    const params = new URLSearchParams();
+
+    if (sourceIds.careernet) {
+      params.set('careernetId', sourceIds.careernet);
+    }
+
+    if (sourceMeta.goyong24) {
+      const { majorGb, departmentId, majorId } = sourceMeta.goyong24;
+      if (majorGb && departmentId && majorId) {
+        params.set('goyongMajorGb', majorGb);
+        params.set('goyongDepartmentId', departmentId);
+        params.set('goyongMajorId', majorId);
+      }
+    }
+
+    const id = profile.id || sourceIds.careernet;
+    if (!id) return '#';
+
+    const query = params.toString();
+    return `/major/${encodeURIComponent(id)}${query ? `?${query}` : ''}`;
+  },
+
+  buildJobUrl(entry) {
+    if (!entry) return '#';
+    const profile = entry.profile || entry;
+    const sourceMeta = entry.sourceMeta || {};
+    const sourceIds = profile.sourceIds || {};
+    const params = new URLSearchParams();
+
+    if (sourceIds.careernet) {
+      params.set('careernetId', sourceIds.careernet);
+    }
+
+    if (sourceMeta.goyong24?.jobCd) {
+      params.set('goyongJobId', sourceMeta.goyong24.jobCd);
+    }
+
+    const id = profile.id || sourceIds.careernet;
+    if (!id) return '#';
+
+    const query = params.toString();
+    return `/job/${encodeURIComponent(id)}${query ? `?${query}` : ''}`;
+  },
+
+  normalizeMajorItem(item) {
+    if (!item) return null;
+
+    if (item.profile) {
+      const profile = item.profile;
+      const normalized = {
+        profile,
+        display: item.display || {},
+        sourceMeta: item.sourceMeta || {}
+      };
+      normalized.url = this.buildMajorUrl(normalized);
+      return normalized;
+    }
+
+    const profile = {
+      id: item.id || (item.majorSeq ? `major:C_${item.majorSeq}` : undefined),
+      name: item.name || item.major || '학과명 없음',
+      sourceIds: {
+        careernet: item.sourceIds?.careernet || item.majorSeq
+      },
+      sources: item.sources || ['CAREERNET']
+    };
+
+    const normalized = {
+      profile,
+      display: {
+        summary: item.summary,
+        categoryName: item.department,
+        employmentRate: item.employmentRate,
+        salaryAfterGraduation: item.salaryAfterGraduation
+      },
+      sourceMeta: {
+        careernet: {
+          majorSeq: item.sourceIds?.careernet || item.majorSeq
+        }
+      }
+    };
+
+    normalized.url = this.buildMajorUrl(normalized);
+    return normalized;
+  },
+
+  normalizeJobItem(item) {
+    if (!item) return null;
+
+    if (item.profile) {
+      const profile = item.profile;
+      const normalized = {
+        profile,
+        display: item.display || {},
+        sourceMeta: item.sourceMeta || {}
+      };
+      normalized.url = this.buildJobUrl(normalized);
+      return normalized;
+    }
+
+    const profile = {
+      id: item.id || (item.jobdicSeq ? `job:C_${item.jobdicSeq}` : undefined),
+      name: item.name || item.jobName || '직업명 없음',
+      sourceIds: {
+        careernet: item.sourceIds?.careernet || item.jobdicSeq
+      },
+      sources: item.sources || ['CAREERNET']
+    };
+
+    const normalized = {
+      profile,
+      display: {
+        summary: item.summary,
+        salary: item.avgSalary || item.salaryRange,
+        outlook: item.jobOutlook,
+        categoryName: item.jobCategoryName
+      },
+      sourceMeta: {
+        careernet: {
+          jobdicSeq: item.sourceIds?.careernet || item.jobdicSeq
+        }
+      }
+    };
+
+    normalized.url = this.buildJobUrl(normalized);
+    return normalized;
+  },
+
   // 로딩 표시
   showLoading(elementId) {
     const element = document.getElementById(elementId);
@@ -137,13 +355,20 @@ const DOMUtils = {
 
   // 학과 카드 생성
   createMajorCard(major) {
+    const normalized = this.normalizeMajorItem(major);
+    if (!normalized) return '';
+
+    const { profile, display, url } = normalized;
+    const summary = display.summary || '설명 없음';
+
     return `
-      <a href="/major/${major.majorSeq}" class="glass-card p-6 rounded-lg hover-glow block">
-        <h3 class="text-xl font-bold mb-2 text-white">${major.major || '학과명 없음'}</h3>
-        <p class="text-wiki-muted text-sm mb-4 line-clamp-2">${major.summary || '설명 없음'}</p>
+      <a href="${url}" class="glass-card p-6 rounded-lg hover-glow block">
+        <h3 class="text-xl font-bold mb-2 text-white">${profile.name || '학과명 없음'}</h3>
+        <p class="text-wiki-muted text-sm mb-4 line-clamp-2">${summary}</p>
         <div class="flex flex-wrap gap-2 text-xs">
-          ${major.employmentRate ? `<span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary rounded">취업률 ${major.employmentRate}</span>` : ''}
-          ${major.department ? `<span class="px-2 py-1 bg-wiki-secondary/20 text-wiki-secondary rounded">${major.department}</span>` : ''}
+          ${display.employmentRate ? `<span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary rounded">취업률 ${display.employmentRate}</span>` : ''}
+          ${display.salaryAfterGraduation ? `<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded">${display.salaryAfterGraduation}</span>` : ''}
+          ${display.categoryName ? `<span class="px-2 py-1 bg-wiki-secondary/20 text-wiki-secondary rounded">${display.categoryName}</span>` : ''}
         </div>
       </a>
     `;
@@ -151,14 +376,20 @@ const DOMUtils = {
 
   // 직업 카드 생성
   createJobCard(job) {
+    const normalized = this.normalizeJobItem(job);
+    if (!normalized) return '';
+
+    const { profile, display, url } = normalized;
+    const summary = display.summary || '설명 없음';
+
     return `
-      <a href="/job/${job.jobdicSeq}" class="glass-card p-6 rounded-lg hover-glow block">
-        <h3 class="text-xl font-bold mb-2 text-white">${job.jobName || '직업명 없음'}</h3>
-        <p class="text-wiki-muted text-sm mb-4 line-clamp-2">${job.summary || '설명 없음'}</p>
+      <a href="${url}" class="glass-card p-6 rounded-lg hover-glow block">
+        <h3 class="text-xl font-bold mb-2 text-white">${profile.name || '직업명 없음'}</h3>
+        <p class="text-wiki-muted text-sm mb-4 line-clamp-2">${summary}</p>
         <div class="flex flex-wrap gap-2 text-xs">
-          ${job.avgSalary ? `<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded">${job.avgSalary}</span>` : ''}
-          ${job.jobOutlook ? `<span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary rounded">전망: ${job.jobOutlook}</span>` : ''}
-          ${job.jobCategoryName ? `<span class="px-2 py-1 bg-wiki-secondary/20 text-wiki-secondary rounded">${job.jobCategoryName}</span>` : ''}
+          ${display.salary ? `<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded">${display.salary}</span>` : ''}
+          ${display.outlook ? `<span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary rounded">전망: ${display.outlook}</span>` : ''}
+          ${display.categoryName ? `<span class="px-2 py-1 bg-wiki-secondary/20 text-wiki-secondary rounded">${display.categoryName}</span>` : ''}
         </div>
       </a>
     `;
@@ -173,7 +404,8 @@ const PageInit = {
     const jobsContainer = document.getElementById('popular-jobs');
     if (jobsContainer) {
       DOMUtils.showLoading('popular-jobs');
-      const jobs = await CareerAPI.searchJobs('', '', 1, 6);
+      const jobResult = await CareerAPI.searchJobs('', '', 1, 6);
+      const jobs = Array.isArray(jobResult.items) ? jobResult.items.slice(0, 6) : [];
       
       if (jobs.length > 0) {
         jobsContainer.innerHTML = `
@@ -190,7 +422,8 @@ const PageInit = {
     const majorsContainer = document.getElementById('popular-majors');
     if (majorsContainer) {
       DOMUtils.showLoading('popular-majors');
-      const majors = await CareerAPI.searchMajors('', 1, 6);
+      const majorResult = await CareerAPI.searchMajors('', 1, 6);
+      const majors = Array.isArray(majorResult.items) ? majorResult.items.slice(0, 6) : [];
       
       if (majors.length > 0) {
         majorsContainer.innerHTML = `
@@ -217,7 +450,8 @@ const PageInit = {
     const category = urlParams.get('category') || '';
     const page = parseInt(urlParams.get('page') || '1');
     
-    const jobs = await CareerAPI.searchJobs(keyword, category, page, 20);
+    const jobResult = await CareerAPI.searchJobs(keyword, category, page, 20);
+    const jobs = Array.isArray(jobResult.items) ? jobResult.items : [];
     
     if (jobs.length > 0) {
       container.innerHTML = `
@@ -226,7 +460,8 @@ const PageInit = {
         </div>
       `;
     } else {
-      DOMUtils.showError('job-list', '검색 결과가 없습니다.');
+      const message = jobResult.meta?.error || '검색 결과가 없습니다.';
+      DOMUtils.showError('job-list', message);
     }
   },
 
@@ -242,7 +477,8 @@ const PageInit = {
     const keyword = urlParams.get('q') || '';
     const page = parseInt(urlParams.get('page') || '1');
     
-    const majors = await CareerAPI.searchMajors(keyword, page, 20);
+    const majorResult = await CareerAPI.searchMajors(keyword, page, 20);
+    const majors = Array.isArray(majorResult.items) ? majorResult.items : [];
     
     if (majors.length > 0) {
       container.innerHTML = `
@@ -251,7 +487,8 @@ const PageInit = {
         </div>
       `;
     } else {
-      DOMUtils.showError('major-list', '검색 결과가 없습니다.');
+      const message = majorResult.meta?.error || '검색 결과가 없습니다.';
+      DOMUtils.showError('major-list', message);
     }
   },
 
@@ -266,7 +503,8 @@ const PageInit = {
     const jobResults = document.getElementById('job-search-results');
     if (jobResults) {
       DOMUtils.showLoading('job-search-results');
-      const jobs = await CareerAPI.searchJobs(keyword, '', 1, 5);
+      const jobResult = await CareerAPI.searchJobs(keyword, '', 1, 5);
+      const jobs = Array.isArray(jobResult.items) ? jobResult.items : [];
       
       if (jobs.length > 0) {
         jobResults.innerHTML = `
@@ -285,7 +523,8 @@ const PageInit = {
     const majorResults = document.getElementById('major-search-results');
     if (majorResults) {
       DOMUtils.showLoading('major-search-results');
-      const majors = await CareerAPI.searchMajors(keyword, 1, 5);
+      const majorResult = await CareerAPI.searchMajors(keyword, 1, 5);
+      const majors = Array.isArray(majorResult.items) ? majorResult.items : [];
       
       if (majors.length > 0) {
         majorResults.innerHTML = `

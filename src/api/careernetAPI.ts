@@ -4,6 +4,15 @@
  * https://www.career.go.kr/cnet/front/openapi/
  */
 
+import type {
+  JobRelatedEntity,
+  MajorUniversityInfo,
+  UnifiedJobDetail,
+  UnifiedJobSummary,
+  UnifiedMajorDetail,
+  UnifiedMajorSummary
+} from '../types/unifiedProfiles';
+
 // Cloudflare Workers에서는 env 객체에서 환경변수를 가져옴
 // 개발 환경에서는 기본값 사용
 const getApiKey = (env?: any) => {
@@ -51,6 +60,40 @@ function parseXMLToJSON(xmlString: string): any[] {
   
   return contents;
 }
+
+const splitToList = (value?: string): string[] => {
+  if (!value) return [];
+  return value
+    .split(/[\n,;•·\/\u00b7]/)
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
+};
+
+const dedupeList = (values: string[]): string[] => Array.from(new Set(values));
+
+const toUniversityEntries = (value?: string): MajorUniversityInfo[] | undefined => {
+  const list = dedupeList(splitToList(value));
+  if (list.length === 0) return undefined;
+  return list.map((name) => ({ name }));
+};
+
+const toRelatedEntities = (value?: string): JobRelatedEntity[] | undefined => {
+  const list = dedupeList(splitToList(value));
+  if (list.length === 0) return undefined;
+  return list.map((name) => ({ name }));
+};
+
+const getMajorName = (major: Major): string => {
+  const fallback = (major as any).mClass || (major as any).facilName || '';
+  const name = major.major || fallback;
+  return name ? name.trim() : '';
+};
+
+const getJobName = (job: Job): string => {
+  const fallback = (job as any).job || (job as any).jobName || '';
+  const name = job.jobName || fallback;
+  return name ? name.trim() : '';
+};
 
 // API 응답 타입 정의
 interface CareerNetResponse<T> {
@@ -330,6 +373,87 @@ export async function getJobDetail(jobdicSeq: string, env?: any): Promise<Job | 
     return getMockJobDetail(jobdicSeq);
   }
 }
+
+export const normalizeCareerNetMajorSummary = (major: Major): UnifiedMajorSummary => {
+  const canonicalId = major.majorSeq
+    ? `major:C_${major.majorSeq}`
+    : `major:C_${getMajorName(major).replace(/\s+/g, '_') || 'unknown'}`;
+  const name = getMajorName(major) || canonicalId;
+
+  return {
+    id: canonicalId,
+    sourceIds: {
+      careernet: major.majorSeq || undefined
+    },
+    name,
+    categoryName: major.department?.trim(),
+    summary: major.summary?.trim(),
+    aptitude: major.aptitude?.trim(),
+    relatedMajors: [],
+    sources: ['CAREERNET']
+  };
+};
+
+export const normalizeCareerNetMajorDetail = (major: Major): UnifiedMajorDetail => {
+  const summary = normalizeCareerNetMajorSummary(major);
+  const universities = toUniversityEntries(major.university);
+  const relatedJobs = dedupeList(splitToList(major.relatedJob));
+
+  return {
+    ...summary,
+    universities,
+    relatedJobs: relatedJobs.length ? relatedJobs : undefined,
+    salaryAfterGraduation: major.salaryAfterGraduation?.trim(),
+    employmentRate: major.employmentRate?.trim(),
+    sources: summary.sources
+  };
+};
+
+export const normalizeCareerNetJobSummary = (job: Job): UnifiedJobSummary => {
+  const canonicalId = job.jobdicSeq
+    ? `job:C_${job.jobdicSeq}`
+    : `job:C_${getJobName(job).replace(/\s+/g, '_') || 'unknown'}`;
+
+  const name = getJobName(job) || canonicalId;
+
+  return {
+    id: canonicalId,
+    sourceIds: {
+      careernet: job.jobdicSeq || undefined
+    },
+    name,
+    category: {
+      name: job.jobCategoryName?.trim() || job.profession?.trim()
+    },
+    sources: ['CAREERNET']
+  };
+};
+
+export const normalizeCareerNetJobDetail = (job: Job): UnifiedJobDetail => {
+  const summary = normalizeCareerNetJobSummary(job);
+  const relatedMajors = toRelatedEntities(job.relatedMajor);
+  const relatedJobs = toRelatedEntities(job.similarJob);
+  const relatedCertificates = dedupeList(splitToList(job.requiredCertification));
+
+  return {
+    ...summary,
+    classifications: {
+      large: job.jobCategoryName?.trim() || job.profession?.trim()
+    },
+    summary: job.summary?.trim(),
+    duties: job.summary?.trim(),
+    prospect: (job.jobOutlook || job.possibility)?.trim(),
+    salary: (job.avgSalary || job.salery)?.trim(),
+    status: (job.employmentTrend || job.equalemployment)?.trim(),
+    abilities: job.aptdType?.trim(),
+    relatedMajors,
+    relatedJobs,
+    relatedCertificates: relatedCertificates.length ? relatedCertificates : undefined,
+    knowledge: job.profession?.trim(),
+    environment: job.equalemployment?.trim(),
+    sources: summary.sources
+  };
+};
 
 // 개발용 Mock 데이터 함수들
 function getMockMajors(keyword?: string): Major[] {

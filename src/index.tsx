@@ -2,7 +2,9 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
-import { searchMajors, searchJobs, getMajorDetail, getJobDetail, JOB_CATEGORIES, APTITUDE_TYPES } from './api/careernetAPI'
+import { JOB_CATEGORIES, APTITUDE_TYPES } from './api/careernetAPI'
+import { getUnifiedJobDetail, getUnifiedMajorDetail, searchUnifiedJobs, searchUnifiedMajors } from './services/profileDataService'
+import type { DataSource } from './types/unifiedProfiles'
 
 // Types
 type Bindings = {
@@ -1226,26 +1228,55 @@ app.get('/major/:slug', (c) => {
   return c.html(renderLayout(content, '화학공학 - 전공 정보 | Careerwiki'))
 })
 
+const parseSourcesQuery = (value?: string | null): DataSource[] | undefined => {
+  if (!value) return undefined
+  const tokens = value
+    .split(',')
+    .map((token) => token.trim().toUpperCase())
+    .filter((token) => token.length > 0) as (DataSource | string)[]
+  const validSources: DataSource[] = []
+  tokens.forEach((token) => {
+    if (token === 'CAREERNET' || token === 'GOYONG24') {
+      if (!validSources.includes(token)) {
+        validSources.push(token)
+      }
+    }
+  })
+  return validSources.length ? validSources : undefined
+}
+
+const parseNumberParam = (value: string | undefined, fallback: number): number => {
+  if (!value) return fallback
+  const parsed = Number(value)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
+}
+
 // API 엔드포인트들
 
 // 학과정보 검색 API
 app.get('/api/majors', async (c) => {
   try {
     const keyword = c.req.query('keyword') || ''
-    const page = parseInt(c.req.query('page') || '1')
-    const perPage = parseInt(c.req.query('perPage') || '20')
-    
-    const majors = await searchMajors({
+    const page = parseNumberParam(c.req.query('page'), 1)
+    const perPage = parseNumberParam(c.req.query('perPage'), 20)
+    const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+    const result = await searchUnifiedMajors({
       keyword,
-      thisPage: page,
-      perPage
+      page,
+      perPage,
+      includeSources
     }, c.env)
-    
+
     return c.json({
       success: true,
-      data: majors,
-      page,
-      perPage
+      data: result.items,
+      meta: {
+        ...result.meta,
+        keyword,
+        page,
+        perPage
+      }
     })
   } catch (error) {
     return c.json({
@@ -1258,19 +1289,44 @@ app.get('/api/majors', async (c) => {
 // 학과 상세 정보 API
 app.get('/api/majors/:id', async (c) => {
   try {
-    const majorSeq = c.req.param('id')
-    const major = await getMajorDetail(majorSeq, c.env)
-    
-    if (!major) {
+    const id = c.req.param('id')
+    const careernetId = c.req.query('careernetId') || undefined
+    const goyongMajorGb = c.req.query('goyongMajorGb') as ('1' | '2') | undefined
+    const goyongDepartmentId = c.req.query('goyongDepartmentId') || undefined
+    const goyongMajorId = c.req.query('goyongMajorId') || undefined
+    const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+    const goyongParams = goyongMajorGb && goyongDepartmentId && goyongMajorId
+      ? {
+          majorGb: goyongMajorGb as '1' | '2',
+          departmentId: goyongDepartmentId,
+          majorId: goyongMajorId
+        }
+      : undefined
+
+    const result = await getUnifiedMajorDetail(
+      {
+        id,
+        careernetId,
+        goyong24Params: goyongParams,
+        includeSources
+      },
+      c.env
+    )
+
+    if (!result.profile) {
       return c.json({
         success: false,
-        error: '학과 정보를 찾을 수 없습니다'
+        error: '학과 정보를 찾을 수 없습니다.',
+        sources: result.sources
       }, 404)
     }
-    
+
     return c.json({
       success: true,
-      data: major
+      data: result.profile,
+      partials: result.partials,
+      sources: result.sources
     })
   } catch (error) {
     return c.json({
@@ -1285,21 +1341,28 @@ app.get('/api/jobs', async (c) => {
   try {
     const keyword = c.req.query('keyword') || ''
     const category = c.req.query('category') || ''
-    const page = parseInt(c.req.query('page') || '1')
-    const perPage = parseInt(c.req.query('perPage') || '20')
-    
-    const jobs = await searchJobs({
+    const page = parseNumberParam(c.req.query('page'), 1)
+    const perPage = parseNumberParam(c.req.query('perPage'), 20)
+    const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+    const result = await searchUnifiedJobs({
       keyword,
       category,
-      thisPage: page,
-      perPage
-    }, c.env)
-    
-    return c.json({
-      success: true,
-      data: jobs,
       page,
       perPage,
+      includeSources
+    }, c.env)
+
+    return c.json({
+      success: true,
+      data: result.items,
+      meta: {
+        ...result.meta,
+        keyword,
+        category,
+        page,
+        perPage
+      },
       categories: JOB_CATEGORIES
     })
   } catch (error) {
@@ -1313,19 +1376,34 @@ app.get('/api/jobs', async (c) => {
 // 직업 상세 정보 API
 app.get('/api/jobs/:id', async (c) => {
   try {
-    const jobdicSeq = c.req.param('id')
-    const job = await getJobDetail(jobdicSeq, c.env)
-    
-    if (!job) {
+    const id = c.req.param('id')
+    const careernetId = c.req.query('careernetId') || undefined
+    const goyongJobId = c.req.query('goyongJobId') || undefined
+    const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+    const result = await getUnifiedJobDetail(
+      {
+        id,
+        careernetId,
+        goyong24JobId: goyongJobId || undefined,
+        includeSources
+      },
+      c.env
+    )
+
+    if (!result.profile) {
       return c.json({
         success: false,
-        error: '직업 정보를 찾을 수 없습니다'
+        error: '직업 정보를 찾을 수 없습니다.',
+        sources: result.sources
       }, 404)
     }
-    
+
     return c.json({
       success: true,
-      data: job
+      data: result.profile,
+      partials: result.partials,
+      sources: result.sources
     })
   } catch (error) {
     return c.json({
