@@ -4,7 +4,10 @@ import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
 import { JOB_CATEGORIES, APTITUDE_TYPES } from './api/careernetAPI'
 import { getUnifiedJobDetail, getUnifiedMajorDetail, searchUnifiedJobs, searchUnifiedMajors } from './services/profileDataService'
+import type { SourceStatusRecord } from './services/profileDataService'
 import type { DataSource } from './types/unifiedProfiles'
+import { renderUnifiedJobDetail, createJobJsonLd } from './templates/unifiedJobDetail'
+import { renderUnifiedMajorDetail, createMajorJsonLd } from './templates/unifiedMajorDetail'
 
 // Types
 type Bindings = {
@@ -29,9 +32,10 @@ app.use('/static/*', serveStatic({ root: './public' }))
 
 // Helper function for logo SVG (옵션 7: 플레이풀 둥근 폰트)
 const getLogoSVG = (size: 'large' | 'small' = 'large') => {
-  const fontSize = size === 'large' ? '48' : '28';
-  const width = size === 'large' ? '320' : '180';
-  const height = size === 'large' ? '80' : '40';
+  const fontSize = size === 'large' ? '56' : '28';
+  const width = size === 'large' ? '360' : '180';
+  const height = size === 'large' ? '90' : '40';
+  const baselineOffset = size === 'large' ? 14 : 10;
   
   return `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
@@ -41,7 +45,7 @@ const getLogoSVG = (size: 'large' | 'small' = 'large') => {
           <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:1" />
         </linearGradient>
       </defs>
-      <text x="${parseInt(width)/2}" y="${parseInt(height)/2 + 10}" 
+      <text x="${parseInt(width)/2}" y="${parseInt(height)/2 + baselineOffset}" 
             font-family="'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive" 
             font-size="${fontSize}" font-weight="bold" 
             fill="url(#logoGrad)" text-anchor="middle">Careerwiki</text>
@@ -50,7 +54,21 @@ const getLogoSVG = (size: 'large' | 'small' = 'large') => {
 }
 
 // Helper function to render layout
-const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 플랫폼', description = 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', isHomepage = false) => {
+const renderLayout = (
+  content: string,
+  title = 'Careerwiki - AI 진로 분석 플랫폼',
+  description = 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼',
+  isHomepage = false,
+  options?: {
+    extraHead?: string
+    canonical?: string
+    ogUrl?: string
+  }
+) => {
+  const canonicalUrl = options?.canonical ?? 'https://careerwiki.org'
+  const ogUrl = options?.ogUrl ?? canonicalUrl
+  const extraHead = options?.extraHead ?? ''
+
   return `
     <!DOCTYPE html>
     <html lang="ko">
@@ -62,9 +80,9 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
         <meta property="og:title" content="${title}">
         <meta property="og:description" content="${description}">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://careerwiki.org">
+        <meta property="og:url" content="${ogUrl}">
         <meta name="robots" content="index, follow">
-        <link rel="canonical" href="https://careerwiki.org">
+        <link rel="canonical" href="${canonicalUrl}">
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <script>
@@ -85,6 +103,7 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
             }
           }
         </script>
+        ${extraHead}
         <style>
           body { background: #0f0f23; color: #e0e0e0; }
           .gradient-text {
@@ -101,9 +120,6 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
             box-shadow: 0 0 30px rgba(67, 97, 238, 0.3);
             transition: all 0.3s ease;
           }
-          .search-input::placeholder {
-            color: #6b7280;
-          }
           .wiki-link {
             color: #64b5f6;
             text-decoration: none;
@@ -113,29 +129,11 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
             color: #4361ee;
             text-decoration: underline;
           }
-          .google-search {
-            max-width: 600px;
-            margin: 0 auto;
-          }
-          .google-search input {
-            width: 100%;
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 1px solid rgba(67, 97, 238, 0.3);
-            border-radius: 24px;
-            background: rgba(26, 26, 46, 0.6);
-            color: #e0e0e0;
-          }
-          .google-search input:focus {
-            outline: none;
-            border-color: #4361ee;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-          }
           .menu-button {
             background: rgba(26, 26, 46, 0.9);
             border: 1px solid rgba(67, 97, 238, 0.3);
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 14px 20px;
+            border-radius: 12px;
             transition: all 0.3s;
           }
           .menu-button:hover {
@@ -144,6 +142,230 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(67, 97, 238, 0.4);
           }
+          .homepage-header {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+          }
+          .header-icon-button {
+            width: 42px;
+            height: 42px;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 26, 46, 0.55);
+            border: 1px solid rgba(100, 181, 246, 0.2);
+            color: #c3ccff;
+            box-shadow: none;
+            transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+          }
+          .header-icon-button:hover {
+            background: rgba(67, 97, 238, 0.25);
+            color: #ffffff;
+            border-color: rgba(100, 181, 246, 0.4);
+          }
+          .header-icon-button:focus-visible {
+            outline: 2px solid #64b5f6;
+            outline-offset: 3px;
+          }
+          .nav-search-shell {
+            width: 100%;
+          }
+          .nav-search-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px 6px 16px;
+            border-radius: 9999px;
+            background: rgba(26, 26, 46, 0.55);
+            border: 1px solid rgba(100, 181, 246, 0.25);
+            transition: border 0.2s ease, box-shadow 0.2s ease;
+          }
+          .nav-search-bar:focus-within {
+            border-color: #4361ee;
+            box-shadow: 0 10px 26px rgba(67, 97, 238, 0.25);
+          }
+          .nav-search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #dee3ff;
+            font-size: 14px;
+            line-height: 1.4;
+          }
+          .nav-search-input::placeholder {
+            color: #7f88a8;
+          }
+          .nav-search-input:focus {
+            outline: none;
+          }
+          .nav-search-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%);
+            color: #ffffff;
+            font-size: 15px;
+            box-shadow: 0 8px 18px rgba(67, 97, 238, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+          }
+          .nav-search-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(67, 97, 238, 0.35);
+          }
+          .nav-search-button:focus-visible {
+            outline: 2px solid #64b5f6;
+            outline-offset: 2px;
+          }
+          .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            color: #d8dcff;
+            background: rgba(26, 26, 46, 0.45);
+            border: 1px solid transparent;
+            transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+          }
+          .nav-link:hover {
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.65) 0%, rgba(100, 181, 246, 0.55) 100%);
+            border-color: rgba(100, 181, 246, 0.45);
+            transform: translateY(-1px);
+          }
+          .nav-link:focus-visible {
+            outline: 2px solid #64b5f6;
+            outline-offset: 3px;
+          }
+          .nav-link .nav-icon {
+            font-size: 1rem;
+          }
+          .nav-link-mobile {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            padding: 10px 18px;
+            background: rgba(26, 26, 46, 0.65);
+            border-radius: 12px;
+            border: 1px solid rgba(100, 181, 246, 0.25);
+          }
+          .nav-link-mobile:not(:last-child) {
+            margin-bottom: 6px;
+          }
+          .mobile-menu-divider {
+            border-top: 1px solid rgba(67, 97, 238, 0.25);
+            padding-top: 12px;
+            margin-top: 12px;
+          }
+          .hero-shell {
+            min-height: calc(100vh - 260px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 16px 40px;
+          }
+          .hero-inner {
+            max-width: 640px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            align-items: center;
+            text-align: center;
+          }
+          .search-shell {
+            width: 100%;
+            max-width: 820px;
+          }
+          .search-shell form {
+            width: 100%;
+          }
+          .search-shell .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px 8px 18px;
+            border-radius: 9999px;
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(100, 181, 246, 0.28);
+            box-shadow: 0 10px 28px rgba(15, 15, 35, 0.35);
+            transition: border 0.2s ease, box-shadow 0.2s ease;
+          }
+          .search-shell .search-bar:focus-within {
+            border-color: #4361ee;
+            box-shadow: 0 16px 40px rgba(67, 97, 238, 0.25);
+          }
+          .search-shell input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #e0e0e0;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 0;
+          }
+          .search-shell input::placeholder {
+            color: #8188a6;
+          }
+          .search-shell input:focus {
+            outline: none;
+          }
+          .search-button {
+            width: 42px;
+            height: 42px;
+            border-radius: 9999px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%);
+            color: #ffffff;
+            box-shadow: 0 10px 22px rgba(67, 97, 238, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+          }
+          .search-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 32px rgba(67, 97, 238, 0.45);
+          }
+          .search-button:focus-visible {
+            outline: 2px solid #64b5f6;
+            outline-offset: 3px;
+          }
+          .pillar-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            width: 100%;
+            max-width: 520px;
+          }
+          @media (min-width: 768px) {
+            .pillar-grid {
+              grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+            .homepage-header {
+              padding: 32px 24px 0;
+            }
+            .hero-shell {
+              padding-top: 80px;
+              padding-bottom: 60px;
+            }
+          }
         </style>
     </head>
     <body class="bg-wiki-bg text-wiki-text min-h-screen">
@@ -151,40 +373,57 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
         <!-- Navigation (Not on homepage) -->
         <nav class="glass-card sticky top-0 z-50 border-b border-wiki-border">
             <div class="container mx-auto px-4 py-4">
-                <div class="flex items-center justify-between">
-                    <a href="/" class="flex items-center">
+                <div class="flex items-center gap-4">
+                    <a href="/" class="shrink-0 hidden md:flex items-center">
                         ${getLogoSVG('small')}
                     </a>
-                    
-                    <!-- Search bar in header -->
-                    <div class="flex-1 max-w-xl mx-8 hidden md:block">
-                        <form action="/search" method="get">
-                            <input type="text" name="q" 
-                                   placeholder="직업, 전공, 진로를 검색하세요..." 
-                                   class="w-full px-4 py-2 bg-wiki-bg rounded-full border border-wiki-border focus:border-wiki-primary focus:outline-none text-sm">
+
+                    <div class="hidden md:flex flex-1 max-w-2xl">
+                        <form action="/search" method="get" class="nav-search-shell">
+                            <div class="nav-search-bar">
+                                <input type="text" name="q" 
+                                       placeholder="직업, 전공, 진로를 검색하세요..." 
+                                       class="nav-search-input">
+                                <button type="submit" class="nav-search-button" aria-label="검색">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
                         </form>
                     </div>
-                    
-                    <div class="hidden md:flex items-center space-x-6">
-                        <a href="/analyzer" class="text-wiki-text hover:text-wiki-primary transition">
-                            <i class="fas fa-brain mr-2"></i>AI 분석
+
+                    <div class="hidden md:flex items-center gap-4">
+                        <a href="/analyzer" class="nav-link">
+                            <i class="fas fa-brain nav-icon"></i>
+                            <span>AI 분석</span>
                         </a>
-                        <a href="/job" class="text-wiki-text hover:text-wiki-primary transition">
-                            <i class="fas fa-briefcase mr-2"></i>직업위키
+                        <a href="/howto" class="nav-link">
+                            <i class="fas fa-route nav-icon"></i>
+                            <span>HowTo</span>
                         </a>
-                        <a href="/major" class="text-wiki-text hover:text-wiki-primary transition">
-                            <i class="fas fa-university mr-2"></i>전공위키
+                        <a href="/help" class="header-icon-button" title="도움말">
+                            <i class="fas fa-question-circle text-base"></i>
                         </a>
-                        <a href="/howto" class="text-wiki-text hover:text-wiki-primary transition">
-                            <i class="fas fa-route mr-2"></i>HowTo
-                        </a>
-                        <a href="/help" class="text-wiki-text hover:text-wiki-primary transition">
-                            <i class="fas fa-question-circle mr-2"></i>도움말
+                        <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
+                            <i class="fas fa-user-circle text-base"></i>
                         </a>
                     </div>
+
                     <button id="mobile-menu-btn" class="md:hidden text-wiki-text">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
+                </div>
+
+                <div class="md:hidden mt-4">
+                    <form action="/search" method="get" class="nav-search-shell">
+                        <div class="nav-search-bar">
+                            <input type="text" name="q" 
+                                   placeholder="검색어를 입력하세요..." 
+                                   class="nav-search-input">
+                            <button type="submit" class="nav-search-button" aria-label="검색">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </nav>
@@ -192,26 +431,20 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden glass-card border-b border-wiki-border">
             <div class="container mx-auto px-4 py-4 space-y-3">
-                <form action="/search" method="get" class="mb-4">
-                    <input type="text" name="q" 
-                           placeholder="검색..." 
-                           class="w-full px-4 py-2 bg-wiki-bg rounded-full border border-wiki-border focus:border-wiki-primary focus:outline-none text-sm">
-                </form>
-                <a href="/analyzer" class="block text-wiki-text hover:text-wiki-primary transition">
+                <a href="/analyzer" class="nav-link nav-link-mobile">
                     <i class="fas fa-brain mr-2"></i>AI 분석
                 </a>
-                <a href="/job" class="block text-wiki-text hover:text-wiki-primary transition">
-                    <i class="fas fa-briefcase mr-2"></i>직업위키
-                </a>
-                <a href="/major" class="block text-wiki-text hover:text-wiki-primary transition">
-                    <i class="fas fa-university mr-2"></i>전공위키
-                </a>
-                <a href="/howto" class="block text-wiki-text hover:text-wiki-primary transition">
+                <a href="/howto" class="nav-link nav-link-mobile">
                     <i class="fas fa-route mr-2"></i>HowTo
                 </a>
-                <a href="/help" class="block text-wiki-text hover:text-wiki-primary transition">
-                    <i class="fas fa-question-circle mr-2"></i>도움말
-                </a>
+                <div class="mobile-menu-divider flex items-center gap-3">
+                    <a href="/help" class="header-icon-button" title="도움말">
+                        <i class="fas fa-question-circle"></i>
+                    </a>
+                    <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                </div>
             </div>
         </div>
         ` : ''}
@@ -227,7 +460,9 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <!-- Left: Logo & Links -->
                     <div class="flex items-center gap-6">
-                        <span class="font-bold text-lg gradient-text">Careerwiki</span>
+                        <div class="shrink-0">
+                            ${getLogoSVG('small')}
+                        </div>
                         <div class="hidden md:flex items-center gap-4 text-sm">
                             <a href="/analyzer" class="text-wiki-muted hover:text-wiki-primary transition">AI 분석</a>
                             <span class="text-wiki-border">·</span>
@@ -268,53 +503,84 @@ const renderLayout = (content: string, title = 'Careerwiki - AI 진로 분석 �
   `
 }
 
+const SOURCE_LABEL_MAP: Record<DataSource, string> = {
+  CAREERNET: '커리어넷',
+  GOYONG24: '고용24'
+}
+
+const DEFAULT_CANONICAL_ORIGIN = 'https://careerwiki.org'
+
+const buildCanonicalUrl = (requestUrl: string, path: string): string => {
+  try {
+    const url = new URL(requestUrl)
+    const { protocol, host, hostname } = url
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return `${protocol}//${host}${path}`
+    }
+    if (hostname.endsWith('.pages.dev') || hostname === 'careerwiki.org' || hostname.endsWith('.careerwiki.org')) {
+      return `${protocol}//${host}${path}`
+    }
+  } catch {
+    // Ignore parsing errors and fall back to default origin
+  }
+  return `${DEFAULT_CANONICAL_ORIGIN}${path}`
+}
+
 // Homepage - Google style with menu buttons
 app.get('/', (c) => {
   const content = `
-    <div class="min-h-screen flex flex-col items-center justify-center px-4">
-        <!-- Logo -->
-        <div class="mb-8">
-            ${getLogoSVG('large')}
-        </div>
-        
-        <!-- Search Bar -->
-        <div class="google-search w-full mb-10">
-            <form action="/search" method="get">
-                <input type="text" name="q" 
-                       placeholder="직업 · 전공 · 진로 인사이트를 검색하세요..." 
-                       autofocus
-                       class="google-search-input">
-            </form>
-        </div>
-        
-        <!-- Main Menu Buttons -->
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-3xl w-full">
-            <a href="/analyzer" class="menu-button text-center group">
-                <i class="fas fa-brain text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
-                <div class="text-sm">AI 분석</div>
-            </a>
-            <a href="/job" class="menu-button text-center group">
-                <i class="fas fa-briefcase text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
-                <div class="text-sm">직업위키</div>
-            </a>
-            <a href="/major" class="menu-button text-center group">
-                <i class="fas fa-university text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
-                <div class="text-sm">전공위키</div>
-            </a>
-            <a href="/howto" class="menu-button text-center group">
-                <i class="fas fa-route text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
-                <div class="text-sm">HowTo</div>
-            </a>
-            <a href="/help" class="menu-button text-center group">
-                <i class="fas fa-question-circle text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
-                <div class="text-sm">도움말</div>
-            </a>
-        </div>
-        
-        <!-- Popular Jobs and Majors Section -->
-        <div class="mt-16 max-w-6xl w-full px-4">
+    <div class="w-full">
+        <header class="homepage-header">
+            <div class="flex items-center gap-3">
+                <a href="/help" class="header-icon-button" title="도움말">
+                    <i class="fas fa-question-circle text-lg"></i>
+                </a>
+                <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
+                    <i class="fas fa-user-circle text-lg"></i>
+                </a>
+            </div>
+        </header>
+
+        <section class="hero-shell">
+            <div class="hero-inner">
+                <div class="flex justify-center">
+                    ${getLogoSVG('large')}
+                </div>
+                <div class="search-shell">
+                    <form action="/search" method="get">
+                        <div class="search-bar">
+                            <input type="text" name="q" 
+                                   placeholder="직업 · 전공 · 진로 인사이트를 검색하세요..." 
+                                   autofocus>
+                            <button type="submit" class="search-button" aria-label="검색">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="pillar-grid w-full">
+                    <a href="/analyzer" class="menu-button text-center group">
+                        <i class="fas fa-brain text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
+                        <div class="text-sm">AI 분석</div>
+                    </a>
+                    <a href="/job" class="menu-button text-center group">
+                        <i class="fas fa-briefcase text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
+                        <div class="text-sm">직업위키</div>
+                    </a>
+                    <a href="/major" class="menu-button text-center group">
+                        <i class="fas fa-university text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
+                        <div class="text-sm">전공위키</div>
+                    </a>
+                    <a href="/howto" class="menu-button text-center group">
+                        <i class="fas fa-route text-2xl mb-2 text-wiki-secondary group-hover:text-white"></i>
+                        <div class="text-sm">HowTo</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-20 max-w-6xl mx-auto px-4">
             <div class="grid md:grid-cols-2 gap-8">
-                <!-- Popular Jobs -->
                 <div>
                     <h2 class="text-2xl font-bold mb-6 gradient-text">
                         <i class="fas fa-fire mr-2"></i>인기 직업
@@ -323,8 +589,7 @@ app.get('/', (c) => {
                         <!-- Jobs will be loaded dynamically -->
                     </div>
                 </div>
-                
-                <!-- Popular Majors -->
+
                 <div>
                     <h2 class="text-2xl font-bold mb-6 gradient-text">
                         <i class="fas fa-star mr-2"></i>인기 전공
@@ -334,12 +599,11 @@ app.get('/', (c) => {
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Simple Stats -->
-        <div class="text-center text-wiki-muted text-sm mt-12">
+        </section>
+
+        <section class="text-center text-wiki-muted text-sm mt-12 px-4">
             <p>1,000+ 직업 정보 · 500+ 전공 정보 · AI 기반 맞춤 분석</p>
-        </div>
+        </section>
     </div>
   `
   
@@ -698,79 +962,112 @@ app.get('/analyzer/major', (c) => {
 
 // Job Wiki List Page
 app.get('/job', async (c) => {
+  const keyword = c.req.query('q') || ''
+  const category = c.req.query('category') || ''
+  const escapedKeyword = escapeHtml(keyword)
+  const escapedCategory = escapeHtml(category)
+  const categoryOptions = Object.entries(JOB_CATEGORIES)
+    .map(([label, code]) => `<option value="${code}" ${code === category ? 'selected' : ''}>${escapeHtml(label)}</option>`)
+    .join('')
+
   const content = `
     <div class="max-w-6xl mx-auto">
-        <h1 class="text-4xl font-bold mb-8 gradient-text text-center">
-            <i class="fas fa-briefcase mr-3"></i>직업위키
-        </h1>
-        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold mb-4 gradient-text">
+                <i class="fas fa-briefcase mr-3"></i>직업위키
+            </h1>
+            <p class="text-wiki-muted max-w-2xl mx-auto">
+                고용24와 커리어넷의 최신 데이터를 바탕으로 직업별 연봉, 전망, 필요 역량을 탐색하세요.
+            </p>
+        </div>
 
-        <div class="grid md:grid-cols-3 gap-6">
-            <a href="/job/software-engineer" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">소프트웨어 엔지니어</h3>
-                <p class="text-sm text-wiki-muted mb-3">소프트웨어를 설계, 개발, 테스트하는 전문가</p>
-                <div class="flex justify-between text-sm">
-                    <span><i class="fas fa-won-sign text-wiki-secondary"></i> 6,500만원</span>
-                    <span><i class="fas fa-chart-line text-wiki-secondary"></i> 성장중</span>
-                </div>
-            </a>
-            <a href="/job/data-scientist" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">데이터 사이언티스트</h3>
-                <p class="text-sm text-wiki-muted mb-3">데이터를 분석하여 인사이트를 도출하는 전문가</p>
-                <div class="flex justify-between text-sm">
-                    <span><i class="fas fa-won-sign text-wiki-secondary"></i> 7,000만원</span>
-                    <span><i class="fas fa-chart-line text-wiki-secondary"></i> 급성장</span>
-                </div>
-            </a>
-            <a href="/job/product-manager" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">프로덕트 매니저</h3>
-                <p class="text-sm text-wiki-muted mb-3">제품 전략과 개발을 총괄하는 관리자</p>
-                <div class="flex justify-between text-sm">
-                    <span><i class="fas fa-won-sign text-wiki-secondary"></i> 8,000만원</span>
-                    <span><i class="fas fa-chart-line text-wiki-secondary"></i> 성장중</span>
-                </div>
-            </a>
+        <form method="get" class="glass-card rounded-xl p-6 mb-10 grid md:grid-cols-[2fr,1fr,auto] gap-4 items-end">
+            <div>
+                <label class="block text-sm text-wiki-muted mb-2" for="job-keyword">키워드</label>
+                <input
+                    id="job-keyword"
+                    type="text"
+                    name="q"
+                    value="${escapedKeyword}"
+                    placeholder="예: 데이터 사이언티스트, 간호사"
+                    class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
+                />
+            </div>
+            <div>
+                <label class="block text-sm text-wiki-muted mb-2" for="job-category">직무 분류</label>
+                <select
+                    id="job-category"
+                    name="category"
+                    class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
+                >
+                    <option value="">전체</option>
+                    ${categoryOptions}
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
+                    <i class="fas fa-search mr-2"></i>검색
+                </button>
+                <a href="/job" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
+            </div>
+        </form>
+
+        <div id="job-list" class="min-h-[240px]"></div>
+
+        <div class="mt-12 text-sm text-wiki-muted">
+            <p class="mb-2">• 데이터 출처: 고용24, 커리어넷</p>
+            <p>• 목록은 프론트엔드에서 API 호출 후 동적으로 렌더링됩니다.</p>
         </div>
     </div>
   `
-  return c.html(renderLayout(content, '직업위키 - Careerwiki'))
+  return c.html(renderLayout(content, '직업위키 - Careerwiki', '직업 연봉과 전망, 필요 역량을 한눈에 확인하세요.'))
 })
 
 // Major Wiki List Page
 app.get('/major', async (c) => {
+  const keyword = c.req.query('q') || ''
+  const escapedKeyword = escapeHtml(keyword)
+
   const content = `
     <div class="max-w-6xl mx-auto">
-        <h1 class="text-4xl font-bold mb-8 gradient-text text-center">
-            <i class="fas fa-university mr-3"></i>전공위키
-        </h1>
-        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold mb-4 gradient-text">
+                <i class="fas fa-university mr-3"></i>전공위키
+            </h1>
+            <p class="text-wiki-muted max-w-2xl mx-auto">
+                전공 커리큘럼, 개설 대학, 관련 직업 정보를 통합 데이터로 제공합니다.
+            </p>
+        </div>
 
-        <div class="grid md:grid-cols-3 gap-6">
-            <a href="/major/computer-science" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">컴퓨터공학과</h3>
-                <p class="text-sm text-wiki-muted mb-3">컴퓨터 시스템과 소프트웨어를 연구하는 학과</p>
-                <div class="text-sm">
-                    <span class="text-wiki-secondary"><i class="fas fa-briefcase"></i> 취업률 95%</span>
-                </div>
-            </a>
-            <a href="/major/chemical-engineering" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">화학공학과</h3>
-                <p class="text-sm text-wiki-muted mb-3">화학 원리를 산업에 응용하는 공학 분야</p>
-                <div class="text-sm">
-                    <span class="text-wiki-secondary"><i class="fas fa-briefcase"></i> 취업률 88%</span>
-                </div>
-            </a>
-            <a href="/major/business" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">경영학과</h3>
-                <p class="text-sm text-wiki-muted mb-3">기업 경영과 비즈니스를 연구하는 학과</p>
-                <div class="text-sm">
-                    <span class="text-wiki-secondary"><i class="fas fa-briefcase"></i> 취업률 87%</span>
-                </div>
-            </a>
+        <form method="get" class="glass-card rounded-xl p-6 mb-10 grid md:grid-cols-[2fr,auto] gap-4 items-end">
+            <div>
+                <label class="block text-sm text-wiki-muted mb-2" for="major-keyword">키워드</label>
+                <input
+                    id="major-keyword"
+                    type="text"
+                    name="q"
+                    value="${escapedKeyword}"
+                    placeholder="예: 인공지능, 간호, 기계"
+                    class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
+                />
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
+                    <i class="fas fa-search mr-2"></i>검색
+                </button>
+                <a href="/major" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
+            </div>
+        </form>
+
+        <div id="major-list" class="min-h-[240px]"></div>
+
+        <div class="mt-12 text-sm text-wiki-muted">
+            <p class="mb-2">• 데이터 출처: 고용24, 커리어넷</p>
+            <p>• 목록은 프론트엔드에서 API 호출 후 동적으로 렌더링됩니다.</p>
         </div>
     </div>
   `
-  return c.html(renderLayout(content, '전공위키 - Careerwiki'))
+  return c.html(renderLayout(content, '전공위키 - Careerwiki', '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.'))
 })
 
 // HowTo Page
@@ -1025,207 +1322,203 @@ app.get('/search', (c) => {
   return c.html(renderLayout(content, `${query ? query + ' - ' : ''}검색 - Careerwiki`))
 })
 
-// Major Detail Page (Based on design file)
-app.get('/major/:slug', (c) => {
+// Unified Job Detail Page (SSR)
+app.get('/job/:slug', async (c) => {
   const slug = c.req.param('slug')
-  
-  // Sample data for chemical engineering
-  const content = `
-    <div class="max-w-6xl mx-auto">
-        <!-- Header Section -->
-        <div class="glass-card p-8 rounded-2xl mb-6">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h1 class="text-4xl font-bold mb-2">화학공학</h1>
-                    <p class="text-lg text-wiki-muted">화학공학을 다루는 학과</p>
-                </div>
-                <div class="flex gap-3">
-                    <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
-                        <i class="fas fa-edit mr-2"></i>편집
-                    </button>
-                    <button class="px-4 py-2 border border-wiki-primary text-wiki-primary rounded-lg hover:bg-wiki-primary hover:text-white transition">
-                        <i class="fas fa-share mr-2"></i>공유
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Key Stats -->
-            <div class="grid md:grid-cols-4 gap-4">
-                <div class="bg-wiki-bg p-4 rounded-lg">
-                    <p class="text-sm text-wiki-muted mb-1">취업률</p>
-                    <p class="text-2xl font-bold text-wiki-primary">88%</p>
-                </div>
-                <div class="bg-wiki-bg p-4 rounded-lg">
-                    <p class="text-sm text-wiki-muted mb-1">평균 초봉</p>
-                    <p class="text-2xl font-bold text-wiki-secondary">4,200만원</p>
-                </div>
-                <div class="bg-wiki-bg p-4 rounded-lg">
-                    <p class="text-sm text-wiki-muted mb-1">대학 수</p>
-                    <p class="text-2xl font-bold">124개</p>
-                </div>
-                <div class="bg-wiki-bg p-4 rounded-lg">
-                    <p class="text-sm text-wiki-muted mb-1">경쟁률</p>
-                    <p class="text-2xl font-bold">8.5:1</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="grid md:grid-cols-3 gap-6">
-            <!-- Left Content -->
-            <div class="md:col-span-2 space-y-6">
-                <!-- Overview -->
-                <div class="glass-card p-6 rounded-xl">
-                    <h2 class="text-2xl font-bold mb-4 gradient-text">개요</h2>
-                    <p class="text-wiki-text leading-relaxed">
-                        화학공학은 화학 원리를 산업에 응용하여 유용한 제품을 대량 생산하는 방법을 연구하는 공학 분야입니다. 
-                        석유화학, 정밀화학, 바이오, 에너지, 환경 등 다양한 산업 분야와 연결되어 있습니다.
-                    </p>
-                </div>
-                
-                <!-- Aptitude & Interest -->
-                <div class="glass-card p-6 rounded-xl">
-                    <h2 class="text-2xl font-bold mb-4 gradient-text">적성 및 흥미</h2>
-                    <p class="text-wiki-text mb-4">
-                        평소 화학실험이나 분석, 화학원리에 관심이 있거나 물질의 변화에 흥미가 있는 사람에게 적합합니다. 
-                        화학이나 과학과목을 잘하거나 팀으로 업무나 실험 및 실습을 수행하는 경우도 많아 대인관계능력도 필요합니다.
-                    </p>
-                </div>
-                
-                <!-- Curriculum -->
-                <div class="glass-card p-6 rounded-xl">
-                    <h2 class="text-2xl font-bold mb-4 gradient-text">교과목</h2>
-                    
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-3">공통과목</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 bg-wiki-bg rounded-full text-sm">수학</span>
-                            <span class="px-3 py-1 bg-wiki-bg rounded-full text-sm">과학</span>
-                            <span class="px-3 py-1 bg-wiki-bg rounded-full text-sm">기술·가정</span>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-3">일반선택과목</h3>
-                        <p class="text-sm text-wiki-muted">
-                            수학Ⅰ, 수학Ⅱ, 미적분, 확률과 통계, 물리학Ⅰ, 화학Ⅰ, 기술·가정, 정보
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-semibold mb-3">진로선택과목</h3>
-                        <p class="text-sm text-wiki-muted">
-                            기하, 물리학Ⅱ, 화학Ⅱ, 공학 일반
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Career Paths -->
-                <div class="glass-card p-6 rounded-xl">
-                    <h2 class="text-2xl font-bold mb-4 gradient-text">진출가능직업</h2>
-                    <div class="grid grid-cols-2 gap-3">
-                        <a href="/job/chemical-engineer" class="bg-wiki-bg p-3 rounded-lg hover:bg-wiki-border transition">
-                            화학공학기술자
-                        </a>
-                        <a href="/job/energy-researcher" class="bg-wiki-bg p-3 rounded-lg hover:bg-wiki-border transition">
-                            대체에너지 개발 연구원
-                        </a>
-                        <a href="/job/material-engineer" class="bg-wiki-bg p-3 rounded-lg hover:bg-wiki-border transition">
-                            재료공학기술자
-                        </a>
-                        <a href="/job/environmental-engineer" class="bg-wiki-bg p-3 rounded-lg hover:bg-wiki-border transition">
-                            환경공학기술자
-                        </a>
-                        <a href="/job/food-engineer" class="bg-wiki-bg p-3 rounded-lg hover:bg-wiki-border transition">
-                            식품공학기술자
-                        </a>
-                        <a href="/job/professor" class="bg-wiki-bg p-3 rounded-lg hover:bg-wiki-border transition">
-                            이공학계열 교수
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Comments Section -->
-                <div class="glass-card p-6 rounded-xl">
-                    <h2 class="text-2xl font-bold mb-4">전체 의견</h2>
-                    
-                    <!-- Best Comments -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-3 text-wiki-secondary">베스트 의견</h3>
-                        <div class="space-y-4">
-                            <div class="bg-wiki-bg p-4 rounded-lg border-l-4 border-wiki-secondary">
-                                <div class="flex justify-between mb-2">
-                                    <span class="font-semibold">연구직가즈아</span>
-                                    <span class="text-sm text-wiki-muted">2024.10.26</span>
-                                </div>
-                                <p class="text-wiki-text">화공과 오지마세요 절대오지마세요 연구비도없고 너무 힘들어요 랩실다니는데 월급 80만원받아요 진짜 박사하기힘들어요</p>
-                            </div>
-                            <div class="bg-wiki-bg p-4 rounded-lg">
-                                <div class="flex justify-between mb-2">
-                                    <span class="font-semibold">교수님살려주세요</span>
-                                    <span class="text-sm text-wiki-muted">2024.10.28</span>
-                                </div>
-                                <p class="text-wiki-text">대단하시네요.. 전 석사하다 때려치고 그냥 취업했어요 ㅋㅋㅋㅋㅋㅋ</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Comment Form -->
-                    <form class="mb-6">
-                        <textarea placeholder="의견을 작성해주세요 (300자 이내)" 
-                                  class="w-full px-4 py-3 bg-wiki-bg rounded-lg border border-wiki-border focus:border-wiki-primary focus:outline-none mb-3"
-                                  rows="3" maxlength="300"></textarea>
-                        <button type="submit" class="px-6 py-2 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
-                            의견 등록
-                        </button>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Right Sidebar -->
-            <div class="space-y-6">
-                <!-- Related Majors -->
-                <div class="glass-card p-6 rounded-xl sticky top-24">
-                    <h3 class="font-bold mb-4">관련학과</h3>
-                    <div class="space-y-2">
-                        <a href="/major/polymer-engineering" class="block text-wiki-link hover:text-wiki-primary">
-                            고분자공학과
-                        </a>
-                        <a href="/major/bio-chemical-engineering" class="block text-wiki-link hover:text-wiki-primary">
-                            생명화학공학과
-                        </a>
-                        <a href="/major/chemical-bio" class="block text-wiki-link hover:text-wiki-primary">
-                            화공생명학
-                        </a>
-                    </div>
-                    
-                    <hr class="my-6 border-wiki-border">
-                    
-                    <h3 class="font-bold mb-4">관련 HowTo</h3>
-                    <div class="space-y-2">
-                        <a href="/howto/chemical-engineer-career" class="block text-wiki-link hover:text-wiki-primary text-sm">
-                            화학공학 전공으로 취직하는 법
-                        </a>
-                        <a href="/howto/graduate-school" class="block text-wiki-link hover:text-wiki-primary text-sm">
-                            대학원 진학 가이드
-                        </a>
-                    </div>
-                    
-                    <hr class="my-6 border-wiki-border">
-                    
-                    <h3 class="font-bold mb-4">취득가능 자격증</h3>
-                    <div class="space-y-2 text-sm">
-                        <div>• 화공기사</div>
-                        <div>• 위험물산업기사</div>
-                        <div>• 가스기사</div>
-                        <div>• 수질환경기사</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  `
-  
-  return c.html(renderLayout(content, '화학공학 - 전공 정보 | Careerwiki'))
+  const careernetId = c.req.query('careernetId') || undefined
+  const goyongJobId = c.req.query('goyongJobId') || undefined
+  const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+  try {
+    const result = await getUnifiedJobDetail(
+      {
+        id: slug,
+        careernetId,
+        goyong24JobId: goyongJobId || undefined,
+        includeSources
+      },
+      c.env
+    )
+
+    if (!result.profile) {
+      const fallbackHtml = renderDetailFallback({
+        icon: 'fa-magnifying-glass',
+        title: '직업 정보를 찾을 수 없습니다',
+        description: '요청하신 직업 데이터가 CareerWiki 통합 파이프라인에 아직 준비되지 않았습니다.',
+        ctaHref: '/job',
+        ctaLabel: '직업위키로 돌아가기'
+      })
+      const sourceSummary = renderSourceStatusSummary(result.sources)
+      const pageContent = `${fallbackHtml}${sourceSummary}`
+      c.status(404)
+      return c.html(
+        renderLayout(
+          pageContent,
+          '직업 정보 없음 - Careerwiki',
+          '요청한 직업 정보를 찾을 수 없습니다.'
+        )
+      )
+    }
+
+    const profile = result.profile
+    const canonicalSlug = profile.id || slug
+    const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
+    const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+    const title = `${profile.name} 직업 정보 - Careerwiki`
+    const description = createMetaDescription(
+      profile.summary,
+      profile.duties,
+      profile.prospect,
+      profile.salary
+    )
+    const extraHead = [
+      '<meta property="og:type" content="article">',
+      createJobJsonLd(profile, canonicalUrl)
+    ].filter(Boolean).join('\n')
+
+    const content = renderUnifiedJobDetail({
+      profile,
+      partials: result.partials,
+      sources: result.sources
+    })
+
+    return c.html(
+      renderLayout(
+        content,
+        escapeHtml(title),
+        escapeHtml(description),
+        false,
+        {
+          canonical: canonicalUrl,
+          ogUrl: canonicalUrl,
+          extraHead
+        }
+      )
+    )
+  } catch (error) {
+    console.error('Job detail route error:', error)
+    const fallbackHtml = renderDetailFallback({
+      icon: 'fa-exclamation-circle',
+      iconColor: 'text-red-500',
+      title: '직업 정보를 불러오지 못했습니다',
+      description: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      ctaHref: '/job',
+      ctaLabel: '직업위키로 돌아가기'
+    })
+    c.status(500)
+    return c.html(
+      renderLayout(
+        fallbackHtml,
+        '직업 정보 로드 오류 - Careerwiki',
+        '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+      )
+    )
+  }
+})
+
+// Unified Major Detail Page (SSR)
+app.get('/major/:slug', async (c) => {
+  const slug = c.req.param('slug')
+  const careernetId = c.req.query('careernetId') || undefined
+  const majorGbParam = c.req.query('goyongMajorGb')
+  const departmentId = c.req.query('goyongDepartmentId') || undefined
+  const majorId = c.req.query('goyongMajorId') || undefined
+  const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+  const goyongMajorGb = majorGbParam === '1' ? '1' : majorGbParam === '2' ? '2' : undefined
+  const goyongParams = goyongMajorGb && departmentId && majorId
+    ? {
+        majorGb: goyongMajorGb,
+        departmentId,
+        majorId
+      }
+    : undefined
+
+  try {
+    const result = await getUnifiedMajorDetail(
+      {
+        id: slug,
+        careernetId,
+        goyong24Params: goyongParams,
+        includeSources
+      },
+      c.env
+    )
+
+    if (!result.profile) {
+      const fallbackHtml = renderDetailFallback({
+        icon: 'fa-magnifying-glass',
+        title: '전공 정보를 찾을 수 없습니다',
+        description: '요청하신 전공 데이터가 CareerWiki 통합 파이프라인에 아직 준비되지 않았습니다.',
+        ctaHref: '/major',
+        ctaLabel: '전공위키로 돌아가기'
+      })
+      const sourceSummary = renderSourceStatusSummary(result.sources)
+      const pageContent = `${fallbackHtml}${sourceSummary}`
+      c.status(404)
+      return c.html(
+        renderLayout(
+          pageContent,
+          '전공 정보 없음 - Careerwiki',
+          '요청한 전공 정보를 찾을 수 없습니다.'
+        )
+      )
+    }
+
+    const profile = result.profile
+    const canonicalSlug = profile.id || slug
+    const canonicalPath = `/major/${encodeURIComponent(canonicalSlug)}`
+    const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+    const title = `${profile.name} 전공 정보 - Careerwiki`
+    const description = createMetaDescription(
+      profile.summary,
+      profile.employmentRate,
+      profile.salaryAfterGraduation,
+      profile.jobProspect
+    )
+    const extraHead = [
+      '<meta property="og:type" content="article">',
+      createMajorJsonLd(profile, canonicalUrl)
+    ].filter(Boolean).join('\n')
+
+    const content = renderUnifiedMajorDetail({
+      profile,
+      partials: result.partials,
+      sources: result.sources
+    })
+
+    return c.html(
+      renderLayout(
+        content,
+        escapeHtml(title),
+        escapeHtml(description),
+        false,
+        {
+          canonical: canonicalUrl,
+          ogUrl: canonicalUrl,
+          extraHead
+        }
+      )
+    )
+  } catch (error) {
+    console.error('Major detail route error:', error)
+    const fallbackHtml = renderDetailFallback({
+      icon: 'fa-exclamation-circle',
+      iconColor: 'text-red-500',
+      title: '전공 정보를 불러오지 못했습니다',
+      description: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      ctaHref: '/major',
+      ctaLabel: '전공위키로 돌아가기'
+    })
+    c.status(500)
+    return c.html(
+      renderLayout(
+        fallbackHtml,
+        '전공 정보 로드 오류 - Careerwiki',
+        '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+      )
+    )
+  }
 })
 
 const parseSourcesQuery = (value?: string | null): DataSource[] | undefined => {
@@ -1249,6 +1542,100 @@ const parseNumberParam = (value: string | undefined, fallback: number): number =
   if (!value) return fallback
   const parsed = Number(value)
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
+}
+
+const escapeHtml = (value: string): string =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
+const createMetaDescription = (...candidates: Array<string | undefined | null>): string => {
+  for (const candidate of candidates) {
+    if (!candidate) continue
+    const normalized = candidate.replace(/\s+/g, ' ').trim()
+    if (!normalized) continue
+    if (normalized.length <= 160) {
+      return normalized
+    }
+    return `${normalized.slice(0, 157)}…`
+  }
+  return 'Careerwiki는 고용24와 커리어넷 데이터를 통합해 제공하는 진로 정보 플랫폼입니다.'
+}
+
+const renderDetailFallback = (options: {
+  icon: string
+  title: string
+  description: string
+  ctaHref: string
+  ctaLabel: string
+  iconColor?: string
+  note?: string
+}): string => {
+  const { icon, title, description, ctaHref, ctaLabel, iconColor = 'text-wiki-muted', note } = options
+  return `
+    <div class="max-w-3xl mx-auto text-center py-20">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-wiki-border/30 mb-6">
+        <i class="fas ${icon} ${iconColor} text-3xl"></i>
+      </div>
+      <h1 class="text-3xl font-bold mb-4 text-white">${escapeHtml(title)}</h1>
+      <p class="text-wiki-muted mb-6">${escapeHtml(description)}</p>
+      ${note ? `<p class="text-xs text-wiki-muted mb-6">${escapeHtml(note)}</p>` : ''}
+      <a href="${escapeHtml(ctaHref)}" class="inline-flex items-center gap-2 px-6 py-3 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition">
+        <i class="fas fa-arrow-left"></i><span>${escapeHtml(ctaLabel)}</span>
+      </a>
+    </div>
+  `
+}
+
+const describeSkipReason = (reason?: string): string => {
+  switch (reason) {
+    case 'missing-id':
+      return '식별자 정보가 부족해 호출되지 않았습니다.'
+    case 'missing-params':
+      return '필수 파라미터가 부족해 호출되지 않았습니다.'
+    case 'keyword-required':
+      return '키워드가 없어 호출되지 않았습니다.'
+    case 'excluded':
+      return '요청한 데이터 소스에서 제외되었습니다.'
+    default:
+      return reason ? `호출되지 않음 (${reason})` : '호출되지 않았습니다.'
+  }
+}
+
+const renderSourceStatusSummary = (sources?: SourceStatusRecord): string => {
+  if (!sources) return ''
+  const entries = Object.entries(sources) as Array<[DataSource, SourceStatusRecord[DataSource]]>
+  const rows = entries
+    .map(([source, status]) => {
+      const label = SOURCE_LABEL_MAP[source] ?? source
+      let message: string
+      if (status?.error) {
+        message = `오류: ${status.error}`
+      } else if (typeof status?.count === 'number' && status.count > 0) {
+        message = `데이터 ${status.count}건 수신`
+      } else if (status?.attempted) {
+        message = '호출되었으나 제공 가능한 데이터가 없습니다.'
+      } else {
+        message = describeSkipReason(status?.skippedReason)
+      }
+      return `
+        <li class="flex items-start justify-between gap-4">
+          <span class="text-sm font-semibold text-wiki-text">${escapeHtml(label)}</span>
+          <span class="text-xs text-wiki-muted text-right">${escapeHtml(message)}</span>
+        </li>
+      `
+    })
+    .join('')
+  if (!rows) return ''
+  return `
+    <div class="glass-card p-6 rounded-xl mt-8">
+      <h2 class="text-lg font-semibold text-wiki-text mb-3">데이터 수집 상태</h2>
+      <ul class="space-y-2">${rows}</ul>
+    </div>
+  `
 }
 
 // API 엔드포인트들

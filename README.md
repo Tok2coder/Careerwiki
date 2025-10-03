@@ -5,8 +5,8 @@
 - **목표**: AI 기반 개인 맞춤형 진로 분석과 전공/직업 위키 플랫폼
 - **주요 기능**: 
   - AI 진로 분석기 (직업 추천 / 전공 추천)
-  - 직업 위키 (1000+ 직업 정보)
-  - 전공 위키 (500+ 전공 정보)
+  - 직업 · 전공 위키 (고용24 + 커리어넷 통합 데이터)
+  - 통합 상세 페이지 SSR (canonical/OG/JSON-LD/데이터 출처 패널)
   - HowTo 가이드 (진로 설정 방법론)
   - 실시간 검색 및 데이터 연동
 
@@ -20,43 +20,59 @@
 
 ### 데이터 모델
 ```typescript
-// 학과 정보
-interface Major {
-  majorSeq: string;        // 학과 코드
-  major: string;           // 학과명
-  summary: string;         // 학과 소개
-  university?: string;     // 대학 목록
-  department?: string;     // 학과 계열
-  salaryAfterGraduation?: string;  // 졸업 후 평균 연봉
-  employmentRate?: string; // 취업률
-  relatedJob?: string;     // 관련 직업
-  aptitude?: string;       // 적성 유형
+type DataSource = 'CAREERNET' | 'GOYONG24'
+
+type SourceIdentifiers = {
+  careernet?: string
+  goyong24?: string
 }
 
-// 직업 정보
-interface Job {
-  jobdicSeq: string;       // 직업 코드
-  jobName: string;         // 직업명
-  summary: string;         // 직업 소개
-  aptdType?: string;       // 적성유형
-  jobCategoryName?: string; // 직업 분류
-  avgSalary?: string;      // 평균 연봉
-  salaryRange?: string;    // 연봉 범위
-  jobOutlook?: string;     // 직업 전망
-  relatedMajor?: string;   // 관련 학과
-  requiredEducation?: string; // 요구 학력
-  requiredCertification?: string; // 필요 자격증
-  employmentTrend?: string; // 고용 동향
+type UnifiedMajorDetail = {
+  id: string
+  name: string
+  summary?: string
+  categoryName?: string
+  relatedMajors?: string[]
+  mainSubjects?: string[]
+  licenses?: string[]
+  universities?: MajorUniversityInfo[]
+  recruitmentStatus?: MajorRecruitmentStat[]
+  relatedJobs?: string[]
+  jobProspect?: string
+  salaryAfterGraduation?: string
+  employmentRate?: string
+  sources: DataSource[]
+  sourceIds: SourceIdentifiers
+}
+
+type UnifiedJobDetail = {
+  id: string
+  name: string
+  summary?: string
+  category?: { code?: string; name?: string }
+  classifications?: { large?: string; medium?: string; small?: string }
+  salary?: string
+  prospect?: string
+  satisfaction?: string
+  duties?: string
+  way?: string
+  relatedMajors?: JobRelatedEntity[]
+  relatedJobs?: JobRelatedEntity[]
+  relatedCertificates?: string[]
+  educationDistribution?: EducationDistribution
+  majorDistribution?: MajorDistribution
+  sources: DataSource[]
+  sourceIds: SourceIdentifiers
 }
 ```
 
-### 스토리지 서비스
+### 데이터 파이프라인 & 스토리지
+- **통합 파이프라인**: CareerNet + 고용24 API 래퍼 → `mergeJobProfiles` / `mergeMajorProfiles`
+- **SSR 템플릿**: `renderUnifiedJobDetail`, `renderUnifiedMajorDetail`, JSON-LD (`createJobJsonLd`, `createMajorJsonLd`)
+- **소스 상태 관리**: `SourceStatusRecord`로 호출 결과/오류/스킵 사유 기록
 - **Cloudflare D1**: 사용자 데이터, 분석 결과 저장 (예정)
 - **Cloudflare KV**: 캐싱, 세션 관리 (예정)
-- **External API**: 한국교육개발원 커리어넷 오픈API 연동 ✅
-  - 학과정보 API: **실시간 데이터 제공** (gubun=univ_list, 501개+ 학과)
-  - 직업정보 API: **실시간 데이터 제공** (XML 파싱 구현)
-  - API Key: `d9e0285190fde074bef30031f17f669e` (활성)
+- **External API**: 커리어넷 & 고용24 오픈 API (환경 변수 `CAREER_NET_API_KEY`, `GOYONG24_API_KEY`)
 
 ## 🚀 현재 완료된 기능
 
@@ -66,14 +82,19 @@ interface Job {
    - 인기 직업/전공 동적 표시
    - 메뉴 네비게이션
 
-2. **API 시스템** (커리어넷 실시간 연동)
-   - `/api/majors` - **학과 정보 검색** (실시간 API 데이터, 501개+ 학과)
-   - `/api/majors/:id` - **학과 상세 정보** (실시간 API 데이터)
-   - `/api/jobs` - **직업 정보 검색** (실시간 API 데이터)
-   - `/api/jobs/:id` - **직업 상세 정보** (실시간 API 데이터)
+2. **API 시스템** (커리어넷 · 고용24 실시간 연동)
+   - `/api/majors` - **학과 정보 검색** (통합 소스 상태 포함)
+   - `/api/majors/:id` - **학과 상세 정보** (통합 소스별 partial + 상태)
+   - `/api/jobs` - **직업 정보 검색** (통합 결과 + 카테고리)
+   - `/api/jobs/:id` - **직업 상세 정보** (통합 소스별 partial + 상태)
    - `/api/categories` - 카테고리 정보
 
-3. **프론트엔드**
+3. **SSR 상세 페이지**
+   - `/job/:slug` → `getUnifiedJobDetail` + `renderUnifiedJobDetail`
+   - `/major/:slug` → `getUnifiedMajorDetail` + `renderUnifiedMajorDetail`
+   - canonical/OG 메타, JSON-LD, 데이터 출처 패널, 공통 fallback UI
+
+4. **프론트엔드**
    - 반응형 디자인 (모바일/태블릿/PC)
    - 다크 테마 + 그라디언트 UI
    - Glass morphism 디자인
@@ -111,30 +132,29 @@ GET /api/categories
 ## 🔄 미구현 기능 및 다음 단계
 
 ### 🔜 구현 예정
-1. **AI 분석 기능**
+1. **목록 페이지 SSR & SEO 고도화**
+   - `/job`, `/major` 검색 결과 SSR + hydrated client 필터링
+   - SERP freshness 유지 전략 (신규 데이터 동기화 스케줄러)
+   - 인기 섹션 prefetch 및 캐싱 레이어 설계
+
+2. **AI 분석 기능**
    - Claude/GPT API 통합
    - 사용자 입력 폼 구현
    - 맞춤형 분석 리포트 생성
 
-2. **데이터베이스**
-   - Cloudflare D1 데이터베이스 설정
-   - 사용자 분석 결과 저장
-   - 검색 히스토리 관리
+3. **데이터베이스**
+   - Cloudflare D1 스키마 정의 및 마이그레이션 관리
+   - 통합 데이터 캐싱/버전 관리
+   - 검색 히스토리 및 사용자 액션 로깅
 
-3. **사용자 기능**
+4. **사용자 기능**
    - 로그인/회원가입 (OAuth)
-   - 마이페이지
-   - 분석 결과 저장/공유
+   - 마이페이지 및 분석 결과 저장/공유
 
-4. **위키 기능**
-   - 직업/전공 상세 페이지
-   - 사용자 기여 시스템
-   - 편집 이력 관리
-
-5. **프리미엄 기능**
-   - 결제 시스템 (Stripe)
-   - Pro 플랜 (₩9,900/월)
-   - 고급 AI 분석
+5. **위키 협업 & 프리미엄**
+   - 사용자 기여 시스템 + 편집 이력 관리
+   - 결제 시스템 (Stripe) 및 Pro 플랜
+   - B2C/B2B 맞춤 리포트 고급 분석
 
 ## 💻 개발 환경 설정
 
@@ -181,28 +201,27 @@ npm run deploy:prod
 - **배포**: ⏳ 예정
 
 ### 🔥 최근 업데이트
-- ✅ 커리어넷 API 인증키 통합 완료
-- ✅ XML 응답 파싱 로직 구현
-- ✅ 실제 직업 데이터 실시간 제공 (직업 검색 가능)
-- ✅ 실제 학과 데이터 실시간 제공 (501개+ 학과, gubun=univ_list)
-- ✅ 연봉, 전망, 고용평등, 학과별 대학 정보 포함
+- ✅ 통합 직업/전공 상세 페이지 SSR 적용 (canonical/OG/JSON-LD 포함)
+- ✅ CareerNet + 고용24 통합 병합 로직 및 소스 상태 패널 추가
+- ✅ 공통 fallback UI/에러 처리 및 데이터 출처 서머리 제공
+- ✅ 헤더/검색/네비게이션 UI 고도화 & wrangler dev 환경 안정화
 
 ## 🎯 추천 다음 작업
 
 1. **긴급도 높음**
-   - CareerNet API 키 발급 및 환경변수 설정
-   - Cloudflare Pages 프로젝트 생성 및 배포
-   - 도메인 (careerwiki.org) 연결
+   - `/job`, `/major` 목록 SSR 및 검색 파라미터 canonical 전략 확립
+   - SERP freshness 지표 정의 및 데이터 동기화 스케줄 설계
+   - JSON-LD 검사 (Rich Result Test) + Lighthouse SEO 점검 자동화
 
 2. **중요도 높음**
-   - AI API (Claude/GPT) 통합
-   - D1 데이터베이스 스키마 설계
-   - 사용자 인증 시스템
+   - Cloudflare D1 스키마/마이그레이션 초안 작성 및 wrangler 워크플로 완성
+   - 통합 데이터 캐싱 전략 수립 (KV/R2 여부 결정, TTL 정책)
+   - API 응답 source diagnostics → 프론트 라벨링 연동
 
 3. **향후 개선**
-   - 성능 최적화 (캐싱)
-   - SEO 최적화
-   - 분석 대시보드
+   - AI Analyzer 폼 → 백엔드 파이프라인 연결 (Claude/GPT)
+   - 사용자 계정 및 즐겨찾기/히스토리 설계
+   - 관측 가능성(로그/메트릭) 및 에러 어노테이션 정비
 
 ## 📞 연락처
 
@@ -210,4 +229,4 @@ npm run deploy:prod
 
 ---
 
-*Last Updated: 2025-10-01*
+*Last Updated: 2025-10-03*

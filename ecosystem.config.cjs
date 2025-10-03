@@ -8,6 +8,7 @@ module.exports = {
         NODE_ENV: 'development',
         PORT: 3000
       },
+      cwd: '/home/user/webapp',
       watch: false,
       instances: 1,
       exec_mode: 'fork'
