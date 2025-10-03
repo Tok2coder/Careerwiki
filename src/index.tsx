@@ -962,112 +962,421 @@ app.get('/analyzer/major', (c) => {
 
 // Job Wiki List Page
 app.get('/job', async (c) => {
-  const keyword = c.req.query('q') || ''
-  const category = c.req.query('category') || ''
-  const escapedKeyword = escapeHtml(keyword)
-  const escapedCategory = escapeHtml(category)
+  const keywordRaw = c.req.query('q') || ''
+  const categoryRaw = c.req.query('category') || ''
+  const keyword = keywordRaw.trim()
+  const category = categoryRaw.trim()
+  const includeSources = parseSourcesQuery(c.req.query('sources'))
+  const page = parseNumberParam(c.req.query('page'), 1)
+  const perPage = parseNumberParam(c.req.query('perPage'), 20)
+
   const categoryOptions = Object.entries(JOB_CATEGORIES)
-    .map(([label, code]) => `<option value="${code}" ${code === category ? 'selected' : ''}>${escapeHtml(label)}</option>`)
+    .map(([label, code]) => {
+      const escapedCode = escapeHtml(code)
+      const isSelected = code === category
+      return `<option value="${escapedCode}" ${isSelected ? 'selected' : ''}>${escapeHtml(label)}</option>`
+    })
     .join('')
 
-  const content = `
-    <div class="max-w-6xl mx-auto">
+  const searchParams = new URLSearchParams()
+  if (keyword) searchParams.set('q', keyword)
+  if (category) searchParams.set('category', category)
+  if (includeSources?.length) searchParams.set('sources', includeSources.join(','))
+  if (page > 1) searchParams.set('page', String(page))
+  if (perPage !== 20) searchParams.set('perPage', String(perPage))
+
+  const canonicalPath = `/job${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
+  const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+
+  const formatSummaryText = (value?: string | null): string => {
+    const fallback = '고용24와 커리어넷 데이터를 통합하여 제공하는 직업 정보입니다. 상세 페이지에서 자세한 내용을 확인하세요.'
+    if (!value) return fallback
+    const normalized = value.replace(/\s+/g, ' ').trim()
+    if (!normalized) return fallback
+    return normalized.length > 220 ? `${normalized.slice(0, 217)}…` : normalized
+  }
+
+  const getCategoryLabel = (): string | undefined => {
+    const entry = Object.entries(JOB_CATEGORIES).find(([, code]) => code === category)
+    return entry ? entry[0] : undefined
+  }
+
+  try {
+    const result = await searchUnifiedJobs(
+      {
+        keyword,
+        category,
+        page,
+        perPage,
+        includeSources
+      },
+      c.env
+    )
+
+    const items = result.items
+    const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+
+    const jobCards = items.length
+      ? items
+          .map((entry) => {
+            const job = entry.profile
+            const display = entry.display ?? {}
+            const jobUrl = `/job/${encodeURIComponent(job.id)}`
+            const summary = escapeHtml(formatSummaryText(display.summary))
+            const categoryName = display.categoryName || job.category?.name
+            const statChips = [
+              display.salary ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-coins text-green-400"></i>${escapeHtml(display.salary)}</span>` : '',
+              display.outlook ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-chart-line text-wiki-secondary"></i>${escapeHtml(display.outlook)}</span>` : '',
+              categoryName ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-layer-group text-wiki-primary"></i>${escapeHtml(categoryName)}</span>` : ''
+            ].filter(Boolean).join('')
+
+            const sourcesBadges = Array.isArray(job.sources) && job.sources.length
+              ? `<div class="flex flex-wrap gap-2 mt-4">${job.sources
+                  .map((source) => `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 border border-wiki-primary/40 text-xs text-wiki-primary"><i class="fas fa-database mr-1"></i>${SOURCE_LABEL_MAP[source] ?? source}</span>`)
+                  .join('')}</div>`
+              : ''
+
+            return `
+              <article class="glass-card p-6 rounded-2xl hover-glow transition">
+                <div class="flex flex-col gap-4">
+                  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <h2 class="text-2xl font-bold text-white">
+                        <a href="${jobUrl}" class="hover:text-wiki-secondary transition">${escapeHtml(job.name)}</a>
+                      </h2>
+                      ${categoryName ? `<p class="text-sm text-wiki-muted">${escapeHtml(categoryName)}</p>` : ''}
+                    </div>
+                    <a href="${jobUrl}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-wiki-primary text-wiki-primary hover:bg-wiki-primary/10 transition">
+                      <span>상세 보기</span>
+                      <i class="fas fa-arrow-right"></i>
+                    </a>
+                  </div>
+                  <p class="text-sm leading-relaxed text-wiki-muted">${summary}</p>
+                  ${statChips ? `<div class="flex flex-wrap gap-2">${statChips}</div>` : ''}
+                  ${sourcesBadges}
+                </div>
+              </article>
+            `
+          })
+          .join('')
+      : `
+        <div class="glass-card p-12 rounded-2xl text-center">
+          <i class="fas fa-circle-info text-4xl text-wiki-secondary mb-4"></i>
+          <h2 class="text-2xl font-semibold text-white mb-2">검색 결과가 없습니다</h2>
+          <p class="text-sm text-wiki-muted">검색어 또는 필터를 변경하여 다시 시도해 주세요. CareerWiki는 매일 새로운 직업 데이터를 수집하고 있습니다.</p>
+        </div>
+      `
+
+    const sourceSummary = renderSourceStatusSummary(result.meta?.sources)
+    const filterSummaryParts: string[] = []
+    if (keyword) {
+      filterSummaryParts.push(`"${escapeHtml(keyword)}" 키워드`)
+    }
+    if (category) {
+      const categoryLabel = getCategoryLabel()
+      filterSummaryParts.push(`${escapeHtml(categoryLabel ?? category)} 분류`)
+    }
+    const filterSummary = filterSummaryParts.length ? filterSummaryParts.join(' · ') : '전체 직업'
+    const headingLabel = keyword ? `“${escapeHtml(keyword)}” 관련 직업` : '직업위키'
+
+    const jsonLdItems = items.map((entry, index) => ({
+      '@type': 'ListItem',
+      position: (page - 1) * perPage + index + 1,
+      url: buildCanonicalUrl(c.req.url, `/job/${encodeURIComponent(entry.profile.id)}`),
+      name: entry.profile.name
+    }))
+    const jsonLd = jsonLdItems.length
+      ? `<script type="application/ld+json">${JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: keyword ? `${keyword} 관련 직업 목록` : 'Careerwiki 직업 목록',
+          numberOfItems: jsonLdItems.length,
+          itemListOrder: 'https://schema.org/ItemListOrderAscending',
+          itemListElement: jsonLdItems
+        }).replace(/</g, '\\u003C')}</script>`
+      : ''
+
+    const content = `
+      <div class="max-w-6xl mx-auto">
         <div class="text-center mb-10">
-            <h1 class="text-4xl font-bold mb-4 gradient-text">
-                <i class="fas fa-briefcase mr-3"></i>직업위키
-            </h1>
-            <p class="text-wiki-muted max-w-2xl mx-auto">
-                고용24와 커리어넷의 최신 데이터를 바탕으로 직업별 연봉, 전망, 필요 역량을 탐색하세요.
-            </p>
+          <h1 class="text-4xl font-bold mb-4 gradient-text">
+            <i class="fas fa-briefcase mr-3"></i>${headingLabel}
+          </h1>
+          <p class="text-wiki-muted max-w-3xl mx-auto">
+            고용24와 커리어넷의 최신 데이터를 바탕으로 직업별 연봉, 전망, 필요 역량을 탐색하세요.
+          </p>
+          <p class="text-xs text-wiki-muted mt-4">${filterSummary} · 총 ${totalCount}건</p>
         </div>
 
         <form method="get" class="glass-card rounded-xl p-6 mb-10 grid md:grid-cols-[2fr,1fr,auto] gap-4 items-end">
-            <div>
-                <label class="block text-sm text-wiki-muted mb-2" for="job-keyword">키워드</label>
-                <input
-                    id="job-keyword"
-                    type="text"
-                    name="q"
-                    value="${escapedKeyword}"
-                    placeholder="예: 데이터 사이언티스트, 간호사"
-                    class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
-                />
-            </div>
-            <div>
-                <label class="block text-sm text-wiki-muted mb-2" for="job-category">직무 분류</label>
-                <select
-                    id="job-category"
-                    name="category"
-                    class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
-                >
-                    <option value="">전체</option>
-                    ${categoryOptions}
-                </select>
-            </div>
-            <div class="flex gap-2">
-                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
-                    <i class="fas fa-search mr-2"></i>검색
-                </button>
-                <a href="/job" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
-            </div>
+          <div>
+            <label class="block text-sm text-wiki-muted mb-2" for="job-keyword">키워드</label>
+            <input
+              id="job-keyword"
+              type="text"
+              name="q"
+              value="${escapeHtml(keyword)}"
+              placeholder="예: 데이터 사이언티스트, 간호사"
+              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
+            />
+          </div>
+          <div>
+            <label class="block text-sm text-wiki-muted mb-2" for="job-category">직무 분류</label>
+            <select
+              id="job-category"
+              name="category"
+              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
+            >
+              <option value="">전체</option>
+              ${categoryOptions}
+            </select>
+          </div>
+          <div class="flex gap-2">
+            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
+              <i class="fas fa-search mr-2"></i>검색
+            </button>
+            <a href="/job" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
+          </div>
         </form>
 
-        <div id="job-list" class="min-h-[240px]"></div>
+        <section class="space-y-4" aria-live="polite">
+          ${jobCards}
+        </section>
 
-        <div class="mt-12 text-sm text-wiki-muted">
-            <p class="mb-2">• 데이터 출처: 고용24, 커리어넷</p>
-            <p>• 목록은 프론트엔드에서 API 호출 후 동적으로 렌더링됩니다.</p>
-        </div>
-    </div>
-  `
-  return c.html(renderLayout(content, '직업위키 - Careerwiki', '직업 연봉과 전망, 필요 역량을 한눈에 확인하세요.'))
+        ${sourceSummary}
+      </div>
+    `
+
+    const pageTitle = keyword ? `${keyword} 직업 검색 결과 - Careerwiki` : '직업위키 - Careerwiki'
+    const description = createMetaDescription(
+      keyword ? `${keyword} 관련 직업 정보를 확인하세요.` : undefined,
+      items[0]?.display?.summary,
+      '직업 연봉과 전망, 필요 역량을 한눈에 확인하세요.'
+    )
+
+    return c.html(
+      renderLayout(
+        content,
+        escapeHtml(pageTitle),
+        escapeHtml(description),
+        false,
+        {
+          canonical: canonicalUrl,
+          ogUrl: canonicalUrl,
+          extraHead: jsonLd
+        }
+      )
+    )
+  } catch (error) {
+    console.error('Job list route error:', error)
+    c.status(500)
+    const fallbackHtml = renderDetailFallback({
+      icon: 'fa-circle-exclamation',
+      iconColor: 'text-red-500',
+      title: '직업 목록을 불러오지 못했습니다',
+      description: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      ctaHref: '/',
+      ctaLabel: '홈으로 돌아가기'
+    })
+    return c.html(
+      renderLayout(
+        fallbackHtml,
+        '직업 목록 오류 - Careerwiki',
+        '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+      )
+    )
+  }
 })
 
 // Major Wiki List Page
 app.get('/major', async (c) => {
-  const keyword = c.req.query('q') || ''
-  const escapedKeyword = escapeHtml(keyword)
+  const keywordRaw = c.req.query('q') || ''
+  const keyword = keywordRaw.trim()
+  const includeSources = parseSourcesQuery(c.req.query('sources'))
+  const page = parseNumberParam(c.req.query('page'), 1)
+  const perPage = parseNumberParam(c.req.query('perPage'), 20)
 
-  const content = `
-    <div class="max-w-6xl mx-auto">
+  const searchParams = new URLSearchParams()
+  if (keyword) searchParams.set('q', keyword)
+  if (includeSources?.length) searchParams.set('sources', includeSources.join(','))
+  if (page > 1) searchParams.set('page', String(page))
+  if (perPage !== 20) searchParams.set('perPage', String(perPage))
+  const canonicalPath = `/major${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
+  const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+
+  const formatSummaryText = (value?: string | null): string => {
+    const fallback = '고용24와 커리어넷 데이터를 통합하여 제공하는 전공 정보입니다. 상세 페이지에서 자세한 내용을 확인하세요.'
+    if (!value) return fallback
+    const normalized = value.replace(/\s+/g, ' ').trim()
+    if (!normalized) return fallback
+    return normalized.length > 220 ? `${normalized.slice(0, 217)}…` : normalized
+  }
+
+  try {
+    const result = await searchUnifiedMajors(
+      {
+        keyword,
+        page,
+        perPage,
+        includeSources
+      },
+      c.env
+    )
+
+    const items = result.items
+    const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+
+    const majorCards = items.length
+      ? items
+          .map((entry) => {
+            const major = entry.profile
+            const display = entry.display ?? {}
+            const majorUrl = `/major/${encodeURIComponent(major.id)}`
+            const summary = escapeHtml(formatSummaryText(display.summary))
+            const statChips = [
+              display.employmentRate ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-user-graduate text-wiki-secondary"></i>${escapeHtml(display.employmentRate)}</span>` : '',
+              display.salaryAfterGraduation ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-coins text-green-400"></i>${escapeHtml(display.salaryAfterGraduation)}</span>` : '',
+              display.categoryName ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-layer-group text-wiki-primary"></i>${escapeHtml(display.categoryName)}</span>` : ''
+            ].filter(Boolean).join('')
+
+            const sourcesBadges = Array.isArray(major.sources) && major.sources.length
+              ? `<div class="flex flex-wrap gap-2 mt-4">${major.sources
+                  .map((source) => `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 border border-wiki-primary/40 text-xs text-wiki-primary"><i class="fas fa-database mr-1"></i>${SOURCE_LABEL_MAP[source] ?? source}</span>`)
+                  .join('')}</div>`
+              : ''
+
+            return `
+              <article class="glass-card p-6 rounded-2xl hover-glow transition">
+                <div class="flex flex-col gap-4">
+                  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <h2 class="text-2xl font-bold text-white">
+                        <a href="${majorUrl}" class="hover:text-wiki-secondary transition">${escapeHtml(major.name)}</a>
+                      </h2>
+                      ${display.categoryName ? `<p class="text-sm text-wiki-muted">${escapeHtml(display.categoryName)}</p>` : ''}
+                    </div>
+                    <a href="${majorUrl}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-wiki-primary text-wiki-primary hover:bg-wiki-primary/10 transition">
+                      <span>상세 보기</span>
+                      <i class="fas fa-arrow-right"></i>
+                    </a>
+                  </div>
+                  <p class="text-sm leading-relaxed text-wiki-muted">${summary}</p>
+                  ${statChips ? `<div class="flex flex-wrap gap-2">${statChips}</div>` : ''}
+                  ${sourcesBadges}
+                </div>
+              </article>
+            `
+          })
+          .join('')
+      : `
+        <div class="glass-card p-12 rounded-2xl text-center">
+          <i class="fas fa-circle-info text-4xl text-wiki-secondary mb-4"></i>
+          <h2 class="text-2xl font-semibold text-white mb-2">검색 결과가 없습니다</h2>
+          <p class="text-sm text-wiki-muted">검색어를 변경하여 다시 시도해 주세요. CareerWiki는 지속적으로 새로운 전공 데이터를 수집하고 있습니다.</p>
+        </div>
+      `
+
+    const sourceSummary = renderSourceStatusSummary(result.meta?.sources)
+    const filterSummary = keyword ? `"${escapeHtml(keyword)}" 키워드` : '전체 전공'
+    const headingLabel = keyword ? `“${escapeHtml(keyword)}” 관련 전공` : '전공위키'
+
+    const jsonLdItems = items.map((entry, index) => ({
+      '@type': 'ListItem',
+      position: (page - 1) * perPage + index + 1,
+      url: buildCanonicalUrl(c.req.url, `/major/${encodeURIComponent(entry.profile.id)}`),
+      name: entry.profile.name
+    }))
+    const jsonLd = jsonLdItems.length
+      ? `<script type="application/ld+json">${JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: keyword ? `${keyword} 관련 전공 목록` : 'Careerwiki 전공 목록',
+          numberOfItems: jsonLdItems.length,
+          itemListOrder: 'https://schema.org/ItemListOrderAscending',
+          itemListElement: jsonLdItems
+        }).replace(/</g, '\\u003C')}</script>`
+      : ''
+
+    const content = `
+      <div class="max-w-6xl mx-auto">
         <div class="text-center mb-10">
-            <h1 class="text-4xl font-bold mb-4 gradient-text">
-                <i class="fas fa-university mr-3"></i>전공위키
-            </h1>
-            <p class="text-wiki-muted max-w-2xl mx-auto">
-                전공 커리큘럼, 개설 대학, 관련 직업 정보를 통합 데이터로 제공합니다.
-            </p>
+          <h1 class="text-4xl font-bold mb-4 gradient-text">
+            <i class="fas fa-university mr-3"></i>${headingLabel}
+          </h1>
+          <p class="text-wiki-muted max-w-3xl mx-auto">
+            전공 커리큘럼, 개설 대학, 관련 직업 정보를 통합 데이터로 제공합니다.
+          </p>
+          <p class="text-xs text-wiki-muted mt-4">${filterSummary} · 총 ${totalCount}건</p>
         </div>
 
         <form method="get" class="glass-card rounded-xl p-6 mb-10 grid md:grid-cols-[2fr,auto] gap-4 items-end">
-            <div>
-                <label class="block text-sm text-wiki-muted mb-2" for="major-keyword">키워드</label>
-                <input
-                    id="major-keyword"
-                    type="text"
-                    name="q"
-                    value="${escapedKeyword}"
-                    placeholder="예: 인공지능, 간호, 기계"
-                    class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
-                />
-            </div>
-            <div class="flex gap-2">
-                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
-                    <i class="fas fa-search mr-2"></i>검색
-                </button>
-                <a href="/major" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
-            </div>
+          <div>
+            <label class="block text-sm text-wiki-muted mb-2" for="major-keyword">키워드</label>
+            <input
+              id="major-keyword"
+              type="text"
+              name="q"
+              value="${escapeHtml(keyword)}"
+              placeholder="예: 인공지능, 간호, 기계"
+              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
+            />
+          </div>
+          <div class="flex gap-2">
+            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
+              <i class="fas fa-search mr-2"></i>검색
+            </button>
+            <a href="/major" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
+          </div>
         </form>
 
-        <div id="major-list" class="min-h-[240px]"></div>
+        <section class="space-y-4" aria-live="polite">
+          ${majorCards}
+        </section>
 
-        <div class="mt-12 text-sm text-wiki-muted">
-            <p class="mb-2">• 데이터 출처: 고용24, 커리어넷</p>
-            <p>• 목록은 프론트엔드에서 API 호출 후 동적으로 렌더링됩니다.</p>
-        </div>
-    </div>
-  `
-  return c.html(renderLayout(content, '전공위키 - Careerwiki', '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.'))
+        ${sourceSummary}
+      </div>
+    `
+
+    const pageTitle = keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki'
+    const description = createMetaDescription(
+      keyword ? `${keyword} 관련 전공 정보를 확인하세요.` : undefined,
+      items[0]?.display?.summary,
+      items[0]?.display?.employmentRate,
+      '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.'
+    )
+
+    return c.html(
+      renderLayout(
+        content,
+        escapeHtml(pageTitle),
+        escapeHtml(description),
+        false,
+        {
+          canonical: canonicalUrl,
+          ogUrl: canonicalUrl,
+          extraHead: jsonLd
+        }
+      )
+    )
+  } catch (error) {
+    console.error('Major list route error:', error)
+    c.status(500)
+    const fallbackHtml = renderDetailFallback({
+      icon: 'fa-circle-exclamation',
+      iconColor: 'text-red-500',
+      title: '전공 목록을 불러오지 못했습니다',
+      description: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      ctaHref: '/',
+      ctaLabel: '홈으로 돌아가기'
+    })
+    return c.html(
+      renderLayout(
+        fallbackHtml,
+        '전공 목록 오류 - Careerwiki',
+        '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+      )
+    )
+  }
 })
 
 // HowTo Page

@@ -7,6 +7,7 @@
   - AI 진로 분석기 (직업 추천 / 전공 추천)
   - 직업 · 전공 위키 (고용24 + 커리어넷 통합 데이터)
   - 통합 상세 페이지 SSR (canonical/OG/JSON-LD/데이터 출처 패널)
+  - 직업 · 전공 목록 SSR (검색 파라미터 대응 ItemList JSON-LD, 데이터 출처 서머리)
   - HowTo 가이드 (진로 설정 방법론)
   - 실시간 검색 및 데이터 연동
 
@@ -94,7 +95,12 @@ type UnifiedJobDetail = {
    - `/major/:slug` → `getUnifiedMajorDetail` + `renderUnifiedMajorDetail`
    - canonical/OG 메타, JSON-LD, 데이터 출처 패널, 공통 fallback UI
 
-4. **프론트엔드**
+4. **SSR 목록 페이지**
+   - `/job` 직업위키: 서버 사이드 검색 + 카테고리 필터, ItemList JSON-LD, source status 진단 블록
+   - `/major` 전공위키: 키워드 기반 서버 사이드 검색, ItemList JSON-LD, 데이터 출처 서머리
+   - 검색 파라미터 기반 canonical URL/OG 메타, 무결성 검사 및 오류 fallback 적용
+
+5. **프론트엔드**
    - 반응형 디자인 (모바일/태블릿/PC)
    - 다크 테마 + 그라디언트 UI
    - Glass morphism 디자인
@@ -132,10 +138,10 @@ GET /api/categories
 ## 🔄 미구현 기능 및 다음 단계
 
 ### 🔜 구현 예정
-1. **목록 페이지 SSR & SEO 고도화**
-   - `/job`, `/major` 검색 결과 SSR + hydrated client 필터링
-   - SERP freshness 유지 전략 (신규 데이터 동기화 스케줄러)
-   - 인기 섹션 prefetch 및 캐싱 레이어 설계
+1. **SSR 목록 페이지 하이브리드 고도화**
+   - `/job`, `/major` SSR 결과 위에 클라이언트 정렬/필터 하이드레이션 및 검색 상태 유지
+   - SERP freshness 모니터링 및 신규 데이터 동기화 스케줄러 설계
+   - Cloudflare KV 기반 캐싱/프리페치 레이어 설계 (incremental revalidation)
 
 2. **AI 분석 기능**
    - Claude/GPT API 통합
@@ -201,6 +207,7 @@ npm run deploy:prod
 - **배포**: ⏳ 예정
 
 ### 🔥 최근 업데이트
+- ✅ 직업/전공 목록 페이지 SSR 적용 (검색 파라미터 대응 ItemList JSON-LD & source summary)
 - ✅ 통합 직업/전공 상세 페이지 SSR 적용 (canonical/OG/JSON-LD 포함)
 - ✅ CareerNet + 고용24 통합 병합 로직 및 소스 상태 패널 추가
 - ✅ 공통 fallback UI/에러 처리 및 데이터 출처 서머리 제공
@@ -209,14 +216,14 @@ npm run deploy:prod
 ## 🎯 추천 다음 작업
 
 1. **긴급도 높음**
-   - `/job`, `/major` 목록 SSR 및 검색 파라미터 canonical 전략 확립
-   - SERP freshness 지표 정의 및 데이터 동기화 스케줄 설계
-   - JSON-LD 검사 (Rich Result Test) + Lighthouse SEO 점검 자동화
+   - `/job`, `/major` SSR 결과에 대한 Cloudflare KV 캐싱/재검증 파이프라인 설계
+   - SERP freshness 지표 정의 및 신규 데이터 동기화 스케줄 설계
+   - JSON-LD Rich Result Test & Search Console 제출 자동화 플로우 마련
 
 2. **중요도 높음**
    - Cloudflare D1 스키마/마이그레이션 초안 작성 및 wrangler 워크플로 완성
-   - 통합 데이터 캐싱 전략 수립 (KV/R2 여부 결정, TTL 정책)
-   - API 응답 source diagnostics → 프론트 라벨링 연동
+   - 소스 상태 로그 → 프론트 라벨·UX 피드백 연동 및 에러 모니터링 대시보드 설계
+   - 검색 UI 하이드레이션(정렬/필터/페이지네이션) 및 성능 측정 지표 정의
 
 3. **향후 개선**
    - AI Analyzer 폼 → 백엔드 파이프라인 연결 (Claude/GPT)
