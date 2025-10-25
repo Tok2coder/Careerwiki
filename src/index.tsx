@@ -1,19 +1,72 @@
 import { Hono } from 'hono'
+import type { Context } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
 import { JOB_CATEGORIES, APTITUDE_TYPES } from './api/careernetAPI'
 import { getUnifiedJobDetail, getUnifiedMajorDetail, searchUnifiedJobs, searchUnifiedMajors } from './services/profileDataService'
 import type { SourceStatusRecord } from './services/profileDataService'
-import type { DataSource } from './types/unifiedProfiles'
+import type { DataSource, UnifiedJobDetail, UnifiedMajorDetail } from './types/unifiedProfiles'
 import { renderUnifiedJobDetail, createJobJsonLd } from './templates/unifiedJobDetail'
 import { renderUnifiedMajorDetail, createMajorJsonLd } from './templates/unifiedMajorDetail'
+import { renderHowtoGuideDetail } from './templates/howtoDetail'
+import { buildCommentGovernanceItems, resolveCommentPolicy } from './templates/detailTemplateUtils'
+import {
+  getSampleJobDetail,
+  getSampleMajorDetail,
+  listSampleJobSummaries,
+  listSampleMajorSummaries,
+  listSampleHowtoSummaries,
+  getSampleHowtoGuide
+} from './data/sampleRegistry'
+import { composeDetailSlug, resolveDetailIdFromSlug } from './utils/slug'
+import {
+  withKvCache,
+  buildListCacheKey,
+  secondsToHuman,
+  formatTimestamp,
+  type CacheState
+} from './services/cacheService'
+import type { ExportedHandlerScheduledHandler } from '@cloudflare/workers-types'
+import { LIST_CACHE_STALE_SECONDS, LIST_CACHE_MAX_AGE_SECONDS } from './config/cachePolicy'
+import { recordListFreshness, attemptScheduledRefresh, getFreshnessStatus, resolveFreshnessTargetById } from './services/freshnessService'
+import { SERP_FRESHNESS_TARGETS } from './config/freshnessConfig'
+import { storePerfMetrics, type PerfMetricsPayload, type PerfAlert } from './services/perfMetricsService'
+import {
+  createOrUpdateSession,
+  createAnalysisRequest,
+  createAnalysisResult,
+  getAnalysisRequestWithResult,
+  getSession as getAiSession,
+  listRequestsBySession,
+  updateRequestStatus
+} from './services/aiAnalysisService'
+import {
+  recordSerpInteraction,
+  getDailySerpSummary,
+  listRecentSerpInteractions
+} from './services/serpInteractionService'
+import {
+  type PageType,
+  type UserRole,
+  blockIpAddress,
+  createComment,
+  getCommentsBySlug,
+  isIpBlocked,
+  listIpBlocks,
+  releaseIpAddress,
+  reportComment,
+  setCommentVote
+} from './services/commentService'
+import type { AnalysisType, PricingTier, RequestStatus } from './types/aiAnalysis'
+
 
 // Types
 type Bindings = {
   DB: D1Database;
   KV: KVNamespace;
   CAREER_NET_API_KEY?: string; // Cloudflare 환경 변수
+  PERF_ALERT_WEBHOOK?: string;
 }
 
 type Variables = {
@@ -30,27 +83,41 @@ app.use('*', renderer)
 // Serve static files
 app.use('/static/*', serveStatic({ root: './public' }))
 
+let logoIdCounter = 0
+
 // Helper function for logo SVG (옵션 7: 플레이풀 둥근 폰트)
 const getLogoSVG = (size: 'large' | 'small' = 'large') => {
-  const fontSize = size === 'large' ? '56' : '28';
-  const width = size === 'large' ? '360' : '180';
-  const height = size === 'large' ? '90' : '40';
-  const baselineOffset = size === 'large' ? 14 : 10;
-  
+  logoIdCounter += 1
+  const gradientId = `logoGrad-${size}-${logoIdCounter}`
+  const fontSize = size === 'large' ? 56 : 28
+  const width = size === 'large' ? 360 : 180
+  const height = size === 'large' ? 90 : 40
+  const baselineOffset = size === 'large' ? 14 : 10
+  const centerX = width / 2
+  const centerY = height / 2 + baselineOffset
+
   return `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Careerwiki 로고">
       <defs>
-        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#4361ee;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:1" />
+        <linearGradient id="${gradientId}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#4361ee" />
+          <stop offset="100%" stop-color="#64b5f6" />
         </linearGradient>
       </defs>
-      <text x="${parseInt(width)/2}" y="${parseInt(height)/2 + baselineOffset}" 
-            font-family="'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive" 
-            font-size="${fontSize}" font-weight="bold" 
-            fill="url(#logoGrad)" text-anchor="middle">Careerwiki</text>
+      <text
+        x="${centerX}"
+        y="${centerY}"
+        font-family="'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive"
+        font-size="${fontSize}"
+        font-weight="bold"
+        text-anchor="middle"
+        fill="url(#${gradientId})"
+        stroke="rgba(15, 23, 42, 0.35)"
+        stroke-width="1"
+        paint-order="stroke fill"
+      >Careerwiki</text>
     </svg>
-  `;
+  `
 }
 
 // Helper function to render layout
@@ -103,6 +170,7 @@ const renderLayout = (
             }
           }
         </script>
+        <script src="/static/perf-metrics.js" defer></script>
         ${extraHead}
         <style>
           body { background: #0f0f23; color: #e0e0e0; }
@@ -372,43 +440,12 @@ const renderLayout = (
         ${!isHomepage ? `
         <!-- Navigation (Not on homepage) -->
         <nav class="glass-card sticky top-0 z-50 border-b border-wiki-border">
-            <div class="container mx-auto px-4 py-4">
-                <div class="flex items-center gap-4">
-                    <a href="/" class="shrink-0 hidden md:flex items-center">
+            <div class="mx-auto w-full max-w-6xl py-4">
+                <div class="flex items-center justify-between md:hidden">
+                    <a href="/" class="flex items-center">
                         ${getLogoSVG('small')}
                     </a>
-
-                    <div class="hidden md:flex flex-1 max-w-2xl">
-                        <form action="/search" method="get" class="nav-search-shell">
-                            <div class="nav-search-bar">
-                                <input type="text" name="q" 
-                                       placeholder="직업, 전공, 진로를 검색하세요..." 
-                                       class="nav-search-input">
-                                <button type="submit" class="nav-search-button" aria-label="검색">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="hidden md:flex items-center gap-4">
-                        <a href="/analyzer" class="nav-link">
-                            <i class="fas fa-brain nav-icon"></i>
-                            <span>AI 분석</span>
-                        </a>
-                        <a href="/howto" class="nav-link">
-                            <i class="fas fa-route nav-icon"></i>
-                            <span>HowTo</span>
-                        </a>
-                        <a href="/help" class="header-icon-button" title="도움말">
-                            <i class="fas fa-question-circle text-base"></i>
-                        </a>
-                        <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
-                            <i class="fas fa-user-circle text-base"></i>
-                        </a>
-                    </div>
-
-                    <button id="mobile-menu-btn" class="md:hidden text-wiki-text">
+                    <button id="mobile-menu-btn" class="text-wiki-text" aria-label="모바일 메뉴 열기">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
@@ -425,12 +462,42 @@ const renderLayout = (
                         </div>
                     </form>
                 </div>
+
+                <div class="hidden md:flex w-full items-center gap-4 flex-nowrap">
+                    <a href="/" class="flex items-center shrink-0">
+                        ${getLogoSVG('small')}
+                    </a>
+                    <form action="/search" method="get" class="nav-search-shell flex-1 min-w-[240px] max-w-xl">
+                        <div class="nav-search-bar">
+                            <input type="text" name="q" 
+                                   placeholder="직업, 전공, 진로를 검색하세요..." 
+                                   class="nav-search-input">
+                            <button type="submit" class="nav-search-button" aria-label="검색">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <a href="/analyzer" class="nav-link">
+                        <i class="fas fa-brain nav-icon"></i>
+                        <span>AI 분석</span>
+                    </a>
+                    <a href="/howto" class="nav-link">
+                        <i class="fas fa-route nav-icon"></i>
+                        <span>HowTo</span>
+                    </a>
+                    <a href="/help" class="header-icon-button" title="도움말">
+                        <i class="fas fa-question-circle text-base"></i>
+                    </a>
+                    <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
+                        <i class="fas fa-user-circle text-base"></i>
+                    </a>
+                </div>
             </div>
         </nav>
         
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden glass-card border-b border-wiki-border">
-            <div class="container mx-auto px-4 py-4 space-y-3">
+            <div class="mx-auto w-full max-w-6xl py-4 space-y-3">
                 <a href="/analyzer" class="nav-link nav-link-mobile">
                     <i class="fas fa-brain mr-2"></i>AI 분석
                 </a>
@@ -524,6 +591,24 @@ const buildCanonicalUrl = (requestUrl: string, path: string): string => {
     // Ignore parsing errors and fall back to default origin
   }
   return `${DEFAULT_CANONICAL_ORIGIN}${path}`
+}
+
+const isAnalysisType = (value: unknown): value is AnalysisType => value === 'job' || value === 'major'
+const isPricingTier = (value: unknown): value is PricingTier => value === 'free' || value === 'pro'
+const isRequestStatus = (value: unknown): value is RequestStatus =>
+  value === 'pending' || value === 'processing' || value === 'completed' || value === 'failed'
+const isPageType = (value: unknown): value is PageType => value === 'job' || value === 'major' || value === 'guide'
+const buildCommentPageSlug = (type: PageType, slug: string): string => `${type}:${slug.trim()}`
+const toParentId = (value: unknown): number | null => {
+  if (value === null || value === undefined) {
+    return null
+  }
+  const parsed = Number(value)
+  if (!Number.isFinite(parsed)) {
+    return null
+  }
+  const normalized = Math.floor(parsed)
+  return normalized > 0 ? normalized : null
 }
 
 // Homepage - Google style with menu buttons
@@ -960,6 +1045,94 @@ app.get('/analyzer/major', (c) => {
   return c.html(renderLayout(content, 'AI 전공 추천 - Careerwiki'))
 })
 
+// Community Guidelines Help Page
+app.get('/help/community-guidelines', (c) => {
+  const policy = resolveCommentPolicy()
+  const governanceItems = buildCommentGovernanceItems(policy)
+  const overviewList = governanceItems
+    .map((item) => `<li class="flex gap-2 text-sm text-wiki-muted leading-relaxed"><i class="fas fa-check-circle text-wiki-secondary mt-0.5" aria-hidden="true"></i><span>${escapeHtml(item)}</span></li>`)
+    .join('')
+  const bestDetails = [
+    `좋아요 ${policy.bestLikeThreshold}개 이상이면 BEST로 승격됩니다.`,
+    `BEST 영역은 최대 ${policy.bestLimit}건으로 유지되며 새로운 BEST가 등록되면 매일 갱신됩니다.`,
+    'BEST 댓글은 목록 상단에 고정되어 누구나 빠르게 확인할 수 있습니다.'
+  ]
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join('')
+  const reportDetails = [
+    `신고 ${policy.reportBlindThreshold}회 이상 시 댓글이 자동으로 블라인드 처리됩니다.`,
+    policy.moderatorIpBlockEnabled
+      ? '모더레이터는 신고가 누적된 IP를 차단하여 악성 활동을 선제적으로 막을 수 있습니다.'
+      : null,
+    `모더레이터 권한 계층: ${policy.moderatorRoles.join(' > ')}`
+  ]
+    .filter(Boolean)
+    .map((item) => `<li>${escapeHtml(String(item))}</li>`)
+    .join('')
+  const windowLabel = policy.voteWindowHours === 24 ? '24시간' : `${policy.voteWindowHours}시간`
+  const voteDetails = [
+    `${windowLabel} 동안 공감/비공감은 ${policy.dailyVoteLimit}회까지 가능합니다.`,
+    '한도를 초과하면 다음 집계 윈도우가 시작될 때 자동으로 초기화됩니다.',
+    '투표 활동은 정책 서명과 함께 텔레메트리로 기록되어 운영팀이 모니터링합니다.'
+  ]
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join('')
+
+  const canonicalUrl = buildCanonicalUrl(c.req.url, '/help/community-guidelines')
+  const content = `
+    <section class="max-w-5xl mx-auto space-y-10 py-8">
+      <header class="space-y-3">
+        <p class="text-xs uppercase tracking-widest text-wiki-secondary">CareerWiki Community</p>
+        <h1 class="text-3xl font-bold text-white">커뮤니티 이용 정책</h1>
+        <p class="text-sm text-wiki-muted">CareerWiki 댓글 커뮤니티의 기본 운영 원칙과 BEST/신고/공감 정책을 한눈에 확인하세요.</p>
+      </header>
+      <section class="grid gap-6 md:grid-cols-2">
+        <article class="glass-card p-6 rounded-xl space-y-4">
+          <h2 class="text-lg font-semibold text-wiki-text">기본 운영 원칙</h2>
+          <ul class="space-y-3">${overviewList}</ul>
+        </article>
+        <article class="glass-card p-6 rounded-xl space-y-4">
+          <h2 class="text-lg font-semibold text-wiki-text">BEST 댓글 정책</h2>
+          <ul class="space-y-2 text-sm text-wiki-muted">${bestDetails}</ul>
+          <p class="text-xs text-wiki-muted/80">승격, 고정, 갱신 이벤트는 <code class="px-2 py-1 rounded bg-wiki-bg/70 border border-wiki-border text-[11px] text-wiki-secondary">cw-detail-action</code> 텔레메트리로 추적됩니다.</p>
+        </article>
+        <article class="glass-card p-6 rounded-xl space-y-4">
+          <h2 class="text-lg font-semibold text-wiki-text">신고 &amp; 모더레이션</h2>
+          <ul class="space-y-2 text-sm text-wiki-muted">${reportDetails}</ul>
+          <p class="text-xs text-wiki-muted/80">블라인드 처리 이후 모더레이터 검토에서 복구 또는 제재 여부가 확정됩니다.</p>
+        </article>
+        <article class="glass-card p-6 rounded-xl space-y-4">
+          <h2 class="text-lg font-semibold text-wiki-text">공감/비공감 정책</h2>
+          <ul class="space-y-2 text-sm text-wiki-muted">${voteDetails}</ul>
+          <p class="text-xs text-wiki-muted/80">제한에 도달하면 안내 메시지가 표시되며 동일 윈도우에서는 추가 상호작용이 차단됩니다.</p>
+        </article>
+      </section>
+      <section class="glass-card p-6 rounded-xl space-y-4">
+        <h2 class="text-lg font-semibold text-wiki-text">상호작용 흐름 요약</h2>
+        <ol class="space-y-2 text-sm text-wiki-muted list-decimal pl-5">
+          <li>비로그인 사용자는 댓글을 열람할 수 있으며, 로그인 후에만 작성·공감·신고가 가능합니다.</li>
+          <li>댓글 등록과 상호작용에는 정책 스냅샷이 포함되어 운영팀에서 변동 이력을 추적합니다.</li>
+          <li>모더레이터는 신고 현황과 BEST 승격 로그를 기준으로 대응합니다.</li>
+        </ol>
+        <p class="text-xs text-wiki-muted">정책은 서비스 개선을 위해 주기적으로 업데이트되며, 변경 사항은 이 페이지에 먼저 반영됩니다.</p>
+      </section>
+      <footer class="text-xs text-wiki-muted">
+        <p>정책 관련 문의는 <a href="mailto:hello@careerwiki.org" class="text-wiki-primary hover:text-wiki-secondary">hello@careerwiki.org</a>로 연락해 주세요.</p>
+      </footer>
+    </section>
+  `
+
+  return c.html(
+    renderLayout(
+      content,
+      '커뮤니티 이용 정책 - Careerwiki',
+      'CareerWiki 댓글 커뮤니티 운영 원칙과 BEST/신고/공감 정책 안내',
+      false,
+      { canonical: canonicalUrl, ogUrl: canonicalUrl }
+    )
+  )
+})
+
 // Job Wiki List Page
 app.get('/job', async (c) => {
   const keywordRaw = c.req.query('q') || ''
@@ -967,8 +1140,8 @@ app.get('/job', async (c) => {
   const keyword = keywordRaw.trim()
   const category = categoryRaw.trim()
   const includeSources = parseSourcesQuery(c.req.query('sources'))
-  const page = parseNumberParam(c.req.query('page'), 1)
-  const perPage = parseNumberParam(c.req.query('perPage'), 20)
+  const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+  const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
 
   const categoryOptions = Object.entries(JOB_CATEGORIES)
     .map(([label, code]) => {
@@ -976,6 +1149,10 @@ app.get('/job', async (c) => {
       const isSelected = code === category
       return `<option value="${escapedCode}" ${isSelected ? 'selected' : ''}>${escapeHtml(label)}</option>`
     })
+    .join('')
+
+  const perPageOptions = [10, 20, 30, 50]
+    .map((size) => `<option value="${size}" ${perPage === size ? 'selected' : ''}>${size}개</option>`)
     .join('')
 
   const searchParams = new URLSearchParams()
@@ -1002,26 +1179,70 @@ app.get('/job', async (c) => {
   }
 
   try {
-    const result = await searchUnifiedJobs(
+    const forceRefresh = c.req.query('refresh') === '1'
+    const { value: result, cacheState } = await withKvCache(
+      c.env.KV,
+      buildListCacheKey('job', { keyword, category, page, perPage, includeSources }),
+      async () =>
+        searchUnifiedJobs(
+          {
+            keyword,
+            category,
+            page,
+            perPage,
+            includeSources
+          },
+          c.env
+        ),
       {
+        staleSeconds: LIST_CACHE_STALE_SECONDS,
+        maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS,
+        metadata: {
+          type: 'job-list',
+          keyword: keyword || null,
+          category: category || null,
+          page,
+          perPage,
+          includeSources: includeSources ?? []
+        },
+        forceRefresh
+      }
+    )
+
+    const items = result.items
+    const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+
+    const freshnessRecordPromise = recordListFreshness(c.env.KV, {
+      type: 'job',
+      params: {
         keyword,
         category,
         page,
         perPage,
         includeSources
       },
-      c.env
-    )
+      trigger: 'runtime',
+      cacheState,
+      totalItems: items.length,
+      reportedTotal: result.meta?.total,
+      sources: result.meta?.sources
+    })
 
-    const items = result.items
-    const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+    if (c.executionCtx && 'waitUntil' in c.executionCtx) {
+      c.executionCtx.waitUntil(
+        freshnessRecordPromise.catch((err) => console.error('[freshness][job]', err))
+      )
+    } else {
+      freshnessRecordPromise.catch((err) => console.error('[freshness][job]', err))
+    }
 
     const jobCards = items.length
       ? items
           .map((entry) => {
             const job = entry.profile
             const display = entry.display ?? {}
-            const jobUrl = `/job/${encodeURIComponent(job.id)}`
+            const jobSlug = composeDetailSlug('job', job.name, job.id)
+            const jobUrl = `/job/${encodeURIComponent(jobSlug)}`
             const summary = escapeHtml(formatSummaryText(display.summary))
             const categoryName = display.categoryName || job.category?.name
             const statChips = [
@@ -1059,15 +1280,14 @@ app.get('/job', async (c) => {
             `
           })
           .join('')
-      : `
-        <div class="glass-card p-12 rounded-2xl text-center">
-          <i class="fas fa-circle-info text-4xl text-wiki-secondary mb-4"></i>
-          <h2 class="text-2xl font-semibold text-white mb-2">검색 결과가 없습니다</h2>
-          <p class="text-sm text-wiki-muted">검색어 또는 필터를 변경하여 다시 시도해 주세요. CareerWiki는 매일 새로운 직업 데이터를 수집하고 있습니다.</p>
-        </div>
-      `
+      : renderSampleJobHighlights()
 
-    const sourceSummary = renderSourceStatusSummary(result.meta?.sources)
+    const cacheNotice = renderCacheNotice(cacheState, {
+      staleSeconds: LIST_CACHE_STALE_SECONDS,
+      maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS
+    })
+
+    const sourceSummaryHtml = renderSourceStatusSummary(result.meta?.sources, { id: 'job-source-summary' })
     const filterSummaryParts: string[] = []
     if (keyword) {
       filterSummaryParts.push(`"${escapeHtml(keyword)}" 키워드`)
@@ -1079,12 +1299,15 @@ app.get('/job', async (c) => {
     const filterSummary = filterSummaryParts.length ? filterSummaryParts.join(' · ') : '전체 직업'
     const headingLabel = keyword ? `“${escapeHtml(keyword)}” 관련 직업` : '직업위키'
 
-    const jsonLdItems = items.map((entry, index) => ({
-      '@type': 'ListItem',
-      position: (page - 1) * perPage + index + 1,
-      url: buildCanonicalUrl(c.req.url, `/job/${encodeURIComponent(entry.profile.id)}`),
-      name: entry.profile.name
-    }))
+    const jsonLdItems = items.map((entry, index) => {
+      const slug = composeDetailSlug('job', entry.profile.name, entry.profile.id)
+      return {
+        '@type': 'ListItem',
+        position: (page - 1) * perPage + index + 1,
+        url: buildCanonicalUrl(c.req.url, `/job/${encodeURIComponent(slug)}`),
+        name: entry.profile.name
+      }
+    })
     const jsonLd = jsonLdItems.length
       ? `<script type="application/ld+json">${JSON.stringify({
           '@context': 'https://schema.org',
@@ -1096,6 +1319,8 @@ app.get('/job', async (c) => {
         }).replace(/</g, '\\u003C')}</script>`
       : ''
 
+    const extraHead = [jsonLd].filter(Boolean).join('\n')
+
     const content = `
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-10">
@@ -1105,10 +1330,10 @@ app.get('/job', async (c) => {
           <p class="text-wiki-muted max-w-3xl mx-auto">
             고용24와 커리어넷의 최신 데이터를 바탕으로 직업별 연봉, 전망, 필요 역량을 탐색하세요.
           </p>
-          <p class="text-xs text-wiki-muted mt-4">${filterSummary} · 총 ${totalCount}건</p>
+          <p class="text-xs text-wiki-muted mt-4">${filterSummary} · 총 <span id="job-total-count">${totalCount}</span>건</p>
         </div>
 
-        <form method="get" class="glass-card rounded-xl p-6 mb-10 grid md:grid-cols-[2fr,1fr,auto] gap-4 items-end">
+        <form id="job-filter-form" data-hydration-target="job" method="get" class="glass-card rounded-xl p-6 mb-6 grid md:grid-cols-[2fr,1fr,1fr,auto] gap-4 items-end">
           <div>
             <label class="block text-sm text-wiki-muted mb-2" for="job-keyword">키워드</label>
             <input
@@ -1131,7 +1356,17 @@ app.get('/job', async (c) => {
               ${categoryOptions}
             </select>
           </div>
-          <div class="flex gap-2">
+          <div>
+            <label class="block text-sm text-wiki-muted mb-2" for="job-per-page">페이지당</label>
+            <select
+              id="job-per-page"
+              name="perPage"
+              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
+            >
+              ${perPageOptions}
+            </select>
+          </div>
+          <div class="flex gap-2 justify-end">
             <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
               <i class="fas fa-search mr-2"></i>검색
             </button>
@@ -1139,13 +1374,50 @@ app.get('/job', async (c) => {
           </div>
         </form>
 
-        <section class="space-y-4" aria-live="polite">
+        <div class="glass-card rounded-xl p-4 mb-6 flex flex-wrap items-center gap-4" id="job-hydration-toolbar">
+          <div class="flex items-center gap-2">
+            <label for="job-sort-select" class="text-sm text-wiki-muted">정렬</label>
+            <select id="job-sort-select" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
+              <option value="relevance">추천 순 (기본)</option>
+              <option value="salary-desc">연봉 높은 순</option>
+              <option value="outlook-desc">전망 좋은 순</option>
+              <option value="name-asc">이름 오름차순</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <label for="job-source-filter" class="text-sm text-wiki-muted">데이터 소스</label>
+            <div class="flex items-center gap-3 text-xs text-wiki-muted" id="job-source-filter" aria-live="polite">
+              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-wiki-secondary"></span>커리어넷</span>
+              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-wiki-primary"></span>고용24</span>
+            </div>
+          </div>
+          <div class="ml-auto text-xs text-wiki-muted" id="job-hydration-status" aria-live="polite"></div>
+        </div>
+
+        ${cacheNotice}
+
+        <section id="job-results" class="space-y-4" aria-live="polite">
           ${jobCards}
         </section>
 
-        ${sourceSummary}
+        ${sourceSummaryHtml}
       </div>
     `
+
+    const hydrationScript = `<script id="job-hydration-data" type="application/json">${serializeForScript({
+      items,
+      meta: {
+        total: totalCount,
+        page,
+        perPage,
+        keyword,
+        category,
+        includeSources: includeSources ?? null,
+        sources: result.meta?.sources ?? null,
+        cacheState
+      }
+    })}</script>`
+    const hydratedContent = `${content}${hydrationScript}`
 
     const pageTitle = keyword ? `${keyword} 직업 검색 결과 - Careerwiki` : '직업위키 - Careerwiki'
     const description = createMetaDescription(
@@ -1156,14 +1428,14 @@ app.get('/job', async (c) => {
 
     return c.html(
       renderLayout(
-        content,
+        hydratedContent,
         escapeHtml(pageTitle),
         escapeHtml(description),
         false,
         {
           canonical: canonicalUrl,
           ogUrl: canonicalUrl,
-          extraHead: jsonLd
+          extraHead
         }
       )
     )
@@ -1193,8 +1465,12 @@ app.get('/major', async (c) => {
   const keywordRaw = c.req.query('q') || ''
   const keyword = keywordRaw.trim()
   const includeSources = parseSourcesQuery(c.req.query('sources'))
-  const page = parseNumberParam(c.req.query('page'), 1)
-  const perPage = parseNumberParam(c.req.query('perPage'), 20)
+  const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+  const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+
+  const perPageOptions = [10, 20, 30, 50]
+    .map((size) => `<option value="${size}" ${perPage === size ? 'selected' : ''}>${size}개</option>`)
+    .join('')
 
   const searchParams = new URLSearchParams()
   if (keyword) searchParams.set('q', keyword)
@@ -1213,25 +1489,67 @@ app.get('/major', async (c) => {
   }
 
   try {
-    const result = await searchUnifiedMajors(
+    const forceRefresh = c.req.query('refresh') === '1'
+    const { value: result, cacheState } = await withKvCache(
+      c.env.KV,
+      buildListCacheKey('major', { keyword, page, perPage, includeSources }),
+      async () =>
+        searchUnifiedMajors(
+          {
+            keyword,
+            page,
+            perPage,
+            includeSources
+          },
+          c.env
+        ),
       {
+        staleSeconds: LIST_CACHE_STALE_SECONDS,
+        maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS,
+        metadata: {
+          type: 'major-list',
+          keyword: keyword || null,
+          page,
+          perPage,
+          includeSources: includeSources ?? []
+        },
+        forceRefresh
+      }
+    )
+
+    const items = result.items
+    const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+
+    const freshnessRecordPromise = recordListFreshness(c.env.KV, {
+      type: 'major',
+      params: {
         keyword,
         page,
         perPage,
         includeSources
       },
-      c.env
-    )
+      trigger: 'runtime',
+      cacheState,
+      totalItems: items.length,
+      reportedTotal: result.meta?.total,
+      sources: result.meta?.sources
+    })
 
-    const items = result.items
-    const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+    if (c.executionCtx && 'waitUntil' in c.executionCtx) {
+      c.executionCtx.waitUntil(
+        freshnessRecordPromise.catch((err) => console.error('[freshness][major]', err))
+      )
+    } else {
+      freshnessRecordPromise.catch((err) => console.error('[freshness][major]', err))
+    }
 
     const majorCards = items.length
       ? items
           .map((entry) => {
             const major = entry.profile
             const display = entry.display ?? {}
-            const majorUrl = `/major/${encodeURIComponent(major.id)}`
+            const majorSlug = composeDetailSlug('major', major.name, major.id)
+            const majorUrl = `/major/${encodeURIComponent(majorSlug)}`
             const summary = escapeHtml(formatSummaryText(display.summary))
             const statChips = [
               display.employmentRate ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-user-graduate text-wiki-secondary"></i>${escapeHtml(display.employmentRate)}</span>` : '',
@@ -1268,24 +1586,26 @@ app.get('/major', async (c) => {
             `
           })
           .join('')
-      : `
-        <div class="glass-card p-12 rounded-2xl text-center">
-          <i class="fas fa-circle-info text-4xl text-wiki-secondary mb-4"></i>
-          <h2 class="text-2xl font-semibold text-white mb-2">검색 결과가 없습니다</h2>
-          <p class="text-sm text-wiki-muted">검색어를 변경하여 다시 시도해 주세요. CareerWiki는 지속적으로 새로운 전공 데이터를 수집하고 있습니다.</p>
-        </div>
-      `
+      : renderSampleMajorHighlights()
 
-    const sourceSummary = renderSourceStatusSummary(result.meta?.sources)
+    const cacheNotice = renderCacheNotice(cacheState, {
+      staleSeconds: LIST_CACHE_STALE_SECONDS,
+      maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS
+    })
+
+    const sourceSummaryHtml = renderSourceStatusSummary(result.meta?.sources, { id: 'major-source-summary' })
     const filterSummary = keyword ? `"${escapeHtml(keyword)}" 키워드` : '전체 전공'
     const headingLabel = keyword ? `“${escapeHtml(keyword)}” 관련 전공` : '전공위키'
 
-    const jsonLdItems = items.map((entry, index) => ({
-      '@type': 'ListItem',
-      position: (page - 1) * perPage + index + 1,
-      url: buildCanonicalUrl(c.req.url, `/major/${encodeURIComponent(entry.profile.id)}`),
-      name: entry.profile.name
-    }))
+    const jsonLdItems = items.map((entry, index) => {
+      const slug = composeDetailSlug('major', entry.profile.name, entry.profile.id)
+      return {
+        '@type': 'ListItem',
+        position: (page - 1) * perPage + index + 1,
+        url: buildCanonicalUrl(c.req.url, `/major/${encodeURIComponent(slug)}`),
+        name: entry.profile.name
+      }
+    })
     const jsonLd = jsonLdItems.length
       ? `<script type="application/ld+json">${JSON.stringify({
           '@context': 'https://schema.org',
@@ -1297,6 +1617,8 @@ app.get('/major', async (c) => {
         }).replace(/</g, '\\u003C')}</script>`
       : ''
 
+    const extraHead = [jsonLd].filter(Boolean).join('\n')
+
     const content = `
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-10">
@@ -1306,10 +1628,10 @@ app.get('/major', async (c) => {
           <p class="text-wiki-muted max-w-3xl mx-auto">
             전공 커리큘럼, 개설 대학, 관련 직업 정보를 통합 데이터로 제공합니다.
           </p>
-          <p class="text-xs text-wiki-muted mt-4">${filterSummary} · 총 ${totalCount}건</p>
+          <p class="text-xs text-wiki-muted mt-4">${filterSummary} · 총 <span id="major-total-count">${totalCount}</span>건</p>
         </div>
 
-        <form method="get" class="glass-card rounded-xl p-6 mb-10 grid md:grid-cols-[2fr,auto] gap-4 items-end">
+        <form id="major-filter-form" data-hydration-target="major" method="get" class="glass-card rounded-xl p-6 mb-6 grid md:grid-cols-[2fr,1fr,auto] gap-4 items-end">
           <div>
             <label class="block text-sm text-wiki-muted mb-2" for="major-keyword">키워드</label>
             <input
@@ -1321,7 +1643,17 @@ app.get('/major', async (c) => {
               class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
             />
           </div>
-          <div class="flex gap-2">
+          <div>
+            <label class="block text-sm text-wiki-muted mb-2" for="major-per-page">페이지당</label>
+            <select
+              id="major-per-page"
+              name="perPage"
+              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
+            >
+              ${perPageOptions}
+            </select>
+          </div>
+          <div class="flex gap-2 justify-end">
             <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
               <i class="fas fa-search mr-2"></i>검색
             </button>
@@ -1329,13 +1661,42 @@ app.get('/major', async (c) => {
           </div>
         </form>
 
-        <section class="space-y-4" aria-live="polite">
+        <div class="glass-card rounded-xl p-4 mb-6 flex flex-wrap items-center gap-4" id="major-hydration-toolbar">
+          <div class="flex items-center gap-2">
+            <label for="major-sort-select" class="text-sm text-wiki-muted">정렬</label>
+            <select id="major-sort-select" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
+              <option value="relevance">추천 순 (기본)</option>
+              <option value="employment-desc">취업률 높은 순</option>
+              <option value="salary-desc">연봉 높은 순</option>
+              <option value="name-asc">이름 오름차순</option>
+            </select>
+          </div>
+          <div class="ml-auto text-xs text-wiki-muted" id="major-hydration-status" aria-live="polite"></div>
+        </div>
+
+        ${cacheNotice}
+
+        <section id="major-results" class="space-y-4" aria-live="polite">
           ${majorCards}
         </section>
 
-        ${sourceSummary}
+        ${sourceSummaryHtml}
       </div>
     `
+
+    const hydrationScript = `<script id="major-hydration-data" type="application/json">${serializeForScript({
+      items,
+      meta: {
+        total: totalCount,
+        page,
+        perPage,
+        keyword,
+        includeSources: includeSources ?? null,
+        sources: result.meta?.sources ?? null,
+        cacheState
+      }
+    })}</script>`
+    const hydratedContent = `${content}${hydrationScript}`
 
     const pageTitle = keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki'
     const description = createMetaDescription(
@@ -1347,14 +1708,14 @@ app.get('/major', async (c) => {
 
     return c.html(
       renderLayout(
-        content,
+        hydratedContent,
         escapeHtml(pageTitle),
         escapeHtml(description),
         false,
         {
           canonical: canonicalUrl,
           ogUrl: canonicalUrl,
-          extraHead: jsonLd
+          extraHead
         }
       )
     )
@@ -1379,53 +1740,97 @@ app.get('/major', async (c) => {
   }
 })
 
-// HowTo Page
+// HowTo Sample Pages
 app.get('/howto', (c) => {
+  const howtoSummaries = listSampleHowtoSummaries()
+  const cards = howtoSummaries.length
+    ? howtoSummaries
+        .map((howto) => {
+          const tags = howto.tags && howto.tags.length
+            ? `<div class="flex flex-wrap gap-2 mt-3">${howto.tags
+                .map((tag) => `<span class="px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted">${escapeHtml(tag)}</span>`)
+                .join('')}</div>`
+            : ''
+          return `
+            <article class="glass-card p-6 rounded-2xl hover-glow transition block">
+              <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                  <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-wiki-primary/15 text-wiki-primary"><i class="fas fa-route"></i></span>
+                  <h3 class="text-xl font-bold text-white">
+                    <a href="/howto/${encodeURIComponent(howto.slug)}" class="hover:text-wiki-secondary transition">
+                      ${escapeHtml(howto.title)}
+                    </a>
+                  </h3>
+                </div>
+                <p class="text-sm text-wiki-muted leading-relaxed">${escapeHtml(howto.snippet)}</p>
+                ${tags}
+                <div class="flex items-center justify-between pt-4 border-t border-wiki-border/60">
+                  <span class="text-xs text-wiki-muted uppercase tracking-wide">Phase 1 샘플 가이드</span>
+                  <a href="/howto/${encodeURIComponent(howto.slug)}" class="inline-flex items-center gap-2 px-4 py-2 text-sm border border-wiki-border rounded-lg text-wiki-muted hover:text-wiki-primary hover:border-wiki-primary transition">
+                    상세 보기<i class="fas fa-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </article>
+          `
+        })
+        .join('')
+    : `
+      <div class="glass-card p-12 rounded-2xl text-center">
+        <i class="fas fa-route text-4xl text-wiki-secondary mb-4"></i>
+        <h2 class="text-2xl font-semibold text-white mb-2">등록된 HowTo가 없습니다</h2>
+        <p class="text-sm text-wiki-muted">Phase 1 합성 가이드를 준비 중입니다. 곧 업데이트될 예정입니다.</p>
+      </div>
+    `
+
   const content = `
     <div class="max-w-6xl mx-auto">
-        <h1 class="text-4xl font-bold mb-8 gradient-text text-center">
-            <i class="fas fa-route mr-3"></i>HowTo 시리즈
+      <header class="text-center mb-10 space-y-3">
+        <h1 class="text-4xl font-bold gradient-text flex items-center justify-center gap-3">
+          <i class="fas fa-route"></i>HowTo 시리즈
         </h1>
-        
-
-        <div class="grid md:grid-cols-2 gap-6">
-            <a href="/howto/law-school" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">로스쿨 들어가는 법</h3>
-                <p class="text-sm text-wiki-muted">법학전문대학원 입학 준비부터 합격까지의 완벽 가이드</p>
-                <div class="flex gap-2 mt-3">
-                    <span class="text-xs px-2 py-1 bg-wiki-bg rounded">법학</span>
-                    <span class="text-xs px-2 py-1 bg-wiki-bg rounded">대학원</span>
-                </div>
-            </a>
-            <a href="/howto/cpa" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">회계사 되는 법</h3>
-                <p class="text-sm text-wiki-muted">공인회계사 시험 준비와 합격 전략</p>
-                <div class="flex gap-2 mt-3">
-                    <span class="text-xs px-2 py-1 bg-wiki-bg rounded">회계</span>
-                    <span class="text-xs px-2 py-1 bg-wiki-bg rounded">자격증</span>
-                </div>
-            </a>
-            <a href="/howto/chemical-engineer-career" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">화학공학 전공으로 취직하는 법</h3>
-                <p class="text-sm text-wiki-muted">화공 전공자를 위한 진로 선택과 취업 전략</p>
-                <div class="flex gap-2 mt-3">
-                    <span class="text-xs px-2 py-1 bg-wiki-bg rounded">화학공학</span>
-                    <span class="text-xs px-2 py-1 bg-wiki-bg rounded">취업</span>
-                </div>
-            </a>
-            <a href="/howto/startup" class="glass-card p-6 rounded-xl hover-glow block">
-                <h3 class="text-xl font-bold mb-2">스타트업 창업하는 법</h3>
-                <p class="text-sm text-wiki-muted">아이디어부터 투자 유치까지 스타트업 창업 가이드</p>
-                <div class="flex gap-2 mt-3">
-                    <span class="text-xs px-2 py-1 bg-wiki-bg rounded">창업</span>
-                    <span class="text-xs px-2 py-1 bg-wiki-bg rounded">비즈니스</span>
-                </div>
-            </a>
-        </div>
+        <p class="text-sm text-wiki-muted max-w-3xl mx-auto">
+          Careerwiki Phase 1 샘플 HowTo 가이드는 AI·Growth 실행 전략을 빠르게 검증하기 위한 템플릿입니다.
+        </p>
+      </header>
+      <section class="space-y-6">
+        ${cards}
+      </section>
     </div>
   `
-  
-  return c.html(renderLayout(content, 'HowTo 시리즈 - Careerwiki'))
+
+  return c.html(
+    renderLayout(
+      content,
+      'HowTo 시리즈 - Careerwiki',
+      'Careerwiki Phase 1 샘플 HowTo 컬렉션으로 Growth 실행 가이드를 확인하세요.'
+    )
+  )
+})
+
+app.get('/howto/:slug', (c) => {
+  const slug = c.req.param('slug')
+  const sample = getSampleHowtoGuide(slug)
+
+  if (!sample) {
+    const fallbackHtml = renderDetailFallback({
+      icon: 'fa-route',
+      title: 'HowTo 정보를 찾을 수 없습니다',
+      description: '요청하신 HowTo 가이드가 아직 등록되지 않았습니다.',
+      ctaHref: '/howto',
+      ctaLabel: 'HowTo 목록으로 돌아가기'
+    })
+    c.status(404)
+    return c.html(
+      renderLayout(
+        fallbackHtml,
+        'HowTo 정보 없음 - Careerwiki',
+        '요청한 HowTo 가이드를 찾을 수 없습니다.'
+      )
+    )
+  }
+
+  return renderSampleHowtoDetailPage(c, sample)
 })
 
 // Help Page
@@ -1482,79 +1887,81 @@ app.get('/help', (c) => {
 // Search Page with Relevance-based Results
 app.get('/search', (c) => {
   const query = c.req.query('q') || ''
-  const normalizedQuery = query.toLowerCase()
-  
-  // Mock data with relevance scoring
-  const jobs = [
-    { id: 'software-engineer', title: '소프트웨어 엔지니어', desc: '소프트웨어를 설계, 개발, 테스트하는 전문가. 프로그래밍, 코딩, 알고리즘 활용', keywords: ['코딩', '프로그래밍', '개발', '소프트웨어', '엔지니어', '알고리즘', 'IT'] },
-    { id: 'data-scientist', title: '데이터 사이언티스트', desc: '데이터 분석과 머신러닝으로 인사이트를 도출하는 전문가. 파이썬 코딩 활용', keywords: ['데이터', '분석', '머신러닝', 'AI', '통계', '코딩', '파이썬'] },
-    { id: 'security-consultant', title: '보안 컨설턴트', desc: '시스템 보안 취약점 분석 및 해결. 보안 코딩과 침투 테스트 수행', keywords: ['보안', '해킹', '네트워크', '시스템', '코딩', '취약점'] },
-    { id: 'frontend-engineer', title: '프론트엔드 엔지니어', desc: '웹 인터페이스 개발 전문가. HTML, CSS, JavaScript 코딩', keywords: ['프론트엔드', '웹', 'UI', 'UX', '코딩', '자바스크립트', '리액트'] },
-    { id: 'chemical-engineer', title: '화학공학 엔지니어', desc: '화학 공정 설계와 최적화를 담당하는 전문가', keywords: ['화학', '공정', '제조', '플랜트', '엔지니어'] },
-  ]
-  
-  const majors = [
-    { id: 'computer-science', title: '컴퓨터공학과', desc: '컴퓨터 시스템과 소프트웨어 개발을 배우는 학과. 프로그래밍과 코딩이 핵심', keywords: ['컴퓨터', '프로그래밍', '코딩', '알고리즘', '소프트웨어', 'IT'] },
-    { id: 'information-science', title: '정보과학과', desc: '정보 시스템과 데이터 처리를 다루는 학과. 코딩과 데이터베이스 학습', keywords: ['정보', '데이터', '시스템', '코딩', '데이터베이스'] },
-    { id: 'design', title: '디자인학과', desc: '시각 디자인과 UX/UI 디자인을 배우는 학과. 웹 코딩 기초 포함', keywords: ['디자인', 'UI', 'UX', '그래픽', '웹디자인', '코딩'] },
-    { id: 'chemical-engineering', title: '화학공학과', desc: '화학 원리를 산업에 응용하는 공학 분야', keywords: ['화학', '공학', '공정', '재료', '에너지'] },
-    { id: 'electrical-engineering', title: '전기전자공학과', desc: '전기, 전자 시스템과 임베디드 시스템 개발. 펌웨어 코딩 포함', keywords: ['전기', '전자', '회로', '임베디드', '코딩', '펌웨어'] },
-  ]
-  
-  const howtos = [
-    { id: 'career-exploration', title: '진로 탐색 가이드', desc: 'IT 직업과 코딩 교육 포함한 진로 탐색 방법', keywords: ['진로', '탐색', '직업', '코딩', 'IT', '교육'] },
-    { id: 'coding-bootcamp', title: '코딩 부트캠프 선택 가이드', desc: '코딩 부트캠프 비교와 선택 방법', keywords: ['코딩', '부트캠프', '교육', '프로그래밍', '취업'] },
-    { id: 'interview-prep', title: '기술 면접 준비하기', desc: '코딩 테스트와 기술 면접 준비 전략', keywords: ['면접', '코딩', '테스트', '알고리즘', '기술'] },
-  ]
-  
-  // Calculate relevance score
-  const calculateScore = (item) => {
+  const normalizedQuery = query.trim().toLowerCase()
+  const hasQuery = normalizedQuery.length > 0
+
+  const jobSamples = listSampleJobSummaries()
+  const majorSamples = listSampleMajorSummaries()
+  const howtoSamples = listSampleHowtoSummaries()
+
+  const calculateScore = (item: { title: string; snippet: string; keywords: string[] }): number => {
+    if (!hasQuery) return 0
     let score = 0
-    const itemText = (item.title + ' ' + item.desc + ' ' + item.keywords.join(' ')).toLowerCase()
-    
-    // Exact match in title
-    if (item.title.toLowerCase().includes(normalizedQuery)) score += 10
-    
-    // Match in description
-    if (item.desc.toLowerCase().includes(normalizedQuery)) score += 5
-    
-    // Match in keywords
-    item.keywords.forEach(keyword => {
-      if (keyword.toLowerCase().includes(normalizedQuery)) score += 3
-      if (normalizedQuery.includes(keyword.toLowerCase())) score += 2
+    const loweredTitle = item.title.toLowerCase()
+    const loweredSnippet = item.snippet.toLowerCase()
+    if (loweredTitle.includes(normalizedQuery)) score += 10
+    if (loweredSnippet.includes(normalizedQuery)) score += 5
+    item.keywords.forEach((keyword) => {
+      const loweredKeyword = keyword.toLowerCase()
+      if (loweredKeyword.includes(normalizedQuery)) score += 3
+      if (normalizedQuery.includes(loweredKeyword)) score += 2
     })
-    
     return score
   }
-  
-  // Filter and sort results
-  const jobResults = jobs
-    .map(job => ({ ...job, score: calculateScore(job) }))
-    .filter(job => job.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5)
-  
-  const majorResults = majors
-    .map(major => ({ ...major, score: calculateScore(major) }))
-    .filter(major => major.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5)
-  
-  const howtoResults = howtos
-    .map(howto => ({ ...howto, score: calculateScore(howto) }))
-    .filter(howto => howto.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
-  
+
+  const buildResultList = <T extends { slug: string; title: string; snippet: string; keywords: string[] }>(
+    items: T[],
+    basePath: 'job' | 'major' | 'howto',
+    limit: number
+  ) => {
+    if (!hasQuery) {
+      return items.slice(0, limit).map((item) => ({
+        slug: item.slug,
+        title: item.title,
+        snippet: item.snippet,
+        keywords: item.keywords,
+        href: `/${basePath}/${encodeURIComponent(item.slug)}`
+      }))
+    }
+
+    return items
+      .map((item) => ({ item, score: calculateScore(item) }))
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map(({ item }) => ({
+        slug: item.slug,
+        title: item.title,
+        snippet: item.snippet,
+        keywords: item.keywords,
+        href: `/${basePath}/${encodeURIComponent(item.slug)}`
+      }))
+  }
+
+  const jobResults = buildResultList(jobSamples, 'job', 5)
+  const majorResults = buildResultList(majorSamples, 'major', 5)
+  const howtoResults = buildResultList(howtoSamples, 'howto', 3)
+
+  const renderKeywordBadges = (keywords: string[]): string => {
+    if (!keywords || !keywords.length) {
+      return ''
+    }
+    return `<div class="flex flex-wrap gap-2 mt-3">${keywords.slice(0, 3)
+      .map((keyword) => `<span class="px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-[11px] text-wiki-muted">${escapeHtml(keyword)}</span>`)
+      .join('')}</div>`
+  }
+
+  const queryValueAttr = escapeHtml(query)
+  const escapedQuery = escapeHtml(query)
+
   const content = `
     <div class="max-w-4xl mx-auto">
-        <!-- Search Bar with Query -->
         <div class="mb-8">
             <form action="/search" method="get" class="relative">
                 <input 
                     type="text" 
                     name="q" 
-                    value="${query}"
+                    value="${queryValueAttr}"
                     placeholder="검색어를 입력하세요" 
                     class="w-full px-6 py-4 bg-wiki-bg border border-wiki-border rounded-full text-lg focus:outline-none focus:border-wiki-primary transition"
                 >
@@ -1563,9 +1970,8 @@ app.get('/search', (c) => {
                 </button>
             </form>
         </div>
-        
+
         ${jobResults.length > 0 ? `
-        <!-- Job Results Section -->
         <div class="mb-8">
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <span class="w-2 h-6 bg-wiki-primary mr-3"></span>
@@ -1573,17 +1979,17 @@ app.get('/search', (c) => {
             </h2>
             <div class="space-y-3">
                 ${jobResults.map(job => `
-                    <a href="/job/${job.id}" class="glass-card p-4 rounded-lg hover-glow block transition">
-                        <h3 class="text-lg font-semibold text-wiki-text">${job.title}</h3>
-                        <p class="text-sm text-wiki-muted mt-1">${job.desc}</p>
+                    <a href="${job.href}" class="glass-card p-4 rounded-lg hover-glow block transition">
+                        <h3 class="text-lg font-semibold text-wiki-text">${escapeHtml(job.title)}</h3>
+                        <p class="text-sm text-wiki-muted mt-1 leading-relaxed">${escapeHtml(job.snippet)}</p>
+                        ${renderKeywordBadges(job.keywords)}
                     </a>
                 `).join('')}
             </div>
         </div>
         ` : ''}
-        
+
         ${majorResults.length > 0 ? `
-        <!-- Major Results Section -->
         <div class="mb-8">
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <span class="w-2 h-6 bg-wiki-secondary mr-3"></span>
@@ -1591,17 +1997,17 @@ app.get('/search', (c) => {
             </h2>
             <div class="space-y-3">
                 ${majorResults.map(major => `
-                    <a href="/major/${major.id}" class="glass-card p-4 rounded-lg hover-glow block transition">
-                        <h3 class="text-lg font-semibold text-wiki-text">${major.title}</h3>
-                        <p class="text-sm text-wiki-muted mt-1">${major.desc}</p>
+                    <a href="${major.href}" class="glass-card p-4 rounded-lg hover-glow block transition">
+                        <h3 class="text-lg font-semibold text-wiki-text">${escapeHtml(major.title)}</h3>
+                        <p class="text-sm text-wiki-muted mt-1 leading-relaxed">${escapeHtml(major.snippet)}</p>
+                        ${renderKeywordBadges(major.keywords)}
                     </a>
                 `).join('')}
             </div>
         </div>
         ` : ''}
-        
+
         ${howtoResults.length > 0 ? `
-        <!-- HowTo Results Section -->
         <div class="mb-8">
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <span class="w-2 h-6 bg-green-500 mr-3"></span>
@@ -1609,39 +2015,57 @@ app.get('/search', (c) => {
             </h2>
             <div class="space-y-3">
                 ${howtoResults.map(howto => `
-                    <a href="/howto/${howto.id}" class="glass-card p-4 rounded-lg hover-glow block transition">
-                        <h3 class="text-lg font-semibold text-wiki-text">${howto.title}</h3>
-                        <p class="text-sm text-wiki-muted mt-1">${howto.desc}</p>
+                    <a href="${howto.href}" class="glass-card p-4 rounded-lg hover-glow block transition">
+                        <h3 class="text-lg font-semibold text-wiki-text">${escapeHtml(howto.title)}</h3>
+                        <p class="text-sm text-wiki-muted mt-1 leading-relaxed">${escapeHtml(howto.snippet)}</p>
+                        ${renderKeywordBadges(howto.keywords)}
                     </a>
                 `).join('')}
             </div>
         </div>
         ` : ''}
-        
+
         ${jobResults.length === 0 && majorResults.length === 0 && howtoResults.length === 0 ? `
         <div class="glass-card p-8 rounded-xl text-center">
             <i class="fas fa-search text-4xl text-wiki-muted mb-4"></i>
-            <p class="text-lg text-wiki-muted">"${query}"에 대한 검색 결과가 없습니다.</p>
-            <p class="text-sm text-wiki-muted mt-2">다른 검색어를 시도해보세요.</p>
+            <p class="text-lg text-wiki-muted">"${escapedQuery}"에 대한 검색 결과가 없습니다.</p>
+            <p class="text-sm text-wiki-muted mt-2">다른 검색어를 시도하거나 Phase 1 샘플 콘텐츠를 탐색해 보세요.</p>
         </div>
         ` : ''}
     </div>
   `
-  
-  return c.html(renderLayout(content, `${query ? query + ' - ' : ''}검색 - Careerwiki`))
+
+  const title = hasQuery ? `${query} - Careerwiki 검색` : '검색 - Careerwiki'
+  const description = hasQuery
+    ? createMetaDescription(`"${query}"와 관련된 Careerwiki 직업, 전공, HowTo 정보를 확인하세요.`)
+    : 'Careerwiki에서 직업, 전공, HowTo 샘플 인사이트를 검색해보세요.'
+
+  return c.html(renderLayout(content, escapeHtml(title), escapeHtml(description)))
 })
 
 // Unified Job Detail Page (SSR)
 app.get('/job/:slug', async (c) => {
   const slug = c.req.param('slug')
+  const resolvedId = resolveDetailIdFromSlug('job', slug)
   const careernetId = c.req.query('careernetId') || undefined
   const goyongJobId = c.req.query('goyongJobId') || undefined
   const includeSources = parseSourcesQuery(c.req.query('sources'))
 
+  const findSampleJobDetail = () => {
+    const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
+    for (const candidate of candidates) {
+      const sample = getSampleJobDetail(candidate)
+      if (sample) {
+        return sample
+      }
+    }
+    return null
+  }
+
   try {
     const result = await getUnifiedJobDetail(
       {
-        id: slug,
+        id: resolvedId,
         careernetId,
         goyong24JobId: goyongJobId || undefined,
         includeSources
@@ -1650,6 +2074,11 @@ app.get('/job/:slug', async (c) => {
     )
 
     if (!result.profile) {
+      const sample = findSampleJobDetail()
+      if (sample) {
+        return renderSampleJobDetailPage(c, sample)
+      }
+
       const fallbackHtml = renderDetailFallback({
         icon: 'fa-magnifying-glass',
         title: '직업 정보를 찾을 수 없습니다',
@@ -1670,7 +2099,7 @@ app.get('/job/:slug', async (c) => {
     }
 
     const profile = result.profile
-    const canonicalSlug = profile.id || slug
+    const canonicalSlug = composeDetailSlug('job', profile.name, profile.id ?? resolvedId)
     const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
     const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
     const title = `${profile.name} 직업 정보 - Careerwiki`
@@ -1706,6 +2135,11 @@ app.get('/job/:slug', async (c) => {
     )
   } catch (error) {
     console.error('Job detail route error:', error)
+    const sample = findSampleJobDetail()
+    if (sample) {
+      console.warn('Job detail fallback: serving synthetic sample for', slug)
+      return renderSampleJobDetailPage(c, sample)
+    }
     const fallbackHtml = renderDetailFallback({
       icon: 'fa-exclamation-circle',
       iconColor: 'text-red-500',
@@ -1728,11 +2162,23 @@ app.get('/job/:slug', async (c) => {
 // Unified Major Detail Page (SSR)
 app.get('/major/:slug', async (c) => {
   const slug = c.req.param('slug')
+  const resolvedId = resolveDetailIdFromSlug('major', slug)
   const careernetId = c.req.query('careernetId') || undefined
   const majorGbParam = c.req.query('goyongMajorGb')
   const departmentId = c.req.query('goyongDepartmentId') || undefined
   const majorId = c.req.query('goyongMajorId') || undefined
   const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+  const findSampleMajorDetail = () => {
+    const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
+    for (const candidate of candidates) {
+      const sample = getSampleMajorDetail(candidate)
+      if (sample) {
+        return sample
+      }
+    }
+    return null
+  }
 
   const goyongMajorGb = majorGbParam === '1' ? '1' : majorGbParam === '2' ? '2' : undefined
   const goyongParams = goyongMajorGb && departmentId && majorId
@@ -1746,7 +2192,7 @@ app.get('/major/:slug', async (c) => {
   try {
     const result = await getUnifiedMajorDetail(
       {
-        id: slug,
+        id: resolvedId,
         careernetId,
         goyong24Params: goyongParams,
         includeSources
@@ -1755,6 +2201,11 @@ app.get('/major/:slug', async (c) => {
     )
 
     if (!result.profile) {
+      const sample = findSampleMajorDetail()
+      if (sample) {
+        return renderSampleMajorDetailPage(c, sample)
+      }
+
       const fallbackHtml = renderDetailFallback({
         icon: 'fa-magnifying-glass',
         title: '전공 정보를 찾을 수 없습니다',
@@ -1775,7 +2226,7 @@ app.get('/major/:slug', async (c) => {
     }
 
     const profile = result.profile
-    const canonicalSlug = profile.id || slug
+    const canonicalSlug = composeDetailSlug('major', profile.name, profile.id ?? resolvedId)
     const canonicalPath = `/major/${encodeURIComponent(canonicalSlug)}`
     const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
     const title = `${profile.name} 전공 정보 - Careerwiki`
@@ -1811,6 +2262,11 @@ app.get('/major/:slug', async (c) => {
     )
   } catch (error) {
     console.error('Major detail route error:', error)
+    const sample = findSampleMajorDetail()
+    if (sample) {
+      console.warn('Major detail fallback: serving synthetic sample for', slug)
+      return renderSampleMajorDetailPage(c, sample)
+    }
     const fallbackHtml = renderDetailFallback({
       icon: 'fa-exclamation-circle',
       iconColor: 'text-red-500',
@@ -1847,10 +2303,46 @@ const parseSourcesQuery = (value?: string | null): DataSource[] | undefined => {
   return validSources.length ? validSources : undefined
 }
 
-const parseNumberParam = (value: string | undefined, fallback: number): number => {
+const parseNumberParam = (
+  value: string | undefined,
+  fallback: number,
+  options?: { min?: number; max?: number }
+): number => {
   if (!value) return fallback
   const parsed = Number(value)
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
+  if (!Number.isFinite(parsed)) {
+    return fallback
+  }
+
+  let result = Math.floor(parsed)
+  if (options?.min !== undefined && result < options.min) {
+    result = options.min
+  }
+  if (options?.max !== undefined && result > options.max) {
+    result = options.max
+  }
+  if (options?.min === undefined && result <= 0) {
+    return fallback
+  }
+  return result
+}
+
+const toIntegerOrNull = (
+  value: unknown,
+  options?: { min?: number; max?: number }
+): number | null => {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return null
+  }
+
+  let result = Math.floor(value)
+  if (options?.min !== undefined && result < options.min) {
+    result = options.min
+  }
+  if (options?.max !== undefined && result > options.max) {
+    result = options.max
+  }
+  return result
 }
 
 const escapeHtml = (value: string): string =>
@@ -1860,6 +2352,12 @@ const escapeHtml = (value: string): string =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
+
+const serializeForScript = (value: unknown): string =>
+  JSON.stringify(value)
+    .replace(/</g, '\\u003C')
+    .replace(/>/g, '\\u003E')
+    .replace(/&/g, '\\u0026')
 
 const createMetaDescription = (...candidates: Array<string | undefined | null>): string => {
   for (const candidate of candidates) {
@@ -1899,6 +2397,88 @@ const renderDetailFallback = (options: {
   `
 }
 
+type SampleHighlight = {
+  slug: string
+  title: string
+  snippet: string
+  keywords: string[]
+}
+
+const renderSampleHighlightBadges = (keywords: string[] | undefined): string => {
+  if (!keywords || keywords.length === 0) return ''
+  const chips = keywords
+    .slice(0, 6)
+    .map((keyword) => `<span class="px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted">${escapeHtml(keyword)}</span>`)
+    .join('')
+  return `<div class="flex flex-wrap gap-2">${chips}</div>`
+}
+
+const renderSampleHighlightCards = (
+  samples: SampleHighlight[],
+  basePath: 'job' | 'major',
+  notice: { title: string; description: string; badge: string }
+): string => {
+  if (!samples.length) {
+    return `
+      <div class="glass-card p-12 rounded-2xl text-center">
+        <i class="fas fa-lightbulb text-4xl text-wiki-secondary mb-4"></i>
+        <h2 class="text-2xl font-semibold text-white mb-2">${escapeHtml(notice.title)}</h2>
+        <p class="text-sm text-wiki-muted">${escapeHtml(notice.description)}</p>
+      </div>
+    `
+  }
+
+  const cards = samples
+    .map((sample) => {
+      const href = `/${basePath}/${encodeURIComponent(sample.slug)}`
+      const badges = renderSampleHighlightBadges(sample.keywords)
+      return `
+        <article class="glass-card h-full p-6 rounded-2xl border border-wiki-border/60 bg-wiki-bg/70">
+          <div class="flex flex-col h-full gap-4">
+            <div>
+              <h3 class="text-xl font-semibold text-white">
+                <a href="${href}" class="hover:text-wiki-secondary transition">${escapeHtml(sample.title)}</a>
+              </h3>
+              <p class="text-xs text-wiki-muted uppercase tracking-wide mt-1">${escapeHtml(notice.badge)}</p>
+            </div>
+            <p class="text-sm text-wiki-muted leading-relaxed flex-1">${escapeHtml(sample.snippet)}</p>
+            ${badges}
+            <div class="pt-2">
+              <a href="${href}" class="inline-flex items-center gap-2 text-sm text-wiki-primary hover:text-wiki-secondary transition">
+                자세히 보기<i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </article>
+      `
+    })
+    .join('')
+
+  return `
+    <section class="space-y-6">
+      <div class="glass-card p-8 rounded-2xl border border-wiki-border/60 bg-wiki-bg/60 text-center">
+        <h2 class="text-2xl font-semibold text-white mb-2">${escapeHtml(notice.title)}</h2>
+        <p class="text-sm text-wiki-muted">${escapeHtml(notice.description)}</p>
+      </div>
+      <div class="grid gap-4 md:grid-cols-3">${cards}</div>
+    </section>
+  `
+}
+
+const renderSampleJobHighlights = (limit = 3): string =>
+  renderSampleHighlightCards(listSampleJobSummaries().slice(0, limit), 'job', {
+    title: 'Phase 1 샘플 직업 살펴보기',
+    description: 'CareerWiki 통합 데이터가 준비되는 동안 합성 직업 샘플을 참고해 주세요.',
+    badge: 'Phase 1 Synthetic Sample'
+  })
+
+const renderSampleMajorHighlights = (limit = 3): string =>
+  renderSampleHighlightCards(listSampleMajorSummaries().slice(0, limit), 'major', {
+    title: 'Phase 1 샘플 전공 미리보기',
+    description: 'CareerWiki가 제공할 전공 데이터를 Phase 1 합성 샘플로 먼저 확인해 보세요.',
+    badge: 'Phase 1 Synthetic Sample'
+  })
+
 const describeSkipReason = (reason?: string): string => {
   switch (reason) {
     case 'missing-id':
@@ -1914,8 +2494,14 @@ const describeSkipReason = (reason?: string): string => {
   }
 }
 
-const renderSourceStatusSummary = (sources?: SourceStatusRecord): string => {
-  if (!sources) return ''
+const renderSourceStatusSummary = (
+  sources?: SourceStatusRecord,
+  options?: { id?: string }
+): string => {
+  const idAttr = options?.id ? ` id="${escapeHtml(options.id)}"` : ''
+  if (!sources) {
+    return options?.id ? `<div${idAttr}></div>` : ''
+  }
   const entries = Object.entries(sources) as Array<[DataSource, SourceStatusRecord[DataSource]]>
   const rows = entries
     .map(([source, status]) => {
@@ -1938,23 +2524,1075 @@ const renderSourceStatusSummary = (sources?: SourceStatusRecord): string => {
       `
     })
     .join('')
-  if (!rows) return ''
+  if (!rows) {
+    return options?.id ? `<div${idAttr}></div>` : ''
+  }
   return `
-    <div class="glass-card p-6 rounded-xl mt-8">
+    <div${idAttr} class="glass-card p-6 rounded-xl mt-8">
       <h2 class="text-lg font-semibold text-wiki-text mb-3">데이터 수집 상태</h2>
       <ul class="space-y-2">${rows}</ul>
     </div>
   `
 }
 
+const renderCacheNotice = (
+  state?: CacheState,
+  options?: { staleSeconds: number; maxAgeSeconds: number }
+): string => {
+  if (!state || state.status === 'bypass') return ''
+
+  const statusLabels: Record<CacheState['status'], string> = {
+    miss: 'Cloudflare KV에 새로 저장된 데이터',
+    hit: 'Cloudflare KV 캐시 적중',
+    revalidated: '캐시 재검증 완료',
+    stale: '임시 캐시 데이터 제공',
+    bypass: '캐시 미사용'
+  }
+
+  const accentClasses: Record<CacheState['status'], string> = {
+    miss: 'text-wiki-secondary',
+    hit: 'text-wiki-secondary',
+    revalidated: 'text-green-400',
+    stale: 'text-yellow-300',
+    bypass: 'text-wiki-muted'
+  }
+
+  const statusLabel = statusLabels[state.status] ?? '캐시 상태'
+  const accent = accentClasses[state.status] ?? 'text-wiki-muted'
+
+  const detailText = [
+    `캐시 생성: ${formatTimestamp(state.cachedAt)}`,
+    `재검증 예정: ${formatTimestamp(state.staleAt)}`,
+    `만료 예정: ${formatTimestamp(state.expiresAt)}`
+  ].join(' · ')
+
+  const durationText = options
+    ? `재검증 주기 ${secondsToHuman(options.staleSeconds)}, 최대 보존 ${secondsToHuman(options.maxAgeSeconds)}`
+    : undefined
+
+  return `
+    <div class="glass-card p-4 rounded-xl mb-6 border border-wiki-border/70 bg-wiki-bg/70">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div>
+          <p class="text-sm font-semibold ${accent}"><i class="fas fa-cloud mr-2"></i>${escapeHtml(statusLabel)}</p>
+          <p class="text-xs text-wiki-muted mt-1">${escapeHtml(detailText)}</p>
+        </div>
+        ${durationText ? `<p class="text-xs text-wiki-muted">${escapeHtml(durationText)}</p>` : ''}
+      </div>
+    </div>
+  `
+}
+
+const createKeywordsMetaTag = (keywords?: string[]): string => {
+  if (!keywords || keywords.length === 0) {
+    return ''
+  }
+  return `<meta name="keywords" content="${escapeHtml(keywords.join(', '))}">`
+}
+
+const createArticleModifiedMeta = (updatedAt?: string): string => {
+  if (!updatedAt) {
+    return ''
+  }
+  return `<meta property="article:modified_time" content="${escapeHtml(updatedAt)}">`
+}
+
+function renderSampleJobDetailPage(
+  c: Context<{ Bindings: Bindings; Variables: Variables }>,
+  sample: NonNullable<ReturnType<typeof getSampleJobDetail>>
+) {
+  const canonicalSlug = sample.meta?.canonicalSlug ?? composeDetailSlug('job', sample.profile.name, sample.profile.id)
+  const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
+  const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+  const title = sample.meta?.title ?? `${sample.profile.name} 직업 정보 - Careerwiki`
+  const description = createMetaDescription(
+    sample.meta?.description,
+    sample.profile.summary,
+    sample.profile.prospect,
+    sample.snippet
+  )
+  const extraHead = [
+    '<meta property="og:type" content="article">',
+    createJobJsonLd(sample.profile, canonicalUrl),
+    createKeywordsMetaTag(sample.meta?.keywords),
+    createArticleModifiedMeta(sample.meta?.updatedAt)
+  ].filter(Boolean).join('\n')
+
+  const content = renderUnifiedJobDetail({
+    profile: sample.profile,
+    partials: sample.partials ?? {},
+    sources: sample.sources
+  })
+
+  return c.html(
+    renderLayout(
+      content,
+      escapeHtml(title),
+      escapeHtml(description),
+      false,
+      {
+        canonical: canonicalUrl,
+        ogUrl: canonicalUrl,
+        extraHead
+      }
+    )
+  )
+}
+
+function renderSampleMajorDetailPage(
+  c: Context<{ Bindings: Bindings; Variables: Variables }>,
+  sample: NonNullable<ReturnType<typeof getSampleMajorDetail>>
+) {
+  const canonicalSlug = sample.meta?.canonicalSlug ?? composeDetailSlug('major', sample.profile.name, sample.profile.id)
+  const canonicalPath = `/major/${encodeURIComponent(canonicalSlug)}`
+  const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+  const title = sample.meta?.title ?? `${sample.profile.name} 전공 정보 - Careerwiki`
+  const description = createMetaDescription(
+    sample.meta?.description,
+    sample.profile.summary,
+    sample.profile.jobProspect,
+    sample.snippet
+  )
+  const extraHead = [
+    '<meta property="og:type" content="article">',
+    createMajorJsonLd(sample.profile, canonicalUrl),
+    createKeywordsMetaTag(sample.meta?.keywords),
+    createArticleModifiedMeta(sample.meta?.updatedAt)
+  ].filter(Boolean).join('\n')
+
+  const content = renderUnifiedMajorDetail({
+    profile: sample.profile,
+    partials: sample.partials ?? {},
+    sources: sample.sources
+  })
+
+  return c.html(
+    renderLayout(
+      content,
+      escapeHtml(title),
+      escapeHtml(description),
+      false,
+      {
+        canonical: canonicalUrl,
+        ogUrl: canonicalUrl,
+        extraHead
+      }
+    )
+  )
+}
+
+function renderSampleHowtoDetailPage(
+  c: Context<{ Bindings: Bindings; Variables: Variables }>,
+  sample: NonNullable<ReturnType<typeof getSampleHowtoGuide>>
+) {
+  const canonicalSlug = sample.meta?.canonicalSlug ?? sample.slug
+  const canonicalPath = `/howto/${encodeURIComponent(canonicalSlug)}`
+  const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+  const title = sample.meta?.title ?? `${sample.guide.title} - Careerwiki HowTo`
+  const description = createMetaDescription(
+    sample.meta?.description,
+    sample.guide.summary,
+    sample.snippet
+  )
+  const extraHead = [
+    '<meta property="og:type" content="article">',
+    createKeywordsMetaTag(sample.meta?.keywords),
+    createArticleModifiedMeta(sample.meta?.updatedAt),
+    createHowtoJsonLd(sample.guide, canonicalUrl)
+  ].filter(Boolean).join('\n')
+
+  const content = renderHowtoGuideDetail(sample.guide)
+
+  return c.html(
+    renderLayout(
+      content,
+      escapeHtml(title),
+      escapeHtml(description),
+      false,
+      {
+        canonical: canonicalUrl,
+        ogUrl: canonicalUrl,
+        extraHead
+      }
+    )
+  )
+}
+
+function createHowtoJsonLd(
+  guide: NonNullable<ReturnType<typeof getSampleHowtoGuide>>['guide'],
+  canonicalUrl: string
+): string {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: guide.title,
+    description: guide.summary,
+    url: canonicalUrl,
+    totalTime: guide.estimatedDuration,
+    difficulty: guide.difficulty,
+    audience: guide.audience,
+    supply: guide.prerequisites?.map((item) => ({
+      '@type': 'HowToSupply',
+      name: item
+    })),
+    tool: guide.resources?.map((resource) => ({
+      '@type': 'HowToTool',
+      name: resource.label,
+      url: resource.url
+    })),
+    step: guide.steps?.map((step) => ({
+      '@type': 'HowToStep',
+      name: step.title,
+      url: `${canonicalUrl}#${encodeURIComponent(step.id)}`,
+      text: step.description,
+      itemListElement: step.keyActions?.map((action) => ({
+        '@type': 'HowToDirection',
+        text: action
+      }))
+    }))
+  }
+
+  const script = JSON.stringify(jsonLd).replace(/</g, '\\u003C')
+  return `<script type="application/ld+json">${script}</script>`
+}
+
+const AUTH_HEADER_USER = 'x-user-id'
+const AUTH_HEADER_ROLE = 'x-user-role'
+const AUTH_HEADER_NAME = 'x-user-name'
+
+type RequestUser = {
+  id: string
+  role: UserRole
+  name?: string | null
+}
+
+const parseUserRole = (value?: string | null): UserRole => {
+  const normalized = value?.toLowerCase() ?? ''
+  if (normalized === 'super-admin' || normalized === 'super_admin' || normalized === 'owner' || normalized === 'root') {
+    return 'super-admin'
+  }
+  if (normalized === 'operator' || normalized === 'admin' || normalized === 'moderator') {
+    return 'operator'
+  }
+  return 'user'
+}
+
+const getOptionalUser = (c: Context): RequestUser | null => {
+  const id = c.req.header(AUTH_HEADER_USER)?.trim()
+  if (!id) {
+    return null
+  }
+  return {
+    id,
+    role: parseUserRole(c.req.header(AUTH_HEADER_ROLE)),
+    name: c.req.header(AUTH_HEADER_NAME) ?? null
+  }
+}
+
+const maskIpForDisplay = (ip: string | null | undefined): string | null => {
+  if (!ip) return null
+  if (ip.includes(':')) {
+    const segments = ip.split(':').slice(0, 4)
+    return `${segments.join(':')}::`
+  }
+  const parts = ip.split('.')
+  if (parts.length !== 4) {
+    return ip
+  }
+  return `${parts[0]}.${parts[1]}.*.*`
+}
+
+const toHex = (buffer: ArrayBuffer): string => {
+  const bytes = new Uint8Array(buffer)
+  return Array.from(bytes)
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('')
+}
+
+const hashIpAddress = async (ip: string | null | undefined): Promise<string | null> => {
+  if (!ip) return null
+  const encoder = new TextEncoder()
+  const digest = await crypto.subtle.digest('SHA-256', encoder.encode(ip))
+  return toHex(digest)
+}
+
+const formatPerfAlertLine = (alert: PerfAlert): string => {
+  const severityIcon = alert.severity === 'critical' ? '🚨' : '⚠️'
+  const isScoreMetric = alert.metric.toLowerCase().includes('cls')
+  const rounding = (value: number) => (isScoreMetric ? value.toFixed(2) : `${Math.round(value)}ms`)
+  const contextParts: string[] = []
+  if (alert.context?.page) {
+    contextParts.push(`page=${alert.context.page}`)
+  }
+  if (alert.context?.action) {
+    contextParts.push(`action=${alert.context.action}`)
+  }
+  if (alert.context?.category) {
+    contextParts.push(`cat=${alert.context.category}`)
+  }
+  const contextSuffix = contextParts.length ? ` (${contextParts.join(' · ')})` : ''
+  return `${severityIcon} ${alert.metric}: ${rounding(alert.value)} > ${rounding(alert.threshold)}${contextSuffix}`
+}
+
+const sendPerfAlertsToSlack = async (
+  webhook: string,
+  options: {
+    alerts: PerfAlert[]
+    url?: string
+    reason?: string
+    id: string
+  }
+): Promise<void> => {
+  try {
+    const header = options.reason ? `Perf alert (${options.reason})` : 'Perf alert detected'
+    const urlLine = options.url ? `URL: ${options.url}` : null
+    const lines = options.alerts.slice(0, 6).map((alert) => formatPerfAlertLine(alert))
+    const bodyLines = [header, `Log ID: ${options.id}`, ...(urlLine ? [urlLine] : []), ...lines]
+    const payload = { text: bodyLines.join('\n') }
+    await fetch(webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+  } catch (error) {
+    console.error('[perf-alert] slack notification failed', error)
+  }
+}
+
 // API 엔드포인트들
+
+app.post('/api/perf-metrics', async (c) => {
+  let payload: PerfMetricsPayload
+  try {
+    payload = await c.req.json<PerfMetricsPayload>()
+  } catch (error) {
+    return c.json({ success: false, error: 'invalid json body' }, 400)
+  }
+
+  try {
+    const rawIp = c.req.header('cf-connecting-ip') ?? null
+    const ipHash = await hashIpAddress(rawIp)
+    const result = await storePerfMetrics(c.env.KV, payload, { ip: ipHash ?? undefined })
+
+    if (result.alerts && result.alerts.length && c.env.PERF_ALERT_WEBHOOK) {
+      c.executionCtx.waitUntil(
+        sendPerfAlertsToSlack(c.env.PERF_ALERT_WEBHOOK, {
+          alerts: result.alerts,
+          url: payload.url,
+          reason: payload.reason,
+          id: result.id
+        })
+      )
+    }
+
+    return c.json({
+      success: true,
+      data: {
+        id: result.id
+      },
+      alerts: result.alerts ?? []
+    })
+  } catch (error) {
+    console.error('[perf-metrics] failed to store', error)
+    return c.json({ success: false, error: 'failed to store metrics' }, 500)
+  }
+})
+
+app.get('/api/comments', async (c) => {
+  const entityTypeRaw = c.req.query('entityType')
+  const slugRaw = c.req.query('slug')
+
+  if (!isPageType(entityTypeRaw)) {
+    return c.json({ success: false, error: 'entityType must be job, major, or guide' }, 400)
+  }
+
+  if (!slugRaw || !slugRaw.trim()) {
+    return c.json({ success: false, error: 'slug is required' }, 400)
+  }
+
+  const slug = slugRaw.trim()
+  const limit = parseNumberParam(c.req.query('limit'), 50, { min: 1, max: 100 })
+  const titleParam = c.req.query('title')
+  const summaryParam = c.req.query('summary')
+  const title = typeof titleParam === 'string' && titleParam.trim().length ? titleParam.trim() : slug
+  const summary = typeof summaryParam === 'string' && summaryParam.trim().length ? summaryParam.trim().slice(0, 400) : null
+  const viewer = getOptionalUser(c)
+
+  try {
+    const result = await getCommentsBySlug(c.env.DB, {
+      slug: buildCommentPageSlug(entityTypeRaw, slug),
+      pageType: entityTypeRaw,
+      title,
+      summary,
+      limit,
+      viewerId: viewer?.id ?? null,
+      viewerRole: viewer?.role ?? 'user',
+      includeModerated: viewer ? viewer.role !== 'user' : false
+    })
+
+    return c.json({
+      success: true,
+      data: result.comments,
+      meta: {
+        total: result.totalCount,
+        page: {
+          id: result.page.id,
+          slug: result.page.slug,
+          title: result.page.title,
+          pageType: result.page.page_type,
+          summary: result.page.summary
+        },
+        viewer: viewer ? { id: viewer.id, role: viewer.role } : null,
+        policy: result.policy,
+        bestThreshold: result.policy.bestLikeThreshold,
+        bestLimit: result.policy.bestLimit,
+        reportBlindThreshold: result.policy.reportBlindThreshold
+      }
+    })
+  } catch (error) {
+    console.error('[comments:list] failed', error)
+    return c.json({ success: false, error: 'failed to load comments' }, 500)
+  }
+})
+
+app.post('/api/comments', async (c) => {
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    return c.json({ success: false, error: 'invalid json body' }, 400)
+  }
+
+  const entityType = body?.entityType
+  const slugRaw = typeof body?.slug === 'string' ? body.slug : ''
+  const contentRaw = typeof body?.content === 'string' ? body.content : ''
+  const title = typeof body?.title === 'string' && body.title.trim().length ? body.title.trim() : slugRaw.trim()
+  const summary = typeof body?.summary === 'string' && body.summary.trim().length ? body.summary.trim().slice(0, 400) : null
+  const parentId = toParentId(body?.parentId)
+
+  if (!isPageType(entityType)) {
+    return c.json({ success: false, error: 'entityType must be job, major, or guide' }, 400)
+  }
+
+  if (!slugRaw || !slugRaw.trim()) {
+    return c.json({ success: false, error: 'slug is required' }, 400)
+  }
+
+  if (!contentRaw || !contentRaw.trim()) {
+    return c.json({ success: false, error: 'content is required' }, 400)
+  }
+
+  const user = getOptionalUser(c)
+  if (!user) {
+    return c.json({ success: false, error: 'authentication required' }, 401)
+  }
+
+  const slug = slugRaw.trim()
+  const ipAddress = c.req.header('cf-connecting-ip') ?? null
+  const ipHash = await hashIpAddress(ipAddress)
+
+  if (await isIpBlocked(c.env.DB, ipHash)) {
+    return c.json({ success: false, error: 'commenting temporarily restricted' }, 403)
+  }
+
+  const anonymousRequested = Boolean(body?.anonymous)
+  const nicknameRaw = typeof body?.nickname === 'string' ? body.nickname : null
+  const nickname = anonymousRequested ? null : nicknameRaw ?? user.name ?? null
+  const displayIp = anonymousRequested ? maskIpForDisplay(ipAddress) : null
+
+  try {
+    const comment = await createComment(c.env.DB, {
+      slug: buildCommentPageSlug(entityType, slug),
+      pageType: entityType,
+      title: title || slug,
+      summary,
+      content: contentRaw,
+      nickname,
+      parentId,
+      authorId: user.id,
+      isAnonymous: anonymousRequested,
+      ipHash,
+      displayIp
+    })
+
+    return c.json({ success: true, data: comment })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'COMMENT_ERROR'
+    if (message === 'EMPTY_CONTENT') {
+      return c.json({ success: false, error: 'content is required' }, 400)
+    }
+    if (message === 'INVALID_PARENT') {
+      return c.json({ success: false, error: 'invalid parentId' }, 400)
+    }
+    if (message === 'COMMENT_NOT_FOUND') {
+      return c.json({ success: false, error: 'comment not found' }, 404)
+    }
+    if (message === 'AUTHOR_REQUIRED') {
+      return c.json({ success: false, error: 'authentication required' }, 401)
+    }
+    console.error('[comments:create] failed', error)
+    return c.json({ success: false, error: 'failed to create comment' }, 500)
+  }
+})
+
+app.post('/api/comments/:id/like', async (c) => {
+  const commentId = Number(c.req.param('id'))
+  if (!Number.isFinite(commentId) || commentId <= 0) {
+    return c.json({ success: false, error: 'invalid comment id' }, 400)
+  }
+
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    body = {}
+  }
+
+  const user = getOptionalUser(c)
+  if (!user) {
+    return c.json({ success: false, error: 'authentication required' }, 401)
+  }
+
+  const directionRaw = typeof body?.direction === 'string' ? body.direction.toLowerCase() : 'up'
+  const direction = directionRaw === 'down' || directionRaw === 'dislike'
+    ? 'down'
+    : directionRaw === 'clear' || directionRaw === 'remove'
+      ? 'clear'
+      : 'up'
+
+  try {
+    const comment = await setCommentVote(c.env.DB, {
+      commentId,
+      userId: user.id,
+      direction
+    })
+    if (!comment) {
+      return c.json({ success: false, error: 'comment not found' }, 404)
+    }
+    return c.json({ success: true, data: comment })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to update like state'
+    if (message === 'USER_REQUIRED') {
+      return c.json({ success: false, error: 'authentication required' }, 401)
+    }
+    if (message === 'COMMENT_NOT_FOUND') {
+      return c.json({ success: false, error: 'comment not found' }, 404)
+    }
+    if (message === 'SELF_VOTE_NOT_ALLOWED') {
+      return c.json({ success: false, error: 'authors cannot vote on their own comments' }, 403)
+    }
+    if (message === 'VOTE_LIMIT_REACHED') {
+      return c.json({ success: false, error: 'vote limit reached' }, 429)
+    }
+    console.error('[comments:like] failed', error)
+    return c.json({ success: false, error: 'failed to update like state' }, 500)
+  }
+})
+
+app.post('/api/comments/:id/flag', async (c) => {
+  const commentId = Number(c.req.param('id'))
+  if (!Number.isFinite(commentId) || commentId <= 0) {
+    return c.json({ success: false, error: 'invalid comment id' }, 400)
+  }
+
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    body = {}
+  }
+
+  const user = getOptionalUser(c)
+  if (!user) {
+    return c.json({ success: false, error: 'authentication required' }, 401)
+  }
+
+  const ipAddress = c.req.header('cf-connecting-ip') ?? null
+  const ipHash = await hashIpAddress(ipAddress)
+
+  try {
+    const comment = await reportComment(c.env.DB, {
+      commentId,
+      reporterId: user.id,
+      reporterIpHash: ipHash,
+      reason: typeof body?.reason === 'string' ? body.reason.slice(0, 200) : null
+    })
+    if (!comment) {
+      return c.json({ success: false, error: 'comment not found' }, 404)
+    }
+    return c.json({
+      success: true,
+      data: {
+        ...comment,
+        blinded: comment.status !== 'visible'
+      }
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to flag comment'
+    if (message === 'REPORTER_REQUIRED') {
+      return c.json({ success: false, error: 'authentication required' }, 401)
+    }
+    if (message === 'COMMENT_NOT_FOUND') {
+      return c.json({ success: false, error: 'comment not found' }, 404)
+    }
+    if (message === 'REPORT_ALREADY_FILED') {
+      return c.json({ success: false, error: 'duplicate report not allowed' }, 409)
+    }
+    console.error('[comments:flag] failed', error)
+    return c.json({ success: false, error: 'failed to flag comment' }, 500)
+  }
+})
+
+app.get('/api/comments/ip-blocks', async (c) => {
+  const user = getOptionalUser(c)
+  if (!user || user.role === 'user') {
+    return c.json({ success: false, error: 'moderator access required' }, 403)
+  }
+
+  const includeReleased = c.req.query('includeReleased') === '1'
+
+  try {
+    const records = await listIpBlocks(c.env.DB, { includeReleased })
+    return c.json({ success: true, data: records })
+  } catch (error) {
+    console.error('[comments:ip-blocks:list] failed', error)
+    return c.json({ success: false, error: 'failed to list ip blocks' }, 500)
+  }
+})
+
+app.post('/api/comments/ip-blocks', async (c) => {
+  const user = getOptionalUser(c)
+  if (!user || user.role === 'user') {
+    return c.json({ success: false, error: 'moderator access required' }, 403)
+  }
+
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    body = {}
+  }
+
+  const ipHashRaw = typeof body?.ipHash === 'string' ? body.ipHash.trim() : ''
+  const ipRaw = typeof body?.ip === 'string' ? body.ip.trim() : ''
+  const ipHash = ipHashRaw || (await hashIpAddress(ipRaw))
+
+  if (!ipHash) {
+    return c.json({ success: false, error: 'ip or ipHash is required' }, 400)
+  }
+
+  try {
+    const record = await blockIpAddress(c.env.DB, {
+      ipHash,
+      reason: typeof body?.reason === 'string' ? body.reason : null,
+      blockedBy: user.id
+    })
+    return c.json({ success: true, data: record })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to block ip'
+    if (message === 'IP_ALREADY_BLOCKED') {
+      return c.json({ success: false, error: 'ip already blocked' }, 409)
+    }
+    if (message === 'IP_HASH_REQUIRED') {
+      return c.json({ success: false, error: 'ipHash required' }, 400)
+    }
+    if (message === 'BLOCK_ACTOR_REQUIRED') {
+      return c.json({ success: false, error: 'moderator identifier required' }, 400)
+    }
+    console.error('[comments:ip-blocks:block] failed', error)
+    return c.json({ success: false, error: 'failed to block ip' }, 500)
+  }
+})
+
+app.post('/api/comments/ip-blocks/:hash/release', async (c) => {
+  const user = getOptionalUser(c)
+  if (!user || user.role === 'user') {
+    return c.json({ success: false, error: 'moderator access required' }, 403)
+  }
+
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    body = {}
+  }
+
+  const hashParam = c.req.param('hash')
+  const ipHash = typeof hashParam === 'string' ? hashParam.trim() : ''
+
+  if (!ipHash) {
+    return c.json({ success: false, error: 'ip hash required' }, 400)
+  }
+
+  try {
+    const record = await releaseIpAddress(c.env.DB, {
+      ipHash,
+      releasedBy: user.id,
+      reason: typeof body?.reason === 'string' ? body.reason : null
+    })
+
+    if (!record) {
+      return c.json({ success: false, error: 'ip block not found' }, 404)
+    }
+
+    return c.json({ success: true, data: record })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to release ip block'
+    if (message === 'IP_HASH_REQUIRED') {
+      return c.json({ success: false, error: 'ip hash required' }, 400)
+    }
+    if (message === 'RELEASE_ACTOR_REQUIRED') {
+      return c.json({ success: false, error: 'moderator identifier required' }, 400)
+    }
+    console.error('[comments:ip-blocks:release] failed', error)
+    return c.json({ success: false, error: 'failed to release ip block' }, 500)
+  }
+})
+
+app.post('/api/perf-metrics', async (c) => {
+  let body: PerfMetricsPayload
+  try {
+    body = await c.req.json<PerfMetricsPayload>()
+  } catch (error) {
+    return c.json({ success: false, error: 'invalid json body' }, 400)
+  }
+
+  try {
+    const ip = c.req.header('cf-connecting-ip') ?? undefined
+    const { id } = await storePerfMetrics(c.env.KV, body, { ip })
+    return c.json({ success: true, id })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'perf metrics store failed'
+    const status = message === 'Invalid payload' || message === 'No metrics provided' ? 400 : 500
+    return c.json({ success: false, error: message }, status)
+  }
+})
+
+app.post('/api/analyzer/sessions', async (c) => {
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    body = {}
+  }
+
+  if (!body || typeof body !== 'object') {
+    return c.json({ success: false, error: 'invalid body' }, 400)
+  }
+
+  try {
+    const session = await createOrUpdateSession(c.env.DB, {
+      sessionId: typeof body.sessionId === 'string' ? body.sessionId : undefined,
+      userIdentifier: typeof body.userIdentifier === 'string' ? body.userIdentifier : undefined,
+      traitsSnapshot: body.traits ?? body.traitsSnapshot
+    })
+
+    const includeRequests = Boolean(body.includeRequests)
+    const response: Record<string, unknown> = { session }
+
+    if (includeRequests) {
+      const limitInput = typeof body.requestLimit === 'number' ? Math.floor(body.requestLimit) : 10
+      const limit = Number.isFinite(limitInput) ? Math.min(Math.max(limitInput, 1), 100) : 10
+      const requests = await listRequestsBySession(c.env.DB, session.id, limit)
+      response.requests = requests
+    }
+
+    return c.json({ success: true, data: response })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'session upsert failed'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+app.get('/api/analyzer/sessions/:id', async (c) => {
+  const sessionId = c.req.param('id')
+  const includeRequests = c.req.query('includeRequests') === '1'
+  const limit = parseNumberParam(c.req.query('limit'), 20, { min: 1, max: 100 })
+
+  const session = await getAiSession(c.env.DB, sessionId)
+  if (!session) {
+    return c.json({ success: false, error: 'session not found' }, 404)
+  }
+
+  const result: Record<string, unknown> = { session }
+  if (includeRequests) {
+    const requests = await listRequestsBySession(c.env.DB, sessionId, limit)
+    result.requests = requests
+  }
+
+  return c.json({ success: true, data: result })
+})
+
+app.post('/api/analyzer/requests', async (c) => {
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    body = {}
+  }
+
+  const sessionId = typeof body.sessionId === 'string' ? body.sessionId : ''
+  const analysisType = body.analysisType
+  const promptPayload = body.promptPayload
+
+  if (!sessionId) {
+    return c.json({ success: false, error: 'sessionId is required' }, 400)
+  }
+
+  if (!isAnalysisType(analysisType)) {
+    return c.json({ success: false, error: 'analysisType must be "job" or "major"' }, 400)
+  }
+
+  if (promptPayload === undefined) {
+    return c.json({ success: false, error: 'promptPayload is required' }, 400)
+  }
+
+  const session = await getAiSession(c.env.DB, sessionId)
+  if (!session) {
+    return c.json({ success: false, error: 'session not found' }, 404)
+  }
+
+  const pricingTier = isPricingTier(body.pricingTier) ? body.pricingTier : 'free'
+  const initialStatus = isRequestStatus(body.status) ? body.status : 'pending'
+
+  try {
+    const request = await createAnalysisRequest(c.env.DB, {
+      sessionId,
+      analysisType,
+      pricingTier,
+      promptPayload,
+      status: initialStatus
+    })
+
+    return c.json({ success: true, data: { request } })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to create analysis request'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+app.get('/api/analyzer/requests/:id', async (c) => {
+  const requestId = Number(c.req.param('id'))
+  if (Number.isNaN(requestId)) {
+    return c.json({ success: false, error: 'invalid request id' }, 400)
+  }
+
+  const record = await getAnalysisRequestWithResult(c.env.DB, requestId)
+  if (!record) {
+    return c.json({ success: false, error: 'request not found' }, 404)
+  }
+
+  return c.json({ success: true, data: record })
+})
+
+app.post('/api/analyzer/requests/:id/result', async (c) => {
+  const requestId = Number(c.req.param('id'))
+  if (Number.isNaN(requestId)) {
+    return c.json({ success: false, error: 'invalid request id' }, 400)
+  }
+
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    body = {}
+  }
+
+  if (typeof body.provider !== 'string' || !body.provider) {
+    return c.json({ success: false, error: 'provider is required' }, 400)
+  }
+
+  if (body.responsePayload === undefined) {
+    return c.json({ success: false, error: 'responsePayload is required' }, 400)
+  }
+
+  const requestStatus = body.requestStatus
+  if (requestStatus !== undefined && !isRequestStatus(requestStatus)) {
+    return c.json({ success: false, error: 'invalid requestStatus' }, 400)
+  }
+
+  try {
+    const { request, result } = await createAnalysisResult(c.env.DB, {
+      requestId,
+      provider: body.provider,
+      model: typeof body.model === 'string' ? body.model : null,
+      completionTokens: typeof body.completionTokens === 'number' ? body.completionTokens : null,
+      promptTokens: typeof body.promptTokens === 'number' ? body.promptTokens : null,
+      totalTokens: typeof body.totalTokens === 'number' ? body.totalTokens : null,
+      latencyMs: typeof body.latencyMs === 'number' ? body.latencyMs : null,
+      responseSummary: typeof body.responseSummary === 'string' ? body.responseSummary : null,
+      responsePayload: body.responsePayload,
+      requestStatus
+    })
+
+    return c.json({ success: true, data: { request, result } })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to store analysis result'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+app.post('/api/analyzer/requests/:id/status', async (c) => {
+  const requestId = Number(c.req.param('id'))
+  if (Number.isNaN(requestId)) {
+    return c.json({ success: false, error: 'invalid request id' }, 400)
+  }
+
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    body = {}
+  }
+
+  if (!isRequestStatus(body.status)) {
+    return c.json({ success: false, error: 'invalid status' }, 400)
+  }
+
+  const processedAt = typeof body.processedAt === 'string'
+    ? body.processedAt
+    : (body.status === 'completed' || body.status === 'failed' ? new Date().toISOString() : null)
+
+  try {
+    const request = await updateRequestStatus(c.env.DB, requestId, body.status, processedAt)
+    return c.json({ success: true, data: { request } })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to update status'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+app.get('/api/analyzer/sessions/:id/requests', async (c) => {
+  const sessionId = c.req.param('id')
+  const limit = parseNumberParam(c.req.query('limit'), 20, { min: 1, max: 100 })
+  const requests = await listRequestsBySession(c.env.DB, sessionId, limit)
+  return c.json({ success: true, data: { requests } })
+})
+
+app.post('/api/serp-interactions', async (c) => {
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    body = {}
+  }
+
+  if (!isAnalysisType(body.pageType)) {
+    return c.json({ success: false, error: 'pageType must be "job" or "major"' }, 400)
+  }
+
+  if (typeof body.action !== 'string' || !body.action.trim()) {
+    return c.json({ success: false, error: 'action is required' }, 400)
+  }
+
+  try {
+    const record = await recordSerpInteraction(c.env.DB, {
+      pageType: body.pageType,
+      action: body.action,
+      keywordLength: toIntegerOrNull(body.keywordLength, { min: 0 }),
+      category: typeof body.category === 'string' ? body.category : null,
+      perPage: toIntegerOrNull(body.perPage, { min: 1, max: 100 }),
+      results: toIntegerOrNull(body.results, { min: 0, max: 1000 }),
+      cacheStatus: typeof body.cacheStatus === 'string' ? body.cacheStatus : null,
+      durationMs: toIntegerOrNull(body.durationMs, { min: 0 }),
+      sampled: typeof body.sampled === 'boolean' ? body.sampled : null,
+      source: typeof body.source === 'string' ? body.source : null
+    })
+
+    return c.json({ success: true, data: { record } })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to record interaction'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+app.get('/api/serp-interactions/recent', async (c) => {
+  const limit = parseNumberParam(c.req.query('limit'), 50, { min: 1, max: 200 })
+  const records = await listRecentSerpInteractions(c.env.DB, limit)
+  return c.json({ success: true, data: { records } })
+})
+
+app.get('/api/serp-interactions/summary', async (c) => {
+  const startDate = c.req.query('startDate') || undefined
+  const endDate = c.req.query('endDate') || undefined
+  const pageType = c.req.query('pageType') as ('job' | 'major') | undefined
+  const action = c.req.query('action') || undefined
+  const limit = parseNumberParam(c.req.query('limit'), 50, { min: 1, max: 200 })
+
+  const summaries = await getDailySerpSummary(c.env.DB, {
+    startDate,
+    endDate,
+    pageType,
+    action,
+    limit
+  })
+
+  return c.json({ success: true, data: { summaries } })
+})
+
+app.get('/api/freshness/status', async (c) => {
+  try {
+    const status = await getFreshnessStatus(c.env.KV)
+    return c.json({
+      success: true,
+      data: status
+    })
+  } catch (error) {
+    return c.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'freshness status fetch failed'
+      },
+      500
+    )
+  }
+})
+
+app.post('/api/freshness/run', async (c) => {
+  try {
+    let body: { targetId?: string; force?: boolean; reason?: string } = {}
+    try {
+      body = await c.req.json<{ targetId?: string; force?: boolean; reason?: string }>()
+    } catch {
+      body = {}
+    }
+
+    const targetId = body.targetId || c.req.query('targetId')
+    if (!targetId) {
+      return c.json({ success: false, error: 'targetId required' }, 400)
+    }
+
+    const target = resolveFreshnessTargetById(targetId)
+    if (!target) {
+      return c.json({ success: false, error: 'unknown targetId' }, 404)
+    }
+
+    const result = await attemptScheduledRefresh(c.env.KV, c.env, target, {
+      force: body.force ?? c.req.query('force') === '1',
+      reason: body.reason || 'manual-trigger'
+    })
+
+    return c.json({
+      success: result.outcome === 'success',
+      result
+    })
+  } catch (error) {
+    return c.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'freshness run failed'
+      },
+      500
+    )
+  }
+})
 
 // 학과정보 검색 API
 app.get('/api/majors', async (c) => {
   try {
     const keyword = c.req.query('keyword') || ''
-    const page = parseNumberParam(c.req.query('page'), 1)
-    const perPage = parseNumberParam(c.req.query('perPage'), 20)
+    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
     const includeSources = parseSourcesQuery(c.req.query('sources'))
 
     const result = await searchUnifiedMajors({
@@ -2037,8 +3675,8 @@ app.get('/api/jobs', async (c) => {
   try {
     const keyword = c.req.query('keyword') || ''
     const category = c.req.query('category') || ''
-    const page = parseNumberParam(c.req.query('page'), 1)
-    const perPage = parseNumberParam(c.req.query('perPage'), 20)
+    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
     const includeSources = parseSourcesQuery(c.req.query('sources'))
 
     const result = await searchUnifiedJobs({
@@ -2119,3 +3757,23 @@ app.get('/api/categories', async (c) => {
 })
 
 export default app
+
+export const scheduled: ExportedHandlerScheduledHandler<Bindings> = async (event, env, ctx) => {
+  const run = Promise.all(
+    SERP_FRESHNESS_TARGETS.map(async (target) => {
+      try {
+        const result = await attemptScheduledRefresh(env.KV, env, target, {
+          reason: event.cron ? `cron:${event.cron}` : 'scheduled-cron'
+        })
+        if (result.outcome === 'error') {
+          console.error('[freshness][scheduled]', target.id, result.error)
+        }
+      } catch (error) {
+        console.error('[freshness][scheduled]', target.id, error)
+      }
+    })
+  )
+
+  ctx.waitUntil(run)
+  await run
+}

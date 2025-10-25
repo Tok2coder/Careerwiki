@@ -12,10 +12,12 @@
   - 실시간 검색 및 데이터 연동
 
 ## 🌐 서비스 URL
-- **개발 서버**: https://3000-iy8xtwcphw6exxjb1hgnf-6532622b.e2b.dev
-- **프로덕션**: https://careerwiki.org (배포 예정)
+- **Cloudflare Pages (production)**: https://careerwiki-phase1.pages.dev
+- **Latest preview deployment**: https://b5797c35.careerwiki-phase1.pages.dev
+- **QA entry point**: https://careerwiki-phase1.pages.dev/job/lawyer
 - **GitHub**: https://github.com/[username]/careerwiki (연동 예정)
-- **API Status**: ✅ 커리어넷 API 실시간 연동 중 (인증키 활성)
+- **API Status**: ✅ CareerNet 정상 / 고용24 상세 API는 헤더 프로필 재시도 적용(2025-10-16)으로 Cloudflare Pages 환경에서도 정상 응답, 실패 시 재시도·오류 로그 제공
+- **커뮤니티 정책 도움말**: `/help/community-guidelines` (댓글 운영 원칙 & BEST/신고/공감 정책 안내)
 
 ## 📊 데이터 아키텍처
 
@@ -71,9 +73,47 @@ type UnifiedJobDetail = {
 - **통합 파이프라인**: CareerNet + 고용24 API 래퍼 → `mergeJobProfiles` / `mergeMajorProfiles`
 - **SSR 템플릿**: `renderUnifiedJobDetail`, `renderUnifiedMajorDetail`, JSON-LD (`createJobJsonLd`, `createMajorJsonLd`)
 - **소스 상태 관리**: `SourceStatusRecord`로 호출 결과/오류/스킵 사유 기록
+- **슬러그 유틸**: `composeDetailSlug`, `resolveDetailIdFromSlug`로 직관적인 히어로 슬러그를 생성하면서 `job:C_159` 등 레거시 ID와의 호환성 유지 (`/job/:slug`, `/major/:slug`, 샘플 fallback 포함)
+- **공통 템플릿 헬퍼**: `detailTemplateUtils.ts`에서 ARIA 탭셋, CTA 그룹, 댓글 placeholder, 소스 패널을 공유하여 직업/전공 SSR 템플릿 중복 제거 및 텔레메트리 속성 일관성 확보
 - **Cloudflare D1**: 사용자 데이터, 분석 결과 저장 (예정)
-- **Cloudflare KV**: 캐싱, 세션 관리 (예정)
+- **Cloudflare KV**: SSR 목록 캐싱 (재검증 1시간 / 만료 6시간), 세션 관리 (예정)
 - **External API**: 커리어넷 & 고용24 오픈 API (환경 변수 `CAREER_NET_API_KEY`, `GOYONG24_API_KEY`)
+
+### Step4 준비 – D1 & AI 파이프라인 설계
+- `migrations/0002_career_analysis_pipeline.sql` 추가: AI 세션/요청/결과 테이블, SERP 상호작용 로그 요약 구조 정의
+- **ai_sessions**: 익명/로그인 사용자의 분석 흐름 추적, 제출 trait snapshot 저장
+- **ai_analysis_requests / ai_analysis_results**: AI 프로바이더 응답 메타데이터(토큰, latency)·결과 전문 보관, 오류/재시도 상태 관리
+- **serp_interaction_logs / serp_interaction_daily_summary**: 하이드레이션 이벤트 기반 사용자 행동 메트릭 집계, Core Web Vitals 보조 분석 기반 테이블
+- **Service Layer**: `src/services/aiAnalysisService.ts`, `src/services/serpInteractionService.ts`로 D1 접근 캡슐화, `parseNumberParam`/`toIntegerOrNull`로 숫자 파라미터 클램프
+- 필요 Secrets: `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` / `SLACK_WEBHOOK_URL` (wrangler pages secret)
+- 향후 wrangler workflows: KV → D1 배치 적재(Beacon 로그), AI 분석 완료 시 결과 → D1 커밋 후 Slack/Email 알림 연동 계획
+
+### Cloudflare KV 캐싱 전략
+- **Key 패턴**: `list:job|major:q=...&category=...&page=...` 형태로 검색 파라미터를 정규화하여 캐시 키 구성
+- **스토리지 구조**: 데이터 + `cachedAt`,`staleAt`,`expiresAt` 메타정보를 JSON으로 저장, KV expiration은 `expiresAt`에 맞춤
+- **정책**: 1시간마다 재검증(stale-while-revalidate), 최대 6시간까지 캐시 유지. 재검증 실패 시 기존 데이터 안정적으로 반환
+- **운영 지원**: SSR 페이지에 캐시 배지/타임라인 표시, `?refresh=1` 쿼리로 강제 재검증 지원 예정된 스케줄러와 연계 용이
+- **향후 과제**: 캐시 히트율/미스율 메트릭 수집 및 Cloudflare Analytics 대시보드 연동, KV TTL 동적 조정
+
+### SERP Freshness 모니터링 & 동기화 스케줄
+- **Cron 실행**: Cloudflare Cron (`*/30 * * * *`) → Worker `onScheduled` 핸들러가 `SERP_FRESHNESS_TARGETS` 목록을 순회하며 재검증이 필요한 타겟만 갱신
+- **타겟 구성**:
+
+| Target ID | Type | Query / Params | Interval |
+| --- | --- | --- | --- |
+| `job-tech-developer` | job | q=`개발자`, category=`100060` | 60분 ±10분 |
+| `job-health-nurse` | job | q=`간호사`, category=`100070` | 90분 ±15분 |
+| `job-data-scientist` | job | q=`데이터 사이언티스트` | 120분 ±20분 |
+| `major-ai` | major | q=`인공지능` | 180분 ±30분 |
+| `major-nursing` | major | q=`간호` | 240분 ±30분 |
+
+- **재검증 파이프라인**: `attemptScheduledRefresh` → `withKvCache(forceRefresh: true)` → `recordListFreshness`
+  - 성공 시 `freshness:snapshot:*` 스냅샷 업데이트 + 캐시 메타데이터 기록
+  - 실패 시 백오프 스케줄(`freshness:schedule:<targetId>`)에 오류/연속 실패 수 저장
+- **운영 엔드포인트**:
+  - `GET /api/freshness/status` : 현재 스케줄 상태와 최근 스냅샷(최대 20개) 조회
+  - `POST /api/freshness/run` : 수동 강제 재검증(`targetId`, optional `force`, `reason`)
+- **로그/인덱스 구조**: `freshness:index:job|major` 에 최근 50개 스냅샷 키를 보관(7일 TTL)하여 운영 대시보드/탐색에 활용
 
 ## 🚀 현재 완료된 기능
 
@@ -94,8 +134,10 @@ type UnifiedJobDetail = {
    - `/job/:slug` → `getUnifiedJobDetail` + `renderUnifiedJobDetail`
    - `/major/:slug` → `getUnifiedMajorDetail` + `renderUnifiedMajorDetail`
    - canonical/OG 메타, JSON-LD, 데이터 출처 패널, 공통 fallback UI
+   - 댓글 섹션 ARIA 강화 + 비로그인 열람 허용/로그인·회원가입 CTA + 정책 링크(`/help/community-guidelines`) + `cw-detail-action` 텔레메트리 상태 스냅샷 연동
 
 4. **SSR 목록 페이지**
+   - Cloudflare KV 기반 캐싱 (재검증 1시간 / 만료 6시간, `?refresh=1`으로 수동 재검증) + 캐시 상태 배지 노출
    - `/job` 직업위키: 서버 사이드 검색 + 카테고리 필터, ItemList JSON-LD, source status 진단 블록
    - `/major` 전공위키: 키워드 기반 서버 사이드 검색, ItemList JSON-LD, 데이터 출처 서머리
    - 검색 파라미터 기반 canonical URL/OG 메타, 무결성 검사 및 오류 fallback 적용
@@ -105,6 +147,11 @@ type UnifiedJobDetail = {
    - 다크 테마 + 그라디언트 UI
    - Glass morphism 디자인
    - 동적 데이터 로딩
+
+6. **운영 & 모니터링**
+   - Cloudflare Cron `*/30 * * * *` 기반 SERP freshness 자동 재검증 파이프라인 완성
+   - `/api/freshness/status` 실시간 상태 조회, `/api/freshness/run` 수동 강제 재검증 지원
+   - FreshnessSnapshot KV 로그 + 캐시 상태 배지를 통해 목록 페이지 운영 가시성 확보
 
 ### ✅ 기술 스택
 - **Backend**: Hono Framework on Cloudflare Workers
@@ -133,6 +180,48 @@ GET /api/jobs/2001
 
 # 카테고리 목록
 GET /api/categories
+```
+
+### 운영 모니터링 API
+```bash
+# 퍼포먼스 메트릭 수집
+POST /api/perf-metrics
+```
+
+### AI 분석 파이프라인 API
+```bash
+# 세션 생성/갱신 (traitsSnapshot 포함 가능)
+POST /api/analyzer/sessions
+
+# 세션 조회 (+요청 목록)
+GET /api/analyzer/sessions/:id?includeRequests=1&limit=20
+
+# 분석 요청 생성
+POST /api/analyzer/requests
+
+# 분석 요청 + 결과 조회
+GET /api/analyzer/requests/:id
+
+# 분석 결과 저장 및 상태 업데이트 (토큰/latency 로그 포함)
+POST /api/analyzer/requests/:id/result
+
+# 요청 상태만 업데이트
+POST /api/analyzer/requests/:id/status
+
+# 세션별 요청 목록 조회
+GET /api/analyzer/sessions/:id/requests?limit=20
+```
+
+### SERP & 하이드레이션 로그 API
+```bash
+# 사용자 하이드레이션/검색 액션 기록
+POST /api/serp-interactions
+
+# 최근 상호작용 로그 확인
+GET /api/serp-interactions/recent?limit=50
+
+# 일별 상호작용 요약 (필터링 지원)
+GET /api/serp-interactions/summary?startDate=2025-10-01&action=sort-change
 ```
 
 ## 🔄 미구현 기능 및 다음 단계
@@ -173,8 +262,18 @@ npm install
 npm run build
 pm2 start ecosystem.config.cjs
 
-# API 키 설정 (.env)
-CAREER_NET_API_KEY=your_api_key_here
+# API 키 설정 (.dev.vars)
+CAREER_NET_API_KEY=your_careernet_key
+GOYONG24_JOB_API_KEY=your_goyong24_job_key
+GOYONG24_MAJOR_API_KEY=your_goyong24_major_key
+```
+
+### Cloudflare Pages 시크릿 등록
+```bash
+# 최초 1회: 프로젝트 이름 확인 후 시크릿 업로드
+npx wrangler pages secret put CAREER_NET_API_KEY --project-name careerwiki-phase1
+npx wrangler pages secret put GOYONG24_JOB_API_KEY --project-name careerwiki-phase1
+npx wrangler pages secret put GOYONG24_MAJOR_API_KEY --project-name careerwiki-phase1
 ```
 
 ### 배포
@@ -206,29 +305,145 @@ npm run deploy:prod
 - **데이터베이스**: ⏳ 예정
 - **배포**: ⏳ 예정
 
+## ✅ Phase 1 Task 3 QA 요약 (2025-10-16)
+- `/job/lawyer` Cloudflare Pages 프로덕션(https://careerwiki-phase1.pages.dev/job/lawyer) SSR 확인
+  - Hero/Quick Stats/Share CTA에 `data-cw-telemetry-variant="lawyer-live-data-v1"` 전파, 히어로 메타 칩 제거 후 비교 매트릭스와 Quick Stats에 집중
+  - CareerNet + 고용24 실데이터가 모두 로드되어 필드 매트릭스에 값이 채워지고, 차단 시에는 `[goyong24]` 로그 + `오류 발생` 상태로 폴백
+  - canonical/meta/JSON-LD/문서 타이틀이 모두 "변호사" 명칭을 사용하며 `job:C_375` 토큰이 사용자-facing 영역에 노출되지 않음
+- Cloudflare Wrangler secrets(`CAREER_NET_API_KEY`, `GOYONG24_JOB_API_KEY`, `GOYONG24_MAJOR_API_KEY`) Pages 프로젝트에 업로드 완료, 헤더 재시도 적용 후 배포 로그 첨부
+- Telemetry 문서(`docs/telemetry-phase1-task3.md`)와 README 최신 링크/QA 절차 반영
+
 ### 🔥 최근 업데이트
+- ✅ 2025-10-25 변호사 페이지 템플릿 최적화: 고용 형태, 직업 분류 체계, 데이터 출처 블록 제거하여 변호사 페이지를 심플하게 정리. `isLawyerProfile()` 조건 분기로 변호사 전용 레이아웃 적용 완료. 제목 및 데이터 수집 정상 작동 확인.
+- ✅ 2025-10-16 Phase-1 Task 3 follow-up: 변호사 상세 페이지에 실데이터(커리어넷+고용24) 병합, 히어로 메타 칩 제거, 헤더 프로필 회전 재시도 로직으로 Cloudflare Pages에서도 고용24 응답 확보. `renderUnifiedJobDetail`은 `변호사` 명칭·법조 비교 매트릭스를 SSR에 반영하고, README/텔레메트리 문서를 갱신했습니다.
+- ✅ 2025-10-13 Phase-1 Task 3 follow-up: 댓글 placeholder를 비로그인 열람 + 로그인/회원가입 CTA 중심으로 정리하고, 운영 정책은 `/help/community-guidelines` 도움말 페이지로 분리. `DetailTelemetry`는 `comment-login-intent`·`comment-signup-intent` 이벤트에 목적지 정보를 포함하며, `npm run build`로 프로덕션 번들 무결성을 재검증.
+- ✅ 2025-10-10 Phase-1 댓글 하이드레이션 & 텔레메트리 연결: `DetailComments.init`를 `DetailPage.init` 플로우에 통합해 SSR placeholder 기반 댓글 로딩/등록/공감/신고 상호작용을 활성화하고, `cw-detail-action` 텔레메트리 스트림에 댓글 이벤트(`comments-load`, `comment-submit`, `comment-like`, `comment-flag`)를 편입. `npm run build` 재검증으로 번들 무결성 확인.
+- ✅ 2025-10-08 Phase-1 Task 3 정리: 직업·전공 SSR 템플릿이 공통 ARIA 탭셋/CTA/댓글 헬퍼(detailTemplateUtils)로 수렴했음을 확인하고, sampleRegistry 중복 `sources` 키 제거 + 합성 fallback canonical slug 검증 후 `npm run build` 통과
+- ✅ 직업/전공 상세 페이지 탭 기반 UX SSR 및 클라이언트 탭 인터랙션·텔레메트리 이벤트 초안 구현 (Phase 1)
+- ✅ 2025-10-08 슬러그 정규화 및 canonical 재정비: `/job/:slug`, `/major/:slug` 라우트가 `resolveDetailIdFromSlug`로 레거시 ID를 복원하고 `composeDetailSlug`를 기반으로 canonical/JSON-LD URL을 생성하도록 리팩터링, 샘플 fallback·README 갱신
+- ✅ 2025-10-08 perf-metrics 저장 파이프라인 E2E 검증 (NodeNext 테스트 번들 + Mock KV) 및 `perfMetricsService` 이벤트 액션 정규화
+- ✅ Phase 1 합성 데이터 레지스트리 확장 (AI 프로덕트 전략가·데이터사이언스학과·AI 로드맵 HowTo) 및 Job/Major 목록 샘플 하이라이트 SSR 통합
+- ✅ D1 기반 AI Analyzer 세션·요청·결과 API 라우트 및 서비스 레이어 연결 (Step4 백엔드)
+- ✅ SERP 상호작용 로그/요약 D1 엔드포인트 및 숫자 파라미터 검증 강화
+- 🐞 Workers 런타임 오류(`Io is not a function`) 원인 분석 및 함수 선언형 전환으로 재발 방지 (문서화 완료)
+- ✅ Cloudflare Cron 기반 SERP freshness 모니터링 스케줄러 & 운영 API (`/api/freshness/status`, `/api/freshness/run`) 추가
+- ✅ Cloudflare KV 기반 SSR 목록 캐싱 (재검증 1시간 / 만료 6시간) 및 캐시 상태 배지 추가
+- ⏳ `/job`, `/major` 검색 UI 하이드레이션 구조 도입 (정렬·필터·페이지당 갱신 클라이언트 반영, 성능 지표 수집 연동 준비)
+- ✅ `/static/perf-metrics.js` + `/api/perf-metrics` 기반 성능 지표 수집(샘플링·Beacon 저장) 및 하이드레이션 이벤트 로깅 추가
+- ✅ 상세 페이지 텔레메트리 이벤트(`cw-detail-action`)를 perf-metrics 파이프라인에 편입 (탭 전환·CTA·공유·댓글 플레이스홀더 액션 기록)
+- 📝 D1 Step4 설계용 migration `0002_career_analysis_pipeline.sql` 초안 추가 (AI 분석·SERP 로그 테이블 정의)
+- 📝 직업/전공 상세 탭 샘플 데이터(데이터 분석가·데이터사이언스학과) 정리 → `DETAIL_PAGE_DESIGN_ANALYSIS.md` 11장 참조
 - ✅ 직업/전공 목록 페이지 SSR 적용 (검색 파라미터 대응 ItemList JSON-LD & source summary)
 - ✅ 통합 직업/전공 상세 페이지 SSR 적용 (canonical/OG/JSON-LD 포함)
 - ✅ CareerNet + 고용24 통합 병합 로직 및 소스 상태 패널 추가
 - ✅ 공통 fallback UI/에러 처리 및 데이터 출처 서머리 제공
 - ✅ 헤더/검색/네비게이션 UI 고도화 & wrangler dev 환경 안정화
 
-## 🎯 추천 다음 작업
+## 📆 단계별 진행 현황 (워크플로 추적)
+- **Step 1 – Cloudflare KV 기반 캐싱 & 재검증 파이프라인**: ✅ 완료 (SSR 목록 캐시 + 캐시 상태 배지)
+- **Step 2 – SERP Freshness 모니터링 & 동기화 스케줄**: ✅ 완료 (Cron/Worker + Freshness API)
+- **Step 3 – 검색 UI 하이드레이션 + 성능 지표 정의**: ⏳ 진행 중 (SSR 하이드레이션 토대 구축, 성능 지표 수집 정의 작업 병행)
+- **Step 4 – D1 스키마 설계 또는 AI 분석 파이프라인 확장**: ⏳ 진행 중 (D1 마이그레이션 + AI Analyzer API 연결 완료, AI 호출 오케스트레이션 대기)
 
-1. **긴급도 높음**
-   - `/job`, `/major` SSR 결과에 대한 Cloudflare KV 캐싱/재검증 파이프라인 설계
-   - SERP freshness 지표 정의 및 신규 데이터 동기화 스케줄 설계
-   - JSON-LD Rich Result Test & Search Console 제출 자동화 플로우 마련
+### 🧠 Step 3 작업 메모 (2025-10-08 기준)
+- **진행**
+  - 2025-10-13: 댓글 placeholder 거버넌스 UI(스코어보드, 로그인 CTA, 가이드 메시지)를 추가하고 `public/static/api-client.js`가 하이드레이션/댓글 텔레메트리에 상태 스냅샷·거버넌스 컨텍스트를 포함하도록 확장. HowTo SSR 페이지는 커뮤니티 정책 카드와 히어로 메타/앵커 UI로 재구성.
+  - 2025-10-10: `DetailComments` 모듈을 `DetailPage` 초기화 루틴과 연결하여 SSR 메타/데이터 속성을 기반으로 댓글 목록 로딩·폼 제출·공감/신고·텔레메트리 이벤트 디스패치를 완성
+  - 2025-10-08: `tsconfig.tests.json` NodeNext 정합성 확보 + `tests/perfMetricsService.test.ts` Mock KV 실행으로 `navigator.sendBeacon` → `/api/perf-metrics` → KV 저장 파이프라인 검증 완료
+  - 2025-10-08: 합성 샘플 레지스트리(직업/전공/HowTo) 확장 및 `/job`, `/major` 목록/상세 샘플 SSR 통합, 검색 기본값 보강
+  - `/job`, `/major` 리스트 SSR에 하이드레이션 데이터(JSON script) + 클라이언트 툴바 ID 구조 반영
+  - `public/static/api-client.js`에 Hydration 모듈 추가, `cw-hydration-complete` 커스텀 이벤트 정의
+  - Freshness 메타 정보(SSR 캐시 상태, 소스 요약, 총 건수)가 클라이언트 리렌더 시 동기화되도록 상태 구조 확장
+  - `/static/perf-metrics.js`에서 TTFB·FCP·LCP·CLS·FID + 하이드레이션 소요시간 로깅, `/api/perf-metrics` Beacon 저장 플로우 초안 구현
+  - 하이드레이션 UI 액션(`cw-hydration-action`) 이벤트 파이프라인 구축, 정렬/필터/페이지 변경 시 샘플 데이터 전송(30%)
+  - Workers 런타임 오류(`Io is not a function`) 원인: 화살표 함수 호이스팅 → 함수 선언식 변경으로 해결, 테스트 & 문서화 완료
+- **남은 항목**
+  - `/api/perf-metrics` 수집 데이터를 조회·집계할 READ 엔드포인트(페이지네이션, 필터, D1 투하 여부) 설계 및 구현 — 저장 파이프라인은 2025-10-08 테스트로 검증 완료
+  - `public/static/api-client.js` 하이드레이션 이벤트 확장으로 `/job`·`/major` 외 상세/HowTo 페이지 텔레메트리 연동
+  - `cw-detail-action` 이벤트 D1 백업/대시보드(탭 전환·CTA 성과 지표) 설계 및 정의
+  - Core Web Vitals 임계값, 샘플링 토글, 운영 대시보드 연계(알림/보고) 정책 정의
 
-2. **중요도 높음**
-   - Cloudflare D1 스키마/마이그레이션 초안 작성 및 wrangler 워크플로 완성
-   - 소스 상태 로그 → 프론트 라벨·UX 피드백 연동 및 에러 모니터링 대시보드 설계
-   - 검색 UI 하이드레이션(정렬/필터/페이지네이션) 및 성능 측정 지표 정의
+### 🧠 Step4 작업 메모 (2025-10-07 기준)
+- **진행**
+  - D1 `ai_sessions`, `ai_analysis_requests`, `ai_analysis_results` 테이블 서비스 레이어 구현 및 Hono API 라우트 연결
+  - `serp_interaction_logs`, `serp_interaction_daily_summary` CRUD API 완성 및 수치 파라미터 클램프 헬퍼(`parseNumberParam`, `toIntegerOrNull`) 도입
+- **문제 & 해결**
+  - Workers 런타임 오류(`Io is not a function`) 재발 방지 조치: 함수 선언식 전환 + README 회고 기록
+- **남은 항목**
+  - Anthropic/OpenAI 호출 어댑터 + latency/토큰 로깅 워크플로(재시도 큐, timeout 가드 포함) 구현
+  - Analyzer API 보호를 위한 권한 레이어(회원/관리자 구분) 및 Slack/Email 알림 파이프 연동
+  - Analyzer 결과를 프론트엔드(위키/HowTo/Analyzer UI)에서 소비하도록 SSR/클라이언트 연동 설계
 
-3. **향후 개선**
-   - AI Analyzer 폼 → 백엔드 파이프라인 연결 (Claude/GPT)
-   - 사용자 계정 및 즐겨찾기/히스토리 설계
-   - 관측 가능성(로그/메트릭) 및 에러 어노테이션 정비
+## 🧾 2025-10-07 요구사항 감사 요약
+
+| 범주 | 현재 구현 상태 | 미충족/개선 필요 | 후속 조치 |
+| --- | --- | --- | --- |
+| 직업 상세 SSR (`src/templates/unifiedJobDetail.ts`) | 탭 기반 레이아웃, CTA, 댓글 플레이스홀더, detail meta script, 클라이언트 탭 인터랙션/텔레메트리 이벤트 초안까지 구현 | 댓글/리액션 D1 연동, 탭 전환 모션·접근성 QA, CTA 성과 추적 대시보드, 텔레메트리 저장 파이프라인 확장 필요 | Phase 1 댓글 MVP 및 텔레메트리 백엔드 연동, UX 모션/접근성 QA 진행 |
+| 전공 상세 SSR (`src/templates/unifiedMajorDetail.ts`) | 전공 개요/커리큘럼/진로/대학/네트워크 탭 SSR + CTA/댓글 placeholder + 클라이언트 탭 이벤트 트래킹 적용 | 졸업생 후기 데이터, HowTo·직업 교차 링크, 댓글 서비스·텔레메트리 백엔드 연동, 사이드바 운영 정보 확장 필요 | 탭 콘텐츠 우선순위 결정 및 HowTo/직업 연계 콘텐츠 큐레이션, 댓글 MVP 연동 |
+| HowTo 상세 템플릿 (`src/templates/howtoDetail.ts`) | SEO 메타·JSON-LD·탭·CTA에 더해 히어로 메타/앵커 재구성, 커뮤니티 정책 카드, 댓글 거버넌스 스코어보드 연계 사이드바를 포함한 SSR 레이아웃 정비 | Hono 라우트 연결, TOC/콘텐츠 자동 앵커, 백엔드 하이드레이션/텔레메트리 저장 플로우 연동, 레이아웃 공통화가 남음 | `/howto/:slug` SSR 라우트 추가, 공통 레이아웃/TOC/텔레메트리 저장까지 연결, 실 데이터 적용 QA |
+| 하이드레이션 & 텔레메트리 (`public/static/api-client.js`, `public/static/perf-metrics.js`) | `/job`·`/major` 리스트 하이드레이트, Core Web Vitals + Hydration 이벤트 수집, 샘플링/Beacon 처리 구현 | 상세 페이지 및 HowTo 하이드레이션 이벤트 부재, 성능 로그 조회/모니터링 UI 부재, 임계값/알림 정책 미정 | Step 3 잔여 과업으로 이벤트 확장, READ API 및 운영 뷰 설계, 임계값 문서화 |
+| 퍼포먼스 메트릭 백엔드 (`/api/perf-metrics`, `perfMetricsService.ts`) | KV 저장, 인덱스 관리, 유효성 검사 완료 | 조회용 API, KV→D1 백업/보존 전략, 관리 콘솔 미구현 | Read API + 분석 파이프라인 정의 후 구현 |
+| Step 4 AI Analyzer 백엔드 | 세션/요청/결과 CRUD, SERP 로그 API, 숫자 파라미터 검증 완료 | 외부 모델 호출 어댑터, 토큰/Latency 모니터링, 알림/재시도 설계, 프런트 연동 미완 | Auth/권한 구축 후 AI 어댑터 + Slack/Email 알림, UI 통합 순서로 진행 |
+| Workers 런타임 이슈 (`Io is not a function`) | 함수 선언식 전환으로 해결, README “최근 업데이트”에 기록 | 후속 회귀 테스트 자동화, 릴리스 메모 챙길 것 | 테스트 시나리오 추가 및 문서 위치 유지 |
+
+## 🧭 Phase 1 Implementation Readiness (2025-10-07)
+
+### Phase 1 Scope (요약)
+- 위키 상세 페이지(직업/전공) 탭 UX 전환 + 데이터 출처 패널 유지, HowTo/AI CTA 삽입
+- 댓글/리액션/신고 MVP 및 베스트 댓글 하이라이트 (D1 `comments`, `comment_reactions`, `comment_reports` 활용)
+- HowTo 상세 페이지를 공통 `renderLayout` 기반 SSR 구조로 편입하고 다크 테마/JSON-LD 재사용
+- 텔레메트리 확장: Core Web Vitals + 하이드레이션 이벤트 상세/HowTo까지 확대, 대시보드/API 정비
+- SEO 친화적 슬러그·내부 링크 정책 정비 및 협업/권한 레디 상태 확보 (Step 4 AI/D1 연동 대비)
+
+### Step 3: 텔레메트리 & 퍼포먼스 감사 결과
+- `public/static/perf-metrics.js`에서 TTFB/FCP/LCP/CLS/FID + hydration duration을 `navigator.sendBeacon`으로 수집, 샘플링·유효성 검사까지 작동
+- `/api/perf-metrics` POST 엔드포인트와 `perfMetricsService.ts`의 KV 적재/인덱싱 로직이 준비되어 있으나, 조회용 READ API와 운영 대시보드가 부재
+- `public/static/api-client.js`에 직업/전공 상세 탭 인터랙션·CTA·댓글 플레이스홀더 텔레메트리 디스패치 추가 완료, HowTo 상세 및 이벤트 저장/분석 루틴은 아직 미완
+- 임계값(경고 기준), 샘플 비율 조정, Slack/Email 알림 연계 정책이 미정인 상태로 모니터링 워크플로 마무리 필요
+
+### Step 4: D1 & AI 백엔드 감사 결과
+- `migrations/0001_initial_schema.sql` + `0002_career_analysis_pipeline.sql`에 `pages`, `comments`, `ai_sessions`, `ai_analysis_requests/results`, `serp_interaction_logs` 등 Phase 1 범위 테이블 정의 완료
+- `src/services/aiAnalysisService.ts`, `serpInteractionService.ts`, `perfMetricsService.ts` 등 서비스 레이어가 준비되어 있어 D1 CRUD·KV 연동은 즉시 활용 가능
+- 외부 LLM 어댑터(Anthropic/OpenAI), 재시도/타임아웃, 토큰·지연시간 로깅 강화, Slack/Email 알림 연동, Auth 기반 접근 제어는 미구현 상태
+- 협업 기능(댓글 모더레이션, 기여도 추적)과 연동될 권한 체계 설계가 필요하며, Phase 2 Auth 결정과 맞물려 있음
+
+### Phase 1 의사결정 필요 항목
+1. **탭 정보 구조**: 직업/전공 상세 탭 구성(예: 개요·데이터·경력 경로 / 개요·교육 로드맵·졸업생 후기) 및 기본 펼침/우선순위
+2. **댓글 정책**: 익명/로그인 여부, 신고 임계값, 좋아요/싫어요 가중치, 베스트 댓글 선정 규칙, 관리자 모드 진입 방식
+3. **SEO 슬러그 & 리디렉션**: 다국어/공백 처리, slug 충돌 시 정책, 상세→HowTo 내부 링크 경로 및 canonical 전략
+4. **텔레메트리 임계값·대시보드**: KPI(예: LCP 2.5s, CLS 0.1), Slack 알림 채널/주기, 관리자 전용 조회 UI 권한 정책
+5. **협업/권한 사전 결정**: Phase 1에서는 댓글 모더레이션을 어떤 Default Role로 처리할지, 향후 Auth 도입 시 마이그레이션 시나리오
+6. **외부 통합 범위**: Slack/Email, Analytics(Amplitude 등) 연계 여부와 우선순위 결정
+
+### Phase 1 착수 즉시 수행 체크포인트
+1. ✅ `/job/:slug`, `/major/:slug` 탭 기반 레이아웃 SSR 및 클라이언트 탭/CTA 텔레메트리 이벤트 초안 완료 (백엔드 저장·모션 후속 진행)
+2. `/howto/:slug` SSR 라우트 연결 및 `renderLayout` 재활용, TOC 앵커, SEO 메타, 탭/댓글 프레임 삽입
+3. `/api/perf-metrics` READ 엔드포인트 + KV 인덱스 브라우징 뷰 초안 작성(운영 대시보드)
+4. 댓글/리액션/신고 API 골격 구현 및 Step 4 D1 스키마와 매핑, 프론트 placeholder 배치
+5. 내부 링크/슬러그 정책 정의 후 라우트 미들웨어 적용(redirect 및 canonical 보강)
+
+### 정우님 Phase 1 진행 지침
+> "우선 현재 계획을 토대로 Phase 1 착수해주고, 하다가 결정이 꼭 필요한 사항이나 내가 가져와야되거나 결정해야될 사항 있으면 기록해뒀다가 멈추고 나한테 물어보거나 요청해줘."
+
+- 상기 의사결정 항목은 진행 중 업데이트하며 README 섹션을 최신 상태로 유지합니다.
+- 블로킹 이슈 발생 시 README 혹은 `/docs` Log 섹션에 기록 후 정우님께 확인을 요청하겠습니다.
+
+## 🎯 추천 다음 작업 (정우님 우선순위 반영)
+
+1. **Phase 1 — 위키/HowTo 완성 & Step 3 마감**
+   - `unifiedJobDetail`/`unifiedMajorDetail` 탭형 섹션, 댓글/리액션 플레이스홀더, HowTo/AI CTA 배치 등 디자인 청사진 반영
+   - `/howto/:slug` SSR 라우트와 `renderLayout` 기반 템플릿 적용, TOC 앵커·텔레메트리 이벤트 연동
+   - `/api/perf-metrics` READ 엔드포인트 + 운영용 목록 뷰 도입, 하이드레이션 이벤트를 상세/HowTo까지 확장해 Step 3 잔여 항목 마무리
+
+2. **Phase 2 — 회원가입/로그인 및 권한 체계 구축**
+   - Auth Provider(Clerk/Auth0/Supabase 등) 또는 자체 JWT 기반 로그인 플로우 확정 및 구현
+   - D1 `users`, `roles`, `user_roles`(또는 permissions) 마이그레이션 설계 → 보호 라우트/Hono 미들웨어 연결
+   - 관리자 전용 Freshness/로그/퍼포먼스 대시보드 접근 제약, 향후 Pro 플랜 대비 가입자 데이터 구조 정의
+
+3. **Phase 3 — AI 분석 기능 고도화 (Analyzer)**
+   - 프론트엔드에서 세션 생성 → 요청 제출 → 결과 표시 플로우 구현 및 위키/HowTo 내 추천 CTA 연결
+   - Anthropic/OpenAI 호출 어댑터 + 토큰/latency 로그 적재, 실패 재시도/알림 전략 확정
+   - 결과 완료 알림 (Slack/Email) 및 Pro 권한과 연동되는 플랜 설계
 
 ## 📞 연락처
 
@@ -236,4 +451,4 @@ npm run deploy:prod
 
 ---
 
-*Last Updated: 2025-10-03*
+*Last Updated: 2025-10-10*

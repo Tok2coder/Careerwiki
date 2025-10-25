@@ -1,28 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "careerwiki",
+  "name": "careerwiki-phase1",
   "compatibility_date": "2024-01-01",
   "compatibility_flags": ["nodejs_compat"],
   "pages_build_output_dir": "./dist",
-  
-  // D1 Database configuration for wiki content  
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "careerwiki-db",
-      "database_id": "local-development" // Will be replaced with actual ID after creation
-    }
-  ],
-  
-  // KV Namespace for caching and session storage  
-  "kv_namespaces": [
-    {
-      "binding": "KV",
-      "id": "local-kv", // Will be replaced with actual ID after creation
-      "preview_id": "local-kv-preview"
-    }
-  ],
-  
+  // Cron triggers는 Cloudflare Pages 미리보기 환경에서 지원되지 않습니다.
+  // production 배포 시 Worker에 연결할 때 재활성화하세요.
+  // "triggers": {
+  //   "crons": ["*/30 * * * *"]
+  // },
+
   // Environment variables (secrets should be set via wrangler secret)
   // For production: wrangler pages secret put CAREER_NET_API_KEY
   "vars": {

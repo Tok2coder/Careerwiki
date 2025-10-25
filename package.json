@@ -17,8 +17,11 @@
     "hono": "^4.9.9"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251008.0",
     "@hono/vite-build": "^1.2.0",
     "@hono/vite-dev-server": "^0.18.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
     "vite": "^6.3.5",
     "wrangler": "^4.4.0"
   }

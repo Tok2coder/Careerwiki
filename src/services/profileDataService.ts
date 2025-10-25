@@ -113,6 +113,173 @@ export interface JobDetailRequest {
   includeSources?: DataSource[]
 }
 
+const LAWYER_IDENTIFIER_TOKENS = [
+  'lawyer',
+  '변호사',
+  'job:c_375',
+  'job-c-375',
+  'job:g_k000007482',
+  'job-g-k000007482',
+  'jobgk000007482',
+  'c_375',
+  'k000007482'
+]
+
+const LAWYER_EXACT_IDS = ['375', 'k000007482']
+const LAWYER_DISPLAY_NAME = '변호사'
+
+const matchesLawyerIdentifier = (value?: string | null): boolean => {
+  if (!value) {
+    return false
+  }
+  const normalized = value.trim().toLowerCase()
+  if (!normalized) {
+    return false
+  }
+  if (LAWYER_EXACT_IDS.includes(normalized)) {
+    return true
+  }
+  return LAWYER_IDENTIFIER_TOKENS.some((token) => normalized.includes(token))
+}
+
+const resolveJobSourceOverride = (request: JobDetailRequest) => {
+  if (
+    matchesLawyerIdentifier(request.id) ||
+    matchesLawyerIdentifier(request.careernetId) ||
+    matchesLawyerIdentifier(request.goyong24JobId)
+  ) {
+    return {
+      careernetId: '375',
+      goyong24JobId: 'K000007482'
+    }
+  }
+  return null
+}
+
+const applyJobDetailOverrides = (
+  profile: UnifiedJobDetail | null,
+  partials: Partial<Record<DataSource, UnifiedJobDetail | null>>
+): UnifiedJobDetail | null => {
+  if (!profile) {
+    return profile
+  }
+
+  const isLawyerProfile =
+    matchesLawyerIdentifier(profile.id) ||
+    matchesLawyerIdentifier(profile.name) ||
+    matchesLawyerIdentifier(profile.sourceIds?.careernet) ||
+    matchesLawyerIdentifier(profile.sourceIds?.goyong24)
+
+  if (!isLawyerProfile) {
+    return profile
+  }
+
+  const goyong = partials.GOYONG24 ?? null
+  const careernet = partials.CAREERNET ?? null
+
+  const resolveText = (...values: Array<string | undefined | null>): string | undefined => {
+    for (const value of values) {
+      if (typeof value !== 'string') continue
+      const trimmed = value.trim()
+      if (trimmed) {
+        return trimmed
+      }
+    }
+    return undefined
+  }
+
+  const mergedSources = (() => {
+    const set = new Set<string>()
+    profile.sources?.forEach((source) => source && set.add(source))
+    goyong?.sources?.forEach((source) => source && set.add(source))
+    careernet?.sources?.forEach((source) => source && set.add(source))
+    const collected = Array.from(set) as DataSource[]
+    return collected.length ? collected : profile.sources ?? []
+  })()
+
+  const candidateName = profile.name && !matchesLawyerIdentifier(profile.name) ? profile.name.trim() : undefined
+  const goyongName = goyong?.name && !matchesLawyerIdentifier(goyong.name) ? goyong.name.trim() : undefined
+  const careernetName =
+    careernet?.name && !matchesLawyerIdentifier(careernet.name) ? careernet.name.trim() : undefined
+
+  const next: UnifiedJobDetail = {
+    ...profile,
+    name: candidateName ?? goyongName ?? careernetName ?? LAWYER_DISPLAY_NAME,
+    sources: mergedSources
+  }
+
+  const summary = resolveText(profile.summary, goyong?.summary, careernet?.summary)
+  if (summary) next.summary = summary
+
+  const duties = resolveText(profile.duties, goyong?.duties, careernet?.duties)
+  if (duties) next.duties = duties
+
+  const prospect = resolveText(profile.prospect, goyong?.prospect, careernet?.prospect)
+  if (prospect) next.prospect = prospect
+
+  const salary = resolveText(profile.salary, goyong?.salary, careernet?.salary)
+  if (salary) next.salary = salary
+
+  const status = resolveText(profile.status, goyong?.status, careernet?.status)
+  if (status) next.status = status
+
+  const abilities = resolveText(profile.abilities, goyong?.abilities, careernet?.abilities)
+  if (abilities) next.abilities = abilities
+
+  const knowledge = resolveText(profile.knowledge, goyong?.knowledge, careernet?.knowledge)
+  if (knowledge) next.knowledge = knowledge
+
+  const environment = resolveText(profile.environment, goyong?.environment, careernet?.environment)
+  if (environment) next.environment = environment
+
+  const personality = resolveText(profile.personality, goyong?.personality, careernet?.personality)
+  if (personality) next.personality = personality
+
+  const interests = resolveText(profile.interests, goyong?.interests, careernet?.interests)
+  if (interests) next.interests = interests
+
+  const values = resolveText(profile.values, goyong?.values, careernet?.values)
+  if (values) next.values = values
+
+  const activitiesImportance = resolveText(
+    profile.activitiesImportance,
+    goyong?.activitiesImportance,
+    careernet?.activitiesImportance
+  )
+  if (activitiesImportance) next.activitiesImportance = activitiesImportance
+
+  const activitiesLevels = resolveText(
+    profile.activitiesLevels,
+    goyong?.activitiesLevels,
+    careernet?.activitiesLevels
+  )
+  if (activitiesLevels) next.activitiesLevels = activitiesLevels
+
+  const technKnow = resolveText(profile.technKnow, goyong?.technKnow, careernet?.technKnow)
+  if (technKnow) next.technKnow = technKnow
+
+  const categoryName = resolveText(profile.category?.name, goyong?.category?.name, careernet?.category?.name)
+  const categoryCode = resolveText(profile.category?.code, goyong?.category?.code, careernet?.category?.code)
+  if (categoryName || categoryCode) {
+    next.category = {
+      code: categoryCode ?? profile.category?.code,
+      name: categoryName ?? profile.category?.name
+    }
+  }
+
+  next.classifications = {
+    large: resolveText(profile.classifications?.large, goyong?.classifications?.large, careernet?.classifications?.large),
+    medium: resolveText(
+      profile.classifications?.medium,
+      goyong?.classifications?.medium,
+      careernet?.classifications?.medium
+    ),
+    small: resolveText(profile.classifications?.small, goyong?.classifications?.small, careernet?.classifications?.small)
+  }
+
+  return next
+}
+
 export interface UnifiedDetailResult<T> {
   profile: T | null
   partials: Partial<Record<DataSource, T | null>>
@@ -429,6 +596,9 @@ export const getUnifiedJobDetail = async (
   const { id, careernetId, goyong24JobId, includeSources } = request
   const sourcesToUse = resolveIncludedSources(includeSources)
   const sourcesStatus = createInitialSourceStatus()
+  const overrides = resolveJobSourceOverride(request)
+  const explicitCareernetId = careernetId?.trim() || undefined
+  const explicitGoyongId = goyong24JobId?.trim() || undefined
 
   let careernetProfile: UnifiedJobDetail | null = null
   let goyongProfile: UnifiedJobDetail | null = null
@@ -437,8 +607,9 @@ export const getUnifiedJobDetail = async (
   if (sourcesToUse.includes('CAREERNET')) {
     const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
     const resolvedCareernetId =
-      careernetId ||
-      (id ? extractCanonicalSuffix(id, 'job:C_') : undefined) ||
+      overrides?.careernetId ??
+      explicitCareernetId ??
+      (id ? extractCanonicalSuffix(id, 'job:C_') : undefined) ??
       (id && !id.includes(':') ? id : undefined)
 
     if (!resolvedCareernetId) {
@@ -464,8 +635,11 @@ export const getUnifiedJobDetail = async (
   // Goyong24 detail
   if (sourcesToUse.includes('GOYONG24')) {
     const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
-    const resolvedJobId =
-      goyong24JobId || (id ? extractCanonicalSuffix(id, 'job:G_') : undefined)
+    const resolvedJobIdRaw =
+      overrides?.goyong24JobId ??
+      explicitGoyongId ??
+      (id ? extractCanonicalSuffix(id, 'job:G_') : undefined)
+    const resolvedJobId = resolvedJobIdRaw ? resolvedJobIdRaw.toUpperCase() : undefined
 
     if (!resolvedJobId) {
       status.skippedReason = 'missing-id'
@@ -485,12 +659,16 @@ export const getUnifiedJobDetail = async (
 
   const merged = mergeJobProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
 
+  const partialsRecord: Partial<Record<DataSource, UnifiedJobDetail | null>> = {
+    CAREERNET: careernetProfile,
+    GOYONG24: goyongProfile
+  }
+
+  const enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+
   return {
-    profile: merged,
-    partials: {
-      CAREERNET: careernetProfile,
-      GOYONG24: goyongProfile
-    },
+    profile: enhancedProfile,
+    partials: partialsRecord,
     sources: sourcesStatus
   }
 }

@@ -90,16 +90,101 @@ const buildUrl = (endpoint: string, params: Record<string, string>): string => {
   return url.toString()
 }
 
+type HeaderProfile = {
+  label: string
+  headers: Record<string, string>
+}
+
+const FETCH_HEADER_PROFILES: HeaderProfile[] = [
+  {
+    label: 'chrome-desktop',
+    headers: {
+      Accept: 'application/xml,text/xml,*/*;q=0.9',
+      'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+      Referer: 'https://www.work24.go.kr/',
+      Origin: 'https://www.work24.go.kr',
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache'
+    }
+  },
+  {
+    label: 'safari-desktop',
+    headers: {
+      Accept: 'application/xml,text/xml,*/*;q=0.9',
+      'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+      'User-Agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
+      Referer: 'https://www.work24.go.kr/',
+      Origin: 'https://www.work24.go.kr',
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache'
+    }
+  },
+  {
+    label: 'careerwiki-bot',
+    headers: {
+      Accept: 'application/xml,text/xml,*/*;q=0.9',
+      'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+      'User-Agent': 'CareerwikiBot/1.0 (+https://careerwiki-phase1.pages.dev)',
+      Referer: 'https://www.work24.go.kr/',
+      Origin: 'https://www.work24.go.kr'
+    }
+  }
+]
+
+const sanitizeResponseSnippet = (value?: string): string => {
+  if (!value) return ''
+  return value
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 240)
+}
+
 const fetchXml = async (endpoint: string, params: Record<string, string>): Promise<string> => {
   const url = buildUrl(endpoint, params)
-  const response = await fetch(url)
+  let lastError: string | null = null
 
-  if (!response.ok) {
-    const body = await response.text()
-    throw new Error(`고용24 API 요청 실패 (${response.status} ${response.statusText}): ${body}`)
+  for (let attempt = 0; attempt < FETCH_HEADER_PROFILES.length; attempt += 1) {
+    const profile = FETCH_HEADER_PROFILES[attempt]
+    try {
+      const response = await fetch(url, {
+        redirect: 'follow',
+        headers: profile.headers,
+        cf: {
+          cacheEverything: false,
+          cacheTtl: 0
+        }
+      })
+
+      const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
+      const body = await response.text()
+      const trimmed = body.trim()
+      const isXml = contentType.includes('xml') || trimmed.startsWith('<')
+
+      if (response.ok && isXml) {
+        if (attempt > 0) {
+          console.info(`[goyong24] ${endpoint} recovered with header profile "${profile.label}" (status ${response.status})`)
+        }
+        return body
+      }
+
+      const snippet = sanitizeResponseSnippet(body)
+      const label = `${response.status} ${response.statusText || 'Unknown'}`
+      lastError = `${label}${snippet ? ` · ${snippet}` : ''}`
+      console.warn(`[goyong24] ${endpoint} attempt ${attempt + 1} (${profile.label}) failed: ${lastError}`)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      lastError = message
+      console.warn(`[goyong24] ${endpoint} attempt ${attempt + 1} (${profile.label}) threw: ${message}`)
+    }
   }
 
-  return response.text()
+  throw new Error(`고용24 API 요청 실패: ${lastError ?? '알 수 없는 오류'}`)
 }
 
 const getFirstValue = (xml: string, tag: string): string => {

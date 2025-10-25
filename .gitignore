@@ -31,3 +31,30 @@ lerna-debug.log*
 
 # misc
 .DS_Store
+*.bak
+*.backup
+*.tmp
+*.log.*
+*.swp
+
+# local scripts & datasets
+test_*.js
+test_*.mjs
+scripts/
+notes/
+*.docx
+*.xlsx
+*.csv
+*.tsv
+*.jsonl
+*.ndjson
+
+# databases & cache snapshots
+*.sqlite
+*.db
+*.sqlite3
+.d1/
+
+# sandbox outputs
+output/
+*.out

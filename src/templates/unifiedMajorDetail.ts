@@ -1,5 +1,19 @@
-import type { DataSource, MajorRecruitmentStat, MajorUniversityInfo, UnifiedMajorDetail } from '../types/unifiedProfiles'
+import type { DataSource, UnifiedMajorDetail } from '../types/unifiedProfiles'
 import type { SourceStatusRecord } from '../services/profileDataService'
+import {
+  TabEntry,
+  buildCard,
+  buildDetailScaffold,
+  DEFAULT_SOURCE_LABELS,
+  escapeHtml,
+  formatRichText,
+  renderChips,
+  renderHeroImage,
+  renderSourceBadges,
+  renderSourcesPanel,
+  sanitizeJson
+} from './detailTemplateUtils'
+import { composeDetailSlug } from '../utils/slug'
 
 export interface UnifiedMajorDetailTemplateParams {
   profile: UnifiedMajorDetail
@@ -8,8 +22,7 @@ export interface UnifiedMajorDetailTemplateParams {
 }
 
 const SOURCE_LABELS: Record<DataSource, string> = {
-  CAREERNET: '커리어넷',
-  GOYONG24: '고용24'
+  ...DEFAULT_SOURCE_LABELS
 }
 
 const SOURCE_DESCRIPTIONS: Record<DataSource, string> = {
@@ -17,47 +30,7 @@ const SOURCE_DESCRIPTIONS: Record<DataSource, string> = {
   GOYONG24: '고용노동부 고용24 학과 정보'
 }
 
-const escapeHtml = (value?: string | null): string => {
-  if (!value) return ''
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-}
-
-const formatRichText = (value?: string | null): string => {
-  if (!value || !value.trim()) {
-    return '<p class="text-sm text-wiki-muted">정보가 제공되지 않았습니다.</p>'
-  }
-
-  return value
-    .trim()
-    .split(/\n{2,}/)
-    .map((paragraph) => {
-      const safe = escapeHtml(paragraph.trim()).replace(/\n/g, '<br>')
-      return `<p class="text-sm leading-relaxed text-wiki-text">${safe}</p>`
-    })
-    .join('')
-}
-
-const renderChips = (items?: string[] | null, emptyText = '정보 없음'): string => {
-  if (!items || items.length === 0) {
-    return `<p class="text-sm text-wiki-muted">${emptyText}</p>`
-  }
-
-  return `
-    <div class="flex flex-wrap gap-2">
-      ${items
-        .filter((item) => !!item && !!item.trim())
-        .map((item) => `<span class="px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted">${escapeHtml(item.trim())}</span>`)
-        .join('')}
-    </div>
-  `
-}
-
-const renderUniversities = (universities?: MajorUniversityInfo[] | null): string => {
+const renderUniversities = (universities?: UnifiedMajorDetail['universities']): string => {
   if (!universities || universities.length === 0) {
     return ''
   }
@@ -87,14 +60,10 @@ const renderUniversities = (universities?: MajorUniversityInfo[] | null): string
     return ''
   }
 
-  return `
-    <div class="grid gap-4 sm:grid-cols-2">
-      ${items.join('')}
-    </div>
-  `
+  return `<div class="grid gap-4 sm:grid-cols-2">${items.join('')}</div>`
 }
 
-const renderRecruitmentTable = (stats?: MajorRecruitmentStat[] | null): string => {
+const renderRecruitmentTable = (stats?: UnifiedMajorDetail['recruitmentStatus']): string => {
   if (!stats || stats.length === 0) {
     return ''
   }
@@ -133,76 +102,6 @@ const renderRecruitmentTable = (stats?: MajorRecruitmentStat[] | null): string =
   `
 }
 
-const renderSourceBadges = (sources?: DataSource[]): string => {
-  if (!sources || sources.length === 0) return ''
-  return `
-    <div class="flex flex-wrap gap-2">
-      ${sources
-        .map((source) => `
-          <span class="px-3 py-1 rounded-full bg-wiki-primary/10 border border-wiki-primary/40 text-xs text-wiki-primary">
-            <i class="fas fa-database mr-1"></i>${SOURCE_LABELS[source] ?? source}
-          </span>
-        `)
-        .join('')}
-    </div>
-  `
-}
-
-const renderSourcesPanel = (
-  profile: UnifiedMajorDetail,
-  sources?: SourceStatusRecord,
-  partials?: Partial<Record<DataSource, UnifiedMajorDetail | null>>
-): string => {
-  const entries = (Object.keys(SOURCE_LABELS) as DataSource[]).map((source) => {
-    const status = sources?.[source]
-    const hasData = !!partials?.[source]
-    const attempted = status?.attempted
-    const icon = hasData
-      ? 'fa-circle-check text-green-400'
-      : attempted && !status?.error
-        ? 'fa-circle text-wiki-secondary'
-        : 'fa-circle-xmark text-red-400'
-    const subline = hasData
-      ? '통합 데이터에 포함되었습니다.'
-      : status?.error
-        ? status.error
-        : status?.skippedReason === 'keyword-required'
-          ? '검색어가 필요하여 호출되지 않았습니다.'
-          : attempted
-            ? '호출되었으나 데이터가 없습니다.'
-            : '해당 소스는 호출되지 않았습니다.'
-
-    return `
-      <li class="p-3 border border-wiki-border rounded-lg bg-wiki-bg/60">
-        <div class="flex items-start gap-3">
-          <i class="fas ${icon} mt-1"></i>
-          <div>
-            <p class="text-sm font-semibold text-wiki-text">${SOURCE_LABELS[source]}</p>
-            <p class="text-xs text-wiki-muted">${SOURCE_DESCRIPTIONS[source]}</p>
-            <p class="text-xs text-wiki-muted mt-1">${escapeHtml(subline)}</p>
-          </div>
-        </div>
-      </li>
-    `
-  })
-
-  return `
-    <div class="glass-card p-6 rounded-xl space-y-4">
-      <div>
-        <h3 class="text-lg font-semibold text-wiki-text">데이터 출처</h3>
-        <p class="text-xs text-wiki-muted mt-1">CareerWiki 통합 파이프라인에서 수집한 전공 정보를 보여줍니다.</p>
-      </div>
-      <ul class="space-y-3">${entries.join('')}</ul>
-      ${profile.sourceIds.careernet || profile.sourceIds.goyong24 ? `
-        <div class="border-t border-wiki-border pt-3 text-xs text-wiki-muted">
-          <p class="font-semibold text-wiki-text mb-1">Source IDs</p>
-          ${profile.sourceIds.careernet ? `<p>커리어넷: ${escapeHtml(profile.sourceIds.careernet)}</p>` : ''}
-          ${profile.sourceIds.goyong24 ? `<p>고용24: ${escapeHtml(profile.sourceIds.goyong24)}</p>` : ''}
-        </div>
-      ` : ''}
-    </div>
-  `
-}
 
 const renderMetaHighlights = (profile: UnifiedMajorDetail): string => {
   const highlights = [
@@ -237,98 +136,166 @@ const renderMetaHighlights = (profile: UnifiedMajorDetail): string => {
 }
 
 export const renderUnifiedMajorDetail = ({ profile, partials, sources }: UnifiedMajorDetailTemplateParams): string => {
-  const overviewSection = `
-    <div class="glass-card p-6 rounded-xl">
-      <h2 class="text-xl font-semibold text-wiki-text mb-4"><i class="fas fa-circle-info mr-2 text-wiki-secondary"></i>전공 개요</h2>
-      ${formatRichText(profile.summary)}
-    </div>
-  `
+  const heroDescription = profile.summary?.split('\n')[0]?.trim()
+  const metaHighlights = renderMetaHighlights(profile)
+  const heroImage = renderHeroImage(profile.name, { dataAttribute: 'data-major-hero-image', context: 'major' })
 
-  const aptitudeSection = profile.aptitude || profile.relatedMajors?.length
-    ? `
-      <div class="glass-card p-6 rounded-xl">
-        <h2 class="text-xl font-semibold text-wiki-text mb-4"><i class="fas fa-user-check mr-2 text-wiki-secondary"></i>적성 & 연관 전공</h2>
-        ${profile.aptitude ? `<div class="mb-4">${formatRichText(profile.aptitude)}</div>` : ''}
-        ${profile.relatedMajors?.length ? `<div><p class="text-sm font-semibold text-wiki-muted uppercase tracking-wide mb-2">추천 유사 전공</p>${renderChips(profile.relatedMajors)}</div>` : ''}
-      </div>
-    `
-    : ''
+  const overviewCards: string[] = []
+  if (profile.summary?.trim()) {
+    overviewCards.push(buildCard('전공 개요', 'fa-circle-info', formatRichText(profile.summary)))
+  }
+  if (profile.aptitude?.trim()) {
+    overviewCards.push(buildCard('이 전공에 어울리는 사람', 'fa-user-check', formatRichText(profile.aptitude)))
+  }
 
-  const curriculumSection = profile.mainSubjects?.length
-    ? `
-      <div class="glass-card p-6 rounded-xl">
-        <h2 class="text-xl font-semibold text-wiki-text mb-4"><i class="fas fa-book-open mr-2 text-wiki-secondary"></i>주요 교과목</h2>
-        ${renderChips(profile.mainSubjects, '교과목 정보가 없습니다.')}
-      </div>
-    `
-    : ''
+  const learningCards: string[] = []
+  if (profile.mainSubjects?.length) {
+    learningCards.push(buildCard('주요 교과목', 'fa-book-open', renderChips(profile.mainSubjects, '교과목 정보가 없습니다.')))
+  }
+  if (profile.whatStudy?.trim()) {
+    learningCards.push(buildCard('무엇을 배우나요?', 'fa-graduation-cap', formatRichText(profile.whatStudy)))
+  }
+  if (profile.howPrepare?.trim()) {
+    learningCards.push(buildCard('어떻게 준비하나요?', 'fa-route', formatRichText(profile.howPrepare)))
+  }
+  if (profile.licenses?.length) {
+    learningCards.push(buildCard('추천 자격증', 'fa-certificate', renderChips(profile.licenses, '관련 자격증 정보가 없습니다.')))
+  }
 
-  const licenseSection = profile.licenses?.length
-    ? `
-      <div class="glass-card p-6 rounded-xl">
-        <h2 class="text-xl font-semibold text-wiki-text mb-4"><i class="fas fa-certificate mr-2 text-wiki-secondary"></i>추천 자격증</h2>
-        ${renderChips(profile.licenses, '관련 자격증 정보가 없습니다.')}
-      </div>
-    `
-    : ''
+  const careerCards: string[] = []
+  if (profile.jobProspect?.trim()) {
+    careerCards.push(buildCard('진로 전망', 'fa-chart-line', formatRichText(profile.jobProspect)))
+  }
+  if (profile.relatedJobs?.length) {
+    careerCards.push(buildCard('관련 직업', 'fa-briefcase', renderChips(profile.relatedJobs, '연관 직업 정보가 없습니다.')))
+  }
+  if (profile.salaryAfterGraduation || profile.employmentRate) {
+    const metaItems = [
+      profile.salaryAfterGraduation ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>` : '',
+      profile.employmentRate ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>` : ''
+    ].join('')
+    careerCards.push(buildCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems}</ul>`))
+  }
 
-  const studyPlanSection = profile.whatStudy || profile.howPrepare
-    ? `
-      <div class="glass-card p-6 rounded-xl">
-        <h2 class="text-xl font-semibold text-wiki-text mb-4"><i class="fas fa-graduation-cap mr-2 text-wiki-secondary"></i>학습 전략</h2>
-        ${profile.whatStudy ? `<div class="mb-4"><p class="text-sm font-semibold text-wiki-muted uppercase tracking-wide mb-2">무엇을 배우나요?</p>${formatRichText(profile.whatStudy)}</div>` : ''}
-        ${profile.howPrepare ? `<div><p class="text-sm font-semibold text-wiki-muted uppercase tracking-wide mb-2">어떻게 준비하나요?</p>${formatRichText(profile.howPrepare)}</div>` : ''}
-      </div>
-    `
-    : ''
-
-  const outlookSection = profile.jobProspect
-    ? `
-      <div class="glass-card p-6 rounded-xl">
-        <h2 class="text-xl font-semibold text-wiki-text mb-4"><i class="fas fa-chart-line mr-2 text-wiki-secondary"></i>진로 전망</h2>
-        ${formatRichText(profile.jobProspect)}
-      </div>
-    `
-    : ''
-
-  const relatedJobsSection = profile.relatedJobs?.length
-    ? `
-      <div class="glass-card p-6 rounded-xl">
-        <h2 class="text-xl font-semibold text-wiki-text mb-4"><i class="fas fa-briefcase mr-2 text-wiki-secondary"></i>관련 직업</h2>
-        ${renderChips(profile.relatedJobs, '연관 직업 정보가 없습니다.')}
-      </div>
-    `
-    : ''
-
+  const universityCards: string[] = []
   const universitiesContent = renderUniversities(profile.universities)
-  const universitySection = universitiesContent
-    ? `
-      <div class="glass-card p-6 rounded-xl">
-        <h2 class="text-xl font-semibold text-wiki-text mb-4"><i class="fas fa-building-columns mr-2 text-wiki-secondary"></i>개설 대학</h2>
-        ${universitiesContent}
-      </div>
-    `
-    : ''
-
+  if (universitiesContent) {
+    universityCards.push(buildCard('개설 대학', 'fa-building-columns', universitiesContent))
+  }
   const recruitmentContent = renderRecruitmentTable(profile.recruitmentStatus)
-  const recruitmentSection = recruitmentContent
+  if (recruitmentContent) {
+    universityCards.push(buildCard('모집 정원 & 지원 현황', 'fa-users', recruitmentContent))
+  }
+
+  const networkCards: string[] = []
+  if (profile.relatedMajors?.length) {
+    networkCards.push(buildCard('추천 유사 전공', 'fa-diagram-project', renderChips(profile.relatedMajors)))
+  }
+  if (profile.sources?.length) {
+    networkCards.push(buildCard('데이터 출처 요약', 'fa-database', renderChips(profile.sources.map((src) => SOURCE_LABELS[src] ?? src))))
+  }
+
+  const tabEntries: TabEntry[] = [
+    { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewCards.join('') },
+    { id: 'curriculum', label: '커리큘럼', icon: 'fa-book-open', content: learningCards.join('') },
+    { id: 'career', label: '진로 · 전망', icon: 'fa-chart-line', content: careerCards.join('') },
+    { id: 'universities', label: '개설 대학', icon: 'fa-building-columns', content: universityCards.join('') },
+    { id: 'network', label: '연결 정보', icon: 'fa-diagram-project', content: networkCards.join('') }
+  ].filter((entry) => entry.content && entry.content.trim().length > 0)
+
+  const entitySlug = composeDetailSlug('major', profile.name, profile.id)
+  const summarySnippet = heroDescription ?? (profile.summary ? profile.summary.trim().slice(0, 400) : null)
+  const detailMetaExtra: Record<string, unknown> = {}
+  if (profile.categoryId) {
+    detailMetaExtra.categoryId = profile.categoryId
+  }
+  if (profile.categoryName) {
+    detailMetaExtra.categoryName = profile.categoryName
+  }
+  if (heroDescription) {
+    detailMetaExtra.heroDescription = heroDescription
+  }
+
+  const { tabLayout, ctaBlock, commentsPlaceholder, metaScript } = buildDetailScaffold({
+    entityType: 'major',
+    entityId: profile.id,
+    entitySlug,
+    entityName: profile.name,
+    entitySummary: summarySnippet,
+    entityCategory: profile.categoryName ?? null,
+    entitySources: profile.sources,
+    tabs: tabEntries,
+    tabFallback: {
+      title: '데이터 준비 중',
+      icon: 'fa-circle-info',
+      message: '이 전공은 아직 상세 정보가 충분하지 않습니다. 데이터가 수집되는 대로 탭이 활성화됩니다.'
+    },
+    ctaLinks: [
+      {
+        href: `/analyzer/major?from=major-detail&major=${encodeURIComponent(profile.id)}`,
+        label: 'AI 전공 추천 받기',
+        icon: 'fa-brain',
+        ctaType: 'ai',
+        variant: 'primary'
+      },
+      {
+        href: `/howto?from=major-detail&major=${encodeURIComponent(profile.id)}`,
+        label: '학습 HowTo 살펴보기',
+        icon: 'fa-route',
+        ctaType: 'howto',
+        variant: 'secondary'
+      }
+    ],
+    comments: {
+      title: '재학생 · 졸업생 의견 (Phase 1 준비 중)',
+      description: '댓글, 리액션, 신고 기능이 곧 제공됩니다. 우선 적용을 원하시면 의견을 남겨주세요.',
+      feedbackLabel: '우선 적용 의견 보내기',
+      notifyLabel: '알림 받기',
+      emptyLabel: `아직 등록된 댓글이 없습니다. ${profile.name}에 대한 경험을 공유해주세요.`
+    },
+    partials,
+    sources,
+    metaExtra: Object.keys(detailMetaExtra).length ? detailMetaExtra : undefined
+  })
+
+  const infoItems: string[] = []
+  if (profile.categoryName) {
+    infoItems.push(`<li class="flex justify-between text-sm"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text">${escapeHtml(profile.categoryName)}</span></li>`)
+  }
+  if (profile.employmentRate) {
+    infoItems.push(`<li class="flex justify-between text-sm"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>`)
+  }
+  if (profile.salaryAfterGraduation) {
+    infoItems.push(`<li class="flex justify-between text-sm"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>`)
+  }
+
+  const infoCard = infoItems.length
     ? `
       <div class="glass-card p-6 rounded-xl">
-        <h2 class="text-xl font-semibold text-wiki-text mb-4"><i class="fas fa-users mr-2 text-wiki-secondary"></i>모집 정원 & 지원 현황</h2>
-        ${recruitmentContent}
+        <h3 class="text-lg font-semibold text-wiki-text mb-3">기본 정보</h3>
+        <ul class="space-y-2">${infoItems.join('')}</ul>
       </div>
     `
     : ''
 
   const sidebarSections = [
-    renderSourcesPanel(profile, sources, partials)
-  ].join('')
-
-  const heroDescription = profile.summary?.split('\n')[0]?.trim()
+    infoCard,
+    renderSourcesPanel({
+      profile,
+      sources,
+      partials,
+      labels: SOURCE_LABELS,
+      descriptions: SOURCE_DESCRIPTIONS,
+      title: '출처',
+      description: '이 페이지에 표시된 데이터 출처를 확인할 수 있습니다.'
+    })
+  ]
+    .filter((section) => !!section && section.trim().length > 0)
+    .join('')
 
   return `
     <div class="max-w-6xl mx-auto">
-      <div class="glass-card p-8 rounded-2xl mb-8">
+      <div class="glass-card p-8 rounded-2xl mb-8 space-y-6">
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
           <div>
             <div class="flex items-center gap-3 mb-3">
@@ -336,56 +303,33 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
               ${profile.categoryName ? `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary">${escapeHtml(profile.categoryName)}</span>` : ''}
             </div>
             <h1 class="text-4xl font-bold text-white mb-3">${escapeHtml(profile.name)}</h1>
-            ${heroDescription ? `<p class="text-sm text-wiki-muted max-w-2xl">${escapeHtml(heroDescription)}</p>` : ''}
-            <div class="mt-4">${renderSourceBadges(profile.sources)}</div>
+            <div class="mt-4 flex flex-wrap gap-3 items-center">
+              ${renderSourceBadges(profile.sources)}
+            </div>
+            ${ctaBlock}
           </div>
           <div class="flex gap-3">
             <a href="/major" class="px-4 py-2 border border-wiki-border rounded-lg text-sm text-wiki-muted hover:border-wiki-primary hover:text-wiki-primary transition"><i class="fas fa-arrow-left mr-2"></i>목록으로</a>
-            <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition" data-share="true"><i class="fas fa-share-alt mr-2"></i>공유</button>
+            <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition" data-share="true" data-entity-type="major" data-entity-id="${escapeHtml(profile.id)}"><i class="fas fa-share-alt mr-2"></i>공유</button>
           </div>
         </div>
-        ${renderMetaHighlights(profile)}
+        ${heroImage}
+        ${metaHighlights}
       </div>
 
       <div class="grid lg:grid-cols-[2fr,1fr] gap-6">
         <div class="space-y-6">
-          ${overviewSection}
-          ${aptitudeSection}
-          ${curriculumSection}
-          ${licenseSection}
-          ${studyPlanSection}
-          ${outlookSection}
-          ${relatedJobsSection}
-          ${universitySection}
-          ${recruitmentSection}
+          ${tabLayout}
+          ${commentsPlaceholder}
         </div>
         <aside class="space-y-6">
           ${sidebarSections}
         </aside>
       </div>
+
+      ${metaScript}
     </div>
   `
-}
-
-const sanitizeJson = (value: unknown): unknown => {
-  if (Array.isArray(value)) {
-    return value.map((item) => sanitizeJson(item)).filter((item) => item !== undefined && item !== null)
-  }
-  if (value && typeof value === 'object') {
-    const result: Record<string, unknown> = {}
-    Object.entries(value).forEach(([key, val]) => {
-      const sanitized = sanitizeJson(val)
-      if (sanitized !== undefined && sanitized !== null && !(typeof sanitized === 'string' && sanitized.trim() === '')) {
-        result[key] = sanitized
-      }
-    })
-    return Object.keys(result).length ? result : undefined
-  }
-  if (typeof value === 'string') {
-    const trimmed = value.trim()
-    return trimmed.length ? trimmed : undefined
-  }
-  return value ?? undefined
 }
 
 export const createMajorJsonLd = (profile: UnifiedMajorDetail, canonicalUrl: string): string => {
@@ -397,7 +341,6 @@ export const createMajorJsonLd = (profile: UnifiedMajorDetail, canonicalUrl: str
     url: canonicalUrl,
     programType: profile.categoryName,
     educationalCredentialAwarded: profile.licenses,
-    dayOfWeek: undefined,
     provider: profile.universities && profile.universities.length > 0
       ? {
           '@type': 'CollegeOrUniversity',
@@ -406,7 +349,6 @@ export const createMajorJsonLd = (profile: UnifiedMajorDetail, canonicalUrl: str
         }
       : undefined,
     occupationalCategory: profile.relatedJobs,
-    applicationDeadline: undefined,
     numberOfCredits: undefined
   })
 
