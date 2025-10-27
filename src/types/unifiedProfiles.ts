@@ -90,6 +90,93 @@ export interface UnifiedJobSummary {
   sources: DataSource[]
 }
 
+// CareerNet API 상세 배열 타입들
+export interface WorkListItem {
+  workName?: string
+  workDesc?: string
+}
+
+export interface PerformEnvironmentItem {
+  code?: string
+  name?: string
+  importance?: number
+}
+
+export interface PerformItem {
+  code?: string
+  name?: string
+  importance?: number
+}
+
+export interface KnowledgeItem {
+  code?: string
+  name?: string
+  importance?: number
+}
+
+export interface PerformList {
+  environment?: PerformEnvironmentItem[]
+  perform?: PerformItem[]
+  knowledge?: KnowledgeItem[]
+}
+
+export interface AbilityItem {
+  code?: string
+  name?: string
+  score?: number
+}
+
+export interface AptitudeItem {
+  code?: string
+  name?: string
+  score?: number
+}
+
+export interface InterestItem {
+  code?: string
+  name?: string
+  score?: number
+}
+
+export interface JobReadyItem {
+  recruit?: string[]
+  certificate?: string[]
+  training?: string[]
+  curriculum?: string[]
+}
+
+export interface ForecastItem {
+  period?: string
+  outlook?: string
+  description?: string
+}
+
+export interface IndicatorChartItem {
+  category?: string
+  value?: number
+  description?: string
+}
+
+export interface RelVideoItem {
+  title?: string
+  url?: string
+  thumbnail?: string
+  duration?: string
+}
+
+export interface RelSolItem {
+  title?: string
+  content?: string
+  url?: string
+}
+
+export interface ResearchItem {
+  title?: string
+  author?: string
+  date?: string
+  url?: string
+}
+
 export interface UnifiedJobDetail extends UnifiedJobSummary {
   classifications?: {
     large?: string
@@ -119,4 +206,18 @@ export interface UnifiedJobDetail extends UnifiedJobSummary {
   majorDistribution?: MajorDistribution
   relatedOrganizations?: JobOrganizationInfo[]
   kecoCodes?: JobKecoCodeInfo[]
+  
+  // CareerNet API 확장 필드들
+  workList?: WorkListItem[]
+  performList?: PerformList
+  abilityList?: AbilityItem[]
+  aptitudeList?: AptitudeItem[]
+  interestList?: InterestItem[]
+  jobReadyList?: JobReadyItem
+  forecastList?: ForecastItem[]
+  indicatorChart?: IndicatorChartItem[]
+  relVideoList?: RelVideoItem[]
+  relSolList?: RelSolItem[]
+  relJinsolList?: RelSolItem[]
+  researchList?: ResearchItem[]
 }

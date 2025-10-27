@@ -154,6 +154,93 @@ export interface Job {
   possibility?: string;   // 전망 (XML)
   equalemployment?: string; // 고용평등 (XML)
   similarJob?: string;    // 유사직업 (XML)
+  
+  // JSON 응답 확장 필드 (CareerNet API 상세)
+  baseInfo?: {
+    jobName?: string
+    jobCategoryName?: string
+    summary?: string
+    avgSalary?: string
+    salaryRange?: string
+    jobOutlook?: string
+    employmentTrend?: string
+    requiredEducation?: string
+    requiredCertification?: string
+  }
+  workList?: Array<{
+    workName?: string
+    workDesc?: string
+  }>
+  performList?: {
+    environment?: Array<{
+      code?: string
+      name?: string
+      importance?: number
+    }>
+    perform?: Array<{
+      code?: string
+      name?: string
+      importance?: number
+    }>
+    knowledge?: Array<{
+      code?: string
+      name?: string
+      importance?: number
+    }>
+  }
+  abilityList?: Array<{
+    code?: string
+    name?: string
+    score?: number
+  }>
+  aptitudeList?: Array<{
+    code?: string
+    name?: string
+    score?: number
+  }>
+  interestList?: Array<{
+    code?: string
+    name?: string
+    score?: number
+  }>
+  jobReadyList?: {
+    recruit?: string[]
+    certificate?: string[]
+    training?: string[]
+    curriculum?: string[]
+  }
+  forecastList?: Array<{
+    period?: string
+    outlook?: string
+    description?: string
+  }>
+  indicatorChart?: Array<{
+    category?: string
+    value?: number
+    description?: string
+  }>
+  relVideoList?: Array<{
+    title?: string
+    url?: string
+    thumbnail?: string
+    duration?: string
+  }>
+  relSolList?: Array<{
+    title?: string
+    content?: string
+    url?: string
+  }>
+  relJinsolList?: Array<{
+    title?: string
+    content?: string
+    url?: string
+  }>
+  researchList?: Array<{
+    title?: string
+    author?: string
+    date?: string
+    url?: string
+  }>
 }
 
 // API 검색 파라미터
@@ -333,52 +420,116 @@ export async function searchJobs(params: SearchParams, env?: any): Promise<Job[]
   }
 }
 
-// 직업 상세 정보 조회
+// 직업 상세 정보 조회 (JSON 응답으로 풍부한 데이터 수집)
 export async function getJobDetail(jobdicSeq: string, env?: any): Promise<Job | null> {
   try {
-    const url = new URL(`${API_BASE_URL}/getOpenApi`);
-    url.searchParams.append('apiKey', getApiKey(env));
-    url.searchParams.append('svcType', 'api');
-    url.searchParams.append('svcCode', 'JOB_VIEW');
-    url.searchParams.append('contentType', 'xml');
-    url.searchParams.append('gubun', 'job_dic_list');
-    url.searchParams.append('jobdicSeq', jobdicSeq);
+    // 먼저 JSON 형식으로 상세 데이터 시도
+    const jsonUrl = new URL(`${API_BASE_URL}/getOpenApi`);
+    jsonUrl.searchParams.append('apiKey', getApiKey(env));
+    jsonUrl.searchParams.append('svcType', 'api');
+    jsonUrl.searchParams.append('svcCode', 'JOB_VIEW');
+    jsonUrl.searchParams.append('contentType', 'json');
+    jsonUrl.searchParams.append('gubun', 'job_dic_list');
+    jsonUrl.searchParams.append('jobdicSeq', jobdicSeq);
     
-    const response = await fetch(url.toString());
+    let response = await fetch(jsonUrl.toString());
+    let jobData: Job | null = null;
     
-    if (!response.ok) {
-      throw new Error(`API 요청 실패: ${response.statusText}`);
+    if (response.ok) {
+      try {
+        const jsonData = await response.json();
+        
+        // JSON 응답 구조 파싱
+        if (jsonData && jsonData.dataSearch && jsonData.dataSearch.content) {
+          const content = Array.isArray(jsonData.dataSearch.content) 
+            ? jsonData.dataSearch.content[0] 
+            : jsonData.dataSearch.content;
+          
+          if (content) {
+            jobData = {
+              jobdicSeq: jobdicSeq,
+              jobName: content.baseInfo?.jobName || content.job || '',
+              summary: content.baseInfo?.summary || content.summary || '',
+              aptdType: content.baseInfo?.aptdType || '',
+              jobCategoryName: content.baseInfo?.jobCategoryName || content.profession || '',
+              avgSalary: content.baseInfo?.avgSalary || content.salery || '',
+              salaryRange: content.baseInfo?.salaryRange || '',
+              jobOutlook: content.baseInfo?.jobOutlook || content.possibility || '',
+              relatedMajor: content.baseInfo?.relatedMajor || '',
+              requiredEducation: content.baseInfo?.requiredEducation || '',
+              requiredCertification: content.baseInfo?.requiredCertification || '',
+              employmentTrend: content.baseInfo?.employmentTrend || content.equalemployment || '',
+              
+              // 확장 필드들 (있을 경우에만)
+              baseInfo: content.baseInfo,
+              workList: content.workList,
+              performList: content.performList,
+              abilityList: content.abilityList,
+              aptitudeList: content.aptitudeList,
+              interestList: content.interestList,
+              jobReadyList: content.jobReadyList,
+              forecastList: content.forecastList,
+              indicatorChart: content.indicatorChart,
+              relVideoList: content.relVideoList,
+              relSolList: content.relSolList,
+              relJinsolList: content.relJinsolList,
+              researchList: content.researchList
+            };
+          }
+        }
+      } catch (jsonError) {
+        console.warn('JSON 파싱 실패, XML 폴백 시도:', jsonError);
+      }
     }
     
-    const xmlData = await response.text();
-    
-    // XML 파싱
-    const jobs = parseXMLToJSON(xmlData);
-    
-    if (jobs.length === 0) {
-      return null;
-    }
-    
-    const job = jobs[0];
-    
-    // 필드 매핑
-    return {
-      jobdicSeq: job.jobdicSeq || jobdicSeq,
-      jobName: job.job || job.jobName || '',
-      summary: job.summary || '',
-      aptdType: job.aptd_type_code || '',
-      jobCategoryName: job.profession || '',
-      avgSalary: job.salery || '',
-      salaryRange: job.salery || '',
-      jobOutlook: job.possibility || '',
-      relatedMajor: '',
-      requiredEducation: '',
-      requiredCertification: '',
-      employmentTrend: job.equalemployment || '',
+    // JSON 실패 시 XML 폴백
+    if (!jobData) {
+      const xmlUrl = new URL(`${API_BASE_URL}/getOpenApi`);
+      xmlUrl.searchParams.append('apiKey', getApiKey(env));
+      xmlUrl.searchParams.append('svcType', 'api');
+      xmlUrl.searchParams.append('svcCode', 'JOB_VIEW');
+      xmlUrl.searchParams.append('contentType', 'xml');
+      xmlUrl.searchParams.append('gubun', 'job_dic_list');
+      xmlUrl.searchParams.append('jobdicSeq', jobdicSeq);
       
-      // 원본 XML 필드도 포함
-      ...job
-    };
+      response = await fetch(xmlUrl.toString());
+      
+      if (!response.ok) {
+        throw new Error(`API 요청 실패: ${response.statusText}`);
+      }
+      
+      const xmlData = await response.text();
+      
+      // XML 파싱
+      const jobs = parseXMLToJSON(xmlData);
+      
+      if (jobs.length === 0) {
+        return null;
+      }
+      
+      const job = jobs[0];
+      
+      // 필드 매핑
+      jobData = {
+        jobdicSeq: job.jobdicSeq || jobdicSeq,
+        jobName: job.job || job.jobName || '',
+        summary: job.summary || '',
+        aptdType: job.aptd_type_code || '',
+        jobCategoryName: job.profession || '',
+        avgSalary: job.salery || '',
+        salaryRange: job.salery || '',
+        jobOutlook: job.possibility || '',
+        relatedMajor: '',
+        requiredEducation: '',
+        requiredCertification: '',
+        employmentTrend: job.equalemployment || '',
+        
+        // 원본 XML 필드도 포함
+        ...job
+      };
+    }
+    
+    return jobData;
     
   } catch (error) {
     console.error('직업 상세정보 조회 오류:', error);
@@ -454,17 +605,89 @@ export const normalizeCareerNetJobDetail = (job: Job): UnifiedJobDetail => {
     classifications: {
       large: job.jobCategoryName?.trim() || job.profession?.trim()
     },
-    summary: job.summary?.trim(),
-    duties: job.summary?.trim(),
-    prospect: (job.jobOutlook || job.possibility)?.trim(),
-    salary: (job.avgSalary || job.salery)?.trim(),
-    status: (job.employmentTrend || job.equalemployment)?.trim(),
-    abilities: job.aptdType?.trim(),
+    summary: job.summary?.trim() || job.baseInfo?.summary?.trim(),
+    duties: job.summary?.trim() || job.baseInfo?.summary?.trim(),
+    prospect: (job.jobOutlook || job.baseInfo?.jobOutlook || job.possibility)?.trim(),
+    salary: (job.avgSalary || job.baseInfo?.avgSalary || job.salery)?.trim(),
+    status: (job.employmentTrend || job.baseInfo?.employmentTrend || job.equalemployment)?.trim(),
+    abilities: job.aptdType?.trim() || job.baseInfo?.aptdType?.trim(),
     relatedMajors,
     relatedJobs,
     relatedCertificates: relatedCertificates.length ? relatedCertificates : undefined,
     knowledge: job.profession?.trim(),
     environment: job.equalemployment?.trim(),
+    
+    // CareerNet JSON API 확장 필드들
+    workList: job.workList?.map(item => ({
+      workName: item.workName,
+      workDesc: item.workDesc
+    })),
+    performList: job.performList ? {
+      environment: job.performList.environment?.map(item => ({
+        code: item.code,
+        name: item.name,
+        importance: item.importance
+      })),
+      perform: job.performList.perform?.map(item => ({
+        code: item.code,
+        name: item.name,
+        importance: item.importance
+      })),
+      knowledge: job.performList.knowledge?.map(item => ({
+        code: item.code,
+        name: item.name,
+        importance: item.importance
+      }))
+    } : undefined,
+    abilityList: job.abilityList?.map(item => ({
+      code: item.code,
+      name: item.name,
+      score: item.score
+    })),
+    aptitudeList: job.aptitudeList?.map(item => ({
+      code: item.code,
+      name: item.name,
+      score: item.score
+    })),
+    interestList: job.interestList?.map(item => ({
+      code: item.code,
+      name: item.name,
+      score: item.score
+    })),
+    jobReadyList: job.jobReadyList,
+    forecastList: job.forecastList?.map(item => ({
+      period: item.period,
+      outlook: item.outlook,
+      description: item.description
+    })),
+    indicatorChart: job.indicatorChart?.map(item => ({
+      category: item.category,
+      value: item.value,
+      description: item.description
+    })),
+    relVideoList: job.relVideoList?.map(item => ({
+      title: item.title,
+      url: item.url,
+      thumbnail: item.thumbnail,
+      duration: item.duration
+    })),
+    relSolList: job.relSolList?.map(item => ({
+      title: item.title,
+      content: item.content,
+      url: item.url
+    })),
+    relJinsolList: job.relJinsolList?.map(item => ({
+      title: item.title,
+      content: item.content,
+      url: item.url
+    })),
+    researchList: job.researchList?.map(item => ({
+      title: item.title,
+      author: item.author,
+      date: item.date,
+      url: item.url
+    })),
+    
     sources: summary.sources
   };
 };

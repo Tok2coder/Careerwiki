@@ -672,3 +672,95 @@ export const getUnifiedJobDetail = async (
     sources: sourcesStatus
   }
 }
+
+export const getUnifiedJobDetailWithRawData = async (
+  request: JobDetailRequest,
+  env?: CareerWikiEnv
+): Promise<UnifiedDetailResult<UnifiedJobDetail> & { rawApiData?: { careernet?: any; goyong24?: any } }> => {
+  const { id, careernetId, goyong24JobId, includeSources } = request
+  const sourcesToUse = resolveIncludedSources(includeSources)
+  const sourcesStatus = createInitialSourceStatus()
+  const overrides = resolveJobSourceOverride(request)
+  const explicitCareernetId = careernetId?.trim() || undefined
+  const explicitGoyongId = goyong24JobId?.trim() || undefined
+
+  let careernetProfile: UnifiedJobDetail | null = null
+  let goyongProfile: UnifiedJobDetail | null = null
+  let rawCareernetData: any = null
+  let rawGoyong24Data: any = null
+
+  // CareerNet detail
+  if (sourcesToUse.includes('CAREERNET')) {
+    const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
+    const resolvedCareernetId =
+      overrides?.careernetId ??
+      explicitCareernetId ??
+      (id ? extractCanonicalSuffix(id, 'job:C_') : undefined) ??
+      (id && !id.includes(':') ? id : undefined)
+
+    if (!resolvedCareernetId) {
+      status.skippedReason = 'missing-id'
+    } else {
+      status.attempted = true
+      try {
+        const raw = await fetchCareerNetJobDetail(resolvedCareernetId, env)
+        rawCareernetData = raw
+        if (raw) {
+          careernetProfile = normalizeCareerNetJobDetail(raw)
+          status.count = 1
+        } else {
+          status.error = 'CareerNet 직업 정보를 찾을 수 없습니다.'
+        }
+      } catch (error) {
+        status.error = error instanceof Error ? error.message : 'CareerNet 직업 상세 조회 실패'
+      }
+    }
+  } else {
+    sourcesStatus.CAREERNET.skippedReason = 'excluded'
+  }
+
+  // Goyong24 detail
+  if (sourcesToUse.includes('GOYONG24')) {
+    const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
+    const resolvedJobIdRaw =
+      overrides?.goyong24JobId ??
+      explicitGoyongId ??
+      (id ? extractCanonicalSuffix(id, 'job:G_') : undefined)
+    const resolvedJobId = resolvedJobIdRaw ? resolvedJobIdRaw.toUpperCase() : undefined
+
+    if (!resolvedJobId) {
+      status.skippedReason = 'missing-id'
+    } else {
+      status.attempted = true
+      try {
+        const raw = await fetchGoyong24JobDetail(resolvedJobId, env as any)
+        rawGoyong24Data = raw
+        goyongProfile = normalizeGoyong24JobDetail(raw)
+        status.count = 1
+      } catch (error) {
+        status.error = error instanceof Error ? error.message : '고용24 직업 상세 조회 실패'
+      }
+    }
+  } else {
+    sourcesStatus.GOYONG24.skippedReason = 'excluded'
+  }
+
+  const merged = mergeJobProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
+
+  const partialsRecord: Partial<Record<DataSource, UnifiedJobDetail | null>> = {
+    CAREERNET: careernetProfile,
+    GOYONG24: goyongProfile
+  }
+
+  const enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+
+  return {
+    profile: enhancedProfile,
+    partials: partialsRecord,
+    sources: sourcesStatus,
+    rawApiData: {
+      careernet: rawCareernetData,
+      goyong24: rawGoyong24Data
+    }
+  }
+}

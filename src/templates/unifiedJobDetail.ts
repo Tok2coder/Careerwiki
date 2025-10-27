@@ -315,6 +315,117 @@ const renderLawyerFieldMatrix = (
       key: 'relatedOrganizations',
       label: '관련 기관 (관련 단체)',
       extract: (entry) => entry?.relatedOrganizations?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
+    },
+    
+    // CareerNet 확장 필드들 (배열 데이터)
+    {
+      key: 'workList',
+      label: '세부 업무 목록',
+      extract: (entry) => entry?.workList?.map((item) => `${item.workName}: ${item.workDesc}`).filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'performList.environment',
+      label: '업무 환경 (중요도별)',
+      extract: (entry) => entry?.performList?.environment
+        ?.sort((a, b) => (b.importance || 0) - (a.importance || 0))
+        .slice(0, 10)
+        .map((item) => `${item.name} (중요도: ${item.importance})`)
+        .filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'performList.perform',
+      label: '업무 수행 능력 (중요도별)',
+      extract: (entry) => entry?.performList?.perform
+        ?.sort((a, b) => (b.importance || 0) - (a.importance || 0))
+        .slice(0, 10)
+        .map((item) => `${item.name} (중요도: ${item.importance})`)
+        .filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'performList.knowledge',
+      label: '필요 지식 (중요도별)',
+      extract: (entry) => entry?.performList?.knowledge
+        ?.sort((a, b) => (b.importance || 0) - (a.importance || 0))
+        .slice(0, 10)
+        .map((item) => `${item.name} (중요도: ${item.importance})`)
+        .filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'abilityList',
+      label: '필요 능력 (점수별)',
+      extract: (entry) => entry?.abilityList
+        ?.sort((a, b) => (b.score || 0) - (a.score || 0))
+        .slice(0, 10)
+        .map((item) => `${item.name} (${item.score}점)`)
+        .filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'aptitudeList',
+      label: '필요 적성 (점수별)',
+      extract: (entry) => entry?.aptitudeList
+        ?.sort((a, b) => (b.score || 0) - (a.score || 0))
+        .slice(0, 10)
+        .map((item) => `${item.name} (${item.score}점)`)
+        .filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'interestList',
+      label: '흥미 유형 (점수별)',
+      extract: (entry) => entry?.interestList
+        ?.sort((a, b) => (b.score || 0) - (a.score || 0))
+        .slice(0, 10)
+        .map((item) => `${item.name} (${item.score}점)`)
+        .filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'jobReadyList.recruit',
+      label: '채용 정보',
+      extract: (entry) => entry?.jobReadyList?.recruit
+    },
+    {
+      key: 'jobReadyList.certificate',
+      label: '추천 자격증 목록',
+      extract: (entry) => entry?.jobReadyList?.certificate
+    },
+    {
+      key: 'jobReadyList.training',
+      label: '추천 교육 과정',
+      extract: (entry) => entry?.jobReadyList?.training
+    },
+    {
+      key: 'jobReadyList.curriculum',
+      label: '관련 교육 과정',
+      extract: (entry) => entry?.jobReadyList?.curriculum
+    },
+    {
+      key: 'forecastList',
+      label: '미래 전망 상세',
+      extract: (entry) => entry?.forecastList?.map((item) => `[${item.period}] ${item.outlook}: ${item.description}`).filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'indicatorChart',
+      label: '직업 지표',
+      extract: (entry) => entry?.indicatorChart?.map((item) => `${item.category}: ${item.value} (${item.description})`).filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'relVideoList',
+      label: '관련 영상 자료',
+      extract: (entry) => entry?.relVideoList?.map((item) => `${item.title} [${item.duration}]`).filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'relSolList',
+      label: '관련 자료',
+      extract: (entry) => entry?.relSolList?.map((item) => item.title).filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'relJinsolList',
+      label: '진로 상담 자료',
+      extract: (entry) => entry?.relJinsolList?.map((item) => item.title).filter((str): str is string => Boolean(str && str.trim()))
+    },
+    {
+      key: 'researchList',
+      label: '연구 자료',
+      extract: (entry) => entry?.researchList?.map((item) => `${item.title} (${item.author}, ${item.date})`).filter((str): str is string => Boolean(str && str.trim()))
     }
   ]
 

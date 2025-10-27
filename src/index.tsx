@@ -4,10 +4,11 @@ import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
 import { JOB_CATEGORIES, APTITUDE_TYPES } from './api/careernetAPI'
-import { getUnifiedJobDetail, getUnifiedMajorDetail, searchUnifiedJobs, searchUnifiedMajors } from './services/profileDataService'
+import { getUnifiedJobDetail, getUnifiedJobDetailWithRawData, getUnifiedMajorDetail, searchUnifiedJobs, searchUnifiedMajors } from './services/profileDataService'
 import type { SourceStatusRecord } from './services/profileDataService'
 import type { DataSource, UnifiedJobDetail, UnifiedMajorDetail } from './types/unifiedProfiles'
 import { renderUnifiedJobDetail, createJobJsonLd } from './templates/unifiedJobDetail'
+import { renderDataDebugPage } from './templates/dataDebugTemplate'
 import { renderUnifiedMajorDetail, createMajorJsonLd } from './templates/unifiedMajorDetail'
 import { renderHowtoGuideDetail } from './templates/howtoDetail'
 import { buildCommentGovernanceItems, resolveCommentPolicy } from './templates/detailTemplateUtils'
@@ -2050,6 +2051,7 @@ app.get('/job/:slug', async (c) => {
   const careernetId = c.req.query('careernetId') || undefined
   const goyongJobId = c.req.query('goyongJobId') || undefined
   const includeSources = parseSourcesQuery(c.req.query('sources'))
+  const debugMode = c.req.query('debug') === 'true' || resolvedId === 'job:C_375'
 
   const findSampleJobDetail = () => {
     const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
@@ -2063,15 +2065,26 @@ app.get('/job/:slug', async (c) => {
   }
 
   try {
-    const result = await getUnifiedJobDetail(
-      {
-        id: resolvedId,
-        careernetId,
-        goyong24JobId: goyongJobId || undefined,
-        includeSources
-      },
-      c.env
-    )
+    // Use debug mode for job:C_375 or when ?debug=true
+    const result = debugMode 
+      ? await getUnifiedJobDetailWithRawData(
+          {
+            id: resolvedId,
+            careernetId,
+            goyong24JobId: goyongJobId || undefined,
+            includeSources
+          },
+          c.env
+        )
+      : await getUnifiedJobDetail(
+          {
+            id: resolvedId,
+            careernetId,
+            goyong24JobId: goyongJobId || undefined,
+            includeSources
+          },
+          c.env
+        )
 
     if (!result.profile) {
       const sample = findSampleJobDetail()
@@ -2099,6 +2112,19 @@ app.get('/job/:slug', async (c) => {
     }
 
     const profile = result.profile
+    
+    // Render debug page if in debug mode
+    if (debugMode && 'rawApiData' in result) {
+      const debugContent = renderDataDebugPage({
+        profile,
+        partials: result.partials,
+        sources: result.sources,
+        rawApiData: result.rawApiData
+      })
+      
+      return c.html(debugContent)
+    }
+    
     const canonicalSlug = composeDetailSlug('job', profile.name, profile.id ?? resolvedId)
     const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
     const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
