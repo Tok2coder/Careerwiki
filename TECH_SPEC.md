@@ -1,295 +1,377 @@
-# CareerWiki Phase 1 - Technical Specification
+# CareerWiki - Technical Specification
 
-> **문서 버전**: 1.0  
+> **문서 버전**: 2.0  
 > **최종 업데이트**: 2025-10-25  
 > **작성자**: AI Development Agent  
-> **목적**: 비개발자도 이해할 수 있는 구체적인 기술 명세서 및 개발 인수인계서
+> **목적**: 프로젝트 전체 계획 및 개발 인수인계서
 
 ---
 
 ## 📋 목차
 
-1. [목표 및 비목표 (Goal & Non-Goal)](#1-목표-및-비목표-goal--non-goal)
-2. [현재 상태 (Current Status)](#2-현재-상태-current-status)
-3. [시스템 아키텍처](#3-시스템-아키텍처)
-4. [데이터 모델 및 플로우](#4-데이터-모델-및-플로우)
-5. [요구사항 목록 (Requirements)](#5-요구사항-목록-requirements)
-6. [코드 레벨 구현 지침](#6-코드-레벨-구현-지침)
-7. [개선 필요 사항 (Technical Debt)](#7-개선-필요-사항-technical-debt)
-8. [배포 및 운영](#8-배포-및-운영)
+1. [프로젝트 개요](#1-프로젝트-개요)
+2. [개발 방식 및 원칙](#2-개발-방식-및-원칙)
+3. [Phase별 작업 계획](#3-phase별-작업-계획)
+4. [현재 상태 및 진행상황](#4-현재-상태-및-진행상황)
+5. [시스템 아키텍처](#5-시스템-아키텍처)
+6. [데이터 모델](#6-데이터-모델)
+7. [코드 구현 지침](#7-코드-구현-지침)
+8. [Technical Debt 관리](#8-technical-debt-관리)
 
 ---
 
-## 1. 목표 및 비목표 (Goal & Non-Goal)
+## 1. 프로젝트 개요
 
-### 1.1 이번 구현의 목표 (Goal)
+### 1.1 핵심 목표
 
-**핵심 목표**: AI 기반 진로 분석 플랫폼의 **위키 기반 정보 제공 시스템** 구축
+**AI 기반 진로 분석 플랫폼**
 
-#### 주요 달성 목표:
+- 직업/전공 정보 통합 위키
+- 사용자 맞춤형 진로 분석 (AI)
+- 커뮤니티 기반 위키 협업
 
-1. **직업/전공 정보 통합 위키**
-   - 커리어넷(교육부)과 고용24(고용노동부) 두 개의 공공 API를 통합
-   - 실시간 데이터 수집 및 통합 표시
-   - 소스별 데이터 상태 추적 (성공/실패/스킵)
+### 1.2 기술 스택
 
-2. **SEO 최적화된 SSR 페이지**
-   - 직업 상세: `/job/:slug` (예: `/job/변호사--job-g-k000007482`)
-   - 전공 상세: `/major/:slug`
-   - 직업 목록: `/job` (검색/필터 지원)
-   - 전공 목록: `/major` (검색 지원)
-   - HowTo 가이드: `/howto/:slug`
-
-3. **캐싱 및 성능 최적화**
-   - Cloudflare KV 기반 목록 캐싱 (stale-while-revalidate 전략)
-   - Cron 기반 자동 재검증 (30분 간격)
-   - 성능 메트릭 수집 (Core Web Vitals)
-
-4. **커뮤니티 기능 준비**
-   - D1 기반 댓글 시스템 (익명 지원)
-   - IP 기반 신고/차단 시스템
-   - 좋아요/싫어요 기능
-
-5. **AI 분석 파이프라인 인프라**
-   - AI 세션/요청/결과 D1 테이블
-   - SERP 상호작용 로그 수집
-   - 향후 Claude/GPT 통합 준비
-
-### 1.2 비목표 (Non-Goal)
-
-**이번 구현에서 하지 않는 것들:**
-
-❌ **사용자 인증 시스템**
-- 로그인/회원가입 기능
-- OAuth 통합
-- 사용자 권한 관리
-- 이유: Phase 2에서 구현 예정
-
-❌ **실제 AI 모델 호출**
-- Claude/GPT API 실제 연동
-- AI 분석 결과 생성
-- 이유: D1 테이블만 준비, 실제 호출은 Phase 3
-
-❌ **결제 시스템**
-- Stripe 통합
-- Pro 플랜 기능
-- 이유: MVP 검증 후 구현
-
-❌ **실시간 채팅/알림**
-- WebSocket 기반 실시간 기능
-- 푸시 알림
-- 이유: Cloudflare Workers 제약 + 우선순위 낮음
-
-❌ **다국어 지원**
-- i18n 시스템
-- 이유: 한국어만 지원 (영어는 Phase 3 이후)
-
-❌ **모바일 앱**
-- React Native/Flutter 앱
-- 이유: 웹 우선 전략
+| 계층 | 기술 |
+|-----|------|
+| Runtime | Cloudflare Workers/Pages |
+| Framework | Hono 4.9.9 |
+| Language | TypeScript 5.9.3 |
+| Database | Cloudflare D1 (SQLite) |
+| Cache | Cloudflare KV |
+| Build | Vite 6.3.5 |
+| Deploy | Wrangler 4.4.0 |
 
 ---
 
-## 2. 현재 상태 (Current Status)
+## 2. 개발 방식 및 원칙
 
-### 2.1 프로젝트 구조
+### 2.1 작업 프로세스
+
+```
+Tech Spec 확인
+    ↓
+Plan 작성 (큰 그림)
+    ↓
+Task 분해 (작은 단위)
+    ↓
+┌─────────────────────┐
+│ Task 1 실행         │
+│  ↓                  │
+│ 완료 보고           │
+│  ↓                  │
+│ 정우님 승인 대기     │
+│  ↓                  │
+│ Commit & Push       │
+└─────────────────────┘
+    ↓
+Task 2 실행...
+```
+
+### 2.2 코드 작성 원칙
+
+#### ✅ 해야 할 것
+1. **정확한 목적**: 모든 코드는 명확한 이유가 있어야 함
+2. **최소 재사용**: 필요한 경우만 재사용
+3. **중복 제거**: 같은 로직은 한 곳에만
+4. **깔끔한 구조**: 파일/함수 역할 명확
+
+#### ❌ 하지 말아야 할 것
+1. **중복 코드**: 같은 로직을 여러 곳에 작성
+2. **중복 페이지**: 같은 목적의 페이지 여러 개
+3. **불필요한 코드 옮기기**: 의미 없는 복사/이동
+4. **과도한 추상화**: 쓸데없이 복잡하게 만들기
+
+### 2.3 템플릿 시스템 철학
+
+**목표**: 틀 1개 수정 → 모든 페이지 자동 반영
+
+```
+샘플 페이지 제작 (테스트용)
+    ↓
+수정 및 개선 반복
+    ↓
+완성된 틀(템플릿) 확정
+    ↓
+API 데이터 → 틀에 주입
+    ↓
+모든 상세페이지 일괄 생성
+```
+
+**샘플 vs 틀**:
+- **샘플**: 별도 URL로 관리, 완료 후 삭제
+  - 예: `/samples/job/lawyer`, `/samples/major/computer-science`
+- **틀(템플릿)**: 별도 파일로 영구 보관
+  - 예: `src/templates/jobDetailTemplate.ts`
+
+**UI 수정 시나리오**:
+```
+"변호사 페이지에서 X 섹션을 고치고 싶다"
+    ↓
+틀 파일 1개만 수정
+    ↓
+모든 직업 페이지에 자동 반영
+```
+
+---
+
+## 3. Phase별 작업 계획
+
+### Phase 1: 상세페이지 템플릿 완성 ⭐ **최우선 작업 (현재)**
+
+**목표**: 완벽한 직업/전공 상세페이지 틀 확정
+
+**작업 순서**:
+1. ✅ 직업 상세 샘플 제작 (변호사)
+   - Hero, Quick Stats, 탭 구조, 소스 비교 매트릭스
+2. 🔄 직업 상세 샘플 개선 (반복)
+   - UI/UX 개선
+   - 데이터 표시 방식 최적화
+   - 특수 케이스 처리 (변호사 전용 로직)
+3. ⏳ 전공 상세 샘플 제작
+   - 커리큘럼, 진로, 대학 정보
+4. ⏳ 전공 상세 샘플 개선 (반복)
+5. ⏳ 틀 확정 및 일반화
+   - 직업 템플릿 파일 완성
+   - 전공 템플릿 파일 완성
+   - 샘플 코드 삭제
+6. ⏳ 모든 직업/전공 페이지 생성 테스트
+   - API 데이터로 대량 생성
+   - QA 및 버그 수정
+
+**완료 기준**:
+- [ ] 직업 상세 템플릿 100% 완성
+- [ ] 전공 상세 템플릿 100% 완성
+- [ ] 샘플 페이지 모두 삭제
+- [ ] API 데이터로 생성된 페이지 10개 이상 QA 완료
+
+---
+
+### Phase 2: 로그인 시스템
+
+**목표**: 사용자 인증 및 세션 관리
+
+**작업 항목**:
+1. ⏳ OAuth 통합 (Google, Kakao)
+2. ⏳ JWT 세션 관리
+3. ⏳ 사용자 DB 테이블 (`users`, `sessions`)
+4. ⏳ 로그인/회원가입 UI
+5. ⏳ 권한 시스템 (User, Admin, Pro)
+
+**완료 기준**:
+- [ ] Google/Kakao 로그인 작동
+- [ ] 세션 유지 및 자동 로그아웃
+- [ ] 마이페이지 기본 구현
+
+---
+
+### Phase 3: 편집 시스템 (위키 협업)
+
+**목표**: 사용자가 직접 위키 페이지를 편집할 수 있는 시스템
+
+**작업 항목**:
+1. ⏳ 편집 권한 관리
+2. ⏳ Markdown 에디터
+3. ⏳ 편집 이력 (revision history)
+4. ⏳ 변경사항 리뷰 (승인/반려)
+5. ⏳ 기여도 추적
+
+**완료 기준**:
+- [ ] 로그인 사용자가 페이지 편집 가능
+- [ ] 편집 이력 조회 및 롤백
+- [ ] 관리자 승인 플로우 작동
+
+---
+
+### Phase 4: HowTo 콘텐츠 작성 및 테스트
+
+**목표**: 진로 설정 가이드 콘텐츠 제작
+
+**작업 항목**:
+1. ⏳ HowTo 템플릿 확정
+2. ⏳ HowTo 콘텐츠 5-10개 작성
+   - 예: "변호사가 되는 방법", "컴퓨터공학 전공 선택 가이드"
+3. ⏳ HowTo ↔ 직업/전공 연결
+4. ⏳ 사용자 피드백 수집
+
+**완료 기준**:
+- [ ] HowTo 최소 5개 발행
+- [ ] 사용자 조회수 100+ 달성
+- [ ] 평균 체류시간 2분 이상
+
+---
+
+### Phase 5: AI 분석 리포트 생성
+
+**목표**: 사용자 맞춤형 진로 분석 AI 서비스
+
+**작업 항목**:
+1. ⏳ Claude/GPT API 연동
+2. ⏳ 프롬프트 템플릿 작성
+   - 직업 추천
+   - 전공 추천
+   - 커리어 패스 분석
+3. ⏳ AI 분석 UI
+   - 입력 폼 (성향, 관심사, 능력)
+   - 결과 리포트 페이지
+4. ⏳ 토큰/비용 추적
+5. ⏳ 결과 저장 및 공유
+
+**완료 기준**:
+- [ ] AI 분석 요청 성공률 95% 이상
+- [ ] 평균 응답 시간 30초 이하
+- [ ] 사용자 만족도 4.0/5.0 이상
+
+---
+
+## 4. 현재 상태 및 진행상황
+
+### 4.1 Phase 1 진행상황 (상세페이지 템플릿)
+
+#### ✅ 완료된 작업
+
+**직업 상세 페이지**:
+- ✅ 변호사 샘플 페이지 기본 구조
+  - Hero 섹션 (제목, 이미지, 공유 버튼)
+  - Quick Stats (평균 연봉, 직업 전망, 직무 만족도)
+  - 탭 구조 (개요, 상세 정보)
+  - 소스 비교 매트릭스 (CareerNet vs 고용24)
+  - JSON-LD, OG 메타, canonical URL
+
+- ✅ 변호사 전용 커스터마이징
+  - `isLawyerProfile()` 조건 분기
+  - 불필요한 블록 제거:
+    - ❌ 고용 형태 (Quick Stats에서 제외)
+    - ❌ 직업 분류 체계 카드
+    - ❌ 데이터 출처 패널
+  - 소스 비교 매트릭스 강조
+
+- ✅ API 통합
+  - CareerNet API 클라이언트 (611 lines)
+  - 고용24 API 클라이언트 (824 lines)
+  - 데이터 병합 로직 (`mergeJobProfiles`)
+  - 소스 상태 추적 (`SourceStatusRecord`)
+
+**전공 상세 페이지**:
+- ✅ 기본 구조 구축
+  - 탭 구조 (개요, 커리큘럼, 진로, 대학 정보)
+  - 관련 직업 연결
+
+**기타**:
+- ✅ 목록 페이지 (직업, 전공)
+- ✅ 캐싱 시스템 (KV, Freshness)
+- ✅ 성능 메트릭 수집
+- ✅ 댓글 시스템 (백엔드)
+
+#### 🔄 진행 중인 작업
+
+**직업 상세 템플릿 개선**:
+- 🔄 변호사 페이지 UI/UX 최종 검토
+- 🔄 다른 직업 샘플 추가 필요 판단
+  - 개발자? 간호사? 선생님?
+- 🔄 특수 케이스 처리 방식 확정
+  - 변호사처럼 특별한 직업이 또 있는가?
+
+#### ⏳ 대기 중인 작업
+
+**전공 상세 템플릿**:
+- ⏳ 전공 샘플 페이지 제작 (컴퓨터공학 등)
+- ⏳ 전공 샘플 개선 반복
+- ⏳ 전공 특수 케이스 처리
+
+**템플릿 확정**:
+- ⏳ 직업 템플릿 파일 분리 및 일반화
+- ⏳ 전공 템플릿 파일 분리 및 일반화
+- ⏳ 샘플 코드 삭제
+- ⏳ 대량 생성 테스트
+
+### 4.2 프로젝트 구조
 
 ```
 webapp/
 ├── src/
-│   ├── index.tsx (3,779 lines)        # 메인 애플리케이션 + 모든 라우트
+│   ├── index.tsx (3,779 lines)        # 메인 + 모든 라우트 (분리 필요)
 │   ├── api/                           # 외부 API 클라이언트
-│   │   ├── careernetAPI.ts (611 lines)
-│   │   └── goyong24API.ts (824 lines)
+│   │   ├── careernetAPI.ts (611)
+│   │   └── goyong24API.ts (824)
 │   ├── services/                      # 비즈니스 로직
 │   │   ├── profileDataService.ts (674)  # 데이터 통합
-│   │   ├── profileMerge.ts (277)        # 소스 병합 로직
+│   │   ├── profileMerge.ts (277)        # 소스 병합
 │   │   ├── cacheService.ts (217)        # KV 캐싱
-│   │   ├── freshnessService.ts (511)    # 재검증 스케줄
+│   │   ├── freshnessService.ts (511)    # 재검증
 │   │   ├── commentService.ts (688)      # 댓글 CRUD
-│   │   ├── perfMetricsService.ts (647)  # 성능 메트릭
-│   │   ├── aiAnalysisService.ts (289)   # AI 세션 관리
+│   │   ├── perfMetricsService.ts (647)
+│   │   ├── aiAnalysisService.ts (289)
 │   │   └── serpInteractionService.ts (136)
-│   ├── templates/                     # SSR 템플릿
-│   │   ├── unifiedJobDetail.ts (1,466 lines)
-│   │   ├── unifiedMajorDetail.ts (386)
+│   ├── templates/                     # SSR 템플릿 (핵심!)
+│   │   ├── unifiedJobDetail.ts (1,466)  # 직업 상세 (개선 중)
+│   │   ├── unifiedMajorDetail.ts (386)  # 전공 상세
 │   │   ├── howtoDetail.ts (629)
-│   │   └── detailTemplateUtils.ts (1,056) # 공통 헬퍼
+│   │   └── detailTemplateUtils.ts (1,056)  # 공통 헬퍼
 │   ├── types/                         # TypeScript 타입
 │   │   ├── unifiedProfiles.ts
 │   │   ├── aiAnalysis.ts
 │   │   └── howto.ts
-│   ├── config/                        # 설정
+│   ├── config/
 │   │   ├── cachePolicy.ts
 │   │   └── freshnessConfig.ts
 │   ├── data/
-│   │   └── sampleRegistry.ts          # 샘플 데이터
+│   │   └── sampleRegistry.ts          # 샘플 데이터 (임시)
 │   └── utils/
-│       └── slug.ts                    # URL 슬러그 처리
+│       └── slug.ts
 ├── public/static/
 │   ├── api-client.js (117KB)          # 클라이언트 하이드레이션
-│   ├── perf-metrics.js (13KB)         # 성능 측정
+│   ├── perf-metrics.js (13KB)
 │   └── style.css
 ├── migrations/
-│   ├── 0001_initial_schema.sql        # 기본 테이블
+│   ├── 0001_initial_schema.sql
 │   ├── 0002_career_analysis_pipeline.sql
 │   └── 0003_comment_policy.sql
-├── wrangler.jsonc                     # Cloudflare 설정
+├── wrangler.jsonc                     # Cloudflare 설정 (D1/KV 추가 필요)
 ├── package.json
+├── TECH_SPEC.md                       # 이 문서
 └── README.md
 ```
 
-### 2.2 완료된 기능 (✅ Implemented)
+### 4.3 알려진 문제 (Known Issues)
 
-#### A. 핵심 위키 기능
-- ✅ **직업 상세 페이지** (`/job/:slug`)
-  - CareerNet + 고용24 실시간 통합
-  - 변호사 페이지 특별 템플릿 (불필요한 블록 제거)
-  - Hero, Quick Stats, 탭 기반 레이아웃
-  - JSON-LD, OG 메타, canonical URL
-  - 소스 비교 매트릭스 (변호사 전용)
+#### 🔴 긴급 (Blocking)
 
-- ✅ **전공 상세 페이지** (`/major/:slug`)
-  - 커리큘럼, 진로, 대학 정보
-  - 탭 기반 UX
-  
-- ✅ **직업 목록** (`/job`)
-  - 검색 (keyword)
-  - 카테고리 필터
-  - KV 캐싱 (1시간 stale, 6시간 max-age)
-  - 캐시 상태 배지
-  - ItemList JSON-LD
+없음 (현재 작업 진행 가능)
 
-- ✅ **전공 목록** (`/major`)
-  - 키워드 검색
-  - KV 캐싱
-  - 소스 상태 표시
+#### 🟡 중요 (Important)
 
-- ✅ **HowTo 가이드** (`/howto/:slug`)
-  - 진로 설정 방법론
-  - 커뮤니티 정책 카드
+1. **index.tsx 비대화** (3,779 lines)
+   - 모든 라우트가 한 파일에
+   - 유지보수 어려움
+   - 해결: Phase 1 완료 후 분리
 
-#### B. 데이터 통합
-- ✅ **API 클라이언트**
-  - CareerNet: 611 lines (직업/전공 검색, 상세)
-  - 고용24: 824 lines (직업/전공/학과 상세, 학력/전공 분포)
-  - 헤더 프로필 재시도 로직 (403/500 대응)
-  
-- ✅ **데이터 병합**
-  - `mergeJobProfiles()`: 두 소스 필드별 병합
-  - `mergeMajorProfiles()`: 전공 데이터 병합
-  - 소스 상태 추적 (`SourceStatusRecord`)
+2. **D1/KV 바인딩 누락**
+   - wrangler.jsonc에 설정 없음
+   - 로컬 마이그레이션 불가
+   - 해결: Phase 1 완료 후 설정
 
-#### C. 캐싱 및 성능
-- ✅ **KV 캐싱**
-  - stale-while-revalidate 전략
-  - `?refresh=1` 수동 재검증
-  - 캐시 키: `list:job|major:q=...&category=...&page=...`
-  
-- ✅ **Freshness 모니터링**
-  - Cron 스케줄러 (`*/30 * * * *`)
-  - 타겟별 재검증
-  - `/api/freshness/status`, `/api/freshness/run`
+3. **템플릿 중복 로직**
+   - 직업/전공 템플릿에 유사 코드
+   - 해결: Phase 1에서 공통화 작업 포함
 
-- ✅ **성능 메트릭**
-  - Core Web Vitals (TTFB, FCP, LCP, CLS, FID)
-  - 하이드레이션 이벤트
-  - KV 저장 (`/api/perf-metrics`)
+#### 🟢 낮음 (Nice to Have)
 
-#### D. 커뮤니티 인프라
-- ✅ **D1 테이블**
-  - `pages`: 위키 페이지 메타데이터
-  - `comments`: 댓글 (익명 지원, 중첩 가능)
-  - `comment_reactions`: 좋아요/싫어요
-  - `comment_reports`: 신고
-  - `ip_blocks`: IP 차단
-  
-- ✅ **댓글 API**
-  - `POST /api/comments`: 생성
-  - `GET /api/comments?slug=...`: 조회
-  - `POST /api/comments/:id/like`: 좋아요
-  - `POST /api/comments/:id/flag`: 신고
-  - IP 해시 기반 익명성
-
-#### E. AI 분석 준비
-- ✅ **D1 테이블**
-  - `ai_sessions`: 분석 세션
-  - `ai_analysis_requests`: 요청
-  - `ai_analysis_results`: 결과
-  - `serp_interaction_logs`: SERP 로그
-  
-- ✅ **API 엔드포인트**
-  - `POST /api/analyzer/sessions`
-  - `POST /api/analyzer/requests`
-  - `POST /api/analyzer/requests/:id/result`
-  - `POST /api/serp-interactions`
-
-### 2.3 미완료 기능 (⏳ Pending)
-
-#### A. 인증 및 권한
-- ⏳ 로그인/회원가입 UI
-- ⏳ OAuth 통합 (Google, Kakao)
-- ⏳ JWT 세션 관리
-- ⏳ 사용자 역할 (User, Admin, Pro)
-
-#### B. AI 실제 연동
-- ⏳ Claude API 호출 로직
-- ⏳ OpenAI API 호출 로직
-- ⏳ 프롬프트 템플릿
-- ⏳ 토큰/비용 추적
-- ⏳ 재시도/타임아웃 처리
-
-#### C. 댓글 UI
-- ⏳ 프론트엔드 댓글 폼
-- ⏳ 댓글 목록 렌더링
-- ⏳ 실시간 좋아요 카운터
-- ⏳ 신고 후 모더레이션 UI
-
-#### D. 검색 고도화
-- ⏳ 전체 사이트 통합 검색
-- ⏳ 자동완성
-- ⏳ 검색 히스토리
-
-#### E. 운영 대시보드
-- ⏳ 성능 메트릭 조회 UI
-- ⏳ 캐시 관리 도구
-- ⏳ 댓글 모더레이션 패널
-
-### 2.4 알려진 문제 (Known Issues)
-
-1. **KV 스토리지 에러**
-   - `[perf-metrics] failed to store TypeError: Cannot read properties of undefined (reading 'put')`
-   - 원인: 로컬 개발 환경에서 KV 바인딩 누락
-   - 영향: 성능 메트릭 저장 실패 (핵심 기능에는 영향 없음)
-   - 해결: wrangler.jsonc에 KV 바인딩 추가 필요
-
-2. **index.tsx 파일 크기**
-   - 3,779 lines - 너무 큼
-   - 모든 라우트가 한 파일에 집중
-   - 개선 필요: 라우트 분리
-
-3. **코드 중복**
-   - 직업/전공 상세 템플릿에 유사한 로직 반복
-   - 탭 렌더링 로직 중복
-   - 개선 필요: 공통 컴포넌트화
-
-4. **D1 마이그레이션 미적용**
-   - wrangler.jsonc에 d1_databases 설정 없음
-   - 로컬에서 마이그레이션 실행 불가
-   - 해결: D1 데이터베이스 생성 및 바인딩 추가
+1. **테스트 부재**
+2. **TypeScript strict 모드 비활성화**
+3. **성능 메트릭 조회 UI 없음**
 
 ---
 
-## 3. 시스템 아키텍처
+## 5. 시스템 아키텍처
 
-### 3.1 전체 아키텍처 다이어그램
+### 5.1 전체 아키텍처
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                        사용자 브라우저                          │
 │  - HTML/CSS/JS 렌더링                                        │
 │  - api-client.js (하이드레이션)                               │
-│  - perf-metrics.js (성능 측정)                               │
 └─────────────────┬───────────────────────────────────────────┘
                   │ HTTPS
                   ▼
@@ -300,26 +382,24 @@ webapp/
 │  │              Hono Application (index.tsx)             │  │
 │  │                                                        │  │
 │  │  Routes:                                              │  │
-│  │  - / (홈)                                             │  │
-│  │  - /job, /major, /howto (목록)                        │  │
-│  │  - /job/:slug, /major/:slug (상세)                    │  │
+│  │  - /job/:slug (직업 상세) ← Phase 1 핵심             │  │
+│  │  - /major/:slug (전공 상세) ← Phase 1 핵심           │  │
+│  │  - /job, /major (목록)                                │  │
 │  │  - /api/* (REST API)                                  │  │
 │  └────┬──────────────────────────────────────────────────┘  │
 │       │                                                      │
 │  ┌────▼────────────────────────────────────────────────┐   │
 │  │              Services Layer                          │   │
 │  │  - profileDataService (데이터 통합)                  │   │
+│  │  - profileMerge (소스 병합)                         │   │
 │  │  - cacheService (KV 캐싱)                           │   │
-│  │  - commentService (댓글 CRUD)                       │   │
-│  │  - perfMetricsService (성능)                        │   │
 │  └────┬───────────────────┬───────────────────────────┘   │
 │       │                   │                               │
 │  ┌────▼────────┐    ┌────▼────────┐                      │
-│  │ API Clients │    │  Templates  │                      │
+│  │ API Clients │    │  Templates  │ ← Phase 1 핵심!      │
 │  │ - CareerNet │    │ - Job Detail│                      │
 │  │ - Goyong24  │    │ - Major Det.│                      │
-│  └─────────────┘    │ - HowTo     │                      │
-│                     └─────────────┘                      │
+│  └─────────────┘    └─────────────┘                      │
 └───────┬───────────────────┬─────────────────────────────┘
         │                   │
         ▼                   ▼
@@ -330,96 +410,58 @@ webapp/
 └───────────────┘   └──────────────────┘
 ```
 
-### 3.2 데이터 플로우
-
-#### A. 직업 상세 조회 플로우
+### 5.2 상세페이지 생성 플로우 (Phase 1 핵심)
 
 ```
-사용자 → /job/lawyer
+사용자 요청: GET /job/lawyer
     ↓
-index.tsx: app.get('/job/:slug')
+index.tsx 라우트 핸들러
     ↓
 resolveDetailIdFromSlug('lawyer')
     → { id: 'job:G_K000007482', source: 'GOYONG24' }
     ↓
 getUnifiedJobDetail(id, env)
     ↓
-    ├─ fetchCareernetJob(375) → CareerNet API
-    │       ↓
-    │   parseCareernetJob() → UnifiedJobDetail (partial)
+    ├─ fetchCareernetJob(375)
+    │   → CareerNet API 호출
+    │   → parseCareernetJob()
+    │   → UnifiedJobDetail (partial)
     │
-    └─ fetchGoyong24JobDetail('K000007482') → Goyong24 API
-            ↓
-        parseGoyong24Job() → UnifiedJobDetail (partial)
+    └─ fetchGoyong24JobDetail('K000007482')
+        → Goyong24 API 호출
+        → parseGoyong24Job()
+        → UnifiedJobDetail (partial)
     ↓
 mergeJobProfiles([careernet, goyong24])
+    → 두 소스 데이터 병합
     → UnifiedJobDetail (merged)
     ↓
-applyJobDetailOverrides('lawyer') → 특별 처리
+applyJobDetailOverrides('lawyer')
+    → 특수 케이스 처리 (변호사 등)
     ↓
 renderUnifiedJobDetail(profile, partials, sources)
     ↓
-HTML Response (SSR)
-```
-
-#### B. 직업 목록 조회 플로우 (캐싱)
-
-```
-사용자 → /job?q=개발자&category=100060
-    ↓
-index.tsx: app.get('/job')
-    ↓
-buildListCacheKey('job', params)
-    → 'list:job:q=개발자&category=100060&page=1'
-    ↓
-withKvCache(key, fetcher, policy)
-    ↓
-    ├─ KV.get(key) → 캐시 확인
-    │   ├─ HIT & fresh → 캐시 반환
-    │   ├─ HIT & stale → 백그라운드 재검증 + 캐시 반환
-    │   └─ MISS → fetcher 실행
-    │
-    └─ fetcher: searchUnifiedJobs(params, env)
-            ↓
-        careernetAPI.searchJobs() + goyong24API.listJobs()
-            ↓
-        병합 및 중복 제거
-            ↓
-        KV.put(key, data, { expirationTtl: 6h })
-    ↓
-recordListFreshness(target, result) → 스냅샷 저장
-    ↓
-renderJobList(results, cacheState)
+    ├─ renderHero()           # Hero 섹션
+    ├─ renderQuickStats()     # Quick Stats (조건부)
+    ├─ renderTabs()           # 탭 구조
+    ├─ renderLawyerFieldMatrix()  # 소스 비교 (변호사 전용)
+    └─ renderSourcesCollapsible()  # 데이터 출처 (조건부)
     ↓
 HTML Response (SSR)
 ```
-
-### 3.3 기술 스택
-
-| 계층 | 기술 | 용도 |
-|-----|------|-----|
-| **Runtime** | Cloudflare Workers | 엣지 컴퓨팅 플랫폼 |
-| **Framework** | Hono 4.9.9 | 웹 프레임워크 |
-| **Language** | TypeScript 5.9.3 | 타입 안전성 |
-| **Build** | Vite 6.3.5 | 빌드 도구 |
-| **Deploy** | Wrangler 4.4.0 | Cloudflare CLI |
-| **Database** | Cloudflare D1 (SQLite) | 관계형 DB |
-| **Cache** | Cloudflare KV | Key-Value 스토어 |
-| **Frontend** | Vanilla JS + TailwindCSS | 클라이언트 |
-| **Process** | PM2 | 로컬 개발 |
 
 ---
 
-## 4. 데이터 모델 및 플로우
+## 6. 데이터 모델
 
-### 4.1 핵심 타입 정의
+### 6.1 핵심 타입 정의
 
-#### A. UnifiedJobDetail
+#### UnifiedJobDetail
 
 ```typescript
 export interface UnifiedJobDetail {
   // 기본 정보
-  id: string                    // 예: "job:C_375" (CareerNet) 또는 "job:G_K000007482" (Goyong24)
+  id: string                    // "job:C_375" 또는 "job:G_K000007482"
   sourceIds: {
     careernet?: string          // "375"
     goyong24?: string           // "K000007482"
@@ -448,36 +490,26 @@ export interface UnifiedJobDetail {
   status?: string               // 고용 형태
   
   // 요구사항
-  educationDistribution?: {     // 학력 분포
-    highSchool?: string
-    college?: string
-    university?: string
-    graduate?: string
-  }
-  majorDistribution?: {         // 전공 분포
-    humanities?: string
-    social?: string
-    engineering?: string
-    // ...
-  }
+  educationDistribution?: EducationDistribution
+  majorDistribution?: MajorDistribution
   
   // 연관 정보
-  relatedMajors?: JobRelatedEntity[]      // 관련 전공
-  relatedJobs?: JobRelatedEntity[]        // 관련 직업
-  relatedCertificates?: string[]          // 관련 자격증
-  relatedOrganizations?: JobOrganizationInfo[]  // 관련 단체
-  kecoCodes?: JobKecoCodeInfo[]           // 한국표준직업분류
+  relatedMajors?: JobRelatedEntity[]
+  relatedJobs?: JobRelatedEntity[]
+  relatedCertificates?: string[]
+  relatedOrganizations?: JobOrganizationInfo[]
+  kecoCodes?: JobKecoCodeInfo[]
 }
 ```
 
-#### B. SourceStatusRecord
+#### SourceStatusRecord
 
 ```typescript
 export interface SourceStatus {
   count?: number        // 반환된 항목 수
-  total?: number        // 전체 항목 수 (페이지네이션)
+  total?: number        // 전체 항목 수
   error?: string        // 에러 메시지
-  skipped?: string      // 스킵 사유 ('excluded', 'missing-id', 'keyword-required' 등)
+  skipped?: string      // 스킵 사유
 }
 
 export interface SourceStatusRecord {
@@ -486,391 +518,213 @@ export interface SourceStatusRecord {
 }
 ```
 
-### 4.2 데이터베이스 스키마
+### 6.2 데이터베이스 스키마
 
-#### A. 댓글 시스템 (0001_initial_schema.sql)
+#### 댓글 시스템 (Phase 2-3에서 UI 구현)
 
 ```sql
--- 위키 페이지 메타데이터
 CREATE TABLE pages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  slug TEXT UNIQUE NOT NULL,                    -- "lawyer", "computer-science"
+  slug TEXT UNIQUE NOT NULL,
   title TEXT NOT NULL,
   page_type TEXT NOT NULL CHECK(page_type IN ('job', 'major', 'guide')),
-  content TEXT NOT NULL,                        -- Markdown
-  summary TEXT,
-  meta_data TEXT,                               -- JSON
-  view_count INTEGER DEFAULT 0,
-  status TEXT DEFAULT 'published',
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  content TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 댓글
 CREATE TABLE comments (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   page_id INTEGER NOT NULL,
-  parent_id INTEGER,                            -- 대댓글용
+  parent_id INTEGER,
   nickname TEXT DEFAULT '익명',
   content TEXT NOT NULL,
-  ip_hash TEXT,                                 -- SHA256(IP)
+  ip_hash TEXT,
   likes INTEGER DEFAULT 0,
-  flagged BOOLEAN DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE
-);
-
--- 댓글 반응 (좋아요/싫어요)
-CREATE TABLE comment_reactions (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  comment_id INTEGER NOT NULL,
-  ip_hash TEXT NOT NULL,
-  reaction_type TEXT NOT NULL CHECK(reaction_type IN ('like', 'dislike')),
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(comment_id, ip_hash),
-  FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE
-);
-
--- 댓글 신고
-CREATE TABLE comment_reports (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  comment_id INTEGER NOT NULL,
-  ip_hash TEXT NOT NULL,
-  reason TEXT NOT NULL,
-  status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'reviewed', 'dismissed')),
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE
-);
-
--- IP 차단
-CREATE TABLE ip_blocks (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  ip_hash TEXT UNIQUE NOT NULL,
-  reason TEXT NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  expires_at DATETIME
+  FOREIGN KEY (page_id) REFERENCES pages(id)
 );
 ```
-
-#### B. AI 분석 파이프라인 (0002_career_analysis_pipeline.sql)
-
-```sql
--- AI 분석 세션
-CREATE TABLE ai_sessions (
-  id TEXT PRIMARY KEY,                          -- UUID
-  user_id TEXT,                                 -- 익명은 NULL
-  session_type TEXT NOT NULL CHECK(session_type IN ('job', 'major', 'career_path')),
-  traits_snapshot TEXT,                         -- JSON (사용자 입력)
-  status TEXT DEFAULT 'active',
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- AI 분석 요청
-CREATE TABLE ai_analysis_requests (
-  id TEXT PRIMARY KEY,                          -- UUID
-  session_id TEXT NOT NULL,
-  analysis_type TEXT NOT NULL,
-  input_data TEXT NOT NULL,                     -- JSON
-  status TEXT DEFAULT 'pending',
-  priority INTEGER DEFAULT 5,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (session_id) REFERENCES ai_sessions(id) ON DELETE CASCADE
-);
-
--- AI 분석 결과
-CREATE TABLE ai_analysis_results (
-  id TEXT PRIMARY KEY,                          -- UUID
-  request_id TEXT UNIQUE NOT NULL,
-  result_data TEXT NOT NULL,                    -- JSON
-  provider TEXT,                                -- 'claude', 'openai'
-  model TEXT,                                   -- 'claude-3-5-sonnet-20241022'
-  tokens_used INTEGER,
-  latency_ms INTEGER,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (request_id) REFERENCES ai_analysis_requests(id) ON DELETE CASCADE
-);
-```
-
-### 4.3 캐싱 전략
-
-#### A. KV 캐시 키 패턴
-
-```typescript
-// 목록 캐시
-const key = `list:${type}:q=${keyword}&category=${cat}&page=${page}`
-// 예: "list:job:q=개발자&category=100060&page=1"
-
-// Freshness 스냅샷
-const snapshotKey = `freshness:snapshot:${targetId}:${timestamp}`
-// 예: "freshness:snapshot:job-tech-developer:1729756800000"
-
-// Freshness 스케줄
-const scheduleKey = `freshness:schedule:${targetId}`
-// 예: "freshness:schedule:job-tech-developer"
-
-// Freshness 인덱스
-const indexKey = `freshness:index:job`
-// 값: ["freshness:snapshot:job-tech-developer:1729756800000", ...]
-
-// 성능 메트릭
-const metricsKey = `perf:${timestamp}:${sessionId}`
-// 예: "perf:1729756800000:abc123"
-```
-
-#### B. 캐싱 정책
-
-| 캐시 타입 | Stale After | Expires After | 재검증 |
-|----------|-------------|---------------|--------|
-| 직업 목록 | 1시간 | 6시간 | Cron (30분) |
-| 전공 목록 | 1시간 | 6시간 | Cron (30분) |
-| Freshness | - | 7일 | - |
-| 성능 메트릭 | - | 30일 | - |
 
 ---
 
-## 5. 요구사항 목록 (Requirements)
+## 7. 코드 구현 지침
 
-### 5.1 기능 요구사항 (Functional Requirements)
+### 7.1 Phase 1: 템플릿 시스템 구현 지침
 
-#### FR-1: 직업 정보 조회
+#### 7.1.1 샘플 페이지 관리
 
-**설명**: 사용자가 직업 정보를 검색하고 상세 내용을 볼 수 있어야 한다.
+**목표**: 샘플 페이지로 템플릿을 반복 개선
 
-**세부 요구사항**:
-- FR-1.1: 직업 목록 페이지에서 키워드 검색 가능
-- FR-1.2: 카테고리별 필터링 지원
-- FR-1.3: 페이지네이션 (기본 20개/페이지)
-- FR-1.4: 직업 상세 페이지는 SEO 최적화 (JSON-LD, OG 메타)
-- FR-1.5: 소스별 데이터 상태 표시 (CareerNet, 고용24)
-- FR-1.6: 변호사 등 특정 직업은 커스텀 템플릿
-
-**우선순위**: ⭐⭐⭐ (최고)  
-**상태**: ✅ 완료
-
-#### FR-2: 전공 정보 조회
-
-**설명**: 사용자가 대학 전공 정보를 검색하고 상세 내용을 볼 수 있어야 한다.
-
-**세부 요구사항**:
-- FR-2.1: 전공 목록 페이지에서 키워드 검색
-- FR-2.2: 전공 상세 페이지 (커리큘럼, 진로, 대학 정보)
-- FR-2.3: 관련 직업 연계 표시
-
-**우선순위**: ⭐⭐⭐  
-**상태**: ✅ 완료
-
-#### FR-3: 캐싱 및 성능
-
-**설명**: 목록 조회 성능을 최적화하기 위해 캐싱을 구현한다.
-
-**세부 요구사항**:
-- FR-3.1: KV 기반 stale-while-revalidate 전략
-- FR-3.2: Cron 기반 자동 재검증 (30분 간격)
-- FR-3.3: 수동 재검증 (`?refresh=1`)
-- FR-3.4: 캐시 상태 배지 표시
-
-**우선순위**: ⭐⭐⭐  
-**상태**: ✅ 완료
-
-#### FR-4: 댓글 시스템
-
-**설명**: 사용자가 위키 페이지에 댓글을 작성하고 반응할 수 있다.
-
-**세부 요구사항**:
-- FR-4.1: 익명 댓글 작성 (닉네임 입력)
-- FR-4.2: 대댓글 (parent_id 지원)
-- FR-4.3: 좋아요/싫어요
-- FR-4.4: 신고 기능
-- FR-4.5: IP 해시 기반 익명성
-
-**우선순위**: ⭐⭐  
-**상태**: ⏳ 백엔드 완료, 프론트엔드 미완료
-
-#### FR-5: 성능 모니터링
-
-**설명**: Core Web Vitals 및 사용자 행동 메트릭을 수집한다.
-
-**세부 요구사항**:
-- FR-5.1: TTFB, FCP, LCP, CLS, FID 측정
-- FR-5.2: 하이드레이션 소요 시간 측정
-- FR-5.3: SERP 상호작용 로그 (정렬, 필터, 페이지 변경)
-- FR-5.4: Beacon API로 KV 저장
-
-**우선순위**: ⭐⭐  
-**상태**: ✅ 수집 완료, 조회 UI 미완료
-
-#### FR-6: AI 분석 준비
-
-**설명**: AI 기반 진로 분석을 위한 인프라를 준비한다.
-
-**세부 요구사항**:
-- FR-6.1: 세션/요청/결과 D1 테이블
-- FR-6.2: REST API 엔드포인트
-- FR-6.3: 상태 추적 (pending, processing, completed, failed)
-
-**우선순위**: ⭐  
-**상태**: ⏳ 테이블만 준비, 실제 AI 호출 미구현
-
-### 5.2 비기능 요구사항 (Non-Functional Requirements)
-
-#### NFR-1: 성능
-
-- **목표**: LCP < 2.5초, CLS < 0.1
-- **캐싱**: 목록 조회 응답 시간 < 200ms (캐시 히트 시)
-- **API 타임아웃**: 외부 API 5초
-
-#### NFR-2: 확장성
-
-- **Cloudflare Workers**: 무제한 스케일링
-- **D1 제약**: 테이블당 10GB (무료 플랜)
-- **KV 제약**: 네임스페이스당 무제한 키 (무료 플랜 100,000 read/day)
-
-#### NFR-3: 보안
-
-- **IP 해싱**: SHA-256 (댓글 익명성)
-- **Rate Limiting**: 향후 구현 (Cloudflare 기본 보호)
-- **XSS 방지**: `escapeHtml()` 사용
-
-#### NFR-4: SEO
-
-- **모든 상세 페이지**: JSON-LD, OG 메타, canonical URL
-- **목록 페이지**: ItemList JSON-LD
-- **크롤러 접근성**: robots.txt, sitemap.xml (향후)
-
----
-
-## 6. 코드 레벨 구현 지침
-
-### 6.1 라우트 분리 (Required Refactor)
-
-**문제**: `index.tsx`가 3,779 lines로 너무 크다.
-
-**해결 방안**:
+**구현 방식 Option A: 별도 라우트**
 
 ```typescript
-// 디렉토리 구조
-src/
-├── index.tsx (100 lines)           # 메인 진입점만
-├── routes/
-│   ├── pages.ts                    # 페이지 라우트 (/, /job, /major 등)
-│   ├── api-jobs.ts                 # /api/jobs, /api/jobs/:id
-│   ├── api-majors.ts               # /api/majors, /api/majors/:id
-│   ├── api-comments.ts             # /api/comments/*
-│   ├── api-analyzer.ts             # /api/analyzer/*
-│   ├── api-perf.ts                 # /api/perf-metrics
-│   └── api-freshness.ts            # /api/freshness/*
-└── ...
-```
-
-**구현 예시**:
-
-```typescript
-// src/index.tsx (간결하게)
-import { Hono } from 'hono'
-import { pagesRoutes } from './routes/pages'
-import { apiJobsRoutes } from './routes/api-jobs'
-import { apiMajorsRoutes } from './routes/api-majors'
-// ...
-
-const app = new Hono<{ Bindings: Bindings }>()
-
-// Middleware
-app.use('*', cors())
-app.use('*', renderer)
-app.use('/static/*', serveStatic({ root: './public' }))
-
-// Mount routes
-app.route('/', pagesRoutes)
-app.route('/api/jobs', apiJobsRoutes)
-app.route('/api/majors', apiMajorsRoutes)
-// ...
-
-export default app
-```
-
-```typescript
-// src/routes/pages.ts
-import { Hono } from 'hono'
-import type { Bindings } from '../types/bindings'
-
-export const pagesRoutes = new Hono<{ Bindings: Bindings }>()
-
-pagesRoutes.get('/', (c) => {
-  // 홈페이지 로직
-})
-
-pagesRoutes.get('/job', async (c) => {
-  // 직업 목록 로직
-})
-
-pagesRoutes.get('/job/:slug', async (c) => {
-  // 직업 상세 로직
-})
-```
-
-### 6.2 D1 바인딩 설정
-
-**현재 문제**: `wrangler.jsonc`에 D1 설정이 없어 마이그레이션 불가.
-
-**해결**:
-
-```jsonc
-// wrangler.jsonc
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "careerwiki-phase1",
-  "compatibility_date": "2024-01-01",
-  "compatibility_flags": ["nodejs_compat"],
-  "pages_build_output_dir": "./dist",
+// src/index.tsx에 샘플 라우트 추가
+app.get('/samples/job/:sampleId', (c) => {
+  const sampleId = c.req.param('sampleId')
+  const sample = getSampleJobDetail(sampleId)
   
-  // D1 데이터베이스 추가
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "careerwiki-db",
-      "database_id": "xxx-xxx-xxx"  // wrangler d1 create 후 받은 ID
+  if (!sample) {
+    return c.notFound()
+  }
+  
+  // 실제 템플릿과 동일한 렌더링
+  const html = renderUnifiedJobDetail(
+    sample.profile,
+    sample.partials,
+    sample.sources
+  )
+  
+  return c.html(html)
+})
+
+// 접근: /samples/job/lawyer
+```
+
+**구현 방식 Option B: 쿼리 파라미터**
+
+```typescript
+app.get('/job/:slug', async (c) => {
+  const slug = c.req.param('slug')
+  const isSample = c.req.query('sample') === 'true'
+  
+  let profile, partials, sources
+  
+  if (isSample) {
+    // 샘플 데이터 사용
+    const sample = getSampleJobDetail(slug)
+    profile = sample.profile
+    partials = sample.partials
+    sources = sample.sources
+  } else {
+    // 실제 API 호출
+    const result = await getUnifiedJobDetail(slug, c.env)
+    profile = result.profile
+    partials = result.partials
+    sources = result.sources
+  }
+  
+  const html = renderUnifiedJobDetail(profile, partials, sources)
+  return c.html(html)
+})
+
+// 접근: /job/lawyer?sample=true
+```
+
+**권장**: Option A (별도 라우트) - 명확한 구분
+
+#### 7.1.2 템플릿 파일 구조
+
+**현재 (Phase 1 진행 중)**:
+```
+src/templates/
+├── unifiedJobDetail.ts       # 직업 상세 템플릿 (개선 중)
+├── unifiedMajorDetail.ts     # 전공 상세 템플릿
+├── howtoDetail.ts
+└── detailTemplateUtils.ts    # 공통 헬퍼
+```
+
+**Phase 1 완료 후 (목표)**:
+```
+src/templates/
+├── job/
+│   ├── jobDetailTemplate.ts       # 최종 확정된 틀
+│   ├── jobDetailRenderer.ts       # 렌더링 로직
+│   └── jobDetailHelpers.ts        # 헬퍼 함수
+├── major/
+│   ├── majorDetailTemplate.ts
+│   ├── majorDetailRenderer.ts
+│   └── majorDetailHelpers.ts
+├── howto/
+│   └── howtoTemplate.ts
+└── shared/
+    ├── tabRenderer.ts             # 탭 공통 렌더러
+    ├── heroRenderer.ts            # Hero 공통 렌더러
+    └── metaHelpers.ts             # SEO 메타 헬퍼
+```
+
+#### 7.1.3 템플릿 렌더링 인터페이스
+
+**표준 인터페이스**:
+
+```typescript
+// src/templates/job/jobDetailTemplate.ts
+export interface JobDetailTemplateParams {
+  profile: UnifiedJobDetail
+  partials?: Partial<Record<DataSource, UnifiedJobDetail | null>>
+  sources?: SourceStatusRecord
+  options?: {
+    showQuickStats?: boolean      // 기본 true
+    showClassifications?: boolean // 기본 true
+    showSourcesPanel?: boolean    // 기본 true
+    customSections?: string[]     // 커스텀 섹션 ID
+  }
+}
+
+export function renderJobDetail(params: JobDetailTemplateParams): string {
+  const {
+    profile,
+    partials,
+    sources,
+    options = {}
+  } = params
+  
+  // 특수 케이스 감지
+  const isLawyer = isLawyerProfile(profile)
+  
+  // 옵션 기본값 설정
+  const finalOptions = {
+    showQuickStats: !isLawyer, // 변호사는 Quick Stats 숨김
+    showClassifications: !isLawyer,
+    showSourcesPanel: !isLawyer,
+    ...options
+  }
+  
+  // 렌더링
+  return buildJobDetailHTML(profile, partials, sources, finalOptions)
+}
+```
+
+#### 7.1.4 특수 케이스 처리
+
+**원칙**: 조건 분기로 처리, 별도 템플릿 파일 만들지 않음
+
+```typescript
+// src/templates/job/jobDetailHelpers.ts
+
+export function isLawyerProfile(profile: UnifiedJobDetail): boolean {
+  const lawyerIds = ['lawyer', '변호사', 'job:c_375', 'job:g_k000007482']
+  return lawyerIds.some(id => 
+    profile.id.toLowerCase().includes(id) ||
+    profile.name.toLowerCase().includes(id)
+  )
+}
+
+export function getTemplateOptions(profile: UnifiedJobDetail) {
+  if (isLawyerProfile(profile)) {
+    return {
+      showQuickStats: false,
+      showClassifications: false,
+      showSourcesPanel: false,
+      customSections: ['lawyerFieldMatrix'] // 변호사 전용 섹션
     }
-  ],
+  }
   
-  // KV 네임스페이스 추가
-  "kv_namespaces": [
-    {
-      "binding": "KV",
-      "id": "xxx-xxx-xxx",  // wrangler kv:namespace create 후 받은 ID
-      "preview_id": "xxx-xxx-xxx"  // 로컬 개발용
-    }
-  ],
+  // 다른 특수 케이스 추가 가능
+  // if (isDoctorProfile(profile)) { ... }
   
-  "vars": {
-    "ENVIRONMENT": "production"
+  return {
+    showQuickStats: true,
+    showClassifications: true,
+    showSourcesPanel: true
   }
 }
 ```
 
-**실행 순서**:
+### 7.2 코드 중복 제거 가이드
 
-```bash
-# 1. D1 데이터베이스 생성
-npx wrangler d1 create careerwiki-db
-# → database_id를 wrangler.jsonc에 복사
+#### 7.2.1 공통 렌더러 추출
 
-# 2. KV 네임스페이스 생성
-npx wrangler kv:namespace create careerwiki_kv
-npx wrangler kv:namespace create careerwiki_kv --preview
-# → id와 preview_id를 wrangler.jsonc에 복사
-
-# 3. 마이그레이션 적용
-npm run db:migrate:local
-
-# 4. 확인
-npx wrangler d1 execute careerwiki-db --local --command="SELECT name FROM sqlite_master WHERE type='table';"
-```
-
-### 6.3 템플릿 공통화
-
-**문제**: `unifiedJobDetail.ts`와 `unifiedMajorDetail.ts`에 중복 로직 많음.
+**문제**: 직업/전공 템플릿에 탭 렌더링 로직 중복
 
 **해결**:
 
@@ -883,7 +737,10 @@ export interface TabConfig {
   content: string
 }
 
-export function renderTabs(tabs: TabConfig[], telemetryVariant?: string): string {
+export function renderTabs(
+  tabs: TabConfig[],
+  telemetryVariant?: string
+): string {
   const tabButtons = tabs.map((tab, index) => `
     <button
       type="button"
@@ -891,9 +748,7 @@ export function renderTabs(tabs: TabConfig[], telemetryVariant?: string): string
       aria-selected="${index === 0 ? 'true' : 'false'}"
       aria-controls="tab-panel-${tab.id}"
       id="tab-${tab.id}"
-      class="tab-button"
-      data-cw-telemetry-component="detail-tab"
-      data-cw-telemetry-action="tab-switch"
+      class="tab-button ${index === 0 ? 'active' : ''}"
       data-tab-id="${tab.id}"
     >
       <i class="fas ${tab.icon}"></i>
@@ -913,11 +768,13 @@ export function renderTabs(tabs: TabConfig[], telemetryVariant?: string): string
   `).join('')
   
   return `
-    <div role="tablist" class="tab-list">
-      ${tabButtons}
-    </div>
-    <div class="tab-panels">
-      ${tabPanels}
+    <div class="tabs-container" data-telemetry-variant="${telemetryVariant || ''}">
+      <div role="tablist" class="tab-list">
+        ${tabButtons}
+      </div>
+      <div class="tab-panels">
+        ${tabPanels}
+      </div>
     </div>
   `
 }
@@ -926,20 +783,69 @@ export function renderTabs(tabs: TabConfig[], telemetryVariant?: string): string
 **사용 예시**:
 
 ```typescript
-// src/templates/unifiedJobDetail.ts
-import { renderTabs } from './shared/tabRenderer'
+// src/templates/job/jobDetailRenderer.ts
+import { renderTabs, TabConfig } from '../shared/tabRenderer'
 
 const tabs: TabConfig[] = [
-  { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewContent },
-  { id: 'details', label: '상세 정보', icon: 'fa-layer-group', content: detailContent }
+  { 
+    id: 'overview', 
+    label: '개요', 
+    icon: 'fa-circle-info', 
+    content: renderOverviewSection(profile) 
+  },
+  { 
+    id: 'details', 
+    label: '상세 정보', 
+    icon: 'fa-layer-group', 
+    content: renderDetailsSection(profile) 
+  }
 ]
 
 const tabsHtml = renderTabs(tabs, 'job-detail-v1')
 ```
 
-### 6.4 에러 처리 표준화
+#### 7.2.2 중복 코드 식별 체크리스트
 
-**모든 서비스 함수는 다음 패턴을 따른다**:
+작업 시작 전 확인:
+
+- [ ] 이 로직이 다른 파일에도 있는가?
+- [ ] 비슷한 함수가 이미 있는가?
+- [ ] 공통 헬퍼로 추출 가능한가?
+- [ ] 템플릿 간 공유 가능한가?
+
+### 7.3 라우트 분리 (Phase 1 완료 후)
+
+**현재 문제**: index.tsx가 3,779 lines
+
+**해결 계획** (Phase 1 완료 후 진행):
+
+```typescript
+// src/index.tsx (목표: 100 lines 이하)
+import { Hono } from 'hono'
+import { pagesRoutes } from './routes/pages'
+import { apiJobsRoutes } from './routes/api/jobs'
+import { apiMajorsRoutes } from './routes/api/majors'
+// ...
+
+const app = new Hono<{ Bindings: Bindings }>()
+
+app.use('*', cors())
+app.use('*', renderer)
+app.use('/static/*', serveStatic({ root: './public' }))
+
+app.route('/', pagesRoutes)
+app.route('/api/jobs', apiJobsRoutes)
+app.route('/api/majors', apiMajorsRoutes)
+// ...
+
+export default app
+```
+
+**우선순위**: Phase 1 완료 후 (지금은 하지 않음)
+
+### 7.4 에러 처리 표준화
+
+**모든 서비스 함수는 일관된 에러 처리**:
 
 ```typescript
 // src/services/baseService.ts
@@ -957,19 +863,19 @@ export class ServiceError extends Error {
 
 export async function withErrorHandling<T>(
   operation: () => Promise<T>,
-  errorContext: string
+  context: string
 ): Promise<T> {
   try {
     return await operation()
   } catch (error) {
-    console.error(`[${errorContext}] 오류 발생:`, error)
+    console.error(`[${context}] 오류:`, error)
     
     if (error instanceof ServiceError) {
       throw error
     }
     
     throw new ServiceError(
-      `${errorContext} 실패: ${error instanceof Error ? error.message : String(error)}`,
+      `${context} 실패: ${error instanceof Error ? error.message : String(error)}`,
       'UNKNOWN_ERROR',
       500,
       { originalError: error }
@@ -978,285 +884,111 @@ export async function withErrorHandling<T>(
 }
 ```
 
-**사용 예시**:
-
-```typescript
-export async function getUnifiedJobDetail(
-  id: string,
-  env: any
-): Promise<UnifiedJobDetail | null> {
-  return withErrorHandling(async () => {
-    // 로직
-  }, 'getUnifiedJobDetail')
-}
-```
-
-### 6.5 API 응답 표준화
-
-**모든 API는 다음 형식을 따른다**:
-
-```typescript
-// src/types/api.ts
-export interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: {
-    code: string
-    message: string
-    details?: any
-  }
-  meta?: {
-    timestamp: number
-    requestId?: string
-  }
-}
-
-export interface ListResponse<T> {
-  items: T[]
-  total: number
-  page: number
-  perPage: number
-  hasMore: boolean
-}
-```
-
-**사용 예시**:
-
-```typescript
-app.get('/api/jobs', async (c) => {
-  try {
-    const results = await searchUnifiedJobs(params, c.env)
-    
-    return c.json<ApiResponse<ListResponse<UnifiedJobSummary>>>({
-      success: true,
-      data: {
-        items: results.items,
-        total: results.total,
-        page: params.page,
-        perPage: params.perPage,
-        hasMore: results.items.length === params.perPage
-      },
-      meta: {
-        timestamp: Date.now()
-      }
-    })
-  } catch (error) {
-    return c.json<ApiResponse<never>>({
-      success: false,
-      error: {
-        code: 'SEARCH_FAILED',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      },
-      meta: {
-        timestamp: Date.now()
-      }
-    }, 500)
-  }
-})
-```
-
 ---
 
-## 7. 개선 필요 사항 (Technical Debt)
+## 8. Technical Debt 관리
 
-### 7.1 긴급 (High Priority)
+### 8.1 긴급 (High Priority) - Phase 1 완료 후 처리
 
-#### TD-1: index.tsx 분리
+#### TD-1: index.tsx 라우트 분리
 - **문제**: 3,779 lines, 유지보수 어려움
-- **해결**: 라우트별 파일 분리 (위 6.1 참조)
+- **해결**: 라우트별 파일 분리
 - **예상 시간**: 4-6시간
-- **영향**: 코드 가독성 ↑, 협업 ↑
+- **우선순위**: Phase 1 완료 후
 
 #### TD-2: D1/KV 바인딩 설정
-- **문제**: 로컬 개발 시 마이그레이션 불가, KV 에러
-- **해결**: wrangler.jsonc 설정 (위 6.2 참조)
+- **문제**: wrangler.jsonc 설정 누락
+- **해결**: D1/KV 생성 및 바인딩
 - **예상 시간**: 30분
-- **영향**: 로컬 개발 안정성 ↑
+- **우선순위**: Phase 1 완료 후
 
-#### TD-3: 에러 핸들링 표준화
-- **문제**: 일관성 없는 try/catch, 에러 로깅
-- **해결**: ServiceError 클래스, withErrorHandling() (위 6.4 참조)
+#### TD-3: 에러 처리 표준화
+- **문제**: 일관성 없는 에러 처리
+- **해결**: ServiceError 클래스 적용
 - **예상 시간**: 2-3시간
-- **영향**: 디버깅 ↑, 운영 안정성 ↑
+- **우선순위**: Phase 1 완료 후
 
-### 7.2 중간 (Medium Priority)
+### 8.2 중간 (Medium Priority) - Phase 2-3에서 처리
 
 #### TD-4: 템플릿 중복 제거
-- **문제**: 직업/전공 템플릿 유사 로직 반복
-- **해결**: 공통 렌더러 추출 (위 6.3 참조)
+- **문제**: 직업/전공 템플릿 유사 로직
+- **해결**: 공통 렌더러 추출
 - **예상 시간**: 3-4시간
-- **영향**: 코드 재사용성 ↑
+- **우선순위**: Phase 1에 일부 포함될 수 있음
 
-#### TD-5: API 응답 표준화
-- **문제**: 각 API마다 다른 응답 형식
-- **해결**: ApiResponse<T> 타입 (위 6.5 참조)
-- **예상 시간**: 2시간
-- **영향**: 프론트엔드 통합 ↑
-
-#### TD-6: 테스트 추가
+#### TD-5: 테스트 추가
 - **문제**: 테스트 부재
 - **해결**: Vitest + Mock KV/D1
 - **예상 시간**: 8-10시간
-- **영향**: 회귀 방지, 리팩토링 안전성 ↑
+- **우선순위**: Phase 3
 
-### 7.3 낮음 (Low Priority)
+### 8.3 낮음 (Low Priority) - 추후
 
-#### TD-7: TypeScript strict 모드
-- **문제**: `tsconfig.json`에서 strict 비활성화
-- **해결**: strict: true, 점진적 타입 강화
+#### TD-6: TypeScript strict 모드
 - **예상 시간**: 6-8시간
-- **영향**: 타입 안전성 ↑
 
-#### TD-8: 성능 메트릭 조회 UI
-- **문제**: 수집만 되고 조회 불가
-- **해결**: `/admin/metrics` 대시보드
+#### TD-7: 성능 메트릭 조회 UI
 - **예상 시간**: 4-6시간
-- **영향**: 운영 가시성 ↑
 
 ---
 
-## 8. 배포 및 운영
+## 9. 작업 가이드
 
-### 8.1 배포 프로세스
+### 9.1 Task 단위 작업 가이드
 
-#### A. 로컬 개발
+**원칙**:
+1. Task는 1-2시간 내 완료 가능한 크기
+2. Task 완료 시마다 보고
+3. 승인 받으면 Commit & Push
+4. 다음 Task 시작
 
-```bash
-# 1. 의존성 설치
-npm install
+**Task 예시 (Phase 1)**:
+- Task 1-1: 변호사 샘플 페이지 Hero 섹션 개선
+- Task 1-2: 변호사 샘플 페이지 Quick Stats 제거 확인
+- Task 1-3: 소스 비교 매트릭스 레이아웃 조정
+- Task 1-4: 개발자 샘플 페이지 생성 (필요 시)
+- Task 1-5: 전공 샘플 페이지 (컴퓨터공학) 생성
+- ...
 
-# 2. 환경 변수 (.dev.vars)
-CAREER_NET_API_KEY=your_key
-GOYONG24_JOB_API_KEY=your_key
-GOYONG24_MAJOR_API_KEY=your_key
+### 9.2 Commit 메시지 가이드
 
-# 3. D1 마이그레이션
-npm run db:migrate:local
+**형식**:
+```
+<type>: <subject>
 
-# 4. 빌드
-npm run build
-
-# 5. PM2로 시작
-pm2 start ecosystem.config.cjs
-
-# 6. 확인
-curl http://localhost:3000
-curl http://localhost:3000/job/lawyer
+<body>
 ```
 
-#### B. 프로덕션 배포
+**타입**:
+- `feat`: 새 기능 (샘플 페이지 추가 등)
+- `fix`: 버그 수정
+- `refactor`: 리팩토링 (템플릿 공통화 등)
+- `docs`: 문서 수정 (Tech Spec 등)
+- `style`: UI/스타일 변경
+- `test`: 테스트 추가
 
-```bash
-# 1. Cloudflare API 인증
-setup_cloudflare_api_key  # AI 도구
-
-# 2. D1 생성 (최초 1회)
-npx wrangler d1 create careerwiki-db
-# → wrangler.jsonc에 database_id 추가
-
-# 3. D1 마이그레이션
-npm run db:migrate:prod
-
-# 4. Secrets 등록
-npx wrangler pages secret put CAREER_NET_API_KEY --project-name careerwiki-phase1
-npx wrangler pages secret put GOYONG24_JOB_API_KEY --project-name careerwiki-phase1
-npx wrangler pages secret put GOYONG24_MAJOR_API_KEY --project-name careerwiki-phase1
-
-# 5. 빌드 및 배포
-npm run build
-npx wrangler pages deploy dist --project-name careerwiki-phase1
+**예시**:
 ```
+feat: Add lawyer sample page Hero section
 
-### 8.2 모니터링
-
-#### A. Cloudflare Dashboard
-- Pages 배포 상태
-- Workers 메트릭 (요청 수, 에러율, CPU 시간)
-- D1 쿼리 수
-- KV 작업 수
-
-#### B. 로그 확인
-
-```bash
-# 로컬
-pm2 logs careerwiki --nostream --lines 50
-
-# 프로덕션
-npx wrangler pages deployment tail --project-name careerwiki-phase1
+- Implement Hero section with title, description, share button
+- Add lawyer-specific styling
+- Remove unnecessary metadata chips
 ```
-
-#### C. 성능 메트릭
-
-```bash
-# KV에서 최근 메트릭 조회 (AI 도구 필요)
-# 향후 /admin/metrics UI 구현 예정
-```
-
-### 8.3 운영 체크리스트
-
-**일일 체크**:
-- [ ] 프로덕션 사이트 접근 가능 확인
-- [ ] 에러율 < 1% 확인 (Cloudflare Dashboard)
-- [ ] API 응답 시간 < 500ms 확인
-
-**주간 체크**:
-- [ ] 캐시 히트율 확인 (목표 > 80%)
-- [ ] D1 사용량 확인 (무료 플랜 제한)
-- [ ] KV 작업 수 확인 (무료 플랜 제한)
-
-**월간 체크**:
-- [ ] 의존성 업데이트 (`npm outdated`)
-- [ ] 보안 취약점 확인 (`npm audit`)
-- [ ] 미사용 캐시 정리
-
----
-
-## 9. 다음 단계 (Next Steps)
-
-### 9.1 Phase 1 완료 기준
-
-- [x] 직업/전공 상세 페이지 SSR
-- [x] 캐싱 및 Freshness 모니터링
-- [ ] index.tsx 라우트 분리
-- [ ] D1/KV 바인딩 설정
-- [ ] 에러 핸들링 표준화
-- [ ] 댓글 프론트엔드 UI
-- [ ] 테스트 추가 (최소 핵심 기능)
-
-### 9.2 Phase 2 계획 (인증 및 권한)
-
-- [ ] 로그인/회원가입 UI
-- [ ] OAuth 통합 (Google, Kakao)
-- [ ] 사용자 역할 (User, Admin, Pro)
-- [ ] 마이페이지
-- [ ] 관리자 대시보드
-
-### 9.3 Phase 3 계획 (AI 실제 연동)
-
-- [ ] Claude/GPT API 호출
-- [ ] 프롬프트 템플릿
-- [ ] AI 분석 UI
-- [ ] 결과 저장 및 공유
 
 ---
 
 ## 10. 참고 자료
 
 ### 10.1 외부 문서
-
 - [Hono 공식 문서](https://hono.dev/)
 - [Cloudflare Workers 문서](https://developers.cloudflare.com/workers/)
-- [Cloudflare D1 문서](https://developers.cloudflare.com/d1/)
-- [Cloudflare KV 문서](https://developers.cloudflare.com/kv/)
 - [CareerNet API 가이드](https://www.career.go.kr/cnet/front/openapi/openApiGuide.do)
-- [고용24 API 가이드](https://www.work24.go.kr/cm/openApi/call/wk/callOpenApiSvcIntro.do)
 
 ### 10.2 내부 문서
-
-- `README.md`: 프로젝트 개요 및 최근 업데이트
-- `migrations/*.sql`: 데이터베이스 스키마
+- `README.md`: 프로젝트 개요
+- `migrations/*.sql`: DB 스키마
 - `src/types/*.ts`: 타입 정의
-- `ecosystem.config.cjs`: PM2 설정
 
 ---
 
@@ -1265,8 +997,11 @@ npx wrangler pages deployment tail --project-name careerwiki-phase1
 | 버전 | 날짜 | 변경 내용 | 작성자 |
 |-----|------|----------|--------|
 | 1.0 | 2025-10-25 | 초안 작성 | AI Agent |
+| 2.0 | 2025-10-25 | 전면 개정 - Phase별 작업 계획 명확화, 템플릿 시스템 집중, 개발 방식 구체화 | AI Agent |
 
 ---
 
 **이 문서는 살아있는 문서(Living Document)입니다.**  
-프로젝트가 진행되면서 지속적으로 업데이트됩니다.
+Phase 진행에 따라 지속적으로 업데이트됩니다.
+
+**다음 업데이트 예정**: Phase 1 완료 시 (템플릿 확정 후)
