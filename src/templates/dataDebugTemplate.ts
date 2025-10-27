@@ -12,79 +12,163 @@ export interface DataDebugTemplateParams {
   }
 }
 
-const renderJsonTable = (data: any, title: string): string => {
+const renderCareerNetTable = (data: any): string => {
   if (!data) {
     return `
-      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-        <h3 class="text-lg font-bold text-gray-700 mb-2">${escapeHtml(title)}</h3>
-        <p class="text-gray-500">데이터 없음</p>
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+        <p class="text-amber-700 font-medium">❌ CareerNet API 응답 없음</p>
       </div>
     `
   }
 
-  const renderValue = (value: any, depth: number = 0): string => {
-    if (value === null || value === undefined) {
-      return `<span class="text-gray-400">null</span>`
+  const renderNestedObject = (obj: any, depth: number = 0): string => {
+    if (!obj || typeof obj !== 'object') {
+      return `<span class="text-gray-600 text-sm">${escapeHtml(String(obj || '-'))}</span>`
     }
-    
-    if (typeof value === 'boolean') {
-      return `<span class="text-blue-600">${value}</span>`
-    }
-    
-    if (typeof value === 'number') {
-      return `<span class="text-green-600">${value}</span>`
-    }
-    
-    if (typeof value === 'string') {
-      const escaped = escapeHtml(value)
-      return `<span class="text-purple-600">"${escaped}"</span>`
-    }
-    
-    if (Array.isArray(value)) {
-      if (value.length === 0) {
-        return `<span class="text-gray-400">[]</span>`
+
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) {
+        return `<span class="text-gray-400 text-sm italic">빈 배열</span>`
       }
-      
-      const items = value.slice(0, 10).map((item, index) => `
-        <div class="ml-4 border-l-2 border-gray-200 pl-2 py-1">
-          <span class="text-gray-500 text-xs">[${index}]</span> ${renderValue(item, depth + 1)}
+
+      return `
+        <div class="ml-${depth * 4} space-y-2">
+          ${obj.map((item, index) => `
+            <div class="border-l-2 border-blue-200 pl-3 py-2 bg-blue-50/30">
+              <div class="text-xs font-bold text-blue-600 mb-1">[${index}]</div>
+              ${renderNestedObject(item, depth + 1)}
+            </div>
+          `).join('')}
         </div>
-      `).join('')
-      
-      const more = value.length > 10 ? `<div class="ml-4 text-gray-500 text-xs">... (총 ${value.length}개 항목)</div>` : ''
-      
-      return `<div class="my-1">${items}${more}</div>`
+      `
     }
-    
-    if (typeof value === 'object') {
-      const entries = Object.entries(value)
-      if (entries.length === 0) {
-        return `<span class="text-gray-400">{}</span>`
-      }
-      
-      if (depth > 2) {
-        return `<span class="text-gray-500 text-xs">[Object with ${entries.length} keys]</span>`
-      }
-      
-      const items = entries.map(([key, val]) => `
-        <div class="ml-4 border-l-2 border-gray-200 pl-2 py-1">
-          <span class="text-blue-700 font-mono text-sm">${escapeHtml(key)}:</span> ${renderValue(val, depth + 1)}
-        </div>
-      `).join('')
-      
-      return `<div class="my-1">${items}</div>`
+
+    const entries = Object.entries(obj)
+    if (entries.length === 0) {
+      return `<span class="text-gray-400 text-sm italic">빈 객체</span>`
     }
-    
-    return `<span class="text-gray-600">${String(value)}</span>`
+
+    return `
+      <table class="w-full border-collapse">
+        <tbody>
+          ${entries.map(([key, value]) => {
+            const isObject = value && typeof value === 'object'
+            const isArray = Array.isArray(value)
+            
+            return `
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-3 px-4 align-top font-semibold text-sm ${
+                  isObject ? 'bg-indigo-50 text-indigo-900' : 'bg-gray-50 text-gray-800'
+                }" style="min-width: 200px; width: 30%;">
+                  ${escapeHtml(key)}
+                  ${isArray ? ` <span class="text-xs text-blue-600">[${(value as any[]).length}개]</span>` : ''}
+                </td>
+                <td class="py-3 px-4 align-top">
+                  ${isObject ? renderNestedObject(value, depth + 1) : 
+                    `<span class="text-gray-700">${escapeHtml(String(value || '-'))}</span>`}
+                </td>
+              </tr>
+            `
+          }).join('')}
+        </tbody>
+      </table>
+    `
   }
 
   return `
-    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-6">
-      <h3 class="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-gray-200">
-        ${escapeHtml(title)}
-      </h3>
-      <div class="overflow-auto max-h-[800px] font-mono text-sm">
-        ${renderValue(data)}
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+        <h3 class="text-xl font-bold text-white flex items-center">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          커리어넷 (CareerNet) 원본 API 응답
+        </h3>
+        <p class="text-blue-100 text-sm mt-1">교육부 커리어넷 - 전체 필드 및 하위 노드</p>
+      </div>
+      <div class="p-6 max-h-[1000px] overflow-auto">
+        ${renderNestedObject(data)}
+      </div>
+    </div>
+  `
+}
+
+const renderGoyong24Table = (data: any): string => {
+  if (!data) {
+    return `
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+        <p class="text-amber-700 font-medium">❌ Goyong24 API 응답 없음</p>
+      </div>
+    `
+  }
+
+  const renderNestedObject = (obj: any, depth: number = 0): string => {
+    if (!obj || typeof obj !== 'object') {
+      return `<span class="text-gray-600 text-sm">${escapeHtml(String(obj || '-'))}</span>`
+    }
+
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) {
+        return `<span class="text-gray-400 text-sm italic">빈 배열</span>`
+      }
+
+      return `
+        <div class="ml-${depth * 4} space-y-2">
+          ${obj.map((item, index) => `
+            <div class="border-l-2 border-green-200 pl-3 py-2 bg-green-50/30">
+              <div class="text-xs font-bold text-green-600 mb-1">[${index}]</div>
+              ${renderNestedObject(item, depth + 1)}
+            </div>
+          `).join('')}
+        </div>
+      `
+    }
+
+    const entries = Object.entries(obj)
+    if (entries.length === 0) {
+      return `<span class="text-gray-400 text-sm italic">빈 객체</span>`
+    }
+
+    return `
+      <table class="w-full border-collapse">
+        <tbody>
+          ${entries.map(([key, value]) => {
+            const isObject = value && typeof value === 'object'
+            const isArray = Array.isArray(value)
+            
+            return `
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-3 px-4 align-top font-semibold text-sm ${
+                  isObject ? 'bg-emerald-50 text-emerald-900' : 'bg-gray-50 text-gray-800'
+                }" style="min-width: 200px; width: 30%;">
+                  ${escapeHtml(key)}
+                  ${isArray ? ` <span class="text-xs text-green-600">[${(value as any[]).length}개]</span>` : ''}
+                </td>
+                <td class="py-3 px-4 align-top">
+                  ${isObject ? renderNestedObject(value, depth + 1) : 
+                    `<span class="text-gray-700">${escapeHtml(String(value || '-'))}</span>`}
+                </td>
+              </tr>
+            `
+          }).join('')}
+        </tbody>
+      </table>
+    `
+  }
+
+  return `
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
+        <h3 class="text-xl font-bold text-white flex items-center">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          고용24 (Goyong24) 원본 API 응답
+        </h3>
+        <p class="text-green-100 text-sm mt-1">고용노동부 고용24 - 전체 필드 및 항목</p>
+      </div>
+      <div class="p-6 max-h-[1000px] overflow-auto">
+        ${renderNestedObject(data)}
       </div>
     </div>
   `
@@ -104,40 +188,47 @@ const renderFieldComparisonTable = (partials?: Partial<Record<DataSource, Unifie
 
   const fields = Array.from(allFields).sort()
 
+  const formatValue = (value: any): string => {
+    if (value === null || value === undefined) {
+      return '<span class="text-gray-300 text-xs italic">없음</span>'
+    }
+    
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        return '<span class="text-gray-400 text-xs italic">빈 배열</span>'
+      }
+      return `<span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">${value.length}개 항목</span>`
+    }
+    
+    if (typeof value === 'object') {
+      const keys = Object.keys(value)
+      return `<span class="inline-block bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">객체 (${keys.length}개 키)</span>`
+    }
+    
+    const str = String(value)
+    if (str.length > 150) {
+      return `<span class="text-gray-700 text-sm">${escapeHtml(str.substring(0, 150))}<span class="text-gray-400">...</span></span>`
+    }
+    
+    return `<span class="text-gray-700 text-sm">${escapeHtml(str)}</span>`
+  }
+
   const rows = fields.map(field => {
     const careernetValue = careernet ? (careernet as any)[field] : undefined
     const goyong24Value = goyong24 ? (goyong24 as any)[field] : undefined
-
-    const formatValue = (value: any): string => {
-      if (value === null || value === undefined) {
-        return '<span class="text-gray-300">-</span>'
-      }
-      
-      if (Array.isArray(value)) {
-        return `<span class="text-blue-600">[${value.length}개 항목]</span>`
-      }
-      
-      if (typeof value === 'object') {
-        return '<span class="text-purple-600">[Object]</span>'
-      }
-      
-      const str = String(value)
-      if (str.length > 100) {
-        return `<span class="text-gray-700">${escapeHtml(str.substring(0, 100))}...</span>`
-      }
-      
-      return `<span class="text-gray-700">${escapeHtml(str)}</span>`
-    }
+    
+    const hasCareernetData = careernetValue !== null && careernetValue !== undefined
+    const hasGoyong24Data = goyong24Value !== null && goyong24Value !== undefined
 
     return `
-      <tr class="border-b border-gray-200 hover:bg-gray-50">
-        <td class="px-4 py-3 font-semibold text-sm text-gray-800 bg-gray-50">
+      <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+        <td class="px-4 py-3 font-semibold text-sm text-gray-800 bg-gray-50 sticky left-0" style="min-width: 180px;">
           ${escapeHtml(field)}
         </td>
-        <td class="px-4 py-3 text-sm">
+        <td class="px-4 py-3 text-sm ${hasCareernetData ? 'bg-blue-50/50' : ''}">
           ${formatValue(careernetValue)}
         </td>
-        <td class="px-4 py-3 text-sm">
+        <td class="px-4 py-3 text-sm ${hasGoyong24Data ? 'bg-green-50/50' : ''}">
           ${formatValue(goyong24Value)}
         </td>
       </tr>
@@ -145,13 +236,28 @@ const renderFieldComparisonTable = (partials?: Partial<Record<DataSource, Unifie
   }).join('')
 
   return `
-    <div class="overflow-x-auto mb-6">
-      <table class="w-full border border-gray-300 rounded-lg">
-        <thead>
-          <tr class="bg-gray-100 border-b-2 border-gray-300">
-            <th class="px-4 py-3 text-left text-sm font-bold text-gray-700">필드명</th>
-            <th class="px-4 py-3 text-left text-sm font-bold text-gray-700">커리어넷 (CareerNet)</th>
-            <th class="px-4 py-3 text-left text-sm font-bold text-gray-700">고용24 (Goyong24)</th>
+    <div class="overflow-x-auto rounded-lg shadow-md">
+      <table class="w-full border border-gray-200 bg-white">
+        <thead class="sticky top-0 z-10">
+          <tr class="bg-gradient-to-r from-gray-700 to-gray-800 text-white">
+            <th class="px-4 py-4 text-left text-sm font-bold sticky left-0 bg-gray-800" style="min-width: 180px;">
+              <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+              </svg>
+              필드명
+            </th>
+            <th class="px-4 py-4 text-left text-sm font-bold bg-blue-700" style="min-width: 300px;">
+              <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              커리어넷 (CareerNet)
+            </th>
+            <th class="px-4 py-4 text-left text-sm font-bold bg-green-700" style="min-width: 300px;">
+              <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
+              고용24 (Goyong24)
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -169,47 +275,153 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
   const careernetId = profile?.sourceIds?.careernet || 'N/A'
   const goyong24Id = profile?.sourceIds?.goyong24 || 'N/A'
 
+  const styles = `
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+      
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      
+      .debug-container {
+        animation: fadeIn 0.5s ease-in;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      
+      .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      table {
+        font-size: 0.875rem;
+      }
+      
+      th {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    </style>
+  `
+
   return `
-    <div class="min-h-screen bg-gray-100 py-8 px-4">
-      <div class="max-w-7xl mx-auto">
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>API 데이터 디버그 - ${escapeHtml(jobTitle)}</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      ${styles}
+    </head>
+    <body class="min-h-screen py-8 px-4">
+      <div class="max-w-[1600px] mx-auto debug-container space-y-6">
+        
         <!-- Header -->
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h1 class="text-3xl font-bold text-gray-900 mb-4">
-            <i class="fas fa-database mr-3 text-blue-600"></i>
-            데이터 수집 디버그: ${escapeHtml(jobTitle)}
-          </h1>
+        <div class="bg-white rounded-2xl shadow-2xl p-8 card-hover">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h1 class="text-4xl font-bold gradient-text mb-2">
+                <i class="fas fa-database mr-3"></i>
+                API 데이터 디버그
+              </h1>
+              <p class="text-2xl font-semibold text-gray-800">${escapeHtml(jobTitle)}</p>
+            </div>
+            <a href="/job/lawyer" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg">
+              <i class="fas fa-arrow-left mr-2"></i>
+              일반 페이지로
+            </a>
+          </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 class="text-sm font-bold text-blue-900 mb-2">커리어넷 ID</h3>
-              <p class="text-lg font-mono text-blue-700">${escapeHtml(careernetId)}</p>
-              <p class="text-xs text-gray-600 mt-1">API: getOpenApi?svcCode=JOB_VIEW&jobdicSeq=${escapeHtml(careernetId)}</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-300 rounded-xl p-5">
+              <div class="flex items-center mb-3">
+                <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h3 class="text-sm font-bold text-blue-900 uppercase tracking-wide">커리어넷 ID</h3>
+              </div>
+              <p class="text-2xl font-bold text-blue-700 mb-2">${escapeHtml(careernetId)}</p>
+              <p class="text-xs text-gray-600 font-mono bg-white/50 p-2 rounded">
+                JOB_VIEW?jobdicSeq=${escapeHtml(careernetId)}
+              </p>
             </div>
             
-            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-              <h3 class="text-sm font-bold text-green-900 mb-2">고용24 ID</h3>
-              <p class="text-lg font-mono text-green-700">${escapeHtml(goyong24Id)}</p>
-              <p class="text-xs text-gray-600 mt-1">API: callOpenApiSvcInfo212D01?jobCd=${escapeHtml(goyong24Id)}</p>
+            <div class="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-300 rounded-xl p-5">
+              <div class="flex items-center mb-3">
+                <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+                <h3 class="text-sm font-bold text-green-900 uppercase tracking-wide">고용24 ID</h3>
+              </div>
+              <p class="text-2xl font-bold text-green-700 mb-2">${escapeHtml(goyong24Id)}</p>
+              <p class="text-xs text-gray-600 font-mono bg-white/50 p-2 rounded">
+                callOpenApiSvcInfo212D*?jobCd=${escapeHtml(goyong24Id)}
+              </p>
             </div>
           </div>
         </div>
 
-        <!-- Source Status -->
+        <!-- API Status -->
         ${sources ? `
-          <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">
-              <i class="fas fa-signal mr-2 text-green-600"></i>
+          <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+              <svg class="w-7 h-7 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
               API 호출 상태
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               ${Object.entries(sources).map(([source, status]) => `
-                <div class="border rounded-lg p-4 ${status.attempted ? (status.error ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300') : 'bg-gray-50 border-gray-300'}">
-                  <h3 class="font-bold text-lg mb-2">${source}</h3>
-                  <div class="text-sm space-y-1">
-                    <p>시도: <span class="font-mono">${status.attempted ? '✅' : '❌'}</span></p>
-                    ${status.count !== undefined ? `<p>결과: <span class="font-mono">${status.count}개</span></p>` : ''}
-                    ${status.error ? `<p class="text-red-600">에러: ${escapeHtml(status.error)}</p>` : ''}
-                    ${status.skippedReason ? `<p class="text-gray-600">건너뜀: ${escapeHtml(status.skippedReason)}</p>` : ''}
+                <div class="border-2 rounded-xl p-5 ${
+                  status.attempted 
+                    ? (status.error ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300')
+                    : 'bg-gray-50 border-gray-300'
+                }">
+                  <h3 class="font-bold text-lg mb-3 flex items-center">
+                    <span class="text-2xl mr-2">${status.attempted ? (status.error ? '❌' : '✅') : '⏸️'}</span>
+                    ${source}
+                  </h3>
+                  <div class="space-y-2 text-sm">
+                    <div class="flex items-center">
+                      <span class="text-gray-600 w-20">시도:</span>
+                      <span class="font-mono font-semibold">${status.attempted ? 'YES' : 'NO'}</span>
+                    </div>
+                    ${status.count !== undefined ? `
+                      <div class="flex items-center">
+                        <span class="text-gray-600 w-20">결과:</span>
+                        <span class="font-mono font-semibold text-green-700">${status.count}개</span>
+                      </div>
+                    ` : ''}
+                    ${status.error ? `
+                      <div class="flex items-start">
+                        <span class="text-gray-600 w-20">에러:</span>
+                        <span class="text-red-600 flex-1">${escapeHtml(status.error)}</span>
+                      </div>
+                    ` : ''}
+                    ${status.skippedReason ? `
+                      <div class="flex items-center">
+                        <span class="text-gray-600 w-20">건너뜀:</span>
+                        <span class="text-gray-500">${escapeHtml(status.skippedReason)}</span>
+                      </div>
+                    ` : ''}
                   </div>
                 </div>
               `).join('')}
@@ -217,32 +429,37 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
           </div>
         ` : ''}
 
-        <!-- Field Comparison Table -->
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h2 class="text-2xl font-bold text-gray-800 mb-4">
-            <i class="fas fa-table mr-2 text-purple-600"></i>
-            필드별 데이터 비교
+        <!-- Field Comparison -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <svg class="w-7 h-7 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path>
+            </svg>
+            병합 후 필드 비교
           </h2>
           ${renderFieldComparisonTable(partials)}
         </div>
 
-        <!-- Raw API Data (CareerNet) -->
-        ${rawApiData?.careernet ? renderJsonTable(rawApiData.careernet, '커리어넷 원본 API 응답 (CareerNet Raw Response)') : ''}
+        <!-- CareerNet Raw Data -->
+        <div class="card-hover">
+          ${renderCareerNetTable(rawApiData?.careernet)}
+        </div>
 
-        <!-- Raw API Data (Goyong24) -->
-        ${rawApiData?.goyong24 ? renderJsonTable(rawApiData.goyong24, '고용24 원본 API 응답 (Goyong24 Raw Response)') : ''}
+        <!-- Goyong24 Raw Data -->
+        <div class="card-hover">
+          ${renderGoyong24Table(rawApiData?.goyong24)}
+        </div>
 
-        <!-- Merged Profile -->
-        ${profile ? renderJsonTable(profile, '병합된 최종 프로필 (Merged Profile)') : ''}
-
-        <!-- Back Button -->
-        <div class="text-center mt-8">
-          <a href="/job/lawyer" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
-            <i class="fas fa-arrow-left mr-2"></i>
+        <!-- Footer -->
+        <div class="text-center py-8">
+          <a href="/job/lawyer" class="inline-flex items-center px-8 py-4 bg-white text-gray-800 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all">
+            <i class="fas fa-arrow-left mr-3"></i>
             일반 페이지로 돌아가기
           </a>
         </div>
+        
       </div>
-    </div>
+    </body>
+    </html>
   `
 }
