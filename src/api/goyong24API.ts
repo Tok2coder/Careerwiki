@@ -797,9 +797,12 @@ export const normalizeGoyong24JobDetail = (
       medium: summary.jobMdclNm,
       small: summary.jobSmclNm
     },
-    summary: summary.jobSum,
+    // CORRECTED MAPPING: Goyong24 API field names are misleading
+    // - summary.way actually contains job description (not "how to become")
+    // - path.technKnow actually contains "how to become" info (not just "tech knowledge")
+    summary: summary.way || summary.jobSum,  // way field contains actual job description
     duties: detail.duty?.execJob || summary.jobSum,
-    way: summary.way || detail.duty?.jobSum,
+    way: detail.path?.technKnow,  // technKnow field contains "how to become" info
     relatedMajors,
     relatedCertificates: relatedCertificates.length ? relatedCertificates : undefined,
     salary: summary.sal,
@@ -815,7 +818,7 @@ export const normalizeGoyong24JobDetail = (
     activitiesImportance: summary.jobActvImprtncs,
     activitiesLevels: summary.jobActvLvls,
     relatedJobs,
-    technKnow: detail.path?.technKnow,
+    technKnow: undefined,  // No separate tech knowledge field in API
     educationDistribution: detail.path?.educationDistribution,
     majorDistribution: detail.path?.majorDistribution,
     relatedOrganizations: organizations,
