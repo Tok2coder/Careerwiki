@@ -23,8 +23,9 @@ const getApiKey = (env?: any) => {
   return 'd9e0285190fde074bef30031f17f669e';
 };
 
-// Base URL
+// Base URLs
 const API_BASE_URL = 'https://www.career.go.kr/cnet/openapi';
+const JOBS_ENCYCLOPEDIA_URL = 'https://www.career.go.kr/cnet/front/openapi/jobs.json';
 
 // XML 엔티티 디코딩 함수
 const decodeXmlEntities = (value?: string | null): string => {
@@ -241,6 +242,9 @@ export interface Job {
     date?: string
     url?: string
   }>
+  
+  // 직업백과 API 응답 (jobs.json)
+  encyclopedia?: any  // 전체 직업백과 데이터를 저장
 }
 
 // API 검색 파라미터
@@ -420,9 +424,40 @@ export async function searchJobs(params: SearchParams, env?: any): Promise<Job[]
   }
 }
 
+// 직업백과 API 조회 (jobs.json - 추가 정보)
+export async function getJobEncyclopedia(jobdicSeq: string, env?: any): Promise<any | null> {
+  try {
+    const url = new URL(JOBS_ENCYCLOPEDIA_URL);
+    url.searchParams.append('apiKey', getApiKey(env));
+    url.searchParams.append('id', jobdicSeq);
+    
+    const response = await fetch(url.toString());
+    
+    if (!response.ok) {
+      console.warn(`직업백과 API 요청 실패: ${response.statusText}`);
+      return null;
+    }
+    
+    const data = await response.json();
+    
+    // 직업백과 API 응답 구조
+    if (data && data.job) {
+      return data.job;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('직업백과 API 조회 오류:', error);
+    return null;
+  }
+}
+
 // 직업 상세 정보 조회 (JSON 응답으로 풍부한 데이터 수집)
 export async function getJobDetail(jobdicSeq: string, env?: any): Promise<Job | null> {
   try {
+    // 직업백과 API 호출 (병렬)
+    const encyclopediaPromise = getJobEncyclopedia(jobdicSeq, env);
+    
     // 먼저 JSON 형식으로 상세 데이터 시도
     const jsonUrl = new URL(`${API_BASE_URL}/getOpenApi`);
     jsonUrl.searchParams.append('apiKey', getApiKey(env));
@@ -434,6 +469,9 @@ export async function getJobDetail(jobdicSeq: string, env?: any): Promise<Job | 
     
     let response = await fetch(jsonUrl.toString());
     let jobData: Job | null = null;
+    
+    // 직업백과 데이터 대기
+    const encyclopediaData = await encyclopediaPromise;
     
     if (response.ok) {
       try {
@@ -473,7 +511,10 @@ export async function getJobDetail(jobdicSeq: string, env?: any): Promise<Job | 
               relVideoList: content.relVideoList,
               relSolList: content.relSolList,
               relJinsolList: content.relJinsolList,
-              researchList: content.researchList
+              researchList: content.researchList,
+              
+              // 직업백과 데이터 추가
+              encyclopedia: encyclopediaData
             };
           }
         }
@@ -525,7 +566,20 @@ export async function getJobDetail(jobdicSeq: string, env?: any): Promise<Job | 
         employmentTrend: job.equalemployment || '',
         
         // 원본 XML 필드도 포함
-        ...job
+        ...job,
+        
+        // 직업백과 데이터 추가
+        encyclopedia: encyclopediaData
+      };
+    }
+    
+    // 직업백과 데이터만 있는 경우
+    if (!jobData && encyclopediaData) {
+      jobData = {
+        jobdicSeq: jobdicSeq,
+        jobName: encyclopediaData.job_nm || '',
+        summary: encyclopediaData.job_summary || '',
+        encyclopedia: encyclopediaData
       };
     }
     

@@ -12,6 +12,85 @@ export interface DataDebugTemplateParams {
   }
 }
 
+const renderEncyclopediaTable = (data: any): string => {
+  if (!data) {
+    return ''
+  }
+
+  const renderNestedObject = (obj: any, depth: number = 0): string => {
+    if (!obj || typeof obj !== 'object') {
+      return `<span class="text-gray-600 text-sm">${escapeHtml(String(obj || '-'))}</span>`
+    }
+
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) {
+        return `<span class="text-gray-400 text-sm italic">빈 배열</span>`
+      }
+
+      return `
+        <div class="ml-${depth * 4} space-y-2">
+          ${obj.map((item, index) => `
+            <div class="border-l-2 border-indigo-200 pl-3 py-2 bg-indigo-50/30">
+              <div class="text-xs font-bold text-indigo-600 mb-1">[${index}]</div>
+              ${renderNestedObject(item, depth + 1)}
+            </div>
+          `).join('')}
+        </div>
+      `
+    }
+
+    const entries = Object.entries(obj)
+    if (entries.length === 0) {
+      return `<span class="text-gray-400 text-sm italic">빈 객체</span>`
+    }
+
+    return `
+      <table class="w-full border-collapse">
+        <tbody>
+          ${entries.map(([key, value]) => {
+            const isObject = value && typeof value === 'object'
+            const isArray = Array.isArray(value)
+            
+            return `
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-3 px-4 align-top font-semibold text-sm ${
+                  isObject ? 'bg-indigo-50 text-indigo-900' : 'bg-gray-50 text-gray-800'
+                }" style="min-width: 200px; width: 30%;">
+                  ${escapeHtml(key)}
+                  ${isArray ? ` <span class="text-xs text-indigo-600">[${(value as any[]).length}개]</span>` : ''}
+                </td>
+                <td class="py-3 px-4 align-top">
+                  ${isObject ? renderNestedObject(value, depth + 1) : 
+                    `<span class="text-gray-700">${escapeHtml(String(value || '-'))}</span>`}
+                </td>
+              </tr>
+            `
+          }).join('')}
+        </tbody>
+      </table>
+    `
+  }
+
+  return `
+    <div class="card-hover">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4">
+          <h3 class="text-xl font-bold text-white flex items-center">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+            커리어넷 직업백과 (jobs.json)
+          </h3>
+          <p class="text-indigo-100 text-sm mt-1">교육부 커리어넷 - 직업백과 API 전체 데이터</p>
+        </div>
+        <div class="p-6 max-h-[1000px] overflow-auto">
+          ${renderNestedObject(data)}
+        </div>
+      </div>
+    </div>
+  `
+}
+
 const renderCareerNetTable = (data: any): string => {
   if (!data) {
     return `
@@ -440,7 +519,10 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
           ${renderFieldComparisonTable(partials)}
         </div>
 
-        <!-- CareerNet Raw Data -->
+        <!-- CareerNet Encyclopedia (jobs.json) -->
+        ${rawApiData?.careernet?.encyclopedia ? renderEncyclopediaTable(rawApiData.careernet.encyclopedia) : ''}
+
+        <!-- CareerNet Job Info (getOpenApi) -->
         <div class="card-hover">
           ${renderCareerNetTable(rawApiData?.careernet)}
         </div>
