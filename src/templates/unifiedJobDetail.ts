@@ -228,21 +228,49 @@ const renderLawyerFieldMatrix = (
     extract: (profile?: UnifiedJobDetail | null) => unknown
     labelMap?: Record<string, string>
   }> = [
-    { key: 'summary', label: '직업 소개', extract: (entry) => entry?.summary },
-    { key: 'duties', label: '주요 업무', extract: (entry) => entry?.duties },
-    { key: 'way', label: '되는 방법', extract: (entry) => entry?.way },
-    { key: 'salary', label: '평균 연봉', extract: (entry) => entry?.salary },
+    // 기본 정보
+    { key: 'summary', label: '직업 소개 (하는 일)', extract: (entry) => entry?.summary },
+    { key: 'duties', label: '수행 직무 (주요 업무)', extract: (entry) => entry?.duties },
+    { key: 'way', label: '되는 방법 (진입 경로)', extract: (entry) => entry?.way },
+    
+    // 분류 정보
+    {
+      key: 'classifications',
+      label: '직업 분류 체계',
+      extract: (entry) => entry?.classifications ? [
+        entry.classifications.large,
+        entry.classifications.medium,
+        entry.classifications.small
+      ].filter(Boolean).join(' > ') : undefined
+    },
+    {
+      key: 'kecoCodes',
+      label: '한국표준직업분류 (KECO)',
+      extract: (entry) => entry?.kecoCodes?.map((item) => `${item.code} - ${item.name}`).filter((str): str is string => Boolean(str && str.trim()))
+    },
+    
+    // 임금 및 전망
+    { key: 'salary', label: '평균 연봉 (임금 수준)', extract: (entry) => entry?.salary },
+    { key: 'satisfaction', label: '직업 만족도', extract: (entry) => entry?.satisfaction },
     { key: 'prospect', label: '직업 전망', extract: (entry) => entry?.prospect },
     { key: 'status', label: '고용 형태', extract: (entry) => entry?.status },
-    { key: 'abilities', label: '능력', extract: (entry) => entry?.abilities },
-    { key: 'knowledge', label: '지식', extract: (entry) => entry?.knowledge },
-    { key: 'personality', label: '성격', extract: (entry) => entry?.personality },
-    { key: 'interests', label: '흥미', extract: (entry) => entry?.interests },
-    { key: 'values', label: '가치관', extract: (entry) => entry?.values },
-    { key: 'environment', label: '업무환경', extract: (entry) => entry?.environment },
+    
+    // 역량 및 특성
+    { key: 'abilities', label: '업무수행능력 (능력)', extract: (entry) => entry?.abilities },
+    { key: 'knowledge', label: '지식 중요도 (지식)', extract: (entry) => entry?.knowledge },
+    { key: 'technKnow', label: '필요 기술 및 지식', extract: (entry) => entry?.technKnow },
+    
+    // 성향 및 환경
+    { key: 'personality', label: '성격 중요도', extract: (entry) => entry?.personality },
+    { key: 'interests', label: '흥미 중요도', extract: (entry) => entry?.interests },
+    { key: 'values', label: '가치관 중요도', extract: (entry) => entry?.values },
+    { key: 'environment', label: '업무환경 중요도', extract: (entry) => entry?.environment },
+    
+    // 업무활동
     { key: 'activitiesImportance', label: '업무활동 중요도', extract: (entry) => entry?.activitiesImportance },
     { key: 'activitiesLevels', label: '업무활동 수준', extract: (entry) => entry?.activitiesLevels },
-    { key: 'technKnow', label: '기술 지식', extract: (entry) => entry?.technKnow },
+    
+    // 교육 및 전공
     {
       key: 'educationDistribution',
       label: '학력 분포',
@@ -258,7 +286,7 @@ const renderLawyerFieldMatrix = (
     },
     {
       key: 'majorDistribution',
-      label: '전공 분포',
+      label: '전공 계열 분포 (전공학과분포)',
       extract: (entry) => entry?.majorDistribution,
       labelMap: {
         humanities: '인문계열',
@@ -272,24 +300,21 @@ const renderLawyerFieldMatrix = (
     },
     {
       key: 'relatedMajors',
-      label: '관련 전공',
+      label: '관련 학과 (관련 전공)',
       extract: (entry) => entry?.relatedMajors?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
     },
-    { key: 'relatedCertificates', label: '추천 자격', extract: (entry) => entry?.relatedCertificates },
+    { key: 'relatedCertificates', label: '관련 자격증 (추천 자격)', extract: (entry) => entry?.relatedCertificates },
+    
+    // 관련 정보
     {
       key: 'relatedJobs',
-      label: '관련 직업',
+      label: '관련 직업 (유사 직업)',
       extract: (entry) => entry?.relatedJobs?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
     },
     {
       key: 'relatedOrganizations',
-      label: '관련 단체',
+      label: '관련 기관 (관련 단체)',
       extract: (entry) => entry?.relatedOrganizations?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
-    },
-    {
-      key: 'kecoCodes',
-      label: '한국표준직업분류',
-      extract: (entry) => entry?.kecoCodes?.map((item) => `${item.code} - ${item.name}`).filter((str): str is string => Boolean(str && str.trim()))
     }
   ]
 
