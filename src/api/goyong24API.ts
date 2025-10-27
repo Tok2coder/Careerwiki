@@ -48,7 +48,8 @@ const decodeXmlEntities = (value?: string | null): string => {
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/&#xA;/gi, '\n')
-    .replace(/&#xD;/gi, '\n')
+    .replace(/&#xD;/gi, '')     // Remove carriage return entirely
+    .replace(/&#xd;/gi, '')     // Remove lowercase variant explicitly
 }
 
 const cleanText = (value?: string | null): string => {

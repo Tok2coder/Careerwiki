@@ -26,6 +26,20 @@ const getApiKey = (env?: any) => {
 // Base URL
 const API_BASE_URL = 'https://www.career.go.kr/cnet/openapi';
 
+// XML 엔티티 디코딩 함수
+const decodeXmlEntities = (value?: string | null): string => {
+  if (!value) return ''
+  return value
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#xA;/gi, '\n')
+    .replace(/&#xD;/gi, '')     // Remove carriage return entirely
+    .replace(/&#xd;/gi, '')     // Remove lowercase variant explicitly
+}
+
 // XML 파싱 헬퍼 함수
 function parseXMLToJSON(xmlString: string): any[] {
   const contents: any[] = [];
@@ -49,7 +63,7 @@ function parseXMLToJSON(xmlString: string): any[] {
       const fieldRegex = new RegExp(`<${field}>([\\s\\S]*?)<\\/${field}>`);
       const fieldMatch = content.match(fieldRegex);
       if (fieldMatch) {
-        obj[field] = fieldMatch[1].trim();
+        obj[field] = decodeXmlEntities(fieldMatch[1]).trim();
       }
     });
     

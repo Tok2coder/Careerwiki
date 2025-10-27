@@ -230,9 +230,19 @@ const renderLawyerFieldMatrix = (
   }> = [
     { key: 'summary', label: '직업 소개', extract: (entry) => entry?.summary },
     { key: 'duties', label: '주요 업무', extract: (entry) => entry?.duties },
+    { key: 'way', label: '되는 방법', extract: (entry) => entry?.way },
     { key: 'salary', label: '평균 연봉', extract: (entry) => entry?.salary },
     { key: 'prospect', label: '직업 전망', extract: (entry) => entry?.prospect },
     { key: 'status', label: '고용 형태', extract: (entry) => entry?.status },
+    { key: 'abilities', label: '능력', extract: (entry) => entry?.abilities },
+    { key: 'knowledge', label: '지식', extract: (entry) => entry?.knowledge },
+    { key: 'personality', label: '성격', extract: (entry) => entry?.personality },
+    { key: 'interests', label: '흥미', extract: (entry) => entry?.interests },
+    { key: 'values', label: '가치관', extract: (entry) => entry?.values },
+    { key: 'environment', label: '업무환경', extract: (entry) => entry?.environment },
+    { key: 'activitiesImportance', label: '업무활동 중요도', extract: (entry) => entry?.activitiesImportance },
+    { key: 'activitiesLevels', label: '업무활동 수준', extract: (entry) => entry?.activitiesLevels },
+    { key: 'technKnow', label: '기술 지식', extract: (entry) => entry?.technKnow },
     {
       key: 'educationDistribution',
       label: '학력 분포',
@@ -265,7 +275,22 @@ const renderLawyerFieldMatrix = (
       label: '관련 전공',
       extract: (entry) => entry?.relatedMajors?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
     },
-    { key: 'relatedCertificates', label: '추천 자격', extract: (entry) => entry?.relatedCertificates }
+    { key: 'relatedCertificates', label: '추천 자격', extract: (entry) => entry?.relatedCertificates },
+    {
+      key: 'relatedJobs',
+      label: '관련 직업',
+      extract: (entry) => entry?.relatedJobs?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
+    },
+    {
+      key: 'relatedOrganizations',
+      label: '관련 단체',
+      extract: (entry) => entry?.relatedOrganizations?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
+    },
+    {
+      key: 'kecoCodes',
+      label: '한국표준직업분류',
+      extract: (entry) => entry?.kecoCodes?.map((item) => `${item.code} - ${item.name}`).filter((str): str is string => Boolean(str && str.trim()))
+    }
   ]
 
   const matrixSources: Array<{ key: DataSource; label: string }> = [
