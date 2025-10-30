@@ -276,7 +276,7 @@ const renderLayout = (
           .homepage-header {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 24px 20px 0;
+            padding: 24px 0 0;
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -490,7 +490,7 @@ const renderLayout = (
               grid-template-columns: repeat(4, minmax(0, 1fr));
             }
             .homepage-header {
-              padding: 32px 24px 0;
+              padding: 32px 0 0;
             }
             .hero-shell {
               padding-top: 80px;
@@ -503,7 +503,7 @@ const renderLayout = (
         ${!isHomepage ? `
         <!-- Navigation (Not on homepage) -->
         <nav class="glass-card sticky top-0 z-50 border-b border-wiki-border">
-            <div class="mx-auto w-full max-w-[1400px] py-2.5 px-4">
+            <div class="mx-auto w-full max-w-[1400px] py-2.5">
                 <div class="flex items-center justify-between md:hidden">
                     <a href="/" class="flex items-center">
                         ${getLogoSVG('small')}
