@@ -252,14 +252,18 @@ const renderComparisonData = (
           const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
           // 값이 1-5 범위면 100으로 스케일링 (직업 내 비교)
           const percentage = numericValue <= 5 ? (numericValue / 5) * 100 : Math.min(numericValue, 100)
+          
+          // 진행 바 색상 결정 (값에 따라)
+          const barColor = percentage >= 80 ? 'bg-green-500' : percentage >= 60 ? 'bg-blue-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-gray-400'
+          
           return `
-            <div class="mb-3">
-              <div class="flex justify-between items-center mb-1">
-                <span class="text-sm text-wiki-text">${escapeHtml(label)}</span>
-                <span class="text-xs text-wiki-muted">${numericValue.toFixed(1)}</span>
+            <div class="mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-wiki-text">${escapeHtml(label)}</span>
+                <span class="text-sm font-semibold text-wiki-primary">${numericValue.toFixed(1)}</span>
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="bg-wiki-primary h-2 rounded-full" style="width: ${percentage.toFixed(1)}%"></div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                <div class="${barColor} h-3 rounded-full transition-all duration-300" style="width: ${percentage.toFixed(1)}%"></div>
               </div>
             </div>
           `
@@ -302,16 +306,20 @@ const renderComparisonData = (
         
         if (value) {
           const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
-          // 직업 간 비교는 0-100 범위
-          const percentage = Math.min(numericValue, 100)
+          // 직업 간 비교는 0-100 범위 (백분위 점수)
+          const percentage = Math.max(0, Math.min(numericValue, 100))
+          
+          // 진행 바 색상 결정 (백분위 기준)
+          const barColor = percentage >= 75 ? 'bg-green-500' : percentage >= 50 ? 'bg-blue-500' : percentage >= 25 ? 'bg-yellow-500' : 'bg-orange-500'
+          
           return `
-            <div class="mb-3">
-              <div class="flex justify-between items-center mb-1">
-                <span class="text-sm text-wiki-text">${escapeHtml(label)}</span>
-                <span class="text-xs text-wiki-muted">${numericValue.toFixed(0)}</span>
+            <div class="mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-wiki-text">${escapeHtml(label)}</span>
+                <span class="text-sm font-semibold text-wiki-accent">${numericValue.toFixed(0)}%</span>
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="bg-wiki-accent h-2 rounded-full" style="width: ${percentage}%"></div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                <div class="${barColor} h-3 rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
               </div>
             </div>
           `
@@ -791,6 +799,126 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
     `,
     options ?? {}
   )
+}
+
+/**
+ * 파이 차트로 분포 데이터를 렌더링하는 함수
+ * Chart.js를 사용하여 시각화
+ */
+const renderDistributionPieChart = (
+  title: string,
+  icon: string,
+  distribution?: Record<string, string | undefined> | null,
+  labels?: Record<string, string>,
+  options?: BuildCardOptions
+): string => {
+  if (!distribution) {
+    return ''
+  }
+
+  const entries = Object.entries(distribution)
+    .filter(([, value]) => typeof value === 'string' && value.trim().length > 0)
+
+  if (!entries.length) {
+    return ''
+  }
+
+  const parsed = entries.map(([key, value]) => {
+    const label = labels?.[key] ?? key
+    const raw = value!.trim()
+    const numericMatch = raw.match(/(\d+(?:[.,]\d+)?)/)
+    const numeric = numericMatch ? Number.parseFloat(numericMatch[1].replace(',', '.')) : null
+    return {
+      key,
+      label,
+      raw,
+      numeric: Number.isFinite(numeric) ? numeric : null
+    }
+  })
+
+  const numericEntries = parsed.filter((entry) => entry.numeric !== null)
+
+  if (!numericEntries.length) {
+    const listMarkup = renderDistributionList(distribution, labels)
+    return listMarkup ? buildCard(title, icon, listMarkup) : ''
+  }
+
+  // 고유 ID 생성
+  const chartId = `chart-${normalizeAnchorValue(title)}-${Date.now()}`
+  
+  // 차트 데이터 준비
+  const chartLabels = numericEntries.map(e => e.label)
+  const chartData = numericEntries.map(e => e.numeric)
+  const chartColors = [
+    'rgba(59, 130, 246, 0.8)',  // blue
+    'rgba(16, 185, 129, 0.8)',  // green
+    'rgba(251, 146, 60, 0.8)',  // orange
+    'rgba(168, 85, 247, 0.8)',  // purple
+    'rgba(236, 72, 153, 0.8)',  // pink
+    'rgba(245, 158, 11, 0.8)',  // amber
+    'rgba(20, 184, 166, 0.8)',  // teal
+    'rgba(239, 68, 68, 0.8)'    // red
+  ]
+
+  const chartHtml = `
+    <div class="flex flex-col lg:flex-row gap-6 items-center">
+      <div class="w-full lg:w-1/2 max-w-xs mx-auto">
+        <canvas id="${chartId}"></canvas>
+      </div>
+      <div class="w-full lg:w-1/2 space-y-2">
+        ${numericEntries.map((entry, idx) => `
+          <div class="flex items-center justify-between text-sm">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full" style="background-color: ${chartColors[idx % chartColors.length]}"></div>
+              <span class="text-wiki-text">${escapeHtml(entry.label)}</span>
+            </div>
+            <span class="font-semibold text-wiki-primary">${entry.raw}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <script>
+      (function() {
+        const ctx = document.getElementById('${chartId}');
+        if (ctx && typeof Chart !== 'undefined') {
+          new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: ${JSON.stringify(chartLabels)},
+              datasets: [{
+                data: ${JSON.stringify(chartData)},
+                backgroundColor: ${JSON.stringify(chartColors.slice(0, numericEntries.length))},
+                borderWidth: 2,
+                borderColor: '#ffffff'
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      const label = context.label || '';
+                      const value = context.parsed || 0;
+                      const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                      const percentage = ((value / total) * 100).toFixed(1);
+                      return label + ': ' + value + ' (' + percentage + '%)';
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      })();
+    </script>
+  `
+
+  return buildCard(title, icon, chartHtml, options ?? {})
 }
 
 const renderDistributionBars = (
@@ -1671,10 +1799,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     pushDetailCard('업무 수행 지표', 'fa-chart-area', activityBlocks)
   }
 
-  // Type C: 학력 분포 (계층적 활용 - detailedDistribution 사용)
+  // Type C: 학력 분포 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
   const educationDistribution = mergedData.education.detailedDistribution || profile.educationDistribution
   const educationAnchor = anchorIdFactory('details', '학력 분포')
-  const educationCard = renderDistributionBars(
+  const educationCard = renderDistributionPieChart(
     '학력 분포',
     'fa-user-graduate',
     educationDistribution,
@@ -1696,10 +1824,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     detailCards.push({ id: educationAnchor, label: '학력 분포', icon: 'fa-user-graduate', markup: educationCard })
   }
 
-  // Type C: 전공 분포 (계층적 활용 - detailedDistribution 사용)
+  // Type C: 전공 분포 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
   const majorDistribution = mergedData.major.detailedDistribution || profile.majorDistribution
   const majorAnchor = anchorIdFactory('details', '전공 분포')
-  const majorCard = renderDistributionBars(
+  const majorCard = renderDistributionPieChart(
     '전공 분포',
     'fa-book-open-reader',
     majorDistribution,
