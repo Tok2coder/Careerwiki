@@ -2191,8 +2191,24 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
           </div>
         ` : ''}
 
-        <!-- Field Comparison -->
+        <!-- Actual Merged View - 먼저 표시 -->
         <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <svg class="w-7 h-7 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            실제 뷰 (Actual Merged View)
+          </h2>
+          <div class="mb-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
+            <p class="text-sm text-blue-900">
+              <strong>💡 이 섹션은</strong> 실제 변호사 페이지(<code class="bg-blue-100 px-2 py-1 rounded">/job/lawyer</code>)에서 사용자에게 보이는 데이터를 보여줍니다.
+            </p>
+          </div>
+          ${renderActualMergedView(rawApiData)}
+        </div>
+
+        <!-- Field Comparison - 나중에 표시 -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover mt-8">
           <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
             <svg class="w-7 h-7 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path>
@@ -2200,17 +2216,6 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
             병합 후 필드 비교
           </h2>
           ${renderFieldComparisonTable(rawApiData)}
-        </div>
-
-        <!-- Actual Merged View -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover mt-8">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-            <svg class="w-7 h-7 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            실제 뷰 (Actual Merged View)
-          </h2>
-          ${renderActualMergedView(rawApiData)}
         </div>
 
         <!-- CareerNet Encyclopedia (jobs.json) -->
