@@ -236,13 +236,20 @@ const renderComparisonData = (
         // 흥미: intrstNmCmpr, intrstStatusCmpr
         // 가치관: valsNmCmpr, valsStatusCmpr
         // 활동: jobActvImprtncNmCmpr, jobActvImprtncStatusCmpr, jobActvLvlNmCmpr, jobActvLvlStatusCmpr
-        // 지식: 미확인 (추후 확인 필요)
-        // 능력: 미확인 (추후 확인 필요)
+        // 지식: knwldgNmCmpr, knwldgStatusCmpr, knwldgLvlNmCmpr, knwldgLvlStatusCmpr (소문자!)
+        // 능력: jobAblNmCmpr, jobAblStatusCmpr, jobAblLvlNmCmpr, jobAblLvlStatusCmpr
+        // 업무환경: jobEnvNmCmpr, jobEnvStatusCmpr
         const label = item.chrNmCmpr || item.intrstNmCmpr || item.valsNmCmpr || 
                       item.jobActvImprtncNmCmpr || item.jobActvLvlNmCmpr ||
+                      item.knwldgNmCmpr || item.knwldgLvlNmCmpr ||
+                      item.jobAblNmCmpr || item.jobAblLvlNmCmpr ||
+                      item.jobEnvNmCmpr ||
                       item.inform || item.name || item.activity || item.list_content || ''
         const value = item.chrStatusCmpr || item.intrstStatusCmpr || item.valsStatusCmpr ||
                       item.jobActvImprtncStatusCmpr || item.jobActvLvlStatusCmpr ||
+                      item.knwldgStatusCmpr || item.knwldgLvlStatusCmpr ||
+                      item.jobAblStatusCmpr || item.jobAblLvlStatusCmpr ||
+                      item.jobEnvStatusCmpr ||
                       item.importance || item.level || item.value || ''
         
         if (!label.trim()) return ''
@@ -295,11 +302,20 @@ const renderComparisonData = (
         // 흥미: intrstNm, intrstStatus
         // 가치관: valsNm, valsStatus
         // 활동: jobActvImprtncNm, jobActvImprtncStatus, jobActvLvlNm, jobActvLvlStatus
+        // 지식: knwldgNm, knwldgStatus, knwldgLvlNm, knwldgLvlStatus (소문자!)
+        // 능력: jobAblNm, jobAblStatus, jobAblLvlNm, jobAblLvlStatus
+        // 업무환경: jobEnvNm, jobEnvStatus
         const label = item.chrNm || item.intrstNm || item.valsNm ||
                       item.jobActvImprtncNm || item.jobActvLvlNm ||
+                      item.knwldgNm || item.knwldgLvlNm ||
+                      item.jobAblNm || item.jobAblLvlNm ||
+                      item.jobEnvNm ||
                       item.inform || item.name || item.activity || item.list_content || ''
         const value = item.chrStatus || item.intrstStatus || item.valsStatus ||
                       item.jobActvImprtncStatus || item.jobActvLvlStatus ||
+                      item.knwldgStatus || item.knwldgLvlStatus ||
+                      item.jobAblStatus || item.jobAblLvlStatus ||
+                      item.jobEnvStatus ||
                       item.importance || item.level || item.value || ''
         
         if (!label.trim()) return ''
@@ -1949,7 +1965,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     pushDetailCard('업무 수행 지표', 'fa-chart-area', activityBlocks)
   }
 
-  // Type C: 학력 분포 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
+  // 1. Type C: 업무 상세 (detailed) - 먼저 표시
+  const workDetailed = mergedData.work.detailed
+  if (workDetailed && typeof workDetailed === 'string' && workDetailed.trim()) {
+    pushDetailCard('업무 상세', 'fa-clipboard-list', formatRichText(workDetailed))
+  }
+
+  // 2. Type C: 학력 분포 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
   const educationDistribution = mergedData.education.detailedDistribution || profile.educationDistribution
   const educationAnchor = anchorIdFactory('details', '학력 분포')
   const educationCard = renderDistributionPieChart(
@@ -1974,7 +1996,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     detailCards.push({ id: educationAnchor, label: '학력 분포', icon: 'fa-user-graduate', markup: educationCard })
   }
 
-  // Type C: 전공 분포 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
+  // 3. Type C: 전공 분포 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
   const majorDistribution = mergedData.major.detailedDistribution || profile.majorDistribution
   const majorAnchor = anchorIdFactory('details', '전공 분포')
   const majorCard = renderDistributionPieChart(
@@ -1999,14 +2021,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   if (majorCard) {
     detailCards.push({ id: majorAnchor, label: '전공 분포', icon: 'fa-book-open-reader', markup: majorCard })
   }
-
-  // Type C: 업무 상세 (detailed)
-  const workDetailed = mergedData.work.detailed
-  if (workDetailed && typeof workDetailed === 'string' && workDetailed.trim()) {
-    pushDetailCard('업무 상세', 'fa-clipboard-list', formatRichText(workDetailed))
-  }
   
-  // Type D: 커리어넷 전용 - 워라밸 & 사회적 기여도
+  // 4. Type D: 커리어넷 전용 - 워라밸 & 사회적 기여도
   const wlb = mergedData.careernetOnly.wlb
   const social = mergedData.careernetOnly.social
   if (wlb || social) {
@@ -2020,139 +2036,47 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     pushDetailCard('워라밸 & 사회적 평가', 'fa-heart', wlbBlocks.join(''))
   }
   
-  // Type D: 커리어넷 전용 - 준비방법
+  // 5-13. 아래 섹션들은 올바른 순서로 재배치됩니다
+  
+  // 5. Type D: 교육·자격 섹션 (진로 준비방법 + 진로 탐색 활동 통합)
   const jobReadyList = mergedData.careernetOnly.jobReadyList
-  if (jobReadyList && Array.isArray(jobReadyList) && jobReadyList.length > 0) {
-    const readyHtml = jobReadyList
-      .map((item: any) => {
-        const title = item.title || item.list_title || ''
-        const content = item.content || item.list_content || ''
-        if (!title && !content) return ''
-        return `<div class="mb-4"><h4 class="text-sm font-semibold text-wiki-text mb-1">${escapeHtml(title)}</h4><p class="text-sm text-wiki-muted">${escapeHtml(content)}</p></div>`
-      })
-      .filter(Boolean)
-      .join('')
-    if (readyHtml) {
-      pushDetailCard('진로 준비방법', 'fa-road', readyHtml)
-    }
-  }
+  const researchList = rawApiData?.careernet?.encyclopedia?.researchList
   
-  // Type D: 고용24 전용 - 근무환경 (ablKnwEnv 데이터 사용)
-  const workEnvironment = mergedData.goyong24Only.workEnvironment
-  if (workEnvironment && (workEnvironment.comparison || workEnvironment.details)) {
-    const envBlocks = []
-    if (workEnvironment.comparison && typeof workEnvironment.comparison === 'object') {
-      // jobsEnvCmpr: 직업간 비교 데이터 (재택근무, 의사결정 권한 등)
-      const comparisonHtml = Object.entries(workEnvironment.comparison)
-        .filter(([key, val]) => val && typeof val === 'string')
-        .map(([key, val]) => {
-          return `<p class="text-sm text-wiki-text mb-1"><strong>${escapeHtml(key)}:</strong> ${escapeHtml(String(val))}</p>`
+  if ((jobReadyList && Array.isArray(jobReadyList) && jobReadyList.length > 0) ||
+      (researchList && Array.isArray(researchList) && researchList.length > 0)) {
+    const educationBlocks = []
+    
+    // 진로 준비방법
+    if (jobReadyList && Array.isArray(jobReadyList) && jobReadyList.length > 0) {
+      const readyHtml = jobReadyList
+        .map((item: any) => {
+          const title = item.title || item.list_title || ''
+          const content = item.content || item.list_content || ''
+          if (!title && !content) return ''
+          return `<div class="mb-4"><h4 class="text-sm font-semibold text-wiki-text mb-1">${escapeHtml(title)}</h4><p class="text-sm text-wiki-muted">${escapeHtml(content)}</p></div>`
         })
+        .filter(Boolean)
         .join('')
-      if (comparisonHtml) {
-        envBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">업무 환경 비교</h3>${comparisonHtml}</div>`)
-      }
-    }
-    if (workEnvironment.details && typeof workEnvironment.details === 'object') {
-      // jobsEnv: 업무 환경 상세 데이터
-      const detailsHtml = Object.entries(workEnvironment.details)
-        .filter(([key, val]) => val && typeof val === 'string')
-        .map(([key, val]) => {
-          return `<p class="text-sm text-wiki-text mb-1"><strong>${escapeHtml(key)}:</strong> ${escapeHtml(String(val))}</p>`
-        })
-        .join('')
-      if (detailsHtml) {
-        envBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">업무 환경 상세</h3>${detailsHtml}</div>`)
-      }
-    }
-    if (envBlocks.length > 0) {
-      pushDetailCard('업무환경 분석', 'fa-building', envBlocks.join(''))
-    }
-  }
-
-  
-  // Type D: 고용24 전용 - 성격 특성 비교
-  const personality = mergedData.goyong24Only.personality
-  if (personality && (personality.withinJob || personality.betweenJobs)) {
-    const personalityHtml = renderComparisonData(
-      personality.withinJob,
-      personality.betweenJobs,
-      '성격 특성',
-      'fa-user-check'
-    )
-    if (personalityHtml) {
-      pushDetailCard('성격 분석', 'fa-user-check', personalityHtml)
-    }
-  }
-
-  // Type D: 고용24 전용 - 흥미 분야 비교
-  const interest = mergedData.goyong24Only.interest
-  if (interest && (interest.withinJob || interest.betweenJobs)) {
-    const interestHtml = renderComparisonData(
-      interest.withinJob,
-      interest.betweenJobs,
-      '흥미 분야',
-      'fa-heart'
-    )
-    if (interestHtml) {
-      pushDetailCard('흥미 분야 분석', 'fa-heart', interestHtml)
-    }
-  }
-
-  // Type D: 고용24 전용 - 가치관 비교
-  const values = mergedData.goyong24Only.values
-  if (values && (values.withinJob || values.betweenJobs)) {
-    const valuesHtml = renderComparisonData(
-      values.withinJob,
-      values.betweenJobs,
-      '가치관',
-      'fa-star'
-    )
-    if (valuesHtml) {
-      pushDetailCard('가치관 분석', 'fa-star', valuesHtml)
-    }
-  }
-
-  // Type D: 고용24 전용 - 업무활동 분석 (중요도 + 수준 통합)
-  const activityImportance = mergedData.goyong24Only.activity?.importance
-  const activityLevel = mergedData.goyong24Only.activity?.level
-  
-  if ((activityImportance && (activityImportance.withinJob || activityImportance.betweenJobs)) ||
-      (activityLevel && (activityLevel.withinJob || activityLevel.betweenJobs))) {
-    const activityBlocks = []
-    
-    // 업무활동 중요도
-    if (activityImportance && (activityImportance.withinJob || activityImportance.betweenJobs)) {
-      const importanceHtml = renderComparisonData(
-        activityImportance.withinJob,
-        activityImportance.betweenJobs,
-        '업무활동 중요도',
-        'fa-chart-line'
-      )
-      if (importanceHtml) {
-        activityBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무활동 중요도</h3>${importanceHtml}</div>`)
+      
+      if (readyHtml) {
+        educationBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">진로 준비방법</h3>${readyHtml}</div>`)
       }
     }
     
-    // 업무활동 수준
-    if (activityLevel && (activityLevel.withinJob || activityLevel.betweenJobs)) {
-      const levelHtml = renderComparisonData(
-        activityLevel.withinJob,
-        activityLevel.betweenJobs,
-        '업무활동 수준',
-        'fa-signal'
-      )
-      if (levelHtml) {
-        activityBlocks.push(`<div class="${activityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무활동 수준</h3>${levelHtml}</div>`)
+    // 진로 탐색 활동 (이전의 조사/연구자료)
+    if (researchList) {
+      const researchHtml = renderResearchList(researchList)
+      if (researchHtml) {
+        educationBlocks.push(`<div class="${educationBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">진로 탐색 활동</h3>${researchHtml}</div>`)
       }
     }
     
-    if (activityBlocks.length > 0) {
-      pushDetailCard('업무활동 분석', 'fa-tasks', activityBlocks.join(''))
+    if (educationBlocks.length > 0) {
+      pushDetailCard('교육·자격', 'fa-graduation-cap', educationBlocks.join(''))
     }
   }
 
-  // Type D: 커리어넷 전용 - 한국의 직업지표
+  // 6. Type D: 커리어넷 전용 - 한국의 직업지표
   const indicatorChart = rawApiData?.careernet?.encyclopedia?.indicatorChart
   if (indicatorChart) {
     const indicatorHtml = renderIndicatorChart(indicatorChart)
@@ -2161,57 +2085,47 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
   }
 
-  // Type D: 커리어넷 전용 - 관련 태그
-  const tagList = rawApiData?.careernet?.encyclopedia?.tagList
-  if (tagList) {
-    const tagsHtml = renderTags(tagList)
-    if (tagsHtml) {
-      pushDetailCard('관련 태그', 'fa-tags', tagsHtml)
-    }
-  }
-
-  // Type D: 커리어넷 전용 - 조사/연구자료
-  const researchList = rawApiData?.careernet?.encyclopedia?.researchList
-  if (researchList) {
-    const researchHtml = renderResearchList(researchList)
-    if (researchHtml) {
-      pushDetailCard('조사/연구자료', 'fa-book-reader', researchHtml)
-    }
-  }
-
-  // Type D: 커리어넷 전용 - 업무 맥락 (performList.environment)
-  const workContext = rawApiData?.careernet?.encyclopedia?.performList?.environment
-  if (workContext && Array.isArray(workContext) && workContext.length > 0) {
-    const contextItems = workContext
-      .sort((a, b) => (b.importance || 0) - (a.importance || 0))
-      .slice(0, 15) // 상위 15개
-      .map((item) => {
-        // environment 필드 사용 (name이 아님)
-        const name = item.environment || item.inform || ''
-        const importance = item.importance || 0
-        const percentage = Math.min(importance, 100)
-        const barColor = percentage >= 80 ? 'bg-green-500' : percentage >= 60 ? 'bg-blue-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-gray-400'
-        
-        return `
-          <div class="mb-4">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-sm font-medium text-wiki-text">${escapeHtml(name)}</span>
-              <span class="text-sm font-semibold text-wiki-primary">${importance}</span>
-            </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-              <div class="${barColor} h-3 rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
-            </div>
-          </div>
-        `
-      })
-      .join('')
+  // 7. Type C: 업무수행능력 분석 (중요도 + 수준 통합)
+  const abilityComparison = mergedData.abilities?.detailedComparison
+  const abilityImportance = abilityComparison?.importance
+  const abilityLevel = abilityComparison?.level
+  
+  if (abilityComparison && ((abilityImportance && (abilityImportance.withinJob || abilityImportance.betweenJobs)) ||
+      (abilityLevel && (abilityLevel.withinJob || abilityLevel.betweenJobs)))) {
+    const abilityBlocks = []
     
-    if (contextItems) {
-      pushDetailCard('업무 맥락', 'fa-briefcase', contextItems)
+    // 업무수행능력 중요도
+    if (abilityImportance && (abilityImportance.withinJob || abilityImportance.betweenJobs)) {
+      const importanceHtml = renderComparisonData(
+        abilityImportance.withinJob,
+        abilityImportance.betweenJobs,
+        '업무수행능력 중요도',
+        'fa-brain'
+      )
+      if (importanceHtml) {
+        abilityBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무수행능력 중요도</h3>${importanceHtml}</div>`)
+      }
+    }
+    
+    // 업무수행능력 수준
+    if (abilityLevel && (abilityLevel.withinJob || abilityLevel.betweenJobs)) {
+      const levelHtml = renderComparisonData(
+        abilityLevel.withinJob,
+        abilityLevel.betweenJobs,
+        '업무수행능력 수준',
+        'fa-star-half-alt'
+      )
+      if (levelHtml) {
+        abilityBlocks.push(`<div class="${abilityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무수행능력 수준</h3>${levelHtml}</div>`)
+      }
+    }
+    
+    if (abilityBlocks.length > 0) {
+      pushDetailCard('업무수행능력 분석', 'fa-brain', abilityBlocks.join(''))
     }
   }
 
-  // Type C: 지식 분석 (중요도 + 수준 통합)
+  // 8. Type C: 지식 분석 (중요도 + 수준 통합)
   const knowledgeComparison = mergedData.knowledge?.detailedComparison
   const knowledgeImportance = knowledgeComparison?.importance
   const knowledgeLevel = knowledgeComparison?.level
@@ -2251,43 +2165,141 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
   }
 
-  // Type C: 업무수행능력 분석 (중요도 + 수준 통합)
-  const abilityComparison = mergedData.abilities?.detailedComparison
-  const abilityImportance = abilityComparison?.importance
-  const abilityLevel = abilityComparison?.level
+  // 9. Type D: 업무환경 분석 (고용24 + 커리어넷 통합)
+  const workEnvironment = mergedData.goyong24Only.workEnvironment
+  const workContext = rawApiData?.careernet?.encyclopedia?.performList?.environment
   
-  if (abilityComparison && ((abilityImportance && (abilityImportance.withinJob || abilityImportance.betweenJobs)) ||
-      (abilityLevel && (abilityLevel.withinJob || abilityLevel.betweenJobs)))) {
-    const abilityBlocks = []
+  if ((workEnvironment && (workEnvironment.comparison || workEnvironment.details)) ||
+      (workContext && Array.isArray(workContext) && workContext.length > 0)) {
+    const workEnvBlocks = []
     
-    // 업무수행능력 중요도
-    if (abilityImportance && (abilityImportance.withinJob || abilityImportance.betweenJobs)) {
+    // 고용24 업무환경 데이터 (직업 내/간 비교)
+    if (workEnvironment && (workEnvironment.comparison || workEnvironment.details)) {
+      const workEnvHtml = renderComparisonData(
+        workEnvironment.comparison, // jobsEnvCmpr (직업 내 비교)
+        workEnvironment.details,    // jobsEnv (직업 간 비교)
+        '업무환경 조건',
+        'fa-building'
+      )
+      if (workEnvHtml) {
+        workEnvBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무환경 조건</h3>${workEnvHtml}</div>`)
+      }
+    }
+    
+    // 커리어넷 업무환경 데이터 (중요도 바 차트)
+    if (workContext && Array.isArray(workContext) && workContext.length > 0) {
+      const contextItems = workContext
+        .sort((a, b) => (b.importance || 0) - (a.importance || 0))
+        .slice(0, 15) // 상위 15개
+        .map((item) => {
+          const name = item.environment || item.inform || ''
+          const importance = item.importance || 0
+          const percentage = Math.min(importance, 100)
+          const barColor = percentage >= 80 ? 'bg-green-500' : percentage >= 60 ? 'bg-blue-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-gray-400'
+          
+          return `
+            <div class="mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-wiki-text">${escapeHtml(name)}</span>
+                <span class="text-sm font-semibold text-wiki-primary">${importance}</span>
+              </div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                <div class="${barColor} h-3 rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
+              </div>
+            </div>
+          `
+        })
+        .join('')
+      
+      if (contextItems) {
+        workEnvBlocks.push(`<div class="${workEnvBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무환경 중요도</h3>${contextItems}</div>`)
+      }
+    }
+    
+    if (workEnvBlocks.length > 0) {
+      pushDetailCard('업무환경 분석', 'fa-building', workEnvBlocks.join(''))
+    }
+  }
+
+  
+  // 10. Type D: 고용24 전용 - 성격 특성 비교
+  const personality = mergedData.goyong24Only.personality
+  if (personality && (personality.withinJob || personality.betweenJobs)) {
+    const personalityHtml = renderComparisonData(
+      personality.withinJob,
+      personality.betweenJobs,
+      '성격 특성',
+      'fa-user-check'
+    )
+    if (personalityHtml) {
+      pushDetailCard('성격 분석', 'fa-user-check', personalityHtml)
+    }
+  }
+
+  // 11. Type D: 고용24 전용 - 흥미 분야 비교
+  const interest = mergedData.goyong24Only.interest
+  if (interest && (interest.withinJob || interest.betweenJobs)) {
+    const interestHtml = renderComparisonData(
+      interest.withinJob,
+      interest.betweenJobs,
+      '흥미 분야',
+      'fa-heart'
+    )
+    if (interestHtml) {
+      pushDetailCard('흥미 분야 분석', 'fa-heart', interestHtml)
+    }
+  }
+
+  // 12. Type D: 고용24 전용 - 가치관 비교
+  const values = mergedData.goyong24Only.values
+  if (values && (values.withinJob || values.betweenJobs)) {
+    const valuesHtml = renderComparisonData(
+      values.withinJob,
+      values.betweenJobs,
+      '가치관',
+      'fa-star'
+    )
+    if (valuesHtml) {
+      pushDetailCard('가치관 분석', 'fa-star', valuesHtml)
+    }
+  }
+
+  // 13. Type D: 고용24 전용 - 업무활동 분석 (중요도 + 수준 통합)
+  const activityImportance = mergedData.goyong24Only.activity?.importance
+  const activityLevel = mergedData.goyong24Only.activity?.level
+  
+  if ((activityImportance && (activityImportance.withinJob || activityImportance.betweenJobs)) ||
+      (activityLevel && (activityLevel.withinJob || activityLevel.betweenJobs))) {
+    const activityBlocks = []
+    
+    // 업무활동 중요도
+    if (activityImportance && (activityImportance.withinJob || activityImportance.betweenJobs)) {
       const importanceHtml = renderComparisonData(
-        abilityImportance.withinJob,
-        abilityImportance.betweenJobs,
-        '업무수행능력 중요도',
-        'fa-brain'
+        activityImportance.withinJob,
+        activityImportance.betweenJobs,
+        '업무활동 중요도',
+        'fa-chart-line'
       )
       if (importanceHtml) {
-        abilityBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무수행능력 중요도</h3>${importanceHtml}</div>`)
+        activityBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무활동 중요도</h3>${importanceHtml}</div>`)
       }
     }
     
-    // 업무수행능력 수준
-    if (abilityLevel && (abilityLevel.withinJob || abilityLevel.betweenJobs)) {
+    // 업무활동 수준
+    if (activityLevel && (activityLevel.withinJob || activityLevel.betweenJobs)) {
       const levelHtml = renderComparisonData(
-        abilityLevel.withinJob,
-        abilityLevel.betweenJobs,
-        '업무수행능력 수준',
-        'fa-star-half-alt'
+        activityLevel.withinJob,
+        activityLevel.betweenJobs,
+        '업무활동 수준',
+        'fa-signal'
       )
       if (levelHtml) {
-        abilityBlocks.push(`<div class="${abilityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무수행능력 수준</h3>${levelHtml}</div>`)
+        activityBlocks.push(`<div class="${activityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무활동 수준</h3>${levelHtml}</div>`)
       }
     }
     
-    if (abilityBlocks.length > 0) {
-      pushDetailCard('업무수행능력 분석', 'fa-brain', abilityBlocks.join(''))
+    if (activityBlocks.length > 0) {
+      pushDetailCard('업무활동 분석', 'fa-tasks', activityBlocks.join(''))
     }
   }
 
@@ -2435,6 +2447,23 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
               : ''
           }
           ${heroImage}
+          ${(() => {
+            const tagList = rawApiData?.careernet?.encyclopedia?.tagList
+            if (tagList && Array.isArray(tagList) && tagList.length > 0) {
+              const tags = tagList
+                .filter((tag: any) => {
+                  const tagText = tag?.tag || tag?.list_content || ''
+                  return tagText && tagText.trim().length > 0
+                })
+                .map((tag: any) => {
+                  const tagText = tag?.tag || tag?.list_content || ''
+                  return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(tagText.trim())}</span>`
+                })
+                .join('')
+              return tags ? `<div class="flex flex-wrap gap-2 mt-4">${tags}</div>` : ''
+            }
+            return ''
+          })()}
         </div>
         ${quickStats ? `<div>${quickStats}</div>` : ''}
       </section>
