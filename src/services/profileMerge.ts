@@ -50,13 +50,15 @@ const mergeRelatedEntities = (
     list?.forEach((entity) => {
       const name = entity.name?.trim()
       if (!name) return
-      const id = entity.id?.trim()
-      const key = id || name
+      // 이름을 키로 사용하여 중복 제거 (ID가 달라도 이름이 같으면 병합)
+      const key = name.toLowerCase()
       if (!map.has(key)) {
         map.set(key, { ...entity, name })
       } else {
         const existing = map.get(key)!
-        map.set(key, { ...existing, ...entity, name })
+        // ID가 있는 것을 우선 사용
+        const mergedId = entity.id?.trim() || existing.id
+        map.set(key, { ...existing, ...entity, name, id: mergedId })
       }
     })
   }

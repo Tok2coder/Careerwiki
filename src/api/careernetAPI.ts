@@ -547,26 +547,35 @@ export const normalizeCareerNetJobDetail = (job: Job): UnifiedJobDetail => {
     };
   }
   
-  // 관련 학과 추출
+  // 관련 학과 추출 (중복 제거)
   const relatedMajors = encyc.departList
     ?.filter((d): d is { depart_id?: number; depart_name?: string } => d !== null && !!d.depart_name)
-    .map(d => ({ name: d.depart_name! }));
+    .map(d => ({ name: d.depart_name!.trim() }))
+    .filter((major, index, self) => 
+      index === self.findIndex(m => m.name === major.name)
+    );
   
-  // 관련 자격증 추출
-  const relatedCertificates = encyc.certiList?.map(c => c.certi).filter((c): c is string => !!c);
+  // 관련 자격증 추출 (중복 제거)
+  const relatedCertificates = encyc.certiList
+    ?.map(c => c.certi?.trim())
+    .filter((c): c is string => !!c)
+    .filter((cert, index, self) => self.indexOf(cert) === index);
   
   // 연관 직업 추출
   const relatedJobs = encyc.baseInfo?.rel_job_nm 
     ? toRelatedEntities(encyc.baseInfo.rel_job_nm)
     : undefined;
   
-  // 관련 기관 추출
+  // 관련 기관 추출 (중복 제거)
   const relatedOrganizations = encyc.jobRelOrgList
     ?.filter(org => org.rel_org)
     .map(org => ({
-      name: org.rel_org!,
-      url: org.rel_org_url
-    }));
+      name: org.rel_org!.trim(),
+      url: org.rel_org_url?.trim()
+    }))
+    .filter((org, index, self) => 
+      index === self.findIndex(o => o.name === org.name)
+    );
   
   // 하는 일 추출
   const workDescriptions = encyc.workList?.map(w => w.work).filter(Boolean).join('\n\n');
