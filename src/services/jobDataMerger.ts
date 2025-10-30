@@ -271,8 +271,8 @@ export const mergeJobData = (rawApiData?: RawApiData): MergedJobData => {
         }
       },
       workEnvironment: {
-        physical: goyong24?.workCond?.envrnCndtn || null,
-        conditions: goyong24?.workCond?.empmtCndtn || null
+        comparison: goyong24?.ablKnwEnv?.jobsEnvCmpr || null,
+        details: goyong24?.ablKnwEnv?.jobsEnv || null
       },
       entryStatistics: goyong24?.workCond?.entry || null
     }
