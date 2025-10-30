@@ -2387,21 +2387,28 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const heroImage = renderHeroImage(profile.name, { dataAttribute: 'data-job-hero-image', context: 'job' })
   const hasSidebar = sidebarContent.trim().length > 0
   
-  // 태그 렌더링
+  // 태그 렌더링 (tagList는 string[] 형식)
   const tagList = rawApiData?.careernet?.encyclopedia?.tagList
-  const heroTags = tagList && Array.isArray(tagList) && tagList.length > 0
-    ? tagList
-        .filter((tag: any) => {
-          const tagText = tag?.tag || tag?.list_content || ''
-          return tagText && tagText.trim().length > 0
-        })
-        .map((tag: any) => {
-          const tagText = tag?.tag || tag?.list_content || ''
-          return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(tagText.trim())}</span>`
-        })
-        .join('')
-    : ''
-  const heroTagsMarkup = heroTags ? `<div class="flex flex-wrap gap-2 mt-4">${heroTags}</div>` : ''
+  let heroTagsMarkup = ''
+  
+  if (tagList && Array.isArray(tagList) && tagList.length > 0) {
+    const heroTags = tagList
+      .filter((tag: string | any) => {
+        // string[] 또는 object[] 모두 지원
+        const tagText = typeof tag === 'string' ? tag : (tag?.tag || tag?.list_content || '')
+        return tagText && tagText.trim().length > 0
+      })
+      .map((tag: string | any) => {
+        // string[] 또는 object[] 모두 지원
+        const tagText = typeof tag === 'string' ? tag : (tag?.tag || tag?.list_content || '')
+        return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(tagText.trim())}</span>`
+      })
+      .join('')
+    
+    if (heroTags) {
+      heroTagsMarkup = `<div class="flex flex-wrap gap-2 mt-4">${heroTags}</div>`
+    }
+  }
 
   const mainColumn = `<div class="space-y-6 min-w-0">${tabLayout}</div>`
   const sidebarMarkup = hasSidebar
