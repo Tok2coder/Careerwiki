@@ -1801,7 +1801,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 직업 소개
     if (typeof workSummary === 'string' && workSummary?.trim()) {
-      introBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">직업 소개</h3>${formatRichText(workSummary)}</div>`)
+      introBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">직업 소개</h3>${formatRichText(workSummary)}</div>`)
     }
     
     // 주요 업무
@@ -1810,15 +1810,15 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         .map((item: any) => {
           // work 필드만 추출
           const text = typeof item === 'string' ? item : item.work || item.list_content || ''
-          return text.trim() ? `<li>${escapeHtml(text)}</li>` : ''
+          return text.trim() ? `<li class="content-text">${escapeHtml(text)}</li>` : ''
         })
         .filter(Boolean)
         .join('')
       if (workList) {
-        introBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">주요 업무</h3><ul class="list-disc list-inside space-y-1">${workList}</ul></div>`)
+        introBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">주요 업무</h3><ul class="list-disc list-inside space-y-1">${workList}</ul></div>`)
       }
     } else if (profile.duties?.trim()) {
-      introBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">주요 업무</h3>${formatRichText(profile.duties)}</div>`)
+      introBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">주요 업무</h3>${formatRichText(profile.duties)}</div>`)
     }
     
     if (introBlocks.length > 0) {
@@ -1837,7 +1837,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
           const text = typeof item === 'string' ? item : item.list_content || ''
           if (!text.trim()) return ''
           // 첫 단어 들여쓰기를 위해 <span> 추가
-          return `<div class="mb-3"><span class="inline-block w-4"></span>${escapeHtml(text)}</div>`
+          return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${escapeHtml(text)}</div>`
         })
         .filter(Boolean)
         .join('')
@@ -1846,7 +1846,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       // 문자열인 경우 줄바꿈을 블록으로 변환
       const lines = prospectPrimary.split('\n').filter(line => line.trim())
       if (lines.length > 1) {
-        prospectHtml = `<div class="space-y-2">${lines.map(line => `<div class="mb-3"><span class="inline-block w-4"></span>${escapeHtml(line)}</div>`).join('')}</div>`
+        prospectHtml = `<div class="space-y-2">${lines.map(line => `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${escapeHtml(line)}</div>`).join('')}</div>`
       } else {
         prospectHtml = formatRichText(prospectPrimary)
       }
@@ -1872,9 +1872,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         return `<li>${escapeHtml(text)}</li>`
       })
       .join('')
-    abilityBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3><ul class="list-disc list-inside space-y-1">${abilityList}</ul></div>`)
+    abilityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3><ul class="list-disc list-inside space-y-1">${abilityList}</ul></div>`)
   } else if (typeof profile.abilities === 'string' && profile.abilities?.trim()) {
-    abilityBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3>${formatRichText(profile.abilities)}</div>`)
+    abilityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3>${formatRichText(profile.abilities)}</div>`)
   }
   
   // 지식 섹션
@@ -1903,27 +1903,41 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       .filter(Boolean)
       .join('')
     if (knowledgeList) {
-      abilityBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">필수 지식</h3><ul class="list-disc list-inside space-y-1">${knowledgeList}</ul></div>`)
+      abilityBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">필수 지식</h3><ul class="list-disc list-inside space-y-1">${knowledgeList}</ul></div>`)
     }
   } else if (typeof profile.technKnow === 'string' && profile.technKnow?.trim()) {
-    abilityBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">활용 기술</h3>${formatRichText(profile.technKnow)}</div>`)
+    abilityBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활용 기술</h3>${formatRichText(profile.technKnow)}</div>`)
   }
   
   if (abilityBlocks.length > 0) {
     pushOverviewCard('핵심 능력', 'fa-bolt', abilityBlocks.join(''))
   }
 
-  const traitBlocks = [
-    profile.personality?.trim()
-      ? `<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">성격 특성</h3>${formatRichText(profile.personality)}</div>`
-      : '',
-    profile.interests?.trim()
-      ? `<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">흥미 요소</h3>${formatRichText(profile.interests)}</div>`
-      : '',
-    profile.values?.trim()
-      ? `<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">가치관</h3>${formatRichText(profile.values)}</div>`
-      : ''
-  ].filter(Boolean)
+  // 직업 만족도 먼저 추가 (있을 경우)
+  const traitBlocks: string[] = []
+  
+  // DEBUG: satisfaction 출처 확인
+  const satisfactionDebug = `<!-- SATISFACTION: value="${profile.satisfaction}" partials_goyong="${partials?.GOYONG24?.satisfaction || 'N/A'}" partials_careernet="${partials?.CAREERNET?.satisfaction || 'N/A'}" -->`
+  
+  if (profile.satisfaction) {
+    traitBlocks.push(`${satisfactionDebug}<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">직업 만족도</h3><p class="content-text text-wiki-text">${escapeHtml(String(profile.satisfaction))}</p></div>`)
+  }
+  
+  if (profile.personality?.trim()) {
+    const divClass = traitBlocks.length > 0 ? 'mt-4' : ''
+    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">성격 특성</h3>${formatRichText(profile.personality)}</div>`)
+  }
+  
+  if (profile.interests?.trim()) {
+    const divClass = traitBlocks.length > 0 ? 'mt-4' : ''
+    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">흥미 요소</h3>${formatRichText(profile.interests)}</div>`)
+  }
+  
+  if (profile.values?.trim()) {
+    const divClass = traitBlocks.length > 0 ? 'mt-4' : ''
+    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">가치관</h3>${formatRichText(profile.values)}</div>`)
+  }
+  
   if (traitBlocks.length) {
     pushOverviewCard('적성 및 흥미', 'fa-handshake', traitBlocks.join(''))
   }
@@ -1961,10 +1975,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   if (profile.activitiesImportance?.trim() || profile.activitiesLevels?.trim()) {
     const activityBlocks = [
       profile.activitiesImportance?.trim()
-        ? `<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">활동 중요도</h3>${formatRichText(profile.activitiesImportance)}</div>`
+        ? `<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활동 중요도</h3>${formatRichText(profile.activitiesImportance)}</div>`
         : '',
       profile.activitiesLevels?.trim()
-        ? `<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">활동 수준</h3>${formatRichText(profile.activitiesLevels)}</div>`
+        ? `<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활동 수준</h3>${formatRichText(profile.activitiesLevels)}</div>`
         : ''
     ].join('')
     pushDetailCard('업무 수행 지표', 'fa-chart-area', activityBlocks)
@@ -2033,10 +2047,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   if (wlb || social) {
     const wlbBlocks = []
     if (wlb) {
-      wlbBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">워라밸 지수</h3><p class="text-sm text-wiki-text">${escapeHtml(wlb)}</p></div>`)
+      wlbBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">워라밸 지수</h3><p class="content-text text-wiki-text">${escapeHtml(wlb)}</p></div>`)
     }
     if (social) {
-      wlbBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">사회적 기여도</h3><p class="text-sm text-wiki-text">${escapeHtml(social)}</p></div>`)
+      wlbBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">사회적 기여도</h3><p class="content-text text-wiki-text">${escapeHtml(social)}</p></div>`)
     }
     pushDetailCard('워라밸 & 사회적 평가', 'fa-heart', wlbBlocks.join(''))
   }
@@ -2450,9 +2464,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
                 <i class="fas fa-share-nodes" aria-hidden="true"></i>
                 공유
               </button>
-              <div class="absolute right-0 mt-2 w-72 rounded-xl border border-wiki-border/60 bg-wiki-bg/95 shadow-xl backdrop-blur hidden" data-share-panel data-cw-telemetry-component="job-share-panel" role="dialog" aria-modal="false" aria-label="링크 공유">
+              <div class="absolute right-0 mt-2 w-72 rounded-xl border border-wiki-border/60 bg-wiki-bg/95 shadow-xl backdrop-blur hidden z-[1001]" data-share-panel data-cw-telemetry-component="job-share-panel" role="dialog" aria-modal="false" aria-label="링크 공유">
                 <div class="flex items-center justify-between px-4 py-3 border-b border-wiki-border/60">
-                  <p class="text-sm font-semibold text-white">직업 상세 링크</p>
+                  <p class="text-sm font-semibold text-white">'${escapeHtml(profile.name)}' 공유하기</p>
                   <button type="button" class="text-xs text-wiki-muted hover:text-white transition" data-share-close aria-label="닫기">
                     <i class="fas fa-times" aria-hidden="true"></i>
                   </button>
