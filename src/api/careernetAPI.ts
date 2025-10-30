@@ -555,6 +555,19 @@ export const normalizeCareerNetJobDetail = (job: Job): UnifiedJobDetail => {
   // 관련 자격증 추출
   const relatedCertificates = encyc.certiList?.map(c => c.certi).filter((c): c is string => !!c);
   
+  // 연관 직업 추출
+  const relatedJobs = encyc.baseInfo?.rel_job_nm 
+    ? toRelatedEntities(encyc.baseInfo.rel_job_nm)
+    : undefined;
+  
+  // 관련 기관 추출
+  const relatedOrganizations = encyc.jobRelOrgList
+    ?.filter(org => org.rel_org)
+    .map(org => ({
+      name: org.rel_org!,
+      url: org.rel_org_url
+    }));
+  
   // 하는 일 추출
   const workDescriptions = encyc.workList?.map(w => w.work).filter(Boolean).join('\n\n');
   
@@ -576,6 +589,8 @@ export const normalizeCareerNetJobDetail = (job: Job): UnifiedJobDetail => {
     interests: encyc.interestList?.map(i => i.interest).filter(Boolean).join(', '),
     relatedMajors,
     relatedCertificates: relatedCertificates?.length ? relatedCertificates : undefined,
+    relatedJobs,
+    relatedOrganizations: relatedOrganizations?.length ? relatedOrganizations : undefined,
     
     // 직업백과 확장 필드들 (UnifiedJobDetail 타입에 맞게)
     workList: encyc.workList?.map(w => ({
