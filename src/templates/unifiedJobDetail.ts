@@ -266,8 +266,8 @@ const renderComparisonData = (
           return `
             <div class="mb-4">
               <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-medium text-wiki-text">${escapeHtml(label)}</span>
-                <span class="text-sm font-semibold text-wiki-primary">${numericValue.toFixed(1)}</span>
+                <span class="content-text font-medium text-wiki-text">${escapeHtml(label)}</span>
+                <span class="content-text font-semibold text-wiki-primary">${numericValue.toFixed(1)}</span>
               </div>
               <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
                 <div class="${barColor} h-3 rounded-full transition-all duration-300" style="width: ${percentage.toFixed(1)}%"></div>
@@ -275,7 +275,7 @@ const renderComparisonData = (
             </div>
           `
         }
-        return `<li class="text-sm text-wiki-text">${escapeHtml(label)}</li>`
+        return `<li class="content-text text-wiki-text">${escapeHtml(label)}</li>`
       })
       .filter(Boolean)
       .join('')
@@ -283,7 +283,7 @@ const renderComparisonData = (
     if (withinJobHtml) {
       blocks.push(`
         <div>
-          <h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-3">
+          <h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-3">
             <i class="${icon} mr-2"></i>직업 내 비교
           </h3>
           <div>${withinJobHtml}</div>
@@ -332,7 +332,7 @@ const renderComparisonData = (
             <div class="mb-4">
               <div class="flex justify-between items-center mb-2">
                 <span class="text-sm font-medium text-wiki-text">${escapeHtml(label)}</span>
-                <span class="text-sm font-semibold text-wiki-accent">${numericValue.toFixed(0)}%</span>
+                <span class="content-text font-semibold text-wiki-accent">${numericValue.toFixed(0)}%</span>
               </div>
               <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
                 <div class="${barColor} h-3 rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
@@ -340,7 +340,7 @@ const renderComparisonData = (
             </div>
           `
         }
-        return `<li class="text-sm text-wiki-text">${escapeHtml(label)}</li>`
+        return `<li class="content-text text-wiki-text">${escapeHtml(label)}</li>`
       })
       .filter(Boolean)
       .join('')
@@ -348,7 +348,7 @@ const renderComparisonData = (
     if (betweenJobsHtml) {
       blocks.push(`
         <div class="mt-6">
-          <h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-3">
+          <h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-3">
             <i class="${icon} mr-2"></i>직업 간 비교
           </h3>
           <div>${betweenJobsHtml}</div>
@@ -375,10 +375,10 @@ const renderResearchList = (researchList: any[]): string => {
       return `
         <li class="flex items-start gap-3 p-3 rounded-lg bg-wiki-bg/40 border border-wiki-border/30">
           <span class="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20 text-blue-300">
-            <i class="fas fa-file-alt text-sm"></i>
+            <i class="fas fa-file-alt"></i>
           </span>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium text-wiki-text">${escapeHtml(title)}</p>
+            <p class="content-text font-medium text-wiki-text">${escapeHtml(title)}</p>
           </div>
         </li>
       `
@@ -397,7 +397,7 @@ const renderResearchList = (researchList: any[]): string => {
         </span>
         <div>
           <h2 class="text-lg sm:text-xl font-bold text-white leading-tight">조사/연구자료</h2>
-          <p class="mt-1 text-sm text-wiki-muted">직업 관련 조사 및 연구 자료를 확인하세요</p>
+          <p class="mt-1 content-text text-wiki-muted">직업 관련 조사 및 연구 자료를 확인하세요</p>
         </div>
       </header>
       <ul class="space-y-2">
@@ -419,7 +419,7 @@ const renderTags = (tagList: any[]): string => {
     .map((tag) => {
       const tagText = tag.startsWith('#') ? tag : `#${tag}`
       return `
-        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-sm font-medium text-blue-200 hover:bg-blue-500/30 hover:border-blue-400/50 transition-all duration-200">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 content-text font-medium text-blue-200 hover:bg-blue-500/30 hover:border-blue-400/50 transition-all duration-200">
           <i class="fas fa-hashtag text-xs text-blue-300"></i>
           ${escapeHtml(tagText.replace('#', ''))}
         </span>
@@ -439,7 +439,7 @@ const renderTags = (tagList: any[]): string => {
         </span>
         <div>
           <h2 class="text-lg sm:text-xl font-bold text-white leading-tight">관련 태그</h2>
-          <p class="mt-1 text-sm text-wiki-muted">직업과 관련된 키워드를 확인하세요</p>
+          <p class="mt-1 content-text text-wiki-muted">직업과 관련된 키워드를 확인하세요</p>
         </div>
       </header>
       <div class="flex flex-wrap gap-2">
@@ -471,11 +471,11 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
       return `
         <div class="mb-5">
           <div class="flex justify-between items-center mb-2">
-            <span class="text-sm font-medium text-wiki-text flex items-center gap-2">
+            <span class="content-text font-medium text-wiki-text flex items-center gap-2">
               <i class="fas fa-chart-bar text-wiki-primary w-4 text-center"></i>
               ${escapeHtml(label)}
             </span>
-            <span class="text-sm font-bold text-wiki-primary">${numericValue.toFixed(1)}%</span>
+            <span class="content-text font-bold text-wiki-primary">${numericValue.toFixed(1)}%</span>
           </div>
           <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden shadow-inner">
             <div class="${barColor} h-4 rounded-full transition-all duration-500 shadow-sm" style="width: ${percentage}%"></div>
@@ -497,7 +497,7 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
         </span>
         <div>
           <h2 class="text-lg sm:text-xl font-bold text-white leading-tight">한국의 직업지표</h2>
-          <p class="mt-1 text-sm text-wiki-muted">직업백과(커리어넷) 제공 지표</p>
+          <p class="mt-1 content-text text-wiki-muted">직업백과(커리어넷) 제공 지표</p>
         </div>
       </header>
       <div class="space-y-1">
@@ -832,7 +832,7 @@ const buildEntityUrl = (entity: JobRelatedEntity, type: 'job' | 'major'): string
 
 const renderEntityList = (entities?: JobRelatedEntity[] | null, type: 'job' | 'major', emptyText = '정보 없음'): string => {
   if (!entities || entities.length === 0) {
-    return `<p class="text-sm text-wiki-muted">${escapeHtml(emptyText)}</p>`
+    return `<p class="content-text text-wiki-muted">${escapeHtml(emptyText)}</p>`
   }
 
   return `
@@ -842,7 +842,7 @@ const renderEntityList = (entities?: JobRelatedEntity[] | null, type: 'job' | 'm
         .map((entity) => {
           const name = escapeHtml(entity.name.trim())
           const url = buildEntityUrl(entity, type)
-          return `<a href="${url}" class="text-sm text-wiki-primary hover:text-wiki-secondary transition">${name}</a>`
+          return `<a href="${url}" class="content-text text-wiki-primary hover:text-wiki-secondary transition">${name}</a>`
         })
         .join('')}
     </div>
@@ -869,7 +869,7 @@ const renderDistributionList = (distribution?: Record<string, string | undefined
     <ul class="space-y-2">
       ${entries
         .map(({ label, value }) => `
-          <li class="flex justify-between text-xs">
+          <li class="flex justify-between content-text">
             <span class="text-wiki-muted">${escapeHtml(label)}</span>
             <span class="text-wiki-text font-semibold">${escapeHtml(value)}</span>
           </li>
@@ -909,7 +909,7 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
     // 기존 로직 (범위 또는 일반 숫자)
     const matches = raw.match(/(\d[\d,]*)/g)
     if (!matches || !matches.length) {
-      return buildCard('임금 정보', 'fa-coins', `<p class="text-sm text-wiki-text">${escapeHtml(raw)}</p>`, options ?? {})
+      return buildCard('임금 정보', 'fa-coins', `<p class="content-text text-wiki-text">${escapeHtml(raw)}</p>`, options ?? {})
     }
 
     const values = matches
@@ -917,7 +917,7 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
       .filter((value) => Number.isFinite(value) && value > 0)
 
     if (!values.length) {
-      return buildCard('임금 정보', 'fa-coins', `<p class="text-sm text-wiki-text">${escapeHtml(raw)}</p>`, options ?? {})
+      return buildCard('임금 정보', 'fa-coins', `<p class="content-text text-wiki-text">${escapeHtml(raw)}</p>`, options ?? {})
     }
 
     const hasRange = raw.includes('~') && values.length >= 2
@@ -1038,7 +1038,7 @@ const renderDistributionPieChart = (
       </div>
       <div class="w-full lg:w-1/2 space-y-2">
         ${numericEntries.map((entry, idx) => `
-          <div class="flex items-center justify-between text-sm">
+          <div class="flex items-center justify-between content-text">
             <div class="flex items-center gap-2">
               <div class="w-3 h-3 rounded-full" style="background-color: ${chartColors[idx % chartColors.length]}"></div>
               <span class="text-wiki-text">${escapeHtml(entry.label)}</span>
@@ -1134,7 +1134,7 @@ const renderDistributionBars = (
     .map((entry) => {
       if (entry.numeric === null || maxValue === 0) {
         return `
-          <div class="flex justify-between text-sm text-wiki-muted">
+          <div class="flex justify-between content-text text-wiki-muted">
             <span>${escapeHtml(entry.label)}</span>
             <span>${escapeHtml(entry.raw)}</span>
           </div>
@@ -1209,7 +1209,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details', heading: string, i
         <li data-toc-order="${index + 1}">
           <a
             href="#${escapeHtml(item.id)}"
-            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-4 py-3 text-sm text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
+            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-4 py-3 content-text text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
             data-cw-telemetry-action="toc-link"
             data-cw-telemetry-component="section-toc-link"
             data-cw-telemetry-scope="${sectionKey}-toc"
@@ -1219,7 +1219,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details', heading: string, i
             <span class="flex h-7 w-7 items-center justify-center rounded-full bg-wiki-primary/25 text-xs font-semibold text-wiki-primary">
               ${index + 1}
             </span>
-            <span class="text-sm text-wiki-text">${escapeHtml(item.label)}</span>
+            <span class="content-text text-wiki-text">${escapeHtml(item.label)}</span>
           </a>
         </li>
       `)
@@ -1282,7 +1282,7 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
 
   return `
     <section class="glass-card p-5 rounded-2xl space-y-3" data-job-sidebar-section>
-      <div class="flex items-center gap-2 text-sm font-semibold text-white">
+      <div class="flex items-center gap-2 content-text font-semibold text-white">
         <i class="fas ${icon} text-wiki-secondary" aria-hidden="true"></i>
         <span>${escapeHtml(title)}</span>
       </div>
@@ -1320,7 +1320,7 @@ const renderJobSidebar = (profile: UnifiedJobDetail): string => {
       .map(
         (item) => `
           <li>
-            <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/70 bg-wiki-bg/60 px-4 py-3 text-sm text-wiki-primary hover:border-wiki-primary hover:text-white transition">
+            <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/70 bg-wiki-bg/60 px-4 py-3 content-text text-wiki-primary hover:border-wiki-primary hover:text-white transition">
               <span class="font-semibold">${escapeHtml(item.label)}</span>
               <span class="text-xs text-wiki-muted">CareerWiki HowTo</span>
             </a>
@@ -1389,7 +1389,7 @@ const renderSourcesCollapsible = (
     <section class="glass-card p-0 rounded-2xl border border-wiki-border/60 bg-wiki-bg/50" data-source-collapsible>
       <button
         type="button"
-        class="w-full flex items-center justify-between gap-3 px-5 py-4 text-sm font-semibold text-white transition hover:text-white"
+        class="w-full flex items-center justify-between gap-3 px-5 py-4 content-text font-semibold text-white transition hover:text-white"
         data-source-toggle
         aria-controls="${panelId}"
         aria-expanded="false"
@@ -1630,7 +1630,7 @@ const renderQuickStats = (
       return ''
     }
     const [primary, ...rest] = trimmed.split(/\n+/)
-    const primaryMarkup = `<p class="text-sm font-semibold text-white leading-snug" data-stat-value-primary>${escapeHtml(primary)}</p>`
+    const primaryMarkup = `<p class="content-text font-semibold text-white leading-snug" data-stat-value-primary>${escapeHtml(primary)}</p>`
     const secondaryMarkup = rest
       .map((line, index) => `<p class="text-xs text-wiki-muted leading-snug ${index === 0 ? 'mt-1' : 'mt-0.5'}" data-stat-value-secondary>${escapeHtml(line)}</p>`)
       .join('')
@@ -1663,7 +1663,7 @@ const renderQuickStats = (
               <i class="fas ${stat.icon}" aria-hidden="true"></i>
             </span>
             <div class="flex flex-col justify-center">
-              <h3 class="text-sm font-semibold text-white leading-tight">${escapeHtml(stat.label)}</h3>
+              <h3 class="content-text font-semibold text-white leading-tight">${escapeHtml(stat.label)}</h3>
               ${noteLabel ? `<span class="text-[11px] text-wiki-muted mt-0.5">${escapeHtml(noteLabel)}</span>` : ''}
             </div>
           </header>
@@ -1689,7 +1689,7 @@ const renderQuickStats = (
         </span>
         <div>
           <h2 class="text-lg sm:text-xl font-bold text-white leading-tight">핵심 지표 요약</h2>
-          <p class="mt-1 text-sm text-wiki-muted">주요 성과 지표를 한눈에 확인하세요.</p>
+          <p class="mt-1 content-text text-wiki-muted">주요 성과 지표를 한눈에 확인하세요.</p>
         </div>
       </header>
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" data-cw-stat-grid>
@@ -1711,9 +1711,9 @@ const renderOrganizationsList = (profile: UnifiedJobDetail): string => {
         if (!/^https?:\/\//i.test(fullUrl)) {
           fullUrl = `https://${fullUrl}`
         }
-        return `<li><a href="${escapeHtml(fullUrl)}" target="_blank" rel="noopener" class="text-sm text-wiki-primary hover:text-wiki-secondary transition">${name}</a></li>`
+        return `<li><a href="${escapeHtml(fullUrl)}" target="_blank" rel="noopener" class="content-text text-wiki-primary hover:text-wiki-secondary transition">${name}</a></li>`
       }
-      return `<li class="text-sm text-wiki-text">${name}</li>`
+      return `<li class="content-text text-wiki-text">${name}</li>`
     })
   return items.length ? `<ul class="space-y-2">${items.join('')}</ul>` : ''
 }
@@ -1725,7 +1725,7 @@ const renderKecoCodeList = (profile: UnifiedJobDetail): string => {
     .map((item) => {
       const code = item.code ? `<span class="text-wiki-muted mr-2">${escapeHtml(item.code)}</span>` : ''
       const name = item.name ? escapeHtml(item.name) : ''
-      return `<li class="text-sm text-wiki-text">${code}${name}</li>`
+      return `<li class="content-text text-wiki-text">${code}${name}</li>`
     })
   return items.length ? `<ul class="space-y-2">${items.join('')}</ul>` : ''
 }

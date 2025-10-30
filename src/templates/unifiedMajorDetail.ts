@@ -47,7 +47,7 @@ const renderUniversities = (universities?: UnifiedMajorDetail['universities']): 
       return `
         <div class="bg-wiki-bg/60 border border-wiki-border rounded-lg p-4">
           <div class="flex items-center justify-between">
-            <h4 class="text-sm font-semibold text-wiki-text">${name}</h4>
+            <h4 class="content-text font-semibold text-wiki-text">${name}</h4>
             ${type}
           </div>
           ${department}
@@ -84,7 +84,7 @@ const renderRecruitmentTable = (stats?: UnifiedMajorDetail['recruitmentStatus'])
 
   return `
     <div class="overflow-x-auto rounded-lg border border-wiki-border">
-      <table class="min-w-full divide-y divide-wiki-border text-sm">
+      <table class="min-w-full divide-y divide-wiki-border content-text">
         <thead class="bg-wiki-bg/80 text-xs uppercase tracking-wide text-wiki-muted">
           <tr>
             <th class="px-4 py-3 text-left">연도</th>
@@ -171,8 +171,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   }
   if (profile.salaryAfterGraduation || profile.employmentRate) {
     const metaItems = [
-      profile.salaryAfterGraduation ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>` : '',
-      profile.employmentRate ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>` : ''
+      profile.salaryAfterGraduation ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>` : '',
+      profile.employmentRate ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>` : ''
     ].join('')
     careerCards.push(buildCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems}</ul>`))
   }
@@ -260,13 +260,13 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   const infoItems: string[] = []
   if (profile.categoryName) {
-    infoItems.push(`<li class="flex justify-between text-sm"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text">${escapeHtml(profile.categoryName)}</span></li>`)
+    infoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text">${escapeHtml(profile.categoryName)}</span></li>`)
   }
   if (profile.employmentRate) {
-    infoItems.push(`<li class="flex justify-between text-sm"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>`)
+    infoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>`)
   }
   if (profile.salaryAfterGraduation) {
-    infoItems.push(`<li class="flex justify-between text-sm"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>`)
+    infoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>`)
   }
 
   const infoCard = infoItems.length
@@ -309,8 +309,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
             ${ctaBlock}
           </div>
           <div class="flex gap-3">
-            <a href="/major" class="px-4 py-2 border border-wiki-border rounded-lg text-sm text-wiki-muted hover:border-wiki-primary hover:text-wiki-primary transition"><i class="fas fa-arrow-left mr-2"></i>목록으로</a>
-            <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition" data-share="true" data-entity-type="major" data-entity-id="${escapeHtml(profile.id)}"><i class="fas fa-share-alt mr-2"></i>공유</button>
+            <a href="/major" class="px-4 py-2 border border-wiki-border rounded-lg content-text text-wiki-muted hover:border-wiki-primary hover:text-wiki-primary transition"><i class="fas fa-arrow-left mr-2"></i>목록으로</a>
+            <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg content-text hover:bg-blue-600 transition" data-share="true" data-entity-type="major" data-entity-id="${escapeHtml(profile.id)}"><i class="fas fa-share-alt mr-2"></i>공유</button>
           </div>
         </div>
         ${heroImage}

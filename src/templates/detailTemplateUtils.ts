@@ -18,7 +18,7 @@ export const escapeHtml = (value?: string | null): string => {
 
 export const formatRichText = (value?: string | null): string => {
   if (!value || !value.trim()) {
-    return '<p class="text-sm text-wiki-muted">정보가 제공되지 않았습니다.</p>'
+    return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
 
   return value
@@ -26,21 +26,21 @@ export const formatRichText = (value?: string | null): string => {
     .split(/\n{2,}/)
     .map((paragraph) => {
       const safe = escapeHtml(paragraph.trim()).replace(/\n/g, '<br>')
-      return `<p class="text-sm leading-relaxed text-wiki-text">${safe}</p>`
+      return `<p class="content-text leading-relaxed text-wiki-text">${safe}</p>`
     })
     .join('')
 }
 
 export const renderChips = (items?: string[] | null, emptyText = '정보 없음'): string => {
   if (!items || items.length === 0) {
-    return `<p class="text-sm text-wiki-muted">${escapeHtml(emptyText)}</p>`
+    return `<p class="content-text text-wiki-muted">${escapeHtml(emptyText)}</p>`
   }
 
   return `
     <div class="flex flex-wrap gap-2">
       ${items
         .filter((item) => !!item && !!item.trim())
-        .map((item) => `<span class="px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted">${escapeHtml(item.trim())}</span>`)
+        .map((item) => `<span class="px-3 py-1.5 rounded-full bg-wiki-bg border border-wiki-border content-text text-wiki-muted">${escapeHtml(item.trim())}</span>`)
         .join('')}
     </div>
   `
@@ -153,7 +153,7 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
 
   return `
     <article ${attributeParts.join(' ')}>
-      <h3 class="text-lg font-semibold text-wiki-text flex items-center gap-2">
+      <h3 class="content-heading font-semibold text-wiki-text flex items-center gap-2">
         <i class="fas ${icon} text-wiki-secondary"></i>
         <span>${escapeHtml(title)}</span>
       </h3>
@@ -181,7 +181,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
     return buildCard(
       fallback?.title ?? '데이터 준비 중',
       fallback?.icon ?? 'fa-circle-info',
-      `<p class="text-sm text-wiki-muted">${escapeHtml(
+      `<p class="content-text text-wiki-muted">${escapeHtml(
         fallback?.message ?? '상세 정보가 수집되는 대로 탭이 활성화됩니다.'
       )}</p>`
     )

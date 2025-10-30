@@ -176,6 +176,11 @@ const renderLayout = (
         ${extraHead}
         <style>
           body { background: #0f0f23; color: #e0e0e0; }
+          
+          /* 기본 콘텐츠 폰트 크기 정의 */
+          .content-text { font-size: 15px; }
+          .content-heading { font-size: 16px; }
+          
           .gradient-text {
             background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%);
             -webkit-background-clip: text;
