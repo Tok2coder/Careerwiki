@@ -222,8 +222,8 @@ const renderLayout = (
             gap: 12px;
           }
           .header-icon-button {
-            width: 42px;
-            height: 42px;
+            width: 36px;
+            height: 36px;
             border-radius: 9999px;
             display: inline-flex;
             align-items: center;
@@ -250,7 +250,7 @@ const renderLayout = (
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 12px 6px 16px;
+            padding: 4px 10px 4px 14px;
             border-radius: 9999px;
             background: rgba(26, 26, 46, 0.55);
             border: 1px solid rgba(100, 181, 246, 0.25);
@@ -265,7 +265,7 @@ const renderLayout = (
             background: transparent;
             border: none;
             color: #dee3ff;
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.4;
           }
           .nav-search-input::placeholder {
@@ -275,8 +275,8 @@ const renderLayout = (
             outline: none;
           }
           .nav-search-button {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 9999px;
             display: inline-flex;
             align-items: center;
@@ -284,8 +284,8 @@ const renderLayout = (
             border: none;
             background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%);
             color: #ffffff;
-            font-size: 15px;
-            box-shadow: 0 8px 18px rgba(67, 97, 238, 0.25);
+            font-size: 14px;
+            box-shadow: 0 6px 14px rgba(67, 97, 238, 0.25);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
           }
@@ -300,10 +300,10 @@ const renderLayout = (
           .nav-link {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 18px;
+            gap: 8px;
+            padding: 6px 14px;
             border-radius: 9999px;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             font-weight: 600;
             letter-spacing: 0.01em;
             color: #d8dcff;
@@ -322,7 +322,7 @@ const renderLayout = (
             outline-offset: 3px;
           }
           .nav-link .nav-icon {
-            font-size: 1rem;
+            font-size: 0.9rem;
           }
           .nav-link-mobile {
             display: flex;
@@ -442,7 +442,7 @@ const renderLayout = (
         ${!isHomepage ? `
         <!-- Navigation (Not on homepage) -->
         <nav class="glass-card sticky top-0 z-50 border-b border-wiki-border">
-            <div class="mx-auto w-full max-w-6xl py-4">
+            <div class="mx-auto w-full max-w-[1400px] py-2.5 px-4">
                 <div class="flex items-center justify-between md:hidden">
                     <a href="/" class="flex items-center">
                         ${getLogoSVG('small')}
@@ -499,7 +499,7 @@ const renderLayout = (
         
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden glass-card border-b border-wiki-border">
-            <div class="mx-auto w-full max-w-6xl py-4 space-y-3">
+            <div class="mx-auto w-full max-w-[1400px] py-3 px-4 space-y-2">
                 <a href="/analyzer" class="nav-link nav-link-mobile">
                     <i class="fas fa-brain mr-2"></i>AI 분석
                 </a>
