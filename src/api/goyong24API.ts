@@ -192,7 +192,9 @@ const getFirstValue = (xml: string, tag: string): string => {
   const regex = new RegExp(`<${tag}>([\\s\\S]*?)<\/${tag}>`, 'i')
   const match = xml.match(regex)
   if (!match) return ''
-  return cleanText(match[1])
+  const value = cleanText(match[1])
+  // 빈 문자열이나 공백만 있는 경우 빈 문자열 반환 (undefined 처리는 호출하는 쪽에서)
+  return value.trim()
 }
 
 const getAllValues = (xml: string, tag: string): string[] => {
@@ -772,13 +774,16 @@ const parseSalProspectSection = (xml: string): Goyong24JobDetailSalProspect => {
     jobNm: getFirstValue(entry, 'jobNm')
   }))
 
+  const jobSatisValue = getFirstValue(block, 'jobSatis')
+  console.log('[DEBUG] Goyong24 salProspect.jobSatis:', jobSatisValue, 'length:', jobSatisValue.length)
+
   return {
     jobCd: getFirstValue(block, 'jobCd'),
     jobLrclNm: getFirstValue(block, 'jobLrclNm'),
     jobMdclNm: getFirstValue(block, 'jobMdclNm'),
     jobSmclNm: getFirstValue(block, 'jobSmclNm'),
     sal: getFirstValue(block, 'sal'),
-    jobSatis: getFirstValue(block, 'jobSatis'),
+    jobSatis: jobSatisValue || undefined,
     jobProspect: getFirstValue(block, 'jobProspect'),
     jobSumProspect,
     jobStatusList
@@ -1121,6 +1126,7 @@ export const normalizeGoyong24JobDetail = (
   }
 
   const summary = detail.summary
+  const salProspect = detail.salProspect
   const canonicalSummary = normalizeGoyong24JobListItem({
     jobClcd: summary.jobLrclNm || '',
     jobClcdNm: summary.jobLrclNm || '',
@@ -1159,7 +1165,7 @@ export const normalizeGoyong24JobDetail = (
     relatedMajors,
     relatedCertificates: relatedCertificates.length ? relatedCertificates : undefined,
     salary: summary.sal,
-    satisfaction: summary.jobSatis,
+    satisfaction: (summary.jobSatis && summary.jobSatis.trim()) || (salProspect?.jobSatis && salProspect.jobSatis.trim()) || undefined,
     prospect: summary.jobProspect,
     status: summary.jobStatus,
     abilities: summary.jobAbil,
