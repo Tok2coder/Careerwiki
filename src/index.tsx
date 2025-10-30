@@ -469,7 +469,7 @@ const renderLayout = (
                     <a href="/" class="flex items-center shrink-0">
                         ${getLogoSVG('small')}
                     </a>
-                    <form action="/search" method="get" class="nav-search-shell flex-1 min-w-[240px] max-w-xl">
+                    <form action="/search" method="get" class="nav-search-shell min-w-[240px] max-w-md">
                         <div class="nav-search-bar">
                             <input type="text" name="q" 
                                    placeholder="직업, 전공, 진로를 검색하세요..." 
@@ -479,20 +479,23 @@ const renderLayout = (
                             </button>
                         </div>
                     </form>
-                    <a href="/analyzer" class="nav-link">
-                        <i class="fas fa-brain nav-icon"></i>
-                        <span>AI 분석</span>
-                    </a>
-                    <a href="/howto" class="nav-link">
-                        <i class="fas fa-route nav-icon"></i>
-                        <span>HowTo</span>
-                    </a>
-                    <a href="/help" class="header-icon-button" title="도움말">
-                        <i class="fas fa-question-circle text-base"></i>
-                    </a>
-                    <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
-                        <i class="fas fa-user-circle text-base"></i>
-                    </a>
+                    <div class="flex-grow"></div>
+                    <div class="flex items-center gap-4">
+                        <a href="/analyzer" class="nav-link">
+                            <i class="fas fa-brain nav-icon"></i>
+                            <span>AI 분석</span>
+                        </a>
+                        <a href="/howto" class="nav-link">
+                            <i class="fas fa-route nav-icon"></i>
+                            <span>HowTo</span>
+                        </a>
+                        <a href="/help" class="header-icon-button" title="도움말">
+                            <i class="fas fa-question-circle text-base"></i>
+                        </a>
+                        <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
+                            <i class="fas fa-user-circle text-base"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -519,7 +522,7 @@ const renderLayout = (
         ` : ''}
         
         <!-- Main Content -->
-        <main class="${isHomepage ? '' : 'container mx-auto px-4 py-8'}">
+        <main class="${isHomepage ? '' : 'mx-auto px-4 py-8'}">
             ${content}
         </main>
         
