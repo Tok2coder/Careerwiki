@@ -1706,7 +1706,12 @@ const renderOrganizationsList = (profile: UnifiedJobDetail): string => {
     .map((org) => {
       const name = escapeHtml(org.name.trim())
       if (org.url) {
-        return `<li><a href="${escapeHtml(org.url)}" target="_blank" rel="noopener" class="text-sm text-wiki-primary hover:text-wiki-secondary transition">${name}</a></li>`
+        // URL에 프로토콜이 없으면 https:// 추가
+        let fullUrl = org.url.trim()
+        if (!/^https?:\/\//i.test(fullUrl)) {
+          fullUrl = `https://${fullUrl}`
+        }
+        return `<li><a href="${escapeHtml(fullUrl)}" target="_blank" rel="noopener" class="text-sm text-wiki-primary hover:text-wiki-secondary transition">${name}</a></li>`
       }
       return `<li class="text-sm text-wiki-text">${name}</li>`
     })
