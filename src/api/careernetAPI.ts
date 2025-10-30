@@ -619,7 +619,7 @@ export const normalizeCareerNetJobDetail = (job: Job): UnifiedJobDetail => {
     duties: workDescriptions,
     prospect: forecastText,
     salary: encyc.baseInfo?.wage ? `${encyc.baseInfo.wage}만원` : undefined,
-    satisfaction: encyc.baseInfo?.satisfication ? String(encyc.baseInfo.satisfication) : undefined,
+    satisfaction: (encyc.baseInfo?.satisfication !== undefined && encyc.baseInfo?.satisfication !== null) ? String(encyc.baseInfo.satisfication) : undefined,
     abilities: encyc.abilityList?.map(a => a.ability_name).filter(Boolean).join(', '),
     personality: encyc.aptitudeList?.map(a => a.aptitude).filter(Boolean).join(', '),
     interests: encyc.interestList?.map(i => i.interest).filter(Boolean).join(', '),

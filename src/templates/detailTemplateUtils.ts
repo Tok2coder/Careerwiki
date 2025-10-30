@@ -153,7 +153,7 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
 
   return `
     <article ${attributeParts.join(' ')}>
-      <h3 class="content-heading font-semibold text-wiki-text flex items-center gap-2">
+      <h3 class="section-title font-semibold text-wiki-text flex items-center gap-2">
         <i class="fas ${icon} text-wiki-secondary"></i>
         <span>${escapeHtml(title)}</span>
       </h3>
