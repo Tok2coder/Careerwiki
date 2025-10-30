@@ -2439,7 +2439,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="max-w-[1400px] mx-auto space-y-8">
       <section class="glass-card p-8 rounded-2xl space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-5">
           ${profile.category?.name ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group" aria-hidden="true"></i>${escapeHtml(profile.category.name)}</span>` : ''}

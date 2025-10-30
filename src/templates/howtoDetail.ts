@@ -526,7 +526,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail): string => {
   const titleId = `howto-title-${escapeHtml(guide.telemetryId)}`
 
   return `
-    <article class="max-w-6xl mx-auto space-y-10" data-cw-detail-root data-cw-detail-kind="howto" aria-labelledby="${titleId}">
+    <article class="max-w-[1400px] mx-auto space-y-10" data-cw-detail-root data-cw-detail-kind="howto" aria-labelledby="${titleId}">
       <header class="glass-card p-8 rounded-2xl space-y-6" data-cw-detail-hero data-cw-telemetry-component="howto-hero" data-cw-telemetry-scope="howto-hero">
         <div class="space-y-4">
           <div class="flex flex-wrap items-center gap-3">
