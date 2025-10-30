@@ -654,12 +654,12 @@ const renderLayout = (
             }
             
             function scrollToTOC() {
-                // 히어로 섹션 바로 다음 첫 번째 카드로 이동
-                const firstCard = document.querySelector('[data-cw-detail-card]');
-                if (firstCard) {
+                // 탭 네비게이션 (개요 상세정보 탭)으로 이동
+                const tablist = document.querySelector('[role="tablist"][aria-label*="직업"][aria-label*="탭"], [role="tablist"][aria-label*="전공"][aria-label*="탭"]');
+                if (tablist) {
                     // 헤더 높이 고려 (약 80px + 여유 20px)
                     const headerOffset = 100;
-                    const elementPosition = firstCard.getBoundingClientRect().top;
+                    const elementPosition = tablist.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
                     
                     window.scrollTo({
@@ -667,8 +667,20 @@ const renderLayout = (
                         behavior: 'smooth'
                     });
                 } else {
-                    // 카드가 없으면 페이지 상단으로
-                    scrollToTop();
+                    // 탭리스트가 없으면 첫 번째 카드로
+                    const firstCard = document.querySelector('[data-cw-detail-card]');
+                    if (firstCard) {
+                        const headerOffset = 100;
+                        const elementPosition = firstCard.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        scrollToTop();
+                    }
                 }
             }
             
