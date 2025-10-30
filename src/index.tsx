@@ -180,6 +180,62 @@ const renderLayout = (
           /* 기본 콘텐츠 폰트 크기 정의 */
           .content-text { font-size: 15px; }
           .content-heading { font-size: 16px; }
+          .section-title { font-size: 18px; }
+          
+          /* 플로팅 네비게이션 버튼 */
+          .floating-nav {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+          }
+          .floating-nav-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 26, 46, 0.75);
+            border: 1px solid rgba(100, 181, 246, 0.3);
+            color: #64b5f6;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+          }
+          .floating-nav-btn:hover {
+            background: rgba(67, 97, 238, 0.85);
+            border-color: rgba(100, 181, 246, 0.6);
+            color: #ffffff;
+            transform: translateX(-4px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+          }
+          .floating-nav-btn .label {
+            position: absolute;
+            right: 64px;
+            white-space: nowrap;
+            padding: 8px 14px;
+            background: rgba(26, 26, 46, 0.95);
+            border: 1px solid rgba(100, 181, 246, 0.4);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #e0e0e0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          }
+          .floating-nav-btn:hover .label {
+            opacity: 1;
+          }
           
           .gradient-text {
             background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%);
@@ -574,6 +630,67 @@ const renderLayout = (
                 });
             }
         </script>
+        
+        <!-- 플로팅 네비게이션 버튼 -->
+        <div class="floating-nav">
+            <button class="floating-nav-btn" onclick="scrollToTop()" aria-label="맨 위로 이동">
+                <i class="fas fa-arrow-up"></i>
+                <span class="label">맨 위로</span>
+            </button>
+            <button class="floating-nav-btn" onclick="scrollToTOC()" aria-label="목차로 이동">
+                <i class="fas fa-list"></i>
+                <span class="label">목차</span>
+            </button>
+            <button class="floating-nav-btn" onclick="scrollToComments()" aria-label="댓글로 이동">
+                <i class="fas fa-comment"></i>
+                <span class="label">댓글</span>
+            </button>
+        </div>
+        
+        <script>
+            // 플로팅 네비게이션 함수
+            function scrollToTop() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            function scrollToTOC() {
+                // 히어로 섹션 바로 다음 첫 번째 카드로 이동
+                const firstCard = document.querySelector('[data-cw-detail-card]');
+                if (firstCard) {
+                    // 헤더 높이 고려 (약 80px + 여유 20px)
+                    const headerOffset = 100;
+                    const elementPosition = firstCard.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // 카드가 없으면 페이지 상단으로
+                    scrollToTop();
+                }
+            }
+            
+            function scrollToComments() {
+                const comments = document.getElementById('cw-comments');
+                if (comments) {
+                    // 헤더 높이 고려 (약 80px + 여유 20px)
+                    const headerOffset = 100;
+                    const elementPosition = comments.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // 댓글이 없으면 페이지 하단으로
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }
+            }
+        </script>
+        
         <script src="/static/api-client.js"></script>
     </body>
     </html>
