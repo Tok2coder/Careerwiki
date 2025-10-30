@@ -211,16 +211,28 @@ export const mergeJobData = (rawApiData?: RawApiData): MergedJobData => {
       simple: careernet?.encyclopedia?.abilityList || null,
       summary: goyong24?.summary?.jobAbil || null,
       detailedComparison: {
-        withinJob: goyong24?.ablKnwEnv?.jobAbilCmpr || null,
-        betweenJobs: goyong24?.ablKnwEnv?.jobAbil || null
+        importance: {
+          withinJob: goyong24?.ablKnwEnv?.jobAbilCmpr || null,
+          betweenJobs: goyong24?.ablKnwEnv?.jobAbil || null
+        },
+        level: {
+          withinJob: goyong24?.ablKnwEnv?.jobAbilLvlCmpr || null,
+          betweenJobs: goyong24?.ablKnwEnv?.jobAbilLvl || null
+        }
       }
     },
     knowledge: {
       simple: careernet?.encyclopedia?.performList?.knowledge || null,
       summary: goyong24?.summary?.knowldg || null,
       detailedComparison: {
-        withinJob: goyong24?.ablKnwEnv?.KnwldgCmpr || null,
-        betweenJobs: goyong24?.ablKnwEnv?.Knwldg || null
+        importance: {
+          withinJob: goyong24?.ablKnwEnv?.KnwldgCmpr || null,
+          betweenJobs: goyong24?.ablKnwEnv?.Knwldg || null
+        },
+        level: {
+          withinJob: goyong24?.ablKnwEnv?.KnwldgLvlCmpr || null,
+          betweenJobs: goyong24?.ablKnwEnv?.KnwldgLvl || null
+        }
       }
     },
     education: {

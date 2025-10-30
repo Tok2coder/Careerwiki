@@ -2211,31 +2211,83 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
   }
 
-  // Type C: 지식 상세 비교
-  const knowledgeComparison = mergedData.knowledge.detailedComparison
-  if (knowledgeComparison && (knowledgeComparison.withinJob || knowledgeComparison.betweenJobs)) {
-    const knowledgeHtml = renderComparisonData(
-      knowledgeComparison.withinJob,
-      knowledgeComparison.betweenJobs,
-      '필수 지식',
-      'fa-book'
-    )
-    if (knowledgeHtml) {
-      pushDetailCard('지식 분석', 'fa-book', knowledgeHtml)
+  // Type C: 지식 분석 (중요도 + 수준 통합)
+  const knowledgeComparison = mergedData.knowledge?.detailedComparison
+  const knowledgeImportance = knowledgeComparison?.importance
+  const knowledgeLevel = knowledgeComparison?.level
+  
+  if (knowledgeComparison && ((knowledgeImportance && (knowledgeImportance.withinJob || knowledgeImportance.betweenJobs)) ||
+      (knowledgeLevel && (knowledgeLevel.withinJob || knowledgeLevel.betweenJobs)))) {
+    const knowledgeBlocks = []
+    
+    // 지식 중요도
+    if (knowledgeImportance && (knowledgeImportance.withinJob || knowledgeImportance.betweenJobs)) {
+      const importanceHtml = renderComparisonData(
+        knowledgeImportance.withinJob,
+        knowledgeImportance.betweenJobs,
+        '지식 중요도',
+        'fa-book'
+      )
+      if (importanceHtml) {
+        knowledgeBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">지식 중요도</h3>${importanceHtml}</div>`)
+      }
+    }
+    
+    // 지식 수준
+    if (knowledgeLevel && (knowledgeLevel.withinJob || knowledgeLevel.betweenJobs)) {
+      const levelHtml = renderComparisonData(
+        knowledgeLevel.withinJob,
+        knowledgeLevel.betweenJobs,
+        '지식 수준',
+        'fa-layer-group'
+      )
+      if (levelHtml) {
+        knowledgeBlocks.push(`<div class="${knowledgeBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">지식 수준</h3>${levelHtml}</div>`)
+      }
+    }
+    
+    if (knowledgeBlocks.length > 0) {
+      pushDetailCard('지식 분석', 'fa-book', knowledgeBlocks.join(''))
     }
   }
 
-  // Type C: 능력 상세 비교
-  const abilityComparison = mergedData.abilities.detailedComparison
-  if (abilityComparison && (abilityComparison.withinJob || abilityComparison.betweenJobs)) {
-    const abilityHtml = renderComparisonData(
-      abilityComparison.withinJob,
-      abilityComparison.betweenJobs,
-      '필수 능력',
-      'fa-brain'
-    )
-    if (abilityHtml) {
-      pushDetailCard('업무수행능력 분석', 'fa-brain', abilityHtml)
+  // Type C: 업무수행능력 분석 (중요도 + 수준 통합)
+  const abilityComparison = mergedData.abilities?.detailedComparison
+  const abilityImportance = abilityComparison?.importance
+  const abilityLevel = abilityComparison?.level
+  
+  if (abilityComparison && ((abilityImportance && (abilityImportance.withinJob || abilityImportance.betweenJobs)) ||
+      (abilityLevel && (abilityLevel.withinJob || abilityLevel.betweenJobs)))) {
+    const abilityBlocks = []
+    
+    // 업무수행능력 중요도
+    if (abilityImportance && (abilityImportance.withinJob || abilityImportance.betweenJobs)) {
+      const importanceHtml = renderComparisonData(
+        abilityImportance.withinJob,
+        abilityImportance.betweenJobs,
+        '업무수행능력 중요도',
+        'fa-brain'
+      )
+      if (importanceHtml) {
+        abilityBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무수행능력 중요도</h3>${importanceHtml}</div>`)
+      }
+    }
+    
+    // 업무수행능력 수준
+    if (abilityLevel && (abilityLevel.withinJob || abilityLevel.betweenJobs)) {
+      const levelHtml = renderComparisonData(
+        abilityLevel.withinJob,
+        abilityLevel.betweenJobs,
+        '업무수행능력 수준',
+        'fa-star-half-alt'
+      )
+      if (levelHtml) {
+        abilityBlocks.push(`<div class="${abilityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무수행능력 수준</h3>${levelHtml}</div>`)
+      }
+    }
+    
+    if (abilityBlocks.length > 0) {
+      pushDetailCard('업무수행능력 분석', 'fa-brain', abilityBlocks.join(''))
     }
   }
 
