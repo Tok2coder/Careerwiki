@@ -510,10 +510,151 @@ export interface Goyong24JobDetailPath {
   kecoList?: Array<{ kecoCd: string; kecoNm: string }>
 }
 
+export interface Goyong24JobDetailSalProspect {
+  jobCd: string
+  jobLrclNm?: string
+  jobMdclNm?: string
+  jobSmclNm?: string
+  sal?: string
+  jobSatis?: string
+  jobProspect?: string
+  jobSumProspect?: Array<{
+    jobProspectNm: string
+    jobProspectRatio: string
+    jobProspectInqYr: string
+  }>
+  jobStatusList?: Array<{ jobCd: string; jobNm: string }>
+}
+
+export interface Goyong24JobDetailAblKnwEnv {
+  jobCd: string
+  jobLrclNm?: string
+  jobMdclNm?: string
+  jobSmclNm?: string
+  jobAbilCmpr?: Array<{
+    jobAblStatusCmpr: string
+    jobAblNmCmpr: string
+    jobAblContCmpr: string
+  }>
+  jobAbil?: Array<{
+    jobAblStatus: string
+    jobAblNm: string
+    jobAblCont: string
+  }>
+  jobAbilLvlCmpr?: Array<{
+    jobAblLvlStatusCmpr: string
+    jobAblLvlNmCmpr: string
+    jobAblLvlContCmpr: string
+  }>
+  jobAbilLvl?: Array<{
+    jobAblLvlStatus: string
+    jobAblLvlNm: string
+    jobAblLvlCont: string
+  }>
+  KnwldgCmpr?: Array<{
+    knwldgStatusCmpr: string
+    knwldgNmCmpr: string
+    knwldgContCmpr: string
+  }>
+  Knwldg?: Array<{
+    knwldgStatus: string
+    knwldgNm: string
+    knwldgCont: string
+  }>
+  KnwldgLvlCmpr?: Array<{
+    knwldgLvlStatusCmpr: string
+    knwldgLvlNmCmpr: string
+    knwldgLvlContCmpr: string
+  }>
+  KnwldgLvl?: Array<{
+    knwldgLvlStatus: string
+    knwldgLvlNm: string
+    knwldgLvlCont: string
+  }>
+  jobsEnvCmpr?: Array<{
+    jobEnvStatusCmpr: string
+    jobEnvNmCmpr: string
+    jobEnvContCmpr: string
+  }>
+  jobsEnv?: Array<{
+    jobEnvStatus: string
+    jobEnvNm: string
+    jobEnvCont: string
+  }>
+}
+
+export interface Goyong24JobDetailChrIntrVals {
+  jobCd: string
+  jobLrclNm?: string
+  jobMdclNm?: string
+  jobSmclNm?: string
+  jobChrCmpr?: Array<{
+    chrStatusCmpr: string
+    chrNmCmpr: string
+    chrContCmpr: string
+  }>
+  jobChr?: Array<{
+    chrStatus: string
+    chrNm: string
+    chrCont: string
+  }>
+  jobIntrstCmpr?: Array<{
+    intrstStatusCmpr: string
+    intrstNmCmpr: string
+    intrstContCmpr: string
+  }>
+  jobIntrst?: Array<{
+    intrstStatus: string
+    intrstNm: string
+    intrstCont: string
+  }>
+  jobValsCmpr?: Array<{
+    valsStatusCmpr: string
+    valsNmCmpr: string
+    valsContCmpr: string
+  }>
+  jobVals?: Array<{
+    valsStatus: string
+    valsNm: string
+    valsCont: string
+  }>
+}
+
+export interface Goyong24JobDetailActv {
+  jobCd: string
+  jobLrclNm?: string
+  jobMdclNm?: string
+  jobSmclNm?: string
+  jobActvImprtncCmpr?: Array<{
+    jobActvImprtncStatusCmpr: string
+    jobActvImprtncNmCmpr: string
+    jobActvImprtncContCmpr: string
+  }>
+  jobActvImprtnc?: Array<{
+    jobActvImprtncStatus: string
+    jobActvImprtncNm: string
+    jobActvImprtncCont: string
+  }>
+  jobActvLvlCmpr?: Array<{
+    jobActvLvlStatusCmpr: string
+    jobActvLvlNmCmpr: string
+    jobActvLvlContCmpr: string
+  }>
+  jobActvLvl?: Array<{
+    jobActvLvlStatus: string
+    jobActvLvlNm: string
+    jobActvLvlCont: string
+  }>
+}
+
 export interface Goyong24JobDetailAggregated {
   summary?: Goyong24JobDetailSummary
   duty?: Goyong24JobDetailDuty
   path?: Goyong24JobDetailPath
+  salProspect?: Goyong24JobDetailSalProspect
+  ablKnwEnv?: Goyong24JobDetailAblKnwEnv
+  chrIntrVals?: Goyong24JobDetailChrIntrVals
+  actv?: Goyong24JobDetailActv
 }
 
 const parseRelMajorList = (xml: string): Array<{ majorCd: string; majorNm: string }> =>
@@ -617,6 +758,206 @@ const parsePathSection = (xml: string): Goyong24JobDetailPath => {
   }
 }
 
+const parseSalProspectSection = (xml: string): Goyong24JobDetailSalProspect => {
+  const block = extractNodes(xml, 'salProspect')[0] || xml
+  
+  const jobSumProspect = extractNodes(block, 'jobSumProspect').map((entry) => ({
+    jobProspectNm: getFirstValue(entry, 'jobProspectNm'),
+    jobProspectRatio: getFirstValue(entry, 'jobProspectRatio'),
+    jobProspectInqYr: getFirstValue(entry, 'jobProspectInqYr')
+  }))
+  
+  const jobStatusList = extractNodes(block, 'jobStatusList').map((entry) => ({
+    jobCd: getFirstValue(entry, 'jobCd'),
+    jobNm: getFirstValue(entry, 'jobNm')
+  }))
+
+  return {
+    jobCd: getFirstValue(block, 'jobCd'),
+    jobLrclNm: getFirstValue(block, 'jobLrclNm'),
+    jobMdclNm: getFirstValue(block, 'jobMdclNm'),
+    jobSmclNm: getFirstValue(block, 'jobSmclNm'),
+    sal: getFirstValue(block, 'sal'),
+    jobSatis: getFirstValue(block, 'jobSatis'),
+    jobProspect: getFirstValue(block, 'jobProspect'),
+    jobSumProspect,
+    jobStatusList
+  }
+}
+
+const parseAblKnwEnvSection = (xml: string): Goyong24JobDetailAblKnwEnv => {
+  const block = extractNodes(xml, 'ablKnwEnv')[0] || xml
+
+  const jobAbilCmpr = extractNodes(block, 'jobAbilCmpr').map((entry) => ({
+    jobAblStatusCmpr: getFirstValue(entry, 'jobAblStatusCmpr'),
+    jobAblNmCmpr: getFirstValue(entry, 'jobAblNmCmpr'),
+    jobAblContCmpr: getFirstValue(entry, 'jobAblContCmpr')
+  }))
+
+  const jobAbil = extractNodes(block, 'jobAbil').map((entry) => ({
+    jobAblStatus: getFirstValue(entry, 'jobAblStatus'),
+    jobAblNm: getFirstValue(entry, 'jobAblNm'),
+    jobAblCont: getFirstValue(entry, 'jobAblCont')
+  }))
+
+  const jobAbilLvlCmpr = extractNodes(block, 'jobAbilLvlCmpr').map((entry) => ({
+    jobAblLvlStatusCmpr: getFirstValue(entry, 'jobAblLvlStatusCmpr'),
+    jobAblLvlNmCmpr: getFirstValue(entry, 'jobAblLvlNmCmpr'),
+    jobAblLvlContCmpr: getFirstValue(entry, 'jobAblLvlContCmpr')
+  }))
+
+  const jobAbilLvl = extractNodes(block, 'jobAbilLvl').map((entry) => ({
+    jobAblLvlStatus: getFirstValue(entry, 'jobAblLvlStatus'),
+    jobAblLvlNm: getFirstValue(entry, 'jobAblLvlNm'),
+    jobAblLvlCont: getFirstValue(entry, 'jobAblLvlCont')
+  }))
+
+  const KnwldgCmpr = extractNodes(block, 'KnwldgCmpr').map((entry) => ({
+    knwldgStatusCmpr: getFirstValue(entry, 'knwldgStatusCmpr'),
+    knwldgNmCmpr: getFirstValue(entry, 'knwldgNmCmpr'),
+    knwldgContCmpr: getFirstValue(entry, 'knwldgContCmpr')
+  }))
+
+  const Knwldg = extractNodes(block, 'Knwldg').map((entry) => ({
+    knwldgStatus: getFirstValue(entry, 'knwldgStatus'),
+    knwldgNm: getFirstValue(entry, 'knwldgNm'),
+    knwldgCont: getFirstValue(entry, 'knwldgCont')
+  }))
+
+  const KnwldgLvlCmpr = extractNodes(block, 'KnwldgLvlCmpr').map((entry) => ({
+    knwldgLvlStatusCmpr: getFirstValue(entry, 'knwldgLvlStatusCmpr'),
+    knwldgLvlNmCmpr: getFirstValue(entry, 'knwldgLvlNmCmpr'),
+    knwldgLvlContCmpr: getFirstValue(entry, 'knwldgLvlContCmpr')
+  }))
+
+  const KnwldgLvl = extractNodes(block, 'KnwldgLvl').map((entry) => ({
+    knwldgLvlStatus: getFirstValue(entry, 'knwldgLvlStatus'),
+    knwldgLvlNm: getFirstValue(entry, 'knwldgLvlNm'),
+    knwldgLvlCont: getFirstValue(entry, 'knwldgLvlCont')
+  }))
+
+  const jobsEnvCmpr = extractNodes(block, 'jobsEnvCmpr').map((entry) => ({
+    jobEnvStatusCmpr: getFirstValue(entry, 'jobEnvStatusCmpr'),
+    jobEnvNmCmpr: getFirstValue(entry, 'jobEnvNmCmpr'),
+    jobEnvContCmpr: getFirstValue(entry, 'jobEnvContCmpr')
+  }))
+
+  const jobsEnv = extractNodes(block, 'jobsEnv').map((entry) => ({
+    jobEnvStatus: getFirstValue(entry, 'jobEnvStatus'),
+    jobEnvNm: getFirstValue(entry, 'jobEnvNm'),
+    jobEnvCont: getFirstValue(entry, 'jobEnvCont')
+  }))
+
+  return {
+    jobCd: getFirstValue(block, 'jobCd'),
+    jobLrclNm: getFirstValue(block, 'jobLrclNm'),
+    jobMdclNm: getFirstValue(block, 'jobMdclNm'),
+    jobSmclNm: getFirstValue(block, 'jobSmclNm'),
+    jobAbilCmpr,
+    jobAbil,
+    jobAbilLvlCmpr,
+    jobAbilLvl,
+    KnwldgCmpr,
+    Knwldg,
+    KnwldgLvlCmpr,
+    KnwldgLvl,
+    jobsEnvCmpr,
+    jobsEnv
+  }
+}
+
+const parseChrIntrValsSection = (xml: string): Goyong24JobDetailChrIntrVals => {
+  const block = extractNodes(xml, 'chrIntrVals')[0] || xml
+
+  const jobChrCmpr = extractNodes(block, 'jobChrCmpr').map((entry) => ({
+    chrStatusCmpr: getFirstValue(entry, 'chrStatusCmpr'),
+    chrNmCmpr: getFirstValue(entry, 'chrNmCmpr'),
+    chrContCmpr: getFirstValue(entry, 'chrContCmpr')
+  }))
+
+  const jobChr = extractNodes(block, 'jobChr').map((entry) => ({
+    chrStatus: getFirstValue(entry, 'chrStatus'),
+    chrNm: getFirstValue(entry, 'chrNm'),
+    chrCont: getFirstValue(entry, 'chrCont')
+  }))
+
+  const jobIntrstCmpr = extractNodes(block, 'jobIntrstCmpr').map((entry) => ({
+    intrstStatusCmpr: getFirstValue(entry, 'intrstStatusCmpr'),
+    intrstNmCmpr: getFirstValue(entry, 'intrstNmCmpr'),
+    intrstContCmpr: getFirstValue(entry, 'intrstContCmpr')
+  }))
+
+  const jobIntrst = extractNodes(block, 'jobIntrst').map((entry) => ({
+    intrstStatus: getFirstValue(entry, 'intrstStatus'),
+    intrstNm: getFirstValue(entry, 'intrstNm'),
+    intrstCont: getFirstValue(entry, 'intrstCont')
+  }))
+
+  const jobValsCmpr = extractNodes(block, 'jobValsCmpr').map((entry) => ({
+    valsStatusCmpr: getFirstValue(entry, 'valsStatusCmpr'),
+    valsNmCmpr: getFirstValue(entry, 'valsNmCmpr'),
+    valsContCmpr: getFirstValue(entry, 'valsContCmpr')
+  }))
+
+  const jobVals = extractNodes(block, 'jobVals').map((entry) => ({
+    valsStatus: getFirstValue(entry, 'valsStatus'),
+    valsNm: getFirstValue(entry, 'valsNm'),
+    valsCont: getFirstValue(entry, 'valsCont')
+  }))
+
+  return {
+    jobCd: getFirstValue(block, 'jobCd'),
+    jobLrclNm: getFirstValue(block, 'jobLrclNm'),
+    jobMdclNm: getFirstValue(block, 'jobMdclNm'),
+    jobSmclNm: getFirstValue(block, 'jobSmclNm'),
+    jobChrCmpr,
+    jobChr,
+    jobIntrstCmpr,
+    jobIntrst,
+    jobValsCmpr,
+    jobVals
+  }
+}
+
+const parseActvSection = (xml: string): Goyong24JobDetailActv => {
+  const block = extractNodes(xml, 'jobActv')[0] || xml
+
+  const jobActvImprtncCmpr = extractNodes(block, 'jobActvImprtncCmpr').map((entry) => ({
+    jobActvImprtncStatusCmpr: getFirstValue(entry, 'jobActvImprtncStatusCmpr'),
+    jobActvImprtncNmCmpr: getFirstValue(entry, 'jobActvImprtncNmCmpr'),
+    jobActvImprtncContCmpr: getFirstValue(entry, 'jobActvImprtncContCmpr')
+  }))
+
+  const jobActvImprtnc = extractNodes(block, 'jobActvImprtnc').map((entry) => ({
+    jobActvImprtncStatus: getFirstValue(entry, 'jobActvImprtncStatus'),
+    jobActvImprtncNm: getFirstValue(entry, 'jobActvImprtncNm'),
+    jobActvImprtncCont: getFirstValue(entry, 'jobActvImprtncCont')
+  }))
+
+  const jobActvLvlCmpr = extractNodes(block, 'jobActvLvlCmpr').map((entry) => ({
+    jobActvLvlStatusCmpr: getFirstValue(entry, 'jobActvLvlStatusCmpr'),
+    jobActvLvlNmCmpr: getFirstValue(entry, 'jobActvLvlNmCmpr'),
+    jobActvLvlContCmpr: getFirstValue(entry, 'jobActvLvlContCmpr')
+  }))
+
+  const jobActvLvl = extractNodes(block, 'jobActvLvl').map((entry) => ({
+    jobActvLvlStatus: getFirstValue(entry, 'jobActvLvlStatus'),
+    jobActvLvlNm: getFirstValue(entry, 'jobActvLvlNm'),
+    jobActvLvlCont: getFirstValue(entry, 'jobActvLvlCont')
+  }))
+
+  return {
+    jobCd: getFirstValue(block, 'jobCd'),
+    jobLrclNm: getFirstValue(block, 'jobLrclNm'),
+    jobMdclNm: getFirstValue(block, 'jobMdclNm'),
+    jobSmclNm: getFirstValue(block, 'jobSmclNm'),
+    jobActvImprtncCmpr,
+    jobActvImprtnc,
+    jobActvLvlCmpr,
+    jobActvLvl
+  }
+}
+
 export const fetchGoyong24JobList = async (
   params: Goyong24JobListParams = {},
   env?: EnvWithGoyong24Keys
@@ -646,7 +987,11 @@ export const fetchGoyong24JobList = async (
 const jobDetailEndpoints = {
   summary: { endpoint: 'callOpenApiSvcInfo212D01', dtlGb: '1' },
   duty: { endpoint: 'callOpenApiSvcInfo212D02', dtlGb: '2' },
-  path: { endpoint: 'callOpenApiSvcInfo212D03', dtlGb: '3' }
+  path: { endpoint: 'callOpenApiSvcInfo212D03', dtlGb: '3' },
+  salProspect: { endpoint: 'callOpenApiSvcInfo212D04', dtlGb: '4' },
+  ablKnwEnv: { endpoint: 'callOpenApiSvcInfo212D05', dtlGb: '5' },
+  chrIntrVals: { endpoint: 'callOpenApiSvcInfo212D06', dtlGb: '6' },
+  actv: { endpoint: 'callOpenApiSvcInfo212D07', dtlGb: '7' }
 } as const
 
 type JobDetailSectionKey = keyof typeof jobDetailEndpoints
@@ -671,16 +1016,24 @@ export const fetchGoyong24JobDetail = async (
   jobCd: string,
   env?: EnvWithGoyong24Keys
 ): Promise<Goyong24JobDetailAggregated> => {
-  const [summaryXml, dutyXml, pathXml] = await Promise.all([
+  const [summaryXml, dutyXml, pathXml, salProspectXml, ablKnwEnvXml, chrIntrValsXml, actvXml] = await Promise.all([
     fetchJobDetailSection(jobCd, 'summary', env),
     fetchJobDetailSection(jobCd, 'duty', env),
-    fetchJobDetailSection(jobCd, 'path', env)
+    fetchJobDetailSection(jobCd, 'path', env),
+    fetchJobDetailSection(jobCd, 'salProspect', env),
+    fetchJobDetailSection(jobCd, 'ablKnwEnv', env),
+    fetchJobDetailSection(jobCd, 'chrIntrVals', env),
+    fetchJobDetailSection(jobCd, 'actv', env)
   ])
 
   return {
     summary: parseSummarySection(summaryXml),
     duty: parseDutySection(dutyXml),
-    path: parsePathSection(pathXml)
+    path: parsePathSection(pathXml),
+    salProspect: parseSalProspectSection(salProspectXml),
+    ablKnwEnv: parseAblKnwEnvSection(ablKnwEnvXml),
+    chrIntrVals: parseChrIntrValsSection(chrIntrValsXml),
+    actv: parseActvSection(actvXml)
   }
 }
 

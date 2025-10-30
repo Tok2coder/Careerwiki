@@ -15,11 +15,16 @@ import {
   SampleCommentPayload
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
+import { mergeJobData, type MergedJobData } from '../services/jobDataMerger'
 
 export interface UnifiedJobDetailTemplateParams {
   profile: UnifiedJobDetail
   partials?: Partial<Record<DataSource, UnifiedJobDetail | null>>
   sources?: SourceStatusRecord
+  rawApiData?: {
+    careernet?: any
+    goyong24?: any
+  }
 }
 
 const SOURCE_DESCRIPTIONS: Record<DataSource, string> = {
@@ -203,6 +208,132 @@ const renderMatrixValue = (value: unknown, labelMap?: Record<string, string>): s
       .join('')}</ul>`
   }
   return `<span class="text-[11px] text-wiki-text">${escapeHtml(String(value))}</span>`
+}
+
+/**
+ * 직업 내/직업 간 비교 데이터를 렌더링하는 헬퍼 함수
+ * Goyong24 API의 비교 데이터를 시각화합니다.
+ */
+const renderComparisonData = (
+  withinJob: any,
+  betweenJobs: any,
+  title: string,
+  icon: string
+): string => {
+  if (!withinJob && !betweenJobs) {
+    return ''
+  }
+
+  const blocks: string[] = []
+
+  // 직업 내 비교 (Within Job)
+  if (withinJob && Array.isArray(withinJob) && withinJob.length > 0) {
+    const withinJobHtml = withinJob
+      .slice(0, 10) // 최대 10개 항목
+      .map((item: any) => {
+        // Goyong24 API 필드명 매핑
+        // 성격: chrNmCmpr, chrStatusCmpr
+        // 흥미: intrstNmCmpr, intrstStatusCmpr
+        // 가치관: valsNmCmpr, valsStatusCmpr
+        // 활동: jobActvImprtncNmCmpr, jobActvImprtncStatusCmpr, jobActvLvlNmCmpr, jobActvLvlStatusCmpr
+        // 지식: 미확인 (추후 확인 필요)
+        // 능력: 미확인 (추후 확인 필요)
+        const label = item.chrNmCmpr || item.intrstNmCmpr || item.valsNmCmpr || 
+                      item.jobActvImprtncNmCmpr || item.jobActvLvlNmCmpr ||
+                      item.inform || item.name || item.activity || item.list_content || ''
+        const value = item.chrStatusCmpr || item.intrstStatusCmpr || item.valsStatusCmpr ||
+                      item.jobActvImprtncStatusCmpr || item.jobActvLvlStatusCmpr ||
+                      item.importance || item.level || item.value || ''
+        
+        if (!label.trim()) return ''
+        
+        // value가 있으면 진행 바 표시, 없으면 텍스트만
+        if (value) {
+          const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
+          // 값이 1-5 범위면 100으로 스케일링 (직업 내 비교)
+          const percentage = numericValue <= 5 ? (numericValue / 5) * 100 : Math.min(numericValue, 100)
+          return `
+            <div class="mb-3">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm text-wiki-text">${escapeHtml(label)}</span>
+                <span class="text-xs text-wiki-muted">${numericValue.toFixed(1)}</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-wiki-primary h-2 rounded-full" style="width: ${percentage.toFixed(1)}%"></div>
+              </div>
+            </div>
+          `
+        }
+        return `<li class="text-sm text-wiki-text">${escapeHtml(label)}</li>`
+      })
+      .filter(Boolean)
+      .join('')
+
+    if (withinJobHtml) {
+      blocks.push(`
+        <div>
+          <h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-3">
+            <i class="${icon} mr-2"></i>직업 내 비교
+          </h3>
+          <div>${withinJobHtml}</div>
+        </div>
+      `)
+    }
+  }
+
+  // 직업 간 비교 (Between Jobs)
+  if (betweenJobs && Array.isArray(betweenJobs) && betweenJobs.length > 0) {
+    const betweenJobsHtml = betweenJobs
+      .slice(0, 10) // 최대 10개 항목
+      .map((item: any) => {
+        // Goyong24 API 필드명 매핑 (직업 간 비교는 Cmpr 없음)
+        // 성격: chrNm, chrStatus
+        // 흥미: intrstNm, intrstStatus
+        // 가치관: valsNm, valsStatus
+        // 활동: jobActvImprtncNm, jobActvImprtncStatus, jobActvLvlNm, jobActvLvlStatus
+        const label = item.chrNm || item.intrstNm || item.valsNm ||
+                      item.jobActvImprtncNm || item.jobActvLvlNm ||
+                      item.inform || item.name || item.activity || item.list_content || ''
+        const value = item.chrStatus || item.intrstStatus || item.valsStatus ||
+                      item.jobActvImprtncStatus || item.jobActvLvlStatus ||
+                      item.importance || item.level || item.value || ''
+        
+        if (!label.trim()) return ''
+        
+        if (value) {
+          const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
+          // 직업 간 비교는 0-100 범위
+          const percentage = Math.min(numericValue, 100)
+          return `
+            <div class="mb-3">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm text-wiki-text">${escapeHtml(label)}</span>
+                <span class="text-xs text-wiki-muted">${numericValue.toFixed(0)}</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-wiki-accent h-2 rounded-full" style="width: ${percentage}%"></div>
+              </div>
+            </div>
+          `
+        }
+        return `<li class="text-sm text-wiki-text">${escapeHtml(label)}</li>`
+      })
+      .filter(Boolean)
+      .join('')
+
+    if (betweenJobsHtml) {
+      blocks.push(`
+        <div class="mt-6">
+          <h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-3">
+            <i class="${icon} mr-2"></i>직업 간 비교
+          </h3>
+          <div>${betweenJobsHtml}</div>
+        </div>
+      `)
+    }
+  }
+
+  return blocks.join('')
 }
 
 const renderLawyerFieldMatrix = (
@@ -585,29 +716,50 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
   }
 
   const raw = salary.trim()
-  const matches = raw.match(/(\d[\d,]*)/g)
-  if (!matches || !matches.length) {
-    return buildCard('임금 정보', 'fa-coins', `<p class="text-sm text-wiki-text">${escapeHtml(raw)}</p>`, options ?? {})
+  
+  // 고용24 형식 파싱: "하위(25%) 8450만원, 평균(50%) 10000만원, 상위(25%) 14200만원"
+  const goyong24Pattern = /하위\(25%\)\s*([\d,]+)만원.*?평균\(50%\)\s*([\d,]+)만원.*?상위\(25%\)\s*([\d,]+)만원/
+  const goyong24Match = raw.match(goyong24Pattern)
+  
+  let dataset: { label: string; value: number }[] = []
+  
+  if (goyong24Match) {
+    // 고용24 데이터 파싱
+    const lower = Number.parseInt(goyong24Match[1].replace(/,/g, ''), 10)
+    const median = Number.parseInt(goyong24Match[2].replace(/,/g, ''), 10)
+    const upper = Number.parseInt(goyong24Match[3].replace(/,/g, ''), 10)
+    
+    dataset = [
+      { label: '하위 25%', value: lower },
+      { label: '평균 50%', value: median },
+      { label: '상위 25%', value: upper }
+    ]
+  } else {
+    // 기존 로직 (범위 또는 일반 숫자)
+    const matches = raw.match(/(\d[\d,]*)/g)
+    if (!matches || !matches.length) {
+      return buildCard('임금 정보', 'fa-coins', `<p class="text-sm text-wiki-text">${escapeHtml(raw)}</p>`, options ?? {})
+    }
+
+    const values = matches
+      .map((value) => Number.parseInt(value.replace(/,/g, ''), 10))
+      .filter((value) => Number.isFinite(value) && value > 0)
+
+    if (!values.length) {
+      return buildCard('임금 정보', 'fa-coins', `<p class="text-sm text-wiki-text">${escapeHtml(raw)}</p>`, options ?? {})
+    }
+
+    const hasRange = raw.includes('~') && values.length >= 2
+    dataset = hasRange
+      ? [
+          { label: '하한', value: values[0] },
+          { label: '상한', value: values[1] }
+        ]
+      : values.map((value, index) => ({
+          label: index === 0 ? '평균' : `지표 ${index + 1}`,
+          value
+        }))
   }
-
-  const values = matches
-    .map((value) => Number.parseInt(value.replace(/,/g, ''), 10))
-    .filter((value) => Number.isFinite(value) && value > 0)
-
-  if (!values.length) {
-    return buildCard('임금 정보', 'fa-coins', `<p class="text-sm text-wiki-text">${escapeHtml(raw)}</p>`, options ?? {})
-  }
-
-  const hasRange = raw.includes('~') && values.length >= 2
-  const dataset = hasRange
-    ? [
-        { label: '하한', value: values[0] },
-        { label: '상한', value: values[1] }
-      ]
-    : values.map((value, index) => ({
-        label: index === 0 ? '평균' : `지표 ${index + 1}`,
-        value
-      }))
 
   const maxValue = Math.max(...dataset.map((item) => item.value))
   const barMarkup = dataset
@@ -1276,7 +1428,10 @@ const renderKecoCodeList = (profile: UnifiedJobDetail): string => {
 
 
 
-export const renderUnifiedJobDetail = ({ profile, partials, sources }: UnifiedJobDetailTemplateParams): string => {
+export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData }: UnifiedJobDetailTemplateParams): string => {
+  // 병합된 데이터 생성 (Type A/B/C/D 규칙 적용)
+  const mergedData = mergeJobData(rawApiData)
+  
   const telemetryVariant = resolveJobTelemetryVariant(profile)
   const telemetryVariantAttr = telemetryVariant ? ` data-cw-telemetry-variant="${escapeHtml(telemetryVariant)}"` : ''
   const quickStats = renderQuickStats(
@@ -1333,31 +1488,124 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources }: UnifiedJo
     }
   }
 
-  if (profile.summary?.trim() || profile.duties?.trim()) {
-    const introBlocks = [
-      profile.summary?.trim()
-        ? `<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">직업 소개</h3>${formatRichText(profile.summary)}</div>`
-        : '',
-      profile.duties?.trim()
-        ? `<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">주요 업무</h3>${formatRichText(profile.duties)}</div>`
-        : ''
-    ].join('')
-    pushOverviewCard('하는 일', 'fa-rocket', introBlocks)
+  // Type C: 업무 설명 (계층적 활용 - simple for overview)
+  const workSimple = mergedData.work.simple
+  const workSummary = mergedData.work.summary || profile.summary
+  
+  if (workSimple || workSummary || profile.duties?.trim()) {
+    const introBlocks = []
+    
+    // 직업 소개
+    if (typeof workSummary === 'string' && workSummary?.trim()) {
+      introBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">직업 소개</h3>${formatRichText(workSummary)}</div>`)
+    }
+    
+    // 주요 업무
+    if (workSimple && Array.isArray(workSimple) && workSimple.length > 0) {
+      const workList = workSimple
+        .map((item: any) => {
+          // work 필드만 추출
+          const text = typeof item === 'string' ? item : item.work || item.list_content || ''
+          return text.trim() ? `<li>${escapeHtml(text)}</li>` : ''
+        })
+        .filter(Boolean)
+        .join('')
+      if (workList) {
+        introBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">주요 업무</h3><ul class="list-disc list-inside space-y-1">${workList}</ul></div>`)
+      }
+    } else if (profile.duties?.trim()) {
+      introBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">주요 업무</h3>${formatRichText(profile.duties)}</div>`)
+    }
+    
+    if (introBlocks.length > 0) {
+      pushOverviewCard('하는 일', 'fa-rocket', introBlocks.join(''))
+    }
   }
 
-  if (profile.prospect?.trim()) {
-    pushOverviewCard('커리어 전망', 'fa-chart-line', formatRichText(profile.prospect))
+  // Type B: 전망 (우선순위 선택 - primary 사용)
+  const prospectPrimary = mergedData.prospect.primary || profile.prospect
+  if (prospectPrimary) {
+    let prospectHtml = ''
+    if (Array.isArray(prospectPrimary) && prospectPrimary.length > 0) {
+      // 배열인 경우 각 항목을 블록으로 만들고 첫 단어 들여쓰기
+      const prospectBlocks = prospectPrimary
+        .map((item: any) => {
+          const text = typeof item === 'string' ? item : item.list_content || ''
+          if (!text.trim()) return ''
+          // 첫 단어 들여쓰기를 위해 <span> 추가
+          return `<div class="mb-3"><span class="inline-block w-4"></span>${escapeHtml(text)}</div>`
+        })
+        .filter(Boolean)
+        .join('')
+      prospectHtml = `<div class="space-y-2">${prospectBlocks}</div>`
+    } else if (typeof prospectPrimary === 'string') {
+      // 문자열인 경우 줄바꿈을 블록으로 변환
+      const lines = prospectPrimary.split('\n').filter(line => line.trim())
+      if (lines.length > 1) {
+        prospectHtml = `<div class="space-y-2">${lines.map(line => `<div class="mb-3"><span class="inline-block w-4"></span>${escapeHtml(line)}</div>`).join('')}</div>`
+      } else {
+        prospectHtml = formatRichText(prospectPrimary)
+      }
+    }
+    
+    if (prospectHtml?.trim()) {
+      pushOverviewCard('커리어 전망', 'fa-chart-line', prospectHtml)
+    }
   }
 
-  const abilityBlocks = [
-    profile.abilities?.trim()
-      ? `<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3>${formatRichText(profile.abilities)}</div>`
-      : '',
-    profile.technKnow?.trim()
-      ? `<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">활용 기술</h3>${formatRichText(profile.technKnow)}</div>`
-      : ''
-  ].filter(Boolean)
-  if (abilityBlocks.length) {
+  // Type C: 능력 & 지식 (계층적 활용 - simple for overview)
+  const abilitiesSimple = mergedData.abilities.simple
+  const knowledgeSimple = mergedData.knowledge.simple
+  
+  const abilityBlocks = []
+  
+  // 능력 섹션
+  if (abilitiesSimple && Array.isArray(abilitiesSimple) && abilitiesSimple.length > 0) {
+    const abilityList = abilitiesSimple
+      .slice(0, 10)
+      .map((item: any) => {
+        const text = typeof item === 'string' ? item : item.list_content || item.ability_name || JSON.stringify(item)
+        return `<li>${escapeHtml(text)}</li>`
+      })
+      .join('')
+    abilityBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3><ul class="list-disc list-inside space-y-1">${abilityList}</ul></div>`)
+  } else if (typeof profile.abilities === 'string' && profile.abilities?.trim()) {
+    abilityBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3>${formatRichText(profile.abilities)}</div>`)
+  }
+  
+  // 지식 섹션
+  if (knowledgeSimple && Array.isArray(knowledgeSimple) && knowledgeSimple.length > 0) {
+    const knowledgeList = knowledgeSimple
+      .slice(0, 10)
+      .map((item: any) => {
+        // knowledge 필드 또는 inform 필드를 사용 (중요도 있으면 함께 표시)
+        if (typeof item === 'string') {
+          return `<li>${escapeHtml(item)}</li>`
+        }
+        const knowledgeName = item.knowledge || item.list_content || item.knowledge_name || ''
+        const inform = item.inform || ''
+        const importance = item.importance
+        
+        // inform이 더 상세한 설명이므로 우선 사용
+        const displayText = inform || knowledgeName
+        if (!displayText.trim()) return ''
+        
+        // 중요도가 있으면 함께 표시
+        if (importance) {
+          return `<li>${escapeHtml(displayText)} <span class="text-wiki-muted text-xs">(중요도 ${importance})</span></li>`
+        }
+        return `<li>${escapeHtml(displayText)}</li>`
+      })
+      .filter(Boolean)
+      .join('')
+    if (knowledgeList) {
+      abilityBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">필수 지식</h3><ul class="list-disc list-inside space-y-1">${knowledgeList}</ul></div>`)
+    }
+  } else if (typeof profile.technKnow === 'string' && profile.technKnow?.trim()) {
+    abilityBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">활용 기술</h3>${formatRichText(profile.technKnow)}</div>`)
+  }
+  
+  if (abilityBlocks.length > 0) {
     pushOverviewCard('핵심 능력', 'fa-bolt', abilityBlocks.join(''))
   }
 
@@ -1376,8 +1624,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources }: UnifiedJo
     pushOverviewCard('적성 및 흥미', 'fa-handshake', traitBlocks.join(''))
   }
 
+  // Type B: 임금 (우선순위 선택 - primary 사용)
+  const salaryPrimary = mergedData.salary.primary || profile.salary
   const salaryAnchor = anchorIdFactory('overview', '임금 정보')
-  const salaryCard = renderSalaryCard(profile.salary, {
+  const salaryCard = renderSalaryCard(salaryPrimary, {
     anchorId: salaryAnchor,
     telemetryScope: 'job-overview-card',
     telemetryComponent: 'job-overview-salary-card'
@@ -1421,11 +1671,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources }: UnifiedJo
     pushDetailCard('업무 수행 지표', 'fa-chart-area', activityBlocks)
   }
 
+  // Type C: 학력 분포 (계층적 활용 - detailedDistribution 사용)
+  const educationDistribution = mergedData.education.detailedDistribution || profile.educationDistribution
   const educationAnchor = anchorIdFactory('details', '학력 분포')
   const educationCard = renderDistributionBars(
     '학력 분포',
     'fa-user-graduate',
-    profile.educationDistribution,
+    educationDistribution,
     {
       middleSchoolOrLess: '중학교 이하',
       highSchool: '고등학교',
@@ -1444,11 +1696,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources }: UnifiedJo
     detailCards.push({ id: educationAnchor, label: '학력 분포', icon: 'fa-user-graduate', markup: educationCard })
   }
 
+  // Type C: 전공 분포 (계층적 활용 - detailedDistribution 사용)
+  const majorDistribution = mergedData.major.detailedDistribution || profile.majorDistribution
   const majorAnchor = anchorIdFactory('details', '전공 분포')
   const majorCard = renderDistributionBars(
     '전공 분포',
     'fa-book-open-reader',
-    profile.majorDistribution,
+    majorDistribution,
     {
       humanities: '인문계열',
       social: '사회계열',
@@ -1468,6 +1722,157 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources }: UnifiedJo
     detailCards.push({ id: majorAnchor, label: '전공 분포', icon: 'fa-book-open-reader', markup: majorCard })
   }
 
+  // Type C: 업무 상세 (detailed)
+  const workDetailed = mergedData.work.detailed
+  if (workDetailed && typeof workDetailed === 'string' && workDetailed.trim()) {
+    pushDetailCard('업무 상세', 'fa-clipboard-list', formatRichText(workDetailed))
+  }
+  
+  // Type D: 커리어넷 전용 - 워라밸 & 사회적 기여도
+  const wlb = mergedData.careernetOnly.wlb
+  const social = mergedData.careernetOnly.social
+  if (wlb || social) {
+    const wlbBlocks = []
+    if (wlb) {
+      wlbBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">워라밸 지수</h3><p class="text-sm text-wiki-text">${escapeHtml(wlb)}</p></div>`)
+    }
+    if (social) {
+      wlbBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">사회적 기여도</h3><p class="text-sm text-wiki-text">${escapeHtml(social)}</p></div>`)
+    }
+    pushDetailCard('워라밸 & 사회적 평가', 'fa-heart', wlbBlocks.join(''))
+  }
+  
+  // Type D: 커리어넷 전용 - 준비방법
+  const jobReadyList = mergedData.careernetOnly.jobReadyList
+  if (jobReadyList && Array.isArray(jobReadyList) && jobReadyList.length > 0) {
+    const readyHtml = jobReadyList
+      .map((item: any) => {
+        const title = item.title || item.list_title || ''
+        const content = item.content || item.list_content || ''
+        if (!title && !content) return ''
+        return `<div class="mb-4"><h4 class="text-sm font-semibold text-wiki-text mb-1">${escapeHtml(title)}</h4><p class="text-sm text-wiki-muted">${escapeHtml(content)}</p></div>`
+      })
+      .filter(Boolean)
+      .join('')
+    if (readyHtml) {
+      pushDetailCard('진로 준비방법', 'fa-road', readyHtml)
+    }
+  }
+  
+  // Type D: 고용24 전용 - 근무환경
+  const workEnvironment = mergedData.goyong24Only.workEnvironment
+  if (workEnvironment && (workEnvironment.physical || workEnvironment.conditions)) {
+    const envBlocks = []
+    if (workEnvironment.physical && typeof workEnvironment.physical === 'string') {
+      envBlocks.push(`<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">물리적 환경</h3>${formatRichText(workEnvironment.physical)}</div>`)
+    }
+    if (workEnvironment.conditions && typeof workEnvironment.conditions === 'string') {
+      envBlocks.push(`<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">근무 조건</h3>${formatRichText(workEnvironment.conditions)}</div>`)
+    }
+    if (envBlocks.length > 0) {
+      pushDetailCard('근무환경 상세', 'fa-building', envBlocks.join(''))
+    }
+  }
+
+  
+  // Type D: 고용24 전용 - 성격 특성 비교
+  const personality = mergedData.goyong24Only.personality
+  if (personality && (personality.withinJob || personality.betweenJobs)) {
+    const personalityHtml = renderComparisonData(
+      personality.withinJob,
+      personality.betweenJobs,
+      '성격 특성',
+      'fa-user-check'
+    )
+    if (personalityHtml) {
+      pushDetailCard('성격 특성 분석', 'fa-user-check', personalityHtml)
+    }
+  }
+
+  // Type D: 고용24 전용 - 흥미 분야 비교
+  const interest = mergedData.goyong24Only.interest
+  if (interest && (interest.withinJob || interest.betweenJobs)) {
+    const interestHtml = renderComparisonData(
+      interest.withinJob,
+      interest.betweenJobs,
+      '흥미 분야',
+      'fa-heart'
+    )
+    if (interestHtml) {
+      pushDetailCard('흥미 분야 분석', 'fa-heart', interestHtml)
+    }
+  }
+
+  // Type D: 고용24 전용 - 가치관 비교
+  const values = mergedData.goyong24Only.values
+  if (values && (values.withinJob || values.betweenJobs)) {
+    const valuesHtml = renderComparisonData(
+      values.withinJob,
+      values.betweenJobs,
+      '가치관',
+      'fa-star'
+    )
+    if (valuesHtml) {
+      pushDetailCard('가치관 분석', 'fa-star', valuesHtml)
+    }
+  }
+
+  // Type D: 고용24 전용 - 활동 중요도 비교
+  const activityImportance = mergedData.goyong24Only.activity?.importance
+  if (activityImportance && (activityImportance.withinJob || activityImportance.betweenJobs)) {
+    const activityImportanceHtml = renderComparisonData(
+      activityImportance.withinJob,
+      activityImportance.betweenJobs,
+      '활동 중요도',
+      'fa-chart-line'
+    )
+    if (activityImportanceHtml) {
+      pushDetailCard('활동 중요도 분석', 'fa-chart-line', activityImportanceHtml)
+    }
+  }
+
+  // Type D: 고용24 전용 - 활동 수준 비교
+  const activityLevel = mergedData.goyong24Only.activity?.level
+  if (activityLevel && (activityLevel.withinJob || activityLevel.betweenJobs)) {
+    const activityLevelHtml = renderComparisonData(
+      activityLevel.withinJob,
+      activityLevel.betweenJobs,
+      '활동 수준',
+      'fa-signal'
+    )
+    if (activityLevelHtml) {
+      pushDetailCard('활동 수준 분석', 'fa-signal', activityLevelHtml)
+    }
+  }
+
+  // Type C: 지식 상세 비교
+  const knowledgeComparison = mergedData.knowledge.detailedComparison
+  if (knowledgeComparison && (knowledgeComparison.withinJob || knowledgeComparison.betweenJobs)) {
+    const knowledgeHtml = renderComparisonData(
+      knowledgeComparison.withinJob,
+      knowledgeComparison.betweenJobs,
+      '필수 지식',
+      'fa-book'
+    )
+    if (knowledgeHtml) {
+      pushDetailCard('필수 지식 상세 비교', 'fa-book', knowledgeHtml)
+    }
+  }
+
+  // Type C: 능력 상세 비교
+  const abilityComparison = mergedData.abilities.detailedComparison
+  if (abilityComparison && (abilityComparison.withinJob || abilityComparison.betweenJobs)) {
+    const abilityHtml = renderComparisonData(
+      abilityComparison.withinJob,
+      abilityComparison.betweenJobs,
+      '필수 능력',
+      'fa-brain'
+    )
+    if (abilityHtml) {
+      pushDetailCard('필수 능력 상세 비교', 'fa-brain', abilityHtml)
+    }
+  }
+
   // 변호사 페이지는 직업 분류 체계 표시하지 않음
   if (!isLawyerProfile(profile) && profile.classifications && (profile.classifications.large || profile.classifications.medium || profile.classifications.small)) {
     const classificationItems = [
@@ -1478,10 +1883,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources }: UnifiedJo
     pushDetailCard('직업 분류 체계', 'fa-sitemap', `<ul class="space-y-2">${classificationItems}</ul>`)
   }
 
-  const kecoList = renderKecoCodeList(profile)
-  if (kecoList) {
-    pushDetailCard('한국표준직업분류 코드', 'fa-layer-group', kecoList)
-  }
+  // 한국표준직업분류 코드 섹션 제거됨
+  // const kecoList = renderKecoCodeList(profile)
+  // if (kecoList) {
+  //   pushDetailCard('한국표준직업분류 코드', 'fa-layer-group', kecoList)
+  // }
 
   const detailContent = detailCards.length
     ? `<div class="space-y-6" data-cw-job-details>
@@ -1565,13 +1971,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources }: UnifiedJo
       `
     : `<div class="space-y-6" data-job-layout>${tabLayout}</div>`
 
-  const lawyerMatrixSection = lawyerMatrix
-    ? `
-        <section class="glass-card p-6 rounded-2xl space-y-4" data-job-lawyer-matrix${telemetryVariantAttr} data-cw-telemetry-component="job-source-matrix-card">
-          ${lawyerMatrix}
-        </section>
-      `
-    : ''
+  // 법조 직업 매트릭스 섹션 제거됨
+  const lawyerMatrixSection = ''
 
   const sourcesBlock = sourcesCollapsible
     ? `<div data-job-sources>${sourcesCollapsible}</div>`
@@ -1580,6 +1981,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources }: UnifiedJo
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
+    ${debugInfo}
     <div class="max-w-6xl mx-auto space-y-8">
       <section class="glass-card p-8 rounded-2xl space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-5">

@@ -2048,9 +2048,9 @@ app.get('/search', (c) => {
 app.get('/job/:slug', async (c) => {
   const slug = c.req.param('slug')
   const resolvedId = resolveDetailIdFromSlug('job', slug)
-  const careernetId = c.req.query('careernetId') || undefined
-  const goyongJobId = c.req.query('goyongJobId') || undefined
-  const includeSources = parseSourcesQuery(c.req.query('sources'))
+  let careernetId = c.req.query('careernetId') || undefined
+  let goyongJobId = c.req.query('goyongJobId') || undefined
+  const includeSources = parseSourcesQuery(c.req.query('sources')) || ['CAREERNET', 'GOYONG24'] // Default to both sources
   const debugMode = c.req.query('debug') === 'true' || resolvedId === 'job:C_375'
 
   const findSampleJobDetail = () => {
@@ -2064,32 +2064,36 @@ app.get('/job/:slug', async (c) => {
     return null
   }
 
+  // Try to extract source IDs from sample data if not provided
+  if (!careernetId || !goyongJobId) {
+    const sample = findSampleJobDetail()
+    if (sample?.profile?.sourceIds) {
+      if (!careernetId && sample.profile.sourceIds.careernet) {
+        careernetId = sample.profile.sourceIds.careernet
+      }
+      if (!goyongJobId && sample.profile.sourceIds.goyong24) {
+        goyongJobId = sample.profile.sourceIds.goyong24
+      }
+    }
+  }
+
   try {
-    // Use debug mode for job:C_375 or when ?debug=true
-    const result = debugMode 
-      ? await getUnifiedJobDetailWithRawData(
-          {
-            id: resolvedId,
-            careernetId,
-            goyong24JobId: goyongJobId || undefined,
-            includeSources
-          },
-          c.env
-        )
-      : await getUnifiedJobDetail(
-          {
-            id: resolvedId,
-            careernetId,
-            goyong24JobId: goyongJobId || undefined,
-            includeSources
-          },
-          c.env
-        )
+    // Always use getUnifiedJobDetailWithRawData to enable data merging
+    const result = await getUnifiedJobDetailWithRawData(
+      {
+        id: resolvedId,
+        careernetId,
+        goyong24JobId: goyongJobId || undefined,
+        includeSources
+      },
+      c.env
+    )
 
     if (!result.profile) {
       const sample = findSampleJobDetail()
       if (sample) {
-        return renderSampleJobDetailPage(c, sample)
+        // Pass rawApiData even when using sample profile
+        return renderSampleJobDetailPageWithRawData(c, sample, result.rawApiData)
       }
 
       const fallbackHtml = renderDetailFallback({
@@ -2143,7 +2147,8 @@ app.get('/job/:slug', async (c) => {
     const content = renderUnifiedJobDetail({
       profile,
       partials: result.partials,
-      sources: result.sources
+      sources: result.sources,
+      rawApiData: result.rawApiData
     })
 
     return c.html(
@@ -2627,6 +2632,14 @@ function renderSampleJobDetailPage(
   c: Context<{ Bindings: Bindings; Variables: Variables }>,
   sample: NonNullable<ReturnType<typeof getSampleJobDetail>>
 ) {
+  return renderSampleJobDetailPageWithRawData(c, sample, undefined)
+}
+
+function renderSampleJobDetailPageWithRawData(
+  c: Context<{ Bindings: Bindings; Variables: Variables }>,
+  sample: NonNullable<ReturnType<typeof getSampleJobDetail>>,
+  rawApiData?: { careernet?: any; goyong24?: any }
+) {
   const canonicalSlug = sample.meta?.canonicalSlug ?? composeDetailSlug('job', sample.profile.name, sample.profile.id)
   const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
   const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
@@ -2647,7 +2660,8 @@ function renderSampleJobDetailPage(
   const content = renderUnifiedJobDetail({
     profile: sample.profile,
     partials: sample.partials ?? {},
-    sources: sample.sources
+    sources: sample.sources,
+    rawApiData // Pass rawApiData even for sample pages
   })
 
   return c.html(
