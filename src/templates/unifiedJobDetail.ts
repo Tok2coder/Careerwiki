@@ -1771,18 +1771,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       </div>`
     : `<p class="text-sm text-wiki-muted">개요 정보가 준비 중입니다.</p>`
 
-  const workContent = [
-    profile.way?.trim()
-      ? `<div><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">업무 방식</h3>${formatRichText(profile.way)}</div>`
-      : '',
-    profile.environment?.trim()
-      ? `<div class="mt-4"><h3 class="text-sm text-wiki-muted uppercase tracking-wide font-semibold mb-2">근무 환경</h3>${formatRichText(profile.environment)}</div>`
-      : ''
-  ].filter(Boolean)
-  if (workContent.length) {
-    pushDetailCard('업무 환경', 'fa-briefcase', workContent.join(''))
-  }
-
+  // profile.way와 profile.environment는 잘못된 매핑이므로 사용하지 않음
+  // profile.way → path.technKnow (되는 방법) - 이미 개요 탭에 표시됨
+  // profile.environment → performList.environment (배열) - 업무환경이 아님
+  
+  // 필수 기술 및 지식은 profile.way에 있지만 실제로는 '되는 방법' 데이터
+  // 이는 개요 탭의 "업무 방식" 섹션에 이미 표시되므로 여기서는 제외
+  
   if (profile.knowledge?.trim()) {
     pushDetailCard('필수 지식', 'fa-book-open', formatRichText(profile.knowledge))
   }
