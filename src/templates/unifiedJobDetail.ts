@@ -1981,7 +1981,6 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
-    ${debugInfo}
     <div class="max-w-6xl mx-auto space-y-8">
       <section class="glass-card p-8 rounded-2xl space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-5">

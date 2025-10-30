@@ -25,6 +25,7 @@ const getApiKey = (env?: any) => {
 
 // Base URLs - 직업정보 API(getOpenApi)는 종료됨, 직업백과 API만 사용
 const JOBS_ENCYCLOPEDIA_URL = 'https://www.career.go.kr/cnet/front/openapi/job.json';
+const API_BASE_URL = 'https://www.career.go.kr/cnet/openapi'; // 학과 정보 API Base URL
 
 // XML 엔티티 디코딩 함수
 const decodeXmlEntities = (value?: string | null): string => {
