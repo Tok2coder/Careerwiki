@@ -555,11 +555,38 @@ export const normalizeCareerNetJobDetail = (job: Job): UnifiedJobDetail => {
       index === self.findIndex(m => m.name === major.name)
     );
   
-  // 관련 자격증 추출 (중복 제거)
+  // 관련 자격증 추출 (중복 및 유사 항목 제거)
   const relatedCertificates = encyc.certiList
     ?.map(c => c.certi?.trim())
     .filter((c): c is string => !!c)
-    .filter((cert, index, self) => self.indexOf(cert) === index);
+    .reduce((acc: string[], cert: string) => {
+      // 자격증 정규화: 괄호 및 특수 문자 제거한 기본 이름 추출
+      const normalizedCert = cert.replace(/\([^)]*\)/g, '').trim()
+      
+      // 이미 같은 기본 이름의 자격증이 있는지 확인
+      const existingIndex = acc.findIndex(existing => {
+        const normalizedExisting = existing.replace(/\([^)]*\)/g, '').trim()
+        return normalizedExisting === normalizedCert
+      })
+      
+      if (existingIndex === -1) {
+        // 새로운 자격증 추가
+        acc.push(cert)
+      } else {
+        // 기존 자격증과 비교하여 더 간결한 것 선택
+        const existing = acc[existingIndex]
+        // 괄호가 없는 버전을 우선
+        if (!cert.includes('(') && existing.includes('(')) {
+          acc[existingIndex] = cert
+        }
+        // 같은 조건이면 더 짧은 것 선택
+        else if (cert.length < existing.length && !cert.includes('(')) {
+          acc[existingIndex] = cert
+        }
+      }
+      
+      return acc
+    }, []);
   
   // 연관 직업 추출
   const relatedJobs = encyc.baseInfo?.rel_job_nm 

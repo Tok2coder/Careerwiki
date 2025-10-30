@@ -41,6 +41,44 @@ const mergeStringArray = (primary?: string[], secondary?: string[]): string[] | 
   return merged.length ? merged : undefined
 }
 
+const mergeCertificates = (primary?: string[], secondary?: string[]): string[] | undefined => {
+  const all = [...(secondary || []), ...(primary || [])]
+  
+  const normalized = all.reduce((acc: string[], cert: string) => {
+    const trimmed = cert?.trim()
+    if (!trimmed) return acc
+    
+    // 자격증 정규화: 괄호 제거한 기본 이름
+    const baseName = trimmed.replace(/\([^)]*\)/g, '').trim()
+    
+    // 동일한 기본 이름이 이미 있는지 확인
+    const existingIndex = acc.findIndex(existing => {
+      const existingBase = existing.replace(/\([^)]*\)/g, '').trim()
+      return existingBase === baseName
+    })
+    
+    if (existingIndex === -1) {
+      // 새로운 자격증 추가
+      acc.push(trimmed)
+    } else {
+      // 기존 것과 비교하여 더 간결한 것 선택
+      const existing = acc[existingIndex]
+      // 괄호 없는 버전 우선
+      if (!trimmed.includes('(') && existing.includes('(')) {
+        acc[existingIndex] = trimmed
+      }
+      // 동일 조건이면 더 짧은 것
+      else if (trimmed.length < existing.length && !trimmed.includes('(')) {
+        acc[existingIndex] = trimmed
+      }
+    }
+    
+    return acc
+  }, [])
+  
+  return normalized.length ? normalized : undefined
+}
+
 const mergeRelatedEntities = (
   primary?: JobRelatedEntity[],
   secondary?: JobRelatedEntity[]
@@ -248,7 +286,7 @@ export const mergeJobProfiles = (
     duties: goyong?.duties ?? careernet?.duties,
     way: goyong?.way ?? careernet?.way,
     relatedMajors: mergeRelatedEntities(goyong?.relatedMajors, careernet?.relatedMajors),
-    relatedCertificates: mergeStringArray(goyong?.relatedCertificates, careernet?.relatedCertificates),
+    relatedCertificates: mergeCertificates(goyong?.relatedCertificates, careernet?.relatedCertificates),
     salary: goyong?.salary ?? careernet?.salary,
     satisfaction: goyong?.satisfaction ?? careernet?.satisfaction,
     prospect: goyong?.prospect ?? careernet?.prospect,
