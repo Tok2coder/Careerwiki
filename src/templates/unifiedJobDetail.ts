@@ -341,7 +341,7 @@ const renderComparisonTable = (
     const rows = validItems.map((item: any, index: number) => {
       const isHidden = index >= 5
       const hideClass = isHidden ? 'hidden' : ''
-      const expandableAttr = isHidden ? 'data-expandable-row' : ''
+      const expandableAttr = isHidden ? 'data-expandable-row="true"' : ''
       
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
@@ -431,7 +431,7 @@ const renderComparisonTable = (
     const rows = validItems.map((item: any, index: number) => {
       const isHidden = index >= 5
       const hideClass = isHidden ? 'hidden' : ''
-      const expandableAttr = isHidden ? 'data-expandable-row' : ''
+      const expandableAttr = isHidden ? 'data-expandable-row="true"' : ''
       
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
