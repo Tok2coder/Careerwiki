@@ -487,14 +487,26 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
   }
 
   // indicatorChart 데이터 구조:
-  // [{ category: "융합성,대인관계,창의성,일가정균형,소득수준,고용유지,사회공헌", value: 0, description: "1.7,0.2,4.2,0.2,2.2,1.7,1.7" }]
+  // Type 1 (타입 정의): [{ indicator: "name", indicator_data: "value", source: "..." }]
+  // Type 2 (실제 API): [{ category: "융합성,대인관계,...", value: 0, description: "1.7,0.2,..." }]
+  
+  let categories: string[] = []
+  let values: number[] = []
+  
+  // Type 2 형식 확인 (category와 description 필드)
   const firstItem = indicatorData[0]
-  if (!firstItem || !firstItem.category || !firstItem.description) {
-    return ''
+  if (firstItem && firstItem.category && firstItem.description) {
+    categories = firstItem.category.split(',').map((c: string) => c.trim())
+    values = firstItem.description.split(',').map((v: string) => Number.parseFloat(v.trim()) || 0)
   }
-
-  const categories = firstItem.category.split(',').map((c: string) => c.trim())
-  const values = firstItem.description.split(',').map((v: string) => Number.parseFloat(v.trim()) || 0)
+  // Type 1 형식 확인 (indicator와 indicator_data 필드)
+  else if (indicatorData.every(item => item && (item.indicator || item.indicator_data))) {
+    categories = indicatorData.map(item => item.indicator || '지표').filter(Boolean)
+    values = indicatorData.map(item => {
+      const val = item.indicator_data
+      return typeof val === 'number' ? val : Number.parseFloat(String(val)) || 0
+    })
+  }
 
   if (categories.length === 0 || values.length === 0 || categories.length !== values.length) {
     return ''
