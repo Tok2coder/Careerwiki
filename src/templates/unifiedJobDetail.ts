@@ -2387,6 +2387,19 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     abilityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3>${formatRichText(profile.abilities)}</div>`)
   }
   
+  // 정규교육과정 추가 (핵심 역량과 필수 지식 사이)
+  const jobReadyListForOverview = rawApiData?.careernet?.encyclopedia?.jobReadyList
+  const curriculumArrayForOverview = jobReadyListForOverview?.curriculum
+  if (curriculumArrayForOverview && Array.isArray(curriculumArrayForOverview) && curriculumArrayForOverview.length > 0) {
+    const curriculumText = curriculumArrayForOverview
+      .map((item: any) => typeof item === 'string' ? item : (item?.curriculum || ''))
+      .filter(Boolean)
+      .join(' ')
+    if (curriculumText.trim()) {
+      abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">정규교육과정</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(curriculumText)}</p></div>`)
+    }
+  }
+  
   // 지식 섹션 (기존 리스트 스타일, 아이콘 없음)
   if (knowledgeSimple && Array.isArray(knowledgeSimple) && knowledgeSimple.length > 0) {
     const knowledgeList = knowledgeSimple
@@ -2420,7 +2433,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   }
   
   if (abilityBlocks.length > 0) {
-    pushOverviewCard('핵심 능력', 'fa-bolt', abilityBlocks.join(''))
+    pushOverviewCard('핵심 능력·자격', 'fa-bolt', abilityBlocks.join(''))
   }
 
   // 직업 만족도 먼저 추가 (있을 경우)
@@ -2602,26 +2615,20 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   
   // 5-13. 아래 섹션들은 올바른 순서로 재배치됩니다
   
-  // 5. Type D: 교육·자격 섹션 (정규교육과정 + 입직 및 취업방법 + 진로 탐색 활동)
+  // 5. Type D: 교육·자격 섹션 (필요기술 및 지식 + 입직 및 취업방법 + 진로 탐색 활동)
   const jobReadyListObj = rawApiData?.careernet?.encyclopedia?.jobReadyList
   const researchList = rawApiData?.careernet?.encyclopedia?.researchList
+  const pathTechnKnow = rawApiData?.goyong24?.path?.technKnow
   
-  // jobReadyList 객체에서 curriculum과 recruit 배열 추출
-  const curriculumArray = jobReadyListObj?.curriculum
+  // jobReadyList 객체에서 recruit 배열 추출
   const recruitArray = jobReadyListObj?.recruit
   
-  if (curriculumArray || recruitArray || (researchList && Array.isArray(researchList) && researchList.length > 0)) {
+  if (pathTechnKnow || recruitArray || (researchList && Array.isArray(researchList) && researchList.length > 0)) {
     const educationBlocks = []
     
-    // 1. 정규교육과정
-    if (curriculumArray && Array.isArray(curriculumArray) && curriculumArray.length > 0) {
-      const curriculumText = curriculumArray
-        .map((item: any) => typeof item === 'string' ? item : (item?.curriculum || ''))
-        .filter(Boolean)
-        .join(' ')
-      if (curriculumText.trim()) {
-        educationBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">정규교육과정</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(curriculumText)}</p></div>`)
-      }
+    // 1. 필요기술 및 지식 (path.technKnow)
+    if (pathTechnKnow && typeof pathTechnKnow === 'string' && pathTechnKnow.trim()) {
+      educationBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">필요기술 및 지식</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(pathTechnKnow)}</p></div>`)
     }
     
     // 2. 입직 및 취업방법
