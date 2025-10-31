@@ -340,25 +340,40 @@ const renderComparisonTable = (
       `
     }).filter(Boolean).join('')
 
-    const showMoreButton = withinJob.length > 5 ? `
+    const collapseButton = withinJob.length > 5 ? `
       <button 
         onclick="toggleExpandTable('${tableId}')" 
-        id="${tableId}-btn"
-        class="mt-4 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-colors"
+        id="${tableId}-collapse-btn"
+        class="hidden ml-4 px-3 py-1 text-xs font-medium text-wiki-secondary hover:text-wiki-primary border border-wiki-secondary/50 hover:border-wiki-primary/50 rounded transition-colors"
       >
-        전체보기 ▼
+        접기 ▲
       </button>
+    ` : ''
+
+    const showMoreButton = withinJob.length > 5 ? `
+      <div class="mt-4 text-center">
+        <button 
+          onclick="toggleExpandTable('${tableId}')" 
+          id="${tableId}-btn"
+          class="px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-colors"
+        >
+          전체보기 (${withinJob.length}개 항목) ▼
+        </button>
+      </div>
     ` : ''
 
     blocks.push(`
       <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
-        <div class="mb-4">
-          <h3 class="text-base font-bold text-wiki-secondary mb-2">
-            <i class="fas fa-clover mr-2"></i>직업 내 비교
-          </h3>
-          <p class="text-xs text-wiki-muted leading-relaxed">
-            500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 내에 비교하여 본 직업에서 중요성(평가점수)이 높게 나타난 항목을 순서대로 제시함
-          </p>
+        <div class="mb-4 flex items-start justify-between">
+          <div class="flex-1">
+            <h3 class="text-base font-bold text-wiki-secondary mb-2">
+              <i class="fas fa-clover mr-2"></i>직업 내 비교
+            </h3>
+            <p class="text-xs text-wiki-muted leading-relaxed">
+              500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 내에 비교하여 본 직업에서 중요성(평가점수)이 높게 나타난 항목을 순서대로 제시함
+            </p>
+          </div>
+          ${collapseButton}
         </div>
         <div class="overflow-x-auto">
           <table class="w-full" id="${tableId}">
@@ -415,25 +430,40 @@ const renderComparisonTable = (
       `
     }).filter(Boolean).join('')
 
-    const showMoreButton = betweenJobs.length > 5 ? `
+    const collapseButton = betweenJobs.length > 5 ? `
       <button 
         onclick="toggleExpandTable('${tableId}')" 
-        id="${tableId}-btn"
-        class="mt-4 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-colors"
+        id="${tableId}-collapse-btn"
+        class="hidden ml-4 px-3 py-1 text-xs font-medium text-wiki-secondary hover:text-wiki-primary border border-wiki-secondary/50 hover:border-wiki-primary/50 rounded transition-colors"
       >
-        전체보기 ▼
+        접기 ▲
       </button>
+    ` : ''
+
+    const showMoreButton = betweenJobs.length > 5 ? `
+      <div class="mt-4 text-center">
+        <button 
+          onclick="toggleExpandTable('${tableId}')" 
+          id="${tableId}-btn"
+          class="px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-colors"
+        >
+          전체보기 (${betweenJobs.length}개 항목) ▼
+        </button>
+      </div>
     ` : ''
 
     blocks.push(`
       <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50 ${withinJob ? 'mt-8' : ''}">
-        <div class="mb-4">
-          <h3 class="text-base font-bold text-wiki-secondary mb-2">
-            <i class="fas fa-exchange-alt mr-2"></i>직업 간 비교
-          </h3>
-          <p class="text-xs text-wiki-muted leading-relaxed">
-            500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 간에 비교하여 본 직업에서 중요성(백분위)이 높게 나타난 항목을 순서대로 제시함
-          </p>
+        <div class="mb-4 flex items-start justify-between">
+          <div class="flex-1">
+            <h3 class="text-base font-bold text-wiki-secondary mb-2">
+              <i class="fas fa-exchange-alt mr-2"></i>직업 간 비교
+            </h3>
+            <p class="text-xs text-wiki-muted leading-relaxed">
+              500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 간에 비교하여 본 직업에서 중요성(백분위)이 높게 나타난 항목을 순서대로 제시함
+            </p>
+          </div>
+          ${collapseButton}
         </div>
         <div class="overflow-x-auto">
           <table class="w-full" id="${tableId}">
@@ -3069,27 +3099,42 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       <script>
         function toggleExpandTable(tableId) {
           const table = document.getElementById(tableId);
-          const button = document.getElementById(tableId + '-btn');
-          if (!table || !button) return;
+          const expandButton = document.getElementById(tableId + '-btn');
+          const collapseButton = document.getElementById(tableId + '-collapse-btn');
+          if (!table) return;
           
+          const allRows = table.querySelectorAll('tr[data-expandable-row]');
           const hiddenRows = table.querySelectorAll('tr[data-expandable-row].hidden');
           const isExpanded = hiddenRows.length === 0;
           
           if (isExpanded) {
-            // 접기
-            const allRows = table.querySelectorAll('tr[data-expandable-row]');
+            // 접기 - 5개 이후 항목만 숨기기
             allRows.forEach((row, index) => {
               if (index >= 5) {
                 row.classList.add('hidden');
               }
             });
-            button.textContent = '전체보기 ▼';
+            // 버튼 상태 업데이트
+            if (expandButton) {
+              expandButton.classList.remove('hidden');
+              const totalCount = allRows.length;
+              expandButton.textContent = '전체보기 (' + totalCount + '개 항목) ▼';
+            }
+            if (collapseButton) {
+              collapseButton.classList.add('hidden');
+            }
           } else {
-            // 펼치기
-            hiddenRows.forEach(row => {
+            // 펼치기 - 모든 항목 보이기
+            allRows.forEach(row => {
               row.classList.remove('hidden');
             });
-            button.textContent = '접기 ▲';
+            // 버튼 상태 업데이트
+            if (expandButton) {
+              expandButton.classList.add('hidden');
+            }
+            if (collapseButton) {
+              collapseButton.classList.remove('hidden');
+            }
           }
         }
       </script>`
@@ -3121,8 +3166,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   const tabEntries: TabEntry[] = [
     { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewContent },
-    { id: 'characteristics', label: '업무특성', icon: 'fa-chart-pie', content: characteristicsContent },
-    { id: 'details', label: '상세 정보', icon: 'fa-layer-group', content: detailContent }
+    { id: 'details', label: '상세정보', icon: 'fa-layer-group', content: detailContent },
+    { id: 'characteristics', label: '업무특성', icon: 'fa-chart-pie', content: characteristicsContent }
   ]
 
   const entitySlug = composeDetailSlug('job', profile.name, profile.id)
