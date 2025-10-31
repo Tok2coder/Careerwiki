@@ -379,9 +379,9 @@ const renderComparisonTable = (
           <table class="w-full" id="${tableId}">
             <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
               <tr>
-                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 100px; font-size: 15px;">평균<br/>(5점 만점)</th>
-                <th class="px-4 py-3 text-left font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
-                <th class="px-4 py-3 text-left font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
+                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">평균<br/>(5점 만점)</th>
+                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
+                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
               </tr>
             </thead>
             <tbody>
@@ -469,9 +469,9 @@ const renderComparisonTable = (
           <table class="w-full" id="${tableId}">
             <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
               <tr>
-                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 80px; font-size: 15px;">백분위</th>
-                <th class="px-4 py-3 text-left font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
-                <th class="px-4 py-3 text-left font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
+                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">백분위</th>
+                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
+                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
               </tr>
             </thead>
             <tbody>
@@ -1772,12 +1772,12 @@ type SectionCardDescriptor = { id: string; label: string; icon: string; markup: 
 
 type TocItem = { id: string; label: string; icon: string }
 
-const renderSectionToc = (sectionKey: 'overview' | 'details', heading: string, items: TocItem[]): string => {
+const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics', heading: string, items: TocItem[]): string => {
   if (!items.length) {
     return ''
   }
 
-  const headingIcon = sectionKey === 'overview' ? 'fa-list-check' : 'fa-layer-group'
+  const headingIcon = sectionKey === 'overview' ? 'fa-list-check' : sectionKey === 'characteristics' ? 'fa-chart-pie' : 'fa-layer-group'
 
   const listMarkup = items
     .map((item, index) => `
