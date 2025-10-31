@@ -1864,36 +1864,34 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   
   const abilityBlocks = []
   
-  // 능력 섹션 (아이콘 포함)
+  // 능력 섹션 (큼지막한 네모 박스 아이콘)
   if (abilitiesSimple && Array.isArray(abilitiesSimple) && abilitiesSimple.length > 0) {
     const abilityList = abilitiesSimple
       .slice(0, 10)
       .map((item: any) => {
         const text = typeof item === 'string' ? item : item.list_content || item.ability_name || JSON.stringify(item)
         const { icon, color } = getAbilityIcon(text)
-        return `<li class="flex items-start gap-2">
-          <i class="fas ${icon} ${color} mt-1 flex-shrink-0"></i>
-          <span>${escapeHtml(text)}</span>
-        </li>`
+        return `<div class="flex items-center gap-3">
+          <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-wiki-card border border-wiki-border flex items-center justify-center">
+            <i class="fas ${icon} ${color} text-2xl"></i>
+          </div>
+          <span class="text-wiki-text">${escapeHtml(text)}</span>
+        </div>`
       })
       .join('')
-    abilityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3><ul class="space-y-2">${abilityList}</ul></div>`)
+    abilityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-4">핵심 역량</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${abilityList}</div></div>`)
   } else if (typeof profile.abilities === 'string' && profile.abilities?.trim()) {
     abilityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3>${formatRichText(profile.abilities)}</div>`)
   }
   
-  // 지식 섹션 (아이콘 포함)
+  // 지식 섹션 (기존 리스트 스타일, 아이콘 없음)
   if (knowledgeSimple && Array.isArray(knowledgeSimple) && knowledgeSimple.length > 0) {
     const knowledgeList = knowledgeSimple
       .slice(0, 10)
       .map((item: any) => {
         // knowledge 필드 또는 inform 필드를 사용 (중요도 있으면 함께 표시)
         if (typeof item === 'string') {
-          const { icon, color } = getAbilityIcon(item)
-          return `<li class="flex items-start gap-2">
-            <i class="fas ${icon} ${color} mt-1 flex-shrink-0"></i>
-            <span>${escapeHtml(item)}</span>
-          </li>`
+          return `<li>${escapeHtml(item)}</li>`
         }
         const knowledgeName = item.knowledge || item.list_content || item.knowledge_name || ''
         const inform = item.inform || ''
@@ -1903,27 +1901,19 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         const displayText = inform || knowledgeName
         if (!displayText.trim()) return ''
         
-        const { icon, color } = getAbilityIcon(displayText)
-        
         // 중요도가 있으면 함께 표시
         if (importance) {
-          return `<li class="flex items-start gap-2">
-            <i class="fas ${icon} ${color} mt-1 flex-shrink-0"></i>
-            <span>${escapeHtml(displayText)} <span class="text-wiki-muted text-xs">(중요도 ${importance})</span></span>
-          </li>`
+          return `<li>${escapeHtml(displayText)} <span class="text-wiki-muted text-xs">(중요도 ${importance})</span></li>`
         }
-        return `<li class="flex items-start gap-2">
-          <i class="fas ${icon} ${color} mt-1 flex-shrink-0"></i>
-          <span>${escapeHtml(displayText)}</span>
-        </li>`
+        return `<li>${escapeHtml(displayText)}</li>`
       })
       .filter(Boolean)
       .join('')
     if (knowledgeList) {
-      abilityBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">필수 지식</h3><ul class="space-y-2">${knowledgeList}</ul></div>`)
+      abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">필수 지식</h3><ul class="list-disc list-inside space-y-1">${knowledgeList}</ul></div>`)
     }
   } else if (typeof profile.technKnow === 'string' && profile.technKnow?.trim()) {
-    abilityBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활용 기술</h3>${formatRichText(profile.technKnow)}</div>`)
+    abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활용 기술</h3>${formatRichText(profile.technKnow)}</div>`)
   }
   
   if (abilityBlocks.length > 0) {
