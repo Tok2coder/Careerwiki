@@ -1864,7 +1864,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   
   const abilityBlocks = []
   
-  // 능력 섹션 (큼지막한 네모 박스 아이콘)
+  // 능력 섹션 (큼지막한 네모 박스 아이콘 - Lucide)
   if (abilitiesSimple && Array.isArray(abilitiesSimple) && abilitiesSimple.length > 0) {
     const abilityList = abilitiesSimple
       .slice(0, 10)
@@ -1873,7 +1873,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         const { icon, color } = getAbilityIcon(text)
         return `<div class="flex items-center gap-3">
           <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-wiki-card border border-wiki-border flex items-center justify-center">
-            <i class="fas ${icon} ${color} text-2xl"></i>
+            <i data-lucide="${icon}" class="${color}" style="width: 28px; height: 28px;"></i>
           </div>
           <span class="text-wiki-text">${escapeHtml(text)}</span>
         </div>`
@@ -2507,6 +2507,12 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       ${communityBlock}
 
       ${metaScript}
+      <script>
+        // Lucide 아이콘 초기화
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        }
+      </script>
     </div>
   `
 }
