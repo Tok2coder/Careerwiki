@@ -524,17 +524,33 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
 
   // 각 지표별 색상 (스크린샷 참고)
   const barColors = [
-    'rgba(168, 85, 247, 0.8)',   // 융합성 - purple
-    'rgba(59, 130, 246, 0.8)',   // 대인관계 - blue
-    'rgba(236, 72, 153, 0.8)',   // 창의성 - pink
-    'rgba(251, 191, 36, 0.8)',   // 일가정균형 - amber
-    'rgba(251, 146, 60, 0.8)',   // 소득수준 - orange
-    'rgba(163, 163, 122, 0.8)',  // 고용유지 - olive
-    'rgba(244, 165, 171, 0.8)'   // 사회공헌 - light pink
+    'rgba(168, 85, 247, 0.8)',   // purple
+    'rgba(59, 130, 246, 0.8)',   // blue
+    'rgba(236, 72, 153, 0.8)',   // pink
+    'rgba(251, 191, 36, 0.8)',   // amber
+    'rgba(251, 146, 60, 0.8)',   // orange
+    'rgba(163, 163, 122, 0.8)',  // olive
+    'rgba(244, 165, 171, 0.8)',  // light pink
+    'rgba(16, 185, 129, 0.8)'    // green
   ]
 
+  // 카테고리와 값을 함께 묶어서 정렬 (높은 순으로)
+  const combined = categories.map((cat, idx) => ({
+    category: cat,
+    value: values[idx],
+    originalIndex: idx
+  }))
+  
+  // 값이 높은 순으로 정렬
+  combined.sort((a, b) => b.value - a.value)
+  
+  // 정렬된 데이터로 분리
+  const sortedCategories = combined.map(item => item.category)
+  const sortedValues = combined.map(item => item.value)
+  const sortedColors = combined.map(item => barColors[item.originalIndex % barColors.length])
+
   // 최대값 찾기 (스케일링용)
-  const maxValue = Math.max(...values, 5) // 최소 5로 설정
+  const maxValue = Math.max(...sortedValues, 5) // 최소 5로 설정
 
   // Chart.js용 고유 ID
   const chartId = `indicator-chart-${Date.now()}`
@@ -548,10 +564,10 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
       
       <!-- 범례 -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        ${categories.map((label, idx) => `
+        ${sortedCategories.map((label, idx) => `
           <div class="flex items-center gap-2">
-            <div class="w-4 h-4 rounded-full flex-shrink-0" style="background-color: ${barColors[idx % barColors.length]}"></div>
-            <span class="text-wiki-text text-sm font-medium">${escapeHtml(label)} ${values[idx].toFixed(1)}%</span>
+            <div class="w-4 h-4 rounded-full flex-shrink-0" style="background-color: ${sortedColors[idx]}"></div>
+            <span class="text-wiki-text text-sm font-medium">${escapeHtml(label)} ${sortedValues[idx].toFixed(1)}%</span>
           </div>
         `).join('')}
       </div>
@@ -569,10 +585,10 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
           new Chart(ctx, {
             type: 'bar',
             data: {
-              labels: ${JSON.stringify(categories)},
+              labels: ${JSON.stringify(sortedCategories)},
               datasets: [{
-                data: ${JSON.stringify(values)},
-                backgroundColor: ${JSON.stringify(barColors.slice(0, categories.length))},
+                data: ${JSON.stringify(sortedValues)},
+                backgroundColor: ${JSON.stringify(sortedColors)},
                 borderWidth: 0,
                 borderRadius: 8,
                 barThickness: 'flex',
