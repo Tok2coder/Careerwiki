@@ -2094,33 +2094,41 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   
   // 5-13. 아래 섹션들은 올바른 순서로 재배치됩니다
   
-  // 5. Type D: 교육·자격 섹션 (진로 준비방법 + 진로 탐색 활동 통합)
-  const jobReadyList = mergedData.careernetOnly.jobReadyList
+  // 5. Type D: 교육·자격 섹션 (정규교육과정 + 입직 및 취업방법 + 진로 탐색 활동)
+  const jobReadyListObj = rawApiData?.careernet?.encyclopedia?.jobReadyList
   const researchList = rawApiData?.careernet?.encyclopedia?.researchList
   
-  if ((jobReadyList && Array.isArray(jobReadyList) && jobReadyList.length > 0) ||
-      (researchList && Array.isArray(researchList) && researchList.length > 0)) {
+  // jobReadyList 객체에서 curriculum과 recruit 배열 추출
+  const curriculumArray = jobReadyListObj?.curriculum
+  const recruitArray = jobReadyListObj?.recruit
+  
+  if (curriculumArray || recruitArray || (researchList && Array.isArray(researchList) && researchList.length > 0)) {
     const educationBlocks = []
     
-    // 진로 준비방법
-    if (jobReadyList && Array.isArray(jobReadyList) && jobReadyList.length > 0) {
-      const readyHtml = jobReadyList
-        .map((item: any) => {
-          const title = item.title || item.list_title || ''
-          const content = item.content || item.list_content || ''
-          if (!title && !content) return ''
-          return `<div class="mb-4"><h4 class="text-sm font-semibold text-wiki-text mb-1">${escapeHtml(title)}</h4><p class="text-sm text-wiki-muted">${escapeHtml(content)}</p></div>`
-        })
+    // 1. 정규교육과정
+    if (curriculumArray && Array.isArray(curriculumArray) && curriculumArray.length > 0) {
+      const curriculumText = curriculumArray
+        .map((item: any) => typeof item === 'string' ? item : (item?.curriculum || ''))
         .filter(Boolean)
-        .join('')
-      
-      if (readyHtml) {
-        educationBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">진로 준비방법</h3>${readyHtml}</div>`)
+        .join(' ')
+      if (curriculumText.trim()) {
+        educationBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">정규교육과정</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(curriculumText)}</p></div>`)
       }
     }
     
-    // 진로 탐색 활동 (이전의 조사/연구자료)
-    if (researchList) {
+    // 2. 입직 및 취업방법
+    if (recruitArray && Array.isArray(recruitArray) && recruitArray.length > 0) {
+      const recruitText = recruitArray
+        .map((item: any) => typeof item === 'string' ? item : (item?.recruit || ''))
+        .filter(Boolean)
+        .join(' ')
+      if (recruitText.trim()) {
+        educationBlocks.push(`<div class="${educationBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">입직 및 취업방법</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(recruitText)}</p></div>`)
+      }
+    }
+    
+    // 3. 진로 탐색 활동
+    if (researchList && Array.isArray(researchList) && researchList.length > 0) {
       const researchHtml = renderResearchList(researchList)
       if (researchHtml) {
         educationBlocks.push(`<div class="${educationBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">진로 탐색 활동</h3>${researchHtml}</div>`)
