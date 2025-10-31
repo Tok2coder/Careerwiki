@@ -2974,33 +2974,66 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       }
     }
     
-    // 커리어넷 업무환경 데이터 (중요도 바 차트)
+    // 커리어넷 업무환경 데이터 (중요도 표)
     if (workContext && Array.isArray(workContext) && workContext.length > 0) {
-      const contextItems = workContext
-        .sort((a, b) => (b.importance || 0) - (a.importance || 0))
-        .slice(0, 15) // 상위 15개
+      // 유효한 데이터만 필터링
+      const validItems = workContext
         .map((item) => {
           const name = item.environment || item.inform || ''
           const importance = item.importance || 0
-          const percentage = Math.min(importance, 100)
-          const barColor = percentage >= 80 ? 'bg-green-500' : percentage >= 60 ? 'bg-blue-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-gray-400'
+          if (!name.trim()) return null
+          return { name, importance }
+        })
+        .filter(Boolean)
+        .sort((a: any, b: any) => b.importance - a.importance)
+      
+      if (validItems.length > 0) {
+        const tableId = `work-env-importance`
+        const rows = validItems.map((item: any, index: number) => {
+          const isHidden = index >= 5
+          const hideClass = isHidden ? 'hidden' : ''
+          const expandableAttr = isHidden ? 'data-expandable-row="true"' : ''
           
           return `
-            <div class="mb-4">
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-medium text-wiki-text">${escapeHtml(name)}</span>
-                <span class="text-sm font-semibold text-wiki-primary">${importance}</span>
-              </div>
-              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-                <div class="${barColor} h-3 rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
-              </div>
-            </div>
+            <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
+              <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.importance}</td>
+              <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.name)}</td>
+            </tr>
           `
-        })
-        .join('')
-      
-      if (contextItems) {
-        workEnvBlocks.push(`<div class="${workEnvBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무환경 중요도</h3>${contextItems}</div>`)
+        }).join('')
+        
+        const toggleIndicator = validItems.length > 5 ? `
+          <div class="mt-3 text-center">
+            <div 
+              onclick="toggleExpandTable('${tableId}')" 
+              id="${tableId}-toggle"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-all cursor-pointer"
+            >
+              <span id="${tableId}-text">전체보기 (${validItems.length}개 항목)</span>
+              <i id="${tableId}-icon" class="fas fa-chevron-down transition-transform"></i>
+            </div>
+          </div>
+        ` : ''
+        
+        const contextTable = `
+          <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+            <div class="overflow-x-auto">
+              <table class="w-full" id="${tableId}">
+                <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
+                  <tr>
+                    <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">중요도</th>
+                    <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">업무환경</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rows}
+                </tbody>
+              </table>
+            </div>
+            ${toggleIndicator}
+          </div>
+        `
+        workEnvBlocks.push(`<div class="${workEnvBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무환경 중요도</h3>${contextTable}</div>`)
       }
     }
     
@@ -3125,6 +3158,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
             if (toggleIcon) {
               toggleIcon.classList.remove('fa-chevron-up');
               toggleIcon.classList.add('fa-chevron-down');
+            }
+            // 스크롤을 표의 상단으로 이동
+            const tableContainer = table.closest('.bg-white\\/5');
+            if (tableContainer) {
+              tableContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
           } else {
             // 펼치기 - expandable 행들 보이기
