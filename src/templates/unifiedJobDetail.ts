@@ -2556,6 +2556,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       </div>`
     : `<p class="text-sm text-wiki-muted">개요 정보가 준비 중입니다.</p>`
 
+  // ===== 업무특성 탭 시작 =====
+  const characteristicsCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
+  const pushCharacteristicsCard = (label: string, icon: string, markup: string) => {
+    const id = anchorIdFactory('characteristics', label)
+    characteristicsCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { id, telemetryScope: 'job-characteristics-card' }) })
+  }
+
   // profile.way와 profile.environment는 잘못된 매핑이므로 사용하지 않음
   // profile.way → path.technKnow (되는 방법) - 이미 개요 탭에 표시됨
   // profile.environment → performList.environment (배열) - 업무환경이 아님
@@ -2667,7 +2674,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
   }
 
-  // 7. Type C: 업무수행능력 분석 (중요도 + 수준 통합)
+  // 1. Type C: 업무수행능력 분석 (중요도 + 수준 통합)
   const abilityComparison = mergedData.abilities?.detailedComparison
   const abilityImportance = abilityComparison?.importance
   const abilityLevel = abilityComparison?.level
@@ -2703,11 +2710,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
     if (abilityBlocks.length > 0) {
-      pushDetailCard('업무수행능력 분석', 'fa-brain', abilityBlocks.join(''))
+      pushCharacteristicsCard('업무수행능력', 'fa-brain', abilityBlocks.join(''))
     }
   }
 
-  // 8. Type C: 지식 분석 (중요도 + 수준 통합)
+  // 2. Type C: 지식 분석 (중요도 + 수준 통합)
   const knowledgeComparison = mergedData.knowledge?.detailedComparison
   const knowledgeImportance = knowledgeComparison?.importance
   const knowledgeLevel = knowledgeComparison?.level
@@ -2743,11 +2750,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
     if (knowledgeBlocks.length > 0) {
-      pushDetailCard('지식 분석', 'fa-book', knowledgeBlocks.join(''))
+      pushCharacteristicsCard('지식', 'fa-book', knowledgeBlocks.join(''))
     }
   }
 
-  // 9. Type D: 업무환경 분석 (고용24 + 커리어넷 통합)
+  // 3. Type D: 업무환경 분석 (고용24 + 커리어넷 통합)
   const workEnvironment = mergedData.goyong24Only.workEnvironment
   const workContext = rawApiData?.careernet?.encyclopedia?.performList?.environment
   
@@ -2799,12 +2806,12 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
     if (workEnvBlocks.length > 0) {
-      pushDetailCard('업무환경 분석', 'fa-building', workEnvBlocks.join(''))
+      pushCharacteristicsCard('업무환경', 'fa-building', workEnvBlocks.join(''))
     }
   }
 
   
-  // 10. Type D: 고용24 전용 - 성격 특성 비교
+  // 4. Type D: 고용24 전용 - 성격 특성 비교
   const personality = mergedData.goyong24Only.personality
   if (personality && (personality.withinJob || personality.betweenJobs)) {
     const personalityHtml = renderComparisonData(
@@ -2814,11 +2821,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       'fa-user-check'
     )
     if (personalityHtml) {
-      pushDetailCard('성격 분석', 'fa-user-check', personalityHtml)
+      pushCharacteristicsCard('성격', 'fa-user-check', personalityHtml)
     }
   }
 
-  // 11. Type D: 고용24 전용 - 흥미 분야 비교
+  // 5. Type D: 고용24 전용 - 흥미 분야 비교
   const interest = mergedData.goyong24Only.interest
   if (interest && (interest.withinJob || interest.betweenJobs)) {
     const interestHtml = renderComparisonData(
@@ -2828,11 +2835,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       'fa-heart'
     )
     if (interestHtml) {
-      pushDetailCard('흥미 분야 분석', 'fa-heart', interestHtml)
+      pushCharacteristicsCard('흥미', 'fa-heart', interestHtml)
     }
   }
 
-  // 12. Type D: 고용24 전용 - 가치관 비교
+  // 6. Type D: 고용24 전용 - 가치관 비교
   const values = mergedData.goyong24Only.values
   if (values && (values.withinJob || values.betweenJobs)) {
     const valuesHtml = renderComparisonData(
@@ -2842,11 +2849,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       'fa-star'
     )
     if (valuesHtml) {
-      pushDetailCard('가치관 분석', 'fa-star', valuesHtml)
+      pushCharacteristicsCard('가치관', 'fa-star', valuesHtml)
     }
   }
 
-  // 13. Type D: 고용24 전용 - 업무활동 분석 (중요도 + 수준 통합)
+  // 7. Type D: 고용24 전용 - 업무활동 분석 (중요도 + 수준 통합)
   const activityImportance = mergedData.goyong24Only.activity?.importance
   const activityLevel = mergedData.goyong24Only.activity?.level
   
@@ -2881,9 +2888,17 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
     if (activityBlocks.length > 0) {
-      pushDetailCard('업무활동 분석', 'fa-tasks', activityBlocks.join(''))
+      pushCharacteristicsCard('업무활동', 'fa-tasks', activityBlocks.join(''))
     }
   }
+
+  const characteristicsContent = characteristicsCards.length
+    ? `<div class="space-y-6" data-cw-job-characteristics>
+        ${renderSectionToc('characteristics', '업무특성 목차', characteristicsCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${characteristicsCards.map((card) => card.markup).join('')}
+      </div>`
+    : `<p class="text-sm text-wiki-muted">업무특성 정보가 준비 중입니다.</p>`
+  // ===== 업무특성 탭 끝 =====
 
   // 변호사 페이지는 직업 분류 체계 표시하지 않음
   if (!isLawyerProfile(profile) && profile.classifications && (profile.classifications.large || profile.classifications.medium || profile.classifications.small)) {
@@ -2910,6 +2925,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   const tabEntries: TabEntry[] = [
     { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewContent },
+    { id: 'characteristics', label: '업무특성', icon: 'fa-chart-pie', content: characteristicsContent },
     { id: 'details', label: '상세 정보', icon: 'fa-layer-group', content: detailContent }
   ]
 
