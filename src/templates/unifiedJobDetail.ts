@@ -2511,6 +2511,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
             </div>
           </div>
         </div>
+        <p class="text-xs text-wiki-muted mt-3 leading-relaxed">
+          직업만족도는 해당 직업의 일자리 증가 가능성, 발전가능성 및 고용안정에 대해 재직자가 느끼는 생각을 종합하여 100점 만점으로 환산한 값입니다.
+        </p>
       `)
     }
   }
