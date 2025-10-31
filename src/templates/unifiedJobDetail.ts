@@ -501,11 +501,21 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
   }
   // Type 1 형식 확인 (indicator와 indicator_data 필드)
   else if (indicatorData.every(item => item && (item.indicator || item.indicator_data))) {
-    categories = indicatorData.map(item => item.indicator || '지표').filter(Boolean)
-    values = indicatorData.map(item => {
-      const val = item.indicator_data
-      return typeof val === 'number' ? val : Number.parseFloat(String(val)) || 0
-    })
+    // indicator와 indicator_data가 콤마로 구분된 문자열인 경우 처리
+    const firstIndicator = indicatorData[0]
+    if (firstIndicator && firstIndicator.indicator && typeof firstIndicator.indicator === 'string' && firstIndicator.indicator.includes(',')) {
+      // 콤마로 구분된 경우
+      categories = firstIndicator.indicator.split(',').map((c: string) => c.trim())
+      const dataStr = String(firstIndicator.indicator_data || '')
+      values = dataStr.split(',').map((v: string) => Number.parseFloat(v.trim()) || 0)
+    } else {
+      // 각 항목이 개별 객체인 경우
+      categories = indicatorData.map(item => item.indicator || '지표').filter(Boolean)
+      values = indicatorData.map(item => {
+        const val = item.indicator_data
+        return typeof val === 'number' ? val : Number.parseFloat(String(val)) || 0
+      })
+    }
   }
 
   if (categories.length === 0 || values.length === 0 || categories.length !== values.length) {
