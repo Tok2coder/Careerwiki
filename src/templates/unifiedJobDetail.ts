@@ -2252,32 +2252,101 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   }
 
   // 직업 만족도 먼저 추가 (있을 경우)
+  // 직업 만족도 등급 계산 함수
+  const getSatisfactionGrade = (satisfaction: string | number | undefined) => {
+    if (!satisfaction) return null
+    
+    const score = typeof satisfaction === 'number' 
+      ? satisfaction 
+      : Number.parseFloat(String(satisfaction)) || 0
+    
+    if (score >= 80) {
+      return {
+        level: '매우 좋음',
+        icon: 'fa-face-grin-stars',
+        color: 'text-green-400',
+        bgColor: 'bg-green-500/20',
+        borderColor: 'border-green-500/50'
+      }
+    } else if (score >= 60) {
+      return {
+        level: '좋음',
+        icon: 'fa-face-smile',
+        color: 'text-blue-400',
+        bgColor: 'bg-blue-500/20',
+        borderColor: 'border-blue-500/50'
+      }
+    } else if (score >= 40) {
+      return {
+        level: '보통',
+        icon: 'fa-face-meh',
+        color: 'text-yellow-400',
+        bgColor: 'bg-yellow-500/20',
+        borderColor: 'border-yellow-500/50'
+      }
+    } else if (score >= 20) {
+      return {
+        level: '별로',
+        icon: 'fa-face-frown',
+        color: 'text-orange-400',
+        bgColor: 'bg-orange-500/20',
+        borderColor: 'border-orange-500/50'
+      }
+    } else {
+      return {
+        level: '매우 별로',
+        icon: 'fa-face-sad-tear',
+        color: 'text-red-400',
+        bgColor: 'bg-red-500/20',
+        borderColor: 'border-red-500/50'
+      }
+    }
+  }
+
   const traitBlocks: string[] = []
   
-  // DEBUG: satisfaction 출처 확인
-  const satisfactionDebug = `<!-- SATISFACTION: value="${profile.satisfaction}" partials_goyong="${partials?.GOYONG24?.satisfaction || 'N/A'}" partials_careernet="${partials?.CAREERNET?.satisfaction || 'N/A'}" -->`
-  
+  // 직업 만족도 카드 (개선된 UI)
   if (profile.satisfaction) {
-    traitBlocks.push(`${satisfactionDebug}<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">직업 만족도</h3><p class="content-text text-wiki-text">${escapeHtml(String(profile.satisfaction))}</p></div>`)
+    const score = typeof profile.satisfaction === 'number' 
+      ? profile.satisfaction 
+      : Number.parseFloat(String(profile.satisfaction)) || 0
+    const grade = getSatisfactionGrade(profile.satisfaction)
+    
+    if (grade) {
+      traitBlocks.push(`
+        <div class="flex items-center gap-4 p-5 rounded-2xl border ${grade.borderColor} ${grade.bgColor}">
+          <div class="flex-shrink-0 flex h-16 w-16 items-center justify-center rounded-2xl ${grade.bgColor} border ${grade.borderColor}">
+            <i class="fas ${grade.icon} text-3xl ${grade.color}"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-sm font-semibold ${grade.color} uppercase tracking-wide mb-1">직업 만족도</h3>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-bold text-white">${score.toFixed(1)}%</span>
+              <span class="text-lg font-semibold ${grade.color}">${grade.level}</span>
+            </div>
+          </div>
+        </div>
+      `)
+    }
   }
   
   if (profile.personality?.trim()) {
-    const divClass = traitBlocks.length > 0 ? 'mt-4' : ''
-    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">적성</h3>${formatAsBulletList(profile.personality)}</div>`)
+    const divClass = traitBlocks.length > 0 ? 'mt-6' : ''
+    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-secondary text-base font-bold mb-3">적성</h3>${formatAsBulletList(profile.personality)}</div>`)
   }
   
   if (profile.interests?.trim()) {
-    const divClass = traitBlocks.length > 0 ? 'mt-4' : ''
-    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">흥미</h3>${formatAsBulletList(profile.interests)}</div>`)
+    const divClass = traitBlocks.length > 0 ? 'mt-6' : ''
+    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-secondary text-base font-bold mb-3">흥미</h3>${formatAsBulletList(profile.interests)}</div>`)
   }
   
   if (profile.values?.trim()) {
-    const divClass = traitBlocks.length > 0 ? 'mt-4' : ''
-    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">가치관</h3>${formatRichText(profile.values)}</div>`)
+    const divClass = traitBlocks.length > 0 ? 'mt-6' : ''
+    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-secondary text-base font-bold mb-3">가치관</h3>${formatRichText(profile.values)}</div>`)
   }
   
   if (traitBlocks.length) {
-    pushOverviewCard('적성 및 흥미', 'fa-handshake', traitBlocks.join(''))
+    pushOverviewCard('적성 및 흥미', 'fa-heart', traitBlocks.join(''))
   }
 
   // Type B: 임금 (우선순위 선택 - primary 사용)
