@@ -61,6 +61,37 @@ const LAWYER_IDENTIFIER_TOKENS = [
 
 const LAWYER_EXACT_IDS = ['375', 'k000007482']
 
+/**
+ * 문장을 쉼표(,) 또는 마침표(.)로 분리하여 불릿 리스트로 변환
+ */
+const formatAsBulletList = (text: string): string => {
+  if (!text || !text.trim()) {
+    return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
+  }
+  
+  // 쉼표와 마침표로 문장 분리 (., 또는 , 기준)
+  const sentences = text
+    .split(/[,.]/)
+    .map(s => s.trim())
+    .filter(s => s.length > 0)
+  
+  if (sentences.length === 0) {
+    return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
+  }
+  
+  if (sentences.length === 1) {
+    // 문장이 하나만 있으면 불릿 없이 그냥 표시
+    return `<p class="content-text leading-relaxed text-wiki-text">${escapeHtml(sentences[0])}</p>`
+  }
+  
+  // 여러 문장이 있으면 불릿 리스트로 변환
+  const listItems = sentences
+    .map(sentence => `<li>${escapeHtml(sentence)}</li>`)
+    .join('')
+  
+  return `<ul class="list-disc list-inside space-y-1 content-text text-wiki-text">${listItems}</ul>`
+}
+
 const matchesLawyerIdentifier = (value?: string | null): boolean => {
   if (!value) {
     return false
@@ -1932,12 +1963,12 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   
   if (profile.personality?.trim()) {
     const divClass = traitBlocks.length > 0 ? 'mt-4' : ''
-    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">성격 특성</h3>${formatRichText(profile.personality)}</div>`)
+    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">적성</h3>${formatAsBulletList(profile.personality)}</div>`)
   }
   
   if (profile.interests?.trim()) {
     const divClass = traitBlocks.length > 0 ? 'mt-4' : ''
-    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">흥미 요소</h3>${formatRichText(profile.interests)}</div>`)
+    traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">흥미</h3>${formatAsBulletList(profile.interests)}</div>`)
   }
   
   if (profile.values?.trim()) {
