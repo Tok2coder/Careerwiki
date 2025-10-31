@@ -2160,8 +2160,130 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   // Type B: 전망 (우선순위 선택 - primary 사용)
   const prospectPrimary = mergedData.prospect.primary || profile.prospect
-  if (prospectPrimary) {
+  
+  // 재직자가 생각하는 일자리 전망 데이터 (GOYONG24)
+  const jobSumProspect = rawApiData?.goyong24?.salProspect?.jobSumProspect
+  const jobProspectInqYr = jobSumProspect && jobSumProspect.length > 0 
+    ? jobSumProspect[0].jobProspectInqYr 
+    : null
+  
+  let prospectChartHtml = ''
+  if (jobSumProspect && Array.isArray(jobSumProspect) && jobSumProspect.length > 0) {
+    // 전망 레이블 매핑
+    const labelMap: Record<string, string> = {
+      '증가': '증가',
+      '다소 증가': '다소 증가',
+      '유지': '유지',
+      '다소 감소': '다소 감소',
+      '감소': '감소'
+    }
+    
+    // 바 색상 (스크린샷 참고 - 파란색 계열)
+    const barColor = 'rgba(59, 130, 246, 0.85)'
+    
+    // Chart.js용 고유 ID
+    const chartId = `prospect-chart-${Date.now()}`
+    
+    // 데이터 파싱
+    const chartData = jobSumProspect.map(item => ({
+      label: labelMap[item.jobProspectNm] || item.jobProspectNm,
+      value: Number.parseFloat(item.jobProspectRatio) || 0
+    }))
+    
+    const chartLabels = chartData.map(d => d.label)
+    const chartValues = chartData.map(d => d.value)
+    const maxValue = Math.max(...chartValues, 50)
+    
+    prospectChartHtml = `
+      <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-base font-bold text-wiki-secondary">재직자가 생각하는 일자리 전망</h4>
+          ${jobProspectInqYr ? `<span class="text-xs text-wiki-muted">&lt;조사년도: ${jobProspectInqYr}년&gt;</span>` : ''}
+        </div>
+        <canvas id="${chartId}" style="max-height: 300px;"></canvas>
+        <p class="text-xs text-wiki-muted mt-3">※ 워크넷 그래프는 직업명 평균 30명의 재직자가 해당 직업의 향후 5년간 일자리 변화에 대해 응답한 결과입니다. 직업전문가 재직자들의 일자리 전망에 차이가 있으므로, 참고자료로만 활용하시기 바랍니다.</p>
+      </div>
+      
+      <script>
+        (function() {
+          const ctx = document.getElementById('${chartId}');
+          if (ctx && typeof Chart !== 'undefined') {
+            new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ${JSON.stringify(chartLabels)},
+                datasets: [{
+                  data: ${JSON.stringify(chartValues)},
+                  backgroundColor: '${barColor}',
+                  borderWidth: 0,
+                  borderRadius: 4,
+                  barThickness: 'flex',
+                  maxBarThickness: 50
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                indexAxis: 'x',
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    max: ${maxValue},
+                    ticks: {
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      font: { size: 11 },
+                      callback: function(value) {
+                        return value;
+                      }
+                    },
+                    grid: {
+                      color: 'rgba(255, 255, 255, 0.1)',
+                      drawBorder: false
+                    },
+                    title: {
+                      display: true,
+                      text: '(단위: %)',
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      font: { size: 10 },
+                      align: 'end'
+                    }
+                  },
+                  x: {
+                    ticks: {
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      font: { size: 11, weight: '500' }
+                    },
+                    grid: {
+                      display: false,
+                      drawBorder: false
+                    }
+                  }
+                },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: { size: 13, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    callbacks: {
+                      label: function(context) {
+                        return context.parsed.y + '%';
+                      }
+                    }
+                  }
+                }
+              }
+            });
+          }
+        })();
+      </script>
+    `
+  }
+  
+  if (prospectPrimary || prospectChartHtml) {
     let prospectHtml = ''
+    
     if (Array.isArray(prospectPrimary) && prospectPrimary.length > 0) {
       // 배열인 경우 각 항목을 블록으로 만들고 첫 단어 들여쓰기
       const prospectBlocks = prospectPrimary
@@ -2184,8 +2306,14 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       }
     }
     
-    if (prospectHtml?.trim()) {
-      pushOverviewCard('커리어 전망', 'fa-chart-line', prospectHtml)
+    // 텍스트가 있으면 먼저 표시, 그래프는 뒤에 표시
+    const combinedHtml = [
+      prospectHtml?.trim() || '',
+      prospectChartHtml?.trim() || ''
+    ].filter(Boolean).join('<div class="mt-6"></div>')
+    
+    if (combinedHtml.trim()) {
+      pushOverviewCard('커리어 전망', 'fa-chart-line', combinedHtml)
     }
   }
 
