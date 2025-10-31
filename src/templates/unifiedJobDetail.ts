@@ -2770,7 +2770,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   // 이는 개요 탭의 "업무 방식" 섹션에 이미 표시되므로 여기서는 제외
   
   if (profile.knowledge?.trim()) {
-    pushDetailCard('필수 지식', 'fa-book-open', formatRichText(profile.knowledge))
+    pushCharacteristicsCard('필수 지식', 'fa-book-open', formatRichText(profile.knowledge))
   }
 
   if (profile.activitiesImportance?.trim() || profile.activitiesLevels?.trim()) {
@@ -2782,13 +2782,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         ? `<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활동 수준</h3>${formatRichText(profile.activitiesLevels)}</div>`
         : ''
     ].join('')
-    pushDetailCard('업무 수행 지표', 'fa-chart-area', activityBlocks)
+    pushCharacteristicsCard('업무 수행 지표', 'fa-chart-area', activityBlocks)
   }
 
   // 1. Type C: 업무 상세 (detailed) - 먼저 표시
   const workDetailed = mergedData.work.detailed
   if (workDetailed && typeof workDetailed === 'string' && workDetailed.trim()) {
-    pushDetailCard('업무 상세', 'fa-clipboard-list', formatWorkDetailAsNumberedCards(workDetailed))
+    pushCharacteristicsCard('업무 상세', 'fa-clipboard-list', formatWorkDetailAsNumberedCards(workDetailed))
   }
 
   // 2-3. Type C: 학력·전공 분포 통합 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
@@ -2819,7 +2819,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     if (social) {
       wlbBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">사회적 기여도</h3><p class="content-text text-wiki-text">${escapeHtml(social)}</p></div>`)
     }
-    pushDetailCard('워라밸 & 사회적 평가', 'fa-heart', wlbBlocks.join(''))
+    pushCharacteristicsCard('워라밸 & 사회적 평가', 'fa-heart', wlbBlocks.join(''))
   }
   
   // 5-13. 아래 섹션들은 올바른 순서로 재배치됩니다
