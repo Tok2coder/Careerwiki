@@ -289,7 +289,176 @@ const renderMatrixValue = (value: unknown, labelMap?: Record<string, string>): s
 }
 
 /**
- * 직업 내/직업 간 비교 데이터를 렌더링하는 헬퍼 함수
+ * 직업 내/직업 간 비교 데이터를 표 형식으로 렌더링하는 헬퍼 함수
+ * Goyong24 API의 비교 데이터를 표로 시각화합니다.
+ */
+const renderComparisonTable = (
+  withinJob: any,
+  betweenJobs: any,
+  title: string,
+  icon: string
+): string => {
+  if (!withinJob && !betweenJobs) {
+    return ''
+  }
+
+  const blocks: string[] = []
+
+  // 직업 내 비교 (Within Job) - 표 형식
+  if (withinJob && Array.isArray(withinJob) && withinJob.length > 0) {
+    const tableId = `within-job-${title.replace(/\s+/g, '-')}`
+    const rows = withinJob.map((item: any, index: number) => {
+      const label = item.chrNmCmpr || item.intrstNmCmpr || item.valsNmCmpr || 
+                    item.jobActvImprtncNmCmpr || item.jobActvLvlNmCmpr ||
+                    item.KnwldgNmCmpr || item.KnwldgLvlNmCmpr ||
+                    item.jobAblNmCmpr || item.jobAblLvlNmCmpr ||
+                    item.jobEnvNmCmpr ||
+                    item.inform || item.name || item.activity || item.list_content || ''
+      const value = item.chrStatusCmpr || item.intrstStatusCmpr || item.valsStatusCmpr ||
+                    item.jobActvImprtncStatusCmpr || item.jobActvLvlStatusCmpr ||
+                    item.KnwldgStatusCmpr || item.KnwldgLvlStatusCmpr ||
+                    item.jobAblStatusCmpr || item.jobAblLvlStatusCmpr ||
+                    item.jobEnvStatusCmpr ||
+                    item.importance || item.level || item.value || ''
+      const description = item.chrContCmpr || item.intrstContCmpr || item.valsContCmpr ||
+                          item.jobActvImprtncContCmpr || item.jobActvLvlContCmpr ||
+                          item.KnwldgContCmpr || item.KnwldgLvlContCmpr ||
+                          item.jobAblContCmpr || item.jobAblLvlContCmpr ||
+                          item.jobEnvContCmpr || ''
+      
+      if (!label.trim()) return ''
+      
+      const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
+      const hideClass = index >= 5 ? 'hidden' : ''
+      
+      return `
+        <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" data-expandable-row>
+          <td class="px-4 py-3 text-center font-semibold text-wiki-text">${numericValue.toFixed(1)}</td>
+          <td class="px-4 py-3 font-medium text-wiki-text">${escapeHtml(label)}</td>
+          <td class="px-4 py-3 text-sm text-wiki-muted">${escapeHtml(description)}</td>
+        </tr>
+      `
+    }).filter(Boolean).join('')
+
+    const showMoreButton = withinJob.length > 5 ? `
+      <button 
+        onclick="toggleExpandTable('${tableId}')" 
+        id="${tableId}-btn"
+        class="mt-4 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-colors"
+      >
+        전체보기 ▼
+      </button>
+    ` : ''
+
+    blocks.push(`
+      <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+        <div class="mb-4">
+          <h3 class="text-base font-bold text-wiki-secondary mb-2">
+            <i class="fas fa-clover mr-2"></i>직업 내 비교
+          </h3>
+          <p class="text-xs text-wiki-muted leading-relaxed">
+            500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 내에 비교하여 본 직업에서 중요성(평가점수)이 높게 나타난 항목을 순서대로 제시함
+          </p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full" id="${tableId}">
+            <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
+              <tr>
+                <th class="px-4 py-3 text-center text-sm font-semibold text-wiki-text" style="width: 100px;">평균<br/>(5점 만점)</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-wiki-text" style="width: 150px;">항목</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-wiki-text">설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
+        ${showMoreButton}
+      </div>
+    `)
+  }
+
+  // 직업 간 비교 (Between Jobs) - 표 형식
+  if (betweenJobs && Array.isArray(betweenJobs) && betweenJobs.length > 0) {
+    const tableId = `between-jobs-${title.replace(/\s+/g, '-')}`
+    const rows = betweenJobs.map((item: any, index: number) => {
+      const label = item.chrNm || item.intrstNm || item.valsNm ||
+                    item.jobActvImprtncNm || item.jobActvLvlNm ||
+                    item.knwldgNm || item.knwldgLvlNm ||
+                    item.jobAblNm || item.jobAblLvlNm ||
+                    item.jobEnvNm ||
+                    item.inform || item.name || item.activity || item.list_content || ''
+      const value = item.chrStatus || item.intrstStatus || item.valsStatus ||
+                    item.jobActvImprtncStatus || item.jobActvLvlStatus ||
+                    item.knwldgStatus || item.knwldgLvlStatus ||
+                    item.jobAblStatus || item.jobAblLvlStatus ||
+                    item.jobEnvStatus ||
+                    item.importance || item.level || item.value || ''
+      const description = item.chrCont || item.intrstCont || item.valsCont ||
+                          item.jobActvImprtncCont || item.jobActvLvlCont ||
+                          item.knwldgCont || item.knwldgLvlCont ||
+                          item.jobAblCont || item.jobAblLvlCont ||
+                          item.jobEnvCont || ''
+      
+      if (!label.trim()) return ''
+      
+      const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
+      const hideClass = index >= 5 ? 'hidden' : ''
+      
+      return `
+        <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" data-expandable-row>
+          <td class="px-4 py-3 text-center font-semibold text-wiki-text">${numericValue.toFixed(0)}</td>
+          <td class="px-4 py-3 font-medium text-wiki-text">${escapeHtml(label)}</td>
+          <td class="px-4 py-3 text-sm text-wiki-muted">${escapeHtml(description)}</td>
+        </tr>
+      `
+    }).filter(Boolean).join('')
+
+    const showMoreButton = betweenJobs.length > 5 ? `
+      <button 
+        onclick="toggleExpandTable('${tableId}')" 
+        id="${tableId}-btn"
+        class="mt-4 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-colors"
+      >
+        전체보기 ▼
+      </button>
+    ` : ''
+
+    blocks.push(`
+      <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50 ${withinJob ? 'mt-8' : ''}">
+        <div class="mb-4">
+          <h3 class="text-base font-bold text-wiki-secondary mb-2">
+            <i class="fas fa-exchange-alt mr-2"></i>직업 간 비교
+          </h3>
+          <p class="text-xs text-wiki-muted leading-relaxed">
+            500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 간에 비교하여 본 직업에서 중요성(백분위)이 높게 나타난 항목을 순서대로 제시함
+          </p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full" id="${tableId}">
+            <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
+              <tr>
+                <th class="px-4 py-3 text-center text-sm font-semibold text-wiki-text" style="width: 80px;">백분위</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-wiki-text" style="width: 150px;">항목</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-wiki-text">설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
+        ${showMoreButton}
+      </div>
+    `)
+  }
+
+  return blocks.join('')
+}
+
+/**
+ * 직업 내/직업 간 비교 데이터를 렌더링하는 헬퍼 함수 (레거시 - 진행바 형식)
  * Goyong24 API의 비교 데이터를 시각화합니다.
  */
 const renderComparisonData = (
@@ -2685,10 +2854,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 업무수행능력 중요도
     if (abilityImportance && (abilityImportance.withinJob || abilityImportance.betweenJobs)) {
-      const importanceHtml = renderComparisonData(
+      const importanceHtml = renderComparisonTable(
         abilityImportance.withinJob,
         abilityImportance.betweenJobs,
-        '업무수행능력 중요도',
+        '업무수행능력',
         'fa-brain'
       )
       if (importanceHtml) {
@@ -2698,10 +2867,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 업무수행능력 수준
     if (abilityLevel && (abilityLevel.withinJob || abilityLevel.betweenJobs)) {
-      const levelHtml = renderComparisonData(
+      const levelHtml = renderComparisonTable(
         abilityLevel.withinJob,
         abilityLevel.betweenJobs,
-        '업무수행능력 수준',
+        '업무수행능력',
         'fa-star-half-alt'
       )
       if (levelHtml) {
@@ -2725,10 +2894,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 지식 중요도
     if (knowledgeImportance && (knowledgeImportance.withinJob || knowledgeImportance.betweenJobs)) {
-      const importanceHtml = renderComparisonData(
+      const importanceHtml = renderComparisonTable(
         knowledgeImportance.withinJob,
         knowledgeImportance.betweenJobs,
-        '지식 중요도',
+        '지식',
         'fa-book'
       )
       if (importanceHtml) {
@@ -2738,10 +2907,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 지식 수준
     if (knowledgeLevel && (knowledgeLevel.withinJob || knowledgeLevel.betweenJobs)) {
-      const levelHtml = renderComparisonData(
+      const levelHtml = renderComparisonTable(
         knowledgeLevel.withinJob,
         knowledgeLevel.betweenJobs,
-        '지식 수준',
+        '지식',
         'fa-layer-group'
       )
       if (levelHtml) {
@@ -2764,10 +2933,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 고용24 업무환경 데이터 (직업 내/간 비교)
     if (workEnvironment && (workEnvironment.comparison || workEnvironment.details)) {
-      const workEnvHtml = renderComparisonData(
+      const workEnvHtml = renderComparisonTable(
         workEnvironment.comparison, // jobsEnvCmpr (직업 내 비교)
         workEnvironment.details,    // jobsEnv (직업 간 비교)
-        '업무환경 조건',
+        '업무환경',
         'fa-building'
       )
       if (workEnvHtml) {
@@ -2814,10 +2983,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   // 4. Type D: 고용24 전용 - 성격 특성 비교
   const personality = mergedData.goyong24Only.personality
   if (personality && (personality.withinJob || personality.betweenJobs)) {
-    const personalityHtml = renderComparisonData(
+    const personalityHtml = renderComparisonTable(
       personality.withinJob,
       personality.betweenJobs,
-      '성격 특성',
+      '성격',
       'fa-user-check'
     )
     if (personalityHtml) {
@@ -2828,10 +2997,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   // 5. Type D: 고용24 전용 - 흥미 분야 비교
   const interest = mergedData.goyong24Only.interest
   if (interest && (interest.withinJob || interest.betweenJobs)) {
-    const interestHtml = renderComparisonData(
+    const interestHtml = renderComparisonTable(
       interest.withinJob,
       interest.betweenJobs,
-      '흥미 분야',
+      '흥미',
       'fa-heart'
     )
     if (interestHtml) {
@@ -2842,7 +3011,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   // 6. Type D: 고용24 전용 - 가치관 비교
   const values = mergedData.goyong24Only.values
   if (values && (values.withinJob || values.betweenJobs)) {
-    const valuesHtml = renderComparisonData(
+    const valuesHtml = renderComparisonTable(
       values.withinJob,
       values.betweenJobs,
       '가치관',
@@ -2863,10 +3032,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 업무활동 중요도
     if (activityImportance && (activityImportance.withinJob || activityImportance.betweenJobs)) {
-      const importanceHtml = renderComparisonData(
+      const importanceHtml = renderComparisonTable(
         activityImportance.withinJob,
         activityImportance.betweenJobs,
-        '업무활동 중요도',
+        '업무활동',
         'fa-chart-line'
       )
       if (importanceHtml) {
@@ -2876,10 +3045,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 업무활동 수준
     if (activityLevel && (activityLevel.withinJob || activityLevel.betweenJobs)) {
-      const levelHtml = renderComparisonData(
+      const levelHtml = renderComparisonTable(
         activityLevel.withinJob,
         activityLevel.betweenJobs,
-        '업무활동 수준',
+        '업무활동',
         'fa-signal'
       )
       if (levelHtml) {
@@ -2896,7 +3065,34 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     ? `<div class="space-y-6" data-cw-job-characteristics>
         ${renderSectionToc('characteristics', '업무특성 목차', characteristicsCards.map(({ id, label, icon }) => ({ id, label, icon })))}
         ${characteristicsCards.map((card) => card.markup).join('')}
-      </div>`
+      </div>
+      <script>
+        function toggleExpandTable(tableId) {
+          const table = document.getElementById(tableId);
+          const button = document.getElementById(tableId + '-btn');
+          if (!table || !button) return;
+          
+          const hiddenRows = table.querySelectorAll('tr[data-expandable-row].hidden');
+          const isExpanded = hiddenRows.length === 0;
+          
+          if (isExpanded) {
+            // 접기
+            const allRows = table.querySelectorAll('tr[data-expandable-row]');
+            allRows.forEach((row, index) => {
+              if (index >= 5) {
+                row.classList.add('hidden');
+              }
+            });
+            button.textContent = '전체보기 ▼';
+          } else {
+            // 펼치기
+            hiddenRows.forEach(row => {
+              row.classList.remove('hidden');
+            });
+            button.textContent = '접기 ▲';
+          }
+        }
+      </script>`
     : `<p class="text-sm text-wiki-muted">업무특성 정보가 준비 중입니다.</p>`
   // ===== 업무특성 탭 끝 =====
 
