@@ -307,7 +307,9 @@ const renderComparisonTable = (
   // 직업 내 비교 (Within Job) - 표 형식
   if (withinJob && Array.isArray(withinJob) && withinJob.length > 0) {
     const tableId = `within-job-${title.replace(/\s+/g, '-')}`
-    const rows = withinJob.map((item: any, index: number) => {
+    
+    // 먼저 유효한 데이터만 필터링
+    const validItems = withinJob.map((item: any) => {
       const label = item.chrNmCmpr || item.intrstNmCmpr || item.valsNmCmpr || 
                     item.jobActvImprtncNmCmpr || item.jobActvLvlNmCmpr ||
                     item.KnwldgNmCmpr || item.KnwldgLvlNmCmpr ||
@@ -326,30 +328,38 @@ const renderComparisonTable = (
                           item.jobAblContCmpr || item.jobAblLvlContCmpr ||
                           item.jobEnvContCmpr || ''
       
-      if (!label.trim()) return ''
+      if (!label.trim()) return null
       
       const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
+      return { label, value: numericValue, description }
+    }).filter(Boolean)
+    
+    // 유효한 항목이 없으면 아예 표시하지 않음
+    if (validItems.length === 0) return ''
+    
+    // 필터링된 유효한 항목들로 행 생성
+    const rows = validItems.map((item: any, index: number) => {
       const isHidden = index >= 5
       const hideClass = isHidden ? 'hidden' : ''
       const expandableAttr = isHidden ? 'data-expandable-row' : ''
       
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
-          <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${numericValue.toFixed(1)}</td>
-          <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(label)}</td>
-          <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(description)}</td>
+          <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.value.toFixed(1)}</td>
+          <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.label)}</td>
+          <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(item.description)}</td>
         </tr>
       `
-    }).filter(Boolean).join('')
+    }).join('')
 
-    const toggleIndicator = withinJob.length > 5 ? `
+    const toggleIndicator = validItems.length > 5 ? `
       <div class="mt-3 text-center">
         <div 
           onclick="toggleExpandTable('${tableId}')" 
           id="${tableId}-toggle"
           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-all cursor-pointer"
         >
-          <span id="${tableId}-text">전체보기 (${withinJob.length}개 항목)</span>
+          <span id="${tableId}-text">전체보기 (${validItems.length}개 항목)</span>
           <i id="${tableId}-icon" class="fas fa-chevron-down transition-transform"></i>
         </div>
       </div>
@@ -387,7 +397,9 @@ const renderComparisonTable = (
   // 직업 간 비교 (Between Jobs) - 표 형식
   if (betweenJobs && Array.isArray(betweenJobs) && betweenJobs.length > 0) {
     const tableId = `between-jobs-${title.replace(/\s+/g, '-')}`
-    const rows = betweenJobs.map((item: any, index: number) => {
+    
+    // 먼저 유효한 데이터만 필터링
+    const validItems = betweenJobs.map((item: any) => {
       const label = item.chrNm || item.intrstNm || item.valsNm ||
                     item.jobActvImprtncNm || item.jobActvLvlNm ||
                     item.knwldgNm || item.knwldgLvlNm ||
@@ -406,30 +418,38 @@ const renderComparisonTable = (
                           item.jobAblCont || item.jobAblLvlCont ||
                           item.jobEnvCont || ''
       
-      if (!label.trim()) return ''
+      if (!label.trim()) return null
       
       const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
+      return { label, value: numericValue, description }
+    }).filter(Boolean)
+    
+    // 유효한 항목이 없으면 아예 표시하지 않음
+    if (validItems.length === 0) return ''
+    
+    // 필터링된 유효한 항목들로 행 생성
+    const rows = validItems.map((item: any, index: number) => {
       const isHidden = index >= 5
       const hideClass = isHidden ? 'hidden' : ''
       const expandableAttr = isHidden ? 'data-expandable-row' : ''
       
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
-          <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${numericValue.toFixed(0)}</td>
-          <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(label)}</td>
-          <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(description)}</td>
+          <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.value.toFixed(0)}</td>
+          <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.label)}</td>
+          <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(item.description)}</td>
         </tr>
       `
-    }).filter(Boolean).join('')
+    }).join('')
 
-    const toggleIndicator = betweenJobs.length > 5 ? `
+    const toggleIndicator = validItems.length > 5 ? `
       <div class="mt-3 text-center">
         <div 
           onclick="toggleExpandTable('${tableId}')" 
           id="${tableId}-toggle"
           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-all cursor-pointer"
         >
-          <span id="${tableId}-text">전체보기 (${betweenJobs.length}개 항목)</span>
+          <span id="${tableId}-text">전체보기 (${validItems.length}개 항목)</span>
           <i id="${tableId}-icon" class="fas fa-chevron-down transition-transform"></i>
         </div>
       </div>
