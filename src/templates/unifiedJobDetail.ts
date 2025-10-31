@@ -329,10 +329,12 @@ const renderComparisonTable = (
       if (!label.trim()) return ''
       
       const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
-      const hideClass = index >= 5 ? 'hidden' : ''
+      const isHidden = index >= 5
+      const hideClass = isHidden ? 'hidden' : ''
+      const expandableAttr = isHidden ? 'data-expandable-row' : ''
       
       return `
-        <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" data-expandable-row>
+        <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
           <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${numericValue.toFixed(1)}</td>
           <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(label)}</td>
           <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(description)}</td>
@@ -407,10 +409,12 @@ const renderComparisonTable = (
       if (!label.trim()) return ''
       
       const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
-      const hideClass = index >= 5 ? 'hidden' : ''
+      const isHidden = index >= 5
+      const hideClass = isHidden ? 'hidden' : ''
+      const expandableAttr = isHidden ? 'data-expandable-row' : ''
       
       return `
-        <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" data-expandable-row>
+        <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
           <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${numericValue.toFixed(0)}</td>
           <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(label)}</td>
           <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(description)}</td>
@@ -2764,7 +2768,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   // 1. Type C: 업무 상세 (detailed) - 먼저 표시
   const workDetailed = mergedData.work.detailed
   if (workDetailed && typeof workDetailed === 'string' && workDetailed.trim()) {
-    pushCharacteristicsCard('업무 상세', 'fa-clipboard-list', formatWorkDetailAsNumberedCards(workDetailed))
+    pushDetailCard('업무 상세', 'fa-clipboard-list', formatWorkDetailAsNumberedCards(workDetailed))
   }
 
   // 2-3. Type C: 학력·전공 분포 통합 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
@@ -2795,7 +2799,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     if (social) {
       wlbBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">사회적 기여도</h3><p class="content-text text-wiki-text">${escapeHtml(social)}</p></div>`)
     }
-    pushCharacteristicsCard('워라밸 & 사회적 평가', 'fa-heart', wlbBlocks.join(''))
+    pushDetailCard('워라밸 & 사회적 평가', 'fa-heart', wlbBlocks.join(''))
   }
   
   // 5-13. 아래 섹션들은 올바른 순서로 재배치됩니다
@@ -3075,22 +3079,24 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       <script>
         function toggleExpandTable(tableId) {
           const table = document.getElementById(tableId);
-          const toggleButton = document.getElementById(tableId + '-toggle');
           const toggleText = document.getElementById(tableId + '-text');
           const toggleIcon = document.getElementById(tableId + '-icon');
           if (!table) return;
           
-          const allRows = table.querySelectorAll('tr[data-expandable-row]');
+          // data-expandable-row 속성을 가진 행들만 선택 (5개 이후의 행들)
+          const expandableRows = table.querySelectorAll('tr[data-expandable-row]');
+          if (expandableRows.length === 0) return; // 5개 이하면 토글 필요 없음
+          
           const hiddenRows = table.querySelectorAll('tr[data-expandable-row].hidden');
           const isExpanded = hiddenRows.length === 0;
-          const totalCount = allRows.length;
+          
+          // 전체 행 수 계산 (5개 고정 + expandable 행들)
+          const totalCount = 5 + expandableRows.length;
           
           if (isExpanded) {
-            // 접기 - 5개 이후 항목만 숨기기
-            allRows.forEach((row, index) => {
-              if (index >= 5) {
-                row.classList.add('hidden');
-              }
+            // 접기 - expandable 행들만 숨기기
+            expandableRows.forEach(row => {
+              row.classList.add('hidden');
             });
             // 버튼 상태 업데이트
             if (toggleText) {
@@ -3101,8 +3107,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
               toggleIcon.classList.add('fa-chevron-down');
             }
           } else {
-            // 펼치기 - 모든 항목 보이기
-            allRows.forEach(row => {
+            // 펼치기 - expandable 행들 보이기
+            expandableRows.forEach(row => {
               row.classList.remove('hidden');
             });
             // 버튼 상태 업데이트
