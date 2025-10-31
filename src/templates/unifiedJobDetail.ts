@@ -1199,27 +1199,36 @@ const renderCombinedDistributionCharts = (
   const renderSingleChart = (
     data: Array<{ label: string; raw: string; numeric: number | null }>,
     title: string,
-    chartId: string
+    chartId: string,
+    sortByValue: boolean = false
   ) => {
+    // 전공 분포의 경우 높은 순으로 정렬
+    const sortedData = sortByValue 
+      ? [...data].sort((a, b) => (b.numeric || 0) - (a.numeric || 0))
+      : data
+
     const chartLabels = data.map(e => e.label)
     const chartData = data.map(e => e.numeric)
 
     return `
       <div class="flex-1 flex flex-col items-center">
-        <h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-4 text-center">${title}</h3>
+        <h3 class="text-lg font-bold text-wiki-secondary mb-4 text-center">${title}</h3>
         <div class="w-full max-w-xs mx-auto mb-4">
           <canvas id="${chartId}"></canvas>
         </div>
-        <div class="w-full max-w-xs space-y-2">
-          ${data.map((entry, idx) => `
-            <div class="flex items-center justify-between content-text">
-              <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full" style="background-color: ${chartColors[idx % chartColors.length]}"></div>
-                <span class="text-wiki-text">${escapeHtml(entry.label)}</span>
+        <div class="w-full max-w-xs space-y-2.5">
+          ${sortedData.map((entry, idx) => {
+            // 원본 데이터에서 인덱스 찾기 (색상 매칭용)
+            const originalIdx = data.findIndex(d => d.label === entry.label)
+            return `
+            <div class="flex items-center justify-between content-text py-1">
+              <div class="flex items-center gap-2.5">
+                <div class="w-4 h-4 rounded-full flex-shrink-0" style="background-color: ${chartColors[originalIdx % chartColors.length]}"></div>
+                <span class="text-wiki-text font-medium">${escapeHtml(entry.label)}</span>
               </div>
-              <span class="font-semibold text-wiki-primary">${entry.raw}</span>
+              <span class="font-bold text-wiki-primary">${entry.raw}%</span>
             </div>
-          `).join('')}
+          `}).join('')}
         </div>
       </div>
       <script>
@@ -1251,7 +1260,7 @@ const renderCombinedDistributionCharts = (
                         const value = context.parsed || 0;
                         const total = context.dataset.data.reduce((a, b) => a + b, 0);
                         const percentage = ((value / total) * 100).toFixed(1);
-                        return label + ': ' + value + ' (' + percentage + '%)';
+                        return label + ': ' + percentage + '%';
                       }
                     }
                   }
@@ -1274,18 +1283,18 @@ const renderCombinedDistributionCharts = (
     
     chartsHtml = `
       <div class="flex flex-col lg:flex-row gap-8">
-        ${renderSingleChart(educationData, '학력 분포', educationChartId)}
-        ${renderSingleChart(majorData, '전공 분포', majorChartId)}
+        ${renderSingleChart(educationData, '학력 분포', educationChartId, false)}
+        ${renderSingleChart(majorData, '전공 분포', majorChartId, true)}
       </div>
     `
   } else if (educationData) {
     // 학력만 있을 경우
     const educationChartId = `chart-education-${timestamp}`
-    chartsHtml = renderSingleChart(educationData, '학력 분포', educationChartId)
+    chartsHtml = renderSingleChart(educationData, '학력 분포', educationChartId, false)
   } else if (majorData) {
     // 전공만 있을 경우
     const majorChartId = `chart-major-${timestamp}`
-    chartsHtml = renderSingleChart(majorData, '전공 분포', majorChartId)
+    chartsHtml = renderSingleChart(majorData, '전공 분포', majorChartId, true)
   }
 
   return buildCard('학력·전공 분포', 'fa-graduation-cap', chartsHtml, options ?? {})
