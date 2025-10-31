@@ -394,26 +394,38 @@ const renderComparisonData = (
   return blocks.join('')
 }
 
-// 조사/연구자료 렌더링
+// 진로탐색활동 렌더링
 const renderResearchList = (researchList: any[]): string => {
   if (!researchList || !Array.isArray(researchList) || researchList.length === 0) {
     return ''
   }
 
+  // 각 활동 유형에 맞는 아이콘 매핑
+  const getActivityIcon = (text: string): string => {
+    if (text.includes('법 체험') || text.includes('진로체험') || text.includes('프로그램')) {
+      return 'fa-users-class'  // 체험 프로그램
+    }
+    if (text.includes('원격영상') || text.includes('멘토링') || text.includes('사이트')) {
+      return 'fa-video'  // 원격 멘토링
+    }
+    if (text.includes('모의법정') || text.includes('동아리')) {
+      return 'fa-scale-balanced'  // 모의법정
+    }
+    return 'fa-lightbulb'  // 기본 아이콘
+  }
+
   const items = researchList
     .filter((item) => item && typeof item === 'object' && item.research)
-    .map((item, index) => {
-      const title = item.research || '연구자료'
-      // research 필드는 텍스트만 있고 URL이 없을 수 있음
+    .map((item) => {
+      const text = item.research || ''
+      const icon = getActivityIcon(text)
       
       return `
-        <li class="flex items-start gap-3 p-3 rounded-lg bg-wiki-bg/40 border border-wiki-border/30">
-          <span class="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20 text-blue-300">
-            <i class="fas fa-file-alt"></i>
+        <li class="flex items-start gap-3">
+          <span class="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg bg-wiki-primary/20 text-wiki-secondary mt-1">
+            <i class="fas ${icon}"></i>
           </span>
-          <div class="flex-1 min-w-0">
-            <p class="content-text font-medium text-wiki-text">${escapeHtml(title)}</p>
-          </div>
+          <p class="content-text text-wiki-text flex-1">${escapeHtml(text)}</p>
         </li>
       `
     })
@@ -423,22 +435,7 @@ const renderResearchList = (researchList: any[]): string => {
     return ''
   }
 
-  return `
-    <section class="glass-card p-6 md:p-7 rounded-3xl border border-wiki-border/70 bg-gradient-to-br from-wiki-bg/90 via-wiki-bg/65 to-wiki-bg/40">
-      <header class="flex items-center gap-3 mb-4">
-        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500/30 via-emerald-500/30 to-green-400/20 text-white">
-          <i class="fas fa-book-reader text-lg"></i>
-        </span>
-        <div>
-          <h2 class="text-lg sm:text-xl font-bold text-white leading-tight">조사/연구자료</h2>
-          <p class="mt-1 content-text text-wiki-muted">직업 관련 조사 및 연구 자료를 확인하세요</p>
-        </div>
-      </header>
-      <ul class="space-y-2">
-        ${items}
-      </ul>
-    </section>
-  `
+  return `<ul class="space-y-3">${items}</ul>`
 }
 
 // 태그 렌더링
