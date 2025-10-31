@@ -403,15 +403,15 @@ const renderResearchList = (researchList: any[]): string => {
   // 각 활동 유형에 맞는 아이콘 매핑
   const getActivityIcon = (text: string): string => {
     if (text.includes('법 체험') || text.includes('진로체험') || text.includes('프로그램')) {
-      return 'fa-users-class'  // 체험 프로그램
+      return 'fa-user-graduate'  // 체험 프로그램
     }
     if (text.includes('원격영상') || text.includes('멘토링') || text.includes('사이트')) {
       return 'fa-video'  // 원격 멘토링
     }
     if (text.includes('모의법정') || text.includes('동아리')) {
-      return 'fa-scale-balanced'  // 모의법정
+      return 'fa-gavel'  // 모의법정 (법정 망치)
     }
-    return 'fa-lightbulb'  // 기본 아이콘
+    return 'fa-compass'  // 기본 아이콘 (진로 탐색)
   }
 
   const items = researchList
@@ -435,7 +435,7 @@ const renderResearchList = (researchList: any[]): string => {
     return ''
   }
 
-  return `<ul class="space-y-3">${items}</ul>`
+  return `<ul class="space-y-4">${items}</ul>`
 }
 
 // 태그 렌더링
