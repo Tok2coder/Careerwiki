@@ -62,17 +62,19 @@ const LAWYER_IDENTIFIER_TOKENS = [
 const LAWYER_EXACT_IDS = ['375', 'k000007482']
 
 /**
- * 문장을 쉼표(,) 또는 마침표(.)로 분리하여 불릿 리스트로 변환
+ * 문장을 마침표(.)로 분리하여 불릿 리스트로 변환
+ * 쉼표는 문장 내 구분자로 유지됨
  */
 const formatAsBulletList = (text: string): string => {
   if (!text || !text.trim()) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
   
-  // 쉼표와 마침표로 문장 분리 (., 또는 , 기준)
+  // 마침표로만 문장 분리 (쉼표는 문장 내 구분자로 유지)
   const sentences = text
-    .split(/[,.]/)
+    .split(/\.\s*/)
     .map(s => s.trim())
+    .map(s => s.replace(/^[,，]\s*/, ''))  // 문장 시작의 쉼표 제거
     .filter(s => s.length > 0)
   
   if (sentences.length === 0) {
