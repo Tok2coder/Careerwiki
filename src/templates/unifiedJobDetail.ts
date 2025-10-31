@@ -2201,7 +2201,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
           ${jobProspectInqYr ? `<span class="text-xs text-wiki-muted">&lt;조사년도: ${jobProspectInqYr}년&gt;</span>` : ''}
         </div>
         <canvas id="${chartId}" style="max-height: 300px;"></canvas>
-        <p class="text-xs text-wiki-muted mt-3">※ 워크넷 그래프는 직업명 평균 30명의 재직자가 해당 직업의 향후 5년간 일자리 변화에 대해 응답한 결과입니다. 직업전문가 재직자들의 일자리 전망에 차이가 있으므로, 참고자료로만 활용하시기 바랍니다.</p>
+        <p class="text-xs text-wiki-muted mt-3">※ 위의 그래프는 직업당 평균 30명의 재직자가 해당 직업의 향후 5년간 일자리 변화에 대해 응답한 결과입니다. 작업전문가와 재직자들의 입장과 견해에 따라 일자리 전망에 차이가 있으므로, 참고자료로만 활용하시기 바랍니다.</p>
       </div>
       
       <script>
