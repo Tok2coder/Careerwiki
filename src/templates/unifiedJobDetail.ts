@@ -1123,6 +1123,174 @@ const renderDistributionPieChart = (
   return buildCard(title, icon, chartHtml, options ?? {})
 }
 
+// 학력·전공 분포 통합 렌더링 함수
+const renderCombinedDistributionCharts = (
+  educationDistribution?: Record<string, string | undefined> | null,
+  majorDistribution?: Record<string, string | undefined> | null,
+  options?: BuildCardOptions
+): string => {
+  // 데이터 파싱 헬퍼 함수
+  const parseDistributionData = (
+    distribution: Record<string, string | undefined> | null | undefined,
+    labels: Record<string, string>
+  ) => {
+    if (!distribution) return null
+
+    const entries = Object.entries(distribution)
+      .filter(([, value]) => typeof value === 'string' && value.trim().length > 0)
+
+    if (!entries.length) return null
+
+    const parsed = entries.map(([key, value]) => {
+      const label = labels[key] ?? key
+      const raw = value!.trim()
+      const numericMatch = raw.match(/(\d+(?:[.,]\d+)?)/)
+      const numeric = numericMatch ? Number.parseFloat(numericMatch[1].replace(',', '.')) : null
+      return {
+        key,
+        label,
+        raw,
+        numeric: Number.isFinite(numeric) ? numeric : null
+      }
+    })
+
+    const numericEntries = parsed.filter((entry) => entry.numeric !== null)
+    return numericEntries.length > 0 ? numericEntries : null
+  }
+
+  // 학력 데이터 파싱
+  const educationData = parseDistributionData(educationDistribution, {
+    middleSchoolOrLess: '중학교 이하',
+    highSchool: '고등학교',
+    college: '전문대',
+    university: '대학',
+    graduate: '석사 이상',
+    doctor: '박사'
+  })
+
+  // 전공 데이터 파싱
+  const majorData = parseDistributionData(majorDistribution, {
+    humanities: '인문계열',
+    social: '사회계열',
+    education: '교육계열',
+    engineering: '공학계열',
+    natural: '자연계열',
+    medical: '의약계열',
+    artsSports: '예체능'
+  })
+
+  // 둘 다 데이터가 없으면 빈 문자열 반환
+  if (!educationData && !majorData) {
+    return ''
+  }
+
+  const chartColors = [
+    'rgba(59, 130, 246, 0.8)',  // blue
+    'rgba(16, 185, 129, 0.8)',  // green
+    'rgba(251, 146, 60, 0.8)',  // orange
+    'rgba(168, 85, 247, 0.8)',  // purple
+    'rgba(236, 72, 153, 0.8)',  // pink
+    'rgba(245, 158, 11, 0.8)',  // amber
+    'rgba(20, 184, 166, 0.8)',  // teal
+    'rgba(239, 68, 68, 0.8)'    // red
+  ]
+
+  // 단일 차트 렌더링 함수
+  const renderSingleChart = (
+    data: Array<{ label: string; raw: string; numeric: number | null }>,
+    title: string,
+    chartId: string
+  ) => {
+    const chartLabels = data.map(e => e.label)
+    const chartData = data.map(e => e.numeric)
+
+    return `
+      <div class="flex-1 flex flex-col items-center">
+        <h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-4 text-center">${title}</h3>
+        <div class="w-full max-w-xs mx-auto mb-4">
+          <canvas id="${chartId}"></canvas>
+        </div>
+        <div class="w-full max-w-xs space-y-2">
+          ${data.map((entry, idx) => `
+            <div class="flex items-center justify-between content-text">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full" style="background-color: ${chartColors[idx % chartColors.length]}"></div>
+                <span class="text-wiki-text">${escapeHtml(entry.label)}</span>
+              </div>
+              <span class="font-semibold text-wiki-primary">${entry.raw}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <script>
+        (function() {
+          const ctx = document.getElementById('${chartId}');
+          if (ctx && typeof Chart !== 'undefined') {
+            new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                labels: ${JSON.stringify(chartLabels)},
+                datasets: [{
+                  data: ${JSON.stringify(chartData)},
+                  backgroundColor: ${JSON.stringify(chartColors.slice(0, data.length))},
+                  borderWidth: 2,
+                  borderColor: '#ffffff'
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                  legend: {
+                    display: false
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return label + ': ' + value + ' (' + percentage + '%)';
+                      }
+                    }
+                  }
+                }
+              }
+            });
+          }
+        })();
+      </script>
+    `
+  }
+
+  const timestamp = Date.now()
+  let chartsHtml = ''
+
+  // 두 차트 모두 있을 경우 가로로 배치
+  if (educationData && majorData) {
+    const educationChartId = `chart-education-${timestamp}`
+    const majorChartId = `chart-major-${timestamp}`
+    
+    chartsHtml = `
+      <div class="flex flex-col lg:flex-row gap-8">
+        ${renderSingleChart(educationData, '학력 분포', educationChartId)}
+        ${renderSingleChart(majorData, '전공 분포', majorChartId)}
+      </div>
+    `
+  } else if (educationData) {
+    // 학력만 있을 경우
+    const educationChartId = `chart-education-${timestamp}`
+    chartsHtml = renderSingleChart(educationData, '학력 분포', educationChartId)
+  } else if (majorData) {
+    // 전공만 있을 경우
+    const majorChartId = `chart-major-${timestamp}`
+    chartsHtml = renderSingleChart(majorData, '전공 분포', majorChartId)
+  }
+
+  return buildCard('학력·전공 분포', 'fa-graduation-cap', chartsHtml, options ?? {})
+}
+
 const renderDistributionBars = (
   title: string,
   icon: string,
@@ -2027,55 +2195,21 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     pushDetailCard('업무 상세', 'fa-clipboard-list', formatRichText(workDetailed))
   }
 
-  // 2. Type C: 학력 분포 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
+  // 2-3. Type C: 학력·전공 분포 통합 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
   const educationDistribution = mergedData.education.detailedDistribution || profile.educationDistribution
-  const educationAnchor = anchorIdFactory('details', '학력 분포')
-  const educationCard = renderDistributionPieChart(
-    '학력 분포',
-    'fa-user-graduate',
-    educationDistribution,
-    {
-      middleSchoolOrLess: '중학교 이하',
-      highSchool: '고등학교',
-      college: '전문대',
-      university: '대학',
-      graduate: '석사 이상',
-      doctor: '박사'
-    },
-    {
-      anchorId: educationAnchor,
-      telemetryScope: 'job-detail-card',
-      telemetryComponent: 'job-detail-education'
-    }
-  )
-  if (educationCard) {
-    detailCards.push({ id: educationAnchor, label: '학력 분포', icon: 'fa-user-graduate', markup: educationCard })
-  }
-
-  // 3. Type C: 전공 분포 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
   const majorDistribution = mergedData.major.detailedDistribution || profile.majorDistribution
-  const majorAnchor = anchorIdFactory('details', '전공 분포')
-  const majorCard = renderDistributionPieChart(
-    '전공 분포',
-    'fa-book-open-reader',
+  const combinedAnchor = anchorIdFactory('details', '학력·전공 분포')
+  const combinedCard = renderCombinedDistributionCharts(
+    educationDistribution,
     majorDistribution,
     {
-      humanities: '인문계열',
-      social: '사회계열',
-      education: '교육계열',
-      engineering: '공학계열',
-      natural: '자연계열',
-      medical: '의약계열',
-      artsSports: '예체능'
-    },
-    {
-      anchorId: majorAnchor,
+      anchorId: combinedAnchor,
       telemetryScope: 'job-detail-card',
-      telemetryComponent: 'job-detail-major'
+      telemetryComponent: 'job-detail-education-major'
     }
   )
-  if (majorCard) {
-    detailCards.push({ id: majorAnchor, label: '전공 분포', icon: 'fa-book-open-reader', markup: majorCard })
+  if (combinedCard) {
+    detailCards.push({ id: combinedAnchor, label: '학력·전공 분포', icon: 'fa-graduation-cap', markup: combinedCard })
   }
   
   // 4. Type D: 커리어넷 전용 - 워라밸 & 사회적 기여도
