@@ -2339,14 +2339,14 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         })
         .filter(Boolean)
         .join('')
-      prospectHtml = `<div class="space-y-2">${prospectBlocks}</div>`
+      prospectHtml = `<div class="space-y-2">${prospectBlocks}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
     } else if (typeof prospectPrimary === 'string') {
       // 문자열인 경우 줄바꿈을 블록으로 변환
       const lines = prospectPrimary.split('\n').filter(line => line.trim())
       if (lines.length > 1) {
-        prospectHtml = `<div class="space-y-2">${lines.map(line => `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${escapeHtml(line)}</div>`).join('')}</div>`
+        prospectHtml = `<div class="space-y-2">${lines.map(line => `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${escapeHtml(line)}</div>`).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       } else {
-        prospectHtml = formatRichText(prospectPrimary)
+        prospectHtml = `${formatRichText(prospectPrimary)}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       }
     }
     
@@ -2512,7 +2512,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
           </div>
         </div>
         <p class="text-xs text-wiki-muted mt-3 leading-relaxed">
-          직업만족도는 해당 직업의 일자리 증가 가능성, 발전가능성 및 고용안정에 대해 재직자가 느끼는 생각을 종합하여 100점 만점으로 환산한 값입니다.
+          ※ 직업만족도는 해당 직업의 일자리 증가 가능성, 발전가능성 및 고용안정에 대해 재직자가 느끼는 생각을 종합하여 100점 만점으로 환산한 값입니다.
         </p>
       `)
     }
