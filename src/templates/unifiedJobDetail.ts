@@ -94,6 +94,50 @@ const formatAsBulletList = (text: string): string => {
   return `<ul class="list-disc list-inside space-y-1 content-text text-wiki-text">${listItems}</ul>`
 }
 
+/**
+ * 업무 상세를 번호가 매겨진 단계별 카드로 변환
+ */
+const formatWorkDetailAsNumberedCards = (text: string): string => {
+  if (!text || !text.trim()) {
+    return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
+  }
+  
+  // 줄바꿈이나 하이픈으로 시작하는 항목들을 분리
+  const items = text
+    .split(/\n/)
+    .map(s => s.trim())
+    .map(s => s.replace(/^[-–—]\s*/, ''))  // 하이픈 제거
+    .filter(s => s.length > 0)
+  
+  if (items.length === 0) {
+    return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
+  }
+  
+  // 단일 항목인 경우 카드 없이 표시
+  if (items.length === 1) {
+    return `<p class="content-text leading-relaxed text-wiki-text">${escapeHtml(items[0])}</p>`
+  }
+  
+  // 여러 항목을 번호가 매겨진 카드로 변환
+  const cards = items
+    .map((item, index) => {
+      const stepNumber = index + 1
+      return `
+        <div class="flex gap-4 p-4 rounded-xl bg-wiki-card/30 border border-wiki-border/40 hover:border-wiki-primary/50 hover:bg-wiki-card/50 transition-all duration-200">
+          <div class="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg bg-wiki-primary/20 border border-wiki-primary/40">
+            <span class="text-sm font-bold text-wiki-primary">${stepNumber}</span>
+          </div>
+          <div class="flex-1 pt-1">
+            <p class="content-text text-wiki-text leading-relaxed">${escapeHtml(item)}</p>
+          </div>
+        </div>
+      `
+    })
+    .join('')
+  
+  return `<div class="space-y-3">${cards}</div>`
+}
+
 const matchesLawyerIdentifier = (value?: string | null): boolean => {
   if (!value) {
     return false
@@ -2522,7 +2566,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   // 1. Type C: 업무 상세 (detailed) - 먼저 표시
   const workDetailed = mergedData.work.detailed
   if (workDetailed && typeof workDetailed === 'string' && workDetailed.trim()) {
-    pushDetailCard('업무 상세', 'fa-clipboard-list', formatRichText(workDetailed))
+    pushDetailCard('업무 상세', 'fa-clipboard-list', formatWorkDetailAsNumberedCards(workDetailed))
   }
 
   // 2-3. Type C: 학력·전공 분포 통합 (계층적 활용 - detailedDistribution 사용) - 파이 차트로 시각화
