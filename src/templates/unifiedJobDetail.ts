@@ -333,9 +333,9 @@ const renderComparisonTable = (
       
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" data-expandable-row>
-          <td class="px-4 py-3 text-center font-semibold text-wiki-text">${numericValue.toFixed(1)}</td>
-          <td class="px-4 py-3 font-medium text-wiki-text">${escapeHtml(label)}</td>
-          <td class="px-4 py-3 text-sm text-wiki-muted">${escapeHtml(description)}</td>
+          <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${numericValue.toFixed(1)}</td>
+          <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(label)}</td>
+          <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(description)}</td>
         </tr>
       `
     }).filter(Boolean).join('')
@@ -379,9 +379,9 @@ const renderComparisonTable = (
           <table class="w-full" id="${tableId}">
             <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
               <tr>
-                <th class="px-4 py-3 text-center text-sm font-semibold text-wiki-text" style="width: 100px;">평균<br/>(5점 만점)</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-wiki-text" style="width: 150px;">항목</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-wiki-text">설명</th>
+                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 100px; font-size: 15px;">평균<br/>(5점 만점)</th>
+                <th class="px-4 py-3 text-left font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
+                <th class="px-4 py-3 text-left font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
               </tr>
             </thead>
             <tbody>
@@ -423,9 +423,9 @@ const renderComparisonTable = (
       
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" data-expandable-row>
-          <td class="px-4 py-3 text-center font-semibold text-wiki-text">${numericValue.toFixed(0)}</td>
-          <td class="px-4 py-3 font-medium text-wiki-text">${escapeHtml(label)}</td>
-          <td class="px-4 py-3 text-sm text-wiki-muted">${escapeHtml(description)}</td>
+          <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${numericValue.toFixed(0)}</td>
+          <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(label)}</td>
+          <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(description)}</td>
         </tr>
       `
     }).filter(Boolean).join('')
@@ -469,9 +469,9 @@ const renderComparisonTable = (
           <table class="w-full" id="${tableId}">
             <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
               <tr>
-                <th class="px-4 py-3 text-center text-sm font-semibold text-wiki-text" style="width: 80px;">백분위</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-wiki-text" style="width: 150px;">항목</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-wiki-text">설명</th>
+                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 80px; font-size: 15px;">백분위</th>
+                <th class="px-4 py-3 text-left font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
+                <th class="px-4 py-3 text-left font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
               </tr>
             </thead>
             <tbody>
