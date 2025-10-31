@@ -486,55 +486,141 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
     return ''
   }
 
-  // indicatorChart는 배열 형태: [{ indicator: 'name', indicator_data: 'value', source: '...' }]
-  const bars = indicatorData
-    .filter((item) => item && item.indicator && item.indicator_data)
-    .map((item) => {
-      const label = item.indicator || '지표'
-      const value = item.indicator_data || '0'
-      
-      const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
-      const percentage = Math.min(numericValue, 100)
-      
-      // 색상 결정 (높을수록 녹색)
-      const barColor = percentage >= 90 ? 'bg-green-500' : percentage >= 80 ? 'bg-blue-500' : percentage >= 70 ? 'bg-yellow-500' : 'bg-orange-500'
-      
-      return `
-        <div class="mb-5">
-          <div class="flex justify-between items-center mb-2">
-            <span class="content-text font-medium text-wiki-text flex items-center gap-2">
-              <i class="fas fa-chart-bar text-wiki-primary w-4 text-center"></i>
-              ${escapeHtml(label)}
-            </span>
-            <span class="content-text font-bold text-wiki-primary">${numericValue.toFixed(1)}%</span>
-          </div>
-          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden shadow-inner">
-            <div class="${barColor} h-4 rounded-full transition-all duration-500 shadow-sm" style="width: ${percentage}%"></div>
-          </div>
-        </div>
-      `
-    })
-    .join('')
-
-  if (!bars) {
+  // indicatorChart 데이터 구조:
+  // [{ category: "융합성,대인관계,창의성,일가정균형,소득수준,고용유지,사회공헌", value: 0, description: "1.7,0.2,4.2,0.2,2.2,1.7,1.7" }]
+  const firstItem = indicatorData[0]
+  if (!firstItem || !firstItem.category || !firstItem.description) {
     return ''
   }
 
+  const categories = firstItem.category.split(',').map((c: string) => c.trim())
+  const values = firstItem.description.split(',').map((v: string) => Number.parseFloat(v.trim()) || 0)
+
+  if (categories.length === 0 || values.length === 0 || categories.length !== values.length) {
+    return ''
+  }
+
+  // 각 지표별 색상 (스크린샷 참고)
+  const barColors = [
+    'rgba(168, 85, 247, 0.8)',   // 융합성 - purple
+    'rgba(59, 130, 246, 0.8)',   // 대인관계 - blue
+    'rgba(236, 72, 153, 0.8)',   // 창의성 - pink
+    'rgba(251, 191, 36, 0.8)',   // 일가정균형 - amber
+    'rgba(251, 146, 60, 0.8)',   // 소득수준 - orange
+    'rgba(163, 163, 122, 0.8)',  // 고용유지 - olive
+    'rgba(244, 165, 171, 0.8)'   // 사회공헌 - light pink
+  ]
+
+  // 최대값 찾기 (스케일링용)
+  const maxValue = Math.max(...values, 5) // 최소 5로 설정
+
+  // Chart.js용 고유 ID
+  const chartId = `indicator-chart-${Date.now()}`
+
   return `
-    <section class="glass-card p-6 md:p-7 rounded-3xl border border-wiki-border/70 bg-gradient-to-br from-wiki-bg/90 via-wiki-bg/65 to-wiki-bg/40">
-      <header class="flex items-center gap-3 mb-5">
-        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/30 via-blue-500/30 to-purple-400/20 text-white">
-          <i class="fas fa-chart-bar text-lg"></i>
-        </span>
-        <div>
-          <h2 class="text-lg sm:text-xl font-bold text-white leading-tight">한국의 직업지표</h2>
-          <p class="mt-1 content-text text-wiki-muted">직업백과(커리어넷) 제공 지표</p>
-        </div>
-      </header>
-      <div class="space-y-1">
-        ${bars}
+    <div class="space-y-6">
+      <!-- 차트 컨테이너 -->
+      <div class="w-full bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+        <canvas id="${chartId}" style="max-height: 400px;"></canvas>
       </div>
-    </section>
+      
+      <!-- 범례 -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        ${categories.map((label, idx) => `
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 rounded-full flex-shrink-0" style="background-color: ${barColors[idx % barColors.length]}"></div>
+            <span class="text-wiki-text text-sm font-medium">${escapeHtml(label)} ${values[idx].toFixed(1)}%</span>
+          </div>
+        `).join('')}
+      </div>
+      
+      <!-- 출처 표시 -->
+      <div class="text-center text-xs text-wiki-muted mt-4">
+        [자료 : 한국직업정보연구원, 맞춤형취업지원을 위한 직업지표 연구(2020~22)]
+      </div>
+    </div>
+    
+    <script>
+      (function() {
+        const ctx = document.getElementById('${chartId}');
+        if (ctx && typeof Chart !== 'undefined') {
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ${JSON.stringify(categories)},
+              datasets: [{
+                data: ${JSON.stringify(values)},
+                backgroundColor: ${JSON.stringify(barColors.slice(0, categories.length))},
+                borderWidth: 0,
+                borderRadius: 8,
+                barThickness: 'flex',
+                maxBarThickness: 60
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              indexAxis: 'x',
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 100,
+                  ticks: {
+                    color: 'rgba(255, 255, 255, 0.6)',
+                    font: {
+                      size: 11
+                    },
+                    callback: function(value) {
+                      return value + '%';
+                    }
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)',
+                    drawBorder: false
+                  }
+                },
+                x: {
+                  ticks: {
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    font: {
+                      size: 11,
+                      weight: '500'
+                    },
+                    maxRotation: 45,
+                    minRotation: 0
+                  },
+                  grid: {
+                    display: false,
+                    drawBorder: false
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  padding: 12,
+                  titleFont: {
+                    size: 13,
+                    weight: 'bold'
+                  },
+                  bodyFont: {
+                    size: 12
+                  },
+                  callbacks: {
+                    label: function(context) {
+                      return context.parsed.y.toFixed(1) + '%';
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      })();
+    </script>
   `
 }
 
