@@ -296,17 +296,19 @@ const renderComparisonTable = (
   withinJob: any,
   betweenJobs: any,
   title: string,
-  icon: string
+  icon: string,
+  uniqueSuffix?: string
 ): string => {
   if (!withinJob && !betweenJobs) {
     return ''
   }
 
   const blocks: string[] = []
+  const suffix = uniqueSuffix ? `-${uniqueSuffix}` : ''
 
   // 직업 내 비교 (Within Job) - 표 형식
   if (withinJob && Array.isArray(withinJob) && withinJob.length > 0) {
-    const tableId = `within-job-${title.replace(/\s+/g, '-')}`
+    const tableId = `within-job-${title.replace(/\s+/g, '-')}${suffix}`
     
     // 먼저 유효한 데이터만 필터링
     const validItems = withinJob.map((item: any) => {
@@ -334,8 +336,10 @@ const renderComparisonTable = (
       return { label, value: numericValue, description }
     }).filter(Boolean)
     
-    // 유효한 항목이 없으면 아예 표시하지 않음
-    if (validItems.length === 0) return ''
+    // 유효한 항목이 없으면 다음 블록(Between Jobs)으로
+    if (validItems.length === 0) {
+      // return ''하지 않고 계속 진행
+    } else {
     
     // 필터링된 유효한 항목들로 행 생성
     const rows = validItems.map((item: any, index: number) => {
@@ -359,44 +363,45 @@ const renderComparisonTable = (
           id="${tableId}-toggle"
           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-all cursor-pointer"
         >
-          <span id="${tableId}-text">전체보기 (${validItems.length}개 항목)</span>
+          <span id="${tableId}-text">전체보기 (${validItems.length - 5}개 항목)</span>
           <i id="${tableId}-icon" class="fas fa-chevron-down transition-transform"></i>
         </div>
       </div>
     ` : ''
 
-    blocks.push(`
-      <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
-        <div class="mb-4">
-          <h3 class="text-base font-bold text-wiki-secondary mb-2">
-            <i class="fas fa-clover mr-2"></i>직업 내 비교
-          </h3>
-          <p class="text-xs text-wiki-muted leading-relaxed">
-            500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 내에 비교하여 본 직업에서 중요성(평가점수)이 높게 나타난 항목을 순서대로 제시함
-          </p>
+      blocks.push(`
+        <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+          <div class="mb-4">
+            <h3 class="text-base font-bold text-wiki-secondary mb-2">
+              <i class="fas fa-clover mr-2"></i>직업 내 비교
+            </h3>
+            <p class="text-xs text-wiki-muted leading-relaxed">
+              500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 내에 비교하여 본 직업에서 중요성(평가점수)이 높게 나타난 항목을 순서대로 제시함
+            </p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full" id="${tableId}">
+              <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
+                <tr>
+                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">평균<br/>(5점 만점)</th>
+                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
+                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+          ${toggleIndicator}
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full" id="${tableId}">
-            <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
-              <tr>
-                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">평균<br/>(5점 만점)</th>
-                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
-                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows}
-            </tbody>
-          </table>
-        </div>
-        ${toggleIndicator}
-      </div>
-    `)
+      `)
+    }
   }
 
   // 직업 간 비교 (Between Jobs) - 표 형식
   if (betweenJobs && Array.isArray(betweenJobs) && betweenJobs.length > 0) {
-    const tableId = `between-jobs-${title.replace(/\s+/g, '-')}`
+    const tableId = `between-jobs-${title.replace(/\s+/g, '-')}${suffix}`
     
     // 먼저 유효한 데이터만 필터링
     const validItems = betweenJobs.map((item: any) => {
@@ -424,8 +429,10 @@ const renderComparisonTable = (
       return { label, value: numericValue, description }
     }).filter(Boolean)
     
-    // 유효한 항목이 없으면 아예 표시하지 않음
-    if (validItems.length === 0) return ''
+    // 유효한 항목이 없으면 건너뜀
+    if (validItems.length === 0) {
+      // 계속 진행
+    } else {
     
     // 필터링된 유효한 항목들로 행 생성
     const rows = validItems.map((item: any, index: number) => {
@@ -449,39 +456,40 @@ const renderComparisonTable = (
           id="${tableId}-toggle"
           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-all cursor-pointer"
         >
-          <span id="${tableId}-text">전체보기 (${validItems.length}개 항목)</span>
+          <span id="${tableId}-text">전체보기 (${validItems.length - 5}개 항목)</span>
           <i id="${tableId}-icon" class="fas fa-chevron-down transition-transform"></i>
         </div>
       </div>
     ` : ''
 
-    blocks.push(`
-      <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50 ${withinJob ? 'mt-8' : ''}">
-        <div class="mb-4">
-          <h3 class="text-base font-bold text-wiki-secondary mb-2">
-            <i class="fas fa-exchange-alt mr-2"></i>직업 간 비교
-          </h3>
-          <p class="text-xs text-wiki-muted leading-relaxed">
-            500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 간에 비교하여 본 직업에서 중요성(백분위)이 높게 나타난 항목을 순서대로 제시함
-          </p>
+      blocks.push(`
+        <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50 ${withinJob ? 'mt-8' : ''}">
+          <div class="mb-4">
+            <h3 class="text-base font-bold text-wiki-secondary mb-2">
+              <i class="fas fa-exchange-alt mr-2"></i>직업 간 비교
+            </h3>
+            <p class="text-xs text-wiki-muted leading-relaxed">
+              500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 간에 비교하여 본 직업에서 중요성(백분위)이 높게 나타난 항목을 순서대로 제시함
+            </p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full" id="${tableId}">
+              <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
+                <tr>
+                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">백분위</th>
+                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
+                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+          ${toggleIndicator}
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full" id="${tableId}">
-            <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
-              <tr>
-                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">백분위</th>
-                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
-                <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows}
-            </tbody>
-          </table>
-        </div>
-        ${toggleIndicator}
-      </div>
-    `)
+      `)
+    }
   }
 
   return blocks.join('')
@@ -1351,11 +1359,14 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
 
   // 조사년도 추출
   const yearMatch = raw.match(/조사년도\s*[:：]?\s*(\d{4})\s*년?/)
-  const yearInfo = yearMatch ? `조사년도: ${yearMatch[1]}년` : ''
+  const yearInfo = yearMatch ? `※ 조사년도: ${yearMatch[1]}년` : ''
   
   // 출처 정보 (고용24 데이터인 경우)
   const source = goyong24Match ? '출처: 고용24' : '출처: 커리어넷'
-  const footerText = yearInfo ? `${yearInfo} | ${source}` : source
+  const yearAndSource = yearInfo ? `${yearInfo} | ${source}` : source
+  
+  // 주석 내용
+  const disclaimer = '※ 위의 임금정보는 직업당 평균 30명의 재직자를 대상으로 실시한 설문조사 결과로, 재직자의 자기보고에 근거한 통계치입니다. 재직자의 경력, 근무업체의 규모 등에 따라 실제 임금과 차이가 있을 수 있으니, 직업간 비교를 위한 참고 자료로만 활용하여 주시길 바랍니다.'
 
   return buildCard(
     '임금 정보',
@@ -1363,7 +1374,10 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
     `
       <div class="space-y-4" data-cw-telemetry-component="job-salary-card">
         <div class="space-y-2">${barMarkup}</div>
-        <p class="text-xs text-wiki-muted leading-relaxed">${escapeHtml(footerText)}</p>
+        <div class="space-y-1.5">
+          <p class="text-xs text-wiki-muted leading-relaxed">${escapeHtml(yearAndSource)}</p>
+          <p class="text-xs text-wiki-muted leading-relaxed">${escapeHtml(disclaimer)}</p>
+        </div>
       </div>
     `,
     options ?? {}
@@ -1935,11 +1949,6 @@ const renderSourcesCollapsible = (
   sources?: SourceStatusRecord,
   partials?: Partial<Record<DataSource, UnifiedJobDetail | null>>
 ): string => {
-  // 변호사 페이지는 데이터 출처 패널 표시하지 않음
-  if (isLawyerProfile(profile)) {
-    return ''
-  }
-
   const normalizedId = profile.id.replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'default'
   const panelId = `job-source-panel-${normalizedId}`
 
@@ -1958,30 +1967,58 @@ const renderSourcesCollapsible = (
   }
 
   const activeSourceCount = partials ? Object.values(partials).filter((value) => Boolean(value)).length : 0
-  const badgeLabel = activeSourceCount > 0 ? `${activeSourceCount}개 활성` : '확인하기'
+  const badgeLabel = activeSourceCount > 0 ? `${activeSourceCount}개 출처` : '확인하기'
+
+  const toggleId = `source-toggle-${normalizedId}`
+  const iconId = `source-icon-${normalizedId}`
 
   return `
     <section class="glass-card p-0 rounded-2xl border border-wiki-border/60 bg-wiki-bg/50" data-source-collapsible>
       <button
         type="button"
-        class="w-full flex items-center justify-between gap-3 px-5 py-4 content-text font-semibold text-white transition hover:text-white"
-        data-source-toggle
+        id="${toggleId}"
+        class="w-full flex items-center justify-between gap-3 px-6 py-5 content-text font-semibold text-white transition hover:text-wiki-secondary cursor-pointer"
         aria-controls="${panelId}"
         aria-expanded="false"
       >
-        <span class="flex items-center gap-2">
-          <i class="fas fa-database text-wiki-secondary" aria-hidden="true"></i>
-          데이터 출처
+        <span class="flex items-center gap-3">
+          <i class="fas fa-database text-wiki-secondary text-lg" aria-hidden="true"></i>
+          <span class="text-base">데이터 출처</span>
         </span>
-        <div class="flex items-center gap-2 text-[11px] text-wiki-muted">
-          <span class="inline-flex items-center gap-1 rounded-full border border-wiki-border/60 bg-wiki-bg/60 px-2 py-1">${escapeHtml(badgeLabel)}</span>
-          <i class="fas fa-chevron-down text-xs transition-transform duration-200" aria-hidden="true" data-source-toggle-icon></i>
+        <div class="flex items-center gap-3 text-sm text-wiki-muted">
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-wiki-secondary/30 bg-wiki-secondary/10 px-3 py-1.5 text-wiki-secondary font-medium">${escapeHtml(badgeLabel)}</span>
+          <i id="${iconId}" class="fas fa-chevron-down text-base transition-transform duration-200" aria-hidden="true"></i>
         </div>
       </button>
-      <div class="border-t border-wiki-border/60 hidden bg-wiki-bg/45 px-5 py-4" data-source-panel id="${panelId}">
+      <div class="border-t border-wiki-border/60 hidden bg-wiki-bg/45 px-6 py-5" id="${panelId}">
         ${panel}
       </div>
     </section>
+    <script>
+      (function() {
+        const toggle = document.getElementById('${toggleId}');
+        const panel = document.getElementById('${panelId}');
+        const icon = document.getElementById('${iconId}');
+        
+        if (toggle && panel && icon) {
+          toggle.addEventListener('click', function() {
+            const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+            
+            if (isExpanded) {
+              panel.classList.add('hidden');
+              toggle.setAttribute('aria-expanded', 'false');
+              icon.classList.remove('fa-chevron-up');
+              icon.classList.add('fa-chevron-down');
+            } else {
+              panel.classList.remove('hidden');
+              toggle.setAttribute('aria-expanded', 'true');
+              icon.classList.remove('fa-chevron-down');
+              icon.classList.add('fa-chevron-up');
+            }
+          });
+        }
+      })();
+    </script>
   `
 }
 
@@ -2750,7 +2787,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   const overviewContent = overviewCards.length
     ? `<div class="space-y-6" data-cw-job-overview>
-        ${renderSectionToc('overview', '개요 목차', overviewCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${renderSectionToc('overview', '목차', overviewCards.map(({ id, label, icon }) => ({ id, label, icon })))}
         ${overviewCards.map((card) => card.markup).join('')}
       </div>`
     : `<p class="text-sm text-wiki-muted">개요 정보가 준비 중입니다.</p>`
@@ -2812,14 +2849,41 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const wlb = mergedData.careernetOnly.wlb
   const social = mergedData.careernetOnly.social
   if (wlb || social) {
-    const wlbBlocks = []
+    const wlbCards = []
+    
+    // 워라밸 카드
     if (wlb) {
-      wlbBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">워라밸 지수</h3><p class="content-text text-wiki-text">${escapeHtml(wlb)}</p></div>`)
+      wlbCards.push(`
+        <div class="flex items-center gap-4 p-5 rounded-2xl border border-purple-500/30 bg-purple-500/5">
+          <div class="flex-shrink-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/30">
+            <i class="fas fa-balance-scale text-3xl text-purple-400"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-sm font-semibold text-purple-400 uppercase tracking-wide mb-2">워라밸 지수</h3>
+            <p class="content-text text-white text-sm leading-relaxed">${escapeHtml(wlb)}</p>
+          </div>
+        </div>
+      `)
     }
+    
+    // 사회적 기여도 카드
     if (social) {
-      wlbBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">사회적 기여도</h3><p class="content-text text-wiki-text">${escapeHtml(social)}</p></div>`)
+      wlbCards.push(`
+        <div class="flex items-center gap-4 p-5 rounded-2xl border border-green-500/30 bg-green-500/5">
+          <div class="flex-shrink-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-500/10 border border-green-500/30">
+            <i class="fas fa-hands-helping text-3xl text-green-400"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-sm font-semibold text-green-400 uppercase tracking-wide mb-2">사회적 기여도</h3>
+            <p class="content-text text-white text-sm leading-relaxed">${escapeHtml(social)}</p>
+          </div>
+        </div>
+      `)
     }
-    pushDetailCard('워라밸 & 사회적 평가', 'fa-heart', wlbBlocks.join(''))
+    
+    // 그리드 레이아웃: 한 줄에 두 개 (큰 화면), 작은 화면에서는 세로로
+    const gridLayout = `<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">${wlbCards.join('')}</div>`
+    pushDetailCard('워라밸 & 사회적 평가', 'fa-heart', gridLayout)
   }
   
   // 5-13. 아래 섹션들은 올바른 순서로 재배치됩니다
@@ -2888,7 +2952,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         abilityImportance.withinJob,
         abilityImportance.betweenJobs,
         '업무수행능력',
-        'fa-brain'
+        'fa-brain',
+        'importance'
       )
       if (importanceHtml) {
         abilityBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무수행능력 중요도</h3>${importanceHtml}</div>`)
@@ -2901,7 +2966,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         abilityLevel.withinJob,
         abilityLevel.betweenJobs,
         '업무수행능력',
-        'fa-star-half-alt'
+        'fa-star-half-alt',
+        'level'
       )
       if (levelHtml) {
         abilityBlocks.push(`<div class="${abilityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무수행능력 수준</h3>${levelHtml}</div>`)
@@ -2913,13 +2979,18 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
   }
 
-  // 2. Type C: 지식 분석 (중요도 + 수준 통합)
+  // 2. Type C: 지식 분석 (중요도 + 수준 통합) - simple 데이터도 포함
   const knowledgeComparison = mergedData.knowledge?.detailedComparison
   const knowledgeImportance = knowledgeComparison?.importance
   const knowledgeLevel = knowledgeComparison?.level
+  const knowledgeSimpleData = mergedData.knowledge?.simple
   
-  if (knowledgeComparison && ((knowledgeImportance && (knowledgeImportance.withinJob || knowledgeImportance.betweenJobs)) ||
-      (knowledgeLevel && (knowledgeLevel.withinJob || knowledgeLevel.betweenJobs)))) {
+  // detailedComparison 또는 simple 데이터가 있으면 지식 섹션 표시
+  const hasKnowledgeDetailed = (knowledgeImportance && (knowledgeImportance.withinJob || knowledgeImportance.betweenJobs)) ||
+                                (knowledgeLevel && (knowledgeLevel.withinJob || knowledgeLevel.betweenJobs))
+  const hasKnowledgeSimple = knowledgeSimpleData && Array.isArray(knowledgeSimpleData) && knowledgeSimpleData.length > 0
+  
+  if (hasKnowledgeDetailed || hasKnowledgeSimple) {
     const knowledgeBlocks = []
     
     // 지식 중요도
@@ -2928,7 +2999,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         knowledgeImportance.withinJob,
         knowledgeImportance.betweenJobs,
         '지식',
-        'fa-book'
+        'fa-book',
+        'importance'
       )
       if (importanceHtml) {
         knowledgeBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">지식 중요도</h3>${importanceHtml}</div>`)
@@ -2941,10 +3013,77 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         knowledgeLevel.withinJob,
         knowledgeLevel.betweenJobs,
         '지식',
-        'fa-layer-group'
+        'fa-layer-group',
+        'level'
       )
       if (levelHtml) {
         knowledgeBlocks.push(`<div class="${knowledgeBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">지식 수준</h3>${levelHtml}</div>`)
+      }
+    }
+    
+    // simple 데이터가 있고 detailed 데이터가 없을 때 simple 데이터를 표로 표시
+    if ((!knowledgeImportance || (!knowledgeImportance.withinJob && !knowledgeImportance.betweenJobs)) &&
+        (!knowledgeLevel || (!knowledgeLevel.withinJob && !knowledgeLevel.betweenJobs)) &&
+        knowledgeSimpleData && Array.isArray(knowledgeSimpleData) && knowledgeSimpleData.length > 0) {
+      
+      // 커리어넷 지식 데이터를 표로 변환
+      const validItems = knowledgeSimpleData
+        .map((item: any) => {
+          const name = item.knowledge || item.list_content || item.knowledge_name || item.inform || ''
+          const importance = item.importance || 0
+          if (!name.trim()) return null
+          return { name, importance }
+        })
+        .filter(Boolean)
+        .sort((a: any, b: any) => b.importance - a.importance)
+      
+      if (validItems.length > 0) {
+        const tableId = `knowledge-importance`
+        const rows = validItems.map((item: any, index: number) => {
+          const isHidden = index >= 5
+          const hideClass = isHidden ? 'hidden' : ''
+          const expandableAttr = isHidden ? 'data-expandable-row="true"' : ''
+          
+          return `
+            <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
+              <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.importance}</td>
+              <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.name)}</td>
+            </tr>
+          `
+        }).join('')
+        
+        const toggleIndicator = validItems.length > 5 ? `
+          <div class="mt-3 text-center">
+            <div 
+              onclick="toggleExpandTable('${tableId}')" 
+              id="${tableId}-toggle"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-all cursor-pointer"
+            >
+              <span id="${tableId}-text">전체보기 (${validItems.length - 5}개 항목)</span>
+              <i id="${tableId}-icon" class="fas fa-chevron-down transition-transform"></i>
+            </div>
+          </div>
+        ` : ''
+        
+        const knowledgeTable = `
+          <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+            <div class="overflow-x-auto">
+              <table class="w-full" id="${tableId}">
+                <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
+                  <tr>
+                    <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">중요도</th>
+                    <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">지식</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rows}
+                </tbody>
+              </table>
+            </div>
+            ${toggleIndicator}
+          </div>
+        `
+        knowledgeBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">필수 지식 중요도</h3>${knowledgeTable}</div>`)
       }
     }
     
@@ -3009,7 +3148,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
               id="${tableId}-toggle"
               class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-wiki-primary hover:text-wiki-secondary border border-wiki-primary/50 hover:border-wiki-secondary/50 rounded-lg transition-all cursor-pointer"
             >
-              <span id="${tableId}-text">전체보기 (${validItems.length}개 항목)</span>
+              <span id="${tableId}-text">전체보기 (${validItems.length - 5}개 항목)</span>
               <i id="${tableId}-icon" class="fas fa-chevron-down transition-transform"></i>
             </div>
           </div>
@@ -3099,7 +3238,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         activityImportance.withinJob,
         activityImportance.betweenJobs,
         '업무활동',
-        'fa-chart-line'
+        'fa-chart-line',
+        'importance'
       )
       if (importanceHtml) {
         activityBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무활동 중요도</h3>${importanceHtml}</div>`)
@@ -3112,7 +3252,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         activityLevel.withinJob,
         activityLevel.betweenJobs,
         '업무활동',
-        'fa-signal'
+        'fa-signal',
+        'level'
       )
       if (levelHtml) {
         activityBlocks.push(`<div class="${activityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무활동 수준</h3>${levelHtml}</div>`)
@@ -3126,15 +3267,16 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   const characteristicsContent = characteristicsCards.length
     ? `<div class="space-y-6" data-cw-job-characteristics>
-        ${renderSectionToc('characteristics', '업무특성 목차', characteristicsCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${renderSectionToc('characteristics', '목차', characteristicsCards.map(({ id, label, icon }) => ({ id, label, icon })))}
         ${characteristicsCards.map((card) => card.markup).join('')}
       </div>
       <script>
         function toggleExpandTable(tableId) {
           const table = document.getElementById(tableId);
+          const toggleButton = document.getElementById(tableId + '-toggle');
           const toggleText = document.getElementById(tableId + '-text');
           const toggleIcon = document.getElementById(tableId + '-icon');
-          if (!table) return;
+          if (!table || !toggleButton) return;
           
           // data-expandable-row 속성을 가진 행들만 선택 (5개 이후의 행들)
           const expandableRows = table.querySelectorAll('tr[data-expandable-row]');
@@ -3143,32 +3285,51 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
           const hiddenRows = table.querySelectorAll('tr[data-expandable-row].hidden');
           const isExpanded = hiddenRows.length === 0;
           
-          // 전체 행 수 계산 (5개 고정 + expandable 행들)
-          const totalCount = 5 + expandableRows.length;
+          // 펼쳐질 항목 수 (항상 5개는 보이므로 expandable 행들만 카운트)
+          const expandableCount = expandableRows.length;
+          
+          // 전체 항목 수 (고정 5개 + expandable)
+          const totalCount = 5 + expandableCount;
           
           if (isExpanded) {
             // 접기 - expandable 행들만 숨기기
             expandableRows.forEach(row => {
               row.classList.add('hidden');
             });
+            
             // 버튼 상태 업데이트
             if (toggleText) {
-              toggleText.textContent = '전체보기 (' + totalCount + '개 항목)';
+              toggleText.textContent = '전체보기 (' + expandableCount + '개 항목)';
             }
             if (toggleIcon) {
               toggleIcon.classList.remove('fa-chevron-up');
               toggleIcon.classList.add('fa-chevron-down');
             }
-            // 스크롤을 표의 상단으로 이동
-            const tableContainer = table.closest('.bg-white\\/5');
-            if (tableContainer) {
-              tableContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // 항목이 10개를 초과하는 경우에만 스크롤 이동
+            if (totalCount > 10) {
+              // 접기 전에 테이블 컨테이너의 위치를 저장
+              let tableContainer = table.closest('div[class*="bg-white"]');
+              if (!tableContainer) {
+                // 다른 방법으로 컨테이너 찾기
+                tableContainer = table.closest('div[class*="rounded"]');
+              }
+              
+              if (tableContainer) {
+                const tableRect = tableContainer.getBoundingClientRect();
+                const scrollY = window.scrollY || window.pageYOffset;
+                const tableY = tableRect.top + scrollY;
+                
+                // 테이블 시작 위치로 즉시 스크롤 (부드러운 효과 없음)
+                window.scrollTo(0, tableY - 120); // 테이블 위치에서 120px 위로 (여유 공간)
+              }
             }
           } else {
             // 펼치기 - expandable 행들 보이기
             expandableRows.forEach(row => {
               row.classList.remove('hidden');
             });
+            
             // 버튼 상태 업데이트
             if (toggleText) {
               toggleText.textContent = '접기';
@@ -3201,7 +3362,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   const detailContent = detailCards.length
     ? `<div class="space-y-6" data-cw-job-details>
-        ${renderSectionToc('details', '상세 정보 목차', detailCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${renderSectionToc('details', '목차', detailCards.map(({ id, label, icon }) => ({ id, label, icon })))}
         ${detailCards.map((card) => card.markup).join('')}
       </div>`
     : `<p class="text-sm text-wiki-muted">상세 정보가 준비 중입니다.</p>`

@@ -251,13 +251,12 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
           aria-hidden="${isActive ? 'false' : 'true'}"
           aria-describedby="${statusId} ${instructionsId}"
           tabindex="${isActive ? '0' : '-1'}"
-          class="cw-tab-panel space-y-6 ${isActive ? 'is-active' : ''}"
+          class="cw-tab-panel space-y-6 ${isActive ? 'is-active' : 'is-hidden'}"
           data-cw-tab-panel
           data-tab-id="${entry.id}"
           data-tab-index="${index}"
           data-cw-telemetry-scope="tab-panel"
           data-cw-telemetry-component="tab-panel"
-          ${isActive ? '' : 'hidden'}
         >
           ${entry.content}
         </section>

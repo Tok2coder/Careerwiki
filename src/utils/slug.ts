@@ -76,41 +76,26 @@ export const composeDetailSlug = (type: 'job' | 'major', name: string | undefine
   const legacySegment = encodeLegacyIdSegment(type, id)
   const nameSlug = slugifyName(name)
 
-  if (!id) {
+  // 이름이 있으면 항상 이름을 슬러그로 사용 (한국어 우선)
+  if (nameSlug) {
     return nameSlug
+  }
+
+  // 이름이 없을 경우에만 ID 사용
+  if (!id) {
+    return 'unknown'
   }
 
   if (!id.includes(':')) {
     const idSlug = slugifyName(id)
-    if (!idSlug && !nameSlug) {
-      return id
-    }
-    if (idSlug && (!nameSlug || idSlug === nameSlug)) {
-      return idSlug
-    }
-    if (!idSlug) {
-      return nameSlug
-    }
-    if (!nameSlug) {
-      return idSlug
-    }
-    if (idSlug && nameSlug.endsWith(idSlug)) {
-      return nameSlug
-    }
-    return joinSlugParts(nameSlug, idSlug)
+    return idSlug || id
   }
 
   if (legacySegment) {
-    if (!nameSlug) {
-      return legacySegment
-    }
-    return joinSlugParts(nameSlug, legacySegment)
+    return legacySegment
   }
 
-  if (!nameSlug) {
-    return normalizeIdSlug(id)
-  }
-  return joinSlugParts(nameSlug, normalizeIdSlug(id))
+  return normalizeIdSlug(id)
 }
 
 export const resolveDetailIdFromSlug = (type: 'job' | 'major', slug: string): string => {

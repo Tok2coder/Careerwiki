@@ -183,6 +183,14 @@ const renderLayout = (
           .content-heading { font-size: 16px; }
           .section-title { font-size: 18px; }
           
+          /* 탭 패널 표시/숨김 - SEO 최적화: hidden 속성 대신 CSS 사용 */
+          .cw-tab-panel.is-hidden {
+            display: none;
+          }
+          .cw-tab-panel.is-active {
+            display: block;
+          }
+          
           /* 플로팅 네비게이션 버튼 */
           .floating-nav {
             position: fixed;
@@ -192,6 +200,18 @@ const renderLayout = (
             display: flex;
             flex-direction: column;
             gap: 12px;
+          }
+          .floating-nav.hidden {
+            display: none;
+          }
+          .floating-nav-scroll-top {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+          }
+          .floating-nav-scroll-top.visible {
+            opacity: 1;
+            pointer-events: auto;
           }
           .floating-nav-btn {
             width: 52px;
@@ -504,7 +524,7 @@ const renderLayout = (
         ${!isHomepage ? `
         <!-- Navigation (Not on homepage) -->
         <nav class="glass-card sticky top-0 z-50 border-b border-wiki-border">
-            <div class="mx-auto w-full max-w-[1400px] py-2.5">
+            <div class="mx-auto w-full max-w-[1400px] px-6 py-2.5">
                 <div class="flex items-center justify-between md:hidden">
                     <a href="/" class="flex items-center">
                         ${getLogoSVG('small')}
@@ -564,7 +584,7 @@ const renderLayout = (
         
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden glass-card border-b border-wiki-border">
-            <div class="mx-auto w-full max-w-[1400px] py-3 px-4 space-y-2">
+            <div class="mx-auto w-full max-w-[1400px] py-3 px-6 space-y-2">
                 <a href="/analyzer" class="nav-link nav-link-mobile">
                     <i class="fas fa-brain mr-2"></i>AI 분석
                 </a>
@@ -584,13 +604,13 @@ const renderLayout = (
         ` : ''}
         
         <!-- Main Content -->
-        <main class="${isHomepage ? '' : 'mx-auto px-4 py-8'}">
+        <main class="${isHomepage ? '' : 'mx-auto px-6 py-8'}">
             ${content}
         </main>
         
         <!-- Footer - Minimal & Trendy -->
         <footer class="border-t border-wiki-border mt-16">
-            <div class="container mx-auto px-4 py-6">
+            <div class="container mx-auto px-6 py-6">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <!-- Left: Logo & Links -->
                     <div class="flex items-center gap-6">
@@ -633,16 +653,16 @@ const renderLayout = (
         </script>
         
         <!-- 플로팅 네비게이션 버튼 -->
-        <div class="floating-nav">
-            <button class="floating-nav-btn" onclick="scrollToTop()" aria-label="맨 위로 이동">
+        <div class="floating-nav" id="floating-nav">
+            <button class="floating-nav-btn floating-nav-scroll-top" id="scroll-top-btn" onclick="scrollToTop()" aria-label="맨 위로 이동">
                 <i class="fas fa-arrow-up"></i>
                 <span class="label">맨 위로</span>
             </button>
-            <button class="floating-nav-btn" onclick="scrollToTOC()" aria-label="목차로 이동">
+            <button class="floating-nav-btn" id="toc-btn" onclick="scrollToTOC()" aria-label="목차로 이동">
                 <i class="fas fa-list"></i>
                 <span class="label">목차</span>
             </button>
-            <button class="floating-nav-btn" onclick="scrollToComments()" aria-label="댓글로 이동">
+            <button class="floating-nav-btn" id="comments-btn" onclick="scrollToComments()" aria-label="댓글로 이동">
                 <i class="fas fa-comment"></i>
                 <span class="label">댓글</span>
             </button>
@@ -702,6 +722,47 @@ const renderLayout = (
                     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                 }
             }
+            
+            // 페이지 타입 감지 및 플로팅 네비게이션 설정
+            (function() {
+                const path = window.location.pathname;
+                const isDetailPage = path.startsWith('/job/') || path.startsWith('/major/') || path.startsWith('/howto/');
+                
+                const scrollTopBtn = document.getElementById('scroll-top-btn');
+                const tocBtn = document.getElementById('toc-btn');
+                const commentsBtn = document.getElementById('comments-btn');
+                
+                if (!isDetailPage) {
+                    // 상세 페이지가 아니면 목차와 댓글 버튼 숨기기
+                    if (tocBtn) tocBtn.style.display = 'none';
+                    if (commentsBtn) commentsBtn.style.display = 'none';
+                    
+                    // 맨위로 버튼은 스크롤 시 표시
+                    if (scrollTopBtn) {
+                        scrollTopBtn.classList.remove('floating-nav-scroll-top');
+                        scrollTopBtn.style.display = 'none';
+                        
+                        window.addEventListener('scroll', function() {
+                            if (window.pageYOffset > 300) {
+                                scrollTopBtn.style.display = 'flex';
+                            } else {
+                                scrollTopBtn.style.display = 'none';
+                            }
+                        });
+                    }
+                } else {
+                    // 상세 페이지에서는 맨위로 버튼 스크롤에 따라 표시
+                    if (scrollTopBtn) {
+                        window.addEventListener('scroll', function() {
+                            if (window.pageYOffset > 300) {
+                                scrollTopBtn.classList.add('visible');
+                            } else {
+                                scrollTopBtn.classList.remove('visible');
+                            }
+                        });
+                    }
+                }
+            })();
         </script>
         
         <script src="/static/api-client.js"></script>

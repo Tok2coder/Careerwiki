@@ -57,7 +57,7 @@ const createSyntheticSourceStatus = (): SourceStatusRecord => ({
 
 const jobSampleSeed: Record<string, SampleJobEntry> = {
   lawyer: {
-    slug: 'lawyer',
+    slug: '변호사',
     title: '변호사',
     snippet: '의뢰인의 권리를 대변하고 각종 법률 분쟁을 해결하는 전문가로, 로스쿨·사법연수원 과정을 거쳐 사건 수임과 자문을 수행합니다.',
     keywords: ['변호사', '법률 전문가', '로스쿨', '법조인', '사법연수원'],
@@ -137,7 +137,7 @@ const jobSampleSeed: Record<string, SampleJobEntry> = {
     },
     sources: createSyntheticSourceStatus(),
     meta: {
-      canonicalSlug: 'lawyer',
+      canonicalSlug: '변호사',
       title: '변호사 - CareerWiki Phase-1 샘플',
       description: '커리어넷과 고용24 데이터를 기반으로 통합한 변호사 직업 샘플 페이지입니다.',
       updatedAt: '2024-10-12',
