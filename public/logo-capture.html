@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Logo Capture Tool</title>
+    <style>
+        body {
+            margin: 40px;
+            background: #0f0f23;
+            font-family: sans-serif;
+            color: white;
+        }
+        .logo-wrapper {
+            margin: 30px 0;
+            padding: 20px;
+            background: #1a1a2e;
+            display: inline-block;
+            border-radius: 8px;
+        }
+        button {
+            margin: 10px 5px;
+            padding: 12px 24px;
+            background: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #64b5f6;
+        }
+        .instructions {
+            margin: 20px 0;
+            padding: 15px;
+            background: #2a2a3e;
+            border-radius: 8px;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Careerwiki 로고 캡처 도구</h1>
+    
+    <div class="instructions">
+        <h3>사용 방법:</h3>
+        <ol>
+            <li>아래 버튼을 클릭하면 자동으로 PNG가 다운로드됩니다</li>
+            <li>다운로드된 PNG 파일들을 <code>/home/user/webapp/public/static/</code>에 업로드하세요</li>
+        </ol>
+    </div>
+
+    <h2>Large Logo (360x90)</h2>
+    <div class="logo-wrapper">
+        <svg id="logo-large" xmlns="http://www.w3.org/2000/svg" width="360" height="90" viewBox="0 0 360 90">
+            <defs>
+                <linearGradient id="logoGrad-large" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#4361ee" />
+                    <stop offset="100%" stop-color="#64b5f6" />
+                </linearGradient>
+            </defs>
+            <text
+                x="180"
+                y="59"
+                font-family="'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive"
+                font-size="56"
+                font-weight="bold"
+                text-anchor="middle"
+                fill="url(#logoGrad-large)"
+                stroke="rgba(15, 23, 42, 0.35)"
+                stroke-width="1"
+                paint-order="stroke fill"
+            >Careerwiki</text>
+        </svg>
+    </div>
+    <br>
+    <button onclick="downloadLogo('logo-large', 'logo-large-1x.png', 1)">다운로드 1x (360x90)</button>
+    <button onclick="downloadLogo('logo-large', 'logo-large.png', 2)">다운로드 2x (720x180)</button>
+
+    <h2>Small Logo (180x40)</h2>
+    <div class="logo-wrapper">
+        <svg id="logo-small" xmlns="http://www.w3.org/2000/svg" width="180" height="40" viewBox="0 0 180 40">
+            <defs>
+                <linearGradient id="logoGrad-small" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#4361ee" />
+                    <stop offset="100%" stop-color="#64b5f6" />
+                </linearGradient>
+            </defs>
+            <text
+                x="90"
+                y="27"
+                font-family="'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive"
+                font-size="28"
+                font-weight="bold"
+                text-anchor="middle"
+                fill="url(#logoGrad-small)"
+                stroke="rgba(15, 23, 42, 0.35)"
+                stroke-width="1"
+                paint-order="stroke fill"
+            >Careerwiki</text>
+        </svg>
+    </div>
+    <br>
+    <button onclick="downloadLogo('logo-small', 'logo-small-1x.png', 1)">다운로드 1x (180x40)</button>
+    <button onclick="downloadLogo('logo-small', 'logo-small.png', 2)">다운로드 2x (360x80)</button>
+
+    <script>
+        function downloadLogo(svgId, filename, scale) {
+            const svg = document.getElementById(svgId);
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Get SVG dimensions
+            const bbox = svg.getBoundingClientRect();
+            const width = parseInt(svg.getAttribute('width'));
+            const height = parseInt(svg.getAttribute('height'));
+            
+            // Set canvas size with scale
+            canvas.width = width * scale;
+            canvas.height = height * scale;
+            
+            // Scale context
+            ctx.scale(scale, scale);
+            
+            // Serialize SVG
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+            
+            // Load and draw
+            const img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+                
+                // Convert to PNG and download
+                canvas.toBlob(function(blob) {
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    
+                    alert(`${filename} 다운로드 완료!`);
+                }, 'image/png');
+            };
+            
+            img.src = url;
+        }
+    </script>
+</body>
+</html>
