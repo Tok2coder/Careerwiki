@@ -179,9 +179,52 @@ const renderLayout = (
           body { background: #0f0f23; color: #e0e0e0; }
           
           /* 기본 콘텐츠 폰트 크기 정의 */
-          .content-text { font-size: 15px; }
-          .content-heading { font-size: 16px; }
-          .section-title { font-size: 18px; }
+          .content-text { 
+            font-size: 15px; 
+            line-height: 1.7;
+            color: #d1d5db;
+          }
+          
+          /* 소제목 스타일 - 명확하고 구분되게, 풀너비 얇은 보더 */
+          .content-heading { 
+            font-size: 15px;
+            font-weight: 700;
+            color: #f3f4f6;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(100, 181, 246, 0.15);
+            display: block;
+            width: 100%;
+          }
+          
+          /* 섹션 제목 - 더 강조되고 트렌디하게, 풀너비 굵은 보더 */
+          .section-title { 
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(100, 181, 246, 0.3);
+            width: 100%;
+          }
+          
+          /* 모바일 최적화 */
+          @media (max-width: 768px) {
+            .section-title {
+              font-size: 18px;
+            }
+            .content-heading {
+              font-size: 14px;
+            }
+            /* 모바일 네비게이션 로고 크기 조정 */
+            nav img[alt*="로고"] {
+              max-width: 120px;
+              height: auto;
+            }
+          }
           
           /* 탭 패널 표시/숨김 - SEO 최적화: hidden 속성 대신 CSS 사용 */
           .cw-tab-panel.is-hidden {
@@ -524,29 +567,28 @@ const renderLayout = (
         ${!isHomepage ? `
         <!-- Navigation (Not on homepage) -->
         <nav class="glass-card sticky top-0 z-50 border-b border-wiki-border">
-            <div class="mx-auto w-full max-w-[1400px] px-6 py-2.5">
-                <div class="flex items-center justify-between md:hidden">
-                    <a href="/" class="flex items-center">
+            <div class="mx-auto w-full max-w-[1400px] px-3 py-2.5">
+                <!-- Mobile Navigation - Single Line -->
+                <div class="flex items-center gap-2 md:hidden">
+                    <a href="/" class="flex items-center shrink-0">
                         ${getLogoSVG('small')}
                     </a>
-                    <button id="mobile-menu-btn" class="text-wiki-text" aria-label="모바일 메뉴 열기">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-
-                <div class="md:hidden mt-4">
-                    <form action="/search" method="get" class="nav-search-shell">
+                    <form action="/search" method="get" class="flex-1 min-w-0">
                         <div class="nav-search-bar">
                             <input type="text" name="q" 
-                                   placeholder="검색어를 입력하세요..." 
+                                   placeholder="검색..." 
                                    class="nav-search-input">
                             <button type="submit" class="nav-search-button" aria-label="검색">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
                     </form>
+                    <button id="mobile-menu-btn" class="text-wiki-text shrink-0 w-10 h-10 flex items-center justify-center" aria-label="모바일 메뉴 열기">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
                 </div>
 
+                <!-- Desktop Navigation -->
                 <div class="hidden md:flex w-full items-center gap-4 flex-nowrap">
                     <a href="/" class="flex items-center shrink-0">
                         ${getLogoSVG('small')}
@@ -604,7 +646,7 @@ const renderLayout = (
         ` : ''}
         
         <!-- Main Content -->
-        <main class="${isHomepage ? '' : 'mx-auto px-6 py-8'}">
+        <main class="${isHomepage ? '' : 'mx-auto px-2 py-4 md:px-6 md:py-8'}">
             ${content}
         </main>
         

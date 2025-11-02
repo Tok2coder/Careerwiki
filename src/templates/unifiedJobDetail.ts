@@ -123,7 +123,7 @@ const formatWorkDetailAsNumberedCards = (text: string): string => {
     .map((item, index) => {
       const stepNumber = index + 1
       return `
-        <div class="flex gap-4 p-4 rounded-xl bg-wiki-card/30 border border-wiki-border/40 hover:border-wiki-primary/50 hover:bg-wiki-card/50 transition-all duration-200">
+        <div class="flex gap-3 p-3 md:gap-4 md:p-4 rounded-xl bg-wiki-card/30 border border-wiki-border/40 hover:border-wiki-primary/50 hover:bg-wiki-card/50 transition-all duration-200">
           <div class="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg bg-wiki-primary/20 border border-wiki-primary/40">
             <span class="text-sm font-bold text-wiki-primary">${stepNumber}</span>
           </div>
@@ -349,9 +349,9 @@ const renderComparisonTable = (
       
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
-          <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.value.toFixed(1)}</td>
-          <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.label)}</td>
-          <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(item.description)}</td>
+          <td class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.value.toFixed(1)}</td>
+          <td class="px-2 py-2 md:px-4 md:py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.label)}</td>
+          <td class="px-2 py-2 md:px-4 md:py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(item.description)}</td>
         </tr>
       `
     }).join('')
@@ -370,7 +370,7 @@ const renderComparisonTable = (
     ` : ''
 
       blocks.push(`
-        <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+        <div class="bg-white/5 rounded-xl md:rounded-2xl px-2 py-6 md:px-6 border border-wiki-border/50">
           <div class="mb-4">
             <h3 class="text-base font-bold text-wiki-secondary mb-2">
               <i class="fas fa-clover mr-2"></i>직업 내 비교
@@ -383,9 +383,9 @@ const renderComparisonTable = (
             <table class="w-full" id="${tableId}">
               <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
                 <tr>
-                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">평균<br/>(5점 만점)</th>
-                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
-                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">평균<br/>(5점 만점)</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
                 </tr>
               </thead>
               <tbody>
@@ -443,8 +443,8 @@ const renderComparisonTable = (
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
           <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.value.toFixed(0)}</td>
-          <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.label)}</td>
-          <td class="px-4 py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(item.description)}</td>
+          <td class="px-2 py-2 md:px-4 md:py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.label)}</td>
+          <td class="px-2 py-2 md:px-4 md:py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(item.description)}</td>
         </tr>
       `
     }).join('')
@@ -476,9 +476,9 @@ const renderComparisonTable = (
             <table class="w-full" id="${tableId}">
               <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
                 <tr>
-                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">백분위</th>
-                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
-                  <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">백분위</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
                 </tr>
               </thead>
               <tbody>
@@ -568,7 +568,7 @@ const renderComparisonData = (
     if (withinJobHtml) {
       blocks.push(`
         <div>
-          <h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-3">
+          <h3 class="content-heading">
             <i class="${icon} mr-2"></i>직업 내 비교
           </h3>
           <div>${withinJobHtml}</div>
@@ -633,7 +633,7 @@ const renderComparisonData = (
     if (betweenJobsHtml) {
       blocks.push(`
         <div class="mt-6">
-          <h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-3">
+          <h3 class="content-heading">
             <i class="${icon} mr-2"></i>직업 간 비교
           </h3>
           <div>${betweenJobsHtml}</div>
@@ -809,7 +809,7 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
   return `
     <div class="space-y-6">
       <!-- 차트 컨테이너 -->
-      <div class="w-full bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+      <div class="w-full bg-white/5 rounded-xl md:rounded-2xl px-2 py-6 md:px-6 border border-wiki-border/50">
         <canvas id="${chartId}" style="max-height: 400px;"></canvas>
       </div>
       
@@ -1798,7 +1798,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
         <li data-toc-order="${index + 1}">
           <a
             href="#${escapeHtml(item.id)}"
-            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-4 py-3 content-text text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
+            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 md:py-3 content-text text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
             data-cw-telemetry-action="toc-link"
             data-cw-telemetry-component="section-toc-link"
             data-cw-telemetry-scope="${sectionKey}-toc"
@@ -1816,7 +1816,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
 
   return `
     <nav
-      class="glass-card p-6 rounded-2xl border border-wiki-border/60 bg-wiki-bg/70"
+      class="glass-card px-2 py-6 md:px-6 rounded-none md:rounded-2xl border border-wiki-border/60 bg-wiki-bg/70"
       data-section-toc="${sectionKey}"
       data-cw-telemetry-scope="${sectionKey}-toc"
       data-cw-telemetry-component="section-toc"
@@ -1870,7 +1870,7 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
   }
 
   return `
-    <section class="glass-card p-5 rounded-2xl space-y-3" data-job-sidebar-section>
+    <section class="glass-card px-2 py-5 md:px-5 rounded-none md:rounded-2xl space-y-3" data-job-sidebar-section>
       <div class="flex items-center gap-2 content-text font-semibold text-white">
         <i class="fas ${icon} text-wiki-secondary" aria-hidden="true"></i>
         <span>${escapeHtml(title)}</span>
@@ -1909,7 +1909,7 @@ const renderJobSidebar = (profile: UnifiedJobDetail): string => {
       .map(
         (item) => `
           <li>
-            <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/70 bg-wiki-bg/60 px-4 py-3 content-text text-wiki-primary hover:border-wiki-primary hover:text-white transition">
+            <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/70 bg-wiki-bg/60 px-3 py-2 md:px-4 md:py-3 content-text text-wiki-primary hover:border-wiki-primary hover:text-white transition">
               <span class="font-semibold">${escapeHtml(item.label)}</span>
               <span class="text-xs text-wiki-muted">CareerWiki HowTo</span>
             </a>
@@ -1973,11 +1973,11 @@ const renderSourcesCollapsible = (
   const iconId = `source-icon-${normalizedId}`
 
   return `
-    <section class="glass-card p-0 rounded-2xl border border-wiki-border/60 bg-wiki-bg/50" data-source-collapsible>
+    <section class="glass-card p-0 rounded-none md:rounded-2xl border border-wiki-border/60 bg-wiki-bg/50" data-source-collapsible>
       <button
         type="button"
         id="${toggleId}"
-        class="w-full flex items-center justify-between gap-3 px-6 py-5 content-text font-semibold text-white transition hover:text-wiki-secondary cursor-pointer"
+        class="w-full flex items-center justify-between gap-3 px-3 py-4 md:px-6 md:py-5 content-text font-semibold text-white transition hover:text-wiki-secondary cursor-pointer"
         aria-controls="${panelId}"
         aria-expanded="false"
       >
@@ -2262,7 +2262,7 @@ const renderQuickStats = (
       const noteAttr = noteLabel ? ` data-stat-note="${escapeHtml(noteLabel)}"` : ''
       return `
         <article
-          class="group relative overflow-hidden rounded-2xl border border-wiki-border/50 bg-wiki-bg/80 p-4 sm:p-5 shadow-sm transition hover:border-wiki-primary/50 hover:shadow-lg"
+          class="group relative overflow-hidden rounded-xl md:rounded-2xl border border-wiki-border/50 bg-wiki-bg/80 p-3 md:p-4 lg:p-5 shadow-sm transition hover:border-wiki-primary/50 hover:shadow-lg"
           data-cw-telemetry-component="job-quick-stat"
           data-cw-telemetry-scope="job-quick-stat"
           data-stat-index="${index}"
@@ -2413,7 +2413,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 직업 소개
     if (typeof workSummary === 'string' && workSummary?.trim()) {
-      introBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">직업 소개</h3>${formatRichText(workSummary)}</div>`)
+      introBlocks.push(`<div><h3 class="content-heading">직업 소개</h3>${formatRichText(workSummary)}</div>`)
     }
     
     // 주요 업무
@@ -2427,10 +2427,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         .filter(Boolean)
         .join('')
       if (workList) {
-        introBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">주요 업무</h3><ul class="list-disc list-inside space-y-1">${workList}</ul></div>`)
+        introBlocks.push(`<div class="mt-4"><h3 class="content-heading">주요 업무</h3><ul class="list-disc list-inside space-y-1">${workList}</ul></div>`)
       }
     } else if (profile.duties?.trim()) {
-      introBlocks.push(`<div class="mt-4"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">주요 업무</h3>${formatRichText(profile.duties)}</div>`)
+      introBlocks.push(`<div class="mt-4"><h3 class="content-heading">주요 업무</h3>${formatRichText(profile.duties)}</div>`)
     }
     
     if (introBlocks.length > 0) {
@@ -2618,7 +2618,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         </div>`
       })
       .join('')
-    abilityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-4">핵심 역량</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${abilityList}</div></div>`)
+    abilityBlocks.push(`<div><h3 class="content-heading">핵심 역량</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${abilityList}</div></div>`)
   } else if (typeof profile.abilities === 'string' && profile.abilities?.trim()) {
     abilityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">핵심 역량</h3>${formatRichText(profile.abilities)}</div>`)
   }
@@ -2632,40 +2632,14 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       .filter(Boolean)
       .join(' ')
     if (curriculumText.trim()) {
-      abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">정규교육과정</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(curriculumText)}</p></div>`)
+      abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading">정규교육과정</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(curriculumText)}</p></div>`)
     }
   }
   
-  // 지식 섹션 (기존 리스트 스타일, 아이콘 없음)
-  if (knowledgeSimple && Array.isArray(knowledgeSimple) && knowledgeSimple.length > 0) {
-    const knowledgeList = knowledgeSimple
-      .slice(0, 10)
-      .map((item: any) => {
-        // knowledge 필드 또는 inform 필드를 사용 (중요도 있으면 함께 표시)
-        if (typeof item === 'string') {
-          return `<li>${escapeHtml(item)}</li>`
-        }
-        const knowledgeName = item.knowledge || item.list_content || item.knowledge_name || ''
-        const inform = item.inform || ''
-        const importance = item.importance
-        
-        // inform이 더 상세한 설명이므로 우선 사용
-        const displayText = inform || knowledgeName
-        if (!displayText.trim()) return ''
-        
-        // 중요도가 있으면 함께 표시
-        if (importance) {
-          return `<li>${escapeHtml(displayText)} <span class="text-wiki-muted text-xs">(중요도 ${importance})</span></li>`
-        }
-        return `<li>${escapeHtml(displayText)}</li>`
-      })
-      .filter(Boolean)
-      .join('')
-    if (knowledgeList) {
-      abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">필수 지식</h3><ul class="list-disc list-inside space-y-1">${knowledgeList}</ul></div>`)
-    }
-  } else if (typeof profile.technKnow === 'string' && profile.technKnow?.trim()) {
-    abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활용 기술</h3>${formatRichText(profile.technKnow)}</div>`)
+  // 지식 섹션은 업무특성 탭에 있으므로 개요에서는 제외
+  // 활용 기술만 표시 (profile.technKnow는 레거시 필드)
+  if (typeof profile.technKnow === 'string' && profile.technKnow?.trim()) {
+    abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading">활용 기술</h3>${formatRichText(profile.technKnow)}</div>`)
   }
   
   if (abilityBlocks.length > 0) {
@@ -3066,13 +3040,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         ` : ''
         
         const knowledgeTable = `
-          <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+          <div class="bg-white/5 rounded-xl md:rounded-2xl px-2 py-6 md:px-6 border border-wiki-border/50">
             <div class="overflow-x-auto">
               <table class="w-full" id="${tableId}">
                 <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
                   <tr>
-                    <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">중요도</th>
-                    <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">지식</th>
+                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">중요도</th>
+                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">지식</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -3155,13 +3129,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         ` : ''
         
         const contextTable = `
-          <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+          <div class="bg-white/5 rounded-xl md:rounded-2xl px-2 py-6 md:px-6 border border-wiki-border/50">
             <div class="overflow-x-auto">
               <table class="w-full" id="${tableId}">
                 <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
                   <tr>
-                    <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">중요도</th>
-                    <th class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">업무환경</th>
+                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">중요도</th>
+                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">업무환경</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -3476,8 +3450,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
-    <div class="max-w-[1400px] mx-auto space-y-8">
-      <section class="glass-card p-8 rounded-2xl space-y-8" data-job-hero${telemetryVariantAttr}>
+    <div class="max-w-[1400px] mx-auto space-y-4 md:space-y-8">
+      <section class="glass-card px-2 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-5">
           ${profile.category?.name ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group" aria-hidden="true"></i>${escapeHtml(profile.category.name)}</span>` : ''}
           <div class="flex flex-wrap items-start justify-between gap-4">

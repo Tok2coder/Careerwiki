@@ -134,7 +134,7 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
   }
 
   const { anchorId, telemetryScope, telemetryComponent } = options
-  const className = `glass-card p-6 rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
+  const className = `glass-card px-2 py-6 md:px-6 rounded-none md:rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
   const attributeParts: string[] = [`class="${className}"`, 'data-cw-detail-card']
 
   if (anchorId) {
@@ -153,8 +153,10 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
 
   return `
     <article ${attributeParts.join(' ')}>
-      <h3 class="section-title font-semibold text-wiki-text flex items-center gap-2">
-        <i class="fas ${icon} text-wiki-secondary"></i>
+      <h3 class="section-title flex items-center gap-3 mb-5">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30">
+          <i class="fas ${icon} text-wiki-secondary text-sm"></i>
+        </span>
         <span>${escapeHtml(title)}</span>
       </h3>
       ${body}
@@ -306,7 +308,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
         </ul>
       </div>
       <p class="sr-only" id="${statusId}" role="status" aria-live="polite" aria-atomic="true" data-cw-tab-status></p>
-      <div class="p-6 space-y-6" data-cw-tab-panels data-cw-telemetry-scope="tab-panels" data-cw-telemetry-component="tab-panels">
+      <div class="px-2 py-6 md:px-6 space-y-6" data-cw-tab-panels data-cw-telemetry-scope="tab-panels" data-cw-telemetry-component="tab-panels">
         ${tabPanels}
       </div>
     </section>
@@ -642,7 +644,7 @@ export const renderCommentsPlaceholder = ({
 
   return `
   <section
-    class="glass-card p-6 rounded-2xl space-y-6"
+    class="glass-card px-2 py-6 md:px-6 rounded-none md:rounded-2xl space-y-4 md:space-y-6"
     id="cw-comments"
     data-cw-comments
     data-cw-telemetry-scope="comments"
