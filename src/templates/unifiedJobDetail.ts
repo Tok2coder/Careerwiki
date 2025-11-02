@@ -2875,7 +2875,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 1. 필요기술 및 지식 (path.technKnow)
     if (pathTechnKnow && typeof pathTechnKnow === 'string' && pathTechnKnow.trim()) {
-      educationBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">필요기술 및 지식</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(pathTechnKnow)}</p></div>`)
+      educationBlocks.push(`<div><h3 class="content-heading">필요기술 및 지식</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(pathTechnKnow)}</p></div>`)
     }
     
     // 2. 입직 및 취업방법
@@ -2885,7 +2885,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         .filter(Boolean)
         .join(' ')
       if (recruitText.trim()) {
-        educationBlocks.push(`<div class="${educationBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">입직 및 취업방법</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(recruitText)}</p></div>`)
+        educationBlocks.push(`<div class="${educationBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">입직 및 취업방법</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(recruitText)}</p></div>`)
       }
     }
     
@@ -2893,7 +2893,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     if (researchList && Array.isArray(researchList) && researchList.length > 0) {
       const researchHtml = renderResearchList(researchList)
       if (researchHtml) {
-        educationBlocks.push(`<div class="${educationBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">진로 탐색 활동</h3>${researchHtml}</div>`)
+        educationBlocks.push(`<div class="${educationBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">진로 탐색 활동</h3>${researchHtml}</div>`)
       }
     }
     
@@ -2930,7 +2930,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         'importance'
       )
       if (importanceHtml) {
-        abilityBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무수행능력 중요도</h3>${importanceHtml}</div>`)
+        abilityBlocks.push(`<div><h3 class="content-heading">업무수행능력 중요도</h3>${importanceHtml}</div>`)
       }
     }
     
@@ -2944,7 +2944,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         'level'
       )
       if (levelHtml) {
-        abilityBlocks.push(`<div class="${abilityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무수행능력 수준</h3>${levelHtml}</div>`)
+        abilityBlocks.push(`<div class="${abilityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">업무수행능력 수준</h3>${levelHtml}</div>`)
       }
     }
     
@@ -2977,7 +2977,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         'importance'
       )
       if (importanceHtml) {
-        knowledgeBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">지식 중요도</h3>${importanceHtml}</div>`)
+        knowledgeBlocks.push(`<div><h3 class="content-heading">지식 중요도</h3>${importanceHtml}</div>`)
       }
     }
     
@@ -2991,7 +2991,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         'level'
       )
       if (levelHtml) {
-        knowledgeBlocks.push(`<div class="${knowledgeBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">지식 수준</h3>${levelHtml}</div>`)
+        knowledgeBlocks.push(`<div class="${knowledgeBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">지식 수준</h3>${levelHtml}</div>`)
       }
     }
     
@@ -3057,7 +3057,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
             ${toggleIndicator}
           </div>
         `
-        knowledgeBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">필수 지식 중요도</h3>${knowledgeTable}</div>`)
+        knowledgeBlocks.push(`<div><h3 class="content-heading">필수 지식 중요도</h3>${knowledgeTable}</div>`)
       }
     }
     
@@ -3083,7 +3083,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         'fa-building'
       )
       if (workEnvHtml) {
-        workEnvBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무환경 조건</h3>${workEnvHtml}</div>`)
+        workEnvBlocks.push(`<div><h3 class="content-heading">업무환경 조건</h3>${workEnvHtml}</div>`)
       }
     }
     
@@ -3146,7 +3146,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
             ${toggleIndicator}
           </div>
         `
-        workEnvBlocks.push(`<div class="${workEnvBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무환경 중요도</h3>${contextTable}</div>`)
+        workEnvBlocks.push(`<div class="${workEnvBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">업무환경 중요도</h3>${contextTable}</div>`)
       }
     }
     
@@ -3216,7 +3216,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         'importance'
       )
       if (importanceHtml) {
-        activityBlocks.push(`<div><h3 class="text-base font-bold text-white mb-4">업무활동 중요도</h3>${importanceHtml}</div>`)
+        activityBlocks.push(`<div><h3 class="content-heading">업무활동 중요도</h3>${importanceHtml}</div>`)
       }
     }
     
@@ -3230,7 +3230,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         'level'
       )
       if (levelHtml) {
-        activityBlocks.push(`<div class="${activityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="text-base font-bold text-white mb-4">업무활동 수준</h3>${levelHtml}</div>`)
+        activityBlocks.push(`<div class="${activityBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">업무활동 수준</h3>${levelHtml}</div>`)
       }
     }
     
