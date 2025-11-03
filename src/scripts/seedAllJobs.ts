@@ -129,12 +129,24 @@ async function fetchCareernetJobIds(env: Env): Promise<Array<{ id: string; name:
     try {
       const jobs = await searchJobs({ category: categoryCode }, env)
       
+      // Debug: Check first job structure
+      if (jobs.length > 0 && allJobs.length === 0) {
+        console.log(`    🔍 첫 번째 직업:`, jobs[0].jobdicSeq, jobs[0].jobName)
+        console.log(`    🔍 전체 keys:`, Object.keys(jobs[0]).join(', '))
+      }
+      
       for (const job of jobs) {
-        allJobs.push({
-          id: job.job_id,
-          name: job.job_name,
-          source: 'careernet'
-        })
+        const jobData = {
+          id: job.jobdicSeq,  // Changed from job.job_id
+          name: job.jobName,   // Changed from job.job_name
+          source: 'careernet' as const
+        }
+        allJobs.push(jobData)
+        
+        // Debug first 3 jobs from first category
+        if (allJobs.length <= 3) {
+          console.log(`    📝 추가됨 #${allJobs.length}: id="${jobData.id}", name="${jobData.name}"`)
+        }
       }
       
       console.log(`    ✓ ${jobs.length}개 직업 발견`)
@@ -153,7 +165,13 @@ function deduplicateJobs(jobs: Array<{ id: string; name: string; source: string 
   const seen = new Map<string, { id: string; name: string; source: string }>()
   
   for (const job of jobs) {
-    const normalizedName = job.name.trim().toLowerCase()
+    // Safe handling of undefined/null job names
+    const normalizedName = (job.name ?? '').trim().toLowerCase()
+    
+    // Skip jobs with empty names
+    if (!normalizedName) {
+      continue
+    }
     
     if (!seen.has(normalizedName)) {
       seen.set(normalizedName, job)
@@ -269,8 +287,10 @@ export async function seedAllJobs(env: Env): Promise<SeedProgress> {
         throw new Error('Profile data is missing')
       }
       
-      // profile의 기본 필드 검증
-      if (!result.profile.job_name || typeof result.profile.job_name !== 'string') {
+      // profile의 기본 필드 검증 - 여러 가능한 필드명 확인
+      const jobName = result.profile.job_name || result.profile.jobName || result.profile.job || result.profile.name
+      if (!jobName || typeof jobName !== 'string') {
+        console.error('❌ Invalid job_name. Available fields:', Object.keys(result.profile).slice(0, 20))
         throw new Error('Invalid job_name in profile')
       }
       

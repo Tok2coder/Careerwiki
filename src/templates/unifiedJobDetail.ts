@@ -67,7 +67,7 @@ const LAWYER_EXACT_IDS = ['375', 'k000007482']
 const safeTrim = (value: any): string => {
   if (value === null || value === undefined) return ''
   if (typeof value !== 'string') return String(value).trim()
-  return value.trim()
+  return safeTrim(value)
 }
 
 /**
@@ -158,7 +158,7 @@ const matchesLawyerIdentifier = (value?: string | null): boolean => {
   if (!value) {
     return false
   }
-  const normalized = value.trim().toLowerCase()
+  const normalized = safeTrim(value).toLowerCase()
   if (!normalized) {
     return false
   }
@@ -224,7 +224,7 @@ const hasMatrixValue = (value: unknown): boolean => {
     return false
   }
   if (typeof value === 'string') {
-    return value.trim().length > 0
+    return safeTrim(value).length > 0
   }
   if (Array.isArray(value)) {
     return value.some((item) =>
@@ -252,7 +252,7 @@ const renderMatrixValue = (value: unknown, labelMap?: Record<string, string>): s
       .split(/\n+/)
       .map(
         (line, index) =>
-          `<p class="text-[11px] leading-relaxed text-wiki-text${index ? ' mt-1' : ''}">${escapeHtml(line.trim())}</p>`
+          `<p class="text-[11px] leading-relaxed text-wiki-text${index ? ' mt-1' : ''}">${escapeHtml(safeTrim(line))}</p>`
       )
       .join('')
   }
@@ -260,7 +260,7 @@ const renderMatrixValue = (value: unknown, labelMap?: Record<string, string>): s
     const items = value
       .map((item) => {
         if (typeof item === 'string') {
-          return item.trim()
+          return safeTrim(item)
         }
         if (item && typeof item === 'object' && 'name' in item && typeof (item as { name?: string }).name === 'string') {
           return ((item as { name?: string }).name ?? '').trim()
@@ -281,7 +281,7 @@ const renderMatrixValue = (value: unknown, labelMap?: Record<string, string>): s
         if (typeof raw !== 'string') {
           return null
         }
-        const trimmed = raw.trim()
+        const trimmed = safeTrim(raw)
         if (!trimmed) {
           return null
         }
@@ -346,7 +346,7 @@ const renderComparisonTable = (
                           item.jobAblContCmpr || item.jobAblLvlContCmpr ||
                           item.jobEnvContCmpr || ''
       
-      if (!label.trim()) return null
+      if (!safeTrim(label)) return null
       
       const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
       return { label, value: numericValue, description }
@@ -439,7 +439,7 @@ const renderComparisonTable = (
                           item.jobAblCont || item.jobAblLvlCont ||
                           item.jobEnvCont || ''
       
-      if (!label.trim()) return null
+      if (!safeTrim(label)) return null
       
       const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
       return { label, value: numericValue, description }
@@ -553,7 +553,7 @@ const renderComparisonData = (
                       item.jobEnvStatusCmpr ||
                       item.importance || item.level || item.value || ''
         
-        if (!label.trim()) return ''
+        if (!safeTrim(label)) return ''
         
         // value가 있으면 진행 바 표시, 없으면 텍스트만
         if (value) {
@@ -619,7 +619,7 @@ const renderComparisonData = (
                       item.jobEnvStatus ||
                       item.importance || item.level || item.value || ''
         
-        if (!label.trim()) return ''
+        if (!safeTrim(label)) return ''
         
         if (value) {
           const numericValue = typeof value === 'number' ? value : Number.parseFloat(String(value)) || 0
@@ -713,7 +713,7 @@ const renderTags = (tagList: any[]): string => {
 
   // tagList는 단순 string[] 배열
   const tags = tagList
-    .filter((tag) => typeof tag === 'string' && tag.trim())
+    .filter((tag) => typeof tag === 'string' && safeTrim(tag))
     .map((tag) => {
       const tagText = tag.startsWith('#') ? tag : `#${tag}`
       return `
@@ -763,8 +763,8 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
   // Type 2 형식 확인 (category와 description 필드)
   const firstItem = indicatorData[0]
   if (firstItem && firstItem.category && firstItem.description) {
-    categories = firstItem.category.split(',').map((c: string) => c.trim())
-    values = firstItem.description.split(',').map((v: string) => Number.parseFloat(v.trim()) || 0)
+    categories = firstItem.category.split(',').map((c: string) => safeTrim(c))
+    values = firstItem.description.split(',').map((v: string) => Number.parseFloat(safeTrim(v)) || 0)
   }
   // Type 1 형식 확인 (indicator와 indicator_data 필드)
   else if (indicatorData.every(item => item && (item.indicator || item.indicator_data))) {
@@ -772,9 +772,9 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
     const firstIndicator = indicatorData[0]
     if (firstIndicator && firstIndicator.indicator && typeof firstIndicator.indicator === 'string' && firstIndicator.indicator.includes(',')) {
       // 콤마로 구분된 경우
-      categories = firstIndicator.indicator.split(',').map((c: string) => c.trim())
+      categories = firstIndicator.indicator.split(',').map((c: string) => safeTrim(c))
       const dataStr = String(firstIndicator.indicator_data || '')
-      values = dataStr.split(',').map((v: string) => Number.parseFloat(v.trim()) || 0)
+      values = dataStr.split(',').map((v: string) => Number.parseFloat(safeTrim(v)) || 0)
     } else {
       // 각 항목이 개별 객체인 경우
       categories = indicatorData.map(item => item.indicator || '지표').filter(Boolean)
@@ -970,7 +970,7 @@ const renderLawyerFieldMatrix = (
     {
       key: 'kecoCodes',
       label: '한국표준직업분류 (KECO)',
-      extract: (entry) => entry?.kecoCodes?.map((item) => `${item.code} - ${item.name}`).filter((str): str is string => Boolean(str && str.trim()))
+      extract: (entry) => entry?.kecoCodes?.map((item) => `${item.code} - ${item.name}`).filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     
     // 임금 및 전망
@@ -1025,7 +1025,7 @@ const renderLawyerFieldMatrix = (
     {
       key: 'relatedMajors',
       label: '관련 학과 (관련 전공)',
-      extract: (entry) => entry?.relatedMajors?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
+      extract: (entry) => entry?.relatedMajors?.map((item) => item.name).filter((name): name is string => Boolean(name && safeTrim(name)))
     },
     { key: 'relatedCertificates', label: '관련 자격증 (추천 자격)', extract: (entry) => entry?.relatedCertificates },
     
@@ -1033,19 +1033,19 @@ const renderLawyerFieldMatrix = (
     {
       key: 'relatedJobs',
       label: '관련 직업 (유사 직업)',
-      extract: (entry) => entry?.relatedJobs?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
+      extract: (entry) => entry?.relatedJobs?.map((item) => item.name).filter((name): name is string => Boolean(name && safeTrim(name)))
     },
     {
       key: 'relatedOrganizations',
       label: '관련 기관 (관련 단체)',
-      extract: (entry) => entry?.relatedOrganizations?.map((item) => item.name).filter((name): name is string => Boolean(name && name.trim()))
+      extract: (entry) => entry?.relatedOrganizations?.map((item) => item.name).filter((name): name is string => Boolean(name && safeTrim(name)))
     },
     
     // CareerNet 확장 필드들 (배열 데이터)
     {
       key: 'workList',
       label: '세부 업무 목록',
-      extract: (entry) => entry?.workList?.map((item) => `${item.workName}: ${item.workDesc}`).filter((str): str is string => Boolean(str && str.trim()))
+      extract: (entry) => entry?.workList?.map((item) => `${item.workName}: ${item.workDesc}`).filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'performList.environment',
@@ -1054,7 +1054,7 @@ const renderLawyerFieldMatrix = (
         ?.sort((a, b) => (b.importance || 0) - (a.importance || 0))
         .slice(0, 10)
         .map((item) => `${item.name} (중요도: ${item.importance})`)
-        .filter((str): str is string => Boolean(str && str.trim()))
+        .filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'performList.perform',
@@ -1063,7 +1063,7 @@ const renderLawyerFieldMatrix = (
         ?.sort((a, b) => (b.importance || 0) - (a.importance || 0))
         .slice(0, 10)
         .map((item) => `${item.name} (중요도: ${item.importance})`)
-        .filter((str): str is string => Boolean(str && str.trim()))
+        .filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'performList.knowledge',
@@ -1072,7 +1072,7 @@ const renderLawyerFieldMatrix = (
         ?.sort((a, b) => (b.importance || 0) - (a.importance || 0))
         .slice(0, 10)
         .map((item) => `${item.name} (중요도: ${item.importance})`)
-        .filter((str): str is string => Boolean(str && str.trim()))
+        .filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'abilityList',
@@ -1081,7 +1081,7 @@ const renderLawyerFieldMatrix = (
         ?.sort((a, b) => (b.score || 0) - (a.score || 0))
         .slice(0, 10)
         .map((item) => `${item.name} (${item.score}점)`)
-        .filter((str): str is string => Boolean(str && str.trim()))
+        .filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'aptitudeList',
@@ -1090,7 +1090,7 @@ const renderLawyerFieldMatrix = (
         ?.sort((a, b) => (b.score || 0) - (a.score || 0))
         .slice(0, 10)
         .map((item) => `${item.name} (${item.score}점)`)
-        .filter((str): str is string => Boolean(str && str.trim()))
+        .filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'interestList',
@@ -1099,7 +1099,7 @@ const renderLawyerFieldMatrix = (
         ?.sort((a, b) => (b.score || 0) - (a.score || 0))
         .slice(0, 10)
         .map((item) => `${item.name} (${item.score}점)`)
-        .filter((str): str is string => Boolean(str && str.trim()))
+        .filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'jobReadyList.recruit',
@@ -1124,32 +1124,32 @@ const renderLawyerFieldMatrix = (
     {
       key: 'forecastList',
       label: '미래 전망 상세',
-      extract: (entry) => entry?.forecastList?.map((item) => `[${item.period}] ${item.outlook}: ${item.description}`).filter((str): str is string => Boolean(str && str.trim()))
+      extract: (entry) => entry?.forecastList?.map((item) => `[${item.period}] ${item.outlook}: ${item.description}`).filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'indicatorChart',
       label: '직업 지표',
-      extract: (entry) => entry?.indicatorChart?.map((item) => `${item.category}: ${item.value} (${item.description})`).filter((str): str is string => Boolean(str && str.trim()))
+      extract: (entry) => entry?.indicatorChart?.map((item) => `${item.category}: ${item.value} (${item.description})`).filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'relVideoList',
       label: '관련 영상 자료',
-      extract: (entry) => entry?.relVideoList?.map((item) => `${item.title} [${item.duration}]`).filter((str): str is string => Boolean(str && str.trim()))
+      extract: (entry) => entry?.relVideoList?.map((item) => `${item.title} [${item.duration}]`).filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'relSolList',
       label: '관련 자료',
-      extract: (entry) => entry?.relSolList?.map((item) => item.title).filter((str): str is string => Boolean(str && str.trim()))
+      extract: (entry) => entry?.relSolList?.map((item) => item.title).filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'relJinsolList',
       label: '진로 상담 자료',
-      extract: (entry) => entry?.relJinsolList?.map((item) => item.title).filter((str): str is string => Boolean(str && str.trim()))
+      extract: (entry) => entry?.relJinsolList?.map((item) => item.title).filter((str): str is string => Boolean(str && safeTrim(str)))
     },
     {
       key: 'researchList',
       label: '연구 자료',
-      extract: (entry) => entry?.researchList?.map((item) => `${item.title} (${item.author}, ${item.date})`).filter((str): str is string => Boolean(str && str.trim()))
+      extract: (entry) => entry?.researchList?.map((item) => `${item.title} (${item.author}, ${item.date})`).filter((str): str is string => Boolean(str && safeTrim(str)))
     }
   ]
 
@@ -1194,7 +1194,7 @@ const renderLawyerFieldMatrix = (
         </tr>
       `
     })
-    .filter((row) => row && row.trim().length > 0)
+    .filter((row) => row && safeTrim(row).length > 0)
     .join('')
 
   if (!rowsMarkup) {
@@ -1262,7 +1262,7 @@ const renderEntityList = (entities?: JobRelatedEntity[] | null, type: 'job' | 'm
       ${entities
         .filter((entity) => !!entity?.name?.trim())
         .map((entity) => {
-          const name = escapeHtml(entity.name.trim())
+          const name = escapeHtml(entity.safeTrim(name))
           const url = buildEntityUrl(entity, type)
           return `<a href="${url}" class="content-text text-wiki-primary hover:text-wiki-secondary transition">${name}</a>`
         })
@@ -1277,7 +1277,7 @@ const renderDistributionList = (distribution?: Record<string, string | undefined
   }
 
   const entries = Object.entries(distribution)
-    .filter(([, value]) => !!value && !!value.trim())
+    .filter(([, value]) => !!value && !!safeTrim(value))
     .map(([key, value]) => ({
       label: labels?.[key] ?? key,
       value: value!.trim()
@@ -1304,11 +1304,11 @@ const renderDistributionList = (distribution?: Record<string, string | undefined
 const formatSalaryValue = (value: number): string => `${value.toLocaleString('ko-KR')}만원`
 
 const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): string => {
-  if (!salary || !salary.trim()) {
+  if (!salary || !safeTrim(salary)) {
     return ''
   }
 
-  const raw = salary.trim()
+  const raw = safeTrim(salary)
   
   // 고용24 형식 파싱: "하위(25%) 8450만원, 평균(50%) 10000만원, 상위(25%) 14200만원"
   const goyong24Pattern = /하위\(25%\)\s*([\d,]+)만원.*?평균\(50%\)\s*([\d,]+)만원.*?상위\(25%\)\s*([\d,]+)만원/
@@ -1426,7 +1426,7 @@ const renderDistributionPieChart = (
   }
 
   const entries = Object.entries(distribution)
-    .filter(([, value]) => typeof value === 'string' && value.trim().length > 0)
+    .filter(([, value]) => typeof value === 'string' && safeTrim(value).length > 0)
 
   if (!entries.length) {
     return ''
@@ -1544,7 +1544,7 @@ const renderCombinedDistributionCharts = (
     if (!distribution) return null
 
     const entries = Object.entries(distribution)
-      .filter(([, value]) => typeof value === 'string' && value.trim().length > 0)
+      .filter(([, value]) => typeof value === 'string' && safeTrim(value).length > 0)
 
     if (!entries.length) return null
 
@@ -1719,7 +1719,7 @@ const renderDistributionBars = (
   }
 
   const entries = Object.entries(distribution)
-    .filter(([, value]) => typeof value === 'string' && value.trim().length > 0)
+    .filter(([, value]) => typeof value === 'string' && safeTrim(value).length > 0)
 
   if (!entries.length) {
     return ''
@@ -1891,7 +1891,7 @@ const resolveRecommendedHowtos = (jobId: string): Array<{ label: string; href: s
 }
 
 const renderSidebarSection = (title: string, icon: string, body: string): string => {
-  if (!body || !body.trim()) {
+  if (!body || !safeTrim(body)) {
     return ''
   }
 
@@ -1967,7 +1967,7 @@ const renderJobSidebar = (profile: UnifiedJobDetail): string => {
     )
   }
 
-  return sections.filter((section) => section && section.trim().length > 0).join('')
+  return sections.filter((section) => section && safeTrim(section).length > 0).join('')
 }
 
 const renderSourcesCollapsible = (
@@ -1988,7 +1988,7 @@ const renderSourcesCollapsible = (
     description: '이 페이지에 노출된 주요 데이터 출처를 확인할 수 있습니다.'
   })
 
-  if (!panel || !panel.trim()) {
+  if (!panel || !safeTrim(panel)) {
     return ''
   }
 
@@ -2256,14 +2256,14 @@ const renderQuickStats = (
     { label: '평균 연봉', value: profile.salary, icon: 'fa-coins', source: 'GOYONG24' as DataSource },
     { label: '직업 전망', value: profile.prospect, icon: 'fa-chart-line', source: 'GOYONG24' as DataSource },
     { label: '직무 만족도', value: profile.satisfaction, icon: 'fa-face-smile', source: 'CAREERNET' as DataSource }
-  ].filter((stat) => typeof stat.value === 'string' && stat.value.trim().length > 0)
+  ].filter((stat) => typeof stat.value === 'string' && stat.safeTrim(value).length > 0)
 
   if (!stats.length) {
     return ''
   }
 
   const valueMarkup = (raw: string): string => {
-    const trimmed = raw.trim()
+    const trimmed = safeTrim(raw)
     if (!trimmed.length) {
       return ''
     }
@@ -2284,7 +2284,7 @@ const renderQuickStats = (
       const trimmed = stat.value!.trim()
       const palette = accents(index)
       const noteText = sourceNote ? sourceNote(stat.source) : ''
-      const noteLabel = noteText && noteText.trim().length ? noteText.trim() : ''
+      const noteLabel = noteText && safeTrim(noteText).length ? safeTrim(noteText) : ''
       const noteAttr = noteLabel ? ` data-stat-note="${escapeHtml(noteLabel)}"` : ''
       return `
         <article
@@ -2342,10 +2342,10 @@ const renderOrganizationsList = (profile: UnifiedJobDetail): string => {
   const items = profile.relatedOrganizations
     .filter((org) => !!org?.name?.trim())
     .map((org) => {
-      const name = escapeHtml(org.name.trim())
+      const name = escapeHtml(org.safeTrim(name))
       if (org.url) {
         // URL에 프로토콜이 없으면 https:// 추가
-        let fullUrl = org.url.trim()
+        let fullUrl = org.safeTrim(url)
         if (!/^https?:\/\//i.test(fullUrl)) {
           fullUrl = `https://${fullUrl}`
         }
@@ -2405,7 +2405,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const detailCards: SectionCardDescriptor[] = []
 
   const pushOverviewCard = (title: string, icon: string, body: string) => {
-    if (!body || !body.trim()) {
+    if (!body || !safeTrim(body)) {
       return
     }
     const anchorId = anchorIdFactory('overview', title)
@@ -2414,13 +2414,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       telemetryScope: 'job-overview-card',
       telemetryComponent: 'job-overview-card'
     })
-    if (cardMarkup.trim()) {
+    if (safeTrim(cardMarkup)) {
       overviewCards.push({ id: anchorId, label: title, icon, markup: cardMarkup })
     }
   }
 
   const pushDetailCard = (title: string, icon: string, body: string) => {
-    if (!body || !body.trim()) {
+    if (!body || !safeTrim(body)) {
       return
     }
     const anchorId = anchorIdFactory('details', title)
@@ -2429,7 +2429,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       telemetryScope: 'job-detail-card',
       telemetryComponent: 'job-detail-card'
     })
-    if (cardMarkup.trim()) {
+    if (safeTrim(cardMarkup)) {
       detailCards.push({ id: anchorId, label: title, icon, markup: cardMarkup })
     }
   }
@@ -2452,7 +2452,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         .map((item: any) => {
           // work 필드만 추출
           const text = typeof item === 'string' ? item : item.work || item.list_content || ''
-          return text.trim() ? `<li class="content-text">${escapeHtml(text)}</li>` : ''
+          return safeTrim(text) ? `<li class="content-text">${escapeHtml(text)}</li>` : ''
         })
         .filter(Boolean)
         .join('')
@@ -2599,7 +2599,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       const prospectBlocks = prospectPrimary
         .map((item: any) => {
           const text = typeof item === 'string' ? item : item.list_content || ''
-          if (!text.trim()) return ''
+          if (!safeTrim(text)) return ''
           // 첫 단어 들여쓰기를 위해 <span> 추가
           return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${escapeHtml(text)}</div>`
         })
@@ -2611,7 +2611,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       }
     } else if (typeof prospectPrimary === 'string') {
       // 문자열인 경우 줄바꿈을 블록으로 변환
-      const lines = prospectPrimary.split('\n').filter(line => line.trim())
+      const lines = prospectPrimary.split('\n').filter(line => safeTrim(line))
       if (lines.length > 1) {
         prospectHtml = `<div class="space-y-2">${lines.map(line => `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${escapeHtml(line)}</div>`).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       } else {
@@ -2626,7 +2626,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     ].filter(Boolean).join('<div class="mt-6"></div>')
     
     // Only add card if combinedHtml has content
-    if (combinedHtml.trim()) {
+    if (safeTrim(combinedHtml)) {
       pushOverviewCard('커리어 전망', 'fa-chart-line', combinedHtml)
     }
   }
@@ -2665,7 +2665,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       .map((item: any) => typeof item === 'string' ? item : (item?.curriculum || ''))
       .filter(Boolean)
       .join(' ')
-    if (curriculumText.trim()) {
+    if (safeTrim(curriculumText)) {
       abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading">정규교육과정</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(curriculumText)}</p></div>`)
     }
   }
@@ -2832,7 +2832,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   // 1. Type C: 업무 상세 (detailed) - 먼저 표시
   const workDetailed = mergedData.work.detailed
-  if (workDetailed && typeof workDetailed === 'string' && workDetailed.trim()) {
+  if (workDetailed && typeof workDetailed === 'string' && safeTrim(workDetailed)) {
     pushDetailCard('업무 상세', 'fa-clipboard-list', formatWorkDetailAsNumberedCards(workDetailed))
   }
 
@@ -2908,7 +2908,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     const educationBlocks = []
     
     // 1. 필요기술 및 지식 (path.technKnow)
-    if (pathTechnKnow && typeof pathTechnKnow === 'string' && pathTechnKnow.trim()) {
+    if (pathTechnKnow && typeof pathTechnKnow === 'string' && safeTrim(pathTechnKnow)) {
       educationBlocks.push(`<div><h3 class="content-heading">필요기술 및 지식</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(pathTechnKnow)}</p></div>`)
     }
     
@@ -2918,7 +2918,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         .map((item: any) => typeof item === 'string' ? item : (item?.recruit || ''))
         .filter(Boolean)
         .join(' ')
-      if (recruitText.trim()) {
+      if (safeTrim(recruitText)) {
         educationBlocks.push(`<div class="${educationBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">입직 및 취업방법</h3><p class="content-text text-wiki-text leading-relaxed">${escapeHtml(recruitText)}</p></div>`)
       }
     }
@@ -3039,7 +3039,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         .map((item: any) => {
           const name = item.knowledge || item.list_content || item.knowledge_name || item.inform || ''
           const importance = item.importance || 0
-          if (!name.trim()) return null
+          if (!safeTrim(name)) return null
           return { name, importance }
         })
         .filter(Boolean)
@@ -3128,7 +3128,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         .map((item) => {
           const name = item.environment || item.inform || ''
           const importance = item.importance || 0
-          if (!name.trim()) return null
+          if (!safeTrim(name)) return null
           return { name, importance }
         })
         .filter(Boolean)
@@ -3383,7 +3383,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   const entitySlug = composeDetailSlug('job', profile.name, profile.id)
   const detailPath = `/job/${encodeURIComponent(entitySlug)}`
-  const summarySnippet = heroDescription ?? (profile.summary ? profile.summary.trim().slice(0, 400) : null)
+  const summarySnippet = heroDescription ?? (profile.summary ? profile.safeTrim(summary).slice(0, 400) : null)
   const detailMetaExtra: Record<string, unknown> = {
     sharePath: detailPath
   }
@@ -3436,7 +3436,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const sidebarContent = renderJobSidebar(profile)
   const sourcesCollapsible = renderSourcesCollapsible(profile, sources, partials)
   const heroImage = renderHeroImage(profile.name, { dataAttribute: 'data-job-hero-image', context: 'job' })
-  const hasSidebar = sidebarContent.trim().length > 0
+  const hasSidebar = safeTrim(sidebarContent).length > 0
   
   // 태그 렌더링 (tagList는 string[] 형식)
   const tagList = rawApiData?.careernet?.encyclopedia?.tagList
@@ -3447,12 +3447,12 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       .filter((tag: string | any) => {
         // string[] 또는 object[] 모두 지원
         const tagText = typeof tag === 'string' ? tag : (tag?.tag || tag?.list_content || '')
-        return tagText && tagText.trim().length > 0
+        return tagText && safeTrim(tagText).length > 0
       })
       .map((tag: string | any) => {
         // string[] 또는 object[] 모두 지원
         const tagText = typeof tag === 'string' ? tag : (tag?.tag || tag?.list_content || '')
-        return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(tagText.trim())}</span>`
+        return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(safeTrim(tagText))}</span>`
       })
       .join('')
     
@@ -3554,7 +3554,7 @@ export const createJobJsonLd = (profile: UnifiedJobDetail, canonicalUrl: string)
     estimatedSalary: profile.salary,
     educationRequirements: profile.majorDistribution
       ? Object.entries(profile.majorDistribution)
-          .filter(([, value]) => !!value && !!value.trim())
+          .filter(([, value]) => !!value && !!safeTrim(value))
           .map(([key, value]) => `${key}: ${value}`)
       : undefined,
     skills: profile.abilities,
