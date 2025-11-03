@@ -451,15 +451,13 @@ const renderLayout = (
           }
           .nav-link-mobile {
             display: flex;
-            width: 100%;
             justify-content: center;
+            align-items: center;
             padding: 10px 18px;
             background: rgba(26, 26, 46, 0.65);
             border-radius: 12px;
             border: 1px solid rgba(100, 181, 246, 0.25);
-          }
-          .nav-link-mobile:not(:last-child) {
-            margin-bottom: 6px;
+            text-align: center;
           }
           .mobile-menu-divider {
             border-top: 1px solid rgba(67, 97, 238, 0.25);
@@ -560,17 +558,21 @@ const renderLayout = (
               padding-top: 80px;
               padding-bottom: 60px;
             }
+            #main-nav {
+              position: sticky !important;
+              transform: translateY(0) !important;
+            }
           }
         </style>
     </head>
     <body class="bg-wiki-bg text-wiki-text min-h-screen">
         ${!isHomepage ? `
         <!-- Navigation (Not on homepage) -->
-        <nav class="glass-card sticky top-0 z-50 border-b border-wiki-border">
+        <nav id="main-nav" class="glass-card fixed top-0 left-0 right-0 z-50 border-b border-wiki-border transition-transform duration-300">
             <div class="mx-auto w-full max-w-[1400px] px-3 py-2.5">
                 <!-- Mobile Navigation - Single Line -->
                 <div class="flex items-center gap-2 md:hidden">
-                    <a href="/" class="flex items-center shrink-0">
+                    <a href="/" class="flex items-center shrink-0 scale-75">
                         ${getLogoSVG('small')}
                     </a>
                     <form action="/search" method="get" class="flex-1 min-w-0 max-w-[calc(100%-140px)]">
@@ -624,15 +626,17 @@ const renderLayout = (
         </nav>
         
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden glass-card border-b border-wiki-border">
+        <div id="mobile-menu" class="hidden md:hidden glass-card border-b border-wiki-border fixed top-[57px] left-0 right-0 z-40">
             <div class="mx-auto w-full max-w-[1400px] py-3 px-6 space-y-2">
-                <a href="/analyzer" class="nav-link nav-link-mobile">
-                    <i class="fas fa-brain mr-2"></i>AI 분석
-                </a>
-                <a href="/howto" class="nav-link nav-link-mobile">
-                    <i class="fas fa-route mr-2"></i>HowTo
-                </a>
-                <div class="mobile-menu-divider flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <a href="/analyzer" class="nav-link nav-link-mobile flex-1">
+                        <i class="fas fa-brain mr-2"></i>AI 분석
+                    </a>
+                    <a href="/howto" class="nav-link nav-link-mobile flex-1">
+                        <i class="fas fa-route mr-2"></i>HowTo
+                    </a>
+                </div>
+                <div class="mobile-menu-divider flex items-center gap-3 justify-end pt-2">
                     <a href="/help" class="header-icon-button" title="도움말">
                         <i class="fas fa-question-circle"></i>
                     </a>
@@ -645,7 +649,7 @@ const renderLayout = (
         ` : ''}
         
         <!-- Main Content -->
-        <main class="${isHomepage ? '' : 'mx-auto px-2 md:px-6 py-4 md:py-8'}">
+        <main class="${isHomepage ? '' : 'mx-auto px-2 md:px-6 pt-[65px] md:pt-0 py-4 md:py-8'}">
             ${content}
         </main>
         
@@ -684,11 +688,49 @@ const renderLayout = (
         </footer>
         
         <script>
+            // Mobile header auto-hide on scroll
+            let lastScrollTop = 0;
+            let isNavVisible = true;
+            const nav = document.getElementById('main-nav');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const isMobile = window.innerWidth < 768;
+            
+            if (isMobile && nav) {
+                window.addEventListener('scroll', () => {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    if (scrollTop > lastScrollTop && scrollTop > 100) {
+                        // Scrolling down & past 100px
+                        nav.style.transform = 'translateY(-100%)';
+                        isNavVisible = false;
+                        if (mobileMenu) mobileMenu.classList.add('hidden');
+                    } else if (scrollTop < lastScrollTop) {
+                        // Scrolling up
+                        nav.style.transform = 'translateY(0)';
+                        isNavVisible = true;
+                    }
+                    
+                    lastScrollTop = scrollTop;
+                });
+                
+                // Show nav on empty area tap
+                document.addEventListener('click', (e) => {
+                    if (!isNavVisible && 
+                        !e.target.closest('a') && 
+                        !e.target.closest('button') && 
+                        !e.target.closest('input') && 
+                        !e.target.closest('nav')) {
+                        nav.style.transform = 'translateY(0)';
+                        isNavVisible = true;
+                    }
+                });
+            }
+            
             // Mobile menu toggle
             const menuBtn = document.getElementById('mobile-menu-btn');
             if(menuBtn) {
                 menuBtn.addEventListener('click', () => {
-                    document.getElementById('mobile-menu').classList.toggle('hidden');
+                    mobileMenu.classList.toggle('hidden');
                 });
             }
         </script>
