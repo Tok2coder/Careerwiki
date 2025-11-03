@@ -40,7 +40,7 @@ export const renderChips = (items?: string[] | null, emptyText = '정보 없음'
     <div class="flex flex-wrap gap-2">
       ${items
         .filter((item) => !!item && !!item.trim())
-        .map((item) => `<span class="px-3 py-1.5 rounded-full bg-wiki-bg border border-wiki-border content-text text-wiki-muted">${escapeHtml(item.trim())}</span>`)
+        .map((item) => `<span class="px-3 py-1.5 rounded-full bg-wiki-bg border border-wiki-border/50 md:border-wiki-border content-text text-wiki-muted">${escapeHtml(item.trim())}</span>`)
         .join('')}
     </div>
   `

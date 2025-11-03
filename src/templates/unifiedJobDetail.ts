@@ -1870,7 +1870,7 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
   }
 
   return `
-    <section class="glass-card px-2 py-5 md:px-5 rounded-none md:rounded-2xl space-y-3" data-job-sidebar-section>
+    <section class="glass-card border-0 md:border px-2 py-5 md:px-5 rounded-none md:rounded-2xl space-y-3 bg-transparent md:bg-wiki-bg/30" data-job-sidebar-section>
       <div class="flex items-center gap-2 content-text font-semibold text-white">
         <i class="fas ${icon} text-wiki-secondary" aria-hidden="true"></i>
         <span>${escapeHtml(title)}</span>
@@ -1909,7 +1909,7 @@ const renderJobSidebar = (profile: UnifiedJobDetail): string => {
       .map(
         (item) => `
           <li>
-            <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/70 bg-wiki-bg/60 px-3 py-2 md:px-4 md:py-3 content-text text-wiki-primary hover:border-wiki-primary hover:text-white transition">
+            <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/40 md:border-wiki-border/70 bg-wiki-bg/60 px-3 py-2 md:px-4 md:py-3 content-text text-wiki-primary hover:border-wiki-primary hover:text-white transition">
               <span class="font-semibold">${escapeHtml(item.label)}</span>
               <span class="text-xs text-wiki-muted">CareerWiki HowTo</span>
             </a>
