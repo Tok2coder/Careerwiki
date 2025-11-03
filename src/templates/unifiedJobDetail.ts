@@ -1343,13 +1343,17 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
     .map(({ label, value }) => {
       const percent = maxValue === 0 ? 0 : Math.round((value / maxValue) * 100)
       const width = Math.min(100, Math.max(12, percent))
+      const isMedian = label === '평균 50%'
+      const textSize = isMedian ? 'text-base' : 'text-[15px]'
+      const textColor = isMedian ? 'text-white font-bold' : 'text-wiki-muted font-semibold'
+      const barHeight = isMedian ? 'h-3' : 'h-2'
       return `
         <div class="space-y-1" data-cw-telemetry-component="job-salary-bar">
-          <div class="flex justify-between text-[11px] text-wiki-muted">
+          <div class="flex justify-between ${textSize} ${textColor}">
             <span>${escapeHtml(label)}</span>
             <span>${formatSalaryValue(value)}</span>
           </div>
-          <div class="h-2 rounded-full bg-wiki-border/40 overflow-hidden">
+          <div class="${barHeight} rounded-full bg-wiki-border/40 overflow-hidden">
             <div class="h-full bg-gradient-to-r from-wiki-primary to-wiki-secondary" style="width:${width}%"></div>
           </div>
         </div>
