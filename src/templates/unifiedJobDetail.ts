@@ -1339,14 +1339,20 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
   }
 
   const maxValue = Math.max(...dataset.map((item) => item.value))
+  // 평균값만 있는 경우 (dataset이 1개)
+  const isSingleAverage = dataset.length === 1 && dataset[0].label === '평균'
+  
   const barMarkup = dataset
     .map(({ label, value }) => {
       const percent = maxValue === 0 ? 0 : Math.round((value / maxValue) * 100)
       const width = Math.min(100, Math.max(12, percent))
       const isMedian = label === '평균 50%'
-      const textSize = isMedian ? 'text-base' : 'text-[15px]'
-      const textColor = isMedian ? 'text-white font-bold' : 'text-wiki-muted font-semibold'
-      const barHeight = isMedian ? 'h-3' : 'h-2'
+      const isAverage = label === '평균'
+      // 평균 50% 또는 단일 평균값일 때 강조
+      const shouldEmphasize = isMedian || (isSingleAverage && isAverage)
+      const textSize = shouldEmphasize ? 'text-base' : 'text-[15px]'
+      const textColor = shouldEmphasize ? 'text-white font-bold' : 'text-wiki-muted font-semibold'
+      const barHeight = shouldEmphasize ? 'h-3' : 'h-2'
       return `
         <div class="space-y-1" data-cw-telemetry-component="job-salary-bar">
           <div class="flex justify-between ${textSize} ${textColor}">
@@ -2583,7 +2589,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         })
         .filter(Boolean)
         .join('')
-      prospectHtml = `<div class="space-y-2">${prospectBlocks}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+      // Only show section if prospectBlocks has content
+      if (prospectBlocks) {
+        prospectHtml = `<div class="space-y-2">${prospectBlocks}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+      }
     } else if (typeof prospectPrimary === 'string') {
       // 문자열인 경우 줄바꿈을 블록으로 변환
       const lines = prospectPrimary.split('\n').filter(line => line.trim())
@@ -2600,6 +2609,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       prospectChartHtml?.trim() || ''
     ].filter(Boolean).join('<div class="mt-6"></div>')
     
+    // Only add card if combinedHtml has content
     if (combinedHtml.trim()) {
       pushOverviewCard('커리어 전망', 'fa-chart-line', combinedHtml)
     }
@@ -3326,15 +3336,15 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     : `<p class="text-sm text-wiki-muted">업무특성 정보가 준비 중입니다.</p>`
   // ===== 업무특성 탭 끝 =====
 
-  // 변호사 페이지는 직업 분류 체계 표시하지 않음
-  if (!isLawyerProfile(profile) && profile.classifications && (profile.classifications.large || profile.classifications.medium || profile.classifications.small)) {
-    const classificationItems = [
-      profile.classifications.large ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">대분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.large)}</span></li>` : '',
-      profile.classifications.medium ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">중분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.medium)}</span></li>` : '',
-      profile.classifications.small ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">소분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.small)}</span></li>` : ''
-    ].join('')
-    pushDetailCard('직업 분류 체계', 'fa-sitemap', `<ul class="space-y-2">${classificationItems}</ul>`)
-  }
+  // 직업 분류 체계 섹션 제거됨 (히어로 섹션에 카테고리 배지로 이미 표시)
+  // if (!isLawyerProfile(profile) && profile.classifications && (profile.classifications.large || profile.classifications.medium || profile.classifications.small)) {
+  //   const classificationItems = [
+  //     profile.classifications.large ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">대분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.large)}</span></li>` : '',
+  //     profile.classifications.medium ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">중분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.medium)}</span></li>` : '',
+  //     profile.classifications.small ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">소분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.small)}</span></li>` : ''
+  //   ].join('')
+  //   pushDetailCard('직업 분류 체계', 'fa-sitemap', `<ul class="space-y-2">${classificationItems}</ul>`)
+  // }
 
   // 한국표준직업분류 코드 섹션 제거됨
   // const kecoList = renderKecoCodeList(profile)
