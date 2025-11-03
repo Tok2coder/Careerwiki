@@ -689,6 +689,88 @@ export const getUnifiedJobDetailWithRawData = async (
   let rawCareernetData: any = null
   let rawGoyong24Data: any = null
 
+  // 🆕 Step 1: Check D1 Database first (if available)
+  if (env && 'DB' in env) {
+    try {
+      const db = (env as any).DB
+      
+      // Extract potential careernet ID from canonical ID format (e.g., "job:C_354" -> "354")
+      const extractedId = id ? extractCanonicalSuffix(id, 'job:C_') : undefined
+      
+      // Build flexible query - try multiple match strategies
+      let jobRow: any = null
+      
+      // Strategy 1: Try by careernet_id
+      if (explicitCareernetId || extractedId) {
+        const searchId = explicitCareernetId || extractedId
+        jobRow = await db.prepare(`
+          SELECT id, name, careernet_id, goyong24_id, api_data_json 
+          FROM jobs 
+          WHERE careernet_id = ?
+          LIMIT 1
+        `).bind(searchId).first()
+      }
+      
+      // Strategy 2: Try by name if no match yet
+      if (!jobRow && id && !id.includes(':')) {
+        jobRow = await db.prepare(`
+          SELECT id, name, careernet_id, goyong24_id, api_data_json 
+          FROM jobs 
+          WHERE name = ?
+          LIMIT 1
+        `).bind(id).first()
+      }
+      
+      if (jobRow && jobRow.api_data_json) {
+        try {
+          const apiData = JSON.parse(jobRow.api_data_json)
+          
+          // Use cached data from D1
+          if (apiData.careernet && sourcesToUse.includes('CAREERNET')) {
+            rawCareernetData = apiData.careernet
+            careernetProfile = normalizeCareerNetJobDetail(apiData.careernet)
+            sourcesStatus.CAREERNET.attempted = true
+            sourcesStatus.CAREERNET.count = 1
+          }
+          
+          if (apiData.goyong24 && sourcesToUse.includes('GOYONG24')) {
+            rawGoyong24Data = apiData.goyong24
+            goyongProfile = normalizeGoyong24JobDetail(apiData.goyong24)
+            sourcesStatus.GOYONG24.attempted = true
+            sourcesStatus.GOYONG24.count = 1
+          }
+          
+          // If we found data in D1, skip API calls
+          if (careernetProfile || goyongProfile) {
+            const merged = mergeJobProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
+            const partialsRecord: Partial<Record<DataSource, UnifiedJobDetail | null>> = {
+              CAREERNET: careernetProfile,
+              GOYONG24: goyongProfile
+            }
+            const enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+            
+            return {
+              profile: enhancedProfile,
+              partials: partialsRecord,
+              sources: sourcesStatus,
+              rawApiData: {
+                careernet: rawCareernetData,
+                goyong24: rawGoyong24Data
+              }
+            }
+          }
+        } catch (parseError) {
+          console.error('Failed to parse D1 api_data_json:', parseError)
+          // Continue to API fallback
+        }
+      }
+    } catch (dbError) {
+      console.error('D1 database query failed:', dbError)
+      // Continue to API fallback
+    }
+  }
+
+  // Step 2: Fallback to API calls if D1 doesn't have the data
   // CareerNet detail
   if (sourcesToUse.includes('CAREERNET')) {
     const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
