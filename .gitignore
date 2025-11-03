@@ -40,7 +40,7 @@ lerna-debug.log*
 # local scripts & datasets
 test_*.js
 test_*.mjs
-scripts/
+# scripts/ - commented out to allow src/scripts/
 notes/
 *.docx
 *.xlsx
