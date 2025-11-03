@@ -271,7 +271,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   const infoCard = infoItems.length
     ? `
-      <div class="glass-card px-2 py-6 md:px-6 rounded-none md:rounded-xl">
+      <div class="glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-xl">
         <h3 class="text-lg font-semibold text-wiki-text mb-3">기본 정보</h3>
         <ul class="space-y-2">${infoItems.join('')}</ul>
       </div>
@@ -295,7 +295,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   return `
     <div class="max-w-[1400px] mx-auto">
-      <div class="glass-card px-2 py-8 md:px-8 rounded-none md:rounded-2xl mb-8 space-y-6">
+      <div class="glass-card border-0 md:border px-2 py-8 md:px-8 rounded-none md:rounded-2xl mb-8 space-y-6">
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
           <div>
             <div class="flex items-center gap-3 mb-3">

@@ -134,7 +134,7 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
   }
 
   const { anchorId, telemetryScope, telemetryComponent } = options
-  const className = `glass-card px-2 py-6 md:px-6 rounded-none md:rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
+  const className = `glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
   const attributeParts: string[] = [`class="${className}"`, 'data-cw-detail-card']
 
   if (anchorId) {
@@ -208,9 +208,9 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
   const tabButtons = entries
     .map((entry, index) => {
       const isActive = index === 0
-      const baseClasses = 'px-4 py-3 text-sm font-semibold transition border-b-2 rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
+      const baseClasses = 'px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
       const activeClasses = isActive
-        ? 'text-white border-wiki-primary bg-wiki-border/30'
+        ? 'text-white border-wiki-primary bg-transparent md:bg-wiki-border/30'
         : 'text-wiki-muted border-transparent hover:text-white hover:border-wiki-border'
       return `
         <li role="presentation" class="flex" data-cw-tab-item>
@@ -269,7 +269,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
   return `
     <section
       id="${tabsetId}"
-      class="glass-card p-0 rounded-2xl overflow-hidden"
+      class="glass-card border-0 md:border p-0 rounded-none md:rounded-2xl overflow-hidden"
       data-cw-tabset
       data-tabset-id="${tabsetId}"
       data-entity-type="${entityType}"
@@ -289,7 +289,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
         <p id="${instructionsId}">방향키로 탭을 이동하고 Enter 키로 선택할 수 있습니다. Home/End 키로 처음과 마지막 탭으로 이동합니다.</p>
       </header>
       <div
-        class="flex flex-wrap gap-2 px-4 pt-4 bg-wiki-bg/70 border-b border-wiki-border"
+        class="flex flex-wrap gap-2 px-2 md:px-4 pt-3 md:pt-4 bg-transparent md:bg-wiki-bg/70 border-b border-wiki-border/50 md:border-wiki-border"
         data-cw-tablist-container
       >
         <ul
@@ -308,7 +308,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
         </ul>
       </div>
       <p class="sr-only" id="${statusId}" role="status" aria-live="polite" aria-atomic="true" data-cw-tab-status></p>
-      <div class="px-2 py-6 md:px-6 space-y-6" data-cw-tab-panels data-cw-telemetry-scope="tab-panels" data-cw-telemetry-component="tab-panels">
+      <div class="px-0 md:px-6 py-6 space-y-6" data-cw-tab-panels data-cw-telemetry-scope="tab-panels" data-cw-telemetry-component="tab-panels">
         ${tabPanels}
       </div>
     </section>
@@ -644,7 +644,7 @@ export const renderCommentsPlaceholder = ({
 
   return `
   <section
-    class="glass-card px-2 py-6 md:px-6 rounded-none md:rounded-2xl space-y-4 md:space-y-6"
+    class="glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-2xl space-y-4 md:space-y-6"
     id="cw-comments"
     data-cw-comments
     data-cw-telemetry-scope="comments"

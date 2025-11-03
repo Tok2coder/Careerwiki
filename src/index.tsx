@@ -573,14 +573,13 @@ const renderLayout = (
                     <a href="/" class="flex items-center shrink-0">
                         ${getLogoSVG('small')}
                     </a>
-                    <form action="/search" method="get" class="flex-1 min-w-0">
+                    <form action="/search" method="get" class="flex-1 min-w-0 max-w-[calc(100%-140px)]">
                         <div class="nav-search-bar">
+                            <i class="fas fa-search text-wiki-muted text-sm"></i>
                             <input type="text" name="q" 
                                    placeholder="검색..." 
                                    class="nav-search-input">
-                            <button type="submit" class="nav-search-button" aria-label="검색">
-                                <i class="fas fa-search"></i>
-                            </button>
+                            <button type="submit" class="sr-only" aria-label="검색">검색</button>
                         </div>
                     </form>
                     <button id="mobile-menu-btn" class="text-wiki-text shrink-0 w-10 h-10 flex items-center justify-center" aria-label="모바일 메뉴 열기">

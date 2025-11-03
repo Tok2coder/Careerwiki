@@ -370,7 +370,7 @@ const renderComparisonTable = (
     ` : ''
 
       blocks.push(`
-        <div class="bg-white/5 rounded-xl md:rounded-2xl px-2 py-6 md:px-6 border border-wiki-border/50">
+        <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl px-0 md:px-6 py-6 border-0 md:border md:border-wiki-border/50">
           <div class="mb-4">
             <h3 class="text-base font-bold text-wiki-secondary mb-2">
               <i class="fas fa-clover mr-2"></i>직업 내 비교
@@ -463,7 +463,7 @@ const renderComparisonTable = (
     ` : ''
 
       blocks.push(`
-        <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50 ${withinJob ? 'mt-8' : ''}">
+        <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl p-0 md:p-6 border-0 md:border md:border-wiki-border/50 ${withinJob ? 'mt-8' : ''}">
           <div class="mb-4">
             <h3 class="text-base font-bold text-wiki-secondary mb-2">
               <i class="fas fa-exchange-alt mr-2"></i>직업 간 비교
@@ -809,7 +809,7 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
   return `
     <div class="space-y-6">
       <!-- 차트 컨테이너 -->
-      <div class="w-full bg-white/5 rounded-xl md:rounded-2xl px-2 py-6 md:px-6 border border-wiki-border/50">
+      <div class="w-full bg-transparent md:bg-white/5 rounded-none md:rounded-2xl px-0 md:px-6 py-6 border-0 md:border md:border-wiki-border/50">
         <canvas id="${chartId}" style="max-height: 400px;"></canvas>
       </div>
       
@@ -2475,7 +2475,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     const maxValue = Math.max(...chartValues, 50)
     
     prospectChartHtml = `
-      <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+      <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl p-0 md:p-6 border-0 md:border md:border-wiki-border/50">
         <div class="flex items-center justify-between mb-4">
           <h4 class="text-base font-bold text-wiki-secondary">재직자가 생각하는 일자리 전망</h4>
           ${jobProspectInqYr ? `<span class="text-xs text-wiki-muted">&lt;조사년도: ${jobProspectInqYr}년&gt;</span>` : ''}
@@ -3040,7 +3040,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         ` : ''
         
         const knowledgeTable = `
-          <div class="bg-white/5 rounded-xl md:rounded-2xl px-2 py-6 md:px-6 border border-wiki-border/50">
+          <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl px-0 md:px-6 py-6 border-0 md:border md:border-wiki-border/50">
             <div class="overflow-x-auto">
               <table class="w-full" id="${tableId}">
                 <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
@@ -3129,7 +3129,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         ` : ''
         
         const contextTable = `
-          <div class="bg-white/5 rounded-xl md:rounded-2xl px-2 py-6 md:px-6 border border-wiki-border/50">
+          <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl px-0 md:px-6 py-6 border-0 md:border md:border-wiki-border/50">
             <div class="overflow-x-auto">
               <table class="w-full" id="${tableId}">
                 <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
@@ -3451,7 +3451,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   return `
     <div class="max-w-[1400px] mx-auto space-y-4 md:space-y-8">
-      <section class="glass-card px-2 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
+      <section class="glass-card border-0 md:border px-2 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-5">
           ${profile.category?.name ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group" aria-hidden="true"></i>${escapeHtml(profile.category.name)}</span>` : ''}
           <div class="flex flex-wrap items-start justify-between gap-4">
