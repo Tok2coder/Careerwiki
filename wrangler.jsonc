@@ -9,6 +9,13 @@
   // "triggers": {
   //   "crons": ["*/30 * * * *"]
   // },
+  
+  // D1 Database 설정 (직업 데이터 영구 저장)
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "careerwiki-jobs",
+    "database_id": "edc21e23-c2ac-4693-bb79-389b6914e173"
+  }],
 
   // Environment variables (secrets should be set via wrangler secret)
   // For production: wrangler pages secret put CAREER_NET_API_KEY

@@ -4104,6 +4104,53 @@ app.get('/api/categories', async (c) => {
   })
 })
 
+// Admin API: Seed all jobs to D1
+app.post('/api/admin/seed-jobs', async (c) => {
+  // 보안: Admin 토큰 확인
+  const token = c.req.header('Authorization')
+  const expectedToken = c.env.ADMIN_SECRET || 'dev-admin-token'
+  
+  if (token !== `Bearer ${expectedToken}`) {
+    return c.json({ error: 'Unauthorized' }, 401)
+  }
+  
+  try {
+    // seedAllJobs를 동적 import
+    const { seedAllJobs } = await import('./scripts/seedAllJobs')
+    
+    // 백그라운드로 실행
+    const seedPromise = seedAllJobs(c.env).catch(err => {
+      console.error('❌ Seed failed:', err)
+      return {
+        total: 0,
+        processed: 0,
+        inserted: 0,
+        updated: 0,
+        skipped: 0,
+        errors: 1,
+        errorDetails: [{ id: 'system', name: 'System', error: err.message }],
+        startTime: Date.now()
+      }
+    })
+    
+    if (c.executionCtx && 'waitUntil' in c.executionCtx) {
+      c.executionCtx.waitUntil(seedPromise)
+    }
+    
+    return c.json({ 
+      message: 'Seed started in background',
+      estimatedTime: 'Test mode',
+      note: 'Check console logs'
+    })
+  } catch (error: any) {
+    console.error('❌ Seed start failed:', error)
+    return c.json({ 
+      error: 'Failed to start seed',
+      details: error.message 
+    }, 500)
+  }
+})
+
 export default app
 
 export const scheduled: ExportedHandlerScheduledHandler<Bindings> = async (event, env, ctx) => {
