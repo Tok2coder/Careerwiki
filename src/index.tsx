@@ -4139,8 +4139,8 @@ app.post('/api/admin/seed-jobs', async (c) => {
     
     return c.json({ 
       message: 'Seed started in background',
-      estimatedTime: 'Test mode',
-      note: 'Check console logs'
+      estimatedTime: '약 3-4분 (420개 직업 × 0.5초)',
+      note: 'PM2 logs를 확인하세요: pm2 logs careerwiki --nostream'
     })
   } catch (error: any) {
     console.error('❌ Seed start failed:', error)
