@@ -3372,7 +3372,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     detailMetaExtra.telemetryVariant = telemetryVariant
   }
 
-  const sampleComments = buildJobDemoComments(profile)
+  // Sample comments disabled for production
+  const sampleComments: SampleCommentPayload[] = []
   const { tabLayout, commentsPlaceholder, metaScript } = buildDetailScaffold({
     entityType: 'job',
     entityId: profile.id,
