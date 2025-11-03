@@ -3455,7 +3455,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         <div class="space-y-5">
           ${profile.category?.name ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group" aria-hidden="true"></i>${escapeHtml(profile.category.name)}</span>` : ''}
           <div class="flex flex-wrap items-start justify-between gap-4">
-            <h1 class="text-4xl font-bold text-white leading-tight">${escapeHtml(profile.name)}</h1>
+            <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight">${escapeHtml(profile.name)}</h1>
             <div class="relative shrink-0" data-share-root data-cw-telemetry-scope="job-hero-actions">
               <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="${escapeHtml(detailPath)}" data-share-title="${escapeHtml(profile.name)}" data-cw-telemetry-component="job-share-trigger" data-cw-telemetry-action="share-open"${telemetryVariantAttr}>
                 <i class="fas fa-share-nodes" aria-hidden="true"></i>

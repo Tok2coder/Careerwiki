@@ -187,7 +187,7 @@ const renderLayout = (
           
           /* 소제목 스타일 - 명확하고 구분되게, 풀너비 얇은 보더 */
           .content-heading { 
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
             color: #f3f4f6;
             letter-spacing: 0.02em;
@@ -217,7 +217,7 @@ const renderLayout = (
               font-size: 18px;
             }
             .content-heading {
-              font-size: 14px;
+              font-size: 16px;
             }
             /* 모바일 네비게이션 로고 크기 조정 */
             nav img[alt*="로고"] {
