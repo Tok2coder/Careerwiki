@@ -2354,7 +2354,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   
   const telemetryVariant = resolveJobTelemetryVariant(profile)
   const telemetryVariantAttr = telemetryVariant ? ` data-cw-telemetry-variant="${escapeHtml(telemetryVariant)}"` : ''
-  const quickStats = renderQuickStats(
+  // Quick Stats removed from hero section
+  const quickStats = ''
+  /*
+  const quickStatsDisabled = renderQuickStats(
     profile,
     (source) => {
       const normalizedSource = (typeof source === 'string' ? source : `${source}`) as DataSource
@@ -2371,6 +2374,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     },
     telemetryVariant
   )
+  */
   const heroDescription = profile.summary?.split('\n')[0]?.trim()
   const lawyerMatrix = renderLawyerFieldMatrix(profile, partials, sources, telemetryVariant)
 

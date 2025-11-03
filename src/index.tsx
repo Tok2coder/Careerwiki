@@ -2361,16 +2361,41 @@ app.get('/job/:slug', async (c) => {
   }
 
   try {
-    // Always use getUnifiedJobDetailWithRawData to enable data merging
-    const result = await getUnifiedJobDetailWithRawData(
-      {
-        id: resolvedId,
-        careernetId,
-        goyong24JobId: goyongJobId || undefined,
-        includeSources
-      },
-      c.env
-    )
+    // Cache strategy: Check cache first, fallback to API, cache for 1 hour
+    const cacheKey = `job:${resolvedId}:${careernetId || 'none'}:${goyongJobId || 'none'}`
+    const cache = caches.default
+    const cacheUrl = new URL(c.req.url)
+    cacheUrl.pathname = `/cache/${cacheKey}`
+    
+    let cachedResponse = await cache.match(cacheUrl)
+    let result
+    
+    if (cachedResponse && !debugMode) {
+      // Use cached data
+      result = await cachedResponse.json()
+    } else {
+      // Fetch from API
+      result = await getUnifiedJobDetailWithRawData(
+        {
+          id: resolvedId,
+          careernetId,
+          goyong24JobId: goyongJobId || undefined,
+          includeSources
+        },
+        c.env
+      )
+      
+      // Cache for 1 hour (3600 seconds)
+      if (result.profile) {
+        const responseToCache = new Response(JSON.stringify(result), {
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, max-age=3600'
+          }
+        })
+        c.executionCtx.waitUntil(cache.put(cacheUrl, responseToCache))
+      }
+    }
 
     if (!result.profile) {
       const sample = findSampleJobDetail()
