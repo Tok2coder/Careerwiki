@@ -645,7 +645,7 @@ const renderLayout = (
         ` : ''}
         
         <!-- Main Content -->
-        <main class="${isHomepage ? '' : 'mx-auto px-2 py-4 md:px-6 md:py-8'}">
+        <main class="${isHomepage ? '' : 'mx-auto px-0 md:px-6 py-4 md:py-8'}">
             ${content}
         </main>
         

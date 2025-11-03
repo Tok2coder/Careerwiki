@@ -1798,7 +1798,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
         <li data-toc-order="${index + 1}">
           <a
             href="#${escapeHtml(item.id)}"
-            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 md:py-3 content-text text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
+            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 md:py-3 text-sm text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
             data-cw-telemetry-action="toc-link"
             data-cw-telemetry-component="section-toc-link"
             data-cw-telemetry-scope="${sectionKey}-toc"
@@ -1808,7 +1808,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
             <span class="flex h-7 w-7 items-center justify-center rounded-full bg-wiki-primary/25 text-xs font-semibold text-wiki-primary">
               ${index + 1}
             </span>
-            <span class="content-text text-wiki-text">${escapeHtml(item.label)}</span>
+            <span class="text-sm text-wiki-text">${escapeHtml(item.label)}</span>
           </a>
         </li>
       `)
@@ -1816,7 +1816,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
 
   return `
     <nav
-      class="glass-card px-2 py-6 md:px-6 rounded-none md:rounded-2xl border border-wiki-border/60 bg-wiki-bg/70"
+      class="glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-2xl md:border-wiki-border/60 bg-transparent md:bg-wiki-bg/70"
       data-section-toc="${sectionKey}"
       data-cw-telemetry-scope="${sectionKey}-toc"
       data-cw-telemetry-component="section-toc"
@@ -1827,7 +1827,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
         <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-wiki-primary/15 text-wiki-primary">
           <i class="fas ${headingIcon} text-lg" aria-hidden="true"></i>
         </span>
-        <h3 class="text-lg sm:text-xl font-bold text-white leading-tight">${escapeHtml(heading)}</h3>
+        <h3 class="text-base md:text-lg font-bold text-white leading-tight">${escapeHtml(heading)}</h3>
       </header>
       <ol class="space-y-2 list-none" data-section-toc-items>
         ${listMarkup}

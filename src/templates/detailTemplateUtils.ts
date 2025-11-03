@@ -208,7 +208,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
   const tabButtons = entries
     .map((entry, index) => {
       const isActive = index === 0
-      const baseClasses = 'px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
+      const baseClasses = 'px-4 md:px-4 py-3 md:py-3 text-sm md:text-sm font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
       const activeClasses = isActive
         ? 'text-white border-wiki-primary bg-transparent md:bg-wiki-border/30'
         : 'text-wiki-muted border-transparent hover:text-white hover:border-wiki-border'
@@ -234,7 +234,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
             data-cw-telemetry-action="tab-trigger"
             data-cw-telemetry-component="tab-trigger"
           >
-            <i class="fas ${entry.icon} mr-2" aria-hidden="true"></i>
+            <i class="fas ${entry.icon} mr-2 text-base md:text-sm" aria-hidden="true"></i>
             <span class="tab-label">${escapeHtml(entry.label)}</span>
           </button>
         </li>
