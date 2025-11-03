@@ -62,18 +62,34 @@ const LAWYER_IDENTIFIER_TOKENS = [
 const LAWYER_EXACT_IDS = ['375', 'k000007482']
 
 /**
+ * 안전한 trim 함수 - undefined/null 체크
+ */
+const safeTrim = (value: any): string => {
+  if (value === null || value === undefined) return ''
+  if (typeof value !== 'string') return String(value).trim()
+  return value.trim()
+}
+
+/**
+ * 안전한 문자열 체크 - 비어있지 않은 문자열인지 확인
+ */
+const isNonEmptyString = (value: any): boolean => {
+  return value !== null && value !== undefined && typeof value === 'string' && safeTrim(value).length > 0
+}
+
+/**
  * 문장을 마침표(.)로 분리하여 불릿 리스트로 변환
  * 쉼표는 문장 내 구분자로 유지됨
  */
 const formatAsBulletList = (text: string): string => {
-  if (!text || !text.trim()) {
+  if (!text || !safeTrim(text)) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
   
   // 마침표로만 문장 분리 (쉼표는 문장 내 구분자로 유지)
   const sentences = text
     .split(/\.\s*/)
-    .map(s => s.trim())
+    .map(s => safeTrim(s))
     .map(s => s.replace(/^[,，]\s*/, ''))  // 문장 시작의 쉼표 제거
     .filter(s => s.length > 0)
   
@@ -98,14 +114,14 @@ const formatAsBulletList = (text: string): string => {
  * 업무 상세를 번호가 매겨진 단계별 카드로 변환
  */
 const formatWorkDetailAsNumberedCards = (text: string): string => {
-  if (!text || !text.trim()) {
+  if (!text || !safeTrim(text)) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
   
   // 줄바꿈이나 하이픈으로 시작하는 항목들을 분리
   const items = text
     .split(/\n/)
-    .map(s => s.trim())
+    .map(s => safeTrim(s))
     .map(s => s.replace(/^[-–—]\s*/, ''))  // 하이픈 제거
     .filter(s => s.length > 0)
   

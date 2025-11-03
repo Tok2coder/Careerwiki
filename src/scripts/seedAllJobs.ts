@@ -274,16 +274,26 @@ export async function seedAllJobs(env: Env): Promise<SeedProgress> {
         throw new Error('Invalid job_name in profile')
       }
       
+      // profile 데이터 정리 - undefined/null 필드 제거 및 문자열 정규화
+      const cleanProfile = JSON.parse(JSON.stringify(result.profile, (key, value) => {
+        // undefined는 JSON에서 제외됨
+        if (value === null) return undefined
+        // 빈 문자열도 제거
+        if (typeof value === 'string' && value.trim() === '') return undefined
+        // 정상 값은 그대로 반환
+        return value
+      }))
+      
       // 안전한 JSON 직렬화 (순환 참조 방지)
       let profileJson: string
       try {
-        profileJson = JSON.stringify(result.profile)
+        profileJson = JSON.stringify(cleanProfile)
       } catch (jsonError: any) {
         throw new Error(`JSON serialization failed: ${jsonError.message}`)
       }
       
-      // 데이터 해시 생성
-      const dataHash = await generateDataHash(result.profile)
+      // 데이터 해시 생성 (정리된 profile 사용)
+      const dataHash = await generateDataHash(cleanProfile)
       
       // D1에 저장
       const action = await upsertJob(env.DB, {
