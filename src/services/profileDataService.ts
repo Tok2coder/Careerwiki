@@ -422,10 +422,104 @@ export const searchUnifiedJobs = async (
   const itemsMap = new Map<string, UnifiedJobSummaryEntry>()
   const sourcesStatus = createInitialSourceStatus()
 
-  // CareerNet search
-  if (sourcesToUse.includes('CAREERNET')) {
+  // 🆕 Step 1: D1 Database search first (if available)
+  if (env?.DB && sourcesToUse.includes('CAREERNET')) {
     const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
     status.attempted = true
+    
+    try {
+      const db = env.DB
+      let query = 'SELECT id, name, careernet_id, goyong24_id, api_data_json FROM jobs'
+      const conditions: string[] = []
+      const bindings: any[] = []
+
+      // Add keyword search
+      if (keyword?.trim()) {
+        conditions.push('LOWER(name) LIKE LOWER(?)')
+        bindings.push(`%${keyword.trim()}%`)
+      }
+
+      // Add category filter if needed (category is already filtered by the API layer)
+      // We'll skip category filtering in D1 for now since category info is in api_data_json
+
+      if (conditions.length > 0) {
+        query += ' WHERE ' + conditions.join(' AND ')
+      }
+
+      // Add pagination
+      const offset = (page - 1) * perPage
+      query += ` LIMIT ? OFFSET ?`
+      bindings.push(perPage, offset)
+
+      console.log(`🔍 D1 직업 검색: keyword="${keyword}", page=${page}, perPage=${perPage}`)
+      
+      const stmt = db.prepare(query)
+      const result = await stmt.bind(...bindings).all()
+      const d1Jobs = result.results || []
+
+      console.log(`✅ D1에서 ${d1Jobs.length}개 직업 검색 완료`)
+
+      d1Jobs.forEach((row: any) => {
+        try {
+          // Parse cached API data
+          let apiData = null
+          if (row.api_data_json) {
+            try {
+              apiData = JSON.parse(row.api_data_json)
+            } catch (parseError) {
+              console.error(`Failed to parse api_data_json for job ${row.id}:`, parseError)
+            }
+          }
+
+          // Create profile with simple numeric ID (consistent with slug system)
+          const profile: UnifiedJobSummary = {
+            id: String(row.id), // ✅ Use simple numeric ID instead of job:C_xxx
+            sourceIds: {
+              careernet: row.careernet_id || undefined,
+              goyong24: row.goyong24_id || undefined
+            },
+            name: row.name?.trim() || `직업 ${row.id}`,
+            category: apiData?.jobCategoryName ? {
+              name: apiData.jobCategoryName.trim()
+            } : undefined,
+            sources: ['CAREERNET'] // Mark as from D1/CareerNet
+          }
+
+          const entry: UnifiedJobSummaryEntry = {
+            profile,
+            sourceMeta: {
+              careernet: {
+                jobdicSeq: row.careernet_id || undefined
+              }
+            },
+            display: {
+              summary: apiData?.summary?.trim(),
+              salary: apiData?.avgSalary?.trim() || apiData?.salery?.trim(),
+              outlook: apiData?.jobOutlook?.trim() || apiData?.possibility?.trim(),
+              categoryName: apiData?.jobCategoryName?.trim() || apiData?.profession?.trim()
+            }
+          }
+
+          itemsMap.set(profile.id, entry)
+        } catch (entryError) {
+          console.error(`Failed to process D1 job row ${row.id}:`, entryError)
+        }
+      })
+
+      status.count = d1Jobs.length
+    } catch (error) {
+      console.error('D1 직업 검색 실패:', error)
+      status.error = error instanceof Error ? error.message : 'D1 직업 검색 실패'
+    }
+  }
+  
+  // Step 2: Fallback to CareerNet API if D1 not available or no results
+  if (itemsMap.size === 0 && sourcesToUse.includes('CAREERNET')) {
+    const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
+    if (!status.attempted) {
+      status.attempted = true
+    }
+    
     try {
       const rawJobs = await searchCareerNetJobs(
         {
@@ -460,7 +554,7 @@ export const searchUnifiedJobs = async (
     } catch (error) {
       status.error = error instanceof Error ? error.message : 'CareerNet 직업 검색 실패'
     }
-  } else {
+  } else if (itemsMap.size === 0) {
     sourcesStatus.CAREERNET.skippedReason = 'excluded'
   }
 
@@ -700,8 +794,19 @@ export const getUnifiedJobDetailWithRawData = async (
       // Build flexible query - try multiple match strategies
       let jobRow: any = null
       
-      // Strategy 1: Try by careernet_id
-      if (explicitCareernetId || extractedId) {
+      // Strategy 1: Try by D1 id (numeric ID from D1)
+      if (id && !id.includes(':')) {
+        jobRow = await db.prepare(`
+          SELECT id, name, careernet_id, goyong24_id, api_data_json 
+          FROM jobs 
+          WHERE id = ?
+          LIMIT 1
+        `).bind(id).first()
+        console.log(`🔍 D1 ID 검색: id="${id}", found=${!!jobRow}`)
+      }
+      
+      // Strategy 2: Try by careernet_id
+      if (!jobRow && (explicitCareernetId || extractedId)) {
         const searchId = explicitCareernetId || extractedId
         jobRow = await db.prepare(`
           SELECT id, name, careernet_id, goyong24_id, api_data_json 
@@ -709,9 +814,10 @@ export const getUnifiedJobDetailWithRawData = async (
           WHERE careernet_id = ?
           LIMIT 1
         `).bind(searchId).first()
+        console.log(`🔍 D1 careernet_id 검색: id="${searchId}", found=${!!jobRow}`)
       }
       
-      // Strategy 2: Try by name if no match yet
+      // Strategy 3: Try by name
       if (!jobRow && id && !id.includes(':')) {
         jobRow = await db.prepare(`
           SELECT id, name, careernet_id, goyong24_id, api_data_json 
@@ -719,6 +825,7 @@ export const getUnifiedJobDetailWithRawData = async (
           WHERE name = ?
           LIMIT 1
         `).bind(id).first()
+        console.log(`🔍 D1 name 검색: name="${id}", found=${!!jobRow}`)
       }
       
       if (jobRow && jobRow.api_data_json) {
@@ -748,6 +855,11 @@ export const getUnifiedJobDetailWithRawData = async (
               GOYONG24: goyongProfile
             }
             const enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+            
+            // 🆕 D1의 name 컬럼을 우선 사용하여 올바른 한글 이름 표시
+            if (jobRow.name && jobRow.name.trim()) {
+              enhancedProfile.name = jobRow.name.trim()
+            }
             
             return {
               profile: enhancedProfile,

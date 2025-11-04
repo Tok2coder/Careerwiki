@@ -1425,7 +1425,7 @@ app.get('/job', async (c) => {
   const category = categoryRaw.trim()
   const includeSources = parseSourcesQuery(c.req.query('sources'))
   const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-  const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+  const perPage = parseNumberParam(c.req.query('perPage'), 50, { min: 1, max: 100 })
 
   const categoryOptions = Object.entries(JOB_CATEGORIES)
     .map(([label, code]) => {
@@ -1435,7 +1435,7 @@ app.get('/job', async (c) => {
     })
     .join('')
 
-  const perPageOptions = [10, 20, 30, 50]
+  const perPageOptions = [20, 50, 100]
     .map((size) => `<option value="${size}" ${perPage === size ? 'selected' : ''}>${size}개</option>`)
     .join('')
 
@@ -1566,12 +1566,11 @@ app.get('/job', async (c) => {
           .join('')
       : renderSampleJobHighlights()
 
-    const cacheNotice = renderCacheNotice(cacheState, {
-      staleSeconds: LIST_CACHE_STALE_SECONDS,
-      maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS
-    })
+    // 🆕 캐시 알림 제거 (사용자에게 보이지 않도록)
+    const cacheNotice = '' // renderCacheNotice(cacheState, { staleSeconds: LIST_CACHE_STALE_SECONDS, maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS })
 
-    const sourceSummaryHtml = renderSourceStatusSummary(result.meta?.sources, { id: 'job-source-summary' })
+    // 🆕 데이터 소스 요약 제거 (사용자에게 혼란을 줄 수 있음)
+    const sourceSummaryHtml = '' // renderSourceStatusSummary(result.meta?.sources, { id: 'job-source-summary' })
     const filterSummaryParts: string[] = []
     if (keyword) {
       filterSummaryParts.push(`"${escapeHtml(keyword)}" 키워드`)
@@ -1683,6 +1682,101 @@ app.get('/job', async (c) => {
         <section id="job-results" class="space-y-4" aria-live="polite">
           ${jobCards}
         </section>
+
+        ${(() => {
+          const totalPages = Math.ceil(totalCount / perPage)
+          if (totalPages <= 1) return ''
+          
+          const buildPageUrl = (pageNum: number) => {
+            const params = new URLSearchParams()
+            if (keyword) params.set('q', keyword)
+            if (category) params.set('category', category)
+            if (includeSources?.length) params.set('sources', includeSources.join(','))
+            if (pageNum > 1) params.set('page', String(pageNum))
+            if (perPage !== 20) params.set('perPage', String(perPage))
+            return `/job${params.toString() ? `?${params.toString()}` : ''}`
+          }
+          
+          const maxPageButtons = 7
+          let startPage = Math.max(1, page - Math.floor(maxPageButtons / 2))
+          let endPage = Math.min(totalPages, startPage + maxPageButtons - 1)
+          
+          if (endPage - startPage < maxPageButtons - 1) {
+            startPage = Math.max(1, endPage - maxPageButtons + 1)
+          }
+          
+          const pageButtons = []
+          
+          // 이전 페이지 버튼
+          if (page > 1) {
+            pageButtons.push(`
+              <a href="${buildPageUrl(page - 1)}" 
+                 class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">
+                <i class="fas fa-chevron-left"></i>
+              </a>
+            `)
+          }
+          
+          // 첫 페이지
+          if (startPage > 1) {
+            pageButtons.push(`
+              <a href="${buildPageUrl(1)}" 
+                 class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">
+                1
+              </a>
+            `)
+            if (startPage > 2) {
+              pageButtons.push(`<span class="px-2 text-wiki-muted">...</span>`)
+            }
+          }
+          
+          // 페이지 번호들
+          for (let i = startPage; i <= endPage; i++) {
+            const isActive = i === page
+            pageButtons.push(`
+              <a href="${buildPageUrl(i)}" 
+                 class="px-4 py-2 rounded-lg transition ${
+                   isActive
+                     ? 'bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-bold'
+                     : 'bg-wiki-bg border border-wiki-border hover:border-wiki-primary'
+                 }">
+                ${i}
+              </a>
+            `)
+          }
+          
+          // 마지막 페이지
+          if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+              pageButtons.push(`<span class="px-2 text-wiki-muted">...</span>`)
+            }
+            pageButtons.push(`
+              <a href="${buildPageUrl(totalPages)}" 
+                 class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">
+                ${totalPages}
+              </a>
+            `)
+          }
+          
+          // 다음 페이지 버튼
+          if (page < totalPages) {
+            pageButtons.push(`
+              <a href="${buildPageUrl(page + 1)}" 
+                 class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            `)
+          }
+          
+          return `
+            <nav class="mt-8 flex justify-center items-center gap-2 flex-wrap" aria-label="페이지네이션">
+              ${pageButtons.join('')}
+            </nav>
+            <p class="text-center text-xs text-wiki-muted mt-4">
+              ${page}페이지 / 총 ${totalPages}페이지 (${totalCount}개 직업)
+            </p>
+          `
+        })()}
 
         ${sourceSummaryHtml}
       </div>
@@ -1872,10 +1966,8 @@ app.get('/major', async (c) => {
           .join('')
       : renderSampleMajorHighlights()
 
-    const cacheNotice = renderCacheNotice(cacheState, {
-      staleSeconds: LIST_CACHE_STALE_SECONDS,
-      maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS
-    })
+    // 🆕 캐시 알림 제거 (사용자에게 보이지 않도록)
+    const cacheNotice = '' // renderCacheNotice(cacheState, { staleSeconds: LIST_CACHE_STALE_SECONDS, maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS })
 
     const sourceSummaryHtml = renderSourceStatusSummary(result.meta?.sources, { id: 'major-source-summary' })
     const filterSummary = keyword ? `"${escapeHtml(keyword)}" 키워드` : '전체 전공'
@@ -2330,11 +2422,61 @@ app.get('/search', (c) => {
 // Unified Job Detail Page (SSR)
 app.get('/job/:slug', async (c) => {
   const slug = c.req.param('slug')
-  const resolvedId = resolveDetailIdFromSlug('job', slug)
+  console.log(`🔍 직업 페이지 요청: slug="${slug}"`)
+  let resolvedId = resolveDetailIdFromSlug('job', slug)
+  console.log(`🔍 resolvedId="${resolvedId}"`)
+  
+  // 🆕 If resolvedId doesn't contain ':', try to find by name in D1
+  if (!resolvedId.includes(':') && c.env.DB) {
+    try {
+      const db = c.env.DB
+      // Decode URL-encoded slug back to Korean
+      const decodedSlug = decodeURIComponent(slug)
+      console.log(`🔍 D1 이름 검색 시도: slug="${decodedSlug}"`)
+      
+      // Convert slug to name (replace hyphens with possible separators)
+      const possibleNames = [
+        decodedSlug.replace(/-/g, ','),  // "가구제조,수리원" (most common format in DB)
+        decodedSlug.replace(/-/g, ' '),  // "가구제조 수리원"
+        decodedSlug.replace(/-/g, ''),   // "가구제조수리원"
+        decodedSlug.replace(/-/g, 'ㆍ'), // "가구제조ㆍ수리원"
+        decodedSlug.replace(/-/g, '·'),  // "가구제조·수리원"
+        decodedSlug,                      // Original with hyphens
+      ]
+      
+      let foundId = false
+      for (const name of possibleNames) {
+        const result = await db.prepare(
+          'SELECT id FROM jobs WHERE LOWER(name) = LOWER(?) LIMIT 1'
+        ).bind(name).first()
+        
+        if (result?.id) {
+          resolvedId = result.id
+          foundId = true
+          console.log(`✅ D1 이름 검색 성공: "${name}" → ID "${resolvedId}"`)
+          break
+        }
+      }
+      
+      if (!foundId) {
+        console.log(`⚠️  D1 이름 검색 실패: 시도한 이름들 - ${possibleNames.join(', ')}`)
+      }
+    } catch (error) {
+      console.error('❌ D1 이름 검색 오류:', error)
+    }
+  }
+  
   let careernetId = c.req.query('careernetId') || undefined
   let goyongJobId = c.req.query('goyongJobId') || undefined
   const includeSources = parseSourcesQuery(c.req.query('sources')) || ['CAREERNET', 'GOYONG24'] // Default to both sources
   const debugMode = c.req.query('debug') === 'true' || resolvedId === 'job:C_375'
+  
+  // 🆕 Redirect to clean URL if query parameters are present (except debug)
+  if ((careernetId || goyongJobId) && !debugMode) {
+    const cleanUrl = `/job/${encodeURIComponent(slug)}`
+    console.log(`♻️  리다이렉트: 깨끗한 URL로 이동 - ${cleanUrl}`)
+    return c.redirect(cleanUrl, 301)
+  }
 
   const findSampleJobDetail = () => {
     const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
@@ -2370,11 +2512,15 @@ app.get('/job/:slug', async (c) => {
     let cachedResponse = await cache.match(cacheUrl)
     let result
     
+    console.log(`💾 캐시 확인: cacheKey="${cacheKey}", cached=${!!cachedResponse}, debugMode=${debugMode}`)
+    
     if (cachedResponse && !debugMode) {
       // Use cached data
+      console.log(`✅ 캐시 사용: ${cacheKey}`)
       result = await cachedResponse.json()
     } else {
       // Fetch from API
+      console.log(`📡 getUnifiedJobDetailWithRawData 호출 시작: id="${resolvedId}", careernetId="${careernetId}", goyongJobId="${goyongJobId}"`)
       result = await getUnifiedJobDetailWithRawData(
         {
           id: resolvedId,
@@ -2397,12 +2543,17 @@ app.get('/job/:slug', async (c) => {
       }
     }
 
+    console.log(`🔍 result.profile 확인: hasProfile=${!!result.profile}, profileName=${result.profile?.name || 'N/A'}`)
+    
     if (!result.profile) {
+      console.log(`⚠️ profile이 없음, 샘플 데이터 확인 중...`)
       const sample = findSampleJobDetail()
       if (sample) {
+        console.log(`📋 샘플 데이터 사용: ${sample.profile?.name}`)
         // Pass rawApiData even when using sample profile
         return renderSampleJobDetailPageWithRawData(c, sample, result.rawApiData)
       }
+      console.log(`❌ 샘플 데이터도 없음, 404 반환`)
 
       const fallbackHtml = renderDetailFallback({
         icon: 'fa-magnifying-glass',

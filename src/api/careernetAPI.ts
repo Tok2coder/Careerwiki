@@ -412,12 +412,21 @@ export async function searchJobs(params: SearchParams, env?: any): Promise<Job[]
 // 직업백과 API 조회 (job.json - 유일한 CareerNet API)
 export async function getJobEncyclopedia(jobdicSeq: string, env?: any): Promise<JobEncyclopediaResponse | null> {
   try {
-    // jobdicSeq가 job:C_375 형태인 경우 숫자만 추출
+    // jobdicSeq 형식 변환
     let seqNumber = jobdicSeq;
+    
+    // 1. job:C_375 형태인 경우 숫자만 추출
     if (jobdicSeq.includes(':')) {
       const match = jobdicSeq.match(/:([A-Z])_(\d+)/i);
       if (match) {
         seqNumber = match[2]; // 숫자 부분만 추출
+      }
+    }
+    // 2. K000000933 형태인 경우 K 제거하고 숫자 추출
+    else if (jobdicSeq.startsWith('K')) {
+      const match = jobdicSeq.match(/K(\d+)/);
+      if (match) {
+        seqNumber = match[1]; // K 뒤의 숫자 부분만
       }
     }
     

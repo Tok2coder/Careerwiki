@@ -160,26 +160,64 @@ async function fetchCareernetJobIds(env: Env): Promise<Array<{ id: string; name:
   return allJobs
 }
 
-// 중복 제거 (이름 기준, 커리어넷 우선)
+// 고용24에서 모든 직업 ID 수집
+async function fetchGoyong24JobIds(env: Env): Promise<Array<{ id: string; name: string; source: 'goyong24' }>> {
+  console.log('📋 고용24 직업 목록 수집 중...')
+  
+  const allJobs: Array<{ id: string; name: string; source: 'goyong24' }> = []
+  
+  try {
+    // 고용24 API는 키워드 없이 전체 목록 조회 가능
+    const { fetchGoyong24JobList } = await import('../api/goyong24API')
+    const response = await fetchGoyong24JobList({ srchType: 'K', keyword: '' }, env)
+    
+    console.log(`  🔍 고용24 API 응답: total=${response.total}, items=${response.items.length}개`)
+    
+    for (const job of response.items) {
+      if (!job.jobCd || !job.jobNm) {
+        continue
+      }
+      
+      const jobData = {
+        id: job.jobCd,
+        name: job.jobNm,
+        source: 'goyong24' as const
+      }
+      allJobs.push(jobData)
+      
+      // Debug first 3 jobs
+      if (allJobs.length <= 3) {
+        console.log(`    📝 추가됨 #${allJobs.length}: id="${jobData.id}", name="${jobData.name}"`)
+      }
+    }
+    
+    console.log(`✅ 고용24: 총 ${allJobs.length}개 직업 발견`)
+  } catch (error: any) {
+    console.error(`  ❌ 고용24 목록 수집 실패:`, error.message)
+    console.error(`  ℹ️  GOYONG24_JOB_API_KEY가 환경 변수에 설정되어 있는지 확인하세요`)
+  }
+  
+  return allJobs
+}
+
+// 중복 제거 (ID 기준, 커리어넷 우선)
 function deduplicateJobs(jobs: Array<{ id: string; name: string; source: string }>): Array<{ id: string; name: string; source: string }> {
   const seen = new Map<string, { id: string; name: string; source: string }>()
   
   for (const job of jobs) {
-    // Safe handling of undefined/null job names
-    const normalizedName = (job.name ?? '').trim().toLowerCase()
-    
-    // Skip jobs with empty names
-    if (!normalizedName) {
+    // Skip jobs with empty IDs
+    if (!job.id) {
       continue
     }
     
-    if (!seen.has(normalizedName)) {
-      seen.set(normalizedName, job)
+    // ID 기준 중복 제거 (같은 ID면 중복)
+    if (!seen.has(job.id)) {
+      seen.set(job.id, job)
     } else {
-      // 중복 발견 - 커리어넷 우선
-      const existing = seen.get(normalizedName)!
+      // 중복 발견 - 커리어넷 우선 (동일 ID인 경우)
+      const existing = seen.get(job.id)!
       if (job.source === 'careernet' && existing.source !== 'careernet') {
-        seen.set(normalizedName, job)
+        seen.set(job.id, job)
       }
     }
   }
@@ -247,11 +285,13 @@ export async function seedAllJobs(env: Env): Promise<SeedProgress> {
     return progress
   }
   
-  // 2. 커리어넷에서 모든 직업 ID 수집
+  // 2. 커리어넷 + 고용24에서 모든 직업 ID 수집
   let allJobs: Array<{ id: string; name: string; source: string }> = []
   try {
     const careernetJobs = await fetchCareernetJobIds(env)
-    allJobs = careernetJobs
+    const goyong24Jobs = await fetchGoyong24JobIds(env)
+    allJobs = [...careernetJobs, ...goyong24Jobs]
+    console.log(`\n📊 전체 수집 완료: 커리어넷 ${careernetJobs.length}개 + 고용24 ${goyong24Jobs.length}개 = 총 ${allJobs.length}개`)
   } catch (error: any) {
     console.error('❌ 직업 목록 수집 실패:', error.message)
     progress.errors++
@@ -304,23 +344,49 @@ export async function seedAllJobs(env: Env): Promise<SeedProgress> {
         return value
       }))
       
+      // 원본 API 데이터 준비 (rawApiData 사용)
+      const rawApiData = {
+        careernet: result.rawApiData?.careernet || null,
+        goyong24: result.rawApiData?.goyong24 || null
+      }
+      
+      // 🆕 빈 데이터 검증 - summary나 encyclopedia가 실제로 있는지 확인
+      const hasValidCareernetData = rawApiData.careernet && (
+        (rawApiData.careernet.summary && rawApiData.careernet.summary.trim()) ||
+        (rawApiData.careernet.encyclopedia?.workList?.length > 0) ||
+        (rawApiData.careernet.encyclopedia?.baseInfo)
+      )
+      
+      const hasValidGoyong24Data = rawApiData.goyong24 && (
+        rawApiData.goyong24.summary?.jobNm ||      // nested 필드 체크
+        rawApiData.goyong24.duty ||                // 또는 다른 섹션 존재 여부
+        rawApiData.goyong24.salProspect ||
+        rawApiData.goyong24.ablKnwEnv
+      )
+      
+      if (!hasValidCareernetData && !hasValidGoyong24Data) {
+        console.warn(`⚠️  빈 데이터 스킵: ${job.name} (ID: ${job.id}) - API에서 상세 정보를 가져오지 못함`)
+        progress.skipped++
+        continue
+      }
+      
       // 안전한 JSON 직렬화 (순환 참조 방지)
-      let profileJson: string
+      let apiDataJson: string
       try {
-        profileJson = JSON.stringify(cleanProfile)
+        apiDataJson = JSON.stringify(rawApiData)
       } catch (jsonError: any) {
         throw new Error(`JSON serialization failed: ${jsonError.message}`)
       }
       
-      // 데이터 해시 생성 (정리된 profile 사용)
-      const dataHash = await generateDataHash(cleanProfile)
+      // 데이터 해시 생성 (원본 API 데이터 사용)
+      const dataHash = await generateDataHash(rawApiData)
       
       // D1에 저장
       const action = await upsertJob(env.DB, {
         id: job.id,
         name: job.name,
         careernetId: job.source === 'careernet' ? job.id : undefined,
-        api_data_json: profileJson,
+        api_data_json: apiDataJson,
         api_data_hash: dataHash
       })
       

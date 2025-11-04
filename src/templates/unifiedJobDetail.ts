@@ -67,7 +67,7 @@ const LAWYER_EXACT_IDS = ['375', 'k000007482']
 const safeTrim = (value: any): string => {
   if (value === null || value === undefined) return ''
   if (typeof value !== 'string') return String(value).trim()
-  return safeTrim(value)
+  return value.trim()  // ✅ Fixed: value가 string일 때는 직접 trim() 호출
 }
 
 /**
@@ -1262,7 +1262,7 @@ const renderEntityList = (entities?: JobRelatedEntity[] | null, type: 'job' | 'm
       ${entities
         .filter((entity) => !!entity?.name?.trim())
         .map((entity) => {
-          const name = escapeHtml(entity.safeTrim(name))
+          const name = escapeHtml(safeTrim(entity.name))
           const url = buildEntityUrl(entity, type)
           return `<a href="${url}" class="content-text text-wiki-primary hover:text-wiki-secondary transition">${name}</a>`
         })
@@ -2256,7 +2256,7 @@ const renderQuickStats = (
     { label: '평균 연봉', value: profile.salary, icon: 'fa-coins', source: 'GOYONG24' as DataSource },
     { label: '직업 전망', value: profile.prospect, icon: 'fa-chart-line', source: 'GOYONG24' as DataSource },
     { label: '직무 만족도', value: profile.satisfaction, icon: 'fa-face-smile', source: 'CAREERNET' as DataSource }
-  ].filter((stat) => typeof stat.value === 'string' && stat.safeTrim(value).length > 0)
+  ].filter((stat) => typeof stat.value === 'string' && safeTrim(stat.value).length > 0)
 
   if (!stats.length) {
     return ''
@@ -2342,10 +2342,10 @@ const renderOrganizationsList = (profile: UnifiedJobDetail): string => {
   const items = profile.relatedOrganizations
     .filter((org) => !!org?.name?.trim())
     .map((org) => {
-      const name = escapeHtml(org.safeTrim(name))
+      const name = escapeHtml(safeTrim(org.name))
       if (org.url) {
         // URL에 프로토콜이 없으면 https:// 추가
-        let fullUrl = org.safeTrim(url)
+        let fullUrl = safeTrim(org.url)
         if (!/^https?:\/\//i.test(fullUrl)) {
           fullUrl = `https://${fullUrl}`
         }
@@ -3383,7 +3383,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
   const entitySlug = composeDetailSlug('job', profile.name, profile.id)
   const detailPath = `/job/${encodeURIComponent(entitySlug)}`
-  const summarySnippet = heroDescription ?? (profile.summary ? profile.safeTrim(summary).slice(0, 400) : null)
+  const summarySnippet = heroDescription ?? (profile.summary ? safeTrim(profile.summary).slice(0, 400) : null)
   const detailMetaExtra: Record<string, unknown> = {
     sharePath: detailPath
   }
