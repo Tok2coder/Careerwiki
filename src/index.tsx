@@ -1670,8 +1670,8 @@ app.get('/job', async (c) => {
           <div class="flex items-center gap-2">
             <label for="job-source-filter" class="text-sm text-wiki-muted">데이터 소스</label>
             <div class="flex items-center gap-3 text-xs text-wiki-muted" id="job-source-filter" aria-live="polite">
-              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-wiki-secondary"></span>커리어넷</span>
-              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-wiki-primary"></span>고용24</span>
+              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-wiki-secondary"></span>커리어넷 (443개 보유)</span>
+              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-wiki-primary"></span>고용24 (535개 보유)</span>
             </div>
           </div>
           <div class="ml-auto text-xs text-wiki-muted" id="job-hydration-status" aria-live="polite"></div>

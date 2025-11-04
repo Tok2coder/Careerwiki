@@ -578,8 +578,15 @@ export const searchUnifiedJobs = async (
     sourcesStatus.CAREERNET.skippedReason = 'excluded'
   }
 
-  // Goyong24 search
-  if (sourcesToUse.includes('GOYONG24')) {
+  // Goyong24 search - SKIP if D1 data available (데이터가 이미 D1에 통합되어 있음)
+  // D1에 커리어넷 + 고용24 데이터가 모두 있으므로 추가 API 호출 불필요
+  if (env?.DB && totalCount > 0) {
+    // D1에서 데이터를 가져왔으므로 Goyong24 API 호출 스킵
+    const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
+    status.skippedReason = 'in-d1'
+    console.log('⏭️  고용24 API 호출 스킵 (D1에 통합 데이터 있음)')
+  } else if (sourcesToUse.includes('GOYONG24')) {
+    // Fallback: D1이 없을 때만 Goyong24 API 호출
     const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
     status.attempted = true
     try {
