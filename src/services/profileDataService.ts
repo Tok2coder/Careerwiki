@@ -471,6 +471,10 @@ export const searchUnifiedJobs = async (
             }
           }
 
+          // Extract nested CareerNet data if available
+          const careernetData = apiData?.careernet || {}
+          const goyongData = apiData?.goyong24 || {}
+
           // Create profile with simple numeric ID (consistent with slug system)
           const profile: UnifiedJobSummary = {
             id: String(row.id), // ✅ Use simple numeric ID instead of job:C_xxx
@@ -479,8 +483,8 @@ export const searchUnifiedJobs = async (
               goyong24: row.goyong24_id || undefined
             },
             name: row.name?.trim() || `직업 ${row.id}`,
-            category: apiData?.jobCategoryName ? {
-              name: apiData.jobCategoryName.trim()
+            category: careernetData.jobCategoryName || careernetData.profession ? {
+              name: (careernetData.jobCategoryName || careernetData.profession).trim()
             } : undefined,
             sources: ['CAREERNET'] // Mark as from D1/CareerNet
           }
@@ -493,10 +497,10 @@ export const searchUnifiedJobs = async (
               }
             },
             display: {
-              summary: apiData?.summary?.trim(),
-              salary: apiData?.avgSalary?.trim() || apiData?.salery?.trim(),
-              outlook: apiData?.jobOutlook?.trim() || apiData?.possibility?.trim(),
-              categoryName: apiData?.jobCategoryName?.trim() || apiData?.profession?.trim()
+              summary: careernetData.summary?.trim(),
+              salary: (careernetData.avgSalary || careernetData.salery)?.trim(),
+              outlook: (careernetData.jobOutlook || careernetData.possibility)?.trim(),
+              categoryName: (careernetData.jobCategoryName || careernetData.profession)?.trim()
             }
           }
 

@@ -2728,11 +2728,34 @@ const DOMUtils = {
       }
     }
 
-    const id = profile.id || sourceIds.careernet;
-    if (!id) return '#';
+    // ✅ 한글 이름이 있으면 한글 슬러그 사용, 없으면 ID 사용
+    const nameSlug = this.slugifyName(profile.name);
+    const slug = nameSlug || profile.id || sourceIds.careernet;
+    
+    if (!slug) return '#';
 
     const query = params.toString();
-    return `/major/${encodeURIComponent(id)}${query ? `?${query}` : ''}`;
+    return `/major/${encodeURIComponent(slug)}${query ? `?${query}` : ''}`;
+  },
+
+  // 한글 슬러그 생성 함수 (서버의 composeDetailSlug와 동일한 로직)
+  slugifyName(value) {
+    if (!value) return '';
+    const HANGUL_SEPARATOR_REGEX = /[·•]/g;
+    const SLUG_INVALID_REGEX = /[^0-9a-z\u3131-\u314e\u314f-\u3163가-힣-]+/gi;
+    
+    const normalized = value.normalize ? value.normalize('NFKC') : value;
+    const slug = normalized
+      .replace(HANGUL_SEPARATOR_REGEX, '-')
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(SLUG_INVALID_REGEX, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    
+    // 최대 길이 140자로 제한
+    return slug.length <= 140 ? slug : slug.slice(0, 140).replace(/-+$/g, '');
   },
 
   buildJobUrl(entry) {
@@ -2750,11 +2773,14 @@ const DOMUtils = {
       params.set('goyongJobId', sourceMeta.goyong24.jobCd);
     }
 
-    const id = profile.id || sourceIds.careernet;
-    if (!id) return '#';
+    // ✅ 한글 이름이 있으면 한글 슬러그 사용, 없으면 ID 사용
+    const nameSlug = this.slugifyName(profile.name);
+    const slug = nameSlug || profile.id || sourceIds.careernet;
+    
+    if (!slug) return '#';
 
     const query = params.toString();
-    return `/job/${encodeURIComponent(id)}${query ? `?${query}` : ''}`;
+    return `/job/${encodeURIComponent(slug)}${query ? `?${query}` : ''}`;
   },
 
   normalizeMajorItem(item) {
