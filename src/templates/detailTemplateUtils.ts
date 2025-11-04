@@ -134,7 +134,7 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
   }
 
   const { anchorId, telemetryScope, telemetryComponent } = options
-  const className = `glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
+  const className = `glass-card border-0 md:border px-6 py-6 md:px-6 rounded-none md:rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
   const attributeParts: string[] = [`class="${className}"`, 'data-cw-detail-card']
 
   if (anchorId) {
@@ -644,7 +644,7 @@ export const renderCommentsPlaceholder = ({
 
   return `
   <section
-    class="glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-2xl space-y-4 md:space-y-6"
+    class="glass-card border-0 md:border px-6 py-6 md:px-6 rounded-none md:rounded-2xl space-y-4 md:space-y-6"
     id="cw-comments"
     data-cw-comments
     data-cw-telemetry-scope="comments"

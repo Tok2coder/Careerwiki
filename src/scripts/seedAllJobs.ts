@@ -3,7 +3,7 @@
  * 커리어넷과 고용24의 모든 직업 데이터를 D1 데이터베이스에 저장
  */
 
-import { searchJobs, JOB_CATEGORIES } from '../api/careernetAPI'
+import { searchJobs, JOB_CATEGORIES, fetchAllJobsList } from '../api/careernetAPI'
 import { getUnifiedJobDetailWithRawData } from '../services/profileDataService'
 import type { UnifiedJobDetail } from '../types/unifiedProfiles'
 
@@ -116,48 +116,36 @@ async function upsertJob(
   }
 }
 
-// 커리어넷에서 모든 직업 ID 수집
+// 커리어넷에서 모든 직업 ID 수집 (jobs.json API 사용 - 546개)
 async function fetchCareernetJobIds(env: Env): Promise<Array<{ id: string; name: string; source: 'careernet' }>> {
-  console.log('📋 커리어넷 직업 목록 수집 중...')
+  console.log('📋 커리어넷 직업 목록 수집 중 (jobs.json API)...')
   
-  const allJobs: Array<{ id: string; name: string; source: 'careernet' }> = []
-  
-  // 각 카테고리별로 직업 수집
-  for (const [categoryName, categoryCode] of Object.entries(JOB_CATEGORIES)) {
-    console.log(`  - ${categoryName} (${categoryCode}) 수집 중...`)
+  try {
+    // 새로운 jobs.json API 사용 (546개 전체)
+    const jobsList = await fetchAllJobsList(env)
     
-    try {
-      const jobs = await searchJobs({ category: categoryCode }, env)
-      
-      // Debug: Check first job structure
-      if (jobs.length > 0 && allJobs.length === 0) {
-        console.log(`    🔍 첫 번째 직업:`, jobs[0].jobdicSeq, jobs[0].jobName)
-        console.log(`    🔍 전체 keys:`, Object.keys(jobs[0]).join(', '))
-      }
-      
-      for (const job of jobs) {
-        const jobData = {
-          id: job.jobdicSeq,  // Changed from job.job_id
-          name: job.jobName,   // Changed from job.job_name
-          source: 'careernet' as const
-        }
-        allJobs.push(jobData)
-        
-        // Debug first 3 jobs from first category
-        if (allJobs.length <= 3) {
-          console.log(`    📝 추가됨 #${allJobs.length}: id="${jobData.id}", name="${jobData.name}"`)
-        }
-      }
-      
-      console.log(`    ✓ ${jobs.length}개 직업 발견`)
-      await sleep(300) // Rate limiting
-    } catch (error: any) {
-      console.error(`  ❌ ${categoryName} 수집 실패:`, error.message)
+    // seq를 문자열 ID로 변환
+    const allJobs = jobsList.map(job => ({
+      id: String(job.seq),  // seq를 ID로 사용
+      name: job.name,
+      source: 'careernet' as const
+    }))
+    
+    console.log(`✅ 커리어넷: 총 ${allJobs.length}개 직업 발견`)
+    
+    // Debug: 첫 3개 출력
+    if (allJobs.length > 0) {
+      console.log(`  🔍 첫 3개 샘플:`)
+      allJobs.slice(0, 3).forEach((job, idx) => {
+        console.log(`    ${idx + 1}. id="${job.id}", name="${job.name}"`)
+      })
     }
+    
+    return allJobs
+  } catch (error: any) {
+    console.error(`  ❌ 커리어넷 직업 목록 수집 실패:`, error.message)
+    return []
   }
-  
-  console.log(`✅ 커리어넷: 총 ${allJobs.length}개 직업 발견`)
-  return allJobs
 }
 
 // 고용24에서 모든 직업 ID 수집

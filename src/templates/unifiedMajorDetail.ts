@@ -294,8 +294,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     .join('')
 
   return `
-    <div class="max-w-[1400px] mx-auto">
-      <div class="glass-card border-0 md:border px-2 py-8 md:px-8 rounded-none md:rounded-2xl mb-8 space-y-6">
+    <div class="max-w-[1400px] mx-auto md:px-6 md:py-8 md:mt-4">
+      <div class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl mb-8 space-y-6">
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
           <div>
             <div class="flex items-center gap-3 mb-3">

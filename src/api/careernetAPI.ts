@@ -833,6 +833,67 @@ function getMockJobDetail(jobdicSeq: string): Job {
   return jobs.find(j => j.jobdicSeq === jobdicSeq) || jobs[0];
 }
 
+/**
+ * 전체 직업 목록 조회 (jobs.json API)
+ * 546개의 모든 직업을 페이지네이션을 통해 수집
+ */
+export async function fetchAllJobsList(env?: any): Promise<Array<{ seq: number; name: string }>> {
+  const JOBS_LIST_URL = 'https://www.career.go.kr/cnet/front/openapi/jobs.json';
+  const allJobs: Array<{ seq: number; name: string }> = [];
+  
+  try {
+    let page = 1;
+    let hasMore = true;
+    
+    while (hasMore) {
+      const url = new URL(JOBS_LIST_URL);
+      url.searchParams.append('apiKey', getApiKey(env));
+      url.searchParams.append('pageIndex', page.toString());
+      
+      const response = await fetch(url.toString());
+      
+      if (!response.ok) {
+        console.error(`jobs.json API 요청 실패 (페이지 ${page}): ${response.statusText}`);
+        break;
+      }
+      
+      const data = await response.json();
+      const jobs = data.jobs || [];
+      
+      if (jobs.length === 0) {
+        hasMore = false;
+        break;
+      }
+      
+      // seq와 job_nm 추출
+      for (const job of jobs) {
+        if (job.seq && job.job_nm) {
+          allJobs.push({
+            seq: job.seq,
+            name: job.job_nm
+          });
+        }
+      }
+      
+      // 전체 개수에 도달했으면 중단
+      if (allJobs.length >= (data.count || 0)) {
+        hasMore = false;
+      } else {
+        page++;
+        // Rate limiting
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+    }
+    
+    console.log(`✅ jobs.json API: 총 ${allJobs.length}개 직업 수집 완료`);
+    return allJobs;
+    
+  } catch (error) {
+    console.error('jobs.json API 조회 오류:', error);
+    return [];
+  }
+}
+
 // 직업 카테고리 코드
 export const JOB_CATEGORIES = {
   '관리직': '100041',

@@ -3485,8 +3485,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
-    <div class="max-w-[1400px] mx-auto space-y-4 md:space-y-8">
-      <section class="glass-card border-0 md:border px-2 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
+    <div class="max-w-[1400px] mx-auto md:px-6 space-y-4 md:space-y-8 md:py-8 md:mt-4">
+      <section class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-5">
           ${profile.category?.name ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group" aria-hidden="true"></i>${escapeHtml(profile.category.name)}</span>` : ''}
           <div class="flex flex-wrap items-start justify-between gap-4">

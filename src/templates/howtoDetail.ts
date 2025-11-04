@@ -526,8 +526,8 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail): string => {
   const titleId = `howto-title-${escapeHtml(guide.telemetryId)}`
 
   return `
-    <article class="max-w-[1400px] mx-auto space-y-10" data-cw-detail-root data-cw-detail-kind="howto" aria-labelledby="${titleId}">
-      <header class="glass-card p-8 rounded-2xl space-y-6" data-cw-detail-hero data-cw-telemetry-component="howto-hero" data-cw-telemetry-scope="howto-hero">
+    <article class="max-w-[1400px] mx-auto md:px-6 md:py-8 md:mt-4 space-y-10" data-cw-detail-root data-cw-detail-kind="howto" aria-labelledby="${titleId}">
+      <header class="glass-card px-6 py-8 md:p-8 rounded-none md:rounded-2xl space-y-6" data-cw-detail-hero data-cw-telemetry-component="howto-hero" data-cw-telemetry-scope="howto-hero">
         <div class="space-y-4">
           <div class="flex flex-wrap items-center gap-3">
             ${guide.tags.length ? `<div class="flex gap-2" aria-label="주요 태그" data-cw-telemetry-component="howto-hero-tags">${guide.tags

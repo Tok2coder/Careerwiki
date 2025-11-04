@@ -338,13 +338,13 @@ const renderLayout = (
             box-shadow: 0 5px 20px rgba(67, 97, 238, 0.4);
           }
           .homepage-header {
-            max-width: 1100px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 24px 0 0;
+            padding: 10px 12px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 12px;
+            gap: 16px;
           }
           .header-icon-button {
             width: 36px;
@@ -649,7 +649,7 @@ const renderLayout = (
         ` : ''}
         
         <!-- Main Content -->
-        <main class="${isHomepage ? '' : 'mx-auto px-2 md:px-6 pt-[65px] md:pt-0 py-4 md:py-8'}">
+        <main class="${isHomepage ? '' : 'mx-auto pt-[65px] md:pt-0'}">
             ${content}
         </main>
         
@@ -900,12 +900,12 @@ app.get('/', (c) => {
   const content = `
     <div class="w-full">
         <header class="homepage-header">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-4">
                 <a href="/help" class="header-icon-button" title="도움말">
-                    <i class="fas fa-question-circle text-lg"></i>
+                    <i class="fas fa-question-circle text-base"></i>
                 </a>
                 <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
-                    <i class="fas fa-user-circle text-lg"></i>
+                    <i class="fas fa-user-circle text-base"></i>
                 </a>
             </div>
         </header>
@@ -982,7 +982,7 @@ app.get('/', (c) => {
 // AI Analyzer Page - Choose between Job or Major
 app.get('/analyzer', (c) => {
   const content = `
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto px-4 md:mt-8">
         <h1 class="text-4xl font-bold mb-8 gradient-text text-center">
             <i class="fas fa-brain mr-3"></i>AI 커리어 분석기
         </h1>
@@ -1035,7 +1035,7 @@ app.get('/analyzer', (c) => {
 // AI Job Analyzer
 app.get('/analyzer/job', (c) => {
   const content = `
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto px-4 md:mt-8">
         <h1 class="text-3xl font-bold mb-8 text-center">
             <i class="fas fa-briefcase mr-3 text-wiki-secondary"></i>AI 직업 추천
         </h1>
@@ -1176,7 +1176,7 @@ app.get('/analyzer/job', (c) => {
 // AI Major Analyzer
 app.get('/analyzer/major', (c) => {
   const content = `
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto px-4 md:mt-8">
         <h1 class="text-3xl font-bold mb-8 text-center">
             <i class="fas fa-university mr-3 text-wiki-secondary"></i>AI 전공 추천
         </h1>
@@ -1605,7 +1605,7 @@ app.get('/job', async (c) => {
     const extraHead = [jsonLd].filter(Boolean).join('\n')
 
     const content = `
-      <div class="max-w-6xl mx-auto">
+      <div class="max-w-6xl mx-auto px-4 md:mt-8">
         <div class="text-center mb-10">
           <h1 class="text-4xl font-bold mb-4 gradient-text">
             <i class="fas fa-briefcase mr-3"></i>${headingLabel}
@@ -1996,7 +1996,7 @@ app.get('/major', async (c) => {
     const extraHead = [jsonLd].filter(Boolean).join('\n')
 
     const content = `
-      <div class="max-w-6xl mx-auto">
+      <div class="max-w-6xl mx-auto px-4 md:mt-8">
         <div class="text-center mb-10">
           <h1 class="text-4xl font-bold mb-4 gradient-text">
             <i class="fas fa-university mr-3"></i>${headingLabel}
@@ -2160,7 +2160,7 @@ app.get('/howto', (c) => {
     `
 
   const content = `
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-6xl mx-auto px-4 md:mt-8">
       <header class="text-center mb-10 space-y-3">
         <h1 class="text-4xl font-bold gradient-text flex items-center justify-center gap-3">
           <i class="fas fa-route"></i>HowTo 시리즈
@@ -2331,7 +2331,7 @@ app.get('/search', (c) => {
   const escapedQuery = escapeHtml(query)
 
   const content = `
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto px-4 md:mt-8">
         <div class="mb-8">
             <form action="/search" method="get" class="relative">
                 <input 
@@ -4257,42 +4257,71 @@ app.get('/api/categories', async (c) => {
 
 // Admin API: Seed all jobs to D1
 app.post('/api/admin/seed-jobs', async (c) => {
-  // 보안: Admin 토큰 확인
+  // 보안: Admin 토큰 확인 (개발 환경에서는 스킵)
   const token = c.req.header('Authorization')
   const expectedToken = c.env.ADMIN_SECRET || 'dev-admin-token'
   
-  if (token !== `Bearer ${expectedToken}`) {
+  // 개발 환경에서는 토큰 체크 스킵
+  if (c.env.ENVIRONMENT !== 'development' && token !== `Bearer ${expectedToken}`) {
     return c.json({ error: 'Unauthorized' }, 401)
   }
+  
+  // background 파라미터로 백그라운드 실행 여부 결정
+  const background = c.req.query('background') === 'true'
   
   try {
     // seedAllJobs를 동적 import
     const { seedAllJobs } = await import('./scripts/seedAllJobs')
     
-    // 백그라운드로 실행
-    const seedPromise = seedAllJobs(c.env).catch(err => {
-      console.error('❌ Seed failed:', err)
-      return {
-        total: 0,
-        processed: 0,
-        inserted: 0,
-        updated: 0,
-        skipped: 0,
-        errors: 1,
-        errorDetails: [{ id: 'system', name: 'System', error: err.message }],
-        startTime: Date.now()
+    if (background) {
+      // 백그라운드로 실행
+      const seedPromise = seedAllJobs(c.env).catch(err => {
+        console.error('❌ Seed failed:', err)
+        return {
+          total: 0,
+          processed: 0,
+          inserted: 0,
+          updated: 0,
+          skipped: 0,
+          errors: 1,
+          errorDetails: [{ id: 'system', name: 'System', error: err.message }],
+          startTime: Date.now()
+        }
+      })
+      
+      if (c.executionCtx && 'waitUntil' in c.executionCtx) {
+        c.executionCtx.waitUntil(seedPromise)
       }
-    })
-    
-    if (c.executionCtx && 'waitUntil' in c.executionCtx) {
-      c.executionCtx.waitUntil(seedPromise)
+      
+      return c.json({ 
+        message: 'Seed started in background',
+        estimatedTime: '약 3-5분 (500+ 직업 × 0.5초)',
+        note: 'PM2 logs를 확인하세요: pm2 logs careerwiki --nostream'
+      })
+    } else {
+      // 동기 실행 - 완료될 때까지 기다림
+      console.log('🌱 Starting seed job synchronously...')
+      const result = await seedAllJobs(c.env)
+      
+      const duration = ((Date.now() - result.startTime) / 1000).toFixed(1)
+      
+      return c.json({
+        success: true,
+        message: '✅ Seed job completed',
+        duration: `${duration}초`,
+        result: {
+          total: result.total,
+          processed: result.processed,
+          inserted: result.inserted,
+          updated: result.updated,
+          skipped: result.skipped,
+          errors: result.errors,
+          errorSummary: result.errorDetails.length > 0 
+            ? `${result.errors}개 오류 발생` 
+            : '오류 없음'
+        }
+      })
     }
-    
-    return c.json({ 
-      message: 'Seed started in background',
-      estimatedTime: '약 3-4분 (420개 직업 × 0.5초)',
-      note: 'PM2 logs를 확인하세요: pm2 logs careerwiki --nostream'
-    })
   } catch (error: any) {
     console.error('❌ Seed start failed:', error)
     return c.json({ 
