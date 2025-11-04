@@ -323,6 +323,12 @@ npm run deploy:prod
 - Telemetry 문서(`docs/telemetry-phase1-task3.md`)와 README 최신 링크/QA 절차 반영
 
 ### 🔥 최근 업데이트
+- ✅ 2025-11-04 **[CRITICAL]** 직업 목록 페이지 D1 통합 및 슬러그 URL 시스템 개선
+  - **D1 우선 검색**: `searchUnifiedJobs`가 D1 데이터베이스를 먼저 조회하도록 수정, API 호출은 폴백으로만 사용
+  - **간단한 ID 형식**: 프로필 ID가 `job:C_159` 대신 간단한 숫자 형식 (`159`) 사용, hydration JSON도 동일 형식
+  - **한글 슬러그 완벽 지원**: `/job/가구제조-수리원` 같은 SEO 친화적 URL이 목록 페이지 링크에서 정상 생성
+  - **대소문자 무관 검색**: D1 name 검색 시 `LOWER()` 함수로 대소문자 구분 없이 매칭
+  - **587개 직업 데이터 D1 제공**: HTML 링크와 JSON hydration 데이터 모두 올바른 형식으로 제공
 - ✅ 2025-11-04 **[MAJOR]** 직업 목록 시스템 완전 수정: 4가지 핵심 문제 해결 완료
   1. ✅ **job:G_unknown 유령 항목 제거**: 3단계 필터링 로직 추가로 invalid 항목 완전 차단 (D1 결과, CareerNet API, Goyong24 API)
   2. ✅ **한글 직업명 정상 표시**: Goyong24 API 검증 로직 수정 (nested 필드 체크) + D1 name 컬럼 우선 사용
