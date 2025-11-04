@@ -423,24 +423,40 @@ export const searchUnifiedJobs = async (
   const sourcesStatus = createInitialSourceStatus()
 
   // 🆕 Step 1: D1 Database search first (if available)
+  let totalCount = 0
   if (env?.DB && sourcesToUse.includes('CAREERNET')) {
     const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
     status.attempted = true
     
     try {
       const db = env.DB
-      let query = 'SELECT id, name, careernet_id, goyong24_id, api_data_json FROM jobs'
       const conditions: string[] = []
-      const bindings: any[] = []
+      const countBindings: any[] = []
 
-      // Add keyword search
+      // Add keyword search condition
       if (keyword?.trim()) {
         conditions.push('LOWER(name) LIKE LOWER(?)')
-        bindings.push(`%${keyword.trim()}%`)
+        countBindings.push(`%${keyword.trim()}%`)
       }
 
       // Add category filter if needed (category is already filtered by the API layer)
       // We'll skip category filtering in D1 for now since category info is in api_data_json
+
+      // First, get total count
+      let countQuery = 'SELECT COUNT(*) as total FROM jobs'
+      if (conditions.length > 0) {
+        countQuery += ' WHERE ' + conditions.join(' AND ')
+      }
+
+      const countStmt = db.prepare(countQuery)
+      const countResult = await countStmt.bind(...countBindings).first<{ total: number }>()
+      totalCount = countResult?.total || 0
+
+      console.log(`📊 D1 전체 직업 수: ${totalCount}`)
+
+      // Now fetch paginated results
+      let query = 'SELECT id, name, careernet_id, goyong24_id, api_data_json FROM jobs'
+      const bindings: any[] = [...countBindings]
 
       if (conditions.length > 0) {
         query += ' WHERE ' + conditions.join(' AND ')
@@ -457,7 +473,7 @@ export const searchUnifiedJobs = async (
       const result = await stmt.bind(...bindings).all()
       const d1Jobs = result.results || []
 
-      console.log(`✅ D1에서 ${d1Jobs.length}개 직업 검색 완료`)
+      console.log(`✅ D1에서 ${d1Jobs.length}개 직업 검색 완료 (전체: ${totalCount})`)
 
       d1Jobs.forEach((row: any) => {
         try {
@@ -603,7 +619,7 @@ export const searchUnifiedJobs = async (
   return {
     items: Array.from(itemsMap.values()),
     meta: {
-      total: itemsMap.size,
+      total: totalCount > 0 ? totalCount : itemsMap.size, // Use DB total count if available
       sources: sourcesStatus
     }
   }
