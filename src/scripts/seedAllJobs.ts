@@ -116,30 +116,48 @@ async function upsertJob(
   }
 }
 
-// 커리어넷에서 모든 직업 ID 수집 (jobs.json API 사용 - 546개)
+// 커리어넷에서 모든 직업 ID 수집 (XML API 사용 - 전체 454개)
 async function fetchCareernetJobIds(env: Env): Promise<Array<{ id: string; name: string; source: 'careernet' }>> {
-  console.log('📋 커리어넷 직업 목록 수집 중 (jobs.json API)...')
+  console.log('📋 커리어넷 직업 목록 수집 중 (XML API - 전체 목록)...')
+  
+  const allJobs: Array<{ id: string; name: string; source: 'careernet' }> = []
   
   try {
-    // 새로운 jobs.json API 사용 (546개 전체)
-    const jobsList = await fetchAllJobsList(env)
+    // XML API로 전체 목록 수집 (카테고리 없이)
+    let page = 1
+    let totalFetched = 0
     
-    // seq를 문자열 ID로 변환
-    const allJobs = jobsList.map(job => ({
-      id: String(job.seq),  // seq를 ID로 사용
-      name: job.name,
-      source: 'careernet' as const
-    }))
+    while (true) {
+      const jobs = await searchJobs({ 
+        thisPage: page,
+        perPage: 100
+      }, env)
+      
+      if (jobs.length === 0) {
+        break
+      }
+      
+      for (const job of jobs) {
+        allJobs.push({
+          id: job.jobdicSeq,
+          name: job.jobName,
+          source: 'careernet' as const
+        })
+      }
+      
+      totalFetched += jobs.length
+      console.log(`  페이지 ${page}: ${jobs.length}개 수집 (누적: ${totalFetched})`)
+      
+      // 100개 미만이면 마지막 페이지
+      if (jobs.length < 100) {
+        break
+      }
+      
+      page++
+      await sleep(300)
+    }
     
     console.log(`✅ 커리어넷: 총 ${allJobs.length}개 직업 발견`)
-    
-    // Debug: 첫 3개 출력
-    if (allJobs.length > 0) {
-      console.log(`  🔍 첫 3개 샘플:`)
-      allJobs.slice(0, 3).forEach((job, idx) => {
-        console.log(`    ${idx + 1}. id="${job.id}", name="${job.name}"`)
-      })
-    }
     
     return allJobs
   } catch (error: any) {
@@ -338,25 +356,8 @@ export async function seedAllJobs(env: Env): Promise<SeedProgress> {
         goyong24: result.rawApiData?.goyong24 || null
       }
       
-      // 🆕 빈 데이터 검증 - summary나 encyclopedia가 실제로 있는지 확인
-      const hasValidCareernetData = rawApiData.careernet && (
-        (rawApiData.careernet.summary && rawApiData.careernet.summary.trim()) ||
-        (rawApiData.careernet.encyclopedia?.workList?.length > 0) ||
-        (rawApiData.careernet.encyclopedia?.baseInfo)
-      )
-      
-      const hasValidGoyong24Data = rawApiData.goyong24 && (
-        rawApiData.goyong24.summary?.jobNm ||      // nested 필드 체크
-        rawApiData.goyong24.duty ||                // 또는 다른 섹션 존재 여부
-        rawApiData.goyong24.salProspect ||
-        rawApiData.goyong24.ablKnwEnv
-      )
-      
-      if (!hasValidCareernetData && !hasValidGoyong24Data) {
-        console.warn(`⚠️  빈 데이터 스킵: ${job.name} (ID: ${job.id}) - API에서 상세 정보를 가져오지 못함`)
-        progress.skipped++
-        continue
-      }
+      // 빈 데이터 검증 제거 - 모든 데이터를 저장
+      // API에서 가져온 데이터는 무조건 저장 (빈 데이터라도)
       
       // 안전한 JSON 직렬화 (순환 참조 방지)
       let apiDataJson: string
