@@ -412,222 +412,153 @@ export const searchUnifiedMajors = async (
   }
 }
 
+/**
+ * Search for unified jobs from D1 database
+ * Simplified version - only uses D1, no API fallbacks
+ */
 export const searchUnifiedJobs = async (
   params: { keyword?: string; category?: string; page?: number; perPage?: number; includeSources?: DataSource[] },
   env?: CareerWikiEnv
 ): Promise<UnifiedSearchResult<UnifiedJobSummaryEntry>> => {
-  const { keyword = '', category = '', page = 1, perPage = 20, includeSources } = params
-  const sourcesToUse = resolveIncludedSources(includeSources)
+  const { keyword = '', category = '', page = 1, perPage = 20 } = params
 
-  const itemsMap = new Map<string, UnifiedJobSummaryEntry>()
-  const sourcesStatus = createInitialSourceStatus()
-
-  // 🆕 Step 1: D1 Database search first (if available)
-  let totalCount = 0
-  if (env?.DB && sourcesToUse.includes('CAREERNET')) {
-    const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
-    status.attempted = true
-    
-    try {
-      const db = env.DB
-      const conditions: string[] = []
-      const countBindings: any[] = []
-
-      // Add keyword search condition
-      if (keyword?.trim()) {
-        conditions.push('LOWER(name) LIKE LOWER(?)')
-        countBindings.push(`%${keyword.trim()}%`)
-      }
-
-      // Add category filter if needed (category is already filtered by the API layer)
-      // We'll skip category filtering in D1 for now since category info is in api_data_json
-
-      // First, get total count
-      let countQuery = 'SELECT COUNT(*) as total FROM jobs'
-      if (conditions.length > 0) {
-        countQuery += ' WHERE ' + conditions.join(' AND ')
-      }
-
-      const countStmt = db.prepare(countQuery)
-      const countResult = await countStmt.bind(...countBindings).first<{ total: number }>()
-      totalCount = countResult?.total || 0
-
-      console.log(`📊 D1 전체 직업 수: ${totalCount}`)
-
-      // Now fetch paginated results
-      let query = 'SELECT id, name, careernet_id, goyong24_id, api_data_json FROM jobs'
-      const bindings: any[] = [...countBindings]
-
-      if (conditions.length > 0) {
-        query += ' WHERE ' + conditions.join(' AND ')
-      }
-
-      // Add pagination
-      const offset = (page - 1) * perPage
-      query += ` LIMIT ? OFFSET ?`
-      bindings.push(perPage, offset)
-
-      console.log(`🔍 D1 직업 검색: keyword="${keyword}", page=${page}, perPage=${perPage}`)
-      
-      const stmt = db.prepare(query)
-      const result = await stmt.bind(...bindings).all()
-      const d1Jobs = result.results || []
-
-      console.log(`✅ D1에서 ${d1Jobs.length}개 직업 검색 완료 (전체: ${totalCount})`)
-
-      d1Jobs.forEach((row: any) => {
-        try {
-          // Parse cached API data
-          let apiData = null
-          if (row.api_data_json) {
-            try {
-              apiData = JSON.parse(row.api_data_json)
-            } catch (parseError) {
-              console.error(`Failed to parse api_data_json for job ${row.id}:`, parseError)
-            }
-          }
-
-          // Extract nested CareerNet data if available
-          const careernetData = apiData?.careernet || {}
-          const goyongData = apiData?.goyong24 || {}
-
-          // Create profile with simple numeric ID (consistent with slug system)
-          const profile: UnifiedJobSummary = {
-            id: String(row.id), // ✅ Use simple numeric ID instead of job:C_xxx
-            sourceIds: {
-              careernet: row.careernet_id || undefined,
-              goyong24: row.goyong24_id || undefined
-            },
-            name: row.name?.trim() || `직업 ${row.id}`,
-            category: careernetData.jobCategoryName || careernetData.profession ? {
-              name: (careernetData.jobCategoryName || careernetData.profession).trim()
-            } : undefined,
-            sources: ['CAREERNET'] // Mark as from D1/CareerNet
-          }
-
-          const entry: UnifiedJobSummaryEntry = {
-            profile,
-            sourceMeta: {
-              careernet: {
-                jobdicSeq: row.careernet_id || undefined
-              }
-            },
-            display: {
-              summary: careernetData.summary?.trim(),
-              salary: (careernetData.avgSalary || careernetData.salery)?.trim(),
-              outlook: (careernetData.jobOutlook || careernetData.possibility)?.trim(),
-              categoryName: (careernetData.jobCategoryName || careernetData.profession)?.trim()
-            }
-          }
-
-          itemsMap.set(profile.id, entry)
-        } catch (entryError) {
-          console.error(`Failed to process D1 job row ${row.id}:`, entryError)
-        }
-      })
-
-      status.count = d1Jobs.length
-    } catch (error) {
-      console.error('D1 직업 검색 실패:', error)
-      status.error = error instanceof Error ? error.message : 'D1 직업 검색 실패'
-    }
+  // D1 database is required
+  if (!env?.DB) {
+    throw new Error('D1 database not available')
   }
+
+  const db = env.DB
+  const conditions: string[] = []
+  const countBindings: any[] = []
+
+  // Add keyword search condition
+  if (keyword?.trim()) {
+    conditions.push('LOWER(name) LIKE LOWER(?)')
+    countBindings.push(`%${keyword.trim()}%`)
+  }
+
+  // First, get total count
+  let countQuery = 'SELECT COUNT(*) as total FROM jobs'
+  if (conditions.length > 0) {
+    countQuery += ' WHERE ' + conditions.join(' AND ')
+  }
+
+  const countResult = await db.prepare(countQuery).bind(...countBindings).first<{ total: number }>()
+  const totalCount = countResult?.total || 0
+
+  // Fetch paginated results
+  let query = 'SELECT id, name, careernet_id, goyong24_id, api_data_json FROM jobs'
+  const bindings: any[] = [...countBindings]
+
+  if (conditions.length > 0) {
+    query += ' WHERE ' + conditions.join(' AND ')
+  }
+
+  // Add pagination
+  const offset = (page - 1) * perPage
+  query += ` LIMIT ? OFFSET ?`
+  bindings.push(perPage, offset)
+
+  const result = await db.prepare(query).bind(...bindings).all()
+  const d1Jobs = result.results || []
+
+  // Parse D1 results into UnifiedJobSummaryEntry format
+  const items: UnifiedJobSummaryEntry[] = []
   
-  // Step 2: Fallback to CareerNet API if D1 not available or no results
-  if (itemsMap.size === 0 && sourcesToUse.includes('CAREERNET')) {
-    const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
-    if (!status.attempted) {
-      status.attempted = true
-    }
-    
+  d1Jobs.forEach((row: any) => {
     try {
-      const rawJobs = await searchCareerNetJobs(
-        {
-          keyword,
-          category,
-          thisPage: page,
-          perPage
-        },
-        env
-      )
-
-      rawJobs.forEach((job) => {
-        const profile = normalizeCareerNetJobSummary(job)
-        const entry: UnifiedJobSummaryEntry = {
-          profile,
-          sourceMeta: {
-            careernet: {
-              jobdicSeq: job.jobdicSeq
-            }
-          },
-          display: {
-            summary: job.summary?.trim(),
-            salary: (job.avgSalary || job.salery)?.trim(),
-            outlook: (job.jobOutlook || job.possibility)?.trim(),
-            categoryName: (job.jobCategoryName || job.profession)?.trim()
-          }
+      // Parse cached API data
+      let apiData = null
+      if (row.api_data_json) {
+        try {
+          apiData = JSON.parse(row.api_data_json)
+        } catch (parseError) {
+          console.error(`Failed to parse api_data_json for job ${row.id}:`, parseError)
         }
-        itemsMap.set(profile.id, entry)
-      })
+      }
 
-      status.count = rawJobs.length
-    } catch (error) {
-      status.error = error instanceof Error ? error.message : 'CareerNet 직업 검색 실패'
-    }
-  } else if (itemsMap.size === 0) {
-    sourcesStatus.CAREERNET.skippedReason = 'excluded'
-  }
-
-  // Goyong24 search - SKIP if D1 data available (데이터가 이미 D1에 통합되어 있음)
-  // D1에 커리어넷 + 고용24 데이터가 모두 있으므로 추가 API 호출 불필요
-  if (env?.DB && totalCount > 0) {
-    // D1에서 데이터를 가져왔으므로 Goyong24 API 호출 스킵
-    const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
-    status.skippedReason = 'in-d1'
-    console.log('⏭️  고용24 API 호출 스킵 (D1에 통합 데이터 있음)')
-  } else if (sourcesToUse.includes('GOYONG24')) {
-    // Fallback: D1이 없을 때만 Goyong24 API 호출
-    const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
-    status.attempted = true
-    try {
-      const response = await fetchGoyong24JobList(
-        {
-          keyword,
-          srchType: 'K'
-        },
-        env as any
-      )
-
-      response.items.forEach((item: Goyong24JobListItem) => {
-        const profile = normalizeGoyong24JobListItem(item)
-        const entry: UnifiedJobSummaryEntry = {
-          profile,
-          sourceMeta: {
-            goyong24: {
-              jobCd: item.jobCd,
-              jobClcd: item.jobClcd
-            }
-          },
-          display: {
-            categoryName: item.jobClcdNm?.trim()
-          }
+      // Extract nested API data
+      const careernetData = apiData?.careernet || {}
+      const goyongData = apiData?.goyong24 || {}
+      
+      // Determine sources dynamically based on actual data
+      const sources: DataSource[] = []
+      if (careernetData && Object.keys(careernetData).length > 0) {
+        sources.push('CAREERNET')
+      }
+      if (goyongData && Object.keys(goyongData).length > 0) {
+        sources.push('GOYONG24')
+      }
+      
+      // Fallback to CAREERNET if no sources detected
+      if (sources.length === 0) {
+        sources.push('CAREERNET')
+      }
+      
+      // Extract salary from encyclopedia.baseInfo.wage
+      const baseInfo = careernetData.encyclopedia?.baseInfo || {}
+      let salary = baseInfo.wage || careernetData.avgSalary || careernetData.salery
+      if (salary) {
+        salary = String(salary).trim()
+      }
+      
+      // Extract outlook from encyclopedia.forecastList[0].forecast
+      const forecastList = careernetData.encyclopedia?.forecastList || []
+      let outlook = forecastList[0]?.forecast || careernetData.jobOutlook || careernetData.possibility
+      if (outlook) {
+        outlook = String(outlook).trim()
+        // Truncate outlook to first 100 characters for display
+        if (outlook.length > 100) {
+          outlook = outlook.slice(0, 97) + '...'
         }
-        itemsMap.set(profile.id, entry)
-      })
+      }
 
-      status.count = response.items.length
-    } catch (error) {
-      status.error = error instanceof Error ? error.message : '고용24 직업 검색 실패'
+      // Create profile
+      const profile: UnifiedJobSummary = {
+        id: String(row.id),
+        sourceIds: {
+          careernet: row.careernet_id && row.careernet_id !== 'null' ? row.careernet_id : undefined,
+          goyong24: row.goyong24_id && row.goyong24_id !== 'null' ? row.goyong24_id : undefined
+        },
+        name: row.name?.trim() || `직업 ${row.id}`,
+        category: careernetData.jobCategoryName || careernetData.profession ? {
+          name: (careernetData.jobCategoryName || careernetData.profession).trim()
+        } : undefined,
+        sources
+      }
+
+      const entry: UnifiedJobSummaryEntry = {
+        profile,
+        sourceMeta: {
+          careernet: row.careernet_id ? {
+            jobdicSeq: row.careernet_id
+          } : undefined,
+          goyong24: row.goyong24_id ? {
+            jobCd: row.goyong24_id
+          } : undefined
+        },
+        display: {
+          summary: careernetData.summary?.trim(),
+          salary,
+          outlook,
+          categoryName: (careernetData.jobCategoryName || careernetData.profession)?.trim()
+        }
+      }
+
+      items.push(entry)
+    } catch (entryError) {
+      console.error(`Failed to process D1 job row ${row.id}:`, entryError)
     }
-  } else {
-    sourcesStatus.GOYONG24.skippedReason = 'excluded'
-  }
+  })
 
   return {
-    items: Array.from(itemsMap.values()),
+    items,
     meta: {
-      total: totalCount > 0 ? totalCount : itemsMap.size, // Use DB total count if available
-      sources: sourcesStatus
+      total: totalCount,
+      sources: {
+        CAREERNET: { count: items.filter(i => i.profile.sources.includes('CAREERNET')).length },
+        GOYONG24: { count: items.filter(i => i.profile.sources.includes('GOYONG24')).length }
+      }
     }
   }
 }

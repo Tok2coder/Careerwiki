@@ -323,6 +323,13 @@ npm run deploy:prod
 - Telemetry 문서(`docs/telemetry-phase1-task3.md`)와 README 최신 링크/QA 절차 반영
 
 ### 🔥 최근 업데이트
+- ✅ 2025-11-04 **[MAJOR]** 코드 간소화 및 정렬 기능 수정 (Phase 1~4 완료)
+  - **시딩 스크립트 수정**: 고용24 데이터 `goyong24Id` 필드 저장 로직 추가
+  - **searchUnifiedJobs 함수 간소화**: API fallback 제거, D1 직접 조회만 사용
+  - **KV 캐시 제거**: 불필요한 캐싱 레이어 제거로 코드 복잡도 감소
+  - **정렬 기능 수정**: `display.salary`는 `encyclopedia.baseInfo.wage`에서, `display.outlook`은 `encyclopedia.forecastList[0].forecast`에서 파싱하도록 수정
+  - **동적 sources 표시**: `api_data_json` 실제 데이터 기반으로 CAREERNET/GOYONG24 출처 자동 감지
+  - **빌드 크기 감소**: 512KB → 510KB (불필요한 코드 제거 효과)
 - ✅ 2025-11-04 **[CRITICAL]** 직업 목록 페이지 D1 통합 및 슬러그 URL 시스템 개선
   - **D1 우선 검색**: `searchUnifiedJobs`가 D1 데이터베이스를 먼저 조회하도록 수정, API 호출은 폴백으로만 사용
   - **간단한 ID 형식**: 프로필 ID가 `job:C_159` 대신 간단한 숫자 형식 (`159`) 사용, hydration JSON도 동일 형식

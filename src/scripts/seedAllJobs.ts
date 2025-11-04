@@ -375,6 +375,7 @@ export async function seedAllJobs(env: Env): Promise<SeedProgress> {
         id: job.id,
         name: job.name,
         careernetId: job.source === 'careernet' ? job.id : undefined,
+        goyong24Id: job.source === 'goyong24' ? job.id : undefined,
         api_data_json: apiDataJson,
         api_data_hash: dataHash
       })

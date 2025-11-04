@@ -1463,62 +1463,20 @@ app.get('/job', async (c) => {
   }
 
   try {
-    const forceRefresh = c.req.query('refresh') === '1'
-    const { value: result, cacheState } = await withKvCache(
-      c.env.KV,
-      buildListCacheKey('job', { keyword, category, page, perPage, includeSources }),
-      async () =>
-        searchUnifiedJobs(
-          {
-            keyword,
-            category,
-            page,
-            perPage,
-            includeSources
-          },
-          c.env
-        ),
+    // Direct D1 query - no KV cache
+    const result = await searchUnifiedJobs(
       {
-        staleSeconds: LIST_CACHE_STALE_SECONDS,
-        maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS,
-        metadata: {
-          type: 'job-list',
-          keyword: keyword || null,
-          category: category || null,
-          page,
-          perPage,
-          includeSources: includeSources ?? []
-        },
-        forceRefresh
-      }
-    )
-
-    const items = result.items
-    const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
-
-    const freshnessRecordPromise = recordListFreshness(c.env.KV, {
-      type: 'job',
-      params: {
         keyword,
         category,
         page,
         perPage,
         includeSources
       },
-      trigger: 'runtime',
-      cacheState,
-      totalItems: items.length,
-      reportedTotal: result.meta?.total,
-      sources: result.meta?.sources
-    })
+      c.env
+    )
 
-    if (c.executionCtx && 'waitUntil' in c.executionCtx) {
-      c.executionCtx.waitUntil(
-        freshnessRecordPromise.catch((err) => console.error('[freshness][job]', err))
-      )
-    } else {
-      freshnessRecordPromise.catch((err) => console.error('[freshness][job]', err))
-    }
+    const items = result.items
+    const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
 
     const jobCards = items.length
       ? items
@@ -1791,8 +1749,7 @@ app.get('/job', async (c) => {
         keyword,
         category,
         includeSources: includeSources ?? null,
-        sources: result.meta?.sources ?? null,
-        cacheState
+        sources: result.meta?.sources ?? null
       }
     })}</script>`
     const hydratedContent = `${content}${hydrationScript}`
