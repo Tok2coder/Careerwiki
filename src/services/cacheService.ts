@@ -1,3 +1,4 @@
+import type { D1Database, KVNamespace } from '@cloudflare/workers-types'
 import type { DataSource } from '../types/unifiedProfiles'
 
 export type CacheStatus = 'miss' | 'hit' | 'revalidated' | 'stale' | 'bypass'

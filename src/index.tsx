@@ -28,7 +28,11 @@ import {
   formatTimestamp,
   type CacheState
 } from './services/cacheService'
-import type { ExportedHandlerScheduledHandler } from '@cloudflare/workers-types'
+import type { 
+  ExportedHandlerScheduledHandler,
+  D1Database,
+  KVNamespace
+} from '@cloudflare/workers-types'
 import { LIST_CACHE_STALE_SECONDS, LIST_CACHE_MAX_AGE_SECONDS } from './config/cachePolicy'
 import { recordListFreshness, attemptScheduledRefresh, getFreshnessStatus, resolveFreshnessTargetById } from './services/freshnessService'
 import { SERP_FRESHNESS_TARGETS } from './config/freshnessConfig'
@@ -66,8 +70,12 @@ import type { AnalysisType, PricingTier, RequestStatus } from './types/aiAnalysi
 type Bindings = {
   DB: D1Database;
   KV: KVNamespace;
-  CAREER_NET_API_KEY?: string; // Cloudflare 환경 변수
+  CAREER_NET_API_KEY?: string;
+  GOYONG24_MAJOR_API_KEY?: string;
+  GOYONG24_JOB_API_KEY?: string;
   PERF_ALERT_WEBHOOK?: string;
+  ADMIN_SECRET?: string;
+  ENVIRONMENT?: string;
 }
 
 type Variables = {
@@ -82,7 +90,7 @@ app.use('*', cors())
 app.use('*', renderer)
 
 // Serve static files
-app.use('/static/*', serveStatic({ root: './public' }))
+app.use('/static/*', serveStatic({ root: './' }))
 
 let logoIdCounter = 0
 

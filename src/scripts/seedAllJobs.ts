@@ -3,6 +3,7 @@
  * 커리어넷과 고용24의 모든 직업 데이터를 D1 데이터베이스에 저장
  */
 
+import type { D1Database } from '@cloudflare/workers-types'
 import { searchJobs, JOB_CATEGORIES, fetchAllJobsList } from '../api/careernetAPI'
 import { getUnifiedJobDetailWithRawData } from '../services/profileDataService'
 import type { UnifiedJobDetail } from '../types/unifiedProfiles'

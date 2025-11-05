@@ -1,3 +1,4 @@
+import type { D1Database, KVNamespace } from '@cloudflare/workers-types'
 import type {
   AiAnalysisRequestRecord,
   AiAnalysisResultRecord,

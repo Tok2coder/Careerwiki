@@ -3,6 +3,7 @@
  * 커리어넷과 고용24의 모든 학과(전공) 데이터를 D1 데이터베이스에 저장
  */
 
+import type { D1Database } from '@cloudflare/workers-types'
 import { searchMajors as searchCareerNetMajors } from '../api/careernetAPI'
 import { fetchGoyong24MajorList, fetchGoyong24MajorDetail } from '../api/goyong24API'
 import { getUnifiedMajorDetail } from '../services/profileDataService'
