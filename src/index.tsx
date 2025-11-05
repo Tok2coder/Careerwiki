@@ -4275,14 +4275,14 @@ app.get('/api/majors/:id', async (c) => {
 
 app.get('/major/:id', async (c) => {
   const id = c.req.param('id')
-  const origin = new URL(c.req.url).origin
+  const { DB } = c.env
   
   try {
-    // API에서 전공 상세 데이터 조회
-    const response = await fetch(`${origin}/api/majors/${id}`)
-    const result = await response.json()
+    // D1에서 직접 전공 상세 데이터 조회
+    const row = await DB.prepare('SELECT id, name, api_data_json FROM majors WHERE id = ?')
+      .bind(id).first<{ id: string; name: string; api_data_json: string }>()
     
-    if (!result.success || !result.data) {
+    if (!row || !row.api_data_json) {
       return c.html(renderLayout(
         `<div class="max-w-4xl mx-auto px-4 py-16 text-center">
           <i class="fas fa-exclamation-triangle text-6xl text-yellow-500 mb-4"></i>
@@ -4297,8 +4297,12 @@ app.get('/major/:id', async (c) => {
       ), 404)
     }
     
-    const major = result.data
-    const majorName = major.name || '전공 정보'
+    // Parse API data from D1
+    const apiData = JSON.parse(row.api_data_json)
+    const major = apiData.merged || apiData.careernet || apiData.goyong24 || {}
+    const sources = apiData.sources || {}
+    
+    const majorName = major.name || row.name || '전공 정보'
     const summary = major.summary?.substring(0, 120) || '전공 정보를 제공합니다.'
     
     // SEO 최적화된 메타 정보
@@ -4471,9 +4475,9 @@ app.get('/major/:id', async (c) => {
         <!-- 데이터 출처 -->
         <div class="text-center text-sm text-wiki-muted mt-8">
           <p>데이터 출처: 
-            ${result.sources?.CAREERNET?.count > 0 ? '커리어넷' : ''}
-            ${result.sources?.CAREERNET?.count > 0 && result.sources?.GOYONG24?.count > 0 ? ', ' : ''}
-            ${result.sources?.GOYONG24?.count > 0 ? '고용24' : ''}
+            ${sources?.CAREERNET?.count > 0 ? '커리어넷' : ''}
+            ${sources?.CAREERNET?.count > 0 && sources?.GOYONG24?.count > 0 ? ', ' : ''}
+            ${sources?.GOYONG24?.count > 0 ? '고용24' : ''}
           </p>
         </div>
       </div>
