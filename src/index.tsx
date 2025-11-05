@@ -4273,7 +4273,8 @@ app.get('/api/majors/:id', async (c) => {
 // 전공 상세 페이지
 // ============================================================================
 
-app.get('/major/:id', async (c) => {
+// Simple Major Detail Page (D1-based, SEO optimized)
+app.get('/majors/:id', async (c) => {
   const id = c.req.param('id')
   const { DB } = c.env
   
@@ -4308,7 +4309,7 @@ app.get('/major/:id', async (c) => {
     // SEO 최적화된 메타 정보
     const pageTitle = `${majorName} 전공 정보 - 대학 학과, 진로, 취업 | CareerWiki`
     const metaDescription = `${summary}. ${major.mainSubjects?.length || 0}개 주요 과목, ${major.relatedJobs?.length || 0}개 관련 직업, ${major.universities?.length || 0}개 대학 정보 제공.`
-    const pageUrl = `https://careerwiki.org/major/${id}`
+    const pageUrl = `https://careerwiki.org/majors/${id}`
     
     // Schema.org JSON-LD: EducationalOccupationalProgram
     const majorSchemaLd = {
@@ -4360,7 +4361,7 @@ app.get('/major/:id', async (c) => {
           "@type": "ListItem",
           "position": 3,
           "name": majorName,
-          "item": pageUrl
+          "item": `https://careerwiki.org/majors/${id}`
         }
       ]
     }
