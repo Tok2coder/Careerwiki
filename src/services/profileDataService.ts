@@ -309,105 +309,136 @@ const extractCanonicalSuffix = (value: string, prefix: string): string | undefin
   return undefined
 }
 
+/**
+ * Search for unified majors from D1 database
+ * Simplified version - only uses D1, no API fallbacks
+ */
 export const searchUnifiedMajors = async (
   params: { keyword?: string; page?: number; perPage?: number; includeSources?: DataSource[] },
   env?: CareerWikiEnv
 ): Promise<UnifiedSearchResult<UnifiedMajorSummaryEntry>> => {
-  const { keyword = '', page = 1, perPage = 20, includeSources } = params
-  const sourcesToUse = resolveIncludedSources(includeSources)
+  const { keyword = '', page = 1, perPage = 20 } = params
 
-  const itemsMap = new Map<string, UnifiedMajorSummaryEntry>()
-  const sourcesStatus = createInitialSourceStatus()
+  // D1 database is required
+  if (!env?.DB) {
+    throw new Error('D1 database not available')
+  }
 
-  // CareerNet search
-  if (sourcesToUse.includes('CAREERNET')) {
-    const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
-    status.attempted = true
+  const db = env.DB
+  const conditions: string[] = []
+  const countBindings: any[] = []
+
+  // Add keyword search condition
+  if (keyword?.trim()) {
+    conditions.push('LOWER(name) LIKE LOWER(?)')
+    countBindings.push(`%${keyword.trim()}%`)
+  }
+
+  // First, get total count
+  let countQuery = 'SELECT COUNT(*) as total FROM majors'
+  if (conditions.length > 0) {
+    countQuery += ' WHERE ' + conditions.join(' AND ')
+  }
+
+  const countResult = await db.prepare(countQuery).bind(...countBindings).first<{ total: number }>()
+  const totalCount = countResult?.total || 0
+
+  // Fetch paginated results
+  let query = 'SELECT id, name, careernet_id, goyong24_id, api_data_json FROM majors'
+  const bindings: any[] = [...countBindings]
+
+  if (conditions.length > 0) {
+    query += ' WHERE ' + conditions.join(' AND ')
+  }
+
+  // Add pagination
+  const offset = (page - 1) * perPage
+  query += ` LIMIT ? OFFSET ?`
+  bindings.push(perPage, offset)
+
+  const result = await db.prepare(query).bind(...bindings).all()
+  const d1Majors = result.results || []
+
+  // Parse D1 results into UnifiedMajorSummaryEntry format
+  const items: UnifiedMajorSummaryEntry[] = []
+  
+  d1Majors.forEach((row: any) => {
     try {
-      const rawMajors = await searchCareerNetMajors(
-        {
-          keyword,
-          thisPage: page,
-          perPage
-        },
-        env
-      )
-
-      rawMajors.forEach((major) => {
-        const profile = normalizeCareerNetMajorSummary(major)
-        const entry: UnifiedMajorSummaryEntry = {
-          profile,
-          sourceMeta: {
-            careernet: {
-              majorSeq: major.majorSeq
-            }
-          },
-          display: {
-            summary: major.summary?.trim(),
-            categoryName: major.department?.trim(),
-            employmentRate: major.employmentRate?.trim(),
-            salaryAfterGraduation: major.salaryAfterGraduation?.trim()
-          }
+      // Parse cached API data
+      let apiData = null
+      if (row.api_data_json) {
+        try {
+          apiData = JSON.parse(row.api_data_json)
+        } catch (parseError) {
+          console.error(`Failed to parse api_data_json for major ${row.id}:`, parseError)
         }
-        itemsMap.set(profile.id, entry)
-      })
-
-      status.count = rawMajors.length
-    } catch (error) {
-      status.error = error instanceof Error ? error.message : 'CareerNet 학과 검색 실패'
-    }
-  } else {
-    sourcesStatus.CAREERNET.skippedReason = 'excluded'
-  }
-
-  // Goyong24 search (requires keyword)
-  if (sourcesToUse.includes('GOYONG24')) {
-    const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
-    if (!keyword.trim()) {
-      status.skippedReason = 'keyword-required'
-    } else {
-      status.attempted = true
-      try {
-        const response = await fetchGoyong24MajorList(
-          {
-            keyword,
-            srchType: 'K'
-          },
-          env as any
-        )
-
-        response.items.forEach((item: Goyong24MajorListItem) => {
-          const profile = normalizeGoyong24MajorListItem(item)
-          const entry: UnifiedMajorSummaryEntry = {
-            profile,
-            sourceMeta: {
-              goyong24: {
-                majorGb: (item.majorGb as '1' | '2') || '1',
-                departmentId: item.empCurtState1Id,
-                majorId: item.empCurtState2Id
-              }
-            },
-            display: {
-              categoryName: item.knowDtlSchDptNm?.trim()
-            }
-          }
-          itemsMap.set(profile.id, entry)
-        })
-
-        status.count = response.items.length
-      } catch (error) {
-        status.error = error instanceof Error ? error.message : '고용24 학과 검색 실패'
       }
+
+      // Extract nested API data
+      const careernetData = apiData?.careernet || {}
+      const goyongData = apiData?.goyong24 || {}
+      
+      // Determine sources dynamically based on actual data
+      const sources: DataSource[] = []
+      if (careernetData && Object.keys(careernetData).length > 0) {
+        sources.push('CAREERNET')
+      }
+      if (goyongData && Object.keys(goyongData).length > 0) {
+        sources.push('GOYONG24')
+      }
+      
+      // Fallback to CAREERNET if no sources detected
+      if (sources.length === 0) {
+        sources.push('CAREERNET')
+      }
+
+      // Create profile
+      const profile: UnifiedMajorSummary = {
+        id: String(row.id),
+        sourceIds: {
+          careernet: row.careernet_id && row.careernet_id !== 'null' ? row.careernet_id : undefined,
+          goyong24: row.goyong24_id && row.goyong24_id !== 'null' ? row.goyong24_id : undefined
+        },
+        name: row.name?.trim() || `전공 ${row.id}`,
+        categoryName: careernetData.categoryName || careernetData.department || goyongData.categoryName,
+        summary: careernetData.summary || goyongData.summary,
+        sources
+      }
+
+      const entry: UnifiedMajorSummaryEntry = {
+        profile,
+        sourceMeta: {
+          careernet: row.careernet_id ? {
+            majorSeq: row.careernet_id
+          } : undefined,
+          goyong24: row.goyong24_id ? {
+            majorGb: goyongData.majorGb || '1',
+            departmentId: goyongData.departmentId,
+            majorId: row.goyong24_id
+          } : undefined
+        },
+        display: {
+          summary: (careernetData.summary || goyongData.summary)?.trim(),
+          categoryName: (careernetData.categoryName || careernetData.department || goyongData.categoryName)?.trim(),
+          employmentRate: careernetData.employmentRate?.trim(),
+          salaryAfterGraduation: careernetData.salaryAfterGraduation?.trim()
+        }
+      }
+
+      items.push(entry)
+    } catch (entryError) {
+      console.error(`Failed to process D1 major row ${row.id}:`, entryError)
     }
-  } else {
-    sourcesStatus.GOYONG24.skippedReason = 'excluded'
-  }
+  })
 
   return {
-    items: Array.from(itemsMap.values()),
+    items,
     meta: {
-      total: itemsMap.size,
-      sources: sourcesStatus
+      total: totalCount,
+      sources: {
+        CAREERNET: { count: items.filter(i => i.profile.sources.includes('CAREERNET')).length },
+        GOYONG24: { count: items.filter(i => i.profile.sources.includes('GOYONG24')).length }
+      }
     }
   }
 }

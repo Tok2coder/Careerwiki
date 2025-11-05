@@ -2940,41 +2940,8 @@ const DOMUtils = {
 const PageInit = {
   // 홈페이지 초기화
   async initHome() {
-    // 인기 직업 로드
-    const jobsContainer = document.getElementById('popular-jobs');
-    if (jobsContainer) {
-      DOMUtils.showLoading('popular-jobs');
-      const jobResult = await CareerAPI.searchJobs('', '', 1, 6);
-      const jobs = Array.isArray(jobResult.items) ? jobResult.items.slice(0, 6) : [];
-      
-      if (jobs.length > 0) {
-        jobsContainer.innerHTML = `
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            ${jobs.map(job => DOMUtils.createJobCard(job)).join('')}
-          </div>
-        `;
-      } else {
-        jobsContainer.innerHTML = '<p class="text-wiki-muted">인기 직업 정보를 불러올 수 없습니다.</p>';
-      }
-    }
-
-    // 인기 학과 로드
-    const majorsContainer = document.getElementById('popular-majors');
-    if (majorsContainer) {
-      DOMUtils.showLoading('popular-majors');
-      const majorResult = await CareerAPI.searchMajors('', 1, 6);
-      const majors = Array.isArray(majorResult.items) ? majorResult.items.slice(0, 6) : [];
-      
-      if (majors.length > 0) {
-        majorsContainer.innerHTML = `
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            ${majors.map(major => DOMUtils.createMajorCard(major)).join('')}
-          </div>
-        `;
-      } else {
-        majorsContainer.innerHTML = '<p class="text-wiki-muted">인기 학과 정보를 불러올 수 없습니다.</p>';
-      }
-    }
+    // 인기 직업/전공 섹션 제거됨 (향후 리뉴얼 예정)
+    console.log('Home page initialized');
   },
 
   // 검색 결과 페이지

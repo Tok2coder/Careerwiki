@@ -322,7 +322,14 @@ export async function seedAllJobs(env: Env): Promise<SeedProgress> {
     
     try {
       // 통합 직업 상세 데이터 가져오기
-      const result = await getUnifiedJobDetailWithRawData({ id: job.id }, env)
+      // Goyong24 직업인 경우 goyong24JobId를 명시적으로 전달
+      const request = job.source === 'goyong24' 
+        ? { id: job.id, goyong24JobId: job.id }
+        : job.source === 'careernet'
+        ? { id: job.id, careernetId: job.id }
+        : { id: job.id }
+      
+      const result = await getUnifiedJobDetailWithRawData(request, env)
       
       // 데이터 검증 강화
       if (!result) {
@@ -444,4 +451,64 @@ export async function seedAllJobs(env: Env): Promise<SeedProgress> {
   }
   
   return progress
+}
+
+// Main execution - ES Module detection
+const isMainModule = import.meta.url === new URL(process.argv[1], 'file://').href
+
+if (isMainModule) {
+  ;(async () => {
+    try {
+      // .dev.vars 파일에서 환경 변수 로드
+      const { readFileSync } = await import('fs')
+      const { resolve } = await import('path')
+      
+      try {
+        const devVarsPath = resolve(process.cwd(), '.dev.vars')
+        const devVarsContent = readFileSync(devVarsPath, 'utf-8')
+        devVarsContent.split('\n').forEach(line => {
+          const trimmed = line.trim()
+          if (trimmed && !trimmed.startsWith('#')) {
+            const [key, ...valueParts] = trimmed.split('=')
+            if (key && valueParts.length > 0) {
+              const value = valueParts.join('=').trim()
+              process.env[key.trim()] = value
+            }
+          }
+        })
+        console.log('✅ Loaded environment variables from .dev.vars')
+      } catch (e) {
+        console.warn('⚠️  Could not load .dev.vars file, using system environment variables')
+      }
+      
+      // Miniflare를 사용하여 로컬 D1 인스턴스 생성
+      const { Miniflare } = await import('miniflare')
+      
+      const mf = new Miniflare({
+        modules: true,
+        script: '',
+        d1Databases: {
+          DB: 'edc21e23-c2ac-4693-bb79-389b6914e173'  // database_id from wrangler.jsonc
+        },
+        d1Persist: './.wrangler/state/v3/d1'
+      })
+
+      const db = await mf.getD1Database('DB')
+      
+      const env: Env = {
+        DB: db as any,
+        CAREER_NET_API_KEY: process.env.CAREER_NET_API_KEY,
+        GOYONG24_MAJOR_API_KEY: process.env.GOYONG24_MAJOR_API_KEY,
+        GOYONG24_JOB_API_KEY: process.env.GOYONG24_JOB_API_KEY
+      }
+
+      console.log('🚀 Starting seeding process...\n')
+      await seedAllJobs(env)
+      console.log('\n✅ Seeding completed successfully')
+      process.exit(0)
+    } catch (error) {
+      console.error('\n❌ Seeding failed:', error)
+      process.exit(1)
+    }
+  })()
 }
