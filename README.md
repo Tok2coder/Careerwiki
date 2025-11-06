@@ -29,37 +29,43 @@ CareerWiki는 **Wikipedia의 협업 정신**과 **AI의 지능**을 결합하여
 
 ## 📊 현재 상태 (2025-01-06)
 
-### ✅ Phase 0 완료 (2025-01-06) 🎉
+### ✅ Phase 0 재완료 (2025-01-06) 🎉
 
-- [x] **아키텍처 설계 문서** 작성 완료 ([ARCHITECTURE.md](./docs/ARCHITECTURE.md))
-- [x] **API 통합 문서** 완전 재작성 완료 ([API_INTEGRATION.md](./docs/API_INTEGRATION.md))
-  - ✅ **CareerNet 공식 문서 기반** 전체 필드 문서화
-    - 직업백과 API: 150+ 필드 (19개 섹션)
-    - 학과정보 API: 80+ 필드 (14개 섹션)
-  - ✅ 고용24 API 전체 필드 문서화 (학과정보 35개 + 직업정보 137개)
-  - ✅ **정확한 현재 수집률 계산**:
-    - 고용24: **100%** (176/176 필드) ✅
-    - CareerNet 직업백과: **~95%** (~73/77 필드) ✅
-    - CareerNet 학과정보: **~13%** (~9/71 필드) ⚠️
-    - **전체: ~79%** (254/320 필드)
-  - 📋 **Phase 1 개선 계획**: 62개 필드 추가 수집 → 목표 98%
-- [x] **Wiki 아키텍처 마이그레이션** 스크립트 작성 ([0003_wiki_architecture.sql](./migrations/0003_wiki_architecture.sql))
-  - wiki_pages, user_contributions, ai_generated_content, page_revisions, page_update_queue, users 테이블
-  - Phase 2에서 production 환경 테스트 예정
-- [x] **도메인 연동 계획** 수립 (Phase 2 완료 후 careerwiki.org 연동)
+**공식 문서 기반 전체 API 분석 완료**
 
-### 🚧 진행 중 (Phase 1 - 시작 예정)
+- [x] **CareerNet 공식 문서 분석** 완료
+  - ✅ 직업백과 API (job.json): 19개 섹션, ~150 필드 → **100% 수집 완료** ✅
+  - ✅ 학과정보 API (getOpenApi): 14개 섹션, ~80 필드 → **~25% 수집 중** ⚠️
+- [x] **고용24 API 분석** 완료
+  - ✅ 학과정보: 35개 필드 → **100% 수집 완료** ✅
+  - ✅ 직업정보: 137개 필드 → **100% 수집 완료** ✅
+- [x] **API_INTEGRATION.md 완전 재작성** (28KB)
+  - 공식 문서 기반 전체 필드 문서화
+  - 현재 수집 현황 정확히 계산
+  - Phase 1 개선 계획 수립
+- [x] **정확한 현재 수집률**:
+  - CareerNet 직업백과: **100%** (79/79 필드) ✅
+  - CareerNet 학과정보: **~25%** (15/59 필드) ⚠️
+  - 고용24 학과정보: **100%** (35/35 필드) ✅
+  - 고용24 직업정보: **100%** (141/141 필드) ✅
+  - **전체: ~86%** (270/314 필드)
+- [x] **Wiki 아키텍처 마이그레이션** 스크립트 작성
+- [x] **도메인 연동 계획** 수립 (Phase 2 후 careerwiki.org)
 
-**목표: CareerNet 학과정보 API 완전 수집 (13% → 95%)**
+### 🚧 다음 단계 (Phase 1)
 
-- [ ] **CareerNet 학과정보 API 코드 개선** (62개 필드 추가 수집)
-  - relate_subject (관련 고교 교과목), career_act (진로 탐색 활동)
-  - main_subject (주요 교과목), enter_field (진출분야)
-  - chartData, GenCD, SchClass (통계 데이터)
-  - lstMiddleAptd, lstHighAptd, lstVals (적성/가치)
-- [ ] **데이터 병합 로직 최적화** (Fuzzy matching + Manual mapping)
-- [ ] **재시딩** (1,435 전공 완전 재수집)
-- [ ] **데이터 품질 검증** (빈 필드율, 완전성)
+**목표: CareerNet 학과정보 완전 수집 (25% → 90%)**
+
+- [ ] **누락된 44개 필드 추가 수집**:
+  - 우선순위 HIGH: relate_subject, career_act, main_subject, enter_field, property (11개)
+  - 우선순위 MEDIUM: chartData 통계 데이터 (14개)
+  - 우선순위 LOW: GenCD, SchClass, 적성/가치 통계 (19개)
+- [ ] **careernetAPI.ts 코드 개선**
+- [ ] **1,435개 전공 재시딩**
+- [ ] **데이터 품질 검증**
+
+**예상 소요 시간**: 2-3일  
+**Phase 1 완료 후 예상 수집률**: **~97%** (304/314 필드)
 
 ### 📅 예정 (Phase 2-6)
 - **Phase 2** (2-3일): 정적 위키 프로토타입 (10개 페이지) + **careerwiki.org 도메인 연동** 🌐
