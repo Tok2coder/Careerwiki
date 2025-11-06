@@ -1,27 +1,684 @@
 # API Integration Documentation
 
-> **작성일**: 2025-01-06  
-> **목적**: CareerNet과 고용24 API의 모든 available 필드를 문서화하고, 현재 수집 현황 및 갭 분석
+> **작성일**: 2025-01-06 (재작성)  
+> **목적**: CareerNet과 고용24 API의 **공식 문서 기반** 전체 필드 문서화 및 현재 수집 현황 분석
 
 ---
 
 ## 📋 목차
 
-1. [고용24 API 필드 문서](#1-고용24-api-필드-문서)
-   - [학과정보 API](#11-학과정보-api)
-   - [직업정보 API](#12-직업정보-api)
-2. [CareerNet API 필드 문서](#2-careernet-api-필드-문서)
+1. [CareerNet API 필드 문서](#1-careernet-api-필드-문서)
+   - [직업백과 API](#11-직업백과-api-jobjson)
+   - [학과정보 API](#12-학과정보-api-getope napi)
+2. [고용24 API 필드 문서](#2-고용24-api-필드-문서)
+   - [학과정보 API](#21-학과정보-api)
+   - [직업정보 API](#22-직업정보-api)
 3. [현재 수집 현황](#3-현재-수집-현황)
 4. [필드 매핑 및 병합 전략](#4-필드-매핑-및-병합-전략)
 5. [갭 분석 및 개선 계획](#5-갭-분석-및-개선-계획)
 
 ---
 
-## 1. 고용24 API 필드 문서
+## 1. CareerNet API 필드 문서
 
-### 1.1 학과정보 API
+> **공식 문서**: https://www.career.go.kr/cnet/front/openapi/
 
-#### 1.1.1 학과정보 목록 API
+### 1.1 직업백과 API (job.json)
+
+**공식 문서**: https://www.career.go.kr/cnet/front/openapi/jobCenter.do
+
+#### 1.1.1 Endpoint 정보
+
+```
+URL: https://www.career.go.kr/cnet/front/openapi/job.json
+Method: GET
+Format: JSON
+Authentication: apiKey (필수)
+```
+
+#### 1.1.2 Request Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `apiKey` | String | ✅ 필수 | OpenAPI 인증키 |
+| `seq` | Number | ✅ 필수 | 직업코드 |
+
+**요청 예시:**
+```
+GET https://www.career.go.kr/cnet/front/openapi/job.json?apiKey=인증키&seq=8
+```
+
+#### 1.1.3 Response Fields (총 ~150+ 필드, 15개 섹션)
+
+##### **섹션 1: baseInfo (기본 정보)** - 20개 필드
+
+```json
+{
+  "baseInfo": {
+    "seq": "Number - 고유번호",
+    "job_cd": "Number - 직업코드",
+    "job_nm": "String - 직업명",
+    "aptit_name": "String - 직업분류",
+    "emp_job_cd": "Number/String - 고용코드",
+    "emp_job_nm": "String - 고용코드명",
+    "std_job_cd": "String - 표준직업코드",
+    "std_job_nm": "String - 표준직업코드명",
+    "rel_job_nm": "String - 관련직업명",
+    "wage": "Number - 평균연봉 (만원)",
+    "wage_source": "String - 평균연봉 출처",
+    "satisfication": "Number - 직업만족도 (%)",
+    "satisfi_source": "String - 직업만족도 출처",
+    "social": "String - 사회공헌",
+    "wlb": "String - 일·가정균형",
+    "INTRST_JOB_YN": "String - 관심직업 설정여부",
+    "views": "Number - 조회수",
+    "likes": "Number - 추천수",
+    "tag": "String - 태그",
+    "reg_dt": "String - 작성일",
+    "edit_dt": "String - 수정일"
+  }
+}
+```
+
+##### **섹션 2: workList (하는 일)** - 배열
+
+```json
+{
+  "workList": [
+    {
+      "work": "String - 하는일 항목"
+    }
+  ]
+}
+```
+
+##### **섹션 3: abilityList (핵심능력)** - 배열
+
+```json
+{
+  "abilityList": [
+    {
+      "ability_name": "String - 핵심능력명",
+      "SORT_ORDR": "String/Number - 정렬순서"
+    }
+  ]
+}
+```
+
+##### **섹션 4: departList (관련학과)** - 배열
+
+```json
+{
+  "departList": [
+    {
+      "depart_id": "Number - 관련학과 ID",
+      "depart_name": "String - 관련학과명"
+    }
+  ]
+}
+```
+
+##### **섹션 5: certiList (관련 자격증)** - 배열
+
+```json
+{
+  "certiList": [
+    {
+      "certi": "String - 관련 자격증명",
+      "LINK": "String - 관련 자격증 링크"
+    }
+  ]
+}
+```
+
+##### **섹션 6: aptitudeList (적성)** - 배열
+
+```json
+{
+  "aptitudeList": [
+    {
+      "aptitude": "String - 적성 설명"
+    }
+  ]
+}
+```
+
+##### **섹션 7: interestList (흥미)** - 배열
+
+```json
+{
+  "interestList": [
+    {
+      "interest": "String - 흥미 설명"
+    }
+  ]
+}
+```
+
+##### **섹션 8: tagList (태그)** - 문자열 배열
+
+```json
+{
+  "tagList": ["String - 태그1", "String - 태그2"]
+}
+```
+
+##### **섹션 9: researchList (진로탐색활동)** - 배열
+
+```json
+{
+  "researchList": [
+    {
+      "research": "String - 진로탐색활동 권장 활동"
+    }
+  ]
+}
+```
+
+##### **섹션 10: relVideoList (관련 동영상)** - 배열 (7개 필드)
+
+```json
+{
+  "relVideoList": [
+    {
+      "video_id": "String - 동영상 ID",
+      "video_name": "String - 동영상 제목",
+      "job_cd": "String/Number - 직업코드",
+      "CID": "String - 콘텐츠 ID",
+      "THUMBNAIL_FILE_SER": "String - 썸네일 ID",
+      "THUMNAIL_PATH": "String - 썸네일 URL",
+      "OUTPATH3": "String - 동영상 URL"
+    }
+  ]
+}
+```
+
+##### **섹션 11: relSolList (관련 진로상담)** - 배열 (6개 필드)
+
+```json
+{
+  "relSolList": [
+    {
+      "cnslt_seq": "Number - 관련진로상담 ID",
+      "cnslt": "String - 진로상담 내용(요약) 또는 ID",
+      "SJ": "String - 제목",
+      "CN": "String - 내용(상세)",
+      "TRGET_SE": "String - 타겟층",
+      "REGIST_DT": "String - 등록일"
+    }
+  ]
+}
+```
+
+##### **섹션 12: relJinsolList (관련 자료)** - 배열 (4개 필드)
+
+```json
+{
+  "relJinsolList": [
+    {
+      "SEQ": "Number - 고유번호",
+      "ALT": "String - 관련자료ID",
+      "SUBJECT": "String - 관련자료명",
+      "THUMBNAIL": "String - 썸네일"
+    }
+  ]
+}
+```
+
+##### **섹션 13: jobReadyList (직업준비)** - 객체 (4개 하위 배열)
+
+```json
+{
+  "jobReadyList": {
+    "recruit": [
+      { "recruit": "String - 입직 및 취업방법" }
+    ],
+    "certificate": [
+      { "certificate": "String - 관련자격증" }
+    ],
+    "training": [
+      { "training": "String - 직업훈련" }
+    ],
+    "curriculum": [
+      { "curriculum": "String - 정규교육과정" }
+    ]
+  }
+}
+```
+
+##### **섹션 14: jobRelOrgList (관련기관)** - 배열 (2개 필드)
+
+```json
+{
+  "jobRelOrgList": [
+    {
+      "rel_org": "String - 관련기관명",
+      "rel_org_url": "String - 관련기관 URL"
+    }
+  ]
+}
+```
+
+##### **섹션 15: forecastList (직업전망)** - 배열
+
+```json
+{
+  "forecastList": [
+    {
+      "forecast": "String - 직업전망 텍스트"
+    }
+  ]
+}
+```
+
+##### **섹션 16: eduChart (학력분포)** - 배열 (3개 필드)
+
+```json
+{
+  "eduChart": [
+    {
+      "chart_name": "String - 학력분포 라벨",
+      "chart_data": "String - 학력분포 데이터 (콤마 구분)",
+      "source": "String - 출처"
+    }
+  ]
+}
+```
+
+##### **섹션 17: majorChart (전공계열)** - 배열 (3개 필드)
+
+```json
+{
+  "majorChart": [
+    {
+      "major": "String - 전공계열명 (콤마 구분)",
+      "major_data": "String - 전공계열 데이터 (콤마 구분)",
+      "source": "String - 출처"
+    }
+  ]
+}
+```
+
+##### **섹션 18: indicatorChart (직업지표)** - 배열 (3개 필드)
+
+```json
+{
+  "indicatorChart": [
+    {
+      "indicator": "String - 직업지표명 (콤마 구분)",
+      "indicator_data": "String - 지표 데이터 (콤마 구분)",
+      "source": "String - 출처"
+    }
+  ]
+}
+```
+
+##### **섹션 19: performList (업무환경/수행능력/지식)** - 객체 (3개 하위 배열)
+
+```json
+{
+  "performList": {
+    "environment": [
+      {
+        "environment": "String - 업무환경 항목명",
+        "inform": "String - 설명",
+        "importance": "Number - 중요도",
+        "source": "String - 출처"
+      }
+    ],
+    "perform": [
+      {
+        "perform": "String - 능력명",
+        "inform": "String - 설명",
+        "importance": "Number - 중요도",
+        "source": "String - 출처"
+      }
+    ],
+    "knowledge": [
+      {
+        "knowledge": "String - 지식명",
+        "inform": "String - 설명",
+        "importance": "Number - 중요도",
+        "source": "String - 출처"
+      }
+    ]
+  }
+}
+```
+
+#### 1.1.4 현재 수집 상태
+
+| 섹션 | 필드 수 | 수집 상태 | 수집률 |
+|------|--------|----------|-------|
+| baseInfo | 21 | ✅ 완전 수집 | 100% |
+| workList | 1 | ✅ 완전 수집 | 100% |
+| abilityList | 2 | ✅ 완전 수집 | 100% |
+| departList | 2 | ✅ 완전 수집 | 100% |
+| certiList | 2 | ✅ 완전 수집 | 100% |
+| aptitudeList | 1 | ✅ 완전 수집 | 100% |
+| interestList | 1 | ✅ 완전 수집 | 100% |
+| tagList | 1 | ✅ 완전 수집 | 100% |
+| researchList | 1 | ✅ 완전 수집 | 100% |
+| relVideoList | 7 | ✅ 완전 수집 | 100% |
+| relSolList | 6 | ✅ 완전 수집 | 100% |
+| relJinsolList | 4 | ✅ 완전 수집 | 100% |
+| jobReadyList | 4 | ✅ 완전 수집 | 100% |
+| jobRelOrgList | 2 | ✅ 완전 수집 | 100% |
+| forecastList | 1 | ✅ 완전 수집 | 100% |
+| eduChart | 3 | ✅ 완전 수집 | 100% |
+| majorChart | 3 | ✅ 완전 수집 | 100% |
+| indicatorChart | 3 | ✅ 완전 수집 | 100% |
+| performList | 12 (3×4) | ✅ 완전 수집 | 100% |
+| **총계** | **~77** | **✅ 완전 수집** | **~95%** |
+
+**코드 위치**: 
+- Type definition: `src/api/careernetAPI.ts:JobEncyclopediaResponse` (lines 172-258)
+- Normalization: `src/api/careernetAPI.ts:normalizeCareerNetJobDetail()` (lines 593-764)
+
+---
+
+### 1.2 학과정보 API (getOpenApi)
+
+**공식 문서**: https://www.career.go.kr/cnet/front/openapi/openApiMajorCenter.do
+
+#### 1.2.1 Endpoint 정보
+
+```
+Base URL: https://www.career.go.kr/cnet/openapi/getOpenApi
+Method: GET
+Format: XML 또는 JSON (contentType 파라미터로 지정)
+Authentication: apiKey (필수)
+Encoding: EUC-KR (XML), UTF-8 (JSON)
+```
+
+#### 1.2.2 Request Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `apiKey` | String | ✅ 필수 | OpenAPI 인증키 |
+| `svcType` | String | ✅ 필수 | 고정값: `api` |
+| `svcCode` | String | ✅ 필수 | `MAJOR` (목록) / `MAJOR_VIEW` (상세) |
+| `contentType` | String | ⚠️ 선택 | `xml` 또는 `json` |
+| `gubun` | String | ✅ 필수 | `univ_list` (대학교) / 기타 |
+| `majorSeq` | String | ⚠️ 조건부 | 학과코드 (상세 조회 시 필수) |
+| `searchTitle` | String | ⚠️ 선택 | 검색어 (목록 조회 시) |
+| `thisPage` | Number | ⚠️ 선택 | 현재 페이지 |
+| `perPage` | Number | ⚠️ 선택 | 페이지당 결과 수 |
+| `subject` | String | ⚠️ 선택 | 학과 계열 필터 |
+| `univSe` | String | ⚠️ 선택 | 대학 분류 (gubun=대학교인 경우) |
+
+**목록 요청 예시:**
+```
+GET https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=인증키&svcType=api&svcCode=MAJOR&contentType=xml&gubun=univ_list
+```
+
+**상세 요청 예시:**
+```
+GET https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=인증키&svcType=api&svcCode=MAJOR_VIEW&contentType=json&gubun=univ_list&majorSeq=665
+```
+
+#### 1.2.3 Response Fields - 목록 조회 (MAJOR)
+
+**Response 구조:**
+```xml
+<dataSearch>
+  <content>
+    <!-- 각 학과 항목 -->
+  </content>
+</dataSearch>
+```
+
+**필드 (총 5개):**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `lClass` | String | 계열 (예: 공학계열, 사회계열) |
+| `mClass` | String | 학과명 |
+| `totalCount` | Number | 전체 검색 결과 수 |
+| `majorSeq` | String | 학과코드 (상세 조회용) |
+| `facilName` | String | 세부학과명 (콤마 구분) |
+
+**현재 수집 상태**: ✅ **완전 수집** (5/5 필드)
+
+**코드 위치**: `src/api/careernetAPI.ts:searchMajors()` (lines 280-332)
+
+---
+
+#### 1.2.4 Response Fields - 상세 조회 (MAJOR_VIEW, 대학교)
+
+**Response 구조:**
+```xml
+<dataSearch>
+  <content>
+    <!-- 학과 상세 정보 -->
+  </content>
+</dataSearch>
+```
+
+**필드 (총 ~80+ 필드, 15개 섹션):**
+
+##### **섹션 1: 기본 정보** (7개 필드)
+
+| Field | Type | Description | 현재 수집 |
+|-------|------|-------------|----------|
+| `major` | String | 학과명 | ✅ |
+| `salary` | String | 졸업 후 직장임금 (예: "130만원 이상") | ✅ |
+| `employment` | String | 취업률 (예: "40% 이상") | ✅ |
+| `department` | String | 세부관련학과 (콤마 구분) | ✅ |
+| `summary` | String | 학과개요 | ✅ |
+| `interest` | String | 흥미와 적성 | ✅ |
+| `property` | String | 학과특성 | ❌ **누락** |
+
+##### **섹션 2: relate_subject (관련 고교 교과목)** - 배열
+
+```xml
+<relate_subject>
+  <content>
+    <subject_name>String - 선택 과목 종류명</subject_name>
+    <subject_description>String - 과목이름</subject_description>
+  </content>
+</relate_subject>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/2 필드)
+
+##### **섹션 3: career_act (진로 탐색 활동)** - 배열
+
+```xml
+<career_act>
+  <content>
+    <act_name>String - 활동 종류명</act_name>
+    <act_description>String - 활동 설명</act_description>
+  </content>
+</career_act>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/2 필드)
+
+##### **섹션 4: job (관련직업)** - 문자열
+
+| Field | Type | Description | 현재 수집 |
+|-------|------|-------------|----------|
+| `job` | String | 관련직업 (콤마 구분) | ✅ |
+
+##### **섹션 5: qualifications (관련자격)** - 문자열
+
+| Field | Type | Description | 현재 수집 |
+|-------|------|-------------|----------|
+| `qualifications` | String | 관련자격 (콤마 구분) | ✅ |
+
+##### **섹션 6: enter_field (졸업 후 진출분야)** - 배열
+
+```xml
+<enter_field>
+  <content>
+    <gradeuate>String - 진출분야명</gradeuate>
+    <description>String - 진출분야설명</description>
+  </content>
+</enter_field>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/2 필드)
+
+##### **섹션 7: main_subject (대학 주요 교과목)** - 배열
+
+```xml
+<main_subject>
+  <content>
+    <SBJECT_NM>String - 교과목명</SBJECT_NM>
+    <SBJECT_SUMRY>String - 교과목설명</SBJECT_SUMRY>
+  </content>
+</main_subject>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/2 필드)
+
+##### **섹션 8: university (개설대학)** - 배열 (6개 필드)
+
+```xml
+<university>
+  <content>
+    <area>String - 지역</area>
+    <schoolName>String - 대학명</schoolName>
+    <schoolURL>String - 학교URL</schoolURL>
+    <campus_nm>String - 캠퍼스명</campus_nm>
+    <majorName>String - 학과명(대학표기)</majorName>
+    <totalCount>String - 전체수</totalCount>
+  </content>
+</university>
+```
+
+**현재 수집 상태**: ⚠️ **부분 수집** (schoolName만, 1/6 필드)
+
+**코드 위치**: `src/api/careernetAPI.ts:getMajorDetail()` (lines 362-369)
+
+##### **섹션 9: chartData (학과전망 통계)** - 복합 객체
+
+```xml
+<chartData>
+  <applicant>
+    <item>
+      <data>Number - 값</data>
+      <name>String - 항목명</name>
+    </item>
+  </applicant>
+  <gender><!-- 동일 구조 --></gender>
+  <employment_rate><!-- 동일 구조 --></employment_rate>
+  <field><!-- 동일 구조 --></field>
+  <avg_salary><!-- 동일 구조 --></avg_salary>
+  <satisfaction><!-- 동일 구조 --></satisfaction>
+  <after_graduation><!-- 동일 구조 --></after_graduation>
+</chartData>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/14+ 필드)
+
+##### **섹션 10: GenCD (성별비율)** - 배열
+
+```xml
+<GenCD>
+  <popular>
+    <PCNT1>String - 비율-정수값</PCNT1>
+    <PCNT2>String - 비율-소수값</PCNT2>
+    <PCNT>String - 비율-반올림값</PCNT>
+    <GEN_NM>String - 성별</GEN_NM>
+  </popular>
+  <bookmark><!-- 동일 구조 --></bookmark>
+</GenCD>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/8 필드)
+
+##### **섹션 11: SchClass (학교급별비율)** - 배열
+
+```xml
+<SchClass>
+  <popular>
+    <PCNT1>String</PCNT1>
+    <PCNT2>String</PCNT2>
+    <PCNT>String</PCNT>
+    <SCH_CLASS_NM>String - 학교급명</SCH_CLASS_NM>
+  </popular>
+  <bookmark><!-- 동일 구조 --></bookmark>
+</SchClass>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/8 필드)
+
+##### **섹션 12: lstMiddleAptd (중학생적성유형)** - 배열
+
+```xml
+<lstMiddleAptd>
+  <popular>
+    <RANK>String</RANK>
+    <CD_ORDR>String</CD_ORDR>
+    <CD_NM>String - 적성유형명</CD_NM>
+  </popular>
+  <bookmark><!-- 동일 구조 --></bookmark>
+</lstMiddleAptd>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/6 필드)
+
+##### **섹션 13: lstHighAptd (고등학생적성유형)** - 배열
+
+```xml
+<lstHighAptd>
+  <popular>
+    <RANK>String</RANK>
+    <CD_ORDR>String</CD_ORDR>
+    <CD_NM>String - 적성유형명</CD_NM>
+  </popular>
+  <bookmark><!-- 동일 구조 --></bookmark>
+</lstHighAptd>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/6 필드)
+
+##### **섹션 14: lstVals (선호직업가치)** - 배열
+
+```xml
+<lstVals>
+  <popular>
+    <RANK>String</RANK>
+    <CD_ORDR>String</CD_ORDR>
+    <CD_NM>String - 직업가치명</CD_NM>
+  </popular>
+  <bookmark><!-- 동일 구조 --></bookmark>
+</lstVals>
+```
+
+**현재 수집 상태**: ❌ **미수집** (0/6 필드)
+
+#### 1.2.5 학과정보 API 전체 요약
+
+| 섹션 | 필드 수 | 현재 수집 | 수집률 |
+|------|--------|----------|-------|
+| 기본 정보 | 7 | 6 | ⚠️ 86% |
+| relate_subject (관련 고교 교과목) | 2 | 0 | ❌ 0% |
+| career_act (진로 탐색 활동) | 2 | 0 | ❌ 0% |
+| job (관련직업) | 1 | 1 | ✅ 100% |
+| qualifications (관련자격) | 1 | 1 | ✅ 100% |
+| enter_field (진출분야) | 2 | 0 | ❌ 0% |
+| main_subject (주요 교과목) | 2 | 0 | ❌ 0% |
+| university (개설대학) | 6 | 1 | ⚠️ 17% |
+| chartData (학과전망) | ~14 | 0 | ❌ 0% |
+| GenCD (성별비율) | 8 | 0 | ❌ 0% |
+| SchClass (학교급별) | 8 | 0 | ❌ 0% |
+| lstMiddleAptd (중학생적성) | 6 | 0 | ❌ 0% |
+| lstHighAptd (고등학생적성) | 6 | 0 | ❌ 0% |
+| lstVals (선호직업가치) | 6 | 0 | ❌ 0% |
+| **총계** | **~71** | **~9** | **⚠️ ~13%** |
+
+**코드 위치**: `src/api/careernetAPI.ts:getMajorDetail()` (lines 335-395)
+
+---
+
+## 2. 고용24 API 필드 문서
+
+### 2.1 학과정보 API
+
+#### 2.1.1 학과정보 목록 API
 
 **Endpoint**: `callOpenApiSvcInfo213L01.do`
 
@@ -43,7 +700,7 @@
 
 ---
 
-#### 1.1.2 일반학과 상세 API (majorGb=1)
+#### 2.1.2 일반학과 상세 API (majorGb=1)
 
 **Endpoint**: `callOpenApiSvcInfo213D01.do`
 
@@ -103,7 +760,7 @@
 
 ---
 
-#### 1.1.3 이색학과 상세 API (majorGb=2)
+#### 2.1.3 이색학과 상세 API (majorGb=2)
 
 **Endpoint**: `callOpenApiSvcInfo213D02.do`
 
@@ -130,9 +787,9 @@
 
 ---
 
-### 1.2 직업정보 API
+### 2.2 직업정보 API
 
-#### 1.2.1 직업정보 목록 API
+#### 2.2.1 직업정보 목록 API
 
 **Endpoint**: `callOpenApiSvcInfo212L01.do`
 
@@ -153,67 +810,15 @@
 
 ---
 
-#### 1.2.2 직업정보 상세 API (7개 섹션)
+#### 2.2.2 직업정보 상세 API (7개 섹션)
 
 고용24 직업정보 API는 **7개의 개별 endpoint**로 나뉘어 있습니다:
-
----
 
 ##### **섹션 1: 요약 (dtlGb=1)**
 
 **Endpoint**: `callOpenApiSvcInfo212D01.do`
 
-**Response Fields**:
-```xml
-<jobSum>
-  <!-- 기본 정보 -->
-  <jobCd>String</jobCd>                        <!-- 직업코드 -->
-  <jobLrclNm>String</jobLrclNm>                <!-- 직업 대분류명 -->
-  <jobMdclNm>String</jobMdclNm>                <!-- 직업 중분류명 -->
-  <jobSmclNm>String</jobSmclNm>                <!-- 직업 소분류명 -->
-  
-  <!-- 직무 정보 -->
-  <jobSum>String</jobSum>                      <!-- 하는일 -->
-  <way>String</way>                            <!-- 되는길 -->
-  
-  <!-- 관련 전공 목록 -->
-  <relMajorList>
-    <majorCd>Number</majorCd>                  <!-- 관련전공코드 -->
-    <majorNm>String</majorNm>                  <!-- 관련전공명 -->
-  </relMajorList>
-  
-  <!-- 관련 자격증 목록 -->
-  <relCertList>
-    <certNm>String</certNm>                    <!-- 관련자격증명 -->
-  </relCertList>
-  
-  <!-- 임금/만족도/전망 -->
-  <sal>String</sal>                            <!-- 임금 -->
-  <jobSatis>String</jobSatis>                  <!-- 직업만족도(%) -->
-  <jobProspect>String</jobProspect>            <!-- 일자리전망 -->
-  <jobStatus>String</jobStatus>                <!-- 일자리현황 -->
-  
-  <!-- 능력/지식/환경 -->
-  <jobAbil>String</jobAbil>                    <!-- 업무수행능력 -->
-  <knowldg>String</knowldg>                    <!-- 지식 -->
-  <jobEnv>String</jobEnv>                      <!-- 업무환경 -->
-  
-  <!-- 성격/흥미/가치관 -->
-  <jobChr>String</jobChr>                      <!-- 성격 -->
-  <jobIntrst>String</jobIntrst>                <!-- 흥미 -->
-  <jobVals>String</jobVals>                    <!-- 직업가치관 -->
-  
-  <!-- 업무활동 -->
-  <jobActvImprtncs>String</jobActvImprtncs>    <!-- 업무활동 중요도 -->
-  <jobActvLvls>String</jobActvLvls>            <!-- 업무활동 수준 -->
-  
-  <!-- 관련 직업 목록 -->
-  <relJobList>
-    <jobCd>Number</jobCd>                      <!-- 관련직업코드 -->
-    <jobNm>String</jobNm>                      <!-- 관련직업명 -->
-  </relJobList>
-</jobSum>
-```
+**Response Fields**: (22개 필드)
 
 **현재 수집 상태**: ✅ **완전 수집** (22/22 필드)
 
@@ -225,22 +830,7 @@
 
 **Endpoint**: `callOpenApiSvcInfo212D02.do`
 
-**Response Fields**:
-```xml
-<jobsDo>
-  <jobCd>String</jobCd>                        <!-- 직업코드 -->
-  <jobLrclNm>String</jobLrclNm>                <!-- 직업 대분류명 -->
-  <jobMdclNm>String</jobMdclNm>                <!-- 직업 중분류명 -->
-  <jobSmclNm>String</jobSmclNm>                <!-- 직업 소분류명 -->
-  <jobSum>String</jobSum>                      <!-- 직무개요 -->
-  <execJob>String</execJob>                    <!-- 수행직무 -->
-  
-  <relJobList>
-    <jobCd>String</jobCd>                      <!-- 직업코드 -->
-    <jobNm>String</jobNm>                      <!-- 직업명 -->
-  </relJobList>
-</jobsDo>
-```
+**Response Fields**: (7개 필드)
 
 **현재 수집 상태**: ✅ **완전 수집** (7/7 필드)
 
@@ -252,62 +842,7 @@
 
 **Endpoint**: `callOpenApiSvcInfo212D03.do`
 
-**Response Fields**:
-```xml
-<way>
-  <jobCd>String</jobCd>
-  <jobLrclNm>String</jobLrclNm>
-  <jobMdclNm>String</jobMdclNm>
-  <jobSmclNm>String</jobSmclNm>
-  
-  <!-- 필수 기술 및 지식 -->
-  <technKnow>String</technKnow>                <!-- 필수 기술 및 지식 -->
-  
-  <!-- 학력 분포 -->
-  <edubg>
-    <edubgMgraduUndr>Number</edubgMgraduUndr>  <!-- 학력분포(%): 중졸이하 -->
-    <edubgHgradu>Number</edubgHgradu>          <!-- 학력분포(%): 고졸 -->
-    <edubgCgraduUndr>Number</edubgCgraduUndr>  <!-- 학력분포(%): 전문대졸 -->
-    <edubgUgradu>Number</edubgUgradu>          <!-- 학력분포(%): 대졸 -->
-    <edubgGgradu>Number</edubgGgradu>          <!-- 학력분포(%): 대학원졸 -->
-    <edubgDgradu>Number</edubgDgradu>          <!-- 학력분포(%): 박사졸 -->
-  </edubg>
-  
-  <!-- 전공학과 분포 -->
-  <schDpt>
-    <cultLangDpt>Number</cultLangDpt>          <!-- 전공학과분포(%): 인문계열 -->
-    <socDpt>Number</socDpt>                    <!-- 전공학과분포(%): 사회계열 -->
-    <eduDpt>Number</eduDpt>                    <!-- 전공학과분포(%): 교육계열 -->
-    <engnrDpt>Number</engnrDpt>                <!-- 전공학과분포(%): 공학계열 -->
-    <natrlDpt>Number</natrlDpt>                <!-- 전공학과분포(%): 자연계열 -->
-    <mediDpt>Number</mediDpt>                  <!-- 전공학과분포(%): 의학계열 -->
-    <artphyDpt>Number</artphyDpt>              <!-- 전공학과분포(%): 예체능계열 -->
-  </schDpt>
-  
-  <!-- 관련 전공 목록 -->
-  <relMajorList>
-    <majorCd>String</majorCd>
-    <majorNm>String</majorNm>
-  </relMajorList>
-  
-  <!-- 관련 정보처 -->
-  <relOrgList>
-    <orgSiteUrl>String</orgSiteUrl>            <!-- 관련정보처 URL -->
-    <orgNm>String</orgNm>                      <!-- 관련정보처명 -->
-  </relOrgList>
-  
-  <!-- 관련 자격 -->
-  <relCertList>
-    <certNm>String</certNm>
-  </relCertList>
-  
-  <!-- 한국고용직업분류 -->
-  <kecoList>
-    <kecoCd>String</kecoCd>                    <!-- KECO코드 -->
-    <kecoNm>String</kecoNm>                    <!-- KECO코드명 -->
-  </kecoList>
-</way>
-```
+**Response Fields**: (23개 필드)
 
 **현재 수집 상태**: ✅ **완전 수집** (23/23 필드)
 
@@ -319,33 +854,7 @@
 
 **Endpoint**: `callOpenApiSvcInfo212D04.do`
 
-**Response Fields**:
-```xml
-<salProspect>
-  <jobCd>String</jobCd>
-  <jobLrclNm>String</jobLrclNm>
-  <jobMdclNm>String</jobMdclNm>
-  <jobSmclNm>String</jobSmclNm>
-  
-  <!-- 임금/만족도 -->
-  <sal>String</sal>                            <!-- 임금 -->
-  <jobSatis>String</jobSatis>                  <!-- 직업만족도(%) -->
-  <jobProspect>String</jobProspect>            <!-- 일자리전망 -->
-  
-  <!-- 일자리전망 상세 -->
-  <jobSumProspect>
-    <jobProspectNm>String</jobProspectNm>      <!-- 일자리전망명 (예: 많이 늘어남) -->
-    <jobProspectRatio>String</jobProspectRatio><!-- 일자리전망률 -->
-    <jobProspectInqYr>Number</jobProspectInqYr><!-- 조사년도 -->
-  </jobSumProspect>
-  
-  <!-- 일자리현황 -->
-  <jobStatusList>
-    <jobCd>String</jobCd>
-    <jobNm>String</jobNm>
-  </jobStatusList>
-</salProspect>
-```
+**Response Fields**: (11개 필드)
 
 **현재 수집 상태**: ✅ **완전 수집** (11/11 필드)
 
@@ -357,89 +866,11 @@
 
 **Endpoint**: `callOpenApiSvcInfo212D05.do`
 
-**Response Fields**: (매우 상세한 구조 - 직업 내 비교 vs 직업 간 비교)
+**Response Fields**: (36개 필드, 6개 카테고리)
 
-```xml
-<ablKnwEnv>
-  <jobCd>String</jobCd>
-  <jobLrclNm>String</jobLrclNm>
-  <jobMdclNm>String</jobMdclNm>
-  <jobSmclNm>String</jobSmclNm>
-  
-  <!-- 업무수행능력 중요도 (직업 내 비교) -->
-  <jobAbilCmpr>
-    <jobAblStatusCmpr>Number</jobAblStatusCmpr>    <!-- 중요도(5점 만점) -->
-    <jobAblNmCmpr>String</jobAblNmCmpr>            <!-- 업무수행능력명 -->
-    <jobAblContCmpr>String</jobAblContCmpr>        <!-- 설명 -->
-  </jobAbilCmpr>
-  
-  <!-- 업무수행능력 중요도 (직업 간 비교) -->
-  <jobAbil>
-    <jobAblStatus>Number</jobAblStatus>            <!-- 중요도(0~100) -->
-    <jobAblNm>String</jobAblNm>
-    <jobAblCont>String</jobAblCont>
-  </jobAbil>
-  
-  <!-- 업무수행능력 수준 (직업 내 비교) -->
-  <jobAbilLvlCmpr>
-    <jobAblLvlStatusCmpr>Number</jobAblLvlStatusCmpr> <!-- 수준(7점 만점) -->
-    <jobAblLvlNmCmpr>String</jobAblLvlNmCmpr>
-    <jobAblLvlContCmpr>String</jobAblLvlContCmpr>
-  </jobAbilLvlCmpr>
-  
-  <!-- 업무수행능력 수준 (직업 간 비교) -->
-  <jobAbilLvl>
-    <jobAblLvlStatus>Number</jobAblLvlStatus>      <!-- 수준(0~100) -->
-    <jobAblLvlNm>String</jobAblLvlNm>
-    <jobAblLvlCont>String</jobAblLvlCont>
-  </jobAbilLvl>
-  
-  <!-- 지식 중요도 (직업 내/간 비교) -->
-  <KnwldgCmpr>
-    <knwldgStatusCmpr>Number</knwldgStatusCmpr>
-    <knwldgNmCmpr>String</knwldgNmCmpr>
-    <knwldgContCmpr>String</knwldgContCmpr>
-  </KnwldgCmpr>
-  
-  <Knwldg>
-    <knwldgStatus>Number</knwldgStatus>
-    <knwldgNm>String</knwldgNm>
-    <knwldgCont>String</knwldgCont>
-  </Knwldg>
-  
-  <!-- 지식 수준 (직업 내/간 비교) -->
-  <KnwldgLvlCmpr>
-    <knwldgLvlStatusCmpr>Number</knwldgLvlStatusCmpr>
-    <knwldgLvlNmCmpr>String</knwldgLvlNmCmpr>
-    <knwldgLvlContCmpr>String</knwldgLvlContCmpr>
-  </KnwldgLvlCmpr>
-  
-  <KnwldgLvl>
-    <knwldgLvlStatus>Number</knwldgLvlStatus>
-    <knwldgLvlNm>String</knwldgLvlNm>
-    <knwldgLvlCont>String</knwldgLvlCont>
-  </KnwldgLvl>
-  
-  <!-- 업무환경 (직업 내/간 비교) -->
-  <jobsEnvCmpr>
-    <jobEnvStatusCmpr>Number</jobEnvStatusCmpr>
-    <jobEnvNmCmpr>String</jobEnvNmCmpr>
-    <jobEnvContCmpr>String</jobEnvContCmpr>
-  </jobsEnvCmpr>
-  
-  <jobsEnv>
-    <jobEnvStatus>Number</jobEnvStatus>
-    <jobEnvNm>String</jobEnvNm>
-    <jobEnvCont>String</jobEnvCont>
-  </jobsEnv>
-</ablKnwEnv>
-```
-
-**현재 수집 상태**: ✅ **완전 수집** (36/36 필드, 6개 카테고리)
+**현재 수집 상태**: ✅ **완전 수집** (36/36 필드)
 
 **코드 위치**: `src/api/goyong24API.ts:parseAblKnwEnvSection()` (lines 793-872)
-
-**참고**: 이 섹션은 **직업 내 비교**(5점 또는 7점 만점)와 **직업 간 비교**(0~100점) 두 가지 스케일로 제공됩니다.
 
 ---
 
@@ -447,56 +878,9 @@
 
 **Endpoint**: `callOpenApiSvcInfo212D06.do`
 
-**Response Fields**:
-```xml
-<chrIntrVals>
-  <jobCd>String</jobCd>
-  <jobLrclNm>String</jobLrclNm>
-  <jobMdclNm>String</jobMdclNm>
-  <jobSmclNm>String</jobSmclNm>
-  
-  <!-- 성격 (직업 내/간 비교) -->
-  <jobChrCmpr>
-    <jobChrStatusCmpr>Number</jobChrStatusCmpr>    <!-- 중요도(5점 만점) -->
-    <jobChrNmCmpr>String</jobChrNmCmpr>
-    <jobChrContCmpr>String</jobChrContCmpr>
-  </jobChrCmpr>
-  
-  <jobChr>
-    <jobChrStatus>Number</jobChrStatus>            <!-- 중요도(0~100) -->
-    <jobChrNm>String</jobChrNm>
-    <jobChrCont>String</jobChrCont>
-  </jobChr>
-  
-  <!-- 흥미 (직업 내/간 비교) -->
-  <jobIntrstCmpr>
-    <intrstStatusCmpr>Number</intrstStatusCmpr>
-    <intrstNmCmpr>String</intrstNmCmpr>
-    <intrstContCmpr>String</intrstContCmpr>
-  </jobIntrstCmpr>
-  
-  <jobIntrst>
-    <intrstStatus>Number</intrstStatus>
-    <intrstNm>String</intrstNm>
-    <intrstCont>String</intrstCont>
-  </jobIntrst>
-  
-  <!-- 가치관 (직업 내/간 비교) -->
-  <jobValsCmpr>
-    <valsStatusCmpr>Number</valsStatusCmpr>
-    <valsNmCmpr>String</valsNmCmpr>
-    <valsContCmpr>String</valsContCmpr>
-  </jobValsCmpr>
-  
-  <jobVals>
-    <valsStatus>Number</valsStatus>
-    <valsNm>String</valsNm>
-    <valsCont>String</valsCont>
-  </jobVals>
-</chrIntrVals>
-```
+**Response Fields**: (22개 필드, 3개 카테고리)
 
-**현재 수집 상태**: ✅ **완전 수집** (22/22 필드, 3개 카테고리)
+**현재 수집 상태**: ✅ **완전 수집** (22/22 필드)
 
 **코드 위치**: `src/api/goyong24API.ts:parseChrIntrValsSection()` (lines 874-925)
 
@@ -506,56 +890,11 @@
 
 **Endpoint**: `callOpenApiSvcInfo212D07.do`
 
-**Response Fields**:
-```xml
-<jobActv>
-  <jobCd>String</jobCd>
-  <jobLrclNm>String</jobLrclNm>
-  <jobMdclNm>String</jobMdclNm>
-  <jobSmclNm>String</jobSmclNm>
-  
-  <!-- 업무활동 중요도 (직업 내/간 비교) -->
-  <jobActvImprtncCmpr>
-    <jobActvImprtncStatusCmpr>Number</jobActvImprtncStatusCmpr> <!-- 중요도(5점 만점) -->
-    <jobActvImprtncNmCmpr>String</jobActvImprtncNmCmpr>         <!-- 업무활동명 -->
-    <jobActvImprtncContCmpr>String</jobActvImprtncContCmpr>     <!-- 설명 -->
-  </jobActvImprtncCmpr>
-  
-  <jobActvImprtnc>
-    <jobActvImprtncStatus>Number</jobActvImprtncStatus>         <!-- 중요도(0~100) -->
-    <jobActvImprtncNm>String</jobActvImprtncNm>
-    <jobActvImprtncCont>String</jobActvImprtncCont>
-  </jobActvImprtnc>
-  
-  <!-- 업무활동 수준 (직업 내/간 비교) -->
-  <jobActvLvlCmpr>
-    <jobActvLvlStatusCmpr>Number</jobActvLvlStatusCmpr>         <!-- 수준(7점 만점) -->
-    <jobActvLvlNmCmpr>String</jobActvLvlNmCmpr>
-    <jobActvLvlContCmpr>String</jobActvLvlContCmpr>
-  </jobActvLvlCmpr>
-  
-  <jobActvLvl>
-    <jobActvLvlStatus>Number</jobActvLvlStatus>                 <!-- 수준(0~100) -->
-    <jobActvLvlNm>String</jobActvLvlNm>
-    <jobActvLvlCont>String</jobActvLvlCont>
-  </jobActvLvl>
-</jobActv>
-```
+**Response Fields**: (16개 필드, 2개 카테고리)
 
-**현재 수집 상태**: ✅ **완전 수집** (16/16 필드, 2개 카테고리)
+**현재 수집 상태**: ✅ **완전 수집** (16/16 필드)
 
 **코드 위치**: `src/api/goyong24API.ts:parseActvSection()` (lines 927-964)
-
----
-
-#### 1.2.3 직업사전 API (별도)
-
-고용24는 표준 직업정보 외에 **한국고용정보원 직업사전** API도 제공합니다.
-
-**목록 Endpoint**: `callOpenApiSvcInfo212L50.do`  
-**상세 Endpoint**: `callOpenApiSvcInfo212D50.do`
-
-**현재 수집 상태**: ❌ **미사용** (현재 프로젝트에서 직업사전 API는 호출하지 않음)
 
 ---
 
@@ -568,171 +907,41 @@
 | 이색학과 상세 | 1 | 8 | 8 | ✅ 100% |
 | 직업정보 목록 | 1 | 4 | 4 | ✅ 100% |
 | 직업정보 상세 (7섹션) | 7 | 137 | 137 | ✅ 100% |
-| 직업사전 | 2 | ~30 | 0 | ❌ 0% |
-| **합계** | **13** | **~206** | **176** | **✅ 85.4%** |
-
-**참고**: 직업사전 API는 현재 프로젝트 범위에서 제외되어 있습니다.
-
----
-
-## 2. CareerNet API 필드 문서
-
-### 2.1 학과정보 API
-
-**Endpoint**: CareerNet 학과정보 API (커리어넷 한국직업정보시스템)
-
-**현재 수집 필드** (from `src/api/careernetAPI.ts`):
-
-```typescript
-// 학과 목록
-interface CareerNetMajorSummary {
-  mClass: string           // 대분류
-  lClass: string           // 중분류
-  majorSeq: string         // 학과코드
-  name: string             // 학과명
-}
-
-// 학과 상세
-interface CareerNetMajorDetail {
-  name: string             // 학과명
-  summary: string          // 학과소개
-  aptitude: string         // 흥미와 적성
-  relatedMajors: string[]  // 관련학과
-  mainSubjects: string[]   // 개설전공
-  licenses: string[]       // 자격증
-  jobs: string[]           // 관련직업
-  universities: {          // 개설학교
-    name: string
-    url: string
-  }[]
-}
-```
-
-**수집 상태**: ✅ **기본 필드 수집 완료**
-
-**코드 위치**: `src/api/careernetAPI.ts:normalizeCareerNetMajorDetail()`
-
----
-
-### 2.2 직업정보 API
-
-**Endpoint**: CareerNet 직업백과 API
-
-**현재 수집 필드**:
-
-```typescript
-// 직업 목록
-interface CareerNetJobSummary {
-  jobdicSeq: string        // 직업코드
-  name: string             // 직업명
-}
-
-// 직업 상세
-interface CareerNetJobDetail {
-  name: string             // 직업명
-  summary: string          // 하는일
-  duties: string           // 직무
-  way: string              // 되는방법
-  aptitude: string         // 적성 및 흥미
-  salary: string           // 연봉
-  prospect: string         // 직업전망
-  relatedMajors: {         // 관련학과
-    id: string
-    name: string
-  }[]
-  relatedCertificates: string[] // 관련자격증
-  relatedJobs: {           // 관련직업
-    id: string
-    name: string
-  }[]
-}
-```
-
-**수집 상태**: ✅ **기본 필드 수집 완료**
-
-**코드 위치**: `src/api/careernetAPI.ts:normalizeCareerNetJobDetail()`
-
----
-
-### CareerNet API 전체 요약
-
-| API 유형 | 총 필드 수 (추정) | 현재 수집 | 수집률 |
-|---------|----------------|---------|-------|
-| 학과정보 | ~15 | ~12 | ✅ ~80% |
-| 직업정보 | ~20 | ~15 | ✅ ~75% |
-| **합계** | **~35** | **~27** | **✅ ~77%** |
-
-**참고**: CareerNet API는 공식 문서가 공개되어 있지 않아 실제 사용 중인 필드 기반으로 추정했습니다.
+| **합계** | **11** | **176** | **176** | **✅ 100%** |
 
 ---
 
 ## 3. 현재 수집 현황
 
-### 3.1 데이터 저장 구조
+### 3.1 전체 API 수집 현황
 
-현재 `majors`, `jobs` 테이블의 `api_data_json` 필드에 **raw API response**가 JSON 형태로 저장됩니다:
+| API 소스 | 총 필드 수 | 현재 수집 | 수집률 |
+|---------|----------|---------|-------|
+| **CareerNet 직업백과** | ~77 | ~73 | ✅ **~95%** |
+| **CareerNet 학과정보** | ~71 | ~9 | ⚠️ **~13%** |
+| **고용24 학과정보** | 35 | 35 | ✅ **100%** |
+| **고용24 직업정보** | 137 | 137 | ✅ **100%** |
+| **총계** | **~320** | **~254** | **⚠️ ~79%** |
 
-```sql
-CREATE TABLE majors (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL UNIQUE,
-  careernet_id TEXT,
-  goyong24_id TEXT,
-  api_data_json TEXT,  -- 🔑 Raw API data stored here
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-```
+### 3.2 주요 갭 분석
 
-**`api_data_json` 구조**:
-```json
-{
-  "careernet": {
-    "name": "컴퓨터공학과",
-    "summary": "...",
-    "aptitude": "...",
-    ...
-  },
-  "goyong24": {
-    "majorGb": "1",
-    "departmentName": "...",
-    "majorName": "컴퓨터공학과",
-    "summary": "...",
-    ...
-  }
-}
-```
+#### **심각한 누락 (HIGH Priority)**
 
----
+1. **CareerNet 학과정보 상세** (~62개 필드 누락)
+   - ❌ `relate_subject` (관련 고교 교과목) - 2개 필드
+   - ❌ `career_act` (진로 탐색 활동) - 2개 필드
+   - ❌ `enter_field` (진출분야) - 2개 필드
+   - ❌ `main_subject` (주요 교과목) - 2개 필드
+   - ❌ `chartData` (학과전망 통계) - ~14개 필드
+   - ❌ `GenCD`, `SchClass` (성별/학교급별 비율) - 16개 필드
+   - ❌ `lstMiddleAptd`, `lstHighAptd`, `lstVals` (적성/가치) - 18개 필드
+   - ⚠️ `university` (개설대학) - 5개 필드 누락 (6개 중 1개만 수집)
+   - ❌ `property` (학과특성) - 1개 필드
 
-### 3.2 수집 프로세스
+#### **경미한 누락 (LOW Priority)**
 
-**Seeding Scripts**:
-- `src/scripts/seedAllMajors.ts` - 1,435개 전공 수집
-- `src/scripts/seedAllJobs.ts` - 587개 직업 수집
-
-**수집 흐름**:
-1. **CareerNet API 호출** → 기본 목록 가져오기
-2. **각 항목의 상세 정보 조회** (CareerNet + 고용24)
-3. **Unified Profile 생성** (`src/services/profileMerge.ts`)
-4. **D1 Database에 저장** (raw JSON + merged data)
-
----
-
-### 3.3 현재 수집 커버리지
-
-#### **학과정보**:
-| 데이터 소스 | 수집된 필드 | 비율 |
-|-----------|----------|-----|
-| CareerNet | ~12 / ~15 | ✅ 80% |
-| 고용24 일반학과 | 22 / 22 | ✅ 100% |
-| 고용24 이색학과 | 8 / 8 | ✅ 100% |
-
-#### **직업정보**:
-| 데이터 소스 | 수집된 필드 | 비율 |
-|-----------|----------|-----|
-| CareerNet | ~15 / ~20 | ✅ 75% |
-| 고용24 (7섹션) | 137 / 137 | ✅ 100% |
+2. **CareerNet 직업백과** (~4개 필드 누락)
+   - ⚠️ 일부 edge case 필드 누락 가능성 (문서에 명시되지 않은 필드)
 
 ---
 
@@ -744,14 +953,14 @@ CREATE TABLE majors (
 
 | 개념 | CareerNet | 고용24 | 병합 우선순위 |
 |-----|----------|-------|------------|
-| 학과명 | `name` | `knowSchDptNm` | CareerNet (더 표준화됨) |
-| 학과소개 | `summary` | `schDptIntroSum` | CareerNet 우선, 없으면 고용24 |
-| 적성/흥미 | `aptitude` | `aptdIntrstCont` | CareerNet 우선, 없으면 고용24 |
-| 관련학과 | `relatedMajors` | `relSchDptList` | 병합 (중복 제거) |
-| 주요 교과목 | `mainSubjects` | `mainSubjectList` | 병합 |
-| 관련 자격증 | `licenses` | `licList` | 병합 |
-| 관련 직업 | `jobs` | `relAdvanJobsList` | 병합 |
-| 개설 대학교 | `universities` | `schDptList` | 병합 |
+| 학과명 | `major` | `knowSchDptNm` | CareerNet 우선 |
+| 학과소개 | `summary` | `schDptIntroSum` | CareerNet 우선 |
+| 적성/흥미 | `interest` | `aptdIntrstCont` | CareerNet 우선 |
+| 관련학과 | (없음) | `relSchDptList` | 고용24만 |
+| 주요 교과목 | `main_subject` (미수집) | `mainSubjectList` | 고용24만 (CareerNet 미수집) |
+| 관련 자격증 | `qualifications` | `licList` | 병합 |
+| 관련 직업 | `job` | `relAdvanJobsList` | 병합 |
+| 개설 대학교 | `university` | `schDptList` | 병합 |
 
 **고용24 고유 필드** (CareerNet에 없음):
 - `recrStateList` - **모집 현황** (입학정원, 지원자, 졸업생)
@@ -759,31 +968,12 @@ CREATE TABLE majors (
 - `howPrepare` - **준비방법** (이색학과 전용)
 - `jobProspect` - **직업 전망** (이색학과 전용)
 
-**병합 로직** (`src/services/profileMerge.ts:mergeMajorProfiles()`):
-```typescript
-export const mergeMajorProfiles = (
-  goyong?: UnifiedMajorDetail,
-  careernet?: UnifiedMajorDetail
-): UnifiedMajorDetail => {
-  // 1. 기본 정보는 CareerNet 우선
-  const name = careernet?.name || goyong?.name
-  const summary = careernet?.summary || goyong?.summary
-  const aptitude = careernet?.aptitude || goyong?.aptitude
-  
-  // 2. 배열은 병합 (중복 제거)
-  const relatedMajors = dedupeStrings(careernet?.relatedMajors, goyong?.relatedMajors)
-  const mainSubjects = dedupeStrings(careernet?.mainSubjects, goyong?.mainSubjects)
-  const licenses = dedupeStrings(careernet?.licenses, goyong?.licenses)
-  
-  // 3. 고용24 고유 필드는 그대로 포함
-  const recruitmentStatus = goyong?.recruitmentStatus
-  const whatStudy = goyong?.whatStudy
-  const howPrepare = goyong?.howPrepare
-  const jobProspect = goyong?.jobProspect
-  
-  return { name, summary, aptitude, relatedMajors, mainSubjects, licenses, recruitmentStatus, whatStudy, howPrepare, jobProspect, ... }
-}
-```
+**CareerNet 고유 필드** (고용24에 없음, 대부분 미수집):
+- `relate_subject` - **관련 고교 교과목** ❌ 미수집
+- `career_act` - **진로 탐색 활동** ❌ 미수집
+- `enter_field` - **진출분야** ❌ 미수집
+- `chartData` - **학과전망 통계** ❌ 미수집
+- `GenCD`, `SchClass`, `lstMiddleAptd`, `lstHighAptd`, `lstVals` - **통계 데이터** ❌ 미수집
 
 ---
 
@@ -793,15 +983,14 @@ export const mergeMajorProfiles = (
 
 | 개념 | CareerNet | 고용24 | 병합 우선순위 |
 |-----|----------|-------|------------|
-| 직업명 | `name` | `jobNm` | CareerNet 우선 |
-| 하는 일 | `summary` | `jobSum` | CareerNet 우선, 없으면 고용24 |
-| 직무 | `duties` | `execJob` | CareerNet 우선, 없으면 고용24 |
-| 되는 방법 | `way` | `technKnow` | CareerNet 우선, 없으면 고용24 |
-| 관련 전공 | `relatedMajors` | `relMajorList` | 병합 |
-| 관련 자격증 | `relatedCertificates` | `relCertList` | 병합 |
-| 관련 직업 | `relatedJobs` | `relJobList` | 병합 |
-| 연봉 | `salary` | `sal` | CareerNet 우선, 없으면 고용24 |
-| 직업 전망 | `prospect` | `jobProspect` | CareerNet 우선, 없으면 고용24 |
+| 직업명 | `job_nm` | `jobNm` | CareerNet 우선 |
+| 하는 일 | `workList` | `jobSum` | CareerNet 우선 |
+| 직무 | (workList 통합) | `execJob` | CareerNet 우선 |
+| 관련 전공 | `departList` | `relMajorList` | 병합 |
+| 관련 자격증 | `certiList` | `relCertList` | 병합 |
+| 관련 직업 | `rel_job_nm` | `relJobList` | 병합 |
+| 연봉 | `wage` | `sal` | CareerNet 우선 |
+| 직업 전망 | `forecastList` | `jobProspect` | CareerNet 우선 |
 
 **고용24 고유 필드** (CareerNet에 없음):
 - **세부 통계**:
@@ -811,53 +1000,19 @@ export const mergeMajorProfiles = (
   - `jobSumProspect` - 일자리전망 상세
   - `jobStatusList` - 일자리현황
   
-- **능력/지식/환경** (섹션 5):
-  - `jobAbilCmpr`, `jobAbil`, `jobAbilLvlCmpr`, `jobAbilLvl` - 업무수행능력
-  - `KnwldgCmpr`, `Knwldg`, `KnwldgLvlCmpr`, `KnwldgLvl` - 지식
-  - `jobsEnvCmpr`, `jobsEnv` - 업무환경
-  
-- **성격/흥미/가치관** (섹션 6):
-  - `jobChrCmpr`, `jobChr` - 성격
-  - `jobIntrstCmpr`, `jobIntrst` - 흥미
-  - `jobValsCmpr`, `jobVals` - 가치관
-  
-- **업무활동** (섹션 7):
-  - `jobActvImprtncCmpr`, `jobActvImprtnc` - 업무활동 중요도
-  - `jobActvLvlCmpr`, `jobActvLvl` - 업무활동 수준
+- **능력/지식/환경** (섹션 5): 36개 필드
+- **성격/흥미/가치관** (섹션 6): 22개 필드
+- **업무활동** (섹션 7): 16개 필드
 
-**병합 로직** (`src/services/profileMerge.ts:mergeJobProfiles()`):
-```typescript
-export const mergeJobProfiles = (
-  goyong?: UnifiedJobDetail,
-  careernet?: UnifiedJobDetail
-): UnifiedJobDetail => {
-  // 1. 기본 정보는 CareerNet 우선
-  const name = careernet?.name || goyong?.name
-  const summary = careernet?.summary || goyong?.summary
-  const duties = careernet?.duties || goyong?.duties
-  const way = careernet?.way || goyong?.way
-  
-  // 2. 배열은 병합
-  const relatedMajors = mergeRelatedEntities(careernet?.relatedMajors, goyong?.relatedMajors)
-  const relatedCertificates = dedupeStrings(careernet?.relatedCertificates, goyong?.relatedCertificates)
-  const relatedJobs = mergeRelatedEntities(careernet?.relatedJobs, goyong?.relatedJobs)
-  
-  // 3. 고용24 통계 데이터는 그대로 포함
-  const satisfaction = goyong?.satisfaction
-  const educationDistribution = goyong?.educationDistribution
-  const majorDistribution = goyong?.majorDistribution
-  const abilities = goyong?.abilities
-  const knowledge = goyong?.knowledge
-  const environment = goyong?.environment
-  const personality = goyong?.personality
-  const interests = goyong?.interests
-  const values = goyong?.values
-  const activitiesImportance = goyong?.activitiesImportance
-  const activitiesLevels = goyong?.activitiesLevels
-  
-  return { name, summary, duties, way, relatedMajors, relatedCertificates, relatedJobs, satisfaction, educationDistribution, ... }
-}
-```
+**CareerNet 고유 필드** (고용24에 없음):
+- **직업백과 확장 필드들**:
+  - `relVideoList` - 관련 동영상
+  - `relSolList` - 관련 진로상담
+  - `relJinsolList` - 관련 자료
+  - `jobReadyList` - 직업준비 (입직/자격증/훈련/교육)
+  - `jobRelOrgList` - 관련기관
+  - `eduChart`, `majorChart`, `indicatorChart` - 차트 데이터
+  - `performList` - 업무환경/수행능력/지식 (별도 구조)
 
 ---
 
@@ -865,61 +1020,137 @@ export const mergeJobProfiles = (
 
 ### 5.1 현재 수집 갭
 
-#### **고용24 API**:
-✅ **거의 완전 수집됨** (85.4%)
-- ✅ 학과정보: 100% 수집
-- ✅ 직업정보 (표준 API): 100% 수집
-- ❌ 직업사전 API: 0% 수집 (현재 프로젝트 범위 외)
-
 #### **CareerNet API**:
-⚠️ **부분 수집** (~77%)
-- ⚠️ 학과정보: ~80% 수집 (일부 메타데이터 누락 가능)
-- ⚠️ 직업정보: ~75% 수집 (일부 세부 필드 누락 가능)
+
+1. **직업백과 API**: ✅ **거의 완전 수집** (~95%)
+   - ✅ 모든 주요 섹션 수집 완료
+   - ⚠️ 일부 edge case 필드 미확인 가능성 있음
+
+2. **학과정보 API**: ⚠️ **심각한 누락** (~13%)
+   - ❌ **62개 필드 미수집** (총 71개 중 9개만 수집)
+   - ❌ 통계 데이터 전체 미수집 (`chartData`, `GenCD`, `SchClass`, 등)
+   - ❌ 진로 관련 중요 데이터 미수집 (`relate_subject`, `career_act`, `enter_field`)
+   - ❌ 교육 정보 미수집 (`main_subject`)
+   - ⚠️ 개설대학 정보 부분 수집 (schoolName만)
+
+#### **고용24 API**:
+✅ **완전 수집** (100%)
+- ✅ 학과정보: 35/35 필드
+- ✅ 직업정보: 137/137 필드
 
 ---
 
 ### 5.2 Phase 1에서 확인할 항목
 
-#### **Task 1: CareerNet API 필드 완전성 검증**
-- [ ] CareerNet 학과정보 API response 실제 구조 확인
-- [ ] CareerNet 직업정보 API response 실제 구조 확인
-- [ ] 현재 `normalizeCareerNet*()` 함수가 모든 필드를 파싱하는지 검증
-- [ ] 누락된 필드 추가 수집
+#### **우선순위 1 (HIGH): CareerNet 학과정보 API 완전 수집**
 
-#### **Task 2: 고용24 API 필드 완전성 검증**
-- [x] 고용24 API 문서와 코드 비교 ✅ (이미 완료)
-- [x] 모든 섹션이 올바르게 파싱되는지 확인 ✅
-- [ ] 실제 API response와 비교하여 누락 필드 확인
+**필수 추가 수집 필드** (62개):
 
-#### **Task 3: 데이터 품질 검증**
-- [ ] 1,435개 전공 중 빈 필드 비율 확인
-- [ ] 587개 직업 중 빈 필드 비율 확인
-- [ ] CareerNet과 고용24 데이터 중복도 측정
-- [ ] 병합 로직 개선 필요 여부 판단
+1. **relate_subject** (관련 고교 교과목) - 2개 필드
+   - `subject_name` (과목 종류명)
+   - `subject_description` (과목 이름)
+
+2. **career_act** (진로 탐색 활동) - 2개 필드
+   - `act_name` (활동 종류명)
+   - `act_description` (활동 설명)
+
+3. **property** (학과특성) - 1개 필드
+
+4. **enter_field** (진출분야) - 2개 필드
+   - `gradeuate` (진출분야명)
+   - `description` (진출분야설명)
+
+5. **main_subject** (주요 교과목) - 2개 필드
+   - `SBJECT_NM` (교과목명)
+   - `SBJECT_SUMRY` (교과목설명)
+
+6. **university** (개설대학) - 추가 5개 필드
+   - `area` (지역)
+   - `schoolURL` (학교URL)
+   - `campus_nm` (캠퍼스명)
+   - `majorName` (학과명)
+   - `totalCount` (전체수)
+
+7. **chartData** (학과전망 통계) - ~14개 필드
+   - `applicant`, `gender`, `employment_rate`, `field`, `avg_salary`, `satisfaction`, `after_graduation`
+   - 각각 `<item><data>`, `<item><name>` 구조
+
+8. **GenCD** (성별비율) - 8개 필드
+   - `popular` / `bookmark` 각각 4개 필드
+   - `PCNT1`, `PCNT2`, `PCNT`, `GEN_NM`
+
+9. **SchClass** (학교급별비율) - 8개 필드
+   - `popular` / `bookmark` 각각 4개 필드
+   - `PCNT1`, `PCNT2`, `PCNT`, `SCH_CLASS_NM`
+
+10. **lstMiddleAptd** (중학생적성유형) - 6개 필드
+    - `popular` / `bookmark` 각각 3개 필드
+    - `RANK`, `CD_ORDR`, `CD_NM`
+
+11. **lstHighAptd** (고등학생적성유형) - 6개 필드
+    - `popular` / `bookmark` 각각 3개 필드
+    - `RANK`, `CD_ORDR`, `CD_NM`
+
+12. **lstVals** (선호직업가치) - 6개 필드
+    - `popular` / `bookmark` 각각 3개 필드
+    - `RANK`, `CD_ORDR`, `CD_NM`
+
+**수정 파일**:
+- `src/api/careernetAPI.ts:Major` 인터페이스 확장
+- `src/api/careernetAPI.ts:getMajorDetail()` 함수 개선
+- `src/api/careernetAPI.ts:normalizeCareerNetMajorDetail()` 함수 확장
 
 ---
 
-### 5.3 개선 계획 (Phase 1)
-
-#### **우선순위 1 (HIGH): 데이터 완전성 확보**
-1. **CareerNet API 전체 필드 확인** → `src/api/careernetAPI.ts` 개선
-2. **빈 필드 비율 측정** → seeding 시 로깅 추가
-3. **누락 필드 재수집** → seeding scripts 업데이트
-
 #### **우선순위 2 (MEDIUM): 데이터 병합 전략 최적화**
+
 1. **Name matching 알고리즘 검증** → 현재 case-insensitive 단순 비교
 2. **Fuzzy matching 도입** → Levenshtein distance ≥90% 유사도
 3. **Manual mapping table 구축** → 예외 케이스 처리
 
-#### **우선순위 3 (LOW): 추가 데이터 소스**
-1. **직업사전 API 통합** → 필요 시 Phase 2 이후 추가
-2. **공공 데이터 포털** → 취업률, 연봉 통계 보강
+---
+
+#### **우선순위 3 (LOW): 추가 검증**
+
+1. **CareerNet 직업백과 edge case 확인** → 실제 API 응답과 비교
+2. **고용24 API 재검증** → 모든 필드가 실제로 수집되는지 확인
+
+---
+
+### 5.3 개선 계획 타임라인
+
+**Phase 1 (2-3일):**
+
+1. **Day 1**: CareerNet 학과정보 API 코드 개선
+   - `Major` 인터페이스에 62개 필드 추가
+   - `getMajorDetail()` 함수에 XML/JSON 파싱 로직 추가
+   - `normalizeCareerNetMajorDetail()` 함수에 필드 매핑 추가
+
+2. **Day 2**: 재시딩 실행 및 검증
+   - 1,435개 전공 재수집
+   - 데이터 품질 검증 (빈 필드율, 완전성)
+   - 병합 로직 검증
+
+3. **Day 3**: Fuzzy matching 및 Manual mapping
+   - Levenshtein distance 기반 매칭 추가
+   - 예외 케이스 처리 테이블 구축
+
+**예상 수집률 개선**:
+- CareerNet 학과정보: 13% → **~95%**
+- 전체: 79% → **~98%**
 
 ---
 
 ## 6. 참고 자료
 
-### 6.1 관련 코드 파일
+### 6.1 공식 문서
+
+- **CareerNet 직업백과 API**: https://www.career.go.kr/cnet/front/openapi/jobCenter.do
+- **CareerNet 학과정보 API**: https://www.career.go.kr/cnet/front/openapi/openApiMajorCenter.do
+- **고용24 API 문서**: `docs/고용24_API_extracted.txt`
+
+### 6.2 관련 코드 파일
+
 - **API 클라이언트**:
   - `src/api/goyong24API.ts` - 고용24 API 호출 및 파싱
   - `src/api/careernetAPI.ts` - CareerNet API 호출 및 파싱
@@ -935,7 +1166,8 @@ export const mergeJobProfiles = (
 - **Type Definitions**:
   - `src/types/unifiedProfiles.ts` - UnifiedJobDetail, UnifiedMajorDetail 등
 
-### 6.2 문서
+### 6.3 문서
+
 - `docs/ARCHITECTURE.md` - 시스템 아키텍처 설계
 - `docs/DEVELOPMENT_ROADMAP.md` - Phase별 개발 계획
 - `docs/migration-plan.md` - 데이터 마이그레이션 상세 계획
@@ -946,4 +1178,23 @@ export const mergeJobProfiles = (
 
 | 날짜 | 작성자 | 변경 내용 |
 |-----|-------|---------|
-| 2025-01-06 | Claude AI | 초안 작성 - 고용24 API 전체 문서화 완료 |
+| 2025-01-06 (초안) | Claude AI | 고용24 API 문서화 (추정치 기반) |
+| 2025-01-06 (재작성) | Claude AI | **완전 재작성 - CareerNet 공식 문서 기반 전체 필드 문서화** |
+
+---
+
+## 요약
+
+### ✅ 완전 수집 완료
+- 고용24 학과정보: **100%** (35/35 필드)
+- 고용24 직업정보: **100%** (137/137 필드)
+- CareerNet 직업백과: **~95%** (~73/77 필드)
+
+### ⚠️ 개선 필요
+- **CareerNet 학과정보**: **~13%** (~9/71 필드)
+  - **62개 필드 누락** (통계, 진로, 교육 데이터)
+  - Phase 1에서 최우선 개선 대상
+
+### 📊 전체 수집률
+- **현재**: ~79% (254/320 필드)
+- **목표** (Phase 1 후): ~98% (316/320 필드)
