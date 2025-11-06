@@ -90,8 +90,8 @@ const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()
 app.use('*', cors())
 app.use('*', renderer)
 
-// Serve static files
-app.use('/static/*', serveStatic({ root: './' }))
+// Serve static files from public directory
+app.use('/static/*', serveStatic({ root: './public' }))
 
 let logoIdCounter = 0
 
@@ -2597,6 +2597,91 @@ app.get('/job/:slug', async (c) => {
 app.get('/major/:slug', async (c) => {
   const slug = c.req.param('slug')
   const resolvedId = resolveDetailIdFromSlug('major', slug)
+  
+  // Check for debug mode first (bypass ISR cache for debugging)
+  const debugMode = c.req.query('debug') === 'true'
+  if (debugMode) {
+    try {
+      const careernetId = c.req.query('careernetId') || undefined
+      const majorGbParam = c.req.query('goyongMajorGb')
+      const departmentId = c.req.query('goyongDepartmentId') || undefined
+      const majorId = c.req.query('goyongMajorId') || undefined
+      const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+      const goyongMajorGb = majorGbParam === '1' ? '1' : majorGbParam === '2' ? '2' : undefined
+      const goyongParams = goyongMajorGb && departmentId && majorId
+        ? { majorGb: goyongMajorGb, departmentId, majorId }
+        : undefined
+
+      const result = await getUnifiedMajorDetailWithRawData(
+        {
+          id: resolvedId,
+          careernetId,
+          goyong24Params: goyongParams,
+          includeSources
+        },
+        c.env
+      )
+
+      if (!result.profile) {
+        const sample = getSampleMajorDetail(resolvedId) || getSampleMajorDetail(slug)
+        if (sample) {
+          const debugHtml = renderDataDebugPage({
+            pageType: 'major',
+            profile: sample,
+            rawData: null,
+            partials: null,
+            sources: {},
+            breadcrumbs: [
+              { href: '/', label: '홈' },
+              { href: '/major', label: '전공위키' },
+              { href: `/major/${encodeURIComponent(slug)}`, label: sample.name }
+            ]
+          })
+          return c.html(renderLayout(debugHtml, `${sample.name} 디버그 - Careerwiki`, '디버그 모드'))
+        }
+        c.status(404)
+        return c.html(renderLayout(renderDetailFallback({
+          icon: 'fa-circle-exclamation',
+          iconColor: 'text-yellow-500',
+          title: '전공을 찾을 수 없습니다',
+          description: `"${slug}" 전공 정보가 존재하지 않습니다.`,
+          ctaHref: '/major',
+          ctaLabel: '전공 목록으로'
+        }), '전공을 찾을 수 없습니다 - Careerwiki'))
+      }
+
+      const debugHtml = renderDataDebugPage({
+        pageType: 'major',
+        profile: result.profile,
+        rawData: result.rawData,
+        partials: result.partials,
+        sources: result.sources,
+        breadcrumbs: [
+          { href: '/', label: '홈' },
+          { href: '/major', label: '전공위키' },
+          { href: `/major/${encodeURIComponent(slug)}`, label: result.profile.name }
+        ]
+      })
+
+      return c.html(renderLayout(
+        debugHtml,
+        `${result.profile.name} 디버그 - Careerwiki`,
+        '디버그 모드: API 원시 데이터 및 통합 결과 확인'
+      ))
+    } catch (error) {
+      console.error('Debug mode error:', error)
+      c.status(500)
+      return c.html(renderLayout(renderDetailFallback({
+        icon: 'fa-circle-exclamation',
+        iconColor: 'text-red-500',
+        title: '디버그 데이터 로드 실패',
+        description: '일시적인 오류가 발생했습니다.',
+        ctaHref: '/major',
+        ctaLabel: '전공 목록으로'
+      }), '오류 - Careerwiki'))
+    }
+  }
   
   // 🆕 ISR (Incremental Static Regeneration) with wiki_pages cache
   return getOrGeneratePage(

@@ -1929,28 +1929,29 @@ const renderJobSidebar = (profile: UnifiedJobDetail): string => {
     )
   }
 
-  const recommendedHowtos = resolveRecommendedHowtos(profile.id)
-  if (recommendedHowtos.length) {
-    const list = recommendedHowtos
-      .map(
-        (item) => `
-          <li>
-            <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/40 md:border-wiki-border/70 bg-wiki-bg/60 px-3 py-2 md:px-4 md:py-3 content-text text-wiki-primary hover:border-wiki-primary hover:text-white transition">
-              <span class="font-semibold">${escapeHtml(item.label)}</span>
-              <span class="text-xs text-wiki-muted">CareerWiki HowTo</span>
-            </a>
-          </li>
-        `
-      )
-      .join('')
-    sections.push(
-      renderSidebarSection(
-        '관련 HowTo',
-        'fa-route',
-        `<ul class="space-y-2" role="list">${list}</ul>`
-      )
-    )
-  }
+  // 관련 HowTo 섹션 제거 (API 데이터만 표시)
+  // const recommendedHowtos = resolveRecommendedHowtos(profile.id)
+  // if (recommendedHowtos.length) {
+  //   const list = recommendedHowtos
+  //     .map(
+  //       (item) => `
+  //         <li>
+  //           <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/40 md:border-wiki-border/70 bg-wiki-bg/60 px-3 py-2 md:px-4 md:py-3 content-text text-wiki-primary hover:border-wiki-primary hover:text-white transition">
+  //             <span class="font-semibold">${escapeHtml(item.label)}</span>
+  //             <span class="text-xs text-wiki-muted">CareerWiki HowTo</span>
+  //           </a>
+  //         </li>
+  //       `
+  //     )
+  //     .join('')
+  //   sections.push(
+  //     renderSidebarSection(
+  //       '관련 HowTo',
+  //       'fa-route',
+  //       `<ul class="space-y-2" role="list">${list}</ul>`
+  //     )
+  //   )
+  // }
 
   const organizations = renderOrganizationsList(profile)
   if (organizations) {
