@@ -1,0 +1,90 @@
+# Cursor AI Rules for CareerWiki Project
+
+## Project Context
+This is a lightweight web application built with:
+- **Backend**: Hono framework (TypeScript)
+- **Frontend**: Hono JSX SSR + Tailwind CSS via CDN
+- **Deployment**: Cloudflare Pages + Workers
+- **Database**: Cloudflare D1 (SQLite)
+- **Build**: Vite + esbuild
+- **Process Manager**: PM2
+
+## Architecture
+- **ISR (Incremental Static Regeneration)**: Wikipedia-style cached dynamic pages
+- **Template Version System**: Automatic cache invalidation on template updates
+- **API Integration**: CareerNet + Goyong24 Korean job/major data
+- **Sample Registry**: Fallback data for development
+
+## Current Status (2025-11-06)
+**Migrating from GenSpark to Cursor due to memory constraints**
+
+### Immediate Issues to Fix:
+1. **JavaScript 403 Errors** (HIGHEST PRIORITY)
+   - File: `src/index.tsx` line 95
+   - Problem: `serveStatic` is commented out
+   - Solution: Uncomment the line after successful local build
+   - Expected: Tabs will work after fixing this
+
+2. **Major Debug Page Data Rendering**
+   - File: `src/templates/dataDebugTemplate.ts`
+   - Problem: Template only supports `UnifiedJobDetail`, not `UnifiedMajorDetail`
+   - Solution: Add major profile field mappings
+
+3. **Apply ISR to `/job/:slug`**
+   - Reference: `/major/:slug` implementation in `src/index.tsx`
+   - Goal: Same caching performance for job pages
+
+## Code Style
+- Use TypeScript strict mode
+- Prefer functional programming
+- Use Hono JSX for templates (NOT React)
+- Korean comments for business logic
+- English comments for technical implementation
+
+## Important Files
+- `src/index.tsx` - Main application entry
+- `src/templates/` - SSR templates (Hono JSX)
+- `src/data/sampleRegistry.ts` - Sample data
+- `src/utils/page-cache.ts` - ISR cache utilities
+- `public/static/api-client.js` - Client-side scripts
+
+## Testing URLs
+- Home: http://localhost:3000
+- Job detail: http://localhost:3000/job/software-developer
+- Major detail: http://localhost:3000/major/digital-marketing-major
+- Debug mode: http://localhost:3000/major/digital-marketing-major?debug=true
+
+## Build & Run
+```bash
+npm run build           # Vite build (works on local, fails on GenSpark)
+pm2 start ecosystem.config.cjs  # Start server
+npm run dev:d1          # Alternative: Vite dev with D1
+```
+
+## Deployment
+```bash
+npm run deploy:prod     # Deploy to Cloudflare Pages
+```
+
+## Critical Constraints
+- **NO Node.js APIs** in production code (Cloudflare Workers runtime)
+- **NO file system access** at runtime
+- Static files MUST be in `public/` and served via `serveStatic`
+- Use Web APIs only (Fetch, Web Crypto, etc.)
+
+## Communication
+- User's name: 정우 (Jeong-woo)
+- Respond in Korean (ko-KR)
+- Be concise and action-oriented
+
+## Next Steps
+1. Run `./setup-local.sh` to auto-configure
+2. Fix `serveStatic` in `src/index.tsx`
+3. Test tab switching functionality
+4. Fix major debug page data rendering
+5. Apply ISR to job routes
+
+## Reference Docs
+- Quick Start: `CURSOR_QUICKSTART.md`
+- Full Migration Guide: `MIGRATION_TO_CURSOR.md`
+- Project README: `README.md`
