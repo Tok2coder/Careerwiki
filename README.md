@@ -29,22 +29,37 @@ CareerWiki는 **Wikipedia의 협업 정신**과 **AI의 지능**을 결합하여
 
 ## 📊 현재 상태 (2025-01-06)
 
-### ✅ Phase 0 완료 (2025-01-06)
+### ✅ Phase 0 완료 (2025-01-06) 🎉
+
 - [x] **아키텍처 설계 문서** 작성 완료 ([ARCHITECTURE.md](./docs/ARCHITECTURE.md))
-- [x] **API 통합 문서** 작성 완료 ([API_INTEGRATION.md](./docs/API_INTEGRATION.md))
-  - 고용24 API 전체 필드 문서화 (학과정보 + 직업정보 7개 섹션)
-  - CareerNet API 필드 매핑
-  - 현재 수집률: 고용24 85.4%, CareerNet ~77%
+- [x] **API 통합 문서** 완전 재작성 완료 ([API_INTEGRATION.md](./docs/API_INTEGRATION.md))
+  - ✅ **CareerNet 공식 문서 기반** 전체 필드 문서화
+    - 직업백과 API: 150+ 필드 (19개 섹션)
+    - 학과정보 API: 80+ 필드 (14개 섹션)
+  - ✅ 고용24 API 전체 필드 문서화 (학과정보 35개 + 직업정보 137개)
+  - ✅ **정확한 현재 수집률 계산**:
+    - 고용24: **100%** (176/176 필드) ✅
+    - CareerNet 직업백과: **~95%** (~73/77 필드) ✅
+    - CareerNet 학과정보: **~13%** (~9/71 필드) ⚠️
+    - **전체: ~79%** (254/320 필드)
+  - 📋 **Phase 1 개선 계획**: 62개 필드 추가 수집 → 목표 98%
 - [x] **Wiki 아키텍처 마이그레이션** 스크립트 작성 ([0003_wiki_architecture.sql](./migrations/0003_wiki_architecture.sql))
   - wiki_pages, user_contributions, ai_generated_content, page_revisions, page_update_queue, users 테이블
   - Phase 2에서 production 환경 테스트 예정
 - [x] **도메인 연동 계획** 수립 (Phase 2 완료 후 careerwiki.org 연동)
 
 ### 🚧 진행 중 (Phase 1 - 시작 예정)
-- [ ] **데이터 완전성 검증** (모든 API 필드 수집 확인)
-- [ ] **CareerNet API 전체 필드 확인** (공식 문서 부재로 실제 응답 확인 필요)
-- [ ] **데이터 병합 로직 최적화** (커리어넷 ↔ 고용24 name matching + fuzzy matching)
-- [ ] **재시딩** (누락된 필드 포함하여 1,435 전공 + 587 직업)
+
+**목표: CareerNet 학과정보 API 완전 수집 (13% → 95%)**
+
+- [ ] **CareerNet 학과정보 API 코드 개선** (62개 필드 추가 수집)
+  - relate_subject (관련 고교 교과목), career_act (진로 탐색 활동)
+  - main_subject (주요 교과목), enter_field (진출분야)
+  - chartData, GenCD, SchClass (통계 데이터)
+  - lstMiddleAptd, lstHighAptd, lstVals (적성/가치)
+- [ ] **데이터 병합 로직 최적화** (Fuzzy matching + Manual mapping)
+- [ ] **재시딩** (1,435 전공 완전 재수집)
+- [ ] **데이터 품질 검증** (빈 필드율, 완전성)
 
 ### 📅 예정 (Phase 2-6)
 - **Phase 2** (2-3일): 정적 위키 프로토타입 (10개 페이지) + **careerwiki.org 도메인 연동** 🌐
