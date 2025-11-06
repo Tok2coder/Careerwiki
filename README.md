@@ -27,22 +27,30 @@ CareerWiki는 **Wikipedia의 협업 정신**과 **AI의 지능**을 결합하여
 
 ---
 
-## 📊 현재 상태 (2025-11-06 12:30)
+## 📊 현재 상태 (2025-11-06 17:00)
 
-### ✅ Phase 2.1.1: 정적 파일 서빙 버그 수정 완료 (2025-11-06) 🔧
+### ✅ Phase 2.1.2: JavaScript 403 에러 완전 해결 + 전공 디버그 페이지 수정 완료 (2025-11-06) 🎯
 
-**문제**: 403 Forbidden - JavaScript 파일 로딩 실패로 탭 전환 불가
-**원인**: HTML에서 `/api-client.js` 참조 vs 파일 위치 `public/static/api-client.js` 불일치
+**문제 1**: JavaScript 403 Forbidden - 탭 전환 불가
+**원인**: Hono serveStatic는 glob 패턴 (`*.js`)을 지원하지 않음
 **해결**: 
-- `public/static/*.js` 파일을 `public/` 루트로 이동
-- serveStatic 설정에 `*.js` 패턴 추가
-- "관련 HowTo" 샘플 섹션 제거 완료
+- JS 파일들을 `/static/` 경로로 유지
+- HTML 스크립트 태그를 `/static/api-client.js`로 수정
+- 단일 serveStatic 미들웨어만 사용
+
+**문제 2**: 전공 디버그 페이지 데이터 미표시
+**원인**: `dataDebugTemplate.ts`가 `UnifiedJobDetail`만 지원
+**해결**:
+- `DataDebugTemplateParams` 타입 확장 (`UnifiedMajorDetail` 지원)
+- 전공 샘플 데이터 전용 렌더링 섹션 추가
+- 기본 정보, 주요 과목, 자격증, 관련 직업 등 구조화된 표시
 
 **변경 사항:**
-- [x] `/api-client.js`, `/perf-metrics.js` 정상 로딩 (200 OK)
-- [x] 탭 전환 기능 복구 (JavaScript 이벤트 리스너 작동)
-- [x] 직업 상세 페이지 사이드바에서 "관련 HowTo" 섹션 제거
-- [x] 모든 페이지 타입에서 정적 자산 정상 로딩 확인
+- [x] `/static/api-client.js`, `/static/perf-metrics.js` 정상 로딩 (200 OK)
+- [x] 탭 전환 기능 완전 복구 (모든 상세 페이지)
+- [x] 전공 디버그 페이지 데이터 렌더링 완료 (샘플)
+- [x] 직업 상세 페이지 "관련 HowTo" 섹션 제거
+- [x] Console.log 디버깅 스테이트먼트 작동 확인
 
 ### ✅ Phase 2.1: ISR 캐시 시스템 구축 완료 (2025-11-06) 🎉
 

@@ -1,15 +1,19 @@
-import type { DataSource, UnifiedJobDetail } from '../types/unifiedProfiles'
+import type { DataSource, UnifiedJobDetail, UnifiedMajorDetail } from '../types/unifiedProfiles'
 import type { SourceStatusRecord } from '../services/profileDataService'
 import { escapeHtml } from './detailTemplateUtils'
 
 export interface DataDebugTemplateParams {
-  profile: UnifiedJobDetail | null
-  partials?: Partial<Record<DataSource, UnifiedJobDetail | null>>
+  profile: UnifiedJobDetail | UnifiedMajorDetail | null
+  partials?: Partial<Record<DataSource, UnifiedJobDetail | UnifiedMajorDetail | null>>
   sources?: SourceStatusRecord
   rawApiData?: {
     careernet?: any
     goyong24?: any
   }
+  // Additional fields for flexible rendering
+  pageType?: 'job' | 'major'
+  rawData?: any
+  breadcrumbs?: Array<{ href: string; label: string }>
 }
 
 // ========== 필드 설명 맵 (직업 & 전공 공통) ==========
@@ -2176,11 +2180,14 @@ const renderFieldComparisonTable = (rawApiData?: { careernet?: any; goyong24?: a
 }
 
 export const renderDataDebugPage = (params: DataDebugTemplateParams): string => {
-  const { profile, partials, sources, rawApiData } = params
+  const { profile, partials, sources, rawApiData, pageType = 'job', rawData } = params
 
-  const jobTitle = profile?.name || '직업 정보'
+  const jobTitle = profile?.name || (pageType === 'major' ? '전공 정보' : '직업 정보')
   const careernetId = profile?.sourceIds?.careernet || 'N/A'
   const goyong24Id = profile?.sourceIds?.goyong24 || 'N/A'
+  
+  // For major pages with sample data, render simplified view
+  const isMajorSampleData = pageType === 'major' && rawData && !rawApiData
 
   const styles = `
     <style>
@@ -2333,6 +2340,115 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
           </div>
         ` : ''}
 
+        ${isMajorSampleData ? `
+        <!-- Major Sample Data View -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <svg class="w-7 h-7 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            전공 샘플 데이터
+          </h2>
+          <div class="mb-4 p-4 bg-amber-50 border-l-4 border-amber-500 rounded">
+            <p class="text-sm text-amber-900">
+              <strong>📌 참고:</strong> 전공 페이지는 현재 샘플 데이터로 표시됩니다. API 연동은 추후 구현 예정입니다.
+            </p>
+          </div>
+          
+          <!-- Profile Summary -->
+          ${profile ? `
+          <div class="space-y-6">
+            <div class="border-2 border-gray-200 rounded-xl p-6 bg-gradient-to-br from-gray-50 to-white">
+              <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-graduation-cap text-blue-600 mr-2"></i>
+                기본 정보
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <span class="text-sm text-gray-600 font-semibold">전공명:</span>
+                  <p class="text-lg font-bold text-gray-900">${escapeHtml(profile.name)}</p>
+                </div>
+                ${'categoryName' in profile && profile.categoryName ? `
+                <div>
+                  <span class="text-sm text-gray-600 font-semibold">계열:</span>
+                  <p class="text-lg font-bold text-blue-700">${escapeHtml(profile.categoryName)}</p>
+                </div>
+                ` : ''}
+                ${'summary' in profile && profile.summary ? `
+                <div class="md:col-span-2">
+                  <span class="text-sm text-gray-600 font-semibold">요약:</span>
+                  <p class="text-gray-800 mt-1">${escapeHtml(profile.summary)}</p>
+                </div>
+                ` : ''}
+              </div>
+            </div>
+            
+            <!-- Main Subjects -->
+            ${'mainSubjects' in profile && profile.mainSubjects && profile.mainSubjects.length > 0 ? `
+            <div class="border-2 border-gray-200 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-white">
+              <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-book text-blue-600 mr-2"></i>
+                주요 과목 (${profile.mainSubjects.length}개)
+              </h3>
+              <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                ${profile.mainSubjects.map((subject: string) => `
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                    <span class="text-gray-800">${escapeHtml(subject)}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            ` : ''}
+            
+            <!-- Licenses -->
+            ${'licenses' in profile && profile.licenses && profile.licenses.length > 0 ? `
+            <div class="border-2 border-gray-200 rounded-xl p-6 bg-gradient-to-br from-green-50 to-white">
+              <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-certificate text-green-600 mr-2"></i>
+                취득 가능 자격증 (${profile.licenses.length}개)
+              </h3>
+              <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                ${profile.licenses.map((license: string) => `
+                  <li class="flex items-start">
+                    <i class="fas fa-award text-yellow-500 mr-2 mt-1"></i>
+                    <span class="text-gray-800">${escapeHtml(license)}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            ` : ''}
+            
+            <!-- Related Jobs -->
+            ${'relatedJobs' in profile && profile.relatedJobs && profile.relatedJobs.length > 0 ? `
+            <div class="border-2 border-gray-200 rounded-xl p-6 bg-gradient-to-br from-purple-50 to-white">
+              <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-briefcase text-purple-600 mr-2"></i>
+                관련 직업 (${profile.relatedJobs.length}개)
+              </h3>
+              <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                ${profile.relatedJobs.map((job: string) => `
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-purple-500 mr-2 mt-1"></i>
+                    <span class="text-gray-800">${escapeHtml(job)}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            ` : ''}
+            
+            <!-- Full Profile JSON -->
+            <div class="border-2 border-gray-200 rounded-xl p-6 bg-gradient-to-br from-gray-50 to-white">
+              <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-code text-gray-600 mr-2"></i>
+                전체 프로필 데이터 (JSON)
+              </h3>
+              <pre class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-xs font-mono"><code>${escapeHtml(JSON.stringify(profile, null, 2))}</code></pre>
+            </div>
+          </div>
+          ` : '<p class="text-gray-500">프로필 데이터 없음</p>'}
+        </div>
+        ` : `
         <!-- Actual Merged View - 먼저 표시 -->
         <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
           <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
@@ -2372,6 +2488,7 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
         <div class="card-hover">
           ${renderGoyong24Table(rawApiData?.goyong24)}
         </div>
+        `}
 
         <!-- Footer 제거됨 -->
         
