@@ -686,7 +686,17 @@ export const normalizeCareerNetMajorSummary = (major: Major): UnifiedMajorSummar
 
 export const normalizeCareerNetMajorDetail = (major: Major): UnifiedMajorDetail => {
   const summary = normalizeCareerNetMajorSummary(major);
-  const universities = toUniversityEntries(major.university);
+  
+  // 개설대학 정보 (universityList 우선, 없으면 university 사용)
+  const universities = major.universityList && major.universityList.length > 0
+    ? major.universityList.map(u => ({
+        name: u.schoolName,
+        url: u.schoolURL,
+        area: u.area,
+        campus: u.campus_nm
+      }))
+    : toUniversityEntries(major.university);
+  
   const relatedJobs = dedupeList(splitToList(major.relatedJob));
 
   return {
@@ -695,6 +705,20 @@ export const normalizeCareerNetMajorDetail = (major: Major): UnifiedMajorDetail 
     relatedJobs: relatedJobs.length ? relatedJobs : undefined,
     salaryAfterGraduation: major.salaryAfterGraduation?.trim(),
     employmentRate: major.employmentRate?.trim(),
+    
+    // Phase 1: 새로운 필드들 추가
+    relateSubject: major.relate_subject,
+    careerAct: major.career_act,
+    mainSubject: major.main_subject,
+    enterField: major.enter_field,
+    property: major.property?.trim(),
+    chartData: major.chartData,
+    genCD: major.GenCD,
+    schClass: major.SchClass,
+    lstMiddleAptd: major.lstMiddleAptd,
+    lstHighAptd: major.lstHighAptd,
+    lstVals: major.lstVals,
+    
     sources: summary.sources
   };
 };

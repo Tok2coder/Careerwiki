@@ -10,6 +10,8 @@ export interface MajorUniversityInfo {
   name?: string
   universityType?: string
   url?: string
+  area?: string        // Phase 1: 지역 (예: "서울특별시")
+  campus?: string      // Phase 1: 캠퍼스명 (예: "서울캠퍼스")
 }
 
 export interface MajorRecruitmentStat {
@@ -43,6 +45,44 @@ export interface UnifiedMajorDetail extends UnifiedMajorSummary {
   jobProspect?: string
   salaryAfterGraduation?: string
   employmentRate?: string
+  
+  // Phase 1: CareerNet 학과정보 새 필드들 (44개 필드)
+  // 교육 콘텐츠 (우선순위: HIGH)
+  relateSubject?: Array<{
+    subject_name: string
+    subject_description: string
+  }>
+  careerAct?: Array<{
+    act_name: string
+    act_description: string
+  }>
+  mainSubject?: Array<{
+    SBJECT_NM: string
+    SBJECT_SUMRY: string
+  }>
+  enterField?: Array<{
+    gradeuate: string  // Note: API has typo "gradeuate"
+    description: string
+  }>
+  property?: string
+  
+  // 통계 데이터 (우선순위: MEDIUM)
+  chartData?: {
+    applicant?: Array<{name: string, data: string}>
+    gender?: Array<{name: string, data: string}>
+    employment_rate?: Array<{name: string, data: string}>
+    field?: Array<{name: string, data: string}>
+    avg_salary?: Array<{name: string, data: string}>
+    satisfaction?: Array<{name: string, data: string}>
+    after_graduation?: Array<{name: string, data: string}>
+  }
+  
+  // 특성 통계 (우선순위: LOW, 복잡한 중첩 구조)
+  genCD?: any        // 성별 통계
+  schClass?: any     // 학교 분류 통계
+  lstMiddleAptd?: any  // 중학교 적성 리스트
+  lstHighAptd?: any    // 고등학교 적성 리스트
+  lstVals?: any      // 가치관 리스트
 }
 
 export interface EducationDistribution {

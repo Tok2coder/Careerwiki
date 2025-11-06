@@ -28,6 +28,21 @@ export interface SeedProgress {
   errorDetails: Array<{ id: string; name: string; error: string }>
   startTime: number
   estimatedTimeLeft?: string
+  // Phase 1: 새 필드 수집 통계
+  phase1Fields?: {
+    relateSubject: number
+    careerAct: number
+    mainSubject: number
+    enterField: number
+    property: number
+    universityList: number
+    chartData: number
+    genCD: number
+    schClass: number
+    lstMiddleAptd: number
+    lstHighAptd: number
+    lstVals: number
+  }
 }
 
 // Rate limiting을 위한 sleep 함수
@@ -290,7 +305,22 @@ export async function seedAllMajors(env: Env): Promise<SeedProgress> {
     skipped: 0,
     errors: 0,
     errorDetails: [],
-    startTime: Date.now()
+    startTime: Date.now(),
+    // Phase 1: 새 필드 수집 통계 초기화
+    phase1Fields: {
+      relateSubject: 0,
+      careerAct: 0,
+      mainSubject: 0,
+      enterField: 0,
+      property: 0,
+      universityList: 0,
+      chartData: 0,
+      genCD: 0,
+      schClass: 0,
+      lstMiddleAptd: 0,
+      lstHighAptd: 0,
+      lstVals: 0
+    }
   }
   
   // 1단계: 커리어넷과 고용24에서 전공 목록 수집
@@ -328,6 +358,38 @@ export async function seedAllMajors(env: Env): Promise<SeedProgress> {
       
       if (!result.profile) {
         throw new Error('전공 상세 데이터를 가져올 수 없습니다')
+      }
+      
+      // Phase 1: 새 필드 수집 통계 업데이트
+      const profile = result.profile
+      if (profile.relateSubject && profile.relateSubject.length > 0) progress.phase1Fields!.relateSubject++
+      if (profile.careerAct && profile.careerAct.length > 0) progress.phase1Fields!.careerAct++
+      if (profile.mainSubject && profile.mainSubject.length > 0) progress.phase1Fields!.mainSubject++
+      if (profile.enterField && profile.enterField.length > 0) progress.phase1Fields!.enterField++
+      if (profile.property) progress.phase1Fields!.property++
+      if (profile.universityList && profile.universityList.length > 0) progress.phase1Fields!.universityList++
+      if (profile.chartData) progress.phase1Fields!.chartData++
+      if (profile.genCD) progress.phase1Fields!.genCD++
+      if (profile.schClass) progress.phase1Fields!.schClass++
+      if (profile.lstMiddleAptd) progress.phase1Fields!.lstMiddleAptd++
+      if (profile.lstHighAptd) progress.phase1Fields!.lstHighAptd++
+      if (profile.lstVals) progress.phase1Fields!.lstVals++
+      
+      // 처음 3개 샘플에서 Phase 1 필드 상세 로깅
+      if (progress.processed < 3) {
+        console.log(`\n📝 샘플 ${progress.processed + 1}: ${major.name}`)
+        console.log(`   relateSubject: ${profile.relateSubject ? `${profile.relateSubject.length}개 항목` : '없음'}`)
+        console.log(`   careerAct: ${profile.careerAct ? `${profile.careerAct.length}개 항목` : '없음'}`)
+        console.log(`   mainSubject: ${profile.mainSubject ? `${profile.mainSubject.length}개 항목` : '없음'}`)
+        console.log(`   enterField: ${profile.enterField ? `${profile.enterField.length}개 항목` : '없음'}`)
+        console.log(`   property: ${profile.property ? '있음' : '없음'}`)
+        console.log(`   universityList: ${profile.universityList ? `${profile.universityList.length}개 대학` : '없음'}`)
+        console.log(`   chartData: ${profile.chartData ? '있음' : '없음'}`)
+        console.log(`   genCD: ${profile.genCD ? '있음' : '없음'}`)
+        console.log(`   schClass: ${profile.schClass ? '있음' : '없음'}`)
+        console.log(`   lstMiddleAptd: ${profile.lstMiddleAptd ? '있음' : '없음'}`)
+        console.log(`   lstHighAptd: ${profile.lstHighAptd ? '있음' : '없음'}`)
+        console.log(`   lstVals: ${profile.lstVals ? '있음' : '없음'}`)
       }
       
       // API 데이터 준비
@@ -394,6 +456,24 @@ export async function seedAllMajors(env: Env): Promise<SeedProgress> {
   console.log(`⏭️  스킵: ${progress.skipped}`)
   console.log(`❌ 오류: ${progress.errors}`)
   console.log(`⏱️  총 소요 시간: ${elapsedMinutes}분 ${elapsedSeconds}초`)
+  
+  // Phase 1: 새 필드 수집 통계 출력
+  if (progress.phase1Fields) {
+    const totalProcessed = progress.processed - progress.errors
+    console.log('\n📊 Phase 1 필드 수집 통계:')
+    console.log(`   relateSubject: ${progress.phase1Fields.relateSubject}/${totalProcessed} (${Math.round(progress.phase1Fields.relateSubject / totalProcessed * 100)}%)`)
+    console.log(`   careerAct: ${progress.phase1Fields.careerAct}/${totalProcessed} (${Math.round(progress.phase1Fields.careerAct / totalProcessed * 100)}%)`)
+    console.log(`   mainSubject: ${progress.phase1Fields.mainSubject}/${totalProcessed} (${Math.round(progress.phase1Fields.mainSubject / totalProcessed * 100)}%)`)
+    console.log(`   enterField: ${progress.phase1Fields.enterField}/${totalProcessed} (${Math.round(progress.phase1Fields.enterField / totalProcessed * 100)}%)`)
+    console.log(`   property: ${progress.phase1Fields.property}/${totalProcessed} (${Math.round(progress.phase1Fields.property / totalProcessed * 100)}%)`)
+    console.log(`   universityList: ${progress.phase1Fields.universityList}/${totalProcessed} (${Math.round(progress.phase1Fields.universityList / totalProcessed * 100)}%)`)
+    console.log(`   chartData: ${progress.phase1Fields.chartData}/${totalProcessed} (${Math.round(progress.phase1Fields.chartData / totalProcessed * 100)}%)`)
+    console.log(`   genCD: ${progress.phase1Fields.genCD}/${totalProcessed} (${Math.round(progress.phase1Fields.genCD / totalProcessed * 100)}%)`)
+    console.log(`   schClass: ${progress.phase1Fields.schClass}/${totalProcessed} (${Math.round(progress.phase1Fields.schClass / totalProcessed * 100)}%)`)
+    console.log(`   lstMiddleAptd: ${progress.phase1Fields.lstMiddleAptd}/${totalProcessed} (${Math.round(progress.phase1Fields.lstMiddleAptd / totalProcessed * 100)}%)`)
+    console.log(`   lstHighAptd: ${progress.phase1Fields.lstHighAptd}/${totalProcessed} (${Math.round(progress.phase1Fields.lstHighAptd / totalProcessed * 100)}%)`)
+    console.log(`   lstVals: ${progress.phase1Fields.lstVals}/${totalProcessed} (${Math.round(progress.phase1Fields.lstVals / totalProcessed * 100)}%)`)
+  }
   
   if (progress.errors > 0) {
     console.log('\n❌ 오류 상세:')
