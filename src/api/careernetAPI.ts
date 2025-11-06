@@ -160,12 +160,120 @@ export interface Major {
   majorSeq: string;        // 학과 코드
   major: string;           // 학과명
   summary: string;         // 학과 소개
-  university?: string;     // 대학명 (리스트)
+  university?: string;     // 대학명 (리스트) - deprecated, use universityList
   department?: string;     // 학과 계열
   salaryAfterGraduation?: string;  // 졸업 후 평균 연봉
   employmentRate?: string; // 취업률
   relatedJob?: string;     // 관련 직업
   aptitude?: string;       // 적성 유형
+  
+  // Phase 1: 추가 필드 (CareerNet 공식 문서 기반)
+  
+  // 교육 콘텐츠 필드 (우선순위 HIGH)
+  relate_subject?: Array<{           // 관련 고교 교과목
+    subject_name: string             // 선택 과목 종류명 (예: "공통과목", "일반선택")
+    subject_description: string      // 과목이름 (예: "사회, 생활·교양")
+  }>
+  career_act?: Array<{               // 진로 탐색 활동
+    act_name: string                 // 활동 종류명 (예: "법률신문 구독")
+    act_description: string          // 활동 설명
+  }>
+  main_subject?: Array<{             // 대학 주요 교과목
+    SBJECT_NM: string                // 교과목명 (예: "민법총칙")
+    SBJECT_SUMRY: string             // 교과목 설명
+  }>
+  enter_field?: Array<{              // 졸업 후 진출분야
+    gradeuate: string                // 진출분야명 (오타: gradeuate → graduate)
+    description: string              // 진출분야 설명
+  }>
+  property?: string                  // 학과특성
+  
+  // 개설대학 상세 정보 (우선순위 HIGH)
+  universityList?: Array<{           // 개설대학 상세 (university 대체)
+    schoolName: string               // 대학명
+    schoolURL?: string               // 학교 URL
+    area?: string                    // 지역 (예: "서울특별시")
+    campus_nm?: string               // 캠퍼스명 (예: "서울캠퍼스")
+    majorName?: string               // 학과명(대학표기)
+    totalCount?: string              // 전체수
+  }>
+  
+  // 통계 데이터 (우선순위 MEDIUM)
+  chartData?: {                      // 학과전망 통계
+    applicant?: Array<{name: string, data: string}>      // 지원자 현황
+    gender?: Array<{name: string, data: string}>         // 성별 분포
+    employment_rate?: Array<{name: string, data: string}>// 취업률
+    field?: Array<{name: string, data: string}>          // 취업 분야
+    avg_salary?: Array<{name: string, data: string}>     // 평균 임금
+    satisfaction?: Array<{name: string, data: string}>   // 만족도
+    after_graduation?: Array<{name: string, data: string}>// 졸업 후 진로
+  }
+  
+  // 특성 통계 (우선순위 LOW)
+  GenCD?: {                          // 특성 - 성별비율
+    popular?: Array<{
+      PCNT1: string                  // 비율 - 정수값
+      PCNT2: string                  // 비율 - 소수값
+      PCNT: string                   // 비율 - 반올림값
+      GEN_NM: string                 // 성별
+    }>
+    bookmark?: Array<{
+      PCNT1: string
+      PCNT2: string
+      PCNT: string
+      GEN_NM: string
+    }>
+  }
+  SchClass?: {                       // 특성 - 학교급별비율
+    popular?: Array<{
+      PCNT1: string
+      PCNT2: string
+      PCNT: string
+      SCH_CLASS_NM: string           // 학교급명
+    }>
+    bookmark?: Array<{
+      PCNT1: string
+      PCNT2: string
+      PCNT: string
+      SCH_CLASS_NM: string
+    }>
+  }
+  lstMiddleAptd?: {                  // 특성 - 중학생 적성유형
+    popular?: Array<{
+      RANK: string                   // 순위
+      CD_ORDR: string                // 코드 순서
+      CD_NM: string                  // 적성유형명
+    }>
+    bookmark?: Array<{
+      RANK: string
+      CD_ORDR: string
+      CD_NM: string
+    }>
+  }
+  lstHighAptd?: {                    // 특성 - 고등학생 적성유형
+    popular?: Array<{
+      RANK: string
+      CD_ORDR: string
+      CD_NM: string
+    }>
+    bookmark?: Array<{
+      RANK: string
+      CD_ORDR: string
+      CD_NM: string
+    }>
+  }
+  lstVals?: {                        // 특성 - 선호 직업가치
+    popular?: Array<{
+      RANK: string
+      CD_ORDR: string
+      CD_NM: string                  // 직업가치명
+    }>
+    bookmark?: Array<{
+      RANK: string
+      CD_ORDR: string
+      CD_NM: string
+    }>
+  }
 }
 
 // 직업백과 API 전체 응답 타입
@@ -359,7 +467,7 @@ export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major
     
     const major = majors[0];
     
-    // university 배열을 문자열로 변환
+    // university 배열을 문자열로 변환 (하위 호환성)
     let universityString = '';
     if (major.university && Array.isArray(major.university)) {
       universityString = major.university
@@ -368,22 +476,43 @@ export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major
         .join(', ');
     }
     
+    // university 배열을 상세 정보로 변환 (Phase 1)
+    let universityList: Major['universityList'] = undefined;
+    if (major.university && Array.isArray(major.university)) {
+      universityList = major.university
+        .map((u: any) => ({
+          schoolName: u.schoolName || '',
+          schoolURL: u.schoolURL || undefined,
+          area: u.area || undefined,
+          campus_nm: u.campus_nm || undefined,
+          majorName: u.majorName || undefined,
+          totalCount: u.totalCount || undefined
+        }))
+        .filter(u => u.schoolName);
+    }
+    
     // 필드 매핑 (JSON 형태는 이미 객체이므로 그대로 사용 가능)
     // 주의: spread operator를 먼저 사용하고, 그 다음에 변환된 필드를 덮어쓴다
     return {
       // 원본 JSON 필드 모두 포함 (중첩 구조 포함)
+      // API가 반환하는 모든 필드가 자동으로 포함됨 (relate_subject, career_act, chartData 등)
       ...major,
       
       // 명시적으로 변환이 필요한 필드들 (위의 spread를 덮어씀)
       majorSeq: majorSeq,
       major: major.major || '',
       summary: major.summary || '',
-      university: universityString,  // 배열을 문자열로 변환
+      university: universityString,       // 배열을 문자열로 변환 (하위 호환성)
+      universityList: universityList,     // 상세 정보 배열 (Phase 1)
       department: major.department || '',
       salaryAfterGraduation: major.salary || '',
       employmentRate: major.employment || '',
       relatedJob: major.job || '',
-      aptitude: major.interest || ''
+      aptitude: major.interest || '',
+      
+      // Phase 1: 새로운 필드들은 spread operator로 자동 포함됨
+      // relate_subject, career_act, main_subject, enter_field, property,
+      // chartData, GenCD, SchClass, lstMiddleAptd, lstHighAptd, lstVals
     };
     
   } catch (error) {
