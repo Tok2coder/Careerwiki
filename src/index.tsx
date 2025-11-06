@@ -64,6 +64,7 @@ import {
   setCommentVote
 } from './services/commentService'
 import type { AnalysisType, PricingTier, RequestStatus } from './types/aiAnalysis'
+import { getOrGeneratePage } from './utils/page-cache'
 
 
 // Types
@@ -2596,49 +2597,135 @@ app.get('/job/:slug', async (c) => {
 app.get('/major/:slug', async (c) => {
   const slug = c.req.param('slug')
   const resolvedId = resolveDetailIdFromSlug('major', slug)
-  const careernetId = c.req.query('careernetId') || undefined
-  const majorGbParam = c.req.query('goyongMajorGb')
-  const departmentId = c.req.query('goyongDepartmentId') || undefined
-  const majorId = c.req.query('goyongMajorId') || undefined
-  const includeSources = parseSourcesQuery(c.req.query('sources'))
+  
+  // 🆕 ISR (Incremental Static Regeneration) with wiki_pages cache
+  return getOrGeneratePage(
+    slug,
+    'major',
+    {
+      // Step 1: Fetch data
+      fetchData: async (slug, env) => {
+        const careernetId = c.req.query('careernetId') || undefined
+        const majorGbParam = c.req.query('goyongMajorGb')
+        const departmentId = c.req.query('goyongDepartmentId') || undefined
+        const majorId = c.req.query('goyongMajorId') || undefined
+        const includeSources = parseSourcesQuery(c.req.query('sources'))
 
-  const findSampleMajorDetail = () => {
-    const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
-    for (const candidate of candidates) {
-      const sample = getSampleMajorDetail(candidate)
-      if (sample) {
-        return sample
-      }
-    }
-    return null
-  }
+        const goyongMajorGb = majorGbParam === '1' ? '1' : majorGbParam === '2' ? '2' : undefined
+        const goyongParams = goyongMajorGb && departmentId && majorId
+          ? { majorGb: goyongMajorGb, departmentId, majorId }
+          : undefined
 
-  const goyongMajorGb = majorGbParam === '1' ? '1' : majorGbParam === '2' ? '2' : undefined
-  const goyongParams = goyongMajorGb && departmentId && majorId
-    ? {
-        majorGb: goyongMajorGb,
-        departmentId,
-        majorId
-      }
-    : undefined
+        const result = await getUnifiedMajorDetail(
+          {
+            id: resolvedId,
+            careernetId,
+            goyong24Params: goyongParams,
+            includeSources
+          },
+          env
+        )
 
-  try {
-    const result = await getUnifiedMajorDetail(
-      {
-        id: resolvedId,
-        careernetId,
-        goyong24Params: goyongParams,
-        includeSources
+        if (!result.profile) {
+          // Try sample data fallback
+          const findSampleMajorDetail = () => {
+            const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
+            for (const candidate of candidates) {
+              const sample = getSampleMajorDetail(candidate)
+              if (sample) return sample
+            }
+            return null
+          }
+          
+          const sample = findSampleMajorDetail()
+          if (sample) {
+            throw new Error('SAMPLE_FALLBACK') // Signal to use sample rendering
+          }
+          
+          throw new Error('PROFILE_NOT_FOUND')
+        }
+
+        return result
       },
-      c.env
-    )
 
-    if (!result.profile) {
+      // Step 2: Render HTML
+      renderHTML: (result) => {
+        const profile = result.profile!  // Non-null assertion (we already checked in fetchData)
+        const canonicalSlug = composeDetailSlug('major', profile.name, profile.id ?? resolvedId)
+        const canonicalPath = `/major/${encodeURIComponent(canonicalSlug)}`
+        const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+        const title = `${profile.name} 전공 정보 - Careerwiki`
+        const description = createMetaDescription(
+          profile.summary,
+          profile.employmentRate,
+          profile.salaryAfterGraduation,
+          profile.jobProspect
+        )
+        const extraHead = [
+          '<meta property="og:type" content="article">',
+          '<meta property="article:modified_time" content="' + new Date().toISOString() + '">',
+          createMajorJsonLd(profile, canonicalUrl)
+        ].filter(Boolean).join('\n')
+
+        const content = renderUnifiedMajorDetail({
+          profile,
+          partials: result.partials,
+          sources: result.sources
+        })
+
+        return renderLayout(
+          content,
+          escapeHtml(title),
+          escapeHtml(description),
+          false,
+          {
+            canonical: canonicalUrl,
+            ogUrl: canonicalUrl,
+            extraHead
+          }
+        )
+      },
+
+      // Step 3: Extract metadata
+      extractMetadata: (result) => {
+        const profile = result.profile!  // Non-null assertion (we already checked in fetchData)
+        return {
+          title: `${profile.name} 전공 정보 - Careerwiki`,
+          description: createMetaDescription(
+            profile.summary,
+            profile.employmentRate,
+            profile.salaryAfterGraduation,
+            profile.jobProspect
+          ),
+          og_image_url: undefined // Add later if needed
+        }
+      }
+    },
+    c
+  ).catch((error) => {
+    // Error handling
+    console.error('Major detail route error:', error)
+    
+    // Try sample fallback
+    if (error.message === 'SAMPLE_FALLBACK') {
+      const findSampleMajorDetail = () => {
+        const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
+        for (const candidate of candidates) {
+          const sample = getSampleMajorDetail(candidate)
+          if (sample) return sample
+        }
+        return null
+      }
+      
       const sample = findSampleMajorDetail()
       if (sample) {
+        console.warn('Major detail fallback: serving synthetic sample for', slug)
         return renderSampleMajorDetailPage(c, sample)
       }
-
+    }
+    
+    // 404 for missing profiles
+    if (error.message === 'PROFILE_NOT_FOUND') {
       const fallbackHtml = renderDetailFallback({
         icon: 'fa-magnifying-glass',
         title: '전공 정보를 찾을 수 없습니다',
@@ -2646,60 +2733,17 @@ app.get('/major/:slug', async (c) => {
         ctaHref: '/major',
         ctaLabel: '전공위키로 돌아가기'
       })
-      const sourceSummary = renderSourceStatusSummary(result.sources)
-      const pageContent = `${fallbackHtml}${sourceSummary}`
       c.status(404)
       return c.html(
         renderLayout(
-          pageContent,
+          fallbackHtml,
           '전공 정보 없음 - Careerwiki',
           '요청한 전공 정보를 찾을 수 없습니다.'
         )
       )
     }
-
-    const profile = result.profile
-    const canonicalSlug = composeDetailSlug('major', profile.name, profile.id ?? resolvedId)
-    const canonicalPath = `/major/${encodeURIComponent(canonicalSlug)}`
-    const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
-    const title = `${profile.name} 전공 정보 - Careerwiki`
-    const description = createMetaDescription(
-      profile.summary,
-      profile.employmentRate,
-      profile.salaryAfterGraduation,
-      profile.jobProspect
-    )
-    const extraHead = [
-      '<meta property="og:type" content="article">',
-      createMajorJsonLd(profile, canonicalUrl)
-    ].filter(Boolean).join('\n')
-
-    const content = renderUnifiedMajorDetail({
-      profile,
-      partials: result.partials,
-      sources: result.sources
-    })
-
-    return c.html(
-      renderLayout(
-        content,
-        escapeHtml(title),
-        escapeHtml(description),
-        false,
-        {
-          canonical: canonicalUrl,
-          ogUrl: canonicalUrl,
-          extraHead
-        }
-      )
-    )
-  } catch (error) {
-    console.error('Major detail route error:', error)
-    const sample = findSampleMajorDetail()
-    if (sample) {
-      console.warn('Major detail fallback: serving synthetic sample for', slug)
-      return renderSampleMajorDetailPage(c, sample)
-    }
+    
+    // 500 for other errors
     const fallbackHtml = renderDetailFallback({
       icon: 'fa-exclamation-circle',
       iconColor: 'text-red-500',
@@ -2716,7 +2760,7 @@ app.get('/major/:slug', async (c) => {
         '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
       )
     )
-  }
+  })
 })
 
 const parseSourcesQuery = (value?: string | null): DataSource[] | undefined => {
