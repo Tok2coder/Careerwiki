@@ -1133,7 +1133,15 @@ const DetailTabs = (() => {
     const triggers = Array.from(tabset.querySelectorAll('[data-cw-tab-trigger]'))
     const panels = Array.from(tabset.querySelectorAll('[data-cw-tab-panel]'))
 
+    console.log('[DetailTabs] initTabset:', {
+      tabsetId: tabset.id,
+      entityType,
+      triggersFound: triggers.length,
+      panelsFound: panels.length
+    })
+
     if (!triggers.length || !panels.length) {
+      console.warn('[DetailTabs] No triggers or panels found, skipping initialization')
       return
     }
 
@@ -1189,6 +1197,7 @@ const DetailTabs = (() => {
       trigger.addEventListener('click', (event) => {
         event.preventDefault()
         const targetId = trigger.getAttribute('data-tab-id')
+        console.log('[DetailTabs] Tab clicked:', targetId, 'Current active:', tabset.dataset.activeTab)
         if (targetId) {
           activate(targetId, 'user')
           trigger.focus()
@@ -1251,9 +1260,12 @@ const DetailTabs = (() => {
   }
 
   const init = (entityType) => {
-    document
-      .querySelectorAll(`[data-cw-tabset][data-entity-type="${entityType}"]`)
-      .forEach((tabset) => initTabset(tabset))
+    const tabsets = document.querySelectorAll(`[data-cw-tabset][data-entity-type="${entityType}"]`)
+    console.log('[DetailTabs] Initializing tabs for entityType:', entityType, 'Found:', tabsets.length, 'tabsets')
+    tabsets.forEach((tabset) => {
+      console.log('[DetailTabs] Initializing tabset:', tabset.id, tabset.dataset)
+      initTabset(tabset)
+    })
   }
 
   return { init }

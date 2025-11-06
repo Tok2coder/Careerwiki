@@ -27,7 +27,22 @@ CareerWiki는 **Wikipedia의 협업 정신**과 **AI의 지능**을 결합하여
 
 ---
 
-## 📊 현재 상태 (2025-11-06)
+## 📊 현재 상태 (2025-11-06 12:30)
+
+### ✅ Phase 2.1.1: 정적 파일 서빙 버그 수정 완료 (2025-11-06) 🔧
+
+**문제**: 403 Forbidden - JavaScript 파일 로딩 실패로 탭 전환 불가
+**원인**: HTML에서 `/api-client.js` 참조 vs 파일 위치 `public/static/api-client.js` 불일치
+**해결**: 
+- `public/static/*.js` 파일을 `public/` 루트로 이동
+- serveStatic 설정에 `*.js` 패턴 추가
+- "관련 HowTo" 샘플 섹션 제거 완료
+
+**변경 사항:**
+- [x] `/api-client.js`, `/perf-metrics.js` 정상 로딩 (200 OK)
+- [x] 탭 전환 기능 복구 (JavaScript 이벤트 리스너 작동)
+- [x] 직업 상세 페이지 사이드바에서 "관련 HowTo" 섹션 제거
+- [x] 모든 페이지 타입에서 정적 자산 정상 로딩 확인
 
 ### ✅ Phase 2.1: ISR 캐시 시스템 구축 완료 (2025-11-06) 🎉
 

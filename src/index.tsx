@@ -91,6 +91,7 @@ app.use('*', cors())
 app.use('*', renderer)
 
 // Serve static files from public directory
+// All static assets including JS, CSS, images are served from /static/* path
 app.use('/static/*', serveStatic({ root: './public' }))
 
 let logoIdCounter = 0
@@ -2602,44 +2603,10 @@ app.get('/major/:slug', async (c) => {
   const debugMode = c.req.query('debug') === 'true'
   if (debugMode) {
     try {
-      const careernetId = c.req.query('careernetId') || undefined
-      const majorGbParam = c.req.query('goyongMajorGb')
-      const departmentId = c.req.query('goyongDepartmentId') || undefined
-      const majorId = c.req.query('goyongMajorId') || undefined
-      const includeSources = parseSourcesQuery(c.req.query('sources'))
-
-      const goyongMajorGb = majorGbParam === '1' ? '1' : majorGbParam === '2' ? '2' : undefined
-      const goyongParams = goyongMajorGb && departmentId && majorId
-        ? { majorGb: goyongMajorGb, departmentId, majorId }
-        : undefined
-
-      const result = await getUnifiedMajorDetailWithRawData(
-        {
-          id: resolvedId,
-          careernetId,
-          goyong24Params: goyongParams,
-          includeSources
-        },
-        c.env
-      )
-
-      if (!result.profile) {
-        const sample = getSampleMajorDetail(resolvedId) || getSampleMajorDetail(slug)
-        if (sample) {
-          const debugHtml = renderDataDebugPage({
-            pageType: 'major',
-            profile: sample,
-            rawData: null,
-            partials: null,
-            sources: {},
-            breadcrumbs: [
-              { href: '/', label: '홈' },
-              { href: '/major', label: '전공위키' },
-              { href: `/major/${encodeURIComponent(slug)}`, label: sample.name }
-            ]
-          })
-          return c.html(renderLayout(debugHtml, `${sample.name} 디버그 - Careerwiki`, '디버그 모드'))
-        }
+      // For major pages, show sample data only (no raw API data yet)
+      const sampleEntry = getSampleMajorDetail(resolvedId) || getSampleMajorDetail(slug)
+      
+      if (!sampleEntry || !sampleEntry.profile) {
         c.status(404)
         return c.html(renderLayout(renderDetailFallback({
           icon: 'fa-circle-exclamation',
@@ -2653,21 +2620,24 @@ app.get('/major/:slug', async (c) => {
 
       const debugHtml = renderDataDebugPage({
         pageType: 'major',
-        profile: result.profile,
-        rawData: result.rawData,
-        partials: result.partials,
-        sources: result.sources,
+        profile: sampleEntry.profile,
+        rawData: {
+          note: 'Major debug mode currently shows sample data only. Raw API data integration coming soon.',
+          sampleEntry
+        },
+        partials: null,
+        sources: sampleEntry.sources || {},
         breadcrumbs: [
           { href: '/', label: '홈' },
           { href: '/major', label: '전공위키' },
-          { href: `/major/${encodeURIComponent(slug)}`, label: result.profile.name }
+          { href: `/major/${encodeURIComponent(slug)}`, label: sampleEntry.profile.name }
         ]
       })
-
+      
       return c.html(renderLayout(
         debugHtml,
-        `${result.profile.name} 디버그 - Careerwiki`,
-        '디버그 모드: API 원시 데이터 및 통합 결과 확인'
+        `${sampleEntry.profile.name} 디버그 (샘플) - Careerwiki`,
+        '디버그 모드: 샘플 데이터 확인'
       ))
     } catch (error) {
       console.error('Debug mode error:', error)
