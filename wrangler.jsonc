@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "careerwiki-phase1",
-  "compatibility_date": "2024-01-01",
+  "compatibility_date": "2024-09-23",
   "compatibility_flags": ["nodejs_compat"],
   "pages_build_output_dir": "./dist",
   // Cron triggers는 Cloudflare Pages 미리보기 환경에서 지원되지 않습니다.

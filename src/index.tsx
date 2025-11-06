@@ -91,8 +91,8 @@ app.use('*', cors())
 app.use('*', renderer)
 
 // Serve static files from public directory
-// All static assets including JS, CSS, images are served from /static/* path
-app.use('/static/*', serveStatic({ root: './public' }))
+// Static files are served by wrangler's --assets flag
+// app.use('/static/*', serveStatic({ root: './public' }))  // Disabled for wrangler dev compatibility
 
 let logoIdCounter = 0
 
