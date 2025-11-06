@@ -176,13 +176,14 @@ async function fetchGoyong24MajorIds(env: Env): Promise<Array<{ id: string; name
   const allMajors: Array<{ id: string; name: string; source: 'goyong24'; majorGb: '1' | '2'; departmentId: string; majorId: string }> = []
   
   try {
-    // 고용24 학과는 키워드 검색이 필요하므로, 여러 일반적인 키워드로 수집
+    // 고용24 학과는 키워드 검색이 필요
+    // 최적화 전략: 단일 키워드 "과"로 900개 수집 + 보완 키워드로 나머지 20개 수집
     const keywords = [
-      '공학', '경영', '경제', '컴퓨터', '의학', '간호', '교육', '법학', '예술', '디자인',
-      '건축', '기계', '전기', '전자', '화학', '생명', '환경', '수학', '물리', '화학',
-      '국어', '영어', '중국어', '일본어', '역사', '철학', '심리', '사회', '정치', '행정',
-      '회계', '금융', '마케팅', '무역', '물류', '관광', '호텔', '외식', '패션', '미용',
-      '체육', '음악', '미술', '연극', '영화', '방송', '신문', '광고', '문예', '국문'
+      // 🔥 최고 효율 키워드 (900개 수집)
+      '과',
+      
+      // 보완 키워드 (누락된 전공 추가)
+      '학', '부', '공', '전공'
     ]
     
     const seenIds = new Set<string>()
@@ -195,15 +196,18 @@ async function fetchGoyong24MajorIds(env: Env): Promise<Array<{ id: string; name
         }, env)
         
         for (const major of response.items) {
-          if (!major.empCurtState2Id || !major.knowSchDptNm) continue
+          if (!major.empCurtState2Id || !major.knowDtlSchDptNm) continue
           
-          // 중복 체크
-          if (seenIds.has(major.empCurtState2Id)) continue
-          seenIds.add(major.empCurtState2Id)
+          // 중복 체크 - 세부 학과명 기준 (더 많은 전공 수집)
+          // knowDtlSchDptNm: 세부 학과명 (예: "컴퓨터교육과")
+          // knowSchDptNm: 표준 학과명 (예: "공학교육과")
+          const uniqueKey = `${major.knowDtlSchDptNm}_${major.empCurtState2Id}`
+          if (seenIds.has(uniqueKey)) continue
+          seenIds.add(uniqueKey)
           
           allMajors.push({
-            id: major.empCurtState2Id,
-            name: major.knowSchDptNm,
+            id: `G${major.empCurtState2Id}_${major.knowDtlSchDptNm}`, // 고유 ID 생성 (prefix + 학과명)
+            name: major.knowDtlSchDptNm, // 세부 학과명 사용
             source: 'goyong24' as const,
             majorGb: (major.majorGb as '1' | '2') || '1',
             departmentId: major.empCurtState1Id,

@@ -4285,6 +4285,7 @@ app.get('/api/majors/:id', async (c) => {
 app.get('/majors/:id', async (c) => {
   const id = c.req.param('id')
   const { DB } = c.env
+  const debugMode = c.req.query('debug') === 'true'
   
   try {
     // D1에서 직접 전공 상세 데이터 조회
@@ -4292,251 +4293,110 @@ app.get('/majors/:id', async (c) => {
       .bind(id).first<{ id: string; name: string; api_data_json: string }>()
     
     if (!row || !row.api_data_json) {
+      const fallbackHtml = renderDetailFallback({
+        icon: 'fa-magnifying-glass',
+        title: '전공 정보를 찾을 수 없습니다',
+        description: '요청하신 전공 데이터가 존재하지 않거나 삭제되었습니다.',
+        ctaHref: '/major',
+        ctaLabel: '전공위키로 돌아가기'
+      })
       return c.html(renderLayout(
-        `<div class="max-w-4xl mx-auto px-4 py-16 text-center">
-          <i class="fas fa-exclamation-triangle text-6xl text-yellow-500 mb-4"></i>
-          <h1 class="text-3xl font-bold mb-4">전공 정보를 찾을 수 없습니다</h1>
-          <p class="text-wiki-muted mb-8">요청하신 전공 정보가 존재하지 않거나 삭제되었습니다.</p>
-          <a href="/" class="btn-primary inline-block">
-            <i class="fas fa-home mr-2"></i>홈으로 돌아가기
-          </a>
-        </div>`,
-        '전공 정보 없음',
+        fallbackHtml,
+        '전공 정보 없음 - Careerwiki',
         '요청하신 전공 정보를 찾을 수 없습니다.'
       ), 404)
     }
     
     // Parse API data from D1
     const apiData = JSON.parse(row.api_data_json)
-    const major = apiData.merged || apiData.careernet || apiData.goyong24 || {}
-    const sources = apiData.sources || {}
     
-    const majorName = major.name || row.name || '전공 정보'
-    const summary = major.summary?.substring(0, 120) || '전공 정보를 제공합니다.'
+    // UnifiedMajorDetail 형식으로 변환
+    const profile: UnifiedMajorDetail = {
+      id: row.id,
+      sourceIds: apiData.merged?.sourceIds || {},
+      name: apiData.merged?.name || row.name,
+      categoryId: apiData.merged?.categoryId,
+      categoryName: apiData.merged?.categoryName,
+      summary: apiData.merged?.summary,
+      aptitude: apiData.merged?.aptitude,
+      relatedMajors: apiData.merged?.relatedMajors,
+      mainSubjects: apiData.merged?.mainSubjects,
+      licenses: apiData.merged?.licenses,
+      universities: apiData.merged?.universities,
+      recruitmentStatus: apiData.merged?.recruitmentStatus,
+      relatedJobs: apiData.merged?.relatedJobs,
+      whatStudy: apiData.merged?.whatStudy,
+      howPrepare: apiData.merged?.howPrepare,
+      jobProspect: apiData.merged?.jobProspect,
+      salaryAfterGraduation: apiData.merged?.salaryAfterGraduation,
+      employmentRate: apiData.merged?.employmentRate,
+      sources: apiData.merged?.sources || []
+    }
+    
+    const majorName = profile.name || '전공 정보'
+    const summary = profile.summary?.substring(0, 120) || '전공 정보를 제공합니다.'
+    
+    // Render debug page if in debug mode
+    if (debugMode) {
+      const debugContent = renderDataDebugPage({
+        profile,
+        partials: apiData.partials || {},
+        sources: apiData.sources || {},
+        rawApiData: {
+          careernet: apiData.careernet || null,
+          goyong24: apiData.goyong24 || null
+        }
+      })
+      
+      return c.html(debugContent)
+    }
     
     // SEO 최적화된 메타 정보
     const pageTitle = `${majorName} 전공 정보 - 대학 학과, 진로, 취업 | CareerWiki`
-    const metaDescription = `${summary}. ${major.mainSubjects?.length || 0}개 주요 과목, ${major.relatedJobs?.length || 0}개 관련 직업, ${major.universities?.length || 0}개 대학 정보 제공.`
-    const pageUrl = `https://careerwiki.org/majors/${id}`
+    const metaDescription = `${summary}. ${profile.mainSubjects?.length || 0}개 주요 과목, ${profile.relatedJobs?.length || 0}개 관련 직업, ${profile.universities?.length || 0}개 대학 정보 제공.`
+    const canonicalUrl = `https://careerwiki.org/majors/${id}`
     
-    // Schema.org JSON-LD: EducationalOccupationalProgram
-    const majorSchemaLd = {
-      "@context": "https://schema.org",
-      "@type": "EducationalOccupationalProgram",
-      "name": majorName,
-      "description": major.summary || metaDescription,
-      "provider": {
-        "@type": "Organization",
-        "name": "CareerWiki",
-        "url": "https://careerwiki.org"
-      },
-      "educationalProgramMode": "대학교",
-      ...(major.categoryName && {
-        "occupationalCategory": {
-          "@type": "CategoryCode",
-          "name": major.categoryName
-        }
-      }),
-      ...(major.licenses && major.licenses.length > 0 && {
-        "educationalCredentialAwarded": major.licenses
-      }),
-      ...(major.mainSubjects && major.mainSubjects.length > 0 && {
-        "competencyRequired": major.mainSubjects
-      }),
-      ...(major.universities && major.universities.length > 0 && {
-        "numberOfCredits": major.universities.length
-      })
-    }
+    // renderUnifiedMajorDetail 템플릿 사용
+    const content = renderUnifiedMajorDetail({
+      profile,
+      partials: apiData.partials || {},
+      sources: apiData.sources || {}
+    })
     
-    // Schema.org JSON-LD: BreadcrumbList
-    const breadcrumbSchemaLd = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "홈",
-          "item": "https://careerwiki.org/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "전공",
-          "item": "https://careerwiki.org/majors"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": majorName,
-          "item": `https://careerwiki.org/majors/${id}`
-        }
-      ]
-    }
-    
-    // 전공 상세 페이지 HTML 생성 (Semantic HTML + Microdata)
-    const content = `
-      <div class="max-w-6xl mx-auto px-4 py-8" itemscope itemtype="https://schema.org/EducationalOccupationalProgram">
-        <!-- 헤더: 전공명 + 계열 -->
-        <header class="mb-8">
-          <h1 class="text-4xl font-bold mb-2" itemprop="name">${majorName}</h1>
-          ${major.categoryName ? `<p class="text-lg text-wiki-muted" itemprop="occupationalCategory">${major.categoryName}</p>` : ''}
-        </header>
-        
-        <!-- 전공 소개 -->
-        ${major.summary ? `
-        <section class="glass-card p-6 rounded-xl mb-6">
-          <h2 class="text-2xl font-bold mb-4 flex items-center">
-            <i class="fas fa-graduation-cap mr-2 text-wiki-primary"></i>
-            전공 소개
-          </h2>
-          <div class="text-wiki-text leading-relaxed" itemprop="description">
-            ${major.summary}
-          </div>
-        </section>
-        ` : ''}
-        
-        <!-- 주요 학습 과목 -->
-        ${major.mainSubjects && major.mainSubjects.length > 0 ? `
-        <section class="glass-card p-6 rounded-xl mb-6">
-          <h2 class="text-2xl font-bold mb-4 flex items-center">
-            <i class="fas fa-book mr-2 text-wiki-primary"></i>
-            주요 학습 과목
-          </h2>
-          <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            ${major.mainSubjects.map((subject: string) => `
-              <li class="flex items-start" itemprop="competencyRequired">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>${subject}</span>
-              </li>
-            `).join('')}
-          </ul>
-        </section>
-        ` : ''}
-        
-        <!-- 적성 및 흥미 -->
-        ${major.aptitude ? `
-        <section class="glass-card p-6 rounded-xl mb-6">
-          <h2 class="text-2xl font-bold mb-4 flex items-center">
-            <i class="fas fa-heart mr-2 text-wiki-primary"></i>
-            적성 및 흥미
-          </h2>
-          <div class="text-wiki-text leading-relaxed" itemprop="educationalCredentialAwarded">
-            ${major.aptitude}
-          </div>
-        </section>
-        ` : ''}
-        
-        <!-- 취득 가능 자격증 -->
-        ${major.licenses && major.licenses.length > 0 ? `
-        <section class="glass-card p-6 rounded-xl mb-6">
-          <h2 class="text-2xl font-bold mb-4 flex items-center">
-            <i class="fas fa-certificate mr-2 text-wiki-primary"></i>
-            취득 가능 자격증
-          </h2>
-          <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            ${major.licenses.map((license: string) => `
-              <li class="flex items-start" itemprop="educationalCredentialAwarded">
-                <i class="fas fa-award text-yellow-500 mr-2 mt-1"></i>
-                <span>${license}</span>
-              </li>
-            `).join('')}
-          </ul>
-        </section>
-        ` : ''}
-        
-        <!-- 관련 직업 -->
-        ${major.relatedJobs && major.relatedJobs.length > 0 ? `
-        <section class="glass-card p-6 rounded-xl mb-6">
-          <h2 class="text-2xl font-bold mb-4 flex items-center">
-            <i class="fas fa-briefcase mr-2 text-wiki-primary"></i>
-            관련 직업
-          </h2>
-          <div class="flex flex-wrap gap-2">
-            ${major.relatedJobs.map((job: string) => `
-              <span class="badge badge-primary" itemprop="occupationalCredentialAwarded">${job}</span>
-            `).join('')}
-          </div>
-        </section>
-        ` : ''}
-        
-        <!-- 개설 대학 -->
-        ${major.universities && major.universities.length > 0 ? `
-        <section class="glass-card p-6 rounded-xl mb-6">
-          <h2 class="text-2xl font-bold mb-4 flex items-center">
-            <i class="fas fa-university mr-2 text-wiki-primary"></i>
-            개설 대학
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            ${major.universities.slice(0, 20).map((uni: any) => `
-              <div class="p-3 bg-white/5 rounded-lg" itemprop="provider" itemscope itemtype="https://schema.org/CollegeOrUniversity">
-                <p class="font-semibold" itemprop="name">${uni.name || uni.university || '대학명 정보 없음'}</p>
-                ${uni.department ? `<p class="text-sm text-wiki-muted" itemprop="department">${uni.department}</p>` : ''}
-              </div>
-            `).join('')}
-          </div>
-          ${major.universities.length > 20 ? `
-            <p class="text-sm text-wiki-muted mt-4 text-center">외 ${major.universities.length - 20}개 대학</p>
-          ` : ''}
-        </section>
-        ` : ''}
-        
-        <!-- 데이터 출처 -->
-        <div class="text-center text-sm text-wiki-muted mt-8">
-          <p>데이터 출처: 
-            ${sources?.CAREERNET?.count > 0 ? '커리어넷' : ''}
-            ${sources?.CAREERNET?.count > 0 && sources?.GOYONG24?.count > 0 ? ', ' : ''}
-            ${sources?.GOYONG24?.count > 0 ? '고용24' : ''}
-          </p>
-        </div>
-      </div>
-    `
-    
-    // extraHead에 Schema.org JSON-LD, OG 이미지, Twitter Card 추가
-    const extraHead = `
-      <script type="application/ld+json">
-        ${JSON.stringify(majorSchemaLd)}
-      </script>
-      <script type="application/ld+json">
-        ${JSON.stringify(breadcrumbSchemaLd)}
-      </script>
-      <meta property="og:image" content="https://careerwiki.org/static/default-major-og-image.jpg">
-      <meta property="og:image:width" content="1200">
-      <meta property="og:image:height" content="630">
-      <meta property="og:image:alt" content="${majorName} 전공 정보">
-      <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:title" content="${pageTitle}">
-      <meta name="twitter:description" content="${metaDescription}">
-      <meta name="twitter:image" content="https://careerwiki.org/static/default-major-og-image.jpg">
-      <meta name="twitter:site" content="@careerwiki">
-    `
+    // Schema.org JSON-LD 생성
+    const extraHead = [
+      '<meta property="og:type" content="article">',
+      createMajorJsonLd(profile, canonicalUrl)
+    ].filter(Boolean).join('\n')
     
     return c.html(renderLayout(
-      content, 
-      pageTitle, 
-      metaDescription,
+      content,
+      escapeHtml(pageTitle),
+      escapeHtml(metaDescription),
       false,
       {
-        canonical: pageUrl,
-        ogUrl: pageUrl,
+        canonical: canonicalUrl,
+        ogUrl: canonicalUrl,
         extraHead
       }
     ))
     
   } catch (error) {
-    console.error('전공 상세 페이지 오류:', error)
+    console.error('Major detail route error:', error)
+    const fallbackHtml = renderDetailFallback({
+      icon: 'fa-exclamation-circle',
+      iconColor: 'text-red-500',
+      title: '전공 정보를 불러오지 못했습니다',
+      description: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      ctaHref: '/major',
+      ctaLabel: '전공위키로 돌아가기'
+    })
+    c.status(500)
     return c.html(renderLayout(
-      `<div class="max-w-4xl mx-auto px-4 py-16 text-center">
-        <i class="fas fa-exclamation-circle text-6xl text-red-500 mb-4"></i>
-        <h1 class="text-3xl font-bold mb-4">오류가 발생했습니다</h1>
-        <p class="text-wiki-muted mb-8">전공 정보를 불러오는 중 문제가 발생했습니다.</p>
-        <a href="/" class="btn-primary inline-block">
-          <i class="fas fa-home mr-2"></i>홈으로 돌아가기
-        </a>
-      </div>`,
-      '오류 발생',
-      '전공 정보를 불러올 수 없습니다.'
-    ), 500)
+      fallbackHtml,
+      '전공 정보 로드 오류 - Careerwiki',
+      '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+    ))
   }
 })
 

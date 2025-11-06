@@ -605,7 +605,71 @@ export const getUnifiedMajorDetail = async (
   let careernetProfile: UnifiedMajorDetail | null = null
   let goyongProfile: UnifiedMajorDetail | null = null
 
-  // CareerNet detail
+  // 🆕 Step 0: Check D1 Database first (if available) for Korean name lookups
+  if (env && 'DB' in env && id && !id.includes(':')) {
+    try {
+      const db = (env as any).DB
+      
+      // Try finding by name (Korean slug) in D1
+      const majorRow = await db.prepare(`
+        SELECT id, name, careernet_id, goyong24_id, api_data_json 
+        FROM majors 
+        WHERE LOWER(name) = LOWER(?)
+        LIMIT 1
+      `).bind(id).first()
+      
+      if (majorRow && majorRow.api_data_json) {
+        // Found in D1 - use cached data
+        const apiData = JSON.parse(majorRow.api_data_json)
+        const careernetData = apiData?.careernet
+        const goyongData = apiData?.goyong24
+        
+        if (careernetData && Object.keys(careernetData).length > 0) {
+          careernetProfile = {
+            id: `major:C_${majorRow.careernet_id}`,
+            sourceIds: { careernet: majorRow.careernet_id },
+            name: majorRow.name,
+            ...careernetData,
+            sources: ['CAREERNET']
+          }
+          const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
+          status.attempted = true
+          status.count = 1
+        }
+        
+        if (goyongData && Object.keys(goyongData).length > 0) {
+          goyongProfile = {
+            id: majorRow.goyong24_id,
+            sourceIds: { goyong24: majorRow.goyong24_id },
+            name: majorRow.name,
+            ...goyongData,
+            sources: ['GOYONG24']
+          }
+          const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
+          status.attempted = true
+          status.count = 1
+        }
+        
+        // If we have data from D1, skip API calls and merge
+        if (careernetProfile || goyongProfile) {
+          const merged = mergeMajorProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
+          return {
+            profile: merged,
+            partials: {
+              CAREERNET: careernetProfile,
+              GOYONG24: goyongProfile
+            },
+            sources: sourcesStatus
+          }
+        }
+      }
+    } catch (d1Error) {
+      console.error('D1 major lookup error:', d1Error)
+      // Continue to API fallback
+    }
+  }
+
+  // CareerNet detail (fallback if D1 didn't return data)
   if (sourcesToUse.includes('CAREERNET')) {
     const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
     const resolvedCareernetId =
@@ -615,7 +679,7 @@ export const getUnifiedMajorDetail = async (
 
     if (!resolvedCareernetId) {
       status.skippedReason = 'missing-id'
-    } else {
+    } else if (!careernetProfile) {  // Only fetch if D1 didn't provide data
       status.attempted = true
       try {
         const raw = await fetchCareerNetMajorDetail(resolvedCareernetId, env)

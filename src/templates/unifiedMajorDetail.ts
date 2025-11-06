@@ -230,22 +230,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       icon: 'fa-circle-info',
       message: '이 전공은 아직 상세 정보가 충분하지 않습니다. 데이터가 수집되는 대로 탭이 활성화됩니다.'
     },
-    ctaLinks: [
-      {
-        href: `/analyzer/major?from=major-detail&major=${encodeURIComponent(profile.id)}`,
-        label: 'AI 전공 추천 받기',
-        icon: 'fa-brain',
-        ctaType: 'ai',
-        variant: 'primary'
-      },
-      {
-        href: `/howto?from=major-detail&major=${encodeURIComponent(profile.id)}`,
-        label: '학습 HowTo 살펴보기',
-        icon: 'fa-route',
-        ctaType: 'howto',
-        variant: 'secondary'
-      }
-    ],
+    ctaLinks: [],
     comments: {
       title: '재학생 · 졸업생 의견 (Phase 1 준비 중)',
       description: '댓글, 리액션, 신고 기능이 곧 제공됩니다. 우선 적용을 원하시면 의견을 남겨주세요.',
@@ -293,24 +278,26 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     .filter((section) => !!section && section.trim().length > 0)
     .join('')
 
+  // Parse category tags from categoryName (comma-separated)
+  const categoryTags = profile.categoryName 
+    ? profile.categoryName.split(',').map(tag => tag.trim()).filter(Boolean)
+    : []
+
   return `
     <div class="max-w-[1400px] mx-auto md:px-6 md:py-8 md:mt-4">
       <div class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl mb-8 space-y-6">
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-          <div>
-            <div class="flex items-center gap-3 mb-3">
-              <span class="px-3 py-1 rounded-full bg-wiki-secondary/10 text-xs text-wiki-secondary font-semibold">CareerWiki 전공 위키</span>
-              ${profile.categoryName ? `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary">${escapeHtml(profile.categoryName)}</span>` : ''}
+          <div class="flex-1">
+            ${profile.categoryName ? `<div class="text-sm text-wiki-secondary font-semibold mb-2">${escapeHtml(profile.categoryName)}</div>` : ''}
+            <div class="flex items-center justify-between gap-4">
+              <h1 class="text-4xl font-bold text-white">${escapeHtml(profile.name)}</h1>
+              <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg content-text hover:bg-blue-600 transition whitespace-nowrap" data-share="true" data-entity-type="major" data-entity-id="${escapeHtml(profile.id)}"><i class="fas fa-share-alt mr-2"></i>공유</button>
             </div>
-            <h1 class="text-4xl font-bold text-white mb-3">${escapeHtml(profile.name)}</h1>
-            <div class="mt-4 flex flex-wrap gap-3 items-center">
-              ${renderSourceBadges(profile.sources)}
-            </div>
-            ${ctaBlock}
-          </div>
-          <div class="flex gap-3">
-            <a href="/major" class="px-4 py-2 border border-wiki-border rounded-lg content-text text-wiki-muted hover:border-wiki-primary hover:text-wiki-primary transition"><i class="fas fa-arrow-left mr-2"></i>목록으로</a>
-            <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg content-text hover:bg-blue-600 transition" data-share="true" data-entity-type="major" data-entity-id="${escapeHtml(profile.id)}"><i class="fas fa-share-alt mr-2"></i>공유</button>
+            ${categoryTags.length > 0 ? `
+              <div class="mt-4 flex flex-wrap gap-2">
+                ${categoryTags.map(tag => `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary">${escapeHtml(tag)}</span>`).join('')}
+              </div>
+            ` : ''}
           </div>
         </div>
         ${heroImage}

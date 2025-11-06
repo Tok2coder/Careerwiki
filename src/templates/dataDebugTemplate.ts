@@ -12,6 +12,151 @@ export interface DataDebugTemplateParams {
   }
 }
 
+// ========== 필드 설명 맵 (직업 & 전공 공통) ==========
+const FIELD_DESCRIPTIONS: Record<string, string> = {
+  // 직업/전공 기본 정보
+  'name': '직업명 또는 전공명',
+  'jobName': '직업명 (통합)',
+  'encyclopedia.baseInfo.job_nm': '커리어넷 직업명',
+  'summary.jobNm': '고용24 직업명',
+  'summary': '전공/직업 요약 정보',
+  'summary.jobLrclNm': '직업 대분류명 (관리직, 전문직 등)',
+  'summary.jobMdclNm': '직업 중분류명',
+  'summary.jobSmclNm': '직업 소분류명',
+  'summary.jobDtclNm': '직업 세분류명',
+  
+  // 전공 관련 필드
+  'categoryId': '전공 계열 ID',
+  'categoryName': '전공 계열명 (인문계열, 자연계열, 공학계열 등)',
+  'aptitude': '적성 및 흥미 (어떤 성향의 학생에게 적합한지)',
+  'relatedMajors': '관련 학과 목록',
+  'mainSubjects': '주요 학습 과목 (기초과목 + 심화과목)',
+  'licenses': '취득 가능 자격증 (국가자격 + 민간자격)',
+  'universities': '개설 대학 정보 (대학명, 학과명, 유형)',
+  'universities[0].name': '대학명',
+  'universities[0].department': '학과/학부명',
+  'universities[0].universityType': '대학 유형 (4년제, 전문대 등)',
+  'universities[0].url': '대학 홈페이지 URL',
+  'recruitmentStatus': '모집 현황 (정원, 지원자, 졸업생 수)',
+  'relatedJobs': '졸업 후 관련 직업',
+  'whatStudy': '무엇을 배우나요? (전공 교육 내용 설명)',
+  'howPrepare': '어떻게 준비하나요? (입학 전 준비사항)',
+  'jobProspect': '졸업 후 진로 전망',
+  'salaryAfterGraduation': '졸업 후 평균 연봉',
+  'employmentRate': '취업률',
+  
+  // 임금 & 만족도
+  'encyclopedia.baseInfo.wage': '커리어넷 임금 정보',
+  'encyclopedia.baseInfo.wage_source': '임금 정보 출처 (조사 기관, 연도)',
+  'summary.sal': '고용24 임금 (간단)',
+  'salProspect.sal': '고용24 임금 (상세 - 하위 10%, 중위, 상위 10%)',
+  'encyclopedia.baseInfo.satisfication': '커리어넷 직업 만족도',
+  'encyclopedia.baseInfo.satisfi_source': '만족도 정보 출처',
+  'summary.jobSatis': '고용24 직업 만족도 (간단)',
+  'salProspect.jobSatis': '고용24 직업 만족도 (상세)',
+  'encyclopedia.baseInfo.social': '사회적 평가 점수',
+  'encyclopedia.baseInfo.wlb': '워라밸 점수 (일과 생활의 균형)',
+  
+  // 일자리 전망
+  'encyclopedia.forecastList': '커리어넷 전망 정보',
+  'summary.jobProspect': '고용24 일자리 전망 (간단)',
+  'salProspect.jobProspect': '고용24 일자리 전망 (상세)',
+  'salProspect.jobSumProspect': '일자리 전망 세부 항목 (증가, 다소증가, 현상유지 등)',
+  
+  // 하는 일
+  'encyclopedia.duties': '커리어넷 주요 업무 (리스트)',
+  'summary.jobDuty': '고용24 주요 업무 (텍스트)',
+  'duty.jobDuty': '고용24 주요 업무 상세',
+  'duty.workList': '세부 업무 항목',
+  
+  // 교육 & 자격
+  'encyclopedia.academicBackground': '커리어넷 학력 요구사항',
+  'encyclopedia.requiredEducation': '필요 교육 수준',
+  'path.eduLvl': '고용24 학력 요구사항',
+  'path.majr': '전공 요구사항',
+  'encyclopedia.relatedMajors': '커리어넷 관련 전공',
+  'path.majrList': '고용24 관련 전공 목록',
+  'encyclopedia.certificates': '커리어넷 관련 자격증',
+  'path.certList': '고용24 관련 자격증 목록',
+  'path.certList[0].certNm': '자격증명',
+  'path.certList[0].issuOrgnNm': '발급 기관',
+  
+  // 능력 & 지식
+  'ablKnwEnv.abilList': '필요한 능력 목록 (의사소통, 문제해결 등)',
+  'ablKnwEnv.abilList[0].abilNm': '능력명',
+  'ablKnwEnv.abilList[0].contDesc': '능력 설명',
+  'ablKnwEnv.abilList[0].imprtDegr': '중요도 (0-100)',
+  'ablKnwEnv.knwlList': '필요한 지식 목록',
+  'ablKnwEnv.knwlList[0].knwlNm': '지식명',
+  'ablKnwEnv.knwlList[0].contDesc': '지식 설명',
+  'ablKnwEnv.knwlList[0].imprtDegr': '중요도',
+  
+  // 성격 & 흥미
+  'chrIntrVals.chrctrList': '필요한 성격 특성',
+  'chrIntrVals.chrctrList[0].chrctrNm': '성격 특성명',
+  'chrIntrVals.chrctrList[0].contDesc': '성격 설명',
+  'chrIntrVals.intrList': '흥미 유형 (현실형, 탐구형, 예술형 등)',
+  'chrIntrVals.intrList[0].intrNm': '흥미 유형명',
+  'chrIntrVals.intrList[0].contDesc': '흥미 설명',
+  'chrIntrVals.valList': '직업 가치관',
+  'chrIntrVals.valList[0].valNm': '가치관명',
+  'chrIntrVals.valList[0].contDesc': '가치관 설명',
+  
+  // 근무 환경
+  'ablKnwEnv.envList': '근무 환경 정보',
+  'ablKnwEnv.envList[0].envNm': '환경 요소명 (실내/실외, 소음 등)',
+  'ablKnwEnv.envList[0].contDesc': '환경 설명',
+  'ablKnwEnv.envList[0].expDegr': '노출 정도',
+  
+  // 업무 활동
+  'actv.actvList': '주요 업무 활동',
+  'actv.actvList[0].actvNm': '활동명',
+  'actv.actvList[0].contDesc': '활동 설명',
+  'actv.actvList[0].imprtDegr': '중요도',
+  
+  // 메타데이터
+  'sourceIds': '데이터 출처 ID (careernet, goyong24)',
+  'sourceIds.careernet': '커리어넷 ID',
+  'sourceIds.goyong24': '고용24 ID',
+  'sources': '데이터 수집 출처 목록',
+  
+  // 기타
+  'encyclopedia.relJobs': '커리어넷 관련 직업',
+  'encyclopedia.relVideoList': '관련 동영상 목록',
+  'encyclopedia.relSolList': '관련 솔루션',
+  'path.kecoList': '한국고용직업분류 (KECO) 코드',
+  'summary.jobStatus': '일자리 현황 (현재 종사자 수)',
+  'salProspect.jobStatusList': '일자리 현황 상세'
+}
+
+// 필드 설명 가져오기 함수
+const getFieldDescription = (fieldPath: string): string => {
+  // 정확한 매칭 먼저 시도
+  if (FIELD_DESCRIPTIONS[fieldPath]) {
+    return FIELD_DESCRIPTIONS[fieldPath]
+  }
+  
+  // 배열 인덱스 제거하고 다시 시도 (예: knwlList[0].knwlNm -> knwlList[0].knwlNm)
+  const withoutArrayIndex = fieldPath.replace(/\[\d+\]/g, '[0]')
+  if (FIELD_DESCRIPTIONS[withoutArrayIndex]) {
+    return FIELD_DESCRIPTIONS[withoutArrayIndex]
+  }
+  
+  // 배열 부분 완전 제거하고 시도 (예: knwlList[0].knwlNm -> knwlList.knwlNm)
+  const withoutArray = fieldPath.replace(/\[\d+\]\./g, '.')
+  if (FIELD_DESCRIPTIONS[withoutArray]) {
+    return FIELD_DESCRIPTIONS[withoutArray]
+  }
+  
+  // 마지막 키만 추출해서 시도
+  const lastKey = fieldPath.split('.').pop() || ''
+  if (FIELD_DESCRIPTIONS[lastKey]) {
+    return FIELD_DESCRIPTIONS[lastKey]
+  }
+  
+  return '' // 설명 없음
+}
+
 const renderEncyclopediaTable = (data: any): string => {
   if (!data) {
     return ''
@@ -1710,7 +1855,7 @@ const renderFieldComparisonTable = (rawApiData?: { careernet?: any; goyong24?: a
     if (!mergedField) return
     
     // Get field description
-    const description = fieldDescriptions[fieldPath] || ''
+    const description = fieldDescriptions[fieldPath] || getFieldDescription(fieldPath)
     
     // Check if this field belongs to a group
     const groupInfo = getGroupInfo(fieldPath)
@@ -2106,10 +2251,7 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
               </h1>
               <p class="text-2xl font-semibold text-gray-800">${escapeHtml(jobTitle)}</p>
             </div>
-            <a href="/job/lawyer" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg">
-              <i class="fas fa-arrow-left mr-2"></i>
-              일반 페이지로
-            </a>
+            <!-- 일반 페이지 링크 제거됨 -->
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2231,13 +2373,7 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
           ${renderGoyong24Table(rawApiData?.goyong24)}
         </div>
 
-        <!-- Footer -->
-        <div class="text-center py-8">
-          <a href="/job/lawyer" class="inline-flex items-center px-8 py-4 bg-white text-gray-800 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all">
-            <i class="fas fa-arrow-left mr-3"></i>
-            일반 페이지로 돌아가기
-          </a>
-        </div>
+        <!-- Footer 제거됨 -->
         
       </div>
     </body>

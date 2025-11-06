@@ -41,6 +41,56 @@ const decodeXmlEntities = (value?: string | null): string => {
     .replace(/&#xd;/gi, '')     // Remove lowercase variant explicitly
 }
 
+// 중첩 XML 노드를 재귀적으로 파싱하는 함수
+function parseXMLNode(xmlString: string): any {
+  // 텍스트 노드인 경우
+  if (!xmlString.includes('<')) {
+    return decodeXmlEntities(xmlString).trim();
+  }
+  
+  const obj: any = {};
+  
+  // 모든 태그 찾기
+  const tagRegex = /<([^\/>\s]+)>([^<]*(?:<(?!\/\1>)[^<]*)*)<\/\1>/g;
+  let match;
+  
+  while ((match = tagRegex.exec(xmlString)) !== null) {
+    const tagName = match[1];
+    const tagContent = match[2];
+    
+    // 중첩된 구조가 있는지 확인
+    if (tagContent.includes('<')) {
+      // 재귀적으로 파싱
+      const parsed = parseXMLNode(tagContent);
+      
+      // 같은 태그가 여러 개 있으면 배열로 처리
+      if (obj[tagName]) {
+        if (!Array.isArray(obj[tagName])) {
+          obj[tagName] = [obj[tagName]];
+        }
+        obj[tagName].push(parsed);
+      } else {
+        obj[tagName] = parsed;
+      }
+    } else {
+      // 단순 텍스트 노드
+      const value = decodeXmlEntities(tagContent).trim();
+      
+      // 같은 태그가 여러 개 있으면 배열로 처리
+      if (obj[tagName]) {
+        if (!Array.isArray(obj[tagName])) {
+          obj[tagName] = [obj[tagName]];
+        }
+        obj[tagName].push(value);
+      } else {
+        obj[tagName] = value;
+      }
+    }
+  }
+  
+  return obj;
+}
+
 // XML 파싱 헬퍼 함수
 function parseXMLToJSON(xmlString: string): any[] {
   const contents: any[] = [];
@@ -49,27 +99,12 @@ function parseXMLToJSON(xmlString: string): any[] {
   
   while ((match = contentRegex.exec(xmlString)) !== null) {
     const content = match[1];
-    const obj: any = {};
     
-    // 각 필드 추출
-    const fields = [
-      'profession', 'summary', 'similarJob', 'salery', 'jobdicSeq',
-      'equalemployment', 'totalCount', 'aptd_type_code', 'prospect',
-      'job_ctg_code', 'job_code', 'job', 'possibility',
-      'major', 'department', 'campus', 'university', 'url',
-      'majorSeq', 'subject', 'facilName', 'mClass', 'facilSeq'
-    ];
+    // 중첩 구조를 재귀적으로 파싱
+    const parsed = parseXMLNode(content);
     
-    fields.forEach(field => {
-      const fieldRegex = new RegExp(`<${field}>([\\s\\S]*?)<\\/${field}>`);
-      const fieldMatch = content.match(fieldRegex);
-      if (fieldMatch) {
-        obj[field] = decodeXmlEntities(fieldMatch[1]).trim();
-      }
-    });
-    
-    if (Object.keys(obj).length > 0) {
-      contents.push(obj);
+    if (Object.keys(parsed).length > 0) {
+      contents.push(parsed);
     }
   }
   
@@ -303,7 +338,7 @@ export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major
     url.searchParams.append('apiKey', getApiKey(env));
     url.searchParams.append('svcType', 'api');
     url.searchParams.append('svcCode', 'MAJOR_VIEW');
-    url.searchParams.append('contentType', 'xml');
+    url.searchParams.append('contentType', 'json');  // JSON 형태로 변경
     url.searchParams.append('gubun', 'univ_list');
     url.searchParams.append('majorSeq', majorSeq);
     
@@ -313,10 +348,10 @@ export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major
       throw new Error(`API 요청 실패: ${response.statusText}`);
     }
     
-    const xmlData = await response.text();
+    const jsonData = await response.json();
     
-    // XML 파싱
-    const majors = parseXMLToJSON(xmlData);
+    // JSON 파싱
+    const majors = jsonData.dataSearch?.content || [];
     
     if (majors.length === 0) {
       return null;
@@ -324,20 +359,31 @@ export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major
     
     const major = majors[0];
     
-    // 필드 매핑
+    // university 배열을 문자열로 변환
+    let universityString = '';
+    if (major.university && Array.isArray(major.university)) {
+      universityString = major.university
+        .map((u: any) => u.schoolName || '')
+        .filter((name: string) => name)
+        .join(', ');
+    }
+    
+    // 필드 매핑 (JSON 형태는 이미 객체이므로 그대로 사용 가능)
+    // 주의: spread operator를 먼저 사용하고, 그 다음에 변환된 필드를 덮어쓴다
     return {
-      majorSeq: major.majorSeq || majorSeq,
-      major: major.mClass || major.facilName || '',
-      summary: major.facilName || major.summary || '',
-      university: major.university || '',
-      department: major.lClass || major.department || '',
-      salaryAfterGraduation: '',
-      employmentRate: major.employment || '',
-      relatedJob: '',
-      aptitude: '',
+      // 원본 JSON 필드 모두 포함 (중첩 구조 포함)
+      ...major,
       
-      // 원본 XML 필드도 포함
-      ...major
+      // 명시적으로 변환이 필요한 필드들 (위의 spread를 덮어씀)
+      majorSeq: majorSeq,
+      major: major.major || '',
+      summary: major.summary || '',
+      university: universityString,  // 배열을 문자열로 변환
+      department: major.department || '',
+      salaryAfterGraduation: major.salary || '',
+      employmentRate: major.employment || '',
+      relatedJob: major.job || '',
+      aptitude: major.interest || ''
     };
     
   } catch (error) {
