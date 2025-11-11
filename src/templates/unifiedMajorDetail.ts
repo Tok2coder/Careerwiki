@@ -277,8 +277,8 @@ const renderMajorSourcesCollapsible = (
 }
 
 export const renderUnifiedMajorDetail = ({ profile, partials, sources }: UnifiedMajorDetailTemplateParams): string => {
-  // categoryName 정리: 50자 이상이면 관련 학과명이 잘못 들어간 것
-  const cleanCategoryName = profile.categoryName && profile.categoryName.length < 50
+  // categoryName 정리: 쉼표가 2개 이상이면 관련 학과명 리스트로 판단
+  const cleanCategoryName = profile.categoryName && profile.categoryName.split(',').length <= 2
     ? profile.categoryName
     : undefined
 

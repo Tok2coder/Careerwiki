@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 히어로 섹션 개선 + 사이드바 개선 + 개요 탭 재구성 + 핵심지표 포맷팅 수정 + 연봉 단위 추가
+   * Current features: 히어로 섹션 개선 + 사이드바 개선 + 개요 탭 재구성 + 핵심지표 포맷팅 수정 + categoryName 필터 개선
    */
-  MAJOR: 15,  // 🆕 졸업 후 평균 연봉에 '만원' 단위 자동 추가
+  MAJOR: 16,  // 🆕 categoryName 필터를 50자 → 쉼표 개수로 변경 (더 정확한 판별)
 
   /**
    * Job detail page template version
