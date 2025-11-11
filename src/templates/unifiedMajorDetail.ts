@@ -324,11 +324,21 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   // 핵심 지표 - 개요로 이동
   if (profile.salaryAfterGraduation || profile.employmentRate) {
-    const metaItems = [
-      profile.salaryAfterGraduation ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>` : '',
-      profile.employmentRate ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>` : ''
-    ].join('')
-    pushOverviewCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems}</ul>`)
+    const metaItems: string[] = []
+    
+    if (profile.salaryAfterGraduation) {
+      // HTML 태그 제거 및 연봉 포맷팅
+      const salaryText = profile.salaryAfterGraduation.replace(/<[^>]*>/g, '').trim()
+      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text font-semibold">${escapeHtml(salaryText)}</span></li>`)
+    }
+    
+    if (profile.employmentRate) {
+      // HTML 태그를 실제 렌더링으로 변경
+      const rateText = profile.employmentRate.replace(/<strong>([^<]+)<\/strong>/g, '<strong class="text-white font-bold">$1</strong>')
+      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${rateText}</span></li>`)
+    }
+    
+    pushOverviewCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems.join('')}</ul>`)
   }
 
   const overviewContent = overviewCards.length > 0
@@ -789,21 +799,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   const sidebarSections: string[] = []
   
-  // 기본 정보
-  const basicInfoItems: string[] = []
-  if (cleanCategoryName) {
-    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text font-medium">${escapeHtml(cleanCategoryName)}</span></li>`)
-  }
-  if (profile.employmentRate) {
-    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text font-medium">${escapeHtml(profile.employmentRate)}</span></li>`)
-  }
-  if (profile.salaryAfterGraduation) {
-    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text font-medium">${escapeHtml(profile.salaryAfterGraduation)}</span></li>`)
-  }
-  
-  if (basicInfoItems.length > 0) {
-    sidebarSections.push(renderSidebarSection('기본 정보', 'fa-info-circle', `<ul class="space-y-3">${basicInfoItems.join('')}</ul>`))
-  }
+  // 기본 정보 제거 (사이드바에서 제거)
 
   // 관련 직업
   if (profile.relatedJobs?.length) {
