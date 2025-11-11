@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: Phase 1 fields (44 data points)
+   * Current features: 히어로 섹션 개선 + 목차 추가 + 기본 정보 개요 탭 이동 + categoryName 필터링
    */
-  MAJOR: 1,
+  MAJOR: 3,  // 🆕 데이터 출처 collapsible, categoryName 50자 필터, 레이아웃 개선
 
   /**
    * Job detail page template version

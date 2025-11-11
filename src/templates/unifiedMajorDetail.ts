@@ -135,29 +135,273 @@ const renderMetaHighlights = (profile: UnifiedMajorDetail): string => {
   `
 }
 
+const renderMajorSourcesCollapsible = (
+  profile: UnifiedMajorDetail,
+  sources?: SourceStatusRecord,
+  partials?: Partial<Record<DataSource, UnifiedMajorDetail | null>>
+): string => {
+  const normalizedId = profile.id.replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'default'
+  const panelId = `major-source-panel-${normalizedId}`
+
+  const panel = renderSourcesPanel({
+    profile,
+    sources,
+    partials,
+    labels: SOURCE_LABELS,
+    descriptions: SOURCE_DESCRIPTIONS,
+    title: '출처',
+    description: '이 페이지에 노출된 주요 데이터 출처를 확인할 수 있습니다.'
+  })
+
+  if (!panel || !safeTrim(panel)) {
+    return ''
+  }
+
+  const activeSourceCount = partials ? Object.values(partials).filter((value) => Boolean(value)).length : 0
+  const badgeLabel = activeSourceCount > 0 ? `${activeSourceCount}개 출처` : '확인하기'
+
+  const toggleId = `source-toggle-${normalizedId}`
+  const iconId = `source-icon-${normalizedId}`
+
+  return `
+    <section class="glass-card p-0 rounded-none md:rounded-2xl border border-wiki-border/60 bg-wiki-bg/50" data-source-collapsible>
+      <button
+        type="button"
+        id="${toggleId}"
+        class="w-full flex items-center justify-between gap-3 px-3 py-4 md:px-6 md:py-5 content-text font-semibold text-white transition hover:text-wiki-secondary cursor-pointer"
+        aria-controls="${panelId}"
+        aria-expanded="false"
+      >
+        <span class="flex items-center gap-3">
+          <i class="fas fa-database text-wiki-secondary text-lg" aria-hidden="true"></i>
+          <span class="text-base">데이터 출처</span>
+        </span>
+        <div class="flex items-center gap-3 text-sm text-wiki-muted">
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-wiki-secondary/30 bg-wiki-secondary/10 px-3 py-1.5 text-wiki-secondary font-medium">${escapeHtml(badgeLabel)}</span>
+          <i id="${iconId}" class="fas fa-chevron-down text-base transition-transform duration-200" aria-hidden="true"></i>
+        </div>
+      </button>
+      <div class="border-t border-wiki-border/60 hidden bg-wiki-bg/45 px-6 py-5" id="${panelId}">
+        ${panel}
+      </div>
+    </section>
+    <script>
+      (function() {
+        const toggle = document.getElementById('${toggleId}');
+        const panel = document.getElementById('${panelId}');
+        const icon = document.getElementById('${iconId}');
+        
+        if (toggle && panel && icon) {
+          toggle.addEventListener('click', function() {
+            const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+            
+            if (isExpanded) {
+              panel.classList.add('hidden');
+              toggle.setAttribute('aria-expanded', 'false');
+              icon.classList.remove('fa-chevron-up');
+              icon.classList.add('fa-chevron-down');
+            } else {
+              panel.classList.remove('hidden');
+              toggle.setAttribute('aria-expanded', 'true');
+              icon.classList.remove('fa-chevron-down');
+              icon.classList.add('fa-chevron-up');
+            }
+          });
+        }
+      })();
+    </script>
+  `
+}
+
 export const renderUnifiedMajorDetail = ({ profile, partials, sources }: UnifiedMajorDetailTemplateParams): string => {
   const heroDescription = profile.summary?.split('\n')[0]?.trim()
-  const metaHighlights = renderMetaHighlights(profile)
   const heroImage = renderHeroImage(profile.name, { dataAttribute: 'data-major-hero-image', context: 'major' })
 
   const overviewCards: string[] = []
   if (profile.summary?.trim()) {
     overviewCards.push(buildCard('전공 개요', 'fa-circle-info', formatRichText(profile.summary)))
   }
+  
+  // 기본 정보를 개요 탭에 추가
+  const basicInfoItems: string[] = []
+  if (profile.categoryName) {
+    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text">${escapeHtml(profile.categoryName)}</span></li>`)
+  }
+  if (profile.employmentRate) {
+    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>`)
+  }
+  if (profile.salaryAfterGraduation) {
+    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>`)
+  }
+  
+  if (basicInfoItems.length > 0) {
+    overviewCards.push(buildCard('기본 정보', 'fa-info-circle', `<ul class="space-y-2">${basicInfoItems.join('')}</ul>`))
+  }
+  
+  // 전공 특성 (property)
+  if (profile.property?.trim()) {
+    overviewCards.push(buildCard('전공 특성', 'fa-star', formatRichText(profile.property)))
+  }
+  
   if (profile.aptitude?.trim()) {
     overviewCards.push(buildCard('이 전공에 어울리는 사람', 'fa-user-check', formatRichText(profile.aptitude)))
   }
+  
+  // 적성 리스트 (lstMiddleAptd, lstHighAptd)
+  const aptitudeItems: string[] = []
+  if (profile.lstMiddleAptd && Array.isArray(profile.lstMiddleAptd) && profile.lstMiddleAptd.length > 0) {
+    const middleAptItems = profile.lstMiddleAptd
+      .filter(item => item && (item.name || item.aptd_name))
+      .slice(0, 10)
+      .map(item => {
+        const name = item.name || item.aptd_name || ''
+        const score = item.score || item.aptd_score
+        if (score !== undefined) {
+          const barWidth = Math.min(parseFloat(score) || 0, 100)
+          return `
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-sm text-wiki-text min-w-[100px]">${escapeHtml(name)}</span>
+              <div class="flex-1 bg-wiki-border/30 rounded-full h-2 overflow-hidden">
+                <div class="bg-purple-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
+              </div>
+              <span class="text-xs text-wiki-muted min-w-[40px] text-right">${parseFloat(score).toFixed(1)}</span>
+            </div>
+          `
+        }
+        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
+      })
+      .join('')
+    if (middleAptItems) {
+      aptitudeItems.push(`<div><h4 class="text-sm font-bold text-wiki-secondary mb-3">중학생 적성</h4>${middleAptItems}</div>`)
+    }
+  }
+  
+  if (profile.lstHighAptd && Array.isArray(profile.lstHighAptd) && profile.lstHighAptd.length > 0) {
+    const highAptItems = profile.lstHighAptd
+      .filter(item => item && (item.name || item.aptd_name))
+      .slice(0, 10)
+      .map(item => {
+        const name = item.name || item.aptd_name || ''
+        const score = item.score || item.aptd_score
+        if (score !== undefined) {
+          const barWidth = Math.min(parseFloat(score) || 0, 100)
+          return `
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-sm text-wiki-text min-w-[100px]">${escapeHtml(name)}</span>
+              <div class="flex-1 bg-wiki-border/30 rounded-full h-2 overflow-hidden">
+                <div class="bg-indigo-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
+              </div>
+              <span class="text-xs text-wiki-muted min-w-[40px] text-right">${parseFloat(score).toFixed(1)}</span>
+            </div>
+          `
+        }
+        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
+      })
+      .join('')
+    if (highAptItems) {
+      aptitudeItems.push(`<div class="${aptitudeItems.length > 0 ? 'mt-4' : ''}"><h4 class="text-sm font-bold text-wiki-secondary mb-3">고등학생 적성</h4>${highAptItems}</div>`)
+    }
+  }
+  
+  if (aptitudeItems.length > 0) {
+    overviewCards.push(buildCard('적성 프로필', 'fa-brain', aptitudeItems.join('')))
+  }
+  
+  // 가치관 리스트 (lstVals)
+  if (profile.lstVals && Array.isArray(profile.lstVals) && profile.lstVals.length > 0) {
+    const valItems = profile.lstVals
+      .filter(item => item && (item.name || item.val_name))
+      .slice(0, 10)
+      .map(item => {
+        const name = item.name || item.val_name || ''
+        const score = item.score || item.val_score
+        if (score !== undefined) {
+          const barWidth = Math.min(parseFloat(score) || 0, 100)
+          return `
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-sm text-wiki-text min-w-[100px]">${escapeHtml(name)}</span>
+              <div class="flex-1 bg-wiki-border/30 rounded-full h-2 overflow-hidden">
+                <div class="bg-pink-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
+              </div>
+              <span class="text-xs text-wiki-muted min-w-[40px] text-right">${parseFloat(score).toFixed(1)}</span>
+            </div>
+          `
+        }
+        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
+      })
+      .join('')
+    if (valItems) {
+      overviewCards.push(buildCard('가치관', 'fa-heart', valItems))
+    }
+  }
 
   const learningCards: string[] = []
+  
+  // 관련 고교 교과목 (relateSubject)
+  if (profile.relateSubject && Array.isArray(profile.relateSubject) && profile.relateSubject.length > 0) {
+    const subjectItems = profile.relateSubject
+      .filter(item => item && (item.subject_name || item.SUBJECT_NM))
+      .map(item => {
+        const name = item.subject_name || item.SUBJECT_NM || ''
+        const desc = item.subject_description || item.SUBJECT_SUMRY || ''
+        if (desc) {
+          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
+        }
+        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
+      })
+      .join('')
+    if (subjectItems) {
+      learningCards.push(buildCard('고교 추천 교과목', 'fa-school', subjectItems))
+    }
+  }
+  
   if (profile.mainSubjects?.length) {
     learningCards.push(buildCard('주요 교과목', 'fa-book-open', renderChips(profile.mainSubjects, '교과목 정보가 없습니다.')))
   }
+  
+  // 대학 주요 교과목 상세 (mainSubject - 배열 버전)
+  if (profile.mainSubject && Array.isArray(profile.mainSubject) && profile.mainSubject.length > 0) {
+    const mainSubjItems = profile.mainSubject
+      .filter(item => item && (item.SBJECT_NM || item.subject_name))
+      .map(item => {
+        const name = item.SBJECT_NM || item.subject_name || ''
+        const desc = item.SBJECT_SUMRY || item.subject_description || ''
+        if (desc) {
+          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
+        }
+        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
+      })
+      .join('')
+    if (mainSubjItems) {
+      learningCards.push(buildCard('대학 주요 교과목 상세', 'fa-book', mainSubjItems))
+    }
+  }
+  
   if (profile.whatStudy?.trim()) {
     learningCards.push(buildCard('무엇을 배우나요?', 'fa-graduation-cap', formatRichText(profile.whatStudy)))
   }
   if (profile.howPrepare?.trim()) {
     learningCards.push(buildCard('어떻게 준비하나요?', 'fa-route', formatRichText(profile.howPrepare)))
   }
+  
+  // 진로 탐색 활동 (careerAct)
+  if (profile.careerAct && Array.isArray(profile.careerAct) && profile.careerAct.length > 0) {
+    const actItems = profile.careerAct
+      .filter(item => item && (item.act_name || item.ACT_NM))
+      .map(item => {
+        const name = item.act_name || item.ACT_NM || ''
+        const desc = item.act_description || item.ACT_SUMRY || ''
+        if (desc) {
+          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
+        }
+        return `<li class="text-sm text-wiki-text">• ${escapeHtml(name)}</li>`
+      })
+      .join('')
+    if (actItems) {
+      learningCards.push(buildCard('진로 탐색 활동', 'fa-compass', actItems))
+    }
+  }
+  
   if (profile.licenses?.length) {
     learningCards.push(buildCard('추천 자격증', 'fa-certificate', renderChips(profile.licenses, '관련 자격증 정보가 없습니다.')))
   }
@@ -169,12 +413,153 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   if (profile.relatedJobs?.length) {
     careerCards.push(buildCard('관련 직업', 'fa-briefcase', renderChips(profile.relatedJobs, '연관 직업 정보가 없습니다.')))
   }
+  
+  // 졸업 후 진출 분야 (enterField)
+  if (profile.enterField && Array.isArray(profile.enterField) && profile.enterField.length > 0) {
+    const enterItems = profile.enterField
+      .filter(item => item && (item.gradeuate || item.field_name))
+      .map(item => {
+        const name = item.gradeuate || item.field_name || ''
+        const desc = item.description || item.field_description || ''
+        if (desc) {
+          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
+        }
+        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
+      })
+      .join('')
+    if (enterItems) {
+      careerCards.push(buildCard('졸업 후 진출 분야', 'fa-door-open', enterItems))
+    }
+  }
+  
   if (profile.salaryAfterGraduation || profile.employmentRate) {
     const metaItems = [
       profile.salaryAfterGraduation ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>` : '',
       profile.employmentRate ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>` : ''
     ].join('')
     careerCards.push(buildCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems}</ul>`))
+  }
+  
+  // 통계 차트 데이터 (chartData)
+  if (profile.chartData) {
+    const chartSections: string[] = []
+    
+    // 지원자 추이 차트
+    if (profile.chartData.applicant && Array.isArray(profile.chartData.applicant) && profile.chartData.applicant.length > 0) {
+      const chartId = `applicant-chart-${Date.now()}`
+      const chartLabels = profile.chartData.applicant.map(item => item.name || '')
+      const chartValues = profile.chartData.applicant.map(item => parseFloat(item.data || '0'))
+      
+      chartSections.push(`
+        <div class="mb-6">
+          <h4 class="text-base font-bold text-wiki-secondary mb-3">지원자 추이</h4>
+          <canvas id="${chartId}" style="max-height: 250px;"></canvas>
+          <script>
+            (function() {
+              const ctx = document.getElementById('${chartId}');
+              if (ctx && typeof Chart !== 'undefined') {
+                new Chart(ctx, {
+                  type: 'line',
+                  data: {
+                    labels: ${JSON.stringify(chartLabels)},
+                    datasets: [{
+                      data: ${JSON.stringify(chartValues)},
+                      borderColor: 'rgba(59, 130, 246, 0.85)',
+                      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                      borderWidth: 2,
+                      fill: true,
+                      tension: 0.4
+                    }]
+                  },
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 11 } },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)', drawBorder: false }
+                      },
+                      x: {
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)', font: { size: 11 } },
+                        grid: { display: false, drawBorder: false }
+                      }
+                    },
+                    plugins: {
+                      legend: { display: false },
+                      tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12
+                      }
+                    }
+                  }
+                });
+              }
+            })();
+          </script>
+        </div>
+      `)
+    }
+    
+    // 취업률 추이 차트
+    if (profile.chartData.employment_rate && Array.isArray(profile.chartData.employment_rate) && profile.chartData.employment_rate.length > 0) {
+      const chartId = `employment-chart-${Date.now()}`
+      const chartLabels = profile.chartData.employment_rate.map(item => item.name || '')
+      const chartValues = profile.chartData.employment_rate.map(item => parseFloat(item.data || '0'))
+      
+      chartSections.push(`
+        <div class="mb-6">
+          <h4 class="text-base font-bold text-wiki-secondary mb-3">취업률 추이</h4>
+          <canvas id="${chartId}" style="max-height: 250px;"></canvas>
+          <script>
+            (function() {
+              const ctx = document.getElementById('${chartId}');
+              if (ctx && typeof Chart !== 'undefined') {
+                new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: ${JSON.stringify(chartLabels)},
+                    datasets: [{
+                      data: ${JSON.stringify(chartValues)},
+                      backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                      borderRadius: 4
+                    }]
+                  },
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 11 }, callback: v => v + '%' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)', drawBorder: false }
+                      },
+                      x: {
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)', font: { size: 11 } },
+                        grid: { display: false, drawBorder: false }
+                      }
+                    },
+                    plugins: {
+                      legend: { display: false },
+                      tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        callbacks: { label: ctx => ctx.parsed.y + '%' }
+                      }
+                    }
+                  }
+                });
+              }
+            })();
+          </script>
+        </div>
+      `)
+    }
+    
+    if (chartSections.length > 0) {
+      careerCards.push(buildCard('통계 정보', 'fa-chart-area', chartSections.join('')))
+    }
   }
 
   const universityCards: string[] = []
@@ -190,9 +575,6 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   const networkCards: string[] = []
   if (profile.relatedMajors?.length) {
     networkCards.push(buildCard('추천 유사 전공', 'fa-diagram-project', renderChips(profile.relatedMajors)))
-  }
-  if (profile.sources?.length) {
-    networkCards.push(buildCard('데이터 출처 요약', 'fa-database', renderChips(profile.sources.map((src) => SOURCE_LABELS[src] ?? src))))
   }
 
   const tabEntries: TabEntry[] = [
@@ -243,76 +625,47 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     metaExtra: Object.keys(detailMetaExtra).length ? detailMetaExtra : undefined
   })
 
-  const infoItems: string[] = []
-  if (profile.categoryName) {
-    infoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text">${escapeHtml(profile.categoryName)}</span></li>`)
-  }
-  if (profile.employmentRate) {
-    infoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>`)
-  }
-  if (profile.salaryAfterGraduation) {
-    infoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>`)
-  }
+  // 데이터 출처 collapsible (직업 템플릿과 동일)
+  const sourcesCollapsible = renderMajorSourcesCollapsible(profile, sources, partials)
 
-  const infoCard = infoItems.length
-    ? `
-      <div class="glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-xl">
-        <h3 class="text-lg font-semibold text-wiki-text mb-3">기본 정보</h3>
-        <ul class="space-y-2">${infoItems.join('')}</ul>
-      </div>
-    `
-    : ''
-
-  const sidebarSections = [
-    infoCard,
-    renderSourcesPanel({
-      profile,
-      sources,
-      partials,
-      labels: SOURCE_LABELS,
-      descriptions: SOURCE_DESCRIPTIONS,
-      title: '출처',
-      description: '이 페이지에 표시된 데이터 출처를 확인할 수 있습니다.'
-    })
-  ]
-    .filter((section) => !!section && section.trim().length > 0)
-    .join('')
-
-  // Parse category tags from categoryName (comma-separated)
-  const categoryTags = profile.categoryName 
+  // categoryName 필드 문제 해결: 쉼표가 많으면 관련 학과명이 잘못 들어간 것
+  // 정상적인 계열명: "공학계열", "인문계열", "자연계열" 등 (보통 10자 이내)
+  // 비정상: "경영학과 항공경영전공,항공과,항공관광과,..." (수백 자)
+  const categoryTags = profile.categoryName && profile.categoryName.length < 50
     ? profile.categoryName.split(',').map(tag => tag.trim()).filter(Boolean)
     : []
+
+  const sourcesBlock = sourcesCollapsible
+    ? `<div data-major-sources>${sourcesCollapsible}</div>`
+    : ''
+
+  const communityBlock = `<div data-major-community>${commentsPlaceholder}</div>`
 
   return `
     <div class="max-w-[1400px] mx-auto md:px-6 md:py-8 md:mt-4">
       <div class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl mb-8 space-y-6">
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
           <div class="flex-1">
-            ${profile.categoryName ? `<div class="text-sm text-wiki-secondary font-semibold mb-2">${escapeHtml(profile.categoryName)}</div>` : ''}
+            ${categoryTags.length === 1 ? `<div class="text-sm text-wiki-secondary font-semibold mb-2">${escapeHtml(categoryTags[0])}</div>` : ''}
             <div class="flex items-center justify-between gap-4">
               <h1 class="text-4xl font-bold text-white">${escapeHtml(profile.name)}</h1>
               <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg content-text hover:bg-blue-600 transition whitespace-nowrap" data-share="true" data-entity-type="major" data-entity-id="${escapeHtml(profile.id)}"><i class="fas fa-share-alt mr-2"></i>공유</button>
             </div>
-            ${categoryTags.length > 0 ? `
-              <div class="mt-4 flex flex-wrap gap-2">
-                ${categoryTags.map(tag => `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary">${escapeHtml(tag)}</span>`).join('')}
-              </div>
-            ` : ''}
           </div>
         </div>
         ${heroImage}
-        ${metaHighlights}
+        ${categoryTags.length > 0 ? `
+          <div class="flex flex-wrap gap-2">
+            ${categoryTags.map(tag => `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary">${escapeHtml(tag)}</span>`).join('')}
+          </div>
+        ` : ''}
       </div>
 
-      <div class="grid lg:grid-cols-[2fr,1fr] gap-6">
-        <div class="space-y-6">
-          ${tabLayout}
-          ${commentsPlaceholder}
-        </div>
-        <aside class="space-y-6">
-          ${sidebarSections}
-        </aside>
+      <div class="space-y-6">
+        ${tabLayout}
       </div>
+      ${sourcesBlock}
+      ${communityBlock}
 
       ${metaScript}
     </div>
