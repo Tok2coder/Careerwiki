@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 히어로 섹션 개선 + 사이드바 추가 + summary 표시
+   * Current features: 히어로 섹션 개선 + 사이드바 추가 + summary 표시 + 목차 추가
    */
-  MAJOR: 7,  // 🆕 직업 템플릿과 완전히 동일한 레이아웃 (2-column + 사이드바)
+  MAJOR: 8,  // 🆕 목차 렌더링 추가 (renderSectionToc + anchorId)
 
   /**
    * Job detail page template version

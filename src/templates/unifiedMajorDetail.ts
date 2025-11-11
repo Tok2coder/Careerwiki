@@ -39,6 +39,60 @@ const safeTrim = (value: any): string => {
   return value.trim()
 }
 
+// 목차 렌더링 함수
+type TocItem = { id: string; label: string; icon: string }
+
+const renderSectionToc = (sectionKey: 'overview' | 'curriculum' | 'career' | 'universities' | 'network', heading: string, items: TocItem[]): string => {
+  if (!items.length) {
+    return ''
+  }
+
+  const headingIcon = sectionKey === 'overview' ? 'fa-list-check' : sectionKey === 'curriculum' ? 'fa-book-open' : sectionKey === 'career' ? 'fa-chart-line' : sectionKey === 'universities' ? 'fa-building-columns' : 'fa-diagram-project'
+
+  const listMarkup = items
+    .map((item, index) => `
+        <li data-toc-order="${index + 1}">
+          <a
+            href="#${escapeHtml(item.id)}"
+            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 md:py-3 text-sm text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
+            data-toc-target="${escapeHtml(item.id)}"
+            data-toc-index="${index}"
+          >
+            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-wiki-primary/25 text-xs font-semibold text-wiki-primary">
+              ${index + 1}
+            </span>
+            <span class="text-sm text-wiki-text">${escapeHtml(item.label)}</span>
+          </a>
+        </li>
+      `)
+    .join('')
+
+  return `
+    <nav
+      class="glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-2xl md:border-wiki-border/60 bg-wiki-bg/70"
+      data-section-toc="${sectionKey}"
+      role="navigation"
+      aria-label="${escapeHtml(heading)}"
+    >
+      <header class="mb-4 flex items-center gap-3">
+        <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-wiki-primary/15 text-wiki-primary">
+          <i class="fas ${headingIcon} text-lg" aria-hidden="true"></i>
+        </span>
+        <h3 class="text-base md:text-lg font-bold text-white leading-tight">${escapeHtml(heading)}</h3>
+      </header>
+      <ol class="space-y-2 list-none" data-section-toc-items>
+        ${listMarkup}
+      </ol>
+    </nav>
+  `
+}
+
+// anchor ID 생성 팩토리
+const anchorIdFactory = (sectionKey: string, label: string): string => {
+  const normalized = label.toLowerCase().replace(/[^a-z0-9가-힣]+/g, '-').replace(/(^-|-$)/g, '')
+  return `${sectionKey}-${normalized}`
+}
+
 const renderUniversities = (universities?: UnifiedMajorDetail['universities']): string => {
   if (!universities || universities.length === 0) {
     return ''
@@ -231,19 +285,31 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   const heroDescription = profile.summary?.split('\n')[0]?.trim()
   const heroImage = renderHeroImage(profile.name, { dataAttribute: 'data-major-hero-image', context: 'major' })
 
-  const overviewCards: string[] = []
+  const overviewCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
+  const pushOverviewCard = (label: string, icon: string, markup: string) => {
+    const id = anchorIdFactory('overview', label)
+    overviewCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
+  }
+
   if (profile.summary?.trim()) {
-    overviewCards.push(buildCard('전공 개요', 'fa-circle-info', formatRichText(profile.summary)))
+    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(profile.summary))
   }
   
   // 전공 특성 (property)
   if (profile.property?.trim()) {
-    overviewCards.push(buildCard('전공 특성', 'fa-star', formatRichText(profile.property)))
+    pushOverviewCard('전공 특성', 'fa-star', formatRichText(profile.property))
   }
   
   if (profile.aptitude?.trim()) {
-    overviewCards.push(buildCard('이 전공에 어울리는 사람', 'fa-user-check', formatRichText(profile.aptitude)))
+    pushOverviewCard('이 전공에 어울리는 사람', 'fa-user-check', formatRichText(profile.aptitude))
   }
+
+  const overviewContent = overviewCards.length > 0
+    ? `<div class="space-y-6">
+        ${renderSectionToc('overview', '목차', overviewCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${overviewCards.map((card) => card.markup).join('')}
+      </div>`
+    : `<p class="text-sm text-wiki-muted">개요 정보가 준비 중입니다.</p>`
   
   // 적성 리스트 (lstMiddleAptd, lstHighAptd)
   const aptitudeItems: string[] = []
@@ -576,7 +642,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   }
 
   const tabEntries: TabEntry[] = [
-    { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewCards.join('') },
+    { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewContent },
     { id: 'curriculum', label: '커리큘럼', icon: 'fa-book-open', content: learningCards.join('') },
     { id: 'career', label: '진로 · 전망', icon: 'fa-chart-line', content: careerCards.join('') },
     { id: 'universities', label: '개설 대학', icon: 'fa-building-columns', content: universityCards.join('') },
