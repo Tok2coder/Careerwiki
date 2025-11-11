@@ -402,6 +402,174 @@ const renderGoyong24Table = (data: any): string => {
   `
 }
 
+// 🆕 전공용 CareerNet 테이블 렌더링 (직업용과 동일한 스타일 but different fields)
+const renderCareerNetMajorTable = (data: any): string => {
+  if (!data) {
+    return `
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+        <p class="text-amber-700 font-medium">❌ CareerNet API 응답 없음</p>
+      </div>
+    `
+  }
+
+  const renderNestedObject = (obj: any, depth: number = 0): string => {
+    if (!obj || typeof obj !== 'object') {
+      return `<span class="text-gray-600 text-sm">${escapeHtml(String(obj || '-'))}</span>`
+    }
+
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) {
+        return `<span class="text-gray-400 text-sm italic">빈 배열</span>`
+      }
+
+      return `
+        <div class="ml-${depth * 4} space-y-2">
+          ${obj.map((item, index) => `
+            <div class="border-l-2 border-blue-200 pl-3 py-2 bg-blue-50/30">
+              <div class="text-xs font-bold text-blue-600 mb-1">[${index}]</div>
+              ${renderNestedObject(item, depth + 1)}
+            </div>
+          `).join('')}
+        </div>
+      `
+    }
+
+    const entries = Object.entries(obj)
+    if (entries.length === 0) {
+      return `<span class="text-gray-400 text-sm italic">빈 객체</span>`
+    }
+
+    return `
+      <table class="w-full border-collapse">
+        <tbody>
+          ${entries.map(([key, value]) => {
+            const isObject = value && typeof value === 'object'
+            const isArray = Array.isArray(value)
+            const description = FIELD_DESCRIPTIONS[key] || FIELD_DESCRIPTIONS[`major.${key}`] || ''
+            
+            return `
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-3 px-4 align-top font-semibold text-sm ${
+                  isObject ? 'bg-indigo-50 text-indigo-900' : 'bg-gray-50 text-gray-800'
+                }" style="min-width: 200px; width: 30%;">
+                  ${escapeHtml(key)}
+                  ${isArray ? ` <span class="text-xs text-blue-600">[${(value as any[]).length}개]</span>` : ''}
+                  ${description ? `<div class="text-xs text-gray-500 font-normal mt-1">${escapeHtml(description)}</div>` : ''}
+                </td>
+                <td class="py-3 px-4 align-top">
+                  ${isObject ? renderNestedObject(value, depth + 1) : 
+                    `<span class="text-gray-700">${escapeHtml(String(value || '-'))}</span>`}
+                </td>
+              </tr>
+            `
+          }).join('')}
+        </tbody>
+      </table>
+    `
+  }
+
+  return `
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+        <h3 class="text-xl font-bold text-white flex items-center">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          커리어넷 (CareerNet) 전공 API 응답
+        </h3>
+        <p class="text-blue-100 text-sm mt-1">교육부 커리어넷 - 전공(학과) 정보 전체 필드</p>
+      </div>
+      <div class="p-6 max-h-[1000px] overflow-auto">
+        ${renderNestedObject(data)}
+      </div>
+    </div>
+  `
+}
+
+// 🆕 전공용 Goyong24 테이블 렌더링
+const renderGoyong24MajorTable = (data: any): string => {
+  if (!data) {
+    return `
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+        <p class="text-amber-700 font-medium">❌ Goyong24 API 응답 없음</p>
+      </div>
+    `
+  }
+
+  const renderNestedObject = (obj: any, depth: number = 0): string => {
+    if (!obj || typeof obj !== 'object') {
+      return `<span class="text-gray-600 text-sm">${escapeHtml(String(obj || '-'))}</span>`
+    }
+
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) {
+        return `<span class="text-gray-400 text-sm italic">빈 배열</span>`
+      }
+
+      return `
+        <div class="ml-${depth * 4} space-y-2">
+          ${obj.map((item, index) => `
+            <div class="border-l-2 border-green-200 pl-3 py-2 bg-green-50/30">
+              <div class="text-xs font-bold text-green-600 mb-1">[${index}]</div>
+              ${renderNestedObject(item, depth + 1)}
+            </div>
+          `).join('')}
+        </div>
+      `
+    }
+
+    const entries = Object.entries(obj)
+    if (entries.length === 0) {
+      return `<span class="text-gray-400 text-sm italic">빈 객체</span>`
+    }
+
+    return `
+      <table class="w-full border-collapse">
+        <tbody>
+          ${entries.map(([key, value]) => {
+            const isObject = value && typeof value === 'object'
+            const isArray = Array.isArray(value)
+            const description = FIELD_DESCRIPTIONS[key] || ''
+            
+            return `
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-3 px-4 align-top font-semibold text-sm ${
+                  isObject ? 'bg-emerald-50 text-emerald-900' : 'bg-gray-50 text-gray-800'
+                }" style="min-width: 200px; width: 30%;">
+                  ${escapeHtml(key)}
+                  ${isArray ? ` <span class="text-xs text-green-600">[${(value as any[]).length}개]</span>` : ''}
+                  ${description ? `<div class="text-xs text-gray-500 font-normal mt-1">${escapeHtml(description)}</div>` : ''}
+                </td>
+                <td class="py-3 px-4 align-top">
+                  ${isObject ? renderNestedObject(value, depth + 1) : 
+                    `<span class="text-gray-700">${escapeHtml(String(value || '-'))}</span>`}
+                </td>
+              </tr>
+            `
+          }).join('')}
+        </tbody>
+      </table>
+    `
+  }
+
+  return `
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
+        <h3 class="text-xl font-bold text-white flex items-center">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          고용24 (Goyong24) 전공 API 응답
+        </h3>
+        <p class="text-green-100 text-sm mt-1">고용노동부 고용24 - 전공(학과) 정보 전체 필드</p>
+      </div>
+      <div class="p-6 max-h-[1000px] overflow-auto">
+        ${renderNestedObject(data)}
+      </div>
+    </div>
+  `
+}
+
 const renderActualMergedView = (rawApiData?: { careernet?: any; goyong24?: any }): string => {
   if (!rawApiData) {
     return '<p class="text-gray-500">원본 API 데이터 없음</p>'
@@ -2479,14 +2647,20 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
         <!-- CareerNet Encyclopedia (jobs.json) -->
         ${rawApiData?.careernet?.encyclopedia ? renderEncyclopediaTable(rawApiData.careernet.encyclopedia) : ''}
 
-        <!-- CareerNet Job Info (getOpenApi) -->
+        <!-- CareerNet Data (직업 or 전공에 따라 분기) -->
         <div class="card-hover">
-          ${renderCareerNetTable(rawApiData?.careernet)}
+          ${pageType === 'major' 
+            ? renderCareerNetMajorTable(rawApiData?.careernet)
+            : renderCareerNetTable(rawApiData?.careernet)
+          }
         </div>
 
-        <!-- Goyong24 Raw Data -->
+        <!-- Goyong24 Data (직업 or 전공에 따라 분기) -->
         <div class="card-hover">
-          ${renderGoyong24Table(rawApiData?.goyong24)}
+          ${pageType === 'major' 
+            ? renderGoyong24MajorTable(rawApiData?.goyong24)
+            : renderGoyong24Table(rawApiData?.goyong24)
+          }
         </div>
         `}
 
