@@ -690,24 +690,35 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   // 상세정보 탭: 커리큘럼 + 진로·전망 + 연결정보 통합
   const detailCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
-  const pushDetailCard = (label: string, icon: string, markup: string) => {
-    const id = anchorIdFactory('details', label)
-    detailCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
-  }
 
-  // 커리큘럼 카드들 추가
+  // 커리큘럼 카드들을 details ID로 다시 빌드
   learningCards.forEach(card => {
-    detailCards.push({ ...card, id: anchorIdFactory('details', card.label) })
+    const newId = anchorIdFactory('details', card.label)
+    // markup에서 body 추출은 불가능하므로, 원본 markup에서 id만 교체
+    // 더 나은 방법: markup을 anchorId를 제외한 부분만 저장했다가 다시 빌드
+    // 하지만 여기서는 간단하게 기존 카드 구조를 재사용
+    const newMarkup = card.markup
+      .replace(/id="[^"]+"/g, `id="${escapeHtml(newId)}"`)
+      .replace(/data-card-anchor="[^"]+"/g, `data-card-anchor="${escapeHtml(newId)}"`)
+    detailCards.push({ id: newId, label: card.label, icon: card.icon, markup: newMarkup })
   })
 
-  // 진로·전망 카드들 추가
+  // 진로·전망 카드들을 details ID로 다시 빌드
   careerCards.forEach(card => {
-    detailCards.push({ ...card, id: anchorIdFactory('details', card.label) })
+    const newId = anchorIdFactory('details', card.label)
+    const newMarkup = card.markup
+      .replace(/id="[^"]+"/g, `id="${escapeHtml(newId)}"`)
+      .replace(/data-card-anchor="[^"]+"/g, `data-card-anchor="${escapeHtml(newId)}"`)
+    detailCards.push({ id: newId, label: card.label, icon: card.icon, markup: newMarkup })
   })
 
-  // 연결정보 카드들 추가
+  // 연결정보 카드들을 details ID로 다시 빌드
   networkCards.forEach(card => {
-    detailCards.push({ ...card, id: anchorIdFactory('details', card.label) })
+    const newId = anchorIdFactory('details', card.label)
+    const newMarkup = card.markup
+      .replace(/id="[^"]+"/g, `id="${escapeHtml(newId)}"`)
+      .replace(/data-card-anchor="[^"]+"/g, `data-card-anchor="${escapeHtml(newId)}"`)
+    detailCards.push({ id: newId, label: card.label, icon: card.icon, markup: newMarkup })
   })
 
   const detailContent = detailCards.length > 0
