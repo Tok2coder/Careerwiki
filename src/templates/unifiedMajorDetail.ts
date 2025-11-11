@@ -304,6 +304,33 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     pushOverviewCard('이 전공에 어울리는 사람', 'fa-user-check', formatRichText(profile.aptitude))
   }
 
+  // 졸업 후 진출 분야 (enterField) - 개요로 이동
+  if (profile.enterField && Array.isArray(profile.enterField) && profile.enterField.length > 0) {
+    const enterItems = profile.enterField
+      .filter(item => item && (item.gradeuate || item.field_name))
+      .map(item => {
+        const name = item.gradeuate || item.field_name || ''
+        const desc = item.description || item.field_description || ''
+        if (desc) {
+          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
+        }
+        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
+      })
+      .join('')
+    if (enterItems) {
+      pushOverviewCard('졸업 후 진출 분야', 'fa-door-open', enterItems)
+    }
+  }
+
+  // 핵심 지표 - 개요로 이동
+  if (profile.salaryAfterGraduation || profile.employmentRate) {
+    const metaItems = [
+      profile.salaryAfterGraduation ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>` : '',
+      profile.employmentRate ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>` : ''
+    ].join('')
+    pushOverviewCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems}</ul>`)
+  }
+
   const overviewContent = overviewCards.length > 0
     ? `<div class="space-y-6">
         ${renderSectionToc('overview', '목차', overviewCards.map(({ id, label, icon }) => ({ id, label, icon })))}
@@ -489,35 +516,6 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   if (profile.jobProspect?.trim()) {
     pushCareerCard('진로 전망', 'fa-chart-line', formatRichText(profile.jobProspect))
-  }
-  if (profile.relatedJobs?.length) {
-    pushCareerCard('관련 직업', 'fa-briefcase', renderChips(profile.relatedJobs, '연관 직업 정보가 없습니다.'))
-  }
-  
-  // 졸업 후 진출 분야 (enterField)
-  if (profile.enterField && Array.isArray(profile.enterField) && profile.enterField.length > 0) {
-    const enterItems = profile.enterField
-      .filter(item => item && (item.gradeuate || item.field_name))
-      .map(item => {
-        const name = item.gradeuate || item.field_name || ''
-        const desc = item.description || item.field_description || ''
-        if (desc) {
-          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
-        }
-        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
-      })
-      .join('')
-    if (enterItems) {
-      pushCareerCard('졸업 후 진출 분야', 'fa-door-open', enterItems)
-    }
-  }
-  
-  if (profile.salaryAfterGraduation || profile.employmentRate) {
-    const metaItems = [
-      profile.salaryAfterGraduation ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>` : '',
-      profile.employmentRate ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>` : ''
-    ].join('')
-    pushCareerCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems}</ul>`)
   }
   
   // 통계 차트 데이터 (chartData)
@@ -774,7 +772,21 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     metaExtra: Object.keys(detailMetaExtra).length ? detailMetaExtra : undefined
   })
 
-  // 사이드바 구성
+  // 사이드바 구성 (직업 템플릿과 동일한 구조)
+  const renderSidebarSection = (title: string, icon: string, body: string): string => {
+    return `
+      <section class="glass-card border-0 md:border px-3 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-transparent md:bg-wiki-bg/30" data-major-sidebar-section>
+        <div class="flex items-center gap-2.5 pb-2 border-b border-wiki-border/30 md:border-0 md:pb-0">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-wiki-secondary/15 text-wiki-secondary">
+            <i class="fas ${icon} text-sm" aria-hidden="true"></i>
+          </span>
+          <h3 class="text-base font-bold text-white">${escapeHtml(title)}</h3>
+        </div>
+        ${body}
+      </section>
+    `
+  }
+
   const sidebarSections: string[] = []
   
   // 기본 정보
@@ -790,13 +802,43 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   }
   
   if (basicInfoItems.length > 0) {
-    sidebarSections.push(`
-      <div class="glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-xl">
-        <h3 class="text-lg font-semibold text-white mb-4">기본 정보</h3>
-        <ul class="space-y-3">${basicInfoItems.join('')}</ul>
-      </div>
-    `)
+    sidebarSections.push(renderSidebarSection('기본 정보', 'fa-info-circle', `<ul class="space-y-3">${basicInfoItems.join('')}</ul>`))
   }
+
+  // 관련 직업
+  if (profile.relatedJobs?.length) {
+    const jobsList = profile.relatedJobs
+      .map(jobName => `
+        <li>
+          <a href="/search?q=${encodeURIComponent(jobName)}&type=job" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
+              <i class="fas fa-briefcase text-xs" aria-hidden="true"></i>
+            </span>
+            <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors">${escapeHtml(jobName)}</span>
+            <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all" aria-hidden="true"></i>
+          </a>
+        </li>
+      `)
+      .join('')
+    sidebarSections.push(renderSidebarSection('관련 직업', 'fa-briefcase', `<ul class="space-y-2" role="list">${jobsList}</ul>`))
+  }
+
+  // 관련 HowTo (샘플 데이터)
+  const sampleHowtos = [
+    { label: `${profile.name} 입학 가이드`, href: '#' },
+    { label: `${profile.name} 취업 준비 방법`, href: '#' }
+  ]
+  const howtoList = sampleHowtos
+    .map(item => `
+      <li>
+        <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/40 bg-wiki-bg/60 px-3 py-2 md:px-4 md:py-3 text-sm text-wiki-primary hover:border-wiki-primary hover:text-white transition">
+          <span class="font-semibold">${escapeHtml(item.label)}</span>
+          <span class="text-xs text-wiki-muted">CareerWiki HowTo</span>
+        </a>
+      </li>
+    `)
+    .join('')
+  sidebarSections.push(renderSidebarSection('관련 HowTo', 'fa-route', `<ul class="space-y-2" role="list">${howtoList}</ul>`))
   
   const hasSidebar = sidebarSections.length > 0
   const sidebarContent = sidebarSections.join('')
