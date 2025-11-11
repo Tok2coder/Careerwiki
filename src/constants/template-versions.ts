@@ -18,7 +18,7 @@ export const TEMPLATE_VERSIONS = {
    * Used for: /major/:slug pages
    * Current features: 히어로 섹션 개선 + 목차 추가 + 기본 정보 개요 탭 이동 + categoryName 필터링
    */
-  MAJOR: 4,  // 🆕 safeTrim import 추가, cleanCategoryName 전역 적용
+  MAJOR: 5,  // 🆕 safeTrim 함수 내부 정의로 변경
 
   /**
    * Job detail page template version

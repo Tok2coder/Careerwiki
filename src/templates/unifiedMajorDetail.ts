@@ -11,7 +11,6 @@ import {
   renderHeroImage,
   renderSourceBadges,
   renderSourcesPanel,
-  safeTrim,
   sanitizeJson
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
@@ -29,6 +28,15 @@ const SOURCE_LABELS: Record<DataSource, string> = {
 const SOURCE_DESCRIPTIONS: Record<DataSource, string> = {
   CAREERNET: '교육부 산하 진로·진학 정보 플랫폼',
   GOYONG24: '고용노동부 고용24 학과 정보'
+}
+
+/**
+ * 안전한 trim 함수 - undefined/null 체크
+ */
+const safeTrim = (value: any): string => {
+  if (value === null || value === undefined) return ''
+  if (typeof value !== 'string') return String(value).trim()
+  return value.trim()
 }
 
 const renderUniversities = (universities?: UnifiedMajorDetail['universities']): string => {
