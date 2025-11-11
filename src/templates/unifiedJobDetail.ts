@@ -111,47 +111,109 @@ const formatAsBulletList = (text: string): string => {
 }
 
 /**
- * 업무 상세를 번호가 매겨진 단계별 카드로 변환
+ * 업무 상세를 계층적 구조로 렌더링 (대분류 제목 + bullet point 항목)
  */
 const formatWorkDetailAsNumberedCards = (text: string): string => {
   if (!text || !safeTrim(text)) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
   
-  // 줄바꿈이나 하이픈으로 시작하는 항목들을 분리
-  const items = text
+  // 줄 단위로 분리
+  const lines = text
     .split(/\n/)
     .map(s => safeTrim(s))
-    .map(s => s.replace(/^[-–—]\s*/, ''))  // 하이픈 제거
     .filter(s => s.length > 0)
   
-  if (items.length === 0) {
+  if (lines.length === 0) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
   
-  // 단일 항목인 경우 카드 없이 표시
-  if (items.length === 1) {
-    return `<p class="content-text leading-relaxed text-wiki-text">${escapeHtml(items[0])}</p>`
+  // 단일 항목인 경우
+  if (lines.length === 1) {
+    const line = lines[0]
+    const isCategory = /^[\[\【]/.test(line)
+    if (isCategory) {
+      // 대분류만 있는 경우
+      const categoryName = line.replace(/[\[\】\]]/g, '').trim()
+      return `<h4 class="text-base font-semibold text-white mb-2">${escapeHtml(categoryName)}</h4>`
+    } else {
+      // 일반 텍스트
+      const cleanText = line.replace(/^[-–—•]\s*/, '').trim()
+      return `<p class="content-text leading-relaxed text-wiki-text">${escapeHtml(cleanText)}</p>`
+    }
   }
   
-  // 여러 항목을 번호가 매겨진 카드로 변환
-  const cards = items
-    .map((item, index) => {
-      const stepNumber = index + 1
-      return `
-        <div class="flex gap-3 p-3 md:gap-4 md:p-4 rounded-xl bg-wiki-card/30 border border-wiki-border/40 hover:border-wiki-primary/50 hover:bg-wiki-card/50 transition-all duration-200">
-          <div class="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg bg-wiki-primary/20 border border-wiki-primary/40">
-            <span class="text-sm font-bold text-wiki-primary">${stepNumber}</span>
-          </div>
-          <div class="flex-1 pt-1">
-            <p class="content-text text-wiki-text leading-relaxed">${escapeHtml(item)}</p>
-          </div>
-        </div>
-      `
+  // 계층 구조 파싱: 대분류([...])와 항목(- ...) 구분
+  const sections: Array<{ category?: string; items: string[] }> = []
+  let currentCategory: string | null = null
+  let currentItems: string[] = []
+  
+  for (const line of lines) {
+    // 대분류 감지: [철도신호원], 【철도수송원】 등
+    const categoryMatch = line.match(/^[\[\【]([^\]】]+)[\]】]/)
+    if (categoryMatch) {
+      // 이전 섹션 저장
+      if (currentCategory || currentItems.length > 0) {
+        sections.push({
+          category: currentCategory || undefined,
+          items: currentItems
+        })
+      }
+      // 새 섹션 시작
+      currentCategory = categoryMatch[1].trim()
+      currentItems = []
+    } else {
+      // 항목 추가 (하이픈 제거)
+      const cleanItem = line.replace(/^[-–—•]\s*/, '').trim()
+      if (cleanItem) {
+        currentItems.push(cleanItem)
+      }
+    }
+  }
+  
+  // 마지막 섹션 저장
+  if (currentCategory || currentItems.length > 0) {
+    sections.push({
+      category: currentCategory || undefined,
+      items: currentItems
     })
+  }
+  
+  // 대분류가 없는 경우: 단순 리스트로 렌더링
+  if (sections.length === 1 && !sections[0].category) {
+    const items = sections[0].items
+    if (items.length === 1) {
+      return `<p class="content-text leading-relaxed text-wiki-text">${escapeHtml(items[0])}</p>`
+    }
+    const listItems = items
+      .map(item => `<li class="content-text text-wiki-text leading-relaxed">${escapeHtml(item)}</li>`)
+      .join('')
+    return `<ul class="space-y-2 pl-6 list-disc marker:text-wiki-primary/60">${listItems}</ul>`
+  }
+  
+  // 계층 구조 렌더링: 대분류 제목 + 항목 리스트
+  const sectionsHtml = sections
+    .map((section) => {
+      if (!section.items.length) return ''
+      
+      // 대분류 제목
+      const categoryHtml = section.category
+        ? `<h4 class="text-base font-semibold text-white mb-3 mt-6 first:mt-0">${escapeHtml(section.category)}</h4>`
+        : ''
+      
+      // 항목 리스트
+      const itemsHtml = section.items
+        .map(item => `<li class="content-text text-wiki-text leading-relaxed mb-2">${escapeHtml(item)}</li>`)
+        .join('')
+      
+      const listHtml = `<ul class="space-y-2 pl-6 list-disc marker:text-wiki-primary/60 mb-4">${itemsHtml}</ul>`
+      
+      return categoryHtml + listHtml
+    })
+    .filter(Boolean)
     .join('')
   
-  return `<div class="space-y-3">${cards}</div>`
+  return `<div class="space-y-1">${sectionsHtml}</div>`
 }
 
 const matchesLawyerIdentifier = (value?: string | null): boolean => {
@@ -1258,16 +1320,27 @@ const renderEntityList = (entities?: JobRelatedEntity[] | null, type: 'job' | 'm
   }
 
   return `
-    <div class="flex flex-col gap-2">
+    <ul class="space-y-2" role="list">
       ${entities
         .filter((entity) => !!entity?.name?.trim())
         .map((entity) => {
           const name = escapeHtml(safeTrim(entity.name))
           const url = buildEntityUrl(entity, type)
-          return `<a href="${url}" class="content-text text-wiki-primary hover:text-wiki-secondary transition">${name}</a>`
+          const typeIcon = type === 'job' ? 'fa-briefcase' : 'fa-graduation-cap'
+          return `
+            <li>
+              <a href="${url}" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
+                  <i class="fas ${typeIcon} text-xs" aria-hidden="true"></i>
+                </span>
+                <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors">${name}</span>
+                <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all" aria-hidden="true"></i>
+              </a>
+            </li>
+          `
         })
         .join('')}
-    </div>
+    </ul>
   `
 }
 
@@ -1896,10 +1969,12 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
   }
 
   return `
-    <section class="glass-card border-0 md:border px-2 py-5 md:px-5 rounded-none md:rounded-2xl space-y-3 bg-transparent md:bg-wiki-bg/30" data-job-sidebar-section>
-      <div class="flex items-center gap-2 content-text font-semibold text-white">
-        <i class="fas ${icon} text-wiki-secondary" aria-hidden="true"></i>
-        <span>${escapeHtml(title)}</span>
+    <section class="glass-card border-0 md:border px-3 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-transparent md:bg-wiki-bg/30" data-job-sidebar-section>
+      <div class="flex items-center gap-2.5 pb-2 border-b border-wiki-border/30 md:border-0 md:pb-0">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-wiki-secondary/15 text-wiki-secondary">
+          <i class="fas ${icon} text-sm" aria-hidden="true"></i>
+        </span>
+        <h3 class="text-base font-bold text-white">${escapeHtml(title)}</h3>
       </div>
       ${body}
     </section>
@@ -1966,6 +2041,51 @@ const renderJobSidebar = (profile: UnifiedJobDetail): string => {
         renderChips(profile.relatedCertificates, '추천 자격증 정보가 없습니다.')
       )
     )
+  }
+  
+  // 직업 준비 정보 (jobReadyList)
+  if (profile.jobReadyList) {
+    const readyItems: string[] = []
+    
+    // 채용 정보
+    if (profile.jobReadyList.recruit && Array.isArray(profile.jobReadyList.recruit) && profile.jobReadyList.recruit.length > 0) {
+      const recruitList = profile.jobReadyList.recruit.map(item => `<li class="text-sm text-wiki-text">• ${escapeHtml(item)}</li>`).join('')
+      readyItems.push(`<div><h4 class="text-sm font-bold text-wiki-secondary mb-2">채용 정보</h4><ul class="space-y-1">${recruitList}</ul></div>`)
+    }
+    
+    // 자격증 (relatedCertificates와 중복 확인 - 고용24 우선)
+    if (profile.jobReadyList.certificate && Array.isArray(profile.jobReadyList.certificate) && profile.jobReadyList.certificate.length > 0) {
+      // relatedCertificates와 다른 항목만 추가
+      const uniqueCerts = profile.jobReadyList.certificate.filter(cert => 
+        !profile.relatedCertificates?.includes(cert)
+      )
+      if (uniqueCerts.length > 0) {
+        const certList = uniqueCerts.map(item => `<li class="text-sm text-wiki-text">• ${escapeHtml(item)}</li>`).join('')
+        readyItems.push(`<div class="mt-3"><h4 class="text-sm font-bold text-wiki-secondary mb-2">추가 자격증</h4><ul class="space-y-1">${certList}</ul></div>`)
+      }
+    }
+    
+    // 교육/훈련
+    if (profile.jobReadyList.training && Array.isArray(profile.jobReadyList.training) && profile.jobReadyList.training.length > 0) {
+      const trainingList = profile.jobReadyList.training.map(item => `<li class="text-sm text-wiki-text">• ${escapeHtml(item)}</li>`).join('')
+      readyItems.push(`<div class="mt-3"><h4 class="text-sm font-bold text-wiki-secondary mb-2">필요 교육/훈련</h4><ul class="space-y-1">${trainingList}</ul></div>`)
+    }
+    
+    // 교육과정
+    if (profile.jobReadyList.curriculum && Array.isArray(profile.jobReadyList.curriculum) && profile.jobReadyList.curriculum.length > 0) {
+      const currList = profile.jobReadyList.curriculum.map(item => `<li class="text-sm text-wiki-text">• ${escapeHtml(item)}</li>`).join('')
+      readyItems.push(`<div class="mt-3"><h4 class="text-sm font-bold text-wiki-secondary mb-2">추천 교육과정</h4><ul class="space-y-1">${currList}</ul></div>`)
+    }
+    
+    if (readyItems.length > 0) {
+      sections.push(
+        renderSidebarSection(
+          '준비하기',
+          'fa-clipboard-check',
+          readyItems.join('')
+        )
+      )
+    }
   }
 
   return sections.filter((section) => section && safeTrim(section).length > 0).join('')
@@ -2350,11 +2470,30 @@ const renderOrganizationsList = (profile: UnifiedJobDetail): string => {
         if (!/^https?:\/\//i.test(fullUrl)) {
           fullUrl = `https://${fullUrl}`
         }
-        return `<li><a href="${escapeHtml(fullUrl)}" target="_blank" rel="noopener" class="content-text text-wiki-primary hover:text-wiki-secondary transition">${name}</a></li>`
+        return `
+          <li>
+            <a href="${escapeHtml(fullUrl)}" target="_blank" rel="noopener" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-secondary/10 text-wiki-secondary group-hover:bg-wiki-secondary/20 transition-colors">
+                <i class="fas fa-building text-xs" aria-hidden="true"></i>
+              </span>
+              <span class="flex-1 text-sm text-wiki-text group-hover:text-white font-medium transition-colors">${name}</span>
+              <i class="fas fa-external-link-alt text-[10px] text-wiki-muted/50 group-hover:text-wiki-secondary transition-colors" aria-hidden="true"></i>
+            </a>
+          </li>
+        `
       }
-      return `<li class="content-text text-wiki-text">${name}</li>`
+      return `
+        <li>
+          <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-secondary/10 text-wiki-secondary">
+              <i class="fas fa-building text-xs" aria-hidden="true"></i>
+            </span>
+            <span class="text-sm text-wiki-text font-medium">${name}</span>
+          </div>
+        </li>
+      `
     })
-  return items.length ? `<ul class="space-y-2">${items.join('')}</ul>` : ''
+  return items.length ? `<ul class="space-y-2" role="list">${items.join('')}</ul>` : ''
 }
 
 const renderKecoCodeList = (profile: UnifiedJobDetail): string => {
@@ -2592,7 +2731,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     `
   }
   
-  if (prospectPrimary || prospectChartHtml) {
+  if (prospectPrimary || prospectChartHtml || profile.forecastList) {
     let prospectHtml = ''
     
     if (Array.isArray(prospectPrimary) && prospectPrimary.length > 0) {
@@ -2620,15 +2759,63 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       }
     }
     
-    // 텍스트가 있으면 먼저 표시, 그래프는 뒤에 표시
+    // 기간별 전망 상세 (forecastList - 고용24 우선)
+    let forecastDetailHtml = ''
+    if (profile.forecastList && Array.isArray(profile.forecastList) && profile.forecastList.length > 0) {
+      const forecastItems = profile.forecastList
+        .filter(item => item.period || item.outlook || item.description)
+        .map(item => {
+          const parts = []
+          if (item.period) parts.push(`<span class="font-bold text-wiki-secondary">${escapeHtml(item.period)}</span>`)
+          if (item.outlook) parts.push(`<span class="text-wiki-primary">${escapeHtml(item.outlook)}</span>`)
+          if (item.description) parts.push(`<p class="text-sm text-wiki-text mt-1">${escapeHtml(item.description)}</p>`)
+          return `<div class="mb-3">${parts.join(' ')}</div>`
+        })
+        .join('')
+      
+      if (forecastItems) {
+        forecastDetailHtml = `<div class="mt-6"><h4 class="text-base font-bold text-wiki-secondary mb-3">기간별 전망</h4>${forecastItems}</div>`
+      }
+    }
+    
+    // 텍스트가 있으면 먼저 표시, 기간별 전망, 그래프는 뒤에 표시
     const combinedHtml = [
       prospectHtml?.trim() || '',
+      forecastDetailHtml?.trim() || '',
       prospectChartHtml?.trim() || ''
     ].filter(Boolean).join('<div class="mt-6"></div>')
     
     // Only add card if combinedHtml has content
     if (safeTrim(combinedHtml)) {
       pushOverviewCard('커리어 전망', 'fa-chart-line', combinedHtml)
+    }
+  }
+
+  // 직업 지표 차트 (indicatorChart)
+  if (profile.indicatorChart && Array.isArray(profile.indicatorChart) && profile.indicatorChart.length > 0) {
+    const indicatorItems = profile.indicatorChart
+      .filter(item => item.category && item.value !== undefined)
+      .slice(0, 10) // 상위 10개만 표시
+      .map(item => {
+        const value = item.value || 0
+        const barWidth = Math.min(value, 100)
+        return `
+          <div class="mb-3">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-sm text-wiki-text font-medium">${escapeHtml(item.category || '')}</span>
+              <span class="text-xs text-wiki-muted">${value.toFixed(1)}</span>
+            </div>
+            <div class="bg-wiki-border/30 rounded-full h-2 overflow-hidden">
+              <div class="bg-green-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
+            </div>
+            ${item.description ? `<p class="text-xs text-wiki-muted mt-1">${escapeHtml(item.description)}</p>` : ''}
+          </div>
+        `
+      })
+      .join('')
+    
+    if (indicatorItems) {
+      pushOverviewCard('직업 지표', 'fa-chart-bar', indicatorItems)
     }
   }
 
@@ -2773,6 +2960,33 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-secondary text-base font-bold mb-3">흥미</h3>${formatAsBulletList(profile.interests)}</div>`)
   }
   
+  // 흥미 측정 (점수 포함 버전 - interestList)
+  if (profile.interestList && Array.isArray(profile.interestList) && profile.interestList.length > 0) {
+    const interestItems = profile.interestList
+      .filter(item => item.name && item.score !== undefined)
+      .sort((a, b) => (b.score || 0) - (a.score || 0))
+      .slice(0, 10) // 상위 10개만 표시
+      .map(item => {
+        const score = item.score || 0
+        const barWidth = Math.min(score, 100)
+        return `
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-sm text-wiki-text min-w-[120px]">${escapeHtml(item.name || '')}</span>
+            <div class="flex-1 bg-wiki-border/30 rounded-full h-2 overflow-hidden">
+              <div class="bg-blue-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
+            </div>
+            <span class="text-xs text-wiki-muted min-w-[40px] text-right">${score.toFixed(1)}</span>
+          </div>
+        `
+      })
+      .join('')
+    
+    if (interestItems) {
+      const divClass = traitBlocks.length > 0 ? 'mt-6' : ''
+      traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-secondary text-base font-bold mb-3">흥미 프로필 (점수)</h3>${interestItems}</div>`)
+    }
+  }
+  
   if (profile.values?.trim()) {
     const divClass = traitBlocks.length > 0 ? 'mt-6' : ''
     traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-secondary text-base font-bold mb-3">가치관</h3>${formatRichText(profile.values)}</div>`)
@@ -2817,6 +3031,16 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   
   if (profile.knowledge?.trim()) {
     pushCharacteristicsCard('필수 지식', 'fa-book-open', formatRichText(profile.knowledge))
+  }
+  
+  // 고용 현황
+  if (profile.status?.trim()) {
+    pushCharacteristicsCard('고용 현황', 'fa-chart-bar', formatRichText(profile.status))
+  }
+  
+  // 근무 환경 (performList.environment와는 다름)
+  if (profile.environment?.trim()) {
+    pushCharacteristicsCard('근무 환경', 'fa-building', formatRichText(profile.environment))
   }
 
   if (profile.activitiesImportance?.trim() || profile.activitiesLevels?.trim()) {
@@ -3353,15 +3577,17 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     : `<p class="text-sm text-wiki-muted">업무특성 정보가 준비 중입니다.</p>`
   // ===== 업무특성 탭 끝 =====
 
-  // 직업 분류 체계 섹션 제거됨 (히어로 섹션에 카테고리 배지로 이미 표시)
-  // if (!isLawyerProfile(profile) && profile.classifications && (profile.classifications.large || profile.classifications.medium || profile.classifications.small)) {
-  //   const classificationItems = [
-  //     profile.classifications.large ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">대분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.large)}</span></li>` : '',
-  //     profile.classifications.medium ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">중분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.medium)}</span></li>` : '',
-  //     profile.classifications.small ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">소분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.small)}</span></li>` : ''
-  //   ].join('')
-  //   pushDetailCard('직업 분류 체계', 'fa-sitemap', `<ul class="space-y-2">${classificationItems}</ul>`)
-  // }
+  // 직업 분류 체계 (사이드바에 표시)
+  if (!isLawyerProfile(profile) && profile.classifications && (profile.classifications.large || profile.classifications.medium || profile.classifications.small)) {
+    const classificationItems = [
+      profile.classifications.large ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">대분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.large)}</span></li>` : '',
+      profile.classifications.medium ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">중분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.medium)}</span></li>` : '',
+      profile.classifications.small ? `<li class="flex justify-between text-sm"><span class="text-wiki-muted">소분류</span><span class="text-wiki-text">${escapeHtml(profile.classifications.small)}</span></li>` : ''
+    ].filter(Boolean).join('')
+    if (classificationItems) {
+      pushDetailCard('직업 분류 체계', 'fa-sitemap', `<ul class="space-y-2">${classificationItems}</ul>`)
+    }
+  }
 
   // 한국표준직업분류 코드 섹션 제거됨
   // const kecoList = renderKecoCodeList(profile)

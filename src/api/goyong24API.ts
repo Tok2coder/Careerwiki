@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Goyong24 (고용24) Open API Client
  *
  * Provides low-level fetch helpers for the 고용24 학과/직업 API endpoints and
@@ -20,6 +20,10 @@ import type {
   UnifiedMajorSummary
 } from '../types/unifiedProfiles'
 
+// Goyong24 API Base URL
+// 문서에 따르면: https://www.work24.go.kr/cm/openApi/call/hr/ (학과)
+// 코드에서는: https://www.work24.go.kr/cm/openApi/call/wk/ (직업)
+// 실제 엔드포인트 확인 필요
 const GOYONG24_BASE_URL = 'https://www.work24.go.kr/cm/openApi/call/wk'
 
 declare global {
@@ -178,6 +182,12 @@ const fetchXml = async (endpoint: string, params: Record<string, string>): Promi
       const label = `${response.status} ${response.statusText || 'Unknown'}`
       lastError = `${label}${snippet ? ` · ${snippet}` : ''}`
       console.warn(`[goyong24] ${endpoint} attempt ${attempt + 1} (${profile.label}) failed: ${lastError}`)
+      
+      // 404 에러인 경우 상세 정보 로깅
+      if (response.status === 404) {
+        console.error(`[goyong24] 404 에러 - 엔드포인트 확인 필요: ${url}`)
+        console.error(`[goyong24] 응답 본문 (처음 500자): ${body.substring(0, 500)}`)
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       lastError = message
@@ -394,6 +404,33 @@ export const fetchGoyong24MajorDetail = async (
   })
 
   return parseMajorDetail(xml, params.majorGb)
+}
+
+// 원본 XML 데이터를 포함한 확장 타입 (시딩용)
+export interface Goyong24MajorDetailWithRaw {
+  parsed: Goyong24MajorDetail
+  rawXml: string
+}
+
+export const fetchGoyong24MajorDetailWithRaw = async (
+  params: Goyong24MajorDetailParams,
+  env?: EnvWithGoyong24Keys
+): Promise<Goyong24MajorDetailWithRaw> => {
+  const endpoint = params.majorGb === '2' ? 'callOpenApiSvcInfo213D02' : 'callOpenApiSvcInfo213D01'
+
+  const xml = await fetchXml(endpoint, {
+    authKey: getApiKey('major', env),
+    returnType: 'XML',
+    target: 'MAJORDTL',
+    majorGb: params.majorGb,
+    empCurtState1Id: params.empCurtState1Id,
+    empCurtState2Id: params.empCurtState2Id
+  })
+
+  return {
+    parsed: parseMajorDetail(xml, params.majorGb),
+    rawXml: xml
+  }
 }
 
 export const normalizeGoyong24MajorListItem = (
@@ -1127,11 +1164,13 @@ export const normalizeGoyong24JobDetail = (
 
   const summary = detail.summary
   const salProspect = detail.salProspect
+  const jobTitle = extractJobTitle(summary) || summary.jobNm || summary.jobSmclNm || summary.jobMdclNm || summary.jobLrclNm || summary.jobCd
+
   const canonicalSummary = normalizeGoyong24JobListItem({
     jobClcd: summary.jobLrclNm || '',
     jobClcdNm: summary.jobLrclNm || '',
     jobCd: summary.jobCd,
-    jobNm: extractJobTitle(summary) || summary.jobCd
+    jobNm: jobTitle
   })
 
   const relatedMajors = mergeRelatedMajorEntities(summary.relMajorList, detail.path?.relMajorList)

@@ -23,9 +23,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Job detail page template version
    * Used for: /job/:slug pages
-   * Current features: TBD (Phase 2 Option 2)
+   * Current features: 상세정보 탭 업무 상세 계층 구조 렌더링 (대분류 제목 + bullet point)
    */
-  JOB: 1,
+  JOB: 10,  // 🆕 formatWorkDetailAsNumberedCards를 계층 구조로 개선 (대분류 제목 + 항목 리스트)
 
   /**
    * Guide page template version

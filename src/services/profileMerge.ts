@@ -272,7 +272,7 @@ export const mergeJobProfiles = (
     id: goyong?.id ?? careernet!.id,
     sourceIds: mergeSourceIds(goyong?.sourceIds, careernet?.sourceIds),
     sources: mergeSources(goyong?.sources, careernet?.sources),
-    name: careernet?.name ?? goyong?.name ?? base.name,
+    name: goyong?.name ?? careernet?.name ?? base.name,  // 🆕 고용24 우선 (기존: careernet 우선)
     category: {
       code: goyong?.category?.code ?? careernet?.category?.code,
       name: goyong?.category?.name ?? careernet?.category?.name

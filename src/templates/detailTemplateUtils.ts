@@ -37,12 +37,21 @@ export const renderChips = (items?: string[] | null, emptyText = '정보 없음'
   }
 
   return `
-    <div class="flex flex-wrap gap-2">
+    <ul class="space-y-1.5" role="list">
       ${items
         .filter((item) => !!item && !!item.trim())
-        .map((item) => `<span class="px-3 py-1.5 rounded-full bg-wiki-bg border border-wiki-border/50 md:border-wiki-border content-text text-wiki-muted">${escapeHtml(item.trim())}</span>`)
+        .map((item) => `
+          <li>
+            <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-wiki-bg/40 border border-wiki-border/40 hover:border-wiki-primary/40 hover:bg-wiki-primary/5 transition-all duration-200">
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-wiki-primary/15 text-wiki-primary">
+                <i class="fas fa-certificate text-[9px]" aria-hidden="true"></i>
+              </span>
+              <span class="text-sm text-wiki-text font-medium">${escapeHtml(item.trim())}</span>
+            </div>
+          </li>
+        `)
         .join('')}
-    </div>
+    </ul>
   `
 }
 
