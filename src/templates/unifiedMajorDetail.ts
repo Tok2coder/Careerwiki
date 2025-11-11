@@ -810,13 +810,13 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   const communityBlock = `<div data-major-community>${commentsPlaceholder}</div>`
 
-  // 히어로 태그: aptitude 필드 활용 (적성/흥미)
-  const heroTags = profile.aptitude && profile.aptitude.length < 200
-    ? profile.aptitude.split(',').map(tag => tag.trim()).filter(Boolean).slice(0, 5)
+  // 히어로 태그: relatedMajors 필드 활용 (관련 학과명)
+  const heroTags = profile.relatedMajors && profile.relatedMajors.length > 0
+    ? profile.relatedMajors.slice(0, 5)
     : []
 
   const heroTagsMarkup = heroTags.length > 0
-    ? `<div class="flex flex-wrap gap-2 mt-4">${heroTags.map(tag => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-wiki-primary font-medium"><i class="fas fa-tag text-[10px]"></i>${escapeHtml(tag)}</span>`).join('')}</div>`
+    ? `<div class="flex flex-wrap gap-2 mt-4">${heroTags.map(tag => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-wiki-primary font-medium"><i class="fas fa-graduation-cap text-[10px]"></i>${escapeHtml(tag)}</span>`).join('')}</div>`
     : ''
 
   const mainColumn = `<div class="space-y-6 min-w-0">${tabLayout}</div>`

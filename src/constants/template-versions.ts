@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 히어로 섹션 개선 + 사이드바 추가 + summary 표시 + 상세정보 탭 통합 + 목차 anchor ID 수정
+   * Current features: 히어로 섹션 개선 + 사이드바 추가 + summary 표시 + 상세정보 탭 통합 + 목차 anchor ID 수정 + 히어로 태그 변경
    */
-  MAJOR: 11,  // 🆕 목차 클릭 시 스크롤 이동 수정 (details anchor ID로 재빌드)
+  MAJOR: 12,  // 🆕 히어로 태그를 aptitude → relatedMajors (관련 학과명)으로 변경
 
   /**
    * Job detail page template version
