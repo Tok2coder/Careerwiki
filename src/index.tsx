@@ -2669,10 +2669,29 @@ app.get('/major/:slug', async (c) => {
   const debugMode = c.req.query('debug') === 'true'
   if (debugMode) {
     try {
-      // For major pages, show sample data only (no raw API data yet)
-      const sampleEntry = getSampleMajorDetail(resolvedId) || getSampleMajorDetail(slug)
-      
-      if (!sampleEntry || !sampleEntry.profile) {
+      // 🆕 실제 D1 데이터 + API 데이터 사용 (직업 페이지와 동일)
+      const careernetId = c.req.query('careernetId') || undefined
+      const majorGbParam = c.req.query('goyongMajorGb')
+      const departmentId = c.req.query('goyongDepartmentId') || undefined
+      const majorId = c.req.query('goyongMajorId') || undefined
+      const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+      const goyongMajorGb = majorGbParam === '1' ? '1' : majorGbParam === '2' ? '2' : undefined
+      const goyongParams = goyongMajorGb && departmentId && majorId
+        ? { majorGb: goyongMajorGb, departmentId, majorId }
+        : undefined
+
+      const result = await getUnifiedMajorDetail(
+        {
+          id: resolvedId,
+          careernetId,
+          goyong24Params: goyongParams,
+          includeSources
+        },
+        c.env
+      )
+
+      if (!result.profile) {
         c.status(404)
         return c.html(renderLayout(renderDetailFallback({
           icon: 'fa-circle-exclamation',
@@ -2686,24 +2705,21 @@ app.get('/major/:slug', async (c) => {
 
       const debugHtml = renderDataDebugPage({
         pageType: 'major',
-        profile: sampleEntry.profile,
-        rawData: {
-          note: 'Major debug mode currently shows sample data only. Raw API data integration coming soon.',
-          sampleEntry
-        },
-        partials: null,
-        sources: sampleEntry.sources || {},
+        profile: result.profile,
+        rawData: result.rawPartials || {},
+        partials: result.partials || null,
+        sources: result.sources || {},
         breadcrumbs: [
           { href: '/', label: '홈' },
           { href: '/major', label: '전공위키' },
-          { href: `/major/${encodeURIComponent(slug)}`, label: sampleEntry.profile.name }
+          { href: `/major/${encodeURIComponent(slug)}`, label: result.profile.name }
         ]
       })
       
       return c.html(renderLayout(
         debugHtml,
-        `${sampleEntry.profile.name} 디버그 (샘플) - Careerwiki`,
-        '디버그 모드: 샘플 데이터 확인'
+        `${result.profile.name} 디버그 - Careerwiki`,
+        '디버그 모드: 실제 API 데이터 확인'
       ))
     } catch (error) {
       console.error('Debug mode error:', error)
@@ -2712,7 +2728,7 @@ app.get('/major/:slug', async (c) => {
         icon: 'fa-circle-exclamation',
         iconColor: 'text-red-500',
         title: '디버그 데이터 로드 실패',
-        description: '일시적인 오류가 발생했습니다.',
+        description: error instanceof Error ? error.message : '일시적인 오류가 발생했습니다.',
         ctaHref: '/major',
         ctaLabel: '전공 목록으로'
       }), '오류 - Careerwiki'))
