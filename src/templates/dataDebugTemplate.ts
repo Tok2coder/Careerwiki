@@ -2354,8 +2354,8 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
   const careernetId = profile?.sourceIds?.careernet || 'N/A'
   const goyong24Id = profile?.sourceIds?.goyong24 || 'N/A'
   
-  // For major pages with sample data, render simplified view
-  const isMajorSampleData = pageType === 'major' && rawData && !rawApiData
+  // 🆕 전공도 직업처럼 실제 API 데이터 표시 (샘플 데이터 모드 제거)
+  const isMajorSampleData = false
 
   const styles = `
     <style>
