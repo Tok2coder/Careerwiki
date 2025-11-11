@@ -368,7 +368,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   }
   
   if (aptitudeItems.length > 0) {
-    overviewCards.push(buildCard('적성 프로필', 'fa-brain', aptitudeItems.join('')))
+    pushOverviewCard('적성 프로필', 'fa-brain', aptitudeItems.join(''))
   }
   
   // 가치관 리스트 (lstVals)
@@ -395,11 +395,15 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       })
       .join('')
     if (valItems) {
-      overviewCards.push(buildCard('가치관', 'fa-heart', valItems))
+      pushOverviewCard('가치관', 'fa-heart', valItems)
     }
   }
 
-  const learningCards: string[] = []
+  const learningCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
+  const pushLearningCard = (label: string, icon: string, markup: string) => {
+    const id = anchorIdFactory('curriculum', label)
+    learningCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
+  }
   
   // 관련 고교 교과목 (relateSubject)
   if (profile.relateSubject && Array.isArray(profile.relateSubject) && profile.relateSubject.length > 0) {
@@ -415,12 +419,12 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       })
       .join('')
     if (subjectItems) {
-      learningCards.push(buildCard('고교 추천 교과목', 'fa-school', subjectItems))
+      pushLearningCard('고교 추천 교과목', 'fa-school', subjectItems)
     }
   }
   
   if (profile.mainSubjects?.length) {
-    learningCards.push(buildCard('주요 교과목', 'fa-book-open', renderChips(profile.mainSubjects, '교과목 정보가 없습니다.')))
+    pushLearningCard('주요 교과목', 'fa-book-open', renderChips(profile.mainSubjects, '교과목 정보가 없습니다.'))
   }
   
   // 대학 주요 교과목 상세 (mainSubject - 배열 버전)
@@ -437,15 +441,15 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       })
       .join('')
     if (mainSubjItems) {
-      learningCards.push(buildCard('대학 주요 교과목 상세', 'fa-book', mainSubjItems))
+      pushLearningCard('대학 주요 교과목 상세', 'fa-book', mainSubjItems)
     }
   }
   
   if (profile.whatStudy?.trim()) {
-    learningCards.push(buildCard('무엇을 배우나요?', 'fa-graduation-cap', formatRichText(profile.whatStudy)))
+    pushLearningCard('무엇을 배우나요?', 'fa-graduation-cap', formatRichText(profile.whatStudy))
   }
   if (profile.howPrepare?.trim()) {
-    learningCards.push(buildCard('어떻게 준비하나요?', 'fa-route', formatRichText(profile.howPrepare)))
+    pushLearningCard('어떻게 준비하나요?', 'fa-route', formatRichText(profile.howPrepare))
   }
   
   // 진로 탐색 활동 (careerAct)
@@ -462,20 +466,32 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       })
       .join('')
     if (actItems) {
-      learningCards.push(buildCard('진로 탐색 활동', 'fa-compass', actItems))
+      pushLearningCard('진로 탐색 활동', 'fa-compass', actItems)
     }
   }
   
   if (profile.licenses?.length) {
-    learningCards.push(buildCard('추천 자격증', 'fa-certificate', renderChips(profile.licenses, '관련 자격증 정보가 없습니다.')))
+    pushLearningCard('추천 자격증', 'fa-certificate', renderChips(profile.licenses, '관련 자격증 정보가 없습니다.'))
   }
 
-  const careerCards: string[] = []
+  const learningContent = learningCards.length > 0
+    ? `<div class="space-y-6">
+        ${renderSectionToc('curriculum', '목차', learningCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${learningCards.map((card) => card.markup).join('')}
+      </div>`
+    : `<p class="text-sm text-wiki-muted">커리큘럼 정보가 준비 중입니다.</p>`
+
+  const careerCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
+  const pushCareerCard = (label: string, icon: string, markup: string) => {
+    const id = anchorIdFactory('career', label)
+    careerCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
+  }
+
   if (profile.jobProspect?.trim()) {
-    careerCards.push(buildCard('진로 전망', 'fa-chart-line', formatRichText(profile.jobProspect)))
+    pushCareerCard('진로 전망', 'fa-chart-line', formatRichText(profile.jobProspect))
   }
   if (profile.relatedJobs?.length) {
-    careerCards.push(buildCard('관련 직업', 'fa-briefcase', renderChips(profile.relatedJobs, '연관 직업 정보가 없습니다.')))
+    pushCareerCard('관련 직업', 'fa-briefcase', renderChips(profile.relatedJobs, '연관 직업 정보가 없습니다.'))
   }
   
   // 졸업 후 진출 분야 (enterField)
@@ -492,7 +508,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       })
       .join('')
     if (enterItems) {
-      careerCards.push(buildCard('졸업 후 진출 분야', 'fa-door-open', enterItems))
+      pushCareerCard('졸업 후 진출 분야', 'fa-door-open', enterItems)
     }
   }
   
@@ -501,7 +517,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       profile.salaryAfterGraduation ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>` : '',
       profile.employmentRate ? `<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>` : ''
     ].join('')
-    careerCards.push(buildCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems}</ul>`))
+    pushCareerCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems}</ul>`)
   }
   
   // 통계 차트 데이터 (chartData)
@@ -622,31 +638,62 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     }
     
     if (chartSections.length > 0) {
-      careerCards.push(buildCard('통계 정보', 'fa-chart-area', chartSections.join('')))
+      pushCareerCard('통계 정보', 'fa-chart-area', chartSections.join(''))
     }
   }
 
-  const universityCards: string[] = []
+  const careerContent = careerCards.length > 0
+    ? `<div class="space-y-6">
+        ${renderSectionToc('career', '목차', careerCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${careerCards.map((card) => card.markup).join('')}
+      </div>`
+    : `<p class="text-sm text-wiki-muted">진로 정보가 준비 중입니다.</p>`
+
+  const universityCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
+  const pushUniversityCard = (label: string, icon: string, markup: string) => {
+    const id = anchorIdFactory('universities', label)
+    universityCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
+  }
+
   const universitiesContent = renderUniversities(profile.universities)
   if (universitiesContent) {
-    universityCards.push(buildCard('개설 대학', 'fa-building-columns', universitiesContent))
+    pushUniversityCard('개설 대학', 'fa-building-columns', universitiesContent)
   }
   const recruitmentContent = renderRecruitmentTable(profile.recruitmentStatus)
   if (recruitmentContent) {
-    universityCards.push(buildCard('모집 정원 & 지원 현황', 'fa-users', recruitmentContent))
+    pushUniversityCard('모집 정원 & 지원 현황', 'fa-users', recruitmentContent)
   }
 
-  const networkCards: string[] = []
-  if (profile.relatedMajors?.length) {
-    networkCards.push(buildCard('추천 유사 전공', 'fa-diagram-project', renderChips(profile.relatedMajors)))
+  const universityContent = universityCards.length > 0
+    ? `<div class="space-y-6">
+        ${renderSectionToc('universities', '목차', universityCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${universityCards.map((card) => card.markup).join('')}
+      </div>`
+    : `<p class="text-sm text-wiki-muted">개설 대학 정보가 준비 중입니다.</p>`
+
+  const networkCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
+  const pushNetworkCard = (label: string, icon: string, markup: string) => {
+    const id = anchorIdFactory('network', label)
+    networkCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
   }
+
+  if (profile.relatedMajors?.length) {
+    pushNetworkCard('추천 유사 전공', 'fa-diagram-project', renderChips(profile.relatedMajors))
+  }
+
+  const networkContent = networkCards.length > 0
+    ? `<div class="space-y-6">
+        ${renderSectionToc('network', '목차', networkCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${networkCards.map((card) => card.markup).join('')}
+      </div>`
+    : `<p class="text-sm text-wiki-muted">연결 정보가 준비 중입니다.</p>`
 
   const tabEntries: TabEntry[] = [
     { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewContent },
-    { id: 'curriculum', label: '커리큘럼', icon: 'fa-book-open', content: learningCards.join('') },
-    { id: 'career', label: '진로 · 전망', icon: 'fa-chart-line', content: careerCards.join('') },
-    { id: 'universities', label: '개설 대학', icon: 'fa-building-columns', content: universityCards.join('') },
-    { id: 'network', label: '연결 정보', icon: 'fa-diagram-project', content: networkCards.join('') }
+    { id: 'curriculum', label: '커리큘럼', icon: 'fa-book-open', content: learningContent },
+    { id: 'career', label: '진로 · 전망', icon: 'fa-chart-line', content: careerContent },
+    { id: 'universities', label: '개설 대학', icon: 'fa-building-columns', content: universityContent },
+    { id: 'network', label: '연결 정보', icon: 'fa-diagram-project', content: networkContent }
   ].filter((entry) => entry.content && entry.content.trim().length > 0)
 
   const entitySlug = composeDetailSlug('major', profile.name, profile.id)
@@ -802,3 +849,4 @@ export const createMajorJsonLd = (profile: UnifiedMajorDetail, canonicalUrl: str
   const script = JSON.stringify(jsonLd).replace(/</g, '\\u003c')
   return `<script type="application/ld+json">${script}</script>`
 }
+
