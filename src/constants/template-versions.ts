@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 히어로 섹션 개선 + 사이드바 개선 + 개요 탭 재구성 + 핵심지표 포맷팅 수정 + categoryName 필터 개선
+   * Current features: D1 병합 로직 적용 (CareerNet + Goyong24 자동 병합)
    */
-  MAJOR: 16,  // 🆕 categoryName 필터를 50자 → 쉼표 개수로 변경 (더 정확한 판별)
+  MAJOR: 17,  // 🆕 D1 조회 로직 수정 (.all()로 모든 레코드 병합, 직업 페이지와 동일)
 
   /**
    * Job detail page template version

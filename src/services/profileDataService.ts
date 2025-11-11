@@ -610,57 +610,104 @@ export const getUnifiedMajorDetail = async (
   let goyongProfile: UnifiedMajorDetail | null = null
 
   // 🆕 Step 0: Check D1 Database first (if available) for Korean name lookups
+  // ⚠️ 직업 페이지와 동일한 병합 로직 적용 (이름으로 모든 레코드 검색 → 병합)
   if (env && 'DB' in env && id && !id.includes(':')) {
     try {
       const db = (env as any).DB
       
       // Try finding by name (Korean slug) in D1
-      const majorRow = await db.prepare(`
+      // ✅ .all()로 변경하여 같은 이름의 모든 레코드를 가져옴 (CareerNet + Goyong24 병합)
+      const allMajorRows = await db.prepare(`
         SELECT id, name, careernet_id, goyong24_id, api_data_json 
         FROM majors 
         WHERE LOWER(name) = LOWER(?)
-        LIMIT 1
-      `).bind(id).first()
+      `).bind(id).all()
       
-      if (majorRow && majorRow.api_data_json) {
-        // Found in D1 - use cached data
-        const apiData = JSON.parse(majorRow.api_data_json)
-        const careernetData = apiData?.careernet
-        const goyongData = apiData?.goyong24
-        
-        if (careernetData && Object.keys(careernetData).length > 0) {
-          careernetProfile = {
-            id: `major:C_${majorRow.careernet_id}`,
-            sourceIds: { careernet: majorRow.careernet_id },
-            name: majorRow.name,
-            ...careernetData,
-            sources: ['CAREERNET']
+      console.log(`🔍 D1 전공 name 검색: name="${id}", found=${allMajorRows.results?.length || 0}개 레코드`)
+      
+      if (allMajorRows.results && allMajorRows.results.length > 0) {
+        // 🆕 여러 레코드가 있으면 모두 병합 (커리어넷 + 고용24)
+        for (const row of allMajorRows.results) {
+          if (row.api_data_json) {
+            try {
+              const apiData = JSON.parse(row.api_data_json)
+              
+              // careernet 데이터 수집 (레코드에 careernet_id가 있고 apiData.careernet이 null이 아닌 경우)
+              if (row.careernet_id && sourcesToUse.includes('CAREERNET') && !careernetProfile) {
+                const careernetData = apiData.careernet
+                
+                // null이 아니고 실제 데이터가 있는 경우만 처리
+                if (careernetData && careernetData !== null && typeof careernetData === 'object') {
+                  careernetProfile = {
+                    id: `major:C_${row.careernet_id}`,
+                    sourceIds: { careernet: row.careernet_id },
+                    name: row.name,
+                    ...careernetData,
+                    sources: ['CAREERNET']
+                  }
+                  const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
+                  status.attempted = true
+                  status.count = 1
+                  console.log(`  ✅ 커리어넷 전공 데이터 수집 완료 (레코드 ID: ${row.id}, careernet_id: ${row.careernet_id})`)
+                  
+                  // rawPartials에 원본 데이터 저장
+                  if (apiData?.rawCareernet) {
+                    if (!sourcesStatus.rawPartials) sourcesStatus.rawPartials = {}
+                    sourcesStatus.rawPartials.CAREERNET = apiData.rawCareernet
+                  }
+                }
+              }
+              
+              // goyong24 데이터 수집 (레코드에 goyong24_id가 있고 apiData.goyong24가 null이 아닌 경우)
+              if (row.goyong24_id && sourcesToUse.includes('GOYONG24') && !goyongProfile) {
+                const goyong24Data = apiData.goyong24
+                
+                // null이 아니고 실제 데이터가 있는 경우만 처리
+                if (goyong24Data && goyong24Data !== null && typeof goyong24Data === 'object') {
+                  goyongProfile = {
+                    id: row.goyong24_id,
+                    sourceIds: { goyong24: row.goyong24_id },
+                    name: row.name,
+                    ...goyong24Data,
+                    sources: ['GOYONG24']
+                  }
+                  const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
+                  status.attempted = true
+                  status.count = 1
+                  console.log(`  ✅ 고용24 전공 데이터 수집 완료 (레코드 ID: ${row.id}, goyong24_id: ${row.goyong24_id})`)
+                  
+                  // rawPartials에 원본 데이터 저장
+                  if (apiData?.rawGoyong24) {
+                    if (!sourcesStatus.rawPartials) sourcesStatus.rawPartials = {}
+                    sourcesStatus.rawPartials.GOYONG24 = apiData.rawGoyong24
+                  }
+                }
+              }
+              
+              // 양쪽 데이터를 모두 찾았으면 중단
+              if (careernetProfile && goyongProfile) {
+                console.log(`  🎯 양쪽 소스 전공 데이터 모두 수집 완료, 병합 진행`)
+                break
+              }
+            } catch (error) {
+              console.error(`  ❌ JSON 파싱 오류 (레코드 ID: ${row.id}):`, error)
+            }
           }
-          const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
-          status.attempted = true
-          status.count = 1
         }
         
-        if (goyongData && Object.keys(goyongData).length > 0) {
-          goyongProfile = {
-            id: majorRow.goyong24_id,
-            sourceIds: { goyong24: majorRow.goyong24_id },
-            name: majorRow.name,
-            ...goyongData,
-            sources: ['GOYONG24']
-          }
-          const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
-          status.attempted = true
-          status.count = 1
-        }
-        
-        // If we have data from D1, skip API calls and merge
+        // If we found data in D1, skip API calls and merge
         if (careernetProfile || goyongProfile) {
           const merged = mergeMajorProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
-          // D1에서 가져온 경우 api_data_json에 원본 데이터가 저장되어 있음
-          const rawPartials: Partial<Record<DataSource, any>> = {}
-          if (apiData?.rawCareernet) rawPartials.CAREERNET = apiData.rawCareernet
-          if (apiData?.rawGoyong24) rawPartials.GOYONG24 = apiData.rawGoyong24
+          
+          // 병합된 데이터의 name 사용 (mergeMajorProfiles에서 이미 고용24 우선 처리됨)
+          // 첫 번째 레코드의 name을 fallback으로 사용
+          if (!merged.name || !merged.name.trim()) {
+            if (allMajorRows.results[0].name && allMajorRows.results[0].name.trim()) {
+              merged.name = allMajorRows.results[0].name.trim()
+            }
+          }
+          
+          console.log(`  🎉 D1 전공 병합 완료: "${merged.name}" (커리어넷: ${!!careernetProfile}, 고용24: ${!!goyongProfile})`)
           
           return {
             profile: merged,
@@ -669,7 +716,7 @@ export const getUnifiedMajorDetail = async (
               GOYONG24: goyongProfile
             },
             sources: sourcesStatus,
-            rawPartials: Object.keys(rawPartials).length > 0 ? rawPartials : undefined
+            rawPartials: sourcesStatus.rawPartials
           }
         }
       }
