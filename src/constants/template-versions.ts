@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 히어로 섹션 개선 + 목차 추가 + 기본 정보 개요 탭 이동 + categoryName 필터링 + 히어로 태그
+   * Current features: 히어로 섹션 개선 + 사이드바 추가 + summary 표시
    */
-  MAJOR: 6,  // 🆕 간격 조정 (space-y-4 md:space-y-8), 히어로 태그 추가 (aptitude 필드)
+  MAJOR: 7,  // 🆕 직업 템플릿과 완전히 동일한 레이아웃 (2-column + 사이드바)
 
   /**
    * Job detail page template version

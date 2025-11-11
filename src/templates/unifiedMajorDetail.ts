@@ -223,33 +223,17 @@ const renderMajorSourcesCollapsible = (
 }
 
 export const renderUnifiedMajorDetail = ({ profile, partials, sources }: UnifiedMajorDetailTemplateParams): string => {
+  // categoryName 정리: 50자 이상이면 관련 학과명이 잘못 들어간 것
+  const cleanCategoryName = profile.categoryName && profile.categoryName.length < 50
+    ? profile.categoryName
+    : undefined
+
   const heroDescription = profile.summary?.split('\n')[0]?.trim()
   const heroImage = renderHeroImage(profile.name, { dataAttribute: 'data-major-hero-image', context: 'major' })
 
   const overviewCards: string[] = []
   if (profile.summary?.trim()) {
     overviewCards.push(buildCard('전공 개요', 'fa-circle-info', formatRichText(profile.summary)))
-  }
-  
-  // categoryName 정리: 50자 이상이면 관련 학과명이 잘못 들어간 것
-  const cleanCategoryName = profile.categoryName && profile.categoryName.length < 50
-    ? profile.categoryName
-    : undefined
-  
-  // 기본 정보를 개요 탭에 추가
-  const basicInfoItems: string[] = []
-  if (cleanCategoryName) {
-    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text">${escapeHtml(cleanCategoryName)}</span></li>`)
-  }
-  if (profile.employmentRate) {
-    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>`)
-  }
-  if (profile.salaryAfterGraduation) {
-    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text">${escapeHtml(profile.salaryAfterGraduation)}</span></li>`)
-  }
-  
-  if (basicInfoItems.length > 0) {
-    overviewCards.push(buildCard('기본 정보', 'fa-info-circle', `<ul class="space-y-2">${basicInfoItems.join('')}</ul>`))
   }
   
   // 전공 특성 (property)
@@ -639,13 +623,35 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     metaExtra: Object.keys(detailMetaExtra).length ? detailMetaExtra : undefined
   })
 
+  // 사이드바 구성
+  const sidebarSections: string[] = []
+  
+  // 기본 정보
+  const basicInfoItems: string[] = []
+  if (cleanCategoryName) {
+    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text font-medium">${escapeHtml(cleanCategoryName)}</span></li>`)
+  }
+  if (profile.employmentRate) {
+    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text font-medium">${escapeHtml(profile.employmentRate)}</span></li>`)
+  }
+  if (profile.salaryAfterGraduation) {
+    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text font-medium">${escapeHtml(profile.salaryAfterGraduation)}</span></li>`)
+  }
+  
+  if (basicInfoItems.length > 0) {
+    sidebarSections.push(`
+      <div class="glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-xl">
+        <h3 class="text-lg font-semibold text-white mb-4">기본 정보</h3>
+        <ul class="space-y-3">${basicInfoItems.join('')}</ul>
+      </div>
+    `)
+  }
+  
+  const hasSidebar = sidebarSections.length > 0
+  const sidebarContent = sidebarSections.join('')
+
   // 데이터 출처 collapsible (직업 템플릿과 동일)
   const sourcesCollapsible = renderMajorSourcesCollapsible(profile, sources, partials)
-
-  // categoryTags는 cleanCategoryName 사용
-  const categoryTags = cleanCategoryName
-    ? cleanCategoryName.split(',').map(tag => tag.trim()).filter(Boolean)
-    : []
 
   const sourcesBlock = sourcesCollapsible
     ? `<div data-major-sources>${sourcesCollapsible}</div>`
@@ -659,18 +665,28 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     : []
 
   const heroTagsMarkup = heroTags.length > 0
-    ? `
-      <div class="flex flex-wrap gap-2">
-        ${heroTags.map(tag => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-wiki-primary font-medium"><i class="fas fa-tag text-[10px]"></i>${escapeHtml(tag)}</span>`).join('')}
-      </div>
-    `
+    ? `<div class="flex flex-wrap gap-2 mt-4">${heroTags.map(tag => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-wiki-primary font-medium"><i class="fas fa-tag text-[10px]"></i>${escapeHtml(tag)}</span>`).join('')}</div>`
     : ''
+
+  const mainColumn = `<div class="space-y-6 min-w-0">${tabLayout}</div>`
+  const sidebarMarkup = hasSidebar
+    ? `<aside class="space-y-6 lg:sticky lg:top-28 lg:h-fit lg:self-start" data-major-sidebar>${sidebarContent}</aside>`
+    : ''
+
+  const layoutBlock = hasSidebar
+    ? `
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)] lg:items-start" data-major-layout>
+          ${mainColumn}
+          ${sidebarMarkup}
+        </div>
+      `
+    : `<div class="space-y-6" data-major-layout>${tabLayout}</div>`
 
   return `
     <div class="max-w-[1400px] mx-auto md:px-6 space-y-4 md:space-y-8 md:py-8 md:mt-4">
-      <section class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8">
+      <section class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8" data-major-hero>
         <div class="space-y-5">
-          ${categoryTags.length === 1 ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group"></i>${escapeHtml(categoryTags[0])}</span>` : ''}
+          ${cleanCategoryName ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group"></i>${escapeHtml(cleanCategoryName)}</span>` : ''}
           <div class="flex flex-wrap items-start justify-between gap-4">
             <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight">${escapeHtml(profile.name)}</h1>
             <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2 shrink-0" data-share="true" data-entity-type="major" data-entity-id="${escapeHtml(profile.id)}">
@@ -678,12 +694,13 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
               공유
             </button>
           </div>
+          ${heroDescription ? `<p class="text-[15px] text-wiki-muted leading-relaxed">${escapeHtml(heroDescription)}</p>` : ''}
           ${heroImage}
           ${heroTagsMarkup}
         </div>
       </section>
 
-      ${tabLayout}
+      ${layoutBlock}
       ${sourcesBlock}
       ${communityBlock}
 
