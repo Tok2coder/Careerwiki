@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 히어로 섹션 개선 + 사이드바 추가 + summary 표시 + 모든 탭에 목차 추가
+   * Current features: 히어로 섹션 개선 + 사이드바 추가 + summary 표시 + 상세정보 탭 통합
    */
-  MAJOR: 9,  // 🆕 모든 탭에 목차 적용 (개요/커리큘럼/진로/대학/연결정보)
+  MAJOR: 10,  // 🆕 상세정보 탭 추가 (커리큘럼+진로+연결정보 통합, 개요-상세정보-대학 3탭 구조)
 
   /**
    * Job detail page template version

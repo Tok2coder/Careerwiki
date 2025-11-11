@@ -42,12 +42,12 @@ const safeTrim = (value: any): string => {
 // 목차 렌더링 함수
 type TocItem = { id: string; label: string; icon: string }
 
-const renderSectionToc = (sectionKey: 'overview' | 'curriculum' | 'career' | 'universities' | 'network', heading: string, items: TocItem[]): string => {
+const renderSectionToc = (sectionKey: 'overview' | 'curriculum' | 'career' | 'universities' | 'network' | 'details', heading: string, items: TocItem[]): string => {
   if (!items.length) {
     return ''
   }
 
-  const headingIcon = sectionKey === 'overview' ? 'fa-list-check' : sectionKey === 'curriculum' ? 'fa-book-open' : sectionKey === 'career' ? 'fa-chart-line' : sectionKey === 'universities' ? 'fa-building-columns' : 'fa-diagram-project'
+  const headingIcon = sectionKey === 'overview' ? 'fa-list-check' : sectionKey === 'details' ? 'fa-layer-group' : sectionKey === 'curriculum' ? 'fa-book-open' : sectionKey === 'career' ? 'fa-chart-line' : sectionKey === 'universities' ? 'fa-building-columns' : 'fa-diagram-project'
 
   const listMarkup = items
     .map((item, index) => `
@@ -688,12 +688,39 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       </div>`
     : `<p class="text-sm text-wiki-muted">연결 정보가 준비 중입니다.</p>`
 
+  // 상세정보 탭: 커리큘럼 + 진로·전망 + 연결정보 통합
+  const detailCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
+  const pushDetailCard = (label: string, icon: string, markup: string) => {
+    const id = anchorIdFactory('details', label)
+    detailCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
+  }
+
+  // 커리큘럼 카드들 추가
+  learningCards.forEach(card => {
+    detailCards.push({ ...card, id: anchorIdFactory('details', card.label) })
+  })
+
+  // 진로·전망 카드들 추가
+  careerCards.forEach(card => {
+    detailCards.push({ ...card, id: anchorIdFactory('details', card.label) })
+  })
+
+  // 연결정보 카드들 추가
+  networkCards.forEach(card => {
+    detailCards.push({ ...card, id: anchorIdFactory('details', card.label) })
+  })
+
+  const detailContent = detailCards.length > 0
+    ? `<div class="space-y-6">
+        ${renderSectionToc('details', '목차', detailCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${detailCards.map((card) => card.markup).join('')}
+      </div>`
+    : `<p class="text-sm text-wiki-muted">상세 정보가 준비 중입니다.</p>`
+
   const tabEntries: TabEntry[] = [
     { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewContent },
-    { id: 'curriculum', label: '커리큘럼', icon: 'fa-book-open', content: learningContent },
-    { id: 'career', label: '진로 · 전망', icon: 'fa-chart-line', content: careerContent },
-    { id: 'universities', label: '개설 대학', icon: 'fa-building-columns', content: universityContent },
-    { id: 'network', label: '연결 정보', icon: 'fa-diagram-project', content: networkContent }
+    { id: 'details', label: '상세정보', icon: 'fa-layer-group', content: detailContent },
+    { id: 'universities', label: '개설 대학', icon: 'fa-building-columns', content: universityContent }
   ].filter((entry) => entry.content && entry.content.trim().length > 0)
 
   const entitySlug = composeDetailSlug('major', profile.name, profile.id)
