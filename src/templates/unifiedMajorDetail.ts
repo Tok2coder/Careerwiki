@@ -653,29 +653,37 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   const communityBlock = `<div data-major-community>${commentsPlaceholder}</div>`
 
-  return `
-    <div class="max-w-[1400px] mx-auto md:px-6 md:py-8 md:mt-4">
-      <div class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl mb-8 space-y-6">
-        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-          <div class="flex-1">
-            ${categoryTags.length === 1 ? `<div class="text-sm text-wiki-secondary font-semibold mb-2">${escapeHtml(categoryTags[0])}</div>` : ''}
-            <div class="flex items-center justify-between gap-4">
-              <h1 class="text-4xl font-bold text-white">${escapeHtml(profile.name)}</h1>
-              <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg content-text hover:bg-blue-600 transition whitespace-nowrap" data-share="true" data-entity-type="major" data-entity-id="${escapeHtml(profile.id)}"><i class="fas fa-share-alt mr-2"></i>공유</button>
-            </div>
-          </div>
-        </div>
-        ${heroImage}
-        ${categoryTags.length > 0 ? `
-          <div class="flex flex-wrap gap-2">
-            ${categoryTags.map(tag => `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary">${escapeHtml(tag)}</span>`).join('')}
-          </div>
-        ` : ''}
-      </div>
+  // 히어로 태그: aptitude 필드 활용 (적성/흥미)
+  const heroTags = profile.aptitude && profile.aptitude.length < 200
+    ? profile.aptitude.split(',').map(tag => tag.trim()).filter(Boolean).slice(0, 5)
+    : []
 
-      <div class="space-y-6">
-        ${tabLayout}
+  const heroTagsMarkup = heroTags.length > 0
+    ? `
+      <div class="flex flex-wrap gap-2">
+        ${heroTags.map(tag => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-wiki-primary font-medium"><i class="fas fa-tag text-[10px]"></i>${escapeHtml(tag)}</span>`).join('')}
       </div>
+    `
+    : ''
+
+  return `
+    <div class="max-w-[1400px] mx-auto md:px-6 space-y-4 md:space-y-8 md:py-8 md:mt-4">
+      <section class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8">
+        <div class="space-y-5">
+          ${categoryTags.length === 1 ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group"></i>${escapeHtml(categoryTags[0])}</span>` : ''}
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight">${escapeHtml(profile.name)}</h1>
+            <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2 shrink-0" data-share="true" data-entity-type="major" data-entity-id="${escapeHtml(profile.id)}">
+              <i class="fas fa-share-nodes"></i>
+              공유
+            </button>
+          </div>
+          ${heroImage}
+          ${heroTagsMarkup}
+        </div>
+      </section>
+
+      ${tabLayout}
       ${sourcesBlock}
       ${communityBlock}
 

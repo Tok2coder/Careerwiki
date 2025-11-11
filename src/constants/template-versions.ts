@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 히어로 섹션 개선 + 목차 추가 + 기본 정보 개요 탭 이동 + categoryName 필터링
+   * Current features: 히어로 섹션 개선 + 목차 추가 + 기본 정보 개요 탭 이동 + categoryName 필터링 + 히어로 태그
    */
-  MAJOR: 5,  // 🆕 safeTrim 함수 내부 정의로 변경
+  MAJOR: 6,  // 🆕 간격 조정 (space-y-4 md:space-y-8), 히어로 태그 추가 (aptitude 필드)
 
   /**
    * Job detail page template version
