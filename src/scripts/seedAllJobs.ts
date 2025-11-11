@@ -455,9 +455,11 @@ export async function seedAllJobs(env: Env): Promise<SeedProgress> {
 }
 
 // Main execution - ES Module detection
-const isMainModule = import.meta.url === new URL(process.argv[1], 'file://').href
+// Windows 호환성을 위해 더 간단한 체크 사용
+const isMainModule = import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/')) || 
+                     import.meta.url.includes('seedAllJobs.ts')
 
-if (isMainModule) {
+if (isMainModule || import.meta.url.includes('seedAllJobs')) {
   ;(async () => {
     try {
       // .dev.vars 파일에서 환경 변수 로드

@@ -91,8 +91,8 @@ app.use('*', cors())
 app.use('*', renderer)
 
 // Serve static files from public directory
-// Static files are served by wrangler's --assets flag
-// app.use('/static/*', serveStatic({ root: './public' }))  // Disabled for wrangler dev compatibility
+// All static assets including JS, CSS, images are served from /static/* path
+app.use('/static/*', serveStatic({ root: './public' }))
 
 let logoIdCounter = 0
 
@@ -2364,7 +2364,7 @@ app.get('/search', (c) => {
   return c.html(renderLayout(content, escapeHtml(title), escapeHtml(description)))
 })
 
-// Unified Job Detail Page (SSR)
+// Unified Job Detail Page (ISR)
 app.get('/job/:slug', async (c) => {
   const slug = c.req.param('slug')
   console.log(`🔍 직업 페이지 요청: slug="${slug}"`)
@@ -2411,62 +2411,37 @@ app.get('/job/:slug', async (c) => {
     }
   }
   
-  let careernetId = c.req.query('careernetId') || undefined
-  let goyongJobId = c.req.query('goyongJobId') || undefined
-  const includeSources = parseSourcesQuery(c.req.query('sources')) || ['CAREERNET', 'GOYONG24'] // Default to both sources
-  const debugMode = c.req.query('debug') === 'true' || resolvedId === 'job:C_375'
-  
-  // 🆕 Redirect to clean URL if query parameters are present (except debug)
-  if ((careernetId || goyongJobId) && !debugMode) {
-    const cleanUrl = `/job/${encodeURIComponent(slug)}`
-    console.log(`♻️  리다이렉트: 깨끗한 URL로 이동 - ${cleanUrl}`)
-    return c.redirect(cleanUrl, 301)
-  }
-
-  const findSampleJobDetail = () => {
-    const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
-    for (const candidate of candidates) {
-      const sample = getSampleJobDetail(candidate)
-      if (sample) {
-        return sample
+  // Check for debug mode first (bypass ISR cache for debugging)
+  const debugMode = c.req.query('debug') === 'true'
+  if (debugMode) {
+    try {
+      let careernetId = c.req.query('careernetId') || undefined
+      let goyongJobId = c.req.query('goyongJobId') || undefined
+      const includeSources = parseSourcesQuery(c.req.query('sources')) || ['CAREERNET', 'GOYONG24']
+      
+      const findSampleJobDetail = () => {
+        const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
+        for (const candidate of candidates) {
+          const sample = getSampleJobDetail(candidate)
+          if (sample) return sample
+        }
+        return null
       }
-    }
-    return null
-  }
-
-  // Try to extract source IDs from sample data if not provided
-  if (!careernetId || !goyongJobId) {
-    const sample = findSampleJobDetail()
-    if (sample?.profile?.sourceIds) {
-      if (!careernetId && sample.profile.sourceIds.careernet) {
-        careernetId = sample.profile.sourceIds.careernet
+      
+      // Try to extract source IDs from sample data if not provided
+      if (!careernetId || !goyongJobId) {
+        const sample = findSampleJobDetail()
+        if (sample?.profile?.sourceIds) {
+          if (!careernetId && sample.profile.sourceIds.careernet) {
+            careernetId = sample.profile.sourceIds.careernet
+          }
+          if (!goyongJobId && sample.profile.sourceIds.goyong24) {
+            goyongJobId = sample.profile.sourceIds.goyong24
+          }
+        }
       }
-      if (!goyongJobId && sample.profile.sourceIds.goyong24) {
-        goyongJobId = sample.profile.sourceIds.goyong24
-      }
-    }
-  }
-
-  try {
-    // Cache strategy: Check cache first, fallback to API, cache for 1 hour
-    const cacheKey = `job:${resolvedId}:${careernetId || 'none'}:${goyongJobId || 'none'}`
-    const cache = caches.default
-    const cacheUrl = new URL(c.req.url)
-    cacheUrl.pathname = `/cache/${cacheKey}`
-    
-    let cachedResponse = await cache.match(cacheUrl)
-    let result
-    
-    console.log(`💾 캐시 확인: cacheKey="${cacheKey}", cached=${!!cachedResponse}, debugMode=${debugMode}`)
-    
-    if (cachedResponse && !debugMode) {
-      // Use cached data
-      console.log(`✅ 캐시 사용: ${cacheKey}`)
-      result = await cachedResponse.json()
-    } else {
-      // Fetch from API
-      console.log(`📡 getUnifiedJobDetailWithRawData 호출 시작: id="${resolvedId}", careernetId="${careernetId}", goyongJobId="${goyongJobId}"`)
-      result = await getUnifiedJobDetailWithRawData(
+      
+      const result = await getUnifiedJobDetailWithRawData(
         {
           id: resolvedId,
           careernetId,
@@ -2476,30 +2451,178 @@ app.get('/job/:slug', async (c) => {
         c.env
       )
       
-      // Cache for 1 hour (3600 seconds)
-      if (result.profile) {
-        const responseToCache = new Response(JSON.stringify(result), {
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'public, max-age=3600'
-          }
+      if (!result.profile) {
+        const sample = findSampleJobDetail()
+        if (sample) {
+          return renderSampleJobDetailPageWithRawData(c, sample, result.rawApiData)
+        }
+        
+        const fallbackHtml = renderDetailFallback({
+          icon: 'fa-magnifying-glass',
+          title: '직업 정보를 찾을 수 없습니다',
+          description: '요청하신 직업 데이터가 CareerWiki 통합 파이프라인에 아직 준비되지 않았습니다.',
+          ctaHref: '/job',
+          ctaLabel: '직업위키로 돌아가기'
         })
-        c.executionCtx.waitUntil(cache.put(cacheUrl, responseToCache))
+        c.status(404)
+        return c.html(renderLayout(fallbackHtml, '직업 정보 없음 - Careerwiki'))
       }
+      
+      const debugContent = renderDataDebugPage({
+        profile: result.profile,
+        partials: result.partials,
+        sources: result.sources,
+        rawApiData: result.rawApiData
+      })
+      
+      return c.html(debugContent)
+    } catch (error) {
+      console.error('Debug mode error:', error)
+      c.status(500)
+      return c.html(renderLayout(renderDetailFallback({
+        icon: 'fa-circle-exclamation',
+        iconColor: 'text-red-500',
+        title: '디버그 데이터 로드 실패',
+        description: '일시적인 오류가 발생했습니다.',
+        ctaHref: '/job',
+        ctaLabel: '직업위키로 돌아가기'
+      }), '오류 - Careerwiki'))
     }
-
-    console.log(`🔍 result.profile 확인: hasProfile=${!!result.profile}, profileName=${result.profile?.name || 'N/A'}`)
+  }
+  
+  // 🆕 ISR (Incremental Static Regeneration) with wiki_pages cache
+  return getOrGeneratePage(
+    slug,
+    'job',
+    {
+      // Step 1: Fetch data
+      fetchData: async (slug, env) => {
+        let careernetId = c.req.query('careernetId') || undefined
+        let goyongJobId = c.req.query('goyongJobId') || undefined
+        const includeSources = parseSourcesQuery(c.req.query('sources')) || ['CAREERNET', 'GOYONG24']
+        
+        // 🆕 Redirect to clean URL if query parameters are present
+        if (careernetId || goyongJobId) {
+          const cleanUrl = `/job/${encodeURIComponent(slug)}`
+          console.log(`♻️  리다이렉트: 깨끗한 URL로 이동 - ${cleanUrl}`)
+          // Note: Redirect is handled by returning early, but we'll let ISR handle it
+        }
+        
+        const findSampleJobDetail = () => {
+          const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
+          for (const candidate of candidates) {
+            const sample = getSampleJobDetail(candidate)
+            if (sample) return sample
+          }
+          return null
+        }
+        
+        // ⚠️ ISR에서는 sample data의 sourceIds를 사용하지 않음
+        // → D1 병합 로직이 자동으로 실행되도록 함
+        // (쿼리 파라미터는 이미 위에서 undefined로 설정됨)
+        
+        const result = await getUnifiedJobDetailWithRawData(
+          {
+            id: resolvedId,
+            careernetId: undefined,  // ⚠️ 명시적으로 undefined (D1 병합 활성화)
+            goyong24JobId: undefined,  // ⚠️ 명시적으로 undefined (D1 병합 활성화)
+            includeSources
+          },
+          env
+        )
+        
+        if (!result.profile) {
+          // Try sample data fallback
+          const sample = findSampleJobDetail()
+          if (sample) {
+            throw new Error('SAMPLE_FALLBACK') // Signal to use sample rendering
+          }
+          
+          throw new Error('PROFILE_NOT_FOUND')
+        }
+        
+        return result
+      },
+      
+      // Step 2: Render HTML
+      renderHTML: (result) => {
+        const profile = result.profile!  // Non-null assertion (we already checked in fetchData)
+        const canonicalSlug = composeDetailSlug('job', profile.name, profile.id ?? resolvedId)
+        const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
+        const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+        const title = `${profile.name} 직업 정보 - Careerwiki`
+        const description = createMetaDescription(
+          profile.summary,
+          profile.duties,
+          profile.prospect,
+          profile.salary
+        )
+        const extraHead = [
+          '<meta property="og:type" content="article">',
+          '<meta property="article:modified_time" content="' + new Date().toISOString() + '">',
+          createJobJsonLd(profile, canonicalUrl)
+        ].filter(Boolean).join('\n')
+        
+        const content = renderUnifiedJobDetail({
+          profile,
+          partials: result.partials,
+          sources: result.sources,
+          rawApiData: result.rawApiData
+        })
+        
+        return renderLayout(
+          content,
+          escapeHtml(title),
+          escapeHtml(description),
+          false,
+          {
+            canonical: canonicalUrl,
+            ogUrl: canonicalUrl,
+            extraHead
+          }
+        )
+      },
+      
+      // Step 3: Extract metadata
+      extractMetadata: (result) => {
+        const profile = result.profile!  // Non-null assertion (we already checked in fetchData)
+        return {
+          title: `${profile.name} 직업 정보 - Careerwiki`,
+          description: createMetaDescription(
+            profile.summary,
+            profile.duties,
+            profile.prospect,
+            profile.salary
+          ),
+          og_image_url: undefined // Add later if needed
+        }
+      }
+    },
+    c
+  ).catch((error) => {
+    // Error handling
+    console.error('Job detail route error:', error)
     
-    if (!result.profile) {
-      console.log(`⚠️ profile이 없음, 샘플 데이터 확인 중...`)
+    // Try sample fallback
+    if (error.message === 'SAMPLE_FALLBACK') {
+      const findSampleJobDetail = () => {
+        const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
+        for (const candidate of candidates) {
+          const sample = getSampleJobDetail(candidate)
+          if (sample) return sample
+        }
+        return null
+      }
+      
       const sample = findSampleJobDetail()
       if (sample) {
-        console.log(`📋 샘플 데이터 사용: ${sample.profile?.name}`)
-        // Pass rawApiData even when using sample profile
-        return renderSampleJobDetailPageWithRawData(c, sample, result.rawApiData)
+        console.warn('Job detail fallback: serving synthetic sample for', slug)
+        return renderSampleJobDetailPage(c, sample)
       }
-      console.log(`❌ 샘플 데이터도 없음, 404 반환`)
-
+    }
+    
+    // 404 for missing profiles
+    if (error.message === 'PROFILE_NOT_FOUND') {
       const fallbackHtml = renderDetailFallback({
         icon: 'fa-magnifying-glass',
         title: '직업 정보를 찾을 수 없습니다',
@@ -2507,74 +2630,17 @@ app.get('/job/:slug', async (c) => {
         ctaHref: '/job',
         ctaLabel: '직업위키로 돌아가기'
       })
-      const sourceSummary = renderSourceStatusSummary(result.sources)
-      const pageContent = `${fallbackHtml}${sourceSummary}`
       c.status(404)
       return c.html(
         renderLayout(
-          pageContent,
+          fallbackHtml,
           '직업 정보 없음 - Careerwiki',
           '요청한 직업 정보를 찾을 수 없습니다.'
         )
       )
     }
-
-    const profile = result.profile
     
-    // Render debug page if in debug mode
-    if (debugMode && 'rawApiData' in result) {
-      const debugContent = renderDataDebugPage({
-        profile,
-        partials: result.partials,
-        sources: result.sources,
-        rawApiData: result.rawApiData
-      })
-      
-      return c.html(debugContent)
-    }
-    
-    const canonicalSlug = composeDetailSlug('job', profile.name, profile.id ?? resolvedId)
-    const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
-    const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
-    const title = `${profile.name} 직업 정보 - Careerwiki`
-    const description = createMetaDescription(
-      profile.summary,
-      profile.duties,
-      profile.prospect,
-      profile.salary
-    )
-    const extraHead = [
-      '<meta property="og:type" content="article">',
-      createJobJsonLd(profile, canonicalUrl)
-    ].filter(Boolean).join('\n')
-
-    const content = renderUnifiedJobDetail({
-      profile,
-      partials: result.partials,
-      sources: result.sources,
-      rawApiData: result.rawApiData
-    })
-
-    return c.html(
-      renderLayout(
-        content,
-        escapeHtml(title),
-        escapeHtml(description),
-        false,
-        {
-          canonical: canonicalUrl,
-          ogUrl: canonicalUrl,
-          extraHead
-        }
-      )
-    )
-  } catch (error) {
-    console.error('Job detail route error:', error)
-    const sample = findSampleJobDetail()
-    if (sample) {
-      console.warn('Job detail fallback: serving synthetic sample for', slug)
-      return renderSampleJobDetailPage(c, sample)
-    }
+    // 500 for other errors
     const fallbackHtml = renderDetailFallback({
       icon: 'fa-exclamation-circle',
       iconColor: 'text-red-500',
@@ -2591,7 +2657,7 @@ app.get('/job/:slug', async (c) => {
         '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
       )
     )
-  }
+  })
 })
 
 // Unified Major Detail Page (SSR)
@@ -3411,6 +3477,16 @@ app.post('/api/perf-metrics', async (c) => {
   }
 
   try {
+    // 로컬 개발 환경에서는 KV가 없을 수 있음
+    if (!c.env.KV) {
+      console.warn('[perf-metrics] KV not available, skipping storage')
+      return c.json({
+        success: true,
+        data: { id: 'local-dev-skip' },
+        alerts: []
+      })
+    }
+
     const rawIp = c.req.header('cf-connecting-ip') ?? null
     const ipHash = await hashIpAddress(rawIp)
     const result = await storePerfMetrics(c.env.KV, payload, { ip: ipHash ?? undefined })
@@ -3799,6 +3875,12 @@ app.post('/api/perf-metrics', async (c) => {
   }
 
   try {
+    // 로컬 개발 환경에서는 KV가 없을 수 있음
+    if (!c.env.KV) {
+      console.warn('[perf-metrics] KV not available, skipping storage')
+      return c.json({ success: true, id: 'local-dev-skip' })
+    }
+
     const ip = c.req.header('cf-connecting-ip') ?? undefined
     const { id } = await storePerfMetrics(c.env.KV, body, { ip })
     return c.json({ success: true, id })
@@ -4295,6 +4377,80 @@ app.get('/api/categories', async (c) => {
     jobCategories: JOB_CATEGORIES,
     aptitudeTypes: APTITUDE_TYPES
   })
+})
+
+// ============================================================================
+// API 엔드포인트 개선: 검색 및 필드 선택 기능 추가
+// ============================================================================
+
+// 학과 검색 API (별도 엔드포인트)
+app.get('/api/majors/search', async (c) => {
+  try {
+    const q = c.req.query('q') || c.req.query('keyword') || ''
+    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+    const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+    const result = await searchUnifiedMajors({
+      keyword: q,
+      page,
+      perPage,
+      includeSources
+    }, c.env)
+
+    return c.json({
+      success: true,
+      data: result.items,
+      meta: {
+        ...result.meta,
+        keyword: q,
+        page,
+        perPage
+      }
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '학과 정보 검색 실패'
+    }, 500)
+  }
+})
+
+// 직업 검색 API (별도 엔드포인트)
+app.get('/api/jobs/search', async (c) => {
+  try {
+    const q = c.req.query('q') || c.req.query('keyword') || ''
+    const category = c.req.query('category') || ''
+    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+    const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+    const result = await searchUnifiedJobs({
+      keyword: q,
+      category,
+      page,
+      perPage,
+      includeSources
+    }, c.env)
+
+    return c.json({
+      success: true,
+      data: result.items,
+      meta: {
+        ...result.meta,
+        keyword: q,
+        category,
+        page,
+        perPage
+      },
+      categories: JOB_CATEGORIES
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '직업 정보 검색 실패'
+    }, 500)
+  }
 })
 
 // ============================================================================

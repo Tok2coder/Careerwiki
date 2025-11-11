@@ -11,6 +11,7 @@ import {
   renderHeroImage,
   renderSourceBadges,
   renderSourcesPanel,
+  safeTrim,
   sanitizeJson
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
@@ -222,10 +223,15 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     overviewCards.push(buildCard('전공 개요', 'fa-circle-info', formatRichText(profile.summary)))
   }
   
+  // categoryName 정리: 50자 이상이면 관련 학과명이 잘못 들어간 것
+  const cleanCategoryName = profile.categoryName && profile.categoryName.length < 50
+    ? profile.categoryName
+    : undefined
+  
   // 기본 정보를 개요 탭에 추가
   const basicInfoItems: string[] = []
-  if (profile.categoryName) {
-    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text">${escapeHtml(profile.categoryName)}</span></li>`)
+  if (cleanCategoryName) {
+    basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">계열/분야</span><span class="text-wiki-text">${escapeHtml(cleanCategoryName)}</span></li>`)
   }
   if (profile.employmentRate) {
     basicInfoItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${escapeHtml(profile.employmentRate)}</span></li>`)
@@ -591,8 +597,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   if (profile.categoryId) {
     detailMetaExtra.categoryId = profile.categoryId
   }
-  if (profile.categoryName) {
-    detailMetaExtra.categoryName = profile.categoryName
+  if (cleanCategoryName) {
+    detailMetaExtra.categoryName = cleanCategoryName
   }
   if (heroDescription) {
     detailMetaExtra.heroDescription = heroDescription
@@ -604,7 +610,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     entitySlug,
     entityName: profile.name,
     entitySummary: summarySnippet,
-    entityCategory: profile.categoryName ?? null,
+    entityCategory: cleanCategoryName ?? null,
     entitySources: profile.sources,
     tabs: tabEntries,
     tabFallback: {
@@ -628,11 +634,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   // 데이터 출처 collapsible (직업 템플릿과 동일)
   const sourcesCollapsible = renderMajorSourcesCollapsible(profile, sources, partials)
 
-  // categoryName 필드 문제 해결: 쉼표가 많으면 관련 학과명이 잘못 들어간 것
-  // 정상적인 계열명: "공학계열", "인문계열", "자연계열" 등 (보통 10자 이내)
-  // 비정상: "경영학과 항공경영전공,항공과,항공관광과,..." (수백 자)
-  const categoryTags = profile.categoryName && profile.categoryName.length < 50
-    ? profile.categoryName.split(',').map(tag => tag.trim()).filter(Boolean)
+  // categoryTags는 cleanCategoryName 사용
+  const categoryTags = cleanCategoryName
+    ? cleanCategoryName.split(',').map(tag => tag.trim()).filter(Boolean)
     : []
 
   const sourcesBlock = sourcesCollapsible

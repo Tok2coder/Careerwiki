@@ -407,10 +407,17 @@ export async function searchMajors(params: SearchParams, env?: any): Promise<Maj
     const response = await fetch(url.toString());
     
     if (!response.ok) {
-      throw new Error(`API 요청 실패: ${response.statusText}`);
+      const errorText = await response.text().catch(() => response.statusText);
+      console.error(`CareerNet API 오류 [${response.status}]: ${errorText.substring(0, 200)}`);
+      throw new Error(`API 요청 실패 [${response.status}]: ${errorText.substring(0, 200)}`);
     }
     
     const xmlData = await response.text();
+    
+    // 빈 응답 체크
+    if (!xmlData || xmlData.trim().length === 0) {
+      throw new Error('API 응답이 비어있습니다.');
+    }
     
     // XML 파싱
     const majors = parseXMLToJSON(xmlData);
@@ -433,9 +440,13 @@ export async function searchMajors(params: SearchParams, env?: any): Promise<Maj
     
   } catch (error) {
     console.error('학과정보 검색 오류:', error);
-    // API 오류 시 더미 데이터 반환
-    console.error('학과정보 검색 실패, Mock 데이터 사용');
-    return getMockMajors(params.keyword);
+    // API 오류 시 에러를 다시 throw하여 호출자가 처리하도록 함
+    // Mock 데이터는 개발/테스트 환경에서만 사용
+    if (process.env.NODE_ENV === 'development' || process.env.ENVIRONMENT === 'development') {
+      console.warn('⚠️  개발 환경: Mock 데이터 사용');
+      return getMockMajors(params.keyword);
+    }
+    throw error; // 프로덕션에서는 에러를 전파
   }
 }
 
@@ -453,10 +464,17 @@ export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major
     const response = await fetch(url.toString());
     
     if (!response.ok) {
-      throw new Error(`API 요청 실패: ${response.statusText}`);
+      const errorText = await response.text().catch(() => response.statusText);
+      console.error(`CareerNet API 오류 [${response.status}]: ${errorText.substring(0, 200)}`);
+      throw new Error(`API 요청 실패 [${response.status}]: ${errorText.substring(0, 200)}`);
     }
     
     const jsonData = await response.json();
+    
+    // 에러 응답 체크
+    if (jsonData.error) {
+      throw new Error(`CareerNet API 에러: ${jsonData.error}`);
+    }
     
     // JSON 파싱
     const majors = jsonData.dataSearch?.content || [];
@@ -467,28 +485,44 @@ export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major
     
     const major = majors[0];
     
-    // university 배열을 문자열로 변환 (하위 호환성)
+    // university 필드 처리 (배열 또는 문자열)
     let universityString = '';
-    if (major.university && Array.isArray(major.university)) {
-      universityString = major.university
-        .map((u: any) => u.schoolName || '')
-        .filter((name: string) => name)
-        .join(', ');
-    }
-    
-    // university 배열을 상세 정보로 변환 (Phase 1)
     let universityList: Major['universityList'] = undefined;
-    if (major.university && Array.isArray(major.university)) {
-      universityList = major.university
-        .map((u: any) => ({
-          schoolName: u.schoolName || '',
-          schoolURL: u.schoolURL || undefined,
-          area: u.area || undefined,
-          campus_nm: u.campus_nm || undefined,
-          majorName: u.majorName || undefined,
-          totalCount: u.totalCount || undefined
-        }))
-        .filter(u => u.schoolName);
+    
+    if (major.university) {
+      if (Array.isArray(major.university)) {
+        // 배열인 경우: 객체 배열 또는 문자열 배열
+        if (major.university.length > 0) {
+          const firstItem = major.university[0];
+          
+          if (typeof firstItem === 'object' && firstItem !== null) {
+            // 객체 배열인 경우 (상세 정보 포함)
+            universityString = major.university
+              .map((u: any) => u.schoolName || '')
+              .filter((name: string) => name)
+              .join(', ');
+            
+            universityList = major.university
+              .map((u: any) => ({
+                schoolName: u.schoolName || '',
+                schoolURL: u.schoolURL || undefined,
+                area: u.area || undefined,
+                campus_nm: u.campus_nm || undefined,
+                majorName: u.majorName || undefined,
+                totalCount: u.totalCount || undefined
+              }))
+              .filter(u => u.schoolName);
+          } else if (typeof firstItem === 'string') {
+            // 문자열 배열인 경우 (대학명만)
+            universityString = major.university.join(', ');
+            // universityList는 생성하지 않음 (상세 정보 없음)
+          }
+        }
+      } else if (typeof major.university === 'string') {
+        // 문자열인 경우 (쉼표로 구분된 대학명)
+        universityString = major.university;
+        // universityList는 생성하지 않음 (상세 정보 없음)
+      }
     }
     
     // 필드 매핑 (JSON 형태는 이미 객체이므로 그대로 사용 가능)
@@ -517,9 +551,13 @@ export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major
     
   } catch (error) {
     console.error('학과 상세정보 조회 오류:', error);
-    // API 오류 시 더미 데이터 반환
-    console.error('학과 상세정보 조회 실패, Mock 데이터 사용');
-    return getMockMajorDetail(majorSeq);
+    // API 오류 시 에러를 다시 throw하여 호출자가 처리하도록 함
+    // Mock 데이터는 개발/테스트 환경에서만 사용
+    if (process.env.NODE_ENV === 'development' || process.env.ENVIRONMENT === 'development') {
+      console.warn('⚠️  개발 환경: Mock 데이터 사용');
+      return getMockMajorDetail(majorSeq);
+    }
+    throw error; // 프로덕션에서는 에러를 전파
   }
 }
 

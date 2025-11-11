@@ -1,11 +1,32 @@
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
 import { searchJobs } from '../api/careernetAPI'
 import { fetchGoyong24JobList } from '../api/goyong24API'
 import type { Env } from '../types/env'
 
+// .dev.vars 파일에서 환경 변수 로드
+try {
+  const devVarsPath = resolve(process.cwd(), '.dev.vars')
+  const devVarsContent = readFileSync(devVarsPath, 'utf-8')
+  devVarsContent.split('\n').forEach(line => {
+    const trimmed = line.trim()
+    if (trimmed && !trimmed.startsWith('#')) {
+      const [key, ...valueParts] = trimmed.split('=')
+      if (key && valueParts.length > 0) {
+        const value = valueParts.join('=').trim()
+        process.env[key.trim()] = value
+      }
+    }
+  })
+  console.log('✅ Loaded environment variables from .dev.vars')
+} catch (e) {
+  console.warn('⚠️  Could not load .dev.vars file, using system environment variables')
+}
+
 // Mock env object
 const env = {
   DB: null as any,
-  CAREERNET_API_KEY: process.env.CAREER_NET_API_KEY || '',
+  CAREER_NET_API_KEY: process.env.CAREER_NET_API_KEY || '',
   GOYONG24_MAJOR_API_KEY: process.env.GOYONG24_MAJOR_API_KEY || '',
   GOYONG24_JOB_API_KEY: process.env.GOYONG24_JOB_API_KEY || ''
 } as Env

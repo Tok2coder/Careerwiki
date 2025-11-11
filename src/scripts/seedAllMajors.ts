@@ -392,12 +392,16 @@ export async function seedAllMajors(env: Env): Promise<SeedProgress> {
         console.log(`   lstVals: ${profile.lstVals ? '있음' : '없음'}`)
       }
       
-      // API 데이터 준비
+      // API 데이터 준비 - 모든 원본 필드 보존
       const apiData = {
+        // normalize된 데이터 (표시용)
         careernet: result.partials?.CAREERNET || null,
         goyong24: result.partials?.GOYONG24 || null,
         merged: result.profile,
-        sources: result.sources
+        sources: result.sources,
+        // 원본 API 응답 (모든 필드 보존) - CareerNet과 Goyong24의 모든 필드 포함
+        rawCareernet: result.rawPartials?.CAREERNET || null,  // CareerNet 원본 Major 객체 전체 (모든 필드)
+        rawGoyong24: result.rawPartials?.GOYONG24 || null      // Goyong24 원본 Goyong24MajorDetail 객체 전체 (모든 필드)
       }
       
       const api_data_json = JSON.stringify(apiData)
@@ -423,12 +427,18 @@ export async function seedAllMajors(env: Env): Promise<SeedProgress> {
       
     } catch (error: any) {
       progress.errors++
+      const errorMessage = error.message || String(error)
       progress.errorDetails.push({
         id: major.id,
         name: major.name,
-        error: error.message
+        error: errorMessage
       })
-      console.error(`  ❌ 오류 (${major.id} - ${major.name}): ${error.message}`)
+      console.error(`  ❌ 오류 (${major.id} - ${major.name}): ${errorMessage}`)
+      
+      // API 연결 문제인 경우 경고
+      if (errorMessage.includes('API 요청 실패') || errorMessage.includes('500') || errorMessage.includes('404')) {
+        console.error(`  ⚠️  API 연결 문제가 있습니다. API 키와 엔드포인트를 확인하세요.`)
+      }
     }
     
     progress.processed++
@@ -487,9 +497,11 @@ export async function seedAllMajors(env: Env): Promise<SeedProgress> {
 }
 
 // Main execution - ES Module detection
-const isMainModule = import.meta.url === new URL(process.argv[1], 'file://').href
+// Windows 호환성을 위해 더 간단한 체크 사용
+const isMainModule = import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/')) || 
+                     import.meta.url.includes('seedAllMajors.ts')
 
-if (isMainModule) {
+if (isMainModule || import.meta.url.includes('seedAllMajors')) {
   ;(async () => {
     try {
       // .dev.vars 파일에서 환경 변수 로드

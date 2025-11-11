@@ -2,7 +2,7 @@
   "name": "careerwiki",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000",
     "build": "vite build",
     "preview": "wrangler pages dev dist",
     "deploy": "npm run build && wrangler pages deploy dist",
@@ -11,7 +11,8 @@
     "db:migrate:prod": "wrangler d1 migrations apply careerwiki-jobs",
     "db:seed:local": "curl -X POST http://localhost:3000/api/admin/seed-jobs -H 'Authorization: Bearer dev-admin-token'",
     "db:reset": "rm -rf .wrangler/state/v3/d1 && npm run db:migrate:local",
-    "clean-port": "fuser -k 3000/tcp 2>/dev/null || true",
+    "clean-port": "node -e \"const { execSync } = require('child_process'); try { const result = execSync('netstat -ano | findstr :3000', { encoding: 'utf-8' }); const pids = [...new Set(result.split('\\n').filter(l => l.includes('LISTENING')).map(l => l.trim().split(/\\s+/).pop()))].filter(Boolean); pids.forEach(pid => { try { execSync(`taskkill /F /PID ${pid}`, { stdio: 'ignore' }); console.log(`✅ 포트 3000 프로세스 종료: PID ${pid}`); } catch(e) {} }); if(pids.length === 0) console.log('✅ 포트 3000 사용 중인 프로세스 없음'); } catch(e) { console.log('✅ 포트 3000 사용 중인 프로세스 없음'); }\"",
+    "stop": "npm run clean-port",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {

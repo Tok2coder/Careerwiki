@@ -100,59 +100,109 @@ CREATE TABLE ai_generated_content (...) -- AI 분석기용
 
 ---
 
-## Phase 2: 정적 위키 페이지 생성 (프로토타입)
-**기간**: 2-3일  
-**목표**: 10개 페이지로 새 아키텍처 검증
+## Phase 2: 정적 위키 시스템 구축
 
-### 왜 프로토타입?
-```
-✅ 장점:
-- 전체 마이그레이션 전에 문제 발견
-- 로그인/편집 시스템 개발 중 실제 페이지로 테스트 가능
-- 병렬 작업 가능 (내가 페이지 생성, 정우님이 로그인 설계 검토)
+### 현재 상태 (2025-11-06)
+- ✅ **Phase 2.1**: ISR 캐시 시스템 구축 완료
+  - `wiki_pages` 테이블 생성
+  - `getOrGeneratePage()` 유틸리티 구현
+  - 템플릿 버전 관리 시스템
+  - `/major/:slug` ISR 적용 완료 (500ms → 50ms)
+- ⚠️ **Phase 2.2**: 직업 상세페이지 ISR 미적용
+  - 현재: SSR + Cloudflare Cache API (1시간 캐싱)
+  - 필요: `/job/:slug`에도 ISR 적용
 
-❌ 바로 전체 하면:
-- 2,022개 페이지 생성 → 문제 발견 → 전체 재생성 (시간 낭비)
-```
+---
 
-### Task 2.1: 페이지 빌더 구현
+### Phase 2.1: ISR 캐시 시스템 구축 ✅ (완료)
+
+**완료된 작업:**
+- [x] `wiki_pages` 테이블 생성 (D1)
+- [x] `getOrGeneratePage()` 함수 구현 (`src/utils/page-cache.ts`)
+- [x] 템플릿 버전 관리 (`src/constants/template-versions.ts`)
+- [x] `/major/:slug` 라우트 ISR 적용
+- [x] 성능 개선 확인 (500ms → 50ms)
+
+**성과:**
+- 캐시 히트 시: **50ms** (10배 빠름)
+- 템플릿 업데이트: 버전 증가 → 자동 재생성
+- 무제한 확장 가능 (빌드 시간 0초)
+
+---
+
+### Phase 2.2: 직업 상세페이지 ISR 적용 (진행 중)
+
+**현재 구현 방식:**
 ```typescript
-class PageBuilder {
-  async buildWikiPage(slug: string): Promise<WikiPage> {
-    // API 데이터 → HTML 섹션 생성
-    // 사용자 기여 슬롯 추가 (빈 상태)
-    // AI 콘텐츠 슬롯 추가 (빈 상태)
-  }
-}
-```
-
-### Task 2.2: 프로토타입 페이지 생성
-**10개 샘플 페이지:**
-- 전공 5개: 컴퓨터공학과, 간호학과, 경영학과, 건축학과, 의예과
-- 직업 5개: 소프트웨어개발자, 간호사, 변호사, 의사, 교사
-
-### Task 2.3: 라우팅 변경 및 A/B 테스트
-```typescript
-// 프로토타입 페이지만 정적 위키로 제공
-app.get('/major/:slug', async (c) => {
-  const slug = c.req.param('slug')
-  const prototypePages = ['컴퓨터공학과', '간호학과', ...]
-  
-  if (prototypePages.includes(slug)) {
-    // 정적 위키 페이지
-    return serveStaticWikiPage(slug)
-  } else {
-    // 기존 SSR (fallback)
-    return serveSSRPage(slug)
-  }
+// src/index.tsx:2368
+app.get('/job/:slug', async (c) => {
+  // SSR 방식
+  // - Cloudflare Cache API 사용 (1시간)
+  // - 매 요청마다 getUnifiedJobDetailWithRawData() 호출
+  // - renderUnifiedJobDetail() 템플릿 사용
 })
 ```
 
+**필요한 작업:**
+- [ ] `/job/:slug` 라우트를 ISR 방식으로 변경
+- [ ] `getOrGeneratePage()` 사용하도록 리팩토링
+- [ ] `/major/:slug`와 동일한 캐시 전략 적용
+- [ ] 성능 벤치마크 (SSR vs ISR 비교)
+
+**예상 효과:**
+- 응답 시간: 500ms → 50ms (10배 개선)
+- 서버 부하: 80% → 10% (8배 감소)
+
+---
+
+### Phase 2.3: 템플릿 개발 및 Phase 1 필드 적용
+
+**현재 템플릿:**
+- `renderUnifiedJobDetail()` - 직업 상세 템플릿
+- `renderUnifiedMajorDetail()` - 전공 상세 템플릿
+
+**필요한 작업:**
+- [ ] Phase 1 필드 활용한 섹션 추가
+  - 전공: `relateSubject`, `careerAct`, `mainSubject`, `enterField`, `chartData`
+  - 직업: 추가 필드 분석 필요
+- [ ] SEO 최적화
+  - Schema.org JSON-LD 개선
+  - Cache-Control 헤더 최적화
+  - ETag 지원
+- [ ] 성능 최적화
+  - 이미지 lazy loading
+  - CSS/JS 최적화
+
+---
+
+### Phase 2.4: 프로토타입 페이지 생성 및 검증
+
+**목표:** 10개 페이지로 아키텍처 검증
+
+**프로토타입 페이지:**
+- 전공 5개: 컴퓨터공학과, 간호학과, 경영학과, 건축학과, 의예과
+- 직업 5개: 소프트웨어개발자, 간호사, 변호사, 의사, 교사
+
 **검증 항목:**
-- [ ] 성능 비교 (SSR vs 정적)
+- [ ] 성능 비교 (SSR vs ISR)
 - [ ] SEO 메타태그 정상
 - [ ] 데이터 표시 완전성
-- [ ] 사용자 기여 슬롯 위치 확인
+- [ ] 캐시 히트율 측정
+- [ ] Core Web Vitals 확인
+
+---
+
+### Phase 2.5: 전체 마이그레이션 준비
+
+**작업 내용:**
+- [ ] 마이그레이션 스크립트 작성
+  - 모든 전공/직업 페이지 ISR 캐시 생성
+  - 배치 처리 (100개씩)
+- [ ] 롤백 계획 수립
+- [ ] 모니터링 설정
+  - 캐시 히트율 추적
+  - 에러율 모니터링
+  - 성능 메트릭 수집
 
 ---
 
