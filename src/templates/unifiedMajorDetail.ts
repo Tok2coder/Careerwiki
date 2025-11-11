@@ -328,7 +328,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     
     if (profile.salaryAfterGraduation) {
       // HTML 태그 제거 및 연봉 포맷팅
-      const salaryText = profile.salaryAfterGraduation.replace(/<[^>]*>/g, '').trim()
+      let salaryText = profile.salaryAfterGraduation.replace(/<[^>]*>/g, '').trim()
+      // 숫자만 있는 경우 만원 단위 추가
+      if (/^\d+(\.\d+)?$/.test(salaryText)) {
+        salaryText = `${salaryText}만원`
+      }
       metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text font-semibold">${escapeHtml(salaryText)}</span></li>`)
     }
     
