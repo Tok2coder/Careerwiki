@@ -10,10 +10,36 @@
  * - No pre-build required (0 sec build time)
  * - Scalable to unlimited pages (no build time increase)
  * - Template changes apply instantly (version-based invalidation)
+ * 
+ * Development Mode:
+ * - In development, cache is automatically bypassed to always show latest data
+ * - Set DISABLE_ISR_CACHE=true environment variable to disable caching
  */
 
 import type { Context } from 'hono'
+import type { D1Database } from '@cloudflare/workers-types'
 import { getTemplateVersion } from '../constants/template-versions'
+
+/**
+ * Check if we're in development mode (cache should be disabled)
+ * Development mode is detected by:
+ * 1. DISABLE_ISR_CACHE environment variable set to 'true'
+ * 2. Local development (no Cloudflare Workers env)
+ */
+function isDevelopmentMode(env?: any): boolean {
+  // Check environment variable first
+  if (typeof process !== 'undefined' && process.env?.DISABLE_ISR_CACHE === 'true') {
+    return true
+  }
+  
+  // Check if running locally (Cloudflare Workers env will have specific bindings)
+  // In local dev, env might be undefined or have different structure
+  if (!env || typeof env.DB === 'undefined') {
+    return true
+  }
+  
+  return false
+}
 
 export interface CachedPage {
   content: string
@@ -82,28 +108,38 @@ export async function getOrGeneratePage<T>(
   c: Context
 ): Promise<Response> {
   const currentVersion = getTemplateVersion(pageType)
+  const devMode = isDevelopmentMode(c.env)
   
-  // Step 1: Check cache (with version validation)
-  const cached = await c.env.DB.prepare(`
-    SELECT content, cache_version, title, description, og_image_url, created_at, updated_at
-    FROM wiki_pages
-    WHERE slug = ? AND page_type = ?
-  `).bind(slug, pageType).first<CachedPage>()
+  // Step 1: Check cache (with version validation) - Production only
+  let cached: CachedPage | null = null
   
-  // Step 2: Cache hit + version match → instant return
-  if (cached && cached.cache_version === currentVersion) {
-    console.log(`[ISR Cache HIT] ${pageType}/${slug} (version ${currentVersion})`)
+  if (!devMode && c.env?.DB) {
+    const result = await c.env.DB.prepare(`
+      SELECT content, cache_version, title, description, og_image_url, created_at, updated_at
+      FROM wiki_pages
+      WHERE slug = ? AND page_type = ?
+    `).bind(slug, pageType).first()
+    cached = (result as CachedPage | null) || null
     
-    // Set cache headers for crawler optimization
-    c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
-    c.header('X-Cache-Status', 'HIT')
-    c.header('X-Template-Version', currentVersion.toString())
-    
-    return c.html(cached.content)
+    // Step 2: Cache hit + version match → instant return
+    if (cached && cached.cache_version === currentVersion) {
+      console.log(`[ISR Cache HIT] ${pageType}/${slug} (version ${currentVersion})`)
+      
+      // Set cache headers for crawler optimization
+      c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
+      c.header('X-Cache-Status', 'HIT')
+      c.header('X-Template-Version', currentVersion.toString())
+      
+      return c.html(cached.content)
+    }
+  } else {
+    // 🛡️ Development mode: Always bypass cache to show latest data
+    console.log(`[ISR Dev Mode] ${pageType}/${slug} (cache bypassed)`)
   }
   
   // Step 3: Cache miss or version mismatch → regenerate
-  const cacheStatus = !cached ? 'MISS' : 'STALE'
+  
+  const cacheStatus = devMode ? 'DEV-BYPASS' : (!cached ? 'MISS' : 'STALE')
   console.log(`[ISR Cache ${cacheStatus}] ${pageType}/${slug} (regenerating with version ${currentVersion})`)
   
   try {
@@ -116,37 +152,44 @@ export async function getOrGeneratePage<T>(
     // Extract metadata
     const metadata = generator.extractMetadata(data)
     
-    // Store in cache
-    const now = Math.floor(Date.now() / 1000) // Unix timestamp in seconds
-    await c.env.DB.prepare(`
-      INSERT OR REPLACE INTO wiki_pages 
-      (slug, page_type, content, cache_version, title, description, og_image_url, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).bind(
-      slug,
-      pageType,
-      html,
-      currentVersion,
-      metadata.title,
-      metadata.description || null,
-      metadata.og_image_url || null,
-      cached?.created_at || now, // Preserve original creation time if exists
-      now
-    ).run()
-    
-    console.log(`[ISR Cache STORED] ${pageType}/${slug} (version ${currentVersion})`)
+    // Store in cache (only in production mode)
+    if (!devMode && c.env?.DB) {
+      const now = Math.floor(Date.now() / 1000) // Unix timestamp in seconds
+      await c.env.DB.prepare(`
+        INSERT OR REPLACE INTO wiki_pages 
+        (slug, page_type, content, cache_version, title, description, og_image_url, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).bind(
+        slug,
+        pageType,
+        html,
+        currentVersion,
+        metadata.title,
+        metadata.description || null,
+        metadata.og_image_url || null,
+        cached?.created_at || now, // Preserve original creation time if exists
+        now
+      ).run()
+      
+      console.log(`[ISR Cache STORED] ${pageType}/${slug} (version ${currentVersion})`)
+    }
     
     // Set cache headers
-    c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
-    c.header('X-Cache-Status', cacheStatus)
+    if (devMode) {
+      c.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+      c.header('X-Cache-Status', 'DEV-BYPASS')
+    } else {
+      c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
+      c.header('X-Cache-Status', cacheStatus)
+    }
     c.header('X-Template-Version', currentVersion.toString())
     
     return c.html(html)
   } catch (error) {
     console.error(`[ISR Error] ${pageType}/${slug}:`, error)
     
-    // If regeneration fails but cache exists, serve stale cache
-    if (cached) {
+    // If regeneration fails but cache exists, serve stale cache (production only)
+    if (!devMode && cached) {
       console.warn(`[ISR Fallback] Serving stale cache for ${pageType}/${slug}`)
       c.header('X-Cache-Status', 'STALE-FALLBACK')
       return c.html(cached.content)
@@ -214,7 +257,7 @@ export async function getCacheStats(db: D1Database): Promise<{
   
   return {
     total: total?.count || 0,
-    byType: Object.fromEntries(byType.results.map(r => [r.page_type, r.count])),
-    byVersion: Object.fromEntries(byVersion.results.map(r => [r.cache_version.toString(), r.count])),
+    byType: Object.fromEntries(byType.results.map((r: { page_type: string; count: number }) => [r.page_type, r.count])),
+    byVersion: Object.fromEntries(byVersion.results.map((r: { cache_version: number; count: number }) => [r.cache_version.toString(), r.count])),
   }
 }

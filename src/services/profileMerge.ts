@@ -252,7 +252,13 @@ export const mergeMajorProfiles = (
     howPrepare: goyong?.howPrepare ?? careernet?.howPrepare,
     jobProspect: mergeRichText(careernet?.jobProspect, goyong?.jobProspect),
     salaryAfterGraduation: goyong?.salaryAfterGraduation ?? careernet?.salaryAfterGraduation,
-    employmentRate: goyong?.employmentRate ?? careernet?.employmentRate
+    employmentRate: goyong?.employmentRate ?? careernet?.employmentRate,
+    // 🔧 Phase 1 필드 병합 추가 (mainSubject, relateSubject, careerAct, enterField, property)
+    mainSubject: (careernet as any)?.mainSubject ?? (goyong as any)?.mainSubject ?? (careernet as any)?.main_subject ?? (goyong as any)?.main_subject,
+    relateSubject: (careernet as any)?.relateSubject ?? (goyong as any)?.relateSubject ?? (careernet as any)?.relate_subject ?? (goyong as any)?.relate_subject,
+    careerAct: (careernet as any)?.careerAct ?? (goyong as any)?.careerAct ?? (careernet as any)?.career_act ?? (goyong as any)?.career_act,
+    enterField: (careernet as any)?.enterField ?? (goyong as any)?.enterField ?? (careernet as any)?.enter_field ?? (goyong as any)?.enter_field,
+    property: (careernet as any)?.property ?? (goyong as any)?.property
   }
 
   return merged

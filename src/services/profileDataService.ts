@@ -639,11 +639,24 @@ export const getUnifiedMajorDetail = async (
                 
                 // null이 아니고 실제 데이터가 있는 경우만 처리
                 if (careernetData && careernetData !== null && typeof careernetData === 'object') {
+                  // 🔧 이중 인코딩된 JSON 문자열 필드 파싱
+                  const parsedData = { ...careernetData }
+                  const fieldsToCheck = ['mainSubject', 'relateSubject', 'careerAct', 'enterField']
+                  for (const field of fieldsToCheck) {
+                    if (parsedData[field] && typeof parsedData[field] === 'string') {
+                      try {
+                        parsedData[field] = JSON.parse(parsedData[field])
+                      } catch (e) {
+                        // 파싱 실패 시 원본 유지
+                      }
+                    }
+                  }
+                  
                   careernetProfile = {
                     id: `major:C_${row.careernet_id}`,
                     sourceIds: { careernet: row.careernet_id },
                     name: row.name,
-                    ...careernetData,
+                    ...parsedData,
                     sources: ['CAREERNET']
                   }
                   const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
@@ -666,11 +679,24 @@ export const getUnifiedMajorDetail = async (
                 
                 // null이 아니고 실제 데이터가 있는 경우만 처리
                 if (goyong24Data && goyong24Data !== null && typeof goyong24Data === 'object') {
+                  // 🔧 이중 인코딩된 JSON 문자열 필드 파싱
+                  const parsedData = { ...goyong24Data }
+                  const fieldsToCheck = ['mainSubject', 'relateSubject', 'careerAct', 'enterField', 'main_subject', 'relate_subject', 'career_act', 'enter_field']
+                  for (const field of fieldsToCheck) {
+                    if (parsedData[field] && typeof parsedData[field] === 'string') {
+                      try {
+                        parsedData[field] = JSON.parse(parsedData[field])
+                      } catch (e) {
+                        // 파싱 실패 시 원본 유지
+                      }
+                    }
+                  }
+                  
                   goyongProfile = {
                     id: row.goyong24_id,
                     sourceIds: { goyong24: row.goyong24_id },
                     name: row.name,
-                    ...goyong24Data,
+                    ...parsedData,
                     sources: ['GOYONG24']
                   }
                   const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
@@ -700,6 +726,18 @@ export const getUnifiedMajorDetail = async (
         // If we found data in D1, skip API calls and merge
         if (careernetProfile || goyongProfile) {
           const merged = mergeMajorProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
+          
+          // 🔧 병합된 데이터에서도 이중 인코딩된 필드 파싱 (병합 과정에서 문자열이 남아있을 수 있음)
+          const fieldsToCheck = ['mainSubject', 'relateSubject', 'careerAct', 'enterField', 'main_subject', 'relate_subject', 'career_act', 'enter_field']
+          for (const field of fieldsToCheck) {
+            if ((merged as any)[field] && typeof (merged as any)[field] === 'string') {
+              try {
+                (merged as any)[field] = JSON.parse((merged as any)[field])
+              } catch (e) {
+                // 파싱 실패 시 원본 유지
+              }
+            }
+          }
           
           // 병합된 데이터의 name 사용 (mergeMajorProfiles에서 이미 고용24 우선 처리됨)
           // 첫 번째 레코드의 name을 fallback으로 사용

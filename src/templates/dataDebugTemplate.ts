@@ -25,7 +25,7 @@ const FIELD_TAB_MAPPING: Record<string, { tab: string; section?: string }> = {
   'summary': { tab: '히어로', section: '요약 설명 (전공명 하단)' },
   
   // [개요 탭]
-  'summary': { tab: '개요', section: '전공 개요' },
+  // 'summary'는 히어로에서 이미 정의되어 있음
   'property': { tab: '개요', section: '전공 특성' },
   'aptitude': { tab: '개요', section: '이 전공에 어울리는 사람' },
   'interest': { tab: '개요', section: '이 전공에 어울리는 사람' },

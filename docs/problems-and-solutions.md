@@ -4,6 +4,80 @@
 
 ---
 
+### 2025-01-30 · 템플릿 수정 후 ISR 캐시로 인해 변경사항이 반영되지 않는 문제
+
+- **현상**  
+  `src/templates/unifiedMajorDetail.ts`에서 "고교 추천 교과목", "대학 주요 교과목 상세", "진로 탐색 활동" 필드를 추가했지만, `http://localhost:3000/major/간호학과` 페이지에서 여전히 해당 섹션이 표시되지 않았습니다.  
+  디버그 모드(`?debug=true`)에서는 데이터가 정상적으로 보였지만, 일반 모드에서는 반영되지 않았습니다.
+
+- **원인**  
+  1. **병합 함수 누락**: `src/services/profileMerge.ts`의 `mergeMajorProfiles()` 함수에서 `mainSubject`, `relateSubject`, `careerAct` 필드를 병합하지 않았습니다. 디버그 모드는 캐시를 우회하여 최신 데이터를 보여주지만, 일반 모드는 ISR 캐시를 사용하여 이전에 생성된 HTML을 반환했습니다.
+  
+  2. **ISR 캐시 문제**: 템플릿을 수정하고 `mergeMajorProfiles()`에 필드를 추가했지만, `wiki_pages` 테이블에 저장된 이전 버전의 HTML이 남아있어서 새로운 변경사항이 반영되지 않았습니다.
+  
+  3. **템플릿 버전 불일치**: 템플릿 파일은 수정되었지만, 템플릿 버전이 올라가지 않아서 시스템이 "템플릿이 바뀌었구나!"를 인식하지 못했습니다.
+
+- **진단 절차**  
+  1. 디버그 모드(`?debug=true`)에서 데이터가 정상적으로 표시되는 것을 확인했습니다.
+  2. D1 데이터베이스에서 `json_extract(api_data_json, '$.merged.mainSubject')` 등이 정상적으로 존재함을 확인했습니다.
+  3. `mergeMajorProfiles()` 함수를 확인한 결과, 해당 필드들이 병합 로직에 포함되지 않았음을 발견했습니다.
+  4. `wiki_pages` 테이블에서 간호학과 페이지의 캐시가 이전 버전으로 저장되어 있음을 확인했습니다.
+
+- **해결**  
+  1. **병합 함수 수정** (`src/services/profileMerge.ts`)  
+     - `mergeMajorProfiles()` 함수에 다음 필드들을 추가했습니다:
+       ```typescript
+       mainSubject: (careernet as any)?.mainSubject ?? (goyong as any)?.mainSubject ?? (careernet as any)?.main_subject ?? (goyong as any)?.main_subject,
+       relateSubject: (careernet as any)?.relateSubject ?? (goyong as any)?.relateSubject ?? (careernet as any)?.relate_subject ?? (goyong as any)?.relate_subject,
+       careerAct: (careernet as any)?.careerAct ?? (goyong as any)?.careerAct ?? (careernet as any)?.career_act ?? (goyong as any)?.career_act,
+       enterField: (careernet as any)?.enterField ?? (goyong as any)?.enterField ?? (careernet as any)?.enter_field ?? (goyong as any)?.enter_field,
+       property: (careernet as any)?.property ?? (goyong as any)?.property
+       ```
+     - 카멜케이스와 스네이크케이스 모두 지원하도록 구현했습니다.
+  
+  2. **ISR 캐시 삭제**  
+     - D1에서 해당 페이지의 캐시를 직접 삭제했습니다:
+       ```sql
+       DELETE FROM wiki_pages WHERE slug = '간호학과' AND page_type = 'major';
+       ```
+  
+  3. **자동화 조치 추가** (`src/utils/page-cache.ts`)  
+     - 개발 모드에서 자동으로 캐시를 우회하도록 `isDevelopmentMode()` 함수를 추가했습니다.
+     - 로컬 개발 환경 또는 `DISABLE_ISR_CACHE=true` 환경 변수가 설정되면 캐시를 사용하지 않습니다.
+     - 개발 모드에서는 항상 최신 데이터로 페이지를 생성하여 템플릿 수정사항이 즉시 반영됩니다.
+
+- **검증**  
+  - 서버 재시작 후 `http://localhost:3000/major/간호학과`를 새로고침하여 "고교 추천 교과목", "대학 주요 교과목 상세", "진로 탐색 활동" 섹션이 정상적으로 표시되는지 확인했습니다.
+  - 개발 모드에서는 로그에 `[ISR Dev Mode]` 메시지가 출력되고, `X-Cache-Status: DEV-BYPASS` 헤더가 설정되는지 확인했습니다.
+  - 프로덕션 모드에서는 기존대로 캐시가 정상적으로 작동하는지 확인했습니다.
+
+- **재발 방지 가이드**  
+  1. **템플릿 수정 시 템플릿 버전 올리기**:  
+     - 템플릿 파일(`src/templates/*.ts`)을 수정한 경우, `src/constants/template-versions.ts`에서 해당 페이지 타입의 버전을 올려야 합니다.
+     - 예: `MAJOR: 23 → 24`
+     - 버전이 올라가면 모든 관련 페이지의 캐시가 자동으로 무효화됩니다.
+  
+  2. **병합 함수 확인**:  
+     - 새로운 필드를 템플릿에 추가할 때는 반드시 `mergeMajorProfiles()` 또는 `mergeJobProfiles()` 함수에도 해당 필드를 추가해야 합니다.
+     - 카멜케이스와 스네이크케이스 모두 지원하도록 구현하는 것을 권장합니다.
+  
+  3. **개발 모드 활용**:  
+     - 로컬 개발 중에는 자동으로 캐시가 우회되므로, 템플릿 수정사항을 즉시 확인할 수 있습니다.
+     - 프로덕션 배포 전에는 반드시 템플릿 버전을 올리고 테스트해야 합니다.
+  
+  4. **수동 캐시 삭제**:  
+     - 긴급한 경우 다음 명령으로 특정 페이지의 캐시를 삭제할 수 있습니다:
+       ```sql
+       DELETE FROM wiki_pages WHERE slug = '페이지슬러그' AND page_type = 'major';
+       ```
+     - 또는 `src/utils/page-cache.ts`의 `invalidatePageCache()` 함수를 사용할 수 있습니다.
+  
+  5. **관련 문서 참조**:  
+     - 비개발자용 설명: `docs/ISR_CACHE_EXPLAINED.md`
+     - 개발자용 상세 설명: `src/utils/page-cache.ts` 주석
+
+---
+
 ### 2025-11-11 · 직업명이 ID 코드(K000000847)로 표시되는 문제
 
 - **현상**  

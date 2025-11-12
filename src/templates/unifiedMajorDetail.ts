@@ -318,10 +318,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   // 졸업 후 진출 분야 (enterField) - 개요로 이동
   if (profile.enterField && Array.isArray(profile.enterField) && profile.enterField.length > 0) {
     const enterItems = profile.enterField
-      .filter(item => item && (item.gradeuate || item.field_name))
+      .filter(item => item && (item.gradeuate || (item as any).field_name))
       .map(item => {
-        const name = item.gradeuate || item.field_name || ''
-        const desc = item.description || item.field_description || ''
+        const itemAny = item as any
+        const name = item.gradeuate || itemAny.field_name || ''
+        const desc = item.description || itemAny.field_description || ''
         if (desc) {
           return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
         }
@@ -334,18 +335,20 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   }
 
   // 4. 핵심 지표 - salary, employment, salaryAfterGraduation, employmentRate
-  const careernetSalary = partials?.CAREERNET?.salary
-  const goyong24Salary = partials?.GOYONG24?.salary
-  const careernetEmployment = partials?.CAREERNET?.employment
-  const goyong24Employment = partials?.GOYONG24?.employment
+  // 일부 필드는 타입 정의에 없지만 실제 데이터에 존재할 수 있음
+  const profileAny = profile as any
+  const careernetSalary = (partials?.CAREERNET as any)?.salary
+  const goyong24Salary = (partials?.GOYONG24 as any)?.salary
+  const careernetEmployment = (partials?.CAREERNET as any)?.employment
+  const goyong24Employment = (partials?.GOYONG24 as any)?.employment
   
-  const hasAnyMetrics = profile.salary || profile.salaryAfterGraduation || profile.employment || profile.employmentRate
+  const hasAnyMetrics = profileAny.salary || profile.salaryAfterGraduation || profileAny.employment || profile.employmentRate
   
   if (hasAnyMetrics) {
     const metaItems: string[] = []
     
     // salary와 salaryAfterGraduation 비교하여 같으면 salary만 표시
-    const salaryValue = profile.salary
+    const salaryValue = profileAny.salary
     const salaryAfterValue = profile.salaryAfterGraduation
     
     const isSameSalary = salaryValue && salaryAfterValue && 
@@ -375,12 +378,12 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 첫 직장 평균 임금(월)</span><span class="text-wiki-text font-semibold">${escapeHtml(salaryText)}</span></li>`)
     }
     
-    if (profile.employment) {
-      const empText = profile.employment.replace(/<strong>([^<]+)<\/strong>/g, '<strong class="text-white font-bold">$1</strong>')
+    if (profileAny.employment) {
+      const empText = profileAny.employment.replace(/<strong>([^<]+)<\/strong>/g, '<strong class="text-white font-bold">$1</strong>')
       metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${empText}</span></li>`)
     }
     
-    if (profile.employmentRate && profile.employmentRate !== profile.employment) {
+    if (profile.employmentRate && profile.employmentRate !== profileAny.employment) {
       const rateText = profile.employmentRate.replace(/<strong>([^<]+)<\/strong>/g, '<strong class="text-white font-bold">$1</strong>')
       metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률 (추가)</span><span class="text-wiki-text">${rateText}</span></li>`)
     }
@@ -486,12 +489,22 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   }
   
   // 서브섹션: 대학 주요 교과목 상세 (독립적으로 체크)
-  if (profile.mainSubject && Array.isArray(profile.mainSubject) && profile.mainSubject.length > 0) {
-      const detailItems = profile.mainSubject
-        .filter(item => item && (item.SBJECT_NM || item.subject_name))
+  // JSON 문자열인 경우 파싱 (카멜케이스와 스네이크케이스 모두 지원)
+  let mainSubjectArray = profile.mainSubject || (profile as any).main_subject
+  if (typeof mainSubjectArray === 'string') {
+    try {
+      mainSubjectArray = JSON.parse(mainSubjectArray)
+    } catch (e) {
+      mainSubjectArray = []
+    }
+  }
+  
+  if (mainSubjectArray && Array.isArray(mainSubjectArray) && mainSubjectArray.length > 0) {
+      const detailItems = mainSubjectArray
+        .filter(item => item && (item.SBJECT_NM || item.subject_name || item.SUBJECT_NM))
         .map(item => {
-          const name = item.SBJECT_NM || item.subject_name || ''
-          const desc = item.SBJECT_SUMRY || item.subject_description || ''
+          const name = item.SBJECT_NM || item.subject_name || item.SUBJECT_NM || ''
+          const desc = item.SBJECT_SUMRY || item.subject_description || item.SUBJECT_SUMRY || ''
           return `
             <div class="p-4 rounded-lg border border-wiki-border/40 bg-wiki-bg/20 hover:border-wiki-primary/40 transition-colors">
               <h5 class="font-semibold text-wiki-text mb-2 flex items-center gap-2">
@@ -522,8 +535,18 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     }
     
   // 서브섹션: 고교 추천 교과목 (독립적으로 체크)
-  if (profile.relateSubject && Array.isArray(profile.relateSubject) && profile.relateSubject.length > 0) {
-    const highSchoolItems = profile.relateSubject
+  // JSON 문자열인 경우 파싱 (카멜케이스와 스네이크케이스 모두 지원)
+  let relateSubjectArray = profile.relateSubject || (profile as any).relate_subject
+  if (typeof relateSubjectArray === 'string') {
+    try {
+      relateSubjectArray = JSON.parse(relateSubjectArray)
+    } catch (e) {
+      relateSubjectArray = []
+    }
+  }
+  
+  if (relateSubjectArray && Array.isArray(relateSubjectArray) && relateSubjectArray.length > 0) {
+    const highSchoolItems = relateSubjectArray
       .filter(item => item && (item.subject_name || item.SUBJECT_NM))
       .map(item => {
         const name = item.subject_name || item.SUBJECT_NM || ''
@@ -568,8 +591,18 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   }
   
   // 7) 진로 탐색 활동 (careerAct)
-  if (profile.careerAct && Array.isArray(profile.careerAct) && profile.careerAct.length > 0) {
-    const actItems = profile.careerAct
+  // JSON 문자열인 경우 파싱 (카멜케이스와 스네이크케이스 모두 지원)
+  let careerActArray = profile.careerAct || (profile as any).career_act
+  if (typeof careerActArray === 'string') {
+    try {
+      careerActArray = JSON.parse(careerActArray)
+    } catch (e) {
+      careerActArray = []
+    }
+  }
+  
+  if (careerActArray && Array.isArray(careerActArray) && careerActArray.length > 0) {
+    const actItems = careerActArray
       .filter(item => item && (item.act_name || item.ACT_NM))
       .map(item => {
         const name = item.act_name || item.ACT_NM || ''
