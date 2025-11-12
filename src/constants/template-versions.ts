@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: D1 병합 로직 적용 (CareerNet + Goyong24 자동 병합)
+   * Current features: 사용자 요청 기반 대규모 템플릿 개선
    */
-  MAJOR: 17,  // 🆕 D1 조회 로직 수정 (.all()로 모든 레코드 병합, 직업 페이지와 동일)
+  MAJOR: 18,  // 🆕 히어로/개요/상세정보/사이드바 전면 개선 (병합 요약, 핵심 지표 확장, 순서 조정, 자격증/태그 병합)
 
   /**
    * Job detail page template version

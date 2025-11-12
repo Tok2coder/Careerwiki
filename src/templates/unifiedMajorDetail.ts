@@ -282,7 +282,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     ? profile.categoryName
     : undefined
 
-  const heroDescription = profile.summary?.split('\n')[0]?.trim()
+  // 1. 히어로 요약: 커리어넷 우선, 없으면 고용24 사용
+  const careernetSummary = partials?.CAREERNET?.summary
+  const goyong24Summary = partials?.GOYONG24?.summary
+  const heroDescription = (careernetSummary || goyong24Summary || profile.summary)?.split('\n')[0]?.trim()
+  
   const heroImage = renderHeroImage(profile.name, { dataAttribute: 'data-major-hero-image', context: 'major' })
 
   const overviewCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
@@ -291,8 +295,15 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     overviewCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
   }
 
-  if (profile.summary?.trim()) {
-    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(profile.summary))
+  // 1. 전공 개요: 고용24만 사용, 둘 다 있으면 개요에만 표시 (히어로와 중복 방지)
+  const hasCareernetOnly = careernetSummary && !goyong24Summary
+  const hasGoyong24Only = goyong24Summary && !careernetSummary
+  const hasBothSummaries = careernetSummary && goyong24Summary
+  
+  if (goyong24Summary?.trim()) {
+    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(goyong24Summary))
+  } else if (hasCareernetOnly && profile.summary?.trim()) {
+    // 커리어넷만 있으면 이미 히어로에 표시되었으므로 개요에는 표시하지 않음
   }
   
   // 전공 특성 (property)
@@ -322,27 +333,61 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     }
   }
 
-  // 핵심 지표 - 개요로 이동
-  if (profile.salaryAfterGraduation || profile.employmentRate) {
+  // 4. 핵심 지표 - salary, employment, salaryAfterGraduation, employmentRate
+  const careernetSalary = partials?.CAREERNET?.salary
+  const goyong24Salary = partials?.GOYONG24?.salary
+  const careernetEmployment = partials?.CAREERNET?.employment
+  const goyong24Employment = partials?.GOYONG24?.employment
+  
+  const hasAnyMetrics = profile.salary || profile.salaryAfterGraduation || profile.employment || profile.employmentRate
+  
+  if (hasAnyMetrics) {
     const metaItems: string[] = []
     
-    if (profile.salaryAfterGraduation) {
-      // HTML 태그 제거 및 연봉 포맷팅
-      let salaryText = profile.salaryAfterGraduation.replace(/<[^>]*>/g, '').trim()
-      // 숫자만 있는 경우 만원 단위 추가
+    // salary와 salaryAfterGraduation 비교하여 같으면 salary만 표시
+    const salaryValue = profile.salary
+    const salaryAfterValue = profile.salaryAfterGraduation
+    
+    const isSameSalary = salaryValue && salaryAfterValue && 
+      salaryValue.replace(/<[^>]*>/g, '').trim() === salaryAfterValue.replace(/<[^>]*>/g, '').trim()
+    
+    if (salaryValue && !isSameSalary) {
+      let salaryText = salaryValue.replace(/<[^>]*>/g, '').trim()
+      if (/^\d+(\.\d+)?$/.test(salaryText)) {
+        salaryText = `${salaryText}만원`
+      }
+      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 첫 직장 평균 임금(월)</span><span class="text-wiki-text font-semibold">${escapeHtml(salaryText)}</span></li>`)
+    }
+    
+    if (salaryAfterValue && (!salaryValue || !isSameSalary)) {
+      let salaryText = salaryAfterValue.replace(/<[^>]*>/g, '').trim()
       if (/^\d+(\.\d+)?$/.test(salaryText)) {
         salaryText = `${salaryText}만원`
       }
       metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text font-semibold">${escapeHtml(salaryText)}</span></li>`)
     }
     
-    if (profile.employmentRate) {
-      // HTML 태그를 실제 렌더링으로 변경
-      const rateText = profile.employmentRate.replace(/<strong>([^<]+)<\/strong>/g, '<strong class="text-white font-bold">$1</strong>')
-      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${rateText}</span></li>`)
+    if (isSameSalary && salaryValue) {
+      let salaryText = salaryValue.replace(/<[^>]*>/g, '').trim()
+      if (/^\d+(\.\d+)?$/.test(salaryText)) {
+        salaryText = `${salaryText}만원`
+      }
+      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 첫 직장 평균 임금(월)</span><span class="text-wiki-text font-semibold">${escapeHtml(salaryText)}</span></li>`)
     }
     
-    pushOverviewCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems.join('')}</ul>`)
+    if (profile.employment) {
+      const empText = profile.employment.replace(/<strong>([^<]+)<\/strong>/g, '<strong class="text-white font-bold">$1</strong>')
+      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${empText}</span></li>`)
+    }
+    
+    if (profile.employmentRate && profile.employmentRate !== profile.employment) {
+      const rateText = profile.employmentRate.replace(/<strong>([^<]+)<\/strong>/g, '<strong class="text-white font-bold">$1</strong>')
+      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률 (추가)</span><span class="text-wiki-text">${rateText}</span></li>`)
+    }
+    
+    if (metaItems.length > 0) {
+      pushOverviewCard('핵심 지표', 'fa-gauge-high', `<ul class="space-y-2">${metaItems.join('')}</ul>`)
+    }
   }
 
   const overviewContent = overviewCards.length > 0
@@ -352,65 +397,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       </div>`
     : `<p class="text-sm text-wiki-muted">개요 정보가 준비 중입니다.</p>`
   
-  // 적성 리스트 (lstMiddleAptd, lstHighAptd)
-  const aptitudeItems: string[] = []
-  if (profile.lstMiddleAptd && Array.isArray(profile.lstMiddleAptd) && profile.lstMiddleAptd.length > 0) {
-    const middleAptItems = profile.lstMiddleAptd
-      .filter(item => item && (item.name || item.aptd_name))
-      .slice(0, 10)
-      .map(item => {
-        const name = item.name || item.aptd_name || ''
-        const score = item.score || item.aptd_score
-        if (score !== undefined) {
-          const barWidth = Math.min(parseFloat(score) || 0, 100)
-          return `
-            <div class="flex items-center gap-3 mb-2">
-              <span class="text-sm text-wiki-text min-w-[100px]">${escapeHtml(name)}</span>
-              <div class="flex-1 bg-wiki-border/30 rounded-full h-2 overflow-hidden">
-                <div class="bg-purple-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
-              </div>
-              <span class="text-xs text-wiki-muted min-w-[40px] text-right">${parseFloat(score).toFixed(1)}</span>
-            </div>
-          `
-        }
-        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
-      })
-      .join('')
-    if (middleAptItems) {
-      aptitudeItems.push(`<div><h4 class="text-sm font-bold text-wiki-secondary mb-3">중학생 적성</h4>${middleAptItems}</div>`)
-    }
-  }
-  
-  if (profile.lstHighAptd && Array.isArray(profile.lstHighAptd) && profile.lstHighAptd.length > 0) {
-    const highAptItems = profile.lstHighAptd
-      .filter(item => item && (item.name || item.aptd_name))
-      .slice(0, 10)
-      .map(item => {
-        const name = item.name || item.aptd_name || ''
-        const score = item.score || item.aptd_score
-        if (score !== undefined) {
-          const barWidth = Math.min(parseFloat(score) || 0, 100)
-          return `
-            <div class="flex items-center gap-3 mb-2">
-              <span class="text-sm text-wiki-text min-w-[100px]">${escapeHtml(name)}</span>
-              <div class="flex-1 bg-wiki-border/30 rounded-full h-2 overflow-hidden">
-                <div class="bg-indigo-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
-              </div>
-              <span class="text-xs text-wiki-muted min-w-[40px] text-right">${parseFloat(score).toFixed(1)}</span>
-            </div>
-          `
-        }
-        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
-      })
-      .join('')
-    if (highAptItems) {
-      aptitudeItems.push(`<div class="${aptitudeItems.length > 0 ? 'mt-4' : ''}"><h4 class="text-sm font-bold text-wiki-secondary mb-3">고등학생 적성</h4>${highAptItems}</div>`)
-    }
-  }
-  
-  if (aptitudeItems.length > 0) {
-    pushOverviewCard('적성 프로필', 'fa-brain', aptitudeItems.join(''))
-  }
+  // 2. 적성 리스트 (lstMiddleAptd, lstHighAptd) 제거됨 - 사용자 요청
   
   // 가치관 리스트 (lstVals)
   if (profile.lstVals && Array.isArray(profile.lstVals) && profile.lstVals.length > 0) {
@@ -440,35 +427,29 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     }
   }
 
+  // 5. 상세정보 탭 순서 재구성
   const learningCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushLearningCard = (label: string, icon: string, markup: string) => {
     const id = anchorIdFactory('curriculum', label)
     learningCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
   }
   
-  // 관련 고교 교과목 (relateSubject)
-  if (profile.relateSubject && Array.isArray(profile.relateSubject) && profile.relateSubject.length > 0) {
-    const subjectItems = profile.relateSubject
-      .filter(item => item && (item.subject_name || item.SUBJECT_NM))
-      .map(item => {
-        const name = item.subject_name || item.SUBJECT_NM || ''
-        const desc = item.subject_description || item.SUBJECT_SUMRY || ''
-        if (desc) {
-          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
-        }
-        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
-      })
-      .join('')
-    if (subjectItems) {
-      pushLearningCard('고교 추천 교과목', 'fa-school', subjectItems)
-    }
+  // 1) 하는 공부 (whatStudy)
+  if (profile.whatStudy?.trim()) {
+    pushLearningCard('하는 공부', 'fa-graduation-cap', formatRichText(profile.whatStudy))
   }
   
+  // 2) 준비 방법 (howPrepare)
+  if (profile.howPrepare?.trim()) {
+    pushLearningCard('준비 방법', 'fa-route', formatRichText(profile.howPrepare))
+  }
+  
+  // 3) 주요 교과목
   if (profile.mainSubjects?.length) {
     pushLearningCard('주요 교과목', 'fa-book-open', renderChips(profile.mainSubjects, '교과목 정보가 없습니다.'))
   }
   
-  // 대학 주요 교과목 상세 (mainSubject - 배열 버전)
+  // 4) 대학 주요 교과목 상세 (mainSubject - 배열 버전)
   if (profile.mainSubject && Array.isArray(profile.mainSubject) && profile.mainSubject.length > 0) {
     const mainSubjItems = profile.mainSubject
       .filter(item => item && (item.SBJECT_NM || item.subject_name))
@@ -486,14 +467,30 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     }
   }
   
-  if (profile.whatStudy?.trim()) {
-    pushLearningCard('무엇을 배우나요?', 'fa-graduation-cap', formatRichText(profile.whatStudy))
-  }
-  if (profile.howPrepare?.trim()) {
-    pushLearningCard('어떻게 준비하나요?', 'fa-route', formatRichText(profile.howPrepare))
+  // 5) 고교 추천 교과목 (relateSubject)
+  if (profile.relateSubject && Array.isArray(profile.relateSubject) && profile.relateSubject.length > 0) {
+    const subjectItems = profile.relateSubject
+      .filter(item => item && (item.subject_name || item.SUBJECT_NM))
+      .map(item => {
+        const name = item.subject_name || item.SUBJECT_NM || ''
+        const desc = item.subject_description || item.SUBJECT_SUMRY || ''
+        if (desc) {
+          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
+        }
+        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
+      })
+      .join('')
+    if (subjectItems) {
+      pushLearningCard('고교 추천 교과목', 'fa-school', subjectItems)
+    }
   }
   
-  // 진로 탐색 활동 (careerAct)
+  // 6) 진로 전망 (jobProspect) - 상세정보 탭으로 이동
+  if (profile.jobProspect?.trim()) {
+    pushLearningCard('진로 전망', 'fa-chart-line', formatRichText(profile.jobProspect))
+  }
+  
+  // 7) 진로 탐색 활동 (careerAct)
   if (profile.careerAct && Array.isArray(profile.careerAct) && profile.careerAct.length > 0) {
     const actItems = profile.careerAct
       .filter(item => item && (item.act_name || item.ACT_NM))
@@ -510,10 +507,6 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       pushLearningCard('진로 탐색 활동', 'fa-compass', actItems)
     }
   }
-  
-  if (profile.licenses?.length) {
-    pushLearningCard('추천 자격증', 'fa-certificate', renderChips(profile.licenses, '관련 자격증 정보가 없습니다.'))
-  }
 
   const learningContent = learningCards.length > 0
     ? `<div class="space-y-6">
@@ -528,9 +521,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     careerCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
   }
 
-  if (profile.jobProspect?.trim()) {
-    pushCareerCard('진로 전망', 'fa-chart-line', formatRichText(profile.jobProspect))
-  }
+  // jobProspect는 상세정보 탭으로 이동됨
   
   // 통계 차트 데이터 (chartData)
   if (profile.chartData) {
@@ -823,6 +814,35 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     sidebarSections.push(renderSidebarSection('관련 직업', 'fa-briefcase', `<ul class="space-y-2" role="list">${jobsList}</ul>`))
   }
 
+  // 7. 추천 자격증 (커리어넷 + 고용24 병합, 중복 제거)
+  const careernetLicenses = partials?.CAREERNET?.licenses || profile.licenses || []
+  const goyong24Licenses = partials?.GOYONG24?.licenses || []
+  
+  // 병합 및 중복 제거
+  const allLicenses = [...careernetLicenses, ...goyong24Licenses]
+  const uniqueLicenses = Array.from(new Set(
+    allLicenses
+      .filter(l => l && typeof l === 'string' && l.trim().length > 0)
+      .map(l => l.trim())
+  ))
+  
+  if (uniqueLicenses.length > 0) {
+    // 가독성을 위해 2열 그리드로 표시
+    const licensesList = uniqueLicenses
+      .map(license => `
+        <li>
+          <div class="flex items-center gap-2 px-3 py-2 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-secondary/60 hover:bg-wiki-secondary/5 transition-all duration-200">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-wiki-secondary/15 text-wiki-secondary">
+              <i class="fas fa-certificate text-[9px]" aria-hidden="true"></i>
+            </span>
+            <span class="text-xs text-wiki-text font-medium">${escapeHtml(license)}</span>
+          </div>
+        </li>
+      `)
+      .join('')
+    sidebarSections.push(renderSidebarSection('추천 자격증', 'fa-certificate', `<ul class="grid grid-cols-1 gap-2" role="list">${licensesList}</ul>`))
+  }
+
   // 관련 HowTo (샘플 데이터)
   const sampleHowtos = [
     { label: `${profile.name} 입학 가이드`, href: '#' },
@@ -852,10 +872,19 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   const communityBlock = `<div data-major-community>${commentsPlaceholder}</div>`
 
-  // 히어로 태그: relatedMajors 필드 활용 (관련 학과명)
-  const heroTags = profile.relatedMajors && profile.relatedMajors.length > 0
-    ? profile.relatedMajors.slice(0, 5)
-    : []
+  // 6. 히어로 태그: 추천 유사 전공 (커리어넷 + 고용24 병합, 중복 제거)
+  const careernetRelated = partials?.CAREERNET?.relatedMajors || profile.relatedMajors || []
+  const goyong24Related = partials?.GOYONG24?.relatedMajors || []
+  
+  // 병합 및 중복 제거
+  const allRelatedMajors = [...careernetRelated, ...goyong24Related]
+  const uniqueRelatedMajors = Array.from(new Set(
+    allRelatedMajors
+      .filter(m => m && typeof m === 'string' && m.trim().length > 0)
+      .map(m => m.trim())
+  ))
+  
+  const heroTags = uniqueRelatedMajors.slice(0, 5)
 
   const heroTagsMarkup = heroTags.length > 0
     ? `<div class="flex flex-wrap gap-2 mt-4">${heroTags.map(tag => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-wiki-primary font-medium"><i class="fas fa-graduation-cap text-[10px]"></i>${escapeHtml(tag)}</span>`).join('')}</div>`
