@@ -1,6 +1,7 @@
 import type { DataSource, UnifiedJobDetail, UnifiedMajorDetail } from '../types/unifiedProfiles'
 import type { SourceStatusRecord } from '../services/profileDataService'
 import { escapeHtml } from './detailTemplateUtils'
+import { renderFieldComparisonByTab } from './fieldComparisonByTab'
 
 export interface DataDebugTemplateParams {
   profile: UnifiedJobDetail | UnifiedMajorDetail | null
@@ -2827,9 +2828,9 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
             <svg class="w-7 h-7 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path>
             </svg>
-            병합 후 필드 비교
+            병합 후 필드 비교 ${pageType === 'major' ? '(탭별/섹션별 분류)' : ''}
           </h2>
-          ${renderFieldComparisonTable(rawApiData)}
+          ${pageType === 'major' ? renderFieldComparisonByTab(rawApiData) : renderFieldComparisonTable(rawApiData)}
         </div>
 
         <!-- CareerNet Encyclopedia (jobs.json) -->
