@@ -444,44 +444,120 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     pushLearningCard('준비 방법', 'fa-route', formatRichText(profile.howPrepare))
   }
   
-  // 3) 주요 교과목
+  // 3) 주요 교과목 (mainSubjects - 기초/심화 구분)
   if (profile.mainSubjects?.length) {
-    pushLearningCard('주요 교과목', 'fa-book-open', renderChips(profile.mainSubjects, '교과목 정보가 없습니다.'))
-  }
-  
-  // 4) 대학 주요 교과목 상세 (mainSubject - 배열 버전)
-  if (profile.mainSubject && Array.isArray(profile.mainSubject) && profile.mainSubject.length > 0) {
-    const mainSubjItems = profile.mainSubject
-      .filter(item => item && (item.SBJECT_NM || item.subject_name))
-      .map(item => {
-        const name = item.SBJECT_NM || item.subject_name || ''
-        const desc = item.SBJECT_SUMRY || item.subject_description || ''
-        if (desc) {
-          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
-        }
-        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
-      })
-      .join('')
-    if (mainSubjItems) {
-      pushLearningCard('대학 주요 교과목 상세', 'fa-book', mainSubjItems)
+    const subjectSections: string[] = []
+    
+    // 기초과목과 심화과목 분리
+    const basicSubjects = profile.mainSubjects.filter(s => s && s.includes('기초') || s.includes('입문'))
+    const advancedSubjects = profile.mainSubjects.filter(s => s && !s.includes('기초') && !s.includes('입문'))
+    
+    if (basicSubjects.length > 0) {
+      subjectSections.push(`
+        <div class="mb-6">
+          <h4 class="text-base font-bold text-wiki-secondary mb-3 flex items-center gap-2">
+            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/15 text-blue-400">
+              <i class="fas fa-seedling text-xs"></i>
+            </span>
+            기초 과목
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            ${basicSubjects.map(subj => `<span class="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg text-sm text-blue-300 font-medium">${escapeHtml(subj)}</span>`).join('')}
+          </div>
+        </div>
+      `)
     }
-  }
-  
-  // 5) 고교 추천 교과목 (relateSubject)
-  if (profile.relateSubject && Array.isArray(profile.relateSubject) && profile.relateSubject.length > 0) {
-    const subjectItems = profile.relateSubject
-      .filter(item => item && (item.subject_name || item.SUBJECT_NM))
-      .map(item => {
-        const name = item.subject_name || item.SUBJECT_NM || ''
-        const desc = item.subject_description || item.SUBJECT_SUMRY || ''
-        if (desc) {
-          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
-        }
-        return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-sm text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
-      })
-      .join('')
-    if (subjectItems) {
-      pushLearningCard('고교 추천 교과목', 'fa-school', subjectItems)
+    
+    if (advancedSubjects.length > 0) {
+      subjectSections.push(`
+        <div class="mb-6">
+          <h4 class="text-base font-bold text-wiki-secondary mb-3 flex items-center gap-2">
+            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/15 text-purple-400">
+              <i class="fas fa-rocket text-xs"></i>
+            </span>
+            심화 과목
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            ${advancedSubjects.map(subj => `<span class="inline-flex items-center gap-1.5 px-3 py-2 bg-purple-500/10 border border-purple-500/20 rounded-lg text-sm text-purple-300 font-medium">${escapeHtml(subj)}</span>`).join('')}
+          </div>
+        </div>
+      `)
+    }
+    
+    // 서브섹션: 대학 주요 교과목 상세
+    if (profile.mainSubject && Array.isArray(profile.mainSubject) && profile.mainSubject.length > 0) {
+      const detailItems = profile.mainSubject
+        .filter(item => item && (item.SBJECT_NM || item.subject_name))
+        .map(item => {
+          const name = item.SBJECT_NM || item.subject_name || ''
+          const desc = item.SBJECT_SUMRY || item.subject_description || ''
+          return `
+            <div class="p-4 rounded-lg border border-wiki-border/40 bg-wiki-bg/20 hover:border-wiki-primary/40 transition-colors">
+              <h5 class="font-semibold text-wiki-text mb-2 flex items-center gap-2">
+                <i class="fas fa-book-open text-wiki-primary text-xs"></i>
+                ${escapeHtml(name)}
+              </h5>
+              ${desc ? `<p class="text-sm text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
+            </div>
+          `
+        })
+        .join('')
+      
+      if (detailItems) {
+        subjectSections.push(`
+          <div class="mt-6">
+            <h4 class="text-base font-bold text-wiki-secondary mb-4 flex items-center gap-2">
+              <span class="flex h-8 w-8 items-center justify-center rounded-full bg-wiki-primary/15 text-wiki-primary">
+                <i class="fas fa-graduation-cap text-xs"></i>
+              </span>
+              대학 주요 교과목 상세
+            </h4>
+            <div class="grid gap-3">
+              ${detailItems}
+            </div>
+          </div>
+        `)
+      }
+    }
+    
+    // 서브섹션: 고교 추천 교과목
+    if (profile.relateSubject && Array.isArray(profile.relateSubject) && profile.relateSubject.length > 0) {
+      const highSchoolItems = profile.relateSubject
+        .filter(item => item && (item.subject_name || item.SUBJECT_NM))
+        .map(item => {
+          const name = item.subject_name || item.SUBJECT_NM || ''
+          const desc = item.subject_description || item.SUBJECT_SUMRY || ''
+          return `
+            <div class="p-4 rounded-lg border border-wiki-border/40 bg-wiki-bg/20 hover:border-wiki-secondary/40 transition-colors">
+              <h5 class="font-semibold text-wiki-text mb-2 flex items-center gap-2">
+                <i class="fas fa-school text-wiki-secondary text-xs"></i>
+                ${escapeHtml(name)}
+              </h5>
+              ${desc ? `<p class="text-sm text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
+            </div>
+          `
+        })
+        .join('')
+      
+      if (highSchoolItems) {
+        subjectSections.push(`
+          <div class="mt-6">
+            <h4 class="text-base font-bold text-wiki-secondary mb-4 flex items-center gap-2">
+              <span class="flex h-8 w-8 items-center justify-center rounded-full bg-wiki-secondary/15 text-wiki-secondary">
+                <i class="fas fa-school text-xs"></i>
+              </span>
+              고교 추천 교과목
+            </h4>
+            <div class="grid gap-3">
+              ${highSchoolItems}
+            </div>
+          </div>
+        `)
+      }
+    }
+    
+    if (subjectSections.length > 0) {
+      pushLearningCard('주요 교과목', 'fa-book-open', subjectSections.join(''))
     }
   }
   
@@ -497,14 +573,19 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       .map(item => {
         const name = item.act_name || item.ACT_NM || ''
         const desc = item.act_description || item.ACT_SUMRY || ''
-        if (desc) {
-          return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-sm text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
-        }
-        return `<li class="text-sm text-wiki-text">• ${escapeHtml(name)}</li>`
+        return `
+          <div class="p-4 rounded-lg border border-wiki-border/40 bg-wiki-bg/20 hover:border-wiki-primary/40 transition-colors">
+            <h5 class="font-semibold text-wiki-text mb-2 flex items-center gap-2">
+              <i class="fas fa-compass text-wiki-primary text-xs"></i>
+              ${escapeHtml(name)}
+            </h5>
+            ${desc ? `<p class="text-sm text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
+          </div>
+        `
       })
       .join('')
     if (actItems) {
-      pushLearningCard('진로 탐색 활동', 'fa-compass', actItems)
+      pushLearningCard('진로 탐색 활동', 'fa-compass', `<div class="grid gap-3">${actItems}</div>`)
     }
   }
 
@@ -680,9 +761,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     networkCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
   }
 
-  if (profile.relatedMajors?.length) {
-    pushNetworkCard('추천 유사 전공', 'fa-diagram-project', renderChips(profile.relatedMajors))
-  }
+  // 추천 유사 전공은 히어로 태그로 이동됨 - 상세정보에서 제거
 
   const networkContent = networkCards.length > 0
     ? `<div class="space-y-6">
@@ -872,12 +951,27 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   const communityBlock = `<div data-major-community>${commentsPlaceholder}</div>`
 
-  // 6. 히어로 태그: 추천 유사 전공 (커리어넷 + 고용24 병합, 중복 제거)
-  const careernetRelated = partials?.CAREERNET?.relatedMajors || profile.relatedMajors || []
+  // 6. 히어로 태그: 추천 유사 전공 (department + relatedMajors 병합, 중복 제거)
+  const careernetRelated = partials?.CAREERNET?.relatedMajors || []
   const goyong24Related = partials?.GOYONG24?.relatedMajors || []
   
-  // 병합 및 중복 제거
-  const allRelatedMajors = [...careernetRelated, ...goyong24Related]
+  // department 필드 추출 (universities에서)
+  const allDepartments: string[] = []
+  if (profile.universities && Array.isArray(profile.universities)) {
+    profile.universities.forEach(uni => {
+      if (uni.department && typeof uni.department === 'string' && uni.department.trim().length > 0) {
+        allDepartments.push(uni.department.trim())
+      }
+    })
+  }
+  
+  // 병합 및 중복 제거 (department + relatedMajors)
+  const allRelatedMajors = [
+    ...allDepartments,
+    ...careernetRelated,
+    ...goyong24Related,
+    ...(profile.relatedMajors || [])
+  ]
   const uniqueRelatedMajors = Array.from(new Set(
     allRelatedMajors
       .filter(m => m && typeof m === 'string' && m.trim().length > 0)
