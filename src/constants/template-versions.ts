@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 서브섹션 독립 렌더링 버그 수정
+   * Current features: 전체 캐시 재생성 (간호학과 등 오래된 캐시 갱신)
    */
-  MAJOR: 21,  // 🆕 mainSubject/relateSubject/careerAct가 mainSubjects 없어도 독립 렌더링
+  MAJOR: 22,  // 🆕 전체 페이지 캐시 강제 갱신
 
   /**
    * Job detail page template version
