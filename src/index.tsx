@@ -2706,7 +2706,10 @@ app.get('/major/:slug', async (c) => {
       const debugHtml = renderDataDebugPage({
         pageType: 'major',
         profile: result.profile,
-        rawData: result.rawPartials || {},
+        rawApiData: {
+          careernet: result.rawPartials?.CAREERNET || null,
+          goyong24: result.rawPartials?.GOYONG24 || null
+        },
         partials: result.partials || null,
         sources: result.sources || {},
         breadcrumbs: [
