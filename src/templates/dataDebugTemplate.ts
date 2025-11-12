@@ -16,67 +16,122 @@ export interface DataDebugTemplateParams {
   breadcrumbs?: Array<{ href: string; label: string }>
 }
 
-// ========== 필드 설명 맵 (직업 & 전공 공통) ==========
+// ========== 필드 분류 (템플릿 구조 기반) ==========
+const FIELD_TAB_MAPPING: Record<string, { tab: string; section?: string }> = {
+  // [히어로 섹션]
+  'name': { tab: '히어로', section: '전공명' },
+  'categoryName': { tab: '히어로', section: '계열 배지 (전공명 상단)' },
+  'summary': { tab: '히어로', section: '요약 설명 (전공명 하단)' },
+  
+  // [개요 탭]
+  'summary': { tab: '개요', section: '전공 개요' },
+  'property': { tab: '개요', section: '전공 특성' },
+  'aptitude': { tab: '개요', section: '이 전공에 어울리는 사람' },
+  'interest': { tab: '개요', section: '이 전공에 어울리는 사람' },
+  'enterField': { tab: '개요', section: '졸업 후 진출 분야' },
+  'enter_field': { tab: '개요', section: '졸업 후 진출 분야' },
+  'salaryAfterGraduation': { tab: '개요', section: '핵심 지표' },
+  'salary': { tab: '개요', section: '핵심 지표' },
+  'employmentRate': { tab: '개요', section: '핵심 지표' },
+  'employment': { tab: '개요', section: '핵심 지표' },
+  'lstMiddleAptd': { tab: '개요', section: '적성 프로필 (중학생)' },
+  'lstHighAptd': { tab: '개요', section: '적성 프로필 (고등학생)' },
+  'lstVals': { tab: '개요', section: '가치관' },
+  
+  // [상세정보 탭 - 커리큘럼]
+  'relateSubject': { tab: '상세정보', section: '고교 추천 교과목' },
+  'relate_subject': { tab: '상세정보', section: '고교 추천 교과목' },
+  'mainSubjects': { tab: '상세정보', section: '주요 교과목' },
+  'mainSubject': { tab: '상세정보', section: '대학 주요 교과목 상세' },
+  'main_subject': { tab: '상세정보', section: '대학 주요 교과목 상세' },
+  'whatStudy': { tab: '상세정보', section: '무엇을 배우나요?' },
+  'howPrepare': { tab: '상세정보', section: '어떻게 준비하나요?' },
+  'careerAct': { tab: '상세정보', section: '진로 탐색 활동' },
+  'career_act': { tab: '상세정보', section: '진로 탐색 활동' },
+  'licenses': { tab: '상세정보', section: '추천 자격증' },
+  'qualifications': { tab: '상세정보', section: '추천 자격증' },
+  
+  // [상세정보 탭 - 진로·전망]
+  'jobProspect': { tab: '상세정보', section: '진로 전망' },
+  'chartData': { tab: '상세정보', section: '통계 정보 (차트)' },
+  
+  // [상세정보 탭 - 추천 유사 전공]
+  'relatedMajors': { tab: '상세정보', section: '추천 유사 전공' },
+  'department': { tab: '상세정보', section: '추천 유사 전공' },
+  
+  // [개설 대학 탭]
+  'universities': { tab: '개설 대학', section: '개설 대학' },
+  'university': { tab: '개설 대학', section: '개설 대학' },
+  'universityList': { tab: '개설 대학', section: '개설 대학' },
+  'recruitmentStatus': { tab: '개설 대학', section: '모집 정원 & 지원 현황' },
+  
+  // [사이드바]
+  'relatedJobs': { tab: '사이드바', section: '관련 직업' },
+  'job': { tab: '사이드바', section: '관련 직업' },
+  'relatedJob': { tab: '사이드바', section: '관련 직업' }
+}
+
+// ========== 필드 설명 맵 (CareerNet + 고용24 완전판) ==========
 const FIELD_DESCRIPTIONS: Record<string, string> = {
-  // ===== 전공 필드 (CareerNet 학과정보 API) =====
-  // [개요 탭 - 기본 정보]
-  'major': '학과명',
-  'name': '전공명/직업명 (통합)',
+  // ===== CareerNet 학과정보 API =====
+  // 기본 정보
+  'major': '학과명 (CareerNet)',
+  'name': '전공명 (통합)',
   'categoryName': '전공 계열명 (인문계열, 사회계열, 교육계열, 공학계열, 자연계열, 의약계열, 예체능계열)',
   'categoryId': '전공 계열 ID',
   'lClass': '계열 (대분류)',
   'mClass': '학과 (중분류)',
   'facilName': '세부학과명',
   
-  // [개요 탭 - 핵심 지표]
-  'salary': '졸업 후 직장임금 (평균 연봉)',
-  'salaryAfterGraduation': '졸업 후 평균 연봉',
-  'employment': '취업률 (%)',
-  'employmentRate': '취업률',
+  // 핵심 지표
+  'salary': '졸업 후 직장임금 (CareerNet)',
+  'salaryAfterGraduation': '졸업 후 평균 연봉 (통합)',
+  'employment': '취업률 (CareerNet, %)',
+  'employmentRate': '취업률 (통합)',
   
-  // [개요 탭 - 학과 소개]
+  // 학과 소개
   'summary': '학과개요 (전공 요약 설명)',
   'property': '학과특성 (해당 학과만의 특징과 강점)',
   'interest': '흥미와적성 (어떤 흥미와 적성을 가진 학생에게 적합한지)',
   'aptitude': '적성 및 흥미',
   
-  // [개요 탭 - 졸업 후 진출 분야]
-  'enter_field': '졸업 후 진출분야 (졸업생들이 주로 진출하는 산업/직종)',
+  // 진출 분야
+  'enter_field': '졸업 후 진출분야 (CareerNet, 배열)',
   'enter_field[0].gradeuate': '진출분야명',
   'enter_field[0].description': '진출분야 설명',
-  'enterField': '졸업 후 진출 분야',
+  'enterField': '졸업 후 진출 분야 (통합)',
   
-  // [상세정보 탭 - 커리큘럼 섹션]
-  'relate_subject': '관련 고교 교과목 (고등학교에서 배우면 좋은 과목)',
+  // 커리큘럼
+  'relate_subject': '관련 고교 교과목 (CareerNet, 배열)',
   'relate_subject[0].subject_name': '선택 과목 종류명 (일반선택, 진로선택 등)',
   'relate_subject[0].subject_description': '종류에 따른 과목이름',
-  'relateSubject': '관련 고교 교과목',
+  'relateSubject': '관련 고교 교과목 (통합)',
   
-  'career_act': '진로 탐색 활동 (고등학생이 체험할 수 있는 활동)',
+  'career_act': '진로 탐색 활동 (CareerNet, 고등학생 체험 활동)',
   'career_act[0].act_name': '활동 종류명',
   'career_act[0].act_description': '활동 종류 설명',
-  'careerAct': '진로 탐색 활동',
+  'careerAct': '진로 탐색 활동 (통합)',
   
-  'main_subject': '대학 주요 교과목 (대학에서 배우는 핵심 과목)',
+  'main_subject': '대학 주요 교과목 (CareerNet, 배열)',
   'main_subject[0].SBJECT_NM': '교과목명',
   'main_subject[0].SBJECT_SUMRY': '교과목설명',
-  'mainSubject': '대학 주요 교과목',
-  'mainSubjects': '주요 학습 과목',
+  'mainSubject': '대학 주요 교과목 (통합)',
+  'mainSubjects': '주요 학습 과목 (통합, 문자열 배열)',
   
-  // [상세정보 탭 - 진로 · 전망 섹션]
-  'job': '관련직업 (졸업 후 진출 가능한 직업들)',
-  'relatedJobs': '졸업 후 관련 직업',
+  // 진로·전망
+  'job': '관련직업 (CareerNet)',
+  'relatedJobs': '졸업 후 관련 직업 (통합)',
   'relatedJob': '관련 직업 (단일)',
   
-  'qualifications': '관련자격 (취득 가능한 자격증 목록)',
-  'licenses': '취득 가능 자격증',
+  'qualifications': '관련자격 (CareerNet)',
+  'licenses': '취득 가능 자격증 (통합)',
   
-  // [상세정보 탭 - 추천 유사 전공 섹션]
-  'department': '세부관련학과 (비슷한 학과들)',
-  'relatedMajors': '관련 학과 목록',
+  // 관련 학과
+  'department': '세부관련학과 (CareerNet)',
+  'relatedMajors': '관련 학과 목록 (통합)',
   
-  // [개설 대학 탭]
-  'university': '개설대학 (해당 학과를 개설한 대학 목록)',
+  // 개설 대학
+  'university': '개설대학 (CareerNet, 배열)',
   'university[0].area': '지역 (대학 소재지)',
   'university[0].schoolName': '대학명',
   'university[0].totalCount': '전체 대학 수',
@@ -84,47 +139,94 @@ const FIELD_DESCRIPTIONS: Record<string, string> = {
   'university[0].schoolGubun': '학교구분 (대학/전문대학)',
   'university[0].majorName': '학과명',
   'university[0].departmentName': '학부명',
-  'universities': '개설 대학 정보',
+  'universities': '개설 대학 정보 (통합)',
   'universities[0].name': '대학명',
   'universities[0].department': '학과/학부명',
   'universities[0].universityType': '대학 유형 (4년제, 전문대)',
   'universities[0].url': '대학 홈페이지 URL',
   'universityList': '개설 대학 목록',
   
-  // [통계 데이터 - chartData]
-  'chartData': '학과 통계 차트 데이터 (성별/연령별/입학현황/취업률)',
+  // 통계 데이터 (CareerNet 전용)
+  'chartData': '학과 통계 차트 데이터 (CareerNet, 성별/연령별/입학현황/취업률)',
   'chartData.satisfaction': '만족도 데이터',
   'chartData.employment_rate': '취업률 통계 (전체/남자/여자)',
   'chartData.applicant': '입학상황 (지원자/입학자 수)',
   
-  'GenCD': '성별 데이터 (인기도/관심도별 남녀 비율)',
+  'GenCD': '성별 데이터 (CareerNet, 인기도/관심도별 남녀 비율)',
   'GenCD.popular': '인기도 통계',
   'GenCD.bookmark': '관심도 통계',
   'GenCD[0].GEN_NM': '성별명 (남자/여자)',
   'GenCD[0].PCNT': '백분율',
   
-  'SchClass': '학교급별 데이터 (중학생/고등학생 관심도)',
+  'SchClass': '학교급별 데이터 (CareerNet, 중학생/고등학생 관심도)',
   'SchClass.popular': '인기도 통계',
   'SchClass.bookmark': '관심도 통계',
   'SchClass[0].SCH_CLASS_NM': '학교급 명칭',
   
-  'lstMiddleAptd': '중학생 적성 순위 (인기도/관심도)',
+  'lstMiddleAptd': '중학생 적성 순위 (CareerNet, 인기도/관심도)',
   'lstMiddleAptd.popular': '인기도별 적성 순위',
   'lstMiddleAptd.bookmark': '관심도별 적성 순위',
   'lstMiddleAptd[0].CD_NM': '적성명 (신체·운동능력, 언어능력, 수리·논리력 등)',
   'lstMiddleAptd[0].RANK': '순위',
   
-  'lstHighAptd': '고등학생 적성 순위 (인기도/관심도)',
+  'lstHighAptd': '고등학생 적성 순위 (CareerNet, 인기도/관심도)',
   'lstHighAptd.popular': '인기도별 적성 순위',
   'lstHighAptd.bookmark': '관심도별 적성 순위',
   'lstHighAptd[0].CD_NM': '적성명',
   'lstHighAptd[0].RANK': '순위',
   
-  'lstVals': '가치관 순위 (능력발휘, 보수, 안정성 등)',
+  'lstVals': '가치관 순위 (CareerNet, 능력발휘, 보수, 안정성 등)',
   'lstVals.popular': '인기도별 가치관',
   'lstVals.bookmark': '관심도별 가치관',
   'lstVals[0].CD_NM': '가치관명',
   'lstVals[0].RANK': '순위',
+  
+  // ===== 고용24 학과정보 API =====
+  // 일반학과 (majorGb=1)
+  'knowDptNm': '계열명 (고용24)',
+  'knowSchDptNm': '학과명 (고용24)',
+  'knowDptId': '계열ID (고용24)',
+  'knowSchDptId': '학과ID (고용24)',
+  'schDptIntroSum': '학과소개 개요 (고용24)',
+  'aptdIntrstCont': '적성/흥미 내용 (고용24)',
+  
+  'relSchDptList': '관련학과 (고용24, 배열)',
+  'relSchDptList[0].knowDtlSchDptNm': '관련학과명',
+  
+  'mainSubjectList': '주요 교과목 (고용24, 배열)',
+  'mainSubjectList[0].mainEdusbjCont': '주요 교과목 내용',
+  
+  'licList': '취득 자격 (고용24, 배열)',
+  'licList[0].adoptCertCont': '취득 자격 내용',
+  
+  'schDptList': '개설 대학 전공 (고용24, 배열)',
+  'schDptList[0].schDptNm': '개설 대학 전공명',
+  'schDptList[0].univGbnNm': '개설 대학교 구분',
+  'schDptList[0].univNm': '개설 대학교명',
+  'schDptList[0].univUrl': '개설 대학교 URL',
+  
+  'relAdvanJobsList': '관련직업 (고용24, 배열)',
+  'relAdvanJobsList[0].knowJobNm': '관련직업명',
+  
+  'recrStateList': '모집현황 (고용24, 배열)',
+  'recrStateList[0].enscMxnp': '입학정원인원수',
+  'recrStateList[0].enscSpnb': '입학지원자인원수',
+  'recrStateList[0].grdnNmpr': '졸업인원수',
+  'recrStateList[0].univGbnNm': '대학교구분',
+  'recrStateList[0].year': '연도',
+  'recruitmentStatus': '모집 현황 (통합, 정원, 지원자, 졸업생)',
+  
+  // 이색학과 (majorGb=2)
+  'whatStudy': '하는 공부 (고용24 이색학과)',
+  'howPrepare': '준비방법 (고용24 이색학과)',
+  'jobPropect': '직업 전망 (고용24 이색학과)',
+  'jobProspect': '직업 전망 (통합)',
+  
+  // 검색용 (목록 API)
+  'majorGb': '학과구분코드 (고용24, 1=일반학과, 2=이색학과)',
+  'knowDtlSchDptNm': '세부학과명 (고용24)',
+  'empCurtState1Id': '계열(학과분류)ID (고용24)',
+  'empCurtState2Id': '학과ID (고용24)',
   
   // ===== 직업 필드 (기존 유지) =====
   'jobName': '직업명 (통합)',
@@ -134,11 +236,6 @@ const FIELD_DESCRIPTIONS: Record<string, string> = {
   'summary.jobMdclNm': '직업 중분류명',
   'summary.jobSmclNm': '직업 소분류명',
   'summary.jobDtclNm': '직업 세분류명',
-  
-  'recruitmentStatus': '모집 현황 (정원, 지원자, 졸업생 수)',
-  'whatStudy': '무엇을 배우나요?',
-  'howPrepare': '어떻게 준비하나요?',
-  'jobProspect': '졸업 후 진로 전망',
   
   // 임금 & 만족도
   'encyclopedia.baseInfo.wage': '커리어넷 임금 정보',
