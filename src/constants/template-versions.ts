@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 주요 교과목 서브섹션 구조 개선 + 히어로 태그 확장
+   * Current features: 필터 로직 수정 + 히어로 태그 개수 증가
    */
-  MAJOR: 19,  // 🆕 주요 교과목 기초/심화 구분, 서브섹션 추가, 진로탐색활동 스타일 개선, 히어로 태그 department 병합
+  MAJOR: 20,  // 🆕 기초/심화 필터 괄호 버그 수정, 히어로 태그 5개→10개
 
   /**
    * Job detail page template version

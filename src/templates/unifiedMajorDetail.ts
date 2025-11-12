@@ -448,9 +448,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   if (profile.mainSubjects?.length) {
     const subjectSections: string[] = []
     
-    // 기초과목과 심화과목 분리
-    const basicSubjects = profile.mainSubjects.filter(s => s && s.includes('기초') || s.includes('입문'))
-    const advancedSubjects = profile.mainSubjects.filter(s => s && !s.includes('기초') && !s.includes('입문'))
+    // 기초과목과 심화과목 분리 (필터 로직 수정)
+    const basicSubjects = profile.mainSubjects.filter(s => s && (s.includes('기초') || s.includes('입문')))
+    const advancedSubjects = profile.mainSubjects.filter(s => s && !(s.includes('기초') || s.includes('입문')))
     
     if (basicSubjects.length > 0) {
       subjectSections.push(`
@@ -978,7 +978,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       .map(m => m.trim())
   ))
   
-  const heroTags = uniqueRelatedMajors.slice(0, 5)
+  const heroTags = uniqueRelatedMajors.slice(0, 10)  // 5개 → 10개로 증가
 
   const heroTagsMarkup = heroTags.length > 0
     ? `<div class="flex flex-wrap gap-2 mt-4">${heroTags.map(tag => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-wiki-primary font-medium"><i class="fas fa-graduation-cap text-[10px]"></i>${escapeHtml(tag)}</span>`).join('')}</div>`
