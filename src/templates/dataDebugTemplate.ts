@@ -2830,7 +2830,7 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
             </svg>
             병합 후 필드 비교 ${pageType === 'major' ? '(탭별/섹션별 분류)' : ''}
           </h2>
-          ${pageType === 'major' ? renderFieldComparisonByTab(rawApiData) : renderFieldComparisonTable(rawApiData)}
+          ${pageType === 'major' ? renderFieldComparisonByTab(rawApiData, profile) : renderFieldComparisonTable(rawApiData)}
         </div>
 
         <!-- CareerNet Encyclopedia (jobs.json) -->

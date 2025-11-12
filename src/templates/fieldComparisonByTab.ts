@@ -116,7 +116,7 @@ const FIELD_DESCRIPTIONS: Record<string, string> = {
 }
 
 interface FieldValue {
-  source: 'careernet' | 'goyong24'
+  source: 'careernet' | 'goyong24' | 'merged'
   value: any
 }
 
@@ -167,32 +167,38 @@ function flattenObject(obj: any, prefix: string = ''): Map<string, any> {
 /**
  * 필드를 탭별/섹션별로 분류하여 렌더링
  */
-export function renderFieldComparisonByTab(rawApiData?: { careernet?: any; goyong24?: any }): string {
-  if (!rawApiData) {
-    return '<p class="text-gray-500">원본 API 데이터 없음</p>'
+export function renderFieldComparisonByTab(
+  rawApiData?: { careernet?: any; goyong24?: any },
+  profile?: any
+): string {
+  if (!rawApiData && !profile) {
+    return '<p class="text-gray-500">표시할 데이터 없음</p>'
   }
 
-  const careernet = rawApiData.careernet
-  const goyong24 = rawApiData.goyong24
+  const careernet = rawApiData?.careernet
+  const goyong24 = rawApiData?.goyong24
 
   // Flatten
   const careernetFields = careernet ? flattenObject(careernet) : new Map()
   const goyong24Fields = goyong24 ? flattenObject(goyong24) : new Map()
+  const profileFields = profile ? flattenObject(profile, 'profile') : new Map()
 
   // 모든 unique 필드 수집
   const allFieldKeys = new Set<string>()
   careernetFields.forEach((_, key) => allFieldKeys.add(key))
   goyong24Fields.forEach((_, key) => allFieldKeys.add(key))
+  profileFields.forEach((_, key) => allFieldKeys.add(key))
 
   // 탭별/섹션별 분류
   const fieldsByTab: FieldsByTab = {}
 
   allFieldKeys.forEach(fieldKey => {
     // 배열 인덱스 제거 (예: licenses[0] -> licenses)
-    const baseFieldKey = fieldKey.replace(/\[\d+\]/g, '')
+    // profile. 프리픽스 제거
+    let baseFieldKey = fieldKey.replace(/\[\d+\]/g, '').replace(/^profile\./, '')
     
     // 탭/섹션 정보 가져오기
-    const mapping = FIELD_TAB_MAPPING[baseFieldKey] || FIELD_TAB_MAPPING[fieldKey]
+    const mapping = FIELD_TAB_MAPPING[baseFieldKey] || FIELD_TAB_MAPPING[fieldKey.replace(/^profile\./, '')]
     const tab = mapping?.tab || '기타'
     const section = mapping?.section || '미분류'
     
@@ -210,6 +216,10 @@ export function renderFieldComparisonByTab(rawApiData?: { careernet?: any; goyon
     }
     if (goyong24Fields.has(fieldKey)) {
       values.push({ source: 'goyong24', value: goyong24Fields.get(fieldKey) })
+    }
+    if (profileFields.has(fieldKey)) {
+      // D1 통합 필드는 'merged' 출처로 표시
+      values.push({ source: 'merged' as any, value: profileFields.get(fieldKey) })
     }
     
     if (values.length > 0) {
@@ -255,8 +265,11 @@ export function renderFieldComparisonByTab(rawApiData?: { careernet?: any; goyon
                   const valueStr = typeof src.value === 'object' 
                     ? JSON.stringify(src.value, null, 2).slice(0, 200) + (JSON.stringify(src.value).length > 200 ? '...' : '')
                     : String(src.value)
-                  const srcLabel = src.source === 'careernet' ? '📚 CareerNet' : '📊 Goyong24'
-                  return `<div class="mb-2"><span class="text-xs font-semibold text-blue-600">${srcLabel}</span>: <span class="text-gray-700">${escapeHtml(valueStr)}</span></div>`
+                  const srcLabel = src.source === 'careernet' ? '📚 CareerNet' : 
+                                   src.source === 'goyong24' ? '📊 Goyong24' : 
+                                   '🔗 D1 (병합)'
+                  const srcColor = src.source === 'merged' ? 'text-green-600' : 'text-blue-600'
+                  return `<div class="mb-2"><span class="text-xs font-semibold ${srcColor}">${srcLabel}</span>: <span class="text-gray-700">${escapeHtml(valueStr)}</span></div>`
                 }).join('')
                 
                 const tabCell = (sectionIdx === 0 && fieldIdx === 0) 
@@ -277,7 +290,9 @@ export function renderFieldComparisonByTab(rawApiData?: { careernet?: any; goyon
                     </td>
                     <td class="px-6 py-4 align-top">
                       ${field.values.map(src => {
-                        const srcLabel = src.source === 'careernet' ? '📚' : '📊'
+                        const srcLabel = src.source === 'careernet' ? '📚' : 
+                                        src.source === 'goyong24' ? '📊' : 
+                                        '🔗'
                         return `<div class="text-sm mb-1">${srcLabel}</div>`
                       }).join('')}
                     </td>
@@ -299,7 +314,7 @@ export function renderFieldComparisonByTab(rawApiData?: { careernet?: any; goyon
         <li>✅ <strong>실제 템플릿 구조</strong>를 기반으로 분류</li>
         <li>🎯 <strong>탭</strong>: 히어로, 개요, 상세정보, 개설 대학, 사이드바</li>
         <li>📂 <strong>섹션</strong>: 각 탭 내의 세부 카드/섹션</li>
-        <li>📚 <strong>출처</strong>: 📚 = CareerNet, 📊 = 고용24</li>
+        <li>📚 <strong>출처</strong>: 📚 = CareerNet 원본, 📊 = 고용24 원본, 🔗 = D1 병합 데이터</li>
       </ul>
     </div>
   `
