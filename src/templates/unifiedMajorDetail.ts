@@ -445,10 +445,10 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   }
   
   // 3) 주요 교과목 (mainSubjects - 기초/심화 구분)
+  const subjectSections: string[] = []
+  
+  // 기초과목과 심화과목 분리 (mainSubjects가 있는 경우에만)
   if (profile.mainSubjects?.length) {
-    const subjectSections: string[] = []
-    
-    // 기초과목과 심화과목 분리 (필터 로직 수정)
     const basicSubjects = profile.mainSubjects.filter(s => s && (s.includes('기초') || s.includes('입문')))
     const advancedSubjects = profile.mainSubjects.filter(s => s && !(s.includes('기초') || s.includes('입문')))
     
@@ -483,9 +483,10 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
         </div>
       `)
     }
-    
-    // 서브섹션: 대학 주요 교과목 상세
-    if (profile.mainSubject && Array.isArray(profile.mainSubject) && profile.mainSubject.length > 0) {
+  }
+  
+  // 서브섹션: 대학 주요 교과목 상세 (독립적으로 체크)
+  if (profile.mainSubject && Array.isArray(profile.mainSubject) && profile.mainSubject.length > 0) {
       const detailItems = profile.mainSubject
         .filter(item => item && (item.SBJECT_NM || item.subject_name))
         .map(item => {
@@ -520,45 +521,45 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       }
     }
     
-    // 서브섹션: 고교 추천 교과목
-    if (profile.relateSubject && Array.isArray(profile.relateSubject) && profile.relateSubject.length > 0) {
-      const highSchoolItems = profile.relateSubject
-        .filter(item => item && (item.subject_name || item.SUBJECT_NM))
-        .map(item => {
-          const name = item.subject_name || item.SUBJECT_NM || ''
-          const desc = item.subject_description || item.SUBJECT_SUMRY || ''
-          return `
-            <div class="p-4 rounded-lg border border-wiki-border/40 bg-wiki-bg/20 hover:border-wiki-secondary/40 transition-colors">
-              <h5 class="font-semibold text-wiki-text mb-2 flex items-center gap-2">
-                <i class="fas fa-school text-wiki-secondary text-xs"></i>
-                ${escapeHtml(name)}
-              </h5>
-              ${desc ? `<p class="text-sm text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
-            </div>
-          `
-        })
-        .join('')
-      
-      if (highSchoolItems) {
-        subjectSections.push(`
-          <div class="mt-6">
-            <h4 class="text-base font-bold text-wiki-secondary mb-4 flex items-center gap-2">
-              <span class="flex h-8 w-8 items-center justify-center rounded-full bg-wiki-secondary/15 text-wiki-secondary">
-                <i class="fas fa-school text-xs"></i>
-              </span>
-              고교 추천 교과목
-            </h4>
-            <div class="grid gap-3">
-              ${highSchoolItems}
-            </div>
+  // 서브섹션: 고교 추천 교과목 (독립적으로 체크)
+  if (profile.relateSubject && Array.isArray(profile.relateSubject) && profile.relateSubject.length > 0) {
+    const highSchoolItems = profile.relateSubject
+      .filter(item => item && (item.subject_name || item.SUBJECT_NM))
+      .map(item => {
+        const name = item.subject_name || item.SUBJECT_NM || ''
+        const desc = item.subject_description || item.SUBJECT_SUMRY || ''
+        return `
+          <div class="p-4 rounded-lg border border-wiki-border/40 bg-wiki-bg/20 hover:border-wiki-secondary/40 transition-colors">
+            <h5 class="font-semibold text-wiki-text mb-2 flex items-center gap-2">
+              <i class="fas fa-school text-wiki-secondary text-xs"></i>
+              ${escapeHtml(name)}
+            </h5>
+            ${desc ? `<p class="text-sm text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
           </div>
-        `)
-      }
-    }
+        `
+      })
+      .join('')
     
-    if (subjectSections.length > 0) {
-      pushLearningCard('주요 교과목', 'fa-book-open', subjectSections.join(''))
+    if (highSchoolItems) {
+      subjectSections.push(`
+        <div class="mt-6">
+          <h4 class="text-base font-bold text-wiki-secondary mb-4 flex items-center gap-2">
+            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-wiki-secondary/15 text-wiki-secondary">
+              <i class="fas fa-school text-xs"></i>
+            </span>
+            고교 추천 교과목
+          </h4>
+          <div class="grid gap-3">
+            ${highSchoolItems}
+          </div>
+        </div>
+      `)
     }
+  }
+  
+  // 주요 교과목 카드 생성 (서브섹션이 하나라도 있으면)
+  if (subjectSections.length > 0) {
+    pushLearningCard('주요 교과목', 'fa-book-open', subjectSections.join(''))
   }
   
   // 6) 진로 전망 (jobProspect) - 상세정보 탭으로 이동

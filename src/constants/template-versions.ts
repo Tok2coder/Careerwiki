@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 필터 로직 수정 + 히어로 태그 개수 증가
+   * Current features: 서브섹션 독립 렌더링 버그 수정
    */
-  MAJOR: 20,  // 🆕 기초/심화 필터 괄호 버그 수정, 히어로 태그 5개→10개
+  MAJOR: 21,  // 🆕 mainSubject/relateSubject/careerAct가 mainSubjects 없어도 독립 렌더링
 
   /**
    * Job detail page template version
