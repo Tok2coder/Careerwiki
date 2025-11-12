@@ -633,7 +633,8 @@ export const getUnifiedMajorDetail = async (
               const apiData = JSON.parse(row.api_data_json)
               
               // careernet 데이터 수집 (레코드에 careernet_id가 있고 apiData.careernet이 null이 아닌 경우)
-              if (row.careernet_id && sourcesToUse.includes('CAREERNET') && !careernetProfile) {
+              // ⚠️ 'null' 문자열도 체크 (SQLite가 null을 문자열로 저장할 수 있음)
+              if (row.careernet_id && row.careernet_id !== 'null' && sourcesToUse.includes('CAREERNET') && !careernetProfile) {
                 const careernetData = apiData.careernet
                 
                 // null이 아니고 실제 데이터가 있는 경우만 처리
@@ -659,7 +660,8 @@ export const getUnifiedMajorDetail = async (
               }
               
               // goyong24 데이터 수집 (레코드에 goyong24_id가 있고 apiData.goyong24가 null이 아닌 경우)
-              if (row.goyong24_id && sourcesToUse.includes('GOYONG24') && !goyongProfile) {
+              // ⚠️ 'null' 문자열도 체크 (SQLite가 null을 문자열로 저장할 수 있음)
+              if (row.goyong24_id && row.goyong24_id !== 'null' && sourcesToUse.includes('GOYONG24') && !goyongProfile) {
                 const goyong24Data = apiData.goyong24
                 
                 // null이 아니고 실제 데이터가 있는 경우만 처리
@@ -939,7 +941,8 @@ export const getUnifiedJobDetailWithRawData = async (
                 // careernet_id가 있으면 커리어넷 데이터, goyong24_id가 있으면 고용24 데이터
                 
                 // careernet 데이터 수집 (레코드에 careernet_id가 있고 apiData.careernet이 null이 아닌 경우)
-                if (row.careernet_id && sourcesToUse.includes('CAREERNET') && !careernetProfile) {
+                // ⚠️ 'null' 문자열도 체크 (SQLite가 null을 문자열로 저장할 수 있음)
+                if (row.careernet_id && row.careernet_id !== 'null' && sourcesToUse.includes('CAREERNET') && !careernetProfile) {
                   // apiData 구조: { careernet: {...} 또는 null, goyong24: {...} 또는 null }
                   const careernetData = apiData.careernet
                   
@@ -954,7 +957,8 @@ export const getUnifiedJobDetailWithRawData = async (
                 }
                 
                 // goyong24 데이터 수집 (레코드에 goyong24_id가 있고 apiData.goyong24가 null이 아닌 경우)
-                if (row.goyong24_id && sourcesToUse.includes('GOYONG24') && !goyongProfile) {
+                // ⚠️ 'null' 문자열도 체크 (SQLite가 null을 문자열로 저장할 수 있음)
+                if (row.goyong24_id && row.goyong24_id !== 'null' && sourcesToUse.includes('GOYONG24') && !goyongProfile) {
                   // apiData 구조: { careernet: {...} 또는 null, goyong24: {...} 또는 null }
                   const goyong24Data = apiData.goyong24
                   

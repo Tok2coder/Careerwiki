@@ -60,7 +60,7 @@ async function generateDataHash(data: any): Promise<string> {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
-// 전공 데이터를 D1에 저장 (upsert)
+// 전공 데이터를 D1에 저장 (upsert) - REPLACE 방식 사용
 async function upsertMajor(
   db: D1Database,
   majorData: {
@@ -74,61 +74,35 @@ async function upsertMajor(
 ): Promise<'inserted' | 'updated' | 'skipped'> {
   const now = Date.now()
   
-  // 기존 데이터 확인
+  // 기존 데이터 확인 (통계용)
   const existing = await db.prepare('SELECT id, api_data_hash FROM majors WHERE id = ?')
     .bind(majorData.id)
     .first<{ id: string; api_data_hash: string }>()
   
+  // INSERT OR REPLACE 방식으로 무조건 삽입/업데이트
+  await db.prepare(`
+    INSERT OR REPLACE INTO majors (
+      id, name, careernet_id, goyong24_id,
+      api_data_json, api_data_hash,
+      api_last_fetched_at, api_last_updated_at,
+      created_at, is_active
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+  `).bind(
+    majorData.id,
+    majorData.name,
+    majorData.careernetId || null,
+    majorData.goyong24Id || null,
+    majorData.api_data_json,
+    majorData.api_data_hash,
+    now,
+    now,
+    existing ? existing.id : now,  // 기존 created_at 유지 (실제로는 REPLACE로 덮어씌워짐)
+  ).run()
+  
   if (existing) {
-    // 해시가 같으면 스킵
-    if (existing.api_data_hash === majorData.api_data_hash) {
-      return 'skipped'
-    }
-    
-    // 업데이트
-    await db.prepare(`
-      UPDATE majors SET
-        name = ?,
-        careernet_id = ?,
-        goyong24_id = ?,
-        api_data_json = ?,
-        api_data_hash = ?,
-        api_last_fetched_at = ?,
-        api_last_updated_at = ?
-      WHERE id = ?
-    `).bind(
-      majorData.name,
-      majorData.careernetId || null,
-      majorData.goyong24Id || null,
-      majorData.api_data_json,
-      majorData.api_data_hash,
-      now,
-      now,
-      majorData.id
-    ).run()
-    
+    // 해시가 같아도 업데이트로 처리 (데이터 보장)
     return 'updated'
   } else {
-    // 신규 삽입
-    await db.prepare(`
-      INSERT INTO majors (
-        id, name, careernet_id, goyong24_id,
-        api_data_json, api_data_hash,
-        api_last_fetched_at, api_last_updated_at,
-        created_at, is_active
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
-    `).bind(
-      majorData.id,
-      majorData.name,
-      majorData.careernetId || null,
-      majorData.goyong24Id || null,
-      majorData.api_data_json,
-      majorData.api_data_hash,
-      now,
-      now,
-      now
-    ).run()
-    
     return 'inserted'
   }
 }

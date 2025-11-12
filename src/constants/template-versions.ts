@@ -16,9 +16,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 전체 캐시 재생성 (간호학과 등 오래된 캐시 갱신)
+   * Current features: D1 병합 로직 수정 ('null' 문자열 체크 추가)
    */
-  MAJOR: 22,  // 🆕 전체 페이지 캐시 강제 갱신
+  MAJOR: 23,  // 🆕 'null' 문자열 체크로 CareerNet + Goyong24 병합 보장
 
   /**
    * Job detail page template version
