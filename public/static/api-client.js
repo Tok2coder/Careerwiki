@@ -585,7 +585,34 @@ const Hydration = (() => {
     const render = () => {
       const items = applyJobSort(state.baseItems, state.sort);
       if (items.length) {
-        container.innerHTML = items.map((item) => DOMUtils.createJobCard(item)).join('');
+        // ✅ 서버 렌더링 HTML 재활용 - DOM 순서만 재배치 (재렌더링 X)
+        const existingCards = Array.from(container.children);
+        
+        // 초기 로드 또는 검색 후: 카드 개수가 다르면 재렌더링 필요
+        if (existingCards.length !== items.length) {
+          container.innerHTML = items.map((item) => DOMUtils.createJobCard(item)).join('');
+        } else {
+          // 정렬만 변경: 기존 DOM 요소 순서 재배치
+          const cardMap = new Map();
+          existingCards.forEach(card => {
+            const link = card.querySelector('a[href^="/job/"]');
+            if (link) {
+              const slug = link.getAttribute('href');
+              cardMap.set(slug, card);
+            }
+          });
+          
+          // 정렬된 순서대로 DOM 재배치
+          items.forEach((item) => {
+            const normalized = DOMUtils.normalizeJobItem(item);
+            if (!normalized) return;
+            
+            const card = cardMap.get(normalized.url);
+            if (card) {
+              container.appendChild(card); // 자동으로 순서 재배치됨
+            }
+          });
+        }
       } else {
         container.innerHTML = emptyJobMessage;
       }
@@ -1133,12 +1160,12 @@ const DetailTabs = (() => {
     const triggers = Array.from(tabset.querySelectorAll('[data-cw-tab-trigger]'))
     const panels = Array.from(tabset.querySelectorAll('[data-cw-tab-panel]'))
 
-    console.log('[DetailTabs] initTabset:', {
-      tabsetId: tabset.id,
-      entityType,
-      triggersFound: triggers.length,
-      panelsFound: panels.length
-    })
+    // console.log('[DetailTabs] initTabset:', {
+    //   tabsetId: tabset.id,
+    //   entityType,
+    //   triggersFound: triggers.length,
+    //   panelsFound: panels.length
+    // })
 
     if (!triggers.length || !panels.length) {
       console.warn('[DetailTabs] No triggers or panels found, skipping initialization')
@@ -1197,7 +1224,7 @@ const DetailTabs = (() => {
       trigger.addEventListener('click', (event) => {
         event.preventDefault()
         const targetId = trigger.getAttribute('data-tab-id')
-        console.log('[DetailTabs] Tab clicked:', targetId, 'Current active:', tabset.dataset.activeTab)
+        // console.log('[DetailTabs] Tab clicked:', targetId, 'Current active:', tabset.dataset.activeTab)
         if (targetId) {
           activate(targetId, 'user')
           trigger.focus()
@@ -1261,9 +1288,9 @@ const DetailTabs = (() => {
 
   const init = (entityType) => {
     const tabsets = document.querySelectorAll(`[data-cw-tabset][data-entity-type="${entityType}"]`)
-    console.log('[DetailTabs] Initializing tabs for entityType:', entityType, 'Found:', tabsets.length, 'tabsets')
+    // console.log('[DetailTabs] Initializing tabs for entityType:', entityType, 'Found:', tabsets.length, 'tabsets')
     tabsets.forEach((tabset) => {
-      console.log('[DetailTabs] Initializing tabset:', tabset.id, tabset.dataset)
+      // console.log('[DetailTabs] Initializing tabset:', tabset.id, tabset.dataset)
       initTabset(tabset)
     })
   }
@@ -2723,6 +2750,20 @@ const DOMUtils = {
   buildMajorUrl(entry) {
     if (!entry) return '#';
     const profile = entry.profile || entry;
+    
+    // ✅ 한글 이름이 있으면 한글 슬러그 사용, 없으면 ID 사용
+    const nameSlug = this.slugifyName(profile.name);
+    const slug = nameSlug || profile.id || profile.sourceIds?.careernet;
+    
+    if (!slug) return '#';
+
+    // 🔄 쿼리 파라미터 제거: 병합된 데이터는 전공명으로만 접근
+    return `/major/${encodeURIComponent(slug)}`;
+  },
+  
+  buildMajorUrlOld(entry) {
+    if (!entry) return '#';
+    const profile = entry.profile || entry;
     const sourceMeta = entry.sourceMeta || {};
     const sourceIds = profile.sourceIds || {};
     const params = new URLSearchParams();
@@ -2773,26 +2814,15 @@ const DOMUtils = {
   buildJobUrl(entry) {
     if (!entry) return '#';
     const profile = entry.profile || entry;
-    const sourceMeta = entry.sourceMeta || {};
-    const sourceIds = profile.sourceIds || {};
-    const params = new URLSearchParams();
-
-    if (sourceIds.careernet) {
-      params.set('careernetId', sourceIds.careernet);
-    }
-
-    if (sourceMeta.goyong24?.jobCd) {
-      params.set('goyongJobId', sourceMeta.goyong24.jobCd);
-    }
-
+    
     // ✅ 한글 이름이 있으면 한글 슬러그 사용, 없으면 ID 사용
     const nameSlug = this.slugifyName(profile.name);
-    const slug = nameSlug || profile.id || sourceIds.careernet;
+    const slug = nameSlug || profile.id || profile.sourceIds?.careernet;
     
     if (!slug) return '#';
 
-    const query = params.toString();
-    return `/job/${encodeURIComponent(slug)}${query ? `?${query}` : ''}`;
+    // 🔄 쿼리 파라미터 제거: 병합된 데이터는 직업명으로만 접근
+    return `/job/${encodeURIComponent(slug)}`;
   },
 
   normalizeMajorItem(item) {
@@ -2912,17 +2942,157 @@ const DOMUtils = {
 
     const { profile, display, url } = normalized;
     const summary = display.summary || '설명 없음';
+    // categoryName은 제목 위에 표시하지 않고 메트릭 박스로만 표시
+    const categoryName = undefined;
+    
+    // 첫 직장 만족도 등급 계산 (서버와 동일한 로직)
+    const getSatisfactionGrade = (satisfaction) => {
+      if (!satisfaction) return null;
+      const score = parseFloat(satisfaction) || 0;
+      
+      if (score >= 80) {
+        return { 
+          level: '매우 좋음', 
+          bg: 'bg-green-500/10', 
+          border: 'border-green-500/20', 
+          iconColor: 'text-green-400',
+          textColor: 'text-green-300',
+          textMuted: 'text-green-300/80'
+        };
+      } else if (score >= 60) {
+        return { 
+          level: '좋음', 
+          bg: 'bg-sky-500/10', 
+          border: 'border-sky-500/20', 
+          iconColor: 'text-sky-400',
+          textColor: 'text-sky-300',
+          textMuted: 'text-sky-300/80'
+        };
+      } else if (score >= 40) {
+        return { 
+          level: '보통', 
+          bg: 'bg-yellow-500/10', 
+          border: 'border-yellow-500/20', 
+          iconColor: 'text-yellow-400',
+          textColor: 'text-yellow-300',
+          textMuted: 'text-yellow-300/80'
+        };
+      } else if (score >= 20) {
+        return { 
+          level: '별로', 
+          bg: 'bg-orange-500/10', 
+          border: 'border-orange-500/20', 
+          iconColor: 'text-orange-400',
+          textColor: 'text-orange-300',
+          textMuted: 'text-orange-300/80'
+        };
+      } else {
+        return { 
+          level: '매우 별로', 
+          bg: 'bg-red-500/10', 
+          border: 'border-red-500/20', 
+          iconColor: 'text-red-400',
+          textColor: 'text-red-300',
+          textMuted: 'text-red-300/80'
+        };
+      }
+    };
+    
+    const satisfactionGrade = getSatisfactionGrade(display.firstJobSatisfaction);
+    
+    // 메트릭 박스들
+    // 커리어넷 데이터: 취업률, 첫직장임금(월), 첫 직장 만족도
+    // categoryName: 계열 (모든 경우에 메트릭 박스로 표시)
+    const metrics = (() => {
+      // categoryName 추출 (쉼표가 2개 이상이면 관련 학과명 리스트로 판단하여 제거)
+      const categoryNameForMetric = display.categoryName && display.categoryName.split(',').length <= 2
+        ? display.categoryName
+        : undefined;
+      
+      // 커리어넷 데이터 메트릭 박스들
+      const careernetMetrics = [
+        display.employmentRate ? `
+          <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-24 h-24 flex-shrink-0">
+            <i class="fas fa-user-graduate text-blue-400 text-base"></i>
+            <span class="text-[9px] font-medium text-blue-300/70 mt-0.5">취업률</span>
+            <span class="text-[11px] font-bold text-blue-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${display.employmentRate}</span>
+          </div>
+        ` : '',
+        display.firstJobSalary ? `
+          <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
+            <i class="fas fa-won-sign text-emerald-400 text-base"></i>
+            <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 월봉</span>
+            <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`}</span>
+          </div>
+        ` : '',
+        display.firstJobSatisfaction && satisfactionGrade ? `
+          <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
+            <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
+            <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
+            <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span>
+          </div>
+        ` : ''
+      ].filter(Boolean);
+      
+      // categoryName 메트릭 박스 추가
+      if (categoryNameForMetric) {
+        careernetMetrics.push(`
+          <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
+            <i class="fas fa-layer-group text-indigo-400 text-base"></i>
+            <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
+            <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${(categoryNameForMetric.length > 8 ? categoryNameForMetric.substring(0, 8) + '...' : categoryNameForMetric)}</span>
+          </div>
+        `);
+      }
+      
+      return careernetMetrics.join('');
+    })();
 
     return `
-      <a href="${url}" class="glass-card p-6 rounded-lg hover-glow block">
-        <h3 class="text-xl font-bold mb-2 text-white">${profile.name || '학과명 없음'}</h3>
-        <p class="text-wiki-muted text-sm mb-4 line-clamp-2">${summary}</p>
-        <div class="flex flex-wrap gap-2 text-xs">
-          ${display.employmentRate ? `<span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary rounded">취업률 ${display.employmentRate}</span>` : ''}
-          ${display.salaryAfterGraduation ? `<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded">${display.salaryAfterGraduation}</span>` : ''}
-          ${display.categoryName ? `<span class="px-2 py-1 bg-wiki-secondary/20 text-wiki-secondary rounded">${display.categoryName}</span>` : ''}
-        </div>
-      </a>
+      <article class="group relative">
+        <a href="${url}" class="block">
+          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
+            <!-- 배경 그라데이션 글로우 -->
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
+              <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
+            </div>
+            
+            <div class="relative flex gap-4">
+              <!-- 왼쪽: 전공 정보 (최대 너비 60% 제한) -->
+              <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
+                <!-- 헤더: 카테고리 + 전공명 -->
+                <div class="space-y-2">
+                  ${categoryName ? `
+                    <div class="flex items-center gap-2">
+                      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
+                        <i class="fas fa-folder text-[8px]"></i>
+                        ${categoryName}
+                      </span>
+                    </div>
+                  ` : ''}
+                  
+                  <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                    ${profile.name || '학과명 없음'}
+                  </h2>
+                </div>
+                
+                <!-- 설명 -->
+                <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
+                  ${summary}
+                </p>
+              </div>
+              
+              <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
+              ${metrics ? `
+                <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
+                  ${metrics}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </a>
+      </article>
     `;
   },
 
@@ -2933,17 +3103,144 @@ const DOMUtils = {
 
     const { profile, display, url } = normalized;
     const summary = display.summary || '설명 없음';
+    
+    // 직업 만족도 등급 계산 (서버와 동일한 로직)
+    const getSatisfactionGrade = (satisfaction) => {
+      if (!satisfaction) return null;
+      const score = parseFloat(satisfaction) || 0;
+      
+      if (score >= 80) {
+        return { 
+          level: '매우 좋음', 
+          bg: 'bg-green-500/10', 
+          border: 'border-green-500/20', 
+          iconColor: 'text-green-400',
+          textColor: 'text-green-300',
+          textMuted: 'text-green-300/80',
+          percentColor: 'text-green-300/60'
+        };
+      } else if (score >= 60) {
+        return { 
+          level: '좋음', 
+          bg: 'bg-sky-500/10', 
+          border: 'border-sky-500/20', 
+          iconColor: 'text-sky-400',
+          textColor: 'text-sky-300',
+          textMuted: 'text-sky-300/80',
+          percentColor: 'text-sky-300/60'
+        };
+      } else if (score >= 40) {
+        return { 
+          level: '보통', 
+          bg: 'bg-yellow-500/10', 
+          border: 'border-yellow-500/20', 
+          iconColor: 'text-yellow-400',
+          textColor: 'text-yellow-300',
+          textMuted: 'text-yellow-300/80',
+          percentColor: 'text-yellow-300/60'
+        };
+      } else if (score >= 20) {
+        return { 
+          level: '별로', 
+          bg: 'bg-orange-500/10', 
+          border: 'border-orange-500/20', 
+          iconColor: 'text-orange-400',
+          textColor: 'text-orange-300',
+          textMuted: 'text-orange-300/80',
+          percentColor: 'text-orange-300/60'
+        };
+      } else {
+        return { 
+          level: '매우 별로', 
+          bg: 'bg-red-500/10', 
+          border: 'border-red-500/20', 
+          iconColor: 'text-red-400',
+          textColor: 'text-red-300',
+          textMuted: 'text-red-300/80',
+          percentColor: 'text-red-300/60'
+        };
+      }
+    };
+    
+    const satisfactionGrade = getSatisfactionGrade(display.satisfaction);
+    
+    // 메트릭 박스들 (연봉, 만족도, 워라벨, 계열) - 정사각형
+    const metrics = [
+      display.salary ? `
+        <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
+          <i class="fas fa-won-sign text-emerald-400 text-base"></i>
+          <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 연봉</span>
+          <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${(display.salary || '').replace(/평균\s*/g, '')}</span>
+        </div>
+      ` : '',
+      display.satisfaction && satisfactionGrade ? `
+        <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
+          <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
+          <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
+          <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span>
+        </div>
+      ` : '',
+      display.wlb ? `
+        <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-24 h-24 flex-shrink-0">
+          <i class="fas fa-balance-scale text-purple-400 text-base"></i>
+          <span class="text-[9px] font-medium text-purple-300/70 mt-0.5">워라벨</span>
+          <span class="text-[11px] font-bold text-purple-300 text-center leading-tight">${display.wlb}</span>
+        </div>
+      ` : '',
+      display.departmentName ? `
+        <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
+          <i class="fas fa-layer-group text-indigo-400 text-base"></i>
+          <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
+          <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${(display.departmentName.length > 8 ? display.departmentName.substring(0, 8) + '...' : display.departmentName)}</span>
+        </div>
+      ` : ''
+    ].filter(Boolean).join('');
 
     return `
-      <a href="${url}" class="glass-card p-6 rounded-lg hover-glow block">
-        <h3 class="text-xl font-bold mb-2 text-white">${profile.name || '직업명 없음'}</h3>
-        <p class="text-wiki-muted text-sm mb-4 line-clamp-2">${summary}</p>
-        <div class="flex flex-wrap gap-2 text-xs">
-          ${display.salary ? `<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded">${display.salary}</span>` : ''}
-          ${display.outlook ? `<span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary rounded">전망: ${display.outlook}</span>` : ''}
-          ${display.categoryName ? `<span class="px-2 py-1 bg-wiki-secondary/20 text-wiki-secondary rounded">${display.categoryName}</span>` : ''}
-        </div>
-      </a>
+      <article class="group relative">
+        <a href="${url}" class="block">
+          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
+            <!-- 배경 그라데이션 글로우 -->
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
+              <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
+            </div>
+            
+            <div class="relative flex gap-4">
+              <!-- 왼쪽: 직업 정보 (최대 너비 60% 제한) -->
+              <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
+                <!-- 헤더: 카테고리 + 직업명 -->
+                <div class="space-y-2">
+                  ${display.categoryName ? `
+                    <div class="flex items-center gap-2">
+                      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
+                        <i class="fas fa-folder text-[8px]"></i>
+                        ${display.categoryName}
+                      </span>
+                    </div>
+                  ` : ''}
+                  
+                  <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                    ${profile.name || '직업명 없음'}
+                  </h2>
+                </div>
+                
+                <!-- 설명 -->
+                <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
+                  ${summary}
+                </p>
+              </div>
+              
+              <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
+              ${metrics ? `
+                <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
+                  ${metrics}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </a>
+      </article>
     `;
   }
 };
@@ -2953,7 +3250,7 @@ const PageInit = {
   // 홈페이지 초기화
   async initHome() {
     // 인기 직업/전공 섹션 제거됨 (향후 리뉴얼 예정)
-    console.log('Home page initialized');
+    // console.log('Home page initialized');
   },
 
   // 검색 결과 페이지

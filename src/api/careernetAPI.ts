@@ -727,12 +727,16 @@ export const normalizeCareerNetMajorDetail = (major: Major): UnifiedMajorDetail 
   
   // 개설대학 정보 (universityList 우선, 없으면 university 사용)
   const universities = major.universityList && major.universityList.length > 0
-    ? major.universityList.map(u => ({
-        name: u.schoolName,
-        url: u.schoolURL,
-        area: u.area,
-        campus: u.campus_nm
-      }))
+    ? major.universityList.map(u => {
+        
+        return {
+          name: u.schoolName,
+          department: u.majorName,  // 전공명 (간호학과 등)
+          url: u.schoolURL,
+          area: u.area,
+          campus: u.campus_nm
+        }
+      })
     : toUniversityEntries(major.university);
   
   const relatedJobs = dedupeList(splitToList(major.relatedJob));
@@ -1122,7 +1126,7 @@ export async function fetchAllJobsList(env?: any): Promise<Array<{ seq: number; 
       }
     }
     
-    console.log(`✅ jobs.json API: 총 ${allJobs.length}개 직업 수집 완료`);
+    // jobs.json API 수집 완료;
     return allJobs;
     
   } catch (error) {

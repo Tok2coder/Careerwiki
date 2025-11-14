@@ -112,18 +112,44 @@ const mergeUniversities = (
   primary?: MajorUniversityInfo[],
   secondary?: MajorUniversityInfo[]
 ): MajorUniversityInfo[] | undefined => {
+  
+  // 대학 이름으로만 중복 제거 (학과는 무시)
   const map = new Map<string, MajorUniversityInfo>()
   const insert = (list?: MajorUniversityInfo[]) => {
     list?.forEach((item) => {
       const name = item.name?.trim()
-      const department = item.department?.trim()
-      if (!name && !department) return
-      const key = `${(name || '').toLowerCase()}::${(department || '').toLowerCase()}`
+      if (!name) return
+      
+      // 대학명 정규화 (캠퍼스/분교 제거)
+      const normalizedName = normalizeUniversityName(name)
+      const key = normalizedName.toLowerCase()
+      
       if (!map.has(key)) {
-        map.set(key, { ...item, name, department })
+        // 첫 등록: 정규화된 이름 사용
+        map.set(key, { ...item, name: normalizedName })
+        
+        // 디버깅: department 있는지 확인
+        if (!item.department) {
+          console.log(`⚠️ 첫 등록 시 department 없음: ${normalizedName} (원본: ${name})`)
+        }
       } else {
+        // 이미 있음: 더 완전한 정보를 가진 것으로 업데이트
         const existing = map.get(key)!
-        map.set(key, { ...existing, ...item, name, department })
+        const merged: MajorUniversityInfo = { ...existing }
+        
+        // 디버깅: 병합 시 department 업데이트 확인
+        if (item.department && !existing.department) {
+          console.log(`✅ Department 업데이트: ${normalizedName} ← "${item.department}"`)
+        }
+        
+        // 더 나은 값이 있으면 업데이트 (기존 값도 덮어씀)
+        if (item.department) merged.department = item.department
+        if (item.universityType) merged.universityType = item.universityType
+        if (item.url) merged.url = item.url
+        if (item.area) merged.area = item.area
+        if (item.campus) merged.campus = item.campus
+        
+        map.set(key, merged)
       }
     })
   }
@@ -132,7 +158,121 @@ const mergeUniversities = (
   insert(primary)
 
   if (map.size === 0) return undefined
-  return Array.from(map.values())
+  
+  // 병합 후 처리: area와 universityType 추론
+  const result = Array.from(map.values()).map(uni => {
+    let enriched = { ...uni }
+    
+    // area가 없으면 대학명으로 추론
+    if (!enriched.area && enriched.name) {
+      const inferredArea = inferRegionFromUniversityName(enriched.name)
+      if (inferredArea) {
+        enriched.area = inferredArea
+      }
+    }
+    
+    // universityType이 없으면 기본값 "대학교" 설정
+    if (!enriched.universityType) {
+      enriched.universityType = '대학교' // 기본값
+    }
+    
+    return enriched
+  })
+  
+  return result
+}
+
+// 대학명 정규화 (캠퍼스/분교/prefix 제거)
+const normalizeUniversityName = (name: string): string => {
+  return name
+    // Prefix 제거 (국립, 사립, 공립 등)
+    .replace(/^국립\s*/g, '')
+    .replace(/^사립\s*/g, '')
+    .replace(/^공립\s*/g, '')
+    .replace(/^시립\s*/g, '')
+    .replace(/^도립\s*/g, '')
+    
+    // 캠퍼스 패턴 제거
+    .replace(/\s*\([^)]*캠퍼스[^)]*\)/g, '')     // (서울캠퍼스), (제2캠퍼스) 등
+    .replace(/\s*서울캠퍼스$/g, '')               // 중앙대학교 서울캠퍼스
+    .replace(/\s*안성캠퍼스$/g, '')
+    .replace(/\s*제\d+캠퍼스$/g, '')              // 제2캠퍼스, 제3캠퍼스 등
+    .replace(/\s*미래캠퍼스$/g, '')
+    .replace(/\s*국제캠퍼스$/g, '')
+    .replace(/\s*WISE\s*캠퍼스$/gi, '')          // WISE 캠퍼스
+    
+    // 분교 패턴 제거
+    .replace(/\s*\(.*분교.*\)/g, '')             // (분교)
+    .replace(/\s*분교$/g, '')
+    .replace(/\s*본교$/g, '')
+    .replace(/\s*\(본교\)$/g, '')
+    
+    // 특수 케이스
+    .replace(/^신경주/g, '경주')                 // 신경주대학교 → 경주대학교
+    
+    .trim()
+}
+
+// 대학명에서 지역 추론 (확장 버전)
+const inferRegionFromUniversityName = (name: string): string | undefined => {
+  // 우선순위 순으로 매칭 (긴 키워드 먼저)
+  const keywords: Array<[string[], string]> = [
+    // 특별시/광역시 (최우선)
+    [['서울'], '서울'],
+    [['부산'], '부산'],
+    [['대구'], '대구'],
+    [['인천'], '인천'],
+    [['광주광역'], '광주'],  // "광주"는 경기 광주시와 충돌 방지
+    [['대전'], '대전'],
+    [['울산'], '울산'],
+    [['세종'], '세종'],
+    
+    // 강원도 (관동 = 강원)
+    [['강원', '관동', '춘천', '강릉', '원주', '동해', '태백', '속초', '삼척'], '강원'],
+    
+    // 경기도
+    [['경기', '수원', '용인', '성남', '고양', '부천', '안산', '안양', '남양주', 
+      '화성', '평택', '의정부', '시흥', '파주', '김포', '광명', '군포', '오산', 
+      '이천', '양주', '안성', '구리', '포천', '의왕', '하남', '여주', '양평', 
+      '동두천', '과천', '가평', '연천'], '경기'],
+    
+    // 충청북도
+    [['충북', '충청북', '청주', '충주', '제천', '음성', '진천', '괴산', '증평', '옥천'], '충북'],
+    
+    // 충청남도
+    [['충남', '충청남', '천안', '공주', '보령', '아산', '서산', '논산', '계룡', 
+      '당진', '금산', '부여', '서천', '청양', '홍성', '예산', '태안'], '충남'],
+    
+    // 전라북도
+    [['전북', '전라북', '전주', '군산', '익산', '정읍', '남원', '김제', '완주', '무주'], '전북'],
+    
+    // 전라남도
+    [['전남', '전라남', '목포', '여수', '순천', '나주', '광양', '담양', '곡성', '화순', '영암'], '전남'],
+    
+    // 경상북도
+    [['경북', '경상북', '포항', '경주', '김천', '안동', '구미', '영주', '영천', 
+      '상주', '문경', '경산', '군위', '의성', '청송', '영양', '영덕'], '경북'],
+    
+    // 경상남도
+    [['경남', '경상남', '창원', '진주', '통영', '사천', '김해', '밀양', '거제', 
+      '양산', '함안', '창녕', '고성', '남해', '하동', '산청', '거창'], '경남'],
+    
+    // 제주도
+    [['제주'], '제주'],
+    
+    // 마지막으로 "광주" (경기 광주시로 추정)
+    [['광주'], '경기']
+  ]
+  
+  for (const [keys, region] of keywords) {
+    for (const key of keys) {
+      if (name.includes(key)) {
+        return region
+      }
+    }
+  }
+  
+  return undefined
 }
 
 const mergeRecruitment = (

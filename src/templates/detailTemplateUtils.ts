@@ -16,12 +16,30 @@ export const escapeHtml = (value?: string | null): string => {
     .replace(/'/g, '&#39;')
 }
 
+// HTML 태그 제거 함수 (고용24 데이터의 HTML 태그 처리용)
+const stripHtmlTags = (html: string): string => {
+  return html
+    .replace(/<[^>]*>/g, '') // 모든 HTML 태그 제거
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .trim()
+}
+
 export const formatRichText = (value?: string | null): string => {
   if (!value || !value.trim()) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
 
-  return value
+  // HTML 태그가 포함되어 있으면 제거
+  const cleanedValue = value.includes('<') || value.includes('>') 
+    ? stripHtmlTags(value)
+    : value
+
+  return cleanedValue
     .trim()
     .split(/\n{2,}/)
     .map((paragraph) => {

@@ -90,10 +90,53 @@ export const withKvCache = async <T>(
   }
 
   if (forceRefresh) {
-    return attemptFetchAndStore('miss')
+    try {
+      return await attemptFetchAndStore('miss')
+    } catch (error) {
+      // KV 접근 실패 시 캐시 없이 직접 fetcher 호출
+      // 로컬 개발 환경에서는 KV가 없을 수 있으므로 조용히 처리
+      if (kv) {
+        console.warn(`KV cache force refresh failed for key ${key}, bypassing cache:`, error)
+      }
+      const fresh = await fetcher()
+      const timestamp = nowSeconds()
+      return {
+        value: fresh,
+        cacheState: {
+          status: 'bypass',
+          key,
+          cachedAt: timestamp,
+          staleAt: timestamp + staleSeconds,
+          expiresAt: timestamp + maxAgeSeconds,
+          metadata
+        }
+      }
+    }
   }
 
-  const stored = await kv.get<StoredCacheEntry<T>>(key, 'json').catch(() => null)
+  let stored: StoredCacheEntry<T> | null = null
+  try {
+    stored = await kv.get<StoredCacheEntry<T>>(key, 'json').catch(() => null)
+  } catch (error) {
+    // KV 접근 실패 시 캐시 없이 직접 fetcher 호출
+    // 로컬 개발 환경에서는 KV가 없을 수 있으므로 조용히 처리
+    if (kv) {
+      console.warn(`KV cache get failed for key ${key}, bypassing cache:`, error)
+    }
+    const fresh = await fetcher()
+    const timestamp = nowSeconds()
+    return {
+      value: fresh,
+      cacheState: {
+        status: 'bypass',
+        key,
+        cachedAt: timestamp,
+        staleAt: timestamp + staleSeconds,
+        expiresAt: timestamp + maxAgeSeconds,
+        metadata
+      }
+    }
+  }
 
   if (stored && stored.version === version) {
     const timestamp = nowSeconds()
@@ -116,7 +159,8 @@ export const withKvCache = async <T>(
       try {
         return await attemptFetchAndStore('revalidated')
       } catch (error) {
-        console.warn(`KV cache revalidation failed for key ${key}:`, error)
+        // KV 저장 실패해도 기존 데이터 반환
+        console.warn(`KV cache revalidation failed for key ${key}, serving stale data:`, error)
         return {
           value: stored.data,
           cacheState: {
@@ -135,8 +179,12 @@ export const withKvCache = async <T>(
   try {
     return await attemptFetchAndStore('miss')
   } catch (error) {
+    // KV 저장 실패 시에도 데이터는 반환 (캐시만 저장 실패)
     if (stored) {
-      console.warn(`KV cache refresh failed for key ${key}, serving stale data:`, error)
+      // 로컬 개발 환경에서는 KV가 없을 수 있으므로 조용히 처리
+      if (kv) {
+        console.warn(`KV cache refresh failed for key ${key}, serving stale data:`, error)
+      }
       return {
         value: stored.data,
         cacheState: {
@@ -149,7 +197,24 @@ export const withKvCache = async <T>(
         }
       }
     }
-    throw error
+    // 저장된 데이터도 없으면 fetcher만 호출 (KV 저장 실패 무시)
+    // 로컬 개발 환경에서는 KV가 없을 수 있으므로 조용히 처리
+    if (kv) {
+      console.warn(`KV cache miss and store failed for key ${key}, bypassing cache:`, error)
+    }
+    const fresh = await fetcher()
+    const timestamp = nowSeconds()
+    return {
+      value: fresh,
+      cacheState: {
+        status: 'bypass',
+        key,
+        cachedAt: timestamp,
+        staleAt: timestamp + staleSeconds,
+        expiresAt: timestamp + maxAgeSeconds,
+        metadata
+      }
+    }
   }
 }
 

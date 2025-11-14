@@ -19,6 +19,7 @@ import type {
   UnifiedMajorDetail,
   UnifiedMajorSummary
 } from '../types/unifiedProfiles'
+import { enrichUniversityWithRegion } from '../utils/universityRegionMapper'
 
 // Goyong24 API Base URL
 // 문서에 따르면: https://www.work24.go.kr/cm/openApi/call/hr/ (학과)
@@ -334,12 +335,19 @@ const parseMajorDetail = (xml: string, majorGb: '1' | '2'): Goyong24MajorDetail 
   }
 
   const major = getFirstValue(xml, 'knowSchDptId') ? xml : ''
-  const universities = extractNodes(major, 'schDptList').map<MajorUniversityInfo>((entry) => ({
-    department: getFirstValue(entry, 'schDptNm'),
-    universityType: getFirstValue(entry, 'univGbnNm'),
-    name: getFirstValue(entry, 'univNm'),
-    url: getFirstValue(entry, 'univUrl')
-  }))
+  const universities = extractNodes(major, 'schDptList').map<MajorUniversityInfo>((entry) => {
+    const deptName = getFirstValue(entry, 'schDptNm')
+    const univName = getFirstValue(entry, 'univNm')
+    
+    
+    return {
+      department: deptName,
+      universityType: getFirstValue(entry, 'univGbnNm'),
+      name: univName,
+      url: getFirstValue(entry, 'univUrl')
+      // 고용24 API에는 area 필드가 없음 (대학명으로 추론 필요)
+    }
+  })
 
   const recruitmentStatus = extractNodes(major, 'recrStateList').map<MajorRecruitmentStat>((entry) => ({
     enrollmentQuota: getFirstValue(entry, 'enscMxnp'),
@@ -463,6 +471,9 @@ export const normalizeGoyong24MajorDetail = (
     empCurtState2Id: detail.majorId
   })
 
+  // 대학 정보에 지역 추론 추가 (고용24 API에는 area 필드 없음)
+  const enrichedUniversities = detail.universities?.map(enrichUniversityWithRegion)
+
   return {
     ...listSummary,
     summary: detail.summary || listSummary.summary,
@@ -470,7 +481,7 @@ export const normalizeGoyong24MajorDetail = (
     relatedMajors: detail.relatedMajors || listSummary.relatedMajors,
     mainSubjects: detail.mainSubjects,
     licenses: detail.licenses,
-    universities: detail.universities,
+    universities: enrichedUniversities,
     recruitmentStatus: detail.recruitmentStatus,
     relatedJobs: detail.relatedJobs,
     whatStudy: detail.whatStudy,
@@ -812,7 +823,6 @@ const parseSalProspectSection = (xml: string): Goyong24JobDetailSalProspect => {
   }))
 
   const jobSatisValue = getFirstValue(block, 'jobSatis')
-  console.log('[DEBUG] Goyong24 salProspect.jobSatis:', jobSatisValue, 'length:', jobSatisValue.length)
 
   return {
     jobCd: getFirstValue(block, 'jobCd'),

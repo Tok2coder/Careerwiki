@@ -92,6 +92,7 @@ app.use('*', renderer)
 
 // Serve static files from public directory
 // All static assets including JS, CSS, images are served from /static/* path
+// @ts-ignore - Cloudflare Workers types mismatch
 app.use('/static/*', serveStatic({ root: './public' }))
 
 let logoIdCounter = 0
@@ -858,7 +859,7 @@ const renderLayout = (
             })();
         </script>
         
-        <script src="/static/api-client.js"></script>
+        <script src="/static/api-client.js?v=${Date.now()}"></script>
     </body>
     </html>
   `
@@ -1475,37 +1476,143 @@ app.get('/job', async (c) => {
             const jobUrl = `/job/${encodeURIComponent(jobSlug)}`
             const summary = escapeHtml(formatSummaryText(display.summary))
             const categoryName = display.categoryName || job.category?.name
-            const statChips = [
-              display.salary ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-coins text-green-400"></i>${escapeHtml(display.salary)}</span>` : '',
-              display.outlook ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-chart-line text-wiki-secondary"></i>${escapeHtml(display.outlook)}</span>` : '',
-              categoryName ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-layer-group text-wiki-primary"></i>${escapeHtml(categoryName)}</span>` : ''
+            
+            // 직업 만족도 등급 계산 (상세페이지와 동일한 로직)
+            const getSatisfactionGrade = (satisfaction: string | undefined) => {
+              if (!satisfaction) return null
+              const score = parseFloat(satisfaction) || 0
+              
+              if (score >= 80) {
+                return { 
+                  level: '매우 좋음', 
+                  bg: 'bg-green-500/10', 
+                  border: 'border-green-500/20', 
+                  iconColor: 'text-green-400',
+                  textColor: 'text-green-300',
+                  textMuted: 'text-green-300/80',
+                  percentColor: 'text-green-300/60'
+                }
+              } else if (score >= 60) {
+                return { 
+                  level: '좋음', 
+                  bg: 'bg-sky-500/10', 
+                  border: 'border-sky-500/20', 
+                  iconColor: 'text-sky-400',
+                  textColor: 'text-sky-300',
+                  textMuted: 'text-sky-300/80',
+                  percentColor: 'text-sky-300/60'
+                }
+              } else if (score >= 40) {
+                return { 
+                  level: '보통', 
+                  bg: 'bg-yellow-500/10', 
+                  border: 'border-yellow-500/20', 
+                  iconColor: 'text-yellow-400',
+                  textColor: 'text-yellow-300',
+                  textMuted: 'text-yellow-300/80',
+                  percentColor: 'text-yellow-300/60'
+                }
+              } else if (score >= 20) {
+                return { 
+                  level: '별로', 
+                  bg: 'bg-orange-500/10', 
+                  border: 'border-orange-500/20', 
+                  iconColor: 'text-orange-400',
+                  textColor: 'text-orange-300',
+                  textMuted: 'text-orange-300/80',
+                  percentColor: 'text-orange-300/60'
+                }
+              } else {
+                return { 
+                  level: '매우 별로', 
+                  bg: 'bg-red-500/10', 
+                  border: 'border-red-500/20', 
+                  iconColor: 'text-red-400',
+                  textColor: 'text-red-300',
+                  textMuted: 'text-red-300/80',
+                  percentColor: 'text-red-300/60'
+                }
+              }
+            }
+            
+            const satisfactionGrade = getSatisfactionGrade(display.satisfaction)
+            
+            // 메트릭 박스들 (연봉, 만족도, 워라벨, 계열) - 고정 크기 정사각형
+            const metrics = [
+              display.salary ? `
+                <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
+                  <i class="fas fa-won-sign text-emerald-400 text-base"></i>
+                  <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 연봉</span>
+                  <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.salary.replace(/평균\s*/g, ''))}</span>
+                </div>
+              ` : '',
+              display.satisfaction && satisfactionGrade ? `
+                <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
+                  <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
+                  <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
+                  <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
+                </div>
+              ` : '',
+              display.wlb ? `
+                <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-24 h-24 flex-shrink-0">
+                  <i class="fas fa-balance-scale text-purple-400 text-base"></i>
+                  <span class="text-[9px] font-medium text-purple-300/70 mt-0.5">워라벨</span>
+                  <span class="text-[11px] font-bold text-purple-300 text-center leading-tight">${escapeHtml(display.wlb)}</span>
+                </div>
+              ` : '',
+              display.departmentName ? `
+                <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
+                  <i class="fas fa-layer-group text-indigo-400 text-base"></i>
+                  <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
+                  <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.departmentName.length > 8 ? display.departmentName.substring(0, 8) + '...' : display.departmentName)}</span>
+                </div>
+              ` : ''
             ].filter(Boolean).join('')
 
-            const sourcesBadges = Array.isArray(job.sources) && job.sources.length
-              ? `<div class="flex flex-wrap gap-2 mt-4">${job.sources
-                  .map((source) => `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 border border-wiki-primary/40 text-xs text-wiki-primary"><i class="fas fa-database mr-1"></i>${SOURCE_LABEL_MAP[source] ?? source}</span>`)
-                  .join('')}</div>`
-              : ''
-
             return `
-              <article class="glass-card p-6 rounded-2xl hover-glow transition">
-                <div class="flex flex-col gap-4">
-                  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                      <h2 class="text-2xl font-bold text-white">
-                        <a href="${jobUrl}" class="hover:text-wiki-secondary transition">${escapeHtml(job.name)}</a>
-                      </h2>
-                      ${categoryName ? `<p class="text-sm text-wiki-muted">${escapeHtml(categoryName)}</p>` : ''}
+              <article class="group relative">
+                <a href="${jobUrl}" class="block">
+                  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
+                    <!-- 배경 그라데이션 글로우 -->
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
+                      <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
                     </div>
-                    <a href="${jobUrl}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-wiki-primary text-wiki-primary hover:bg-wiki-primary/10 transition">
-                      <span>상세 보기</span>
-                      <i class="fas fa-arrow-right"></i>
-                    </a>
+                    
+                    <div class="relative flex gap-4">
+                      <!-- 왼쪽: 직업 정보 (최대 너비 60% 제한) -->
+                      <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
+                        <!-- 헤더: 카테고리 + 직업명 -->
+                        <div class="space-y-2">
+                          ${categoryName ? `
+                            <div class="flex items-center gap-2">
+                              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
+                                <i class="fas fa-folder text-[8px]"></i>
+                                ${escapeHtml(categoryName)}
+                              </span>
+                            </div>
+                          ` : ''}
+                          
+                          <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                            ${escapeHtml(job.name)}
+                          </h2>
+                        </div>
+                        
+                        <!-- 설명 -->
+                        <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
+                          ${summary}
+                        </p>
+                      </div>
+                      
+                      <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
+                      ${metrics ? `
+                        <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
+                          ${metrics}
+                        </div>
+                      ` : ''}
+                    </div>
                   </div>
-                  <p class="text-sm leading-relaxed text-wiki-muted">${summary}</p>
-                  ${statChips ? `<div class="flex flex-wrap gap-2">${statChips}</div>` : ''}
-                  ${sourcesBadges}
-                </div>
+                </a>
               </article>
             `
           })
@@ -1551,15 +1658,31 @@ app.get('/job', async (c) => {
     const extraHead = [jsonLd].filter(Boolean).join('\n')
 
     const content = `
-      <div class="max-w-6xl mx-auto px-4 md:mt-8">
-        <div class="text-center mb-10">
-          <h1 class="text-4xl font-bold mb-4 gradient-text">
-            <i class="fas fa-briefcase mr-3"></i>${headingLabel}
+      <div class="max-w-[1400px] mx-auto md:px-6">
+        <div class="relative text-center pb-8 mb-8 space-y-7">
+          <!-- 배경 글로우 효과 -->
+          <div class="absolute inset-0 -z-10 overflow-hidden">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-wiki-primary/5 rounded-full blur-[100px]"></div>
+          </div>
+          
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-wiki-primary/10 to-blue-500/10 border border-wiki-primary/20 backdrop-blur-sm">
+            <span class="text-xs font-semibold text-wiki-primary">💼 JOB WIKI</span>
+          </div>
+          
+          <h1 class="text-[38px] md:text-[42px] lg:text-5xl font-bold gradient-text leading-tight">
+            ${headingLabel}
           </h1>
-          <p class="text-wiki-muted max-w-3xl mx-auto">
-            고용24와 커리어넷의 최신 데이터를 바탕으로 직업별 연봉, 전망, 필요 역량을 탐색하세요.
+          
+          <p class="text-lg md:text-xl text-wiki-text/90 max-w-2xl mx-auto font-medium leading-relaxed">
+            당신의 다음 커리어를 여기서 확인하세요
           </p>
-          <p class="text-xs text-wiki-muted mt-4">${filterSummary} · 총 <span id="job-total-count">${totalCount}</span>건</p>
+          
+          <div class="flex items-center justify-center gap-3 text-sm">
+            <span class="px-3 py-1.5 rounded-lg bg-wiki-bg/60 text-wiki-muted">${filterSummary}</span>
+            <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-blue-500/20 border border-wiki-primary/30 text-white font-semibold">
+              <span id="job-total-count">${totalCount}</span>개
+            </span>
+          </div>
         </div>
 
         <form id="job-filter-form" data-hydration-target="job" method="get" class="glass-card rounded-xl p-6 mb-6 grid md:grid-cols-[2fr,1fr,1fr,auto] gap-4 items-end">
@@ -1599,11 +1722,10 @@ app.get('/job', async (c) => {
             <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
               <i class="fas fa-search mr-2"></i>검색
             </button>
-            <a href="/job" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
           </div>
         </form>
 
-        <div class="glass-card rounded-xl p-4 mb-6 flex flex-wrap items-center gap-4" id="job-hydration-toolbar">
+        <div class="mb-6 flex flex-wrap items-center justify-end gap-4" id="job-hydration-toolbar">
           <div class="flex items-center gap-2">
             <label for="job-sort-select" class="text-sm text-wiki-muted">정렬</label>
             <select id="job-sort-select" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
@@ -1613,14 +1735,6 @@ app.get('/job', async (c) => {
               <option value="name-asc">이름 오름차순</option>
             </select>
           </div>
-          <div class="flex items-center gap-2">
-            <label for="job-source-filter" class="text-sm text-wiki-muted">데이터 소스</label>
-            <div class="flex items-center gap-3 text-xs text-wiki-muted" id="job-source-filter" aria-live="polite">
-              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-wiki-secondary"></span>커리어넷 (443개 보유)</span>
-              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-wiki-primary"></span>고용24 (535개 보유)</span>
-            </div>
-          </div>
-          <div class="ml-auto text-xs text-wiki-muted" id="job-hydration-status" aria-live="polite"></div>
         </div>
 
         ${cacheNotice}
@@ -1763,7 +1877,11 @@ app.get('/job', async (c) => {
       )
     )
   } catch (error) {
-    console.error('Job list route error:', error)
+    // 로컬 개발 환경에서는 D1이 없을 수 있으므로 조용히 처리
+    const isLocalDev = !c.env.KV && !c.env.DB
+    if (!isLocalDev) {
+      console.error('Job list route error:', error)
+    }
     c.status(500)
     const fallbackHtml = renderDetailFallback({
       icon: 'fa-circle-exclamation',
@@ -1874,37 +1992,156 @@ app.get('/major', async (c) => {
             const majorSlug = composeDetailSlug('major', major.name, major.id)
             const majorUrl = `/major/${encodeURIComponent(majorSlug)}`
             const summary = escapeHtml(formatSummaryText(display.summary))
-            const statChips = [
-              display.employmentRate ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-user-graduate text-wiki-secondary"></i>${escapeHtml(display.employmentRate)}</span>` : '',
-              display.salaryAfterGraduation ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-coins text-green-400"></i>${escapeHtml(display.salaryAfterGraduation)}</span>` : '',
-              display.categoryName ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-bg border border-wiki-border text-xs text-wiki-muted"><i class="fas fa-layer-group text-wiki-primary"></i>${escapeHtml(display.categoryName)}</span>` : ''
-            ].filter(Boolean).join('')
-
-            const sourcesBadges = Array.isArray(major.sources) && major.sources.length
-              ? `<div class="flex flex-wrap gap-2 mt-4">${major.sources
-                  .map((source) => `<span class="px-3 py-1 rounded-full bg-wiki-primary/10 border border-wiki-primary/40 text-xs text-wiki-primary"><i class="fas fa-database mr-1"></i>${SOURCE_LABEL_MAP[source] ?? source}</span>`)
-                  .join('')}</div>`
-              : ''
+            // categoryName은 제목 위에 표시하지 않고 메트릭 박스로만 표시
+            const categoryName = undefined
+            
+            // 첫 직장 만족도 등급 계산 (직업위키와 동일한 로직)
+            const getSatisfactionGrade = (satisfaction: string | undefined) => {
+              if (!satisfaction) return null
+              const score = parseFloat(satisfaction) || 0
+              
+              if (score >= 80) {
+                return { 
+                  level: '매우 좋음', 
+                  bg: 'bg-green-500/10', 
+                  border: 'border-green-500/20', 
+                  iconColor: 'text-green-400',
+                  textColor: 'text-green-300',
+                  textMuted: 'text-green-300/80'
+                }
+              } else if (score >= 60) {
+                return { 
+                  level: '좋음', 
+                  bg: 'bg-sky-500/10', 
+                  border: 'border-sky-500/20', 
+                  iconColor: 'text-sky-400',
+                  textColor: 'text-sky-300',
+                  textMuted: 'text-sky-300/80'
+                }
+              } else if (score >= 40) {
+                return { 
+                  level: '보통', 
+                  bg: 'bg-yellow-500/10', 
+                  border: 'border-yellow-500/20', 
+                  iconColor: 'text-yellow-400',
+                  textColor: 'text-yellow-300',
+                  textMuted: 'text-yellow-300/80'
+                }
+              } else if (score >= 20) {
+                return { 
+                  level: '별로', 
+                  bg: 'bg-orange-500/10', 
+                  border: 'border-orange-500/20', 
+                  iconColor: 'text-orange-400',
+                  textColor: 'text-orange-300',
+                  textMuted: 'text-orange-300/80'
+                }
+              } else {
+                return { 
+                  level: '매우 별로', 
+                  bg: 'bg-red-500/10', 
+                  border: 'border-red-500/20', 
+                  iconColor: 'text-red-400',
+                  textColor: 'text-red-300',
+                  textMuted: 'text-red-300/80'
+                }
+              }
+            }
+            
+            const satisfactionGrade = getSatisfactionGrade(display.firstJobSatisfaction)
+            
+            // 메트릭 박스들
+            // 커리어넷 데이터: 취업률, 첫직장임금(월), 첫 직장 만족도
+            // categoryName: 계열 (모든 경우에 메트릭 박스로 표시)
+            const metrics = (() => {
+              // categoryName 추출 (쉼표가 2개 이상이면 관련 학과명 리스트로 판단하여 제거)
+              const categoryNameForMetric = display.categoryName && display.categoryName.split(',').length <= 2
+                ? display.categoryName
+                : undefined
+              
+              // 커리어넷 데이터 메트릭 박스들
+              const careernetMetrics = [
+                display.employmentRate ? `
+                  <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-24 h-24 flex-shrink-0">
+                    <i class="fas fa-user-graduate text-blue-400 text-base"></i>
+                    <span class="text-[9px] font-medium text-blue-300/70 mt-0.5">취업률</span>
+                    <span class="text-[11px] font-bold text-blue-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.employmentRate.replace(/<[^>]*>/g, ''))}</span>
+                  </div>
+                ` : '',
+                display.firstJobSalary ? `
+                  <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
+                    <i class="fas fa-won-sign text-emerald-400 text-base"></i>
+                    <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 월봉</span>
+                    <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`)}</span>
+                  </div>
+                ` : '',
+                display.firstJobSatisfaction && satisfactionGrade ? `
+                  <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
+                    <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
+                    <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
+                    <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
+                  </div>
+                ` : ''
+              ].filter(Boolean)
+              
+              // categoryName 메트릭 박스 추가
+              if (categoryNameForMetric) {
+                careernetMetrics.push(`
+                  <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
+                    <i class="fas fa-layer-group text-indigo-400 text-base"></i>
+                    <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
+                    <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(categoryNameForMetric.length > 8 ? categoryNameForMetric.substring(0, 8) + '...' : categoryNameForMetric)}</span>
+                  </div>
+                `)
+              }
+              
+              return careernetMetrics.join('')
+            })()
 
             return `
-              <article class="glass-card p-6 rounded-2xl hover-glow transition">
-                <div class="flex flex-col gap-4">
-                  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                      <h2 class="text-2xl font-bold text-white">
-                        <a href="${majorUrl}" class="hover:text-wiki-secondary transition">${escapeHtml(major.name)}</a>
-                      </h2>
-                      ${display.categoryName ? `<p class="text-sm text-wiki-muted">${escapeHtml(display.categoryName)}</p>` : ''}
+              <article class="group relative">
+                <a href="${majorUrl}" class="block">
+                  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
+                    <!-- 배경 그라데이션 글로우 -->
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
+                      <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
                     </div>
-                    <a href="${majorUrl}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-wiki-primary text-wiki-primary hover:bg-wiki-primary/10 transition">
-                      <span>상세 보기</span>
-                      <i class="fas fa-arrow-right"></i>
-                    </a>
+                    
+                    <div class="relative flex gap-4">
+                      <!-- 왼쪽: 전공 정보 (최대 너비 60% 제한) -->
+                      <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
+                        <!-- 헤더: 카테고리 + 전공명 -->
+                        <div class="space-y-2">
+                          ${categoryName ? `
+                            <div class="flex items-center gap-2">
+                              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
+                                <i class="fas fa-folder text-[8px]"></i>
+                                ${escapeHtml(categoryName)}
+                              </span>
+                            </div>
+                          ` : ''}
+                          
+                          <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                            ${escapeHtml(major.name)}
+                          </h2>
+                        </div>
+                        
+                        <!-- 설명 -->
+                        <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
+                          ${summary}
+                        </p>
+                      </div>
+                      
+                      <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
+                      ${metrics ? `
+                        <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
+                          ${metrics}
+                        </div>
+                      ` : ''}
+                    </div>
                   </div>
-                  <p class="text-sm leading-relaxed text-wiki-muted">${summary}</p>
-                  ${statChips ? `<div class="flex flex-wrap gap-2">${statChips}</div>` : ''}
-                  ${sourcesBadges}
-                </div>
+                </a>
               </article>
             `
           })
@@ -1914,7 +2151,7 @@ app.get('/major', async (c) => {
     // 🆕 캐시 알림 제거 (사용자에게 보이지 않도록)
     const cacheNotice = '' // renderCacheNotice(cacheState, { staleSeconds: LIST_CACHE_STALE_SECONDS, maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS })
 
-    const sourceSummaryHtml = renderSourceStatusSummary(result.meta?.sources, { id: 'major-source-summary' })
+    const sourceSummaryHtml = '' // 데이터 수집 상태 제거
     const filterSummary = keyword ? `"${escapeHtml(keyword)}" 키워드` : '전체 전공'
     const headingLabel = keyword ? `“${escapeHtml(keyword)}” 관련 전공` : '전공위키'
 
@@ -1941,15 +2178,31 @@ app.get('/major', async (c) => {
     const extraHead = [jsonLd].filter(Boolean).join('\n')
 
     const content = `
-      <div class="max-w-6xl mx-auto px-4 md:mt-8">
-        <div class="text-center mb-10">
-          <h1 class="text-4xl font-bold mb-4 gradient-text">
-            <i class="fas fa-university mr-3"></i>${headingLabel}
+      <div class="max-w-[1400px] mx-auto md:px-6">
+        <div class="relative text-center pb-8 mb-8 space-y-7">
+          <!-- 배경 글로우 효과 -->
+          <div class="absolute inset-0 -z-10 overflow-hidden">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-wiki-secondary/5 rounded-full blur-[100px]"></div>
+          </div>
+          
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-wiki-secondary/10 to-purple-500/10 border border-wiki-secondary/20 backdrop-blur-sm">
+            <span class="text-xs font-semibold text-wiki-secondary">🎓 MAJOR WIKI</span>
+          </div>
+          
+          <h1 class="text-[38px] md:text-[42px] lg:text-5xl font-bold gradient-text leading-tight">
+            ${headingLabel}
           </h1>
-          <p class="text-wiki-muted max-w-3xl mx-auto">
-            전공 커리큘럼, 개설 대학, 관련 직업 정보를 통합 데이터로 제공합니다.
+          
+          <p class="text-lg md:text-xl text-wiki-text/90 max-w-2xl mx-auto font-medium leading-relaxed">
+            전문성을 키우는 첫 걸음, 지금 시작하세요
           </p>
-          <p class="text-xs text-wiki-muted mt-4">${filterSummary} · 총 <span id="major-total-count">${totalCount}</span>건</p>
+          
+          <div class="flex items-center justify-center gap-3 text-sm">
+            <span class="px-3 py-1.5 rounded-lg bg-wiki-bg/60 text-wiki-muted">${filterSummary}</span>
+            <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-secondary/20 to-purple-500/20 border border-wiki-secondary/30 text-white font-semibold">
+              <span id="major-total-count">${totalCount}</span>개
+            </span>
+          </div>
         </div>
 
         <form id="major-filter-form" data-hydration-target="major" method="get" class="glass-card rounded-xl p-6 mb-6 grid md:grid-cols-[2fr,1fr,auto] gap-4 items-end">
@@ -1978,11 +2231,10 @@ app.get('/major', async (c) => {
             <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
               <i class="fas fa-search mr-2"></i>검색
             </button>
-            <a href="/major" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
           </div>
         </form>
 
-        <div class="glass-card rounded-xl p-4 mb-6 flex flex-wrap items-center gap-4" id="major-hydration-toolbar">
+        <div class="mb-6 flex flex-wrap items-center justify-end gap-4" id="major-hydration-toolbar">
           <div class="flex items-center gap-2">
             <label for="major-sort-select" class="text-sm text-wiki-muted">정렬</label>
             <select id="major-sort-select" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
@@ -1992,7 +2244,6 @@ app.get('/major', async (c) => {
               <option value="name-asc">이름 오름차순</option>
             </select>
           </div>
-          <div class="ml-auto text-xs text-wiki-muted" id="major-hydration-status" aria-live="polite"></div>
         </div>
 
         ${cacheNotice}
@@ -2000,6 +2251,102 @@ app.get('/major', async (c) => {
         <section id="major-results" class="space-y-4" aria-live="polite">
           ${majorCards}
         </section>
+
+        ${(() => {
+          // 실제 병합된 아이템 수를 기준으로 페이지네이션 계산
+          const actualTotalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+          const totalPages = Math.ceil(actualTotalCount / perPage)
+          if (totalPages <= 1) return ''
+          
+          const buildPageUrl = (pageNum: number) => {
+            const params = new URLSearchParams()
+            if (keyword) params.set('q', keyword)
+            if (includeSources?.length) params.set('sources', includeSources.join(','))
+            if (pageNum > 1) params.set('page', String(pageNum))
+            if (perPage !== 20) params.set('perPage', String(perPage))
+            return `/major${params.toString() ? `?${params.toString()}` : ''}`
+          }
+          
+          const maxPageButtons = 7
+          let startPage = Math.max(1, page - Math.floor(maxPageButtons / 2))
+          let endPage = Math.min(totalPages, startPage + maxPageButtons - 1)
+          
+          if (endPage - startPage < maxPageButtons - 1) {
+            startPage = Math.max(1, endPage - maxPageButtons + 1)
+          }
+          
+          const pageButtons = []
+          
+          // 이전 페이지 버튼
+          if (page > 1) {
+            pageButtons.push(`
+              <a href="${buildPageUrl(page - 1)}" 
+                 class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">
+                <i class="fas fa-chevron-left"></i>
+              </a>
+            `)
+          }
+          
+          // 첫 페이지
+          if (startPage > 1) {
+            pageButtons.push(`
+              <a href="${buildPageUrl(1)}" 
+                 class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">
+                1
+              </a>
+            `)
+            if (startPage > 2) {
+              pageButtons.push(`<span class="px-2 text-wiki-muted">...</span>`)
+            }
+          }
+          
+          // 페이지 번호들 (최대 7개만 표시)
+          for (let i = startPage; i <= endPage; i++) {
+            const isActive = i === page
+            pageButtons.push(`
+              <a href="${buildPageUrl(i)}" 
+                 class="px-4 py-2 rounded-lg transition ${
+                   isActive
+                     ? 'bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-bold'
+                     : 'bg-wiki-bg border border-wiki-border hover:border-wiki-primary'
+                 }">
+                ${i}
+              </a>
+            `)
+          }
+          
+          // 마지막 페이지
+          if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+              pageButtons.push(`<span class="px-2 text-wiki-muted">...</span>`)
+            }
+            pageButtons.push(`
+              <a href="${buildPageUrl(totalPages)}" 
+                 class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">
+                ${totalPages}
+              </a>
+            `)
+          }
+          
+          // 다음 페이지 버튼
+          if (page < totalPages) {
+            pageButtons.push(`
+              <a href="${buildPageUrl(page + 1)}" 
+                 class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            `)
+          }
+          
+          return `
+            <nav class="mt-8 flex justify-center items-center gap-2 flex-wrap" aria-label="페이지네이션">
+              ${pageButtons.join('')}
+            </nav>
+            <p class="text-center text-xs text-wiki-muted mt-4">
+              ${page}페이지 / 총 ${totalPages}페이지 (${actualTotalCount}개 전공)
+            </p>
+          `
+        })()}
 
         ${sourceSummaryHtml}
       </div>
@@ -2040,8 +2387,266 @@ app.get('/major', async (c) => {
         }
       )
     )
-  } catch (error) {
-    console.error('Major list route error:', error)
+    } catch (error) {
+      // KV 연결 실패 등 네트워크 에러는 캐시 없이 직접 조회 시도
+      if (error instanceof Error && (error.message.includes('fetch failed') || error.message.includes('ECONNRESET') || error.message.includes('ECONNREFUSED') || error.message.includes('terminated'))) {
+        try {
+          // 로컬 개발 환경에서는 KV가 없을 수 있으므로 조용히 처리
+          const isLocalDev = !c.env.KV && !c.env.DB
+          if (!isLocalDev) {
+            console.warn('KV cache failed, attempting direct D1 query:', error.message)
+          }
+          const directResult = await searchUnifiedMajors(
+          {
+            keyword,
+            page,
+            perPage,
+            includeSources
+          },
+          c.env
+        )
+        
+        const items = directResult.items
+        const totalCount = typeof directResult.meta?.total === 'number' ? directResult.meta.total : items.length
+        
+        // 간단한 카드 렌더링 (에러 상태 표시 없이)
+        const majorCards = items.length
+          ? items
+              .map((entry) => {
+                const major = entry.profile
+                const display = entry.display ?? {}
+                const majorSlug = composeDetailSlug('major', major.name, major.id)
+                const majorUrl = `/major/${encodeURIComponent(majorSlug)}`
+                const summary = escapeHtml(formatSummaryText(display.summary))
+                const categoryName = display.categoryName && display.categoryName.split(',').length <= 2
+                  ? display.categoryName
+                  : undefined
+                
+                const satisfactionGrade = (() => {
+                  if (!display.firstJobSatisfaction) return null
+                  const score = parseFloat(display.firstJobSatisfaction) || 0
+                  if (score >= 80) return { level: '매우 좋음', bg: 'bg-green-500/10', border: 'border-green-500/20', iconColor: 'text-green-400', textColor: 'text-green-300', textMuted: 'text-green-300/80' }
+                  if (score >= 60) return { level: '좋음', bg: 'bg-sky-500/10', border: 'border-sky-500/20', iconColor: 'text-sky-400', textColor: 'text-sky-300', textMuted: 'text-sky-300/80' }
+                  if (score >= 40) return { level: '보통', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', iconColor: 'text-yellow-400', textColor: 'text-yellow-300', textMuted: 'text-yellow-300/80' }
+                  if (score >= 20) return { level: '별로', bg: 'bg-orange-500/10', border: 'border-orange-500/20', iconColor: 'text-orange-400', textColor: 'text-orange-300', textMuted: 'text-orange-300/80' }
+                  return { level: '매우 별로', bg: 'bg-red-500/10', border: 'border-red-500/20', iconColor: 'text-red-400', textColor: 'text-red-300', textMuted: 'text-red-300/80' }
+                })()
+                
+                const metrics = (() => {
+                  if (display.departmentName) {
+                    return display.departmentName ? `
+                      <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
+                        <i class="fas fa-layer-group text-indigo-400 text-base"></i>
+                        <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
+                        <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.departmentName.length > 8 ? display.departmentName.substring(0, 8) + '...' : display.departmentName)}</span>
+                      </div>
+                    ` : ''
+                  }
+                  return [
+                    display.employmentRate ? `
+                      <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-24 h-24 flex-shrink-0">
+                        <i class="fas fa-user-graduate text-blue-400 text-base"></i>
+                        <span class="text-[9px] font-medium text-blue-300/70 mt-0.5">취업률</span>
+                        <span class="text-[11px] font-bold text-blue-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.employmentRate)}</span>
+                      </div>
+                    ` : '',
+                    display.firstJobSalary ? `
+                      <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
+                        <i class="fas fa-won-sign text-emerald-400 text-base"></i>
+                        <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 월봉</span>
+                        <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.firstJobSalary)}</span>
+                      </div>
+                    ` : '',
+                    display.firstJobSatisfaction && satisfactionGrade ? `
+                      <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
+                        <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
+                        <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
+                        <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
+                      </div>
+                    ` : ''
+                  ].filter(Boolean).join('')
+                })()
+                
+                return `
+                  <article class="group relative">
+                    <a href="${majorUrl}" class="block">
+                      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                          <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
+                          <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
+                        </div>
+                        <div class="relative flex gap-4">
+                          <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
+                            <div class="space-y-2">
+                              ${categoryName ? `
+                                <div class="flex items-center gap-2">
+                                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
+                                    <i class="fas fa-folder text-[8px]"></i>
+                                    ${escapeHtml(categoryName)}
+                                  </span>
+                                </div>
+                              ` : ''}
+                              <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                                ${escapeHtml(major.name)}
+                              </h2>
+                            </div>
+                            <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
+                              ${summary}
+                            </p>
+                          </div>
+                          ${metrics ? `
+                            <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
+                              ${metrics}
+                            </div>
+                          ` : ''}
+                        </div>
+                      </div>
+                    </a>
+                  </article>
+                `
+              })
+              .join('')
+          : renderSampleMajorHighlights()
+        
+        const totalPages = Math.ceil(totalCount / perPage)
+        const buildPageUrl = (pageNum: number) => {
+          const params = new URLSearchParams()
+          if (keyword) params.set('q', keyword)
+          if (includeSources?.length) params.set('sources', includeSources.join(','))
+          if (pageNum > 1) params.set('page', String(pageNum))
+          if (perPage !== 20) params.set('perPage', String(perPage))
+          return `/major${params.toString() ? `?${params.toString()}` : ''}`
+        }
+        
+        const maxPageButtons = 7
+        let startPage = Math.max(1, page - Math.floor(maxPageButtons / 2))
+        let endPage = Math.min(totalPages, startPage + maxPageButtons - 1)
+        if (endPage - startPage < maxPageButtons - 1) {
+          startPage = Math.max(1, endPage - maxPageButtons + 1)
+        }
+        
+        const pageButtons = []
+        if (page > 1) {
+          pageButtons.push(`<a href="${buildPageUrl(page - 1)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition"><i class="fas fa-chevron-left"></i></a>`)
+        }
+        if (startPage > 1) {
+          pageButtons.push(`<a href="${buildPageUrl(1)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">1</a>`)
+          if (startPage > 2) pageButtons.push(`<span class="px-2 text-wiki-muted">...</span>`)
+        }
+        for (let i = startPage; i <= endPage; i++) {
+          const isActive = i === page
+          pageButtons.push(`<a href="${buildPageUrl(i)}" class="px-4 py-2 rounded-lg transition ${isActive ? 'bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-bold' : 'bg-wiki-bg border border-wiki-border hover:border-wiki-primary'}">${i}</a>`)
+        }
+        if (endPage < totalPages) {
+          if (endPage < totalPages - 1) pageButtons.push(`<span class="px-2 text-wiki-muted">...</span>`)
+          pageButtons.push(`<a href="${buildPageUrl(totalPages)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">${totalPages}</a>`)
+        }
+        if (page < totalPages) {
+          pageButtons.push(`<a href="${buildPageUrl(page + 1)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition"><i class="fas fa-chevron-right"></i></a>`)
+        }
+        
+        const paginationHtml = totalPages > 1 ? `
+          <nav class="mt-8 flex justify-center items-center gap-2 flex-wrap" aria-label="페이지네이션">
+            ${pageButtons.join('')}
+          </nav>
+          <p class="text-center text-xs text-wiki-muted mt-4">
+            ${page}페이지 / 총 ${totalPages}페이지 (${totalCount}개 전공)
+          </p>
+        ` : ''
+        
+        const content = `
+          <div class="max-w-[1400px] mx-auto md:px-6 md:mt-8">
+            <div class="relative text-center mb-16 space-y-7">
+              <div class="absolute inset-0 -z-10 overflow-hidden">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-wiki-secondary/5 rounded-full blur-[100px]"></div>
+              </div>
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-wiki-secondary/10 to-purple-500/10 border border-wiki-secondary/20 backdrop-blur-sm">
+                <span class="text-xs font-semibold text-wiki-secondary">🎓 MAJOR WIKI</span>
+              </div>
+              <h1 class="text-[38px] md:text-[42px] lg:text-5xl font-bold gradient-text leading-tight">
+                ${keyword ? `"${escapeHtml(keyword)}" 관련 전공` : '전공위키'}
+              </h1>
+              <p class="text-lg md:text-xl text-wiki-text/90 max-w-2xl mx-auto font-medium leading-relaxed">
+                전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.
+              </p>
+              <div class="flex items-center justify-center gap-4 text-sm text-wiki-muted">
+                <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-blue-500/20 border border-wiki-primary/30 text-white font-semibold">
+                  <span id="major-total-count">${totalCount}</span>개 전공
+                </span>
+              </div>
+            </div>
+            <form method="get" action="/major" class="glass-card rounded-xl p-6 mb-6" id="major-filter-form">
+              <div class="flex flex-col md:flex-row gap-4 items-end">
+                <div class="flex-1 w-full">
+                  <label for="major-keyword" class="block text-sm text-wiki-muted mb-2">검색어</label>
+                  <input type="text" id="major-keyword" name="q" value="${escapeHtml(keyword)}" placeholder="전공명으로 검색..." class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none" />
+                </div>
+                <div class="w-full md:w-auto">
+                  <label for="major-per-page" class="block text-sm text-wiki-muted mb-2">페이지당 항목</label>
+                  <select id="major-per-page" name="perPage" class="px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
+                    ${[20, 50, 100].map(size => `<option value="${size}" ${perPage === size ? 'selected' : ''}>${size}개</option>`).join('')}
+                  </select>
+                </div>
+                <div class="flex gap-2 justify-end">
+                  <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
+                    <i class="fas fa-search mr-2"></i>검색
+                  </button>
+                  <a href="/major" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
+                </div>
+              </div>
+            </form>
+            <div class="glass-card rounded-xl p-4 mb-6 flex flex-wrap items-center gap-4" id="major-hydration-toolbar">
+              <div class="flex items-center gap-2">
+                <label for="major-sort-select" class="text-sm text-wiki-muted">정렬</label>
+                <select id="major-sort-select" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
+                  <option value="relevance">추천 순 (기본)</option>
+                  <option value="employment-desc">취업률 높은 순</option>
+                  <option value="salary-desc">연봉 높은 순</option>
+                  <option value="name-asc">이름 오름차순</option>
+                </select>
+              </div>
+              <div class="ml-auto text-xs text-wiki-muted" id="major-hydration-status" aria-live="polite"></div>
+            </div>
+            <section id="major-results" class="space-y-4" aria-live="polite">
+              ${majorCards}
+            </section>
+            ${paginationHtml}
+          </div>
+        `
+        
+        const hydrationScript = `<script id="major-hydration-data" type="application/json">${serializeForScript({
+          items,
+          meta: {
+            total: totalCount,
+            page,
+            perPage,
+            keyword,
+            includeSources: includeSources ?? null,
+            sources: directResult.meta?.sources ?? null
+          }
+        })}</script>`
+        
+        return c.html(
+          renderLayout(
+            `${content}${hydrationScript}`,
+            keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki',
+            keyword ? `${keyword} 관련 전공 정보를 확인하세요.` : '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.'
+          )
+        )
+      } catch (fallbackError) {
+        // 로컬 개발 환경에서는 D1이 없을 수 있으므로 조용히 처리
+        const isLocalDev = !c.env.KV && !c.env.DB
+        if (!isLocalDev) {
+          console.error('Direct D1 query also failed:', fallbackError)
+        }
+      }
+    }
+    
+    // 로컬 개발 환경에서는 D1이 없을 수 있으므로 조용히 처리
+    const isLocalDev = !c.env.KV && !c.env.DB
+    if (!isLocalDev) {
+      console.error('Major list route error:', error)
+    }
     c.status(500)
     const fallbackHtml = renderDetailFallback({
       icon: 'fa-circle-exclamation',
@@ -2105,13 +2710,23 @@ app.get('/howto', (c) => {
     `
 
   const content = `
-    <div class="max-w-6xl mx-auto px-4 md:mt-8">
-      <header class="text-center mb-10 space-y-3">
-        <h1 class="text-4xl font-bold gradient-text flex items-center justify-center gap-3">
-          <i class="fas fa-route"></i>HowTo 시리즈
+    <div class="max-w-[1400px] mx-auto md:px-6">
+      <header class="relative text-center pb-8 mb-8 space-y-7">
+        <!-- 배경 글로우 효과 -->
+        <div class="absolute inset-0 -z-10 overflow-hidden">
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/5 rounded-full blur-[100px]"></div>
+        </div>
+        
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 backdrop-blur-sm">
+          <span class="text-xs font-semibold text-amber-400">🚀 HOWTO GUIDE</span>
+        </div>
+        
+        <h1 class="text-[38px] md:text-[42px] lg:text-5xl font-bold gradient-text leading-tight">
+          실전 HowTo 가이드
         </h1>
-        <p class="text-sm text-wiki-muted max-w-3xl mx-auto">
-          Careerwiki Phase 1 샘플 HowTo 가이드는 AI·Growth 실행 전략을 빠르게 검증하기 위한 템플릿입니다.
+        
+        <p class="text-lg md:text-xl text-wiki-text/90 max-w-2xl mx-auto font-medium leading-relaxed">
+          먼저 간 사람들의 진짜 노하우를 배우세요
         </p>
       </header>
       <section class="space-y-6">
@@ -2205,64 +2820,11 @@ app.get('/help', (c) => {
   return c.html(renderLayout(content, '도움말 - Careerwiki'))
 })
 
-// Search Page with Relevance-based Results
-app.get('/search', (c) => {
+// Search Page - 실제 D1 데이터 검색
+app.get('/search', async (c) => {
   const query = c.req.query('q') || ''
-  const normalizedQuery = query.trim().toLowerCase()
-  const hasQuery = normalizedQuery.length > 0
-
-  const jobSamples = listSampleJobSummaries()
-  const majorSamples = listSampleMajorSummaries()
-  const howtoSamples = listSampleHowtoSummaries()
-
-  const calculateScore = (item: { title: string; snippet: string; keywords: string[] }): number => {
-    if (!hasQuery) return 0
-    let score = 0
-    const loweredTitle = item.title.toLowerCase()
-    const loweredSnippet = item.snippet.toLowerCase()
-    if (loweredTitle.includes(normalizedQuery)) score += 10
-    if (loweredSnippet.includes(normalizedQuery)) score += 5
-    item.keywords.forEach((keyword) => {
-      const loweredKeyword = keyword.toLowerCase()
-      if (loweredKeyword.includes(normalizedQuery)) score += 3
-      if (normalizedQuery.includes(loweredKeyword)) score += 2
-    })
-    return score
-  }
-
-  const buildResultList = <T extends { slug: string; title: string; snippet: string; keywords: string[] }>(
-    items: T[],
-    basePath: 'job' | 'major' | 'howto',
-    limit: number
-  ) => {
-    if (!hasQuery) {
-      return items.slice(0, limit).map((item) => ({
-        slug: item.slug,
-        title: item.title,
-        snippet: item.snippet,
-        keywords: item.keywords,
-        href: `/${basePath}/${encodeURIComponent(item.slug)}`
-      }))
-    }
-
-    return items
-      .map((item) => ({ item, score: calculateScore(item) }))
-      .filter(({ score }) => score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit)
-      .map(({ item }) => ({
-        slug: item.slug,
-        title: item.title,
-        snippet: item.snippet,
-        keywords: item.keywords,
-        href: `/${basePath}/${encodeURIComponent(item.slug)}`
-      }))
-  }
-
-  const jobResults = buildResultList(jobSamples, 'job', 5)
-  const majorResults = buildResultList(majorSamples, 'major', 5)
-  const howtoResults = buildResultList(howtoSamples, 'howto', 3)
-
+  const keyword = query.trim()
+  
   const renderKeywordBadges = (keywords: string[]): string => {
     if (!keywords || !keywords.length) {
       return ''
@@ -2272,11 +2834,366 @@ app.get('/search', (c) => {
       .join('')}</div>`
   }
 
-  const queryValueAttr = escapeHtml(query)
-  const escapedQuery = escapeHtml(query)
+  const queryValueAttr = escapeHtml(keyword)
+  const escapedQuery = escapeHtml(keyword)
+
+  // 실제 D1 데이터 검색
+  let jobCardsHtml = ''
+  let majorCardsHtml = ''
+  let howtoResults: Array<{ href: string; title: string; snippet: string; keywords: string[] }> = []
+
+  // 요약 텍스트 포맷팅 함수
+  const formatSummaryText = (value?: string | null, type: 'job' | 'major' = 'job'): string => {
+    const fallback = type === 'job' 
+      ? '고용24와 커리어넷 데이터를 통합하여 제공하는 직업 정보입니다. 상세 페이지에서 자세한 내용을 확인하세요.'
+      : '고용24와 커리어넷 데이터를 통합하여 제공하는 전공 정보입니다. 상세 페이지에서 자세한 내용을 확인하세요.'
+    if (!value) return fallback
+    const normalized = value.replace(/\s+/g, ' ').trim()
+    if (!normalized) return fallback
+    return normalized.length > 220 ? `${normalized.slice(0, 217)}…` : normalized
+  }
+
+  if (keyword && c.env?.DB) {
+    try {
+      // 직업 검색
+      const jobSearchResult = await searchUnifiedJobs(
+        { keyword, page: 1, perPage: 5 },
+        c.env
+      )
+      
+      // 직업 만족도 등급 계산 함수
+      const getSatisfactionGrade = (satisfaction: string | undefined) => {
+        if (!satisfaction) return null
+        const score = parseFloat(satisfaction) || 0
+        
+        if (score >= 80) {
+          return { 
+            level: '매우 좋음', 
+            bg: 'bg-green-500/10', 
+            border: 'border-green-500/20', 
+            iconColor: 'text-green-400',
+            textColor: 'text-green-300',
+            textMuted: 'text-green-300/80'
+          }
+        } else if (score >= 60) {
+          return { 
+            level: '좋음', 
+            bg: 'bg-sky-500/10', 
+            border: 'border-sky-500/20', 
+            iconColor: 'text-sky-400',
+            textColor: 'text-sky-300',
+            textMuted: 'text-sky-300/80'
+          }
+        } else if (score >= 40) {
+          return { 
+            level: '보통', 
+            bg: 'bg-yellow-500/10', 
+            border: 'border-yellow-500/20', 
+            iconColor: 'text-yellow-400',
+            textColor: 'text-yellow-300',
+            textMuted: 'text-yellow-300/80'
+          }
+        } else if (score >= 20) {
+          return { 
+            level: '별로', 
+            bg: 'bg-orange-500/10', 
+            border: 'border-orange-500/20', 
+            iconColor: 'text-orange-400',
+            textColor: 'text-orange-300',
+            textMuted: 'text-orange-300/80'
+          }
+        } else {
+          return { 
+            level: '매우 별로', 
+            bg: 'bg-red-500/10', 
+            border: 'border-red-500/20', 
+            iconColor: 'text-red-400',
+            textColor: 'text-red-300',
+            textMuted: 'text-red-300/80'
+          }
+        }
+      }
+      
+      jobCardsHtml = jobSearchResult.items.slice(0, 5).map((entry) => {
+        const job = entry.profile
+        const display = entry.display ?? {}
+        const jobSlug = composeDetailSlug('job', job.name, job.id)
+        const jobUrl = `/job/${encodeURIComponent(jobSlug)}`
+        const summary = escapeHtml(formatSummaryText(display.summary, 'job'))
+        const categoryName = display.categoryName
+        
+        const satisfactionGrade = getSatisfactionGrade(display.satisfaction)
+        
+        // 메트릭 박스들
+        const metrics = [
+          display.salary ? `
+            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
+              <i class="fas fa-won-sign text-emerald-400 text-base"></i>
+              <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 연봉</span>
+              <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.salary.replace(/평균\s*/g, ''))}</span>
+            </div>
+          ` : '',
+          display.satisfaction && satisfactionGrade ? `
+            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
+              <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
+              <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
+              <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
+            </div>
+          ` : '',
+          display.wlb ? `
+            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-24 h-24 flex-shrink-0">
+              <i class="fas fa-balance-scale text-purple-400 text-base"></i>
+              <span class="text-[9px] font-medium text-purple-300/70 mt-0.5">워라벨</span>
+              <span class="text-[11px] font-bold text-purple-300 text-center leading-tight">${escapeHtml(display.wlb)}</span>
+            </div>
+          ` : '',
+          display.departmentName ? `
+            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
+              <i class="fas fa-layer-group text-indigo-400 text-base"></i>
+              <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
+              <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.departmentName.length > 8 ? display.departmentName.substring(0, 8) + '...' : display.departmentName)}</span>
+            </div>
+          ` : ''
+        ].filter(Boolean).join('')
+        
+        return `
+          <article class="group relative">
+            <a href="${jobUrl}" class="block">
+              <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
+                <!-- 배경 그라데이션 글로우 -->
+                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
+                  <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
+                </div>
+                
+                <div class="relative flex gap-4">
+                  <!-- 왼쪽: 직업 정보 (최대 너비 60% 제한) -->
+                  <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
+                    <!-- 헤더: 카테고리 + 직업명 -->
+                    <div class="space-y-2">
+                      ${categoryName ? `
+                        <div class="flex items-center gap-2">
+                          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
+                            <i class="fas fa-folder text-[8px]"></i>
+                            ${escapeHtml(categoryName)}
+                          </span>
+                        </div>
+                      ` : ''}
+                      
+                      <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                        ${escapeHtml(job.name)}
+                      </h2>
+                    </div>
+                    
+                    <!-- 설명 -->
+                    <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
+                      ${summary}
+                    </p>
+                  </div>
+                  
+                  <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
+                  ${metrics ? `
+                    <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
+                      ${metrics}
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            </a>
+          </article>
+        `
+      }).join('')
+
+      // 전공 검색
+      const majorSearchResult = await searchUnifiedMajors(
+        { keyword, page: 1, perPage: 5 },
+        c.env
+      )
+      
+      // 전공 만족도 등급 계산 함수
+      const getMajorSatisfactionGrade = (satisfaction: string | undefined) => {
+        if (!satisfaction) return null
+        const score = parseFloat(satisfaction) || 0
+        
+        if (score >= 80) {
+          return { 
+            level: '매우 좋음', 
+            bg: 'bg-green-500/10', 
+            border: 'border-green-500/20', 
+            iconColor: 'text-green-400',
+            textColor: 'text-green-300',
+            textMuted: 'text-green-300/80'
+          }
+        } else if (score >= 60) {
+          return { 
+            level: '좋음', 
+            bg: 'bg-sky-500/10', 
+            border: 'border-sky-500/20', 
+            iconColor: 'text-sky-400',
+            textColor: 'text-sky-300',
+            textMuted: 'text-sky-300/80'
+          }
+        } else if (score >= 40) {
+          return { 
+            level: '보통', 
+            bg: 'bg-yellow-500/10', 
+            border: 'border-yellow-500/20', 
+            iconColor: 'text-yellow-400',
+            textColor: 'text-yellow-300',
+            textMuted: 'text-yellow-300/80'
+          }
+        } else if (score >= 20) {
+          return { 
+            level: '별로', 
+            bg: 'bg-orange-500/10', 
+            border: 'border-orange-500/20', 
+            iconColor: 'text-orange-400',
+            textColor: 'text-orange-300',
+            textMuted: 'text-orange-300/80'
+          }
+        } else {
+          return { 
+            level: '매우 별로', 
+            bg: 'bg-red-500/10', 
+            border: 'border-red-500/20', 
+            iconColor: 'text-red-400',
+            textColor: 'text-red-300',
+            textMuted: 'text-red-300/80'
+          }
+        }
+      }
+      
+      majorCardsHtml = majorSearchResult.items.slice(0, 5).map((entry) => {
+        const major = entry.profile
+        const display = entry.display ?? {}
+        const majorSlug = composeDetailSlug('major', major.name, major.id)
+        const majorUrl = `/major/${encodeURIComponent(majorSlug)}`
+        const summary = escapeHtml(formatSummaryText(display.summary, 'major'))
+        const categoryName = undefined // categoryName은 제목 위에 표시하지 않고 메트릭 박스로만 표시
+        
+        const satisfactionGrade = getMajorSatisfactionGrade(display.firstJobSatisfaction)
+        
+        // 메트릭 박스들
+        const categoryNameForMetric = display.categoryName && display.categoryName.split(',').length <= 2
+          ? display.categoryName
+          : undefined
+        
+        const careernetMetrics = [
+          display.employmentRate ? `
+            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-24 h-24 flex-shrink-0">
+              <i class="fas fa-user-graduate text-blue-400 text-base"></i>
+              <span class="text-[9px] font-medium text-blue-300/70 mt-0.5">취업률</span>
+              <span class="text-[11px] font-bold text-blue-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.employmentRate.replace(/<[^>]*>/g, ''))}</span>
+            </div>
+          ` : '',
+          display.firstJobSalary ? `
+            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
+              <i class="fas fa-won-sign text-emerald-400 text-base"></i>
+              <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 월봉</span>
+              <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`)}</span>
+            </div>
+          ` : '',
+          display.firstJobSatisfaction && satisfactionGrade ? `
+            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
+              <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
+              <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
+              <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
+            </div>
+          ` : ''
+        ].filter(Boolean)
+        
+        if (categoryNameForMetric) {
+          careernetMetrics.push(`
+            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
+              <i class="fas fa-layer-group text-indigo-400 text-base"></i>
+              <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
+              <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(categoryNameForMetric.length > 8 ? categoryNameForMetric.substring(0, 8) + '...' : categoryNameForMetric)}</span>
+            </div>
+          `)
+        }
+        
+        const metrics = careernetMetrics.join('')
+        
+        return `
+          <article class="group relative">
+            <a href="${majorUrl}" class="block">
+              <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
+                <!-- 배경 그라데이션 글로우 -->
+                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
+                  <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
+                </div>
+                
+                <div class="relative flex gap-4">
+                  <!-- 왼쪽: 전공 정보 (최대 너비 60% 제한) -->
+                  <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
+                    <!-- 헤더: 카테고리 + 전공명 -->
+                    <div class="space-y-2">
+                      ${categoryName ? `
+                        <div class="flex items-center gap-2">
+                          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
+                            <i class="fas fa-folder text-[8px]"></i>
+                            ${escapeHtml(categoryName)}
+                          </span>
+                        </div>
+                      ` : ''}
+                      
+                      <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                        ${escapeHtml(major.name)}
+                      </h2>
+                    </div>
+                    
+                    <!-- 설명 -->
+                    <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
+                      ${summary}
+                    </p>
+                  </div>
+                  
+                  <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
+                  ${metrics ? `
+                    <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
+                      ${metrics}
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            </a>
+          </article>
+        `
+      }).join('')
+    } catch (error) {
+      console.error('검색 오류:', error)
+    }
+  }
+
+  // HowTo는 샘플 데이터 사용
+  const howtoSamples = listSampleHowtoSummaries()
+  if (keyword) {
+    const normalizedQuery = keyword.toLowerCase()
+    howtoResults = howtoSamples
+      .filter((item) => {
+        const title = item.title.toLowerCase()
+        const snippet = item.snippet.toLowerCase()
+        return title.includes(normalizedQuery) || snippet.includes(normalizedQuery)
+      })
+      .slice(0, 3)
+      .map((item) => ({
+        href: `/howto/${encodeURIComponent(item.slug)}`,
+        title: item.title,
+        snippet: item.snippet,
+        keywords: item.keywords
+      }))
+  } else {
+    howtoResults = howtoSamples.slice(0, 3).map((item) => ({
+      href: `/howto/${encodeURIComponent(item.slug)}`,
+      title: item.title,
+      snippet: item.snippet,
+      keywords: item.keywords
+    }))
+  }
 
   const content = `
-    <div class="max-w-4xl mx-auto px-4 md:mt-8">
+    <div class="max-w-[1400px] mx-auto md:px-6 md:mt-8">
         <div class="mb-8">
             <form action="/search" method="get" class="relative">
                 <input 
@@ -2292,38 +3209,36 @@ app.get('/search', (c) => {
             </form>
         </div>
 
-        ${jobResults.length > 0 ? `
+        ${jobCardsHtml ? `
         <div class="mb-8">
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <span class="w-2 h-6 bg-wiki-primary mr-3"></span>
                 직업위키
             </h2>
-            <div class="space-y-3">
-                ${jobResults.map(job => `
-                    <a href="${job.href}" class="glass-card p-4 rounded-lg hover-glow block transition">
-                        <h3 class="text-lg font-semibold text-wiki-text">${escapeHtml(job.title)}</h3>
-                        <p class="text-sm text-wiki-muted mt-1 leading-relaxed">${escapeHtml(job.snippet)}</p>
-                        ${renderKeywordBadges(job.keywords)}
-                    </a>
-                `).join('')}
+            <div class="space-y-4">
+                ${jobCardsHtml}
+                ${jobCardsHtml.split('</article>').length - 1 >= 5 ? `
+                <a href="/job?q=${encodeURIComponent(keyword)}" class="block glass-card py-3 px-6 rounded-xl hover-glow transition text-center">
+                    <span class="text-sm font-medium text-wiki-text">직업 결과 더보기</span>
+                </a>
+                ` : ''}
             </div>
         </div>
         ` : ''}
 
-        ${majorResults.length > 0 ? `
+        ${majorCardsHtml ? `
         <div class="mb-8">
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <span class="w-2 h-6 bg-wiki-secondary mr-3"></span>
                 전공위키
             </h2>
-            <div class="space-y-3">
-                ${majorResults.map(major => `
-                    <a href="${major.href}" class="glass-card p-4 rounded-lg hover-glow block transition">
-                        <h3 class="text-lg font-semibold text-wiki-text">${escapeHtml(major.title)}</h3>
-                        <p class="text-sm text-wiki-muted mt-1 leading-relaxed">${escapeHtml(major.snippet)}</p>
-                        ${renderKeywordBadges(major.keywords)}
-                    </a>
-                `).join('')}
+            <div class="space-y-4">
+                ${majorCardsHtml}
+                ${majorCardsHtml.split('</article>').length - 1 >= 5 ? `
+                <a href="/major?q=${encodeURIComponent(keyword)}" class="block glass-card py-3 px-6 rounded-xl hover-glow transition text-center">
+                    <span class="text-sm font-medium text-wiki-text">전공 결과 더보기</span>
+                </a>
+                ` : ''}
             </div>
         </div>
         ` : ''}
@@ -2342,24 +3257,29 @@ app.get('/search', (c) => {
                         ${renderKeywordBadges(howto.keywords)}
                     </a>
                 `).join('')}
+                ${howtoResults.length >= 3 ? `
+                <a href="/howto" class="block glass-card py-3 px-6 rounded-xl hover-glow transition text-center">
+                    <span class="text-sm font-medium text-wiki-text">HowTo 결과 더보기</span>
+                </a>
+                ` : ''}
             </div>
         </div>
         ` : ''}
 
-        ${jobResults.length === 0 && majorResults.length === 0 && howtoResults.length === 0 ? `
+        ${keyword && !jobCardsHtml && !majorCardsHtml && howtoResults.length === 0 ? `
         <div class="glass-card p-8 rounded-xl text-center">
             <i class="fas fa-search text-4xl text-wiki-muted mb-4"></i>
             <p class="text-lg text-wiki-muted">"${escapedQuery}"에 대한 검색 결과가 없습니다.</p>
-            <p class="text-sm text-wiki-muted mt-2">다른 검색어를 시도하거나 Phase 1 샘플 콘텐츠를 탐색해 보세요.</p>
+            <p class="text-sm text-wiki-muted mt-2">다른 검색어를 시도해보세요.</p>
         </div>
         ` : ''}
     </div>
   `
 
-  const title = hasQuery ? `${query} - Careerwiki 검색` : '검색 - Careerwiki'
-  const description = hasQuery
-    ? createMetaDescription(`"${query}"와 관련된 Careerwiki 직업, 전공, HowTo 정보를 확인하세요.`)
-    : 'Careerwiki에서 직업, 전공, HowTo 샘플 인사이트를 검색해보세요.'
+  const title = keyword ? `${keyword} - Careerwiki 검색` : '검색 - Careerwiki'
+  const description = keyword
+    ? createMetaDescription(`"${keyword}"와 관련된 Careerwiki 직업, 전공 정보를 확인하세요.`)
+    : 'Careerwiki에서 직업, 전공, HowTo 정보를 검색해보세요.'
 
   return c.html(renderLayout(content, escapeHtml(title), escapeHtml(description)))
 })
@@ -2367,9 +3287,7 @@ app.get('/search', (c) => {
 // Unified Job Detail Page (ISR)
 app.get('/job/:slug', async (c) => {
   const slug = c.req.param('slug')
-  console.log(`🔍 직업 페이지 요청: slug="${slug}"`)
   let resolvedId = resolveDetailIdFromSlug('job', slug)
-  console.log(`🔍 resolvedId="${resolvedId}"`)
   
   // 🆕 If resolvedId doesn't contain ':', try to find by name in D1
   if (!resolvedId.includes(':') && c.env.DB) {
@@ -2377,7 +3295,6 @@ app.get('/job/:slug', async (c) => {
       const db = c.env.DB
       // Decode URL-encoded slug back to Korean
       const decodedSlug = decodeURIComponent(slug)
-      console.log(`🔍 D1 이름 검색 시도: slug="${decodedSlug}"`)
       
       // Convert slug to name (replace hyphens with possible separators)
       const possibleNames = [
@@ -2393,21 +3310,16 @@ app.get('/job/:slug', async (c) => {
       for (const name of possibleNames) {
         const result = await db.prepare(
           'SELECT id FROM jobs WHERE LOWER(name) = LOWER(?) LIMIT 1'
-        ).bind(name).first()
+        ).bind(name).first() as { id: string } | null
         
         if (result?.id) {
-          resolvedId = result.id
+          resolvedId = result.id as string
           foundId = true
-          console.log(`✅ D1 이름 검색 성공: "${name}" → ID "${resolvedId}"`)
           break
         }
       }
-      
-      if (!foundId) {
-        console.log(`⚠️  D1 이름 검색 실패: 시도한 이름들 - ${possibleNames.join(', ')}`)
-      }
     } catch (error) {
-      console.error('❌ D1 이름 검색 오류:', error)
+      console.error('D1 이름 검색 오류:', error)
     }
   }
   
@@ -2504,7 +3416,6 @@ app.get('/job/:slug', async (c) => {
         // 🆕 Redirect to clean URL if query parameters are present
         if (careernetId || goyongJobId) {
           const cleanUrl = `/job/${encodeURIComponent(slug)}`
-          console.log(`♻️  리다이렉트: 깨끗한 URL로 이동 - ${cleanUrl}`)
           // Note: Redirect is handled by returning early, but we'll let ISR handle it
         }
         
@@ -2676,9 +3587,9 @@ app.get('/major/:slug', async (c) => {
       const majorId = c.req.query('goyongMajorId') || undefined
       const includeSources = parseSourcesQuery(c.req.query('sources'))
 
-      const goyongMajorGb = majorGbParam === '1' ? '1' : majorGbParam === '2' ? '2' : undefined
+      const goyongMajorGb = majorGbParam === '1' ? '1' as const : majorGbParam === '2' ? '2' as const : undefined
       const goyongParams = goyongMajorGb && departmentId && majorId
-        ? { majorGb: goyongMajorGb, departmentId, majorId }
+        ? { majorGb: goyongMajorGb, departmentId, majorId } as { majorGb: '1' | '2'; departmentId: string; majorId: string }
         : undefined
 
       const result = await getUnifiedMajorDetail(
@@ -2751,9 +3662,9 @@ app.get('/major/:slug', async (c) => {
         const majorId = c.req.query('goyongMajorId') || undefined
         const includeSources = parseSourcesQuery(c.req.query('sources'))
 
-        const goyongMajorGb = majorGbParam === '1' ? '1' : majorGbParam === '2' ? '2' : undefined
+        const goyongMajorGb = majorGbParam === '1' ? '1' as const : majorGbParam === '2' ? '2' as const : undefined
         const goyongParams = goyongMajorGb && departmentId && majorId
-          ? { majorGb: goyongMajorGb, departmentId, majorId }
+          ? { majorGb: goyongMajorGb, departmentId, majorId } as { majorGb: '1' | '2'; departmentId: string; majorId: string }
           : undefined
 
         const result = await getUnifiedMajorDetail(

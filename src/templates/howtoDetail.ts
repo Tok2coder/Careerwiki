@@ -1,6 +1,6 @@
 import type { HowtoGuideDetail } from '../types/howto'
-import type { CtaLinkOption, TabEntry, CommentPolicyAttributes } from './detailTemplateUtils'
-import { buildCommentGovernanceItems, renderCtaGroup, renderCommentsPlaceholder, renderTabset, resolveCommentPolicy } from './detailTemplateUtils'
+import type { CommentPolicyAttributes } from './detailTemplateUtils'
+import { renderCommentsPlaceholder, resolveCommentPolicy } from './detailTemplateUtils'
 
 const escapeHtml = (value?: string | null): string => {
   if (!value) return ''
@@ -35,24 +35,6 @@ const renderChips = (items?: string[] | null): string => {
   return chips.length ? `<div class="flex flex-wrap gap-2" data-cw-telemetry-component="howto-chip-list">${chips.join('')}</div>` : ''
 }
 
-const renderKeyMetrics = (metrics?: Array<{ label: string; value: string; hint?: string }>): string => {
-  if (!metrics || metrics.length === 0) return ''
-  return `
-    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4" aria-label="핵심 지표" data-cw-telemetry-component="howto-metrics">
-      ${metrics
-        .map(
-          (metric) => `
-            <article class="bg-wiki-bg/60 border border-wiki-border rounded-xl p-4" data-cw-detail-card data-cw-telemetry-component="howto-metric-card">
-              <p class="text-xs text-wiki-muted uppercase tracking-wide">${escapeHtml(metric.label)}</p>
-              <p class="text-lg font-semibold text-white mt-1">${escapeHtml(metric.value)}</p>
-              ${metric.hint ? `<p class="text-[10px] text-wiki-muted mt-2">${escapeHtml(metric.hint)}</p>` : ''}
-            </article>
-          `
-        )
-        .join('')}
-    </section>
-  `
-}
 
 const renderSteps = (steps: HowtoGuideDetail['steps']): string => {
   if (!steps || steps.length === 0) {
@@ -60,40 +42,39 @@ const renderSteps = (steps: HowtoGuideDetail['steps']): string => {
   }
 
   return `
-    <ol class="space-y-8" data-cw-howto-steps data-cw-telemetry-component="howto-steps" role="list">
+    <div class="space-y-12" data-cw-howto-steps data-cw-telemetry-component="howto-steps">
       ${steps
         .map((step, index) => {
           const header = `
-            <header class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-full bg-wiki-primary/15 text-wiki-primary flex items-center justify-center font-semibold" aria-hidden="true">${index + 1}</div>
-              <div>
-                <h3 class="text-xl font-semibold text-white">${escapeHtml(step.title)}</h3>
-                <p class="text-xs text-wiki-muted mt-1">${escapeHtml(step.id)}</p>
-              </div>
+            <header class="mb-6">
+              <h2 class="text-2xl md:text-3xl font-bold text-white mb-3 flex items-start gap-3">
+                <span class="text-wiki-primary font-bold">${index + 1}.</span>
+                <span>${escapeHtml(step.title)}</span>
+              </h2>
             </header>
           `
           const body = `
-            <div class="mt-4 space-y-5">
+            <div class="space-y-6">
               ${formatRichText(step.description)}
               ${step.keyActions && step.keyActions.length ? `
-                <section data-cw-telemetry-component="howto-step-actions">
-                  <h4 class="content-heading font-semibold text-wiki-muted uppercase tracking-wide mb-2">핵심 액션</h4>
-                  <ul class="space-y-2 list-disc list-inside content-text text-wiki-text" role="list">
+                <div class="bg-wiki-bg/40 border-l-4 border-wiki-primary rounded-r-lg p-4 space-y-2" data-cw-telemetry-component="howto-step-actions">
+                  <h4 class="text-sm font-semibold text-wiki-primary uppercase tracking-wide mb-3">핵심 액션</h4>
+                  <ul class="space-y-2 list-disc list-inside text-base text-wiki-text" role="list">
                     ${step.keyActions.map((action) => `<li role="listitem">${escapeHtml(action)}</li>`).join('')}
                   </ul>
-                </section>
+                </div>
               ` : ''}
               ${step.expectedOutcome ? `
-                <aside class="border border-wiki-border rounded-lg p-3 bg-wiki-bg/70 content-text text-wiki-muted" aria-label="예상 산출물" data-cw-telemetry-component="howto-step-outcome">
-                  <span class="font-semibold text-wiki-secondary">예상 산출물 · </span>${escapeHtml(step.expectedOutcome)}
-                </aside>
+                <div class="bg-wiki-secondary/10 border border-wiki-secondary/30 rounded-lg p-4 text-base text-wiki-text" aria-label="예상 산출물" data-cw-telemetry-component="howto-step-outcome">
+                  <span class="font-semibold text-wiki-secondary">💡 예상 산출물: </span>${escapeHtml(step.expectedOutcome)}
+                </div>
               ` : ''}
             </div>
           `
-          return `<li id="${escapeHtml(step.id)}" class="glass-card p-6 rounded-2xl space-y-4" data-cw-detail-card data-cw-telemetry-component="howto-step" role="listitem">${header}${body}</li>`
+          return `<section id="${escapeHtml(step.id)}" class="py-6 border-b border-wiki-border/40 last:border-b-0" data-cw-telemetry-component="howto-step">${header}${body}</section>`
         })
         .join('')}
-    </ol>
+    </div>
   `
 }
 
@@ -245,92 +226,97 @@ const renderRecommendedSection = (
   `
 }
 
-const resolveHowtoCtaIcon = (type?: string | null): string => {
-  const normalized = (type ?? '').toLowerCase()
-  if (normalized === 'ai') return 'fa-robot'
-  if (normalized === 'job') return 'fa-briefcase'
-  if (normalized === 'major') return 'fa-graduation-cap'
-  return 'fa-arrow-up-right-from-square'
+
+const renderRelatedJobOrMajor = (action: HowtoGuideDetail['nextActions'][0]): string => {
+  if (!action.href) return ''
+  const icon = action.type === 'job' ? 'fa-briefcase' : action.type === 'major' ? 'fa-graduation-cap' : ''
+  if (!icon) return ''
+  
+  return `
+    <li>
+      <a href="${escapeHtml(action.href)}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200" data-cw-telemetry-action="sidebar-related-click">
+        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary">
+          <i class="fas ${icon} text-xs" aria-hidden="true"></i>
+        </span>
+        <div class="flex-1 min-w-0">
+          <span class="text-sm text-wiki-text hover:text-white font-medium block">${escapeHtml(action.label)}</span>
+          ${action.description ? `<span class="text-xs text-wiki-muted mt-0.5 block line-clamp-2">${escapeHtml(action.description)}</span>` : ''}
+        </div>
+        <i class="fas fa-chevron-right text-[10px] text-wiki-muted/50" aria-hidden="true"></i>
+      </a>
+    </li>
+  `
 }
 
-const mapHowtoCtas = (guide: HowtoGuideDetail): CtaLinkOption[] => {
-  const links = guide.ctaLinks?.length
-    ? guide.ctaLinks
-    : [
-        { label: 'AI 커리어 분석 실행', href: '/analyzer?from=howto', type: 'ai' },
-        { label: '그로스 직업 정보 보기', href: '/job/growth-marketing-director', type: 'job' }
-      ]
-
-  return links.map((link, index) => ({
-    href: link.href,
-    label: link.label,
-    icon: resolveHowtoCtaIcon(link.type),
-    ctaType: link.type ?? 'external',
-    variant: (link.type ?? 'external') === 'ai' || index === 0 ? 'primary' : 'secondary'
-  }))
-}
-
-const renderCtas = (guide: HowtoGuideDetail): string => {
-  const normalizedLinks = mapHowtoCtas(guide)
-  return renderCtaGroup({
-    entityType: 'guide',
-    entityId: guide.telemetryId,
-    links: normalizedLinks
-  })
-}
-
-const renderGovernanceCard = (policy?: Required<CommentPolicyAttributes> | null): string => {
-  if (!policy) {
-    return ''
-  }
-
-  const items = buildCommentGovernanceItems(policy)
-  if (!items.length) {
+const renderSidebarSection = (title: string, icon: string, body: string): string => {
+  if (!body || !body.trim()) {
     return ''
   }
 
   return `
-    <section class="glass-card p-6 rounded-xl space-y-3" aria-label="커뮤니티 운영 정책" data-cw-telemetry-component="howto-governance-summary">
-      <h3 class="text-lg font-semibold text-wiki-text">커뮤니티 운영 정책</h3>
-      <ul class="list-disc list-inside space-y-1 text-xs text-wiki-muted">
-        ${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
-      </ul>
+    <section class="glass-card border-0 md:border px-3 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-transparent md:bg-wiki-bg/30" data-howto-sidebar-section>
+      <div class="flex items-center gap-2.5 pb-2 border-b border-wiki-border/30 md:border-0 md:pb-0">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-wiki-secondary/15 text-wiki-secondary">
+          <i class="fas ${icon} text-sm" aria-hidden="true"></i>
+        </span>
+        <h3 class="text-base font-bold text-white">${escapeHtml(title)}</h3>
+      </div>
+      ${body}
     </section>
   `
 }
 
 const renderSidebar = (
   guide: HowtoGuideDetail,
-  relatedItems: Array<Required<NonNullable<HowtoGuideDetail['relatedContent']>[number]>>,
-  policy: Required<CommentPolicyAttributes> | null
+  relatedItems: Array<Required<NonNullable<HowtoGuideDetail['relatedContent']>[number]>>
 ): string => {
-  const prerequisitesSection = guide.prerequisites?.length
-    ? `
-      <section class="glass-card p-6 rounded-xl space-y-3" aria-label="준비 체크리스트" data-cw-telemetry-component="howto-prerequisites">
-        <h3 class="text-lg font-semibold text-wiki-text">준비 체크리스트</h3>
-        ${renderChips(guide.prerequisites)}
-      </section>
-    `
-    : ''
+  const relatedJobs = guide.nextActions?.filter(action => action.type === 'job') || []
+  const relatedMajors = guide.nextActions?.filter(action => action.type === 'major') || []
+  
+  const sections: string[] = []
+  
+  if (relatedJobs.length) {
+    sections.push(
+      renderSidebarSection(
+        '연관 직업',
+        'fa-briefcase',
+        `<ul class="space-y-2" role="list">${relatedJobs.map(action => renderRelatedJobOrMajor(action)).join('')}</ul>`
+      )
+    )
+  }
 
-  const tagsSection = guide.tags.length
-    ? `
-      <section class="glass-card p-6 rounded-xl space-y-3" aria-label="키워드" data-cw-telemetry-component="howto-tags">
-        <h3 class="text-lg font-semibold text-wiki-text">키워드</h3>
-        ${renderChips(guide.tags)}
-      </section>
-    `
-    : ''
+  if (relatedMajors.length) {
+    sections.push(
+      renderSidebarSection(
+        '연관 전공',
+        'fa-graduation-cap',
+        `<ul class="space-y-2" role="list">${relatedMajors.map(action => renderRelatedJobOrMajor(action)).join('')}</ul>`
+      )
+    )
+  }
 
-  const recommendedSection = renderRecommendedSection(relatedItems)
-  const governanceCard = renderGovernanceCard(policy)
+  if (relatedItems.length) {
+    const relatedHowtoList = relatedItems
+      .map((item) => `
+        <li>
+          <a href="/howto/${escapeHtml(encodeURIComponent(item.slug))}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/40 md:border-wiki-border/70 bg-wiki-bg/60 px-3 py-2 md:px-4 md:py-3 content-text text-wiki-primary hover:border-wiki-primary hover:text-white transition" data-cw-telemetry-action="related-click">
+            <span class="font-semibold">${escapeHtml(item.title)}</span>
+            ${item.summary ? `<span class="text-xs text-wiki-muted">${escapeHtml(item.summary)}</span>` : ''}
+          </a>
+        </li>
+      `)
+      .join('')
+    
+    sections.push(
+      renderSidebarSection(
+        '관련 HowTo',
+        'fa-route',
+        `<ul class="space-y-2" role="list">${relatedHowtoList}</ul>`
+      )
+    )
+  }
 
-  return `
-    ${prerequisitesSection}
-    ${tagsSection}
-    ${governanceCard}
-    ${recommendedSection}
-  `
+  return sections.filter(section => section && section.trim().length > 0).join('')
 }
 
 const buildCommentCopy = (): {
@@ -372,41 +358,102 @@ const serializeForScript = (value: unknown): string =>
     .replace(/>/g, '\\u003e')
     .replace(/&/g, '\\u0026')
 
-export const renderHowtoGuideDetail = (guide: HowtoGuideDetail): string => {
-  const keyMetrics = renderKeyMetrics(guide.keyMetrics)
+const renderSourcesCollapsible = (guide: HowtoGuideDetail): string => {
+  const normalizedId = guide.telemetryId.replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'default'
+  const toggleId = `howto-source-toggle-${normalizedId}`
+  const panelId = `howto-source-panel-${normalizedId}`
 
-  const heroMetaItems: Array<{ label: string; value: string }> = []
-  if (guide.difficulty) {
-    heroMetaItems.push({ label: '난이도', value: guide.difficulty })
+  // 리소스를 출처 섹션으로 변환
+  const resources = guide.resources || []
+  if (resources.length === 0) {
+    return ''
   }
-  if (guide.estimatedDuration) {
-    heroMetaItems.push({ label: '예상 기간', value: guide.estimatedDuration })
-  }
-  if (guide.audience) {
-    heroMetaItems.push({ label: '대상', value: guide.audience })
-  }
-  const heroMeta = heroMetaItems.length
-    ? `
-      <dl class="flex flex-wrap gap-3 text-xs text-wiki-muted" data-cw-telemetry-component="howto-hero-meta" aria-label="가이드 메타 정보">
-        ${heroMetaItems
-          .map(
-            (item) => `
-              <div class="px-3 py-1 border border-wiki-border rounded-lg bg-wiki-bg/40">
-                <dt class="sr-only">${escapeHtml(item.label)}</dt>
-                <dd>${escapeHtml(item.label)} · ${escapeHtml(item.value)}</dd>
-              </div>
-            `
-          )
-          .join('')}
-      </dl>
-    `
-    : ''
+
+  const resourcesList = resources
+    .map((resource) => `
+      <li class="p-3 border border-wiki-border rounded-lg bg-wiki-bg/60 transition" data-source-entry="resource">
+        <div class="flex items-start gap-3">
+          <i class="fas fa-link text-wiki-secondary mt-1" aria-hidden="true"></i>
+          <div class="space-y-1">
+            <a href="${escapeHtml(resource.url)}" target="_blank" rel="noopener" class="text-sm font-semibold text-wiki-primary hover:text-wiki-secondary transition">
+              ${escapeHtml(resource.label)}
+            </a>
+            ${resource.description ? `<p class="text-xs text-wiki-muted">${escapeHtml(resource.description)}</p>` : ''}
+          </div>
+        </div>
+      </li>
+    `)
+    .join('')
+
+  const panel = `
+    <div class="space-y-3">
+      <p class="text-sm text-wiki-muted">이 가이드에서 참고한 리소스와 출처입니다.</p>
+      <ul class="space-y-2" role="list">
+        ${resourcesList}
+      </ul>
+    </div>
+  `
+
+  const iconId = `howto-source-icon-${normalizedId}`
+  const badgeLabel = `${resources.length}개 리소스`
+
+  return `
+    <section class="glass-card p-0 rounded-none md:rounded-2xl border border-wiki-border/60 bg-wiki-bg/50" data-source-collapsible>
+      <button
+        type="button"
+        id="${toggleId}"
+        class="w-full flex items-center justify-between gap-3 px-3 py-4 md:px-6 md:py-5 content-text font-semibold text-white transition hover:text-wiki-secondary cursor-pointer"
+        aria-controls="${panelId}"
+        aria-expanded="false"
+      >
+        <span class="flex items-center gap-3">
+          <i class="fas fa-database text-wiki-secondary text-lg" aria-hidden="true"></i>
+          <span class="text-base">데이터 출처</span>
+        </span>
+        <div class="flex items-center gap-3 text-sm text-wiki-muted">
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-wiki-secondary/30 bg-wiki-secondary/10 px-3 py-1.5 text-wiki-secondary font-medium">${escapeHtml(badgeLabel)}</span>
+          <i id="${iconId}" class="fas fa-chevron-down text-base transition-transform duration-200" aria-hidden="true"></i>
+        </div>
+      </button>
+      <div class="border-t border-wiki-border/60 hidden bg-wiki-bg/45 px-6 py-5" id="${panelId}">
+        ${panel}
+      </div>
+    </section>
+    <script>
+      (function() {
+        const toggle = document.getElementById('${toggleId}');
+        const panel = document.getElementById('${panelId}');
+        const icon = document.getElementById('${iconId}');
+        
+        if (toggle && panel && icon) {
+          toggle.addEventListener('click', function() {
+            const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+            
+            if (isExpanded) {
+              panel.classList.add('hidden');
+              toggle.setAttribute('aria-expanded', 'false');
+              icon.classList.remove('fa-chevron-up');
+              icon.classList.add('fa-chevron-down');
+            } else {
+              panel.classList.remove('hidden');
+              toggle.setAttribute('aria-expanded', 'true');
+              icon.classList.remove('fa-chevron-down');
+              icon.classList.add('fa-chevron-up');
+            }
+          });
+        }
+      })();
+    </script>
+  `
+}
+
+export const renderHowtoGuideDetail = (guide: HowtoGuideDetail): string => {
 
   const prerequisites = guide.prerequisites?.length
     ? `
-        <section aria-label="필수 준비 사항" data-cw-telemetry-component="howto-prerequisites-inline">
-          <h3 class="text-base font-semibold text-wiki-text mb-2">필수 준비 사항</h3>
-          <ul class="list-disc list-inside content-text text-wiki-muted space-y-1" role="list">
+        <section class="bg-wiki-bg/30 border-l-4 border-wiki-primary rounded-r-lg p-5 space-y-3" aria-label="필수 준비 사항" data-cw-telemetry-component="howto-prerequisites-inline">
+          <h3 class="text-lg font-semibold text-white mb-3">📋 필수 준비 사항</h3>
+          <ul class="space-y-2 list-disc list-inside text-base text-wiki-text" role="list">
             ${guide.prerequisites.map((item) => `<li role="listitem">${escapeHtml(item)}</li>`).join('')}
           </ul>
         </section>
@@ -415,70 +462,50 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail): string => {
 
   const checkpoints = guide.checkpoints?.length
     ? `
-        <section class="space-y-3" aria-label="체크포인트" data-cw-telemetry-component="howto-checkpoints">
-          <h3 class="text-base font-semibold text-wiki-text">체크포인트</h3>
-          ${guide.checkpoints
-            .map(
-              (checkpoint) => `
-                <article class="border border-wiki-border rounded-lg p-3 bg-wiki-bg/70" data-cw-detail-card data-cw-telemetry-component="howto-checkpoint">
-                  <h4 class="content-heading text-white font-semibold">${escapeHtml(checkpoint.title)}</h4>
-                  <p class="text-xs text-wiki-muted mt-1">${escapeHtml(checkpoint.description)}</p>
-                </article>
-              `
-            )
-            .join('')}
+        <section class="space-y-4" aria-label="체크포인트" data-cw-telemetry-component="howto-checkpoints">
+          <h3 class="text-xl font-semibold text-white mb-4">✅ 체크포인트</h3>
+          <div class="grid gap-3 md:grid-cols-2">
+            ${guide.checkpoints
+              .map(
+                (checkpoint) => `
+                  <div class="border border-wiki-border rounded-lg p-4 bg-wiki-bg/40 hover:bg-wiki-bg/60 transition" data-cw-telemetry-component="howto-checkpoint">
+                    <h4 class="text-sm font-semibold text-white mb-1">${escapeHtml(checkpoint.title)}</h4>
+                    <p class="text-sm text-wiki-muted">${escapeHtml(checkpoint.description)}</p>
+                  </div>
+                `
+              )
+              .join('')}
+          </div>
         </section>
       `
     : ''
 
-  const overviewContent = `
-    <article class="glass-card p-8 rounded-2xl space-y-5" data-cw-detail-card data-cw-telemetry-component="howto-overview">
-      <header class="space-y-4">
-        <h2 class="text-2xl font-semibold text-white">개요</h2>
+  // 블로그 형태: 모든 내용을 하나의 글로 쭉쭉 나열
+  const blogContent = `
+    <article class="prose prose-invert max-w-none space-y-10" data-cw-telemetry-component="howto-blog-content">
+      <!-- 서론 -->
+      <section class="space-y-4">
         ${formatRichText(guide.summary)}
         ${guide.sampleNote ? `<p class="content-text text-amber-300 bg-amber-500/10 border border-amber-400/40 rounded-lg p-3" role="note">${escapeHtml(guide.sampleNote)}</p>` : ''}
-      </header>
-      <div class="grid gap-6 md:grid-cols-2">
-        ${prerequisites}
-        ${checkpoints}
-      </div>
+      </section>
+
+      <!-- 필수 준비 사항 (있는 경우) -->
+      ${prerequisites}
+
+      <!-- 체크포인트 (있는 경우) -->
+      ${checkpoints}
+
+      <!-- 본문: 단계별 가이드 -->
+      ${guide.steps && guide.steps.length > 0 ? `
+        <section class="space-y-8" data-cw-telemetry-component="howto-steps">
+          ${renderSteps(guide.steps)}
+        </section>
+      ` : ''}
+
+
+      <!-- 마무리 (다음 액션은 사이드바로 이동했으므로 제거) -->
     </article>
   `
-
-  const playbookContent = `
-    <section data-cw-detail-card data-cw-telemetry-component="howto-playbook">
-      ${renderSteps(guide.steps)}
-    </section>
-  `
-
-  const resourcesContent = `
-    <div class="space-y-6" data-cw-telemetry-component="howto-resources-block">
-      <article class="glass-card p-6 rounded-2xl space-y-4" data-cw-detail-card>
-        <h2 class="text-xl font-semibold text-white">추천 리소스</h2>
-        ${renderResources(guide.resources)}
-      </article>
-      ${guide.nextActions?.length ? `
-        <article class="glass-card p-6 rounded-2xl space-y-4" data-cw-detail-card>
-          <h2 class="text-xl font-semibold text-white">다음 액션</h2>
-          ${renderNextActions(guide.nextActions)}
-        </article>
-      ` : ''}
-    </div>
-  `
-
-  const tabEntries: TabEntry[] = [
-    { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewContent },
-    { id: 'playbook', label: '실행 플레북', icon: 'fa-route', content: playbookContent },
-    { id: 'resources', label: '리소스', icon: 'fa-toolbox', content: resourcesContent }
-  ]
-
-  const tabLayout = renderTabset({
-    entityType: 'guide',
-    entityId: guide.telemetryId,
-    entries: tabEntries
-  })
-
-  const ctaBlock = renderCtas(guide)
 
   const { config: commentConfig, policy: commentPolicy } = buildCommentCopy()
 
@@ -497,7 +524,9 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail): string => {
   })
 
   const relatedItems = sanitizeRelatedContent(guide.relatedContent)
-  const sidebarContent = renderSidebar(guide, relatedItems, commentPolicy)
+  const sidebarContent = renderSidebar(guide, relatedItems)
+  const sourcesCollapsible = renderSourcesCollapsible(guide)
+  const hasSidebar = sidebarContent.trim().length > 0
 
   const detailMeta = {
     entity: {
@@ -509,7 +538,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail): string => {
       summary: guide.summary,
       sources: [] as string[]
     },
-    tabs: tabEntries.map((entry) => entry.id),
+    tabs: [],
     recommendations: relatedItems.map((item) => normalizeSlug(item.slug)),
     sourceStatus: [] as string[],
     partials: [] as string[],
@@ -525,50 +554,89 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail): string => {
 
   const titleId = `howto-title-${escapeHtml(guide.telemetryId)}`
 
-  return `
-    <article class="max-w-[1400px] mx-auto md:px-6 md:py-8 md:mt-4 space-y-10" data-cw-detail-root data-cw-detail-kind="howto" aria-labelledby="${titleId}">
-      <header class="glass-card px-6 py-8 md:p-8 rounded-none md:rounded-2xl space-y-6" data-cw-detail-hero data-cw-telemetry-component="howto-hero" data-cw-telemetry-scope="howto-hero">
-        <div class="space-y-4">
-          <div class="flex flex-wrap items-center gap-3">
-            ${guide.tags.length ? `<div class="flex gap-2" aria-label="주요 태그" data-cw-telemetry-component="howto-hero-tags">${guide.tags
-              .map((tag) => `<span class="px-3 py-1 rounded-full bg-wiki-secondary/10 text-xs text-wiki-secondary">${escapeHtml(tag)}</span>`)
-              .join('')}</div>` : ''}
-            <span class="px-3 py-1 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary">HowTo 샘플</span>
-          </div>
-          <h1 class="text-4xl font-bold text-white flex flex-wrap items-center gap-3" id="${titleId}">
-            ${guide.heroIcon ? `<i class="fas ${escapeHtml(guide.heroIcon)} text-wiki-secondary" aria-hidden="true"></i>` : ''}
-            <span>${escapeHtml(guide.title)}</span>
-          </h1>
-          <p class="content-text text-wiki-muted">업데이트: ${escapeHtml(guide.updatedAt)}</p>
-        </div>
-        ${heroMeta}
-        ${ctaBlock}
-        ${keyMetrics ? `<div class="pt-4 border-t border-wiki-border/60 space-y-6">${keyMetrics}</div>` : ''}
-        <div class="flex gap-3" role="group" aria-label="세부 페이지 보조 액션" data-cw-telemetry-component="howto-hero-actions">
-          <a href="/howto" class="px-4 py-2 border border-wiki-border rounded-lg content-text text-wiki-muted hover:border-wiki-primary hover:text-wiki-primary transition" data-cw-telemetry-action="howto-back">
-            <i class="fas fa-arrow-left mr-2" aria-hidden="true"></i>목록으로
-          </a>
-          <button class="px-4 py-2 bg-wiki-primary text-white rounded-lg content-text hover:bg-blue-600 transition" data-share="true" data-entity-type="guide" data-entity-id="${escapeHtml(guide.telemetryId)}" data-cw-telemetry-component="howto-share">
-            <i class="fas fa-share-alt mr-2" aria-hidden="true"></i>공유
-          </button>
-          <a href="#cw-comments" class="px-4 py-2 border border-wiki-border rounded-lg content-text text-wiki-muted hover:border-wiki-primary hover:text-wiki-primary transition" data-cw-telemetry-component="howto-hero-actions" data-cw-telemetry-action="hero-comment-anchor" data-entity-id="${escapeHtml(guide.telemetryId)}" data-entity-type="guide">
-            <i class="fas fa-comments mr-2" aria-hidden="true"></i>커뮤니티 피드백 보기
-          </a>
-        </div>
-      </header>
+  const mainColumn = `<div class="space-y-6 min-w-0">${blogContent}</div>`
+  const sidebarMarkup = hasSidebar
+    ? `<aside class="space-y-6 lg:sticky lg:top-28 lg:h-fit lg:self-start" data-howto-sidebar>${sidebarContent}</aside>`
+    : ''
 
-      <div class="grid lg:grid-cols-[2fr,1fr] gap-8 items-start">
-        <main class="space-y-8" id="cw-detail-main" data-cw-telemetry-scope="howto-main" data-cw-telemetry-component="howto-main">
-          ${tabLayout}
-          ${commentsPlaceholder}
-        </main>
-        <aside class="space-y-6" aria-labelledby="cw-detail-sidebar-heading" role="complementary" data-cw-telemetry-scope="howto-sidebar" data-cw-telemetry-component="howto-sidebar">
-          <h2 id="cw-detail-sidebar-heading" class="text-lg font-semibold text-wiki-text sr-only">추천 및 보조 정보</h2>
-          ${sidebarContent}
-        </aside>
+  const layoutBlock = hasSidebar
+    ? `
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)] lg:items-start" data-howto-layout>
+          ${mainColumn}
+          ${sidebarMarkup}
+        </div>
+      `
+    : `<div class="space-y-6" data-howto-layout>${blogContent}</div>`
+
+  const sourcesBlock = sourcesCollapsible ? `<div data-howto-sources>${sourcesCollapsible}</div>` : ''
+  const communityBlock = `<div data-howto-community>${commentsPlaceholder}</div>`
+
+  const canonicalPath = `/howto/${encodeURIComponent(guide.slug)}`
+
+  return `
+    <div class="max-w-[1400px] mx-auto md:px-6 space-y-4 md:space-y-8 md:py-8 md:mt-4">
+      <!-- 목록으로 버튼 -->
+      <div class="flex items-center">
+        <a href="/howto" class="inline-flex items-center gap-2 px-4 py-2 text-sm text-wiki-muted hover:text-wiki-primary transition" data-cw-telemetry-action="howto-back">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          <span>목록으로</span>
+        </a>
       </div>
 
+      <section class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8" data-howto-hero>
+        <div class="space-y-5">
+          <!-- 태그 -->
+          ${guide.tags.length ? `<div class="flex flex-wrap gap-2" aria-label="주요 태그" data-cw-telemetry-component="howto-hero-tags">${guide.tags
+            .map((tag) => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(tag)}</span>`)
+            .join('')}</div>` : ''}
+          
+          <!-- 제목과 공유 버튼 -->
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight" id="${titleId}">
+              ${escapeHtml(guide.title)}
+            </h1>
+            <div class="relative shrink-0" data-share-root data-cw-telemetry-scope="howto-hero-actions">
+              <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open">
+                <i class="fas fa-share-nodes" aria-hidden="true"></i>
+                공유
+              </button>
+              <div class="absolute right-0 mt-2 w-72 rounded-xl border border-wiki-border/60 bg-wiki-bg/95 shadow-xl backdrop-blur hidden z-[1001]" data-share-panel data-cw-telemetry-component="howto-share-panel" role="dialog" aria-modal="false" aria-label="링크 공유">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-wiki-border/60">
+                  <p class="text-sm font-semibold text-white">'${escapeHtml(guide.title)}' 공유하기</p>
+                  <button type="button" class="text-xs text-wiki-muted hover:text-white transition" data-share-close aria-label="닫기">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div class="p-4 space-y-3">
+                  <div class="flex items-center gap-2">
+                    <input type="text" class="flex-1 px-3 py-2 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-xs text-white focus:outline-none" value="${escapeHtml(canonicalPath)}" readonly data-share-url>
+                    <button type="button" class="px-3 py-2 bg-wiki-primary text-white text-xs rounded-md hover:bg-blue-600 transition" data-share-copy data-cw-telemetry-component="howto-share-copy" data-cw-telemetry-action="share-copy">
+                      <i class="fas fa-copy mr-1" aria-hidden="true"></i>복사
+                    </button>
+                  </div>
+                  <p class="text-[11px] text-wiki-muted">복사 버튼을 누르면 링크가 클립보드에 저장됩니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 작성일 및 작성자 -->
+          <div class="flex items-center gap-4 text-sm text-wiki-muted">
+            <span>${escapeHtml(guide.updatedAt)}</span>
+            <span class="text-wiki-border">·</span>
+            <span>CareerWiki</span>
+          </div>
+          
+          <!-- 요약 설명 -->
+          ${guide.summary ? `<p class="text-[15px] text-wiki-muted leading-relaxed" data-cw-telemetry-component="howto-hero-summary">${escapeHtml(guide.summary)}</p>` : ''}
+        </div>
+      </section>
+
+      ${layoutBlock}
+      ${sourcesBlock}
+      ${communityBlock}
+
       ${metaScript}
-    </article>
+    </div>
   `
 }

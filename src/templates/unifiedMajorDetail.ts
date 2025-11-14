@@ -14,6 +14,8 @@ import {
   sanitizeJson
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
+import { renderKoreaMap, normalizeRegionName, type RegionData } from '../components/koreaMap'
+import { inferRegionFromUniversityName } from '../utils/universityRegionMapper'
 
 export interface UnifiedMajorDetailTemplateParams {
   profile: UnifiedMajorDetail
@@ -43,7 +45,8 @@ const safeTrim = (value: any): string => {
 type TocItem = { id: string; label: string; icon: string }
 
 const renderSectionToc = (sectionKey: 'overview' | 'curriculum' | 'career' | 'universities' | 'network' | 'details', heading: string, items: TocItem[]): string => {
-  if (!items.length) {
+  // 항목이 1개 이하면 목차 숨김 (목차가 의미 없음)
+  if (items.length <= 1) {
     return ''
   }
 
@@ -93,37 +96,467 @@ const anchorIdFactory = (sectionKey: string, label: string): string => {
   return `${sectionKey}-${normalized}`
 }
 
-const renderUniversities = (universities?: UnifiedMajorDetail['universities']): string => {
-  if (!universities || universities.length === 0) {
-    return ''
-  }
+/**
+ * 대학 유형 정규화 (고용24 우선, 없으면 기타 로직 사용)
+ */
+const normalizeUniversityType = (type?: string): '대학교' | '전문대학' | '기타' => {
+  if (!type) return '기타'
+  
+  const normalized = type.trim()
+  
+  // 정확한 매칭 (고용24 + 커리어넷)
+  if (normalized === '4년제' || normalized === '일반대' || normalized === '대학교') return '대학교'
+  if (normalized === '전문대' || normalized === '전문대학' || normalized === '2년제') return '전문대학'
+  
+  // 패턴 매칭
+  const lower = normalized.toLowerCase()
+  if (lower.includes('4년') || lower.includes('일반')) return '대학교'
+  if (lower.includes('전문') || lower.includes('2년')) return '전문대학'
+  
+  // 기타
+  return '기타'
+}
 
+/**
+ * 지역별 + 유형별 대학 집계
+ */
+interface UniversityByRegionAndType {
+  universities: UnifiedMajorDetail['universities']
+  regular: UnifiedMajorDetail['universities']  // 대학교(4년제)
+  college: UnifiedMajorDetail['universities']  // 전문대학
+  regionCounts: Record<string, { regular: number; college: number }>
+}
+
+const aggregateUniversitiesByRegion = (universities?: UnifiedMajorDetail['universities']): UniversityByRegionAndType => {
+  const result: UniversityByRegionAndType = {
+    universities: universities || [],
+    regular: [],
+    college: [],
+    regionCounts: {}
+  }
+  
+  if (!universities || universities.length === 0) {
+    return result
+  }
+  
+  let skippedCount = 0
+  let processedCount = 0
+  
+  universities.forEach(uni => {
+    // Area가 없는 대학은 제외
+    if (!uni.area) {
+      skippedCount++
+      return
+    }
+    
+    processedCount++
+    
+    const uniType = normalizeUniversityType(uni.universityType)
+    const region = normalizeRegionName(uni.area)
+    
+    if (!region) return
+    
+    // 지역별 카운트 초기화
+    if (!result.regionCounts[region]) {
+      result.regionCounts[region] = { regular: 0, college: 0 }
+    }
+    
+    // 유형별 분류
+    if (uniType === '대학교') {
+      if (result.regular) result.regular.push(uni)
+      result.regionCounts[region].regular++
+    } else if (uniType === '전문대학') {
+      if (result.college) result.college.push(uni)
+      result.regionCounts[region].college++
+    }
+  })
+  
+  return result
+}
+
+/**
+ * 대학 목록 렌더링 (단일 카드)
+ */
+const renderUniversityList = (universities: UnifiedMajorDetail['universities'], emptyMessage?: string): string => {
+  if (!universities || universities.length === 0) {
+    return `<p class="text-sm text-wiki-muted text-center py-8">${emptyMessage || '개설 대학 정보가 없습니다.'}</p>`
+  }
+  
   const items = universities
     .filter((uni) => !!uni?.name?.trim())
     .map((uni) => {
       const name = escapeHtml(uni.name!.trim())
+      const area = uni.area ? `<span class="text-[10px] text-wiki-muted">${escapeHtml(normalizeRegionName(uni.area))}</span>` : ''
       const department = uni.department ? `<p class="text-xs text-wiki-muted mt-1">${escapeHtml(uni.department)}</p>` : ''
       const type = uni.universityType ? `<span class="px-2 py-1 text-[10px] rounded bg-wiki-primary/10 text-wiki-primary">${escapeHtml(uni.universityType)}</span>` : ''
       const link = uni.url
-        ? `<a href="${escapeHtml(uni.url)}" target="_blank" rel="noopener" class="text-xs text-wiki-primary hover:text-wiki-secondary mt-2 flex items-center gap-1">웹사이트<i class="fas fa-arrow-up-right-from-square"></i></a>`
+        ? `<a href="${escapeHtml(uni.url)}" target="_blank" rel="noopener" class="text-xs text-wiki-primary hover:text-wiki-secondary flex items-center gap-1">웹사이트<i class="fas fa-arrow-up-right-from-square"></i></a>`
         : ''
+      // 지역 정규화: area가 있으면 정규화, 없으면 대학명에서 추론
+      let regionName = normalizeRegionName(uni.area)
+      if (!regionName && uni.name) {
+        regionName = inferRegionFromUniversityName(uni.name) || ''
+      }
+      // 여전히 없으면 "기타" (지도에 표시되지 않지만 필터링은 작동)
+      const finalRegion = regionName || '기타'
+      
       return `
-        <div class="bg-wiki-bg/60 border border-wiki-border rounded-lg px-2 py-4 md:px-4">
-          <div class="flex items-center justify-between">
-            <h4 class="content-text font-semibold text-wiki-text">${name}</h4>
+        <div class="bg-wiki-bg/60 border border-wiki-border rounded-lg px-3 py-4 md:px-4 university-card hover:border-wiki-primary/40 hover:bg-wiki-bg/80 transition-all duration-200" data-region="${escapeHtml(finalRegion)}">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="content-text font-semibold text-wiki-text">${name}</h4>
+              ${area}
+            </div>
             ${type}
           </div>
           ${department}
-          ${link}
+          ${link ? `<div class="mt-2">${link}</div>` : ''}
         </div>
       `
     })
-
+  
   if (items.length === 0) {
+    return `<p class="text-sm text-wiki-muted text-center py-8">${emptyMessage || '개설 대학 정보가 없습니다.'}</p>`
+  }
+  
+  return `<div class="grid gap-4 sm:grid-cols-2">${items.join('')}</div>`
+}
+
+/**
+ * 메인 개설 대학 렌더링 (탭 + 지도 + 목록)
+ */
+const renderUniversities = (universities?: UnifiedMajorDetail['universities']): string => {
+  if (!universities || universities.length === 0) {
     return ''
   }
-
-  return `<div class="grid gap-4 sm:grid-cols-2">${items.join('')}</div>`
+  
+  const aggregated = aggregateUniversitiesByRegion(universities)
+  
+  // 지역 데이터 생성 (지도용)
+  const regularRegions: RegionData[] = Object.entries(aggregated.regionCounts)
+    .map(([id, counts]) => ({ id, name: id, count: counts.regular }))
+  
+  const collegeRegions: RegionData[] = Object.entries(aggregated.regionCounts)
+    .map(([id, counts]) => ({ id, name: id, count: counts.college }))
+  
+  // 대학교 탭 컨텐츠
+  const regularMapHtml = renderKoreaMap({ regions: regularRegions })
+  const regularListHtml = renderUniversityList(aggregated.regular, '4년제 대학 정보가 없습니다.')
+  
+  const regularTabContent = `
+    <div class="space-y-6">
+      <!-- 지역별 분포 지도 -->
+      <div class="bg-wiki-bg/30 border border-wiki-border/50 rounded-xl p-4 md:p-6 shadow-lg">
+        <h4 class="text-sm md:text-base font-bold text-wiki-text mb-4 flex items-center gap-2">
+          <i class="fas fa-map text-wiki-primary text-base"></i>
+          지역별 분포
+        </h4>
+        ${regularMapHtml}
+        <div class="flex items-center justify-center gap-2 mt-4 px-2">
+          <i class="fas fa-info-circle text-wiki-primary/60 text-xs"></i>
+          <p class="text-xs text-wiki-muted text-center">지역을 클릭하면 해당 지역의 대학만 표시됩니다</p>
+        </div>
+        <div class="flex justify-center mt-3">
+          <button type="button" class="reset-region-filter px-4 py-2 text-xs bg-wiki-primary/10 text-wiki-primary rounded-lg hover:bg-wiki-primary/20 transition-all duration-200 flex items-center gap-2" style="display: none;">
+            <i class="fas fa-times"></i>
+            <span>필터 해제</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 대학 목록 -->
+      <div class="university-list-container" data-tab-type="regular">
+        ${regularListHtml}
+      </div>
+    </div>
+  `
+  
+  // 전문대학 탭 컨텐츠
+  const collegeMapHtml = renderKoreaMap({ regions: collegeRegions })
+  const collegeListHtml = renderUniversityList(aggregated.college, '전문대학 정보가 없습니다.')
+  
+  const collegeTabContent = `
+    <div class="space-y-6">
+      <!-- 지역별 분포 지도 -->
+      <div class="bg-wiki-bg/30 border border-wiki-border/50 rounded-xl p-4 md:p-6 shadow-lg">
+        <h4 class="text-sm md:text-base font-bold text-wiki-text mb-4 flex items-center gap-2">
+          <i class="fas fa-map text-wiki-primary text-base"></i>
+          지역별 분포
+        </h4>
+        ${collegeMapHtml}
+        <div class="flex items-center justify-center gap-2 mt-4 px-2">
+          <i class="fas fa-info-circle text-wiki-primary/60 text-xs"></i>
+          <p class="text-xs text-wiki-muted text-center">지역을 클릭하면 해당 지역의 대학만 표시됩니다</p>
+        </div>
+        <div class="flex justify-center mt-3">
+          <button type="button" class="reset-region-filter px-4 py-2 text-xs bg-wiki-primary/10 text-wiki-primary rounded-lg hover:bg-wiki-primary/20 transition-all duration-200 flex items-center gap-2" style="display: none;">
+            <i class="fas fa-times"></i>
+            <span>필터 해제</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 대학 목록 -->
+      <div class="university-list-container" data-tab-type="college">
+        ${collegeListHtml}
+      </div>
+    </div>
+  `
+  
+  // 서브탭 UI
+  const hasRegular = (aggregated.regular?.length ?? 0) > 0
+  const hasCollege = (aggregated.college?.length ?? 0) > 0
+  
+  if (!hasRegular && !hasCollege) {
+    return `<p class="text-sm text-wiki-muted">개설 대학 정보가 없습니다.</p>`
+  }
+  
+  // 공통 스타일과 스크립트
+  const commonStyleAndScript = `
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .university-card {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      
+      @media (max-width: 640px) {
+        .korea-map-container svg {
+          max-width: 100%;
+        }
+      }
+    </style>
+    
+    <script>
+      (function() {
+        // 서브탭 전환
+        const tabButtons = document.querySelectorAll('.uni-subtab-btn');
+        const tabContents = document.querySelectorAll('.uni-subtab-content');
+        
+        tabButtons.forEach(btn => {
+          btn.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-subtab');
+            
+            // 모든 버튼/컨텐츠 비활성화
+            tabButtons.forEach(b => {
+              b.classList.remove('border-wiki-primary', 'text-wiki-text');
+              b.classList.add('border-transparent', 'text-wiki-muted');
+              b.setAttribute('aria-selected', 'false');
+              // 배지 색상도 변경
+              const badge = b.querySelector('span');
+              if (badge) {
+                badge.classList.remove('bg-wiki-primary/20', 'text-wiki-primary');
+                badge.classList.add('bg-wiki-border/40', 'text-wiki-muted');
+              }
+            });
+            tabContents.forEach(c => c.classList.add('hidden'));
+            
+            // 선택된 탭 활성화
+            this.classList.remove('border-transparent', 'text-wiki-muted');
+            this.classList.add('border-wiki-primary', 'text-wiki-text');
+            this.setAttribute('aria-selected', 'true');
+            // 배지 색상 변경
+            const activeBadge = this.querySelector('span');
+            if (activeBadge) {
+              activeBadge.classList.remove('bg-wiki-border/40', 'text-wiki-muted');
+              activeBadge.classList.add('bg-wiki-primary/20', 'text-wiki-primary');
+            }
+            
+            const targetContent = document.querySelector('[data-subtab-content="' + targetTab + '"]');
+            if (targetContent) {
+              targetContent.classList.remove('hidden');
+            }
+          });
+        });
+        
+        // 지역 클릭 필터링 (모든 경우 처리: 탭 1개 또는 2개)
+        document.querySelectorAll('[data-korea-map]').forEach(mapWrapper => {
+          // 항상 .uni-subtab-content 안에 있으므로 이것을 찾음
+          const container = mapWrapper.closest('.uni-subtab-content');
+          if (!container) return;
+          
+          const listContainer = container.querySelector('.university-list-container');
+          const resetBtn = container.querySelector('.reset-region-filter');
+          if (!listContainer || !resetBtn) return;
+          
+          let activeRegion = null;
+          
+          mapWrapper.querySelectorAll('.region li a').forEach(regionLink => {
+            const region = regionLink.getAttribute('data-region');
+            if (!region) return;
+            
+            regionLink.addEventListener('click', function(e) {
+              e.preventDefault();
+              
+              // 데이터 없는 지역은 클릭 무시
+              if (this.classList.contains('no-data')) return;
+              
+              // "전체" 버튼 클릭 시
+              if (region === 'ALL') {
+                activeRegion = null;
+                resetBtn.style.display = 'none';
+                mapWrapper.querySelectorAll('.region li a').forEach(link => {
+                  link.classList.remove('active');
+                });
+                listContainer.querySelectorAll('.university-card').forEach(card => {
+                  card.style.display = '';
+                  card.style.animation = 'fadeIn 0.3s ease-in-out';
+                });
+                return;
+              }
+              
+              // 같은 지역 재클릭 시
+              if (activeRegion === region) {
+                activeRegion = null;
+                resetBtn.style.display = 'none';
+                mapWrapper.querySelectorAll('.region li a').forEach(link => {
+                  link.classList.remove('active');
+                });
+                listContainer.querySelectorAll('.university-card').forEach(card => {
+                  card.style.display = '';
+                  card.style.animation = 'fadeIn 0.3s ease-in-out';
+                });
+                return;
+              }
+              
+              // 새 지역 선택
+              activeRegion = region;
+              resetBtn.style.display = 'block';
+              
+              mapWrapper.querySelectorAll('.region li a').forEach(link => {
+                link.classList.remove('active');
+              });
+              this.classList.add('active');
+              
+              // 대학 카드 필터링
+              listContainer.querySelectorAll('.university-card').forEach(card => {
+                const cardRegion = card.getAttribute('data-region');
+                if (cardRegion === region) {
+                  card.style.display = '';
+                  card.style.animation = 'fadeIn 0.3s ease-in-out';
+                } else {
+                  card.style.display = 'none';
+                }
+              });
+            });
+          });
+          
+          resetBtn.addEventListener('click', function() {
+            activeRegion = null;
+            this.style.display = 'none';
+            mapWrapper.querySelectorAll('.region li a').forEach(link => {
+              link.classList.remove('active');
+            });
+            listContainer.querySelectorAll('.university-card').forEach(card => {
+              card.style.display = '';
+              card.style.animation = 'fadeIn 0.3s ease-in-out';
+            });
+          });
+        });
+      })();
+    </script>
+  `
+  
+  // 전문대학만 있을 때: 전문대학 탭만 표시
+  if (!hasRegular && hasCollege) {
+    return `
+      <div class="university-tabs-wrapper w-full">
+        <!-- 서브 탭 네비게이션 -->
+        <div class="flex gap-2 border-b border-wiki-border/50 mb-6" role="tablist">
+          <button
+            type="button"
+            class="uni-subtab-btn w-full px-4 py-3 text-sm font-semibold text-wiki-text border-b-2 border-wiki-primary transition"
+            data-subtab="college"
+            role="tab"
+            aria-selected="true"
+          >
+            <i class="fas fa-building mr-2"></i>
+            전문대학
+            <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-wiki-primary/20 text-wiki-primary">${aggregated.college?.length ?? 0}</span>
+          </button>
+        </div>
+        
+        <!-- 전문대학 탭 컨텐츠 -->
+        <div class="uni-subtab-content" data-subtab-content="college">
+          ${collegeTabContent}
+        </div>
+      </div>
+      ${commonStyleAndScript}
+    `
+  }
+  
+  // 대학교만 있을 때: 대학교 탭만 표시
+  if (hasRegular && !hasCollege) {
+    return `
+      <div class="university-tabs-wrapper w-full">
+        <!-- 서브 탭 네비게이션 -->
+        <div class="flex gap-2 border-b border-wiki-border/50 mb-6" role="tablist">
+          <button
+            type="button"
+            class="uni-subtab-btn w-full px-4 py-3 text-sm font-semibold text-wiki-text border-b-2 border-wiki-primary transition"
+            data-subtab="regular"
+            role="tab"
+            aria-selected="true"
+          >
+            <i class="fas fa-university mr-2"></i>
+            대학교
+            <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-wiki-primary/20 text-wiki-primary">${aggregated.regular?.length ?? 0}</span>
+          </button>
+        </div>
+        
+        <!-- 대학교 탭 컨텐츠 -->
+        <div class="uni-subtab-content" data-subtab-content="regular">
+          ${regularTabContent}
+        </div>
+      </div>
+      ${commonStyleAndScript}
+    `
+  }
+  
+  // 둘 다 있을 때: 두 탭을 균등하게 나눔 (flex-1)
+  return `
+    <div class="university-tabs-wrapper w-full">
+      <!-- 서브 탭 네비게이션 -->
+      <div class="flex gap-2 border-b border-wiki-border/50 mb-6" role="tablist">
+        <button
+          type="button"
+          class="uni-subtab-btn flex-1 px-4 py-3 text-sm font-semibold text-wiki-text border-b-2 border-wiki-primary transition"
+          data-subtab="regular"
+          role="tab"
+          aria-selected="true"
+        >
+          <i class="fas fa-university mr-2"></i>
+          대학교
+          <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-wiki-primary/20 text-wiki-primary">${aggregated.regular?.length ?? 0}</span>
+        </button>
+        <button
+          type="button"
+          class="uni-subtab-btn flex-1 px-4 py-3 text-sm font-semibold text-wiki-muted border-b-2 border-transparent hover:text-wiki-text transition"
+          data-subtab="college"
+          role="tab"
+          aria-selected="false"
+        >
+          <i class="fas fa-building mr-2"></i>
+          전문대학
+          <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-wiki-border/40 text-wiki-muted">${aggregated.college?.length ?? 0}</span>
+        </button>
+      </div>
+      
+      <!-- 대학교 탭 컨텐츠 -->
+      <div class="uni-subtab-content" data-subtab-content="regular">
+        ${regularTabContent}
+      </div>
+      
+      <!-- 전문대학 탭 컨텐츠 -->
+      <div class="uni-subtab-content hidden" data-subtab-content="college">
+        ${collegeTabContent}
+      </div>
+    </div>
+    ${commonStyleAndScript}
+  `
 }
 
 const renderRecruitmentTable = (stats?: UnifiedMajorDetail['recruitmentStatus']): string => {
@@ -169,7 +602,7 @@ const renderRecruitmentTable = (stats?: UnifiedMajorDetail['recruitmentStatus'])
 const renderMetaHighlights = (profile: UnifiedMajorDetail): string => {
   const highlights = [
     profile.employmentRate ? { label: '취업률', value: profile.employmentRate, icon: 'fa-briefcase', accent: 'text-green-400' } : null,
-    profile.salaryAfterGraduation ? { label: '졸업 후 평균 연봉', value: profile.salaryAfterGraduation, icon: 'fa-coins', accent: 'text-yellow-300' } : null,
+    profile.salaryAfterGraduation ? { label: '졸업 후 평균 월봉', value: profile.salaryAfterGraduation, icon: 'fa-coins', accent: 'text-yellow-300' } : null,
     profile.categoryName ? { label: '계열/분야', value: profile.categoryName, icon: 'fa-layer-group', accent: 'text-wiki-secondary' } : null
   ].filter(Boolean) as Array<{ label: string; value: string; icon: string; accent: string }>
 
@@ -367,7 +800,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       if (/^\d+(\.\d+)?$/.test(salaryText)) {
         salaryText = `${salaryText}만원`
       }
-      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 연봉</span><span class="text-wiki-text font-semibold">${escapeHtml(salaryText)}</span></li>`)
+      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">졸업 후 평균 월봉</span><span class="text-wiki-text font-semibold">${escapeHtml(salaryText)}</span></li>`)
     }
     
     if (isSameSalary && salaryValue) {
@@ -385,7 +818,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     
     if (profile.employmentRate && profile.employmentRate !== profileAny.employment) {
       const rateText = profile.employmentRate.replace(/<strong>([^<]+)<\/strong>/g, '<strong class="text-white font-bold">$1</strong>')
-      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률 (추가)</span><span class="text-wiki-text">${rateText}</span></li>`)
+      metaItems.push(`<li class="flex justify-between content-text"><span class="text-wiki-muted">취업률</span><span class="text-wiki-text">${rateText}</span></li>`)
     }
     
     if (metaItems.length > 0) {
@@ -452,8 +885,36 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   
   // 기초과목과 심화과목 분리 (mainSubjects가 있는 경우에만)
   if (profile.mainSubjects?.length) {
-    const basicSubjects = profile.mainSubjects.filter(s => s && (s.includes('기초') || s.includes('입문')))
-    const advancedSubjects = profile.mainSubjects.filter(s => s && !(s.includes('기초') || s.includes('입문')))
+    let basicSubjects: string[] = []
+    let advancedSubjects: string[] = []
+    
+    // ‡ 구분자가 있는 뭉텅이 데이터 파싱
+    const firstSubject = profile.mainSubjects[0]
+    if (firstSubject && firstSubject.includes('‡')) {
+      const sections = firstSubject.split('‡').filter(s => s.trim())
+      
+      sections.forEach(section => {
+        if (section.includes('기초과목')) {
+          // "기초과목 : 심리학, 해부학, ..." 형식에서 과목들 추출
+          const subjects = section.replace(/^.*?기초과목\s*[:：]\s*/i, '')
+            .split(/[,、]\s*/)
+            .map(s => s.trim())
+            .filter(s => s && s !== '등')
+          basicSubjects.push(...subjects)
+        } else if (section.includes('심화과목')) {
+          // "심화과목 : 임상미생물학, ..." 형식에서 과목들 추출
+          const subjects = section.replace(/^.*?심화과목\s*[:：]\s*/i, '')
+            .split(/[,、]\s*/)
+            .map(s => s.trim())
+            .filter(s => s && s !== '등')
+          advancedSubjects.push(...subjects)
+        }
+      })
+    } else {
+      // 기존 로직: 배열로 들어온 경우
+      basicSubjects = profile.mainSubjects.filter(s => s && (s.includes('기초') || s.includes('입문')))
+      advancedSubjects = profile.mainSubjects.filter(s => s && !(s.includes('기초') || s.includes('입문')))
+    }
     
     if (basicSubjects.length > 0) {
       subjectSections.push(`
@@ -550,14 +1011,22 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       .filter(item => item && (item.subject_name || item.SUBJECT_NM))
       .map(item => {
         const name = item.subject_name || item.SUBJECT_NM || ''
-        const desc = item.subject_description || item.SUBJECT_SUMRY || ''
+        let desc = item.subject_description || item.SUBJECT_SUMRY || ''
+        
+        // 고교 추천 교과목: <br>을 줄바꿈(\n)으로 변환 후 formatRichText 적용
+        if (desc) {
+          desc = desc
+            .replace(/<br\s*\/?>/gi, '\n')  // <br> → 줄바꿈
+            .replace(/&lt;br\s*\/?&gt;/gi, '\n')  // &lt;br&gt; → 줄바꿈
+        }
+        
         return `
           <div class="p-4 rounded-lg border border-wiki-border/40 bg-wiki-bg/20 hover:border-wiki-secondary/40 transition-colors">
             <h5 class="font-semibold text-wiki-text mb-2 flex items-center gap-2">
               <i class="fas fa-school text-wiki-secondary text-xs"></i>
               ${escapeHtml(name)}
             </h5>
-            ${desc ? `<p class="text-sm text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
+            ${desc ? `<p class="text-sm text-wiki-muted leading-relaxed">${formatRichText(desc)}</p>` : ''}
           </div>
         `
       })
@@ -605,8 +1074,26 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     const actItems = careerActArray
       .filter(item => item && (item.act_name || item.ACT_NM))
       .map(item => {
-        const name = item.act_name || item.ACT_NM || ''
-        const desc = item.act_description || item.ACT_SUMRY || ''
+        let name = item.act_name || item.ACT_NM || ''
+        let desc = item.act_description || item.ACT_SUMRY || ''
+        
+        // 진로 탐색 활동: name과 desc 모두 <br> 태그 제거
+        if (name) {
+          name = name
+            .replace(/<br\s*\/?>/gi, ' ')  // <br>, <br/>, <br /> 제거
+            .replace(/&lt;br\s*\/?&gt;/gi, ' ')  // &lt;br&gt; 제거
+            .replace(/\s+/g, ' ')  // 연속된 공백 하나로
+            .trim()
+        }
+        
+        if (desc) {
+          desc = desc
+            .replace(/<br\s*\/?>/gi, ' ')  // <br>, <br/>, <br /> 제거
+            .replace(/&lt;br\s*\/?&gt;/gi, ' ')  // &lt;br&gt; 제거
+            .replace(/\s+/g, ' ')  // 연속된 공백 하나로
+            .trim()
+        }
+        
         return `
           <div class="p-4 rounded-lg border border-wiki-border/40 bg-wiki-bg/20 hover:border-wiki-primary/40 transition-colors">
             <h5 class="font-semibold text-wiki-text mb-2 flex items-center gap-2">
@@ -775,7 +1262,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
 
   const universitiesContent = renderUniversities(profile.universities)
   if (universitiesContent) {
-    pushUniversityCard('개설 대학', 'fa-building-columns', universitiesContent)
+    pushUniversityCard('대학정보', 'fa-building-columns', universitiesContent)
   }
   const recruitmentContent = renderRecruitmentTable(profile.recruitmentStatus)
   if (recruitmentContent) {
@@ -847,7 +1334,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   const tabEntries: TabEntry[] = [
     { id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewContent },
     { id: 'details', label: '상세정보', icon: 'fa-layer-group', content: detailContent },
-    { id: 'universities', label: '개설 대학', icon: 'fa-building-columns', content: universityContent }
+    { id: 'universities', label: '대학정보', icon: 'fa-building-columns', content: universityContent }
   ].filter((entry) => entry.content && entry.content.trim().length > 0)
 
   const entitySlug = composeDetailSlug('major', profile.name, profile.id)
@@ -909,70 +1396,193 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   
   // 기본 정보 제거 (사이드바에서 제거)
 
-  // 관련 직업
+  // 관련 직업 (5개 이상일 때 접기/펼치기)
   if (profile.relatedJobs?.length) {
-    const jobsList = profile.relatedJobs
-      .map(jobName => `
-        <li>
-          <a href="/search?q=${encodeURIComponent(jobName)}&type=job" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
-            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
-              <i class="fas fa-briefcase text-xs" aria-hidden="true"></i>
-            </span>
-            <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors">${escapeHtml(jobName)}</span>
-            <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all" aria-hidden="true"></i>
-          </a>
-        </li>
-      `)
-      .join('')
-    sidebarSections.push(renderSidebarSection('관련 직업', 'fa-briefcase', `<ul class="space-y-2" role="list">${jobsList}</ul>`))
+    const limit = 5
+    const hasMore = profile.relatedJobs.length > limit
+    const visibleJobs = profile.relatedJobs.slice(0, limit)
+    const hiddenJobs = profile.relatedJobs.slice(limit)
+    
+    const renderJob = (jobName: string, isHidden: boolean = false) => `
+      <li${isHidden ? ' class="hidden-item" style="display: none;"' : ''}>
+        <a href="/search?q=${encodeURIComponent(jobName)}&type=job" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
+            <i class="fas fa-briefcase text-xs" aria-hidden="true"></i>
+          </span>
+          <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors">${escapeHtml(jobName)}</span>
+          <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all" aria-hidden="true"></i>
+        </a>
+      </li>
+    `
+    
+    const jobsList = [
+      ...visibleJobs.map(job => renderJob(job, false)),
+      ...hiddenJobs.map(job => renderJob(job, true))
+    ].join('')
+    
+    const toggleButton = hasMore ? `
+      <button class="expand-toggle mt-3 w-full px-3 py-2 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200 flex items-center justify-center gap-2 text-sm text-wiki-muted hover:text-wiki-primary" data-expanded="false">
+        <span class="toggle-text">더보기</span>
+        <span class="toggle-count text-xs opacity-75">(+${hiddenJobs.length})</span>
+        <i class="fas fa-chevron-down text-xs toggle-icon transition-transform"></i>
+      </button>
+    ` : ''
+    
+    sidebarSections.push(renderSidebarSection('관련 직업', 'fa-briefcase', `
+      <div class="expandable-list">
+        <ul class="space-y-2" role="list">${jobsList}</ul>
+        ${toggleButton}
+      </div>
+    `))
   }
 
-  // 7. 추천 자격증 (커리어넷 + 고용24 병합, 중복 제거)
+  // 7. 추천 자격증 (계층 구조로 표시)
   const careernetLicenses = partials?.CAREERNET?.licenses || profile.licenses || []
   const goyong24Licenses = partials?.GOYONG24?.licenses || []
   
-  // 병합 및 중복 제거
+  // 병합 및 자격증 파싱 (계층 구조 유지, 중복 제거)
   const allLicenses = [...careernetLicenses, ...goyong24Licenses]
-  const uniqueLicenses = Array.from(new Set(
-    allLicenses
-      .filter(l => l && typeof l === 'string' && l.trim().length > 0)
-      .map(l => l.trim())
-  ))
+  const licenseMap = new Map<string, string[]>() // name -> subLicenses
   
-  if (uniqueLicenses.length > 0) {
-    // 가독성을 위해 2열 그리드로 표시
-    const licensesList = uniqueLicenses
-      .map(license => `
-        <li>
-          <div class="flex items-center gap-2 px-3 py-2 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-secondary/60 hover:bg-wiki-secondary/5 transition-all duration-200">
-            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-wiki-secondary/15 text-wiki-secondary">
-              <i class="fas fa-certificate text-[9px]" aria-hidden="true"></i>
-            </span>
-            <span class="text-xs text-wiki-text font-medium">${escapeHtml(license)}</span>
-          </div>
+  allLicenses.forEach(license => {
+    if (!license || typeof license !== 'string' || !license.trim()) return
+    
+    let text = license.trim()
+    
+    // "국가자격 :", "민간자격 :" 등의 prefix 제거
+    text = text.replace(/^(국가자격|민간자격|공인자격|기타자격)\s*[:：]\s*/i, '')
+    
+    // 괄호가 있는 항목 처리: "전문간호사(A, B, C)" → { name: "전문간호사", subLicenses: ["A", "B", "C"] }
+    const bracketMatches = text.match(/([^(,]+)\(([^)]+)\)/g)
+    if (bracketMatches) {
+      bracketMatches.forEach(match => {
+        const [, prefix, inner] = match.match(/([^(]+)\(([^)]+)\)/) || []
+        if (prefix?.trim()) {
+          const name = prefix.trim()
+          const subLicenses = inner
+            ? inner.split(/[,、]/).map(s => s.trim()).filter(s => s)
+            : []
+          
+          // 중복 처리: 이미 있으면 서브 자격증 병합
+          if (licenseMap.has(name)) {
+            const existing = licenseMap.get(name) || []
+            const merged = Array.from(new Set([...existing, ...subLicenses]))
+            licenseMap.set(name, merged)
+          } else {
+            licenseMap.set(name, subLicenses)
+          }
+        }
+        // 원본에서 제거
+        text = text.replace(match, '')
+      })
+    }
+    
+    // 나머지를 쉼표로 분리 (서브 자격증 없음)
+    text.split(/[,、]/).forEach(item => {
+      const trimmed = item.trim()
+      if (trimmed && !licenseMap.has(trimmed)) {
+        licenseMap.set(trimmed, [])
+      }
+    })
+  })
+  
+  // Map을 배열로 변환
+  const parsedLicenses = Array.from(licenseMap.entries()).map(([name, subLicenses]) => ({
+    name,
+    subLicenses: subLicenses.length > 0 ? subLicenses : undefined
+  }))
+  
+  if (parsedLicenses.length > 0) {
+    const limit = 5
+    const hasMore = parsedLicenses.length > limit
+    const visibleLicenses = parsedLicenses.slice(0, limit)
+    const hiddenLicenses = parsedLicenses.slice(limit)
+    
+    const renderLicense = (licenseItem: { name: string; subLicenses?: string[] }, isHidden: boolean = false) => {
+      const hasSubs = licenseItem.subLicenses && licenseItem.subLicenses.length > 0
+      const subLimit = 3
+      const visibleSubs = hasSubs ? licenseItem.subLicenses!.slice(0, subLimit) : []
+      const hiddenSubs = hasSubs ? licenseItem.subLicenses!.slice(subLimit) : []
+      const hasMoreSubs = hiddenSubs.length > 0
+      
+      const mainItem = `
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-wiki-bg/40 border border-wiki-border/40 hover:border-wiki-primary/40 hover:bg-wiki-primary/5 transition-all duration-200">
+          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-wiki-primary/15 text-wiki-primary">
+            <i class="fas fa-certificate text-[9px]" aria-hidden="true"></i>
+          </span>
+          <span class="text-sm text-wiki-text font-medium">${escapeHtml(licenseItem.name)}</span>
+        </div>
+      `
+      
+      let subItems = ''
+      if (hasSubs) {
+        const subList = visibleSubs.map(sub => `
+          <li class="sub-license-item">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-wiki-bg/20 border border-wiki-border/30 hover:border-wiki-secondary/30 hover:bg-wiki-secondary/5 transition-all duration-200">
+              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-wiki-secondary/10 text-wiki-secondary">
+                <i class="fas fa-circle text-[6px]" aria-hidden="true"></i>
+              </span>
+              <span class="text-xs text-wiki-muted font-medium">${escapeHtml(sub)}</span>
+            </div>
+          </li>
+        `).join('')
+        
+        const hiddenSubList = hiddenSubs.map(sub => `
+          <li class="sub-license-item hidden-sub-item" style="display: none;">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-wiki-bg/20 border border-wiki-border/30 hover:border-wiki-secondary/30 hover:bg-wiki-secondary/5 transition-all duration-200">
+              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-wiki-secondary/10 text-wiki-secondary">
+                <i class="fas fa-circle text-[6px]" aria-hidden="true"></i>
+              </span>
+              <span class="text-xs text-wiki-muted font-medium">${escapeHtml(sub)}</span>
+            </div>
+          </li>
+        `).join('')
+        
+        const subToggle = hasMoreSubs ? `
+          <button class="sub-expand-toggle ml-7 mt-1 px-2 py-1 rounded text-xs text-wiki-secondary hover:text-wiki-secondary/80 transition-colors flex items-center gap-1" data-expanded="false">
+            <span class="sub-toggle-text">+${hiddenSubs.length}개 더보기</span>
+            <i class="fas fa-chevron-down text-[8px] sub-toggle-icon transition-transform"></i>
+          </button>
+        ` : ''
+        
+        subItems = `
+          <ul class="ml-7 mt-1.5 space-y-1" role="list">
+            ${subList}
+            ${hiddenSubList}
+          </ul>
+          ${subToggle}
+        `
+      }
+      
+      return `
+        <li${isHidden ? ' class="hidden-item" style="display: none;"' : ''}>
+          ${mainItem}
+          ${subItems}
         </li>
-      `)
-      .join('')
-    sidebarSections.push(renderSidebarSection('추천 자격증', 'fa-certificate', `<ul class="grid grid-cols-1 gap-2" role="list">${licensesList}</ul>`))
+      `
+    }
+    
+    const licensesList = [
+      ...visibleLicenses.map(lic => renderLicense(lic, false)),
+      ...hiddenLicenses.map(lic => renderLicense(lic, true))
+    ].join('')
+    
+    const toggleButton = hasMore ? `
+      <button class="expand-toggle mt-3 w-full px-3 py-2 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200 flex items-center justify-center gap-2 text-sm text-wiki-muted hover:text-wiki-primary" data-expanded="false">
+        <span class="toggle-text">더보기</span>
+        <span class="toggle-count text-xs opacity-75">(+${hiddenLicenses.length})</span>
+        <i class="fas fa-chevron-down text-xs toggle-icon transition-transform"></i>
+      </button>
+    ` : ''
+    
+    sidebarSections.push(renderSidebarSection('추천 자격증', 'fa-certificate', `
+      <div class="expandable-list">
+        <ul class="space-y-2" role="list">${licensesList}</ul>
+        ${toggleButton}
+      </div>
+    `))
   }
 
-  // 관련 HowTo (샘플 데이터)
-  const sampleHowtos = [
-    { label: `${profile.name} 입학 가이드`, href: '#' },
-    { label: `${profile.name} 취업 준비 방법`, href: '#' }
-  ]
-  const howtoList = sampleHowtos
-    .map(item => `
-      <li>
-        <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/40 bg-wiki-bg/60 px-3 py-2 md:px-4 md:py-3 text-sm text-wiki-primary hover:border-wiki-primary hover:text-white transition">
-          <span class="font-semibold">${escapeHtml(item.label)}</span>
-          <span class="text-xs text-wiki-muted">CareerWiki HowTo</span>
-        </a>
-      </li>
-    `)
-    .join('')
-  sidebarSections.push(renderSidebarSection('관련 HowTo', 'fa-route', `<ul class="space-y-2" role="list">${howtoList}</ul>`))
-  
   const hasSidebar = sidebarSections.length > 0
   const sidebarContent = sidebarSections.join('')
 
@@ -1055,6 +1665,79 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
       ${communityBlock}
 
       ${metaScript}
+      
+      <script>
+        // 사이드바 접기/펼치기 기능
+        (function() {
+          // 메인 자격증 목록 토글
+          const expandButtons = document.querySelectorAll('.expand-toggle');
+          
+          expandButtons.forEach(button => {
+            button.addEventListener('click', function() {
+              const container = this.closest('.expandable-list');
+              const hiddenItems = container.querySelectorAll('.hidden-item');
+              const isExpanded = this.getAttribute('data-expanded') === 'true';
+              const toggleText = this.querySelector('.toggle-text');
+              const toggleIcon = this.querySelector('.toggle-icon');
+              const toggleCount = this.querySelector('.toggle-count');
+              
+              if (isExpanded) {
+                // 접기
+                hiddenItems.forEach(item => {
+                  item.style.display = 'none';
+                });
+                toggleText.textContent = '더보기';
+                toggleIcon.style.transform = 'rotate(0deg)';
+                toggleCount.style.display = '';
+                this.setAttribute('data-expanded', 'false');
+              } else {
+                // 펼치기
+                hiddenItems.forEach(item => {
+                  item.style.display = '';
+                  item.style.animation = 'fadeIn 0.3s ease-in-out';
+                });
+                toggleText.textContent = '접기';
+                toggleIcon.style.transform = 'rotate(180deg)';
+                toggleCount.style.display = 'none';
+                this.setAttribute('data-expanded', 'true');
+              }
+            });
+          });
+          
+          // 서브 자격증 토글 (하위 3개씩 접기/펼치기)
+          const subExpandButtons = document.querySelectorAll('.sub-expand-toggle');
+          
+          subExpandButtons.forEach(button => {
+            button.addEventListener('click', function() {
+              const parentLi = this.closest('li');
+              const hiddenSubItems = parentLi.querySelectorAll('.hidden-sub-item');
+              const isExpanded = this.getAttribute('data-expanded') === 'true';
+              const toggleText = this.querySelector('.sub-toggle-text');
+              const toggleIcon = this.querySelector('.sub-toggle-icon');
+              
+              if (isExpanded) {
+                // 접기
+                hiddenSubItems.forEach(item => {
+                  item.style.display = 'none';
+                });
+                const count = hiddenSubItems.length;
+                toggleText.textContent = '+' + count + '개 더보기';
+                toggleIcon.style.transform = 'rotate(0deg)';
+                this.setAttribute('data-expanded', 'false');
+              } else {
+                // 펼치기
+                hiddenSubItems.forEach(item => {
+                  item.style.display = '';
+                  item.style.animation = 'fadeIn 0.3s ease-in-out';
+                });
+                toggleText.textContent = '접기';
+                toggleIcon.style.transform = 'rotate(180deg)';
+                this.setAttribute('data-expanded', 'true');
+              }
+            });
+          });
+        })();
+      </script>
     </div>
   `
 }

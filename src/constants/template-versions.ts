@@ -16,16 +16,16 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: D1 병합 로직 수정 ('null' 문자열 체크 추가)
+   * Current features: 사이드바 개선 (추천 자격증 계층 구조, 중복 제거, 하위 자격증 3개씩 토글), 목차 UX 개선, 탭 이름 변경, 지도 UI 개선, 지역 필터링 개선
    */
-  MAJOR: 23,  // 🆕 'null' 문자열 체크로 CareerNet + Goyong24 병합 보장
+  MAJOR: 77,  // 🔧 한국어학과/국어국문학과 이름 선택 로직 수정
 
   /**
    * Job detail page template version
    * Used for: /job/:slug pages
-   * Current features: 상세정보 탭 업무 상세 계층 구조 렌더링 (대분류 제목 + bullet point)
+   * Current features: 고용24 전용 직업 설명 추가 (duty.jobSum), 사이드바 연관 직업 5개 토글
    */
-  JOB: 10,  // 🆕 formatWorkDetailAsNumberedCards를 계층 구조로 개선 (대분류 제목 + 항목 리스트)
+  JOB: 14,  // 📝 고용24 데이터만 있는 직업도 설명 표시 (duty.jobSum 활용)
 
   /**
    * Guide page template version
@@ -33,16 +33,24 @@ export const TEMPLATE_VERSIONS = {
    * Current features: TBD (future)
    */
   GUIDE: 1,
+
+  /**
+   * HowTo guide page template version
+   * Used for: /howto/:slug pages
+   * Current features: 블로그 형태로 변경 (탭 제거, 사이드바 sticky 적용, 히어로 섹션 정리), AI 말투 제거 및 자연스러운 문체로 변경
+   */
+  HOWTO: 3,  // ✍️ AI 말투 제거 및 자연스러운 문체로 변경, 중복 숫자 제거
 } as const
 
 /**
  * Helper function to get template version by page type
  */
-export function getTemplateVersion(pageType: 'major' | 'job' | 'guide'): number {
+export function getTemplateVersion(pageType: 'major' | 'job' | 'guide' | 'howto'): number {
   const versionMap = {
     major: TEMPLATE_VERSIONS.MAJOR,
     job: TEMPLATE_VERSIONS.JOB,
     guide: TEMPLATE_VERSIONS.GUIDE,
+    howto: TEMPLATE_VERSIONS.HOWTO,
   }
   return versionMap[pageType]
 }

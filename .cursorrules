@@ -15,6 +15,39 @@ This is a lightweight web application built with:
 - **API Integration**: CareerNet + Goyong24 Korean job/major data
 - **Sample Registry**: Fallback data for development
 
+## ISR Cache Management (CRITICAL)
+**⚠️ ALWAYS increment template version when modifying template code or data processing logic!**
+
+- Template versions: `src/constants/template-versions.ts`
+  - `MAJOR`: Major detail page template version
+  - `JOB`: Job detail page template version
+  - `HOWTO`: How-to guide template version
+
+**Cache Behavior**:
+- Cache key = `slug` + `template version`
+- If version unchanged → cached HTML is served (new code won't execute)
+- If version changed → cache miss → new HTML generated
+
+**When to increment**:
+- ✅ Template HTML structure changes
+- ✅ Data processing/normalization logic changes
+- ✅ Styling changes (classes, inline styles)
+- ✅ Client-side JavaScript changes
+- ❌ Only backend logic changes (not affecting HTML output)
+
+**Example**:
+```typescript
+// BAD: Changed code but forgot to increment version
+// Result: Cached HTML still shows old data
+export const TEMPLATE_VERSIONS = {
+  MAJOR: 47,  // ❌ Should be 48!
+}
+
+// GOOD: Always increment when changing template logic
+export const TEMPLATE_VERSIONS = {
+  MAJOR: 48,  // ✅ Version bumped
+}
+
 ## Current Status (2025-11-06)
 **Migrating from GenSpark to Cursor due to memory constraints**
 

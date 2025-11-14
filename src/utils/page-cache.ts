@@ -123,8 +123,6 @@ export async function getOrGeneratePage<T>(
     
     // Step 2: Cache hit + version match → instant return
     if (cached && cached.cache_version === currentVersion) {
-      console.log(`[ISR Cache HIT] ${pageType}/${slug} (version ${currentVersion})`)
-      
       // Set cache headers for crawler optimization
       c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
       c.header('X-Cache-Status', 'HIT')
@@ -132,15 +130,9 @@ export async function getOrGeneratePage<T>(
       
       return c.html(cached.content)
     }
-  } else {
-    // 🛡️ Development mode: Always bypass cache to show latest data
-    console.log(`[ISR Dev Mode] ${pageType}/${slug} (cache bypassed)`)
   }
   
   // Step 3: Cache miss or version mismatch → regenerate
-  
-  const cacheStatus = devMode ? 'DEV-BYPASS' : (!cached ? 'MISS' : 'STALE')
-  console.log(`[ISR Cache ${cacheStatus}] ${pageType}/${slug} (regenerating with version ${currentVersion})`)
   
   try {
     // Fetch data
@@ -170,8 +162,6 @@ export async function getOrGeneratePage<T>(
         cached?.created_at || now, // Preserve original creation time if exists
         now
       ).run()
-      
-      console.log(`[ISR Cache STORED] ${pageType}/${slug} (version ${currentVersion})`)
     }
     
     // Set cache headers

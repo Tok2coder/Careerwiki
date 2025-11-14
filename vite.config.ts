@@ -14,5 +14,19 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true
+  },
+  build: {
+    minify: 'esbuild',
+    target: 'es2022',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined // 단일 번들 유지 (Cloudflare Workers 제약)
+      }
+    },
+    chunkSizeWarningLimit: 1000
+  },
+  esbuild: {
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : []
   }
 })

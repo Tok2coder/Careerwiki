@@ -1886,7 +1886,8 @@ type SectionCardDescriptor = { id: string; label: string; icon: string; markup: 
 type TocItem = { id: string; label: string; icon: string }
 
 const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics', heading: string, items: TocItem[]): string => {
-  if (!items.length) {
+  // 항목이 1개 이하면 목차 숨김 (목차가 의미 없음)
+  if (items.length <= 1) {
     return ''
   }
 
@@ -1984,12 +1985,53 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
 const renderJobSidebar = (profile: UnifiedJobDetail): string => {
   const sections: string[] = []
 
+  // 연관 직업 (5개 이상일 때 접기/펼치기)
   if (profile.relatedJobs?.length) {
+    const limit = 5
+    const hasMore = profile.relatedJobs.length > limit
+    const visibleJobs = profile.relatedJobs.slice(0, limit)
+    const hiddenJobs = profile.relatedJobs.slice(limit)
+    
+    const filteredJobs = profile.relatedJobs.filter((entity) => !!entity?.name?.trim())
+    const renderJob = (entity: JobRelatedEntity, isHidden: boolean = false) => {
+      const name = escapeHtml(safeTrim(entity.name))
+      const url = buildEntityUrl(entity, 'job')
+      return `
+        <li${isHidden ? ' class="hidden-item" style="display: none;"' : ''}>
+          <a href="${url}" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
+              <i class="fas fa-briefcase text-xs" aria-hidden="true"></i>
+            </span>
+            <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors">${name}</span>
+            <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all" aria-hidden="true"></i>
+          </a>
+        </li>
+      `
+    }
+    
+    const jobsList = [
+      ...visibleJobs.map(job => renderJob(job, false)),
+      ...hiddenJobs.map(job => renderJob(job, true))
+    ].join('')
+    
+    const toggleButton = hasMore ? `
+      <button class="expand-toggle mt-3 w-full px-3 py-2 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200 flex items-center justify-center gap-2 text-sm text-wiki-muted hover:text-wiki-primary" data-expanded="false">
+        <span class="toggle-text">더보기</span>
+        <span class="toggle-count text-xs opacity-75">(+${hiddenJobs.length})</span>
+        <i class="fas fa-chevron-down text-xs toggle-icon transition-transform"></i>
+      </button>
+    ` : ''
+    
     sections.push(
       renderSidebarSection(
         '연관 직업',
         'fa-user-tie',
-        renderEntityList(profile.relatedJobs, 'job', '연관 직업 정보가 준비 중입니다.')
+        `
+          <div class="expandable-list">
+            <ul class="space-y-2" role="list">${jobsList}</ul>
+            ${toggleButton}
+          </div>
+        `
       )
     )
   }
@@ -2043,50 +2085,7 @@ const renderJobSidebar = (profile: UnifiedJobDetail): string => {
     )
   }
   
-  // 직업 준비 정보 (jobReadyList)
-  if (profile.jobReadyList) {
-    const readyItems: string[] = []
-    
-    // 채용 정보
-    if (profile.jobReadyList.recruit && Array.isArray(profile.jobReadyList.recruit) && profile.jobReadyList.recruit.length > 0) {
-      const recruitList = profile.jobReadyList.recruit.map(item => `<li class="text-sm text-wiki-text">• ${escapeHtml(item)}</li>`).join('')
-      readyItems.push(`<div><h4 class="text-sm font-bold text-wiki-secondary mb-2">채용 정보</h4><ul class="space-y-1">${recruitList}</ul></div>`)
-    }
-    
-    // 자격증 (relatedCertificates와 중복 확인 - 고용24 우선)
-    if (profile.jobReadyList.certificate && Array.isArray(profile.jobReadyList.certificate) && profile.jobReadyList.certificate.length > 0) {
-      // relatedCertificates와 다른 항목만 추가
-      const uniqueCerts = profile.jobReadyList.certificate.filter(cert => 
-        !profile.relatedCertificates?.includes(cert)
-      )
-      if (uniqueCerts.length > 0) {
-        const certList = uniqueCerts.map(item => `<li class="text-sm text-wiki-text">• ${escapeHtml(item)}</li>`).join('')
-        readyItems.push(`<div class="mt-3"><h4 class="text-sm font-bold text-wiki-secondary mb-2">추가 자격증</h4><ul class="space-y-1">${certList}</ul></div>`)
-      }
-    }
-    
-    // 교육/훈련
-    if (profile.jobReadyList.training && Array.isArray(profile.jobReadyList.training) && profile.jobReadyList.training.length > 0) {
-      const trainingList = profile.jobReadyList.training.map(item => `<li class="text-sm text-wiki-text">• ${escapeHtml(item)}</li>`).join('')
-      readyItems.push(`<div class="mt-3"><h4 class="text-sm font-bold text-wiki-secondary mb-2">필요 교육/훈련</h4><ul class="space-y-1">${trainingList}</ul></div>`)
-    }
-    
-    // 교육과정
-    if (profile.jobReadyList.curriculum && Array.isArray(profile.jobReadyList.curriculum) && profile.jobReadyList.curriculum.length > 0) {
-      const currList = profile.jobReadyList.curriculum.map(item => `<li class="text-sm text-wiki-text">• ${escapeHtml(item)}</li>`).join('')
-      readyItems.push(`<div class="mt-3"><h4 class="text-sm font-bold text-wiki-secondary mb-2">추천 교육과정</h4><ul class="space-y-1">${currList}</ul></div>`)
-    }
-    
-    if (readyItems.length > 0) {
-      sections.push(
-        renderSidebarSection(
-          '준비하기',
-          'fa-clipboard-check',
-          readyItems.join('')
-        )
-      )
-    }
-  }
+  // 직업 준비 정보 (jobReadyList) - 사이드바에서 제거 (상세정보 탭으로 이동)
 
   return sections.filter((section) => section && safeTrim(section).length > 0).join('')
 }
@@ -2537,7 +2536,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     telemetryVariant
   )
   */
-  const heroDescription = profile.summary?.split('\n')[0]?.trim()
+  // 히어로 섹션 설명: profile.summary 우선, 없으면 고용24의 duty.jobSum 사용
+  const heroDescription = profile.summary?.split('\n')[0]?.trim() 
+    || rawApiData?.goyong24?.duty?.jobSum?.trim()
   const lawyerMatrix = renderLawyerFieldMatrix(profile, partials, sources, telemetryVariant)
 
   const anchorIdFactory = createAnchorIdFactory(profile.id)
@@ -2767,7 +2768,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         .map(item => {
           const parts = []
           if (item.period) parts.push(`<span class="font-bold text-wiki-secondary">${escapeHtml(item.period)}</span>`)
-          if (item.outlook) parts.push(`<span class="text-wiki-primary">${escapeHtml(item.outlook)}</span>`)
+          if (item.outlook) parts.push(`<span class="text-white">${escapeHtml(item.outlook)}</span>`)
           if (item.description) parts.push(`<p class="text-sm text-wiki-text mt-1">${escapeHtml(item.description)}</p>`)
           return `<div class="mb-3">${parts.join(' ')}</div>`
         })
@@ -2791,31 +2792,12 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
   }
 
-  // 직업 지표 차트 (indicatorChart)
-  if (profile.indicatorChart && Array.isArray(profile.indicatorChart) && profile.indicatorChart.length > 0) {
-    const indicatorItems = profile.indicatorChart
-      .filter(item => item.category && item.value !== undefined)
-      .slice(0, 10) // 상위 10개만 표시
-      .map(item => {
-        const value = item.value || 0
-        const barWidth = Math.min(value, 100)
-        return `
-          <div class="mb-3">
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-sm text-wiki-text font-medium">${escapeHtml(item.category || '')}</span>
-              <span class="text-xs text-wiki-muted">${value.toFixed(1)}</span>
-            </div>
-            <div class="bg-wiki-border/30 rounded-full h-2 overflow-hidden">
-              <div class="bg-green-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
-            </div>
-            ${item.description ? `<p class="text-xs text-wiki-muted mt-1">${escapeHtml(item.description)}</p>` : ''}
-          </div>
-        `
-      })
-      .join('')
-    
-    if (indicatorItems) {
-      pushOverviewCard('직업 지표', 'fa-chart-bar', indicatorItems)
+  // 한국의 직업지표 (indicatorChart) - 막대 차트로 렌더링
+  const indicatorChartData = rawApiData?.careernet?.encyclopedia?.indicatorChart
+  if (indicatorChartData && Array.isArray(indicatorChartData) && indicatorChartData.length > 0) {
+    const indicatorHtml = renderIndicatorChart(indicatorChartData)
+    if (indicatorHtml) {
+      pushOverviewCard('한국의 직업지표', 'fa-chart-bar', indicatorHtml)
     }
   }
 
@@ -3161,14 +3143,54 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
   }
 
-  // 6. Type D: 커리어넷 전용 - 한국의 직업지표
-  const indicatorChart = rawApiData?.careernet?.encyclopedia?.indicatorChart
-  if (indicatorChart) {
-    const indicatorHtml = renderIndicatorChart(indicatorChart)
-    if (indicatorHtml) {
-      pushDetailCard('한국의 직업지표', 'fa-chart-bar', indicatorHtml)
+  // 5.5. 직업 준비하기 (jobReadyList) - 고용24 출처 데이터
+  if (profile.jobReadyList) {
+    const readyBlocks: string[] = []
+    
+    // 채용 정보
+    if (profile.jobReadyList.recruit && Array.isArray(profile.jobReadyList.recruit) && profile.jobReadyList.recruit.length > 0) {
+      const recruitList = profile.jobReadyList.recruit
+        .map(item => `<li class="flex items-start gap-2 text-wiki-text"><span class="text-wiki-secondary mt-1">•</span><span>${escapeHtml(item)}</span></li>`)
+        .join('')
+      readyBlocks.push(`<div><h3 class="content-heading">채용 정보</h3><ul class="space-y-2">${recruitList}</ul></div>`)
+    }
+    
+    // 자격증 (relatedCertificates와 중복 확인 - 고용24 우선)
+    if (profile.jobReadyList.certificate && Array.isArray(profile.jobReadyList.certificate) && profile.jobReadyList.certificate.length > 0) {
+      // relatedCertificates와 다른 항목만 추가
+      const uniqueCerts = profile.jobReadyList.certificate.filter(cert => 
+        !profile.relatedCertificates?.includes(cert)
+      )
+      if (uniqueCerts.length > 0) {
+        const certList = uniqueCerts
+          .map(item => `<li class="flex items-start gap-2 text-wiki-text"><span class="text-wiki-secondary mt-1">•</span><span>${escapeHtml(item)}</span></li>`)
+          .join('')
+        readyBlocks.push(`<div class="${readyBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">추가 자격증</h3><ul class="space-y-2">${certList}</ul></div>`)
+      }
+    }
+    
+    // 교육/훈련
+    if (profile.jobReadyList.training && Array.isArray(profile.jobReadyList.training) && profile.jobReadyList.training.length > 0) {
+      const trainingList = profile.jobReadyList.training
+        .map(item => `<li class="flex items-start gap-2 text-wiki-text"><span class="text-wiki-secondary mt-1">•</span><span>${escapeHtml(item)}</span></li>`)
+        .join('')
+      readyBlocks.push(`<div class="${readyBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">필요 교육/훈련</h3><ul class="space-y-2">${trainingList}</ul></div>`)
+    }
+    
+    // 교육과정
+    if (profile.jobReadyList.curriculum && Array.isArray(profile.jobReadyList.curriculum) && profile.jobReadyList.curriculum.length > 0) {
+      const currList = profile.jobReadyList.curriculum
+        .map(item => `<li class="flex items-start gap-2 text-wiki-text"><span class="text-wiki-secondary mt-1">•</span><span>${escapeHtml(item)}</span></li>`)
+        .join('')
+      readyBlocks.push(`<div class="${readyBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">추천 교육과정</h3><ul class="space-y-2">${currList}</ul></div>`)
+    }
+    
+    if (readyBlocks.length > 0) {
+      pushDetailCard('직업 준비하기', 'fa-clipboard-check', readyBlocks.join(''))
     }
   }
+
+  // 한국의 직업지표는 개요 탭으로 이동 (중복 제거)
 
   // 1. Type C: 업무수행능력 분석 (중요도 + 수준 통합)
   const abilityComparison = mergedData.abilities?.detailedComparison
@@ -3764,6 +3786,42 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         if (typeof lucide !== 'undefined') {
           lucide.createIcons();
         }
+        
+        // 사이드바 접기/펼치기 기능 (연관 직업)
+        (function() {
+          const expandButtons = document.querySelectorAll('.expand-toggle');
+          
+          expandButtons.forEach(button => {
+            button.addEventListener('click', function() {
+              const container = this.closest('.expandable-list');
+              const hiddenItems = container.querySelectorAll('.hidden-item');
+              const isExpanded = this.getAttribute('data-expanded') === 'true';
+              const toggleText = this.querySelector('.toggle-text');
+              const toggleIcon = this.querySelector('.toggle-icon');
+              const toggleCount = this.querySelector('.toggle-count');
+              
+              if (isExpanded) {
+                // 접기
+                hiddenItems.forEach(item => {
+                  item.style.display = 'none';
+                });
+                toggleText.textContent = '더보기';
+                toggleIcon.style.transform = 'rotate(0deg)';
+                toggleCount.style.display = '';
+                this.setAttribute('data-expanded', 'false');
+              } else {
+                // 펼치기
+                hiddenItems.forEach(item => {
+                  item.style.display = '';
+                });
+                toggleText.textContent = '접기';
+                toggleIcon.style.transform = 'rotate(180deg)';
+                toggleCount.style.display = 'none';
+                this.setAttribute('data-expanded', 'true');
+              }
+            });
+          });
+        })();
       </script>
     </div>
   `
