@@ -23,9 +23,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Job detail page template version
    * Used for: /job/:slug pages
-   * Current features: 고용24 전용 직업 설명 추가 (duty.jobSum), 사이드바 연관 직업 5개 토글, 흥미 프로필 중복 제거, 커리어 전망 빈 데이터 처리
+   * Current features: 고용24 전용 직업 설명 추가 (duty.jobSum), 사이드바 연관 직업 5개 토글, 흥미 프로필 중복 제거, 커리어 전망 빈 데이터 처리, 깔끔한 URL slug
    */
-  JOB: 16,  // 🚫 커리어 전망 섹션: 데이터 없으면 주석 포함 전체 섹션 숨김
+  JOB: 17,  // 🔄 Slug 개선으로 인한 캐시 무효화
 
   /**
    * Guide page template version

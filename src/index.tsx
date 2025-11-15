@@ -3301,21 +3301,20 @@ app.get('/job/:slug', async (c) => {
       console.log(`[Job Slug Resolution] resolvedId before D1 search: "${resolvedId}"`)
       
       // New approach: slug has no separators, so we normalize DB names to match
-      // slug: "가스에너지시험원및진단전문가"
-      // DB: "가스·에너지시험원 및 진단전문가" → normalized to "가스에너지시험원및진단전문가"
+      // slug: "건축가건축설계사" (from "건축가(건축설계사)")
+      // DB: "건축가(건축설계사)" → normalized to "건축가건축설계사"
       const normalized = decodedSlug.toLowerCase()
       console.log(`[Job Slug Resolution] Normalized slug for search: "${normalized}"`)
       
       const result = await db.prepare(
-        'SELECT id, name FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", "")) = ? LIMIT 1'
+        'SELECT id, name FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? LIMIT 1'
       ).bind(normalized).first() as { id: string; name: string } | null
       
       if (result?.id) {
         console.log(`[Job Slug Resolution] ✓ MATCHED! ID: "${result.id}", DB Name: "${result.name}"`)
         resolvedId = result.id as string
-      }
-      
-      if (resolvedId === slug || !resolvedId.includes(':')) {
+      } else {
+        // Only show "NO MATCH FOUND" if actually no match
         console.log(`[Job Slug Resolution] ✗ NO MATCH FOUND. Will proceed with slug as-is: "${resolvedId}"`)
         
         // Try to find similar names for debugging
