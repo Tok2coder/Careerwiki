@@ -76,12 +76,17 @@ export const composeDetailSlug = (type: 'job' | 'major', name: string | undefine
   const legacySegment = encodeLegacyIdSegment(type, id)
   const nameSlug = slugifyName(name)
 
-  // 이름이 있으면 항상 이름을 슬러그로 사용 (한국어 우선)
+  // 이름이 있고 ID도 legacy 형식이면 둘 다 포함 (SEO + 정확한 매칭)
+  if (nameSlug && legacySegment) {
+    return joinSlugParts(nameSlug, legacySegment)
+  }
+
+  // 이름만 있으면 이름 사용
   if (nameSlug) {
     return nameSlug
   }
 
-  // 이름이 없을 경우에만 ID 사용
+  // 이름이 없을 경우 ID 사용
   if (!id) {
     return 'unknown'
   }
