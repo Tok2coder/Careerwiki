@@ -3296,26 +3296,41 @@ app.get('/job/:slug', async (c) => {
       // Decode URL-encoded slug back to Korean
       const decodedSlug = decodeURIComponent(slug)
       
-      // Convert slug to name (replace hyphens with possible separators)
-      const possibleNames = [
-        decodedSlug.replace(/-/g, ', '), // "가스, 수도, 전기" (comma with space - most common)
-        decodedSlug.replace(/-/g, ','),  // "가스,수도,전기" (comma without space)
-        decodedSlug.replace(/-/g, ' '),  // "가스 수도 전기" (space)
-        decodedSlug.replace(/-/g, '·'),  // "가스·수도·전기" (middle dot)
-        decodedSlug.replace(/-/g, 'ㆍ'), // "가스ㆍ수도ㆍ전기" (hangul middle dot)
-        decodedSlug.replace(/-/g, '/'),  // "가스/수도/전기" (slash)
-        decodedSlug,                      // Original with hyphens
-      ]
+      console.log(`[Job Slug Resolution] Original slug: "${slug}"`)
+      console.log(`[Job Slug Resolution] Decoded slug: "${decodedSlug}"`)
+      console.log(`[Job Slug Resolution] resolvedId before D1 search: "${resolvedId}"`)
       
-      // Try exact match only (fuzzy matching removed due to SQLite complexity limit)
-      for (const name of possibleNames) {
-        const result = await db.prepare(
-          'SELECT id FROM jobs WHERE LOWER(name) = LOWER(?) LIMIT 1'
-        ).bind(name).first() as { id: string } | null
+      // New approach: slug has no separators, so we normalize DB names to match
+      // slug: "가스에너지시험원및진단전문가"
+      // DB: "가스·에너지시험원 및 진단전문가" → normalized to "가스에너지시험원및진단전문가"
+      const normalized = decodedSlug.toLowerCase()
+      console.log(`[Job Slug Resolution] Normalized slug for search: "${normalized}"`)
+      
+      const result = await db.prepare(
+        'SELECT id, name FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", "")) = ? LIMIT 1'
+      ).bind(normalized).first() as { id: string; name: string } | null
+      
+      if (result?.id) {
+        console.log(`[Job Slug Resolution] ✓ MATCHED! ID: "${result.id}", DB Name: "${result.name}"`)
+        resolvedId = result.id as string
+      }
+      
+      if (resolvedId === slug || !resolvedId.includes(':')) {
+        console.log(`[Job Slug Resolution] ✗ NO MATCH FOUND. Will proceed with slug as-is: "${resolvedId}"`)
         
-        if (result?.id) {
-          resolvedId = result.id as string
-          break
+        // Try to find similar names for debugging
+        const firstWord = decodedSlug.split('-')[0]
+        if (firstWord && firstWord.length > 1) {
+          const similarJobs = await db.prepare(
+            'SELECT id, name FROM jobs WHERE name LIKE ? LIMIT 5'
+          ).bind(`${firstWord}%`).all() as { results: Array<{ id: string; name: string }> }
+          
+          if (similarJobs.results?.length > 0) {
+            console.log(`[Job Slug Resolution] Similar jobs found starting with "${firstWord}":`)
+            similarJobs.results.forEach((job, idx) => {
+              console.log(`  ${idx + 1}. "${job.name}" (${job.id})`)
+            })
+          }
         }
       }
     } catch (error) {

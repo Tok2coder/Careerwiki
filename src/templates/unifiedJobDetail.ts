@@ -2750,12 +2750,12 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       if (prospectBlocks) {
         prospectHtml = `<div class="space-y-2">${prospectBlocks}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       }
-    } else if (typeof prospectPrimary === 'string') {
-      // 문자열인 경우 줄바꿈을 블록으로 변환
+    } else if (typeof prospectPrimary === 'string' && safeTrim(prospectPrimary)) {
+      // 문자열인 경우 줄바꿈을 블록으로 변환 (실제 내용이 있을 때만)
       const lines = prospectPrimary.split('\n').filter(line => safeTrim(line))
       if (lines.length > 1) {
         prospectHtml = `<div class="space-y-2">${lines.map(line => `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${escapeHtml(line)}</div>`).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
-      } else {
+      } else if (lines.length === 1) {
         prospectHtml = `${formatRichText(prospectPrimary)}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       }
     }

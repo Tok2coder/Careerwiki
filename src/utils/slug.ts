@@ -12,13 +12,14 @@ const truncateSlug = (value: string): string => {
 const slugifyName = (value?: string | null): string => {
   if (!value) return ''
   const normalized = typeof value.normalize === 'function' ? value.normalize('NFKC') : value
+  
+  // Remove all separators and spaces for clean URLs
+  // This makes URLs cleaner and matching easier
   const slug = normalized
-    .replace(HANGUL_SEPARATOR_REGEX, '-')
     .trim()
     .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(SLUG_INVALID_REGEX, '-')
-    .replace(/-+/g, '-')
+    .replace(/[-,·ㆍ/\s]/g, '')  // Remove all common separators and spaces
+    .replace(SLUG_INVALID_REGEX, '')  // Remove any other invalid characters
     .replace(/^-+|-+$/g, '')
 
   return truncateSlug(slug)

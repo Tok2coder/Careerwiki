@@ -23,9 +23,9 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Job detail page template version
    * Used for: /job/:slug pages
-   * Current features: 고용24 전용 직업 설명 추가 (duty.jobSum), 사이드바 연관 직업 5개 토글, 흥미 프로필 중복 제거
+   * Current features: 고용24 전용 직업 설명 추가 (duty.jobSum), 사이드바 연관 직업 5개 토글, 흥미 프로필 중복 제거, 커리어 전망 빈 데이터 처리
    */
-  JOB: 15,  // 🧹 적성 및 흥미 섹션에서 중복된 "흥미 프로필 (점수)" 제거
+  JOB: 16,  // 🚫 커리어 전망 섹션: 데이터 없으면 주석 포함 전체 섹션 숨김
 
   /**
    * Guide page template version
