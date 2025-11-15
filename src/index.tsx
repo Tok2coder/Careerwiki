@@ -3298,17 +3298,16 @@ app.get('/job/:slug', async (c) => {
       
       // Convert slug to name (replace hyphens with possible separators)
       const possibleNames = [
-        decodedSlug.replace(/-/g, ','),  // "가구제조,수리원" (most common format in DB)
-        decodedSlug.replace(/-/g, ', '), // "가구제조, 수리원" (comma with space)
-        decodedSlug.replace(/-/g, ' '),  // "가구제조 수리원"
-        decodedSlug.replace(/-/g, ''),   // "가구제조수리원"
-        decodedSlug.replace(/-/g, 'ㆍ'), // "가구제조ㆍ수리원"
-        decodedSlug.replace(/-/g, '·'),  // "가구제조·수리원"
+        decodedSlug.replace(/-/g, ', '), // "가스, 수도, 전기" (comma with space - most common)
+        decodedSlug.replace(/-/g, ','),  // "가스,수도,전기" (comma without space)
+        decodedSlug.replace(/-/g, ' '),  // "가스 수도 전기" (space)
+        decodedSlug.replace(/-/g, '·'),  // "가스·수도·전기" (middle dot)
+        decodedSlug.replace(/-/g, 'ㆍ'), // "가스ㆍ수도ㆍ전기" (hangul middle dot)
+        decodedSlug.replace(/-/g, '/'),  // "가스/수도/전기" (slash)
         decodedSlug,                      // Original with hyphens
       ]
       
-      let foundId = false
-      // Step 1: Try exact match
+      // Try exact match only (fuzzy matching removed due to SQLite complexity limit)
       for (const name of possibleNames) {
         const result = await db.prepare(
           'SELECT id FROM jobs WHERE LOWER(name) = LOWER(?) LIMIT 1'
@@ -3316,27 +3315,7 @@ app.get('/job/:slug', async (c) => {
         
         if (result?.id) {
           resolvedId = result.id as string
-          foundId = true
           break
-        }
-      }
-      
-      // Step 2: Try fuzzy match if exact match fails (부분 일치 검색)
-      if (!foundId) {
-        // Extract words from slug and create fuzzy pattern
-        const words = decodedSlug.split(/-/).filter(w => w.length > 0)
-        if (words.length > 0) {
-          // Create pattern like "%가스%수도%전기%계기%검침원%"
-          const fuzzyPattern = `%${words.join('%')}%`
-          const result = await db.prepare(
-            'SELECT id, name FROM jobs WHERE LOWER(name) LIKE LOWER(?) LIMIT 1'
-          ).bind(fuzzyPattern).first() as { id: string; name: string } | null
-          
-          if (result?.id) {
-            console.log(`[Fuzzy Match] slug="${slug}" matched to "${result.name}" (id: ${result.id})`)
-            resolvedId = result.id as string
-            foundId = true
-          }
         }
       }
     } catch (error) {
