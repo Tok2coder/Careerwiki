@@ -2942,32 +2942,32 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-secondary text-base font-bold mb-3">흥미</h3>${formatAsBulletList(profile.interests)}</div>`)
   }
   
-  // 흥미 측정 (점수 포함 버전 - interestList)
-  if (profile.interestList && Array.isArray(profile.interestList) && profile.interestList.length > 0) {
-    const interestItems = profile.interestList
-      .filter(item => item.name && item.score !== undefined)
-      .sort((a, b) => (b.score || 0) - (a.score || 0))
-      .slice(0, 10) // 상위 10개만 표시
-      .map(item => {
-        const score = item.score || 0
-        const barWidth = Math.min(score, 100)
-        return `
-          <div class="flex items-center gap-3 mb-2">
-            <span class="text-sm text-wiki-text min-w-[120px]">${escapeHtml(item.name || '')}</span>
-            <div class="flex-1 bg-wiki-border/30 rounded-full h-2 overflow-hidden">
-              <div class="bg-blue-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
-            </div>
-            <span class="text-xs text-wiki-muted min-w-[40px] text-right">${score.toFixed(1)}</span>
-          </div>
-        `
-      })
-      .join('')
-    
-    if (interestItems) {
-      const divClass = traitBlocks.length > 0 ? 'mt-6' : ''
-      traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-secondary text-base font-bold mb-3">흥미 프로필 (점수)</h3>${interestItems}</div>`)
-    }
-  }
+  // 흥미 프로필 (점수) 섹션 제거 - 흥미 섹션과 중복되고 점수 데이터가 의미 없음 (0.0)
+  // if (profile.interestList && Array.isArray(profile.interestList) && profile.interestList.length > 0) {
+  //   const interestItems = profile.interestList
+  //     .filter(item => item.name && item.score !== undefined)
+  //     .sort((a, b) => (b.score || 0) - (a.score || 0))
+  //     .slice(0, 10) // 상위 10개만 표시
+  //     .map(item => {
+  //       const score = item.score || 0
+  //       const barWidth = Math.min(score, 100)
+  //       return `
+  //         <div class="flex items-center gap-3 mb-2">
+  //           <span class="text-sm text-wiki-text min-w-[120px]">${escapeHtml(item.name || '')}</span>
+  //           <div class="flex-1 bg-wiki-border/30 rounded-full h-2 overflow-hidden">
+  //             <div class="bg-blue-500 h-full rounded-full transition-all" style="width: ${barWidth}%"></div>
+  //           </div>
+  //           <span class="text-xs text-wiki-muted min-w-[40px] text-right">${score.toFixed(1)}</span>
+  //         </div>
+  //       `
+  //     })
+  //     .join('')
+  //   
+  //   if (interestItems) {
+  //     const divClass = traitBlocks.length > 0 ? 'mt-6' : ''
+  //     traitBlocks.push(`<div class="${divClass}"><h3 class="content-heading text-wiki-secondary text-base font-bold mb-3">흥미 프로필 (점수)</h3>${interestItems}</div>`)
+  //   }
+  // }
   
   if (profile.values?.trim()) {
     const divClass = traitBlocks.length > 0 ? 'mt-6' : ''
