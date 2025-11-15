@@ -1444,6 +1444,15 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
   const allLicenses = [...careernetLicenses, ...goyong24Licenses]
   const licenseMap = new Map<string, string[]>() // name -> subLicenses
   
+  // '등'과 같은 불필요한 접미사를 필터링하는 함수
+  const isValidLicense = (text: string): boolean => {
+    if (!text || !text.trim()) return false
+    const trimmed = text.trim()
+    // '등', '등등' 같은 일반적인 접미사 필터링
+    if (/^등+$/.test(trimmed)) return false
+    return true
+  }
+  
   allLicenses.forEach(license => {
     if (!license || typeof license !== 'string' || !license.trim()) return
     
@@ -1457,10 +1466,10 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     if (bracketMatches) {
       bracketMatches.forEach(match => {
         const [, prefix, inner] = match.match(/([^(]+)\(([^)]+)\)/) || []
-        if (prefix?.trim()) {
+        if (prefix?.trim() && isValidLicense(prefix.trim())) {
           const name = prefix.trim()
           const subLicenses = inner
-            ? inner.split(/[,、]/).map(s => s.trim()).filter(s => s)
+            ? inner.split(/[,、]/).map(s => s.trim()).filter(s => isValidLicense(s))
             : []
           
           // 중복 처리: 이미 있으면 서브 자격증 병합
@@ -1480,7 +1489,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     // 나머지를 쉼표로 분리 (서브 자격증 없음)
     text.split(/[,、]/).forEach(item => {
       const trimmed = item.trim()
-      if (trimmed && !licenseMap.has(trimmed)) {
+      if (isValidLicense(trimmed) && !licenseMap.has(trimmed)) {
         licenseMap.set(trimmed, [])
       }
     })

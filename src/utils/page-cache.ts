@@ -134,6 +134,9 @@ export async function getOrGeneratePage<T>(
   
   // Step 3: Cache miss or version mismatch → regenerate
   
+  // Determine cache status for headers
+  const cacheStatus = cached ? 'VERSION-MISMATCH' : 'MISS'
+  
   try {
     // Fetch data
     const data = await generator.fetchData(slug, c.env)
