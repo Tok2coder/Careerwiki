@@ -348,6 +348,7 @@ export const searchUnifiedMajors = async (
   // 🚀 성능 최적화: 페이지네이션을 먼저 적용하여 필요한 전공명만 가져오기
   
   // Step 1: 고유한 전공명 목록을 페이지네이션 적용하여 가져오기
+  // ⚠️ 주의: LIMIT 이후에도 정규화로 인한 병합이 발생할 수 있으므로 여유분을 가져옴
   let uniqueNamesQuery = `
     SELECT DISTINCT LOWER(name) as normalized_name, name as original_name
     FROM majors
@@ -357,9 +358,10 @@ export const searchUnifiedMajors = async (
   }
   uniqueNamesQuery += ' ORDER BY normalized_name'
   
-  // 페이지네이션 적용
+  // 페이지네이션 적용 (정규화 병합을 고려하여 1.5배 가져오기)
   const offset = (page - 1) * perPage
-  uniqueNamesQuery += ` LIMIT ${perPage} OFFSET ${offset}`
+  const limitWithBuffer = Math.ceil(perPage * 1.2)
+  uniqueNamesQuery += ` LIMIT ${limitWithBuffer} OFFSET ${offset}`
   
   const uniqueNamesResult = await db.prepare(uniqueNamesQuery).bind(...countBindings).all()
   const uniqueNames = uniqueNamesResult.results || []
@@ -380,21 +382,32 @@ export const searchUnifiedMajors = async (
   
   // Step 2: 해당 전공명들에 대한 모든 레코드 조회 (병합을 위해)
   const nameList = uniqueNames.map((r: any) => r.original_name)
-  const placeholders = nameList.map(() => 'LOWER(name) = LOWER(?)').join(' OR ')
   
-  let detailQuery = `
-    SELECT id, name, careernet_id, goyong24_id, api_data_json 
-    FROM majors 
-    WHERE (${placeholders})
-  `
-  if (conditions.length > 0) {
-    detailQuery += ' AND (' + conditions.join(' AND ') + ')'
+  // 🔧 SQLite 변수 제한을 피하기 위해 IN 절을 청크로 나눔 (최대 100개씩)
+  const CHUNK_SIZE = 100
+  const d1Majors: any[] = []
+  
+  for (let i = 0; i < nameList.length; i += CHUNK_SIZE) {
+    const chunk = nameList.slice(i, i + CHUNK_SIZE)
+    const placeholders = chunk.map(() => '?').join(', ')
+    
+    let detailQuery = `
+      SELECT id, name, careernet_id, goyong24_id, api_data_json 
+      FROM majors 
+      WHERE name IN (${placeholders})
+    `
+    if (conditions.length > 0) {
+      detailQuery += ' AND (' + conditions.join(' AND ') + ')'
+    }
+    detailQuery += ' ORDER BY LOWER(name)'
+    
+    const detailBindings = [...chunk, ...countBindings]
+    const result = await db.prepare(detailQuery).bind(...detailBindings).all()
+    
+    if (result.results) {
+      d1Majors.push(...result.results)
+    }
   }
-  detailQuery += ' ORDER BY LOWER(name)'
-  
-  const detailBindings = [...nameList, ...countBindings]
-  const result = await db.prepare(detailQuery).bind(...detailBindings).all()
-  const d1Majors = result.results || []
   
   // Step 3: 총 개수 계산 (전체 고유 전공명 수)
   let countQuery = 'SELECT COUNT(DISTINCT LOWER(name)) as total FROM majors'
@@ -410,6 +423,8 @@ export const searchUnifiedMajors = async (
     let normalized = name
       .trim()
       .toLowerCase()
+      // 🔧 URL slug의 하이픈을 공백으로 변환
+      .replace(/-/g, ' ')
       // "및"를 쉼표로 변환 (예: "컴퓨터공학 및 정보통신공학" → "컴퓨터공학,정보통신공학")
       .replace(/\s*및\s*/g, ',')
       // 가운뎃점을 쉼표로 변환
@@ -685,14 +700,17 @@ export const searchUnifiedMajors = async (
     }
   })
 
+  // 🔧 정규화 병합으로 인해 perPage보다 많거나 적을 수 있으므로 정확히 perPage 개수로 제한
+  const paginatedItems = items.slice(0, perPage)
+
   // 🚀 페이지네이션은 이미 데이터베이스 레벨에서 적용됨 (LIMIT/OFFSET)
   return {
-    items, // 이미 페이지네이션된 결과
+    items: paginatedItems, // 정확히 요청한 개수만 반환
     meta: {
       total: totalCount, // 전체 고유 전공명 수
       sources: {
-        CAREERNET: { count: items.filter(i => i.profile.sources.includes('CAREERNET')).length },
-        GOYONG24: { count: items.filter(i => i.profile.sources.includes('GOYONG24')).length }
+        CAREERNET: { count: paginatedItems.filter(i => i.profile.sources.includes('CAREERNET')).length },
+        GOYONG24: { count: paginatedItems.filter(i => i.profile.sources.includes('GOYONG24')).length }
       }
     }
   }
@@ -726,6 +744,7 @@ export const searchUnifiedJobs = async (
   // 🚀 성능 최적화: 페이지네이션을 먼저 적용하여 필요한 직업명만 가져오기
   
   // Step 1: 고유한 직업명 목록을 페이지네이션 적용하여 가져오기
+  // ⚠️ 주의: LIMIT 이후에도 정규화로 인한 병합이 발생할 수 있으므로 여유분을 가져옴
   let uniqueNamesQuery = `
     SELECT DISTINCT LOWER(name) as normalized_name, name as original_name
     FROM jobs
@@ -735,9 +754,10 @@ export const searchUnifiedJobs = async (
   }
   uniqueNamesQuery += ' ORDER BY normalized_name'
   
-  // 페이지네이션 적용
+  // 페이지네이션 적용 (정규화 병합을 고려하여 1.5배 가져오기)
   const offset = (page - 1) * perPage
-  uniqueNamesQuery += ` LIMIT ${perPage} OFFSET ${offset}`
+  const limitWithBuffer = Math.ceil(perPage * 1.2)
+  uniqueNamesQuery += ` LIMIT ${limitWithBuffer} OFFSET ${offset}`
   
   const uniqueNamesResult = await db.prepare(uniqueNamesQuery).bind(...countBindings).all()
   const uniqueNames = uniqueNamesResult.results || []
@@ -758,21 +778,32 @@ export const searchUnifiedJobs = async (
   
   // Step 2: 해당 직업명들에 대한 모든 레코드 조회 (병합을 위해)
   const nameList = uniqueNames.map((r: any) => r.original_name)
-  const placeholders = nameList.map(() => 'LOWER(name) = LOWER(?)').join(' OR ')
   
-  let detailQuery = `
-    SELECT id, name, careernet_id, goyong24_id, api_data_json 
-    FROM jobs 
-    WHERE (${placeholders})
-  `
-  if (conditions.length > 0) {
-    detailQuery += ' AND (' + conditions.join(' AND ') + ')'
+  // 🔧 SQLite 변수 제한을 피하기 위해 IN 절을 청크로 나눔 (최대 100개씩)
+  const CHUNK_SIZE = 100
+  const d1Jobs: any[] = []
+  
+  for (let i = 0; i < nameList.length; i += CHUNK_SIZE) {
+    const chunk = nameList.slice(i, i + CHUNK_SIZE)
+    const placeholders = chunk.map(() => '?').join(', ')
+    
+    let detailQuery = `
+      SELECT id, name, careernet_id, goyong24_id, api_data_json 
+      FROM jobs 
+      WHERE name IN (${placeholders})
+    `
+    if (conditions.length > 0) {
+      detailQuery += ' AND (' + conditions.join(' AND ') + ')'
+    }
+    detailQuery += ' ORDER BY LOWER(name)'
+    
+    const detailBindings = [...chunk, ...countBindings]
+    const result = await db.prepare(detailQuery).bind(...detailBindings).all()
+    
+    if (result.results) {
+      d1Jobs.push(...result.results)
+    }
   }
-  detailQuery += ' ORDER BY LOWER(name)'
-  
-  const detailBindings = [...nameList, ...countBindings]
-  const result = await db.prepare(detailQuery).bind(...detailBindings).all()
-  const d1Jobs = result.results || []
   
   // Step 3: 총 개수 계산 (전체 고유 직업명 수)
   let countQuery = 'SELECT COUNT(DISTINCT LOWER(name)) as total FROM jobs'
@@ -1033,14 +1064,17 @@ export const searchUnifiedJobs = async (
     }
   })
 
+  // 🔧 정규화 병합으로 인해 perPage보다 많거나 적을 수 있으므로 정확히 perPage 개수로 제한
+  const paginatedItems = items.slice(0, perPage)
+
   // 🚀 페이지네이션은 이미 데이터베이스 레벨에서 적용됨 (LIMIT/OFFSET)
   return {
-    items, // 이미 페이지네이션된 결과
+    items: paginatedItems, // 정확히 요청한 개수만 반환
     meta: {
       total: totalCount, // 전체 고유 직업명 수
       sources: {
-        CAREERNET: { count: items.filter(i => i.profile.sources.includes('CAREERNET')).length },
-        GOYONG24: { count: items.filter(i => i.profile.sources.includes('GOYONG24')).length }
+        CAREERNET: { count: paginatedItems.filter(i => i.profile.sources.includes('CAREERNET')).length },
+        GOYONG24: { count: paginatedItems.filter(i => i.profile.sources.includes('GOYONG24')).length }
       }
     }
   }
@@ -1068,6 +1102,8 @@ export const getUnifiedMajorDetail = async (
         let normalized = name
           .trim()
           .toLowerCase()
+          // 🔧 URL slug의 하이픈을 공백으로 변환
+          .replace(/-/g, ' ')
           .replace(/\s*및\s*/g, ',')
           .replace(/[·•]/g, ',')
           .replace(/\s*,\s*/g, ',')

@@ -170,11 +170,26 @@ CareerWiki는 **Wikipedia의 협업 정신**과 **AI의 지능**을 결합하여
 
 ## 📖 주요 문서
 
+### 시작하기 (필독)
 | 문서 | 설명 |
 |------|------|
-| [ARCHITECTURE.md](./docs/ARCHITECTURE.md) | 시스템 아키텍처 전체 설계 |
+| **[MASTER_PLAN.md](./MASTER_PLAN.md)** | 🎯 **전체 프로젝트 진행 계획** (Goal-Period-Target-Work-Step 구조) |
+| **[PHASE3_PLAN.md](./PHASE3_PLAN.md)** | 🔐 **Phase 3 로그인 시스템 구현 계획** (5일 로드맵, JWT 아키텍처) |
+| **[PHASE3_EXPLANATION_SIMPLE.md](./PHASE3_EXPLANATION_SIMPLE.md)** | 🎓 **Phase 3 비개발자용 쉬운 설명** (정우님을 위한 완전 가이드) |
+| [README.md](./README.md) | 프로젝트 개요 및 빠른 시작 |
+
+### 상세 문서
+| 문서 | 설명 |
+|------|------|
 | [DEVELOPMENT_ROADMAP.md](./docs/DEVELOPMENT_ROADMAP.md) | 단계별 개발 로드맵 (Phase 0-6) |
-| [migration-plan.md](./docs/migration-plan.md) | 상세 마이그레이션 계획 |
+| [PROJECT_STATUS.md](./docs/PROJECT_STATUS.md) | 프로젝트 현황 및 데이터 통계 |
+| [ARCHITECTURE.md](./docs/ARCHITECTURE.md) | 시스템 아키텍처 전체 설계 |
+
+### 기술 문서
+| 문서 | 설명 |
+|------|------|
+| [ISR_CACHE_EXPLAINED.md](./docs/ISR_CACHE_EXPLAINED.md) | ISR 캐시 시스템 설명 |
+| [API_INTEGRATION.md](./docs/API_INTEGRATION.md) | API 필드 매핑 문서 |
 | [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) | 문제 해결 가이드 |
 
 ---

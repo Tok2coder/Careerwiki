@@ -8,15 +8,18 @@ export type UserRole = 'super-admin' | 'operator' | 'user'
 
 const DEFAULT_PAGE_CONTENT = '# Synthetic placeholder\n\nThis placeholder record enables comments for SSR pages.'
 
-const BEST_LIKE_THRESHOLD = 8
+const BEST_LIKE_THRESHOLD = 5  // Updated: 5개 이상 공감 필요
 const BEST_LIMIT = 10
-export const REPORT_BLIND_THRESHOLD = 5
+export const REPORT_BLIND_THRESHOLD = 3  // Updated: 3회 이상 신고 시 블라인드
 const DAILY_VOTE_LIMIT = 5
 const VOTE_WINDOW_HOURS = 24
+const ANONYMOUS_DAILY_COMMENT_LIMIT = 5  // 익명 사용자 하루 최대 5건
 const DEFAULT_IP_DISPLAY_MODE: 'masked' = 'masked'
 const MODERATOR_IP_BLOCK_ENABLED = true
 const MODERATOR_ROLE_ORDER: ReadonlyArray<UserRole> = ['super-admin', 'operator']
 const BLINDED_PLACEHOLDER = '신고 누적으로 블라인드 처리된 댓글입니다.'
+const MAX_CONTENT_LENGTH = 500  // 한글 기준 500자
+const MAX_DEPTH = 3  // 최대 3단계 답글
 
 const MODERATOR_ROLES: ReadonlySet<UserRole> = new Set(['super-admin', 'operator'])
 
@@ -46,6 +49,12 @@ export interface CommentRecord {
   displayIp: string | null
   createdAt: string
   viewerVote: VoteValue
+  passwordHash?: string | null  // 익명 댓글 비밀번호 해시
+  anonymousNumber?: number | null  // 익명 번호 (익명 1, 익명 2, ...)
+  isEdited?: boolean  // 수정 여부
+  editedAt?: string | null  // 수정 시간
+  mentions?: string[] | null  // 멘션된 사용자/댓글 ID 배열
+  depth?: number  // 답글 깊이 (0=최상위, 1=답글, 2=답글의 답글, 3=최대)
 }
 
 export interface CommentThread extends CommentRecord {
@@ -68,6 +77,7 @@ export interface CommentListResult {
     moderatorIpBlockEnabled: boolean
     moderatorRoles: UserRole[]
   }
+  nextAnonymousNumber?: number  // 익명 사용자를 위한 다음 익명 번호 (읽기 전용)
 }
 
 export interface CreateCommentPayload {
@@ -78,10 +88,13 @@ export interface CreateCommentPayload {
   content: string
   nickname?: string | null
   parentId?: number | null
-  authorId: string
+  authorId: string | null  // Phase 3 Day 3: 익명 사용자 지원을 위해 null 허용
   isAnonymous?: boolean
   ipHash?: string | null
   displayIp?: string | null
+  password?: string | null  // 익명 댓글 비밀번호 (4자리 숫자)
+  mentions?: string[] | null  // 멘션된 사용자/댓글 ID 배열
+  requestAnonymous?: boolean  // 로그인 사용자가 익명으로 작성 요청
 }
 
 export interface VotePayload {
@@ -113,7 +126,34 @@ const normalizeNickname = (value: string | null | undefined): string => {
   return trimmed.length ? trimmed.slice(0, 40) : '익명'
 }
 
-const normalizeContent = (value: string): string => value.trim().slice(0, 1000)
+const normalizeContent = (value: string): string => {
+  // 한글 기준 500자 제한 (실제로는 바이트 기준이지만, 간단히 문자 수로 제한)
+  const trimmed = value.trim()
+  return trimmed.length > MAX_CONTENT_LENGTH ? trimmed.slice(0, MAX_CONTENT_LENGTH) : trimmed
+}
+
+// 비밀번호 해시 생성 (간단한 해시, 실제로는 더 강력한 해시 사용 권장)
+const hashPassword = async (password: string): Promise<string> => {
+  if (!password || password.length !== 4 || !/^\d{4}$/.test(password)) {
+    throw new Error('INVALID_PASSWORD')
+  }
+  // Web Crypto API 사용
+  const encoder = new TextEncoder()
+  const data = encoder.encode(password)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
+// 비밀번호 검증
+const verifyPassword = async (password: string, hash: string): Promise<boolean> => {
+  try {
+    const computedHash = await hashPassword(password)
+    return computedHash === hash
+  } catch {
+    return false
+  }
+}
 
 const normalizeDisplayIp = (value: string | null | undefined): string | null => {
   if (!value) return null
@@ -160,6 +200,17 @@ const mapRowToComment = (row: any): CommentRecord => {
   const voteRaw = Number(row.viewer_vote ?? 0)
   const viewerVote: VoteValue = voteRaw === 1 ? 1 : voteRaw === -1 ? -1 : 0
 
+  // 멘션 파싱
+  let mentions: string[] | null = null
+  if (row.mentions && typeof row.mentions === 'string') {
+    try {
+      const parsed = JSON.parse(row.mentions)
+      mentions = Array.isArray(parsed) ? parsed : null
+    } catch {
+      mentions = null
+    }
+  }
+
   return {
     id: Number(row.id),
     pageId: Number(row.page_id),
@@ -174,8 +225,26 @@ const mapRowToComment = (row: any): CommentRecord => {
     isAnonymous: Number(row.is_anonymous ?? 0) === 1,
     displayIp: row.display_ip ?? null,
     createdAt: typeof row.created_at === 'string' ? row.created_at : new Date().toISOString(),
-    viewerVote
+    viewerVote,
+    passwordHash: typeof row.password_hash === 'string' ? row.password_hash : null,
+    anonymousNumber: row.anonymous_number !== null && row.anonymous_number !== undefined ? Number(row.anonymous_number) : null,
+    isEdited: Number(row.is_edited ?? 0) === 1,
+    editedAt: typeof row.edited_at === 'string' ? row.edited_at : null,
+    mentions,
+    depth: row.depth !== null && row.depth !== undefined ? Number(row.depth) : 0
   }
+}
+
+// 깊이 계산 헬퍼 함수
+const calculateDepth = (comment: CommentRecord, byId: Map<number, CommentThread>, depth = 0): number => {
+  if (!comment.parentId || depth >= MAX_DEPTH) {
+    return depth
+  }
+  const parent = byId.get(comment.parentId)
+  if (!parent) {
+    return depth
+  }
+  return calculateDepth(parent, byId, depth + 1)
 }
 
 const toThreads = (records: CommentRecord[], bestSet: Set<number>): CommentThread[] => {
@@ -186,19 +255,25 @@ const toThreads = (records: CommentRecord[], bestSet: Set<number>): CommentThrea
     byId.set(record.id, {
       ...record,
       replies: [],
-      isBest: bestSet.has(record.id)
+      isBest: bestSet.has(record.id),
+      depth: record.depth ?? 0
     })
   })
 
+  // 깊이 계산
   byId.forEach((comment) => {
     if (comment.parentId && byId.has(comment.parentId)) {
       const parent = byId.get(comment.parentId)!
+      const depth = calculateDepth(comment, byId)
+      comment.depth = Math.min(depth, MAX_DEPTH)
       parent.replies.push(comment)
     } else {
+      comment.depth = 0
       roots.push(comment)
     }
   })
 
+  // 답글 정렬 (최신순)
   byId.forEach((comment) => {
     comment.replies.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
   })
@@ -304,14 +379,16 @@ export const getCommentsForPage = async (
 
   const selectSql = viewerId
     ? `SELECT c.id, c.page_id, c.parent_id, c.author_id, c.nickname, c.content, c.likes, c.dislike_count, c.report_count,
-             c.status, c.is_anonymous, c.display_ip, c.created_at, v.vote AS viewer_vote
+             c.status, c.is_anonymous, c.display_ip, c.created_at, c.password_hash, c.anonymous_number,
+             c.is_edited, c.edited_at, c.mentions, c.depth, v.vote AS viewer_vote
        FROM comments c
        LEFT JOIN comment_votes v ON v.comment_id = c.id AND v.user_id = ?
        WHERE c.page_id = ? ${includeModerated ? '' : "AND c.status = 'visible'"}
        ORDER BY c.created_at DESC
        LIMIT ?`
     : `SELECT c.id, c.page_id, c.parent_id, c.author_id, c.nickname, c.content, c.likes, c.dislike_count, c.report_count,
-             c.status, c.is_anonymous, c.display_ip, c.created_at, 0 AS viewer_vote
+             c.status, c.is_anonymous, c.display_ip, c.created_at, c.password_hash, c.anonymous_number,
+             c.is_edited, c.edited_at, c.mentions, c.depth, 0 AS viewer_vote
        FROM comments c
        WHERE c.page_id = ? ${includeModerated ? '' : "AND c.status = 'visible'"}
        ORDER BY c.created_at DESC
@@ -324,9 +401,20 @@ export const getCommentsForPage = async (
   const rawRecords = Array.isArray(rows.results) ? rows.results.map(mapRowToComment) : []
   const records = rawRecords.map((record) => applyViewerPolicy(record, viewerRole))
 
+  // Best 댓글 선정: 공감 5개 이상, 공감 > 싫어요, 최상위 댓글만
   const bestCandidates = rawRecords
-    .filter((record) => record.parentId === null && record.likeCount >= BEST_LIKE_THRESHOLD && record.status === 'visible')
-    .sort((a, b) => (a.likeCount < b.likeCount ? 1 : a.likeCount > b.likeCount ? -1 : a.createdAt < b.createdAt ? 1 : -1))
+    .filter((record) => 
+      record.parentId === null && 
+      record.status === 'visible' &&
+      record.likeCount >= BEST_LIKE_THRESHOLD &&
+      record.likeCount > record.dislikeCount  // 공감이 싫어요보다 많아야 함
+    )
+    .sort((a, b) => {
+      // 공감 수 내림차순, 같으면 최신순
+      if (a.likeCount < b.likeCount) return 1
+      if (a.likeCount > b.likeCount) return -1
+      return a.createdAt < b.createdAt ? 1 : -1
+    })
     .slice(0, BEST_LIMIT)
 
   const bestSet = new Set(bestCandidates.map((comment) => comment.id))
@@ -355,9 +443,9 @@ export const getCommentsForPage = async (
       bestLikeThreshold: BEST_LIKE_THRESHOLD,
       bestLimit: BEST_LIMIT,
       reportBlindThreshold: REPORT_BLIND_THRESHOLD,
-      requiresAuth: true,
-      dailyVoteLimit: DAILY_VOTE_LIMIT,
-      voteWindowHours: VOTE_WINDOW_HOURS,
+      requiresAuth: false,  // Phase 3 Day 3: 익명 사용자도 댓글 작성 가능
+      dailyVoteLimit: 0,  // 일일 투표 제한 제거
+      voteWindowHours: 0,  // 투표 윈도우 제거
       ipDisplayMode: DEFAULT_IP_DISPLAY_MODE,
       moderatorIpBlockEnabled: MODERATOR_IP_BLOCK_ENABLED,
       moderatorRoles: [...MODERATOR_ROLE_ORDER]
@@ -393,12 +481,88 @@ export const getCommentsBySlug = async (
     includeModerated: options.includeModerated
   })
 
+  // 익명 사용자를 위한 다음 익명 번호 조회 (읽기 전용)
+  const nextAnonymousNumber = await peekNextAnonymousNumber(db, page.id)
+
   return {
     page,
     comments,
     totalCount,
-    policy
+    policy,
+    nextAnonymousNumber
   }
+}
+
+// 다음 익명 번호 조회 (읽기 전용, 실제 할당하지 않음)
+const peekNextAnonymousNumber = async (db: D1Database, pageId: number): Promise<number> => {
+  const counter = await db
+    .prepare('SELECT next_number FROM anonymous_comment_counters WHERE page_id = ?')
+    .bind(pageId)
+    .first()
+
+  if (counter) {
+    return Number(counter.next_number ?? 1)
+  } else {
+    // 아직 익명 댓글이 없는 경우
+    return 1
+  }
+}
+
+// 익명 번호 할당
+const getNextAnonymousNumber = async (db: D1Database, pageId: number): Promise<number> => {
+  // anonymous_comment_counters 테이블에서 다음 번호 가져오기
+  const counter = await db
+    .prepare('SELECT next_number FROM anonymous_comment_counters WHERE page_id = ?')
+    .bind(pageId)
+    .first()
+
+  if (counter) {
+    const nextNumber = Number(counter.next_number ?? 1)
+    // 다음 번호 업데이트
+    await db
+      .prepare('UPDATE anonymous_comment_counters SET next_number = ? WHERE page_id = ?')
+      .bind(nextNumber + 1, pageId)
+      .run()
+    return nextNumber
+  } else {
+    // 첫 익명 댓글인 경우
+    await db
+      .prepare('INSERT INTO anonymous_comment_counters (page_id, next_number) VALUES (?, ?)')
+      .bind(pageId, 2)
+      .run()
+    return 1
+  }
+}
+
+// 일일 댓글 제한 체크 (익명 사용자만)
+const checkDailyLimit = async (db: D1Database, pageId: number, ipHash: string | null): Promise<boolean> => {
+  if (!ipHash) return true  // IP가 없으면 제한 없음 (로그인 사용자)
+
+  const today = new Date().toISOString().split('T')[0]  // YYYY-MM-DD
+  const limitRow = await db
+    .prepare('SELECT count FROM anonymous_daily_limits WHERE page_id = ? AND ip_hash = ? AND date = ?')
+    .bind(pageId, ipHash, today)
+    .first()
+
+  const currentCount = limitRow ? Number(limitRow.count ?? 0) : 0
+  if (currentCount >= ANONYMOUS_DAILY_COMMENT_LIMIT) {
+    return false
+  }
+
+  // 카운트 증가 또는 생성
+  if (limitRow) {
+    await db
+      .prepare('UPDATE anonymous_daily_limits SET count = count + 1 WHERE page_id = ? AND ip_hash = ? AND date = ?')
+      .bind(pageId, ipHash, today)
+      .run()
+  } else {
+    await db
+      .prepare('INSERT INTO anonymous_daily_limits (page_id, ip_hash, date, count) VALUES (?, ?, ?, 1)')
+      .bind(pageId, ipHash, today)
+      .run()
+  }
+
+  return true
 }
 
 export const createComment = async (db: D1Database, payload: CreateCommentPayload): Promise<CommentRecord> => {
@@ -407,11 +571,9 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
     throw new Error('EMPTY_CONTENT')
   }
 
-  if (!payload.authorId || !payload.authorId.trim()) {
-    throw new Error('AUTHOR_REQUIRED')
-  }
-
-  const nickname = normalizeNickname(payload.nickname)
+  const isAnonymousUser = !payload.authorId || payload.isAnonymous || payload.requestAnonymous
+  // 익명 사용자는 닉네임 입력하지 않음 (익명 번호는 자동 배정)
+  const nickname = isAnonymousUser ? null : normalizeNickname(payload.nickname)
   const page = await ensurePageRecord(db, {
     slug: payload.slug,
     title: payload.title,
@@ -419,31 +581,86 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
     summary: payload.summary ?? null
   })
 
+  // 익명 사용자 일일 제한 체크
+  if (isAnonymousUser && payload.ipHash) {
+    const canComment = await checkDailyLimit(db, page.id, payload.ipHash)
+    if (!canComment) {
+      throw new Error('DAILY_LIMIT_REACHED')
+    }
+  }
+
+  // 비밀번호 해시 생성 (익명 사용자만)
+  let passwordHash: string | null = null
+  if (isAnonymousUser && payload.password) {
+    if (!/^\d{4}$/.test(payload.password)) {
+      throw new Error('INVALID_PASSWORD')
+    }
+    passwordHash = await hashPassword(payload.password)
+  } else if (isAnonymousUser && !payload.password) {
+    throw new Error('PASSWORD_REQUIRED')
+  }
+
+  // 익명 번호 할당
+  let anonymousNumber: number | null = null
+  if (isAnonymousUser) {
+    anonymousNumber = await getNextAnonymousNumber(db, page.id)
+  }
+
+  // 부모 댓글 확인 및 깊이 계산
+  let depth = 0
   if (payload.parentId) {
     const parent = await db
-      .prepare('SELECT id FROM comments WHERE id = ? AND page_id = ? LIMIT 1')
+      .prepare('SELECT id, parent_id FROM comments WHERE id = ? AND page_id = ? LIMIT 1')
       .bind(payload.parentId, page.id)
       .first()
 
     if (!parent) {
       throw new Error('INVALID_PARENT')
     }
+
+    // 부모의 깊이 계산
+    if (parent.parent_id) {
+      const grandparent = await db
+        .prepare('SELECT depth FROM comments WHERE id = ? LIMIT 1')
+        .bind(parent.parent_id)
+        .first()
+      depth = grandparent ? (Number(grandparent.depth ?? 0) + 1) : 2
+    } else {
+      depth = 1
+    }
+
+    // 최대 깊이 제한
+    if (depth >= MAX_DEPTH) {
+      depth = MAX_DEPTH
+    }
   }
+
+  // 멘션 JSON 변환
+  const mentionsJson = payload.mentions && Array.isArray(payload.mentions) && payload.mentions.length > 0
+    ? JSON.stringify(payload.mentions.slice(0, 10))  // 최대 10개 멘션
+    : null
 
   const result = await db
     .prepare(
-      `INSERT INTO comments (page_id, parent_id, author_id, nickname, content, ip_hash, is_anonymous, display_ip, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'visible')`
+      `INSERT INTO comments (page_id, parent_id, author_id, nickname, content, ip_hash, is_anonymous, display_ip, status,
+                             password_hash, anonymous_number, mentions, depth)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'visible', ?, ?, ?, ?)`
     )
     .bind(
       page.id,
       payload.parentId ?? null,
       payload.authorId,
-      nickname,
+      isAnonymousUser && anonymousNumber 
+        ? `익명 ${anonymousNumber}` 
+        : (nickname || (isAnonymousUser ? '익명' : null)),
       trimmedContent,
       payload.ipHash ?? null,
-      payload.isAnonymous ? 1 : 0,
-      normalizeDisplayIp(payload.displayIp)
+      isAnonymousUser ? 1 : 0,
+      normalizeDisplayIp(payload.displayIp),
+      passwordHash,
+      anonymousNumber,
+      mentionsJson,
+      depth
     )
     .run()
 
@@ -452,7 +669,8 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
   const row = await db
     .prepare(
       `SELECT id, page_id, parent_id, author_id, nickname, content, likes, dislike_count, report_count,
-              status, is_anonymous, display_ip, created_at, 0 AS viewer_vote
+              status, is_anonymous, display_ip, created_at, password_hash, anonymous_number,
+              is_edited, edited_at, mentions, depth, 0 AS viewer_vote
        FROM comments WHERE id = ? LIMIT 1`
     )
     .bind(commentId)
@@ -490,15 +708,8 @@ export const setCommentVote = async (db: D1Database, payload: VotePayload): Prom
     .bind(payload.commentId, payload.userId)
     .first()
 
-  if (!existing && voteValue !== 0) {
-    const limitRow = await db
-      .prepare<{ count: number }>('SELECT COUNT(*) AS count FROM comment_votes WHERE user_id = ? AND created_at >= datetime(\'now\', ?)')
-      .bind(payload.userId, `-${VOTE_WINDOW_HOURS} hours`)
-      .first()
-    if (Number(limitRow?.count ?? 0) >= DAILY_VOTE_LIMIT) {
-      throw new Error('VOTE_LIMIT_REACHED')
-    }
-  }
+  // 일일 투표 제한 제거 - 여러 댓글에 공감/싫어요는 제한 없음 (한 댓글에만 제한)
+  // 제한 로직 제거됨
 
   if (voteValue === 0) {
     if (existing) {
@@ -573,6 +784,125 @@ export const reportComment = async (db: D1Database, payload: ReportPayload): Pro
     .first()
 
   return row ? mapRowToComment(row) : null
+}
+
+export interface UpdateCommentPayload {
+  commentId: number
+  content: string
+  userId: string | null  // 로그인 사용자 ID 또는 null
+  password?: string | null  // 익명 댓글 수정 시 비밀번호
+}
+
+export interface DeleteCommentPayload {
+  commentId: number
+  userId: string | null  // 로그인 사용자 ID 또는 null
+  password?: string | null  // 익명 댓글 삭제 시 비밀번호
+}
+
+export const updateComment = async (db: D1Database, payload: UpdateCommentPayload): Promise<CommentRecord> => {
+  const trimmedContent = normalizeContent(payload.content)
+  if (!trimmedContent) {
+    throw new Error('EMPTY_CONTENT')
+  }
+
+  // 댓글 조회
+  const comment = await db
+    .prepare('SELECT id, author_id, password_hash, is_anonymous FROM comments WHERE id = ? LIMIT 1')
+    .bind(payload.commentId)
+    .first()
+
+  if (!comment) {
+    throw new Error('COMMENT_NOT_FOUND')
+  }
+
+  const authorId = typeof comment.author_id === 'string' ? comment.author_id : null
+  const isAnonymous = Number(comment.is_anonymous ?? 0) === 1
+  const passwordHash = typeof comment.password_hash === 'string' ? comment.password_hash : null
+
+  // 권한 확인
+  if (authorId) {
+    // 로그인 사용자 댓글: 작성자만 수정 가능
+    if (!payload.userId || payload.userId !== authorId) {
+      throw new Error('UNAUTHORIZED')
+    }
+  } else if (isAnonymous) {
+    // 익명 댓글: 비밀번호 확인 필요
+    if (!payload.password || !passwordHash) {
+      throw new Error('PASSWORD_REQUIRED')
+    }
+    const isValid = await verifyPassword(payload.password, passwordHash)
+    if (!isValid) {
+      throw new Error('INVALID_PASSWORD')
+    }
+  } else {
+    throw new Error('UNAUTHORIZED')
+  }
+
+  // 댓글 수정
+  await db
+    .prepare('UPDATE comments SET content = ?, is_edited = 1, edited_at = CURRENT_TIMESTAMP WHERE id = ?')
+    .bind(trimmedContent, payload.commentId)
+    .run()
+
+  // 수정된 댓글 조회
+  const row = await db
+    .prepare(
+      `SELECT id, page_id, parent_id, author_id, nickname, content, likes, dislike_count, report_count,
+              status, is_anonymous, display_ip, created_at, password_hash, anonymous_number,
+              is_edited, edited_at, mentions, depth, 0 AS viewer_vote
+       FROM comments WHERE id = ? LIMIT 1`
+    )
+    .bind(payload.commentId)
+    .first()
+
+  if (!row) {
+    throw new Error('COMMENT_NOT_FOUND')
+  }
+
+  return mapRowToComment(row)
+}
+
+export const deleteComment = async (db: D1Database, payload: DeleteCommentPayload): Promise<boolean> => {
+  // 댓글 조회
+  const comment = await db
+    .prepare('SELECT id, author_id, password_hash, is_anonymous FROM comments WHERE id = ? LIMIT 1')
+    .bind(payload.commentId)
+    .first()
+
+  if (!comment) {
+    throw new Error('COMMENT_NOT_FOUND')
+  }
+
+  const authorId = typeof comment.author_id === 'string' ? comment.author_id : null
+  const isAnonymous = Number(comment.is_anonymous ?? 0) === 1
+  const passwordHash = typeof comment.password_hash === 'string' ? comment.password_hash : null
+
+  // 권한 확인
+  if (authorId) {
+    // 로그인 사용자 댓글: 작성자만 삭제 가능
+    if (!payload.userId || payload.userId !== authorId) {
+      throw new Error('UNAUTHORIZED')
+    }
+  } else if (isAnonymous) {
+    // 익명 댓글: 비밀번호 확인 필요
+    if (!payload.password || !passwordHash) {
+      throw new Error('PASSWORD_REQUIRED')
+    }
+    const isValid = await verifyPassword(payload.password, passwordHash)
+    if (!isValid) {
+      throw new Error('INVALID_PASSWORD')
+    }
+  } else {
+    throw new Error('UNAUTHORIZED')
+  }
+
+  // 댓글 삭제 (soft delete: status를 'deleted'로 변경)
+  await db
+    .prepare("UPDATE comments SET status = 'deleted' WHERE id = ?")
+    .bind(payload.commentId)
+    .run()
+
+  return true
 }
 
 export const isIpBlocked = async (db: D1Database, ipHash: string | null | undefined): Promise<boolean> => {

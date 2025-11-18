@@ -1401,7 +1401,16 @@ const DetailComments = (() => {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;')
 
-  const formatContent = (value = '') => escapeHtml(value).replace(/(?:\r\n|\n\r|\n|\r)/g, '<br>')
+  const formatContent = (value = '') => {
+    if (!value) return ''
+    // 내부 링크 파싱: [[job:slug]], [[major:slug]], [[howto:slug]] 형식 지원
+    let formatted = escapeHtml(value)
+      .replace(/\[\[job:([^\]]+)\]\]/g, '<a href="/job/$1" class="text-wiki-primary hover:text-wiki-secondary underline">$1</a>')
+      .replace(/\[\[major:([^\]]+)\]\]/g, '<a href="/major/$1" class="text-wiki-primary hover:text-wiki-secondary underline">$1</a>')
+      .replace(/\[\[howto:([^\]]+)\]\]/g, '<a href="/howto/$1" class="text-wiki-primary hover:text-wiki-secondary underline">$1</a>')
+      .replace(/(?:\r\n|\n\r|\n|\r)/g, '<br>')
+    return formatted
+  }
 
   const formatDate = (value) => {
     if (!value) {
@@ -1434,7 +1443,16 @@ const DetailComments = (() => {
   const toggleLoading = (section, isLoading) => {
     const loader = section.querySelector('[data-cw-comments-loading]')
     if (loader) {
-      loader.hidden = !isLoading
+      // hidden 속성과 style.display 모두 설정하여 확실히 숨김/표시
+      if (isLoading) {
+        loader.hidden = false
+        loader.style.display = 'flex'
+        loader.removeAttribute('hidden')
+      } else {
+        loader.hidden = true
+        loader.style.display = 'none'
+        loader.setAttribute('hidden', '')
+      }
     }
     const bodyRegion = section.querySelector('[data-cw-comments-body]')
     if (bodyRegion) {
@@ -1544,19 +1562,10 @@ const DetailComments = (() => {
   }
 
   const refreshScoreboardCopy = (section, state) => {
-    const bestThreshold = ensureBestThreshold(state)
-    const bestScoreEl = section.querySelector('[data-cw-comment-scorecard-count="best"]')
-    if (bestScoreEl) {
-      bestScoreEl.textContent = `좋아요 ${bestThreshold}개 이상 댓글은 BEST로 승격됩니다.`
-    }
-    const reportThreshold = state?.policy && typeof state.policy.reportBlindThreshold === 'number' && Number.isFinite(state.policy.reportBlindThreshold)
-      ? state.policy.reportBlindThreshold
-      : DEFAULT_POLICY.reportBlindThreshold
-    const moderationEl = section.querySelector('[data-cw-comment-scorecard-count="moderation"]')
-    if (moderationEl) {
-      moderationEl.textContent = reportThreshold
-        ? `신고 ${reportThreshold}회 이상 시 자동으로 블라인드 처리됩니다.`
-        : '신고 누적 시 모더레이션 검토가 진행됩니다.'
+    // scoreboard 제거 - 사용자 요청에 따라 정보 박스 제거
+    const scoreboard = section.querySelector('[data-cw-comment-scoreboard]')
+    if (scoreboard) {
+      scoreboard.hidden = true
     }
   }
 
@@ -1588,147 +1597,36 @@ const DetailComments = (() => {
   }
 
   const updateScoreboard = (section, state, stats) => {
-    const total = typeof state?.meta?.total === 'number' ? state.meta.total : stats.total
-    const bestThreshold = typeof state?.policy?.bestLikeThreshold === 'number' ? state.policy.bestLikeThreshold : null
-    const bestLimit = typeof state?.policy?.bestLimit === 'number' ? state.policy.bestLimit : null
-    const bestSummary = section.querySelector('[data-cw-comment-scorecard-count="best"]')
-    if (bestSummary) {
-      if (stats.best > 0) {
-        const parts = [`BEST ${stats.best}건`]
-        if (bestLimit) {
-          parts.push(`최대 ${bestLimit}건 운영`)
-        }
-        if (bestThreshold) {
-          parts.push(`좋아요 ${bestThreshold}회 이상`)
-        }
-        if (total > 0) {
-          parts.push(`총 ${total}건 중`)
-        }
-        bestSummary.textContent = parts.join(' · ')
-      } else if (total > 0 && bestThreshold) {
-        bestSummary.textContent = `좋아요 ${bestThreshold}개 이상 댓글이 BEST로 승격됩니다.`
-      } else if (total > 0) {
-        bestSummary.textContent = 'BEST 조건을 충족한 댓글이 아직 없습니다.'
-      } else {
-        bestSummary.textContent = '아직 집계되지 않았습니다.'
-      }
-    }
-
-    const moderationSummary = section.querySelector('[data-cw-comment-scorecard-count="moderation"]')
-    const reportThreshold = typeof state?.policy?.reportBlindThreshold === 'number' ? state.policy.reportBlindThreshold : null
-    if (moderationSummary) {
-      if (stats.blinded > 0) {
-        const parts = [`블라인드 처리 ${stats.blinded}건`]
-        if (reportThreshold) {
-          parts.push(`신고 ${reportThreshold}회 이상`)
-        }
-        moderationSummary.textContent = parts.join(' · ')
-      } else if (reportThreshold) {
-        moderationSummary.textContent = `신고 ${reportThreshold}회 이상 시 자동으로 블라인드 처리됩니다.`
-      } else {
-        moderationSummary.textContent = '신고/블라인드 누적 내역이 없습니다.'
-      }
+    // scoreboard 제거 - 사용자 요청에 따라 정보 박스 제거
+    const scoreboard = section.querySelector('[data-cw-comment-scoreboard]')
+    if (scoreboard) {
+      scoreboard.hidden = true
     }
   }
 
   const updateAuthCta = (section, state) => {
+    // 익명 사용자도 댓글 작성 가능하므로 CTA 항상 숨김
     const cta = section.querySelector('[data-cw-comment-auth-cta]')
-    if (!cta) return
-    const requiresAuth = Boolean(state?.policy?.requiresAuth)
-    const hasViewer = Boolean(state?.viewer?.id)
-    cta.hidden = !(requiresAuth && !hasViewer)
+    if (cta) {
+      cta.hidden = true
+    }
   }
 
   const updateGuidance = (section, state, stats) => {
     const guidanceEl = section.querySelector('[data-cw-comment-guidance]')
     if (!guidanceEl) return
 
-    const messages = []
-    const total = typeof state?.meta?.total === 'number' ? state.meta.total : stats.total
-    const requiresAuth = Boolean(state?.policy?.requiresAuth)
-    const hasViewer = Boolean(state?.viewer?.id)
-    if (requiresAuth && !hasViewer) {
-      messages.push('로그인 후 댓글 작성 및 상호작용이 가능합니다.')
-    }
-    if (total > 0) {
-      messages.push(`총 ${total}개의 의견이 등록되었습니다.`)
-    }
-    if (stats.best > 0) {
-      messages.push(`BEST 댓글 ${stats.best}건이 상단에 고정되었습니다.`)
-    } else if (typeof state?.policy?.bestLikeThreshold === 'number') {
-      messages.push(`좋아요 ${state.policy.bestLikeThreshold}개 이상이면 BEST로 승격됩니다.`)
-    }
-    if (stats.blinded > 0) {
-      messages.push(`신고 누적 ${stats.blinded}건으로 블라인드 처리된 댓글이 있습니다.`)
-    } else if (typeof state?.policy?.reportBlindThreshold === 'number') {
-      messages.push(`신고 ${state.policy.reportBlindThreshold}회 이상 시 자동으로 블라인드 처리됩니다.`)
-    }
-    if (typeof state?.policy?.dailyVoteLimit === 'number' && state.policy.dailyVoteLimit > 0) {
-      const windowHours = typeof state.policy.voteWindowHours === 'number' && state.policy.voteWindowHours > 0 ? state.policy.voteWindowHours : 24
-      const windowLabel = windowHours === 24 ? '24시간' : `${windowHours}시간`
-      messages.push(`${windowLabel} 동안 공감/비공감은 ${state.policy.dailyVoteLimit}회까지 가능합니다.`)
-    }
-    if (isModeratorRole(state.viewerRole, state)) {
-      messages.push('모더레이터로 신고·블라인드 현황을 확인할 수 있습니다.')
-    }
-
-    if (messages.length) {
-      guidanceEl.hidden = false
-      guidanceEl.textContent = messages.join(' · ')
-    } else {
-      guidanceEl.hidden = true
-      guidanceEl.textContent = ''
-    }
+    // 정책 안내 문구 제거 - 사용자 요청에 따라 모든 안내 문구 제거
+    guidanceEl.hidden = true
+    guidanceEl.textContent = ''
   }
 
   const updatePolicySummary = (section, policy) => {
     const el = section.querySelector('[data-cw-comment-policy]')
     if (!el) return
-    if (!policy) {
-      el.hidden = true
-      el.textContent = ''
-      return
-    }
-    const messages = []
-    if (policy.requiresAuth) {
-      messages.push('댓글 작성은 로그인한 사용자만 가능합니다.')
-    }
-    if (typeof policy.bestLikeThreshold === 'number') {
-      messages.push(`좋아요 ${policy.bestLikeThreshold}개 이상 댓글은 BEST로 강조됩니다.`)
-    }
-    if (typeof policy.bestLimit === 'number') {
-      messages.push(`BEST 영역은 상위 ${policy.bestLimit}개 댓글로 구성됩니다.`)
-    }
-    if (typeof policy.reportBlindThreshold === 'number') {
-      messages.push(`신고 ${policy.reportBlindThreshold}회 이상 시 자동으로 블라인드 처리됩니다.`)
-    }
-    if (typeof policy.dailyVoteLimit === 'number' && policy.dailyVoteLimit > 0) {
-      const windowHours = typeof policy.voteWindowHours === 'number' && policy.voteWindowHours > 0 ? policy.voteWindowHours : 24
-      const windowLabel = windowHours === 24 ? '24시간' : `${windowHours}시간`
-      messages.push(`${windowLabel} 내 공감/비공감은 ${policy.dailyVoteLimit}회로 제한됩니다.`)
-    }
-    if (typeof policy.ipDisplayMode === 'string') {
-      if (policy.ipDisplayMode === 'masked') {
-        messages.push('IP는 마스킹된 형태로만 노출됩니다.')
-      } else if (policy.ipDisplayMode === 'hash') {
-        messages.push('IP는 해시 정보로만 보관됩니다.')
-      } else if (policy.ipDisplayMode === 'hidden') {
-        messages.push('IP는 사용자에게 노출되지 않습니다.')
-      }
-    }
-    if (policy.moderatorIpBlockEnabled) {
-      messages.push('운영자는 신고 누적 IP를 차단할 수 있습니다.')
-    }
-    if (Array.isArray(policy.moderatorRoles) && policy.moderatorRoles.length) {
-      messages.push(`모더레이션 권한: ${policy.moderatorRoles.join(', ')}`)
-    }
-    if (!messages.length) {
-      el.hidden = true
-      el.textContent = ''
-      return
-    }
-    el.hidden = false
-    el.textContent = messages.join(' · ')
+    // 정책 안내 문구 제거 - 사용자 요청에 따라 모든 안내 문구 제거
+    el.hidden = true
+    el.textContent = ''
   }
 
   const isModeratorRole = (role, state) => {
@@ -1744,33 +1642,102 @@ const DetailComments = (() => {
   const applyAuthState = (section, state) => {
     const form = section.querySelector('[data-cw-comment-form]')
     const authNotice = section.querySelector('[data-cw-comment-auth]')
-    const requiresAuth = Boolean(state.policy?.requiresAuth)
+    const authCta = section.querySelector('[data-cw-comment-auth-cta]')
     const hasViewer = Boolean(state.viewer?.id)
-    const shouldDisable = requiresAuth && !hasViewer
+
+    // 로그인 CTA 숨기기 (익명 사용자도 댓글 작성 가능)
+    if (authCta) {
+      authCta.hidden = true
+    }
 
     if (form) {
+      // 폼은 항상 활성화 (익명 사용자도 작성 가능)
       const controls = form.querySelectorAll('input, textarea, button')
       controls.forEach((control) => {
         if (control instanceof HTMLButtonElement || control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement) {
-          control.disabled = shouldDisable
+          control.disabled = false
         }
       })
 
-      if (shouldDisable) {
-        form.dataset.commentDisabled = '1'
+      const nicknameWrapper = form.querySelector('[data-cw-comment-nickname-wrapper]')
+      const nicknameInput = form.querySelector('[data-cw-comment-nickname]')
+      const anonymousLabel = form.querySelector('[data-cw-comment-anonymous-label]')
+      const anonymousNumberEl = form.querySelector('[data-cw-comment-anonymous-number]')
+      const passwordInput = form.querySelector('[data-cw-comment-password]')
+      const contentTextarea = form.querySelector('[data-cw-comment-content]')
+      const charCountEl = form.querySelector('[data-cw-comment-char-count]')
+
+      // 익명 사용자: 닉네임 입력 필드 숨김, 익명 번호 표시
+      // 로그인 사용자: 닉네임 선택, 비밀번호 숨김
+      if (!hasViewer) {
+        // 익명 사용자 - 닉네임 입력 필드 숨김, 익명 번호 표시
+        if (nicknameWrapper instanceof HTMLElement) {
+          nicknameWrapper.hidden = true
+        }
+        if (nicknameInput instanceof HTMLInputElement) {
+          nicknameInput.required = false
+          nicknameInput.removeAttribute('aria-required')
+        }
+        if (anonymousLabel instanceof HTMLElement) {
+          anonymousLabel.hidden = false
+          const nextNumber = typeof state.nextAnonymousNumber === 'number' ? state.nextAnonymousNumber : 1
+          if (anonymousNumberEl) {
+            anonymousNumberEl.textContent = `익명 ${nextNumber}`
+          }
+          // 비밀번호 입력칸을 익명 번호와 같은 컨테이너에 있으므로 자동으로 표시됨
+          if (passwordInput instanceof HTMLInputElement) {
+            passwordInput.required = true
+            passwordInput.setAttribute('aria-required', 'true')
+            passwordInput.hidden = false
+          }
+        }
       } else {
-        delete form.dataset.commentDisabled
+        // 로그인 사용자
+        if (nicknameWrapper instanceof HTMLElement) {
+          nicknameWrapper.hidden = false
+        }
+        if (nicknameInput instanceof HTMLInputElement) {
+          nicknameInput.required = false
+          nicknameInput.removeAttribute('aria-required')
+          nicknameInput.placeholder = '닉네임 (선택, 익명으로 작성 시)'
+          // 로그인 사용자의 ID를 기본값으로 설정
+          if (state.viewer?.id && !nicknameInput.value) {
+            nicknameInput.value = String(state.viewer.id)
+          }
+        }
+        if (anonymousLabel instanceof HTMLElement) {
+          anonymousLabel.hidden = true
+        }
+        if (passwordInput instanceof HTMLInputElement) {
+          passwordInput.required = false
+          passwordInput.removeAttribute('aria-required')
+          passwordInput.hidden = true
+        }
       }
+
+      // 글자 수 카운터
+      if (contentTextarea instanceof HTMLTextAreaElement && charCountEl) {
+        const updateCharCount = () => {
+          const length = contentTextarea.value.length
+          charCountEl.textContent = `${length} / 500자`
+          if (length > 500) {
+            charCountEl.classList.add('text-red-400')
+            charCountEl.classList.remove('text-wiki-muted')
+          } else {
+            charCountEl.classList.remove('text-red-400')
+            charCountEl.classList.add('text-wiki-muted')
+          }
+        }
+        contentTextarea.addEventListener('input', updateCharCount)
+        updateCharCount()
+      }
+
+      delete form.dataset.commentDisabled
     }
 
     if (authNotice) {
-      if (shouldDisable) {
-        authNotice.hidden = false
-        authNotice.textContent = '로그인 후 댓글을 남길 수 있습니다.'
-      } else {
-        authNotice.hidden = true
-        authNotice.textContent = ''
-      }
+      authNotice.hidden = true
+      authNotice.textContent = ''
     }
 
     updateAuthCta(section, state)
@@ -1791,6 +1758,9 @@ const DetailComments = (() => {
     if (comment.status !== 'visible') {
       badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-amber-300 bg-amber-500/10 rounded-full">블라인드<span class="sr-only"> · 신고 누적으로 숨겨진 댓글</span></span>')
     }
+    if (comment.isEdited) {
+      badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-wiki-muted bg-wiki-border/40 rounded-full">수정됨</span>')
+    }
 
     const statusLabels = []
     if (comment.isBest) {
@@ -1799,11 +1769,17 @@ const DetailComments = (() => {
     if (comment.status !== 'visible') {
       statusLabels.push('블라인드 처리됨')
     }
+    if (comment.isEdited) {
+      statusLabels.push('수정됨')
+    }
     const srStatusText = statusLabels.length ? `<span class="sr-only">(${statusLabels.join(', ')})</span>` : ''
 
-    const showIp = comment.displayIp && (comment.isAnonymous || isModeratorRole(state.viewerRole, state))
-      ? `<span class="px-2 py-0.5 text-[11px] text-wiki-muted bg-wiki-border/40 rounded-full">IP ${escapeHtml(comment.displayIp)}</span>`
-      : ''
+    // 익명 번호 및 IP 표시: 익명 댓글은 익명 번호와 마스킹된 IP 표시
+    const showIp = comment.isAnonymous && comment.displayIp
+      ? `<span class="px-2 py-0.5 text-[11px] text-wiki-muted bg-wiki-border/40 rounded-full">${escapeHtml(comment.displayIp)}</span>`
+      : (comment.displayIp && isModeratorRole(state.viewerRole, state))
+        ? `<span class="px-2 py-0.5 text-[11px] text-wiki-muted bg-wiki-border/40 rounded-full">IP ${escapeHtml(comment.displayIp)}</span>`
+        : ''
 
     const moderatorInfo = isModeratorRole(state.viewerRole, state)
       ? `<span class="inline-flex items-center gap-1 text-[11px] text-wiki-muted" aria-label="신고 ${comment.reportCount ?? 0}회"><i class="fas fa-flag" aria-hidden="true"></i>${comment.reportCount ?? 0}</span>`
@@ -1821,9 +1797,12 @@ const DetailComments = (() => {
         : ''
 
     const likeActive = comment.viewerVote === 1
+    const editedAt = comment.editedAt ? formatDate(comment.editedAt) : null
+    const displayNickname = comment.nickname || (comment.isAnonymous && comment.anonymousNumber ? `익명 ${comment.anonymousNumber}` : '익명')
     const commentLabelParts = [
-      `${comment.nickname || '익명'}님의 댓글`,
+      `${displayNickname}님의 댓글`,
       createdAt ? `작성 ${createdAt}` : null,
+      editedAt && comment.isEdited ? `수정 ${editedAt}` : null,
       statusLabels.length ? statusLabels.join(', ') : null
     ].filter(Boolean)
     const commentAriaLabel = escapeHtml(commentLabelParts.join(', '))
@@ -1833,7 +1812,7 @@ const DetailComments = (() => {
         <article class="space-y-3">
           <header class="flex flex-wrap items-center justify-between gap-2 text-xs text-wiki-muted">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="font-semibold text-wiki-text text-sm">${escapeHtml(comment.nickname || '익명')}</span>
+              <span class="font-semibold text-wiki-text text-sm">${escapeHtml(displayNickname)}</span>
               ${showIp}
               ${badges.join('')}
               ${srStatusText}
@@ -2071,15 +2050,25 @@ const DetailComments = (() => {
         }
       }
 
-      const payload = await response.json().catch(() => ({}))
+      let payload
+      try {
+        payload = await response.json()
+      } catch (err) {
+        console.error('[comments] JSON parse error', err, response.status, response.statusText)
+        throw new Error(`Invalid response: ${response.status}`)
+      }
+      
       if (!response.ok || !payload?.success) {
-        throw new Error((payload && payload.error) || `HTTP ${response.status}`)
+        const errorMsg = payload?.error || `HTTP ${response.status}`
+        console.error('[comments] API error', errorMsg, payload)
+        throw new Error(errorMsg)
       }
 
       state.comments = Array.isArray(payload.data) ? payload.data : []
       state.meta = payload.meta || null
       state.viewer = payload.meta?.viewer ?? null
       state.viewerRole = state.viewer?.role ?? 'user'
+      state.nextAnonymousNumber = typeof payload.meta?.nextAnonymousNumber === 'number' ? payload.meta.nextAnonymousNumber : null
 
       let policyChanged = false
       let policySource = state.policy ? 'dataset' : 'unknown'
@@ -2096,11 +2085,22 @@ const DetailComments = (() => {
         state.policySignature = computePolicySignature(state.policy)
       }
 
+      // Best 탭 기본값 설정: Best 댓글이 있으면 'best' 탭이 기본, 없으면 'all' 탭이 기본
+      const bestComments = state.comments.filter((comment) => comment.isBest === true)
+      if (bestComments.length > 0 && state.activeTab === 'all') {
+        state.activeTab = 'best'
+      } else if (bestComments.length === 0 && state.activeTab === 'best') {
+        state.activeTab = 'all'
+      }
+
       updatePolicySummary(section, state.policy)
       refreshScoreboardCopy(section, state)
       applyAuthState(section, state)
       renderComments(section, state)
       section.dataset.commentsStatus = 'ready'
+      
+      // 로딩 상태 명시적으로 해제
+      toggleLoading(section, false)
       const stats = computeCommentStats(state.comments)
 
       if (policyChanged) {
@@ -2130,11 +2130,17 @@ const DetailComments = (() => {
         governance: getGovernanceFromState(state)
       })
     } catch (error) {
+      console.error('[comments] loadComments error', error)
       section.dataset.commentsStatus = 'error'
       const message = error && error.name === 'AbortError'
         ? '댓글 응답이 지연되어 연결을 종료했습니다. 네트워크 상태를 확인한 후 다시 시도해주세요.'
         : '댓글을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.'
       setStatus(section, message, 'error')
+      
+      // 에러 발생 시에도 빈 댓글 목록 표시
+      state.comments = []
+      renderComments(section, state)
+      
       DetailTelemetry.emit('comments-load', {
         component: 'comments',
         entityType: state.entityType,
@@ -2147,8 +2153,15 @@ const DetailComments = (() => {
       })
     } finally {
       state.loading = false
+      section.dataset.commentsStatus = state.comments.length > 0 ? 'ready' : 'empty'
       toggleLoading(section, false)
       applyAuthState(section, state)
+      
+      // 로딩 요소가 확실히 숨겨지도록
+      const loader = section.querySelector('[data-cw-comments-loading]')
+      if (loader) {
+        loader.hidden = true
+      }
     }
   }
 
@@ -2244,18 +2257,30 @@ const DetailComments = (() => {
         return
       }
 
+      // Phase 3 Day 3: requiresAuth가 false이면 익명 사용자도 댓글 작성 가능
       if (state.policy?.requiresAuth && !state.viewer?.id) {
         setStatus(section, '로그인 후 댓글을 남길 수 있습니다.', 'error')
         return
       }
 
       const formData = new FormData(form)
-      const nickname = (formData.get('nickname') || '').toString().trim().slice(0, MAX_NICKNAME_LENGTH)
       const rawContent = (formData.get('content') || '').toString().trim()
       if (!rawContent) {
         setStatus(section, '댓글 내용을 입력해주세요.', 'error')
         return
       }
+      
+      // 익명 사용자는 닉네임 입력하지 않음 (익명 번호는 서버에서 자동 배정)
+      const isAnonymous = !state.viewer?.id
+      const nickname = isAnonymous ? null : ((formData.get('nickname') || '').toString().trim().slice(0, MAX_NICKNAME_LENGTH) || null)
+      
+      // 멘션 추출: @댓글ID 또는 @익명번호 형식
+      const mentionMatches = rawContent.match(/@(\d+)|@익명\s*(\d+)/g) || []
+      const mentions = mentionMatches.map((match) => {
+        const idMatch = match.match(/\d+/)
+        return idMatch ? idMatch[0] : null
+      }).filter(Boolean).slice(0, 10)  // 최대 10개 멘션
+      
       const content = rawContent.slice(0, MAX_CONTENT_LENGTH)
 
       const currentPolicySignature = state.policySignature ?? (state.policy ? computePolicySignature(state.policy) : null)
@@ -2288,8 +2313,10 @@ const DetailComments = (() => {
             slug: state.entitySlug,
             title: state.entityName || state.entitySlug,
             summary: state.entitySummary || null,
-            nickname: nickname || undefined,
-            content
+            nickname: nickname || undefined,  // 익명 사용자는 nickname 없음 (익명 번호는 서버에서 자동 배정)
+            content,
+            mentions: mentions.length > 0 ? mentions : undefined,
+            password: isAnonymous ? (formData.get('password') || '').toString().trim() || undefined : undefined
           })
         })
         const payload = await response.json().catch(() => ({}))
@@ -2547,6 +2574,7 @@ const DetailComments = (() => {
       viewer: null,
       viewerRole: 'user',
       policy: null,
+      nextAnonymousNumber: null,
       policySignature: null,
       loading: false,
       submitting: false,

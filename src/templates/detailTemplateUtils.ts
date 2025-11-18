@@ -506,10 +506,8 @@ export const buildCommentGovernanceItems = (policy: Required<CommentPolicyAttrib
   governanceItems.push(`좋아요 ${policy.bestLikeThreshold}개 이상 댓글은 BEST로 강조됩니다.`)
   governanceItems.push('BEST 댓글은 목록 상단에 고정됩니다.')
   governanceItems.push(`신고 ${policy.reportBlindThreshold}회 이상 시 자동으로 블라인드 처리됩니다.`)
-  if (policy.dailyVoteLimit > 0) {
-    const windowLabel = policy.voteWindowHours === 24 ? '24시간' : `${policy.voteWindowHours}시간`
-    governanceItems.push(`${windowLabel} 내 공감/비공감은 ${policy.dailyVoteLimit}회로 제한됩니다.`)
-  }
+  governanceItems.push('여러 댓글에 공감/비공감을 표시하는 것은 제한이 없습니다.')
+  governanceItems.push('단, 한 댓글에는 공감 또는 비공감 중 하나만 선택할 수 있습니다.')
   if (policy.ipDisplayMode === 'masked') {
     governanceItems.push('IP는 마스킹된 형태로만 노출됩니다.')
   } else if (policy.ipDisplayMode === 'hash') {
@@ -610,45 +608,64 @@ export const renderCommentsPlaceholder = ({
   const bestEmptyMessage = escapeHtml(`좋아요 ${resolvedBestThreshold}개 이상을 받은 댓글이 등록되면 BEST 영역이 활성화됩니다.`)
   const allEmptyMessage = escapeHtml(emptyLabel ?? '가장 먼저 의견을 남겨보세요.')
 
-  const loginCtaBlock = policySnapshot.requiresAuth
-    ? `
-    <div class="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 flex flex-wrap items-center gap-3" data-cw-comment-auth-cta role="alert" aria-live="assertive">
-      <span>로그인 후 댓글 작성 및 상호작용이 가능합니다.</span>
-      <div class="flex flex-wrap gap-2">
-        <a href="/login" class="px-3 py-1 bg-amber-400/20 border border-amber-500/60 rounded-md text-amber-200 hover:bg-amber-400/30 transition" data-cw-comment-login-intent data-auth-target="login">로그인</a>
-        <a href="/signup" class="px-3 py-1 border border-amber-500/40 rounded-md text-amber-200 hover:bg-amber-400/20 transition" data-cw-comment-signup-intent data-auth-target="signup">회원가입</a>
-      </div>
-    </div>
-    `
-    : ''
+  // 로그인 CTA 제거 - 익명 사용자도 댓글 작성 가능
+  const loginCtaBlock = ''
+
+  const passwordId = `${normalizedBase}-password`
 
   const composerBlock = composerEnabled
     ? `
-    <form class="space-y-3" data-cw-comment-form data-cw-telemetry-scope="comment-form" data-cw-telemetry-component="comment-form" novalidate aria-describedby="${statusMessageId} ${authMessageId}">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-        <label class="sr-only" for="${escapeHtml(nicknameId)}">닉네임 (선택)</label>
-        <input
-          id="${escapeHtml(nicknameId)}"
-          name="nickname"
-          type="text"
-          maxlength="40"
-          placeholder="닉네임 (선택)"
-          autocomplete="nickname"
-          class="w-full sm:w-auto flex-1 px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
-        />
-      </div>
-      <div>
-        <label class="sr-only" for="${escapeHtml(contentId)}">댓글 작성</label>
-        <textarea
-          id="${escapeHtml(contentId)}"
-          name="content"
-          rows="3"
-          required
-          placeholder="${escapeHtml(entityName)}에 대한 의견을 남겨주세요."
-          class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none resize-y"
-          aria-required="true"
-          aria-describedby="${statusMessageId} ${authMessageId}"
-        ></textarea>
+    <form class="space-y-3" data-cw-comment-form data-cw-telemetry-scope="comment-form" data-cw-telemetry-component="comment-form" novalidate aria-describedby="${statusMessageId}">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:gap-3">
+        <div class="flex-1 space-y-3">
+          <div class="flex flex-col sm:flex-row gap-3 items-center justify-start">
+            <div class="flex-1" data-cw-comment-nickname-wrapper>
+              <label class="sr-only" for="${escapeHtml(nicknameId)}">닉네임</label>
+              <input
+                id="${escapeHtml(nicknameId)}"
+                name="nickname"
+                type="text"
+                maxlength="40"
+                placeholder="닉네임 (선택, 익명으로 작성 시)"
+                autocomplete="nickname"
+                class="w-full px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm"
+                data-cw-comment-nickname
+              />
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0" data-cw-comment-anonymous-label hidden>
+              <span class="text-sm text-wiki-text whitespace-nowrap" data-cw-comment-anonymous-number>익명 1</span>
+              <label class="sr-only" for="${escapeHtml(passwordId)}">비밀번호 (익명 필수)</label>
+              <input
+                id="${escapeHtml(passwordId)}"
+                name="password"
+                type="password"
+                maxlength="4"
+                pattern="[0-9]{4}"
+                placeholder="비밀번호 (4자리 숫자)"
+                autocomplete="new-password"
+                style="width: 175px;"
+                class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm"
+                data-cw-comment-password
+              />
+            </div>
+          </div>
+          <div>
+            <label class="sr-only" for="${escapeHtml(contentId)}">댓글 작성</label>
+            <textarea
+              id="${escapeHtml(contentId)}"
+              name="content"
+              rows="4"
+              maxlength="500"
+              required
+              placeholder="타인의 권리를 침해하거나 명예를 훼손하거나, 욕설, 음란, 광고·홍보성 댓글은 운영원칙 및 관련 법률에 제재를 받을 수 있습니다. 그 외의 의견을 자유롭게 게시해보세요!"
+              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none resize-y text-sm"
+              aria-required="true"
+              aria-describedby="${statusMessageId}"
+              data-cw-comment-content
+            ></textarea>
+            <div class="text-xs text-wiki-muted mt-1 text-right" data-cw-comment-char-count>0 / 500자</div>
+          </div>
+        </div>
       </div>
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" data-cw-comments-toolbar data-cw-telemetry-component="comments-toolbar">
         <div class="text-xs text-wiki-muted" id="${statusMessageId}" data-cw-comment-status role="status" aria-live="polite" aria-atomic="true"></div>
@@ -660,7 +677,7 @@ export const renderCommentsPlaceholder = ({
           data-cw-telemetry-component="comment-submit"
         >
           <i class="fas fa-paper-plane" aria-hidden="true"></i>
-          <span>댓글 남기기</span>
+          <span>등록</span>
         </button>
       </div>
     </form>
@@ -691,20 +708,22 @@ export const renderCommentsPlaceholder = ({
     aria-roledescription="댓글 상호작용 영역"
     role="complementary"${sampleAttributes}
   >
-    <header class="flex items-start gap-3" data-cw-comments-header data-cw-telemetry-scope="comments-header" data-cw-telemetry-component="comments-header">
-      <i class="fas fa-comments text-wiki-secondary text-xl mt-1" aria-hidden="true"></i>
-      <div class="space-y-1">
-        <h2 class="text-lg font-semibold text-wiki-text" id="${normalizedBase}-title">${visibleHeading}</h2>
-        ${srTitle ? `<p class="sr-only" id="${srTitleId}">${srTitle}</p>` : ''}
-        ${sanitizedDescription ? `<p class="sr-only">${sanitizedDescription}</p>` : ''}
-      </div>
-    </header>
-    <p class="sr-only" id="${instructionsId}">로그인 여부와 관계없이 댓글 목록을 볼 수 있으며, 로그인 후에만 작성과 상호작용이 가능합니다.</p>
+        <header class="flex items-center justify-between gap-3" data-cw-comments-header data-cw-telemetry-scope="comments-header" data-cw-telemetry-component="comments-header">
+          <div class="flex items-center gap-3">
+            <i class="fas fa-comments text-wiki-secondary text-xl" aria-hidden="true"></i>
+            <div class="space-y-1">
+              <h2 class="text-lg font-semibold text-wiki-text" id="${normalizedBase}-title">${visibleHeading}</h2>
+              ${srTitle ? `<p class="sr-only" id="${srTitleId}">${srTitle}</p>` : ''}
+              ${sanitizedDescription ? `<p class="sr-only">${sanitizedDescription}</p>` : ''}
+            </div>
+          </div>
+          <div class="text-xs text-wiki-muted flex items-center" id="${policyLinkId}">
+            <a href="${helpCenterHref}" class="text-wiki-primary hover:text-wiki-secondary transition whitespace-nowrap" data-cw-comment-policy-link>커뮤니티 이용 정책</a>
+          </div>
+        </header>
+    <p class="sr-only" id="${instructionsId}">댓글 목록을 볼 수 있으며, 로그인 여부와 관계없이 댓글 작성이 가능합니다.</p>
     <div class="text-xs text-wiki-muted" id="${authMessageId}" data-cw-comment-auth aria-live="polite" aria-atomic="true"></div>
     ${loginCtaBlock}
-    <div class="text-xs text-wiki-muted" id="${policyLinkId}">
-      <a href="${helpCenterHref}" class="text-wiki-primary hover:text-wiki-secondary transition" data-cw-comment-policy-link>커뮤니티 이용 정책 보기</a>
-    </div>
     <div class="space-y-6" data-cw-comments-body data-cw-telemetry-component="comments-body" role="region" aria-live="polite" aria-atomic="false" aria-busy="false">
       <div class="flex items-center gap-3 text-sm text-wiki-muted" data-cw-comments-loading hidden>
         <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
@@ -755,16 +774,6 @@ export const renderCommentsPlaceholder = ({
                 id="${sortLikesId}"
               >공감순</button>
             </div>
-          </div>
-        </div>
-        <div class="grid gap-3 sm:grid-cols-2" data-cw-comment-scoreboard>
-          <div class="flex items-center gap-3 rounded-xl border border-wiki-border/60 bg-wiki-bg/50 px-4 py-3 text-xs text-wiki-muted" data-cw-comment-scorecard="best">
-            <i class="fas fa-star text-wiki-secondary" aria-hidden="true"></i>
-            <span data-cw-comment-scorecard-count="best">${bestScoreboardMessage}</span>
-          </div>
-          <div class="flex items-center gap-3 rounded-xl border border-wiki-border/60 bg-wiki-bg/50 px-4 py-3 text-xs text-wiki-muted" data-cw-comment-scorecard="moderation">
-            <i class="fas fa-shield-halved text-amber-300" aria-hidden="true"></i>
-            <span data-cw-comment-scorecard-count="moderation">${moderationScoreboardMessage}</span>
           </div>
         </div>
         <p class="text-xs text-wiki-muted" data-cw-comment-guidance hidden></p>

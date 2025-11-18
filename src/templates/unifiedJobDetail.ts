@@ -3673,9 +3673,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       description: `${profile.name} 역할에서 겪은 성장 전략과 인사이트를 공유해주세요.`,
       feedbackLabel: '피드백 남기기',
       notifyLabel: '알림 받기',
-      emptyLabel: `${profile.name}에 대한 의견을 남겨주세요.`,
+      emptyLabel: `아직 등록된 댓글이 없습니다.`,
       sampleComments,
-      showForm: false
+      showForm: true  // 익명 사용자도 댓글 작성 가능
     },
     partials,
     sources,

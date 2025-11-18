@@ -18,14 +18,14 @@ export const TEMPLATE_VERSIONS = {
    * Used for: /major/:slug pages
    * Current features: 사이드바 개선 (추천 자격증 계층 구조, 중복 제거, 하위 자격증 3개씩 토글), 목차 UX 개선, 탭 이름 변경, 지도 UI 개선, 지역 필터링 개선
    */
-  MAJOR: 78,  // 🔧 추천 자격증에서 '등' 접미사 필터링 추가
+  MAJOR: 92,  // 💬 댓글 제출 버튼 텍스트 변경: '댓글 남기기' → '등록'
 
   /**
    * Job detail page template version
    * Used for: /job/:slug pages
    * Current features: 고용24 전용 직업 설명 추가 (duty.jobSum), 사이드바 연관 직업 5개 토글, 흥미 프로필 중복 제거, 커리어 전망 빈 데이터 처리, 깔끔한 URL slug
    */
-  JOB: 17,  // 🔄 Slug 개선으로 인한 캐시 무효화
+  JOB: 31,  // 💬 댓글 제출 버튼 텍스트 변경: '댓글 남기기' → '등록'
 
   /**
    * Guide page template version

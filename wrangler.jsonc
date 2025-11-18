@@ -17,6 +17,19 @@
     "database_id": "edc21e23-c2ac-4693-bb79-389b6914e173"
   }],
 
+  // KV Namespace 설정 (Phase 3: 인증 시스템)
+  // Day 2 시작 전 생성 필요:
+  // wrangler kv:namespace create "AUTH_KV"
+  // wrangler kv:namespace create "AUTH_KV" --preview
+  "kv_namespaces": [
+    // Day 2 시작 전에 아래 주석 해제하고 ID 입력
+    // {
+    //   "binding": "AUTH_KV",
+    //   "id": "your_production_kv_id_here",
+    //   "preview_id": "your_preview_kv_id_here"
+    // }
+  ],
+
   // Environment variables (secrets should be set via wrangler secret)
   // For production: wrangler pages secret put CAREER_NET_API_KEY
   "vars": {

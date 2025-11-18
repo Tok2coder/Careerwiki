@@ -3,6 +3,8 @@ import type { Context } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
+import auth from './routes/auth'
+import { authMiddleware, requireAuth, requireAdmin, requireRole } from './middleware/auth'
 import { JOB_CATEGORIES, APTITUDE_TYPES } from './api/careernetAPI'
 import { getUnifiedJobDetail, getUnifiedJobDetailWithRawData, getUnifiedMajorDetail, searchUnifiedJobs, searchUnifiedMajors } from './services/profileDataService'
 import type { SourceStatusRecord } from './services/profileDataService'
@@ -56,12 +58,14 @@ import {
   type UserRole,
   blockIpAddress,
   createComment,
+  deleteComment,
   getCommentsBySlug,
   isIpBlocked,
   listIpBlocks,
   releaseIpAddress,
   reportComment,
-  setCommentVote
+  setCommentVote,
+  updateComment
 } from './services/commentService'
 import type { AnalysisType, PricingTier, RequestStatus } from './types/aiAnalysis'
 import { getOrGeneratePage } from './utils/page-cache'
@@ -77,6 +81,11 @@ type Bindings = {
   PERF_ALERT_WEBHOOK?: string;
   ADMIN_SECRET?: string;
   ENVIRONMENT?: string;
+  // Phase 3: Google OAuth 환경 변수
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
+  GOOGLE_CALLBACK_URL: string;
+  JWT_SECRET: string;
 }
 
 type Variables = {
@@ -95,7 +104,111 @@ app.use('*', renderer)
 // @ts-ignore - Cloudflare Workers types mismatch
 app.use('/static/*', serveStatic({ root: './public' }))
 
+// Phase 3: 인증 Middleware (모든 라우트에 적용)
+app.use('*', authMiddleware)
+
+// Phase 3: 인증 라우트
+app.route('/auth', auth)
+
 let logoIdCounter = 0
+
+// Phase 3 Day 4: 사용자 정보에 따른 헤더 UI 생성 함수
+const renderUserMenu = (
+  user: { id: number; name: string | null; email: string; role: string; picture_url: string | null; username: string | null } | null,
+  ipAddress: string | null = null
+) => {
+  // 로그인 여부와 관계없이 유저 아이콘 버튼 표시
+  const menuHtml = `
+    <!-- 유저 메뉴 드롭다운 -->
+    <div class="relative" id="user-menu-container">
+      <button 
+        id="user-menu-btn" 
+        class="header-icon-button" 
+        title="사용자 메뉴"
+        aria-label="사용자 메뉴"
+        aria-expanded="false"
+        aria-haspopup="true"
+      >
+        <i class="fas fa-user-circle text-base"></i>
+      </button>
+      <div 
+        id="user-menu-dropdown" 
+        class="hidden absolute right-0 top-full mt-1 w-56 glass-card rounded-lg border border-wiki-border/50 shadow-xl py-1 z-50"
+        role="menu"
+        style="background: rgba(26, 26, 46, 0.98); backdrop-filter: blur(16px);"
+      >
+        ${user ? `
+        <!-- 로그인된 사용자: 권한에 따른 표시 -->
+        <div class="px-4 py-2.5 border-b border-wiki-border/30">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-wiki-muted">${user.role === 'admin' ? '관리자' : user.role === 'expert' ? '전문가' : '사용자'}</span>
+            <span class="text-xs font-mono text-wiki-text font-medium">${user.username || 'user_' + user.id}</span>
+          </div>
+        </div>
+        
+        <!-- 설정 -->
+        <a href="/user/settings" class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem">
+          <div class="flex items-center gap-3">
+            <i class="fas fa-cog text-xs w-4 text-center"></i>
+            <span>설정</span>
+          </div>
+        </a>
+        
+        <!-- 로그아웃 -->
+        <form action="/auth/logout" method="POST">
+          <button type="submit" class="w-full text-left px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors flex items-center gap-3" role="menuitem">
+            <i class="fas fa-sign-out-alt text-xs w-4 text-center"></i>
+            <span>로그아웃</span>
+          </button>
+        </form>
+        ` : `
+        <!-- 비로그인 사용자: IP 주소 표시 -->
+        <div class="px-4 py-2.5 border-b border-wiki-border/30">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-wiki-muted">아이피</span>
+            <span id="user-ip-display" class="text-xs font-mono text-wiki-text font-medium">${ipAddress || '로딩 중...'}</span>
+          </div>
+        </div>
+        
+        <!-- 로그인 -->
+        <a href="/auth/google" class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem">
+          <div class="flex items-center gap-3">
+            <i class="fab fa-google text-xs w-4 text-center"></i>
+            <span>로그인</span>
+          </div>
+        </a>
+        `}
+      </div>
+    </div>
+  `
+  
+  // 비로그인 상태일 때 IP 로딩 스크립트 추가
+  if (!user) {
+    return menuHtml + `
+    <script>
+      (function() {
+        const ipDisplay = document.getElementById('user-ip-display');
+        if (ipDisplay && ipDisplay.textContent === '로딩 중...') {
+          fetch('/api/client-ip')
+            .then(res => res.json())
+            .then(data => {
+              if (data.ip && ipDisplay) {
+                ipDisplay.textContent = data.ip;
+              }
+            })
+            .catch(() => {
+              if (ipDisplay) {
+                ipDisplay.textContent = '127.0.0.1';
+              }
+            });
+        }
+      })();
+    </script>
+    `
+  }
+  
+  return menuHtml
+}
 
 // Helper function for logo SVG (옵션 7: 플레이풀 둥근 폰트)
 const getLogoSVG = (size: 'large' | 'small' = 'large') => {
@@ -142,11 +255,33 @@ const renderLayout = (
     extraHead?: string
     canonical?: string
     ogUrl?: string
+    user?: { id: number; name: string | null; email: string; role: string; picture_url: string | null; username: string | null } | null
+    context?: Context  // Phase 3 Day 4: Context를 통해 사용자 정보 자동 가져오기
+    ipAddress?: string | null  // Phase 3 Day 4: IP 주소 (비로그인 상태에서 표시)
   }
 ) => {
   const canonicalUrl = options?.canonical ?? 'https://careerwiki.org'
   const ogUrl = options?.ogUrl ?? canonicalUrl
   const extraHead = options?.extraHead ?? ''
+  
+  // Phase 3 Day 4: 사용자 정보 가져오기 (options.user 우선, 없으면 context에서 가져오기)
+  let user = options?.user ?? null
+  if (!user && options?.context) {
+    const contextUser = options.context.get('user')
+    if (contextUser) {
+      user = {
+        id: contextUser.id,
+        name: contextUser.name,
+        email: contextUser.email,
+        role: contextUser.role,
+        picture_url: contextUser.picture_url,
+        username: contextUser.username
+      }
+    }
+  }
+  
+  // 디버깅: 사용자 정보 확인
+  // console.log('[renderLayout] User:', user ? { id: user.id, username: user.username } : 'null')
 
   return `
     <!DOCTYPE html>
@@ -349,13 +484,12 @@ const renderLayout = (
             box-shadow: 0 5px 20px rgba(67, 97, 238, 0.4);
           }
           .homepage-header {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 10px 12px;
+            width: 100%;
+            padding: 10px 0;
+          }
+          .homepage-header > div {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 16px;
           }
           .header-icon-button {
             width: 36px;
@@ -480,7 +614,7 @@ const renderLayout = (
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 16px 40px;
+            padding: 40px 16px 40px;
           }
           .hero-inner {
             max-width: 640px;
@@ -566,7 +700,7 @@ const renderLayout = (
               padding: 32px 0 0;
             }
             .hero-shell {
-              padding-top: 80px;
+              padding-top: 40px;
               padding-bottom: 60px;
             }
             #main-nav {
@@ -628,9 +762,7 @@ const renderLayout = (
                         <a href="/help" class="header-icon-button" title="도움말">
                             <i class="fas fa-question-circle text-base"></i>
                         </a>
-                        <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
-                            <i class="fas fa-user-circle text-base"></i>
-                        </a>
+                        ${renderUserMenu(user)}
                     </div>
                 </div>
             </div>
@@ -651,9 +783,7 @@ const renderLayout = (
                     <a href="/help" class="header-icon-button" title="도움말">
                         <i class="fas fa-question-circle"></i>
                     </a>
-                    <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
-                        <i class="fas fa-user-circle"></i>
-                    </a>
+                    ${renderUserMenu(user)}
                 </div>
             </div>
         </div>
@@ -859,6 +989,40 @@ const renderLayout = (
             })();
         </script>
         
+        <!-- Phase 3 Day 4: 유저 메뉴 드롭다운 전역 스크립트 -->
+        <script>
+          (function() {
+            function initUserMenu() {
+              const btn = document.getElementById('user-menu-btn');
+              const dropdown = document.getElementById('user-menu-dropdown');
+              if (!btn || !dropdown) return;
+              
+              // 클릭 이벤트 리스너 추가
+              btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isOpen = !dropdown.classList.contains('hidden');
+                dropdown.classList.toggle('hidden', isOpen);
+                btn.setAttribute('aria-expanded', String(!isOpen));
+              });
+              
+              // 외부 클릭 시 드롭다운 닫기
+              document.addEventListener('click', function(e) {
+                if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                  dropdown.classList.add('hidden');
+                  btn.setAttribute('aria-expanded', 'false');
+                }
+              });
+            }
+            
+            // DOM 로드 완료 시 실행
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', initUserMenu);
+            } else {
+              initUserMenu();
+            }
+          })();
+        </script>
+        
         <script src="/static/api-client.js?v=${Date.now()}"></script>
     </body>
     </html>
@@ -906,22 +1070,48 @@ const toParentId = (value: unknown): number | null => {
   return normalized > 0 ? normalized : null
 }
 
+// Phase 3 Day 4: IP 주소 가져오기 헬퍼 함수
+const getClientIp = (c: Context): string | null => {
+  // Cloudflare Workers에서는 CF-Connecting-IP 사용
+  const cfIp = c.req.header('cf-connecting-ip')
+  if (cfIp) return cfIp
+  
+  // X-Forwarded-For 헤더 확인 (첫 번째 IP만 사용)
+  const forwarded = c.req.header('x-forwarded-for')
+  if (forwarded) {
+    const ips = forwarded.split(',').map(ip => ip.trim()).filter(Boolean)
+    if (ips.length > 0) return ips[0]
+  }
+  
+  // X-Real-IP 헤더 확인
+  const realIp = c.req.header('x-real-ip')
+  if (realIp) return realIp
+  
+  // 로컬 환경에서는 클라이언트 측에서 가져오도록 빈 문자열 반환
+  return null
+}
+
 // Homepage - Google style with menu buttons
 app.get('/', (c) => {
+  // Phase 3 Day 4: 사용자 정보 가져오기
+  const user = c.get('user')
+  const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, username: user.username } : null
+  
   const content = `
-    <div class="w-full">
+    <div class="w-full min-h-screen flex flex-col">
         <header class="homepage-header">
-            <div class="flex items-center gap-4">
-                <a href="/help" class="header-icon-button" title="도움말">
-                    <i class="fas fa-question-circle text-base"></i>
-                </a>
-                <a href="/login" class="header-icon-button" title="로그인 또는 회원가입">
-                    <i class="fas fa-user-circle text-base"></i>
-                </a>
+            <div class="mx-auto w-full max-w-[1400px] px-3 flex items-center">
+                <div class="flex-grow"></div>
+                <div class="flex items-center gap-4">
+                    <a href="/help" class="header-icon-button" title="도움말">
+                        <i class="fas fa-question-circle text-base"></i>
+                    </a>
+                    ${renderUserMenu(userData)}
+                </div>
             </div>
         </header>
 
-        <section class="hero-shell">
+        <section class="hero-shell flex-grow">
             <div class="hero-inner">
                 <div class="flex justify-center">
                     ${getLogoSVG('large')}
@@ -958,15 +1148,28 @@ app.get('/', (c) => {
                 </div>
             </div>
         </section>
-
-        <section class="text-center text-wiki-muted text-sm mt-20 px-4">
-            <p>1,000+ 직업 정보 · 500+ 전공 정보 · AI 기반 맞춤 분석</p>
-        </section>
     </div>
   `
   
-  return c.html(renderLayout(content, 'Careerwiki - AI 진로 분석 플랫폼', 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', true))
+  return c.html(renderLayout(content, 'Careerwiki - AI 진로 분석 플랫폼', 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', true, { user: userData }))
 })
+
+// Phase 3 Day 4: renderLayout 헬퍼 함수 (자동으로 context 전달)
+const renderLayoutWithContext = (
+  c: Context,
+  content: string,
+  title?: string,
+  description?: string,
+  isHomepage?: boolean,
+  options?: {
+    extraHead?: string
+    canonical?: string
+    ogUrl?: string
+    user?: { id: number; name: string | null; email: string; role: string; picture_url: string | null; username: string | null } | null
+  }
+) => {
+  return renderLayout(content, title, description, isHomepage, { ...options, context: c })
+}
 
 // AI Analyzer Page - Choose between Job or Major
 app.get('/analyzer', (c) => {
@@ -1018,7 +1221,7 @@ app.get('/analyzer', (c) => {
     </div>
   `
   
-  return c.html(renderLayout(content, 'AI 커리어 분석기 - Careerwiki'))
+  return c.html(renderLayoutWithContext(c, content, 'AI 커리어 분석기 - Careerwiki'))
 })
 
 // AI Job Analyzer
@@ -1159,7 +1362,7 @@ app.get('/analyzer/job', (c) => {
     </script>
   `
   
-  return c.html(renderLayout(content, 'AI 직업 추천 - Careerwiki'))
+  return c.html(renderLayoutWithContext(c, content, 'AI 직업 추천 - Careerwiki'))
 })
 
 // AI Major Analyzer
@@ -1315,7 +1518,7 @@ app.get('/analyzer/major', (c) => {
     </script>
   `
   
-  return c.html(renderLayout(content, 'AI 전공 추천 - Careerwiki'))
+  return c.html(renderLayoutWithContext(c, content, 'AI 전공 추천 - Careerwiki'))
 })
 
 // Community Guidelines Help Page
@@ -1342,11 +1545,10 @@ app.get('/help/community-guidelines', (c) => {
     .filter(Boolean)
     .map((item) => `<li>${escapeHtml(String(item))}</li>`)
     .join('')
-  const windowLabel = policy.voteWindowHours === 24 ? '24시간' : `${policy.voteWindowHours}시간`
   const voteDetails = [
-    `${windowLabel} 동안 공감/비공감은 ${policy.dailyVoteLimit}회까지 가능합니다.`,
-    '한도를 초과하면 다음 집계 윈도우가 시작될 때 자동으로 초기화됩니다.',
-    '투표 활동은 정책 서명과 함께 텔레메트리로 기록되어 운영팀이 모니터링합니다.'
+    '여러 댓글에 공감/비공감을 표시하는 것은 제한이 없습니다.',
+    '단, 한 댓글에는 공감 또는 비공감 중 하나만 선택할 수 있습니다.',
+    '자신이 작성한 댓글에는 공감/비공감을 할 수 없습니다.'
   ]
     .map((item) => `<li>${escapeHtml(item)}</li>`)
     .join('')
@@ -1377,13 +1579,13 @@ app.get('/help/community-guidelines', (c) => {
         <article class="glass-card p-6 rounded-xl space-y-4">
           <h2 class="text-lg font-semibold text-wiki-text">공감/비공감 정책</h2>
           <ul class="space-y-2 text-sm text-wiki-muted">${voteDetails}</ul>
-          <p class="text-xs text-wiki-muted/80">제한에 도달하면 안내 메시지가 표시되며 동일 윈도우에서는 추가 상호작용이 차단됩니다.</p>
         </article>
       </section>
       <section class="glass-card p-6 rounded-xl space-y-4">
         <h2 class="text-lg font-semibold text-wiki-text">상호작용 흐름 요약</h2>
         <ol class="space-y-2 text-sm text-wiki-muted list-decimal pl-5">
-          <li>비로그인 사용자는 댓글을 열람할 수 있으며, 로그인 후에만 작성·공감·신고가 가능합니다.</li>
+          <li>익명 사용자도 댓글을 작성할 수 있으며, 4자리 숫자 비밀번호가 필요합니다. 익명 사용자는 하루 최대 5개의 댓글을 작성할 수 있습니다.</li>
+          <li>로그인 사용자는 댓글 작성 제한이 없으며, 익명으로 작성할 수도 있습니다.</li>
           <li>댓글 등록과 상호작용에는 정책 스냅샷이 포함되어 운영팀에서 변동 이력을 추적합니다.</li>
           <li>모더레이터는 신고 현황과 BEST 승격 로그를 기준으로 대응합니다.</li>
         </ol>
@@ -1396,7 +1598,7 @@ app.get('/help/community-guidelines', (c) => {
   `
 
   return c.html(
-    renderLayout(
+    renderLayoutWithContext(c,
       content,
       '커뮤니티 이용 정책 - Careerwiki',
       'CareerWiki 댓글 커뮤니티 운영 원칙과 BEST/신고/공감 정책 안내',
@@ -1414,7 +1616,7 @@ app.get('/job', async (c) => {
   const category = categoryRaw.trim()
   const includeSources = parseSourcesQuery(c.req.query('sources'))
   const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-  const perPage = parseNumberParam(c.req.query('perPage'), 50, { min: 1, max: 100 })
+  const perPage = parseNumberParam(c.req.query('perPage'), 50, { min: 1, max: 50 })
 
   const categoryOptions = Object.entries(JOB_CATEGORIES)
     .map(([label, code]) => {
@@ -1424,7 +1626,7 @@ app.get('/job', async (c) => {
     })
     .join('')
 
-  const perPageOptions = [20, 50, 100]
+  const perPageOptions = [20, 50]
     .map((size) => `<option value="${size}" ${perPage === size ? 'selected' : ''}>${size}개</option>`)
     .join('')
 
@@ -1864,7 +2066,7 @@ app.get('/job', async (c) => {
     )
 
     return c.html(
-      renderLayout(
+      renderLayoutWithContext(c,
         hydratedContent,
         escapeHtml(pageTitle),
         escapeHtml(description),
@@ -1892,7 +2094,7 @@ app.get('/job', async (c) => {
       ctaLabel: '홈으로 돌아가기'
     })
     return c.html(
-      renderLayout(
+      renderLayoutWithContext(c,
         fallbackHtml,
         '직업 목록 오류 - Careerwiki',
         '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
@@ -1907,7 +2109,7 @@ app.get('/major', async (c) => {
   const keyword = keywordRaw.trim()
   const includeSources = parseSourcesQuery(c.req.query('sources'))
   const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-  const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+  const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
 
   const perPageOptions = [10, 20, 30, 50]
     .map((size) => `<option value="${size}" ${perPage === size ? 'selected' : ''}>${size}개</option>`)
@@ -2375,7 +2577,7 @@ app.get('/major', async (c) => {
     )
 
     return c.html(
-      renderLayout(
+      renderLayoutWithContext(c,
         hydratedContent,
         escapeHtml(pageTitle),
         escapeHtml(description),
@@ -2627,7 +2829,7 @@ app.get('/major', async (c) => {
         })}</script>`
         
         return c.html(
-          renderLayout(
+          renderLayoutWithContext(c,
             `${content}${hydrationScript}`,
             keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki',
             keyword ? `${keyword} 관련 전공 정보를 확인하세요.` : '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.'
@@ -2657,7 +2859,7 @@ app.get('/major', async (c) => {
       ctaLabel: '홈으로 돌아가기'
     })
     return c.html(
-      renderLayout(
+      renderLayoutWithContext(c,
         fallbackHtml,
         '전공 목록 오류 - Careerwiki',
         '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
@@ -2736,7 +2938,7 @@ app.get('/howto', (c) => {
   `
 
   return c.html(
-    renderLayout(
+    renderLayoutWithContext(c,
       content,
       'HowTo 시리즈 - Careerwiki',
       'Careerwiki Phase 1 샘플 HowTo 컬렉션으로 Growth 실행 가이드를 확인하세요.'
@@ -2758,7 +2960,7 @@ app.get('/howto/:slug', (c) => {
     })
     c.status(404)
     return c.html(
-      renderLayout(
+      renderLayoutWithContext(c,
         fallbackHtml,
         'HowTo 정보 없음 - Careerwiki',
         '요청한 HowTo 가이드를 찾을 수 없습니다.'
@@ -2817,7 +3019,7 @@ app.get('/help', (c) => {
     </div>
   `
   
-  return c.html(renderLayout(content, '도움말 - Careerwiki'))
+  return c.html(renderLayoutWithContext(c, content, '도움말 - Careerwiki'))
 })
 
 // Search Page - 실제 D1 데이터 검색
@@ -3281,7 +3483,7 @@ app.get('/search', async (c) => {
     ? createMetaDescription(`"${keyword}"와 관련된 Careerwiki 직업, 전공 정보를 확인하세요.`)
     : 'Careerwiki에서 직업, 전공, HowTo 정보를 검색해보세요.'
 
-  return c.html(renderLayout(content, escapeHtml(title), escapeHtml(description)))
+  return c.html(renderLayoutWithContext(c, content, escapeHtml(title), escapeHtml(description)))
 })
 
 // Unified Job Detail Page (ISR)
@@ -3391,7 +3593,7 @@ app.get('/job/:slug', async (c) => {
           ctaLabel: '직업위키로 돌아가기'
         })
         c.status(404)
-        return c.html(renderLayout(fallbackHtml, '직업 정보 없음 - Careerwiki'))
+        return c.html(renderLayoutWithContext(c, fallbackHtml, '직업 정보 없음 - Careerwiki'))
       }
       
       const debugContent = renderDataDebugPage({
@@ -3405,7 +3607,7 @@ app.get('/job/:slug', async (c) => {
     } catch (error) {
       console.error('Debug mode error:', error)
       c.status(500)
-      return c.html(renderLayout(renderDetailFallback({
+      return c.html(renderLayoutWithContext(c, renderDetailFallback({
         icon: 'fa-circle-exclamation',
         iconColor: 'text-red-500',
         title: '디버그 데이터 로드 실패',
@@ -3495,7 +3697,7 @@ app.get('/job/:slug', async (c) => {
           rawApiData: result.rawApiData
         })
         
-        return renderLayout(
+        return renderLayoutWithContext(c,
           content,
           escapeHtml(title),
           escapeHtml(description),
@@ -3557,7 +3759,7 @@ app.get('/job/:slug', async (c) => {
       })
       c.status(404)
       return c.html(
-        renderLayout(
+        renderLayoutWithContext(c,
           fallbackHtml,
           '직업 정보 없음 - Careerwiki',
           '요청한 직업 정보를 찾을 수 없습니다.'
@@ -3576,7 +3778,7 @@ app.get('/job/:slug', async (c) => {
     })
     c.status(500)
     return c.html(
-      renderLayout(
+      renderLayoutWithContext(c,
         fallbackHtml,
         '직업 정보 로드 오류 - Careerwiki',
         '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
@@ -3618,7 +3820,7 @@ app.get('/major/:slug', async (c) => {
 
       if (!result.profile) {
         c.status(404)
-        return c.html(renderLayout(renderDetailFallback({
+        return c.html(renderLayoutWithContext(c, renderDetailFallback({
           icon: 'fa-circle-exclamation',
           iconColor: 'text-yellow-500',
           title: '전공을 찾을 수 없습니다',
@@ -3644,7 +3846,7 @@ app.get('/major/:slug', async (c) => {
         ]
       })
       
-      return c.html(renderLayout(
+      return c.html(renderLayoutWithContext(c,
         debugHtml,
         `${result.profile.name} 디버그 - Careerwiki`,
         '디버그 모드: 실제 API 데이터 확인'
@@ -3652,7 +3854,7 @@ app.get('/major/:slug', async (c) => {
     } catch (error) {
       console.error('Debug mode error:', error)
       c.status(500)
-      return c.html(renderLayout(renderDetailFallback({
+      return c.html(renderLayoutWithContext(c, renderDetailFallback({
         icon: 'fa-circle-exclamation',
         iconColor: 'text-red-500',
         title: '디버그 데이터 로드 실패',
@@ -3738,7 +3940,7 @@ app.get('/major/:slug', async (c) => {
           sources: result.sources
         })
 
-        return renderLayout(
+        return renderLayoutWithContext(c,
           content,
           escapeHtml(title),
           escapeHtml(description),
@@ -3800,7 +4002,7 @@ app.get('/major/:slug', async (c) => {
       })
       c.status(404)
       return c.html(
-        renderLayout(
+        renderLayoutWithContext(c,
           fallbackHtml,
           '전공 정보 없음 - Careerwiki',
           '요청한 전공 정보를 찾을 수 없습니다.'
@@ -3819,7 +4021,7 @@ app.get('/major/:slug', async (c) => {
     })
     c.status(500)
     return c.html(
-      renderLayout(
+      renderLayoutWithContext(c,
         fallbackHtml,
         '전공 정보 로드 오류 - Careerwiki',
         '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
@@ -4176,7 +4378,7 @@ function renderSampleJobDetailPageWithRawData(
   })
 
   return c.html(
-    renderLayout(
+    renderLayoutWithContext(c,
       content,
       escapeHtml(title),
       escapeHtml(description),
@@ -4218,7 +4420,7 @@ function renderSampleMajorDetailPage(
   })
 
   return c.html(
-    renderLayout(
+    renderLayoutWithContext(c,
       content,
       escapeHtml(title),
       escapeHtml(description),
@@ -4255,7 +4457,7 @@ function renderSampleHowtoDetailPage(
   const content = renderHowtoGuideDetail(sample.guide)
 
   return c.html(
-    renderLayout(
+    renderLayoutWithContext(c,
       content,
       escapeHtml(title),
       escapeHtml(description),
@@ -4307,36 +4509,54 @@ function createHowtoJsonLd(
   return `<script type="application/ld+json">${script}</script>`
 }
 
-const AUTH_HEADER_USER = 'x-user-id'
-const AUTH_HEADER_ROLE = 'x-user-role'
-const AUTH_HEADER_NAME = 'x-user-name'
-
+// Phase 3 Day 3: 기존 헤더 기반 인증을 JWT 기반으로 변경
+// 기존 코드 호환을 위한 타입 유지
 type RequestUser = {
   id: string
   role: UserRole
   name?: string | null
 }
 
-const parseUserRole = (value?: string | null): UserRole => {
-  const normalized = value?.toLowerCase() ?? ''
-  if (normalized === 'super-admin' || normalized === 'super_admin' || normalized === 'owner' || normalized === 'root') {
-    return 'super-admin'
+/**
+ * Phase 3 Day 3: 새로운 역할 시스템을 기존 댓글 시스템 역할로 매핑
+ * 
+ * 기존: 'super-admin' | 'operator' | 'user'
+ * 신규: 'anonymous' | 'user' | 'expert' | 'admin'
+ */
+const mapRoleForComments = (newRole: string | null | undefined): UserRole => {
+  if (!newRole || newRole === 'anonymous') {
+    return 'user'  // 익명 유저도 댓글 작성 가능
   }
-  if (normalized === 'operator' || normalized === 'admin' || normalized === 'moderator') {
-    return 'operator'
+  
+  switch (newRole) {
+    case 'admin':
+      return 'super-admin'
+    case 'expert':
+      return 'operator'
+    case 'user':
+    default:
+      return 'user'
   }
-  return 'user'
 }
 
+/**
+ * Phase 3 Day 3: authMiddleware에서 설정한 사용자 정보를 기존 형식으로 변환
+ * 
+ * Context에서 user를 가져와서 RequestUser 형식으로 반환
+ * 로그인하지 않은 경우 null 반환 (익명 사용자)
+ */
 const getOptionalUser = (c: Context): RequestUser | null => {
-  const id = c.req.header(AUTH_HEADER_USER)?.trim()
-  if (!id) {
-    return null
+  // authMiddleware에서 설정한 user 가져오기
+  const user = c.get('user')
+  
+  if (!user) {
+    return null  // 비로그인 사용자
   }
+  
   return {
-    id,
-    role: parseUserRole(c.req.header(AUTH_HEADER_ROLE)),
-    name: c.req.header(AUTH_HEADER_NAME) ?? null
+    id: user.id.toString(),
+    role: mapRoleForComments(user.role),
+    name: user.name
   }
 }
 
@@ -4459,6 +4679,12 @@ app.post('/api/perf-metrics', async (c) => {
   }
 })
 
+// Phase 3 Day 4: 클라이언트 IP 주소 반환 API
+app.get('/api/client-ip', (c) => {
+  const ipAddress = getClientIp(c)
+  return c.json({ ip: ipAddress || '127.0.0.1' })
+})
+
 app.get('/api/comments', async (c) => {
   const entityTypeRaw = c.req.query('entityType')
   const slugRaw = c.req.query('slug')
@@ -4472,7 +4698,7 @@ app.get('/api/comments', async (c) => {
   }
 
   const slug = slugRaw.trim()
-  const limit = parseNumberParam(c.req.query('limit'), 50, { min: 1, max: 100 })
+  const limit = parseNumberParam(c.req.query('limit'), 50, { min: 1, max: 50 })
   const titleParam = c.req.query('title')
   const summaryParam = c.req.query('summary')
   const title = typeof titleParam === 'string' && titleParam.trim().length ? titleParam.trim() : slug
@@ -4503,11 +4729,12 @@ app.get('/api/comments', async (c) => {
           pageType: result.page.page_type,
           summary: result.page.summary
         },
-        viewer: viewer ? { id: viewer.id, role: viewer.role } : null,
+        viewer: viewer ? { id: viewer.id, name: viewer.name, role: viewer.role } : null,
         policy: result.policy,
         bestThreshold: result.policy.bestLikeThreshold,
         bestLimit: result.policy.bestLimit,
-        reportBlindThreshold: result.policy.reportBlindThreshold
+        reportBlindThreshold: result.policy.reportBlindThreshold,
+        nextAnonymousNumber: result.nextAnonymousNumber ?? null
       }
     })
   } catch (error) {
@@ -4543,11 +4770,9 @@ app.post('/api/comments', async (c) => {
     return c.json({ success: false, error: 'content is required' }, 400)
   }
 
+  // Phase 3 Day 3: 익명 사용자도 댓글 작성 가능
   const user = getOptionalUser(c)
-  if (!user) {
-    return c.json({ success: false, error: 'authentication required' }, 401)
-  }
-
+  
   const slug = slugRaw.trim()
   const ipAddress = c.req.header('cf-connecting-ip') ?? null
   const ipHash = await hashIpAddress(ipAddress)
@@ -4558,8 +4783,13 @@ app.post('/api/comments', async (c) => {
 
   const anonymousRequested = Boolean(body?.anonymous)
   const nicknameRaw = typeof body?.nickname === 'string' ? body.nickname : null
-  const nickname = anonymousRequested ? null : nicknameRaw ?? user.name ?? null
-  const displayIp = anonymousRequested ? maskIpForDisplay(ipAddress) : null
+  
+  // 익명 사용자는 닉네임 입력하지 않음 (익명 번호는 서버에서 자동 배정)
+  // 로그인 사용자가 익명으로 작성하는 경우에만 nicknameRaw 사용
+  const nickname = anonymousRequested && user
+    ? nicknameRaw  // 로그인 사용자가 익명으로 작성하는 경우
+    : (user ? (nicknameRaw ?? user?.name ?? null) : null)  // 로그인 사용자는 nickname 또는 이름 사용, 익명 사용자는 null
+  const displayIp = (anonymousRequested || !user) ? maskIpForDisplay(ipAddress) : null
 
   try {
     const comment = await createComment(c.env.DB, {
@@ -4568,12 +4798,13 @@ app.post('/api/comments', async (c) => {
       title: title || slug,
       summary,
       content: contentRaw,
-      nickname,
+      nickname: nickname,  // 익명 사용자는 null (익명 번호는 서버에서 자동 배정)
       parentId,
-      authorId: user.id,
-      isAnonymous: anonymousRequested,
+      authorId: user?.id ?? null,  // 익명 사용자는 null
+      isAnonymous: anonymousRequested || !user,  // 로그인 안 했으면 익명으로 처리
       ipHash,
-      displayIp
+      displayIp,
+      password: body?.password || null  // 익명 사용자는 비밀번호 필요
     })
 
     return c.json({ success: true, data: comment })
@@ -4647,6 +4878,102 @@ app.post('/api/comments/:id/like', async (c) => {
     }
     console.error('[comments:like] failed', error)
     return c.json({ success: false, error: 'failed to update like state' }, 500)
+  }
+})
+
+app.patch('/api/comments/:id', async (c) => {
+  const commentId = Number(c.req.param('id'))
+  if (!Number.isFinite(commentId) || commentId <= 0) {
+    return c.json({ success: false, error: 'invalid comment id' }, 400)
+  }
+
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    return c.json({ success: false, error: 'invalid json body' }, 400)
+  }
+
+  const contentRaw = typeof body?.content === 'string' ? body.content : ''
+  if (!contentRaw || !contentRaw.trim()) {
+    return c.json({ success: false, error: 'content is required' }, 400)
+  }
+
+  const user = getOptionalUser(c)
+  const passwordRaw = typeof body?.password === 'string' ? body.password : null
+
+  try {
+    const comment = await updateComment(c.env.DB, {
+      commentId,
+      content: contentRaw,
+      userId: user?.id ?? null,
+      password: passwordRaw ?? null
+    })
+    return c.json({ success: true, data: comment })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'COMMENT_ERROR'
+    if (message === 'COMMENT_NOT_FOUND') {
+      return c.json({ success: false, error: 'comment not found' }, 404)
+    }
+    if (message === 'UNAUTHORIZED') {
+      return c.json({ success: false, error: 'unauthorized' }, 403)
+    }
+    if (message === 'PASSWORD_REQUIRED') {
+      return c.json({ success: false, error: 'password is required for anonymous comments' }, 400)
+    }
+    if (message === 'INVALID_PASSWORD') {
+      return c.json({ success: false, error: 'invalid password' }, 403)
+    }
+    if (message === 'EMPTY_CONTENT') {
+      return c.json({ success: false, error: 'content is required' }, 400)
+    }
+    console.error('[comments:update] failed', error)
+    return c.json({ success: false, error: 'failed to update comment' }, 500)
+  }
+})
+
+app.delete('/api/comments/:id', async (c) => {
+  const commentId = Number(c.req.param('id'))
+  if (!Number.isFinite(commentId) || commentId <= 0) {
+    return c.json({ success: false, error: 'invalid comment id' }, 400)
+  }
+
+  let body: any
+  try {
+    body = await c.req.json().catch(() => ({}))
+  } catch {
+    body = {}
+  }
+
+  const user = getOptionalUser(c)
+  const passwordRaw = typeof body?.password === 'string' ? body.password : null
+
+  try {
+    const success = await deleteComment(c.env.DB, {
+      commentId,
+      userId: user?.id ?? null,
+      password: passwordRaw ?? null
+    })
+    if (!success) {
+      return c.json({ success: false, error: 'comment not found' }, 404)
+    }
+    return c.json({ success: true })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'COMMENT_ERROR'
+    if (message === 'COMMENT_NOT_FOUND') {
+      return c.json({ success: false, error: 'comment not found' }, 404)
+    }
+    if (message === 'UNAUTHORIZED') {
+      return c.json({ success: false, error: 'unauthorized' }, 403)
+    }
+    if (message === 'PASSWORD_REQUIRED') {
+      return c.json({ success: false, error: 'password is required for anonymous comments' }, 400)
+    }
+    if (message === 'INVALID_PASSWORD') {
+      return c.json({ success: false, error: 'invalid password' }, 403)
+    }
+    console.error('[comments:delete] failed', error)
+    return c.json({ success: false, error: 'failed to delete comment' }, 500)
   }
 })
 
@@ -4874,7 +5201,7 @@ app.post('/api/analyzer/sessions', async (c) => {
 app.get('/api/analyzer/sessions/:id', async (c) => {
   const sessionId = c.req.param('id')
   const includeRequests = c.req.query('includeRequests') === '1'
-  const limit = parseNumberParam(c.req.query('limit'), 20, { min: 1, max: 100 })
+  const limit = parseNumberParam(c.req.query('limit'), 20, { min: 1, max: 50 })
 
   const session = await getAiSession(c.env.DB, sessionId)
   if (!session) {
@@ -5031,7 +5358,7 @@ app.post('/api/analyzer/requests/:id/status', async (c) => {
 
 app.get('/api/analyzer/sessions/:id/requests', async (c) => {
   const sessionId = c.req.param('id')
-  const limit = parseNumberParam(c.req.query('limit'), 20, { min: 1, max: 100 })
+  const limit = parseNumberParam(c.req.query('limit'), 20, { min: 1, max: 50 })
   const requests = await listRequestsBySession(c.env.DB, sessionId, limit)
   return c.json({ success: true, data: { requests } })
 })
@@ -5058,8 +5385,8 @@ app.post('/api/serp-interactions', async (c) => {
       action: body.action,
       keywordLength: toIntegerOrNull(body.keywordLength, { min: 0 }),
       category: typeof body.category === 'string' ? body.category : null,
-      perPage: toIntegerOrNull(body.perPage, { min: 1, max: 100 }),
-      results: toIntegerOrNull(body.results, { min: 0, max: 1000 }),
+      perPage: toIntegerOrNull(body.perPage, { min: 1, max: 50 }),
+      results: toIntegerOrNull(body.results, { min: 0, max: 500 }),
       cacheStatus: typeof body.cacheStatus === 'string' ? body.cacheStatus : null,
       durationMs: toIntegerOrNull(body.durationMs, { min: 0 }),
       sampled: typeof body.sampled === 'boolean' ? body.sampled : null,
@@ -5159,7 +5486,7 @@ app.get('/api/majors', async (c) => {
   try {
     const keyword = c.req.query('keyword') || ''
     const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
     const includeSources = parseSourcesQuery(c.req.query('sources'))
 
     const result = await searchUnifiedMajors({
@@ -5243,7 +5570,7 @@ app.get('/api/jobs', async (c) => {
     const keyword = c.req.query('keyword') || ''
     const category = c.req.query('category') || ''
     const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
     const includeSources = parseSourcesQuery(c.req.query('sources'))
 
     const result = await searchUnifiedJobs({
@@ -5332,7 +5659,7 @@ app.get('/api/majors/search', async (c) => {
   try {
     const q = c.req.query('q') || c.req.query('keyword') || ''
     const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
     const includeSources = parseSourcesQuery(c.req.query('sources'))
 
     const result = await searchUnifiedMajors({
@@ -5366,7 +5693,7 @@ app.get('/api/jobs/search', async (c) => {
     const q = c.req.query('q') || c.req.query('keyword') || ''
     const category = c.req.query('category') || ''
     const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
     const includeSources = parseSourcesQuery(c.req.query('sources'))
 
     const result = await searchUnifiedJobs({
@@ -5406,7 +5733,7 @@ app.get('/api/majors', async (c) => {
   try {
     const keyword = c.req.query('keyword') || ''
     const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 100 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
     const includeSources = parseSourcesQuery(c.req.query('sources'))
 
     const result = await searchUnifiedMajors({
@@ -5499,7 +5826,7 @@ app.get('/majors/:id', async (c) => {
         ctaHref: '/major',
         ctaLabel: '전공위키로 돌아가기'
       })
-      return c.html(renderLayout(
+      return c.html(renderLayoutWithContext(c,
         fallbackHtml,
         '전공 정보 없음 - Careerwiki',
         '요청하신 전공 정보를 찾을 수 없습니다.'
@@ -5568,7 +5895,7 @@ app.get('/majors/:id', async (c) => {
       createMajorJsonLd(profile, canonicalUrl)
     ].filter(Boolean).join('\n')
     
-    return c.html(renderLayout(
+    return c.html(renderLayoutWithContext(c,
       content,
       escapeHtml(pageTitle),
       escapeHtml(metaDescription),
@@ -5591,7 +5918,7 @@ app.get('/majors/:id', async (c) => {
       ctaLabel: '전공위키로 돌아가기'
     })
     c.status(500)
-    return c.html(renderLayout(
+    return c.html(renderLayoutWithContext(c,
       fallbackHtml,
       '전공 정보 로드 오류 - Careerwiki',
       '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
@@ -5600,19 +5927,254 @@ app.get('/majors/:id', async (c) => {
 })
 
 // ============================================================================
+// 사용자 설정 페이지
+// ============================================================================
+
+// Phase 3 Day 4: 개인 설정 페이지
+app.get('/user/settings', requireAuth, async (c) => {
+  const user = c.get('user')
+  if (!user) {
+    return c.redirect('/auth/google')
+  }
+  
+  const userData = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    username: user.username,
+    picture_url: user.picture_url,
+    role: user.role,
+    created_at: user.created_at
+  }
+  
+  const content = `
+    <div class="max-w-4xl mx-auto px-4 md:px-6 py-8">
+      <h1 class="text-3xl font-bold mb-8 gradient-text">
+        <i class="fas fa-cog mr-3"></i>개인 설정
+      </h1>
+      
+      <div class="space-y-6">
+        <!-- 프로필 정보 섹션 -->
+        <div class="glass-card p-6 rounded-xl border border-wiki-border">
+          <h2 class="text-xl font-semibold mb-4 text-wiki-text">
+            <i class="fas fa-user mr-2 text-wiki-primary"></i>프로필 정보
+          </h2>
+          
+          <div class="space-y-4">
+            <!-- 프로필 사진 -->
+            <div class="flex items-center gap-4">
+              <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-wiki-border">
+                <img 
+                  src="${userData.picture_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userData.name || userData.email) + '&background=4361ee&color=fff'}" 
+                  alt="${userData.name || 'User'}"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <p class="text-sm text-wiki-muted">프로필 사진은 Google 계정에서 변경할 수 있습니다.</p>
+              </div>
+            </div>
+            
+            <!-- 이메일 -->
+            <div>
+              <label class="block text-sm font-medium text-wiki-text mb-2">이메일</label>
+              <div class="px-4 py-2 bg-wiki-card border border-wiki-border rounded-lg text-wiki-text">
+                ${userData.email}
+              </div>
+              <p class="text-xs text-wiki-muted mt-1">Google 계정 이메일입니다.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 계정 설정 섹션 -->
+        <div class="glass-card p-6 rounded-xl border border-wiki-border">
+          <h2 class="text-xl font-semibold mb-4 text-wiki-text">
+            <i class="fas fa-id-card mr-2 text-wiki-primary"></i>계정 설정
+          </h2>
+          
+          <div class="space-y-4">
+            <!-- 사용자 아이디 변경 -->
+            <div>
+              <label for="username" class="block text-sm font-medium text-wiki-text mb-2">
+                사용자 아이디 (닉네임)
+              </label>
+              <form id="username-form" class="flex gap-2">
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value="${userData.username || ''}"
+                  placeholder="user_abc123"
+                  pattern="[a-z0-9_]{3,20}"
+                  class="flex-1 px-4 py-2 bg-wiki-card border border-wiki-border rounded-lg text-wiki-text focus:outline-none focus:border-wiki-primary focus:ring-1 focus:ring-wiki-primary"
+                  required
+                />
+                <button
+                  type="submit"
+                  class="px-6 py-2 bg-wiki-primary text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                >
+                  변경
+                </button>
+              </form>
+              <p class="text-xs text-wiki-muted mt-2">
+                3-20자, 영문 소문자, 숫자, 언더스코어(_)만 사용 가능합니다.
+              </p>
+              <div id="username-message" class="mt-2 text-sm hidden"></div>
+            </div>
+            
+            <!-- 가입일 -->
+            <div>
+              <label class="block text-sm font-medium text-wiki-text mb-2">가입일</label>
+              <div class="px-4 py-2 bg-wiki-card border border-wiki-border rounded-lg text-wiki-text">
+                ${userData.created_at ? new Date(userData.created_at * 1000).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) : '알 수 없음'}
+              </div>
+            </div>
+            
+            <!-- 역할 -->
+            <div>
+              <label class="block text-sm font-medium text-wiki-text mb-2">역할</label>
+              <div class="px-4 py-2 bg-wiki-card border border-wiki-border rounded-lg text-wiki-text">
+                ${userData.role === 'admin' ? '관리자' : userData.role === 'expert' ? '전문가' : '일반 사용자'}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 보안 섹션 -->
+        <div class="glass-card p-6 rounded-xl border border-wiki-border">
+          <h2 class="text-xl font-semibold mb-4 text-wiki-text">
+            <i class="fas fa-shield-halved mr-2 text-wiki-primary"></i>보안
+          </h2>
+          
+          <div class="space-y-4">
+            <div>
+              <p class="text-sm text-wiki-muted mb-2">
+                Google OAuth를 통해 로그인하므로 별도의 비밀번호가 없습니다.
+              </p>
+              <p class="text-sm text-wiki-muted">
+                계정 보안은 Google 계정 설정에서 관리하세요.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      (function() {
+        const form = document.getElementById('username-form');
+        const input = document.getElementById('username');
+        const message = document.getElementById('username-message');
+        
+        if (!form || !input || !message) return;
+        
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const newUsername = input.value.trim().toLowerCase();
+          
+          // 클라이언트 측 유효성 검사
+          if (!/^[a-z0-9_]{3,20}$/.test(newUsername)) {
+            message.className = 'mt-2 text-sm text-red-400';
+            message.textContent = '사용자 아이디는 3-20자의 영문 소문자, 숫자, 언더스코어만 사용할 수 있습니다.';
+            message.classList.remove('hidden');
+            return;
+          }
+          
+          // 버튼 비활성화
+          const submitBtn = form.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = '변경 중...';
+          }
+          
+          try {
+            const response = await fetch('/api/user/username', {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ username: newUsername })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+              message.className = 'mt-2 text-sm text-green-400';
+              message.textContent = '사용자 아이디가 변경되었습니다.';
+              message.classList.remove('hidden');
+              
+              // 페이지 새로고침
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            } else {
+              message.className = 'mt-2 text-sm text-red-400';
+              message.textContent = data.error || '사용자 아이디 변경에 실패했습니다.';
+              message.classList.remove('hidden');
+            }
+          } catch (error) {
+            message.className = 'mt-2 text-sm text-red-400';
+            message.textContent = '네트워크 오류가 발생했습니다.';
+            message.classList.remove('hidden');
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = '변경';
+            }
+          }
+        });
+      })();
+    </script>
+  `
+  
+  return c.html(renderLayoutWithContext(c,
+    content,
+    '개인 설정 - Careerwiki',
+    '계정 설정 및 프로필 관리',
+    false,
+    { user: userData }
+  ))
+})
+
+// ============================================================================
+// 사용자 API
+// ============================================================================
+
+// Phase 3 Day 4: 사용자 아이디 변경 API
+app.patch('/api/user/username', requireAuth, async (c) => {
+  const user = c.get('user')
+  if (!user) {
+    return c.json({ success: false, error: 'Unauthorized' }, 401)
+  }
+  
+  try {
+    const body = await c.req.json() as { username?: string }
+    
+    if (!body.username) {
+      return c.json({ success: false, error: 'Username is required' }, 400)
+    }
+    
+    const { updateUsername } = await import('./utils/auth-helpers')
+    await updateUsername(c.env.DB, user.id, body.username)
+    
+    return c.json({ success: true, message: 'Username updated successfully' })
+  } catch (error) {
+    console.error('❌ [User API] Failed to update username:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Failed to update username'
+    return c.json({ success: false, error: errorMessage }, 400)
+  }
+})
+
+// ============================================================================
 // Admin 관련 API
 // ============================================================================
 
 // Admin API: Seed all jobs to D1
-app.post('/api/admin/seed-jobs', async (c) => {
-  // 보안: Admin 토큰 확인 (개발 환경에서는 스킵)
-  const token = c.req.header('Authorization')
-  const expectedToken = c.env.ADMIN_SECRET || 'dev-admin-token'
-  
-  // 개발 환경에서는 토큰 체크 스킵
-  if (c.env.ENVIRONMENT !== 'development' && token !== `Bearer ${expectedToken}`) {
-    return c.json({ error: 'Unauthorized' }, 401)
-  }
+app.post('/api/admin/seed-jobs', requireAdmin, async (c) => {
+  // Phase 3 Day 3: JWT 기반 인증으로 변경
+  // requireAdmin 미들웨어가 이미 권한 체크를 수행함
+  // 기존 토큰 기반 인증은 하위 호환성을 위해 유지 (선택 사항)
   
   // background 파라미터로 백그라운드 실행 여부 결정
   const background = c.req.query('background') === 'true'

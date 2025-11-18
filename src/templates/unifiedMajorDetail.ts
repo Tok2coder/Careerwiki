@@ -1366,11 +1366,12 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources }: Unified
     },
     ctaLinks: [],
     comments: {
-      title: '재학생 · 졸업생 의견 (Phase 1 준비 중)',
-      description: '댓글, 리액션, 신고 기능이 곧 제공됩니다. 우선 적용을 원하시면 의견을 남겨주세요.',
+      title: '재학생 · 졸업생 의견',
+      description: '댓글, 리액션, 신고 기능을 사용할 수 있습니다.',
       feedbackLabel: '우선 적용 의견 보내기',
       notifyLabel: '알림 받기',
-      emptyLabel: `아직 등록된 댓글이 없습니다. ${profile.name}에 대한 경험을 공유해주세요.`
+      emptyLabel: `아직 등록된 댓글이 없습니다. ${profile.name}에 대한 경험을 공유해주세요.`,
+      showForm: true  // 익명 사용자도 댓글 작성 가능
     },
     partials,
     sources,

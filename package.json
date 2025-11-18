@@ -18,7 +18,8 @@
   "dependencies": {
     "axios": "^1.12.2",
     "dotenv": "^17.2.3",
-    "hono": "^4.9.9"
+    "hono": "^4.9.9",
+    "jose": "^6.1.2"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251008.0",

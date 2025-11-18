@@ -147,8 +147,16 @@ export async function getOrGeneratePage<T>(
     // Extract metadata
     const metadata = generator.extractMetadata(data)
     
-    // Store in cache (only in production mode)
-    if (!devMode && c.env?.DB) {
+    // 🔧 Validate data before caching
+    // Don't cache pages with empty or invalid data
+    const isValidPage = metadata.title && 
+                        !metadata.title.includes('job:') && 
+                        !metadata.title.includes('major:') &&
+                        html.length > 10000 && // Minimum HTML size (empty pages are ~5KB)
+                        !html.includes('정보가 준비 중입니다')
+    
+    // Store in cache (only in production mode AND valid data)
+    if (!devMode && c.env?.DB && isValidPage) {
       const now = Math.floor(Date.now() / 1000) // Unix timestamp in seconds
       await c.env.DB.prepare(`
         INSERT OR REPLACE INTO wiki_pages 
@@ -165,6 +173,8 @@ export async function getOrGeneratePage<T>(
         cached?.created_at || now, // Preserve original creation time if exists
         now
       ).run()
+    } else if (!devMode && !isValidPage) {
+      console.warn(`[ISR Skip Cache] Page ${pageType}/${slug} has invalid data, not caching`)
     }
     
     // Set cache headers
