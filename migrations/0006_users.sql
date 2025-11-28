@@ -37,3 +37,4 @@ CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 -- - Ver. 2.0: 익명 편집 허용 예정
 
 
+

@@ -1,6 +1,10 @@
 /**
  * Job Data Merger Service
  * 
+ * @deprecated 이 파일은 레거시 코드입니다. 
+ * 새로운 코드에서는 ETL에서 생성된 `merged_profile_json`을 직접 사용하세요.
+ * 현재 `src/index.tsx`의 edit-data API에서만 사용 중입니다.
+ * 
  * Type A: 동일 데이터 → 병합 (중복 제거)
  * Type B: 유사 데이터 → 우선순위 선택
  * Type C: 보완 데이터 → 계층적 활용 (simple/summary/detailed)

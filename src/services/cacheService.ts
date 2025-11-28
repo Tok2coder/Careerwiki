@@ -232,6 +232,7 @@ export const buildListCacheKey = (
     page?: number
     perPage?: number
     includeSources?: DataSource[]
+    sort?: string
   }
 ): string => {
   const search = new URLSearchParams()
@@ -240,6 +241,9 @@ export const buildListCacheKey = (
   }
   if (type === 'job' && params.category) {
     search.set('category', params.category.trim())
+  }
+  if (params.sort && params.sort !== 'relevance') {
+    search.set('sort', params.sort)
   }
   if (params.page && params.page > 1) {
     search.set('page', String(params.page))

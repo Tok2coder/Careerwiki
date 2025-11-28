@@ -112,9 +112,9 @@ export async function updateApiData(
         api_last_updated_at = excluded.api_last_updated_at
     `).bind(
       jobId,
-      apiData.sourceIds?.careernet || null,
-      apiData.sourceIds?.goyong24 || null,
-      apiData.name,
+      apiData.sourceIds?.careernet ?? null,
+      apiData.sourceIds?.goyong24 ?? null,
+      apiData.name ?? '',
       JSON.stringify(apiData),
       newHash,
       now,

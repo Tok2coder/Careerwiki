@@ -45,7 +45,13 @@ export type SourceStatusRecord = Record<DataSource, SourceStatus> & {
 
 const createInitialSourceStatus = (): SourceStatusRecord => ({
   CAREERNET: { attempted: false, count: 0 },
-  GOYONG24: { attempted: false, count: 0 }
+  GOYONG24: { attempted: false, count: 0 },
+  WORK24_JOB: { attempted: false, count: 0 },
+  WORK24_DJOB: { attempted: false, count: 0 },
+  WORK24_MAJOR: { attempted: false, count: 0 },
+  AI: { attempted: false, count: 0 },
+  USER_CONTRIBUTED: { attempted: false, count: 0 },
+  ADMIN_OVERRIDE: { attempted: false, count: 0 }
 })
 
 export interface UnifiedMajorSummaryEntry {
@@ -69,6 +75,8 @@ export interface UnifiedMajorSummaryEntry {
     firstJobSatisfaction?: string  // 첫 직장 만족도
     jobProspect?: string  // 직업 전망 (고용24만)
     departmentName?: string  // 계열명 (고용24만)
+    universityCount?: string  // 개설 대학 수
+    relatedJobCount?: string  // 관련 직업 수
   }
 }
 
@@ -90,7 +98,12 @@ export interface UnifiedJobSummaryEntry {
     wlb?: string
     outlook?: string
     categoryName?: string
+    categoryLarge?: string   // 대분류
+    categoryMedium?: string  // 중분류
+    categorySmall?: string   // 소분류
     departmentName?: string  // 계열명 (고용24만)
+    workStrong?: string      // 작업 강도 (직업사전)
+    skillYear?: string       // 숙련기간 (직업사전)
   }
 }
 
@@ -313,6 +326,24 @@ const ensureSourceStatus = (sources: SourceStatusRecord, source: DataSource): So
   return sources[source]
 }
 
+const derivePartialsFromMergedProfile = <T extends { sources?: DataSource[] }>(
+  profile: T
+): Partial<Record<DataSource, T | null>> => {
+  const partials: Partial<Record<DataSource, T | null>> = {}
+  const sources = Array.isArray(profile.sources) ? profile.sources : []
+
+  if (sources.includes('CAREERNET')) {
+    partials.CAREERNET = profile
+  }
+
+  // WORK24_MAJOR 추가 (전공 데이터 소스)
+  if (sources.includes('WORK24_JOB') || sources.includes('WORK24_DJOB') || sources.includes('WORK24_MAJOR') || sources.includes('GOYONG24')) {
+    partials.GOYONG24 = profile
+  }
+
+  return partials
+}
+
 const extractCanonicalSuffix = (value: string, prefix: string): string | undefined => {
   if (value.startsWith(prefix)) {
     return value.substring(prefix.length)
@@ -325,38 +356,97 @@ const extractCanonicalSuffix = (value: string, prefix: string): string | undefin
  * Simplified version - only uses D1, no API fallbacks
  */
 export const searchUnifiedMajors = async (
-  params: { keyword?: string; page?: number; perPage?: number; includeSources?: DataSource[] },
+  params: { keyword?: string; page?: number; perPage?: number; includeSources?: DataSource[]; sort?: string },
   env?: CareerWikiEnv
 ): Promise<UnifiedSearchResult<UnifiedMajorSummaryEntry>> => {
-  const { keyword = '', page = 1, perPage = 20 } = params
+  const { keyword = '', page = 1, perPage = 20, sort = 'relevance' } = params
 
   // D1 database is required
   if (!env?.DB) {
     throw new Error('D1 database not available')
   }
 
-  const db = env.DB
+  const db = env.DB as any
   const conditions: string[] = []
   const countBindings: any[] = []
 
-  // Add keyword search condition
+  // 🔍 검색어 정규화 함수 (오타/공백/특수문자 허용)
+  const normalizeSearchTerm = (term: string): string => {
+    return term
+      .toLowerCase()
+      .replace(/\s+/g, '')           // 공백 제거
+      .replace(/[·•\-_]/g, '')       // 특수문자 제거
+      .replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '')    // 단독 자모 제거
+  }
+
+  // 키워드 검색 조건 (확장된 범위: name + summary + heroSummary + 태그/카테고리)
   if (keyword?.trim()) {
-    conditions.push('LOWER(name) LIKE LOWER(?)')
-    countBindings.push(`%${keyword.trim()}%`)
+    const searchTerm = keyword.trim()
+    const normalizedTerm = normalizeSearchTerm(searchTerm)
+    
+    // 여러 필드에서 검색 (OR 조건)
+    conditions.push(`(
+      LOWER(name) LIKE LOWER(?) OR
+      LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) LIKE LOWER(?) OR
+      json_extract(merged_profile_json, '$.summary') LIKE ? OR
+      json_extract(merged_profile_json, '$.heroSummary') LIKE ? OR
+      json_extract(merged_profile_json, '$.categoryDisplay') LIKE ? OR
+      json_extract(merged_profile_json, '$.categoryName') LIKE ? OR
+      json_extract(merged_profile_json, '$.heroTags') LIKE ?
+    )`)
+    countBindings.push(
+      `%${searchTerm}%`,           // 원본 검색어
+      `%${normalizedTerm}%`,       // 정규화된 검색어 (공백/특수문자 제거)
+      `%${searchTerm}%`,           // summary
+      `%${searchTerm}%`,           // heroSummary
+      `%${searchTerm}%`,           // categoryDisplay (계열)
+      `%${searchTerm}%`,           // categoryName
+      `%${searchTerm}%`            // heroTags
+    )
   }
 
   // 🚀 성능 최적화: 페이지네이션을 먼저 적용하여 필요한 전공명만 가져오기
   
   // Step 1: 고유한 전공명 목록을 페이지네이션 적용하여 가져오기
   // ⚠️ 주의: LIMIT 이후에도 정규화로 인한 병합이 발생할 수 있으므로 여유분을 가져옴
+  
+  // 정렬 옵션에 따른 ORDER BY 절
+  let orderByClause = 'ORDER BY normalized_name'
+  if (sort === 'employment-desc') {
+    // 취업률 높은 순 - chartData에서 추출
+    orderByClause = `ORDER BY 
+      CAST(COALESCE(
+        json_extract(merged_profile_json, '$.chartData[0].employment_rate[0].data'),
+        json_extract(merged_profile_json, '$.chartData.employment_rate[0].data'),
+        json_extract(merged_profile_json, '$.employmentRate'),
+        '0'
+      ) AS REAL) DESC, normalized_name`
+  } else if (sort === 'salary-desc') {
+    // 월급 높은 순 (졸업 후 첫 직장 월급)
+    orderByClause = `ORDER BY 
+      CAST(COALESCE(
+        json_extract(merged_profile_json, '$.salaryAfterGraduation'),
+        '0'
+      ) AS REAL) DESC, normalized_name`
+  } else if (sort === 'name-asc') {
+    orderByClause = 'ORDER BY normalized_name'
+  } else {
+    // 기본: 데이터 풍부도 순
+    orderByClause = `ORDER BY 
+      (CASE WHEN json_extract(merged_profile_json, '$.employmentRate') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(merged_profile_json, '$.firstJobSalary') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(merged_profile_json, '$.firstJobSatisfaction') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(merged_profile_json, '$.heroSummary') IS NOT NULL THEN 1 ELSE 0 END) DESC, normalized_name`
+  }
+  
   let uniqueNamesQuery = `
-    SELECT DISTINCT LOWER(name) as normalized_name, name as original_name
+    SELECT DISTINCT LOWER(name) as normalized_name, name as original_name, merged_profile_json
     FROM majors
   `
   if (conditions.length > 0) {
     uniqueNamesQuery += ' WHERE ' + conditions.join(' AND ')
   }
-  uniqueNamesQuery += ' ORDER BY normalized_name'
+  uniqueNamesQuery += ` ${orderByClause}`
   
   // 페이지네이션 적용 (정규화 병합을 고려하여 1.5배 가져오기)
   const offset = (page - 1) * perPage
@@ -372,10 +462,7 @@ export const searchUnifiedMajors = async (
       items: [],
       meta: {
         total: 0,
-        sources: {
-          CAREERNET: { count: 0 },
-          GOYONG24: { count: 0 }
-        }
+        sources: createInitialSourceStatus()
       }
     }
   }
@@ -392,7 +479,7 @@ export const searchUnifiedMajors = async (
     const placeholders = chunk.map(() => '?').join(', ')
     
     let detailQuery = `
-      SELECT id, name, careernet_id, goyong24_id, api_data_json 
+      SELECT id, name, slug, careernet_id, goyong24_id, merged_profile_json, api_data_json 
       FROM majors 
       WHERE name IN (${placeholders})
     `
@@ -414,7 +501,7 @@ export const searchUnifiedMajors = async (
   if (conditions.length > 0) {
     countQuery += ' WHERE ' + conditions.join(' AND ')
   }
-  const countResult = await db.prepare(countQuery).bind(...countBindings).first<{ total: number }>()
+  const countResult = await db.prepare(countQuery).bind(...countBindings).first() as { total: number } | null
   const totalCount = countResult?.total || 0
 
   // 🔄 전공명 정규화 함수 (보수적 접근 - 실제로 같은 전공인 경우만 병합)
@@ -532,78 +619,88 @@ export const searchUnifiedMajors = async (
   // 각 고유 전공명에 대해 병합된 레코드 생성
   majorsByName.forEach((rows: any[]) => {
     try {
-      // 🔄 모든 레코드의 데이터를 병합
-      let mergedCareernetData: any = {}
-      let mergedGoyongData: any = {}
-      let careernetId: string | undefined
-      let goyongId: string | undefined
       // 원본 이름 중 가장 긴 이름을 선택 (정보가 가장 풍부함)
       const originalNames = rows.map(r => r.name?.trim()).filter(Boolean)
       const majorName = originalNames.reduce((longest, current) => 
         current.length > longest.length ? current : longest
       , originalNames[0] || '알 수 없음')
       
-      // 성능 최적화: ID는 먼저 추출하고, 병합이 필요한 경우에만 JSON 파싱
-      rows.forEach((row: any) => {
-        // ID만 먼저 추출 (JSON 파싱 없이)
-        if (!careernetId && row.careernet_id && row.careernet_id !== 'null') {
-          careernetId = row.careernet_id
-        }
-        if (!goyongId && row.goyong24_id && row.goyong24_id !== 'null') {
-          goyongId = row.goyong24_id
-        }
-      })
+      // 🆕 ETL로 정제된 merged_profile_json 우선 사용
+      let mergedProfile: any = null
+      let careernetId: string | undefined
+      let goyongId: string | undefined
+      let majorSlug: string | undefined
       
-      // 병합이 필요한 경우에만 JSON 파싱 (단일 레코드면 첫 번째 레코드만 파싱)
-      const rowsToProcess = rows.length === 1 ? [rows[0]] : rows
-      rowsToProcess.forEach((row: any) => {
-        let apiData = null
-        if (row.api_data_json) {
+      // merged_profile_json이 있는 첫 번째 행 찾기
+      for (const row of rows) {
+        if (row.merged_profile_json) {
           try {
-            apiData = JSON.parse(row.api_data_json)
+            mergedProfile = JSON.parse(row.merged_profile_json)
+            majorSlug = row.slug
+            careernetId = row.careernet_id && row.careernet_id !== 'null' ? row.careernet_id : undefined
+            goyongId = row.goyong24_id && row.goyong24_id !== 'null' ? row.goyong24_id : undefined
+            break
           } catch (parseError) {
-            console.error(`Failed to parse api_data_json for major ${row.id}:`, parseError)
+            console.error(`Failed to parse merged_profile_json for major ${row.id}:`, parseError)
           }
         }
-        
-        // Careernet 데이터 병합
-        if (apiData?.careernet && Object.keys(apiData.careernet).length > 0) {
-          mergedCareernetData = { ...mergedCareernetData, ...apiData.careernet }
-        }
-        
-        // Goyong24 데이터 병합
-        if (apiData?.goyong24 && Object.keys(apiData.goyong24).length > 0) {
-          mergedGoyongData = { ...mergedGoyongData, ...apiData.goyong24 }
-        }
-      })
-      
-      const careernetData = mergedCareernetData
-      const goyongData = mergedGoyongData
-      
-      // Determine sources dynamically based on actual data
-      const sources: DataSource[] = []
-      if (careernetData && Object.keys(careernetData).length > 0) {
-        sources.push('CAREERNET')
-      }
-      if (goyongData && Object.keys(goyongData).length > 0) {
-        sources.push('GOYONG24')
       }
       
-      // Fallback to CAREERNET if no sources detected
+      // merged_profile_json이 없으면 기존 api_data_json 로직 사용
+      let careernetData: any = {}
+      let goyongData: any = {}
+      
+      if (!mergedProfile) {
+        rows.forEach((row: any) => {
+          if (!careernetId && row.careernet_id && row.careernet_id !== 'null') {
+            careernetId = row.careernet_id
+          }
+          if (!goyongId && row.goyong24_id && row.goyong24_id !== 'null') {
+            goyongId = row.goyong24_id
+          }
+          if (!majorSlug && row.slug) {
+            majorSlug = row.slug
+          }
+        })
+        
+        const rowsToProcess = rows.length === 1 ? [rows[0]] : rows
+        rowsToProcess.forEach((row: any) => {
+          let apiData = null
+          if (row.api_data_json) {
+            try {
+              apiData = JSON.parse(row.api_data_json)
+            } catch (parseError) {
+              console.error(`Failed to parse api_data_json for major ${row.id}:`, parseError)
+            }
+          }
+          
+          if (apiData?.careernet && Object.keys(apiData.careernet).length > 0) {
+            careernetData = { ...careernetData, ...apiData.careernet }
+          }
+          if (apiData?.goyong24 && Object.keys(apiData.goyong24).length > 0) {
+            goyongData = { ...goyongData, ...apiData.goyong24 }
+          }
+        })
+      }
+      
+      // Determine sources
+      const sources: DataSource[] = mergedProfile?.sources || []
       if (sources.length === 0) {
-        sources.push('CAREERNET')
+        if (careernetData && Object.keys(careernetData).length > 0) sources.push('CAREERNET')
+        if (goyongData && Object.keys(goyongData).length > 0) sources.push('GOYONG24')
+        if (sources.length === 0) sources.push('CAREERNET')
       }
 
-      // Create profile (병합된 데이터 사용)
+      // Create profile (merged_profile_json 우선 사용)
       const profile: UnifiedMajorSummary = {
-        id: majorName, // 전공명을 ID로 사용 (중복 제거)
+        id: majorSlug || majorName, // slug가 있으면 사용
         sourceIds: {
-          careernet: careernetId,
-          goyong24: goyongId
+          careernet: mergedProfile?.sourceIds?.careernet || careernetId,
+          goyong24: mergedProfile?.sourceIds?.work24 || goyongId
         },
-        name: majorName,
-        categoryName: careernetData.categoryName || careernetData.department || goyongData.categoryName,
-        summary: careernetData.summary || goyongData.summary,
+        name: mergedProfile?.name || majorName,
+        categoryName: mergedProfile?.categoryDisplay || mergedProfile?.categoryName || careernetData.categoryName || careernetData.department || goyongData.categoryName,
+        summary: mergedProfile?.heroSummary || mergedProfile?.summary || careernetData.summary || goyongData.summary,
         sources
       }
 
@@ -614,31 +711,105 @@ export const searchUnifiedMajors = async (
             majorSeq: careernetId
           } : undefined,
           goyong24: goyongId ? {
-            majorGb: goyongData.majorGb || '1',
-            departmentId: goyongData.departmentId,
+            majorGb: goyongData?.majorGb || mergedProfile?.majorGb || '1',
+            departmentId: goyongData?.departmentId,
             majorId: goyongId
           } : undefined
         },
         display: (() => {
-          // 커리어넷과 고용24 데이터 모두 있는지 확인
+          // 🆕 merged_profile_json이 있으면 우선 사용
+          if (mergedProfile) {
+            // 첫직장임금(월)
+            const firstJobSalary = mergedProfile.salaryAfterGraduation?.trim()
+            
+            // chartData 정규화 (배열인 경우 첫 번째 요소 사용)
+            let chartData = mergedProfile.chartData
+            if (Array.isArray(chartData)) {
+              chartData = chartData[0]
+            }
+            
+            // 🔧 취업률: chartData.employment_rate에서 "전체" 값 우선 사용 (정확한 수치)
+            // 없으면 employmentRate 필드 폴백 (대략적인 값: "60% 이상" 등)
+            let employmentRate: string | undefined = undefined
+            if (chartData?.employment_rate && Array.isArray(chartData.employment_rate)) {
+              const totalItem = chartData.employment_rate.find((e: any) => e.item === '전체')
+              if (totalItem?.data) {
+                const rate = parseFloat(totalItem.data)
+                if (!isNaN(rate)) {
+                  // 소수점 1자리까지 표시
+                  employmentRate = Number.isInteger(rate) ? `${rate}%` : `${rate.toFixed(1)}%`
+                }
+              }
+            }
+            // 폴백: employmentRate 필드 사용 (대략적인 값)
+            if (!employmentRate && mergedProfile.employmentRate) {
+              employmentRate = mergedProfile.employmentRate.trim()
+            }
+            
+            // 첫 직장 만족도: chartData.satisfaction에서 추출
+            let firstJobSatisfaction: string | undefined = undefined
+            if (chartData?.satisfaction && Array.isArray(chartData.satisfaction)) {
+              // "만족" + "매우 만족" 합산 (긍정적 만족도)
+              const satisfiedItem = chartData.satisfaction.find((s: any) => s.item === '만족')
+              const verySatisfiedItem = chartData.satisfaction.find((s: any) => s.item === '매우 만족')
+              const satisfiedScore = parseFloat(satisfiedItem?.data || '0')
+              const verySatisfiedScore = parseFloat(verySatisfiedItem?.data || '0')
+              const totalSatisfaction = satisfiedScore + verySatisfiedScore
+              if (totalSatisfaction > 0) {
+                firstJobSatisfaction = `${totalSatisfaction.toFixed(1)}%`
+              }
+            }
+            
+            // 대학 수
+            const universityCount = Array.isArray(mergedProfile.universities) ? mergedProfile.universities.length : 0
+            
+            // 관련 직업 수
+            const relatedJobCount = Array.isArray(mergedProfile.relatedJobs) ? mergedProfile.relatedJobs.length : 0
+            
+            return {
+              summary: mergedProfile.heroSummary?.trim() || mergedProfile.summary?.trim(),
+              categoryName: mergedProfile.categoryDisplay?.trim() || mergedProfile.categoryName?.trim(),
+              employmentRate,
+              salaryAfterGraduation: firstJobSalary,
+              firstJobSalary,
+              firstJobSatisfaction,
+              universityCount: universityCount > 0 ? String(universityCount) : undefined,
+              relatedJobCount: relatedJobCount > 0 ? String(relatedJobCount) : undefined
+            }
+          }
+          
+          // 기존 로직: api_data_json 사용
           const hasCareernet = careernetData && Object.keys(careernetData).length > 0
           const hasGoyong24 = goyongData && Object.keys(goyongData).length > 0
           
           // 둘 다 있으면 커리어넷 데이터만 사용
           if (hasCareernet && hasGoyong24) {
-            // 취업률
-            const employmentRate = careernetData.employmentRate?.trim()
-            
-            // 첫직장임금(월): salaryAfterGraduation은 이미 월봉임
             const firstJobSalary = careernetData.salaryAfterGraduation?.trim()
             
-            // 첫 직장 만족도: chartData.satisfaction에서 추출
+            // 취업률: chartData.employment_rate에서 "전체" 값 우선 사용
+            let employmentRate: string | undefined = undefined
+            if (careernetData.chartData?.employment_rate && Array.isArray(careernetData.chartData.employment_rate)) {
+              const totalItem = careernetData.chartData.employment_rate.find((e: any) => e.item === '전체')
+              if (totalItem?.data) {
+                const rate = parseFloat(totalItem.data)
+                if (!isNaN(rate)) {
+                  employmentRate = Number.isInteger(rate) ? `${rate}%` : `${rate.toFixed(1)}%`
+                }
+              }
+            }
+            if (!employmentRate && careernetData.employmentRate) {
+              employmentRate = careernetData.employmentRate.trim()
+            }
+            
             let firstJobSatisfaction: string | undefined = undefined
             if (careernetData.chartData?.satisfaction && Array.isArray(careernetData.chartData.satisfaction)) {
-              const firstSatisfaction = careernetData.chartData.satisfaction[0]
-              if (firstSatisfaction?.data) {
-                const satisText = String(firstSatisfaction.data).trim()
-                firstJobSatisfaction = satisText.includes('%') ? satisText : `${satisText}%`
+              const satisfiedItem = careernetData.chartData.satisfaction.find((s: any) => s.item === '만족')
+              const verySatisfiedItem = careernetData.chartData.satisfaction.find((s: any) => s.item === '매우 만족')
+              const satisfiedScore = parseFloat(satisfiedItem?.data || '0')
+              const verySatisfiedScore = parseFloat(verySatisfiedItem?.data || '0')
+              const totalSatisfaction = satisfiedScore + verySatisfiedScore
+              if (totalSatisfaction > 0) {
+                firstJobSatisfaction = `${totalSatisfaction.toFixed(1)}%`
               }
             }
             
@@ -664,15 +835,32 @@ export const searchUnifiedMajors = async (
           
           // 커리어넷 데이터만 있는 경우
           if (hasCareernet && !hasGoyong24) {
-            const employmentRate = careernetData.employmentRate?.trim()
             const firstJobSalary = careernetData.salaryAfterGraduation?.trim()
+            
+            // 취업률: chartData.employment_rate에서 "전체" 값 우선 사용
+            let employmentRate: string | undefined = undefined
+            if (careernetData.chartData?.employment_rate && Array.isArray(careernetData.chartData.employment_rate)) {
+              const totalItem = careernetData.chartData.employment_rate.find((e: any) => e.item === '전체')
+              if (totalItem?.data) {
+                const rate = parseFloat(totalItem.data)
+                if (!isNaN(rate)) {
+                  employmentRate = Number.isInteger(rate) ? `${rate}%` : `${rate.toFixed(1)}%`
+                }
+              }
+            }
+            if (!employmentRate && careernetData.employmentRate) {
+              employmentRate = careernetData.employmentRate.trim()
+            }
             
             let firstJobSatisfaction: string | undefined = undefined
             if (careernetData.chartData?.satisfaction && Array.isArray(careernetData.chartData.satisfaction)) {
-              const firstSatisfaction = careernetData.chartData.satisfaction[0]
-              if (firstSatisfaction?.data) {
-                const satisText = String(firstSatisfaction.data).trim()
-                firstJobSatisfaction = satisText.includes('%') ? satisText : `${satisText}%`
+              const satisfiedItem = careernetData.chartData.satisfaction.find((s: any) => s.item === '만족')
+              const verySatisfiedItem = careernetData.chartData.satisfaction.find((s: any) => s.item === '매우 만족')
+              const satisfiedScore = parseFloat(satisfiedItem?.data || '0')
+              const verySatisfiedScore = parseFloat(verySatisfiedItem?.data || '0')
+              const totalSatisfaction = satisfiedScore + verySatisfiedScore
+              if (totalSatisfaction > 0) {
+                firstJobSatisfaction = `${totalSatisfaction.toFixed(1)}%`
               }
             }
             
@@ -700,18 +888,86 @@ export const searchUnifiedMajors = async (
     }
   })
 
+  // 🔧 JavaScript에서 최종 정렬 적용 (DB 병합 후 순서가 깨질 수 있음)
+  const parseNumberFromDisplay = (value: string | undefined): number => {
+    if (!value) return 0
+    const match = value.match(/([\d.]+)/)
+    return match ? parseFloat(match[1]) : 0
+  }
+  
+  // 🔍 검색어가 있을 때: 매칭 필드에 따른 우선순위 정렬
+  // 우선순위: 이름 > 정규화이름 > 태그 > 히어로소개 > 카테고리 > 계열
+  if (keyword?.trim() && sort === 'relevance') {
+    const searchTerm = keyword.trim().toLowerCase()
+    const normalizedSearchTerm = searchTerm.replace(/\s+/g, '').replace(/[·•\-_]/g, '')
+    
+    const getMatchScore = (item: UnifiedMajorSummaryEntry): number => {
+      const name = (item.profile?.name || '').toLowerCase()
+      const normalizedName = name.replace(/\s+/g, '').replace(/[·•\-_]/g, '')
+      const heroTags = JSON.stringify((item as any).display?.heroTags || []).toLowerCase()
+      const heroSummary = (item.display?.summary || '').toLowerCase()
+      const categoryName = (item.display?.categoryName || '').toLowerCase()
+      const categoryDisplay = (item.display as any)?.categoryDisplay?.toLowerCase() || ''
+      
+      // 우선순위 점수 (높을수록 먼저)
+      if (name.includes(searchTerm)) return 100           // 1. 이름 매칭
+      if (normalizedName.includes(normalizedSearchTerm)) return 90  // 2. 정규화 이름 매칭
+      if (heroTags.includes(searchTerm)) return 70        // 3. 태그 매칭
+      if (heroSummary.includes(searchTerm)) return 50     // 4. 히어로 소개 매칭
+      if (categoryName.includes(searchTerm)) return 30    // 5. 카테고리 매칭
+      if (categoryDisplay.includes(searchTerm)) return 20 // 6. 계열 매칭
+      return 0
+    }
+    
+    items.sort((a, b) => {
+      const scoreA = getMatchScore(a)
+      const scoreB = getMatchScore(b)
+      if (scoreB !== scoreA) return scoreB - scoreA
+      // 점수가 같으면 이름순
+      return (a.profile?.name || '').localeCompare(b.profile?.name || '', 'ko')
+    })
+  } else if (sort === 'salary-desc') {
+    // 월급 높은 순 (salaryAfterGraduation)
+    items.sort((a, b) => {
+      const salaryA = parseNumberFromDisplay(a.display?.salaryAfterGraduation || a.display?.firstJobSalary)
+      const salaryB = parseNumberFromDisplay(b.display?.salaryAfterGraduation || b.display?.firstJobSalary)
+      return salaryB - salaryA
+    })
+  } else if (sort === 'employment-desc') {
+    // 취업률 높은 순
+    items.sort((a, b) => {
+      const rateA = parseNumberFromDisplay(a.display?.employmentRate)
+      const rateB = parseNumberFromDisplay(b.display?.employmentRate)
+      return rateB - rateA
+    })
+  } else if (sort === 'relevance') {
+    // 기본 순 (데이터 풍부도) - 검색어 없을 때
+    items.sort((a, b) => {
+      const scoreA = (a.display?.employmentRate ? 1 : 0) + 
+                     (a.display?.salaryAfterGraduation || a.display?.firstJobSalary ? 1 : 0) + 
+                     (a.display?.firstJobSatisfaction ? 1 : 0) + 
+                     (a.profile?.summary ? 1 : 0)
+      const scoreB = (b.display?.employmentRate ? 1 : 0) + 
+                     (b.display?.salaryAfterGraduation || b.display?.firstJobSalary ? 1 : 0) + 
+                     (b.display?.firstJobSatisfaction ? 1 : 0) + 
+                     (b.profile?.summary ? 1 : 0)
+      return scoreB - scoreA
+    })
+  }
+
   // 🔧 정규화 병합으로 인해 perPage보다 많거나 적을 수 있으므로 정확히 perPage 개수로 제한
   const paginatedItems = items.slice(0, perPage)
 
   // 🚀 페이지네이션은 이미 데이터베이스 레벨에서 적용됨 (LIMIT/OFFSET)
+  const resultSources = createInitialSourceStatus()
+  resultSources.CAREERNET = { attempted: true, count: paginatedItems.filter(i => i.profile.sources.includes('CAREERNET')).length }
+  resultSources.GOYONG24 = { attempted: true, count: paginatedItems.filter(i => i.profile.sources.includes('GOYONG24')).length }
+  
   return {
     items: paginatedItems, // 정확히 요청한 개수만 반환
     meta: {
       total: totalCount, // 전체 고유 전공명 수
-      sources: {
-        CAREERNET: { count: paginatedItems.filter(i => i.profile.sources.includes('CAREERNET')).length },
-        GOYONG24: { count: paginatedItems.filter(i => i.profile.sources.includes('GOYONG24')).length }
-      }
+      sources: resultSources
     }
   }
 }
@@ -721,340 +977,228 @@ export const searchUnifiedMajors = async (
  * Simplified version - only uses D1, no API fallbacks
  */
 export const searchUnifiedJobs = async (
-  params: { keyword?: string; category?: string; page?: number; perPage?: number; includeSources?: DataSource[] },
+  params: { keyword?: string; category?: string; page?: number; perPage?: number; includeSources?: DataSource[]; sort?: string },
   env?: CareerWikiEnv
 ): Promise<UnifiedSearchResult<UnifiedJobSummaryEntry>> => {
-  const { keyword = '', category = '', page = 1, perPage = 20 } = params
+  const { keyword = '', category = '', page = 1, perPage = 20, sort = 'relevance' } = params
 
   // D1 database is required
   if (!env?.DB) {
     throw new Error('D1 database not available')
   }
 
-  const db = env.DB
-  const conditions: string[] = []
-  const countBindings: any[] = []
+  const db = env.DB as any
+  const conditions: string[] = ['merged_profile_json IS NOT NULL']
+  const bindings: any[] = []
 
-  // Add keyword search condition
+  // 🔍 검색어 정규화 함수 (오타/공백/특수문자 허용)
+  const normalizeSearchTerm = (term: string): string => {
+    return term
+      .toLowerCase()
+      .replace(/\s+/g, '')           // 공백 제거
+      .replace(/[·•\-_]/g, '')       // 특수문자 제거
+      .replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '')    // 단독 자모 제거
+  }
+
+  // 키워드 검색 조건 (확장된 범위: name + summary + heroIntro + 태그/카테고리)
   if (keyword?.trim()) {
-    conditions.push('LOWER(name) LIKE LOWER(?)')
-    countBindings.push(`%${keyword.trim()}%`)
+    const searchTerm = keyword.trim()
+    const normalizedTerm = normalizeSearchTerm(searchTerm)
+    
+    // 여러 필드에서 검색 (OR 조건)
+    conditions.push(`(
+      LOWER(name) LIKE LOWER(?) OR
+      LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) LIKE LOWER(?) OR
+      json_extract(merged_profile_json, '$.summary') LIKE ? OR
+      json_extract(merged_profile_json, '$.heroIntro') LIKE ? OR
+      json_extract(merged_profile_json, '$.categoryName') LIKE ? OR
+      json_extract(merged_profile_json, '$.heroTags') LIKE ? OR
+      json_extract(merged_profile_json, '$.keywords') LIKE ?
+    )`)
+    bindings.push(
+      `%${searchTerm}%`,           // 원본 검색어
+      `%${normalizedTerm}%`,       // 정규화된 검색어 (공백/특수문자 제거)
+      `%${searchTerm}%`,           // summary
+      `%${searchTerm}%`,           // heroIntro
+      `%${searchTerm}%`,           // categoryName
+      `%${searchTerm}%`,           // heroTags
+      `%${searchTerm}%`            // keywords
+    )
   }
 
-  // 🚀 성능 최적화: 페이지네이션을 먼저 적용하여 필요한 직업명만 가져오기
-  
-  // Step 1: 고유한 직업명 목록을 페이지네이션 적용하여 가져오기
-  // ⚠️ 주의: LIMIT 이후에도 정규화로 인한 병합이 발생할 수 있으므로 여유분을 가져옴
-  let uniqueNamesQuery = `
-    SELECT DISTINCT LOWER(name) as normalized_name, name as original_name
-    FROM jobs
-  `
-  if (conditions.length > 0) {
-    uniqueNamesQuery += ' WHERE ' + conditions.join(' AND ')
-  }
-  uniqueNamesQuery += ' ORDER BY normalized_name'
-  
-  // 페이지네이션 적용 (정규화 병합을 고려하여 1.5배 가져오기)
-  const offset = (page - 1) * perPage
-  const limitWithBuffer = Math.ceil(perPage * 1.2)
-  uniqueNamesQuery += ` LIMIT ${limitWithBuffer} OFFSET ${offset}`
-  
-  const uniqueNamesResult = await db.prepare(uniqueNamesQuery).bind(...countBindings).all()
-  const uniqueNames = uniqueNamesResult.results || []
-  
-  if (uniqueNames.length === 0) {
-    // 결과가 없으면 빈 배열 반환
+  // Step 1: 총 개수 계산
+  let countQuery = `SELECT COUNT(*) as total FROM jobs WHERE ${conditions.join(' AND ')}`
+  const countResult = await db.prepare(countQuery).bind(...bindings).first() as { total: number } | null
+  const totalCount = countResult?.total || 0
+
+  if (totalCount === 0) {
     return {
       items: [],
       meta: {
         total: 0,
-        sources: {
-          CAREERNET: { count: 0 },
-          GOYONG24: { count: 0 }
-        }
+        sources: createInitialSourceStatus()
       }
     }
   }
-  
-  // Step 2: 해당 직업명들에 대한 모든 레코드 조회 (병합을 위해)
-  const nameList = uniqueNames.map((r: any) => r.original_name)
-  
-  // 🔧 SQLite 변수 제한을 피하기 위해 IN 절을 청크로 나눔 (최대 100개씩)
-  const CHUNK_SIZE = 100
-  const d1Jobs: any[] = []
-  
-  for (let i = 0; i < nameList.length; i += CHUNK_SIZE) {
-    const chunk = nameList.slice(i, i + CHUNK_SIZE)
-    const placeholders = chunk.map(() => '?').join(', ')
-    
-    let detailQuery = `
-      SELECT id, name, careernet_id, goyong24_id, api_data_json 
-      FROM jobs 
-      WHERE name IN (${placeholders})
-    `
-    if (conditions.length > 0) {
-      detailQuery += ' AND (' + conditions.join(' AND ') + ')'
-    }
-    detailQuery += ' ORDER BY LOWER(name)'
-    
-    const detailBindings = [...chunk, ...countBindings]
-    const result = await db.prepare(detailQuery).bind(...detailBindings).all()
-    
-    if (result.results) {
-      d1Jobs.push(...result.results)
-    }
-  }
-  
-  // Step 3: 총 개수 계산 (전체 고유 직업명 수)
-  let countQuery = 'SELECT COUNT(DISTINCT LOWER(name)) as total FROM jobs'
-  if (conditions.length > 0) {
-    countQuery += ' WHERE ' + conditions.join(' AND ')
-  }
-  const countResult = await db.prepare(countQuery).bind(...countBindings).first<{ total: number }>()
-  const totalCount = countResult?.total || 0
 
-  // 🔄 직업명 정규화 함수 (쉼표, 가운뎃점, 공백, "및" 통일)
-  const normalizeJobName = (name: string): string => {
-    let normalized = name
-      .trim()
-      .toLowerCase()
-      // 일반적인 오타 수정
-      .replace(/운저원/g, '운전원') // 운저원 → 운전원
-      // "채굴기계" → "기계" (건설 및 채굴기계운전원 → 건설기계운전원)
-      .replace(/채굴기계/g, '기계')
-      // "및"를 쉼표로 변환
-      .replace(/\s*및\s*/g, ',')
-      // 가운뎃점을 쉼표로 변환
-      .replace(/[·•]/g, ',')
-      // 쉼표 앞뒤 공백 제거
-      .replace(/\s*,\s*/g, ',')
-      // 모든 공백 완전히 제거 (가장 공격적인 정규화)
-      .replace(/\s+/g, '')
-      // "공"과 "원" 접미사 통일
-      .replace(/(도장|설치|수리|운전)공$/g, '$1원')
-    
-    // 쉼표로 구분된 경우 불필요한 추가 직무명 제거
-    const parts = normalized.split(',')
-    if (parts.length > 1) {
-      // "코미디언", "엔터테이너" 같은 동의어 추가 직무명은 제거
-      const synonymExtraParts = ['코미디언', '엔터테이너']
-      const filteredParts = parts.filter(part => {
-        // 마지막 부분이 동의어면 제거
-        return !synonymExtraParts.some(extra => part === extra || part.endsWith(extra))
-      })
-      if (filteredParts.length > 0) {
-        normalized = filteredParts.join(',')
-      }
-    }
-    
-    return normalized
+  // Step 2: 페이지네이션 적용하여 직업 목록 조회
+  const offset = (page - 1) * perPage
+  
+  // 정렬 옵션에 따른 ORDER BY 절 (SQL에서는 기본 정렬만, 연봉/취업률 등은 JS에서 후처리)
+  // 실제 데이터 경로: $.overviewSalary.sal, $.satisfaction, $.wlb 등
+  let orderByClause = 'ORDER BY name'
+  if (sort === 'name-asc') {
+    orderByClause = 'ORDER BY name'
+  } else {
+    // 기본: 데이터 풍부도 순 (여러 필드가 있는 항목 우선)
+    orderByClause = `ORDER BY 
+      (CASE WHEN json_extract(merged_profile_json, '$.overviewSalary.sal') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(merged_profile_json, '$.satisfaction') IS NOT NULL OR json_extract(merged_profile_json, '$.overviewSalary.jobSatis') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(merged_profile_json, '$.wlb') IS NOT NULL OR json_extract(merged_profile_json, '$.detailWlb.wlb') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(merged_profile_json, '$.heroIntro') IS NOT NULL OR json_extract(merged_profile_json, '$.summary') IS NOT NULL THEN 1 ELSE 0 END) DESC, name`
   }
-
-  // 🔄 같은 이름의 직업을 병합하기 위한 Map
-  const jobsByName = new Map<string, any[]>()
-  const mergedGroups: Array<{ normalized: string; originals: string[]; count: number }> = []
   
-  d1Jobs.forEach((row: any) => {
-    const originalName = row.name?.trim()
-    if (!originalName) return
-    
-    const normalizedName = normalizeJobName(originalName)
-    
-    if (!jobsByName.has(normalizedName)) {
-      jobsByName.set(normalizedName, [])
-    }
-    jobsByName.get(normalizedName)!.push(row)
-  })
-  
-  // 병합된 그룹 정보 수집
-  jobsByName.forEach((rows, normalizedName) => {
-    if (rows.length > 1) {
-      const originalNames = [...new Set(rows.map(r => r.name?.trim()))].filter(Boolean)
-      mergedGroups.push({
-        normalized: normalizedName,
-        originals: originalNames,
-        count: rows.length
-      })
-    }
-  })
+  const listQuery = `
+    SELECT id, name, slug, primary_source, merged_profile_json
+    FROM jobs 
+    WHERE ${conditions.join(' AND ')}
+    ${orderByClause}
+    LIMIT ${perPage} OFFSET ${offset}
+  `
+  const listResult = await db.prepare(listQuery).bind(...bindings).all()
+  const d1Jobs = listResult.results || []
 
   // Parse D1 results into UnifiedJobSummaryEntry format
   const items: UnifiedJobSummaryEntry[] = []
-  
-  // 각 고유 직업명에 대해 병합된 레코드 생성
-  jobsByName.forEach((rows: any[]) => {
-    try {
-      // 🔄 모든 레코드의 데이터를 병합
-      let mergedCareernetData: any = {}
-      let mergedGoyongData: any = {}
-      let careernetId: string | undefined
-      let goyongId: string | undefined
-      // 원본 이름 중 가장 긴 이름을 선택 (정보가 가장 풍부함)
-      const originalNames = rows.map(r => r.name?.trim()).filter(Boolean)
-      const jobName = originalNames.reduce((longest, current) => 
-        current.length > longest.length ? current : longest
-      , originalNames[0] || '알 수 없음')
-      
-      rows.forEach((row: any) => {
-        let apiData = null
-        if (row.api_data_json) {
-          try {
-            apiData = JSON.parse(row.api_data_json)
-          } catch (parseError) {
-            console.error(`Failed to parse api_data_json for job ${row.id}:`, parseError)
-          }
-        }
-        
-        // Careernet 데이터 병합
-        if (apiData?.careernet && Object.keys(apiData.careernet).length > 0) {
-          mergedCareernetData = { ...mergedCareernetData, ...apiData.careernet }
-          if (!careernetId && row.careernet_id && row.careernet_id !== 'null') {
-            careernetId = row.careernet_id
-          }
-        }
-        
-        // Goyong24 데이터 병합
-        if (apiData?.goyong24 && Object.keys(apiData.goyong24).length > 0) {
-          mergedGoyongData = { ...mergedGoyongData, ...apiData.goyong24 }
-          if (!goyongId && row.goyong24_id && row.goyong24_id !== 'null') {
-            goyongId = row.goyong24_id
-          }
-        }
-      })
-      
-      const careernetData = mergedCareernetData
-      const goyongData = mergedGoyongData
-      
-      // Determine sources dynamically based on actual data
-      const sources: DataSource[] = []
-      if (careernetData && Object.keys(careernetData).length > 0) {
-        sources.push('CAREERNET')
-      }
-      if (goyongData && Object.keys(goyongData).length > 0) {
-        sources.push('GOYONG24')
-      }
-      
-      // Fallback to CAREERNET if no sources detected
-      if (sources.length === 0) {
-        sources.push('CAREERNET')
-      }
-      
-      // Extract data from CareerNet and Goyong24
-      const baseInfo = careernetData.encyclopedia?.baseInfo || {}
-      const goyongSalProspect = goyongData.salProspect || {}
-      
-      // 연봉: 고용24 우선, 없으면 커리어넷
-      let salary: string | undefined = undefined
-      
-      // 1. 고용24 salProspect.sal 우선
-      if (goyongSalProspect.sal) {
-        // 고용24: "조사년도:2023년, 임금 하위(25%) 3150만원, 평균(50%) 3600만원, 상위(25%) 4500만원"
-        // → "평균 3600만원" 추출
-        const salText = String(goyongSalProspect.sal).trim()
-        const match = salText.match(/평균\(50%\)\s*(\d[\d,]*만원)/)
-        if (match) {
-          salary = `평균 ${match[1]}`
-        }
-      }
-      
-      // 2. 고용24 summary.sal 대안
-      if (!salary && goyongData.summary?.sal) {
-        const salText = String(goyongData.summary.sal).trim()
-        const match = salText.match(/평균\(50%\)\s*(\d[\d,]*만원)/)
-        if (match) {
-          salary = `평균 ${match[1]}`
-        }
-      }
-      
-      // 3. 커리어넷 encyclopedia.baseInfo.wage
-      if (!salary && baseInfo.wage) {
-        const wageText = String(baseInfo.wage).trim()
-        // 쉼표 제거 후 숫자 확인
-        const wageWithoutComma = wageText.replace(/,/g, '')
-        
-        if (/^[\d,]+$/.test(wageText)) {
-          // 숫자만 있는 경우 (쉼표 포함): "4579" 또는 "5,000" → "평균 4579만원" 또는 "평균 5000만원"
-          salary = `평균 ${wageWithoutComma}만원`
-        } else if (wageText.includes('만원')) {
-          // 이미 "만원" 포함: "평균" 없으면 추가
-          salary = wageText.includes('평균') ? wageText : `평균 ${wageText}`
-        } else {
-          salary = wageText
-        }
-      }
-      
-      // 4. 레거시 데이터 (avgSalary, salery)
-      if (!salary && (careernetData.avgSalary || careernetData.salery)) {
-        const legacySalary = String(careernetData.avgSalary || careernetData.salery).trim()
-        // 쉼표 제거 후 숫자 확인
-        const legacyWithoutComma = legacySalary.replace(/,/g, '')
-        
-        if (/^[\d,]+$/.test(legacySalary)) {
-          salary = `평균 ${legacyWithoutComma}만원`
-        } else {
-          salary = legacySalary
-        }
-      }
-      
-      // 직업 만족도: 고용24 우선, 없으면 커리어넷, % 붙이기
-      let satisfaction: string | undefined = undefined
-      if (goyongSalProspect.jobSatis) {
-        const satisText = String(goyongSalProspect.jobSatis).trim()
-        satisfaction = satisText.includes('%') ? satisText : `${satisText}%`
-      } else if (baseInfo.satisfication) {
-        const satisText = String(baseInfo.satisfication).trim()
-        satisfaction = satisText.includes('%') ? satisText : `${satisText}%`
-      }
-      
-      // 워라벨: 커리어넷만
-      let wlb: string | undefined = undefined
-      if (baseInfo.wlb) {
-        wlb = String(baseInfo.wlb).trim()
-      }
-      
-      // Extract outlook from encyclopedia.forecastList[0].forecast
-      const forecastList = careernetData.encyclopedia?.forecastList || []
-      let outlook = forecastList[0]?.forecast || careernetData.jobOutlook || careernetData.possibility
-      if (outlook) {
-        outlook = String(outlook).trim()
-        // Truncate outlook to first 100 characters for display
-        if (outlook.length > 100) {
-          outlook = outlook.slice(0, 97) + '...'
-        }
-      }
 
-      // Create profile (병합된 데이터 사용)
-      const profile: UnifiedJobSummary = {
-        id: jobName, // 직업명을 ID로 사용 (중복 제거)
-        sourceIds: {
-          careernet: careernetId,
-          goyong24: goyongId
-        },
-        name: jobName,
-        category: careernetData.jobCategoryName || careernetData.profession ? {
-          name: (careernetData.jobCategoryName || careernetData.profession).trim()
-        } : undefined,
-        sources
+  d1Jobs.forEach((row: any) => {
+    try {
+      // merged_profile_json 파싱
+      const profile = row.merged_profile_json ? JSON.parse(row.merged_profile_json) : {}
+      const jobName = profile.name || row.name || '알 수 없음'
+      
+      // sources 추출
+      const sources: DataSource[] = Array.isArray(profile.sources) ? profile.sources : ['CAREERNET']
+      
+      // sourceIds 추출
+      const sourceIds = profile.sourceIds || {}
+      
+      // 히어로 설명 (상세페이지와 동일한 로직)
+      const heroDescription =
+        profile.heroIntro?.split('\n')[0]?.trim() ||
+        profile.summary?.split('\n')[0]?.trim() ||
+        profile.work?.summary?.split('\n')[0]?.trim() ||
+        profile.duties?.split('\n')[0]?.trim() ||
+        profile.overviewWork?.main?.split('\n')[0]?.trim() ||
+        ''
+      
+      // 카테고리 추출 (heroCategory 우선)
+      const categoryLarge = profile.heroCategory?.large || profile.heroCategory?.value || ''
+      const categoryMedium = profile.heroCategory?.medium || ''
+      const categorySmall = profile.heroCategory?.small || ''
+      const categoryName = categorySmall || categoryMedium || categoryLarge
+      
+      // 메트릭 데이터 추출 (우선순위: 연봉 > 만족도 > 워라벨 > 작업강도 > 숙련기간)
+      
+      // 1. 평균 연봉
+      let salary: string | undefined
+      const salData = profile.salary || profile.overviewSalary?.wage || profile.overviewSalary?.sal
+      if (salData) {
+        const salText = String(salData).trim()
+        // "조사년도:2023년, 임금 하위(25%) 3150만원, 평균(50%) 3600만원, 상위(25%) 4500만원" → "평균 3600만원"
+        const match = salText.match(/평균\(50%\)\s*(\d[\d,]*만원)/)
+        if (match) {
+          salary = match[1]
+        } else if (/^[\d,]+$/.test(salText.replace(/만원/g, ''))) {
+          // 숫자만 있는 경우 (예: "2,000" 또는 "2000만원")
+          const numOnly = salText.replace(/[만원,]/g, '')
+          salary = `${numOnly}만원`
+        } else if (salText.includes('만원')) {
+          salary = salText.replace(/평균\s*/g, '')
+        }
+      }
+      
+      // 2. 만족도 (여러 경로 지원)
+      let satisfaction: string | undefined
+      const satisData = 
+        profile.satisfaction || 
+        profile.overviewAptitude?.satisfaction?.value ||
+        profile.overviewSalary?.jobSatis || 
+        profile.detailWlb?.satisfaction
+      if (satisData) {
+        const satisText = String(satisData).trim()
+        // 숫자만 있으면 % 붙이기
+        if (/^[\d.]+$/.test(satisText)) {
+          satisfaction = `${satisText}%`
+        } else {
+          satisfaction = satisText
+        }
+      }
+      
+      // 3. 워라벨 (여러 경로 지원)
+      let wlb: string | undefined
+      const wlbData = profile.wlb || profile.detailWlb?.wlb
+      if (wlbData) {
+        wlb = String(wlbData).trim()
+      }
+      
+      // 4. 작업 강도 (직업사전 - overviewWork에서 추출)
+      // "가벼운 작업" → "가벼움", "아주 가벼운 작업" → "아주 가벼움" 등으로 간결하게 변환
+      let workStrong: string | undefined
+      const workStrongData = profile.overviewWork?.workStrong || profile.optionJobInfo?.workStrong
+      if (workStrongData) {
+        const raw = String(workStrongData).trim()
+        // 워딩 간결화
+        const workStrongMap: Record<string, string> = {
+          '아주 가벼운 작업': '아주 가벼움',
+          '가벼운 작업': '가벼움',
+          '보통 작업': '보통',
+          '힘든 작업': '힘듬',
+          '아주 힘든 작업': '아주 힘듬'
+        }
+        workStrong = workStrongMap[raw] || raw
+      }
+      
+      // 5. 숙련기간 (overviewAbilities에서 추출)
+      // "6개월 초과 ~ 1년 이하" → "6개월 ~ 1년" 형태로 간결하게 변환
+      let skillYear: string | undefined
+      const skillYearData = profile.overviewAbilities?.skillYear || profile.optionJobInfo?.skillYear
+      if (skillYearData) {
+        const raw = String(skillYearData).trim()
+        // "초과", "이하" 단어 제거하여 간결하게 표시
+        skillYear = raw
+          .replace(/\s*초과\s*/g, ' ')
+          .replace(/\s*이하\s*/g, '')
+          .replace(/\s+/g, ' ')
+          .trim()
       }
 
       const entry: UnifiedJobSummaryEntry = {
-        profile,
+        profile: {
+          id: row.id || jobName,
+          sourceIds: {
+            careernet: sourceIds.careernet,
+            goyong24: sourceIds.goyong24 || sourceIds.work24_job || sourceIds.work24_djob
+          },
+          name: jobName,
+          category: categoryName ? { name: categoryName } : undefined,
+          sources
+        },
         sourceMeta: {
-          careernet: careernetId ? {
-            jobdicSeq: careernetId
-          } : undefined,
-          goyong24: goyongId ? {
-            jobCd: goyongId
-          } : undefined
+          careernet: sourceIds.careernet ? { jobdicSeq: sourceIds.careernet } : undefined,
+          goyong24: sourceIds.goyong24 ? { jobCd: sourceIds.goyong24 } : undefined
         },
         display: {
-          summary: careernetData.summary?.trim() || goyongData.duty?.jobSum?.trim(),
+          summary: heroDescription,
+          categoryName,
+          categoryLarge,
+          categoryMedium,
+          categorySmall,
           salary,
           satisfaction,
           wlb,
-          outlook,
-          categoryName: (careernetData.jobCategoryName || careernetData.profession)?.trim(),
-          departmentName: goyongData.departmentName?.trim()  // 계열명 (고용24만)
+          workStrong,
+          skillYear
         }
       }
 
@@ -1064,18 +1208,64 @@ export const searchUnifiedJobs = async (
     }
   })
 
-  // 🔧 정규화 병합으로 인해 perPage보다 많거나 적을 수 있으므로 정확히 perPage 개수로 제한
-  const paginatedItems = items.slice(0, perPage)
-
-  // 🚀 페이지네이션은 이미 데이터베이스 레벨에서 적용됨 (LIMIT/OFFSET)
-  return {
-    items: paginatedItems, // 정확히 요청한 개수만 반환
-    meta: {
-      total: totalCount, // 전체 고유 직업명 수
-      sources: {
-        CAREERNET: { count: paginatedItems.filter(i => i.profile.sources.includes('CAREERNET')).length },
-        GOYONG24: { count: paginatedItems.filter(i => i.profile.sources.includes('GOYONG24')).length }
+  // JavaScript에서 정렬 후처리 (SQL에서 처리하기 어려운 정렬)
+  
+  // 🔍 검색어가 있을 때: 매칭 필드에 따른 우선순위 정렬
+  // 우선순위: 이름 > 정규화이름 > 태그 > 히어로소개 > 카테고리 > 키워드
+  if (keyword?.trim() && sort === 'relevance') {
+    const searchTerm = keyword.trim().toLowerCase()
+    const normalizedSearchTerm = searchTerm.replace(/\s+/g, '').replace(/[·•\-_]/g, '')
+    
+    const getMatchScore = (item: UnifiedJobSummaryEntry): number => {
+      const name = (item.profile?.name || '').toLowerCase()
+      const normalizedName = name.replace(/\s+/g, '').replace(/[·•\-_]/g, '')
+      const heroTags = JSON.stringify(item.display?.heroTags || []).toLowerCase()
+      const heroIntro = (item.display?.summary || '').toLowerCase()
+      const categoryName = (item.display?.categoryName || '').toLowerCase()
+      const keywords = JSON.stringify(item.display?.keywords || []).toLowerCase()
+      
+      // 우선순위 점수 (높을수록 먼저)
+      if (name.includes(searchTerm)) return 100           // 1. 이름 매칭
+      if (normalizedName.includes(normalizedSearchTerm)) return 90  // 2. 정규화 이름 매칭
+      if (heroTags.includes(searchTerm)) return 70        // 3. 태그 매칭
+      if (heroIntro.includes(searchTerm)) return 50       // 4. 히어로 소개 매칭
+      if (categoryName.includes(searchTerm)) return 30    // 5. 카테고리 매칭
+      if (keywords.includes(searchTerm)) return 10        // 6. 키워드 매칭
+      return 0
+    }
+    
+    items.sort((a, b) => {
+      const scoreA = getMatchScore(a)
+      const scoreB = getMatchScore(b)
+      if (scoreB !== scoreA) return scoreB - scoreA
+      // 점수가 같으면 이름순
+      return (a.profile?.name || '').localeCompare(b.profile?.name || '', 'ko')
+    })
+  } else if (sort === 'salary-desc') {
+    // 연봉 높은 순: salary 필드에서 숫자 추출 후 정렬
+    items.sort((a, b) => {
+      const getSalaryNum = (item: UnifiedJobSummaryEntry): number => {
+        const sal = item.display?.salary
+        if (!sal) return 0
+        const match = String(sal).match(/(\d[\d,]*)만원/)
+        if (match) {
+          return parseInt(match[1].replace(/,/g, ''), 10) || 0
+        }
+        return 0
       }
+      return getSalaryNum(b) - getSalaryNum(a)
+    })
+  }
+
+  const jobResultSources = createInitialSourceStatus()
+  jobResultSources.CAREERNET = { attempted: true, count: items.filter(i => i.profile.sources.includes('CAREERNET')).length }
+  jobResultSources.GOYONG24 = { attempted: true, count: items.filter(i => i.profile.sources.includes('GOYONG24')).length }
+  
+  return {
+    items,
+    meta: {
+      total: totalCount,
+      sources: jobResultSources
     }
   }
 }
@@ -1088,14 +1278,264 @@ export const getUnifiedMajorDetail = async (
   const sourcesToUse = resolveIncludedSources(includeSources)
   const sourcesStatus = createInitialSourceStatus()
 
+
   let careernetProfile: UnifiedMajorDetail | null = null
   let goyongProfile: UnifiedMajorDetail | null = null
 
-  // 🆕 Step 0: Check D1 Database first (if available) for Korean name lookups
-  // ⚠️ 직업 페이지와 동일한 병합 로직 적용 (이름으로 모든 레코드 검색 → 병합)
-  if (env && 'DB' in env && id && !id.includes(':')) {
+  // 🆕 Step 0: Try merged_profile_json first (ETL 결과 우선 사용)
+  
+  // ID가 G23_, C23_ 등으로 시작하면 실제 DB ID로 간주
+  const isActualDbId = id && (id.match(/^[GC]\d+_/) !== null)
+  // major:xxx 형식의 ETL ID 감지
+  const isEtlMajorId = id && id.startsWith('major:')
+  const searchKey = id ? (isEtlMajorId ? id.substring(6) : id) : '' // 'major:' prefix 제거
+  
+  
+  if (env && 'DB' in env && id) {
     try {
       const db = (env as any).DB
+      
+      // 🚀 PRIORITY 1: Check for ETL-merged data (merged_profile_json)
+      let mergedMajorRow: any = null
+      
+      if (!isActualDbId) {
+        // Try by ETL ID directly
+        if (isEtlMajorId) {
+          mergedMajorRow = await db.prepare(`
+            SELECT id, name, slug, merged_profile_json, careernet_id, goyong24_id,
+                   user_contributed_json, admin_data_json
+            FROM majors 
+            WHERE id = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+            LIMIT 1
+          `).bind(id).first()
+        }
+        
+        // Try by slug
+        if (!mergedMajorRow && !searchKey.match(/^\d+$/)) {
+          mergedMajorRow = await db.prepare(`
+            SELECT id, name, slug, merged_profile_json, careernet_id, goyong24_id,
+                   user_contributed_json, admin_data_json
+            FROM majors 
+            WHERE slug = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+            LIMIT 1
+          `).bind(searchKey).first()
+        }
+        
+        // Try by name
+        if (!mergedMajorRow) {
+          mergedMajorRow = await db.prepare(`
+            SELECT id, name, slug, merged_profile_json, careernet_id, goyong24_id,
+                   user_contributed_json, admin_data_json
+            FROM majors 
+            WHERE name = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+            LIMIT 1
+          `).bind(searchKey).first()
+        }
+      }
+      
+      // ✅ ETL 병합 데이터가 있으면 바로 사용!
+      if (mergedMajorRow && mergedMajorRow.merged_profile_json) {
+        
+        try {
+          let merged = JSON.parse(mergedMajorRow.merged_profile_json) as UnifiedMajorDetail
+          
+          // user_contributed_json과 admin_data_json 병합
+          let userData = {}
+          let adminData = {}
+          
+          try {
+            if (mergedMajorRow.user_contributed_json) {
+              userData = JSON.parse(mergedMajorRow.user_contributed_json as string)
+            }
+          } catch (error) {
+            console.error('[getUnifiedMajorDetail] Failed to parse user_contributed_json:', error)
+          }
+          
+          try {
+            if (mergedMajorRow.admin_data_json) {
+              adminData = JSON.parse(mergedMajorRow.admin_data_json as string)
+            }
+          } catch (error) {
+            console.error('[getUnifiedMajorDetail] Failed to parse admin_data_json:', error)
+          }
+          
+          // 병합 적용 (admin > user > merged 우선순위)
+          merged = {
+            ...merged,
+            ...userData,
+            ...adminData
+          } as UnifiedMajorDetail
+          
+          sourcesStatus.CAREERNET.attempted = !!mergedMajorRow.careernet_id
+          sourcesStatus.CAREERNET.count = mergedMajorRow.careernet_id ? 1 : 0
+          sourcesStatus.GOYONG24.attempted = !!mergedMajorRow.goyong24_id
+          sourcesStatus.GOYONG24.count = mergedMajorRow.goyong24_id ? 1 : 0
+          
+          const partialsRecord = derivePartialsFromMergedProfile(merged)
+
+          const careernetStatus = ensureSourceStatus(sourcesStatus, 'CAREERNET')
+          if (partialsRecord.CAREERNET) {
+            careernetStatus.attempted = true
+            careernetStatus.count = (careernetStatus.count ?? 0) + 1
+            delete careernetStatus.skippedReason
+          } else {
+            careernetStatus.skippedReason = careernetStatus.skippedReason ?? 'not-in-source-data'
+          }
+
+          const goyongStatus = ensureSourceStatus(sourcesStatus, 'GOYONG24')
+          if (partialsRecord.GOYONG24) {
+            goyongStatus.attempted = true
+            goyongStatus.count = (goyongStatus.count ?? 0) + 1
+            delete goyongStatus.skippedReason
+          } else {
+            goyongStatus.skippedReason = goyongStatus.skippedReason ?? 'not-in-source-data'
+          }
+
+          return {
+            profile: merged,
+            partials: partialsRecord,
+            sources: sourcesStatus
+          }
+        } catch (error) {
+          console.error('[getUnifiedMajorDetail] Failed to parse merged_profile_json:', error)
+          // Fallback to old logic below
+        }
+      }
+      
+      // 📦 FALLBACK: Old logic (api_data_json 사용)
+      
+      // ID가 실제 DB ID인 경우 직접 조회
+      if (isActualDbId) {
+        const directResult = await db.prepare(`
+          SELECT id, name, careernet_id, goyong24_id, api_data_json, user_contributed_json, admin_data_json 
+          FROM majors 
+          WHERE id = ? AND is_active = 1
+        `).bind(id).all()
+        
+        if (directResult.results && directResult.results.length > 0) {
+          const allMajorRows = directResult
+          
+          // 아래의 병합 로직으로 이동
+          if (allMajorRows.results && allMajorRows.results.length > 0) {
+            
+            // 병합 로직 처리 (아래에서 계속)
+            for (const row of allMajorRows.results) {
+              if (row.api_data_json) {
+                try {
+                  const apiData = JSON.parse(row.api_data_json)
+                  
+                  if (row.careernet_id && row.careernet_id !== 'null' && sourcesToUse.includes('CAREERNET') && !careernetProfile) {
+                    const careernetData = apiData.careernet
+                    if (careernetData && careernetData !== null && typeof careernetData === 'object') {
+                      const parsedData = { ...careernetData }
+                      const fieldsToCheck = ['mainSubject', 'relateSubject', 'careerAct', 'enterField']
+                      for (const field of fieldsToCheck) {
+                        if (parsedData[field] && typeof parsedData[field] === 'string') {
+                          try {
+                            parsedData[field] = JSON.parse(parsedData[field])
+                          } catch (e) {}
+                        }
+                      }
+                      
+                      careernetProfile = {
+                        id: `major:C_${row.careernet_id}`,
+                        sourceIds: { careernet: row.careernet_id },
+                        name: row.name,
+                        ...parsedData,
+                        sources: ['CAREERNET']
+                      }
+                      
+                      const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
+                      status.attempted = true
+                      status.count = 1
+                      
+                      if (apiData?.rawCareernet) {
+                        if (!sourcesStatus.rawPartials) sourcesStatus.rawPartials = {}
+                        sourcesStatus.rawPartials.CAREERNET = apiData.rawCareernet
+                      }
+                    }
+                  }
+                  
+                  if (row.goyong24_id && row.goyong24_id !== 'null' && sourcesToUse.includes('GOYONG24') && !goyongProfile) {
+                    const goyong24Data = apiData.goyong24
+                    if (goyong24Data && goyong24Data !== null && typeof goyong24Data === 'object') {
+                      const parsedData = { ...goyong24Data }
+                      const fieldsToCheck = ['mainSubject', 'relateSubject', 'careerAct', 'enterField', 'main_subject', 'relate_subject', 'career_act', 'enter_field']
+                      for (const field of fieldsToCheck) {
+                        if (parsedData[field] && typeof parsedData[field] === 'string') {
+                          try {
+                            parsedData[field] = JSON.parse(parsedData[field])
+                          } catch (e) {}
+                        }
+                      }
+                      
+                      goyongProfile = {
+                        id: `major:G_${row.goyong24_id}`,
+                        sourceIds: { goyong24: row.goyong24_id },
+                        name: row.name,
+                        ...parsedData,
+                        sources: ['GOYONG24']
+                      }
+                      
+                      const status = ensureSourceStatus(sourcesStatus, 'GOYONG24')
+                      status.attempted = true
+                      status.count = 1
+                      
+                      if (apiData?.rawGoyong24) {
+                        if (!sourcesStatus.rawPartials) sourcesStatus.rawPartials = {}
+                        sourcesStatus.rawPartials.GOYONG24 = apiData.rawGoyong24
+                      }
+                    }
+                  }
+                  
+                  if (careernetProfile && goyongProfile) break
+                } catch (error) {
+                  console.error(`[getUnifiedMajorDetail] JSON parse error:`, error)
+                }
+              }
+            }
+            
+            if (careernetProfile || goyongProfile) {
+              let enhancedProfile = mergeMajorProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
+              const partialsRecord = { CAREERNET: careernetProfile, GOYONG24: goyongProfile }
+              
+              const firstRow = allMajorRows.results[0]
+              let userData = {}
+              let adminData = {}
+              
+              try {
+                if (firstRow.user_contributed_json) {
+                  userData = JSON.parse(firstRow.user_contributed_json as string)
+                }
+              } catch (error) {
+                console.error('[getUnifiedMajorDetail] Failed to parse user_contributed_json:', error)
+              }
+              
+              try {
+                if (firstRow.admin_data_json) {
+                  adminData = JSON.parse(firstRow.admin_data_json as string)
+                }
+              } catch (error) {
+                console.error('[getUnifiedMajorDetail] Failed to parse admin_data_json:', error)
+              }
+              
+              enhancedProfile = {
+                ...enhancedProfile,
+                ...userData,
+                ...adminData
+              } as UnifiedMajorDetail
+              
+              return {
+                profile: enhancedProfile,
+                partials: partialsRecord,
+                sources: sourcesStatus,
+                rawPartials: sourcesStatus.rawPartials
+              }
+            }
+          }
+        } else {
+        }
+      }
       
       // 🔄 전공명 정규화 함수 (목록 페이지와 동일)
       const normalizeMajorNameForSearch = (name: string): string => {
@@ -1119,9 +1559,9 @@ export const getUnifiedMajorDetail = async (
       
       // Try finding by name (Korean slug) in D1
       // ✅ 정규화된 이름으로도 검색하여 병합된 전공 찾기
-      // 1. 정확히 일치하는 것 먼저 검색
+      // 1. 정확히 일치하는 것 먼저 검색 (user_contributed_json, admin_data_json 포함)
       let allMajorRows = await db.prepare(`
-        SELECT id, name, careernet_id, goyong24_id, api_data_json 
+        SELECT id, name, careernet_id, goyong24_id, api_data_json, user_contributed_json, admin_data_json 
         FROM majors 
         WHERE LOWER(name) = LOWER(?)
       `).bind(id).all()
@@ -1130,7 +1570,7 @@ export const getUnifiedMajorDetail = async (
       if (!allMajorRows.results || allMajorRows.results.length === 0) {
         // 모든 전공을 가져와서 정규화된 이름으로 필터링
         const allMajors = await db.prepare(`
-          SELECT id, name, careernet_id, goyong24_id, api_data_json 
+          SELECT id, name, careernet_id, goyong24_id, api_data_json, user_contributed_json, admin_data_json 
           FROM majors
         `).all()
         
@@ -1144,6 +1584,7 @@ export const getUnifiedMajorDetail = async (
       }
       
       if (allMajorRows.results && allMajorRows.results.length > 0) {
+        
         // 🆕 여러 레코드가 있으면 모두 병합 (커리어넷 + 고용24)
         for (const row of allMajorRows.results) {
           if (row.api_data_json) {
@@ -1170,7 +1611,7 @@ export const getUnifiedMajorDetail = async (
                     }
                   }
                   
-                careernetProfile = {
+                const newCareernetProfile: UnifiedMajorDetail = {
                   id: `major:C_${row.careernet_id}`,
                   sourceIds: { careernet: row.careernet_id },
                   name: row.name,
@@ -1179,8 +1620,8 @@ export const getUnifiedMajorDetail = async (
                 }
                 
                 // 🔧 D1 데이터에 department가 없으면 rawCareernet.universityList에서 보완
-                if (careernetProfile.universities && apiData?.rawCareernet?.universityList) {
-                  careernetProfile.universities = careernetProfile.universities.map(uni => {
+                if (newCareernetProfile.universities && apiData?.rawCareernet?.universityList) {
+                  newCareernetProfile.universities = newCareernetProfile.universities.map(uni => {
                     if (uni.department) return uni // 이미 있으면 그대로
                     
                     // rawCareernet.universityList에서 같은 대학 찾기
@@ -1194,6 +1635,8 @@ export const getUnifiedMajorDetail = async (
                     return uni
                   })
                 }
+                
+                careernetProfile = newCareernetProfile
                 
                 const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
                 status.attempted = true
@@ -1258,7 +1701,15 @@ export const getUnifiedMajorDetail = async (
         
         // If we found data in D1, skip API calls and merge
         if (careernetProfile || goyongProfile) {
-          const merged = mergeMajorProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
+          const mergedResult = mergeMajorProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
+          
+          // merged가 null이면 빈 객체로 초기화
+          const merged: UnifiedMajorDetail = mergedResult ?? {
+            id: id,
+            sourceIds: {},
+            name: id,
+            sources: []
+          }
           
           // 🔧 병합된 데이터에서도 이중 인코딩된 필드 파싱 (병합 과정에서 문자열이 남아있을 수 있음)
           const fieldsToCheck = ['mainSubject', 'relateSubject', 'careerAct', 'enterField', 'main_subject', 'relate_subject', 'career_act', 'enter_field']
@@ -1296,12 +1747,43 @@ export const getUnifiedMajorDetail = async (
             }
           }
           
+          const partialsRecord = {
+            CAREERNET: careernetProfile,
+            GOYONG24: goyongProfile
+          }
+          
+          // user_contributed_json과 admin_data_json 병합 (직업 페이지와 동일)
+          // 첫 번째 레코드에서 가져오기 (모든 레코드가 같은 병합 데이터를 공유)
+          const firstRow = allMajorRows.results[0]
+          let userData = {}
+          let adminData = {}
+          
+          try {
+            if (firstRow.user_contributed_json) {
+              userData = JSON.parse(firstRow.user_contributed_json as string)
+            }
+          } catch (error) {
+            console.error('[getUnifiedMajorDetail] Failed to parse user_contributed_json:', error)
+          }
+          
+          try {
+            if (firstRow.admin_data_json) {
+              adminData = JSON.parse(firstRow.admin_data_json as string)
+            }
+          } catch (error) {
+            console.error('[getUnifiedMajorDetail] Failed to parse admin_data_json:', error)
+          }
+          
+          // 병합 적용 (admin > user > api 우선순위)
+          const enhancedProfile = {
+            ...merged,
+            ...userData,
+            ...adminData
+          } as UnifiedMajorDetail
+          
           return {
-            profile: merged,
-            partials: {
-              CAREERNET: careernetProfile,
-              GOYONG24: goyongProfile
-            },
+            profile: enhancedProfile,
+            partials: partialsRecord,
             sources: sourcesStatus,
             rawPartials: sourcesStatus.rawPartials
           }
@@ -1384,7 +1866,87 @@ export const getUnifiedMajorDetail = async (
     sourcesStatus.GOYONG24.skippedReason = 'excluded'
   }
 
-  const merged = mergeMajorProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
+  let merged = mergeMajorProfiles(goyongProfile ?? undefined, careernetProfile ?? undefined)
+
+  // 🆕 API 호출 후에도 DB에서 user_contributed_json과 admin_data_json 병합 (직업 페이지와 동일)
+  if (env && 'DB' in env && id) {
+    try {
+      const db = (env as any).DB
+      
+      
+      // 실제 DB ID로 변환
+      let dbMajorId = id
+      let dbMajor = await db.prepare('SELECT id, user_contributed_json, admin_data_json FROM majors WHERE id = ? AND is_active = 1')
+        .bind(dbMajorId)
+        .first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+      
+      // ID로 찾지 못한 경우 복합 ID 형식 처리
+      if (!dbMajor && id.includes(':')) {
+        const parts = id.split(':')
+        if (parts.length > 1) {
+          let extractedId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
+          
+          dbMajor = await db.prepare('SELECT id, user_contributed_json, admin_data_json FROM majors WHERE id = ? AND is_active = 1')
+            .bind(extractedId)
+            .first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+          
+          if (dbMajor) {
+            dbMajorId = extractedId
+          }
+        }
+      }
+      
+      // 여전히 찾지 못한 경우 slug로 시도
+      if (!dbMajor && !id.includes(':')) {
+        const decodedSlug = decodeURIComponent(id)
+        const normalizedSlug = decodedSlug.toLowerCase()
+        dbMajor = await db.prepare(`
+          SELECT id, user_contributed_json, admin_data_json 
+          FROM majors 
+          WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? 
+          AND is_active = 1 
+          LIMIT 1
+        `).bind(normalizedSlug).first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+        
+        if (dbMajor) {
+          dbMajorId = dbMajor.id
+        }
+      }
+      
+      if (dbMajor) {
+        
+        let userData = {}
+        let adminData = {}
+        
+        try {
+          if (dbMajor.user_contributed_json) {
+            userData = JSON.parse(dbMajor.user_contributed_json)
+          }
+        } catch (error) {
+          console.error('[getUnifiedMajorDetail] Failed to parse user_contributed_json:', error)
+        }
+        
+        try {
+          if (dbMajor.admin_data_json) {
+            adminData = JSON.parse(dbMajor.admin_data_json)
+          }
+        } catch (error) {
+          console.error('[getUnifiedMajorDetail] Failed to parse admin_data_json:', error)
+        }
+        
+        // 병합 적용 (admin > user > api 우선순위)
+        merged = {
+          ...merged,
+          ...userData,
+          ...adminData
+        } as UnifiedMajorDetail
+        
+      } else {
+      }
+    } catch (dbError) {
+      console.error('[getUnifiedMajorDetail] Failed to merge user/admin data:', dbError)
+    }
+  }
 
   return {
     profile: merged,
@@ -1408,10 +1970,110 @@ export const getUnifiedJobDetail = async (
   const overrides = resolveJobSourceOverride(request)
   const explicitCareernetId = careernetId?.trim() || undefined
   const explicitGoyongId = goyong24JobId?.trim() || undefined
+  const hasExplicitSourceId = !!(explicitCareernetId || explicitGoyongId)
 
   let careernetProfile: UnifiedJobDetail | null = null
   let goyongProfile: UnifiedJobDetail | null = null
 
+  // 🚀 PRIORITY 1: Check for ETL-merged data (merged_profile_json)
+  if (env && 'DB' in env && id && !hasExplicitSourceId) {
+    try {
+      const db = (env as any).DB
+      
+      let mergedJobRow: any = null
+      
+      
+      // Try by ID first (most reliable for numeric IDs)
+      if (id.match(/^\d+$/)) {
+        mergedJobRow = await db.prepare(`
+          SELECT id, name, slug, merged_profile_json,
+                 user_contributed_json, admin_data_json
+          FROM jobs 
+          WHERE id = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+          LIMIT 1
+        `).bind(id).first()
+        if (mergedJobRow) {
+        }
+      }
+      
+      // Try by slug
+      if (!mergedJobRow && !id.includes(':') && !id.match(/^\d+$/)) {
+        mergedJobRow = await db.prepare(`
+          SELECT id, name, slug, merged_profile_json,
+                 user_contributed_json, admin_data_json
+          FROM jobs 
+          WHERE slug = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+          LIMIT 1
+        `).bind(id).first()
+        if (mergedJobRow) {
+        }
+      }
+      
+      if (!mergedJobRow) {
+      }
+      
+      // Try by name
+      if (!mergedJobRow && !id.includes(':')) {
+        mergedJobRow = await db.prepare(`
+          SELECT id, name, slug, merged_profile_json,
+                 user_contributed_json, admin_data_json
+          FROM jobs 
+          WHERE name = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+          LIMIT 1
+        `).bind(id).first()
+      }
+      
+      // ✅ ETL 병합 데이터가 있으면 바로 사용!
+      if (mergedJobRow && mergedJobRow.merged_profile_json) {
+        
+        try {
+          let merged = JSON.parse(mergedJobRow.merged_profile_json) as UnifiedJobDetail
+          
+          // user_contributed_json과 admin_data_json 병합
+          let userData = {}
+          let adminData = {}
+          
+          try {
+            if (mergedJobRow.user_contributed_json) {
+              userData = JSON.parse(mergedJobRow.user_contributed_json as string)
+            }
+          } catch (error) {
+            console.error('[getUnifiedJobDetail] Failed to parse user_contributed_json:', error)
+          }
+          
+          try {
+            if (mergedJobRow.admin_data_json) {
+              adminData = JSON.parse(mergedJobRow.admin_data_json as string)
+            }
+          } catch (error) {
+            console.error('[getUnifiedJobDetail] Failed to parse admin_data_json:', error)
+          }
+          
+          // 병합 적용 (admin > user > merged 우선순위)
+          merged = {
+            ...merged,
+            ...userData,
+            ...adminData
+          } as UnifiedJobDetail
+          
+          return {
+            profile: merged,
+            partials: {},
+            sources: sourcesStatus
+          }
+        } catch (error) {
+          console.error('[getUnifiedJobDetail] Failed to parse merged_profile_json:', error)
+          // Fallback to old logic below
+        }
+      }
+      
+    } catch (error) {
+      console.error('[getUnifiedJobDetail] Error checking merged data:', error)
+      // Fallback to old logic below
+    }
+  }
+
+  // 📦 FALLBACK: API 호출 로직
   // CareerNet detail
   if (sourcesToUse.includes('CAREERNET')) {
     const status = ensureSourceStatus(sourcesStatus, 'CAREERNET')
@@ -1498,13 +2160,142 @@ export const getUnifiedJobDetailWithRawData = async (
   let rawCareernetData: any = null
   let rawGoyong24Data: any = null
 
-  // 🆕 Step 1: Check D1 Database first (if available)
+  // 🆕 Step 0: Try merged_profile_json first (ETL 결과 우선 사용)
   // ⚠️ 쿼리 파라미터가 명시적으로 있으면 D1 병합을 건너뛰고 직접 조회
   const hasExplicitSourceId = !!(explicitCareernetId || explicitGoyongId)
   
   if (env && 'DB' in env && !hasExplicitSourceId) {
     try {
       const db = (env as any).DB
+      
+      // 🚀 PRIORITY 1: Check for ETL-merged data (merged_profile_json)
+      // 이름, slug, 또는 ID로 조회
+      let mergedJobRow: any = null
+      
+      if (id) {
+        
+        // Try by ID first (most reliable for numeric IDs)
+        if (id.match(/^\d+$/)) {
+          mergedJobRow = await db.prepare(`
+            SELECT id, name, slug, merged_profile_json, careernet_id, goyong24_id,
+                   user_contributed_json, admin_data_json
+            FROM jobs 
+            WHERE id = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+            LIMIT 1
+          `).bind(id).first()
+          if (mergedJobRow) {
+          }
+        }
+        
+        // Try by slug
+        if (!mergedJobRow && !id.includes(':') && !id.match(/^\d+$/)) {
+          mergedJobRow = await db.prepare(`
+            SELECT id, name, slug, merged_profile_json, careernet_id, goyong24_id,
+                   user_contributed_json, admin_data_json
+            FROM jobs 
+            WHERE slug = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+            LIMIT 1
+          `).bind(id).first()
+          if (mergedJobRow) {
+          }
+        }
+        
+        // Try by name
+        if (!mergedJobRow && !id.includes(':')) {
+          mergedJobRow = await db.prepare(`
+            SELECT id, name, slug, merged_profile_json, careernet_id, goyong24_id,
+                   user_contributed_json, admin_data_json
+            FROM jobs 
+            WHERE name = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+            LIMIT 1
+          `).bind(id).first()
+          if (mergedJobRow) {
+          }
+        }
+        
+        if (!mergedJobRow) {
+        }
+      }
+      
+      // ✅ ETL 병합 데이터가 있으면 바로 사용!
+      if (mergedJobRow && mergedJobRow.merged_profile_json) {
+        
+        try {
+          let merged = JSON.parse(mergedJobRow.merged_profile_json) as UnifiedJobDetail
+          
+          // user_contributed_json과 admin_data_json 병합
+          let userData = {}
+          let adminData = {}
+          
+          try {
+            if (mergedJobRow.user_contributed_json) {
+              userData = JSON.parse(mergedJobRow.user_contributed_json as string)
+            }
+          } catch (error) {
+            console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json:', error)
+          }
+          
+          try {
+            if (mergedJobRow.admin_data_json) {
+              adminData = JSON.parse(mergedJobRow.admin_data_json as string)
+            }
+          } catch (error) {
+            console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json:', error)
+          }
+          
+          // 병합 적용 (admin > user > merged 우선순위)
+          merged = {
+            ...merged,
+            ...userData,
+            ...adminData
+          } as UnifiedJobDetail
+          
+          // rawApiData는 job_sources에서 가져오기 (디버그/편집용)
+          let rawCareernetData: any = null
+          let rawGoyong24Data: any = null
+          
+          if (mergedJobRow.careernet_id || mergedJobRow.goyong24_id) {
+            try {
+              const sources = await db.prepare(`
+                SELECT source_system, raw_payload
+                FROM job_sources
+                WHERE job_id = ?
+              `).bind(mergedJobRow.id).all()
+              
+              for (const source of sources.results || []) {
+                const rawPayload = JSON.parse(source.raw_payload || '{}')
+                if (source.source_system === 'CAREERNET') {
+                  rawCareernetData = rawPayload
+                } else if (source.source_system === 'WORK24_JOB' || source.source_system === 'WORK24_DJOB') {
+                  rawGoyong24Data = rawPayload
+                }
+              }
+            } catch (error) {
+              console.error('[getUnifiedJobDetailWithRawData] Failed to fetch raw sources:', error)
+            }
+          }
+          
+          sourcesStatus.CAREERNET.attempted = !!mergedJobRow.careernet_id
+          sourcesStatus.CAREERNET.count = mergedJobRow.careernet_id ? 1 : 0
+          sourcesStatus.GOYONG24.attempted = !!mergedJobRow.goyong24_id
+          sourcesStatus.GOYONG24.count = mergedJobRow.goyong24_id ? 1 : 0
+          
+          return {
+            profile: merged,
+            partials: {},
+            sources: sourcesStatus,
+            rawApiData: {
+              careernet: rawCareernetData,
+              goyong24: rawGoyong24Data
+            }
+          }
+        } catch (error) {
+          console.error('[getUnifiedJobDetailWithRawData] Failed to parse merged_profile_json:', error)
+          // Fallback to old logic below
+        }
+      }
+      
+      // 📦 FALLBACK: Old logic (api_data_json 사용)
       
       // Extract potential careernet ID from canonical ID format (e.g., "job:C_354" -> "354")
       const extractedId = id ? extractCanonicalSuffix(id, 'job:C_') : undefined
@@ -1514,7 +2305,7 @@ export const getUnifiedJobDetailWithRawData = async (
       // Strategy 3: Try by name (fetch ALL matching records for merging)
       if (id && !id.includes(':')) {
         const allJobRows = await db.prepare(`
-          SELECT id, name, careernet_id, goyong24_id, api_data_json 
+          SELECT id, name, careernet_id, goyong24_id, api_data_json, user_contributed_json, admin_data_json
           FROM jobs 
           WHERE name = ?
         `).bind(id).all()
@@ -1577,13 +2368,42 @@ export const getUnifiedJobDetailWithRawData = async (
               CAREERNET: careernetProfile,
               GOYONG24: goyongProfile
             }
-            const enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+            let enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+            
+            // 🆕 user_contributed_json과 admin_data_json 병합 (admin > user > api 우선순위)
+            // 첫 번째 레코드의 user_contributed_json과 admin_data_json 사용
+            const firstRow = allJobRows.results[0]
+            let userData = {}
+            let adminData = {}
+            
+            try {
+              if (firstRow.user_contributed_json) {
+                userData = JSON.parse(firstRow.user_contributed_json as string)
+              }
+            } catch (error) {
+              console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json:', error)
+            }
+            
+            try {
+              if (firstRow.admin_data_json) {
+                adminData = JSON.parse(firstRow.admin_data_json as string)
+              }
+            } catch (error) {
+              console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json:', error)
+            }
+            
+            // 병합 적용 (admin > user > api 우선순위)
+            enhancedProfile = {
+              ...enhancedProfile,
+              ...userData,
+              ...adminData
+            } as UnifiedJobDetail
             
             // 🆕 병합된 데이터의 name 사용 (mergeJobProfiles에서 이미 고용24 우선 처리됨)
             // 첫 번째 레코드의 name을 fallback으로 사용
             if (!enhancedProfile.name || !enhancedProfile.name.trim()) {
-              if (allJobRows.results[0].name && allJobRows.results[0].name.trim()) {
-                enhancedProfile.name = allJobRows.results[0].name.trim()
+              if (firstRow.name && firstRow.name.trim()) {
+                enhancedProfile.name = firstRow.name.trim()
               }
             }
             
@@ -1605,7 +2425,7 @@ export const getUnifiedJobDetailWithRawData = async (
       // Strategy 1: Try by D1 id (numeric ID from D1)
       if (!careernetProfile && !goyongProfile && id && !id.includes(':')) {
         const jobRow = await db.prepare(`
-          SELECT id, name, careernet_id, goyong24_id, api_data_json 
+          SELECT id, name, careernet_id, goyong24_id, api_data_json, user_contributed_json, admin_data_json
           FROM jobs 
           WHERE id = ?
           LIMIT 1
@@ -1688,7 +2508,34 @@ export const getUnifiedJobDetailWithRawData = async (
                 CAREERNET: careernetProfile,
                 GOYONG24: goyongProfile
               }
-              const enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+              let enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+              
+              // 🆕 user_contributed_json과 admin_data_json 병합 (admin > user > api 우선순위)
+              let userData = {}
+              let adminData = {}
+              
+              try {
+                if (jobRow.user_contributed_json) {
+                  userData = JSON.parse(jobRow.user_contributed_json as string)
+                }
+              } catch (error) {
+                console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json:', error)
+              }
+              
+              try {
+                if (jobRow.admin_data_json) {
+                  adminData = JSON.parse(jobRow.admin_data_json as string)
+                }
+              } catch (error) {
+                console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json:', error)
+              }
+              
+              // 병합 적용 (admin > user > api 우선순위)
+              enhancedProfile = {
+                ...enhancedProfile,
+                ...userData,
+                ...adminData
+              } as UnifiedJobDetail
               
               if (!enhancedProfile.name || !enhancedProfile.name.trim()) {
                 if (jobRow.name && jobRow.name.trim()) {
@@ -1716,7 +2563,7 @@ export const getUnifiedJobDetailWithRawData = async (
       if (!careernetProfile && !goyongProfile && (explicitCareernetId || extractedId)) {
         const searchId = explicitCareernetId || extractedId
         const jobRow = await db.prepare(`
-          SELECT id, name, careernet_id, goyong24_id, api_data_json 
+          SELECT id, name, careernet_id, goyong24_id, api_data_json, user_contributed_json, admin_data_json
           FROM jobs 
           WHERE careernet_id = ?
           LIMIT 1
@@ -1739,7 +2586,7 @@ export const getUnifiedJobDetailWithRawData = async (
             // 같은 이름의 다른 레코드(고용24)도 찾아서 병합
             if (jobRow.name) {
               const otherRows = await db.prepare(`
-                SELECT id, name, careernet_id, goyong24_id, api_data_json 
+                SELECT id, name, careernet_id, goyong24_id, api_data_json, user_contributed_json, admin_data_json
                 FROM jobs 
                 WHERE name = ? AND goyong24_id IS NOT NULL
               `).bind(jobRow.name).all()
@@ -1815,7 +2662,34 @@ export const getUnifiedJobDetailWithRawData = async (
                 CAREERNET: careernetProfile,
                 GOYONG24: goyongProfile
               }
-              const enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+              let enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+              
+              // 🆕 user_contributed_json과 admin_data_json 병합 (admin > user > api 우선순위)
+              let userData = {}
+              let adminData = {}
+              
+              try {
+                if (jobRow.user_contributed_json) {
+                  userData = JSON.parse(jobRow.user_contributed_json as string)
+                }
+              } catch (error) {
+                console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json:', error)
+              }
+              
+              try {
+                if (jobRow.admin_data_json) {
+                  adminData = JSON.parse(jobRow.admin_data_json as string)
+                }
+              } catch (error) {
+                console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json:', error)
+              }
+              
+              // 병합 적용 (admin > user > api 우선순위)
+              enhancedProfile = {
+                ...enhancedProfile,
+                ...userData,
+                ...adminData
+              } as UnifiedJobDetail
               
               if (!enhancedProfile.name || !enhancedProfile.name.trim()) {
                 if (jobRow.name && jobRow.name.trim()) {
@@ -1925,15 +2799,117 @@ export const getUnifiedJobDetailWithRawData = async (
     GOYONG24: goyongProfile
   }
 
-  const enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+  let enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
+  
+  // 🆕 API 호출 후에도 DB에서 user_contributed_json과 admin_data_json 병합
+  if (env && 'DB' in env && id) {
+    try {
+      const db = (env as any).DB
+      
+      // 실제 DB ID로 변환 (editJob과 동일한 로직)
+      let dbJobId = id
+      let dbJob = await db.prepare('SELECT id, user_contributed_json, admin_data_json FROM jobs WHERE id = ? AND is_active = 1')
+        .bind(dbJobId)
+        .first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+      
+      // ID로 찾지 못한 경우 복합 ID 형식 처리 (job:G_K000000890 같은 형식)
+      if (!dbJob && id.includes(':')) {
+        // job:G_K000000890 -> G_K000000890 또는 K000000890
+        const parts = id.split(':')
+        if (parts.length > 1) {
+          let extractedId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
+          
+          // 추출한 ID로 다시 시도
+          dbJob = await db.prepare('SELECT id, user_contributed_json, admin_data_json FROM jobs WHERE id = ? AND is_active = 1')
+            .bind(extractedId)
+            .first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+          
+          if (dbJob) {
+            dbJobId = extractedId
+          } else {
+            // G_K000000890 형식으로도 시도
+            const withPrefix = parts[parts.length - 1]
+            dbJob = await db.prepare('SELECT id, user_contributed_json, admin_data_json FROM jobs WHERE id = ? AND is_active = 1')
+              .bind(withPrefix)
+              .first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+            
+            if (dbJob) {
+              dbJobId = withPrefix
+            }
+          }
+        }
+      }
+      
+      // 여전히 찾지 못한 경우 slug로 시도 (editJob과 동일한 로직)
+      if (!dbJob) {
+        const decodedSlug = decodeURIComponent(id)
+        const normalizedSlug = decodedSlug.toLowerCase()
+        
+        // 방법 1: 정규화된 이름으로 조회
+        dbJob = await db.prepare(
+          'SELECT id, user_contributed_json, admin_data_json FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+        ).bind(normalizedSlug).first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+        
+        // 방법 2: 이름으로 직접 조회 (대소문자 무시)
+        if (!dbJob) {
+          dbJob = await db.prepare(
+            'SELECT id, user_contributed_json, admin_data_json FROM jobs WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
+          ).bind(normalizedSlug).first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+        }
+        
+        // 방법 3: 원본 slug로 조회
+        if (!dbJob) {
+          dbJob = await db.prepare(
+            'SELECT id, user_contributed_json, admin_data_json FROM jobs WHERE LOWER(name) = LOWER(?) AND is_active = 1 LIMIT 1'
+          ).bind(decodedSlug).first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+        }
+        
+        if (dbJob) {
+          dbJobId = dbJob.id
+        }
+      }
+      
+      if (dbJob) {
+        let userData = {}
+        let adminData = {}
+        
+        try {
+          if (dbJob.user_contributed_json) {
+            userData = JSON.parse(dbJob.user_contributed_json)
+          }
+        } catch (error) {
+          console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json (API path):', error)
+        }
+        
+        try {
+          if (dbJob.admin_data_json) {
+            adminData = JSON.parse(dbJob.admin_data_json)
+          }
+        } catch (error) {
+          console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json (API path):', error)
+        }
+        
+        // 병합 적용 (admin > user > api 우선순위)
+        enhancedProfile = {
+          ...enhancedProfile,
+          ...userData,
+          ...adminData
+        } as UnifiedJobDetail
+      }
+    } catch (dbError) {
+      // DB 조회 실패는 조용히 처리 (로컬 개발 환경 등)
+      // 에러가 발생해도 기존 enhancedProfile을 그대로 사용
+      console.error('[getUnifiedJobDetailWithRawData] Failed to merge user_contributed_json (API path):', dbError)
+    }
+  }
 
   return {
     profile: enhancedProfile,
     partials: partialsRecord,
     sources: sourcesStatus,
     rawApiData: {
-      careernet: rawCareernetData,
-      goyong24: rawGoyong24Data
+      careernet: rawCareernetData || null,
+      goyong24: rawGoyong24Data || null
     }
   }
 }

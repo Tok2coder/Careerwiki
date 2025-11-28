@@ -114,7 +114,7 @@ function parseXMLToJSON(xmlString: string): any[] {
 const splitToList = (value?: string): string[] => {
   if (!value) return [];
   return value
-    .split(/[\n,;•·\/\u00b7]/)
+    .split(/[\n,;\/•]/) // CareerNet 데이터의 가운뎃점(·)은 단일 직업명을 구성하므로 분리하지 않는다.
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
 };
@@ -952,6 +952,26 @@ export const normalizeCareerNetJobDetail = (job: Job): UnifiedJobDetail => {
       author: '',
       date: '',
       url: ''
+    })),
+    
+    // Phase 1.2: 누락된 필드 추가
+    // 워라밸 및 사회적 평가
+    wlb: encyc.baseInfo?.wlb,
+    social: encyc.baseInfo?.social,
+    
+    // 태그 정보
+    tagList: encyc.tagList || (encyc.baseInfo?.tag ? encyc.baseInfo.tag.split(',').map(t => t.trim()).filter(Boolean) : undefined),
+    
+    // 차트 데이터
+    eduChart: encyc.eduChart?.map(e => ({
+      name: e.chart_name || '',
+      data: e.chart_data || '',
+      source: e.source || ''
+    })),
+    majorChart: encyc.majorChart?.map(m => ({
+      name: m.major || '',
+      data: m.major_data || '',
+      source: m.source || ''
     })),
     
     sources: summary.sources

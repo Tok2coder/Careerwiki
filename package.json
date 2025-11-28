@@ -13,10 +13,20 @@
     "db:reset": "rm -rf .wrangler/state/v3/d1 && npm run db:migrate:local",
     "clean-port": "node -e \"const { execSync } = require('child_process'); try { const result = execSync('netstat -ano | findstr :3000', { encoding: 'utf-8' }); const pids = [...new Set(result.split('\\n').filter(l => l.includes('LISTENING')).map(l => l.trim().split(/\\s+/).pop()))].filter(Boolean); pids.forEach(pid => { try { execSync(`taskkill /F /PID ${pid}`, { stdio: 'ignore' }); console.log(`✅ 포트 3000 프로세스 종료: PID ${pid}`); } catch(e) {} }); if(pids.length === 0) console.log('✅ 포트 3000 사용 중인 프로세스 없음'); } catch(e) { console.log('✅ 포트 3000 사용 중인 프로세스 없음'); }\"",
     "stop": "npm run clean-port",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "etl:merge-jobs": "tsx src/scripts/runJobMerge.ts",
+    "etl:merge-jobs:limit": "tsx src/scripts/runJobMerge.ts --limit=100",
+    "etl:merge-majors": "tsx src/scripts/runMajorMerge.ts",
+    "etl:merge-majors:limit": "tsx src/scripts/runMajorMerge.ts --limit=100",
+    "etl:related-jobs": "tsx src/scripts/runRelatedJobs.ts",
+    "etl:related-jobs:limit": "tsx src/scripts/runRelatedJobs.ts --limit=100",
+    "etl:related-jobs:dry": "tsx src/scripts/runRelatedJobs.ts --dry-run",
+    "etl:merge-all": "npm run etl:merge-jobs && npm run etl:merge-majors && npm run etl:related-jobs"
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.8.11",
     "axios": "^1.12.2",
+    "csv-parse": "^6.1.0",
     "dotenv": "^17.2.3",
     "hono": "^4.9.9",
     "jose": "^6.1.2"

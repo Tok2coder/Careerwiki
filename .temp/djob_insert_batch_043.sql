@@ -1,0 +1,799 @@
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006562:1', '{"dJobCd":"K000006562","dJobCdSeq":"1","dJobNm":"유리열가공원","workSum":"유리공예품, 유리컵, 양주컵, 이화학용 유리제품 등의 가공을 위해 1차로 성형된 유리 기물에 부분적으로 열을 가하여 기물의 형태를 구부리고 골을 내고 모양을 만든다.","doWork":"1차 성형된 유리제품을 수령하고 작업지시서에 따라 가공할 부위 및 치수를 확인한다. 정형할 부위를 깨끗이 세척한다. 버너 등 장비 및 장치의 작동을 점검한다. 장갑, 보호안경 등 안전장비를 착용한다. 작업대 위에 작업할 유리성형물을 고정한다. 가스버너를 점화하여 작업준비를 한다. 가공 부위를 연화점(열에 의하여 변형을 일으키기 시작하는 온도)까지 토치로 가열하여 연화한다. 쇠막대 집게를 이용하여 연화된 부위를 천천히 구부리거나 잡아당겨 성형한다. 따로 성형된 유리기물을 융착시킬 경우에는 융착할 부분을 맞대어 동시에 연화시켜 접착한다. 접합부에 의해 생긴 자국을 불꽃으로 녹이고 다듬는다. 기물에 구멍을 뚫을 때에는 토치로 유리를 연화시킨 다음 규격에 맞는 쇠막대로 구멍을 뚫고 화염을 약하게 조절하여 구멍의 단면을 매끄럽게 한다. 가공부위의 가공상태를 검사한다. 가공이 완료된 유리가공물을 상온에서 냉각한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"위험내재|고온|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"수동조작","similarNm":"세촉성형작업원","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"C231","dJobICdNm":"[C231]유리 및 유리제품 제조업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004383:1', '{"dJobCd":"K000004383","dJobCdSeq":"1","dJobNm":"유리인공식성형원","workSum":"취관과 금형, 몰드를 이용하여 빈 공간을 가진 병·조명 등, 실험기구·광학용 유리관 등 유리제품을 성형한다.","doWork":"작업지시서에 따라 성형할 제품의 모양과 규격을 확인한다. 취관(성형봉, 대롱)및 금형의 도구와 장비를 준비한다. 성형할 원료유리의 용융상태를 확인한다. 취관의 끝을 용융된 유리용해에 담그고, 취관을 한쪽 방향으로 돌리며 빼낸다. 입을 취관 끝에 대고 공기를 불어넣어 1차로 작은 원구 형상으로 유리를 말아 낸다. 1차 성형된 유리원구가 어느 정도 경화된후 성형할 유리기물의 크기를 고려하여 원구가 달린 취관을 용해유리에 담가 같은 방법으로 다시 한 번 유리를 말아 낸다. 취관을 돌리며 입으로 바람을 불어넣어 적절한 크기의 더 큰 원구를 만든다. 유리성형보조원이 금형을 열면 금형 안에 원구를 넣는다. 보조원에게 금형을 닫도록 지시하고, 금형이 닫히면 취관의 끝에 일정한 힘으로 바람을 불어넣어 취관을 돌려준다. 성형작업이 완료되면 보조원에게 금형을 열게 하고, 성형된 유리를 금형에서 분리한다. 유리성형의 성형상태를 검사하고 불필요한 부분을 마무리하도록 보조원에게 지시한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"4년 초과 ~ 10년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workFunc1":"수집","workFunc2":"말하기신호","workFunc3":"정밀작업","similarNm":"취입성형원, 취주성형원, 수동블로우성형원","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"C231","dJobICdNm":"[C231]유리 및 유리제품 제조업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002488:1', '{"dJobCd":"K000002488","dJobCdSeq":"1","dJobNm":"유리장식원","workSum":"판유리 및 유리컵 등의 유리제품에 도안이나 문양을 새기기 위해 유리장식용 필름 및 유리 장식용 전사지를 부착하거나 실크스크린(Silk Screen)인쇄기를 조작하여 유리표면에 인쇄한다.","doWork":"작업명세서에 따라 장식할 유리의 종류 및 형태, 규격을 확인한다. 주문서에 따라 무늬가 형성된 유리장식용 필름과 전사지를 준비한다. 인쇄장치의 윤활유 및 오일 상태와 작동 여부를 점검한다. 유리표면에 필름 및 전사지의 부착위치를 마킹(Marking)한다. 마킹부분에 필름이나 전사지를 부착한다. 스크린인쇄가 필요한 경우에는 실크스크린(Silk Screen)인쇄기의 전원을 켠다. 인쇄할 유리표면의 오염 물질을 제거한다. 인쇄기의 지그테이블 위에 인쇄할 유리를 올려놓는다. 디지털입력기에 인쇄프로그램을 입력한다. 스타트 스위치를 켜 스크린을 상하좌우로 조정하며 인쇄한다. 완성된 인쇄상태를 작업명세서와 비교하여 점검한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"가벼운 작업","workPlace":"실내","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"전사지부착원","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"C231","dJobICdNm":"[C231]유리 및 유리제품 제조업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003419:1', '{"dJobCd":"K000003419","dJobCdSeq":"1","dJobNm":"유리재단원","workSum":"원판유리의 최적 사용을 고려하여 제품별 치수에 따라 판유리를 절단한다.","doWork":"작업명세서 및 주문서에 따라 재단할 원판유리의 종류 및 형태, 규격을 확인한다. CNC기계 등 자동재단기의 윤활유, 오일상태와 작동을 점검한다. 원판유리를 CNC작업대 위에 올려놓는다. 주문제품의 모양 및 크기에 따라 치수를 CNC프로그램 입력기에 입력한다. CNC기계를 작동하여 재단한다. CNC에서 재단 가공된 유리를 양손을 이용하여 잘라낸다. 각면기로 절단된 각면을 다듬는다. 세척기를 통과시켜 세척한다. 완성된 유리를 검사하고 다음 공정으로 이송시킨다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|위험내재|고온|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"CNC유리재단원","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"C231","dJobICdNm":"[C231]유리 및 유리제품 제조업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002698:1', '{"dJobCd":"K000002698","dJobCdSeq":"1","dJobNm":"유리제품검사원","workSum":"성형 가공된 유리나 거울의 표면, 모서리 등을 검사하여 결함을 판정하고 폐기하거나 해당 부서로 반송하여 결함을 제거하도록 한다.","doWork":"검사기준서를 확인하고 작업지시서에 따라 마킹(Marking)도구 등 검사도구를 준비하고 점검한다. 작업대에 검사제품을 올려놓는다. 유리 및 거울의 표면, 두께, 모서리, 투명도 및 착색도 등을 육안, 불빛 및 검사도구를 이용하여 검사한다. 품질기준에 따라 제품의 하자 여부를 판정하고 불량부분을 기록한 후 보고한다. 검사결과의 품질관리 리스트를 작성한다. 불량제품을 표기하여 분리하고 재가공부서로 이송하거나 폐기한다. 이상이 없는 제품에 검사필증, 품질표시라벨 등을 부착하고 시험성적표 등을 첨부한다. 출하를 위하여 적재보관소로 이송한다. 검사도구 및 검사설비장치를 정돈하고 주위를 정리한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"2년 초과 ~ 4년 이하","workStrong":"보통 작업","workPlace":"실내","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"수동조작","similarNm":"유리제품품질검사원","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"C231","dJobICdNm":"[C231]유리 및 유리제품 제조업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002572:1', '{"dJobCd":"K000002572","dJobCdSeq":"1","dJobNm":"유리조각사","workSum":"유리 공예품이나 장식용 유리제품 표면에 미세한 문양을 조각하거나 강화유리 및 착색유리의 표면을 조각한다.","doWork":"작업명세서 및 주문서에 따라 조각할 유리의 종류 및 형태, 규격을 확인한다. 카트리지, 필름, 조명 등의 작업도구를 준비한다. 샌딩기의 가동 여부를 점검한다. 컴퓨터에 조각할 문양을 입력하고 카트리지로 출력한다. 카트리지 위에 필름을 올리고 빛을 투과하여 카트리지의 문양을 필름에 옮긴다. 필름을 조심스럽게 물로 씻어 낸다. 필름을 조각할 성형물의 표면에 접착시킨다. 필름지를 제외한 부분을 커버필름으로 감싼다. 샌딩기 안에 필름지를 붙인 유리성형물을 넣는다. 샌딩기를 가동시켜 조각한다. 조각된 유리성형물을 꺼내어 조각된 모양을 검사한다. 완성된 유리는 규격별로 착색 및 도색공정으로 보낸다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"보통 작업","workPlace":"실내","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"정밀작업","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"C231","dJobICdNm":"[C231]유리 및 유리제품 제조업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005603:1', '{"dJobCd":"K000005603","dJobCdSeq":"1","dJobNm":"조명기구장식원","workSum":"램프 받침대, 샹들리에 등의 조명기구에 플라스틱 튜브를 짜내는 방식으로 장식 물질을 칠해 정해진장식용 무늬를 그려 넣는다.","doWork":"컴퓨터의 포토샵 기능 등을 이용한 디자인 시안에 따라 조명기구 장식을 기획한다. 주문제작인 경우 현장을 방문해 주변과 조화로운 디자인 계획을 잡기도 한다. 장식물질과 물을 혼합하여 일정 농도로 만든다. 재료를 플라스틱 튜브에 붓는다. 붓 등의 도구를 사용해서 꽃잎 등의 명시된 무늬를 그려 넣는다. 일정 시간 건조 후 입체적인 장식물을 추가로 붙이기도 한다. 작업이 끝난 조명기구에 전원을 넣어 실제 작업내용을 살펴보기도 한다.","optionJobInfo":{"eduLevel":"12년 초과 ~ 14년 이하(전문대졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"손사용|시각|","workEnv":"위험내재|","workFunc1":"수집","workFunc2":"말하기신호","workFunc3":"수동조작","similarNm":"램프장식원","certLic":"컴퓨터그래픽스운용기능사","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"C284","dJobICdNm":"[C284]전구 및 조명장치 제조업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005762:1', '{"dJobCd":"K000005762","dJobCdSeq":"1","dJobNm":"착색성형원","workSum":"유리제품 성형 시 유리표면에 규정된 색상을 입힌다.","doWork":"작업지시서에 따라 착색성형할 제품의 색깔과 종류 및 규격을 확인한다. 유리공예품이나 장식용 유리제품 성형 시 사용할 금형보다 약간 작은 예비금형을 준비한다. 취관(대롱)도구와 장비를 준비한다. 성형할 원료유리의 용융상태를 확인한다. 취관의 끝을 발색원소를 함유한 용융된 유리용해에 담그고, 취관을 한쪽 방향으로 돌리며 빼낸다. 입을 취관 끝에 대고 1차로 예비금형에 불어넣어 금형안벽에 유색유리를 얇게 입힌다. 2차로 취관에 무색 용융유리를 말아서 예비금형에 대고 불어 무색 유리 위에 유색 유리막을 입힌다. 적절한 크기의 성형할 금형에 다시 취관을 대고 취관을 돌리며 입으로 바람을 불어넣어 성형을 완료한다. 착색성형의 컬러상태를 검사하고 다음 공정으로 이송시킨다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"위험내재|고온|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"수동조작","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"C231","dJobICdNm":"[C231]유리 및 유리제품 제조업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004883:1', '{"dJobCd":"K000004883","dJobCdSeq":"1","dJobNm":"칼날연마원","workSum":"합판제조 시 사용되는 각종 칼날을 나이프그라인더와 숫돌을 사용하여 연마한다.","doWork":"커팅오일(Cutting Oil)과 연마석의 상태를 확인한다. 연마수 탱크에 물을 채우고 커팅오일을 일정량 투입하여 혼합한다. 칼날을 물로 씻고 연마기의 자석 판에 밀착한다. 칼날의 연마각, 연마량을 결정한 후 기계를 작동한다. 기계의 마찰부분에 수시로 윤활유를 급유한다. 연마가 끝나면 기계를 정지하고 자석 판에서 칼날을 빼낸다. 숫돌을 사용하여 손으로 마무리 연마를 한다. 연마가 완료되면 칼집을 씌워 보관대로 보낸다. 필요에 따라 접합부분에 파도못을 박아 보강하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"손사용|","workEnv":"대기환경미흡|위험내재|소음·진동|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"수동조작","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"C162","dJobICdNm":"[C162]나무제품 제조업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005971:1', '{"dJobCd":"K000005971","dJobCdSeq":"1","dJobNm":"톱수리반장","workSum":"목재소 및 제재소의 절단기계에 사용되는 띠톱, 둥근톱 등을 수리하는 작업원의 활동을 감독·조정한다.","doWork":"제재소로부터 고장나거나 닳은 띠톱이나 둥근톱을 의뢰받아 수리한다. 작업원의 작업상황을 관리·감독하고 톱수리에 대한 전반적인 기술을 바탕으로 기술적인 지원 및 톱수리에 필요한 자재를 공급한다. 자재의 혼합상태 등을 점검하고 확인한다. 작업절차 및 작업방법을 결정하여 작업원에게 작업내용을 지시하고 작업배치를 한다. 작업명세에 따라 지시된 작업이 이루어지는지 확인하고 작업원과 함께 작업하며 작업상황을 관찰하고 작업내용을 점검한다. 작업원에 대한 직무교육 및 안전위생교육을 통하여 직무수행능력을 향상시키고 안전재해를 예방한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"4년 초과 ~ 10년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|손사용|","workEnv":"위험내재|소음·진동|","workFunc1":"조정","workFunc2":"감독","workFunc3":"수동조작","similarNm":"목립반장","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"S953","dJobICdNm":"[S953]개인 및 가정용품 수리업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002626:1', '{"dJobCd":"K000002626","dJobCdSeq":"1","dJobNm":"톱수리원","workSum":"연삭숫돌 등 수동공구, 프레스 등 기계공구, 산소용접기 등 용접공구를 사용하여 띠톱, 손톱, 둥근톱을 연마, 용접, 날 세우기 등의 작업을 수행하여 톱을 수리한다.","doWork":"톱의 결함을 육안으로 조사한다. 동력절단기를 사용하여 톱니를 자른다. 숫돌연삭기로 접합부를 갈고 용접기로 용접하거나 땜질하여 톱니를 만든다. 교정프레스를 사용하여 톱날의 굴곡과 비틀림을 곧게 펴고 톱 몸통의 오목한 자국을 없애기 위하여 금속테이블 위에 올려놓고 해머로 두드린다. 철형 또는 지정된 플라이어를 사용하여 절단할 톱의 폭을 조절한다. 명세서에 따라 절단하기 위하여 톱니의 수와 각을 측정한다. 톱줄질기에 톱날을 고정하고 톱니 사이의 거리, 사면의 각을 조정하기 위하여 줄, 연마숫돌, 핸드휠을 다룬다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|손사용|","workEnv":"위험내재|소음·진동|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"수동조작","similarNm":"목립원","dJobECd":"8853","dJobECdNm":"[8853]유리기능, 복사, 수제 제본 등 기타 기능 종사원","dJobJCd":"7999","dJobJCdNm":"[7999]기타 기능 관련 종사원","dJobICd":"S953","dJobICdNm":"[S953]개인 및 가정용품 수리업","inqYear":"2017"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002604:1', '{"dJobCd":"K000002604","dJobCdSeq":"1","dJobNm":"곡류침지원","workSum":"정선한 옥수수 등의 곡류에 포함된 전분, 배아, 옥피, 가용성 물질 등을 분리하고자 황산용액에 침지하는 탱크를 관리·조작한다.","doWork":"침지(Steeping)탱크 조정판에 침지시간, 온도, 아황산(SO2)용액의 양, 물의 양 등을 입력한다. 아황산용액 저장탱크의 농도를 확인하고 조정판을 조작하여 침지탱크에 일정량의 옥수수와 아황산용액을 투입한다. 투입된 옥수수와 아황산용액을 가열하고자 증기밸브를 열고 침지탱크의 이중벽인 재킷(Jacket)이나 순환관에 증기를 투입한다. 일정 시간 동안 침지한 후 견본을 채취하여 수분함유량, 아황산의 농도 등을 검사하여 제품 표준과 비교한다. 침지가 완료되면 용액배출밸브를 열어 아황산용액을 저장탱크로 이송한다. 침지탱크의 하부배출 밸브를 열어 파쇄공정의 저장호퍼로 침지된 옥수수를 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"아주 가벼운 작업","workPlace":"실내","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005978:1', '{"dJobCd":"K000005978","dJobCdSeq":"1","dJobNm":"곡물건조기조작원","workSum":"곡물에 함유되어 있는 습기를 제거하고자 곡물건조기를 조작한다.","doWork":"수분측정기를 사용하여 곡물에 포함된 수분의 함유량을 확인하고, 건조할 곡물의 양을 확인한다. 사일로(Silo:곡물을 저장하는 탑 또 탱크)에 저장된 곡물의 양을 조절하여 건조기로 투입한다. 곡물에 포함된 수분함유량과 건조기의 온도계를 확인하여 건조시간 및 온도를 재점검한다. 규정된 온도로 가열하고자 증기밸브를 조작하고 송풍기를 가동한다. 배출구에서 나오는 곡물의 건조상태를 확인한다. 견본을 채취하여 수분함유량을 검사하고 순환관에 투입되는 증기의 압력 및 송풍기를 다시 조정한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"밀건조기조작원, 보리건조기조작원, 쌀건조기조작원, 옥수수건조기조작원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004498:1', '{"dJobCd":"K000004498","dJobCdSeq":"1","dJobNm":"곡물등급원","workSum":"창고로 반입되는 벼, 밀 등 곡물의 견본을 채취하여 수분함량, 이물질의 함유, 해당곡물의 크기 등을 검사하여 분류한다.","doWork":"화물차에서 하차된 곡물의 견본을 채취하여 곡물의 크기, 균일도, 파손정도 등의 육안검사를 실시한다. 수분측정기로 곡물의 수분함량을 검사하여 건조정도를 파악한다. 검사한 자료를 근거로 품질 등급을 정하고 기록표에 적어 포장용기의 외부에 부착하고 작업일지에 등급과 수량을 기록한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내·외","physicalAct":"시각|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"수동조작","connectJob":"밀등급원, 벼등급원, 보리등급원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106/C111","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업 / [C111]알코올음료 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003395:1', '{"dJobCd":"K000003395","dJobCdSeq":"1","dJobNm":"곡물압출기조작원","workSum":"일정한 형태로 곡물을 가공하고자 원료를 혼합하고 압출하는 기계를 조작한다.","doWork":"압출할 제품의 형태를 확인하고 모양에 맞는 금속판을 준비한다. 압출기의 끝에 준비한 금속판을 설치하고 압출되어 나오는 반죽을 절단하는 칼날을 고정시킨다. 계량용기를 사용하여 밀가루, 물, 향료 등을 반죽혼합기에 투입한다. 혼합이 용이하도록 교반기를 가동한다. 혼합기의 배출구를 열고 압착기를 가동한다. 컨베이어를 가동하여 일정 크기로 절단된 곡물을 다음 공정으로 운반한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"곡물사출기조작원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006443:1', '{"dJobCd":"K000006443","dJobCdSeq":"1","dJobNm":"곡물저장탱크관리원","workSum":"벌크(Bulk)상태로 입고되는 사료원료를 품목별로 분류하고 저장하고자 버킷엘리베이터(Bucket Elevator), 컨베이어(Conveyor) 등의 기계를 조작한다.","doWork":"화물차로 입고된 곡물의 종류와 품종을 파악한다. 품목별로 저장탱크(Silo)로 이송시키는 컨베이어를 가동하여 곡물을 운반한다. 곡물의 견본을 채취하여 건조상태, 품질 등을 검사하고 입고량을 기록한다. 출하 시 버킷엘리베이터를 가동하거나 사일로를 조작하여 곡물을 출하하고 출하량을 기록한다. 수시로 저장탱크의 곡물량을 점검하여 재고량을 파악한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내·외","workEnv":"대기환경미흡|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001736:1', '{"dJobCd":"K000001736","dJobCdSeq":"1","dJobNm":"곡물제분기조작원","workSum":"양조용 엿기름, 이유식, 당면 등 곡물가공품을 제조하고자 보리, 옥수수 또는 쌀 등 곡물원료를 분쇄하는 제분기를 조작한다.","doWork":"분쇄할 곡물의 종류와 건조상태에 따라 제분기의 롤러의 간격이나 날의 방향을 조절한다. 곡물 저장탱크에 연결된 컨베이어나 이송관을 점검한 후, 저장탱크의 배출구를 열어 제분기의 호퍼(Hopper:곡물 등을 아래로 떨어뜨리기 위한 깔때기 모양의 장치)에 곡물을 투입한다. 제분기를 가동하여 곡물을 분쇄한다. 제분된 곡물의 견본을 채취하여 입자크기를 측정한다. 작업이 완료되면 원료의 투입량을 기록하고 분쇄된 입자의 굵기, 품질, 중량 등을 작업일지에 기록한다. 자동화된 기계의 조정판에 롤러간격, 투입량, 제분시간 등을 입력하여 제분되는 과정을 관찰·조절하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"롤러제분기조작원, 원추형제분기조작원","connectJob":"밀껍질분쇄기조작원, 밀알맹이분쇄기조작원, 옥수수제분원, 콩제분기조작원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106/C111","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업 / [C111]알코올음료 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004070:1', '{"dJobCd":"K000004070","dJobCdSeq":"1","dJobNm":"도정반장","workSum":"미곡 등의 곡류를 도정하는 데 종사하는 작업원의 활동을 감독·조정한다.","doWork":"도정해야 할 쌀의 등급과 양을 파악하고 작업방법을 결정한다. 정선기, 현미기, 풍구 및 기타 도정설비를 조정하도록 지시한다. 작업원에게 도정기계 설비에 대하여 교육·훈련한다. 도정과정을 살펴보고 도정된 쌀을 검사한 후 제품의 질과 양이 일정한 수준을 유지하도록 지시한다. 기계를 점검하고 수리를 의뢰하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"4년 초과 ~ 10년 이하","workStrong":"아주 가벼운 작업","workPlace":"실내","workFunc1":"조정","workFunc2":"감독","workFunc3":"제어조작","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002993:1', '{"dJobCd":"K000002993","dJobCdSeq":"1","dJobNm":"밀정선기조작원","workSum":"밀, 옥수수 등의 맥곡(보리류의 곡물)에 섞인 이물질을 분리·제거하기 위해 정선기 및 관련 설비를 조작·관리한다.","doWork":"작업 여부에 따라 정선기와 각종 가수설비의 가동 여부를 판단한다. 제어기판을 조작하면서 검불기, 철편분리기, 석발기 등 각 정선기의 작동상태를 유지한다. 정선된 곡물의 표본을 추출·검사하면서 원맥(原麥)에서 먼지, 다른 곡식, 지푸라기, 돌 등의 이물질이 제대로 분리되는 지 확인한다. 정선된 곡물이 가수탱크로 운반되면 입력된 급수량, 배합량, 침지시간 등이 적정상태로 유지되는지 확인하고 필요할 경우 조정판을 조작하여 침지상태를 조절한다. 작업상황 및 내용을 정기적으로 작업일지에 기록한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"시범후 30일 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"위험내재|다습|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"밀정선기조정판조작원","connectJob":"옥수수정선기조작원, 콩정선기조작원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006736:1', '{"dJobCd":"K000006736","dJobCdSeq":"1","dJobNm":"사료원료혼합원","workSum":"어류 및 가축의 사료를 제조하고자 옥수수가루, 어분(Fish Meal:魚粉), 첨가물 등을 일정 비율로 혼합하는 기계를 조작하고 관리한다.","doWork":"제품 제조에 관련된 작업일지를 확인하고 기계의 이상 유무, 제품별 배합비 등을 확인한다. 곡물저장탱크관리원에게 연락하여 저장탱크(Silo)의 원료(옥수수가루, 곡물, 어분, 첨가물) 재고량 및 배합할 원료의 청결도를 확인한다. 저장탱크의 배출구를 열고, 버킷컨베이어(Bucket Conveyor)나 송풍관을 가동하여 혼합탱크로 해당품목의 원료를 이송한다. 혼합기에 입력된 배합비가 정확한지 확인한 후, 원료의 혼합이 용이하도록 교반기를 가동하고 가동상태를 주시한다. 배합시간, 액상원료의 공정유지상태 등을 파악하면서 후속공정과의 연계가 원활하게 이루어지고 있는지 점검한다. 혼합탱크의 배출구를 열고 견본을 채취하여 혼합상태를 검사한다. 혼합물이 배출구를 통해 안전하게 사일로(Silo)로 이송되는지 확인·점검한다. 사료의 입도(Grain Size:粒度)를 작업표준과 일치하게 하기 위하여 자동공급기의 조절장치를 조절하기도 하며 분무기의 노즐·공기조절장치 등을 조정하여 사료에 뜨거운 당밀을 뿌리기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|소음·진동|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"유지","connectJob":"가금류사료혼합원, 개사료혼합원, 닭사료혼합원, 돼지사료혼합원, 어분혼합원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C108","dJobICdNm":"[C108]동물용 사료 및 조제식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001841:1', '{"dJobCd":"K000001841","dJobCdSeq":"1","dJobNm":"사료제분기조작원","workSum":"사료를 제조하고자 곡물을 분쇄하는 기계를 조작하고 유지·관리한다.","doWork":"분쇄기의 가공속도, 입도(Grain Size, 粒度) 등을 조정판에 입력하여 제분되는 전체과정을 관찰·조절한다. 분쇄기통 안으로 투입되는 곡물의 유출량을 조절한다. 분쇄롤러의 간격을 조절하여 분쇄입도를 맞추고 분쇄속도를 조절한다. 분쇄기의 가동 및 분쇄상태를 관찰한다. 분리기를 통해 분리되는 곡물가루의 입자를 점검하며 건조기의 회전속도를 조정하여 수분이 제대로 건조되도록 관리한다. 건조가 완료된 곡물이 혼합공정으로 원활하게 이송되는지 확인한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"사료제분기조정판조작원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C108","dJobICdNm":"[C108]동물용 사료 및 조제식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003417:1', '{"dJobCd":"K000003417","dJobCdSeq":"1","dJobNm":"사별원","workSum":"분쇄된 밀가루를 체(금속망)로 걸러 용도와 등급별로 분리하는 사별기(篩別機)와 순화기를 조작·관리한다.","doWork":"분쇄된 밀가루가 사별기와 순화기로 이송되도록 유출량을 조절하고 사별되는 상태를 점검·확인한다. 이상이 있을 경우 제분기조작원(곡물가공)에게 연락하여 유출량을 조정한다. 정제기의 흡입풍량상태를 확인한다. 체(Filter)를 통과하는 밀가루를 손으로 직접 추출해서 육안으로 확인하거나 분석기기로 분석하여 제품 표준과 일치하는 지 확인한다. 세척솔의 가동상태 및 체의 상태를 주기적으로 점검하여 체가 정상적인 기능유지를 하도록 한다. 생산제품의 분석을 위해 주기적으로 견본을 채취하여 실험실에 분석을 의뢰한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"위험내재|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"사별기조작원, 순화기조작원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002316:1', '{"dJobCd":"K000002316","dJobCdSeq":"1","dJobNm":"양념제분기조작원","workSum":"각종 양념을 제조하기 위해 사용되는 원료(계피, 고추, 생강, 마늘 등)를 분쇄하는 제분기를 조작·관리한다.","doWork":"제분기의 호퍼(Hopper)에 양념을 만들기 위한 원료들(계피, 고추, 생강, 마늘 등)을 채운다. 양념 원료의 종류와 제조할 제품의 종류에 따라 분쇄기의 롤러 간격을 조정한다. 분쇄기를 가동하여 원료를 분쇄하고, 견본을 채취하여 제품 표준과 비교·검사한다. 분쇄된 양념 원료를 용기에 받아 혼합공정이나 포장공정으로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"유지","connectJob":"계피제분원, 고추냉이제분원, 고추제분원, 마늘제분원, 생강제분원, 파제분원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004925:1', '{"dJobCd":"K000004925","dJobCdSeq":"1","dJobNm":"옥피사별기조작원","workSum":"배아가 분리된 옥분(옥수수가루)에서 전분을 제조하고자 옥피(옥수수껍질)를 분리하는 기계를 조작한다.","doWork":"밸브를 열어 배아가 분리된 옥수수가루를 혼합탱크로 이송한다. 혼합액을 제조하고자 일정량의 물을 공급하고 교반기를 가동한다. 혼합액에 포함된 이물질이나 섬유질을 제거하고자 금속망이 부착된 여과장치를 통과시킨다. 견본을 채취하여 입도(Grain Size:粒度)를 검사한다. 혼합액을 분무하는 노즐을 조절한다. 원심분리기의 회전디스크에 혼합액을 분무하여 옥피를 분리한다. 불순물이 제거된 전분을 다음 공정으로 이송하고 분리된 옥피를 저장탱크로 이송한다. 자동화된 기계의 조정판에 농도, 디스크의 회전속도 등을 입력하여 분리되는 상태를 관찰·조절하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"사별기조정판조작원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005813:1', '{"dJobCd":"K000005813","dJobCdSeq":"1","dJobNm":"정미기조작원","workSum":"곡물가공용, 양조용, 식용으로 사용하고자 현미에 붙은 겨층을 깎고 정선하는 기계를 조작·관리한다.","doWork":"현미저장탱크의 저장량을 점검하고 견본을 채취하여 수분함량, 현미의 크기 등을 확인한다. 정미기의 도정도(搗精度:쌀에서 겨가 깎여나간 정도)를 맞추기 위하여 분동추의 마찰압력을 조절한다. 도정된 현미의 이물질을 제거하고 광택을 내는 제강기, 정선흔들체, 현미선별기의 가동상태를 점검한다. 기계설비의 점검이 완료되면 저장탱크의 배출구를 열고 기계를 가동한다. 정미기에서 도정된 현미의 견본을 채취하여 도정도를 확인한다. 기계의 가동상태를 확인하고 도정이 완료된 현미를 저장탱크로 운반하고자 버킷컨베이어(Bucket Conveyor)를 가동한다. 수시로 각 과정의 견본을 채취하여 도정상태를 점검한다. 작업이 완료되면 기계의 각 부위에 기름을 치고 파손되거나 낡은 기계부품을 수리한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|위험내재|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"정미도정원","connectJob":"마찰식정미기조작원, 방아식정미기조작원, 연삭식정미기조작원, 통풍식정미기조작원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006904:1', '{"dJobCd":"K000006904","dJobCdSeq":"1","dJobNm":"조제밀가루제조원","workSum":"조제(調製)밀가루를 만들기 위하여 밀가루로 제조할 제품(빵, 과자, 라면)의 특성에 맞게 설탕, 소금, 유지, 분유, 효모 등의 첨가물을 투입하여 혼합하는 혼합기를 조작한다.","doWork":"혼합기의 뚜껑을 열고 계량용기를 사용하여 일정량의 밀가루를 넣거나 저장탱크의 배출구를 열어 투입한다. 설탕, 분유, 효모, 향료, 조미료 등의 첨가물을 제품별 용도에 맞는 배합비에 따라 일정 비율로 투입한다. 혼합이 용이하도록 교반기를 가동한다. 배출구를 열고 견본을 채취하여 첨가물의 혼합상태를 점검한다. 혼합이 완료되면 혼합기의 배출구를 열고 저장탱크나 포장기의 호퍼로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|위험내재|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"프리믹스(Premixedflour)제조원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005571:1', '{"dJobCd":"K000005571","dJobCdSeq":"1","dJobNm":"펠릿사료성형기조작원","workSum":"배합된 사료를 압착하여 일정한 형태로 성형하는 기계를 조작·관리한다.","doWork":"성형할 제품의 종류에 따라 형틀을 선별한 후 수동공구를 사용하여 설치한다. 기계를 가열하고자 증기밸브를 돌려 순환관에 증기를 투입한다. 사료가루저장탱크의 배출구를 열어 사료가루를 성형기에 투입한다. 성형된 펠릿(Pellet)사료의 견본을 채취하여 중량, 크기, 형태 등을 검사하고 제품 표준과 비교한다. 냉각팬(Pan)을 가동하여 가열·성형된 펠릿사료를 냉각한다. 컨베이어(Conveyor)를 가동하여 성형된 사료를 저장탱크로 운반한다. 파손된 기계나 낡은 부품을 교환하기도 한다. 자동화된 기계의 조정판에 사료의 주입량, 압착시간, 가열온도 등을 입력하여 압착·성형되는 과정을 관찰·조절하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|위험내재|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C108","dJobICdNm":"[C108]동물용 사료 및 조제식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002942:1', '{"dJobCd":"K000002942","dJobCdSeq":"1","dJobNm":"현미기조작원","workSum":"정미가 용이하도록 돌, 지푸라기 등의 이물질을 제거하고 껍질을 벗기는 도정기를 조작·관리한다.","doWork":"곡물 저장탱크의 저장량을 확인하고 배출밸브를 조절하여 정선기에 투입되는 곡물의 유량을 조절한다. 정선기를 가동하여 곡물에 포함되어 있는 돌, 지푸라기, 먼지 등의 이물질을 제거한다. 정선된 곡물을 현미기의 저장탱크로 이송한다. 현미기를 조작하여 곡물의 탈부율(껍질을 제거하는 정도)을 조정한다. 곡물 저장탱크의 배출밸브를 돌려 현미기에 투입되는 곡물의 유량을 조절한다. 현미기를 가동하여 껍질과 현미를 분리한다. 분리된 껍질(뉘)에 포함된 곡물을 재가공하고자 현미기에 재투입한다. 분리된 현미를 진동식 분리기나 송풍식 분리기에 투입하여 완숙립(현미)과 미숙립(설미)으로 분리한다. 분리가 완료되면 송풍이송관을 가동하여 저장탱크로 이송한다. 현미공정에 투입된 곡물의 수량과 도정된 현미의 수량을 작업일지에 기록한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"현미도정원","dJobECd":"8732","dJobECdNm":"[8732]제분·도정 기계 조작원","dJobJCd":"8111","dJobJCdNm":"[8111]제분 및 도정 관련 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005310:1', '{"dJobCd":"K000005310","dJobCdSeq":"1","dJobNm":"건과류제조원","workSum":"감자칩(Potato Chip)과 같은 건과류를 제조하고자 세척하고 절단하여 튀기는 기계를 조작·관리한다.","doWork":"세척탱크에 급수밸브를 열어 물을 채운 후 일정수량의 원재료인 감자를 투입한다. 세척탱크의 회전날개를 가동하여 부착된 싹과 껍질 등 이물질을 제거한다. 절단기의 수동핸들을 돌려 칼날간격을 조절하고 호퍼에 감자를 투입한다. 호퍼의 배출구를 열고 절단기를 가동한다. 절단된 견본을 채취하여 두께를 검사한다. 절단된 감자를 물에 씻어 녹말 및 당분을 제거하고 건조대 위에 쌓아 물기를 제거한다. 조리통에 식용유를 채우고 버너를 점화하여 일정온도로 가열한다. 얇게 절단된 재료가 조리통에 일정하게 투입되도록 컨베이어 및 이송장치의 속도를 조절한다. 교반기를 가동하여 투입한 재료를 저어주고 색상을 살펴 튀김시간 및 온도를 조절한다. 조리가 완료되면 컨베이어를 가동하거나 철망용기를 사용하여 칩을 꺼내 냉각시키고 진동기를 통과시켜 식용유를 털어낸다. 기름이 제거된 칩을 소금 등의 첨가물을 뿌려 혼합한다. 부서진 칩 등을 제거하고 포장공정으로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"위험내재|고온|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"감자칩제조원","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001314:1', '{"dJobCd":"K000001314","dJobCdSeq":"1","dJobNm":"국수제조원","workSum":"각종 국수(건면류, 생면류, 숙면류)를 제조하기 위해 제면기(국수제조기계)를 조작·관리한다.","doWork":"제품의 종류에 따라 혼합할 재료(밀가루, 고구마, 감자, 쌀 등)를 준비하고 중량을 측정한다. 재료와 소금 또는 알칼리제(Kan-sui)를 섞어 배합한다. 맛을 차별화하거나 기능성을 부여하기 위한 각종 부재료를 함께 넣기도 한다. 일정량의 물을 배합기에 급수하여 배합된 재료를 반죽한다. 반죽정도를 검사한 후, 만들고자 하는 제품에 따라 압착롤러의 간격을 조절한다. 압착롤러를 가동하여 반죽을 납작하게 누른다. 보통 다단롤러를 이용해 점차 반죽의 두께를 줄이면서 면대를 만든다. 이때 압착되면서 감겨지는 면대가 서로 달라붙지 않도록 면대의 사이사이에 밀가루를 뿌린다. 사출기로 이송된 면대가 일정한 두께로 사출되도록 사출기의 롤러를 교정하고, 사출시키면서 일정한 국수면발 크기로 절단한다. 막대봉을 사용하여 국수면발을 받아 걸고 건조실로 운반한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"당면제조원","certLic":"한식조리기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004232:1', '{"dJobCd":"K000004232","dJobCdSeq":"1","dJobNm":"껌베이스제조원","workSum":"껌베이스를 제조하고자 껌의 주원료(치클, 초산비닐수지 등)에 고무질, 무기질 등을 혼합하고 반죽하는 기계를 조작·관리한다.","doWork":"제조하고자 하는 껌의 종류에 따라 필요한 껌베이스 주원료(추잉껌은 치클 등의 천연수지, 풍선껌은 초산비닐 등의 합성수지)를 준비한다. 1차적인 기계적 전단혼합(剪斷混合)을 하기 위해 배합기의 작동상태를 확인한 후 교반기를 가동한다. 2차적인 열용융혼합(熱溶融混合)을 하기 위해 재킷(Jacket)에 증기를 투입하고, 원료가 반죽되는 과정을 관찰하며 온도를 조절한다. 배출밸브를 열어 반죽된 원료를 첨가물과 혼합하는 공정으로 자동 이송한다. 견본을 채취하여 제품 표준과 비교한다. 배출구에 여과장치를 부착하여 불순물을 제거하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"껌반죽기조작원, 껌배합기조작원","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002670:1', '{"dJobCd":"K000002670","dJobCdSeq":"1","dJobNm":"껌성형기조작원","workSum":"껌베이스에 첨가물을 혼합한 껌매스를 일정한 규격과 모양으로 성형하는 기계를 조작·관리한다.","doWork":"혼합공정(껌베이스와 첨가물을 혼합하는 공정)을 거친 껌매스를 일반 냉각시킨다. 일반 냉각을 시킨 껌매스를 잘게 자른 후(보통 5kg 내외) 냉각터널(Cooling Tunnel)을 통과시킨다. 제조하고자 하는 껌의 규격에 맞게 성형기의 롤러(Roller) 간격을 조절한다. 성형기를 작동시켜 얇게 압연을 하고 일정한 모양과 크기로 절단한다. 이때 일반 껌은 막대 형태로, 사탕 씌울 껌은 작은 알약 형태로 자른다. 분말설탕이 뿌려진 껌시트(Gum Sheet)가 일정 수량씩 자동 적재되어 숙성실로 이송되도록 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006182:1', '{"dJobCd":"K000006182","dJobCdSeq":"1","dJobNm":"당액조리원","workSum":"사탕, 껌 등에 사용하는 당액을 제조하고자 원료(설탕, 물엿, 시럽, 버터 등)를 혼합·조리하는 압력솥을 조작·관리한다.","doWork":"조리할 당액의 종류를 작업표준과 비교·확인하고 일일 사용량이 충분한지 확인한다. 자동계량된 원료(설탕, 물엿, 시럽, 버터 등)를 압력솥에 투입하고 압력솥을 가열한다. 압력솥 내부의 온도와 압력이 일정하게 유지되는지 수시로 살피고 필요시 조정판의 온도와 압력 조절값을 재입력한다. 조리가 완료되면 압력솥의 뚜껑을 열고 견본을 채취하여 당도, 맛, 농도 등을 검사하고 제품 표준과 비교한다. 정밀한 성분 검사를 위하여 견본의 일부를 실험실로 보낸다. 펌프를 가동하여 조리된 당액을 저장탱크로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"당액제조원","connectJob":"껌당액제조원, 사탕당액제조원, 진공조리솥조작원","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005766:1', '{"dJobCd":"K000005766","dJobCdSeq":"1","dJobNm":"당액피복원","workSum":"빵, 과자 등의 표면에 당액이나 광택액 등을 코팅하는 기계를 조작·관리한다.","doWork":"제품의 종류에 맞게 제조된 당액(또는 광택액)을 기계의 호퍼(Hopper)에 투입한다. 호퍼의 배출밸브를 조절하고 당액(광택액)을 분무하는 노즐(Nozzle)의 구멍크기 등을 점검한다. 당액이나 광택액을 코팅할 제품을 컨베이어 위에 올려놓는다. 컨베이어를 가동한 후 호퍼의 밸브를 열고 노즐로 당액(광택액)을 분무한다. 당액(광택액)이 코팅된 제품을 관찰하여 코팅 상태를 점검한다. 노즐의 상태를 수시로 점검하고 필요시 교체한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"당의원","connectJob":"빵피복원, 파이피복원","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003882:1', '{"dJobCd":"K000003882","dJobCdSeq":"1","dJobNm":"두부제조원","workSum":"두부를 제조하고자 콩을 선별한 후 두부제조기를 조작·관리한다.","doWork":"자동선별기를 이용하거나 수작업으로 콩에 포함된 이물질(돌, 다른 곡물 등), 상한 콩, 썩은 콩 등을 골라낸다. 선별된 콩을 불리기 전에 깨끗한 물을 이용하여 세척한다. 분쇄 시 두유가 잘 추출되도록 세척한 콩에 물을 채우고 탱크에서 불린다. 레버를 돌려 글라인더 분쇄기의 간격을 조절한 후, 물에 담가 둔 콩을 투입한다. 밸브를 열고 일정 비율의 물을 공급하면서 두유를 제조한다. 비지를 분리한 두유를 끓인다. 끓는 과정에서 생기는 거품을 제거하기 위해 소포제를 사용하기도 한다. 끓인 두유에 일정량의 간수(응고제)를 투입하여 응고시킨다. 면포를 깐 성형틀에 구름 모양처럼 응고된 순두부를 넣고 압착 프레스를 가동해 두부 형태를 만든다. 세균의 번식을 막아 보존성을 높이고 유통을 용이하게 하기 위해 성형이 끝난 두부를 가열 숙성하고 찬물에 통과 시킨 후 냉장 유통한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"순두부제조원, 유부제조원, 비지제조원","certLic":"한식조리기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006085:1', '{"dJobCd":"K000006085","dJobCdSeq":"1","dJobNm":"레토르트배전기조작원","workSum":"각종 레토르트 식품(Retort Food:데우기만 하면 조리가 끝나는 식품)을 제조하고자 혼합한 원료를 가열하여 익히는 기계를 조작·관리한다.","doWork":"배전기 뚜껑을 열고 송풍기를 가동하여 혼합한 원료(즉석 스프, 카레, 짜장, 죽 등을 만들기 위한 레토르트 식품 원료)를 투입한다. 급수밸브를 조절하여 일정 비율의 물이나 식용유 등을 혼합 원료에 투입한다. 수동핸들을 돌려 배전기의 뚜껑을 밀폐하고 혼합이 용이하도록 교반기를 가동한다. 배전기를 일정 온도로 가열하고자 증기밸브를 돌려 순환관이나 재킷(Jacket)에 증기를 투입한다. 일정 시간 가열 후 견본을 채취하여 맛과 향, 익혀진 상태 등을 검사하고 제품 표준과 비교한다. 제품이 완전히 익혀졌으면 배전기의 압력밸브를 돌려 증기압력을 제거하고 배출밸브를 열어 충전탱크로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002566:1', '{"dJobCd":"K000002566","dJobCdSeq":"1","dJobNm":"로스터조작원","workSum":"초콜릿의 향을 더하고 외피 분리가 용이하도록 코코아 열매를 볶는 배전기를 조작·관리한다.","doWork":"코코아 열매를 선별기(석발기, 철분리기 등)에 투입하여 각종 이물질을 제거한다. 배전기의 조정판에 배전시간, 코코아 열매의 투입량, 가열온도 등을 입력한다. 이물질이 제거된 코코아 열매를 배전탱크에 투입한다. 배전기를 가동하여 코코아 열매를 굽고 투시창으로 볶아지는 상태를 관찰한다. 볶아진 코코아 열매를 껍질(shell)과 속으로 분리하고자 껍질분리기의 호퍼(Hopper)에 열매를 투입하고 기계를 가동한다. 액상의 초콜릿액을 제조하고자 분리된 속을 분쇄하는 분쇄기를 조작한다. 초콜릿액을 살균·탈취하고자 증기밸브를 돌려 고온의 증기를 재킷(Jacket)에 투입한다. 색상, 향, 미생물의 수 등을 검사하고자 견본을 채취해 실험실로 이송한다. 초콜릿액을 미세한 입도로 제조하고자 가열분쇄기에 투입한 후 분쇄된 초콜릿액을 저장탱크로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"가벼운 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"코코아배전원","connectJob":"가열분쇄기조작원, 껍질분리기조작원, 살균탈취기조작원","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003542:1', '{"dJobCd":"K000003542","dJobCdSeq":"1","dJobNm":"마카로니제조원","workSum":"마카로니를 제조하고자 재료를 혼합하고 압출하는 압착기를 조작·관리한다.","doWork":"생산할 마카로니(기계로 만든 파스타의 일종으로, 스파게티보다는 짧고 속이 비어있으며 계란이 들어가지 않음)의 종류에 따라 형판을 선별한 후, 이를 압착기에 부착한다. 원료 밀가루를 혼합기에 넣고 물을 부은 후, 정해진 온도에서 일정 시간 교반해 반죽을 만든다. 압착기의 조정판에 압착시간, 압착량, 가동속도 등을 입력하고 기계를 가동시킨다. 매끈하고 단단하게 만들어진 반죽을 압착기에 투입시키면서 반죽 중의 기포를 없애고 투명도를 높인다. 압착된 반죽을 다이(Die:두꺼운 금속판에 작은 구멍들이 뚫린 형태)에 통과를 시켜 마카로니를 만든다. 다이에서 나온 마카로니의 유해 미생물(곰팡이 등) 번식을 막기 위해, 컨베이어로 이동시키고 공기송풍기를 가동하여 수분 함량을 낮춘다. 견본을 채취하여 중량, 색상, 크기 등을 제품 표준과 비교·분석한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001802:1', '{"dJobCd":"K000001802","dJobCdSeq":"1","dJobNm":"만두성형기조작원","workSum":"만두피에 만두 속을 채우고 성형하는 만두성형기를 조작·관리한다.","doWork":"전 공정에서 배합된 만두소를 만두성형기의 호퍼(Hopper)에 투입한다. 제조하려는 만두의 종류에 따라 성형기의 조정판을 조정한다. 성형기를 가동시켜 컨베이어 위의 만두피에 만두 속을 자동으로 채우고(충전), 일정한 모양으로 성형한다. 충전(충진)·성형되는 만두의 외형, 만두 속의 충전(충진)상태 및 만두피의 봉합상태 등을 점검한다. 견본을 채취하여 중량을 측정하고 품질관리실로 보낸다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001613:1', '{"dJobCd":"K000001613","dJobCdSeq":"1","dJobNm":"만두소제조원","workSum":"각종 재료(고기, 김치, 야채 등)를 조미향신료와 혼합해 만두소를 제조하는 기계를 조작·관리한다.","doWork":"만두의 종류에 맞는 각종 재료(고기, 김치, 두부, 당면, 야채 등)를 보관창고(냉동, 냉장, 실온)에서 이동시킨 후, 이를 제품 표준과 비교·확인한다. 선별된 재료를 세척통에 넣어 흙과 이물질 등을 세척한 후, 자연건조를 시키거나 탈수기에 투입하여 물기를 제거한다. 세절기의 투입구에 여러 가지 재료를 정해진 순서에 따라 투입한 후, 기계를 가동하여 제품 표준에 맞는 규격으로 절단한다. 절단된 재료를 계량한다. 혼합기의 투입구에 절단된 재료와 조미향신료(조미료, 소금, 향신료 등)를 정해진 배합순서로 넣은 후 일정 시간 혼합한다. 혼합이 완료되면 배출밸브를 열거나 혼합통을 내려 만두소를 용기에 담는다. 혼합된 만두소를 만두피에 넣기 위한 성형공정으로 이동시킨다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"냉동만두소제조원","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006876:1', '{"dJobCd":"K000006876","dJobCdSeq":"1","dJobNm":"만두증숙냉동기조작원","workSum":"성형한 만두를 익힌 후 급속 냉동하는 설비를 조작·관리한다.","doWork":"만두의 종류에 따라 증숙(쪄서 숙성시키는 것) 온도와 시간을 확인한다. 스팀 온도, 컨베이어 벨트의 이송속도를 증숙기의 조정판 스위치에 입력한다. 컨베이어 벨트에 의해 자동적으로 증숙되는 과정을 모니터를 통해 확인한다. 급속냉동 설비의 조정판에 냉각온도를 입력한다. 증숙과정을 통해 익혀진 만두를 급속냉동(보통 영하 30도 이하)시킨 후 선별 과정으로 이송시킨다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"2년 초과 ~ 4년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001872:1', '{"dJobCd":"K000001872","dJobCdSeq":"1","dJobNm":"만두피성형원","workSum":"밀가루와 물, 부재료 등을 혼합해 면대를 만든 후 만두피를 제조하는 장비를 조작·관리한다.","doWork":"제품에 따른 적정량의 밀가루를 계량한 후, 혼합기의 호퍼(Hopper)에 투입한다. 제품 표준에 따른 일정량의 물을 넣은 후, 교반기를 가동하여 혼합하고 반죽을 만든다. 제조하고자 하는 만두피의 두께에 맞게 롤러의 간격을 조절한 후, 반죽을 롤러에 투입해 만두면대를 만든다. 제조된 만두면대를 면대걸이에 걸고 숙성을 시킨 후, 만두피 성형공정으로 이송시킨다. 제조할 만두의 종류에 따라 틀을 교체하기도 한다. 만두피 성형기를 가동시키면서 성형되는 과정을 관찰하여 이상이 없는지 점검한다. 만들어진 만두피는 만두 속을 충진하기 위한 공정으로 자동 이송시킨다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005699:1', '{"dJobCd":"K000005699","dJobCdSeq":"1","dJobNm":"반죽분할기조작원","workSum":"빵, 과자 등을 제조하고자 반죽을 일정한 크기로 절단하는 분할기를 조작·관리한다.","doWork":"분할기의 호퍼(Hopper)에 원료가 배합된 반죽을 투입한다. 분할기의 조정판에 절단할 반죽의 중량을 입력한다. 절단칼날의 가동상태를 점검한 후 호퍼의 배출구를 열고 기계를 가동한다. 수시로 분할된 반죽의 견본을 채취하여 수동저울이나 자동저울을 사용하여 중량을 검사한다. 컨베이어를 가동하여 분할한 반죽을 다음 공정으로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"반죽분할원, 케이크분할원","connectJob":"조형기조작원","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004595:1', '{"dJobCd":"K000004595","dJobCdSeq":"1","dJobNm":"반죽혼합원","workSum":"빵, 과자 등을 제조하고자 각종 원료(밀가루, 소금, 물, 포도당 등)를 혼합·반죽하는 기계를 조작·관리한다.","doWork":"작업표준에 따라 배합원료와 배합비를 확인한 후 원료(밀가루, 소금, 물, 포도당, 효모, 계란분 등)를 운반한다. 혼합기의 호퍼(Hopper)에 준비한 원료를 일정 비율로 투입한다. 교반기를 가동하여 원료를 균일하게 혼합한다. 혼합이 완료되면 견본을 채취하여 색, 반죽정도 등을 검사하고 제품 표준과 비교한 후 성형공정이나 발효공정으로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"과자반죽혼합원, 무발효반죽혼합원, 제빵반죽혼합원","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005114:1', '{"dJobCd":"K000005114","dJobCdSeq":"1","dJobNm":"배취롤러조작원","workSum":"일정한 모양의 사탕을 제조하고자 혼합된 사탕원료의 응고성을 높이는 롤러를 조작·관리한다.","doWork":"기계의 호퍼(Hopper)에 혼합된 원료를 투입한 후, 롤러의 간격을 조절하여 제품의 규격에 맞춘다. 호퍼의 배출구를 열고 원료를 배취롤러(Batch Roller)에 공급하여 원통형이나 판상으로 반죽한다. 원료의 점도에 따라 롤러의 온도를 조절해 준다. 성형롤러를 가동하여 원료를 원통형이나 막대모양으로 성형한다. 컨베이어를 가동하여 성형되는 사탕을 냉각기에 투입한 후 송풍기를 가동하거나 저온의 물을 냉각관에 순환시켜 제품을 냉각한다. 냉각된 사탕을 절단기에 투입하여 일정한 규격으로 절단한다. 제품의 종류에 따라 아몬드, 땅콩 등의 원료를 첨가하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006864:1', '{"dJobCd":"K000006864","dJobCdSeq":"1","dJobNm":"베이킹파우더혼합원","workSum":"베이킹파우더(빵, 과자 요리를 만들 때 사용하는 팽창제)를 제조하고자 원재료를 혼합하는 기계를 조작·관리한다.","doWork":"계량용기를 이용해 계량하거나 마대를 풀어 혼합할 원재료들을 혼합기에 투입한다. 혼합이 용이하도록 교반기를 가동한다. 혼합이 완료되면 혼합물에 포함된 굵은 입자를 제거하고자 사별기(체의 크기별로 다단계 형태)의 호퍼(Hopper)로 운반한다. 사별기의 체를 점검한 후 기계를 가동하고 호퍼의 배출구를 열어 굵은 입자를 제거한다. 혼합물의 견본을 채취하여 입도를 검사한다. 혼합이 완료되면 운반용기를 사용하여 충전기의 호퍼에 투입한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006912:1', '{"dJobCd":"K000006912","dJobCdSeq":"1","dJobNm":"비스킷배합기조작원","workSum":"비스킷을 제조하기 위해 비스킷 원료를 계량하고 배합기를 조작한다.","doWork":"밀가루 등 비스킷의 원료를 계량한다. 작업지시서에 따라 물과 밀가루 등을 배합기에 투입하고 온도, 습도 등을 설정한다. 배합통에 담겨진 밀가루반죽을 운반하여 웨곤에 걸고 투입한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004683:1', '{"dJobCd":"K000004683","dJobCdSeq":"1","dJobNm":"비스킷성형기조작원","workSum":"비스킷를 성형하기 위해 성형기를 조작한다.","doWork":"생산할 제품에 따라 제품 표준을 확인한다. 비스킷성형기에 온도, 시간 등을 설정한다. 매 시간마다 견본을 채취하여 배합두께 등을 확인하고 제품 표준기준을 충족하지 못하면 재설정한다. 재설정한 성형기를 가동하고 생산과정을 관찰한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"가벼운 작업","workPlace":"실내","physicalAct":"손사용|","workEnv":"소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001753:1', '{"dJobCd":"K000001753","dJobCdSeq":"1","dJobNm":"비스킷오븐기조작원","workSum":"비스킷을 굽기 위해 오븐기의 온도 등 제반 조건을 설정하고 조작한다.","doWork":"오븐기의 불꽃 등을 설정하고 조정한다. 견본을 채취하여 비스킷의 색깔을 토대로 제품의 불량 여부를 확인한다. 제품의 색깔에 따라 온도를 재조정한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"가벼운 작업","workPlace":"실내","physicalAct":"손사용|","workEnv":"소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001256:1', '{"dJobCd":"K000001256","dJobCdSeq":"1","dJobNm":"비스킷제조원","workSum":"비스킷을 제조하고자 혼합된 반죽을 일정한 두께로 밀고 모양을 찍는 성형기를 조작·관리한다.","doWork":"제품 표준에 맞는 제품을 생산하고자 압연롤러의 간격을 조절한다. 성형기를 작동한 후 제품의 상태(모양, 색상 등)를 제품 표준과 비교·점검한다. 성형하는 방법에 따라 철사절단기나 회전칼날을 이용하여 비스킷을 절단하기도 한다. 비스킷의 종류에 따라 소금, 설탕액, 계란액을 분사하는 노즐을 점검하기도 한다. 자동화된 기계의 조정판에 원료의 투입량, 중량 등을 입력하여 성형되는 과정을 관찰·조절하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"소프트비스켓성형원, 하드비스켓성형원","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002251:1', '{"dJobCd":"K000002251","dJobCdSeq":"1","dJobNm":"사탕제조원","workSum":"사탕을 제조하고자 각종 원료를 용해·혼합·성형하는 일을 한다.","doWork":"제조하고자 하는 제품의 종류에 따라 각종 사탕 원료(물엿, 설탕, 유제품, 식용유지, 벌꿀, 포도당, 향료, 착색료 등)를 준비한다. 자동계량된 사탕 원료를 용해기의 호퍼(Hopper)에 순서대로 투입한다. 원료의 용해가 용이하도록 증기밸브를 조절하여 재킷(Jacket:주입구)이나 순환관에 증기를 주입한다. 교반기를 가동한 후 일정 비율로 물을 투입해 점도를 조절한다. 작업표준에 명시된 용해온도를 유지하고자 온도계를 관찰하면서 증기밸브를 조정한다. 제품에 따라 콩류(땅콩), 가공한 과실(건포도, 설탕에 절인 오렌지껍질, 앵두, 복숭아 등) 등을 혼합하기도 한다. 용해, 혼합이 완료되면 견본을 채취하여 맛, 향, 점도 등을 검사하고 제품규격과 비교한다. 배출밸브를 열고 이송펌프를 가동하여 성형공정으로 용해액(또는 혼합액)을 이송한 후, 성형기의 호퍼에 용해액(또는 혼합액)을 투입한다. 점도를 성형에 알맞게 유지하고자 증기밸브나 전기열선 등의 가열장치를 가동한다. 제품의 종류에 따라 성형틀을 기계에 설치한다. 성형틀을 냉각하는 냉각수밸브를 조절한다. 기계를 가동하여 성형되는 과정을 관찰한다. 견본을 채취하여 제품규격과 비교한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"사탕성형기조작원, 사탕용해기조작원","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005480:1', '{"dJobCd":"K000005480","dJobCdSeq":"1","dJobNm":"사탕주형원","workSum":"각종 사탕 모양을 만들기 위하여 사탕액을 냉각된 형판(Mold)에 붓는다.","doWork":"호퍼(Hopper)의 뚜껑을 열어 사탕액을 채우고, 증기밸브를 돌리거나 열선을 가동하여 굳지 않도록 일정 온도로 가열한다. 만들고자 하는 사탕의 모양(제품 특유의 모양, 또는 각종 동물, 캐릭터 등)에 따라 형판을 선별한 후 호퍼의 배출구를 열어 사탕액을 형틀에 붓는다. 형틀에 채워지는 사탕액의 상태를 점검·확인하고 적절한 조치를 취한다. 사탕이 굳으면 형판을 떼어낸다. 제품의 규격, 중량, 색상 등을 검사하고자 견본을 실험실로 보낸다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"수동조작","connectJob":"젤리주형원, 초콜릿주형원","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002193:1', '{"dJobCd":"K000002193","dJobCdSeq":"1","dJobNm":"살균솥조작원","workSum":"충전·포장된 곡물조리식품을 장기 보존하고자 유해균을 살균하는 기계인 살균솥(Retort:레토르트)를 조작한다.","doWork":"내열성 플라스틱 필름 단독 혹은 금속박을 여러 층으로 접착하여 만든 재료로 포장한 제품을 금속상자에 정렬하여 쌓는다. 수동핸들을 돌려 살균솥의 문을 열고 제품을 넣은 금속상자를 쌓는다. 수동핸들을 돌려 살균솥의 문을 닫고 증기밸브를 돌려 살균솥 내부로 고온으로 가압된 증기를 투입한다. 온도계, 압력계 등을 관찰하고 증기밸브를 조절하여 명시된 온도, 압력을 조정한다. 규정시간 동안 가열하여 살균 후 증기밸브를 닫고 배기밸브를 열어 압력을 줄인다. 수동핸들을 돌려 살균솥의 문을 열고 제품을 꺼낸다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"위험내재|고온|소음·진동|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"레토르트살균원","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003426:1', '{"dJobCd":"K000003426","dJobCdSeq":"1","dJobNm":"샌드기조작원","workSum":"과자나 초콜릿에 첨가되는 젤리, 크림, 사탕 등을 일정한 크기와 모양으로 충전하거나 제조하는 기계를 조작·관리한다.","doWork":"생산할 제품과 충전할 크림, 버터, 초콜릿 등의 원료를 확인하고 원료분사에 알맞은 노즐(Nozzle)로 교체한 후 노즐의 주입위치를 맞춘다. 기계가 가동되면 샌드기에 투입되는 과자가 원활히 공급되도록 손으로 과자를 정렬하거나 충전물의 분사가 원활히 이루어지도록 노즐의 상태를 살핀다. 과자에 충전물이 정확히 주입될 수 있도록 충전속도와 컨베이어의 이송속도를 조절한다. 견본을 채취하여 주입량을 검사하고 제품 표준과 비교한다. 정밀한 성분검사를 하고자 견본의 일부를 실험실로 보낸다. 제품의 종류에 따라 성형판을 선별한 후 샌드기에 부착한다. 기계의 호퍼(Hopper)에 사탕, 젤리, 크림 등을 넣고, 굳지 않도록 일정한 온도를 유지하고자 전열장치를 가동하거나 증기밸브를 돌려 순환관에 증기를 주입한다. 기계를 가동하고 사탕, 젤리 등이 형판에 주입되는 과정을 관찰한다. 주입된 제품을 명시된 규격의 중량, 두께가 되도록 철사절단기를 가동하여 절단한다. 견본을 채취하여 정형상태, 중량, 크기 등을 검사하고 제품 표준과 비교한다. 기계의 조정판에 충전량, 주입시간, 컨베이어의 운반속도 등을 입력하여 가공되는 상태를 관찰·조절하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002900:1', '{"dJobCd":"K000002900","dJobCdSeq":"1","dJobNm":"스낵성형원","workSum":"압착한 면대를 일정한 크기와 모양의 스낵으로 제조하고자 압출성형기를 조작·관리한다.","doWork":"면대가 감긴 권취봉을 성형기의 걸대에 걸고 기계의 고무벨트 위에 밀어 넣는다. 제조할 제품의 종류에 따라 회전드럼 형틀을 선별하여 성형기에 설치한다. 성형기의 조정판을 조절하여 면대의 풀림속도와 회전드럼 형판의 회전속도를 맞춘다. 성형기를 가동하여 일정한 크기와 모양의 스낵을 제조한다. 성형된 제품의 견본을 채취하여 규격을 검사한다. 소모된 면대 권취봉을 교체하고 작업일지에 기록한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006663:1', '{"dJobCd":"K000006663","dJobCdSeq":"1","dJobNm":"식품정제기조작원","workSum":"혼합한 각종 식품 원료를 분쇄하여 미세한 입자로 만드는 롤러정제기를 조작·관리한다.","doWork":"제조하고자 하는 입자의 크기에 따라 정제기의 종류(조분쇄기, 세분쇄기, 미분쇄기)를 선택한다. 이송컨베이어를 가동하여 정제기의 호퍼(Hopper)에 원료를 투입한다. 원료가 굳지 않도록 증기밸브를 조절하여 호퍼를 가열한다. 원료의 견본을 채취하여 제분입도(입자의 크기)를 확인한다. 제품에 정해진 입자 크기를 얻기 위해 작업표준에 맞게 롤러의 간격을 조절한다. 호퍼의 배출밸브를 열고 정제기를 가동한다. 온도계와 압력계를 관찰하고 롤러의 회전상태를 점검한다. 정제된 원료의 견본을 채취하여 입자 크기를 제품 표준과 비교·검사한다. 작업이 완료되면 컨베이어나 이송관을 사용하여 후공정으로 운반한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004536:1', '{"dJobCd":"K000004536","dJobCdSeq":"1","dJobNm":"양갱제조원","workSum":"양갱을 제조하고자 한천과 각종 첨가물을 혼합하고 용해·응고하는 기계를 조작·관리한다.","doWork":"제조하려는 양갱의 종류에 따라 한천과 첨가물(물엿, 팥고물, 설탕, 소금)을 준비하고 계량한다. 한천에 일정 비율의 물을 섞은 후 혼합이 용이하도록 교반기를 가동한다. 혼합 용기 내부의 온도가 일정하게 유지되는지 관찰하고 필요시 조정판의 수치를 재조정한다. 한천의 용해가 완료되면 압력솥의 뚜껑을 열고 기타 첨가물(팥고물, 물엿, 설탕, 소금)을 투입한다. 특별한 맛(블루베리, 망고, 딸기, 커피, 호두, 밤 맛 등)을 내는 양갱을 만들기 위해, 맛에 맞는 앙금과 퓌레 등을 함께 첨가한다. 작업표준에 따라 일정한 농도가 될 때까지 가열한 후, 겔화(Gelation:콜로이드 용액의 입자가 구조를 가져 유동성을 잃고 고체로 변한 것)된 반제품을 원하는 모양의 틀에 일정 시간 넣고 응고시킨다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006353:1', '{"dJobCd":"K000006353","dJobCdSeq":"1","dJobNm":"유탕기조작원","workSum":"일정한 모양으로 성형된 라면의 면발을 튀기는 유탕기를 조작한다.","doWork":"증숙성형 공정을 통과한 라면면발을 납형(성형틀)에 넣고 컨베이어를 따라 이동하는 납형을 점검하며 면발의 상태를 확인한다. 컨베이어를 가동해 반제품형태의 라면 면발을 유탕기에 투입한다. 라면의 종류에 따라 튀기는 온도, 시간 등을 조절한다. 유탕공정이 끝난 제품을 냉각공정으로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|위험내재|고온|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003163:1', '{"dJobCd":"K000003163","dJobCdSeq":"1","dJobNm":"자동오븐조작원","workSum":"빵, 과자 등을 대량으로 굽는 터널식 오븐을 조작·관리한다.","doWork":"작업표준을 확인하고 제품의 종류 및 공정 등을 숙지한다. 오븐의 작동상태 및 컨베이어의 가동상태를 확인하다. 제품의 종류에 따라 굽는 시간 및 온도를 조절하기 위하여 작업표준에 따라 컨베이어의 속도조절스위치와 오븐의 온도조절스위치를 조정한다. 컨베이어 위에 놓인 제품의 정렬상태나 투입수량이 적당한지 점검·확인하고 기계를 가동한다. 오븐 가동 중에 오븐 내부의 온도가 일정하게 유지되는지를 점검하고 오븐의 투시창을 통하여 제품이 구워지는 상태를 확인한다. 견본을 채취하여 맛, 향, 구워진 상태 등을 검사하고 제품 표준과 비교한다. 오븐의 조정판에 오븐의 온도, 굽는 시간, 컨베이어의 속도 등을 입력하여 가공되는 과정을 관찰·조절하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"위험내재|고온|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"터널식오븐조작원","connectJob":"데크식오븐조작원, 릴식오븐조작원","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002842:1', '{"dJobCd":"K000002842","dJobCdSeq":"1","dJobNm":"제과롤러조작원","workSum":"스낵(Snack)을 제조하고자 혼합·증숙(쪄서 숙성)된 원료를 판상(Sheet)으로 만드는 롤러를 조작·관리한다.","doWork":"과자 제품에 따라 작업표준을 참조하여 롤러의 간격을 조절하고 기계를 가동한다. 컨베이어를 통해 자동 이송된 과자 원료가 롤러의 호퍼에 원활히 투입되는지 살핀다. 롤러를 통과하여 판상으로 제조된 원료의 견본을 채취하여 자나 마이크로미터 등으로 두께를 측정하고 제품 표준과 비교한다. 속도다이얼을 조절하여 롤러의 가동속도를 변경하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"박편기조작원","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004414:1', '{"dJobCd":"K000004414","dJobCdSeq":"1","dJobNm":"제과주형기조작원","workSum":"껌, 사탕, 젤리 등 말랑말랑한 과자를 제조하기 위한 주형기(Moulding Machine)를 조작·관리한다.","doWork":"제품의 종류에 따라 형판을 선별한 후, 주형기(Moulding Machine)에 부착한다. 젤리액 저장탱크의 온도계를 관찰하여 굳지 않도록 증기밸브를 돌리거나 열선을 가동하여 일정 온도로 가열한다. 저장탱크의 밸브를 열고 펌프를 가동하여 주형기의 호퍼(Hopper)로 젤리액을 이송한다. 주형기를 가동하고 조정판을 조절하여 젤리액의 충전속도와 조형판의 이동속도를 맞춘다. 형틀의 젤리액을 굳게 하고자 송풍기를 가동한다. 견본을 채취하여 중량, 모양 등을 검사한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001649:1', '{"dJobCd":"K000001649","dJobCdSeq":"1","dJobNm":"제면기조작원","workSum":"배합된 라면 반죽을 꼬불꼬불한 라면발로 만들기 위해 제면기를 조작·관리한다.","doWork":"제조하려는 라면의 종류에 따라 롤러를 교체하고, 면발 규격에 맞추기 위해 롤러의 간격을 조절한다. 전 공정(배합공정)에서 배합된 라면 반죽(소맥분과 배합수를 혼합)을 롤러를 이용해 얇게 눌러 펴서 면대(Sheet)를 만든다. 압연된 면대를 제면기를 이용하여 국수 모양(국수발)으로 만들면서, 컨베이어 벨트의 속도를 조절해 라면 특유의 꼬불꼬불한 면발 형태를 만들어 준다. 라면의 웨이브(Wave)가 적당한지 제품 표준과 비교한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002127:1', '{"dJobCd":"K000002127","dJobCdSeq":"1","dJobNm":"제면증숙성형기조작원","workSum":"라면의 면발을 증숙한 후 일정한 모양으로 만들기 위한 성형절단기를 조작·관리한다.","doWork":"제면공정을 통과한 라면 면발의 상태를 확인하면서 스팀박스(Steam Box)를 통과시킨다. 베타 성분을 지닌 라면 면발을 소화가 잘되는 알파 성분으로 만들어 주기 위해 보통 100도 이상으로 스팀 온도를 유지시킨다. 증숙공정이 완료되면 중량을 재는 등의 중간 검사를 한다. 포장 단위의 크기로 자르기 위한 성형절단기의 가동상태를 점검한다. 성형절단기의 조정판에 제품의 종류에 따라 절단규격을 입력하거나 칼날의 높낮이를 조정한다. 납형 케이스에 투입되는 면의 상태를 점검하면서 일정한 모양으로 만든다. 견본을 채취하여 규격, 맛, 증숙상태 등을 제품 표준과 비교·검사한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004669:1', '{"dJobCd":"K000004669","dJobCdSeq":"1","dJobNm":"제면혼합기조작원","workSum":"라면·국수 등 제면에 사용되는 원료(소맥분, 전분, 밀가루, 소금 등)를 배합수와 섞기 위한 혼합기를 조작·관리한다.","doWork":"제품의 종류에 따라 원료(소맥분, 전분 등)를 준비하고 자동 계량한다. 작업표준의 배합비에 따라 식품첨가물을 계량하고, 준비된 원료와 식품첨가물을 혼합기의 호퍼게이트(Hopper Gate)에 투입한다. 염수(여러 종의 배합수)를 급수하면서, 급수 상태와 교반기의 이상 유무를 살피고 혼합정도를 확인한다. 반죽이 완료되면 라면의 면대를 만든 후, 특유의 웨이브를 주기 위한 공정으로 자동 이송시킨다. 견본을 채취하여 점도, 색상 등을 검사하고 제품 표준과 비교한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품산업기사, 식품가공기능사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005083:1', '{"dJobCd":"K000005083","dJobCdSeq":"1","dJobNm":"조리솥조작원","workSum":"곡물 제품을 제조하고자 곡물을 혼합하여 조리하는 압력조리솥을 조작한다.","doWork":"조리솥의 뚜껑을 열고 계량한 곡물, 조미료, 향료 등을 투입한다. 수동핸들을 돌려 뚜껑을 닫고 가스버너를 점화하여 조리솥을 일정 온도로 가열한다. 제품의 종류별로 일정 시간 동안 가열한 후 조리가 완료된 견본을 채취하여 맛, 향 등을 검사하고 제품 표준과 비교한다. 조리가 완료되면 조리솥을 기울여 운반용기에 담거나 컨베이어 위에 올려놓아 다음 공정으로 운반한다. 제품의 종류와 가열시간, 조리횟수 등을 작업일지에 기록한다. 작업이 완료되면 물호스와 세척솔을 사용하여 조리솥 내부의 이물질을 제거한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"고온|다습|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C106","dJobICdNm":"[C106]곡물가공품, 전분 및 전분제품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002364:1', '{"dJobCd":"K000002364","dJobCdSeq":"1","dJobNm":"초콜릿액제조원","workSum":"코코아 원료(Cocoa Mass)에 각종 첨가물을 배합해 초콜릿액을 제조한다.","doWork":"제조하고자 하는 초콜릿 제품의 종류에 따라 필요한 코코아 원료(코코아버터, 코코아매스, 코코아분말 등)를 준비한다. 각종 첨가물(설탕, 유지, 유당, 분유 등)을 계량해 준비한 코코아 원료와 함께 배합탱크의 호퍼(Hopper)에 투입한다. 교반기를 가동하고 증기밸브를 조절해 배합탱크의 온도를 점차 올린다. 작업표준에 따라 용해에 적합한 온도까지 올리고, 이 온도를 일정 시간 유지한다. 배합이 완료되면 교반기의 가동을 중지하고 견본을 채취하여 제품 표준과 비교한다. 배출밸브를 열고 이송펌프를 가동하여 콘칭(Conching:정제, 정련)공정으로 배합액을 이송한다. 배합에 투입된 원료의 종류와 수량, 배합시간 등을 작업일지에 기록한다. 물호스나 세척솔을 사용하여 배합탱크를 세척한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"수동조작","connectJob":"바류초콜릿성형기조작원, 볼류초콜릿성형기조작원, 초콜릿배합원, 초콜릿성형기조작원, 판상류초콜릿성형기조작원","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003441:1', '{"dJobCd":"K000003441","dJobCdSeq":"1","dJobNm":"침전기조작원","workSum":"사탕을 제조하고자 사탕 용해액을 일정한 모양의 형판에 자동으로 침전시키는 침전기를 조작·관리한다.","doWork":"밸브를 열고 펌프를 가동하여 사탕 용해액을 침전기의 호퍼(Hopper)에 채운다. 사탕 용해액이 굳지 않도록 증기밸브를 조절하여 호퍼를 일정 온도로 가열한 후, 온도가 유지되도록 온도계를 관찰한다. 호퍼의 밸브를 열어 형판에 사탕 용해액을 붓고 일정 시간 동안 침전시킨다. 침전된 사탕의 중량을 측정하고 필요에 따라 사탕 용해액의 분출량을 조절한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005729:1', '{"dJobCd":"K000005729","dJobCdSeq":"1","dJobNm":"코팅팬조작원","workSum":"원형의 껌이나 아몬드·땅콩 등의 표면에 색상을 입히거나 광택을 주기 위하여 초콜릿이나 시럽을 코팅하는 기계를 조작·관리한다.","doWork":"기계의 호퍼(Hopper)에 껌, 땅콩, 아몬드 등을 투입한다. 분사기의 호퍼에 코팅원료(초콜릿, 시럽)를 투입한 후 굳지 않도록 증기밸브를 조절하여 호퍼를 가열한다. 코팅팬의 송풍기를 가동하여 노즐의 분사량을 조절한다. 제품의 견본을 채취하여 코팅량을 검사하고 제품규격에 따라 분사량을 조절한다. 코팅이 완료되면 컨베이어를 가동하여 다음 공정으로 운반한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"껌코팅팬조작원, 초콜릿코팅팬조작원","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005012:1', '{"dJobCd":"K000005012","dJobCdSeq":"1","dJobNm":"콘체기조작원","workSum":"배합된 초콜릿액의 색상, 맛, 질감 등을 향상시키기 위하여 식품첨가물을 혼합·정련(精鍊)하는 콘체기(Conche Machine)를 조작·관리한다.","doWork":"이송관의 펌프를 가동하여 배합된 초콜릿액을 콘체기의 호퍼(Hopper)에 투입한다. 일정 비율로 식품첨가물(코코아, 향료, 식용색소 등)을 계량한 후, 작업표준의 정해진 순서에 따라 호퍼에 함께 투입한다. 작업표준에 맞는 일정한 온도로 기계를 유지하고자 냉·온수밸브를 조절한다. 교반기를 가동한 후, 진동수, 주기, 회전속도 등이 일정하게 유지되도록 조정판의 다이얼과 레버를 조정한다. 작업이 완료되면 견본을 채취하여 맛, 향, 색상 등을 제품 표준과 비교·검사한다. 정밀한 성분검사를 위하여 견본의 일부를 실험실로 보낸다. 작업이 완료되면 기계의 배출밸브를 열고 펌프를 가동하여 저장탱크로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001850:1', '{"dJobCd":"K000001850","dJobCdSeq":"1","dJobNm":"크림피복기조작원","workSum":"케이크나 케이크형 과자에 크림을 바르는 기계를 조작·관리한다.","doWork":"펌프를 가동하여 기계의 호퍼(Hopper)에 크림을 채운다. 크림피복기의 노즐 상태를 점검하고 밸브를 조절한다. 케이크(또는 케이크형 과자)를 운반하는 컨베이어의 가동속도를 점검한 후, 피복량을 조절한다. 기계를 가동하여 크림이 피복되는 상태를 관찰한다. 규정된 중량의 크림이 피복되는지 확인하고자 케이크(케이크형 과자)의 중량을 측정한다. 작업장 내의 청결을 유지하고자 물호스와 세척솔로 기계의 각 부위를 세척한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1년 초과 ~ 2년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002142:1', '{"dJobCd":"K000002142","dJobCdSeq":"1","dJobNm":"파과분쇄기조작원","workSum":"사탕 제조과정에서 발생한 사탕 부스러기들을 모은 후 다시 녹여 사용하기 위해 분쇄기를 조작·관리한다.","doWork":"분쇄하고자 하는 입자 크기에 맞춰 분쇄기 롤러의 간격을 조절한다. 모은 사탕부스러기들을 분쇄기의 호퍼(Hopper)에 투입한다. 롤러의 하부에 통을 대고 분쇄기를 가동한다. 분쇄되는 과정을 관찰하고 견본을 채취하여 분쇄된 사탕의 크기를 검사한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"시범후 30일 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002356:1', '{"dJobCd":"K000002356","dJobCdSeq":"1","dJobNm":"파칭기조작원","workSum":"건조된 스낵(Snack) 반제품(생지)을 가열된 소금으로 튀기고 일정한 크기로 팽창시키는 파칭기(Parching Machine)를 조작·관리한다.","doWork":"기계의 회전실린더를 가열하고자 가스 또는 기름버너를 점화한다. 건조된 스낵 반제품의 이물질을 제거하고자 진동체와 공기집진장치를 가동한다. 컨베이어를 가동하여 회전실린더에 스낵 반제품을 투입하고 일정 비율의 소금을 투입한다. 회전실린더를 회전시키고 버너의 열량을 조절하여 가열해 반제품 스낵을 팽창시킨다. 팽창되어 나온 스낵의 색상, 향, 팽창상태 등을 확인하고 스낵의 투입량, 가열온도, 실린더의 회전속도 등을 조절한다. 진동체를 가동하고 스낵에 부착된 소금을 제거한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002403:1', '{"dJobCd":"K000002403","dJobCdSeq":"1","dJobNm":"퍼핑건조작원","workSum":"스낵(Snack)을 제조하고자 소맥분, 옥수수 등의 원료를 혼합하여 성형한 스낵을 가열하여 팽창시키는 압력용기(Puffing Gun)를 조작·관리한다.","doWork":"퍼핑건(압출성형기)의 투입구에 맥분, 옥수수 등을 혼합하여 일정 형태로 성형한 스낵을 투입한다. 투입구를 단단히 잠그고 가열한다. 압출성형기 내부의 스낵이 타지 않도록 기계 내부의 교반기를 가동하거나 압출성형기를 회전시킨다. 압력용기 내부의 온도와 압력이 일정하게 유지되는지 살피고 필요시 온도와 압력을 재조정한다. 일정 시간 고온고압으로 유지한 압출성형기의 뚜껑을 열어 투입된 원료를 퍼핑(팽창)시킨다. 기계의 배출구를 열고 송풍기를 가동하여 퍼핑된 스낵을 다음 공정으로 이송한다. 파손되거나 낡은 부품을 수리하거나 교체하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|고온|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"곡물팽화원","connectJob":"팽화기조작원","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000007432:1', '{"dJobCd":"K000007432","dJobCdSeq":"1","dJobNm":"프라잉기조작원","workSum":"스낵(Snack)을 제조하고자 압착 성형한 반제품 스낵을 기름에 튀기는 튀김기(Flying Machine)를 조작·관리한다.","doWork":"튀김기(Flying Machine)의 유량계를 점검하고 식용유 저장탱크의 밸브를 조절하여 부족한 식용유를 채운다. 식용유를 작업표준에 맞는 일정 온도로 가열시킨다. 컨베이어를 가동해 압착 성형된 반제품 스낵을 튀김기에 투입한다. 튀김기 내의 이송컨베이어를 가동하여 스낵의 튀김시간을 조절한다. 스낵의 견본을 채취하여 팽창상태, 중량 등을 검사하고 제품 표준과 비교하고자 실험실로 보낸다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8733","dJobECdNm":"[8733]곡물 가공제품 기계 조작원","dJobJCd":"8112","dJobJCdNm":"[8112]곡물가공 제품 기계 조작원","dJobICd":"C107","dJobICdNm":"[C107]기타 식품 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003057:1', '{"dJobCd":"K000003057","dJobCdSeq":"1","dJobNm":"가공원료육계량원","workSum":"소시지, 햄, 기타 가공육을 제조하고자 원료육과 기타 첨가물을 일정 비율로 계량한다.","doWork":"제조할 제품의 종류나 수량을 파악한다. 제품의 종류에 따라 부위별로 선별하여 절단된 원료육과 부재료 및 첨가물을 선택한다. 선택된 원료들을 계량용기에 담아서 바닥저울 등 계량용기를 사용하여 일정 비율로 계량한다. 계량한 재료를 운반용기에 담아 염지, 수침, 만육, 혼합 등 가공공정으로 운반하고, 계량된 재료의 중량을 품목별, 날짜별로 작업일지에 기록한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|위험내재|다습|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"수동조작","similarNm":"배합실작업원","connectJob":"소시지육계량원, 햄육계량원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C101","dJobICdNm":"[C101]도축, 육류 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004981:1', '{"dJobCd":"K000004981","dJobCdSeq":"1","dJobNm":"가공원료육정선원","workSum":"가공육 제품을 만들기 위하여 사용될 육류, 어류, 해조류 등의 원료를 부위별로 선별하고 다듬는다.","doWork":"원료육를 작업대에 올려놓고 칼로 지방, 껍질, 털, 힘줄, 지느러미, 머리, 꼬리, 내장 및 기타 이물질을 선별하여 제거한다. 이물질이 제거된 살코기를 각 부위별로 선별하여 절단한다. 또는 제품별로 일정한 크기로 절단한 후 각각 별도의 용기에 담는다. 사용한 칼 등 작업도구 및 작업대는 정비하고 세척·살균하여 보관한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"가벼운 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|다습|","workFunc1":"비교","workFunc2":"관련없음","workFunc3":"수동조작","connectJob":"가축육정선원, 어육정선원","certLic":"식육처리기능사","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C101","dJobICdNm":"[C101]도축, 육류 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006053:1', '{"dJobCd":"K000006053","dJobCdSeq":"1","dJobNm":"가공치즈원료분쇄원","workSum":"가공치즈의 제조에 필요한 원료치즈를 선별, 분쇄, 혼합하고자 관련 설비를 조작·관리한다.","doWork":"제조하고자 하는 치즈의 종류에 따라 유산균의 비중, 숙성도가 서로 다른 체더, 콜비, 몬테레이 등의 자연치즈 중에서 필요한 원료치즈를 선별한다. 선별된 원료치즈들의 비닐포장상태를 점검하고 이물질의 투입 여부를 관찰·확인한 후 냄새, 촉감, 맛을 통해서 적정한 상태의 원료치즈를 최종적으로 선별한다. 선정된 원료를 분쇄기에 넣고 가동하여 일정한 크기로 분쇄, 혼합한다. 분쇄된 원료치즈의 상태를 육안으로 검사한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"1개월 초과 ~ 3개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"살균가공치즈원료분쇄원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002523:1', '{"dJobCd":"K000002523","dJobCdSeq":"1","dJobNm":"가공치즈원료유화원","workSum":"분쇄된 원료치즈를 유화·용융하고자 유화솥 및 관련 설비를 조작·관리한다.","doWork":"분쇄가 완료된 원료치즈를 유화솥에 투입하고 일정량의 정제수, 유화제 및 과실, 야채, 고기 향료 등의 각종 첨가물을 넣는다. 치즈와 첨가물이 잘 혼합되도록 일정 시간 동안 교반기를 작동한다. 작동 중인 교반기의 교반상태를 점검하면서 천천히 스팀밸브를 열어 가열하고 온도를 일정하게 유지한다. 치즈 조직의 탄력을 위하여 진공펌프를 작동하여 유화솥 내부를 진공상태로 만든다. 유화·용융상태가 완료되면 이송펌프를 작동하여 치즈를 충전기로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"살균가공치즈원료유화원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003790:1', '{"dJobCd":"K000003790","dJobCdSeq":"1","dJobNm":"가금육냉각기조작원","workSum":"닭, 오리 등 가금육의 미생물 발생을 방지하고 신선한 상태로 보존하는 냉각장치(Chiller)를 조작·관리한다.","doWork":"물, 펌프, 교반기, 얼음공급기 등을 점검하여 냉각수 공급을 확인한다. 세척수의 염소농도를 확인하고 유지한다. 작업지시서에 따라 일정속도로 컨베이어를 가동하고 소독, 세척 및 냉각과정을 관찰한다. 수량에 따라 물의 온도 및 염소농도를 조절한다. 냉각이 완료된 도체를 등급 분류 및 포장라인으로 이송한다. 수냉각 공정 이외의 공기냉각을 하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"저온|다습|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"공기냉각기조작원, 수냉각기조작원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C101","dJobICdNm":"[C101]도축, 육류 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004099:1', '{"dJobCd":"K000004099","dJobCdSeq":"1","dJobNm":"가금육엑기스추출원","workSum":"닭발, 유황오리 등 가금육을 사용하여 엑기스를 추출하는 고압탱크를 조작·관리한다.","doWork":"호스를 사용하여 탱크 내부의 이물질을 제거하고 물기를 제거한다. 이물질 및 핏물이 제거된 재료와 한약 등의 부재료를 일정 비율로 계량한다. 고압탱크에 물, 재료 및 부재료 등을 투입한다. 증기밸브를 조절하여 고압탱크의 온도와 압력을 일정하게 유지한다. 엑기스 추출이 용이하도록 교반기를 가동한다. 일정 시간 동안 가압한 후 견본을 채취하여 농도, 향, 맛 등을 검사하고 제품 표준과 비교한다. 추출이 완료되면 고압탱크의 압력밸브를 열어 압력을 제거한다. 고압탱크의 배출구를 열고 펌프를 가동하여 저장탱크로 추출한 엑기스를 이송하거나파우치(Pouch) 등에 포장한다. 고압탱크 내의 찌꺼기를 꺼내 폐기장으로 운반한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"위험내재|고온|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"닭발엑기스추출원, 유화오리엑기스추출원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C101","dJobICdNm":"[C101]도축, 육류 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004236:1', '{"dJobCd":"K000004236","dJobCdSeq":"1","dJobNm":"고압살균기조작원","workSum":"통조림을 장기간 보존하고, 변질을 방지하고자 통조림 내용물을 살균하는 고압살균기를 조작한다.","doWork":"살균기에 밀봉된 통조림이 적재된 밀차를 밀어 넣는다. 내용물의 종류와 통조림의 크기에 따라 온도와 시간을 설정한다. 살균기의 문을 닫고 배기밸브를 연다. 증기밸브를 조작하여 순환관이나 재킷(Jacket)에 증기를 주입한다. 온도계, 압력계를 확인하여 규정온도와 압력이 되면 배기밸브를 잠그고 일정 시간 동안 고압으로 살균한다. 살균이 완료되면 증기밸브를 잠그고 살균기 내의 압력을 제거한다. 압력이 제거된 것을 확인하고 급수밸브를 열어 통조림을 냉각한다. 살균, 냉각 후에 금속막대로 용기를 두드려서 그 진동소리와 진동으로 제품 상태를 검사하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"위험내재|고온|다습|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"통조림살균원","connectJob":"통조림탈기원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C102","dJobICdNm":"[C102]수산물 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002836:1', '{"dJobCd":"K000002836","dJobCdSeq":"1","dJobNm":"균액제조원","workSum":"발효유에 사용되는 균액(유산균 발효액)을 제조하고자 원료를 혼합·살균하고 종균을 접종·배양하는 배합탱크를 조작한다.","doWork":"집유한 원유·탈지유 등의 원료에 규정된 성분규격에 적합하도록 여러 가지 원재료를 계량하고 혼합탱크의 투입구에 일정 비율로 투입한다. 혼합기의 교반기를 가동하여 일정 시간 동안 혼합한다. 혼합액을 초고온살균기로 열처리하여 살균한다. 열교환기를 통해 유산균이 생육할 수 있는 적정온도로 냉각한다. 배양탱크에 투입된 혼합액에 무균상태로 제조된 유산균(스타터:Starter)를 일정 비율로 접종하고 혼합한다. 유산균의 종류 및 제품의 종류에 따라 배양온도와 배양시간을 조절한다. 자동온도조절장치 및 산도계를 확인하며 배양과정을 관찰·기록한다. 배양이 완료된 혼합액(유산균 발효액)은 냉각하고 조합공정으로 이송한다. 물호스를 사용하여 작업장 주위를 청소한다. 자동화된 기계의 조정판에 배합비, 살균시간, 배양시간, 냉각시간 등을 입력하여 균액이 제조되는 과정을 관찰·조절하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|고온|다습|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"젖산균배양원","connectJob":"균액제조조정판조작원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003289:1', '{"dJobCd":"K000003289","dJobCdSeq":"1","dJobNm":"균질기조작원","workSum":"가공우유, 발효유 등 낙농제품의 배합용액이 균일하게 혼합·살균되도록 균질기(Homogenizer), 청정기(Clarifier), 살균기를 조작관리한다.","doWork":"균질시간, 압력, 살균온도 등을 조정판으로 입력한다. 청정기배합탱크에서 배합된 용액이 이송펌프를 통해 자동으로 균질기의 탱크로 이송되면 제어실에서 균질시간, 균질기의 온도 및 압력수치 등을 관찰하면서 균질공정이 제대로 수행되는지 확인한다. 현장의 설비를 직접 점검하면서 교반기의 가동상태, 압력밸브의 이상 유무 등을 확인한다. 균질과정이 완료되고 고온순간살균이 진행될 때 살균온도가 적정하게 제어조작 되는지 관찰한다. 작업과정을 작업일지에 기록한다. 작업이 완료되면 관련 설비를 수동이나 자동으로 세척한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"아주 가벼운 작업","workPlace":"실내","workEnv":"위험내재|다습|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006705:1', '{"dJobCd":"K000006705","dJobCdSeq":"1","dJobNm":"낙농품살균원","workSum":"우유, 버터, 치즈와 기타 낙농품 제조 시 인체에 해로운 세균을 살균하고자 살균기, 냉각기 및 기타 관련 장비를 조작한다.","doWork":"저장탱크, 살균기, 냉각기의 온도, 압력계기 및 배관라인의 밸브작동상태를 점검한다. 기계의 예열과 장치살균을 위하여 물을 넣고 서서히 살균온도까지 가열하여 일정 시간 순환한다. 증기밸브를 열어 살균기의 온도와 압력을 규정대로 올리고 원유저장탱크의 배출밸브를 열어 원유를 살균기로 이송한다. 펌프를 가동하여 일정한 압력으로 원유를 살균기에 주입하여 살균한다. 균질기의 압력을 일정하게 맞추고 살균된 원유를 균질한다. 펌프를 가동하여 균질된 원유를 냉각기에 통과시켜 일정한 온도로 냉각하고 저장탱크로 이송한다. 저장탱크의 밸브를 닫고 물, 알칼리용액, 산용액을 교대로 순환시켜 장치와 기계내부의 유성분을 완전히 제거한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"고온|다습|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","connectJob":"멸균기조작원, 순간고온살균원, 순간초고온살균원, 저온살균원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005058:1', '{"dJobCd":"K000005058","dJobCdSeq":"1","dJobNm":"낙농품원료조합반장","workSum":"요구르트, 발효유 등 낙농제품을 제조하고자 원료를 배합·균질·접종·숙성하는 데 종사하는 작업원의 활동을 감독·조정한다.","doWork":"제품의 종류에 따라 배합할 종균을 점검하고 배합비를 점검한다. 가공기계, 탱크 또는 작업원의 위생상태를 점검한다. 작업내용에 따라 작업원에게 지시·배치한다. 작업의 진행사항을 파악하고 작업내용을 보고한다. 작업원의 작업상황을 관리·감독하고 기술적인 지원 및 자재를 공급한다. 작업계획에 따라 세부실행항목을 수립하고 작업절차 및 방법을 결정하여 작업원에게 작업내용을 지시하고 작업배치를 한다. 표준작업명세에 따라 지시된 작업이 이루어지는지 작업원과 함께 작업하며 작업상황을 관찰하고 작업내용을 점검한다. 작업원의 직무교육 및 안전위생교육을 통하여 직무수행능력을 향상시키고 안전재해를 예방한다. 수시면담과 관찰을 통하여 작업원의 애로점 및 건의사항을 수렴·해결하고 문제점을 보완한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"4년 초과 ~ 10년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"고온|저온|소음·진동|","workFunc1":"조정","workFunc2":"감독","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000006613:1', '{"dJobCd":"K000006613","dJobCdSeq":"1","dJobNm":"냉동연육해동기조작원","workSum":"어묵, 맛살, 기타 어육제품을 제조하고자 냉동된 연육(얇게 저민 고기)을 해동하는 기계를 조작한다.","doWork":"냉동연육을 호이스트나 삽 등을 사용하여 해동기의 교반탱크에 일정량 투입한다. 일정량의 소금, 후추 등이 용해된 물을 넣고 교반기를 가동한다. 연육에 균질화와 탄력성을 부여하고자 절단칼날(Lottery Cutter)을 가동하여 분쇄·혼합한다. 혼합되는 상태를 관찰하며 탱크 내에 부착된 갈고리의 각도를 조절하여 반죽된 연육을 뒤집어 준다. 육안과 촉감으로 혼합된 상태를 확인한다. 혼합이 완료되면 레버를 당겨 운반용기에 담는다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"위험내재|저온|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"배합기조작원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C101","dJobICdNm":"[C101]도축, 육류 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003196:1', '{"dJobCd":"K000003196","dJobCdSeq":"1","dJobNm":"발효유균질액혼합원","workSum":"발효유를 제조하고자 배양과 균질이 완료된 배양액을 정수하는 여과기와 자외선 살균기 및 혼합하는 혼합기를 조작·관리한다.","doWork":"조합공정에서 비타민, 포도당, 올리고당, 철분, 식이섬유 등을 물에 용해시킨 시럽과 혼합한 유산균 발효액을 조합탱크에서 혼합탱크로 이송시킨다. 유산균 발효액의 양에 따라 일정한 비율로 여과 및 살균된 정수(淨水)를 투입한다. 혼합기를 조작하여 혼합측정치, 온도를 관찰하면서 적정상태를 제어조작한다. 혼합이 완료되면 탱크를 고온상태로 멸균하여 처리한다. 배관에서 표본을 추출하여 완성된 발효유의 산도, 당도 등을 측정기로 측정한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"아주 가벼운 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"위험내재|다습|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001257:1', '{"dJobCd":"K000001257","dJobCdSeq":"1","dJobNm":"발효유배양액균질원","workSum":"발효유 제조에 필요한 배양액을 균질상태로 만들기 위하여 균질기를 가동한다.","doWork":"배양이 완료된 용액이 균질기로 이송되면 향료를 일정 비율 첨가한 후 균질기를 가동시킨다. 표준치수측정기에 나타나는 균질기의 압력을 관찰하여 적정 압력치로 조정한다. 균질이 완료된 용액은 밸브를 조작하여 조합탱크로 이송한 후 온수밸브를 열어 조합탱크 안을 청소한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"아주 가벼운 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"위험내재|다습|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004362:1', '{"dJobCd":"K000004362","dJobCdSeq":"1","dJobNm":"발효유원료조합원","workSum":"발효유 제품을 제조하고자 시럽(액당)을 제조하여 유산균 배양액과 조합하는 탱크를 조작한다.","doWork":"제품의 종류에 따라 유산균 배양액과 시럽의 배합비를 확인한다. 고과당, 올리고당, 비타민, 철분, 식이섬유 등을 물에 용해한 후 살균하여 시럽을 제조한다. 조합탱크에 유산균 배양액과 시럽을 일정 비율로 주입한다. 교반기를 가동하여 일정 시간 혼합하여 조합액을 만든다. 조합액의 견본을 채취하여 당도계, 뷰렛(Buret) 등으로 당도, 산도를 검사하고 맛과 색을 확인하여 제품규격표와 비교한다. 완성된 조합액을 송액공정으로 이송한다. 조합탱크, 이송관, 밸브 등의 장비를 세균에 오염되지 않도록 고압증기로 살균한다. 자동화된 기계의 조정판에 혼합비, 균질시간, 숙성시간 등을 입력하여 조합되는 과정을 관찰·조절하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"고온|저온|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004999:1', '{"dJobCd":"K000004999","dJobCdSeq":"1","dJobNm":"배소기조작원","workSum":"가공된 오징어나 쥐치 등의 연육(얇게 저민 고기)을 식용으로 사용할 수 있도록 가열하여 익히는 배소기를 조작한다.","doWork":"주입기의 주입노즐과 회전밀대 사이의 간격을 조절하여 오징어나 쥐치 등 연육의 공급량을 조절한다. 연육 공급노즐의 간격을 조절하여 연육의 두께를 조절한다. 불꽃을 조절하고자 가스공급노즐을 조정하고 배소된 연육이 동그랗게 말려지지 않도록 가이드를 조절한다. 컨베이어를 가동하고 가스공급노즐의 밸브를 열어 점화한다. 투입되는 연육의 상태를 관찰하고 배출되는 상태를 점검하여 두께가 제품 표준과 일치하는지 확인한다. 연육의 배소상태를 확인하고 가스노즐을 조절하여 불꽃을 조정한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|고온|다습|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"증숙기조작원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C102","dJobICdNm":"[C102]수산물 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005164:1', '{"dJobCd":"K000005164","dJobCdSeq":"1","dJobNm":"배양반장","workSum":"발효유를 제조하고자 원료에 접종하는 젖산균을 배양하는 활동을 감독·조정한다.","doWork":"원료(우유, 탈지유)의 위생상태를 점검하고 배합비를 확인한다. 작업내용에 따라 작업원에게 지시·배치한다. 작업의 진행사항을 파악하고 작업내용을 보고한다. 작업원의 작업상황을 관리·감독하고 기술적인 지원 및 자재를 공급한다. 작업계획에 따라 세부실행항목을 수립하고 작업절차 및 방법을 결정하여 작업원에게 작업내용을 지시하고 작업배치를 한다. 표준작업명세에 따라 지시된 작업이 이루어지는지 작업원과 함께 작업하며 작업상황을 관찰하고 작업내용을 점검한다. 작업원의 직무교육 및 안전위생교육을 통하여 직무수행능력을 향상시키고 안전재해를 예방한다. 수시면담과 관찰을 통하여 작업원의 애로점 및 건의사항을 수렴·해결하고 문제점을 보완한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"2년 초과 ~ 4년 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"다습|소음·진동|","workFunc1":"조정","workFunc2":"감독","workFunc3":"제어조작","certLic":"식품가공기능사, 식품산업기사","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002030:1', '{"dJobCd":"K000002030","dJobCdSeq":"1","dJobNm":"버터교유기조작원","workSum":"일정한 품질의 버터를 제조하고자 크림숙성탱크와 버터교유기(Churning Machine)를 조작한다.","doWork":"원유에서 분리한 크림을 살균장치로 살균하고 냉각시킨다. 숙성탱크로 이송하여 일정 기간 숙성한다. 버터교유기의 속도 및 시간 등을 조절한다. 숙성탱크의 밸브를 열고 이송펌프를 가동하여 크림을 교유기로 이송한다. 교유기의 교반기와 압출기를 가동하여 버터입자의 생성이 원활히 될 수 있도록 크림을 혼합한다. 일반버터와 무염버터에 따라 교유기의 압출부에 소금을 투입하는 밸브로 투입되는 소금량을 조절한다. 교반기의 가동상태를 확인하고자 교반기의 배출구에서 떨어지는 버터의 미립자를 관찰한다. 견본을 채취하여 수분함유량, 지방, 색상에 대한 표준화 검사를 한다. 버터의 맛과 향을 검사한다. 작업량을 작업일지에 기록하고 물호스를 사용하여 교반기, 숙성탱크, 이송관 등의 설비를 청소한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|다습|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"버터교동기조작원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000005944:1', '{"dJobCd":"K000005944","dJobCdSeq":"1","dJobNm":"버터제조반장","workSum":"버터를 제조하고자 원유를 가공하는 데 종사하는 작업원의 활동을 감독·조정한다.","doWork":"일일 작업량에 따라 작업원을 배치하고 생산기록계기를 점검한다. 각 제조공정의 견본을 채취하여 맛, 향, 색상 등을 점검한다. 작업내용에 따라 작업원에게 지시·배치한다. 작업의 진행사항을 파악하고 작업내용을 보고한다. 작업원의 작업상황을 관리·감독하고 기술적인 지원 및 자재를 공급한다. 작업계획에 따라 세부실행항목을 수립하고 작업절차 및 방법을 결정하여 작업원에게 작업내용을 지시하고 작업배치를 한다. 표준작업명세에 따라 지시된 작업이 이루어지는지 작업원과 함께 작업하며 작업상황을 관찰하고 작업내용을 점검한다. 작업원의 직무교육 및 안전위생교육을 통하여 직무수행능력을 향상시키고 안전재해를 예방한다. 수시면담과 관찰을 통하여 작업원의 애로점 및 건의사항을 수렴·해결하고 문제점을 보완한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"2년 초과 ~ 4년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"청각|손사용|","workEnv":"대기환경미흡|","workFunc1":"조정","workFunc2":"감독","workFunc3":"제어조작","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001670:1', '{"dJobCd":"K000001670","dJobCdSeq":"1","dJobNm":"분무건조기조작원","workSum":"분유, 커피·포도당 등 분말식품을 제조하고자 농축액을 고압펌프, 분무기(Atmoizer)를 사용하여 열풍으로 건조하고 분말로 제조하는 기계를 조작한다.","doWork":"예열기, 고압펌프, 송풍기, 배풍기의 작동상태를 점검하고, 농축액의 농도 및 제품의 종류에 따라 노즐(Nozzle) 구멍의 지름을 결정한다. 송액펌프(Delivery Pump)를 조작하여 송액량을 조절한다. 송풍기를 작동하여 건조실에 열풍을 불어 넣는다. 건조실의 내부온도가 적정온도로 올라가면 송액펌프를 가동하여 예열기를 통과한 농축액을 건조실에 뿜어낸다. 배풍기의 스위치를 넣어 공기를 빨아내고, 집진장치를 가동하여 공기 중에 포함된 미세입자의 분말을 모아낸다. 건조실의 온도, 노즐의 분무상태, 농축액의 유출량 등을 감시·조절한다. 분말의 수분함량을 조절하고자, 제습된 찬 공기를 불어 넣거나 수분조절기를 가동한다. 분무 건조된 입자를 채분공정으로 이송시킨다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|고온|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001652:1', '{"dJobCd":"K000001652","dJobCdSeq":"1","dJobNm":"빙과제조반장","workSum":"빙과를 제조하기 위하여 원료를 혼합·살균·충전·냉각하는데 종사하는 작업원의 활동을 감독·조정한다.","doWork":"일일 생산계획에 따라 자재소요량을 계산하고 생산에 필요한 인원을 파악한다. 제조기계의 가동상태를 점검한다. 작업내용에 따라 작업원에게 지시·배치한다. 작업의 진행사항을 파악하고 작업내용을 보고한다. 작업원의 작업상황을 관리·감독하고 기술적인 지원 및 자재를 공급한다. 작업계획에 따라 세부실행항목을 수립하고 작업절차 및 방법을 결정하여 작업원에게 작업내용을 지시하고 작업배치를 한다. 표준작업명세에 따라 지시된 작업이 이루어지는지 작업원과 함께 작업하며 작업상황을 관찰하고 작업내용을 점검한다. 작업원의 직무교육 및 안전위생교육을 통하여 직무수행능력을 향상시키고 안전재해를 예방한다. 수시면담과 관찰을 통하여 작업원의 애로점 및 건의사항을 수렴·해결하고 문제점을 보완한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"4년 초과 ~ 10년 이하","workStrong":"보통 작업","workPlace":"실내","workFunc1":"조정","workFunc2":"감독","workFunc3":"제어조작","connectJob":"아이스크림제조반장","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000003811:1', '{"dJobCd":"K000003811","dJobCdSeq":"1","dJobNm":"빙주기조작원","workSum":"빙주를 제조하고자 향료와 감미료가 첨가된 수용액을 튜브모양의 셀로판 용기에 채우고 봉하는 기계를 조작한다.","doWork":"혼합탱크에 정화·살균된 물을 투입하고 제품의 종류에 따라 향과 맛을 내는 추출액을 일정 비율로 투입한다. 교반기를 가동하여 균일하게 혼합한 후 견본을 채취하여 맛과 향, 미생물 등을 검사한다. 빙주기의 각 부분을 점검한 후 혼합탱크의 배출밸브와 빙주기의 투입밸브를 연결한다. 빙주기에 투입되는 셀로판 용기를 확인하고 기계를 가동한다. 혼합용액이 빙주기를 통해 셀로판 용기에 충전되는 과정을 관찰한다. 충전된 셀로판 용기의 투입구를 밀봉하는 가열장치를 가동한다. 용기에 충전되는 혼합용액의 양을 점검한다. 자동화된 기계의 조정판에 혼합비율과 살균시간, 용액의 충전량 등을 입력하여 가동되는 과정을 관찰·조절하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"저온|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000001627:1', '{"dJobCd":"K000001627","dJobCdSeq":"1","dJobNm":"소시지혼합원","workSum":"소시지나 햄을 제조하고자 연육(얇게 저민 고기), 지육(소나 돼지 같은 것을 도살하여 머리, 내장, 족(足)을 잘라 내고 아직 각을 뜨지 아니한 고기), 어육 및 기타 첨가물을 혼합하고 미세한 입자로 분쇄하는 기계를 조작·관리한다.","doWork":"절단(Grinding)공정을 거친 육류와 향신료 등 각종 첨가물을 혼합기 탱크(Mixing Tank)의 투입구에 넣는다. 세절기(細切機)로 절단된 육류를 더욱 세밀하게 갈아내며 각종 첨가물을 일정 시간동안 혼합한다. 배출구의 절단칼날을 가동한다. 운반용 통(Retainer)을 배출구의 아래에 대어 절단되어 나오는 육류를 받는다. 견본을 채취하여 혼합 상태를 육안으로 검사한다. 절단상태가 규격과 일치하지 않으면 칼날의 회전속도를 다시 조절한다. 혼합육을 충전공정으로 이송한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"대기환경미흡|저온|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"소시지혼합기조작원","connectJob":"햄혼합원, 육류분쇄기조작원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C101","dJobICdNm":"[C101]도축, 육류 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002377:1', '{"dJobCd":"K000002377","dJobCdSeq":"1","dJobNm":"숙성탱크조작원","workSum":"아이스크림, 발효유와 기타 낙농제품의 조직을 향상시키고 안정화시키기 위하여 숙성탱크를 관리한다.","doWork":"용액을 투입하기 전에 탱크 내부의 이물질을 제거하고 증기살균기를 조작하여 무균상태로 만든다. 제품에 따라 숙성온도를 조절하고자 냉각액의 밸브를 열고 펌프를 가동하여 탱크의 재킷(Jacket)에 냉각액을 주입한다. 이송펌프, 호스 등을 사용하여 일정량의 용액을 주입하고, 내부에 장착된 교반기를 가동하여 혼합한다. 온도계를 확인하여 증기밸브나 냉각수밸브를 조절하고 내부의 온도를 숙성온도로 유지한다. 용액을 투입한 시간이나 양을 작업일지에 기록하고 탱크의 상단에 부착한다. 밸브를 열어 숙성탱크 내부에 물, 약품 등을 투여하고 탱크 내 잔유물이 남지 않도록 청소한다. 향료, 색소, 비타민 등의 첨가물을 투입구에 넣어 혼합하기도 하며 이송펌프·밸브를 조작하여 다음 공정으로 이송하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"저온|다습|소음·진동|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C105","dJobICdNm":"[C105]낙농제품 및 식용빙과류 제조업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000004022:1', '{"dJobCd":"K000004022","dJobCdSeq":"1","dJobNm":"식육즉석가공원","workSum":"수제소시지, 수제햄, 양념육 등 식육가공품을 만들고 판매한다.","doWork":"육제품과 육가공학 등의 이론 및 제조법을 통해 조미분쇄육, 양념육, 비가열 육가공제품, 소시지, 햄 등의 다양한 식육가공제품을 생산한다. 지육을 발골하여 포장육으로 가공하고 식육을 원료로 하여 햄류, 소시지류, 베이컨류의 식품 가공품 및 육류에 양념을 한 양념육류를 생산한다. 소비자 취향을 고려하여 현장중심의 제품을 생산한다. 홍보·마케팅 전략을 수립하고 고객관리 및 서비스를 제공하기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"6개월 초과 ~ 1년 이하","workStrong":"보통 작업","workPlace":"실내","physicalAct":"웅크림|","workEnv":"위험내재|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"수동조작","similarNm":"수제소시지제조원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C101","dJobICdNm":"[C101]도축, 육류 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;
+
+INSERT INTO job_sources (source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at) 
+         VALUES ('WORK24_DJOB', 'DICTIONARY', 'K000002728:1', '{"dJobCd":"K000002728","dJobCdSeq":"1","dJobNm":"식품훈제원","workSum":"소시지나 베이컨, 햄, 기타 가공육 및 어패류 등에 특유의 향이나 맛을 부여하고자 훈제하는 기계를 조작·관리한다.","doWork":"훈제실(훈연실:Smoke House) 내부의 청결상태를 점검하고, 훈제에 필요한 참나무나 기타 나무의 톱밥을 확인한다. 성형틀로 필름포장(Casing)된 소시지나 베이컨을 이동적재밀차(Trolley)의 걸대에 걸거나 층층이 쌓고 훈제실로 밀어 넣은 후 훈제실의 문을 닫고 기계를 가동한다. 계기판의 온도계와 압력계를 관찰하면서 조정판의 버튼을 조작하여 훈제실 내부의 온도와 압력을 조절한다. 일정한 시간이 지난 뒤 훈제가 완료되면 문을 열고, 밀차를 빼낸다. 자동분무기를 가동하여 그을음이나 이물질을 제거하면서 제품을 냉각시킨다. 견본을 채취하여 색상이나 맛을 확인하고 작업일지에 수량과 작업일시, 사용된 톱밥의 종류 및 훈연온도 등을 기록한다. 훈제가 완료된 제품을 밀차상태로 냉각실에 넣어 냉각시켜 주기도 한다.","optionJobInfo":{"eduLevel":"9년 초과 ~ 12년 이하(고졸 정도)","skillYear":"3개월 초과 ~ 6개월 이하","workStrong":"보통 작업","workPlace":"실내","workEnv":"대기환경미흡|위험내재|고온|","workFunc1":"수집","workFunc2":"관련없음","workFunc3":"제어조작","similarNm":"훈연원","connectJob":"어패류훈제원, 육류훈제원","dJobECd":"8731","dJobECdNm":"[8731]육류·어패류·낙농품 가공기계 조작원","dJobJCd":"8113","dJobJCdNm":"[8113]육류·어패류 및 낙농품 가공 기계 조작원","dJobICd":"C101","dJobICdNm":"[C101]도축, 육류 가공 및 저장 처리업","inqYear":"2016"}}', '{}', unixepoch('now'), unixepoch('now'))
+         ON CONFLICT(source_system, source_key) DO UPDATE SET
+           raw_payload = excluded.raw_payload,
+           normalized_payload = excluded.normalized_payload,
+           fetched_at = excluded.fetched_at,
+           updated_at = excluded.updated_at;

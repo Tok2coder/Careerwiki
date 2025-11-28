@@ -1,8 +1,10 @@
 import type {
+  DataSource,
   EducationDistribution,
   JobKecoCodeInfo,
   JobOrganizationInfo,
   JobRelatedEntity,
+  MajorDistribution,
   MajorRecruitmentStat,
   MajorUniversityInfo,
   SourceIdentifiers,
@@ -10,8 +12,8 @@ import type {
   UnifiedMajorDetail
 } from '../types/unifiedProfiles'
 
-const mergeSources = (...lists: Array<string[] | undefined>): string[] => {
-  const set = new Set<string>()
+const mergeSources = (...lists: Array<DataSource[] | undefined>): DataSource[] => {
+  const set = new Set<DataSource>()
   lists.forEach((list) => list?.forEach((item) => item && set.add(item)))
   return Array.from(set)
 }
@@ -360,7 +362,7 @@ const mergeDistribution = <T extends Record<string, string | undefined>>(
   return {
     ...(secondary ?? {}),
     ...(primary ?? {})
-  }
+  } as T
 }
 
 export const mergeMajorProfiles = (

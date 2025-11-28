@@ -164,26 +164,21 @@ export const requireExpert = requireRole('expert')
 /**
  * 직업/전공 페이지 편집 권한 체크
  * 
- * Phase 3: admin만 편집 가능
- * Ver. 2.0: 모든 사용자 편집 가능 (단, API 데이터 제외)
+ * Phase 4: 익명 편집 허용
+ * - 로그인 사용자: 모든 역할 허용
+ * - 익명 사용자: 비밀번호 검증은 API 엔드포인트에서 처리
  */
 export const requireJobMajorEdit = createMiddleware<{ Bindings: CloudflareBindings }>(
   async (c, next) => {
     const user = c.get('user')
     
-    if (!user) {
-      console.log('⛔ [Auth] Login required for job/major edit')
-      return c.json({ error: 'Login required to edit job/major pages' }, 401)
-    }
-    
-    if (user.role !== 'admin') {
-      console.log('⛔ [Auth] Only administrators can edit job/major pages')
+    // 익명 사용자도 허용 (비밀번호 검증은 API 엔드포인트에서 처리)
+    if (user) {
+      console.log('✅ [Auth] Job/Major edit permission granted')
       console.log('   User Role:', user.role)
-      return c.json({ error: 'Only administrators can edit job/major pages' }, 403)
+    } else {
+      console.log('✅ [Auth] Anonymous edit allowed (password verification in API)')
     }
-    
-    console.log('✅ [Auth] Job/Major edit permission granted')
-    console.log('   User Role:', user.role)
     
     return next()
   }
@@ -192,21 +187,22 @@ export const requireJobMajorEdit = createMiddleware<{ Bindings: CloudflareBindin
 /**
  * HowTo 편집 권한 체크
  * 
- * user/expert/admin 모두 편집 가능
+ * Phase 4: 익명 편집 허용
+ * - 로그인 사용자: user/expert/admin 모두 편집 가능
+ * - 익명 사용자: 비밀번호 검증은 API 엔드포인트에서 처리
  * 자신이 작성한 글만 수정/삭제 가능 (admin 제외)
  */
 export const requireHowToEdit = createMiddleware<{ Bindings: CloudflareBindings }>(
   async (c, next) => {
     const user = c.get('user')
     
-    if (!user) {
-      console.log('⛔ [Auth] Login required for HowTo edit')
-      return c.json({ error: 'Login required to edit HowTo guides' }, 401)
+    // 익명 사용자도 허용 (비밀번호 검증은 API 엔드포인트에서 처리)
+    if (user) {
+      console.log('✅ [Auth] HowTo edit permission granted')
+      console.log('   User Role:', user.role)
+    } else {
+      console.log('✅ [Auth] Anonymous HowTo edit allowed (password verification in API)')
     }
-    
-    // user, expert, admin 모두 가능
-    console.log('✅ [Auth] HowTo edit permission granted')
-    console.log('   User Role:', user.role)
     
     return next()
   }

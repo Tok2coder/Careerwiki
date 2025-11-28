@@ -32,8 +32,8 @@ const joinSlugParts = (primary?: string | null, secondary?: string | null): stri
   return truncateSlug(combined)
 }
 
-const encodeLegacyIdSegment = (type: 'job' | 'major' | 'guide', id: string): string | null => {
-  if (type === 'guide') {
+const encodeLegacyIdSegment = (type: 'job' | 'major' | 'guide', id: string | undefined): string | null => {
+  if (type === 'guide' || !id) {
     return null
   }
   const regex = type === 'job' ? /^job:([a-z])_(\d+)$/i : /^major:([a-z])_(\d+)$/i
@@ -73,8 +73,8 @@ const normalizeIdSlug = (id: string): string => {
   return truncateSlug(fallback)
 }
 
-export const composeDetailSlug = (type: 'job' | 'major', name: string | undefined, id: string): string => {
-  const legacySegment = encodeLegacyIdSegment(type, id)
+export const composeDetailSlug = (type: 'job' | 'major', name: string | undefined, id: string | undefined): string => {
+  const legacySegment = id ? encodeLegacyIdSegment(type, id) : null
   const nameSlug = slugifyName(name)
 
   // 이름이 있고 ID도 legacy 형식이면 둘 다 포함 (SEO + 정확한 매칭)

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ISR (Incremental Static Regeneration) Page Cache System
  * 
  * Architecture: Wikipedia/Namu Wiki-style cached dynamic rendering
@@ -110,10 +110,13 @@ export async function getOrGeneratePage<T>(
   const currentVersion = getTemplateVersion(pageType)
   const devMode = isDevelopmentMode(c.env)
   
+  // 🆕 캐시 우회 파라미터 확인 (_t 파라미터가 있으면 캐시 무시)
+  const bypassCache = c.req.query('_t') !== undefined
+  
   // Step 1: Check cache (with version validation) - Production only
   let cached: CachedPage | null = null
   
-  if (!devMode && c.env?.DB) {
+  if (!devMode && !bypassCache && c.env?.DB) {
     const result = await c.env.DB.prepare(`
       SELECT content, cache_version, title, description, og_image_url, created_at, updated_at
       FROM wiki_pages
@@ -135,7 +138,7 @@ export async function getOrGeneratePage<T>(
   // Step 3: Cache miss or version mismatch → regenerate
   
   // Determine cache status for headers
-  const cacheStatus = cached ? 'VERSION-MISMATCH' : 'MISS'
+  const cacheStatus = bypassCache ? 'BYPASS' : (cached ? 'VERSION-MISMATCH' : 'MISS')
   
   try {
     // Fetch data
@@ -155,8 +158,8 @@ export async function getOrGeneratePage<T>(
                         html.length > 10000 && // Minimum HTML size (empty pages are ~5KB)
                         !html.includes('정보가 준비 중입니다')
     
-    // Store in cache (only in production mode AND valid data)
-    if (!devMode && c.env?.DB && isValidPage) {
+    // Store in cache (only in production mode AND valid data AND not bypassing cache)
+    if (!devMode && !bypassCache && c.env?.DB && isValidPage) {
       const now = Math.floor(Date.now() / 1000) // Unix timestamp in seconds
       await c.env.DB.prepare(`
         INSERT OR REPLACE INTO wiki_pages 
@@ -178,9 +181,9 @@ export async function getOrGeneratePage<T>(
     }
     
     // Set cache headers
-    if (devMode) {
+    if (devMode || bypassCache) {
       c.header('Cache-Control', 'no-cache, no-store, must-revalidate')
-      c.header('X-Cache-Status', 'DEV-BYPASS')
+      c.header('X-Cache-Status', bypassCache ? 'BYPASS' : 'DEV-BYPASS')
     } else {
       c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
       c.header('X-Cache-Status', cacheStatus)
@@ -212,13 +215,107 @@ export async function invalidatePageCache(
   options: {
     slug?: string
     pageType?: 'major' | 'job' | 'guide'
+    jobId?: string  // 🆕 DB ID로 캐시 삭제 지원
+    majorId?: string  // 🆕 DB ID로 캐시 삭제 지원
   }
 ): Promise<number> {
-  const { slug, pageType } = options
+  const { slug, pageType, jobId, majorId } = options
   
   let query = 'DELETE FROM wiki_pages WHERE 1=1'
   const bindings: string[] = []
   
+  // 🆕 jobId 또는 majorId가 제공된 경우, 실제 slug를 찾아서 삭제
+  if (jobId && pageType === 'job') {
+    try {
+      // jobId가 복합 형식인 경우 처리 (job:G_K000000890 -> K000000890)
+      let dbJobId = jobId
+      if (jobId.includes(':')) {
+        const parts = jobId.split(':')
+        if (parts.length > 1) {
+          dbJobId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
+        }
+      }
+      
+      // DB에서 실제 job name을 찾아서 slug로 변환
+      const job = await db.prepare('SELECT name FROM jobs WHERE id = ? AND is_active = 1')
+        .bind(dbJobId)
+        .first<{ name: string }>()
+      
+      if (job?.name) {
+        // name을 slug로 변환 (정규화)
+        const normalizedSlug = job.name.toLowerCase()
+          .replace(/[-\s,·ㆍ\/()]/g, '')
+        
+        // 여러 가능한 slug 형식으로 삭제 시도
+        const slugsToDelete = [
+          normalizedSlug,
+          job.name.toLowerCase(),
+          encodeURIComponent(job.name)
+        ]
+        
+        let totalDeleted = 0
+        for (const slugToDelete of slugsToDelete) {
+          const deleteResult = await db.prepare('DELETE FROM wiki_pages WHERE slug = ? AND page_type = ?')
+            .bind(slugToDelete, 'job')
+            .run()
+          
+          if (deleteResult.meta.changes > 0) {
+            totalDeleted += deleteResult.meta.changes
+          }
+        }
+        
+        // slug로 찾지 못한 경우, pageType만으로 삭제 (fallback)
+        if (totalDeleted === 0) {
+          console.warn(`[ISR Invalidate] No cache found for jobId: ${jobId}, deleting all job caches as fallback`)
+          const result = await db.prepare('DELETE FROM wiki_pages WHERE page_type = ?')
+            .bind('job')
+            .run()
+          totalDeleted = result.meta.changes || 0
+        }
+        
+        return totalDeleted
+      }
+    } catch (error) {
+      console.error('[ISR Invalidate] Failed to find job slug:', error)
+    }
+  }
+  
+  if (majorId && pageType === 'major') {
+    try {
+      // majorId로 실제 major name을 찾아서 slug로 변환
+      const major = await db.prepare('SELECT name FROM majors WHERE id = ? AND is_active = 1')
+        .bind(majorId)
+        .first<{ name: string }>()
+      
+      if (major?.name) {
+        const normalizedSlug = major.name.toLowerCase()
+          .replace(/[-\s,·ㆍ\/()]/g, '')
+        
+        const slugsToDelete = [
+          normalizedSlug,
+          major.name.toLowerCase(),
+          encodeURIComponent(major.name)
+        ]
+        
+        let totalDeleted = 0
+        for (const slugToDelete of slugsToDelete) {
+          const deleteResult = await db.prepare('DELETE FROM wiki_pages WHERE slug = ? AND page_type = ?')
+            .bind(slugToDelete, 'major')
+            .run()
+          
+          if (deleteResult.meta.changes > 0) {
+            totalDeleted += deleteResult.meta.changes
+          }
+        }
+        
+        return totalDeleted
+      }
+    } catch (error) {
+      console.error('[ISR Invalidate] Failed to find major slug:', error)
+    }
+  }
+  
+  // 기존 slug 기반 삭제 로직
   if (slug) {
     query += ' AND slug = ?'
     bindings.push(slug)
@@ -231,7 +328,6 @@ export async function invalidatePageCache(
   
   const result = await db.prepare(query).bind(...bindings).run()
   
-  console.log(`[ISR Invalidate] Deleted ${result.meta.changes} cache entries`)
   return result.meta.changes || 0
 }
 

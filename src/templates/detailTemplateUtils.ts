@@ -1,14 +1,17 @@
 import type { DataSource, SourceIdentifiers } from '../types/unifiedProfiles'
 import type { SourceStatusRecord } from '../services/profileDataService'
 
-export const DEFAULT_SOURCE_LABELS: Record<DataSource, string> = {
-  CAREERNET: '커리어넷',
-  GOYONG24: '고용24'
+export const DEFAULT_SOURCE_LABELS: Partial<Record<DataSource, string>> = {
+  CAREERNET: '커리어넷 직업백과',
+  GOYONG24: '고용24 직업정보',
+  WORK24_DJOB: '고용24 직업사전'
 }
 
-export const escapeHtml = (value?: string | null): string => {
+export const escapeHtml = (value?: string | null | unknown): string => {
   if (!value) return ''
-  return value
+  // 문자열이 아닌 경우 문자열로 변환 시도
+  const strValue = typeof value === 'string' ? value : String(value)
+  return strValue
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -35,9 +38,17 @@ export const formatRichText = (value?: string | null): string => {
   }
 
   // HTML 태그가 포함되어 있으면 제거
-  const cleanedValue = value.includes('<') || value.includes('>') 
+  let cleanedValue = value.includes('<') || value.includes('>') 
     ? stripHtmlTags(value)
     : value
+  
+  // 깨진 문자 및 특수 기호 제거 (□, ■, ▢, �, 제어문자 등)
+  cleanedValue = cleanedValue
+    .replace(/[\u25A0-\u25FF]/g, '')  // 기하학적 도형 (□, ■, ▢ 등)
+    .replace(/\uFFFD/g, '')           // Replacement character (�)
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')  // 제어문자 (탭/개행/CR 제외)
+    .replace(/\u00A0/g, ' ')          // Non-breaking space → 일반 공백
+    .replace(/[^\S\n]+/g, ' ')        // 연속 공백 정리 (줄바꿈 보존)
 
   return cleanedValue
     .trim()
@@ -77,6 +88,7 @@ export interface BuildCardOptions {
   anchorId?: string
   telemetryScope?: string
   telemetryComponent?: string
+  editButton?: EditButtonOptions  // 편집 버튼 옵션
 }
 
 interface HeroImageRule {
@@ -109,7 +121,8 @@ const HERO_IMAGE_RULES: HeroImageRule[] = [
 
 const DEFAULT_HERO_IMAGE = 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=1600&q=80'
 
-export const resolveHeroImageUrl = (title: string): string => {
+export const resolveHeroImageUrl = (title?: string): string => {
+  if (!title) return DEFAULT_HERO_IMAGE
   const normalized = title.toLowerCase()
   for (const rule of HERO_IMAGE_RULES) {
     if (rule.keywords.some((keyword) => normalized.includes(keyword))) {
@@ -120,7 +133,7 @@ export const resolveHeroImageUrl = (title: string): string => {
 }
 
 export const renderHeroImage = (
-  title: string,
+  title?: string,
   options: { imageUrl?: string; dataAttribute?: string; context?: string } = {}
 ): string => {
   const imageUrl = options.imageUrl ?? resolveHeroImageUrl(title)
@@ -130,7 +143,7 @@ export const renderHeroImage = (
 
   return `
     <figure
-      class="relative overflow-hidden rounded-3xl border border-wiki-border/60 bg-wiki-bg/60 shadow-lg h-[200px] sm:h-[240px] md:h-[280px] lg:h-[320px] xl:h-[360px]"
+      class="relative overflow-hidden rounded-3xl border border-wiki-border/60 bg-wiki-bg/60 shadow-lg h-[280px] sm:h-[340px] md:h-[420px] lg:h-[500px] xl:h-[560px]"
       ${dataAttributeSnippet}
       data-hero-context="${escapeHtml(context)}"
       data-hero-url="${escapeHtml(imageUrl)}"
@@ -178,16 +191,88 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
     attributeParts.push(`data-cw-telemetry-component="${escapeHtml(telemetryComponent)}"`)
   }
 
+  const editButtonHtml = options.editButton
+    ? renderEditButton(options.editButton)
+    : ''
+
   return `
     <article ${attributeParts.join(' ')}>
-      <h3 class="section-title flex items-center gap-3 mb-5">
+      <h3 class="section-title flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
         <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30">
           <i class="fas ${icon} text-wiki-secondary text-sm"></i>
         </span>
         <span>${escapeHtml(title)}</span>
+        </div>
+        ${editButtonHtml ? `<div class="flex items-center">${editButtonHtml}</div>` : ''}
       </h3>
       ${body}
     </article>
+  `
+}
+
+/**
+ * 편집 버튼 렌더링
+ * 
+ * @param options 편집 버튼 옵션
+ * @returns 편집 버튼 HTML
+ */
+export interface EditButtonOptions {
+  entityType: 'job' | 'major' | 'howto'
+  entityId: string
+  field: string  // 'summary', 'duties', 'salary' 등
+  label?: string  // 버튼 라벨 (기본: '편집')
+  enabled?: boolean  // 편집 가능 여부 (기본: true)
+  dataSource?: 'api' | 'user' | 'admin'  // 데이터 출처
+}
+
+export const renderEditButton = (options: EditButtonOptions): string => {
+  const {
+    entityType,
+    entityId,
+    field,
+    label = '편집',
+    enabled = true,
+    dataSource
+  } = options
+
+  const buttonId = `edit-btn-${entityType}-${entityId}-${field}`
+  const buttonClass = enabled
+    ? 'edit-btn inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-wiki-primary hover:text-wiki-secondary hover:bg-wiki-primary/10 rounded-lg transition-colors border border-wiki-primary/30 hover:border-wiki-primary/50'
+    : 'edit-btn inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-wiki-muted cursor-not-allowed opacity-50 rounded-lg border border-wiki-border/30'
+
+  const badgeClass = dataSource === 'api'
+    ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+    : dataSource === 'user'
+    ? 'bg-green-500/20 text-green-400 border-green-500/30'
+    : dataSource === 'admin'
+    ? 'bg-purple-500/20 text-purple-400 border-purple-500/30'
+    : ''
+
+  const badgeLabel = dataSource === 'api'
+    ? 'API'
+    : dataSource === 'user'
+    ? '사용자'
+    : dataSource === 'admin'
+    ? '관리자'
+    : ''
+
+  return `
+    <button
+      id="${escapeHtml(buttonId)}"
+      class="${buttonClass}"
+      data-edit-button
+      data-entity-type="${escapeHtml(entityType)}"
+      data-entity-id="${escapeHtml(entityId)}"
+      data-field="${escapeHtml(field)}"
+      ${enabled ? '' : 'disabled'}
+      aria-label="${escapeHtml(label)} (${escapeHtml(field)})"
+      title="${enabled ? `${escapeHtml(label)} (${escapeHtml(field)})` : '편집 불가'}"
+    >
+      <i class="fas fa-edit text-xs" aria-hidden="true"></i>
+      <span>${escapeHtml(label)}</span>
+      ${badgeLabel ? `<span class="ml-1 px-1.5 py-0.5 text-[10px] font-semibold rounded border ${badgeClass}">${escapeHtml(badgeLabel)}</span>` : ''}
+    </button>
   `
 }
 
@@ -958,7 +1043,7 @@ export const buildDetailScaffold = ({
 
 export const renderSourceBadges = (
   sources?: DataSource[] | null,
-  labels: Record<DataSource, string> = DEFAULT_SOURCE_LABELS
+  labels: Partial<Record<DataSource, string>> = DEFAULT_SOURCE_LABELS
 ): string => {
   if (!sources || sources.length === 0) return ''
   return `
@@ -978,8 +1063,8 @@ export interface SourcesPanelOptions {
   profile: { sourceIds: SourceIdentifiers }
   sources?: SourceStatusRecord
   partials?: Partial<Record<DataSource, unknown | null>>
-  labels?: Record<DataSource, string>
-  descriptions?: Record<DataSource, string>
+  labels?: Partial<Record<DataSource, string>>
+  descriptions?: Partial<Record<DataSource, string>>
   title: string
   description?: string
   annotations?: Array<{ label?: string; content: string }>

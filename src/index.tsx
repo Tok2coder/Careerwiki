@@ -1,17 +1,19 @@
-import { Hono } from 'hono'
+﻿import { Hono } from 'hono'
 import type { Context } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
 import auth from './routes/auth'
-import { authMiddleware, requireAuth, requireAdmin, requireRole } from './middleware/auth'
+import { authMiddleware, requireAuth, requireAdmin, requireRole, requireJobMajorEdit, requireHowToEdit } from './middleware/auth'
 import { JOB_CATEGORIES, APTITUDE_TYPES } from './api/careernetAPI'
 import { getUnifiedJobDetail, getUnifiedJobDetailWithRawData, getUnifiedMajorDetail, searchUnifiedJobs, searchUnifiedMajors } from './services/profileDataService'
 import type { SourceStatusRecord } from './services/profileDataService'
 import type { DataSource, UnifiedJobDetail, UnifiedMajorDetail } from './types/unifiedProfiles'
 import { renderUnifiedJobDetail, createJobJsonLd } from './templates/unifiedJobDetail'
-import { renderDataDebugPage } from './templates/dataDebugTemplate'
+import { renderJobTemplateDesignPage } from './templates/jobTemplateDesignPage'
+import { renderJobETLInspectionPage } from './templates/jobETLInspectionPage'
 import { renderUnifiedMajorDetail, createMajorJsonLd } from './templates/unifiedMajorDetail'
+import type { JobSourceRow, MajorSourceRow } from './types/database'
 import { renderHowtoGuideDetail } from './templates/howtoDetail'
 import { buildCommentGovernanceItems, resolveCommentPolicy } from './templates/detailTemplateUtils'
 import {
@@ -68,7 +70,12 @@ import {
   updateComment
 } from './services/commentService'
 import type { AnalysisType, PricingTier, RequestStatus } from './types/aiAnalysis'
-import { getOrGeneratePage } from './utils/page-cache'
+import { getOrGeneratePage, invalidatePageCache } from './utils/page-cache'
+import { editJob, editMajor, editHowTo } from './services/editService'
+import { getRevisionById, listRevisions, restoreRevision } from './services/revisionService'
+import { validateUrl } from './utils/editValidation'
+import { findSimilarNames, saveNameMappings, deleteNameMapping, getExistingMappings } from './services/similarNamesService'
+import { renderAdminSimilarNamesPage } from './templates/adminSimilarNames'
 
 
 // Types
@@ -1031,7 +1038,13 @@ const renderLayout = (
 
 const SOURCE_LABEL_MAP: Record<DataSource, string> = {
   CAREERNET: '커리어넷',
-  GOYONG24: '고용24'
+  GOYONG24: '고용24',
+  WORK24_JOB: '고용24 직업정보',
+  WORK24_DJOB: '고용24 직업사전',
+  WORK24_MAJOR: '고용24 학과정보',
+  AI: 'AI 생성',
+  USER_CONTRIBUTED: '사용자 기여',
+  ADMIN_OVERRIDE: '관리자'
 }
 
 const DEFAULT_CANONICAL_ORIGIN = 'https://careerwiki.org'
@@ -1608,34 +1621,610 @@ app.get('/help/community-guidelines', (c) => {
   )
 })
 
+// Job Template Design Page
+app.get('/job-template-design', async (c) => {
+  try {
+    const db = c.env.DB as D1Database
+    if (!db) {
+      throw new Error('DB not available')
+    }
+
+    // 변호사 데이터 가져오기
+    const jobRow = await db.prepare(`
+      SELECT id, name FROM jobs WHERE name = '변호사' LIMIT 1
+    `).first<{ id: string; name: string }>()
+
+    if (!jobRow) {
+      c.status(404)
+      return c.text('변호사 데이터를 찾을 수 없습니다. ETL 시딩을 먼저 실행해주세요.')
+    }
+
+    // job_sources 가져오기
+    // job_id로 먼저 시도
+    let sources = await db.prepare(`
+      SELECT * FROM job_sources WHERE job_id = ?
+    `).bind(jobRow.id).all<JobSourceRow>()
+    
+    // job_id가 null인 경우 이름으로 직접 매칭 (더 정확하게)
+    if (!sources.results || sources.results.length === 0) {
+      console.log('job_id로 찾기 실패, 이름으로 매칭 시도:', jobRow.name)
+      
+      // JSON_EXTRACT로 직접 매칭 (SQLite 지원)
+      // normalized_payload와 raw_payload 모두 확인
+      try {
+        sources = await db.prepare(`
+          SELECT * FROM job_sources 
+          WHERE JSON_EXTRACT(normalized_payload, '$.name') = ?
+             OR JSON_EXTRACT(raw_payload, '$.dJobNm') = ?
+             OR JSON_EXTRACT(raw_payload, '$.jobNm') = ?
+             OR JSON_EXTRACT(raw_payload, '$.duty.job_nm') = ?
+        `).bind(jobRow.name, jobRow.name, jobRow.name, jobRow.name).all<JobSourceRow>()
+      } catch (e) {
+        console.error('JSON_EXTRACT 실패, 수동 필터링:', e)
+        // JSON_EXTRACT 안되면 전체 검색
+        const allSources = await db.prepare(`
+          SELECT * FROM job_sources WHERE normalized_payload LIKE ? OR raw_payload LIKE ?
+        `).bind(`%"name":"${jobRow.name}"%`, `%"${jobRow.name}"%`).all<JobSourceRow>()
+        
+        const matchedSources = allSources.results?.filter(source => {
+          try {
+            const normalized = JSON.parse(source.normalized_payload || '{}')
+            const raw = JSON.parse(source.raw_payload || '{}')
+            return normalized.name === jobRow.name || 
+                   raw.dJobNm === jobRow.name || 
+                   raw.jobNm === jobRow.name ||
+                   raw.duty?.job_nm === jobRow.name
+          } catch {
+            return false
+          }
+        }) || []
+        
+        sources = { results: matchedSources, success: true, meta: allSources.meta }
+      }
+    }
+    
+    console.log(`찾은 소스: ${sources.results?.length || 0}개`)
+
+    if (!sources.results || sources.results.length === 0) {
+      c.status(404)
+      return c.text('변호사의 소스 데이터를 찾을 수 없습니다.')
+    }
+
+    const html = renderJobTemplateDesignPage(jobRow.name, sources.results)
+    return c.html(html)
+  } catch (error) {
+    console.error('Template design page error:', error)
+    c.status(500)
+    return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
+  }
+})
+
+// Job Merge Designer Page (드래그 앤 드롭 병합 규칙 설계)
+app.get('/job-template-design2', async (c) => {
+  try {
+    const db = c.env.DB as D1Database
+    if (!db) {
+      throw new Error('DB not available')
+    }
+
+    // 실제 DB에 있는 직업들의 소스 데이터 가져오기 (다양한 예시 확보)
+    // 각 소스 시스템에서 균등하게 샘플링
+    // SQLite에서는 UNION ALL 안의 각 SELECT에 ORDER BY를 사용할 수 없으므로 서브쿼리로 감싸야 함
+    const allSources = await db.prepare(`
+      SELECT js.*, 
+             COALESCE(
+               j.name,
+               JSON_EXTRACT(js.normalized_payload, '$.name'),
+               JSON_EXTRACT(js.raw_payload, '$.dJobNm'),
+               JSON_EXTRACT(js.raw_payload, '$.jobNm')
+             ) as job_name
+      FROM (
+        -- 커리어넷 샘플 (20개)
+        SELECT * FROM (
+          SELECT * FROM job_sources 
+          WHERE source_system = 'CAREERNET' 
+          ORDER BY RANDOM() 
+          LIMIT 20
+        )
+        
+        UNION ALL
+        
+        -- 고용24 직업정보 샘플 (20개)
+        SELECT * FROM (
+          SELECT * FROM job_sources 
+          WHERE source_system = 'WORK24_JOB' 
+          ORDER BY RANDOM() 
+          LIMIT 20
+        )
+        
+        UNION ALL
+        
+        -- 고용24 직업사전 샘플 (20개)
+        SELECT * FROM (
+          SELECT * FROM job_sources 
+          WHERE source_system = 'WORK24_DJOB' 
+          ORDER BY RANDOM() 
+          LIMIT 20
+        )
+      ) js
+      LEFT JOIN jobs j ON js.job_id = j.id
+    `).all<JobSourceRow & { job_name: string }>()
+
+    console.log(`Found ${allSources.results?.length || 0} source records`)
+
+    if (!allSources.results || allSources.results.length === 0) {
+      c.status(404)
+      return c.text('샘플 직업 데이터를 찾을 수 없습니다. ETL 시딩을 먼저 실행해주세요.')
+    }
+
+    // 소스별로 데이터 통합
+    const careernetSamples: any[] = []
+    const work24JobSamples: any[] = []
+    const work24DJobSamples: any[] = []
+
+    allSources.results.forEach(row => {
+      try {
+        const rawData = JSON.parse(row.raw_payload || '{}')
+        if (!rawData || Object.keys(rawData).length === 0) return
+
+        if (row.source_system === 'CAREERNET') {
+          careernetSamples.push({ ...rawData, _jobName: row.job_name })
+        } else if (row.source_system === 'WORK24_JOB') {
+          work24JobSamples.push({ ...rawData, _jobName: row.job_name })
+        } else if (row.source_system === 'WORK24_DJOB') {
+          work24DJobSamples.push({ ...rawData, _jobName: row.job_name })
+        }
+      } catch (e) {
+        console.error(`Failed to parse ${row.source_system} for ${row.job_name}:`, e)
+      }
+    })
+
+    const { renderJobMergeDesigner } = await import('./templates/jobMergeDesigner')
+    const html = renderJobMergeDesigner(careernetSamples, work24JobSamples, work24DJobSamples)
+    return c.html(html)
+  } catch (error) {
+    console.error('Job merge designer error:', error)
+    c.status(500)
+    return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
+  }
+})
+
+// 직업별 디자이너 페이지: /job-template-design2/:slug
+app.get('/job-template-design2/:slug', async (c) => {
+  try {
+    const db = c.env.DB as D1Database
+    if (!db) {
+      throw new Error('DB not available')
+    }
+
+    const slug = decodeURIComponent(c.req.param('slug'))
+    
+    // slug로 직업 찾기
+    const job = await db.prepare(`
+      SELECT id, name, slug FROM jobs WHERE slug = ? LIMIT 1
+    `).bind(slug).first<{ id: string; name: string; slug: string }>()
+    
+    if (!job) {
+      c.status(404)
+      return c.text(`직업 "${slug}"을 찾을 수 없습니다.`)
+    }
+
+    // 해당 직업의 모든 소스 데이터 가져오기
+    const allSources = await db.prepare(`
+      SELECT js.*, 
+             COALESCE(
+               j.name,
+               JSON_EXTRACT(js.normalized_payload, '$.name'),
+               JSON_EXTRACT(js.raw_payload, '$.dJobNm'),
+               JSON_EXTRACT(js.raw_payload, '$.jobNm')
+             ) as job_name
+      FROM job_sources js
+      LEFT JOIN jobs j ON js.job_id = j.id
+      WHERE (
+        js.job_id = ?
+        OR JSON_EXTRACT(js.normalized_payload, '$.name') = ?
+        OR (js.source_system = 'WORK24_DJOB' AND JSON_EXTRACT(js.raw_payload, '$.dJobNm') = ?)
+        OR (js.source_system = 'WORK24_JOB' AND JSON_EXTRACT(js.raw_payload, '$.jobNm') = ?)
+      )
+    `).bind(job.id, job.name, job.name, job.name).all<JobSourceRow & { job_name: string }>()
+
+    console.log(`Found ${allSources.results?.length || 0} source records for job: ${job.name}`)
+
+    if (!allSources.results || allSources.results.length === 0) {
+      c.status(404)
+      return c.text(`직업 "${job.name}"의 소스 데이터를 찾을 수 없습니다.`)
+    }
+
+    // 다른 직업들의 예시 데이터 가져오기 (현재 직업에 없는 필드용)
+    // 각 소스별로 균등하게 샘플링하여 모든 필드에 예시 데이터가 있도록 함
+    const otherSamples = await db.prepare(`
+      SELECT source_system, raw_payload, job_name FROM (
+        -- CAREERNET 샘플 15개
+        SELECT js.source_system, js.raw_payload,
+               COALESCE(j.name, JSON_EXTRACT(js.normalized_payload, '$.name')) as job_name
+        FROM job_sources js
+        LEFT JOIN jobs j ON js.job_id = j.id
+        WHERE js.source_system = 'CAREERNET'
+          AND js.job_id != ?
+          AND js.raw_payload IS NOT NULL 
+          AND js.raw_payload != '{}'
+        ORDER BY RANDOM()
+        LIMIT 15
+      )
+      UNION ALL
+      SELECT source_system, raw_payload, job_name FROM (
+        -- WORK24_JOB 샘플 15개
+        SELECT js.source_system, js.raw_payload,
+               COALESCE(j.name, JSON_EXTRACT(js.raw_payload, '$.jobNm')) as job_name
+        FROM job_sources js
+        LEFT JOIN jobs j ON js.job_id = j.id
+        WHERE js.source_system = 'WORK24_JOB'
+          AND js.job_id != ?
+          AND js.raw_payload IS NOT NULL 
+          AND js.raw_payload != '{}'
+        ORDER BY RANDOM()
+        LIMIT 15
+      )
+      UNION ALL
+      SELECT source_system, raw_payload, job_name FROM (
+        -- WORK24_DJOB 샘플 20개 (필드가 많아서 더 많이)
+        SELECT js.source_system, js.raw_payload,
+               COALESCE(j.name, JSON_EXTRACT(js.raw_payload, '$.dJobNm')) as job_name
+        FROM job_sources js
+        LEFT JOIN jobs j ON js.job_id = j.id
+        WHERE js.source_system = 'WORK24_DJOB'
+          AND js.job_id != ?
+          AND js.raw_payload IS NOT NULL 
+          AND js.raw_payload != '{}'
+        ORDER BY RANDOM()
+        LIMIT 20
+      )
+    `).bind(job.id, job.id, job.id).all<{ source_system: string; raw_payload: string; job_name: string }>()
+
+    // 소스별로 데이터 통합
+    const careernetSamples: any[] = []
+    const work24JobSamples: any[] = []
+    const work24DJobSamples: any[] = []
+
+    // 현재 직업 데이터 추가 (우선 표시)
+    allSources.results.forEach(row => {
+      try {
+        const rawData = JSON.parse(row.raw_payload || '{}')
+        if (!rawData || Object.keys(rawData).length === 0) return
+
+        if (row.source_system === 'CAREERNET') {
+          careernetSamples.push({ ...rawData, _jobName: row.job_name, _isCurrentJob: true })
+        } else if (row.source_system === 'WORK24_JOB') {
+          work24JobSamples.push({ ...rawData, _jobName: row.job_name, _isCurrentJob: true })
+        } else if (row.source_system === 'WORK24_DJOB') {
+          work24DJobSamples.push({ ...rawData, _jobName: row.job_name, _isCurrentJob: true })
+        }
+      } catch (e) {
+        console.error(`Failed to parse ${row.source_system} for ${row.job_name}:`, e)
+      }
+    })
+
+    // 다른 직업 예시 데이터 추가 (예시용)
+    otherSamples.results?.forEach(row => {
+      try {
+        const rawData = JSON.parse(row.raw_payload || '{}')
+        if (!rawData || Object.keys(rawData).length === 0) return
+
+        if (row.source_system === 'CAREERNET') {
+          careernetSamples.push({ ...rawData, _jobName: `[예시] ${row.job_name}`, _isCurrentJob: false })
+        } else if (row.source_system === 'WORK24_JOB') {
+          work24JobSamples.push({ ...rawData, _jobName: `[예시] ${row.job_name}`, _isCurrentJob: false })
+        } else if (row.source_system === 'WORK24_DJOB') {
+          work24DJobSamples.push({ ...rawData, _jobName: `[예시] ${row.job_name}`, _isCurrentJob: false })
+        }
+      } catch (e) {
+        console.error(`Failed to parse sample ${row.source_system}:`, e)
+      }
+    })
+
+    const { renderJobMergeDesigner } = await import('./templates/jobMergeDesigner')
+    const html = renderJobMergeDesigner(
+      careernetSamples,
+      work24JobSamples,
+      work24DJobSamples,
+      job.name,
+      job.slug
+    )
+    return c.html(html)
+  } catch (error) {
+    console.error('Job merge designer error:', error)
+    c.status(500)
+    return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
+  }
+})
+
+// Major Merge Designer Page (전공 데이터 필드 병합 규칙 설계)
+app.get('/major-template-design', async (c) => {
+  try {
+    const db = c.env.DB as D1Database
+    if (!db) {
+      throw new Error('DB not available')
+    }
+
+    // 실제 DB에 있는 전공들의 소스 데이터 가져오기
+    const allSources = await db.prepare(`
+      SELECT ms.*, 
+             COALESCE(
+               m.name,
+               JSON_EXTRACT(ms.normalized_payload, '$.name'),
+               JSON_EXTRACT(ms.raw_payload, '$.major'),
+               JSON_EXTRACT(ms.raw_payload, '$.majorName')
+             ) as major_name
+      FROM (
+        -- 커리어넷 샘플 (20개)
+        SELECT * FROM (
+          SELECT * FROM major_sources 
+          WHERE source_system = 'CAREERNET' 
+          ORDER BY RANDOM() 
+          LIMIT 20
+        )
+        
+        UNION ALL
+        
+        -- 고용24 학과정보 샘플 (20개)
+        SELECT * FROM (
+          SELECT * FROM major_sources 
+          WHERE source_system = 'WORK24_MAJOR' 
+          ORDER BY RANDOM() 
+          LIMIT 20
+        )
+      ) ms
+      LEFT JOIN majors m ON ms.major_id = m.id
+    `).all<MajorSourceRow & { major_name: string }>()
+
+    console.log(`Found ${allSources.results?.length || 0} major source records`)
+
+    if (!allSources.results || allSources.results.length === 0) {
+      c.status(404)
+      return c.text('샘플 전공 데이터를 찾을 수 없습니다. ETL 시딩을 먼저 실행해주세요.')
+    }
+
+    // 소스별로 데이터 통합
+    const careernetSamples: any[] = []
+    const work24MajorSamples: any[] = []
+
+    // normalized_payload 사용 (병합 로직과 동일한 필드명 표시)
+    allSources.results.forEach(row => {
+      try {
+        const normalizedData = JSON.parse(row.normalized_payload || '{}')
+        if (!normalizedData || Object.keys(normalizedData).length === 0) return
+
+        if (row.source_system === 'CAREERNET') {
+          careernetSamples.push({ ...normalizedData, _majorName: row.major_name })
+        } else if (row.source_system === 'WORK24_MAJOR') {
+          work24MajorSamples.push({ ...normalizedData, _majorName: row.major_name })
+        }
+      } catch (e) {
+        console.error(`Failed to parse ${row.source_system} for ${row.major_name}:`, e)
+      }
+    })
+
+    const { renderMajorMergeDesigner } = await import('./templates/majorMergeDesigner')
+    const html = renderMajorMergeDesigner(careernetSamples, work24MajorSamples)
+    return c.html(html)
+  } catch (error) {
+    console.error('Major merge designer error:', error)
+    c.status(500)
+    return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
+  }
+})
+
+// 전공별 디자이너 페이지: /major-template-design/:slug
+app.get('/major-template-design/:slug', async (c) => {
+  try {
+    const db = c.env.DB as D1Database
+    if (!db) {
+      throw new Error('DB not available')
+    }
+
+    const slug = decodeURIComponent(c.req.param('slug'))
+    
+    // slug로 전공 찾기
+    const major = await db.prepare(`
+      SELECT id, name, slug FROM majors WHERE slug = ? LIMIT 1
+    `).bind(slug).first<{ id: string; name: string; slug: string }>()
+    
+    if (!major) {
+      c.status(404)
+      return c.text(`전공 "${slug}"을 찾을 수 없습니다.`)
+    }
+
+    // 해당 전공의 모든 소스 데이터 가져오기
+    const allSources = await db.prepare(`
+      SELECT ms.*, 
+             COALESCE(
+               m.name,
+               JSON_EXTRACT(ms.normalized_payload, '$.name'),
+               JSON_EXTRACT(ms.raw_payload, '$.major'),
+               JSON_EXTRACT(ms.raw_payload, '$.majorName')
+             ) as major_name
+      FROM major_sources ms
+      LEFT JOIN majors m ON ms.major_id = m.id
+      WHERE (
+        ms.major_id = ?
+        OR JSON_EXTRACT(ms.normalized_payload, '$.name') = ?
+        OR JSON_EXTRACT(ms.raw_payload, '$.major') = ?
+        OR JSON_EXTRACT(ms.raw_payload, '$.majorName') = ?
+      )
+    `).bind(major.id, major.name, major.name, major.name).all<MajorSourceRow & { major_name: string }>()
+
+    console.log(`Found ${allSources.results?.length || 0} source records for major: ${major.name}`)
+
+    if (!allSources.results || allSources.results.length === 0) {
+      c.status(404)
+      return c.text(`전공 "${major.name}"의 소스 데이터를 찾을 수 없습니다.`)
+    }
+
+    // 다른 전공들의 예시 데이터 가져오기 (normalized_payload 사용)
+    const otherSamples = await db.prepare(`
+      SELECT source_system, normalized_payload, major_name FROM (
+        SELECT ms.source_system, ms.normalized_payload,
+               COALESCE(m.name, JSON_EXTRACT(ms.normalized_payload, '$.name')) as major_name
+        FROM major_sources ms
+        LEFT JOIN majors m ON ms.major_id = m.id
+        WHERE ms.source_system = 'CAREERNET'
+          AND ms.major_id != ?
+          AND ms.normalized_payload IS NOT NULL 
+          AND ms.normalized_payload != '{}'
+        ORDER BY RANDOM()
+        LIMIT 15
+      )
+      UNION ALL
+      SELECT source_system, normalized_payload, major_name FROM (
+        SELECT ms.source_system, ms.normalized_payload,
+               COALESCE(m.name, JSON_EXTRACT(ms.normalized_payload, '$.name')) as major_name
+        FROM major_sources ms
+        LEFT JOIN majors m ON ms.major_id = m.id
+        WHERE ms.source_system = 'WORK24_MAJOR'
+          AND ms.major_id != ?
+          AND ms.normalized_payload IS NOT NULL 
+          AND ms.normalized_payload != '{}'
+        ORDER BY RANDOM()
+        LIMIT 15
+      )
+    `).bind(major.id, major.id).all<{ source_system: string; normalized_payload: string; major_name: string }>()
+
+    // 소스별로 데이터 통합
+    const careernetSamples: any[] = []
+    const work24MajorSamples: any[] = []
+
+    // 현재 전공 데이터 추가 (우선 표시) - normalized_payload 사용
+    allSources.results.forEach(row => {
+      try {
+        const normalizedData = JSON.parse(row.normalized_payload || '{}')
+        if (!normalizedData || Object.keys(normalizedData).length === 0) return
+
+        if (row.source_system === 'CAREERNET') {
+          careernetSamples.push({ ...normalizedData, _majorName: row.major_name, _isCurrentMajor: true })
+        } else if (row.source_system === 'WORK24_MAJOR') {
+          work24MajorSamples.push({ ...normalizedData, _majorName: row.major_name, _isCurrentMajor: true })
+        }
+      } catch (e) {
+        console.error(`Failed to parse ${row.source_system} for ${row.major_name}:`, e)
+      }
+    })
+
+    // 다른 전공의 예시 데이터 추가 (필드 예시용) - normalized_payload 사용
+    otherSamples.results?.forEach(row => {
+      try {
+        const normalizedData = JSON.parse(row.normalized_payload || '{}')
+        if (!normalizedData || Object.keys(normalizedData).length === 0) return
+
+        const displayName = `[예시] ${row.major_name}`
+        if (row.source_system === 'CAREERNET') {
+          careernetSamples.push({ ...normalizedData, _majorName: displayName, _isCurrentMajor: false })
+        } else if (row.source_system === 'WORK24_MAJOR') {
+          work24MajorSamples.push({ ...normalizedData, _majorName: displayName, _isCurrentMajor: false })
+        }
+      } catch (e) {
+        // Skip invalid JSON
+      }
+    })
+
+    const { renderMajorMergeDesigner } = await import('./templates/majorMergeDesigner')
+    const html = renderMajorMergeDesigner(
+      careernetSamples, 
+      work24MajorSamples,
+      major.name,
+      major.slug
+    )
+    return c.html(html)
+  } catch (error) {
+    console.error('Major merge designer error:', error)
+    c.status(500)
+    return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
+  }
+})
+
+// ETL 병합 로직 점검 페이지: /job-template-design3/:slug
+app.get('/job-template-design3/:slug', async (c) => {
+  try {
+    const db = c.env.DB as D1Database
+    if (!db) {
+      throw new Error('DB not available')
+    }
+
+    const slug = decodeURIComponent(c.req.param('slug'))
+    
+    // slug로 직업 찾기
+    const job = await db.prepare(`
+      SELECT id, name, slug, merged_profile_json FROM jobs WHERE slug = ? LIMIT 1
+    `).bind(slug).first<{ id: string; name: string; slug: string; merged_profile_json: string | null }>()
+    
+    if (!job) {
+      c.status(404)
+      return c.text(`직업 "${slug}"을 찾을 수 없습니다.`)
+    }
+
+    // 해당 직업의 모든 소스 데이터 가져오기
+    const allSources = await db.prepare(`
+      SELECT js.*, 
+             COALESCE(
+               j.name,
+               JSON_EXTRACT(js.normalized_payload, '$.name'),
+               JSON_EXTRACT(js.raw_payload, '$.dJobNm'),
+               JSON_EXTRACT(js.raw_payload, '$.jobNm')
+             ) as job_name
+      FROM job_sources js
+      LEFT JOIN jobs j ON js.job_id = j.id
+      WHERE (
+        js.job_id = ?
+        OR JSON_EXTRACT(js.normalized_payload, '$.name') = ?
+        OR (js.source_system = 'WORK24_DJOB' AND JSON_EXTRACT(js.raw_payload, '$.dJobNm') = ?)
+        OR (js.source_system = 'WORK24_JOB' AND JSON_EXTRACT(js.raw_payload, '$.jobNm') = ?)
+      )
+    `).bind(job.id, job.name, job.name, job.name).all<JobSourceRow & { job_name: string }>()
+
+    console.log(`Found ${allSources.results?.length || 0} source records for job: ${job.name}`)
+
+    if (!allSources.results || allSources.results.length === 0) {
+      c.status(404)
+      return c.text(`직업 "${job.name}"의 소스 데이터를 찾을 수 없습니다.`)
+    }
+
+    // Merged profile 파싱
+    let mergedProfile: UnifiedJobDetail | null = null
+    if (job.merged_profile_json) {
+      try {
+        mergedProfile = JSON.parse(job.merged_profile_json) as UnifiedJobDetail
+      } catch (e) {
+        console.error('Failed to parse merged_profile_json:', e)
+      }
+    }
+
+    const html = renderJobETLInspectionPage(
+      job.name,
+      job.id,
+      allSources.results,
+      mergedProfile
+    )
+    return c.html(html)
+  } catch (error) {
+    console.error('ETL inspection page error:', error)
+    c.status(500)
+    return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
+  }
+})
+
 // Job Wiki List Page
 app.get('/job', async (c) => {
   const keywordRaw = c.req.query('q') || ''
-  const categoryRaw = c.req.query('category') || ''
   const keyword = keywordRaw.trim()
-  const category = categoryRaw.trim()
   const includeSources = parseSourcesQuery(c.req.query('sources'))
   const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-  const perPage = parseNumberParam(c.req.query('perPage'), 50, { min: 1, max: 50 })
-
-  const categoryOptions = Object.entries(JOB_CATEGORIES)
-    .map(([label, code]) => {
-      const escapedCode = escapeHtml(code)
-      const isSelected = code === category
-      return `<option value="${escapedCode}" ${isSelected ? 'selected' : ''}>${escapeHtml(label)}</option>`
-    })
-    .join('')
-
-  const perPageOptions = [20, 50]
-    .map((size) => `<option value="${size}" ${perPage === size ? 'selected' : ''}>${size}개</option>`)
-    .join('')
+  const perPage = 50 // 고정값
+  const sort = c.req.query('sort') || 'relevance' // 정렬 옵션
 
   const searchParams = new URLSearchParams()
   if (keyword) searchParams.set('q', keyword)
-  if (category) searchParams.set('category', category)
   if (includeSources?.length) searchParams.set('sources', includeSources.join(','))
   if (page > 1) searchParams.set('page', String(page))
-  if (perPage !== 20) searchParams.set('perPage', String(perPage))
+  if (sort && sort !== 'relevance') searchParams.set('sort', sort)
 
   const canonicalPath = `/job${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
   const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
@@ -1648,20 +2237,15 @@ app.get('/job', async (c) => {
     return normalized.length > 220 ? `${normalized.slice(0, 217)}…` : normalized
   }
 
-  const getCategoryLabel = (): string | undefined => {
-    const entry = Object.entries(JOB_CATEGORIES).find(([, code]) => code === category)
-    return entry ? entry[0] : undefined
-  }
-
   try {
     // Direct D1 query - no KV cache
     const result = await searchUnifiedJobs(
       {
         keyword,
-        category,
         page,
         perPage,
-        includeSources
+        includeSources,
+        sort
       },
       c.env
     )
@@ -1669,156 +2253,9 @@ app.get('/job', async (c) => {
     const items = result.items
     const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
 
+    // 공통 함수 renderJobCard 사용
     const jobCards = items.length
-      ? items
-          .map((entry) => {
-            const job = entry.profile
-            const display = entry.display ?? {}
-            const jobSlug = composeDetailSlug('job', job.name, job.id)
-            const jobUrl = `/job/${encodeURIComponent(jobSlug)}`
-            const summary = escapeHtml(formatSummaryText(display.summary))
-            const categoryName = display.categoryName || job.category?.name
-            
-            // 직업 만족도 등급 계산 (상세페이지와 동일한 로직)
-            const getSatisfactionGrade = (satisfaction: string | undefined) => {
-              if (!satisfaction) return null
-              const score = parseFloat(satisfaction) || 0
-              
-              if (score >= 80) {
-                return { 
-                  level: '매우 좋음', 
-                  bg: 'bg-green-500/10', 
-                  border: 'border-green-500/20', 
-                  iconColor: 'text-green-400',
-                  textColor: 'text-green-300',
-                  textMuted: 'text-green-300/80',
-                  percentColor: 'text-green-300/60'
-                }
-              } else if (score >= 60) {
-                return { 
-                  level: '좋음', 
-                  bg: 'bg-sky-500/10', 
-                  border: 'border-sky-500/20', 
-                  iconColor: 'text-sky-400',
-                  textColor: 'text-sky-300',
-                  textMuted: 'text-sky-300/80',
-                  percentColor: 'text-sky-300/60'
-                }
-              } else if (score >= 40) {
-                return { 
-                  level: '보통', 
-                  bg: 'bg-yellow-500/10', 
-                  border: 'border-yellow-500/20', 
-                  iconColor: 'text-yellow-400',
-                  textColor: 'text-yellow-300',
-                  textMuted: 'text-yellow-300/80',
-                  percentColor: 'text-yellow-300/60'
-                }
-              } else if (score >= 20) {
-                return { 
-                  level: '별로', 
-                  bg: 'bg-orange-500/10', 
-                  border: 'border-orange-500/20', 
-                  iconColor: 'text-orange-400',
-                  textColor: 'text-orange-300',
-                  textMuted: 'text-orange-300/80',
-                  percentColor: 'text-orange-300/60'
-                }
-              } else {
-                return { 
-                  level: '매우 별로', 
-                  bg: 'bg-red-500/10', 
-                  border: 'border-red-500/20', 
-                  iconColor: 'text-red-400',
-                  textColor: 'text-red-300',
-                  textMuted: 'text-red-300/80',
-                  percentColor: 'text-red-300/60'
-                }
-              }
-            }
-            
-            const satisfactionGrade = getSatisfactionGrade(display.satisfaction)
-            
-            // 메트릭 박스들 (연봉, 만족도, 워라벨, 계열) - 고정 크기 정사각형
-            const metrics = [
-              display.salary ? `
-                <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
-                  <i class="fas fa-won-sign text-emerald-400 text-base"></i>
-                  <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 연봉</span>
-                  <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.salary.replace(/평균\s*/g, ''))}</span>
-                </div>
-              ` : '',
-              display.satisfaction && satisfactionGrade ? `
-                <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
-                  <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
-                  <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
-                  <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
-                </div>
-              ` : '',
-              display.wlb ? `
-                <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-24 h-24 flex-shrink-0">
-                  <i class="fas fa-balance-scale text-purple-400 text-base"></i>
-                  <span class="text-[9px] font-medium text-purple-300/70 mt-0.5">워라벨</span>
-                  <span class="text-[11px] font-bold text-purple-300 text-center leading-tight">${escapeHtml(display.wlb)}</span>
-                </div>
-              ` : '',
-              display.departmentName ? `
-                <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
-                  <i class="fas fa-layer-group text-indigo-400 text-base"></i>
-                  <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
-                  <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.departmentName.length > 8 ? display.departmentName.substring(0, 8) + '...' : display.departmentName)}</span>
-                </div>
-              ` : ''
-            ].filter(Boolean).join('')
-
-            return `
-              <article class="group relative">
-                <a href="${jobUrl}" class="block">
-                  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
-                    <!-- 배경 그라데이션 글로우 -->
-                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
-                      <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
-                    </div>
-                    
-                    <div class="relative flex gap-4">
-                      <!-- 왼쪽: 직업 정보 (최대 너비 60% 제한) -->
-                      <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
-                        <!-- 헤더: 카테고리 + 직업명 -->
-                        <div class="space-y-2">
-                          ${categoryName ? `
-                            <div class="flex items-center gap-2">
-                              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
-                                <i class="fas fa-folder text-[8px]"></i>
-                                ${escapeHtml(categoryName)}
-                              </span>
-                            </div>
-                          ` : ''}
-                          
-                          <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
-                            ${escapeHtml(job.name)}
-                          </h2>
-                        </div>
-                        
-                        <!-- 설명 -->
-                        <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
-                          ${summary}
-                        </p>
-                      </div>
-                      
-                      <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
-                      ${metrics ? `
-                        <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
-                          ${metrics}
-                        </div>
-                      ` : ''}
-                    </div>
-                  </div>
-                </a>
-              </article>
-            `
-          })
-          .join('')
+      ? items.map((entry) => renderJobCard(entry)).join('')
       : renderSampleJobHighlights()
 
     // 🆕 캐시 알림 제거 (사용자에게 보이지 않도록)
@@ -1826,15 +2263,7 @@ app.get('/job', async (c) => {
 
     // 🆕 데이터 소스 요약 제거 (사용자에게 혼란을 줄 수 있음)
     const sourceSummaryHtml = '' // renderSourceStatusSummary(result.meta?.sources, { id: 'job-source-summary' })
-    const filterSummaryParts: string[] = []
-    if (keyword) {
-      filterSummaryParts.push(`"${escapeHtml(keyword)}" 키워드`)
-    }
-    if (category) {
-      const categoryLabel = getCategoryLabel()
-      filterSummaryParts.push(`${escapeHtml(categoryLabel ?? category)} 분류`)
-    }
-    const filterSummary = filterSummaryParts.length ? filterSummaryParts.join(' · ') : '전체 직업'
+    const filterSummary = keyword ? `"${escapeHtml(keyword)}" 키워드` : '전체 직업'
     const headingLabel = keyword ? `“${escapeHtml(keyword)}” 관련 직업` : '직업위키'
 
     const jsonLdItems = items.map((entry, index) => {
@@ -1861,11 +2290,14 @@ app.get('/job', async (c) => {
 
     const content = `
       <div class="max-w-[1400px] mx-auto md:px-6">
-        <div class="relative text-center pb-8 mb-8 space-y-7">
-          <!-- 배경 글로우 효과 -->
+        <!-- 히어로 섹션 with 그라데이션 블렌딩 -->
+        <div class="relative text-center pb-12 mb-6 space-y-7">
+          <!-- 배경 글로우 + 하단 페이드 -->
           <div class="absolute inset-0 -z-10 overflow-hidden">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-wiki-primary/5 rounded-full blur-[100px]"></div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-wiki-primary/8 via-wiki-primary/5 to-transparent rounded-full blur-[120px]"></div>
           </div>
+          <!-- 하단 그라데이션 페이드 -->
+          <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-wiki-bg to-transparent -z-10"></div>
           
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-wiki-primary/10 to-blue-500/10 border border-wiki-primary/20 backdrop-blur-sm">
             <span class="text-xs font-semibold text-wiki-primary">💼 JOB WIKI</span>
@@ -1887,57 +2319,59 @@ app.get('/job', async (c) => {
           </div>
         </div>
 
-        <form id="job-filter-form" data-hydration-target="job" method="get" class="glass-card rounded-xl p-6 mb-6 grid md:grid-cols-[2fr,1fr,1fr,auto] gap-4 items-end">
-          <div>
-            <label class="block text-sm text-wiki-muted mb-2" for="job-keyword">키워드</label>
-            <input
-              id="job-keyword"
-              type="text"
-              name="q"
-              value="${escapeHtml(keyword)}"
-              placeholder="예: 데이터 사이언티스트, 간호사"
-              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
-            />
-          </div>
-          <div>
-            <label class="block text-sm text-wiki-muted mb-2" for="job-category">직무 분류</label>
-            <select
-              id="job-category"
-              name="category"
-              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
-            >
-              <option value="">전체</option>
-              ${categoryOptions}
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm text-wiki-muted mb-2" for="job-per-page">페이지당</label>
-            <select
-              id="job-per-page"
-              name="perPage"
-              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
-            >
-              ${perPageOptions}
-            </select>
-          </div>
-          <div class="flex gap-2 justify-end">
-            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
-              <i class="fas fa-search mr-2"></i>검색
-            </button>
+        <form id="job-filter-form" data-hydration-target="job" method="get" class="mb-6">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <!-- 검색창 - 글래스모피즘 + 인셋 아이콘 -->
+            <div class="flex-1 relative group">
+              <div class="absolute inset-0 bg-gradient-to-r from-wiki-primary/20 via-wiki-secondary/20 to-wiki-primary/20 rounded-2xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+              <div class="relative flex items-center bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 group-focus-within:border-wiki-primary/50 group-focus-within:shadow-lg group-focus-within:shadow-wiki-primary/10">
+                <span class="pl-4 pr-2 text-wiki-muted/60 group-focus-within:text-wiki-primary transition-colors duration-300">
+                  <i class="fas fa-search text-sm"></i>
+                </span>
+                <input
+                  id="job-keyword"
+                  type="text"
+                  name="q"
+                  value="${escapeHtml(keyword)}"
+                  placeholder="어떤 직업을 찾고 계신가요?"
+                  class="flex-1 px-2 py-3.5 bg-transparent border-none focus:outline-none text-sm text-white placeholder:text-wiki-muted/50"
+                />
+                <button type="submit" class="m-1.5 px-5 py-2 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-primary/25 active:scale-95 transition-all duration-200">
+                  검색
+                </button>
+              </div>
+            </div>
+            <!-- 정렬 - 커스텀 드롭다운 -->
+            <div class="flex items-center" id="job-hydration-toolbar">
+              <div class="relative" data-dropdown="job-sort">
+                <button type="button" id="job-sort-trigger" class="flex items-center gap-2 pl-4 pr-3 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white/70 hover:bg-white/[0.06] hover:border-white/[0.1] focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[130px]">
+                  <span id="job-sort-label">기본 순</span>
+                  <i class="fas fa-chevron-down text-[10px] text-white/40 ml-auto transition-transform duration-200" id="job-sort-chevron"></i>
+                </button>
+                <div id="job-sort-menu" class="absolute right-0 top-full mt-2 w-44 py-1.5 bg-[#1c2333]/95 backdrop-blur-xl border border-white/[0.08] rounded-xl shadow-2xl shadow-black/40 opacity-0 invisible translate-y-1 transition-all duration-200 z-50">
+                  <div class="px-2 py-1.5 text-[10px] font-medium text-white/30 uppercase tracking-wider">정렬 기준</div>
+                  <button type="button" data-sort="relevance" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group">
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-primary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span>기본 순</span>
+                  </button>
+                  <button type="button" data-sort="salary-desc" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group">
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-primary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span>연봉 높은 순</span>
+                  </button>
+                  <button type="button" data-sort="name-asc" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group">
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-primary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span>이름순</span>
+                  </button>
+                </div>
+                <select id="job-sort-select" class="sr-only">
+                  <option value="relevance">기본 순</option>
+                  <option value="salary-desc">연봉 높은 순</option>
+                  <option value="name-asc">이름순</option>
+                </select>
+              </div>
+            </div>
           </div>
         </form>
-
-        <div class="mb-6 flex flex-wrap items-center justify-end gap-4" id="job-hydration-toolbar">
-          <div class="flex items-center gap-2">
-            <label for="job-sort-select" class="text-sm text-wiki-muted">정렬</label>
-            <select id="job-sort-select" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
-              <option value="relevance">추천 순 (기본)</option>
-              <option value="salary-desc">연봉 높은 순</option>
-              <option value="outlook-desc">전망 좋은 순</option>
-              <option value="name-asc">이름 오름차순</option>
-            </select>
-          </div>
-        </div>
 
         ${cacheNotice}
 
@@ -1952,10 +2386,8 @@ app.get('/job', async (c) => {
           const buildPageUrl = (pageNum: number) => {
             const params = new URLSearchParams()
             if (keyword) params.set('q', keyword)
-            if (category) params.set('category', category)
             if (includeSources?.length) params.set('sources', includeSources.join(','))
             if (pageNum > 1) params.set('page', String(pageNum))
-            if (perPage !== 20) params.set('perPage', String(perPage))
             return `/job${params.toString() ? `?${params.toString()}` : ''}`
           }
           
@@ -2051,7 +2483,7 @@ app.get('/job', async (c) => {
         page,
         perPage,
         keyword,
-        category,
+        sort,
         includeSources: includeSources ?? null,
         sources: result.meta?.sources ?? null
       }
@@ -2109,17 +2541,14 @@ app.get('/major', async (c) => {
   const keyword = keywordRaw.trim()
   const includeSources = parseSourcesQuery(c.req.query('sources'))
   const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-  const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
-
-  const perPageOptions = [10, 20, 30, 50]
-    .map((size) => `<option value="${size}" ${perPage === size ? 'selected' : ''}>${size}개</option>`)
-    .join('')
+  const perPage = 50 // 고정값
+  const sort = c.req.query('sort') || 'relevance' // 정렬 옵션
 
   const searchParams = new URLSearchParams()
   if (keyword) searchParams.set('q', keyword)
   if (includeSources?.length) searchParams.set('sources', includeSources.join(','))
   if (page > 1) searchParams.set('page', String(page))
-  if (perPage !== 20) searchParams.set('perPage', String(perPage))
+  if (sort && sort !== 'relevance') searchParams.set('sort', sort)
   const canonicalPath = `/major${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
   const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
 
@@ -2135,14 +2564,15 @@ app.get('/major', async (c) => {
     const forceRefresh = c.req.query('refresh') === '1'
     const { value: result, cacheState } = await withKvCache(
       c.env.KV,
-      buildListCacheKey('major', { keyword, page, perPage, includeSources }),
+      buildListCacheKey('major', { keyword, page, perPage, includeSources, sort }),
       async () =>
         searchUnifiedMajors(
           {
             keyword,
             page,
             perPage,
-            includeSources
+            includeSources,
+            sort
           },
           c.env
         ),
@@ -2186,168 +2616,9 @@ app.get('/major', async (c) => {
       freshnessRecordPromise.catch((err) => console.error('[freshness][major]', err))
     }
 
+    // 공통 함수 renderMajorCard 사용
     const majorCards = items.length
-      ? items
-          .map((entry) => {
-            const major = entry.profile
-            const display = entry.display ?? {}
-            const majorSlug = composeDetailSlug('major', major.name, major.id)
-            const majorUrl = `/major/${encodeURIComponent(majorSlug)}`
-            const summary = escapeHtml(formatSummaryText(display.summary))
-            // categoryName은 제목 위에 표시하지 않고 메트릭 박스로만 표시
-            const categoryName = undefined
-            
-            // 첫 직장 만족도 등급 계산 (직업위키와 동일한 로직)
-            const getSatisfactionGrade = (satisfaction: string | undefined) => {
-              if (!satisfaction) return null
-              const score = parseFloat(satisfaction) || 0
-              
-              if (score >= 80) {
-                return { 
-                  level: '매우 좋음', 
-                  bg: 'bg-green-500/10', 
-                  border: 'border-green-500/20', 
-                  iconColor: 'text-green-400',
-                  textColor: 'text-green-300',
-                  textMuted: 'text-green-300/80'
-                }
-              } else if (score >= 60) {
-                return { 
-                  level: '좋음', 
-                  bg: 'bg-sky-500/10', 
-                  border: 'border-sky-500/20', 
-                  iconColor: 'text-sky-400',
-                  textColor: 'text-sky-300',
-                  textMuted: 'text-sky-300/80'
-                }
-              } else if (score >= 40) {
-                return { 
-                  level: '보통', 
-                  bg: 'bg-yellow-500/10', 
-                  border: 'border-yellow-500/20', 
-                  iconColor: 'text-yellow-400',
-                  textColor: 'text-yellow-300',
-                  textMuted: 'text-yellow-300/80'
-                }
-              } else if (score >= 20) {
-                return { 
-                  level: '별로', 
-                  bg: 'bg-orange-500/10', 
-                  border: 'border-orange-500/20', 
-                  iconColor: 'text-orange-400',
-                  textColor: 'text-orange-300',
-                  textMuted: 'text-orange-300/80'
-                }
-              } else {
-                return { 
-                  level: '매우 별로', 
-                  bg: 'bg-red-500/10', 
-                  border: 'border-red-500/20', 
-                  iconColor: 'text-red-400',
-                  textColor: 'text-red-300',
-                  textMuted: 'text-red-300/80'
-                }
-              }
-            }
-            
-            const satisfactionGrade = getSatisfactionGrade(display.firstJobSatisfaction)
-            
-            // 메트릭 박스들
-            // 커리어넷 데이터: 취업률, 첫직장임금(월), 첫 직장 만족도
-            // categoryName: 계열 (모든 경우에 메트릭 박스로 표시)
-            const metrics = (() => {
-              // categoryName 추출 (쉼표가 2개 이상이면 관련 학과명 리스트로 판단하여 제거)
-              const categoryNameForMetric = display.categoryName && display.categoryName.split(',').length <= 2
-                ? display.categoryName
-                : undefined
-              
-              // 커리어넷 데이터 메트릭 박스들
-              const careernetMetrics = [
-                display.employmentRate ? `
-                  <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-24 h-24 flex-shrink-0">
-                    <i class="fas fa-user-graduate text-blue-400 text-base"></i>
-                    <span class="text-[9px] font-medium text-blue-300/70 mt-0.5">취업률</span>
-                    <span class="text-[11px] font-bold text-blue-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.employmentRate.replace(/<[^>]*>/g, ''))}</span>
-                  </div>
-                ` : '',
-                display.firstJobSalary ? `
-                  <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
-                    <i class="fas fa-won-sign text-emerald-400 text-base"></i>
-                    <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 월봉</span>
-                    <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`)}</span>
-                  </div>
-                ` : '',
-                display.firstJobSatisfaction && satisfactionGrade ? `
-                  <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
-                    <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
-                    <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
-                    <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
-                  </div>
-                ` : ''
-              ].filter(Boolean)
-              
-              // categoryName 메트릭 박스 추가
-              if (categoryNameForMetric) {
-                careernetMetrics.push(`
-                  <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
-                    <i class="fas fa-layer-group text-indigo-400 text-base"></i>
-                    <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
-                    <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(categoryNameForMetric.length > 8 ? categoryNameForMetric.substring(0, 8) + '...' : categoryNameForMetric)}</span>
-                  </div>
-                `)
-              }
-              
-              return careernetMetrics.join('')
-            })()
-
-            return `
-              <article class="group relative">
-                <a href="${majorUrl}" class="block">
-                  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
-                    <!-- 배경 그라데이션 글로우 -->
-                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
-                      <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
-                    </div>
-                    
-                    <div class="relative flex gap-4">
-                      <!-- 왼쪽: 전공 정보 (최대 너비 60% 제한) -->
-                      <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
-                        <!-- 헤더: 카테고리 + 전공명 -->
-                        <div class="space-y-2">
-                          ${categoryName ? `
-                            <div class="flex items-center gap-2">
-                              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
-                                <i class="fas fa-folder text-[8px]"></i>
-                                ${escapeHtml(categoryName)}
-                              </span>
-                            </div>
-                          ` : ''}
-                          
-                          <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
-                            ${escapeHtml(major.name)}
-                          </h2>
-                        </div>
-                        
-                        <!-- 설명 -->
-                        <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
-                          ${summary}
-                        </p>
-                      </div>
-                      
-                      <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
-                      ${metrics ? `
-                        <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
-                          ${metrics}
-                        </div>
-                      ` : ''}
-                    </div>
-                  </div>
-                </a>
-              </article>
-            `
-          })
-          .join('')
+      ? items.map((entry) => renderMajorCard(entry)).join('')
       : renderSampleMajorHighlights()
 
     // 🆕 캐시 알림 제거 (사용자에게 보이지 않도록)
@@ -2381,11 +2652,14 @@ app.get('/major', async (c) => {
 
     const content = `
       <div class="max-w-[1400px] mx-auto md:px-6">
-        <div class="relative text-center pb-8 mb-8 space-y-7">
-          <!-- 배경 글로우 효과 -->
+        <!-- 히어로 섹션 with 그라데이션 블렌딩 -->
+        <div class="relative text-center pb-12 mb-6 space-y-7">
+          <!-- 배경 글로우 + 하단 페이드 -->
           <div class="absolute inset-0 -z-10 overflow-hidden">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-wiki-secondary/5 rounded-full blur-[100px]"></div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-wiki-secondary/8 via-wiki-secondary/5 to-transparent rounded-full blur-[120px]"></div>
           </div>
+          <!-- 하단 그라데이션 페이드 -->
+          <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-wiki-bg to-transparent -z-10"></div>
           
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-wiki-secondary/10 to-purple-500/10 border border-wiki-secondary/20 backdrop-blur-sm">
             <span class="text-xs font-semibold text-wiki-secondary">🎓 MAJOR WIKI</span>
@@ -2407,46 +2681,59 @@ app.get('/major', async (c) => {
           </div>
         </div>
 
-        <form id="major-filter-form" data-hydration-target="major" method="get" class="glass-card rounded-xl p-6 mb-6 grid md:grid-cols-[2fr,1fr,auto] gap-4 items-end">
-          <div>
-            <label class="block text-sm text-wiki-muted mb-2" for="major-keyword">키워드</label>
-            <input
-              id="major-keyword"
-              type="text"
-              name="q"
-              value="${escapeHtml(keyword)}"
-              placeholder="예: 인공지능, 간호, 기계"
-              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
-            />
-          </div>
-          <div>
-            <label class="block text-sm text-wiki-muted mb-2" for="major-per-page">페이지당</label>
-            <select
-              id="major-per-page"
-              name="perPage"
-              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none"
-            >
-              ${perPageOptions}
-            </select>
-          </div>
-          <div class="flex gap-2 justify-end">
-            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
-              <i class="fas fa-search mr-2"></i>검색
-            </button>
+        <form id="major-filter-form" data-hydration-target="major" method="get" class="mb-6">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <!-- 검색창 - 글래스모피즘 + 인셋 아이콘 -->
+            <div class="flex-1 relative group">
+              <div class="absolute inset-0 bg-gradient-to-r from-wiki-secondary/20 via-purple-500/20 to-wiki-secondary/20 rounded-2xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+              <div class="relative flex items-center bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 group-focus-within:border-wiki-secondary/50 group-focus-within:shadow-lg group-focus-within:shadow-wiki-secondary/10">
+                <span class="pl-4 pr-2 text-wiki-muted/60 group-focus-within:text-wiki-secondary transition-colors duration-300">
+                  <i class="fas fa-search text-sm"></i>
+                </span>
+                <input
+                  id="major-keyword"
+                  type="text"
+                  name="q"
+                  value="${escapeHtml(keyword)}"
+                  placeholder="어떤 학과를 찾고 계신가요?"
+                  class="flex-1 px-2 py-3.5 bg-transparent border-none focus:outline-none text-sm text-white placeholder:text-wiki-muted/50"
+                />
+                <button type="submit" class="m-1.5 px-5 py-2 bg-gradient-to-r from-wiki-secondary to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-secondary/25 active:scale-95 transition-all duration-200">
+                  검색
+                </button>
+              </div>
+            </div>
+            <!-- 정렬 - 커스텀 드롭다운 -->
+            <div class="flex items-center" id="major-hydration-toolbar">
+              <div class="relative" data-dropdown="major-sort">
+                <button type="button" id="major-sort-trigger" class="flex items-center gap-2 pl-4 pr-3 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white/70 hover:bg-white/[0.06] hover:border-white/[0.1] focus:outline-none focus:border-wiki-secondary/40 transition-all duration-200 cursor-pointer min-w-[140px]">
+                  <span id="major-sort-label">기본 순</span>
+                  <i class="fas fa-chevron-down text-[10px] text-white/40 ml-auto transition-transform duration-200" id="major-sort-chevron"></i>
+                </button>
+                <div id="major-sort-menu" class="absolute right-0 top-full mt-2 w-44 py-1.5 bg-[#1c2333]/95 backdrop-blur-xl border border-white/[0.08] rounded-xl shadow-2xl shadow-black/40 opacity-0 invisible translate-y-1 transition-all duration-200 z-50">
+                  <div class="px-2 py-1.5 text-[10px] font-medium text-white/30 uppercase tracking-wider">정렬 기준</div>
+                  <button type="button" data-sort="relevance" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group">
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-secondary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span>기본 순</span>
+                  </button>
+                  <button type="button" data-sort="employment-desc" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group">
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-secondary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span>취업률 높은 순</span>
+                  </button>
+                  <button type="button" data-sort="salary-desc" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group">
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-secondary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span>월급 높은 순</span>
+                  </button>
+                </div>
+                <select id="major-sort-select" class="sr-only">
+                  <option value="relevance">기본 순</option>
+                  <option value="employment-desc">취업률 높은 순</option>
+                  <option value="salary-desc">월급 높은 순</option>
+                </select>
+              </div>
+            </div>
           </div>
         </form>
-
-        <div class="mb-6 flex flex-wrap items-center justify-end gap-4" id="major-hydration-toolbar">
-          <div class="flex items-center gap-2">
-            <label for="major-sort-select" class="text-sm text-wiki-muted">정렬</label>
-            <select id="major-sort-select" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
-              <option value="relevance">추천 순 (기본)</option>
-              <option value="employment-desc">취업률 높은 순</option>
-              <option value="salary-desc">연봉 높은 순</option>
-              <option value="name-asc">이름 오름차순</option>
-            </select>
-          </div>
-        </div>
 
         ${cacheNotice}
 
@@ -2465,7 +2752,6 @@ app.get('/major', async (c) => {
             if (keyword) params.set('q', keyword)
             if (includeSources?.length) params.set('sources', includeSources.join(','))
             if (pageNum > 1) params.set('page', String(pageNum))
-            if (perPage !== 20) params.set('perPage', String(perPage))
             return `/major${params.toString() ? `?${params.toString()}` : ''}`
           }
           
@@ -2561,6 +2847,7 @@ app.get('/major', async (c) => {
         page,
         perPage,
         keyword,
+        sort,
         includeSources: includeSources ?? null,
         sources: result.meta?.sources ?? null,
         cacheState
@@ -2611,103 +2898,9 @@ app.get('/major', async (c) => {
         const items = directResult.items
         const totalCount = typeof directResult.meta?.total === 'number' ? directResult.meta.total : items.length
         
-        // 간단한 카드 렌더링 (에러 상태 표시 없이)
+        // 공통 함수 renderMajorCard 사용
         const majorCards = items.length
-          ? items
-              .map((entry) => {
-                const major = entry.profile
-                const display = entry.display ?? {}
-                const majorSlug = composeDetailSlug('major', major.name, major.id)
-                const majorUrl = `/major/${encodeURIComponent(majorSlug)}`
-                const summary = escapeHtml(formatSummaryText(display.summary))
-                const categoryName = display.categoryName && display.categoryName.split(',').length <= 2
-                  ? display.categoryName
-                  : undefined
-                
-                const satisfactionGrade = (() => {
-                  if (!display.firstJobSatisfaction) return null
-                  const score = parseFloat(display.firstJobSatisfaction) || 0
-                  if (score >= 80) return { level: '매우 좋음', bg: 'bg-green-500/10', border: 'border-green-500/20', iconColor: 'text-green-400', textColor: 'text-green-300', textMuted: 'text-green-300/80' }
-                  if (score >= 60) return { level: '좋음', bg: 'bg-sky-500/10', border: 'border-sky-500/20', iconColor: 'text-sky-400', textColor: 'text-sky-300', textMuted: 'text-sky-300/80' }
-                  if (score >= 40) return { level: '보통', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', iconColor: 'text-yellow-400', textColor: 'text-yellow-300', textMuted: 'text-yellow-300/80' }
-                  if (score >= 20) return { level: '별로', bg: 'bg-orange-500/10', border: 'border-orange-500/20', iconColor: 'text-orange-400', textColor: 'text-orange-300', textMuted: 'text-orange-300/80' }
-                  return { level: '매우 별로', bg: 'bg-red-500/10', border: 'border-red-500/20', iconColor: 'text-red-400', textColor: 'text-red-300', textMuted: 'text-red-300/80' }
-                })()
-                
-                const metrics = (() => {
-                  if (display.departmentName) {
-                    return display.departmentName ? `
-                      <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
-                        <i class="fas fa-layer-group text-indigo-400 text-base"></i>
-                        <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
-                        <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.departmentName.length > 8 ? display.departmentName.substring(0, 8) + '...' : display.departmentName)}</span>
-                      </div>
-                    ` : ''
-                  }
-                  return [
-                    display.employmentRate ? `
-                      <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-24 h-24 flex-shrink-0">
-                        <i class="fas fa-user-graduate text-blue-400 text-base"></i>
-                        <span class="text-[9px] font-medium text-blue-300/70 mt-0.5">취업률</span>
-                        <span class="text-[11px] font-bold text-blue-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.employmentRate)}</span>
-                      </div>
-                    ` : '',
-                    display.firstJobSalary ? `
-                      <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
-                        <i class="fas fa-won-sign text-emerald-400 text-base"></i>
-                        <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 월봉</span>
-                        <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.firstJobSalary)}</span>
-                      </div>
-                    ` : '',
-                    display.firstJobSatisfaction && satisfactionGrade ? `
-                      <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
-                        <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
-                        <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
-                        <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
-                      </div>
-                    ` : ''
-                  ].filter(Boolean).join('')
-                })()
-                
-                return `
-                  <article class="group relative">
-                    <a href="${majorUrl}" class="block">
-                      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
-                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                          <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
-                          <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
-                        </div>
-                        <div class="relative flex gap-4">
-                          <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
-                            <div class="space-y-2">
-                              ${categoryName ? `
-                                <div class="flex items-center gap-2">
-                                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
-                                    <i class="fas fa-folder text-[8px]"></i>
-                                    ${escapeHtml(categoryName)}
-                                  </span>
-                                </div>
-                              ` : ''}
-                              <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
-                                ${escapeHtml(major.name)}
-                              </h2>
-                            </div>
-                            <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
-                              ${summary}
-                            </p>
-                          </div>
-                          ${metrics ? `
-                            <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
-                              ${metrics}
-                            </div>
-                          ` : ''}
-                        </div>
-                      </div>
-                    </a>
-                  </article>
-                `
-              })
-              .join('')
+          ? items.map((entry) => renderMajorCard(entry)).join('')
           : renderSampleMajorHighlights()
         
         const totalPages = Math.ceil(totalCount / perPage)
@@ -2716,7 +2909,6 @@ app.get('/major', async (c) => {
           if (keyword) params.set('q', keyword)
           if (includeSources?.length) params.set('sources', includeSources.join(','))
           if (pageNum > 1) params.set('page', String(pageNum))
-          if (perPage !== 20) params.set('perPage', String(perPage))
           return `/major${params.toString() ? `?${params.toString()}` : ''}`
         }
         
@@ -2783,12 +2975,6 @@ app.get('/major', async (c) => {
                   <label for="major-keyword" class="block text-sm text-wiki-muted mb-2">검색어</label>
                   <input type="text" id="major-keyword" name="q" value="${escapeHtml(keyword)}" placeholder="전공명으로 검색..." class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none" />
                 </div>
-                <div class="w-full md:w-auto">
-                  <label for="major-per-page" class="block text-sm text-wiki-muted mb-2">페이지당 항목</label>
-                  <select id="major-per-page" name="perPage" class="px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
-                    ${[20, 50, 100].map(size => `<option value="${size}" ${perPage === size ? 'selected' : ''}>${size}개</option>`).join('')}
-                  </select>
-                </div>
                 <div class="flex gap-2 justify-end">
                   <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
                     <i class="fas fa-search mr-2"></i>검색
@@ -2801,10 +2987,9 @@ app.get('/major', async (c) => {
               <div class="flex items-center gap-2">
                 <label for="major-sort-select" class="text-sm text-wiki-muted">정렬</label>
                 <select id="major-sort-select" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none">
-                  <option value="relevance">추천 순 (기본)</option>
+                  <option value="relevance">기본 순</option>
                   <option value="employment-desc">취업률 높은 순</option>
-                  <option value="salary-desc">연봉 높은 순</option>
-                  <option value="name-asc">이름 오름차순</option>
+                  <option value="salary-desc">월급 높은 순</option>
                 </select>
               </div>
               <div class="ml-auto text-xs text-wiki-muted" id="major-hydration-status" aria-live="polite"></div>
@@ -2913,11 +3098,14 @@ app.get('/howto', (c) => {
 
   const content = `
     <div class="max-w-[1400px] mx-auto md:px-6">
-      <header class="relative text-center pb-8 mb-8 space-y-7">
-        <!-- 배경 글로우 효과 -->
+      <!-- 히어로 섹션 with 그라데이션 블렌딩 -->
+      <header class="relative text-center pb-12 mb-6 space-y-7">
+        <!-- 배경 글로우 + 하단 페이드 -->
         <div class="absolute inset-0 -z-10 overflow-hidden">
-          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/5 rounded-full blur-[100px]"></div>
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-amber-500/8 via-amber-500/5 to-transparent rounded-full blur-[120px]"></div>
         </div>
+        <!-- 하단 그라데이션 페이드 -->
+        <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-wiki-bg to-transparent -z-10"></div>
         
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 backdrop-blur-sm">
           <span class="text-xs font-semibold text-amber-400">🚀 HOWTO GUIDE</span>
@@ -3275,46 +3463,73 @@ app.get('/search', async (c) => {
         
         const satisfactionGrade = getMajorSatisfactionGrade(display.firstJobSatisfaction)
         
-        // 메트릭 박스들
+        // 메트릭 박스들 (우선순위: 취업률 > 평균월급 > 만족도 > 계열, 최대 3개)
         const categoryNameForMetric = display.categoryName && display.categoryName.split(',').length <= 2
           ? display.categoryName
           : undefined
         
-        const careernetMetrics = [
-          display.employmentRate ? `
-            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-24 h-24 flex-shrink-0">
-              <i class="fas fa-user-graduate text-blue-400 text-base"></i>
-              <span class="text-[9px] font-medium text-blue-300/70 mt-0.5">취업률</span>
-              <span class="text-[11px] font-bold text-blue-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.employmentRate.replace(/<[^>]*>/g, ''))}</span>
-            </div>
-          ` : '',
-          display.firstJobSalary ? `
-            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
-              <i class="fas fa-won-sign text-emerald-400 text-base"></i>
-              <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 월봉</span>
-              <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`)}</span>
-            </div>
-          ` : '',
-          display.firstJobSatisfaction && satisfactionGrade ? `
-            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
-              <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
-              <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
-              <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
-            </div>
-          ` : ''
-        ].filter(Boolean)
+        type HomeMetricBox = { html: string; priority: number }
+        const homeMetricBoxes: HomeMetricBox[] = []
         
-        if (categoryNameForMetric) {
-          careernetMetrics.push(`
-            <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
-              <i class="fas fa-layer-group text-indigo-400 text-base"></i>
-              <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
-              <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${escapeHtml(categoryNameForMetric.length > 8 ? categoryNameForMetric.substring(0, 8) + '...' : categoryNameForMetric)}</span>
-            </div>
-          `)
+        if (display.employmentRate) {
+          const rateText = formatEmploymentRate(display.employmentRate) || ''
+          homeMetricBoxes.push({
+            priority: 1,
+            html: `
+              <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
+                <i class="fas fa-chart-line text-blue-400 text-sm sm:text-base"></i>
+                <span class="text-[8px] sm:text-[9px] font-medium text-blue-300/70 mt-0.5">취업률</span>
+                <span class="text-[10px] sm:text-[11px] font-bold text-blue-300 text-center leading-tight px-1 truncate max-w-full">${escapeHtml(rateText)}</span>
+              </div>
+            `
+          })
         }
         
-        const metrics = careernetMetrics.join('')
+        if (display.firstJobSalary) {
+          const salaryText = display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`
+          homeMetricBoxes.push({
+            priority: 2,
+            html: `
+              <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
+                <i class="fas fa-won-sign text-emerald-400 text-sm sm:text-base"></i>
+                <span class="text-[8px] sm:text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 월급</span>
+                <span class="text-[10px] sm:text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 truncate max-w-full">${escapeHtml(salaryText)}</span>
+              </div>
+            `
+          })
+        }
+        
+        if (display.firstJobSatisfaction && satisfactionGrade) {
+          homeMetricBoxes.push({
+            priority: 3,
+            html: `
+              <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
+                <i class="fas fa-smile ${satisfactionGrade.iconColor} text-sm sm:text-base"></i>
+                <span class="text-[8px] sm:text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
+                <span class="text-[10px] sm:text-[11px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
+              </div>
+            `
+          })
+        }
+        
+        if (categoryNameForMetric) {
+          homeMetricBoxes.push({
+            priority: 4,
+            html: `
+              <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
+                <i class="fas fa-graduation-cap text-purple-400 text-sm sm:text-base"></i>
+                <span class="text-[8px] sm:text-[9px] font-medium text-purple-300/70 mt-0.5">계열</span>
+                <span class="text-[10px] sm:text-[11px] font-bold text-purple-300 text-center leading-tight px-1 truncate max-w-full">${escapeHtml(categoryNameForMetric.length > 8 ? categoryNameForMetric.substring(0, 8) + '...' : categoryNameForMetric)}</span>
+              </div>
+            `
+          })
+        }
+        
+        const sortedHomeBoxes = homeMetricBoxes.sort((a, b) => a.priority - b.priority).slice(0, 3)
+        const metrics = sortedHomeBoxes.map((box, index) => {
+          if (index === 2) return `<div class="hidden sm:flex">${box.html}</div>`
+          return box.html
+        }).join('')
         
         return `
           <article class="group relative">
@@ -3498,26 +3713,34 @@ app.get('/job/:slug', async (c) => {
       // Decode URL-encoded slug back to Korean
       const decodedSlug = decodeURIComponent(slug)
       
-      console.log(`[Job Slug Resolution] Original slug: "${slug}"`)
-      console.log(`[Job Slug Resolution] Decoded slug: "${decodedSlug}"`)
-      console.log(`[Job Slug Resolution] resolvedId before D1 search: "${resolvedId}"`)
       
-      // New approach: slug has no separators, so we normalize DB names to match
-      // slug: "건축가건축설계사" (from "건축가(건축설계사)")
-      // DB: "건축가(건축설계사)" → normalized to "건축가건축설계사"
-      const normalized = decodedSlug.toLowerCase()
-      console.log(`[Job Slug Resolution] Normalized slug for search: "${normalized}"`)
+      // 1. 먼저 slug 필드로 직접 조회 (가장 정확)
+      let result = await db.prepare(
+        'SELECT id, name FROM jobs WHERE slug = ? LIMIT 1'
+      ).bind(decodedSlug).first() as { id: string; name: string } | null
       
-      const result = await db.prepare(
-        'SELECT id, name FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? LIMIT 1'
-      ).bind(normalized).first() as { id: string; name: string } | null
+      // 2. slug로 못 찾으면 정규화된 slug로 검색 (하이픈 제거)
+      if (!result) {
+        const normalizedSlug = decodedSlug.toLowerCase().replace(/-/g, '')
+        
+        result = await db.prepare(
+          'SELECT id, name FROM jobs WHERE LOWER(REPLACE(slug, "-", "")) = ? LIMIT 1'
+        ).bind(normalizedSlug).first() as { id: string; name: string } | null
+      }
+      
+      // 3. 여전히 못 찾으면 이름으로 검색
+      if (!result) {
+        const normalized = decodedSlug.toLowerCase().replace(/-/g, '')
+        
+        result = await db.prepare(
+          'SELECT id, name FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? LIMIT 1'
+        ).bind(normalized).first() as { id: string; name: string } | null
+      }
       
       if (result?.id) {
-        console.log(`[Job Slug Resolution] ✓ MATCHED! ID: "${result.id}", DB Name: "${result.name}"`)
         resolvedId = result.id as string
       } else {
         // Only show "NO MATCH FOUND" if actually no match
-        console.log(`[Job Slug Resolution] ✗ NO MATCH FOUND. Will proceed with slug as-is: "${resolvedId}"`)
         
         // Try to find similar names for debugging
         const firstWord = decodedSlug.split('-')[0]
@@ -3527,7 +3750,6 @@ app.get('/job/:slug', async (c) => {
           ).bind(`${firstWord}%`).all() as { results: Array<{ id: string; name: string }> }
           
           if (similarJobs.results?.length > 0) {
-            console.log(`[Job Slug Resolution] Similar jobs found starting with "${firstWord}":`)
             similarJobs.results.forEach((job, idx) => {
               console.log(`  ${idx + 1}. "${job.name}" (${job.id})`)
             })
@@ -3540,68 +3762,73 @@ app.get('/job/:slug', async (c) => {
   }
   
   // Check for debug mode first (bypass ISR cache for debugging)
+  // 병합 설계 시스템: 이름이 완전히 같은 직업만 동일 엔티티로 간주
   const debugMode = c.req.query('debug') === 'true'
   if (debugMode) {
     try {
-      let careernetId = c.req.query('careernetId') || undefined
-      let goyongJobId = c.req.query('goyongJobId') || undefined
-      const includeSources = parseSourcesQuery(c.req.query('sources')) || ['CAREERNET', 'GOYONG24']
-      
-      const findSampleJobDetail = () => {
-        const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
-        for (const candidate of candidates) {
-          const sample = getSampleJobDetail(candidate)
-          if (sample) return sample
-        }
-        return null
+      // 1. 데이터베이스에서 job_sources 가져오기 (이름으로 검색)
+      const db = c.env.DB as D1Database
+      if (!db) {
+        throw new Error('DB not available')
       }
-      
-      // Try to extract source IDs from sample data if not provided
-      if (!careernetId || !goyongJobId) {
-        const sample = findSampleJobDetail()
-        if (sample?.profile?.sourceIds) {
-          if (!careernetId && sample.profile.sourceIds.careernet) {
-            careernetId = sample.profile.sourceIds.careernet
-          }
-          if (!goyongJobId && sample.profile.sourceIds.goyong24) {
-            goyongJobId = sample.profile.sourceIds.goyong24
-          }
-        }
+
+      // resolvedId를 직업명으로 사용 (slug에서 변환된 이름)
+      const jobName = resolvedId
+
+      // 통합 job 엔티티에서 job_id 찾기
+      const jobRow = await db.prepare(`
+        SELECT id, name FROM jobs WHERE id = ? OR name = ? LIMIT 1
+      `).bind(jobName, jobName).first<{ id: string; name: string }>()
+
+      if (!jobRow) {
+        // 직업을 못 찾으면 검색 페이지로 리다이렉트
+        const searchQuery = decodeURIComponent(slug).replace(/-/g, ' ')
+        return c.redirect(`/search?q=${encodeURIComponent(searchQuery)}`)
       }
+
+      // 2. 해당 job_id의 모든 소스 가져오기
+      let sources = await db.prepare(`
+        SELECT * FROM job_sources WHERE job_id = ?
+      `).bind(jobRow.id).all<JobSourceRow>()
       
-      const result = await getUnifiedJobDetailWithRawData(
-        {
-          id: resolvedId,
-          careernetId,
-          goyong24JobId: goyongJobId || undefined,
-          includeSources
-        },
-        c.env
-      )
-      
-      if (!result.profile) {
-        const sample = findSampleJobDetail()
-        if (sample) {
-          return renderSampleJobDetailPageWithRawData(c, sample, result.rawApiData)
-        }
+      // job_id가 null인 경우 이름으로 직접 매칭
+      if (!sources.results || sources.results.length === 0) {
+        console.log('job_id로 찾기 실패, 이름으로 매칭 시도:', jobRow.name)
         
+        // normalized와 raw 둘 다 검색
+        const normalizedSources = await db.prepare(`
+          SELECT * FROM job_sources 
+          WHERE JSON_EXTRACT(normalized_payload, '$.name') = ?
+        `).bind(jobRow.name).all<JobSourceRow>()
+        
+        const rawSources = await db.prepare(`
+          SELECT * FROM job_sources 
+          WHERE JSON_EXTRACT(raw_payload, '$.dJobNm') = ?
+          OR raw_payload LIKE ?
+        `).bind(jobRow.name, `%"dJobNm":"${jobRow.name}"%`).all<JobSourceRow>()
+        
+        // 두 결과 합치기 (중복 제거)
+        const allResults = [...(normalizedSources.results || []), ...(rawSources.results || [])]
+        const uniqueResults = Array.from(new Map(allResults.map(item => [item.source_key, item])).values())
+        
+        sources = { results: uniqueResults, success: true, meta: normalizedSources.meta }
+        console.log(`매칭된 소스: ${uniqueResults.length}개`)
+      }
+
+      if (!sources.results || sources.results.length === 0) {
         const fallbackHtml = renderDetailFallback({
-          icon: 'fa-magnifying-glass',
-          title: '직업 정보를 찾을 수 없습니다',
-          description: '요청하신 직업 데이터가 CareerWiki 통합 파이프라인에 아직 준비되지 않았습니다.',
-          ctaHref: '/job',
-          ctaLabel: '직업위키로 돌아가기'
+          icon: 'fa-database',
+          title: '소스 데이터가 없습니다',
+          description: '이 직업에 대한 원본 데이터를 찾을 수 없습니다.',
+          ctaHref: '/jobs',
+          ctaLabel: '직업 목록으로'
         })
         c.status(404)
-        return c.html(renderLayoutWithContext(c, fallbackHtml, '직업 정보 없음 - Careerwiki'))
+        return c.html(renderLayoutWithContext(c, fallbackHtml, '소스 데이터 없음 - Careerwiki'))
       }
-      
-      const debugContent = renderDataDebugPage({
-        profile: result.profile,
-        partials: result.partials,
-        sources: result.sources,
-        rawApiData: result.rawApiData
-      })
+
+      // 3. 템플릿 디자인 페이지 렌더링
+      const debugContent = renderJobTemplateDesignPage(jobRow.name, sources.results)
       
       return c.html(debugContent)
     } catch (error) {
@@ -3748,23 +3975,10 @@ app.get('/job/:slug', async (c) => {
       }
     }
     
-    // 404 for missing profiles
+    // 404 for missing profiles -> 검색 페이지로 리다이렉트
     if (error.message === 'PROFILE_NOT_FOUND') {
-      const fallbackHtml = renderDetailFallback({
-        icon: 'fa-magnifying-glass',
-        title: '직업 정보를 찾을 수 없습니다',
-        description: '요청하신 직업 데이터가 CareerWiki 통합 파이프라인에 아직 준비되지 않았습니다.',
-        ctaHref: '/job',
-        ctaLabel: '직업위키로 돌아가기'
-      })
-      c.status(404)
-      return c.html(
-        renderLayoutWithContext(c,
-          fallbackHtml,
-          '직업 정보 없음 - Careerwiki',
-          '요청한 직업 정보를 찾을 수 없습니다.'
-        )
-      )
+      const searchQuery = decodeURIComponent(slug).replace(/-/g, ' ')
+      return c.redirect(`/search?q=${encodeURIComponent(searchQuery)}`)
     }
     
     // 500 for other errors
@@ -3790,67 +4004,92 @@ app.get('/job/:slug', async (c) => {
 // Unified Major Detail Page (SSR)
 app.get('/major/:slug', async (c) => {
   const slug = c.req.param('slug')
-  const resolvedId = resolveDetailIdFromSlug('major', slug)
+  let resolvedId = resolveDetailIdFromSlug('major', slug)
+  
+  // 🆕 If resolvedId doesn't contain ':', try to find by name in D1 (직업 페이지와 동일)
+  if (!resolvedId.includes(':') && c.env.DB) {
+    try {
+      const db = c.env.DB
+      // Decode URL-encoded slug back to Korean
+      const decodedSlug = decodeURIComponent(slug)
+      
+      
+      // slug도 DB 쿼리와 동일한 정규화 적용 (하이픈, 괄호, 특수문자 제거)
+      const normalized = decodedSlug.toLowerCase()
+        .replace(/-/g, '')
+        .replace(/,/g, '')
+        .replace(/·/g, '')
+        .replace(/ㆍ/g, '')
+        .replace(/\//g, '')
+        .replace(/\s/g, '')
+        .replace(/\(/g, '')
+        .replace(/\)/g, '')
+      
+      const result = await db.prepare(
+        'SELECT id, name FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+      ).bind(normalized).first() as { id: string; name: string } | null
+      
+      if (result?.id) {
+        resolvedId = result.id as string
+      } else {
+      }
+    } catch (error) {
+      console.error('[Major Slug Resolution] D1 이름 검색 오류:', error)
+    }
+  }
   
   // Check for debug mode first (bypass ISR cache for debugging)
+  // 병합 설계 시스템: 이름이 완전히 같은 전공만 동일 엔티티로 간주
   const debugMode = c.req.query('debug') === 'true'
   if (debugMode) {
     try {
-      // 🆕 실제 D1 데이터 + API 데이터 사용 (직업 페이지와 동일)
-      const careernetId = c.req.query('careernetId') || undefined
-      const majorGbParam = c.req.query('goyongMajorGb')
-      const departmentId = c.req.query('goyongDepartmentId') || undefined
-      const majorId = c.req.query('goyongMajorId') || undefined
-      const includeSources = parseSourcesQuery(c.req.query('sources'))
-
-      const goyongMajorGb = majorGbParam === '1' ? '1' as const : majorGbParam === '2' ? '2' as const : undefined
-      const goyongParams = goyongMajorGb && departmentId && majorId
-        ? { majorGb: goyongMajorGb, departmentId, majorId } as { majorGb: '1' | '2'; departmentId: string; majorId: string }
-        : undefined
-
-      const result = await getUnifiedMajorDetail(
-        {
-          id: resolvedId,
-          careernetId,
-          goyong24Params: goyongParams,
-          includeSources
-        },
-        c.env
-      )
-
-      if (!result.profile) {
-        c.status(404)
-        return c.html(renderLayoutWithContext(c, renderDetailFallback({
-          icon: 'fa-circle-exclamation',
-          iconColor: 'text-yellow-500',
-          title: '전공을 찾을 수 없습니다',
-          description: `"${slug}" 전공 정보가 존재하지 않습니다.`,
-          ctaHref: '/major',
-          ctaLabel: '전공 목록으로'
-        }), '전공을 찾을 수 없습니다 - Careerwiki'))
+      // 1. 데이터베이스에서 major_sources 가져오기 (이름으로 검색)
+      const db = c.env.DB as D1Database
+      if (!db) {
+        throw new Error('DB not available')
       }
 
-      const debugHtml = renderDataDebugPage({
-        pageType: 'major',
-        profile: result.profile,
-        rawApiData: {
-          careernet: result.rawPartials?.CAREERNET || null,
-          goyong24: result.rawPartials?.GOYONG24 || null
-        },
-        partials: result.partials || null,
-        sources: result.sources || {},
-        breadcrumbs: [
-          { href: '/', label: '홈' },
-          { href: '/major', label: '전공위키' },
-          { href: `/major/${encodeURIComponent(slug)}`, label: result.profile.name }
-        ]
+      // resolvedId를 전공명으로 사용 (slug에서 변환된 이름)
+      const majorName = resolvedId
+
+      // 통합 major 엔티티에서 major_id 찾기
+      const majorRow = await db.prepare(`
+        SELECT id, name FROM majors WHERE id = ? OR name = ? LIMIT 1
+      `).bind(majorName, majorName).first<{ id: string; name: string }>()
+
+      if (!majorRow) {
+        // 전공을 못 찾으면 검색 페이지로 리다이렉트
+        const searchQuery = decodeURIComponent(slug).replace(/-/g, ' ')
+        return c.redirect(`/search?q=${encodeURIComponent(searchQuery)}`)
+      }
+
+      // 2. 해당 major_id의 모든 소스 가져오기
+      const sources = await db.prepare(`
+        SELECT * FROM major_sources WHERE major_id = ?
+      `).bind(majorRow.id).all<MajorSourceRow>()
+
+      if (!sources.results || sources.results.length === 0) {
+        const fallbackHtml = renderDetailFallback({
+          icon: 'fa-database',
+          title: '소스 데이터가 없습니다',
+          description: '이 전공에 대한 원본 데이터를 찾을 수 없습니다.',
+          ctaHref: '/majors',
+          ctaLabel: '전공 목록으로'
+        })
+        c.status(404)
+        return c.html(renderLayoutWithContext(c, fallbackHtml, '소스 데이터 없음 - Careerwiki'))
+      }
+
+      // 3. 필드 비교 (전공은 아직 미구현)
+      c.status(501)
+      const fallbackHtml = renderDetailFallback({
+        icon: 'fa-tools',
+        title: '전공 필드 비교 준비 중',
+        description: '전공 필드 비교 기능은 아직 구현 중입니다. 직업 필드 비교를 먼저 확인해주세요.',
+        ctaHref: '/majors',
+        ctaLabel: '전공 목록으로'
       })
-      
-      return c.html(renderLayoutWithContext(c,
-        debugHtml,
-        `${result.profile.name} 디버그 - Careerwiki`,
-        '디버그 모드: 실제 API 데이터 확인'
-      ))
+      return c.html(renderLayoutWithContext(c, fallbackHtml, '준비 중 - Careerwiki'))
     } catch (error) {
       console.error('Debug mode error:', error)
       c.status(500)
@@ -3883,6 +4122,7 @@ app.get('/major/:slug', async (c) => {
           ? { majorGb: goyongMajorGb, departmentId, majorId } as { majorGb: '1' | '2'; departmentId: string; majorId: string }
           : undefined
 
+        
         const result = await getUnifiedMajorDetail(
           {
             id: resolvedId,
@@ -3893,7 +4133,10 @@ app.get('/major/:slug', async (c) => {
           env
         )
 
+        
         if (!result.profile) {
+          console.error(`[Major ISR fetchData] Profile not found for resolvedId: "${resolvedId}"`)
+          
           // Try sample data fallback
           const findSampleMajorDetail = () => {
             const candidates = resolvedId !== slug ? [slug, resolvedId] : [slug]
@@ -3912,7 +4155,72 @@ app.get('/major/:slug', async (c) => {
           throw new Error('PROFILE_NOT_FOUND')
         }
 
-        return result
+        // 실제 DB ID 찾기 (resolvedId 사용, 이미 DB ID로 해결됨)
+        let actualDbId = resolvedId
+        
+        // profile.id가 composite ID인 경우 실제 DB ID로 업데이트
+        if (result.profile.id && result.profile.id.includes(':')) {
+        }
+        
+        // 실제 DB ID로 프로필 업데이트
+        
+        // 관련 직업 중 DB에 존재하는 직업 매핑 조회
+        let existingJobSlugs = new Map<string, string>()
+        if (result.profile.relatedJobs?.length && env?.DB) {
+          try {
+            const jobNames = result.profile.relatedJobs.slice(0, 20) // 최대 20개만 조회
+            const placeholders = jobNames.map(() => '?').join(',')
+            const query = `SELECT name, slug FROM jobs WHERE name IN (${placeholders})`
+            const { results } = await env.DB.prepare(query).bind(...jobNames).all() as { results: Array<{ name: string; slug: string }> | null }
+            if (results) {
+              for (const row of results) {
+                existingJobSlugs.set(row.name, row.slug)
+              }
+            }
+          } catch (e) {
+            console.error('[Major ISR fetchData] Failed to query existing jobs:', e)
+          }
+        }
+        
+        // 같은 계열 전공 조회 (관련 전공)
+        let relatedMajorsByCategory: Array<{ id: string; name: string; slug: string }> = []
+        const categoryDisplay = (result.profile as any).categoryDisplay
+        if (categoryDisplay && env?.DB) {
+          try {
+            // 같은 계열의 다른 전공 조회 (자기 자신 제외, 최대 15개)
+            const query = `
+              SELECT id, name, slug 
+              FROM majors 
+              WHERE json_extract(merged_profile_json, '$.categoryDisplay') = ? 
+                AND id != ? 
+                AND is_active = 1
+              ORDER BY name
+              LIMIT 15
+            `
+            const { results } = await env.DB.prepare(query)
+              .bind(categoryDisplay, actualDbId)
+              .all() as { results: Array<{ id: string; name: string; slug: string }> | null }
+            if (results) {
+              relatedMajorsByCategory = results.map(row => ({
+                id: row.id,
+                name: row.name,
+                slug: row.slug
+              }))
+            }
+          } catch (e) {
+            console.error('[Major ISR fetchData] Failed to query related majors by category:', e)
+          }
+        }
+        
+        return {
+          ...result,
+          profile: {
+            ...result.profile,
+            id: actualDbId
+          },
+          existingJobSlugs,
+          relatedMajorsByCategory
+        }
       },
 
       // Step 2: Render HTML
@@ -3937,7 +4245,9 @@ app.get('/major/:slug', async (c) => {
         const content = renderUnifiedMajorDetail({
           profile,
           partials: result.partials,
-          sources: result.sources
+          sources: result.sources,
+          existingJobSlugs: result.existingJobSlugs,
+          relatedMajorsByCategory: result.relatedMajorsByCategory
         })
 
         return renderLayoutWithContext(c,
@@ -3991,23 +4301,10 @@ app.get('/major/:slug', async (c) => {
       }
     }
     
-    // 404 for missing profiles
+    // 404 for missing profiles -> 검색 페이지로 리다이렉트
     if (error.message === 'PROFILE_NOT_FOUND') {
-      const fallbackHtml = renderDetailFallback({
-        icon: 'fa-magnifying-glass',
-        title: '전공 정보를 찾을 수 없습니다',
-        description: '요청하신 전공 데이터가 CareerWiki 통합 파이프라인에 아직 준비되지 않았습니다.',
-        ctaHref: '/major',
-        ctaLabel: '전공위키로 돌아가기'
-      })
-      c.status(404)
-      return c.html(
-        renderLayoutWithContext(c,
-          fallbackHtml,
-          '전공 정보 없음 - Careerwiki',
-          '요청한 전공 정보를 찾을 수 없습니다.'
-        )
-      )
+      const searchQuery = decodeURIComponent(slug).replace(/-/g, ' ')
+      return c.redirect(`/search?q=${encodeURIComponent(searchQuery)}`)
     }
     
     // 500 for other errors
@@ -4089,6 +4386,21 @@ const toIntegerOrNull = (
   return result
 }
 
+// 취업률 포맷 함수: "70% 이상" 같은 텍스트에서 숫자 추출 후 소수점 1자리까지 반올림
+const formatEmploymentRate = (rate: string | undefined): string | undefined => {
+  if (!rate) return undefined
+  // HTML 태그 제거 및 공백 정리
+  const cleaned = rate.replace(/<[^>]*>/g, '').trim()
+  // 숫자 추출 (정수 또는 소수)
+  const match = cleaned.match(/([\d.]+)/)
+  if (!match) return cleaned
+  const num = parseFloat(match[1])
+  if (isNaN(num)) return cleaned
+  // 소수점 1자리까지 반올림, 정수면 정수로 표시
+  const rounded = Math.round(num * 10) / 10
+  return Number.isInteger(rounded) ? `${rounded}%` : `${rounded.toFixed(1)}%`
+}
+
 const escapeHtml = (value: string): string =>
   value
     .replace(/&/g, '&amp;')
@@ -4114,6 +4426,317 @@ const createMetaDescription = (...candidates: Array<string | undefined | null>):
     return `${normalized.slice(0, 157)}…`
   }
   return 'Careerwiki는 고용24와 커리어넷 데이터를 통합해 제공하는 진로 정보 플랫폼입니다.'
+}
+
+// ============================================================================
+// 카드 렌더링 공통 함수 (SSR + API 공유)
+// ============================================================================
+
+// 만족도 등급 계산 (직업/전공 공통)
+const getSatisfactionGrade = (satisfaction: string | undefined) => {
+  if (!satisfaction) return null
+  const score = parseFloat(satisfaction) || 0
+  
+  if (score >= 80) {
+    return { level: '매우 좋음', bg: 'bg-green-500/10', border: 'border-green-500/20', iconColor: 'text-green-400', textColor: 'text-green-300', textMuted: 'text-green-300/80' }
+  } else if (score >= 60) {
+    return { level: '좋음', bg: 'bg-sky-500/10', border: 'border-sky-500/20', iconColor: 'text-sky-400', textColor: 'text-sky-300', textMuted: 'text-sky-300/80' }
+  } else if (score >= 40) {
+    return { level: '보통', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', iconColor: 'text-yellow-400', textColor: 'text-yellow-300', textMuted: 'text-yellow-300/80' }
+  } else if (score >= 20) {
+    return { level: '별로', bg: 'bg-orange-500/10', border: 'border-orange-500/20', iconColor: 'text-orange-400', textColor: 'text-orange-300', textMuted: 'text-orange-300/80' }
+  } else {
+    return { level: '매우 별로', bg: 'bg-red-500/10', border: 'border-red-500/20', iconColor: 'text-red-400', textColor: 'text-red-300', textMuted: 'text-red-300/80' }
+  }
+}
+
+// 직업 요약 텍스트 포맷
+const formatJobSummaryText = (value?: string | null): string => {
+  const fallback = '고용24와 커리어넷 데이터를 통합하여 제공하는 직업 정보입니다. 상세 페이지에서 자세한 내용을 확인하세요.'
+  if (!value) return fallback
+  const normalized = value.replace(/\s+/g, ' ').trim()
+  if (!normalized) return fallback
+  return normalized.length > 220 ? `${normalized.slice(0, 217)}…` : normalized
+}
+
+// 전공 요약 텍스트 포맷
+const formatMajorSummaryText = (value?: string | null): string => {
+  const fallback = '고용24와 커리어넷 데이터를 통합하여 제공하는 학과 정보입니다. 상세 페이지에서 자세한 내용을 확인하세요.'
+  if (!value) return fallback
+  const normalized = value.replace(/\s+/g, ' ').trim()
+  if (!normalized) return fallback
+  return normalized.length > 220 ? `${normalized.slice(0, 217)}…` : normalized
+}
+
+// 직업 카드 HTML 렌더링
+const renderJobCard = (entry: { profile: any; display?: any }): string => {
+  const job = entry.profile
+  const display = entry.display ?? {}
+  const jobSlug = composeDetailSlug('job', job.name, job.id)
+  const jobUrl = `/job/${encodeURIComponent(jobSlug)}`
+  const summary = escapeHtml(formatJobSummaryText(display.summary))
+  const categoryName = display.categoryName || job.category?.name
+  
+  const satisfactionGrade = getSatisfactionGrade(display.satisfaction)
+  
+  // 메트릭 박스 생성 (우선순위: 평균 연봉 > 만족도 > 워라벨 > 작업 강도 > 숙련기간)
+  type MetricBox = { html: string; priority: number }
+  const metricBoxes: MetricBox[] = []
+  
+  // 1. 평균 연봉 (최우선)
+  if (display.salary) {
+    const salaryText = display.salary.replace(/평균\s*/g, '')
+    metricBoxes.push({
+      priority: 1,
+      html: `
+        <div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0">
+          <i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i>
+          <span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70">평균 연봉</span>
+          <span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${escapeHtml(salaryText)}</span>
+        </div>
+      `
+    })
+  }
+  
+  // 2. 만족도
+  if (display.satisfaction && satisfactionGrade) {
+    metricBoxes.push({
+      priority: 2,
+      html: `
+        <div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0">
+          <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i>
+          <span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">만족도</span>
+          <span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
+        </div>
+      `
+    })
+  }
+  
+  // 3. 워라벨
+  if (display.wlb) {
+    metricBoxes.push({
+      priority: 3,
+      html: `
+        <div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0">
+          <i class="fas fa-balance-scale text-purple-400 text-base sm:text-lg"></i>
+          <span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70">워라벨</span>
+          <span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight">${escapeHtml(display.wlb)}</span>
+        </div>
+      `
+    })
+  }
+  
+  // 4. 작업 강도 (직업사전)
+  if (display.workStrong) {
+    metricBoxes.push({
+      priority: 4,
+      html: `
+        <div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0">
+          <i class="fas fa-dumbbell text-amber-400 text-base sm:text-lg"></i>
+          <span class="text-[9px] sm:text-[10px] font-medium text-amber-300/70">작업 강도</span>
+          <span class="text-[11px] sm:text-[13px] font-bold text-amber-300 text-center leading-tight">${escapeHtml(display.workStrong)}</span>
+        </div>
+      `
+    })
+  }
+  
+  // 5. 숙련기간 (직업사전)
+  if (display.skillYear) {
+    metricBoxes.push({
+      priority: 5,
+      html: `
+        <div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-cyan-500/10 backdrop-blur-sm border border-cyan-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0">
+          <i class="fas fa-clock text-cyan-400 text-base sm:text-lg"></i>
+          <span class="text-[9px] sm:text-[10px] font-medium text-cyan-300/70">숙련기간</span>
+          <span class="text-[11px] sm:text-[13px] font-bold text-cyan-300 text-center leading-tight">${escapeHtml(display.skillYear)}</span>
+        </div>
+      `
+    })
+  }
+  
+  // 우선순위 정렬 후 최대 3개 선택
+  const sortedBoxes = metricBoxes.sort((a, b) => a.priority - b.priority).slice(0, 3)
+  
+  // 메트릭 박스 HTML 생성 (3번째 박스는 모바일에서 숨김)
+  const metricsHtml = sortedBoxes.map((box, index) => {
+    if (index === 2) {
+      return `<div class="hidden sm:flex">${box.html}</div>`
+    }
+    return box.html
+  }).join('')
+
+  return `
+    <article class="group relative">
+      <a href="${jobUrl}" class="block">
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
+          <!-- 배경 그라데이션 글로우 -->
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
+          </div>
+          
+          <div class="relative flex gap-3 sm:gap-4">
+            <!-- 왼쪽: 직업 정보 (최대 너비 60% 제한) -->
+            <div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]">
+              <!-- 헤더: 카테고리 + 직업명 -->
+              <div class="space-y-1.5 sm:space-y-2">
+                ${categoryName ? `
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
+                      <i class="fas fa-folder text-[7px] sm:text-[8px]"></i>
+                      ${escapeHtml(categoryName)}
+                    </span>
+                  </div>
+                ` : ''}
+                
+                <h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                  ${escapeHtml(job.name)}
+                </h2>
+              </div>
+              
+              <!-- 설명 -->
+              <p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">
+                ${summary}
+              </p>
+            </div>
+            
+            <!-- 오른쪽: 메트릭 박스들 (최대 3개, 모바일에서 2개) -->
+            ${metricsHtml ? `
+              <div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">
+                ${metricsHtml}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </a>
+    </article>
+  `
+}
+
+// 전공 카드 HTML 렌더링
+const renderMajorCard = (entry: { profile: any; display?: any }): string => {
+  const major = entry.profile
+  const display = entry.display ?? {}
+  const majorSlug = composeDetailSlug('major', major.name, major.id)
+  const majorUrl = `/major/${encodeURIComponent(majorSlug)}`
+  const summary = escapeHtml(formatMajorSummaryText(display.summary))
+  // 계열 이름: 콤마가 2개 이하인 경우에만 표시 (클라이언트 로직과 통일)
+  const categoryName = display.categoryName && display.categoryName.split(',').length <= 2
+    ? display.categoryName
+    : undefined
+  
+  const satisfactionGrade = getSatisfactionGrade(display.firstJobSatisfaction)
+  
+  // 메트릭 박스 생성 (우선순위: 취업률 > 첫직장월급 > 만족도 > 계열)
+  type MetricBox = { html: string; priority: number }
+  const metricBoxes: MetricBox[] = []
+  
+  // 1. 취업률 (최우선)
+  if (display.employmentRate) {
+    const rateText = formatEmploymentRate(display.employmentRate) || ''
+    metricBoxes.push({
+      priority: 1,
+      html: `
+        <div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0">
+          <i class="fas fa-chart-line text-blue-400 text-base sm:text-lg"></i>
+          <span class="text-[9px] sm:text-[10px] font-medium text-blue-300/70">취업률</span>
+          <span class="text-[11px] sm:text-[13px] font-bold text-blue-300 text-center leading-tight px-1">${escapeHtml(rateText)}</span>
+        </div>
+      `
+    })
+  }
+  
+  // 2. 평균 월급
+  if (display.firstJobSalary) {
+    const salaryText = display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`
+    metricBoxes.push({
+      priority: 2,
+      html: `
+        <div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0">
+          <i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i>
+          <span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70">평균 월급</span>
+          <span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${escapeHtml(salaryText)}</span>
+        </div>
+      `
+    })
+  }
+  
+  // 3. 만족도
+  if (display.firstJobSatisfaction && satisfactionGrade) {
+    metricBoxes.push({
+      priority: 3,
+      html: `
+        <div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0">
+          <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i>
+          <span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">만족도</span>
+          <span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${escapeHtml(satisfactionGrade.level)}</span>
+        </div>
+      `
+    })
+  }
+  
+  // 4. 계열
+  if (categoryName) {
+    metricBoxes.push({
+      priority: 4,
+      html: `
+        <div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0">
+          <i class="fas fa-graduation-cap text-purple-400 text-base sm:text-lg"></i>
+          <span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70">계열</span>
+          <span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight px-1">${escapeHtml(categoryName.length > 10 ? categoryName.substring(0, 10) + '...' : categoryName)}</span>
+        </div>
+      `
+    })
+  }
+  
+  // 우선순위 정렬 후 최대 3개 선택
+  const sortedBoxes = metricBoxes.sort((a, b) => a.priority - b.priority).slice(0, 3)
+  
+  // 메트릭 박스 HTML 생성 (3번째 박스는 모바일에서 숨김)
+  const metricsHtml = sortedBoxes.map((box, index) => {
+    if (index === 2) {
+      return `<div class="hidden sm:flex">${box.html}</div>`
+    }
+    return box.html
+  }).join('')
+
+  return `
+    <article class="group relative">
+      <a href="${majorUrl}" class="block">
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
+          <!-- 배경 그라데이션 글로우 -->
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
+          </div>
+          
+          <div class="relative flex gap-3 sm:gap-4">
+            <!-- 왼쪽: 전공 정보 (최대 너비 60% 제한) -->
+            <div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]">
+              <!-- 헤더: 전공명 -->
+              <div class="space-y-1.5 sm:space-y-2">
+                <h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                  ${escapeHtml(major.name)}
+                </h2>
+              </div>
+              
+              <!-- 설명 -->
+              <p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">
+                ${summary}
+              </p>
+            </div>
+            
+            <!-- 오른쪽: 메트릭 박스들 (최대 3개, 모바일에서 2개) -->
+            ${metricsHtml ? `
+              <div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">
+                ${metricsHtml}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </a>
+    </article>
+  `
 }
 
 const renderDetailFallback = (options: {
@@ -5514,6 +6137,41 @@ app.get('/api/majors', async (c) => {
   }
 })
 
+// 학과 검색 API (별도 엔드포인트) - :id 라우트보다 먼저 정의해야 함
+app.get('/api/majors/search', async (c) => {
+  try {
+    const q = c.req.query('q') || c.req.query('keyword') || ''
+    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
+    const sort = c.req.query('sort') || 'relevance'
+    const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+    const result = await searchUnifiedMajors({
+      keyword: q,
+      page,
+      perPage,
+      sort,
+      includeSources
+    }, c.env)
+
+    return c.json({
+      success: true,
+      data: result.items,
+      meta: {
+        ...result.meta,
+        keyword: q,
+        page,
+        perPage
+      }
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '학과 정보 검색 실패'
+    }, 500)
+  }
+})
+
 // 학과 상세 정보 API
 app.get('/api/majors/:id', async (c) => {
   try {
@@ -5601,6 +6259,45 @@ app.get('/api/jobs', async (c) => {
   }
 })
 
+// 직업 검색 API (별도 엔드포인트) - :id 라우트보다 먼저 정의해야 함
+app.get('/api/jobs/search', async (c) => {
+  try {
+    const q = c.req.query('q') || c.req.query('keyword') || ''
+    const category = c.req.query('category') || ''
+    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
+    const sort = c.req.query('sort') || 'relevance'
+    const includeSources = parseSourcesQuery(c.req.query('sources'))
+
+    const result = await searchUnifiedJobs({
+      keyword: q,
+      category,
+      page,
+      perPage,
+      sort,
+      includeSources
+    }, c.env)
+
+    return c.json({
+      success: true,
+      data: result.items,
+      meta: {
+        ...result.meta,
+        keyword: q,
+        category,
+        page,
+        perPage
+      },
+      categories: JOB_CATEGORIES
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '직업 정보 검색 실패'
+    }, 500)
+  }
+})
+
 // 직업 상세 정보 API
 app.get('/api/jobs/:id', async (c) => {
   try {
@@ -5641,6 +6338,584 @@ app.get('/api/jobs/:id', async (c) => {
   }
 })
 
+// 편집 모드용 데이터 조회 API (실제 렌더링에 사용되는 데이터 반환)
+app.get('/api/job/:id/edit-data', async (c) => {
+  try {
+    const id = c.req.param('id')
+    
+    const result = await getUnifiedJobDetailWithRawData(
+      {
+        id,
+        careernetId: undefined,
+        goyong24JobId: undefined,
+        includeSources: ['CAREERNET', 'GOYONG24']
+      },
+      c.env
+    )
+
+    if (!result.profile) {
+      return c.json({
+        success: false,
+        error: '직업 정보를 찾을 수 없습니다.'
+      }, 404)
+    }
+
+    const profile = result.profile
+    let rawApiData = result.rawApiData || { careernet: null, goyong24: null }
+    
+    // 🆕 api_data_json을 직접 읽어서 rawApiData 보완
+    // getUnifiedJobDetailWithRawData가 careernet이 null이면 rawCareernetData를 설정하지 않을 수 있음
+    // 하지만 실제 api_data_json에는 { careernet: null, goyong24: {...} } 형식으로 저장되어 있을 수 있음
+    if (c.env.DB) {
+      try {
+        // 실제 DB ID로 조회
+        let dbResult = await c.env.DB.prepare(
+          'SELECT id, api_data_json FROM jobs WHERE id = ? AND is_active = 1 LIMIT 1'
+        ).bind(id).first<{ id: string; api_data_json: string | null }>()
+        
+        if (!dbResult && id.includes(':')) {
+          const parts = id.split(':')
+          if (parts.length > 1) {
+            const extractedId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
+            dbResult = await c.env.DB.prepare(
+              'SELECT id, api_data_json FROM jobs WHERE id = ? AND is_active = 1 LIMIT 1'
+            ).bind(extractedId).first<{ id: string; api_data_json: string | null }>()
+          }
+        }
+        
+        if (!dbResult) {
+          const normalizedSlug = id.toLowerCase()
+          dbResult = await c.env.DB.prepare(
+            'SELECT id, api_data_json FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+          ).bind(normalizedSlug).first<{ id: string; api_data_json: string | null }>()
+        }
+        
+        if (dbResult?.api_data_json) {
+          try {
+            const apiDataFromDb = JSON.parse(dbResult.api_data_json)
+            // api_data_json의 구조를 그대로 사용 (careernet이 null이어도 포함)
+            rawApiData = {
+              careernet: apiDataFromDb.careernet ?? null,
+              goyong24: apiDataFromDb.goyong24 ?? null
+            }
+            console.log('[edit-data] Loaded rawApiData from api_data_json:', {
+              careernet: rawApiData.careernet ? 'exists' : 'null',
+              goyong24: rawApiData.goyong24 ? 'exists' : 'null'
+            })
+          } catch (parseError) {
+            console.error('[edit-data] Failed to parse api_data_json:', parseError)
+          }
+        }
+      } catch (dbError) {
+        console.error('[edit-data] Failed to read api_data_json from DB:', dbError)
+      }
+    }
+
+    // 실제 렌더링에 사용되는 병합 데이터 생성
+    const { mergeJobData } = await import('./services/jobDataMerger')
+    const mergedData = mergeJobData(rawApiData)
+
+    // 🆕 템플릿과 정확히 동일한 로직으로 필드 추출 (renderUnifiedJobDetail과 일치)
+    // 템플릿에서는 profile이 이미 user_contributed_json과 admin_data_json이 병합된 결과를 사용
+    
+    // 히어로 설명: 템플릿과 동일한 로직
+    // 템플릿: const heroDescription = profile.summary?.split('\n')[0]?.trim() || rawApiData?.goyong24?.duty?.jobSum?.trim()
+    // 편집 모드에서는 전체 summary를 편집할 수 있도록 profile.summary 전체를 사용
+    const heroDescriptionFirstLine = profile.summary?.split('\n')[0]?.trim() 
+      || rawApiData?.goyong24?.duty?.jobSum?.trim() || ''
+    
+    // summary 필드: 전체 profile.summary를 사용 (없으면 고용24의 duty.jobSum 사용)
+    // 템플릿에서는 heroDescription만 사용하지만, 편집 모드에서는 전체 summary를 편집 가능하게
+    const summaryForEdit = profile.summary || rawApiData?.goyong24?.duty?.jobSum || ''
+
+    // "하는 일" 섹션: 템플릿과 동일한 로직
+    // 템플릿: const workSummary = mergedData.work.summary || profile.summary
+    const workSummary = mergedData.work.summary || profile.summary || ''
+    
+    // 주요 업무: 템플릿과 동일한 로직
+    // 템플릿: workSimple이 있으면 그것을 사용, 없으면 profile.duties
+    const workSimple = mergedData.work.simple
+    let duties = ''
+    if (workSimple && Array.isArray(workSimple) && workSimple.length > 0) {
+      // workSimple이 있으면 템플릿과 동일하게 처리
+      duties = workSimple
+        .map((item: any) => {
+          const text = typeof item === 'string' ? item : item.work || item.list_content || ''
+          return text?.trim() || ''
+        })
+        .filter(Boolean)
+        .join('\n')
+    } else if (profile.duties?.trim()) {
+      // workSimple이 없으면 profile.duties 사용 (템플릿과 동일)
+      duties = profile.duties
+    }
+
+    // 태그: 템플릿과 동일한 로직 (rawApiData.careernet.encyclopedia.tagList)
+    // 템플릿에서는 tagList를 rawApiData.careernet.encyclopedia.tagList에서 가져옴
+    const tagList = rawApiData?.careernet?.encyclopedia?.tagList || []
+    const tagText = Array.isArray(tagList) 
+      ? tagList.map((tag: any) => {
+          // 템플릿과 동일한 로직: string이면 그대로, object면 tag 또는 list_content 추출
+          const tagText = typeof tag === 'string' ? tag : (tag?.tag || tag?.list_content || '')
+          return tagText?.trim() || ''
+        }).filter(Boolean).join('\n')
+      : ''
+
+    // 실제 데이터베이스 ID 조회 (profile.id는 API ID일 수 있음)
+    let actualDbId = id
+    if (c.env.DB) {
+      try {
+        // slug로 조회 시도
+        const normalizedSlug = id.toLowerCase()
+        const dbResult = await c.env.DB.prepare(
+          'SELECT id FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+        ).bind(normalizedSlug).first<{ id: string }>()
+        
+        if (dbResult?.id) {
+          actualDbId = dbResult.id
+        } else {
+          // ID로 직접 조회 시도
+          const directResult = await c.env.DB.prepare(
+            'SELECT id FROM jobs WHERE id = ? AND is_active = 1 LIMIT 1'
+          ).bind(id).first<{ id: string }>()
+          
+          if (directResult?.id) {
+            actualDbId = directResult.id
+          }
+        }
+      } catch (dbError) {
+        console.error('[edit-data] Failed to resolve DB ID:', dbError)
+        // DB 조회 실패 시 원본 id 사용
+      }
+    }
+
+    // 편집 가능한 필드만 추출 (실제 렌더링에 사용되는 값들)
+    // 🆕 summary는 전체 profile.summary를 사용 (히어로 설명은 첫 줄만 표시되지만 편집은 전체를 편집)
+    // profile.summary가 없으면 고용24의 duty.jobSum을 사용
+    const editData = {
+      name: profile.name || '',
+      summary: summaryForEdit, // 전체 summary (히어로 설명은 첫 줄만 표시되지만 편집은 전체)
+      duties: duties, // 실제 "하는 일" 섹션에 표시되는 주요 업무
+      way: profile.way || '',
+      salary: mergedData.salary.primary || profile.salary || '',
+      prospect: mergedData.prospect.primary || profile.prospect || '',
+      satisfaction: mergedData.satisfaction.primary || profile.satisfaction || '',
+      status: profile.status || '',
+      abilities: profile.abilities || '',
+      knowledge: profile.knowledge || '',
+      environment: profile.environment || '',
+      personality: profile.personality || '',
+      interests: profile.interests || '',
+      values: profile.values || '',
+      activitiesImportance: profile.activitiesImportance || '',
+      activitiesLevels: profile.activitiesLevels || '',
+      // 추가 필드들
+      technKnow: profile.technKnow || '',
+      aptitude: profile.aptitudeList?.map((item: any) => item.name || '').join('\n') || '',
+      educationDistribution: profile.educationDistribution ? JSON.stringify(profile.educationDistribution, null, 2) : '',
+      majorDistribution: profile.majorDistribution ? JSON.stringify(profile.majorDistribution, null, 2) : '',
+      tags: tagText, // 태그 목록
+      workSummary: workSummary // 전체 직업 소개 (히어로 설명과 다를 수 있음)
+    }
+
+    // 디버깅: 데이터가 비어있는지 확인
+    const dataKeys = Object.keys(editData)
+    const nonEmptyKeys = dataKeys.filter(key => {
+      const value = editData[key as keyof typeof editData]
+      return value !== null && value !== undefined && value !== ''
+    })
+    
+    
+    return c.json({
+      success: true,
+      data: editData,
+      entityId: actualDbId, // 실제 데이터베이스 ID 사용
+      entityType: 'job'
+    })
+  } catch (error) {
+    console.error('[edit-data] Error:', error)
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '편집 데이터 조회 실패'
+    }, 500)
+  }
+})
+
+// 전공 편집 모드용 데이터 조회 API
+app.get('/api/major/:id/edit-data', async (c) => {
+  try {
+    const id = c.req.param('id')
+    
+    // 전공 상세페이지와 동일한 ID 해결 로직 사용
+    const resolvedId = resolveDetailIdFromSlug('major', id)
+    
+    // 실제 DB ID 찾기 (전공 상세페이지와 동일한 로직)
+    let actualDbId = resolvedId
+    if (c.env.DB) {
+      try {
+        // composite ID인 경우 (major:C_xxx 또는 major:G_xxx)
+        if (resolvedId.includes(':')) {
+          const parts = resolvedId.split(':')
+          if (parts.length > 1) {
+            const sourceId = parts[parts.length - 1].replace(/^C_/, '').replace(/^G_/, '')
+            // careernet_id나 goyong24_id로 실제 DB ID 찾기
+            const dbResult = await c.env.DB.prepare(
+              'SELECT id FROM majors WHERE careernet_id = ? OR goyong24_id = ? LIMIT 1'
+            ).bind(sourceId, sourceId).first() as { id: string } | null
+            if (dbResult?.id) {
+              actualDbId = dbResult.id
+            } else {
+              console.warn(`[major edit-data] Could not resolve DB ID from composite ID, using resolvedId: ${resolvedId}`)
+            }
+          }
+        } else {
+          // resolvedId가 composite ID가 아닌 경우 DB에서 찾기
+          // ID로 직접 조회 시도
+          let dbResult = await c.env.DB.prepare(
+            'SELECT id FROM majors WHERE id = ? AND is_active = 1 LIMIT 1'
+          ).bind(resolvedId).first() as { id: string } | null
+          
+          
+          if (!dbResult) {
+            // slug로 조회 시도 (정규화된 이름으로)
+            const decodedSlug = decodeURIComponent(id)
+            const normalizedSlug = decodedSlug.toLowerCase()
+            
+            // 방법 1: 정규화된 이름으로 조회
+            dbResult = await c.env.DB.prepare(
+              'SELECT id FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+            ).bind(normalizedSlug).first() as { id: string } | null
+            
+            
+            if (!dbResult) {
+              // 방법 2: 이름으로 직접 조회 (대소문자 무시)
+              dbResult = await c.env.DB.prepare(
+                'SELECT id FROM majors WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
+              ).bind(normalizedSlug).first() as { id: string } | null
+              
+            }
+            
+            if (!dbResult) {
+              // 방법 3: 원본 slug로 조회
+              dbResult = await c.env.DB.prepare(
+                'SELECT id FROM majors WHERE LOWER(name) = LOWER(?) AND is_active = 1 LIMIT 1'
+              ).bind(decodedSlug).first() as { id: string } | null
+              
+            }
+          }
+          
+          if (dbResult?.id) {
+            actualDbId = dbResult.id
+          } else {
+            console.warn(`[major edit-data] Could not resolve DB ID, using resolvedId: ${resolvedId}`)
+            actualDbId = resolvedId
+          }
+        }
+      } catch (dbError) {
+        console.error('[major edit-data] Failed to resolve DB ID:', dbError)
+        // DB 조회 실패 시 resolvedId 사용
+        actualDbId = resolvedId
+      }
+    }
+    
+    // 전공 상세페이지와 동일한 방식으로 데이터 조회
+    // actualDbId가 실제 DB ID인 경우 그대로 사용, 아니면 resolvedId 사용
+    const searchId = actualDbId !== resolvedId ? actualDbId : resolvedId
+    const result = await getUnifiedMajorDetail(
+      {
+        id: searchId, // 실제 DB ID 또는 resolvedId
+        careernetId: undefined,
+        goyong24Params: undefined
+      },
+      c.env
+    )
+
+    if (!result.profile) {
+      console.error(`[major edit-data] Profile not found for searchId: ${searchId}`)
+      // 원본 slug로도 시도 (composite ID가 아닌 경우에만)
+      if (searchId !== id && !id.includes(':')) {
+        const retryResult = await getUnifiedMajorDetail(
+          {
+            id: id,
+            careernetId: undefined,
+            goyong24Params: undefined
+          },
+          c.env
+        )
+        if (retryResult.profile) {
+          // retryResult 사용
+          const profile = retryResult.profile
+          const editData = {
+            name: profile.name || '',
+            summary: profile.summary || '',
+            property: profile.property || '',
+            aptitude: profile.aptitude || '',
+            whatStudy: profile.whatStudy || '',
+            howPrepare: profile.howPrepare || '',
+            enterField: profile.enterField ? JSON.stringify(profile.enterField, null, 2) : ''
+          }
+          
+          // 프로필 이름으로 실제 DB ID 찾기
+          if (c.env.DB && profile.name) {
+            try {
+              const dbResult = await c.env.DB.prepare(
+                'SELECT id FROM majors WHERE LOWER(name) = LOWER(?) AND is_active = 1 LIMIT 1'
+              ).bind(profile.name).first() as { id: string } | null
+              if (dbResult?.id) {
+                actualDbId = dbResult.id
+              }
+            } catch (e) {
+              console.error('[major edit-data] Failed to resolve DB ID from retry:', e)
+            }
+          }
+          
+          return c.json({
+            success: true,
+            data: editData,
+            entityId: actualDbId || id,
+            entityType: 'major'
+          })
+        }
+      }
+      return c.json({
+        success: false,
+        error: '전공 정보를 찾을 수 없습니다.'
+      }, 404)
+    }
+    
+    // 프로필을 찾은 경우, 실제 DB ID를 다시 확인
+    if (actualDbId === resolvedId && !actualDbId.includes(':') && c.env.DB) {
+      try {
+        // 프로필 이름으로 실제 DB ID 찾기
+        const profileName = result.profile.name
+        if (profileName) {
+          const dbResult = await c.env.DB.prepare(
+            'SELECT id FROM majors WHERE LOWER(name) = LOWER(?) AND is_active = 1 LIMIT 1'
+          ).bind(profileName).first() as { id: string } | null
+          if (dbResult?.id) {
+            actualDbId = dbResult.id
+          }
+        }
+      } catch (e) {
+        console.error('[major edit-data] Failed to resolve DB ID from profile name:', e)
+      }
+    }
+
+    const profile = result.profile
+    
+    // 편집 가능한 필드만 추출
+    const editData = {
+      name: profile.name || '',
+      summary: profile.summary || '',
+      property: profile.property || '',
+      aptitude: profile.aptitude || '',
+      whatStudy: profile.whatStudy || '',
+      howPrepare: profile.howPrepare || '',
+      enterField: profile.enterField ? JSON.stringify(profile.enterField, null, 2) : ''
+    }
+
+    return c.json({
+      success: true,
+      data: editData,
+      entityId: actualDbId, // 실제 데이터베이스 ID 사용
+      entityType: 'major'
+    })
+  } catch (error) {
+    console.error('[major edit-data] Error:', error)
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '편집 데이터 조회 실패'
+    }, 500)
+  }
+})
+
+// 편집 모드 미리보기 API
+app.post('/api/job/:id/preview', async (c) => {
+  try {
+    const id = c.req.param('id')
+    const body = await c.req.json() as Record<string, string>
+
+    // 현재 데이터 조회
+    const result = await getUnifiedJobDetailWithRawData(
+      {
+        id,
+        careernetId: undefined,
+        goyong24JobId: undefined,
+        includeSources: ['CAREERNET', 'GOYONG24']
+      },
+      c.env
+    )
+
+    if (!result.profile) {
+      return c.json({
+        success: false,
+        error: '직업 정보를 찾을 수 없습니다.'
+      }, 404)
+    }
+
+    // 편집된 데이터로 프로필 업데이트
+    const editedProfile: UnifiedJobDetail = {
+      ...result.profile,
+      name: body.name !== undefined ? body.name : result.profile.name,
+      summary: body.summary !== undefined ? body.summary : result.profile.summary,
+      duties: body.duties !== undefined ? body.duties : result.profile.duties,
+      way: body.way !== undefined ? body.way : result.profile.way,
+      salary: body.salary !== undefined ? body.salary : result.profile.salary,
+      prospect: body.prospect !== undefined ? body.prospect : result.profile.prospect,
+      satisfaction: body.satisfaction !== undefined ? body.satisfaction : result.profile.satisfaction,
+      status: body.status !== undefined ? body.status : result.profile.status,
+      abilities: body.abilities !== undefined ? body.abilities : result.profile.abilities,
+      knowledge: body.knowledge !== undefined ? body.knowledge : result.profile.knowledge,
+      environment: body.environment !== undefined ? body.environment : result.profile.environment,
+      personality: body.personality !== undefined ? body.personality : result.profile.personality,
+      interests: body.interests !== undefined ? body.interests : result.profile.interests,
+      values: body.values !== undefined ? body.values : result.profile.values,
+      activitiesImportance: body.activitiesImportance !== undefined ? body.activitiesImportance : result.profile.activitiesImportance,
+      activitiesLevels: body.activitiesLevels !== undefined ? body.activitiesLevels : result.profile.activitiesLevels,
+      technKnow: body.technKnow !== undefined ? body.technKnow : result.profile.technKnow
+    }
+    
+    // aptitude는 aptitudeList로 변환 (필요한 경우)
+    if (body.aptitude !== undefined && body.aptitude.trim()) {
+      const aptitudeNames = body.aptitude.split('\n').filter(a => a.trim()).map(a => a.trim())
+      editedProfile.aptitudeList = aptitudeNames.map(name => ({ name, score: 0 }))
+    }
+    
+    // 태그 업데이트 (rawApiData에 반영)
+    let updatedRawApiData = { ...result.rawApiData }
+    if (body.tags !== undefined && updatedRawApiData?.careernet?.encyclopedia) {
+      const tagList = body.tags.split('\n').filter(t => t.trim()).map(t => t.trim())
+      updatedRawApiData = {
+        ...updatedRawApiData,
+        careernet: {
+          ...updatedRawApiData.careernet,
+          encyclopedia: {
+            ...updatedRawApiData.careernet.encyclopedia,
+            tagList
+          }
+        }
+      }
+    }
+
+    // 실제 페이지 HTML 렌더링
+    const previewHtml = renderUnifiedJobDetail({
+      profile: editedProfile,
+      partials: result.partials,
+      sources: result.sources,
+      rawApiData: updatedRawApiData
+    })
+
+    return c.json({
+      success: true,
+      html: previewHtml
+    })
+  } catch (error) {
+    console.error('[preview] Error:', error)
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '미리보기 생성 실패'
+    }, 500)
+  }
+})
+
+// 전공 편집 모드 미리보기 API
+app.post('/api/major/:id/preview', async (c) => {
+  try {
+    const id = c.req.param('id')
+    const body = await c.req.json() as Record<string, string>
+
+    // edit-data API와 동일한 ID 해결 로직 사용
+    // ID가 G23_, C23_ 등으로 시작하면 실제 DB ID로 간주
+    const isActualDbId = id && (id.match(/^[GC]\d+_/) !== null)
+    
+    let actualDbId = id
+    if (c.env.DB && !isActualDbId) {
+      try {
+        // slug로 조회 시도
+        const decodedSlug = decodeURIComponent(id)
+        const normalizedSlug = decodedSlug.toLowerCase()
+        const dbResult = await c.env.DB.prepare(
+          'SELECT id FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+        ).bind(normalizedSlug).first() as { id: string } | null
+        
+        if (!dbResult) {
+          const dbResult2 = await c.env.DB.prepare(
+            'SELECT id FROM majors WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
+          ).bind(normalizedSlug).first() as { id: string } | null
+          
+          if (dbResult2) {
+            actualDbId = dbResult2.id
+          }
+        } else {
+          actualDbId = dbResult.id
+        }
+        
+      } catch (dbError) {
+        console.error('[major preview] Failed to resolve DB ID:', dbError)
+      }
+    }
+    
+    const searchId = actualDbId
+
+    // 현재 데이터 조회
+    const result = await getUnifiedMajorDetail(
+      {
+        id: searchId, // 실제 DB ID 또는 resolvedId
+        careernetId: undefined,
+        goyong24Params: undefined
+      },
+      c.env
+    )
+
+    if (!result.profile) {
+      console.error(`[major preview] Profile not found for searchId: ${searchId}`)
+      return c.json({
+        success: false,
+        error: '전공 정보를 찾을 수 없습니다.'
+      }, 404)
+    }
+
+    // 편집된 데이터로 프로필 업데이트 (직업 상세페이지와 동일한 로직)
+    const editedProfile: UnifiedMajorDetail = {
+      ...result.profile,
+      name: body.name !== undefined ? body.name : result.profile.name,
+      summary: body.summary !== undefined ? body.summary : result.profile.summary,
+      property: body.property !== undefined ? body.property : result.profile.property,
+      aptitude: body.aptitude !== undefined ? body.aptitude : result.profile.aptitude,
+      whatStudy: body.whatStudy !== undefined ? body.whatStudy : result.profile.whatStudy,
+      howPrepare: body.howPrepare !== undefined ? body.howPrepare : result.profile.howPrepare
+    }
+    
+    // enterField는 JSON 문자열로 받아서 파싱
+    if (body.enterField !== undefined && body.enterField.trim()) {
+      try {
+        editedProfile.enterField = JSON.parse(body.enterField)
+      } catch (e) {
+        // 파싱 실패 시 원본 유지
+      }
+    }
+
+    // 실제 페이지 HTML 렌더링 (partials 제거하여 editedProfile이 우선 적용되도록)
+    const { renderUnifiedMajorDetail } = await import('./templates/unifiedMajorDetail')
+    const previewHtml = renderUnifiedMajorDetail({
+      profile: editedProfile,
+      partials: undefined,  // 편집된 profile만 사용
+      sources: result.sources
+    })
+
+    return c.json({
+      success: true,
+      html: previewHtml
+    })
+  } catch (error) {
+    console.error('[major preview] Error:', error)
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '미리보기 생성 실패'
+    }, 500)
+  }
+})
+
 // 직업 카테고리 목록 API
 app.get('/api/categories', async (c) => {
   return c.json({
@@ -5651,75 +6926,57 @@ app.get('/api/categories', async (c) => {
 })
 
 // ============================================================================
-// API 엔드포인트 개선: 검색 및 필드 선택 기능 추가
+// 카드 HTML 렌더링 API (클라이언트 정렬 시 사용)
 // ============================================================================
 
-// 학과 검색 API (별도 엔드포인트)
-app.get('/api/majors/search', async (c) => {
+// 직업 카드 HTML 반환 API
+app.post('/api/job/cards', async (c) => {
   try {
-    const q = c.req.query('q') || c.req.query('keyword') || ''
-    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
-    const includeSources = parseSourcesQuery(c.req.query('sources'))
-
-    const result = await searchUnifiedMajors({
-      keyword: q,
-      page,
-      perPage,
-      includeSources
-    }, c.env)
-
+    const body = await c.req.json<{ items: Array<{ profile: any; display?: any }> }>()
+    const items = body.items || []
+    
+    if (!Array.isArray(items) || items.length === 0) {
+      return c.json({ html: '', count: 0 })
+    }
+    
+    const html = items.map((item) => renderJobCard(item)).join('')
+    
     return c.json({
-      success: true,
-      data: result.items,
-      meta: {
-        ...result.meta,
-        keyword: q,
-        page,
-        perPage
-      }
+      html,
+      count: items.length
     })
   } catch (error) {
+    console.error('Job cards API error:', error)
     return c.json({
-      success: false,
-      error: error instanceof Error ? error.message : '학과 정보 검색 실패'
+      error: error instanceof Error ? error.message : '카드 렌더링 실패',
+      html: '',
+      count: 0
     }, 500)
   }
 })
 
-// 직업 검색 API (별도 엔드포인트)
-app.get('/api/jobs/search', async (c) => {
+// 전공 카드 HTML 반환 API
+app.post('/api/major/cards', async (c) => {
   try {
-    const q = c.req.query('q') || c.req.query('keyword') || ''
-    const category = c.req.query('category') || ''
-    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
-    const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
-    const includeSources = parseSourcesQuery(c.req.query('sources'))
-
-    const result = await searchUnifiedJobs({
-      keyword: q,
-      category,
-      page,
-      perPage,
-      includeSources
-    }, c.env)
-
+    const body = await c.req.json<{ items: Array<{ profile: any; display?: any }> }>()
+    const items = body.items || []
+    
+    if (!Array.isArray(items) || items.length === 0) {
+      return c.json({ html: '', count: 0 })
+    }
+    
+    const html = items.map((item) => renderMajorCard(item)).join('')
+    
     return c.json({
-      success: true,
-      data: result.items,
-      meta: {
-        ...result.meta,
-        keyword: q,
-        category,
-        page,
-        perPage
-      },
-      categories: JOB_CATEGORIES
+      html,
+      count: items.length
     })
   } catch (error) {
+    console.error('Major cards API error:', error)
     return c.json({
-      success: false,
-      error: error instanceof Error ? error.message : '직업 정보 검색 실패'
+      error: error instanceof Error ? error.message : '카드 렌더링 실패',
+      html: '',
+      count: 0
     }, 500)
   }
 })
@@ -5862,20 +7119,8 @@ app.get('/majors/:id', async (c) => {
     const majorName = profile.name || '전공 정보'
     const summary = profile.summary?.substring(0, 120) || '전공 정보를 제공합니다.'
     
-    // Render debug page if in debug mode
-    if (debugMode) {
-      const debugContent = renderDataDebugPage({
-        profile,
-        partials: apiData.partials || {},
-        sources: apiData.sources || {},
-        rawApiData: {
-          careernet: apiData.careernet || null,
-          goyong24: apiData.goyong24 || null
-        }
-      })
-      
-      return c.html(debugContent)
-    }
+    // Note: 디버그 모드는 ISR 캐시를 우회하는 별도 라우트에서 처리됩니다.
+    // 이 함수는 ISR 캐시 생성용이므로 디버그 모드를 지원하지 않습니다.
     
     // SEO 최적화된 메타 정보
     const pageTitle = `${majorName} 전공 정보 - 대학 학과, 진로, 취업 | CareerWiki`
@@ -6180,12 +7425,15 @@ app.post('/api/admin/seed-jobs', requireAdmin, async (c) => {
   const background = c.req.query('background') === 'true'
   
   try {
-    // seedAllJobs를 동적 import
-    const { seedAllJobs } = await import('./scripts/seedAllJobs')
+    // 새 ETL 스크립트 사용 (seedAllJobs는 삭제됨)
+    return c.json({ 
+      error: 'This endpoint is deprecated. Please use the new ETL scripts in src/scripts/etl/' 
+    }, 501)
     
+    /*
     if (background) {
       // 백그라운드로 실행
-      const seedPromise = seedAllJobs(c.env).catch(err => {
+      const seedPromise = Promise.resolve({}).catch((err: unknown) => {
         console.error('❌ Seed failed:', err)
         return {
           total: 0,
@@ -6211,33 +7459,635 @@ app.post('/api/admin/seed-jobs', requireAdmin, async (c) => {
     } else {
       // 동기 실행 - 완료될 때까지 기다림
       console.log('🌱 Starting seed job synchronously...')
-      const result = await seedAllJobs(c.env)
-      
-      const duration = ((Date.now() - result.startTime) / 1000).toFixed(1)
-      
-      return c.json({
-        success: true,
-        message: '✅ Seed job completed',
-        duration: `${duration}초`,
-        result: {
-          total: result.total,
-          processed: result.processed,
-          inserted: result.inserted,
-          updated: result.updated,
-          skipped: result.skipped,
-          errors: result.errors,
-          errorSummary: result.errorDetails.length > 0 
-            ? `${result.errors}개 오류 발생` 
-            : '오류 없음'
-        }
-      })
+      return c.json({ error: 'Deprecated' }, 501)
     }
-  } catch (error: any) {
+    */
+  } catch (error: unknown) {
     console.error('❌ Seed start failed:', error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
     return c.json({ 
       error: 'Failed to start seed',
-      details: error.message 
+      details: errorMessage 
     }, 500)
+  }
+})
+
+// ============================================
+// Phase 4: 편집 시스템 API 엔드포인트
+// ============================================
+
+// 직업 편집
+app.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
+  try {
+    const jobId = c.req.param('id')
+    const user = getOptionalUser(c)
+    let body: any
+    
+    try {
+      body = await c.req.json()
+    } catch {
+      return c.json({ success: false, error: 'invalid json body' }, 400)
+    }
+    
+    const field = typeof body.field === 'string' ? body.field : ''
+    const content = typeof body.content === 'string' ? body.content : ''
+    const source = typeof body.source === 'string' ? body.source : ''
+    const changeSummary = typeof body.changeSummary === 'string' ? body.changeSummary : undefined
+    const anonymous = Boolean(body.anonymous)
+    const password = typeof body.password === 'string' ? body.password : undefined
+    
+    // 필수 필드 검증 (field, content는 필수, source는 선택)
+    if (!field || !content) {
+      return c.json({ success: false, error: 'field and content are required' }, 400)
+    }
+    
+    // Source URL 검증 (source가 제공된 경우에만 검증)
+    if (source && !validateUrl(source)) {
+      return c.json({ success: false, error: 'Invalid source URL. Must be a valid http/https URL' }, 400)
+    }
+    
+    // IP 해시 생성
+    const ipAddress = c.req.header('cf-connecting-ip') ?? null
+    const ipHash = await hashIpAddress(ipAddress)
+    
+    // 편집 서비스 호출
+    const result = await editJob(c.env.DB, jobId, {
+      field,
+      content,
+      source,
+      changeSummary,
+      anonymous,
+      password,
+      ipHash: ipHash ?? undefined,
+      userId: user?.id?.toString(),
+      editorType: user?.role as 'user' | 'expert' | 'admin' | undefined
+    })
+    
+    // 캐시 무효화 (editJob 내부에서 이미 처리되지만, 중복 호출해도 안전)
+    // editJob 내부에서 이미 invalidatePageCache를 호출하므로 여기서는 생략 가능
+    // 하지만 API 엔드포인트에서도 호출하여 확실하게 처리
+    await invalidatePageCache(c.env.DB, {
+      jobId: jobId,
+      pageType: 'job'
+    })
+    
+    return c.json({
+      success: true,
+      revisionId: result.revisionId,
+      message: 'Edit saved successfully'
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'edit failed'
+    const status = message.includes('NOT_FOUND') ? 404 
+      : message.includes('REQUIRED') || message.includes('INVALID') ? 400
+      : message.includes('LIMIT') ? 403
+      : 500
+    
+    return c.json({ success: false, error: message }, status)
+  }
+})
+
+// 전공 편집
+app.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => {
+  try {
+    const majorIdParam = c.req.param('id')
+    const user = getOptionalUser(c)
+    let body: any
+    
+    try {
+      body = await c.req.json()
+    } catch {
+      return c.json({ success: false, error: 'invalid json body' }, 400)
+    }
+    
+    const field = typeof body.field === 'string' ? body.field : ''
+    const content = typeof body.content === 'string' ? body.content : ''
+    const source = typeof body.source === 'string' ? body.source : ''
+    const changeSummary = typeof body.changeSummary === 'string' ? body.changeSummary : undefined
+    const anonymous = Boolean(body.anonymous)
+    const password = typeof body.password === 'string' ? body.password : undefined
+    
+    // 필수 필드 검증 (field, content는 필수, source는 선택)
+    if (!field || !content) {
+      return c.json({ success: false, error: 'field and content are required' }, 400)
+    }
+    
+    // Source URL 검증 (source가 제공된 경우에만 검증)
+    if (source && !validateUrl(source)) {
+      return c.json({ success: false, error: 'Invalid source URL. Must be a valid http/https URL' }, 400)
+    }
+    
+    // 실제 DB ID로 변환 (editJob과 동일한 로직)
+    let majorId = majorIdParam
+    let major = await c.env.DB.prepare('SELECT id FROM majors WHERE id = ? AND is_active = 1')
+      .bind(majorId)
+      .first<{ id: string }>()
+    
+    // ID로 찾지 못한 경우 slug로 시도
+    if (!major) {
+      // major:G_xxx 같은 형식에서 실제 ID 추출 시도
+      let extractedId = majorId
+      if (majorId.includes(':')) {
+        const parts = majorId.split(':')
+        if (parts.length > 1) {
+          extractedId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
+          major = await c.env.DB.prepare('SELECT id FROM majors WHERE id = ? AND is_active = 1')
+            .bind(extractedId)
+            .first<{ id: string }>()
+          
+          if (major) {
+            majorId = extractedId
+          }
+        }
+      }
+      
+      // 여전히 찾지 못한 경우 slug로 시도
+      if (!major) {
+        const decodedSlug = decodeURIComponent(majorId)
+        const normalizedSlug = decodedSlug.toLowerCase()
+        
+        major = await c.env.DB.prepare(
+          'SELECT id FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+        ).bind(normalizedSlug).first<{ id: string }>()
+        
+        if (!major) {
+          major = await c.env.DB.prepare(
+            'SELECT id FROM majors WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
+          ).bind(normalizedSlug).first<{ id: string }>()
+        }
+        
+        if (!major) {
+          major = await c.env.DB.prepare(
+            'SELECT id FROM majors WHERE LOWER(name) = LOWER(?) AND is_active = 1 LIMIT 1'
+          ).bind(decodedSlug).first<{ id: string }>()
+        }
+        
+        if (major) {
+          majorId = major.id
+        }
+      }
+    }
+    
+    if (!major) {
+      console.error(`[major edit] Major not found. Searched with: ${majorIdParam}`)
+      return c.json({ success: false, error: 'MAJOR_NOT_FOUND' }, 404)
+    }
+    
+    
+    const ipAddress = c.req.header('cf-connecting-ip') ?? null
+    const ipHash = await hashIpAddress(ipAddress)
+    
+    const result = await editMajor(c.env.DB, majorId, {
+      field,
+      content,
+      source,
+      changeSummary,
+      anonymous,
+      password,
+      ipHash: ipHash ?? undefined,
+      userId: user?.id?.toString(),
+      editorType: user?.role as 'user' | 'expert' | 'admin' | undefined
+    })
+    
+    await invalidatePageCache(c.env.DB, {
+      majorId: majorId,
+      pageType: 'major'
+    })
+    
+    
+    return c.json({
+      success: true,
+      revisionId: result.revisionId,
+      message: 'Edit saved successfully'
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'edit failed'
+    console.error(`[major edit] Error:`, error)
+    const status = message.includes('NOT_FOUND') ? 404 
+      : message.includes('REQUIRED') || message.includes('INVALID') ? 400
+      : message.includes('LIMIT') ? 403
+      : 500
+    
+    return c.json({ success: false, error: message }, status)
+  }
+})
+
+// HowTo 편집
+app.post('/api/howto/:slug/edit', requireHowToEdit, async (c) => {
+  try {
+    const slug = c.req.param('slug')
+    const user = getOptionalUser(c)
+    let body: any
+    
+    try {
+      body = await c.req.json()
+    } catch {
+      return c.json({ success: false, error: 'invalid json body' }, 400)
+    }
+    
+    const content = typeof body.content === 'string' ? body.content : ''
+    const source = typeof body.source === 'string' ? body.source : undefined
+    const changeSummary = typeof body.changeSummary === 'string' ? body.changeSummary : undefined
+    const anonymous = Boolean(body.anonymous)
+    const password = typeof body.password === 'string' ? body.password : undefined
+    
+    if (!content) {
+      return c.json({ success: false, error: 'content is required' }, 400)
+    }
+    
+    const ipAddress = c.req.header('cf-connecting-ip') ?? null
+    const ipHash = await hashIpAddress(ipAddress)
+    
+    const result = await editHowTo(c.env.DB, slug, {
+      content,
+      source,
+      changeSummary,
+      anonymous,
+      password,
+      ipHash: ipHash ?? undefined,
+      userId: user?.id?.toString(),
+      editorType: user?.role as 'user' | 'expert' | 'admin' | undefined
+    })
+    
+    await invalidatePageCache(c.env.DB, {
+      slug,
+      pageType: 'guide'
+    })
+    
+    return c.json({
+      success: true,
+      revisionId: result.revisionId,
+      message: 'Edit saved successfully'
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'edit failed'
+    const status = message.includes('NOT_FOUND') ? 404 
+      : message.includes('REQUIRED') || message.includes('INVALID') ? 400
+      : message.includes('LIMIT') ? 403
+      : 500
+    
+    return c.json({ success: false, error: message }, status)
+  }
+})
+
+// Revision 상세 조회
+app.get('/api/revision/:id', authMiddleware, async (c) => {
+  try {
+    const revisionId = Number(c.req.param('id'))
+    const includeFullData = c.req.query('fullData') === 'true'
+    const formatForEdit = c.req.query('formatForEdit') === 'true' // 편집 형식으로 변환
+    
+    if (!Number.isFinite(revisionId) || revisionId <= 0) {
+      return c.json({ success: false, error: 'invalid revision id' }, 400)
+    }
+    
+    const revision = await getRevisionById(c.env.DB, revisionId)
+    
+    if (!revision) {
+      return c.json({ success: false, error: 'revision not found' }, 404)
+    }
+    
+    let fullData = null
+    let editFormattedData = null
+    
+    if (includeFullData) {
+      // 전체 데이터 재구성
+      const { reconstructFullData } = await import('./services/revisionService')
+      try {
+        const snapshot = JSON.parse(revision.dataSnapshot)
+        
+        // 변경사항만 저장된 경우 전체 데이터 재구성 필요
+        if (snapshot.changedFields !== undefined) {
+          // entityType이 'job' | 'major' | 'howto'인 경우에만 재구성
+          if (revision.entityType === 'job' || revision.entityType === 'major' || revision.entityType === 'howto') {
+            fullData = await reconstructFullData(
+              c.env.DB,
+              revision.entityType,
+              revision.entityId,
+              revision.revisionNumber
+            )
+          } else {
+            // 'guide' 등 다른 타입은 스냅샷 그대로 사용
+            fullData = snapshot
+          }
+        } else {
+          // 전체 스냅샷인 경우 그대로 사용
+          fullData = snapshot
+        }
+        
+        // 편집 형식으로 변환 요청 시
+        if (formatForEdit && revision.entityType === 'job' && fullData) {
+          // edit-data API와 동일한 로직으로 필드 추출
+          const { mergeJobData } = await import('./services/jobDataMerger')
+          
+          // fullData가 원본 구조인지 확인 (careernet, goyong24 포함 여부)
+          let rawApiData: { careernet: any; goyong24: any } = { careernet: null, goyong24: null }
+          if (fullData.careernet !== undefined || fullData.goyong24 !== undefined) {
+            rawApiData = {
+              careernet: fullData.careernet || null,
+              goyong24: fullData.goyong24 || null
+            }
+          } else {
+            // fullData가 이미 병합된 구조인 경우, 원본 구조로 가정
+            rawApiData = fullData as any
+          }
+          
+          const mergedData = mergeJobData(rawApiData)
+          
+          // profile 객체 생성 (fullData에서 직접 필드 추출)
+          const profile = {
+            name: fullData.name || '',
+            summary: fullData.summary || (rawApiData?.goyong24 as any)?.duty?.jobSum || '',
+            duties: fullData.duties || '',
+            way: fullData.way || '',
+            salary: fullData.salary || '',
+            prospect: fullData.prospect || '',
+            satisfaction: fullData.satisfaction || '',
+            status: fullData.status || '',
+            abilities: fullData.abilities || '',
+            knowledge: fullData.knowledge || '',
+            environment: fullData.environment || '',
+            personality: fullData.personality || '',
+            interests: fullData.interests || '',
+            values: fullData.values || '',
+            technKnow: fullData.technKnow || '',
+            aptitudeList: fullData.aptitudeList || [],
+            educationDistribution: fullData.educationDistribution || null,
+            majorDistribution: fullData.majorDistribution || null
+          }
+          
+          // edit-data API와 동일한 로직으로 필드 추출
+          const summaryForEdit = profile.summary || (rawApiData?.goyong24 as any)?.duty?.jobSum || ''
+          const workSummary = mergedData.work.summary || profile.summary || ''
+          
+          const workSimple = mergedData.work.simple
+          let duties = ''
+          if (workSimple && Array.isArray(workSimple) && workSimple.length > 0) {
+            duties = workSimple
+              .map((item: any) => {
+                const text = typeof item === 'string' ? item : item.work || item.list_content || ''
+                return text?.trim() || ''
+              })
+              .filter(Boolean)
+              .join('\n')
+          } else if (profile.duties?.trim()) {
+            duties = profile.duties
+          }
+          
+          const tagList = (rawApiData?.careernet as any)?.encyclopedia?.tagList || []
+          const tagText = Array.isArray(tagList) 
+            ? tagList.map((tag: any) => {
+                const tagText = typeof tag === 'string' ? tag : (tag?.tag || tag?.list_content || '')
+                return tagText?.trim() || ''
+              }).filter(Boolean).join('\n')
+            : ''
+          
+          editFormattedData = {
+            name: profile.name || '',
+            summary: summaryForEdit,
+            duties: duties,
+            way: profile.way || '',
+            salary: mergedData.salary.primary || profile.salary || '',
+            prospect: mergedData.prospect.primary || profile.prospect || '',
+            satisfaction: mergedData.satisfaction.primary || profile.satisfaction || '',
+            status: profile.status || '',
+            abilities: profile.abilities || '',
+            knowledge: profile.knowledge || '',
+            environment: profile.environment || '',
+            personality: profile.personality || '',
+            interests: profile.interests || '',
+            values: profile.values || '',
+            technKnow: profile.technKnow || '',
+            aptitude: profile.aptitudeList?.map((item: any) => item.name || '').join('\n') || '',
+            educationDistribution: profile.educationDistribution ? JSON.stringify(profile.educationDistribution, null, 2) : '',
+            majorDistribution: profile.majorDistribution ? JSON.stringify(profile.majorDistribution, null, 2) : '',
+            tags: tagText,
+            workSummary: workSummary
+          }
+        }
+      } catch (error) {
+        console.error('[revision/:id] Failed to reconstruct full data:', error)
+      }
+    }
+    
+    return c.json({
+      success: true,
+      data: {
+        ...revision,
+        fullData,
+        editFormattedData
+      }
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to get revision'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+// Revision 목록 조회
+app.get('/api/job/:id/revisions', authMiddleware, async (c) => {
+  try {
+    const jobIdParam = c.req.param('id')
+    const limit = parseInt(c.req.query('limit') || '20', 10)
+    const offset = parseInt(c.req.query('offset') || '0', 10)
+    
+    // 실제 DB ID로 변환 (editJob과 동일한 로직)
+    let jobId = jobIdParam
+    let job = await c.env.DB.prepare('SELECT id FROM jobs WHERE id = ? AND is_active = 1')
+      .bind(jobId)
+      .first<{ id: string }>()
+    
+    // ID로 찾지 못한 경우 slug로 시도
+    if (!job) {
+      // job:G_K000000890 같은 형식에서 실제 ID 추출 시도
+      let extractedId = jobId
+      if (jobId.includes(':')) {
+        const parts = jobId.split(':')
+        if (parts.length > 1) {
+          extractedId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
+          job = await c.env.DB.prepare('SELECT id FROM jobs WHERE id = ? AND is_active = 1')
+            .bind(extractedId)
+            .first<{ id: string }>()
+          
+          if (job) {
+            jobId = extractedId
+          }
+        }
+      }
+      
+      // 여전히 찾지 못한 경우 slug로 시도
+      if (!job) {
+        const decodedSlug = decodeURIComponent(jobId)
+        const normalizedSlug = decodedSlug.toLowerCase()
+        
+        job = await c.env.DB.prepare(
+          'SELECT id FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+        ).bind(normalizedSlug).first<{ id: string }>()
+        
+        if (!job) {
+          job = await c.env.DB.prepare(
+            'SELECT id FROM jobs WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
+          ).bind(normalizedSlug).first<{ id: string }>()
+        }
+        
+        if (!job) {
+          job = await c.env.DB.prepare(
+            'SELECT id FROM jobs WHERE LOWER(name) = LOWER(?) AND is_active = 1 LIMIT 1'
+          ).bind(decodedSlug).first<{ id: string }>()
+        }
+        
+        if (job) {
+          jobId = job.id
+        }
+      }
+    }
+    
+    if (!job) {
+      return c.json({ success: false, error: 'JOB_NOT_FOUND' }, 404)
+    }
+    
+    const result = await listRevisions(c.env.DB, 'job', jobId, {
+      limit: Math.min(Math.max(limit, 1), 100),
+      offset: Math.max(offset, 0)
+    })
+    
+    return c.json({
+      success: true,
+      data: result
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to list revisions'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+app.get('/api/major/:id/revisions', authMiddleware, async (c) => {
+  try {
+    let majorId = c.req.param('id')
+    const limit = parseInt(c.req.query('limit') || '20', 10)
+    const offset = parseInt(c.req.query('offset') || '0', 10)
+    
+    // ID 해결 (직업 상세페이지와 동일한 로직)
+    if (c.env.DB && majorId) {
+      try {
+        const db = c.env.DB
+        
+        // composite ID인 경우 (major:C_xxx 또는 major:G_xxx)
+        if (majorId.includes(':')) {
+          const parts = majorId.split(':')
+          if (parts.length > 1) {
+            const sourceId = parts[parts.length - 1].replace(/^C_/, '').replace(/^G_/, '')
+            const dbResult = await db.prepare(
+              'SELECT id FROM majors WHERE careernet_id = ? OR goyong24_id = ? LIMIT 1'
+            ).bind(sourceId, sourceId).first() as { id: string } | null
+            if (dbResult?.id) {
+              majorId = dbResult.id
+            }
+          }
+        } else {
+          // majorId가 composite ID가 아닌 경우 DB에서 찾기
+          let dbResult = await db.prepare(
+            'SELECT id FROM majors WHERE id = ? AND is_active = 1 LIMIT 1'
+          ).bind(majorId).first() as { id: string } | null
+          
+          if (!dbResult) {
+            // slug로 조회 시도
+            const decodedSlug = decodeURIComponent(majorId)
+            const normalizedSlug = decodedSlug.toLowerCase()
+            dbResult = await db.prepare(
+              'SELECT id FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+            ).bind(normalizedSlug).first() as { id: string } | null
+            
+            if (dbResult?.id) {
+              majorId = dbResult.id
+            }
+          }
+        }
+      } catch (dbError) {
+        console.error('[major revisions] Failed to resolve ID:', dbError)
+      }
+    }
+    
+    const result = await listRevisions(c.env.DB, 'major', majorId, {
+      limit: Math.min(Math.max(limit, 1), 100),
+      offset: Math.max(offset, 0)
+    })
+    
+    
+    return c.json({
+      success: true,
+      data: result
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to list revisions'
+    console.error('[major revisions] Error:', error)
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+// 되돌리기
+app.post('/api/revision/:id/restore', authMiddleware, async (c) => {
+  try {
+    const revisionId = Number(c.req.param('id'))
+    const user = getOptionalUser(c)
+    let body: any
+    
+    try {
+      body = await c.req.json()
+    } catch {
+      body = {}
+    }
+    
+    if (!Number.isFinite(revisionId) || revisionId <= 0) {
+      return c.json({ success: false, error: 'invalid revision id' }, 400)
+    }
+    
+    const password = typeof body.password === 'string' ? body.password : undefined
+    
+    // 익명 편집인 경우 비밀번호 검증 (passwordHash가 있는 경우에만)
+    const targetRevision = await getRevisionById(c.env.DB, revisionId)
+    if (targetRevision?.editorType === 'anonymous' && targetRevision.passwordHash) {
+      // passwordHash가 있는 경우에만 비밀번호 검증 필요
+      if (!password) {
+        return c.json({ success: false, error: 'PASSWORD_REQUIRED' }, 403)
+      }
+      
+      const { verifyEditPassword } = await import('./utils/anonymousEdit')
+      const isValid = await verifyEditPassword(password, targetRevision.passwordHash)
+      if (!isValid) {
+        return c.json({ success: false, error: 'INVALID_PASSWORD' }, 403)
+      }
+    }
+    
+    // 되돌리기 실행
+    const revision = await restoreRevision(
+      c.env.DB,
+      revisionId,
+      user?.id?.toString() ?? null,
+      password
+    )
+    
+    // 캐시 무효화 (jobId 또는 majorId 사용)
+    await invalidatePageCache(c.env.DB, {
+      jobId: revision.entityType === 'job' ? revision.entityId : undefined,
+      majorId: revision.entityType === 'major' ? revision.entityId : undefined,
+      slug: revision.entityType === 'howto' ? revision.entityId : undefined,
+      pageType: revision.entityType === 'howto' ? 'guide' : revision.entityType
+    })
+    
+    return c.json({
+      success: true,
+      revisionId: revision.id,
+      message: 'Revision restored successfully'
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'restore failed'
+    const status = message.includes('NOT_FOUND') ? 404
+      : message.includes('REQUIRED') || message.includes('UNAUTHORIZED') ? 403
+      : message.includes('INVALID') ? 400
+      : 500
+    
+    return c.json({ success: false, error: message }, status)
   }
 })
 
@@ -6262,3 +8112,333 @@ export const scheduled: ExportedHandlerScheduledHandler<Bindings> = async (event
   ctx.waitUntil(run)
   await run
 }
+
+// 🆕 API에서 원본 데이터를 다시 가져와서 api_data_json 업데이트
+app.post('/api/job/:id/refetch-api-data', authMiddleware, async (c) => {
+  try {
+    const jobIdParam = c.req.param('id')
+    
+    // 실제 DB ID로 변환
+    let jobId = jobIdParam
+    let job = await c.env.DB.prepare('SELECT id, name, careernet_id, goyong24_id FROM jobs WHERE id = ? AND is_active = 1')
+      .bind(jobId)
+      .first<{ id: string; name: string; careernet_id: string | null; goyong24_id: string | null }>()
+    
+    // ID로 찾지 못한 경우 slug로 시도
+    if (!job) {
+      let extractedId = jobId
+      if (jobId.includes(':')) {
+        const parts = jobId.split(':')
+        if (parts.length > 1) {
+          extractedId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
+          job = await c.env.DB.prepare('SELECT id, name, careernet_id, goyong24_id FROM jobs WHERE id = ? AND is_active = 1')
+            .bind(extractedId)
+            .first<{ id: string; name: string; careernet_id: string | null; goyong24_id: string | null }>()
+          
+          if (job) {
+            jobId = extractedId
+          }
+        }
+      }
+      
+      if (!job) {
+        const decodedSlug = decodeURIComponent(jobId)
+        const normalizedSlug = decodedSlug.toLowerCase()
+        
+        job = await c.env.DB.prepare(
+          'SELECT id, name, careernet_id, goyong24_id FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+        ).bind(normalizedSlug).first<{ id: string; name: string; careernet_id: string | null; goyong24_id: string | null }>()
+        
+        if (!job) {
+          job = await c.env.DB.prepare(
+            'SELECT id, name, careernet_id, goyong24_id FROM jobs WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
+          ).bind(normalizedSlug).first<{ id: string; name: string; careernet_id: string | null; goyong24_id: string | null }>()
+        }
+        
+        if (!job) {
+          job = await c.env.DB.prepare(
+            'SELECT id, name, careernet_id, goyong24_id FROM jobs WHERE LOWER(name) = LOWER(?) AND is_active = 1 LIMIT 1'
+          ).bind(decodedSlug).first<{ id: string; name: string; careernet_id: string | null; goyong24_id: string | null }>()
+        }
+        
+        if (job) {
+          jobId = job.id
+        }
+      }
+    }
+    
+    if (!job) {
+      return c.json({ success: false, error: 'JOB_NOT_FOUND' }, 404)
+    }
+    
+    
+    // API에서 데이터 가져오기 (명시적으로 source ID 전달하여 강제로 API 호출)
+    const { getUnifiedJobDetailWithRawData } = await import('./services/profileDataService')
+    const result = await getUnifiedJobDetailWithRawData(
+      {
+        id: jobId,
+        careernetId: job.careernet_id || undefined,
+        goyong24JobId: job.goyong24_id || undefined,
+        includeSources: ['CAREERNET', 'GOYONG24']
+      },
+      c.env as any
+    )
+    
+    if (!result.profile) {
+      return c.json({ success: false, error: 'Failed to fetch data from API' }, 500)
+    }
+    
+    // api_data_json 업데이트
+    // ⚠️ api_data_json에는 원본 API 데이터 구조를 저장해야 함 (rawApiData 사용)
+    const rawApiData = result.rawApiData || { careernet: null, goyong24: null }
+    
+    // DB에 직접 저장 (updateApiData는 UnifiedJobDetail을 받지만, 우리는 rawApiData를 저장해야 함)
+    const now = Date.now()
+    const apiDataJson = JSON.stringify(rawApiData)
+    
+    // 해시 생성 (rawApiData 사용) - Web Crypto API 사용 (Cloudflare Workers 호환)
+    const normalized = JSON.stringify(rawApiData, Object.keys(rawApiData).sort())
+    const encoder = new TextEncoder()
+    const dataBuffer = encoder.encode(normalized)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    const dataHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+    
+    await c.env.DB.prepare(`
+      UPDATE jobs 
+      SET api_data_json = ?, api_data_hash = ?, api_last_fetched_at = ?, api_last_updated_at = ?
+      WHERE id = ?
+    `).bind(apiDataJson, dataHash, now, now, jobId).run()
+    
+    const updateResult = { updated: true, changedFields: [] }
+    
+    // 캐시 무효화
+    await invalidatePageCache(c.env.DB, {
+      jobId: jobId,
+      pageType: 'job'
+    })
+    
+    return c.json({
+      success: true,
+      message: 'API data refetched and saved successfully',
+      updated: updateResult.updated,
+      changedFields: updateResult.changedFields
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to refetch API data'
+    console.error('[refetch-api-data] Error:', error)
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+// 🆕 user_contributed_json 비우기 (원본 API 데이터 복구용)
+app.post('/api/job/:id/reset-contributions', authMiddleware, async (c) => {
+  try {
+    const jobIdParam = c.req.param('id')
+    
+    // 실제 DB ID로 변환 (editJob과 동일한 로직)
+    let jobId = jobIdParam
+    let job = await c.env.DB.prepare('SELECT id FROM jobs WHERE id = ? AND is_active = 1')
+      .bind(jobId)
+      .first<{ id: string }>()
+    
+    // ID로 찾지 못한 경우 slug로 시도
+    if (!job) {
+      let extractedId = jobId
+      if (jobId.includes(':')) {
+        const parts = jobId.split(':')
+        if (parts.length > 1) {
+          extractedId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
+          job = await c.env.DB.prepare('SELECT id FROM jobs WHERE id = ? AND is_active = 1')
+            .bind(extractedId)
+            .first<{ id: string }>()
+          
+          if (job) {
+            jobId = extractedId
+          }
+        }
+      }
+      
+      if (!job) {
+        const decodedSlug = decodeURIComponent(jobId)
+        const normalizedSlug = decodedSlug.toLowerCase()
+        
+        job = await c.env.DB.prepare(
+          'SELECT id FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+        ).bind(normalizedSlug).first<{ id: string }>()
+        
+        if (!job) {
+          job = await c.env.DB.prepare(
+            'SELECT id FROM jobs WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
+          ).bind(normalizedSlug).first<{ id: string }>()
+        }
+        
+        if (!job) {
+          job = await c.env.DB.prepare(
+            'SELECT id FROM jobs WHERE LOWER(name) = LOWER(?) AND is_active = 1 LIMIT 1'
+          ).bind(decodedSlug).first<{ id: string }>()
+        }
+        
+        if (job) {
+          jobId = job.id
+        }
+      }
+    }
+    
+    if (!job) {
+      return c.json({ success: false, error: 'JOB_NOT_FOUND' }, 404)
+    }
+    
+    // user_contributed_json을 빈 객체로 설정
+    const now = Date.now()
+    await c.env.DB.prepare(`
+      UPDATE jobs 
+      SET user_contributed_json = '{}', user_last_updated_at = ?
+      WHERE id = ?
+    `).bind(now, jobId).run()
+    
+    // 캐시 무효화
+    await invalidatePageCache(c.env.DB, {
+      jobId: jobId,
+      pageType: 'job'
+    })
+    
+    return c.json({
+      success: true,
+      message: 'User contributions cleared. Original API data will now be displayed.'
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'failed to reset contributions'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+// ============================================================================
+// 유사 이름 병합 관리 페이지 및 API
+// ============================================================================
+
+// 유사 이름 병합 관리 페이지 (데이터는 클라이언트에서 비동기 로드)
+app.get('/similar-names', async (c) => {
+  const typeParam = c.req.query('type') || 'job'
+  const type = typeParam === 'major' ? 'major' : 'job'
+  
+  // 빈 페이지 먼저 렌더링, 데이터는 클라이언트에서 API 호출
+  return c.html(renderAdminSimilarNamesPage({ type }))
+})
+
+// 유사 이름 후보 조회 API
+app.get('/api/similar-names/:type', async (c) => {
+  try {
+    const type = c.req.param('type') as 'job' | 'major'
+    if (type !== 'job' && type !== 'major') {
+      return c.json({ success: false, error: 'Invalid type. Must be "job" or "major".' }, 400)
+    }
+    
+    const minScoreParam = c.req.query('minScore')
+    const minScore = minScoreParam ? parseFloat(minScoreParam) : 0.7
+    
+    if (isNaN(minScore) || minScore < 0 || minScore > 1) {
+      return c.json({ success: false, error: 'minScore must be between 0 and 1' }, 400)
+    }
+    
+    const result = await findSimilarNames(c.env.DB, type, minScore)
+    
+    return c.json({
+      success: true,
+      data: result
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to find similar names'
+    console.error('[similar-names] Error:', error)
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+// 이름 매핑 저장 API
+app.post('/api/name-mappings', async (c) => {
+  try {
+    const body = await c.req.json<{
+      mappings: Array<{
+        type: 'job' | 'major'
+        sourceName: string
+        targetName: string
+        similarityScore?: number
+        matchReason?: string
+      }>
+    }>()
+    
+    if (!body.mappings || !Array.isArray(body.mappings) || body.mappings.length === 0) {
+      return c.json({ success: false, error: 'mappings array is required' }, 400)
+    }
+    
+    // 유효성 검사
+    for (const mapping of body.mappings) {
+      if (!mapping.type || !['job', 'major'].includes(mapping.type)) {
+        return c.json({ success: false, error: 'Invalid type in mapping' }, 400)
+      }
+      if (!mapping.sourceName || !mapping.targetName) {
+        return c.json({ success: false, error: 'sourceName and targetName are required' }, 400)
+      }
+    }
+    
+    // 현재 사용자 정보 (미들웨어에서 설정)
+    const user = c.get('user') as { id: string; email: string } | undefined
+    const createdBy = user?.id ?? user?.email ?? 'admin'
+    
+    const result = await saveNameMappings(c.env.DB, body.mappings, createdBy)
+    
+    return c.json({
+      success: true,
+      data: result
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to save mappings'
+    console.error('[name-mappings] Error:', error)
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+// 기존 매핑 조회 API
+app.get('/api/name-mappings/:type', async (c) => {
+  try {
+    const type = c.req.param('type') as 'job' | 'major'
+    if (type !== 'job' && type !== 'major') {
+      return c.json({ success: false, error: 'Invalid type. Must be "job" or "major".' }, 400)
+    }
+    
+    const mappings = await getExistingMappings(c.env.DB, type)
+    
+    return c.json({
+      success: true,
+      data: mappings
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to get mappings'
+    console.error('[name-mappings] Error:', error)
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+// 매핑 삭제 API
+app.delete('/api/name-mappings/:id', async (c) => {
+  try {
+    const idParam = c.req.param('id')
+    const id = parseInt(idParam, 10)
+    
+    if (isNaN(id)) {
+      return c.json({ success: false, error: 'Invalid mapping ID' }, 400)
+    }
+    
+    const result = await deleteNameMapping(c.env.DB, id)
+    
+    if (!result.success) {
+      return c.json({ success: false, error: result.error }, 500)
+    }
+    
+    return c.json({ success: true })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to delete mapping'
+    console.error('[name-mappings] Error:', error)
+    return c.json({ success: false, error: message }, 500)
+  }
+})

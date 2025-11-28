@@ -16,16 +16,16 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: 사이드바 개선 (추천 자격증 계층 구조, 중복 제거, 하위 자격증 3개씩 토글), 목차 UX 개선, 탭 이름 변경, 지도 UI 개선, 지역 필터링 개선
+   * Current features: ETL 병합 필드 사용 (heroSummary, categoryDisplay, heroTags)
    */
-  MAJOR: 92,  // 💬 댓글 제출 버튼 텍스트 변경: '댓글 남기기' → '등록'
+  MAJOR: 170,  // 관련 전공에서 자기 자신 제외
 
   /**
    * Job detail page template version
    * Used for: /job/:slug pages
-   * Current features: 고용24 전용 직업 설명 추가 (duty.jobSum), 사이드바 연관 직업 5개 토글, 흥미 프로필 중복 제거, 커리어 전망 빈 데이터 처리, 깔끔한 URL slug
+   * Current features: ETL 개선 완료, 배열 필드 타입 체크 추가
    */
-  JOB: 31,  // 💬 댓글 제출 버튼 텍스트 변경: '댓글 남기기' → '등록'
+  JOB: 87,  // 관련 직업에서 자기 자신 제외
 
   /**
    * Guide page template version

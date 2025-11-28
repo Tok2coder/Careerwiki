@@ -7,6 +7,2673 @@
 const API_BASE = window.location.origin + '/api';
 const TELEMETRY_VERSION = 'phase1-task3';
 
+// Phase 4: 편집 시스템 클라이언트
+const EditSystem = {
+  currentModal: null,
+  currentEntity: null,
+  currentHistoryModal: null,
+  currentHistoryEntity: null, // 현재 열린 역사 모달의 엔티티 정보 { entityType, entityId }
+  editMode: false,
+  editData: {},
+  tempEdits: {}, // 임시 저장된 편집 내용 { fieldKey: { content, editType, sources } }
+  previewContainer: null,
+
+  /**
+   * 편집 시스템 초기화
+   */
+  init() {
+    // 편집 모드 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('edit') === 'true') {
+      this.enterEditMode();
+      return;
+    }
+
+    // 일반 모드 이벤트 리스너 등록
+    this.initNormalModeEventListeners();
+  },
+
+  /**
+   * 일반 모드 이벤트 리스너 등록
+   */
+  initNormalModeEventListeners() {
+    // 편집 모드 트리거 버튼 (히어로 섹션)
+    document.addEventListener('click', (e) => {
+      const editModeTrigger = e.target.closest('[data-edit-mode-trigger]');
+      if (editModeTrigger) {
+        e.preventDefault();
+        this.handleEditModeClick(editModeTrigger);
+      }
+      
+      // 문서 역사 트리거 버튼
+      const historyTrigger = e.target.closest('[data-history-trigger]');
+      if (historyTrigger) {
+        e.preventDefault();
+        this.handleHistoryClick(historyTrigger);
+      }
+      
+      // 섹션별 편집 버튼 (기존)
+      const editButton = e.target.closest('[data-edit-button]');
+      if (editButton) {
+        e.preventDefault();
+        this.handleEditClick(editButton);
+      }
+
+      // 모달 닫기 버튼
+      const closeBtn = e.target.closest('[data-edit-modal-close]');
+      if (closeBtn) {
+        e.preventDefault();
+        this.closeModal();
+      }
+
+      // 문서 역사 모달 닫기 버튼
+      const historyCloseBtn = e.target.closest('[data-history-modal-close]');
+      if (historyCloseBtn) {
+        e.preventDefault();
+        this.closeHistoryModal();
+      }
+
+      // 백드롭 클릭으로 닫기
+      const backdrop = e.target.closest('[data-edit-modal-backdrop]');
+      if (backdrop && e.target === backdrop) {
+        this.closeModal();
+      }
+
+      const historyBackdrop = e.target.closest('[data-history-modal-backdrop]');
+      if (historyBackdrop && e.target === historyBackdrop) {
+        this.closeHistoryModal();
+      }
+
+      // 되돌리기 버튼
+      const restoreBtn = e.target.closest('[data-restore-revision]');
+      if (restoreBtn) {
+        e.preventDefault();
+        const revisionId = restoreBtn.getAttribute('data-restore-revision');
+        this.handleRestoreRevision(revisionId);
+      }
+
+      // 비교 버튼
+      const compareBtn = e.target.closest('[data-compare-revision]');
+      if (compareBtn) {
+        e.preventDefault();
+        const revisionId = compareBtn.getAttribute('data-compare-revision');
+        this.handleCompareRevision(revisionId);
+      }
+      
+      // 페이지네이션 버튼
+      const pageBtn = e.target.closest('[data-history-page]');
+      if (pageBtn) {
+        e.preventDefault();
+        const page = parseInt(pageBtn.getAttribute('data-history-page'), 10);
+        const { entityType, entityId } = this.currentHistoryEntity || {};
+        if (entityType && entityId) {
+          this.loadRevisions({ entityType, entityId, page, limit: 10 });
+        }
+      }
+    });
+  },
+
+  /**
+   * 편집 모드 이벤트 리스너 등록
+   */
+  initEditModeEventListeners() {
+    // 편집 모드 저장/취소 버튼
+    document.addEventListener('click', (e) => {
+      const saveBtn = e.target.closest('[data-edit-save]');
+      if (saveBtn) {
+        e.preventDefault();
+        this.handleSave();
+      }
+
+      const cancelBtn = e.target.closest('[data-edit-cancel]');
+      if (cancelBtn) {
+        e.preventDefault();
+        this.exitEditMode();
+      }
+    });
+
+    // ESC 키로 편집 모드 종료
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.editMode) {
+        this.exitEditMode();
+      }
+    });
+  },
+
+  /**
+   * 편집 모드 진입
+   */
+  async enterEditMode() {
+    this.editMode = true;
+    
+    // 현재 페이지에서 엔티티 정보 추출
+    const pathname = window.location.pathname;
+    let entityType = null;
+    let entityId = null;
+
+    if (pathname.startsWith('/job/')) {
+      entityType = 'job';
+      let slug = pathname.replace('/job/', '');
+      // URL 인코딩된 slug 디코딩
+      try {
+        slug = decodeURIComponent(slug);
+      } catch (e) {
+        // 디코딩 실패 시 원본 사용
+      }
+      const jobIdElement = document.querySelector('[data-job-id]');
+      entityId = jobIdElement?.getAttribute('data-job-id') || slug;
+    } else if (pathname.startsWith('/major/')) {
+      entityType = 'major';
+      let slug = pathname.replace('/major/', '');
+      // URL 인코딩된 slug 디코딩
+      try {
+        slug = decodeURIComponent(slug);
+      } catch (e) {
+        // 디코딩 실패 시 원본 사용
+      }
+      // URL slug를 우선 사용 (data-major-id는 fallback)
+      // URL slug가 실제 페이지의 전공을 정확히 나타내므로 우선순위가 높음
+      const majorIdElement = document.querySelector('[data-major-id]');
+      entityId = slug || majorIdElement?.getAttribute('data-major-id');
+    } else if (pathname.startsWith('/howto/') || pathname.startsWith('/guide/')) {
+      entityType = 'howto';
+      let slug = pathname.replace(/^\/(howto|guide)\//, '');
+      // URL 인코딩된 slug 디코딩
+      try {
+        slug = decodeURIComponent(slug);
+      } catch (e) {
+        // 디코딩 실패 시 원본 사용
+      }
+      entityId = slug;
+    }
+
+    if (!entityType || !entityId) {
+      console.error('[EditSystem] Cannot determine entity type/id');
+      return;
+    }
+
+    this.currentEntity = { entityType, entityId };
+
+    // 서버에서 편집 데이터 로드
+    await this.loadEditData();
+    
+    // 편집 모드 UI 생성
+    this.renderEditMode();
+    
+    // 필드별 편집 이벤트 리스너 초기화
+    setTimeout(() => {
+      this.initFieldEditListeners();
+      this.initPreview();
+      // 초기 미리보기 표시 (previewContainer가 준비된 후)
+      if (this.previewContainer) {
+        this.updatePreview();
+      }
+    }, 200);
+  },
+
+  /**
+   * 서버에서 편집 데이터 로드
+   */
+  async loadEditData() {
+    const { entityType, entityId } = this.currentEntity;
+    console.log(`[EditSystem] Loading edit data for ${entityType}: ${entityId}`);
+    
+    try {
+      let endpoint;
+      // entityId가 이미 URL 인코딩되어 있을 수 있으므로, 
+      // decodeURIComponent로 디코딩한 후 다시 인코딩하여 일관성 유지
+      let normalizedEntityId = entityId;
+      try {
+        // 이미 인코딩된 경우 디코딩 시도
+        const decoded = decodeURIComponent(entityId);
+        // 디코딩이 성공하고 결과가 다르면 인코딩된 것이었음
+        if (decoded !== entityId) {
+          normalizedEntityId = decoded;
+        }
+      } catch (e) {
+        // 디코딩 실패 시 원본 사용 (이미 디코딩된 상태)
+        normalizedEntityId = entityId;
+      }
+      
+      if (entityType === 'job') {
+        endpoint = `${API_BASE}/job/${encodeURIComponent(normalizedEntityId)}/edit-data`;
+      } else if (entityType === 'major') {
+        endpoint = `${API_BASE}/major/${encodeURIComponent(normalizedEntityId)}/edit-data`;
+      } else {
+        console.error('[EditSystem] Unsupported entity type for edit-data');
+        return;
+      }
+
+      console.log(`[EditSystem] Fetching from: ${endpoint} (normalized entityId: ${normalizedEntityId})`);
+      const response = await fetch(endpoint);
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || '편집 데이터 로드 실패');
+      }
+
+      // 데이터 검증
+      if (!result.data) {
+        console.warn('[EditSystem] No data returned from edit-data API');
+        this.editData = {};
+      } else {
+        this.editData = result.data;
+        const dataKeys = Object.keys(this.editData);
+        const nonEmptyKeys = dataKeys.filter(key => {
+          const value = this.editData[key];
+          return value !== null && value !== undefined && value !== '';
+        });
+        console.log('[EditSystem] Loaded edit data:', dataKeys.length, 'total fields,', nonEmptyKeys.length, 'non-empty fields');
+        console.log('[EditSystem] Non-empty fields:', nonEmptyKeys);
+        console.log('[EditSystem] Sample values:', {
+          name: this.editData.name,
+          summary: this.editData.summary ? this.editData.summary.substring(0, 50) + '...' : 'empty',
+          duties: this.editData.duties ? this.editData.duties.substring(0, 50) + '...' : 'empty',
+          tags: this.editData.tags ? this.editData.tags.substring(0, 50) + '...' : 'empty'
+        });
+      }
+      
+      // entityId 업데이트 (edit-data API에서 반환하는 실제 ID 사용)
+      if (result.entityId) {
+        console.log(`[EditSystem] Updating entityId from "${this.currentEntity.entityId}" to "${result.entityId}"`);
+        this.currentEntity.entityId = result.entityId;
+      } else {
+        console.warn(`[EditSystem] No entityId returned from edit-data API`);
+      }
+    } catch (error) {
+      console.error('[EditSystem] Load edit data error:', error);
+      console.error('[EditSystem] Error details:', {
+        message: error.message,
+        stack: error.stack,
+        entityType: this.currentEntity.entityType,
+        entityId: this.currentEntity.entityId
+      });
+      alert('편집 데이터를 불러오는데 실패했습니다: ' + (error.message || '알 수 없는 오류'));
+      // 에러 발생 시 편집 모드 종료
+      this.exitEditMode();
+    }
+  },
+
+  /**
+   * 미리보기 업데이트 (디바운싱 적용)
+   */
+  previewUpdateTimer: null,
+
+  /**
+   * 미리보기 업데이트 (디바운싱)
+   */
+  async updatePreviewDebounced() {
+    // 기존 타이머 취소
+    if (this.previewUpdateTimer) {
+      clearTimeout(this.previewUpdateTimer);
+    }
+
+    // 300ms 후 미리보기 업데이트
+    this.previewUpdateTimer = setTimeout(() => {
+      this.updatePreview();
+    }, 300);
+  },
+
+  /**
+   * 편집 모드 UI 렌더링
+   */
+  renderEditMode() {
+    // 기존 페이지 전체 숨기기
+    const body = document.body;
+    
+    // 원본 페이지를 숨김
+    body.style.display = 'none';
+    body.setAttribute('data-original-page-hidden', 'true');
+
+    // 편집 모드 UI 생성
+    const editModeHtml = this.createEditModeHtml();
+    
+    // body 내용을 편집 모드로 교체
+    body.style.display = '';
+    body.innerHTML = editModeHtml;
+    body.setAttribute('data-edit-mode', 'true');
+
+    // 미리보기 컨테이너 참조 저장
+    this.previewContainer = document.getElementById('edit-preview');
+
+    // 편집 모드 이벤트 리스너 등록 (body 교체 후)
+    this.initEditModeEventListeners();
+  },
+
+  /**
+   * 편집 모드 HTML 생성 (섹션별로 나눔)
+   */
+  createEditModeHtml() {
+    const { entityType } = this.currentEntity;
+    
+    // 섹션별 필드 그룹화
+    const sections = this.groupFieldsBySection(entityType);
+
+    const sectionsHtml = sections.map(section => {
+      const fieldsHtml = section.fields.map(field => {
+        const value = this.editData[field.key] || '';
+        const label = field.label;
+        const isTextarea = field.type === 'textarea';
+
+        return `
+          <div class="space-y-3 border-b border-wiki-border/30 pb-4 last:border-0" data-field-container="${field.key}">
+            <div class="flex items-center justify-between">
+              <label class="block text-sm font-medium text-white">
+                ${this.escapeHtml(label)}
+              </label>
+              <button
+                type="button"
+                data-field-edit-btn="${field.key}"
+                class="px-3 py-1.5 text-xs rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
+              >
+                <i class="fas fa-edit mr-1"></i>편집
+              </button>
+            </div>
+            
+            <!-- 읽기 전용 표시 영역 -->
+            <div id="display-${field.key}" class="min-h-[60px] px-4 py-3 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white whitespace-pre-wrap">
+              ${value ? this.escapeHtml(value) : '<span class="text-wiki-muted">내용 없음</span>'}
+            </div>
+            
+            <!-- 편집 영역 (초기에는 숨김) -->
+            <div id="edit-${field.key}" class="hidden space-y-3">
+              ${isTextarea ? `
+                <textarea
+                  id="input-${field.key}"
+                  rows="6"
+                  class="w-full px-4 py-3 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-wiki-primary focus:border-transparent resize-y"
+                  data-edit-field="${field.key}"
+                >${this.escapeHtml(value)}</textarea>
+              ` : `
+                <input
+                  type="text"
+                  id="input-${field.key}"
+                  class="w-full px-4 py-3 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-wiki-primary focus:border-transparent"
+                  value="${this.escapeHtml(value)}"
+                  data-edit-field="${field.key}"
+                />
+              `}
+              
+              <!-- 수정 유형 선택 -->
+              <div class="space-y-2">
+                <div class="flex items-center gap-4">
+                  <label class="flex items-center gap-2 text-sm text-white cursor-pointer">
+                    <input type="radio" name="edit-type-${field.key}" value="simple" checked class="text-wiki-primary">
+                    <span>단순 수정</span>
+                  </label>
+                  <label class="flex items-center gap-2 text-sm text-white cursor-pointer">
+                    <input type="radio" name="edit-type-${field.key}" value="source" class="text-wiki-primary">
+                    <span>출처 입력</span>
+                  </label>
+                </div>
+                
+                <!-- 출처 입력 영역 (출처 입력 선택 시 표시) -->
+                <div id="sources-${field.key}" class="hidden space-y-2">
+                  <div class="sources-list-${field.key} space-y-2"></div>
+                  <button
+                    type="button"
+                    data-add-source="${field.key}"
+                    class="px-3 py-1.5 text-xs rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
+                  >
+                    <i class="fas fa-plus mr-1"></i>출처 추가
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 임시 저장/취소 버튼 -->
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  data-field-temp-save="${field.key}"
+                  class="px-4 py-2 text-sm rounded-lg bg-wiki-primary/70 text-white hover:bg-wiki-primary transition"
+                >
+                  임시 저장
+                </button>
+                <button
+                  type="button"
+                  data-field-cancel="${field.key}"
+                  class="px-4 py-2 text-sm rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
+                >
+                  취소
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="bg-wiki-bg/50 border border-wiki-border/60 rounded-xl p-6 space-y-4">
+          <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <i class="fas ${section.icon}" aria-hidden="true"></i>
+            ${this.escapeHtml(section.title)}
+          </h3>
+          <div class="space-y-6">
+            ${fieldsHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="h-screen flex flex-col bg-wiki-bg overflow-hidden">
+        <!-- 편집 모드 헤더 -->
+        <div class="flex-shrink-0 bg-wiki-bg/95 backdrop-blur-sm border-b border-wiki-border/60 px-6 py-4">
+          <div class="max-w-[1600px] mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <h1 class="text-xl font-bold text-white">편집 모드</h1>
+              <span class="px-3 py-1 rounded-full bg-wiki-primary/20 text-xs text-wiki-primary font-medium">
+                ${this.escapeHtml(this.currentEntity.entityType.toUpperCase())}
+              </span>
+            </div>
+            <div class="flex items-center gap-3">
+              <button
+                type="button"
+                data-edit-cancel
+                class="px-4 py-2 rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                data-edit-save-all
+                class="px-4 py-2 rounded-lg bg-wiki-primary text-white hover:bg-blue-600 transition"
+              >
+                저장
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 편집 모드 본문 (좌우 분할, 고정 높이) -->
+        <div class="flex-1 overflow-hidden max-w-[1600px] mx-auto w-full px-6 py-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+            <!-- 왼쪽: 편집 폼 (스크롤 가능) -->
+            <div class="flex flex-col overflow-hidden">
+              <div class="bg-wiki-bg/50 border border-wiki-border/60 rounded-xl p-6 flex flex-col h-full">
+                <h2 class="text-lg font-semibold text-white mb-4 flex-shrink-0">편집창</h2>
+                <div class="flex-1 overflow-y-auto space-y-6 pr-2">
+                  ${sectionsHtml}
+                </div>
+              </div>
+            </div>
+
+            <!-- 오른쪽: 실시간 미리보기 (스크롤 가능) -->
+            <div class="flex flex-col overflow-hidden">
+              <div class="bg-wiki-bg/50 border border-wiki-border/60 rounded-xl p-6 flex flex-col h-full">
+                <h2 class="text-lg font-semibold text-white mb-4 flex-shrink-0">미리보기</h2>
+                <div id="edit-preview" class="flex-1 overflow-y-auto">
+                  <!-- 미리보기 내용이 여기에 실시간으로 렌더링됨 -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  /**
+   * 필드를 섹션별로 그룹화
+   */
+  groupFieldsBySection(entityType) {
+    if (entityType === 'major') {
+      return [
+        {
+          title: '히어로 섹션',
+          icon: 'fa-star',
+          fields: [
+            { key: 'name', label: '전공명', type: 'text' },
+            { key: 'summary', label: '전공 소개', type: 'textarea' }
+          ]
+        },
+        {
+          title: '개요 탭',
+          icon: 'fa-circle-info',
+          fields: [
+            { key: 'property', label: '전공 특성', type: 'textarea' },
+            { key: 'aptitude', label: '이 전공에 어울리는 사람', type: 'textarea' }
+          ]
+        },
+        {
+          title: '상세정보 탭',
+          icon: 'fa-layer-group',
+          fields: [
+            { key: 'whatStudy', label: '무엇을 배우나', type: 'textarea' },
+            { key: 'howPrepare', label: '어떻게 준비하나', type: 'textarea' },
+            { key: 'enterField', label: '졸업 후 진출 분야', type: 'textarea' }
+          ]
+        }
+      ]
+    } else if (entityType === 'job') {
+      return [
+        {
+          title: '히어로 섹션',
+          icon: 'fa-star',
+          fields: [
+            { key: 'name', label: '직업명', type: 'text' },
+            { key: 'summary', label: '직업 소개 (히어로 설명)', type: 'textarea' },
+            { key: 'tags', label: '태그', type: 'textarea' }
+          ]
+        },
+        {
+          title: '개요 탭',
+          icon: 'fa-circle-info',
+          fields: [
+            { key: 'duties', label: '주요 업무', type: 'textarea' },
+            { key: 'way', label: '되는 방법', type: 'textarea' },
+            { key: 'salary', label: '임금 정보', type: 'textarea' },
+            { key: 'prospect', label: '전망', type: 'textarea' },
+            { key: 'satisfaction', label: '만족도', type: 'textarea' },
+            { key: 'status', label: '고용 형태', type: 'textarea' }
+          ]
+        },
+        {
+          title: '상세정보 탭',
+          icon: 'fa-layer-group',
+          fields: [
+            { key: 'knowledge', label: '지식', type: 'textarea' },
+            { key: 'environment', label: '환경', type: 'textarea' },
+            { key: 'technKnow', label: '기술/지식', type: 'textarea' },
+            { key: 'aptitude', label: '적성', type: 'textarea' },
+            { key: 'educationDistribution', label: '학력 분포', type: 'textarea' },
+            { key: 'majorDistribution', label: '전공 분포', type: 'textarea' }
+          ]
+        },
+        {
+          title: '업무특성 탭',
+          icon: 'fa-chart-pie',
+          fields: [
+            { key: 'abilities', label: '능력', type: 'textarea' },
+            { key: 'personality', label: '성격', type: 'textarea' },
+            { key: 'interests', label: '흥미', type: 'textarea' },
+            { key: 'values', label: '가치관', type: 'textarea' },
+            { key: 'activitiesImportance', label: '활동 중요도', type: 'textarea' },
+            { key: 'activitiesLevels', label: '활동 수준', type: 'textarea' }
+          ]
+        }
+      ];
+    }
+    return [];
+  },
+
+  /**
+   * 편집 가능한 필드 목록 가져오기
+   */
+  getEditableFields(entityType) {
+    if (entityType === 'job') {
+      return [
+        { key: 'name', label: '직업명', type: 'text' },
+        { key: 'summary', label: '직업 소개', type: 'textarea' },
+        { key: 'duties', label: '주요 업무', type: 'textarea' },
+        { key: 'salary', label: '임금 정보', type: 'textarea' },
+        { key: 'prospect', label: '전망', type: 'textarea' },
+        { key: 'way', label: '되는 방법', type: 'textarea' },
+        { key: 'abilities', label: '능력', type: 'textarea' },
+        { key: 'knowledge', label: '지식', type: 'textarea' },
+        { key: 'environment', label: '환경', type: 'textarea' },
+        { key: 'personality', label: '성격', type: 'textarea' },
+        { key: 'interests', label: '흥미', type: 'textarea' },
+        { key: 'values', label: '가치관', type: 'textarea' }
+      ];
+    } else if (entityType === 'major') {
+      return [
+        { key: 'name', label: '전공명', type: 'text' },
+        { key: 'summary', label: '전공 소개', type: 'textarea' },
+        { key: 'whatStudy', label: '무엇을 배우나', type: 'textarea' },
+        { key: 'howPrepare', label: '어떻게 준비하나', type: 'textarea' },
+        { key: 'jobProspect', label: '진로 전망', type: 'textarea' }
+      ];
+    } else if (entityType === 'howto') {
+      return [
+        { key: 'title', label: '제목', type: 'text' },
+        { key: 'content', label: '내용', type: 'textarea' }
+      ];
+    }
+    return [];
+  },
+
+  /**
+   * 필드별 편집 이벤트 리스너 초기화
+   */
+  initFieldEditListeners() {
+    // 편집 버튼 클릭
+    document.addEventListener('click', (e) => {
+      const editBtn = e.target.closest('[data-field-edit-btn]');
+      if (editBtn) {
+        const fieldKey = editBtn.getAttribute('data-field-edit-btn');
+        this.enterFieldEditMode(fieldKey);
+      }
+
+      // 출처 추가 버튼
+      const addSourceBtn = e.target.closest('[data-add-source]');
+      if (addSourceBtn) {
+        const fieldKey = addSourceBtn.getAttribute('data-add-source');
+        this.addSourceInput(fieldKey);
+      }
+
+      // 필드 임시 저장 버튼
+      const tempSaveBtn = e.target.closest('[data-field-temp-save]');
+      if (tempSaveBtn) {
+        const fieldKey = tempSaveBtn.getAttribute('data-field-temp-save');
+        this.tempSaveField(fieldKey);
+      }
+
+      // 최종 저장 버튼
+      const saveAllBtn = e.target.closest('[data-edit-save-all]');
+      if (saveAllBtn) {
+        e.preventDefault();
+        this.saveAllEdits();
+      }
+
+      // 필드 취소 버튼
+      const cancelBtn = e.target.closest('[data-field-cancel]');
+      if (cancelBtn) {
+        const fieldKey = cancelBtn.getAttribute('data-field-cancel');
+        this.cancelFieldEdit(fieldKey);
+      }
+    });
+
+    // 수정 유형 라디오 버튼 변경
+    document.addEventListener('change', (e) => {
+      if (e.target.matches('input[name^="edit-type-"]')) {
+        const fieldKey = e.target.name.replace('edit-type-', '');
+        const editType = e.target.value;
+        const sourcesDiv = document.getElementById(`sources-${fieldKey}`);
+        if (sourcesDiv) {
+          sourcesDiv.classList.toggle('hidden', editType !== 'source');
+        }
+      }
+    });
+
+    // 실시간 미리보기 업데이트 (편집 중인 필드만)
+    // 실시간 미리보기 업데이트 제거 - 임시 저장 시에만 업데이트
+    // document.addEventListener('input', (e) => {
+    //   if (e.target.matches('[data-edit-field]')) {
+    //     this.updatePreviewDebounced();
+    //   }
+    // });
+  },
+
+  /**
+   * 필드 편집 모드 진입
+   */
+  enterFieldEditMode(fieldKey) {
+    const displayDiv = document.getElementById(`display-${fieldKey}`);
+    const editDiv = document.getElementById(`edit-${fieldKey}`);
+    const editBtn = document.querySelector(`[data-field-edit-btn="${fieldKey}"]`);
+    
+    if (displayDiv && editDiv && editBtn) {
+      displayDiv.classList.add('hidden');
+      editDiv.classList.remove('hidden');
+      editBtn.classList.add('hidden');
+      
+      // 입력 필드에 포커스 및 임시 저장된 내용 복원
+      const input = document.getElementById(`input-${fieldKey}`);
+      if (input) {
+        // 임시 저장된 내용이 있으면 복원
+        if (this.tempEdits[fieldKey]) {
+          input.value = this.tempEdits[fieldKey].content;
+          
+          // 수정 유형 복원
+          const editType = this.tempEdits[fieldKey].editType;
+          const editTypeRadio = document.querySelector(`input[name="edit-type-${fieldKey}"][value="${editType}"]`);
+          if (editTypeRadio) {
+            editTypeRadio.checked = true;
+            
+            // 출처 입력 선택 시 출처 복원
+            if (editType === 'source' && this.tempEdits[fieldKey].sources.length > 0) {
+              const sourcesDiv = document.getElementById(`sources-${fieldKey}`);
+              if (sourcesDiv) {
+                sourcesDiv.classList.remove('hidden');
+                const sourcesList = document.querySelector(`.sources-list-${fieldKey}`);
+                if (sourcesList) {
+                  // 기존 출처 입력 필드 제거 후 재생성
+                  sourcesList.innerHTML = '';
+                  this.tempEdits[fieldKey].sources.forEach((source) => {
+                    this.addSourceInput(fieldKey);
+                    const inputs = sourcesList.querySelectorAll('input');
+                    if (inputs[inputs.length - 1]) {
+                      inputs[inputs.length - 1].value = source;
+                    }
+                  });
+                }
+              }
+            }
+          }
+        }
+        setTimeout(() => input.focus(), 100);
+      }
+    }
+  },
+
+  /**
+   * 필드 편집 취소
+   */
+  cancelFieldEdit(fieldKey) {
+    const displayDiv = document.getElementById(`display-${fieldKey}`);
+    const editDiv = document.getElementById(`edit-${fieldKey}`);
+    const editBtn = document.querySelector(`[data-field-edit-btn="${fieldKey}"]`);
+    const input = document.getElementById(`input-${fieldKey}`);
+    
+    if (displayDiv && editDiv && editBtn && input) {
+      // 임시 저장된 값이 있으면 그것을 사용, 없으면 원래 값 사용
+      const valueToShow = this.tempEdits[fieldKey] 
+        ? this.tempEdits[fieldKey].content 
+        : (this.editData[fieldKey] || '');
+      
+      // 입력 필드는 임시 저장된 값으로 설정 (다시 편집할 때를 위해)
+      if (this.tempEdits[fieldKey]) {
+        input.value = this.tempEdits[fieldKey].content;
+      } else {
+        input.value = this.editData[fieldKey] || '';
+      }
+      
+      // 출처 입력 영역 초기화
+      const sourcesList = document.querySelector(`.sources-list-${fieldKey}`);
+      if (sourcesList) {
+        sourcesList.innerHTML = '';
+      }
+      const sourcesDiv = document.getElementById(`sources-${fieldKey}`);
+      if (sourcesDiv) {
+        sourcesDiv.classList.add('hidden');
+      }
+      
+      // 라디오 버튼 초기화
+      const simpleRadio = document.querySelector(`input[name="edit-type-${fieldKey}"][value="simple"]`);
+      if (simpleRadio) {
+        simpleRadio.checked = true;
+      }
+      
+      // 표시 영역 업데이트
+      displayDiv.innerHTML = valueToShow 
+        ? this.escapeHtml(valueToShow) 
+        : '<span class="text-wiki-muted">내용 없음</span>';
+      
+      // 임시 저장된 필드는 표시
+      if (this.tempEdits[fieldKey]) {
+        displayDiv.classList.add('border-wiki-primary/50');
+      } else {
+        displayDiv.classList.remove('border-wiki-primary/50');
+      }
+      
+      displayDiv.classList.remove('hidden');
+      editDiv.classList.add('hidden');
+      editBtn.classList.remove('hidden');
+    }
+  },
+
+  /**
+   * 출처 입력 필드 추가
+   */
+  addSourceInput(fieldKey) {
+    const sourcesList = document.querySelector(`.sources-list-${fieldKey}`);
+    if (!sourcesList) return;
+    
+    const sourceIndex = sourcesList.children.length;
+    const sourceHtml = `
+      <div class="flex items-center gap-2" data-source-item="${fieldKey}-${sourceIndex}">
+        <input
+          type="url"
+          placeholder="https://example.com/article"
+          class="flex-1 px-3 py-2 text-sm rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-wiki-primary focus:border-transparent"
+          data-source-url="${fieldKey}"
+        />
+        <button
+          type="button"
+          data-remove-source="${fieldKey}-${sourceIndex}"
+          class="px-2 py-2 text-sm rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    `;
+    
+    sourcesList.insertAdjacentHTML('beforeend', sourceHtml);
+    
+    // 삭제 버튼 이벤트
+    const removeBtn = sourcesList.querySelector(`[data-remove-source="${fieldKey}-${sourceIndex}"]`);
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        const item = document.querySelector(`[data-source-item="${fieldKey}-${sourceIndex}"]`);
+        if (item) item.remove();
+      });
+    }
+  },
+
+  /**
+   * 필드 임시 저장 (로컬에만 저장)
+   */
+  tempSaveField(fieldKey) {
+    const input = document.getElementById(`input-${fieldKey}`);
+    if (!input) return;
+    
+    const content = input.value.trim();
+    if (!content) {
+      alert('내용을 입력해주세요.');
+      return;
+    }
+    
+    const editType = document.querySelector(`input[name="edit-type-${fieldKey}"]:checked`)?.value || 'simple';
+    const sourcesList = document.querySelectorAll(`input[data-source-url="${fieldKey}"]`);
+    const sources = Array.from(sourcesList).map(input => input.value.trim()).filter(Boolean);
+    
+    // 출처 입력 선택 시 출처 필수
+    if (editType === 'source' && sources.length === 0) {
+      alert('출처를 최소 1개 이상 입력해주세요.');
+      return;
+    }
+    
+    // 임시 저장 (로컬 상태에만 저장)
+    this.tempEdits[fieldKey] = {
+      content,
+      editType,
+      sources
+    };
+    
+    console.log(`[EditSystem] Temp saved field: ${fieldKey}, content length: ${content.length}`);
+    console.log(`[EditSystem] Current tempEdits keys:`, Object.keys(this.tempEdits));
+    
+    // UI 업데이트
+    this.editData[fieldKey] = content;
+    const displayDiv = document.getElementById(`display-${fieldKey}`);
+    if (displayDiv) {
+      displayDiv.innerHTML = content ? this.escapeHtml(content) : '<span class="text-wiki-muted">내용 없음</span>';
+      displayDiv.classList.add('border-wiki-primary/50'); // 임시 저장 표시
+    }
+    
+    // 편집 모드 종료 (읽기 모드로 전환)
+    this.cancelFieldEdit(fieldKey);
+    
+    // 미리보기 업데이트
+    this.updatePreview();
+    
+    // 성공 메시지
+    const tempSaveBtn = document.querySelector(`[data-field-temp-save="${fieldKey}"]`);
+    if (tempSaveBtn) {
+      const originalText = tempSaveBtn.innerHTML;
+      tempSaveBtn.innerHTML = '<i class="fas fa-check mr-1"></i>임시 저장됨';
+      tempSaveBtn.classList.add('bg-green-600');
+      setTimeout(() => {
+        tempSaveBtn.innerHTML = originalText;
+        tempSaveBtn.classList.remove('bg-green-600');
+      }, 2000);
+    }
+  },
+
+  /**
+   * 모든 편집 내용 최종 저장 (서버에 저장)
+   */
+  async saveAllEdits() {
+    const editKeys = Object.keys(this.tempEdits);
+    
+    if (editKeys.length === 0) {
+      alert('저장할 편집 내용이 없습니다.');
+      return;
+    }
+    
+    const { entityType, entityId } = this.currentEntity;
+    console.log(`[EditSystem] Saving all edits with entityId: "${entityId}", entityType: "${entityType}"`);
+    
+    try {
+      // 모든 필드에 대해 서버에 저장
+      const savePromises = editKeys.map(fieldKey => {
+        const edit = this.tempEdits[fieldKey];
+        const sourceToSend = edit.editType === 'source' ? edit.sources[0] : '';
+        
+        let endpoint;
+        if (entityType === 'job') {
+          endpoint = `${API_BASE}/job/${entityId}/edit`;
+        } else if (entityType === 'major') {
+          endpoint = `${API_BASE}/major/${entityId}/edit`;
+        } else if (entityType === 'howto') {
+          endpoint = `${API_BASE}/howto/${entityId}/edit`;
+        } else {
+          throw new Error('지원하지 않는 엔티티 타입입니다.');
+        }
+        
+        return fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            field: fieldKey,
+            content: edit.content,
+            source: sourceToSend
+          })
+        }).then(res => res.json());
+      });
+      
+      const results = await Promise.all(savePromises);
+      
+      // 에러 확인
+      const errors = results.filter(r => !r.success);
+      if (errors.length > 0) {
+        throw new Error(errors[0].error || '저장 중 오류가 발생했습니다.');
+      }
+      
+      // 성공 시 임시 저장 내용 초기화
+      this.tempEdits = {};
+      
+      // 편집 모드 종료 (저장 후이므로 캐시 우회 필요)
+      alert('모든 편집 내용이 저장되었습니다.');
+      this.exitEditMode(true); // forceRefresh = true
+    } catch (error) {
+      console.error('[EditSystem] Save all edits error:', error);
+      alert(error.message || '저장 중 오류가 발생했습니다.');
+    }
+  },
+
+  /**
+   * 미리보기 초기화 및 업데이트
+   */
+  initPreview() {
+    this.previewContainer = document.getElementById('edit-preview');
+    this.updatePreview();
+  },
+
+  /**
+   * 미리보기 업데이트 (서버 API 호출)
+   */
+  async updatePreview() {
+    if (!this.previewContainer) return;
+
+    const { entityType, entityId } = this.currentEntity;
+    const previewData = { ...this.editData };
+
+    // 임시 저장된 편집 내용 반영
+    console.log(`[EditSystem] updatePreview - tempEdits keys:`, Object.keys(this.tempEdits));
+    Object.keys(this.tempEdits).forEach(fieldKey => {
+      previewData[fieldKey] = this.tempEdits[fieldKey].content;
+      console.log(`[EditSystem] Applied tempEdit for ${fieldKey}: ${this.tempEdits[fieldKey].content.substring(0, 50)}...`);
+    });
+
+    // 현재 편집 중인 필드의 값도 반영 (임시 저장된 값보다 우선하지 않음)
+    // 편집 모드가 아닌 필드만 확인
+    document.querySelectorAll('[data-edit-field]').forEach(input => {
+      const key = input.getAttribute('data-edit-field');
+      const editDiv = document.getElementById(`edit-${key}`);
+      
+      // 현재 편집 중인 필드만 반영 (editDiv가 보이는 경우)
+      if (key && editDiv && !editDiv.classList.contains('hidden')) {
+        previewData[key] = input.value;
+        console.log(`[EditSystem] Applied current input for ${key}: ${input.value.substring(0, 50)}...`);
+      }
+    });
+    
+    console.log(`[EditSystem] Preview data being sent:`, {
+      name: previewData.name || '(empty)',
+      summary: previewData.summary ? `${previewData.summary.substring(0, 80)}...` : '(empty)',
+      property: previewData.property ? `${previewData.property.substring(0, 80)}...` : '(empty)',
+      aptitude: previewData.aptitude ? `${previewData.aptitude.substring(0, 80)}...` : '(empty)',
+      whatStudy: previewData.whatStudy ? `${previewData.whatStudy.substring(0, 80)}...` : '(empty)',
+      howPrepare: previewData.howPrepare ? `${previewData.howPrepare.substring(0, 80)}...` : '(empty)',
+      enterField: previewData.enterField ? `${previewData.enterField.substring(0, 80)}...` : '(empty)'
+    });
+
+    // 로딩 표시
+    this.previewContainer.innerHTML = '<div class="text-wiki-muted text-center py-8">미리보기 생성 중...</div>';
+
+    try {
+      let endpoint;
+      // entityId가 이미 URL 인코딩되어 있을 수 있으므로, 
+      // decodeURIComponent로 디코딩한 후 다시 인코딩하여 일관성 유지
+      let normalizedEntityId = entityId;
+      try {
+        const decoded = decodeURIComponent(entityId);
+        if (decoded !== entityId) {
+          normalizedEntityId = decoded;
+        }
+      } catch (e) {
+        normalizedEntityId = entityId;
+      }
+      
+      if (entityType === 'job') {
+        endpoint = `${API_BASE}/job/${encodeURIComponent(normalizedEntityId)}/preview`;
+      } else if (entityType === 'major') {
+        endpoint = `${API_BASE}/major/${encodeURIComponent(normalizedEntityId)}/preview`;
+      } else {
+        this.previewContainer.innerHTML = '<div class="text-wiki-muted">미리보기를 지원하지 않는 엔티티 타입입니다.</div>';
+        return;
+      }
+      
+      console.log(`[EditSystem] Preview endpoint: ${endpoint} (entityId: ${entityId}, normalized: ${normalizedEntityId})`);
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(previewData)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || '미리보기 생성 실패');
+      }
+
+      // 서버에서 받은 HTML을 미리보기 컨테이너에 삽입
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = result.html;
+      
+      // 메인 콘텐츠 영역 찾기 (job 또는 major)
+      const mainContent = tempDiv.querySelector(`[data-${entityType}-id]`) || tempDiv.querySelector('[data-job-id]') || tempDiv.querySelector('[data-major-id]');
+      
+      if (mainContent) {
+        // 커뮤니티 댓글 섹션 제거 (job만 해당)
+        const communitySection = mainContent.querySelector('[data-job-community]');
+        if (communitySection) {
+          communitySection.remove();
+        }
+        
+        // 편집 버튼, 공유 버튼, 역사 버튼 제거
+        const editButtons = mainContent.querySelectorAll('[data-edit-mode-trigger], [data-edit-button], [data-share-root], [data-history-trigger]');
+        editButtons.forEach(btn => btn.remove());
+        
+        // 외부 링크 제거 (a 태그의 href 제거)
+        const links = mainContent.querySelectorAll('a[href]');
+        links.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && (href.startsWith('http') || href.startsWith('/'))) {
+            link.setAttribute('href', '#');
+            link.style.pointerEvents = 'none';
+            link.style.cursor = 'default';
+            link.style.opacity = '0.7';
+          }
+        });
+        
+        // 사이드바를 메인 콘텐츠와 데이터 출처 사이로 이동 (모바일처럼)
+        const sidebar = mainContent.querySelector(`[data-${entityType}-sidebar]`) || mainContent.querySelector('[data-job-sidebar]') || mainContent.querySelector('[data-major-sidebar]');
+        const sourcesBlock = mainContent.querySelector(`[data-${entityType}-sources]`) || mainContent.querySelector('[data-job-sources]') || mainContent.querySelector('[data-major-sources]');
+        const layoutBlock = mainContent.querySelector(`[data-${entityType}-layout]`) || mainContent.querySelector('[data-job-layout]') || mainContent.querySelector('[data-major-layout]');
+        
+        if (sidebar && layoutBlock && sourcesBlock) {
+          // 사이드바를 레이아웃 블록 다음, 출처 블록 전으로 이동
+          layoutBlock.insertAdjacentElement('afterend', sidebar);
+          
+          // 사이드바 스타일 조정 (모바일처럼 전체 너비)
+          if (sidebar instanceof HTMLElement) {
+            sidebar.style.width = '100%';
+            sidebar.style.maxWidth = '100%';
+          }
+          
+          // 레이아웃 블록에서 사이드바 제거 및 그리드 조정
+          // layoutBlock 자체가 grid일 수 있으므로 직접 확인
+          const isLayoutBlockGrid = layoutBlock.classList.contains('grid');
+          const layoutGrid = isLayoutBlockGrid ? layoutBlock : layoutBlock.querySelector('.grid');
+          const targetElement = layoutGrid || layoutBlock;
+          
+          if (targetElement) {
+            // 그리드 내부의 사이드바 제거
+            const sidebarInGrid = targetElement.querySelector('[data-job-sidebar]');
+            if (sidebarInGrid) {
+              sidebarInGrid.remove();
+            }
+            
+            // layoutBlock 자체가 grid인 경우
+            if (isLayoutBlockGrid) {
+              // 모든 자식 요소 처리
+              const children = Array.from(targetElement.children);
+              children.forEach((child) => {
+                if (child instanceof HTMLElement && !child.hasAttribute('data-job-sidebar')) {
+                  // 메인 콘텐츠 스타일 조정
+                  child.style.width = '100%';
+                  child.style.maxWidth = '100%';
+                  child.style.flex = 'none';
+                  // 모든 grid 관련 클래스 제거
+                  child.className = child.className
+                    .replace(/lg:col-span-\d+/g, '')
+                    .replace(/col-span-\d+/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+                }
+              });
+              
+              // layoutBlock의 그리드 클래스 제거
+              targetElement.className = targetElement.className
+                .replace(/grid\s+/g, '')
+                .replace(/lg:grid-cols-\[[^\]]+\]/g, '')
+                .replace(/grid-cols-\d+/g, '')
+                .replace(/gap-\d+/g, '')
+                .replace(/lg:items-start/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+              if (!targetElement.className.includes('space-y')) {
+                targetElement.classList.add('space-y-6');
+              }
+            } else if (layoutGrid) {
+              // layoutBlock 내부에 grid가 있는 경우
+              const gridChildren = Array.from(layoutGrid.children);
+              
+              // 그리드의 모든 자식 요소를 layoutBlock으로 직접 이동
+              gridChildren.forEach((child) => {
+                if (child instanceof HTMLElement && !child.hasAttribute('data-job-sidebar')) {
+                  // 메인 콘텐츠 스타일 조정
+                  child.style.width = '100%';
+                  child.style.maxWidth = '100%';
+                  child.style.flex = 'none';
+                  // 모든 grid 관련 클래스 제거
+                  child.className = child.className
+                    .replace(/lg:col-span-\d+/g, '')
+                    .replace(/col-span-\d+/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+                  
+                  // layoutBlock에 직접 추가
+                  layoutBlock.insertBefore(child, layoutGrid);
+                }
+              });
+              
+              // 빈 그리드 요소 제거
+              layoutGrid.remove();
+              
+              // layoutBlock에 space-y 추가
+              if (!layoutBlock.className.includes('space-y')) {
+                layoutBlock.classList.add('space-y-6');
+              }
+            }
+          }
+        }
+        
+        // 탭 기능 활성화를 위한 스크립트 추가
+        const previewHtml = mainContent.innerHTML;
+        
+        // 탭 관련 스크립트가 있는지 확인하고 없으면 추가
+        this.previewContainer.innerHTML = previewHtml;
+        
+        // 탭 초기화 (DetailTabs 모듈 사용)
+        setTimeout(() => {
+          // 탭셋 찾기
+          const tabsets = this.previewContainer.querySelectorAll('[data-cw-tabset]');
+          tabsets.forEach(tabset => {
+            const entityType = tabset.getAttribute('data-entity-type') || 'job';
+            
+            // DetailTabs 모듈이 있으면 사용
+            if (window.DetailTabs && typeof window.DetailTabs.init === 'function') {
+              window.DetailTabs.init(entityType);
+            } else {
+              // 직접 탭 초기화 (간단한 버전)
+              this.initTabsInPreview(tabset);
+            }
+          });
+        }, 200);
+      } else {
+        this.previewContainer.innerHTML = result.html;
+      }
+
+    } catch (error) {
+      console.error('[EditSystem] Preview update error:', error);
+      this.previewContainer.innerHTML = `<div class="text-red-300 text-sm">미리보기 생성 실패: ${this.escapeHtml(error.message || '알 수 없는 오류')}</div>`;
+    }
+  },
+
+
+  /**
+   * 미리보기에서 탭 초기화 (간단한 버전)
+   */
+  initTabsInPreview(tabset) {
+    const triggers = tabset.querySelectorAll('[data-tab-id]');
+    const panels = tabset.querySelectorAll('[data-cw-tab-panel]');
+    
+    const activate = (tabId) => {
+      // 모든 탭 비활성화
+      triggers.forEach(trigger => {
+        trigger.setAttribute('aria-selected', 'false');
+        trigger.classList.remove('bg-wiki-primary', 'text-white');
+        trigger.classList.add('bg-transparent', 'text-wiki-muted');
+      });
+      
+      panels.forEach(panel => {
+        panel.setAttribute('aria-hidden', 'true');
+        panel.classList.add('is-hidden');
+        panel.classList.remove('is-active');
+      });
+      
+      // 선택된 탭 활성화
+      const activeTrigger = tabset.querySelector(`[data-tab-id="${tabId}"]`);
+      const activePanel = tabset.querySelector(`[data-cw-tab-panel][data-tab-id="${tabId}"]`);
+      
+      if (activeTrigger) {
+        activeTrigger.setAttribute('aria-selected', 'true');
+        activeTrigger.classList.add('bg-wiki-primary', 'text-white');
+        activeTrigger.classList.remove('bg-transparent', 'text-wiki-muted');
+      }
+      
+      if (activePanel) {
+        activePanel.setAttribute('aria-hidden', 'false');
+        activePanel.classList.remove('is-hidden');
+        activePanel.classList.add('is-active');
+      }
+    };
+    
+    // 탭 버튼 클릭 이벤트
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabId = trigger.getAttribute('data-tab-id');
+        if (tabId) {
+          activate(tabId);
+          tabset.setAttribute('data-active-tab', tabId);
+        }
+      });
+    });
+  },
+
+  /**
+   * 편집 모드 종료
+   */
+  exitEditMode(forceRefresh = false) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('edit');
+    
+    if (forceRefresh) {
+      // 저장 후: 캐시 우회를 위해 _t 파라미터 추가 후 새로고침
+      url.searchParams.set('_t', Date.now().toString());
+      window.location.href = url.toString();
+    } else {
+      // 취소: URL 파라미터만 제거
+      url.searchParams.delete('_t');
+      window.location.replace(url.toString());
+    }
+  },
+
+  /**
+   * 저장 처리
+   */
+  async handleSave() {
+    const form = document.getElementById('edit-form');
+    if (!form) return;
+
+    const formData = new FormData(form);
+    const editType = formData.get('edit-type') || 'source';
+    const source = formData.get('source')?.trim() || '';
+
+    // 수정 유형 검증: 출처 입력 선택 시 출처 URL 필수
+    if (editType === 'source' && !source) {
+      alert('출처 URL을 입력해주세요.');
+      return;
+    }
+
+    const { entityType, entityId } = this.currentEntity;
+    const edits = {};
+    const originalData = this.editData || {};
+
+    // 편집된 필드 수집 (편집 필드는 document에서 찾아야 함)
+    document.querySelectorAll('[data-edit-field]').forEach(input => {
+      const key = input.getAttribute('data-edit-field');
+      const currentValue = input.value.trim();
+      const originalValue = originalData[key] || '';
+      
+      // 값이 변경된 경우에만 추가 (빈 값이 아니거나 원래 값과 다른 경우)
+      if (currentValue && currentValue !== originalValue) {
+        edits[key] = currentValue;
+      }
+    });
+
+    if (Object.keys(edits).length === 0) {
+      alert('편집할 내용이 없습니다. 내용을 입력하거나 변경해주세요.');
+      return;
+    }
+
+    try {
+      // 각 필드별로 편집 API 호출
+      const editPromises = Object.entries(edits).map(([field, content]) => {
+        let endpoint;
+        if (entityType === 'job') {
+          endpoint = `${API_BASE}/job/${entityId}/edit`;
+        } else if (entityType === 'major') {
+          endpoint = `${API_BASE}/major/${entityId}/edit`;
+        } else if (entityType === 'howto') {
+          endpoint = `${API_BASE}/howto/${entityId}/edit`;
+        } else {
+          throw new Error('지원하지 않는 엔티티 타입입니다.');
+        }
+
+        // 단순 수정일 때는 source를 빈 문자열로 전송
+        const sourceToSend = editType === 'simple' ? '' : source;
+        
+        return fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            field,
+            content,
+            source: sourceToSend
+          })
+        });
+      });
+
+      const responses = await Promise.all(editPromises);
+      const results = await Promise.all(responses.map(r => r.json()));
+
+      // 에러 확인
+      const errors = results.filter(r => !r.success);
+      if (errors.length > 0) {
+        throw new Error(errors[0].error || '저장 중 오류가 발생했습니다.');
+      }
+
+      // 성공 시 편집 모드 종료 (저장 후이므로 캐시 우회 필요)
+      alert('저장되었습니다.');
+      this.exitEditMode(true); // forceRefresh = true
+
+    } catch (error) {
+      console.error('[EditSystem] Save error:', error);
+      alert(error.message || '저장 중 오류가 발생했습니다.');
+    }
+  },
+
+  /**
+   * 편집 모드 트리거 클릭 핸들러 (히어로 섹션)
+   */
+  handleEditModeClick(button) {
+    const entityType = button.dataset.entityType;
+    const entityId = button.dataset.entityId;
+
+    if (!entityType || !entityId) {
+      console.error('[EditSystem] Missing required data attributes');
+      return;
+    }
+
+    // 편집 모드 진입 (URL 파라미터 추가)
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('edit', 'true');
+    window.location.href = currentUrl.toString();
+  },
+
+  /**
+   * 섹션별 편집 버튼 클릭 핸들러
+   */
+  handleEditClick(button) {
+    const entityType = button.dataset.entityType;
+    const entityId = button.dataset.entityId;
+    const field = button.dataset.field;
+
+    if (!entityType || !entityId || !field) {
+      console.error('[EditSystem] Missing required data attributes');
+      return;
+    }
+
+    // 특정 필드 편집 모달 열기
+    this.openEditModal({ entityType, entityId, field });
+  },
+
+  /**
+   * 편집 모달 열기
+   */
+  openEditModal({ entityType, entityId, field = null }) {
+    // 기존 모달이 있으면 닫기
+    if (this.currentModal) {
+      this.closeModal();
+    }
+
+    this.currentEntity = { entityType, entityId, field };
+
+    // 모달 HTML 생성
+    const modalHtml = this.createModalHtml({ entityType, entityId, field });
+    
+    // 모달을 body에 추가
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    const modal = modalContainer.firstElementChild;
+    document.body.appendChild(modal);
+    this.currentModal = modal;
+
+    // 모달 초기화
+    this.initModal(modal);
+
+    // 애니메이션을 위해 약간의 지연 후 표시
+    requestAnimationFrame(() => {
+      modal.classList.remove('opacity-0');
+      modal.classList.add('opacity-100');
+      const dialog = modal.querySelector('[data-edit-modal-dialog]');
+      if (dialog) {
+        dialog.classList.remove('scale-95');
+        dialog.classList.add('scale-100');
+      }
+    });
+
+    // 첫 번째 입력 필드에 포커스
+    const firstInput = modal.querySelector('textarea, input[type="text"], input[type="url"]');
+    if (firstInput) {
+      setTimeout(() => firstInput.focus(), 100);
+    }
+  },
+
+  /**
+   * 편집 모달 HTML 생성
+   */
+  createModalHtml({ entityType, entityId, field }) {
+    const fieldLabel = field ? this.getFieldLabel(entityType, field) : '전체 편집';
+    const isAnonymous = !this.isLoggedIn();
+
+    return `
+      <div 
+        data-edit-modal-backdrop
+        class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-200"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="edit-modal-title"
+      >
+        <div 
+          data-edit-modal-dialog
+          class="w-full max-w-2xl max-h-[90vh] bg-wiki-bg/95 border border-wiki-border/60 rounded-2xl shadow-2xl scale-95 transition-transform duration-200 overflow-hidden flex flex-col"
+        >
+          <!-- 헤더 -->
+          <div class="flex items-center justify-between px-6 py-4 border-b border-wiki-border/60">
+            <h2 id="edit-modal-title" class="text-lg font-semibold text-white">
+              ${this.escapeHtml(fieldLabel)} 편집
+            </h2>
+            <button 
+              type="button"
+              data-edit-modal-close
+              class="text-wiki-muted hover:text-white transition p-1 rounded-lg hover:bg-wiki-border/30"
+              aria-label="닫기"
+            >
+              <i class="fas fa-times text-lg" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <!-- 본문 -->
+          <form data-edit-form class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+            <!-- 내용 입력 -->
+            <div>
+              <label for="edit-content" class="block text-sm font-medium text-white mb-2">
+                내용 <span class="text-wiki-muted">(필수)</span>
+              </label>
+              <textarea
+                id="edit-content"
+                name="content"
+                rows="8"
+                class="w-full px-4 py-3 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-wiki-primary focus:border-transparent resize-y"
+                placeholder="편집할 내용을 입력하세요..."
+                required
+              ></textarea>
+            </div>
+
+            <!-- 출처 입력 -->
+            <div>
+              <label for="edit-source" class="block text-sm font-medium text-white mb-2">
+                출처 URL <span class="text-wiki-muted">(필수)</span>
+              </label>
+              <input
+                type="url"
+                id="edit-source"
+                name="source"
+                class="w-full px-4 py-3 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-wiki-primary focus:border-transparent"
+                placeholder="https://example.com/article"
+                required
+              />
+              <p class="mt-1 text-xs text-wiki-muted">편집 내용의 출처를 명시해주세요.</p>
+            </div>
+
+            <!-- 익명 편집 옵션 (로그인하지 않은 경우) -->
+            ${isAnonymous ? `
+              <div class="space-y-3 p-4 rounded-lg bg-wiki-bg/50 border border-wiki-border/40">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="edit-anonymous"
+                    name="anonymous"
+                    class="w-4 h-4 rounded border-wiki-border/60 bg-wiki-bg/70 text-wiki-primary focus:ring-wiki-primary"
+                  />
+                  <span class="text-sm text-white">익명으로 편집</span>
+                </label>
+                <div id="edit-password-section" class="hidden space-y-2">
+                  <label for="edit-password" class="block text-sm font-medium text-white">
+                    비밀번호 <span class="text-wiki-muted">(4자리 숫자)</span>
+                  </label>
+                  <input
+                    type="password"
+                    id="edit-password"
+                    name="password"
+                    class="w-full px-4 py-3 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-wiki-primary focus:border-transparent"
+                    placeholder="0000"
+                    maxlength="4"
+                    pattern="[0-9]{4}"
+                    inputmode="numeric"
+                  />
+                  <p class="text-xs text-wiki-muted">나중에 수정하거나 되돌리기 위해 필요합니다.</p>
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- 에러 메시지 -->
+            <div id="edit-error" class="hidden p-3 rounded-lg bg-red-500/20 border border-red-500/40">
+              <p class="text-sm text-red-300"></p>
+            </div>
+
+            <!-- 성공 메시지 -->
+            <div id="edit-success" class="hidden p-3 rounded-lg bg-green-500/20 border border-green-500/40">
+              <p class="text-sm text-green-300"></p>
+            </div>
+          </form>
+
+          <!-- 푸터 -->
+          <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-wiki-border/60">
+            <button
+              type="button"
+              data-edit-modal-close
+              class="px-4 py-2 rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
+            >
+              취소
+            </button>
+            <button
+              type="submit"
+              data-edit-submit
+              class="px-4 py-2 rounded-lg bg-wiki-primary text-white hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              저장
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  /**
+   * 필드 라벨 가져오기
+   */
+  getFieldLabel(entityType, field) {
+    const labels = {
+      job: {
+        summary: '직업 소개',
+        duties: '주요 업무',
+        salary: '임금 정보',
+        prospect: '전망',
+        education: '학력',
+        experience: '경력'
+      },
+      major: {
+        summary: '전공 소개',
+        career: '진로',
+        curriculum: '교과과정'
+      },
+      howto: {
+        content: '내용'
+      }
+    };
+    return labels[entityType]?.[field] || field;
+  },
+
+  /**
+   * 로그인 여부 확인
+   */
+  isLoggedIn() {
+    // TODO: 실제 로그인 상태 확인 로직 구현
+    // 현재는 항상 익명으로 처리
+    return false;
+  },
+
+  /**
+   * 모달 초기화
+   */
+  initModal(modal) {
+    const form = modal.querySelector('[data-edit-form]');
+    const anonymousCheckbox = modal.querySelector('#edit-anonymous');
+    const passwordSection = modal.querySelector('#edit-password-section');
+    const submitBtn = modal.querySelector('[data-edit-submit]');
+
+    // 익명 편집 체크박스 토글
+    if (anonymousCheckbox && passwordSection) {
+      anonymousCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          passwordSection.classList.remove('hidden');
+          const passwordInput = passwordSection.querySelector('#edit-password');
+          if (passwordInput) {
+            passwordInput.required = true;
+            passwordInput.focus();
+          }
+        } else {
+          passwordSection.classList.add('hidden');
+          const passwordInput = passwordSection.querySelector('#edit-password');
+          if (passwordInput) {
+            passwordInput.required = false;
+            passwordInput.value = '';
+          }
+        }
+      });
+    }
+
+    // 폼 제출
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await this.handleSubmit(form);
+      });
+    }
+  },
+
+  /**
+   * 폼 제출 처리
+   */
+  async handleSubmit(form) {
+    const submitBtn = form.querySelector('[data-edit-submit]');
+    const errorDiv = form.querySelector('#edit-error');
+    const successDiv = form.querySelector('#edit-success');
+    const { entityType, entityId, field } = this.currentEntity;
+
+    // 에러/성공 메시지 숨기기
+    if (errorDiv) errorDiv.classList.add('hidden');
+    if (successDiv) successDiv.classList.add('hidden');
+
+    // 폼 데이터 수집
+    const formData = new FormData(form);
+    const content = formData.get('content')?.trim() || '';
+    const source = formData.get('source')?.trim() || '';
+    const anonymous = formData.get('anonymous') === 'on';
+    const password = formData.get('password')?.trim() || '';
+
+    // 유효성 검사
+    if (!content) {
+      this.showError(form, '내용을 입력해주세요.');
+      return;
+    }
+    if (!source) {
+      this.showError(form, '출처 URL을 입력해주세요.');
+      return;
+    }
+    if (anonymous && !password) {
+      this.showError(form, '비밀번호를 입력해주세요.');
+      return;
+    }
+    if (password && !/^\d{4}$/.test(password)) {
+      this.showError(form, '비밀번호는 4자리 숫자여야 합니다.');
+      return;
+    }
+
+    // 제출 버튼 비활성화
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = '저장 중...';
+    }
+
+    try {
+      // API 엔드포인트 결정
+      let endpoint;
+      if (entityType === 'job') {
+        endpoint = `${API_BASE}/job/${entityId}/edit`;
+      } else if (entityType === 'major') {
+        endpoint = `${API_BASE}/major/${entityId}/edit`;
+      } else if (entityType === 'howto') {
+        endpoint = `${API_BASE}/howto/${entityId}/edit`;
+      } else {
+        throw new Error('지원하지 않는 엔티티 타입입니다.');
+      }
+
+      // 요청 본문 구성
+      const payload = {
+        field: field || null,
+        content,
+        source
+      };
+
+      if (anonymous && password) {
+        payload.password = password;
+      }
+
+      // API 호출
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || result.message || '편집 저장에 실패했습니다.');
+      }
+
+      // 성공 메시지 표시
+      this.showSuccess(form, '편집이 저장되었습니다. 페이지를 새로고침합니다...');
+
+      // 페이지 새로고침 (캐시 우회)
+      setTimeout(() => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('_t', Date.now().toString());
+        window.location.replace(url.toString());
+      }, 1500);
+
+    } catch (error) {
+      console.error('[EditSystem] Submit error:', error);
+      this.showError(form, error.message || '편집 저장 중 오류가 발생했습니다.');
+      
+      // 제출 버튼 다시 활성화
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '저장';
+      }
+    }
+  },
+
+  /**
+   * 에러 메시지 표시
+   */
+  showError(form, message) {
+    const errorDiv = form.querySelector('#edit-error');
+    if (errorDiv) {
+      const errorText = errorDiv.querySelector('p');
+      if (errorText) {
+        errorText.textContent = message;
+      }
+      errorDiv.classList.remove('hidden');
+      errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  },
+
+  /**
+   * 성공 메시지 표시
+   */
+  showSuccess(form, message) {
+    const successDiv = form.querySelector('#edit-success');
+    if (successDiv) {
+      const successText = successDiv.querySelector('p');
+      if (successText) {
+        successText.textContent = message;
+      }
+      successDiv.classList.remove('hidden');
+      successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  },
+
+  /**
+   * 모달 닫기
+   */
+  /**
+   * 문서 역사 클릭 핸들러
+   */
+  async handleHistoryClick(button) {
+    const entityType = button.dataset.entityType;
+    const entityId = button.dataset.entityId;
+
+    if (!entityType || !entityId) {
+      console.error('[EditSystem] Missing required data attributes for history');
+      return;
+    }
+
+    this.currentEntity = { entityType, entityId };
+    await this.openHistoryModal({ entityType, entityId });
+  },
+
+  /**
+   * 문서 역사 모달 열기
+   */
+  async openHistoryModal({ entityType, entityId }) {
+    // 모달 HTML 생성
+    const modalHtml = this.createHistoryModalHtml({ entityType, entityId });
+    
+    // 모달을 body에 추가
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    const modal = modalContainer.firstElementChild;
+    document.body.appendChild(modal);
+    
+    this.currentHistoryModal = modal;
+
+    // 애니메이션
+    setTimeout(() => {
+      modal.classList.remove('opacity-0');
+      modal.classList.add('opacity-100');
+    }, 10);
+
+    // 현재 엔티티 정보 저장
+    this.currentHistoryEntity = { entityType, entityId };
+    
+    // Revision 목록 로드 (첫 페이지, 10개씩)
+    await this.loadRevisions({ entityType, entityId, page: 1, limit: 10 });
+  },
+
+  /**
+   * 문서 역사 모달 HTML 생성
+   */
+  createHistoryModalHtml({ entityType, entityId }) {
+    const entityTypeLabel = entityType === 'job' ? '직업' : entityType === 'major' ? '전공' : '가이드';
+    
+    return `
+      <div 
+        class="fixed inset-0 z-[1000] flex items-center justify-center p-4 opacity-0 transition-opacity duration-200"
+        data-history-modal-backdrop
+      >
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" data-history-modal-backdrop></div>
+        <div class="relative w-full max-w-4xl max-h-[90vh] bg-wiki-bg/95 border border-wiki-border/60 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+          <!-- 헤더 -->
+          <div class="flex items-center justify-between px-6 py-4 border-b border-wiki-border/60">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i class="fas fa-history" aria-hidden="true"></i>
+              역사
+            </h2>
+            <button 
+              type="button" 
+              class="text-wiki-muted hover:text-white transition p-2"
+              data-history-modal-close
+              aria-label="닫기"
+            >
+              <i class="fas fa-times text-lg" aria-hidden="true"></i>
+            </button>
+          </div>
+          
+          <!-- 내용 -->
+          <div class="flex-1 overflow-y-auto px-6 py-4">
+            <div id="history-loading" class="text-center py-8">
+              <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-wiki-primary"></div>
+              <p class="mt-4 text-wiki-muted">편집 이력을 불러오는 중...</p>
+            </div>
+            <div id="history-content" class="hidden">
+              <!-- Revision 목록이 여기에 동적으로 추가됨 -->
+            </div>
+            <div id="history-error" class="hidden text-center py-8">
+              <p class="text-red-400">편집 이력을 불러올 수 없습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  /**
+   * Revision 목록 로드
+   */
+  async loadRevisions({ entityType, entityId, page = 1, limit = 10 }) {
+    const loadingEl = document.getElementById('history-loading');
+    const contentEl = document.getElementById('history-content');
+    const errorEl = document.getElementById('history-error');
+
+    try {
+      let endpoint;
+      if (entityType === 'job') {
+        endpoint = `${API_BASE}/job/${entityId}/revisions?limit=${limit}&offset=${(page - 1) * limit}`;
+      } else if (entityType === 'major') {
+        endpoint = `${API_BASE}/major/${entityId}/revisions?limit=${limit}&offset=${(page - 1) * limit}`;
+      } else {
+        throw new Error('지원하지 않는 엔티티 타입입니다.');
+      }
+
+      const response = await fetch(endpoint);
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || '편집 이력을 불러올 수 없습니다.');
+      }
+
+      const { revisions, total } = result.data || { revisions: [], total: 0 };
+      const totalPages = Math.ceil(total / limit);
+
+      // 🆕 DB에서 이미 is_current = 1인 revision이 있으므로 가상의 현재 버전을 추가하지 않음
+      // is_current = 1인 revision이 없으면 가상의 현재 버전 추가
+      const hasCurrentRevision = revisions.some(r => r.isCurrent === true);
+      let allRevisions = revisions;
+      
+      // revision이 없거나 현재 버전이 없으면 가상의 현재 버전 추가 (첫 페이지에서만)
+      if (!hasCurrentRevision && page === 1) {
+        // 첫 페이지에서만 현재 버전이 없는 경우에만 가상의 현재 버전 추가
+        const maxRevisionNumber = revisions.length > 0 
+          ? Math.max(...revisions.map(r => r.revisionNumber || 0))
+          : 0;
+        const currentRevision = {
+          id: 'current',
+          revisionNumber: maxRevisionNumber + 1,
+          isCurrent: true,
+          editorName: '운영자',
+          editorType: 'admin',
+          changeSummary: '현재 버전',
+          changedFields: [],
+          createdAt: new Date().toISOString(),
+          dataSnapshot: '{}'
+        };
+        allRevisions = [currentRevision, ...revisions];
+      }
+
+      // 로딩 숨기기
+      if (loadingEl) loadingEl.classList.add('hidden');
+      if (errorEl) errorEl.classList.add('hidden');
+      if (contentEl) {
+        contentEl.classList.remove('hidden');
+        // 실제 편집 이력 수 계산 (현재 버전 제외)
+        const actualRevisionCount = revisions.filter(r => r.id !== 'current').length
+        const displayTotal = actualRevisionCount > 0 ? total : 0
+        contentEl.innerHTML = this.renderRevisionsList(allRevisions, displayTotal, page, totalPages, limit);
+      }
+    } catch (error) {
+      console.error('[EditSystem] Failed to load revisions:', error);
+      if (loadingEl) loadingEl.classList.add('hidden');
+      if (contentEl) contentEl.classList.add('hidden');
+      if (errorEl) {
+        errorEl.classList.remove('hidden');
+        errorEl.querySelector('p').textContent = error.message || '편집 이력을 불러올 수 없습니다.';
+      }
+    }
+  },
+
+  /**
+   * Revision 목록 렌더링 (페이지네이션 포함)
+   */
+  renderRevisionsList(revisions, total, currentPage = 1, totalPages = 1, limit = 10) {
+    // 실제 편집 이력이 없는 경우 (현재 버전만 있고 실제 revision이 없는 경우)
+    const actualRevisions = revisions.filter(r => r.id !== 'current')
+    if (!revisions || revisions.length === 0 || (actualRevisions.length === 0 && total === 0)) {
+      return `
+        <div class="text-center py-8">
+          <p class="text-wiki-muted">아직 편집 이력이 없습니다.</p>
+        </div>
+      `;
+    }
+
+    const revisionsHtml = revisions.map((rev, index) => {
+      const date = new Date(rev.createdAt);
+      const dateStr = date.toLocaleString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      const editorName = rev.editorName || '알 수 없음';
+      const editorType = rev.editorType || 'anonymous';
+      const changeSummary = rev.changeSummary || '변경 없음';
+      const changedFields = rev.changedFields || [];
+      const isCurrent = rev.isCurrent;
+
+      // 변경량 계산 (간단한 추정)
+      const changeSize = this.calculateChangeSize(rev);
+      
+      // 변경량 표시 (괄호 안에 색상으로)
+      let changeSizeDisplay = '';
+      if (changeSize !== null && changeSize !== 0) {
+        const changeColor = changeSize > 0 ? 'text-green-400' : 'text-red-400';
+        const changeSign = changeSize > 0 ? '+' : '';
+        changeSizeDisplay = ` <span class="${changeColor}">(${changeSign}${changeSize})</span>`;
+      }
+
+      return `
+        <div class="border-b border-wiki-border/40 py-3 ${isCurrent ? 'bg-wiki-primary/5' : ''}">
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0 flex items-center gap-3 flex-wrap">
+              <span class="text-sm font-mono text-wiki-primary shrink-0">r${rev.revisionNumber}</span>
+              ${isCurrent ? '<span class="px-2 py-0.5 text-xs font-semibold rounded bg-wiki-primary/20 text-wiki-primary border border-wiki-primary/30 shrink-0">현재 버전</span>' : ''}
+              <span class="text-sm text-wiki-muted shrink-0">${dateStr}</span>
+              <span class="text-sm text-white font-medium shrink-0">${this.escapeHtml(editorName)}</span>
+              <span class="text-xs text-wiki-muted shrink-0">(${this.getEditorTypeLabel(editorType)})</span>
+              <span class="text-sm text-wiki-text shrink-0">${this.escapeHtml(changeSummary)}</span>
+              ${changeSizeDisplay}
+              ${changedFields.length > 0 ? `
+                <div class="flex flex-wrap gap-1 shrink-0">
+                  ${changedFields.map(field => `
+                    <span class="px-2 py-0.5 text-xs rounded bg-wiki-bg/60 border border-wiki-border/40 text-wiki-muted">
+                      ${this.escapeHtml(field)}
+                    </span>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              ${!isCurrent && rev.id !== 'current' ? `
+                <button
+                  type="button"
+                  class="px-3 py-1.5 text-xs rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition"
+                  data-restore-revision="${rev.id}"
+                  title="이 버전으로 되돌리기"
+                >
+                  <i class="fas fa-undo" aria-hidden="true"></i>
+                  되돌리기
+                </button>
+              ` : ''}
+              ${rev.id !== 'current' ? `
+                <button
+                  type="button"
+                  class="px-3 py-1.5 text-xs rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition"
+                  data-compare-revision="${rev.id}"
+                  title="현재 버전과 비교"
+                >
+                  <i class="fas fa-code-compare" aria-hidden="true"></i>
+                  비교
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // 페이지네이션 HTML 생성
+    let paginationHtml = '';
+    if (totalPages > 1) {
+      const paginationButtons = [];
+      
+      // 이전 페이지 버튼
+      if (currentPage > 1) {
+        paginationButtons.push(`
+          <button
+            type="button"
+            class="px-3 py-1.5 text-sm rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition"
+            data-history-page="${currentPage - 1}"
+            title="이전 페이지"
+          >
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          </button>
+        `);
+      }
+      
+      // 페이지 번호 버튼들
+      const startPage = Math.max(1, currentPage - 2);
+      const endPage = Math.min(totalPages, currentPage + 2);
+      
+      if (startPage > 1) {
+        paginationButtons.push(`
+          <button
+            type="button"
+            class="px-3 py-1.5 text-sm rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition"
+            data-history-page="1"
+          >
+            1
+          </button>
+        `);
+        if (startPage > 2) {
+          paginationButtons.push(`<span class="px-2 text-wiki-muted">...</span>`);
+        }
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        const isActive = i === currentPage;
+        paginationButtons.push(`
+          <button
+            type="button"
+            class="px-3 py-1.5 text-sm rounded-lg transition ${
+              isActive
+                ? 'bg-wiki-primary text-white border border-wiki-primary'
+                : 'border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white'
+            }"
+            data-history-page="${i}"
+          >
+            ${i}
+          </button>
+        `);
+      }
+      
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          paginationButtons.push(`<span class="px-2 text-wiki-muted">...</span>`);
+        }
+        paginationButtons.push(`
+          <button
+            type="button"
+            class="px-3 py-1.5 text-sm rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition"
+            data-history-page="${totalPages}"
+          >
+            ${totalPages}
+          </button>
+        `);
+      }
+      
+      // 다음 페이지 버튼
+      if (currentPage < totalPages) {
+        paginationButtons.push(`
+          <button
+            type="button"
+            class="px-3 py-1.5 text-sm rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition"
+            data-history-page="${currentPage + 1}"
+            title="다음 페이지"
+          >
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        `);
+      }
+      
+      paginationHtml = `
+        <div class="flex items-center justify-between px-6 py-4 border-t border-wiki-border/60">
+          <div class="text-sm text-wiki-muted">
+            총 ${total}개 중 ${(currentPage - 1) * limit + 1}-${Math.min(currentPage * limit, total)}개 표시
+          </div>
+          <div class="flex items-center gap-2">
+            ${paginationButtons.join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="space-y-0">
+        <div class="mb-4 pb-2 border-b border-wiki-border/60">
+          <p class="text-sm text-wiki-muted">총 ${total}개의 편집 이력</p>
+        </div>
+        ${revisionsHtml}
+      </div>
+      ${paginationHtml}
+    `;
+  },
+
+  /**
+   * 변경량 계산 (간단한 추정)
+   */
+  calculateChangeSize(revision) {
+    // dataSnapshot의 크기를 기반으로 변경량 추정
+    try {
+      const snapshot = JSON.parse(revision.dataSnapshot || '{}');
+      const snapshotSize = JSON.stringify(snapshot).length;
+      
+      // 이전 revision과 비교하여 변경량 계산 (간단한 추정)
+      // 실제로는 이전 revision의 snapshot과 비교해야 하지만,
+      // 여기서는 snapshot 크기만으로 추정
+      return snapshotSize > 1000 ? snapshotSize - 1000 : 0;
+    } catch {
+      return null;
+    }
+  },
+
+  /**
+   * 편집자 타입 라벨
+   */
+  getEditorTypeLabel(type) {
+    const labels = {
+      'anonymous': '익명',
+      'user': '사용자',
+      'expert': '전문가',
+      'admin': '관리자',
+      'system': '시스템'
+    };
+    return labels[type] || type;
+  },
+
+  /**
+   * 문서 역사 모달 닫기
+   */
+  closeHistoryModal() {
+    if (!this.currentHistoryModal) return;
+
+    // 애니메이션
+    this.currentHistoryModal.classList.remove('opacity-100');
+    this.currentHistoryModal.classList.add('opacity-0');
+
+    setTimeout(() => {
+      if (this.currentHistoryModal && this.currentHistoryModal.parentNode) {
+        this.currentHistoryModal.parentNode.removeChild(this.currentHistoryModal);
+      }
+      this.currentHistoryModal = null;
+      this.currentHistoryEntity = null; // 엔티티 정보도 초기화
+    }, 200);
+  },
+
+  /**
+   * 되돌리기 처리
+   */
+  async handleRestoreRevision(revisionId) {
+    if (!revisionId) return;
+    
+    // revisionId가 'current'인 경우 처리하지 않음
+    if (revisionId === 'current') {
+      alert('현재 버전으로는 되돌릴 수 없습니다.');
+      return;
+    }
+
+    const confirmed = confirm('이 버전으로 되돌리시겠습니까? 현재 버전도 이력에 저장됩니다.');
+    if (!confirmed) return;
+
+    try {
+      // revisionId가 숫자가 아닌 경우 처리
+      const numericRevisionId = parseInt(revisionId, 10);
+      if (isNaN(numericRevisionId) || numericRevisionId <= 0) {
+        throw new Error('유효하지 않은 revision ID입니다.');
+      }
+      
+      const response = await fetch(`${API_BASE}/revision/${numericRevisionId}/restore`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        // 에러 메시지 처리
+        let errorMessage = result.error || '되돌리기에 실패했습니다.';
+        if (result.error === 'PASSWORD_REQUIRED') {
+          const password = prompt('이 편집은 비밀번호가 필요합니다. 비밀번호를 입력하세요:');
+          if (password) {
+            // 비밀번호와 함께 다시 시도
+            const retryResponse = await fetch(`${API_BASE}/revision/${numericRevisionId}/restore`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ password })
+            });
+            const retryResult = await retryResponse.json();
+            if (!retryResponse.ok || !retryResult.success) {
+              throw new Error(retryResult.error || '비밀번호가 올바르지 않습니다.');
+            }
+            // 성공 시 아래 코드로 진행
+          } else {
+            throw new Error('비밀번호가 필요합니다.');
+          }
+        } else {
+          throw new Error(errorMessage);
+        }
+      }
+
+      alert('되돌리기가 완료되었습니다.');
+      this.closeHistoryModal();
+      
+      // 페이지 전체 새로고침하여 변경사항 반영 (캐시 우회)
+      window.location.reload();
+    } catch (error) {
+      console.error('[EditSystem] Failed to restore revision:', error);
+      alert(error.message || '되돌리기에 실패했습니다.');
+    }
+  },
+
+  /**
+   * 비교 처리
+   */
+  async handleCompareRevision(revisionId) {
+    if (!revisionId) return;
+    
+    // revisionId가 'current'인 경우 처리하지 않음
+    if (revisionId === 'current') {
+      alert('현재 버전과 현재 버전을 비교할 수 없습니다.');
+      return;
+    }
+
+    const { entityType, entityId } = this.currentHistoryEntity || {};
+    if (!entityType || !entityId) {
+      alert('엔티티 정보를 찾을 수 없습니다.');
+      return;
+    }
+
+    try {
+      // 로딩 표시
+      const loadingModal = this.createCompareModalHtml({ loading: true });
+      const loadingContainer = document.createElement('div');
+      loadingContainer.innerHTML = loadingModal;
+      const loadingElement = loadingContainer.firstElementChild;
+      document.body.appendChild(loadingElement);
+      
+      // 현재 버전 데이터 가져오기
+      let currentEndpoint;
+      if (entityType === 'job') {
+        currentEndpoint = `${API_BASE}/job/${entityId}/edit-data`;
+      } else if (entityType === 'major') {
+        currentEndpoint = `${API_BASE}/major/${entityId}/edit-data`;
+      } else {
+        throw new Error('지원하지 않는 엔티티 타입입니다.');
+      }
+      
+      const currentResponse = await fetch(currentEndpoint);
+      const currentResult = await currentResponse.json();
+      
+      if (!currentResponse.ok || !currentResult.success) {
+        throw new Error('현재 버전 데이터를 불러올 수 없습니다.');
+      }
+      
+      // 선택한 revision 데이터 가져오기 (편집 형식으로 변환 요청)
+      const numericRevisionId = parseInt(revisionId, 10);
+      if (isNaN(numericRevisionId) || numericRevisionId <= 0) {
+        throw new Error('유효하지 않은 revision ID입니다.');
+      }
+      
+      const revisionResponse = await fetch(`${API_BASE}/revision/${numericRevisionId}?fullData=true&formatForEdit=true`);
+      const revisionResult = await revisionResponse.json();
+      
+      if (!revisionResponse.ok || !revisionResult.success) {
+        throw new Error('Revision 데이터를 불러올 수 없습니다.');
+      }
+      
+      const revision = revisionResult.data;
+      
+      // 편집 형식으로 변환된 데이터 사용 (없으면 fullData 사용)
+      let revisionData = revision.editFormattedData || revision.fullData;
+      if (!revisionData) {
+        // fullData가 없으면 dataSnapshot에서 파싱
+        try {
+          const snapshot = JSON.parse(revision.dataSnapshot);
+          if (snapshot.changedFields !== undefined) {
+            // 변경사항만 저장된 경우 - reconstructFullData는 서버에서 이미 수행했어야 함
+            // 클라이언트에서는 snapshot을 그대로 사용하거나 에러 표시
+            throw new Error('Revision 데이터 재구성이 필요합니다.');
+          } else {
+            revisionData = snapshot;
+          }
+        } catch (error) {
+          throw new Error('Revision 데이터를 파싱할 수 없습니다.');
+        }
+      }
+      
+      // 로딩 모달 제거
+      if (loadingElement && loadingElement.parentNode) {
+        loadingElement.parentNode.removeChild(loadingElement);
+      }
+      
+      // 비교 모달 표시
+      const compareModal = this.createCompareModalHtml({
+        currentData: currentResult.data,
+        revisionData: revisionData,
+        revision: revision
+      });
+      const modalContainer = document.createElement('div');
+      modalContainer.innerHTML = compareModal;
+      const modalElement = modalContainer.firstElementChild;
+      document.body.appendChild(modalElement);
+      
+      // 애니메이션
+      setTimeout(() => {
+        modalElement.classList.remove('opacity-0');
+        modalElement.classList.add('opacity-100');
+      }, 10);
+      
+      // 모달 닫기 이벤트 리스너
+      const closeBtn = modalElement.querySelector('[data-compare-modal-close]');
+      const backdrop = modalElement.querySelector('[data-compare-modal-backdrop]');
+      
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          this.closeCompareModal(modalElement);
+        });
+      }
+      
+      if (backdrop) {
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) {
+            this.closeCompareModal(modalElement);
+          }
+        });
+      }
+      
+    } catch (error) {
+      console.error('[EditSystem] Failed to compare revision:', error);
+      alert(error.message || '비교 중 오류가 발생했습니다.');
+      
+      // 로딩 모달 제거
+      const loadingModal = document.querySelector('[data-compare-modal-backdrop]');
+      if (loadingModal && loadingModal.parentNode) {
+        loadingModal.parentNode.removeChild(loadingModal);
+      }
+    }
+  },
+  
+  /**
+   * 비교 모달 HTML 생성
+   */
+  createCompareModalHtml({ loading = false, currentData = null, revisionData = null, revision = null }) {
+    if (loading) {
+      return `
+        <div 
+          class="fixed inset-0 z-[1001] flex items-center justify-center p-4 opacity-0 transition-opacity duration-200"
+          data-compare-modal-backdrop
+        >
+          <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" data-compare-modal-backdrop></div>
+          <div class="relative w-full max-w-6xl max-h-[90vh] bg-wiki-bg/95 border border-wiki-border/60 rounded-2xl shadow-2xl">
+            <div class="flex items-center justify-center py-20">
+              <div class="text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-wiki-primary mx-auto mb-4"></div>
+                <p class="text-wiki-muted">비교 데이터를 불러오는 중...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    if (!currentData || !revisionData || !revision) {
+      return '';
+    }
+    
+    // 필드 비교
+    // revision의 changedFields를 확인하여 실제로 편집된 필드만 비교
+    const changedFields = revision.changedFields || [];
+    const fields = this.getEditableFields(this.currentHistoryEntity?.entityType || 'job');
+    
+    // changedFields에 포함된 필드만 필터링 (편집하지 않은 필드는 제외)
+    const fieldsToCompare = fields.filter(field => {
+      // changedFields에 포함되어 있으면 비교 대상
+      return changedFields.includes(field.key);
+    });
+    
+    const comparisons = fieldsToCompare.map(field => {
+      const currentValue = currentData[field.key] || '';
+      const revisionValue = this.getFieldValue(revisionData, field.key) || '';
+      const isChanged = currentValue !== revisionValue;
+      
+      return {
+        ...field,
+        currentValue,
+        revisionValue,
+        isChanged
+      };
+    }).filter(comp => {
+      // 둘 중 하나라도 값이 있으면 표시
+      const hasCurrentValue = comp.currentValue && comp.currentValue.trim() !== '';
+      const hasRevisionValue = comp.revisionValue && comp.revisionValue.trim() !== '';
+      
+      return hasCurrentValue || hasRevisionValue;
+    });
+    
+    // 변경된 필드가 있는지 확인
+    const hasChanges = comparisons.some(comp => comp.isChanged);
+    
+    const revisionDate = new Date(revision.createdAt);
+    const revisionDateStr = revisionDate.toLocaleString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    
+    return `
+      <div 
+        class="fixed inset-0 z-[1001] flex items-center justify-center p-4 opacity-0 transition-opacity duration-200"
+        data-compare-modal-backdrop
+      >
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" data-compare-modal-backdrop></div>
+        <div class="relative w-full max-w-6xl max-h-[90vh] bg-wiki-bg/95 border border-wiki-border/60 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+          <!-- 헤더 -->
+          <div class="flex items-center justify-between px-6 py-4 border-b border-wiki-border/60 flex-shrink-0">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i class="fas fa-code-compare" aria-hidden="true"></i>
+              버전 비교
+            </h2>
+            <button 
+              type="button" 
+              class="text-wiki-muted hover:text-white transition p-2"
+              data-compare-modal-close
+              aria-label="닫기"
+            >
+              <i class="fas fa-times text-lg" aria-hidden="true"></i>
+            </button>
+          </div>
+          
+          <!-- 비교 헤더 -->
+          <div class="px-6 py-3 border-b border-wiki-border/60 bg-wiki-bg/50 flex-shrink-0">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <h3 class="text-sm font-semibold text-wiki-primary mb-1">현재 버전</h3>
+                <p class="text-xs text-wiki-muted">최신 데이터</p>
+              </div>
+              <div>
+                <h3 class="text-sm font-semibold text-wiki-muted mb-1">Revision r${revision.revisionNumber}</h3>
+                <p class="text-xs text-wiki-muted">${revisionDateStr} · ${this.escapeHtml(revision.editorName || '알 수 없음')}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 비교 내용 -->
+          <div class="flex-1 overflow-y-auto px-6 py-4">
+            ${!hasChanges ? `
+              <div class="text-center py-12">
+                <div class="mb-4">
+                  <i class="fas fa-check-circle text-green-400 text-4xl mb-3"></i>
+                </div>
+                <p class="text-white text-lg font-semibold mb-2">현재 버전과 동일합니다</p>
+                <p class="text-wiki-muted text-sm">이 revision과 현재 버전 사이에는 변경사항이 없습니다.</p>
+              </div>
+            ` : comparisons.length === 0 ? `
+              <div class="text-center py-12">
+                <p class="text-wiki-muted">변경된 필드가 없습니다.</p>
+              </div>
+            ` : `
+              <div class="space-y-6">
+                ${comparisons.filter(comp => comp.isChanged).map(comp => `
+                  <div class="border-b border-wiki-border/40 pb-4 last:border-0">
+                    <h4 class="text-sm font-semibold text-white mb-3">${this.escapeHtml(comp.label)}</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                      <!-- 현재 버전 -->
+                      <div class="space-y-2">
+                        <div class="text-xs text-wiki-muted mb-1">현재 버전</div>
+                        <div class="px-3 py-2 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white whitespace-pre-wrap min-h-[60px]">
+                          ${comp.currentValue ? this.escapeHtml(String(comp.currentValue)) : '<span class="text-wiki-muted">내용 없음</span>'}
+                        </div>
+                      </div>
+                      <!-- Revision 버전 -->
+                      <div class="space-y-2">
+                        <div class="text-xs text-wiki-muted mb-1">Revision r${revision.revisionNumber}</div>
+                        <div class="px-3 py-2 rounded-lg bg-wiki-bg/70 border border-yellow-500/50 bg-yellow-500/10 text-white whitespace-pre-wrap min-h-[60px]">
+                          ${comp.revisionValue ? this.escapeHtml(String(comp.revisionValue)) : '<span class="text-wiki-muted">내용 없음</span>'}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-2 text-xs text-yellow-400">
+                      <i class="fas fa-exclamation-circle mr-1"></i>이 필드는 변경되었습니다.
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        </div>
+      </div>
+    `;
+  },
+  
+  /**
+   * 비교 모달 닫기
+   */
+  closeCompareModal(modalElement) {
+    if (!modalElement) return;
+    
+    modalElement.classList.remove('opacity-100');
+    modalElement.classList.add('opacity-0');
+    
+    setTimeout(() => {
+      if (modalElement && modalElement.parentNode) {
+        modalElement.parentNode.removeChild(modalElement);
+      }
+    }, 200);
+  },
+  
+  /**
+   * 편집 가능한 필드 목록 가져오기
+   */
+  getEditableFields(entityType) {
+    if (entityType === 'job') {
+      return [
+        { key: 'name', label: '직업명', type: 'text' },
+        { key: 'summary', label: '직업 소개 (히어로 설명)', type: 'textarea' },
+        { key: 'tags', label: '태그', type: 'textarea' },
+        { key: 'duties', label: '주요 업무', type: 'textarea' },
+        { key: 'way', label: '되는 방법', type: 'textarea' },
+        { key: 'salary', label: '임금 정보', type: 'text' },
+        { key: 'prospect', label: '직업 전망', type: 'textarea' },
+        { key: 'satisfaction', label: '직업 만족도', type: 'textarea' },
+        { key: 'status', label: '고용 형태', type: 'text' },
+        { key: 'abilities', label: '업무수행능력', type: 'textarea' },
+        { key: 'knowledge', label: '필요 지식', type: 'textarea' },
+        { key: 'environment', label: '업무 환경', type: 'textarea' },
+        { key: 'personality', label: '직업 성격', type: 'textarea' },
+        { key: 'interests', label: '직업 흥미', type: 'textarea' },
+        { key: 'values', label: '직업 가치관', type: 'textarea' },
+        { key: 'technKnow', label: '기술 지식', type: 'textarea' },
+        { key: 'aptitude', label: '적성', type: 'textarea' },
+        { key: 'workSummary', label: '직업 소개 (전체)', type: 'textarea' }
+      ];
+    } else if (entityType === 'major') {
+      return [
+        { key: 'name', label: '전공명', type: 'text' },
+        { key: 'summary', label: '전공 소개', type: 'textarea' },
+        { key: 'property', label: '전공 특성', type: 'textarea' },
+        { key: 'aptitude', label: '이 전공에 어울리는 사람', type: 'textarea' },
+        { key: 'whatStudy', label: '하는 공부', type: 'textarea' },
+        { key: 'howPrepare', label: '준비 방법', type: 'textarea' },
+        { key: 'enterField', label: '졸업 후 진출 분야', type: 'textarea' }
+      ];
+    }
+    return [];
+  },
+  
+  /**
+   * Revision 데이터에서 필드 값 추출
+   * editFormattedData를 사용하는 경우 직접 필드 접근만 하면 됨
+   */
+  getFieldValue(revisionData, fieldKey) {
+    if (!revisionData || typeof revisionData !== 'object') {
+      return '';
+    }
+    
+    // 직접 필드 접근 (editFormattedData 형식인 경우)
+    if (revisionData[fieldKey] !== undefined) {
+      const value = revisionData[fieldKey];
+      // null이나 undefined는 빈 문자열로 변환
+      return value === null || value === undefined ? '' : String(value);
+    }
+    
+    // 중첩된 객체에서 찾기 (원본 구조인 경우를 위한 fallback)
+    for (const key in revisionData) {
+      if (typeof revisionData[key] === 'object' && revisionData[key] !== null) {
+        if (revisionData[key][fieldKey] !== undefined) {
+          const value = revisionData[key][fieldKey];
+          return value === null || value === undefined ? '' : String(value);
+        }
+      }
+    }
+    
+    return '';
+  },
+
+  closeModal() {
+    if (!this.currentModal) return;
+
+    // 애니메이션
+    this.currentModal.classList.remove('opacity-100');
+    this.currentModal.classList.add('opacity-0');
+    const dialog = this.currentModal.querySelector('[data-edit-modal-dialog]');
+    if (dialog) {
+      dialog.classList.remove('scale-100');
+      dialog.classList.add('scale-95');
+    }
+
+    // DOM에서 제거
+    setTimeout(() => {
+      if (this.currentModal && this.currentModal.parentNode) {
+        this.currentModal.parentNode.removeChild(this.currentModal);
+      }
+      this.currentModal = null;
+      this.currentEntity = null;
+    }, 200);
+  },
+
+  /**
+   * HTML 이스케이프
+   */
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+};
+
+// 페이지 로드 시 편집 시스템 초기화
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => EditSystem.init());
+} else {
+  EditSystem.init();
+}
+
 // API 호출 함수들
 const CareerAPI = {
   // 학과 검색
@@ -199,17 +2866,15 @@ const SOURCE_LABEL_MAP = {
 };
 
 const JOB_SORT_LABELS = {
-  relevance: '추천 순',
+  relevance: '기본 순',
   'salary-desc': '연봉 높은 순',
-  'outlook-desc': '전망 좋은 순',
-  'name-asc': '이름 오름차순'
+  'name-asc': '이름순'
 };
 
 const MAJOR_SORT_LABELS = {
-  relevance: '추천 순',
+  relevance: '기본 순',
   'employment-desc': '취업률 높은 순',
-  'salary-desc': '연봉 높은 순',
-  'name-asc': '이름 오름차순'
+  'salary-desc': '월급 높은 순'
 };
 
 const OUTLOOK_SCORE_MAP = {
@@ -240,6 +2905,21 @@ const parseNumberFromText = (value) => {
   if (!numeric) return 0;
   const parsed = parseFloat(numeric);
   return Number.isFinite(parsed) ? parsed : 0;
+};
+
+// 취업률 포맷 함수: "70% 이상" 같은 텍스트에서 숫자 추출 후 소수점 1자리까지 반올림
+const formatEmploymentRate = (rate) => {
+  if (!rate) return null;
+  // HTML 태그 제거 및 공백 정리
+  const cleaned = String(rate).replace(/<[^>]*>/g, '').trim();
+  // 숫자 추출 (정수 또는 소수)
+  const match = cleaned.match(/([\d.]+)/);
+  if (!match) return cleaned;
+  const num = parseFloat(match[1]);
+  if (isNaN(num)) return cleaned;
+  // 소수점 1자리까지 반올림, 정수면 정수로 표시
+  const rounded = Math.round(num * 10) / 10;
+  return Number.isInteger(rounded) ? `${rounded}%` : `${rounded.toFixed(1)}%`;
 };
 
 const computeOutlookScore = (value) => {
@@ -464,7 +3144,7 @@ const Hydration = (() => {
   const createState = (initialItems, initialMeta = {}) => ({
     baseItems: Array.isArray(initialItems) ? initialItems.slice() : [],
     meta: { ...initialMeta },
-    sort: 'relevance',
+    sort: initialMeta.sort || 'relevance',
     isHydrated: false
   });
 
@@ -543,18 +3223,47 @@ const Hydration = (() => {
     </div>
   `;
 
+  // 데이터 풍부도 계산 함수 (display 객체의 유효한 필드 개수)
+  const calculateJobDataRichness = (item) => {
+    if (!item?.display) return 0;
+    const d = item.display;
+    let score = 0;
+    // 중요 필드에 가중치 부여
+    if (d.salary) score += 3;
+    if (d.satisfaction) score += 2;
+    if (d.wlb) score += 2;
+    if (d.outlook) score += 2;
+    if (d.summary) score += 1;
+    if (d.categoryName) score += 1;
+    if (d.workStrong) score += 1;
+    if (d.skillYear) score += 1;
+    return score;
+  };
+
+  const calculateMajorDataRichness = (item) => {
+    if (!item?.display) return 0;
+    const d = item.display;
+    let score = 0;
+    // 중요 필드에 가중치 부여
+    if (d.employmentRate) score += 3;
+    if (d.firstJobSalary || d.salaryAfterGraduation) score += 3;
+    if (d.firstJobSatisfaction) score += 2;
+    if (d.summary) score += 1;
+    if (d.categoryName) score += 1;
+    return score;
+  };
+
   const applyJobSort = (items, sortKey) => {
     if (!Array.isArray(items)) return [];
     const cloned = items.slice();
     switch (sortKey) {
       case 'salary-desc':
         return cloned.sort((a, b) => parseNumberFromText(b?.display?.salary) - parseNumberFromText(a?.display?.salary));
-      case 'outlook-desc':
-        return cloned.sort((a, b) => computeOutlookScore(b?.display?.outlook) - computeOutlookScore(a?.display?.outlook));
       case 'name-asc':
         return cloned.sort((a, b) => (a?.profile?.name || '').localeCompare(b?.profile?.name || ''));
       default:
-        return cloned;
+        // 기본 순: 데이터 풍부도 기준 정렬 (데이터 많은 순)
+        return cloned.sort((a, b) => calculateJobDataRichness(b) - calculateJobDataRichness(a));
     }
   };
 
@@ -569,8 +3278,105 @@ const Hydration = (() => {
       case 'name-asc':
         return cloned.sort((a, b) => (a?.profile?.name || '').localeCompare(b?.profile?.name || ''));
       default:
-        return cloned;
+        // 기본 순: 데이터 풍부도 기준 정렬 (데이터 많은 순)
+        return cloned.sort((a, b) => calculateMajorDataRichness(b) - calculateMajorDataRichness(a));
     }
+  };
+
+  // 페이지네이션 업데이트 함수
+  const updatePagination = (containerId, total, currentPage, perPage, baseUrl, keyword) => {
+    // 결과 섹션과 페이지네이션 요소 찾기
+    const resultsSection = document.getElementById(containerId);
+    if (!resultsSection) return;
+    
+    // aria-label로 페이지네이션 nav 찾기 (SSR에서 렌더링된 요소)
+    let nav = document.querySelector('nav[aria-label="페이지네이션"]');
+    
+    // 페이지네이션 정보 텍스트 요소 찾기 (nav 다음의 p.text-center)
+    let paginationInfo = nav ? nav.nextElementSibling : null;
+    if (paginationInfo && paginationInfo.tagName !== 'P') {
+      paginationInfo = null;
+    }
+    
+    const totalPages = Math.ceil(total / perPage);
+    
+    // 페이지가 1개 이하면 페이지네이션 숨기기
+    if (totalPages <= 1) {
+      if (nav) nav.style.display = 'none';
+      if (paginationInfo) paginationInfo.style.display = 'none';
+      return;
+    }
+    
+    // nav 요소가 없으면 생성
+    if (!nav) {
+      nav = document.createElement('nav');
+      nav.className = 'mt-8 flex justify-center items-center gap-2 flex-wrap';
+      nav.setAttribute('aria-label', '페이지네이션');
+      resultsSection.parentNode.insertBefore(nav, resultsSection.nextSibling);
+    }
+    nav.style.display = '';
+    
+    // 페이지 URL 생성 함수
+    const buildPageUrl = (pageNum) => {
+      const params = new URLSearchParams();
+      if (keyword) params.set('q', keyword);
+      if (pageNum > 1) params.set('page', String(pageNum));
+      return `${baseUrl}${params.toString() ? `?${params.toString()}` : ''}`;
+    };
+    
+    // 페이지 버튼 생성
+    const maxPageButtons = 7;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+    
+    if (endPage - startPage < maxPageButtons - 1) {
+      startPage = Math.max(1, endPage - maxPageButtons + 1);
+    }
+    
+    const pageButtons = [];
+    
+    // 이전 페이지 버튼
+    if (currentPage > 1) {
+      pageButtons.push(`<a href="${buildPageUrl(currentPage - 1)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition"><i class="fas fa-chevron-left"></i></a>`);
+    }
+    
+    // 첫 페이지
+    if (startPage > 1) {
+      pageButtons.push(`<a href="${buildPageUrl(1)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">1</a>`);
+      if (startPage > 2) {
+        pageButtons.push(`<span class="px-2 text-wiki-muted">...</span>`);
+      }
+    }
+    
+    // 페이지 번호들
+    for (let i = startPage; i <= endPage; i++) {
+      const isActive = i === currentPage;
+      pageButtons.push(`<a href="${buildPageUrl(i)}" class="px-4 py-2 rounded-lg transition ${isActive ? 'bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-bold' : 'bg-wiki-bg border border-wiki-border hover:border-wiki-primary'}">${i}</a>`);
+    }
+    
+    // 마지막 페이지
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pageButtons.push(`<span class="px-2 text-wiki-muted">...</span>`);
+      }
+      pageButtons.push(`<a href="${buildPageUrl(totalPages)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">${totalPages}</a>`);
+    }
+    
+    // 다음 페이지 버튼
+    if (currentPage < totalPages) {
+      pageButtons.push(`<a href="${buildPageUrl(currentPage + 1)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition"><i class="fas fa-chevron-right"></i></a>`);
+    }
+    
+    nav.innerHTML = pageButtons.join('');
+    
+    // 페이지네이션 정보 업데이트
+    if (!paginationInfo) {
+      paginationInfo = document.createElement('p');
+      paginationInfo.className = 'text-center text-xs text-wiki-muted mt-4';
+      nav.parentNode.insertBefore(paginationInfo, nav.nextSibling);
+    }
+    paginationInfo.style.display = '';
+    paginationInfo.textContent = `${currentPage}페이지 / 총 ${totalPages}페이지 (${total}개 항목)`;
   };
 
   const hydrateJobSerp = () => {
@@ -581,81 +3387,68 @@ const Hydration = (() => {
     const hydrationStartedAt = now();
     const json = parseJsonScript('job-hydration-data');
     const state = createState(json?.items || [], ensureMetaDefaults(json?.meta || {}, (json?.items || []).length));
+    
+    // 원본 SSR 데이터 보존 (기본 순 복원용)
+    state.originalItems = state.baseItems.slice();
 
-    const render = () => {
-      const items = applyJobSort(state.baseItems, state.sort);
-      if (items.length) {
-        // ✅ 서버 렌더링 HTML 재활용 - DOM 순서만 재배치 (재렌더링 X)
-        const existingCards = Array.from(container.children);
+    // 전체 DB 정렬 + 즉각 반응 (AJAX)
+    const render = async (skipFetch = false) => {
+      // skipFetch가 true면 현재 데이터만 렌더링 (첫 로드용)
+      if (!skipFetch && state.sort !== 'relevance') {
+        // 로딩 표시
+        container.innerHTML = '<div class="flex justify-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-wiki-primary"></i></div>';
         
-        // 초기 로드 또는 검색 후: 카드 개수가 다르면 재렌더링 필요
-        if (existingCards.length !== items.length) {
-          container.innerHTML = items.map((item) => DOMUtils.createJobCard(item)).join('');
-        } else {
-          // 정렬만 변경: 기존 DOM 요소 순서 재배치
-          const cardMap = new Map();
-          existingCards.forEach(card => {
-            const link = card.querySelector('a[href^="/job/"]');
-            if (link) {
-              const slug = link.getAttribute('href');
-              cardMap.set(slug, card);
-            }
-          });
+        try {
+          // 서버에서 정렬된 데이터 가져오기
+          const params = new URLSearchParams();
+          if (state.meta.keyword) params.set('q', state.meta.keyword);
+          params.set('sort', state.sort);
+          params.set('perPage', '50');
           
-          // 정렬된 순서대로 DOM 재배치
-          items.forEach((item) => {
-            const normalized = DOMUtils.normalizeJobItem(item);
-            if (!normalized) return;
-            
-            const card = cardMap.get(normalized.url);
-            if (card) {
-              container.appendChild(card); // 자동으로 순서 재배치됨
+          const response = await fetch(`/api/jobs/search?${params.toString()}`);
+          const result = await response.json();
+          
+          if (result.success && Array.isArray(result.data)) {
+            state.baseItems = result.data;
+            if (result.meta) {
+              state.meta.total = result.meta.total;
             }
-          });
+          }
+        } catch (error) {
+          console.error('Sort API error:', error);
         }
+      }
+      
+      // 기본 순: 원본 SSR 데이터 그대로 사용 (재정렬 없음)
+      // 다른 정렬: 서버 API 결과 사용
+      const items = state.sort === 'relevance' 
+        ? state.originalItems  // 원본 그대로 (서버에서 이미 기본 순 정렬됨)
+        : state.baseItems;     // 서버 API 결과
+      
+      if (items.length) {
+        container.innerHTML = items.map(item => DOMUtils.createJobCard(item)).join('');
       } else {
         container.innerHTML = emptyJobMessage;
       }
       updateSourceSummary('job-source-summary', state.meta.sources);
       updateSourceFilterStatus('job-source-filter', state.meta.sources);
       updateHydrationStatus('job-hydration-status', state.meta, state.sort, JOB_SORT_LABELS);
+      
       const totalEl = document.getElementById('job-total-count');
       if (totalEl && typeof state.meta.total === 'number') {
         totalEl.textContent = String(state.meta.total);
       }
-      emitHydrationAction(page, 'render', {
-        results: Array.isArray(items) ? items.length : 0,
-        sortKey: state.sort,
-        total: typeof state.meta.total === 'number' ? state.meta.total : null,
-        cacheStatus: state.meta?.cacheState?.status ?? null
-      }, state);
+      
       if (!state.isHydrated) {
         const duration = Math.max(now() - hydrationStartedAt, 0);
         const stateSnapshot = summarizeHydrationState(state);
-        const completionPayload = {
-          total: stateSnapshot?.total ?? null,
-          results: Array.isArray(items) ? items.length : 0,
-          sort: stateSnapshot?.sort ?? null,
-          duration,
-          cacheStatus: stateSnapshot?.cacheStatus ?? null,
-          filters: {
-            keyword: stateSnapshot?.keyword ?? null,
-            category: stateSnapshot?.category ?? null,
-            includeSources: stateSnapshot?.includeSources ?? null
-          },
-          pagination: {
-            page: stateSnapshot?.page ?? null,
-            perPage: stateSnapshot?.perPage ?? null
-          },
-          cacheAgeSeconds: stateSnapshot?.cacheAgeSeconds ?? null
-        };
         window.dispatchEvent(new CustomEvent('cw-hydration-complete', {
           detail: {
             version: TELEMETRY_VERSION,
             source: 'hydration',
             page,
             component,
-            payload: completionPayload,
+            payload: { total: stateSnapshot?.total ?? null, results: items.length, sort: stateSnapshot?.sort ?? null, duration },
             state: stateSnapshot,
             duration,
             context: TelemetryContext.build({ component, source: 'hydration', page })
@@ -667,96 +3460,71 @@ const Hydration = (() => {
 
     const form = document.getElementById('job-filter-form');
     const sortSelect = document.getElementById('job-sort-select');
-    const perPageSelect = document.getElementById('job-per-page');
+    
+    // 커스텀 드롭다운 초기화
+    const initCustomDropdown = () => {
+      const trigger = document.getElementById('job-sort-trigger');
+      const menu = document.getElementById('job-sort-menu');
+      const label = document.getElementById('job-sort-label');
+      const chevron = document.getElementById('job-sort-chevron');
+      const options = menu?.querySelectorAll('.sort-option');
+      
+      if (!trigger || !menu || !label || !options) return;
+      
+      // 현재 값 표시
+      const updateLabel = (value) => {
+        const labels = { relevance: '기본 순', 'salary-desc': '연봉 높은 순', 'name-asc': '이름순' };
+        label.textContent = labels[value] || '기본 순';
+        options.forEach(opt => {
+          opt.classList.toggle('active', opt.dataset.sort === value);
+        });
+      };
+      updateLabel(state.sort);
+      
+      // 토글
+      const toggleMenu = (show) => {
+        if (show) {
+          menu.classList.remove('opacity-0', 'invisible', 'translate-y-1');
+          menu.classList.add('opacity-100', 'visible', 'translate-y-0');
+          chevron?.classList.add('rotate-180');
+        } else {
+          menu.classList.add('opacity-0', 'invisible', 'translate-y-1');
+          menu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+          chevron?.classList.remove('rotate-180');
+        }
+      };
+      
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = menu.classList.contains('opacity-100');
+        toggleMenu(!isOpen);
+      });
+      
+      options.forEach(opt => {
+        opt.addEventListener('click', () => {
+          const value = opt.dataset.sort;
+          state.sort = value;
+          if (sortSelect) sortSelect.value = value;
+          updateLabel(value);
+          toggleMenu(false);
+          render(); // 즉각 정렬
+        });
+      });
+      
+      // 외부 클릭 시 닫기
+      document.addEventListener('click', () => toggleMenu(false));
+    };
+    initCustomDropdown();
 
     if (sortSelect) {
       sortSelect.value = state.sort;
       sortSelect.addEventListener('change', () => {
         state.sort = sortSelect.value;
-        emitHydrationAction(page, 'sort-change', { sortKey: state.sort }, state);
-        render();
+        render(); // 즉각 정렬
       });
     }
 
-    if (form) {
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const formData = new FormData(form);
-        const keyword = (formData.get('q') || '').toString();
-        const category = (formData.get('category') || '').toString();
-        const perPageRaw = (formData.get('perPage') || '20').toString();
-        const perPage = parseInt(perPageRaw, 10) || 20;
-        const keywordLength = keyword.trim().length;
-        const sanitizedCategory = category || null;
-        const startTime = now();
-
-        emitHydrationAction(page, 'filter-submit', {
-          phase: 'start',
-          keywordLength,
-          category: sanitizedCategory,
-          perPage
-        }, state);
-
-        DOMUtils.showLoading('job-results');
-        updateHydrationStatus('job-hydration-status', { total: state.meta.total }, state.sort, JOB_SORT_LABELS);
-
-        try {
-          const result = await CareerAPI.searchJobs(keyword, category, 1, perPage, {
-            sources: Array.isArray(state.meta.includeSources) ? state.meta.includeSources : undefined
-          });
-          const items = Array.isArray(result.items) ? result.items : [];
-          state.baseItems = items;
-          state.meta = ensureMetaDefaults(result.meta || {}, items.length);
-          state.meta.keyword = keyword;
-          state.meta.category = category;
-          state.meta.includeSources = state.meta.includeSources || (result.meta?.sources ? Object.keys(result.meta.sources) : null);
-          state.meta.cacheState = null;
-          state.sort = sortSelect ? sortSelect.value : 'relevance';
-
-          if (perPageSelect) {
-            perPageSelect.value = String(perPage);
-          }
-
-          const params = new URLSearchParams();
-          if (keyword) params.set('q', keyword);
-          if (category) params.set('category', category);
-          if (perPage !== 20) params.set('perPage', String(perPage));
-          window.history.replaceState({}, '', `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}`);
-
-          emitHydrationAction(page, 'filter-submit', {
-            phase: 'complete',
-            keywordLength,
-            category: sanitizedCategory,
-            perPage,
-            duration: Math.max(now() - startTime, 0),
-            results: items.length,
-            cacheStatus: result.meta?.cacheState?.status ?? null
-          }, state);
-        } catch (error) {
-          console.error('[hydration][job] 검색 실패', error);
-          state.baseItems = [];
-          emitHydrationAction(page, 'filter-submit', {
-            phase: 'error',
-            keywordLength,
-            category: sanitizedCategory,
-            perPage,
-            duration: Math.max(now() - startTime, 0)
-          }, state);
-        } finally {
-          render();
-        }
-      });
-    }
-
-    if (perPageSelect && form) {
-      perPageSelect.addEventListener('change', () => {
-        const nextPerPage = parseInt(perPageSelect.value, 10) || 20;
-        emitHydrationAction(page, 'per-page-change', { perPage: nextPerPage }, state);
-        form.requestSubmit();
-      });
-    }
-
-    render();
+    // 검색 폼은 기본 동작(페이지 새로고침)으로 SSR 결과를 받음
   };
 
   const hydrateMajorSerp = () => {
@@ -767,53 +3535,67 @@ const Hydration = (() => {
     const hydrationStartedAt = now();
     const json = parseJsonScript('major-hydration-data');
     const state = createState(json?.items || [], ensureMetaDefaults(json?.meta || {}, (json?.items || []).length));
+    
+    // 원본 SSR 데이터 보존 (기본 순 복원용)
+    state.originalItems = state.baseItems.slice();
 
-    const render = () => {
-      const items = applyMajorSort(state.baseItems, state.sort);
+    // 전체 DB 정렬 + 즉각 반응 (AJAX)
+    const render = async (skipFetch = false) => {
+      // skipFetch가 true면 현재 데이터만 렌더링 (첫 로드용)
+      if (!skipFetch && state.sort !== 'relevance') {
+        // 로딩 표시
+        container.innerHTML = '<div class="flex justify-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-wiki-primary"></i></div>';
+        
+        try {
+          // 서버에서 정렬된 데이터 가져오기
+          const params = new URLSearchParams();
+          if (state.meta.keyword) params.set('q', state.meta.keyword);
+          params.set('sort', state.sort);
+          params.set('perPage', '50');
+          
+          const response = await fetch(`/api/majors/search?${params.toString()}`);
+          const result = await response.json();
+          
+          if (result.success && Array.isArray(result.data)) {
+            state.baseItems = result.data;
+            if (result.meta) {
+              state.meta.total = result.meta.total;
+            }
+          }
+        } catch (error) {
+          console.error('Sort API error:', error);
+        }
+      }
+      
+      // 기본 순: 원본 SSR 데이터 그대로 사용 (재정렬 없음)
+      // 다른 정렬: 서버 API 결과 사용
+      const items = state.sort === 'relevance' 
+        ? state.originalItems  // 원본 그대로 (서버에서 이미 기본 순 정렬됨)
+        : state.baseItems;     // 서버 API 결과
+      
       if (items.length) {
-        container.innerHTML = items.map((item) => DOMUtils.createMajorCard(item)).join('');
+        container.innerHTML = items.map(item => DOMUtils.createMajorCard(item)).join('');
       } else {
         container.innerHTML = emptyMajorMessage;
       }
       updateSourceSummary('major-source-summary', state.meta.sources);
       updateHydrationStatus('major-hydration-status', state.meta, state.sort, MAJOR_SORT_LABELS);
+      
       const totalEl = document.getElementById('major-total-count');
       if (totalEl && typeof state.meta.total === 'number') {
         totalEl.textContent = String(state.meta.total);
       }
-      emitHydrationAction(page, 'render', {
-        results: Array.isArray(items) ? items.length : 0,
-        sortKey: state.sort,
-        total: typeof state.meta.total === 'number' ? state.meta.total : null,
-        cacheStatus: state.meta?.cacheState?.status ?? null
-      }, state);
+      
       if (!state.isHydrated) {
         const duration = Math.max(now() - hydrationStartedAt, 0);
         const stateSnapshot = summarizeHydrationState(state);
-        const completionPayload = {
-          total: stateSnapshot?.total ?? null,
-          results: Array.isArray(items) ? items.length : 0,
-          sort: stateSnapshot?.sort ?? null,
-          duration,
-          cacheStatus: stateSnapshot?.cacheStatus ?? null,
-          filters: {
-            keyword: stateSnapshot?.keyword ?? null,
-            category: stateSnapshot?.category ?? null,
-            includeSources: stateSnapshot?.includeSources ?? null
-          },
-          pagination: {
-            page: stateSnapshot?.page ?? null,
-            perPage: stateSnapshot?.perPage ?? null
-          },
-          cacheAgeSeconds: stateSnapshot?.cacheAgeSeconds ?? null
-        };
         window.dispatchEvent(new CustomEvent('cw-hydration-complete', {
           detail: {
             version: TELEMETRY_VERSION,
             source: 'hydration',
             page,
             component,
-            payload: completionPayload,
+            payload: { total: stateSnapshot?.total ?? null, results: items.length, sort: stateSnapshot?.sort ?? null, duration },
             state: stateSnapshot,
             duration,
             context: TelemetryContext.build({ component, source: 'hydration', page })
@@ -825,88 +3607,71 @@ const Hydration = (() => {
 
     const form = document.getElementById('major-filter-form');
     const sortSelect = document.getElementById('major-sort-select');
-    const perPageSelect = document.getElementById('major-per-page');
+    
+    // 커스텀 드롭다운 초기화
+    const initCustomDropdown = () => {
+      const trigger = document.getElementById('major-sort-trigger');
+      const menu = document.getElementById('major-sort-menu');
+      const label = document.getElementById('major-sort-label');
+      const chevron = document.getElementById('major-sort-chevron');
+      const options = menu?.querySelectorAll('.sort-option');
+      
+      if (!trigger || !menu || !label || !options) return;
+      
+      // 현재 값 표시
+      const updateLabel = (value) => {
+        const labels = { relevance: '기본 순', 'employment-desc': '취업률 높은 순', 'salary-desc': '연봉 높은 순', 'name-asc': '이름순' };
+        label.textContent = labels[value] || '기본 순';
+        options.forEach(opt => {
+          opt.classList.toggle('active', opt.dataset.sort === value);
+        });
+      };
+      updateLabel(state.sort);
+      
+      // 토글
+      const toggleMenu = (show) => {
+        if (show) {
+          menu.classList.remove('opacity-0', 'invisible', 'translate-y-1');
+          menu.classList.add('opacity-100', 'visible', 'translate-y-0');
+          chevron?.classList.add('rotate-180');
+        } else {
+          menu.classList.add('opacity-0', 'invisible', 'translate-y-1');
+          menu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+          chevron?.classList.remove('rotate-180');
+        }
+      };
+      
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = menu.classList.contains('opacity-100');
+        toggleMenu(!isOpen);
+      });
+      
+      options.forEach(opt => {
+        opt.addEventListener('click', () => {
+          const value = opt.dataset.sort;
+          state.sort = value;
+          if (sortSelect) sortSelect.value = value;
+          updateLabel(value);
+          toggleMenu(false);
+          render(); // 즉각 정렬
+        });
+      });
+      
+      // 외부 클릭 시 닫기
+      document.addEventListener('click', () => toggleMenu(false));
+    };
+    initCustomDropdown();
 
     if (sortSelect) {
       sortSelect.value = state.sort;
       sortSelect.addEventListener('change', () => {
         state.sort = sortSelect.value;
-        emitHydrationAction(page, 'sort-change', { sortKey: state.sort }, state);
-        render();
+        render(); // 즉각 정렬
       });
     }
 
-    if (form) {
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const formData = new FormData(form);
-        const keyword = (formData.get('q') || '').toString();
-        const perPageRaw = (formData.get('perPage') || '20').toString();
-        const perPage = parseInt(perPageRaw, 10) || 20;
-        const keywordLength = keyword.trim().length;
-        const startTime = now();
-
-        emitHydrationAction(page, 'filter-submit', {
-          phase: 'start',
-          keywordLength,
-          perPage
-        }, state);
-
-        DOMUtils.showLoading('major-results');
-        updateHydrationStatus('major-hydration-status', { total: state.meta.total }, state.sort, MAJOR_SORT_LABELS);
-        try {
-          const result = await CareerAPI.searchMajors(keyword, 1, perPage, {
-            sources: Array.isArray(state.meta.includeSources) ? state.meta.includeSources : undefined
-          });
-          const items = Array.isArray(result.items) ? result.items : [];
-          state.baseItems = items;
-          state.meta = ensureMetaDefaults(result.meta || {}, items.length);
-          state.meta.keyword = keyword;
-          state.meta.includeSources = state.meta.includeSources || (result.meta?.sources ? Object.keys(result.meta.sources) : null);
-          state.meta.cacheState = null;
-          state.sort = sortSelect ? sortSelect.value : 'relevance';
-
-          if (perPageSelect) {
-            perPageSelect.value = String(perPage);
-          }
-
-          const params = new URLSearchParams();
-          if (keyword) params.set('q', keyword);
-          if (perPage !== 20) params.set('perPage', String(perPage));
-          window.history.replaceState({}, '', `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}`);
-
-          emitHydrationAction(page, 'filter-submit', {
-            phase: 'complete',
-            keywordLength,
-            perPage,
-            duration: Math.max(now() - startTime, 0),
-            results: items.length,
-            cacheStatus: result.meta?.cacheState?.status ?? null
-          }, state);
-        } catch (error) {
-          console.error('[hydration][major] 검색 실패', error);
-          state.baseItems = [];
-          emitHydrationAction(page, 'filter-submit', {
-            phase: 'error',
-            keywordLength,
-            perPage,
-            duration: Math.max(now() - startTime, 0)
-          }, state);
-        } finally {
-          render();
-        }
-      });
-    }
-
-    if (perPageSelect && form) {
-      perPageSelect.addEventListener('change', () => {
-        const nextPerPage = parseInt(perPageSelect.value, 10) || 20;
-        emitHydrationAction(page, 'per-page-change', { perPage: nextPerPage }, state);
-        form.requestSubmit();
-      });
-    }
-
-    render();
+    // 검색 폼은 기본 동작(페이지 새로고침)으로 SSR 결과를 받음
   };
 
   return {
@@ -1277,6 +4042,57 @@ const DetailTabs = (() => {
         }
       })
     })
+
+    // 📱 모바일 스와이프로 탭 전환
+    const panelsContainer = tabset.querySelector('[data-cw-tab-panels]')
+    if (panelsContainer && triggers.length > 1) {
+      let touchStartX = 0
+      let touchStartY = 0
+      let touchEndX = 0
+      let touchEndY = 0
+      const SWIPE_THRESHOLD = 50  // 최소 스와이프 거리
+      const SWIPE_ANGLE_THRESHOLD = 30  // 수평 스와이프 판정 각도
+
+      panelsContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX
+        touchStartY = e.changedTouches[0].screenY
+      }, { passive: true })
+
+      panelsContainer.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX
+        touchEndY = e.changedTouches[0].screenY
+        
+        const diffX = touchEndX - touchStartX
+        const diffY = touchEndY - touchStartY
+        const absDiffX = Math.abs(diffX)
+        const absDiffY = Math.abs(diffY)
+        
+        // 수평 스와이프인지 확인 (각도 체크)
+        if (absDiffX < SWIPE_THRESHOLD || absDiffY > absDiffX * Math.tan(SWIPE_ANGLE_THRESHOLD * Math.PI / 180)) {
+          return
+        }
+        
+        const currentId = tabset.dataset.activeTab
+        const currentIndex = triggers.findIndex(t => t.getAttribute('data-tab-id') === currentId)
+        
+        let nextIndex
+        if (diffX > 0) {
+          // 오른쪽으로 스와이프 → 이전 탭
+          nextIndex = (currentIndex - 1 + triggers.length) % triggers.length
+        } else {
+          // 왼쪽으로 스와이프 → 다음 탭
+          nextIndex = (currentIndex + 1) % triggers.length
+        }
+        
+        const nextTrigger = triggers[nextIndex]
+        const nextId = nextTrigger?.getAttribute('data-tab-id')
+        if (nextId) {
+          activate(nextId, 'user')
+          // 탭 버튼을 화면에 보이게 스크롤
+          nextTrigger.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+        }
+      }, { passive: true })
+    }
 
     DetailTelemetry.emit('tab-ready', {
       component: 'tabset',
@@ -2963,313 +5779,83 @@ const DOMUtils = {
     }
   },
 
-  // 학과 카드 생성
+  // 학과 카드 생성 (클라이언트 정렬용)
   createMajorCard(major) {
     const normalized = this.normalizeMajorItem(major);
     if (!normalized) return '';
-
     const { profile, display, url } = normalized;
     const summary = display.summary || '설명 없음';
-    // categoryName은 제목 위에 표시하지 않고 메트릭 박스로만 표시
-    const categoryName = undefined;
+    const categoryName = display.categoryName && display.categoryName.split(',').length <= 2 ? display.categoryName : undefined;
     
-    // 첫 직장 만족도 등급 계산 (서버와 동일한 로직)
-    const getSatisfactionGrade = (satisfaction) => {
-      if (!satisfaction) return null;
-      const score = parseFloat(satisfaction) || 0;
-      
-      if (score >= 80) {
-        return { 
-          level: '매우 좋음', 
-          bg: 'bg-green-500/10', 
-          border: 'border-green-500/20', 
-          iconColor: 'text-green-400',
-          textColor: 'text-green-300',
-          textMuted: 'text-green-300/80'
-        };
-      } else if (score >= 60) {
-        return { 
-          level: '좋음', 
-          bg: 'bg-sky-500/10', 
-          border: 'border-sky-500/20', 
-          iconColor: 'text-sky-400',
-          textColor: 'text-sky-300',
-          textMuted: 'text-sky-300/80'
-        };
-      } else if (score >= 40) {
-        return { 
-          level: '보통', 
-          bg: 'bg-yellow-500/10', 
-          border: 'border-yellow-500/20', 
-          iconColor: 'text-yellow-400',
-          textColor: 'text-yellow-300',
-          textMuted: 'text-yellow-300/80'
-        };
-      } else if (score >= 20) {
-        return { 
-          level: '별로', 
-          bg: 'bg-orange-500/10', 
-          border: 'border-orange-500/20', 
-          iconColor: 'text-orange-400',
-          textColor: 'text-orange-300',
-          textMuted: 'text-orange-300/80'
-        };
-      } else {
-        return { 
-          level: '매우 별로', 
-          bg: 'bg-red-500/10', 
-          border: 'border-red-500/20', 
-          iconColor: 'text-red-400',
-          textColor: 'text-red-300',
-          textMuted: 'text-red-300/80'
-        };
-      }
-    };
-    
-    const satisfactionGrade = getSatisfactionGrade(display.firstJobSatisfaction);
-    
-    // 메트릭 박스들
-    // 커리어넷 데이터: 취업률, 첫직장임금(월), 첫 직장 만족도
-    // categoryName: 계열 (모든 경우에 메트릭 박스로 표시)
-    const metrics = (() => {
-      // categoryName 추출 (쉼표가 2개 이상이면 관련 학과명 리스트로 판단하여 제거)
-      const categoryNameForMetric = display.categoryName && display.categoryName.split(',').length <= 2
-        ? display.categoryName
-        : undefined;
-      
-      // 커리어넷 데이터 메트릭 박스들
-      const careernetMetrics = [
-        display.employmentRate ? `
-          <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-24 h-24 flex-shrink-0">
-            <i class="fas fa-user-graduate text-blue-400 text-base"></i>
-            <span class="text-[9px] font-medium text-blue-300/70 mt-0.5">취업률</span>
-            <span class="text-[11px] font-bold text-blue-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${display.employmentRate}</span>
-          </div>
-        ` : '',
-        display.firstJobSalary ? `
-          <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
-            <i class="fas fa-won-sign text-emerald-400 text-base"></i>
-            <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 월봉</span>
-            <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`}</span>
-          </div>
-        ` : '',
-        display.firstJobSatisfaction && satisfactionGrade ? `
-          <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
-            <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
-            <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
-            <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span>
-          </div>
-        ` : ''
-      ].filter(Boolean);
-      
-      // categoryName 메트릭 박스 추가
-      if (categoryNameForMetric) {
-        careernetMetrics.push(`
-          <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
-            <i class="fas fa-layer-group text-indigo-400 text-base"></i>
-            <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
-            <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${(categoryNameForMetric.length > 8 ? categoryNameForMetric.substring(0, 8) + '...' : categoryNameForMetric)}</span>
-          </div>
-        `);
-      }
-      
-      return careernetMetrics.join('');
+    const satisfactionGrade = (() => {
+      if (!display.firstJobSatisfaction) return null;
+      const score = parseFloat(display.firstJobSatisfaction) || 0;
+      if (score >= 80) return { level: '매우 좋음', bg: 'bg-green-500/10', border: 'border-green-500/20', iconColor: 'text-green-400', textColor: 'text-green-300', textMuted: 'text-green-300/80' };
+      if (score >= 60) return { level: '좋음', bg: 'bg-sky-500/10', border: 'border-sky-500/20', iconColor: 'text-sky-400', textColor: 'text-sky-300', textMuted: 'text-sky-300/80' };
+      if (score >= 40) return { level: '보통', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', iconColor: 'text-yellow-400', textColor: 'text-yellow-300', textMuted: 'text-yellow-300/80' };
+      if (score >= 20) return { level: '별로', bg: 'bg-orange-500/10', border: 'border-orange-500/20', iconColor: 'text-orange-400', textColor: 'text-orange-300', textMuted: 'text-orange-300/80' };
+      return { level: '매우 별로', bg: 'bg-red-500/10', border: 'border-red-500/20', iconColor: 'text-red-400', textColor: 'text-red-300', textMuted: 'text-red-300/80' };
     })();
+    
+    const metricBoxes = [];
+    if (display.employmentRate) {
+      const rateText = formatEmploymentRate(display.employmentRate) || '';
+      metricBoxes.push({ priority: 1, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-chart-line text-blue-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-blue-300/70">취업률</span><span class="text-[11px] sm:text-[13px] font-bold text-blue-300 text-center leading-tight px-1">${rateText}</span></div>` });
+    }
+    if (display.firstJobSalary) {
+      const salaryText = display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`;
+      metricBoxes.push({ priority: 2, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70">평균 월급</span><span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${salaryText}</span></div>` });
+    }
+    if (display.firstJobSatisfaction && satisfactionGrade) {
+      metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">만족도</span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
+    }
+    if (categoryName) {
+      metricBoxes.push({ priority: 4, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-graduation-cap text-purple-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70">계열</span><span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight px-1">${categoryName.length > 10 ? categoryName.substring(0, 10) + '...' : categoryName}</span></div>` });
+    }
+    const sortedBoxes = metricBoxes.sort((a, b) => a.priority - b.priority).slice(0, 3);
+    const metrics = sortedBoxes.map((box, i) => i === 2 ? `<div class="hidden sm:flex">${box.html}</div>` : box.html).join('');
 
-    return `
-      <article class="group relative">
-        <a href="${url}" class="block">
-          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
-            <!-- 배경 그라데이션 글로우 -->
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
-              <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
-            </div>
-            
-            <div class="relative flex gap-4">
-              <!-- 왼쪽: 전공 정보 (최대 너비 60% 제한) -->
-              <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
-                <!-- 헤더: 카테고리 + 전공명 -->
-                <div class="space-y-2">
-                  ${categoryName ? `
-                    <div class="flex items-center gap-2">
-                      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
-                        <i class="fas fa-folder text-[8px]"></i>
-                        ${categoryName}
-                      </span>
-                    </div>
-                  ` : ''}
-                  
-                  <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
-                    ${profile.name || '학과명 없음'}
-                  </h2>
-                </div>
-                
-                <!-- 설명 -->
-                <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
-                  ${summary}
-                </p>
-              </div>
-              
-              <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
-              ${metrics ? `
-                <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
-                  ${metrics}
-                </div>
-              ` : ''}
-            </div>
-          </div>
-        </a>
-      </article>
-    `;
+    return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4"><div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2"><h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || '학과명 없음'}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics ? `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
   },
 
-  // 직업 카드 생성
+  // 직업 카드 생성 (클라이언트 정렬용)
   createJobCard(job) {
     const normalized = this.normalizeJobItem(job);
     if (!normalized) return '';
-
     const { profile, display, url } = normalized;
     const summary = display.summary || '설명 없음';
     
-    // 직업 만족도 등급 계산 (서버와 동일한 로직)
-    const getSatisfactionGrade = (satisfaction) => {
-      if (!satisfaction) return null;
-      const score = parseFloat(satisfaction) || 0;
-      
-      if (score >= 80) {
-        return { 
-          level: '매우 좋음', 
-          bg: 'bg-green-500/10', 
-          border: 'border-green-500/20', 
-          iconColor: 'text-green-400',
-          textColor: 'text-green-300',
-          textMuted: 'text-green-300/80',
-          percentColor: 'text-green-300/60'
-        };
-      } else if (score >= 60) {
-        return { 
-          level: '좋음', 
-          bg: 'bg-sky-500/10', 
-          border: 'border-sky-500/20', 
-          iconColor: 'text-sky-400',
-          textColor: 'text-sky-300',
-          textMuted: 'text-sky-300/80',
-          percentColor: 'text-sky-300/60'
-        };
-      } else if (score >= 40) {
-        return { 
-          level: '보통', 
-          bg: 'bg-yellow-500/10', 
-          border: 'border-yellow-500/20', 
-          iconColor: 'text-yellow-400',
-          textColor: 'text-yellow-300',
-          textMuted: 'text-yellow-300/80',
-          percentColor: 'text-yellow-300/60'
-        };
-      } else if (score >= 20) {
-        return { 
-          level: '별로', 
-          bg: 'bg-orange-500/10', 
-          border: 'border-orange-500/20', 
-          iconColor: 'text-orange-400',
-          textColor: 'text-orange-300',
-          textMuted: 'text-orange-300/80',
-          percentColor: 'text-orange-300/60'
-        };
-      } else {
-        return { 
-          level: '매우 별로', 
-          bg: 'bg-red-500/10', 
-          border: 'border-red-500/20', 
-          iconColor: 'text-red-400',
-          textColor: 'text-red-300',
-          textMuted: 'text-red-300/80',
-          percentColor: 'text-red-300/60'
-        };
-      }
-    };
+    const satisfactionGrade = (() => {
+      if (!display.satisfaction) return null;
+      const score = parseFloat(display.satisfaction) || 0;
+      if (score >= 80) return { level: '매우 좋음', bg: 'bg-green-500/10', border: 'border-green-500/20', iconColor: 'text-green-400', textColor: 'text-green-300', textMuted: 'text-green-300/80' };
+      if (score >= 60) return { level: '좋음', bg: 'bg-sky-500/10', border: 'border-sky-500/20', iconColor: 'text-sky-400', textColor: 'text-sky-300', textMuted: 'text-sky-300/80' };
+      if (score >= 40) return { level: '보통', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', iconColor: 'text-yellow-400', textColor: 'text-yellow-300', textMuted: 'text-yellow-300/80' };
+      if (score >= 20) return { level: '별로', bg: 'bg-orange-500/10', border: 'border-orange-500/20', iconColor: 'text-orange-400', textColor: 'text-orange-300', textMuted: 'text-orange-300/80' };
+      return { level: '매우 별로', bg: 'bg-red-500/10', border: 'border-red-500/20', iconColor: 'text-red-400', textColor: 'text-red-300', textMuted: 'text-red-300/80' };
+    })();
     
-    const satisfactionGrade = getSatisfactionGrade(display.satisfaction);
-    
-    // 메트릭 박스들 (연봉, 만족도, 워라벨, 계열) - 정사각형
-    const metrics = [
-      display.salary ? `
-        <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-24 h-24 flex-shrink-0">
-          <i class="fas fa-won-sign text-emerald-400 text-base"></i>
-          <span class="text-[9px] font-medium text-emerald-300/70 mt-0.5">평균 연봉</span>
-          <span class="text-[11px] font-bold text-emerald-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${(display.salary || '').replace(/평균\s*/g, '')}</span>
-        </div>
-      ` : '',
-      display.satisfaction && satisfactionGrade ? `
-        <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-24 h-24 flex-shrink-0">
-          <i class="fas fa-smile ${satisfactionGrade.iconColor} text-base"></i>
-          <span class="text-[9px] font-medium ${satisfactionGrade.textMuted} mt-0.5">만족도</span>
-          <span class="text-[11px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span>
-        </div>
-      ` : '',
-      display.wlb ? `
-        <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-24 h-24 flex-shrink-0">
-          <i class="fas fa-balance-scale text-purple-400 text-base"></i>
-          <span class="text-[9px] font-medium text-purple-300/70 mt-0.5">워라벨</span>
-          <span class="text-[11px] font-bold text-purple-300 text-center leading-tight">${display.wlb}</span>
-        </div>
-      ` : '',
-      display.departmentName ? `
-        <div class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-lg bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 w-24 h-24 flex-shrink-0">
-          <i class="fas fa-layer-group text-indigo-400 text-base"></i>
-          <span class="text-[9px] font-medium text-indigo-300/70 mt-0.5">계열</span>
-          <span class="text-[11px] font-bold text-indigo-300 text-center leading-tight px-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">${(display.departmentName.length > 8 ? display.departmentName.substring(0, 8) + '...' : display.departmentName)}</span>
-        </div>
-      ` : ''
-    ].filter(Boolean).join('');
+    const metricBoxes = [];
+    if (display.salary) {
+      const salaryText = (display.salary || '').replace(/평균\s*/g, '');
+      metricBoxes.push({ priority: 1, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70">평균 연봉</span><span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${salaryText}</span></div>` });
+    }
+    if (display.satisfaction && satisfactionGrade) {
+      metricBoxes.push({ priority: 2, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">만족도</span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
+    }
+    if (display.wlb) {
+      metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-balance-scale text-purple-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70">워라벨</span><span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight">${display.wlb}</span></div>` });
+    }
+    if (display.workStrong) {
+      metricBoxes.push({ priority: 4, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-dumbbell text-amber-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-amber-300/70">작업 강도</span><span class="text-[11px] sm:text-[13px] font-bold text-amber-300 text-center leading-tight">${display.workStrong}</span></div>` });
+    }
+    if (display.skillYear) {
+      metricBoxes.push({ priority: 5, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-cyan-500/10 backdrop-blur-sm border border-cyan-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-clock text-cyan-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-cyan-300/70">숙련기간</span><span class="text-[11px] sm:text-[13px] font-bold text-cyan-300 text-center leading-tight">${display.skillYear}</span></div>` });
+    }
+    const sortedBoxes = metricBoxes.sort((a, b) => a.priority - b.priority).slice(0, 3);
+    const metrics = sortedBoxes.map((box, i) => i === 2 ? `<div class="hidden sm:flex">${box.html}</div>` : box.html).join('');
 
-    return `
-      <article class="group relative">
-        <a href="${url}" class="block">
-          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
-            <!-- 배경 그라데이션 글로우 -->
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div>
-              <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div>
-            </div>
-            
-            <div class="relative flex gap-4">
-              <!-- 왼쪽: 직업 정보 (최대 너비 60% 제한) -->
-              <div class="flex-1 space-y-4 min-w-0 max-w-[60%]">
-                <!-- 헤더: 카테고리 + 직업명 -->
-                <div class="space-y-2">
-                  ${display.categoryName ? `
-                    <div class="flex items-center gap-2">
-                      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
-                        <i class="fas fa-folder text-[8px]"></i>
-                        ${display.categoryName}
-                      </span>
-                    </div>
-                  ` : ''}
-                  
-                  <h2 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
-                    ${profile.name || '직업명 없음'}
-                  </h2>
-                </div>
-                
-                <!-- 설명 -->
-                <p class="text-sm leading-relaxed text-wiki-muted/90 line-clamp-2">
-                  ${summary}
-                </p>
-              </div>
-              
-              <!-- 오른쪽: 메트릭 박스들 (정사각형, 고정 크기, 오른쪽 끝 정렬) -->
-              ${metrics ? `
-                <div class="flex gap-2 items-center justify-end flex-shrink-0 ml-auto">
-                  ${metrics}
-                </div>
-              ` : ''}
-            </div>
-          </div>
-        </a>
-      </article>
-    `;
+    return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4"><div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2">${display.categoryName ? `<div class="flex items-center gap-2"><span class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20"><i class="fas fa-folder text-[7px] sm:text-[8px]"></i>${display.categoryName}</span></div>` : ''}<h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || '직업명 없음'}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics ? `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
   }
 };
 

@@ -456,7 +456,7 @@ export const normalizeGoyong24MajorListItem = (
     summary: undefined,
     aptitude: undefined,
     relatedMajors: [],
-    sources: ['GOYONG24']
+    sources: ['WORK24_MAJOR']
   }
 }
 
@@ -487,7 +487,7 @@ export const normalizeGoyong24MajorDetail = (
     whatStudy: detail.whatStudy,
     howPrepare: detail.howPrepare,
     jobProspect: detail.jobProspect,
-    sources: ['GOYONG24']
+    sources: ['WORK24_MAJOR']
   }
 }
 
@@ -1231,6 +1231,289 @@ export const normalizeGoyong24JobDetail = (
     majorDistribution: detail.path?.majorDistribution,
     relatedOrganizations: organizations,
     kecoCodes,
+    
+    // Phase 1.2: 누락된 필드 추가
+    // 재직자 전망 차트 데이터
+    jobSumProspect: salProspect?.jobSumProspect,
+    
+    // 능력/지식/환경 상세 비교 데이터
+    ablKnwEnv: detail.ablKnwEnv,
+    
+    // 성격/흥미/가치관 상세 비교 데이터
+    chrIntrVals: detail.chrIntrVals,
+    
+    // 업무활동 상세 비교 데이터
+    actv: detail.actv,
+    
     sources: ['GOYONG24']
+  }
+}
+
+// ============================================================================
+// 직업사전 (Job Dictionary) Types - 212D50
+// ============================================================================
+
+export interface Goyong24JobDictionaryParams {
+  dJobCd: string      // 직업코드 (4자리)
+  dJobCdSeq: string   // 일련번호
+}
+
+export interface Goyong24JobDictionaryDetail {
+  dJobCd: string
+  dJobCdSeq: string
+  dJobNm?: string
+  dJobJCd?: string          // 표준직업분류코드
+  dJobICd?: string          // 표준산업분류코드
+  jobDefiSumryCont?: string // 직업정의 요약
+  jobDefiCont?: string      // 직업정의 상세
+  reprDutyCont?: string     // 대표 업무
+  execJobCont?: string      // 수행직무
+  prepEdursbjNm?: string    // 준비 교육과목
+  needKnowlgCont?: string   // 필요 지식
+  needAbilCont?: string     // 필요 능력
+  jobIntrstCont?: string    // 흥미
+  jobAptdCont?: string      // 적성
+  jobChrCont?: string       // 성격
+  jobValCont?: string       // 가치관
+  relJobNmCont?: string     // 관련 직업
+  relCertNmCont?: string    // 관련 자격증
+  jobWorkEnvCont?: string   // 근무환경
+  relJobList?: Array<{      // 관련 직업 목록
+    relJobCd: string
+    relJobNm: string
+  }>
+  // optionJobInfo는 raw_payload에만 존재 (XML 파싱 시 포함되지 않음)
+  // normalizeGoyong24JobDictionaryDetail에서는 raw_payload를 별도로 받아야 함
+  optionJobInfo?: {
+    dJobICdNm?: string       // 표준산업분류명 (예: "[J602]텔레비전 방송업")
+    workStrong?: string      // 작업강도
+    workPlace?: string       // 작업장소
+    physicalAct?: string     // 신체활동
+    eduLevel?: string        // 정규교육
+    skillYear?: string       // 숙련기간
+    workEnv?: string        // 작업환경
+    similarNm?: string        // 유사직업명
+    connectJob?: string      // 연관직업
+    certLic?: string         // 자격증
+  }
+  doWork?: string            // 하는 일
+  workSum?: string           // 업무 요약
+}
+
+/**
+ * Fetch Work24 Job Dictionary Detail (직업사전 상세)
+ * API: callOpenApiSvcInfo212D50.do
+ */
+/**
+ * Normalize Work24 Job Dictionary to UnifiedJobDetail format
+ */
+/**
+ * 대괄호 제거 헬퍼 함수
+ * 예: "[J602]텔레비전 방송업" → "텔레비전 방송업"
+ */
+function removeBrackets(value?: string | null): string | null {
+  if (!value) return null
+  return value.replace(/^\s*\[[^\]]*\]\s*/, '').trim() || null
+}
+
+export const normalizeGoyong24JobDictionaryDetail = (
+  detail: Goyong24JobDictionaryDetail
+): Partial<UnifiedJobDetail> => {
+  if (!detail.dJobCd || !detail.dJobNm) {
+    throw new Error('고용24 직업사전 데이터에 필수 정보가 없습니다.')
+  }
+  
+  const relatedJobs: JobRelatedEntity[] | undefined = detail.relJobList?.map(job => ({
+    id: job.relJobCd,
+    name: job.relJobNm
+  })).filter(job => job.name) || undefined
+  
+  // optionJobInfo에서 dJobICdNm 정제 (대괄호 제거)
+  const cleanedDJobICdNm = detail.optionJobInfo?.dJobICdNm 
+    ? removeBrackets(detail.optionJobInfo.dJobICdNm)
+    : null
+  
+  return {
+    id: `WORK24_DJOB:${detail.dJobCd}:${detail.dJobCdSeq}`,
+    name: detail.dJobNm,
+    sourceIds: {
+      work24_djob: `${detail.dJobCd}:${detail.dJobCdSeq}`
+    },
+    summary: detail.jobDefiSumryCont || detail.jobDefiCont,
+    description: detail.jobDefiCont,
+    duties: detail.reprDutyCont || detail.execJobCont,
+    work: detail.execJobCont ? [detail.execJobCont] : undefined,
+    knowledge: detail.needKnowlgCont,
+    abilities: detail.needAbilCont,
+    interests: detail.jobIntrstCont,
+    personality: detail.jobChrCont,
+    values: detail.jobValCont,
+    environment: detail.jobWorkEnvCont,
+    relatedMajors: detail.prepEdursbjNm ? [{name: detail.prepEdursbjNm}] : undefined,
+    relatedCertificates: detail.relCertNmCont ? [detail.relCertNmCont] : undefined,
+    relatedJobs: relatedJobs && relatedJobs.length > 0 ? relatedJobs : undefined,
+    // 정제된 dJobICdNm 추가
+    dJobICdNm: cleanedDJobICdNm,
+    // optionJobInfo 필드들도 정제하여 추가
+    doWork: detail.doWork || null,
+    workStrong: detail.optionJobInfo?.workStrong || null,
+    workPlace: detail.optionJobInfo?.workPlace || null,
+    physicalAct: detail.optionJobInfo?.physicalAct || null,
+    eduLevel: detail.optionJobInfo?.eduLevel || null,
+    skillYear: detail.optionJobInfo?.skillYear || null,
+    workEnv: detail.optionJobInfo?.workEnv || null,
+    similarNm: detail.optionJobInfo?.similarNm || null,
+    connectJob: detail.optionJobInfo?.connectJob || null,
+    certLic: detail.optionJobInfo?.certLic || null,
+    workSum: detail.workSum || null,
+    
+    // Phase 1.2: 누락된 필드 추가
+    aptitude: detail.jobAptdCont || null,           // 적성
+    relatedJobsText: detail.relJobNmCont || null,   // 관련 직업 (텍스트)
+    
+    sources: ['WORK24_DJOB' as DataSource]
+  }
+}
+
+export async function fetchGoyong24JobDictionaryDetail(
+  serviceKey: string,
+  dJobCd: string,
+  dJobCdSeq: string
+): Promise<Goyong24JobDictionaryDetail | null> {
+  const authKey = serviceKey
+  
+  if (!authKey) {
+    throw new Error('[goyong24API] GOYONG24_JOB_API_KEY가 설정되지 않았습니다.')
+  }
+
+  const url = new URL(`${GOYONG24_BASE_URL}/callOpenApiSvcInfo212D50.do`)
+  url.searchParams.append('authKey', authKey)
+  url.searchParams.append('returnType', 'XML')
+  url.searchParams.append('target', 'dJobDTL')
+  url.searchParams.append('dJobCd', dJobCd)
+  url.searchParams.append('dJobCdSeq', dJobCdSeq)
+
+  try {
+    const response = await fetch(url.toString())
+    
+    if (!response.ok) {
+      throw new Error(`API 요청 실패 [${response.status}]: ${response.statusText}`)
+    }
+
+    const xmlText = await response.text()
+
+    // Parse XML (support both browser and Node.js)
+    let xmlDoc: Document
+    if (typeof DOMParser !== 'undefined') {
+      // Browser environment
+      const parser = new DOMParser()
+      xmlDoc = parser.parseFromString(xmlText, 'text/xml')
+    } else {
+      // Node.js environment
+      const { DOMParser: NodeDOMParser } = await import('@xmldom/xmldom')
+      const parser = new NodeDOMParser()
+      xmlDoc = parser.parseFromString(xmlText, 'text/xml')
+    }
+
+    // Check for API errors
+    const errorElements = xmlDoc.getElementsByTagName('error')
+    if (errorElements && errorElements.length > 0) {
+      const errorMsg = errorElements[0].textContent || 'Unknown API error'
+      throw new Error(`고용24 API 에러: ${errorMsg}`)
+    }
+
+    // Parse dJobSum element
+    const dJobSumElements = xmlDoc.getElementsByTagName('dJobSum')
+    if (!dJobSumElements || dJobSumElements.length === 0) {
+      console.warn(`[fetchGoyong24JobDictionaryDetail] No dJobSum found for ${dJobCd}:${dJobCdSeq}`)
+      return null
+    }
+    
+    const dJobSum = dJobSumElements[0]
+
+    const getElementText = (parent: Element, tagName: string): string | undefined => {
+      const elements = parent.getElementsByTagName(tagName)
+      if (elements && elements.length > 0) {
+        return elements[0].textContent || undefined
+      }
+      return undefined
+    }
+
+    const getListElements = (parent: Element, listTag: string, itemTag: string): any[] => {
+      const listElements = parent.getElementsByTagName(listTag)
+      if (!listElements || listElements.length === 0) return []
+      
+      const list = listElements[0]
+      const items = list.getElementsByTagName(itemTag)
+      
+      return Array.from(items).map(item => {
+        const obj: any = {}
+        for (let i = 0; i < item.childNodes.length; i++) {
+          const child = item.childNodes[i]
+          if (child.nodeType === 1) { // Element node
+            const element = child as Element
+            obj[element.tagName] = element.textContent || undefined
+          }
+        }
+        return obj
+      })
+    }
+
+    const result: Goyong24JobDictionaryDetail = {
+      dJobCd: dJobCd,
+      dJobCdSeq: dJobCdSeq,
+      dJobNm: getElementText(dJobSum, 'dJobNm'),
+      dJobJCd: getElementText(dJobSum, 'dJobJCd'),
+      dJobICd: getElementText(dJobSum, 'dJobICd'),
+      jobDefiSumryCont: getElementText(dJobSum, 'jobDefiSumryCont'),
+      jobDefiCont: getElementText(dJobSum, 'jobDefiCont'),
+      reprDutyCont: getElementText(dJobSum, 'reprDutyCont'),
+      execJobCont: getElementText(dJobSum, 'execJobCont'),
+      prepEdursbjNm: getElementText(dJobSum, 'prepEdursbjNm'),
+      needKnowlgCont: getElementText(dJobSum, 'needKnowlgCont'),
+      needAbilCont: getElementText(dJobSum, 'needAbilCont'),
+      jobIntrstCont: getElementText(dJobSum, 'jobIntrstCont'),
+      jobAptdCont: getElementText(dJobSum, 'jobAptdCont'),
+      jobChrCont: getElementText(dJobSum, 'jobChrCont'),
+      jobValCont: getElementText(dJobSum, 'jobValCont'),
+      relJobNmCont: getElementText(dJobSum, 'relJobNmCont'),
+      relCertNmCont: getElementText(dJobSum, 'relCertNmCont'),
+      jobWorkEnvCont: getElementText(dJobSum, 'jobWorkEnvCont'),
+      doWork: getElementText(dJobSum, 'doWork'),
+      workSum: getElementText(dJobSum, 'workSum')
+    }
+
+    // Parse optionJobInfo if available
+    const optionJobInfoElements = dJobSum.getElementsByTagName('optionJobInfo')
+    if (optionJobInfoElements && optionJobInfoElements.length > 0) {
+      const optionJobInfoElement = optionJobInfoElements[0]
+      result.optionJobInfo = {
+        dJobICdNm: getElementText(optionJobInfoElement, 'dJobICdNm'),
+        workStrong: getElementText(optionJobInfoElement, 'workStrong'),
+        workPlace: getElementText(optionJobInfoElement, 'workPlace'),
+        physicalAct: getElementText(optionJobInfoElement, 'physicalAct'),
+        eduLevel: getElementText(optionJobInfoElement, 'eduLevel'),
+        skillYear: getElementText(optionJobInfoElement, 'skillYear'),
+        workEnv: getElementText(optionJobInfoElement, 'workEnv'),
+        similarNm: getElementText(optionJobInfoElement, 'similarNm'),
+        connectJob: getElementText(optionJobInfoElement, 'connectJob'),
+        certLic: getElementText(optionJobInfoElement, 'certLic')
+      }
+    }
+
+    // Parse related jobs if available
+    const relJobList = getListElements(dJobSum, 'relJobList', 'relJob')
+    if (relJobList.length > 0) {
+      result.relJobList = relJobList.map(item => ({
+        relJobCd: item.relJobCd || '',
+        relJobNm: item.relJobNm || ''
+      }))
+    }
+
+    return result
+
+  } catch (error) {
+    console.error(`[fetchGoyong24JobDictionaryDetail] Error for ${dJobCd}:${dJobCdSeq}:`, error)
+    throw error
   }
 }

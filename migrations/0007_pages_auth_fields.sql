@@ -41,3 +41,4 @@ CREATE INDEX IF NOT EXISTS idx_page_revisions_user_id ON page_revisions(user_id)
 -- - Ver. 2.0: 익명 편집 허용 예정
 
 
+
