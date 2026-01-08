@@ -95,7 +95,9 @@ export const requireAuth = createMiddleware<{ Bindings: CloudflareBindings }>(
       console.log('   Path:', c.req.path)
       
       // 현재 URL을 return_url로 저장
-      const returnUrl = encodeURIComponent(c.req.url)
+      const url = new URL(c.req.url)
+      const pathWithQuery = url.pathname + url.search
+      const returnUrl = encodeURIComponent(pathWithQuery || '/')
       return c.redirect(`/auth/google?return_url=${returnUrl}`)
     }
     
@@ -187,22 +189,24 @@ export const requireJobMajorEdit = createMiddleware<{ Bindings: CloudflareBindin
 /**
  * HowTo 편집 권한 체크
  * 
- * Phase 4: 익명 편집 허용
+ * 로그인 필수, 본인 글만 편집 가능 (admin 제외)
  * - 로그인 사용자: user/expert/admin 모두 편집 가능
- * - 익명 사용자: 비밀번호 검증은 API 엔드포인트에서 처리
- * 자신이 작성한 글만 수정/삭제 가능 (admin 제외)
+ * - 익명 사용자: 편집 불가
+ * - 작성자 확인은 API 엔드포인트에서 수행
  */
 export const requireHowToEdit = createMiddleware<{ Bindings: CloudflareBindings }>(
   async (c, next) => {
     const user = c.get('user')
     
-    // 익명 사용자도 허용 (비밀번호 검증은 API 엔드포인트에서 처리)
-    if (user) {
-      console.log('✅ [Auth] HowTo edit permission granted')
-      console.log('   User Role:', user.role)
-    } else {
-      console.log('✅ [Auth] Anonymous HowTo edit allowed (password verification in API)')
+    // 로그인 필수
+    if (!user) {
+      console.log('⛔ [Auth] HowTo edit requires login')
+      return c.json({ error: 'LOGIN_REQUIRED', message: 'HowTo 편집은 로그인이 필요합니다.' }, 401)
     }
+    
+      console.log('✅ [Auth] HowTo edit permission granted')
+    console.log('   User ID:', user.id)
+    console.log('   User Role:', user.role)
     
     return next()
   }

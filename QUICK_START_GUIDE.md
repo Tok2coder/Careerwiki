@@ -70,3 +70,7 @@ powershell -ExecutionPolicy Bypass -File run-test-etl.ps1
 **🎯 다음 채팅에서 바로 시작할 수 있도록 모든 준비가 완료되었습니다!**
 
 
+
+
+
+

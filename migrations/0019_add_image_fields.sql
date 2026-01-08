@@ -16,7 +16,7 @@ ALTER TABLE majors ADD COLUMN image_credits TEXT;
 CREATE INDEX IF NOT EXISTS idx_jobs_image ON jobs(image_url) WHERE image_url IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_majors_image ON majors(image_url) WHERE image_url IS NOT NULL;
 
--- 메타데이터 기록
-INSERT INTO schema_migrations (version, description, applied_at) 
-VALUES ('0019', 'Add image fields for jobs and majors', datetime('now'));
+-- 메타데이터 기록 (wrangler d1 migrations가 자동 추적하므로 불필요)
+-- INSERT INTO schema_migrations (version, description, applied_at) 
+-- VALUES ('0019', 'Add image fields for jobs and majors', datetime('now'));
 

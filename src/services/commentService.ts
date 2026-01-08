@@ -1,4 +1,5 @@
 import type { D1Database } from '@cloudflare/workers-types'
+import { filterProfanity } from './profanityService'
 
 export type PageType = 'job' | 'major' | 'guide'
 export type CommentStatus = 'visible' | 'blinded' | 'deleted'
@@ -39,6 +40,8 @@ export interface CommentRecord {
   pageId: number
   parentId: number | null
   authorId: string | null
+  authorRole?: string | null  // 작성자 역할 (admin, expert, user 등)
+  authorPictureUrl?: string | null  // 작성자 프로필 이미지 (custom > OAuth > null)
   nickname: string
   content: string
   likeCount: number
@@ -55,6 +58,8 @@ export interface CommentRecord {
   editedAt?: string | null  // 수정 시간
   mentions?: string[] | null  // 멘션된 사용자/댓글 ID 배열
   depth?: number  // 답글 깊이 (0=최상위, 1=답글, 2=답글의 답글, 3=최대)
+  moderated?: boolean  // 욕설 필터 적용 여부
+  originalContent?: string | null  // 필터링 전 원본 내용
 }
 
 export interface CommentThread extends CommentRecord {
@@ -99,7 +104,7 @@ export interface CreateCommentPayload {
 
 export interface VotePayload {
   commentId: number
-  userId: string
+  userId: string  // 로그인 사용자 ID 또는 익명 투표 시 ip 해시 기반 ID
   direction: VoteDirection
 }
 
@@ -170,7 +175,12 @@ const sanitizeReason = (value: string | null | undefined, maxLength = 200): stri
 const isModeratorRole = (role: UserRole | null | undefined): boolean => (role ? MODERATOR_ROLES.has(role) : false)
 
 const applyViewerPolicy = (record: CommentRecord, role: UserRole): CommentRecord => {
-  const allowIp = isModeratorRole(role) ? record.displayIp : record.isAnonymous ? record.displayIp : null
+  // 익명 댓글: displayIp는 이미 마스킹된 상태. 일반 사용자도 표시 허용.
+  const allowIp = isModeratorRole(role)
+    ? record.displayIp
+    : record.isAnonymous
+      ? record.displayIp
+      : null
   if (role === 'user' && record.status !== 'visible') {
     return {
       ...record,
@@ -211,11 +221,16 @@ const mapRowToComment = (row: any): CommentRecord => {
     }
   }
 
+  // 프로필 이미지 우선순위: custom_picture_url > picture_url > null
+  const authorPictureUrl = row.author_custom_picture_url || row.author_picture_url || null
+
   return {
     id: Number(row.id),
     pageId: Number(row.page_id),
     parentId: row.parent_id !== null ? Number(row.parent_id) : null,
     authorId: typeof row.author_id === 'string' ? row.author_id : null,
+    authorRole: typeof row.author_role === 'string' ? row.author_role : null,
+    authorPictureUrl,
     nickname: typeof row.nickname === 'string' && row.nickname.trim() ? row.nickname.trim() : '익명',
     content: typeof row.content === 'string' ? row.content : '',
     likeCount: Number(row.likes ?? 0),
@@ -231,7 +246,9 @@ const mapRowToComment = (row: any): CommentRecord => {
     isEdited: Number(row.is_edited ?? 0) === 1,
     editedAt: typeof row.edited_at === 'string' ? row.edited_at : null,
     mentions,
-    depth: row.depth !== null && row.depth !== undefined ? Number(row.depth) : 0
+    depth: row.depth !== null && row.depth !== undefined ? Number(row.depth) : 0,
+    moderated: Number(row.moderated ?? 0) === 1,
+    originalContent: typeof row.original_content === 'string' ? row.original_content : null
   }
 }
 
@@ -380,16 +397,20 @@ export const getCommentsForPage = async (
   const selectSql = viewerId
     ? `SELECT c.id, c.page_id, c.parent_id, c.author_id, c.nickname, c.content, c.likes, c.dislike_count, c.report_count,
              c.status, c.is_anonymous, c.display_ip, c.created_at, c.password_hash, c.anonymous_number,
-             c.is_edited, c.edited_at, c.mentions, c.depth, v.vote AS viewer_vote
+             c.is_edited, c.edited_at, c.mentions, c.depth, v.vote AS viewer_vote, u.role AS author_role,
+             u.picture_url AS author_picture_url, u.custom_picture_url AS author_custom_picture_url
        FROM comments c
        LEFT JOIN comment_votes v ON v.comment_id = c.id AND v.user_id = ?
+       LEFT JOIN users u ON u.id = c.author_id
        WHERE c.page_id = ? ${includeModerated ? '' : "AND c.status = 'visible'"}
        ORDER BY c.created_at DESC
        LIMIT ?`
     : `SELECT c.id, c.page_id, c.parent_id, c.author_id, c.nickname, c.content, c.likes, c.dislike_count, c.report_count,
              c.status, c.is_anonymous, c.display_ip, c.created_at, c.password_hash, c.anonymous_number,
-             c.is_edited, c.edited_at, c.mentions, c.depth, 0 AS viewer_vote
+             c.is_edited, c.edited_at, c.mentions, c.depth, 0 AS viewer_vote, u.role AS author_role,
+             u.picture_url AS author_picture_url, u.custom_picture_url AS author_custom_picture_url
        FROM comments c
+       LEFT JOIN users u ON u.id = c.author_id
        WHERE c.page_id = ? ${includeModerated ? '' : "AND c.status = 'visible'"}
        ORDER BY c.created_at DESC
        LIMIT ?`
@@ -464,6 +485,7 @@ export const getCommentsBySlug = async (
     viewerId?: string | null
     viewerRole?: UserRole
     includeModerated?: boolean
+    ipHash?: string | null
   }
 ): Promise<CommentListResult> => {
   const page = await ensurePageRecord(db, {
@@ -482,7 +504,7 @@ export const getCommentsBySlug = async (
   })
 
   // 익명 사용자를 위한 다음 익명 번호 조회 (읽기 전용)
-  const nextAnonymousNumber = await peekNextAnonymousNumber(db, page.id)
+  const nextAnonymousNumber = await peekNextAnonymousNumber(db, page.id, options.ipHash ?? null)
 
   return {
     page,
@@ -494,7 +516,24 @@ export const getCommentsBySlug = async (
 }
 
 // 다음 익명 번호 조회 (읽기 전용, 실제 할당하지 않음)
-const peekNextAnonymousNumber = async (db: D1Database, pageId: number): Promise<number> => {
+const peekNextAnonymousNumber = async (db: D1Database, pageId: number, ipHash: string | null): Promise<number> => {
+  // 동일 IP가 해당 페이지에서 사용한 익명 번호가 있으면 재사용
+  if (ipHash) {
+    const existing = await db
+      .prepare(
+        `SELECT anonymous_number 
+         FROM comments 
+         WHERE page_id = ? AND ip_hash = ? AND is_anonymous = 1 AND anonymous_number IS NOT NULL 
+         ORDER BY created_at DESC LIMIT 1`
+      )
+      .bind(pageId, ipHash)
+      .first<{ anonymous_number: number | null }>()
+
+    if (existing?.anonymous_number) {
+      return Number(existing.anonymous_number)
+    }
+  }
+
   const counter = await db
     .prepare('SELECT next_number FROM anonymous_comment_counters WHERE page_id = ?')
     .bind(pageId)
@@ -508,9 +547,24 @@ const peekNextAnonymousNumber = async (db: D1Database, pageId: number): Promise<
   }
 }
 
-// 익명 번호 할당
-const getNextAnonymousNumber = async (db: D1Database, pageId: number): Promise<number> => {
-  // anonymous_comment_counters 테이블에서 다음 번호 가져오기
+// 익명 번호 할당 (동일 IP는 기존 번호 재사용, 없으면 증가)
+const getNextAnonymousNumber = async (db: D1Database, pageId: number, ipHash: string | null): Promise<number> => {
+  if (ipHash) {
+    const existing = await db
+      .prepare(
+        `SELECT anonymous_number 
+         FROM comments 
+         WHERE page_id = ? AND ip_hash = ? AND is_anonymous = 1 AND anonymous_number IS NOT NULL 
+         ORDER BY created_at DESC LIMIT 1`
+      )
+      .bind(pageId, ipHash)
+      .first<{ anonymous_number: number | null }>()
+
+    if (existing?.anonymous_number) {
+      return Number(existing.anonymous_number)
+    }
+  }
+
   const counter = await db
     .prepare('SELECT next_number FROM anonymous_comment_counters WHERE page_id = ?')
     .bind(pageId)
@@ -571,6 +625,12 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
     throw new Error('EMPTY_CONTENT')
   }
 
+  // 욕설 필터 적용
+  const profanityResult = await filterProfanity(db, trimmedContent)
+  const finalContent = profanityResult.output
+  const isModerated = profanityResult.moderated
+  const originalContent = isModerated ? profanityResult.originalInput : null
+
   const isAnonymousUser = !payload.authorId || payload.isAnonymous || payload.requestAnonymous
   // 익명 사용자는 닉네임 입력하지 않음 (익명 번호는 자동 배정)
   const nickname = isAnonymousUser ? null : normalizeNickname(payload.nickname)
@@ -603,7 +663,7 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
   // 익명 번호 할당
   let anonymousNumber: number | null = null
   if (isAnonymousUser) {
-    anonymousNumber = await getNextAnonymousNumber(db, page.id)
+    anonymousNumber = await getNextAnonymousNumber(db, page.id, payload.ipHash ?? null)
   }
 
   // 부모 댓글 확인 및 깊이 계산
@@ -643,8 +703,8 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
   const result = await db
     .prepare(
       `INSERT INTO comments (page_id, parent_id, author_id, nickname, content, ip_hash, is_anonymous, display_ip, status,
-                             password_hash, anonymous_number, mentions, depth)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'visible', ?, ?, ?, ?)`
+                             password_hash, anonymous_number, mentions, depth, moderated, original_content)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'visible', ?, ?, ?, ?, ?, ?)`
     )
     .bind(
       page.id,
@@ -653,14 +713,16 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
       isAnonymousUser && anonymousNumber 
         ? `익명 ${anonymousNumber}` 
         : (nickname || (isAnonymousUser ? '익명' : null)),
-      trimmedContent,
+      finalContent,
       payload.ipHash ?? null,
       isAnonymousUser ? 1 : 0,
       normalizeDisplayIp(payload.displayIp),
       passwordHash,
       anonymousNumber,
       mentionsJson,
-      depth
+      depth,
+      isModerated ? 1 : 0,
+      originalContent
     )
     .run()
 
@@ -670,7 +732,7 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
     .prepare(
       `SELECT id, page_id, parent_id, author_id, nickname, content, likes, dislike_count, report_count,
               status, is_anonymous, display_ip, created_at, password_hash, anonymous_number,
-              is_edited, edited_at, mentions, depth, 0 AS viewer_vote
+              is_edited, edited_at, mentions, depth, moderated, original_content, 0 AS viewer_vote
        FROM comments WHERE id = ? LIMIT 1`
     )
     .bind(commentId)
@@ -791,12 +853,32 @@ export interface UpdateCommentPayload {
   content: string
   userId: string | null  // 로그인 사용자 ID 또는 null
   password?: string | null  // 익명 댓글 수정 시 비밀번호
+  userRole?: 'user' | 'expert' | 'admin' | null  // 사용자 역할 (admin은 모든 댓글 수정 가능)
 }
 
 export interface DeleteCommentPayload {
   commentId: number
   userId: string | null  // 로그인 사용자 ID 또는 null
   password?: string | null  // 익명 댓글 삭제 시 비밀번호
+  userRole?: 'user' | 'expert' | 'admin' | 'super-admin' | 'operator' | null  // 관리자/운영자는 모든 댓글 삭제 가능
+}
+
+export interface ModerationComment {
+  id: number
+  parentId: number | null
+  pageId: number
+  pageType: PageType
+  slug: string
+  title: string
+  content: string
+  nickname: string | null
+  isAnonymous: boolean
+  displayIp: string | null
+  status: CommentStatus
+  reportCount: number
+  likes: number
+  dislikes: number
+  createdAt: string
 }
 
 export const updateComment = async (db: D1Database, payload: UpdateCommentPayload): Promise<CommentRecord> => {
@@ -819,7 +901,13 @@ export const updateComment = async (db: D1Database, payload: UpdateCommentPayloa
   const isAnonymous = Number(comment.is_anonymous ?? 0) === 1
   const passwordHash = typeof comment.password_hash === 'string' ? comment.password_hash : null
 
-  // 권한 확인
+  // 권한 확인 (admin은 모든 댓글 수정 가능)
+  const isAdmin =
+    payload.userRole === 'admin' ||
+    payload.userRole === 'super-admin' ||
+    payload.userRole === 'operator'
+  
+  if (!isAdmin) {
   if (authorId) {
     // 로그인 사용자 댓글: 작성자만 수정 가능
     if (!payload.userId || payload.userId !== authorId) {
@@ -836,6 +924,7 @@ export const updateComment = async (db: D1Database, payload: UpdateCommentPayloa
     }
   } else {
     throw new Error('UNAUTHORIZED')
+    }
   }
 
   // 댓글 수정
@@ -877,32 +966,108 @@ export const deleteComment = async (db: D1Database, payload: DeleteCommentPayloa
   const isAnonymous = Number(comment.is_anonymous ?? 0) === 1
   const passwordHash = typeof comment.password_hash === 'string' ? comment.password_hash : null
 
-  // 권한 확인
-  if (authorId) {
-    // 로그인 사용자 댓글: 작성자만 삭제 가능
-    if (!payload.userId || payload.userId !== authorId) {
+  // 권한 확인 (관리자/운영자는 모든 댓글 삭제 가능)
+  const isAdmin =
+    payload.userRole === 'admin' ||
+    payload.userRole === 'super-admin' ||
+    payload.userRole === 'operator'
+  
+  if (!isAdmin) {
+    if (authorId) {
+      // 로그인 사용자 댓글: 작성자만 삭제 가능
+      if (!payload.userId || payload.userId !== authorId) {
+        throw new Error('UNAUTHORIZED')
+      }
+    } else if (isAnonymous) {
+      // 익명 댓글: 비밀번호 확인 필요
+      if (!payload.password || !passwordHash) {
+        throw new Error('PASSWORD_REQUIRED')
+      }
+      const isValid = await verifyPassword(payload.password, passwordHash)
+      if (!isValid) {
+        throw new Error('INVALID_PASSWORD')
+      }
+    } else {
       throw new Error('UNAUTHORIZED')
     }
-  } else if (isAnonymous) {
-    // 익명 댓글: 비밀번호 확인 필요
-    if (!payload.password || !passwordHash) {
-      throw new Error('PASSWORD_REQUIRED')
-    }
-    const isValid = await verifyPassword(payload.password, passwordHash)
-    if (!isValid) {
-      throw new Error('INVALID_PASSWORD')
-    }
-  } else {
-    throw new Error('UNAUTHORIZED')
   }
 
-  // 댓글 삭제 (soft delete: status를 'deleted'로 변경)
-  await db
-    .prepare("UPDATE comments SET status = 'deleted' WHERE id = ?")
-    .bind(payload.commentId)
-    .run()
+  // 요청: 원본 댓글 삭제 시 대댓글도 함께 완전 삭제
+  await db.prepare('DELETE FROM comments WHERE parent_id = ?').bind(payload.commentId).run()
+  await db.prepare('DELETE FROM comments WHERE id = ?').bind(payload.commentId).run()
 
   return true
+}
+
+// 관리자: 블라인드/신고 댓글 목록 조회
+export const listFlaggedComments = async (db: D1Database, page = 1, perPage = 20): Promise<{ items: ModerationComment[]; total: number }> => {
+  const offset = (page - 1) * perPage
+  const rows = await db
+    .prepare(
+      `SELECT c.id, c.parent_id, c.page_id, c.nickname, c.content, c.report_count, c.status,
+              c.is_anonymous, c.display_ip, c.likes, c.dislike_count, c.created_at,
+              p.slug, p.page_type, p.title
+       FROM comments c
+       JOIN pages p ON p.id = c.page_id
+       WHERE c.status = 'blinded' OR c.report_count > 0
+       ORDER BY c.report_count DESC, c.created_at DESC
+       LIMIT ? OFFSET ?`
+    )
+    .bind(perPage, offset)
+    .all()
+
+  const countRow = await db
+    .prepare(
+      `SELECT COUNT(*) AS total
+       FROM comments c
+       WHERE c.status = 'blinded' OR c.report_count > 0`
+    )
+    .first<{ total: number }>()
+
+  const items: ModerationComment[] = Array.isArray(rows?.results)
+    ? rows.results.map((r: any) => ({
+        id: Number(r.id),
+        parentId: r.parent_id !== null ? Number(r.parent_id) : null,
+        pageId: Number(r.page_id),
+        pageType: r.page_type as PageType,
+        slug: r.slug,
+        title: r.title,
+        content: typeof r.content === 'string' ? r.content : '',
+        nickname: typeof r.nickname === 'string' ? r.nickname : null,
+        isAnonymous: Number(r.is_anonymous ?? 0) === 1,
+        displayIp: r.display_ip ?? null,
+        status: (r.status as CommentStatus) ?? 'visible',
+        reportCount: Number(r.report_count ?? 0),
+        likes: Number(r.likes ?? 0),
+        dislikes: Number(r.dislike_count ?? 0),
+        createdAt: typeof r.created_at === 'string' ? r.created_at : new Date().toISOString()
+      }))
+    : []
+
+  return { items, total: Number(countRow?.total ?? 0) }
+}
+
+export const setCommentStatus = async (db: D1Database, commentId: number, status: CommentStatus): Promise<boolean> => {
+  await db.prepare('UPDATE comments SET status = ? WHERE id = ?').bind(status, commentId).run()
+  return true
+}
+
+export const resetCommentReports = async (db: D1Database, commentId: number): Promise<boolean> => {
+  await db.prepare('UPDATE comments SET report_count = 0 WHERE id = ?').bind(commentId).run()
+  await db.prepare('DELETE FROM comment_reports WHERE comment_id = ?').bind(commentId).run()
+  return true
+}
+
+export const deleteOrphanReplies = async (db: D1Database): Promise<number> => {
+  const res = await db
+    .prepare(
+      `DELETE FROM comments
+       WHERE parent_id IS NOT NULL
+         AND parent_id NOT IN (SELECT id FROM comments)`
+    )
+    .run()
+  const changes = (res as any)?.meta?.changes ?? 0
+  return Number(changes)
 }
 
 export const isIpBlocked = async (db: D1Database, ipHash: string | null | undefined): Promise<boolean> => {

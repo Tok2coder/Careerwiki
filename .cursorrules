@@ -1,5 +1,29 @@
 # Cursor AI Rules for CareerWiki Project
 
+## ⛔ 절대 금지 규칙 (CRITICAL - NEVER DO THIS)
+
+**다음 작업은 반드시 사용자의 명시적 동의 없이 절대 실행하지 마세요:**
+
+1. **`git stash`** - 커밋되지 않은 변경 사항이 사라짐 (2026-01-08 사고 발생)
+2. **`git reset --hard`** - 모든 변경 사항 영구 삭제
+3. **`git checkout -- .`** - 모든 변경 사항 삭제
+4. **`DROP TABLE`** - 테이블 삭제
+5. **`DELETE FROM` (WHERE 없이)** - 전체 데이터 삭제
+6. **`rm -rf`** - 파일/폴더 영구 삭제
+7. **데이터베이스 파일 직접 삭제**
+
+**대신 해야 할 것:**
+- 코드 변경 전: `git commit -m "백업: 작업 전 상태"` 로 먼저 커밋
+- 데이터 작업 전: 백업 파일 생성 확인
+- 위험한 작업 전: 사용자에게 먼저 경고하고 동의 받기
+
+**2026-01-08 사고 기록:**
+> `git stash`로 인해 20,000줄 이상의 작업이 숨겨지고 코드가 이전 상태로 롤백됨.
+> 사용자가 작업한 "소개 탭", "직업 리스트 이미지", "HowTo" 등 모든 변경 사항이 사라짐.
+> `git stash pop`으로 복구했지만, 사용자에게 큰 불안감을 줌.
+
+---
+
 ## Project Context
 This is a lightweight web application built with:
 - **Backend**: Hono framework (TypeScript)

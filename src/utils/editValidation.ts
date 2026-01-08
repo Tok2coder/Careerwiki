@@ -13,11 +13,28 @@ const ALLOWED_JOB_FIELDS = new Set([
   'abilities', 'knowledge', 'environment', 'personality', 'interests', 'values',
   'activitiesImportance', 'activitiesLevels', 'technKnow', 'aptitude',
   'educationDistribution', 'majorDistribution', 'tags', 'workSummary',
-  'requirements', 'workEnvironment', 'careerPath', 'relatedJobs', 'education', 'certifications', 'skills'
+  'requirements', 'workEnvironment', 'careerPath', 'relatedJobs', 'education', 'certifications', 'skills',
+  'trivia'
 ])
 
 const ALLOWED_MAJOR_FIELDS = new Set([
-  'name', 'summary', 'property', 'aptitude', 'whatStudy', 'howPrepare', 'enterField'
+  'name',
+  'summary',
+  'heroSummary',  // 히어로 섹션 전공 설명 (개요와 분리)
+  'overview.summary',
+  'heroTags',
+  'categoryName',
+  'property',
+  'aptitude',
+  'whatStudy',
+  'mainSubject',
+  'relateSubject',
+  'enterField',
+  'trivia',  // 여담 (개요 탭)
+  'careerAct',
+  'sidebarJobs',
+  'sidebarMajors',
+  'sidebarHowtos'
 ])
 
 /**

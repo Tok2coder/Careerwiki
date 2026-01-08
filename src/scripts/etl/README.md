@@ -1,71 +1,98 @@
 # CareerWiki ETL Scripts
 
+> 상세 가이드: `docs/ETL_SEEDING_GUIDE.md`
+
 ## 📁 디렉토리 구조
 
 ```
-src/scripts/etl/
-├── seedCareerNetJobs.ts        - 커리어넷 직업백과 시딩
-├── seedWork24Jobs.ts           - 고용24 직업정보 시딩
-├── seedWork24JobDictionary.ts  - 고용24 직업사전 시딩 (6,581개)
-├── mergeJobProfiles.ts         - 3개 소스 병합
-├── seedCareerNetMajors.ts      - 커리어넷 전공 시딩
-├── seedWork24Majors.ts         - 고용24 학과정보 시딩
-└── mergeMajorProfiles.ts       - 2개 소스 병합
+src/scripts/
+├── loadJobDictionaryIndex.ts       # 직업사전 마스터 CSV 로드
+├── runCareerNetJobsSeeding.ts      # 커리어넷 직업 시딩 runner
+├── runWork24JobsSeeding.ts         # 고용24 직업 시딩 runner
+├── runWork24JobDictionarySeeding.ts # 고용24 직업사전 시딩 runner
+├── runCareerNetMajorsSeeding.ts    # 커리어넷 전공 시딩 runner
+├── runWork24MajorsSeeding.ts       # 고용24 전공 시딩 runner
+├── runWork24MajorsCSVSeeding.ts    # 고용24 전공 CSV 시딩 runner
+├── runJobMerge.ts                  # 직업 병합 runner
+├── runMajorMerge.ts                # 전공 병합 runner
+└── etl/
+    ├── seedCareerNetJobs.ts        # 커리어넷 직업 시딩 로직
+    ├── seedCareerNetMajors.ts      # 커리어넷 전공 시딩 로직
+    ├── seedWork24Jobs.ts           # 고용24 직업 시딩 로직
+    ├── seedWork24JobDictionary.ts  # 고용24 직업사전 시딩 로직
+    ├── seedWork24JobDictionaryFromCSV.ts
+    ├── seedWork24Majors.ts         # 고용24 전공 시딩 로직
+    ├── seedWork24MajorsFromCSV.ts
+    ├── mergeJobProfiles.ts         # job_sources → jobs 병합
+    └── mergeMajorProfiles.ts       # major_sources → majors 병합
 ```
 
 ## 🚀 실행 순서
 
-1. `loadJobDictionaryIndex.ts` (루트)
-2. `seedCareerNetJobs.ts`
-3. `seedWork24Jobs.ts`
-4. `seedWork24JobDictionary.ts`
-5. `mergeJobProfiles.ts`
-6. `seedCareerNetMajors.ts` (선택)
-7. `seedWork24Majors.ts` (선택)
-8. `mergeMajorProfiles.ts` (선택)
+### 직업 데이터 (Phase 1)
 
-## 📖 사용법
-
-모든 스크립트는 Workers 또는 Node 환경에서 실행 가능합니다.
-
-### Workers (Cloudflare)
 ```bash
-wrangler deploy src/scripts/etl/seedCareerNetJobs.ts
-# 또는
-curl https://your-worker.workers.dev/seed-careernet-jobs
+# 1. 직업사전 마스터 코드 로드
+npx tsx src/scripts/loadJobDictionaryIndex.ts
+
+# 2. 커리어넷 직업 시딩
+npx tsx src/scripts/runCareerNetJobsSeeding.ts
+
+# 3. 고용24 직업 시딩
+npx tsx src/scripts/runWork24JobsSeeding.ts
+
+# 4. 고용24 직업사전 시딩 (⚠️ 시간 오래 걸림)
+npx tsx src/scripts/runWork24JobDictionarySeeding.ts
+
+# 5. 직업 병합 (최종)
+npx tsx src/scripts/runJobMerge.ts
 ```
 
-### Node (로컬)
+### 전공 데이터 (Phase 2)
+
 ```bash
-tsx src/scripts/etl/seedCareerNetJobs.ts
+# 6. 커리어넷 전공 시딩
+npx tsx src/scripts/runCareerNetMajorsSeeding.ts
+
+# 7. 고용24 전공 시딩
+npx tsx src/scripts/runWork24MajorsSeeding.ts
+# 또는 CSV 버전
+npx tsx src/scripts/runWork24MajorsCSVSeeding.ts
+
+# 8. 전공 병합 (최종)
+npx tsx src/scripts/runMajorMerge.ts
 ```
 
 ## 🔧 옵션
 
-모든 스크립트는 다음 옵션을 지원합니다:
-- `--limit=N`: 처리할 개수 제한 (테스트용)
-- `--skip=true`: 이미 존재하는 데이터 스킵
+| 옵션 | 설명 | 예시 |
+|------|------|------|
+| `--limit=N` | 처리할 개수 제한 | `--limit=100` |
+| `--skip=true` | 기존 데이터 스킵 | `--skip=true` |
 
 **예시:**
 ```bash
-tsx src/scripts/etl/seedCareerNetJobs.ts --limit=100 --skip=true
+npx tsx src/scripts/runCareerNetJobsSeeding.ts --limit=100
+npx tsx src/scripts/runMajorMerge.ts --majorGb=1 --name=컴퓨터공학과
 ```
 
 ## 📊 모니터링
 
-시딩 진행 상황은 `seed_logs` 테이블에서 확인:
 ```sql
+-- 시딩 진행 상황
 SELECT * FROM seed_logs ORDER BY started_at DESC LIMIT 10;
-```
 
-실패 항목은 `seed_errors` 테이블에서 확인:
-```sql
+-- 실패 항목
 SELECT * FROM seed_errors WHERE resolved_at IS NULL;
 ```
 
 ## ⚠️ 주의사항
 
-- Rate limiting: 최소 300ms 간격
+- **HowTo는 시딩 대상이 아님** (사용자가 직접 작성)
+- Rate limiting: 최소 **300ms 간격**
 - 재시도: 3회까지 자동
-- 로그: 모든 작업은 seed_logs에 기록됨
+- 직업사전 시딩: **6,581개** 항목 (3~6시간 소요)
 
+## 📚 상세 문서
+
+👉 **`docs/ETL_SEEDING_GUIDE.md`** 참조

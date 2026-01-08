@@ -21,6 +21,7 @@ export interface RevisionRecord {
   editorId: string | null
   editorType: 'anonymous' | 'user' | 'expert' | 'admin' | 'system'
   editorName: string | null
+  editorPictureUrl: string | null  // 편집자 프로필 이미지 (custom > OAuth > null)
   passwordHash: string | null
   anonymousNumber: number | null
   ipHash: string | null
@@ -70,6 +71,9 @@ function mapRowToRevision(row: any): RevisionRecord {
     }
   }
 
+  // 프로필 이미지 우선순위: custom > OAuth > null
+  const editorPictureUrl = row.editor_custom_picture_url || row.editor_picture_url || null
+
   return {
     id: Number(row.id),
     entityType: row.entity_type as RevisionRecord['entityType'],
@@ -79,6 +83,7 @@ function mapRowToRevision(row: any): RevisionRecord {
     editorId: typeof row.editor_id === 'string' ? row.editor_id : null,
     editorType: row.editor_type as RevisionRecord['editorType'],
     editorName: typeof row.editor_name === 'string' ? row.editor_name : null,
+    editorPictureUrl,
     passwordHash: typeof row.password_hash === 'string' ? row.password_hash : null,
     anonymousNumber: row.anonymous_number !== null && row.anonymous_number !== undefined ? Number(row.anonymous_number) : null,
     ipHash: typeof row.ip_hash === 'string' ? row.ip_hash : null,
@@ -277,13 +282,16 @@ export async function listRevisions(
   
   const total = countResult ? Number(countResult.total) : 0
   
-  // Revision 목록 조회 (최신순)
+  // Revision 목록 조회 (최신순, 편집자 프로필 이미지 포함)
   const rows = await db
     .prepare(`
-      SELECT *
-      FROM page_revisions
-      WHERE entity_type = ? AND entity_id = ?
-      ORDER BY revision_number DESC
+      SELECT pr.*, 
+             u.picture_url AS editor_picture_url, 
+             u.custom_picture_url AS editor_custom_picture_url
+      FROM page_revisions pr
+      LEFT JOIN users u ON u.id = pr.editor_id
+      WHERE pr.entity_type = ? AND pr.entity_id = ?
+      ORDER BY pr.revision_number DESC
       LIMIT ? OFFSET ?
     `)
     .bind(entityType, entityId, limit, offset)
@@ -443,13 +451,15 @@ export async function createRevision(
  * @param revisionId 복원할 revision ID
  * @param userId 복원 요청자 ID (권한 확인용)
  * @param password 익명 편집인 경우 비밀번호
+ * @param username 사용자 닉네임 (역사에 표시)
  * @returns 복원 후 생성된 새 Revision 레코드
  */
 export async function restoreRevision(
   db: D1Database,
   revisionId: number,
   userId?: string | null,
-  password?: string | null
+  password?: string | null,
+  username?: string | null
 ): Promise<RevisionRecord> {
   // 복원할 revision 조회
   const targetRevision = await getRevisionById(db, revisionId)
@@ -458,24 +468,18 @@ export async function restoreRevision(
     throw new Error('REVISION_NOT_FOUND')
   }
   
-  // 권한 확인
-  if (targetRevision.editorType === 'anonymous') {
-    // 익명 편집인 경우: passwordHash가 있으면 비밀번호 확인 필요, 없으면 IP 해시만으로 허용
-    if (targetRevision.passwordHash) {
-      // passwordHash가 있는 경우에만 비밀번호 확인 필요
-      if (!password) {
-        throw new Error('PASSWORD_REQUIRED')
+  // 권한 확인: 엔티티 타입에 따라 다른 정책 적용
+  // - job, major: 누구나 되돌리기 가능 (위키 스타일)
+  // - howto: 작성자 본인 또는 관리자만 가능
+  if (targetRevision.entityType === 'howto') {
+    // 하우투는 작성자 본인 또는 관리자만 되돌리기 가능
+    if (targetRevision.editorId) {
+      if (!userId || (userId !== targetRevision.editorId && !userId.startsWith('admin'))) {
+        throw new Error('UNAUTHORIZED')
       }
-      // 비밀번호 검증은 API 엔드포인트에서 수행 (verifyEditPassword 사용)
-      // 여기서는 비밀번호가 제공되었는지만 확인
-    }
-    // passwordHash가 null이면 패스워드 없이 허용 (IP 해시만으로 식별)
-  } else if (targetRevision.editorId) {
-    // 로그인 사용자 편집인 경우 작성자 또는 관리자만 복원 가능
-    if (!userId || (userId !== targetRevision.editorId && !userId.startsWith('admin'))) {
-      throw new Error('UNAUTHORIZED')
     }
   }
+  // job, major는 권한 확인 없이 누구나 되돌리기 가능
   
   // 현재 활성 revision의 스냅샷 저장 (되돌리기 전 상태 보존)
   const currentRevision = await getCurrentRevision(
@@ -524,9 +528,14 @@ export async function restoreRevision(
     const now = Date.now()
     await db.prepare(`
       UPDATE jobs 
-      SET user_contributed_json = ?, user_last_updated_at = ?
+      SET user_contributed_json = ?, merged_profile_json = ?, user_last_updated_at = ?
       WHERE id = ?
-    `).bind(JSON.stringify(userContributedData), now, targetRevision.entityId).run()
+    `).bind(
+      JSON.stringify(userContributedData),
+      JSON.stringify(restoredData),
+      now,
+      targetRevision.entityId
+    ).run()
     
     // api_data_json과 admin_data_json은 유지 (원본 데이터 보존)
   } else if (targetRevision.entityType === 'major') {
@@ -541,9 +550,14 @@ export async function restoreRevision(
     const now = Date.now()
     await db.prepare(`
       UPDATE majors 
-      SET user_contributed_json = ?, user_last_updated_at = ?
+      SET user_contributed_json = ?, merged_profile_json = ?, user_last_updated_at = ?
       WHERE id = ?
-    `).bind(JSON.stringify(userContributedData), now, targetRevision.entityId).run()
+    `).bind(
+      JSON.stringify(userContributedData),
+      JSON.stringify(restoredData),
+      now,
+      targetRevision.entityId
+    ).run()
   } else if (targetRevision.entityType === 'howto') {
     // HowTo 데이터 복원
     const content = restoredData.content || restoredData
@@ -555,15 +569,16 @@ export async function restoreRevision(
   }
   
   // 새 revision 생성 (change_type='restore')
+  const editorDisplayName = username || (userId ? `User ${userId}` : '익명')
   const restoredRevision = await createRevision(db, {
     entityType: targetRevision.entityType,
     entityId: targetRevision.entityId,
     dataSnapshot: restoredData,
     editorId: userId ?? null,
     editorType: userId ? 'user' : 'anonymous',
-    editorName: userId ? `Restored by user` : 'Restored anonymously',
+    editorName: editorDisplayName,
     changeType: 'restore',
-    changeSummary: `Restored to revision ${targetRevision.revisionNumber}`,
+    changeSummary: `r${targetRevision.revisionNumber} 버전으로 복원`,
     changedFields: targetRevision.changedFields ?? []
   })
   

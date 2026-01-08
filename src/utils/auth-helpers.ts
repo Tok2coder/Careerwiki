@@ -2,33 +2,57 @@
  * Phase 3: 인증 헬퍼 함수
  * 
  * D1 데이터베이스와 상호작용하는 인증 관련 유틸리티
+ * 
+ * 업데이트 (2025-12-09): provider 방식 지원 (Google/Kakao/Naver 등)
  */
 
 import type { D1Database } from '@cloudflare/workers-types'
+
+/**
+ * 지원하는 OAuth Provider 타입
+ */
+export type OAuthProvider = 'google' | 'kakao' | 'naver'
 
 /**
  * 사용자 타입 (D1 users 테이블)
  */
 export interface User {
   id: number
+  // 레거시 호환 (마이그레이션 후에도 기존 google_id 컬럼 유지)
   google_id: string
+  // 새로운 provider 방식
+  provider: OAuthProvider
+  provider_user_id: string
   email: string
   name: string | null
   picture_url: string | null
-  username: string | null  // Phase 3 Day 4: 사용자 아이디
+  custom_picture_url: string | null  // 사용자가 직접 업로드한 프로필 이미지
+  username: string | null  // 닉네임으로 사용
   role: 'user' | 'expert' | 'admin'
   edit_count: number
   comment_count: number
   is_banned: number // SQLite BOOLEAN (0 or 1)
   ban_reason: string | null
   banned_until: number | null
+  onboarded: number  // 온보딩 완료 여부 (0 or 1)
   last_login_at: number | null
   created_at: number | null
   updated_at: number | null
 }
 
 /**
- * Google 프로필 정보
+ * OAuth 프로필 정보 (모든 provider 공통)
+ */
+export interface OAuthProfile {
+  provider: OAuthProvider
+  provider_user_id: string
+  email: string
+  name: string | null
+  picture_url: string | null
+}
+
+/**
+ * 레거시 Google 프로필 (하위 호환)
  */
 export interface GoogleProfile {
   google_id: string
@@ -38,7 +62,23 @@ export interface GoogleProfile {
 }
 
 /**
- * D1에서 Google ID로 사용자 조회
+ * D1에서 provider + provider_user_id로 사용자 조회
+ */
+export async function getUserByProvider(
+  db: D1Database,
+  provider: OAuthProvider,
+  providerUserId: string
+): Promise<User | null> {
+  const result = await db
+    .prepare('SELECT * FROM users WHERE provider = ? AND provider_user_id = ?')
+    .bind(provider, providerUserId)
+    .first<User>()
+  
+  return result || null
+}
+
+/**
+ * D1에서 Google ID로 사용자 조회 (레거시 호환)
  */
 export async function getUserByGoogleId(
   db: D1Database,
@@ -83,10 +123,26 @@ export async function getUserByEmail(
 }
 
 /**
- * Phase 3 Day 4: 고유한 사용자 아이디 생성
- * 형식: user_XXXXXX (6자리 랜덤 문자열)
+ * D1에서 닉네임(username)으로 사용자 조회
  */
-async function generateUniqueUsername(db: D1Database): Promise<string> {
+export async function getUserByUsername(
+  db: D1Database,
+  username: string
+): Promise<User | null> {
+  const result = await db
+    .prepare('SELECT * FROM users WHERE username = ?')
+    .bind(username)
+    .first<User>()
+  
+  return result || null
+}
+
+/**
+ * 고유한 임시 사용자 아이디 생성
+ * 형식: user_XXXXXX (6자리 랜덤 문자열)
+ * 온보딩 전 임시 닉네임으로 사용
+ */
+async function generateTempUsername(db: D1Database): Promise<string> {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
   const maxAttempts = 10
   
@@ -118,37 +174,44 @@ async function generateUniqueUsername(db: D1Database): Promise<string> {
 }
 
 /**
- * D1에 새 사용자 생성
+ * D1에 새 사용자 생성 (OAuth 프로필 기반)
  */
-export async function createUser(
+export async function createUserFromOAuth(
   db: D1Database,
-  profile: GoogleProfile
+  profile: OAuthProfile
 ): Promise<User> {
   const now = Math.floor(Date.now() / 1000) // UNIX timestamp
   
   console.log('📝 [Auth] Creating new user in D1...')
-  console.log('   Google ID:', profile.google_id)
+  console.log('   Provider:', profile.provider)
+  console.log('   Provider User ID:', profile.provider_user_id)
   console.log('   Email:', profile.email)
   console.log('   Name:', profile.name)
   
-  // Phase 3 Day 4: 사용자 아이디 생성 (회원가입 절차)
-  const username = await generateUniqueUsername(db)
-  console.log('   Generated Username:', username)
+  // 임시 닉네임 생성 (온보딩에서 변경)
+  const tempUsername = await generateTempUsername(db)
+  console.log('   Temp Username:', tempUsername)
+  
+  // google_id는 레거시 호환을 위해 provider_user_id와 동일하게 설정 (Google인 경우)
+  const googleIdValue = profile.provider === 'google' ? profile.provider_user_id : ''
   
   const result = await db
     .prepare(`
       INSERT INTO users (
-        google_id, email, name, picture_url, username, role,
-        edit_count, comment_count,
-        is_banned, last_login_at, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, 'user', 0, 0, 0, ?, ?, ?)
+        google_id, provider, provider_user_id,
+        email, name, picture_url, username, role,
+        edit_count, comment_count, is_banned,
+        onboarded, last_login_at, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, 'user', 0, 0, 0, 0, ?, ?, ?)
     `)
     .bind(
-      profile.google_id,
+      googleIdValue,
+      profile.provider,
+      profile.provider_user_id,
       profile.email,
       profile.name,
       profile.picture_url,
-      username,
+      tempUsername,
       now, // last_login_at
       now, // created_at
       now  // updated_at
@@ -161,7 +224,7 @@ export async function createUser(
   }
   
   console.log('✅ [Auth] User created, ID:', result.meta.last_row_id)
-  console.log('   Username:', username)
+  console.log('   Onboarded: false (requires onboarding)')
   
   // 생성된 사용자 조회
   const user = await getUserById(db, result.meta.last_row_id as number)
@@ -174,12 +237,31 @@ export async function createUser(
 }
 
 /**
+ * D1에 새 사용자 생성 (레거시 GoogleProfile 호환)
+ */
+export async function createUser(
+  db: D1Database,
+  profile: GoogleProfile
+): Promise<User> {
+  // GoogleProfile을 OAuthProfile로 변환
+  const oauthProfile: OAuthProfile = {
+    provider: 'google',
+    provider_user_id: profile.google_id,
+    email: profile.email,
+    name: profile.name,
+    picture_url: profile.picture_url
+  }
+  
+  return createUserFromOAuth(db, oauthProfile)
+}
+
+/**
  * D1에서 사용자 정보 업데이트 (last_login_at, 프로필 동기화)
  */
 export async function updateUser(
   db: D1Database,
   userId: number,
-  profile: Partial<GoogleProfile>
+  profile: Partial<OAuthProfile>
 ): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
   
@@ -188,7 +270,7 @@ export async function updateUser(
   
   // 업데이트할 필드만 포함
   const updates: string[] = ['last_login_at = ?', 'updated_at = ?']
-  const bindings: any[] = [now, now]
+  const bindings: (string | number | null)[] = [now, now]
   
   if (profile.name !== undefined) {
     updates.push('name = ?')
@@ -227,21 +309,36 @@ export async function updateUser(
 /**
  * 사용자 조회 또는 생성 (OAuth 로그인 시 사용)
  * 
- * 1. Google ID로 사용자 조회
- * 2. 없으면 신규 생성
+ * 1. provider + provider_user_id로 사용자 조회
+ * 2. 없으면 신규 생성 (onboarded=0)
  * 3. 있으면 last_login_at 및 프로필 업데이트
  */
-export async function getOrCreateUser(
+export async function getOrCreateUserFromOAuth(
   db: D1Database,
-  profile: GoogleProfile
+  profile: OAuthProfile
 ): Promise<User> {
-  console.log('🔍 [Auth] Looking up user by Google ID:', profile.google_id)
+  console.log('🔍 [Auth] Looking up user by provider:', profile.provider, profile.provider_user_id)
   
-  // 1. 기존 사용자 조회
-  let user = await getUserByGoogleId(db, profile.google_id)
+  // 1. 기존 사용자 조회 (새 방식)
+  let user = await getUserByProvider(db, profile.provider, profile.provider_user_id)
+  
+  // 레거시 호환: Google 로그인인데 새 방식으로 못 찾으면 google_id로 재시도
+  if (!user && profile.provider === 'google') {
+    user = await getUserByGoogleId(db, profile.provider_user_id)
+    
+    // 레거시 사용자 발견 시 provider 필드 업데이트
+    if (user && (!user.provider || !user.provider_user_id)) {
+      console.log('📝 [Auth] Migrating legacy Google user to provider format...')
+      await db
+        .prepare('UPDATE users SET provider = ?, provider_user_id = ? WHERE id = ?')
+        .bind('google', profile.provider_user_id, user.id)
+        .run()
+    }
+  }
   
   if (user) {
     console.log('✅ [Auth] Existing user found, ID:', user.id)
+    console.log('   Onboarded:', user.onboarded === 1)
     
     // 2. 기존 사용자라면 last_login_at 및 프로필 업데이트
     await updateUser(db, user.id, profile)
@@ -257,9 +354,75 @@ export async function getOrCreateUser(
   } else {
     console.log('🆕 [Auth] New user, creating...')
     
-    // 4. 신규 사용자 생성
-    return await createUser(db, profile)
+    // 4. 신규 사용자 생성 (onboarded=0)
+    return await createUserFromOAuth(db, profile)
   }
+}
+
+/**
+ * 사용자 조회 또는 생성 (레거시 GoogleProfile 호환)
+ */
+export async function getOrCreateUser(
+  db: D1Database,
+  profile: GoogleProfile
+): Promise<User> {
+  // GoogleProfile을 OAuthProfile로 변환
+  const oauthProfile: OAuthProfile = {
+    provider: 'google',
+    provider_user_id: profile.google_id,
+    email: profile.email,
+    name: profile.name,
+    picture_url: profile.picture_url
+  }
+  
+  return getOrCreateUserFromOAuth(db, oauthProfile)
+}
+
+/**
+ * 온보딩 완료 처리
+ */
+export async function completeOnboarding(
+  db: D1Database,
+  userId: number
+): Promise<void> {
+  console.log('✅ [Auth] Completing onboarding for user:', userId)
+  
+  const result = await db
+    .prepare('UPDATE users SET onboarded = 1, updated_at = ? WHERE id = ?')
+    .bind(Math.floor(Date.now() / 1000), userId)
+    .run()
+  
+  if (!result.success) {
+    console.error('❌ [Auth] Failed to complete onboarding:', result.error)
+    throw new Error('Failed to complete onboarding')
+  }
+  
+  console.log('✅ [Auth] Onboarding completed')
+}
+
+/**
+ * 닉네임 업데이트 (온보딩 시 사용)
+ */
+export async function updateNickname(
+  db: D1Database,
+  userId: number,
+  nickname: string
+): Promise<void> {
+  console.log('📝 [Auth] Updating nickname...')
+  console.log('   User ID:', userId)
+  console.log('   New Nickname:', nickname)
+  
+  const result = await db
+    .prepare('UPDATE users SET username = ?, updated_at = ? WHERE id = ?')
+    .bind(nickname, Math.floor(Date.now() / 1000), userId)
+    .run()
+  
+  if (!result.success) {
+    console.error('❌ [Auth] Failed to update nickname:', result.error)
+    throw new Error('Failed to update nickname')
+  }
+  
+  console.log('✅ [Auth] Nickname updated')
 }
 
 /**
@@ -372,47 +535,12 @@ export async function unbanUser(
 }
 
 /**
- * Phase 3 Day 4: 사용자 아이디(username) 업데이트
+ * 사용자 아이디(username) 업데이트 (레거시 호환)
  */
 export async function updateUsername(
   db: D1Database,
   userId: number,
   newUsername: string
 ): Promise<void> {
-  console.log('📝 [Auth] Updating username...')
-  console.log('   User ID:', userId)
-  console.log('   New Username:', newUsername)
-  
-  // 유효성 검사
-  if (!newUsername || newUsername.length < 3 || newUsername.length > 20) {
-    throw new Error('Username must be between 3 and 20 characters')
+  return updateNickname(db, userId, newUsername)
   }
-  
-  // 영문, 숫자, 언더스코어만 허용
-  if (!/^[a-z0-9_]+$/.test(newUsername)) {
-    throw new Error('Username can only contain lowercase letters, numbers, and underscores')
-  }
-  
-  // 중복 체크
-  const existing = await db
-    .prepare('SELECT id FROM users WHERE username = ? AND id != ?')
-    .bind(newUsername, userId)
-    .first()
-  
-  if (existing) {
-    throw new Error('Username already taken')
-  }
-  
-  const result = await db
-    .prepare('UPDATE users SET username = ?, updated_at = ? WHERE id = ?')
-    .bind(newUsername, Math.floor(Date.now() / 1000), userId)
-    .run()
-  
-  if (!result.success) {
-    console.error('❌ [Auth] Failed to update username:', result.error)
-    throw new Error('Failed to update username')
-  }
-  
-  console.log('✅ [Auth] Username updated')
-}
-

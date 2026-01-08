@@ -206,8 +206,12 @@ async function initMiniflare(): Promise<{ mf: Miniflare; db: D1Database }> {
   const mf = new Miniflare({
     modules: true,
     script: '',
-    d1Databases: ['DB'],
-    d1Persist: '.wrangler/state/v3/d1/miniflare-D1DatabaseObject'
+    // 로컬 D1 바인딩 (Wrangler와 동일한 DB ID 사용)
+    d1Databases: {
+      DB: 'edc21e23-c2ac-4693-bb79-389b6914e173'
+    },
+    // wrangler 로컬 DB가 저장되는 기본 경로
+    d1Persist: '.wrangler/state/v3/d1'
   })
   
   const db = await mf.getD1Database('DB')

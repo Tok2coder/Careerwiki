@@ -16,30 +16,30 @@ export const TEMPLATE_VERSIONS = {
   /**
    * Major detail page template version
    * Used for: /major/:slug pages
-   * Current features: ETL 병합 필드 사용 (heroSummary, categoryDisplay, heroTags)
+   * Current features: ETL 병합 필드 사용 (heroSummary, categoryDisplay, heroTags), image_alt 필드 지원, R2 이미지 서빙
    */
-  MAJOR: 170,  // 관련 전공에서 자기 자신 제외
+  MAJOR: 274,  // 데이터 출처 하이라이트 기능 추가
 
   /**
    * Job detail page template version
    * Used for: /job/:slug pages
-   * Current features: ETL 개선 완료, 배열 필드 타입 체크 추가
+   * Current features: ETL 개선 완료, 배열 필드 타입 체크 추가, image_alt 필드 지원
    */
-  JOB: 87,  // 관련 직업에서 자기 자신 제외
+  JOB: 212,  // 비교 테이블: 설명을 항목 아래에 표시 (모바일/데스크톱 동일)
 
   /**
    * Guide page template version
    * Used for: /guide/:slug pages
    * Current features: TBD (future)
    */
-  GUIDE: 1,
+  GUIDE: 2,  // 로고 PNG 이미지로 교체, 파비콘 추가
 
   /**
    * HowTo guide page template version
    * Used for: /howto/:slug pages
    * Current features: 블로그 형태로 변경 (탭 제거, 사이드바 sticky 적용, 히어로 섹션 정리), AI 말투 제거 및 자연스러운 문체로 변경
    */
-  HOWTO: 3,  // ✍️ AI 말투 제거 및 자연스러운 문체로 변경, 중복 숫자 제거
+  HOWTO: 82,  // 로고 PNG 이미지로 교체, 파비콘 추가
 } as const
 
 /**

@@ -4,7 +4,7 @@
  * 이 파일은 Cloudflare Workers 환경에서 사용되는 환경 변수와 바인딩을 정의합니다.
  */
 
-import type { D1Database, KVNamespace } from '@cloudflare/workers-types'
+import type { D1Database, KVNamespace, R2Bucket } from '@cloudflare/workers-types'
 
 export interface CloudflareBindings {
   // Database
@@ -12,6 +12,9 @@ export interface CloudflareBindings {
   
   // Key-Value Store
   KV: KVNamespace
+  
+  // R2 Storage (이미지/파일 업로드)
+  UPLOADS: R2Bucket
   
   // API Keys
   CAREER_NET_API_KEY?: string

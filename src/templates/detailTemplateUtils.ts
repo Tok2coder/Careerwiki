@@ -89,6 +89,7 @@ export interface BuildCardOptions {
   telemetryScope?: string
   telemetryComponent?: string
   editButton?: EditButtonOptions  // 편집 버튼 옵션
+  dataSources?: string[]  // 데이터 출처 목록 (CAREERNET, GOYONG24, WORK24_DJOB 등)
 }
 
 interface HeroImageRule {
@@ -134,11 +135,13 @@ export const resolveHeroImageUrl = (title?: string): string => {
 
 export const renderHeroImage = (
   title?: string,
-  options: { imageUrl?: string; dataAttribute?: string; context?: string } = {}
+  options: { imageUrl?: string; imageAlt?: string; dataAttribute?: string; context?: string; slug?: string } = {}
 ): string => {
   const imageUrl = options.imageUrl ?? resolveHeroImageUrl(title)
+  const imageAlt = options.imageAlt ?? `${escapeHtml(title ?? '')}를 상징하는 대표 이미지`
   const dataAttribute = options.dataAttribute ?? 'data-hero-image'
   const context = options.context ?? 'default'
+  const slug = options.slug ?? ''
   const dataAttributeSnippet = `${dataAttribute}="true"`
 
   return `
@@ -147,6 +150,7 @@ export const renderHeroImage = (
       ${dataAttributeSnippet}
       data-hero-context="${escapeHtml(context)}"
       data-hero-url="${escapeHtml(imageUrl)}"
+      data-hero-slug="${escapeHtml(slug)}"
       data-cw-telemetry-scope="hero"
       data-cw-telemetry-component="detail-hero-image"
       data-cw-telemetry-action="hero-image"
@@ -154,16 +158,35 @@ export const renderHeroImage = (
       <div class="absolute inset-0">
         <img
           src="${escapeHtml(imageUrl)}"
-          alt="${escapeHtml(title)}를 상징하는 대표 이미지"
+          alt="${escapeHtml(imageAlt)}"
           class="w-full h-full object-cover object-center"
           loading="lazy"
           decoding="async"
+          onerror="this.onerror=null; this.src='${DEFAULT_HERO_IMAGE}'; this.alt='${escapeHtml(title ?? '')} 대표 이미지 준비 중';"
         >
         <div class="absolute inset-0 bg-gradient-to-b from-black/35 via-wiki-bg/20 to-wiki-bg/80 mix-blend-multiply"></div>
         <div class="absolute inset-0 bg-gradient-to-tr from-wiki-primary/30 via-transparent to-wiki-secondary/40 mix-blend-screen"></div>
         <div class="absolute inset-6 rounded-2xl border border-white/10 pointer-events-none"></div>
       </div>
-      <figcaption class="sr-only">${escapeHtml(title)}를 상징하는 이미지</figcaption>
+      <!-- 관리자용 이미지 재생성 버튼 (클라이언트에서 동적으로 표시) -->
+      <div 
+        class="absolute top-4 right-4 hidden" 
+        data-admin-image-controls
+        data-image-type="${context === 'job' ? 'jobs' : 'majors'}"
+        data-image-slug="${escapeHtml(slug)}"
+        data-image-title="${escapeHtml(title ?? '')}"
+      >
+        <button 
+          type="button"
+          class="flex items-center gap-2 px-3 py-2 bg-wiki-bg/90 backdrop-blur-sm rounded-lg border border-wiki-border hover:border-wiki-primary transition-colors text-sm text-wiki-text hover:text-wiki-primary"
+          data-action="regenerate-image"
+          title="이미지 재생성"
+        >
+          <i class="fas fa-sync-alt"></i>
+          <span>이미지 변경</span>
+        </button>
+      </div>
+      <figcaption class="sr-only">${escapeHtml(imageAlt)}</figcaption>
     </figure>
   `
 }
@@ -173,8 +196,8 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
     return ''
   }
 
-  const { anchorId, telemetryScope, telemetryComponent } = options
-  const className = `glass-card border-0 md:border px-6 py-6 md:px-6 rounded-none md:rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
+  const { anchorId, telemetryScope, telemetryComponent, dataSources } = options
+  const className = `glass-card border px-6 py-6 md:px-6 rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
   const attributeParts: string[] = [`class="${className}"`, 'data-cw-detail-card']
 
   if (anchorId) {
@@ -189,6 +212,11 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
 
   if (telemetryComponent) {
     attributeParts.push(`data-cw-telemetry-component="${escapeHtml(telemetryComponent)}"`)
+  }
+
+  // 데이터 출처 속성 추가 (하이라이트 기능용)
+  if (dataSources && dataSources.length > 0) {
+    attributeParts.push(`data-source="${dataSources.map(s => escapeHtml(s)).join(',')}"`)
   }
 
   const editButtonHtml = options.editButton
@@ -238,8 +266,8 @@ export const renderEditButton = (options: EditButtonOptions): string => {
 
   const buttonId = `edit-btn-${entityType}-${entityId}-${field}`
   const buttonClass = enabled
-    ? 'edit-btn inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-wiki-primary hover:text-wiki-secondary hover:bg-wiki-primary/10 rounded-lg transition-colors border border-wiki-primary/30 hover:border-wiki-primary/50'
-    : 'edit-btn inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-wiki-muted cursor-not-allowed opacity-50 rounded-lg border border-wiki-border/30'
+    ? 'edit-btn inline-flex items-center gap-1.5 px-3 py-2 min-h-[36px] sm:min-h-[32px] text-xs sm:text-xs font-medium text-wiki-primary hover:text-wiki-secondary hover:bg-wiki-primary/10 rounded-lg transition-colors border border-wiki-primary/30 hover:border-wiki-primary/50'
+    : 'edit-btn inline-flex items-center gap-1.5 px-3 py-2 min-h-[36px] sm:min-h-[32px] text-xs sm:text-xs font-medium text-wiki-muted cursor-not-allowed opacity-50 rounded-lg border border-wiki-border/30'
 
   const badgeClass = dataSource === 'api'
     ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
@@ -276,7 +304,14 @@ export const renderEditButton = (options: EditButtonOptions): string => {
   `
 }
 
-export type TabEntry = { id: string; label: string; icon: string; content: string }
+export type TabEntry = { 
+  id: string
+  label: string
+  icon: string
+  content: string
+  /** 아이콘만 표시 (탭 오른쪽 끝으로 밀림, 호버 시 라벨 표시) */
+  iconOnly?: boolean
+}
 export type DetailComponentEntityType = 'job' | 'major' | 'guide'
 
 export interface TabsetOptions {
@@ -317,42 +352,79 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
   const instructionsId = `${tabsetId}-instructions`
   const totalTabs = entries.length
 
-  const tabButtons = entries
-    .map((entry, index) => {
-      const isActive = index === 0
-      const baseClasses = 'px-4 md:px-4 py-3 md:py-3 text-sm md:text-sm font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
-      const activeClasses = isActive
-        ? 'text-white border-wiki-primary bg-transparent md:bg-wiki-border/30'
-        : 'text-wiki-muted border-transparent hover:text-white hover:border-wiki-border'
-      return `
-        <li role="presentation" class="flex" data-cw-tab-item>
-          <button
-            type="button"
-            id="cw-tab-${entry.id}"
-            role="tab"
-            aria-selected="${isActive ? 'true' : 'false'}"
-            aria-controls="cw-tab-panel-${entry.id}"
-            aria-describedby="${statusId} ${instructionsId}"
-            aria-keyshortcuts="ArrowLeft ArrowRight Home End"
-            aria-setsize="${totalTabs}"
-            aria-posinset="${index + 1}"
-            tabindex="${isActive ? '0' : '-1'}"
-            class="${baseClasses} ${activeClasses}"
-            data-cw-tab-trigger
-            data-tab-id="${entry.id}"
-            data-tab-index="${index}"
-            data-entity-type="${entityType}"
-            data-entity-id="${escapeHtml(entityId)}"
-            data-cw-telemetry-action="tab-trigger"
-            data-cw-telemetry-component="tab-trigger"
-          >
-            <i class="fas ${entry.icon} mr-2 text-base md:text-sm" aria-hidden="true"></i>
-            <span class="tab-label">${escapeHtml(entry.label)}</span>
-          </button>
-        </li>
-      `
+  // 일반 탭과 아이콘 전용 탭 분리
+  const regularEntries = entries.filter(e => !e.iconOnly)
+  const iconOnlyEntries = entries.filter(e => e.iconOnly)
+
+  const renderTabButton = (entry: TabEntry, index: number, isIconOnly: boolean) => {
+    const isActive = index === 0
+    const baseClasses = isIconOnly
+      ? 'px-3 py-3 text-sm font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
+      : 'px-4 md:px-4 py-3 md:py-3 text-sm md:text-sm font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
+    const activeClasses = isActive
+      ? 'text-white border-wiki-primary bg-transparent md:bg-wiki-border/30'
+      : 'text-wiki-muted border-transparent hover:text-white hover:border-wiki-border'
+    
+    // 아이콘 전용 탭: 아이콘만 표시, title로 호버 시 라벨 표시
+    const buttonContent = isIconOnly
+      ? `<i class="fas ${entry.icon} text-base" aria-hidden="true"></i>
+         <span class="sr-only">${escapeHtml(entry.label)}</span>`
+      : `<i class="fas ${entry.icon} mr-2 text-base md:text-sm" aria-hidden="true"></i>
+         <span class="tab-label">${escapeHtml(entry.label)}</span>`
+    
+    const titleAttr = isIconOnly ? `title="${escapeHtml(entry.label)}"` : ''
+    const iconOnlyAttr = isIconOnly ? 'data-icon-only="true"' : ''
+    
+    return `
+      <li role="presentation" class="flex" data-cw-tab-item>
+        <button
+          type="button"
+          id="cw-tab-${entry.id}"
+          role="tab"
+          aria-selected="${isActive ? 'true' : 'false'}"
+          aria-controls="cw-tab-panel-${entry.id}"
+          aria-describedby="${statusId} ${instructionsId}"
+          aria-keyshortcuts="ArrowLeft ArrowRight Home End"
+          aria-setsize="${totalTabs}"
+          aria-posinset="${index + 1}"
+          aria-label="${isIconOnly ? escapeHtml(entry.label) : ''}"
+          tabindex="${isActive ? '0' : '-1'}"
+          class="${baseClasses} ${activeClasses}"
+          ${titleAttr}
+          ${iconOnlyAttr}
+          data-cw-tab-trigger
+          data-tab-id="${entry.id}"
+          data-tab-index="${index}"
+          data-entity-type="${entityType}"
+          data-entity-id="${escapeHtml(entityId)}"
+          data-cw-telemetry-action="tab-trigger"
+          data-cw-telemetry-component="tab-trigger"
+        >
+          ${buttonContent}
+        </button>
+      </li>
+    `
+  }
+
+  // 일반 탭 버튼
+  const regularTabButtons = regularEntries
+    .map((entry, idx) => {
+      const originalIndex = entries.indexOf(entry)
+      return renderTabButton(entry, originalIndex, false)
     })
     .join('')
+  
+  // 아이콘 전용 탭 버튼 (오른쪽 끝에 배치)
+  const iconOnlyTabButtons = iconOnlyEntries.length > 0
+    ? `<li class="flex-grow"></li>` + iconOnlyEntries
+        .map((entry) => {
+          const originalIndex = entries.indexOf(entry)
+          return renderTabButton(entry, originalIndex, true)
+        })
+        .join('')
+    : ''
+  
+  const tabButtons = regularTabButtons + iconOnlyTabButtons
 
   const tabPanels = entries
     .map((entry, index) => {
@@ -381,7 +453,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
   return `
     <section
       id="${tabsetId}"
-      class="glass-card border-0 md:border p-0 rounded-none md:rounded-2xl overflow-hidden"
+      class="glass-card border p-0 rounded-2xl overflow-hidden"
       data-cw-tabset
       data-tabset-id="${tabsetId}"
       data-entity-type="${entityType}"
@@ -690,7 +762,7 @@ export const renderCommentsPlaceholder = ({
     : COMMENT_POLICY_DEFAULTS.reportBlindThreshold
   const bestScoreboardMessage = escapeHtml(`좋아요 ${resolvedBestThreshold}개 이상 댓글은 BEST로 승격됩니다.`)
   const moderationScoreboardMessage = escapeHtml(`신고 ${resolvedReportThreshold}회 이상 시 자동으로 블라인드 처리됩니다.`)
-  const bestEmptyMessage = escapeHtml(`좋아요 ${resolvedBestThreshold}개 이상을 받은 댓글이 등록되면 BEST 영역이 활성화됩니다.`)
+  const bestEmptyMessage = escapeHtml('아직 BEST 댓글이 없습니다.')
   const allEmptyMessage = escapeHtml(emptyLabel ?? '가장 먼저 의견을 남겨보세요.')
 
   // 로그인 CTA 제거 - 익명 사용자도 댓글 작성 가능
@@ -700,25 +772,37 @@ export const renderCommentsPlaceholder = ({
 
   const composerBlock = composerEnabled
     ? `
-    <form class="space-y-3" data-cw-comment-form data-cw-telemetry-scope="comment-form" data-cw-telemetry-component="comment-form" novalidate aria-describedby="${statusMessageId}">
+    <form class="space-y-1.5" data-cw-comment-form data-cw-telemetry-scope="comment-form" data-cw-telemetry-component="comment-form" novalidate aria-describedby="${statusMessageId}">
       <div class="flex flex-col sm:flex-row sm:items-start sm:gap-3">
         <div class="flex-1 space-y-3">
-          <div class="flex flex-col sm:flex-row gap-3 items-center justify-start">
+            <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-start">
             <div class="flex-1" data-cw-comment-nickname-wrapper>
               <label class="sr-only" for="${escapeHtml(nicknameId)}">닉네임</label>
-              <input
-                id="${escapeHtml(nicknameId)}"
-                name="nickname"
-                type="text"
-                maxlength="40"
-                placeholder="닉네임 (선택, 익명으로 작성 시)"
-                autocomplete="nickname"
-                class="w-full px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm"
-                data-cw-comment-nickname
-              />
+                <div class="flex items-center gap-2 pl-2">
+                <div class="w-6 h-6 rounded-full bg-wiki-card flex items-center justify-center flex-shrink-0 hidden" data-cw-comment-author-avatar>
+                  <i class="fas fa-user-circle text-sm text-wiki-muted"></i>
+                </div>
+                <span class="hidden text-xs px-2 py-1 rounded-full bg-red-500/15 text-red-200 font-semibold" data-cw-comment-admin-badge aria-label="관리자">관리자</span>
+                <span class="hidden text-sm text-wiki-text" data-cw-comment-nickname-display></span>
+                <span class="hidden text-xs text-wiki-muted" data-cw-comment-ip-display></span>
+                <input
+                  id="${escapeHtml(nicknameId)}"
+                  name="nickname"
+                  type="text"
+                  maxlength="40"
+                  placeholder="닉네임"
+                  autocomplete="nickname"
+                  class="w-full px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm"
+                  data-cw-comment-nickname
+                />
+              </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0" data-cw-comment-anonymous-label hidden>
-              <span class="text-sm text-wiki-text whitespace-nowrap" data-cw-comment-anonymous-number>익명 1</span>
+              <div class="w-6 h-6 rounded-full bg-wiki-card flex items-center justify-center flex-shrink-0" data-cw-comment-anon-avatar>
+                <i class="fas fa-user-circle text-sm text-wiki-muted"></i>
+              </div>
+              <span class="text-sm text-wiki-text whitespace-nowrap" data-cw-comment-anonymous-number>익명</span>
+              <span class="text-xs text-wiki-muted" data-cw-comment-current-ip></span>
               <label class="sr-only" for="${escapeHtml(passwordId)}">비밀번호 (익명 필수)</label>
               <input
                 id="${escapeHtml(passwordId)}"
@@ -732,7 +816,11 @@ export const renderCommentsPlaceholder = ({
                 class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm"
                 data-cw-comment-password
               />
+              <span class="text-xs text-red-400" data-cw-comment-password-warning hidden></span>
             </div>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-wiki-muted cursor-pointer" data-cw-comment-reply-indicator hidden>
+            <span class="px-2 py-1 rounded bg-wiki-border/40 text-wiki-text" data-cw-comment-reply-label></span>
           </div>
           <div>
             <label class="sr-only" for="${escapeHtml(contentId)}">댓글 작성</label>
@@ -748,12 +836,14 @@ export const renderCommentsPlaceholder = ({
               aria-describedby="${statusMessageId}"
               data-cw-comment-content
             ></textarea>
-            <div class="text-xs text-wiki-muted mt-1 text-right" data-cw-comment-char-count>0 / 500자</div>
           </div>
         </div>
       </div>
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" data-cw-comments-toolbar data-cw-telemetry-component="comments-toolbar">
-        <div class="text-xs text-wiki-muted" id="${statusMessageId}" data-cw-comment-status role="status" aria-live="polite" aria-atomic="true"></div>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between" data-cw-comments-toolbar data-cw-telemetry-component="comments-toolbar">
+        <div class="flex items-start gap-3 text-xs text-wiki-muted pl-4 leading-none">
+          <div class="leading-none" data-cw-comment-char-count>0 / 500자</div>
+          <div id="${statusMessageId}" data-cw-comment-status role="status" aria-live="polite" aria-atomic="true"></div>
+        </div>
         <button
           type="submit"
           class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition"
@@ -766,6 +856,7 @@ export const renderCommentsPlaceholder = ({
         </button>
       </div>
     </form>
+    <div class="border-t border-wiki-border/60 my-4"></div>
     `
     : `
     <div class="text-xs text-wiki-muted" id="${statusMessageId}" data-cw-comment-status role="status" aria-live="polite" aria-atomic="true"></div>
@@ -773,7 +864,7 @@ export const renderCommentsPlaceholder = ({
 
   return `
   <section
-    class="glass-card border-0 md:border px-6 py-6 md:px-6 rounded-none md:rounded-2xl space-y-4 md:space-y-6"
+    class="glass-card border px-6 py-6 md:px-6 rounded-2xl space-y-4 md:space-y-6"
     id="cw-comments"
     data-cw-comments
     data-cw-telemetry-scope="comments"
@@ -809,22 +900,24 @@ export const renderCommentsPlaceholder = ({
     <p class="sr-only" id="${instructionsId}">댓글 목록을 볼 수 있으며, 로그인 여부와 관계없이 댓글 작성이 가능합니다.</p>
     <div class="text-xs text-wiki-muted" id="${authMessageId}" data-cw-comment-auth aria-live="polite" aria-atomic="true"></div>
     ${loginCtaBlock}
+    ${composerBlock}
     <div class="space-y-6" data-cw-comments-body data-cw-telemetry-component="comments-body" role="region" aria-live="polite" aria-atomic="false" aria-busy="false">
       <div class="flex items-center gap-3 text-sm text-wiki-muted" data-cw-comments-loading hidden>
         <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
         <span>댓글을 불러오는 중...</span>
       </div>
       <div class="space-y-4" data-comment-toolbar>
-        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <!-- 탭: 전체 댓글 / BEST -->
           <div
-            class="inline-flex items-center gap-1 rounded-full border border-wiki-border/80 bg-wiki-bg/80 p-1"
+            class="flex items-center gap-1 rounded-full border border-wiki-border/80 bg-wiki-bg/80 p-1 w-full sm:w-auto"
             role="tablist"
             aria-label="댓글 보기 유형"
             data-comment-tablist
           >
             <button
               type="button"
-              class="comment-tab-btn px-4 py-2 rounded-full text-xs font-semibold transition border border-wiki-primary/50 bg-wiki-primary text-white shadow-sm"
+              class="comment-tab-btn flex-1 sm:flex-none px-4 py-2.5 min-h-[44px] rounded-full text-sm font-semibold transition border border-wiki-primary/50 bg-wiki-primary text-white shadow-sm"
               data-comment-tab="all"
               role="tab"
               aria-selected="true"
@@ -833,7 +926,7 @@ export const renderCommentsPlaceholder = ({
             >전체 댓글</button>
             <button
               type="button"
-              class="comment-tab-btn px-4 py-2 rounded-full text-xs font-semibold transition border border-transparent text-wiki-muted hover:text-white hover:bg-wiki-primary/60"
+              class="comment-tab-btn flex-1 sm:flex-none px-4 py-2.5 min-h-[44px] rounded-full text-sm font-semibold transition border border-transparent text-gray-300 hover:text-white hover:bg-wiki-primary/60"
               data-comment-tab="best"
               role="tab"
               aria-selected="false"
@@ -841,19 +934,20 @@ export const renderCommentsPlaceholder = ({
               aria-controls="${bestPanelId}"
             >BEST</button>
           </div>
-          <div class="flex flex-wrap items-center gap-3 text-xs text-wiki-muted" data-comment-sort-toolbar>
+          <!-- 정렬: 최신순 / 공감순 -->
+          <div class="flex items-center justify-between sm:justify-end gap-3 text-xs text-wiki-muted" data-comment-sort-toolbar>
             <span class="uppercase tracking-wide text-[11px]">정렬</span>
-            <div class="inline-flex rounded-lg border border-wiki-border/70 bg-wiki-bg/70 p-1" role="group" data-comment-sort-group>
+            <div class="flex flex-1 sm:flex-none rounded-lg border border-wiki-border/70 bg-wiki-bg/70 p-1" role="group" data-comment-sort-group>
               <button
                 type="button"
-                class="comment-sort-btn px-3 py-1.5 rounded-md text-xs font-semibold transition border border-wiki-primary/60 bg-wiki-primary text-white shadow-sm"
+                class="comment-sort-btn flex-1 sm:flex-none px-3 sm:px-4 py-2 min-h-[40px] rounded-md text-xs font-semibold transition border border-wiki-primary/60 bg-wiki-primary text-white shadow-sm"
                 data-comment-sort="latest"
                 aria-pressed="true"
                 id="${sortLatestId}"
               >최신순</button>
               <button
                 type="button"
-                class="comment-sort-btn px-3 py-1.5 rounded-md text-xs font-semibold transition border border-transparent text-wiki-muted hover:text-wiki-primary hover:border-wiki-primary/50"
+                class="comment-sort-btn flex-1 sm:flex-none px-3 sm:px-4 py-2 min-h-[40px] rounded-md text-xs font-semibold transition border border-transparent text-gray-300 hover:text-white hover:bg-wiki-border/50"
                 data-comment-sort="likes"
                 aria-pressed="false"
                 id="${sortLikesId}"
@@ -884,7 +978,47 @@ export const renderCommentsPlaceholder = ({
         <ul data-cw-comments-list></ul>
       </div>
     </div>
-    ${composerBlock}
+    <!-- 댓글 신고 모달 -->
+    <div class="fixed inset-0 z-[2000] hidden" data-cw-comment-report-modal role="dialog" aria-modal="true" aria-labelledby="${normalizedBase}-comment-report-title">
+      <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" data-cw-comment-report-backdrop></div>
+      <div class="fixed inset-0 flex items-center justify-center px-4">
+        <div class="w-full max-w-md rounded-2xl bg-wiki-bg border border-wiki-border shadow-2xl" data-cw-comment-report-dialog>
+          <div class="flex items-center justify-between px-6 py-4 border-b border-wiki-border">
+            <h3 id="${normalizedBase}-comment-report-title" class="text-lg font-semibold text-white">댓글 신고</h3>
+            <button type="button" class="text-wiki-muted hover:text-white transition" data-cw-comment-report-close aria-label="닫기">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <form class="p-6 space-y-4" data-cw-comment-report-form>
+            <div class="space-y-2">
+              <label class="text-sm font-semibold text-white">신고 사유 *</label>
+              <select class="w-full rounded-lg border border-wiki-border bg-wiki-bg px-3 py-2 text-sm text-white focus:border-wiki-primary focus:outline-none" data-cw-comment-report-reason required>
+                <option value="">선택해주세요</option>
+                <option value="defamation">명예훼손</option>
+                <option value="obscene">음란물</option>
+                <option value="spam">스팸/광고</option>
+                <option value="copyright">저작권 침해</option>
+                <option value="false_info">허위정보</option>
+                <option value="other">기타</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-semibold text-white">상세 사유 (선택)</label>
+              <textarea class="w-full rounded-lg border border-wiki-border bg-wiki-bg px-3 py-2 text-sm text-white min-h-[96px] resize-none focus:border-wiki-primary focus:outline-none" maxlength="300" placeholder="추가 설명이 있다면 작성해주세요 (최대 300자)" data-cw-comment-report-detail></textarea>
+            </div>
+            <div class="flex items-center justify-between gap-3 pt-2">
+              <button type="button" class="flex-1 px-4 py-2 rounded-lg border border-wiki-border text-sm text-wiki-muted hover:text-white hover:border-wiki-primary transition" data-cw-comment-report-close>
+                취소
+              </button>
+              <button type="submit" class="flex-1 px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-sm font-semibold text-white transition" data-cw-comment-report-submit>
+                신고하기
+              </button>
+            </div>
+            <div class="text-sm" data-cw-comment-report-message role="alert" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+    </div>
   </section>
 `
 }
@@ -1096,16 +1230,20 @@ export const renderSourcesPanel = ({
         : ''
       const noteLine = note ? `<p class="text-xs text-wiki-muted">${escapeHtml(note)}</p>` : ''
 
+      // 데이터가 있는 출처만 클릭 가능 (하이라이트 기능)
+      const clickableClass = hasData ? 'cursor-pointer hover:border-wiki-primary/60 hover:bg-wiki-primary/5' : ''
+      const clickableHint = hasData ? `<span class="text-[10px] text-wiki-muted/70 ml-2">(클릭하여 표시)</span>` : ''
+      
       return `
         <li
-          class="p-3 border border-wiki-border rounded-lg bg-wiki-bg/60 transition"
+          class="p-3 border border-wiki-border rounded-lg bg-wiki-bg/60 transition ${clickableClass}"
           data-source-entry="${escapeHtml(source)}"
           data-source-has-data="${hasData ? 'true' : 'false'}"
         >
           <div class="flex items-start gap-3">
             <i class="fas ${icon} mt-1" aria-hidden="true"></i>
             <div class="space-y-1">
-              <p class="text-sm font-semibold text-wiki-text">${escapeHtml(labels[source] ?? source)}</p>
+              <p class="text-sm font-semibold text-wiki-text">${escapeHtml(labels[source] ?? source)}${clickableHint}</p>
               ${descriptionLine}
               ${noteLine}
             </div>
@@ -1186,3 +1324,4 @@ export const sanitizeJson = (value: unknown): unknown => {
   }
   return value ?? undefined
 }
+

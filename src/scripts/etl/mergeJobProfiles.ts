@@ -626,10 +626,56 @@ export async function mergeJobProfiles(
         )
         
         // 1.3 직업 소개 (우선순위: 고용24 직업정보 → 커리어넷 첫 문장 → 직업사전)
+        // 대괄호 형식 정제 헬퍼: "[직종명] -설명..." → "설명..." / "[코드]내용" → "내용"
+        const cleanHeroIntro = (text: string | null | undefined): string | null => {
+          if (!text || typeof text !== 'string') return null
+          let cleaned = text.trim()
+          
+          // 1. 대괄호로 시작하면 대괄호 부분과 뒤의 하이픈(-) 제거
+          // 예: "[가구수리원] -고객의..." → "고객의..."
+          // 예: "[J602]텔레비전 방송업..." → "텔레비전 방송업..."
+          if (cleaned.startsWith('[')) {
+            // 대괄호 끝 찾기
+            const bracketEnd = cleaned.indexOf(']')
+            if (bracketEnd !== -1) {
+              cleaned = cleaned.slice(bracketEnd + 1).trim()
+              // 하이픈으로 시작하면 제거
+              if (cleaned.startsWith('-')) {
+                cleaned = cleaned.slice(1).trim()
+              }
+            }
+          }
+          
+          // 2. 여러 직종이 포함된 경우 (줄바꿈으로 구분) 첫 번째만 사용
+          if (cleaned.includes('\n')) {
+            const firstLine = cleaned.split('\n')[0].trim()
+            // 첫 줄도 대괄호로 시작하면 다시 정제
+            if (firstLine.startsWith('[')) {
+              const bracketEnd = firstLine.indexOf(']')
+              if (bracketEnd !== -1) {
+                cleaned = firstLine.slice(bracketEnd + 1).trim()
+                if (cleaned.startsWith('-')) {
+                  cleaned = cleaned.slice(1).trim()
+                }
+              }
+            } else {
+              cleaned = firstLine
+            }
+          }
+          
+          // 3. 첫 문장만 추출 (마침표 기준)
+          const firstSentence = cleaned.split('.')[0]
+          if (firstSentence && firstSentence.length > 10) {
+            cleaned = firstSentence + '.'
+          }
+          
+          return cleaned.length > 0 ? cleaned : null
+        }
+        
         const heroIntro = selectBestValue(
-          jobData?.summary || goyong24Raw?.summary?.jobSum || goyong24Raw?.duty?.jobSum,  // 고용24 우선
-          careernetData?.summary ? (careernetData.summary.split('.')[0] + '.').trim() : null,  // 첫 문장만
-          djobData?.summary || djobData?.workSum
+          cleanHeroIntro(jobData?.summary || goyong24Raw?.summary?.jobSum || goyong24Raw?.duty?.jobSum),  // 고용24 직업정보 우선
+          cleanHeroIntro(careernetData?.summary),  // 커리어넷
+          cleanHeroIntro(djobData?.summary || djobData?.workSum)  // 직업사전
         )
         
         // 1.5 태그 (병합 + 중복제거: 쉼표/공백 기준 split)
@@ -639,6 +685,16 @@ export async function mergeJobProfiles(
           djobData?.similarNm || djobData?.optionJobInfo?.similarNm,
           djobData?.connectJob || djobData?.optionJobInfo?.connectJob
         ]
+        
+        // 불필요한 태그 필터링 (접미어, 한 글자, 의미없는 단어)
+        const invalidTags = new Set(['등', '외', '기타', '및', '그외', '그 외', '기타 등', '등등'])
+        const isValidTag = (tag: string): boolean => {
+          if (!tag || tag.length === 0) return false
+          if (tag.length === 1) return false  // 한 글자 태그 제외 ("등", "외" 등)
+          if (invalidTags.has(tag)) return false
+          if (/^[0-9]+$/.test(tag)) return false  // 숫자만 있는 경우 제외
+          return true
+        }
         
         const tagSet = new Set<string>()
         allTagSources.forEach(source => {
@@ -654,7 +710,7 @@ export async function mergeJobProfiles(
           }
           
           tags.forEach(tag => {
-            if (tag && tag.length > 0) {
+            if (isValidTag(tag)) {
               tagSet.add(tag)
             }
           })

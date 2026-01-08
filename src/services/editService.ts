@@ -626,6 +626,8 @@ export async function editMajor(
 /**
  * HowTo 편집
  * 
+ * 로그인 필수, 본인 글만 편집 가능 (admin 제외)
+ * 
  * @param db D1 데이터베이스
  * @param slug HowTo slug
  * @param payload 편집 페이로드
@@ -636,7 +638,12 @@ export async function editHowTo(
   slug: string,
   payload: EditHowToPayload
 ): Promise<{ success: boolean; revisionId: number }> {
-  // HowTo 존재 확인
+  // 로그인 필수
+  if (!payload.userId) {
+    throw new Error('LOGIN_REQUIRED')
+  }
+  
+  // HowTo 존재 확인 (작성자 정보 포함)
   const howto = await db.prepare(`
     SELECT * FROM pages 
     WHERE slug = ? AND page_type = 'guide' AND status = 'published'
@@ -646,45 +653,23 @@ export async function editHowTo(
     throw new Error('HOWTO_NOT_FOUND')
   }
   
-  // 익명 편집인 경우 제한 체크 (IP 해시가 있는 경우만)
-  if (!payload.userId && payload.ipHash) {
-    const limitCheck = await checkAnonymousEditLimit(db, 'howto', slug, payload.ipHash)
-    if (!limitCheck.allowed) {
-      throw new Error('DAILY_LIMIT_REACHED')
-    }
+  // 작성자 확인 (admin은 모든 글 편집 가능)
+  const authorId = howto.author_id as number | null
+  const isAdmin = payload.editorType === 'admin'
+  
+  if (!isAdmin && authorId !== null && authorId.toString() !== payload.userId) {
+    throw new Error('NOT_AUTHOR')
   }
   
-  // 편집자 정보 설정
-  let editorId: string | null = null
-  let editorType: 'anonymous' | 'user' | 'expert' | 'admin' | 'system' = 'anonymous'
-  let editorName: string | null = null
-  let passwordHash: string | null = null
-  let anonymousNumber: number | null = null
+  // 편집자 정보 설정 (로그인 사용자만)
+  const editorId = payload.userId
+  const editorType = payload.editorType ?? 'user'
   
-  if (payload.userId) {
-    // 로그인 사용자 편집
-    editorId = payload.userId
-    editorType = payload.editorType ?? 'user'
-    
-    const user = await db.prepare('SELECT username FROM users WHERE id = ?')
-      .bind(payload.userId)
-      .first<{ username: string }>()
-    
-    editorName = user?.username ?? `User ${payload.userId}`
-  } else if (payload.ipHash) {
-    // 익명 편집 (IP 해시만으로 식별, 비밀번호 없음)
-    editorType = 'anonymous'
-    anonymousNumber = await getNextAnonymousNumber(db, 'howto', slug, payload.ipHash)
-    editorName = `익명 ${anonymousNumber}`
-    // 비밀번호는 없음 (IP 해시만으로 식별)
-    passwordHash = null
-  } else {
-    // IP 해시도 없는 경우 (로컬 개발 환경 등)
-    // 기본 익명 사용자로 처리
-    editorType = 'anonymous'
-    editorName = '익명 사용자'
-    passwordHash = null
-  }
+  const user = await db.prepare('SELECT username FROM users WHERE id = ?')
+    .bind(payload.userId)
+    .first<{ username: string }>()
+  
+  const editorName = user?.username ?? `User ${payload.userId}`
   
   // Content 길이 검증
   if (!payload.content || payload.content.length === 0) {
@@ -729,9 +714,6 @@ export async function editHowTo(
       editorId,
       editorType,
       editorName,
-      passwordHash,
-      anonymousNumber,
-      ipHash: payload.ipHash ?? null,
       changeType: 'edit',
       changeSummary: payload.changeSummary ?? 'Edited HowTo guide',
       changedFields: ['content'],
@@ -762,10 +744,7 @@ export async function editHowTo(
     throw new Error('DATA_UPDATE_FAILED')
   }
   
-  // 익명 편집 카운트 증가 (IP 해시가 있는 경우만)
-  if (!payload.userId && payload.ipHash) {
-    await incrementAnonymousEditCount(db, 'howto', slug, payload.ipHash)
-  }
+  console.log(`[editHowTo] Edited HowTo: ${slug} by user ${payload.userId}`)
   
   // 캐시 무효화 (편집 후 ISR 캐시 삭제)
   await invalidatePageCache(db, {
@@ -775,6 +754,159 @@ export async function editHowTo(
   
   return {
     success: true,
+    revisionId: revision.id
+  }
+}
+
+/**
+ * HowTo 생성 페이로드
+ */
+export interface CreateHowToPayload {
+  title: string
+  slug: string
+  summary: string
+  content: string  // JSON 문자열 (HowtoGuideDetail 구조)
+  userId: string   // 필수 (로그인 사용자만 생성 가능)
+  editorType?: 'user' | 'expert' | 'admin'
+}
+
+/**
+ * HowTo 생성
+ * 
+ * 새 HowTo 가이드를 생성합니다.
+ * 로그인 사용자만 생성 가능합니다.
+ * 
+ * @param db D1 데이터베이스
+ * @param payload 생성 페이로드
+ * @returns 성공 여부, 생성된 slug, revision ID
+ */
+export async function createHowTo(
+  db: D1Database,
+  payload: CreateHowToPayload
+): Promise<{ success: boolean; slug: string; revisionId: number }> {
+  // 필수 필드 검증
+  if (!payload.title || payload.title.trim().length === 0) {
+    throw new Error('TITLE_REQUIRED')
+  }
+  
+  if (!payload.slug || payload.slug.trim().length === 0) {
+    throw new Error('SLUG_REQUIRED')
+  }
+  
+  if (!payload.summary || payload.summary.trim().length === 0) {
+    throw new Error('SUMMARY_REQUIRED')
+  }
+  
+  if (!payload.content || payload.content.length === 0) {
+    throw new Error('CONTENT_REQUIRED')
+  }
+  
+  if (!payload.userId) {
+    throw new Error('LOGIN_REQUIRED')
+  }
+  
+  // Content 길이 검증
+  if (payload.content.length > 10 * 1024 * 1024) {
+    throw new Error('CONTENT_TOO_LONG')
+  }
+  
+  // Slug 검증 (영문, 숫자, 하이픈만)
+  const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+  const normalizedSlug = payload.slug.toLowerCase().trim()
+  if (!slugRegex.test(normalizedSlug)) {
+    throw new Error('INVALID_SLUG_FORMAT')
+  }
+  
+  // content 파싱 (JSON 문자열)
+  let contentData: any
+  try {
+    contentData = JSON.parse(payload.content)
+  } catch {
+    throw new Error('INVALID_CONTENT_FORMAT')
+  }
+  
+  // Content 정리 (XSS 방지)
+  const sanitizedContent = sanitizeContent(payload.content)
+  const sanitizedTitle = sanitizeContent(payload.title.trim())
+  const sanitizedSummary = sanitizeContent(payload.summary.trim())
+  
+  // 중복 slug 확인
+  const existingPage = await db.prepare(
+    'SELECT id FROM pages WHERE slug = ?'
+  ).bind(normalizedSlug).first()
+  
+  if (existingPage) {
+    throw new Error('SLUG_ALREADY_EXISTS')
+  }
+  
+  // 편집자 정보 조회
+  const user = await db.prepare('SELECT username, role FROM users WHERE id = ?')
+    .bind(payload.userId)
+    .first<{ username: string; role: string }>()
+  
+  const editorName = user?.username ?? `User ${payload.userId}`
+  const editorType = (payload.editorType ?? user?.role ?? 'user') as 'user' | 'expert' | 'admin'
+  
+  // pages 테이블에 INSERT
+  let pageId: number
+  try {
+    const result = await db.prepare(`
+      INSERT INTO pages (slug, title, page_type, content, summary, status, author_id, source)
+      VALUES (?, ?, 'guide', ?, ?, 'published', ?, 'user')
+    `).bind(
+      normalizedSlug,
+      sanitizedTitle,
+      sanitizedContent,
+      sanitizedSummary,
+      payload.userId
+    ).run()
+    
+    pageId = result.meta?.last_row_id as number
+  } catch (error) {
+    console.error('[createHowTo] Failed to insert into pages:', error)
+    throw new Error('CREATE_FAILED')
+  }
+  
+  // 스냅샷 생성
+  const snapshot = {
+    content: sanitizedContent,
+    contentData,
+    slug: normalizedSlug,
+    title: sanitizedTitle,
+    summary: sanitizedSummary
+  }
+  
+  // 초기 revision 생성
+  let revision: any
+  try {
+    revision = await createRevision(db, {
+      entityType: 'howto',
+      entityId: normalizedSlug,
+      dataSnapshot: snapshot,
+      editorId: payload.userId,
+      editorType,
+      editorName,
+      changeType: 'initial',
+      changeSummary: 'HowTo 가이드 생성',
+      changedFields: ['title', 'summary', 'content'],
+      storeFullSnapshot: true
+    })
+  } catch (error) {
+    // revision 생성 실패 시 pages 삭제 (보상 트랜잭션)
+    console.error('[createHowTo] Failed to create revision, rolling back:', error)
+    try {
+      await db.prepare('DELETE FROM pages WHERE id = ?').bind(pageId).run()
+    } catch (rollbackError) {
+      console.error('[createHowTo] Failed to rollback pages:', rollbackError)
+    }
+    throw new Error('REVISION_CREATION_FAILED')
+  }
+  
+  console.log(`[createHowTo] Created HowTo: ${normalizedSlug} by user ${payload.userId}`)
+  
+  return {
+    success: true,
+    slug: normalizedSlug,
     revisionId: revision.id
   }
 }
@@ -807,5 +939,259 @@ export async function editApiData(
   }
   
   throw new Error('INVALID_ENTITY_TYPE')
+}
+
+/**
+ * 직업 생성 페이로드 (관리자 전용)
+ */
+export interface CreateJobPayload {
+  id: string           // 직업 ID (고유)
+  name: string         // 직업명
+  summary?: string     // 요약
+  duties?: string      // 하는 일
+  salary?: string      // 급여
+  prospect?: string    // 전망
+  way?: string         // 되는 길
+  userId: string       // 생성자 ID
+}
+
+/**
+ * 직업 생성 (관리자 전용)
+ * 
+ * @param db D1 데이터베이스
+ * @param payload 생성 페이로드
+ * @returns 성공 여부, 생성된 ID, revision ID
+ */
+export async function createJob(
+  db: D1Database,
+  payload: CreateJobPayload
+): Promise<{ success: boolean; id: string; revisionId: number }> {
+  // 필수 필드 검증
+  if (!payload.id || payload.id.trim().length === 0) {
+    throw new Error('ID_REQUIRED')
+  }
+  
+  if (!payload.name || payload.name.trim().length === 0) {
+    throw new Error('NAME_REQUIRED')
+  }
+  
+  if (!payload.userId) {
+    throw new Error('LOGIN_REQUIRED')
+  }
+  
+  const jobId = payload.id.trim()
+  const jobName = sanitizeContent(payload.name.trim())
+  
+  // 중복 ID 확인
+  const existingJob = await db.prepare(
+    'SELECT id FROM jobs WHERE id = ?'
+  ).bind(jobId).first()
+  
+  if (existingJob) {
+    throw new Error('ID_ALREADY_EXISTS')
+  }
+  
+  // 초기 데이터 구성
+  const adminData: Record<string, any> = {}
+  if (payload.summary) adminData.summary = sanitizeContent(payload.summary)
+  if (payload.duties) adminData.duties = sanitizeContent(payload.duties)
+  if (payload.salary) adminData.salary = sanitizeContent(payload.salary)
+  if (payload.prospect) adminData.prospect = sanitizeContent(payload.prospect)
+  if (payload.way) adminData.way = sanitizeContent(payload.way)
+  
+  const now = Date.now()
+  
+  // jobs 테이블에 INSERT
+  try {
+    await db.prepare(`
+      INSERT INTO jobs (id, name, admin_data_json, admin_last_updated_at, created_at, is_active, primary_source)
+      VALUES (?, ?, ?, ?, ?, 1, 'CAREERNET')
+    `).bind(
+      jobId,
+      jobName,
+      JSON.stringify(adminData),
+      now,
+      now
+    ).run()
+  } catch (error) {
+    console.error('[createJob] Failed to insert into jobs:', error)
+    throw new Error('CREATE_FAILED')
+  }
+  
+  // 스냅샷 생성
+  const snapshot = {
+    id: jobId,
+    name: jobName,
+    ...adminData
+  }
+  
+  // 편집자 정보 조회
+  const user = await db.prepare('SELECT username FROM users WHERE id = ?')
+    .bind(payload.userId)
+    .first<{ username: string }>()
+  
+  const editorName = user?.username ?? `User ${payload.userId}`
+  
+  // 초기 revision 생성
+  let revision: any
+  try {
+    revision = await createRevision(db, {
+      entityType: 'job',
+      entityId: jobId,
+      dataSnapshot: snapshot,
+      editorId: payload.userId,
+      editorType: 'admin',
+      editorName,
+      changeType: 'initial',
+      changeSummary: '직업 생성 (관리자)',
+      changedFields: Object.keys(adminData),
+      storeFullSnapshot: true
+    })
+  } catch (error) {
+    // revision 생성 실패 시 jobs 삭제 (보상 트랜잭션)
+    console.error('[createJob] Failed to create revision, rolling back:', error)
+    try {
+      await db.prepare('DELETE FROM jobs WHERE id = ?').bind(jobId).run()
+    } catch (rollbackError) {
+      console.error('[createJob] Failed to rollback jobs:', rollbackError)
+    }
+    throw new Error('REVISION_CREATION_FAILED')
+  }
+  
+  console.log(`[createJob] Created job: ${jobId} (${jobName}) by admin ${payload.userId}`)
+  
+  return {
+    success: true,
+    id: jobId,
+    revisionId: revision.id
+  }
+}
+
+/**
+ * 전공 생성 페이로드 (관리자 전용)
+ */
+export interface CreateMajorPayload {
+  id: string           // 전공 ID (고유)
+  name: string         // 전공명
+  summary?: string     // 요약
+  property?: string    // 학과 특성
+  aptitude?: string    // 적성
+  whatStudy?: string   // 무엇을 배우나
+  howPrepare?: string  // 어떻게 준비하나
+  enterField?: string  // 진출 분야
+  userId: string       // 생성자 ID
+}
+
+/**
+ * 전공 생성 (관리자 전용)
+ * 
+ * @param db D1 데이터베이스
+ * @param payload 생성 페이로드
+ * @returns 성공 여부, 생성된 ID, revision ID
+ */
+export async function createMajor(
+  db: D1Database,
+  payload: CreateMajorPayload
+): Promise<{ success: boolean; id: string; revisionId: number }> {
+  // 필수 필드 검증
+  if (!payload.id || payload.id.trim().length === 0) {
+    throw new Error('ID_REQUIRED')
+  }
+  
+  if (!payload.name || payload.name.trim().length === 0) {
+    throw new Error('NAME_REQUIRED')
+  }
+  
+  if (!payload.userId) {
+    throw new Error('LOGIN_REQUIRED')
+  }
+  
+  const majorId = payload.id.trim()
+  const majorName = sanitizeContent(payload.name.trim())
+  
+  // 중복 ID 확인
+  const existingMajor = await db.prepare(
+    'SELECT id FROM majors WHERE id = ?'
+  ).bind(majorId).first()
+  
+  if (existingMajor) {
+    throw new Error('ID_ALREADY_EXISTS')
+  }
+  
+  // 초기 데이터 구성
+  const adminData: Record<string, any> = {}
+  if (payload.summary) adminData.summary = sanitizeContent(payload.summary)
+  if (payload.property) adminData.property = sanitizeContent(payload.property)
+  if (payload.aptitude) adminData.aptitude = sanitizeContent(payload.aptitude)
+  if (payload.whatStudy) adminData.whatStudy = sanitizeContent(payload.whatStudy)
+  if (payload.howPrepare) adminData.howPrepare = sanitizeContent(payload.howPrepare)
+  if (payload.enterField) adminData.enterField = sanitizeContent(payload.enterField)
+  
+  const now = Date.now()
+  
+  // majors 테이블에 INSERT
+  try {
+    await db.prepare(`
+      INSERT INTO majors (id, name, admin_data_json, admin_last_updated_at, created_at, is_active, primary_source)
+      VALUES (?, ?, ?, ?, ?, 1, 'CAREERNET')
+    `).bind(
+      majorId,
+      majorName,
+      JSON.stringify(adminData),
+      now,
+      now
+    ).run()
+  } catch (error) {
+    console.error('[createMajor] Failed to insert into majors:', error)
+    throw new Error('CREATE_FAILED')
+  }
+  
+  // 스냅샷 생성
+  const snapshot = {
+    id: majorId,
+    name: majorName,
+    ...adminData
+  }
+  
+  // 편집자 정보 조회
+  const user = await db.prepare('SELECT username FROM users WHERE id = ?')
+    .bind(payload.userId)
+    .first<{ username: string }>()
+  
+  const editorName = user?.username ?? `User ${payload.userId}`
+  
+  // 초기 revision 생성
+  let revision: any
+  try {
+    revision = await createRevision(db, {
+      entityType: 'major',
+      entityId: majorId,
+      dataSnapshot: snapshot,
+      editorId: payload.userId,
+      editorType: 'admin',
+      editorName,
+      changeType: 'initial',
+      changeSummary: '전공 생성 (관리자)',
+      changedFields: Object.keys(adminData),
+      storeFullSnapshot: true
+    })
+  } catch (error) {
+    // revision 생성 실패 시 majors 삭제 (보상 트랜잭션)
+    console.error('[createMajor] Failed to create revision, rolling back:', error)
+    try {
+      await db.prepare('DELETE FROM majors WHERE id = ?').bind(majorId).run()
+    } catch (rollbackError) {
+      console.error('[createMajor] Failed to rollback majors:', rollbackError)
+    }
+    throw new Error('REVISION_CREATION_FAILED')
+  }
+  
+  console.log(`[createMajor] Created major: ${majorId} (${majorName}) by admin ${payload.userId}`)
+  
+  return {
+    success: true,
+    id: majorId,
+    revisionId: revision.id
+  }
 }
 

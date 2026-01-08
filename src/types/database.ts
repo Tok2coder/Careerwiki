@@ -172,6 +172,15 @@ export interface JobRow {
   primary_source?: 'CAREERNET' | 'WORK24_JOB' | 'WORK24_DJOB' | null
   primary_std_code?: string | null
   name_en?: string | null
+
+  // Image fields from migration 0019
+  image_url?: string | null
+  image_alt?: string | null
+  image_credits?: string | null
+  image_style_version?: string | null
+
+  // Image prompt field from migration 0032
+  image_prompt?: string | null
 }
 
 /**
@@ -199,6 +208,15 @@ export interface MajorRow {
   ai_last_updated_at?: number | null
   primary_source?: 'CAREERNET' | 'WORK24_MAJOR' | null
   name_en?: string | null
+
+  // Image fields from migration 0019
+  image_url?: string | null
+  image_alt?: string | null
+  image_credits?: string | null
+  image_style_version?: string | null
+
+  // Image prompt field from migration 0032
+  image_prompt?: string | null
 }
 
 // ============================================================================

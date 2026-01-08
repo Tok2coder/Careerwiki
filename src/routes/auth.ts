@@ -17,6 +17,9 @@ import { generateAccessToken, generateRefreshToken, verifyAccessToken } from '..
 
 const auth = new Hono<{ Bindings: CloudflareBindings }>()
 
+const isHttpsRequest = (req: Request) =>
+  req.header('x-forwarded-proto') === 'https' || req.url.startsWith('https://')
+
 /**
  * Google OAuth 로그인 시작
  * GET /auth/google
@@ -24,17 +27,29 @@ const auth = new Hono<{ Bindings: CloudflareBindings }>()
 auth.get('/google', async (c) => {
   const env = c.env
   
+  const isHttps = isHttpsRequest(c.req)
+  
   // 이미 로그인되어 있는지 체크
   const accessToken = getCookie(c, 'access_token')
   if (accessToken) {
     const payload = await verifyAccessToken(accessToken, env.JWT_SECRET)
     if (payload) {
+      // DB에 사용자 존재 여부까지 확인 (없으면 쿠키 정리 후 재로그인 진행)
+      const user = await getUserById(env.DB, payload.userId)
+      if (user) {
       console.log('ℹ️ [OAuth] User already logged in, redirecting to home')
       console.log('   User ID:', payload.userId)
-      
-      // Return URL이 있으면 그곳으로, 없으면 메인 페이지로
       const returnUrl = c.req.query('return_url') || '/'
       return c.redirect(returnUrl)
+      } else {
+        console.log('⚠️ [OAuth] Token valid but user not found, clearing cookies')
+        deleteCookie(c, 'access_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+        deleteCookie(c, 'refresh_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+      }
+    } else {
+      // 토큰 검증 실패 시도 역시 쿠키 정리
+      deleteCookie(c, 'access_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+      deleteCookie(c, 'refresh_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
     }
   }
   
@@ -44,7 +59,7 @@ auth.get('/google', async (c) => {
   // State를 임시 쿠키에 저장 (5분 TTL)
   setCookie(c, 'oauth_state', state, {
     httpOnly: true,
-    secure: true,
+    secure: isHttps,
     sameSite: 'Lax',
     maxAge: 300, // 5분
     path: '/'
@@ -54,7 +69,7 @@ auth.get('/google', async (c) => {
   const returnUrl = c.req.query('return_url') || '/'
   setCookie(c, 'oauth_return_url', returnUrl, {
     httpOnly: true,
-    secure: true,
+    secure: isHttps,
     sameSite: 'Lax',
     maxAge: 300, // 5분
     path: '/'
@@ -86,6 +101,7 @@ auth.get('/google/callback', async (c) => {
   const env = c.env
   const code = c.req.query('code')
   const state = c.req.query('state')
+  const isHttps = isHttpsRequest(c.req)
   
   console.log('🔐 [OAuth] Callback received')
   console.log('   Code:', code?.substring(0, 20) + '...')
@@ -100,7 +116,7 @@ auth.get('/google/callback', async (c) => {
         <body>
           <h1>로그인 실패</h1>
           <p>보안 검증에 실패했습니다. 다시 시도해주세요.</p>
-          <a href="/auth/google">다시 로그인</a>
+          <a href="/login?redirect=${encodeURIComponent(c.req.path + c.req.search || '/')}">다시 로그인</a>
         </body>
       </html>
     `, 400)
@@ -114,7 +130,7 @@ auth.get('/google/callback', async (c) => {
         <body>
           <h1>로그인 실패</h1>
           <p>인증 코드를 받지 못했습니다. 다시 시도해주세요.</p>
-          <a href="/auth/google">다시 로그인</a>
+          <a href="/login?redirect=${encodeURIComponent(c.req.path + c.req.search || '/')}">다시 로그인</a>
         </body>
       </html>
     `, 400)
@@ -201,7 +217,7 @@ auth.get('/google/callback', async (c) => {
     // 8. HttpOnly Cookie 설정
     setCookie(c, 'access_token', accessToken, {
       httpOnly: true,
-      secure: true, // HTTPS에서만 전송
+      secure: isHttps, // HTTPS에서만 전송 (로컬/프리뷰에서는 false)
       sameSite: 'Lax',
       maxAge: 3600, // 1시간 (초 단위)
       path: '/'
@@ -209,7 +225,7 @@ auth.get('/google/callback', async (c) => {
     
     setCookie(c, 'refresh_token', refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: isHttps,
       sameSite: 'Lax',
       maxAge: 604800, // 7일 (초 단위)
       path: '/'
@@ -218,15 +234,30 @@ auth.get('/google/callback', async (c) => {
     console.log('🎉 [OAuth] Login successful!')
     console.log('   Access Token set (1 hour)')
     console.log('   Refresh Token set (7 days)')
+    console.log('   Onboarded:', user.onboarded === 1)
     
-    // 9. Return URL로 바로 리다이렉트
+    // 9. Return URL 처리
     const returnUrl = getCookie(c, 'oauth_return_url') || '/'
     
     // OAuth 쿠키 삭제
     deleteCookie(c, 'oauth_state')
     deleteCookie(c, 'oauth_return_url')
     
-    // 바로 원래 페이지로 리다이렉트
+    // 10. 온보딩 체크 - 신규 사용자는 온보딩 페이지로
+    if (user.onboarded === 0) {
+      console.log('🆕 [OAuth] New user, redirecting to onboarding...')
+      // 원래 가려던 URL을 쿠키에 저장 (온보딩 완료 후 사용)
+      setCookie(c, 'onboarding_return_url', returnUrl, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Lax',
+        maxAge: 3600, // 1시간
+        path: '/'
+      })
+      return c.redirect('/onboarding')
+    }
+    
+    // 기존 사용자는 원래 페이지로 리다이렉트
     return c.redirect(returnUrl)
     
   } catch (error) {
@@ -238,7 +269,7 @@ auth.get('/google/callback', async (c) => {
           <h1>로그인 실패</h1>
           <p>Google 로그인 중 오류가 발생했습니다.</p>
           <p style="color: #ef4444; font-family: monospace;">${error instanceof Error ? error.message : '알 수 없는 오류'}</p>
-          <a href="/auth/google">다시 로그인</a>
+          <a href="/login?redirect=${encodeURIComponent(c.req.path + c.req.search || '/')}">다시 로그인</a>
         </body>
       </html>
     `, 500)
@@ -251,6 +282,7 @@ auth.get('/google/callback', async (c) => {
  */
 auth.post('/logout', async (c) => {
   const refreshToken = getCookie(c, 'refresh_token')
+  const isHttps = isHttpsRequest(c.req)
   
   console.log('🚪 [Auth] Logout requested')
   
@@ -265,14 +297,20 @@ auth.post('/logout', async (c) => {
   }
   
   // Cookie 삭제
-  deleteCookie(c, 'access_token')
-  deleteCookie(c, 'refresh_token')
+  deleteCookie(c, 'access_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+  deleteCookie(c, 'refresh_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
   
   console.log('✅ [Auth] Cookies cleared')
   console.log('🎉 [Auth] Logout successful')
   
-  // 메인 페이지로 리다이렉트
-  return c.redirect('/')
+  // POST body에서 return_url 가져오기, 없으면 쿼리 파라미터, 없으면 메인 페이지
+  const body = await c.req.parseBody()
+  const returnUrl = (body.return_url as string) || c.req.query('return_url') || '/'
+  
+  // 보안: 같은 도메인 내의 경로만 허용 (외부 URL 리다이렉트 방지)
+  const safeUrl = returnUrl.startsWith('/') ? returnUrl : '/'
+  
+  return c.redirect(safeUrl)
 })
 
 /**
@@ -282,6 +320,7 @@ auth.post('/logout', async (c) => {
 auth.get('/logout', async (c) => {
   // POST와 동일한 로직
   const refreshToken = getCookie(c, 'refresh_token')
+  const isHttps = isHttpsRequest(c.req)
   
   console.log('🚪 [Auth] Logout requested (GET)')
   
@@ -294,13 +333,19 @@ auth.get('/logout', async (c) => {
     }
   }
   
-  deleteCookie(c, 'access_token')
-  deleteCookie(c, 'refresh_token')
+  deleteCookie(c, 'access_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+  deleteCookie(c, 'refresh_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
   
   console.log('✅ [Auth] Cookies cleared')
   console.log('🎉 [Auth] Logout successful')
   
-  return c.redirect('/')
+  // 쿼리 파라미터에서 return_url 가져오기, 없으면 메인 페이지
+  const returnUrl = c.req.query('return_url') || '/'
+  
+  // 보안: 같은 도메인 내의 경로만 허용 (외부 URL 리다이렉트 방지)
+  const safeUrl = returnUrl.startsWith('/') ? returnUrl : '/'
+  
+  return c.redirect(safeUrl)
 })
 
 /**

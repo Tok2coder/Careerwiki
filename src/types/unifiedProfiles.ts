@@ -542,6 +542,7 @@ export interface UnifiedJobDetail extends UnifiedJobSummary {
       source?: string | null
     } | null
   }
+  trivia?: string | string[] | null
   overviewSalary?: {
     sal?: string | null
     wage?: string | null

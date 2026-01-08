@@ -696,9 +696,8 @@ export async function getJobDetail(jobdicSeq: string, env?: any): Promise<Job | 
     
   } catch (error) {
     console.error('직업 상세정보 조회 오류:', error);
-    // API 오류 시 더미 데이터 반환 (개발용)
-    console.error('직업 상세정보 조회 실패, Mock 데이터 사용');
-    return getMockJobDetail(jobdicSeq);
+    // API 오류 시 null 반환 (Mock 데이터 사용 중단 - 잘못된 직업 ID로 잘못된 페이지 렌더링 방지)
+    return null;
   }
 }
 

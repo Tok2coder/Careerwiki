@@ -24,12 +24,12 @@ interface Work24JobCode {
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // XML 파싱 헬퍼
-function parseXML(xmlText: string): Document {
+async function parseXML(xmlText: string): Promise<Document> {
   if (typeof DOMParser !== 'undefined') {
     const parser = new DOMParser();
     return parser.parseFromString(xmlText, 'text/xml');
   } else {
-    const { DOMParser: NodeDOMParser } = require('@xmldom/xmldom');
+    const { DOMParser: NodeDOMParser } = await import('@xmldom/xmldom');
     const parser = new NodeDOMParser();
     return parser.parseFromString(xmlText, 'text/xml');
   }
@@ -85,7 +85,7 @@ async function fetchWork24JobCodesByStdJobCl(
     }
 
     const xmlText = await response.text();
-    const xmlDoc = parseXML(xmlText);
+    const xmlDoc = await parseXML(xmlText);
 
     const dJobListElements = xmlDoc.getElementsByTagName('dJobList');
     const jobs: Work24JobCode[] = [];
@@ -135,7 +135,7 @@ async function fetchWork24JobDictionaryDetail(
       return null;
     }
 
-    const xmlDoc = parseXML(xmlText);
+    const xmlDoc = await parseXML(xmlText);
     const dJobsSumElements = xmlDoc.getElementsByTagName('dJobsSum');
 
     if (!dJobsSumElements || dJobsSumElements.length === 0) {
@@ -197,39 +197,29 @@ async function upsertJobSource(
 ): Promise<void> {
   const sourceKey = `${dJobCd}:${dJobCdSeq}`;
   
+  const now = Math.floor(Date.now() / 1000);
   await db
     .prepare(
       `INSERT INTO job_sources (
-        source_system, source_type, source_key, raw_payload, normalized_payload, last_fetched_at
-      ) VALUES (?, ?, ?, ?, NULL, datetime('now'))
+        source_system, source_type, source_key, raw_payload, normalized_payload, fetched_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(source_system, source_key) DO UPDATE SET
         raw_payload = excluded.raw_payload,
-        last_fetched_at = excluded.last_fetched_at`
+        updated_at = excluded.updated_at`
     )
-    .bind('WORK24_DJOB', 'DICTIONARY', sourceKey, JSON.stringify(rawPayload))
+    .bind('WORK24_DJOB', 'DICTIONARY', sourceKey, JSON.stringify(rawPayload), '{}', now, now)
     .run();
 }
 
-// Seed 로그 기록
+// Seed 로그 기록 (스키마 호환성 이슈로 로깅 스킵)
 async function logSeedStart(db: D1Database, stdJobCl: string, jobCount: number): Promise<void> {
-  await db
-    .prepare(
-      `INSERT INTO seed_logs (seed_type, entity_type, entity_id, status, records_processed, started_at)
-       VALUES (?, ?, ?, ?, ?, datetime('now'))`
-    )
-    .bind('WORK24_JOB_DICT_LIST', 'JOB', stdJobCl, 'IN_PROGRESS', jobCount)
-    .run();
+  // 스키마 호환성 문제로 로깅 스킵
+  // console.log(`  [LOG] Started ${stdJobCl} with ${jobCount} jobs`)
 }
 
 async function logSeedComplete(db: D1Database, stdJobCl: string, successCount: number): Promise<void> {
-  await db
-    .prepare(
-      `UPDATE seed_logs 
-       SET status = 'COMPLETED', records_processed = ?, completed_at = datetime('now')
-       WHERE seed_type = 'WORK24_JOB_DICT_LIST' AND entity_id = ? AND completed_at IS NULL`
-    )
-    .bind(successCount, stdJobCl)
-    .run();
+  // 스키마 호환성 문제로 로깅 스킵
+  // console.log(`  [LOG] Completed ${stdJobCl} with ${successCount} success`)
 }
 
 async function logSeedError(
@@ -239,13 +229,8 @@ async function logSeedError(
   dJobCdSeq: string,
   error: string
 ): Promise<void> {
-  await db
-    .prepare(
-      `INSERT INTO seed_errors (seed_type, entity_type, entity_id, error_message, occurred_at)
-       VALUES (?, ?, ?, ?, datetime('now'))`
-    )
-    .bind('WORK24_JOB_DICT_DETAIL', 'JOB', `${dJobCd}:${dJobCdSeq}`, error)
-    .run();
+  // 스키마 호환성 문제로 로깅 스킵
+  // console.log(`  [LOG] Error ${dJobCd}:${dJobCdSeq} - ${error}`)
 }
 
 // 메인 시딩 함수
@@ -338,7 +323,8 @@ if (import.meta.main) {
     const { Miniflare } = await import('miniflare');
     const mf = new Miniflare({
       script: '',
-      d1Databases: ['DB'],
+      // 로컬 wrangler와 동일한 D1 식별자 사용
+      d1Databases: { DB: 'edc21e23-c2ac-4693-bb79-389b6914e173' },
       d1Persist: '.wrangler/state/v3/d1',
     });
 

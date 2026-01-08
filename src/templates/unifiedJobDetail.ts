@@ -31,6 +31,7 @@ export interface UnifiedJobDetailTemplateParams {
     careernet?: any
     goyong24?: any
   }
+  existingJobSlugs?: Map<string, string>  // DB에 존재하는 직업명 → slug 매핑
 }
 
 const SOURCE_DESCRIPTIONS: Record<DataSource, string> = {
@@ -541,16 +542,20 @@ const renderComparisonTable = (
     } else {
     
     // 필터링된 유효한 항목들로 행 생성
+    // 설명을 항목 아래에 표시 (모바일/데스크톱 동일)
     const rows = validItems.map((item: any, index: number) => {
       const isHidden = index >= 5
       const hideClass = isHidden ? 'hidden' : ''
       const expandableAttr = isHidden ? 'data-expandable-row="true"' : ''
+      const hasDesc = item.description && safeTrim(item.description)
       
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
-          <td class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.value.toFixed(1)}</td>
-          <td class="px-2 py-2 md:px-4 md:py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.label)}</td>
-          <td class="px-2 py-2 md:px-4 md:py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(item.description)}</td>
+          <td class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text text-sm md:text-base align-top">${item.value.toFixed(1)}</td>
+          <td class="px-2 py-2 md:px-4 md:py-3 text-wiki-text text-sm md:text-base">
+            <span class="font-medium">${escapeHtml(item.label)}</span>
+            ${hasDesc ? `<p class="text-xs md:text-sm text-wiki-muted mt-1 font-normal leading-relaxed">${escapeHtml(item.description)}</p>` : ''}
+          </td>
         </tr>
       `
     }).join('')
@@ -569,7 +574,7 @@ const renderComparisonTable = (
     ` : ''
 
       blocks.push(`
-        <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl px-0 md:px-6 py-6 border-0 md:border md:border-wiki-border/50">
+        <div class="bg-white/5 rounded-2xl px-3 py-4 md:px-6 md:py-6 border border-wiki-border/50">
           <div class="mb-4">
             <h3 class="text-base font-bold text-wiki-secondary mb-2">
               <i class="fas fa-clover mr-2"></i>직업 내 비교
@@ -578,13 +583,12 @@ const renderComparisonTable = (
               500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 내에 비교하여 본 직업에서 중요성(평가점수)이 높게 나타난 항목을 순서대로 제시함
             </p>
           </div>
-          <div class="overflow-x-auto">
+          <div class="overflow-x-auto -mx-1 md:mx-0">
             <table class="w-full" id="${tableId}">
               <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
                 <tr>
-                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">평균<br/>(5점 만점)</th>
-                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
-                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text text-sm md:text-base" style="width: 70px; min-width: 70px;">평균</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-left font-semibold text-wiki-text text-sm md:text-base">항목</th>
                 </tr>
               </thead>
               <tbody>
@@ -634,16 +638,20 @@ const renderComparisonTable = (
     } else {
     
     // 필터링된 유효한 항목들로 행 생성
+    // 설명을 항목 아래에 표시 (모바일/데스크톱 동일)
     const rows = validItems.map((item: any, index: number) => {
       const isHidden = index >= 5
       const hideClass = isHidden ? 'hidden' : ''
       const expandableAttr = isHidden ? 'data-expandable-row="true"' : ''
+      const hasDesc = item.description && safeTrim(item.description)
       
       return `
         <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
-          <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.value.toFixed(0)}</td>
-          <td class="px-2 py-2 md:px-4 md:py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.label)}</td>
-          <td class="px-2 py-2 md:px-4 md:py-3 text-wiki-muted" style="font-size: 15px;">${escapeHtml(item.description)}</td>
+          <td class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text text-sm md:text-base align-top">${item.value.toFixed(0)}</td>
+          <td class="px-2 py-2 md:px-4 md:py-3 text-wiki-text text-sm md:text-base">
+            <span class="font-medium">${escapeHtml(item.label)}</span>
+            ${hasDesc ? `<p class="text-xs md:text-sm text-wiki-muted mt-1 font-normal leading-relaxed">${escapeHtml(item.description)}</p>` : ''}
+          </td>
         </tr>
       `
     }).join('')
@@ -662,7 +670,7 @@ const renderComparisonTable = (
     ` : ''
 
       blocks.push(`
-        <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl p-0 md:p-6 border-0 md:border md:border-wiki-border/50 ${withinJob ? 'mt-8' : ''}">
+        <div class="bg-white/5 rounded-2xl px-3 py-4 md:px-6 md:py-6 border border-wiki-border/50 ${withinJob ? 'mt-8' : ''}">
           <div class="mb-4">
             <h3 class="text-base font-bold text-wiki-secondary mb-2">
               <i class="fas fa-exchange-alt mr-2"></i>직업 간 비교
@@ -671,13 +679,12 @@ const renderComparisonTable = (
               500여 개 직업 종사자들의 자신의 직업에 대해 평가한 ${title} 관련 항목별 중요도를 직업 간에 비교하여 본 직업에서 중요성(백분위)이 높게 나타난 항목을 순서대로 제시함
             </p>
           </div>
-          <div class="overflow-x-auto">
+          <div class="overflow-x-auto -mx-1 md:mx-0">
             <table class="w-full" id="${tableId}">
               <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
                 <tr>
-                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">백분위</th>
-                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 150px; font-size: 15px;">항목</th>
-                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">설명</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text text-sm md:text-base" style="width: 70px; min-width: 70px;">백분위</th>
+                  <th class="px-2 py-2 md:px-4 md:py-3 text-left font-semibold text-wiki-text text-sm md:text-base">항목</th>
                 </tr>
               </thead>
               <tbody>
@@ -1039,7 +1046,7 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
   return `
     <div class="space-y-6">
       <!-- 차트 컨테이너 -->
-      <div class="w-full bg-transparent md:bg-white/5 rounded-none md:rounded-2xl px-0 md:px-6 py-6 border-0 md:border md:border-wiki-border/50">
+      <div class="w-full bg-white/5 rounded-2xl px-6 py-6 border border-wiki-border/50">
         <canvas id="${chartId}" style="max-height: 400px;"></canvas>
       </div>
       
@@ -2076,7 +2083,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
 
   return `
     <nav
-      class="glass-card border-0 md:border px-2 py-6 md:px-6 rounded-none md:rounded-2xl md:border-wiki-border/60 bg-wiki-bg/70"
+      class="glass-card border px-4 py-6 md:px-6 rounded-2xl border-wiki-border/60 bg-wiki-bg/70"
       data-section-toc="${sectionKey}"
       data-cw-telemetry-scope="${sectionKey}-toc"
       data-cw-telemetry-component="section-toc"
@@ -2130,7 +2137,7 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
   }
 
   return `
-    <section class="glass-card border-0 md:border px-3 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-transparent md:bg-wiki-bg/30" data-job-sidebar-section>
+    <section class="glass-card border px-4 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-wiki-bg/30" data-job-sidebar-section>
       <div class="flex items-center gap-2.5 pb-2 border-b border-wiki-border/30 md:border-0 md:pb-0">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-wiki-secondary/15 text-wiki-secondary">
           <i class="fas ${icon} text-sm" aria-hidden="true"></i>
@@ -2142,7 +2149,7 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
   `
 }
 
-const renderJobSidebar = (profile: UnifiedJobDetail): string => {
+const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<string, string>): string => {
   const sections: string[] = []
 
   // 연관 직업 (ETL 구조화 필드 sidebarJobs 사용)
@@ -2160,18 +2167,41 @@ const renderJobSidebar = (profile: UnifiedJobDetail): string => {
     })
     
     if (validJobs.length > 0) {
-      const hasMore = validJobs.length > limit
-      const visibleJobs = validJobs.slice(0, limit)
-      const hiddenJobs = validJobs.slice(limit)
+      // DB에 존재하는 직업을 위로, 존재하지 않는 직업을 아래로 정렬
+      const sortedJobs = [...validJobs].sort((a, b) => {
+        const aName = extractEntityName(a)?.toLowerCase() || ''
+        const bName = extractEntityName(b)?.toLowerCase() || ''
+        const aExists = existingJobSlugs?.has(aName) ?? false
+        const bExists = existingJobSlugs?.has(bName) ?? false
+        if (aExists && !bExists) return -1
+        if (!aExists && bExists) return 1
+        return 0
+      })
+      
+      const hasMore = sortedJobs.length > limit
+      const visibleJobs = sortedJobs.slice(0, limit)
+      const hiddenJobs = sortedJobs.slice(limit)
       
       const renderJob = (entity: JobRelatedEntity | any, isHidden: boolean = false) => {
-        const name = escapeHtml(extractEntityName(entity))
-        const url = buildEntityUrl(entity, 'job')
+        const rawName = extractEntityName(entity)
+        const name = escapeHtml(rawName)
+        const nameLower = rawName?.toLowerCase() || ''
+        
+        // DB에 존재하는 직업은 상세페이지로, 존재하지 않는 직업은 검색페이지로
+        const existsInDb = existingJobSlugs?.has(nameLower)
+        const url = existsInDb 
+          ? buildEntityUrl(entity, 'job')
+          : `/search?q=${encodeURIComponent(rawName)}`
+        
+        // 존재하지 않는 직업은 아이콘과 스타일을 약간 다르게
+        const icon = existsInDb ? 'fa-briefcase' : 'fa-search'
+        const opacity = existsInDb ? '' : 'opacity-75'
+        
         return `
           <li${isHidden ? ' class="hidden-item" style="display: none;"' : ''}>
-            <a href="${url}" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
+            <a href="${url}" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200 ${opacity}">
               <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
-                <i class="fas fa-briefcase text-xs" aria-hidden="true"></i>
+                <i class="fas ${icon} text-xs" aria-hidden="true"></i>
               </span>
               <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors">${name}</span>
               <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all" aria-hidden="true"></i>
@@ -2352,10 +2382,61 @@ const renderJobSidebar = (profile: UnifiedJobDetail): string => {
   return sections.filter((section) => section && safeTrim(section).length > 0).join('')
 }
 
+// 사용자 추가 출처를 평탄화하여 공통으로 활용 (페이지 표시 순서대로 정렬, 1부터 번호 부여)
+const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; text: string }> => {
+  if (!src || typeof src !== 'object') return []
+  
+  // 필드 표시 순서 (개요 탭 → 상세정보 탭)
+  const fieldOrder: string[] = [
+    // 히어로 섹션
+    'summary', 'heroCategory', 'heroTags',
+    // 개요 탭
+    'overviewWork.main', 'overviewWork.physicalAct', 'overviewWork.mentalAct',
+    'overviewAbilities.abilityList', 'overviewAbilities.aptitudeList', 'overviewAbilities.interestList',
+    'trivia',
+    // 상세정보 탭
+    'detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList',
+    // 사이드바
+    'sidebarMajors', 'sidebarCerts'
+  ]
+  
+  const flat: Array<{ id: number; fieldKey: string; text: string; displayOrder: number; originalId: number }> = []
+  
+  for (const [fieldKey, val] of Object.entries(src)) {
+    const arr = Array.isArray(val) ? val : [val]
+    arr.forEach((item: any) => {
+      const text = (item?.text || item?.url || '').trim()
+      if (!text) return
+      const originalId = item?.id || 0
+      const displayOrder = fieldOrder.indexOf(fieldKey)
+      flat.push({ 
+        id: 0, // 나중에 순서대로 재부여
+        fieldKey, 
+        text, 
+        displayOrder: displayOrder >= 0 ? displayOrder : 999,
+        originalId 
+      })
+    })
+  }
+  
+  // 표시 순서대로 정렬 후 1부터 번호 재부여
+  flat.sort((a, b) => {
+    if (a.displayOrder !== b.displayOrder) return a.displayOrder - b.displayOrder
+    return a.originalId - b.originalId // 같은 필드 내에서는 입력 순서
+  })
+  
+  return flat.map((item, idx) => ({
+    id: idx + 1, // 1부터 순차 번호
+    fieldKey: item.fieldKey,
+    text: item.text
+  }))
+}
+
 const renderSourcesCollapsible = (
   profile: UnifiedJobDetail,
   sources?: SourceStatusRecord,
-  partials?: Partial<Record<DataSource, UnifiedJobDetail | null>>
+  partials?: Partial<Record<DataSource, UnifiedJobDetail | null>>,
+  userSourcesFlatFromTemplate?: Array<{ id: number; fieldKey: string; text: string }>
 ): string => {
   const normalizedId = profile.id.replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'default'
   const panelId = `job-source-panel-${normalizedId}`
@@ -2380,6 +2461,10 @@ const renderSourcesCollapsible = (
     normalizedPartials.WORK24_DJOB = profile
   }
 
+  // 사용자가 추가한 출처 (_sources) - 배열 지원
+  const userSources = (profile as any)._sources as Record<string, { id?: number; text?: string; url?: string }[] | { id?: number; text?: string; url?: string }> | undefined
+  const userSourcesFlat = userSourcesFlatFromTemplate ?? normalizeUserSources(userSources)
+  
   const panel = renderSourcesPanel({
     profile,
     sources,
@@ -2390,24 +2475,86 @@ const renderSourcesCollapsible = (
     description: '이 페이지에 노출된 주요 데이터 출처를 확인할 수 있습니다.'
   })
 
+  // 사용자 출처 HTML 생성
+  const userSourcesHtml = userSourcesFlat.length > 0
+    ? userSourcesFlat.map((source) => {
+        // 필드 키를 읽기 쉬운 레이블로 변환
+        const fieldLabels: Record<string, string> = {
+          'summary': '직업 설명',
+          'heroCategory': '직업 분류',
+          'heroTags': '태그',
+          'overviewWork.main': '수행 직무',
+          'overviewWork.workStrong': '작업강도',
+          'overviewWork.workPlace': '작업장소',
+          'overviewWork.physicalAct': '육체활동',
+          'overviewAbilities.abilityList': '핵심 역량',
+          'overviewAbilities.technKnow': '활용 기술',
+          'overviewAptitude.aptitudeList': '적성',
+          'overviewAptitude.interestList': '흥미',
+          'trivia': '여담',
+          'detailReady.curriculum': '정규 교육과정',
+          'detailReady.recruit': '채용 정보',
+          'detailReady.training': '필요 교육/훈련',
+          'detailReady.researchList': '진로 탐색 활동',
+          'sidebarJobs': '관련 직업',
+          'sidebarMajors': '관련 학과',
+          'sidebarCerts': '추천 자격증'
+        }
+        const fieldLabel = fieldLabels[source.fieldKey] || source.fieldKey
+        return `
+          <li class="user-source-item p-3 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10" 
+              id="user-fn-${source.id}" 
+              data-back-to="user-fnref-${source.id}"
+              data-field-key="${escapeHtml(source.fieldKey)}">
+            <div class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-xs font-bold flex items-center justify-center">${source.id}</span>
+              <div class="flex-1 text-sm">
+                <span class="text-wiki-muted">[${escapeHtml(fieldLabel)}]</span>
+                <span class="text-wiki-text ml-2">${escapeHtml(source.text)}</span>
+              </div>
+            </div>
+          </li>
+        `
+      }).join('')
+    : ''
+
+  const hasUserSources = userSourcesFlat.length > 0
+  const userSourceCount = userSourcesFlat.length
+
   if (!panel || !safeTrim(panel)) {
+    // API 출처가 없어도 사용자 출처가 있으면 표시
+    if (!hasUserSources) {
     return ''
+    }
   }
 
   const activeSourceCountFromSources = normalizedSources.length
   const fallbackSourceCount = Object.values(normalizedPartials || {}).filter((value) => Boolean(value)).length
-  const activeSourceCount = activeSourceCountFromSources || fallbackSourceCount
+  const activeSourceCount = (activeSourceCountFromSources || fallbackSourceCount) + userSourceCount
   const badgeLabel = `${activeSourceCount}개`
 
   const toggleId = `source-toggle-${normalizedId}`
   const iconId = `source-icon-${normalizedId}`
 
+  // 사용자 출처 섹션
+  const userSourcesSection = hasUserSources ? `
+    <div class="mt-6 pt-4 border-t border-wiki-border/40">
+      <h4 class="text-sm font-semibold text-wiki-text mb-3 flex items-center gap-2">
+        <i class="fas fa-user-edit text-wiki-primary"></i>
+        사용자 추가 출처
+      </h4>
+      <ol class="space-y-2">
+        ${userSourcesHtml}
+      </ol>
+    </div>
+  ` : ''
+
   return `
-    <section class="glass-card p-0 rounded-none md:rounded-2xl border border-wiki-border/60 bg-wiki-bg/50" data-source-collapsible>
+    <section class="glass-card p-0 rounded-2xl border border-wiki-border/60 bg-wiki-bg/50" data-source-collapsible>
       <button
         type="button"
         id="${toggleId}"
-        class="w-full flex items-center justify-between gap-3 px-3 py-4 md:px-6 md:py-5 content-text font-semibold text-white transition hover:text-wiki-secondary cursor-pointer"
+        class="w-full flex items-center justify-between gap-3 px-4 py-4 md:px-6 md:py-5 content-text font-semibold text-white transition hover:text-wiki-secondary cursor-pointer"
         aria-controls="${panelId}"
         aria-expanded="false"
       >
@@ -2421,7 +2568,8 @@ const renderSourcesCollapsible = (
         </div>
       </button>
       <div class="border-t border-wiki-border/60 hidden bg-wiki-bg/45 px-6 py-5" id="${panelId}">
-        ${panel}
+        ${panel || ''}
+        ${userSourcesSection}
       </div>
     </section>
     <script>
@@ -2447,6 +2595,185 @@ const renderSourcesCollapsible = (
             }
           });
         }
+        
+        // 주석 번호 클릭 → 출처 섹션으로 이동
+        document.querySelectorAll('.user-footnote-ref').forEach(function(ref) {
+          ref.addEventListener('click', function(e) {
+            e.preventDefault();
+            var sourceId = this.getAttribute('data-source-id');
+            var targetEl = document.getElementById('user-fn-' + sourceId);
+            if (!targetEl) return;
+            
+            // 출처 섹션 펼치기
+            var sourceSection = document.querySelector('[data-source-collapsible]');
+            if (sourceSection) {
+              var toggleBtn = sourceSection.querySelector('button[aria-controls]');
+              if (toggleBtn && toggleBtn.getAttribute('aria-expanded') === 'false') {
+                toggleBtn.click();
+              }
+            }
+            
+            // 스크롤 이동
+            setTimeout(function() {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              targetEl.classList.add('ring-2', 'ring-wiki-primary');
+              setTimeout(function() {
+                targetEl.classList.remove('ring-2', 'ring-wiki-primary');
+              }, 2000);
+            }, 300);
+          });
+        });
+        
+        // 출처 클릭 → 해당 섹션으로 이동 (탭 전환 포함)
+        document.querySelectorAll('.user-source-item').forEach(function(item) {
+          item.addEventListener('click', function() {
+            var backTo = this.getAttribute('data-back-to');
+            var fieldKey = this.getAttribute('data-field-key');
+            var targetEl = document.getElementById(backTo);
+            
+            // 필드 키에 따라 필요한 탭 결정
+            var targetTabId = null;
+            if (fieldKey) {
+              // 상세정보 필드
+              var detailFields = ['detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList'];
+              if (fieldKey.startsWith('detail') || detailFields.some(function(f) { return fieldKey.startsWith(f) || fieldKey === f; })) {
+                targetTabId = 'details';  // 탭 ID는 'details' (복수형)
+              } else if (fieldKey.startsWith('overview') || fieldKey === 'summary' || fieldKey === 'heroCategory' || fieldKey === 'heroTags' || fieldKey === 'trivia') {
+                targetTabId = 'overview';
+              }
+              // sidebar 필드는 탭 전환 불필요 (항상 표시)
+            }
+            
+            // 탭 전환 함수 (api-client.js의 DetailTabs 로직과 일치)
+            function switchToTab(tabId) {
+              var tabBtn = document.getElementById('cw-tab-' + tabId);
+              var tabPanel = document.getElementById('cw-tab-panel-' + tabId);
+              if (!tabBtn || !tabPanel) return;
+              
+              // 이미 해당 탭이 활성화되어 있으면 스킵
+              if (tabBtn.getAttribute('aria-selected') === 'true') return;
+              
+              var ACTIVE_CLASSES = ['text-white', 'border-wiki-primary', 'md:bg-wiki-border/30'];
+              var INACTIVE_CLASSES = ['text-wiki-muted', 'border-transparent', 'bg-transparent'];
+              
+              // 모든 탭 버튼 비활성화
+              document.querySelectorAll('[data-cw-tab-trigger]').forEach(function(btn) {
+                btn.setAttribute('aria-selected', 'false');
+                btn.setAttribute('tabindex', '-1');
+                btn.classList.remove('is-active');
+                ACTIVE_CLASSES.forEach(function(cls) { btn.classList.remove(cls); });
+                INACTIVE_CLASSES.forEach(function(cls) { btn.classList.add(cls); });
+              });
+              
+              // 모든 탭 패널 비활성화
+              document.querySelectorAll('[data-cw-tab-panel]').forEach(function(panel) {
+                panel.setAttribute('aria-hidden', 'true');
+                panel.setAttribute('tabindex', '-1');
+                panel.classList.remove('is-active');
+                panel.classList.add('is-hidden');
+              });
+              
+              // 대상 탭 버튼 활성화
+              tabBtn.setAttribute('aria-selected', 'true');
+              tabBtn.setAttribute('tabindex', '0');
+              tabBtn.classList.add('is-active');
+              INACTIVE_CLASSES.forEach(function(cls) { tabBtn.classList.remove(cls); });
+              ACTIVE_CLASSES.forEach(function(cls) { tabBtn.classList.add(cls); });
+              
+              // 대상 탭 패널 활성화
+              tabPanel.setAttribute('aria-hidden', 'false');
+              tabPanel.setAttribute('tabindex', '0');
+              tabPanel.classList.add('is-active');
+              tabPanel.classList.remove('is-hidden');
+              
+              // tabset의 data-active-tab 업데이트
+              var tabset = document.querySelector('[data-cw-tabset]');
+              if (tabset) {
+                tabset.setAttribute('data-active-tab', tabId);
+              }
+            }
+            
+            // 탭 전환 필요 시 전환
+            if (targetTabId) {
+              switchToTab(targetTabId);
+            }
+            
+            // 약간의 지연 후 스크롤 (탭 전환 후 렌더링 대기)
+            setTimeout(function() {
+              if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetEl.classList.add('ring-2', 'ring-wiki-primary');
+                setTimeout(function() {
+                  targetEl.classList.remove('ring-2', 'ring-wiki-primary');
+                }, 2000);
+              }
+            }, 100);
+          });
+        });
+        
+        // 데이터 출처 하이라이트 기능 (배타적 + 토글 방식)
+        (function() {
+          var activeSource = null;
+          var sourceColors = {
+            'CAREERNET': { bg: 'rgba(59, 130, 246, 0.08)', border: 'rgba(59, 130, 246, 0.3)' },
+            'GOYONG24': { bg: 'rgba(34, 197, 94, 0.08)', border: 'rgba(34, 197, 94, 0.3)' },
+            'WORK24_JOB': { bg: 'rgba(34, 197, 94, 0.08)', border: 'rgba(34, 197, 94, 0.3)' },
+            'WORK24_DJOB': { bg: 'rgba(168, 85, 247, 0.08)', border: 'rgba(168, 85, 247, 0.3)' }
+          };
+          
+          function clearAllHighlights() {
+            document.querySelectorAll('[data-source]').forEach(function(el) {
+              el.style.backgroundColor = '';
+              el.style.boxShadow = '';
+              el.classList.remove('source-highlighted');
+            });
+            document.querySelectorAll('[data-source-entry]').forEach(function(el) {
+              el.classList.remove('ring-2', 'ring-wiki-primary');
+            });
+          }
+          
+          function highlightSource(source) {
+            var color = sourceColors[source];
+            if (!color) return;
+            
+            document.querySelectorAll('[data-source]').forEach(function(el) {
+              var sources = (el.getAttribute('data-source') || '').split(',');
+              if (sources.indexOf(source) !== -1) {
+                el.style.backgroundColor = color.bg;
+                el.style.boxShadow = 'inset 0 0 0 1px ' + color.border;
+                el.classList.add('source-highlighted');
+              }
+            });
+            
+            // 해당 출처 항목도 강조
+            var sourceEntry = document.querySelector('[data-source-entry="' + source + '"]');
+            if (sourceEntry) {
+              sourceEntry.classList.add('ring-2', 'ring-wiki-primary');
+            }
+          }
+          
+          // 출처 항목 클릭 이벤트
+          document.querySelectorAll('[data-source-entry][data-source-has-data="true"]').forEach(function(entry) {
+            entry.addEventListener('click', function(e) {
+              // 다른 클릭 이벤트와 충돌 방지
+              if (e.target.closest('.user-source-item')) return;
+              
+              var source = this.getAttribute('data-source-entry');
+              
+              // 배타적 + 토글 방식
+              if (activeSource === source) {
+                // 같은 출처 클릭 시 끄기
+                clearAllHighlights();
+                activeSource = null;
+              } else {
+                // 다른 출처 클릭 시 전환
+                clearAllHighlights();
+                highlightSource(source);
+                activeSource = source;
+              }
+            });
+          });
+        })();
       })();
     </script>
   `
@@ -2835,7 +3162,7 @@ const renderKecoCodeList = (profile: UnifiedJobDetail): string => {
 
 
 
-export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData }: UnifiedJobDetailTemplateParams): string => {
+export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData, existingJobSlugs }: UnifiedJobDetailTemplateParams): string => {
   // profile은 merged_profile_json에서 파싱된 데이터 (평탄한 구조 + 계층적 구조 병행)
   // ETL에서 기본 필드들을 모두 포함하고 있음
   
@@ -2869,9 +3196,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     normalizedSources.every((source) => source === 'WORK24_DJOB')
 
   const heroTitle = profile.heroTitle || profile.name
+  // heroDescription: ETL 데이터(heroIntro)는 첫 줄만, 사용자 편집 데이터(summary)는 전체 사용
   const heroDescription =
     profile.heroIntro?.split('\n')[0]?.trim() ||
-    profile.summary?.split('\n')[0]?.trim() ||
+    (profile.summary ? safeTrim(profile.summary).replace(/\n+/g, ' ') : null) ||  // 줄바꿈 → 공백
     profile.work?.summary?.split('\n')[0]?.trim() ||
     profile.duties?.split('\n')[0]?.trim() ||
     rawApiData?.goyong24?.duty?.jobSum?.trim()
@@ -2910,20 +3238,70 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   // 히어로 카테고리 렌더링
   let categoryHtml = ''
   if (profile.heroCategory) {
-    if (profile.heroCategory.type === 'breadcrumb') {
-      // 브레드크럼 스타일 (pill 배지)
-      const breadcrumbParts = [
-        profile.heroCategory.large,
-        profile.heroCategory.medium,
-        profile.heroCategory.small
-      ].filter(Boolean)
+    // 문자열 형식 지원 (사용자 생성 데이터)
+    if (typeof profile.heroCategory === 'string') {
+      const categoryValue = safeTrim(profile.heroCategory)
+      if (categoryValue) {
+        categoryHtml = `
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-wiki-primary">
+            <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
+            ${escapeHtml(categoryValue)}
+          </span>
+        `
+      }
+    } else if (profile.heroCategory.type === 'breadcrumb') {
+      // 브레드크럼 스타일 (pill 배지) - 모바일에서 클릭하여 확장
+      const largePart = profile.heroCategory.large ? escapeHtml(profile.heroCategory.large) : ''
+      const mediumPart = profile.heroCategory.medium ? escapeHtml(profile.heroCategory.medium) : ''
+      const smallPart = profile.heroCategory.small ? escapeHtml(profile.heroCategory.small) : ''
+      const totalLevels = (largePart ? 1 : 0) + (mediumPart ? 1 : 0) + (smallPart ? 1 : 0)
       
-      categoryHtml = `
-        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-wiki-primary">
-          <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
-          ${breadcrumbParts.map(part => escapeHtml(part || '')).join(' <span class="text-wiki-muted/60">›</span> ')}
-        </span>
-      `
+      // 3개 레벨이 있을 때만 모바일 확장 기능 적용
+      if (totalLevels >= 2) {
+        categoryHtml = `
+          <style>
+            @media (min-width: 768px) {
+              .job-bc-mobile { display: none !important; }
+              .job-bc-desktop { display: inline-flex !important; }
+            }
+            @media (max-width: 767px) {
+              .job-bc-mobile { display: inline-flex !important; }
+              .job-bc-desktop { display: none !important; }
+              .job-bc-mobile .bc-m, .job-bc-mobile .bc-s,
+              .job-bc-mobile .bc-sep-m, .job-bc-mobile .bc-sep-s { display: none; }
+              .job-bc-mobile[data-lv="2"] .bc-m,
+              .job-bc-mobile[data-lv="2"] .bc-sep-m { display: inline; }
+              .job-bc-mobile[data-lv="3"] .bc-m,
+              .job-bc-mobile[data-lv="3"] .bc-s,
+              .job-bc-mobile[data-lv="3"] .bc-sep-m,
+              .job-bc-mobile[data-lv="3"] .bc-sep-s { display: inline; }
+              .job-bc-mobile .bc-expand { transition: opacity 0.2s; }
+              .job-bc-mobile[data-lv="3"] .bc-expand { opacity: 0; pointer-events: none; }
+            }
+          </style>
+          <!-- 데스크톱: 전체 표시 -->
+          <span class="job-bc-desktop hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-wiki-primary">
+            <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
+            ${largePart}${mediumPart ? ` <span class="text-wiki-muted/60">›</span> ${mediumPart}` : ''}${smallPart ? ` <span class="text-wiki-muted/60">›</span> ${smallPart}` : ''}
+          </span>
+          <!-- 모바일: 클릭하여 단계적 확장 -->
+          <span class="job-bc-mobile inline-flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-wiki-primary cursor-pointer select-none active:bg-wiki-primary/10" data-lv="1" data-max="${totalLevels}" onclick="(function(e){var el=e.currentTarget;if(!el)return;var lv=parseInt(el.getAttribute('data-lv')||'1',10);var mx=parseInt(el.getAttribute('data-max')||'1',10);var nxt=lv>=mx?1:lv+1;el.setAttribute('data-lv',String(nxt));})(event)">
+            <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
+            <span class="bc-l">${largePart}</span>
+            ${mediumPart ? `<span class="bc-sep-m text-wiki-muted/60">›</span><span class="bc-m">${mediumPart}</span>` : ''}
+            ${smallPart ? `<span class="bc-sep-s text-wiki-muted/60">›</span><span class="bc-s">${smallPart}</span>` : ''}
+            <i class="fas fa-chevron-right bc-expand text-[9px] text-wiki-muted/70 ml-0.5" aria-hidden="true"></i>
+          </span>
+        `
+      } else {
+        // 1개 레벨만 있으면 기존 방식
+        categoryHtml = `
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-wiki-primary">
+            <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
+            ${largePart || mediumPart || smallPart}
+          </span>
+        `
+      }
     } else if (profile.heroCategory.value) {
       // 단일 값 스타일 (ETL에서 이미 정제된 값 사용)
       const categoryValue = safeTrim(profile.heroCategory.value)
@@ -2944,7 +3322,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const overviewCards: SectionCardDescriptor[] = []
   const detailCards: SectionCardDescriptor[] = []
 
-  const pushOverviewCard = (title: string, icon: string, body: string) => {
+  const pushOverviewCard = (title: string, icon: string, body: string, dataSources?: string[]) => {
     if (!body || !safeTrim(body)) {
       return
     }
@@ -2952,14 +3330,15 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     const cardMarkup = buildCard(title, icon, body, {
       anchorId,
       telemetryScope: 'job-overview-card',
-      telemetryComponent: 'job-overview-card'
+      telemetryComponent: 'job-overview-card',
+      dataSources
     })
     if (safeTrim(cardMarkup)) {
       overviewCards.push({ id: anchorId, label: title, icon, markup: cardMarkup })
     }
   }
 
-  const pushDetailCard = (title: string, icon: string, body: string) => {
+  const pushDetailCard = (title: string, icon: string, body: string, dataSources?: string[]) => {
     if (!body || !safeTrim(body)) {
       return
     }
@@ -2967,11 +3346,45 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     const cardMarkup = buildCard(title, icon, body, {
       anchorId,
       telemetryScope: 'job-detail-card',
-      telemetryComponent: 'job-detail-card'
+      telemetryComponent: 'job-detail-card',
+      dataSources
     })
     if (safeTrim(cardMarkup)) {
       detailCards.push({ id: anchorId, label: title, icon, markup: cardMarkup })
     }
+  }
+
+  // 특정 필드가 어느 출처에서 왔는지 판단하는 헬퍼 함수
+  // partials가 있으면 partials 기반, 없으면 profile.sources 기반
+  const normalizedProfileSources = Array.isArray(profile.sources) ? profile.sources : []
+  const getFieldSources = (fieldExtractor: (p: UnifiedJobDetail | null | undefined) => any): string[] => {
+    const sources: string[] = []
+    
+    // partials 기반 판단 (더 정확함)
+    if (partials?.CAREERNET && fieldExtractor(partials.CAREERNET)) {
+      sources.push('CAREERNET')
+    }
+    if (partials?.GOYONG24 && fieldExtractor(partials.GOYONG24)) {
+      sources.push('GOYONG24')
+    }
+    if (partials?.WORK24_DJOB && fieldExtractor(partials.WORK24_DJOB)) {
+      sources.push('WORK24_DJOB')
+    }
+    
+    // partials가 비어있으면 profile.sources 기반으로 폴백
+    if (sources.length === 0 && normalizedProfileSources.length > 0) {
+      // 해당 필드가 profile에 있으면 profile.sources 사용
+      if (fieldExtractor(profile)) {
+        normalizedProfileSources.forEach(s => {
+          if (s === 'CAREERNET' || s === 'GOYONG24' || s === 'WORK24_JOB' || s === 'WORK24_DJOB') {
+            // WORK24_JOB은 GOYONG24로 통합
+            sources.push(s === 'WORK24_JOB' ? 'GOYONG24' : s)
+          }
+        })
+      }
+    }
+    
+    return [...new Set(sources)]  // 중복 제거
   }
 
   // Type C: 업무 설명 (ETL 구조화 필드 overviewWork 사용)
@@ -2986,8 +3399,26 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     const workMetaCards: string[] = []
     
     // 주요 업무 설명 (ETL에서 우선순위로 선택된 값)
-    if (workMainDesc && typeof workMainDesc === 'string' && safeTrim(workMainDesc)) {
-      introBlocks.push(`<div><h4 class="text-base font-semibold text-white mb-2">수행 직무</h4>${renderDutyBulletList(workMainDesc)}</div>`)
+    // 문자열 또는 배열 모두 지원 (편집 시 배열로 저장될 수 있음)
+    if (workMainDesc) {
+      let workMainContent = ''
+      if (typeof workMainDesc === 'string' && safeTrim(workMainDesc)) {
+        workMainContent = renderDutyBulletList(workMainDesc)
+      } else if (Array.isArray(workMainDesc) && workMainDesc.length > 0) {
+        // 배열인 경우 불릿 리스트로 렌더링
+        const validItems = workMainDesc.filter((item: any) => typeof item === 'string' && safeTrim(item))
+        if (validItems.length > 0) {
+          workMainContent = `<ul class="space-y-2">${validItems.map((item: string) => 
+            `<li class="flex items-start gap-2 text-[15px] text-wiki-text">
+              <span class="text-wiki-secondary mt-1">▶</span>
+              <span>${escapeHtml(safeTrim(item))}</span>
+            </li>`
+          ).join('')}</ul>`
+        }
+      }
+      if (workMainContent) {
+        introBlocks.push(`<div><h4 class="text-base font-semibold text-white mb-2">수행 직무</h4>${workMainContent}</div>`)
+      }
     }
     
     // 작업강도
@@ -3016,7 +3447,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
   if (introBlocks.length > 0) {
-    pushOverviewCard('주요 업무', 'fa-rocket', introBlocks.join(''))
+    // 주요 업무 출처 판단: overviewWork 필드가 있는 출처
+    const workSources = getFieldSources(p => p?.overviewWork?.main || p?.duties || p?.work?.summary)
+    pushOverviewCard('주요 업무', 'fa-rocket', introBlocks.join(''), workSources.length > 0 ? workSources : normalizedProfileSources.filter(s => s === 'CAREERNET' || s === 'GOYONG24' || s === 'WORK24_DJOB'))
   }
   }
 
@@ -3077,7 +3510,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     const maxValue = Math.max(...chartValues, 50)
     
     prospectChartHtml = `
-      <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl p-0 md:p-6 border-0 md:border md:border-wiki-border/50">
+          <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
         <div class="flex items-center justify-between mb-4">
           <h4 class="text-base font-bold text-wiki-secondary">재직자가 생각하는 일자리 전망</h4>
           ${jobProspectInqYr ? `<span class="text-xs text-wiki-muted">&lt;조사년도: ${jobProspectInqYr}년&gt;</span>` : ''}
@@ -3221,7 +3654,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // Only add card if combinedHtml has content
     if (safeTrim(combinedHtml)) {
-      pushOverviewCard('커리어 전망', 'fa-chart-line', combinedHtml)
+      // 전망 출처 판단: overviewProspect 필드가 있는 출처
+      const prospectSources = getFieldSources(p => p?.overviewProspect?.main || p?.prospect)
+      pushOverviewCard('커리어 전망', 'fa-chart-line', combinedHtml, prospectSources.length > 0 ? prospectSources : normalizedProfileSources.filter(s => s === 'CAREERNET' || s === 'GOYONG24' || s === 'WORK24_DJOB'))
     }
   }
 
@@ -3282,7 +3717,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   }
   
   if (abilityBlocks.length > 0) {
-    pushOverviewCard('핵심 능력·자격', 'fa-bolt', abilityBlocks.join(''))
+    // 능력 출처 판단: overviewAbilities 필드가 있는 출처
+    // '과정' 탭으로 이동됨
+    const abilitySources = getFieldSources(p => p?.overviewAbilities?.abilityList || p?.abilities)
+    pushDetailCard('핵심 능력·자격', 'fa-bolt', abilityBlocks.join(''), abilitySources.length > 0 ? abilitySources : normalizedProfileSources.filter(s => s === 'CAREERNET' || s === 'GOYONG24' || s === 'WORK24_DJOB'))
   }
 
   // 직업 만족도 먼저 추가 (있을 경우)
@@ -3397,112 +3835,75 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   }
   
   if (traitBlocks.length) {
-    pushOverviewCard('적성 및 흥미', 'fa-heart', traitBlocks.join(''))
+    // 적성/흥미 출처 판단
+    const traitSources = getFieldSources(p => p?.personality || p?.interests || p?.values)
+    pushOverviewCard('적성 및 흥미', 'fa-heart', traitBlocks.join(''), traitSources.length > 0 ? traitSources : normalizedProfileSources.filter(s => s === 'CAREERNET' || s === 'GOYONG24' || s === 'WORK24_DJOB'))
+  }
+
+  // 여담 (trivia) - 리스트 형식
+  let triviaItems: string[] = []
+  if (Array.isArray(profile.trivia)) {
+    triviaItems = profile.trivia.filter((item: any) => typeof item === 'string' && safeTrim(item))
+  } else if (typeof profile.trivia === 'string' && safeTrim(profile.trivia)) {
+    // 문자열인 경우 줄바꿈 또는 •로 분리
+    triviaItems = profile.trivia.split(/\n|•/).map((s: string) => s.trim()).filter(Boolean)
+  }
+  
+  if (triviaItems.length > 0) {
+    const triviaList = triviaItems
+      .map(item => `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(item)}</span></li>`)
+      .join('')
+    // 여담은 사용자 기여 데이터 (출처 정보 없음)
+    pushOverviewCard('여담', 'fa-comment-dots', `<ul class="space-y-2">${triviaList}</ul>`)
   }
 
   // Type B: 임금 (ETL 구조화 필드 overviewSalary 사용)
   const overviewSalary = profile.overviewSalary
   const salaryPrimary = overviewSalary?.sal || overviewSalary?.wage
   const salaryAnchor = anchorIdFactory('overview', '임금 정보')
+  const salarySources = getFieldSources(p => p?.overviewSalary?.sal || p?.overviewSalary?.wage || p?.salary)
   const salaryCard = renderSalaryCard(salaryPrimary, {
     anchorId: salaryAnchor,
     telemetryScope: 'job-overview-card',
-    telemetryComponent: 'job-overview-salary-card'
+    telemetryComponent: 'job-overview-salary-card',
+    dataSources: salarySources
   })
   if (salaryCard) {
     overviewCards.push({ id: salaryAnchor, label: '임금 정보', icon: 'fa-coins', markup: salaryCard })
   }
 
-  const overviewContent = overviewCards.length
-    ? `<div class="space-y-6" data-cw-job-overview>
-        ${renderSectionToc('overview', '목차', overviewCards.map(({ id, label, icon }) => ({ id, label, icon })))}
-        ${overviewCards.map((card) => card.markup).join('')}
-      </div>`
-    : `<p class="text-sm text-wiki-muted">개요 정보가 준비 중입니다.</p>`
-
-  // ===== 업무특성 탭 시작 (ETL 구조화 필드 char* 사용) =====
-  const characteristicsCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
-  const pushCharacteristicsCard = (label: string, icon: string, markup: string) => {
-    const id = anchorIdFactory('characteristics', label)
-    characteristicsCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, telemetryScope: 'job-characteristics-card' }) })
-  }
-
-  // 지식 (charKnowledge) - 제거됨 (뒤의 고용24 지식 비교 테이블로 대체)
-  
-  // 근무 환경 (charEnvironment)
-  const charEnvironment = profile.charEnvironment
-  if (charEnvironment?.jobsEnv && Array.isArray(charEnvironment.jobsEnv) && charEnvironment.jobsEnv.length > 0) {
-    const envText = charEnvironment.jobsEnv
-      .map((item: any) => typeof item === 'string' ? item : (item?.envNm || item?.name || ''))
-      .filter(Boolean)
-      .join(', ')
-    if (safeTrim(envText)) {
-      pushCharacteristicsCard('근무 환경', 'fa-building', formatRichText(envText))
-  }
-  }
-
-  // 업무 활동 중요도/수준 (charStatus - actv 데이터)
-  const charStatus = profile.charStatus
-  if (charStatus && (charStatus.jobActvImprtnc || charStatus.jobActvLvl)) {
-    const activityBlocks: string[] = []
-    
-    if (charStatus.jobActvImprtnc && Array.isArray(charStatus.jobActvImprtnc) && charStatus.jobActvImprtnc.length > 0) {
-      const impText = charStatus.jobActvImprtnc
-        .map((item: any) => typeof item === 'string' ? item : (item?.actvNm || item?.name || ''))
-        .filter(Boolean)
-        .join(', ')
-      if (safeTrim(impText)) {
-        activityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활동 중요도</h3>${formatRichText(impText)}</div>`)
-      }
-    }
-    
-    if (charStatus.jobActvLvl && Array.isArray(charStatus.jobActvLvl) && charStatus.jobActvLvl.length > 0) {
-      const lvlText = charStatus.jobActvLvl
-        .map((item: any) => typeof item === 'string' ? item : (item?.actvNm || item?.name || ''))
-        .filter(Boolean)
-        .join(', ')
-      if (safeTrim(lvlText)) {
-        activityBlocks.push(`<div class="${activityBlocks.length > 0 ? 'mt-4' : ''}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활동 수준</h3>${formatRichText(lvlText)}</div>`)
-      }
-    }
-    
-    if (activityBlocks.length > 0) {
-      pushCharacteristicsCard('업무 수행 지표', 'fa-chart-area', activityBlocks.join(''))
-    }
-  }
-
-  // 흥미 (charInterest) - 제거됨 (뒤의 고용24 흥미 비교 테이블로 대체)
-  
-  // 가치관 (charValues) - 제거됨 (뒤의 고용24 가치관 비교 테이블로 대체)
-
-  // 한국의 직업지표 (ETL 구조화 필드 detailIndicators 사용)
+  // 한국의 직업지표 (ETL 구조화 필드 detailIndicators 사용) - 소개 탭
   const indicatorChartData = profile.detailIndicators
   if (indicatorChartData && Array.isArray(indicatorChartData) && indicatorChartData.length > 0) {
     const indicatorHtml = renderIndicatorChart(indicatorChartData)
     if (indicatorHtml) {
-      pushDetailCard('한국의 직업지표', 'fa-chart-bar', indicatorHtml)
+      // 직업지표는 고용24에서 제공
+      const indicatorSources = getFieldSources(p => p?.detailIndicators)
+      pushOverviewCard('한국의 직업지표', 'fa-chart-bar', indicatorHtml, indicatorSources.length > 0 ? indicatorSources : ['GOYONG24'])
     }
   }
 
-  // 2-3. Type C: 학력·전공 분포 통합 (ETL 구조화 필드 detailEducation 사용) - 파이 차트로 시각화
+  // 학력·전공 분포 통합 (ETL 구조화 필드 detailEducation 사용) - 소개 탭
   const detailEducation = profile.detailEducation
   const educationDistribution = detailEducation?.educationDistribution
   const majorDistribution = detailEducation?.majorDistribution
-  const combinedAnchor = anchorIdFactory('details', '학력·전공 분포')
+  const combinedAnchor = anchorIdFactory('overview', '학력·전공 분포')
+  const educationSources = getFieldSources(p => p?.detailEducation?.educationDistribution || p?.detailEducation?.majorDistribution)
   const combinedCard = renderCombinedDistributionCharts(
     educationDistribution,
     majorDistribution,
     {
       anchorId: combinedAnchor,
-      telemetryScope: 'job-detail-card',
-      telemetryComponent: 'job-detail-education-major'
+      telemetryScope: 'job-overview-card',
+      telemetryComponent: 'job-overview-education-major',
+      dataSources: educationSources.length > 0 ? educationSources : ['GOYONG24']
     }
   )
   if (combinedCard) {
-    detailCards.push({ id: combinedAnchor, label: '학력·전공 분포', icon: 'fa-graduation-cap', markup: combinedCard })
+    overviewCards.push({ id: combinedAnchor, label: '학력·전공 분포', icon: 'fa-graduation-cap', markup: combinedCard })
   }
-  
-  // 4. Type D: 워라밸 & 사회적 기여도 (ETL 구조화 필드 detailWlb 사용)
+
+  // 워라밸 & 사회적 기여도 (ETL 구조화 필드 detailWlb 사용) - 소개 탭
   const detailWlb = profile.detailWlb
   const wlb = detailWlb?.wlb
   const social = detailWlb?.social
@@ -3541,12 +3942,98 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     
     // 그리드 레이아웃: 한 줄에 두 개 (큰 화면), 작은 화면에서는 세로로
     const gridLayout = `<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">${wlbCards.join('')}</div>`
-    pushDetailCard('워라밸 & 사회적 평가', 'fa-heart', gridLayout)
+    // 워라밸/사회적 평가는 주로 고용24에서 제공
+    const wlbSources = getFieldSources(p => p?.detailWorkLifeBalance?.wlb || p?.detailWorkLifeBalance?.social)
+    pushOverviewCard('워라밸 & 사회적 평가', 'fa-heart', gridLayout, wlbSources.length > 0 ? wlbSources : ['GOYONG24'])
   }
+
+  // 소개 탭 섹션 순서 재정렬
+  const overviewSectionOrder = [
+    '주요 업무',
+    '커리어 전망',
+    '한국의 직업지표',
+    '학력·전공 분포',
+    '워라밸 & 사회적 평가',
+    '적성 및 흥미',
+    '임금 정보',
+    '여담'
+  ]
+  overviewCards.sort((a, b) => {
+    const aIndex = overviewSectionOrder.indexOf(a.label)
+    const bIndex = overviewSectionOrder.indexOf(b.label)
+    // 순서 목록에 없는 항목은 맨 뒤로
+    const aOrder = aIndex === -1 ? 999 : aIndex
+    const bOrder = bIndex === -1 ? 999 : bIndex
+    return aOrder - bOrder
+  })
+
+  const overviewContent = overviewCards.length
+    ? `<div class="space-y-6" data-cw-job-overview>
+        ${renderSectionToc('overview', '목차', overviewCards.map(({ id, label, icon }) => ({ id, label, icon })))}
+        ${overviewCards.map((card) => card.markup).join('')}
+      </div>`
+    : `<p class="text-sm text-wiki-muted">소개 정보가 준비 중입니다.</p>`
+
+  // ===== 업무특성 탭 시작 (ETL 구조화 필드 char* 사용) =====
+  const characteristicsCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
+  const pushCharacteristicsCard = (label: string, icon: string, markup: string, dataSources?: string[]) => {
+    const id = anchorIdFactory('characteristics', label)
+    characteristicsCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, telemetryScope: 'job-characteristics-card', dataSources }) })
+  }
+
+  // 지식 (charKnowledge) - 제거됨 (뒤의 고용24 지식 비교 테이블로 대체)
   
-  // 5-13. 아래 섹션들은 올바른 순서로 재배치됩니다
+  // 근무 환경 (charEnvironment)
+  const charEnvironment = profile.charEnvironment
+  if (charEnvironment?.jobsEnv && Array.isArray(charEnvironment.jobsEnv) && charEnvironment.jobsEnv.length > 0) {
+    const envText = charEnvironment.jobsEnv
+      .map((item: any) => typeof item === 'string' ? item : (item?.envNm || item?.name || ''))
+      .filter(Boolean)
+      .join(', ')
+    if (safeTrim(envText)) {
+      const envSources = getFieldSources(p => p?.charEnvironment?.jobsEnv)
+      pushCharacteristicsCard('근무 환경', 'fa-building', formatRichText(envText), envSources.length > 0 ? envSources : ['GOYONG24'])
+  }
+  }
+
+  // 업무 활동 중요도/수준 (charStatus - actv 데이터)
+  const charStatus = profile.charStatus
+  if (charStatus && (charStatus.jobActvImprtnc || charStatus.jobActvLvl)) {
+    const activityBlocks: string[] = []
+    
+    if (charStatus.jobActvImprtnc && Array.isArray(charStatus.jobActvImprtnc) && charStatus.jobActvImprtnc.length > 0) {
+      const impText = charStatus.jobActvImprtnc
+        .map((item: any) => typeof item === 'string' ? item : (item?.actvNm || item?.name || ''))
+        .filter(Boolean)
+        .join(', ')
+      if (safeTrim(impText)) {
+        activityBlocks.push(`<div><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활동 중요도</h3>${formatRichText(impText)}</div>`)
+      }
+    }
+    
+    if (charStatus.jobActvLvl && Array.isArray(charStatus.jobActvLvl) && charStatus.jobActvLvl.length > 0) {
+      const lvlText = charStatus.jobActvLvl
+        .map((item: any) => typeof item === 'string' ? item : (item?.actvNm || item?.name || ''))
+        .filter(Boolean)
+        .join(', ')
+      if (safeTrim(lvlText)) {
+        activityBlocks.push(`<div class="${activityBlocks.length > 0 ? 'mt-4' : ''}"><h3 class="content-heading text-wiki-muted uppercase tracking-wide font-semibold mb-2">활동 수준</h3>${formatRichText(lvlText)}</div>`)
+      }
+    }
+    
+    if (activityBlocks.length > 0) {
+      const statusSources = getFieldSources(p => p?.charStatus)
+      pushCharacteristicsCard('업무 수행 지표', 'fa-chart-area', activityBlocks.join(''), statusSources.length > 0 ? statusSources : ['GOYONG24'])
+    }
+  }
+
+  // 흥미 (charInterest) - 제거됨 (뒤의 고용24 흥미 비교 테이블로 대체)
   
-  // 5. Type D: 교육·자격 섹션 및 직업 준비하기 (ETL 구조화 필드 detailReady 사용)
+  // 가치관 (charValues) - 제거됨 (뒤의 고용24 가치관 비교 테이블로 대체)
+
+  // 한국의 직업지표, 학력·전공 분포, 워라밸 & 사회적 평가는 소개 탭으로 이동됨 (line 3868~)
+  
+  // 직업 준비하기 (ETL 구조화 필드 detailReady 사용)
   const detailReady = profile.detailReady
   
   // 필요기술 및 지식은 overviewAbilities.technKnow로 이동됨 (개요 탭에서 표시)
@@ -3594,7 +4081,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         .map(text => `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(text)}</span></li>`)
         .join('')
       if (certList) {
-        readyBlocks.push(`<div class="${readyBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">추가 자격증</h3><ul class="space-y-2">${certList}</ul></div>`)
+        readyBlocks.push(`<div class="${readyBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">추천 자격증</h3><ul class="space-y-2">${certList}</ul></div>`)
       }
     }
     
@@ -3625,7 +4112,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
     if (readyBlocks.length > 0) {
-      pushDetailCard('직업 준비하기', 'fa-clipboard-check', readyBlocks.join(''))
+      // 직업 준비하기 출처 판단
+      const readySources = getFieldSources(p => p?.detailReady?.curriculum || p?.detailReady?.training || p?.way)
+      pushDetailCard('직업 준비하기', 'fa-clipboard-check', readyBlocks.join(''), readySources.length > 0 ? readySources : normalizedProfileSources.filter(s => s === 'CAREERNET' || s === 'GOYONG24' || s === 'WORK24_DJOB'))
     }
   }
 
@@ -3677,7 +4166,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
     if (abilityBlocks.length > 0) {
-      pushCharacteristicsCard('업무수행능력', 'fa-brain', abilityBlocks.join(''))
+      const abilitySources = getFieldSources(p => p?.abilities || p?.goyong24Only?.workEnvironment)
+      pushCharacteristicsCard('업무수행능력', 'fa-brain', abilityBlocks.join(''), abilitySources.length > 0 ? abilitySources : ['GOYONG24'])
     }
   }
 
@@ -3774,7 +4264,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         ` : ''
         
         const knowledgeTable = `
-          <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl px-0 md:px-6 py-6 border-0 md:border md:border-wiki-border/50">
+          <div class="bg-white/5 rounded-2xl px-6 py-6 border border-wiki-border/50">
             <div class="overflow-x-auto">
               <table class="w-full" id="${tableId}">
                 <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
@@ -3796,7 +4286,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
     if (knowledgeBlocks.length > 0) {
-      pushCharacteristicsCard('지식', 'fa-book', knowledgeBlocks.join(''))
+      const knowledgeSources = getFieldSources(p => p?.knowledge || p?.goyong24Only?.workEnvironment)
+      pushCharacteristicsCard('지식', 'fa-book', knowledgeBlocks.join(''), knowledgeSources.length > 0 ? knowledgeSources : ['GOYONG24'])
     }
   }
 
@@ -3868,7 +4359,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
         ` : ''
         
         const contextTable = `
-          <div class="bg-transparent md:bg-white/5 rounded-none md:rounded-2xl px-0 md:px-6 py-6 border-0 md:border md:border-wiki-border/50">
+          <div class="bg-white/5 rounded-2xl px-6 py-6 border border-wiki-border/50">
             <div class="overflow-x-auto">
               <table class="w-full" id="${tableId}">
                 <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
@@ -3890,7 +4381,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
     if (workEnvBlocks.length > 0) {
-      pushCharacteristicsCard('업무환경', 'fa-building', workEnvBlocks.join(''))
+      pushCharacteristicsCard('업무환경', 'fa-building', workEnvBlocks.join(''), ['GOYONG24'])
     }
   }
 
@@ -3907,7 +4398,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       'fa-user-check'
     )
     if (personalityHtml) {
-      pushCharacteristicsCard('성격', 'fa-user-check', personalityHtml)
+      pushCharacteristicsCard('성격', 'fa-user-check', personalityHtml, ['GOYONG24'])
     }
   }
 
@@ -3923,7 +4414,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       'fa-heart'
     )
     if (interestHtml) {
-      pushCharacteristicsCard('흥미', 'fa-heart', interestHtml)
+      pushCharacteristicsCard('흥미', 'fa-heart', interestHtml, ['GOYONG24'])
     }
   }
 
@@ -3939,7 +4430,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
       'fa-star'
     )
     if (valuesHtml) {
-      pushCharacteristicsCard('가치관', 'fa-star', valuesHtml)
+      pushCharacteristicsCard('가치관', 'fa-star', valuesHtml, ['GOYONG24'])
     }
   }
 
@@ -3989,12 +4480,21 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     }
     
     if (activityBlocks.length > 0) {
-      pushCharacteristicsCard('업무활동', 'fa-tasks', activityBlocks.join(''))
+      pushCharacteristicsCard('업무활동', 'fa-tasks', activityBlocks.join(''), ['GOYONG24'])
     }
   }
 
   const characteristicsContent = characteristicsCards.length
     ? `<div class="space-y-6" data-cw-job-characteristics>
+        <div class="px-4 md:px-0 mb-4 md:mb-6 pb-4 border-b border-wiki-border/30">
+          <h2 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2.5 md:gap-3 mb-2 md:mb-3">
+            <span class="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-lg bg-wiki-primary/20 flex-shrink-0">
+              <i class="fas fa-chart-pie text-wiki-primary text-base md:text-lg" aria-hidden="true"></i>
+            </span>
+            업무특성
+          </h2>
+          <p class="text-sm md:text-base text-wiki-muted leading-relaxed px-0.5">직업 수행에 필요한 능력, 지식, 성격 등 상세 분석</p>
+        </div>
         ${renderSectionToc('characteristics', '목차', characteristicsCards.map(({ id, label, icon }) => ({ id, label, icon })))}
         ${characteristicsCards.map((card) => card.markup).join('')}
       </div>
@@ -4079,6 +4579,19 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   //   pushDetailCard('한국표준직업분류 코드', 'fa-layer-group', kecoList)
   // }
 
+  // 과정 탭 섹션 순서 재정렬
+  const detailSectionOrder = [
+    '핵심 능력·자격',
+    '직업 준비하기'
+  ]
+  detailCards.sort((a, b) => {
+    const aIndex = detailSectionOrder.indexOf(a.label)
+    const bIndex = detailSectionOrder.indexOf(b.label)
+    const aOrder = aIndex === -1 ? 999 : aIndex
+    const bOrder = bIndex === -1 ? 999 : bIndex
+    return aOrder - bOrder
+  })
+
   const detailContent = detailCards.length
     ? `<div class="space-y-6" data-cw-job-details>
         ${renderSectionToc('details', '목차', detailCards.map(({ id, label, icon }) => ({ id, label, icon })))}
@@ -4093,13 +4606,14 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   
   const tabEntries: TabEntry[] = []
   if (hasOverviewContent) {
-    tabEntries.push({ id: 'overview', label: '개요', icon: 'fa-circle-info', content: overviewContent })
+    tabEntries.push({ id: 'overview', label: '소개', icon: 'fa-circle-info', content: overviewContent })
   }
   if (hasDetailContent) {
-    tabEntries.push({ id: 'details', label: '상세정보', icon: 'fa-layer-group', content: detailContent })
+    tabEntries.push({ id: 'details', label: '과정', icon: 'fa-layer-group', content: detailContent })
   }
   if (hasCharacteristicsContent) {
-    tabEntries.push({ id: 'characteristics', label: '업무특성', icon: 'fa-chart-pie', content: characteristicsContent })
+    // 업무특성 탭: 아이콘만 표시, 오른쪽 끝 배치, 호버 시 라벨 표시
+    tabEntries.push({ id: 'characteristics', label: '업무특성', icon: 'fa-chart-pie', content: characteristicsContent, iconOnly: true })
   }
 
   const entitySlug = composeDetailSlug('job', profile.name, profile.id)
@@ -4154,26 +4668,70 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
     metaExtra: detailMetaExtra
   })
 
-  const sidebarContent = renderJobSidebar(profile)
-  const sourcesCollapsible = renderSourcesCollapsible(profile, sources, partials)
-  const heroImage = renderHeroImage(profile.name, { dataAttribute: 'data-job-hero-image', context: 'job' })
+  const sidebarContent = renderJobSidebar(profile, existingJobSlugs)
+  const userSourcesFlat = normalizeUserSources((profile as any)._sources)
+  const sourcesCollapsible = renderSourcesCollapsible(profile, sources, partials, userSourcesFlat)
+  const heroImageUrl = (profile as any).image_url
+  const heroImageAlt = (profile as any).image_alt ?? `${profile.name} 직업 종사자가 업무를 수행하는 모습`
+  // slug 추출 (이미지 재생성용)
+  const jobSlug = (profile as any).slug || profile.name
+  // 🔍 디버그 HTML 코멘트
+  const debugComment = `<!-- DEBUG: image_url=${heroImageUrl || 'undefined'}, hasImageUrl=${!!heroImageUrl} -->`
+  const heroImage = heroImageUrl && heroImageUrl.trim() !== '' 
+    ? renderHeroImage(profile.name, { imageUrl: heroImageUrl, imageAlt: heroImageAlt, dataAttribute: 'data-job-hero-image', context: 'job', slug: jobSlug })
+    : debugComment
   const hasSidebar = safeTrim(sidebarContent).length > 0
   
-  // 히어로 태그 렌더링 (ETL에서 병합된 heroTags 사용)
+  // 히어로 태그 렌더링 (ETL에서 병합된 heroTags 또는 user_contributed heroTags 사용)
+  // 불필요한 태그 필터링 ("등", "외", "기타" 등)
+  const invalidTags = new Set(['등', '외', '기타', '및', '그외', '그 외', '기타 등', '등등'])
+  const isValidTag = (tag: string): boolean => {
+    const t = safeTrim(tag)
+    if (!t) return false  // 빈 문자열 제외
+    if (invalidTags.has(t)) return false
+    if (/^[0-9]+$/.test(t)) return false
+    return true
+  }
+  
   let heroTagsMarkup = ''
   if (profile.heroTags && Array.isArray(profile.heroTags) && profile.heroTags.length > 0) {
-    const tagsHtml = profile.heroTags
-      .slice(0, 8)  // 최대 8개만 표시
-      .filter(tag => tag && safeTrim(tag).length > 0)
-      .map(tag => 
-        `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition">
-          <i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}
-        </span>`
-      )
+    const validTags = profile.heroTags.filter(tag => isValidTag(tag))
+    const visibleLimit = 15
+    const hasMore = validTags.length > visibleLimit
+    
+    const visibleTags = validTags.slice(0, visibleLimit)
+    const hiddenTags = validTags.slice(visibleLimit)
+    
+    const tagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-wiki-primary font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition'
+    
+    const visibleTagsHtml = visibleTags
+      .map(tag => `<span class="${tagClass}"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
       .join('')
     
-    if (tagsHtml) {
-      heroTagsMarkup = `<div class="flex flex-wrap gap-2 mt-4">${tagsHtml}</div>`
+    const hiddenTagsHtml = hiddenTags
+      .map(tag => `<span class="${tagClass}"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
+      .join('')
+    
+    const containerId = `job-tags-${Date.now()}`
+    
+    const moreButton = hasMore
+      ? `<button type="button" id="${containerId}-more" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/80 text-xs text-wiki-muted font-medium border-2 border-dashed border-wiki-border hover:border-wiki-primary/50 hover:text-wiki-primary hover:bg-wiki-primary/5 transition-all duration-200" onclick="document.getElementById('${containerId}-hidden').classList.remove('hidden'); this.classList.add('hidden'); document.getElementById('${containerId}-less').classList.remove('hidden');">
+          <i class="fas fa-plus text-[10px]" aria-hidden="true"></i>${hiddenTags.length}개 더보기
+        </button>`
+      : ''
+    
+    const lessButton = hasMore
+      ? `<button type="button" id="${containerId}-less" class="hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/80 text-xs text-wiki-muted font-medium border-2 border-dashed border-wiki-border hover:border-wiki-primary/50 hover:text-wiki-primary hover:bg-wiki-primary/5 transition-all duration-200" onclick="document.getElementById('${containerId}-hidden').classList.add('hidden'); this.classList.add('hidden'); document.getElementById('${containerId}-more').classList.remove('hidden');">
+          <i class="fas fa-minus text-[10px]" aria-hidden="true"></i>접기
+        </button>`
+      : ''
+    
+    const hiddenTagsContainer = hasMore
+      ? `<span id="${containerId}-hidden" class="hidden contents">${hiddenTagsHtml}</span>`
+      : ''
+    
+    if (visibleTagsHtml) {
+      heroTagsMarkup = `<div class="flex flex-wrap gap-2 mt-4">${visibleTagsHtml}${hiddenTagsContainer}${moreButton}${lessButton}</div>`
     }
   }
 
@@ -4201,8 +4759,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
-    <div class="max-w-[1400px] mx-auto md:px-6 space-y-4 md:space-y-8 md:py-8 md:mt-4" data-job-id="${escapeHtml(profile.id)}">
-      <section class="glass-card border-0 md:border px-6 py-8 md:px-8 rounded-none md:rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
+    <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-8 md:mt-4" data-job-id="${escapeHtml(profile.id)}">
+      <section class="glass-card border px-6 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">
             ${categoryHtml || (profile.category?.name ? `<span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-wiki-primary"><i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>${escapeHtml(profile.category.name)}</span>` : '')}
@@ -4262,6 +4820,19 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
                   </div>
                 </div>
               </div>
+              <!-- 저장 버튼 -->
+              <button 
+                type="button" 
+                class="p-2.5 bg-wiki-card border border-wiki-border/60 text-wiki-text rounded-lg text-sm hover:border-amber-400/50 hover:text-amber-400 transition"
+                data-bookmark-btn
+                data-bookmark-type="job"
+                data-bookmark-slug="${escapeHtml(entitySlug)}"
+                data-bookmark-title="${escapeHtml(profile.name)}"
+                aria-label="저장"
+                title="저장함에 추가"
+              >
+                <i class="fas fa-bookmark" aria-hidden="true"></i>
+              </button>
             </div>
             </div>
           </div>
@@ -4283,6 +4854,25 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
 
       ${metaScript}
       <script>
+        // 사용자 추가 출처 데이터 (평탄화 배열)
+        window.__USER_SOURCES__ = ${JSON.stringify(userSourcesFlat || [])};
+        
+        // 필드별 주석 번호 매핑
+        window.__SOURCE_FIELD_MAP__ = {
+          'summary': ['직업 설명', '.hero-description', '[data-field="summary"]'],
+          'heroCategory': ['직업 분류', '.hero-category', '[data-field="heroCategory"]'],
+          'heroTags': ['태그', '.hero-tags', '[data-field="heroTags"]'],
+          'overviewWork.main': ['수행 직무', 'h4:contains("수행 직무")', '[data-field="overviewWork.main"]'],
+          'overviewWork.workStrong': ['작업강도', ':contains("작업강도")', '[data-field="overviewWork.workStrong"]'],
+          'overviewAbilities.abilityList': ['핵심 역량', 'h4:contains("핵심 역량")', '[data-field="overviewAbilities.abilityList"]'],
+          'trivia': ['여담', 'h3:contains("여담")', '[data-field="trivia"]'],
+          'detailReady.curriculum': ['정규 교육과정', 'h3:contains("정규 교육과정")', '[data-field="detailReady.curriculum"]'],
+          'detailReady.recruit': ['채용 정보', 'h3:contains("채용 정보")', '[data-field="detailReady.recruit"]'],
+          'sidebarJobs': ['관련 직업', 'h3:contains("관련 직업")', '[data-field="sidebarJobs"]'],
+          'sidebarMajors': ['관련 학과', 'h3:contains("관련 전공")', '[data-field="sidebarMajors"]']
+        };
+      </script>
+      <script>
         // _t 파라미터 제거 (캐시 우회 후 URL 정리)
         (function() {
           if (window.location.search.includes('_t=')) {
@@ -4290,6 +4880,79 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData 
             url.searchParams.delete('_t');
             window.history.replaceState({}, '', url.toString());
           }
+        })();
+        
+        // 사용자 추가 출처에 주석 번호 추가 및 클릭 이벤트 등록 (배열 지원)
+        (function() {
+          const sources = window.__USER_SOURCES__ || [];
+          const fieldMap = window.__SOURCE_FIELD_MAP__ || {};
+          
+          (Array.isArray(sources) ? sources : []).forEach(function(source) {
+            const sourceId = source.id || 1;
+            const fieldKey = source.fieldKey;
+            const mapping = fieldMap[fieldKey];
+            if (!mapping) return;
+            
+            const fieldLabel = mapping[0];
+            
+            // content-heading 클래스를 가진 요소 중 해당 필드명을 포함하는 것을 찾기
+            const headings = document.querySelectorAll('.content-heading, h3, h4');
+            headings.forEach(function(heading) {
+              if (heading.textContent && heading.textContent.includes(fieldLabel)) {
+                // 동일 ID가 이미 있으면 패스
+                if (heading.querySelector('#user-fnref-' + sourceId)) return;
+                
+                // 주석 번호 추가
+                const footnoteRef = document.createElement('sup');
+                footnoteRef.className = 'user-footnote-ref ml-1 inline-flex align-middle cursor-pointer';
+                footnoteRef.id = 'user-fnref-' + sourceId;
+                footnoteRef.setAttribute('data-source-id', sourceId);
+                footnoteRef.innerHTML = '<span class="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-wiki-primary/20 text-wiki-primary hover:bg-wiki-primary/30 transition">' + sourceId + '</span>';
+                
+                // flex justify-between로 멀어지는 문제를 피하기 위해 텍스트 컨테이너에 부착
+                const attachTarget =
+                  heading.querySelector('.section-title-text') ||
+                  heading.querySelector('.content-heading-text') ||
+                  heading.querySelector('.flex.items-center') ||
+                  heading.firstElementChild ||
+                  heading;
+                
+                attachTarget.appendChild(footnoteRef);
+                
+                // 클릭 이벤트 등록 - 데이터 출처 섹션으로 이동
+                footnoteRef.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  
+                  var targetEl = document.getElementById('user-fn-' + sourceId);
+                  if (!targetEl) return;
+                  
+                  // 데이터 출처 섹션 찾기 및 펼치기
+                  var sourceSection = document.querySelector('[data-source-collapsible]');
+                  if (sourceSection) {
+                    var toggleBtn = sourceSection.querySelector('button[aria-controls]');
+                    var panelId = toggleBtn ? toggleBtn.getAttribute('aria-controls') : null;
+                    var panel = panelId ? document.getElementById(panelId) : null;
+                    
+                    // 섹션이 접혀있으면 펼치기
+                    if (toggleBtn && toggleBtn.getAttribute('aria-expanded') === 'false') {
+                      toggleBtn.click();
+                    }
+                  }
+                  
+                  // 스크롤 이동 (펼치기 애니메이션 후)
+                  setTimeout(function() {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // 하이라이트 효과
+                    targetEl.classList.add('ring-2', 'ring-wiki-primary');
+                    setTimeout(function() {
+                      targetEl.classList.remove('ring-2', 'ring-wiki-primary');
+                    }, 2000);
+                  }, 300);
+                });
+              }
+            });
+          });
         })();
         
         // Lucide 아이콘 초기화

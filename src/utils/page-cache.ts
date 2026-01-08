@@ -19,6 +19,8 @@
 import type { Context } from 'hono'
 import type { D1Database } from '@cloudflare/workers-types'
 import { getTemplateVersion } from '../constants/template-versions'
+import { weakETag, toNFC } from './etag'
+import { matchETag } from './etag'
 
 /**
  * Check if we're in development mode (cache should be disabled)
@@ -39,6 +41,11 @@ function isDevelopmentMode(env?: any): boolean {
   }
   
   return false
+}
+
+function buildWeakEtag(pageType: string, slug: string, version: number, content: string) {
+  const seed = `${version}:${pageType}:${toNFC(slug)}:${content.length}`
+  return weakETag(seed)
 }
 
 export interface CachedPage {
@@ -126,10 +133,18 @@ export async function getOrGeneratePage<T>(
     
     // Step 2: Cache hit + version match → instant return
     if (cached && cached.cache_version === currentVersion) {
+      const etag = buildWeakEtag(pageType, slug, currentVersion, cached.content)
+    if (matchETag(c.req.header('If-None-Match'), etag)) {
+        c.header('ETag', etag)
+        c.header('X-Cache-Status', 'HIT')
+        c.status(304)
+        return c.body(null)
+      }
       // Set cache headers for crawler optimization
       c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
       c.header('X-Cache-Status', 'HIT')
       c.header('X-Template-Version', currentVersion.toString())
+      c.header('ETag', etag)
       
       return c.html(cached.content)
     }
@@ -146,6 +161,13 @@ export async function getOrGeneratePage<T>(
     
     // Render HTML
     const html = await generator.renderHTML(data)
+    const etag = buildWeakEtag(pageType, slug, currentVersion, html)
+    if (c.req.header('If-None-Match') === etag && !devMode) {
+      c.header('ETag', etag)
+      c.header('X-Cache-Status', cacheStatus)
+      c.status(304)
+      return c.body(null)
+    }
     
     // Extract metadata
     const metadata = generator.extractMetadata(data)
@@ -189,6 +211,7 @@ export async function getOrGeneratePage<T>(
       c.header('X-Cache-Status', cacheStatus)
     }
     c.header('X-Template-Version', currentVersion.toString())
+    c.header('ETag', etag)
     
     return c.html(html)
   } catch (error) {
@@ -227,30 +250,40 @@ export async function invalidatePageCache(
   // 🆕 jobId 또는 majorId가 제공된 경우, 실제 slug를 찾아서 삭제
   if (jobId && pageType === 'job') {
     try {
-      // jobId가 복합 형식인 경우 처리 (job:G_K000000890 -> K000000890)
+      // jobId가 복합 형식인 경우 처리
+      // - job:G_K000000890 -> K000000890 (Goyong24)
+      // - job:C_354 -> C_354 (Careernet) - C_ 유지
+      // - job:U_xxx -> U_xxx (User) - U_ 유지
       let dbJobId = jobId
       if (jobId.includes(':')) {
         const parts = jobId.split(':')
         if (parts.length > 1) {
-          dbJobId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
+          const lastPart = parts[parts.length - 1]
+          // U_나 C_로 시작하면 그대로 사용, G_만 제거
+          if (lastPart.startsWith('U_') || lastPart.startsWith('C_')) {
+            dbJobId = lastPart
+          } else {
+            dbJobId = lastPart.replace(/^G_/, '')
+          }
         }
       }
       
-      // DB에서 실제 job name을 찾아서 slug로 변환
-      const job = await db.prepare('SELECT name FROM jobs WHERE id = ? AND is_active = 1')
+      // DB에서 실제 job name과 slug를 찾아서 삭제 (is_active 조건 제거 - 삭제된 직업도 캐시 무효화 필요)
+      const job = await db.prepare('SELECT name, slug FROM jobs WHERE id = ?')
         .bind(dbJobId)
-        .first<{ name: string }>()
+        .first<{ name: string, slug: string | null }>()
       
       if (job?.name) {
         // name을 slug로 변환 (정규화)
         const normalizedSlug = job.name.toLowerCase()
           .replace(/[-\s,·ㆍ\/()]/g, '')
         
-        // 여러 가능한 slug 형식으로 삭제 시도
+        // 여러 가능한 slug 형식으로 삭제 시도 (DB에 저장된 slug 포함)
         const slugsToDelete = [
           normalizedSlug,
           job.name.toLowerCase(),
-          encodeURIComponent(job.name)
+          encodeURIComponent(job.name),
+          ...(job.slug ? [job.slug] : [])  // DB에 저장된 slug도 시도
         ]
         
         let totalDeleted = 0
@@ -282,10 +315,21 @@ export async function invalidatePageCache(
   
   if (majorId && pageType === 'major') {
     try {
-      // majorId로 실제 major name을 찾아서 slug로 변환
-      const major = await db.prepare('SELECT name FROM majors WHERE id = ? AND is_active = 1')
-        .bind(majorId)
-        .first<{ name: string }>()
+      // majorId가 복합 형식인 경우 처리 (U_ prefix 유지)
+      let dbMajorId = majorId
+      if (majorId.includes(':')) {
+        const parts = majorId.split(':')
+        if (parts.length > 1) {
+          const lastPart = parts[parts.length - 1]
+          // U_로 시작하면 그대로 사용
+          dbMajorId = lastPart.startsWith('U_') ? lastPart : lastPart.replace(/^[A-Z]_/, '')
+        }
+      }
+      
+      // majorId로 실제 major name과 slug를 찾아서 삭제 (is_active 조건 제거 - 삭제된 전공도 캐시 무효화 필요)
+      const major = await db.prepare('SELECT name, slug FROM majors WHERE id = ?')
+        .bind(dbMajorId)
+        .first<{ name: string, slug: string | null }>()
       
       if (major?.name) {
         const normalizedSlug = major.name.toLowerCase()
@@ -294,7 +338,8 @@ export async function invalidatePageCache(
         const slugsToDelete = [
           normalizedSlug,
           major.name.toLowerCase(),
-          encodeURIComponent(major.name)
+          encodeURIComponent(major.name),
+          ...(major.slug ? [major.slug] : [])  // DB에 저장된 slug도 시도
         ]
         
         let totalDeleted = 0

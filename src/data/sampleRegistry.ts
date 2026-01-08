@@ -540,6 +540,8 @@ const howtoSamples: Record<string, SampleHowtoEntry> = {
       slug: 'seo-growth-playbook',
       title: '법무법인 SEO 성장 플레이북',
       heroIcon: 'fa-chart-line',
+      thumbnailUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=450&fit=crop',
+      authorName: '운영자',
       summary: '법무법인 핵심 키워드에 대해 SERP 1~2위를 달성하고, 전화·상담 문의량을 3배 이상 끌어올린 실제 Growth 실험 구조를 재현한 샘플 HowTo입니다.',
       tags: ['SEO', '법률마케팅', 'Growth 전략'],
       updatedAt: '2024-09-20',
@@ -635,6 +637,8 @@ const howtoSamples: Record<string, SampleHowtoEntry> = {
       slug: 'ai-product-roadmap',
       title: 'AI 프로덕트 로드맵 스프린트',
       heroIcon: 'fa-robot',
+      thumbnailUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=450&fit=crop',
+      authorName: '운영자',
       summary: '생성형 AI 기능을 제품 로드맵에 반영할 때 필요한 전략 정렬, 실험 설계, 책임 있는 출시 절차를 정리한 Phase 1 샘플 HowTo입니다.',
       tags: ['AI 전략', '프로덕트', 'Responsible AI'],
       updatedAt: '2024-09-25',
@@ -943,5 +947,21 @@ export const listSampleJobSummaries = (): SampleSearchItem[] =>
 export const listSampleMajorSummaries = (): SampleSearchItem[] =>
   majorSampleList.map(({ slug, title, snippet, keywords }) => ({ slug, title, snippet, keywords }))
 
-export const listSampleHowtoSummaries = (): Array<SampleSearchItem & { tags: string[] }> =>
-  Object.values(howtoSamples).map(({ slug, title, snippet, keywords, tags }) => ({ slug, title, snippet, keywords, tags }))
+export const listSampleHowtoSummaries = (): Array<SampleSearchItem & { 
+  tags: string[]
+  thumbnailUrl?: string
+  authorName?: string
+  authorPictureUrl?: string | null
+  updatedAt: string
+}> =>
+  Object.values(howtoSamples).map(({ slug, title, snippet, keywords, tags, guide }) => ({ 
+    slug, 
+    title, 
+    snippet, 
+    keywords, 
+    tags,
+    thumbnailUrl: guide.thumbnailUrl,
+    authorName: guide.authorName,
+    authorPictureUrl: null,
+    updatedAt: guide.updatedAt
+  }))

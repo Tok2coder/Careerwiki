@@ -32,12 +32,13 @@ const joinSlugParts = (primary?: string | null, secondary?: string | null): stri
   return truncateSlug(combined)
 }
 
-const encodeLegacyIdSegment = (type: 'job' | 'major' | 'guide', id: string | undefined): string | null => {
-  if (type === 'guide' || !id) {
+const encodeLegacyIdSegment = (type: 'job' | 'major' | 'guide', id: string | undefined | null): string | null => {
+  if (type === 'guide' || id === undefined || id === null) {
     return null
   }
+  const s = typeof id === 'string' ? id : String(id)
   const regex = type === 'job' ? /^job:([a-z])_(\d+)$/i : /^major:([a-z])_(\d+)$/i
-  const match = id.match(regex)
+  const match = s.match(regex)
   if (!match) {
     return null
   }
@@ -74,8 +75,10 @@ const normalizeIdSlug = (id: string): string => {
 }
 
 export const composeDetailSlug = (type: 'job' | 'major', name: string | undefined, id: string | undefined): string => {
-  const legacySegment = id ? encodeLegacyIdSegment(type, id) : null
-  const nameSlug = slugifyName(name)
+  const idStr = id !== undefined && id !== null ? String(id) : undefined
+  const nameStr = name !== undefined && name !== null ? String(name) : undefined
+  const legacySegment = idStr ? encodeLegacyIdSegment(type, idStr) : null
+  const nameSlug = slugifyName(nameStr)
 
   // 이름이 있고 ID도 legacy 형식이면 둘 다 포함 (SEO + 정확한 매칭)
   if (nameSlug && legacySegment) {
@@ -88,20 +91,20 @@ export const composeDetailSlug = (type: 'job' | 'major', name: string | undefine
   }
 
   // 이름이 없을 경우 ID 사용
-  if (!id) {
+  if (!idStr) {
     return 'unknown'
   }
 
-  if (!id.includes(':')) {
-    const idSlug = slugifyName(id)
-    return idSlug || id
+  if (!idStr.includes(':')) {
+    const idSlug = slugifyName(idStr)
+    return idSlug || idStr
   }
 
   if (legacySegment) {
     return legacySegment
   }
 
-  return normalizeIdSlug(id)
+  return normalizeIdSlug(idStr)
 }
 
 export const resolveDetailIdFromSlug = (type: 'job' | 'major', slug: string): string => {

@@ -17,6 +17,13 @@
     "database_id": "edc21e23-c2ac-4693-bb79-389b6914e173"
   }],
 
+  // R2 Storage 설정 (이미지/파일 업로드)
+  // 버킷 생성: wrangler r2 bucket create careerwiki-uploads
+  "r2_buckets": [{
+    "binding": "UPLOADS",
+    "bucket_name": "careerwiki-uploads"
+  }],
+
   // KV Namespace 설정 (Phase 3: 인증 시스템)
   // Day 2 시작 전 생성 필요:
   // wrangler kv:namespace create "AUTH_KV"
@@ -29,6 +36,20 @@
     //   "preview_id": "your_preview_kv_id_here"
     // }
   ],
+  
+  // Vectorize 설정 (AI 분석기 후보 검색)
+  // 인덱스 생성: wrangler vectorize create careerwiki-embeddings --dimensions=768 --metric=cosine
+  "vectorize": [
+    {
+      "binding": "VECTORIZE",
+      "index_name": "careerwiki-embeddings"
+    }
+  ],
+  
+  // Workers AI 설정 (임베딩 생성)
+  "ai": {
+    "binding": "AI"
+  },
 
   // Environment variables (secrets should be set via wrangler secret)
   // For production: wrangler pages secret put CAREER_NET_API_KEY
