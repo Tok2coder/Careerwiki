@@ -72,24 +72,27 @@ export const TEMPLATE_VERSIONS = {
   MAJOR: 48,  // ✅ Version bumped
 }
 
-## Current Status (2025-11-06)
-**Migrating from GenSpark to Cursor due to memory constraints**
+## Current Status (2026-01-08)
+**✅ Production 마이그레이션 완료!**
 
-### Immediate Issues to Fix:
-1. **JavaScript 403 Errors** (HIGHEST PRIORITY)
-   - File: `src/index.tsx` line 95
-   - Problem: `serveStatic` is commented out
-   - Solution: Uncomment the line after successful local build
-   - Expected: Tabs will work after fixing this
+### 완료된 작업:
+1. **D1 데이터베이스 마이그레이션** - 모든 핵심 테이블 Production에 업로드 완료
+2. **R2 이미지 업로드** - ~7,500개 이미지 Production R2에 업로드 완료
+3. **개발환경 연동** - `npm run dev`로 Production D1/R2 직접 연결
 
-2. **Major Debug Page Data Rendering**
-   - File: `src/templates/dataDebugTemplate.ts`
-   - Problem: Template only supports `UnifiedJobDetail`, not `UnifiedMajorDetail`
-   - Solution: Add major profile field mappings
+### 개발 명령어:
+```bash
+npm run dev              # Production D1/R2 연결 (wrangler dev --remote)
+npm run deploy:prod      # Cloudflare Pages 배포
+```
 
-3. **Apply ISR to `/job/:slug`**
-   - Reference: `/major/:slug` implementation in `src/index.tsx`
-   - Goal: Same caching performance for job pages
+### 환경 설정:
+- `.dev.vars` 파일에 `CLOUDFLARE_API_TOKEN` 필요
+- `wrangler.jsonc`에 R2/D1 바인딩 설정됨
+
+### 알려진 이슈:
+- HowTo 데이터가 Production D1에 없음 (원본 데이터 손실됨)
+- 로컬 D1에는 HowTo 데이터 있음 (백업에서 복구됨)
 
 ## Code Style
 - Use TypeScript strict mode
@@ -135,11 +138,8 @@ npm run deploy:prod     # Deploy to Cloudflare Pages
 - Be concise and action-oriented
 
 ## Next Steps
-1. Run `./setup-local.sh` to auto-configure
-2. Fix `serveStatic` in `src/index.tsx`
-3. Test tab switching functionality
-4. Fix major debug page data rendering
-5. Apply ISR to job routes
+1. HowTo 데이터 Production D1에 업로드 (로컬 D1에서 추출 필요)
+2. 추가 기능 개발 진행
 
 ## Reference Docs
 - Quick Start: `CURSOR_QUICKSTART.md`
