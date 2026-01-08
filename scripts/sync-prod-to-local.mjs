@@ -9,8 +9,39 @@
 
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-const API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const rootDir = join(__dirname, '..');
+
+// .dev.vars에서 API 토큰 읽기
+function loadDevVars() {
+  const devVarsPath = join(rootDir, '.dev.vars');
+  if (!existsSync(devVarsPath)) {
+    return null;
+  }
+
+  try {
+    const content = readFileSync(devVarsPath, 'utf-8');
+    // PowerShell 형식: $env:CLOUDFLARE_API_TOKEN="..."
+    const match = content.match(/\$env:CLOUDFLARE_API_TOKEN=["']([^"']+)["']/);
+    if (match) {
+      return match[1];
+    }
+    // 일반 형식: CLOUDFLARE_API_TOKEN=...
+    const match2 = content.match(/^CLOUDFLARE_API_TOKEN=["']?([^"'\n]+)["']?$/m);
+    if (match2) {
+      return match2[1];
+    }
+  } catch (e) {
+    // 무시
+  }
+  return null;
+}
+
+const API_TOKEN = process.env.CLOUDFLARE_API_TOKEN || loadDevVars();
 
 // 동기화할 핵심 테이블 (순서 중요: FK 의존성 고려)
 const SYNC_TABLES = [
