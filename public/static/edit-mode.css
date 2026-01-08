@@ -1,0 +1,143 @@
+/**
+ * 편집 모드 스타일
+ * 직업/전공 편집 시스템
+ */
+
+/* 편집 모드 트랜지션 */
+[data-edit-mode="true"] {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 모달 애니메이션 */
+#create-modal {
+  animation: modalIn 0.2s ease-out;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#create-modal > div:last-child {
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 필드 포커스 효과 */
+[data-field-key]:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* 출처 토글 버튼 */
+[data-source-toggle]:hover i {
+  transform: rotate(15deg);
+  transition: transform 0.2s;
+}
+
+/* 저장/취소 버튼 상태 */
+#edit-save-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+#edit-save-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+#edit-save-btn:not(:disabled):active {
+  transform: translateY(0);
+}
+
+/* 섹션 구분선 */
+.edit-section-divider {
+  position: relative;
+}
+
+.edit-section-divider::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+}
+
+/* 읽기 전용 필드 스타일 */
+.readonly-field {
+  opacity: 0.6;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+/* 변경된 필드 하이라이트 */
+.field-changed {
+  border-color: rgba(34, 197, 94, 0.5) !important;
+  background: rgba(34, 197, 94, 0.05) !important;
+}
+
+/* 에러 상태 필드 */
+.field-error {
+  border-color: rgba(239, 68, 68, 0.5) !important;
+  background: rgba(239, 68, 68, 0.05) !important;
+}
+
+/* 스크롤바 스타일 */
+[data-edit-mode="true"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-edit-mode="true"] ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+[data-edit-mode="true"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+[data-edit-mode="true"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* 반응형 조정 */
+@media (max-width: 640px) {
+  #create-modal > div:last-child {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+  
+  [data-edit-mode="true"] .sticky {
+    position: fixed;
+    left: 0;
+    right: 0;
+  }
+}
+
+

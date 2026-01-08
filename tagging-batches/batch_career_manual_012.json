@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283306411848",
+    "job_name": "무용가",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "무용가는 춤을 추고 공연하는 업무를 수행합니다.\n\n춤 연습을 합니다.\n\n공연을 준비합니다.\n\n무대에서 춤을 춥니다.\n\n안무를 창작합니다.\n\n후배 무용수를 지도합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283332223520",
+    "job_name": "스턴트맨",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "스턴트맨은 영화나 공연에서 위험한 장면을 대신하는 업무를 수행합니다.\n\n스턴트 장면을 연습합니다.\n\n안전 장비를 착용합니다.\n\n위험한 동작을 수행합니다.\n\n감독의 지시에 따릅니다.\n\n부상 예방을 합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283343467158",
+    "job_name": "연극연출가",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "연극연출가는 연극 공연을 기획하고 감독하는 업무를 수행합니다.\n\n대본을 선정합니다.\n\n배우를 캐스팅합니다.\n\n연습을 지도합니다.\n\n무대 디자인을 결정합니다.\n\n공연을 총괄합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283402459323",
+    "job_name": "화가",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "화가는 그림을 그리는 업무를 수행합니다.\n\n주제를 선정합니다.\n\n스케치를 합니다.\n\n물감을 사용합니다.\n\n작품을 완성합니다.\n\n전시회를 준비합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283363398634",
+    "job_name": "장례지도사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "장례지도사는 장례 절차를 진행하는 업무를 수행합니다.\n\n고인과 가족을 상담합니다.\n\n장례 절차를 계획합니다.\n\n장례식을 진행합니다.\n\n행정 절차를 처리합니다.\n\n유족을 지원합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기획서비스직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283356346547",
+    "job_name": "인문계중등학교교사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "인문계중등학교교사는 중학교에서 인문 과목을 가르치는 업무를 수행합니다.\n\n수업 계획을 세웁니다.\n\n학생들을 가르칩니다.\n\n시험을 출제합니다.\n\n성적을 평가합니다.\n\n학생 상담을 합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283330181114",
+    "job_name": "소음진동기술자",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "소음진동기술자는 소음과 진동을 측정하고 제어하는 업무를 수행합니다.\n\n측정 장비를 설치합니다.\n\n소음과 진동을 측정합니다.\n\n데이터를 분석합니다.\n\n제어 방법을 제안합니다.\n\n보고서를 작성합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283340456966",
+    "job_name": "애니메이션작가",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "애니메이션작가는 애니메이션 스토리를 쓰는 업무를 수행합니다.\n\n스토리를 기획합니다.\n\n등장인물을 설정합니다.\n\n대본을 작성합니다.\n\n콘티를 만듭니다.\n\n제작팀과 협의합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283346355412",
+    "job_name": "영화시나리오작가",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "영화시나리오작가는 영화의 대본을 쓰는 업무를 수행합니다.\n\n스토리를 기획합니다.\n\n등장인물을 개발합니다.\n\n대본을 작성합니다.\n\n수정을 거칩니다.\n\n감독과 협의합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283321094381",
+    "job_name": "사회단체활동가",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "사회단체활동가는 사회 문제를 해결하기 위한 활동을 하는 업무를 수행합니다.\n\n사회 문제를 조사합니다.\n\n캠페인을 기획합니다.\n\n참여자를 모집합니다.\n\n활동을 조직합니다.\n\n성과를 평가합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기획서비스직"
+      }
+    }
+  }
+]
+
+

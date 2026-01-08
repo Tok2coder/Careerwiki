@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283328957492",
+    "job_name": "세탁원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "세탁원은 옷이나 섬유 제품을 세탁하고 관리하는 업무를 수행합니다.\n\n고객의 의류를 접수하고 상태를 확인합니다.\n\n세탁 방법을 결정하고 세제를 선택합니다.\n\n세탁기를 조작하여 세탁을 진행합니다.\n\n세탁된 의류를 건조하고 다림질합니다.\n\n고객에게 세탁물을 전달합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283394996325",
+    "job_name": "푸드스타일리스트",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "푸드스타일리스트는 음식의 외관을 아름답게 연출하는 업무를 수행합니다.\n\n클라이언트의 요구사항을 파악합니다.\n\n음식의 색상과 구성을 계획합니다.\n\n음식을 예쁘게 배열하고 장식합니다.\n\n사진 촬영이나 영상 촬영을 지원합니다.\n\n음식 스타일링 트렌드를 연구합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "디자인 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283331082680",
+    "job_name": "쇼핑호스트",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "쇼핑호스트는 TV 홈쇼핑에서 상품을 소개하고 판매하는 업무를 수행합니다.\n\n상품의 특징과 장점을 설명합니다.\n\n시청자와 실시간으로 소통합니다.\n\n상품 판매를 유도합니다.\n\n방송 진행을 원활하게 합니다.\n\n시청자 문의에 답변합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "영업관련 서비스직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283301032565",
+    "job_name": "동물조련사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "동물조련사는 동물을 훈련시키고 관리하는 업무를 수행합니다.\n\n동물의 행동을 관찰하고 분석합니다.\n\n훈련 계획을 수립합니다.\n\n동물에게 명령을 가르칩니다.\n\n동물의 건강을 관리합니다.\n\n공연이나 촬영에 동물을 참여시킵니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "연기 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283351814766",
+    "job_name": "유제품제조원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "유제품제조원은 우유를 가공하여 유제품을 생산하는 업무를 수행합니다.\n\n원유를 검사하고 품질을 확인합니다.\n\n유제품 제조 기계를 조작합니다.\n\n살균과 냉각 과정을 담당합니다.\n\n포장과 라벨링을 실시합니다.\n\n제품의 품질 관리를 수행합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283337407450",
+    "job_name": "심리학연구원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "심리학연구원은 인간의 심리 현상을 연구하는 업무를 수행합니다.\n\n연구 주제를 설정하고 설계합니다.\n\n실험을 계획하고 실행합니다.\n\n데이터를 수집하고 분석합니다.\n\n연구 결과를 해석합니다.\n\n학술 논문을 작성합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "인문·사회과학 연구원"
+      }
+    }
+  },
+  {
+    "job_id": "1765283284144159",
+    "job_name": "경영컨설턴트",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "경영컨설턴트는 기업의 경영 문제를 분석하고 해결 방안을 제시하는 업무를 수행합니다.\n\n기업의 현황을 진단합니다.\n\n문제점을 파악하고 해결 방안을 제시합니다.\n\n경영 전략을 수립합니다.\n\n변화 관리와 실행을 지원합니다.\n\n성과를 평가하고 보고합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "금융 및 경영 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283335247950",
+    "job_name": "시장 및 여론조사전문가",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "시장 및 여론조사전문가는 시장과 여론을 조사하고 분석하는 업무를 수행합니다.\n\n조사 설계를 수립합니다.\n\n샘플을 선정하고 데이터를 수집합니다.\n\n데이터를 분석하고 해석합니다.\n\n보고서를 작성합니다.\n\n시장 트렌드를 예측합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "금융 및 경영 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283385623157",
+    "job_name": "커플매니저",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "커플매니저는 커플의 결혼 준비를 돕고 결혼식을 기획하는 업무를 수행합니다.\n\n커플의 예산과 선호도를 파악합니다.\n\n결혼식 장소와 날짜를 예약합니다.\n\n하객 관리와 초대장을 준비합니다.\n\n결혼식 진행을 총괄합니다.\n\n결혼 후 사후 관리를 제공합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기획서비스직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283392589306",
+    "job_name": "파티플래너",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "파티플래너는 각종 행사와 파티를 기획하고 실행하는 업무를 수행합니다.\n\n클라이언트의 요구사항을 파악합니다.\n\n행사 콘셉트와 예산을 계획합니다.\n\n장소와 날짜를 예약합니다.\n\n행사 진행을 총괄합니다.\n\n행사 후 평가와 보고를 실시합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기획서비스직"
+      }
+    }
+  }
+]
+
+

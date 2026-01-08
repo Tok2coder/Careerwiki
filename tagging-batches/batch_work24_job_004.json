@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283522625491",
+    "job_name": "떡제조원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[떡제조원]\n-떡 반죽을 준비한다.\n-재료를 계량한다.\n-반죽을 치댄다.\n-떡을 성형한다.\n-증기를 이용해 찐다.\n-냉각과 포장을 한다.\n-품질을 검사한다.\n-위생을 유지한다.\n-재고를 관리한다.\n-장비를 청소한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283499829703",
+    "job_name": "공업배관공",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[공업배관공]\n-배관 설계도를 읽는다.\n-배관 재료를 준비한다.\n-배관을 절단한다.\n-배관을 연결한다.\n-용접을 실시한다.\n-누수 검사를 한다.\n-배관을 설치한다.\n-유지보수를 한다.\n-안전 수칙을 준수한다.\n-장비를 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283491499585",
+    "job_name": "철도교통관제사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[철도관제사]\n-열차 운행을 모니터링한다.\n-신호 체계를 운영한다.\n-열차 스케줄을 관리한다.\n-비상 상황에 대응한다.\n-통신을 유지한다.\n-안전 규정을 준수한다.\n-보고서를 작성한다.\n-시스템을 유지한다.\n-승객 안전을 책임진다.\n-교통 흐름을 조절한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "일반운전 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283494731969",
+    "job_name": "건축목공",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[건축목공]\n-목재를 재단한다.\n-골조를 조립한다.\n-문과 창문을 설치한다.\n-마감을 한다.\n-가구를 제작한다.\n-수리를 한다.\n-안전 수칙을 준수한다.\n-도구를 관리한다.\n-품질을 검사한다.\n-디자인을 구현한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283498976241",
+    "job_name": "건물도장공",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[건물도장공]\n-표면을 준비한다.\n-프라이머를 바른다.\n-페인트를 혼합한다.\n-도장을 실시한다.\n-마무리를 한다.\n-품질을 검사한다.\n-안전 수칙을 준수한다.\n-장비를 관리한다.\n-색상을 맞춘다.\n-유지보수를 한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283431074364",
+    "job_name": "자연과학시험원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[자연과학시험원]\n-시료를 채취한다.\n-실험을 설계한다.\n-데이터를 수집한다.\n-분석을 실시한다.\n-결과를 해석한다.\n-보고서를 작성한다.\n-장비를 유지한다.\n-안전 수칙을 준수한다.\n-품질 관리를 한다.\n-연구를 지원한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "이학 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283498312707",
+    "job_name": "미장공",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[미장공]\n-벽면을 준비한다.\n-모르타르를 혼합한다.\n-미장을 한다.\n-표면을 평탄화한다.\n-마무리를 한다.\n-크랙을 보수한다.\n-안전 수칙을 준수한다.\n-도구를 관리한다.\n-품질을 검사한다.\n-디자인을 구현한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283432182558",
+    "job_name": "생명과학시험원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[생명과학시험원]\n-생물 시료를 채취한다.\n-실험을 설계한다.\n-데이터를 수집한다.\n-분석을 실시한다.\n-결과를 해석한다.\n-보고서를 작성한다.\n-장비를 유지한다.\n-안전 수칙을 준수한다.\n-연구를 지원한다.\n-품질 관리를 한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "이학 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283468738131",
+    "job_name": "학예사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[학예사]\n-박물관 자료를 수집한다.\n-전시를 기획한다.\n-자료를 보존한다.\n-교육 프로그램을 개발한다.\n-관람객을 안내한다.\n-연구를 수행한다.\n-자료를 관리한다.\n-보존 방법을 적용한다.\n-전시를 유지한다.\n-보고서를 작성한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283448989966",
+    "job_name": "전기안전기술자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[전기안전기술자]\n-전기 설비를 점검한다.\n-안전 기준을 확인한다.\n-문제를 진단한다.\n-보수 계획을 수립한다.\n-수리를 실시한다.\n-안전 조치를 취한다.\n-보고서를 작성한다.\n-장비를 관리한다.\n-법규를 준수한다.\n-교육을 실시한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  }
+]
+
+

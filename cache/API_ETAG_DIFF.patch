@@ -1,0 +1,108 @@
+*** Update File: src/utils/etag.ts
+@@
++import { createHash } from 'crypto'
++
++export const toNFC = (s: string | null | undefined) => (s ? s.normalize('NFC') : '')
++
++export const weakETag = (seed: string) => {
++  const hash = createHash('sha1').update(toNFC(seed)).digest('hex')
++  return `W/"${hash}"`
++}
++
++export const matchETag = (incoming: string | null | undefined, etag: string) => {
++  if (!incoming) return false
++  const clean = (v: string) => v.trim().replace(/^W\//i, '').replace(/^"|"$/g, '')
++  const target = clean(etag)
++  return incoming
++    .split(',')
++    .map(clean)
++    .includes(target)
++}
+
+*** Update File: src/index.tsx
+@@
+-app.get('/api/jobs', async (c) => {
+-  try {
+-    const mark = c.get('mark') as ((k: string) => void) | undefined
+-    mark?.('parse-query')
+-    const keyword = c.req.query('keyword') || ''
+-    const category = c.req.query('category') || ''
+-    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+-    const perPage = parseNumberParam(c.req.query('perPage'), 8, { min: 1, max: 50 })
+-    const includeSources = parseSourcesQuery(c.req.query('sources'))
+-
+-    const dataVersion = 'v1'
+-    const seed = `${TEMPLATE_VERSIONS.JOB}:${dataVersion}:${toNFC(keyword)}:${page}:${perPage}:${category}`
+-    const etag = weakETag(seed)
+-    const inm = c.req.header('If-None-Match')
+-    const hasMatch = matchETag(inm, etag)
+-    if (hasMatch) {
+-      c.header('ETag', etag)
+-      c.header('Cache-Control', 'public, max-age=60, stale-while-revalidate=30')
+-      c.header('X-Cache-Status', 'HIT')
+-      return c.body(null, 304)
+-    }
++app.get('/api/jobs', async (c) => {
++  try {
++    const mark = c.get('mark') as ((k: string) => void) | undefined
++    mark?.('parse-query')
++    const keyword = c.req.query('keyword') || ''
++    const category = c.req.query('category') || ''
++    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
++    const perPage = parseNumberParam(c.req.query('perPage'), 8, { min: 1, max: 50 })
++    const includeSources = parseSourcesQuery(c.req.query('sources'))
++
++    const dataVersion = 'v1'
++    const seed = `${TEMPLATE_VERSIONS.JOB}:${dataVersion}:${toNFC(keyword)}:${page}:${perPage}:${category}`
++    const etag = weakETag(seed)
++    const inm = c.req.header('If-None-Match')
++    const hasMatch = matchETag(inm, etag)
++    if (hasMatch) {
++      c.header('ETag', etag)
++      c.header('Cache-Control', 'public, max-age=60, stale-while-revalidate=30')
++      c.header('X-Cache-Status', 'HIT')
++      return c.body(null, 304)
++    }
+
+@@
+-app.get('/api/majors', async (c) => {
+-  try {
+-    const mark = c.get('mark') as ((k: string) => void) | undefined
+-    mark?.('parse-query')
+-    const keyword = c.req.query('keyword') || ''
+-    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+-    const perPage = parseNumberParam(c.req.query('perPage'), 8, { min: 1, max: 50 })
+-    const includeSources = parseSourcesQuery(c.req.query('sources'))
+-
+-    const dataVersion = 'v1'
+-    const seed = `${TEMPLATE_VERSIONS.MAJOR}:${dataVersion}:${toNFC(keyword)}:${page}:${perPage}`
+-    const etag = weakETag(seed)
+-    const inm = c.req.header('If-None-Match')
+-    const hasMatch = matchETag(inm, etag)
+-    if (hasMatch) {
+-      c.header('ETag', etag)
+-      c.header('Cache-Control', 'public, max-age=60, stale-while-revalidate=30')
+-      c.header('X-Cache-Status', 'HIT')
+-      return c.body(null, 304)
+-    }
++app.get('/api/majors', async (c) => {
++  try {
++    const mark = c.get('mark') as ((k: string) => void) | undefined
++    mark?.('parse-query')
++    const keyword = c.req.query('keyword') || ''
++    const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
++    const perPage = parseNumberParam(c.req.query('perPage'), 8, { min: 1, max: 50 })
++    const includeSources = parseSourcesQuery(c.req.query('sources'))
++
++    const dataVersion = 'v1'
++    const seed = `${TEMPLATE_VERSIONS.MAJOR}:${dataVersion}:${toNFC(keyword)}:${page}:${perPage}`
++    const etag = weakETag(seed)
++    const inm = c.req.header('If-None-Match')
++    const hasMatch = matchETag(inm, etag)
++    if (hasMatch) {
++      c.header('ETag', etag)
++      c.header('Cache-Control', 'public, max-age=60, stale-while-revalidate=30')
++      c.header('X-Cache-Status', 'HIT')
++      return c.body(null, 304)
++    }
+

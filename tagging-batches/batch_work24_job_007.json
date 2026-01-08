@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283412377363",
+    "job_name": "운송관리자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[운송관리자]\n-운송 계획을 수립한다.\n-차량을 배분한다.\n-운송 경로를 최적화한다.\n-운송업체를 관리한다.\n-화물 추적을 한다.\n-비용을 통제한다.\n-안전 수칙을 준수한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-팀을 감독한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "176528348109248",
+    "job_name": "양식조리사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[양식조리사]\n-양식 요리를 한다.\n-재료를 준비한다.\n-조리법을 따른다.\n-맛을 조절한다.\n-접시를 장식한다.\n-위생을 유지한다.\n-메뉴를 개발한다.\n-재고를 관리한다.\n-교육을 실시한다.\n-품질을 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283473551514",
+    "job_name": "광고영상감독",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[광고영상감독]\n-광고 콘셉트를 기획한다.\n-스토리보드를 작성한다.\n-촬영을 감독한다.\n-배우를 지도한다.\n-특수 효과를 감독한다.\n-편집을 지휘한다.\n-클라이언트와 협의한다.\n-예산을 관리한다.\n-최종 승인을 받는다.\n-홍보를 지원한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283475491690",
+    "job_name": "피부 및 체형관리사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[피부관리사]\n-피부 상태를 진단한다.\n-클렌징을 한다.\n-마사지를 실시한다.\n-팩을 적용한다.\n-관리법을 교육한다.\n-제품을 추천한다.\n-기록을 관리한다.\n-위생을 유지한다.\n-고객을 상담한다.\n-기술을 연마한다.\n\n[체형관리사]\n-체형을 측정한다.\n-다이어트 상담을 한다.\n-운동 프로그램을 짜준다.\n-마사지를 한다.\n-영양 상담을 한다.\n-진전을 모니터링한다.\n-교육을 실시한다.\n-기록을 관리한다.\n-안전을 유지한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283433813430",
+    "job_name": "약학연구원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[약학연구원]\n-신약을 개발한다.\n-약물 효능을 연구한다.\n-임상 시험을 설계한다.\n-데이터를 분석한다.\n-보고서를 작성한다.\n-논문을 발표한다.\n-안전성을 평가한다.\n-규제를 준수한다.\n-협력을 한다.\n-지식을 유지한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "이학 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283499348417",
+    "job_name": "건설배관공",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[건설배관공]\n-배관 설계를 읽는다.\n-재료를 준비한다.\n-배관을 절단한다.\n-배관을 연결한다.\n-용접을 실시한다.\n-누수 검사를 한다.\n-배관을 설치한다.\n-유지보수를 한다.\n-안전 수칙을 준수한다.\n-품질을 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283490818405",
+    "job_name": "철도·전동차기관사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[철도기관사]\n-열차를 운전한다.\n-신호를 확인한다.\n-속도를 조절한다.\n-안전 수칙을 준수한다.\n-승객 안전을 책임진다.\n-비상 상황에 대응한다.\n-기록을 관리한다.\n-정비를 확인한다.\n-시간표를 준수한다.\n-통신을 유지한다.\n\n[전동차기관사]\n-전동차를 운전한다.\n-전기 시스템을 모니터링한다.\n-신호를 따른다.\n-안전을 유지한다.\n-승객을 관리한다.\n-문제를 해결한다.\n-보고서를 작성한다.\n-교육을 받는다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "일반운전 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283421371269",
+    "job_name": "도로운송사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[도로운송사무원]\n-운송 일정을 관리한다.\n-화물 예약을 받는다.\n-운송 경로를 계획한다.\n-운송장을 작성한다.\n-화물 추적을 한다.\n-고객을 응대한다.\n-문제를 해결한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-법규를 준수한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283468460636",
+    "job_name": "방송기자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[방송기자]\n-뉴스를 취재한다.\n-인터뷰를 진행한다.\n-기사를 작성한다.\n-영상을 촬영한다.\n-편집을 한다.\n-방송을 진행한다.\n-사실을 검증한다.\n-데드라인을 지킨다.\n-시청자와 소통한다.\n-윤리를 준수한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283530916658",
+    "job_name": "곡식작물재배원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[곡식재배원]\n-종자를 심는다.\n-물을 공급한다.\n-비료를 준다.\n-해충을 방제한다.\n-성장을 모니터링한다.\n-수확을 한다.\n-곡물을 저장한다.\n-품질을 검사한다.\n-장비를 유지한다.\n-기록을 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "농림·어업 숙련직"
+      }
+    }
+  }
+]
+
+

@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283465677930",
+    "job_name": "한약사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[한약사]\n-한약을 조제한다.\n-약재를 검토한다.\n-처방을 분석한다.\n-약을 분쇄한다.\n-탕약을 달인다.\n-포장을 한다.\n-복용법을 설명한다.\n-부작용을 모니터링한다.\n-기록을 관리한다.\n-위생을 유지한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "의료 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "176528346597017",
+    "job_name": "보건교사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[보건교사]\n-보건 교육을 실시한다.\n-학생 건강을 관리한다.\n-응급 처치를 한다.\n-건강 검진을 감독한다.\n-질병 예방을 교육한다.\n-상담을 진행한다.\n-의료 기록을 관리한다.\n-보건실을 운영한다.\n-교직원 건강을 지원한다.\n-학교 보건 정책을 수립한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283423754295",
+    "job_name": "고객상담원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[고객상담원]\n-고객 문의를 접수한다.\n-질문에 답변한다.\n-불만을 해결한다.\n-정보를 제공한다.\n-주문을 처리한다.\n-기록을 관리한다.\n-피드백을 수집한다.\n-서비스 품질을 유지한다.\n-교육을 받는다.\n-성과를 분석한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "영업관련 서비스직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283416155964",
+    "job_name": "병무행정사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[병무행정사무원]\n-병역 신청을 접수한다.\n-서류를 검토한다.\n-면접을 진행한다.\n-병역 처분을 결정한다.\n-기록을 관리한다.\n-상담을 제공한다.\n-법규를 준수한다.\n-보고서를 작성한다.\n-시스템을 운영한다.\n-민원을 처리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283484278463",
+    "job_name": "세탁원(다림질원)",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[세탁원]\n-의류를 분류한다.\n-세탁을 실시한다.\n-세제를 사용한다.\n-세탁기를 운영한다.\n-건조를 한다.\n-다림질을 한다.\n-포장을 한다.\n-고객을 응대한다.\n-품질을 검사한다.\n-기록을 관리한다.\n\n[다림질원]\n-의류를 분류한다.\n-다림질을 준비한다.\n-스팀 다리미를 사용한다.\n-주름을 펴준다.\n-모양을 유지한다.\n-특수 처리한다.\n-품질을 검사한다.\n-포장을 한다.\n-고객을 응대한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283433280884",
+    "job_name": "의학연구원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[의학연구원]\n-의학 연구를 수행한다.\n-임상 시험을 설계한다.\n-데이터를 수집한다.\n-분석을 실시한다.\n-논문을 작성한다.\n-치료법을 개발한다.\n-약물을 연구한다.\n-윤리적 문제를 고려한다.\n-협력을 한다.\n-성과를 발표한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "의학 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283409874866",
+    "job_name": "예술·디자인·방송관리자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[예술관리자]\n-예술 프로젝트를 기획한다.\n-예술가를 관리한다.\n-예산을 수립한다.\n-프로모션을 진행한다.\n-전시를 감독한다.\n-관객을 관리한다.\n-협찬을 유치한다.\n-보고서를 작성한다.\n-팀을 감독한다.\n\n[디자인관리자]\n-디자인 프로젝트를 감독한다.\n-디자이너를 관리한다.\n-클라이언트를 응대한다.\n-예산을 통제한다.\n-품질을 유지한다.\n-일정을 관리한다.\n-피드백을 처리한다.\n-보고서를 작성한다.\n\n[방송관리자]\n-방송 프로그램을 기획한다.\n-제작팀을 관리한다.\n-예산을 감독한다.\n-방송 품질을 유지한다.\n-시청률을 분석한다.\n-광고를 관리한다.\n-법규를 준수한다.\n-보고서를 작성한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283495454986",
+    "job_name": "건축석공",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[건축석공]\n-석재를 재단한다.\n-표면을 연마한다.\n-설치를 한다.\n-접합을 실시한다.\n-마무리를 한다.\n-품질을 검사한다.\n-안전 수칙을 준수한다.\n-도구를 관리한다.\n-디자인을 구현한다.\n-수리를 한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283423024989",
+    "job_name": "의료코디네이터",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[의료코디네이터]\n-환자를 안내한다.\n-진료 일정을 조율한다.\n-서류를 준비한다.\n-보험을 처리한다.\n-통역을 지원한다.\n-상담을 진행한다.\n-문제를 해결한다.\n-기록을 관리한다.\n-의료팀과 협력한다.\n-환자 만족도를 높인다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "의료 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283494168126",
+    "job_name": "철골공(강구조물건립원)",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[철골공]\n-철골 구조를 설계한다.\n-재료를 준비한다.\n-용접을 실시한다.\n-조립을 한다.\n-설치를 진행한다.\n-안전 검사를 한다.\n-마무리를 한다.\n-유지보수를 한다.\n-안전 수칙을 준수한다.\n-품질을 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  }
+]
+
+

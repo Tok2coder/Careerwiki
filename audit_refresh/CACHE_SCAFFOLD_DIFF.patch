@@ -1,0 +1,45 @@
+++ src/utils/page-cache.ts
+@@
+ function isDevelopmentMode(env?: any): boolean {
+@@
+ }
+
+function buildWeakEtag(pageType: string, slug: string, version: number, content: string) {
+  return `W/"${version}-${pageType}-${slug}-${content.length}"`
+}
+@@
+    if (cached && cached.cache_version === currentVersion) {
++      const etag = buildWeakEtag(pageType, slug, currentVersion, cached.content)
++      if (c.req.header('If-None-Match') === etag) {
++        c.header('ETag', etag)
++        c.header('X-Cache-Status', 'HIT')
++        c.status(304)
++        return c.body(null)
++      }
+       // Set cache headers for crawler optimization
+       c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
+       c.header('X-Cache-Status', 'HIT')
+       c.header('X-Template-Version', currentVersion.toString())
++      c.header('ETag', etag)
+       
+       return c.html(cached.content)
+     }
+   }
+@@
+    // Render HTML
+    const html = await generator.renderHTML(data)
++    const etag = buildWeakEtag(pageType, slug, currentVersion, html)
++    if (c.req.header('If-None-Match') === etag && !devMode) {
++      c.header('ETag', etag)
++      c.header('X-Cache-Status', cacheStatus)
++      c.status(304)
++      return c.body(null)
++    }
+@@
+    } else {
+      c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
+      c.header('X-Cache-Status', cacheStatus)
+    }
+    c.header('X-Template-Version', currentVersion.toString())
++    c.header('ETag', etag)
+

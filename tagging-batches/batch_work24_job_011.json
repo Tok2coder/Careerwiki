@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283492731507",
+    "job_name": "버스운전원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[버스운전원]\n-버스를 운전한다.\n-승객을 태운다.\n-요금을 징수한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-시간표를 지킨다.\n-승객을 안내한다.\n-비상 상황에 대응한다.\n-차량을 점검한다.\n-보고서를 작성한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "일반운전 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283493013609",
+    "job_name": "크레인·호이스트운전원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[크레인운전원]\n-크레인을 조작한다.\n-화물을 들어 올린다.\n-화물을 이동한다.\n-안전 수칙을 준수한다.\n-신호를 따른다.\n-장비를 점검한다.\n-무게를 계산한다.\n-기록을 관리한다.\n-교육을 받는다.\n\n[호이스트운전원]\n-호이스트를 조작한다.\n-화물을 들어 올린다.\n-정밀하게 이동한다.\n-안전을 유지한다.\n-신호를 따른다.\n-장비를 점검한다.\n-교육을 받는다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283431649456",
+    "job_name": "수학 및 통계연구원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[수학연구원]\n-수학적 문제를 연구한다.\n-이론을 개발한다.\n-모델을 구축한다.\n-증명을 한다.\n-논문을 작성한다.\n-강의를 한다.\n-협력을 한다.\n\n[통계연구원]\n-데이터를 수집한다.\n-통계 분석을 실시한다.\n-모델을 개발한다.\n-결과를 해석한다.\n-보고서를 작성한다.\n-소프트웨어를 사용한다.\n-연구를 지원한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "이학 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "176528342553743",
+    "job_name": "행정사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[행정사]\n-행정 서류를 작성한다.\n-법적 문서를 준비한다.\n-고객을 상담한다.\n-대행 업무를 처리한다.\n-법규를 준수한다.\n-기록을 관리한다.\n-세금을 계산한다.\n-신고를 대행한다.\n-교육을 받는다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283493883814",
+    "job_name": "선박기관사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[선박기관사]\n-선박 엔진을 운영한다.\n-장비를 유지보수한다.\n-연료를 관리한다.\n-안전을 유지한다.\n-문제를 진단한다.\n-수리를 실시한다.\n-기록을 관리한다.\n-교육을 받는다.\n-법규를 준수한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "일반운전 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283416514994",
+    "job_name": "조세행정사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[조세행정사무원]\n-세금 신고를 접수한다.\n-서류를 검토한다.\n-세금을 계산한다.\n-납부를 확인한다.\n-환급을 처리한다.\n-기록을 관리한다.\n-법규를 준수한다.\n-상담을 제공한다.\n-보고서를 작성한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283482141498",
+    "job_name": "홀서빙원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[홀서빙원]\n-고객을 안내한다.\n-주문을 받는다.\n-음식을 서빙한다.\n-계산을 처리한다.\n-테이블을 정리한다.\n-고객 불편을 해결한다.\n-메뉴를 설명한다.\n-청결을 유지한다.\n-팀과 협력한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283474377911",
+    "job_name": "경기심판 및 경기기록원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[경기심판]\n-경기를 감독한다.\n-규칙을 집행한다.\n-판정을 내린다.\n-안전을 유지한다.\n-보고서를 작성한다.\n-교육을 받는다.\n-법규를 준수한다.\n\n[경기기록원]\n-경기 결과를 기록한다.\n-통계를 수집한다.\n-데이터를 분석한다.\n-보고서를 작성한다.\n-시스템을 운영한다.\n-정확성을 유지한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283409306509",
+    "job_name": "중고등학교 교장 및 교감",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[중고등학교 교장]\n-학교를 관리한다.\n-교육 정책을 수립한다.\n-교직원을 감독한다.\n-학생을 지도한다.\n-예산을 관리한다.\n-부모와 소통한다.\n-학교 발전을 계획한다.\n-법규를 준수한다.\n\n[중고등학교 교감]\n-교장을 지원한다.\n-행정 업무를 처리한다.\n-교사를 감독한다.\n-학생 지도를 지원한다.\n-프로그램을 기획한다.\n-보고서를 작성한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283469284852",
+    "job_name": "사진작가 및 사진사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[사진작가]\n-사진을 촬영한다.\n-구도를 설정한다.\n-조명을 조절한다.\n-편집을 한다.\n-클라이언트를 응대한다.\n-프로젝트를 기획한다.\n-기술을 연마한다.\n\n[사진사]\n-인물 사진을 촬영한다.\n-행사 사진을 찍는다.\n-사진을 인화한다.\n-고객을 상담한다.\n-장비를 관리한다.\n-기록을 관리한다.\n-기술을 유지한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  }
+]
+
+

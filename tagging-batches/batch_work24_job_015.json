@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283455943446",
+    "job_name": "3D프린팅모델러",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[3D프린팅모델러]\n-3D 모델을 디자인한다.\n-소프트웨어를 사용한다.\n-프린팅을 준비한다.\n-품질을 검사한다.\n-수정을 실시한다.\n-재료를 선택한다.\n-기술을 연마한다.\n-프로젝트를 관리한다.\n-클라이언트를 지원한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283419246952",
+    "job_name": "자재·구매사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[자재사무원]\n-자재를 관리한다.\n-재고를 모니터링한다.\n-주문을 처리한다.\n-공급업체와 협력한다.\n-기록을 유지한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n\n[구매사무원]\n-구매 계획을 수립한다.\n-가격을 협상한다.\n-계약을 체결한다.\n-품질을 검사한다.\n-배송을 추적한다.\n-기록을 관리한다.\n-보고서를 작성한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283418922102",
+    "job_name": "경리사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[경리사무원]\n-회계를 처리한다.\n-거래를 기록한다.\n-청구서를 작성한다.\n-급여를 계산한다.\n-세금을 관리한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n-기록을 유지한다.\n-감사를 지원한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283473827463",
+    "job_name": "공연·영화 및 음반기획자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[공연기획자]\n-공연을 기획한다.\n-예산을 관리한다.\n-아티스트를 섭외한다.\n-장소를 예약한다.\n-마케팅을 실시한다.\n-프로모션을 진행한다.\n-티켓을 판매한다.\n-보고서를 작성한다.\n\n[영화기획자]\n-영화를 기획한다.\n-스크립트를 개발한다.\n-예산을 확보한다.\n-제작팀을 구성한다.\n-촬영을 감독한다.\n-배급을 담당한다.\n-홍보를 실시한다.\n\n[음반기획자]\n-음반을 기획한다.\n-아티스트를 관리한다.\n-녹음을 감독한다.\n-마케팅을 실시한다.\n-배급을 담당한다.\n-판매를 추적한다.\n-계약을 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "176528340904243",
+    "job_name": "경찰·소방·교도관리자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[경찰관리자]\n-경찰 업무를 감독한다.\n-범죄 예방을 기획한다.\n-팀을 관리한다.\n-교육을 실시한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n-커뮤니티를 지원한다.\n\n[소방관리자]\n-소방 서비스를 관리한다.\n-화재 예방을 감독한다.\n-구조 활동을 조율한다.\n-교육을 실시한다.\n-장비를 유지한다.\n-보고서를 작성한다.\n\n[교도관리자]\n-교도소를 관리한다.\n-수감자를 감독한다.\n-프로그램을 운영한다.\n-안전을 유지한다.\n-보고서를 작성한다.\n-법규를 준수한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283487138100",
+    "job_name": "기술영업원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[기술영업원]\n-기술 제품을 소개한다.\n-고객의 요구를 파악한다.\n-솔루션을 제안한다.\n-계약을 체결한다.\n-기술 지원을 제공한다.\n-관계를 유지한다.\n-시장 동향을 분석한다.\n-보고서를 작성한다.\n-교육을 받는다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "영업관련 서비스직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283481435437",
+    "job_name": "주방장",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[주방장]\n-메뉴를 기획한다.\n-조리를 감독한다.\n-품질을 유지한다.\n-직원을 관리한다.\n-재료를 관리한다.\n-위생을 유지한다.\n-비용을 통제한다.\n-고객 만족을 모니터링한다.\n-교육을 실시한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283489136648",
+    "job_name": "온라인판매원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[온라인판매원]\n-제품을 등록한다.\n-가격을 설정한다.\n-고객을 응대한다.\n-주문을 처리한다.\n-배송을 관리한다.\n-리뷰를 모니터링한다.\n-마케팅을 실시한다.\n-판매 실적을 분석한다.\n-고객 데이터를 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "영업관련 서비스직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283484954564",
+    "job_name": "방역원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[방역원]\n-방역을 실시한다.\n-해충을 방제한다.\n-청소를 한다.\n-장비를 사용한다.\n-안전을 유지한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-교육을 받는다.\n-법규를 준수한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283486774724",
+    "job_name": "제품광고영업원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[제품광고영업원]\n-광고 공간을 판매한다.\n-클라이언트를 발굴한다.\n-계약을 체결한다.\n-광고 효과를 설명한다.\n-가격을 협상한다.\n-관계를 유지한다.\n-시장 동향을 분석한다.\n-보고서를 작성한다.\n-성과를 추적한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "영업관련 서비스직"
+      }
+    }
+  }
+]
+
+

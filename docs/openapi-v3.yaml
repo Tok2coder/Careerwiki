@@ -1,0 +1,773 @@
+openapi: 3.0.3
+info:
+  title: CareerWiki AI Analyzer API
+  description: |
+    진로/직업/전공 추천을 위한 AI 분석 API (V3)
+    
+    ## 핵심 철학
+    - 사용자는 자기 자신을 모를 수 있다
+    - 경험을 전제하지 않는 질문 기반
+    - 다양성이 버그가 아니라 기능
+    
+    ## 분석 흐름
+    1. Stage 선택 (job_explore, job_student, job_early 등)
+    2. Universal Intake (12문항 기반)
+    3. Stage-based Follow-up (경험 허용 단계만)
+    4. (선택) Deep Intake (MBTI/서사)
+    5. Scoring: Like + Can + Risk → Fit
+    6. Phase 4: Hard Filter + Diversity Guard
+    7. TOP3 결과 반환
+  version: 3.0.0
+  contact:
+    name: CareerWiki Team
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Local Development
+  - url: https://careerwiki.pages.dev
+    description: Production (Cloudflare Pages)
+
+tags:
+  - name: Analysis
+    description: 분석 요청 및 결과 조회
+  - name: Followup
+    description: Follow-up 질문 응답
+  - name: Session
+    description: 세션 및 Facts 관리
+  - name: Admin
+    description: 관리자 API (메트릭스, 통계)
+
+paths:
+  /api/ai-analyzer/analyze:
+    post:
+      tags:
+        - Analysis
+      summary: 분석 요청 (V3)
+      description: |
+        Stage 기반 분석 요청을 처리합니다.
+        
+        **V3 페이로드 필수 필드:**
+        - `session_id`: 고유 세션 식별자
+        - `stage`: 분석 단계 (job_explore, job_student 등)
+        - `universal_answers`: Universal Intake 응답
+        
+        **선택 필드:**
+        - `deep_intake`: MBTI + 서사형 질문 응답 (비미성년 단계만)
+      operationId: analyze
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisRequestV3'
+            examples:
+              minimal:
+                summary: 최소 요청 (탐색 단계)
+                value:
+                  session_id: "sess-123456"
+                  stage: "job_explore"
+                  universal_answers:
+                    univ_interest: ["tech", "creative"]
+                    univ_workstyle_social: "balanced"
+                    univ_priority: "growth"
+              with_constraints:
+                summary: 제약 조건 포함
+                value:
+                  session_id: "sess-789012"
+                  stage: "job_student"
+                  universal_answers:
+                    univ_interest: ["numbers", "logic"]
+                    univ_constraint_time: ["no_overtime"]
+                    univ_constraint_qualification: ["no_degree"]
+              with_deep_intake:
+                summary: Deep Intake 포함
+                value:
+                  session_id: "sess-345678"
+                  stage: "job_early"
+                  universal_answers:
+                    univ_interest: ["people", "business"]
+                    univ_workstyle_social: "team"
+                    univ_priority: "income"
+                  deep_intake:
+                    mbti: "ENFJ"
+                    best_moment: "팀을 이끌어 프로젝트를 성공시켰을 때"
+                    worst_moment: "혼자 반복적인 업무만 할 때"
+                    priority_top1: "growth"
+      responses:
+        '200':
+          description: 분석 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResponse'
+        '400':
+          description: 입력 검증 실패
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                validation_error:
+                  value:
+                    error: "session_id is required"
+                    code: "VALIDATION_ERROR"
+                    timestamp: "2026-01-05T12:00:00.000Z"
+                invalid_stage:
+                  value:
+                    error: "Invalid stage: unknown_stage"
+                    code: "INVALID_STAGE"
+                    details:
+                      provided: "unknown_stage"
+                      allowed: ["job_explore", "job_student", "job_early", "major_explore", "major_student", "major_early"]
+                    timestamp: "2026-01-05T12:00:00.000Z"
+        '500':
+          description: 분석 처리 실패
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/ai-analyzer/followup:
+    post:
+      tags:
+        - Followup
+      summary: Follow-up 질문 응답
+      description: |
+        Follow-up 질문에 대한 응답을 처리합니다.
+        
+        **answer = "no" 시:**
+        - Phase 4 Safe Replacement Logic 실행
+        - 해당 제약을 confirmed_constraint로 승격
+        - TOP3 재계산 (Hard Filter + Diversity Guard)
+      operationId: submitFollowup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FollowupRequest'
+            examples:
+              yes_response:
+                summary: 긍정 응답
+                value:
+                  session_id: "sess-123456"
+                  question_id: "tradeoff_salary_wlb"
+                  answer: "yes"
+                  request_id: 42
+              no_response:
+                summary: 부정 응답 (Phase 4 트리거)
+                value:
+                  session_id: "sess-123456"
+                  question_id: "constraint_overtime"
+                  answer: "no"
+                  request_id: 42
+                  constraint: "work_hours_strict"
+                  job_id: "financial-analyst"
+      responses:
+        '200':
+          description: 응답 처리 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowupResponse'
+        '400':
+          description: 입력 검증 실패
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/ai-analyzer/result/{requestId}:
+    get:
+      tags:
+        - Analysis
+      summary: 분석 결과 조회
+      operationId: getResult
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 분석 요청 ID
+      responses:
+        '200':
+          description: 결과 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultResponse'
+        '404':
+          description: 요청 없음
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/ai-analyzer/facts/{sessionId}:
+    get:
+      tags:
+        - Session
+      summary: 세션 Facts 조회
+      operationId: getFacts
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 세션 ID
+      responses:
+        '200':
+          description: Facts 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session_id:
+                    type: string
+                  facts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Fact'
+
+  /admin/api/ai/metrics:
+    get:
+      tags:
+        - Admin
+      summary: Phase 4 메트릭스 조회
+      description: |
+        Phase 4 관련 메트릭스를 조회합니다.
+        - Diversity Guard 발동률
+        - Research Bias Cap 발동률
+        - Phase 4 적용률
+      operationId: getMetrics
+      parameters:
+        - name: days
+          in: query
+          schema:
+            type: integer
+            default: 7
+            minimum: 1
+            maximum: 90
+          description: 조회 기간 (일)
+      responses:
+        '200':
+          description: 메트릭스 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+
+components:
+  schemas:
+    AnalysisRequestV3:
+      type: object
+      required:
+        - session_id
+        - stage
+        - universal_answers
+      properties:
+        session_id:
+          type: string
+          description: 고유 세션 식별자
+          example: "sess-abc123"
+        user_id:
+          type: string
+          description: 사용자 ID (선택)
+        analysis_type:
+          type: string
+          enum: [job, major]
+          default: job
+        stage:
+          $ref: '#/components/schemas/AnalysisStage'
+        universal_answers:
+          $ref: '#/components/schemas/UniversalAnswers'
+        deep_intake:
+          $ref: '#/components/schemas/DeepIntake'
+          description: 비미성년 단계에서만 유효
+
+    AnalysisStage:
+      type: string
+      enum:
+        - job_explore
+        - job_student
+        - job_early
+        - major_explore
+        - major_student
+        - major_early
+      description: |
+        분석 단계:
+        - job_explore: 탐색 (경험 거의 없음)
+        - job_student: 학생 (전공/진학 연계)
+        - job_early: 초기 경력 (0~3년)
+        - major_*: 전공 분석
+
+    UniversalAnswers:
+      type: object
+      description: Universal Intake 응답 (question_id → value)
+      additionalProperties: true
+      example:
+        univ_interest: ["tech", "creative"]
+        univ_workstyle_social: "solo"
+        univ_priority: "wlb"
+        univ_constraint_time: ["no_overtime"]
+
+    DeepIntake:
+      type: object
+      properties:
+        mbti:
+          type: string
+          pattern: "^[EI][SN][TF][JP]$"
+          example: "ENFP"
+        best_moment:
+          type: string
+          description: 가장 좋았던 순간 (오픈텍스트)
+          maxLength: 500
+        worst_moment:
+          type: string
+          description: 가장 싫었던 순간 (오픈텍스트)
+          maxLength: 500
+        change_reason:
+          type: string
+          description: 지금 원하는 변화 (오픈텍스트)
+          maxLength: 500
+        priority_top1:
+          type: string
+          enum: [growth, stability, wlb, income]
+
+    AnalysisResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        request_id:
+          type: integer
+        result:
+          $ref: '#/components/schemas/AnalysisResult'
+
+    AnalysisResult:
+      type: object
+      required:
+        - engine_state
+        - versions
+        - input_summary
+        - fit_top3
+        - ux_flags
+        - generated_at
+      properties:
+        engine_state:
+          type: string
+          enum:
+            - phase0_stub
+            - phase1a_initial
+            - phase1a_mve
+            - phase2_scoring
+            - phase2_stage_based
+            - phase4_filtered
+            - production
+        versions:
+          type: object
+          properties:
+            recipe:
+              type: string
+            tagger:
+              type: string
+            scoring:
+              type: string
+        input_summary:
+          $ref: '#/components/schemas/InputSummary'
+        fit_top3:
+          type: array
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/FitRecommendation'
+        like_top10:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/SimpleRecommendation'
+        can_top10:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/SimpleRecommendation'
+        caution_jobs:
+          type: array
+          items:
+            type: object
+            properties:
+              job_id:
+                type: string
+              job_name:
+                type: string
+              risk_penalty:
+                type: number
+        followup_questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FollowupQuestion'
+        ux_flags:
+          $ref: '#/components/schemas/UXFlags'
+        user_insight:
+          $ref: '#/components/schemas/UserInsight'
+        phase4_applied:
+          type: boolean
+          description: Phase 4 적용 여부
+        diversity_guard_active:
+          type: boolean
+          description: Diversity Guard 활성화 여부
+        diversity_changes:
+          type: array
+          items:
+            type: string
+          description: Diversity Guard로 인한 변경 내역
+        analysis_stage:
+          type: string
+        stage_specific_insights:
+          type: array
+          items:
+            type: string
+        llm_explanation:
+          type: string
+        generated_at:
+          type: string
+          format: date-time
+        total_candidates:
+          type: integer
+
+    InputSummary:
+      type: object
+      properties:
+        profile_revision_id:
+          type: string
+        key_interests:
+          type: array
+          items:
+            type: string
+        key_skills:
+          type: array
+          items:
+            type: string
+        non_negotiables:
+          type: array
+          items:
+            type: string
+        facts_applied:
+          type: integer
+        applied_rules:
+          type: array
+          items:
+            type: string
+        deep_intake_provided:
+          type: boolean
+        stage:
+          type: string
+        universal_facts_count:
+          type: integer
+        confirmed_constraints:
+          type: array
+          items:
+            type: string
+          description: 확정된 Hard Filter 제약
+
+    FitRecommendation:
+      type: object
+      required:
+        - job_id
+        - job_name
+        - fit_score
+      properties:
+        job_id:
+          type: string
+        job_name:
+          type: string
+        fit_score:
+          type: number
+        like_score:
+          type: number
+        can_score:
+          type: number
+        risk_details:
+          type: array
+          items:
+            type: object
+        evidence_links:
+          type: array
+          items:
+            type: object
+
+    SimpleRecommendation:
+      type: object
+      properties:
+        job_id:
+          type: string
+        job_name:
+          type: string
+        like_score:
+          type: number
+        can_score:
+          type: number
+
+    FollowupQuestion:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [clarification, tradeoff, priority, discovery]
+        question:
+          type: string
+        context:
+          type: string
+        options:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+              label:
+                type: string
+              tags:
+                type: array
+                items:
+                  type: string
+        fact_key:
+          type: string
+        affects_attributes:
+          type: array
+          items:
+            type: string
+
+    UXFlags:
+      type: object
+      properties:
+        show_tradeoff_notice:
+          type: boolean
+        needs_more_input:
+          type: boolean
+        high_uncertainty_jobs:
+          type: array
+          items:
+            type: string
+        scoring_coverage:
+          type: object
+          properties:
+            safe_known:
+              type: integer
+            safe_unknown:
+              type: integer
+            caution:
+              type: integer
+            total:
+              type: integer
+
+    UserInsight:
+      type: object
+      properties:
+        summary:
+          type: string
+        key_traits:
+          type: array
+          items:
+            type: object
+            properties:
+              trait:
+                type: string
+              confidence:
+                type: number
+              source:
+                type: string
+        applied_facts:
+          type: array
+          items:
+            type: object
+            properties:
+              fact_key:
+                type: string
+              influence:
+                type: string
+
+    FollowupRequest:
+      type: object
+      required:
+        - session_id
+        - question_id
+        - answer
+      properties:
+        session_id:
+          type: string
+        user_id:
+          type: string
+        question_id:
+          type: string
+        answer:
+          type: string
+          enum: [yes, no]
+        request_id:
+          type: integer
+        constraint:
+          type: string
+          description: "no" 응답 시 적용할 제약 타입
+        job_id:
+          type: string
+          description: 대상 직업 ID
+
+    FollowupResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        phase4_applied:
+          type: boolean
+        fact_saved:
+          type: object
+          properties:
+            fact_key:
+              type: string
+            value:
+              type: string
+            fact_level:
+              type: integer
+        rank_change:
+          $ref: '#/components/schemas/RankChangeInfo'
+        new_top3:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleRecommendation'
+        message:
+          type: string
+
+    RankChangeInfo:
+      type: object
+      properties:
+        changed:
+          type: boolean
+        before_top3:
+          type: array
+          items:
+            type: string
+        after_top3:
+          type: array
+          items:
+            type: string
+        removed_count:
+          type: integer
+        diversity_applied:
+          type: boolean
+
+    ResultResponse:
+      type: object
+      properties:
+        request_id:
+          type: integer
+        session_id:
+          type: string
+        status:
+          type: string
+        result:
+          $ref: '#/components/schemas/AnalysisResult'
+
+    Fact:
+      type: object
+      properties:
+        fact_key:
+          type: string
+        value_json:
+          type: string
+        confidence:
+          type: number
+        fact_level:
+          type: integer
+          description: |
+            1: confirmed_constraint (Hard Filter)
+            2: priority, universal constraint
+            3: discovery, motivation, tradeoff
+            4: profile, insight
+
+    MetricsResponse:
+      type: object
+      properties:
+        period_days:
+          type: integer
+        total_analysis:
+          type: integer
+        metrics:
+          type: object
+          properties:
+            diversity_guard:
+              type: object
+              properties:
+                count:
+                  type: integer
+                rate_percent:
+                  type: integer
+            research_bias_cap:
+              type: object
+              properties:
+                count:
+                  type: integer
+                rate_percent:
+                  type: integer
+            phase4_applied:
+              type: object
+              properties:
+                count:
+                  type: integer
+                rate_percent:
+                  type: integer
+        daily_trend:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+              diversity_guard:
+                type: integer
+              research_bias_cap:
+                type: integer
+              analysis_completed:
+                type: integer
+        generated_at:
+          type: string
+          format: date-time
+
+    ApiError:
+      type: object
+      required:
+        - error
+        - code
+        - timestamp
+      properties:
+        error:
+          type: string
+          description: 에러 메시지
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - INVALID_STAGE
+            - INVALID_PAYLOAD
+            - SESSION_NOT_FOUND
+            - REQUEST_NOT_FOUND
+            - RESULT_NOT_FOUND
+            - DB_ERROR
+            - ANALYSIS_FAILED
+            - INTERNAL_ERROR
+        details:
+          type: object
+          additionalProperties: true
+        request_id:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+
+
+

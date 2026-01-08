@@ -1,0 +1,487 @@
+-- Batch tagging SQL generated at 2026-01-06T07:11:04.292Z
+-- Tagger version: tagger-v1.0.0
+-- Total jobs: 10
+
+BEGIN TRANSACTION;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283410160808',
+  '대학교 총장 및 대학학장',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 75, 50, 50,
+  50, 50, 50, 50, 50, 35,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 50로 평가","growth":"growth는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 75로 평가","stability":"stability는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 50로 평가","income":"income는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 50로 평가","teamwork":"teamwork는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 50로 평가","solo_deep":"solo_deep는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 50로 평가","analytical":"analytical는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 50로 평가","creative":"creative는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 50로 평가","execution":"execution는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 50로 평가","people_facing":"people_facing는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 35로 평가","degree_required":"degree_required는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 none로 평가","license_required":"license_required는 [대학교 총장]\n-대학을 총괄한다.\n-교육 정책을 수립한다.\n-교직원을 관리한다.\n-예산을 감독한다.\n-외부 관계를 구축한다.\n-연구를 지원한다.\n-법규를 준수한다.\n-보고서를 작... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283474923173',
+  '레크리에이션전문가',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 75, 50, 40,
+  50, 50, 50, 50, 50, 50,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 50로 평가","growth":"growth는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 75로 평가","stability":"stability는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 50로 평가","income":"income는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 40로 평가","teamwork":"teamwork는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 50로 평가","solo_deep":"solo_deep는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 50로 평가","analytical":"analytical는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 50로 평가","creative":"creative는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 50로 평가","execution":"execution는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 50로 평가","people_facing":"people_facing는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 50로 평가","degree_required":"degree_required는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 none로 평가","license_required":"license_required는 [레크리에이션전문가]\n-레크리에이션 프로그램을 기획한다.\n-활동을 조직한다.\n-참가자를 관리한다.\n-안전을 감독한다.\n-평가를 실시한다.\n-교육을 제공한다.\n-자원을 관리한다.\n-... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283489768934',
+  '매표원 및 복권판매원',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 50, 50,
+  50, 50, 40, 40, 70, 75,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 50로 평가","growth":"growth는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 50로 평가","stability":"stability는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 50로 평가","income":"income는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 50로 평가","teamwork":"teamwork는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 50로 평가","solo_deep":"solo_deep는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 50로 평가","analytical":"analytical는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 40로 평가","creative":"creative는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 40로 평가","execution":"execution는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 70로 평가","people_facing":"people_facing는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 75로 평가","degree_required":"degree_required는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 none로 평가","license_required":"license_required는 [매표원]\n-티켓을 판매한다.\n-예약을 처리한다.\n-가격을 안내한다.\n-고객을 응대한다.\n-기록을 관리한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n-안전을 유지한다.\n\n[복권판... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283480006378',
+  '바텐터',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 50, 50,
+  70, 30, 40, 40, 70, 75,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 50로 평가","growth":"growth는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 50로 평가","stability":"stability는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 50로 평가","income":"income는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 50로 평가","teamwork":"teamwork는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 70로 평가","solo_deep":"solo_deep는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 30로 평가","analytical":"analytical는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 40로 평가","creative":"creative는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 40로 평가","execution":"execution는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 70로 평가","people_facing":"people_facing는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 75로 평가","degree_required":"degree_required는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 none로 평가","license_required":"license_required는 [바텐터]\n-음료를 준비한다.\n-칵테일을 만든다.\n-고객을 응대한다.\n-주문을 받는다.\n-청결을 유지한다.\n-재고를 관리한다.\n-법규를 준수한다.\n-기술을 연마한다.\n-팀과 협력한... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283475777136',
+  '메이크업아티스트 및 뷰티매니저',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 60, 50, 50,
+  50, 50, 60, 30, 60, 75,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 50로 평가","growth":"growth는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 60로 평가","stability":"stability는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 50로 평가","income":"income는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 50로 평가","teamwork":"teamwork는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 50로 평가","solo_deep":"solo_deep는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 50로 평가","analytical":"analytical는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 60로 평가","creative":"creative는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 30로 평가","execution":"execution는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 60로 평가","people_facing":"people_facing는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 75로 평가","degree_required":"degree_required는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 none로 평가","license_required":"license_required는 [메이크업아티스트]\n-메이크업을 실시한다.\n-피부 상태를 분석한다.\n-제품을 추천한다.\n-기술을 연마한다.\n-고객을 상담한다.\n-안전을 유지한다.\n-장비를 관리한다.\n\n[뷰티매니저... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '176528347522091',
+  '스포츠감독 및 코치',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 75, 50, 40,
+  70, 30, 50, 50, 50, 35,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 50로 평가","growth":"growth는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 75로 평가","stability":"stability는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 50로 평가","income":"income는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 40로 평가","teamwork":"teamwork는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 70로 평가","solo_deep":"solo_deep는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 30로 평가","analytical":"analytical는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 50로 평가","creative":"creative는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 50로 평가","execution":"execution는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 50로 평가","people_facing":"people_facing는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 35로 평가","degree_required":"degree_required는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 none로 평가","license_required":"license_required는 [스포츠감독]\n-팀을 관리한다.\n-전략을 수립한다.\n-훈련을 감독한다.\n-선수를 선발한다.\n-경기를 지휘한다.\n-성과를 분석한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[스포... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283436299226',
+  'IT테스터 및 IT QA전문가',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 60, 50, 50,
+  70, 30, 60, 30, 60, 50,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 50로 평가","growth":"growth는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 60로 평가","stability":"stability는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 50로 평가","income":"income는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 50로 평가","teamwork":"teamwork는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 70로 평가","solo_deep":"solo_deep는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 30로 평가","analytical":"analytical는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 60로 평가","creative":"creative는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 30로 평가","execution":"execution는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 60로 평가","people_facing":"people_facing는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 50로 평가","degree_required":"degree_required는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 none로 평가","license_required":"license_required는 [it테스터]\n-소프트웨어를 테스트한다.\n-버그를 발견한다.\n-테스트 케이스를 작성한다.\n-결과를 보고한다.\n-품질을 평가한다.\n-문서를 작성한다.\n-팀과 협력한다.\n\n[it qa... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283492453859',
+  '택시운전원',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 50, 50,
+  50, 50, 60, 30, 60, 75,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 50로 평가","growth":"growth는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 50로 평가","stability":"stability는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 50로 평가","income":"income는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 50로 평가","teamwork":"teamwork는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 50로 평가","solo_deep":"solo_deep는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 50로 평가","analytical":"analytical는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 60로 평가","creative":"creative는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 30로 평가","execution":"execution는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 60로 평가","people_facing":"people_facing는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 75로 평가","degree_required":"degree_required는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 none로 평가","license_required":"license_required는 [택시운전원]\n-승객을 태운다.\n-목적지로 운전한다.\n-요금을 계산한다.\n-안전을 유지한다.\n-교통 법규를 준수한다.\n-차량을 관리한다.\n-고객을 응대한다.\n-기록을 유지한다.\n-... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283432718675',
+  '임학 및 산림학연구원',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  40, 75, 50, 70,
+  50, 50, 50, 50, 50, 35,
+  'overtime_some', 'none', 'some', 'none',
+  'master', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 40로 평가","growth":"growth는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 75로 평가","stability":"stability는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 50로 평가","income":"income는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 70로 평가","teamwork":"teamwork는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 50로 평가","solo_deep":"solo_deep는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 50로 평가","analytical":"analytical는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 50로 평가","creative":"creative는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 50로 평가","execution":"execution는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 50로 평가","people_facing":"people_facing는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 35로 평가","degree_required":"degree_required는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 master로 평가","license_required":"license_required는 [임학연구원]\n-산림을 연구한다.\n-나무를 관리한다.\n-생태계를 분석한다.\n-보호 방안을 개발한다.\n-데이터를 수집한다.\n-보고서를 작성한다.\n-현장을 조사한다.\n\n[산림학연구원]... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '176528349218798',
+  '화물차·특수차운전원',
+  'WORK24_JOB',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 60, 50, 50,
+  50, 50, 40, 40, 70, 75,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 50로 평가","growth":"growth는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 60로 평가","stability":"stability는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 50로 평가","income":"income는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 50로 평가","teamwork":"teamwork는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 50로 평가","solo_deep":"solo_deep는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 50로 평가","analytical":"analytical는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 40로 평가","creative":"creative는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 40로 평가","execution":"execution는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 70로 평가","people_facing":"people_facing는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 75로 평가","degree_required":"degree_required는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 none로 평가","license_required":"license_required는 [화물차운전원]\n-화물을 운송한다.\n-차량을 적재한다.\n-안전을 유지한다.\n-일정을 준수한다.\n-문서를 관리한다.\n-차량을 유지한다.\n-고객을 응대한다.\n-기록을 관리한다.\n\n[특... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+COMMIT;

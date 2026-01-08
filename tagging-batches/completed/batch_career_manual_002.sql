@@ -1,0 +1,487 @@
+-- Batch tagging SQL generated at 2026-01-06T06:03:04.660Z
+-- Tagger version: tagger-v1.0.0
+-- Total jobs: 10
+
+BEGIN TRANSACTION;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283344914179',
+  '영사기사',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 50, 40,
+  50, 50, 40, 40, 70, 50,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 50로 평가","growth":"growth는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 50로 평가","stability":"stability는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 50로 평가","income":"income는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 40로 평가","teamwork":"teamwork는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 50로 평가","solo_deep":"solo_deep는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 50로 평가","analytical":"analytical는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 40로 평가","creative":"creative는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 40로 평가","execution":"execution는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 70로 평가","people_facing":"people_facing는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 50로 평가","degree_required":"degree_required는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 none로 평가","license_required":"license_required는 영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283311674653',
+  '방사성폐기물관리원',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 50, 50,
+  50, 50, 40, 40, 70, 50,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 50로 평가","growth":"growth는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 50로 평가","stability":"stability는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 50로 평가","income":"income는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 50로 평가","teamwork":"teamwork는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 50로 평가","solo_deep":"solo_deep는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 50로 평가","analytical":"analytical는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 40로 평가","creative":"creative는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 40로 평가","execution":"execution는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 70로 평가","people_facing":"people_facing는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 50로 평가","degree_required":"degree_required는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 none로 평가","license_required":"license_required는 방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283349261713',
+  '원자력연구원',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 65, 50, 70,
+  50, 50, 50, 50, 50, 35,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 50로 평가","growth":"growth는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 65로 평가","stability":"stability는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 50로 평가","income":"income는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 70로 평가","teamwork":"teamwork는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 50로 평가","solo_deep":"solo_deep는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 50로 평가","analytical":"analytical는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 50로 평가","creative":"creative는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 50로 평가","execution":"execution는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 50로 평가","people_facing":"people_facing는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 35로 평가","degree_required":"degree_required는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 none로 평가","license_required":"license_required는 원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283351271120',
+  '유리제품제조원',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 50, 50,
+  50, 50, 40, 40, 70, 50,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 50로 평가","growth":"growth는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 50로 평가","stability":"stability는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 50로 평가","income":"income는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 50로 평가","teamwork":"teamwork는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 50로 평가","solo_deep":"solo_deep는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 50로 평가","analytical":"analytical는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 40로 평가","creative":"creative는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 40로 평가","execution":"execution는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 70로 평가","people_facing":"people_facing는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 50로 평가","degree_required":"degree_required는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 none로 평가","license_required":"license_required는 유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283360062685',
+  '자동차공학기술자',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 85, 65, 80,
+  50, 50, 60, 60, 30, 35,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 50로 평가","growth":"growth는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 85로 평가","stability":"stability는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 65로 평가","income":"income는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 80로 평가","teamwork":"teamwork는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 50로 평가","solo_deep":"solo_deep는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 50로 평가","analytical":"analytical는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 60로 평가","creative":"creative는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 60로 평가","execution":"execution는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 30로 평가","people_facing":"people_facing는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 35로 평가","degree_required":"degree_required는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 none로 평가","license_required":"license_required는 자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 ... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283356919112',
+  '인쇄기조작원',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 50, 50,
+  50, 50, 40, 40, 70, 50,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 50로 평가","growth":"growth는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 50로 평가","stability":"stability는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 50로 평가","income":"income는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 50로 평가","teamwork":"teamwork는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 50로 평가","solo_deep":"solo_deep는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 50로 평가","analytical":"analytical는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 40로 평가","creative":"creative는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 40로 평가","execution":"execution는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 70로 평가","people_facing":"people_facing는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 50로 평가","degree_required":"degree_required는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 none로 평가","license_required":"license_required는 인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '176528333276057',
+  '스포츠에이전트',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 30, 50,
+  50, 50, 60, 30, 60, 50,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 50로 평가","growth":"growth는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 50로 평가","stability":"stability는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 30로 평가","income":"income는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 50로 평가","teamwork":"teamwork는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 50로 평가","solo_deep":"solo_deep는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 50로 평가","analytical":"analytical는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 60로 평가","creative":"creative는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 30로 평가","execution":"execution는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 60로 평가","people_facing":"people_facing는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 50로 평가","degree_required":"degree_required는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 none로 평가","license_required":"license_required는 스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283361722716',
+  '자연계중등학교교사',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 60, 50, 50,
+  50, 50, 70, 40, 40, 75,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 50로 평가","growth":"growth는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 60로 평가","stability":"stability는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 50로 평가","income":"income는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 50로 평가","teamwork":"teamwork는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 50로 평가","solo_deep":"solo_deep는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 50로 평가","analytical":"analytical는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 70로 평가","creative":"creative는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 40로 평가","execution":"execution는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 40로 평가","people_facing":"people_facing는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 75로 평가","degree_required":"degree_required는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 none로 평가","license_required":"license_required는 자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '176528336091237',
+  '자동차정비원',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 50, 50,
+  50, 50, 40, 40, 70, 75,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 50로 평가","growth":"growth는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 50로 평가","stability":"stability는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 50로 평가","income":"income는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 50로 평가","teamwork":"teamwork는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 50로 평가","solo_deep":"solo_deep는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 50로 평가","analytical":"analytical는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 40로 평가","creative":"creative는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 40로 평가","execution":"execution는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 70로 평가","people_facing":"people_facing는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 75로 평가","degree_required":"degree_required는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 none로 평가","license_required":"license_required는 자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+
+INSERT INTO job_attributes (
+  job_id, job_name, source_system, tagger_version, status,
+  wlb, growth, stability, income,
+  teamwork, solo_deep, analytical, creative, execution, people_facing,
+  work_hours, shift_work, travel, remote_possible,
+  degree_required, license_required, experience_required,
+  _confidence, _field_confidence_json, evidence_json
+) VALUES (
+  '1765283387196166',
+  '콘크리트공',
+  'CAREERNET',
+  'tagger-v1.0.0',
+  'tagged',
+  50, 50, 50, 50,
+  50, 50, 40, 40, 70, 50,
+  'regular', 'none', 'none', 'none',
+  'none', 'none', 'none',
+  0.66,
+  '{"wlb":0.7,"growth":0.7,"stability":0.7,"income":0.6,"teamwork":0.7,"solo_deep":0.7,"analytical":0.7,"creative":0.7,"execution":0.7,"people_facing":0.7,"degree_required":0.49999999999999994,"license_required":0.49999999999999994}',
+  '{"wlb":"wlb는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 50로 평가","growth":"growth는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 50로 평가","stability":"stability는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 50로 평가","income":"income는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 50로 평가","teamwork":"teamwork는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 50로 평가","solo_deep":"solo_deep는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 50로 평가","analytical":"analytical는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 40로 평가","creative":"creative는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 40로 평가","execution":"execution는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 70로 평가","people_facing":"people_facing는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 50로 평가","degree_required":"degree_required는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 none로 평가","license_required":"license_required는 콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리... 기반으로 none로 평가"}'
+)
+ON CONFLICT(job_id) DO UPDATE SET
+  job_name = excluded.job_name,
+  tagger_version = excluded.tagger_version,
+  status = excluded.status,
+  wlb = excluded.wlb,
+  growth = excluded.growth,
+  stability = excluded.stability,
+  income = excluded.income,
+  teamwork = excluded.teamwork,
+  solo_deep = excluded.solo_deep,
+  analytical = excluded.analytical,
+  creative = excluded.creative,
+  execution = excluded.execution,
+  people_facing = excluded.people_facing,
+  work_hours = excluded.work_hours,
+  shift_work = excluded.shift_work,
+  travel = excluded.travel,
+  remote_possible = excluded.remote_possible,
+  degree_required = excluded.degree_required,
+  license_required = excluded.license_required,
+  experience_required = excluded.experience_required,
+  _confidence = excluded._confidence,
+  _field_confidence_json = excluded._field_confidence_json,
+  evidence_json = excluded.evidence_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+COMMIT;

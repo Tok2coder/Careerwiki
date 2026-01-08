@@ -1,0 +1,25 @@
+PRAGMA defer_foreign_keys=TRUE;
+CREATE TABLE jobs (
+    id TEXT PRIMARY KEY,
+    careernet_id TEXT,
+    goyong24_id TEXT,
+    name TEXT NOT NULL,
+    api_data_json TEXT,
+    api_data_hash TEXT,
+    api_last_fetched_at INTEGER,
+    api_last_updated_at INTEGER,
+    user_contributed_json TEXT,
+    user_last_updated_at INTEGER,
+    admin_data_json TEXT,
+    admin_last_updated_at INTEGER,
+    created_at INTEGER NOT NULL,
+    is_active INTEGER DEFAULT 1 CHECK(is_active IN (0, 1)),
+    slug TEXT UNIQUE,
+    primary_source TEXT CHECK(primary_source IN ('CAREERNET', 'WORK24_JOB', 'WORK24_DJOB', 'USER')),
+    merged_profile_json TEXT,
+    ai_data_json TEXT,
+    ai_last_updated_at INTEGER,
+    image_url TEXT,
+    image_alt TEXT,
+    image_credits TEXT
+, name_en TEXT, image_prompt TEXT);

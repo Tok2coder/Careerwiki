@@ -1,0 +1,46 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "careerwiki-phase1",
+  "compatibility_date": "2024-09-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": "./dist",
+  // Cron triggers는 Cloudflare Pages 미리보기 환경에서 지원되지 않습니다.
+  // production 배포 시 Worker에 연결할 때 재활성화하세요.
+  // "triggers": {
+  //   "crons": ["*/30 * * * *"]
+  // },
+  
+  // D1 Database 설정 (직업 데이터 영구 저장)
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "careerwiki-db",
+    "database_id": "edc21e23-c2ac-4693-bb79-389b6914e173"
+  }],
+
+  // R2 Storage 설정 (이미지/파일 업로드)
+  // 버킷 생성: wrangler r2 bucket create careerwiki-uploads
+  "r2_buckets": [{
+    "binding": "UPLOADS",
+    "bucket_name": "careerwiki-uploads"
+  }],
+
+  // KV Namespace 설정 (Phase 3: 인증 시스템)
+  // Day 2 시작 전 생성 필요:
+  // wrangler kv:namespace create "AUTH_KV"
+  // wrangler kv:namespace create "AUTH_KV" --preview
+  "kv_namespaces": [
+    // Day 2 시작 전에 아래 주석 해제하고 ID 입력
+    // {
+    //   "binding": "AUTH_KV",
+    //   "id": "your_production_kv_id_here",
+    //   "preview_id": "your_preview_kv_id_here"
+    // }
+  ],
+
+  // Environment variables (secrets should be set via wrangler secret)
+  // For production: wrangler pages secret put CAREER_NET_API_KEY
+  "vars": {
+    // Public variables (non-sensitive)
+    "ENVIRONMENT": "production"
+  }
+}

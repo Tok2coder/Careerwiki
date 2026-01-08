@@ -1,0 +1,8 @@
+*** Update File: src/templates/unifiedJobDetail.ts
+@@
+-  const sourcesCollapsible = renderSourcesCollapsible(profile, sources, partials, userSourcesFlat)
+-  const heroImage = renderHeroImage(profile.name, { dataAttribute: 'data-job-hero-image', context: 'job' })
++  const sourcesCollapsible = renderSourcesCollapsible(profile, sources, partials, userSourcesFlat)
++  const heroImageUrl = (profile as any).image_url ?? `/images/jobs/${composeDetailSlug('job', profile)}__v1.webp`
++  const heroImage = renderHeroImage(profile.name, { imageUrl: heroImageUrl, dataAttribute: 'data-job-hero-image', context: 'job' })
+

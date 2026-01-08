@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283344914179",
+    "job_name": "영사기사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "영사기사는 영화, 방송, 광고 등의 영상물을 촬영하는 업무를 수행합니다.\n\n촬영 계획을 수립하고 카메라와 조명 장비를 준비합니다.\n\n배우와 스태프의 연기를 촬영합니다.\n\n촬영된 영상의 품질을 확인하고 편집합니다.\n\n촬영 장비의 유지보수와 관리를 담당합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283311674653",
+    "job_name": "방사성폐기물관리원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "방사성폐기물관리원은 방사성 물질로 오염된 폐기물을 안전하게 처리하고 관리하는 업무를 수행합니다.\n\n방사성 폐기물의 수집과 분류를 담당합니다.\n\n방사성 폐기물을 안전하게 저장하고 운반합니다.\n\n방사선량을 측정하고 안전 기준을 준수합니다.\n\n폐기물 처리 시설의 운영과 유지보수를 담당합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "안전 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283349261713",
+    "job_name": "원자력연구원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "원자력연구원은 원자력 발전과 관련된 연구와 개발 업무를 수행합니다.\n\n원자력 발전 기술의 연구와 개발을 담당합니다.\n\n방사선 안전과 원자력 안전을 연구합니다.\n\n원자력 발전소의 운영과 유지보수를 연구합니다.\n\n원자력 관련 정책과 규제를 연구합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "이학 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283351271120",
+    "job_name": "유리제품제조원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "유리제품제조원은 유리를 가공하여 다양한 유리 제품을 생산하는 업무를 수행합니다.\n\n유리 원료를 준비하고 용해합니다.\n\n유리를 성형하고 가공합니다.\n\n유리 제품의 품질을 검사합니다.\n\n유리 제조 장비의 운영과 유지보수를 담당합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283360062685",
+    "job_name": "자동차공학기술자",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "자동차공학기술자는 자동차의 설계, 개발, 생산과 관련된 기술 업무를 수행합니다.\n\n자동차의 설계와 개발을 담당합니다.\n\n자동차의 성능과 안전을 테스트합니다.\n\n자동차 생산 공정을 연구하고 개선합니다.\n\n자동차 관련 기술의 연구와 개발을 수행합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "공학 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283356919112",
+    "job_name": "인쇄기조작원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "인쇄기조작원은 인쇄기를 조작하여 각종 인쇄물을 생산하는 업무를 수행합니다.\n\n인쇄할 원고와 재료를 준비합니다.\n\n인쇄기의 설정과 조작을 담당합니다.\n\n인쇄물의 품질을 검사합니다.\n\n인쇄 장비의 유지보수와 관리를 수행합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "176528333276057",
+    "job_name": "스포츠에이전트",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "스포츠에이전트는 운동선수의 경력 관리와 계약 중개를 담당하는 업무를 수행합니다.\n\n운동선수의 경기력 향상을 위한 코칭을 제공합니다.\n\n운동선수와 스폰서, 구단 간의 계약을 중개합니다.\n\n운동선수의 이미지 관리를 담당합니다.\n\n스포츠 산업의 트렌드를 분석하고 조언합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "연기 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283361722716",
+    "job_name": "자연계중등학교교사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "자연계중등학교교사는 중학교 학생들에게 과학, 수학 등의 자연 계열 과목을 가르치는 업무를 수행합니다.\n\n자연 계열 과목의 교육과정을 계획하고 수업을 진행합니다.\n\n학생들의 학습 진도를 평가하고 지도합니다.\n\n과학 실험과 실습을 지도합니다.\n\n학생들의 진로 상담과 생활 지도를 담당합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "176528336091237",
+    "job_name": "자동차정비원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "자동차정비원은 자동차의 고장 진단과 수리를 담당하는 업무를 수행합니다.\n\n자동차의 고장을 진단합니다.\n\n고장난 부품을 교체하거나 수리합니다.\n\n자동차의 정기 점검과 유지보수를 수행합니다.\n\n고객에게 수리 내용과 비용을 설명합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283387196166",
+    "job_name": "콘크리트공",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "콘크리트공은 콘크리트를 사용하여 건축 구조물을 만드는 업무를 수행합니다.\n\n콘크리트 혼합물을 준비합니다.\n\n콘크리트를 타설하고 다짐합니다.\n\n콘크리트 표면을 마무리합니다.\n\n콘크리트 양생을 관리합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  }
+]
+
+

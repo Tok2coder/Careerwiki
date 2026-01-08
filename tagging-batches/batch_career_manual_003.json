@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283361279679",
+    "job_name": "자동차조립원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "자동차조립원은 자동차의 각 부품을 조립하여 완성된 자동차를 생산하는 업무를 수행합니다.\n\n자동차 조립 라인에서 지정된 위치에 배치됩니다.\n\n엔진, 변속기, 차체 등의 주요 부품을 조립합니다.\n\n전기 배선과 각종 센서를 연결합니다.\n\n조립된 자동차의 품질을 검사하고 이상이 있으면 수정합니다.\n\n안전 수칙을 준수하며 작업합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283336531510",
+    "job_name": "신용관련추심원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "신용관련추심원은 채무자의 신용정보를 조사하고 채무금을 회수하는 업무를 수행합니다.\n\n채무자의 연락처와 재산 상황을 조사합니다.\n\n채무자와 협상하여 상환 계획을 수립합니다.\n\n법적 절차를 통해 채무금을 회수합니다.\n\n신용정보를 기록하고 보고서를 작성합니다.\n\n개인정보 보호와 윤리적 기준을 준수합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "금융 및 경영 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283289215513",
+    "job_name": "교육학연구원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "교육학연구원은 교육 방법과 교육 제도의 연구와 개발 업무를 수행합니다.\n\n교육 현장을 조사하고 교육 데이터를 수집합니다.\n\n교육 프로그램의 효과성을 연구합니다.\n\n새로운 교육 방법과 교재를 개발합니다.\n\n교육 정책에 대한 연구를 수행합니다.\n\n연구 결과를 발표하고 교육 개선에 기여합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "인문·사회과학 연구원"
+      }
+    }
+  },
+  {
+    "job_id": "1765283396606169",
+    "job_name": "학습지방문교사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "학습지방문교사는 학생들의 집을 방문하여 학습을 지도하는 업무를 수행합니다.\n\n학생의 학습 수준을 평가합니다.\n\n개인별 맞춤 학습 계획을 수립합니다.\n\n학습지 교재를 활용하여 수업을 진행합니다.\n\n학생의 진도를 확인하고 보충 학습을 제공합니다.\n\n학부모와 상담하여 학생의 학습 방향을 조언합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283350713746",
+    "job_name": "위생사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "위생사는 식품의 위생과 안전을 관리하는 업무를 수행합니다.\n\n식품의 위생 상태를 검사합니다.\n\n식품 제조 공정의 위생 관리를 담당합니다.\n\n식중독 예방을 위한 지도를 실시합니다.\n\n위생 관련 법규 준수를 확인합니다.\n\n위생 교육 프로그램을 운영합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "의료 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283299097297",
+    "job_name": "도선사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "도선사는 선박의 안전한 항해를 위한 도선 업무를 수행합니다.\n\n항만과 해역의 상황을 파악합니다.\n\n선박의 안전한 입출항을 지도합니다.\n\n항해 안전을 위한 조언을 제공합니다.\n\n기상 조건과 해류를 고려한 항로를 안내합니다.\n\n선박 사고 예방을 위한 안전 조치를 취합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "일반운전 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283364145434",
+    "job_name": "재료공학기술자",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "재료공학기술자는 새로운 재료의 개발과 기존 재료의 개선 업무를 수행합니다.\n\n재료의 물리적, 화학적 성질을 연구합니다.\n\n새로운 재료의 합성 방법을 개발합니다.\n\n재료의 강도와 내구성을 테스트합니다.\n\n재료의 응용 분야를 연구합니다.\n\n재료 관련 기술의 특허를 출원합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "공학 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283344289283",
+    "job_name": "연예인매니저",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "연예인매니저는 연예인의 활동을 기획하고 관리하는 업무를 수행합니다.\n\n연예인의 스케줄을 관리하고 일정을 조율합니다.\n\n연예인의 이미지 관리를 담당합니다.\n\n연예인의 활동을 위한 계약을 체결합니다.\n\n연예인의 팬들과의 소통을 관리합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "연기 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "176528335290888",
+    "job_name": "음반기획자",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "음반기획자는 음악 작품의 기획, 제작, 유통을 담당하는 업무를 수행합니다.\n\n음악 작품의 콘셉트를 기획하고 아티스트를 섭외합니다.\n\n녹음, 믹싱, 마스터링 등의 제작 과정을 감독합니다.\n\n음반의 마케팅과 유통 전략을 수립합니다.\n\n음악 시장 동향을 분석하고 트렌드를 예측합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술기획 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283364797881",
+    "job_name": "전공",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "전공은 전자기기와 통신 장비의 설치와 정비 업무를 수행합니다.\n\n전자기기의 설치와 배선을 담당합니다.\n\n통신 장비의 유지보수와 수리를 수행합니다.\n\n시스템의 정상 작동을 점검합니다.\n\n고장 진단과 부품 교체를 실시합니다.\n\n기술 문서와 매뉴얼을 관리합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  }
+]
+
+

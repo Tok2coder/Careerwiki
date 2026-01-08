@@ -1,0 +1,368 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "careerwiki-analyzer-response-v3",
+  "title": "CareerWiki AI Analyzer Response V3",
+  "description": "V3 분석 결과 응답 스키마 (Stage-based + Phase 4 Diversity Guard)",
+  "type": "object",
+  "required": ["request_id", "result"],
+  "properties": {
+    "request_id": {
+      "type": "integer",
+      "description": "분석 요청 ID"
+    },
+    "result": {
+      "$ref": "#/definitions/AnalysisResultJSON"
+    }
+  },
+  "definitions": {
+    "AnalysisResultJSON": {
+      "type": "object",
+      "required": [
+        "engine_state",
+        "versions",
+        "input_summary",
+        "fit_top3",
+        "like_top10",
+        "can_top10",
+        "caution_jobs",
+        "ux_flags",
+        "llm_explanation",
+        "generated_at",
+        "total_candidates"
+      ],
+      "properties": {
+        "engine_state": {
+          "type": "string",
+          "enum": [
+            "phase0_stub",
+            "phase1a_initial",
+            "phase1a_mve",
+            "phase2_scoring",
+            "phase2_stage_based",
+            "phase4_filtered",
+            "production"
+          ],
+          "description": "현재 엔진 상태 (QA 혼동 방지용)"
+        },
+        "versions": {
+          "$ref": "#/definitions/Versions"
+        },
+        "input_summary": {
+          "$ref": "#/definitions/InputSummaryV3"
+        },
+        "fit_top3": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/FitRecommendation" },
+          "maxItems": 3,
+          "description": "Fit Score 기준 TOP3 추천"
+        },
+        "like_top10": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/LikeRecommendation" },
+          "maxItems": 10,
+          "description": "Like Score 기준 TOP10"
+        },
+        "can_top10": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/CanRecommendation" },
+          "maxItems": 10,
+          "description": "Can Score 기준 TOP10"
+        },
+        "caution_jobs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/CautionJob" },
+          "description": "주의가 필요한 직업 목록"
+        },
+        "ux_flags": {
+          "$ref": "#/definitions/UXFlags"
+        },
+        "followup_questions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/FollowupQuestionV2" },
+          "description": "추가 질문 목록 (선택적)"
+        },
+        "llm_explanation": {
+          "type": "string",
+          "description": "분석 결과에 대한 설명"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "결과 생성 시각"
+        },
+        "total_candidates": {
+          "type": "integer",
+          "description": "검토된 총 직업 수"
+        },
+        "user_insight": {
+          "$ref": "#/definitions/UserInsight",
+          "description": "사용자 프로필 인사이트 (선택적)"
+        },
+        "phase4_applied": {
+          "type": "boolean",
+          "description": "Phase 4 (Safe Replacement) 적용 여부"
+        },
+        "diversity_guard_active": {
+          "type": "boolean",
+          "description": "Diversity Guard 활성화 여부"
+        },
+        "diversity_changes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Diversity Guard로 인한 변경사항"
+        },
+        "rank_change": {
+          "$ref": "#/definitions/RankChangeInfo",
+          "description": "Follow-up 처리 후 순위 변경 정보"
+        },
+        "analysis_stage": {
+          "type": "string",
+          "enum": ["job_explore", "job_student", "job_early", "major_explore", "major_student", "major_early"],
+          "description": "분석 Stage (V3)"
+        },
+        "stage_specific_insights": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Stage별 맞춤 인사이트 (V3)"
+        }
+      }
+    },
+    "Versions": {
+      "type": "object",
+      "required": ["recipe", "tagger", "scoring"],
+      "properties": {
+        "recipe": { "type": "string" },
+        "tagger": { "type": "string" },
+        "scoring": { "type": "string" }
+      }
+    },
+    "InputSummaryV3": {
+      "type": "object",
+      "required": ["profile_revision_id", "key_interests", "key_skills", "non_negotiables", "preferences"],
+      "properties": {
+        "profile_revision_id": { "type": "string" },
+        "key_interests": { "type": "array", "items": { "type": "string" } },
+        "key_skills": { "type": "array", "items": { "type": "string" } },
+        "non_negotiables": { "type": "array", "items": { "type": "string" } },
+        "preferences": { "type": "array", "items": { "type": "string" } },
+        "facts_applied": { "type": "integer" },
+        "applied_rules": { "type": "array", "items": { "type": "string" } },
+        "deep_intake_provided": { "type": "boolean" },
+        "insight_tags": { "type": "array", "items": { "type": "string" } },
+        "stage": { 
+          "type": "string",
+          "description": "V3: 분석 Stage"
+        },
+        "universal_facts_count": { 
+          "type": "integer",
+          "description": "V3: Universal Intake에서 수집된 fact 수"
+        },
+        "life_constraints": { 
+          "type": "array", 
+          "items": { "type": "string" },
+          "description": "V3: 생애주기 제약조건"
+        },
+        "confirmed_constraints": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "V3: 확정된 Hard Filter 제약조건"
+        }
+      }
+    },
+    "FitRecommendation": {
+      "type": "object",
+      "required": ["job_id", "job_name", "fit_score", "like_score", "can_score", "risk_details", "evidence_links"],
+      "properties": {
+        "job_id": { "type": "string" },
+        "job_name": { "type": "string" },
+        "fit_score": { "type": "number" },
+        "like_score": { "type": "number" },
+        "can_score": { "type": "number" },
+        "risk_details": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/RiskDetail" }
+        },
+        "evidence_links": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/EvidenceLink" }
+        }
+      }
+    },
+    "LikeRecommendation": {
+      "type": "object",
+      "required": ["job_id", "job_name", "like_score"],
+      "properties": {
+        "job_id": { "type": "string" },
+        "job_name": { "type": "string" },
+        "like_score": { "type": "number" }
+      }
+    },
+    "CanRecommendation": {
+      "type": "object",
+      "required": ["job_id", "job_name", "can_score"],
+      "properties": {
+        "job_id": { "type": "string" },
+        "job_name": { "type": "string" },
+        "can_score": { "type": "number" }
+      }
+    },
+    "CautionJob": {
+      "type": "object",
+      "required": ["job_id", "job_name", "risk_penalty"],
+      "properties": {
+        "job_id": { "type": "string" },
+        "job_name": { "type": "string" },
+        "risk_penalty": { "type": "number" }
+      }
+    },
+    "RiskDetail": {
+      "type": "object",
+      "required": ["risk_type", "description", "severity"],
+      "properties": {
+        "risk_type": { "type": "string" },
+        "description": { "type": "string" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high"] }
+      }
+    },
+    "EvidenceLink": {
+      "type": "object",
+      "required": ["fact_key", "value"],
+      "properties": {
+        "fact_key": { "type": "string" },
+        "value": {},
+        "contribution": { "type": "string" }
+      }
+    },
+    "UXFlags": {
+      "type": "object",
+      "properties": {
+        "show_tradeoff_notice": { "type": "boolean" },
+        "needs_more_input": { "type": "boolean" },
+        "high_uncertainty_jobs": { "type": "array", "items": { "type": "string" } },
+        "scoring_coverage": {
+          "type": "object",
+          "properties": {
+            "safe_known": { "type": "integer" },
+            "safe_unknown": { "type": "integer" },
+            "caution": { "type": "integer" },
+            "total": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "FollowupQuestionV2": {
+      "type": "object",
+      "required": ["id", "type", "question", "options", "fact_key", "affects_attributes"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { 
+          "type": "string", 
+          "enum": ["clarification", "tradeoff", "priority", "discovery"] 
+        },
+        "question": { "type": "string" },
+        "context": { "type": "string" },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value", "label"],
+            "properties": {
+              "value": { "type": "string" },
+              "label": { "type": "string" },
+              "tags": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "fact_key": { "type": "string" },
+        "affects_attributes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "UserInsight": {
+      "type": "object",
+      "required": ["summary", "key_traits", "applied_facts"],
+      "properties": {
+        "summary": { "type": "string" },
+        "key_traits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["trait", "confidence"],
+            "properties": {
+              "trait": { "type": "string" },
+              "confidence": { "type": "number" },
+              "source": { "type": "string" }
+            }
+          }
+        },
+        "applied_facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["fact_key", "influence"],
+            "properties": {
+              "fact_key": { "type": "string" },
+              "influence": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "RankChangeInfo": {
+      "type": "object",
+      "required": ["changed", "replacements", "before_top3", "after_top3", "removed_count", "diversity_applied", "debug"],
+      "properties": {
+        "changed": { "type": "boolean" },
+        "replacements": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ReplacementResult" }
+        },
+        "before_top3": { "type": "array", "items": { "type": "string" } },
+        "after_top3": { "type": "array", "items": { "type": "string" } },
+        "removed_count": { "type": "integer" },
+        "diversity_applied": { "type": "boolean" },
+        "debug": {
+          "type": "object",
+          "properties": {
+            "hard_filtered": { "type": "integer" },
+            "soft_reranked": { "type": "integer" },
+            "constraints_applied": { "type": "array", "items": { "type": "string" } },
+            "diversity_violations": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "ReplacementResult": {
+      "type": "object",
+      "required": ["original_job", "reason", "rule_applied"],
+      "properties": {
+        "original_job": {
+          "type": "object",
+          "required": ["job_id", "job_name", "rank"],
+          "properties": {
+            "job_id": { "type": "string" },
+            "job_name": { "type": "string" },
+            "rank": { "type": "integer" }
+          }
+        },
+        "replacement_job": {
+          "type": ["object", "null"],
+          "properties": {
+            "job_id": { "type": "string" },
+            "job_name": { "type": "string" },
+            "fit_score": { "type": "number" },
+            "similarity_score": { "type": "number" }
+          }
+        },
+        "reason": { "type": "string" },
+        "rule_applied": {
+          "type": "string",
+          "enum": ["hard_filter", "diversity_guard", "soft_rerank"]
+        }
+      }
+    }
+  }
+}
+
+
+
+

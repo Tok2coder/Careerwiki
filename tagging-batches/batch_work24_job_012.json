@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283482488732",
+    "job_name": "패스트푸드준비원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[패스트푸드준비원]\n-주문을 받는다.\n-음식을 준비한다.\n-포장을 한다.\n-청결을 유지한다.\n-고객을 응대한다.\n-재고를 관리한다.\n-장비를 조작한다.\n-안전을 준수한다.\n-팀과 협력한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283410710701",
+    "job_name": "유치원 원장 및 원감",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[유치원 원장]\n-유치원을 관리한다.\n-교육 프로그램을 기획한다.\n-교직원을 감독한다.\n-부모와 소통한다.\n-예산을 관리한다.\n-법규를 준수한다.\n-안전을 유지한다.\n\n[유치원 원감]\n-원장을 지원한다.\n-행정 업무를 처리한다.\n-교사를 감독한다.\n-프로그램을 지원한다.\n-부모 상담을 진행한다.\n-보고서를 작성한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283422539898",
+    "job_name": "출판·자료편집사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[출판사무원]\n-원고를 편집한다.\n-교정을 본다.\n-레이아웃을 구성한다.\n-인쇄를 준비한다.\n-저자와 협의한다.\n-일정을 관리한다.\n-기록을 관리한다.\n\n[자료편집사무원]\n-자료를 수집한다.\n-편집을 실시한다.\n-형식을 통일한다.\n-오류를 수정한다.\n-보고서를 작성한다.\n-데이터를 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283497178369",
+    "job_name": "섀시조립·설치원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[섀시조립원]\n-섀시 부품을 준비한다.\n-조립을 실시한다.\n-용접을 한다.\n-품질을 검사한다.\n-안전 수칙을 준수한다.\n-장비를 사용한다.\n-기록을 관리한다.\n\n[섀시설치원]\n-섀시를 설치한다.\n-고정을 실시한다.\n-연결을 한다.\n-테스트를 진행한다.\n-문제를 해결한다.\n-안전을 유지한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "176528342701427",
+    "job_name": "증권·외환딜러",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[증권딜러]\n-주식 거래를 실행한다.\n-시장 동향을 모니터링한다.\n-주문을 처리한다.\n-리스크를 관리한다.\n-보고서를 작성한다.\n-고객과 소통한다.\n-법규를 준수한다.\n\n[외환딜러]\n-외환 거래를 실시한다.\n-환율을 모니터링한다.\n-거래를 실행한다.\n-리스크를 관리한다.\n-보고서를 작성한다.\n-고객을 지원한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283414891152",
+    "job_name": "조사전문가",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[조사전문가]\n-조사 계획을 수립한다.\n-데이터를 수집한다.\n-분석을 실시한다.\n-보고서를 작성한다.\n-결과를 해석한다.\n-추천안을 제시한다.\n-법규를 준수한다.\n-기록을 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283472138895",
+    "job_name": "영화배우 및 탤런트",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[영화배우]\n-대본을 분석한다.\n-연기를 준비한다.\n-촬영에 참여한다.\n-감정을 표현한다.\n-감독과 협의한다.\n-프로모션에 참여한다.\n-기술을 연마한다.\n\n[탤런트]\n-방송에 출연한다.\n-대본을 공부한다.\n-연기를 한다.\n-프로모션 활동을 한다.\n-팬과 소통한다.\n-이미지를 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283470121350",
+    "job_name": "UX·UI디자이너",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[UX디자이너]\n-사용자 조사를 실시한다.\n-사용자 경험을 설계한다.\n-와이어프레임을 만든다.\n-프로토타입을 개발한다.\n-테스트를 진행한다.\n-피드백을 분석한다.\n-개선을 한다.\n\n[UI디자이너]\n-인터페이스를 디자인한다.\n-시각적 요소를 구성한다.\n-색상을 선택한다.\n-타이포그래피를 설정한다.\n-일관성을 유지한다.\n-사용성을 고려한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283413511282",
+    "job_name": "정부·공공행정전문가",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[정부행정전문가]\n-정책을 개발한다.\n-프로그램을 기획한다.\n-예산을 관리한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n-시민을 지원한다.\n-데이터를 분석한다.\n-프로젝트를 관리한다.\n\n[공공행정전문가]\n-공공 서비스를 관리한다.\n-프로그램을 운영한다.\n-성과를 평가한다.\n-보고서를 작성한다.\n-시민 참여를 유도한다.\n-법규를 준수한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283485383403",
+    "job_name": "가사관리사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[가사관리사]\n-청소를 실시한다.\n-세탁을 한다.\n-요리를 준비한다.\n-장보기를 한다.\n-가구를 관리한다.\n-안전을 유지한다.\n-고객을 지원한다.\n-기록을 관리한다.\n-서비스를 제공한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  }
+]
+
+

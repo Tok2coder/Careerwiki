@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283435222108",
+    "job_name": "컴퓨터시스템설계 및 분석가",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[컴퓨터시스템설계사]\n-사용자 요구사항을 분석한다.\n-시스템 아키텍처를 설계한다.\n-데이터베이스 구조를 설계한다.\n-네트워크 구성을 계획한다.\n-보안 요구사항을 정의한다.\n-시스템 사양서를 작성한다.\n-개발팀과 협력한다.\n-테스트 계획을 수립한다.\n-문서화를 진행한다.\n\n[컴퓨터시스템분석가]\n-기존 시스템을 분석한다.\n-성능 병목을 식별한다.\n-개선 방안을 제안한다.\n-업그레이드 계획을 수립한다.\n-호환성 문제를 해결한다.\n-시스템 통합을 설계한다.\n-비용-편익 분석을 실시한다.\n-보고서를 작성한다.\n-변경 관리를 담당한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283460171364",
+    "job_name": "청소년지도사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[청소년상담사]\n-청소년의 고민을 상담한다.\n-정서적 지지를 제공한다.\n-진로 상담을 진행한다.\n-학습 지도를 돕는다.\n-부모 상담을 실시한다.\n-위기 청소년을 지원한다.\n-프로그램을 기획한다.\n-상담 기록을 관리한다.\n-외부 기관과 연계한다.\n\n[청소년지도원]\n-청소년 활동을 감독한다.\n-안전 교육을 실시한다.\n-규칙 준수를 지도한다.\n-문제 행동을 해결한다.\n-개인 상담을 진행한다.\n-집단 활동을 기획한다.\n-보고서를 작성한다.\n-청소년 데이터를 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283460711835",
+    "job_name": "생활지도원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[생활지도교사]\n-학생들의 일상 생활을 감독한다.\n-기숙사 생활을 관리한다.\n-생활 규칙을 교육한다.\n-청결과 안전을 유지한다.\n-개인 위생을 지도한다.\n-식사와 취침을 관리한다.\n-문제 상황을 해결한다.\n-부모와 소통한다.\n-상담을 진행한다.\n-보고서를 작성한다.\n\n[생활지도사]\n-시설 거주자의 생활을 지원한다.\n-개인 생활 습관을 지도한다.\n-건강 관리를 돕는다.\n-사회적응을 지원한다.\n-일상 생활 기술을 가르친다.\n-정서적 지지를 제공한다.\n-가족과의 연계를 돕는다.\n-생활 기록을 관리한다.\n-프로그램을 기획한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283427741398",
+    "job_name": "신용분석가",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[신용평가사]\n-기업의 재무 상태를 분석한다.\n-신용 등급을 평가한다.\n-리스크를 평가한다.\n-보고서를 작성한다.\n-신용 정보를 수집한다.\n-모델을 개발한다.\n-의사결정을 지원한다.\n-규제를 준수한다.\n\n[신용분석원]\n-개인 신용 정보를 분석한다.\n-대출 신청을 심사한다.\n-신용 점수를 계산한다.\n-사기 가능성을 검토한다.\n-승인/거부 결정을 내린다.\n-고객에게 결과를 통보한다.\n-신용 기록을 관리한다.\n-법규를 준수한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283413242494",
+    "job_name": "제조·생산관리자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[생산관리자]\n-생산 계획을 수립한다.\n-자원을 배분한다.\n-생산 일정을 관리한다.\n-품질을 감독한다.\n-효율성을 개선한다.\n-비용을 통제한다.\n-팀을 감독한다.\n-보고서를 작성한다.\n-문제를 해결한다.\n\n[제조관리자]\n-제조 공정을 감독한다.\n-장비를 유지관리한다.\n-안전 수칙을 준수한다.\n-생산량을 모니터링한다.\n-품질 관리를 실시한다.\n-재고를 관리한다.\n-공급업체와 협력한다.\n-개선 프로젝트를 주도한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283412115147",
+    "job_name": "영업·판매관리자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[영업관리자]\n-영업 전략을 수립한다.\n-판매 목표를 설정한다.\n-팀을 관리한다.\n-성과를 모니터링한다.\n-교육을 실시한다.\n-고객 관계를 관리한다.\n-시장 분석을 진행한다.\n-보고서를 작성한다.\n-예산을 관리한다.\n\n[판매관리자]\n-판매 계획을 개발한다.\n-채널을 관리한다.\n-프로모션을 기획한다.\n-재고를 감독한다.\n-가격 정책을 수립한다.\n-성과를 분석한다.\n-팀을 지도한다.\n-고객 만족도를 조사한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "영업관련 서비스직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283416814542",
+    "job_name": "광고·홍보·마케팅사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[광고사무원]\n-광고 자료를 준비한다.\n-광고 게재를 관리한다.\n-계약서를 작성한다.\n-광고비를 정산한다.\n-광고 효과를 분석한다.\n-고객과 소통한다.\n-문서를 관리한다.\n-보고서를 작성한다.\n-예산을 관리한다.\n\n[홍보사무원]\n-홍보 자료를 작성한다.\n-보도 자료를 배포한다.\n-이벤트를 지원한다.\n-소셜 미디어를 운영한다.\n-언론을 모니터링한다.\n-자료를 관리한다.\n-보고서를 작성한다.\n\n[마케팅사무원]\n-시장 조사를 실시한다.\n-데이터를 분석한다.\n-보고서를 작성한다.\n-캠페인을 지원한다.\n-고객 데이터를 관리한다.\n-프로모션을 기획한다.\n-성과를 추적한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283531374356",
+    "job_name": "과수작물재배원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[과수원관리자]\n-나무를 심는다.\n-물을 공급한다.\n-비료를 준다.\n-해충을 방제한다.\n-가지치기를 한다.\n-수확을 한다.\n-품질을 검사한다.\n-장비를 유지한다.\n-기록을 관리한다.\n\n[과수재배기술자]\n-품종을 선발한다.\n-재배 기술을 적용한다.\n-생장을 모니터링한다.\n-문제를 진단한다.\n-해결 방안을 적용한다.\n-품질을 향상한다.\n-연구를 수행한다.\n-교육을 실시한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "농림·어업 숙련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283497973108",
+    "job_name": "타일·대리석시공원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[타일시공원]\n-바닥을 준비한다.\n-타일을 재단한다.\n-접착제를 바른다.\n-타일을 붙인다.\n-줄눈을 채운다.\n-표면을 마무리한다.\n-품질을 검사한다.\n-안전 수칙을 준수한다.\n-도구를 관리한다.\n\n[대리석시공원]\n-대리석을 재단한다.\n-표면을 연마한다.\n-설치를 진행한다.\n-접합을 한다.\n-마무리를 한다.\n-품질을 확인한다.\n-유지보수를 한다.\n-안전 수칙을 준수한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283472672395",
+    "job_name": "영상·녹화 및 편집기사",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[영상촬영기사]\n-촬영 장비를 준비한다.\n-촬영 계획을 수립한다.\n-조명과 구도를 설정한다.\n-촬영을 진행한다.\n-음성을 녹음한다.\n-장면을 연출한다.\n-안전 수칙을 준수한다.\n-장비를 관리한다.\n\n[영상편집기사]\n-촬영된 영상을 검토한다.\n-컷 편집을 한다.\n-특수 효과를 추가한다.\n-음성을 동기화한다.\n-색상을 보정한다.\n-최종 편집을 한다.\n-포맷을 변환한다.\n-품질을 검사한다.\n\n[녹화기사]\n-녹화 장비를 설치한다.\n-신호를 테스트한다.\n-녹화를 진행한다.\n-기술 문제를 해결한다.\n-녹화 파일을 관리한다.\n-편집을 지원한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  }
+]
+
+

@@ -1,0 +1,75 @@
+*** Update File: src/services/profileDataService.ts
+@@
+ export const searchUnifiedJobs = async (
+   params: { keyword?: string; category?: string; page?: number; perPage?: number; includeSources?: DataSource[]; sort?: string },
+   env?: CareerWikiEnv
+ ): Promise<UnifiedSearchResult<UnifiedJobSummaryEntry>> => {
+   const { keyword = '', category = '', page = 1, perPage = 20, sort = 'relevance' } = params
+@@
+-  // D1 database is required
+-  if (!env?.DB) {
+-    throw new Error('D1 database not available')
+-  }
++  // D1 database is required
++  if (!env?.DB) {
++    throw new Error('D1 database not available')
++  }
+ 
+   const db = env.DB as any
++  const toNfc = (s?: string) => (s ? s.normalize('NFC') : '')
++
++  // 🚀 FTS5 우선 경로 (dev): 2글자 이상 → FTS5 MATCH + bm25, 요약 필드만 select
++  const keywordTrimmed = keyword.trim()
++  const useFts = keywordTrimmed.length >= 2 && (env as any)?.USE_FTS_DEV !== 'false'
++  if (useFts) {
++    const q = toNfc(keywordTrimmed)
++    const offset = (page - 1) * perPage
++
++    const ftsResult = await withD1Retry(
++      () =>
++        db
++          .prepare(
++            `SELECT rowid as id, name, slug, summary
++             FROM jobs_search_fts
++             WHERE jobs_search_fts MATCH ?
++             ORDER BY bm25(jobs_search_fts) ASC
++             LIMIT ? OFFSET ?`
++          )
++          .bind(q, perPage, offset)
++          .all()
++    ) as { results?: any[] }
++    const ftsRows = ftsResult?.results || []
++
++    const items: UnifiedJobSummaryEntry[] = ftsRows.map((row: any) => ({
++      profile: {
++        id: row.id ?? row.slug ?? row.name ?? '',
++        sourceIds: { careernet: undefined, goyong24: undefined },
++        name: row.name ?? '',
++        category: undefined,
++        sources: ['CAREERNET']
++      },
++      sourceMeta: {},
++      display: {
++        summary: row.summary || '',
++        categoryName: undefined,
++        categoryLarge: undefined,
++        categoryMedium: undefined,
++        categorySmall: undefined,
++        salary: undefined,
++        satisfaction: undefined,
++        wlb: undefined,
++        workStrong: undefined,
++        skillYear: undefined
++      },
++      _sources: { CAREERNET: row.summary ? 1 : 0 }
++    }))
++
++    const resultSources = createInitialSourceStatus()
++    resultSources.CAREERNET = { attempted: true, count: items.length }
++
++    return {
++      items,
++      meta: { total: items.length, sources: resultSources }
++    }
++  }
+

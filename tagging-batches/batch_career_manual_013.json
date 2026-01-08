@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283341791607",
+    "job_name": "양장사 및 양복사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "양장사 및 양복사는 양복과 양장을 디자인하고 제작하는 업무를 수행합니다.\n\n고객의 체형과 취향을 파악합니다.\n\n패턴을 설계합니다.\n\n천을 재단합니다.\n\n봉제 작업을 합니다.\n\n완성된 옷을 다듬습니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283343766144",
+    "job_name": "연근해 어부 및 해녀",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "연근해 어부 및 해녀는 바다에서 물고기를 잡는 업무를 수행합니다.\n\n물고기의 이동 패턴을 관찰합니다.\n\n그물을 설치합니다.\n\n물고기를 포획합니다.\n\n수확물을 정리합니다.\n\n안전 수칙을 준수합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "농림·어업 숙련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283342342747",
+    "job_name": "언어학연구원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "언어학연구원은 언어의 구조와 발전을 연구하는 업무를 수행합니다.\n\n언어 데이터를 수집합니다.\n\n언어 현상을 분석합니다.\n\n연구 결과를 정리합니다.\n\n논문을 작성합니다.\n\n학술 활동에 참여합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "인문·사회과학 연구원"
+      }
+    }
+  },
+  {
+    "job_id": "1765283327753431",
+    "job_name": "성악가",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "성악가는 클래식 음악에서 노래를 부르는 업무를 수행합니다.\n\n음역과 테크닉을 훈련합니다.\n\n곡을 연습합니다.\n\n공연에서 노래합니다.\n\n목소리를 관리합니다.\n\n음악을 해석합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283362693974",
+    "job_name": "작곡가",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "작곡가는 음악 작품을 작곡하는 업무를 수행합니다.\n\n멜로디를 창작합니다.\n\n화성을 구성합니다.\n\n곡을 편곡합니다.\n\n녹음을 감독합니다.\n\n음악적 아이디어를 발전시킵니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283357564908",
+    "job_name": "일기예보관",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "일기예보관은 날씨 정보를 수집하고 예보하는 업무를 수행합니다.\n\n기상 데이터를 수집합니다.\n\n날씨 패턴을 분석합니다.\n\n예보 모델을 실행합니다.\n\n예보를 발표합니다.\n\n재해 예보를 발령합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "이학 전문직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283333868113",
+    "job_name": "시멘트제조원",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "시멘트제조원은 시멘트를 생산하는 업무를 수행합니다.\n\n원재료를 준비합니다.\n\n제조 공정을 운영합니다.\n\n품질을 검사합니다.\n\n안전 수칙을 준수합니다.\n\n생산량을 관리합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283356623903",
+    "job_name": "인문사회계열교수",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "인문사회계열교수는 인문사회 분야를 가르치는 업무를 수행합니다.\n\n강의를 준비합니다.\n\n학생들을 가르칩니다.\n\n연구를 수행합니다.\n\n논문을 작성합니다.\n\n학술 활동에 참여합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283341791607",
+    "job_name": "양장사 및 양복사",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "양장사 및 양복사는 양복과 양장을 디자인하고 제작하는 업무를 수행합니다.\n\n고객의 체형과 취향을 파악합니다.\n\n패턴을 설계합니다.\n\n천을 재단합니다.\n\n봉제 작업을 합니다.\n\n완성된 옷을 다듬습니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283343766144",
+    "job_name": "연근해 어부 및 해녀",
+    "source_system": "CAREERNET",
+    "current_status": "not_started",
+    "content": {
+      "duties": "연근해 어부 및 해녀는 바다에서 물고기를 잡는 업무를 수행합니다.\n\n물고기의 이동 패턴을 관찰합니다.\n\n그물을 설치합니다.\n\n물고기를 포획합니다.\n\n수확물을 정리합니다.\n\n안전 수칙을 준수합니다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "농림·어업 숙련직"
+      }
+    }
+  }
+]
+
+

@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Content-Length: 19676
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Cache-Control: public, max-age=60, stale-while-revalidate=30
+Server-Timing: search-start;dur=367, serialize;dur=0
+X-Response-Duration: 367
+

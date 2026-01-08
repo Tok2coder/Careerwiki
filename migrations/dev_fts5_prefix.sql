@@ -1,0 +1,3 @@
+-- DEV-ONLY FTS5 PREFIX SEARCH SETUP
+-- Skipped in production D1 (FTS5 virtual tables not fully supported in remote D1)
+-- Use local development with --local flag for FTS5 functionality

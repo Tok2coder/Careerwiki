@@ -1,0 +1,2325 @@
+/* HowTo 에디터 스타일 */
+
+/* =====================================================
+   툴바 레이아웃
+   ===================================================== */
+.howto-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.howto-editor-toolbar .toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.howto-editor-toolbar .toolbar-group:last-child {
+  border-right: none;
+}
+
+.howto-editor-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0 0.5rem;
+  border-radius: 0.375rem;
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.howto-editor-toolbar button:hover {
+  background: rgba(79, 143, 255, 0.15);
+  color: #4f8fff;
+}
+
+.howto-editor-toolbar button.is-active {
+  background: rgba(79, 143, 255, 0.2);
+  color: #4f8fff;
+}
+
+/* H1, H2, H3 버튼 크기 차별화 */
+.howto-editor-toolbar button[data-action="h1"],
+.howto-editor-toolbar button[data-action="h2"],
+.howto-editor-toolbar button[data-action="h3"] {
+  font-family: inherit;
+  line-height: 1;
+  padding: 0 0.5rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.howto-editor-toolbar button[data-action="h1"] {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.howto-editor-toolbar button[data-action="h2"] {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.howto-editor-toolbar button[data-action="h3"] {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* =====================================================
+   드롭다운 메뉴 (정렬, 폰트, 커스텀 블록)
+   ===================================================== */
+.toolbar-dropdown {
+  position: relative;
+}
+
+.toolbar-dropdown .toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.align-menu,
+.font-menu,
+.custom-block-menu,
+.color-menu,
+.size-menu,
+.row-menu,
+.col-menu,
+.cell-color-menu,
+.border-style-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 160px;
+  margin-top: 0.25rem;
+  padding: 0.5rem 0;
+  background: #1a1d24;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  flex-direction: column;
+}
+
+/* 기본적으로 숨김 */
+.align-menu.hidden,
+.font-menu.hidden,
+.custom-block-menu.hidden,
+.color-menu.hidden,
+.size-menu.hidden,
+.row-menu.hidden,
+.col-menu.hidden,
+.cell-color-menu.hidden,
+.border-style-menu.hidden {
+  display: none !important;
+}
+
+/* 열린 상태일 때만 flex로 표시 */
+.toolbar-dropdown.is-open .align-menu,
+.toolbar-dropdown.is-open .font-menu,
+.toolbar-dropdown.is-open .custom-block-menu,
+.toolbar-dropdown.is-open .color-menu,
+.toolbar-dropdown.is-open .size-menu,
+.toolbar-dropdown.is-open .row-menu,
+.toolbar-dropdown.is-open .col-menu,
+.toolbar-dropdown.is-open .cell-color-menu,
+.toolbar-dropdown.is-open .border-style-menu {
+  display: flex !important;
+}
+
+
+.align-menu button,
+.font-menu button,
+.custom-block-menu button,
+.size-menu button,
+.row-menu button,
+.col-menu button,
+.border-style-menu button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.85);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+/* 색상 메뉴 레이아웃 */
+.color-menu {
+  min-width: 180px;
+}
+
+.color-menu .color-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.375rem;
+  padding: 0.5rem;
+}
+
+/* 글자 크기 메뉴 */
+.size-menu {
+  min-width: 60px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.size-menu button {
+  padding: 0.375rem 0.75rem !important;
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.size-menu button.is-default {
+  color: #4f8fff;
+  font-weight: 500;
+}
+
+/* 툴바 글자 크기 입력칸 */
+.size-input-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+  padding: 0 0.375rem !important;
+}
+
+.size-input {
+  width: 36px;
+  padding: 0.25rem 0.25rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.25rem;
+  color: #fff;
+  font-size: 0.75rem;
+  text-align: center;
+  outline: none;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.size-input::-webkit-outer-spin-button,
+.size-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.size-input:focus {
+  border-color: #4f8fff;
+  background: rgba(79, 143, 255, 0.1);
+}
+
+/* 현재 글꼴 표시 */
+.current-font-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 글꼴 메뉴 활성 항목 */
+.font-menu button.is-active {
+  color: #4f8fff;
+  background: rgba(79, 143, 255, 0.1);
+}
+
+.align-menu button:hover,
+.font-menu button:hover,
+.custom-block-menu button:hover,
+.size-menu button:hover,
+.row-menu button:hover,
+.col-menu button:hover,
+.border-style-menu button:hover {
+  background: rgba(79, 143, 255, 0.15);
+}
+
+/* 색상 그리드 (글자 색상, 셀 배경색) */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.375rem;
+  padding: 0.5rem;
+}
+
+.color-grid button {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.25rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.color-grid button:hover {
+  transform: scale(1.15);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.color-menu .color-reset,
+.cell-color-menu .color-reset {
+  display: block;
+  width: calc(100% - 1rem);
+  margin: 0.25rem 0.5rem 0;
+  padding: 0.375rem 0.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.color-menu .color-reset:hover,
+.cell-color-menu .color-reset:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* =====================================================
+   표 툴바
+   ===================================================== */
+.table-toolbar {
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(79, 143, 255, 0.1);
+  border-bottom: 1px solid rgba(79, 143, 255, 0.2);
+}
+
+.table-toolbar.visible {
+  display: flex;
+}
+
+.table-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.table-toolbar button:hover {
+  background: rgba(79, 143, 255, 0.2);
+  border-color: rgba(79, 143, 255, 0.4);
+}
+
+.table-toolbar .toolbar-divider {
+  width: 1px;
+  height: 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* =====================================================
+   에디터 본문 영역
+   ===================================================== */
+.howto-editor-content {
+  min-height: 400px;
+  overflow: visible;
+  max-height: none;
+}
+
+.howto-editor-content .ProseMirror {
+  min-height: 400px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  outline: none;
+}
+
+.howto-editor-content .ProseMirror:focus {
+  outline: none;
+}
+
+/* =====================================================
+   Placeholder
+   ===================================================== */
+.howto-editor-content .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  height: 0;
+}
+
+.howto-editor-content .ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+/* 테이블 관련 요소에는 placeholder 스타일 적용 안함 */
+.howto-editor-content .ProseMirror .tableWrapper.is-empty::before,
+.howto-editor-content .ProseMirror .tableWrapper.is-editor-empty::before,
+.howto-editor-content .ProseMirror table .is-empty::before,
+.howto-editor-content .ProseMirror th.is-empty::before,
+.howto-editor-content .ProseMirror td.is-empty::before,
+.howto-editor-content .ProseMirror th .is-empty::before,
+.howto-editor-content .ProseMirror td .is-empty::before,
+.howto-editor-content .ProseMirror th p.is-empty::before,
+.howto-editor-content .ProseMirror td p.is-empty::before {
+  content: none !important;
+  display: none !important;
+  float: none !important;
+}
+
+/* =====================================================
+   기본 텍스트 스타일
+   ===================================================== */
+.howto-editor-content .ProseMirror {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.howto-editor-content .ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  color: #fff;
+  border-bottom: 2px solid rgba(79, 143, 255, 0.3);
+  padding-bottom: 0.5rem;
+}
+
+.howto-editor-content .ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.75rem;
+  color: #fff;
+}
+
+.howto-editor-content .ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.howto-editor-content .ProseMirror p {
+  margin-bottom: 0.75rem;
+}
+
+/* =====================================================
+   취소선 hover 효과
+   ===================================================== */
+.howto-editor-content .ProseMirror s {
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease;
+}
+
+.howto-editor-content .ProseMirror s:hover {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* =====================================================
+   링크
+   ===================================================== */
+/* 내부 링크 - 민트색 */
+.howto-editor-content .ProseMirror a {
+  color: #00d4aa !important;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.howto-editor-content .ProseMirror a:hover {
+  color: #00ffcc !important;
+}
+
+/* 외부 링크 - 주황색 */
+.howto-editor-content .ProseMirror a[href^="http"],
+.howto-editor-content .ProseMirror a[href^="https"],
+.howto-editor-content .ProseMirror a[href^="www."] {
+  color: #f59e0b !important;
+}
+
+.howto-editor-content .ProseMirror a[href^="http"]:hover,
+.howto-editor-content .ProseMirror a[href^="https"]:hover,
+.howto-editor-content .ProseMirror a[href^="www."]:hover {
+  color: #fbbf24 !important;
+}
+
+/* =====================================================
+   인용구 - 스타일은 아래 통합 섹션에서 정의
+   ===================================================== */
+
+/* =====================================================
+   리스트
+   ===================================================== */
+.howto-editor-content .ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.howto-editor-content .ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.howto-editor-content .ProseMirror li {
+  margin-bottom: 0.375rem;
+}
+
+.howto-editor-content .ProseMirror li::marker {
+  color: #4f8fff;
+}
+
+/* =====================================================
+   체크리스트 - 업그레이드된 스타일
+   ===================================================== */
+.howto-editor-content .ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0;
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.875rem;
+  padding: 0.625rem 0.875rem;
+  margin: 0.375rem 0;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  min-height: 2.5rem;
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li:hover {
+  background: rgba(79, 143, 255, 0.05);
+  border-color: rgba(79, 143, 255, 0.15);
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li > label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(79, 143, 255, 0.5);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  position: relative;
+  background: transparent;
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"]:hover {
+  border-color: #4f8fff;
+  box-shadow: 0 0 0 3px rgba(79, 143, 255, 0.1);
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #4f8fff, #8b5cf6);
+  border-color: transparent;
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li > div {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 1.25rem;
+}
+
+.howto-editor-content .ProseMirror ul[data-type="taskList"] li > div p {
+  margin: 0;
+  line-height: 1.25rem;
+}
+
+/* =====================================================
+   코드 블록
+   ===================================================== */
+.howto-editor-content .ProseMirror pre {
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.howto-editor-content .ProseMirror code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.875rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}
+
+.howto-editor-content .ProseMirror pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* =====================================================
+   구분선
+   ===================================================== */
+.howto-editor-content .ProseMirror hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(79, 143, 255, 0.5), rgba(139, 92, 246, 0.5), transparent);
+  margin: 2.5rem 0;
+  position: relative;
+}
+
+.howto-editor-content .ProseMirror hr::before {
+  content: '✦';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--wiki-bg, #0f1419);
+  padding: 0 1rem;
+  color: rgba(79, 143, 255, 0.6);
+  font-size: 0.75rem;
+}
+
+/* =====================================================
+   표 스타일
+   ===================================================== */
+/* 표 Wrapper - Tiptap에서 생성되는 컨테이너 */
+.howto-editor-content .ProseMirror .tableWrapper {
+  display: block !important;
+  overflow-x: auto;
+  margin: 1.5rem 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.howto-editor-content .ProseMirror table {
+  display: table !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: rgba(15, 20, 30, 0.6);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  table-layout: fixed !important;
+  border: 1px solid rgba(79, 143, 255, 0.3);
+}
+
+/* colgroup 스타일 제거 */
+.howto-editor-content .ProseMirror table colgroup {
+  display: table-column-group;
+}
+
+.howto-editor-content .ProseMirror table col {
+  width: auto !important;
+}
+
+.howto-editor-content .ProseMirror th {
+  background: linear-gradient(135deg, rgba(79, 143, 255, 0.25), rgba(79, 143, 255, 0.15));
+  font-weight: 600;
+  text-align: left;
+  padding: 0.875rem 1rem;
+  border: 1px solid rgba(79, 143, 255, 0.2);
+  color: #fff;
+}
+
+.howto-editor-content .ProseMirror td {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  vertical-align: top;
+  background: transparent;
+}
+
+.howto-editor-content .ProseMirror tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.howto-editor-content .ProseMirror tr:hover td {
+  background: rgba(79, 143, 255, 0.08);
+}
+
+.howto-editor-content .ProseMirror .selectedCell {
+  background: rgba(79, 143, 255, 0.2) !important;
+  outline: 2px solid rgba(79, 143, 255, 0.5);
+  outline-offset: -2px;
+}
+
+/* 표 리사이즈 핸들 */
+.howto-editor-content .ProseMirror .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #4f8fff;
+  cursor: col-resize;
+  z-index: 10;
+}
+
+/* =====================================================
+   이미지
+   ===================================================== */
+.howto-editor-content .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+.howto-editor-content .ProseMirror img.ProseMirror-selectednode {
+  outline: 3px solid #4f8fff;
+  outline-offset: 2px;
+}
+
+/* 이미지 리사이즈 핸들 */
+.howto-editor-content .ProseMirror .image-resizer {
+  display: block;
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1rem 0;
+}
+
+/* 이미지 정렬 - 편집기 내 */
+.howto-editor-content .ProseMirror .image-resizer[data-align="left"] {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.howto-editor-content .ProseMirror .image-resizer[data-align="center"] {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.howto-editor-content .ProseMirror .image-resizer[data-align="right"] {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.howto-editor-content .ProseMirror .image-resizer .resize-handle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #4f8fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  cursor: nwse-resize;
+}
+
+.howto-editor-content .ProseMirror .image-resizer .resize-handle.se {
+  right: -6px;
+  bottom: -6px;
+}
+
+/* =====================================================
+   각주
+   ===================================================== */
+.howto-editor-content .ProseMirror sup[data-footnote-id] {
+  color: #4f8fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.howto-editor-content .ProseMirror sup[data-footnote-id]:hover {
+  text-decoration: underline;
+}
+
+/* =====================================================
+   커스텀 블록: 체크포인트
+   ===================================================== */
+.howto-editor-content .ProseMirror .checkpoint-box {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(34, 197, 94, 0.04));
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.25rem 1.25rem 3.5rem;
+  margin: 1.5rem 0;
+  position: relative;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+}
+
+.howto-editor-content .ProseMirror .checkpoint-box:hover {
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+}
+
+.howto-editor-content .ProseMirror .checkpoint-box::before {
+  content: '✓';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: white;
+  font-weight: bold;
+}
+
+.howto-editor-content .ProseMirror .checkpoint-box > * {
+  margin: 0;
+}
+
+.howto-editor-content .ProseMirror .checkpoint-box p.is-empty::before {
+  content: '체크포인트 내용을 입력하세요...';
+}
+
+/* =====================================================
+   커스텀 블록: 결론 박스
+   ===================================================== */
+.howto-editor-content .ProseMirror .conclusion-box {
+  background: linear-gradient(135deg, rgba(79, 143, 255, 0.12), rgba(79, 143, 255, 0.04));
+  border: 1px solid rgba(79, 143, 255, 0.35);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.25rem 1.25rem 3.5rem;
+  margin: 1.5rem 0;
+  position: relative;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+}
+
+.howto-editor-content .ProseMirror .conclusion-box:hover {
+  box-shadow: 0 4px 12px rgba(79, 143, 255, 0.15);
+}
+
+.howto-editor-content .ProseMirror .conclusion-box::before {
+  content: '💡';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.howto-editor-content .ProseMirror .conclusion-box > * {
+  margin: 0;
+}
+
+.howto-editor-content .ProseMirror .conclusion-box p.is-empty::before {
+  content: '결론/요약 내용을 입력하세요...';
+}
+
+/* =====================================================
+   커스텀 블록: Q&A
+   ===================================================== */
+.howto-editor-content .ProseMirror .qna-block {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.howto-editor-content .ProseMirror .qna-question {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(251, 191, 36, 0.05));
+  padding: 1.25rem;
+  padding-left: 3.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 3rem;
+}
+
+.howto-editor-content .ProseMirror .qna-question .qna-label-q {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #000;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(251, 191, 36, 0.3);
+}
+
+.howto-editor-content .ProseMirror .qna-question .qna-text,
+.howto-editor-content .ProseMirror .qna-question .qna-content {
+  flex: 1;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.howto-editor-content .ProseMirror .qna-question .qna-content p {
+  margin: 0;
+}
+
+.howto-editor-content .ProseMirror .qna-question p.is-empty::before {
+  content: '질문을 입력하세요...';
+}
+
+.howto-editor-content .ProseMirror .qna-answer {
+  padding: 1.25rem;
+  padding-left: 3.5rem;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(79, 143, 255, 0.03);
+  min-height: 3rem;
+}
+
+.howto-editor-content .ProseMirror .qna-answer .qna-label-a {
+  position: absolute;
+  left: 1rem;
+  top: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  background: linear-gradient(135deg, #4f8fff, #3b7aed);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(79, 143, 255, 0.3);
+}
+
+.howto-editor-content .ProseMirror .qna-answer .qna-text,
+.howto-editor-content .ProseMirror .qna-answer .qna-content {
+  flex: 1;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+}
+
+.howto-editor-content .ProseMirror .qna-answer .qna-content p {
+  margin: 0;
+}
+
+.howto-editor-content .ProseMirror .qna-answer p.is-empty::before {
+  content: '답변을 입력하세요...';
+}
+
+/* =====================================================
+   커스텀 블록: 커리어 리스트
+   ===================================================== */
+.howto-editor-content .ProseMirror .career-list {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.howto-editor-content .ProseMirror .career-list:hover {
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+/* 커리어 리스트 아이템 */
+.howto-editor-content .ProseMirror .career-list-item {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.875rem 1rem 0.875rem 2.5rem;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.howto-editor-content .ProseMirror .career-list-item::before {
+  content: '→';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a78bfa;
+  font-weight: 600;
+}
+
+.howto-editor-content .ProseMirror .career-list-item:hover {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.howto-editor-content .ProseMirror .career-list-item .career-list-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.howto-editor-content .ProseMirror .career-list-item .career-list-content p {
+  margin: 0;
+}
+
+/* 기존 ul/li 기반 스타일 (호환성) */
+.howto-editor-content .ProseMirror .career-list ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.howto-editor-content .ProseMirror .career-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.howto-editor-content .ProseMirror .career-list li:last-child {
+  border-bottom: none;
+}
+
+.howto-editor-content .ProseMirror .career-list li::before {
+  content: '→';
+  color: #a78bfa;
+}
+
+/* =====================================================
+   슬래시 메뉴
+   ===================================================== */
+.slash-command-menu {
+  position: absolute;
+  background: #1a1d24;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  z-index: 1000;
+  min-width: 220px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.slash-command-menu .slash-command-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.slash-command-menu .slash-command-item:hover,
+.slash-command-menu .slash-command-item.is-selected {
+  background: rgba(79, 143, 255, 0.15);
+}
+
+.slash-command-menu .slash-command-item .icon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #4f8fff;
+}
+
+.slash-command-menu .slash-command-item .label {
+  font-weight: 500;
+  color: #fff;
+}
+
+.slash-command-menu .slash-command-item .description {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* =====================================================
+   링크 팝업
+   ===================================================== */
+.link-popup {
+  position: absolute;
+  background: #1a1d24;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.link-popup input {
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.375rem;
+  color: #fff;
+  font-size: 0.875rem;
+  width: 250px;
+  outline: none;
+}
+
+.link-popup input:focus {
+  border-color: #4f8fff;
+}
+
+.link-popup button {
+  padding: 0.5rem 1rem;
+  background: #4f8fff;
+  border: none;
+  border-radius: 0.375rem;
+  color: #fff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.link-popup button:hover {
+  background: #3b82f6;
+}
+
+/* =====================================================
+   각주 팝업
+   ===================================================== */
+.footnote-popup {
+  position: absolute;
+  background: #1a1d24;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  width: 320px;
+}
+
+.footnote-popup .footnote-popup-title {
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footnote-popup .footnote-popup-title i {
+  color: #4f8fff;
+}
+
+.footnote-popup label {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.25rem;
+}
+
+.footnote-popup input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.375rem;
+  color: #fff;
+  font-size: 0.875rem;
+  outline: none;
+  margin-bottom: 0.75rem;
+}
+
+.footnote-popup input:focus {
+  border-color: #4f8fff;
+}
+
+.footnote-popup .footnote-popup-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.footnote-popup .footnote-popup-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.footnote-popup .footnote-popup-actions button.cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footnote-popup .footnote-popup-actions button.cancel:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.footnote-popup .footnote-popup-actions button.submit {
+  background: #4f8fff;
+  border: none;
+  color: #fff;
+}
+
+.footnote-popup .footnote-popup-actions button.submit:hover {
+  background: #3b82f6;
+}
+
+/* =====================================================
+   내부 링크 검색 팝업
+   ===================================================== */
+.internal-link-popup {
+  position: absolute;
+  background: #1a1d24;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  width: 320px;
+}
+
+.internal-link-popup .tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.internal-link-popup .tab-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.internal-link-popup .tab-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.internal-link-popup .tab-btn.active {
+  background: rgba(79, 143, 255, 0.2);
+  border-color: rgba(79, 143, 255, 0.5);
+  color: #4f8fff;
+  font-weight: 500;
+}
+
+.internal-link-popup input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 0.875rem;
+  outline: none;
+  margin-bottom: 0.75rem;
+}
+
+.internal-link-popup input:focus {
+  border-color: #4f8fff;
+  box-shadow: 0 0 0 2px rgba(79, 143, 255, 0.2);
+}
+
+.internal-link-popup input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.internal-link-popup .results {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.internal-link-popup .results .no-results {
+  padding: 1.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.875rem;
+}
+
+.internal-link-popup .result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 0.25rem;
+}
+
+.internal-link-popup .result-item:hover {
+  background: rgba(79, 143, 255, 0.15);
+}
+
+.internal-link-popup .result-item .title {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.internal-link-popup .result-item .type {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+/* =====================================================
+   출처 섹션 (에디터 하단)
+   ===================================================== */
+.editor-footnotes-section {
+  margin-top: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  scroll-margin-top: 100px; /* 스크롤 시 여유 공간 */
+}
+
+.editor-footnotes-section h4 {
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editor-footnotes-section h4 i {
+  color: #4f8fff;
+}
+
+.editor-footnotes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.editor-footnotes-empty {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.editor-footnotes-empty i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.editor-footnote-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  transition: all 0.15s;
+}
+
+.editor-footnote-item:hover {
+  background: rgba(79, 143, 255, 0.08);
+  border-color: rgba(79, 143, 255, 0.2);
+}
+
+/* 각주 번호 - JS에서 사용하는 클래스명 */
+.editor-footnote-item .editor-footnote-id,
+.editor-footnote-item .footnote-number {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4f8fff, #3b7aed);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(79, 143, 255, 0.3);
+}
+
+/* 각주 내용 컨테이너 */
+.editor-footnote-item .editor-footnote-content,
+.editor-footnote-item .footnote-content {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 각주 텍스트 */
+.editor-footnote-item .editor-footnote-text,
+.editor-footnote-item .footnote-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.875rem;
+  margin-bottom: 0.375rem;
+  line-height: 1.5;
+}
+
+/* 각주 URL - 줄바꿈 적용 */
+.editor-footnote-item .editor-footnote-url,
+.editor-footnote-item .footnote-url {
+  display: block;
+  color: #4f8fff;
+  font-size: 0.75rem;
+  text-decoration: none;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+.editor-footnote-item .editor-footnote-url:hover,
+.editor-footnote-item .footnote-url:hover {
+  text-decoration: underline;
+  color: #6ba3ff;
+}
+
+/* 각주 액션 버튼 컨테이너 */
+.editor-footnote-item .editor-footnote-actions,
+.editor-footnote-item .footnote-actions {
+  display: flex;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+/* 편집/삭제 버튼 스타일 */
+.editor-footnote-item .editor-footnote-actions button,
+.editor-footnote-item .footnote-actions button,
+.editor-footnote-item .btn-edit,
+.editor-footnote-item .btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.375rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.editor-footnote-item .btn-edit:hover {
+  background: rgba(79, 143, 255, 0.15);
+  border-color: rgba(79, 143, 255, 0.5);
+  color: #4f8fff;
+}
+
+.editor-footnote-item .btn-delete:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+.editor-footnote-item .footnote-actions button:hover {
+  border-color: #4f8fff;
+  color: #4f8fff;
+}
+
+.editor-footnote-item .footnote-actions button.delete:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* =====================================================
+   자동완성 드롭다운
+   ===================================================== */
+.autocomplete-item {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.autocomplete-item:hover {
+  background: rgba(79, 143, 255, 0.15);
+}
+
+/* =====================================================
+   미리보기 오버레이
+   ===================================================== */
+#preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  overflow-y: auto;
+}
+
+#preview-content {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #1a1d24;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* =====================================================
+   반응형
+   ===================================================== */
+@media (max-width: 768px) {
+  .howto-editor-toolbar {
+    gap: 0.25rem;
+    padding: 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    flex-wrap: nowrap;
+  }
+  
+  .howto-editor-toolbar::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .howto-editor-toolbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .howto-editor-toolbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
+  
+  .howto-editor-toolbar .toolbar-group {
+    padding: 0 0.375rem;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+  }
+  
+  .howto-editor-toolbar button {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .howto-editor-toolbar .toolbar-dropdown .toolbar-btn {
+    min-height: 2.75rem;
+  }
+  
+  .howto-editor-content .ProseMirror {
+    padding: 1rem;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  
+  .howto-editor-content .ProseMirror p {
+    font-size: 16px;
+  }
+}
+
+/* =====================================================
+   각주 모달
+   ===================================================== */
+.footnote-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footnote-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.footnote-modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 480px;
+  background: #1a1d24;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.footnote-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footnote-modal-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.footnote-modal-close {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.footnote-modal-close:hover {
+  color: #fff;
+}
+
+.footnote-modal-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.footnote-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footnote-field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footnote-field input {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 0.9375rem;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.footnote-field input:focus {
+  border-color: #4f8fff;
+  background: rgba(79, 143, 255, 0.05);
+}
+
+.footnote-field input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.footnote-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footnote-modal-footer .btn-delete {
+  margin-right: auto;
+  padding: 0.625rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 0.5rem;
+  color: #ef4444;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.footnote-modal-footer .btn-delete:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+
+.footnote-modal-footer .btn-cancel {
+  padding: 0.625rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.footnote-modal-footer .btn-cancel:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.footnote-modal-footer .btn-save {
+  padding: 0.625rem 1.25rem;
+  background: #4f8fff;
+  border: none;
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.footnote-modal-footer .btn-save:hover {
+  background: #3a7bff;
+}
+
+/* 각주 인라인 스타일 */
+.footnote-ref {
+  vertical-align: super;
+  font-size: 0.75em;
+  line-height: 1;
+}
+
+.footnote-link {
+  color: #4f8fff;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.footnote-link:hover {
+  color: #00d4aa;
+}
+
+/* =====================================================
+   이미지 리사이저
+   ===================================================== */
+.image-resizer {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+  transition: all 0.15s;
+}
+
+/* 정렬 */
+.image-resizer[data-align="left"] {
+  display: block;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.image-resizer[data-align="center"] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.image-resizer[data-align="right"] {
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* 정렬 */
+.image-resizer[data-align="left"] {
+  display: block;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.image-resizer[data-align="center"] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.image-resizer[data-align="right"] {
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.image-resizer img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+/* 선택된 이미지 */
+.image-resizer.selected {
+  outline: 2px solid #4f8fff;
+  outline-offset: 2px;
+}
+
+.image-resizer.selected .resize-handle {
+  display: block;
+}
+
+.image-resizer.selected .image-toolbar {
+  display: flex;
+}
+
+/* 리사이즈 핸들 */
+.resize-handle {
+  display: none;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #4f8fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  z-index: 10;
+  cursor: nwse-resize;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.resize-handle-nw {
+  top: -6px;
+  left: -6px;
+  cursor: nwse-resize;
+}
+
+.resize-handle-ne {
+  top: -6px;
+  right: -6px;
+  cursor: nesw-resize;
+}
+
+.resize-handle-sw {
+  bottom: -6px;
+  left: -6px;
+  cursor: nesw-resize;
+}
+
+.resize-handle-se {
+  bottom: -6px;
+  right: -6px;
+  cursor: nwse-resize;
+}
+
+/* 리사이징 중 */
+.image-resizer.resizing {
+  user-select: none;
+}
+
+.image-resizer.resizing img {
+  pointer-events: none;
+}
+
+/* 이미지 툴바 */
+.image-toolbar {
+  display: none;
+  position: absolute;
+  top: -44px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 25, 35, 0.95);
+  border: 1px solid rgba(79, 143, 255, 0.3);
+  border-radius: 0.5rem;
+  padding: 0.375rem;
+  gap: 0.25rem;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 20;
+  white-space: nowrap;
+}
+
+.image-toolbar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 0.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.375rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.image-toolbar button:hover {
+  background: rgba(79, 143, 255, 0.2);
+  color: #4f8fff;
+}
+
+.image-toolbar button i {
+  font-size: 0.75rem;
+}
+
+.image-toolbar .toolbar-separator {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 0.25rem;
+}
+
+/* 이미지 래퍼 (렌더링된 HTML) */
+.image-wrapper {
+  margin: 1.5rem 0;
+}
+
+.image-wrapper.image-align-left {
+  text-align: left;
+}
+
+.image-wrapper.image-align-center {
+  text-align: center;
+}
+
+.image-wrapper.image-align-right {
+  text-align: right;
+}
+
+.image-wrapper img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+/* ================================
+   인용구 (Blockquote) 스타일
+   ================================ */
+.howto-editor-content blockquote,
+.custom-blockquote {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-left: 3px solid #8b5cf6;
+  border-radius: 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  box-sizing: border-box;
+}
+
+/* 여는 따옴표 */
+.howto-editor-content blockquote::before,
+.custom-blockquote::before {
+  content: '"';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.75rem;
+  font-size: 2.5rem;
+  color: rgba(139, 92, 246, 0.5);
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* 닫는 따옴표 */
+.howto-editor-content blockquote::after,
+.custom-blockquote::after {
+  content: '"';
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.75rem;
+  font-size: 2.5rem;
+  color: rgba(139, 92, 246, 0.5);
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* 내부 p 태그 */
+.howto-editor-content blockquote p,
+.custom-blockquote p {
+  margin: 0;
+}
+
+/* 정렬 */
+.howto-editor-content blockquote.blockquote-align-center,
+.custom-blockquote.blockquote-align-center {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 85%;
+  text-align: center;
+  padding: 2.5rem 1.5rem 1.25rem 1.5rem;
+  border-left: 1px solid rgba(139, 92, 246, 0.25);
+  border-top: 3px solid #8b5cf6;
+}
+
+.howto-editor-content blockquote.blockquote-align-center::before,
+.custom-blockquote.blockquote-align-center::before {
+  left: 1rem;
+  transform: none;
+  top: 0.5rem;
+}
+
+.howto-editor-content blockquote.blockquote-align-center::after,
+.custom-blockquote.blockquote-align-center::after {
+  right: 1rem;
+  bottom: 0.25rem;
+}
+
+.howto-editor-content blockquote.blockquote-align-right,
+.custom-blockquote.blockquote-align-right {
+  margin-left: auto;
+  max-width: 85%;
+  text-align: right;
+  padding: 1.25rem 3.5rem 1.25rem 1.5rem;
+  border-left: 1px solid rgba(139, 92, 246, 0.25);
+  border-right: 3px solid #8b5cf6;
+}
+
+.howto-editor-content blockquote.blockquote-align-right::before,
+.custom-blockquote.blockquote-align-right::before {
+  left: 0.75rem;
+  right: auto;
+}
+
+.howto-editor-content blockquote.blockquote-align-right::after,
+.custom-blockquote.blockquote-align-right::after {
+  right: 0.75rem;
+  bottom: 0.25rem;
+}
+
+/* 사이즈 */
+.howto-editor-content blockquote.blockquote-size-small,
+.custom-blockquote.blockquote-size-small {
+  max-width: 70%;
+  font-size: 0.95rem;
+  padding: 1rem 1.25rem 1rem 3rem;
+}
+
+.howto-editor-content blockquote.blockquote-size-small::before,
+.custom-blockquote.blockquote-size-small::before {
+  font-size: 2rem;
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
+.howto-editor-content blockquote.blockquote-size-small::after,
+.custom-blockquote.blockquote-size-small::after {
+  font-size: 2rem;
+  right: 0.5rem;
+  bottom: 0.25rem;
+}
+
+.howto-editor-content blockquote.blockquote-size-large,
+.custom-blockquote.blockquote-size-large {
+  max-width: 100%;
+  font-size: 1.15rem;
+  padding: 1.5rem 1.75rem 1.5rem 4rem;
+}
+
+.howto-editor-content blockquote.blockquote-size-large::before,
+.custom-blockquote.blockquote-size-large::before {
+  font-size: 3rem;
+  left: 1rem;
+  top: 0.75rem;
+}
+
+.howto-editor-content blockquote.blockquote-size-large::after,
+.custom-blockquote.blockquote-size-large::after {
+  font-size: 3rem;
+  right: 1rem;
+  bottom: 0.25rem;
+}
+
+/* 인용구 wrapper (에디터 전용) */
+.blockquote-wrapper {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.blockquote-wrapper .custom-blockquote {
+  margin: 0;
+}
+
+.blockquote-wrapper .blockquote-content {
+  outline: none;
+  min-height: 1.5rem;
+}
+
+/* 인용구 툴바 */
+.blockquote-toolbar {
+  position: absolute;
+  top: -2.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.5rem;
+  background: #1a1f2e;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 50;
+}
+
+.blockquote-wrapper:hover .blockquote-toolbar,
+.blockquote-wrapper:focus-within .blockquote-toolbar {
+  display: flex;
+}
+
+.blockquote-toolbar button {
+  padding: 0.35rem 0.5rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  min-width: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.blockquote-toolbar button:hover {
+  background: rgba(139, 92, 246, 0.3);
+  color: #a78bfa;
+}
+
+.blockquote-toolbar .toolbar-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 0.25rem;
+}
+
+/* ================================
+   이미지 편집 모달 스타일
+   ================================ */
+.image-edit-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-edit-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.image-edit-modal-content {
+  position: relative;
+  background: #1a1f2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  max-width: 700px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-edit-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.image-edit-modal-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+}
+
+.image-edit-modal-header .close-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.25rem;
+  transition: color 0.15s;
+}
+
+.image-edit-modal-header .close-btn:hover {
+  color: white;
+}
+
+.image-edit-modal-body {
+  flex: 1;
+  padding: 1.5rem;
+  overflow: auto;
+}
+
+.image-edit-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.image-edit-modal-footer button {
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.image-edit-modal-footer .btn-cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.image-edit-modal-footer .btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.image-edit-modal-footer .btn-apply,
+.image-edit-modal-footer .btn-apply-mosaic,
+.image-edit-modal-footer .btn-done {
+  background: #4f8fff;
+  border: none;
+  color: white;
+}
+
+.image-edit-modal-footer .btn-apply:hover,
+.image-edit-modal-footer .btn-apply-mosaic:hover,
+.image-edit-modal-footer .btn-done:hover {
+  background: #3b7ef5;
+}
+
+/* 크롭 컨테이너 */
+.crop-container,
+.mosaic-container {
+  position: relative;
+  display: inline-block;
+  background: #0d1117;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.crop-container canvas,
+.mosaic-container canvas {
+  display: block;
+  max-width: 100%;
+}
+
+.crop-selection,
+.mosaic-selection {
+  position: absolute;
+  border: 2px dashed #4f8fff;
+  background: rgba(79, 143, 255, 0.1);
+  cursor: move;
+  box-sizing: border-box;
+}
+
+.crop-selection::before,
+.mosaic-selection::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.crop-info,
+.mosaic-controls {
+  margin-top: 1rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+}
+
+.mosaic-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.mosaic-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mosaic-controls input[type="range"] {
+  width: 120px;
+  accent-color: #4f8fff;
+}

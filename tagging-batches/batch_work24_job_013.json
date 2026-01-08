@@ -1,0 +1,184 @@
+[
+  {
+    "job_id": "1765283415778123",
+    "job_name": "법원공무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[법원공무원]\n-법원 업무를 지원한다.\n-서류를 관리한다.\n-재판을 준비한다.\n-기록을 유지한다.\n-안내를 제공한다.\n-법규를 준수한다.\n-보고서를 작성한다.\n-시스템을 운영한다.\n-민원을 처리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "교육·법률·사회복지·경찰·소방직 및 군인"
+      }
+    }
+  },
+  {
+    "job_id": "1765283496293366",
+    "job_name": "철근공",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[철근공]\n-철근을 재단한다.\n-철근을 조립한다.\n-용접을 실시한다.\n-보강을 한다.\n-안전 수칙을 준수한다.\n-품질을 검사한다.\n-장비를 관리한다.\n-기록을 유지한다.\n-설계를 따른다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283472936861",
+    "job_name": "개그맨 및 코미디언",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[개그맨]\n-개그를 준비한다.\n-공연을 한다.\n-대본을 작성한다.\n-즉흥 연기를 한다.\n-관객과 소통한다.\n-프로모션을 한다.\n-기술을 연마한다.\n-팀과 협력한다.\n\n[코미디언]\n-코미디 루틴을 개발한다.\n-공연에 출연한다.\n-타이밍을 맞춘다.\n-관객 반응을 읽는다.\n-프로그램에 참여한다.\n-콘텐츠를 제작한다.\n-이미지를 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "예술·디자인·방송·스포츠직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283421053844",
+    "job_name": "항공운송사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[항공운송사무원]\n-항공편을 예약한다.\n-티켓을 발권한다.\n-수하물을 처리한다.\n-승객을 안내한다.\n-비상 상황에 대응한다.\n-문서를 관리한다.\n-고객 불편을 해결한다.\n-안전 수칙을 준수한다.\n-보고서를 작성한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283478150821",
+    "job_name": "항공기객실승무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[항공기객실승무원]\n-승객을 안내한다.\n-안전을 설명한다.\n-식음료를 제공한다.\n-응급 처치를 한다.\n-비상 상황에 대응한다.\n-청결을 유지한다.\n-승객을 지원한다.\n-보고서를 작성한다.\n-훈련을 받는다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  },
+  {
+    "job_id": "176528341709323",
+    "job_name": "경영기획사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[경영기획사무원]\n-경영 계획을 수립한다.\n-데이터를 분석한다.\n-보고서를 작성한다.\n-프로젝트를 지원한다.\n-예산을 관리한다.\n-성과를 모니터링한다.\n-제안을 준비한다.\n-회의를 준비한다.\n-문서를 관리한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283419641669",
+    "job_name": "물류사무원",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[물류사무원]\n-물류 계획을 수립한다.\n-주문을 처리한다.\n-재고를 관리한다.\n-배송을 추적한다.\n-문서를 작성한다.\n-공급업체와 협력한다.\n-문제를 해결한다.\n-보고서를 작성한다.\n-시스템을 운영한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "사무 관련직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283453790950",
+    "job_name": "폐기물처리기술자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[폐기물처리기술자]\n-폐기물을 분류한다.\n-처리 방법을 결정한다.\n-장비를 운영한다.\n-환경 영향을 평가한다.\n-안전 수칙을 준수한다.\n-법규를 따른다.\n-보고서를 작성한다.\n-유지보수를 한다.\n-기술을 개발한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283412976396",
+    "job_name": "전기·가스·수도관리자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[전기관리자]\n-전기 시스템을 관리한다.\n-유지보수를 감독한다.\n-안전을 유지한다.\n-예산을 관리한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n-기술을 감독한다.\n\n[가스관리자]\n-가스 공급을 관리한다.\n-시설을 유지한다.\n-안전을 감독한다.\n-문제를 해결한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n\n[수도관리자]\n-상수도 시스템을 관리한다.\n-수질을 모니터링한다.\n-유지보수를 감독한다.\n-안전을 유지한다.\n-보고서를 작성한다.\n-법규를 준수한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "기능직"
+      }
+    }
+  },
+  {
+    "job_id": "1765283411571832",
+    "job_name": "환경∙청소∙경비 관련 관리자",
+    "source_system": "WORK24_JOB",
+    "current_status": "not_started",
+    "content": {
+      "duties": "[환경관리자]\n-환경 정책을 수립한다.\n-오염을 모니터링한다.\n-개선 방안을 개발한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n-프로그램을 운영한다.\n-교육을 실시한다.\n\n[청소관리자]\n-청소 서비스를 감독한다.\n-직원을 관리한다.\n-품질을 유지한다.\n-예산을 관리한다.\n-계약을 처리한다.\n-보고서를 작성한다.\n\n[경비관리자]\n-보안 시스템을 관리한다.\n-경비원을 감독한다.\n-안전을 유지한다.\n-보고서를 작성한다.\n-법규를 준수한다.\n-문제를 해결한다.",
+      "environment": "",
+      "qualifications": "",
+      "outlook": "",
+      "salary_info": "",
+      "related_majors": [],
+      "related_licenses": [],
+      "classifications": {
+        "large": "미용·여행·숙박·음식·경비·청소직"
+      }
+    }
+  }
+]
+
+

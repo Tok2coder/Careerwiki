@@ -1,0 +1,116 @@
+++ src/index.tsx
+@@
+ import { renderAdminContent } from './templates/admin/adminContent'
+ import { renderAdminStats } from './templates/admin/adminStats'
+ import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats } from './services/adminService'
++// Dev-only helpers (instrumentation, safety)
++const isDevEnv = (env?: any) => {
++  const flag = env?.ENVIRONMENT || process?.env?.ENVIRONMENT || process?.env?.NODE_ENV
++  return !flag || ['dev', 'development', 'local'].includes(String(flag).toLowerCase())
++}
++
++const timingMiddleware = async (c: any, next: any) => {
++  if (!isDevEnv(c?.env)) {
++    await next()
++    return
++  }
++  const t0 = Date.now()
++  const marks: Record<string, number> = {}
++  c.set('mark', (k: string) => {
++    marks[k] = Date.now()
++  })
++  await next()
++  const parts = Object.entries(marks).map(([k, v]) => `${k};dur=${Date.now() - Number(v)}`)
++  if (parts.length > 0) c.header('Server-Timing', parts.join(', '))
++  c.header('X-Response-Duration', String(Date.now() - t0))
++}
++
++const apiCacheHintMiddleware = async (c: any, next: any) => {
++  await next()
++  const path = c.req.path || ''
++  if (path.startsWith('/api/') && !c.res.headers.get('Cache-Control')) {
++    c.header('Cache-Control', 'public, max-age=60, stale-while-revalidate=30')
++  }
++}
++
++const errorLoggingMiddleware = async (c: any, next: any) => {
++  try {
++    await next()
++  } catch (e: any) {
++    console.error(JSON.stringify({ ts: new Date().toISOString(), route: c?.req?.path, msg: String(e), stack: e?.stack }))
++    return c.text('Internal Error', 500)
++  }
++}
+@@
+ // Middleware
+ app.use('*', cors())
+ app.use('*', renderer)
++app.use('*', errorLoggingMiddleware)
++app.use('*', timingMiddleware)
++app.use('*', apiCacheHintMiddleware)
+@@
+ // 학과정보 검색 API
+ app.get('/api/majors', async (c) => {
++  const mark = c.get('mark') as ((k: string) => void) | undefined
+   try {
+     const keyword = c.req.query('keyword') || ''
+     const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
+     const perPage = parseNumberParam(c.req.query('perPage'), 20, { min: 1, max: 50 })
+     const includeSources = parseSourcesQuery(c.req.query('sources'))
+ 
++    mark?.('search-start')
+     const result = await searchUnifiedMajors({
+       keyword,
+       page,
+       perPage,
+       includeSources
+     }, c.env)
+ 
++    mark?.('serialize')
+     return c.json({
+       success: true,
+@@
+ // 직업정보 검색 API
+ app.get('/api/jobs', async (c) => {
++  const mark = c.get('mark') as ((k: string) => void) | undefined
+   try {
+     const keyword = c.req.query('keyword') || ''
+@@
++    mark?.('search-start')
+     const result = await searchUnifiedJobs({
+       keyword,
+       category,
+       page,
+       perPage,
+       includeSources
+     }, c.env)
+ 
++    mark?.('serialize')
+     return c.json({
+@@
+ app.get('/job/:slug', async (c) => {
++  const mark = c.get('mark') as ((k: string) => void) | undefined
++  mark?.('route-start')
+@@
+       // Step 1: Fetch data
+       fetchData: async (slug, env) => {
++        mark?.('fetch-start')
+@@
+         const result = await getUnifiedJobDetailWithRawData(
+@@
+         )
++        mark?.('db-fetch')
+@@
+       // Step 2: Render HTML
+       renderHTML: (result) => {
++        mark?.('render-start')
+@@
+         const content = renderUnifiedJobDetail({
+           profile,
+           partials: result.partials,
+           sources: result.sources,
+           rawApiData: result.rawApiData,
+           existingJobSlugs: result.existingJobSlugs
+         })
++        mark?.('render-done')
+

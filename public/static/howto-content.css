@@ -1,0 +1,735 @@
+/* HowTo 사용자 콘텐츠 스타일 - 편집창과 동일 */
+.howto-user-content {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.9);
+}
+
+/* 헤더 */
+.howto-user-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem;
+  color: #fff;
+  border-bottom: 2px solid rgba(79, 143, 255, 0.3);
+  padding-bottom: 0.5rem;
+}
+.howto-user-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.875rem;
+  color: #fff;
+}
+.howto-user-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+  color: rgba(255,255,255,0.95);
+}
+
+/* 단락 - 편집창과 동일 */
+.howto-user-content p {
+  margin-bottom: 0.75rem;
+}
+
+/* 정렬 */
+.howto-user-content [style*="text-align: left"] { text-align: left; }
+.howto-user-content [style*="text-align: center"] { text-align: center; }
+.howto-user-content [style*="text-align: right"] { text-align: right; }
+
+/* 내부 링크 - 민트색 */
+.howto-user-content a {
+  color: #00d4aa;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.howto-user-content a:hover {
+  color: #00ffcc;
+}
+
+/* 외부 링크 - 주황색 */
+.howto-user-content a[href^="http"] {
+  color: #f59e0b;
+}
+.howto-user-content a[href^="http"]:hover {
+  color: #fbbf24;
+}
+
+/* 인용구 - 깔끔한 스타일 */
+.howto-user-content blockquote {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-left: 3px solid #8b5cf6;
+  border-radius: 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  box-sizing: border-box;
+}
+.howto-user-content blockquote::before {
+  content: '"';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.75rem;
+  font-size: 2.5rem;
+  color: rgba(139, 92, 246, 0.5);
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+.howto-user-content blockquote::after {
+  content: '"';
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.75rem;
+  font-size: 2.5rem;
+  color: rgba(139, 92, 246, 0.5);
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+.howto-user-content blockquote p {
+  margin: 0;
+}
+.howto-user-content blockquote > * {
+  margin: 0;
+}
+
+/* 인용구 정렬 */
+.howto-user-content blockquote.blockquote-align-center {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 85%;
+  text-align: center;
+  padding: 2.5rem 1.5rem 1.25rem 1.5rem;
+  border-left: 1px solid rgba(139, 92, 246, 0.25);
+  border-top: 3px solid #8b5cf6;
+}
+.howto-user-content blockquote.blockquote-align-center::before {
+  left: 1rem;
+  transform: none;
+  top: 0.5rem;
+}
+.howto-user-content blockquote.blockquote-align-center::after {
+  right: 1rem;
+  bottom: 0.25rem;
+}
+.howto-user-content blockquote.blockquote-align-right {
+  margin-left: auto;
+  max-width: 85%;
+  text-align: right;
+  padding: 1.25rem 3.5rem 1.25rem 1.5rem;
+  border-left: 1px solid rgba(139, 92, 246, 0.25);
+  border-right: 3px solid #8b5cf6;
+}
+.howto-user-content blockquote.blockquote-align-right::before {
+  left: 0.75rem;
+  right: auto;
+}
+.howto-user-content blockquote.blockquote-align-right::after {
+  right: 0.75rem;
+  bottom: 0.25rem;
+}
+
+/* 인용구 사이즈 */
+.howto-user-content blockquote.blockquote-size-small {
+  max-width: 70%;
+  font-size: 0.95rem;
+  padding: 1rem 1.25rem 1rem 3rem;
+}
+.howto-user-content blockquote.blockquote-size-small::before {
+  font-size: 2rem;
+  left: 0.5rem;
+  top: 0.5rem;
+}
+.howto-user-content blockquote.blockquote-size-small::after {
+  font-size: 2rem;
+  right: 0.5rem;
+  bottom: 0.25rem;
+}
+.howto-user-content blockquote.blockquote-size-large {
+  max-width: 100%;
+  font-size: 1.15rem;
+  padding: 1.5rem 1.75rem 1.5rem 4rem;
+}
+.howto-user-content blockquote.blockquote-size-large::before {
+  font-size: 3rem;
+  left: 1rem;
+  top: 0.75rem;
+}
+.howto-user-content blockquote.blockquote-size-large::after {
+  font-size: 3rem;
+  right: 1rem;
+  bottom: 0.25rem;
+}
+
+/* 리스트 */
+.howto-user-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.howto-user-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.howto-user-content li {
+  margin-bottom: 0.375rem;
+}
+.howto-user-content li::marker {
+  color: #4f8fff;
+}
+
+/* 체크리스트 - 업그레이드된 스타일 */
+.howto-user-content ul[data-type="taskList"],
+.howto-user-content .task-list {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 1rem 0 !important;
+}
+.howto-user-content ul[data-type="taskList"] li,
+.howto-user-content .task-list li,
+.howto-user-content .task-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0.875rem !important;
+  padding: 0.625rem 0.875rem !important;
+  margin: 0.375rem 0 !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 0.5rem !important;
+  min-height: 2.5rem !important;
+}
+.howto-user-content ul[data-type="taskList"] li:hover,
+.howto-user-content .task-list li:hover,
+.howto-user-content .task-item:hover {
+  background: rgba(79, 143, 255, 0.05) !important;
+  border-color: rgba(79, 143, 255, 0.15) !important;
+}
+.howto-user-content ul[data-type="taskList"] li label,
+.howto-user-content .task-list li label,
+.howto-user-content .task-item label {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+.howto-user-content ul[data-type="taskList"] li input[type="checkbox"],
+.howto-user-content .task-list li input[type="checkbox"],
+.howto-user-content .task-item input[type="checkbox"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  border: 2px solid rgba(79, 143, 255, 0.5) !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+  position: relative !important;
+  background: transparent !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+}
+.howto-user-content ul[data-type="taskList"] li input[type="checkbox"]:checked,
+.howto-user-content .task-list li input[type="checkbox"]:checked,
+.howto-user-content .task-item input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #4f8fff, #8b5cf6) !important;
+  border-color: transparent !important;
+}
+.howto-user-content ul[data-type="taskList"] li input[type="checkbox"]:checked::after,
+.howto-user-content .task-list li input[type="checkbox"]:checked::after,
+.howto-user-content .task-item input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+.howto-user-content ul[data-type="taskList"] li[data-checked="true"] div,
+.howto-user-content .task-list li[data-checked="true"] div,
+.howto-user-content .task-item[data-checked="true"] span {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+.howto-user-content ul[data-type="taskList"] li div,
+.howto-user-content .task-list li div,
+.howto-user-content .task-item div,
+.howto-user-content .task-item span {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.howto-user-content ul[data-type="taskList"] li div p,
+.howto-user-content .task-list li div p,
+.howto-user-content .task-item p {
+  margin: 0 !important;
+}
+
+/* 코드 블록 */
+.howto-user-content pre {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+.howto-user-content code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.875rem;
+  background: rgba(255,255,255,0.1);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}
+.howto-user-content pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* 취소선 hover 효과 */
+.howto-user-content s {
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease;
+}
+.howto-user-content s:hover {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 구분선 - 편집창과 동일 */
+.howto-user-content hr {
+  border: none !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, rgba(79, 143, 255, 0.5), rgba(139, 92, 246, 0.5), transparent) !important;
+  margin: 2.5rem 0 !important;
+  position: relative !important;
+}
+.howto-user-content hr::before {
+  content: '✦';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--wiki-bg, #0f1419);
+  padding: 0 1rem;
+  color: rgba(79, 143, 255, 0.6);
+  font-size: 0.75rem;
+}
+
+/* 표 - 강화된 스타일 */
+.howto-user-content table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  margin: 1.5rem 0 !important;
+  background: rgba(0,0,0,0.3) !important;
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(79, 143, 255, 0.2) !important;
+}
+.howto-user-content thead {
+  background: linear-gradient(135deg, rgba(79, 143, 255, 0.25), rgba(79, 143, 255, 0.15)) !important;
+}
+.howto-user-content th {
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 0.875rem 1rem !important;
+  border-bottom: 1px solid rgba(79, 143, 255, 0.3) !important;
+  color: #fff !important;
+  font-size: 0.875rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.025em !important;
+}
+.howto-user-content td {
+  padding: 0.875rem 1rem !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  color: rgba(255,255,255,0.85) !important;
+}
+.howto-user-content tbody tr:last-child td {
+  border-bottom: none !important;
+}
+.howto-user-content tbody tr:hover td {
+  background: rgba(79, 143, 255, 0.08) !important;
+}
+
+/* 이미지 */
+.howto-user-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+/* 이미지 래퍼 (정렬 지원) */
+.howto-user-content .image-wrapper {
+  margin: 1.5rem 0;
+}
+.howto-user-content .image-wrapper.image-align-left {
+  text-align: left;
+}
+.howto-user-content .image-wrapper.image-align-center {
+  text-align: center;
+}
+.howto-user-content .image-wrapper.image-align-right {
+  text-align: right;
+}
+.howto-user-content .image-wrapper img {
+  display: inline-block;
+  margin: 0;
+}
+
+/* 각주 링크 */
+.howto-user-content sup a {
+  color: #4f8fff;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.75rem;
+}
+.howto-user-content sup a:hover {
+  text-decoration: underline;
+}
+
+/* 체크포인트 박스 - 편집창과 동일 */
+.howto-user-content .checkpoint-box {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(34, 197, 94, 0.04));
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.25rem 1.25rem 3.5rem;
+  margin: 1.5rem 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+}
+.howto-user-content .checkpoint-box::before {
+  content: '✓';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: white;
+  font-weight: bold;
+}
+.howto-user-content .checkpoint-box > * {
+  margin: 0;
+}
+
+/* 결론 박스 - 편집창과 동일 */
+.howto-user-content .conclusion-box {
+  background: linear-gradient(135deg, rgba(79, 143, 255, 0.12), rgba(79, 143, 255, 0.04));
+  border: 1px solid rgba(79, 143, 255, 0.35);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.25rem 1.25rem 3.5rem;
+  margin: 1.5rem 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+}
+.howto-user-content .conclusion-box::before {
+  content: '💡';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.howto-user-content .conclusion-box > * {
+  margin: 0;
+}
+
+/* Q&A 블록 */
+.howto-user-content .qna-block {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+.howto-user-content .qna-question {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(251, 191, 36, 0.05));
+  padding: 1.25rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.howto-user-content .qna-question .qna-label-q {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #000;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(251, 191, 36, 0.3);
+}
+.howto-user-content .qna-question .qna-text {
+  flex: 1;
+  font-weight: 500;
+  color: rgba(255,255,255,0.95);
+}
+.howto-user-content .qna-answer {
+  padding: 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(79, 143, 255, 0.03);
+}
+.howto-user-content .qna-answer .qna-label-a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  background: linear-gradient(135deg, #4f8fff, #3b7aed);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(79, 143, 255, 0.3);
+}
+.howto-user-content .qna-answer .qna-text {
+  flex: 1;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.7;
+}
+
+/* 커리어 리스트 */
+.howto-user-content .career-list {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.howto-user-content .career-list-item {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.875rem 1rem 0.875rem 2.5rem;
+  position: relative;
+  transition: all 0.2s;
+}
+.howto-user-content .career-list-item::before {
+  content: '→';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a78bfa;
+  font-weight: 600;
+}
+.howto-user-content .career-list-item:hover {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+/* 폰트 스타일 */
+.howto-user-content [style*="font-family: serif"] { font-family: 'Noto Serif KR', Georgia, serif; }
+.howto-user-content [style*="font-family: monospace"] { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+.howto-user-content [style*="Nanum Gothic"] { font-family: 'Nanum Gothic', sans-serif; }
+.howto-user-content [style*="Nanum Myeongjo"] { font-family: 'Nanum Myeongjo', serif; }
+
+/* 각주 번호 스타일 */
+.howto-user-content .footnote-ref {
+  line-height: 1;
+}
+.howto-user-content .footnote-ref a {
+  font-size: 0.75rem;
+  color: #4f8fff !important;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0 0.1rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.howto-user-content .footnote-ref a:hover {
+  color: #00d4aa !important;
+  text-decoration: underline;
+}
+.howto-user-content .footnote-ref a::after {
+  content: none !important;
+}
+
+/* 본문 각주 하이라이트 */
+.footnote-highlight {
+  background: rgba(79, 143, 255, 0.3) !important;
+  border-radius: 0.25rem;
+  animation: footnote-pulse 0.5s ease-out;
+}
+@keyframes footnote-pulse {
+  0% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* 출처 섹션 */
+.footnotes-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(79, 143, 255, 0.2);
+}
+.footnotes-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+.footnotes-section .footnotes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.footnotes-section .footnote-item {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+  padding: 0.5rem 0;
+  scroll-margin-top: 100px;
+}
+.footnotes-section .footnote-item.highlight {
+  background: rgba(79, 143, 255, 0.15);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  margin: 0 -0.75rem;
+}
+.footnotes-section .footnote-id {
+  color: #4f8fff;
+  font-weight: 600;
+  min-width: 1.25rem;
+}
+.footnotes-section .footnote-text a {
+  color: #00d4aa;
+  text-decoration: none;
+}
+.footnotes-section .footnote-text a:hover {
+  text-decoration: underline;
+}
+
+/* =====================================================
+   모바일 최적화
+   ===================================================== */
+@media (max-width: 640px) {
+  body {
+    overflow-x: hidden !important;
+    max-width: 100vw;
+  }
+  
+  [data-howto-layout],
+  [data-howto-hero],
+  [data-howto-sidebar],
+  [data-howto-sources],
+  [data-howto-community] {
+    overflow-x: hidden !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  
+  .howto-user-content {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+  }
+  
+  .howto-user-content h1 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 0.75rem;
+  }
+  
+  .howto-user-content h2 {
+    font-size: 1.25rem;
+    margin: 1.25rem 0 0.625rem;
+  }
+  
+  .howto-user-content h3 {
+    font-size: 1.125rem;
+    margin: 1rem 0 0.5rem;
+  }
+  
+  .howto-user-content blockquote {
+    padding: 1rem 1.25rem 1rem 2.5rem;
+    margin: 1rem 0;
+  }
+  
+  .howto-user-content blockquote::before {
+    font-size: 2rem;
+    left: 0.5rem;
+    top: 0.5rem;
+  }
+  
+  .howto-user-content blockquote::after {
+    font-size: 2rem;
+    right: 0.5rem;
+    bottom: 0.25rem;
+  }
+  
+  .howto-user-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+  
+  .howto-user-content img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .howto-user-content pre {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+  
+  .howto-user-content code {
+    font-size: 0.8125rem;
+    word-break: break-word;
+  }
+  
+  .howto-user-content .image-wrapper {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .howto-user-content .image-wrapper img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
