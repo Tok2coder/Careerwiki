@@ -13,18 +13,26 @@
 
 ## 🚀 개발 시작하기
 
-### 1. 동기화 (처음 또는 주기적)
-```powershell
-$env:CLOUDFLARE_API_TOKEN="your-token"
-npm run sync:prod-to-local
-```
-
-### 2. 개발 서버 실행
+### 개발 서버 실행 (자동 동기화)
 ```bash
 npm run dev
 ```
 
-이제 **실제 Production 데이터**로 로컬에서 개발할 수 있습니다!
+**자동으로 Production 데이터를 동기화한 후 개발 서버를 시작합니다!**
+
+- 이미 동기화되어 있으면 빠르게 스킵
+- 동기화가 필요하면 자동으로 실행
+- API 토큰이 없어도 경고 후 개발 서버 실행
+
+### 수동 동기화 (필요시)
+```bash
+npm run sync:prod-to-local
+```
+
+### 동기화 없이 개발 (빠른 반복)
+```bash
+npm run dev:no-sync
+```
 
 ---
 

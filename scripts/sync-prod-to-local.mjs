@@ -115,23 +115,35 @@ async function syncTable(table) {
 }
 
 async function main() {
-  console.log('='.repeat(50));
-  console.log('Production → 로컬 D1 동기화');
-  console.log('='.repeat(50));
-  console.log('');
-
+  // API 토큰 없으면 경고만 하고 스킵
   if (!API_TOKEN) {
-    console.error('❌ CLOUDFLARE_API_TOKEN 환경변수가 필요합니다.');
-    console.error('   PowerShell: $env:CLOUDFLARE_API_TOKEN="your-token"');
-    process.exit(1);
+    console.log('⚠️  CLOUDFLARE_API_TOKEN이 없어 동기화를 스킵합니다.');
+    console.log('   동기화 없이 개발 서버를 시작합니다...\n');
+    process.exit(0);
   }
 
-  log('동기화 시작...');
-  console.log('');
+  console.log('🔄 Production → 로컬 D1 동기화 중...\n');
 
   let success = 0;
   let failed = 0;
+  let needsSync = false;
 
+  // 빠른 체크: 동기화 필요한지 확인
+  for (const table of SYNC_TABLES) {
+    const remoteCount = getRemoteCount(table);
+    const localCount = getLocalCount(table);
+    if (remoteCount !== localCount) {
+      needsSync = true;
+      break;
+    }
+  }
+
+  if (!needsSync) {
+    console.log('✅ 모든 데이터가 이미 동기화되어 있습니다.\n');
+    process.exit(0);
+  }
+
+  // 동기화 실행
   for (const table of SYNC_TABLES) {
     if (await syncTable(table)) {
       success++;
@@ -141,9 +153,11 @@ async function main() {
   }
 
   console.log('');
-  console.log('='.repeat(50));
-  console.log(`완료: 성공 ${success}, 실패 ${failed}`);
-  console.log('='.repeat(50));
+  if (failed === 0) {
+    console.log('✅ 동기화 완료!\n');
+  } else {
+    console.log(`⚠️  동기화 완료 (일부 실패: ${failed})\n`);
+  }
 
   // 정리
   if (existsSync('sync_temp')) {
@@ -151,5 +165,9 @@ async function main() {
   }
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  console.error('동기화 중 오류:', err.message);
+  // 실패해도 개발 서버는 실행되도록
+  process.exit(0);
+});
 
