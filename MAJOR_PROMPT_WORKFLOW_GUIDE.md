@@ -149,7 +149,7 @@ async function insertPrompts() {
   fs.writeFileSync(sqlFileName, sqlContent);
 
   try {
-    execSync(`npx wrangler d1 execute careerwiki-db --local --file ${sqlFileName}`, { 
+    execSync(`npx wrangler d1 execute careerwiki --local --file ${sqlFileName}`, { 
       stdio: 'inherit',
       cwd: process.cwd()
     });
@@ -171,12 +171,12 @@ insertPrompts();
 ### 프롬프트 삽입 후 확인
 ```bash
 # 새 프롬프트가 있고 이미지가 없는 전공 수 확인
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) as count FROM majors WHERE image_prompt IS NOT NULL AND image_prompt != '' AND (image_url IS NULL OR image_url = '')"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) as count FROM majors WHERE image_prompt IS NOT NULL AND image_prompt != '' AND (image_url IS NULL OR image_url = '')"
 ```
 
 ### 특정 전공 프롬프트 확인
 ```bash
-npx wrangler d1 execute careerwiki-db --local --command "SELECT name, SUBSTR(image_prompt, 1, 200) FROM majors WHERE name LIKE '%컴퓨터%'"
+npx wrangler d1 execute careerwiki --local --command "SELECT name, SUBSTR(image_prompt, 1, 200) FROM majors WHERE name LIKE '%컴퓨터%'"
 ```
 
 ---
@@ -228,7 +228,7 @@ cat scripts/major_batch_1_majors.json
 node scripts/insert_major_prompts_batch1.cjs
 
 # 4. 검증
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM majors WHERE image_prompt IS NOT NULL AND (image_url IS NULL OR image_url = '')"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM majors WHERE image_prompt IS NOT NULL AND (image_url IS NULL OR image_url = '')"
 
 # 5. 이 문서의 진행 상황 테이블 업데이트
 ```

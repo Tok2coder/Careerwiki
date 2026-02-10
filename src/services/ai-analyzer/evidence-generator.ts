@@ -197,6 +197,59 @@ export const EVIDENCE_MAPPING_RULES: EvidenceMappingRule[] = [
     userLabelTemplate: '분석적 업무 관심',
     jobLabelTemplate: '분석 업무: {jobValue}/100',
   },
+
+  // ============================================
+  // P0: Can 검증 강점 → 직업 속성 매칭 (6개)
+  // 유저가 경험으로 검증한 강점과 직업 요구 역량 연결
+  // ============================================
+  {
+    userFactPattern: 'can_verified_analytical',
+    jobAttributes: ['analytical'],
+    matchLogic: { type: 'threshold', positive: 60, negative: 30 },
+    explanationTemplate: '분석력이 검증된 강점이시네요! 이 직업은 분석 역량을 {jobValue}점 수준으로 활용합니다',
+    userLabelTemplate: '검증된 분석력 강점',
+    jobLabelTemplate: '분석 요구: {jobValue}/100',
+  },
+  {
+    userFactPattern: 'can_verified_creative',
+    jobAttributes: ['creative'],
+    matchLogic: { type: 'threshold', positive: 60, negative: 30 },
+    explanationTemplate: '창의력이 검증된 강점이시네요! 이 직업은 창의성을 {jobValue}점 수준으로 요구합니다',
+    userLabelTemplate: '검증된 창의력 강점',
+    jobLabelTemplate: '창의성 요구: {jobValue}/100',
+  },
+  {
+    userFactPattern: 'can_verified_communication',
+    jobAttributes: ['people_facing', 'teamwork'],
+    matchLogic: { type: 'threshold', positive: 60, negative: 30 },
+    explanationTemplate: '소통력이 검증된 강점이시네요! 이 직업은 대인/협업 역량을 {jobValue}점 수준으로 요구합니다',
+    userLabelTemplate: '검증된 소통력 강점',
+    jobLabelTemplate: '대인/협업: {jobValue}/100',
+  },
+  {
+    userFactPattern: 'can_verified_structured_execution',
+    jobAttributes: ['execution'],
+    matchLogic: { type: 'threshold', positive: 60, negative: 30 },
+    explanationTemplate: '체계적 실행력이 검증된 강점이시네요! 이 직업은 실행 역량을 {jobValue}점 수준으로 요구합니다',
+    userLabelTemplate: '검증된 실행력 강점',
+    jobLabelTemplate: '실행력 요구: {jobValue}/100',
+  },
+  {
+    userFactPattern: 'can_verified_persistence',
+    jobAttributes: ['execution', 'growth'],
+    matchLogic: { type: 'threshold', positive: 50, negative: 30 },
+    explanationTemplate: '끈기가 검증된 강점이시네요! 이 직업은 꾸준함과 성장을 {jobValue}점 수준으로 요구합니다',
+    userLabelTemplate: '검증된 끈기 강점',
+    jobLabelTemplate: '성장/지속성: {jobValue}/100',
+  },
+  {
+    userFactPattern: 'can_verified_fast_learning',
+    jobAttributes: ['growth', 'analytical'],
+    matchLogic: { type: 'threshold', positive: 60, negative: 30 },
+    explanationTemplate: '빠른 학습력이 검증된 강점이시네요! 이 직업은 학습 성장을 {jobValue}점 수준으로 기대합니다',
+    userLabelTemplate: '검증된 학습력 강점',
+    jobLabelTemplate: '성장 기회: {jobValue}/100',
+  },
 ]
 
 // ============================================
@@ -455,6 +508,7 @@ export function generateDefaultEvidence(
   
   return defaultLinks
 }
+
 
 
 

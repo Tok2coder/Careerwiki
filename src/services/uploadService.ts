@@ -5,7 +5,7 @@
  * - 이미지 서빙
  */
 
-import type { R2Bucket } from '@cloudflare/workers-types'
+import type { R2Bucket, R2ObjectBody } from '@cloudflare/workers-types'
 
 // 허용된 MIME 타입과 매직 넘버
 const ALLOWED_TYPES: Record<string, { mime: string; magic: number[]; ext: string }> = {
@@ -54,14 +54,21 @@ function generateUUID(): string {
 }
 
 /**
- * 파일 키 생성 (경로: howto/YYYY/MM/DD/uuid.ext)
+ * 파일 키 생성 (경로: howto/YYYY/MM/DD/{originalFilename}-{shortId}.ext 또는 howto/YYYY/MM/DD/uuid.ext)
  */
-function generateFileKey(ext: string): string {
+export function generateFileKey(ext: string, originalFilename?: string): string {
   const now = new Date()
   const year = now.getFullYear()
   const month = String(now.getMonth() + 1).padStart(2, '0')
   const day = String(now.getDate()).padStart(2, '0')
   const uuid = generateUUID()
+  const shortId = uuid.split('-')[0]
+  
+  if (originalFilename) {
+    // 원본 파일명에서 확장자 제거하고 안전한 문자만 유지
+    const baseName = originalFilename.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9가-힣_-]/g, '_').slice(0, 50)
+    return `howto/${year}/${month}/${day}/${baseName}-${shortId}.${ext}`
+  }
   
   return `howto/${year}/${month}/${day}/${uuid}.${ext}`
 }

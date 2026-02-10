@@ -11,7 +11,7 @@ function runQuery(isRemote, sql) {
   const flag = isRemote ? '--remote' : '--local';
   try {
     const result = execSync(
-      `npx wrangler d1 execute careerwiki-db ${flag} --command "${sql}" --json`,
+      `npx wrangler d1 execute careerwiki ${flag} --command "${sql}" --json`,
       {
         encoding: 'utf-8',
         env: { ...process.env, CLOUDFLARE_API_TOKEN: API_TOKEN },

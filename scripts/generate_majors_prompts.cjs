@@ -66,7 +66,7 @@ function processMajorBatch(batchNum) {
 
   try {
     console.log(`📊 전공 배치 ${batchNum}: 데이터 추출 중...`);
-    const result = execSync(`npx wrangler d1 execute careerwiki-db --local --command "SELECT id, name, name_en FROM majors WHERE name_en IS NOT NULL AND name_en != '' AND (image_prompt IS NULL OR image_prompt = '') ORDER BY id LIMIT 100;"`, {
+    const result = execSync(`npx wrangler d1 execute careerwiki --local --command "SELECT id, name, name_en FROM majors WHERE name_en IS NOT NULL AND name_en != '' AND (image_prompt IS NULL OR image_prompt = '') ORDER BY id LIMIT 100;"`, {
       encoding: 'utf8',
       cwd: process.cwd()
     });
@@ -128,14 +128,14 @@ function processMajorBatch(batchNum) {
     fs.writeFileSync(sqlFile, sqlContent);
 
     console.log(`🔄 전공 배치 ${batchNum}: 데이터베이스 업데이트 중...`);
-    execSync(`npx wrangler d1 execute careerwiki-db --local --file ${sqlFile}`, {
+    execSync(`npx wrangler d1 execute careerwiki --local --file ${sqlFile}`, {
       stdio: 'inherit',
       cwd: process.cwd()
     });
 
     if (fs.existsSync(sqlFile)) fs.unlinkSync(sqlFile);
 
-    const progressResult = execSync(`npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) as count FROM majors WHERE image_prompt IS NOT NULL AND image_prompt != '';"`, {
+    const progressResult = execSync(`npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) as count FROM majors WHERE image_prompt IS NOT NULL AND image_prompt != '';"`, {
       encoding: 'utf8'
     });
     const countMatch = progressResult.match(/"count":\s*(\d+)/);

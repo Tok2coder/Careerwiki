@@ -3,7 +3,7 @@
  * 
  * Usage:
  * - Local: npm run migrate:run
- * - Production: wrangler d1 migrations apply careerwiki-db --remote
+ * - Production: wrangler d1 migrations apply careerwiki --remote
  */
 
 import type { D1Database } from '@cloudflare/workers-types'
@@ -19,8 +19,8 @@ async function executeMigrationFiles(db: D1Database): Promise<void> {
   // This script is for programmatic execution if needed
   
   console.log('✅ Migration files should be executed via wrangler d1 migrations apply')
-  console.log('   Local: wrangler d1 migrations apply careerwiki-db --local')
-  console.log('   Remote: wrangler d1 migrations apply careerwiki-db --remote')
+  console.log('   Local: wrangler d1 migrations apply careerwiki --local')
+  console.log('   Remote: wrangler d1 migrations apply careerwiki --remote')
 }
 
 /**

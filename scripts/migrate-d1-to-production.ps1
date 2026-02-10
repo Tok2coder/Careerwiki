@@ -9,7 +9,7 @@ Write-Host "============================================" -ForegroundColor Cyan
 
 # 1. 스키마 적용
 Write-Host "`n[1/3] Production에 스키마 적용 중..." -ForegroundColor Yellow
-npx wrangler d1 execute careerwiki-db --remote --file=migration_schema.sql
+npx wrangler d1 execute careerwiki --remote --file=migration_schema.sql
 if ($LASTEXITCODE -ne 0) {
     Write-Host "스키마 적용 실패!" -ForegroundColor Red
     exit 1
@@ -103,7 +103,7 @@ foreach ($table in $tables) {
     Write-Host "  - $table 처리 중..." -NoNewline
     
     # 데이터 개수 확인
-    $countResult = npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) as count FROM $table;" --json 2>$null | ConvertFrom-Json
+    $countResult = npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) as count FROM $table;" --json 2>$null | ConvertFrom-Json
     $rowCount = $countResult[0].results[0].count
     
     if ($rowCount -eq 0) {
@@ -113,7 +113,7 @@ foreach ($table in $tables) {
     }
     
     # Export (데이터만)
-    npx wrangler d1 export careerwiki-db --local --output=$outputFile --table=$table 2>$null
+    npx wrangler d1 export careerwiki --local --output=$outputFile --table=$table 2>$null
     
     if ($LASTEXITCODE -ne 0 -or !(Test-Path $outputFile)) {
         Write-Host " Export 실패!" -ForegroundColor Red
@@ -122,7 +122,7 @@ foreach ($table in $tables) {
     }
     
     # Production에 적용
-    npx wrangler d1 execute careerwiki-db --remote --file=$outputFile 2>$null
+    npx wrangler d1 execute careerwiki --remote --file=$outputFile 2>$null
     
     if ($LASTEXITCODE -eq 0) {
         Write-Host " 완료 ($rowCount rows)" -ForegroundColor Green
@@ -143,6 +143,6 @@ Write-Host "============================================" -ForegroundColor Cyan
 
 # 5. Production 데이터 확인
 Write-Host "`nProduction 데이터 확인 중..." -ForegroundColor Yellow
-npx wrangler d1 execute careerwiki-db --remote --command "SELECT COUNT(*) as job_count FROM jobs;"
-npx wrangler d1 execute careerwiki-db --remote --command "SELECT COUNT(*) as table_count FROM sqlite_master WHERE type='table';"
+npx wrangler d1 execute careerwiki --remote --command "SELECT COUNT(*) as job_count FROM jobs;"
+npx wrangler d1 execute careerwiki --remote --command "SELECT COUNT(*) as table_count FROM sqlite_master WHERE type='table';"
 

@@ -102,7 +102,7 @@ export function renderNav(userMenuHtml: string): string {
         <div class="flex-grow"></div>
         <div class="flex items-center gap-1">
           <a href="/analyzer" class="nav-link">
-            <i class="fas fa-brain nav-icon"></i><span>AI 분석</span>
+            <i class="fas fa-brain nav-icon"></i><span>AI 추천</span>
           </a>
           <a href="/howto" class="nav-link">
             <i class="fas fa-route nav-icon"></i><span>HowTo</span>
@@ -123,17 +123,22 @@ export function renderNav(userMenuHtml: string): string {
       
       <!-- 1) 사용자 정보 (IP 또는 사용자 ID) -->
       <div class="mb-4 px-4 py-3 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(100, 181, 246, 0.1);">
-        <div class="flex items-center justify-between">
-          <span class="text-xs text-wiki-muted" id="mobile-user-role-label">아이피</span>
-          <span class="text-sm font-mono text-white font-medium" id="mobile-user-id-display">로딩 중...</span>
+        <div class="flex items-center gap-3">
+          <div id="mobile-user-avatar" class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <span class="text-sm font-medium text-white block truncate" id="mobile-user-id-display">로딩 중...</span>
+            <span class="text-xs text-wiki-muted" id="mobile-user-role-label">아이피</span>
+          </div>
         </div>
       </div>
       
-      <!-- 2) 메인 메뉴: AI 분석, HowTo -->
+      <!-- 2) 메인 메뉴: AI 추천, HowTo -->
       <div class="flex gap-2 mb-4">
         <a href="/analyzer" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-white font-medium transition-all" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(100, 181, 246, 0.15);">
           <i class="fas fa-brain text-emerald-400"></i>
-          <span>AI 분석</span>
+          <span>AI 추천</span>
         </a>
         <a href="/howto" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-white font-medium transition-all" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(100, 181, 246, 0.15);">
           <i class="fas fa-route text-amber-400"></i>
@@ -294,13 +299,18 @@ export function renderNavScripts(): string {
 
       // Mobile menu content rendering
       function renderMobileMenuLoggedIn(user) {
-        const roleText = user.role === 'admin' || user.role === 'super-admin' || user.role === 'operator' ? '관리자' : user.role === 'expert' ? '전문가' : '사용자';
+        const roleText = user.role === 'admin' || user.role === 'super-admin' || user.role === 'operator' ? '관리자' : user.role === 'expert' ? '전문가' : '일반 회원';
         
         // Update user info display
         const roleLabel = document.getElementById('mobile-user-role-label');
         const idDisplay = document.getElementById('mobile-user-id-display');
+        const avatar = document.getElementById('mobile-user-avatar');
         if (roleLabel) roleLabel.textContent = roleText;
         if (idDisplay) idDisplay.textContent = user.username || 'user_' + user.id;
+        if (avatar) {
+          const initial = (user.username || user.email || 'U').charAt(0).toUpperCase();
+          avatar.innerHTML = initial;
+        }
         
         // User menu section (작성 가이드, 작성 댓글, 저장함)
         const userMenuSection = document.getElementById('mobile-user-menu-section');
@@ -310,7 +320,8 @@ export function renderNavScripts(): string {
             adminLink = '<a href="/admin" class="mobile-menu-link"><i class="fas fa-shield-alt text-amber-400"></i><span>관리자</span></a>';
           }
           userMenuSection.innerHTML = adminLink +
-            '<a href="/howto/my-drafts" class="mobile-menu-link"><i class="fas fa-file-alt text-wiki-primary"></i><span>작성 가이드</span></a>' +
+            '<a href="/user/ai-results" class="mobile-menu-link"><i class="fas fa-robot text-emerald-400"></i><span>AI 추천</span></a>' +
+            '<a href="/user/drafts" class="mobile-menu-link"><i class="fas fa-file-alt text-wiki-primary"></i><span>작성 가이드</span></a>' +
             '<a href="/user/comments" class="mobile-menu-link"><i class="fas fa-comments text-wiki-secondary"></i><span>작성 댓글</span></a>' +
             '<a href="/user/bookmarks" class="mobile-menu-link"><i class="fas fa-bookmark text-amber-400"></i><span>저장함</span></a>';
         }
@@ -363,18 +374,27 @@ export function renderNavScripts(): string {
       }
 
       function renderLoggedInMenu(user) {
-        const roleText = user.role === 'admin' || user.role === 'super-admin' || user.role === 'operator' ? '관리자' : user.role === 'expert' ? '전문가' : '사용자';
+        const roleText = user.role === 'admin' || user.role === 'super-admin' || user.role === 'operator' ? '관리자' : user.role === 'expert' ? '전문가' : '일반 회원';
+        const initial = (user.username || user.email || 'U').charAt(0).toUpperCase();
+        const profileImg = user.pictureUrl || user.custom_picture_url || user.picture_url;
+        const avatarHtml = profileImg 
+          ? '<img src="' + profileImg + '" alt="' + (user.username || 'User') + '" class="w-10 h-10 rounded-full object-cover border border-wiki-border/50" style="width:2.5rem;height:2.5rem;flex-shrink:0;" onerror="this.style.display=\\'none\\';this.nextElementSibling.style.display=\\'flex\\';"/><div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold" style="width:2.5rem;height:2.5rem;flex-shrink:0;display:none;">' + initial + '</div>'
+          : '<div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold" style="width:2.5rem;height:2.5rem;flex-shrink:0;">' + initial + '</div>';
         const adminMenu = (user.role === 'admin' || user.role === 'super-admin' || user.role === 'operator') ?
           '<a href="/admin" class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem"><div class="flex items-center gap-3"><i class="fas fa-shield-alt text-xs w-4 text-center text-amber-400"></i><span>관리자</span></div></a>' : '';
         return (
-          '<div class="px-4 py-2.5 border-b border-wiki-border/30">' +
-            '<div class="flex items-center justify-between">' +
-              '<span class="text-xs text-wiki-muted">' + roleText + '</span>' +
-              '<span class="text-xs font-mono text-wiki-text font-medium">' + (user.username || 'user_' + user.id) + '</span>' +
+          '<div class="px-4 py-3 border-b border-wiki-border/30">' +
+            '<div class="flex items-center gap-3">' +
+              avatarHtml +
+              '<div class="flex-1 min-w-0">' +
+                '<span class="text-sm font-medium text-white block truncate">' + (user.username || 'user_' + user.id) + '</span>' +
+                '<span class="text-xs text-wiki-muted">' + roleText + '</span>' +
+              '</div>' +
             '</div>' +
           '</div>' +
           adminMenu +
-          '<a href="/howto/my-drafts" class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem"><div class="flex items-center gap-3"><i class="fas fa-file-alt text-xs w-4 text-center text-wiki-primary"></i><span>작성 가이드</span></div></a>' +
+          '<a href="/user/ai-results" class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem"><div class="flex items-center gap-3"><i class="fas fa-robot text-xs w-4 text-center text-emerald-400"></i><span>AI 추천</span></div></a>' +
+          '<a href="/user/drafts" class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem"><div class="flex items-center gap-3"><i class="fas fa-file-alt text-xs w-4 text-center text-wiki-primary"></i><span>작성 가이드</span></div></a>' +
           '<a href="/user/comments" class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem"><div class="flex items-center gap-3"><i class="fas fa-comments text-xs w-4 text-center text-wiki-secondary"></i><span>작성 댓글</span></div></a>' +
           '<a href="/user/bookmarks" class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem"><div class="flex items-center gap-3"><i class="fas fa-bookmark text-xs w-4 text-center text-amber-400"></i><span>저장함</span></div></a>' +
           '<div class="border-t border-wiki-border/30 my-1"></div>' +

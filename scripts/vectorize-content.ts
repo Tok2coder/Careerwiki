@@ -2,49 +2,70 @@
 /**
  * vectorize-content.ts
  * 
- * Part 2.3: 직업/전공/HowTo 콘텐츠 임베딩 생성 및 Vectorize 업로드
+ * 직업 콘텐츠 임베딩 생성 및 Vectorize 업로드
  * 
  * Usage:
  *   npx tsx scripts/vectorize-content.ts --type job --limit 100
- *   npx tsx scripts/vectorize-content.ts --type major --limit 50
- *   npx tsx scripts/vectorize-content.ts --type howto --limit 50
- *   npx tsx scripts/vectorize-content.ts --reindex  # 전체 재색인
+ *   npx tsx scripts/vectorize-content.ts --type job --dry-run
+ *   npx tsx scripts/vectorize-content.ts --type job  # 전체 실행
+ * 
+ * Prerequisites:
+ *   1. CLOUDFLARE_ACCOUNT_ID 환경변수 설정
+ *   2. CLOUDFLARE_API_TOKEN 환경변수 설정 (Workers AI 권한 필요)
+ *   3. Vectorize 인덱스 생성: wrangler vectorize create careerwiki-embeddings --dimensions=768 --metric=cosine
  */
 
 import { execSync } from 'child_process'
 import * as fs from 'fs'
 import * as crypto from 'crypto'
 
+// ============================================
+// 설정
+// ============================================
+const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5'
+const VECTOR_DIMENSIONS = 768
+const VECTORIZE_INDEX = 'careerwiki-embeddings'
+const BATCH_SIZE = 20 // Workers AI 배치 크기 제한
+const D1_DATABASE = 'careerwiki-kr'
+const ACCOUNT_ID = '3587865378649966bfb0a814fce73c77'
+// Workers AI 전용 토큰 (D1/Vectorize 권한 불필요, AI 권한만 필요)
+const AI_API_TOKEN = 'koXCD2lF5brPHwZZO-oxLQW3PLuK9_-vQA7zr1AJ'
+
 interface CLIArgs {
   type: 'job' | 'major' | 'howto' | 'all'
   limit: number
   offset: number
-  reindex: boolean
   dryRun: boolean
 }
 
 interface ContentChunk {
-  id: string  // namespace:entity_id:chunk_index
+  id: string
   namespace: string
   entity_id: string
   text: string
-  text_hash: string
   metadata: {
     type: 'job' | 'major' | 'howto'
     entity_id: string
-    slug: string
-    title: string
+    job_name: string
     section: string
-    chunk_index: number
   }
 }
 
+interface VectorData {
+  id: string
+  values: number[]
+  namespace?: string
+  metadata: Record<string, string | number>
+}
+
+// ============================================
+// CLI 인자 파싱
+// ============================================
 function parseArgs(): CLIArgs {
   const args: CLIArgs = {
     type: 'job',
-    limit: 100,
+    limit: 1000, // 기본값: 전체
     offset: 0,
-    reindex: false,
     dryRun: false,
   }
   
@@ -56,8 +77,6 @@ function parseArgs(): CLIArgs {
       args.limit = parseInt(process.argv[++i], 10)
     } else if (arg === '--offset' && process.argv[i + 1]) {
       args.offset = parseInt(process.argv[++i], 10)
-    } else if (arg === '--reindex') {
-      args.reindex = true
     } else if (arg === '--dry-run') {
       args.dryRun = true
     } else if (arg === '--help' || arg === '-h') {
@@ -66,17 +85,18 @@ Usage: npx tsx scripts/vectorize-content.ts [options]
 
 Options:
   --type, -t <type>  Content type: job, major, howto, all (default: job)
-  --limit <n>        Number of items to process (default: 100)
+  --limit <n>        Number of items to process (default: 1000)
   --offset <n>       Skip first n items (default: 0)
-  --reindex          Force reindex all items
   --dry-run          Preview without uploading
   --help, -h         Show this help
 
-Prerequisites:
-  1. Create Vectorize index:
-     wrangler vectorize create careerwiki-embeddings --dimensions=768 --metric=cosine
-  
-  2. Ensure wrangler is configured with your account
+Environment Variables:
+  CLOUDFLARE_ACCOUNT_ID  Your Cloudflare account ID
+  CLOUDFLARE_API_TOKEN   API token with Workers AI permission
+
+Example:
+  npx tsx scripts/vectorize-content.ts --type job --limit 100 --dry-run
+  npx tsx scripts/vectorize-content.ts --type job
       `)
       process.exit(0)
     }
@@ -85,10 +105,17 @@ Prerequisites:
   return args
 }
 
-function executeD1Query(query: string): string {
+// ============================================
+// D1 쿼리 실행 (로컬 또는 리모트)
+// ============================================
+function executeD1Query(query: string, remote: boolean = true): string {
   try {
+    const remoteFlag = remote ? '--remote' : '--local'
+    // 쿼리를 한 줄로 정리 (줄바꿈 제거)
+    const singleLineQuery = query.replace(/\s+/g, ' ').trim()
+    const escapedQuery = singleLineQuery.replace(/"/g, '\\"')
     const result = execSync(
-      `npx wrangler d1 execute careerwiki-db --local --json --command="${query.replace(/"/g, '\\"')}"`,
+      `npx wrangler d1 execute ${D1_DATABASE} ${remoteFlag} --json --command="${escapedQuery}"`,
       { encoding: 'utf-8', maxBuffer: 100 * 1024 * 1024 }
     )
     return result
@@ -98,84 +125,14 @@ function executeD1Query(query: string): string {
   }
 }
 
-function generateTextHash(text: string): string {
-  return crypto.createHash('md5').update(text).digest('hex').slice(0, 16)
-}
-
-function extractJobChunks(jobId: string, jobName: string, payload: any): ContentChunk[] {
-  const chunks: ContentChunk[] = []
-  const slug = jobId
-  
-  // Key sections to embed
-  const sections: Array<{ key: string; name: string }> = [
-    { key: 'duties', name: '하는 일' },
-    { key: 'environment', name: '근무 환경' },
-    { key: 'qualifications', name: '필요 역량' },
-    { key: 'outlook', name: '전망' },
-  ]
-  
-  let chunkIndex = 0
-  for (const section of sections) {
-    const text = payload[section.key]
-    if (!text || text.trim().length < 20) continue
-    
-    // Clean and normalize text
-    const cleanText = text.trim().slice(0, 1000)  // Limit chunk size
-    
-    chunks.push({
-      id: `job:${jobId}:${chunkIndex}`,
-      namespace: 'job-content',
-      entity_id: jobId,
-      text: `${jobName} - ${section.name}: ${cleanText}`,
-      text_hash: generateTextHash(cleanText),
-      metadata: {
-        type: 'job',
-        entity_id: jobId,
-        slug,
-        title: jobName,
-        section: section.name,
-        chunk_index: chunkIndex,
-      }
-    })
-    chunkIndex++
-  }
-  
-  // Add combined summary chunk
-  const summary = [
-    payload.duties?.slice(0, 200),
-    payload.qualifications?.slice(0, 100),
-  ].filter(Boolean).join(' ')
-  
-  if (summary.length > 50) {
-    chunks.push({
-      id: `job:${jobId}:summary`,
-      namespace: 'job-content',
-      entity_id: jobId,
-      text: `${jobName} 요약: ${summary}`,
-      text_hash: generateTextHash(summary),
-      metadata: {
-        type: 'job',
-        entity_id: jobId,
-        slug,
-        title: jobName,
-        section: '요약',
-        chunk_index: chunkIndex,
-      }
-    })
-  }
-  
-  return chunks
-}
-
+// ============================================
+// 직업 데이터 조회 (jobs 테이블 - merged_profile_json)
+// ============================================
 async function fetchJobs(limit: number, offset: number): Promise<ContentChunk[]> {
   console.log(`📊 Fetching jobs (limit: ${limit}, offset: ${offset})...`)
   
-  const query = `
-    SELECT job_id, json_extract(normalized_payload, '$.name') as job_name, normalized_payload
-    FROM job_sources
-    ORDER BY job_id
-    LIMIT ${limit} OFFSET ${offset}
-  `
+  // jobs 테이블에서 merged_profile_json 조회
+  const query = `SELECT id, name, merged_profile_json FROM jobs WHERE merged_profile_json IS NOT NULL AND is_active = 1 ORDER BY id LIMIT ${limit} OFFSET ${offset}`
   
   const rawResult = executeD1Query(query)
   let parsed: any
@@ -195,110 +152,152 @@ async function fetchJobs(limit: number, offset: number): Promise<ContentChunk[]>
   
   const allChunks: ContentChunk[] = []
   for (const row of rows) {
-    let payload: any = {}
+    let profile: any = {}
     try {
-      payload = typeof row.normalized_payload === 'string' 
-        ? JSON.parse(row.normalized_payload) 
-        : row.normalized_payload || {}
+      profile = typeof row.merged_profile_json === 'string' 
+        ? JSON.parse(row.merged_profile_json) 
+        : row.merged_profile_json || {}
     } catch { /* ignore */ }
     
-    const chunks = extractJobChunks(row.job_id, row.job_name || payload.name || 'Unknown', payload)
-    allChunks.push(...chunks)
+    const jobName = row.name || profile.name || 'Unknown'
+    const jobId = row.id
+    
+    // 직업 설명 텍스트 생성 (heroIntro + overviewWork.main)
+    const textParts: string[] = [jobName]
+    
+    // heroIntro 추가
+    if (profile.heroIntro) {
+      textParts.push(profile.heroIntro.slice(0, 200))
+    }
+    
+    // overviewWork.main 추가
+    if (profile.overviewWork?.main) {
+      textParts.push(`하는 일: ${profile.overviewWork.main.slice(0, 400)}`)
+    }
+    
+    // heroTags 추가
+    if (profile.heroTags && Array.isArray(profile.heroTags)) {
+      textParts.push(`키워드: ${profile.heroTags.slice(0, 10).join(', ')}`)
+    }
+    
+    const text = textParts.join(' ').slice(0, 800) // 최대 800자
+    
+    if (text.length < 30) continue // 너무 짧은 텍스트 제외
+    
+    allChunks.push({
+      id: `job:${jobId}`,
+      namespace: 'job-content',
+      entity_id: jobId,
+      text,
+      metadata: {
+        type: 'job',
+        entity_id: jobId,
+        job_name: jobName,
+        section: 'summary',
+      }
+    })
   }
   
   return allChunks
 }
 
-async function generateEmbeddings(chunks: ContentChunk[]): Promise<Array<{ chunk: ContentChunk; vector: number[] }>> {
-  console.log(`\n🧠 Generating embeddings for ${chunks.length} chunks...`)
-  console.log('   Note: This requires Workers AI access. Using placeholder vectors for now.')
+// ============================================
+// Cloudflare Workers AI로 임베딩 생성
+// ============================================
+async function generateEmbeddingsViaAPI(
+  texts: string[],
+  accountId: string,
+  apiToken: string
+): Promise<number[][]> {
+  const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${EMBEDDING_MODEL}`
   
-  // In a real implementation, you would call the AI API here:
-  // const response = await AI.run('@cf/baai/bge-m3', { text: chunks.map(c => c.text) })
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ text: texts }),
+  })
   
-  // For now, generate placeholder vectors (768 dimensions)
-  // In production, replace with actual AI embeddings
-  const results: Array<{ chunk: ContentChunk; vector: number[] }> = []
-  
-  for (const chunk of chunks) {
-    // Placeholder: generate deterministic vector from text hash
-    const hashBytes = Buffer.from(chunk.text_hash, 'hex')
-    const vector: number[] = new Array(768).fill(0).map((_, i) => {
-      // Generate pseudo-random float from hash
-      return (hashBytes[i % hashBytes.length] / 255) * 2 - 1
-    })
-    
-    // Normalize vector
-    const norm = Math.sqrt(vector.reduce((sum, v) => sum + v * v, 0))
-    const normalizedVector = vector.map(v => v / norm)
-    
-    results.push({ chunk, vector: normalizedVector })
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Workers AI API failed: ${response.status} - ${errorText}`)
   }
   
-  return results
+  const result = await response.json() as { success: boolean; result: { data: number[][] }; errors?: any[] }
+  
+  if (!result.success) {
+    throw new Error(`Workers AI failed: ${JSON.stringify(result.errors)}`)
+  }
+  
+  return result.result.data
 }
 
-async function uploadToVectorize(embeddings: Array<{ chunk: ContentChunk; vector: number[] }>, dryRun: boolean): Promise<void> {
-  console.log(`\n☁️ Uploading ${embeddings.length} vectors to Vectorize...`)
-  
-  if (dryRun) {
-    console.log('   [DRY RUN] Skipping actual upload')
-    console.log('   Sample vector ID:', embeddings[0]?.chunk.id)
-    console.log('   Sample metadata:', JSON.stringify(embeddings[0]?.chunk.metadata, null, 2))
+// ============================================
+// Vectorize에 업로드 (NDJSON 파일 + wrangler CLI)
+// ============================================
+async function uploadToVectorize(vectors: VectorData[]): Promise<void> {
+  if (vectors.length === 0) {
+    console.log('   No vectors to upload')
     return
   }
   
-  // In a real implementation, you would use the Vectorize API:
-  // await VECTORIZE.upsert(embeddings.map(e => ({
-  //   id: e.chunk.id,
-  //   values: e.vector,
-  //   namespace: e.chunk.namespace,
-  //   metadata: e.chunk.metadata,
-  // })))
+  // NDJSON 파일 생성
+  const ndjsonPath = 'artifacts/vectorize-upload.ndjson'
+  const artifactsDir = 'artifacts'
   
-  // For now, save to a file for manual upload or testing
-  const outputPath = 'artifacts/vectorize-data.json'
-  const outputDir = 'artifacts'
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true })
+  if (!fs.existsSync(artifactsDir)) {
+    fs.mkdirSync(artifactsDir, { recursive: true })
   }
   
-  const data = embeddings.map(e => ({
-    id: e.chunk.id,
-    values: e.vector,
-    namespace: e.chunk.namespace,
-    metadata: e.chunk.metadata,
-  }))
+  // NDJSON 형식으로 저장
+  const ndjsonContent = vectors.map(v => JSON.stringify(v)).join('\n')
+  fs.writeFileSync(ndjsonPath, ndjsonContent, 'utf-8')
   
-  fs.writeFileSync(outputPath, JSON.stringify(data, null, 2), 'utf-8')
-  console.log(`   Saved ${embeddings.length} vectors to ${outputPath}`)
-  console.log('   ')
-  console.log('   To upload to Vectorize:')
-  console.log('   1. Create index if not exists:')
-  console.log('      wrangler vectorize create careerwiki-embeddings --dimensions=768 --metric=cosine')
-  console.log('   2. Use Vectorize API or wrangler to upload vectors')
+  console.log(`   Saved ${vectors.length} vectors to ${ndjsonPath}`)
+  
+  // wrangler vectorize insert 실행
+  try {
+    console.log(`   Uploading to Vectorize index: ${VECTORIZE_INDEX}...`)
+    const result = execSync(
+      `npx wrangler vectorize insert ${VECTORIZE_INDEX} --file="${ndjsonPath}"`,
+      { encoding: 'utf-8', timeout: 120000 }
+    )
+    console.log(`   Upload result: ${result.trim()}`)
+  } catch (error: any) {
+    console.error('   Upload failed:', error.message)
+    throw error
+  }
 }
 
+// ============================================
+// 메인 함수
+// ============================================
 async function main() {
   const args = parseArgs()
   
   console.log('🚀 Vectorize Content Script')
   console.log(`   Type: ${args.type}`)
   console.log(`   Limit: ${args.limit}`)
-  console.log(`   Reindex: ${args.reindex}`)
+  console.log(`   Offset: ${args.offset}`)
   console.log(`   Dry run: ${args.dryRun}`)
   console.log('')
   
+  // 하드코딩된 상수 사용 (환경변수 대신 - wrangler OAuth와 충돌 방지)
+  const accountId = ACCOUNT_ID
+  const apiToken = AI_API_TOKEN
+  
+  console.log(`   Account ID: ${accountId.slice(0, 8)}...`)
+  console.log(`   API Token: ${apiToken.slice(0, 8)}...`)
+  
+  // 직업 데이터 조회
   let allChunks: ContentChunk[] = []
   
   if (args.type === 'job' || args.type === 'all') {
     const jobChunks = await fetchJobs(args.limit, args.offset)
     allChunks.push(...jobChunks)
   }
-  
-  // TODO: Add major and howto content extraction
-  // if (args.type === 'major' || args.type === 'all') { ... }
-  // if (args.type === 'howto' || args.type === 'all') { ... }
   
   if (allChunks.length === 0) {
     console.log('⚠️ No content chunks to process')
@@ -307,27 +306,80 @@ async function main() {
   
   console.log(`\n📝 Total chunks to embed: ${allChunks.length}`)
   
-  // Generate embeddings
-  const embeddings = await generateEmbeddings(allChunks)
+  if (args.dryRun) {
+    console.log('\n[DRY RUN] Skipping embedding generation and upload')
+    console.log('Sample chunks:')
+    for (const chunk of allChunks.slice(0, 3)) {
+      console.log(`  - ${chunk.id}: ${chunk.text.slice(0, 80)}...`)
+    }
+    return
+  }
   
-  // Upload to Vectorize
-  await uploadToVectorize(embeddings, args.dryRun)
+  // 배치 처리로 임베딩 생성
+  console.log(`\n🧠 Generating embeddings (batch size: ${BATCH_SIZE})...`)
   
-  // Summary
-  console.log('\n✅ Done!')
-  console.log(`   Processed: ${allChunks.length} chunks`)
-  console.log(`   Generated: ${embeddings.length} embeddings`)
+  const allVectors: VectorData[] = []
+  let processedCount = 0
   
-  // Show sample
-  if (embeddings.length > 0) {
-    console.log('\n📋 Sample chunk:')
-    console.log(`   ID: ${embeddings[0].chunk.id}`)
-    console.log(`   Text: ${embeddings[0].chunk.text.slice(0, 100)}...`)
-    console.log(`   Vector dims: ${embeddings[0].vector.length}`)
+  for (let i = 0; i < allChunks.length; i += BATCH_SIZE) {
+    const batch = allChunks.slice(i, i + BATCH_SIZE)
+    const texts = batch.map(c => c.text)
+    
+    try {
+      console.log(`   Processing batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(allChunks.length / BATCH_SIZE)} (${batch.length} items)...`)
+      
+      const embeddings = await generateEmbeddingsViaAPI(texts, accountId!, apiToken!)
+      
+      for (let j = 0; j < batch.length; j++) {
+        const chunk = batch[j]
+        const vector = embeddings[j]
+        
+        if (vector && vector.length === VECTOR_DIMENSIONS) {
+          allVectors.push({
+            id: chunk.id,
+            values: vector,
+            namespace: chunk.namespace,
+            metadata: {
+              job_name: chunk.metadata.job_name,
+              entity_id: chunk.metadata.entity_id,
+              type: chunk.metadata.type,
+            },
+          })
+          processedCount++
+        }
+      }
+      
+      // Rate limiting: 배치 사이에 짧은 딜레이
+      if (i + BATCH_SIZE < allChunks.length) {
+        await new Promise(resolve => setTimeout(resolve, 500))
+      }
+      
+    } catch (error) {
+      console.error(`   Batch ${Math.floor(i / BATCH_SIZE) + 1} failed:`, error)
+      // 실패해도 계속 진행
+    }
+  }
+  
+  console.log(`\n✅ Generated ${processedCount} embeddings`)
+  
+  // Vectorize에 업로드
+  if (allVectors.length > 0) {
+    console.log(`\n☁️ Uploading to Vectorize...`)
+    await uploadToVectorize(allVectors)
+  }
+  
+  // 최종 요약
+  console.log('\n📊 Summary:')
+  console.log(`   Total chunks: ${allChunks.length}`)
+  console.log(`   Embeddings generated: ${processedCount}`)
+  console.log(`   Vectors uploaded: ${allVectors.length}`)
+  
+  if (allVectors.length > 0) {
+    console.log('\n📋 Sample vector:')
+    console.log(`   ID: ${allVectors[0].id}`)
+    console.log(`   Metadata: ${JSON.stringify(allVectors[0].metadata)}`)
+    console.log(`   Vector dims: ${allVectors[0].values.length}`)
   }
 }
 
 main().catch(console.error)
-
-
-

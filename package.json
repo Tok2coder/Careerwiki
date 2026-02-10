@@ -2,17 +2,17 @@
   "name": "careerwiki",
   "type": "module",
   "scripts": {
-    "dev": "npm run build && npx wrangler pages dev dist --d1=careerwiki-db --r2=careerwiki-uploads --kv=KV --local --ip 0.0.0.0 --port 3000",
-    "dev:remote": "npm run build && wrangler dev --remote --port 3000",
+    "dev": "npm run clean-port && npm run build && npx wrangler pages dev dist --d1=careerwiki-kr --r2=careerwiki-uploads --kv=KV --ip 0.0.0.0 --port 3000 --log-level info",
+    "dev:local": "npm run build && npx wrangler pages dev dist --d1=careerwiki-kr --r2=careerwiki-uploads --kv=KV --local --ip 0.0.0.0 --port 3000",
     "dev:vite": "vite --port 3000",
     "build": "vite build",
     "build:editor": "vite build --config vite.editor.config.ts",
     "build:all": "npm run build:editor && npm run build",
     "preview": "wrangler pages dev dist",
     "deploy": "npm run build && wrangler pages deploy dist",
-    "dev:sandbox": "wrangler pages dev dist --d1=careerwiki-jobs --local --ip 0.0.0.0 --port 3000",
-    "db:migrate:local": "wrangler d1 migrations apply careerwiki-db --local",
-    "db:migrate:prod": "wrangler d1 migrations apply careerwiki-db --remote",
+    "dev:sandbox": "wrangler pages dev dist --d1=careerwiki-kr --local --ip 0.0.0.0 --port 3000",
+    "db:migrate:local": "wrangler d1 migrations apply careerwiki-kr --local",
+    "db:migrate:prod": "wrangler d1 migrations apply careerwiki-kr --remote",
     "sync:prod-to-local": "node scripts/sync-prod-to-local.mjs",
     "db:seed:local": "curl -X POST http://localhost:3000/api/admin/seed-jobs -H 'Authorization: Bearer dev-admin-token'",
     "db:reset": "rm -rf .wrangler/state/v3/d1 && npm run db:migrate:local",
@@ -55,7 +55,8 @@
     "csv-parse": "^6.1.0",
     "dotenv": "^17.2.3",
     "hono": "^4.9.9",
-    "jose": "^6.1.2"
+    "jose": "^6.1.2",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251008.0",
@@ -67,6 +68,6 @@
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vite": "^6.3.5",
-    "wrangler": "^4.4.0"
+    "wrangler": "^4.57.0"
   }
 }

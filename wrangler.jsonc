@@ -1,6 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "careerwiki-phase1",
+  // wrangler whoami로 확인된 실제 Account ID
+  "account_id": "3587865378649966bfb0a814fce73c77",
   "compatibility_date": "2024-09-23",
   "compatibility_flags": ["nodejs_compat"],
   "pages_build_output_dir": "./dist",
@@ -10,18 +12,22 @@
   //   "crons": ["*/30 * * * *"]
   // },
   
-  // D1 Database 설정 (직업 데이터 영구 저장)
+  // D1 Database 설정 (모든 데이터 저장 - 직업, 학과, HowTo, 유저 등)
+  // remote: true로 개발 환경에서도 Production D1 사용
+  // 2026-01-16: careerwiki-jobs → careerwiki-kr 마이그레이션 완료
   "d1_databases": [{
     "binding": "DB",
-    "database_name": "careerwiki-db",
-    "database_id": "edc21e23-c2ac-4693-bb79-389b6914e173"
+    "database_name": "careerwiki-kr",
+    "database_id": "1dbc57d6-0ce3-4a7e-8d2e-3159b0df1315",
+    "remote": true
   }],
 
   // R2 Storage 설정 (이미지/파일 업로드)
-  // 버킷 생성: wrangler r2 bucket create careerwiki-uploads
+  // remote: true로 개발 환경에서도 Production R2 사용
   "r2_buckets": [{
     "binding": "UPLOADS",
-    "bucket_name": "careerwiki-uploads"
+    "bucket_name": "careerwiki-uploads",
+    "remote": true
   }],
 
   // KV Namespace 설정 (Phase 3: 인증 시스템)
@@ -38,7 +44,10 @@
   ],
   
   // Vectorize 설정 (AI 분석기 후보 검색)
-  // 인덱스 생성: wrangler vectorize create careerwiki-embeddings --dimensions=768 --metric=cosine
+  // ⚠️ 인덱스 재생성 필요 (OpenAI Embedding 1536차원):
+  //   1. npx wrangler vectorize delete careerwiki-embeddings
+  //   2. npx wrangler vectorize create careerwiki-embeddings --dimensions=1536 --metric=cosine
+  // 2026-01-26: OpenAI text-embedding-3-small (1536차원) 전환
   "vectorize": [
     {
       "binding": "VECTORIZE",
@@ -46,7 +55,7 @@
     }
   ],
   
-  // Workers AI 설정 (임베딩 생성)
+  // Workers AI 설정 (LLM 호출용 - 임베딩은 OpenAI로 전환됨)
   "ai": {
     "binding": "AI"
   },

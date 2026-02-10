@@ -69,7 +69,7 @@ function runRemote(cmd) {
 
 function getRowCount(table) {
   const result = runLocal(
-    `npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) as count FROM ${table};" --json`
+    `npx wrangler d1 execute careerwiki-kr --local --command "SELECT COUNT(*) as count FROM ${table};" --json`
   );
   if (!result) return 0;
   try {
@@ -101,7 +101,7 @@ async function splitTableToBatches(table) {
   
   // 컬럼 정보 가져오기
   const pragmaResult = runLocal(
-    `npx wrangler d1 execute careerwiki-db --local --command "PRAGMA table_info(${table});" --json`
+    `npx wrangler d1 execute careerwiki-kr --local --command "PRAGMA table_info(${table});" --json`
   );
   if (!pragmaResult) {
     console.log(`    ❌ 컬럼 정보 가져오기 실패`);
@@ -129,7 +129,7 @@ async function splitTableToBatches(table) {
     
     // 배치 데이터 가져오기
     const dataResult = runLocal(
-      `npx wrangler d1 execute careerwiki-db --local --command "SELECT * FROM ${table} LIMIT ${BATCH_SIZE} OFFSET ${offset};" --json`
+      `npx wrangler d1 execute careerwiki-kr --local --command "SELECT * FROM ${table} LIMIT ${BATCH_SIZE} OFFSET ${offset};" --json`
     );
     
     if (!dataResult) {
@@ -190,7 +190,7 @@ async function applyBatches(table) {
     process.stdout.write(`    적용: ${i + 1}/${files.length}\r`);
     
     const result = runRemote(
-      `npx wrangler d1 execute careerwiki-db --remote --file="${filePath}"`
+      `npx wrangler d1 execute careerwiki-kr --remote --file="${filePath}"`
     );
     
     if (result) {

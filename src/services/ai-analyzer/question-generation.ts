@@ -31,6 +31,8 @@ export interface QuestionOption {
 export interface ScoredJob {
   job_id: string
   job_name: string
+  slug?: string           // 커리어위키 URL 슬러그
+  image_url?: string      // 직업 썸네일 이미지
   scores: {
     fit: number
     like: number

@@ -25,7 +25,7 @@ const ESSENTIAL_TABLES = [
 function runLocal(sql) {
   try {
     const result = execSync(
-      `npx wrangler d1 execute careerwiki-db --local --command "${sql}" --json`,
+      `npx wrangler d1 execute careerwiki --local --command "${sql}" --json`,
       {
         encoding: 'utf-8',
         env: { ...process.env, CLOUDFLARE_API_TOKEN: API_TOKEN },
@@ -43,7 +43,7 @@ function runRemote(sql) {
   const escaped = sql.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$');
   try {
     execSync(
-      `npx wrangler d1 execute careerwiki-db --remote --command "${escaped}"`,
+      `npx wrangler d1 execute careerwiki --remote --command "${escaped}"`,
       {
         encoding: 'utf-8',
         env: { ...process.env, CLOUDFLARE_API_TOKEN: API_TOKEN },
@@ -78,7 +78,7 @@ function getLocalData(table) {
 function getRemoteCount(table) {
   try {
     const result = execSync(
-      `npx wrangler d1 execute careerwiki-db --remote --command "SELECT COUNT(*) as cnt FROM ${table};" --json`,
+      `npx wrangler d1 execute careerwiki --remote --command "SELECT COUNT(*) as cnt FROM ${table};" --json`,
       {
         encoding: 'utf-8',
         env: { ...process.env, CLOUDFLARE_API_TOKEN: API_TOKEN },

@@ -15,3 +15,4 @@ ALTER TABLE users ADD COLUMN custom_picture_url TEXT;
 
 
 
+

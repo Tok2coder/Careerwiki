@@ -1,4 +1,4 @@
-﻿import { mergeJobProfiles, mergeMajorProfiles } from './profileMerge'
+import { mergeJobProfiles, mergeMajorProfiles } from './profileMerge'
 import {
   getJobDetail as fetchCareerNetJobDetail,
   getMajorDetail as fetchCareerNetMajorDetail,

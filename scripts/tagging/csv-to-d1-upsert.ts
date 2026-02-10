@@ -3,7 +3,7 @@
  * 
  * 사용법:
  *   npx tsx scripts/tagging/csv-to-d1-upsert.ts input.csv
- *   wrangler d1 execute careerwiki-db --local --file=scripts/tagging/output/upsert-job-attributes.sql
+ *   wrangler d1 execute careerwiki-kr --local --file=scripts/tagging/output/upsert-job-attributes.sql
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
@@ -269,9 +269,9 @@ function main() {
   console.log('다음 단계:')
   console.log('  1. SQL 내용 확인')
   console.log('  2. 로컬 DB 적용:')
-  console.log('     wrangler d1 execute careerwiki-db --local --file=scripts/tagging/output/upsert-job-attributes.sql')
+  console.log('     wrangler d1 execute careerwiki-kr --local --file=scripts/tagging/output/upsert-job-attributes.sql')
   console.log('  3. 적용 확인:')
-  console.log('     wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = \'tagged\'"')
+  console.log('     wrangler d1 execute careerwiki-kr --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = \'tagged\'"')
 
   // 버킷별 통계
   const bucketStats: Record<string, number> = {}
@@ -287,6 +287,7 @@ function main() {
 }
 
 main()
+
 
 
 

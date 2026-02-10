@@ -15,7 +15,7 @@ async function testEditSystem() {
   const mf = new Miniflare({
     script: '',
     d1Databases: {
-      DB: 'careerwiki-jobs'
+      DB: 'careerwiki'
     },
     modules: true,
     compatibilityDate: '2024-01-01'

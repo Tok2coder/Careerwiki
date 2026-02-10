@@ -79,7 +79,7 @@ function runCommand(cmd, options = {}) {
 
 function getRemoteCount(table) {
   const result = runCommand(
-    `npx wrangler d1 execute careerwiki-db --remote --command "SELECT COUNT(*) as cnt FROM ${table};" --json`,
+    `npx wrangler d1 execute careerwiki-kr --remote --command "SELECT COUNT(*) as cnt FROM ${table};" --json`,
     { silent: true }
   );
   try {
@@ -91,7 +91,7 @@ function getRemoteCount(table) {
 
 function getLocalCount(table) {
   const result = runCommand(
-    `npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) as cnt FROM ${table};" --json`,
+    `npx wrangler d1 execute careerwiki-kr --local --command "SELECT COUNT(*) as cnt FROM ${table};" --json`,
     { silent: true }
   );
   try {
@@ -120,19 +120,19 @@ async function syncTable(table) {
 
   try {
     runCommand(
-      `npx wrangler d1 export careerwiki-db --remote --no-schema --table=${table} --output=${dumpFile}`,
+      `npx wrangler d1 export careerwiki-kr --remote --no-schema --table=${table} --output=${dumpFile}`,
       { silent: true }
     );
 
     // 로컬 테이블 비우기
     runCommand(
-      `npx wrangler d1 execute careerwiki-db --local --command "DELETE FROM ${table};"`,
+      `npx wrangler d1 execute careerwiki-kr --local --command "DELETE FROM ${table};"`,
       { silent: true }
     );
 
     // 로컬에 적용
     runCommand(
-      `npx wrangler d1 execute careerwiki-db --local --file=${dumpFile}`,
+      `npx wrangler d1 execute careerwiki-kr --local --file=${dumpFile}`,
       { silent: true }
     );
 

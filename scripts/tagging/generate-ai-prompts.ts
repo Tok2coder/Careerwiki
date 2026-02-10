@@ -170,7 +170,7 @@ function classifyJob(job: JobRecord): string {
 function fetchJobsFromDB(): JobRecord[] {
   try {
     // wrangler 명령어로 JSON 데이터 가져오기
-    const command = `npx wrangler d1 execute careerwiki-db --local --command "SELECT job_id, json_extract(normalized_payload, '$.name') as job_name, source_system, json_extract(normalized_payload, '$.classifications.large') as large_category, json_extract(normalized_payload, '$.classifications.medium') as medium_category, json_extract(normalized_payload, '$.classifications.small') as small_category FROM job_sources WHERE source_system IN ('CAREERNET', 'WORK24_JOB') ORDER BY json_extract(normalized_payload, '$.name')" --json`
+    const command = `npx wrangler d1 execute careerwiki --local --command "SELECT job_id, json_extract(normalized_payload, '$.name') as job_name, source_system, json_extract(normalized_payload, '$.classifications.large') as large_category, json_extract(normalized_payload, '$.classifications.medium') as medium_category, json_extract(normalized_payload, '$.classifications.small') as small_category FROM job_sources WHERE source_system IN ('CAREERNET', 'WORK24_JOB') ORDER BY json_extract(normalized_payload, '$.name')" --json`
 
     console.log('📊 DB에서 직업 데이터 가져오는 중...')
     const output = execSync(command, { encoding: 'utf-8', cwd: process.cwd() })
@@ -379,6 +379,7 @@ function main() {
 }
 
 main()
+
 
 
 

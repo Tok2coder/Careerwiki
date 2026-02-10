@@ -9,7 +9,7 @@ function checkMissingImages(type = 'job') {
   // 전체 항목 수
   const totalQuery = `SELECT COUNT(*) as count FROM ${type}s WHERE name_en IS NOT NULL AND name_en != '';`;
   const totalResult = execSync(
-    `npx wrangler d1 execute careerwiki-db --local --command "${totalQuery.replace(/"/g, '\\"')}"`,
+    `npx wrangler d1 execute careerwiki --local --command "${totalQuery.replace(/"/g, '\\"')}"`,
     { encoding: 'utf8', cwd: process.cwd() }
   );
   const totalMatch = totalResult.match(/"count":\s*(\d+)/);
@@ -18,7 +18,7 @@ function checkMissingImages(type = 'job') {
   // 이미지가 있는 항목 수
   const withImageQuery = `SELECT COUNT(*) as count FROM ${type}s WHERE image_url IS NOT NULL AND image_url != '';`;
   const withImageResult = execSync(
-    `npx wrangler d1 execute careerwiki-db --local --command "${withImageQuery.replace(/"/g, '\\"')}"`,
+    `npx wrangler d1 execute careerwiki --local --command "${withImageQuery.replace(/"/g, '\\"')}"`,
     { encoding: 'utf8', cwd: process.cwd() }
   );
   const withImageMatch = withImageResult.match(/"count":\s*(\d+)/);
@@ -27,7 +27,7 @@ function checkMissingImages(type = 'job') {
   // 프롬프트는 있지만 이미지가 없는 항목 수
   const missingImageQuery = `SELECT COUNT(*) as count FROM ${type}s WHERE name_en IS NOT NULL AND name_en != '' AND image_prompt IS NOT NULL AND image_prompt != '' AND (image_url IS NULL OR image_url = '');`;
   const missingImageResult = execSync(
-    `npx wrangler d1 execute careerwiki-db --local --command "${missingImageQuery.replace(/"/g, '\\"')}"`,
+    `npx wrangler d1 execute careerwiki --local --command "${missingImageQuery.replace(/"/g, '\\"')}"`,
     { encoding: 'utf8', cwd: process.cwd() }
   );
   const missingImageMatch = missingImageResult.match(/"count":\s*(\d+)/);
@@ -36,7 +36,7 @@ function checkMissingImages(type = 'job') {
   // 프롬프트가 없는 항목 수
   const noPromptQuery = `SELECT COUNT(*) as count FROM ${type}s WHERE name_en IS NOT NULL AND name_en != '' AND (image_prompt IS NULL OR image_prompt = '');`;
   const noPromptResult = execSync(
-    `npx wrangler d1 execute careerwiki-db --local --command "${noPromptQuery.replace(/"/g, '\\"')}"`,
+    `npx wrangler d1 execute careerwiki --local --command "${noPromptQuery.replace(/"/g, '\\"')}"`,
     { encoding: 'utf8', cwd: process.cwd() }
   );
   const noPromptMatch = noPromptResult.match(/"count":\s*(\d+)/);
@@ -52,7 +52,7 @@ function checkMissingImages(type = 'job') {
     console.log(`📋 이미지 생성 대기 중인 항목 샘플 (최대 10개):\n`);
     const sampleQuery = `SELECT id, name, name_en FROM ${type}s WHERE name_en IS NOT NULL AND name_en != '' AND image_prompt IS NOT NULL AND image_prompt != '' AND (image_url IS NULL OR image_url = '') ORDER BY id LIMIT 10;`;
     const sampleResult = execSync(
-      `npx wrangler d1 execute careerwiki-db --local --command "${sampleQuery.replace(/"/g, '\\"')}"`,
+      `npx wrangler d1 execute careerwiki --local --command "${sampleQuery.replace(/"/g, '\\"')}"`,
       { encoding: 'utf8', cwd: process.cwd() }
     );
 

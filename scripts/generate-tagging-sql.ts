@@ -325,7 +325,7 @@ function main() {
     fs.writeFileSync(args.output, sqlContent, 'utf-8')
     console.log(`\n📁 SQL file saved to: ${args.output}`)
     console.log(`\n🚀 Apply with:`)
-    console.log(`   npx wrangler d1 execute careerwiki-db --local --file ${args.output}`)
+    console.log(`   npx wrangler d1 execute careerwiki --local --file ${args.output}`)
   }
   
   // Summary

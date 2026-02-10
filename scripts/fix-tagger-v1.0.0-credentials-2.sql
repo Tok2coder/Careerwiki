@@ -42,3 +42,4 @@ UPDATE job_attributes SET license_required = 'preferred' WHERE job_name = 'ì „ê¸
 
 
 
+

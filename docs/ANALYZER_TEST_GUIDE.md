@@ -106,10 +106,10 @@ Research Bias Cap: ✓ 적용됨
 **확인 사항:**
 ```bash
 # raw_events 확인
-npx wrangler d1 execute careerwiki-db --local --command="SELECT * FROM raw_events ORDER BY id DESC LIMIT 5"
+npx wrangler d1 execute careerwiki --local --command="SELECT * FROM raw_events ORDER BY id DESC LIMIT 5"
 
 # facts 확인
-npx wrangler d1 execute careerwiki-db --local --command="SELECT * FROM facts ORDER BY id DESC LIMIT 5"
+npx wrangler d1 execute careerwiki --local --command="SELECT * FROM facts ORDER BY id DESC LIMIT 5"
 ```
 
 - [ ] `STAGE_SELECTED` 이벤트 저장됨
@@ -274,7 +274,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/ai-analyzer/analyze" -Method P
 **해결:**
 ```bash
 # 태깅 데이터 확인
-npx wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) FROM job_attributes WHERE tagger_version = 'tagger-v1.0.0'"
+npx wrangler d1 execute careerwiki --local --command="SELECT COUNT(*) FROM job_attributes WHERE tagger_version = 'tagger-v1.0.0'"
 
 # 0이면 태깅 진행 필요
 npx tsx scripts/export-jobs-for-tagging.ts --limit 50

@@ -238,7 +238,7 @@ export function generateImageFileKey(
   const ext = extMap[contentType] || 'webp'
   // slug에 '/'가 포함되면 경로 구분자로 해석되므로 '_'로 대체
   const safeSlug = slug.replace(/\//g, '_')
-  // 🔧 기존 이미지와 같은 URL 인코딩된 키 형식으로 저장해야 덮어쓰기됨
+  // R2 키는 URL-인코딩된 형태로 통일 (기존 이미지들과 일관성 유지)
   const encodedSlug = encodeURIComponent(safeSlug)
   return `${type}/${prefix}-${encodedSlug}.${ext}`
 }

@@ -23,10 +23,10 @@ npm install
 
 ```bash
 # DB 테이블 확인
-npx wrangler d1 execute careerwiki-db --local --command="SELECT name FROM sqlite_master WHERE type='table'"
+npx wrangler d1 execute careerwiki --local --command="SELECT name FROM sqlite_master WHERE type='table'"
 
 # job_attributes 현황 확인
-npx wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) as total, status FROM job_attributes GROUP BY status"
+npx wrangler d1 execute careerwiki --local --command="SELECT COUNT(*) as total, status FROM job_attributes GROUP BY status"
 ```
 
 ---
@@ -114,17 +114,17 @@ npx tsx scripts/generate-tagging-sql.ts --input tagging-results.json
 npx tsx scripts/generate-tagging-sql.ts --input tagging-results.json --dry-run
 
 # 로컬 DB에 적용
-npx wrangler d1 execute careerwiki-db --local --file migrations/batch_tagging_YYYYMMDD.sql
+npx wrangler d1 execute careerwiki --local --file migrations/batch_tagging_YYYYMMDD.sql
 ```
 
 ### Step 5: 검증
 
 ```bash
 # 태깅 결과 확인
-npx wrangler d1 execute careerwiki-db --local --command="SELECT job_id, job_name, wlb, analytical FROM job_attributes WHERE job_id = 'data-scientist'"
+npx wrangler d1 execute careerwiki --local --command="SELECT job_id, job_name, wlb, analytical FROM job_attributes WHERE job_id = 'data-scientist'"
 
 # 전체 현황
-npx wrangler d1 execute careerwiki-db --local --command="SELECT status, COUNT(*) as count FROM job_attributes GROUP BY status"
+npx wrangler d1 execute careerwiki --local --command="SELECT status, COUNT(*) as count FROM job_attributes GROUP BY status"
 ```
 
 ---
@@ -200,10 +200,10 @@ npx wrangler d1 execute careerwiki-db --local --command="SELECT status, COUNT(*)
 
 ```bash
 # 전체 현황
-npx wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = 'tagged'"
+npx wrangler d1 execute careerwiki --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = 'tagged'"
 
 # 소스별 현황
-npx wrangler d1 execute careerwiki-db --local --command="SELECT source_system, COUNT(*) FROM job_attributes GROUP BY source_system"
+npx wrangler d1 execute careerwiki --local --command="SELECT source_system, COUNT(*) FROM job_attributes GROUP BY source_system"
 ```
 
 ---

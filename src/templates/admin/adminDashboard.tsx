@@ -202,8 +202,27 @@ function escapeHtml(text: string): string {
   return String(text).replace(/[&<>"']/g, m => map[m])
 }
 
-function formatRelativeTime(dateStr: string): string {
-  const date = new Date(dateStr)
+function formatRelativeTime(dateInput: string | number): string {
+  let date: Date
+  
+  // Unix timestamp (초 단위) 처리
+  if (typeof dateInput === 'number') {
+    // 10자리면 초 단위, 13자리면 밀리초 단위
+    date = dateInput < 10000000000 
+      ? new Date(dateInput * 1000)  // 초 → 밀리초
+      : new Date(dateInput)
+  } else {
+    // 문자열인 경우 숫자로 변환 시도
+    const num = Number(dateInput)
+    if (!isNaN(num) && num > 0) {
+      date = num < 10000000000 
+        ? new Date(num * 1000) 
+        : new Date(num)
+    } else {
+      date = new Date(dateInput)
+    }
+  }
+  
   const now = new Date()
   const diffMs = now.getTime() - date.getTime()
   const diffMins = Math.floor(diffMs / 60000)

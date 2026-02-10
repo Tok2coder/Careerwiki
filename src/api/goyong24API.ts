@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Goyong24 (고용24) Open API Client
  *
  * Provides low-level fetch helpers for the 고용24 학과/직업 API endpoints and

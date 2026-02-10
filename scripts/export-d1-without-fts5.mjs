@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const DB_PATH = join(__dirname, '..', '.wrangler/state/v3/d1/miniflare-D1DatabaseObject/careerwiki-db.sqlite');
+const DB_PATH = join(__dirname, '..', '.wrangler/state/v3/d1/miniflare-D1DatabaseObject/careerwiki.sqlite');
 const OUTPUT_FILE = join(__dirname, '..', 'migration_backup.sql');
 
 console.log('📦 D1 데이터베이스 덤프 생성 중 (FTS5 제외)...\n');

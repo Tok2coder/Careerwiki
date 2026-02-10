@@ -143,3 +143,4 @@ WHERE job_name LIKE '%부사관%' AND degree_required = 'none';
 
 
 
+

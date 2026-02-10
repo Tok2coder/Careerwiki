@@ -71,7 +71,7 @@ async function insertPrompts() {
   fs.writeFileSync(sqlFilePath, sqlContent);
 
   // 데이터베이스 업데이트
-  execSync(`npx wrangler d1 execute careerwiki-db --local --file ${sqlFilePath}`, {
+  execSync(`npx wrangler d1 execute careerwiki --local --file ${sqlFilePath}`, {
     stdio: 'inherit',
     cwd: process.cwd()
   });

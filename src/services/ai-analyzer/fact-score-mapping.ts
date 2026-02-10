@@ -44,8 +44,8 @@ export const MAPPING_POLICY = {
   DUPLICATE_POLICY: 'highest_wins' as const,
   
   // 전체 Like/Can에 대한 fact boost 총합 상한
-  MAX_TOTAL_LIKE_BOOST: 40,
-  MAX_TOTAL_CAN_BOOST: 30,
+  MAX_TOTAL_LIKE_BOOST: 25,  // 개인화 스코어링 도입으로 40→25 (이중 카운팅 방지)
+  MAX_TOTAL_CAN_BOOST: 30,   // 개인화 스코어링 도입으로 50→30 (이중 카운팅 방지)
   MAX_TOTAL_RISK_REDUCTION: 20,  // Risk 감소 상한
   
   // 충돌 시 우선순위 (높은 숫자가 우선)
@@ -1127,6 +1127,885 @@ export const FACT_SCORE_RULES: FactScoreRule[] = [
       return effects
     }
   },
+  
+  // ============================================
+  // P0: 5축 상태좌표 기반 scoring
+  // ============================================
+  
+  // state.role_identity: 역할 정체성
+  {
+    fact_key_pattern: /^state\.role_identity$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['confirmed_constraint'],
+    effects: (factValue) => {
+      const data = typeof factValue === 'object' ? factValue : { value: factValue }
+      const role = data.value
+      const effects: FactScoreEffect[] = []
+      
+      switch (role) {
+        case 'student':
+          // 학생: 성장 잠재력 중시
+          effects.push({ score_type: 'like', job_attribute: 'growth', boost: 10 })
+          break
+        case 'job_seeker':
+          // 구직자: 취업 가능성 중시
+          effects.push({ score_type: 'can', job_attribute: 'stability', boost: 10 })
+          break
+        case 'early_career':
+          // 초기 경력: 성장 기회 중시
+          effects.push({ score_type: 'like', job_attribute: 'growth', boost: 15 })
+          break
+        case 'mid_career':
+          // 중간 경력: 균형 중시
+          effects.push({ score_type: 'like', job_attribute: 'wlb', boost: 5 })
+          effects.push({ score_type: 'like', job_attribute: 'stability', boost: 5 })
+          break
+        case 'senior':
+          // 시니어: 안정성 중시
+          effects.push({ score_type: 'like', job_attribute: 'stability', boost: 15 })
+          break
+        case 'career_changer':
+          // 전직자: 새로운 기회 중시
+          effects.push({ score_type: 'like', job_attribute: 'growth', boost: 10 })
+          effects.push({ score_type: 'risk', job_attribute: 'stability', boost: 5 })
+          break
+      }
+      
+      return effects
+    }
+  },
+  
+  // state.skill_level: 숙련도
+  {
+    fact_key_pattern: /^state\.skill_level$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['confirmed_constraint'],
+    effects: (factValue) => {
+      const data = typeof factValue === 'object' ? factValue : { value: factValue }
+      const level = typeof data.value === 'number' ? data.value : parseInt(data.value, 10)
+      const effects: FactScoreEffect[] = []
+      
+      if (level <= 1) {
+        // 입문/초급: 학습 곡선 낮은 직업 선호
+        effects.push({ score_type: 'can', job_attribute: 'growth', boost: 10 })
+        effects.push({ score_type: 'risk', job_attribute: 'analytical', boost: 10 })
+      } else if (level >= 4) {
+        // 고급/전문가: 전문성 발휘 직업 선호
+        effects.push({ score_type: 'can', job_attribute: 'analytical', boost: 15 })
+        effects.push({ score_type: 'like', job_attribute: 'income', boost: 10 })
+      }
+      
+      return effects
+    }
+  },
+  
+  // state.transition_status: 전환 상태
+  {
+    fact_key_pattern: /^state\.transition_status$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['confirmed_constraint'],
+    effects: (factValue) => {
+      const data = typeof factValue === 'object' ? factValue : { value: factValue }
+      const status = data.value
+      const effects: FactScoreEffect[] = []
+      
+      switch (status) {
+        case 'exploring':
+          // 탐색 중: 다양한 옵션 제시
+          effects.push({ score_type: 'like', job_attribute: 'growth', boost: 5 })
+          break
+        case 'decided':
+          // 결정됨: 실행 가능성 중시
+          effects.push({ score_type: 'can', job_attribute: 'stability', boost: 10 })
+          break
+        case 'preparing':
+          // 준비 중: 준비 필요 직업 필터
+          effects.push({ score_type: 'risk', job_attribute: 'stability', boost: -5 })
+          break
+        case 'transitioning':
+          // 전환 중: 즉시 가능한 직업
+          effects.push({ score_type: 'can', job_attribute: 'execution', boost: 10 })
+          break
+      }
+      
+      return effects
+    }
+  },
+  
+  // state.constraint.*: 제약 조건
+  {
+    fact_key_pattern: /^state\.constraint\.(time|money|location|family|health|qualification)$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['confirmed_constraint'],
+    effects: (factValue) => {
+      const data = typeof factValue === 'object' ? factValue : { value: factValue }
+      const hasConstraint = data.value === true || data.value === 'true'
+      const effects: FactScoreEffect[] = []
+      
+      if (hasConstraint) {
+        // 제약이 있으면 워라밸 중시
+        effects.push({ score_type: 'like', job_attribute: 'wlb', boost: 10 })
+        effects.push({ score_type: 'risk', job_attribute: 'wlb', boost: -10 })
+      }
+      
+      return effects
+    }
+  },
+  
+  // ============================================
+  // P0: 전이 신호 기반 scoring
+  // ============================================
+  
+  // transition.motivation_primary: 전환 동기
+  {
+    fact_key_pattern: /^transition\.motivation_primary$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['tradeoff'],
+    effects: (factValue) => {
+      const data = typeof factValue === 'object' ? factValue : { value: factValue }
+      const motivation = data.value
+      const effects: FactScoreEffect[] = []
+      
+      switch (motivation) {
+        case 'higher_income':
+          effects.push({ score_type: 'like', job_attribute: 'income', boost: 20 })
+          break
+        case 'better_wlb':
+          effects.push({ score_type: 'like', job_attribute: 'wlb', boost: 20 })
+          break
+        case 'career_growth':
+          effects.push({ score_type: 'like', job_attribute: 'growth', boost: 20 })
+          break
+        case 'job_security':
+          effects.push({ score_type: 'like', job_attribute: 'stability', boost: 20 })
+          break
+        case 'passion':
+          effects.push({ score_type: 'like', job_attribute: 'creative', boost: 15 })
+          effects.push({ score_type: 'like', job_attribute: 'growth', boost: 10 })
+          break
+        case 'relocation':
+          effects.push({ score_type: 'can', job_attribute: 'remote_possible', boost: 15 })
+          break
+      }
+      
+      return effects
+    }
+  },
+  
+  // transition.desired_type: 원하는 전환 유형
+  {
+    fact_key_pattern: /^transition\.desired_type$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['tradeoff'],
+    effects: (factValue) => {
+      const data = typeof factValue === 'object' ? factValue : { value: factValue }
+      const types = Array.isArray(data.value) ? data.value : [data.value]
+      const effects: FactScoreEffect[] = []
+      
+      for (const type of types) {
+        switch (type) {
+          case 'same_field_up':
+            effects.push({ score_type: 'like', job_attribute: 'growth', boost: 10 })
+            break
+          case 'different_field':
+            effects.push({ score_type: 'can', job_attribute: 'growth', boost: 10 })
+            break
+          case 'freelance':
+            effects.push({ score_type: 'like', job_attribute: 'wlb', boost: 10 })
+            effects.push({ score_type: 'risk', job_attribute: 'stability', boost: 10 })
+            break
+          case 'startup':
+            effects.push({ score_type: 'like', job_attribute: 'growth', boost: 15 })
+            effects.push({ score_type: 'risk', job_attribute: 'stability', boost: 15 })
+            break
+        }
+      }
+      
+      return effects
+    }
+  },
+  
+  // ============================================
+  // Hard Dislike: 절대 안 되는 것 (Like 대폭 감점)
+  // ============================================
+  {
+    fact_key_pattern: /^profile\.hard_dislike$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['confirmed_constraint'], // 최고 우선순위
+    effects: (factValue) => {
+      const data = typeof factValue === 'object' ? factValue : { type: factValue }
+      const dislikeType = data.type
+      const effects: FactScoreEffect[] = []
+      
+      // hard_dislike → 직업 속성 매핑 (Like 점수 대폭 감점)
+      const HARD_DISLIKE_PENALTY_MAP: Record<string, { attr: JobAttribute; penalty: number }[]> = {
+        // 업무 유형 관련
+        'sales': [{ attr: 'people_facing', penalty: -40 }],
+        'public_speaking': [{ attr: 'people_facing', penalty: -35 }],
+        'meetings': [{ attr: 'teamwork', penalty: -25 }],
+        'call_center': [{ attr: 'people_facing', penalty: -45 }],
+        
+        // 근무 환경 관련
+        'overtime': [{ attr: 'wlb', penalty: -40 }],
+        'shift_work': [{ attr: 'wlb', penalty: -35 }],
+        'travel': [{ attr: 'remote', penalty: -30 }],
+        
+        // 업무 성격 관련
+        'routine': [{ attr: 'creative', penalty: -30 }],
+        'conflict': [{ attr: 'people_facing', penalty: -35 }],
+        'physical': [{ attr: 'execution', penalty: -40 }],
+        'construction': [{ attr: 'execution', penalty: -45 }],
+        
+        // 특수 직종
+        'woodwork': [{ attr: 'execution', penalty: -50 }], // 키워드 직접 매칭
+      }
+      
+      const penalties = HARD_DISLIKE_PENALTY_MAP[dislikeType]
+      if (penalties) {
+        for (const { attr, penalty } of penalties) {
+          effects.push({ score_type: 'like', job_attribute: attr, boost: penalty })
+        }
+      }
+      
+      return effects
+    }
+  },
+  
+  // 일반 dislike (mild - 약한 감점)
+  {
+    fact_key_pattern: /^profile\.dislike$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['discovery'],
+    effects: (factValue) => {
+      const data = typeof factValue === 'object' ? factValue : { type: factValue }
+      const dislikeType = data.type
+      const intensity = data.intensity || 'mild'
+      const effects: FactScoreEffect[] = []
+      
+      // mild dislike는 약한 감점
+      const basePenalty = intensity === 'hard' ? -30 : -10
+      
+      const MILD_DISLIKE_MAP: Record<string, JobAttribute> = {
+        'overtime': 'wlb',
+        'meeting': 'teamwork',
+        'sales': 'people_facing',
+        'routine': 'creative',
+        'pressure': 'wlb',
+        'travel': 'remote',
+        'physical': 'execution',
+        'conflict': 'people_facing',
+        'public': 'people_facing',
+        'uncertainty': 'stability',
+      }
+      
+      const attr = MILD_DISLIKE_MAP[dislikeType]
+      if (attr) {
+        effects.push({ score_type: 'like', job_attribute: attr, boost: basePenalty })
+      }
+      
+      return effects
+    }
+  },
+  
+  // ============================================
+  // P2: 이력서 파싱 데이터 기반 scoring (resume_parsed)
+  // ============================================
+  
+  // resume.skill: 이력서에서 추출된 스킬 → Can 점수 부스트
+  {
+    fact_key_pattern: /^resume\.skill$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['discovery'],
+    effects: (factValue) => {
+      const skill = typeof factValue === 'string' ? factValue.toLowerCase() : String(factValue).toLowerCase()
+      const effects: FactScoreEffect[] = []
+      
+      // 스킬 카테고리별 매핑
+      const SKILL_TO_ATTR_MAP: Record<string, { attr: JobAttribute; boost: number }[]> = {
+        // 기술/IT 관련
+        'python': [{ attr: 'analytical', boost: 12 }],
+        'java': [{ attr: 'analytical', boost: 12 }],
+        'javascript': [{ attr: 'analytical', boost: 10 }, { attr: 'creative', boost: 5 }],
+        'typescript': [{ attr: 'analytical', boost: 12 }],
+        'sql': [{ attr: 'analytical', boost: 10 }],
+        'react': [{ attr: 'creative', boost: 8 }, { attr: 'analytical', boost: 5 }],
+        'node': [{ attr: 'analytical', boost: 10 }],
+        '프로그래밍': [{ attr: 'analytical', boost: 10 }],
+        '코딩': [{ attr: 'analytical', boost: 10 }],
+        '개발': [{ attr: 'analytical', boost: 10 }],
+        'ai': [{ attr: 'analytical', boost: 12 }],
+        '머신러닝': [{ attr: 'analytical', boost: 15 }],
+        '데이터분석': [{ attr: 'analytical', boost: 15 }],
+        
+        // 디자인/창의 관련
+        'photoshop': [{ attr: 'creative', boost: 12 }],
+        'figma': [{ attr: 'creative', boost: 12 }],
+        'illustrator': [{ attr: 'creative', boost: 12 }],
+        '디자인': [{ attr: 'creative', boost: 12 }],
+        'ui': [{ attr: 'creative', boost: 10 }],
+        'ux': [{ attr: 'creative', boost: 10 }, { attr: 'analytical', boost: 5 }],
+        '영상편집': [{ attr: 'creative', boost: 12 }],
+        
+        // 커뮤니케이션/대인 관련
+        '영업': [{ attr: 'people_facing', boost: 15 }],
+        '마케팅': [{ attr: 'people_facing', boost: 10 }, { attr: 'creative', boost: 8 }],
+        '고객관리': [{ attr: 'people_facing', boost: 12 }],
+        'crm': [{ attr: 'people_facing', boost: 10 }],
+        '프레젠테이션': [{ attr: 'people_facing', boost: 10 }],
+        '협상': [{ attr: 'people_facing', boost: 12 }],
+        
+        // 관리/실행 관련
+        '프로젝트관리': [{ attr: 'execution', boost: 12 }, { attr: 'teamwork', boost: 8 }],
+        'pm': [{ attr: 'execution', boost: 12 }],
+        '리더십': [{ attr: 'teamwork', boost: 12 }, { attr: 'people_facing', boost: 8 }],
+        '팀관리': [{ attr: 'teamwork', boost: 15 }],
+        'excel': [{ attr: 'analytical', boost: 8 }],
+        '엑셀': [{ attr: 'analytical', boost: 8 }],
+        
+        // 언어 관련
+        '영어': [{ attr: 'people_facing', boost: 8 }],
+        '중국어': [{ attr: 'people_facing', boost: 10 }],
+        '일본어': [{ attr: 'people_facing', boost: 8 }],
+      }
+      
+      // 부분 매칭으로 스킬 찾기
+      for (const [skillKeyword, boosts] of Object.entries(SKILL_TO_ATTR_MAP)) {
+        if (skill.includes(skillKeyword)) {
+          for (const { attr, boost } of boosts) {
+            effects.push({ score_type: 'can', job_attribute: attr, boost })
+          }
+          break // 첫 번째 매칭만 적용
+        }
+      }
+      
+      // 매칭되지 않은 스킬도 기본 Can 부스트
+      if (effects.length === 0) {
+        effects.push({ score_type: 'can', job_attribute: 'growth', boost: 5 })
+      }
+      
+      return effects
+    }
+  },
+  
+  // resume.certification: 자격증 → Can 점수 부스트 + 전문성 신호
+  {
+    fact_key_pattern: /^resume\.certification$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['discovery'],
+    effects: (factValue) => {
+      const cert = typeof factValue === 'string' ? factValue.toLowerCase() : String(factValue).toLowerCase()
+      const effects: FactScoreEffect[] = []
+      
+      // 자격증 카테고리별 매핑
+      const CERT_TO_ATTR_MAP: Record<string, { attr: JobAttribute; boost: number }[]> = {
+        // IT/기술 자격증
+        '정보처리기사': [{ attr: 'analytical', boost: 15 }],
+        '정보보안기사': [{ attr: 'analytical', boost: 15 }],
+        'aws': [{ attr: 'analytical', boost: 12 }],
+        '토익': [{ attr: 'people_facing', boost: 8 }],
+        'toeic': [{ attr: 'people_facing', boost: 8 }],
+        'opic': [{ attr: 'people_facing', boost: 10 }],
+        
+        // 전문직 자격증
+        'cpa': [{ attr: 'analytical', boost: 20 }, { attr: 'stability', boost: 10 }],
+        '회계사': [{ attr: 'analytical', boost: 20 }],
+        '세무사': [{ attr: 'analytical', boost: 18 }],
+        '변호사': [{ attr: 'analytical', boost: 20 }, { attr: 'people_facing', boost: 10 }],
+        '의사': [{ attr: 'people_facing', boost: 15 }, { attr: 'stability', boost: 15 }],
+        '간호사': [{ attr: 'people_facing', boost: 15 }],
+        '약사': [{ attr: 'analytical', boost: 15 }, { attr: 'stability', boost: 10 }],
+        
+        // 기술/기능 자격증
+        '운전면허': [{ attr: 'execution', boost: 5 }],
+        '지게차': [{ attr: 'execution', boost: 10 }],
+        '용접': [{ attr: 'execution', boost: 12 }],
+        '전기기사': [{ attr: 'execution', boost: 15 }],
+        
+        // 관리/경영 자격증
+        'pmp': [{ attr: 'execution', boost: 15 }, { attr: 'teamwork', boost: 10 }],
+        '사회복지사': [{ attr: 'people_facing', boost: 15 }],
+      }
+      
+      for (const [certKeyword, boosts] of Object.entries(CERT_TO_ATTR_MAP)) {
+        if (cert.includes(certKeyword)) {
+          for (const { attr, boost } of boosts) {
+            effects.push({ score_type: 'can', job_attribute: attr, boost })
+          }
+          break
+        }
+      }
+      
+      // 기본 자격증 보유 시 안정성 + 실행력 부스트
+      if (effects.length === 0) {
+        effects.push({ score_type: 'can', job_attribute: 'stability', boost: 5 })
+        effects.push({ score_type: 'can', job_attribute: 'execution', boost: 5 })
+      }
+      
+      return effects
+    }
+  },
+  
+  // resume.industry: 경험 업종 → 관련 속성 Like/Can 부스트
+  {
+    fact_key_pattern: /^resume\.industry$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['discovery'],
+    effects: (factValue) => {
+      const industry = typeof factValue === 'string' ? factValue.toLowerCase() : String(factValue).toLowerCase()
+      const effects: FactScoreEffect[] = []
+      
+      const INDUSTRY_TO_ATTR_MAP: Record<string, { attr: JobAttribute; likeBoost: number; canBoost: number }[]> = {
+        'it': [{ attr: 'analytical', likeBoost: 8, canBoost: 12 }],
+        '소프트웨어': [{ attr: 'analytical', likeBoost: 8, canBoost: 12 }],
+        '금융': [{ attr: 'stability', likeBoost: 10, canBoost: 10 }, { attr: 'analytical', likeBoost: 5, canBoost: 8 }],
+        '제조': [{ attr: 'execution', likeBoost: 5, canBoost: 12 }],
+        '유통': [{ attr: 'people_facing', likeBoost: 5, canBoost: 10 }],
+        '의료': [{ attr: 'people_facing', likeBoost: 8, canBoost: 10 }, { attr: 'stability', likeBoost: 5, canBoost: 8 }],
+        '교육': [{ attr: 'people_facing', likeBoost: 10, canBoost: 10 }],
+        '미디어': [{ attr: 'creative', likeBoost: 10, canBoost: 10 }],
+        '광고': [{ attr: 'creative', likeBoost: 10, canBoost: 10 }],
+        '컨설팅': [{ attr: 'analytical', likeBoost: 8, canBoost: 12 }, { attr: 'people_facing', likeBoost: 5, canBoost: 8 }],
+        '스타트업': [{ attr: 'growth', likeBoost: 12, canBoost: 8 }],
+        '공공기관': [{ attr: 'stability', likeBoost: 10, canBoost: 10 }],
+      }
+      
+      for (const [industryKeyword, boosts] of Object.entries(INDUSTRY_TO_ATTR_MAP)) {
+        if (industry.includes(industryKeyword)) {
+          for (const { attr, likeBoost, canBoost } of boosts) {
+            effects.push({ score_type: 'like', job_attribute: attr, boost: likeBoost })
+            effects.push({ score_type: 'can', job_attribute: attr, boost: canBoost })
+          }
+          break
+        }
+      }
+      
+      return effects
+    }
+  },
+  
+  // resume.education_level: 학력 수준 → 자격요건 매칭에 활용
+  {
+    fact_key_pattern: /^resume\.education_level$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['discovery'],
+    effects: (factValue) => {
+      const level = typeof factValue === 'string' ? factValue.toLowerCase() : String(factValue).toLowerCase()
+      const effects: FactScoreEffect[] = []
+      
+      // 학력에 따른 적합도 조정
+      if (level.includes('석사') || level.includes('박사') || level.includes('master') || level.includes('phd')) {
+        effects.push({ score_type: 'can', job_attribute: 'analytical', boost: 12 })
+        effects.push({ score_type: 'can', job_attribute: 'growth', boost: 8 })
+      } else if (level.includes('대학') || level.includes('학사') || level.includes('bachelor')) {
+        effects.push({ score_type: 'can', job_attribute: 'analytical', boost: 8 })
+      }
+      
+      // 학력이 높을수록 성장 기회 중시할 가능성
+      if (level.includes('석사') || level.includes('박사')) {
+        effects.push({ score_type: 'like', job_attribute: 'growth', boost: 10 })
+      }
+      
+      return effects
+    }
+  },
+  
+  // resume.role_type: 현재/이전 역할 유형 → 경험 기반 Can 부스트
+  {
+    fact_key_pattern: /^resume\.role_type$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['discovery'],
+    effects: (factValue) => {
+      const role = typeof factValue === 'string' ? factValue.toLowerCase() : String(factValue).toLowerCase()
+      const effects: FactScoreEffect[] = []
+      
+      const ROLE_TO_ATTR_MAP: Record<string, { attr: JobAttribute; boost: number }[]> = {
+        '개발자': [{ attr: 'analytical', boost: 15 }],
+        'developer': [{ attr: 'analytical', boost: 15 }],
+        'engineer': [{ attr: 'analytical', boost: 15 }],
+        '디자이너': [{ attr: 'creative', boost: 15 }],
+        'designer': [{ attr: 'creative', boost: 15 }],
+        '마케터': [{ attr: 'creative', boost: 10 }, { attr: 'people_facing', boost: 10 }],
+        'marketer': [{ attr: 'creative', boost: 10 }, { attr: 'people_facing', boost: 10 }],
+        '영업': [{ attr: 'people_facing', boost: 15 }],
+        'sales': [{ attr: 'people_facing', boost: 15 }],
+        '기획자': [{ attr: 'analytical', boost: 10 }, { attr: 'creative', boost: 8 }],
+        'planner': [{ attr: 'analytical', boost: 10 }, { attr: 'creative', boost: 8 }],
+        '관리자': [{ attr: 'teamwork', boost: 12 }, { attr: 'execution', boost: 10 }],
+        'manager': [{ attr: 'teamwork', boost: 12 }, { attr: 'execution', boost: 10 }],
+        '대표': [{ attr: 'teamwork', boost: 15 }, { attr: 'execution', boost: 12 }],
+        'ceo': [{ attr: 'teamwork', boost: 15 }, { attr: 'execution', boost: 12 }],
+        '연구원': [{ attr: 'analytical', boost: 15 }, { attr: 'solo_work', boost: 10 }],
+        'researcher': [{ attr: 'analytical', boost: 15 }, { attr: 'solo_work', boost: 10 }],
+      }
+      
+      for (const [roleKeyword, boosts] of Object.entries(ROLE_TO_ATTR_MAP)) {
+        if (role.includes(roleKeyword)) {
+          for (const { attr, boost } of boosts) {
+            effects.push({ score_type: 'can', job_attribute: attr, boost })
+          }
+          break
+        }
+      }
+      
+      return effects
+    }
+  },
+
+  // ============================================
+  // Phase 2.1: 미니모듈 토큰 → 직업 속성 매핑 (강화된 버전)
+  // ============================================
+
+  // 미니모듈 interest_top 기반 매핑
+  {
+    fact_key_pattern: /^minimodule\.interest_top$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['priority.top1'],
+    effects: (factValue) => {
+      const interests = Array.isArray(factValue) ? factValue : [factValue]
+      const effects: FactScoreEffect[] = []
+
+      interests.forEach((interest: string) => {
+        switch (interest) {
+          case 'problem_solving':
+            effects.push({ score_type: 'like', job_attribute: 'analytical', boost: 25 })
+            effects.push({ score_type: 'can', job_attribute: 'analytical', boost: 15 })
+            break
+          case 'data_numbers':
+            effects.push({ score_type: 'like', job_attribute: 'analytical', boost: 30 })
+            effects.push({ score_type: 'can', job_attribute: 'analytical', boost: 20 })
+            // 현장직/제조업 회피 (분석 성향 + 현장직 불일치)
+            effects.push({ score_type: 'risk', job_attribute: 'execution', boost: 20 })
+            break
+          case 'creating':
+            effects.push({ score_type: 'like', job_attribute: 'creative', boost: 25 })
+            effects.push({ score_type: 'can', job_attribute: 'creative', boost: 15 })
+            break
+          case 'helping_teaching':
+            effects.push({ score_type: 'like', job_attribute: 'people_facing', boost: 25 })
+            break
+          case 'organizing':
+            effects.push({ score_type: 'like', job_attribute: 'execution', boost: 20 })
+            effects.push({ score_type: 'like', job_attribute: 'stability', boost: 15 })
+            break
+          case 'influencing':
+            effects.push({ score_type: 'like', job_attribute: 'people_facing', boost: 20 })
+            effects.push({ score_type: 'like', job_attribute: 'teamwork', boost: 15 })
+            break
+        }
+      })
+
+      return effects
+    }
+  },
+
+  // 미니모듈 strength_top 기반 매핑 (강화된 버전)
+  {
+    fact_key_pattern: /^minimodule\.strength_top$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['priority.top1'],
+    effects: (factValue) => {
+      const strengths = Array.isArray(factValue) ? factValue : [factValue]
+      const effects: FactScoreEffect[] = []
+
+      strengths.forEach((strength: string) => {
+        switch (strength) {
+          case 'analytical':
+            // 분석형 강점 → 데이터 분석, 연구, 기획 직업군 Fit +30
+            effects.push({ score_type: 'like', job_attribute: 'analytical', boost: 30 })
+            effects.push({ score_type: 'can', job_attribute: 'analytical', boost: 25 })
+            // 현장직/제조업 회피 (핵심 피드백 반영)
+            effects.push({ score_type: 'risk', job_attribute: 'execution', boost: 25 })
+            break
+          case 'creative':
+            effects.push({ score_type: 'like', job_attribute: 'creative', boost: 25 })
+            effects.push({ score_type: 'can', job_attribute: 'creative', boost: 20 })
+            break
+          case 'communication':
+            effects.push({ score_type: 'like', job_attribute: 'people_facing', boost: 20 })
+            effects.push({ score_type: 'can', job_attribute: 'people_facing', boost: 15 })
+            break
+          case 'structured_execution':
+            // 체계적 실행 강점 → 관리, 운영 직업군 Fit +25
+            effects.push({ score_type: 'like', job_attribute: 'execution', boost: 25 })
+            effects.push({ score_type: 'can', job_attribute: 'execution', boost: 20 })
+            effects.push({ score_type: 'like', job_attribute: 'stability', boost: 15 })
+            break
+          case 'persistence':
+            effects.push({ score_type: 'can', job_attribute: 'execution', boost: 20 })
+            break
+          case 'fast_learning':
+            effects.push({ score_type: 'can', job_attribute: 'growth', boost: 20 })
+            effects.push({ score_type: 'like', job_attribute: 'growth', boost: 15 })
+            break
+        }
+      })
+
+      return effects
+    }
+  },
+
+  // 미니모듈 energy_drain_flags 기반 매핑 (강화된 페널티)
+  {
+    fact_key_pattern: /^minimodule\.energy_drain_flags$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['priority.dealbreaker'],
+    effects: (factValue) => {
+      const drains = Array.isArray(factValue) ? factValue : [factValue]
+      const effects: FactScoreEffect[] = []
+
+      drains.forEach((drain: string) => {
+        switch (drain) {
+          case 'people_drain':
+            // 대인 피로 → 대면 서비스 직업군 Fit -40 (강화)
+            effects.push({ score_type: 'like', job_attribute: 'people_facing', boost: -40 })
+            effects.push({ score_type: 'risk', job_attribute: 'people_facing', boost: 35 })
+            effects.push({ score_type: 'like', job_attribute: 'solo_work', boost: 25 })
+            break
+          case 'time_pressure_drain':
+            effects.push({ score_type: 'like', job_attribute: 'wlb', boost: 25 })
+            effects.push({ score_type: 'risk', job_attribute: 'wlb', boost: 30 })
+            break
+          case 'cognitive_drain':
+            effects.push({ score_type: 'risk', job_attribute: 'analytical', boost: 20 })
+            break
+          case 'responsibility_drain':
+            effects.push({ score_type: 'risk', job_attribute: 'teamwork', boost: 20 })
+            effects.push({ score_type: 'like', job_attribute: 'solo_work', boost: 15 })
+            break
+          case 'repetition_drain':
+            effects.push({ score_type: 'like', job_attribute: 'creative', boost: 20 })
+            effects.push({ score_type: 'risk', job_attribute: 'execution', boost: 15 })
+            break
+          case 'unpredictability_drain':
+            effects.push({ score_type: 'like', job_attribute: 'stability', boost: 25 })
+            effects.push({ score_type: 'risk', job_attribute: 'growth', boost: 15 })
+            break
+        }
+      })
+
+      return effects
+    }
+  },
+
+  // 미니모듈 sacrifice_flags 기반 매핑 (Hard Bias 충돌 페널티 강화)
+  {
+    fact_key_pattern: /^minimodule\.sacrifice_flags$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['confirmed_constraint'],
+    effects: (factValue) => {
+      const sacrifices = Array.isArray(factValue) ? factValue : [factValue]
+      const effects: FactScoreEffect[] = []
+
+      sacrifices.forEach((sacrifice: string) => {
+        switch (sacrifice) {
+          case 'no_sacrifice':
+            // 희생 불가 → 모든 부정적 조건에 민감
+            effects.push({ score_type: 'like', job_attribute: 'stability', boost: 30 })
+            effects.push({ score_type: 'like', job_attribute: 'wlb', boost: 25 })
+            effects.push({ score_type: 'risk', job_attribute: 'growth', boost: 20 })
+            break
+          case 'sacrifice_income':
+            effects.push({ score_type: 'like', job_attribute: 'income', boost: -20 })
+            effects.push({ score_type: 'like', job_attribute: 'growth', boost: 15 })
+            break
+          case 'sacrifice_wlb':
+            effects.push({ score_type: 'risk', job_attribute: 'wlb', boost: -15 })
+            effects.push({ score_type: 'like', job_attribute: 'growth', boost: 20 })
+            break
+          case 'sacrifice_stability':
+            effects.push({ score_type: 'like', job_attribute: 'stability', boost: -20 })
+            effects.push({ score_type: 'like', job_attribute: 'growth', boost: 20 })
+            break
+        }
+      })
+
+      return effects
+    }
+  },
+
+  // 미니모듈 workstyle_top 기반 매핑
+  {
+    fact_key_pattern: /^minimodule\.workstyle_top$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['motivation'],
+    effects: (factValue) => {
+      const styles = Array.isArray(factValue) ? factValue : [factValue]
+      const effects: FactScoreEffect[] = []
+
+      styles.forEach((style: string) => {
+        switch (style) {
+          case 'solo':
+            effects.push({ score_type: 'like', job_attribute: 'solo_work', boost: 25 })
+            effects.push({ score_type: 'like', job_attribute: 'people_facing', boost: -15 })
+            effects.push({ score_type: 'risk', job_attribute: 'teamwork', boost: 15 })
+            break
+          case 'team':
+            effects.push({ score_type: 'like', job_attribute: 'teamwork', boost: 25 })
+            effects.push({ score_type: 'like', job_attribute: 'people_facing', boost: 15 })
+            effects.push({ score_type: 'like', job_attribute: 'solo_work', boost: -10 })
+            break
+          case 'structured':
+            effects.push({ score_type: 'like', job_attribute: 'stability', boost: 20 })
+            effects.push({ score_type: 'like', job_attribute: 'execution', boost: 15 })
+            effects.push({ score_type: 'risk', job_attribute: 'creative', boost: 10 })
+            break
+          case 'flexible':
+            effects.push({ score_type: 'like', job_attribute: 'creative', boost: 20 })
+            effects.push({ score_type: 'like', job_attribute: 'remote', boost: 15 })
+            effects.push({ score_type: 'risk', job_attribute: 'stability', boost: 10 })
+            break
+        }
+      })
+
+      return effects
+    }
+  },
+
+  // 미니모듈 value_top 기반 매핑
+  {
+    fact_key_pattern: /^minimodule\.value_top$/,
+    priority: MAPPING_POLICY.PRIORITY_ORDER['priority.top1'],
+    effects: (factValue) => {
+      const values = Array.isArray(factValue) ? factValue : [factValue]
+      const effects: FactScoreEffect[] = []
+
+      values.forEach((value: string) => {
+        switch (value) {
+          case 'autonomy':
+            effects.push({ score_type: 'like', job_attribute: 'solo_work', boost: 20 })
+            effects.push({ score_type: 'like', job_attribute: 'remote', boost: 20 })
+            break
+          case 'growth':
+            effects.push({ score_type: 'like', job_attribute: 'growth', boost: 25 })
+            break
+          case 'stability':
+            effects.push({ score_type: 'like', job_attribute: 'stability', boost: 25 })
+            effects.push({ score_type: 'risk', job_attribute: 'growth', boost: 10 })
+            break
+          case 'income':
+            effects.push({ score_type: 'like', job_attribute: 'income', boost: 25 })
+            break
+          case 'meaning':
+            effects.push({ score_type: 'like', job_attribute: 'people_facing', boost: 15 })
+            effects.push({ score_type: 'like', job_attribute: 'growth', boost: 10 })
+            break
+          case 'recognition':
+            effects.push({ score_type: 'like', job_attribute: 'people_facing', boost: 15 })
+            effects.push({ score_type: 'like', job_attribute: 'teamwork', boost: 10 })
+            break
+        }
+      })
+
+      return effects
+    }
+  },
+
+  // ============================================
+  // P0: Can 검증 질문 결과 → Can Boost 규칙 (6개)
+  // 자기평가 강점의 실제 경험 검증 시 Can 점수 가산
+  // ============================================
+
+  // 1. 분석력 검증
+  {
+    fact_key_pattern: 'can_verified_analytical',
+    priority: 90,  // 높은 우선순위 (confirmed_constraint 바로 아래)
+    effects: (factValue) => {
+      const value = typeof factValue === 'string' ? factValue : String(factValue)
+      switch (value) {
+        case 'strong_evidence':
+          return [{ score_type: 'can', job_attribute: 'analytical', boost: 15 }]
+        case 'some_evidence':
+          return [{ score_type: 'can', job_attribute: 'analytical', boost: 8 }]
+        default:
+          return []
+      }
+    }
+  },
+
+  // 2. 창의력 검증
+  {
+    fact_key_pattern: 'can_verified_creative',
+    priority: 90,
+    effects: (factValue) => {
+      const value = typeof factValue === 'string' ? factValue : String(factValue)
+      switch (value) {
+        case 'strong_evidence':
+          return [{ score_type: 'can', job_attribute: 'creative', boost: 15 }]
+        case 'some_evidence':
+          return [{ score_type: 'can', job_attribute: 'creative', boost: 8 }]
+        default:
+          return []
+      }
+    }
+  },
+
+  // 3. 소통력 검증
+  {
+    fact_key_pattern: 'can_verified_communication',
+    priority: 90,
+    effects: (factValue) => {
+      const value = typeof factValue === 'string' ? factValue : String(factValue)
+      switch (value) {
+        case 'strong_evidence':
+          return [
+            { score_type: 'can', job_attribute: 'people_facing', boost: 15 },
+            { score_type: 'can', job_attribute: 'teamwork', boost: 10 }
+          ]
+        case 'some_evidence':
+          return [
+            { score_type: 'can', job_attribute: 'people_facing', boost: 8 },
+            { score_type: 'can', job_attribute: 'teamwork', boost: 5 }
+          ]
+        default:
+          return []
+      }
+    }
+  },
+
+  // 4. 실행력 검증
+  {
+    fact_key_pattern: 'can_verified_structured_execution',
+    priority: 90,
+    effects: (factValue) => {
+      const value = typeof factValue === 'string' ? factValue : String(factValue)
+      switch (value) {
+        case 'strong_evidence':
+          return [{ score_type: 'can', job_attribute: 'execution', boost: 15 }]
+        case 'some_evidence':
+          return [{ score_type: 'can', job_attribute: 'execution', boost: 8 }]
+        default:
+          return []
+      }
+    }
+  },
+
+  // 5. 끈기 검증
+  {
+    fact_key_pattern: 'can_verified_persistence',
+    priority: 90,
+    effects: (factValue) => {
+      const value = typeof factValue === 'string' ? factValue : String(factValue)
+      switch (value) {
+        case 'strong_evidence':
+          return [
+            { score_type: 'can', job_attribute: 'execution', boost: 10 },
+            { score_type: 'can', job_attribute: 'growth', boost: 10 }
+          ]
+        case 'some_evidence':
+          return [
+            { score_type: 'can', job_attribute: 'execution', boost: 5 },
+            { score_type: 'can', job_attribute: 'growth', boost: 5 }
+          ]
+        default:
+          return []
+      }
+    }
+  },
+
+  // 6. 학습력 검증
+  {
+    fact_key_pattern: 'can_verified_fast_learning',
+    priority: 90,
+    effects: (factValue) => {
+      const value = typeof factValue === 'string' ? factValue : String(factValue)
+      switch (value) {
+        case 'strong_evidence':
+          return [
+            { score_type: 'can', job_attribute: 'growth', boost: 15 },
+            { score_type: 'can', job_attribute: 'analytical', boost: 5 }
+          ]
+        case 'some_evidence':
+          return [
+            { score_type: 'can', job_attribute: 'growth', boost: 8 },
+            { score_type: 'can', job_attribute: 'analytical', boost: 3 }
+          ]
+        default:
+          return []
+      }
+    }
+  },
 ]
 
 // ============================================
@@ -1229,7 +2108,7 @@ function applyTotalCap(boostMap: Map<JobAttribute, number>, cap: number): void {
   for (const boost of boostMap.values()) {
     total += Math.max(0, boost)  // 양수만 합산
   }
-  
+
   if (total > cap) {
     const ratio = cap / total
     for (const [attr, boost] of boostMap.entries()) {
@@ -1237,6 +2116,58 @@ function applyTotalCap(boostMap: Map<JobAttribute, number>, cap: number): void {
         boostMap.set(attr, boost * ratio)
       }
     }
+  }
+}
+
+// ============================================
+// P0: Can-Like 밸런스 캡
+// |Can - Like| > 40일 경우 소프트 캡 적용
+// 한쪽이 너무 높으면 현실성 낮음 → 적정 수준으로 조정
+// ============================================
+export const BALANCE_CAP_CONFIG = {
+  MAX_IMBALANCE: 40,           // 허용되는 최대 불균형
+  SOFT_CAP_RATIO: 0.6,         // 초과분에 적용되는 감쇠 비율 (40% 감쇠)
+}
+
+export interface BalancedScores {
+  like: number
+  can: number
+  balance_cap_applied: boolean
+  original_diff: number
+}
+
+/**
+ * Can-Like 밸런스 캡 적용
+ * - |Can - Like| > 40이면 소프트 캡 적용
+ * - 초과분의 40%만 인정하여 극단적 불균형 방지
+ */
+export function applyBalanceCap(like: number, can: number): BalancedScores {
+  const diff = Math.abs(can - like)
+
+  if (diff <= BALANCE_CAP_CONFIG.MAX_IMBALANCE) {
+    return { like, can, balance_cap_applied: false, original_diff: diff }
+  }
+
+  // 초과분 계산
+  const excess = diff - BALANCE_CAP_CONFIG.MAX_IMBALANCE
+  const cappedExcess = excess * BALANCE_CAP_CONFIG.SOFT_CAP_RATIO
+
+  let adjustedLike = like
+  let adjustedCan = can
+
+  if (can > like) {
+    // Can이 너무 높음 → Can 감소
+    adjustedCan = like + BALANCE_CAP_CONFIG.MAX_IMBALANCE + cappedExcess
+  } else {
+    // Like가 너무 높음 → Like 감소
+    adjustedLike = can + BALANCE_CAP_CONFIG.MAX_IMBALANCE + cappedExcess
+  }
+
+  return {
+    like: Math.round(adjustedLike),
+    can: Math.round(adjustedCan),
+    balance_cap_applied: true,
+    original_diff: diff,
   }
 }
 

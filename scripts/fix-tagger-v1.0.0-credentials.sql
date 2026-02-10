@@ -35,3 +35,4 @@ UPDATE job_attributes SET degree_required = 'college' WHERE job_name = '회계�
 
 
 
+

@@ -119,7 +119,7 @@ cmd /c mklink /J ".wrangler\state\v3\r2\miniflare-R2BucketObject\blobs" ".wrangl
 
 2. **package.json dev 스크립트** (이미 설정됨)
 ```json
-"dev": "npm run build && npx wrangler pages dev dist --d1=careerwiki-db --r2=careerwiki-uploads --local --port 3000"
+"dev": "npm run build && npx wrangler pages dev dist --d1=careerwiki --r2=careerwiki-uploads --local --port 3000"
 ```
 
 ### 3.2 서버 실행
@@ -254,7 +254,7 @@ node -e "const Database = require('better-sqlite3'); const db = new Database('.w
 
 ```bash
 # 확인
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM jobs WHERE image_url IS NULL OR image_url = ''"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM jobs WHERE image_url IS NULL OR image_url = ''"
 ```
 
 ---
@@ -288,7 +288,7 @@ node scripts/generate_major_images_r2.cjs
 
 ```bash
 # 프롬프트 있고 이미지 없는 전공 수
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM majors WHERE image_prompt IS NOT NULL AND (image_url IS NULL OR image_url = '')"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM majors WHERE image_prompt IS NOT NULL AND (image_url IS NULL OR image_url = '')"
 ```
 
 ### 6.4 전공 이미지 서빙

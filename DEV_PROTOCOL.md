@@ -73,13 +73,13 @@ npm run dev:no-sync
 ### 데이터 확인/수정
 ```powershell
 # Production 조회
-npx wrangler d1 execute careerwiki-db --remote --command "SELECT COUNT(*) FROM jobs;"
+npx wrangler d1 execute careerwiki --remote --command "SELECT COUNT(*) FROM jobs;"
 
 # 로컬 조회
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM jobs;"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM jobs;"
 
 # Production에 데이터 추가 (주의!)
-npx wrangler d1 execute careerwiki-db --remote --command "INSERT INTO ..."
+npx wrangler d1 execute careerwiki --remote --command "INSERT INTO ..."
 ```
 
 ---
@@ -114,7 +114,7 @@ npx wrangler d1 execute careerwiki-db --remote --command "INSERT INTO ..."
 ### Production 직접 조작
 ```powershell
 # ⚠️ 위험! Production 데이터 직접 수정
-npx wrangler d1 execute careerwiki-db --remote --command "DELETE FROM ..."
+npx wrangler d1 execute careerwiki --remote --command "DELETE FROM ..."
 ```
 - **DELETE, DROP, TRUNCATE** 전 백업 필수
 - 실수 시 복구 어려움

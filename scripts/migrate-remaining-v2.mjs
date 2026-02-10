@@ -15,7 +15,7 @@ const TABLES = [
 function runLocal(sql) {
   try {
     const result = execSync(
-      `npx wrangler d1 execute careerwiki-db --local --command "${sql}" --json`,
+      `npx wrangler d1 execute careerwiki --local --command "${sql}" --json`,
       { encoding: 'utf-8', env: { ...process.env, CLOUDFLARE_API_TOKEN: API_TOKEN }, maxBuffer: 100*1024*1024, stdio: ['pipe','pipe','pipe'] }
     );
     return JSON.parse(result);
@@ -25,7 +25,7 @@ function runLocal(sql) {
 function runRemote(sql) {
   const escaped = sql.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$');
   try {
-    execSync(`npx wrangler d1 execute careerwiki-db --remote --command "${escaped}"`,
+    execSync(`npx wrangler d1 execute careerwiki --remote --command "${escaped}"`,
       { encoding: 'utf-8', env: { ...process.env, CLOUDFLARE_API_TOKEN: API_TOKEN }, stdio: ['pipe','pipe','pipe'] });
     return true;
   } catch (e) { 

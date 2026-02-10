@@ -135,12 +135,12 @@ const importScript = `# Job Dictionary Index Import Script
 # Batches: ${batches.length}
 
 ${batches.map((_, i) => 
-  `echo "Importing batch ${i + 1}/${batches.length}..."\nnpx wrangler d1 execute careerwiki-db --local --file=.temp/job_dict_batch_${String(i + 1).padStart(3, '0')}.sql`
+  `echo "Importing batch ${i + 1}/${batches.length}..."\nnpx wrangler d1 execute careerwiki-kr --local --file=.temp/job_dict_batch_${String(i + 1).padStart(3, '0')}.sql`
 ).join('\n')}
 
 echo "✅ All batches imported!"
 echo "Verifying count..."
-npx wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) as count FROM job_dictionary_index;"
+npx wrangler d1 execute careerwiki-kr --local --command="SELECT COUNT(*) as count FROM job_dictionary_index;"
 `
 
 const scriptPath = path.join(tempDir, 'import_job_dict.sh')

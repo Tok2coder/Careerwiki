@@ -204,6 +204,9 @@ export function renderAdminAiAnalyzer(props: AdminAiAnalyzerProps): string {
           <button onclick="showTab('errors')" class="tab-btn px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 border-transparent text-slate-400 hover:text-white" data-tab="errors">
             <i class="fas fa-bug mr-2"></i>에러 로그
           </button>
+          <button onclick="showTab('scenario-test')" class="tab-btn px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 border-transparent text-slate-400 hover:text-white" data-tab="scenario-test">
+            <i class="fas fa-flask mr-2"></i>시나리오 테스트
+          </button>
         </nav>
       </div>
       
@@ -414,13 +417,296 @@ export function renderAdminAiAnalyzer(props: AdminAiAnalyzerProps): string {
           </table>
         </div>
       </div>
+
+      <!-- 시나리오 테스트 탭 -->
+      <div id="tab-scenario-test" class="tab-content hidden p-6">
+        <div class="mb-6">
+          <h4 class="text-white font-medium mb-2"><i class="fas fa-flask mr-2 text-purple-400"></i>자동화 시나리오 테스트</h4>
+          <p class="text-slate-400 text-sm">P0/P1/P2/P3 기능을 자동으로 검증합니다. LLM 질문에도 자동 응답합니다.</p>
+        </div>
+
+        <!-- E2E 테스트 모드 선택 -->
+        <div class="mb-6 p-4 bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30">
+          <h5 class="text-white font-medium mb-3"><i class="fas fa-vial mr-2 text-purple-400"></i>E2E 테스트 (실제 사용자 흐름 시뮬레이션)</h5>
+          <p class="text-slate-400 text-sm mb-4">실제 사용자처럼 프로필 입력 → 심층질문 답변 → LLM 라운드 1,2,3 → 결과 확인까지 전 과정을 자동으로 진행합니다.</p>
+          <div class="flex gap-3 flex-wrap mb-4">
+            <select id="e2eScenarioSelect" class="flex-1 min-w-48 px-4 py-2 bg-slate-700 rounded-lg text-white" onchange="showExpectedJobs()">
+              <option value="">시나리오 선택...</option>
+              <option value="analytical_user">분석형 유저 (Employed)</option>
+              <option value="stability_seeker">안정 지향 유저 (Job Seeker)</option>
+              <option value="internal_conflict">내면갈등 유저 (Career Changer)</option>
+              <option value="creative_user">창의형 유저 (Student)</option>
+              <option value="low_can_user">Can 부족 유저 (Job Seeker)</option>
+              <option value="comprehensive_test">종합 테스트 (Employed)</option>
+            </select>
+            <button onclick="runE2ETest()" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all shadow-lg">
+              <i class="fas fa-play-circle mr-2"></i>E2E 테스트 실행
+            </button>
+          </div>
+
+          <!-- 예상 직업 표시 -->
+          <div id="expectedJobsPanel" class="hidden mt-4 p-4 bg-slate-800/50 rounded-lg border border-slate-600/50">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h6 class="text-green-400 font-medium mb-2 flex items-center gap-2">
+                  <i class="fas fa-check-circle"></i>
+                  <span>예상 상위 직업 카테고리</span>
+                </h6>
+                <div id="expectedTopJobs" class="flex flex-wrap gap-2"></div>
+              </div>
+              <div>
+                <h6 class="text-red-400 font-medium mb-2 flex items-center gap-2">
+                  <i class="fas fa-times-circle"></i>
+                  <span>제외되어야 할 직업 카테고리</span>
+                </h6>
+                <div id="expectedExcludedJobs" class="flex flex-wrap gap-2"></div>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-600/50">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                <div class="text-center p-2 bg-slate-700/50 rounded">
+                  <div class="text-slate-400 text-xs">Fit 점수 범위</div>
+                  <div id="expectedFitRange" class="text-white font-medium">-</div>
+                </div>
+                <div class="text-center p-2 bg-slate-700/50 rounded">
+                  <div class="text-slate-400 text-xs">성장곡선 매칭</div>
+                  <div id="expectedGrowthCurve" class="font-medium">-</div>
+                </div>
+                <div class="text-center p-2 bg-slate-700/50 rounded">
+                  <div class="text-slate-400 text-xs">내면갈등 리스크</div>
+                  <div id="expectedConflictRisk" class="font-medium">-</div>
+                </div>
+                <div class="text-center p-2 bg-slate-700/50 rounded">
+                  <div class="text-slate-400 text-xs">Can 필터</div>
+                  <div id="expectedCanFilter" class="font-medium">-</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 기존 Quick 테스트 (API 직접 호출) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div class="space-y-4">
+            <h5 class="text-white font-medium">Quick 테스트 (백엔드 직접 계산)</h5>
+            <p class="text-slate-400 text-xs">LLM 라운드 없이 빠르게 점수만 확인합니다.</p>
+            <div class="flex gap-3">
+              <select id="scenarioSelect" class="flex-1 px-4 py-2 bg-slate-700 rounded-lg text-white">
+                <option value="">시나리오 선택...</option>
+                <option value="analytical_user">분석형 유저 (Basic)</option>
+                <option value="stability_seeker">안정 지향 유저 (Basic)</option>
+                <option value="internal_conflict">내면갈등 유저 (Conflict)</option>
+                <option value="creative_user">창의형 유저 (Basic)</option>
+                <option value="low_can_user">Can 부족 유저 (Edge Case)</option>
+                <option value="comprehensive_test">종합 테스트 (Comprehensive)</option>
+              </select>
+              <button onclick="runSingleScenario()" class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors">
+                <i class="fas fa-bolt mr-2"></i>Quick
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <h5 class="text-white font-medium">전체 Quick 테스트</h5>
+            <p class="text-slate-400 text-xs">6개 시나리오 모두 Quick 테스트합니다.</p>
+            <button onclick="runAllScenarios()" class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors">
+              <i class="fas fa-rocket mr-2"></i>전체 Quick 테스트
+            </button>
+          </div>
+        </div>
+
+        <!-- 테스트 진행 상태 -->
+        <div id="testProgress" class="hidden mb-6 p-4 bg-slate-800/50 rounded-lg">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="animate-spin w-5 h-5 border-2 border-purple-500 border-t-transparent rounded-full"></div>
+            <span class="text-white" id="testProgressText">테스트 실행 중...</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div id="testProgressBar" class="bg-purple-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- 테스트 결과 -->
+        <div id="testResults" class="hidden">
+          <!-- 요약 카드 -->
+          <div id="testSummary" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"></div>
+
+          <!-- 상세 결과 -->
+          <div id="testDetails" class="space-y-4"></div>
+        </div>
+
+        <!-- 기능 검증 체크리스트 -->
+        <div class="mt-8 p-4 bg-slate-800/30 rounded-lg">
+          <h5 class="text-white font-medium mb-4"><i class="fas fa-check-double mr-2 text-green-400"></i>검증 대상 기능 (P0/P1/P2/P3)</h5>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+            <div class="space-y-2">
+              <div class="text-blue-400 font-medium">P0</div>
+              <div class="text-slate-400">Can 검증 질문</div>
+              <div class="text-slate-400">Can-Like 밸런스 캡</div>
+            </div>
+            <div class="space-y-2">
+              <div class="text-yellow-400 font-medium">P1</div>
+              <div class="text-slate-400">Risk 강도 시스템</div>
+              <div class="text-slate-400">Hard Exclusion 조건</div>
+            </div>
+            <div class="space-y-2">
+              <div class="text-purple-400 font-medium">P2</div>
+              <div class="text-slate-400">수집 진행도 추적</div>
+              <div class="text-slate-400">Can 기반 TAG 필터</div>
+            </div>
+            <div class="space-y-2">
+              <div class="text-green-400 font-medium">P3</div>
+              <div class="text-slate-400">성장곡선 매칭</div>
+              <div class="text-slate-400">내면갈등 Risk 조정</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     
+    <!-- Scenario Runner Script -->
+    <script src="/static/scenario-runner.js"></script>
+
     <!-- JavaScript -->
     <script>
       const API_BASE = '/api/ai-analyzer';
       const ADMIN_API_BASE = '/admin/api/ai';
-      
+
+      // 시나리오별 예상 결과 데이터
+      const SCENARIO_EXPECTED_RESULTS = {
+        analytical_user: {
+          topJobCategories: ['데이터 분석', '통계', '리서치', 'BI'],
+          excludedJobCategories: ['현장직', '서비스직', '육체노동'],
+          fitScoreRange: { min: 60, max: 95 },
+          featuresApplied: {
+            growthCurveMatching: true,
+            internalConflictRisk: false,
+            canBasedFilter: true,
+            balanceCap: true
+          }
+        },
+        stability_seeker: {
+          topJobCategories: ['공무원', '행정', '사무직', '공공기관'],
+          excludedJobCategories: ['스타트업', '영업', '프리랜서', '야근 많은 직업'],
+          fitScoreRange: { min: 55, max: 90 },
+          featuresApplied: {
+            growthCurveMatching: true,
+            internalConflictRisk: false,
+            canBasedFilter: true,
+            balanceCap: true
+          }
+        },
+        internal_conflict: {
+          topJobCategories: ['UX/UI', '기획', '컨설팅', '연구'],
+          excludedJobCategories: ['영업', '단순 사무', '현장직'],
+          fitScoreRange: { min: 50, max: 85 },
+          featuresApplied: {
+            growthCurveMatching: true,
+            internalConflictRisk: true,
+            canBasedFilter: true,
+            balanceCap: true
+          }
+        },
+        creative_user: {
+          topJobCategories: ['디자이너', '아트디렉터', '크리에이티브', '일러스트'],
+          excludedJobCategories: ['회계', '법무', '공장', '물류'],
+          fitScoreRange: { min: 65, max: 95 },
+          featuresApplied: {
+            growthCurveMatching: true,
+            internalConflictRisk: false,
+            canBasedFilter: true,
+            balanceCap: true
+          }
+        },
+        low_can_user: {
+          topJobCategories: ['신입 가능', '교육 제공', '성장 가능'],
+          excludedJobCategories: ['시니어급', '전문가급'],
+          fitScoreRange: { min: 40, max: 75 },
+          featuresApplied: {
+            growthCurveMatching: true,
+            internalConflictRisk: false,
+            canBasedFilter: true,
+            balanceCap: false
+          }
+        },
+        comprehensive_test: {
+          topJobCategories: ['개발자', 'PM', '기획자', '컨설턴트'],
+          excludedJobCategories: ['현장직', '교대근무', '출장 많은 직업'],
+          fitScoreRange: { min: 55, max: 90 },
+          featuresApplied: {
+            growthCurveMatching: true,
+            internalConflictRisk: false,
+            canBasedFilter: true,
+            balanceCap: true
+          }
+        }
+      };
+
+      // 예상 직업 표시
+      function showExpectedJobs() {
+        const scenarioId = document.getElementById('e2eScenarioSelect').value;
+        const panel = document.getElementById('expectedJobsPanel');
+
+        if (!scenarioId) {
+          panel.classList.add('hidden');
+          return;
+        }
+
+        const expected = SCENARIO_EXPECTED_RESULTS[scenarioId];
+        if (!expected) {
+          panel.classList.add('hidden');
+          return;
+        }
+
+        // 상위 직업 카테고리 표시
+        document.getElementById('expectedTopJobs').innerHTML = expected.topJobCategories.map(cat =>
+          \`<span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">\${cat}</span>\`
+        ).join('');
+
+        // 제외 직업 카테고리 표시
+        document.getElementById('expectedExcludedJobs').innerHTML = expected.excludedJobCategories.map(cat =>
+          \`<span class="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-sm">\${cat}</span>\`
+        ).join('');
+
+        // Fit 점수 범위
+        document.getElementById('expectedFitRange').textContent = \`\${expected.fitScoreRange.min} ~ \${expected.fitScoreRange.max}\`;
+
+        // 기능 적용 표시
+        const f = expected.featuresApplied;
+        document.getElementById('expectedGrowthCurve').innerHTML = f.growthCurveMatching
+          ? '<span class="text-green-400">✓ 적용</span>'
+          : '<span class="text-slate-500">- 미적용</span>';
+        document.getElementById('expectedConflictRisk').innerHTML = f.internalConflictRisk
+          ? '<span class="text-yellow-400">✓ 감지</span>'
+          : '<span class="text-slate-500">- 해당없음</span>';
+        document.getElementById('expectedCanFilter').innerHTML = f.canBasedFilter
+          ? '<span class="text-green-400">✓ 적용</span>'
+          : '<span class="text-slate-500">- 미적용</span>';
+
+        panel.classList.remove('hidden');
+      }
+
+      // E2E 테스트 실행
+      async function runE2ETest() {
+        const scenarioId = document.getElementById('e2eScenarioSelect').value;
+        if (!scenarioId) {
+          alert('시나리오를 선택하세요');
+          return;
+        }
+
+        if (typeof window.runE2EScenario !== 'function') {
+          alert('E2E 러너가 로드되지 않았습니다. 페이지를 새로고침해주세요.');
+          return;
+        }
+
+        try {
+          await window.runE2EScenario(scenarioId);
+        } catch (e) {
+          console.error('E2E Test Error:', e);
+          alert('E2E 테스트 오류: ' + e.message);
+        }
+      }
+
       // 탭 전환
       function showTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -613,6 +899,268 @@ export function renderAdminAiAnalyzer(props: AdminAiAnalyzerProps): string {
           alert('조회 실패: ' + e.message);
         }
       }
+
+      // ============================================
+      // 시나리오 테스트 함수들
+      // ============================================
+
+      async function runSingleScenario() {
+        const scenarioId = document.getElementById('scenarioSelect').value;
+        if (!scenarioId) {
+          alert('시나리오를 선택하세요');
+          return;
+        }
+
+        showTestProgress('시나리오 실행 중: ' + scenarioId);
+
+        try {
+          const res = await fetch(API_BASE + '/test/run-scenario', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ scenario_id: scenarioId })
+          });
+          const data = await res.json();
+
+          if (!data.success) {
+            throw new Error(data.error || '테스트 실패');
+          }
+
+          displaySingleResult(data);
+        } catch (e) {
+          alert('테스트 실패: ' + e.message);
+        } finally {
+          hideTestProgress();
+        }
+      }
+
+      async function runAllScenarios() {
+        const scenarios = [
+          'analytical_user',
+          'stability_seeker',
+          'internal_conflict',
+          'creative_user',
+          'low_can_user',
+          'comprehensive_test'
+        ];
+
+        showTestProgress('전체 테스트 시작...');
+        const results = [];
+
+        for (let i = 0; i < scenarios.length; i++) {
+          updateTestProgress((i + 1) / scenarios.length * 100, \`테스트 중: \${scenarios[i]} (\${i + 1}/\${scenarios.length})\`);
+
+          try {
+            const res = await fetch(API_BASE + '/test/run-scenario', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ scenario_id: scenarios[i] })
+            });
+            const data = await res.json();
+            results.push(data);
+          } catch (e) {
+            results.push({
+              success: false,
+              scenario: { id: scenarios[i], name: scenarios[i] },
+              verification: { passed: false, score: 0, summary: e.message }
+            });
+          }
+        }
+
+        displayAllResults(results);
+        hideTestProgress();
+      }
+
+      function showTestProgress(text) {
+        document.getElementById('testProgress').classList.remove('hidden');
+        document.getElementById('testProgressText').textContent = text;
+        document.getElementById('testProgressBar').style.width = '0%';
+        document.getElementById('testResults').classList.add('hidden');
+      }
+
+      function updateTestProgress(percent, text) {
+        document.getElementById('testProgressBar').style.width = percent + '%';
+        document.getElementById('testProgressText').textContent = text;
+      }
+
+      function hideTestProgress() {
+        document.getElementById('testProgress').classList.add('hidden');
+      }
+
+      function displaySingleResult(data) {
+        const v = data.verification;
+        const resultPageUrl = data.result_page_url || '';
+        const resultApiUrl = data.result_api_url || '';
+        const hasResultPage = !!resultPageUrl;
+        const summaryHtml = \`
+          <div class="stat-card glass-card rounded-xl p-4">
+            <div class="text-2xl font-bold \${v.passed ? 'text-green-400' : 'text-red-400'}">\${v.passed ? '통과' : '실패'}</div>
+            <div class="text-xs text-slate-400">결과</div>
+          </div>
+          <div class="stat-card glass-card rounded-xl p-4">
+            <div class="text-2xl font-bold text-white">\${v.score}/100</div>
+            <div class="text-xs text-slate-400">점수</div>
+          </div>
+          <div class="stat-card glass-card rounded-xl p-4">
+            <div class="text-2xl font-bold text-white">\${data.results.total_scored}</div>
+            <div class="text-xs text-slate-400">평가 직업 수</div>
+          </div>
+          \${hasResultPage ? \`
+            <div class="stat-card glass-card rounded-xl p-4 cursor-pointer hover:bg-slate-700/50" onclick="window.open('\${resultPageUrl}', '_blank')">
+              <div class="text-2xl font-bold text-blue-400"><i class="fas fa-external-link-alt"></i></div>
+              <div class="text-xs text-slate-400">결과 페이지</div>
+            </div>
+          \` : \`
+            <div class="stat-card glass-card rounded-xl p-4 opacity-50">
+              <div class="text-2xl font-bold text-slate-500"><i class="fas fa-exclamation-circle"></i></div>
+              <div class="text-xs text-slate-400">저장 실패</div>
+            </div>
+          \`}
+        \`;
+        document.getElementById('testSummary').innerHTML = summaryHtml;
+
+        const detailsHtml = \`
+          <div class="glass-card rounded-xl p-5">
+            <h5 class="text-white font-medium mb-4">\${data.scenario.name}</h5>
+            <p class="text-slate-400 text-sm mb-4">\${data.scenario.description}</p>
+
+            <!-- 검증 상세 -->
+            <div class="space-y-3 mb-4">
+              \${Object.entries(v.details).map(([key, detail]) => \`
+                <div class="flex justify-between items-center p-2 rounded \${detail.passed ? 'bg-green-500/10' : 'bg-red-500/10'}">
+                  <span class="text-sm text-slate-300">\${formatCheckName(key)}</span>
+                  <span class="text-sm \${detail.passed ? 'text-green-400' : 'text-red-400'}">\${detail.passed ? '✓' : '✗'} \${detail.message}</span>
+                </div>
+              \`).join('')}
+            </div>
+
+            <!-- 적용된 기능 -->
+            <div class="grid grid-cols-4 gap-2 mb-4">
+              <div class="text-center p-2 rounded \${data.results.applied_features.growth_curve ? 'bg-green-500/20' : 'bg-slate-700'}">
+                <div class="text-xs text-slate-400">성장곡선</div>
+                <div class="\${data.results.applied_features.growth_curve ? 'text-green-400' : 'text-slate-500'}">\${data.results.applied_features.growth_curve ? '✓' : '-'}</div>
+              </div>
+              <div class="text-center p-2 rounded \${data.results.applied_features.conflict_risk ? 'bg-green-500/20' : 'bg-slate-700'}">
+                <div class="text-xs text-slate-400">내면갈등</div>
+                <div class="\${data.results.applied_features.conflict_risk ? 'text-green-400' : 'text-slate-500'}">\${data.results.applied_features.conflict_risk ? '✓' : '-'}</div>
+              </div>
+              <div class="text-center p-2 rounded \${data.results.applied_features.can_filter ? 'bg-green-500/20' : 'bg-slate-700'}">
+                <div class="text-xs text-slate-400">Can 필터</div>
+                <div class="\${data.results.applied_features.can_filter ? 'text-green-400' : 'text-slate-500'}">\${data.results.applied_features.can_filter ? '✓' : '-'}</div>
+              </div>
+              <div class="text-center p-2 rounded \${data.results.applied_features.balance_cap ? 'bg-green-500/20' : 'bg-slate-700'}">
+                <div class="text-xs text-slate-400">밸런스캡</div>
+                <div class="\${data.results.applied_features.balance_cap ? 'text-green-400' : 'text-slate-500'}">\${data.results.applied_features.balance_cap ? '✓' : '-'}</div>
+              </div>
+            </div>
+
+            <!-- Top 5 직업 -->
+            <div class="flex justify-between items-center mb-2">
+              <h6 class="text-white font-medium">Top 5 추천 직업</h6>
+              <div class="flex gap-2">
+                \${data.result_page_url ? \`
+                  <a href="\${data.result_page_url}" target="_blank" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                    <i class="fas fa-external-link-alt mr-1"></i>결과 페이지에서 보기
+                  </a>
+                \` : ''}
+                \${data.result_api_url ? \`
+                  <a href="\${data.result_api_url}" target="_blank" class="px-3 py-1 bg-slate-600 hover:bg-slate-700 text-white rounded text-sm">
+                    <i class="fas fa-code mr-1"></i>API 결과
+                  </a>
+                \` : ''}
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="text-left text-slate-400 border-b border-slate-700">
+                    <th class="pb-2 pr-4">직업명</th>
+                    <th class="pb-2 pr-4">Fit</th>
+                    <th class="pb-2 pr-4">Like</th>
+                    <th class="pb-2 pr-4">Can</th>
+                    <th class="pb-2 pr-4">Risk</th>
+                    <th class="pb-2 pr-4">상세</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  \${data.results.top_jobs.map((job, i) => \`
+                    <tr class="border-b border-slate-700/50">
+                      <td class="py-2 pr-4">
+                        <div class="flex items-center gap-2">
+                          \${job.image_url ? \`<img src="\${job.image_url}" class="w-8 h-8 rounded object-cover" onerror="this.style.display='none'" />\` : ''}
+                          <span class="text-white">\${i + 1}. \${job.job_name}</span>
+                        </div>
+                      </td>
+                      <td class="py-2 pr-4 text-blue-400 font-bold">\${job.fit}</td>
+                      <td class="py-2 pr-4 text-green-400">\${job.like}</td>
+                      <td class="py-2 pr-4 text-yellow-400">\${job.can}</td>
+                      <td class="py-2 pr-4 text-red-400">\${job.risk}</td>
+                      <td class="py-2 pr-4">
+                        <a href="/jobs/\${job.slug || job.job_id}" target="_blank" class="text-blue-400 hover:text-blue-300">
+                          <i class="fas fa-arrow-right"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  \`).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        \`;
+        document.getElementById('testDetails').innerHTML = detailsHtml;
+        document.getElementById('testResults').classList.remove('hidden');
+      }
+
+      function displayAllResults(results) {
+        const passed = results.filter(r => r.success && r.verification?.passed).length;
+        const failed = results.length - passed;
+        const avgScore = results.reduce((sum, r) => sum + (r.verification?.score || 0), 0) / results.length;
+
+        const summaryHtml = \`
+          <div class="stat-card glass-card rounded-xl p-4">
+            <div class="text-2xl font-bold text-green-400">\${passed}</div>
+            <div class="text-xs text-slate-400">통과</div>
+          </div>
+          <div class="stat-card glass-card rounded-xl p-4">
+            <div class="text-2xl font-bold text-red-400">\${failed}</div>
+            <div class="text-xs text-slate-400">실패</div>
+          </div>
+          <div class="stat-card glass-card rounded-xl p-4">
+            <div class="text-2xl font-bold text-white">\${avgScore.toFixed(1)}</div>
+            <div class="text-xs text-slate-400">평균 점수</div>
+          </div>
+          <div class="stat-card glass-card rounded-xl p-4">
+            <div class="text-2xl font-bold text-white">\${results.length}</div>
+            <div class="text-xs text-slate-400">총 시나리오</div>
+          </div>
+        \`;
+        document.getElementById('testSummary').innerHTML = summaryHtml;
+
+        const detailsHtml = results.map(r => \`
+          <div class="p-4 rounded-lg \${r.success && r.verification?.passed ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}">
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="text-white font-medium">\${r.scenario?.name || r.scenario?.id}</span>
+                <span class="ml-2 px-2 py-0.5 rounded text-xs \${r.success && r.verification?.passed ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}">\${r.success && r.verification?.passed ? '통과' : '실패'}</span>
+              </div>
+              <span class="text-white font-bold">\${r.verification?.score || 0}/100</span>
+            </div>
+            <div class="text-sm text-slate-400 mt-1">\${r.verification?.summary || (r.error || '알 수 없는 오류')}</div>
+          </div>
+        \`).join('');
+        document.getElementById('testDetails').innerHTML = detailsHtml;
+        document.getElementById('testResults').classList.remove('hidden');
+      }
+
+      function formatCheckName(key) {
+        const names = {
+          topJobsCheck: 'Top 직업 카테고리',
+          excludedJobsCheck: '제외 직업 카테고리',
+          fitScoreCheck: 'Fit 점수 범위',
+          balanceCheck: 'Like-Can 밸런스',
+          featuresCheck: '기능 적용 여부',
+        };
+        return names[key] || key;
+      }
     </script>
   `
   
@@ -622,6 +1170,7 @@ export function renderAdminAiAnalyzer(props: AdminAiAnalyzerProps): string {
     children: content
   })
 }
+
 
 
 

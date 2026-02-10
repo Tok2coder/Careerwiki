@@ -207,64 +207,9 @@ export const UNIVERSAL_QUESTIONS: UniversalQuestion[] = [
   },
 
   // ============================================
-  // 6. 제약조건 - 시간/근무 (선택)
+  // 6~8. 제약조건 질문들 - Step 1에서 이미 입력받으므로 제거됨
+  // (시간/근무, 장소/이동, 자격/학력은 Step 1 "5축 - 제약조건"에서 처리)
   // ============================================
-  {
-    question_id: 'univ_constraint_time',
-    order: 6,
-    text: '시간/근무 관련해서 꼭 피해야 하는 조건이 있나요?',
-    ui_type: 'checkbox',
-    options: [
-      { value: 'work_hours_strict', label: '야근/긴 근무 절대 불가', tags: ['work_hours_strict'] },
-      { value: 'shift_work_no', label: '교대근무 불가', tags: ['shift_work_no'] },
-      { value: 'weekend_no', label: '주말근무 불가', tags: ['weekend_no'] },
-    ],
-    allow_unknown: true,
-    unknown_label: '해당 없음',
-    fact_key: 'profile.constraints.time',
-    required: false,
-    normalize_rule: 'direct',
-  },
-
-  // ============================================
-  // 7. 제약조건 - 장소/이동 (선택)
-  // ============================================
-  {
-    question_id: 'univ_constraint_location',
-    order: 7,
-    text: '장소/이동 관련해서 꼭 피해야 하는 조건이 있나요?',
-    ui_type: 'checkbox',
-    options: [
-      { value: 'remote_only', label: '재택/원격만 가능', tags: ['remote_only'] },
-      { value: 'travel_no', label: '출장 불가', tags: ['travel_no'] },
-      { value: 'region_fixed', label: '특정 지역만 가능', tags: ['region_fixed'] },
-    ],
-    allow_unknown: true,
-    unknown_label: '해당 없음',
-    fact_key: 'profile.constraints.location',
-    required: false,
-    normalize_rule: 'direct',
-  },
-
-  // ============================================
-  // 8. 제약조건 - 자격/학력 (선택)
-  // ============================================
-  {
-    question_id: 'univ_constraint_qualification',
-    order: 8,
-    text: '자격/학력 관련해서 어려운 점이 있나요?',
-    ui_type: 'checkbox',
-    options: [
-      { value: 'degree_impossible', label: '학위 취득이 어려워요', tags: ['degree_impossible'] },
-      { value: 'license_impossible', label: '자격증 취득이 어려워요', tags: ['license_impossible'] },
-      { value: 'training_limited', label: '장기 교육이 어려워요', tags: ['training_limited'] },
-    ],
-    allow_unknown: true,
-    unknown_label: '해당 없음',
-    fact_key: 'profile.constraints.qualification',
-    required: false,
-    normalize_rule: 'direct',
-  },
 
   // ============================================
   // 9. 강점/잘하는 것 (선택)
@@ -589,7 +534,513 @@ export const INSIGHT_WORDING: Record<AnalysisStage, {
 // 개인정보 경고 문구 (미성년용)
 export const PRIVACY_WARNING_TEXT = '⚠️ 민감한 개인정보(주소/학교 이름/연락처/실명 등)는 작성하지 마세요.'
 
+// ============================================
+// V3: 서술형 필수 질문 (2026-01 리팩토링)
+// 깊은 내러티브 확보를 위한 2문항
+// ============================================
+export interface NarrativeQuestion {
+  question_id: string
+  order: number
+  text: string
+  placeholder: string
+  hint: string
+  fact_key: string
+  min_length: number       // 최소 글자수
+  max_length: number       // 최대 글자수
+  required: boolean
+  purpose: string          // 이 질문의 목적 설명
+}
 
+// 레거시 - 새로운 동적 질문 시스템(NARRATIVE_QUESTIONS_BY_CONTEXT)으로 대체됨
+export const NARRATIVE_QUESTIONS_LEGACY: NarrativeQuestion[] = [
+  {
+    question_id: 'narrative_high_alive',
+    order: 1,
+    text: "최근 6개월 중 가장 '살아있다'고 느낀 순간은 언제였고, 왜였나요?",
+    placeholder: "예: 팀 프로젝트에서 제 아이디어가 채택됐을 때요. 처음으로 제 생각이 인정받은 느낌이었고, 밤새워도 지치지 않았어요...",
+    hint: "구체적인 상황, 그때의 감정, 왜 그렇게 느꼈는지 자유롭게 적어주세요",
+    fact_key: 'narrative.highAliveMoment',
+    min_length: 50,
+    max_length: 1000,
+    required: true,
+    purpose: '에너지 원천과 동기 패턴 파악',
+  },
+  {
+    question_id: 'narrative_lost',
+    order: 2,
+    text: "반대로 가장 '나를 잃었다'고 느낀 순간은 언제였고, 왜였나요?",
+    placeholder: "예: 매일 같은 보고서를 작성할 때요. 제가 누군지, 왜 이 일을 하는지 모르겠었어요...",
+    hint: "힘들었던 상황, 그때의 감정, 무엇이 힘들었는지 자유롭게 적어주세요",
+    fact_key: 'narrative.lostMoment',
+    min_length: 50,
+    max_length: 1000,
+    required: true,
+    purpose: '회피 패턴과 스트레스 트리거 파악',
+  },
+]
+
+// ============================================
+// V3: 3라운드 심층 질문 템플릿
+// LLM이 이 템플릿을 기반으로 개인화 질문 생성
+// ============================================
+export type RoundPurpose = 'ENGINE' | 'AVOIDANCE' | 'INTEGRATION'
+
+export interface RoundQuestionTemplate {
+  round: 1 | 2 | 3
+  purpose: RoundPurpose
+  theme: string
+  base_questions: string[]  // LLM이 참고할 기본 질문들
+  probe_directions: string[] // 탐색 방향
+}
+
+export const ROUND_TEMPLATES: RoundQuestionTemplate[] = [
+  // Round 1: DRIVE (욕망 + 정체성 + 가치)
+  {
+    round: 1,
+    purpose: 'ENGINE',  // 레거시 호환
+    theme: 'DRIVE: 욕망, 정체성, 가치 탐색',
+    base_questions: [
+      // 욕망/동기
+      "어떤 일을 할 때 시간 가는 줄 모르나요? 그때 어떤 기분이 드나요?",
+      "5년 후, '이렇게 되면 정말 행복하겠다'고 상상하면 어떤 감정이 드나요?",
+      // 정체성
+      "어떤 사람으로 기억되고 싶으세요?",
+      "주변에서 보는 나와 내가 생각하는 나의 차이가 있나요?",
+      // 가치
+      "절대 포기 못하는 가치가 있다면 뭔가요? 왜 그게 중요한가요?",
+    ],
+    probe_directions: [
+      '몰입 경험과 감정',
+      '미래 비전과 행복',
+      '기억되고 싶은 모습',
+      '자기 인식의 간극',
+      '핵심 가치와 원칙',
+    ],
+  },
+  // Round 2: FRICTION (회피 + 관계 + 환경)
+  {
+    round: 2,
+    purpose: 'AVOIDANCE',  // 레거시 호환
+    theme: 'FRICTION: 회피, 관계 갈등, 환경 탐색',
+    base_questions: [
+      // 회피
+      "절대 하고 싶지 않은 일이 있나요? 왜 그런 감정이 드나요?",
+      "다시는 하고 싶지 않은 경험이 있다면, 그때 어떤 감정이었나요?",
+      // 관계
+      "절대 같이 일하고 싶지 않은 사람 유형은? 왜 그런가요?",
+      "가장 힘들었던 관계 갈등 경험은? 어떤 감정이었나요?",
+      // 환경
+      "이런 조직 문화에서는 버틸 수 없다면, 어떤 문화인가요?",
+    ],
+    probe_directions: [
+      '절대 회피 영역과 이유',
+      '부정 경험의 감정',
+      '힘든 관계 유형',
+      '관계 갈등 패턴',
+      '견딜 수 없는 환경',
+    ],
+  },
+  // Round 3: REALITY (제약 + 실행 + 트레이드오프)
+  {
+    round: 3,
+    purpose: 'INTEGRATION',  // 레거시 호환
+    theme: 'REALITY: 제약, 실행, 트레이드오프 탐색',
+    base_questions: [
+      // 제약
+      "지금 가장 큰 현실적 제약은 뭔가요? 그 제약 때문에 어떤 기분이 드나요?",
+      // 실행
+      "지금 당장 시작할 수 있는 가장 작은 행동은 뭘까요?",
+      "새로운 시도에 얼마나 시간/에너지를 투자할 수 있나요?",
+      // 트레이드오프
+      "성장을 위해 포기할 수 있는 것은? 포기한다면 어떤 감정일까요?",
+      "절대 포기 못하는 조건이 있다면? 왜 그게 중요한가요?",
+    ],
+    probe_directions: [
+      '현실 제약과 감정',
+      '가능한 첫 걸음',
+      '투자 가능 자원',
+      '포기 가능 영역',
+      '비타협 조건',
+    ],
+  },
+]
+
+// 라운드별 설명 메타데이터 (DRIVE/FRICTION/REALITY)
+export const ROUND_METADATA = {
+  1: {
+    title: 'DRIVE: 욕망과 정체성',
+    subtitle: '무엇을 원하고, 어떤 사람이고 싶나요?',
+    emoji: '🔥',
+    color: 'from-orange-500 to-red-500',
+    estimatedTime: '3-5분',
+    axes: ['욕망', '정체성', '가치'],
+  },
+  2: {
+    title: 'FRICTION: 회피와 경계',
+    subtitle: '무엇을 피하고, 누구와 안 맞나요?',
+    emoji: '🛡️',
+    color: 'from-purple-500 to-indigo-500',
+    estimatedTime: '3-5분',
+    axes: ['회피', '관계', '환경'],
+  },
+  3: {
+    title: 'REALITY: 현실과 실행',
+    subtitle: '어떤 제약이 있고, 무엇을 포기할 수 있나요?',
+    emoji: '🚀',
+    color: 'from-emerald-500 to-teal-500',
+    estimatedTime: '3-5분',
+    axes: ['제약', '실행', '트레이드오프'],
+  },
+} as const
+
+// ============================================
+// 동적 서술형 질문 시스템 (상황 + 경력 + 목표 기반)
+// ============================================
+export interface NarrativeQuestion {
+  id: string
+  text: string
+  placeholder: string
+  emoji: string
+  color: string  // gradient color
+  fact_key: string  // 저장 시 사용
+}
+
+export interface NarrativeQuestionSet {
+  question1: NarrativeQuestion
+  question2: NarrativeQuestion
+}
+
+// 컨텍스트 키 생성 함수
+export function getNarrativeContextKey(
+  roleIdentity: string | null,
+  careerStage: string | null,
+  transitionStatus: string | null
+): string {
+  // 우선순위: 특수 상황 > 일반 상황
+  // 1. 특수 조합 체크
+  if (roleIdentity === 'inactive' && transitionStatus === 'returner') {
+    return 'inactive_returner'
+  }
+  if (roleIdentity === 'manager' && careerStage === '10_plus' && transitionStatus === 'second_career') {
+    return 'manager_10plus_second'
+  }
+  if (roleIdentity === 'entrepreneur') {
+    return 'entrepreneur'
+  }
+  
+  // 2. 이직/전환 의사가 있는 경우
+  if (transitionStatus === 'changer') {
+    if (roleIdentity === 'student') return 'student_changer'
+    if (careerStage === '0_3') return 'worker_junior_changer'
+    if (careerStage === '3_10') return 'worker_mid_changer'
+    if (careerStage === '10_plus') return 'worker_senior_changer'
+    return 'worker_changer'
+  }
+  
+  // 3. 학생
+  if (roleIdentity === 'student') {
+    return 'student_explore'
+  }
+  
+  // 4. 경력 기반
+  if (careerStage === 'none' || careerStage === '0_3') {
+    return 'worker_junior'
+  }
+  if (careerStage === '3_10') {
+    return 'worker_mid'
+  }
+  if (careerStage === '10_plus') {
+    return 'worker_senior'
+  }
+  
+  // 5. 기본값
+  return 'default'
+}
+
+// 서술형 질문 매핑
+export const NARRATIVE_QUESTIONS: Record<string, NarrativeQuestionSet> = {
+  // ============================================
+  // 학생/탐색
+  // ============================================
+  'student_explore': {
+    question1: {
+      id: 'dream_future',
+      text: '어떤 일을 하는 사람이 되고 싶나요? 왜 그런가요?',
+      placeholder: '예: 사람들에게 영감을 주는 일을 하고 싶어요. 어릴 때 좋은 선생님을 만나서 제 인생이 바뀌었거든요...',
+      emoji: '🌟',
+      color: 'from-yellow-500 to-orange-500',
+      fact_key: 'narrative.dream_future',
+    },
+    question2: {
+      id: 'fun_experience',
+      text: '학교나 일상에서 가장 재미있었던 활동은 뭐였나요? 왜 재미있었나요?',
+      placeholder: '예: 팀 프로젝트에서 발표를 맡았을 때요. 제 아이디어가 팀원들에게 인정받는 느낌이 좋았어요...',
+      emoji: '✨',
+      color: 'from-pink-500 to-rose-500',
+      fact_key: 'narrative.fun_experience',
+    },
+  },
+  
+  'student_changer': {
+    question1: {
+      id: 'change_reason',
+      text: '전공이나 진로를 바꾸고 싶은 이유가 뭔가요?',
+      placeholder: '예: 처음엔 부모님 권유로 선택했는데, 공부할수록 저랑 안 맞는다는 생각이 들었어요...',
+      emoji: '🔄',
+      color: 'from-blue-500 to-cyan-500',
+      fact_key: 'narrative.change_reason',
+    },
+    question2: {
+      id: 'new_interest',
+      text: '새로 도전하고 싶은 분야가 있나요? 왜 끌리나요?',
+      placeholder: '예: 디자인 쪽이요. 뭔가 만들어내는 일을 할 때 시간 가는 줄 모르거든요...',
+      emoji: '🎯',
+      color: 'from-violet-500 to-purple-500',
+      fact_key: 'narrative.new_interest',
+    },
+  },
+  
+  // ============================================
+  // 직장인 - 주니어 (0~3년)
+  // ============================================
+  'worker_junior': {
+    question1: {
+      id: 'rewarding_moment',
+      text: '현재 일에서 가장 보람 있는 순간은 언제인가요?',
+      placeholder: '예: 제가 맡은 기능이 실제로 배포되고 사용자 반응을 볼 때요. 내가 만든 게 누군가에게 도움이 된다는 게...',
+      emoji: '💪',
+      color: 'from-emerald-500 to-teal-500',
+      fact_key: 'narrative.rewarding_moment',
+    },
+    question2: {
+      id: 'future_vision',
+      text: '3년 후 어떤 모습이고 싶나요? 구체적으로 상상해본다면?',
+      placeholder: '예: 팀에서 인정받는 중간 역할이요. 후배도 가르치고, 제 의견이 반영되는 위치...',
+      emoji: '🔮',
+      color: 'from-indigo-500 to-blue-500',
+      fact_key: 'narrative.future_vision',
+    },
+  },
+  
+  'worker_junior_changer': {
+    question1: {
+      id: 'change_trigger',
+      text: '이직이나 전환을 생각하게 된 계기가 있나요?',
+      placeholder: '예: 반복되는 업무에 성장이 멈춘 느낌이 들었어요. 매일 같은 일만 하니까...',
+      emoji: '💭',
+      color: 'from-amber-500 to-orange-500',
+      fact_key: 'narrative.change_trigger',
+    },
+    question2: {
+      id: 'next_must_have',
+      text: '다음 직장에서 꼭 얻고 싶은 것은 뭔가요?',
+      placeholder: '예: 새로운 기술을 배울 수 있는 환경이요. 그리고 야근 없이 제 시간을 가질 수 있으면...',
+      emoji: '🎁',
+      color: 'from-green-500 to-emerald-500',
+      fact_key: 'narrative.next_must_have',
+    },
+  },
+  
+  // ============================================
+  // 직장인 - 미들 (3~10년)
+  // ============================================
+  'worker_mid': {
+    question1: {
+      id: 'proud_achievement',
+      text: '지금까지 커리어에서 가장 자랑스러운 성과가 있다면?',
+      placeholder: '예: 처음으로 프로젝트 리드를 맡아서 성공적으로 마무리했을 때요. 힘들었지만 뿌듯했어요...',
+      emoji: '🏆',
+      color: 'from-yellow-500 to-amber-500',
+      fact_key: 'narrative.proud_achievement',
+    },
+    question2: {
+      id: 'current_gap',
+      text: '현재 위치에서 아쉬운 점이 있다면 뭔가요?',
+      placeholder: '예: 관리 업무가 늘면서 실무 역량이 정체된 느낌이에요. 예전처럼 깊이 파고들 시간이 없어서...',
+      emoji: '🤔',
+      color: 'from-slate-500 to-gray-600',
+      fact_key: 'narrative.current_gap',
+    },
+  },
+  
+  'worker_mid_changer': {
+    question1: {
+      id: 'breaking_point',
+      text: '더 이상 참을 수 없게 된 결정적 계기가 있었나요?',
+      placeholder: '예: 연봉 협상에서 실망했어요. 3년간 열심히 했는데 인정받지 못한다는 생각에...',
+      emoji: '⚡',
+      color: 'from-red-500 to-rose-600',
+      fact_key: 'narrative.breaking_point',
+    },
+    question2: {
+      id: 'must_avoid',
+      text: '다음 단계에서 반드시 피하고 싶은 것은?',
+      placeholder: '예: 정치가 심한 조직이요. 실력보다 눈치가 중요한 환경에서는 못 버틸 것 같아요...',
+      emoji: '🚫',
+      color: 'from-orange-600 to-red-500',
+      fact_key: 'narrative.must_avoid',
+    },
+  },
+  
+  // ============================================
+  // 직장인 - 시니어 (10년+)
+  // ============================================
+  'worker_senior': {
+    question1: {
+      id: 'legacy',
+      text: '지금까지 쌓아온 것 중 가장 소중한 것은 뭔가요?',
+      placeholder: '예: 업계에서의 네트워크요. 어디서든 도움 주고받을 수 있는 관계들이 큰 자산이에요...',
+      emoji: '💎',
+      color: 'from-purple-600 to-indigo-600',
+      fact_key: 'narrative.legacy',
+    },
+    question2: {
+      id: 'remaining_goal',
+      text: '남은 커리어에서 꼭 이루고 싶은 것이 있다면?',
+      placeholder: '예: 후배들을 키우는 일이요. 제가 받은 도움을 다음 세대에 돌려주고 싶어요...',
+      emoji: '🌱',
+      color: 'from-teal-600 to-cyan-600',
+      fact_key: 'narrative.remaining_goal',
+    },
+  },
+  
+  'worker_senior_changer': {
+    question1: {
+      id: 'senior_change_reason',
+      text: '이 시점에서 변화를 생각하게 된 이유는 뭔가요?',
+      placeholder: '예: 더 이상 이 분야에서 성장할 게 없다는 생각이 들었어요. 새로운 도전이 필요한 시기...',
+      emoji: '🔄',
+      color: 'from-blue-600 to-purple-600',
+      fact_key: 'narrative.senior_change_reason',
+    },
+    question2: {
+      id: 'non_negotiable',
+      text: '새로운 시작에서 절대 포기할 수 없는 조건은?',
+      placeholder: '예: 연봉 수준은 유지해야 해요. 가족 부양 책임이 있어서 너무 큰 리스크는 못 져요...',
+      emoji: '⚖️',
+      color: 'from-slate-600 to-zinc-600',
+      fact_key: 'narrative.non_negotiable',
+    },
+  },
+  
+  // ============================================
+  // 창업가/프리랜서
+  // ============================================
+  'entrepreneur': {
+    question1: {
+      id: 'entrepreneur_why',
+      text: '왜 독립적인 일을 선택하셨나요? (혹은 선택하려 하나요?)',
+      placeholder: '예: 제 아이디어를 직접 실현하고 싶었어요. 조직에서는 항상 누군가의 결정을 기다려야 해서...',
+      emoji: '🚀',
+      color: 'from-orange-500 to-red-500',
+      fact_key: 'narrative.entrepreneur_why',
+    },
+    question2: {
+      id: 'entrepreneur_challenge',
+      text: '독립적으로 일하면서 가장 힘든 점은 뭔가요?',
+      placeholder: '예: 수입이 불안정한 거요. 잘될 때와 안 될 때의 차이가 너무 커서 스트레스...',
+      emoji: '🏔️',
+      color: 'from-slate-500 to-gray-600',
+      fact_key: 'narrative.entrepreneur_challenge',
+    },
+  },
+  
+  // ============================================
+  // 경력 단절/복귀
+  // ============================================
+  'inactive_returner': {
+    question1: {
+      id: 'gap_reflection',
+      text: '경력 단절 기간 동안 어떤 생각이 들었나요?',
+      placeholder: '예: 처음엔 쉬는 게 좋았는데, 시간이 지나니까 불안해졌어요. 사회와 단절된 느낌...',
+      emoji: '💭',
+      color: 'from-blue-500 to-indigo-500',
+      fact_key: 'narrative.gap_reflection',
+    },
+    question2: {
+      id: 'comeback_worry',
+      text: '복귀하면서 가장 걱정되는 부분은 뭔가요?',
+      placeholder: '예: 기술이 많이 바뀌었을 것 같아요. 따라갈 수 있을지, 나이 때문에 편견이 있을지...',
+      emoji: '😰',
+      color: 'from-amber-500 to-yellow-500',
+      fact_key: 'narrative.comeback_worry',
+    },
+  },
+  
+  // ============================================
+  // 세컨드 커리어
+  // ============================================
+  'manager_10plus_second': {
+    question1: {
+      id: 'accumulated_value',
+      text: '지금까지 쌓은 것 중 가장 가치 있는 것은 뭔가요?',
+      placeholder: '예: 사람을 보는 눈이요. 수많은 면접과 평가를 하면서 인재를 알아보는 감각이 생겼어요...',
+      emoji: '💎',
+      color: 'from-purple-600 to-pink-600',
+      fact_key: 'narrative.accumulated_value',
+    },
+    question2: {
+      id: 'second_career_dream',
+      text: '은퇴 후 또는 다음 단계에서 꼭 해보고 싶은 일은?',
+      placeholder: '예: 컨설팅이요. 제 경험을 후배 경영자들에게 나눠주고 싶어요. 돈보다는 의미가 중요...',
+      emoji: '🌅',
+      color: 'from-amber-500 to-orange-500',
+      fact_key: 'narrative.second_career_dream',
+    },
+  },
+  
+  // ============================================
+  // 기본값 (모든 조건에 해당하지 않을 때)
+  // ============================================
+  'default': {
+    question1: {
+      id: 'high_alive',
+      text: '최근 6개월 중 가장 "살아있다"고 느낀 순간은 언제였나요? 왜 그랬나요?',
+      placeholder: '예: 팀 프로젝트에서 제 아이디어가 채택됐을 때요. 처음으로 제 생각이 인정받은 느낌이었고...',
+      emoji: '🔥',
+      color: 'from-orange-500 to-red-500',
+      fact_key: 'narrative.high_alive_moment',
+    },
+    question2: {
+      id: 'lost_moment',
+      text: '반대로 가장 "나를 잃었다"고 느낀 순간은 언제였나요? 왜 그랬나요?',
+      placeholder: '예: 매일 같은 보고서를 작성할 때요. 제가 누군지, 왜 이 일을 하는지 모르겠었어요...',
+      emoji: '🌫️',
+      color: 'from-violet-500 to-purple-500',
+      fact_key: 'narrative.lost_moment',
+    },
+  },
+  
+  // 이직 의사 있는 일반 케이스 (경력 무관)
+  'worker_changer': {
+    question1: {
+      id: 'change_trigger_general',
+      text: '이직이나 전환을 생각하게 된 계기가 있나요?',
+      placeholder: '예: 성장이 멈춘 느낌이 들었어요. 매일 같은 일만 반복하니까 무기력해지더라고요...',
+      emoji: '💭',
+      color: 'from-blue-500 to-cyan-500',
+      fact_key: 'narrative.change_trigger',
+    },
+    question2: {
+      id: 'next_priority',
+      text: '다음 직장/커리어에서 가장 중요하게 생각하는 것은?',
+      placeholder: '예: 배울 수 있는 환경이요. 정체되지 않고 계속 성장할 수 있는 곳이면 좋겠어요...',
+      emoji: '⭐',
+      color: 'from-yellow-500 to-amber-500',
+      fact_key: 'narrative.next_priority',
+    },
+  },
+}
+
+// 서술형 질문 가져오기 헬퍼 함수
+export function getNarrativeQuestions(
+  roleIdentity: string | null,
+  careerStage: string | null,
+  transitionStatus: string | null
+): NarrativeQuestionSet {
+  const key = getNarrativeContextKey(roleIdentity, careerStage, transitionStatus)
+  return NARRATIVE_QUESTIONS[key] || NARRATIVE_QUESTIONS['default']
+}
 
 
 

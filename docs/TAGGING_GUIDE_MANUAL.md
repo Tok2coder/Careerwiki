@@ -312,10 +312,10 @@ careernet_100003,변호사,LAW_PUBLIC,25,70,70,90,45,70,85,40,55,65,overtime_fre
 node scripts/tagging/csv-to-d1-upsert.js tagging-coverage-set.csv
 
 # 2. D1에 업로드
-wrangler d1 execute careerwiki-db --local --file=output/upsert-job-attributes.sql
+wrangler d1 execute careerwiki --local --file=output/upsert-job-attributes.sql
 
 # 3. 확인
-wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = 'tagged'"
+wrangler d1 execute careerwiki --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = 'tagged'"
 ```
 
 ### 7.2 Upsert SQL 예시
@@ -415,6 +415,7 @@ ON CONFLICT(job_id) DO UPDATE SET
 *Version: v1.0.0*
 *Created: 2026-01-05*
 *Author: CareerWiki AI Team*
+
 
 
 

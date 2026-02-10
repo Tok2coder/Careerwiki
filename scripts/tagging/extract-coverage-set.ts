@@ -4,7 +4,7 @@
  * 목적: DB에서 버킷별 대표 직업을 추출하여 태깅용 CSV 생성
  * 
  * 사용법:
- *   npx wrangler d1 execute careerwiki-db --local --file=scripts/tagging/extract-jobs-query.sql > output.json
+ *   npx wrangler d1 execute careerwiki-kr --local --file=scripts/tagging/extract-jobs-query.sql > output.json
  *   npx tsx scripts/tagging/extract-coverage-set.ts
  */
 
@@ -295,7 +295,7 @@ function generateExtractSQL() {
 
   const sql = `
 -- Coverage Set 직업 추출 쿼리
--- 사용: wrangler d1 execute careerwiki-db --local --file=scripts/tagging/output/extract-jobs.sql
+-- 사용: wrangler d1 execute careerwiki-kr --local --file=scripts/tagging/output/extract-jobs.sql
 
 -- 1. 직업 기본 정보 추출
 SELECT 
@@ -328,9 +328,10 @@ generateSampleTemplate()
 generateExtractSQL()
 
 console.log('\n📋 다음 단계:')
-console.log('1. wrangler d1 execute careerwiki-db --local --file=scripts/tagging/output/extract-jobs.sql')
+console.log('1. wrangler d1 execute careerwiki-kr --local --file=scripts/tagging/output/extract-jobs.sql')
 console.log('2. 결과를 바탕으로 버킷별 직업 선정')
 console.log('3. tagging-template.csv를 복사하여 태깅 작업 시작')
+
 
 
 

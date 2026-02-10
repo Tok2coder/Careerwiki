@@ -26,7 +26,7 @@ app.route('/api/ai-analyzer', analyzerRoutes)
 ```jsonc
 "d1_databases": [{
   "binding": "DB",                    // ← env.DB로 접근
-  "database_name": "careerwiki-db",
+  "database_name": "careerwiki",
   "database_id": "edc21e23-c2ac-4693-bb79-389b6914e173"
 }]
 ```
@@ -35,16 +35,16 @@ app.route('/api/ai-analyzer', analyzerRoutes)
 
 ```bash
 # 로컬 개발
-wrangler d1 execute careerwiki-db --local --file=src/services/ai-analyzer/schema.sql
+wrangler d1 execute careerwiki --local --file=src/services/ai-analyzer/schema.sql
 
 # 프로덕션
-wrangler d1 execute careerwiki-db --file=src/services/ai-analyzer/schema.sql
+wrangler d1 execute careerwiki --file=src/services/ai-analyzer/schema.sql
 ```
 
 ### 2. 스키마 확인
 
 ```bash
-wrangler d1 execute careerwiki-db --local --command="SELECT name FROM sqlite_master WHERE type='table'"
+wrangler d1 execute careerwiki --local --command="SELECT name FROM sqlite_master WHERE type='table'"
 ```
 
 예상 출력:

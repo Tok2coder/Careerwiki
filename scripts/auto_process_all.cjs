@@ -58,7 +58,7 @@ function processBatch(batchNum) {
   // Extract data
   const dataFile = `batch${batchNum}_data.txt`;
   try {
-    execSync(`npx wrangler d1 execute careerwiki-db --local --command "SELECT id, name, name_en FROM jobs WHERE name_en IS NOT NULL AND name_en != '' AND image_prompt IS NULL ORDER BY id LIMIT 100;" > ${dataFile}`, { stdio: 'pipe' });
+    execSync(`npx wrangler d1 execute careerwiki --local --command "SELECT id, name, name_en FROM jobs WHERE name_en IS NOT NULL AND name_en != '' AND image_prompt IS NULL ORDER BY id LIMIT 100;" > ${dataFile}`, { stdio: 'pipe' });
   } catch (error) {
     console.log('⚠️  데이터 추출 실패 또는 더 이상 데이터 없음');
     return false;
@@ -107,7 +107,7 @@ function processBatch(batchNum) {
   // Execute SQL
   console.log(`🔄 데이터베이스 업데이트 중...`);
   try {
-    execSync(`npx wrangler d1 execute careerwiki-db --local --file ${sqlFile}`, { stdio: 'pipe' });
+    execSync(`npx wrangler d1 execute careerwiki --local --file ${sqlFile}`, { stdio: 'pipe' });
     console.log(`✅ 배치 ${batchNum} 완료! (${jobs.length}개)`);
 
     // Cleanup
@@ -115,7 +115,7 @@ function processBatch(batchNum) {
     fs.unlinkSync(sqlFile);
 
     // Progress check
-    const progressResult = execSync(`npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) as count FROM jobs WHERE image_prompt IS NOT NULL AND image_prompt != '';"`, { encoding: 'utf8' });
+    const progressResult = execSync(`npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) as count FROM jobs WHERE image_prompt IS NOT NULL AND image_prompt != '';"`, { encoding: 'utf8' });
     const countMatch = progressResult.match(/"count":\s*(\d+)/);
     if (countMatch) {
       const completed = parseInt(countMatch[1]);

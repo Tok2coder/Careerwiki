@@ -15,3 +15,4 @@ UPDATE jobs SET merged_profile_json = json_set(merged_profile_json, '$.sidebarCe
 
 
 
+

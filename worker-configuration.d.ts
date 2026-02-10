@@ -35,6 +35,10 @@ export interface CloudflareBindings {
   GOOGLE_CLIENT_SECRET: string
   GOOGLE_CALLBACK_URL: string
   JWT_SECRET: string
+  
+  // AI APIs
+  OPENAI_API_KEY?: string
+  GEMINI_API_KEY?: string
 }
 
 

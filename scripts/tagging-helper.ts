@@ -22,7 +22,7 @@ const COMPLETED_DIR = 'tagging-batches/completed'
 
 function executeD1Query(query: string): any {
   const cleanQuery = query.replace(/\s+/g, ' ').trim()
-  const cmd = `npx wrangler d1 execute careerwiki-db --local --json --command="${cleanQuery.replace(/"/g, '\\"')}"`
+  const cmd = `npx wrangler d1 execute careerwiki-kr --local --json --command="${cleanQuery.replace(/"/g, '\\"')}"`
   const result = execSync(cmd, { encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024 })
   const parsed = JSON.parse(result)
   return parsed[0]?.results || []
@@ -173,7 +173,7 @@ function applyBatch(batchNum: string) {
     // Apply SQL
     console.log('\n⚡ SQL 적용 중...')
     execSync(
-      `npx wrangler d1 execute careerwiki-db --local --file ${outputFile}`,
+      `npx wrangler d1 execute careerwiki-kr --local --file ${outputFile}`,
       { stdio: 'inherit' }
     )
     

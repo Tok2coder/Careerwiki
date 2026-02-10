@@ -127,8 +127,8 @@ npm run etl:merge-majors
 ### 이름 매핑 적용
 ```bash
 # SQL 파일로 매핑 추가
-npx wrangler d1 execute careerwiki-db --local --file=apply-job-mappings.sql
-npx wrangler d1 execute careerwiki-db --local --file=apply-major-mappings.sql
+npx wrangler d1 execute careerwiki --local --file=apply-job-mappings.sql
+npx wrangler d1 execute careerwiki --local --file=apply-major-mappings.sql
 
 # 매핑 적용 후 ETL 재실행 필요
 npm run etl:merge-jobs

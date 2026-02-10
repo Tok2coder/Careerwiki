@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev)",
+      "Bash(npx wrangler:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 5; \\(Invoke-WebRequest -Uri ''http://localhost:8787/api/ai-analyzer/test-scenario/stability_seeker'' -Method POST\\).Content\")",
+      "Bash(powershell -Command \"\\(Invoke-WebRequest -Uri ''http://localhost:3000/api/ai-analyzer/test-scenario/stability_seeker'' -Method POST\\).Content\")",
+      "Bash(powershell -Command \"$body = ''{\"\"scenario_id\"\":\"\"stability_seeker\"\"}''; $response = Invoke-WebRequest -Uri ''http://localhost:3000/api/ai-analyzer/test/run-scenario'' -Method POST -Body $body -ContentType ''application/json''; $response.Content\")",
+      "Bash(curl:*)",
+      "Bash(npm run sync:prod-to-local:*)",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 15; curl.exe -X POST ''http://localhost:3000/api/ai-analyzer/test/run-scenario'' -H ''Content-Type: application/json'' -d ''{\"\"scenario_id\"\":\"\"stability_seeker\"\"}''\")",
+      "Bash(echo:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(timeout:*)",
+      "Bash(findstr:*)",
+      "Bash(grep:*)",
+      "Bash(python:*)",
+      "Bash(ping:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

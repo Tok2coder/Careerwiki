@@ -107,10 +107,10 @@ scripts/tagging/output/
 npx tsx scripts/tagging/csv-to-d1-upsert.ts scripts/tagging/output/tagged-it_data-final.csv
 
 # 2. 생성된 SQL로 DB 업데이트
-wrangler d1 execute careerwiki-db --local --file scripts/tagging/output/upsert-job-attributes.sql
+wrangler d1 execute careerwiki --local --file scripts/tagging/output/upsert-job-attributes.sql
 
 # 3. 확인
-wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = 'tagged' AND job_id IN (SELECT job_id FROM job_sources WHERE json_extract(normalized_payload, '$.name') LIKE '%웹마스터%')"
+wrangler d1 execute careerwiki --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = 'tagged' AND job_id IN (SELECT job_id FROM job_sources WHERE json_extract(normalized_payload, '$.name') LIKE '%웹마스터%')"
 ```
 
 ### 3.2 스코어링 테스트
@@ -177,10 +177,10 @@ wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) FROM job_at
 
 ```bash
 # 전체 태깅 개수 확인
-wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = 'tagged'"
+wrangler d1 execute careerwiki --local --command="SELECT COUNT(*) FROM job_attributes WHERE status = 'tagged'"
 
 # 버킷별 분포 확인
-wrangler d1 execute careerwiki-db --local --command="SELECT bucket, COUNT(*) as count FROM (SELECT CASE WHEN job_name LIKE '%개발%' OR job_name LIKE '%데이터%' THEN 'IT_DATA' WHEN job_name LIKE '%의사%' OR job_name LIKE '%간호%' THEN 'MEDICAL_HEALTH' ELSE 'OTHER' END as bucket FROM job_attributes WHERE status = 'tagged') GROUP BY bucket"
+wrangler d1 execute careerwiki --local --command="SELECT bucket, COUNT(*) as count FROM (SELECT CASE WHEN job_name LIKE '%개발%' OR job_name LIKE '%데이터%' THEN 'IT_DATA' WHEN job_name LIKE '%의사%' OR job_name LIKE '%간호%' THEN 'MEDICAL_HEALTH' ELSE 'OTHER' END as bucket FROM job_attributes WHERE status = 'tagged') GROUP BY bucket"
 ```
 
 ---
@@ -212,7 +212,7 @@ wrangler d1 execute careerwiki-db --local --command="SELECT bucket, COUNT(*) as 
 **해결:**
 ```bash
 # 로컬에서 테스트
-wrangler d1 execute careerwiki-db --local --command="SELECT 1"
+wrangler d1 execute careerwiki --local --command="SELECT 1"
 
 # SQL 파일 확인
 head -20 scripts/tagging/output/upsert-job-attributes.sql
@@ -245,6 +245,7 @@ cat scripts/tagging/output/ai-prompt-phase2-it_data-final.txt
 *Version: v1.0.0*
 *Created: 2026-01-05*
 *Next: Phase 5 캘리브레이션 시나리오 QA*
+
 
 
 

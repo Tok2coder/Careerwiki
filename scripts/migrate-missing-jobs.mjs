@@ -35,7 +35,7 @@ function runRemote(sql) {
   const escaped = sql.replace(/"/g, '\\"').replace(/\$/g, '\\$');
   try {
     execSync(
-      `npx wrangler d1 execute careerwiki-db --remote --command "${escaped}"`,
+      `npx wrangler d1 execute careerwiki-kr --remote --command "${escaped}"`,
       {
         encoding: 'utf-8',
         env: { ...process.env, CLOUDFLARE_API_TOKEN: API_TOKEN },
@@ -77,7 +77,7 @@ async function main() {
 
     // 로컬에서 해당 job 데이터 가져오기
     const result = runLocal(
-      `npx wrangler d1 execute careerwiki-db --local --command "SELECT ${SMALL_COLUMNS.join(', ')} FROM jobs WHERE id='${id}';" --json`
+      `npx wrangler d1 execute careerwiki-kr --local --command "SELECT ${SMALL_COLUMNS.join(', ')} FROM jobs WHERE id='${id}';" --json`
     );
 
     if (!result) {

@@ -167,10 +167,19 @@ export const ResizableImage = Image.extend({
         })
       }
 
+      // 안전한 pos 가져오기 헬퍼 함수
+      const getSafePos = (): number => {
+        if (typeof getPos === 'function') {
+          const pos = getPos()
+          return pos !== undefined ? pos : 0
+        }
+        return 0
+      }
+
       // 선택 상태 관리
       const updateSelection = () => {
         const { from, to } = editor.state.selection
-        const pos = typeof getPos === 'function' ? getPos() : 0
+        const pos = getSafePos()
         const isSelected = from <= pos && to >= pos + node.nodeSize
         container.classList.toggle('selected', isSelected)
         
@@ -183,7 +192,7 @@ export const ResizableImage = Image.extend({
       // 클릭 시 선택
       container.addEventListener('click', (e) => {
         e.preventDefault()
-        const pos = typeof getPos === 'function' ? getPos() : 0
+        const pos = getSafePos()
         editor.commands.setNodeSelection(pos)
         updateSelection()
       })
@@ -196,7 +205,7 @@ export const ResizableImage = Image.extend({
         
         e.stopPropagation()
         const action = button.getAttribute('data-action')
-        const pos = typeof getPos === 'function' ? getPos() : 0
+        const pos = getSafePos()
         
         switch (action) {
           case 'align-left':
@@ -224,7 +233,8 @@ export const ResizableImage = Image.extend({
             break
           case 'crop':
             openCropModal(img, (croppedDataUrl) => {
-              editor.chain().focus().setNodeSelection(pos).updateAttributes('image', {
+              const currentPos = getSafePos()
+              editor.chain().focus().setNodeSelection(currentPos).updateAttributes('image', {
                 src: croppedDataUrl,
                 width: null,
                 height: null
@@ -234,7 +244,8 @@ export const ResizableImage = Image.extend({
             break
           case 'mosaic':
             openMosaicModal(img, (mosaicDataUrl) => {
-              editor.chain().focus().setNodeSelection(pos).updateAttributes('image', {
+              const currentPos = getSafePos()
+              editor.chain().focus().setNodeSelection(currentPos).updateAttributes('image', {
                 src: mosaicDataUrl
               }).run()
               img.src = mosaicDataUrl
@@ -247,7 +258,7 @@ export const ResizableImage = Image.extend({
       const updateImageSize = (percent: number) => {
         const naturalWidth = img.naturalWidth || 800
         const newWidth = Math.round(naturalWidth * (percent / 100))
-        const pos = typeof getPos === 'function' ? getPos() : 0
+        const pos = getSafePos()
         
         editor.chain().focus().setNodeSelection(pos).updateAttributes('image', { 
           width: newWidth,
@@ -309,7 +320,7 @@ export const ResizableImage = Image.extend({
             container.classList.remove('resizing')
             
             // 에디터에 크기 저장
-            const pos = typeof getPos === 'function' ? getPos() : 0
+            const pos = getSafePos()
             editor.chain().focus().setNodeSelection(pos).updateAttributes('image', {
               width: Math.round(img.offsetWidth),
               height: Math.round(img.offsetHeight)

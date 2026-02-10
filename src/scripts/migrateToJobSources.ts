@@ -3,7 +3,7 @@
  * Phase 2.2: Extract and migrate existing data
  * 
  * Run with: npm run migrate:job-sources
- * or: wrangler d1 execute careerwiki-db --local --file=dist/scripts/migrateToJobSources.js
+ * or: wrangler d1 execute careerwiki-kr --local --file=dist/scripts/migrateToJobSources.js
  */
 
 import type { D1Database } from '@cloudflare/workers-types'

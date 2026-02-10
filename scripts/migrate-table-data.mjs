@@ -89,7 +89,7 @@ function runCommand(cmd) {
 
 function getRowCount(table) {
   const result = runCommand(
-    `npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) as count FROM ${table};" --json`
+    `npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) as count FROM ${table};" --json`
   );
   if (!result) return 0;
   try {
@@ -102,7 +102,7 @@ function getRowCount(table) {
 
 function getColumnNames(table) {
   const result = runCommand(
-    `npx wrangler d1 execute careerwiki-db --local --command "PRAGMA table_info(${table});" --json`
+    `npx wrangler d1 execute careerwiki --local --command "PRAGMA table_info(${table});" --json`
   );
   if (!result) return [];
   try {
@@ -144,7 +144,7 @@ async function migrateTable(table) {
     
     // 배치 데이터 가져오기
     const dataResult = runCommand(
-      `npx wrangler d1 execute careerwiki-db --local --command "SELECT * FROM ${table} LIMIT ${BATCH_SIZE} OFFSET ${offset};" --json`
+      `npx wrangler d1 execute careerwiki --local --command "SELECT * FROM ${table} LIMIT ${BATCH_SIZE} OFFSET ${offset};" --json`
     );
     
     if (!dataResult) {
@@ -170,7 +170,7 @@ async function migrateTable(table) {
       
       // Production에 실행
       const insertResult = runCommand(
-        `npx wrangler d1 execute careerwiki-db --remote --command "${insertSQL.replace(/"/g, '\\"')}"`
+        `npx wrangler d1 execute careerwiki --remote --command "${insertSQL.replace(/"/g, '\\"')}"`
       );
       
       if (insertResult) {

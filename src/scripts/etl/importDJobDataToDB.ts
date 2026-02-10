@@ -57,7 +57,7 @@ function generateSQLInserts() {
     const filename = `djob_insert_batch_${String(i + 1).padStart(3, '0')}.sql`;
     psLines.push(
       `Write-Host "[${i + 1}/${batches}] ${filename} 실행 중..."`,
-      `npx wrangler d1 execute careerwiki-db --local --file=.temp/${filename} 2>&1 | Out-Null`,
+      `npx wrangler d1 execute careerwiki-kr --local --file=.temp/${filename} 2>&1 | Out-Null`,
       `if ($LASTEXITCODE -eq 0) { Write-Host "  ✅ 완료" } else { Write-Host "  ❌ 실패"; exit 1 }`,
       ''
     );
@@ -67,7 +67,7 @@ function generateSQLInserts() {
     'Write-Host "`n✅ 모든 배치 저장 완료!`n"',
     '',
     'Write-Host "📊 DB 확인 중...`n"',
-    'npx wrangler d1 execute careerwiki-db --local --command="SELECT COUNT(*) as count FROM job_sources WHERE source_system = \'WORK24_DJOB\';" 2>&1 | Select-String -Pattern "count"',
+    'npx wrangler d1 execute careerwiki-kr --local --command="SELECT COUNT(*) as count FROM job_sources WHERE source_system = \'WORK24_DJOB\';" 2>&1 | Select-String -Pattern "count"',
     ''
   );
 

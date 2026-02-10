@@ -195,7 +195,7 @@ npm run db:migrate:prod
 
 ### 이미지 필드 확인
 ```bash
-npx wrangler d1 execute careerwiki-db --local --command \
+npx wrangler d1 execute careerwiki --local --command \
   "SELECT name, image_url, image_alt FROM jobs LIMIT 5"
 ```
 

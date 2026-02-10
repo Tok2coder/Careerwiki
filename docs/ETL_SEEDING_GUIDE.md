@@ -104,7 +104,7 @@ WORK24_API_KEY=your_work24_api_key
 
 2. **D1 마이그레이션 적용**
 ```bash
-npx wrangler d1 migrations apply careerwiki-db --local
+npx wrangler d1 migrations apply careerwiki --local
 ```
 
 ---
@@ -188,11 +188,11 @@ npx tsx src/scripts/runRelatedJobs.ts
 
 ```bash
 # 개별 테이블 확인
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM job_dictionary_index;"
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM job_sources;"
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM jobs;"
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM major_sources;"
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM majors;"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM job_dictionary_index;"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM job_sources;"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM jobs;"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM major_sources;"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM majors;"
 ```
 
 ### 시딩 로그 확인
@@ -270,7 +270,7 @@ npx tsx src/scripts/runMajorMerge.ts --name=스마트폰콘텐츠과
 
 ```bash
 # 프로덕션 D1에 시딩 (--remote 플래그)
-npx wrangler d1 execute careerwiki-db --remote --command "SELECT COUNT(*) FROM jobs;"
+npx wrangler d1 execute careerwiki --remote --command "SELECT COUNT(*) FROM jobs;"
 
 # 또는 API 엔드포인트 사용 (관리자 권한 필요)
 curl -X POST https://careerwiki.org/api/admin/seed-jobs \

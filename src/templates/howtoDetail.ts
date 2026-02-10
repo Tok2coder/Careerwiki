@@ -1,4 +1,4 @@
-﻿import type { HowtoGuideDetail } from '../types/howto'
+import type { HowtoGuideDetail } from '../types/howto'
 import type { CommentPolicyAttributes } from './detailTemplateUtils'
 import { renderCommentsPlaceholder, resolveCommentPolicy } from './detailTemplateUtils'
 

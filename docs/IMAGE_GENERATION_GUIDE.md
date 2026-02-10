@@ -126,11 +126,11 @@ node scripts/generate_images_comfyui.cjs job 100 200
 
 ```bash
 # 이미지가 있는 직업 수 확인
-npx wrangler d1 execute careerwiki-db --local --command \
+npx wrangler d1 execute careerwiki --local --command \
   "SELECT COUNT(*) as count FROM jobs WHERE image_url IS NOT NULL AND image_url != '';"
 
 # 이미지가 없는 직업 수 확인
-npx wrangler d1 execute careerwiki-db --local --command \
+npx wrangler d1 execute careerwiki --local --command \
   "SELECT COUNT(*) as count FROM jobs WHERE (image_url IS NULL OR image_url = '') AND image_prompt IS NOT NULL;"
 ```
 

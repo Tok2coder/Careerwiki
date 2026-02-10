@@ -304,7 +304,7 @@ function processBatch(batchNum, batchSize = 100) {
 
   try {
     // 남은 직업들 조회
-    const result = execSync(`npx wrangler d1 execute careerwiki-db --local --command "SELECT id, name, name_en FROM jobs WHERE name_en IS NOT NULL AND name_en != '' AND (image_prompt IS NULL OR image_prompt = '') ORDER BY id LIMIT ${batchSize};"`, {
+    const result = execSync(`npx wrangler d1 execute careerwiki --local --command "SELECT id, name, name_en FROM jobs WHERE name_en IS NOT NULL AND name_en != '' AND (image_prompt IS NULL OR image_prompt = '') ORDER BY id LIMIT ${batchSize};"`, {
       encoding: 'utf8',
       cwd: process.cwd()
     });
@@ -334,7 +334,7 @@ function processBatch(batchNum, batchSize = 100) {
     fs.writeFileSync(sqlFile, sqlContent);
 
     console.log(`🔄 배치 ${batchNum}: 데이터베이스 업데이트 중...`);
-    execSync(`npx wrangler d1 execute careerwiki-db --local --file ${sqlFile}`, {
+    execSync(`npx wrangler d1 execute careerwiki --local --file ${sqlFile}`, {
       stdio: 'inherit',
       cwd: process.cwd()
     });
@@ -343,7 +343,7 @@ function processBatch(batchNum, batchSize = 100) {
     if (fs.existsSync(sqlFile)) fs.unlinkSync(sqlFile);
 
     // 진행 상황 확인
-    const progressResult = execSync(`npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) as count FROM jobs WHERE image_prompt IS NOT NULL AND image_prompt != '';"`, {
+    const progressResult = execSync(`npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) as count FROM jobs WHERE image_prompt IS NOT NULL AND image_prompt != '';"`, {
       encoding: 'utf8'
     });
     const countMatch = progressResult.match(/"count":\s*(\d+)/);

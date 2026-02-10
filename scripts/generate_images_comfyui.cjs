@@ -163,7 +163,7 @@ async function processBatch(type, limit = BATCH_SIZE, offset = 0) {
                    LIMIT ${limit} OFFSET ${offset}`;
 
     const result = execSync(
-      `npx wrangler d1 execute careerwiki-db --local --command "${query.replace(/"/g, '\\"')}"`,
+      `npx wrangler d1 execute careerwiki --local --command "${query.replace(/"/g, '\\"')}"`,
       { encoding: 'utf8', cwd: process.cwd() }
     );
 
@@ -243,7 +243,7 @@ async function processBatch(type, limit = BATCH_SIZE, offset = 0) {
       fs.writeFileSync(sqlFile, sqlContent);
 
       console.log(`🔄 데이터베이스 업데이트 중...`);
-      execSync(`npx wrangler d1 execute careerwiki-db --local --file ${sqlFile}`, {
+      execSync(`npx wrangler d1 execute careerwiki --local --file ${sqlFile}`, {
         stdio: 'inherit',
         cwd: process.cwd()
       });

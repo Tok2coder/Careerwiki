@@ -219,7 +219,7 @@ auth.get('/google/callback', async (c) => {
       httpOnly: true,
       secure: isHttps, // HTTPS에서만 전송 (로컬/프리뷰에서는 false)
       sameSite: 'Lax',
-      maxAge: 3600, // 1시간 (초 단위)
+      maxAge: 43200, // 12시간 (초 단위)
       path: '/'
     })
     
@@ -251,7 +251,7 @@ auth.get('/google/callback', async (c) => {
         httpOnly: true,
         secure: true,
         sameSite: 'Lax',
-        maxAge: 3600, // 1시간
+        maxAge: 43200, // 12시간
         path: '/'
       })
       return c.redirect('/onboarding')
@@ -428,7 +428,7 @@ auth.post('/refresh', async (c) => {
       httpOnly: true,
       secure: true,
       sameSite: 'Lax',
-      maxAge: 3600, // 1시간
+      maxAge: 43200, // 12시간
       path: '/'
     })
     

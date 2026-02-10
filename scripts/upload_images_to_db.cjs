@@ -35,7 +35,7 @@ function uploadLocalImagesToDB(type, imageDir) {
     try {
       const query = `SELECT id, name FROM ${type}s WHERE id = '${itemId}' OR id LIKE '%${itemId}%' LIMIT 1`;
       const result = execSync(
-        `npx wrangler d1 execute careerwiki-db --local --command "${query.replace(/"/g, '\\"')}"`,
+        `npx wrangler d1 execute careerwiki --local --command "${query.replace(/"/g, '\\"')}"`,
         { encoding: 'utf8', cwd: process.cwd() }
       );
 
@@ -93,7 +93,7 @@ function uploadLocalImagesToDB(type, imageDir) {
   console.log(`\n📝 SQL 파일 생성: ${sqlFile}`);
   console.log(`🔄 데이터베이스 업데이트 중...\n`);
 
-  execSync(`npx wrangler d1 execute careerwiki-db --local --file ${sqlFile}`, {
+  execSync(`npx wrangler d1 execute careerwiki --local --file ${sqlFile}`, {
     stdio: 'inherit',
     cwd: process.cwd()
   });

@@ -126,7 +126,7 @@ npx tsx scripts/export-jobs-for-tagging.ts --limit 50
 
 ```bash
 npx tsx scripts/generate-tagging-sql.ts --input tagging-results.json
-npx wrangler d1 execute careerwiki-db --local --file migrations/batch_tagging_YYYYMMDD.sql
+npx wrangler d1 execute careerwiki --local --file migrations/batch_tagging_YYYYMMDD.sql
 ```
 
 ---

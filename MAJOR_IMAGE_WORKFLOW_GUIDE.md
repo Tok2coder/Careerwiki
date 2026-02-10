@@ -264,12 +264,12 @@ generateMajorImages().catch(console.error);
 
 ### 전체 상태 확인
 ```bash
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) as total, COUNT(CASE WHEN image_url IS NOT NULL AND image_url != '' THEN 1 END) as with_images FROM majors"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) as total, COUNT(CASE WHEN image_url IS NOT NULL AND image_url != '' THEN 1 END) as with_images FROM majors"
 ```
 
 ### 특정 전공 확인
 ```bash
-npx wrangler d1 execute careerwiki-db --local --command "SELECT name, image_url FROM majors WHERE name LIKE '%컴퓨터%' LIMIT 5"
+npx wrangler d1 execute careerwiki --local --command "SELECT name, image_url FROM majors WHERE name LIKE '%컴퓨터%' LIMIT 5"
 ```
 
 ---
@@ -290,7 +290,7 @@ npx wrangler d1 execute careerwiki-db --local --command "SELECT name, image_url 
 node scripts/generate_major_images_r2.cjs
 
 # 2. 진행 상황 확인
-npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM majors WHERE image_url IS NOT NULL AND image_url != ''"
+npx wrangler d1 execute careerwiki --local --command "SELECT COUNT(*) FROM majors WHERE image_url IS NOT NULL AND image_url != ''"
 
 # 3. 완료 후 템플릿 버전 올리기
 # src/constants/template-versions.ts에서 MAJOR 버전 +1
@@ -303,12 +303,13 @@ npx wrangler d1 execute careerwiki-db --local --command "SELECT COUNT(*) FROM ma
 전공 프롬프트는 이미 608개 모두 DB에 저장되어 있습니다.
 확인:
 ```bash
-npx wrangler d1 execute careerwiki-db --local --command "SELECT name, SUBSTR(image_prompt, 1, 100) as prompt_preview FROM majors LIMIT 3"
+npx wrangler d1 execute careerwiki --local --command "SELECT name, SUBSTR(image_prompt, 1, 100) as prompt_preview FROM majors LIMIT 3"
 ```
 
 ---
 
 **문서 생성일**: 2025-12-19
+
 
 
 

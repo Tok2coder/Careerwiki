@@ -482,19 +482,18 @@ export async function getStats(db: D1Database, params: StatsParams): Promise<Sta
     ORDER BY date
   `).bind(startDate, endDate).all()
   
-  // TOP 페이지
+  // TOP 페이지 (wiki_pages DROP됨 → serp_interaction_logs 기반으로 변경)
   const topPagesResult = await db.prepare(`
-    SELECT 
-      wp.slug,
-      COALESCE(j.name, m.name, wp.slug) as name,
-      wp.page_type as type,
+    SELECT
+      sil.page_slug as slug,
+      COALESCE(j.name, m.name, sil.page_slug) as name,
+      sil.page_type as type,
       COUNT(sil.id) as views
-    FROM wiki_pages wp
-    LEFT JOIN serp_interaction_logs sil ON sil.page_type = wp.page_type
-    LEFT JOIN jobs j ON wp.page_type = 'job' AND wp.slug = j.id
-    LEFT JOIN majors m ON wp.page_type = 'major' AND wp.slug = m.id
+    FROM serp_interaction_logs sil
+    LEFT JOIN jobs j ON sil.page_type = 'job' AND sil.page_slug = j.slug
+    LEFT JOIN majors m ON sil.page_type = 'major' AND sil.page_slug = m.slug
     WHERE sil.recorded_at BETWEEN ? AND ?
-    GROUP BY wp.slug, wp.page_type
+    GROUP BY sil.page_slug, sil.page_type
     ORDER BY views DESC
     LIMIT ?
   `).bind(startDate, endDate, topLimit).all()

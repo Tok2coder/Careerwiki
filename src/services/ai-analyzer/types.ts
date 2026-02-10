@@ -99,6 +99,18 @@ export interface UserConstraints {
   degree_impossible?: boolean
   license_impossible?: boolean
   
+  // ============================================
+  // 🆕 V3 Hard Exclusion 제약 (미니모듈 기반)
+  // ============================================
+  // 육체/현장 노동 불가
+  physical_labor_no?: boolean
+  // 반복 숙련 노동 불가 (공장, 제조, 조립 등)
+  repetitive_manual_no?: boolean
+  // 의사결정 영향 없는 단순 실행직 회피
+  no_decision_impact_avoid?: boolean
+  // 데이터/분석 없는 직업 회피 (analytical 성향 강할 때)
+  requires_data_work?: boolean
+  
   // Preference (선호)
   prefer_low_overtime?: boolean
   prefer_remote?: boolean
@@ -273,7 +285,10 @@ export interface FollowupNoResult {
 export interface AnalysisResultJSON {
   // Phase 상태 표시 (QA 혼동 방지)
   engine_state: EngineStateV3
-  
+
+  // 미니모듈 결과 (프론트엔드 복원용)
+  mini_module_result?: any
+
   versions: {
     recipe: string
     tagger: string
@@ -322,6 +337,31 @@ export interface AnalysisResultJSON {
   // V3: Stage 기반 분석 정보
   analysis_stage?: string
   stage_specific_insights?: string[]
+  
+  // Freeze v1.1: TAG 근거 패킷 (최종 결과 설명용)
+  // - 왜 특정 직업이 제외되었는지
+  // - 왜 특정 직업에 경고가 붙었는지
+  // - 사후 검증 및 유저 신뢰 확보용
+  tag_evidence?: {
+    hard_excluded_jobs: Array<{
+      job_id: string
+      job_name: string
+      rule: string
+      reason: string
+      confidence: 'high'
+    }>
+    soft_considerations: Array<{
+      job_id: string
+      job_name: string
+      warning: string
+      penalty_applied: number
+    }>
+    why_not_recommended: Array<{
+      job_name: string
+      primary_reason: string
+      user_constraint: string
+    }>
+  }
   
   // Debug info (only included when debug=true)
   debug_info?: DebugInfo
@@ -410,10 +450,12 @@ export interface FollowupQuestionV2 {
 // 이렇게 해야 "목적 없는 질문"이 생기지 않습니다.
 // ============================================
 
-export type FollowupPurpose = 
+export type FollowupPurpose =
   | 'contradiction_resolver'  // 모순 해결형: 앞 답변끼리 충돌하는 지점 확인
   | 'decision_variable'       // 결정변수 확인형: 추천을 갈라먹는 변수를 확정
   | 'reality_constraint'      // 현실 제약 확인형: 시간·돈·학력·지역 등 "불가능" 제거
+  | 'identity_anchor'         // P1: 정체성/가치 앵커 질문 - 핵심 가치 확인
+  | 'can_validation'          // P0: Can 검증형: 자기평가 강점의 실제 경험 확인
 
 export interface FollowupQuestionV3 {
   id: string
@@ -613,13 +655,14 @@ export interface UserInsight {
 }
 
 // Phase 1C용 Follow-up 질문 타입 확장
-export type FollowupQuestionType = 
-  | 'tradeoff'     // 트레이드오프형 (기존)
-  | 'narrative'    // 서사형 (왜?)
-  | 'pattern'      // 패턴형 (반복되는 성향)
-  | 'priority'     // 우선순위형
-  | 'clarification' // 명확화형
-  | 'discovery'    // 자기발견형 (기존)
+export type FollowupQuestionType =
+  | 'tradeoff'       // 트레이드오프형 (기존)
+  | 'narrative'      // 서사형 (왜?)
+  | 'pattern'        // 패턴형 (반복되는 성향)
+  | 'priority'       // 우선순위형
+  | 'clarification'  // 명확화형
+  | 'discovery'      // 자기발견형 (기존)
+  | 'can_validation' // P0: Can 검증형 (자기평가 강점 경험 확인)
 
 // 확장된 AnalysisRequestPayload (Phase 1C)
 export interface AnalysisRequestPayloadV2 extends AnalysisRequestPayload {
@@ -647,6 +690,18 @@ export interface AnalysisRequestPayloadV3 {
   profile?: AnalysisRequestPayload['profile']
   // Debug mode: includes detailed score breakdown
   debug?: boolean
+  // P0 5축 상태좌표
+  career_state?: {
+    role_identity: string
+    career_stage_years: string
+    transition_status: string
+    skill_level: number
+    constraints: Record<string, { has_constraint: boolean; details?: string }>
+  }
+  // P0 전이 신호
+  transition_signal?: Record<string, string | string[]>
+  // P0 팔로업 답변
+  followup_answers?: Record<string, string>
 }
 
 // ============================================
@@ -678,6 +733,11 @@ export interface SummaryOnePageSection {
   headline: string                    // "당신은 이런 타입, 지금 단계에서 최우선은 이것"
   top_takeaways: string[]             // 3~5개 핵심 요약
   recommended_next_step: string       // 다음 단계 제안
+  // 🆕 추천 로직 설명 (왜 이 직업이 추천되었는지, 왜 특정 직업군이 제외되었는지)
+  recommendation_rationale?: {
+    included_because: string[]        // 이런 직업이 추천된 이유
+    excluded_because: string[]        // 이런 직업이 제외된 이유
+  }
 }
 
 // 2. 개인 분석 (서사형)
@@ -744,19 +804,7 @@ export interface PlanBPathsSection {
   paths: PlanBPath[]                  // 2개 대체 경로
 }
 
-// 7. 학습/전환 로드맵
-export interface RoadmapMilestone {
-  title: string
-  tasks: string[]
-}
-
-export interface LearningRoadmapSection {
-  _meta: SectionMeta
-  timeline: '2w' | '1m' | '3m'        // 권장 기간
-  milestones: RoadmapMilestone[]
-}
-
-// 8. 다음 질문 (업그레이드용)
+// 7. 다음 질문 (업그레이드용)
 export interface NextQuestionsSection {
   _meta: SectionMeta
   questions: string[]                 // 3개 추가 질문
@@ -777,14 +825,426 @@ export interface PremiumReport {
   sections_completed: number
   sections_total: number
   
-  // 8개 섹션
+  // 분석 상세 메타데이터 (UI에서 사용)
+  _confidence?: number          // 신뢰도 (0~1)
+  _factsCount?: number          // 수집된 팩트 수
+  _answeredQuestions?: number   // 답변한 질문 수
+  _candidatesScored?: number    // 평가한 직업 수
+  _appliedRules?: number        // 적용된 규칙 수
+  
+  // 7개 섹션
   summary_one_page: SummaryOnePageSection
   personal_analysis: PersonalAnalysisSection
   key_hypotheses: KeyHypothesesSection
   recommendations_top: TopRecommendationsSection
   recommendations_hold: HoldRecommendationsSection
   plan_b_paths: PlanBPathsSection
-  learning_roadmap: LearningRoadmapSection
   next_questions: NextQuestionsSection
+}
+
+// ============================================
+// V3 LLM+RAG 시스템 (2026-01 리팩토링)
+// ============================================
+
+// 서술형 답변 저장용
+export interface NarrativeFacts {
+  highAliveMoment: string   // "가장 자랑스러운 성과"
+  lostMoment: string        // "아쉬운 점"
+  // 커리어 스토리 (q0) - 둘 중 하나 사용
+  storyAnswer?: string      // "간략하게 지금까지의 이야기"
+  life_story?: string       // 별칭
+  // 전공/이전 직업 정보 (구조화 입력 - 선택)
+  career_background?: string  // "전공/학과, 직무/업종, 경력 기간"
+}
+
+// 3라운드 심층 질문용 타입
+export type RoundPurposeTag = 'ENGINE' | 'AVOIDANCE' | 'INTEGRATION'
+
+// 질문으로 추출하려는 데이터 타입
+export type ExtractTarget = 
+  | 'value_rank'        // 가치 순위
+  | 'fear_root'         // 두려움 근원
+  | 'decision_rule'     // 선택 기준 (If-Then)
+  | 'constraint'        // 제약 조건
+  | 'driver'            // 동기/욕구
+  | 'pattern'           // 반복 패턴
+  | 'emotional_trigger' // 감정 트리거
+
+export interface RoundQuestion {
+  id: string
+  questionText: string
+  purposeTag: RoundPurposeTag
+  answerType: 'TEXT'
+  minLengthGuidance: number    // 권장 최소 글자수
+  intent?: string              // UI 노출용: "자율이 중요한 이유의 근원(경험/감정)을 확인"
+  what_to_extract?: ExtractTarget[]  // 운영/학습용: 이 질문으로 뽑아내려는 데이터
+}
+
+export interface RoundAnswer {
+  questionId: string
+  questionText?: string  // 질문 텍스트 (다음 라운드 컨텍스트용)
+  roundNumber: 1 | 2 | 3
+  answer: string
+  answeredAt: string
+}
+
+// 근거 인용 (사용자 원문에서 발췌)
+export interface EvidenceQuote {
+  text: string
+  source: {
+    step: number
+    round?: number
+    questionId: string
+  }
+}
+
+// LLM Judge 결과 (개별 직업 평가)
+export interface LLMJudgeResult {
+  job_id: string
+  job_name: string
+  fitScore: number           // 0-100: 적합도
+  desireScore: number        // 0-100: 욕망/원함
+  feasibilityScore: number   // 0-100: 실현 가능성
+  overallScore: number       // 계산: Fit*0.45 + Desire*0.35 + Feasibility*0.20 - RiskPenalty
+  riskFlags: string[]        // 위험 요소 라벨
+  riskPenalty: number        // 리스크 감점
+  evidenceQuotes: EvidenceQuote[]  // 사용자 원문 인용 2-4개 (필수)
+  rationale: string          // 추천 이유 3-6문장
+  likeReason?: string        // 좋아할 이유 (흥미/가치 연결)
+  canReason?: string         // 잘할 이유 (강점/스타일 매칭)
+  first30DaysPlan: string[]  // 30일 실행 계획 3개
+}
+
+// SearchProfile (RAG 검색용 사용자 프로필)
+export interface SearchProfile {
+  desiredThemes: string[]         // 원하는 것들
+  dislikedThemes: string[]        // 피하고 싶은 것들
+  strengthsHypothesis: string[]   // 추정 강점
+  environmentPreferences: string[] // 환경 선호
+  hardConstraints: string[]       // 절대 조건
+  riskSignals: string[]           // 위험 신호
+  keywords: string[]              // 검색 키워드
+  
+  // 🆕 한 줄 메타 요약 (LLM Judge 품질 향상용)
+  // 예: "Exploration-ready but low tolerance for social pressure and unpredictability"
+  decision_summary?: string
+  
+  // 🆕 Hard Bias 충돌 정보
+  hardBiasConflicts?: {
+    hasConflict: boolean
+    overallType: 'conservative' | 'exploratory' | 'balanced'
+    conflictNames: string[]
+  }
+}
+
+// ============================================
+// Freeze v1.1: SearchProfileV2 확장
+// ============================================
+// facts, preferences, aversions, axis_coverage 추가
+// ============================================
+
+// 명시적 사실 (확정)
+export interface FactItem {
+  key: string               // 예: "education_level", "current_role"
+  value: string             // 예: "대졸", "백엔드 개발자"
+  confidence: number        // 0-1
+  source: string            // 예: "step1.career_state", "round1.q2"
+}
+
+// 선호 (강도 포함)
+export interface PreferenceItem {
+  theme: string             // 예: "remote_work", "growth_opportunity"
+  intensity: 1 | 2 | 3 | 4 | 5  // 선호 강도
+  evidenceKey?: string      // 근거 소스
+}
+
+// 거부감 (강도 포함)
+export interface AversionItem {
+  theme: string             // 예: "overtime", "micromanagement"
+  intensity: 1 | 2 | 3 | 4 | 5  // 거부감 강도
+  evidenceKey?: string      // 근거 소스
+}
+
+// 축별 커버리지 상태
+export interface AxisCoverageState {
+  confidence: number        // 0-1
+  evidence: string[]        // 유저 발언 2-5개
+  missing: boolean          // 정보 부족 여부
+  priority: number          // 0-100 질문 우선순위
+}
+
+// SearchProfileV2: Freeze v1.1 확장 버전
+export interface SearchProfileV2 extends SearchProfile {
+  // 명시적 사실 (확정)
+  facts: FactItem[]
+  
+  // 선호/거부감 (강도 포함)
+  preferences: PreferenceItem[]
+  aversions: AversionItem[]
+  
+  // 축별 커버리지 상태
+  axis_coverage: {
+    interest: AxisCoverageState
+    strength: AxisCoverageState
+    values: AxisCoverageState
+    work_style: AxisCoverageState
+    people: AxisCoverageState
+    environment: AxisCoverageState
+    stress_tolerance: AxisCoverageState
+    growth: AxisCoverageState
+    risk: AxisCoverageState
+    feasibility_constraints: AxisCoverageState
+  }
+  
+  // 메타
+  profile_version: number
+  generated_at: string
+}
+
+// Hard Exclusion 규칙 결과
+export interface HardCutItem {
+  job_id: string
+  job_name: string
+  reason: string
+  rule_matched: string
+}
+
+// Work Style Map (시각화용)
+export interface WorkStyleMapData {
+  analytical_vs_creative: number    // -100 ~ 100
+  solo_vs_team: number              // -100 ~ 100
+  structured_vs_flexible: number    // -100 ~ 100
+  fast_vs_steady: number            // -100 ~ 100
+  guided_vs_autonomous: number      // -100 ~ 100
+}
+
+// 전환 타이밍 (30/60/90일)
+export interface TransitionTimingData {
+  day30: { goal: string; actions: string[]; milestone: string }
+  day60: { goal: string; actions: string[]; milestone: string }
+  day90: { goal: string; actions: string[]; milestone: string }
+}
+
+// Expert Guidance (전문가 조언)
+export interface ExpertGuidanceData {
+  doNow: string[]              // 당장 할 것
+  stopDoing: string[]          // 멈출 것
+  experiment: string[]         // 실험할 것
+  cognitiveTrapFixes: string[] // 인지 함정 교정 루틴
+  conflictResponses: string[]  // 갈등 대응 대체 문장
+}
+
+// 프로필 항목 해석 (개별 항목)
+export interface ProfileItemInterpretation {
+  token: string             // 원본 토큰 (예: "problem_solving")
+  label: string             // 한글 라벨 (예: "문제해결")
+  meaning: string           // 의미 해석 (예: "복잡한 상황을 분석하고 해결책을 찾는 것에서 에너지를 얻는 타입입니다")
+}
+
+// 프로필 해석 전체 (LLM 생성)
+export interface ProfileInterpretation {
+  // 흥미/관심사 해석
+  interests: ProfileItemInterpretation[]
+  interests_summary: string    // "당신은 ~하는 것을 좋아하는 사람입니다"
+
+  // 강점 해석
+  strengths: ProfileItemInterpretation[]
+  strengths_summary: string    // "당신은 ~에 강점을 가진 사람입니다"
+
+  // 가치관 해석
+  values: ProfileItemInterpretation[]
+  values_summary: string       // "당신에게 ~는 중요한 가치입니다"
+
+  // 제약/회피 해석
+  constraints: ProfileItemInterpretation[]
+  constraints_summary: string  // "당신은 ~를 피하고 싶어하는 타입입니다"
+
+  // 종합 프로필 해석
+  overall_profile: string      // 전체 프로필을 종합한 1-2문장
+}
+
+// ============================================
+// 메타인지 결과 (MetaCognition Tab)
+// 자기 이해 중심의 상담 스타일 분석
+// ============================================
+
+// 강점/약점 항목 (의미 해석 포함)
+export interface ArsenalItem {
+  trait: string       // 특성 (예: "분석력")
+  meaning: string     // 왜 이게 강점/약점인지 상담 스타일 설명
+}
+
+// 선호도 항목 (WHY 포함)
+export interface PreferenceMapItem {
+  item: string        // 항목 (예: "문제해결", "반복업무")
+  why: string         // 왜 좋아하는지/싫어하는지 심리적 해석
+}
+
+// 스트레스/회복 항목 (WHY 포함)
+export interface StressRecoveryItem {
+  factor: string      // 요인 (예: "시간 압박")
+  why: string         // 왜 스트레스인지/회복되는지 해석
+}
+
+// 메타인지 결과 전체
+export interface MetaCognitionResult {
+  // 1️⃣ 나의 무기고
+  myArsenal: {
+    strengths: ArsenalItem[]    // 강점 + 왜 이게 강점인지
+    weaknesses: ArsenalItem[]   // 약점 + 극복 방향
+    counselorNote?: string      // 강점 관련 상담사 조언
+  }
+
+  // 2️⃣ 선호도 지도
+  preferenceMap: {
+    likes: PreferenceMapItem[]      // 좋아하는 것 + 왜
+    fits: PreferenceMapItem[]       // 잘 맞는 것 + 왜
+    dislikes: PreferenceMapItem[]   // 안 맞는 것 + 왜
+    counselorNote?: string          // 선호도 관련 상담사 조언
+  }
+
+  // 3️⃣ 내면 탐구
+  innerExploration: {
+    valueAnalysis: string       // 핵심 가치관 분석 (상담 스타일)
+    identityInsight: string     // 정체성 인식 ("당신은 ~ 사람입니다")
+    innerConflicts: string      // 내적 갈등과 의미 (있으면)
+  }
+
+  // 4️⃣ 스트레스 & 회복
+  stressRecovery: {
+    stressFactors: StressRecoveryItem[]    // 스트레스 요인 + 왜
+    recoveryMethods: StressRecoveryItem[]  // 회복 방법 + 왜 효과적인지
+    counselorNote?: string                 // 스트레스 관련 상담사 조언
+  }
+
+  // 5️⃣ 성장 가능성
+  growthPotential: {
+    direction: string           // 성장 방향 제안
+    leveragePoints: string[]    // 활용할 수 있는 강점
+    counselorNote: string       // 상담사 스타일 조언
+  }
+
+  // 메타 정보
+  _meta?: {
+    generated_by: 'llm' | 'rule' | 'hybrid'
+    confidence?: number
+  }
+}
+
+// V3 Premium Report (LLM+RAG 기반)
+export interface PremiumReportV3 {
+  // 메타 정보
+  report_id: string
+  engine_version: 'v3'
+  generated_at: string
+  session_id: string
+
+  // 0. Profile Interpretation (프로필 해석)
+  profileInterpretation?: ProfileInterpretation
+
+  // 0.5 MetaCognition (메타인지 - 자기 이해 중심 분석)
+  metaCognition?: MetaCognitionResult
+
+  // 1. Executive Summary
+  executiveSummary: string
+  
+  // 2. Work Style Map
+  workStyleMap: WorkStyleMapData
+  workStyleNarrative: string
+  
+  // 3. Inner Conflict Analysis
+  innerConflictAnalysis: string
+  conflictPatterns: string[]
+  
+  // 4. Failure Pattern & Stress Profile
+  failurePattern: string
+  stressProfile: string
+  stressTriggers: string[]
+  
+  // 5. Growth Curve Type
+  growthCurveType: string
+  growthCurveDescription: string
+  
+  // 6. Transition Timing (30/60/90)
+  transitionTiming: TransitionTimingData
+  
+  // 7. Life Version Statement
+  lifeVersionStatement: {
+    oneLiner: string        // 1문장 정의
+    expanded: string[]      // 3문장 확장
+  }
+  
+  // 8. Job Recommendations (3세트)
+  jobRecommendations: {
+    overallTop5: LLMJudgeResult[]   // 종합 Top5
+    fitTop10: LLMJudgeResult[]      // Fit 기준 Top10
+    desireTop10: LLMJudgeResult[]   // Desire 기준 Top10
+  }
+  
+  // 9. Expert Guidance
+  expertGuidance: ExpertGuidanceData
+  
+  // 10. Appendix
+  appendix: {
+    hardCutList: HardCutItem[]      // 제외된 직업 목록
+    evidenceIndex: EvidenceQuote[]  // 전체 인용 인덱스
+    totalCandidatesSearched: number
+    totalCandidatesJudged: number
+  }
+  
+  // 안전 규칙 준수 여부
+  safetyCompliance: {
+    noDiagnosticTerms: boolean      // 진단명 단정 없음
+    professionalHelpSuggested: boolean  // 전문가 도움 권유 포함 여부
+  }
+}
+
+// V3 분석 요청 확장
+export interface AnalysisRequestPayloadV3Extended extends AnalysisRequestPayloadV3 {
+  // 서술형 답변
+  narrative_facts?: NarrativeFacts
+  // 3라운드 심층 질문 답변
+  round_answers?: RoundAnswer[]
+  // 엔진 버전
+  engine_version?: 'v2' | 'v3'
+}
+
+// V3 분석 결과 확장
+export interface AnalysisResultJSONV3 extends AnalysisResultJSON {
+  // V3 프리미엄 리포트
+  premium_report?: PremiumReportV3
+  // 엔진 버전
+  engine_version: 'v2' | 'v3'
+}
+
+// ScoredJob 타입 (기존 호환 + 확장)
+export interface ScoredJob {
+  job_id: string
+  job_name: string
+  slug?: string           // 커리어위키 URL 슬러그
+  image_url?: string      // 직업 썸네일 이미지
+  job_description?: string  // 직업 설명 (추천 결과에 표시용)
+  rationale?: string       // 추천 근거 요약
+  likeReason?: string      // Like 점수 근거
+  canReason?: string       // Can 점수 근거
+  riskWarning?: string     // Risk 경고
+  base_like?: number
+  base_can?: number
+  base_risk?: number
+  like_score?: number
+  can_score?: number
+  risk_penalty?: number
+  final_score?: number
+  entry_level_friendly?: boolean
+  attributes?: Record<string, number | string>
+  // V3 확장
+  scores?: {
+    fit: number
+    like: number
+    can: number
+    risk_penalty: number
+  }
+  vector_score?: number
+  tag_source?: 'tagged' | 'vector_only'
 }
 

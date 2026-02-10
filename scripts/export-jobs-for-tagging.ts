@@ -65,7 +65,7 @@ function executeD1Query(query: string): string {
   try {
     // Clean query - remove newlines and extra spaces
     const cleanQuery = query.replace(/\s+/g, ' ').trim()
-    const cmd = `npx wrangler d1 execute careerwiki-db --local --json --command="${cleanQuery.replace(/"/g, '\\"')}"`
+    const cmd = `npx wrangler d1 execute careerwiki-kr --local --json --command="${cleanQuery.replace(/"/g, '\\"')}"`
     
     const result = execSync(cmd, { 
       encoding: 'utf-8', 

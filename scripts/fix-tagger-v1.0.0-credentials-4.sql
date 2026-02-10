@@ -51,3 +51,4 @@ UPDATE job_attributes SET degree_required = 'bachelor' WHERE job_name = '행사�
 
 
 
+
