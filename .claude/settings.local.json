@@ -18,7 +18,14 @@
       "Bash(grep:*)",
       "Bash(python:*)",
       "Bash(ping:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)",
+      "Bash(git rm:*)",
+      "Bash(while read f)",
+      "Bash(do git rm --cached \"$f\")",
+      "Bash(done)",
+      "Bash(CLOUDFLARE_ACCOUNT_ID=3587865378649966bfb0a814fce73c77 npx wrangler:*)"
     ]
   }
 }
