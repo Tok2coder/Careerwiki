@@ -4369,11 +4369,13 @@ analyzerRoutes.get('/vectorize-test', async (c) => {
     const queryEmbedding = embeddings[0]
     
     // 벡터 검색
+    // Cloudflare Vectorize limits: returnMetadata='indexed' → max topK=100
+    const clampedTopK = Math.min(topK, 100)
     const searchStart = Date.now()
     const searchResult = await env.VECTORIZE.query(queryEmbedding, {
-      topK,
+      topK: clampedTopK,
       returnValues: false,
-      returnMetadata: 'all',
+      returnMetadata: 'indexed',
     })
     const searchTime = Date.now() - searchStart
     

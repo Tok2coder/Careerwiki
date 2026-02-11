@@ -100,11 +100,14 @@ export async function searchSimilar(
   } = options
   
   try {
+    // Cloudflare Vectorize limits: returnMetadata='indexed' → max topK=100
+    const clampedTopK = Math.min(topK, 100)
     const results = await vectorize.query(queryVector, {
-      topK,
+      topK: clampedTopK,
       namespace,
       filter,
-      returnMetadata: true,
+      returnValues: false,
+      returnMetadata: 'indexed',
     })
     
     // Filter by minimum score and map to our result type
