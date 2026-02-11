@@ -618,10 +618,10 @@ export interface SampleCommentPayload {
 }
 
 const COMMENT_POLICY_DEFAULTS: Required<CommentPolicyAttributes> = {
-  requiresAuth: true,
-  bestLikeThreshold: 8,
+  requiresAuth: false,
+  bestLikeThreshold: 5,
   bestLimit: 10,
-  reportBlindThreshold: 5,
+  reportBlindThreshold: 3,
   dailyVoteLimit: 5,
   voteWindowHours: 24,
   ipDisplayMode: 'masked',
@@ -655,11 +655,9 @@ export const resolveCommentPolicy = (policy?: CommentPolicyAttributes): Required
 
 export const buildCommentGovernanceItems = (policy: Required<CommentPolicyAttributes>): string[] => {
   const governanceItems: string[] = []
-  if (policy.requiresAuth) {
-    governanceItems.push('로그인한 사용자만 댓글을 작성할 수 있습니다.')
-  } else {
-    governanceItems.push('로그인하지 않아도 댓글을 작성할 수 있습니다.')
-  }
+  governanceItems.push('로그인 없이도 댓글을 작성할 수 있습니다. 익명 작성 시 4자리 숫자 비밀번호가 필요합니다.')
+  governanceItems.push('익명 사용자는 하루 최대 5개의 댓글을 작성할 수 있습니다.')
+  governanceItems.push('댓글은 최대 500자까지 작성 가능하며, 최대 3단계까지 답글을 달 수 있습니다.')
   governanceItems.push(`좋아요 ${policy.bestLikeThreshold}개 이상 댓글은 BEST로 강조됩니다.`)
   governanceItems.push('BEST 댓글은 목록 상단에 고정됩니다.')
   governanceItems.push(`신고 ${policy.reportBlindThreshold}회 이상 시 자동으로 블라인드 처리됩니다.`)
@@ -1173,6 +1171,38 @@ export const buildDetailScaffold = ({
     metaScript,
     meta
   }
+}
+
+/**
+ * 광고 슬롯 플레이스홀더
+ * 출처 섹션과 댓글 섹션 사이에 배치되는 광고 영역
+ * 실제 광고가 로드되지 않으면 빈 상태로 collapse됨
+ */
+export const renderAdSlot = (options: {
+  entityType: 'job' | 'major' | 'howto'
+  position?: 'content-bottom'
+}): string => {
+  const { entityType, position = 'content-bottom' } = options
+  return `
+    <div class="ad-slot-container"
+         data-ad-slot="${position}"
+         data-ad-entity-type="${entityType}"
+         data-ad-status="pending"
+         style="min-height: 0; transition: min-height 0.3s ease;">
+      <div class="ad-slot-inner hidden" data-ad-inner>
+        <div class="max-w-3xl mx-auto py-4">
+          <div class="text-center">
+            <div class="inline-block px-2 py-0.5 text-[10px] text-wiki-muted/50 uppercase tracking-wider mb-1">ad</div>
+            <div class="ad-slot-content rounded-xl border border-wiki-border/20 bg-wiki-card/30 overflow-hidden"
+                 data-ad-content
+                 style="min-height: 90px;">
+              <!-- 광고 콘텐츠가 여기에 삽입됩니다 -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
 }
 
 export const renderSourceBadges = (

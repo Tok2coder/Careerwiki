@@ -1,6 +1,6 @@
 import type { HowtoGuideDetail } from '../types/howto'
 import type { CommentPolicyAttributes } from './detailTemplateUtils'
-import { renderCommentsPlaceholder, resolveCommentPolicy } from './detailTemplateUtils'
+import { renderCommentsPlaceholder, resolveCommentPolicy, renderAdSlot } from './detailTemplateUtils'
 
 const escapeHtml = (value?: string | null): string => {
   if (!value) return ''
@@ -341,9 +341,9 @@ const buildCommentCopy = (): {
   policy: Required<CommentPolicyAttributes>
 } => {
   const policy = resolveCommentPolicy({
-    requiresAuth: true,
-    bestLikeThreshold: 8,
-    reportBlindThreshold: 5,
+    requiresAuth: false,
+    bestLikeThreshold: 5,
+    reportBlindThreshold: 3,
     dailyVoteLimit: 5,
     voteWindowHours: 24,
     ipDisplayMode: 'masked',
@@ -355,7 +355,7 @@ const buildCommentCopy = (): {
     policy,
     config: {
       title: '커뮤니티 피드백',
-      description: '로그인 기반 댓글과 BEST·신고 정책이 적용됩니다. 신고 5회 이상 시 자동 블라인드 처리됩니다.',
+      description: '익명·로그인 댓글과 BEST·신고 정책이 적용됩니다. 신고 3회 이상 시 자동 블라인드 처리됩니다.',
       feedbackLabel: '우선 적용 의견 보내기',
       notifyLabel: '업데이트 알림 받기',
       emptyLabel: '가장 먼저 의견을 남겨주세요.'
@@ -604,6 +604,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
     : `<div class="space-y-6 overflow-x-hidden" data-howto-layout style="min-width: 0; overflow-x: hidden;">${blogContent}</div>`
 
   const sourcesBlock = sourcesCollapsible ? `<div data-howto-sources class="overflow-x-hidden" style="min-width: 0; overflow-x: hidden;">${sourcesCollapsible}</div>` : ''
+  const adSlotBlock = renderAdSlot({ entityType: 'howto' })
   const communityBlock = `<div data-howto-community class="overflow-x-hidden" style="min-width: 0; overflow-x: hidden;">${commentsPlaceholder}</div>`
 
   const canonicalPath = `/howto/${encodeURIComponent(guide.slug)}`
@@ -939,6 +940,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
 
       ${layoutBlock}
       ${sourcesBlock}
+      ${adSlotBlock}
       ${communityBlock}
 
       ${metaScript}

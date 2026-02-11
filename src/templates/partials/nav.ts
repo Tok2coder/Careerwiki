@@ -176,6 +176,31 @@ export function renderNavStyles(): string {
     .header-icon-button { width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; color: rgba(200, 210, 255, 0.7); transition: all 0.2s ease; }
     .header-icon-button:hover { color: #ffffff; background: rgba(100, 181, 246, 0.15); }
     .header-icon-button:focus-visible { outline: 2px solid #64b5f6; outline-offset: 2px; }
+    /* 유저 아이콘 일관성: 모든 페이지에서 동일한 크기 보장 */
+    #user-menu-btn { width: 38px; height: 38px; padding: 7px; }
+    #user-menu-btn img,
+    .header-icon-button img {
+      display: block;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      min-height: 24px;
+      max-width: 24px;
+      max-height: 24px;
+      flex: 0 0 24px;
+      border-radius: 9999px;
+      object-fit: cover;
+    }
+    #user-menu-btn > div {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      min-height: 24px;
+      font-size: 12px;
+    }
+    #user-menu-btn > i {
+      font-size: 16px;
+    }
     #user-menu-dropdown { background: rgba(15, 19, 35, 0.96); border: 1px solid rgba(100, 116, 139, 0.22); }
     #user-menu-dropdown .border-wiki-border\\/30 { border-color: rgba(100, 116, 139, 0.18) !important; }
     #user-menu-dropdown .border-wiki-border\\/50 { border-color: rgba(100, 116, 139, 0.18) !important; }

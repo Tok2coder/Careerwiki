@@ -18,6 +18,7 @@ import {
   renderHeroImage,
   renderSourcesPanel,
   sanitizeJson,
+  renderAdSlot,
   SampleCommentPayload
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
@@ -4756,6 +4757,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
     ? `<div data-job-sources>${sourcesCollapsible}</div>`
     : ''
 
+  const adSlotBlock = renderAdSlot({ entityType: 'job' })
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
@@ -4850,6 +4852,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
       ${lawyerMatrixSection}
       ${layoutBlock}
       ${sourcesBlock}
+      ${adSlotBlock}
       ${communityBlock}
 
       ${metaScript}

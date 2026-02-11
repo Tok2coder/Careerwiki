@@ -39,6 +39,10 @@ export interface CloudflareBindings {
   // AI APIs
   OPENAI_API_KEY?: string
   GEMINI_API_KEY?: string
+
+  // Releases page: Cloudflare Pages API
+  CF_ACCOUNT_ID?: string
+  CF_PAGES_API_TOKEN?: string
 }
 
 

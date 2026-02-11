@@ -216,6 +216,9 @@ type Bindings = {
   GOOGLE_CLIENT_SECRET: string;
   GOOGLE_CALLBACK_URL: string;
   JWT_SECRET: string;
+  // Releases page: Cloudflare Pages API
+  CF_ACCOUNT_ID?: string;
+  CF_PAGES_API_TOKEN?: string;
 }
 
 // User 타입 (auth-helpers에서 정의)
@@ -470,27 +473,178 @@ app.get('/releases', async (c) => {
   const user = c.get('user')
   const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
   const userMenuHtml = renderUserMenu(userData)
+
+  // --- Cloudflare Pages API로 배포 이력 가져오기 ---
+  const accountId = c.env.CF_ACCOUNT_ID || ''
+  const apiToken = c.env.CF_PAGES_API_TOKEN || ''
+  const projectName = 'careerwiki-phase1'
+
+  interface DeploymentMeta {
+    branch: string
+    commitHash: string
+    commitMessage: string
+    createdOn: string
+    status: string
+    environment: string
+  }
+
+  let deployments: DeploymentMeta[] = []
+  let fetchError = false
+
+  if (accountId && apiToken) {
+    try {
+      const cacheKey = new Request('https://releases-cache.internal/deployments')
+      const cache = typeof caches !== 'undefined' ? (caches as any).default as Cache | undefined : null
+
+      let cachedResponse = cache ? await cache.match(cacheKey) : null
+      if (cachedResponse) {
+        deployments = await cachedResponse.json() as DeploymentMeta[]
+      } else {
+        const apiUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/pages/projects/${projectName}/deployments?per_page=30`
+        const apiRes = await fetch(apiUrl, {
+          headers: { 'Authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json' }
+        })
+        if (apiRes.ok) {
+          const data = await apiRes.json() as { result?: any[] }
+          const raw = (data.result || [])
+            .filter((d: any) => d.environment === 'production')
+            .slice(0, 20)
+
+          deployments = raw.map((d: any) => ({
+            branch: d.deployment_trigger?.metadata?.branch || '',
+            commitHash: d.deployment_trigger?.metadata?.commit_hash || '',
+            commitMessage: d.deployment_trigger?.metadata?.commit_message || '직접 배포',
+            createdOn: d.created_on || '',
+            status: d.latest_stage?.status || 'unknown',
+            environment: d.environment || 'production'
+          }))
+
+          if (cache) {
+            const cacheResponse = new Response(JSON.stringify(deployments), {
+              headers: { 'Cache-Control': 'public, max-age=600' }
+            })
+            await cache.put(cacheKey, cacheResponse)
+          }
+        } else {
+          fetchError = true
+        }
+      }
+    } catch (e) {
+      console.error('[Releases] API fetch error:', e)
+      fetchError = true
+    }
+  } else {
+    fetchError = true
+  }
+
+  // 날짜 포맷 (한국어)
+  const fmtDate = (iso: string): string => {
+    if (!iso) return ''
+    const d = new Date(iso)
+    const y = d.getFullYear()
+    const m = d.getMonth() + 1
+    const day = d.getDate()
+    const h = d.getHours()
+    const min = String(d.getMinutes()).padStart(2, '0')
+    const ampm = h >= 12 ? '오후' : '오전'
+    const h12 = h % 12 || 12
+    return `${y}년 ${m}월 ${day}일 ${ampm} ${h12}:${min}`
+  }
+
+  // 상태 뱃지
+  const statusBadge = (status: string): string => {
+    switch (status) {
+      case 'success': return '<span class="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-medium">성공</span>'
+      case 'failure': return '<span class="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 font-medium">실패</span>'
+      case 'active': case 'idle': return '<span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 font-medium">진행 중</span>'
+      default: return `<span class="text-xs px-2 py-0.5 rounded-full bg-slate-500/20 text-slate-400 font-medium">${status}</span>`
+    }
+  }
+
+  const dotClass = (status: string): string => {
+    switch (status) {
+      case 'success': return 'rl-dot-ok'
+      case 'failure': return 'rl-dot-fail'
+      case 'active': case 'idle': return 'rl-dot-prog'
+      default: return 'rl-dot-ok'
+    }
+  }
+
+  const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+  // 커밋 메시지 정리 (첫 줄, 120자 제한)
+  const trimMsg = (msg: string): string => {
+    const line = msg.split('\n')[0].trim()
+    return line.length > 120 ? line.slice(0, 117) + '...' : line
+  }
+
+  // 타임라인 HTML 생성
+  let timelineHtml: string
+  if (fetchError || deployments.length === 0) {
+    timelineHtml = `
+      <div class="glass-card rounded-xl p-8 text-center" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.22);backdrop-filter:blur(14px);">
+        <i class="fas fa-server text-3xl text-slate-400 mb-4 block"></i>
+        <p class="text-white font-semibold mb-2">${fetchError ? '배포 이력을 불러올 수 없습니다' : '배포 이력이 없습니다'}</p>
+        <p class="text-sm text-slate-400">${fetchError ? 'API 연결을 확인해 주세요. 잠시 후 다시 시도하세요.' : '아직 프로덕션 배포가 없습니다.'}</p>
+      </div>`
+  } else {
+    const cards = deployments.map((d, i) => {
+      const shortHash = d.commitHash ? d.commitHash.slice(0, 7) : ''
+      const commitLink = shortHash
+        ? `<a href="https://github.com/Tok2coder/Careerwiki/commit/${esc(d.commitHash)}" class="font-mono hover:underline" style="color:#64b5f6;" target="_blank" rel="noopener"><i class="fas fa-code-commit mr-1"></i>${shortHash}</a>`
+        : ''
+      const branchHtml = d.branch ? `<span><i class="fas fa-code-branch mr-1"></i>${esc(d.branch)}</span>` : ''
+
+      return `
+        <div class="relative pl-10 sm:pl-12 ${i < deployments.length - 1 ? 'pb-6' : ''}">
+          <div class="rl-dot ${dotClass(d.status)}"></div>
+          <div class="glass-card rounded-xl p-4 sm:p-5" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.22);backdrop-filter:blur(14px);">
+            <div class="flex flex-wrap items-center gap-2 mb-2">
+              ${statusBadge(d.status)}
+              <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 font-medium" style="color:#93c5fd;">production</span>
+              <span class="text-xs ml-auto" style="color:#9aa3c5;">${fmtDate(d.createdOn)}</span>
+            </div>
+            <p class="text-white font-medium text-sm sm:text-base mb-1">${esc(trimMsg(d.commitMessage))}</p>
+            <div class="flex flex-wrap items-center gap-3 text-xs" style="color:#9aa3c5;">
+              ${branchHtml}
+              ${commitLink}
+            </div>
+          </div>
+        </div>`
+    }).join('')
+
+    timelineHtml = `<div class="relative"><div class="rl-line"></div>${cards}</div>`
+  }
+
   return c.html(`<!DOCTYPE html>
   <html lang="ko">
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>릴리즈 노트 | CareerWiki</title>
+      <title>배포 이력 | CareerWiki</title>
       <link href="/static/style.css" rel="stylesheet" />
       <script src="https://cdn.tailwindcss.com"></script>
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
       ${renderNavStyles()}
+      <style>
+        .rl-line{position:absolute;left:15px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#4361ee 0%,#64b5f6 50%,rgba(67,97,238,0.1) 100%);}
+        .rl-dot{width:12px;height:12px;border-radius:50%;position:absolute;left:10px;top:20px;z-index:1;}
+        .rl-dot-ok{background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.4);}
+        .rl-dot-fail{background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,0.4);}
+        .rl-dot-prog{background:#eab308;box-shadow:0 0 8px rgba(234,179,8,0.4);animation:rl-pulse 2s infinite;}
+        @keyframes rl-pulse{0%,100%{opacity:1}50%{opacity:.5}}
+        @media(max-width:640px){.rl-line{left:11px;}.rl-dot{left:6px;}}
+      </style>
     </head>
     <body class="bg-wiki-bg text-wiki-text min-h-screen" style="background-color:#0b1220;color:#e6e8f5;">
       ${renderNav(userMenuHtml)}
-      <main class="max-w-[1200px] mx-auto px-4 pt-20 pb-20 text-center space-y-5 sm:pt-12">
-        <p class="text-xs uppercase tracking-[0.2em] text-blue-300 font-semibold">Releases</p>
-        <h1 class="text-3xl md:text-4xl font-bold text-white">릴리즈 노트 준비 중</h1>
-        <p class="text-sm text-wiki-muted">배포 이력 페이지를 곧 제공합니다. 최신 문의는 <a class="text-wiki-link" href="mailto:contact@careerwiki.org">contact@careerwiki.org</a>로 연락주세요.</p>
-        <div class="flex flex-wrap justify-center gap-3 pt-2">
-          <a href="/help" class="px-5 py-3 min-h-[44px] flex items-center rounded-lg border border-wiki-border text-sm text-wiki-text hover:bg-wiki-surface">도움말로 돌아가기</a>
-          <a href="/feedback" class="px-5 py-3 min-h-[44px] flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-semibold hover:opacity-90">건의사항</a>
+      <main class="max-w-[900px] mx-auto px-4 pt-20 pb-20 sm:pt-12">
+        <div class="text-center mb-8">
+          <p class="text-xs uppercase tracking-[0.2em] font-semibold mb-2" style="color:#93c5fd;">Releases</p>
+          <h1 class="text-3xl md:text-4xl font-bold text-white">배포 이력</h1>
+          <p class="text-sm mt-2" style="color:#9aa3c5;">프로덕션 환경에 배포된 최근 업데이트 내역입니다.</p>
         </div>
+        ${timelineHtml}
       </main>
       ${renderNavScripts()}
     </body>
@@ -515,12 +669,12 @@ const renderUserMenu = (
   
   const absoluteImageUrl = profileImageUrl ? getAbsoluteImageUrl(profileImageUrl) : null
   
-  // 프로필 이미지 또는 기본 아이콘 렌더링 (버튼용)
+  // 프로필 이미지 또는 기본 아이콘 렌더링 (버튼용 - 24x24 고정)
   const userIconHtml = absoluteImageUrl
-    ? `<img src="${absoluteImageUrl}" alt="${user?.name || 'User'}" class="rounded-full object-cover w-full h-full" style="width: 100%; height: 100%; object-fit: cover;" />`
+    ? `<img src="${absoluteImageUrl}" alt="${user?.name || 'User'}" class="rounded-full object-cover" style="width: 24px; height: 24px;" />`
     : user
-      ? `<div class="w-full h-full rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-sm">${(user.username || user.name || 'U').charAt(0).toUpperCase()}</div>`
-      : `<i class="fas fa-user-circle text-base"></i>`
+      ? `<div class="rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold" style="width: 24px; height: 24px; font-size: 12px;">${(user.username || user.name || 'U').charAt(0).toUpperCase()}</div>`
+      : `<i class="fas fa-user-circle" style="font-size: 16px;"></i>`
   
   // 유저 아이콘 버튼 + 빈 드롭다운 (내용은 클라이언트에서 nav.ts가 렌더링)
   const menuHtml = `
@@ -1144,15 +1298,7 @@ const renderLayout = (
           .header-icon-button {
             padding: 8px;
           }
-          #user-menu-btn img,
-          .header-icon-button img {
-            display: block;
-            width: 24px;
-            height: 24px;
-            min-width: 24px;
-            min-height: 24px;
-            flex: 0 0 24px;
-          }
+          /* 유저 아이콘 크기는 nav.ts renderNavStyles()에서 통합 관리 */
           .pillar-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1744,29 +1890,45 @@ app.get('/analyzer', (c) => {
             
             <div class="grid md:grid-cols-2 gap-8 mt-8">
                 <!-- Job Recommendation -->
-                <a href="/analyzer/job" class="glass-card p-8 rounded-xl hover-glow block text-center group">
+                <a href="/analyzer/job" class="glass-card p-8 rounded-xl hover-glow block text-center group relative overflow-hidden">
+                    <div class="absolute top-3 right-3 px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-xs font-bold text-emerald-400">
+                        <i class="fas fa-gift mr-1"></i>베타 무료
+                    </div>
                     <i class="fas fa-briefcase text-6xl mb-4 text-wiki-secondary group-hover:text-wiki-primary transition"></i>
                     <h3 class="text-2xl font-bold mb-3">직업 추천</h3>
                     <p class="text-wiki-muted">
                         나의 성향, 능력, 가치관을 바탕으로<br>
                         적합한 직업을 AI가 추천해드립니다
                     </p>
-                    <div class="mt-6">
+                    <div class="mt-4 flex items-center justify-center gap-2">
+                        <span class="text-wiki-muted line-through text-sm">₩50,000</span>
+                        <span class="text-emerald-400 font-bold text-lg">무료</span>
+                    </div>
+                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정 무료 제공</p>
+                    <div class="mt-4">
                         <span class="px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block group-hover:bg-blue-600 transition">
                             직업 추천받기 →
                         </span>
                     </div>
                 </a>
-                
+
                 <!-- Major Recommendation -->
-                <a href="/analyzer/major" class="glass-card p-8 rounded-xl hover-glow block text-center group">
+                <a href="/analyzer/major" class="glass-card p-8 rounded-xl hover-glow block text-center group relative overflow-hidden">
+                    <div class="absolute top-3 right-3 px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-xs font-bold text-emerald-400">
+                        <i class="fas fa-gift mr-1"></i>베타 무료
+                    </div>
                     <i class="fas fa-university text-6xl mb-4 text-wiki-secondary group-hover:text-wiki-primary transition"></i>
                     <h3 class="text-2xl font-bold mb-3">전공 추천</h3>
                     <p class="text-wiki-muted">
                         나의 적성, 흥미, 목표를 분석하여<br>
                         최적의 전공을 AI가 추천해드립니다
                     </p>
-                    <div class="mt-6">
+                    <div class="mt-4 flex items-center justify-center gap-2">
+                        <span class="text-wiki-muted line-through text-sm">₩10,000</span>
+                        <span class="text-emerald-400 font-bold text-lg">무료</span>
+                    </div>
+                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정 무료 제공</p>
+                    <div class="mt-4">
                         <span class="px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block group-hover:bg-blue-600 transition">
                             전공 추천받기 →
                         </span>
@@ -13960,6 +14122,17 @@ app.get('/help/community-guidelines', (c) => {
     .map((item) => `<li>${escapeHtml(item)}</li>`)
     .join('')
 
+  const commentRules = [
+    '댓글은 최대 500자까지 작성할 수 있습니다.',
+    '답글은 최대 3단계까지 달 수 있습니다.',
+    '익명 댓글 작성 시 4자리 숫자 비밀번호를 설정해야 하며, 수정/삭제 시 필요합니다.',
+    '익명 사용자는 하루 최대 5개의 댓글을 작성할 수 있습니다.',
+    '로그인 사용자는 댓글 작성 횟수 제한이 없으며, 익명으로도 작성 가능합니다.',
+    '욕설, 비방, 광고성 댓글은 자동 필터링되거나 제재 대상이 됩니다.'
+  ]
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join('')
+
   const canonicalUrl = buildCanonicalUrl(c.req.url, '/help/community-guidelines')
   const content = `
     <div class="max-w-[1400px] mx-auto px-4 pt-4 pb-10 sm:pt-12">
@@ -13975,16 +14148,19 @@ app.get('/help/community-guidelines', (c) => {
           <ul class="space-y-3">${overviewList}</ul>
         </article>
         <article class="glass-card p-6 rounded-xl space-y-4">
+          <h2 class="text-lg font-semibold text-wiki-text">댓글 작성 규칙</h2>
+          <ul class="space-y-2 text-sm text-wiki-muted">${commentRules}</ul>
+        </article>
+        <article class="glass-card p-6 rounded-xl space-y-4">
           <h2 class="text-lg font-semibold text-wiki-text">BEST 댓글 정책</h2>
           <ul class="space-y-2 text-sm text-wiki-muted">${bestDetails}</ul>
-          <p class="text-xs text-wiki-muted/80">승격, 고정, 갱신 이벤트는 <code class="px-2 py-1 rounded bg-wiki-bg/70 border border-wiki-border text-[11px] text-wiki-secondary">cw-detail-action</code> 텔레메트리로 추적됩니다.</p>
         </article>
         <article class="glass-card p-6 rounded-xl space-y-4">
           <h2 class="text-lg font-semibold text-wiki-text">신고 &amp; 모더레이션</h2>
           <ul class="space-y-2 text-sm text-wiki-muted">${reportDetails}</ul>
           <p class="text-xs text-wiki-muted/80">블라인드 처리 이후 모더레이터 검토에서 복구 또는 제재 여부가 확정됩니다.</p>
         </article>
-        <article class="glass-card p-6 rounded-xl space-y-4">
+        <article class="glass-card p-6 rounded-xl space-y-4 md:col-span-2">
           <h2 class="text-lg font-semibold text-wiki-text">공감/비공감 정책</h2>
           <ul class="space-y-2 text-sm text-wiki-muted">${voteDetails}</ul>
         </article>
@@ -13992,10 +14168,11 @@ app.get('/help/community-guidelines', (c) => {
       <section class="glass-card p-6 rounded-xl space-y-4">
         <h2 class="text-lg font-semibold text-wiki-text">상호작용 흐름 요약</h2>
         <ol class="space-y-2 text-sm text-wiki-muted list-decimal pl-5">
-          <li>익명 사용자도 댓글을 작성할 수 있으며, 4자리 숫자 비밀번호가 필요합니다. 익명 사용자는 하루 최대 5개의 댓글을 작성할 수 있습니다.</li>
-          <li>로그인 사용자는 댓글 작성 제한이 없으며, 익명으로 작성할 수도 있습니다.</li>
-          <li>댓글 등록과 상호작용에는 정책 스냅샷이 포함되어 운영팀에서 변동 이력을 추적합니다.</li>
-          <li>모더레이터는 신고 현황과 BEST 승격 로그를 기준으로 대응합니다.</li>
+          <li>로그인 없이 댓글을 작성할 수 있습니다. 익명 작성 시 4자리 숫자 비밀번호가 필요하며, 하루 최대 5개까지 작성 가능합니다.</li>
+          <li>로그인 사용자는 댓글 작성 횟수 제한 없이 자유롭게 작성할 수 있으며, 원하면 익명으로도 작성할 수 있습니다.</li>
+          <li>답글은 최대 3단계까지 달 수 있으며, 댓글 한 건당 최대 500자까지 작성 가능합니다.</li>
+          <li>좋아요 ${policy.bestLikeThreshold}개 이상을 받은 댓글은 BEST로 승격되어 목록 상단에 고정됩니다.</li>
+          <li>신고 ${policy.reportBlindThreshold}회 이상 누적 시 자동으로 블라인드 처리되며, 모더레이터가 최종 검토합니다.</li>
         </ol>
         <p class="text-xs text-wiki-muted">정책은 서비스 개선을 위해 주기적으로 업데이트되며, 변경 사항은 이 페이지에 먼저 반영됩니다.</p>
       </section>
@@ -31171,69 +31348,36 @@ app.get('/admin/ai-analyzer', async (c, next) => {
   return requireAdmin(c as any, next)
 }, async (c) => {
   const db = c.env.DB
-  
+
   try {
-    // Overview 데이터 수집
-    const [taggedJobs, lowConf, recentRun, analysisCount, followupCount] = await Promise.all([
-      db.prepare('SELECT COUNT(*) as count FROM job_attributes').first<{ count: number }>(),
-      db.prepare('SELECT COUNT(*) as count FROM job_attributes WHERE _confidence < 0.75').first<{ count: number }>(),
-      db.prepare('SELECT run_id, status, processed_jobs, started_at FROM tagger_runs ORDER BY started_at DESC LIMIT 1').first(),
-      db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE requested_at >= datetime('now', '-24 hours')").first<{ count: number }>(),
-      db.prepare("SELECT COUNT(*) as count FROM facts WHERE collected_at >= datetime('now', '-24 hours')").first<{ count: number }>(),
+    // AI 추천 핵심 통계 수집
+    const [
+      totalCompleted, totalRequests, reanalysisCount,
+      analysisLast24h, followupLast24h, totalSessions
+    ] = await Promise.all([
+      db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE status = 'completed'").first<{ count: number }>().catch(() => ({ count: 0 })),
+      db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests").first<{ count: number }>().catch(() => ({ count: 0 })),
+      db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE is_reanalysis = 1").first<{ count: number }>().catch(() => ({ count: 0 })),
+      db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE requested_at >= datetime('now', '-24 hours')").first<{ count: number }>().catch(() => ({ count: 0 })),
+      db.prepare("SELECT COUNT(*) as count FROM facts WHERE collected_at >= datetime('now', '-24 hours')").first<{ count: number }>().catch(() => ({ count: 0 })),
+      db.prepare("SELECT COUNT(DISTINCT session_id) as count FROM ai_analysis_requests").first<{ count: number }>().catch(() => ({ count: 0 })),
     ])
-    
-    // Tagger runs
-    const taggerRuns = await db.prepare(`
-      SELECT run_id, tagger_version, status, total_jobs, processed_jobs, failed_jobs, 
-             qa_passed, qa_failed, started_at, completed_at
-      FROM tagger_runs
-      ORDER BY started_at DESC
-      LIMIT 10
-    `).all()
-    
-    // Low confidence jobs
-    const lowConfJobs = await db.prepare(`
-      SELECT job_id, job_name, _confidence
-      FROM job_attributes
-      WHERE _confidence < 0.75
-      ORDER BY _confidence ASC
-      LIMIT 20
-    `).all()
-    
-    // Tagger errors
-    const taggerErrors = await db.prepare(`
-      SELECT job_id, error_type, error_message, retry_count, created_at
-      FROM tagger_errors
-      ORDER BY created_at DESC
-      LIMIT 20
-    `).all()
-    
+
     const { VERSIONS } = await import('./services/ai-analyzer/types')
-    const { TAGGER_VERSION } = await import('./services/ai-analyzer/job-attributes-types')
-    
+
     return c.html(renderAdminAiAnalyzer({
       overview: {
-        taggedJobsCount: taggedJobs?.count || 0,
-        candidatePoolSize: taggedJobs?.count || 0,
-        targetPoolSize: 80,
-        recentTaggerRun: recentRun as any || null,
-        lowConfidenceCount: lowConf?.count || 0,
-        analysisRequestsLast24h: analysisCount?.count || 0,
-        followupsLast24h: followupCount?.count || 0,
+        totalCompletedAnalyses: totalCompleted?.count || 0,
+        totalRequests: totalRequests?.count || 0,
+        reanalysisCount: reanalysisCount?.count || 0,
+        analysisRequestsLast24h: analysisLast24h?.count || 0,
+        followupsLast24h: followupLast24h?.count || 0,
+        totalSessions: totalSessions?.count || 0,
         engineVersions: {
           scoring: VERSIONS.scoring,
-          tagger: TAGGER_VERSION,
           recipe: VERSIONS.recipe,
         },
-        recentSessionStats: {
-          avgQuestionsGenerated: 3,
-          avgFactsApplied: 0.5,
-          totalSessions: 10,
-        },
       },
-      taggerRuns: (taggerRuns.results || []) as any[],
-      lowConfidenceJobs: (lowConfJobs.results || []) as any[],
-      taggerErrors: (taggerErrors.results || []) as any[],
     }))
   } catch (error) {
     console.error('AI Analyzer admin error:', error)

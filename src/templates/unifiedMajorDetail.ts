@@ -11,6 +11,7 @@ import {
   renderHeroImage,
   renderSourceBadges,
   renderSourcesPanel,
+  renderAdSlot,
   sanitizeJson
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
@@ -2507,6 +2508,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     ? `<div data-major-sources>${sourcesCollapsible}</div>`
     : ''
 
+  const adSlotBlock = renderAdSlot({ entityType: 'major' })
   const communityBlock = `<div data-major-community>${commentsPlaceholder}</div>`
 
   // 6. 히어로 태그: ETL에서 병합된 heroTags 사용, 없으면 폴백
@@ -2675,6 +2677,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
 
       ${layoutBlock}
       ${sourcesBlock}
+      ${adSlotBlock}
       ${communityBlock}
 
       <script>
