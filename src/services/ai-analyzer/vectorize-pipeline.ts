@@ -439,6 +439,53 @@ export async function searchCandidates(
 }
 
 // ============================================
+// Multi-Query 벡터 검색 (topK=100 제한 우회)
+// 여러 쿼리를 배치 임베딩 + 병렬 검색하여 후보 풀 확장
+// ============================================
+export async function searchCandidatesMultiQuery(
+  vectorize: VectorizeIndex,
+  openaiApiKey: string,
+  queries: string[],
+  topK: number = 100
+): Promise<VectorSearchResult[]> {
+  // 1. 배치 임베딩 (한 번의 OpenAI 호출로 모든 쿼리 임베딩)
+  const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, queries)
+  console.log(`[Multi-Query] Batch embedding done: ${queries.length} queries → ${embeddings.length} embeddings`)
+
+  // 2. 병렬 Vectorize 검색 (각 topK=100)
+  const clampedTopK = Math.min(topK, 100)
+  const searchPromises = embeddings.map(emb =>
+    vectorize.query(emb, { topK: clampedTopK, returnValues: false, returnMetadata: 'none' })
+  )
+  const searchResults = await Promise.all(searchPromises)
+
+  // 3. 중복 제거 (같은 job_id → 최고 score 유지)
+  const bestScoreMap = new Map<string, number>()
+  let totalMatches = 0
+  for (const result of searchResults) {
+    for (const match of result.matches) {
+      totalMatches++
+      const existing = bestScoreMap.get(match.id)
+      if (existing === undefined || match.score > existing) {
+        bestScoreMap.set(match.id, match.score)
+      }
+    }
+  }
+
+  console.log(`[Multi-Query] Total matches: ${totalMatches}, Unique jobs: ${bestScoreMap.size}`)
+
+  // 4. 결과 변환 (score 내림차순)
+  return Array.from(bestScoreMap.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([id, score]) => ({
+      job_id: id,
+      job_name: id,
+      score,
+      metadata: {} as Record<string, any>,
+    }))
+}
+
+// ============================================
 // 후보군 확장 (메인 함수) - 벡터 검색 기반
 // ============================================
 // 2026-01-26: 태깅 의존도 완전 제거
@@ -1305,6 +1352,51 @@ export async function buildLLMSearchQuery(
   return llmQuery
 }
 
+// ============================================
+// Multi-Search 쿼리 생성 (LLM 쿼리 분할 + 차원별 키워드)
+// 10-12개 쿼리로 벡터 공간의 다양한 영역 탐색
+// ============================================
+export async function buildMultiSearchQueries(
+  miniModule: MiniModuleResult,
+  openaiApiKey: string
+): Promise<string[]> {
+  // 1. 기존 LLM 쿼리 (종합 직업명 리스트)
+  const llmQuery = await buildLLMSearchQuery(miniModule, openaiApiKey)
+
+  // 2. LLM 출력을 3-5개씩 분할하여 서브쿼리 생성
+  // "적합 직업: A, B, C, D, E, ..." → ["A, B, C", "D, E, F", ...]
+  const rawContent = llmQuery.replace(/^적합 직업:\s*/, '')
+  const jobNames = rawContent.split(/[,，、]/).map(s => s.trim()).filter(Boolean)
+  const chunkSize = Math.max(3, Math.ceil(jobNames.length / 5))
+  const subQueries: string[] = []
+  for (let i = 0; i < jobNames.length; i += chunkSize) {
+    subQueries.push(jobNames.slice(i, i + chunkSize).join(', '))
+  }
+
+  // 3. 차원별 키워드 쿼리 추가 (LLM 호출 없이 규칙 기반)
+  const dimensionQueries: string[] = []
+  if (miniModule.interest_top?.length) {
+    dimensionQueries.push(`${miniModule.interest_top.join(' ')} 관련 직업`)
+  }
+  if (miniModule.strength_top?.length) {
+    dimensionQueries.push(`${miniModule.strength_top.join(' ')} 역량이 필요한 직업`)
+  }
+  if (miniModule.value_top?.length) {
+    dimensionQueries.push(`${miniModule.value_top.join(' ')} 가치를 충족하는 직업`)
+  }
+
+  // 4. 모든 쿼리 결합 (종합 + 서브쿼리 + 차원별)
+  const allQueries = [
+    llmQuery,          // 종합 (가장 중요)
+    ...subQueries,     // LLM 출력 분할 (5-8개)
+    ...dimensionQueries, // 흥미/강점/가치 차원 (2-3개)
+  ]
+
+  console.log(`[Multi-Search] Generated ${allQueries.length} queries: 1 main + ${subQueries.length} sub + ${dimensionQueries.length} dimension`)
+
+  return allQueries
+}
+
 // V3: SearchProfile → 검색 쿼리 변환 (정적 키워드 기반 - fallback용)
 export function searchProfileToQuery(profile: SearchProfile): string {
   const parts: string[] = []
@@ -1369,13 +1461,13 @@ export async function expandCandidatesV3(
     throw new Error('[V3 Vectorize] miniModule이 필수입니다 - LLM 검색 쿼리 생성에 필요')
   }
 
-  const query = await buildLLMSearchQuery(miniModule, openaiApiKey)
-  console.log(`[V3 Vectorize] Search query (llm): ${query.substring(0, 100)}...`)
+  const queries = await buildMultiSearchQueries(miniModule, openaiApiKey)
+  console.log(`[V3 Vectorize] Multi-query search: ${queries.length} queries`)
 
-  // 2. 벡터 검색 (OpenAI Embedding)
+  // 2. 벡터 검색 (Multi-Query 병렬 검색, OpenAI Embedding)
   // Vectorize 로컬 실행 불가 시 DB fallback (wrangler pages dev 한계)
   try {
-    const vectorResults = await searchCandidates(vectorize, openaiApiKey, query, targetSize)
+    const vectorResults = await searchCandidatesMultiQuery(vectorize, openaiApiKey, queries)
 
     const candidates = vectorResults.map(vr => ({
       ...vr,
@@ -1392,7 +1484,7 @@ export async function expandCandidatesV3(
     // Vectorize 로컬 바인딩 에러 → DB fallback (production에서는 발생하지 않음)
     if (vecError?.message?.includes('remotely') || vecError?.message?.includes('Vectorize')) {
       console.warn(`[V3 Vectorize] Vectorize 로컬 실행 불가 → DB fallback: ${vecError.message}`)
-      console.log(`[V3 Vectorize] LLM 쿼리는 성공: ${query.substring(0, 80)}...`)
+      console.log(`[V3 Vectorize] LLM 쿼리는 성공: ${queries[0]?.substring(0, 80)}...`)
       const fallbackResult = await getFallbackCandidatesV3(db, targetSize)
       return {
         candidates: fallbackResult,
@@ -1781,24 +1873,25 @@ async function expandCandidatesV3WithPreFilter(
     }
   }
 
-  // 1. 검색 쿼리 생성: miniModule 있으면 LLM (필수), 없으면 정적 키워드 (인터뷰 모드)
-  let query: string
-  if (miniModule) {
-    query = await buildLLMSearchQuery(miniModule, openaiApiKey!)
-    console.log(`[V3 Vectorize] Search query (llm): ${query.substring(0, 100)}...`)
-  } else {
-    query = searchProfileToQuery(searchProfile)
-    console.log(`[V3 Vectorize] Search query (static - interview mode): ${query.substring(0, 100)}...`)
-  }
-
-  // 2. 벡터 검색 (Pre-Filter 감안해서 더 많이 검색, OpenAI Embedding)
-  // Vectorize 로컬 실행 불가 시 DB fallback (wrangler pages dev 한계)
-  const extraBuffer = excludedJobIds ? excludedJobIds.size : 0
-  const searchTopK = Math.min(targetSize + extraBuffer + 100, 1000)
-
+  // 1. 검색 쿼리 생성: miniModule 있으면 Multi-Query (LLM+분할+차원별), 없으면 단일 정적 쿼리
   try {
-    let vectorResults = await searchCandidates(vectorize, openaiApiKey!, query, searchTopK)
-    console.log(`[V3 Vectorize] Raw vector results: ${vectorResults.length}`)
+    let vectorResults: VectorSearchResult[]
+
+    if (miniModule) {
+      const queries = await buildMultiSearchQueries(miniModule, openaiApiKey!)
+      console.log(`[V3 Vectorize] Multi-query search: ${queries.length} queries`)
+
+      // 2. Multi-Query 병렬 벡터 검색 (각 topK=100, 중복 제거)
+      vectorResults = await searchCandidatesMultiQuery(vectorize, openaiApiKey!, queries)
+      console.log(`[V3 Vectorize] Multi-query results: ${vectorResults.length} unique jobs`)
+    } else {
+      const query = searchProfileToQuery(searchProfile)
+      console.log(`[V3 Vectorize] Search query (static - interview mode): ${query.substring(0, 100)}...`)
+
+      // 2. 단일 쿼리 벡터 검색 (인터뷰 모드 fallback)
+      vectorResults = await searchCandidates(vectorize, openaiApiKey!, query, 100)
+      console.log(`[V3 Vectorize] Single-query results: ${vectorResults.length}`)
+    }
 
     // 3. Pre-Filter 적용 (제외 대상 제거)
     if (excludedJobIds && excludedJobIds.size > 0) {
