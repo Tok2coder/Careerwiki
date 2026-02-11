@@ -420,9 +420,9 @@ export async function searchCandidates(
   const queryEmbedding = embeddings[0]
   
   // 2. 벡터 검색
-  // Cloudflare Vectorize limits: returnMetadata='none' → topK up to 1000
-  // metadata는 후속 D1 조회에서 가져오므로 'none'으로 설정하여 topK 제한 회피
-  const clampedTopK = Math.min(topK, 1000)
+  // Cloudflare Vectorize 절대 상한: topK = 100
+  // metadata는 후속 D1 조회에서 가져오므로 'none'으로 설정
+  const clampedTopK = Math.min(topK, 100)
   const searchResult = await vectorize.query(queryEmbedding, {
     topK: clampedTopK,
     returnValues: false,
