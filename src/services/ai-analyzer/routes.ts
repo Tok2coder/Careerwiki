@@ -1009,6 +1009,123 @@ async function saveDeepIntakeFacts(
 }
 
 // ============================================
+// 실존적 질문 답변 LLM 분석 (비동기 백그라운드 실행)
+// "7일 뒤 지구 멸망" 시나리오 답변에서 존재 기반 가치 추출
+// ============================================
+async function analyzeExistentialAnswer(
+  db: D1Database,
+  sessionId: string,
+  userId: string | undefined,
+  rawAnswer: string,
+  openaiApiKey?: string,
+): Promise<void> {
+  if (!openaiApiKey) {
+    console.warn('[Existential Analysis] No OpenAI API key - skipping analysis')
+    return
+  }
+
+  console.log('[Existential Analysis] Starting for session:', sessionId)
+
+  // 1. 원문 저장 (fact)
+  await db.prepare(`
+    INSERT INTO facts (session_id, user_id, fact_key, value_json, confidence, source_type, fact_level)
+    VALUES (?, ?, 'existential.priority_raw', ?, 1.0, 'deep_intake', 2)
+    ON CONFLICT(session_id, fact_key) DO UPDATE SET
+      value_json = excluded.value_json,
+      collected_at = CURRENT_TIMESTAMP
+  `).bind(sessionId, userId || null, JSON.stringify(rawAnswer)).run()
+
+  // 2. LLM 구조적 분석
+  const systemPrompt = `당신은 심리 분석가이자 커리어 전략가입니다.
+
+사용자는 다음 질문에 답했습니다:
+"만약 7일 뒤 되돌릴 수 없는 우주적 재난으로 지구가 사라진다면, 그 7일을 어디에서, 누구와, 무엇을 하며 보내고 싶은가? 그리고 그 이유는 무엇인가?"
+
+아래 사용자의 답변을 감정적으로 요약하지 마십시오.
+도덕적 평가를 하지 마십시오.
+칭찬하거나 위로하지 마십시오.
+
+대신, 다음 항목을 구조적으로 분석하십시오.
+
+1. 주요 행동 지향성 (Primary Action Orientation)
+다음 중 가장 가까운 유형을 선택:
+- 관계 중심형
+- 성취 추구형
+- 자유/탐험 지향형
+- 의미 탐색형
+- 책임 수행형
+- 자기표현형
+- 회피/무기력형
+- 경험 소비형
+
+2. 핵심 가치 신호 (최대 3개 선택)
+아래 중에서만 선택:
+관계, 성취, 자유, 안정, 의미, 영향력, 인정, 성장, 기여, 경험, 자기표현, 소속
+
+3. 시간 지향성
+다음 중 선택:
+- 현재 몰입형
+- 관계 정리형
+- 유산 남기기형
+- 후회 보완형
+- 초월/철학형
+
+4. 정서적 톤
+다음 중 선택:
+수용, 긴박, 두려움, 평온, 체념, 저항, 공허, 성찰
+
+5. 잠재적 괴리 분석
+사용자의 마지막 7일 선택이 일반적인 사회적 성공 경로와 얼마나 다른지 한 줄로 분석하십시오.
+
+6. 직업 설계에 시사점
+이 답변이 커리어 방향 설정에 어떤 신호를 주는지 2~3줄로 분석하십시오.
+
+반드시 JSON 형식으로만 출력하십시오.
+{
+  "primary_orientation": "...",
+  "core_values": ["...", "..."],
+  "time_orientation": "...",
+  "emotional_tone": "...",
+  "hidden_gap_analysis": "...",
+  "career_implication": "..."
+}`
+
+  try {
+    const { callOpenAI } = await import('./openai-client')
+    const { response } = await callOpenAI(openaiApiKey, [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: `[USER_DATA]\n${rawAnswer}\n[/USER_DATA]` },
+    ], {
+      temperature: 0.3,
+      max_tokens: 800,
+    })
+
+    // JSON 파싱
+    const jsonMatch = response.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) {
+      console.error('[Existential Analysis] Failed to parse JSON from response')
+      return
+    }
+
+    const structured = JSON.parse(jsonMatch[0])
+    console.log('[Existential Analysis] Structured result:', structured)
+
+    // 3. 구조적 분석 결과 저장 (fact)
+    await db.prepare(`
+      INSERT INTO facts (session_id, user_id, fact_key, value_json, confidence, source_type, fact_level)
+      VALUES (?, ?, 'existential.priority_structured', ?, 0.85, 'inferred', 2)
+      ON CONFLICT(session_id, fact_key) DO UPDATE SET
+        value_json = excluded.value_json,
+        collected_at = CURRENT_TIMESTAMP
+    `).bind(sessionId, userId || null, JSON.stringify(structured)).run()
+
+    console.log('[Existential Analysis] Complete for session:', sessionId)
+  } catch (error) {
+    console.error('[Existential Analysis] LLM analysis failed:', error)
+  }
+}
+
+// ============================================
 // POST /followup - Follow-up 응답 처리 (facts 저장)
 // ============================================
 analyzerRoutes.post('/followup', async (c) => {
@@ -3852,7 +3969,7 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
     const body = await c.req.json<{
       session_id: string
       round_number: 1 | 2 | 3
-      narrative_facts?: { highAliveMoment: string; lostMoment: string; life_story?: string; storyAnswer?: string }
+      narrative_facts?: { highAliveMoment: string; lostMoment: string; life_story?: string; storyAnswer?: string; existentialAnswer?: string }
       previous_round_answers?: Array<{
         questionId: string
         questionText?: string  // 질문 텍스트 (다음 라운드 컨텍스트용)
@@ -4267,38 +4384,49 @@ analyzerRoutes.post('/v3/narrative-facts', async (c) => {
       user_id?: string
       high_alive_moment: string
       lost_moment: string
+      existential_answer?: string
     }>()
-    
-    const { session_id, user_id, high_alive_moment, lost_moment } = body
-    
+
+    const { session_id, user_id, high_alive_moment, lost_moment, existential_answer } = body
+
     // P0-1: session_id 검증 강화
     if (!session_id || session_id.trim() === '') {
       console.error('[V3 Narrative Facts] VALIDATION FAILED: session_id is empty or null')
-      return c.json({ 
-        success: false, 
+      return c.json({
+        success: false,
         error: 'session_id is required and cannot be empty',
         detail: 'session_id_validation_failed'
       }, 400)
     }
-    
+
     // P0-1: 입력값 로깅
     console.log('[V3 Narrative Facts] SAVE REQUEST:', {
       session_id,
       user_id: user_id || null,
       high_alive_moment_length: high_alive_moment?.length || 0,
       lost_moment_length: lost_moment?.length || 0,
+      existential_answer_length: existential_answer?.length || 0,
     })
-    
+
     // UPSERT (기존 있으면 업데이트)
     const result = await db.prepare(`
-      INSERT INTO narrative_facts (session_id, user_id, high_alive_moment, lost_moment)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO narrative_facts (session_id, user_id, high_alive_moment, lost_moment, existential_answer)
+      VALUES (?, ?, ?, ?, ?)
       ON CONFLICT(session_id) DO UPDATE SET
         high_alive_moment = excluded.high_alive_moment,
         lost_moment = excluded.lost_moment,
+        existential_answer = excluded.existential_answer,
         created_at = datetime('now')
-    `).bind(session_id, user_id || null, high_alive_moment, lost_moment).run()
-    
+    `).bind(session_id, user_id || null, high_alive_moment, lost_moment, existential_answer || null).run()
+
+    // 실존적 질문 답변이 있으면 비동기로 LLM 분석 실행
+    if (existential_answer && existential_answer.trim().length > 10) {
+      c.executionCtx.waitUntil(
+        analyzeExistentialAnswer(db, session_id, user_id, existential_answer, (env as any).OPENAI_API_KEY)
+          .catch(err => console.error('[Existential Analysis] Background analysis failed:', err))
+      )
+    }
+
     console.log('[V3 Narrative Facts] SAVE SUCCESS:', {
       session_id,
       meta: result.meta,
@@ -4791,10 +4919,24 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     // 4. LLM Judge 호출 (Top 20 결정 + rationale 생성)
     let topJobs: any[]
 
-    // 사전 필터된 상위 후보군
-    const preFilteredJobs = filteredJobs
-      .sort((a, b) => (b.final_score || b.like_score || 0) - (a.final_score || a.like_score || 0))
-      .slice(0, Math.min(judgeTopN * 2, 40))
+    // 사전 필터된 상위 후보군 (Like/Can 편향 분리로 다양한 후보 확보)
+    // Like 편향 후보: like_score 상위 25개
+    const likeBiasedJobs = [...filteredJobs]
+      .sort((a, b) => (b.like_score || 0) - (a.like_score || 0))
+      .slice(0, 25)
+    // Can 편향 후보: can_score 상위 25개
+    const canBiasedJobs = [...filteredJobs]
+      .sort((a, b) => (b.can_score || 0) - (a.can_score || 0))
+      .slice(0, 25)
+    // 합집합 (중복 제거) → ~35-45개 unique 후보
+    const preFilterJobIdSet = new Set<string>()
+    const preFilteredJobs: typeof filteredJobs = []
+    for (const job of [...likeBiasedJobs, ...canBiasedJobs]) {
+      if (!preFilterJobIdSet.has(job.job_id)) {
+        preFilterJobIdSet.add(job.job_id)
+        preFilteredJobs.push(job)
+      }
+    }
 
     // ScoredJob을 FilteredCandidate 형태로 변환
     const candidatesForJudge: FilteredCandidate[] = preFilteredJobs.map(job => ({
@@ -4905,23 +5047,25 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     let premiumReport: any = null
 
     // 5-1. NarrativeFacts 조회
-    let narrativeFacts: { highAliveMoment: string; lostMoment: string } | undefined
+    let narrativeFacts: { highAliveMoment: string; lostMoment: string; existentialAnswer?: string } | undefined
     try {
       const narrativeRow = await db.prepare(`
-        SELECT high_alive_moment, lost_moment
+        SELECT high_alive_moment, lost_moment, existential_answer
         FROM narrative_facts
         WHERE session_id = ?
       `).bind(session_id).first<{
         high_alive_moment: string | null
         lost_moment: string | null
+        existential_answer: string | null
       }>()
 
       if (narrativeRow && (narrativeRow.high_alive_moment || narrativeRow.lost_moment)) {
         narrativeFacts = {
           highAliveMoment: narrativeRow.high_alive_moment || '',
           lostMoment: narrativeRow.lost_moment || '',
+          existentialAnswer: narrativeRow.existential_answer || undefined,
         }
-        console.log('[Recommendation Mode] NarrativeFacts loaded')
+        console.log('[Recommendation Mode] NarrativeFacts loaded', narrativeRow.existential_answer ? '(with existential)' : '')
       }
     } catch (narrativeError) {
       console.warn('[Recommendation Mode] Failed to load narrative facts:', narrativeError)
@@ -5044,43 +5188,65 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     // 6. 결과 반환
     const duration = Date.now() - startTime
 
-    // like_top10: like_score 기준 정렬 (Fit >= 25 필터)
-    const likeTop10 = [...topJobs]
-      .filter(job => (job.final_score || job.fit_score || 0) >= 25)
-      .sort((a, b) => (b.like_score || 0) - (a.like_score || 0))
-      .slice(0, 10)
-      .map(job => ({
-        job_id: job.job_id,
-        job_name: job.job_name,
-        job_description: job.job_description || null,
-        slug: job.slug,
-        image_url: job.image_url || null,
-        fit_score: job.final_score || job.fit_score || 50,
-        like_score: job.like_score || 50,
-        can_score: job.can_score || 50,
-        rationale: job.rationale || null,
-        like_reason: job.like_reason || null,
-        can_reason: job.can_reason || null,
-      }))
+    // 카테고리 다양성 적용 Top 10 선택 함수
+    // 같은 KSCO 대분류에서 최대 3개까지만 허용, 부족하면 fallback으로 채움
+    const diverseTop10 = (
+      jobs: any[],
+      scoreKey: 'like_score' | 'can_score',
+      maxPerCategory: number = 3
+    ) => {
+      const sorted = [...jobs]
+        .filter(job => (job.final_score || job.fit_score || 0) >= 25)
+        .sort((a, b) => (b[scoreKey] || 0) - (a[scoreKey] || 0))
 
-    // can_top10: can_score 기준 정렬 (Fit >= 25 필터)
-    const canTop10 = [...topJobs]
-      .filter(job => (job.final_score || job.fit_score || 0) >= 25)
-      .sort((a, b) => (b.can_score || 0) - (a.can_score || 0))
-      .slice(0, 10)
-      .map(job => ({
-        job_id: job.job_id,
-        job_name: job.job_name,
-        job_description: job.job_description || null,
-        slug: job.slug,
-        image_url: job.image_url || null,
-        fit_score: job.final_score || job.fit_score || 50,
-        like_score: job.like_score || 50,
-        can_score: job.can_score || 50,
-        rationale: job.rationale || null,
-        like_reason: job.like_reason || null,
-        can_reason: job.can_reason || null,
-      }))
+      const result: any[] = []
+      const selectedIds = new Set<string>()
+      const categoryCount = new Map<string, number>()
+
+      // 1차: 카테고리 다양성 적용
+      for (const job of sorted) {
+        if (result.length >= 10) break
+        const category = job.ksco_major || job.attributes?.ksco_major || '기타'
+        const count = categoryCount.get(category) || 0
+        if (count >= maxPerCategory) continue
+
+        result.push(job)
+        selectedIds.add(job.job_id)
+        categoryCount.set(category, count + 1)
+      }
+
+      // 2차 fallback: 10개 미만이면 카테고리 제한 없이 점수순으로 채움
+      if (result.length < 10) {
+        for (const job of sorted) {
+          if (result.length >= 10) break
+          if (selectedIds.has(job.job_id)) continue
+          result.push(job)
+          selectedIds.add(job.job_id)
+        }
+      }
+
+      return result
+    }
+
+    const jobToDto = (job: any) => ({
+      job_id: job.job_id,
+      job_name: job.job_name,
+      job_description: job.job_description || null,
+      slug: job.slug,
+      image_url: job.image_url || null,
+      fit_score: job.final_score || job.fit_score || 50,
+      like_score: job.like_score || 50,
+      can_score: job.can_score || 50,
+      rationale: job.rationale || null,
+      like_reason: job.like_reason || null,
+      can_reason: job.can_reason || null,
+    })
+
+    // like_top10: like_score 기준 + 카테고리 다양성
+    const likeTop10 = diverseTop10(topJobs, 'like_score').map(jobToDto)
+
+    // can_top10: can_score 기준 + 카테고리 다양성
+    const canTop10 = diverseTop10(topJobs, 'can_score').map(jobToDto)
 
     // ============================================
     // 7. 결과 저장 (ai_analysis_requests + ai_analysis_results)

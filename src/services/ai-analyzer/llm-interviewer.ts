@@ -287,9 +287,8 @@ ${INJECTION_DEFENSE}
       "id": "R1-Q1",
       "axis": ["interest", "value"],
       "state": "B",
-      "empathy": "자연스러운 연결 문장 (선택사항 - 없어도 됨)",
       "anchor": "USER_DATA에서 실제로 나온 짧은 구절",
-      "question": "질문 한 문장 (한국어)",
+      "question": "연결문장과 질문을 하나로 통합한 완성된 텍스트 (한국어)",
       "extract": "추출 타겟 (trigger, boundary, flow_condition, success_definition, hidden_fear, energizer, learning_style, decision_rule, strength_evidence, preferred_feedback, relationship_mode 중 하나)"
     }
   ]
@@ -297,7 +296,10 @@ ${INJECTION_DEFENSE}
 
 ## 출력 규칙:
 - 3~5개 질문
-- 각 질문은 1~2문장 이내
+- **question 필드 하나에 공감/연결/질문을 자연스럽게 통합하세요** (별도 empathy 필드 사용 금지!)
+- question 구조: "[사용자 발언 재진술] + [의미 해석 1줄] + [질문]" 을 하나의 자연스러운 문단으로 작성
+- 예시: "반복 업무가 늘며 성장 속도가 둔화된 느낌을 말씀해주셨어요. 이건 단순한 지루함이 아니라 전문성 경로가 안 보인다는 신호로 보이는데요, 어떤 방향의 전문성이 쌓이면 '나아가고 있다'고 느끼실 것 같으세요?"
+- 각 질문은 2~4문장 이내 (연결문장 포함)
 - JSON 외에 다른 코멘트 금지`
 
 // ============================================
@@ -684,6 +686,7 @@ function buildInterviewContext(input: InterviewerInput): string {
   parts.push('1. "간략하게 지금까지의 이야기를 들려주세요" (커리어 스토리)')
   parts.push('2. "지금까지 커리어에서 가장 자랑스러운 성과가 있다면?" (자랑스러운 경험/성과)')
   parts.push('3. "현재 위치에서 아쉬운 점이 있다면 뭔가요?" (아쉬운 점/부족한 점)')
+  parts.push('4. "만약 7일 뒤 지구가 사라진다면..." (실존적 가치 질문)')
   
   // CAG 상태에서 추가로 이미 물어본 질문 추가
   if (input.cagState && input.cagState.asked_questions_log.length > 0) {
@@ -715,6 +718,10 @@ function buildInterviewContext(input: InterviewerInput): string {
     }
     if (input.narrativeFacts.lostMoment) {
       parts.push(`[아쉬운 점]\n"${input.narrativeFacts.lostMoment}"`)
+    }
+    if (input.narrativeFacts.existentialAnswer) {
+      parts.push(`[실존적 가치 질문 답변 - "7일 뒤 지구 멸망" 시나리오]\n"${input.narrativeFacts.existentialAnswer}"`)
+      parts.push('↳ 이 답변은 사회적 조건이 제거된 상태에서의 본질적 가치를 드러냅니다. 직접 언급하지 말고, 여기서 드러난 가치 방향을 심층 질문 설계에 반영하세요.')
     }
   }
   
@@ -1005,11 +1012,8 @@ function parseInterviewerResponse(
           extractTargets = filtered.length > 0 ? filtered : undefined
         }
         
-        // 질문 텍스트 조합 (v2.0: empathy + question)
-        let questionText = q.questionText || q.question || ''
-        if (q.empathy && !questionText.startsWith(q.empathy)) {
-          questionText = `${q.empathy} ${questionText}`
-        }
+        // 질문 텍스트 (v2.1: question 필드에 공감+질문 통합)
+        const questionText = q.questionText || q.question || ''
         
         // state에 따른 intent 자동 생성 (v2.0)
         let intent = q.intent

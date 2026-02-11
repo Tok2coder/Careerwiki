@@ -855,6 +855,18 @@ export interface NarrativeFacts {
   life_story?: string       // 별칭
   // 전공/이전 직업 정보 (구조화 입력 - 선택)
   career_background?: string  // "전공/학과, 직무/업종, 경력 기간"
+  // 실존적 질문 답변 ("7일 뒤 지구 멸망" 시나리오)
+  existentialAnswer?: string
+}
+
+// 실존적 질문 LLM 분석 결과
+export interface ExistentialAnalysis {
+  primary_orientation: string   // 주요 행동 지향성
+  core_values: string[]         // 핵심 가치 신호 (최대 3개)
+  time_orientation: string      // 시간 지향성
+  emotional_tone: string        // 정서적 톤
+  hidden_gap_analysis: string   // 잠재적 괴리 분석
+  career_implication: string    // 직업 설계 시사점
 }
 
 // 3라운드 심층 질문용 타입

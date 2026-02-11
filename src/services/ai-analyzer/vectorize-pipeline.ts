@@ -1043,6 +1043,19 @@ export async function vectorResultsToScoredJobs(
       const baseCan = Math.min(100, personalized.can + Math.round(vectorBonus * 0.5))
       const baseRisk = 10
 
+      // 미태깅 직업 페널티: job_attributes 없이 기본값 50으로 채워진 직업은 순위 하락
+      const isUntagged = !!(attrs as any)?._from_jobs_fallback
+      const untaggedPenalty = isUntagged ? -25 : 0
+
+      // ksco_major 추출 (카테고리 다양성 보장용)
+      let kscoMajor = ''
+      if (attrs.merged_profile_json) {
+        try {
+          const profile = JSON.parse(attrs.merged_profile_json)
+          kscoMajor = profile.ksco_major || profile.kscoMajor || ''
+        } catch {}
+      }
+
       return {
         job_id: attrs.job_id,
         job_name: attrs.job_name,
@@ -1055,7 +1068,8 @@ export async function vectorResultsToScoredJobs(
         like_score: baseLike,
         can_score: baseCan,
         risk_penalty: baseRisk,
-        final_score: Math.round(0.55 * baseLike + 0.45 * baseCan - baseRisk + (vectorScore * 20)),  // Like 가중 + 벡터 점수
+        final_score: Math.round(0.55 * baseLike + 0.45 * baseCan - baseRisk + (vectorScore * 20)) + untaggedPenalty,
+        ksco_major: kscoMajor,
         attributes: {
           wlb: attrs.wlb,
           growth: attrs.growth,
@@ -1073,6 +1087,7 @@ export async function vectorResultsToScoredJobs(
           shift_work: attrs.shift_work,
           degree_required: attrs.degree_required,
           license_required: attrs.license_required,
+          ksco_major: kscoMajor,
         },
       }
     }

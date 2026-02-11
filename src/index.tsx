@@ -27129,7 +27129,14 @@ app.delete('/api/job/:id', requireAuth, async (c) => {
       await c.env.DB.prepare('DELETE FROM jobs WHERE id = ?')
         .bind(jobId)
         .run()
-      
+
+      // job_attributes 동시 삭제
+      c.executionCtx.waitUntil(
+        import('./services/ai-analyzer/auto-tagger').then(({ deleteJobAttributes }) =>
+          deleteJobAttributes(c.env.DB, jobId)
+        ).catch(err => console.error('[Job Delete] Auto-delete job_attributes failed:', err))
+      )
+
       console.log(`[Job Permanent Delete] Job "${job.name}" (${jobId}) permanently deleted by ${user.username || user.email}`)
       
       return c.json({
@@ -27397,6 +27404,21 @@ app.post('/api/job/create', requireAuth, async (c) => {
       console.log('[API] Skipping auto image: API keys not configured')
     }
     
+    // 자동 태깅 (백그라운드 - 응답 블로킹 없음)
+    const openaiKeyForTag = (c.env as any).OPENAI_API_KEY
+    if (openaiKeyForTag) {
+      c.executionCtx.waitUntil(
+        import('./services/ai-analyzer/auto-tagger').then(({ autoTagJob }) =>
+          autoTagJob(c.env.DB, {
+            id,
+            name,
+            user_contributed_json: JSON.stringify(userData),
+            merged_profile_json: JSON.stringify(mergedProfile),
+          }, openaiKeyForTag)
+        ).catch(err => console.error('[User Job Create] Auto-tag failed:', err))
+      )
+    }
+
     return c.json({
       success: true,
       id,
@@ -27782,7 +27804,21 @@ app.post('/api/admin/job', requireAdmin, async (c) => {
       way,
       userId: user.id.toString()
     })
-    
+
+    // 자동 태깅 (백그라운드 - 응답 블로킹 없음)
+    const openaiKey = (c.env as any).OPENAI_API_KEY
+    if (openaiKey) {
+      c.executionCtx.waitUntil(
+        import('./services/ai-analyzer/auto-tagger').then(({ autoTagJob }) =>
+          autoTagJob(c.env.DB, {
+            id,
+            name,
+            admin_data_json: JSON.stringify({ summary, duties, salary, prospect, way }),
+          }, openaiKey)
+        ).catch(err => console.error('[Admin Job Create] Auto-tag failed:', err))
+      )
+    }
+
     return c.json({
       success: true,
       id: result.id,

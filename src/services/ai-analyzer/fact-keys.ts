@@ -58,6 +58,14 @@ export const ANCHOR_FACT_KEYS = {
 } as const
 
 // ============================================
+// 3.2.5 Existential (실존적 질문 - "7일 뒤 지구 멸망")
+// ============================================
+export const EXISTENTIAL_FACT_KEYS = {
+  existential_priority_raw: 'existential.priority_raw',           // 원문 답변 (long_text)
+  existential_priority_structured: 'existential.priority_structured', // LLM 분석 결과 (json)
+} as const
+
+// ============================================
 // 통합 사전 (유효성 검증용)
 // ============================================
 export const ALL_FACT_KEYS = {
@@ -65,6 +73,7 @@ export const ALL_FACT_KEYS = {
   ...CONSTRAINT_FACT_KEYS,
   ...TRANSITION_FACT_KEYS,
   ...ANCHOR_FACT_KEYS,
+  ...EXISTENTIAL_FACT_KEYS,
 } as const
 
 // fact_key 유효성 검증 함수
@@ -84,9 +93,10 @@ export function isValidFactKey(key: string): boolean {
 }
 
 // fact_key prefix 추출
-export function getFactKeyPrefix(key: string): 'state' | 'transition' | 'anchor' | 'unknown' {
+export function getFactKeyPrefix(key: string): 'state' | 'transition' | 'anchor' | 'existential' | 'unknown' {
   if (key.startsWith('state.')) return 'state'
   if (key.startsWith('transition.')) return 'transition'
   if (key.startsWith('anchor.')) return 'anchor'
+  if (key.startsWith('existential.')) return 'existential'
   return 'unknown'
 }

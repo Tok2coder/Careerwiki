@@ -199,6 +199,12 @@ const LIFE_VERSION_PROMPT = `사용자의 "삶의 버전 문장(Life Version Sta
 - 일반적이고 뻔한 문장 금지 (예: "성장하는 삶을 원한다" X)
 - 구체적이고 고유한 표현 사용 (예: "깊이 몰입할 수 있는 문제를 풀며..." O)
 
+## 실존적 가치 반영 규칙
+만약 [실존적 가치] 데이터가 있다면, 이것은 사회적 조건(급여, 승진, 평가)이 모두 제거된 상태에서 사용자가 선택한 본질적 가치입니다.
+- 이 가치를 삶의 버전 문장에 가장 높은 가중치(0.45)로 반영하세요
+- expanded 문장에 다음 패턴을 포함하세요:
+  "당신은 모든 사회적 조건이 사라진 상황에서 '____'를 선택했습니다. 이는 본질적으로 ______을 가장 중요하게 여긴다는 강력한 신호입니다."
+
 ## 예시
 oneLiner: "나는 자율적으로 깊이 몰입하며, 복잡한 문제 해결을 통해 가치를 만들고, 건강과 가족 시간을 희생하지 않는 삶을 원한다."
 expanded:
@@ -542,8 +548,12 @@ function buildReporterContext(
     if (narrativeFacts.lostMoment) {
       parts.push(`\n[나를 잃었다고 느낀 순간]\n"${narrativeFacts.lostMoment}"`)
     }
+    if (narrativeFacts.existentialAnswer) {
+      parts.push(`\n[실존적 가치 - "모든 사회적 조건이 사라진 상황에서의 선택"]\n"${narrativeFacts.existentialAnswer}"`)
+      parts.push('↳ 이 답변은 급여, 승진, 미래, 평가가 모두 제거된 상태에서 사용자가 선택한 본질적 가치입니다. 리포트의 가치 분석에 가장 높은 가중치(0.45)로 반영하세요.')
+    }
   }
-  
+
   // 라운드 답변 (DRIVE/FRICTION/REALITY 체계)
   if (roundAnswers && roundAnswers.length > 0) {
     parts.push('\n[심층 질문 답변]')
@@ -1147,6 +1157,9 @@ function buildMetaCognitionContext(
     }
     if (narrativeFacts.lostMoment) {
       parts.push(`\n[나를 잃었다고 느낀 순간]\n"${narrativeFacts.lostMoment}"`)
+    }
+    if (narrativeFacts.existentialAnswer) {
+      parts.push(`\n[실존적 가치 선택]\n"${narrativeFacts.existentialAnswer}"`)
     }
   }
 
