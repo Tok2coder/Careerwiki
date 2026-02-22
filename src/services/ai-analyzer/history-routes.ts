@@ -4,8 +4,6 @@
 // ============================================
 
 import { Hono } from 'hono'
-import { getCookie } from 'hono/cookie'
-import { verify } from 'hono/jwt'
 import type { D1Database } from '@cloudflare/workers-types'
 
 // ============================================
@@ -35,6 +33,7 @@ interface HistoryItem {
   request_id: number
   session_id: string
   analysis_type: string
+  result_label: string
   result_summary: {
     top_jobs?: Array<{ name: string; score: number }>
     top_majors?: Array<{ name: string; score: number }>
@@ -44,6 +43,10 @@ interface HistoryItem {
   // V3 추가 필드
   engine_version?: 'v2' | 'v3'
   has_premium_report?: boolean
+  // 버전 관리
+  version_number?: number
+  version_note?: string | null
+  parent_request_id?: number | null
 }
 
 interface Env {
@@ -51,26 +54,11 @@ interface Env {
   JWT_SECRET: string
 }
 
-// Helper: JWT에서 사용자 조회
-async function getUserFromCookie(c: any): Promise<{ id: number; username: string; role: string } | null> {
-  const accessToken = getCookie(c, 'access_token')
-  if (!accessToken) return null
-  
-  try {
-    const payload = await verify(accessToken, c.env.JWT_SECRET, 'HS256') as any
-    // JWT payload에서 userId 또는 id 사용 (auth.ts에서 userId로 생성)
-    const userId = payload?.userId || payload?.id
-    if (!userId) return null
-    
-    const user = await c.env.DB.prepare(
-      'SELECT id, username, role FROM users WHERE id = ?'
-    ).bind(userId).first()
-    
-    return user || null
-  } catch (e) {
-    console.error('[HistoryRoutes] JWT verify error:', e)
-    return null
-  }
+// Helper: 미들웨어에서 인증된 사용자 조회
+function getUserFromContext(c: any): { id: number; username: string; role: string } | null {
+  const user = c.get('user')
+  if (!user) return null
+  return { id: user.id, username: user.username || '', role: user.role }
 }
 
 // ============================================
@@ -83,7 +71,7 @@ historyRoutes.get('/', async (c) => {
   const db = c.env.DB
 
   // 로그인 체크 (쿠키에서 직접 JWT 검증)
-  const user = await getUserFromCookie(c)
+  const user = getUserFromContext(c)
   if (!user?.id) {
     return c.json({ error: 'Login required', code: 'AUTH_REQUIRED' }, 401)
   }
@@ -107,10 +95,10 @@ historyRoutes.get('/', async (c) => {
 
     const total = countResult?.total || 0
 
-    // P1-3: 결과 조회 (engine_version, premium_report_json 추가)
+    // 결과 조회 (engine_version, premium_report_json, 버전 관리 필드 추가)
     const results = await db
       .prepare(`
-        SELECT 
+        SELECT
           r.id,
           r.request_id,
           r.result_json,
@@ -120,7 +108,10 @@ historyRoutes.get('/', async (c) => {
           r.engine_version,
           CASE WHEN r.premium_report_json IS NOT NULL THEN 1 ELSE 0 END as has_premium_report,
           req.session_id,
-          req.analysis_type
+          req.analysis_type,
+          req.version_number,
+          req.version_note,
+          req.parent_request_id
         FROM ai_analysis_results r
         JOIN ai_analysis_requests req ON r.request_id = req.id
         WHERE req.user_id = ?
@@ -137,9 +128,11 @@ historyRoutes.get('/', async (c) => {
         created_at: string
         session_id: string
         analysis_type: string
-        // P1-3: V3 호환성 필드
         engine_version: string | null
         has_premium_report: number
+        version_number: number | null
+        version_note: string | null
+        parent_request_id: number | null
       }>()
 
     // 결과 가공
@@ -169,12 +162,17 @@ historyRoutes.get('/', async (c) => {
         request_id: row.request_id,
         session_id: row.session_id,
         analysis_type: row.analysis_type,
+        result_label: row.analysis_type === 'major' ? '추천 전공' : '추천 직업',
         result_summary: resultSummary,
         confidence_score: row.confidence_score,
         created_at: row.created_at,
-        // P1-3: V3 호환성 - engine_version이 null이면 'v2'로 간주
+        // V3 호환성 - engine_version이 null이면 'v2'로 간주
         engine_version: (row.engine_version as 'v2' | 'v3') || 'v2',
         has_premium_report: row.has_premium_report === 1,
+        // 버전 관리
+        version_number: row.version_number || 1,
+        version_note: row.version_note || null,
+        parent_request_id: row.parent_request_id || null,
       }
     })
 
@@ -188,7 +186,6 @@ historyRoutes.get('/', async (c) => {
       },
     })
   } catch (error) {
-    console.error('History load error:', error)
     return c.json({ error: 'Failed to load history', details: String(error) }, 500)
   }
 })
@@ -198,7 +195,7 @@ historyRoutes.get('/:id', async (c) => {
   const db = c.env.DB
 
   // 로그인 체크 (쿠키에서 직접 JWT 검증)
-  const user = await getUserFromCookie(c)
+  const user = getUserFromContext(c)
   if (!user?.id) {
     return c.json({ error: 'Login required', code: 'AUTH_REQUIRED' }, 401)
   }
@@ -211,14 +208,16 @@ historyRoutes.get('/:id', async (c) => {
       return c.json({ error: 'Invalid result ID' }, 400)
     }
 
-    // P1-3: engine_version, premium_report_json 추가 조회
     const result = await db
       .prepare(`
-        SELECT 
+        SELECT
           r.*,
           req.session_id,
           req.analysis_type,
-          req.payload_json as request_payload
+          req.payload_json as request_payload,
+          req.version_number,
+          req.version_note,
+          req.parent_request_id
         FROM ai_analysis_results r
         JOIN ai_analysis_requests req ON r.request_id = req.id
         WHERE r.id = ? AND req.user_id = ?
@@ -237,16 +236,29 @@ historyRoutes.get('/:id', async (c) => {
         session_id: string
         analysis_type: string
         request_payload: string | null
-        // P1-3: V3 호환성 필드
         engine_version: string | null
         premium_report_json: string | null
+        version_number: number | null
+        version_note: string | null
+        parent_request_id: number | null
       }>()
 
     if (!result) {
       return c.json({ error: 'Result not found or access denied' }, 404)
     }
 
-    // JSON 파싱 (P1-3: v2/v3 호환성 처리)
+    // 같은 session의 버전 목록 조회
+    const versionSiblings = await db
+      .prepare(`
+        SELECT req.id as request_id, req.version_number, req.version_note, r.created_at
+        FROM ai_analysis_requests req
+        JOIN ai_analysis_results r ON r.request_id = req.id
+        WHERE req.session_id = ?
+        ORDER BY req.version_number ASC
+      `)
+      .bind(result.session_id)
+      .all<{ request_id: number; version_number: number | null; version_note: string | null; created_at: string }>()
+
     const parsedResult = {
       id: result.id,
       request_id: result.request_id,
@@ -260,14 +272,22 @@ historyRoutes.get('/:id', async (c) => {
       scoring_trace: result.scoring_trace_json ? JSON.parse(result.scoring_trace_json) : null,
       request_payload: result.request_payload ? JSON.parse(result.request_payload) : null,
       created_at: result.created_at,
-      // P1-3: V3 호환성 필드 (null이면 v2로 간주)
       engine_version: result.engine_version || 'v2',
       premium_report: result.premium_report_json ? JSON.parse(result.premium_report_json) : null,
+      // 버전 관리
+      version_number: result.version_number || 1,
+      version_note: result.version_note || null,
+      parent_request_id: result.parent_request_id || null,
+      versions: (versionSiblings.results || []).map(v => ({
+        request_id: v.request_id,
+        version_number: v.version_number || 1,
+        version_note: v.version_note || null,
+        created_at: v.created_at,
+      })),
     }
 
     return c.json({ result: parsedResult })
   } catch (error) {
-    console.error('History detail error:', error)
     return c.json({ error: 'Failed to load history detail', details: String(error) }, 500)
   }
 })

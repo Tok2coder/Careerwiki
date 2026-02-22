@@ -36,6 +36,7 @@ const SCENARIOS = {
       motivation: '데이터를 통해 숨겨진 인사이트를 발견하고, 이를 바탕으로 비즈니스 의사결정에 기여하고 싶습니다. 복잡한 문제를 분석해서 해결책을 찾을 때 가장 보람을 느낍니다.',
       avoidance: '반복적인 단순 업무나 사람들과 끊임없이 소통해야 하는 일은 피하고 싶습니다. 집중해서 깊이 파고들 시간이 없으면 답답함을 느낍니다.',
       constraints: '야근이 너무 잦으면 힘들지만, 프로젝트 마감 시에는 어느 정도 감수할 수 있습니다. 주 평균 주 50시간 이상은 피하고 싶습니다.',
+      existential: '뉴스를 보는 순간 가장 먼저 노트북을 열 것 같아요. 회사에서 풀다 만 그 데이터셋이 떠오릅니다. 아무도 못 찾은 패턴이 분명 있는데, 시간에 쫓겨 포기했거든요. 마지막이니까 그걸 끝까지 파보고 싶습니다. 그리고 저녁에는 부모님 댁에 가서 제가 발견한 걸 설명해드리고 싶어요. 아마 이해 못 하시겠지만 그래도 제가 뭘 좋아했는지는 아시면 좋겠습니다. 왜냐하면 결국 저는 복잡한 걸 이해하는 순간이 가장 살아있다고 느끼는 사람이고, 그걸 나눌 사람이 있다는 게 감사하니까요.',
     },
     llmPatterns: {
       '분석|데이터|통계': '데이터 분석 관련 업무를 3년 이상 해왔습니다. SQL과 Python을 주로 사용합니다.',
@@ -74,6 +75,7 @@ const SCENARIOS = {
       motivation: '오래 다닐 수 있는 안정적인 직장을 찾고 있습니다. 퇴근 후에는 가족과 시간을 보내고 싶고, 예측 가능한 삶을 원합니다.',
       avoidance: '불확실한 상황이나 갑작스러운 변화가 많은 환경은 스트레스입니다. 매일 다른 일을 해야 하거나 실적 압박이 심한 곳은 피하고 싶습니다.',
       constraints: '출장은 전혀 불가능합니다. 가정 사정으로 저녁 7시까지는 반드시 퇴근해야 합니다.',
+      existential: '그 뉴스를 듣는 순간 바로 집으로 달려갈 것 같아요. 아이들을 안고 아내한테 "우리 내일부터 매일 같이 아침밥 먹자"라고 말할 것 같습니다. 그리고 부모님 댁에 가서 어릴 때 자주 갔던 바닷가에 가족 모두 함께 가고 싶어요. 특별한 게 아니라 그냥 같이 걷고, 밥 먹고, 이야기하는 거요. 왜 이게 먼저 떠올랐냐면, 결국 저한테 가장 중요한 건 화려한 성취가 아니라 매일 저녁 식탁에 둘러앉는 그 시간이었던 것 같거든요.',
     },
     llmPatterns: {
       '안정|고용|정규직': '정규직으로 오래 다닐 수 있는 회사를 찾고 있습니다.',
@@ -111,6 +113,7 @@ const SCENARIOS = {
       motivation: '창의적인 일을 하고 싶고 제 방식대로 업무를 진행하고 싶습니다. 하지만 동시에 수입이 안정적이어야 마음이 편합니다. 둘 다 포기하기 어렵습니다.',
       avoidance: '루틴하고 반복적인 일은 지루해서 견디기 어렵습니다. 그런데 프리랜서처럼 수입이 불규칙한 것도 불안합니다.',
       constraints: '주말은 확실히 쉬고 싶고, 야근도 가능하면 피하고 싶습니다. 창의적인 일이지만 너무 불안정한 건 싫습니다.',
+      existential: '솔직히 두 가지가 동시에 떠올라서 혼란스럽습니다. 먼저 작업실로 가서 아무 제약 없이 진짜 만들고 싶었던 걸 만들고 싶어요. 클라이언트 눈치 안 보고, 수익 걱정 없이, 순수하게 제 감각대로. 근데 밤이 되면 결국 사람들한테 갈 것 같아요. 가까운 사람들이랑 조용한 곳에서 와인 마시면서 밤새 이야기하고 싶습니다. 왜 이게 먼저 떠올랐냐면, 평소에 제가 창작과 안정 사이에서 계속 갈등하는데 결국 둘 다 포기 못 하는 사람이라는 걸 알겠어서요.',
     },
     llmPatterns: {
       '자율|자유|재량': '업무 방식을 스스로 정할 수 있는 게 중요합니다.',
@@ -148,6 +151,7 @@ const SCENARIOS = {
       motivation: '디자인으로 사람들에게 감동을 주고 싶습니다. 제 작품이 세상에 나가서 누군가의 마음을 움직이는 것이 꿈입니다. 아트 디렉터가 되고 싶어요.',
       avoidance: '숫자만 다루거나 규칙에 얽매인 업무는 창의성을 죽이는 것 같아요. 관료적인 조직 문화도 답답합니다.',
       constraints: '초봉이 낮아도 괜찮습니다. 성장할 수 있는 환경이라면 야근도 감수할 수 있어요.',
+      existential: '뉴스 보자마자 화방으로 달려갈 것 같아요. 가장 큰 캔버스를 사서 거리 한복판에 놓고 그림을 그리고 싶습니다. 평소에는 클라이언트 취향에 맞춰야 했는데, 마지막이니까 진짜 내가 그리고 싶은 걸 그리고 싶어요. 지나가는 사람들이 잠깐이라도 멈춰서 보면 좋겠고, 그 중 누군가 "이거 뭐예요?"라고 물어보면 같이 그리자고 하고 싶어요. 밤에는 친한 사람들이랑 옥상에서 별 보면서 인생 이야기 나누고 싶습니다. 왜 이게 먼저냐면, 결국 저한테 가장 중요한 건 "만든 것이 누군가에게 닿는 순간"이라는 걸 알겠어서요.',
     },
     llmPatterns: {
       '포트폴리오|작품|디자인': '디자인 관련 포트폴리오가 있고, 프리랜서로 일한 경험도 있습니다.',
@@ -185,6 +189,7 @@ const SCENARIOS = {
       motivation: '데이터 분석 분야에 정말 관심이 많습니다. 경험은 없지만 온라인 강의로 열심히 공부하고 있고, 부트캠프도 수료했습니다. 신입으로 기회를 얻고 싶습니다.',
       avoidance: '배울 수 없는 단순 반복 업무는 피하고 싶습니다. 성장할 수 있는 환경이 중요합니다.',
       constraints: '신입이라 연봉은 크게 기대하지 않습니다. 배울 수 있다면 야근도 괜찮고, 어떤 조건이든 열심히 할 준비가 되어있습니다.',
+      existential: '뉴스 보면 아마 한동안 멍하게 앉아있을 것 같아요. 그리고 나서 가장 먼저 할 건 서점에 가는 거예요. 항상 사고 싶었는데 "지금은 바쁘니까 나중에"라고 미뤘던 천문학 책이랑 피아노 교본을 살 것 같습니다. 시간이 7일밖에 없지만 그래도 처음부터 끝까지 뭔가를 배워보는 경험을 하고 싶어요. 그리고 부트캠프에서 함께 공부했던 사람들을 만나서 "우리 마지막으로 해커톤 하나 하자"고 하고 싶습니다. 왜냐하면 경험은 없지만 뭔가를 배우는 과정 자체가 저한테는 가장 살아있는 시간이었거든요.',
     },
     llmPatterns: {
       '경험|경력|이력': '관련 경험은 없지만 온라인 강의로 공부하고 있습니다.',
@@ -222,6 +227,7 @@ const SCENARIOS = {
       motivation: '기술과 창의성을 결합해서 문제를 해결하는 것이 좋습니다. 프론트엔드 개발 경험이 있고, 점점 풀스택으로 성장하고 싶습니다. 자율성 있는 환경에서 일하고 싶어요.',
       avoidance: '너무 루틴한 유지보수 업무나 관료적인 조직은 맞지 않습니다. 출장이 잦거나 교대 근무가 있는 곳도 피하고 싶습니다.',
       constraints: '야근이 가끔은 괜찮지만 상시적이면 힘듭니다. 주 3일 이상 재택이 가능하면 좋겠습니다.',
+      existential: '뉴스를 듣자마자 바로 에디터를 열 것 같아요. 2년 전부터 기획만 해놓고 못 만들었던 앱이 있거든요. 기술적으로 도전적이면서 실제로 사람들 도움이 되는 서비스인데, 마지막 7일이면 MVP는 만들 수 있을 것 같습니다. 낮에는 카페에서 코딩하고, 저녁에는 오래된 친구들을 불러서 맥주 마시면서 "이거 한번 써봐"라고 보여주고 싶어요. 밤에는 음악 들으면서 한강 산책하고요. 왜 이게 먼저냐면, 결국 제가 가장 후회할 건 "만들 수 있었는데 안 만든 것"이랑 "만날 수 있었는데 안 만난 사람들"이니까요.',
     },
     llmPatterns: {
       '기술|개발|프로그래밍': '프론트엔드 개발 경험이 있고, 백엔드도 배우고 있습니다.',
@@ -232,6 +238,248 @@ const SCENARIOS = {
       round1: ['풀스택 개발자로 성장하면서 팀 리드 역할도 해보고 싶습니다.', '기술적으로 도전적인 프로젝트에 참여하고 싶습니다.', '외국 클라이언트와 협업하며 글로벌 경험을 쌓고 싶습니다.'],
       round2: ['레거시 코드만 유지보수하는 건 지치게 합니다.', '기술 결정에 전혀 참여하지 못하는 환경은 답답합니다.', '비효율적인 프로세스나 불필요한 회의가 많은 곳은 맞지 않습니다.'],
       round3: ['현재 연봉에서 15-20% 정도 인상을 기대합니다.', '하이브리드 근무가 가능해야 합니다. 주 2일 출근 정도가 이상적입니다.', '판교나 강남권 스타트업/IT 기업을 선호합니다.'],
+    },
+  },
+};
+
+// ============================================
+// 전공 시나리오 데이터
+// ============================================
+
+const MAJOR_SCENARIOS = {
+  major_stem_student: {
+    id: 'major_stem_student',
+    name: 'STEM 지향 학생',
+    type: 'major',
+    careerState: 'student',
+    academicState: 'high_school_regular',
+    miniModule: {
+      interest_top: ['data_numbers', 'problem_solving'],
+      value_top: ['growth', 'income'],
+      strength_top: ['analytical', 'fast_learning'],
+      constraint_flags: [],
+      workstyle_top: ['solo', 'structured'],
+      background_flags: [],
+      language_skills: [{ language: 'english', level: 'business' }],
+      sacrifice_flags: ['low_initial_income', 'willing_to_study'],
+      energy_drain_flags: ['people_drain'],
+      achievement_feedback_top: ['metric_feedback', 'problem_solved_feedback'],
+      execution_style: 'plan_first',
+      impact_scope: 'impact_industry',
+      failure_response: 'iterate_on_failure',
+      persistence_anchor: 'growth_anchor',
+      external_expectation: 'neutral_to_expectation',
+    },
+    narrativeAnswers: {
+      motivation: '수학 문제를 풀 때 가장 재미있고, 프로그래밍으로 뭔가 만들 때 성취감을 느낍니다.',
+      avoidance: '암기 위주 학습이나 글쓰기가 많은 과목은 피하고 싶습니다.',
+      constraints: '수능 수학, 과학탐구 성적이 좋아서 이공계 상위권 대학을 목표로 하고 있습니다.',
+    },
+    llmPatterns: {
+      '수학|과학|이과': '수학을 좋아하고 물리, 화학 성적이 좋습니다. 프로그래밍도 독학으로 배우고 있어요.',
+      '진로|졸업|취업': '소프트웨어 개발자나 데이터 분석가 같은 IT 관련 직업에 관심이 있습니다.',
+      '대학|학교|입시': '수능 수학, 과학 성적은 상위권이고, 정시를 준비하고 있습니다.',
+    },
+    roundFallbacks: {
+      round1: ['알고리즘 문제 풀이에 빠지면 시간 가는 줄 모릅니다.', '인공지능과 머신러닝에 대해 더 깊이 배우고 싶습니다.'],
+      round2: ['글을 많이 읽고 써야 하는 건 좀 지칩니다.', '정답이 없는 토론식 수업보다 명확한 답이 있는 문제가 좋습니다.'],
+      round3: ['서울 소재 상위권 대학에 진학하고 싶습니다.', '수능 모의고사 기준 수학 1등급, 과탐 2등급 수준입니다.'],
+    },
+  },
+
+  major_humanities_student: {
+    id: 'major_humanities_student',
+    name: '인문 지향 학생',
+    type: 'major',
+    careerState: 'student',
+    academicState: 'high_school_early',
+    miniModule: {
+      interest_top: ['helping_teaching', 'organizing'],
+      value_top: ['meaning', 'stability'],
+      strength_top: ['communication', 'persistence'],
+      constraint_flags: ['math_impossible'],
+      workstyle_top: ['team', 'flexible'],
+      background_flags: ['volunteer_ngo'],
+      language_skills: [],
+      sacrifice_flags: ['willing_to_study'],
+      energy_drain_flags: ['cognitive_drain'],
+      achievement_feedback_top: ['helping_feedback', 'growth_feedback'],
+      execution_style: 'flexible_execution',
+      impact_scope: 'impact_individual',
+      failure_response: 'pause_on_failure',
+      persistence_anchor: 'meaning_anchor',
+      external_expectation: 'external_structure_ok',
+    },
+    narrativeAnswers: {
+      motivation: '사람들을 돕고 가르치는 일에 보람을 느낍니다.',
+      avoidance: '수학이 많은 학과는 절대 안 됩니다.',
+      constraints: '수시 전형으로 준비 중이고, 내신은 국어/사회 과목이 강합니다.',
+    },
+    llmPatterns: {
+      '교육|가르치|봉사': '동아리에서 멘토링 활동을 하면서 가르치는 것에 보람을 느꼈습니다.',
+      '수학|숫자|계산': '수학은 정말 어렵고, 수학이 많은 학과는 절대 가면 안 됩니다.',
+      '사회|심리|인간': '사람들의 행동과 심리가 왜 그런지 이해하는 데 관심이 많습니다.',
+    },
+    roundFallbacks: {
+      round1: ['사람들의 마음을 이해하고 도와주는 직업이면 좋겠습니다.', '글을 읽고 토론하는 수업이 가장 재미있습니다.'],
+      round2: ['숫자가 많이 나오는 과목은 정말 싫습니다.', '혼자 연구실에서 실험하는 것보다 사람들과 함께하는 게 좋습니다.'],
+      round3: ['학교 내신 평균 2등급 정도이고, 국어/사회 과목이 특히 좋습니다.', '교직이수가 가능한 학과면 좋겠습니다.'],
+    },
+  },
+
+  major_creative_student: {
+    id: 'major_creative_student',
+    name: '예술형 학생',
+    type: 'major',
+    careerState: 'student',
+    academicState: 'high_school_undecided',
+    miniModule: {
+      interest_top: ['creating', 'influencing'],
+      value_top: ['autonomy', 'recognition'],
+      strength_top: ['creative', 'communication'],
+      constraint_flags: [],
+      workstyle_top: ['flexible'],
+      background_flags: [],
+      language_skills: [],
+      sacrifice_flags: ['low_initial_income', 'ignore_social_pressure'],
+      energy_drain_flags: ['repetition_drain', 'time_pressure_drain'],
+      achievement_feedback_top: ['tangible_output_feedback', 'growth_feedback'],
+      execution_style: 'action_first',
+      impact_scope: 'impact_society',
+      failure_response: 'pivot_on_failure',
+      persistence_anchor: 'meaning_anchor',
+      external_expectation: 'expectation_pressure',
+    },
+    narrativeAnswers: {
+      motivation: '무언가를 직접 만들고 디자인하는 것이 가장 즐겁습니다.',
+      avoidance: '반복적인 암기나 정해진 틀에 맞춰야 하는 학습은 답답합니다.',
+      constraints: '아직 입시 방향을 정하지 못했습니다.',
+    },
+    llmPatterns: {
+      '디자인|미술|예술|창작': '어릴 때부터 그림 그리기를 좋아했고, 디지털 아트도 독학으로 배웠습니다.',
+      '진로|직업|미래': 'UX 디자이너나 일러스트레이터가 되고 싶습니다.',
+    },
+    roundFallbacks: {
+      round1: ['그림, 디자인, 영상 편집 같은 창작 활동에 빠지면 하루가 금방 갑니다.'],
+      round2: ['규칙이나 절차가 엄격한 환경은 숨 막힙니다.'],
+      round3: ['미대 실기 준비를 할지, 디자인과를 일반 전형으로 갈지 고민 중입니다.'],
+    },
+  },
+
+  major_career_focused: {
+    id: 'major_career_focused',
+    name: '취업 중시 학생',
+    type: 'major',
+    careerState: 'student',
+    academicState: 'high_school_regular',
+    miniModule: {
+      interest_top: ['organizing', 'data_numbers'],
+      value_top: ['income', 'stability'],
+      strength_top: ['structured_execution', 'persistence'],
+      constraint_flags: ['low_employment_avoid'],
+      workstyle_top: ['structured', 'team'],
+      background_flags: [],
+      language_skills: [{ language: 'english', level: 'basic' }],
+      sacrifice_flags: ['no_sacrifice'],
+      energy_drain_flags: ['unpredictability_drain', 'cognitive_drain'],
+      achievement_feedback_top: ['metric_feedback'],
+      execution_style: 'plan_first',
+      impact_scope: 'impact_team',
+      failure_response: 'iterate_on_failure',
+      persistence_anchor: 'reward_anchor',
+      external_expectation: 'external_structure_ok',
+    },
+    narrativeAnswers: {
+      motivation: '졸업 후 빠르게 취업해서 경제적으로 안정되고 싶습니다.',
+      avoidance: '취업률이 낮은 전공은 피하고 싶습니다.',
+      constraints: '수능 성적은 중상위권이고, 서울/수도권 대학을 목표로 합니다.',
+    },
+    llmPatterns: {
+      '취업|직업|소득|연봉': '졸업하면 바로 취업할 수 있는 학과가 좋습니다.',
+      '안정|공무원|정규직': '대기업이나 공기업 같은 안정적인 직장에 취업하고 싶습니다.',
+    },
+    roundFallbacks: {
+      round1: ['안정적인 대기업이나 공기업에 입사하는 것이 목표입니다.'],
+      round2: ['뭘 배우는지는 모르겠고 졸업장만 주는 학과는 싫습니다.'],
+      round3: ['수능 전 과목 평균 2~3등급 수준입니다.'],
+    },
+  },
+
+  major_conflict_student: {
+    id: 'major_conflict_student',
+    name: '갈등형 학생',
+    type: 'major',
+    careerState: 'student',
+    academicState: 'high_school_undecided',
+    miniModule: {
+      interest_top: ['creating', 'organizing'],
+      value_top: ['autonomy', 'stability'],
+      strength_top: ['creative', 'structured_execution'],
+      constraint_flags: [],
+      workstyle_top: ['flexible', 'structured'],
+      background_flags: [],
+      language_skills: [],
+      sacrifice_flags: ['low_initial_income'],
+      energy_drain_flags: ['unpredictability_drain', 'repetition_drain'],
+      achievement_feedback_top: ['tangible_output_feedback', 'metric_feedback'],
+      execution_style: 'flexible_execution',
+      impact_scope: 'impact_team',
+      failure_response: 'pause_on_failure',
+      persistence_anchor: 'growth_anchor',
+      external_expectation: 'expectation_pressure',
+    },
+    narrativeAnswers: {
+      motivation: '창의적인 일을 하면서도 안정적으로 살고 싶습니다.',
+      avoidance: '너무 틀에 박힌 일도 싫지만, 너무 불확실한 미래도 불안합니다.',
+      constraints: '입시 방향을 못 정했습니다.',
+    },
+    llmPatterns: {
+      '갈등|고민|선택': '디자인이나 창작을 좋아하지만, 먹고 살 수 있을지 걱정됩니다.',
+      '부모|주변|기대': '부모님은 안정적인 직업을 원하시고, 저도 이해가 되면서도 억울합니다.',
+    },
+    roundFallbacks: {
+      round1: ['디자인이나 영상 만들기를 좋아하지만, 이것만으로 살 수 있을지 고민됩니다.'],
+      round2: ['매일 같은 일을 반복하는 건 답답하지만, 너무 불안정한 것도 싫습니다.'],
+      round3: ['성적은 중간 정도이고, 특별히 잘하는 과목은 없습니다.'],
+    },
+  },
+
+  major_math_constrained: {
+    id: 'major_math_constrained',
+    name: '수학 제약 학생',
+    type: 'major',
+    careerState: 'student',
+    academicState: 'retake',
+    miniModule: {
+      interest_top: ['problem_solving', 'helping_teaching'],
+      value_top: ['growth', 'meaning'],
+      strength_top: ['communication', 'fast_learning'],
+      constraint_flags: ['math_impossible'],
+      workstyle_top: ['team', 'flexible'],
+      background_flags: [],
+      language_skills: [{ language: 'english', level: 'business' }],
+      sacrifice_flags: ['willing_to_study', 'field_change_ok'],
+      energy_drain_flags: ['cognitive_drain', 'time_pressure_drain'],
+      achievement_feedback_top: ['helping_feedback', 'problem_solved_feedback'],
+      execution_style: 'flexible_execution',
+      impact_scope: 'impact_individual',
+      failure_response: 'iterate_on_failure',
+      persistence_anchor: 'meaning_anchor',
+      external_expectation: 'neutral_to_expectation',
+    },
+    narrativeAnswers: {
+      motivation: '사람들과 소통하면서 문제를 해결하는 일에 관심이 있습니다.',
+      avoidance: '수학이 핵심인 학과는 절대 안 됩니다.',
+      constraints: '재수 중이라 내년에 확실하게 갈 학과를 정해야 합니다.',
+    },
+    llmPatterns: {
+      '수학|숫자|계산|정량': '수학을 정말 못합니다. 수포자라서 수학 집중 학과는 절대 안 됩니다.',
+      '문제|해결|논리': '수학은 못하지만 사람 사이의 문제를 해결하는 것은 좋아합니다.',
+    },
+    roundFallbacks: {
+      round1: ['사람의 행동이나 사회 현상을 이해하는 데 관심이 많습니다.'],
+      round2: ['수학이 나오면 머리가 하얘집니다. 절대 안 됩니다.'],
+      round3: ['수능 수학 5등급이라 이과 계열은 불가능합니다.'],
     },
   },
 };
@@ -626,6 +874,7 @@ class AutoAnswerGenerator {
       case 'motivation': return '관심 있는 분야에서 전문성을 쌓고 성장하고 싶습니다.';
       case 'avoidance': return '맞지 않는 환경이나 성장 기회가 없는 곳은 피하고 싶습니다.';
       case 'constraints': return '현실적인 조건을 고려해서 결정하겠습니다.';
+      case 'existential': return '가장 먼저 가족한테 전화할 것 같아요. 그리고 평소에 하고 싶었지만 미뤘던 것들을 하나씩 해보고 싶습니다. 결국 마지막에 떠오르는 건 소중한 사람들과 의미 있는 경험이라는 걸 이 질문을 통해 알게 됐어요.';
       default: return '일반적인 수준입니다.';
     }
   }
@@ -638,10 +887,11 @@ class AutoAnswerGenerator {
 
 class ScenarioRunner {
   constructor(scenarioId, options = {}) {
-    const scenario = SCENARIOS[scenarioId];
+    const scenario = SCENARIOS[scenarioId] || MAJOR_SCENARIOS[scenarioId];
     if (!scenario) {
       throw new Error(`시나리오를 찾을 수 없습니다: ${scenarioId}`);
     }
+    this.isMajorScenario = !!MAJOR_SCENARIOS[scenarioId];
 
     this.scenario = scenario;
     this.API_BASE = '/api/ai-analyzer';
@@ -765,19 +1015,29 @@ class ScenarioRunner {
     // Stage 결정 (careerState 기반)
     const stage = this.getStageFromCareerState(careerState);
 
-    const response = await fetch(`${this.API_BASE}/analyze`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        session_id: this.sessionId,
-        analysis_type: 'job',
-        stage: stage,
-        career_state: careerState,
-        universal_answers: universalAnswers,
-        mini_module_result: miniModule,
-        debug: true,
-      }),
-    });
+    // 503 재시도 포함 (동시 테스트 시 Worker 동시 요청 한도 대비)
+    let response;
+    const MAX_RETRIES = 2;
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      response = await fetch(`${this.API_BASE}/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: this.sessionId,
+          analysis_type: 'job',
+          stage: stage,
+          career_state: careerState,
+          universal_answers: universalAnswers,
+          mini_module_result: miniModule,
+          debug: true,
+        }),
+      });
+      if (response.ok || response.status < 500) break;
+      if (attempt < MAX_RETRIES) {
+        this.progressUI.log(`⚠️ 서버 오류 ${response.status}, ${5 * (attempt + 1)}초 후 재시도... (${attempt + 1}/${MAX_RETRIES})`, 'warning');
+        await new Promise(r => setTimeout(r, 5000 * (attempt + 1)));
+      }
+    }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -828,13 +1088,18 @@ class ScenarioRunner {
     this.progressUI.log('Step 2-1: 내러티브 답변 제출 중...', 'info');
     await this.waitWhilePaused();
 
-    // API가 기대하는 필드명: high_alive_moment, lost_moment
+    // API가 기대하는 필드명: high_alive_moment, lost_moment, existential_answer
     const highAliveMoment = this.answerGenerator.getNarrativeAnswer('motivation') || '';
     const lostMoment = this.answerGenerator.getNarrativeAnswer('avoidance') || '';
+    const existentialAnswer = this.answerGenerator.getNarrativeAnswer('existential') || '';
 
     // 안전한 substring 호출
     const displayMotivation = highAliveMoment.length > 50 ? highAliveMoment.substring(0, 50) + '...' : highAliveMoment;
     this.progressUI.log(`동기: "${displayMotivation}"`, 'info');
+    if (existentialAnswer) {
+      const displayExistential = existentialAnswer.length > 50 ? existentialAnswer.substring(0, 50) + '...' : existentialAnswer;
+      this.progressUI.log(`실존적 가치: "${displayExistential}"`, 'info');
+    }
 
     const response = await fetch(`${this.API_BASE}/v3/narrative-facts`, {
       method: 'POST',
@@ -843,6 +1108,7 @@ class ScenarioRunner {
         session_id: this.sessionId,
         high_alive_moment: highAliveMoment,
         lost_moment: lostMoment,
+        existential_answer: existentialAnswer || undefined,
       }),
     });
 
@@ -882,6 +1148,7 @@ class ScenarioRunner {
         narrative_facts: {
           highAliveMoment: this.answerGenerator.getNarrativeAnswer('motivation'),
           lostMoment: this.answerGenerator.getNarrativeAnswer('avoidance'),
+          existentialAnswer: this.answerGenerator.getNarrativeAnswer('existential') || '',
         },
         mini_module_result: this.scenario.miniModule,
         previous_round_answers: this.previousRoundAnswers || [],
@@ -1010,18 +1277,36 @@ class ScenarioRunner {
       ],
     };
 
-    const response = await fetch(`${this.API_BASE}/v3/recommend`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        session_id: this.sessionId,
-        searchProfile: searchProfile,
-        mini_module_result: miniModule,  // ★ LLM 리포트 생성에 필요!
-        topK: 200,
-        judgeTopN: 10,
-        debug: true,
-      }),
-    });
+    // Phase 1: Judge (추천 + 점수 매기기) — 503 재시도 포함
+    const recommendEndpoint = this.isMajorScenario ? '/v3/recommend-major' : '/v3/recommend';
+    const phaseLabel = this.isMajorScenario ? '전공' : '직업';
+    this.progressUI.log(`Phase 1: ${phaseLabel} 추천 분석 중...`, 'info');
+    let response;
+    const MAX_RETRIES = 2;
+    const requestBody = {
+      session_id: this.sessionId,
+      searchProfile: searchProfile,
+      mini_module_result: miniModule,
+      topK: 200,
+      judgeTopN: 10,
+      debug: true,
+      skipReport: true,
+    };
+    if (this.isMajorScenario && this.scenario.academicState) {
+      requestBody.academic_state = this.scenario.academicState;
+    }
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      response = await fetch(`${this.API_BASE}${recommendEndpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+      });
+      if (response.ok || response.status < 500) break;
+      if (attempt < MAX_RETRIES) {
+        this.progressUI.log(`⚠️ 서버 오류 ${response.status}, ${5 * (attempt + 1)}초 후 재시도... (${attempt + 1}/${MAX_RETRIES})`, 'warning');
+        await new Promise(r => setTimeout(r, 5000 * (attempt + 1)));
+      }
+    }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -1029,24 +1314,52 @@ class ScenarioRunner {
     }
 
     const data = await response.json();
+    this.progressUI.log(`Phase 1 완료: ${phaseLabel} 추천 완료`, 'success');
 
-    // ★ Report Mode 표시 (LLM vs Fallback)
-    const reportMode = data.report_mode || 'unknown';
-    if (reportMode === 'llm') {
-      this.progressUI.log('✅ LLM 기반 리포트 생성 성공', 'success');
-    } else if (reportMode === 'fallback') {
-      this.progressUI.log('⚠️ Fallback 리포트 사용 (LLM 실패 또는 미설정)', 'warning');
-    } else {
-      this.progressUI.log(`📋 리포트 모드: ${reportMode}`, 'info');
+    // Phase 2: Reporter (심리분석 리포트 생성)
+    this.progressUI.log('Phase 2: 심리분석 리포트 생성 중...', 'info');
+    try {
+      const reportResponse = await fetch(`${this.API_BASE}/v3/recommend/report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: this.sessionId }),
+      });
+      if (reportResponse.ok) {
+        const reportData = await reportResponse.json();
+        data.premium_report = reportData.premium_report;
+        data.report_mode = reportData.report_mode;
+        const reportMode = reportData.report_mode || 'unknown';
+        if (reportMode === 'llm') {
+          this.progressUI.log('LLM 기반 리포트 생성 성공', 'success');
+        } else if (reportMode === 'fallback') {
+          this.progressUI.log('Fallback 리포트 사용', 'warning');
+        }
+      } else {
+        this.progressUI.log('리포트 생성 실패 (추천 결과는 정상)', 'warning');
+      }
+    } catch (reportError) {
+      this.progressUI.log('리포트 생성 중 오류 (추천 결과는 정상)', 'warning');
     }
 
-    if (data.recommendations && data.recommendations.top_jobs && data.recommendations.top_jobs.length > 0) {
+    if (this.isMajorScenario && data.recommendations && data.recommendations.top_majors && data.recommendations.top_majors.length > 0) {
+      // 전공 추천 결과 표시
+      const topMajor = data.recommendations.top_majors[0];
+      const topMajorName = topMajor?.major_name || topMajor?.name || '전공명 없음';
+      const topFitScore = topMajor?.fit_score ?? topMajor?.scores?.fit ?? 'N/A';
+      this.progressUI.log(`추천 1위: ${topMajorName} (Fit: ${topFitScore})`, 'success');
+
+      for (let i = 0; i < Math.min(3, data.recommendations.top_majors.length); i++) {
+        const major = data.recommendations.top_majors[i];
+        const majorName = major?.major_name || major?.name || '전공명 없음';
+        const fitScore = major?.fit_score ?? major?.scores?.fit ?? 'N/A';
+        this.progressUI.log(`${i + 1}. ${majorName} - Fit: ${fitScore}`, 'success');
+      }
+    } else if (data.recommendations && data.recommendations.top_jobs && data.recommendations.top_jobs.length > 0) {
       const topJob = data.recommendations.top_jobs[0];
       const topJobName = topJob?.job_name || topJob?.name || '직업명 없음';
       const topFitScore = topJob?.fit_score ?? topJob?.scores?.fit ?? 'N/A';
       this.progressUI.log(`추천 1위: ${topJobName} (Fit: ${topFitScore})`, 'success');
 
-      // 상위 3개 표시
       for (let i = 0; i < Math.min(3, data.recommendations.top_jobs.length); i++) {
         const job = data.recommendations.top_jobs[i];
         const jobName = job?.job_name || job?.name || '직업명 없음';
@@ -1054,7 +1367,6 @@ class ScenarioRunner {
         this.progressUI.log(`${i + 1}. ${jobName} - Fit: ${fitScore}`, 'success');
       }
     } else if (data.recommendations && data.recommendations.length > 0) {
-      // 이전 API 형식 호환
       const topJob = data.recommendations[0];
       const topJobName = topJob?.job_name || topJob?.name || '직업명 없음';
       const topFitScore = topJob?.scores?.fit ?? topJob?.fit ?? 'N/A';
@@ -1101,4 +1413,25 @@ window.runE2EScenario = async function(scenarioId) {
 
 window.runE2EScenarioWithUI = window.runE2EScenario;
 
-console.log('ScenarioRunner loaded. Available functions: runE2EScenario(scenarioId)');
+window.runMajorE2EScenario = async function(scenarioId) {
+  try {
+    const runner = new ScenarioRunner(scenarioId);
+    const result = await runner.start();
+    console.log('Major E2E Scenario Result:', result);
+    return result;
+  } catch (error) {
+    console.error('Major E2E Scenario Error:', error);
+    alert('전공 시나리오 실행 오류: ' + error.message);
+    return { success: false, error: error.message };
+  }
+};
+
+window.getMajorScenarioList = function() {
+  return Object.values(MAJOR_SCENARIOS).map(s => ({
+    id: s.id,
+    name: s.name,
+    academicState: s.academicState,
+  }));
+};
+
+console.log('ScenarioRunner loaded. Available functions: runE2EScenario(scenarioId), runMajorE2EScenario(scenarioId), getMajorScenarioList()');

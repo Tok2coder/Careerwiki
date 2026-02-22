@@ -7,7 +7,8 @@
 
 import type { D1Database } from '@cloudflare/workers-types'
 import type { VectorSearchResult } from './vectorize-pipeline'
-import type { HardCutItem, UserConstraints } from './types'
+import type { HardCutItem, UserConstraints, MajorUserConstraints } from './types'
+import type { MajorVectorSearchResult } from './vectorize-pipeline'
 
 // ============================================
 // Types
@@ -59,6 +60,8 @@ export function calculateIntensityMultiplier(intensity: ConstraintIntensity): nu
     case 'absolute': return 1.5
     case 'prefer_avoid': return 1.0
     case 'acceptable': return 0.3
+    default:
+      return 1.0
   }
 }
 
@@ -481,7 +484,7 @@ async function getJobAttributes(
     
     try {
       const queryResult = await db.prepare(`
-        SELECT 
+        SELECT
           job_id,
           work_hours,
           shift_work,
@@ -489,10 +492,22 @@ async function getJobAttributes(
           remote_possible,
           degree_required,
           license_required,
+          physical_demand,
+          work_environment,
+          employment_type,
+          job_type,
           wlb,
           growth,
           stability,
-          income
+          income,
+          teamwork,
+          solo_deep,
+          analytical,
+          creative,
+          execution,
+          people_facing,
+          decision_authority,
+          repetitive_level
         FROM job_attributes
         WHERE job_id IN (${placeholders})
       `).bind(...batch).all<{
@@ -503,17 +518,28 @@ async function getJobAttributes(
         remote_possible: string
         degree_required: string
         license_required: string
+        physical_demand: string
+        work_environment: string
+        employment_type: string
+        job_type: string
         wlb: number
         growth: number
         stability: number
         income: number
+        teamwork: number
+        solo_deep: number
+        analytical: number
+        creative: number
+        execution: number
+        people_facing: number
+        decision_authority: number
+        repetitive_level: number
       }>()
       
       for (const row of queryResult.results || []) {
         results.set(row.job_id, row)
       }
     } catch (error) {
-      console.warn('[TagFilter] Batch query failed:', error)
     }
   }
   
@@ -600,7 +626,6 @@ export async function preFilterByHardConstraints(
             })
           }
         } catch (error) {
-          console.warn(`[PreFilter] Rule ${rule.id} query failed:`, error)
         }
       })()
     )
@@ -614,7 +639,6 @@ export async function preFilterByHardConstraints(
     const countResult = await db.prepare('SELECT COUNT(*) as cnt FROM job_attributes').first<{ cnt: number }>()
     totalTagged = countResult?.cnt || 0
   } catch (error) {
-    console.warn('[PreFilter] Count query failed:', error)
   }
   
   return {
@@ -662,11 +686,9 @@ export async function getAllowedJobIdsForRag(
       }
     }
     
-    console.log(`[PreFilter] Allowed jobs for RAG: ${allowedIds.length} / ${allJobs.results?.length || 0}`)
     return allowedIds
     
   } catch (error) {
-    console.warn('[PreFilter] Failed to get allowed job IDs:', error)
     return null  // 실패 시 필터 없이 전체 검색
   }
 }
@@ -1108,8 +1130,6 @@ export function applyMiniModuleHardFilter<T extends { job_id: string; job_name: 
       excludedCount: ruleExclusionCount[rule.id] || 0,
     }))
 
-  console.log(`[MiniModuleHardFilter] Filtered ${excludedJobIds.length} jobs:`, 
-    appliedRules.map(r => `${r.ruleId}(${r.excludedCount})`).join(', '))
 
   return {
     filtered,
@@ -1178,6 +1198,25 @@ export function calculateMiniModuleRiskPenalty(
     if (isIrregular) {
       penalty += 15
       warnings.push('불규칙한 근무 환경 (예측 가능성 선호와 불일치)')
+    }
+  }
+
+  // no_sacrifice + 도전적/불안정 직업 → +10~15 penalty
+  if (miniModule.sacrifice_flags?.includes('no_sacrifice')) {
+    // 야근 가능성 있는 직업
+    if (jobAttrs.work_hours === 'overtime_sometimes' || jobAttrs.work_hours === 'overtime_frequent') {
+      penalty += 10
+      warnings.push('희생 불가 선택이나 야근 가능성 있음')
+    }
+    // 안정성 낮은 직업 (stability < 50이지만 Hard Exclusion 기준(40) 이상)
+    if (typeof jobAttrs.stability === 'number' && jobAttrs.stability < 50 && jobAttrs.stability >= 40) {
+      penalty += 10
+      warnings.push('희생 불가 선택이나 안정성이 보통 이하')
+    }
+    // 초기 저수입 감수 필요 직업 (income_level < 40)
+    if (typeof jobAttrs.income_level === 'number' && jobAttrs.income_level < 40) {
+      penalty += 8
+      warnings.push('희생 불가 선택이나 초기 수입이 낮을 수 있음')
     }
   }
 
@@ -1570,6 +1609,456 @@ export function applyCanBasedFilterBatch<T extends { job_id: string; attributes?
       totalInput: jobs.length,
       excluded: excluded.length,
       withPenalty,
+    },
+  }
+}
+
+// ============================================
+// 전공 추천 전용 Tag Filter
+// ============================================
+// 기존 직업 필터 함수를 수정하지 않고, 전공 전용 함수만 추가
+// major_attributes 테이블 기반 Hard Exclusion + Risk Penalty
+// ============================================
+
+export interface MajorHardExclusionRule {
+  id: string
+  userConstraint: keyof MajorUserConstraints
+  majorAttribute: string
+  majorCondition: (value: string | number | null) => boolean
+  reason: string
+  penaltyMultiplier?: number
+}
+
+export interface MajorRiskPenaltyRule {
+  id: string
+  userConstraint: keyof MajorUserConstraints
+  majorAttribute: string
+  majorCondition: (value: string | number | null) => boolean
+  penalty: number
+  warningLabel: string
+}
+
+export interface MajorFilteredCandidate extends MajorVectorSearchResult {
+  riskPenalty: number
+  riskWarnings: string[]
+  tagSource: 'tagged' | 'untagged'
+}
+
+export interface MajorFilterResult {
+  passed: MajorFilteredCandidate[]
+  excluded: Array<{ major_id: string; major_name: string; reason: string; rule_matched: string }>
+  stats: {
+    totalInput: number
+    hardExcluded: number
+    passed: number
+    withRiskPenalty: number
+    untaggedCount: number
+  }
+}
+
+// ============================================
+// 전공 Hard Exclusion Rules
+// ============================================
+export const MAJOR_HARD_EXCLUSION_RULES: MajorHardExclusionRule[] = [
+  {
+    id: 'math_impossible_vs_high_math',
+    userConstraint: 'math_impossible',
+    majorAttribute: 'math_intensity',
+    majorCondition: (val) => typeof val === 'number' && val > 70,
+    reason: '수학 역량 부족으로 해당 전공 이수 어려움',
+    penaltyMultiplier: 1.5,
+  },
+  {
+    id: 'lab_impossible_vs_lab_heavy',
+    userConstraint: 'lab_impossible',
+    majorAttribute: 'lab_practical',
+    majorCondition: (val) => typeof val === 'number' && val > 70,
+    reason: '실험/실습 불가한 상황에서 해당 전공 이수 어려움',
+    penaltyMultiplier: 1.5,
+  },
+  {
+    id: 'high_competition_avoid_vs_high',
+    userConstraint: 'high_competition_avoid',
+    majorAttribute: 'competition_level',
+    majorCondition: (val) => typeof val === 'number' && val > 80,
+    reason: '매우 높은 입학 경쟁률',
+  },
+  {
+    id: 'reading_heavy_avoid_vs_high',
+    userConstraint: 'reading_heavy_avoid',
+    majorAttribute: 'reading_writing',
+    majorCondition: (val) => typeof val === 'number' && val > 75,
+    reason: '독해/작문 강도가 매우 높은 전공',
+  },
+]
+
+// ============================================
+// 전공 Risk Penalty Rules (경고 + 감점)
+// ============================================
+export const MAJOR_RISK_PENALTY_RULES: MajorRiskPenaltyRule[] = [
+  {
+    id: 'math_impossible_vs_moderate_math',
+    userConstraint: 'math_impossible',
+    majorAttribute: 'math_intensity',
+    majorCondition: (val) => typeof val === 'number' && val > 50 && val <= 70,
+    penalty: 12,
+    warningLabel: '수학이 일부 포함된 전공',
+  },
+  {
+    id: 'lab_impossible_vs_moderate_lab',
+    userConstraint: 'lab_impossible',
+    majorAttribute: 'lab_practical',
+    majorCondition: (val) => typeof val === 'number' && val > 50 && val <= 70,
+    penalty: 10,
+    warningLabel: '실험/실습이 일부 포함된 전공',
+  },
+  {
+    id: 'high_competition_avoid_vs_moderate',
+    userConstraint: 'high_competition_avoid',
+    majorAttribute: 'competition_level',
+    majorCondition: (val) => typeof val === 'number' && val > 65 && val <= 80,
+    penalty: 8,
+    warningLabel: '경쟁률이 다소 높은 전공',
+  },
+  {
+    id: 'low_employment_avoid_vs_low',
+    userConstraint: 'low_employment_avoid',
+    majorAttribute: 'employment_rate',
+    majorCondition: (val) => typeof val === 'number' && val < 40,
+    penalty: 15,
+    warningLabel: '취업률이 낮은 전공',
+  },
+  {
+    id: 'low_employment_avoid_vs_moderate',
+    userConstraint: 'low_employment_avoid',
+    majorAttribute: 'employment_rate',
+    majorCondition: (val) => typeof val === 'number' && val >= 40 && val < 55,
+    penalty: 8,
+    warningLabel: '취업률이 평균 이하인 전공',
+  },
+  {
+    id: 'reading_heavy_avoid_vs_moderate',
+    userConstraint: 'reading_heavy_avoid',
+    majorAttribute: 'reading_writing',
+    majorCondition: (val) => typeof val === 'number' && val > 55 && val <= 75,
+    penalty: 8,
+    warningLabel: '독해/작문이 일부 필요한 전공',
+  },
+]
+
+// ============================================
+// 전공 Main Filter Function
+// ============================================
+export async function applyMajorTagFilter(
+  db: D1Database,
+  candidates: MajorVectorSearchResult[],
+  userConstraints: MajorUserConstraints
+): Promise<MajorFilterResult> {
+  const excluded: MajorFilterResult['excluded'] = []
+  const passed: MajorFilteredCandidate[] = []
+  let withRiskPenalty = 0
+  let untaggedCount = 0
+
+  // 1. 후보들의 major_attributes 조회
+  const majorIds = candidates.map(c => c.major_id)
+  const attributesMap = await getMajorAttributes(db, majorIds)
+
+  // 2. 각 후보에 대해 필터링
+  for (const candidate of candidates) {
+    const attrs = attributesMap.get(candidate.major_id)
+    const isTagged = !!attrs
+
+    if (!isTagged) {
+      untaggedCount++
+    }
+
+    // Hard Exclusion 체크
+    let isExcluded = false
+    let excludeReason = ''
+    let excludeRule = ''
+
+    if (isTagged) {
+      for (const rule of MAJOR_HARD_EXCLUSION_RULES) {
+        const userHasConstraint = userConstraints[rule.userConstraint]
+        if (userHasConstraint) {
+          const majorValue = attrs[rule.majorAttribute]
+          if (rule.majorCondition(majorValue)) {
+            isExcluded = true
+            excludeReason = rule.reason
+            excludeRule = rule.id
+            break
+          }
+        }
+      }
+    }
+
+    if (isExcluded) {
+      excluded.push({
+        major_id: candidate.major_id,
+        major_name: candidate.major_name,
+        reason: excludeReason,
+        rule_matched: excludeRule,
+      })
+      continue
+    }
+
+    // Risk Penalty 계산
+    let totalPenalty = 0
+    const warnings: string[] = []
+
+    if (isTagged) {
+      for (const rule of MAJOR_RISK_PENALTY_RULES) {
+        const userHasConstraint = userConstraints[rule.userConstraint]
+        if (userHasConstraint) {
+          const majorValue = attrs[rule.majorAttribute]
+          if (rule.majorCondition(majorValue)) {
+            totalPenalty += rule.penalty
+            warnings.push(rule.warningLabel)
+          }
+        }
+      }
+    }
+
+    if (totalPenalty > 0) {
+      withRiskPenalty++
+    }
+
+    passed.push({
+      ...candidate,
+      riskPenalty: totalPenalty,
+      riskWarnings: warnings,
+      tagSource: isTagged ? 'tagged' : 'untagged',
+    })
+  }
+
+  return {
+    passed,
+    excluded,
+    stats: {
+      totalInput: candidates.length,
+      hardExcluded: excluded.length,
+      passed: passed.length,
+      withRiskPenalty,
+      untaggedCount,
+    },
+  }
+}
+
+// ============================================
+// Helper: Major Attributes 조회
+// ============================================
+async function getMajorAttributes(
+  db: D1Database,
+  majorIds: string[]
+): Promise<Map<string, Record<string, any>>> {
+  if (majorIds.length === 0) {
+    return new Map()
+  }
+
+  const BATCH_SIZE = 100
+  const results = new Map<string, Record<string, any>>()
+
+  for (let i = 0; i < majorIds.length; i += BATCH_SIZE) {
+    const batch = majorIds.slice(i, i + BATCH_SIZE)
+    const placeholders = batch.map(() => '?').join(',')
+
+    try {
+      const queryResult = await db.prepare(`
+        SELECT
+          major_id, major_name,
+          academic_rigor, math_intensity, creativity, social_interaction,
+          lab_practical, reading_writing,
+          career_breadth, career_income_potential, employment_rate,
+          competition_level, growth_outlook, stability, autonomy, teamwork,
+          field_category, degree_level
+        FROM major_attributes
+        WHERE major_id IN (${placeholders})
+      `).bind(...batch).all<{
+        major_id: number
+        major_name: string
+        academic_rigor: number
+        math_intensity: number
+        creativity: number
+        social_interaction: number
+        lab_practical: number
+        reading_writing: number
+        career_breadth: number
+        career_income_potential: number
+        employment_rate: number
+        competition_level: number
+        growth_outlook: number
+        stability: number
+        autonomy: number
+        teamwork: number
+        field_category: string
+        degree_level: string
+      }>()
+
+      for (const row of queryResult.results || []) {
+        results.set(String(row.major_id), row)
+      }
+    } catch (error) {
+      // DB 조회 실패 시 무시 (해당 전공은 untagged 처리)
+    }
+  }
+
+  return results
+}
+
+// ============================================
+// 전공 제약조건 추출 (설문 응답에서)
+// ============================================
+export function extractMajorUserConstraints(
+  universalAnswers: Record<string, string | string[]>
+): MajorUserConstraints {
+  const constraints: MajorUserConstraints = {}
+
+  const majorConstraints = universalAnswers['univ_major_constraints']
+  if (majorConstraints) {
+    const arr = Array.isArray(majorConstraints) ? majorConstraints : [majorConstraints]
+    if (arr.includes('math_impossible')) constraints.math_impossible = true
+    if (arr.includes('lab_impossible')) constraints.lab_impossible = true
+    if (arr.includes('high_competition_avoid')) constraints.high_competition_avoid = true
+    if (arr.includes('low_employment_avoid')) constraints.low_employment_avoid = true
+    if (arr.includes('reading_heavy_avoid')) constraints.reading_heavy_avoid = true
+  }
+
+  return constraints
+}
+
+// ============================================
+// 전공 미니모듈 기반 Hard Exclusion
+// ============================================
+export interface MajorMiniModuleExclusionRule {
+  id: string
+  description: string
+  shouldExclude: (
+    miniModule: MiniModuleResult,
+    majorAttrs: Record<string, any>
+  ) => boolean
+}
+
+export const MAJOR_MINI_MODULE_EXCLUSION_RULES: MajorMiniModuleExclusionRule[] = [
+  // 1. solo 선호 + 팀워크 과다 전공 → 제외
+  {
+    id: 'solo_vs_high_teamwork_major',
+    description: '혼자 학습 선호 → 팀 프로젝트 중심 전공 제외',
+    shouldExclude: (mm, major) => {
+      const prefersSolo = mm.workstyle_top?.includes('solo') || mm.workstyle_top?.includes('solo_deep')
+      const highTeamwork = (major.teamwork || 50) >= 80
+      return prefersSolo === true && highTeamwork
+    },
+  },
+  // 2. people_drain + 사회적 상호작용 높은 전공 → 제외
+  {
+    id: 'people_drain_vs_high_social_major',
+    description: '대인 에너지 소모 → 사회적 상호작용 높은 전공 제외',
+    shouldExclude: (mm, major) => {
+      const hasPeopleDrain = mm.energy_drain_flags?.includes('people_drain')
+      const highSocial = (major.social_interaction || 50) >= 75
+      return hasPeopleDrain === true && highSocial
+    },
+  },
+  // 3. 분석형 강점 + 수학/분석 요소 전혀 없는 순수 예술 전공 → 제외
+  {
+    id: 'analytical_vs_pure_arts_major',
+    description: '분석형 강점 → 순수 예술/실기 전공 제외',
+    shouldExclude: (mm, major) => {
+      const hasAnalytical = mm.strength_top?.includes('analytical') ||
+        mm.interest_top?.includes('data_numbers')
+      const isPureArts = (major.math_intensity || 50) <= 15 &&
+        (major.academic_rigor || 50) <= 25 &&
+        (major.creativity || 50) >= 80
+      return hasAnalytical === true && isPureArts
+    },
+  },
+  // 4. 창의형 강점 + 수학 집중 이론 전공 → 제외
+  {
+    id: 'creative_vs_math_heavy_major',
+    description: '창의형 강점 → 수학 집중 이론 전공 제외',
+    shouldExclude: (mm, major) => {
+      const isCreative = mm.strength_top?.includes('creative') ||
+        mm.interest_top?.includes('creating') || mm.interest_top?.includes('art')
+      const isMathHeavy = (major.math_intensity || 50) >= 80 &&
+        (major.creativity || 50) <= 25
+      return isCreative === true && isMathHeavy
+    },
+  },
+  // 5. cognitive_drain + 학문적 이론 강도 높은 전공 → 제외
+  {
+    id: 'cognitive_drain_vs_high_rigor_major',
+    description: '인지 부하 에너지 소모 → 학술 강도 높은 전공 제외',
+    shouldExclude: (mm, major) => {
+      const hasCognitiveDrain = mm.energy_drain_flags?.includes('cognitive_drain')
+      const highRigor = (major.academic_rigor || 50) >= 85
+      return hasCognitiveDrain === true && highRigor
+    },
+  },
+  // 6. repetition_drain + 실습 반복 위주 전공 → 제외
+  {
+    id: 'repetition_drain_vs_lab_repetitive_major',
+    description: '반복 에너지 소모 → 반복 실습 중심 전공 제외',
+    shouldExclude: (mm, major) => {
+      const hasRepetitionDrain = mm.energy_drain_flags?.includes('repetition_drain')
+      const isLabRepetitive = (major.lab_practical || 50) >= 75 &&
+        (major.creativity || 50) <= 30
+      return hasRepetitionDrain === true && isLabRepetitive
+    },
+  },
+]
+
+/**
+ * 전공 미니모듈 Hard Filter 적용
+ */
+export function applyMajorMiniModuleHardFilter<T extends { major_id: string | number; major_name: string; attributes?: Record<string, any> }>(
+  majors: T[],
+  miniModule: MiniModuleResult | undefined
+): { filtered: T[]; filterResult: MiniModuleHardFilter } {
+  if (!miniModule) {
+    return {
+      filtered: majors,
+      filterResult: {
+        excludedJobIds: [],
+        appliedRules: [],
+        stats: { totalFiltered: 0, beforeCount: majors.length, afterCount: majors.length },
+      },
+    }
+  }
+
+  const excludedIds: string[] = []
+  const ruleExclusionCount: Record<string, number> = {}
+
+  const filtered = majors.filter(major => {
+    const attrs = (major as any).attributes || major
+
+    for (const rule of MAJOR_MINI_MODULE_EXCLUSION_RULES) {
+      if (rule.shouldExclude(miniModule, { ...attrs, major_name: major.major_name })) {
+        excludedIds.push(String(major.major_id))
+        ruleExclusionCount[rule.id] = (ruleExclusionCount[rule.id] || 0) + 1
+        return false
+      }
+    }
+    return true
+  })
+
+  const appliedRules = MAJOR_MINI_MODULE_EXCLUSION_RULES
+    .filter(rule => ruleExclusionCount[rule.id] && ruleExclusionCount[rule.id] > 0)
+    .map(rule => ({
+      ruleId: rule.id,
+      reason: rule.description,
+      excludedCount: ruleExclusionCount[rule.id] || 0,
+    }))
+
+  return {
+    filtered,
+    filterResult: {
+      excludedJobIds: excludedIds,
+      appliedRules,
+      stats: {
+        totalFiltered: excludedIds.length,
+        beforeCount: majors.length,
+        afterCount: filtered.length,
+      },
     },
   }
 }

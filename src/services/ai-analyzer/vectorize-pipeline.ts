@@ -30,6 +30,8 @@ import type { MiniModuleResult } from './mini-module-questions'
 import { TOKEN_TO_ENGLISH } from './mini-module-questions'
 import { generateOpenAIEmbedding, OPENAI_EMBEDDING_DIMENSIONS } from './openai-client'
 import { calculatePersonalizedBaseScores } from './personalized-scoring'
+import { calculateMajorPersonalizedBaseScores } from './personalized-scoring-major'
+import type { ScoredMajor, MajorAttributes } from './types'
 import { 
   JOB_PROFILE_COMPACT_VERSION, 
   getFullEmbeddingVersion 
@@ -430,12 +432,15 @@ export async function searchCandidates(
   })
 
   // 3. 결과 변환 (metadata 없이 ID + score만 반환, job_name은 D1에서 조회)
-  return searchResult.matches.map(match => ({
-    job_id: match.id,
-    job_name: match.id,
-    score: match.score,
-    metadata: {} as Record<string, any>,
-  }))
+  // major:/howto: prefix ID 제외 (RAG 검색용 엔트리가 AI Analyzer에 혼입되지 않도록)
+  return searchResult.matches
+    .filter(match => !match.id.includes(':'))
+    .map(match => ({
+      job_id: match.id,
+      job_name: match.id,
+      score: match.score,
+      metadata: {} as Record<string, any>,
+    }))
 }
 
 // ============================================
@@ -450,7 +455,6 @@ export async function searchCandidatesMultiQuery(
 ): Promise<VectorSearchResult[]> {
   // 1. 배치 임베딩 (한 번의 OpenAI 호출로 모든 쿼리 임베딩)
   const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, queries)
-  console.log(`[Multi-Query] Batch embedding done: ${queries.length} queries → ${embeddings.length} embeddings`)
 
   // 2. 병렬 Vectorize 검색 (각 topK=100)
   const clampedTopK = Math.min(topK, 100)
@@ -459,25 +463,36 @@ export async function searchCandidatesMultiQuery(
   )
   const searchResults = await Promise.all(searchPromises)
 
-  // 3. 중복 제거 (같은 job_id → 최고 score 유지)
+  // 3. 중복 제거 (같은 job_id → 최고 score 유지 + 히트카운트 추적)
+  // v3.9.5: 여러 쿼리에 등장하는 주류 직업에 히트카운트 보너스
+  // major:/howto: prefix ID 제외 (RAG 검색용 엔트리가 AI Analyzer에 혼입되지 않도록)
   const bestScoreMap = new Map<string, number>()
+  const hitCountMap = new Map<string, number>()
   let totalMatches = 0
   for (const result of searchResults) {
     for (const match of result.matches) {
+      if (match.id.includes(':')) continue  // major:/howto: prefix 제외
       totalMatches++
       const existing = bestScoreMap.get(match.id)
       if (existing === undefined || match.score > existing) {
         bestScoreMap.set(match.id, match.score)
       }
+      hitCountMap.set(match.id, (hitCountMap.get(match.id) || 0) + 1)
     }
   }
 
-  console.log(`[Multi-Query] Total matches: ${totalMatches}, Unique jobs: ${bestScoreMap.size}`)
 
   // 4. 결과 변환 (score 내림차순)
+  // 히트카운트 보너스: 3+개 쿼리에 등장 → 점수 보정 (주류 직업 우선)
   return Array.from(bestScoreMap.entries())
-    .sort((a, b) => b[1] - a[1])
-    .map(([id, score]) => ({
+    .map(([id, score]) => {
+      const hits = hitCountMap.get(id) || 1
+      // 3+개 쿼리 히트 시 score에 보너스 (최대 +0.05)
+      const hitBonus = hits >= 3 ? Math.min(0.05, (hits - 2) * 0.015) : 0
+      return { id, score: Math.min(1.0, score + hitBonus), hits }
+    })
+    .sort((a, b) => b.score - a.score)
+    .map(({ id, score }) => ({
       job_id: id,
       job_name: id,
       score,
@@ -506,7 +521,6 @@ export async function expandCandidates(
   
   // Vectorize 또는 OpenAI API 키가 없으면 fallback
   if (!vectorize || !openaiApiKey) {
-    console.log('[Vectorize] Vectorize/OpenAI not available, using DB fallback')
     const fallbackResult = await getFallbackCandidates(db, targetSize)
     return {
       candidates: fallbackResult,
@@ -519,12 +533,10 @@ export async function expandCandidates(
   try {
     // 1. 검색 쿼리 생성 (한국어 직접 사용 가능)
     const query = buildSearchQuery(facts)
-    console.log(`[Vectorize] Search query: ${query.substring(0, 100)}...`)
     
     // 2. 벡터 검색 (OpenAI Embedding 사용)
     const vectorResults = await searchCandidates(vectorize, openaiApiKey, query, targetSize)
     
-    console.log(`[Vectorize] Found ${vectorResults.length} candidates via vector search`)
     
     return {
       candidates: vectorResults,
@@ -534,7 +546,6 @@ export async function expandCandidates(
     }
     
   } catch (error) {
-    console.error('[Vectorize] Search failed, using fallback:', error)
     const fallbackResult = await getFallbackCandidates(db, targetSize)
     return {
       candidates: fallbackResult,
@@ -703,7 +714,6 @@ export function parseJobProfileFromMergedJson(
       }
       
     } catch (e) {
-      console.warn(`[parseJobProfile] Failed to parse merged_profile_json for ${jobId}:`, e)
     }
   }
 
@@ -736,7 +746,6 @@ export async function indexJobsToVectorize(
   let offset = 0
   const version = getFullEmbeddingVersion()
   
-  console.log(`[Vectorize] Starting indexing with version: ${version}`)
   
   while (true) {
     // jobs 테이블에서 직접 조회 (6,945개 전체)
@@ -809,20 +818,217 @@ export async function indexJobsToVectorize(
       indexed += jobs.results.length
       
     } catch (error) {
-      console.error(`[Vectorize] Batch indexing failed at offset ${offset}:`, error)
       errors += jobs.results.length
     }
     
     offset += batchSize
-    console.log(`[Vectorize] Indexed ${indexed} jobs so far...`)
     
     // OpenAI rate limit 방지 (1초 대기)
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
   
-  console.log(`[Vectorize] Indexing complete. Total: ${indexed}, Errors: ${errors}, Version: ${version}`)
   
   return { indexed, errors, version }
+}
+
+// ============================================
+// 전공 데이터 인덱싱 (배치 처리용 - OpenAI Embedding)
+// ============================================
+// Vectorize ID: major:{id}
+// ============================================
+
+/**
+ * buildMajorProfileCompact: 전공 데이터를 인덱싱용 텍스트로 변환
+ * 최대 1000자
+ */
+export function buildMajorProfileCompact(major: {
+  name: string
+  merged_profile_json: string | null
+}): string {
+  const name = major.name || '미상'
+  const parts: string[] = [name]
+
+  if (major.merged_profile_json) {
+    try {
+      const profile = JSON.parse(major.merged_profile_json)
+      const summary = profile.heroIntro || profile.summary || profile.description || profile.overview || ''
+      if (summary) parts.push(summary.trim().slice(0, 300))
+
+      // 관련 직업 (검색 연관성 향상)
+      const relatedJobs = profile.relatedJobs || profile.related_jobs || profile.관련직업 || []
+      if (Array.isArray(relatedJobs) && relatedJobs.length > 0) {
+        const jobNames = relatedJobs.slice(0, 8).map((j: any) => typeof j === 'string' ? j : j.name || j.job_name || '').filter(Boolean)
+        if (jobNames.length > 0) parts.push(`관련직업: ${jobNames.join(', ')}`)
+      }
+
+      // 학과 분류
+      const category = profile.category || profile.분류 || profile.field || ''
+      if (category) parts.push(category)
+
+      // 핵심 교과목
+      const courses = profile.courses || profile.주요교과목 || profile.curriculum || []
+      if (Array.isArray(courses) && courses.length > 0) {
+        parts.push(`교과목: ${courses.slice(0, 5).join(', ')}`)
+      }
+    } catch {}
+  }
+
+  return parts.join(' ').substring(0, 1000)
+}
+
+export async function indexMajorsToVectorize(
+  db: D1Database,
+  vectorize: VectorizeIndex,
+  openaiApiKey: string,
+  batchSize: number = 50
+): Promise<{ indexed: number; errors: number }> {
+  let indexed = 0
+  let errors = 0
+  let offset = 0
+
+
+  while (true) {
+    const majors = await db.prepare(`
+      SELECT id, name, merged_profile_json
+      FROM majors
+      WHERE is_active = 1
+      LIMIT ? OFFSET ?
+    `).bind(batchSize, offset).all<{
+      id: string
+      name: string
+      merged_profile_json: string | null
+    }>()
+
+    if (!majors.results || majors.results.length === 0) break
+
+    const textsForEmbedding = majors.results.map(m =>
+      buildMajorProfileCompact({ name: m.name, merged_profile_json: m.merged_profile_json })
+    )
+
+    try {
+      const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, textsForEmbedding)
+
+      const vectors = majors.results.map((m, idx) => ({
+        id: `major:${m.id}`,
+        values: embeddings[idx],
+        metadata: {
+          type: 'major',
+          name: m.name,
+        },
+      }))
+
+      await vectorize.upsert(vectors)
+      indexed += majors.results.length
+
+      // indexed_at 업데이트
+      const ids = majors.results.map(m => m.id)
+      const placeholders = ids.map(() => '?').join(',')
+      await db.prepare(`UPDATE majors SET indexed_at = datetime('now'), embedding_version = 'MPC_V1' WHERE id IN (${placeholders})`).bind(...ids).run()
+    } catch (error) {
+      errors += majors.results.length
+    }
+
+    offset += batchSize
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+
+  return { indexed, errors }
+}
+
+// ============================================
+// HowTo(가이드) 데이터 인덱싱 (배치 처리용 - OpenAI Embedding)
+// ============================================
+// Vectorize ID: howto:{id}
+// pages 테이블의 page_type='guide' 대상
+// ============================================
+
+/**
+ * buildHowtoProfileCompact: 가이드 데이터를 인덱싱용 텍스트로 변환
+ * 최대 1000자
+ */
+export function buildHowtoProfileCompact(page: {
+  title: string
+  summary: string | null
+  content: string | null
+}): string {
+  const parts: string[] = [page.title || '미상']
+
+  if (page.summary) {
+    parts.push(page.summary.trim().slice(0, 200))
+  }
+
+  if (page.content) {
+    // HTML 태그 제거 후 앞부분만 사용
+    const plainText = page.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+    if (plainText.length > 0) {
+      parts.push(plainText.slice(0, 500))
+    }
+  }
+
+  return parts.join(' ').substring(0, 1000)
+}
+
+export async function indexHowtosToVectorize(
+  db: D1Database,
+  vectorize: VectorizeIndex,
+  openaiApiKey: string,
+  batchSize: number = 50
+): Promise<{ indexed: number; errors: number }> {
+  let indexed = 0
+  let errors = 0
+  let offset = 0
+
+
+  while (true) {
+    const pages = await db.prepare(`
+      SELECT id, slug, title, summary, content
+      FROM pages
+      WHERE page_type IN ('guide', 'howto')
+        AND status = 'published'
+      LIMIT ? OFFSET ?
+    `).bind(batchSize, offset).all<{
+      id: number
+      slug: string
+      title: string
+      summary: string | null
+      content: string | null
+    }>()
+
+    if (!pages.results || pages.results.length === 0) break
+
+    const textsForEmbedding = pages.results.map(p =>
+      buildHowtoProfileCompact({ title: p.title, summary: p.summary, content: p.content })
+    )
+
+    try {
+      const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, textsForEmbedding)
+
+      const vectors = pages.results.map((p, idx) => ({
+        id: `howto:${p.id}`,
+        values: embeddings[idx],
+        metadata: {
+          type: 'howto',
+          title: p.title,
+          slug: p.slug,
+        },
+      }))
+
+      await vectorize.upsert(vectors)
+      indexed += pages.results.length
+
+      // indexed_at 업데이트
+      const ids = pages.results.map(p => p.id)
+      const placeholders = ids.map(() => '?').join(',')
+      await db.prepare(`UPDATE pages SET indexed_at = datetime('now'), embedding_version = 'HPC_V1' WHERE id IN (${placeholders})`).bind(...ids).run()
+    } catch (error) {
+      errors += pages.results.length
+    }
+
+    offset += batchSize
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+
+  return { indexed, errors }
 }
 
 // ============================================
@@ -935,13 +1141,15 @@ export async function vectorResultsToScoredJobs(
   const BATCH_SIZE = 100  // D1 안정성을 위해 100개씩
   const jobIds = vectorResults.map(v => v.job_id)
 
-  // batch로 나눠서 조회
-  const allAttributeResults: any[] = []
+  // v3.10.6: batch 병렬 조회 (순차 → Promise.all로 최적화)
+  const batches: string[][] = []
   for (let i = 0; i < jobIds.length; i += BATCH_SIZE) {
-    const batchIds = jobIds.slice(i, i + BATCH_SIZE)
-    const placeholders = batchIds.map(() => '?').join(',')
+    batches.push(jobIds.slice(i, i + BATCH_SIZE))
+  }
 
-    const batchResult = await db.prepare(`
+  const batchPromises = batches.map(batchIds => {
+    const placeholders = batchIds.map(() => '?').join(',')
+    return db.prepare(`
       SELECT
         ja.job_id, ja.job_name,
         j.slug, j.image_url, j.api_data_json, j.merged_profile_json,
@@ -976,7 +1184,11 @@ export async function vectorResultsToScoredJobs(
     degree_required: string
     license_required: string
   }>()
+  })
 
+  const batchResults = await Promise.all(batchPromises)
+  const allAttributeResults: any[] = []
+  for (const batchResult of batchResults) {
     if (batchResult.results) {
       allAttributeResults.push(...batchResult.results)
     }
@@ -989,13 +1201,16 @@ export async function vectorResultsToScoredJobs(
   // job_attributes에 없는 job_id들을 찾아서 jobs 테이블에서 직접 조회
   const missingJobIds = jobIds.filter(id => !attributesMap.has(id))
   if (missingJobIds.length > 0) {
-    console.log(`[vectorResultsToScoredJobs] ${missingJobIds.length}개 직업이 job_attributes에 없음, jobs 테이블에서 직접 조회`)
 
+    // v3.10.6: fallback도 병렬 조회
+    const missingBatches: string[][] = []
     for (let i = 0; i < missingJobIds.length; i += BATCH_SIZE) {
-      const batchIds = missingJobIds.slice(i, i + BATCH_SIZE)
-      const placeholders = batchIds.map(() => '?').join(',')
+      missingBatches.push(missingJobIds.slice(i, i + BATCH_SIZE))
+    }
 
-      const fallbackResult = await db.prepare(`
+    const fallbackPromises = missingBatches.map(batchIds => {
+      const placeholders = batchIds.map(() => '?').join(',')
+      return db.prepare(`
         SELECT id as job_id, name as job_name, slug, image_url, api_data_json, merged_profile_json
         FROM jobs
         WHERE id IN (${placeholders})
@@ -1007,10 +1222,12 @@ export async function vectorResultsToScoredJobs(
         api_data_json: string | null
         merged_profile_json: string | null
       }>()
+    })
 
+    const fallbackResults = await Promise.all(fallbackPromises)
+    for (const fallbackResult of fallbackResults) {
       if (fallbackResult.results) {
         for (const row of fallbackResult.results) {
-          // job_attributes 데이터 없이 jobs 테이블 데이터만으로 기본값 생성
           attributesMap.set(row.job_id, {
             ...row,
             wlb: 50, growth: 50, stability: 50, income: 50,
@@ -1036,9 +1253,10 @@ export async function vectorResultsToScoredJobs(
     
     if (attrs) {
       const personalized = calculatePersonalizedBaseScores(attrs, miniModule)
-      // 벡터 유사도 보너스: 의미적으로 가까운 직업에 Like/Can 보너스
-      // vectorScore 범위 0~1, 보너스 0~15점
-      const vectorBonus = Math.round(vectorScore * 15)
+      // v3.9.5: 벡터 유사도 보너스 축소 (이중 적용 버그 수정)
+      // 기존: vectorScore*15 + final에 vectorScore*20 = 최대 35점 이중 적용
+      // 수정: vectorScore*10만 base에 반영, final에는 추가 보너스 없음
+      const vectorBonus = Math.round(vectorScore * 10)
       const baseLike = Math.min(100, personalized.like + vectorBonus)
       const baseCan = Math.min(100, personalized.can + Math.round(vectorBonus * 0.5))
       const baseRisk = 10
@@ -1068,7 +1286,8 @@ export async function vectorResultsToScoredJobs(
         like_score: baseLike,
         can_score: baseCan,
         risk_penalty: baseRisk,
-        final_score: Math.round(0.55 * baseLike + 0.45 * baseCan - baseRisk + (vectorScore * 20)) + untaggedPenalty,
+        // v3.9.5: vectorScore*20 이중 적용 제거 — 벡터 보너스는 baseLike/baseCan에만 반영
+        final_score: Math.round(0.55 * baseLike + 0.45 * baseCan - baseRisk) + untaggedPenalty,
         ksco_major: kscoMajor,
         attributes: {
           wlb: attrs.wlb,
@@ -1113,9 +1332,17 @@ export async function vectorResultsToScoredJobs(
         income: 50,
         remote: 50,
         solo_work: 50,
+        solo_deep: 50,
         people_facing: 50,
         analytical: 50,
         creative: 50,
+        execution: 50,
+        teamwork: 50,
+        work_hours: 'regular',
+        shift_work: 'none',
+        degree_required: 'none',
+        license_required: 'none',
+        ksco_major: '',
       },
     }
   })
@@ -1278,13 +1505,18 @@ export function buildSearchProfile(input: SearchProfileInput): SearchProfile {
 const LLM_SEARCH_QUERY_PROMPT = `당신은 한국 직업 전문가입니다. 사용자의 프로파일을 보고, 이 사람에게 적합할 수 있는 한국 직업 카테고리와 구체적 직업명을 나열해주세요.
 
 규칙:
-1. 직업 카테고리 5~8개, 구체적 직업명 15~25개를 나열
+1. 직업 카테고리 5~8개, 구체적 직업명 25~30개를 나열
 2. 한국어로 작성 (예: 공무원, 행정사무원, 데이터분석가)
 3. 사용자의 흥미, 가치관, 강점, 제약조건을 모두 고려
-4. 너무 뻔한 것만 나열하지 말고, 숨겨진 적합 직업도 포함
-5. 제약조건이 있으면 그에 맞는 현실적인 직업 위주로
-6. 쉼표로 구분하여 한 줄로 출력
-7. 설명이나 번호 없이 직업명/카테고리만 나열`
+4. ★★★ 반드시 누구나 아는 주류 직업 위주로 출력하세요!
+   - 주류 직업 = 취업포털에서 쉽게 검색되는 직업 (예: UX디자이너, 서비스기획자, 소프트웨어개발자, 경영컨설턴트, 연구원, 마케터, 교사, 간호사 등)
+   - 최소 20개는 주류 직업이어야 합니다
+   - 숨겨진 틈새 직업은 5개 이하로 제한
+5. ❌ 금지: 특정 소재/재료 기반 세부 직종 (예: 고무제품개발자, 바이오화학제품○○자, 석유화학○○자, 단청기술자 등)
+   → 사용자가 해당 분야를 명시적으로 언급하지 않았다면 절대 포함 금지
+6. 제약조건이 있으면 그에 맞는 현실적인 직업 위주로
+7. 쉼표로 구분하여 한 줄로 출력
+8. 설명이나 번호 없이 직업명/카테고리만 나열`
 
 export async function buildLLMSearchQuery(
   miniModule: MiniModuleResult,
@@ -1330,7 +1562,7 @@ export async function buildLLMSearchQuery(
 
   const userMessage = `사용자 프로파일:\n${profileParts.join('\n')}`
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  const response = await fetch('https://gateway.ai.cloudflare.com/v1/3587865378649966bfb0a814fce73c77/careerwiki/openai/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -1361,10 +1593,112 @@ export async function buildLLMSearchQuery(
 
   const llmQuery = `적합 직업: ${content}`.substring(0, 500)
 
-  console.log(`[LLM Search Query] Generated: ${llmQuery.substring(0, 150)}...`)
-  console.log(`[LLM Search Query] Tokens: ${data.usage?.total_tokens || 'unknown'}`)
 
   return llmQuery
+}
+
+// ============================================
+// v3.9.5: 커리어 아키타입 쿼리 빌더
+// 흥미+가치 조합에서 주류 직업군 쿼리를 생성하여
+// 벡터 검색에서 누구나 아는 직업이 후보에 포함되도록 보장
+// ============================================
+function buildArchetypeQueries(miniModule: MiniModuleResult): string[] {
+  const interests = miniModule.interest_top || []
+  const values = miniModule.value_top || []
+
+  // 흥미×가치 조합 → 주류 직업 쿼리 맵
+  // 각 조합은 한국 취업시장에서 실제 존재하는 대표 직업 4-6개
+  const ARCHETYPE_MAP: Record<string, Record<string, string>> = {
+    creating: {
+      autonomy: 'UX디자이너 서비스기획자 콘텐츠기획자 브랜드디자이너 영상편집자',
+      growth: 'UX디자이너 프로덕트디자이너 게임기획자 광고기획자 콘텐츠전략가',
+      stability: 'UX디자이너 인테리어디자이너 편집디자이너 공간디자이너 웹디자이너',
+      wlb: 'UX디자이너 웹디자이너 편집디자이너 콘텐츠기획자 그래픽디자이너',
+      income: '광고감독 크리에이티브디렉터 브랜드매니저 UX디렉터 아트디렉터',
+      meaning: '교육콘텐츠기획자 문화기획자 공공디자이너 사회혁신디자이너',
+      recognition: 'UX디렉터 크리에이티브디렉터 아트디렉터 프로덕트디자이너',
+    },
+    problem_solving: {
+      autonomy: '경영컨설턴트 UX리서처 데이터분석가 전략기획자 프리랜서컨설턴트',
+      growth: '경영컨설턴트 전략기획자 데이터사이언티스트 사업개발매니저 투자분석가',
+      stability: '공공정책분석가 연구원 품질관리전문가 시스템분석가 감사관',
+      wlb: '연구원 품질관리전문가 공공정책분석가 데이터분석가 시스템분석가',
+      income: '경영컨설턴트 투자분석가 전략기획임원 데이터사이언티스트 기술컨설턴트',
+      meaning: '정책연구원 사회문제해결전문가 비영리컨설턴트 교육혁신가',
+      recognition: '경영컨설턴트 전략기획자 연구원 기술자문위원',
+    },
+    data_numbers: {
+      autonomy: '데이터분석가 통계컨설턴트 퀀트분석가 BI분석가 리서치애널리스트',
+      growth: '데이터사이언티스트 AI엔지니어 머신러닝엔지니어 데이터엔지니어',
+      stability: '통계분석전문가 보험계리사 재무분석가 공공데이터분석가',
+      wlb: '통계분석전문가 재무분석가 공공데이터분석가 경리사무원 회계사무원',
+      income: '퀀트분석가 데이터사이언티스트 AI엔지니어 금융공학전문가',
+      meaning: '보건통계분석가 사회조사분석사 공공데이터분석가 교육평가연구원',
+      recognition: '데이터사이언티스트 AI연구원 통계학자 데이터아키텍트',
+    },
+    helping_teaching: {
+      autonomy: '상담심리사 코치 교육컨설턴트 사회복지사 진로상담사',
+      growth: '교육기획자 HRD전문가 조직개발컨설턴트 상담심리사',
+      stability: '교사 공무원 사회복지사 간호사 상담교사',
+      wlb: '교사 사회복지사 상담교사 보건교사 사서 학교상담사',
+      income: '임상심리전문가 조직개발컨설턴트 HRD매니저 의사',
+      meaning: '사회복지사 상담심리사 NGO활동가 교육혁신가 청소년지도사',
+      recognition: '임상심리전문가 교수 교육전문가 상담심리사',
+    },
+    organizing: {
+      autonomy: '프로젝트매니저 경영기획자 전략기획자 사업개발매니저',
+      growth: '경영기획자 사업개발매니저 프로덕트매니저 전략기획자',
+      stability: '행정관리자 공무원 총무관리자 인사담당자 경영지원',
+      wlb: '행정사무원 총무관리자 인사담당자 경리사무원 공무원 사무관리자',
+      income: '경영기획임원 사업개발이사 프로그램디렉터 경영관리자',
+      meaning: '비영리경영자 공공기관관리자 사회적기업매니저 협동조합운영자',
+      recognition: '경영기획자 프로젝트디렉터 전략기획임원',
+    },
+    influencing: {
+      autonomy: '마케터 브랜드매니저 홍보전문가 콘텐츠마케터 퍼포먼스마케터',
+      growth: '마케팅전략가 브랜드매니저 디지털마케터 그로스해커',
+      stability: '홍보담당자 마케팅관리자 광고대행사기획자 사내커뮤니케이션',
+      wlb: '홍보담당자 마케팅관리자 사내커뮤니케이션 콘텐츠마케터',
+      income: 'CMO 마케팅이사 브랜드디렉터 세일즈디렉터',
+      meaning: '사회마케팅전문가 공익캠페인기획자 비영리홍보전문가',
+      recognition: '브랜드디렉터 마케팅전략가 PR전문가 광고크리에이터',
+    },
+    tech: {
+      autonomy: '소프트웨어개발자 풀스택개발자 프리랜서개발자 DevOps엔지니어',
+      growth: '소프트웨어엔지니어 백엔드개발자 AI엔지니어 클라우드아키텍트',
+      stability: '시스템엔지니어 IT인프라관리자 정보보안전문가 DBA',
+      wlb: '시스템엔지니어 IT인프라관리자 DBA 정보보안전문가 웹개발자',
+      income: 'CTO 시니어개발자 AI엔지니어 클라우드아키텍트 보안컨설턴트',
+      meaning: '에듀테크개발자 헬스테크개발자 오픈소스개발자 접근성전문가',
+      recognition: 'CTO 테크리드 소프트웨어아키텍트 AI연구원',
+    },
+    routine: {
+      autonomy: '사무관리자 재무회계사 세무사 행정사',
+      growth: '회계사 세무사 법무사 노무사 감정평가사',
+      stability: '공무원 은행원 회계사 행정직 사무관리자',
+      wlb: '공무원 은행원 행정사무원 경리사무원 사무관리자 총무',
+      income: '회계사 세무사 변리사 감정평가사 법무사',
+      meaning: '공공행정가 시민서비스전문가 법률구조사',
+      recognition: '공인회계사 세무사 행정전문가',
+    },
+  }
+
+  const queries: string[] = []
+  const seen = new Set<string>()
+
+  // v3.9.9: 상위 흥미 3개 × 상위 가치 3개 조합 (2×2→3×3 확장)
+  for (const interest of interests.slice(0, 3)) {
+    for (const value of values.slice(0, 3)) {
+      const query = ARCHETYPE_MAP[interest]?.[value]
+      if (query && !seen.has(query)) {
+        seen.add(query)
+        queries.push(query)
+      }
+    }
+  }
+
+  // v3.9.9: 최대 5개로 확장 (3→5, 주류 직업 커버리지 향상)
+  return queries.slice(0, 5)
 }
 
 // ============================================
@@ -1388,26 +1722,50 @@ export async function buildMultiSearchQueries(
     subQueries.push(jobNames.slice(i, i + chunkSize).join(', '))
   }
 
-  // 3. 차원별 키워드 쿼리 추가 (LLM 호출 없이 규칙 기반)
+  // 3. 차원별 키워드 쿼리 추가 (한국어 변환 + 규칙 기반)
+  // v3.9.5: 영어 토큰 → 한국어 라벨 변환 (벡터 매칭 정확도 향상)
+  const INTEREST_KR: Record<string, string> = {
+    creating: '창작 예술 디자인 기획', problem_solving: '문제해결 분석 컨설팅',
+    data_numbers: '데이터분석 통계', helping_teaching: '교육 상담 복지',
+    organizing: '기획 관리 행정', influencing: '마케팅 영업 홍보',
+    tech: '기술 IT 프로그래밍 개발', routine: '사무 행정 정규업무',
+  }
+  const STRENGTH_KR: Record<string, string> = {
+    analytical: '분석력 논리적사고', creative: '창의성 아이디어',
+    communication: '소통 커뮤니케이션', structured_execution: '실행력 체계적',
+    persistence: '끈기 지속력', fast_learning: '학습능력 빠른습득',
+  }
+  const VALUE_KR: Record<string, string> = {
+    growth: '성장 발전 커리어성장', stability: '안정 정규직 정시퇴근',
+    income: '높은연봉 수입', autonomy: '자율 독립 재량',
+    meaning: '보람 사회기여', recognition: '인정 전문성',
+  }
+
   const dimensionQueries: string[] = []
   if (miniModule.interest_top?.length) {
-    dimensionQueries.push(`${miniModule.interest_top.join(' ')} 관련 직업`)
+    const krInterests = miniModule.interest_top.map((t: string) => INTEREST_KR[t] || t).join(' ')
+    dimensionQueries.push(`${krInterests} 관련 직업`)
   }
   if (miniModule.strength_top?.length) {
-    dimensionQueries.push(`${miniModule.strength_top.join(' ')} 역량이 필요한 직업`)
+    const krStrengths = miniModule.strength_top.map((t: string) => STRENGTH_KR[t] || t).join(' ')
+    dimensionQueries.push(`${krStrengths} 역량이 필요한 직업`)
   }
   if (miniModule.value_top?.length) {
-    dimensionQueries.push(`${miniModule.value_top.join(' ')} 가치를 충족하는 직업`)
+    const krValues = miniModule.value_top.map((t: string) => VALUE_KR[t] || t).join(' ')
+    dimensionQueries.push(`${krValues} 환경의 직업`)
   }
 
-  // 4. 모든 쿼리 결합 (종합 + 서브쿼리 + 차원별)
+  // 4. 커리어 아키타입 쿼리 (흥미+가치 조합 → 주류 직업군 보장)
+  const archetypeQueries = buildArchetypeQueries(miniModule)
+
+  // 5. 모든 쿼리 결합 (종합 + 서브쿼리 + 차원별 + 아키타입)
   const allQueries = [
-    llmQuery,          // 종합 (가장 중요)
-    ...subQueries,     // LLM 출력 분할 (5-8개)
-    ...dimensionQueries, // 흥미/강점/가치 차원 (2-3개)
+    llmQuery,            // 종합 (가장 중요)
+    ...subQueries,       // LLM 출력 분할 (5-8개)
+    ...dimensionQueries, // 흥미/강점/가치 한국어 차원 (2-3개)
+    ...archetypeQueries, // 주류 커리어 패스 보장 (1-3개)
   ]
 
-  console.log(`[Multi-Search] Generated ${allQueries.length} queries: 1 main + ${subQueries.length} sub + ${dimensionQueries.length} dimension`)
 
   return allQueries
 }
@@ -1461,7 +1819,6 @@ export async function expandCandidatesV3(
 
   // Vectorize 또는 OpenAI API 키가 없으면 fallback
   if (!vectorize || !openaiApiKey) {
-    console.log('[V3 Vectorize] Vectorize/OpenAI not available, using DB fallback')
     const fallbackResult = await getFallbackCandidatesV3(db, targetSize)
     return {
       candidates: fallbackResult,
@@ -1477,7 +1834,6 @@ export async function expandCandidatesV3(
   }
 
   const queries = await buildMultiSearchQueries(miniModule, openaiApiKey)
-  console.log(`[V3 Vectorize] Multi-query search: ${queries.length} queries`)
 
   // 2. 벡터 검색 (Multi-Query 병렬 검색, OpenAI Embedding)
   // Vectorize 로컬 실행 불가 시 DB fallback (wrangler pages dev 한계)
@@ -1498,8 +1854,6 @@ export async function expandCandidatesV3(
   } catch (vecError: any) {
     // Vectorize 로컬 바인딩 에러 → DB fallback (production에서는 발생하지 않음)
     if (vecError?.message?.includes('remotely') || vecError?.message?.includes('Vectorize')) {
-      console.warn(`[V3 Vectorize] Vectorize 로컬 실행 불가 → DB fallback: ${vecError.message}`)
-      console.log(`[V3 Vectorize] LLM 쿼리는 성공: ${queries[0]?.substring(0, 80)}...`)
       const fallbackResult = await getFallbackCandidatesV3(db, targetSize)
       return {
         candidates: fallbackResult,
@@ -1580,7 +1934,6 @@ export async function getCachedSearchProfile(
       return JSON.parse(cached.profile_json)
     }
   } catch (error) {
-    console.warn('[P1-2] SearchProfile cache read failed:', error)
   }
   
   return null
@@ -1604,10 +1957,8 @@ export async function cacheSearchProfile(
         created_at = datetime('now')
     `).bind(sessionId, answersHash, JSON.stringify(profile)).run()
     
-    console.log('[P1-2] SearchProfile cached:', { sessionId, answersHash: answersHash.substring(0, 8) })
   } catch (error) {
     // 캐시 저장 실패는 치명적이지 않음
-    console.warn('[P1-2] SearchProfile cache write failed:', error)
   }
 }
 
@@ -1633,7 +1984,6 @@ export async function incrementalUpsertToVectorize(
   const { batchSize = 50, maxJobs = 500 } = options
   const CURRENT_VERSION = `JPC_${JOB_PROFILE_COMPACT_VERSION}`
   
-  console.log(`[Vectorize Incremental] Starting upsert, target version: ${CURRENT_VERSION}`)
   
   let upserted = 0
   let errors = 0
@@ -1657,7 +2007,6 @@ export async function incrementalUpsertToVectorize(
     }>()
     
     if (!jobs.results || jobs.results.length === 0) {
-      console.log('[Vectorize Incremental] No more jobs to upsert')
       break
     }
     
@@ -1717,10 +2066,8 @@ export async function incrementalUpsertToVectorize(
       }
       
       upserted += jobs.results.length
-      console.log(`[Vectorize Incremental] Upserted ${upserted} jobs`)
       
     } catch (error) {
-      console.error(`[Vectorize Incremental] Batch failed at offset ${offset}:`, error)
       errors += jobs.results.length
     }
     
@@ -1730,7 +2077,6 @@ export async function incrementalUpsertToVectorize(
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
   
-  console.log(`[Vectorize Incremental] Complete. Upserted: ${upserted}, Errors: ${errors}, Skipped: ${skipped}`)
   
   return { upserted, errors, skipped }
 }
@@ -1801,7 +2147,6 @@ export async function expandCandidatesV3WithCache(
     searchProfile = await getCachedSearchProfile(db, sessionId, answersHash)
     if (searchProfile) {
       cacheHit = true
-      console.log('[P1-2] SearchProfile cache hit:', { sessionId, answersHash: answersHash.substring(0, 8) })
     }
   }
   
@@ -1825,10 +2170,6 @@ export async function expandCandidatesV3WithCache(
     preFilterResult = await preFilterByHardConstraints(db, userConstraints)
     excludedJobIds = preFilterResult.excludedJobIds
     
-    console.log(`[TAG Pre-Filter] Excluded ${preFilterResult.stats.excluded} jobs before RAG`, {
-      totalTagged: preFilterResult.stats.totalTagged,
-      remaining: preFilterResult.stats.remainingTagged,
-    })
   }
   
   // 후보군 확장 (Pre-Filter 결과를 적용, OpenAI Embedding 사용)
@@ -1871,13 +2212,11 @@ async function expandCandidatesV3WithPreFilter(
 
   // Vectorize 또는 OpenAI API 키가 없으면 fallback
   if (!vectorize || !openaiApiKey) {
-    console.log('[V3 Vectorize] Vectorize/OpenAI not available, using DB fallback')
     let fallbackResult = await getFallbackCandidatesV3(db, targetSize)
 
     // Pre-Filter 적용
     if (excludedJobIds && excludedJobIds.size > 0) {
       fallbackResult = fallbackResult.filter(c => !excludedJobIds.has(c.job_id))
-      console.log(`[V3 Fallback] After pre-filter: ${fallbackResult.length} candidates`)
     }
 
     return {
@@ -1894,25 +2233,20 @@ async function expandCandidatesV3WithPreFilter(
 
     if (miniModule) {
       const queries = await buildMultiSearchQueries(miniModule, openaiApiKey!)
-      console.log(`[V3 Vectorize] Multi-query search: ${queries.length} queries`)
 
       // 2. Multi-Query 병렬 벡터 검색 (각 topK=100, 중복 제거)
       vectorResults = await searchCandidatesMultiQuery(vectorize, openaiApiKey!, queries)
-      console.log(`[V3 Vectorize] Multi-query results: ${vectorResults.length} unique jobs`)
     } else {
       const query = searchProfileToQuery(searchProfile)
-      console.log(`[V3 Vectorize] Search query (static - interview mode): ${query.substring(0, 100)}...`)
 
       // 2. 단일 쿼리 벡터 검색 (인터뷰 모드 fallback)
       vectorResults = await searchCandidates(vectorize, openaiApiKey!, query, 100)
-      console.log(`[V3 Vectorize] Single-query results: ${vectorResults.length}`)
     }
 
     // 3. Pre-Filter 적용 (제외 대상 제거)
     if (excludedJobIds && excludedJobIds.size > 0) {
       const beforeCount = vectorResults.length
       vectorResults = vectorResults.filter(r => !excludedJobIds.has(r.job_id))
-      console.log(`[V3 Vectorize] After pre-filter: ${vectorResults.length} (removed ${beforeCount - vectorResults.length})`)
     }
 
     // 4. targetSize로 제한
@@ -1926,7 +2260,6 @@ async function expandCandidatesV3WithPreFilter(
     }
   } catch (vecError: any) {
     if (vecError?.message?.includes('remotely') || vecError?.message?.includes('Vectorize')) {
-      console.warn(`[V3 Vectorize] Vectorize 로컬 실행 불가 → DB fallback: ${vecError.message}`)
       let fallbackResult = await getFallbackCandidatesV3(db, targetSize)
       if (excludedJobIds && excludedJobIds.size > 0) {
         fallbackResult = fallbackResult.filter(c => !excludedJobIds.has(c.job_id))
@@ -1942,3 +2275,622 @@ async function expandCandidatesV3WithPreFilter(
   }
 }
 
+// ============================================
+// 전공 추천 전용 벡터 파이프라인
+// ============================================
+// 기존 직업 추천 함수를 수정하지 않고, 전공 전용 함수만 정의
+// major: prefix 벡터만 필터, major_attributes JOIN, 전공 스코어링
+// ============================================
+
+// 전공 벡터 검색 결과 타입
+export interface MajorVectorSearchResult {
+  major_id: string
+  major_name: string
+  score: number
+  metadata?: Record<string, any>
+}
+
+export interface MajorCandidateExpansionResult {
+  candidates: MajorVectorSearchResult[]
+  total_searched: number
+  search_duration_ms: number
+  fallback_used: boolean
+}
+
+// ============================================
+// 전공 벡터 검색 (Multi-Query) — major: prefix만 포함
+// ============================================
+export async function searchMajorCandidatesMultiQuery(
+  vectorize: VectorizeIndex,
+  openaiApiKey: string,
+  queries: string[],
+  topK: number = 100
+): Promise<MajorVectorSearchResult[]> {
+  // 1. 배치 임베딩
+  const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, queries)
+
+  // 2. 병렬 Vectorize 검색
+  const clampedTopK = Math.min(topK, 100)
+  const searchPromises = embeddings.map(emb =>
+    vectorize.query(emb, { topK: clampedTopK, returnValues: false, returnMetadata: 'none' })
+  )
+  const searchResults = await Promise.all(searchPromises)
+
+  // 3. 중복 제거 — major: prefix만 포함 (직업 검색과 정반대)
+  const bestScoreMap = new Map<string, number>()
+  const hitCountMap = new Map<string, number>()
+  for (const result of searchResults) {
+    for (const match of result.matches) {
+      if (!match.id.startsWith('major:')) continue  // major: prefix만 포함
+      const majorId = match.id.replace('major:', '')  // prefix 제거
+      const existing = bestScoreMap.get(majorId)
+      if (existing === undefined || match.score > existing) {
+        bestScoreMap.set(majorId, match.score)
+      }
+      hitCountMap.set(majorId, (hitCountMap.get(majorId) || 0) + 1)
+    }
+  }
+
+  // 4. 결과 변환 (히트카운트 보너스 포함)
+  return Array.from(bestScoreMap.entries())
+    .map(([id, score]) => {
+      const hits = hitCountMap.get(id) || 1
+      const hitBonus = hits >= 3 ? Math.min(0.05, (hits - 2) * 0.015) : 0
+      return { id, score: Math.min(1.0, score + hitBonus), hits }
+    })
+    .sort((a, b) => b.score - a.score)
+    .map(({ id, score }) => ({
+      major_id: id,
+      major_name: id,  // 실제 이름은 DB 조인에서 채움
+      score,
+      metadata: {} as Record<string, any>,
+    }))
+}
+
+// ============================================
+// 전공 LLM 검색 쿼리 생성
+// ============================================
+const LLM_MAJOR_SEARCH_QUERY_PROMPT = `당신은 한국 대학 전공/학과 전문가입니다. 사용자의 프로파일을 보고, 이 사람에게 적합할 수 있는 한국 대학 전공(학과)을 나열해주세요.
+
+규칙:
+1. 전공 카테고리 5~8개, 구체적 전공/학과명 25~30개를 나열
+2. 한국어로 작성 (예: 컴퓨터공학과, 경영학과, 심리학과)
+3. 사용자의 흥미, 가치관, 강점, 제약조건을 모두 고려
+4. ★★★ 반드시 실제 한국 대학에 개설된 주류 전공 위주로 출력하세요!
+   - 주류 전공 = 대부분 대학에 개설된 일반적 학과 (예: 컴퓨터공학, 경영학, 심리학, 간호학, 디자인학, 영문학, 화학공학 등)
+   - 최소 20개는 주류 전공이어야 합니다
+   - 특수/희소 전공은 5개 이하로 제한
+5. ❌ 금지: 대학원 전용 세부 전공이나 존재하지 않는 학과명
+6. 제약조건이 있으면 그에 맞는 현실적인 전공 위주로
+7. 쉼표로 구분하여 한 줄로 출력
+8. 설명이나 번호 없이 전공명만 나열`
+
+export async function buildLLMMajorSearchQuery(
+  miniModule: MiniModuleResult,
+  openaiApiKey: string
+): Promise<string> {
+  const profileParts: string[] = []
+
+  if (miniModule.interest_top?.length) {
+    profileParts.push(`흥미: ${miniModule.interest_top.join(', ')}`)
+  }
+  if (miniModule.value_top?.length) {
+    profileParts.push(`가치관: ${miniModule.value_top.join(', ')}`)
+  }
+  if (miniModule.strength_top?.length) {
+    profileParts.push(`강점: ${miniModule.strength_top.join(', ')}`)
+  }
+  if (miniModule.workstyle_top?.length) {
+    profileParts.push(`학습스타일: ${miniModule.workstyle_top.join(', ')}`)
+  }
+  if (miniModule.constraint_flags?.length) {
+    profileParts.push(`제약조건: ${miniModule.constraint_flags.join(', ')}`)
+  }
+  if (miniModule.energy_drain_flags?.length) {
+    profileParts.push(`에너지소모: ${miniModule.energy_drain_flags.join(', ')}`)
+  }
+  if (miniModule.sacrifice_flags?.length) {
+    profileParts.push(`감수가능: ${miniModule.sacrifice_flags.join(', ')}`)
+  }
+  if (miniModule.persistence_anchor) {
+    profileParts.push(`지속동기: ${miniModule.persistence_anchor}`)
+  }
+
+  if (profileParts.length === 0) {
+    throw new Error('[LLM Major Search Query] miniModule에 프로파일 데이터가 없습니다')
+  }
+
+  const userMessage = `사용자 프로파일:\n${profileParts.join('\n')}`
+
+  const response = await fetch('https://gateway.ai.cloudflare.com/v1/3587865378649966bfb0a814fce73c77/careerwiki/openai/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${openaiApiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: LLM_MAJOR_SEARCH_QUERY_PROMPT },
+        { role: 'user', content: userMessage },
+      ],
+      temperature: 0.3,
+      max_tokens: 300,
+    }),
+  })
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '')
+    throw new Error(`[LLM Major Search Query] API error ${response.status}: ${body.substring(0, 200)}`)
+  }
+
+  const data = await response.json() as any
+  const content = data.choices?.[0]?.message?.content?.trim()
+
+  if (!content) {
+    throw new Error('[LLM Major Search Query] LLM 응답이 비어있습니다')
+  }
+
+  return `적합 전공: ${content}`.substring(0, 500)
+}
+
+// ============================================
+// 전공 아키타입 쿼리 빌더
+// 흥미+가치 조합에서 주류 전공 쿼리를 생성
+// ============================================
+function buildMajorArchetypeQueries(miniModule: MiniModuleResult): string[] {
+  const interests = miniModule.interest_top || []
+  const values = miniModule.value_top || []
+
+  const MAJOR_ARCHETYPE_MAP: Record<string, Record<string, string>> = {
+    creating: {
+      autonomy: '시각디자인학과 산업디자인학과 건축학과 미디어학과 영상학과',
+      growth: '산업디자인학과 디지털미디어학과 게임학과 콘텐츠학과',
+      stability: '건축학과 실내디자인학과 패션디자인학과 시각디자인학과',
+      income: '건축학과 산업디자인학과 영상학과',
+      meaning: '문화콘텐츠학과 교육공학과 미디어커뮤니케이션학과',
+    },
+    problem_solving: {
+      autonomy: '철학과 경영학과 컴퓨터공학과 수학과 물리학과',
+      growth: '컴퓨터공학과 산업공학과 경영학과 데이터사이언스학과',
+      stability: '법학과 행정학과 회계학과 통계학과',
+      income: '의학과 법학과 경영학과 컴퓨터공학과 금융학과',
+      meaning: '사회학과 정치학과 국제학과 환경공학과 교육학과',
+    },
+    data_numbers: {
+      autonomy: '수학과 통계학과 물리학과 경제학과 컴퓨터공학과',
+      growth: '데이터사이언스학과 컴퓨터공학과 산업공학과 통계학과',
+      stability: '회계학과 통계학과 컴퓨터공학과 경제학과',
+      income: '컴퓨터공학과 금융공학과 경제학과 통계학과 의학과',
+      meaning: '환경공학과 수학교육과 통계학과 보건학과',
+    },
+    helping_teaching: {
+      autonomy: '심리학과 상담학과 교육학과 사회복지학과',
+      growth: '교육학과 심리학과 간호학과 언어치료학과',
+      stability: '간호학과 사회복지학과 유아교육과 초등교육과 특수교육과',
+      income: '의학과 치의학과 약학과 간호학과 물리치료학과',
+      meaning: '사회복지학과 교육학과 상담학과 신학과 간호학과',
+    },
+    tech: {
+      autonomy: '컴퓨터공학과 소프트웨어학과 전자공학과 정보보안학과',
+      growth: '컴퓨터공학과 소프트웨어학과 데이터사이언스학과 로봇공학과',
+      stability: '전기공학과 전자공학과 컴퓨터공학과 기계공학과 토목공학과',
+      income: '컴퓨터공학과 전자공학과 화학공학과 의공학과',
+      meaning: '환경공학과 바이오공학과 의공학과 에너지공학과',
+    },
+    research: {
+      autonomy: '물리학과 화학과 생명과학과 수학과 천문학과',
+      growth: '생명공학과 신소재공학과 뇌과학과',
+      stability: '약학과 화학과 생명과학과 수학과',
+      income: '의학과 약학과 치의학과 한의학과',
+      meaning: '생명과학과 환경과학과 해양학과 천문학과',
+    },
+    organizing: {
+      autonomy: '경영학과 행정학과 국제학과 정치외교학과',
+      growth: '경영학과 국제통상학과 미디어학과 산업공학과',
+      stability: '행정학과 경영학과 회계학과 법학과 세무학과',
+      income: '경영학과 금융학과 법학과 회계학과',
+      meaning: '행정학과 사회학과 국제학과 도시계획학과',
+    },
+    influencing: {
+      autonomy: '광고홍보학과 미디어학과 경영학과 커뮤니케이션학과',
+      growth: '경영학과 미디어학과 광고홍보학과',
+      stability: '경영학과 행정학과 법학과 무역학과',
+      income: '경영학과 법학과 금융학과 의학과',
+      meaning: '사회학과 국제학과 정치외교학과 신문방송학과',
+    },
+  }
+
+  const queries: string[] = []
+  for (const interest of interests) {
+    const valueMap = MAJOR_ARCHETYPE_MAP[interest]
+    if (!valueMap) continue
+    for (const value of values) {
+      const query = valueMap[value]
+      if (query && !queries.includes(query)) {
+        queries.push(query)
+      }
+    }
+  }
+
+  return queries.slice(0, 3)
+}
+
+// ============================================
+// Multi-Search 쿼리 생성 (전공용)
+// ============================================
+export async function buildMultiSearchQueriesForMajor(
+  miniModule: MiniModuleResult,
+  openaiApiKey: string
+): Promise<string[]> {
+  // 1. LLM 쿼리 (종합 전공명 리스트)
+  const llmQuery = await buildLLMMajorSearchQuery(miniModule, openaiApiKey)
+
+  // 2. LLM 출력을 3-5개씩 분할
+  const rawContent = llmQuery.replace(/^적합 전공:\s*/, '')
+  const majorNames = rawContent.split(/[,，、]/).map(s => s.trim()).filter(Boolean)
+  const chunkSize = Math.max(3, Math.ceil(majorNames.length / 5))
+  const subQueries: string[] = []
+  for (let i = 0; i < majorNames.length; i += chunkSize) {
+    subQueries.push(majorNames.slice(i, i + chunkSize).join(', '))
+  }
+
+  // 3. 차원별 키워드 쿼리 (전공 도메인)
+  const INTEREST_MAJOR_KR: Record<string, string> = {
+    creating: '디자인 미술 건축 영상 창작',
+    problem_solving: '공학 과학 분석 연구 컨설팅',
+    data_numbers: '수학 통계 데이터 경제 회계',
+    helping_teaching: '교육 심리 복지 상담 간호',
+    organizing: '경영 행정 기획 관리',
+    influencing: '광고 홍보 마케팅 미디어 커뮤니케이션',
+    tech: 'IT 컴퓨터 전자 기계 소프트웨어',
+    routine: '행정 사무 회계 세무',
+    research: '연구 과학 물리 화학 생명',
+    design: '디자인 시각 산업 건축 패션',
+    art: '미술 음악 영화 연극 무용',
+  }
+  const STRENGTH_MAJOR_KR: Record<string, string> = {
+    analytical: '분석 논리 수학 과학 연구',
+    creative: '창의 디자인 예술 기획',
+    communication: '소통 발표 토론 언어',
+    structured_execution: '실험 실습 제작 구현',
+    persistence: '연구 심화 전문',
+    fast_learning: '다학제 융합 복수전공',
+  }
+  const VALUE_MAJOR_KR: Record<string, string> = {
+    growth: '성장산업 신기술 미래유망',
+    stability: '안정 취업률 공무원 전문직',
+    income: '고소득 전문직 금융 의학',
+    autonomy: '자유 연구 자기주도',
+    meaning: '사회공헌 교육 복지 환경',
+    recognition: '전문성 명성 학술',
+  }
+
+  const dimensionQueries: string[] = []
+  if (miniModule.interest_top?.length) {
+    const kr = miniModule.interest_top.map((t: string) => INTEREST_MAJOR_KR[t] || t).join(' ')
+    dimensionQueries.push(`${kr} 관련 전공 학과`)
+  }
+  if (miniModule.strength_top?.length) {
+    const kr = miniModule.strength_top.map((t: string) => STRENGTH_MAJOR_KR[t] || t).join(' ')
+    dimensionQueries.push(`${kr} 역량이 필요한 전공 학과`)
+  }
+  if (miniModule.value_top?.length) {
+    const kr = miniModule.value_top.map((t: string) => VALUE_MAJOR_KR[t] || t).join(' ')
+    dimensionQueries.push(`${kr} 전공 학과`)
+  }
+
+  // 4. 아키타입 쿼리 (흥미+가치 조합 → 주류 전공)
+  const archetypeQueries = buildMajorArchetypeQueries(miniModule)
+
+  // 5. 결합
+  return [
+    llmQuery,
+    ...subQueries,
+    ...dimensionQueries,
+    ...archetypeQueries,
+  ]
+}
+
+// ============================================
+// 전공 벡터 결과 → ScoredMajor 변환
+// major_attributes + majors 테이블 JOIN
+// ============================================
+export async function vectorResultsToScoredMajors(
+  db: D1Database,
+  vectorResults: MajorVectorSearchResult[],
+  miniModule?: any
+): Promise<ScoredMajor[]> {
+  if (vectorResults.length === 0) return []
+
+  const BATCH_SIZE = 100
+  const majorIds = vectorResults.map(v => v.major_id)
+
+  // 1. major_attributes + majors 조인 조회 (배치 병렬)
+  const batches: string[][] = []
+  for (let i = 0; i < majorIds.length; i += BATCH_SIZE) {
+    batches.push(majorIds.slice(i, i + BATCH_SIZE))
+  }
+
+  const batchPromises = batches.map(batchIds => {
+    const placeholders = batchIds.map(() => '?').join(',')
+    return db.prepare(`
+      SELECT
+        ma.major_id, ma.major_name,
+        m.slug, m.image_url, m.merged_profile_json,
+        ma.academic_rigor, ma.math_intensity, ma.creativity, ma.social_interaction,
+        ma.lab_practical, ma.reading_writing,
+        ma.career_breadth, ma.career_income_potential, ma.employment_rate,
+        ma.competition_level, ma.growth_outlook, ma.stability, ma.autonomy, ma.teamwork,
+        ma.field_category, ma.degree_level,
+        ma.prerequisite_subjects, ma.related_careers, ma.key_skills, ma.description
+      FROM major_attributes ma
+      LEFT JOIN majors m ON ma.major_id = m.id
+      WHERE ma.major_id IN (${placeholders})
+    `).bind(...batchIds).all<{
+      major_id: number
+      major_name: string
+      slug: string | null
+      image_url: string | null
+      merged_profile_json: string | null
+      academic_rigor: number
+      math_intensity: number
+      creativity: number
+      social_interaction: number
+      lab_practical: number
+      reading_writing: number
+      career_breadth: number
+      career_income_potential: number
+      employment_rate: number
+      competition_level: number
+      growth_outlook: number
+      stability: number
+      autonomy: number
+      teamwork: number
+      field_category: string
+      degree_level: string
+      prerequisite_subjects: string
+      related_careers: string
+      key_skills: string
+      description: string | null
+    }>()
+  })
+
+  const batchResults = await Promise.all(batchPromises)
+  const allAttributeResults: any[] = []
+  for (const batchResult of batchResults) {
+    if (batchResult.results) {
+      allAttributeResults.push(...batchResult.results)
+    }
+  }
+
+  const attributesMap = new Map(
+    allAttributeResults.map(row => [String(row.major_id), row])
+  )
+
+  // 2. major_attributes에 없는 전공 → majors 테이블에서 직접 조회 (fallback)
+  const missingMajorIds = majorIds.filter(id => !attributesMap.has(id))
+  if (missingMajorIds.length > 0) {
+    const missingBatches: string[][] = []
+    for (let i = 0; i < missingMajorIds.length; i += BATCH_SIZE) {
+      missingBatches.push(missingMajorIds.slice(i, i + BATCH_SIZE))
+    }
+
+    const fallbackPromises = missingBatches.map(batchIds => {
+      const placeholders = batchIds.map(() => '?').join(',')
+      return db.prepare(`
+        SELECT id as major_id, name as major_name, slug, image_url, merged_profile_json
+        FROM majors
+        WHERE id IN (${placeholders})
+      `).bind(...batchIds).all<{
+        major_id: number
+        major_name: string
+        slug: string | null
+        image_url: string | null
+        merged_profile_json: string | null
+      }>()
+    })
+
+    const fallbackResults = await Promise.all(fallbackPromises)
+    for (const fallbackResult of fallbackResults) {
+      if (fallbackResult.results) {
+        for (const row of fallbackResult.results) {
+          attributesMap.set(String(row.major_id), {
+            ...row,
+            academic_rigor: 50, math_intensity: 50, creativity: 50, social_interaction: 50,
+            lab_practical: 50, reading_writing: 50,
+            career_breadth: 50, career_income_potential: 50, employment_rate: 50,
+            competition_level: 50, growth_outlook: 50, stability: 50, autonomy: 50, teamwork: 50,
+            field_category: 'general', degree_level: 'bachelor',
+            prerequisite_subjects: '[]', related_careers: '[]', key_skills: '[]',
+            description: null,
+            _from_majors_fallback: true,
+          })
+        }
+      }
+    }
+  }
+
+  // 3. ScoredMajor 생성
+  const vectorScoreMap = new Map(
+    vectorResults.map(vr => [vr.major_id, vr.score])
+  )
+
+  return vectorResults.map(vr => {
+    const attrs = attributesMap.get(vr.major_id) as any
+    const vectorScore = vectorScoreMap.get(vr.major_id) || 0
+
+    if (attrs) {
+      const personalized = calculateMajorPersonalizedBaseScores(attrs, miniModule)
+      const vectorBonus = Math.round(vectorScore * 10)
+      const baseLike = Math.min(100, personalized.like + vectorBonus)
+      const baseCan = Math.min(100, personalized.can + Math.round(vectorBonus * 0.5))
+      const baseRisk = 10
+
+      // 미태깅 전공 페널티
+      const isUntagged = !!(attrs as any)?._from_majors_fallback
+      const untaggedPenalty = isUntagged ? -25 : 0
+
+      // 전공 설명 추출
+      let majorDescription: string | undefined
+      if (attrs.description) {
+        majorDescription = attrs.description
+      } else if (attrs.merged_profile_json) {
+        try {
+          const profile = JSON.parse(attrs.merged_profile_json)
+          majorDescription = (
+            profile.summary || profile.요약 || profile.description || ''
+          ).substring(0, 200) || undefined
+        } catch {}
+      }
+
+      return {
+        entity_type: 'major' as const,
+        major_id: String(attrs.major_id),
+        major_name: attrs.major_name,
+        slug: attrs.slug || undefined,
+        image_url: attrs.image_url || undefined,
+        major_description: majorDescription,
+        base_like: baseLike,
+        base_can: baseCan,
+        base_risk: baseRisk,
+        like_score: baseLike,
+        can_score: baseCan,
+        risk_penalty: baseRisk,
+        final_score: Math.round(0.55 * baseLike + 0.45 * baseCan - baseRisk) + untaggedPenalty,
+        field_category: attrs.field_category || 'general',
+        tag_source: (isUntagged ? 'untagged' : 'tagged') as 'tagged' | 'untagged',
+        attributes: {
+          academic_rigor: attrs.academic_rigor,
+          math_intensity: attrs.math_intensity,
+          creativity: attrs.creativity,
+          social_interaction: attrs.social_interaction,
+          lab_practical: attrs.lab_practical,
+          reading_writing: attrs.reading_writing,
+          career_breadth: attrs.career_breadth,
+          career_income_potential: attrs.career_income_potential,
+          employment_rate: attrs.employment_rate,
+          competition_level: attrs.competition_level,
+          growth_outlook: attrs.growth_outlook,
+          stability: attrs.stability,
+          autonomy: attrs.autonomy,
+          teamwork: attrs.teamwork,
+          field_category: attrs.field_category,
+          degree_level: attrs.degree_level,
+        } as MajorAttributes,
+      } satisfies ScoredMajor
+    }
+
+    // 속성 정보가 없는 경우 기본값
+    const baseLike = Math.round(50 + vr.score * 20)
+    return {
+      entity_type: 'major' as const,
+      major_id: vr.major_id,
+      major_name: vr.major_name,
+      slug: undefined,
+      image_url: undefined,
+      major_description: undefined,
+      base_like: baseLike,
+      base_can: 50,
+      base_risk: 15,
+      like_score: baseLike,
+      can_score: 50,
+      risk_penalty: 15,
+      final_score: Math.round(baseLike + 50 - 15),
+      field_category: 'general',
+      tag_source: 'untagged' as const,
+      attributes: {
+        academic_rigor: 50, math_intensity: 50, creativity: 50, social_interaction: 50,
+        lab_practical: 50, reading_writing: 50,
+        career_breadth: 50, career_income_potential: 50, employment_rate: 50,
+        competition_level: 50, growth_outlook: 50, stability: 50, autonomy: 50, teamwork: 50,
+        field_category: 'general', degree_level: 'bachelor',
+      } as MajorAttributes,
+    } satisfies ScoredMajor
+  })
+}
+
+// ============================================
+// V3: Fallback — majors 테이블에서 직접 조회 (태깅 무관)
+// ============================================
+async function getFallbackMajorCandidatesV3(
+  db: D1Database,
+  limit: number
+): Promise<MajorVectorSearchResult[]> {
+  const result = await db.prepare(`
+    SELECT id, name
+    FROM majors
+    WHERE name IS NOT NULL AND merged_profile_json IS NOT NULL
+    ORDER BY RANDOM()
+    LIMIT ?
+  `).bind(limit).all<{ id: string; name: string }>()
+
+  return (result.results || []).map((row, idx) => ({
+    major_id: String(row.id),
+    major_name: row.name,
+    score: 0.5 - (idx * 0.0001),
+    metadata: { source: 'fallback_v3' },
+  }))
+}
+
+// ============================================
+// V3: SearchProfile 기반 전공 후보군 확장
+// ============================================
+export async function expandCandidatesV3ForMajors(
+  db: D1Database,
+  vectorize: VectorizeIndex | undefined,
+  openaiApiKey: string | undefined,
+  searchProfile: SearchProfile,
+  options: {
+    targetSize?: number
+    miniModule?: MiniModuleResult
+  } = {}
+): Promise<MajorCandidateExpansionResult> {
+  const { targetSize = 500, miniModule } = options
+  const startTime = Date.now()
+
+  // Vectorize 또는 OpenAI API 키가 없으면 fallback
+  if (!vectorize || !openaiApiKey) {
+    const fallbackResult = await getFallbackMajorCandidatesV3(db, targetSize)
+    return {
+      candidates: fallbackResult,
+      total_searched: fallbackResult.length,
+      search_duration_ms: Date.now() - startTime,
+      fallback_used: true,
+    }
+  }
+
+  // miniModule 필수
+  if (!miniModule) {
+    throw new Error('[V3 Major Vectorize] miniModule이 필수입니다 - LLM 검색 쿼리 생성에 필요')
+  }
+
+  const queries = await buildMultiSearchQueriesForMajor(miniModule, openaiApiKey)
+
+  try {
+    const vectorResults = await searchMajorCandidatesMultiQuery(vectorize, openaiApiKey, queries)
+
+    const candidates = vectorResults.map(vr => ({
+      ...vr,
+      metadata: { ...vr.metadata, source: 'vector_search', query_source: 'llm' },
+    }))
+
+    return {
+      candidates,
+      total_searched: vectorResults.length,
+      search_duration_ms: Date.now() - startTime,
+      fallback_used: false,
+    }
+  } catch (vecError: any) {
+    if (vecError?.message?.includes('remotely') || vecError?.message?.includes('Vectorize')) {
+      const fallbackResult = await getFallbackMajorCandidatesV3(db, targetSize)
+      return {
+        candidates: fallbackResult,
+        total_searched: fallbackResult.length,
+        search_duration_ms: Date.now() - startTime,
+        fallback_used: true,
+      }
+    }
+    throw vecError
+  }
+}

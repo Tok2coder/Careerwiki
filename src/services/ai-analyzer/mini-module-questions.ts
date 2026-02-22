@@ -862,6 +862,9 @@ export function calculateMiniModuleResult(rawSelections: {
   achievement_feedback?: string[]
   execution_style?: string[]
   impact_scope?: string[]
+  failure_response?: string[]
+  persistence_anchor?: string[]
+  external_expectation?: string[]
 }): MiniModuleResult {
   // Top 2 추출
   const interest_top = getTopN(rawSelections.interest, 2)
@@ -956,6 +959,13 @@ export const TOKEN_TO_ENGLISH: Record<string, string> = {
   qualification_constraint: 'no degree no certification entry-level',
   uncertainty_constraint: 'stable environment predictable secure',
   
+  // Major Constraint tokens (전공 추천용)
+  math_impossible: 'no math avoid mathematics statistics quantitative',
+  lab_impossible: 'no lab no experiment no practical no hands-on',
+  high_competition_avoid: 'low competition easy admission accessible',
+  low_employment_avoid: 'high employment rate career prospects job security',
+  reading_heavy_avoid: 'minimal reading writing avoid essay thesis papers',
+
   // Sacrifice tokens (Q8)
   low_initial_income: 'low starting salary growth potential long-term',
   willing_to_study: 'retraining education new skills certification',
@@ -1143,6 +1153,22 @@ export const TOKEN_TO_KOREAN: Record<string, string> = {
   
   // Health Constraint token
   health_constraint: '건강 제약',
+
+  // Major Constraint tokens (전공 추천용)
+  math_impossible: '수학 불가',
+  lab_impossible: '실험/실습 불가',
+  high_competition_avoid: '높은 경쟁률 기피',
+  low_employment_avoid: '낮은 취업률 기피',
+  reading_heavy_avoid: '독해/작문 기피',
+
+  // Academic State tokens (전공 추천 학업상태)
+  high_school_early: '수시 준비',
+  high_school_regular: '정시 준비',
+  high_school_undecided: '진로 미정',
+  university_freshman: '전과/복수전공',
+  transfer: '편입 준비',
+  retake: '재수/반수',
+  adult_learner: '성인학습자',
 
   // Extended Constraint tokens (HardCut/Job attributes)
   // 피하고 싶은 것 문맥에서 사용되므로 "~불가"가 아닌 피하고 싶은 대상으로 표기
@@ -1462,4 +1488,132 @@ export function calculateTotalLikeBoost(
 ): number {
   const totalBoost = results.reduce((sum, r) => sum + r.like_adjustment, 0)
   return Math.min(totalBoost, maxCap)
+}
+
+// ============================================
+// 전공 추천 전용 질문 모듈
+// ============================================
+
+// ---- 전공용 제약 조건 (Q4 대체) ----
+// analysis_type === 'major'일 때 CONSTRAINT_QUESTIONS 대신 사용
+export const MAJOR_CONSTRAINT_QUESTIONS: MiniModuleQuestion[] = [
+  {
+    id: 'mm_mcon_1',
+    text: '수학이 많은 전공은 피하고 싶다',
+    token: 'math_impossible',
+    emoji: '🔢'
+  },
+  {
+    id: 'mm_mcon_2',
+    text: '실험/실습 위주 전공은 어렵다',
+    token: 'lab_impossible',
+    emoji: '🔬'
+  },
+  {
+    id: 'mm_mcon_3',
+    text: '경쟁률이 높은 학과는 피하고 싶다',
+    token: 'high_competition_avoid',
+    emoji: '📈'
+  },
+  {
+    id: 'mm_mcon_4',
+    text: '취업률이 낮은 전공은 걱정된다',
+    token: 'low_employment_avoid',
+    emoji: '💼'
+  },
+  {
+    id: 'mm_mcon_5',
+    text: '글 읽기/쓰기가 많은 전공은 피하고 싶다',
+    token: 'reading_heavy_avoid',
+    emoji: '📝'
+  },
+]
+
+// ---- 학업 상태 질문 (전공 전용, 프로필 빌딩 첫 단계) ----
+// analysis_type === 'major'일 때 흥미/가치/강점 질문 전에 학업 상태를 먼저 물어봄
+// 이 정보는 LLM Judge의 feasibilityScore 평가에 활용
+export interface AcademicStateOption {
+  id: string
+  label: string
+  token: string
+  emoji: string
+  description: string  // 부가 설명 (UI 툴팁용)
+}
+
+export const ACADEMIC_STATE_QUESTION_OPTIONS: AcademicStateOption[] = [
+  {
+    id: 'mm_acad_1',
+    label: '고등학생 - 수시 준비',
+    token: 'high_school_early',
+    emoji: '📋',
+    description: '학생부 종합/교과 전형으로 대학 진학을 준비하고 있어요',
+  },
+  {
+    id: 'mm_acad_2',
+    label: '고등학생 - 정시 준비',
+    token: 'high_school_regular',
+    emoji: '📝',
+    description: '수능 성적으로 대학 진학을 준비하고 있어요',
+  },
+  {
+    id: 'mm_acad_3',
+    label: '고등학생 - 아직 미정',
+    token: 'high_school_undecided',
+    emoji: '🤔',
+    description: '입시 방향이 아직 정해지지 않았어요',
+  },
+  {
+    id: 'mm_acad_4',
+    label: '대학 재학 - 전과/복수전공 고민',
+    token: 'university_freshman',
+    emoji: '🎓',
+    description: '현재 재학 중이며 전과 또는 복수전공을 고민하고 있어요',
+  },
+  {
+    id: 'mm_acad_5',
+    label: '편입 준비',
+    token: 'transfer',
+    emoji: '🔄',
+    description: '다른 대학/학과로 편입을 준비하고 있어요',
+  },
+  {
+    id: 'mm_acad_6',
+    label: '재수/반수',
+    token: 'retake',
+    emoji: '🔁',
+    description: '재수 또는 반수를 통해 다시 대학을 준비하고 있어요',
+  },
+  {
+    id: 'mm_acad_7',
+    label: '성인학습자/직장인',
+    token: 'adult_learner',
+    emoji: '💼',
+    description: '직장 생활 중이거나 성인이 된 후 대학 진학을 고민하고 있어요',
+  },
+]
+
+export const ACADEMIC_STATE_QUESTION_TEXT = '현재 학업 상황은 어떤가요?'
+
+// ---- 전공용 미니모듈 통합 (Q0~Q15) ----
+// Q0: 학업 상태 (전공 전용)
+// Q1~Q3: 흥미/가치/강점 (직업과 동일)
+// Q4: 전공 제약 (직업 제약 대신)
+// Q5~Q15: 나머지 공통 질문 (직업과 동일)
+export const MAJOR_MINI_MODULE_QUESTIONS = {
+  academic_state: ACADEMIC_STATE_QUESTION_OPTIONS,   // Q0 (전공 전용)
+  interest: INTEREST_QUESTIONS,                      // Q1
+  value: VALUE_QUESTIONS,                            // Q2
+  strength: STRENGTH_QUESTIONS,                      // Q3
+  constraint: MAJOR_CONSTRAINT_QUESTIONS,             // Q4 (전공용 교체)
+  workstyle: WORKSTYLE_QUESTIONS,                    // Q5
+  background: BACKGROUND_QUESTIONS,                  // Q6
+  language: LANGUAGE_QUESTIONS,                      // Q7
+  sacrifice: SACRIFICE_QUESTIONS,                    // Q8
+  energy_drain: ENERGY_DRAIN_QUESTIONS,              // Q9
+  achievement_feedback: ACHIEVEMENT_FEEDBACK_QUESTIONS, // Q10
+  execution_style: EXECUTION_STYLE_QUESTIONS,        // Q11
+  impact_scope: IMPACT_SCOPE_QUESTIONS,              // Q12
+  failure_response: FAILURE_RESPONSE_QUESTIONS,      // Q13
+  persistence_anchor: PERSISTENCE_ANCHOR_QUESTIONS,  // Q14
+  external_expectation: EXTERNAL_EXPECTATION_QUESTIONS, // Q15
 }

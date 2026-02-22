@@ -27,6 +27,7 @@ import type {
 import type { MiniModuleResult } from './mini-module-questions'
 import { TOKEN_TO_KOREAN } from './mini-module-questions'
 import { callOpenAI, OPENAI_MODEL, type OpenAIMessage } from './openai-client'
+import type { MajorJudgeResult } from './llm-judge'
 
 // ============================================
 // Constants
@@ -46,6 +47,8 @@ export interface ReporterInput {
   hardCutList: HardCutItem[]
   // 미니모듈 결과 (리포트 구조화용)
   miniModuleResult?: MiniModuleResult
+  // 추가 컨텍스트 (버전 관리: "내용 추가" 기능)
+  additionalContext?: string
 }
 
 // ============================================
@@ -109,12 +112,23 @@ JSON: {"executiveSummary": "요약 텍스트"}`
 
 const WORKSTYLE_PROMPT = `사용자의 작업 스타일을 심층 분석하세요.
 
-## 분석 축 (-100 ~ +100)
+## 분석 축 (⚠️ 범위: -100 ~ +100, 반드시 음수도 사용!)
+각 축은 중앙(0)이 균형 상태이며, 음수와 양수 방향으로 성향이 나뉩니다.
+**반드시 음수 값도 사용하세요!** 예: 분석적 성향이 강하면 -60~-80, 창의적이면 +60~+80
+
 1. **analytical_vs_creative**: 분석적(-100) ↔ 창의적(+100)
+   - 예: 데이터 분석 좋아하는 사람 → -70, 예술/디자인 좋아하는 사람 → +80
 2. **solo_vs_team**: 혼자 작업(-100) ↔ 팀 협업(+100)
+   - 예: 혼자 몰입 선호 → -60, 팀워크 선호 → +70
 3. **structured_vs_flexible**: 구조화(-100) ↔ 유연함(+100)
-4. **fast_vs_steady**: 빠른 스프린트(-100) ↔ 장기 몰입(+100)
+   - 예: 체계적 계획 선호 → -70, 유연한 대응 선호 → +60
+4. **depth_vs_breadth**: 전문가형(-100) ↔ 제너럴리스트(+100)
+   - 예: 한 분야 깊이 파는 스타일 → -80, 다양한 분야 넓게 → +60
 5. **guided_vs_autonomous**: 가이드 선호(-100) ↔ 자율 선호(+100)
+   - 예: 멘토/매뉴얼 선호 → -50, 자율적 판단 선호 → +90
+
+⚠️ 절대 모든 축을 양수(0~100)로만 채우지 마세요! 사용자 성향에 따라 음수 방향도 있습니다.
+⚠️ 0점은 "판단 불가"가 아니라 "양쪽 균형"을 의미합니다.
 
 ## 추가 분석 요소 (workStyleNarrative에 포함)
 - **에너지 방향**: 사람 ↔ 문제 ↔ 창작 ↔ 시스템 중 어디에서 에너지를 얻나?
@@ -132,7 +146,7 @@ JSON: {
     "analytical_vs_creative": number,
     "solo_vs_team": number,
     "structured_vs_flexible": number,
-    "fast_vs_steady": number,
+    "depth_vs_breadth": number,
     "guided_vs_autonomous": number
   },
   "workStyleNarrative": "당신은 '[유형명]' 작업자입니다. [특성 설명]. [권장 환경]. [피해야 할 환경]."
@@ -280,10 +294,14 @@ const PROFILE_INTERPRETATION_PROMPT = `사용자의 프로필 항목들을 심�
 - "안정성" → "예측 가능한 환경에서 안정감을 느끼는 타입입니다. 불확실성보다는 체계적인 계획을 선호합니다."
 - "자율성" → "스스로 판단하고 결정하는 것을 중요하게 여깁니다. 세세한 지시나 감시를 받으면 답답함을 느낄 수 있습니다."
 
-### 제약/회피 (constraints)
-- "야근 기피" → "업무와 개인 시간의 경계가 무너지는 것을 꺼리는 타입입니다. 효율적으로 일하고, 정해진 시간 안에 마무리하는 것을 중요하게 생각합니다."
-- "반복업무 기피" → "같은 일을 반복하면 빠르게 지루함을 느끼는 타입입니다. 새로운 자극과 변화가 있어야 동기부여가 됩니다."
-- "대인관계 스트레스" → "사람들과의 갈등이나 불필요한 사회적 에너지 소비를 꺼리는 타입입니다. 깊은 관계는 좋지만 피상적인 네트워킹은 부담스럽습니다."
+### 제약/회피 (constraints) — ⚠️ flag 기반으로만 도출!
+- constraint_flags / energy_drain_flags에 있는 것만 도출하세요
+- 사용자가 명시하지 않은 제약을 추측으로 추가 금지!
+- 예시:
+  - "work_hours_strict" → "야근/시간 침범 기피" + 해석
+  - "repetitive_averse" 또는 "routine_drain" → "반복업무 기피" + 해석
+  - "social_interaction_drain" → "대인관계 에너지 소모" + 해석
+  - 해당 flag 없으면 해당 제약 추가 금지!
 
 ## 출력 형식 (반드시 준수)
 주어진 프로필 토큰들을 모두 해석하고, 카테고리별로 요약 문장도 작성하세요.
@@ -374,10 +392,15 @@ const METACOGNITION_PROMPT = `당신은 따뜻하고 통찰력 있는 커리어 
         { "factor": "스트레스 요인", "why": "왜 스트레스인지 해석" }
       ],
       "recoveryMethods": [
-        { "factor": "회복 방법", "why": "왜 효과적인지 해석" }
+        { "factor": "회복 방법", "why": "왜 효과적인지 해석 — 디테일 필수! 아래 기준 참고" }
       ],
       "counselorNote": "스트레스 관리에 대한 상담사 스타일 조언 1-2문장"
     },
+    // ⚠️ recoveryMethods.why 작성 기준:
+    // ❌ "혼자만의 시간을 가짐으로써 내면을 재충전할 수 있기 때문입니다." (너무 뻔함)
+    // ✅ "분석적 사고를 많이 쓰는 당신은, 외부 자극 없이 머릿속을 정리하는 시간이 필요합니다. 독서나 산책 같은 저자극 활동이 사고력 회복에 도움됩니다." (구체적!)
+    // 반드시 사용자의 강점/가치관/스트레스 요인을 연결하여 설명하세요!
+    // 위 예시를 그대로 복사하지 마세요. 사용자의 구체적 데이터를 반영하여 새로운 문장을 작성하세요.
     "growthPotential": {
       "direction": "성장 방향 제안 1-2문장",
       "leveragePoints": ["활용할 수 있는 강점 1", "강점 2"],
@@ -394,22 +417,25 @@ export async function generatePremiumReportV3(
   input: ReporterInput,
   openaiApiKey?: string  // OpenAI API 키 추가
 ): Promise<PremiumReportV3> {
-  const { sessionId, judgeResults, searchProfile, narrativeFacts, roundAnswers, universalAnswers, hardCutList, miniModuleResult } = input
-  
+  const { sessionId, judgeResults, searchProfile, narrativeFacts, roundAnswers, universalAnswers, hardCutList, miniModuleResult, additionalContext } = input
+
   // 사용자 컨텍스트 구성 (미니모듈 결과 포함)
-  const userContext = buildReporterContext(narrativeFacts, roundAnswers, universalAnswers, searchProfile, miniModuleResult)
+  let userContext = buildReporterContext(narrativeFacts, roundAnswers, universalAnswers, searchProfile, miniModuleResult)
+
+  // 추가 컨텍스트가 있으면 반영
+  if (additionalContext) {
+    userContext += `\n\n[추가 정보]\n사용자가 다음 정보를 추가로 제공했습니다:\n"${additionalContext}"\n이 정보를 기존 분석에 반영하여 보고서를 작성하세요.`
+  }
   
   // 직업 추천 결과 정리
   const jobRecommendations = organizeJobRecommendations(judgeResults)
   
   // OpenAI API 키 없으면 fallback 리포트
   if (!openaiApiKey) {
-    console.log('[LLM Reporter] OpenAI API key not available, using fallback report')
     return createFallbackReport(sessionId, jobRecommendations, hardCutList, judgeResults, miniModuleResult)
   }
   
   try {
-    console.log('[LLM Reporter] Generating premium report with OpenAI GPT-4o-mini')
     
     // 프로필 해석용 컨텍스트 생성 (미니모듈 결과를 포함)
     const profileContext = buildProfileInterpretationContext(miniModuleResult)
@@ -459,7 +485,7 @@ export async function generatePremiumReportV3(
 
       executiveSummary: executiveSummary?.executiveSummary || '분석 결과 요약을 생성하지 못했습니다.',
 
-      workStyleMap: workStyleResult?.workStyleMap || getDefaultWorkStyleMap(),
+      workStyleMap: normalizeWorkStyleMap(workStyleResult?.workStyleMap, miniModuleResult) || getDefaultWorkStyleMap(),
       workStyleNarrative: workStyleResult?.workStyleNarrative || '',
 
       innerConflictAnalysis: psychologyResult?.innerConflictAnalysis || '',
@@ -491,12 +517,38 @@ export async function generatePremiumReportV3(
         noDiagnosticTerms: true,
         professionalHelpSuggested: checkNeedsProfessionalHelp(narrativeFacts, roundAnswers),
       },
+
+      // 분석 상세 메타데이터 (UI 통계 표시용)
+      _factsCount: (() => {
+        let count = 0
+        if (miniModuleResult) {
+          count += (miniModuleResult.interest_top?.length || 0)
+          count += (miniModuleResult.value_top?.length || 0)
+          count += (miniModuleResult.strength_top?.length || 0)
+          count += (miniModuleResult.constraint_flags?.length || 0)
+          if (miniModuleResult.sacrifice_flags?.length) count += miniModuleResult.sacrifice_flags.length
+          if (miniModuleResult.energy_drain_flags?.length) count += miniModuleResult.energy_drain_flags.length
+        }
+        if (narrativeFacts?.highAliveMoment) count++
+        if (narrativeFacts?.lostMoment) count++
+        if ((narrativeFacts as any)?.existentialAnswer) count++
+        return count
+      })(),
+      _answeredQuestions: (() => {
+        let count = 0
+        if (miniModuleResult) count += 15  // 미니모듈 15문항
+        if (narrativeFacts?.highAliveMoment) count++
+        if (narrativeFacts?.lostMoment) count++
+        if ((narrativeFacts as any)?.existentialAnswer) count++
+        if (roundAnswers?.length) count += roundAnswers.length
+        return count
+      })(),
+      _candidatesScored: judgeResults.length,
     }
     // 전체 리포트에 한국어 조사 교정 적용 (LLM + fallback 텍스트 모두)
     return fixParticlesDeep(report) as typeof report
 
   } catch (error) {
-    console.error('[LLM Reporter] Generation failed:', error)
     return fixParticlesDeep(
       createFallbackReport(sessionId, jobRecommendations, hardCutList, judgeResults, miniModuleResult)
     ) as PremiumReportV3
@@ -523,7 +575,12 @@ function buildReporterContext(
     parts.push(`흥미 Top2: ${mm.interest_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
     parts.push(`가치 Top2: ${mm.value_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
     parts.push(`강점 Top2: ${mm.strength_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
-    parts.push(`제약 조건: ${mm.constraint_flags.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
+    // constraint_flags + energy_drain_flags 통합 (에너지 소모원도 실질적 제약)
+    const allConstraints = [
+      ...mm.constraint_flags.map(t => TOKEN_TO_KOREAN[t] || t),
+      ...(mm.energy_drain_flags || []).map(t => TOKEN_TO_KOREAN[t] || t),
+    ]
+    parts.push(`제약 조건: ${allConstraints.join(', ') || '없음'}`)
     
     if (mm.internal_conflict_flags?.length) {
       parts.push(`⚡ 내부 충돌 감지: ${mm.internal_conflict_flags.join(', ')} - 리포트에서 반드시 언급`)
@@ -617,9 +674,38 @@ function fixKoreanParticles(text: string): string {
   return text
 }
 
-/** 객체의 모든 문자열 값에 한국어 조사 교정 적용 (재귀) */
+// v3.10.6: LLM이 자주 생성하는 한국어 오타 교정
+function fixCommonLLMTypos(text: string): string {
+  // 띄어쓰기 오류 (LLM이 자주 틀리는 패턴)
+  text = text.replace(/할 수있/g, '할 수 있')
+  text = text.replace(/할수 있/g, '할 수 있')
+  text = text.replace(/할수있/g, '할 수 있')
+  text = text.replace(/될 수있/g, '될 수 있')
+  text = text.replace(/될수 있/g, '될 수 있')
+  text = text.replace(/될수있/g, '될 수 있')
+  // "~ㅂ니다" 관련
+  text = text.replace(/습 니다/g, '습니다')
+  text = text.replace(/입 니다/g, '입니다')
+  text = text.replace(/합 니다/g, '합니다')
+  // 중복 조사
+  text = text.replace(/을를/g, '를')
+  text = text.replace(/이가/g, '가')
+  text = text.replace(/은는/g, '는')
+  // 흔한 오타
+  text = text.replace(/뿐만아니라/g, '뿐만 아니라')
+  text = text.replace(/그러므로써/g, '그럼으로써')
+  text = text.replace(/됬/g, '됐')
+  text = text.replace(/안됄/g, '안 될')
+  text = text.replace(/갯수/g, '개수')
+  text = text.replace(/몇몇의/g, '몇몇')
+  // 반복 어절 제거 (예: "이 직업은 이 직업은", "사용자의 사용자의")
+  text = text.replace(/(\S{2,8})\s+\1/g, '$1')
+  return text
+}
+
+/** 객체의 모든 문자열 값에 한국어 조사 교정 + 오타 교정 적용 (재귀) */
 export function fixParticlesDeep(obj: any): any {
-  if (typeof obj === 'string') return fixKoreanParticles(obj)
+  if (typeof obj === 'string') return fixCommonLLMTypos(fixKoreanParticles(obj))
   if (Array.isArray(obj)) return obj.map(fixParticlesDeep)
   if (obj && typeof obj === 'object') {
     const result: any = {}
@@ -637,7 +723,6 @@ async function generateSection(
   userContext: string
 ): Promise<any> {
   if (!openaiApiKey) {
-    console.warn('[LLM Reporter] OpenAI API key not available, skipping section')
     return null
   }
   
@@ -653,24 +738,19 @@ async function generateSection(
       max_tokens: 1500,  // 800 → 1500: 심리 분석 등 복잡한 JSON을 위해 증가
     })
 
-    console.log('[LLM Reporter] Raw response length:', text.length)
 
     const jsonMatch = text.match(/\{[\s\S]*\}/)
 
     if (jsonMatch) {
       try {
         const parsed = JSON.parse(jsonMatch[0])
-        console.log('[LLM Reporter] Parsed keys:', Object.keys(parsed))
         return fixParticlesDeep(parsed)
       } catch (parseError) {
-        console.error('[LLM Reporter] JSON parse failed:', parseError, 'Raw:', jsonMatch[0].substring(0, 200))
       }
     } else {
-      console.warn('[LLM Reporter] No JSON found in response:', text.substring(0, 200))
     }
 
   } catch (error) {
-    console.error('[LLM Reporter] Section generation failed:', error)
   }
   
   return null
@@ -733,12 +813,170 @@ function checkNeedsProfessionalHelp(
 // ============================================
 // Default/Fallback Values
 // ============================================
+/**
+ * v3.10.5: WorkStyleMap 후처리
+ * 1) fast_vs_steady → depth_vs_breadth 필드명 마이그레이션
+ * 2) LLM이 0~100만 반환한 경우 → -100~+100으로 리맵
+ * 3) 범위 클램프
+ */
+function normalizeWorkStyleMap(raw: any, miniModule?: MiniModuleResult): WorkStyleMapData | null {
+  // raw가 없어도 miniModule이 있으면 기본값 + miniModule 교정으로 의미있는 값 생성
+  if (!raw && !miniModule) return null
+  if (!raw) {
+    // LLM이 WorkStyle을 생성하지 못했지만 miniModule 답변은 있음
+    // → 기본값(0)에서 시작하되 miniModule 교정은 적용
+    const result: WorkStyleMapData = {
+      analytical_vs_creative: 0,
+      solo_vs_team: 0,
+      structured_vs_flexible: 0,
+      depth_vs_breadth: 0,
+      guided_vs_autonomous: 0,
+    }
+    applyMiniModuleCorrections(result, miniModule!)
+    return result
+  }
+
+  // fast_vs_steady → depth_vs_breadth 마이그레이션
+  const map: any = { ...raw }
+  if (map.fast_vs_steady !== undefined && map.depth_vs_breadth === undefined) {
+    map.depth_vs_breadth = map.fast_vs_steady
+    delete map.fast_vs_steady
+  }
+
+  const fields: (keyof WorkStyleMapData)[] = [
+    'analytical_vs_creative', 'solo_vs_team', 'structured_vs_flexible',
+    'depth_vs_breadth', 'guided_vs_autonomous',
+  ]
+
+  // LLM이 0~100만 반환했는지 감지: 모든 값이 0 이상이면 리맵 필요
+  const values = fields.map(f => typeof map[f] === 'number' ? map[f] : 0)
+  const allNonNegative = values.every(v => v >= 0)
+  const hasHighValues = values.some(v => v > 50)
+
+  if (allNonNegative && hasHighValues) {
+    // 0~100 → -100~+100 변환: score * 2 - 100
+    for (const f of fields) {
+      if (typeof map[f] === 'number') {
+        map[f] = Math.round(map[f] * 2 - 100)
+      }
+    }
+  }
+
+  // 클램프 -100 ~ +100
+  const result: WorkStyleMapData = {
+    analytical_vs_creative: 0,
+    solo_vs_team: 0,
+    structured_vs_flexible: 0,
+    depth_vs_breadth: 0,
+    guided_vs_autonomous: 0,
+  }
+  for (const f of fields) {
+    result[f] = Math.max(-100, Math.min(100, typeof map[f] === 'number' ? map[f] : 0))
+  }
+
+  // miniModule 기반 방향 교정
+  if (miniModule) {
+    applyMiniModuleCorrections(result, miniModule)
+  }
+
+  return result
+}
+
+// ============================================
+// miniModule 기반 WorkStyle 방향 교정
+// LLM 출력을 존중하되, 유저 답변과 방향이 모순되면 부호 반전
+// raw가 없는 경우(기본값 0)에도 적용하여 miniModule만으로 방향 설정
+// ============================================
+function applyMiniModuleCorrections(result: WorkStyleMapData, miniModule: MiniModuleResult): void {
+  const interests = miniModule.interest_top || []
+  const workstyles = miniModule.workstyle_top || []
+
+  // analytical_vs_creative 방향 교정
+  const analyticalTokens = ['data', 'analysis', 'problem_solving', 'research', 'analytical']
+  const creativeTokens = ['creative', 'art', 'design', 'writing']
+  const hasAnalytical = interests.some(i => analyticalTokens.includes(i))
+  const hasCreative = interests.some(i => creativeTokens.includes(i))
+
+  if (hasAnalytical && !hasCreative) {
+    if (result.analytical_vs_creative > 0) {
+      // 분석형인데 양수(창의 방향) → 부호 반전
+      result.analytical_vs_creative = -Math.abs(result.analytical_vs_creative)
+    } else if (result.analytical_vs_creative === 0) {
+      // 0(미정)이면 분석 방향으로 기본값 설정
+      result.analytical_vs_creative = -50
+    }
+  } else if (hasCreative && !hasAnalytical) {
+    if (result.analytical_vs_creative < 0) {
+      // 창의형인데 음수(분석 방향) → 부호 반전
+      result.analytical_vs_creative = Math.abs(result.analytical_vs_creative)
+    } else if (result.analytical_vs_creative === 0) {
+      result.analytical_vs_creative = 50
+    }
+  }
+
+  // solo_vs_team 방향 교정
+  const prefersSolo = workstyles.some(w => ['solo', 'solo_deep'].includes(w))
+  const prefersTeam = workstyles.some(w => ['team', 'team_harmony'].includes(w))
+  if (prefersSolo && !prefersTeam) {
+    if (result.solo_vs_team > 0) {
+      result.solo_vs_team = -Math.abs(result.solo_vs_team)
+    } else if (result.solo_vs_team === 0) {
+      result.solo_vs_team = -40
+    }
+  } else if (prefersTeam && !prefersSolo) {
+    if (result.solo_vs_team < 0) {
+      result.solo_vs_team = Math.abs(result.solo_vs_team)
+    } else if (result.solo_vs_team === 0) {
+      result.solo_vs_team = 40
+    }
+  }
+
+  // structured_vs_flexible 방향 교정
+  const prefersStructured = workstyles.includes('structured')
+  const prefersFlexible = workstyles.includes('flexible')
+  if (prefersStructured && !prefersFlexible) {
+    if (result.structured_vs_flexible > 0) {
+      result.structured_vs_flexible = -Math.abs(result.structured_vs_flexible)
+    } else if (result.structured_vs_flexible === 0) {
+      result.structured_vs_flexible = -40
+    }
+  } else if (prefersFlexible && !prefersStructured) {
+    if (result.structured_vs_flexible < 0) {
+      result.structured_vs_flexible = Math.abs(result.structured_vs_flexible)
+    } else if (result.structured_vs_flexible === 0) {
+      result.structured_vs_flexible = 40
+    }
+  }
+
+  // depth_vs_breadth: 0일 때만 miniModule 신호로 보정
+  if (result.depth_vs_breadth === 0) {
+    const impactScope = miniModule.impact_scope
+    const hasSoloDeep = workstyles.includes('solo_deep')
+    if (impactScope === 'specialist' || hasSoloDeep) {
+      result.depth_vs_breadth = -40
+    } else if (impactScope === 'generalist') {
+      result.depth_vs_breadth = 40
+    }
+  }
+
+  // guided_vs_autonomous: 0일 때만 miniModule 신호로 보정
+  if (result.guided_vs_autonomous === 0) {
+    const execStyle = miniModule.execution_style
+    if (execStyle === 'methodical' || execStyle === 'planner') {
+      result.guided_vs_autonomous = -30
+    } else if (execStyle === 'explorer' || execStyle === 'improvisational') {
+      result.guided_vs_autonomous = 40
+    }
+  }
+
+}
+
 function getDefaultWorkStyleMap(): WorkStyleMapData {
   return {
     analytical_vs_creative: 0,
     solo_vs_team: 0,
     structured_vs_flexible: 0,
-    fast_vs_steady: 0,
+    depth_vs_breadth: 0,
     guided_vs_autonomous: 0,
   }
 }
@@ -1337,5 +1575,745 @@ function buildFallbackMetaCognition(miniModuleResult?: MiniModuleResult): MetaCo
     _meta: {
       generated_by: 'rule',
     },
+  }
+}
+
+// ============================================
+// ============================================
+// MAJOR (전공) REPORTER SYSTEM
+// 직업 리포터와 병렬적인 전공 추천 리포트 생성
+// ============================================
+// ============================================
+
+// ============================================
+// Major Reporter Types
+// ============================================
+export interface MajorReporterInput {
+  sessionId: string
+  judgeResults: MajorJudgeResult[]
+  searchProfile: SearchProfile
+  narrativeFacts?: NarrativeFacts
+  roundAnswers?: RoundAnswer[]
+  universalAnswers?: Record<string, string | string[]>
+  hardCutList: HardCutItem[]
+  miniModuleResult?: MiniModuleResult
+  additionalContext?: string
+}
+
+export interface MajorPremiumReportV3 {
+  report_id: string
+  engine_version: string
+  generated_at: string
+  session_id: string
+
+  // 프로필 해석 (reuse existing)
+  profileInterpretation?: any
+  metaCognition?: any
+
+  executiveSummary: string
+
+  // 학습 스타일 맵 (workStyleMap 대신)
+  learningStyleMap: {
+    theoretical_vs_practical: number     // 이론(-100) ↔ 실습(+100)
+    solo_vs_collaborative: number        // 독립학습(-100) ↔ 협업학습(+100)
+    structured_vs_exploratory: number    // 체계적(-100) ↔ 탐구적(+100)
+    depth_vs_breadth: number             // 심화(-100) ↔ 융합(+100)
+    guided_vs_autonomous: number         // 교수주도(-100) ↔ 자기주도(+100)
+  }
+  learningStyleNarrative: string
+
+  // 심리 분석 (reuse existing fields)
+  innerConflictAnalysis: string
+  conflictPatterns: string[]
+  failurePattern: string
+  stressProfile: string
+  stressTriggers: string[]
+  growthCurveType: string
+  growthCurveDescription: string
+
+  // 삶의 버전 문장
+  lifeVersionStatement: {
+    oneLiner: string
+    expanded: string[]
+  }
+
+  // 전공 추천 결과
+  majorRecommendations: {
+    overallTop5: MajorJudgeResult[]
+    fitTop10: MajorJudgeResult[]
+    desireTop10: MajorJudgeResult[]
+  }
+
+  // 학기별 로드맵
+  academicTimeline: {
+    semester1: { goal: string; actions: string[]; milestone: string }
+    semester2: { goal: string; actions: string[]; milestone: string }
+    semester3_4: { goal: string; actions: string[]; milestone: string }
+    beyond: { goal: string; actions: string[]; milestone: string }
+  }
+
+  // 학습 가이드
+  studyGuidance: {
+    doNow: string[]
+    stopDoing: string[]
+    experiment: string[]
+    studyTips: string[]
+  }
+
+  appendix: {
+    hardCutList: HardCutItem[]
+    evidenceIndex: EvidenceQuote[]
+    totalCandidatesSearched: number
+    totalCandidatesJudged: number
+  }
+
+  safetyCompliance: {
+    noDiagnosticTerms: boolean
+    professionalHelpSuggested: boolean
+  }
+
+  _factsCount?: number
+  _answeredQuestions?: number
+  _candidatesScored?: number
+}
+
+// ============================================
+// Major-Specific Prompts
+// ============================================
+const MAJOR_REPORTER_SYSTEM_PROMPT = `당신은 전문 학과/전공 상담사이자 학습 분석가입니다. 사용자의 답변과 분석 결과를 바탕으로 전문가급 전공 추천 리포트를 작성합니다.
+
+## ⚠️ 핵심 원칙 (반드시 준수!)
+이 분석은 '당신이 어떤 사람인가'를 판단하지 않습니다.
+대신, 당신이 어떤 기준으로 전공을 선택할 때 가장 안정적인지를 분석합니다.
+
+## 표현 규칙 (필수)
+❌ 금지: "당신에게 어울리는 전공은...", "AI가 추천합니다"
+✓ 사용: "현재 당신의 판단 구조 기준에서, 다음 전공이 가장 일관됩니다"
+✓ 사용: "학문적 성향 분석에 따르면"
+
+## 역할
+- 사용자의 학문적 성향, 학습 패턴, 적성을 분석합니다
+- 전공 적합도와 학습 경로를 안내합니다
+- 모든 분석에는 사용자 원문 인용 근거가 필요합니다
+- 따뜻하면서도 통찰력 있는 톤을 유지합니다
+
+## 안전 규칙 (필수)
+- 정신의학적 진단명(우울증, ADHD, 불안장애 등) 단정 금지
+- "~경향이 있다", "~패턴이 보인다", "~가능성이 있다" 표현 사용
+- 위험 신호 감지 시 "전문가 상담 권유" 1줄만 추가 (과도하게 강조 금지)
+${INJECTION_DEFENSE}
+
+## 출력 형식
+반드시 요청된 JSON 스키마만 출력하세요.`
+
+const MAJOR_EXECUTIVE_SUMMARY_PROMPT = `사용자의 전공 분석 결과를 요약하세요.
+
+## 반드시 포함할 내용 (고정 템플릿)
+
+1. **판단 기준 안내 문장 (최상단 필수)**:
+   "이 분석은 '당신이 어떤 사람인가'를 판단하지 않습니다. 대신, 당신이 어떤 기준으로 전공을 선택할 때 가장 안정적인지를 분석합니다."
+
+2. **당신의 판단 구조 요약**:
+   - 흥미 Top 2: [토큰 → 해석]
+   - 가치 Top 2: [토큰 → 해석]
+   - 강점 Top 2: [토큰 → 해석]
+   - 제약 조건: [토큰 → 해석]
+
+3. **전공 추천 방향**:
+   "현재 당신의 판단 구조 기준에서, 다음 전공 선택이 가장 일관됩니다"
+
+4. **학습 스타일 요약**: 이론형/실습형, 독립/협업 등 핵심 학습 성향
+
+5. **다음 단계 안내**
+
+JSON: {"executiveSummary": "요약 텍스트"}`
+
+const MAJOR_LEARNING_STYLE_PROMPT = `사용자의 학습 스타일을 심층 분석하세요.
+
+## 분석 축 (⚠️ 범위: -100 ~ +100, 반드시 음수도 사용!)
+각 축은 중앙(0)이 균형 상태이며, 음수와 양수 방향으로 성향이 나뉩니다.
+**반드시 음수 값도 사용하세요!**
+
+1. **theoretical_vs_practical**: 이론 중심(-100) ↔ 실습 중심(+100)
+   - 예: 강의/논문 선호 → -70, 실험/프로젝트 선호 → +80
+2. **solo_vs_collaborative**: 독립 학습(-100) ↔ 협업 학습(+100)
+   - 예: 혼자 공부 선호 → -60, 스터디그룹 선호 → +70
+3. **structured_vs_exploratory**: 체계적 학습(-100) ↔ 탐구적 학습(+100)
+   - 예: 교과서 순서대로 → -70, 궁금한 것부터 파고드는 스타일 → +60
+4. **depth_vs_breadth**: 심화 전공(-100) ↔ 융합/복수전공(+100)
+   - 예: 한 분야 깊이 파는 스타일 → -80, 다양한 학문 넓게 → +60
+5. **guided_vs_autonomous**: 교수 주도(-100) ↔ 자기주도(+100)
+   - 예: 교수님 지도 선호 → -50, 독학/자율 학습 선호 → +90
+
+⚠️ 절대 모든 축을 양수(0~100)로만 채우지 마세요! 사용자 성향에 따라 음수 방향도 있습니다.
+
+## 추가 분석 요소 (learningStyleNarrative에 포함)
+- **학습 에너지 원천**: 강의 ↔ 실험 ↔ 토론 ↔ 독서 중 어디에서 에너지를 얻나?
+- **학습 리듬**: 집중형 몰입 vs 분산형 학습, 어느 쪽에서 성과가 나나?
+- **피드백 선호**: 시험 점수 vs 프로젝트 평가 vs 교수 피드백
+- **최적 학습 환경**: 도서관 ↔ 연구실 ↔ 카페 ↔ 온라인
+
+## 출력 형식 (반드시 준수)
+learningStyleNarrative는 다음 형태로 작성:
+"당신은 '[학습자 유형명]'입니다. [핵심 학습 특성]. [최적 학습 환경]. [주의할 학습 환경]."
+
+JSON: {
+  "learningStyleMap": {
+    "theoretical_vs_practical": number,
+    "solo_vs_collaborative": number,
+    "structured_vs_exploratory": number,
+    "depth_vs_breadth": number,
+    "guided_vs_autonomous": number
+  },
+  "learningStyleNarrative": "당신은 '[유형명]' 학습자입니다. [특성 설명]. [권장 환경]. [피해야 할 환경]."
+}`
+
+const MAJOR_ACADEMIC_TIMELINE_PROMPT = `학기별 학습 로드맵을 작성하세요.
+
+각 시기에:
+- goal: 달성 목표
+- actions: 구체적 행동 3-5개
+- milestone: 측정 가능한 성과 지표
+
+## 시기별 가이드
+
+### semester1 (1학기)
+- 전공 탐색 및 기초 과목 수강
+- 학습 습관 형성
+- 교수/선배 네트워크 구축
+
+### semester2 (2학기)
+- 전공 심화 과목 도전
+- 스터디그룹/프로젝트 참여
+- 관심 분야 구체화
+
+### semester3_4 (3-4학기)
+- 전문 영역 확정
+- 인턴/현장실습 경험
+- 포트폴리오 시작
+
+### beyond (고학년/졸업 후)
+- 진로 방향 확정 (대학원/취업/창업)
+- 졸업 프로젝트/논문
+- 커리어 네트워크 확장
+
+JSON: {
+  "academicTimeline": {
+    "semester1": {"goal": "", "actions": [], "milestone": ""},
+    "semester2": {"goal": "", "actions": [], "milestone": ""},
+    "semester3_4": {"goal": "", "actions": [], "milestone": ""},
+    "beyond": {"goal": "", "actions": [], "milestone": ""}
+  }
+}`
+
+const MAJOR_STUDY_GUIDANCE_PROMPT = `전공 학습을 위한 실질적 조언을 작성하세요.
+
+1. doNow: 당장 시작할 학습 활동 3-5개
+   - 전공 탐색, 기초 학습, 커뮤니티 참여 등
+2. stopDoing: 멈춰야 할 학습 습관 2-3개
+   - 비효율적 학습법, 잘못된 전공 선택 기준 등
+3. experiment: 시도해볼 것 2-3개
+   - 새로운 학습 방법, 관련 활동, 체험 기회 등
+4. studyTips: 효과적 학습 팁 3-5개
+   - 전공별 학습 전략, 시간 관리, 성적 관리 등
+
+JSON: {
+  "studyGuidance": {
+    "doNow": [],
+    "stopDoing": [],
+    "experiment": [],
+    "studyTips": []
+  }
+}`
+
+// ============================================
+// Major Reporter Helper Functions
+// ============================================
+
+/**
+ * 전공 리포터용 OpenAI 섹션 생성 (MAJOR_REPORTER_SYSTEM_PROMPT 사용)
+ */
+async function generateMajorSection(
+  openaiApiKey: string | undefined,
+  sectionPrompt: string,
+  userContext: string
+): Promise<any> {
+  if (!openaiApiKey) {
+    return null
+  }
+
+  try {
+    const messages: OpenAIMessage[] = [
+      { role: 'system', content: MAJOR_REPORTER_SYSTEM_PROMPT },
+      { role: 'user', content: `${userContext}\n\n${sectionPrompt}` },
+    ]
+
+    const { response: text } = await callOpenAI(openaiApiKey, messages, {
+      model: DEFAULT_MODEL,
+      temperature: 0.6,
+      max_tokens: 1500,
+    })
+
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+
+    if (jsonMatch) {
+      try {
+        const parsed = JSON.parse(jsonMatch[0])
+        return fixParticlesDeep(parsed)
+      } catch {
+        // JSON 파싱 실패
+      }
+    }
+  } catch {
+    // API 호출 실패
+  }
+
+  return null
+}
+
+/**
+ * 전공 리포터용 사용자 컨텍스트 구성
+ * buildReporterContext()를 미러링하되 학업 관련 라벨 사용
+ */
+function buildMajorReporterContext(
+  narrativeFacts?: NarrativeFacts,
+  roundAnswers?: RoundAnswer[],
+  universalAnswers?: Record<string, string | string[]>,
+  searchProfile?: SearchProfile,
+  miniModuleResult?: MiniModuleResult
+): string {
+  const parts: string[] = ['[USER_DATA]\n[사용자 프로필 및 답변 - 전공 분석용]']
+
+  // 미니모듈 결과 (판단 구조 요약)
+  if (miniModuleResult) {
+    const mm = miniModuleResult
+    parts.push('\n[판단 구조 요약 - 전공 추천의 핵심 축!]')
+    parts.push(`흥미 Top2: ${mm.interest_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
+    parts.push(`가치 Top2: ${mm.value_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
+    parts.push(`강점 Top2: ${mm.strength_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
+    const allConstraints = [
+      ...mm.constraint_flags.map(t => TOKEN_TO_KOREAN[t] || t),
+      ...(mm.energy_drain_flags || []).map(t => TOKEN_TO_KOREAN[t] || t),
+    ]
+    parts.push(`제약 조건: ${allConstraints.join(', ') || '없음'}`)
+
+    if (mm.internal_conflict_flags?.length) {
+      parts.push(`⚡ 내부 충돌 감지: ${mm.internal_conflict_flags.join(', ')} - 리포트에서 반드시 언급`)
+    }
+    parts.push('[/판단 구조 요약]\n')
+  }
+
+  // 프로필 요약 (학업 관점)
+  if (searchProfile) {
+    parts.push(`\n[학업 성향 프로필]`)
+    parts.push(`- 관심 학문 분야: ${searchProfile.desiredThemes.join(', ') || '미지정'}`)
+    parts.push(`- 피하고 싶은 학습 환경: ${searchProfile.dislikedThemes.join(', ') || '미지정'}`)
+    parts.push(`- 추정 학습 강점: ${searchProfile.strengthsHypothesis.join(', ') || '미지정'}`)
+    parts.push(`- 학습 환경 선호: ${searchProfile.environmentPreferences.join(', ') || '미지정'}`)
+  }
+
+  // 서술형 답변
+  if (narrativeFacts) {
+    if (narrativeFacts.highAliveMoment) {
+      parts.push(`\n[살아있다고 느낀 순간]\n"${narrativeFacts.highAliveMoment}"`)
+    }
+    if (narrativeFacts.lostMoment) {
+      parts.push(`\n[나를 잃었다고 느낀 순간]\n"${narrativeFacts.lostMoment}"`)
+    }
+    if (narrativeFacts.existentialAnswer) {
+      parts.push(`\n[실존적 가치 - "모든 사회적 조건이 사라진 상황에서의 선택"]\n"${narrativeFacts.existentialAnswer}"`)
+      parts.push('↳ 이 답변은 사회적 조건이 모두 제거된 상태에서 사용자가 선택한 본질적 가치입니다. 전공 분석에 가장 높은 가중치(0.45)로 반영하세요.')
+    }
+  }
+
+  // 라운드 답변
+  if (roundAnswers && roundAnswers.length > 0) {
+    parts.push('\n[심층 질문 답변]')
+    for (const ans of roundAnswers) {
+      const roundLabel = ans.roundNumber === 1
+        ? 'DRIVE(욕망/정체성/가치)'
+        : ans.roundNumber === 2
+          ? 'FRICTION(회피/관계/환경)'
+          : 'REALITY(제약/실행/트레이드오프)'
+      parts.push(`[Round${ans.roundNumber}-${roundLabel}] "${ans.answer}"`)
+    }
+  }
+
+  // Universal 답변
+  if (universalAnswers) {
+    const priority = universalAnswers['univ_priority']
+    const workstyle = universalAnswers['univ_workstyle_social']
+    const energy = universalAnswers['univ_energy']
+
+    if (priority) parts.push(`\n우선순위: ${priority}`)
+    if (workstyle) parts.push(`학습 방식: ${workstyle}`)
+    if (energy) parts.push(`에너지 충전: ${energy}`)
+  }
+
+  parts.push('\n[/USER_DATA]')
+
+  return parts.join('\n')
+}
+
+/**
+ * 전공 추천 결과 정리 (overallTop5, fitTop10, desireTop10)
+ */
+function organizeMajorRecommendations(judgeResults: MajorJudgeResult[]): {
+  overallTop5: MajorJudgeResult[]
+  fitTop10: MajorJudgeResult[]
+  desireTop10: MajorJudgeResult[]
+} {
+  const byOverall = [...judgeResults].sort((a, b) => b.overallScore - a.overallScore)
+  const byFit = [...judgeResults].sort((a, b) => b.fitScore - a.fitScore)
+  const byDesire = [...judgeResults].sort((a, b) => b.desireScore - a.desireScore)
+
+  return {
+    overallTop5: byOverall.slice(0, 5),
+    fitTop10: byFit.slice(0, 10),
+    desireTop10: byDesire.slice(0, 10),
+  }
+}
+
+/**
+ * 전공용 학습 스타일 맵 기본값
+ */
+function getDefaultLearningStyleMap(): MajorPremiumReportV3['learningStyleMap'] {
+  return {
+    theoretical_vs_practical: 0,
+    solo_vs_collaborative: 0,
+    structured_vs_exploratory: 0,
+    depth_vs_breadth: 0,
+    guided_vs_autonomous: 0,
+  }
+}
+
+/**
+ * 전공용 학기별 로드맵 기본값
+ */
+function getDefaultAcademicTimeline(): MajorPremiumReportV3['academicTimeline'] {
+  return {
+    semester1: {
+      goal: '전공 탐색 및 기초 학습',
+      actions: ['관심 전공 관련 기초 과목 수강', '전공 소개 세미나 참석', '선배/교수 면담'],
+      milestone: '관심 전공 3개 이상 구체화',
+    },
+    semester2: {
+      goal: '전공 심화 탐색',
+      actions: ['전공 심화 과목 수강', '스터디그룹 참여', '관련 동아리 활동'],
+      milestone: '전공 관련 첫 번째 프로젝트 완성',
+    },
+    semester3_4: {
+      goal: '전문 영역 확정',
+      actions: ['전공 필수 과목 이수', '인턴/현장실습 참여', '포트폴리오 구축 시작'],
+      milestone: '전문 분야 방향 확정',
+    },
+    beyond: {
+      goal: '진로 방향 확정 및 실행',
+      actions: ['졸업 프로젝트/논문 준비', '대학원/취업 준비', '네트워크 확장'],
+      milestone: '졸업 후 진로 계획 수립',
+    },
+  }
+}
+
+/**
+ * 전공용 학습 가이드 기본값
+ */
+function getDefaultStudyGuidance(): MajorPremiumReportV3['studyGuidance'] {
+  return {
+    doNow: [
+      '관심 전공 관련 입문 콘텐츠 하루 30분 학습하기',
+      '해당 전공 졸업생 진로 사례 3개 이상 조사하기',
+      '전공 관련 온라인 강의 하나 들어보기',
+    ],
+    stopDoing: [
+      '취업률/연봉만으로 전공을 선택하는 것',
+      '다른 사람의 전공 선택과 비교하는 것',
+    ],
+    experiment: [
+      '관심 전공 관련 무료 강의 하나 들어보기',
+      '전공 관련 커뮤니티에서 현직자 이야기 들어보기',
+    ],
+    studyTips: [
+      '전공 기초 개념을 먼저 탄탄히 다지세요',
+      '교수님 오피스아워를 적극 활용하세요',
+      '같은 관심사를 가진 스터디 그룹을 만들어보세요',
+    ],
+  }
+}
+
+/**
+ * 전공용 학습 스타일 맵 후처리
+ * LLM이 0~100만 반환한 경우 → -100~+100으로 리맵, 범위 클램프
+ */
+function normalizeLearningStyleMap(raw: any): MajorPremiumReportV3['learningStyleMap'] | null {
+  if (!raw) return null
+
+  const fields: (keyof MajorPremiumReportV3['learningStyleMap'])[] = [
+    'theoretical_vs_practical', 'solo_vs_collaborative', 'structured_vs_exploratory',
+    'depth_vs_breadth', 'guided_vs_autonomous',
+  ]
+
+  const map: any = { ...raw }
+
+  // LLM이 0~100만 반환했는지 감지
+  const values = fields.map(f => typeof map[f] === 'number' ? map[f] : 0)
+  const allNonNegative = values.every(v => v >= 0)
+  const hasHighValues = values.some(v => v > 50)
+
+  if (allNonNegative && hasHighValues) {
+    for (const f of fields) {
+      if (typeof map[f] === 'number') {
+        map[f] = Math.round(map[f] * 2 - 100)
+      }
+    }
+  }
+
+  // 클램프 -100 ~ +100
+  const result = getDefaultLearningStyleMap()
+  for (const f of fields) {
+    result[f] = Math.max(-100, Math.min(100, typeof map[f] === 'number' ? map[f] : 0))
+  }
+
+  return result
+}
+
+/**
+ * 전공용 증거 인용 수집
+ */
+function collectAllMajorEvidence(judgeResults: MajorJudgeResult[]): EvidenceQuote[] {
+  const all: EvidenceQuote[] = []
+  const seen = new Set<string>()
+
+  for (const major of judgeResults) {
+    for (const eq of major.evidenceQuotes || []) {
+      const key = eq.text.substring(0, 50)
+      if (!seen.has(key)) {
+        seen.add(key)
+        all.push(eq)
+      }
+    }
+  }
+
+  return all
+}
+
+// ============================================
+// Major Fallback Report
+// ============================================
+
+/**
+ * OpenAI 사용 불가 시 전공용 기본 리포트 생성
+ */
+function createMajorFallbackReport(
+  sessionId: string,
+  majorRecommendations: {
+    overallTop5: MajorJudgeResult[]
+    fitTop10: MajorJudgeResult[]
+    desireTop10: MajorJudgeResult[]
+  },
+  hardCutList: HardCutItem[],
+  judgeResults: MajorJudgeResult[],
+  miniModuleResult?: MiniModuleResult
+): MajorPremiumReportV3 {
+  return {
+    report_id: `major-report-${sessionId}-${Date.now()}`,
+    engine_version: 'v3-major',
+    generated_at: new Date().toISOString(),
+    session_id: sessionId,
+
+    profileInterpretation: buildFallbackProfileInterpretation(miniModuleResult),
+    metaCognition: buildFallbackMetaCognition(miniModuleResult),
+
+    executiveSummary: '전공 분석이 완료되었습니다. 추천 전공 목록을 확인해주세요. 더 자세한 분석을 위해서는 심층 질문에 더 상세히 답변해주시면 좋습니다.',
+
+    learningStyleMap: getDefaultLearningStyleMap(),
+    learningStyleNarrative: '학습 스타일 분석을 위해 더 많은 정보가 필요합니다.',
+
+    innerConflictAnalysis: '내면 갈등 분석을 위해 더 많은 정보가 필요합니다.',
+    conflictPatterns: [],
+
+    failurePattern: '패턴 분석을 위해 더 많은 정보가 필요합니다.',
+    stressProfile: '스트레스 프로필 분석을 위해 더 많은 정보가 필요합니다.',
+    stressTriggers: [],
+
+    growthCurveType: '분석 중',
+    growthCurveDescription: '성장 곡선 분석을 위해 더 많은 정보가 필요합니다.',
+
+    lifeVersionStatement: {
+      oneLiner: '당신만의 학문적 길을 찾아가는 중입니다.',
+      expanded: [
+        '현재 다양한 학문 분야의 가능성을 탐색하고 계십니다.',
+        '자신의 관심사와 강점을 통해 적합한 전공을 발견해 나가실 수 있습니다.',
+        '작은 학습 실험들이 전공 선택의 확신으로 이어질 수 있습니다.',
+      ],
+    },
+
+    majorRecommendations,
+
+    academicTimeline: getDefaultAcademicTimeline(),
+
+    studyGuidance: getDefaultStudyGuidance(),
+
+    appendix: {
+      hardCutList,
+      evidenceIndex: collectAllMajorEvidence(judgeResults),
+      totalCandidatesSearched: judgeResults.length + hardCutList.length,
+      totalCandidatesJudged: judgeResults.length,
+    },
+
+    safetyCompliance: {
+      noDiagnosticTerms: true,
+      professionalHelpSuggested: false,
+    },
+  }
+}
+
+// ============================================
+// Main Function: generateMajorPremiumReport
+// ============================================
+
+/**
+ * 전공 추천 프리미엄 리포트 생성
+ * generatePremiumReportV3()를 미러링하되 전공 전용 프롬프트/구조 사용
+ */
+export async function generateMajorPremiumReport(
+  ai: Ai | null,
+  input: MajorReporterInput,
+  openaiApiKey?: string
+): Promise<MajorPremiumReportV3> {
+  const { sessionId, judgeResults, searchProfile, narrativeFacts, roundAnswers, universalAnswers, hardCutList, miniModuleResult, additionalContext } = input
+
+  // 사용자 컨텍스트 구성 (전공 분석용)
+  let userContext = buildMajorReporterContext(narrativeFacts, roundAnswers, universalAnswers, searchProfile, miniModuleResult)
+
+  // 추가 컨텍스트가 있으면 반영
+  if (additionalContext) {
+    userContext += `\n\n[추가 정보]\n사용자가 다음 정보를 추가로 제공했습니다:\n"${additionalContext}"\n이 정보를 기존 분석에 반영하여 보고서를 작성하세요.`
+  }
+
+  // 전공 추천 결과 정리
+  const majorRecommendations = organizeMajorRecommendations(judgeResults)
+
+  // OpenAI API 키 없으면 fallback 리포트
+  if (!openaiApiKey) {
+    return createMajorFallbackReport(sessionId, majorRecommendations, hardCutList, judgeResults, miniModuleResult)
+  }
+
+  try {
+    // 프로필 해석용 컨텍스트 생성
+    const profileContext = buildProfileInterpretationContext(miniModuleResult)
+
+    // 메타인지 분석용 컨텍스트 생성
+    const metaCognitionContext = buildMetaCognitionContext(miniModuleResult, narrativeFacts)
+
+    // 병렬로 각 섹션 생성 (전공용 프롬프트 사용)
+    const [
+      executiveSummary,
+      learningStyleResult,
+      psychologyResult,
+      lifeVersionResult,
+      academicTimelineResult,
+      studyGuidanceResult,
+      profileInterpretationResult,
+      metaCognitionResult,
+    ] = await Promise.all([
+      generateMajorSection(openaiApiKey, MAJOR_EXECUTIVE_SUMMARY_PROMPT, userContext),
+      generateMajorSection(openaiApiKey, MAJOR_LEARNING_STYLE_PROMPT, userContext),
+      generateMajorSection(openaiApiKey, PSYCHOLOGY_PROMPT, userContext),
+      generateMajorSection(openaiApiKey, LIFE_VERSION_PROMPT, userContext),
+      generateMajorSection(openaiApiKey, MAJOR_ACADEMIC_TIMELINE_PROMPT, userContext),
+      generateMajorSection(openaiApiKey, MAJOR_STUDY_GUIDANCE_PROMPT, userContext),
+      // 프로필 해석은 미니모듈 결과가 있을 때만 생성 (기존 프롬프트 재사용)
+      miniModuleResult ? generateSection(openaiApiKey, PROFILE_INTERPRETATION_PROMPT, profileContext) : Promise.resolve(null),
+      // 메타인지 분석은 미니모듈 결과가 있을 때만 생성 (기존 프롬프트 재사용)
+      miniModuleResult ? generateSection(openaiApiKey, METACOGNITION_PROMPT, metaCognitionContext) : Promise.resolve(null),
+    ])
+
+    // 전체 인용 인덱스 수집
+    const allEvidenceQuotes = collectAllMajorEvidence(judgeResults)
+
+    const report: MajorPremiumReportV3 = {
+      report_id: `major-report-${sessionId}-${Date.now()}`,
+      engine_version: 'v3-major',
+      generated_at: new Date().toISOString(),
+      session_id: sessionId,
+
+      // 프로필 해석
+      profileInterpretation: profileInterpretationResult?.profileInterpretation ||
+        buildFallbackProfileInterpretation(miniModuleResult),
+
+      // 메타인지
+      metaCognition: metaCognitionResult?.metaCognition ||
+        buildFallbackMetaCognition(miniModuleResult),
+
+      executiveSummary: executiveSummary?.executiveSummary || '전공 분석 결과 요약을 생성하지 못했습니다.',
+
+      learningStyleMap: normalizeLearningStyleMap(learningStyleResult?.learningStyleMap) || getDefaultLearningStyleMap(),
+      learningStyleNarrative: learningStyleResult?.learningStyleNarrative || '',
+
+      innerConflictAnalysis: psychologyResult?.innerConflictAnalysis || '',
+      conflictPatterns: psychologyResult?.conflictPatterns || [],
+
+      failurePattern: psychologyResult?.failurePattern || '',
+      stressProfile: psychologyResult?.stressProfile || '',
+      stressTriggers: psychologyResult?.stressTriggers || [],
+
+      growthCurveType: psychologyResult?.growthCurveType || '분석 중',
+      growthCurveDescription: psychologyResult?.growthCurveDescription || '',
+
+      lifeVersionStatement: lifeVersionResult?.lifeVersionStatement || { oneLiner: '', expanded: [] },
+
+      majorRecommendations,
+
+      academicTimeline: academicTimelineResult?.academicTimeline || getDefaultAcademicTimeline(),
+
+      studyGuidance: studyGuidanceResult?.studyGuidance || getDefaultStudyGuidance(),
+
+      appendix: {
+        hardCutList,
+        evidenceIndex: allEvidenceQuotes,
+        totalCandidatesSearched: judgeResults.length + hardCutList.length,
+        totalCandidatesJudged: judgeResults.length,
+      },
+
+      safetyCompliance: {
+        noDiagnosticTerms: true,
+        professionalHelpSuggested: checkNeedsProfessionalHelp(narrativeFacts, roundAnswers),
+      },
+
+      _factsCount: (() => {
+        let count = 0
+        if (miniModuleResult) {
+          count += (miniModuleResult.interest_top?.length || 0)
+          count += (miniModuleResult.value_top?.length || 0)
+          count += (miniModuleResult.strength_top?.length || 0)
+          count += (miniModuleResult.constraint_flags?.length || 0)
+          if (miniModuleResult.sacrifice_flags?.length) count += miniModuleResult.sacrifice_flags.length
+          if (miniModuleResult.energy_drain_flags?.length) count += miniModuleResult.energy_drain_flags.length
+        }
+        if (narrativeFacts?.highAliveMoment) count++
+        if (narrativeFacts?.lostMoment) count++
+        if ((narrativeFacts as any)?.existentialAnswer) count++
+        return count
+      })(),
+      _answeredQuestions: (() => {
+        let count = 0
+        if (miniModuleResult) count += 15
+        if (narrativeFacts?.highAliveMoment) count++
+        if (narrativeFacts?.lostMoment) count++
+        if ((narrativeFacts as any)?.existentialAnswer) count++
+        if (roundAnswers?.length) count += roundAnswers.length
+        return count
+      })(),
+      _candidatesScored: judgeResults.length,
+    }
+
+    // 전체 리포트에 한국어 조사 교정 적용
+    return fixParticlesDeep(report) as typeof report
+
+  } catch (error) {
+    return fixParticlesDeep(
+      createMajorFallbackReport(sessionId, majorRecommendations, hardCutList, judgeResults, miniModuleResult)
+    ) as MajorPremiumReportV3
   }
 }

@@ -47,10 +47,12 @@ export function assertConstraintType(value: string): ConstraintType {
 // ============================================
 // Version Constants
 // ============================================
+import { RECOMMENDATION_ENGINE_VERSION } from './llm-judge'
+
 export const VERSIONS = {
   recipe: 'recipe-v1.0.0',
   tagger: 'tagger-v1.0.0',
-  scoring: 'scoring-v0.2.1-final',
+  scoring: `scoring-${RECOMMENDATION_ENGINE_VERSION}`,
 } as const
 
 // ============================================
@@ -116,6 +118,109 @@ export interface UserConstraints {
   prefer_remote?: boolean
   prefer_stability?: boolean
   learning_window_months?: number
+}
+
+// ============================================
+// Major Constraint Types (전공 추천 전용)
+// ============================================
+export const VALID_MAJOR_CONSTRAINT_TYPES = [
+  'math_impossible',          // 수학 집중 불가
+  'lab_impossible',            // 실험/실습 불가
+  'high_competition_avoid',    // 높은 경쟁률 기피
+  'low_employment_avoid',      // 낮은 취업률 기피
+  'reading_heavy_avoid',       // 독해/작문 집중 기피
+] as const
+
+export type MajorConstraintType = typeof VALID_MAJOR_CONSTRAINT_TYPES[number]
+
+export function isValidMajorConstraintType(value: string): value is MajorConstraintType {
+  return VALID_MAJOR_CONSTRAINT_TYPES.includes(value as MajorConstraintType)
+}
+
+export function assertMajorConstraintType(value: string): MajorConstraintType {
+  if (!isValidMajorConstraintType(value)) {
+    throw new Error(`Invalid major constraint_type: "${value}". Allowed: ${VALID_MAJOR_CONSTRAINT_TYPES.join(', ')}`)
+  }
+  return value
+}
+
+export interface MajorUserConstraints {
+  // Hard constraints (전공 불가 조건)
+  math_impossible?: boolean
+  lab_impossible?: boolean
+  high_competition_avoid?: boolean
+  low_employment_avoid?: boolean
+  reading_heavy_avoid?: boolean
+}
+
+// 학업 상태 (전공 추천에서 Feasibility 평가용)
+export const ACADEMIC_STATE_OPTIONS = [
+  'high_school_early',       // 수시 준비
+  'high_school_regular',     // 정시 준비
+  'high_school_undecided',   // 아직 미정
+  'university_freshman',     // 대학 재학 (전과/복수전공)
+  'transfer',                // 편입 준비
+  'retake',                  // 재수/반수
+  'adult_learner',           // 성인학습자/직장인
+] as const
+
+export type AcademicState = typeof ACADEMIC_STATE_OPTIONS[number]
+
+// ============================================
+// ScoredMajor (ScoredJob과 분리된 전공 전용 타입)
+// ============================================
+export interface ScoredMajor {
+  entity_type: 'major'
+  major_id: string | number
+  major_name: string
+  slug?: string
+  image_url?: string
+  major_description?: string
+  base_like: number
+  base_can: number
+  base_risk: number
+  like_score: number
+  can_score: number
+  risk_penalty: number
+  final_score: number
+  field_category?: string
+  tag_source?: 'tagged' | 'untagged' | 'archetype_inject'
+  attributes?: MajorAttributes
+}
+
+export interface MajorAttributes {
+  academic_rigor?: number
+  math_intensity?: number
+  creativity?: number
+  social_interaction?: number
+  lab_practical?: number
+  reading_writing?: number
+  career_breadth?: number
+  career_income_potential?: number
+  employment_rate?: number
+  competition_level?: number
+  growth_outlook?: number
+  stability?: number
+  autonomy?: number
+  teamwork?: number
+  field_category?: string
+  degree_level?: string
+  prerequisite_subjects?: string
+  related_careers?: string
+  key_skills?: string
+}
+
+// ============================================
+// FilteredMajorCandidate (전공 Tag Filter 결과 타입)
+// ============================================
+export interface FilteredMajorCandidate {
+  major_id: string | number
+  major_name: string
+  score: number
+  riskPenalty: number
+  riskWarnings: string[]
+  tagSource: 'tagged' | 'untagged'
+  attributes?: MajorAttributes
 }
 
 // ============================================
@@ -702,6 +807,11 @@ export interface AnalysisRequestPayloadV3 {
   transition_signal?: Record<string, string | string[]>
   // P0 팔로업 답변
   followup_answers?: Record<string, string>
+  // Phase 3: 편집 모드
+  edit_mode?: boolean
+  edit_session_id?: string
+  source_request_id?: number
+  version_note?: string
 }
 
 // ============================================
@@ -830,6 +940,7 @@ export interface PremiumReport {
   _factsCount?: number          // 수집된 팩트 수
   _answeredQuestions?: number   // 답변한 질문 수
   _candidatesScored?: number    // 평가한 직업 수
+  _totalJobCount?: number       // DB 전체 직업 수
   _appliedRules?: number        // 적용된 규칙 수
   
   // 7개 섹션
@@ -1026,7 +1137,7 @@ export interface WorkStyleMapData {
   analytical_vs_creative: number    // -100 ~ 100
   solo_vs_team: number              // -100 ~ 100
   structured_vs_flexible: number    // -100 ~ 100
-  fast_vs_steady: number            // -100 ~ 100
+  depth_vs_breadth: number          // -100 ~ 100 (전문가형 ↔ 제너럴리스트)
   guided_vs_autonomous: number      // -100 ~ 100
 }
 
