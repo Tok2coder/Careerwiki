@@ -3852,4 +3852,157 @@ contentEditorRoutes.delete('/api/name-mappings/:id', async (c) => {
   }
 })
 
+// ============================================================================
+// Group N: HowTo 업데이트/삭제 API (Phase 1 누락 → Phase 2에서 이동)
+// ============================================================================
+
+// HowTo 업데이트 API (발행된 HowTo 수정)
+contentEditorRoutes.put('/api/howto/:id/update', requireAuth, async (c) => {
+  try {
+    const user = c.get('user')!
+    const pageId = parseInt(c.req.param('id'))
+
+    if (!Number.isFinite(pageId)) {
+      return c.json({ success: false, error: '유효하지 않은 ID입니다' }, 400)
+    }
+
+    // 권한 확인 (작성자 또는 관리자만)
+    const page = await c.env.DB.prepare(
+      'SELECT author_id FROM pages WHERE id = ? AND page_type = ?'
+    ).bind(pageId, 'guide').first<{ author_id: number | null }>()
+
+    if (!page) {
+      return c.json({ success: false, error: 'HowTo를 찾을 수 없습니다' }, 404)
+    }
+
+    const isAuthor = page.author_id && user.id === page.author_id
+    const isAdmin = user.role === 'admin'
+
+    if (!isAuthor && !isAdmin) {
+      return c.json({ success: false, error: '편집 권한이 없습니다' }, 403)
+    }
+
+    const body = await c.req.json()
+    const { title, summary, contentHtml, contentJson, tags, relatedJobs, relatedMajors, relatedHowtos, thumbnailUrl, footnotes } = body
+
+    if (!title || !title.trim()) {
+      return c.json({ success: false, error: '제목을 입력해주세요' }, 400)
+    }
+
+    // 첫 번째 이미지 추출 (썸네일이 명시적으로 설정되지 않은 경우)
+    let finalThumbnailUrl = thumbnailUrl || ''
+    let extractedFootnotes = footnotes || []
+    if (contentJson) {
+      try {
+        const contentObj = JSON.parse(contentJson)
+        if (!finalThumbnailUrl) {
+          finalThumbnailUrl = extractFirstImage(contentObj)
+        }
+        // 각주 추출 (클라이언트에서 안 보내면 서버에서 추출)
+        if (!footnotes || footnotes.length === 0) {
+          extractedFootnotes = extractFootnotes(contentObj)
+        }
+      } catch {}
+    }
+
+    // meta_data 구성
+    const metaData = JSON.stringify({
+      contentJson,
+      tags: tags || [],
+      relatedJobs: relatedJobs || [],
+      relatedMajors: relatedMajors || [],
+      relatedHowtos: relatedHowtos || [],
+      footnotes: extractedFootnotes,
+      authorName: user.username || user.email?.split('@')[0] || '작성자',
+      thumbnailUrl: finalThumbnailUrl
+    })
+
+    // 업데이트
+    const now = new Date().toISOString()
+    await c.env.DB.prepare(`
+      UPDATE pages
+      SET title = ?, summary = ?, content = ?, meta_data = ?, updated_at = ?
+      WHERE id = ?
+    `).bind(title.trim(), summary || '', contentHtml || '', metaData, now, pageId).run()
+
+    return c.json({ success: true, message: '저장되었습니다' })
+  } catch (error) {
+    return c.json({ success: false, error: '저장 중 오류가 발생했습니다' }, 500)
+  }
+})
+
+// HowTo 삭제 API
+contentEditorRoutes.delete('/api/howto/:id', requireAuth, async (c) => {
+  try {
+    const user = c.get('user')!
+    const pageId = parseInt(c.req.param('id'))
+
+    if (!Number.isFinite(pageId)) {
+      return c.json({ success: false, error: '유효하지 않은 ID입니다' }, 400)
+    }
+
+    // 권한 확인 + 이미지 삭제를 위한 content, meta_data 조회
+    const page = await c.env.DB.prepare(
+      'SELECT author_id, content, meta_data FROM pages WHERE id = ? AND page_type = ?'
+    ).bind(pageId, 'guide').first<{ author_id: number | null; content: string | null; meta_data: string | null }>()
+
+    if (!page) {
+      return c.json({ success: false, error: 'HowTo를 찾을 수 없습니다' }, 404)
+    }
+
+    const isAuthor = page.author_id && user.id === page.author_id
+    const isAdmin = user.role === 'admin'
+
+    if (!isAuthor && !isAdmin) {
+      return c.json({ success: false, error: '삭제 권한이 없습니다' }, 403)
+    }
+
+    // R2 이미지 삭제 (본문 이미지 + 썸네일)
+    const imageKeysToDelete: string[] = []
+
+    // 1) 본문에서 /uploads/ 경로 이미지 추출
+    if (page.content) {
+      const uploadMatches = page.content.match(/\/uploads\/[^\s"'<>]+/g) || []
+      for (const match of uploadMatches) {
+        const key = match.replace('/uploads/', '')
+        if (key && !imageKeysToDelete.includes(key)) {
+          imageKeysToDelete.push(key)
+        }
+      }
+    }
+
+    // 2) 썸네일 URL 추출
+    if (page.meta_data) {
+      try {
+        const meta = JSON.parse(page.meta_data)
+        if (meta.thumbnailUrl && meta.thumbnailUrl.startsWith('/uploads/')) {
+          const key = meta.thumbnailUrl.replace('/uploads/', '')
+          if (key && !imageKeysToDelete.includes(key)) {
+            imageKeysToDelete.push(key)
+          }
+        }
+      } catch (e) {
+        // meta_data 파싱 실패 시 무시
+      }
+    }
+
+    // R2에서 이미지 삭제 (실패해도 D1 삭제는 진행)
+    if (imageKeysToDelete.length > 0 && c.env.UPLOADS) {
+      for (const key of imageKeysToDelete) {
+        try {
+          await c.env.UPLOADS.delete(key)
+        } catch (e) {
+        }
+      }
+    }
+
+    // D1에서 페이지 삭제
+    await c.env.DB.prepare('DELETE FROM pages WHERE id = ?').bind(pageId).run()
+
+    return c.json({ success: true, message: '삭제되었습니다' })
+  } catch (error) {
+    return c.json({ success: false, error: '삭제 중 오류가 발생했습니다' }, 500)
+  }
+})
+
 export { contentEditorRoutes }

@@ -518,6 +518,28 @@ npx tsc --noEmit && npm run build && npm run deploy
 
 ---
 
+## Phase 1.5 (예정) — content-editor.ts 분할
+
+```
+## 목표
+Phase 1에서 추출한 `src/routes/content-editor.ts` (3,855줄, 44 라우트)를 더 작은 파일로 분할.
+Phase 2~3 완료 후 또는 적절한 시점에 실행.
+
+## 분할 후보 (세부 분석 필요):
+- content-editor-job.ts: Job CRUD API (~500줄)
+- content-editor-major.ts: Major CRUD API (~500줄)
+- content-editor-howto.ts: HowTo CRUD + Drafts + Publish API (~1,200줄)
+- content-editor-admin.ts: Admin seed/job/major/howto API (~800줄)
+- content-editor-misc.ts: Slug, Search, Tags, Revisions, Similar names (~800줄)
+
+## 주의사항:
+- Phase 2~3 실행 전에 세부 분석 필요 (정확한 라인, 의존성 매핑)
+- 이전 Phase와 동일한 수준의 세밀한 계획 수립 필수
+- tsc 통과 + 빌드 + 배포 + 프로덕션 검증 워크플로우 동일 적용
+```
+
+---
+
 ## 롤백 방법 (문제 발생 시)
 
 ```bash
