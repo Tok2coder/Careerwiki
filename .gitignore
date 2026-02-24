@@ -68,6 +68,12 @@ artifacts/
 # temp files
 .temp/
 .cursor/
+
+# Claude Code local settings
+.claude/settings.local.json
+.claude/launch.json
+.claude/plans/
+.claude/worktrees/
 temp-*.png
 temp_*.html
 temp_*.json

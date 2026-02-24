@@ -88,6 +88,25 @@ scripts/                       # ETL 및 유틸리티 스크립트
 - **커밋 메시지**: `feat/fix/chore: [한국어 설명]`
 - **TypeScript**: strict mode, async/await, functional style
 
+## Workflow Rules
+
+### 작업 완료 시 필수 절차
+1. `npx tsc --noEmit` — 타입 체크 통과 확인
+2. `npm run build` — 빌드 성공 확인
+3. 관련 파일만 `git add` → `git commit`
+4. `npm run deploy` — Cloudflare Pages 배포
+5. careerwiki.org에서 동작 확인 (로컬 테스트 불필요, Vectorize는 프로덕션에서만 동작)
+
+### 큰 작업 완료 시
+- `git push` 전에 **반드시 유저에게 확인** 요청
+- 푸시 전 점검사항 보고: 빌드 상태, 타입 에러, 변경 파일 목록, 배포 확인 여부
+- 유저 승인 후에만 push 실행
+
+### 테스트
+- 로컬 dev 서버 사용하지 않음
+- 배포 후 careerwiki.org에서 직접 테스트
+- Vectorize, AI binding 등 Cloudflare 바인딩은 프로덕션에서만 정상 동작
+
 ## Critical Rules
 
 - **절대 금지**: `git stash`, `git reset --hard`, `DROP TABLE`, `DELETE FROM` (WHERE 없이), `.dev.vars` 커밋
