@@ -18,7 +18,8 @@ import {
   MAJOR_STUDENT_OPTIONS,
 } from './services/ai-analyzer/career-tree-types'
 import { getUnifiedJobDetail, getUnifiedJobDetailWithRawData, getUnifiedMajorDetail, searchUnifiedJobs, searchUnifiedMajors } from './services/profileDataService'
-import type { SourceStatusRecord } from './services/profileDataService'
+import { ragSearchUnified, ragSearchJobs, ragSearchMajors } from './services/rag-search'
+import type { SourceStatusRecord, UnifiedSearchResult, UnifiedMajorSummaryEntry } from './services/profileDataService'
 import type { DataSource, UnifiedJobDetail, UnifiedMajorDetail } from './types/unifiedProfiles'
 import { renderUnifiedJobDetail, createJobJsonLd } from './templates/unifiedJobDetail'
 import { renderJobTemplateDesignPage } from './templates/jobTemplateDesignPage'
@@ -67,6 +68,7 @@ import {
 } from './services/aiAnalysisService'
 // Phase 0: AI Analyzer Service (scoring-v0.2.1-final)
 import { analyzerRoutes } from './services/ai-analyzer'
+import { svgToPng, getCachedOgImage, cacheOgImage } from './services/ogImageService'
 import {
   recordSerpInteraction,
   getDailySerpSummary,
@@ -183,14 +185,6 @@ const errorLoggingMiddleware = async (c: any, next: any) => {
   try {
     await next()
   } catch (e: any) {
-    console.error(
-      JSON.stringify({
-        ts: new Date().toISOString(),
-        route: c?.req?.path,
-        msg: String(e),
-        stack: e?.stack,
-      })
-    )
     return c.text('Internal Error', 500)
   }
 }
@@ -201,8 +195,8 @@ type Bindings = {
   DB: D1Database;
   KV: KVNamespace;
   UPLOADS: R2Bucket;  // R2 이미지 업로드
-  VECTORIZE?: VectorizeIndex;  // Vectorize 인덱스 (AI 분석기 후보 검색)
-  AI?: Ai;  // Workers AI (임베딩 생성)
+  VECTORIZE: VectorizeIndex;  // Vectorize 인덱스 (AI 분석기 후보 검색)
+  AI: Ai;  // Workers AI (임베딩 생성)
   CAREER_NET_API_KEY?: string;
   GOYONG24_MAJOR_API_KEY?: string;
   GOYONG24_JOB_API_KEY?: string;
@@ -216,9 +210,14 @@ type Bindings = {
   GOOGLE_CLIENT_SECRET: string;
   GOOGLE_CALLBACK_URL: string;
   JWT_SECRET: string;
-  // Releases page: Cloudflare Pages API
+  // Cloudflare API (releases page 등)
+  CLOUDFLARE_ACCOUNT_ID?: string;
+  CLOUDFLARE_API_TOKEN?: string;
   CF_ACCOUNT_ID?: string;
+  CF_ZONE_ID?: string;
   CF_PAGES_API_TOKEN?: string;
+  GITHUB_TOKEN?: string;
+  GOOGLE_SITE_VERIFICATION?: string;
 }
 
 // User 타입 (auth-helpers에서 정의)
@@ -247,6 +246,48 @@ type Variables = {
 }
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()
+
+// Global error handler — 에러 원인 파악용
+app.onError((err, c) => {
+  return c.text(`Error: ${err?.message}\nStack: ${err?.stack}`, 500)
+})
+
+// 임시 진단 엔드포인트 — 바인딩 확인용
+app.get('/api/debug/bindings', async (c) => {
+  const kvTest = { exists: !!c.env.KV, type: typeof c.env.KV }
+  const dbTest = { exists: !!c.env.DB, type: typeof c.env.DB }
+  let kvWrite = 'skip'
+  if (c.env.KV) {
+    try {
+      await c.env.KV.put('_test_binding', 'ok', { expirationTtl: 60 })
+      const val = await c.env.KV.get('_test_binding')
+      kvWrite = val === 'ok' ? 'ok' : `read_mismatch:${val}`
+      await c.env.KV.delete('_test_binding')
+    } catch (e: any) {
+      kvWrite = `error:${e?.message}`
+    }
+  }
+  let dbWrite = 'skip'
+  if (c.env.DB) {
+    try {
+      const r = await c.env.DB.prepare('SELECT 1 as v').first<{v:number}>()
+      dbWrite = r?.v === 1 ? 'ok' : `unexpected:${JSON.stringify(r)}`
+    } catch (e: any) {
+      dbWrite = `error:${e?.message}`
+    }
+  }
+  return c.json({ kv: kvTest, db: dbTest, kvWrite, dbWrite })
+})
+
+// www → non-www 301 리다이렉트
+app.use('*', async (c, next) => {
+  const url = new URL(c.req.url)
+  if (url.hostname.startsWith('www.')) {
+    url.hostname = url.hostname.slice(4)
+    return c.redirect(url.toString(), 301)
+  }
+  return next()
+})
 
 // Middleware
 app.use('*', cors())
@@ -278,6 +319,499 @@ app.route('/auth', auth)
 // GET  /api/ai-analyzer/session/:id - 세션 이력
 // ============================================
 app.route('/api/ai-analyzer', analyzerRoutes)
+
+// ============================================
+// 공유 미니카드 페이지 (공개, 로그인 불필요)
+// ============================================
+const BOT_UA_PATTERN = /bot|crawl|spider|slack|facebook|twitter|kakao|discord|preview|whatsapp|telegram|line|naver/i
+
+app.get('/share/:token', async (c) => {
+  const db = c.env.DB
+  const token = c.req.param('token')
+
+  if (!token || token.length < 8 || token.length > 32) {
+    return c.html(renderShareGonePage(), 410, {
+      'X-Robots-Tag': 'noindex, nofollow',
+    })
+  }
+
+  try {
+    const row = await db.prepare(`
+      SELECT share_token, share_data_json, share_version, is_revoked, expires_at
+      FROM share_tokens WHERE share_token = ?
+    `).bind(token).first<{
+      share_token: string
+      share_data_json: string
+      share_version: number
+      is_revoked: number
+      expires_at: string | null
+    }>()
+
+    if (!row) {
+      return c.html(renderShareGonePage(), 410, {
+        'X-Robots-Tag': 'noindex, nofollow',
+      })
+    }
+
+    // revoked / expired 확인
+    const isExpired = !row.expires_at || new Date(row.expires_at) < new Date()
+    if (row.is_revoked || isExpired) {
+      return c.html(renderShareGonePage(), 410, {
+        'X-Robots-Tag': 'noindex, nofollow',
+      })
+    }
+
+    // 봇이 아니면 view_count 증가 (atomic)
+    const ua = c.req.header('user-agent') || ''
+    if (!BOT_UA_PATTERN.test(ua)) {
+      c.executionCtx.waitUntil(
+        db.prepare(`
+          UPDATE share_tokens SET view_count = view_count + 1, last_viewed_at = CURRENT_TIMESTAMP
+          WHERE share_token = ?
+        `).bind(token).run()
+      )
+    }
+
+    // share_data_json 파싱 + 렌더
+    const data = JSON.parse(row.share_data_json) as {
+      v: number
+      type?: 'job' | 'major'
+      jobs: Array<{ name: string; fit: number; slug: string; image_url?: string }>
+      vision: string
+      meta: {
+        strengths: string[]
+        values: string[]
+        cautions: string[]
+        likes: string[]
+        avoid: string[]
+      }
+      createdAt: string
+    }
+
+    // 이미지 없는 항목이 있으면 DB에서 slug로 조회하여 보강
+    const itemsMissingImage = data.jobs.filter((j: any) => !j.image_url && j.slug)
+    if (itemsMissingImage.length > 0) {
+      const slugs = itemsMissingImage.map((j: any) => j.slug)
+      const placeholders = slugs.map(() => '?').join(',')
+      const table = data.type === 'major' ? 'majors' : 'jobs'
+      const rows = await db.prepare(
+        `SELECT slug, image_url FROM ${table} WHERE slug IN (${placeholders}) AND image_url IS NOT NULL`
+      ).bind(...slugs).all<{ slug: string; image_url: string }>()
+      if (rows.results) {
+        const imageMap = new Map(rows.results.map(r => [r.slug, r.image_url]))
+        for (const job of data.jobs) {
+          if (!job.image_url && job.slug && imageMap.has(job.slug)) {
+            job.image_url = imageMap.get(job.slug)
+          }
+        }
+      }
+    }
+
+    const html = renderShareCard(data, token)
+    return c.html(html, 200, {
+      'X-Robots-Tag': 'noindex, nofollow',
+      'Cache-Control': 'public, max-age=300',
+    })
+
+  } catch (error) {
+    return c.html(renderShareGonePage(), 500, {
+      'X-Robots-Tag': 'noindex, nofollow',
+    })
+  }
+})
+
+// 미니카드 HTML 렌더링
+// 서버사이드 태그 번역 맵 (클라이언트 translateToKorean 라벨과 동기화)
+const SHARE_TAG_LABELS: Record<string, string> = {
+  // 강점
+  analytical: '분석력', creative: '창의력', communication: '소통력',
+  structured_execution: '실행력', persistence: '끈기', fast_learning: '학습력',
+  leadership: '리더십', detail_oriented: '꼼꼼함', patience: '인내심',
+  empathy: '공감 능력', organization: '체계적 정리', adaptability: '적응력',
+  perseverance: '끈기', creativity: '창의성', strategic: '전략적 사고',
+  teamwork: '팀워크', independence: '독립적 업무',
+  // 가치
+  recognition: '인정/영향력', stability: '안정성', income: '높은 수입',
+  growth: '성장', autonomy: '자율성', meaning: '의미/사회 기여',
+  wlb: '워라밸', balance: '워라밸', expertise: '전문성',
+  // 관심
+  problem_solving: '문제 해결', data_numbers: '데이터/숫자', tech: '기술/IT',
+  people: '사람/소통', helping: '돌봄/봉사', business: '비즈니스',
+  nature: '자연/환경', physical: '신체 활동', research: '연구/탐구',
+  teaching: '교육/가르침', analysis: '분석', design: '디자인',
+  writing: '글쓰기', hands_on: '손으로 만들기', helping_teaching: '교육/돌봄',
+  // 주의 (스트레스 트리거)
+  people_drain: '대인 스트레스', cognitive_drain: '인지 피로',
+  time_pressure_drain: '시간 압박', responsibility_drain: '책임 스트레스',
+  repetition_drain: '반복 피로', unpredictability_drain: '불확실성 스트레스',
+  // 제약/회피
+  time_constraint: '시간 제약', income_constraint: '수입 조건',
+  location_constraint: '위치 제약', physical_constraint: '체력 제약',
+  no_travel: '출장 불가', no_overtime: '야근 불가', remote_preferred: '재택 선호',
+  prefer_remote: '재택 선호', no_shift: '교대근무 불가',
+}
+
+function translateTag(tag: string): string {
+  if (!tag) return tag
+  // 정확 일치
+  if (SHARE_TAG_LABELS[tag]) return SHARE_TAG_LABELS[tag]
+  // 이미 한국어면 그대로
+  if (/[가-힣]/.test(tag)) return tag
+  // 언더스코어를 공백으로 바꿔서 재시도
+  const normalized = tag.replace(/_/g, ' ')
+  return SHARE_TAG_LABELS[normalized] || tag
+}
+
+function renderShareCard(data: any, token: string): string {
+  const jobs = data.jobs || []
+  const meta = data.meta || {}
+  const vision = data.vision || ''
+  const isMajor = data.type === 'major'
+
+  const pageTitle = isMajor ? '전공 적성 분석' : '커리어 분석'
+  const ogTitle = isMajor ? 'AI 전공 적성 분석 — 커리어위키' : 'AI 커리어 분석 — 커리어위키'
+  const itemLabel = isMajor ? '추천 전공' : '추천 직업'
+  const ctaText = isMajor ? '전공 추천 받기' : '직업 추천 받기'
+  const ctaHref = isMajor
+    ? '/analyzer/major?utm_source=share&utm_medium=og&utm_campaign=ai_report'
+    : '/analyzer?utm_source=share&utm_medium=og&utm_campaign=ai_report'
+  const fallbackIcon = isMajor ? 'fa-graduation-cap' : 'fa-briefcase'
+
+  const ogDesc = jobs.length > 0
+    ? `Top 추천: ${jobs.slice(0, 2).map((j: any) => `${j.name}(${j.fit}점)`).join(' · ')} 나도 무료로 해보기 →`
+    : `AI가 분석한 나의 ${isMajor ? '전공 적성' : '커리어'} — 나도 무료로 해보기 →`
+
+  // 순위별 배지 색상 (OG 이미지와 동일)
+  const badgeColors = ['#fbbf24', '#94a3b8', '#cd7f32', '#6366f1', '#6366f1']
+  const badgeBgs = ['rgba(251,191,36,0.15)', 'rgba(148,163,184,0.15)', 'rgba(205,127,50,0.15)', 'rgba(99,102,241,0.12)', 'rgba(99,102,241,0.12)']
+
+  const jobsHtml = jobs.map((j: any, i: number) => {
+    const fitColor = j.fit >= 85 ? '#818cf8' : j.fit >= 70 ? '#60a5fa' : '#9ca3af'
+    const rankBadge = `<div style="width:22px;height:22px;border-radius:50%;background:${badgeColors[i]};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#1e1b4b;flex-shrink:0;">${i + 1}</div>`
+    const imageHtml = j.image_url
+      ? `<img src="${j.image_url}" alt="${j.name}" style="width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;">`
+      : `<div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,${badgeColors[i]}40,${badgeColors[i]}20);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:#94a3b8;"><i class="fas ${fallbackIcon}"></i></div>`
+    return `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.04);margin-bottom:${i < jobs.length - 1 ? '8px' : '0'};">
+      ${rankBadge}
+      ${imageHtml}
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:15px;font-weight:600;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${j.name}</div>
+      </div>
+      <div style="font-size:18px;font-weight:800;color:${fitColor};flex-shrink:0;">${j.fit}<span style="font-size:12px;font-weight:600;">점</span></div>
+    </div>`
+  }).join('')
+
+  // 태그 렌더 (다크 테마 + 한국어 번역)
+  const renderTags = (items: string[], bgColor: string, textColor: string) =>
+    items.filter(Boolean).map(t => {
+      const translated = translateTag(t)
+      return `<span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500;background:${bgColor};color:${textColor};margin:2px 4px 2px 0;">#${translated}</span>`
+    }).join('')
+
+  const strengthTags = renderTags(meta.strengths || [], 'rgba(34,197,94,0.15)', '#86efac')
+  const valueTags = renderTags(meta.values || [], 'rgba(99,102,241,0.15)', '#a5b4fc')
+  const likeTags = renderTags(meta.likes || [], 'rgba(168,85,247,0.15)', '#d8b4fe')
+  const cautionTags = renderTags(meta.cautions || [], 'rgba(251,146,60,0.15)', '#fdba74')
+  const avoidTags = renderTags(meta.avoid || [], 'rgba(239,68,68,0.15)', '#fca5a5')
+
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${ogTitle}</title>
+  <meta property="og:title" content="${ogTitle}">
+  <meta property="og:description" content="${ogDesc}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://careerwiki.org/share/${token}">
+  <meta property="og:image" content="https://careerwiki.org/share/${token}/og.png">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="418">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${ogTitle}">
+  <meta name="twitter:description" content="${ogDesc}">
+  <meta name="twitter:image" content="https://careerwiki.org/share/${token}/og.png">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://careerwiki.org/share/${token}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(26, 26, 46, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .header-sub { font-size: 12px; color: rgba(255,255,255,0.7); letter-spacing: 3px; margin-bottom: 6px; }
+    .header-title { font-size: 24px; font-weight: 800; color: white; }
+    .body { padding: 24px; }
+    .section { margin-bottom: 24px; }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title i { font-size: 14px; }
+    .vision-box {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #c4b5fd;
+      font-style: italic;
+    }
+    .tag-row { margin-bottom: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+    .tag-label { font-size: 12px; color: #64748b; min-width: 36px; flex-shrink: 0; }
+    .notice {
+      text-align: center;
+      font-size: 11px;
+      color: #4b5563;
+      padding: 12px 0 0;
+      border-top: 1px solid rgba(99, 102, 241, 0.1);
+    }
+    .cta {
+      display: block;
+      margin: 0 24px 24px;
+      text-align: center;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      text-decoration: none;
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
+      transition: opacity 0.2s;
+    }
+    .cta:hover { opacity: 0.9; }
+    .footer {
+      text-align: center;
+      padding: 16px 0;
+      font-size: 12px;
+    }
+    .footer a { color: #6366f1; text-decoration: none; }
+    .footer a:hover { color: #818cf8; }
+  </style>
+</head>
+<body>
+  <div style="width:100%;max-width:480px;">
+    <div class="card">
+      <div class="header">
+        <div class="header-sub">AI CAREER ANALYSIS</div>
+        <div class="header-title">${pageTitle}</div>
+      </div>
+
+      <div class="body">
+        ${jobs.length > 0 ? `
+        <div class="section">
+          <div class="section-title">
+            <i class="fas fa-trophy" style="color:#fbbf24;"></i> ${itemLabel} TOP ${Math.min(jobs.length, 5)}
+          </div>
+          ${jobsHtml}
+        </div>
+        ` : ''}
+
+        ${vision ? `
+        <div class="section">
+          <div class="section-title">
+            <i class="fas fa-star" style="color:#a78bfa;"></i> ${isMajor ? '전공 비전' : '커리어 비전'}
+          </div>
+          <div class="vision-box">"${vision}"</div>
+        </div>
+        ` : ''}
+
+        <div class="section">
+          <div class="section-title">
+            <i class="fas fa-dna" style="color:#c084fc;"></i> 커리어 DNA
+          </div>
+          ${strengthTags ? `<div class="tag-row"><span class="tag-label">강점</span>${strengthTags}</div>` : ''}
+          ${valueTags ? `<div class="tag-row"><span class="tag-label">가치</span>${valueTags}</div>` : ''}
+          ${likeTags ? `<div class="tag-row"><span class="tag-label">관심</span>${likeTags}</div>` : ''}
+          ${cautionTags ? `<div class="tag-row"><span class="tag-label">주의</span>${cautionTags}</div>` : ''}
+          ${avoidTags ? `<div class="tag-row"><span class="tag-label">회피</span>${avoidTags}</div>` : ''}
+        </div>
+
+        <div class="notice">
+          <i class="fas fa-info-circle"></i>
+          이 페이지는 요약본이며, 상세 분석 내용은 포함되지 않습니다.
+        </div>
+      </div>
+
+      <div style="margin:0 24px 24px;text-align:center;">
+        <a href="${ctaHref}" class="cta" style="margin:0;">
+          <i class="fas fa-rocket" style="margin-right:6px;"></i> ${ctaText}
+        </a>
+        <div style="margin-top:8px;font-size:11px;color:#6366f1;">
+          <i class="fas fa-gift" style="margin-right:3px;"></i> 베타 기간 무료
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <a href="/">careerwiki.org</a>
+    </div>
+  </div>
+</body>
+</html>`
+}
+
+// 410 Gone 페이지 (OG 태그 포함!)
+function renderShareGonePage(): string {
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공유 링크 만료 — 커리어위키</title>
+  <meta property="og:title" content="AI 커리어 분석 — 커리어위키">
+  <meta property="og:description" content="나도 무료로 AI 커리어 DNA 분석 받아보기 →">
+  <meta property="og:image" content="https://careerwiki.org/images/og-share-card.png">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="/static/tailwind.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md text-center">
+    <div class="bg-white rounded-2xl shadow-lg px-8 py-10">
+      <div class="text-5xl mb-4 text-gray-300"><i class="fas fa-link-slash"></i></div>
+      <h1 class="text-xl font-bold text-gray-700 mb-2">이 공유 링크는 만료되었습니다</h1>
+      <p class="text-gray-400 text-sm mb-8">링크가 해제되었거나 유효기간이 지났습니다.</p>
+      <a href="/ai-analyzer?utm_source=share&utm_medium=expired&utm_campaign=ai_report"
+         class="inline-block bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity">
+        <i class="fas fa-rocket mr-1"></i> 나도 무료로 커리어 DNA 보기
+      </a>
+    </div>
+    <div class="mt-4 text-xs text-gray-400">
+      <a href="/" class="hover:text-gray-600">careerwiki.org</a>
+    </div>
+  </div>
+</body>
+</html>`
+}
+
+// ============================================
+// 공유 OG 이미지 (동적 SVG)
+// ============================================
+app.get('/share/:token/og.png', async (c) => {
+  const db = c.env.DB
+  const r2 = c.env.UPLOADS
+  const token = c.req.param('token')
+
+  if (!token) {
+    return c.redirect('/images/og-default.png', 302)
+  }
+
+  try {
+    // 1. R2 캐시 확인
+    const cached = await getCachedOgImage(r2, token)
+    if (cached) {
+      return new Response(cached.buffer as ArrayBuffer, {
+        status: 200,
+        headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' },
+      })
+    }
+
+    // 2. D1에서 share_data 조회
+    const row = await db.prepare(`
+      SELECT share_data_json FROM share_tokens
+      WHERE share_token = ? AND is_revoked = 0
+    `).bind(token).first<{ share_data_json: string }>()
+
+    if (!row) {
+      return c.redirect('/images/og-default.png', 302)
+    }
+
+    // 3. SVG 생성 → PNG 변환
+    const data = JSON.parse(row.share_data_json)
+    const svg = renderOgSvg(data.jobs || [], data.vision || '')
+    const png = await svgToPng(svg, r2)
+
+    // 4. R2에 캐시 저장 (non-blocking)
+    c.executionCtx.waitUntil(cacheOgImage(r2, token, png))
+
+    // 5. PNG 반환
+    return new Response(png.buffer as ArrayBuffer, {
+      status: 200,
+      headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' },
+    })
+  } catch (err) {
+    return c.redirect('/images/og-default.png', 302)
+  }
+})
+
+function renderOgSvg(jobs: Array<{ name: string; fit: number }>, vision = ''): string {
+  const rankColors = ['#fbbf24', '#94a3b8', '#cd7f32', '#9ca3af', '#9ca3af']
+  const jobLines = jobs.slice(0, 5).map((j, i) => {
+    const y = 195 + i * 44
+    const rank = `${i + 1}`
+    const fitColor = j.fit >= 85 ? '#818cf8' : j.fit >= 70 ? '#60a5fa' : '#9ca3af'
+    const badgeColor = rankColors[i] || '#9ca3af'
+    return `<circle cx="65" cy="${y - 7}" r="13" fill="${badgeColor}" opacity="0.9"/>
+    <text x="65" y="${y - 2}" font-size="13" fill="#1e1b4b" font-weight="bold" font-family="Noto Sans KR, sans-serif" text-anchor="middle">${rank}</text>
+    <text x="90" y="${y}" font-size="24" fill="#e0e0e0" font-family="Noto Sans KR, sans-serif">${j.name}</text>
+    <text x="720" y="${y}" font-size="24" fill="${fitColor}" font-weight="bold" font-family="Noto Sans KR, sans-serif" text-anchor="end">${j.fit}점</text>`
+  }).join('\n    ')
+
+  const visionLine = vision
+    ? `<text x="400" y="${195 + Math.min(jobs.length, 5) * 44 + 30}" font-size="16" fill="#a5b4fc" font-family="Noto Sans KR, sans-serif" text-anchor="middle" opacity="0.8">"${vision.slice(0, 60)}${vision.length > 60 ? '...' : ''}"</text>`
+    : ''
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="418" viewBox="0 0 800 418">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b"/>
+      <stop offset="100%" style="stop-color:#312e81"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="418" fill="url(#bg)" rx="0"/>
+
+  <!-- Header -->
+  <text x="400" y="50" font-size="15" fill="#a5b4fc" font-family="Noto Sans KR, sans-serif" text-anchor="middle" letter-spacing="3">AI CAREER ANALYSIS</text>
+  <text x="400" y="90" font-size="32" fill="white" font-weight="bold" font-family="Noto Sans KR, sans-serif" text-anchor="middle">나의 커리어 DNA</text>
+
+  <!-- Divider -->
+  <line x1="200" y1="110" x2="600" y2="110" stroke="#4338ca" stroke-width="1" opacity="0.5"/>
+
+  <!-- Subtitle -->
+  <text x="400" y="145" font-size="16" fill="#c4b5fd" font-family="Noto Sans KR, sans-serif" text-anchor="middle">AI 추천 직업</text>
+
+  <!-- Job List -->
+  ${jobLines}
+
+  <!-- Vision -->
+  ${visionLine}
+
+  <!-- Footer -->
+  <text x="400" y="405" font-size="13" fill="#6366f1" font-family="Noto Sans KR, sans-serif" text-anchor="middle">careerwiki.org</text>
+</svg>`
+}
 
 // ============================================
 // 온보딩 라우트
@@ -316,7 +850,6 @@ app.get('/api/me/onboarding', requireAuth, async (c) => {
     const status = await getOnboardingStatus(c.env.DB, user.id)
     return c.json(status)
   } catch (error) {
-    console.error('[Onboarding] Error getting status:', error)
     return c.json({ error: 'Failed to get onboarding status' }, 500)
   }
 })
@@ -333,7 +866,6 @@ app.get('/api/nickname/check', async (c) => {
     const result = await checkNicknameAvailability(c.env.DB, value)
     return c.json(result)
   } catch (error) {
-    console.error('[Onboarding] Error checking nickname:', error)
     return c.json({ ok: false, reason: 'invalid', message: '검증 중 오류가 발생했습니다.' })
   }
 })
@@ -366,19 +898,24 @@ app.post('/api/onboarding', requireAuth, async (c) => {
     
     return c.json(result)
   } catch (error) {
-    console.error('[Onboarding] Error submitting:', error)
     return c.json({ success: false, error: '온보딩 처리 중 오류가 발생했습니다.' }, 500)
   }
 })
 
 // 약관 페이지
 app.get('/legal/terms', async (c) => {
-  return c.html(renderTermsPage())
+  const user = c.get('user')
+  const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
+  const userMenuHtml = renderUserMenu(userData)
+  return c.html(renderTermsPage({ userMenuHtml }))
 })
 
 // 개인정보처리방침 페이지
 app.get('/legal/privacy', async (c) => {
-  return c.html(renderPrivacyPage())
+  const user = c.get('user')
+  const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
+  const userMenuHtml = renderUserMenu(userData)
+  return c.html(renderPrivacyPage({ userMenuHtml }))
 })
 
 // Help Center
@@ -468,185 +1005,194 @@ app.get('/feedback/:id', async (c) => {
   )
 })
 
-// Releases placeholder (with shared header)
+// 릴리즈 노트 (사용자 대상 — feat/fix만 필터링)
 app.get('/releases', async (c) => {
   const user = c.get('user')
   const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
   const userMenuHtml = renderUserMenu(userData)
 
-  // --- Cloudflare Pages API로 배포 이력 가져오기 ---
-  const accountId = c.env.CF_ACCOUNT_ID || ''
-  const apiToken = c.env.CF_PAGES_API_TOKEN || ''
-  const projectName = 'careerwiki-phase1'
+  // --- GitHub API에서 커밋 가져오기 (cf.cacheTtl로 엣지 캐싱) ---
+  interface ReleaseNote { type: 'feat' | 'fix' | 'improve'; message: string; date: string; dateKey: string }
 
-  interface DeploymentMeta {
-    branch: string
-    commitHash: string
-    commitMessage: string
-    createdOn: string
-    status: string
-    environment: string
-  }
-
-  let deployments: DeploymentMeta[] = []
+  let notes: ReleaseNote[] = []
   let fetchError = false
 
-  if (accountId && apiToken) {
-    try {
-      const cacheKey = new Request('https://releases-cache.internal/deployments')
-      const cache = typeof caches !== 'undefined' ? (caches as any).default as Cache | undefined : null
-
-      let cachedResponse = cache ? await cache.match(cacheKey) : null
-      if (cachedResponse) {
-        deployments = await cachedResponse.json() as DeploymentMeta[]
-      } else {
-        const apiUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/pages/projects/${projectName}/deployments?per_page=30`
-        const apiRes = await fetch(apiUrl, {
-          headers: { 'Authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json' }
-        })
-        if (apiRes.ok) {
-          const data = await apiRes.json() as { result?: any[] }
-          const raw = (data.result || [])
-            .filter((d: any) => d.environment === 'production')
-            .slice(0, 20)
-
-          deployments = raw.map((d: any) => ({
-            branch: d.deployment_trigger?.metadata?.branch || '',
-            commitHash: d.deployment_trigger?.metadata?.commit_hash || '',
-            commitMessage: d.deployment_trigger?.metadata?.commit_message || '직접 배포',
-            createdOn: d.created_on || '',
-            status: d.latest_stage?.status || 'unknown',
-            environment: d.environment || 'production'
-          }))
-
-          if (cache) {
-            const cacheResponse = new Response(JSON.stringify(deployments), {
-              headers: { 'Cache-Control': 'public, max-age=600' }
-            })
-            await cache.put(cacheKey, cacheResponse)
-          }
-        } else {
-          fetchError = true
-        }
-      }
-    } catch (e) {
-      console.error('[Releases] API fetch error:', e)
-      fetchError = true
-    }
-  } else {
-    fetchError = true
+  const typeMap: Record<string, ReleaseNote['type']> = {
+    feat: 'feat', fix: 'fix', improve: 'improve', update: 'improve', perf: 'improve'
   }
 
-  // 날짜 포맷 (한국어)
-  const fmtDate = (iso: string): string => {
-    if (!iso) return ''
+  const KV_RELEASE_KEY = 'release-notes-v5'
+
+  const parseCommitMessage = (msg: string, iso: string): ReleaseNote | null => {
+    const firstLine = msg.split('\n')[0].trim()
+    const match = firstLine.match(/^(feat|fix|improve|update|perf)(\(.+?\))?:\s*(.+)$/i)
+    if (!match) return null
+    const rawType = match[1].toLowerCase()
+    const type = typeMap[rawType] || 'improve'
+    const body = match[3].trim()
+    if (!body) return null
     const d = new Date(iso)
-    const y = d.getFullYear()
-    const m = d.getMonth() + 1
-    const day = d.getDate()
-    const h = d.getHours()
-    const min = String(d.getMinutes()).padStart(2, '0')
-    const ampm = h >= 12 ? '오후' : '오전'
-    const h12 = h % 12 || 12
-    return `${y}년 ${m}월 ${day}일 ${ampm} ${h12}:${min}`
+    const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000)
+    const dateKey = `${kst.getFullYear()}-${String(kst.getMonth() + 1).padStart(2, '0')}`
+    return { type, message: body.length > 100 ? body.slice(0, 97) + '...' : body, date: iso, dateKey }
   }
 
-  // 상태 뱃지
-  const statusBadge = (status: string): string => {
-    switch (status) {
-      case 'success': return '<span class="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-medium">성공</span>'
-      case 'failure': return '<span class="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 font-medium">실패</span>'
-      case 'active': case 'idle': return '<span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 font-medium">진행 중</span>'
-      default: return `<span class="text-xs px-2 py-0.5 rounded-full bg-slate-500/20 text-slate-400 font-medium">${status}</span>`
-    }
-  }
+  try {
+    // 1) KV 캐시 확인 (가장 안정적)
+    const kvData = await c.env.KV.get(KV_RELEASE_KEY).catch(() => null)
+    if (kvData) {
+      notes = JSON.parse(kvData) as ReleaseNote[]
+    } else {
+      // 2) GitHub API 호출 (cf.cacheTtl로 Cloudflare 엣지 캐싱 — rate limit 우회)
+      const apiUrl = 'https://api.github.com/repos/Tok2coder/Careerwiki/commits?sha=main&per_page=100'
+      const ghHeaders: Record<string, string> = { 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'Careerwiki-Releases' }
+      const ghToken = (c.env as any).GITHUB_TOKEN as string | undefined
+      if (ghToken) ghHeaders['Authorization'] = `token ${ghToken}`
 
-  const dotClass = (status: string): string => {
-    switch (status) {
-      case 'success': return 'rl-dot-ok'
-      case 'failure': return 'rl-dot-fail'
-      case 'active': case 'idle': return 'rl-dot-prog'
-      default: return 'rl-dot-ok'
+      const apiRes = await fetch(apiUrl, {
+        headers: ghHeaders,
+        cf: { cacheTtl: 7200, cacheEverything: true },
+      } as any)
+
+      if (apiRes.ok) {
+        const commits = await apiRes.json() as any[]
+        for (const cm of commits) {
+          const msg: string = cm.commit?.message || ''
+          const iso = cm.commit?.author?.date || cm.commit?.committer?.date || ''
+          const note = parseCommitMessage(msg, iso)
+          if (note) notes.push(note)
+        }
+        // KV에 저장 (24시간)
+        if (notes.length > 0) {
+          try { await c.env.KV.put(KV_RELEASE_KEY, JSON.stringify(notes), { expirationTtl: 86400 }) } catch {}
+        }
+      } else {
+        fetchError = true
+      }
     }
+  } catch (e) {
+    fetchError = true
   }
 
   const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
-  // 커밋 메시지 정리 (첫 줄, 120자 제한)
-  const trimMsg = (msg: string): string => {
-    const line = msg.split('\n')[0].trim()
-    return line.length > 120 ? line.slice(0, 117) + '...' : line
+  const typeLabel: Record<string, { icon: string; label: string; color: string; bg: string }> = {
+    feat:    { icon: 'fa-wand-magic-sparkles', label: '새 기능',  color: '#a78bfa', bg: 'rgba(167,139,250,0.15)' },
+    fix:     { icon: 'fa-bug',      label: '버그 수정', color: '#f87171', bg: 'rgba(248,113,113,0.15)' },
+    improve: { icon: 'fa-arrow-up', label: '개선',     color: '#60a5fa', bg: 'rgba(96,165,250,0.15)' },
   }
 
-  // 타임라인 HTML 생성
-  let timelineHtml: string
-  if (fetchError || deployments.length === 0) {
-    timelineHtml = `
+  // 날짜별 그룹핑
+  const grouped = new Map<string, ReleaseNote[]>()
+  for (const n of notes) {
+    const arr = grouped.get(n.dateKey) || []
+    arr.push(n)
+    grouped.set(n.dateKey, arr)
+  }
+
+  const fmtDateHeader = (key: string): string => {
+    const [y, m] = key.split('-').map(Number)
+    return `${y}년 ${m}월`
+  }
+
+  // 월 목록 (정렬됨: 최신 먼저)
+  const monthKeys = [...grouped.keys()]
+
+  // 각 월별 카드 HTML 생성 (data-month 속성으로 JS 토글)
+  let sectionsHtml = ''
+  if (fetchError || notes.length === 0) {
+    sectionsHtml = `
       <div class="glass-card rounded-xl p-8 text-center" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.22);backdrop-filter:blur(14px);">
-        <i class="fas fa-server text-3xl text-slate-400 mb-4 block"></i>
-        <p class="text-white font-semibold mb-2">${fetchError ? '배포 이력을 불러올 수 없습니다' : '배포 이력이 없습니다'}</p>
-        <p class="text-sm text-slate-400">${fetchError ? 'API 연결을 확인해 주세요. 잠시 후 다시 시도하세요.' : '아직 프로덕션 배포가 없습니다.'}</p>
+        <i class="fas fa-box-open text-3xl text-slate-400 mb-4 block"></i>
+        <p class="text-white font-semibold mb-2">${fetchError ? '업데이트 내역을 불러올 수 없습니다' : '아직 업데이트 내역이 없습니다'}</p>
+        <p class="text-sm text-slate-400">잠시 후 다시 시도해 주세요.</p>
       </div>`
   } else {
-    const cards = deployments.map((d, i) => {
-      const shortHash = d.commitHash ? d.commitHash.slice(0, 7) : ''
-      const commitLink = shortHash
-        ? `<a href="https://github.com/Tok2coder/Careerwiki/commit/${esc(d.commitHash)}" class="font-mono hover:underline" style="color:#64b5f6;" target="_blank" rel="noopener"><i class="fas fa-code-commit mr-1"></i>${shortHash}</a>`
-        : ''
-      const branchHtml = d.branch ? `<span><i class="fas fa-code-branch mr-1"></i>${esc(d.branch)}</span>` : ''
+    for (const [dateKey, items] of grouped) {
+      const isFirst = dateKey === monthKeys[0]
+      const itemsHtml = items.map(n => {
+        const t = typeLabel[n.type] || typeLabel.improve
+        return `
+          <div class="flex items-start gap-3 py-3">
+            <span class="flex-shrink-0 mt-0.5 w-7 h-7 rounded-lg flex items-center justify-center text-xs" style="background:${t.bg};color:${t.color};"><i class="fas ${t.icon}"></i></span>
+            <div class="flex-1 min-w-0">
+              <p class="text-white text-sm sm:text-base leading-relaxed">${esc(n.message)}</p>
+            </div>
+            <span class="flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-medium" style="background:${t.bg};color:${t.color};">${t.label}</span>
+          </div>`
+      }).join('<div style="border-top:1px solid rgba(148,163,184,0.1);"></div>')
 
-      return `
-        <div class="relative pl-10 sm:pl-12 ${i < deployments.length - 1 ? 'pb-6' : ''}">
-          <div class="rl-dot ${dotClass(d.status)}"></div>
-          <div class="glass-card rounded-xl p-4 sm:p-5" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.22);backdrop-filter:blur(14px);">
-            <div class="flex flex-wrap items-center gap-2 mb-2">
-              ${statusBadge(d.status)}
-              <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 font-medium" style="color:#93c5fd;">production</span>
-              <span class="text-xs ml-auto" style="color:#9aa3c5;">${fmtDate(d.createdOn)}</span>
-            </div>
-            <p class="text-white font-medium text-sm sm:text-base mb-1">${esc(trimMsg(d.commitMessage))}</p>
-            <div class="flex flex-wrap items-center gap-3 text-xs" style="color:#9aa3c5;">
-              ${branchHtml}
-              ${commitLink}
-            </div>
+      const fc = items.filter(n => n.type === 'feat').length
+      const xc = items.filter(n => n.type === 'fix').length
+      const ic = items.filter(n => n.type === 'improve').length
+
+      sectionsHtml += `
+        <div class="rl-month" data-month="${dateKey}" data-feat="${fc}" data-fix="${xc}" data-improve="${ic}" style="${isFirst ? '' : 'display:none;'}">
+          <div class="glass-card rounded-xl px-4 sm:px-5" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.15);backdrop-filter:blur(14px);">
+            ${itemsHtml}
           </div>
         </div>`
-    }).join('')
-
-    timelineHtml = `<div class="relative"><div class="rl-line"></div>${cards}</div>`
+    }
   }
+
+  // 드롭다운 옵션
+  const dropdownOptions = monthKeys.map((k, i) => {
+    const [y, m] = k.split('-').map(Number)
+    const count = grouped.get(k)!.length
+    return `<option value="${k}"${i === 0 ? ' selected' : ''}>${y}년 ${m}월 (${count}건)</option>`
+  }).join('')
 
   return c.html(`<!DOCTYPE html>
   <html lang="ko">
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>배포 이력 | CareerWiki</title>
+      <title>업데이트 내역 | Careerwiki</title>
       <link href="/static/style.css" rel="stylesheet" />
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/static/tailwind.css">
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
       ${renderNavStyles()}
-      <style>
-        .rl-line{position:absolute;left:15px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#4361ee 0%,#64b5f6 50%,rgba(67,97,238,0.1) 100%);}
-        .rl-dot{width:12px;height:12px;border-radius:50%;position:absolute;left:10px;top:20px;z-index:1;}
-        .rl-dot-ok{background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.4);}
-        .rl-dot-fail{background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,0.4);}
-        .rl-dot-prog{background:#eab308;box-shadow:0 0 8px rgba(234,179,8,0.4);animation:rl-pulse 2s infinite;}
-        @keyframes rl-pulse{0%,100%{opacity:1}50%{opacity:.5}}
-        @media(max-width:640px){.rl-line{left:11px;}.rl-dot{left:6px;}}
-      </style>
     </head>
-    <body class="bg-wiki-bg text-wiki-text min-h-screen" style="background-color:#0b1220;color:#e6e8f5;">
+    <body class="bg-wiki-bg text-wiki-text min-h-screen">
       ${renderNav(userMenuHtml)}
-      <main class="max-w-[900px] mx-auto px-4 pt-20 pb-20 sm:pt-12">
-        <div class="text-center mb-8">
-          <p class="text-xs uppercase tracking-[0.2em] font-semibold mb-2" style="color:#93c5fd;">Releases</p>
-          <h1 class="text-3xl md:text-4xl font-bold text-white">배포 이력</h1>
-          <p class="text-sm mt-2" style="color:#9aa3c5;">프로덕션 환경에 배포된 최근 업데이트 내역입니다.</p>
+      <main class="max-w-[1400px] mx-auto px-4 pt-20 pb-10 sm:pt-12">
+        <header class="mb-8 space-y-3">
+          <div class="flex items-center gap-2 text-xs text-blue-300 font-semibold uppercase tracking-[0.2em]">
+            <i class="fas fa-rocket"></i><span>업데이트 내역</span>
+          </div>
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <h1 class="text-3xl md:text-4xl font-bold text-white">업데이트 내역</h1>
+            <p class="text-wiki-muted text-[15px]">Careerwiki에 추가된 새 기능과 개선 사항을 확인하세요.</p>
+          </div>
+        </header>
+        ${monthKeys.length > 0 ? `
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+          <div id="rlStats" class="flex flex-wrap justify-center gap-3">
+          </div>
+          <select id="rlMonthSelect" onchange="rlSwitch(this.value)" class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.25);color:#e6e8f5;">
+            ${dropdownOptions}
+          </select>
+        </div>` : ''}
+        <div id="rlSections">
+          ${sectionsHtml}
         </div>
-        ${timelineHtml}
       </main>
       ${renderNavScripts()}
+      <script>
+      function rlSwitch(month){
+        document.querySelectorAll('.rl-month').forEach(function(el){
+          el.style.display=el.getAttribute('data-month')===month?'':'none';
+        });
+        var active=document.querySelector('.rl-month[data-month="'+month+'"]');
+        if(!active)return;
+        var fc=+active.getAttribute('data-feat'),xc=+active.getAttribute('data-fix'),ic=+active.getAttribute('data-improve');
+        document.getElementById('rlStats').innerHTML=
+          '<div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs" style="background:rgba(167,139,250,0.12);color:#a78bfa;"><i class="fas fa-wand-magic-sparkles"></i><span>새 기능 '+fc+'</span></div>'+
+          '<div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs" style="background:rgba(248,113,113,0.12);color:#f87171;"><i class="fas fa-bug"></i><span>버그 수정 '+xc+'</span></div>'+
+          '<div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs" style="background:rgba(96,165,250,0.12);color:#60a5fa;"><i class="fas fa-arrow-up"></i><span>개선 '+ic+'</span></div>';
+      }
+      rlSwitch(document.getElementById('rlMonthSelect')?.value||'');
+      </script>
     </body>
   </html>`)
 })
@@ -734,6 +1280,10 @@ const renderLayout = (
     extraHead?: string
     canonical?: string
     ogUrl?: string
+    ogImage?: string
+    ogImageWidth?: string
+    ogImageHeight?: string
+    ogType?: string
     user?: { id: number; name: string | null; email: string; role: string; picture_url: string | null; custom_picture_url?: string | null; username: string | null } | null
     context?: Context<{ Bindings: Bindings; Variables: Variables }>  // Phase 3 Day 4: Context를 통해 사용자 정보 자동 가져오기
     ipAddress?: string | null  // Phase 3 Day 4: IP 주소 (비로그인 상태에서 표시)
@@ -742,7 +1292,12 @@ const renderLayout = (
   const canonicalUrl = options?.canonical ?? 'https://careerwiki.org'
   const ogUrl = options?.ogUrl ?? canonicalUrl
   const extraHead = options?.extraHead ?? ''
-  
+  const ogImage = (options?.ogImage && options.ogImage.trim()) || 'https://careerwiki.org/images/og-default.png'
+  const ogImageWidth = options?.ogImageWidth ?? '1200'
+  const ogImageHeight = options?.ogImageHeight ?? '630'
+  const ogType = options?.ogType ?? 'website'
+  const googleVerification = options?.context?.env?.GOOGLE_SITE_VERIFICATION ?? ''
+
   // Phase 3 Day 4: 사용자 정보 가져오기 (options.user 우선, 없으면 context에서 가져오기)
   let user = options?.user ?? null
   if (!user && options?.context) {
@@ -760,9 +1315,6 @@ const renderLayout = (
     }
   }
   
-  // 디버깅: 사용자 정보 확인
-  // console.log('[renderLayout] User:', user ? { id: user.id, username: user.username } : 'null')
-
   return `
     <!DOCTYPE html>
     <html lang="ko">
@@ -773,33 +1325,26 @@ const renderLayout = (
         <meta name="description" content="${description}">
         <meta property="og:title" content="${title}">
         <meta property="og:description" content="${description}">
-        <meta property="og:type" content="website">
+        <meta property="og:type" content="${ogType}">
         <meta property="og:url" content="${ogUrl}">
+        <meta property="og:image" content="${ogImage}">
+        <meta property="og:image:width" content="${ogImageWidth}">
+        <meta property="og:image:height" content="${ogImageHeight}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:description" content="${description}">
+        <meta name="twitter:image" content="${ogImage}">
         <meta name="robots" content="index, follow">
+        ${googleVerification ? `<meta name="google-site-verification" content="${googleVerification}">` : ''}
         <link rel="canonical" href="${canonicalUrl}">
         <link rel="icon" type="image/png" href="/images/CWfavicon.png">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
-        <script src="https://unpkg.com/lucide@latest"></script>
+        <link href="/static/style.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/static/tailwind.css">
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/lucide@0.474.0/dist/umd/lucide.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-        <script>
-          tailwind.config = {
-            darkMode: 'class',
-            theme: {
-              extend: {
-                colors: {
-                  'wiki-bg': '#0f0f23',
-                  'wiki-card': '#1a1a2e',
-                  'wiki-border': '#2a2a3e',
-                  'wiki-primary': '#4361ee',
-                  'wiki-secondary': '#64b5f6',
-                  'wiki-text': '#e0e0e0',
-                  'wiki-muted': '#9ca3af',
-                }
-              }
-            }
-          }
-        </script>
+        <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" crossorigin="anonymous"></script>
+        <script>if(window.Kakao&&!Kakao.isInitialized())Kakao.init('79ec886101c6ef4987616900d70beb73');</script>
         <script>
           // 서버에서 주입하는 사용자 정보 (초기값, ISR 캐시 페이지에서는 null일 수 있음)
           window.__USER__ = ${user ? JSON.stringify({ id: user.id, username: user.username, role: user.role, pictureUrl: user.custom_picture_url || user.picture_url || null }) : 'null'};
@@ -823,7 +1368,7 @@ const renderLayout = (
         <script src="/static/perf-metrics.js" defer></script>
         ${extraHead}
         <style>
-          body { background: #0f0f23; color: #e0e0e0; }
+          body { background-color: #0b1220; color: #dee3ff; }
           
           /* 기본 콘텐츠 폰트 크기 정의 */
           .content-text { 
@@ -1340,7 +1885,7 @@ const renderLayout = (
         ${!isHomepage ? `${renderNav(renderUserMenu(user))}` : ''}
         
         <!-- Main Content -->
-        <main class="${isHomepage ? '' : 'mx-auto pt-[65px] md:pt-0'}">
+        <main class="${isHomepage ? '' : 'mx-auto pt-20 sm:pt-12'}">
             ${content}
         </main>
         ${renderNavScripts()}
@@ -1408,7 +1953,7 @@ const renderLayout = (
                         <span class="text-wiki-muted/30">|</span>
                         <a href="/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
                     </div>
-                    <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2025 Careerwiki</span>
+                    <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2026 Careerwiki</span>
                 </div>
                 
                 <!-- Desktop: Original horizontal layout -->
@@ -1433,7 +1978,7 @@ const renderLayout = (
                             <span class="text-wiki-muted/30">|</span>
                             <a href="/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
                         </div>
-                        <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2025 Careerwiki</span>
+                        <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2026 Careerwiki</span>
                     </div>
                 </div>
             </div>
@@ -1475,14 +2020,6 @@ const renderLayout = (
                         nav.style.transform = 'translateY(0)';
                         isNavVisible = true;
                     }
-                });
-            }
-            
-            // Mobile menu toggle
-            const menuBtn = document.getElementById('mobile-menu-btn');
-            if(menuBtn) {
-                menuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
                 });
             }
             
@@ -1668,7 +2205,7 @@ const renderLayout = (
                 if (data.error === 'not_logged_in') {
                   alert('로그인이 필요합니다.');
                   const currentPath = window.location.pathname + window.location.search;
-                  window.location.href = '/auth/google?return_url=' + encodeURIComponent(currentPath);
+                  window.location.href = '/login?redirect=' + encodeURIComponent(currentPath);
                   return;
                 }
                 
@@ -1678,7 +2215,6 @@ const renderLayout = (
                   markAsSaved(btn, data.saved, countDelta);
                 }
               } catch (e) {
-                console.error('[bookmark]', e);
                 alert('저장 중 오류가 발생했습니다.');
               } finally {
                 btn.disabled = false;
@@ -1716,6 +2252,66 @@ const renderLayout = (
             }
           })();
         </script>
+
+    <!-- 글로벌 공유 모달 -->
+    <div id="share-modal-overlay" class="fixed inset-0 bg-black/50 z-[9998] hidden transition-opacity" data-share-modal-close></div>
+    <div id="share-modal-global" class="fixed z-[9999] hidden left-0 right-0 bottom-0 rounded-t-2xl md:left-1/2 md:right-auto md:bottom-auto md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:w-[420px] bg-wiki-bg border border-wiki-border/60 shadow-2xl">
+      <div class="md:hidden w-10 h-1 bg-wiki-border/60 rounded-full mx-auto mt-3"></div>
+      <div class="flex items-center justify-between px-5 py-4">
+        <h3 class="text-lg font-bold text-white">공유</h3>
+        <button type="button" data-share-modal-close class="text-wiki-muted hover:text-white transition"><i class="fas fa-times text-lg"></i></button>
+      </div>
+      <div id="share-modal-thumbnail" class="hidden px-5 pb-3">
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-wiki-card/50 border border-wiki-border/30">
+          <div class="shrink-0 w-16 h-16 md:w-24 md:h-[62px] rounded-lg overflow-hidden border border-wiki-border/40 bg-wiki-card">
+            <img id="share-modal-og-img" src="" alt="" class="w-full h-full object-cover">
+          </div>
+          <div class="min-w-0 flex-1">
+            <p id="share-modal-og-title" class="text-sm font-medium text-white line-clamp-2"></p>
+            <p class="text-xs text-wiki-muted mt-0.5">careerwiki.org</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-center gap-5 px-5 py-4">
+        <button type="button" data-share-kakao class="flex flex-col items-center gap-1.5 group">
+          <div class="w-12 h-12 rounded-full bg-[#FEE500] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <img src="/images/kakao-icon.svg" class="w-6 h-6" alt="카카오톡">
+          </div>
+          <span class="text-xs text-wiki-muted">카카오톡</span>
+        </button>
+        <button type="button" data-share-x class="flex flex-col items-center gap-1.5 group">
+          <div class="w-12 h-12 rounded-full bg-black border border-wiki-border/60 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <i class="fab fa-x-twitter text-white text-lg"></i>
+          </div>
+          <span class="text-xs text-wiki-muted">X</span>
+        </button>
+        <button type="button" data-share-facebook class="flex flex-col items-center gap-1.5 group">
+          <div class="w-12 h-12 rounded-full bg-[#1877F2] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <i class="fab fa-facebook-f text-white text-lg"></i>
+          </div>
+          <span class="text-xs text-wiki-muted">Facebook</span>
+        </button>
+        <button type="button" data-share-linkedin class="flex flex-col items-center gap-1.5 group">
+          <div class="w-12 h-12 rounded-full bg-[#0A66C2] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <i class="fab fa-linkedin-in text-white text-lg"></i>
+          </div>
+          <span class="text-xs text-wiki-muted">LinkedIn</span>
+        </button>
+        <button type="button" data-share-native class="flex flex-col items-center gap-1.5 md:hidden group">
+          <div class="w-12 h-12 rounded-full bg-wiki-card border border-wiki-border/60 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <i class="fas fa-ellipsis-h text-white text-lg"></i>
+          </div>
+          <span class="text-xs text-wiki-muted">더보기</span>
+        </button>
+      </div>
+      <div class="px-5 pb-5">
+        <div class="flex items-center gap-2 bg-wiki-card border border-wiki-border/60 rounded-lg px-3 py-2.5">
+          <input id="share-modal-url" type="text" readonly class="flex-1 bg-transparent text-sm text-white outline-none min-w-0 truncate">
+          <button type="button" data-share-modal-copy class="px-3 py-1.5 bg-wiki-primary text-white text-sm rounded-md hover:bg-blue-600 transition shrink-0">복사</button>
+        </div>
+      </div>
+    </div>
+
     </body>
     </html>
   `
@@ -1857,7 +2453,7 @@ app.get('/', (c) => {
     </div>
   `
   
-  return c.html(renderLayout(content, 'Careerwiki - AI 진로 분석 플랫폼', 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', true, { user: userData }))
+  return c.html(renderLayout(content, 'Careerwiki - AI 진로 분석 플랫폼', 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', true, { user: userData, context: c }))
 })
 
 // Phase 3 Day 4: renderLayout 헬퍼 함수 (자동으로 context 전달)
@@ -1871,6 +2467,10 @@ const renderLayoutWithContext = (
     extraHead?: string
     canonical?: string
     ogUrl?: string
+    ogImage?: string
+    ogImageWidth?: string
+    ogImageHeight?: string
+    ogType?: string
     user?: { id: number; name: string | null; email: string; role: string; picture_url: string | null; custom_picture_url?: string | null; username: string | null } | null
   }
 ) => {
@@ -1879,21 +2479,45 @@ const renderLayoutWithContext = (
 
 // AI Analyzer Page - Choose between Job or Major (로그인 불필요 - 안내만)
 app.get('/analyzer', (c) => {
+  const user = c.get('user')
+  const isLoggedIn = !!user
+
+  const bannerHtml = isLoggedIn
+    ? `<div class="mt-8 p-4 rounded-xl border border-amber-500/30 bg-amber-500/10">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-exclamation-triangle text-amber-400 text-lg"></i>
+                <div>
+                    <p class="text-amber-300 font-medium">반드시 본인 계정으로 진행해주세요</p>
+                    <p class="text-sm text-amber-200/70">입력한 정보는 현재 로그인된 계정에 저장됩니다. 다른 사람의 계정으로 진행하면 데이터가 섞일 수 있어요.</p>
+                </div>
+            </div>
+        </div>`
+    : `<div class="mt-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-center">
+            <p class="text-amber-400 font-semibold mb-1">
+                <i class="fas fa-lock mr-2"></i>AI 추천을 받으려면 로그인이 필요합니다
+            </p>
+            <p class="text-wiki-muted text-sm">
+                로그인하시면 분석 결과 저장, 이력서 첨부, 맞춤 추천 등의 기능을 이용하실 수 있습니다.
+            </p>
+        </div>`
+
   const content = `
-    <div class="max-w-6xl mx-auto px-4 md:px-6 md:mt-8">
-        <h1 class="text-4xl font-bold mb-8 gradient-text text-center">
-            <i class="fas fa-brain mr-3"></i>AI 추천기
-        </h1>
-        
-        <div class="glass-card p-8 rounded-2xl">
-            <h2 class="text-2xl font-bold mb-6 text-center">무엇을 추천받고 싶으신가요?</h2>
-            
-            <div class="grid md:grid-cols-2 gap-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 md:px-6 pt-0 md:pt-2">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-white">
+                <i class="fas fa-brain mr-2 text-wiki-primary"></i>AI 추천
+            </h1>
+            <p class="text-wiki-muted text-sm md:text-base mt-2 max-w-lg mx-auto leading-relaxed">
+                LLM 심층 인터뷰와 벡터 시맨틱 검색으로<br class="hidden md:inline"> 수천 개의 직업·전공 중 나에게 맞는 진로를 찾아드립니다
+            </p>
+        </div>
+
+        <div class="glass-card p-6 md:p-8 rounded-2xl">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 text-center">무엇을 추천받고 싶으신가요?</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8">
                 <!-- Job Recommendation -->
                 <a href="/analyzer/job" class="glass-card p-8 rounded-xl hover-glow block text-center group relative overflow-hidden">
-                    <div class="absolute top-3 right-3 px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-xs font-bold text-emerald-400">
-                        <i class="fas fa-gift mr-1"></i>베타 무료
-                    </div>
                     <i class="fas fa-briefcase text-6xl mb-4 text-wiki-secondary group-hover:text-wiki-primary transition"></i>
                     <h3 class="text-2xl font-bold mb-3">직업 추천</h3>
                     <p class="text-wiki-muted">
@@ -1904,7 +2528,7 @@ app.get('/analyzer', (c) => {
                         <span class="text-wiki-muted line-through text-sm">₩50,000</span>
                         <span class="text-emerald-400 font-bold text-lg">무료</span>
                     </div>
-                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정 무료 제공</p>
+                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정</p>
                     <div class="mt-4">
                         <span class="px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block group-hover:bg-blue-600 transition">
                             직업 추천받기 →
@@ -1914,9 +2538,6 @@ app.get('/analyzer', (c) => {
 
                 <!-- Major Recommendation -->
                 <a href="/analyzer/major" class="glass-card p-8 rounded-xl hover-glow block text-center group relative overflow-hidden">
-                    <div class="absolute top-3 right-3 px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-xs font-bold text-emerald-400">
-                        <i class="fas fa-gift mr-1"></i>베타 무료
-                    </div>
                     <i class="fas fa-university text-6xl mb-4 text-wiki-secondary group-hover:text-wiki-primary transition"></i>
                     <h3 class="text-2xl font-bold mb-3">전공 추천</h3>
                     <p class="text-wiki-muted">
@@ -1927,7 +2548,7 @@ app.get('/analyzer', (c) => {
                         <span class="text-wiki-muted line-through text-sm">₩10,000</span>
                         <span class="text-emerald-400 font-bold text-lg">무료</span>
                     </div>
-                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정 무료 제공</p>
+                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정</p>
                     <div class="mt-4">
                         <span class="px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block group-hover:bg-blue-600 transition">
                             전공 추천받기 →
@@ -1936,15 +2557,7 @@ app.get('/analyzer', (c) => {
                 </a>
             </div>
             
-            <!-- 로그인 필요 안내 -->
-            <div class="mt-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-center">
-                <p class="text-amber-400 font-semibold mb-1">
-                    <i class="fas fa-lock mr-2"></i>AI 추천을 받으려면 로그인이 필요합니다
-                </p>
-                <p class="text-wiki-muted text-sm">
-                    로그인하시면 분석 결과 저장, 이력서 첨부, 맞춤 추천 등의 기능을 이용하실 수 있습니다.
-                </p>
-            </div>
+            ${bannerHtml}
             
             <div class="mt-6 text-center text-wiki-muted text-sm">
                 <p>AI 추천은 개인정보를 안전하게 처리하며, 결과는 참고용으로만 활용하시기 바랍니다.</p>
@@ -1953,12 +2566,13 @@ app.get('/analyzer', (c) => {
     </div>
   `
   
-  return c.html(renderLayoutWithContext(c, content, 'AI 추천기 - Careerwiki'))
+  return c.html(renderLayoutWithContext(c, content, 'AI 추천 - Careerwiki'))
 })
 
 // AI Job Analyzer v2.0.0 (Stage-based Universal Intake + Follow-up) - 로그인 필수
 app.get('/analyzer/job', requireAuth, (c) => {
-  const debugMode = c.req.query('debug') === 'true'
+  const user = c.get('user')
+  const debugMode = c.req.query('debug') === 'true' || isAdminRole(user?.role)
   
   // ============================================
   // 통합 질문 데이터 (3단계 구조: 프로필 → 심층 → 결과)
@@ -2196,41 +2810,12 @@ app.get('/analyzer/job', requireAuth, (c) => {
   const identityAnchorPatternsJson = JSON.stringify(IDENTITY_ANCHOR_PATTERNS)
   
   const content = `
-    <div class="max-w-6xl mx-auto px-4 md:px-6 md:mt-8">
-        <h1 class="text-3xl font-bold mb-6 text-center">
-            <i class="fas fa-briefcase mr-3 text-wiki-secondary"></i>AI 직업 추천
+    <div class="max-w-6xl mx-auto px-4 md:px-6 pt-0 md:pt-2">
+        <h1 class="text-3xl md:text-4xl font-bold mb-6 text-center text-white">
+            <i class="fas fa-briefcase mr-2 text-wiki-primary"></i>AI 직업 추천
             ${debugMode ? '<span class="ml-2 text-sm bg-yellow-500 text-black px-2 py-1 rounded">DEBUG MODE</span>' : ''}
         </h1>
 
-        <!-- 🧪 개발자 테스트 버튼 (DEBUG MODE에서만 표시) -->
-        ${debugMode ? `
-        <div class="mb-6 p-4 rounded-xl border-2 border-dashed border-green-500/50 bg-green-500/10">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-flask text-2xl text-green-400"></i>
-                    <div>
-                        <h3 class="font-bold text-green-300">🧪 샘플 테스트 모드</h3>
-                        <p class="text-xs text-green-400/70">버튼을 누르면 샘플 데이터로 바로 결과를 확인합니다</p>
-                    </div>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="runSampleTest('developer')"
-                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-laptop-code"></i> 개발자형
-                    </button>
-                    <button onclick="runSampleTest('creative')"
-                            class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-palette"></i> 창작형
-                    </button>
-                    <button onclick="runSampleTest('helper')"
-                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition flex items-center gap-2">
-                        <i class="fas fa-hands-helping"></i> 도움형
-                    </button>
-                </div>
-            </div>
-        </div>
-        ` : ''}
-        
         <!-- Step Indicator (3단계: 프로필→심층→결과) -->
         <div class="flex justify-center items-center gap-2 md:gap-4 mb-6 flex-wrap" id="step-indicator">
             <div class="step-dot flex flex-col items-center active" data-step="1">
@@ -2740,283 +3325,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
         const IDENTITY_ANCHOR_PATTERNS = ${identityAnchorPatternsJson};
 
         // ============================================
-        // 🧪 샘플 테스트 페르소나 (개발자용)
-        // ============================================
-        const SAMPLE_PERSONAS = {
-            developer: {
-                name: '개발자형 김코딩',
-                description: '문제해결과 분석을 좋아하고, 기술 성장을 중시하는 개발자 지망생',
-                miniModuleResult: {
-                    interest_top: ['problem_solving', 'data_numbers'],
-                    value_top: ['growth', 'autonomy'],
-                    strength_top: ['analytical', 'fast_learning'],
-                    constraint_flags: [],
-                    sacrifice_flags: ['low_initial_income', 'willing_to_study'],
-                    energy_drain_flags: ['people_drain', 'repetition_drain'],
-                    achievement_feedback_top: ['problem_solved_feedback', 'growth_feedback'],
-                    execution_style: 'action_first',
-                    impact_scope: 'impact_team',
-                    failure_response: 'iterate_on_failure',
-                    persistence_anchor: 'growth_anchor',
-                    external_expectation: 'neutral_to_expectation',
-                },
-                universalAnswers: {
-                    univ_interest: ['problem_solving', 'data', 'tech'],
-                    univ_priority: ['growth', 'autonomy'],
-                    univ_strength: ['analytical', 'fast_learning'],
-                    univ_dislike: ['routine', 'meeting'],
-                    univ_workstyle_social: ['solo', 'flexible'],
-                },
-                careerState: {
-                    role_identity: 'student',
-                    career_stage_years: 'year_0',
-                    transition_status: ['first_job'],
-                    skill_level: 'level_2',
-                },
-            },
-            creative: {
-                name: '창작형 박아트',
-                description: '창의적 결과물을 만들어내고, 의미 있는 일을 하고 싶은 디자이너',
-                miniModuleResult: {
-                    interest_top: ['creating', 'influencing'],
-                    value_top: ['meaning', 'recognition'],
-                    strength_top: ['creative', 'communication'],
-                    constraint_flags: ['time_constraint'],
-                    sacrifice_flags: ['field_change_ok'],
-                    energy_drain_flags: ['time_pressure_drain', 'cognitive_drain'],
-                    achievement_feedback_top: ['tangible_output_feedback', 'helping_feedback'],
-                    execution_style: 'flexible_execution',
-                    impact_scope: 'impact_society',
-                    failure_response: 'pivot_on_failure',
-                    persistence_anchor: 'meaning_anchor',
-                    external_expectation: 'expectation_pressure',
-                },
-                universalAnswers: {
-                    univ_interest: ['creating', 'media', 'influencing'],
-                    univ_priority: ['meaning', 'autonomy'],
-                    univ_strength: ['creative', 'communication'],
-                    univ_dislike: ['routine', 'pressure'],
-                    univ_workstyle_social: ['solo', 'flexible'],
-                },
-                careerState: {
-                    role_identity: 'worker_junior',
-                    career_stage_years: 'year_1_3',
-                    transition_status: ['career_change'],
-                    skill_level: 'level_3',
-                },
-            },
-            helper: {
-                name: '도움형 이상담',
-                description: '사람을 돕고 가르치는 것을 좋아하며, 안정을 중시하는 사회복지 관심자',
-                miniModuleResult: {
-                    interest_top: ['helping_teaching', 'organizing'],
-                    value_top: ['stability', 'meaning'],
-                    strength_top: ['communication', 'persistence'],
-                    constraint_flags: ['time_constraint', 'income_constraint'],
-                    sacrifice_flags: ['no_sacrifice'],
-                    energy_drain_flags: ['responsibility_drain', 'unpredictability_drain'],
-                    achievement_feedback_top: ['helping_feedback', 'metric_feedback'],
-                    execution_style: 'plan_first',
-                    impact_scope: 'impact_individual',
-                    failure_response: 'pause_on_failure',
-                    persistence_anchor: 'people_anchor',
-                    external_expectation: 'external_structure_ok',
-                },
-                universalAnswers: {
-                    univ_interest: ['helping', 'health', 'organizing'],
-                    univ_priority: ['stability', 'meaning'],
-                    univ_strength: ['communication', 'persistence', 'empathy'],
-                    univ_dislike: ['uncertainty', 'pressure'],
-                    univ_workstyle_social: ['team', 'structured'],
-                },
-                careerState: {
-                    role_identity: 'career_explorer',
-                    career_stage_years: 'year_0',
-                    transition_status: ['first_job'],
-                    skill_level: 'level_1',
-                },
-            },
-        };
-
-        // 🧪 샘플 테스트 실행 함수
-        async function runSampleTest(personaType) {
-            const persona = SAMPLE_PERSONAS[personaType];
-            if (!persona) {
-                alert('알 수 없는 페르소나: ' + personaType);
-                return;
-            }
-
-            console.log('[🧪 Sample Test] Starting with persona:', persona.name);
-            showLoading('샘플 테스트 실행 중...', persona.description);
-
-            // 세션 ID 생성
-            const testSessionId = 'test_' + Date.now() + '_' + personaType;
-            currentSessionId = testSessionId;
-            window.miniModuleResult = persona.miniModuleResult;
-            universalAnswers = persona.universalAnswers;
-            careerState = persona.careerState;
-
-            try {
-                // SearchProfile 구성
-                const mm = persona.miniModuleResult;
-                const ua = persona.universalAnswers;
-                const searchProfile = {
-                    desiredThemes: [
-                        ...(mm.interest_top || []),
-                        ...(mm.value_top || []),
-                        ...(ua.univ_interest || []),
-                    ].filter(Boolean),
-                    dislikedThemes: ua.univ_dislike || [],
-                    strengthsHypothesis: mm.strength_top || [],
-                    environmentPreferences: ua.univ_workstyle_social || [],
-                    hardConstraints: mm.constraint_flags || [],
-                    riskSignals: [],
-                    keywords: [
-                        ...(mm.interest_top || []),
-                        ...(ua.univ_interest || []),
-                        ...(mm.strength_top || []),
-                    ].filter(Boolean),
-                };
-
-                console.log('[🧪 Sample Test] Calling v3/recommend API...');
-                console.log('[🧪 Sample Test] searchProfile:', searchProfile);
-                console.log('[🧪 Sample Test] mini_module_result:', mm);
-
-                // v3/recommend API 직접 호출
-                const response = await fetch('/api/ai-analyzer/v3/recommend', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        session_id: testSessionId,
-                        searchProfile: searchProfile,
-                        mini_module_result: mm,
-                        topK: 800,
-                        judgeTopN: 20,
-                        debug: true,
-                    })
-                });
-
-                const data = await response.json();
-                console.log('[🧪 Sample Test] API Response:', data);
-
-                hideLoading();
-
-                if (!response.ok) {
-                    throw new Error(data.error || data.message || 'API 오류: ' + response.status);
-                }
-
-                if (data.success && data.recommendations) {
-                    // API에서 받은 premium_report 사용 (없으면 fallback)
-                    const premiumReport = data.premium_report || {
-                        executiveSummary: '🧪 샘플 테스트 결과입니다. (' + persona.name + ')',
-                        lifeVersionStatement: {
-                            oneLiner: persona.description,
-                            expanded: [
-                                '관심사: ' + mm.interest_top.join(', '),
-                                '핵심 가치: ' + mm.value_top.join(', '),
-                                '강점: ' + mm.strength_top.join(', '),
-                            ],
-                        },
-                    };
-
-                    console.log('[🧪 Sample Test] Premium Report from API:', data.premium_report);
-
-                    // 결과를 표시용 데이터로 변환
-                    const mapJobData = (job) => ({
-                        job_id: job.job_id,
-                        job_name: job.job_name,
-                        job_description: job.job_description || '',
-                        slug: job.slug || '',
-                        image_url: job.image_url || '',
-                        fit_score: job.fit_score,
-                        like_score: job.like_score,
-                        can_score: job.can_score,
-                        rationale: job.rationale || '',
-                        evidence_quotes: job.evidence_quotes || [],
-                    });
-
-                    // 🔍 DEBUG: API 응답 데이터 확인
-                    if (data.recommendations.like_top10?.[0]) {
-                        console.log('[🧪 Sample Test] 🔍 like_top10[0]:', {
-                            job_name: data.recommendations.like_top10[0].job_name,
-                            image_url: data.recommendations.like_top10[0].image_url,
-                            job_description: data.recommendations.like_top10[0].job_description,
-                        });
-                    }
-
-                    const analyzeData = {
-                        request_id: testSessionId,
-                        result: {
-                            engine_version: 'v3',
-                            fit_top3: (data.recommendations.top_jobs || []).slice(0, 10).map(mapJobData),
-                            like_top10: (data.recommendations.like_top10 || []).map(mapJobData),
-                            can_top10: (data.recommendations.can_top10 || []).map(mapJobData),
-                            premium_report: premiumReport,
-                            user_insight: {
-                                summary: premiumReport.workStyleNarrative || premiumReport.executiveSummary || persona.description,
-                                traits: [
-                                    { name: '관심사', values: mm.interest_top },
-                                    { name: '가치', values: mm.value_top },
-                                    { name: '강점', values: mm.strength_top },
-                                ],
-                            },
-                        },
-                        _recommendation_mode: {
-                            enabled: true,
-                            total_candidates: data.recommendations.total_candidates,
-                            filtered_count: data.recommendations.filtered_count,
-                            search_duration_ms: data.recommendations.search_duration_ms,
-                            persona_used: personaType,
-                        },
-                    };
-
-                    console.log('[🧪 Sample Test] Displaying results...');
-                    currentRequestId = testSessionId;
-                    displayResults(analyzeData);
-                    goToStep(3);
-
-                    // 테스트 정보 배너 표시
-                    showTestResultBanner(persona, data.recommendations);
-                } else {
-                    throw new Error('추천 결과가 없습니다: ' + JSON.stringify(data));
-                }
-
-            } catch (error) {
-                hideLoading();
-                console.error('[🧪 Sample Test] Error:', error);
-                alert('샘플 테스트 오류: ' + error.message);
-            }
-        }
-
-        // 테스트 결과 배너 표시
-        function showTestResultBanner(persona, recommendations) {
-            const banner = document.createElement('div');
-            banner.id = 'test-result-banner';
-            banner.className = 'mb-4 p-4 rounded-xl border-2 border-green-500/50 bg-green-500/10';
-            banner.innerHTML = \`
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-flask text-2xl text-green-400"></i>
-                    <div class="flex-1">
-                        <h3 class="font-bold text-green-300">🧪 샘플 테스트 결과</h3>
-                        <p class="text-sm text-green-400/80">페르소나: <strong>\${persona.name}</strong> | 총 \${recommendations.total_candidates}개 후보 → \${recommendations.filtered_count}개 필터링 → Top \${recommendations.top_jobs?.length || 0}개 추천</p>
-                        <p class="text-xs text-green-400/60 mt-1">검색 시간: \${recommendations.search_duration_ms}ms</p>
-                    </div>
-                    <button onclick="this.parentElement.parentElement.remove()" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm">닫기</button>
-                </div>
-            \`;
-
-            // 기존 배너가 있으면 제거
-            const existingBanner = document.getElementById('test-result-banner');
-            if (existingBanner) existingBanner.remove();
-
-            // 결과 영역 맨 위에 삽입
-            const step3 = document.getElementById('step3');
-            if (step3) {
-                step3.insertBefore(banner, step3.firstChild);
-            }
-        }
-
-        // ============================================
         // 동적 서술형 질문 시스템 (상황 + 경력 + 목표 기반)
         // ============================================
         const NARRATIVE_QUESTIONS = {
@@ -3165,7 +3473,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 careerState.career_stage_years,
                 careerState.transition_status
             );
-            console.log('[V3] Narrative context key:', key, { role: careerState.role_identity, career: careerState.career_stage_years, transition: careerState.transition_status });
             return NARRATIVE_QUESTIONS[key] || NARRATIVE_QUESTIONS['default'];
         }
         
@@ -3180,7 +3487,84 @@ app.get('/analyzer/job', requireAuth, (c) => {
         let currentSessionId = null;
         let currentRequestId = null;
         let previousTop3 = [];
-        
+
+        // ============================================
+        // Phase 3: 편집 모드 유틸리티
+        // ============================================
+        function showEditModeBanner() {
+            if (!window.__editMode) return;
+            const banner = document.createElement('div');
+            banner.id = 'edit-mode-banner';
+            banner.className = 'mb-4 p-3 rounded-xl border';
+            banner.style.cssText = 'border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.08);';
+            banner.innerHTML = '<div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2"><i class="fas fa-edit text-amber-400"></i><span class="text-amber-300 text-sm font-medium">수정 모드</span><span class="text-amber-200/70 text-xs">변경사항이 있으면 이후 단계가 초기화됩니다</span></div><button onclick="cancelEditMode()" class="px-3 py-1 text-xs rounded-lg border border-wiki-border text-wiki-muted hover:text-white transition">취소</button></div>';
+            const container = document.querySelector('.max-w-6xl') || document.querySelector('main');
+            if (container) container.insertBefore(banner, container.firstChild);
+        }
+
+        async function cancelEditMode() {
+            if (!window.__editMode) return;
+            try {
+                await fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
+                    method: 'DELETE', credentials: 'same-origin'
+                });
+            } catch (e) {}
+            window.location.href = '/user/ai-results/' + window.__sourceRequestId;
+        }
+
+        function getEditModePayloadExtras() {
+            if (!window.__editMode) return {};
+            return {
+                session_id: window.__originalSessionId,
+                edit_mode: true,
+                edit_session_id: window.__editSessionId,
+                source_request_id: window.__sourceRequestId,
+                version_note: '입력 수정',
+            };
+        }
+
+        // 편집 모드 변경 감지
+        function detectStep1Changes() {
+            if (!window.__editMode) return false;
+            return JSON.stringify(careerState) !== window.__editSnapshot.careerState
+                || JSON.stringify(universalAnswers) !== window.__editSnapshot.universalAnswers;
+        }
+        function detectNarrativeChanges() {
+            if (!window.__editMode) return false;
+            return JSON.stringify(window.narrativeFacts || {}) !== window.__editSnapshot.narrativeFacts;
+        }
+        function detectRoundChanges(roundNumber) {
+            if (!window.__editMode) return false;
+            const snapRounds = JSON.parse(window.__editSnapshot.roundAnswers);
+            const currRounds = window.roundAnswers || [];
+            const snapR = snapRounds.filter(a => a.roundNumber === roundNumber);
+            const currR = currRounds.filter(a => a.roundNumber === roundNumber);
+            return JSON.stringify(snapR) !== JSON.stringify(currR);
+        }
+
+        // 캐스케이드 리셋
+        function cascadeResetFromStep1() {
+            window.narrativeFacts = null;
+            window.roundAnswers = [];
+            window.roundQuestions = null;
+            window.currentRound = 0;
+            window.savedNarrativeQuestions = null;
+            window.__editSnapshot.narrativeFacts = '{}';
+            window.__editSnapshot.roundAnswers = '[]';
+        }
+        function cascadeResetFromNarrative() {
+            window.roundAnswers = [];
+            window.roundQuestions = null;
+            window.currentRound = 0;
+            window.__editSnapshot.roundAnswers = '[]';
+        }
+        function cascadeResetFromRound(roundNumber) {
+            window.roundAnswers = (window.roundAnswers || []).filter(a => a.roundNumber <= roundNumber);
+            window.currentRound = roundNumber;
+            window.__editSnapshot.roundAnswers = JSON.stringify(window.roundAnswers);
+        }
+        // ============================================
+
         // 프로필 서브스텝 이동 함수
         function goToProfileStep1() {
             profileSubStep = 1;
@@ -3322,7 +3706,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 }
                 
             } catch (error) {
-                console.error('Resume upload error:', error);
                 showResumeError(error.message || '이력서 분석 중 오류가 발생했습니다.');
             }
         }
@@ -3385,7 +3768,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             if (extracted.skills?.length > 0) bgParts.push('스킬: ' + extracted.skills.slice(0, 3).join(', '));
             
             window.resumeCareerBackground = bgParts.join(', ');
-            console.log('[Resume] Career background extracted:', window.resumeCareerBackground);
             
             // 역할 정체성 선택
             if (careerStateFromResume.role_identity) {
@@ -3411,7 +3793,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 if (skillBtn) skillBtn.click();
             }
             
-            console.log('Resume parsed successfully:', parsedData);
         }
         
         // ============================================
@@ -3530,7 +3911,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     // Step 2는 심층 질문 (generateFollowupQuestions에서 렌더링)
                     // Step 3는 결과 (submitFollowupsAndAnalyze에서 렌더링)
                 } catch (error) {
-                    console.error('[goToStep] Error during render:', error);
                 }
             }
 
@@ -4510,7 +4890,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
         function restoreIntegratedAnswers() {
             if (!integratedAnswers || Object.keys(integratedAnswers).length === 0) return;
             
-            console.log('[restoreIntegratedAnswers] Restoring:', integratedAnswers);
             
             Object.keys(integratedAnswers).forEach(questionId => {
                 const value = integratedAnswers[questionId];
@@ -4927,11 +5306,14 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 }
             };
             
-            console.log('[IntegratedQuestions] miniModuleResult updated:', window.miniModuleResult);
         }
         
         // Step 1 → Step 2 (심층 질문) 직접 이동
         async function goToStep2Direct() {
+            // Phase 3: 편집 모드 캐스케이드 리셋
+            if (window.__editMode && detectStep1Changes()) {
+                cascadeResetFromStep1();
+            }
             // 통합 질문 결과 계산
             updateIntegratedUniversalAnswers();
             
@@ -4974,7 +5356,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 const data = await response.json();
                 hideLoading();
                 
-                console.log('[generateFollowupQuestions] API response:', data);
                 
                 if (data.result?.followup_questions?.length > 0) {
                     renderFollowupQuestions(data.result.followup_questions);
@@ -4984,7 +5365,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 }
             } catch (error) {
                 hideLoading();
-                console.error('[generateFollowupQuestions] Error:', error);
                 // 에러 시 기본 질문 표시
                 renderDefaultFollowupQuestions();
             }
@@ -5235,8 +5615,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             const result = calculateMiniModuleResultFromSelections();
             window.miniModuleResult = result;
             
-            console.log('[MiniModule] 결과:', result);
-            console.log('[MiniModule] 요약:', summarizeMiniModuleResultLocal(result));
             
             // Step 2로 전환
             goToStep2WithLoading();
@@ -5495,12 +5873,10 @@ app.get('/analyzer/job', requireAuth, (c) => {
         function updateChipOrder(questionId) {
             const container = document.querySelector(\`[data-question-id="\${questionId}"]\`);
             if (!container) {
-                console.warn('[updateChipOrder] Container not found for:', questionId);
                 return;
             }
             const orderEl = container.querySelector('.selected-order');
             if (!orderEl) {
-                console.warn('[updateChipOrder] Order element not found for:', questionId);
                 return;
             }
             const arr = transitionSignalAnswers[questionId] || [];
@@ -5599,7 +5975,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     renderTransitionSignalForm();
                     goToStep(3);
                 } catch (error) {
-                    console.error('[submitUniversalAndGoToTransition] Error:', error);
                 } finally {
                     hideLoading();
                 }
@@ -5647,7 +6022,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 });
                 
                 const data = await response.json();
-                console.log('Analysis response (for followups):', data);
                 hideLoading();
                 
                 if (data.result?.followup_questions?.length > 0) {
@@ -5661,7 +6035,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 }
             } catch (error) {
                 hideLoading();
-                console.error('Error:', error);
                 alert('오류가 발생했습니다: ' + error.message);
             }
         }
@@ -5681,12 +6054,10 @@ app.get('/analyzer/job', requireAuth, (c) => {
 
                 // P0-1: session_id 유효성 검사
                 if (!currentSessionId || currentSessionId.trim() === '') {
-                    console.error('[V3] saveNarrativeFacts: session_id is invalid');
                     showErrorToast('세션 ID가 유효하지 않습니다. 페이지를 새로고침해주세요.');
                     return false;
                 }
 
-                console.log('[V3] Saving narrative facts:', { session_id: currentSessionId });
 
                 const response = await fetch('/api/ai-analyzer/v3/narrative-facts', {
                     method: 'POST',
@@ -5695,16 +6066,15 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         session_id: currentSessionId,
                         high_alive_moment: facts.highAliveMoment || facts.question1Answer || '',
                         lost_moment: facts.lostMoment || facts.question2Answer || '',
+                        existential_answer: facts.existentialAnswer || undefined,
                     })
                 });
 
                 // P0-1: 응답 상태 확인
                 if (!response.ok) {
                     const errorText = await response.text();
-                    console.error('[V3] Narrative facts save HTTP error:', response.status, errorText);
                     // 테이블 없음 등의 D1 에러는 무시하고 계속 진행 (테스트 환경)
                     if (errorText.includes('error code: 1031') || errorText.includes('no such table')) {
-                        console.warn('[V3] DB table may not exist, continuing without saving narrative facts');
                         return true; // 테스트를 위해 계속 진행
                     }
                     showErrorToast('서술형 답변 저장 실패: ' + errorText.substring(0, 100));
@@ -5715,19 +6085,15 @@ app.get('/analyzer/job', requireAuth, (c) => {
 
                 // P0-1: 상세 에러 표시
                 if (!data.success) {
-                    console.error('[V3] Narrative facts save failed:', data);
                     showErrorToast('서술형 답변 저장 실패: ' + (data.detail || data.error || 'Unknown error'));
                     return false;
                 }
 
-                console.log('[V3] Narrative facts saved successfully:', data);
                 return true;
 
             } catch (error) {
-                console.error('[V3] Failed to save narrative facts:', error);
                 // JSON 파싱 에러 등은 무시하고 계속 진행 (테스트 환경)
                 if (error.message && error.message.includes('JSON')) {
-                    console.warn('[V3] JSON parse error, continuing without saving narrative facts');
                     return true;
                 }
                 showErrorToast('서술형 답변 저장 중 오류 발생: ' + (error.message || 'Network error'));
@@ -5798,17 +6164,14 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 // 먼저 HTTP 상태 체크 (500 에러 등)
                 if (!response.ok) {
                     const errorText = await response.text().catch(() => 'Unknown server error');
-                    console.error('[V3] Round questions HTTP error:', response.status, errorText);
                     alert('질문 생성 중 서버 오류가 발생했습니다 (HTTP ' + response.status + ')\\n\\n잠시 후 다시 시도해주세요.');
                     return;
                 }
                 
                 const data = await response.json();
-                console.log('[V3] Round questions response:', data);
                 
                 // API 에러 처리
                 if (data.error) {
-                    console.error('[V3] API error:', data.error);
                     alert('질문 생성 중 오류가 발생했습니다: ' + (data.error || 'Unknown error') + '\\n\\n페이지를 새로고침하고 다시 시도해주세요.');
                     return;
                 }
@@ -5820,7 +6183,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     window.currentRound = roundNumber;
                     window.roundQuestions = questions;  // 질문 저장 (복원용)
                     
-                    console.log('[V3] Generated by:', data.generated_by);
                     
                     renderV3RoundUI(roundNumber, questions, meta);
                     // Step 2에 라운드 표시 (3단계 구조)
@@ -5829,12 +6191,10 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
                     // 질문이 없으면 에러 표시
-                    console.error('[V3] No questions generated');
                     alert('질문을 생성하지 못했습니다. 페이지를 새로고침하고 다시 시도해주세요.');
                 }
             } catch (error) {
                 hideLoading();
-                console.error('[V3] Round questions error:', error);
                 alert('질문 생성 중 오류가 발생했습니다: ' + (error.message || 'Network error') + '\\n\\n페이지를 새로고침하고 다시 시도해주세요.');
             }
         }
@@ -6006,12 +6366,10 @@ app.get('/analyzer/job', requireAuth, (c) => {
         // V3: 심층 질문 기초 답변 복원
         function restoreNarrativeAnswers() {
             if (!window.narrativeFacts) {
-                console.log('[restoreNarrativeAnswers] No narrative facts to restore');
                 return;
             }
             
             const facts = window.narrativeFacts;
-            console.log('[restoreNarrativeAnswers] Restoring narrative answers:', facts);
             
             // Q0: 스토리 질문
             const q0 = document.getElementById('narrative_q0');
@@ -6046,7 +6404,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 }
             }
             
-            console.log('[restoreNarrativeAnswers] Narrative answers restored successfully');
         }
         
         // V3: 라운드 답변 복원
@@ -6067,7 +6424,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 }
             });
             
-            console.log('[ServerRestore] Round answers restored:', currentRoundAnswers.length);
         }
         
         // V3: 글자수 카운터
@@ -6083,6 +6439,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
         async function submitV3RoundAndContinue(currentRound, questions) {
             const answers = collectV3RoundAnswers(questions);
             if (!validateV3Answers(answers, questions)) return;
+
+            // Phase 3: 편집 모드 - 라운드 변경 시 이후 라운드 초기화
+            if (window.__editMode && detectRoundChanges(currentRound)) {
+                cascadeResetFromRound(currentRound);
+            }
             
             const nextBtn = document.getElementById('step3-next-btn');
             const prevBtn = document.getElementById('step3-prev-btn');
@@ -6160,18 +6521,13 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         round_answers: window.roundAnswers,
                         engine_version: 'v3',
                         debug: DEBUG_MODE,
+                        ...getEditModePayloadExtras(),
                     })
                 });
                 
                 const analyzeData = await analyzeResponse.json();
                 
                 // ★★★ LLM 모듈 확인용 콘솔 로그 ★★★
-                console.log('======================================');
-                console.log('★★★ /analyze API 응답 (LLM 확인) ★★★');
-                console.log('======================================');
-                console.log('llm_modules:', analyzeData.result?.llm_modules || analyzeData.llm_modules);
-                console.log('전체 응답:', analyzeData);
-                console.log('======================================');
                 
                 // 2. Recommendation Mode API (최신 Vectorize+TAG 추천)
                 showLoading('추천 생성 중...', 'AI가 최적의 직업을 찾고 있어요');
@@ -6196,36 +6552,36 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         ].filter(Boolean),
                     };
                     
-                    const recommendResponse = await fetch('/api/ai-analyzer/v3/recommend', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            session_id: currentSessionId,
-                            searchProfile: searchProfile,
-                            mini_module_result: miniModule,
-                            topK: 800,
-                            judgeTopN: 20,
-                            debug: DEBUG_MODE,
-                        })
-                    });
-                    
+                    // Phase 1: 추천만 빠르게 (리포트는 Phase 2에서 비동기 생성)
+                    let recommendResponse;
+                    for (let attempt = 0; attempt <= 2; attempt++) {
+                        recommendResponse = await fetch('/api/ai-analyzer/v3/recommend', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                session_id: currentSessionId,
+                                searchProfile: searchProfile,
+                                mini_module_result: miniModule,
+                                topK: 800,
+                                judgeTopN: 20,
+                                skipReport: true,
+                                debug: DEBUG_MODE,
+                            })
+                        });
+                        if (recommendResponse.ok || recommendResponse.status < 500) break;
+                        if (attempt < 2) {
+                            await new Promise(r => setTimeout(r, 5000 * (attempt + 1)));
+                        }
+                    }
+
                     const recommendData = await recommendResponse.json();
 
                     // 🔍 DEBUG: API 응답 확인
-                    console.log('[V3.1] 🔍 recommendData 전체:', recommendData);
                     if (recommendData.recommendations?.like_top10?.[0]) {
-                        console.log('[V3.1] 🔍 like_top10[0] 샘플:', {
-                            job_id: recommendData.recommendations.like_top10[0].job_id,
-                            job_name: recommendData.recommendations.like_top10[0].job_name,
-                            image_url: recommendData.recommendations.like_top10[0].image_url,
-                            job_description: recommendData.recommendations.like_top10[0].job_description,
-                            rationale: recommendData.recommendations.like_top10[0].rationale,
-                        });
                     }
 
                     // 3. 결과 병합: Recommendation Mode 결과를 우선 사용
                     if (recommendData.success && recommendData.recommendations) {
-                        console.log('[V3.1] Recommendation Mode 결과 사용:', recommendData.recommendations.top_jobs?.length, '개 직업');
 
                         // analyzeData.result가 없으면 초기화
                         if (!analyzeData.result) {
@@ -6244,6 +6600,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                 fit_score: job.fit_score,
                                 like_score: job.like_score,
                                 can_score: job.can_score,
+                                feasibility_score: job.feasibility_score || 0,
                                 rationale: job.rationale || '',
                                 like_reason: job.like_reason || '',
                                 can_reason: job.can_reason || '',
@@ -6251,7 +6608,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                 risk_details: [],
                                 evidence_links: [],
                             }));
-                            console.log('[V3.1] fit_top3 merged:', analyzeData.result.fit_top3.length, '개, top:', analyzeData.result.fit_top3[0]?.job_name);
                         }
 
                         // like_top10에 Recommendation Mode 결과 병합 (result 안에 저장)
@@ -6265,11 +6621,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                 fit_score: job.fit_score,
                                 like_score: job.like_score,
                                 can_score: job.can_score,
+                                feasibility_score: job.feasibility_score || 0,
                                 rationale: job.rationale || '',
                                 like_reason: job.like_reason || '',
                                 can_reason: job.can_reason || '',
                             }));
-                            console.log('[V3.1] like_top10 merged:', analyzeData.result.like_top10.length, '개');
                         }
 
                         // can_top10에 Recommendation Mode 결과 병합 (result 안에 저장)
@@ -6283,17 +6639,16 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                 fit_score: job.fit_score,
                                 like_score: job.like_score,
                                 can_score: job.can_score,
+                                feasibility_score: job.feasibility_score || 0,
                                 rationale: job.rationale || '',
                                 like_reason: job.like_reason || '',
                                 can_reason: job.can_reason || '',
                             }));
-                            console.log('[V3.1] can_top10 merged:', analyzeData.result.can_top10.length, '개');
                         }
 
                         // premium_report 병합 (추천 모드의 LLM 리포트가 더 정확함)
                         if (recommendData.premium_report) {
                             analyzeData.result.premium_report = recommendData.premium_report;
-                            console.log('[V3.1] premium_report merged from recommendation mode');
                         }
 
                         // request_id 업데이트 (추천 모드에서 갱신된 ID 사용)
@@ -6311,18 +6666,63 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     }
                 } catch (recommendError) {
                     // Recommendation Mode 실패해도 기존 결과는 표시
-                    console.warn('[V3.1] Recommendation Mode 실패, 기존 결과 사용:', recommendError);
                 }
                 
                 hideLoading();
-                
+
+                // 편집 모드: 분석 완료 → 결과 페이지로 이동
+                if (window.__editMode && analyzeData.request_id) {
+                    fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
+                        method: 'DELETE', credentials: 'same-origin'
+                    }).catch(() => {});
+                    window.location.href = '/user/ai-results/' + analyzeData.request_id;
+                    return;
+                }
+
                 currentRequestId = analyzeData.request_id;
                 displayResults(analyzeData);
                 goToStep(3); // 결과 (3단계 구조)
-                
+
+                // Phase 2: 프리미엄 리포트 비동기 생성 (결과 표시 후 백그라운드에서)
+                (async () => {
+                    // 리포트 로딩 표시
+                    const reportBanner = document.createElement('div');
+                    reportBanner.id = 'report-loading-banner';
+                    reportBanner.className = 'text-center py-3 px-4 rounded-xl mb-4';
+                    reportBanner.style.cssText = 'background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);';
+                    reportBanner.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><span class="text-sm" style="color: rgba(165,180,252,0.9);">심리분석 리포트를 생성하고 있습니다...</span>';
+                    const step3El = document.getElementById('step3');
+                    if (step3El && step3El.firstChild) {
+                        step3El.insertBefore(reportBanner, step3El.firstChild);
+                    }
+
+                    try {
+                        const reportResponse = await fetch('/api/ai-analyzer/v3/recommend/report', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ session_id: currentSessionId }),
+                        });
+
+                        document.getElementById('report-loading-banner')?.remove();
+
+                        if (reportResponse.ok) {
+                            const reportData = await reportResponse.json();
+                            if (reportData.premium_report) {
+                                analyzeData.result.premium_report = reportData.premium_report;
+                                // 현재 활성 탭 저장 후 재렌더링
+                                const activeTab = document.querySelector('.report-tab.active')?.getAttribute('data-tab');
+                                displayResults(analyzeData);
+                                if (activeTab) showReportTab(activeTab);
+                            }
+                        } else {
+                        }
+                    } catch (reportError) {
+                        document.getElementById('report-loading-banner')?.remove();
+                    }
+                })();
+
             } catch (error) {
                 hideLoading();
-                console.error('[V3] Analysis error:', error);
                 alert('분석 중 오류가 발생했습니다: ' + error.message);
             }
         }
@@ -6372,16 +6772,10 @@ app.get('/analyzer/job', requireAuth, (c) => {
             
             // P0-1: session_id 유효성 검사
             if (!currentSessionId || currentSessionId.trim() === '') {
-                console.error('[V3] saveV3RoundAnswers: session_id is invalid');
                 showErrorToast('세션 ID가 유효하지 않습니다. 페이지를 새로고침해주세요.');
                 return false;
             }
             
-            console.log('[V3] Saving round answers:', { 
-                session_id: currentSessionId, 
-                round_number: roundNumber,
-                answers_count: answers.length 
-            });
             
             // 서버 저장
             try {
@@ -6398,7 +6792,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 // 먼저 HTTP 상태 체크 (500 에러 등)
                 if (!response.ok) {
                     const errorText = await response.text().catch(() => 'Unknown error');
-                    console.error('[V3] Round answers save HTTP error:', response.status, errorText);
                     showErrorToast('라운드 ' + roundNumber + ' 답변 저장 실패 (HTTP ' + response.status + ')');
                     // 로컬에는 저장되었으므로 진행은 계속
                     return false;
@@ -6408,17 +6801,14 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 
                 // P0-1: 상세 에러 표시
                 if (!data.success) {
-                    console.error('[V3] Round answers save failed:', data);
                     showErrorToast('라운드 ' + roundNumber + ' 답변 저장 실패: ' + (data.detail || data.error || 'Unknown error'));
                     // 로컬에는 저장되었으므로 진행은 계속
                     return false;
                 }
                 
-                console.log('[V3] Round answers saved successfully:', data);
                 return true;
                 
             } catch (error) {
-                console.error('[V3] Failed to save round answers:', error);
                 showErrorToast('라운드 ' + roundNumber + ' 답변 저장 중 오류 발생: ' + (error.message || 'Network error'));
                 // 로컬에는 저장되었으므로 진행은 계속
                 return false;
@@ -6563,6 +6953,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
             const savedQ0 = window.narrativeFacts?.storyAnswer || window.narrativeFacts?.life_story || '';
             const savedQ1 = window.narrativeFacts?.question1Answer || window.narrativeFacts?.highAliveMoment || '';
             const savedQ2 = window.narrativeFacts?.question2Answer || window.narrativeFacts?.lostMoment || '';
+            const savedQ3 = window.narrativeFacts?.existentialAnswer || '';
             const savedCareerBg = window.narrativeFacts?.career_background || '';
             
             // 스토리 질문 (공통 - 모든 템플릿에서 첫 번째 질문)
@@ -6746,6 +7137,39 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     </div>
                 </div>
                 
+                <!-- 서술형 질문 3: 실존적 가치 질문 -->
+                <div class="question-block p-5 rounded-2xl mb-5" style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.05)); border: 1px solid rgba(168,85,247,0.2);">
+                    <label class="block text-lg font-semibold mb-3 text-white">
+                        <span class="mr-2">\u{1F30C}</span>
+                        마지막 7일
+                    </label>
+                    <div class="text-sm text-slate-300 mb-4 leading-relaxed space-y-2">
+                        <p>오늘 밤 9시, 모든 방송과 휴대폰에 긴급 뉴스가 뜹니다.</p>
+                        <p>과학적으로 확인된 사실이며, 정확히 7일 뒤 지구는 사라집니다. 생존 가능성은 없습니다.</p>
+                        <p>사람들은 각자의 방식으로 남은 시간을 보내기 시작합니다.</p>
+                        <p class="text-white font-medium pt-1">이 소식을 듣는 순간, 당신이 가장 먼저 떠올릴 행동은 무엇일 것 같나요?</p>
+                        <p class="text-white font-medium">어디로 가고 싶고, 누구를 만나고 싶고, 무엇을 하고 싶을 것 같나요?</p>
+                        <p class="text-white font-medium">그리고 왜 그것이 가장 먼저 떠올랐을까요?</p>
+                    </div>
+                    <textarea
+                        id="narrative_q3"
+                        name="narrative_q3"
+                        data-fact-key="narrative.existential_answer"
+                        rows="5"
+                        minlength="30"
+                        maxlength="5000"
+                        placeholder="가장 먼저 떠오르는 행동, 가고 싶은 곳, 만나고 싶은 사람, 그리고 그 이유를 자유롭게 적어주세요..."
+                        class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[100px]"
+                        style="background-color: rgba(15,15,35,1); border-color: rgba(168,85,247,0.3); color: #fff;"
+                        onfocus="this.style.borderColor='rgba(168,85,247,0.6)';"
+                        onblur="this.style.borderColor='rgba(168,85,247,0.3)'; validateNarrativeLength(this, 30);"
+                        oninput="updateNarrativeCounter(this, 5000);">\${savedQ3}</textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <span id="narrative_q3_hint" class="text-xs text-wiki-muted">최소 30자 / 현재 \${savedQ3.length}자</span>
+                        <span id="narrative_q3_counter" class="text-xs text-wiki-muted">\${savedQ3.length}자</span>
+                    </div>
+                </div>
+
                 <!-- 추가 격려 문구 -->
                 <div class="text-center text-xs text-wiki-muted/60 mt-6">
                     <i class="fas fa-shield-alt mr-1"></i>
@@ -6778,7 +7202,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 }
             });
             
-            console.log('[renderNarrativeStep] currentStep set to 2, window.currentStep:', window.currentStep);
             
             // Step 2 버튼 업데이트
             const analyzeBtn = document.getElementById('analyze-btn');
@@ -6815,6 +7238,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 if (q2 && q2.value) {
                     updateNarrativeCounter(q2, 10000);
                     validateNarrativeLength(q2, 50);
+                }
+                const q3 = document.getElementById('narrative_q3');
+                if (q3 && q3.value) {
+                    updateNarrativeCounter(q3, 5000);
+                    validateNarrativeLength(q3, 30);
                 }
             }, 100);
         }
@@ -6870,9 +7298,14 @@ app.get('/analyzer/job', requireAuth, (c) => {
             if (!validateNarrativeRequired()) {
                 return;
             }
-            
+
             // 서술형 답변 수집 및 저장
             const narrativeFacts = collectNarrativeAnswers();
+
+            // Phase 3: 편집 모드 - 서술형 변경 시 라운드 데이터 초기화
+            if (window.__editMode && detectNarrativeChanges()) {
+                cascadeResetFromNarrative();
+            }
             if (narrativeFacts) {
                 await saveNarrativeFacts(narrativeFacts);
             }
@@ -6889,8 +7322,9 @@ app.get('/analyzer/job', requireAuth, (c) => {
             const q0 = document.getElementById('narrative_q0');
             const q1 = document.getElementById('narrative_q1');
             const q2 = document.getElementById('narrative_q2');
+            const q3 = document.getElementById('narrative_q3');
             const careerBg = document.getElementById('narrative_career_bg');
-            
+
             // 레거시 지원 (이전 버전 호환)
             const legacyHighAlive = document.getElementById('narrative_high_alive');
             const legacyLost = document.getElementById('narrative_lost');
@@ -6906,6 +7340,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     // 레거시 호환성 유지
                     highAliveMoment: q1.value.trim(),
                     lostMoment: q2.value.trim(),
+                    // 실존적 가치 질문 (7일 뒤 지구 멸망)
+                    existentialAnswer: q3?.value?.trim() || '',
                     // 새로운 구조
                     question1Answer: q1.value.trim(),
                     question2Answer: q2.value.trim(),
@@ -6969,7 +7405,16 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 alert('두 번째 질문에 50자 이상 작성해주세요.');
                 return false;
             }
-            
+
+            // 실존적 질문 검증 (최소 30자)
+            const q3El = document.getElementById('narrative_q3');
+            if (q3El && q3El.value.trim().length > 0 && q3El.value.trim().length < 30) {
+                q3El.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                q3El.focus();
+                alert('실존적 질문에 30자 이상 작성해주세요.');
+                return false;
+            }
+
             return true;
         }
         
@@ -7679,7 +8124,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 });
                 
                 const data = await response.json();
-                console.log('Analysis response (for followups):', data);
                 hideLoading();
                 
                 if (data.result?.followup_questions?.length > 0) {
@@ -7693,7 +8137,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 }
             } catch (error) {
                 hideLoading();
-                console.error('Error:', error);
                 alert('오류가 발생했습니다: ' + error.message);
             }
         }
@@ -7723,7 +8166,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 });
                 
                 const data = await response.json();
-                console.log('Analysis response:', data);
                 
                 if (!response.ok) throw new Error(data.error || 'API 오류');
                 
@@ -7731,7 +8173,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 displayResults(data);
                 goToStep(3); // 결과 (3단계 구조)
             } catch (error) {
-                console.error('Error:', error);
                 alert('분석 중 오류가 발생했습니다: ' + error.message);
             } finally {
                 hideLoading();
@@ -7842,7 +8283,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 displayResults(data);
                 goToStep(3); // 결과 (3단계 구조)
             } catch (error) {
-                console.error('Error:', error);
                 alert('분석 중 오류가 발생했습니다: ' + error.message);
             } finally {
                 hideLoading();
@@ -7857,7 +8297,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
         function displayResults(data) {
             // 결과가 없는 경우 처리
             if (!data || !data.result) {
-                console.error('[displayResults] No result data:', data);
                 showErrorToast('분석 결과를 불러올 수 없습니다: ' + (data?.error || '데이터가 없습니다'));
                 return;
             }
@@ -7867,11 +8306,10 @@ app.get('/analyzer/job', requireAuth, (c) => {
             // mini_module_result 복원 (DB에서 로드 시 window에 없을 수 있음)
             if (result.mini_module_result && !window.miniModuleResult) {
                 window.miniModuleResult = result.mini_module_result;
-                console.log('[displayResults] Restored miniModuleResult from result data');
             }
 
             // V3: 프리미엄 리포트가 있으면 새 UI로 표시
-            if (result.premium_report || result.engine_version === 'v3') {
+            if (result.premium_report || (result.engine_version && result.engine_version.startsWith('v3'))) {
                 displayPremiumReportV3(result);
                 return;
             }
@@ -7906,10 +8344,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         <i class="fas fa-chevron-down text-[10px] transition-transform score-toggle-icon"></i>
                     </button>
                     <div class="score-details hidden mt-2 pt-2 border-t border-wiki-border/30">
-                        <div class="text-sm text-wiki-muted mb-2">Fit: \${job.fit_score}</div>
-                        <div class="flex gap-2 text-xs">
-                            <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded">Like: \${job.like_score}</span>
-                            <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded">Can: \${job.can_score}</span>
+                        <div class="p-3 rounded-lg" style="background-color: rgba(26,26,46,0.5);">
+                            \${getScoreExplanation(job.like_score, job.can_score, job.fit_score, job.risk_penalty || 0, job.feasibility_score || 0)}
                         </div>
                     </div>
                 </div>
@@ -8120,6 +8556,15 @@ app.get('/analyzer/job', requireAuth, (c) => {
         }
         
         function displayPremiumReportV3(result) {
+            // 결과 단계: step indicator와 페이지 타이틀 숨김 (깔끔한 리포트 뷰)
+            const stepIndicator = document.getElementById('step-indicator');
+            if (stepIndicator) stepIndicator.style.display = 'none';
+            const pageTitle = document.querySelector('h1.text-3xl');
+            if (pageTitle) pageTitle.style.display = 'none';
+            // 계정 안내 배너도 숨김
+            const accountBanner = document.getElementById('account-warning-banner');
+            if (accountBanner) accountBanner.style.display = 'none';
+
             const report = result.premium_report || {};
             
             // PremiumReport 타입 데이터 매핑 (백엔드 실제 필드에 맞춤)
@@ -8202,8 +8647,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
 
             // 프로필 해석 (LLM 생성)
             const profileInterpretation = report.profileInterpretation || null;
-            console.log('[DEBUG] profileInterpretation:', profileInterpretation);
-            console.log('[DEBUG] report keys:', Object.keys(report));
 
             // 전환 타이밍 (30/60/90일 계획)
             const transitionTiming = report.transitionTiming || {
@@ -8237,7 +8680,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
 
             // 메타인지 분석 결과
             const metaCognition = report.metaCognition || null;
-            console.log('[DEBUG] metaCognition:', metaCognition);
 
             // 한국어 받침 판별 (조사 선택용)
             function hasBatchim(word) {
@@ -8334,22 +8776,22 @@ app.get('/analyzer/job', requireAuth, (c) => {
 
             // 탭 UI 생성
             container.innerHTML = \`
-                <!-- V3 프리미엄 리포트 헤더 -->
-                <div class="text-center mb-8">
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style="background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2)); border: 1px solid rgba(99,102,241,0.3);">
-                        <span class="text-lg">✨</span>
-                        <span class="text-sm font-medium" style="color: rgb(165,180,252);">프리미엄 리포트 V3</span>
-                    </div>
-                    <h2 class="text-2xl md:text-3xl font-bold mb-2">당신만의 커리어 분석 리포트</h2>
-                    <p class="text-wiki-muted mb-4">AI가 분석한 당신의 커리어 방향성</p>
-                    <!-- 테스트용 버튼들 -->
-                    <div class="flex justify-center gap-3 flex-wrap">
+                <!-- 리포트 헤더 -->
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+                        <span class="text-2xl">✨</span>
+                        당신만의 커리어 분석 리포트
+                    </h2>
+                    <p class="text-wiki-muted text-sm">AI가 분석한 당신의 커리어 방향성</p>
+                    <div class="flex justify-center items-center gap-2 mt-3">
+                        <button onclick="shareReport()" id="share-report-btn" class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition" style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; cursor: pointer;">
+                            <i class="fas fa-share-alt"></i> 공유
+                        </button>
+                        \${DEBUG_MODE ? \`
                         <button onclick="copyAllReportContent()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6; border: 1px solid rgba(67, 97, 238, 0.3);">
                             <i class="fas fa-copy"></i> 결과 전체 복사
                         </button>
-                        <button onclick="resetAnalyzer()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">
-                            <i class="fas fa-redo"></i> 처음부터 다시
-                        </button>
+                        \` : ''}
                     </div>
                 </div>
                 
@@ -8477,11 +8919,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                 const constraintsSpan = profileIsOdd && profileLastSection === 'constraints' ? 'md:col-span-2' : '';
                                 return '<div class="' + profileGridClass + '">' +
 
-                                (profileInterpretation.interests?.length > 0 ? '<div class="p-4 rounded-xl ' + interestsSpan + '" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💚</span><h5 class="font-bold text-green-400 text-[15px]">좋아하는 것</h5></div>' + (profileInterpretation.interests.length <= 2 ? '<div class="flex flex-wrap gap-2">' + profileInterpretation.interests.map(item => '<span class="px-3 py-1.5 rounded-full text-[15px] font-medium" style="background-color: rgba(34,197,94,0.15); color: rgb(134,239,172);">' + translateToKorean(item.label) + '</span>').join('') + '</div>' : '<p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.interests_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.interests.map(item => '<div class="pl-3 border-l-2 border-green-500/30"><div class="font-medium text-green-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning) + '</div></div>').join('') + '</div>') + '</div>' : '') +
+                                (profileInterpretation.interests?.length > 0 ? '<div class="p-4 rounded-xl ' + interestsSpan + '" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💚</span><h5 class="font-bold text-green-400 text-[15px]">좋아하는 것</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.interests_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.interests.map(item => '<div class="pl-3 border-l-2 border-green-500/30"><div class="font-medium text-green-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '에 대한 관심이 높습니다.') + '</div></div>').join('') + '</div></div>' : '') +
 
-                                (profileInterpretation.strengths?.length > 0 ? '<div class="p-4 rounded-xl ' + strengthsSpan + '" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💪</span><h5 class="font-bold text-blue-400 text-[15px]">잘하는 것</h5></div>' + (profileInterpretation.strengths.length <= 2 ? '<div class="flex flex-wrap gap-2">' + profileInterpretation.strengths.map(item => '<span class="px-3 py-1.5 rounded-full text-[15px] font-medium" style="background-color: rgba(59,130,246,0.15); color: rgb(147,197,253);">' + translateToKorean(item.label) + '</span>').join('') + '</div>' : '<p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.strengths_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.strengths.map(item => '<div class="pl-3 border-l-2 border-blue-500/30"><div class="font-medium text-blue-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning) + '</div></div>').join('') + '</div>') + '</div>' : '') +
+                                (profileInterpretation.strengths?.length > 0 ? '<div class="p-4 rounded-xl ' + strengthsSpan + '" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💪</span><h5 class="font-bold text-blue-400 text-[15px]">잘하는 것</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.strengths_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.strengths.map(item => '<div class="pl-3 border-l-2 border-blue-500/30"><div class="font-medium text-blue-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '이(가) 강점입니다.') + '</div></div>').join('') + '</div></div>' : '') +
 
-                                (profileInterpretation.values?.length > 0 ? '<div class="p-4 rounded-xl ' + valuesSpan + '" style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">⭐</span><h5 class="font-bold text-purple-400 text-[15px]">중요한 가치</h5></div>' + (profileInterpretation.values.length <= 2 ? '<div class="flex flex-wrap gap-2">' + profileInterpretation.values.map(item => '<span class="px-3 py-1.5 rounded-full text-[15px] font-medium" style="background-color: rgba(168,85,247,0.15); color: rgb(216,180,254);">' + translateToKorean(item.label) + '</span>').join('') + '</div>' : '<p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.values_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.values.map(item => '<div class="pl-3 border-l-2 border-purple-500/30"><div class="font-medium text-purple-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning) + '</div></div>').join('') + '</div>') + '</div>' : '') +
+                                (profileInterpretation.values?.length > 0 ? '<div class="p-4 rounded-xl ' + valuesSpan + '" style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">⭐</span><h5 class="font-bold text-purple-400 text-[15px]">중요한 가치</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.values_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.values.map(item => '<div class="pl-3 border-l-2 border-purple-500/30"><div class="font-medium text-purple-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '을(를) 중요하게 여깁니다.') + '</div></div>').join('') + '</div></div>' : '') +
 
                                 (profileInterpretation.constraints?.length > 0 ? '<div class="p-4 rounded-xl ' + constraintsSpan + '" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">🚫</span><h5 class="font-bold text-red-400 text-[15px]">피하고 싶은 것</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.constraints_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.constraints.map(item => '<div class="pl-3 border-l-2 border-red-500/30"><div class="font-medium text-red-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning) + '</div></div>').join('') + '</div></div>' : '') +
 
@@ -8984,23 +9426,23 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         </div>
                     \` : ''}
 
-                    <!-- 가치 우선순위 -->
+                    <!-- 가치 우선순위 (가로 배치) -->
                     \${personal.value_priorities?.length > 0 ? \`
                         <div class="mb-8">
                             <h4 class="text-xl font-bold mb-4 flex items-center gap-2">
                                 <span>⭐</span> 가치 우선순위
                             </h4>
-                            <div class="grid gap-3">
-                                \${personal.value_priorities.map((v, i) => {
-                                    const colors = ['rgba(168,85,247,0.2)', 'rgba(99,102,241,0.2)', 'rgba(59,130,246,0.2)', 'rgba(6,182,212,0.2)', 'rgba(16,185,129,0.2)', 'rgba(245,158,11,0.2)', 'rgba(239,68,68,0.2)'];
-                                    const textColors = ['rgb(216,180,254)', 'rgb(165,180,252)', 'rgb(147,197,253)', 'rgb(103,232,249)', 'rgb(110,231,183)', 'rgb(253,224,71)', 'rgb(252,165,165)'];
-                                    // 키워드 볼드 처리
+                            <div class="grid grid-cols-\${Math.min(personal.value_priorities.length, 3)} gap-3">
+                                \${personal.value_priorities.slice(0, 5).map((v, i) => {
+                                    const colors = ['rgba(168,85,247,0.2)', 'rgba(99,102,241,0.2)', 'rgba(59,130,246,0.2)', 'rgba(6,182,212,0.2)', 'rgba(16,185,129,0.2)'];
+                                    const textColors = ['rgb(216,180,254)', 'rgb(165,180,252)', 'rgb(147,197,253)', 'rgb(103,232,249)', 'rgb(110,231,183)'];
                                     let text = translateToKorean(v).trim();
-                                    if (!text.endsWith('.')) text += '.';
-                                    text = text.replace(/(성장|수입|보상|워라밸|안정|의미|보람|인정|영향력|자율|도전|리스크)/g, '<strong style="color: ' + textColors[i % textColors.length] + '">$1</strong>');
-                                    return \`<div class="p-4 rounded-xl flex items-start gap-3" style="background-color: \${colors[i % colors.length]}; border: 1px solid \${colors[i % colors.length].replace('0.2', '0.3')};">
-                                        <span class="text-lg font-bold mt-0.5" style="color: \${textColors[i % textColors.length]};">#\${i + 1}</span>
-                                        <span class="text-[15px] leading-relaxed text-wiki-text">\${text}</span>
+                                    // 짧은 값 레이블은 마침표 제거, 문장(10자+)만 마침표 유지
+                                    if (text.length < 10) text = text.replace(/\\.$/, '');
+                                    else if (!text.endsWith('.')) text += '.';
+                                    return \`<div class="p-3 md:p-4 rounded-xl flex items-center gap-2 justify-center" style="background-color: \${colors[i % colors.length]}; border: 1px solid \${colors[i % colors.length].replace('0.2', '0.3')};">
+                                        <span class="text-sm font-bold" style="color: \${textColors[i % textColors.length]};">#\${i + 1}</span>
+                                        <span class="text-[15px] font-semibold text-wiki-text">\${text}</span>
                                     </div>\`;
                                 }).join('')}
                             </div>
@@ -9082,33 +9524,36 @@ app.get('/analyzer/job', requireAuth, (c) => {
                             <p class="text-sm text-wiki-muted mb-5">각 축의 중앙은 균형 상태이며, 좌우로 치우칠수록 해당 성향이 강합니다.</p>
                             <div class="space-y-5">
                                 \${[
-                                    { left: '분석형', right: '창의형', value: workStyleMap.analytical_vs_creative, color: 'cyan' },
-                                    { left: '혼자 집중', right: '팀 협업', value: workStyleMap.solo_vs_team, color: 'blue' },
-                                    { left: '체계적', right: '유연함', value: workStyleMap.structured_vs_flexible, color: 'violet' },
-                                    { left: '전문가형', right: '제너럴리스트', value: workStyleMap.depth_vs_breadth, color: 'amber' },
-                                    { left: '가이드 선호', right: '자율 선호', value: workStyleMap.guided_vs_autonomous, color: 'emerald' },
+                                    { left: '분석형', right: '창의형', value: workStyleMap.analytical_vs_creative, color: 'cyan', leftDesc: '데이터와 논리 기반 접근을 선호합니다', rightDesc: '새로운 아이디어와 창의적 접근을 선호합니다', balanceDesc: '분석과 창의성을 균형 있게 활용합니다' },
+                                    { left: '혼자 집중', right: '팀 협업', value: workStyleMap.solo_vs_team, color: 'blue', leftDesc: '독립적으로 깊이 파고드는 작업에서 에너지를 얻습니다', rightDesc: '팀원들과 함께 논의하고 협력할 때 시너지를 냅니다', balanceDesc: '상황에 따라 독립 작업과 협업을 유연하게 전환합니다' },
+                                    { left: '체계적', right: '유연함', value: workStyleMap.structured_vs_flexible, color: 'violet', leftDesc: '명확한 계획과 프로세스 안에서 안정감을 느낍니다', rightDesc: '상황에 맞게 즉흥적으로 대응하는 것을 선호합니다', balanceDesc: '체계와 유연함을 상황에 맞게 조합합니다' },
+                                    { left: '전문가형', right: '제너럴리스트', value: workStyleMap.depth_vs_breadth, color: 'amber', leftDesc: '한 분야를 깊이 파고들어 전문성을 키우는 것을 선호합니다', rightDesc: '다양한 분야를 넓게 경험하며 연결하는 것을 즐깁니다', balanceDesc: '깊이와 넓이를 균형 있게 추구합니다' },
+                                    { left: '가이드 선호', right: '자율 선호', value: workStyleMap.guided_vs_autonomous, color: 'emerald', leftDesc: '명확한 방향과 멘토링이 있을 때 성장이 빠릅니다', rightDesc: '스스로 판단하고 실행할 수 있는 자율성을 중요시합니다', balanceDesc: '적절한 가이드와 자율성의 균형을 추구합니다' },
                                 ].map(axis => \`
-                                    <div class="flex items-center gap-4">
-                                        <span class="text-sm w-24 text-right \${axis.value < 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted'}">\${axis.left}</span>
-                                        <div class="flex-1 h-3 bg-wiki-border/20 rounded-full relative overflow-hidden">
-                                            <div class="absolute top-0 left-1/2 w-px h-full bg-wiki-muted/40 z-10"></div>
-                                            \${axis.value === 0
-                                                ? '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-gray-400 rounded-full border-2 border-wiki-bg z-20"></div>'
-                                                : \`<div class="absolute top-0 h-full bg-\${axis.color}-400/80 rounded-full transition-all"
-                                                     style="\${axis.value >= 0
-                                                        ? 'left: 50%; width: ' + Math.max(axis.value / 2, 3) + '%;'
-                                                        : 'right: 50%; width: ' + Math.max(Math.abs(axis.value) / 2, 3) + '%;'}"></div>\`}
+                                    <div>
+                                        <div class="flex items-center gap-4">
+                                            <span class="text-sm w-24 text-right \${axis.value < 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted'}">\${axis.left}</span>
+                                            <div class="flex-1 h-3 bg-wiki-border/20 rounded-full relative overflow-hidden">
+                                                <div class="absolute top-0 left-1/2 w-px h-full bg-wiki-muted/40 z-10"></div>
+                                                \${axis.value === 0
+                                                    ? '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-gray-400 rounded-full border-2 border-wiki-bg z-20"></div>'
+                                                    : \`<div class="absolute top-0 h-full bg-\${axis.color}-400/80 rounded-full transition-all"
+                                                         style="\${axis.value >= 0
+                                                            ? 'left: 50%; width: ' + Math.max(axis.value / 2, 3) + '%;'
+                                                            : 'right: 50%; width: ' + Math.max(Math.abs(axis.value) / 2, 3) + '%;'}"></div>\`}
+                                            </div>
+                                            <span class="text-sm w-24 \${axis.value > 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted'}">\${axis.right}</span>
                                         </div>
-                                        <span class="text-sm w-24 \${axis.value > 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted'}">\${axis.right}</span>
+                                        <p class="text-xs text-wiki-muted mt-1 text-center">\${Math.abs(axis.value) >= 15 ? (axis.value < 0 ? axis.leftDesc : axis.rightDesc) : axis.balanceDesc}</p>
                                     </div>
                                 \`).join('')}
                             </div>
                         </div>
                     \` : ''}
 
-                    <!-- 내면 갈등 + 성장 곡선 (2열 그리드) -->
+                    <!-- 내면 갈등 + 성장 곡선 (둘 다 있으면 2열, 하나만 있으면 1열) -->
                     \${(innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts) || growthCurve.type ? \`
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="grid grid-cols-1 \${(innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts) && growthCurve.type ? 'md:grid-cols-2' : ''} gap-6 mb-8">
                             <!-- 내면 갈등 분석 -->
                             \${innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts ? \`
                                 <div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.1)); border: 1px solid rgba(168,85,247,0.2);">
@@ -9361,10 +9806,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
                             <span class="text-3xl">📊</span>
                             <span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">분석 상세 정보</span>
                         </h2>
-                        <p class="text-center text-wiki-muted text-sm mt-2">AI 추천의 근거와 신뢰도를 확인하세요.</p>
+                        <p class="text-center text-wiki-muted text-sm mt-2">AI 추천의 근거와 기술적 분석을 확인하세요.</p>
+                        <p class="text-center text-wiki-muted text-xs mt-1">엔진 버전: \${result.engine_version || 'unknown'}</p>
                         <div class="mt-6 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
                     </div>
-                    <p class="text-base text-wiki-muted mb-6">이 섹션은 AI 추천의 근거, 사용된 알고리즘, 그리고 신뢰도를 상세히 보여줍니다.</p>
+                    <p class="text-base text-wiki-muted mb-6">이 섹션은 AI 추천의 근거, 사용된 알고리즘, 그리고 점수 산출 과정을 상세히 보여줍니다.</p>
 
                     <!-- 분석 파이프라인 설명 -->
                     <div class="mb-8 p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(34,197,94,0.2);">
@@ -9414,8 +9860,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                 <div class="text-base text-wiki-muted mt-1">답변한 질문</div>
                             </div>
                             <div class="p-4 rounded-xl bg-wiki-bg/50 text-center">
-                                <div class="text-3xl font-bold text-purple-400">\${report._candidatesScored || 60}</div>
-                                <div class="text-base text-wiki-muted mt-1">LLM 평가 직업</div>
+                                <div class="text-3xl font-bold text-purple-400">\${(report._totalJobCount || report._candidatesScored || 0).toLocaleString()}</div>
+                                <div class="text-base text-wiki-muted mt-1">분석 대상 직업</div>
                             </div>
                             <div class="p-4 rounded-xl bg-wiki-bg/50 text-center">
                                 <div class="text-3xl font-bold text-amber-400">6</div>
@@ -9424,61 +9870,90 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         </div>
                     </div>
 
-                    <!-- 신뢰도 섹션 -->
+                    <!-- AI 추천 시스템 작동 원리 -->
                     <div class="mb-8 p-5 rounded-xl" style="background-color: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);">
-                        <h4 class="text-xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 추천 신뢰도</h4>
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="text-4xl font-bold" style="color: rgb(99,102,241);">\${Math.round((report._confidence || 0.75) * 100)}%</div>
-                            <div class="flex-1">
-                                <div class="h-4 bg-wiki-border/30 rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-wiki-primary to-wiki-secondary transition-all" style="width: \${Math.round((report._confidence || 0.75) * 100)}%"></div>
-                                </div>
+                        <h4 class="text-xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 AI 추천은 이렇게 만들어집니다</h4>
+                        <p class="text-[15px] text-wiki-muted mb-5">이 리포트는 단순 키워드 매칭이 아닌, 3단계 AI 시스템을 거쳐 생성됩니다.</p>
+
+                        <!-- RAG: 벡터 검색 -->
+                        <div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(34,197,94,0.2); color: rgb(34,197,94);">STEP 1</span>
+                                <span class="font-bold text-white text-base">RAG — 의미 기반 후보 검색</span>
+                            </div>
+                            <p class="text-[14px] text-wiki-muted leading-relaxed mb-2">당신의 답변 전체를 AI 임베딩(숫자 벡터)으로 변환한 뒤, 7,000개 직업 DB에서 <span class="text-emerald-400">의미적으로 가장 가까운 직업들</span>을 찾습니다.</p>
+                            <p class="text-[13px] text-wiki-muted/70">"데이터 분석을 좋아한다"고 답하면, 직업명에 '분석'이 없더라도 데이터 관련 업무를 하는 직업이 후보에 포함됩니다. 단순 키워드 검색과의 차이입니다.</p>
+                        </div>
+
+                        <!-- TAG: 절대 조건 필터 -->
+                        <div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(251,191,36,0.2); color: rgb(251,191,36);">STEP 2</span>
+                                <span class="font-bold text-white text-base">TAG — 절대 조건 필터링</span>
+                            </div>
+                            <p class="text-[14px] text-wiki-muted leading-relaxed mb-2">후보 직업들의 속성 태그를 당신의 <span class="text-amber-400">제약 조건</span>과 대조합니다.</p>
+                            <p class="text-[13px] text-wiki-muted/70">"절대 안 돼" 수준의 제약은 해당 직업을 후보에서 완전히 제거합니다. "가능하면 피하고 싶다" 수준이면 제거 대신 Risk 감점이 적용되어 순위가 내려갑니다. 예: "야근 절대 불가" → 야간 근무 직업 제외, "출장 가능하면 싫다" → 출장 직업은 남되 감점.</p>
+                        </div>
+
+                        <!-- CAG: LLM 평가 -->
+                        <div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(99,102,241,0.2); color: rgb(129,140,248);">STEP 3</span>
+                                <span class="font-bold text-white text-base">CAG — AI가 직접 평가</span>
+                            </div>
+                            <p class="text-[14px] text-wiki-muted leading-relaxed mb-2">남은 후보 직업 각각에 대해, GPT-4o-mini가 당신의 프로필 전체를 읽고 <span class="text-indigo-400">Like(좋아할 가능성)</span>와 <span class="text-blue-400">Can(잘할 가능성)</span> 점수를 매깁니다.</p>
+                            <p class="text-[13px] text-wiki-muted/70">AI는 단순히 숫자만 매기는 것이 아니라, "왜 이 직업을 좋아할지", "왜 잘할 수 있는지"에 대한 구체적인 이유도 함께 생성합니다. 각 직업 카드에 표시되는 Like/Can 이유가 바로 이 단계에서 만들어집니다.</p>
+                        </div>
+
+                        <!-- 최종 점수 -->
+                        <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(168,85,247,0.2); color: rgb(192,132,252);">최종</span>
+                                <span class="font-bold text-white text-base">종합 점수 계산 (Fit)</span>
+                            </div>
+                            <p class="text-[14px] text-wiki-muted leading-relaxed mb-3">AI가 매긴 점수를 아래 공식으로 조합하여 최종 순위를 결정합니다.</p>
+                            <div class="p-3 rounded-lg text-center" style="background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);">
+                                <p class="text-base font-bold text-white" style="font-family: monospace;">Fit = Like + Can + Background − Risk</p>
+                            </div>
+                            <div class="mt-3 space-y-1 text-[13px] text-wiki-muted/80">
+                                <p><span class="text-purple-400 font-medium">Like</span> — 좋아할 직업을 중요하게 반영합니다. 흥미와 가치관이 맞아야 오래 갈 수 있기 때문입니다.</p>
+                                <p><span class="text-blue-400 font-medium">Can</span> — 잘할 수 있는 직업도 함께 반영합니다. 강점과 역량이 맞아야 성과를 낼 수 있습니다.</p>
+                                <p><span class="text-amber-400 font-medium">Background</span> — 경력, 학력, 경험이 직업과 얼마나 관련 있는지 평가합니다.</p>
+                                <p><span class="text-red-400 font-medium">Risk</span> — 당신이 "절대 싫다"고 한 조건과 충돌하면 감점됩니다.</p>
                             </div>
                         </div>
-                        <div class="text-base text-wiki-muted mb-4">
-                            <p class="font-medium text-white mb-2">신뢰도란?</p>
-                            <p>입력 데이터의 양과 질을 기반으로 계산됩니다. 답변이 구체적이고, 더 많은 질문에 응답할수록 신뢰도가 올라갑니다.</p>
-                        </div>
-                        <p class="text-base" style="color: rgba(165,180,252,0.9);">
-                            \${(report._confidence || 0.75) >= 0.8
-                                ? '✅ 충분한 정보를 바탕으로 신뢰도 높은 추천입니다.'
-                                : (report._confidence || 0.75) >= 0.6
-                                    ? '⚡ 기본적인 추천은 가능하지만, 더 많은 정보가 있으면 정확도가 올라갑니다.'
-                                    : '⚠️ 제한된 정보로 추천했습니다. 추가 질문에 답변하시면 더 정확해집니다.'}
-                        </p>
                     </div>
 
                     <!-- 점수 계산 방식 설명 -->
-                    <div class="mb-8 p-5 rounded-xl bg-wiki-bg/30">
-                        <h4 class="text-xl font-bold mb-4">💡 점수 계산 방식</h4>
-                        <div class="space-y-3 text-base">
-                            <div class="flex items-start gap-3">
-                                <span class="text-emerald-400 font-bold text-lg shrink-0">Fit</span>
-                                <div>
-                                    <p class="text-white">종합 적합도</p>
-                                    <p class="text-wiki-muted text-[15px]">Like × 0.55 + Can × 0.45 - Risk 로 계산됩니다. 좋아하면서 잘할 수 있는 직업이 높은 점수를 받습니다.</p>
-                                </div>
+                    <div class="mb-8 rounded-xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.08);">
+                        <div class="px-5 py-3" style="background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08);">
+                            <h4 class="text-base font-bold text-wiki-text">💡 점수 계산 방식</h4>
+                        </div>
+                        <div class="divide-y" style="--tw-divide-opacity: 0.06; --tw-divide-color: rgba(255,255,255,var(--tw-divide-opacity));">
+                            <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(52,211,153);">
+                                <span class="text-emerald-400 font-bold text-sm w-10 shrink-0 text-center">Fit</span>
+                                <span class="text-white text-sm font-medium w-20 shrink-0">종합 적합도</span>
+                                <span class="text-wiki-muted text-[13px]">Like + Can + Background 종합, Risk 차감</span>
                             </div>
-                            <div class="flex items-start gap-3">
-                                <span class="text-purple-400 font-bold text-lg shrink-0">Like</span>
-                                <div>
-                                    <p class="text-white">좋아할 가능성</p>
-                                    <p class="text-wiki-muted text-[15px]">관심 분야, 가치관, 우선순위가 직업의 특성과 얼마나 일치하는지 평가합니다.</p>
-                                </div>
+                            <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(168,85,247);">
+                                <span class="text-purple-400 font-bold text-sm w-10 shrink-0 text-center">Like</span>
+                                <span class="text-white text-sm font-medium w-20 shrink-0">좋아할 가능성</span>
+                                <span class="text-wiki-muted text-[13px]">관심 분야, 가치관, 우선순위와 직업 특성의 일치도</span>
                             </div>
-                            <div class="flex items-start gap-3">
-                                <span class="text-blue-400 font-bold text-lg shrink-0">Can</span>
-                                <div>
-                                    <p class="text-white">잘할 가능성</p>
-                                    <p class="text-wiki-muted text-[15px]">강점, 업무 스타일, 경험이 직업의 요구사항과 얼마나 맞는지 평가합니다.</p>
-                                </div>
+                            <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(96,165,250);">
+                                <span class="text-blue-400 font-bold text-sm w-10 shrink-0 text-center">Can</span>
+                                <span class="text-white text-sm font-medium w-20 shrink-0">잘할 가능성</span>
+                                <span class="text-wiki-muted text-[13px]">강점, 업무 스타일, 경험과 직업 요구사항의 적합도</span>
                             </div>
-                            <div class="flex items-start gap-3">
-                                <span class="text-red-400 font-bold text-lg shrink-0">Risk</span>
-                                <div>
-                                    <p class="text-white">위험 요소</p>
-                                    <p class="text-wiki-muted text-[15px]">절대 피하고 싶은 조건, 에너지 소모원과 직업 환경이 충돌할 때 페널티가 적용됩니다.</p>
-                                </div>
+                            <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(251,191,36);">
+                                <span class="text-amber-400 font-bold text-sm w-10 shrink-0 text-center">Bg</span>
+                                <span class="text-white text-sm font-medium w-20 shrink-0">배경 적합도</span>
+                                <span class="text-wiki-muted text-[13px]">경력, 전공, 자격증, 해외경험 등 배경의 도움 정도</span>
+                            </div>
+                            <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(248,113,113);">
+                                <span class="text-red-400 font-bold text-sm w-10 shrink-0 text-center">Risk</span>
+                                <span class="text-white text-sm font-medium w-20 shrink-0">위험 요소</span>
+                                <span class="text-wiki-muted text-[13px]">피하고 싶은 조건과 직업 환경 충돌 시 페널티</span>
                             </div>
                         </div>
                     </div>
@@ -9507,12 +9982,76 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     </div>
                 </div>
                 
-                <!-- 하단: 다시 시작 버튼 -->
-                <div class="text-center mt-8">
-                    <a href="/analyzer" class="inline-flex items-center gap-2 px-6 py-3 bg-wiki-card border border-wiki-border rounded-xl hover:bg-wiki-bg transition">
-                        <i class="fas fa-redo"></i>
-                        <span>다시 분석하기</span>
-                    </a>
+                <!-- 하단: 입력 수정 + 내용 추가 버튼 -->
+                <div class="flex flex-col sm:flex-row gap-3 justify-center mt-8">
+                    <button onclick="showEditWarningModal()"
+                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition hover:opacity-80"
+                        style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);">
+                        <i class="fas fa-edit"></i> 입력한 내용 수정
+                    </button>
+                    <button onclick="showAddContextModal()"
+                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition hover:opacity-80"
+                        style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">
+                        <i class="fas fa-plus"></i> 새로운 내용 추가
+                    </button>
+                </div>
+
+                <!-- 입력 수정 경고 모달 -->
+                <div id="edit-warning-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+                    <div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-lg mx-4 shadow-2xl w-full max-h-[90vh] overflow-y-auto">
+                        <div class="mb-5">
+                            <div class="w-12 h-12 mx-auto mb-4 bg-amber-500/20 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-xl text-amber-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white text-center mb-2">입력 내용 수정 안내</h3>
+                            <p class="text-sm text-wiki-muted text-center">기존에 입력했던 내용을 수정할 수 있습니다.<br>단, 수정 범위에 따라 이후 단계의 답변이 초기화될 수 있습니다.</p>
+                        </div>
+                        <div class="space-y-4 mb-6">
+                            <div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);">
+                                <p class="text-sm font-medium text-amber-300 mb-1">Step 1 (프로필 기본정보) 수정 시</p>
+                                <p class="text-xs text-wiki-muted">Step 2(심층 질문)의 질문이 새로 생성되며, 기존 심층 질문 답변이 모두 초기화됩니다.</p>
+                            </div>
+                            <div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);">
+                                <p class="text-sm font-medium text-amber-300 mb-1">Step 2 (심층 질문) 답변 수정 시</p>
+                                <p class="text-xs text-wiki-muted">수정한 라운드 이후의 질문들이 새로 생성되며, 해당 라운드 이후 답변이 초기화됩니다.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="hideEditWarningModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">
+                                취소
+                            </button>
+                            <button onclick="navigateToEditMode()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium">
+                                수정 시작하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 내용 추가 모달 -->
+                <div id="add-context-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+                    <div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-md mx-4 shadow-2xl w-full">
+                        <div class="mb-5">
+                            <h3 class="text-lg font-bold text-white mb-2">
+                                <i class="fas fa-plus text-emerald-400 mr-2"></i>추가 정보 입력
+                            </h3>
+                            <p class="text-sm text-wiki-muted">현재 분석에 반영하고 싶은 추가 정보를 자유롭게 작성해주세요.</p>
+                        </div>
+                        <textarea id="additional-context-text"
+                                  class="w-full h-32 p-3 rounded-xl text-sm text-white placeholder-wiki-muted resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                                  style="background: rgba(15, 15, 35, 0.6); border: 1px solid rgba(148, 163, 184, 0.2);"
+                                  placeholder="예: 최근 데이터 분석 부트캠프를 수료했습니다. 재택근무가 가능한 직업을 선호합니다."
+                                  minlength="30"></textarea>
+                        <p id="context-char-count" class="text-xs mt-1 text-wiki-muted">0 / 최소 30자</p>
+                        <div class="flex gap-3 mt-4">
+                            <button onclick="hideAddContextModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">
+                                취소
+                            </button>
+                            <button id="submit-context-btn" onclick="submitAdditionalContext()" disabled
+                                    class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                                추가 후 재분석
+                            </button>
+                        </div>
+                    </div>
                 </div>
             \`;
             
@@ -9547,6 +10086,122 @@ app.get('/analyzer/job', requireAuth, (c) => {
             document.querySelector('.report-tab[data-tab="' + tabId + '"]')?.classList.add('active');
         }
         
+        // ============================================
+        // 입력 수정 / 내용 추가 (V3 리포트 하단)
+        // ============================================
+        function showEditWarningModal() {
+            document.getElementById('edit-warning-modal')?.classList.remove('hidden');
+        }
+        function hideEditWarningModal() {
+            document.getElementById('edit-warning-modal')?.classList.add('hidden');
+        }
+        function navigateToEditMode() {
+            if (!currentSessionId) { alert('세션 정보가 없습니다.'); return; }
+            const analyzerPath = selectedAnalysisType === 'major' ? '/analyzer/major' : '/analyzer/job';
+            const params = new URLSearchParams({
+                session_id: currentSessionId,
+                edit_mode: 'true',
+            });
+            if (currentRequestId) params.set('source_request_id', String(currentRequestId));
+            window.location.href = analyzerPath + '?' + params.toString();
+        }
+        function showAddContextModal() {
+            document.getElementById('add-context-modal')?.classList.remove('hidden');
+        }
+        function hideAddContextModal() {
+            document.getElementById('add-context-modal')?.classList.add('hidden');
+            const textarea = document.getElementById('additional-context-text');
+            if (textarea) textarea.value = '';
+            updateContextCharCount();
+        }
+        function updateContextCharCount() {
+            const textarea = document.getElementById('additional-context-text');
+            if (!textarea) return;
+            const count = textarea.value.length;
+            const countEl = document.getElementById('context-char-count');
+            if (countEl) countEl.textContent = count + ' / 최소 30자';
+            const btn = document.getElementById('submit-context-btn');
+            if (btn) btn.disabled = count < 30;
+        }
+        document.getElementById('additional-context-text')?.addEventListener('input', updateContextCharCount);
+
+        async function submitAdditionalContext() {
+            const textarea = document.getElementById('additional-context-text');
+            const text = textarea ? textarea.value.trim() : '';
+            if (text.length < 30) return;
+            if (!currentRequestId) { alert('분석 결과 ID가 없습니다.'); return; }
+
+            const btn = document.getElementById('submit-context-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>재분석 중...';
+            }
+
+            try {
+                const res = await fetch('/api/ai-analyzer/add-context', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ request_id: currentRequestId, additional_text: text })
+                });
+                const data = await res.json();
+                if (data.success && data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                } else if (data.success && data.new_request_id) {
+                    window.location.href = '/user/ai-results/' + data.new_request_id;
+                } else {
+                    alert('재분석 요청 실패: ' + (data.message || '알 수 없는 오류'));
+                    if (btn) { btn.disabled = false; btn.innerHTML = '추가 후 재분석'; }
+                }
+            } catch (err) {
+                alert('재분석 요청 중 오류가 발생했습니다.');
+                if (btn) { btn.disabled = false; btn.innerHTML = '추가 후 재분석'; }
+            }
+        }
+
+        // ============================================
+        // 공유 기능
+        // ============================================
+        let _shareUrl = null;
+        let _shareToken = null;
+
+        async function shareReport() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const requestId = urlParams.get('request_id') || urlParams.get('view') || currentRequestId;
+            if (!requestId) { alert('결과 ID가 없습니다.'); return; }
+
+            try {
+                const res = await fetch('/api/ai-analyzer/share', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ request_id: parseInt(requestId) }),
+                });
+                const json = await res.json();
+                if (!json.success) {
+                    alert(json.error || '공유 생성에 실패했습니다.');
+                    return;
+                }
+
+                _shareUrl = json.share_url;
+                _shareToken = json.token;
+
+                // 글로벌 공유 모달 열기
+                var ogImage = json.share_url + '/og.png';
+                if (window.__openShareModal) {
+                    window.__openShareModal(json.share_url, 'AI가 분석한 나의 커리어 DNA', ogImage);
+                } else {
+                    // fallback: 클립보드 복사
+                    try {
+                        await navigator.clipboard.writeText(json.share_url);
+                        alert('공유 링크가 복사되었습니다!');
+                    } catch(e) {
+                        prompt('아래 링크를 복사하세요:', json.share_url);
+                    }
+                }
+            } catch (err) {
+                alert('공유 생성 중 오류가 발생했습니다.');
+            }
+        }
+
         // 결과 전체 복사 기능 (데이터 기반 - DOM이 아닌 실제 데이터에서 추출)
         function copyAllReportContent() {
             const data = window.currentReportData;
@@ -9590,7 +10245,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     const fit = job.scores?.fit || job.fit_score || '-';
                     const like = job.scores?.like || job.like_score || '-';
                     const can = job.scores?.can || job.can_score || '-';
-                    t += '  ' + (i+1) + '. ' + name + ' (Fit:' + fit + ' Like:' + like + ' Can:' + can + ')\\n';
+                    const bg = job.feasibility_score || job.feasibilityScore || 0;
+                    var scoreStr = '(Fit:' + fit + ' Like:' + like + ' Can:' + can;
+                    if (bg > 0) scoreStr += ' Bg:' + bg;
+                    scoreStr += ')';
+                    t += '  ' + (i+1) + '. ' + name + ' ' + scoreStr + '\\n';
                     if (job.like_reason) t += '     Like: ' + job.like_reason + '\\n';
                     if (job.can_reason) t += '     Can: ' + job.can_reason + '\\n';
                 });
@@ -9673,8 +10332,12 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     const fit = job.scores?.fit || job.fit_score || '-';
                     const like = job.scores?.like || job.like_score || '-';
                     const can = job.scores?.can || job.can_score || '-';
+                    const bg = job.feasibility_score || job.feasibilityScore || 0;
                     const desc = (job.job_description || job.description || job.summary || '').replace(/\\n/g, ' ').trim();
-                    s += '  ' + (i+1) + '. ' + name + ' (Fit:' + fit + ' Like:' + like + ' Can:' + can + ')\\n';
+                    var scoreStr = '(Fit:' + fit + ' Like:' + like + ' Can:' + can;
+                    if (bg > 0) scoreStr += ' Bg:' + bg;
+                    scoreStr += ')';
+                    s += '  ' + (i+1) + '. ' + name + ' ' + scoreStr + '\\n';
                     if (desc) s += '     ' + desc.substring(0, 100) + (desc.length > 100 ? '...' : '') + '\\n';
                     if (job.like_reason) s += '     💜 Like: ' + job.like_reason + '\\n';
                     if (job.can_reason) s += '     💪 Can: ' + job.can_reason + '\\n';
@@ -9735,7 +10398,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             navigator.clipboard.writeText(t).then(function() {
                 alert('리포트 전체 내용이 클립보드에 복사되었습니다!');
             }).catch(function(err) {
-                console.error('복사 실패:', err);
                 const textarea = document.createElement('textarea');
                 textarea.value = t;
                 document.body.appendChild(textarea);
@@ -9769,7 +10431,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
             window.collectedCareerState = {};
             window.universalAnswers = {};
             window.narrativeAnswers = {};
-            window.roundAnswers = {};
+            window.roundAnswers = [];
             window.stepScrollPositions = {};
             
             // UI 초기화
@@ -9899,6 +10561,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 const likeNum = parseInt(likeScore) || 0;
                 const canNum = parseInt(canScore) || 0;
                 const riskPenalty = job.riskPenalty || job.risk_penalty || 0;
+                const bgScore = job.feasibility_score || job.feasibilityScore || 0;
 
                 // profileInterpretation에서 토큰 가져오기
                 const pi = profileInterp || {};
@@ -9983,8 +10646,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                 \` : ''}
                             </div>
 
-                            <!-- 점수 바 (3점 비교) -->
-                            <div class="flex items-center gap-4 mt-3 pt-2.5" style="border-top: 1px solid rgba(255,255,255,0.06);">
+                            <!-- 점수 바 -->
+                            <div class="flex items-center gap-3 mt-3 pt-2.5" style="border-top: 1px solid rgba(255,255,255,0.06);">
                                 <div class="flex-1">
                                     <div class="flex items-center justify-between mb-1">
                                         <span class="text-[11px] text-emerald-400/80 font-medium">Fit</span>
@@ -10012,6 +10675,15 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                         <div class="h-full rounded-full transition-all" style="width: \${Math.min(canNum2, 100)}%; background: rgb(96,165,250);"></div>
                                     </div>
                                 </div>
+                                \${parseInt(bgScore) > 0 ? \`<div class="flex-1">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-[11px] text-amber-400/80 font-medium">Bg</span>
+                                        <span class="text-[11px] text-amber-400 font-semibold">\${bgScore}</span>
+                                    </div>
+                                    <div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);">
+                                        <div class="h-full rounded-full transition-all" style="width: \${Math.min(parseInt(bgScore) || 0, 100)}%; background: rgb(251,191,36);"></div>
+                                    </div>
+                                </div>\` : ''}
                             </div>
                         </div>
                     </div>
@@ -10040,20 +10712,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     <!-- 점수 상세 (기본 숨김) -->
                     <div class="score-details-compact hidden px-4 pb-3">
                         <div class="p-3 rounded-lg" style="background-color: rgba(26,26,46,0.5);">
-                            <div class="flex items-center gap-6 text-base">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-emerald-400 font-semibold">\${fitScore}</span>
-                                    <span class="text-wiki-muted">Fit</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-purple-400 font-semibold">\${likeScore}</span>
-                                    <span class="text-wiki-muted">Like</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-blue-400 font-semibold">\${canScore}</span>
-                                    <span class="text-wiki-muted">Can</span>
-                                </div>
-                            </div>
+                            \${getScoreExplanation(likeScore, canScore, fitScore, riskPenalty, bgScore)}
                         </div>
                     </div>
                 </div>
@@ -10090,7 +10749,9 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 const fitScore = job.scores?.fit || job.fit_score || '-';
                 const likeScore = job.scores?.like || job.like_score || '-';
                 const canScore = job.scores?.can || job.can_score || '-';
-                
+                const riskPenalty = job.riskPenalty || job.risk_penalty || job.scores?.risk_penalty || 0;
+                const bgScore = job.feasibility_score || job.feasibilityScore || 0;
+
                 return \`
                 <div class="glass-card p-5 rounded-xl group" style="border-left: 4px solid \${idx < 3 ? 'rgba(99,102,241,0.8)' : 'rgba(100,100,120,0.3)'};">
                     <a href="/job/\${jobSlug}" target="_blank" rel="noopener noreferrer" class="block hover:opacity-90 transition">
@@ -10148,26 +10809,15 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         </button>
                     </div>
                     <div class="score-details hidden mt-3 pt-3 border-t border-wiki-border/30">
-                        <div class="grid grid-cols-3 gap-2">
-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(16,185,129,0.1);">
-                                <div class="text-sm font-medium text-emerald-400">\${fitScore}</div>
-                                <div class="text-xs text-wiki-muted">Fit</div>
-                            </div>
-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(168,85,247,0.1);">
-                                <div class="text-sm font-medium text-purple-400">\${likeScore}</div>
-                                <div class="text-xs text-wiki-muted">Like</div>
-                            </div>
-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(59,130,246,0.1);">
-                                <div class="text-sm font-medium text-blue-400">\${canScore}</div>
-                                <div class="text-xs text-wiki-muted">Can</div>
-                            </div>
+                        <div class="p-3 rounded-lg" style="background-color: rgba(26,26,46,0.5);">
+                            \${getScoreExplanation(likeScore, canScore, fitScore, riskPenalty, bgScore)}
                         </div>
                     </div>
                 </div>
                 \`;
             }).join('');
         }
-        
+
         // 직업 카드 렌더링
         function renderJobCards(jobs, setId) {
             if (!jobs || jobs.length === 0) {
@@ -10220,20 +10870,9 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     
                     <!-- 점수 상세 (기본 숨김) -->
                     <div class="score-details hidden mt-3 pt-3 border-t border-wiki-border/30">
-                        <!-- 점수 바 -->
-                        <div class="grid grid-cols-3 gap-2 mb-3">
-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(16,185,129,0.1);">
-                                <div class="text-sm font-medium text-emerald-400">\${job.fitScore || job.fit_score || '-'}</div>
-                                <div class="text-xs text-wiki-muted">Fit</div>
-                            </div>
-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(168,85,247,0.1);">
-                                <div class="text-sm font-medium text-purple-400">\${job.desireScore || job.like_score || '-'}</div>
-                                <div class="text-xs text-wiki-muted">Like</div>
-                            </div>
-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(59,130,246,0.1);">
-                                <div class="text-sm font-medium text-blue-400">\${job.feasibilityScore || job.can_score || '-'}</div>
-                                <div class="text-xs text-wiki-muted">Can</div>
-                            </div>
+                        <!-- 점수 산출 과정 -->
+                        <div class="p-3 rounded-lg mb-3" style="background-color: rgba(26,26,46,0.5);">
+                            \${getScoreExplanation(job.desireScore || job.like_score, job.feasibilityScore || job.can_score, job.fitScore || job.fit_score, job.riskPenalty || job.risk_penalty || 0, job.feasibilityScore || job.feasibility_score || 0)}
                         </div>
                         
                         <!-- 리스크 플래그 -->
@@ -10257,6 +10896,27 @@ app.get('/analyzer/job', requireAuth, (c) => {
             \`).join('');
         }
         
+        // 점수 산출 과정 설명 생성
+        function getScoreExplanation(likeVal, canVal, fitVal, riskVal, bgVal) {
+            const like = parseInt(likeVal) || 0;
+            const can = parseInt(canVal) || 0;
+            const fit = parseInt(fitVal) || 0;
+            const risk = parseFloat(riskVal) || 0;
+            const bg = parseInt(bgVal) || 0;
+            let html = '<div class="space-y-2.5 text-[13px]">';
+            html += '<div class="flex items-center justify-between"><span class="text-purple-400">💜 흥미(Like)</span><span class="text-purple-300 font-medium">' + like + '점</span></div>';
+            html += '<div class="flex items-center justify-between"><span class="text-blue-400">💪 역량(Can)</span><span class="text-blue-300 font-medium">' + can + '점</span></div>';
+            if (bg > 0) {
+                html += '<div class="flex items-center justify-between"><span class="text-amber-400">🎓 배경(Background)</span><span class="text-amber-300 font-medium">' + bg + '점</span></div>';
+            }
+            if (risk > 0) {
+                html += '<div class="flex items-center justify-between"><span class="text-red-400">⚠️ 리스크 감점</span><span class="text-red-300 font-medium">−' + risk + '</span></div>';
+            }
+            html += '<div class="border-t border-wiki-border/30 pt-2 mt-1 flex items-center justify-between"><span class="text-emerald-400 font-medium">= 적합도(Fit)</span><span class="text-emerald-400 font-bold text-base">' + fit + '점</span></div>';
+            html += '</div>';
+            return html;
+        }
+
         // 점수 상세 토글
         function toggleJobScores(btn) {
             const card = btn.closest('.glass-card');
@@ -10769,7 +11429,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 const data = await response.json();
                 displayResults(data);
             } catch (error) {
-                console.error('Error:', error);
             }
         }
         
@@ -10808,9 +11467,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         method: 'POST', 
                         credentials: 'same-origin' 
                     });
-                    console.log('[Session] Extended');
                 } catch (e) {
-                    console.warn('[Session] Extend failed:', e);
                 }
             }
         }
@@ -10837,10 +11494,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
             try {
                 localStorage.setItem('analyzer_draft', JSON.stringify(draft));
                 localStorage.setItem('analyzer_draft_timestamp', Date.now().toString());
-                console.log('[AutoSave] Draft saved at step', draft.currentStep);
                 window.analyzerUnsavedChanges = true; // 로컬에만 저장된 상태
             } catch (e) {
-                console.warn('[AutoSave] Failed to save draft:', e);
             }
         }
         
@@ -10918,7 +11573,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     career_background: currentCareerBackground  // 전공/직무 정보 (최상위에도 저장)
                 };
                 
-                console.log('[AutoServerSave] Saving draft to server...');
                 
                 const response = await fetch('/api/ai-analyzer/draft/save', {
                     method: 'POST',
@@ -10929,10 +11583,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 
                 if (response.ok) {
                     window.analyzerUnsavedChanges = false;
-                    console.log('[AutoServerSave] Draft saved to server');
                 }
             } catch (error) {
-                console.warn('[AutoServerSave] Failed:', error);
             }
         }
         
@@ -11023,7 +11675,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     career_background: currentCareerBackground  // 전공/직무 정보 (최상위에도 저장)
                 };
                 
-                console.log('[ManualSave] Sending draft data:', draftData);
                 
                 const response = await fetch('/api/ai-analyzer/draft/save', {
                     method: 'POST',
@@ -11033,7 +11684,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 });
                 
                 const responseData = await response.json().catch(() => ({}));
-                console.log('[ManualSave] Server response:', response.status, responseData);
                 
                 if (response.ok) {
                     window.analyzerUnsavedChanges = false; // 서버에 저장됨
@@ -11044,12 +11694,10 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         saveBtn.disabled = false;
                         saveBtn.dataset.saved = 'true';
                     }
-                    console.log('[ManualSave] Draft saved to server');
                 } else {
                     throw new Error('Server save failed: ' + (responseData.error || response.status));
                 }
             } catch (error) {
-                console.error('[ManualSave] Error:', error);
                 // 로컬에는 저장되었으므로 경고만 표시
                 if (saveBtn) {
                     saveBtn.innerHTML = '<i class="fas fa-exclamation-triangle mr-2 text-amber-400"></i>오프라인 저장됨';
@@ -11088,10 +11736,10 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 });
                 const serverData = await serverResponse.json();
                 
-                if (serverResponse.ok && serverData.found && serverData.draft) {
+                if (serverResponse.ok && serverData.found && serverData.draft && serverData.draft.analysis_type !== 'major') {
                     const serverDraft = serverData.draft;
                     pendingServerDraft = serverDraft;
-                    
+
                     // 서버에 저장된 데이터가 있으면 모달 표시
                     const stepNames = ['', '상태 선택', '기본 정보', '앞으로의 방향', '심층 질문', '결과'];
                     const savedDate = new Date(serverDraft.updated_at);
@@ -11103,14 +11751,12 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         '<span class="text-xs">마지막 작업: ' + dateStr + '</span>';
                     
                     document.getElementById('continue-modal').classList.remove('hidden');
-                    console.log('[AutoRestore] Server draft found at step', serverDraft.current_step);
                     return 'modal';
                 }
                 
                 // 서버에 draft가 없으면 로컬 스토리지도 정리 (서버가 source of truth)
                 // 이전에 유저 메뉴에서 삭제했거나, 다른 기기에서 삭제한 경우
                 if (serverResponse.ok && !serverData.found) {
-                    console.log('[AutoRestore] Server has no draft, clearing local storage');
                     localStorage.removeItem('analyzer_draft');
                     localStorage.removeItem('analyzer_draft_timestamp');
                     return false;
@@ -11133,7 +11779,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 const draft = JSON.parse(draftStr);
                 pendingDraft = draft;
                 
-                console.log('[AutoRestore] Local draft found at step', draft.currentStep);
                 
                 // 로컬에 저장된 데이터가 있으면 모달 표시 (step 1이어도)
                 if (draft.currentStep >= 1) {
@@ -11152,7 +11797,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 
                 return false;
             } catch (e) {
-                console.warn('[AutoRestore] Failed to restore draft:', e);
                 return false;
             }
         }
@@ -11179,28 +11823,24 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     window.narrativeAnswers = draft.step3_answers;
                     transitionSignalAnswers = draft.step3_answers;
                 }
-                if (draft.step4_answers) {
-                    window.roundAnswers = draft.step4_answers;
+                // step4_answers 통합 구조에서 개별 필드 추출
+                if (draft.step4_answers && typeof draft.step4_answers === 'object') {
+                    const step4Data = draft.step4_answers;
+                    window.roundAnswers = Array.isArray(step4Data.round_answers) ? step4Data.round_answers : [];
+                    if (step4Data.narrative_facts) window.narrativeFacts = step4Data.narrative_facts;
+                    if (step4Data.narrative_questions) window.savedNarrativeQuestions = step4Data.narrative_questions;
+                    if (step4Data.round_questions) window.roundQuestions = step4Data.round_questions;
+                    if (step4Data.current_round > 0) window.currentRound = step4Data.current_round;
                 }
                 if (draft.step1_answers?.stage) {
                     selectedStage = draft.step1_answers.stage;
                 }
-                
+
                 document.getElementById('continue-modal').classList.add('hidden');
-                
+
                 // mini_module_result 복원
                 if (draft.mini_module_result) {
                     window.miniModuleResult = draft.mini_module_result;
-                }
-                
-                // narrative_facts 복원
-                if (draft.narrative_facts) {
-                    window.narrativeFacts = draft.narrative_facts;
-                }
-                
-                // current_round 복원
-                if (draft.current_round) {
-                    window.currentRound = draft.current_round;
                 }
                 
                 // UI 복원 후 해당 step으로 이동
@@ -11217,7 +11857,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     if (draft.current_step >= 4) {
                         // 심층 질문 UI 렌더링
                         const currentRound = draft.current_round || 1;
-                        console.log('[continueFromDraft] Restoring step 4, round:', currentRound);
                         
                         // 라운드 질문 가져오기 시작
                         setTimeout(() => {
@@ -11279,7 +11918,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 // Step 4 (심층 질문) 복원 추가!
                 if (pendingDraft.currentStep >= 4) {
                     const currentRound = pendingDraft.currentRound || 1;
-                    console.log('[continueFromDraft] Restoring step 4 (local), round:', currentRound);
                     
                     setTimeout(() => {
                         if (typeof startV3RoundQuestions === 'function') {
@@ -11305,7 +11943,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
         
         // 새로 시작 확인
         async function confirmRestart() {
-            console.log('[confirmRestart] Starting fresh...');
             
             // 1. 로컬 스토리지 삭제
             localStorage.removeItem('analyzer_draft');
@@ -11319,12 +11956,9 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 });
                 if (response.ok) {
                     const result = await response.json();
-                    console.log('[confirmRestart] All drafts deleted:', result.deleted_count);
                 } else {
-                    console.warn('[confirmRestart] Delete-all failed:', response.status);
                 }
             } catch (e) {
-                console.warn('[confirmRestart] Delete failed:', e);
             }
             
             // 3. 모달 닫기
@@ -11338,7 +11972,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
             window.collectedCareerState = {};
             window.universalAnswers = {};
             window.narrativeAnswers = {};
-            window.roundAnswers = {};
+            window.roundAnswers = [];
             window.miniModuleResult = null;  // 미니모듈 결과도 초기화
             miniModuleSelections = { interest: [], value: [], strength: [], constraint: [] };
             selectedStage = '';
@@ -11362,9 +11996,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     localStorage.removeItem('analyzer_draft');
                     localStorage.removeItem('analyzer_draft_timestamp');
                     window.analyzerUnsavedChanges = false;
-                    console.log('[AutoSave] Draft marked as completed and cleared');
                 }).catch(err => {
-                    console.warn('[AutoSave] Failed to mark draft as completed:', err);
                     localStorage.removeItem('analyzer_draft');
                     localStorage.removeItem('analyzer_draft_timestamp');
                 });
@@ -11398,10 +12030,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 });
                 
                 if (response.ok) {
-                    console.log('[SaveCompleted] Draft marked as completed on server');
                 }
             } catch (error) {
-                console.warn('[SaveCompleted] Failed:', error);
             }
         }
         
@@ -11423,20 +12053,16 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     
                 const response = await fetch(url, { credentials: 'same-origin' });
                 if (!response.ok) {
-                    console.log('[ServerRestore] Failed to load draft:', response.status);
                     return null;
                 }
                 
                 const data = await response.json();
                 if (!data.found || !data.draft) {
-                    console.log('[ServerRestore] No draft found');
                     return null;
                 }
                 
-                console.log('[ServerRestore] Draft loaded from server:', data.draft.session_id);
                 return data.draft;
             } catch (error) {
-                console.error('[ServerRestore] Error loading draft:', error);
                 return null;
             }
         }
@@ -11456,7 +12082,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             // 프로필 서브스텝 복원 (1: 5축, 2: 나를 알아가기)
             if (draft.profile_sub_step || draft.step1_answers?.profileSubStep) {
                 profileSubStep = draft.profile_sub_step || draft.step1_answers?.profileSubStep || 1;
-                console.log('[ServerRestore] ProfileSubStep restored:', profileSubStep);
             }
             
             // 5축 좌표 복원 (step1_answers.careerState 또는 draft.career_state)
@@ -11465,14 +12090,12 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 // 로컬 careerState 변수 업데이트
                 Object.assign(careerState, savedCareerState);
                 window.collectedCareerState = savedCareerState;
-                console.log('[ServerRestore] CareerState restored:', careerState);
             }
             
             // 이력서 업로드 정보 복원
             if (draft.step1_answers?.resumeUploaded) {
                 window.resumeUploaded = true;
                 window.resumeCareerBackground = draft.step1_answers.resumeCareerBackground || '';
-                console.log('[ServerRestore] Resume info restored:', window.resumeCareerBackground);
             }
             
             // career_background 복원 (최상위 필드 또는 narrative_facts에서)
@@ -11508,13 +12131,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     if (step4Data.narrative_facts.career_background && !window.resumeCareerBackground) {
                         window.savedCareerBackground = step4Data.narrative_facts.career_background;
                     }
-                    console.log('[ServerRestore] narrative_facts restored:', window.narrativeFacts);
                 }
                 
                 // narrative_questions 복원 (동적 질문 재사용)
                 if (step4Data.narrative_questions) {
                     window.savedNarrativeQuestions = step4Data.narrative_questions;
-                    console.log('[ServerRestore] narrative_questions restored:', window.savedNarrativeQuestions);
                 }
                 
                 // round_questions 복원
@@ -11547,7 +12168,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             // ============================================
             if (draft.mini_module_result) {
                 window.miniModuleResult = draft.mini_module_result;
-                console.log('[ServerRestore] mini_module_result restored:', window.miniModuleResult);
             }
             
             // ============================================
@@ -11555,7 +12175,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             // ============================================
             if (draft.aggregated_profile) {
                 window.aggregatedProfile = draft.aggregated_profile;
-                console.log('[ServerRestore] aggregatedProfile restored, version:', draft.profile_version);
             }
             if (draft.memory) {
                 // aggregatedProfile이 없으면 생성
@@ -11564,10 +12183,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
                 } else {
                     window.aggregatedProfile.memory = draft.memory;
                 }
-                console.log('[ServerRestore] memory restored');
             }
             
-            console.log('[ServerRestore] Draft applied, step:', draft.current_step, 'stage:', selectedStage, 'narrativeFacts:', window.narrativeFacts, 'currentRound:', window.currentRound);
             return draft.current_step || 1;
         }
         
@@ -11580,7 +12197,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         card.classList.add('selected');
                         card.style.borderColor = '#4361ee';
                         card.style.backgroundColor = 'rgba(67,97,238,0.2)';
-                        console.log('[ServerRestore] Role identity restored:', careerState.role_identity);
                     }
                 });
             }
@@ -11592,7 +12208,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         card.classList.add('selected');
                         card.style.borderColor = '#4361ee';
                         card.style.backgroundColor = 'rgba(67,97,238,0.2)';
-                        console.log('[ServerRestore] Career stage restored:', careerState.career_stage_years);
                     }
                 });
             }
@@ -11604,7 +12219,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         card.classList.add('selected');
                         card.style.borderColor = '#10b981';
                         card.style.backgroundColor = 'rgba(16,185,129,0.2)';
-                        console.log('[ServerRestore] Transition status restored:', card.dataset.value);
                     }
                 });
             }
@@ -11616,7 +12230,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         card.classList.add('selected');
                         card.style.borderColor = '#8b5cf6';
                         card.style.backgroundColor = 'rgba(139,92,246,0.2)';
-                        console.log('[ServerRestore] Skill level restored:', careerState.skill_level);
                     }
                 });
             }
@@ -11636,7 +12249,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                 if (headerBtn) {
                                     // toggleConstraint를 호출하면 careerState.constraints에 다시 설정됨
                                     headerBtn.click();
-                                    console.log('[ServerRestore] Constraint restored:', type);
                                     
                                     // 세부 태그 복원 (details 배열이 있는 경우)
                                     if (constraint.details && Array.isArray(constraint.details)) {
@@ -11645,7 +12257,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                                 const detailTag = card.querySelector(\`.detail-tag[data-value="\${detailValue}"]\`);
                                                 if (detailTag && !detailTag.classList.contains('selected')) {
                                                     detailTag.click();
-                                                    console.log('[ServerRestore] Constraint detail restored:', type, detailValue);
                                                 }
                                             });
                                         }, 100);
@@ -11659,7 +12270,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             
             // 다음 버튼 활성화 체크
             checkStep1Completion();
-            console.log('[ServerRestore] Step 1 selection updated, careerState:', careerState);
         }
         
         // Step 2 UI 업데이트 (Universal answers 복원)
@@ -11695,7 +12305,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         textarea.value = answer;
                     }
                 }
-                console.log('[ServerRestore] Step 2 answer restored:', questionId);
             });
         }
         
@@ -11706,18 +12315,52 @@ app.get('/analyzer/job', requireAuth, (c) => {
             // URL에서 session_id 확인 (AI 추천 메뉴에서 진행중 클릭 시)
             const urlParams = new URLSearchParams(window.location.search);
             const urlSessionId = urlParams.get('session_id');
-            
+            const urlEditMode = urlParams.get('edit_mode') === 'true';
+            const urlSourceRequestId = urlParams.get('source_request_id');
+
+            // Phase 3: 편집 모드 진입
+            if (urlSessionId && urlEditMode && urlSourceRequestId) {
+                const serverDraft = await loadDraftFromServer(urlSessionId);
+                if (!serverDraft) {
+                    alert('원본 데이터를 불러올 수 없습니다.');
+                    window.location.href = '/user/ai-results';
+                    return;
+                }
+
+                const editSessionId = 'edit-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                const restoredStep = applyServerDraft(serverDraft);
+                currentSessionId = editSessionId;
+
+                window.__editMode = true;
+                window.__originalSessionId = urlSessionId;
+                window.__editSessionId = editSessionId;
+                window.__sourceRequestId = parseInt(urlSourceRequestId, 10);
+                window.__editSnapshot = {
+                    careerState: JSON.stringify(careerState),
+                    universalAnswers: JSON.stringify(universalAnswers),
+                    narrativeFacts: JSON.stringify(window.narrativeFacts || {}),
+                    roundAnswers: JSON.stringify(window.roundAnswers || []),
+                };
+
+                setTimeout(() => {
+                    updateStep1Selection();
+                    showEditModeBanner();
+                    if (restoredStep === 1 && profileSubStep === 2) goToProfileStep2();
+                    // step 4에서 복원 시 라운드 질문 UI 표시
+                    if (restoredStep >= 4 && typeof startV3RoundQuestions === 'function') {
+                        try { startV3RoundQuestions(); } catch(e) { }
+                    }
+                }, 200);
+
+                goToStep(restoredStep || 1, true);
+                return;
+            }
+
             if (urlSessionId) {
                 // 서버에서 해당 session의 draft 불러오기
-                console.log('[Init] Loading draft from server for session:', urlSessionId);
                 const serverDraft = await loadDraftFromServer(urlSessionId);
-                console.log('[Init] Server draft loaded:', serverDraft);
-                console.log('[Init] Server draft current_step:', serverDraft?.current_step);
-                console.log('[Init] Server draft narrative_facts:', serverDraft?.narrative_facts);
-                console.log('[Init] Server draft narrative_questions:', serverDraft?.narrative_questions);
                 if (serverDraft) {
                     const restoredStep = applyServerDraft(serverDraft);
-                    console.log('[Init] restoredStep from applyServerDraft:', restoredStep);
                     
                     // DOM 업데이트 후 UI 적용 (setTimeout으로 다음 틱에서 실행)
                     setTimeout(() => {
@@ -11744,7 +12387,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                                 setTimeout(() => restoreRoundAnswers(), 100);
                             } else {
                                 // 심층 질문 기초 단계 복원
-                                console.log('[Restore] Rendering narrative step, narrativeFacts:', window.narrativeFacts);
                                 renderNarrativeStep();
                                 // 저장된 답변 복원
                                 setTimeout(() => restoreNarrativeAnswers(), 150);
@@ -11778,7 +12420,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             // request_id가 있으면 결과 직접 로드 (테스트 시나리오 결과 조회용)
             const urlRequestId = urlParams.get('request_id');
             if (urlRequestId) {
-                console.log('[Init] Loading result from request_id:', urlRequestId);
                 try {
                     showLoading();
                     const response = await fetch('/api/ai-analyzer/result/' + urlRequestId);
@@ -11786,18 +12427,15 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     hideLoading();
 
                     if (response.ok && data) {
-                        console.log('[Init] Result loaded:', data);
                         currentRequestId = parseInt(urlRequestId, 10);
                         displayResults(data);
                         goToStep(3);  // 결과 화면으로 이동
                         return;
                     } else {
-                        console.error('[Init] Failed to load result:', data);
                         alert('결과를 불러오는데 실패했습니다: ' + (data.error || 'Unknown error'));
                     }
                 } catch (e) {
                     hideLoading();
-                    console.error('[Init] Error loading result:', e);
                     alert('결과를 불러오는데 실패했습니다.');
                 }
             }
@@ -11805,7 +12443,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             // 시나리오 자동 실행 (?scenario=stability_seeker 등)
             const scenarioId = urlParams.get('scenario');
             if (scenarioId) {
-                console.log('[Init] Auto-running scenario:', scenarioId);
                 try {
                     showLoading();
 
@@ -11833,7 +12470,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         throw new Error(testData.error || '테스트 실패');
                     }
 
-                    console.log('[Init] Scenario test completed:', testData);
 
                     // 결과 로드
                     if (testData.request_id) {
@@ -11843,7 +12479,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
                         hideLoading();
 
                         if (resultResponse.ok && resultData) {
-                            console.log('[Init] Scenario result loaded:', resultData);
                             currentRequestId = testData.request_id;
 
                             // 시나리오 테스트 배너 표시
@@ -11876,11 +12511,32 @@ app.get('/analyzer/job', requireAuth, (c) => {
                     alert('시나리오 결과를 불러오는데 실패했습니다.');
                 } catch (e) {
                     hideLoading();
-                    console.error('[Init] Scenario test error:', e);
                     alert('시나리오 테스트 실패: ' + e.message);
                 }
             }
 
+            // 저장된 리포트 뷰 모드 확인 (?view=requestId)
+            const viewResultId = new URLSearchParams(window.location.search).get('view');
+            if (viewResultId) {
+                showLoading('리포트 불러오는 중...', '잠시만 기다려주세요');
+                try {
+                    const res = await fetch('/api/ai-analyzer/saved-result/' + viewResultId);
+                    const data = await res.json();
+                    hideLoading();
+                    if (data.success && data.result) {
+                        currentRequestId = data.request_id;
+                        displayResults({ result: data.result, request_id: data.request_id });
+                        goToStep(3);
+                    } else {
+                        showErrorToast('결과를 불러올 수 없습니다.');
+                        goToStep(1);
+                    }
+                } catch (e) {
+                    hideLoading();
+                    showErrorToast('결과를 불러오는데 실패했습니다.');
+                    goToStep(1);
+                }
+            } else {
             // URL에 session_id가 없으면 서버/로컬에서 복원 시도
             const restoredStep = await autoRestoreDraft();
             if (restoredStep === 'modal') {
@@ -11895,6 +12551,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
             } else {
                 goToStep(1);           // Step 1부터 시작
             }
+            }
             
             // Step 2 버튼 기본 핸들러 설정 (renderNarrativeStep/renderV3RoundUI에서 덮어씀)
             const step2PrevBtn = document.getElementById('step2-prev-btn');
@@ -11908,7 +12565,6 @@ app.get('/analyzer/job', requireAuth, (c) => {
             if (analyzeBtn) {
                 analyzeBtn.onclick = () => {
                     // 기본값: 아무 동작 없음 (renderNarrativeStep에서 설정됨)
-                    console.log('[analyze-btn] Default handler - waiting for render');
                 };
             }
             
@@ -11938,6 +12594,8 @@ app.get('/analyzer/major', requireAuth, (c) => {
   
   // 전공용 스테이지
   const majorStagesJson = JSON.stringify([
+    { id: 'major_child', label: '어린이', description: '호기심 탐색', emoji: '🌈' },
+    { id: 'major_elementary', label: '초등학생', description: '관심사 발견', emoji: '🧒' },
     { id: 'major_middle', label: '중학생', description: '진로 탐색 중', emoji: '🎒' },
     { id: 'major_high', label: '고등학생', description: '대학 진학 준비', emoji: '📖' },
     { id: 'major_freshman', label: '대학 신입생', description: '전공 탐색 중', emoji: '🎓' },
@@ -11987,37 +12645,27 @@ app.get('/analyzer/major', requireAuth, (c) => {
   const identityAnchorPatternsJson = JSON.stringify(IDENTITY_ANCHOR_PATTERNS)
   
   const content = `
-    <div class="max-w-6xl mx-auto px-4 md:px-6 md:mt-8">
-        <h1 class="text-3xl font-bold mb-6 text-center">
-            <i class="fas fa-university mr-3 text-wiki-secondary"></i>AI 전공 추천
+    <div class="max-w-6xl mx-auto px-4 md:px-6 pt-0 md:pt-2">
+        <h1 class="text-3xl md:text-4xl font-bold mb-6 text-center text-white">
+            <i class="fas fa-university mr-2 text-wiki-primary"></i>AI 전공 추천
             ${debugMode ? '<span class="ml-2 text-sm bg-yellow-500 text-black px-2 py-1 rounded">DEBUG MODE</span>' : ''}
         </h1>
-        
+
         <!-- Step Indicator (5단계) -->
-        <div class="flex justify-center items-center gap-1 md:gap-2 mb-6 flex-wrap" id="step-indicator">
+        <div class="flex justify-center items-center gap-2 md:gap-4 mb-6 flex-wrap" id="step-indicator">
             <div class="step-dot flex flex-col items-center active" data-step="1">
-                <span class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-wiki-primary text-white rounded-full font-bold text-xs md:text-sm">1</span>
-                <span class="text-xs mt-1 hidden md:block">학생유형</span>
+                <span class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-wiki-primary text-white rounded-full font-bold text-sm md:text-base">1</span>
+                <span class="text-xs mt-1">프로필</span>
             </div>
-            <div class="w-4 md:w-8 h-0.5 bg-wiki-border"></div>
+            <div class="w-8 md:w-12 h-0.5 bg-wiki-border"></div>
             <div class="step-dot flex flex-col items-center" data-step="2">
-                <span class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-wiki-card text-wiki-muted rounded-full font-bold text-xs md:text-sm">2</span>
-                <span class="text-xs mt-1 hidden md:block">관심사</span>
+                <span class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-wiki-card text-wiki-muted rounded-full font-bold text-sm md:text-base">2</span>
+                <span class="text-xs mt-1">심층</span>
             </div>
-            <div class="w-4 md:w-8 h-0.5 bg-wiki-border"></div>
+            <div class="w-8 md:w-12 h-0.5 bg-wiki-border"></div>
             <div class="step-dot flex flex-col items-center" data-step="3">
-                <span class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-wiki-card text-wiki-muted rounded-full font-bold text-xs md:text-sm">3</span>
-                <span class="text-xs mt-1 hidden md:block">목표</span>
-            </div>
-            <div class="w-4 md:w-8 h-0.5 bg-wiki-border"></div>
-            <div class="step-dot flex flex-col items-center" data-step="4">
-                <span class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-wiki-card text-wiki-muted rounded-full font-bold text-xs md:text-sm">4</span>
-                <span class="text-xs mt-1 hidden md:block">심층</span>
-            </div>
-            <div class="w-4 md:w-8 h-0.5 bg-wiki-border"></div>
-            <div class="step-dot flex flex-col items-center" data-step="5">
-                <span class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-wiki-card text-wiki-muted rounded-full font-bold text-xs md:text-sm">5</span>
-                <span class="text-xs mt-1 hidden md:block">결과</span>
+                <span class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-wiki-card text-wiki-muted rounded-full font-bold text-sm md:text-base">3</span>
+                <span class="text-xs mt-1">결과</span>
             </div>
         </div>
         
@@ -12096,50 +12744,6 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 <p class="text-wiki-muted mt-2">학생 유형에 맞는 전공을 추천해드려요</p>
             </div>
             
-            <!-- 이력서 업로드 섹션 (선택사항) -->
-            <div class="mb-8 p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1)); border: 1px dashed rgba(99,102,241,0.3);">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-                        <i class="fas fa-file-alt text-white"></i>
-                    </div>
-                <div>
-                        <h3 class="font-bold text-white">이력서/자기소개서로 빠르게 시작하기</h3>
-                        <p class="text-xs" style="color: rgb(148,163,184)">PDF 파일을 업로드하면 항목을 자동으로 채워드려요</p>
-                    </div>
-                    <span class="ml-auto px-3 py-1 text-xs rounded-full" style="background-color: rgba(99,102,241,0.2); color: rgb(165,180,252);">선택사항</span>
-                </div>
-                
-                <div class="flex items-center gap-4">
-                    <label class="flex-1 cursor-pointer">
-                        <input type="file" id="resume-upload" accept=".pdf" class="hidden" onchange="handleResumeUpload(this)">
-                        <div class="flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-dashed transition-all hover:border-indigo-400"
-                             style="background-color: rgba(26,26,46,0.5); border-color: rgba(99,102,241,0.3);">
-                            <i class="fas fa-cloud-upload-alt text-xl" style="color: rgb(165,180,252);"></i>
-                            <span style="color: rgb(148,163,184);">PDF 파일 선택</span>
-                        </div>
-                    </label>
-                    
-                    <div id="resume-status" class="hidden flex items-center gap-2 px-4 py-3 rounded-xl" style="background-color: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);">
-                        <i class="fas fa-check-circle text-emerald-400"></i>
-                        <span class="text-emerald-400 text-sm" id="resume-status-text">분석 완료!</span>
-                    </div>
-                </div>
-                
-                <p class="text-xs mt-2" style="color: rgb(100,116,139);">
-                    <i class="fas fa-info-circle mr-1"></i>
-                    파일은 저장되지 않으며, 분석 참고용으로만 사용됩니다. 임시저장 시 분석 결과만 저장됩니다.
-                </p>
-                
-                <div id="resume-loading" class="hidden mt-3 flex items-center justify-center gap-3 py-3">
-                    <i class="fas fa-spinner fa-spin text-indigo-400"></i>
-                    <span style="color: rgb(165,180,252);">문서 분석 중...</span>
-                </div>
-                
-                <div id="resume-error" class="hidden mt-3 p-3 rounded-lg" style="background-color: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);">
-                    <p class="text-red-400 text-sm"><i class="fas fa-exclamation-circle mr-2"></i><span id="resume-error-text"></span></p>
-                </div>
-            </div>
-            
             <div class="space-y-8" id="major-state-form">
                 <!-- 학생 유형 -->
                 <div class="state-axis-section" data-axis="student_type">
@@ -12147,8 +12751,11 @@ app.get('/analyzer/major', requireAuth, (c) => {
                         <div class="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">1</div>
                         <h3 class="text-lg font-bold">나는 현재?</h3>
                     </div>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="student-type-options">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="student-type-options">
                         <!-- JS로 동적 생성 -->
+                    </div>
+                    <div id="student-sub-options" class="hidden">
+                        <!-- 고등학생/대학생 하위옵션 동적 생성 -->
                     </div>
                 </div>
                 
@@ -12167,11 +12774,11 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 <!-- 구분선 -->
                 <div class="border-t border-wiki-border/30"></div>
                 
-                <!-- 축 3: 전환 상태 (다중 선택) -->
+                <!-- 축 3: 전공 선택 상황 (다중 선택) -->
                 <div class="state-axis-section" data-axis="transition_status">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">3</div>
-                        <h3 class="text-lg font-bold">지금 상황은?</h3>
+                        <h3 class="text-lg font-bold">전공 선택 상황은?</h3>
                         <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-xs rounded-full">복수 선택</span>
                     </div>
                     <p class="text-sm text-wiki-muted mb-4 ml-11">해당하는 상황을 모두 선택해주세요</p>
@@ -12211,6 +12818,29 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 </div>
             </div>
             
+            <!-- 구분선 -->
+            <div class="border-t border-wiki-border/30 my-6"></div>
+
+            <!-- 기본 정보 (관심사) -->
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">6</div>
+                <h3 class="text-lg font-bold">관심사 & 기본 정보</h3>
+            </div>
+            <form id="universal-form">
+                <div id="universal-questions" class="space-y-6"></div>
+            </form>
+
+            <!-- 구분선 -->
+            <div class="border-t border-wiki-border/30 my-6"></div>
+
+            <!-- 앞으로의 방향 (전이 신호) -->
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">7</div>
+                <h3 class="text-lg font-bold">앞으로의 방향</h3>
+            </div>
+            <p class="text-sm text-wiki-muted mb-4 ml-11">원하는 변화와 목표를 알려주세요</p>
+            <div id="transition-signal-form" class="space-y-6"></div>
+
             <!-- 하단 버튼 -->
             <div class="flex justify-center gap-4 pt-8 mt-6 border-t border-wiki-border/30">
                 <a href="/analyzer" class="px-6 py-3 bg-wiki-card/50 border border-wiki-border text-gray-300 rounded-xl hover:bg-wiki-card hover:text-white transition inline-flex items-center">
@@ -12219,73 +12849,32 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 <button type="button" id="step1-next-btn" onclick="goToStep2WithLoading()" disabled
                         class="px-10 py-4 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-bold rounded-xl shadow-lg shadow-wiki-primary/25 transition disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none hover:shadow-wiki-primary/40 hover:scale-[1.02] active:scale-[0.98]">
                     <i class="fas fa-arrow-right mr-2"></i>다음
-                            </button>
-                    </div>
+                </button>
+            </div>
                 </div>
-                
-        <!-- Step 2: 기본 질문 -->
-        <div id="step2" class="step-content hidden glass-card p-8 rounded-2xl mb-6">
+
+        <!-- Step 2: 심층 인터뷰 (V3) -->
+        <div id="step2" class="step-content hidden glass-card p-6 md:p-8 rounded-2xl mb-6">
             <h2 class="text-xl font-bold mb-2 text-center">
-                <i class="fas fa-rocket text-wiki-primary mr-2"></i>기본 정보 (30~60초)
+                <i class="fas fa-comments text-wiki-primary mr-2"></i>심층 질문 기초
             </h2>
-            <p class="text-center text-wiki-muted mb-6 text-sm">느낌대로 선택하시면 됩니다!</p>
-            
-            <form id="universal-form">
-                <div id="universal-questions" class="space-y-6"></div>
-                <div class="flex justify-center gap-4 pt-6">
-                    <button type="button" onclick="goToStep(1)" class="px-6 py-3 bg-wiki-card border border-wiki-border text-white rounded-xl hover:bg-wiki-bg transition inline-flex items-center">
-                        <i class="fas fa-arrow-left mr-2"></i>상황 다시 선택
-                    </button>
-                    <button type="button" onclick="submitUniversalAndGoToTransition()"
-                            class="px-10 py-4 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-bold rounded-xl hover-glow transition">
-                        <i class="fas fa-arrow-right mr-2"></i>다음
-                    </button>
-                </div>
-            </form>
-                </div>
-                
-        <!-- Step 3: 전이 신호 -->
-        <div id="step3" class="step-content hidden glass-card p-6 md:p-8 rounded-2xl mb-6">
-            <h2 class="text-xl font-bold mb-2 text-center">
-                <i class="fas fa-compass text-emerald-400 mr-2"></i>앞으로의 방향 (1~2분)
-            </h2>
-            <p class="text-center text-wiki-muted mb-6 text-sm">원하는 변화와 목표를 알려주세요</p>
-            
-            <div id="transition-signal-form" class="space-y-6"></div>
-            
+            <p class="text-center text-wiki-muted mb-6 text-sm" id="step2-subtitle">당신의 이야기를 자유롭게 들려주세요</p>
+
+            <div id="followup-questions-form" class="space-y-6"></div>
+
             <div class="flex justify-center gap-4 pt-6">
-                <button type="button" onclick="goToStep(2)" class="px-6 py-3 bg-wiki-card border border-wiki-border text-white rounded-xl hover:bg-wiki-bg transition">
+                <button type="button" id="step2-prev-btn" onclick="goToStep(1)" class="px-6 py-3 bg-wiki-card border border-wiki-border text-white rounded-xl hover:bg-wiki-bg transition">
                     <i class="fas fa-arrow-left mr-2"></i>이전
                 </button>
-                <button type="button" onclick="submitTransitionAndContinue()" id="step3-next-btn"
-                        class="px-10 py-4 bg-gradient-to-r from-emerald-500 to-wiki-secondary text-white font-bold rounded-xl hover-glow transition">
+                <button type="button" id="analyze-btn"
+                        class="px-12 py-4 bg-gradient-to-r from-purple-500 to-wiki-secondary text-white font-bold rounded-xl hover-glow transition transform hover:scale-105">
                     <i class="fas fa-arrow-right mr-2"></i>다음
                 </button>
             </div>
                 </div>
-                
-        <!-- Step 4: 심층 팔로업 -->
-        <div id="step4" class="step-content hidden glass-card p-6 md:p-8 rounded-2xl mb-6">
-            <h2 class="text-xl font-bold mb-2 text-center">
-                <i class="fas fa-user-astronaut text-purple-400 mr-2"></i>심층 질문 (1~2분)
-            </h2>
-            <p class="text-center text-wiki-muted mb-6 text-sm" id="step4-subtitle">더 정확한 추천을 위한 맞춤 질문이에요</p>
-            
-            <div id="followup-questions-form" class="space-y-6"></div>
-            
-            <div class="flex justify-center gap-4 pt-6">
-                <button type="button" onclick="goToStep(3)" class="px-6 py-3 bg-wiki-card border border-wiki-border text-white rounded-xl hover:bg-wiki-bg transition">
-                    <i class="fas fa-arrow-left mr-2"></i>이전
-                </button>
-                <button type="button" onclick="submitFollowupsAndAnalyze()" id="analyze-btn"
-                        class="px-12 py-4 bg-gradient-to-r from-purple-500 to-wiki-secondary text-white font-bold rounded-xl hover-glow transition transform hover:scale-105">
-                    <i class="fas fa-magic mr-2"></i>AI 추천 받기
-                </button>
-            </div>
-                </div>
-                
-        <!-- Step 5: 결과 -->
-        <div id="step5" class="step-content hidden">
+
+        <!-- Step 3: 결과 -->
+        <div id="step3" class="step-content hidden">
             <!-- Confidence UI: 근거 강도 + 결정변수 -->
             <div id="confidence-card" class="glass-card p-6 rounded-2xl mb-6 border border-emerald-500/30 hidden">
                 <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
@@ -12353,6 +12942,15 @@ app.get('/analyzer/major', requireAuth, (c) => {
         let transitionSignalAnswers = {};
         let currentSessionId = null;
         let currentRequestId = null;
+        window.analyzerUnsavedChanges = false;
+
+        // V3 심층 인터뷰 상태
+        window.V3_MODE = true;
+        window.currentRound = 0;
+        window.roundAnswers = [];
+        window.narrativeFacts = null;
+        window.roundQuestions = null;
+        window.savedNarrativeQuestions = null;
         
         let careerState = {
             role_identity: null,
@@ -12369,11 +12967,127 @@ app.get('/analyzer/major', requireAuth, (c) => {
             document.getElementById('loading-submessage').textContent = submessage;
             overlay.classList.remove('hidden');
         }
-        
+
         function hideLoading() {
             document.getElementById('loading-overlay').classList.add('hidden');
         }
-        
+
+        // ============================================
+        // 편집 모드 유틸리티 (Major)
+        // ============================================
+        function showEditModeBanner() {
+            if (!window.__editMode) return;
+            const banner = document.createElement('div');
+            banner.id = 'edit-mode-banner';
+            banner.className = 'mb-4 p-3 rounded-xl border';
+            banner.style.cssText = 'border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.08);';
+            banner.innerHTML = \`
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-edit text-amber-400"></i>
+                  <span class="text-amber-300 text-sm font-medium">수정 모드</span>
+                  <span class="text-amber-200/70 text-xs">변경사항이 있으면 이후 단계가 초기화됩니다</span>
+                </div>
+                <button onclick="cancelEditMode()" class="px-3 py-1 text-xs rounded-lg border border-wiki-border text-wiki-muted hover:text-white transition">취소</button>
+              </div>\`;
+            const container = document.querySelector('.max-w-6xl') || document.querySelector('main');
+            if (container) container.insertBefore(banner, container.firstChild);
+        }
+
+        async function cancelEditMode() {
+            if (!window.__editMode) return;
+            try {
+                await fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
+                    method: 'DELETE', credentials: 'same-origin'
+                });
+            } catch (e) {}
+            window.location.href = '/user/ai-results/' + window.__sourceRequestId;
+        }
+
+        function getEditModePayloadExtras() {
+            if (!window.__editMode) return {};
+            return {
+                session_id: window.__originalSessionId,
+                edit_mode: true,
+                edit_session_id: window.__editSessionId,
+                source_request_id: window.__sourceRequestId,
+                version_note: '입력 수정',
+            };
+        }
+
+        function detectStep1Changes() {
+            if (!window.__editMode) return false;
+            return JSON.stringify(careerState) !== window.__editSnapshot.careerState;
+        }
+
+        function detectStep2Changes() {
+            if (!window.__editMode) return false;
+            return JSON.stringify(universalAnswers) !== window.__editSnapshot.universalAnswers;
+        }
+
+        function detectStep3Changes() {
+            if (!window.__editMode) return false;
+            return JSON.stringify(transitionSignalAnswers) !== window.__editSnapshot.transitionSignalAnswers;
+        }
+
+        function cascadeResetFromStep1() {
+            universalAnswers = {};
+            transitionSignalAnswers = {};
+            followupAnswers = {};
+            window.narrativeFacts = null;
+            window.roundAnswers = [];
+            window.roundQuestions = null;
+            window.currentRound = 0;
+            window.savedNarrativeQuestions = null;
+            window.__editSnapshot.universalAnswers = '{}';
+            window.__editSnapshot.transitionSignalAnswers = '{}';
+            if (window.__editSnapshot) {
+                window.__editSnapshot.narrativeFacts = '{}';
+                window.__editSnapshot.roundAnswers = '[]';
+            }
+        }
+
+        function cascadeResetFromStep2() {
+            transitionSignalAnswers = {};
+            followupAnswers = {};
+            window.__editSnapshot.transitionSignalAnswers = '{}';
+        }
+
+        function detectNarrativeChanges() {
+            if (!window.__editMode) return false;
+            return JSON.stringify(window.narrativeFacts || {}) !== (window.__editSnapshot.narrativeFacts || '{}');
+        }
+
+        function detectRoundChanges(roundNumber) {
+            if (!window.__editMode) return false;
+            const snapRounds = JSON.parse(window.__editSnapshot.roundAnswers || '[]');
+            const currRounds = window.roundAnswers || [];
+            const snapR = snapRounds.filter(a => a.roundNumber === roundNumber);
+            const currR = currRounds.filter(a => a.roundNumber === roundNumber);
+            return JSON.stringify(snapR) !== JSON.stringify(currR);
+        }
+
+        function cascadeResetFromNarrative() {
+            window.roundAnswers = [];
+            window.roundQuestions = null;
+            window.currentRound = 0;
+            if (window.__editSnapshot) {
+                window.__editSnapshot.roundAnswers = '[]';
+            }
+        }
+
+        function cascadeResetFromRound(roundNumber) {
+            window.roundAnswers = (window.roundAnswers || []).filter(a => a.roundNumber <= roundNumber);
+            window.currentRound = roundNumber;
+            if (window.__editSnapshot) {
+                window.__editSnapshot.roundAnswers = JSON.stringify(window.roundAnswers);
+            }
+        }
+
+        function cascadeResetFromStep3() {
+            followupAnswers = {};
+        }
+
         // ============================================
         // 이력서 업로드 처리 (전공 추천)
         // ============================================
@@ -12448,7 +13162,6 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 }
                 
             } catch (error) {
-                console.error('Resume upload error:', error);
                 showResumeError(error.message || '문서 분석 중 오류가 발생했습니다.');
             }
         }
@@ -12502,7 +13215,6 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 if (skillBtn) skillBtn.click();
             }
             
-            console.log('Resume parsed successfully:', parsedData);
         }
         
         // ============================================
@@ -12511,21 +13223,21 @@ app.get('/analyzer/major', requireAuth, (c) => {
         const STUDENT_TYPE_DISABLED_RULES = {
             middle: {
                 career_stage: ['univ', 'grad', 'work_exp'],
-                transition_status: ['job_change', 'promotion', 'return_work'],
+                transition_status: ['major_change', 'double_major'],
                 skill_level: [3, 4],
                 reasons: {
                     career_stage: '중학생은 선택할 수 없어요',
-                    transition_status: '학생에게는 해당하지 않아요',
+                    transition_status: '대학 입학 후 선택할 수 있어요',
                     skill_level: '아직 해당 단계가 아니에요'
                 }
             },
             high: {
                 career_stage: ['grad', 'work_exp'],
-                transition_status: ['job_change', 'promotion', 'return_work'],
+                transition_status: ['major_change', 'double_major'],
                 skill_level: [4],
                 reasons: {
                     career_stage: '고등학생은 선택할 수 없어요',
-                    transition_status: '학생에게는 해당하지 않아요',
+                    transition_status: '대학 입학 후 선택할 수 있어요',
                     skill_level: '아직 해당 단계가 아니에요'
                 }
             },
@@ -12555,6 +13267,8 @@ app.get('/analyzer/major', requireAuth, (c) => {
             updateTransitionStatusOptionsMajor();
             updateSkillLevelOptionsMajor();
             renderConstraintOptionsMajor();
+            renderUniversalQuestions();
+            renderTransitionSignalForm();
         }
         
         // 학생 유형 선택 (다크 테마)
@@ -12563,10 +13277,11 @@ app.get('/analyzer/major', requireAuth, (c) => {
             if (!container) return;
             
             const studentTypes = [
+                { value: 'child', label: '어린이', description: '호기심 탐색', emoji: '🌈' },
+                { value: 'elementary', label: '초등학생', description: '관심사 발견', emoji: '🧒' },
                 { value: 'middle', label: '중학생', description: '진로 탐색 중', emoji: '🎒' },
                 { value: 'high', label: '고등학생', description: '대학 진학 준비', emoji: '📖' },
-                { value: 'univ', label: '대학생', description: '전공 탐색/전과', emoji: '🎓' },
-                { value: 'grad', label: '대학원 준비', description: '석·박사 진학', emoji: '🔬' },
+                { value: 'univ', label: '대학생', description: '전공 탐색/전과/대학원', emoji: '🎓' },
             ];
             
             container.innerHTML = studentTypes.map(opt => \`
@@ -12586,7 +13301,17 @@ app.get('/analyzer/major', requireAuth, (c) => {
         function selectStudentType(value, btnEl) {
             studentType = value;
             careerState.role_identity = 'student'; // 전공 추천은 항상 student
-            
+
+            // studentType → selectedStage 매핑
+            const stageMap = {
+                child: 'major_child',
+                elementary: 'major_elementary',
+                middle: 'major_middle',
+                high: 'major_high',
+                univ: 'major_student',
+            };
+            selectedStage = stageMap[value] || 'major_high';
+
             // 선택 상태 업데이트
             document.querySelectorAll('#student-type-options .student-type-card').forEach(btn => {
                 btn.classList.remove('border-cyan-500', 'bg-cyan-500/20', 'shadow-lg', 'shadow-cyan-500/20');
@@ -12594,14 +13319,84 @@ app.get('/analyzer/major', requireAuth, (c) => {
             });
             btnEl.classList.remove('border-wiki-border/50');
             btnEl.classList.add('border-cyan-500', 'bg-cyan-500/20', 'shadow-lg', 'shadow-cyan-500/20');
-            
+
+            // 하위옵션 표시/숨김
+            const subContainer = document.getElementById('student-sub-options');
+            if (subContainer) {
+                if (value === 'high') {
+                    subContainer.innerHTML = renderHighSubOptions();
+                    subContainer.classList.remove('hidden');
+                } else if (value === 'univ') {
+                    subContainer.innerHTML = renderUnivSubOptions();
+                    subContainer.classList.remove('hidden');
+                } else {
+                    subContainer.innerHTML = '';
+                    subContainer.classList.add('hidden');
+                    window.academicState = null;
+                }
+            }
+
             // 다른 축들 업데이트
             setTimeout(() => {
                 updateTransitionStatusOptionsMajor();
                 updateSkillLevelOptionsMajor();
             }, 150);
-            
+
             checkStep1Completion();
+        }
+
+        // 고등학생 하위옵션 렌더링
+        function renderHighSubOptions() {
+            const options = [
+                { value: 'high_school_early', label: '수시', description: '내신/학생부' },
+                { value: 'high_school_regular', label: '정시', description: '수능 준비' },
+                { value: 'high_school_undecided', label: '미정', description: '아직 결정 전' },
+                { value: 'retake', label: '재수', description: '재수/반수' },
+            ];
+            return '<div class="mt-3 pl-2 border-l-2 border-cyan-500/30"><p class="text-xs text-wiki-muted mb-2">입시 전형 선택 (선택사항)</p><div class="flex flex-wrap gap-2">' +
+                options.map(opt =>
+                    '<button type="button" onclick="selectHighSubType(\\'' + opt.value + '\\', this)" class="sub-option-btn px-3 py-1.5 text-xs rounded-lg border border-wiki-border/50 bg-wiki-card/60 text-wiki-muted hover:border-cyan-500/50 hover:text-white transition-all" data-value="' + opt.value + '">' +
+                    '<span class="font-medium">' + opt.label + '</span> <span class="text-wiki-muted/70">· ' + opt.description + '</span></button>'
+                ).join('') +
+                '</div></div>';
+        }
+
+        // 대학생 하위옵션 렌더링
+        function renderUnivSubOptions() {
+            const options = [
+                { value: 'freshman', label: '신입생', description: '전공 탐색', stage: 'major_freshman' },
+                { value: 'current', label: '재학생', description: '전과/복수전공', stage: 'major_student' },
+                { value: 'graduate', label: '대학원 준비', description: '석·박사 진학', stage: 'major_graduate' },
+            ];
+            return '<div class="mt-3 pl-2 border-l-2 border-cyan-500/30"><p class="text-xs text-wiki-muted mb-2">상세 유형 선택 (선택사항)</p><div class="flex flex-wrap gap-2">' +
+                options.map(opt =>
+                    '<button type="button" onclick="selectUnivSubType(\\'' + opt.value + '\\', \\'' + opt.stage + '\\', this)" class="sub-option-btn px-3 py-1.5 text-xs rounded-lg border border-wiki-border/50 bg-wiki-card/60 text-wiki-muted hover:border-cyan-500/50 hover:text-white transition-all" data-value="' + opt.value + '">' +
+                    '<span class="font-medium">' + opt.label + '</span> <span class="text-wiki-muted/70">· ' + opt.description + '</span></button>'
+                ).join('') +
+                '</div></div>';
+        }
+
+        // 고등학생 하위 선택
+        function selectHighSubType(value, btnEl) {
+            window.academicState = value;
+            document.querySelectorAll('#student-sub-options .sub-option-btn').forEach(btn => {
+                btn.classList.remove('border-cyan-500', 'bg-cyan-500/20', 'text-white');
+                btn.classList.add('border-wiki-border/50', 'text-wiki-muted');
+            });
+            btnEl.classList.remove('border-wiki-border/50', 'text-wiki-muted');
+            btnEl.classList.add('border-cyan-500', 'bg-cyan-500/20', 'text-white');
+        }
+
+        // 대학생 하위 선택
+        function selectUnivSubType(value, stage, btnEl) {
+            selectedStage = stage;
+            window.academicState = null;
+            document.querySelectorAll('#student-sub-options .sub-option-btn').forEach(btn => {
+                btn.classList.remove('border-cyan-500', 'bg-cyan-500/20', 'text-white');
+                btn.classList.add('border-wiki-border/50', 'text-wiki-muted');
+            });
+            btnEl.classList.remove('border-wiki-border/50', 'text-wiki-muted');
+            btnEl.classList.add('border-cyan-500', 'bg-cyan-500/20', 'text-white');
         }
         
         // 전공 선택 목적 (다크 테마)
@@ -12647,19 +13442,28 @@ app.get('/analyzer/major', requireAuth, (c) => {
         function updateTransitionStatusOptionsMajor() {
             const container = document.getElementById('transition-status-options');
             if (!container) return;
-            
-            const rules = studentType && STUDENT_TYPE_DISABLED_RULES[studentType] 
-                ? STUDENT_TYPE_DISABLED_RULES[studentType] 
+
+            const MAJOR_TRANSITION_OPTIONS = [
+                { value: 'first_choice', label: '첫 전공 선택', emoji: '🌱', description: '아직 전공을 정한 적 없어요' },
+                { value: 'exploring', label: '여러 전공 탐색', emoji: '🔍', description: '관심 분야를 비교하는 중' },
+                { value: 'major_change', label: '전과/전공 변경', emoji: '🔄', description: '현재 전공을 바꾸고 싶어요' },
+                { value: 'career_linked', label: '목표 직업 연계', emoji: '🎯', description: '원하는 직업에 맞는 전공 탐색' },
+                { value: 'double_major', label: '복수전공/부전공', emoji: '➕', description: '추가 전공을 고려하고 있어요' },
+                { value: 'undecided', label: '아직 모르겠어요', emoji: '🤔', description: '방향을 정하지 못했어요' },
+            ];
+
+            const rules = studentType && STUDENT_TYPE_DISABLED_RULES[studentType]
+                ? STUDENT_TYPE_DISABLED_RULES[studentType]
                 : { transition_status: [], reasons: {} };
             const disabledValues = rules.transition_status || [];
             const reason = rules.reasons?.transition_status || '현재 상태에서 선택할 수 없어요';
-            
+
             if (!Array.isArray(careerState.transition_status)) {
                 careerState.transition_status = [];
             }
             careerState.transition_status = careerState.transition_status.filter(v => !disabledValues.includes(v));
-            
-            container.innerHTML = TRANSITION_STATUS_OPTIONS.map(opt => {
+
+            container.innerHTML = MAJOR_TRANSITION_OPTIONS.map(opt => {
                 const isDisabled = disabledValues.includes(opt.value);
                 const isSelected = careerState.transition_status.includes(opt.value);
                 
@@ -12785,7 +13589,16 @@ app.get('/analyzer/major', requireAuth, (c) => {
         function renderConstraintOptionsMajor() {
             const container = document.getElementById('constraint-options');
             if (!container) return;
-            
+
+            const MAJOR_CONSTRAINT_OPTIONS = [
+                { type: 'grades', label: '성적/입시 제약', emoji: '📊', description: '성적 범위 내에서 선택해야 해요', placeholder: '예: 수학 과목이 약함, 내신 3등급 이내 필요 등', details: [{ value: 'gpa_limit', label: '내신 성적 제한' }, { value: 'exam_limit', label: '수능 점수 제한' }, { value: 'weak_subject', label: '특정 과목 약함' }] },
+                { type: 'money', label: '경제적 제약', emoji: '💰', description: '학비·생활비 부담이 있어요', placeholder: '예: 등록금 500만원 이하, 장학금 가능한 곳만 등', details: [{ value: 'tuition_burden', label: '학비 부담' }, { value: 'scholarship_required', label: '장학금 필수' }, { value: 'living_cost', label: '자취비용 고려' }] },
+                { type: 'location', label: '지역 제약', emoji: '📍', description: '통학 가능한 지역이 정해져 있어요', placeholder: '예: 서울/경기만 가능, 집에서 통학 가능한 거리 등', details: [{ value: 'capital_only', label: '수도권만 가능' }, { value: 'specific_region', label: '특정 지역만 가능' }, { value: 'commute_required', label: '자택 통학 필요' }] },
+                { type: 'family', label: '가족 의견', emoji: '👨‍👩‍👧', description: '가족 의견을 고려해야 해요', placeholder: '예: 부모님이 특정 전공을 원하심, 가업이 있음 등', details: [{ value: 'parent_opinion', label: '부모님 의견 고려' }, { value: 'family_business', label: '가업 승계 고려' }, { value: 'family_care', label: '가족 돌봄 필요' }] },
+                { type: 'subject', label: '과목/적성 제약', emoji: '📐', description: '특정 과목이나 활동이 부담돼요', placeholder: '예: 수학을 못함, 실험 수업이 부담됨 등', details: [{ value: 'math_science_hard', label: '수학/과학 기피' }, { value: 'language_hard', label: '외국어 어려움' }, { value: 'practical_hard', label: '실기/실험 부담' }] },
+                { type: 'duration', label: '기간/과정 제약', emoji: '⏳', description: '수업 기간이나 과정이 부담돼요', placeholder: '예: 4년 이내 졸업 원함, 대학원 필수 전공 기피 등', details: [{ value: 'fast_graduation', label: '빠른 졸업 원함' }, { value: 'no_grad_required', label: '대학원 필수 기피' }, { value: 'internship_burden', label: '실습 기간 부담' }] },
+            ];
+
             container.innerHTML = \`
                 <div class="mb-4">
                     <button type="button" onclick="toggleNoConstraintMajor(this)" id="no-constraint-btn"
@@ -12795,7 +13608,7 @@ app.get('/analyzer/major', requireAuth, (c) => {
                             <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform" style="background-color: rgba(16,185,129,0.2);">✅</div>
                             <div class="text-left flex-1">
                                 <div class="font-semibold text-white">제약 없음</div>
-                                <div class="text-sm" style="color: rgb(148,163,184)">특별한 제약 조건 없이 모든 옵션 고려</div>
+                                <div class="text-sm" style="color: rgb(148,163,184)">특별한 제약 조건 없이 모든 전공 고려</div>
                             </div>
                             <div class="w-6 h-6 rounded-full border flex items-center justify-center no-constraint-check opacity-0 transition-opacity" style="border-color: rgba(42,42,62,0.5);">
                                 <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
@@ -12811,7 +13624,7 @@ app.get('/analyzer/major', requireAuth, (c) => {
                     <div class="flex-1 h-px" style="background-color: rgba(42,42,62,0.3)"></div>
                 </div>
                 <div id="constraint-list" class="grid gap-3">
-                    \${CONSTRAINT_OPTIONS.map(opt => \`
+                    \${MAJOR_CONSTRAINT_OPTIONS.map(opt => \`
                         <div class="constraint-card rounded-xl border overflow-hidden transition-all duration-300" 
                              style="border-color: rgba(42,42,62,0.5); background-color: rgba(26,26,46,0.9);"
                              data-type="\${opt.type}">
@@ -13012,18 +13825,18 @@ app.get('/analyzer/major', requireAuth, (c) => {
             else nextBtn.classList.remove('hover-glow');
         }
         
-        function goToStep(step) {
+        function goToStep(step, skipRender = false) {
             document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById('step' + step);
             if (target) target.classList.remove('hidden');
             currentStep = step;
-            
+
             // 본인 계정 경고 배너: Step 1에서만 표시
             const warningBanner = document.getElementById('account-warning-banner');
             if (warningBanner) {
                 warningBanner.style.display = step === 1 ? 'block' : 'none';
             }
-            
+
             document.querySelectorAll('.step-dot').forEach(dot => {
                 const dotStep = parseInt(dot.dataset.step);
                 const circle = dot.querySelector('span');
@@ -13042,26 +13855,79 @@ app.get('/analyzer/major', requireAuth, (c) => {
             });
         }
         
-        function goToStep2WithLoading() {
+        async function goToStep2WithLoading() {
+            // 편집 모드: 변경 감지 → 이후 단계 초기화
+            if (window.__editMode && detectStep1Changes()) {
+                cascadeResetFromStep1();
+            }
+
+            // 관심사 + 전이신호 답변 수집
+            collectUniversalAnswers();
+
+            // 세션 ID 생성
+            currentSessionId = currentSessionId || 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+
             // 서버에 자동 저장 (백그라운드)
             saveDraftToServer();
-            
-            showLoading('질문 구성 중...', '상황에 맞는 질문을 준비하고 있어요');
-            setTimeout(() => {
-                renderUniversalQuestions();
-                goToStep(2);
-                hideLoading();
-            }, 600);
+
+            // V3 모드: 서술형 심층 질문 → 3라운드 인터뷰
+            goToStep(2);
+            renderNarrativeStepMajor();
         }
-        
-        // 전이 신호 렌더링 (고급 UI)
+
+        // 전이 신호 렌더링 (전공 전용)
         function renderTransitionSignalForm() {
             const container = document.getElementById('transition-signal-form');
             if (!container) {
-                console.warn('[renderTransitionSignalForm] Container not found');
                 return;
             }
-            container.innerHTML = TRANSITION_SIGNAL_QUESTIONS.map(q => {
+            const MAJOR_SIGNAL_QUESTIONS = [
+                { question_id: 'trans_desired_type', text: '전공 선택 후 어떤 준비를 하고 싶나요?', help: '최대 3개까지 선택 (선택 순서 = 우선순위)', ui_type: 'chips', max_selections: 3, options: [
+                    { value: 'campus_life', label: '대학생활 계획', emoji: '🏫' },
+                    { value: 'certification', label: '자격증/스펙 준비', emoji: '📜' },
+                    { value: 'internship', label: '인턴/현장경험', emoji: '🏢' },
+                    { value: 'study_abroad', label: '유학/교환학생', emoji: '🌍' },
+                    { value: 'grad_school', label: '대학원 진학', emoji: '🎓' },
+                    { value: 'employment', label: '취업 준비', emoji: '💼' },
+                    { value: 'double_major', label: '복수전공/부전공', emoji: '📚' },
+                    { value: 'club_activity', label: '동아리/대외활동', emoji: '🤝' },
+                    { value: 'research', label: '학부 연구', emoji: '🔬' },
+                    { value: 'startup', label: '창업/프로젝트', emoji: '🚀' },
+                ], fact_key: 'transition.desired_type' },
+                { question_id: 'trans_motivation', text: '전공을 고민하는 가장 큰 이유는 뭔가요?', help: '가장 중요한 이유 하나를 선택해주세요.', ui_type: 'radio', options: [
+                    { value: 'find_aptitude', label: '내 적성을 찾고 싶어서', emoji: '🔍' },
+                    { value: 'employment', label: '취업이 잘 되는 전공을 찾고 싶어서', emoji: '💼' },
+                    { value: 'interest', label: '좋아하는 분야를 공부하고 싶어서', emoji: '❤️' },
+                    { value: 'parents', label: '부모님/주변 추천이 있어서', emoji: '👨‍👩‍👧' },
+                    { value: 'grades', label: '성적에 맞는 전공을 찾고 싶어서', emoji: '📊' },
+                    { value: 'change', label: '현재 전공/진로가 안 맞아서', emoji: '🔄' },
+                ], fact_key: 'transition.motivation_primary' },
+                { question_id: 'trans_blockers', text: '전공 선택에서 가장 걱정되는 건 뭔가요?', help: '해당하는 걱정을 모두 선택해주세요.', ui_type: 'checkbox', options: [
+                    { value: 'aptitude', label: '적성에 안 맞을까 봐', emoji: '😰' },
+                    { value: 'employment', label: '취업이 안 될까 봐', emoji: '💼' },
+                    { value: 'grades', label: '성적이 부족할까 봐', emoji: '📉' },
+                    { value: 'info_lack', label: '전공 정보가 부족해서', emoji: '❓' },
+                    { value: 'difficulty', label: '전공 공부가 어려울까 봐', emoji: '📚' },
+                    { value: 'regret', label: '나중에 후회할까 봐', emoji: '😥' },
+                    { value: 'family', label: '가족 의견과 달라서', emoji: '👨‍👩‍👧' },
+                ], fact_key: 'transition.blocker' },
+                { question_id: 'trans_timeline', text: '전공/진학 결정은 언제까지 해야 하나요?', help: '시간 여유에 따라 추천이 달라져요.', ui_type: 'radio', options: [
+                    { value: '1m', label: '1개월 내', emoji: '🔥' },
+                    { value: '3m', label: '3개월 내', emoji: '⚡' },
+                    { value: '6m', label: '6개월 내', emoji: '📆' },
+                    { value: '1y', label: '1년 내', emoji: '📅' },
+                    { value: '2y', label: '2년 이상', emoji: '🗓️' },
+                    { value: 'no_rush', label: '천천히 해도 돼요', emoji: '🐢' },
+                ], fact_key: 'transition.timeline' },
+                { question_id: 'trans_time_invest', text: '일주일에 전공 탐색에 투자할 수 있는 시간은?', help: '현실적으로 가능한 시간을 선택해주세요.', ui_type: 'radio', options: [
+                    { value: '0', label: '거의 없어요', emoji: '😓' },
+                    { value: '5', label: '5시간 이하', emoji: '⏱️' },
+                    { value: '10', label: '5~10시간', emoji: '📖' },
+                    { value: '20', label: '10~20시간', emoji: '💪' },
+                    { value: '40', label: '20시간 이상', emoji: '🏃' },
+                ], fact_key: 'transition.time_invest_hours_bucket' },
+            ];
+            container.innerHTML = MAJOR_SIGNAL_QUESTIONS.map(q => {
                 if (q.ui_type === 'chips') {
                     return \`
                         <div class="trans-question p-5 rounded-2xl mb-5" style="background-color: rgba(26,26,46,0.5); border: 1px solid rgba(42,42,62,0.3);" data-question-id="\${q.question_id}">
@@ -13155,12 +14021,10 @@ app.get('/analyzer/major', requireAuth, (c) => {
         function updateChipOrder(questionId) {
             const container = document.querySelector(\`[data-question-id="\${questionId}"]\`);
             if (!container) {
-                console.warn('[updateChipOrder] Container not found for:', questionId);
                 return;
             }
             const orderEl = container.querySelector('.selected-order');
             if (!orderEl) {
-                console.warn('[updateChipOrder] Order element not found for:', questionId);
                 return;
             }
             const arr = transitionSignalAnswers[questionId] || [];
@@ -13242,17 +14106,21 @@ app.get('/analyzer/major', requireAuth, (c) => {
         
         async function submitUniversalAndGoToTransition() {
             collectUniversalAnswers();
-            
+
+            // 편집 모드: Step 2 변경 감지 → 이후 단계 초기화
+            if (window.__editMode && detectStep2Changes()) {
+                cascadeResetFromStep2();
+            }
+
             // 서버에 자동 저장 (백그라운드)
             saveDraftToServer();
-            
+
             showLoading('답변 저장 중...', '전이 신호 질문을 준비하고 있어요');
             setTimeout(() => {
                 try {
                     renderTransitionSignalForm();
                     goToStep(3);
                 } catch (error) {
-                    console.error('[submitUniversalAndGoToTransition] Error:', error);
                 } finally {
                     hideLoading();
                 }
@@ -13260,9 +14128,14 @@ app.get('/analyzer/major', requireAuth, (c) => {
         }
         
         async function submitTransitionAndContinue() {
+            // 편집 모드: Step 3 변경 감지 → followup 초기화
+            if (window.__editMode && detectStep3Changes()) {
+                cascadeResetFromStep3();
+            }
+
             // 서버에 자동 저장 (백그라운드)
             saveDraftToServer();
-            
+
             showLoading('분석 중...', '맞춤 심층 질문을 구성하고 있어요');
             
             try {
@@ -13278,25 +14151,34 @@ app.get('/analyzer/major', requireAuth, (c) => {
                         career_state: careerState,
                         transition_signal: transitionSignalAnswers,
                         universal_answers: universalAnswers,
+                        academic_state: window.academicState || undefined,
                         debug: DEBUG_MODE,
+                        ...getEditModePayloadExtras(),
                     })
                 });
-                
+
                 const data = await response.json();
                 hideLoading();
-                
+
                 if (data.result?.followup_questions?.length > 0) {
                     renderFollowupQuestions(data.result.followup_questions);
-                    goToStep(4);
+                    goToStep(2);
                 } else {
+                    // 편집 모드: 분석 완료 → 결과 페이지로 이동
+                    if (window.__editMode && data.request_id) {
+                        fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
+                            method: 'DELETE', credentials: 'same-origin'
+                        }).catch(() => {});
+                        window.location.href = '/user/ai-results/' + data.request_id;
+                        return;
+                    }
                     currentRequestId = data.request_id;
                     displayResults(data);
                     saveDraftAsCompletedMajor();  // 결과 저장
-                    goToStep(5);
+                    goToStep(3);
                 }
             } catch (error) {
                 hideLoading();
-                console.error('Error:', error);
                 alert('오류가 발생했습니다: ' + error.message);
             }
         }
@@ -13585,6 +14467,778 @@ app.get('/analyzer/major', requireAuth, (c) => {
             }
         }
         
+        // ============================================
+        // V3: 서술형 심층 질문 + 3라운드 인터뷰 시스템 (전공 추천)
+        // ============================================
+
+        // V3: 전공 전용 서술형 질문 선택
+        function getNarrativeQuestionsMajor() {
+            // 전과/전공 변경이면 changer 질문, 나머지는 explore 질문
+            const transStatus = careerState.transition_status;
+            if (transStatus === 'major_change') {
+                return {
+                    question1: {
+                        id: 'change_reason',
+                        text: '전공이나 진로를 바꾸고 싶은 이유가 뭔가요?',
+                        placeholder: '예: 처음엔 부모님 권유로 선택했는데, 공부할수록 저랑 안 맞는다는 생각이 들었어요...',
+                        emoji: '🔄',
+                        color: 'from-blue-500 to-cyan-500',
+                        fact_key: 'narrative.change_reason',
+                    },
+                    question2: {
+                        id: 'new_interest',
+                        text: '새로 도전하고 싶은 분야가 있나요? 왜 끌리나요?',
+                        placeholder: '예: 디자인 쪽이요. 뭔가 만들어내는 일을 할 때 시간 가는 줄 모르거든요...',
+                        emoji: '🎯',
+                        color: 'from-violet-500 to-purple-500',
+                        fact_key: 'narrative.new_interest',
+                    },
+                };
+            }
+            return {
+                question1: {
+                    id: 'dream_future',
+                    text: '어떤 일을 하는 사람이 되고 싶나요? 왜 그런가요?',
+                    placeholder: '예: 사람들에게 영감을 주는 일을 하고 싶어요. 어릴 때 좋은 선생님을 만나서 제 인생이 바뀌었거든요...',
+                    emoji: '🌟',
+                    color: 'from-yellow-500 to-orange-500',
+                    fact_key: 'narrative.dream_future',
+                },
+                question2: {
+                    id: 'fun_experience',
+                    text: '학교나 일상에서 가장 재미있었던 활동은 뭐였나요? 왜 재미있었나요?',
+                    placeholder: '예: 팀 프로젝트에서 발표를 맡았을 때요. 제 아이디어가 팀원들에게 인정받는 느낌이 좋았어요...',
+                    emoji: '✨',
+                    color: 'from-pink-500 to-rose-500',
+                    fact_key: 'narrative.fun_experience',
+                },
+            };
+        }
+
+        // V3: 서술형 심층 질문 렌더링 (전공 전용)
+        function renderNarrativeStepMajor() {
+            const container = document.getElementById('followup-questions-form');
+            if (!container) return;
+
+            const questions = window.savedNarrativeQuestions || getNarrativeQuestionsMajor();
+            const q1 = questions.question1;
+            const q2 = questions.question2;
+            window.savedNarrativeQuestions = questions;
+
+            const savedQ0 = window.narrativeFacts?.storyAnswer || window.narrativeFacts?.life_story || '';
+            const savedQ1 = window.narrativeFacts?.question1Answer || window.narrativeFacts?.highAliveMoment || '';
+            const savedQ2 = window.narrativeFacts?.question2Answer || window.narrativeFacts?.lostMoment || '';
+            const savedQ3 = window.narrativeFacts?.existentialAnswer || '';
+
+            const isMinor = ['major_child', 'major_elementary', 'major_middle'].includes(selectedStage);
+
+            // 색상 파싱
+            const parseGradient = (color) => {
+                const colors = color.replace('from-', '').replace(' to-', ',').split(',');
+                const colorMap = {
+                    'yellow-500': '234,179,8', 'orange-500': '249,115,22', 'red-500': '239,68,68',
+                    'pink-500': '236,72,153', 'rose-500': '244,63,94', 'rose-600': '225,29,72',
+                    'violet-500': '139,92,246', 'purple-500': '168,85,247', 'purple-600': '147,51,234',
+                    'indigo-500': '99,102,241', 'indigo-600': '79,70,229', 'blue-500': '59,130,246',
+                    'blue-600': '37,99,235', 'cyan-500': '6,182,212', 'cyan-600': '8,145,178',
+                    'teal-500': '20,184,166', 'emerald-500': '16,185,129', 'green-500': '34,197,94',
+                    'amber-500': '245,158,11', 'slate-500': '100,116,139',
+                };
+                return colors.map(c => colorMap[c.trim()] || '139,92,246');
+            };
+
+            const q1Colors = parseGradient(q1.color);
+            const q2Colors = parseGradient(q2.color);
+
+            // 미성년(중학생 이하)은 간단한 질문만
+            const minLenQ = isMinor ? 20 : 50;
+            const minLenStory = isMinor ? 20 : 30;
+
+            container.innerHTML = \`
+                <!-- 격려 문구 -->
+                <div class="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-xl p-4 mb-6">
+                    <p class="text-emerald-300 text-sm">
+                        <i class="fas fa-lightbulb mr-2"></i>
+                        자세히 (구체적인 상황, 감정, 이유를 솔직하게) 작성할수록 AI가 더 정확한 전공 추천을 드릴 수 있어요.
+                    </p>
+                </div>
+
+                <!-- 스토리 질문 -->
+                <div class="question-block p-5 rounded-2xl mb-5" style="background: linear-gradient(135deg, rgba(100,116,139,0.1), rgba(59,130,246,0.05)); border: 1px solid rgba(100,116,139,0.2);">
+                    <label class="block text-lg font-semibold mb-2 text-white">
+                        <span class="mr-2">📖</span>
+                        간략하게 지금까지의 이야기를 들려주세요
+                        <span class="text-red-400 ml-1">*</span>
+                    </label>
+                    <p class="text-sm text-wiki-muted mb-4">학교생활, 관심 분야, 고민 등 배경을 간략히 적어주세요. AI가 맥락을 이해하는 데 도움이 돼요.</p>
+                    <textarea
+                        id="narrative_q0"
+                        name="narrative_q0"
+                        data-fact-key="narrative.life_story"
+                        rows="4"
+                        minlength="\${minLenStory}"
+                        maxlength="5000"
+                        placeholder="예: 고등학교 2학년인데 이과 쪽이 좋긴 한데 정확히 뭘 해야 할지 모르겠어요. 수학이랑 과학은 괜찮은데 생물은 별로..."
+                        class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[100px]"
+                        style="background-color: rgba(15,15,35,1); border-color: rgba(100,116,139,0.3); color: #fff;"
+                        onfocus="this.style.borderColor='rgba(100,116,139,0.6)';"
+                        onblur="this.style.borderColor='rgba(100,116,139,0.3)';"
+                        oninput="updateNarrativeCounterMajor(this, 5000);">\${savedQ0}</textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <span id="narrative_q0_hint" class="text-xs text-wiki-muted">최소 \${minLenStory}자 / 현재 \${savedQ0.length}자</span>
+                        <span id="narrative_q0_counter" class="text-xs text-wiki-muted">\${savedQ0.length}자</span>
+                    </div>
+                </div>
+
+                <!-- 동적 질문 1 -->
+                <div class="question-block p-5 rounded-2xl mb-5" style="background: linear-gradient(135deg, rgba(\${q1Colors[0]},0.1), rgba(\${q1Colors[1]},0.05)); border: 1px solid rgba(\${q1Colors[0]},0.2);">
+                    <label class="block text-lg font-semibold mb-2 text-white">
+                        <span class="mr-2">\${q1.emoji}</span>
+                        \${q1.text}
+                        <span class="text-red-400 ml-1">*</span>
+                    </label>
+                    <p class="text-sm text-wiki-muted mb-4">구체적인 상황, 감정, 이유를 자유롭게 적어주세요</p>
+                    <textarea
+                        id="narrative_q1"
+                        name="narrative_q1"
+                        data-fact-key="\${q1.fact_key}"
+                        data-question-id="\${q1.id}"
+                        rows="5"
+                        minlength="\${minLenQ}"
+                        maxlength="10000"
+                        placeholder="\${q1.placeholder}"
+                        class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[120px]"
+                        style="background-color: rgba(15,15,35,1); border-color: rgba(\${q1Colors[0]},0.3); color: #fff;"
+                        onfocus="this.style.borderColor='rgba(\${q1Colors[0]},0.6)';"
+                        onblur="this.style.borderColor='rgba(\${q1Colors[0]},0.3)';"
+                        oninput="updateNarrativeCounterMajor(this, 10000);">\${savedQ1}</textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <span id="narrative_q1_hint" class="text-xs text-wiki-muted">최소 \${minLenQ}자 / 현재 \${savedQ1.length}자</span>
+                        <span id="narrative_q1_counter" class="text-xs text-wiki-muted">\${savedQ1.length}자</span>
+                    </div>
+                </div>
+
+                <!-- 동적 질문 2 -->
+                <div class="question-block p-5 rounded-2xl mb-5" style="background: linear-gradient(135deg, rgba(\${q2Colors[0]},0.1), rgba(\${q2Colors[1]},0.05)); border: 1px solid rgba(\${q2Colors[0]},0.2);">
+                    <label class="block text-lg font-semibold mb-2 text-white">
+                        <span class="mr-2">\${q2.emoji}</span>
+                        \${q2.text}
+                        <span class="text-red-400 ml-1">*</span>
+                    </label>
+                    <p class="text-sm text-wiki-muted mb-4">구체적인 상황, 감정, 이유를 자유롭게 적어주세요</p>
+                    <textarea
+                        id="narrative_q2"
+                        name="narrative_q2"
+                        data-fact-key="\${q2.fact_key}"
+                        data-question-id="\${q2.id}"
+                        rows="5"
+                        minlength="\${minLenQ}"
+                        maxlength="10000"
+                        placeholder="\${q2.placeholder}"
+                        class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[120px]"
+                        style="background-color: rgba(15,15,35,1); border-color: rgba(\${q2Colors[0]},0.3); color: #fff;"
+                        onfocus="this.style.borderColor='rgba(\${q2Colors[0]},0.6)';"
+                        onblur="this.style.borderColor='rgba(\${q2Colors[0]},0.3)';"
+                        oninput="updateNarrativeCounterMajor(this, 10000);">\${savedQ2}</textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <span id="narrative_q2_hint" class="text-xs text-wiki-muted">최소 \${minLenQ}자 / 현재 \${savedQ2.length}자</span>
+                        <span id="narrative_q2_counter" class="text-xs text-wiki-muted">\${savedQ2.length}자</span>
+                    </div>
+                </div>
+
+                <!-- 실존적 가치 질문 -->
+                <div class="question-block p-5 rounded-2xl mb-5" style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.05)); border: 1px solid rgba(168,85,247,0.2);">
+                    <label class="block text-lg font-semibold mb-3 text-white">
+                        <span class="mr-2">\u{1F30C}</span>
+                        마지막 7일
+                    </label>
+                    <div class="text-sm text-slate-300 mb-4 leading-relaxed space-y-2">
+                        <p>오늘 밤 9시, 모든 방송과 휴대폰에 긴급 뉴스가 뜹니다.</p>
+                        <p>정확히 7일 뒤 지구는 사라집니다. 생존 가능성은 없습니다.</p>
+                        <p class="text-white font-medium pt-1">이 소식을 듣는 순간, 가장 먼저 떠올릴 행동은 무엇일 것 같나요?</p>
+                        <p class="text-white font-medium">어디로 가고 싶고, 누구를 만나고 싶고, 무엇을 하고 싶을 것 같나요?</p>
+                    </div>
+                    <textarea
+                        id="narrative_q3"
+                        name="narrative_q3"
+                        data-fact-key="narrative.existential_answer"
+                        rows="4"
+                        minlength="20"
+                        maxlength="5000"
+                        placeholder="가장 먼저 떠오르는 행동, 가고 싶은 곳, 만나고 싶은 사람을 자유롭게 적어주세요..."
+                        class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[100px]"
+                        style="background-color: rgba(15,15,35,1); border-color: rgba(168,85,247,0.3); color: #fff;"
+                        onfocus="this.style.borderColor='rgba(168,85,247,0.6)';"
+                        onblur="this.style.borderColor='rgba(168,85,247,0.3)';"
+                        oninput="updateNarrativeCounterMajor(this, 5000);">\${savedQ3}</textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <span id="narrative_q3_hint" class="text-xs text-wiki-muted">최소 20자 / 현재 \${savedQ3.length}자</span>
+                        <span id="narrative_q3_counter" class="text-xs text-wiki-muted">\${savedQ3.length}자</span>
+                    </div>
+                </div>
+
+                <div class="text-center text-xs text-wiki-muted/60 mt-6">
+                    <i class="fas fa-shield-alt mr-1"></i>
+                    입력하신 내용은 추천에만 사용되며, 외부에 공개되지 않습니다.
+                </div>
+            \`;
+
+            // Step 2 제목 업데이트
+            const step2Title = document.querySelector('#step2 h2');
+            if (step2Title) {
+                step2Title.innerHTML = '<i class="fas fa-comments text-wiki-primary mr-2"></i>심층 질문 기초';
+            }
+            const step2Subtitle = document.getElementById('step2-subtitle');
+            if (step2Subtitle) {
+                step2Subtitle.textContent = '당신의 이야기를 자유롭게 들려주세요';
+            }
+
+            // 버튼 업데이트
+            const analyzeBtn = document.getElementById('analyze-btn');
+            if (analyzeBtn) {
+                analyzeBtn.innerHTML = '<i class="fas fa-arrow-right mr-2"></i>다음';
+                analyzeBtn.onclick = submitNarrativeAndContinueV3Major;
+            }
+
+            const step2PrevBtn = document.getElementById('step2-prev-btn');
+            if (step2PrevBtn) {
+                step2PrevBtn.onclick = () => {
+                    collectNarrativeAnswersMajor();
+                    goToStep(1);
+                };
+            }
+
+            // 카운터 초기화
+            setTimeout(() => {
+                ['narrative_q0', 'narrative_q1', 'narrative_q2', 'narrative_q3'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && el.value) updateNarrativeCounterMajor(el, id === 'narrative_q0' || id === 'narrative_q3' ? 5000 : 10000);
+                });
+            }, 100);
+        }
+
+        // V3: 서술형 글자수 카운터
+        function updateNarrativeCounterMajor(textarea, maxLength) {
+            const counter = document.getElementById(textarea.id + '_counter');
+            const hint = document.getElementById(textarea.id + '_hint');
+            const current = textarea.value.length;
+            const minLength = parseInt(textarea.minLength) || 30;
+
+            if (counter) {
+                counter.textContent = current.toLocaleString() + '자';
+                if (current >= maxLength * 0.9) {
+                    counter.style.color = current >= maxLength ? 'rgb(239, 68, 68)' : 'rgb(251, 146, 60)';
+                } else if (current >= minLength) {
+                    counter.style.color = 'rgb(74, 222, 128)';
+                } else {
+                    counter.style.color = 'rgb(148, 163, 184)';
+                }
+            }
+            if (hint) {
+                if (current >= minLength) {
+                    hint.textContent = '✓ 최소 ' + minLength + '자 충족';
+                    hint.style.color = 'rgb(74, 222, 128)';
+                } else {
+                    hint.textContent = '최소 ' + minLength + '자 / 현재 ' + current + '자';
+                    hint.style.color = 'rgb(148, 163, 184)';
+                }
+            }
+        }
+
+        // V3: 서술형 답변 수집
+        function collectNarrativeAnswersMajor() {
+            const q0 = document.getElementById('narrative_q0');
+            const q1 = document.getElementById('narrative_q1');
+            const q2 = document.getElementById('narrative_q2');
+            const q3 = document.getElementById('narrative_q3');
+
+            if (q1 && q2) {
+                window.narrativeFacts = {
+                    storyAnswer: q0?.value?.trim() || '',
+                    life_story: q0?.value?.trim() || '',
+                    highAliveMoment: q1.value.trim(),
+                    lostMoment: q2.value.trim(),
+                    existentialAnswer: q3?.value?.trim() || '',
+                    question1Answer: q1.value.trim(),
+                    question2Answer: q2.value.trim(),
+                    question1FactKey: q1.dataset.factKey,
+                    question2FactKey: q2.dataset.factKey,
+                    question1Id: q1.dataset.questionId,
+                    question2Id: q2.dataset.questionId,
+                };
+            }
+            return window.narrativeFacts || null;
+        }
+
+        // V3: 서술형 필수 검증
+        function validateNarrativeRequiredMajor() {
+            const isMinor = ['major_child', 'major_elementary', 'major_middle'].includes(selectedStage);
+            const minLenQ = isMinor ? 20 : 50;
+            const minLenStory = isMinor ? 20 : 30;
+
+            const q0 = document.getElementById('narrative_q0');
+            const q1 = document.getElementById('narrative_q1');
+            const q2 = document.getElementById('narrative_q2');
+
+            if (!q1 || !q2) return true;
+
+            if (q0 && q0.value.trim().length < minLenStory) {
+                q0.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                q0.focus();
+                alert('지금까지의 이야기를 ' + minLenStory + '자 이상 작성해주세요.');
+                return false;
+            }
+            if (q1.value.trim().length < minLenQ) {
+                q1.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                q1.focus();
+                alert('첫 번째 질문에 ' + minLenQ + '자 이상 작성해주세요.');
+                return false;
+            }
+            if (q2.value.trim().length < minLenQ) {
+                q2.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                q2.focus();
+                alert('두 번째 질문에 ' + minLenQ + '자 이상 작성해주세요.');
+                return false;
+            }
+
+            const q3 = document.getElementById('narrative_q3');
+            if (q3 && q3.value.trim().length > 0 && q3.value.trim().length < 20) {
+                q3.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                q3.focus();
+                alert('마지막 질문에 20자 이상 작성해주세요.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // V3: 서술형 답변 서버 저장
+        async function saveNarrativeFactsMajor(facts) {
+            try {
+                currentSessionId = currentSessionId || 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+
+                const response = await fetch('/api/ai-analyzer/v3/narrative-facts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        high_alive_moment: facts.highAliveMoment || facts.question1Answer || '',
+                        lost_moment: facts.lostMoment || facts.question2Answer || '',
+                        existential_answer: facts.existentialAnswer || undefined,
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    if (errorText.includes('error code: 1031') || errorText.includes('no such table')) {
+                        return true;
+                    }
+                    showErrorToastMajor('서술형 답변 저장 실패: ' + errorText.substring(0, 100));
+                    return false;
+                }
+
+                const data = await response.json();
+                if (!data.success) {
+                    showErrorToastMajor('서술형 답변 저장 실패: ' + (data.detail || data.error || 'Unknown error'));
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                if (error.message && error.message.includes('JSON')) return true;
+                showErrorToastMajor('서술형 답변 저장 중 오류: ' + (error.message || 'Network error'));
+                return false;
+            }
+        }
+
+        // V3: 에러 토스트
+        function showErrorToastMajor(message) {
+            const existingToast = document.querySelector('.v3-error-toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'v3-error-toast';
+            toast.innerHTML = \`
+                <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                            background: #ef4444; color: white; padding: 12px 20px; border-radius: 8px;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 10000; max-width: 90vw;
+                            font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>\${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()"
+                            style="margin-left: 8px; background: none; border: none; color: white; cursor: pointer;">✕</button>
+                </div>
+            \`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        // V3: 서술형 제출 후 라운드 시작
+        async function submitNarrativeAndContinueV3Major() {
+            if (!validateNarrativeRequiredMajor()) return;
+
+            const narrativeFacts = collectNarrativeAnswersMajor();
+
+            if (window.__editMode && detectNarrativeChanges()) {
+                cascadeResetFromNarrative();
+            }
+            if (narrativeFacts) {
+                await saveNarrativeFactsMajor(narrativeFacts);
+            }
+
+            saveDraftToServer();
+
+            await startV3RoundQuestionsMajor(1);
+        }
+
+        // V3: 라운드 질문 시작
+        async function startV3RoundQuestionsMajor(roundNumber) {
+            const roundMeta = {
+                1: { title: '내면의 에너지 탐색', subtitle: '무엇이 당신을 움직이게 하나요?', emoji: '🔥', color: 'from-orange-500 to-red-500' },
+                2: { title: '경계선 확인', subtitle: '무엇을 피하고 싶으신가요?', emoji: '🛡️', color: 'from-purple-500 to-indigo-500' },
+                3: { title: '실행 계획 설계', subtitle: '어떻게 시작할 수 있을까요?', emoji: '🚀', color: 'from-emerald-500 to-teal-500' },
+            };
+
+            const meta = roundMeta[roundNumber];
+            showLoading('질문 구성 중...', meta.subtitle);
+
+            try {
+                currentSessionId = currentSessionId || 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+
+                const response = await fetch('/api/ai-analyzer/v3/round-questions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        round_number: roundNumber,
+                        narrative_facts: window.narrativeFacts,
+                        previous_round_answers: window.roundAnswers,
+                        universal_answers: universalAnswers,
+                        career_state: careerState,
+                        transition_signal: transitionSignalAnswers,
+                    })
+                });
+
+                hideLoading();
+
+                if (!response.ok) {
+                    alert('질문 생성 중 서버 오류가 발생했습니다 (HTTP ' + response.status + ')\\n\\n잠시 후 다시 시도해주세요.');
+                    return;
+                }
+
+                const data = await response.json();
+                if (data.error) {
+                    alert('질문 생성 중 오류: ' + (data.error || 'Unknown error'));
+                    return;
+                }
+
+                const questions = data.questions || [];
+                if (questions.length > 0) {
+                    window.currentRound = roundNumber;
+                    window.roundQuestions = questions;
+                    renderV3RoundUIMajor(roundNumber, questions, meta);
+                    document.querySelectorAll('.step-content').forEach(s => s.classList.add('hidden'));
+                    document.getElementById('step2')?.classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    alert('질문을 생성하지 못했습니다. 페이지를 새로고침하고 다시 시도해주세요.');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('질문 생성 중 오류: ' + (error.message || 'Network error'));
+            }
+        }
+
+        // V3: 라운드 UI 렌더링
+        function renderV3RoundUIMajor(roundNumber, questions, meta) {
+            const container = document.getElementById('followup-questions-form');
+            if (!container) return;
+
+            container.innerHTML = \`
+                <!-- 라운드 헤더 -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center gap-3 px-6 py-3 rounded-2xl mb-4" style="background: linear-gradient(135deg, rgba(249,115,22,0.15), rgba(234,88,12,0.1));">
+                        <span class="text-3xl">\${meta.emoji}</span>
+                        <div class="text-left">
+                            <div class="text-lg font-bold text-white">\${meta.title}</div>
+                            <div class="text-sm text-wiki-muted">\${meta.subtitle}</div>
+                        </div>
+                    </div>
+
+                    <!-- 라운드 진행 표시 -->
+                    <div class="flex items-center justify-center gap-3 mb-4">
+                        \${[1, 2, 3].map(r => \`
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all \${r === roundNumber ? 'bg-gradient-to-r ' + meta.color + ' text-white scale-110' : r < roundNumber ? 'bg-emerald-500 text-white' : 'bg-wiki-card text-wiki-muted'}">
+                                    \${r < roundNumber ? '✓' : r}
+                                </div>
+                                \${r < 3 ? '<div class="w-8 h-0.5 ' + (r < roundNumber ? 'bg-emerald-500' : 'bg-wiki-border') + '"></div>' : ''}
+                            </div>
+                        \`).join('')}
+                    </div>
+                    <div class="text-xs text-wiki-muted">Round \${roundNumber} / 3</div>
+                </div>
+
+                <!-- 질문들 -->
+                <div class="space-y-6" id="v3-round-questions">
+                    \${questions.map((q, idx) => \`
+                        <div class="question-block p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(26,26,46,0.8), rgba(36,36,56,0.5)); border: 1px solid rgba(67,97,238,0.2);">
+                            <label class="block text-lg font-semibold mb-3 text-white">
+                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-sm mr-2">\${idx + 1}</span>
+                                \${q.questionText}
+                            </label>
+                            <textarea
+                                id="v3_q_\${q.id}"
+                                name="\${q.id}"
+                                rows="4"
+                                minlength="\${q.minLengthGuidance || 30}"
+                                placeholder="자유롭게 적어주세요..."
+                                class="w-full px-4 py-3 rounded-xl border transition-all resize-none"
+                                style="background-color: rgba(15,15,35,1); border-color: rgba(67,97,238,0.3); color: #fff;"
+                                onfocus="this.style.borderColor='rgba(67,97,238,0.6)';"
+                                onblur="this.style.borderColor='rgba(67,97,238,0.3)';"
+                                oninput="updateV3CounterMajor(this)"></textarea>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-xs text-wiki-muted">최소 \${q.minLengthGuidance || 30}자</span>
+                                <span id="v3_q_\${q.id}_counter" class="text-xs text-wiki-muted">0자</span>
+                            </div>
+                        </div>
+                    \`).join('')}
+                </div>
+            \`;
+
+            // Step 2 제목 업데이트
+            const step2Title = document.querySelector('#step2 h2');
+            if (step2Title) {
+                step2Title.innerHTML = \`<i class="fas fa-comments text-wiki-primary mr-2"></i>심층 질문 Round \${roundNumber}\`;
+            }
+            const step2Subtitle = document.getElementById('step2-subtitle');
+            if (step2Subtitle) {
+                const subtitleText = roundNumber === 1
+                    ? '당신의 답변을 바탕으로 맞춤 질문을 준비했어요'
+                    : roundNumber === 2
+                    ? '더 깊이 있는 이해를 위한 질문이에요'
+                    : '마지막으로 몇 가지만 더 여쭤볼게요';
+                step2Subtitle.textContent = subtitleText;
+            }
+
+            // 버튼 업데이트
+            const analyzeBtn = document.getElementById('analyze-btn');
+            if (analyzeBtn) {
+                if (roundNumber < 3) {
+                    analyzeBtn.innerHTML = '<i class="fas fa-arrow-right mr-2"></i>다음 라운드';
+                    analyzeBtn.onclick = () => submitV3RoundAndContinueMajor(roundNumber, questions);
+                } else {
+                    analyzeBtn.innerHTML = '<i class="fas fa-magic mr-2"></i>AI 전공 추천 받기';
+                    analyzeBtn.onclick = () => submitV3RoundAndAnalyzeMajor(questions);
+                }
+            }
+
+            // 이전 버튼 동작
+            const step2PrevBtn = document.getElementById('step2-prev-btn');
+            if (step2PrevBtn) {
+                step2PrevBtn.onclick = () => {
+                    if (roundNumber === 1) {
+                        showPrevWarningModalMajor(() => {
+                            renderNarrativeStepMajor();
+                        });
+                    } else {
+                        startV3RoundQuestionsMajor(roundNumber - 1);
+                    }
+                };
+            }
+        }
+
+        // V3: 글자수 카운터
+        function updateV3CounterMajor(textarea) {
+            const counter = document.getElementById(textarea.id + '_counter');
+            if (counter) {
+                counter.textContent = textarea.value.length + '자';
+                counter.style.color = textarea.value.length >= (parseInt(textarea.minLength) || 30) ? 'rgb(74, 222, 128)' : 'rgb(148,163,184)';
+            }
+        }
+
+        // V3: 이전 버튼 경고 모달
+        function showPrevWarningModalMajor(onConfirm) {
+            const existingModal = document.getElementById('prev-warning-modal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'prev-warning-modal';
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            modal.innerHTML = \`
+                <div class="bg-wiki-card rounded-2xl p-6 max-w-md w-full border border-wiki-border shadow-2xl">
+                    <div class="text-center mb-4">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                            <i class="fas fa-exclamation-triangle text-2xl text-yellow-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">이전 단계로 돌아가시겠습니까?</h3>
+                        <p class="text-wiki-muted text-sm">이전 단계의 내용을 수정하면 심층 질문이 새로 생성될 수 있습니다.</p>
+                        <p class="text-yellow-400 text-sm mt-2"><i class="fas fa-info-circle mr-1"></i>기존 답변이 초기화될 수 있습니다.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="prev-warning-cancel" class="flex-1 px-4 py-3 bg-wiki-bg border border-wiki-border rounded-xl text-white hover:bg-wiki-card transition">
+                            취소
+                        </button>
+                        <button id="prev-warning-confirm" class="flex-1 px-4 py-3 bg-yellow-600 hover:bg-yellow-500 rounded-xl text-white font-medium transition">
+                            이전으로 돌아가기
+                        </button>
+                    </div>
+                </div>
+            \`;
+
+            document.body.appendChild(modal);
+
+            document.getElementById('prev-warning-cancel').onclick = () => modal.remove();
+            document.getElementById('prev-warning-confirm').onclick = () => {
+                modal.remove();
+                window.currentRound = 0;
+                window.roundQuestions = null;
+                window.roundAnswers = [];
+                onConfirm();
+            };
+        }
+
+        // V3: 라운드 답변 수집
+        function collectV3RoundAnswersMajor(questions) {
+            return questions.map(q => {
+                const textarea = document.getElementById('v3_q_' + q.id);
+                return {
+                    question_id: q.id,
+                    question_text: q.questionText,
+                    purpose_tag: q.purposeTag,
+                    answer: textarea ? textarea.value.trim() : '',
+                };
+            });
+        }
+
+        // V3: 답변 검증
+        function validateV3AnswersMajor(answers, questions) {
+            for (let i = 0; i < answers.length; i++) {
+                const minLen = questions[i].minLengthGuidance || 30;
+                if (answers[i].answer.length < minLen) {
+                    const textarea = document.getElementById('v3_q_' + questions[i].id);
+                    if (textarea) {
+                        textarea.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                        textarea.focus();
+                    }
+                    alert('질문 ' + (i + 1) + '에 ' + minLen + '자 이상 작성해주세요.');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // V3: 라운드 답변 저장
+        async function saveV3RoundAnswersMajor(roundNumber, answers) {
+            for (const ans of answers) {
+                window.roundAnswers.push({
+                    questionId: ans.question_id,
+                    questionText: ans.question_text,
+                    roundNumber: roundNumber,
+                    answer: ans.answer,
+                    answeredAt: new Date().toISOString(),
+                });
+            }
+
+            try {
+                const response = await fetch('/api/ai-analyzer/v3/round-answers', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        round_number: roundNumber,
+                        answers: answers,
+                    })
+                });
+
+                if (!response.ok) {
+                    showErrorToastMajor('라운드 ' + roundNumber + ' 답변 저장 실패 (HTTP ' + response.status + ')');
+                    return false;
+                }
+
+                const data = await response.json();
+                if (!data.success) {
+                    showErrorToastMajor('라운드 ' + roundNumber + ' 답변 저장 실패: ' + (data.detail || data.error || 'Unknown error'));
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                showErrorToastMajor('라운드 ' + roundNumber + ' 답변 저장 중 오류: ' + (error.message || 'Network error'));
+                return false;
+            }
+        }
+
+        // V3: 라운드 답변 제출 후 다음 라운드
+        async function submitV3RoundAndContinueMajor(currentRound, questions) {
+            const answers = collectV3RoundAnswersMajor(questions);
+            if (!validateV3AnswersMajor(answers, questions)) return;
+
+            if (window.__editMode && detectRoundChanges(currentRound)) {
+                cascadeResetFromRound(currentRound);
+            }
+
+            showLoading('답변 저장 중...', '다음 라운드를 준비하고 있어요');
+
+            try {
+                await saveV3RoundAnswersMajor(currentRound, answers);
+                await startV3RoundQuestionsMajor(currentRound + 1);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // V3: 마지막 라운드 후 분석 시작
+        async function submitV3RoundAndAnalyzeMajor(questions) {
+            const answers = collectV3RoundAnswersMajor(questions);
+            if (!validateV3AnswersMajor(answers, questions)) return;
+
+            showLoading('답변 저장 중...', '마지막 답변을 저장하고 있어요');
+            await saveV3RoundAnswersMajor(3, answers);
+
+            showLoading('AI가 분석 중...', '최적의 전공을 찾고 있어요');
+
+            try {
+                const response = await fetch('/api/ai-analyzer/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        analysis_type: selectedAnalysisType,
+                        stage: selectedStage || 'major_high',
+                        career_state: careerState,
+                        transition_signal: transitionSignalAnswers,
+                        universal_answers: universalAnswers,
+                        narrative_facts: window.narrativeFacts,
+                        round_answers: window.roundAnswers,
+                        engine_version: 'v3',
+                        academic_state: window.academicState || undefined,
+                        debug: DEBUG_MODE,
+                        ...getEditModePayloadExtras(),
+                    })
+                });
+
+                const data = await response.json();
+                hideLoading();
+
+                if (window.__editMode && data.request_id) {
+                    fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
+                        method: 'DELETE', credentials: 'same-origin'
+                    }).catch(() => {});
+                    window.location.href = '/user/ai-results/' + data.request_id;
+                    return;
+                }
+
+                currentRequestId = data.request_id;
+                displayResults(data);
+                saveDraftAsCompletedMajor();
+                goToStep(3);
+            } catch (error) {
+                hideLoading();
+                alert('분석 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
         async function submitFollowupsAndAnalyze() {
             showLoading('AI가 분석 중...', '최적의 전공을 찾고 있어요');
             
@@ -13600,57 +15254,1724 @@ app.get('/analyzer/major', requireAuth, (c) => {
                         transition_signal: transitionSignalAnswers,
                         universal_answers: universalAnswers,
                         followup_answers: followupAnswers,
+                        academic_state: window.academicState || undefined,
                         debug: DEBUG_MODE,
+                        ...getEditModePayloadExtras(),
                     })
                 });
-                
+
                 const data = await response.json();
                 hideLoading();
+
+                // 편집 모드: 분석 완료 → 결과 페이지로 이동
+                if (window.__editMode && data.request_id) {
+                    fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
+                        method: 'DELETE', credentials: 'same-origin'
+                    }).catch(() => {});
+                    window.location.href = '/user/ai-results/' + data.request_id;
+                    return;
+                }
+
                 currentRequestId = data.request_id;
                 displayResults(data);
                 saveDraftAsCompletedMajor();  // 결과 저장
-                goToStep(5);
+                goToStep(3);
             } catch (error) {
                 hideLoading();
-                console.error('Error:', error);
                 alert('오류가 발생했습니다: ' + error.message);
             }
         }
         
         function displayResults(data) {
+            const result = data.result || data;
+
+            // V3 프리미엄 리포트가 있으면 4탭 UI 표시
+            if (result.premium_report) {
+                displayPremiumReportV3Major(result);
+                return;
+            }
+
             const container = document.getElementById('major-results');
-            const result = data.result;
-            
+
             // Confidence UI 표시
             displayConfidenceUI(result);
-            
-            if (!result || !result.recommendations || result.recommendations.length === 0) {
+
+            // 추천 전공 배열 추출 (라이브 응답 vs 저장된 결과 둘 다 처리)
+            let majors = [];
+            if (result.recommendations && result.recommendations.top_majors) {
+                majors = result.recommendations.top_majors;
+            } else if (result.fit_top_majors) {
+                majors = result.fit_top_majors;
+            } else if (Array.isArray(result.recommendations)) {
+                majors = result.recommendations;
+            }
+
+            if (!majors || majors.length === 0) {
                 container.innerHTML = '<p class="text-center text-wiki-muted">추천 결과가 없습니다. 다시 시도해주세요.</p>';
                 return;
             }
-            
-            container.innerHTML = result.recommendations.map((rec, i) => \`
-                <a href="/major/\${rec.slug || rec.major_id || rec.id || encodeURIComponent(rec.name)}" class="block p-4 bg-wiki-bg rounded-lg border border-wiki-border hover:border-wiki-primary transition group \${i === 0 ? 'border-wiki-primary ring-2 ring-wiki-primary/20' : ''}">
+
+            container.innerHTML = majors.map((rec, i) => \`
+                <a href="/major/\${rec.slug || rec.major_id || rec.id || encodeURIComponent(rec.major_name || rec.name)}" class="block p-4 bg-wiki-bg rounded-lg border border-wiki-border hover:border-wiki-primary transition group \${i === 0 ? 'border-wiki-primary ring-2 ring-wiki-primary/20' : ''}">
                     \${rec.image_url ? \`
                         <div class="mb-3 overflow-hidden rounded-lg">
-                            <img src="\${rec.image_url}" alt="\${rec.name}" class="w-full h-32 object-cover group-hover:scale-105 transition-transform" />
+                            <img src="\${rec.image_url}" alt="\${rec.major_name || rec.name}" class="w-full h-32 object-cover group-hover:scale-105 transition-transform" />
                         </div>
                     \` : ''}
                     <div class="flex items-center gap-3 mb-2">
                         <span class="text-2xl font-bold text-wiki-primary">#\${i + 1}</span>
-                        <h3 class="text-lg font-bold group-hover:text-wiki-primary transition">\${rec.name || rec.job_name || '추천 전공'}</h3>
+                        <h3 class="text-lg font-bold group-hover:text-wiki-primary transition">\${rec.major_name || rec.name || '추천 전공'}</h3>
                     </div>
                     <p class="text-wiki-muted text-sm mb-2">\${rec.reason || rec.match_reason || ''}</p>
-                    \${rec.fit_score ? \`<div class="text-sm text-wiki-secondary">점수: \${Math.round(rec.fit_score * 100)}%</div>\` : ''}
+                    \${rec.fit_score ? \`<div class="text-sm text-wiki-secondary">적합도: \${Math.round(rec.fit_score)}점</div>\` : ''}
+                    \${rec.field_category ? \`<div class="text-xs text-wiki-muted mt-1">\${rec.field_category}</div>\` : ''}
                     <div class="text-xs text-wiki-primary mt-2 opacity-0 group-hover:opacity-100 transition">자세히 보기 →</div>
                 </a>
             \`).join('');
         }
         
+
+        // ============================================
+// V3 Premium Report - Major (전공) Analyzer
+// ============================================
+
+function addReportStylesMajor() {
+    if (document.getElementById('report-v3-styles-major')) return;
+
+    const style = document.createElement('style');
+    style.id = 'report-v3-styles-major';
+    style.textContent = \`
+        .report-tab {
+            background-color: rgba(26,26,46,0.5);
+            color: rgb(148,163,184);
+        }
+        .report-tab:hover {
+            background-color: rgba(42,42,62,0.5);
+        }
+        .report-tab.active {
+            background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(168,85,247,0.2));
+            color: white;
+            border: 1px solid rgba(99,102,241,0.5);
+        }
+        .major-set-tab {
+            background: linear-gradient(135deg, rgba(26,26,46,0.7), rgba(42,42,62,0.5));
+            color: rgb(148,163,184);
+            border: 1px solid rgba(148,163,184,0.15);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .major-set-tab:hover {
+            background: linear-gradient(135deg, rgba(42,42,62,0.8), rgba(62,62,82,0.6));
+            color: rgb(200,210,220);
+            border-color: rgba(148,163,184,0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .major-set-tab.active {
+            background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(168,85,247,0.25));
+            color: white;
+            border: 1px solid rgba(99,102,241,0.5);
+            box-shadow: 0 4px 16px rgba(99,102,241,0.25);
+        }
+    \`;
+    document.head.appendChild(style);
+}
+
+// ── 한국어 번역 레이블 (전공 리포트용) ──
+const STAGE_LABELS_M = {
+    job_explore: '탐색 단계', job_student: '학생 단계', job_prepare: '취업 준비',
+    job_early: '초기 커리어 (0~3년)', job_mid: '경력자 (3년+)',
+    job_transition: '전환/복귀', job_second: '세컨드 커리어',
+    major_child: '어린이', major_elementary: '초등학생', major_middle: '중학생',
+    major_high: '고등학생', major_freshman: '대학 신입생',
+    major_student: '대학 재학생', major_graduate: '대학원 준비',
+};
+const VALUE_LABELS_M = {
+    recognition: '인정받고 영향력 발휘', stability: '안정성', income: '높은 수입',
+    growth: '성장', autonomy: '자율성', meaning: '의미/사회 기여',
+    wlb: '워라밸', balance: '일과 삶의 균형', expertise: '전문성', creativity: '창의성',
+};
+const WORKSTYLE_LABELS_M = {
+    solo: '혼자 집중', solo_deep: '혼자 깊이 집중', team: '팀 협업',
+    team_harmony: '팀 조화', mixed: '상황에 따라', structured: '체계적 환경', flexible: '자유로운 환경',
+};
+const INTEREST_LABELS_M = {
+    problem_solving: '문제 해결', data_numbers: '데이터/숫자', tech: '기술/IT',
+    creative: '창작/예술', people: '사람/소통', helping: '돌봄/봉사', helping_teaching: '교육/봉사',
+    business: '비즈니스/경영', nature: '자연/환경', physical: '신체 활동',
+    research: '연구/탐구', teaching: '교육/가르침', analysis: '분석',
+    design: '디자인', writing: '글쓰기', hands_on: '손으로 만들기',
+    creating: '창작 활동', organizing: '조직/관리', influencing: '영향력 발휘',
+};
+const STRENGTH_LABELS_M = {
+    analytical: '분석력', creative: '창의력', communication: '소통력',
+    structured_execution: '실행력', persistence: '끈기', fast_learning: '학습력',
+    leadership: '리더십', detail_oriented: '꼼꼼함', patience: '인내심',
+    empathy: '공감 능력', organization: '체계적 정리', adaptability: '적응력',
+    perseverance: '끈기', creativity: '창의성', strategic: '전략적 사고',
+    teamwork: '팀워크', independence: '독립적 업무',
+};
+const DRAIN_LABELS_M = {
+    people_drain: '대인관계 스트레스', cognitive_drain: '인지 피로',
+    time_pressure_drain: '시간 압박 스트레스', responsibility_drain: '책임 스트레스',
+    repetition_drain: '반복 피로', unpredictability_drain: '불확실성 스트레스',
+    routine_drain: '반복 업무 피로', bureaucracy_drain: '관료주의 스트레스',
+    pressure_drain: '마감 압박', conflict_drain: '갈등 상황',
+    isolation_drain: '고립된 환경', physical_drain: '신체적 피로', uncertainty_drain: '불확실성',
+};
+const SACRIFICE_LABELS_M = {
+    low_initial_income: '낮은 초봉 감수', willing_to_study: '재학습 감수',
+    field_change_ok: '분야 전환 감수', ignore_social_pressure: '주변 시선 감수',
+    no_sacrifice: '포기 불가', unstable_hours: '불규칙한 시간 감수',
+    long_hours_ok: '긴 근무시간 감수', long_hours: '긴 근무시간',
+    relocation: '거주지 이동', unstable_early: '초기 불안정 감수',
+};
+const CONSTRAINT_LABELS_M = {
+    time_constraint: '시간 제약', income_constraint: '수입 조건',
+    location_constraint: '위치 제약', physical_constraint: '체력 제약',
+    qualification_constraint: '자격 제약', uncertainty_constraint: '불확실성 회피',
+    health_constraint: '건강 제약', math_impossible: '수학 불가',
+    low_employment_avoid: '낮은 취업률 회피',
+    work_hours_strict: '불규칙한 근무시간', no_travel: '출장 불가',
+    no_overtime: '야근 불가', remote_only: '재택만 가능',
+    remote_preferred: '재택 선호', prefer_remote: '재택 선호',
+};
+
+function escapeTemplateStringM(str) {
+    if (!str) return str;
+    const backtick = String.fromCharCode(96);
+    return String(str).replace(/\\$/g, '&#36;').replace(new RegExp(backtick, 'g'), '&#96;');
+}
+
+function translateToKorean(text) {
+    if (!text) return text;
+    let result = String(text);
+    const ALL_LABELS = {
+        ...STAGE_LABELS_M, ...VALUE_LABELS_M, ...WORKSTYLE_LABELS_M,
+        ...INTEREST_LABELS_M, ...STRENGTH_LABELS_M, ...DRAIN_LABELS_M,
+        ...SACRIFICE_LABELS_M, ...CONSTRAINT_LABELS_M,
+    };
+    if (ALL_LABELS[result]) return ALL_LABELS[result];
+    const sortedEntries = Object.entries(ALL_LABELS).sort((a, b) => b[0].length - a[0].length);
+    for (const [eng, kor] of sortedEntries) {
+        result = result.replace(new RegExp(eng.replace(/_/g, '[_\\\\s]?'), 'gi'), kor);
+    }
+    return escapeTemplateStringM(result);
+}
+
+function displayPremiumReportV3Major(result) {
+    // 결과 단계: step indicator와 페이지 타이틀 숨김
+    const stepIndicator = document.getElementById('step-indicator');
+    if (stepIndicator) stepIndicator.style.display = 'none';
+    const pageTitle = document.querySelector('h1.text-3xl');
+    if (pageTitle) pageTitle.style.display = 'none';
+    const accountBanner = document.getElementById('account-warning-banner');
+    if (accountBanner) accountBanner.style.display = 'none';
+
+    const report = result.premium_report || {};
+
+    // PremiumReport 타입 데이터 매핑
+    const summary = {
+        headline: report.executiveSummary || report.summary_one_page?.headline || '',
+        top_takeaways: report.lifeVersionStatement?.expanded || report.summary_one_page?.top_takeaways || [],
+        recommended_next_step: report.studyGuidance?.doNow?.[0] || report.summary_one_page?.recommended_next_step || '',
+    };
+
+    const mm = window.miniModuleResult || {};
+
+    // learningStyleNarrative 텍스트 정리 함수
+    function cleanLearningStyleNarrative(text) {
+        if (!text) return null;
+        let cleaned = text;
+        cleaned = cleaned.replace(/\\([^)]*(?:Top2|선호|강점)[^)]*\\)/g, '');
+        const parts = cleaned.split('당신은');
+        if (parts.length > 2) {
+            cleaned = parts[0] + '당신은' + parts.slice(1).join('');
+        }
+        cleaned = cleaned.replace(/\\s+/g, ' ').trim();
+        return cleaned;
+    }
+
+    const personal = {
+        personality_summary: cleanLearningStyleNarrative(report.learningStyleNarrative) ||
+            (report.lifeVersionStatement?.oneLiner) ||
+            (mm.interest_top?.length ? generatePersonalitySummaryMajor(mm) : null),
+        work_style_insights: [
+            report.learningStyleMap?.solo_vs_collaborative ? \`\${translateToKorean(report.learningStyleMap.solo_vs_collaborative > 0 ? '협업학습' : '독립학습')} 학습 스타일을 선호합니다\` : null,
+            report.learningStyleMap?.structured_vs_exploratory ? \`학습 시 \${translateToKorean(report.learningStyleMap.structured_vs_exploratory > 0 ? '탐구적' : '체계적')} 접근을 취합니다\` : null,
+            report.growthCurveDescription || null,
+            ...(report.personal_analysis?.work_style_insights || []),
+        ].filter(Boolean),
+        value_priorities: mm.value_top?.map(v => translateToKorean(v)) ||
+            report.personal_analysis?.value_priorities || [],
+        potential_challenges: [
+            ...(report.stressTriggers || []),
+            ...(report.conflictPatterns || []),
+            ...(report.personal_analysis?.potential_challenges || []),
+        ].slice(0, 3),
+        blind_spots_to_check: report.failurePattern ? [report.failurePattern] :
+            (report.personal_analysis?.blind_spots_to_check || []),
+    };
+
+    // 한국어 받침 판별
+    function hasBatchim(word) {
+        if (!word || word.length === 0) return false;
+        const last = word.charCodeAt(word.length - 1);
+        if (last >= 0xAC00 && last <= 0xD7A3) return (last - 0xAC00) % 28 !== 0;
+        if (last >= 0x30 && last <= 0x39) return [0, 1, 3, 6, 7, 8].includes(last - 0x30);
+        return false;
+    }
+
+    // 성격 요약 생성 헬퍼
+    function generatePersonalitySummaryMajor(mm) {
+        const parts = [];
+        if (mm.interest_top?.length) {
+            const items = mm.interest_top.map(t => translateToKorean(t));
+            const joined = items.length > 1 ? items.slice(0, -1).join(', ') + (hasBatchim(items[items.length - 2]) ? '과 ' : '와 ') + items[items.length - 1] : items[0];
+            parts.push(\`\${joined}에 관심을 가지고 있으며\`);
+        }
+        if (mm.value_top?.length) {
+            const items = mm.value_top.map(t => translateToKorean(t));
+            const lastItem = items[items.length - 1];
+            const joined = items.length > 1 ? items.slice(0, -1).join(', ') + (hasBatchim(items[items.length - 2]) ? '과 ' : '와 ') + lastItem : lastItem;
+            const particle = hasBatchim(lastItem) ? '을' : '를';
+            parts.push(\`\${joined}\${particle} 중요하게 여기는\`);
+        }
+        if (mm.strength_top?.length) {
+            const items = mm.strength_top.map(t => translateToKorean(t));
+            parts.push(\`\${items.join(', ')}에서 강점을 보이는\`);
+        }
+        if (parts.length === 0) return null;
+        return parts.join(' ') + ' 분입니다.';
+    }
+
+    // V3 심리 분석 데이터 매핑
+    const innerConflict = {
+        analysis: report.innerConflictAnalysis || '',
+        patterns: report.conflictPatterns || [],
+    };
+    const growthCurve = {
+        type: report.growthCurveType || '',
+        description: report.growthCurveDescription || '',
+    };
+    const stressProfile = {
+        profile: report.stressProfile || '',
+        triggers: report.stressTriggers || [],
+        failurePattern: report.failurePattern || '',
+    };
+    const profileInterpretation = report.profileInterpretation || null;
+
+    // 학기별 로드맵
+    const academicTimeline = report.academicTimeline || {
+        semester1: { goal: '', actions: [], milestone: '' },
+        semester2: { goal: '', actions: [], milestone: '' },
+        semester3_4: { goal: '', actions: [], milestone: '' },
+        beyond: { goal: '', actions: [], milestone: '' },
+    };
+
+    // 인생 버전 선언문
+    const lifeVersion = {
+        oneLiner: report.lifeVersionStatement?.oneLiner || '',
+        expanded: report.lifeVersionStatement?.expanded || [],
+    };
+
+    // 학습 가이드
+    const studyGuidance = report.studyGuidance || {
+        doNow: [],
+        stopDoing: [],
+        experiment: [],
+        studyTips: [],
+    };
+
+    // 학습 스타일 맵 (5축)
+    const learningStyleMap = report.learningStyleMap || {
+        theoretical_vs_practical: 0,
+        solo_vs_collaborative: 0,
+        structured_vs_exploratory: 0,
+        depth_vs_breadth: 0,
+        guided_vs_autonomous: 0,
+    };
+
+    // 메타인지 분석 결과
+    const metaCognition = report.metaCognition || null;
+
+    // 전공 추천 데이터
+    const fitTopMajors = result.fit_top_majors || [];
+    const majorRecs = report.majorRecommendations || {};
+
+    const overallTop5 = fitTopMajors.length > 0 ? fitTopMajors.slice(0, 5) : (majorRecs.overallTop5 || []);
+    const fitTop10 = (result.can_top10 || fitTopMajors || []).slice(0, 10);
+    const likeTop10 = (result.like_top10 || majorRecs.desireTop10 || []).slice(0, 10);
+
+    // 결과 컨테이너 초기화
+    const container = document.getElementById('step3');
+    if (!container) return;
+
+    // 전공 비전 섹션 HTML 사전 계산
+    let careerVisionHtml = '';
+    if (lifeVersion.oneLiner) {
+        let profileDesc = '';
+        if (profileInterpretation) {
+            const pi = profileInterpretation;
+            const parts = [];
+            if (pi.interests?.length > 0) {
+                parts.push('<span class="text-green-400">' + translateToKorean(pi.interests[0].label) + '</span>에 관심이 있고');
+            }
+            if (pi.strengths?.length > 0) {
+                parts.push('<span class="text-blue-400">' + translateToKorean(pi.strengths[0].label) + '</span>이 강점이며');
+            }
+            if (pi.values?.length > 0) {
+                parts.push('<span class="text-purple-400">' + translateToKorean(pi.values[0].label) + '</span>을 중시하는 당신을 위한 맞춤 분석입니다.');
+            }
+            if (parts.length > 0) {
+                const joined = parts.join(', ');
+                const finalText = joined.endsWith('.') ? joined : joined + '의 프로필입니다.';
+                profileDesc = '<p class="text-[15px] text-wiki-muted mt-3 leading-relaxed">' + finalText + '</p>';
+            }
+        }
+        careerVisionHtml = '<div class="mb-6 p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.1)); border: 1px solid rgba(251,191,36,0.3);"><p class="text-lg md:text-xl font-semibold leading-relaxed" style="color: rgb(251,191,36);">"' + translateToKorean(lifeVersion.oneLiner) + '"</p>' + profileDesc + '</div>';
+    } else if (personal.personality_summary) {
+        const highlightedText = personal.personality_summary.replace(/'([^']+)'/g, '<strong class="text-wiki-secondary font-bold">&#39;$1&#39;</strong>');
+        careerVisionHtml = '<div class="mb-6 p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.3);"><p class="text-lg leading-relaxed text-white">💫 ' + highlightedText + '</p></div>';
+    } else if (profileInterpretation) {
+        const pi = profileInterpretation;
+        const parts = [];
+        if (pi.interests?.length > 0) {
+            parts.push('<span class="text-green-400">' + translateToKorean(pi.interests[0].label) + '</span>을 좋아하고');
+        }
+        if (pi.strengths?.length > 0) {
+            parts.push('<span class="text-blue-400">' + translateToKorean(pi.strengths[0].label) + '</span>에 강점을 가진');
+        }
+        if (pi.values?.length > 0) {
+            const valLabel = translateToKorean(pi.values[0].label);
+            parts.push('<span class="text-purple-400">' + valLabel + '</span>' + (hasBatchim(valLabel) ? '을' : '를') + ' 중요하게 여기는');
+        }
+        const summaryText = parts.length > 0 ? '당신은 ' + parts.join(', ') + ' 사람입니다.' : '당신의 전공 프로필을 분석했습니다.';
+        careerVisionHtml = '<div class="mb-6 p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.3);"><p class="text-lg leading-relaxed text-white">💫 ' + summaryText + '</p></div>';
+    }
+
+    // 탭 UI 생성
+    container.innerHTML = \`
+        <!-- 리포트 헤더 -->
+        <div class="text-center mb-6">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+                <span class="text-2xl">✨</span>
+                당신만의 전공 분석 리포트
+            </h2>
+            <p class="text-wiki-muted text-sm">AI가 분석한 당신의 전공 방향성</p>
+            <div class="flex justify-center items-center gap-2 mt-3">
+                <button onclick="shareReportMajor()" id="share-report-btn" class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition" style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; cursor: pointer;">
+                    <i class="fas fa-share-alt"></i> 공유
+                </button>
+                \${DEBUG_MODE ? \`
+                <button onclick="copyAllReportContent()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6; border: 1px solid rgba(67, 97, 238, 0.3);">
+                    <i class="fas fa-copy"></i> 결과 전체 복사
+                </button>
+                \` : ''}
+            </div>
+        </div>
+
+        <!-- 탭 네비게이션 -->
+        <div class="flex justify-center gap-1 mb-6 flex-wrap" id="report-tabs">
+            <button onclick="showReportTabMajor('summary')" class="report-tab active px-6 py-3 rounded-xl text-base font-semibold transition" data-tab="summary">요약</button>
+            <button onclick="showReportTabMajor('psychology')" class="report-tab px-6 py-3 rounded-xl text-base font-semibold transition" data-tab="psychology">메타인지</button>
+            <button onclick="showReportTabMajor('recommendations')" class="report-tab px-6 py-3 rounded-xl text-base font-semibold transition" data-tab="recommendations">추천 전공</button>
+            <button onclick="showReportTabMajor('details')" class="report-tab px-6 py-3 rounded-xl text-base font-semibold transition" data-tab="details" title="분석 상세">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
+
+        <!-- 탭 컨텐츠: 요약 -->
+        <div id="tab-summary" class="report-tab-content glass-card p-6 rounded-2xl mb-6">
+            <div class="mb-8 pb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-center flex items-center justify-center gap-3">
+                    <span class="text-3xl">📋</span>
+                    <span class="bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">요약</span>
+                </h2>
+                <p class="text-center text-wiki-muted text-sm mt-2">당신의 전공 분석 핵심을 한눈에 확인하세요.</p>
+                <div class="mt-6 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
+            </div>
+
+            <!-- 전공 비전 -->
+            <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                <span>✨</span> 전공 비전
+            </h4>
+            \${careerVisionHtml}
+
+            <!-- 메타인지 요약 (요약 탭) -->
+            \${metaCognition ? \`
+                <div class="mt-8 mb-8">
+                    <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                        <span>📊</span> 메타인지
+                        <button onclick="showReportTabMajor('psychology')" class="ml-auto px-3 py-1.5 rounded-lg text-[13px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
+                            <span>자세히 보기</span>
+                            <i class="fas fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </h4>
+
+                    \${(() => {
+                        const metaSummarySections = [
+                            metaCognition.myArsenal?.strengths?.length > 0 ? 'strengths' : null,
+                            profileInterpretation?.values?.length > 0 ? 'values' : null,
+                            metaCognition.stressRecovery?.stressFactors?.length > 0 ? 'stress' : null,
+                        ].filter(Boolean);
+                        const metaSummaryCount = metaSummarySections.length;
+                        const metaSummaryGridClass = metaSummaryCount <= 1 ? 'grid grid-cols-1 gap-4' : metaSummaryCount === 2 ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'grid grid-cols-1 md:grid-cols-3 gap-4';
+                        return '<div class="' + metaSummaryGridClass + '">';
+                    })()}
+                        <!-- 핵심 강점 -->
+                        \${metaCognition.myArsenal?.strengths?.length > 0 ? \`
+                            <div class="p-4 rounded-xl" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-lg">💪</span>
+                                    <h5 class="font-bold text-green-400 text-[15px]">핵심 강점</h5>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    \${metaCognition.myArsenal.strengths.slice(0, 3).map(s => \`
+                                        <span class="px-2.5 py-1 rounded text-[15px] font-medium" style="background-color: rgba(34,197,94,0.15); color: rgb(134,239,172);">\${translateToKorean(s.trait)}</span>
+                                    \`).join('')}
+                                </div>
+                            </div>
+                        \` : ''}
+
+                        <!-- 핵심 가치 -->
+                        \${profileInterpretation?.values?.length > 0 ? \`
+                            <div class="p-4 rounded-xl" style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2);">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-lg">⭐</span>
+                                    <h5 class="font-bold text-purple-400 text-[15px]">핵심 가치</h5>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    \${profileInterpretation.values.slice(0, 3).map(v => \`
+                                        <span class="px-2.5 py-1 rounded text-[15px] font-medium" style="background-color: rgba(168,85,247,0.15); color: rgb(216,180,254);">\${translateToKorean(v.label)}</span>
+                                    \`).join('')}
+                                </div>
+                            </div>
+                        \` : ''}
+
+                        <!-- 스트레스 주의점 -->
+                        \${metaCognition.stressRecovery?.stressFactors?.length > 0 ? \`
+                            <div class="p-4 rounded-xl" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-lg">⚠️</span>
+                                    <h5 class="font-bold text-red-400 text-[15px]">주의점</h5>
+                                    <span class="relative group cursor-help">
+                                        <i class="fas fa-question-circle text-wiki-muted text-xs"></i>
+                                        <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(30,30,40,0.95); border: 1px solid rgba(255,255,255,0.1);">이 항목들은 에너지가 소모되거나 스트레스를 유발할 수 있는 요인입니다.<br/>전공 선택 시 이 요인들을 고려하면 번아웃을 예방할 수 있습니다.</span>
+                                    </span>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    \${metaCognition.stressRecovery.stressFactors.slice(0, 2).map(s => \`
+                                        <span class="px-2.5 py-1 rounded text-[15px] font-medium" style="background-color: rgba(239,68,68,0.15); color: rgb(252,165,165);">\${translateToKorean(s.factor)}</span>
+                                    \`).join('')}
+                                </div>
+                            </div>
+                        \` : ''}
+                    </div>
+                </div>
+            \` : ''}
+
+            <!-- 나의 전공 프로필 (프로필 해석) -->
+            \${profileInterpretation ? \`
+                <div class="mt-8 mb-8">
+                    <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                        <span>🧬</span> 나의 전공 프로필
+                    </h4>
+
+                    \${(() => {
+                        const profileSections = [
+                            profileInterpretation.interests?.length > 0 ? 'interests' : null,
+                            profileInterpretation.strengths?.length > 0 ? 'strengths' : null,
+                            profileInterpretation.values?.length > 0 ? 'values' : null,
+                            profileInterpretation.constraints?.length > 0 ? 'constraints' : null
+                        ].filter(Boolean);
+                        const profileCount = profileSections.length;
+                        const profileGridClass = profileCount <= 1 ? 'grid grid-cols-1 gap-4' : 'grid grid-cols-1 md:grid-cols-2 gap-4';
+                        const profileIsOdd = profileCount > 1 && profileCount % 2 === 1;
+                        const profileLastSection = profileSections[profileCount - 1];
+                        const interestsSpan = profileIsOdd && profileLastSection === 'interests' ? 'md:col-span-2' : '';
+                        const strengthsSpan = profileIsOdd && profileLastSection === 'strengths' ? 'md:col-span-2' : '';
+                        const valuesSpan = profileIsOdd && profileLastSection === 'values' ? 'md:col-span-2' : '';
+                        const constraintsSpan = profileIsOdd && profileLastSection === 'constraints' ? 'md:col-span-2' : '';
+                        return '<div class="' + profileGridClass + '">' +
+
+                        (profileInterpretation.interests?.length > 0 ? '<div class="p-4 rounded-xl ' + interestsSpan + '" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💚</span><h5 class="font-bold text-green-400 text-[15px]">좋아하는 것</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.interests_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.interests.map(item => '<div class="pl-3 border-l-2 border-green-500/30"><div class="font-medium text-green-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '에 대한 관심이 높습니다.') + '</div></div>').join('') + '</div></div>' : '') +
+
+                        (profileInterpretation.strengths?.length > 0 ? '<div class="p-4 rounded-xl ' + strengthsSpan + '" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💪</span><h5 class="font-bold text-blue-400 text-[15px]">잘하는 것</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.strengths_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.strengths.map(item => '<div class="pl-3 border-l-2 border-blue-500/30"><div class="font-medium text-blue-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '이(가) 강점입니다.') + '</div></div>').join('') + '</div></div>' : '') +
+
+                        (profileInterpretation.values?.length > 0 ? '<div class="p-4 rounded-xl ' + valuesSpan + '" style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">⭐</span><h5 class="font-bold text-purple-400 text-[15px]">중요한 가치</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.values_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.values.map(item => '<div class="pl-3 border-l-2 border-purple-500/30"><div class="font-medium text-purple-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '을(를) 중요하게 여깁니다.') + '</div></div>').join('') + '</div></div>' : '') +
+
+                        (profileInterpretation.constraints?.length > 0 ? '<div class="p-4 rounded-xl ' + constraintsSpan + '" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">🚫</span><h5 class="font-bold text-red-400 text-[15px]">피하고 싶은 것</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.constraints_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.constraints.map(item => '<div class="pl-3 border-l-2 border-red-500/30"><div class="font-medium text-red-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning) + '</div></div>').join('') + '</div></div>' : '') +
+
+                        '</div>';
+                    })()}
+                </div>
+            \` : ''}
+
+            <!-- 학습 스타일 힌트 -->
+            \${learningStyleMap && (learningStyleMap.theoretical_vs_practical !== undefined || learningStyleMap.solo_vs_collaborative !== undefined) ? \`
+                <div class="mt-6 flex flex-wrap gap-2 justify-center">
+                    \${[
+                        learningStyleMap.theoretical_vs_practical < 0 ? '📖 이론 중심' : learningStyleMap.theoretical_vs_practical > 0 ? '🔧 실습 중심' : null,
+                        learningStyleMap.solo_vs_collaborative < 0 ? '🧘 독립 학습 선호' : learningStyleMap.solo_vs_collaborative > 0 ? '🤝 협업 학습 선호' : null,
+                        learningStyleMap.structured_vs_exploratory < 0 ? '📋 체계적 학습' : learningStyleMap.structured_vs_exploratory > 0 ? '🔍 탐구적 학습' : null,
+                        learningStyleMap.guided_vs_autonomous > 0 ? '🚀 자기주도 학습' : null,
+                    ].filter(Boolean).map(hint => \`
+                        <span class="px-3 py-1.5 rounded-full text-[13px] font-medium" style="background: rgba(99,102,241,0.1); color: rgb(165,180,252); border: 1px solid rgba(99,102,241,0.2);">\${hint}</span>
+                    \`).join('')}
+                </div>
+            \` : ''}
+
+            <!-- 프로필 → 추천 브릿지 문장 -->
+            \${profileInterpretation && overallTop5.length > 0 ? \`
+                <div class="mt-4 mb-2 p-4 rounded-xl text-center" style="background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(245,158,11,0.05)); border: 1px solid rgba(251,191,36,0.2);">
+                    <p class="text-base md:text-lg" style="color: rgb(253,224,71);">
+                        <span class="font-medium">🎯 이런 당신에게 맞는 전공</span>
+                    </p>
+                    <p class="text-[15px] text-wiki-muted mt-2">
+                        \${(() => {
+                            const parts = [];
+                            const pi = profileInterpretation;
+                            if (pi.interests?.length > 0) {
+                                parts.push('<span class="text-green-400">"' + translateToKorean(pi.interests[0].label) + '"</span>을 좋아하고');
+                            }
+                            if (pi.strengths?.length > 0) {
+                                parts.push('<span class="text-blue-400">"' + translateToKorean(pi.strengths[0].label) + '"</span>이 강점인 당신');
+                            }
+                            if (pi.constraints?.length > 0) {
+                                parts.push('<span class="text-red-400">"' + translateToKorean(pi.constraints[0].label) + '"</span> 없이 성장할 수 있는 전공을 찾았습니다.');
+                            } else if (parts.length > 0) {
+                                parts.push('에게 맞는 전공을 찾았습니다.');
+                            }
+                            return parts.length > 0 ? parts.join(' ') : '당신의 프로필을 바탕으로 전공을 추천합니다.';
+                        })()}
+                    </p>
+                </div>
+            \` : ''}
+
+            <!-- TOP 3 전공 카드 (요약 탭) -->
+            \${overallTop5.length > 0 ? \`
+                <div class="mt-6 pt-4 border-t border-wiki-border/30">
+                    <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                        <span>🏆</span> 추천 전공 Top 3
+                        <button onclick="showReportTabMajor('recommendations')" class="ml-auto px-3 py-1.5 rounded-lg text-[13px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
+                            <span>더보기</span>
+                            <i class="fas fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        \${overallTop5.slice(0, 3).map((major, idx) => {
+                            const majorName = major.major_name || major.major_id || '전공';
+                            const majorSlug = major.slug || encodeURIComponent(majorName);
+                            const rationale = major.rationale || major.one_line_why || '';
+                            const imageUrl = major.image_url || '';
+                            const description = (major.major_description || major.description || major.summary || '').replace(/\\n\\n/g, ' ').replace(/\\n/g, ' ').trim();
+                            const displayDescription = description || '';
+                            const fitScore = major.scores?.fit || major.fit_score || '-';
+                            const likeReason = major.like_reason || '';
+                            const canReason = major.can_reason || '';
+                            const hasReasons = likeReason || canReason;
+
+                            return \`
+                                <a href="/major/\${majorSlug}" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl transition-all hover:scale-[1.02] group"
+                                   style="background: linear-gradient(135deg, rgba(\${idx === 0 ? '245,158,11' : idx === 1 ? '100,116,139' : '180,83,9'},0.15), rgba(\${idx === 0 ? '251,191,36' : idx === 1 ? '148,163,184' : '217,119,6'},0.05)); border: 1px solid rgba(\${idx === 0 ? '245,158,11' : idx === 1 ? '100,116,139' : '180,83,9'},0.3);">
+                                        <div class="mb-3 overflow-hidden rounded-lg" style="aspect-ratio: 16/10;">
+                                            \${imageUrl ? \`
+                                                <img src="\${imageUrl}" alt="\${majorName}"
+                                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                                <div class="hidden w-full h-full items-center justify-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.1));">
+                                                    <i class="fas fa-graduation-cap text-3xl text-wiki-muted"></i>
+                                                </div>
+                                            \` : \`
+                                                <div class="w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.1));">
+                                                    <i class="fas fa-graduation-cap text-3xl text-wiki-muted"></i>
+                                                </div>
+                                            \`}
+                                        </div>
+                                        <div class="flex items-center gap-3 mb-3">
+                                            <span class="text-2xl">\${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</span>
+                                            <span class="font-bold text-lg text-white flex-1 line-clamp-1">\${majorName}</span>
+                                            <span class="text-base font-bold" style="color: rgb(\${idx === 0 ? '251,191,36' : idx === 1 ? '148,163,184' : '217,119,6'});">Fit \${fitScore}</span>
+                                        </div>
+                                        \${major.field_category ? \`<div class="text-xs text-wiki-muted mb-2">\${{engineering:'공학',natural_science:'자연과학',social_science:'사회과학',humanities:'인문학',arts:'예술/체육',medical:'의약/보건',education:'교육',business:'경영/경제',law:'법학',agriculture:'농림/수산',general:'기타'}[major.field_category] || major.field_category}</div>\` : ''}
+                                        \${displayDescription ? \`<p class="text-base text-wiki-muted line-clamp-3 mb-3">\${displayDescription}</p>\` : ''}
+                                        \${hasReasons ? \`
+                                            <div class="space-y-1.5 mt-3 p-3 rounded-lg" style="background: rgba(0,0,0,0.2);">
+                                                \${likeReason ? \`<p class="text-[13px] leading-relaxed text-purple-300/90"><span class="text-purple-400 font-medium">💜 Like:</span> \${likeReason}</p>\` : ''}
+                                                \${canReason ? \`<p class="text-[13px] leading-relaxed text-blue-300/90"><span class="text-blue-400 font-medium">💪 Can:</span> \${canReason}</p>\` : ''}
+                                            </div>
+                                        \` : (rationale && !rationale.includes('자동 생성된 결과') ? \`
+                                            <p class="text-[13px] text-emerald-400/80 mt-3">💡 \${rationale}</p>
+                                        \` : '')}
+                                </a>
+                            \`;
+                        }).join('')}
+                    </div>
+                </div>
+            \` : ''}
+
+        </div>
+
+        <!-- TAB_PSYCHOLOGY_PLACEHOLDER -->
+
+    \`;
+
+    // --- Phase 2: Psychology tab will be appended ---
+    // We build the rest via string concatenation to avoid template literal nesting issues
+
+    // Build psychology tab HTML
+    var psychologyHtml = buildPsychologyTabMajor(personal, metaCognition, profileInterpretation, learningStyleMap, innerConflict, growthCurve, academicTimeline, studyGuidance, stressProfile);
+
+    // Build recommendations tab HTML
+    var recommendationsHtml = buildRecommendationsTabMajor(profileInterpretation, overallTop5, fitTop10, likeTop10);
+
+    // Build details tab HTML
+    var detailsHtml = buildDetailsTabMajor(result, report);
+
+    // Build bottom buttons HTML
+    var bottomHtml = buildBottomButtonsMajor();
+
+    // Replace placeholder and append remaining tabs
+    var currentHtml = container.innerHTML;
+    currentHtml = currentHtml.replace('<!-- TAB_PSYCHOLOGY_PLACEHOLDER -->', psychologyHtml + recommendationsHtml + detailsHtml + bottomHtml);
+    container.innerHTML = currentHtml;
+
+    // 스타일 추가
+    addReportStylesMajor();
+
+    // 전역 데이터 저장
+    window.currentReportData = {
+        report,
+        overallTop5,
+        fitTop10,
+        likeTop10,
+        profileInterpretation,
+    };
+}
+
+// ============================================
+// Psychology Tab Builder
+// ============================================
+function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation, learningStyleMap, innerConflict, growthCurve, academicTimeline, studyGuidance, stressProfile) {
+    var html = '';
+
+    html += '<div id="tab-psychology" class="report-tab-content hidden glass-card p-6 md:p-8 rounded-2xl mb-6">';
+    html += '<div class="mb-8 pb-6">';
+    html += '<h2 class="text-2xl md:text-3xl font-bold text-center flex items-center justify-center gap-3">';
+    html += '<span class="text-3xl">📊</span>';
+    html += '<span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">메타인지</span>';
+    html += '</h2>';
+    html += '<p class="text-center text-wiki-muted text-sm mt-2">자기 자신에 대한 깊은 이해와 내면 탐구.</p>';
+    html += '<div class="mt-6 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>';
+    html += '</div>';
+
+    // 핵심 요약
+    if (personal.personality_summary || metaCognition?.innerExploration?.identityInsight) {
+        html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.3);">';
+        html += '<h4 class="text-xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>';
+        html += '<p class="text-base md:text-lg leading-relaxed text-white mb-4">';
+        var rawText = metaCognition?.innerExploration?.identityInsight || personal.personality_summary || '';
+        var styled = rawText.replace(/'([^']+)'/g, '<strong class="text-wiki-secondary font-bold">$1</strong>');
+        if (profileInterpretation) {
+            var pi = profileInterpretation;
+            (pi.interests || []).forEach(function(i) {
+                var label = translateToKorean(i.label);
+                styled = styled.replace(new RegExp(label, 'g'), '<strong class="text-green-400">' + label + '</strong>');
+            });
+            (pi.strengths || []).forEach(function(s) {
+                var label = translateToKorean(s.label);
+                styled = styled.replace(new RegExp(label, 'g'), '<strong class="text-blue-400">' + label + '</strong>');
+            });
+            (pi.values || []).forEach(function(v) {
+                var label = translateToKorean(v.label);
+                styled = styled.replace(new RegExp(label, 'g'), '<strong class="text-purple-400">' + label + '</strong>');
+            });
+        }
+        html += styled;
+        html += '</p>';
+
+        if (metaCognition?.innerExploration?.innerConflicts) {
+            html += '<div class="p-4 rounded-xl mb-4" style="background-color: rgba(236,72,153,0.08); border-left: 3px solid rgba(236,72,153,0.5);">';
+            html += '<div class="text-[15px] font-medium text-pink-300 mb-2">🎭 알아두면 좋은 내적 갈등</div>';
+            html += '<p class="text-[15px] text-wiki-muted leading-relaxed">' + translateToKorean(metaCognition.innerExploration.innerConflicts) + '</p>';
+            html += '</div>';
+        }
+        if (metaCognition?.innerExploration?.valueAnalysis) {
+            html += '<details class="group">';
+            html += '<summary class="cursor-pointer text-[15px] text-violet-400 font-medium hover:text-violet-300 flex items-center gap-2">';
+            html += '<span>📖</span><span class="group-open:hidden">▶ 추가 설명</span><span class="hidden group-open:inline">▼ 추가 설명</span>';
+            html += '</summary>';
+            html += '<div class="mt-3 p-4 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(139,92,246,0.05);">' + translateToKorean(metaCognition.innerExploration.valueAnalysis) + '</div>';
+            html += '</details>';
+        }
+        html += '</div>';
+    } else {
+        html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.2);">';
+        html += '<h4 class="text-xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>';
+        html += '<p class="text-base md:text-lg leading-relaxed text-wiki-muted">심층 분석을 위해 더 많은 정보가 필요합니다. 심층 질문에 자세히 답변해주시면 더 정확한 분석이 가능합니다.</p>';
+        html += '</div>';
+    }
+
+    // 메타인지 5개 섹션
+    if (metaCognition) {
+        html += buildMetaCognitionSectionsMajor(metaCognition, profileInterpretation);
+    }
+
+    // 작업 스타일 인사이트
+    if (personal.work_style_insights?.length > 0) {
+        html += '<div class="mb-8">';
+        html += '<h4 class="text-xl font-bold mb-4 flex items-center gap-2"><span>🎨</span> 학습 스타일</h4>';
+        html += '<div class="grid gap-3">';
+        personal.work_style_insights.forEach(function(ws) {
+            var text = translateToKorean(ws).trim();
+            if (!text.endsWith('.') && !text.endsWith('다.') && !text.endsWith('요.') && !text.endsWith('니다.')) text += '.';
+            text = text.replace(/(성장|도전|학습|몰입|성취감|자율|창의성|분석|문제|해결|독립|협업|리더십|꼼꼼|유연|안정|전문성|체계)/g, '<strong class="text-indigo-400">$1</strong>');
+            html += '<div class="p-4 rounded-xl bg-wiki-bg/50 flex items-start gap-4" style="border: 1px solid rgba(99,102,241,0.1);"><span class="text-wiki-primary text-lg mt-0.5">✓</span><span class="text-[15px] leading-relaxed text-wiki-text">' + text + '</span></div>';
+        });
+        html += '</div></div>';
+    }
+
+    // 가치 우선순위
+    if (personal.value_priorities?.length > 0) {
+        html += '<div class="mb-8">';
+        html += '<h4 class="text-xl font-bold mb-4 flex items-center gap-2"><span>⭐</span> 가치 우선순위</h4>';
+        var gridCols = Math.min(personal.value_priorities.length, 3);
+        html += '<div class="grid grid-cols-' + gridCols + ' gap-3">';
+        var colors = ['rgba(168,85,247,0.2)', 'rgba(99,102,241,0.2)', 'rgba(59,130,246,0.2)', 'rgba(6,182,212,0.2)', 'rgba(16,185,129,0.2)'];
+        var textColors = ['rgb(216,180,254)', 'rgb(165,180,252)', 'rgb(147,197,253)', 'rgb(103,232,249)', 'rgb(110,231,183)'];
+        personal.value_priorities.slice(0, 5).forEach(function(v, i) {
+            var text = translateToKorean(v).trim();
+            if (text.length < 10) text = text.replace(/\\.$/, '');
+            else if (!text.endsWith('.')) text += '.';
+            html += '<div class="p-3 md:p-4 rounded-xl flex items-center gap-2 justify-center" style="background-color: ' + colors[i % colors.length] + '; border: 1px solid ' + colors[i % colors.length].replace('0.2', '0.3') + ';"><span class="text-sm font-bold" style="color: ' + textColors[i % textColors.length] + ';">#' + (i + 1) + '</span><span class="text-[15px] font-semibold text-wiki-text">' + text + '</span></div>';
+        });
+        html += '</div></div>';
+    }
+
+    // 잠재적 도전
+    if (personal.potential_challenges?.length > 0) {
+        html += '<div class="mb-8 p-5 rounded-xl" style="background-color: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.2);">';
+        html += '<h4 class="text-xl font-bold mb-4 text-orange-400 flex items-center gap-2"><span>⚠️</span> 주의할 점</h4>';
+        html += '<ul class="space-y-3">';
+        personal.potential_challenges.forEach(function(c) {
+            html += '<li class="flex items-center gap-3"><span class="text-orange-400">•</span><span class="text-[15px] leading-relaxed text-wiki-text">' + c + '</span></li>';
+        });
+        html += '</ul></div>';
+    }
+
+    // 블라인드 스팟
+    if (personal.blind_spots_to_check?.length > 0) {
+        html += '<div class="mb-8 p-5 rounded-xl" style="background-color: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);">';
+        html += '<h4 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2"><span>🔍</span> 점검할 블라인드 스팟</h4>';
+        html += '<ul class="space-y-3">';
+        personal.blind_spots_to_check.forEach(function(b) {
+            html += '<li class="flex items-center gap-3"><span class="text-red-400">•</span><span class="text-[15px] leading-relaxed text-wiki-text">' + b + '</span></li>';
+        });
+        html += '</ul></div>';
+    }
+
+    // 학습 스타일 5축 시각화
+    if (learningStyleMap && (learningStyleMap.theoretical_vs_practical !== 0 || learningStyleMap.solo_vs_collaborative !== 0)) {
+        html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(59,130,246,0.1)); border: 1px solid rgba(6,182,212,0.2);">';
+        html += '<h4 class="text-xl font-bold mb-2 text-cyan-400 flex items-center gap-2"><span>📊</span> 학습 스타일 5축 분석</h4>';
+        html += '<p class="text-sm text-wiki-muted mb-5">각 축의 중앙은 균형 상태이며, 좌우로 치우칠수록 해당 성향이 강합니다.</p>';
+        html += '<div class="space-y-5">';
+
+        var axes = [
+            { left: '이론형', right: '실습형', value: learningStyleMap.theoretical_vs_practical, color: 'cyan', leftDesc: '이론과 개념 이해를 통한 학습을 선호합니다', rightDesc: '실험과 실습 중심의 체험적 학습을 선호합니다', balanceDesc: '이론과 실습을 균형 있게 활용합니다' },
+            { left: '독립학습', right: '협업학습', value: learningStyleMap.solo_vs_collaborative, color: 'blue', leftDesc: '혼자 깊이 파고드는 학습에서 에너지를 얻습니다', rightDesc: '동료들과 함께 토론하고 협력할 때 시너지를 냅니다', balanceDesc: '상황에 따라 독립 학습과 협업을 유연하게 전환합니다' },
+            { left: '체계적', right: '탐구적', value: learningStyleMap.structured_vs_exploratory, color: 'violet', leftDesc: '명확한 커리큘럼과 계획 안에서 안정감을 느낍니다', rightDesc: '자유로운 탐구와 발견 중심의 학습을 선호합니다', balanceDesc: '체계와 탐구를 상황에 맞게 조합합니다' },
+            { left: '심화형', right: '융합형', value: learningStyleMap.depth_vs_breadth, color: 'amber', leftDesc: '한 분야를 깊이 파고들어 전문성을 키우는 것을 선호합니다', rightDesc: '다양한 분야를 융합하며 학제간 연결을 즐깁니다', balanceDesc: '깊이와 넓이를 균형 있게 추구합니다' },
+            { left: '교수주도', right: '자기주도', value: learningStyleMap.guided_vs_autonomous, color: 'emerald', leftDesc: '교수의 체계적 가르침과 피드백이 있을 때 성장이 빠릅니다', rightDesc: '스스로 학습 방향을 설정하고 주도적으로 공부합니다', balanceDesc: '적절한 가이드와 자율성의 균형을 추구합니다' },
+        ];
+
+        axes.forEach(function(axis) {
+            var val = axis.value || 0;
+            html += '<div>';
+            html += '<div class="flex items-center gap-4">';
+            html += '<span class="text-sm w-24 text-right ' + (val < 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted') + '">' + axis.left + '</span>';
+            html += '<div class="flex-1 h-3 bg-wiki-border/20 rounded-full relative overflow-hidden">';
+            html += '<div class="absolute top-0 left-1/2 w-px h-full bg-wiki-muted/40 z-10"></div>';
+            if (val === 0) {
+                html += '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-gray-400 rounded-full border-2 border-wiki-bg z-20"></div>';
+            } else {
+                var barStyle = val >= 0
+                    ? 'left: 50%; width: ' + Math.max(val / 2, 3) + '%;'
+                    : 'right: 50%; width: ' + Math.max(Math.abs(val) / 2, 3) + '%;';
+                html += '<div class="absolute top-0 h-full bg-' + axis.color + '-400/80 rounded-full transition-all" style="' + barStyle + '"></div>';
+            }
+            html += '</div>';
+            html += '<span class="text-sm w-24 ' + (val > 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted') + '">' + axis.right + '</span>';
+            html += '</div>';
+            html += '<p class="text-xs text-wiki-muted mt-1 text-center">' + (Math.abs(val) >= 15 ? (val < 0 ? axis.leftDesc : axis.rightDesc) : axis.balanceDesc) + '</p>';
+            html += '</div>';
+        });
+
+        html += '</div></div>';
+    }
+
+    // 내면 갈등 + 성장 곡선
+    if ((innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts) || growthCurve.type) {
+        var bothExist = (innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts) && growthCurve.type;
+        html += '<div class="grid grid-cols-1 ' + (bothExist ? 'md:grid-cols-2' : '') + ' gap-6 mb-8">';
+        if (innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts) {
+            html += '<div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.1)); border: 1px solid rgba(168,85,247,0.2);">';
+            html += '<h4 class="text-xl font-bold mb-4 text-purple-400 flex items-center gap-2"><span>💭</span> 내면 갈등 분석</h4>';
+            if (innerConflict.patterns?.length > 0) {
+                html += '<p class="text-lg font-bold mb-3" style="color: rgb(216,180,254);">' + innerConflict.patterns[0] + '</p>';
+            }
+            html += '<p class="text-[15px] leading-relaxed text-wiki-text mb-4">' + innerConflict.analysis + '</p>';
+            if (innerConflict.patterns?.length > 1) {
+                html += '<div class="mt-4 pt-4 border-t border-purple-400/20"><span class="text-sm text-purple-300 font-semibold">기타 갈등 패턴:</span><ul class="mt-3 space-y-2">';
+                innerConflict.patterns.slice(1).forEach(function(p) {
+                    html += '<li class="flex items-center gap-3"><span class="text-purple-400">•</span><span class="text-[15px] leading-relaxed text-wiki-muted">' + p + '</span></li>';
+                });
+                html += '</ul></div>';
+            }
+            html += '</div>';
+        }
+        if (growthCurve.type) {
+            html += '<div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(52,211,153,0.1)); border: 1px solid rgba(16,185,129,0.2);">';
+            html += '<h4 class="text-xl font-bold mb-4 text-emerald-400 flex items-center gap-2"><span>📈</span> 성장 곡선 유형</h4>';
+            html += '<p class="text-lg font-bold mb-3" style="color: rgb(52,211,153);">' + translateToKorean(growthCurve.type) + '</p>';
+            if (growthCurve.description) {
+                html += '<p class="text-[15px] leading-relaxed text-wiki-text">' + growthCurve.description + '</p>';
+            }
+            html += '</div>';
+        }
+        html += '</div>';
+    }
+
+    // 학기별 로드맵
+    if (academicTimeline.semester1?.goal || academicTimeline.semester2?.goal || academicTimeline.semester3_4?.goal || academicTimeline.beyond?.goal) {
+        html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(99,102,241,0.1)); border: 1px solid rgba(59,130,246,0.2);">';
+        html += '<h4 class="text-xl font-bold mb-2 text-blue-400 flex items-center gap-2"><span>📅</span> 학기별 로드맵</h4>';
+        html += '<p class="text-sm text-wiki-muted mb-5">학기별 목표와 실행 계획을 통해 체계적으로 학업을 준비하세요.</p>';
+        html += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">';
+
+        var semesters = [
+            { key: 'semester1', data: academicTimeline.semester1, label: '1학기', num: '1', color: 'blue', colorText: 'text-blue-300', colorBg: 'rgba(59,130,246,' },
+            { key: 'semester2', data: academicTimeline.semester2, label: '2학기', num: '2', color: 'indigo', colorText: 'text-indigo-300', colorBg: 'rgba(99,102,241,' },
+            { key: 'semester3_4', data: academicTimeline.semester3_4, label: '3-4학기', num: '3+', color: 'violet', colorText: 'text-violet-300', colorBg: 'rgba(139,92,246,' },
+            { key: 'beyond', data: academicTimeline.beyond, label: '졸업 이후', num: '∞', color: 'purple', colorText: 'text-purple-300', colorBg: 'rgba(168,85,247,' },
+        ];
+
+        semesters.forEach(function(sem) {
+            if (sem.data?.goal) {
+                html += '<div class="p-4 rounded-xl" style="background-color: ' + sem.colorBg + '0.1); border: 1px solid ' + sem.colorBg + '0.15);">';
+                html += '<div class="text-sm font-bold ' + sem.colorText + ' mb-3 flex items-center gap-2">';
+                html += '<span class="w-8 h-8 rounded-full bg-' + sem.color + '-500/20 flex items-center justify-center text-' + sem.color + '-400 font-bold">' + sem.num + '</span>';
+                html += sem.label;
+                html += '</div>';
+                html += '<div class="text-base font-semibold text-white mb-3">' + sem.data.goal + '</div>';
+                if (sem.data.actions?.length > 0) {
+                    html += '<ul class="text-sm text-wiki-muted space-y-2 mb-3">';
+                    sem.data.actions.slice(0, 2).forEach(function(a) {
+                        html += '<li class="flex items-center gap-2"><span class="text-' + sem.color + '-400">•</span> ' + a + '</li>';
+                    });
+                    html += '</ul>';
+                }
+                if (sem.data.milestone) {
+                    html += '<div class="text-sm text-' + sem.color + '-400 font-medium">✓ ' + sem.data.milestone + '</div>';
+                }
+                html += '</div>';
+            }
+        });
+
+        html += '</div></div>';
+    }
+
+    // 학습 가이드
+    if (studyGuidance.doNow?.length > 0 || studyGuidance.stopDoing?.length > 0 || studyGuidance.experiment?.length > 0 || studyGuidance.studyTips?.length > 0) {
+        html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.1)); border: 1px solid rgba(34,197,94,0.2);">';
+        html += '<h4 class="text-xl font-bold mb-2 text-green-400 flex items-center gap-2"><span>🧭</span> 학습 가이드</h4>';
+        html += '<p class="text-[15px] text-wiki-muted mb-5">지금 당장 실천할 수 있는 구체적인 조언입니다.</p>';
+
+        var activeSections = [];
+        if (studyGuidance.doNow?.length > 0) activeSections.push('doNow');
+        if (studyGuidance.stopDoing?.length > 0) activeSections.push('stopDoing');
+        if (studyGuidance.experiment?.length > 0) activeSections.push('experiment');
+        if (studyGuidance.studyTips?.length > 0) activeSections.push('studyTips');
+        var count = activeSections.length;
+        var lastSection = activeSections[count - 1];
+        var isOdd = count % 2 === 1;
+        var gridClass = count <= 1 ? 'grid grid-cols-1 gap-4' : 'grid grid-cols-1 md:grid-cols-2 gap-4';
+
+        var doNowSpan = isOdd && lastSection === 'doNow' ? 'md:col-span-2' : '';
+        var stopSpan = isOdd && lastSection === 'stopDoing' ? 'md:col-span-2' : '';
+        var experimentSpan = isOdd && lastSection === 'experiment' ? 'md:col-span-2' : '';
+        var tipsSpan = isOdd && lastSection === 'studyTips' ? 'md:col-span-2' : '';
+
+        html += '<div class="' + gridClass + '">';
+
+        if (studyGuidance.doNow?.length > 0) {
+            html += '<div class="p-5 rounded-xl ' + doNowSpan + '" style="background-color: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.15);"><div class="text-base font-bold text-green-400 mb-3 flex items-center gap-2"><span class="text-xl">✅</span> 지금 시작할 것</div><ul class="space-y-2">';
+            studyGuidance.doNow.slice(0, 3).forEach(function(d) {
+                html += '<li class="flex items-center gap-3"><span class="text-green-400">•</span><span class="text-[15px] text-wiki-text">' + translateToKorean(d) + '</span></li>';
+            });
+            html += '</ul></div>';
+        }
+        if (studyGuidance.stopDoing?.length > 0) {
+            html += '<div class="p-5 rounded-xl ' + stopSpan + '" style="background-color: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.15);"><div class="text-base font-bold text-red-400 mb-3 flex items-center gap-2"><span class="text-xl">🚫</span> 그만해야 할 것</div><ul class="space-y-2">';
+            studyGuidance.stopDoing.slice(0, 3).forEach(function(s) {
+                html += '<li class="flex items-center gap-3"><span class="text-red-400">•</span><span class="text-[15px] text-wiki-text">' + translateToKorean(s) + '</span></li>';
+            });
+            html += '</ul></div>';
+        }
+        if (studyGuidance.experiment?.length > 0) {
+            html += '<div class="p-5 rounded-xl ' + experimentSpan + '" style="background-color: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.15);"><div class="text-base font-bold text-amber-400 mb-3 flex items-center gap-2"><span class="text-xl">🧪</span> 시도해볼 것</div><ul class="space-y-2">';
+            studyGuidance.experiment.slice(0, 3).forEach(function(e) {
+                html += '<li class="flex items-center gap-3"><span class="text-amber-400">•</span><span class="text-[15px] text-wiki-text">' + translateToKorean(e) + '</span></li>';
+            });
+            html += '</ul></div>';
+        }
+        if (studyGuidance.studyTips?.length > 0) {
+            html += '<div class="p-5 rounded-xl ' + tipsSpan + '" style="background-color: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.15);"><div class="text-base font-bold text-blue-400 mb-3 flex items-center gap-2"><span class="text-xl">📚</span> 학습 팁</div><ul class="space-y-2">';
+            studyGuidance.studyTips.slice(0, 3).forEach(function(t) {
+                html += '<li class="flex items-center gap-3"><span class="text-blue-400">•</span><span class="text-[15px] text-wiki-text">' + translateToKorean(t) + '</span></li>';
+            });
+            html += '</ul></div>';
+        }
+
+        html += '</div></div>';
+    }
+
+    // 스트레스 프로필 상세
+    if (stressProfile.profile) {
+        html += '<div class="p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(251,146,60,0.1)); border: 1px solid rgba(239,68,68,0.2);">';
+        html += '<h4 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2"><span>😰</span> 스트레스 프로필</h4>';
+        html += '<p class="text-[15px] leading-relaxed text-wiki-text mb-4">' + stressProfile.profile + '</p>';
+        if (stressProfile.triggers?.length > 0) {
+            html += '<div class="mt-4 pt-4 border-t border-red-400/20"><span class="text-sm text-red-300 font-semibold">주요 트리거:</span><div class="mt-3 flex flex-wrap gap-2">';
+            stressProfile.triggers.forEach(function(t) {
+                html += '<span class="px-3 py-1.5 rounded-lg text-sm font-medium" style="background-color: rgba(239,68,68,0.15); color: rgb(252,165,165);">' + t + '</span>';
+            });
+            html += '</div></div>';
+        }
+        html += '</div>';
+    }
+
+    html += '</div>'; // close tab-psychology
+
+    return html;
+}
+
+// ============================================
+// MetaCognition Sections Builder (identical to job version)
+// ============================================
+function buildMetaCognitionSectionsMajor(metaCognition, profileInterpretation) {
+    var html = '';
+
+    // 강점 + 선호도 (2열 그리드)
+    html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">';
+
+    // 1. 나의 무기고 (강점 + 약점)
+    html += '<div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(99,102,241,0.05)); border: 1px solid rgba(59,130,246,0.15);">';
+    html += '<h4 class="text-lg font-bold mb-4 text-blue-400 flex items-center gap-2"><span>💪</span> 나의 강점</h4>';
+
+    if (metaCognition.myArsenal?.strengths?.length > 0) {
+        html += '<div class="flex flex-wrap gap-2 mb-4">';
+        metaCognition.myArsenal.strengths.forEach(function(s, i) {
+            var icons = { '분석력': '🔍', '창작/예술': '🎨', '소통력': '💬', '체계적 실행력': '📋', '끈기': '💪', '빠른 학습': '⚡', '리더십': '👑', '공감 능력': '🤝', '꼼꼼함': '🔬', '적응력': '🌊' };
+            var icon = icons[translateToKorean(s.trait)] || '✨';
+            html += '<button onclick="document.getElementById(\\'strength-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-4 py-2 rounded-full text-[15px] font-semibold cursor-pointer transition-all hover:scale-105" style="background-color: rgba(34,197,94,0.15); color: rgb(134,239,172);">' + icon + ' ' + translateToKorean(s.trait) + '</button>';
+        });
+        html += '</div>';
+        metaCognition.myArsenal.strengths.forEach(function(s, i) {
+            html += '<div id="strength-detail-' + i + '" class="hidden mb-3 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed animate-fadeIn" style="background-color: rgba(34,197,94,0.05); border-left: 2px solid rgba(34,197,94,0.3);"><span class="font-medium text-green-300">' + translateToKorean(s.trait) + ':</span><span class="ml-1">' + s.meaning + '</span></div>';
+        });
+        if (metaCognition.myArsenal.counselorNote) {
+            html += '<div class="mt-3 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-[15px] font-medium mb-1" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-[15px] text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.myArsenal.counselorNote) + '</p></div>';
+        }
+    } else {
+        html += '<p class="text-[15px] text-wiki-muted">강점 분석을 위해 더 많은 정보가 필요합니다.</p>';
+    }
+
+    if (metaCognition.myArsenal?.weaknesses?.length > 0) {
+        html += '<div class="mt-5 pt-4 border-t border-wiki-border/20">';
+        html += '<div class="text-[15px] font-medium text-orange-400 mb-3 flex items-center gap-2"><span>⚠️</span> 개선 가능 영역</div>';
+        html += '<div class="flex flex-wrap gap-2 mb-3">';
+        metaCognition.myArsenal.weaknesses.forEach(function(w) {
+            html += '<span class="px-3 py-1.5 rounded-full text-[15px]" style="background-color: rgba(251,146,60,0.1); color: rgb(253,186,116);">' + translateToKorean(w.trait) + '</span>';
+        });
+        html += '</div>';
+        html += '<details class="group"><summary class="cursor-pointer text-[15px] text-wiki-muted hover:text-wiki-primary flex items-center gap-1"><span class="group-open:hidden">▶ 극복 방향 보기</span><span class="hidden group-open:inline">▼ 접기</span></summary>';
+        html += '<div class="mt-3 space-y-2 pl-2 border-l-2 border-orange-500/20">';
+        metaCognition.myArsenal.weaknesses.forEach(function(w) {
+            html += '<div class="text-[15px]"><span class="font-medium text-orange-300">' + translateToKorean(w.trait) + ':</span><span class="text-wiki-muted ml-1">' + w.meaning + '</span></div>';
+        });
+        html += '</div></details></div>';
+    }
+
+    html += '</div>'; // close 나의 강점
+
+    // 2. 선호도 지도
+    html += '<div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(168,85,247,0.08), rgba(236,72,153,0.05)); border: 1px solid rgba(168,85,247,0.15);">';
+    html += '<h4 class="text-lg font-bold mb-4 text-purple-400 flex items-center gap-2"><span>🎯</span> 선호도 요약</h4>';
+    html += '<div class="space-y-4">';
+
+    // 좋아하는 것
+    if (metaCognition.preferenceMap?.likes?.length > 0) {
+        html += '<div><div class="text-[15px] font-medium text-green-400 mb-2">💚 좋아하는 것</div><div class="flex flex-wrap gap-1.5 mb-2">';
+        metaCognition.preferenceMap.likes.forEach(function(l, i) {
+            var icons = { '기술/IT': '💻', '문제해결': '🧩', '창작/예술': '🎨', '데이터/숫자': '📊', '사람 돕기': '🤲', '조직/관리': '📋', '영향력': '📢', '연구/탐구': '🔬', '리딩': '👑', '빌딩': '🏗️' };
+            var icon = icons[translateToKorean(l.item)] || '💚';
+            html += '<button onclick="document.getElementById(\\'like-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-2.5 py-1 rounded-lg text-[15px] font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(34,197,94,0.12); color: rgb(134,239,172);">' + icon + ' ' + translateToKorean(l.item) + '</button>';
+        });
+        html += '</div>';
+        metaCognition.preferenceMap.likes.forEach(function(l, i) {
+            html += '<div id="like-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(34,197,94,0.05); border-left: 2px solid rgba(34,197,94,0.3);"><span class="font-medium text-green-300">' + translateToKorean(l.item) + ':</span><span class="ml-1">' + translateToKorean(l.why) + '</span></div>';
+        });
+        html += '</div>';
+    }
+
+    // 피하고 싶은 것
+    if (metaCognition.preferenceMap?.dislikes?.length > 0) {
+        html += '<div><div class="text-[15px] font-medium text-red-400 mb-2">🚫 피하고 싶은 것</div><div class="flex flex-wrap gap-1.5 mb-2">';
+        metaCognition.preferenceMap.dislikes.forEach(function(d, i) {
+            var icons = { '불규칙한 근무시간': '⏰', '재택 선호': '🏠', '야근 없음': '🌙', '출장 없음': '✈️', '교대근무 없음': '🔄', '시간 제약': '⏳', '수입 제약': '💰', '체력 제약': '🏋️', '불확실성 제약': '❓' };
+            var icon = icons[translateToKorean(d.item)] || '🚫';
+            html += '<button onclick="document.getElementById(\\'dislike-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-2.5 py-1 rounded-lg text-[15px] font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(239,68,68,0.12); color: rgb(252,165,165);">' + icon + ' ' + translateToKorean(d.item) + '</button>';
+        });
+        html += '</div>';
+        metaCognition.preferenceMap.dislikes.forEach(function(d, i) {
+            html += '<div id="dislike-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(239,68,68,0.05); border-left: 2px solid rgba(239,68,68,0.3);"><span class="font-medium text-red-300">' + translateToKorean(d.item) + ':</span><span class="ml-1">' + translateToKorean(d.why) + '</span></div>';
+        });
+        html += '</div>';
+    }
+
+    // 잘 맞는 것
+    if (metaCognition.preferenceMap?.fits?.length > 0) {
+        html += '<div><div class="text-[15px] font-medium text-blue-400 mb-2">💙 잘 맞는 것</div><div class="flex flex-wrap gap-1.5 mb-2">';
+        metaCognition.preferenceMap.fits.forEach(function(f, i) {
+            html += '<button onclick="document.getElementById(\\'fit-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-2.5 py-1 rounded-lg text-[15px] font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(59,130,246,0.12); color: rgb(147,197,253);">💙 ' + translateToKorean(f.item) + '</button>';
+        });
+        html += '</div>';
+        metaCognition.preferenceMap.fits.forEach(function(f, i) {
+            html += '<div id="fit-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(59,130,246,0.05); border-left: 2px solid rgba(59,130,246,0.3);"><span class="font-medium text-blue-300">' + translateToKorean(f.item) + ':</span><span class="ml-1">' + translateToKorean(f.why) + '</span></div>';
+        });
+        html += '</div>';
+    }
+
+    html += '</div>'; // close space-y-4
+
+    // 상담사 노트
+    if (metaCognition.preferenceMap?.counselorNote) {
+        html += '<div class="mt-4 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-[15px] font-medium mb-1" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-[15px] text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.preferenceMap.counselorNote) + '</p></div>';
+    }
+
+    html += '</div>'; // close 선호도 요약
+    html += '</div>'; // close 2-col grid
+
+    // 스트레스 + 성장 (2열 그리드)
+    var hasStress = metaCognition.stressRecovery?.stressFactors?.length > 0;
+    var hasGrowth = !!metaCognition.growthPotential;
+    html += '<div class="grid grid-cols-1 ' + (hasStress && hasGrowth ? 'md:grid-cols-2' : '') + ' gap-6 mb-6">';
+
+    // 4. 스트레스 & 회복
+    if (hasStress) {
+        html += '<div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(251,146,60,0.05)); border: 1px solid rgba(239,68,68,0.15);">';
+        html += '<h4 class="text-lg font-bold mb-4 text-red-400 flex items-center gap-2"><span>⚡</span> 스트레스 요인</h4>';
+        html += '<div class="flex flex-wrap gap-2 mb-4">';
+        metaCognition.stressRecovery.stressFactors.forEach(function(s, i) {
+            var icons = { '반복 업무 피로': '🔄', '관료주의 스트레스': '📑', '사람 상대 피로': '👥', '인지 과부하': '🧠', '시간 압박': '⏰', '책임감 부담': '⚖️', '예측 불가': '🌪️', '갈등 상황': '💢', '멀티태스킹': '🔀', '불확실성': '❓' };
+            var icon = icons[translateToKorean(s.factor)] || '⚡';
+            html += '<button onclick="document.getElementById(\\'stress-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-3 py-1.5 rounded-full text-[15px] font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(239,68,68,0.12); color: rgb(252,165,165);">' + icon + ' ' + translateToKorean(s.factor) + '</button>';
+        });
+        html += '</div>';
+        metaCognition.stressRecovery.stressFactors.forEach(function(s, i) {
+            html += '<div id="stress-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(239,68,68,0.05); border-left: 2px solid rgba(239,68,68,0.3);"><span class="font-medium text-red-300">' + translateToKorean(s.factor) + ':</span><span class="ml-1">' + translateToKorean(s.why) + '</span></div>';
+        });
+        if (metaCognition.stressRecovery.counselorNote) {
+            html += '<div class="mt-3 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-[15px] font-medium mb-1" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-[15px] text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.stressRecovery.counselorNote) + '</p></div>';
+        }
+        if (metaCognition.stressRecovery?.recoveryMethods?.length > 0) {
+            html += '<div class="mt-4 pt-4 border-t border-wiki-border/20">';
+            html += '<div class="text-[15px] font-medium text-emerald-400 mb-2 flex items-center gap-2"><span>🌿</span> 회복 방법</div>';
+            html += '<div class="flex flex-wrap gap-2 mb-3">';
+            metaCognition.stressRecovery.recoveryMethods.forEach(function(r) {
+                html += '<span class="px-3 py-1.5 rounded-full text-[15px] font-medium" style="background-color: rgba(16,185,129,0.12); color: rgb(110,231,183);">' + translateToKorean(r.factor) + '</span>';
+            });
+            html += '</div>';
+            html += '<details class="group"><summary class="cursor-pointer text-[15px] text-wiki-muted hover:text-wiki-primary flex items-center gap-1"><span class="group-open:hidden">▶ 왜 회복되는지 이해하기</span><span class="hidden group-open:inline">▼ 접기</span></summary>';
+            html += '<div class="mt-3 space-y-2 text-[15px]">';
+            metaCognition.stressRecovery.recoveryMethods.forEach(function(r) {
+                html += '<div class="p-3 rounded-lg" style="background-color: rgba(16,185,129,0.05);"><span class="font-medium text-emerald-300">' + translateToKorean(r.factor) + ':</span><span class="text-wiki-muted ml-1">' + translateToKorean(r.why) + '</span></div>';
+            });
+            html += '</div></details></div>';
+        }
+        html += '</div>';
+    }
+
+    // 5. 성장 가능성
+    if (hasGrowth) {
+        html += '<div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(52,211,153,0.05)); border: 1px solid rgba(16,185,129,0.15);">';
+        html += '<h4 class="text-lg font-bold mb-4 text-emerald-400 flex items-center gap-2"><span>🌱</span> 성장 가능성</h4>';
+        if (metaCognition.growthPotential.leveragePoints?.length > 0) {
+            html += '<div class="flex flex-wrap gap-2 mb-4">';
+            metaCognition.growthPotential.leveragePoints.forEach(function(p) {
+                var icons = { '분석력': '🔍', '창작/예술': '🎨', '소통력': '💬', '체계적 실행력': '📋', '끈기': '💪', '빠른 학습': '⚡', '리더십': '👑', '공감 능력': '🤝', '꼼꼼함': '🔬', '적응력': '🌊' };
+                var icon = icons[translateToKorean(p)] || '✨';
+                html += '<span class="px-3 py-1.5 rounded-full text-[15px] font-medium" style="background-color: rgba(16,185,129,0.12); color: rgb(110,231,183);">' + icon + ' ' + translateToKorean(p) + '</span>';
+            });
+            html += '</div>';
+        }
+        if (metaCognition.growthPotential.counselorNote) {
+            html += '<div class="p-4 rounded-xl mb-4" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-[15px] font-medium mb-2" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-[15px] text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.growthPotential.counselorNote) + '</p></div>';
+        }
+        if (metaCognition.growthPotential.direction) {
+            html += '<details class="group"><summary class="cursor-pointer text-[15px] text-wiki-muted hover:text-wiki-primary flex items-center gap-1"><span class="group-open:hidden">▶ 성장 방향 상세 보기</span><span class="hidden group-open:inline">▼ 접기</span></summary>';
+            html += '<div class="mt-3 p-4 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(16,185,129,0.05);">🎯 ' + translateToKorean(metaCognition.growthPotential.direction) + '</div>';
+            html += '</details>';
+        }
+        html += '</div>';
+    }
+
+    html += '</div>'; // close stress+growth grid
+    html += '<hr class="border-wiki-border/20 my-8" />';
+
+    return html;
+}
+
+// ============================================
+// Recommendations Tab Builder
+// ============================================
+function buildRecommendationsTabMajor(profileInterpretation, overallTop5, fitTop10, likeTop10) {
+    var html = '';
+
+    html += '<div id="tab-recommendations" class="report-tab-content hidden glass-card p-6 rounded-2xl mb-6">';
+    html += '<div class="mb-8 pb-6">';
+    html += '<h2 class="text-2xl md:text-3xl font-bold text-center flex items-center justify-center gap-3">';
+    html += '<span class="text-3xl">🎓</span>';
+    html += '<span class="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">추천 전공</span>';
+    html += '</h2>';
+    html += '<p class="text-center text-wiki-muted text-sm mt-2">당신에게 맞는 전공을 AI가 분석했습니다.</p>';
+    html += '<div class="mt-6 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>';
+    html += '</div>';
+
+    // 프로필 기반 추천 요약
+    if (profileInterpretation) {
+        html += '<div class="mb-6 p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.08)); border: 1px solid rgba(99,102,241,0.2);">';
+        html += '<h4 class="text-lg font-bold mb-3 flex items-center gap-2" style="color: rgb(165,180,252);"><span>📌</span> 당신의 프로필 기반 추천</h4>';
+        html += '<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">';
+        if (profileInterpretation.interests?.length > 0) {
+            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(34,197,94,0.1);"><span class="text-green-400">💚</span><div><div class="text-base font-semibold text-green-400">흥미</div><div class="text-[15px] text-white">' + profileInterpretation.interests.slice(0, 2).map(function(i) { return i.label; }).join(', ') + '</div></div></div>';
+        }
+        if (profileInterpretation.strengths?.length > 0) {
+            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(59,130,246,0.1);"><span class="text-blue-400">💪</span><div><div class="text-base font-semibold text-blue-400">강점</div><div class="text-[15px] text-white">' + profileInterpretation.strengths.slice(0, 2).map(function(s) { return s.label; }).join(', ') + '</div></div></div>';
+        }
+        if (profileInterpretation.values?.length > 0) {
+            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(168,85,247,0.1);"><span class="text-purple-400">⭐</span><div><div class="text-base font-semibold text-purple-400">가치</div><div class="text-[15px] text-white">' + profileInterpretation.values.slice(0, 2).map(function(v) { return v.label; }).join(', ') + '</div></div></div>';
+        }
+        if (profileInterpretation.constraints?.length > 0) {
+            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(239,68,68,0.1);"><span class="text-red-400">🚫</span><div><div class="text-base font-semibold text-red-400">제약</div><div class="text-[15px] text-white">' + profileInterpretation.constraints.slice(0, 2).map(function(c) { return c.label; }).join(', ') + '</div></div></div>';
+        }
+        html += '</div>';
+        html += '<p class="text-[15px] text-wiki-muted">이 조건들을 종합하여 <span class="text-wiki-primary font-medium">' + (overallTop5.length || fitTop10.length) + '개</span>의 전공을 추천합니다.</p>';
+        html += '</div>';
+    }
+
+    // 3세트 탭
+    html += '<div class="flex gap-3 mb-6">';
+    html += '<button onclick="showMajorSet(\\'overall\\')" class="major-set-tab active flex-1 px-5 py-3.5 rounded-xl text-[15px] font-medium" data-set="overall"><span class="flex items-center justify-center gap-2"><span class="text-lg">🏆</span><span>종합 추천</span></span></button>';
+    html += '<button onclick="showMajorSet(\\'fit\\')" class="major-set-tab flex-1 px-5 py-3.5 rounded-xl text-[15px] font-medium" data-set="fit"><span class="flex items-center justify-center gap-2"><span class="text-lg">💪</span><span>잘 맞을 것 같은 전공</span></span></button>';
+    html += '<button onclick="showMajorSet(\\'desire\\')" class="major-set-tab flex-1 px-5 py-3.5 rounded-xl text-[15px] font-medium" data-set="desire"><span class="flex items-center justify-center gap-2"><span class="text-lg">💖</span><span>좋아할만한 전공</span></span></button>';
+    html += '</div>';
+
+    // 전공 카드들
+    html += '<div id="major-cards-container">';
+    var initialMajors = (overallTop5.length > 0 ? overallTop5 : fitTop10).slice(0, 5);
+    html += renderMajorCardsV3(initialMajors, 'overall', profileInterpretation);
+    html += '</div>';
+
+    html += '</div>'; // close tab-recommendations
+
+    return html;
+}
+
+// ============================================
+// Details Tab Builder
+// ============================================
+function buildDetailsTabMajor(result, report) {
+    var html = '';
+
+    html += '<div id="tab-details" class="report-tab-content hidden glass-card p-6 md:p-8 rounded-2xl mb-6">';
+    html += '<div class="mb-8 pb-6">';
+    html += '<h2 class="text-2xl md:text-3xl font-bold text-center flex items-center justify-center gap-3"><span class="text-3xl">📊</span><span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">분석 상세 정보</span></h2>';
+    html += '<p class="text-center text-wiki-muted text-sm mt-2">AI 추천의 근거와 기술적 분석을 확인하세요.</p>';
+    html += '<p class="text-center text-wiki-muted text-xs mt-1">엔진 버전: ' + (result.engine_version || 'unknown') + '</p>';
+    html += '<div class="mt-6 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>';
+    html += '</div>';
+    html += '<p class="text-base text-wiki-muted mb-6">이 섹션은 AI 추천의 근거, 사용된 알고리즘, 그리고 점수 산출 과정을 상세히 보여줍니다.</p>';
+
+    // 분석 파이프라인 설명
+    html += '<div class="mb-8 p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(34,197,94,0.2);">';
+    html += '<h4 class="text-xl font-bold mb-4 text-emerald-400">🔬 분석 파이프라인</h4>';
+    html += '<div class="space-y-4 text-base">';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">1</span><div><p class="font-medium text-white">벡터 검색 (Vectorize)</p><p class="text-wiki-muted text-[15px]">당신의 답변을 임베딩으로 변환하여 전공 DB에서 의미적으로 유사한 후보를 검색합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">2</span><div><p class="font-medium text-white">TAG 필터링 (Hard Constraints)</p><p class="text-wiki-muted text-[15px]">학습 환경, 선호도 등 절대 조건에 맞지 않는 전공을 제외합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">3</span><div><p class="font-medium text-white">LLM Judge (GPT-4o-mini)</p><p class="text-wiki-muted text-[15px]">남은 후보 전공에 대해 AI가 Like/Can/Fit 점수를 계산하고, 추천 이유를 생성합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">4</span><div><p class="font-medium text-white">LLM Reporter (심리분석)</p><p class="text-wiki-muted text-[15px]">당신의 미니모듈 결과를 바탕으로 학습 스타일과 전공 방향을 분석합니다.</p></div></div>';
+    html += '</div></div>';
+
+    // 입력 데이터 요약
+    html += '<div class="mb-8">';
+    html += '<h4 class="text-xl font-bold mb-4">📝 분석에 사용된 입력 데이터</h4>';
+    html += '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
+    html += '<div class="p-4 rounded-xl bg-wiki-bg/50 text-center"><div class="text-3xl font-bold text-wiki-primary">' + (report._factsCount || 0) + '</div><div class="text-base text-wiki-muted mt-1">수집된 팩트</div></div>';
+    html += '<div class="p-4 rounded-xl bg-wiki-bg/50 text-center"><div class="text-3xl font-bold text-emerald-400">' + (report._answeredQuestions || 0) + '</div><div class="text-base text-wiki-muted mt-1">답변한 질문</div></div>';
+    html += '<div class="p-4 rounded-xl bg-wiki-bg/50 text-center"><div class="text-3xl font-bold text-purple-400">' + (report._totalJobCount || report._candidatesScored || 0).toLocaleString() + '</div><div class="text-base text-wiki-muted mt-1">분석 대상 전공</div></div>';
+    html += '<div class="p-4 rounded-xl bg-wiki-bg/50 text-center"><div class="text-3xl font-bold text-amber-400">6</div><div class="text-base text-wiki-muted mt-1">LLM 호출 횟수</div></div>';
+    html += '</div></div>';
+
+    // AI 추천 시스템 작동 원리
+    html += '<div class="mb-8 p-5 rounded-xl" style="background-color: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);">';
+    html += '<h4 class="text-xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 AI 추천은 이렇게 만들어집니다</h4>';
+    html += '<p class="text-[15px] text-wiki-muted mb-5">이 리포트는 단순 키워드 매칭이 아닌, 3단계 AI 시스템을 거쳐 생성됩니다.</p>';
+
+    // STEP 1 RAG
+    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(34,197,94,0.2); color: rgb(34,197,94);">STEP 1</span><span class="font-bold text-white text-base">RAG — 의미 기반 후보 검색</span></div><p class="text-[14px] text-wiki-muted leading-relaxed mb-2">당신의 답변 전체를 AI 임베딩(숫자 벡터)으로 변환한 뒤, 전공 DB에서 <span class="text-emerald-400">의미적으로 가장 가까운 전공들</span>을 찾습니다.</p><p class="text-[13px] text-wiki-muted/70">"데이터 분석을 좋아한다"고 답하면, 전공명에 \\'분석\\'이 없더라도 데이터 관련 학습을 하는 전공이 후보에 포함됩니다.</p></div>';
+
+    // STEP 2 TAG
+    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(251,191,36,0.2); color: rgb(251,191,36);">STEP 2</span><span class="font-bold text-white text-base">TAG — 절대 조건 필터링</span></div><p class="text-[14px] text-wiki-muted leading-relaxed mb-2">후보 전공들의 속성 태그를 당신의 <span class="text-amber-400">제약 조건</span>과 대조합니다.</p><p class="text-[13px] text-wiki-muted/70">"절대 안 돼" 수준의 제약은 해당 전공을 후보에서 완전히 제거합니다.</p></div>';
+
+    // STEP 3 CAG
+    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(99,102,241,0.2); color: rgb(129,140,248);">STEP 3</span><span class="font-bold text-white text-base">CAG — AI가 직접 평가</span></div><p class="text-[14px] text-wiki-muted leading-relaxed mb-2">남은 후보 전공 각각에 대해, GPT-4o-mini가 당신의 프로필 전체를 읽고 <span class="text-indigo-400">Like(좋아할 가능성)</span>와 <span class="text-blue-400">Can(잘할 가능성)</span> 점수를 매깁니다.</p><p class="text-[13px] text-wiki-muted/70">AI는 단순히 숫자만 매기는 것이 아니라, "왜 이 전공을 좋아할지", "왜 잘할 수 있는지"에 대한 구체적인 이유도 함께 생성합니다.</p></div>';
+
+    // 최종 점수
+    html += '<div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(168,85,247,0.2); color: rgb(192,132,252);">최종</span><span class="font-bold text-white text-base">종합 점수 계산 (Fit)</span></div><p class="text-[14px] text-wiki-muted leading-relaxed mb-3">AI가 매긴 점수를 아래 공식으로 조합하여 최종 순위를 결정합니다.</p>';
+    html += '<div class="p-3 rounded-lg text-center" style="background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);"><p class="text-base font-bold text-white" style="font-family: monospace;">Fit = Like + Can + Background</p></div>';
+    html += '<div class="mt-3 space-y-1 text-[13px] text-wiki-muted/80"><p><span class="text-purple-400 font-medium">Like</span> — 좋아할 전공을 중요하게 반영합니다. 흥미와 가치관이 맞아야 오래 갈 수 있기 때문입니다.</p><p><span class="text-blue-400 font-medium">Can</span> — 잘할 수 있는 전공도 함께 반영합니다. 강점과 역량이 맞아야 성과를 낼 수 있습니다.</p><p><span class="text-amber-400 font-medium">Background</span> — 경력, 학력, 경험이 전공과 얼마나 관련 있는지 평가합니다.</p></div>';
+    html += '</div></div>';
+
+    // 점수 계산 방식
+    html += '<div class="mb-8 rounded-xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.08);">';
+    html += '<div class="px-5 py-3" style="background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08);"><h4 class="text-base font-bold text-wiki-text">💡 점수 계산 방식</h4></div>';
+    html += '<div class="divide-y" style="--tw-divide-opacity: 0.06; --tw-divide-color: rgba(255,255,255,var(--tw-divide-opacity));">';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(52,211,153);"><span class="text-emerald-400 font-bold text-sm w-10 shrink-0 text-center">Fit</span><span class="text-white text-sm font-medium w-20 shrink-0">종합 적합도</span><span class="text-wiki-muted text-[13px]">Like + Can + Background 종합</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(168,85,247);"><span class="text-purple-400 font-bold text-sm w-10 shrink-0 text-center">Like</span><span class="text-white text-sm font-medium w-20 shrink-0">좋아할 가능성</span><span class="text-wiki-muted text-[13px]">관심 분야, 가치관, 우선순위와 전공 특성의 일치도</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(96,165,250);"><span class="text-blue-400 font-bold text-sm w-10 shrink-0 text-center">Can</span><span class="text-white text-sm font-medium w-20 shrink-0">잘할 가능성</span><span class="text-wiki-muted text-[13px]">강점, 학습 스타일, 경험과 전공 요구사항의 적합도</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(251,191,36);"><span class="text-amber-400 font-bold text-sm w-10 shrink-0 text-center">Bg</span><span class="text-white text-sm font-medium w-20 shrink-0">배경 적합도</span><span class="text-wiki-muted text-[13px]">경력, 학력, 자격증, 경험 등 배경의 도움 정도</span></div>';
+    html += '</div></div>';
+
+    // 데이터 소스
+    html += '<div class="p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(99,102,241,0.05)); border: 1px solid rgba(139,92,246,0.2);">';
+    html += '<h4 class="text-xl font-bold mb-4 text-purple-400">📚 데이터 소스</h4>';
+    html += '<div class="grid md:grid-cols-2 gap-4 text-base">';
+    html += '<div><p class="font-medium text-white mb-1">전공 정보</p><p class="text-wiki-muted text-[15px]">커리어넷 + 대학 정보 데이터 통합</p></div>';
+    html += '<div><p class="font-medium text-white mb-1">전공 속성 태깅</p><p class="text-wiki-muted text-[15px]">major_attributes 테이블: 학습환경, 진로 방향 등 속성</p></div>';
+    html += '<div><p class="font-medium text-white mb-1">임베딩 모델</p><p class="text-wiki-muted text-[15px]">OpenAI text-embedding-3-small (1536차원)</p></div>';
+    html += '<div><p class="font-medium text-white mb-1">판단 모델</p><p class="text-wiki-muted text-[15px]">GPT-4o-mini (Like/Can/Fit 점수 및 추천 이유 생성)</p></div>';
+    html += '</div></div>';
+
+    html += '</div>'; // close tab-details
+
+    return html;
+}
+
+// ============================================
+// Bottom Buttons Builder
+// ============================================
+function buildBottomButtonsMajor() {
+    var html = '';
+
+    html += '<div class="flex flex-col sm:flex-row gap-3 justify-center mt-8">';
+    html += '<button onclick="showEditWarningModal()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition hover:opacity-80" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);"><i class="fas fa-edit"></i> 입력한 내용 수정</button>';
+    html += '<button onclick="showAddContextModal()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition hover:opacity-80" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);"><i class="fas fa-plus"></i> 새로운 내용 추가</button>';
+    html += '</div>';
+
+    // 입력 수정 경고 모달
+    html += '<div id="edit-warning-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">';
+    html += '<div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-lg mx-4 shadow-2xl w-full max-h-[90vh] overflow-y-auto">';
+    html += '<div class="mb-5"><div class="w-12 h-12 mx-auto mb-4 bg-amber-500/20 rounded-full flex items-center justify-center"><i class="fas fa-exclamation-triangle text-xl text-amber-400"></i></div>';
+    html += '<h3 class="text-lg font-bold text-white text-center mb-2">입력 내용 수정 안내</h3>';
+    html += '<p class="text-sm text-wiki-muted text-center">기존에 입력했던 내용을 수정할 수 있습니다.<br>단, 수정 범위에 따라 이후 단계의 답변이 초기화될 수 있습니다.</p></div>';
+    html += '<div class="space-y-4 mb-6">';
+    html += '<div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);"><p class="text-sm font-medium text-amber-300 mb-1">Step 1 (프로필 기본정보) 수정 시</p><p class="text-xs text-wiki-muted">Step 2(심층 질문)의 질문이 새로 생성되며, 기존 심층 질문 답변이 모두 초기화됩니다.</p></div>';
+    html += '<div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);"><p class="text-sm font-medium text-amber-300 mb-1">Step 2 (심층 질문) 답변 수정 시</p><p class="text-xs text-wiki-muted">수정한 라운드 이후의 질문들이 새로 생성되며, 해당 라운드 이후 답변이 초기화됩니다.</p></div>';
+    html += '</div>';
+    html += '<div class="flex gap-3">';
+    html += '<button onclick="hideEditWarningModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">취소</button>';
+    html += '<button onclick="navigateToEditMode()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium">수정 시작하기</button>';
+    html += '</div></div></div>';
+
+    // 내용 추가 모달
+    html += '<div id="add-context-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">';
+    html += '<div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-md mx-4 shadow-2xl w-full">';
+    html += '<div class="mb-5"><h3 class="text-lg font-bold text-white mb-2"><i class="fas fa-plus text-emerald-400 mr-2"></i>추가 정보 입력</h3>';
+    html += '<p class="text-sm text-wiki-muted">현재 분석에 반영하고 싶은 추가 정보를 자유롭게 작성해주세요.</p></div>';
+    html += '<textarea id="additional-context-text" class="w-full h-32 p-3 rounded-xl text-sm text-white placeholder-wiki-muted resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50" style="background: rgba(15, 15, 35, 0.6); border: 1px solid rgba(148, 163, 184, 0.2);" placeholder="예: 수학에 관심이 많고 프로그래밍을 좋아합니다. 실험보다는 이론 학습을 선호합니다." minlength="30"></textarea>';
+    html += '<p id="context-char-count" class="text-xs mt-1 text-wiki-muted">0 / 최소 30자</p>';
+    html += '<div class="flex gap-3 mt-4">';
+    html += '<button onclick="hideAddContextModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">취소</button>';
+    html += '<button id="submit-context-btn" onclick="submitAdditionalContext()" disabled class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">추가 후 재분석</button>';
+    html += '</div></div></div>';
+
+    return html;
+}
+
+// ============================================
+// Tab Switching (Major)
+// ============================================
+function showReportTabMajor(tabId) {
+    document.querySelectorAll('.report-tab-content').forEach(function(el) { el.classList.add('hidden'); });
+    document.querySelectorAll('.report-tab').forEach(function(el) { el.classList.remove('active'); });
+
+    var tab = document.getElementById('tab-' + tabId);
+    if (tab) tab.classList.remove('hidden');
+    var btn = document.querySelector('.report-tab[data-tab="' + tabId + '"]');
+    if (btn) btn.classList.add('active');
+}
+
+// ============================================
+// Major Set Switching (recommendation sub-tabs)
+// ============================================
+function showMajorSet(setId) {
+    var data = window.currentReportData;
+    if (!data) return;
+
+    var majorList = [];
+
+    if (setId === 'overall') majorList = (data.overallTop5 || data.fitTop10 || []).slice(0, 5);
+    else if (setId === 'fit') majorList = (data.fitTop10 || []).slice(0, 10);
+    else if (setId === 'desire') majorList = (data.likeTop10 || data.fitTop10 || []).slice(0, 10);
+
+    var container = document.getElementById('major-cards-container');
+    if (container) container.innerHTML = renderMajorCardsV3(majorList, setId, data.profileInterpretation);
+
+    document.querySelectorAll('.major-set-tab').forEach(function(el) { el.classList.remove('active'); });
+    var activeBtn = document.querySelector('.major-set-tab[data-set="' + setId + '"]');
+    if (activeBtn) activeBtn.classList.add('active');
+}
+
+// ============================================
+// Major Card Rendering (V3 compact design)
+// ============================================
+function renderMajorCardsV3(majors, setId, profileInterp) {
+    if (!majors || majors.length === 0) {
+        return '<p class="text-wiki-muted text-center py-8">추천 결과가 없습니다.</p>';
+    }
+
+    setId = setId || 'overall';
+    profileInterp = profileInterp || null;
+
+    return majors.map(function(major, idx) {
+        var majorName = major.major_name || major.major_id || '전공';
+        var majorSlug = major.slug || major.major_id || '';
+        var imageUrl = major.image_url || '';
+        if (imageUrl && imageUrl.includes('/uploads/')) {
+            var parts = imageUrl.split('/');
+            var filename = parts.pop();
+            imageUrl = parts.join('/') + '/' + encodeURIComponent(filename);
+        }
+        var rationale = major.rationale || major.one_line_why || '';
+        var description = (major.major_description || major.description || major.summary || '').replace(/\\n\\n/g, ' ').replace(/\\n/g, ' ').trim();
+        var displayDescription = description || '';
+        var fitScore = major.scores?.fit || major.fit_score || '-';
+        var likeScore = major.scores?.like || major.like_score || '-';
+        var canScore = major.scores?.can || major.can_score || '-';
+        var fieldCategory = major.field_category || '';
+
+        // 탭별 주점수 결정
+        var mainScore, mainScoreLabel, mainScoreColor;
+        var likeReasonText = major.like_reason || '';
+        var canReasonText = major.can_reason || '';
+
+        var isAutoGenerated = rationale.includes('자동 생성된 결과') || rationale.includes('LLM 분석이 진행되지');
+        if (likeReasonText.includes('자동 생성된 결과')) likeReasonText = '';
+        if (canReasonText.includes('자동 생성된 결과')) canReasonText = '';
+
+        if (!likeReasonText && !isAutoGenerated && rationale && !rationale.includes('[')) {
+            likeReasonText = rationale;
+        }
+        if (!likeReasonText && likeScore !== '-') {
+            var ls = parseInt(likeScore) || 0;
+            if (ls >= 70) likeReasonText = '당신의 관심사와 가치관에 잘 맞는 전공입니다.';
+            else if (ls >= 50) likeReasonText = '흥미로운 학습 환경을 제공할 수 있습니다.';
+        }
+        if (!canReasonText && canScore !== '-') {
+            var cs = parseInt(canScore) || 0;
+            if (cs >= 70) canReasonText = '당신의 강점을 잘 발휘할 수 있는 분야입니다.';
+            else if (cs >= 50) canReasonText = '성장 가능성이 있는 분야입니다.';
+        }
+
+        if (setId === 'desire') {
+            mainScore = likeScore; mainScoreLabel = 'Like'; mainScoreColor = 'text-purple-400';
+        } else if (setId === 'fit') {
+            mainScore = canScore; mainScoreLabel = 'Can'; mainScoreColor = 'text-blue-400';
+        } else {
+            mainScore = fitScore; mainScoreLabel = 'Fit'; mainScoreColor = 'text-emerald-400';
+        }
+
+        // 이유 HTML 생성
+        var reasonOuterHtml = '';
+        if (setId === 'overall') {
+            if (likeReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[13px] w-12">💜 Like</span><p class="text-[14px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
+            if (canReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[13px] w-12">💪 Can</span><p class="text-[14px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
+        } else if (setId === 'desire') {
+            if (likeReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[13px] w-12">💜 Like</span><p class="text-[14px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
+        } else {
+            if (canReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[13px] w-12">💪 Can</span><p class="text-[14px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
+        }
+
+        var rankBadge = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '' + (idx + 1);
+
+        // 프로필 매칭 포인트
+        var matchingTags = [];
+        var likeNum = parseInt(likeScore) || 0;
+        var canNum = parseInt(canScore) || 0;
+        var pi = profileInterp || {};
+        var interestLabels = (pi.interests || []).slice(0, 2).map(function(i) { return i.label; });
+        var strengthLabels = (pi.strengths || []).slice(0, 2).map(function(s) { return s.label; });
+
+        if (likeNum >= 65 && interestLabels.length > 0) {
+            matchingTags.push({ icon: '💚', label: interestLabels[0] + ' 흥미', color: 'green' });
+        }
+        if (canNum >= 65 && strengthLabels.length > 0) {
+            matchingTags.push({ icon: '💪', label: strengthLabels[0] + ' 강점', color: 'blue' });
+        }
+
+        var matchingTagsHtml = '';
+        if (matchingTags.length > 0) {
+            matchingTagsHtml = '<div class="flex flex-wrap gap-1.5 mt-2">';
+            matchingTags.forEach(function(tag) {
+                var rgb = tag.color === 'green' ? '34,197,94' : '59,130,246';
+                var textRgb = tag.color === 'green' ? '134,239,172' : '147,197,253';
+                matchingTagsHtml += '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs" style="background: rgba(' + rgb + ',0.15); color: rgb(' + textRgb + ');"><span>' + tag.icon + '</span><span>' + tag.label + '</span></span>';
+            });
+            matchingTagsHtml += '</div>';
+        }
+
+        // 점수 바
+        var fitNum = parseInt(fitScore) || 0;
+        var likeNum2 = parseInt(likeScore) || 0;
+        var canNum2 = parseInt(canScore) || 0;
+        var bgScore = major.feasibility_score || major.feasibilityScore || 0;
+
+        var cardHtml = '';
+        cardHtml += '<div class="rounded-2xl overflow-hidden group transition-all mb-4" style="background: linear-gradient(135deg, rgba(30,30,50,0.9), rgba(25,25,45,0.95)); border: 1px solid rgba(99,102,241,' + (idx < 3 ? '0.25' : '0.12') + ');">';
+
+        // 상단: 썸네일 + 전공 정보
+        cardHtml += '<div class="flex items-stretch">';
+
+        // 썸네일
+        if (imageUrl && imageUrl.trim()) {
+            cardHtml += '<div class="flex-shrink-0 w-28 sm:w-32 relative overflow-hidden">';
+            cardHtml += '<img src="' + imageUrl + '" alt="' + majorName + '" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML=\\'<div class=\\\\\\'w-full h-full flex items-center justify-center\\\\\\' style=\\\\\\'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));\\\\\\' ><i class=\\\\\\'fas fa-graduation-cap text-2xl text-wiki-muted\\\\\\'></i></div>\\';" />';
+            cardHtml += '<div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);"><span class="' + (idx < 3 ? 'text-sm' : 'text-xs font-bold text-wiki-muted') + '">' + rankBadge + '</span></div>';
+            cardHtml += '</div>';
+        } else {
+            cardHtml += '<div class="flex-shrink-0 w-28 sm:w-32 relative flex items-center justify-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));">';
+            cardHtml += '<i class="fas fa-graduation-cap text-2xl text-wiki-muted"></i>';
+            cardHtml += '<div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6);"><span class="' + (idx < 3 ? 'text-sm' : 'text-xs font-bold text-wiki-muted') + '">' + rankBadge + '</span></div>';
+            cardHtml += '</div>';
+        }
+
+        // 전공 정보 + 점수
+        cardHtml += '<div class="flex-1 min-w-0 p-4 flex flex-col justify-between"><div>';
+        cardHtml += '<div class="flex items-start justify-between gap-3 mb-1.5">';
+        cardHtml += '<a href="/major/' + majorSlug + '" target="_blank" rel="noopener noreferrer" class="group-hover:text-wiki-primary transition"><h4 class="font-bold text-lg text-white leading-tight">' + majorName + '</h4></a>';
+        cardHtml += '<div class="flex-shrink-0 text-right"><span class="text-xl font-bold ' + mainScoreColor + '">' + mainScore + '</span><span class="text-xs text-wiki-muted ml-0.5">' + mainScoreLabel + '</span></div>';
+        cardHtml += '</div>';
+
+        if (fieldCategory) {
+            var fieldCategoryKr = {engineering:'공학',natural_science:'자연과학',social_science:'사회과학',humanities:'인문학',arts:'예술/체육',medical:'의약/보건',education:'교육',business:'경영/경제',law:'법학',agriculture:'농림/수산',general:'기타'}[fieldCategory] || fieldCategory;
+            cardHtml += '<div class="text-xs text-wiki-muted mb-1.5">' + fieldCategoryKr + '</div>';
+        }
+        if (displayDescription) {
+            cardHtml += '<p class="text-[14px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">' + displayDescription + '</p>';
+        }
+        cardHtml += matchingTagsHtml;
+        cardHtml += '</div>';
+
+        // 점수 바
+        cardHtml += '<div class="flex items-center gap-3 mt-3 pt-2.5" style="border-top: 1px solid rgba(255,255,255,0.06);">';
+        cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-emerald-400/80 font-medium">Fit</span><span class="text-[11px] text-emerald-400 font-semibold">' + fitScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(fitNum, 100) + '%; background: rgb(52,211,153);"></div></div></div>';
+        cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-purple-400/80 font-medium">Like</span><span class="text-[11px] text-purple-400 font-semibold">' + likeScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(likeNum2, 100) + '%; background: rgb(168,85,247);"></div></div></div>';
+        cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-blue-400/80 font-medium">Can</span><span class="text-[11px] text-blue-400 font-semibold">' + canScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(canNum2, 100) + '%; background: rgb(96,165,250);"></div></div></div>';
+        if (parseInt(bgScore) > 0) {
+            cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-amber-400/80 font-medium">Bg</span><span class="text-[11px] text-amber-400 font-semibold">' + bgScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(parseInt(bgScore) || 0, 100) + '%; background: rgb(251,191,36);"></div></div></div>';
+        }
+        cardHtml += '</div>';
+
+        cardHtml += '</div></div>'; // close flex items-stretch + info div
+
+        // 하단: 추천 이유
+        if (reasonOuterHtml) {
+            cardHtml += '<div class="px-4 pb-4 pt-0"><div class="p-3 rounded-xl space-y-2" style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.1);">' + reasonOuterHtml + '</div></div>';
+        }
+
+        // 하단 액션 바
+        cardHtml += '<div class="flex items-center justify-between px-4 pb-3 ' + (reasonOuterHtml ? '' : 'pt-0') + '">';
+        cardHtml += '<button onclick="event.stopPropagation(); toggleMajorScoresCompact(this)" class="text-[13px] text-wiki-muted hover:text-wiki-primary transition flex items-center gap-1.5" title="상세 점수"><i class="fas fa-chart-bar"></i><span>상세 점수</span></button>';
+        if (majorSlug) {
+            cardHtml += '<a href="/major/' + majorSlug + '" target="_blank" rel="noopener noreferrer" class="text-[13px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1"><span>상세 보기</span><i class="fas fa-arrow-right text-[11px]"></i></a>';
+        }
+        cardHtml += '</div>';
+
+        // 점수 상세 (기본 숨김)
+        cardHtml += '<div class="score-details-compact hidden px-4 pb-3"><div class="p-3 rounded-lg" style="background-color: rgba(26,26,46,0.5);">';
+        cardHtml += getScoreExplanationMajor(likeScore, canScore, fitScore, bgScore);
+        cardHtml += '</div></div>';
+
+        cardHtml += '</div>'; // close card
+
+        return cardHtml;
+    }).join('');
+}
+
+// ============================================
+// Score Explanation (Major - no risk_penalty)
+// ============================================
+function getScoreExplanationMajor(likeVal, canVal, fitVal, bgVal) {
+    var like = parseInt(likeVal) || 0;
+    var can = parseInt(canVal) || 0;
+    var fit = parseInt(fitVal) || 0;
+    var bg = parseInt(bgVal) || 0;
+    var html = '<div class="space-y-2.5 text-[13px]">';
+    html += '<div class="flex items-center justify-between"><span class="text-purple-400">💜 흥미(Like)</span><span class="text-purple-300 font-medium">' + like + '점</span></div>';
+    html += '<div class="flex items-center justify-between"><span class="text-blue-400">💪 역량(Can)</span><span class="text-blue-300 font-medium">' + can + '점</span></div>';
+    if (bg > 0) {
+        html += '<div class="flex items-center justify-between"><span class="text-amber-400">🎓 배경(Background)</span><span class="text-amber-300 font-medium">' + bg + '점</span></div>';
+    }
+    html += '<div class="border-t border-wiki-border/30 pt-2 mt-1 flex items-center justify-between"><span class="text-emerald-400 font-medium">= 적합도(Fit)</span><span class="text-emerald-400 font-bold text-base">' + fit + '점</span></div>';
+    html += '</div>';
+    return html;
+}
+
+// ============================================
+// Toggle Major Scores (compact)
+// ============================================
+function toggleMajorScoresCompact(btn) {
+    var card = btn.closest('.rounded-2xl');
+    if (!card) return;
+    var details = card.querySelector('.score-details-compact');
+    if (details) {
+        details.classList.toggle('hidden');
+    }
+}
+window.toggleMajorScoresCompact = toggleMajorScoresCompact;
+
+        // ============================================
+        // 입력 수정 / 내용 추가 (전공 리포트 하단)
+        // ============================================
+        function showEditWarningModal() {
+            document.getElementById('edit-warning-modal')?.classList.remove('hidden');
+        }
+        function hideEditWarningModal() {
+            document.getElementById('edit-warning-modal')?.classList.add('hidden');
+        }
+        function navigateToEditMode() {
+            if (!currentSessionId) { alert('세션 정보가 없습니다.'); return; }
+            const params = new URLSearchParams({
+                session_id: currentSessionId,
+                edit_mode: 'true',
+            });
+            if (currentRequestId) params.set('source_request_id', String(currentRequestId));
+            window.location.href = '/analyzer/major?' + params.toString();
+        }
+        function showAddContextModal() {
+            document.getElementById('add-context-modal')?.classList.remove('hidden');
+        }
+        function hideAddContextModal() {
+            document.getElementById('add-context-modal')?.classList.add('hidden');
+            const textarea = document.getElementById('additional-context-text');
+            if (textarea) textarea.value = '';
+            updateContextCharCount();
+        }
+        function updateContextCharCount() {
+            const textarea = document.getElementById('additional-context-text');
+            if (!textarea) return;
+            const count = textarea.value.length;
+            const countEl = document.getElementById('context-char-count');
+            if (countEl) countEl.textContent = count + ' / 최소 30자';
+            const btn = document.getElementById('submit-context-btn');
+            if (btn) btn.disabled = count < 30;
+        }
+        document.getElementById('additional-context-text')?.addEventListener('input', updateContextCharCount);
+
+        async function submitAdditionalContext() {
+            const textarea = document.getElementById('additional-context-text');
+            const text = textarea ? textarea.value.trim() : '';
+            if (text.length < 30) return;
+            if (!currentRequestId) { alert('분석 결과 ID가 없습니다.'); return; }
+
+            const btn = document.getElementById('submit-context-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>재분석 중...';
+            }
+
+            try {
+                const res = await fetch('/api/ai-analyzer/add-context', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ request_id: currentRequestId, additional_text: text })
+                });
+                const data = await res.json();
+                if (data.success && data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                } else if (data.success && data.new_request_id) {
+                    window.location.href = '/user/ai-results/' + data.new_request_id;
+                } else {
+                    alert('재분석 요청 실패: ' + (data.message || '알 수 없는 오류'));
+                    if (btn) { btn.disabled = false; btn.innerHTML = '추가 후 재분석'; }
+                }
+            } catch (err) {
+                alert('재분석 요청 중 오류가 발생했습니다.');
+                if (btn) { btn.disabled = false; btn.innerHTML = '추가 후 재분석'; }
+            }
+        }
+
+        // ============================================
+        // 공유 기능 (전공)
+        // ============================================
+        let _shareUrlMajor = null;
+        let _shareTokenMajor = null;
+
+        async function shareReportMajor() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const requestId = urlParams.get('request_id') || urlParams.get('view') || currentRequestId;
+            if (!requestId) { alert('결과 ID가 없습니다.'); return; }
+
+            try {
+                const res = await fetch('/api/ai-analyzer/share', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ request_id: parseInt(requestId) }),
+                });
+                const json = await res.json();
+                if (!json.success) {
+                    alert(json.error || '공유 생성에 실패했습니다.');
+                    return;
+                }
+
+                _shareUrlMajor = json.share_url;
+                _shareTokenMajor = json.token;
+
+                // 글로벌 공유 모달 열기
+                var ogImage = json.share_url + '/og.png';
+                if (window.__openShareModal) {
+                    window.__openShareModal(json.share_url, 'AI가 분석한 나의 전공 적성', ogImage);
+                } else {
+                    // fallback: 클립보드 복사
+                    try {
+                        await navigator.clipboard.writeText(json.share_url);
+                        alert('공유 링크가 복사되었습니다!');
+                    } catch(e) {
+                        prompt('아래 링크를 복사하세요:', json.share_url);
+                    }
+                }
+            } catch (err) {
+                alert('공유 생성 중 오류가 발생했습니다.');
+            }
+        }
+
         function displayConfidenceUI(result) {
             const card = document.getElementById('confidence-card');
             if (!card) return;
-            
+
             // confidence_score 계산
             let confidenceScore = result?.confidence_score;
             if (confidenceScore === undefined) {
@@ -13697,9 +17018,10 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 const opt = ROLE_IDENTITY_OPTIONS.find(o => o.value === careerState.role_identity);
                 decisions.push({ label: '현재 상태: ' + (opt?.label || careerState.role_identity) });
             }
-            if (careerState.transition_status && careerState.transition_status !== 'none') {
-                const opt = TRANSITION_STATUS_OPTIONS.find(o => o.value === careerState.transition_status);
-                decisions.push({ label: '전환 상태: ' + (opt?.label || careerState.transition_status) });
+            if (careerState.transition_status && careerState.transition_status.length > 0) {
+                const MAJOR_TR_LABELS = { first_choice: '첫 전공 선택', exploring: '여러 전공 탐색', major_change: '전과/전공 변경', career_linked: '목표 직업 연계', double_major: '복수전공/부전공', undecided: '아직 모르겠어요' };
+                const labels = (Array.isArray(careerState.transition_status) ? careerState.transition_status : [careerState.transition_status]).map(v => MAJOR_TR_LABELS[v] || v);
+                decisions.push({ label: '전공 선택 상황: ' + labels.join(', ') });
             }
             if (universalAnswers.univ_interest?.length > 0) {
                 decisions.push({ label: '관심 분야: ' + universalAnswers.univ_interest.slice(0, 3).join(', ') });
@@ -13751,24 +17073,22 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 if (serverResponse.ok && serverData.found && serverData.draft && serverData.draft.analysis_type === 'major') {
                     const serverDraft = serverData.draft;
                     pendingServerDraft = serverDraft;
-                    
-                    const stepNames = ['', '상태 선택', '기본 정보', '앞으로의 방향', '심층 질문', '결과'];
+
+                    const stepNamesMap = { 1: '프로필', 2: '프로필', 3: '프로필', 4: '심층 질문', 5: '결과' };
                     const savedDate = new Date(serverDraft.updated_at);
-                    const dateStr = savedDate.toLocaleDateString('ko-KR') + ' ' + 
+                    const dateStr = savedDate.toLocaleDateString('ko-KR') + ' ' +
                                    savedDate.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-                    
-                    document.getElementById('continue-modal-info').innerHTML = 
-                        '<strong class="text-white">' + stepNames[serverDraft.current_step] + '</strong>까지 진행됨<br>' +
+
+                    document.getElementById('continue-modal-info').innerHTML =
+                        '<strong class="text-white">' + (stepNamesMap[serverDraft.current_step] || '프로필') + '</strong>까지 진행됨<br>' +
                         '<span class="text-xs">마지막 작업: ' + dateStr + '</span>';
                     
                     document.getElementById('continue-modal').classList.remove('hidden');
-                    console.log('[AutoRestore] Server draft found at step', serverDraft.current_step);
                     return 'modal';
                 }
                 
                 // 서버에 major draft가 없으면 로컬 스토리지도 정리
                 if (serverResponse.ok && !serverData.found) {
-                    console.log('[AutoRestore] Server has no major draft, clearing local storage');
                     localStorage.removeItem('analyzer_draft_major');
                     localStorage.removeItem('analyzer_draft_major_timestamp');
                     return false;
@@ -13789,15 +17109,15 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 
                 const draft = JSON.parse(draftStr);
                 pendingDraft = draft;
-                
+
                 if (draft.currentStep >= 1) {
-                    const stepNames = ['', '상태 선택', '기본 정보', '앞으로의 방향', '심층 질문', '결과'];
+                    const stepNamesMap = { 1: '프로필', 2: '프로필', 3: '프로필', 4: '심층 질문', 5: '결과' };
                     const savedDate = new Date(savedTime);
-                    const dateStr = savedDate.toLocaleDateString('ko-KR') + ' ' + 
+                    const dateStr = savedDate.toLocaleDateString('ko-KR') + ' ' +
                                    savedDate.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-                    
-                    document.getElementById('continue-modal-info').innerHTML = 
-                        '<strong class="text-white">' + stepNames[draft.currentStep] + '</strong>까지 진행됨<br>' +
+
+                    document.getElementById('continue-modal-info').innerHTML =
+                        '<strong class="text-white">' + (stepNamesMap[draft.currentStep] || '프로필') + '</strong>까지 진행됨<br>' +
                         '<span class="text-xs">마지막 작업: ' + dateStr + '</span>';
                     
                     document.getElementById('continue-modal').classList.remove('hidden');
@@ -13806,7 +17126,6 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 
                 return false;
             } catch (e) {
-                console.warn('[AutoRestore] Failed:', e);
                 return false;
             }
         }
@@ -13826,27 +17145,91 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 if (draft.step3_answers) {
                     transitionSignalAnswers = draft.step3_answers;
                 }
-                if (draft.step4_answers) {
-                    window.roundAnswers = draft.step4_answers;
+                // step4_answers 통합 구조에서 개별 필드 추출
+                if (draft.step4_answers && typeof draft.step4_answers === 'object' && Object.keys(draft.step4_answers).length > 0) {
+                    const step4Data = draft.step4_answers;
+                    window.roundAnswers = Array.isArray(step4Data.round_answers) ? step4Data.round_answers : [];
+                    if (step4Data.narrative_facts) window.narrativeFacts = step4Data.narrative_facts;
+                    if (step4Data.narrative_questions) window.savedNarrativeQuestions = step4Data.narrative_questions;
+                    if (step4Data.round_questions) window.roundQuestions = step4Data.round_questions;
+                    if (step4Data.current_round > 0) window.currentRound = step4Data.current_round;
+                } else {
+                    // 하위호환: step4_answers가 비어있으면 top-level 필드에서 복원
+                    if (Array.isArray(draft.round_answers) && draft.round_answers.length > 0) {
+                        window.roundAnswers = draft.round_answers;
+                    }
+                    if (draft.narrative_facts) {
+                        window.narrativeFacts = draft.narrative_facts;
+                    }
+                    if (draft.saved_narrative_questions) {
+                        window.savedNarrativeQuestions = draft.saved_narrative_questions;
+                    }
+                    if (draft.current_round > 0) {
+                        window.currentRound = draft.current_round;
+                    }
                 }
                 if (draft.step1_answers?.stage) {
                     selectedStage = draft.step1_answers.stage;
                 }
-                
+                if (draft.step1_answers?.studentType) {
+                    studentType = draft.step1_answers.studentType;
+                }
+                if (draft.step1_answers?.academicState) {
+                    window.academicState = draft.step1_answers.academicState;
+                }
+
+                // mini_module_result 복원
+                if (draft.mini_module_result) {
+                    window.miniModuleResult = draft.mini_module_result;
+                }
+
                 document.getElementById('continue-modal').classList.remove('hidden');
                 document.getElementById('continue-modal').classList.add('hidden');
-                
+
                 setTimeout(() => {
                     updateStep1Selection();
-                    if (draft.current_step >= 2) {
-                        renderUniversalQuestions();
+                    // 하위옵션 UI 복원
+                    if (studentType === 'high' || studentType === 'univ') {
+                        const subContainer = document.getElementById('student-sub-options');
+                        if (subContainer) {
+                            subContainer.innerHTML = studentType === 'high' ? renderHighSubOptions() : renderUnivSubOptions();
+                            subContainer.classList.remove('hidden');
+                            // 하위옵션 선택 상태 복원
+                            const savedAcademicState = window.academicState;
+                            if (savedAcademicState) {
+                                const subBtn = subContainer.querySelector('[data-value="' + savedAcademicState + '"]');
+                                if (subBtn) {
+                                    subBtn.classList.remove('border-wiki-border/50', 'text-wiki-muted');
+                                    subBtn.classList.add('border-cyan-500', 'bg-cyan-500/20', 'text-white');
+                                }
+                            }
+                            // 대학생 하위: selectedStage로 복원
+                            if (studentType === 'univ' && selectedStage) {
+                                const stageToValue = { major_freshman: 'freshman', major_student: 'current', major_graduate: 'graduate' };
+                                const subVal = stageToValue[selectedStage];
+                                if (subVal) {
+                                    const subBtn = subContainer.querySelector('[data-value="' + subVal + '"]');
+                                    if (subBtn) {
+                                        subBtn.classList.remove('border-wiki-border/50', 'text-wiki-muted');
+                                        subBtn.classList.add('border-cyan-500', 'bg-cyan-500/20', 'text-white');
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (draft.current_step >= 3) {
-                        renderTransitionSignalForm();
+                    // Step 2 (심층 질문) 복원
+                    if (draft.current_step >= 2 && window.currentRound > 0) {
+                        setTimeout(() => {
+                            if (typeof startV3RoundQuestions === 'function') {
+                                startV3RoundQuestions(window.currentRound);
+                            }
+                        }, 300);
                     }
                 }, 200);
-                
-                goToStep(draft.current_step, true);
+
+                // 기존 5단계 → 3단계 매핑: old 1→1, old 2-3→1, old 4→2, old 5→3
+                const mappedStep = draft.current_step <= 3 ? 1 : draft.current_step === 4 ? 2 : 3;
+                goToStep(mappedStep, true);
                 pendingServerDraft = null;
                 return;
             }
@@ -13873,15 +17256,11 @@ app.get('/analyzer/major', requireAuth, (c) => {
             
             setTimeout(() => {
                 updateStep1Selection();
-                if (pendingDraft.currentStep >= 2) {
-                    renderUniversalQuestions();
-                }
-                if (pendingDraft.currentStep >= 3) {
-                    renderTransitionSignalForm();
-                }
             }, 200);
-            
-            goToStep(pendingDraft.currentStep, true);
+
+            // 기존 5단계 → 3단계 매핑
+            const mappedStep = pendingDraft.currentStep <= 3 ? 1 : pendingDraft.currentStep === 4 ? 2 : 3;
+            goToStep(mappedStep, true);
             pendingDraft = null;
         }
         
@@ -13894,7 +17273,27 @@ app.get('/analyzer/major', requireAuth, (c) => {
         function hideRestartWarning() {
             document.getElementById('restart-warning-modal').classList.add('hidden');
         }
-        
+
+        // 저장 버튼 리셋 (내용 변경 시 호출)
+        function resetSaveButtons() {
+            document.querySelectorAll('[id$="-save-btn"]').forEach(btn => {
+                if (btn.dataset.saved === 'true') {
+                    btn.innerHTML = '<i class="fas fa-save mr-2 text-emerald-400"></i>임시저장';
+                    btn.dataset.saved = 'false';
+                    window.analyzerUnsavedChanges = true;
+                }
+            });
+        }
+
+        // beforeunload 핸들러 (저장 확인)
+        window.addEventListener('beforeunload', (e) => {
+            if (window.analyzerUnsavedChanges) {
+                e.preventDefault();
+                e.returnValue = '저장하지 않은 변경사항이 있습니다. 페이지를 떠나시겠습니까?';
+                return e.returnValue;
+            }
+        });
+
         // 서버에 자동 저장 (백그라운드, UI 업데이트 없음)
         async function saveDraftToServer() {
             try {
@@ -13904,20 +17303,52 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 }
                 
                 // 최신 답변 수집
-                const currentUniversalAnswers = typeof collectUniversalAnswers === 'function' 
-                    ? collectUniversalAnswers() 
+                const currentUniversalAnswers = typeof collectUniversalAnswers === 'function'
+                    ? collectUniversalAnswers()
                     : (universalAnswers || {});
                 const currentTransitionAnswers = transitionSignalAnswers || {};
-                
+
+                // 서술형 심층 질문 현재 값 수집
+                const narrativeQ0 = document.getElementById('narrative_q0');
+                const narrativeQ1 = document.getElementById('narrative_q1');
+                const narrativeQ2 = document.getElementById('narrative_q2');
+                const narrativeCareerBg = document.getElementById('narrative_career_bg');
+                if (narrativeQ0 || narrativeQ1 || narrativeQ2) {
+                    const currentQuestions = typeof getNarrativeQuestionsMajor === 'function' ? getNarrativeQuestionsMajor() : null;
+                    window.narrativeFacts = {
+                        storyAnswer: narrativeQ0?.value || '',
+                        life_story: narrativeQ0?.value || '',
+                        question1Answer: narrativeQ1?.value || '',
+                        question2Answer: narrativeQ2?.value || '',
+                        highAliveMoment: narrativeQ1?.value || '',
+                        lostMoment: narrativeQ2?.value || '',
+                        career_background: narrativeCareerBg?.value || '',
+                    };
+                    if (currentQuestions) {
+                        window.savedNarrativeQuestions = currentQuestions;
+                    }
+                }
+
+                // step4_answers 통합 데이터
+                const step4Data = {
+                    round_answers: window.roundAnswers || [],
+                    narrative_facts: window.narrativeFacts || null,
+                    narrative_questions: window.savedNarrativeQuestions || null,
+                    round_questions: window.roundQuestions || null,
+                    current_round: window.currentRound || 0
+                };
+
                 const draftData = {
                     session_id: currentSessionId,
                     analysis_type: 'major',
                     current_step: window.currentStep || currentStep || 1,
-                    profile_sub_step: profileSubStep || 1,  // 프로필 서브스텝
-                    current_round: window.currentRound || 0,  // 심층 질문 라운드
+                    profile_sub_step: profileSubStep || 1,
+                    current_round: window.currentRound || 0,
                     career_state: careerState || {},
-                    step1_answers: { 
+                    step1_answers: {
                         stage: selectedStage,
+                        studentType: studentType,
+                        academicState: window.academicState || null,
                         careerState: careerState || {},
                         profileSubStep: profileSubStep || 1,
                         currentRound: window.currentRound || 0
@@ -13926,10 +17357,12 @@ app.get('/analyzer/major', requireAuth, (c) => {
                     mini_module_selections: typeof miniModuleSelections !== 'undefined' ? miniModuleSelections : null,
                     step2_answers: currentUniversalAnswers,
                     step3_answers: currentTransitionAnswers,
-                    step4_answers: {}
+                    step4_answers: step4Data,
+                    narrative_facts: window.narrativeFacts || null,
+                    round_answers: window.roundAnswers || [],
+                    saved_narrative_questions: window.savedNarrativeQuestions || null,
                 };
                 
-                console.log('[AutoServerSave] Saving draft to server...');
                 
                 const response = await fetch('/api/ai-analyzer/draft/save', {
                     method: 'POST',
@@ -13939,13 +17372,12 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 });
                 
                 if (response.ok) {
-                    console.log('[AutoServerSave] Draft saved to server');
+                    window.analyzerUnsavedChanges = false;
                 }
             } catch (error) {
-                console.warn('[AutoServerSave] Failed:', error);
             }
         }
-        
+
         // 결과 도달 시 서버에 완료 상태 저장 (major)
         async function saveDraftAsCompletedMajor() {
             if (!currentSessionId) return;
@@ -13954,7 +17386,7 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 const draftData = {
                     session_id: currentSessionId,
                     analysis_type: 'major',
-                    current_step: 5,  // major는 step 5가 결과
+                    current_step: 3,  // major는 step 3이 결과
                     career_state: careerState || {},
                     step1_answers: { 
                         stage: selectedStage,
@@ -13973,18 +17405,16 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 });
                 
                 if (response.ok) {
-                    console.log('[SaveCompleted] Draft marked as completed on server (major)');
+                    window.analyzerUnsavedChanges = false;
                     localStorage.removeItem('analyzer_draft_major');
                     localStorage.removeItem('analyzer_draft_major_timestamp');
                 }
             } catch (error) {
-                console.warn('[SaveCompleted] Failed:', error);
             }
         }
         
         // 새로 시작 확정
         async function confirmRestart() {
-            console.log('[confirmRestart] Starting fresh (major)...');
             
             // 1. 로컬 스토리지 삭제
             localStorage.removeItem('analyzer_draft_major');
@@ -13998,12 +17428,9 @@ app.get('/analyzer/major', requireAuth, (c) => {
                 });
                 if (response.ok) {
                     const result = await response.json();
-                    console.log('[confirmRestart] All drafts deleted:', result.deleted_count);
                 } else {
-                    console.warn('[confirmRestart] Delete-all failed:', response.status);
                 }
             } catch (e) {
-                console.warn('[confirmRestart] Delete failed:', e);
             }
             
             // 3. 모달 닫기
@@ -14017,7 +17444,7 @@ app.get('/analyzer/major', requireAuth, (c) => {
             careerState = { role_identity: null, career_stage_years: null, transition_status: null, skill_level: null, constraints: {} };
             universalAnswers = {};
             transitionSignalAnswers = {};
-            window.roundAnswers = {};
+            window.roundAnswers = [];
             selectedStage = '';
             
             // 5. Step 1부터 시작
@@ -14027,15 +17454,70 @@ app.get('/analyzer/major', requireAuth, (c) => {
         // Step 1 UI 복원
         function updateStep1Selection() {
             // 5축 좌표 UI 복원 (간단 버전)
-            console.log('[Restore] Restoring careerState:', careerState);
         }
         
         document.addEventListener('DOMContentLoaded', async () => {
             renderCareerStateForm();
-            
+
             const urlParams = new URLSearchParams(window.location.search);
             const urlSessionId = urlParams.get('session_id');
-            
+
+            // ============================================
+            // 편집 모드 초기화 (Major)
+            // ============================================
+            const urlEditMode = urlParams.get('edit_mode') === 'true';
+            const urlSourceRequestId = urlParams.get('source_request_id');
+
+            if (urlSessionId && urlEditMode && urlSourceRequestId) {
+                const serverDraft = await loadDraftFromServer(urlSessionId);
+                if (!serverDraft) {
+                    alert('원본 데이터를 불러올 수 없습니다.');
+                    window.location.href = '/user/ai-results';
+                    return;
+                }
+
+                const editSessionId = 'edit-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+
+                // Draft 적용
+                currentSessionId = editSessionId;
+                if (serverDraft.step1_answers?.careerState || serverDraft.career_state) {
+                    Object.assign(careerState, serverDraft.step1_answers?.careerState || serverDraft.career_state);
+                }
+                if (serverDraft.step2_answers) {
+                    universalAnswers = serverDraft.step2_answers;
+                }
+                if (serverDraft.step3_answers) {
+                    transitionSignalAnswers = serverDraft.step3_answers;
+                }
+                if (serverDraft.step1_answers?.stage) {
+                    selectedStage = serverDraft.step1_answers.stage;
+                }
+
+                // 편집 모드 전역 상태
+                window.__editMode = true;
+                window.__originalSessionId = urlSessionId;
+                window.__editSessionId = editSessionId;
+                window.__sourceRequestId = parseInt(urlSourceRequestId, 10);
+
+                // 변경 감지용 스냅샷
+                window.__editSnapshot = {
+                    careerState: JSON.stringify(careerState),
+                    universalAnswers: JSON.stringify(universalAnswers),
+                    transitionSignalAnswers: JSON.stringify(transitionSignalAnswers),
+                    narrativeFacts: JSON.stringify(window.narrativeFacts || {}),
+                    roundAnswers: JSON.stringify(window.roundAnswers || []),
+                };
+
+                // UI 복원 + 배너
+                setTimeout(() => {
+                    updateStep1Selection();
+                    showEditModeBanner();
+                }, 200);
+
+                goToStep(1);
+                return;
+            }
+
             if (urlSessionId) {
                 const serverDraft = await loadDraftFromServer(urlSessionId);
                 if (serverDraft) {
@@ -14044,18 +17526,61 @@ app.get('/analyzer/major', requireAuth, (c) => {
                         Object.assign(careerState, serverDraft.step1_answers?.careerState || serverDraft.career_state);
                     }
                     setTimeout(() => updateStep1Selection(), 200);
-                    goToStep(serverDraft.current_step, true);
+                    // 기존 5단계 → 3단계 매핑
+                    const ms = serverDraft.current_step <= 3 ? 1 : serverDraft.current_step === 4 ? 2 : 3;
+                    goToStep(ms, true);
                     return;
                 }
             }
-            
+
+            // 저장된 리포트 뷰 모드 확인 (?view=requestId)
+            const viewResultId = urlParams.get('view');
+            if (viewResultId) {
+                showLoading('리포트 불러오는 중...', '잠시만 기다려주세요');
+                try {
+                    const res = await fetch('/api/ai-analyzer/saved-result/' + viewResultId);
+                    if (!res.ok) {
+                        hideLoading();
+                        console.error('[view] API error:', res.status, res.statusText);
+                        showErrorToastMajor('결과 API 오류: ' + res.status);
+                        goToStep(1);
+                    } else {
+                        const data = await res.json();
+                        hideLoading();
+                        if (data.success && data.result) {
+                            currentRequestId = data.request_id;
+                            // mini_module_result 복원 (프리미엄 리포트 렌더에 필요)
+                            if (data.result.mini_module_result) {
+                                window.miniModuleResult = data.result.mini_module_result;
+                            }
+                            try {
+                                displayResults({ result: data.result, request_id: data.request_id });
+                            } catch (renderErr) {
+                                console.error('[view] displayResults error:', renderErr);
+                                showErrorToastMajor('리포트 렌더링 실패: ' + renderErr.message);
+                            }
+                            goToStep(3);
+                        } else {
+                            console.error('[view] API returned:', data);
+                            showErrorToastMajor('결과를 불러올 수 없습니다: ' + (data.error || 'unknown'));
+                            goToStep(1);
+                        }
+                    }
+                } catch (e) {
+                    hideLoading();
+                    console.error('[view] Exception:', e);
+                    showErrorToastMajor('결과 로딩 실패: ' + (e.message || e));
+                    goToStep(1);
+                }
+            } else {
             const restoredStep = await autoRestoreDraft();
             if (restoredStep === 'modal') {
                 goToStep(1);
             } else {
                 goToStep(1);
             }
-            
+            }
+
             // 입력 변경 감지 - 저장 버튼 리셋 (저장 버튼 자체 제외)
             document.addEventListener('click', (e) => {
                 const target = e.target;
@@ -14135,12 +17660,16 @@ app.get('/help/community-guidelines', (c) => {
 
   const canonicalUrl = buildCanonicalUrl(c.req.url, '/help/community-guidelines')
   const content = `
-    <div class="max-w-[1400px] mx-auto px-4 pt-4 pb-10 sm:pt-12">
+    <div class="max-w-[1400px] mx-auto px-4 pb-10">
       <section class="space-y-10">
-      <header class="space-y-3">
-        <p class="text-xs uppercase tracking-widest text-wiki-secondary">CareerWiki Community</p>
-        <h1 class="text-3xl font-bold text-white">커뮤니티 이용 정책</h1>
-        <p class="text-sm text-wiki-muted">CareerWiki 댓글 커뮤니티의 기본 운영 원칙과 BEST/신고/공감 정책을 한눈에 확인하세요.</p>
+      <header class="mb-8 space-y-3">
+        <div class="flex items-center gap-2 text-xs text-blue-300 font-semibold uppercase tracking-[0.2em]">
+          <i class="fas fa-users-gear"></i><span>커뮤니티 이용 정책</span>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <h1 class="text-3xl md:text-4xl font-bold text-white">커뮤니티 이용 정책</h1>
+          <p class="text-wiki-muted text-[15px]">Careerwiki 댓글 커뮤니티 운영 원칙</p>
+        </div>
       </header>
       <section class="grid gap-6 md:grid-cols-2">
         <article class="glass-card p-6 rounded-xl space-y-4">
@@ -14187,7 +17716,7 @@ app.get('/help/community-guidelines', (c) => {
     renderLayoutWithContext(c,
       content,
       '커뮤니티 이용 정책 - Careerwiki',
-      'CareerWiki 댓글 커뮤니티 운영 원칙과 BEST/신고/공감 정책 안내',
+      'Careerwiki 댓글 커뮤니티 운영 원칙과 BEST/신고/공감 정책 안내',
       false,
       { canonical: canonicalUrl, ogUrl: canonicalUrl }
     )
@@ -14220,7 +17749,6 @@ app.get('/job-template-design', async (c) => {
     
     // job_id가 null인 경우 이름으로 직접 매칭 (더 정확하게)
     if (!sources.results || sources.results.length === 0) {
-      console.log('job_id로 찾기 실패, 이름으로 매칭 시도:', jobRow.name)
       
       // JSON_EXTRACT로 직접 매칭 (SQLite 지원)
       // normalized_payload와 raw_payload 모두 확인
@@ -14233,7 +17761,6 @@ app.get('/job-template-design', async (c) => {
              OR JSON_EXTRACT(raw_payload, '$.duty.job_nm') = ?
         `).bind(jobRow.name, jobRow.name, jobRow.name, jobRow.name).all<JobSourceRow>()
       } catch (e) {
-        console.error('JSON_EXTRACT 실패, 수동 필터링:', e)
         // JSON_EXTRACT 안되면 전체 검색
         const allSources = await db.prepare(`
           SELECT * FROM job_sources WHERE normalized_payload LIKE ? OR raw_payload LIKE ?
@@ -14256,7 +17783,6 @@ app.get('/job-template-design', async (c) => {
       }
     }
     
-    console.log(`찾은 소스: ${sources.results?.length || 0}개`)
 
     if (!sources.results || sources.results.length === 0) {
       c.status(404)
@@ -14266,7 +17792,6 @@ app.get('/job-template-design', async (c) => {
     const html = renderJobTemplateDesignPage(jobRow.name, sources.results)
     return c.html(html)
   } catch (error) {
-    console.error('Template design page error:', error)
     c.status(500)
     return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
   }
@@ -14323,7 +17848,6 @@ app.get('/job-template-design2', async (c) => {
       LEFT JOIN jobs j ON js.job_id = j.id
     `).all<JobSourceRow & { job_name: string }>()
 
-    console.log(`Found ${allSources.results?.length || 0} source records`)
 
     if (!allSources.results || allSources.results.length === 0) {
       c.status(404)
@@ -14348,7 +17872,6 @@ app.get('/job-template-design2', async (c) => {
           work24DJobSamples.push({ ...rawData, _jobName: row.job_name })
         }
       } catch (e) {
-        console.error(`Failed to parse ${row.source_system} for ${row.job_name}:`, e)
       }
     })
 
@@ -14356,7 +17879,6 @@ app.get('/job-template-design2', async (c) => {
     const html = renderJobMergeDesigner(careernetSamples, work24JobSamples, work24DJobSamples)
     return c.html(html)
   } catch (error) {
-    console.error('Job merge designer error:', error)
     c.status(500)
     return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
   }
@@ -14401,7 +17923,6 @@ app.get('/job-template-design2/:slug', async (c) => {
       )
     `).bind(job.id, job.name, job.name, job.name).all<JobSourceRow & { job_name: string }>()
 
-    console.log(`Found ${allSources.results?.length || 0} source records for job: ${job.name}`)
 
     if (!allSources.results || allSources.results.length === 0) {
       c.status(404)
@@ -14473,7 +17994,6 @@ app.get('/job-template-design2/:slug', async (c) => {
           work24DJobSamples.push({ ...rawData, _jobName: row.job_name, _isCurrentJob: true })
         }
       } catch (e) {
-        console.error(`Failed to parse ${row.source_system} for ${row.job_name}:`, e)
       }
     })
 
@@ -14491,7 +18011,6 @@ app.get('/job-template-design2/:slug', async (c) => {
           work24DJobSamples.push({ ...rawData, _jobName: `[예시] ${row.job_name}`, _isCurrentJob: false })
         }
       } catch (e) {
-        console.error(`Failed to parse sample ${row.source_system}:`, e)
       }
     })
 
@@ -14505,7 +18024,6 @@ app.get('/job-template-design2/:slug', async (c) => {
     )
     return c.html(html)
   } catch (error) {
-    console.error('Job merge designer error:', error)
     c.status(500)
     return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
   }
@@ -14550,7 +18068,6 @@ app.get('/major-template-design', async (c) => {
       LEFT JOIN majors m ON ms.major_id = m.id
     `).all<MajorSourceRow & { major_name: string }>()
 
-    console.log(`Found ${allSources.results?.length || 0} major source records`)
 
     if (!allSources.results || allSources.results.length === 0) {
       c.status(404)
@@ -14573,7 +18090,6 @@ app.get('/major-template-design', async (c) => {
           work24MajorSamples.push({ ...normalizedData, _majorName: row.major_name })
         }
       } catch (e) {
-        console.error(`Failed to parse ${row.source_system} for ${row.major_name}:`, e)
       }
     })
 
@@ -14581,7 +18097,6 @@ app.get('/major-template-design', async (c) => {
     const html = renderMajorMergeDesigner(careernetSamples, work24MajorSamples)
     return c.html(html)
   } catch (error) {
-    console.error('Major merge designer error:', error)
     c.status(500)
     return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
   }
@@ -14626,7 +18141,6 @@ app.get('/major-template-design/:slug', async (c) => {
       )
     `).bind(major.id, major.name, major.name, major.name).all<MajorSourceRow & { major_name: string }>()
 
-    console.log(`Found ${allSources.results?.length || 0} source records for major: ${major.name}`)
 
     if (!allSources.results || allSources.results.length === 0) {
       c.status(404)
@@ -14678,7 +18192,6 @@ app.get('/major-template-design/:slug', async (c) => {
           work24MajorSamples.push({ ...normalizedData, _majorName: row.major_name, _isCurrentMajor: true })
         }
       } catch (e) {
-        console.error(`Failed to parse ${row.source_system} for ${row.major_name}:`, e)
       }
     })
 
@@ -14708,7 +18221,6 @@ app.get('/major-template-design/:slug', async (c) => {
     )
     return c.html(html)
   } catch (error) {
-    console.error('Major merge designer error:', error)
     c.status(500)
     return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
   }
@@ -14753,7 +18265,6 @@ app.get('/job-template-design3/:slug', async (c) => {
       )
     `).bind(job.id, job.name, job.name, job.name).all<JobSourceRow & { job_name: string }>()
 
-    console.log(`Found ${allSources.results?.length || 0} source records for job: ${job.name}`)
 
     if (!allSources.results || allSources.results.length === 0) {
       c.status(404)
@@ -14766,7 +18277,6 @@ app.get('/job-template-design3/:slug', async (c) => {
       try {
         mergedProfile = JSON.parse(job.merged_profile_json) as UnifiedJobDetail
       } catch (e) {
-        console.error('Failed to parse merged_profile_json:', e)
       }
     }
 
@@ -14778,7 +18288,6 @@ app.get('/job-template-design3/:slug', async (c) => {
     )
     return c.html(html)
   } catch (error) {
-    console.error('ETL inspection page error:', error)
     c.status(500)
     return c.text('오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)))
   }
@@ -14819,29 +18328,18 @@ app.get('/job', async (c) => {
   const isLoggedIn = !!user
 
   try {
-    // Direct D1 query - no KV cache
-    const result = await searchUnifiedJobs(
-      {
-        keyword,
-        page,
-        perPage,
-        includeSources,
-        sort
-      },
-      c.env
-    )
+    // RAG 검색 (키워드 + 기본 정렬) 또는 D1 직접 검색
+    const result = keyword && sort === 'relevance'
+      ? await ragSearchJobs(c.env, keyword, { page, perPage })
+      : await searchUnifiedJobs(
+          { keyword, page, perPage, includeSources, sort },
+          c.env
+        )
 
     const items = result.items
     const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
 
     try {
-      console.log('[job-list]', {
-        keyword: keyword || '(all)',
-        page,
-        perPage,
-        count: items.length,
-        total: totalCount
-      })
     } catch (_) {}
 
     // 공통 함수 renderJobCard 사용
@@ -14893,7 +18391,7 @@ app.get('/job', async (c) => {
     const content = `
       <div class="max-w-[1400px] mx-auto px-4 md:px-6">
         <!-- 히어로 섹션 with 그라데이션 블렌딩 -->
-        <div class="relative text-center pt-12 pb-12 mb-6 space-y-7">
+        <div class="relative text-center pt-2 pb-12 mb-6 space-y-7">
           <!-- 배경 글로우 + 하단 페이드 -->
           <div class="absolute inset-0 -z-10 overflow-hidden">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-wiki-primary/8 via-wiki-primary/5 to-transparent rounded-full blur-[120px]"></div>
@@ -15283,45 +18781,46 @@ app.get('/major', async (c) => {
 
   try {
     const forceRefresh = c.req.query('refresh') === '1'
-    const { value: result, cacheState } = await withKvCache(
-      c.env.KV,
-      buildListCacheKey('major', { keyword, page, perPage, includeSources, sort }),
-      async () =>
-        searchUnifiedMajors(
-          {
-            keyword,
+    const useRag = !!(keyword && sort === 'relevance')
+
+    let result: UnifiedSearchResult<UnifiedMajorSummaryEntry>
+    let cacheState: CacheState | undefined
+
+    if (useRag) {
+      // RAG 검색 (벡터 + LIKE 폴백) - 자체 KV 임베딩 캐시 사용
+      result = await ragSearchMajors(c.env, keyword, { page, perPage })
+      cacheState = undefined
+    } else {
+      // 기존 LIKE 검색 + KV 결과 캐시
+      const cached = await withKvCache(
+        c.env.KV,
+        buildListCacheKey('major', { keyword, page, perPage, includeSources, sort }),
+        async () =>
+          searchUnifiedMajors(
+            { keyword, page, perPage, includeSources, sort },
+            c.env
+          ),
+        {
+          staleSeconds: LIST_CACHE_STALE_SECONDS,
+          maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS,
+          metadata: {
+            type: 'major-list',
+            keyword: keyword || null,
             page,
             perPage,
-            includeSources,
-            sort
+            includeSources: includeSources ?? []
           },
-          c.env
-        ),
-      {
-        staleSeconds: LIST_CACHE_STALE_SECONDS,
-        maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS,
-        metadata: {
-          type: 'major-list',
-          keyword: keyword || null,
-          page,
-          perPage,
-          includeSources: includeSources ?? []
-        },
-        forceRefresh
-      }
-    )
+          forceRefresh
+        }
+      )
+      result = cached.value
+      cacheState = cached.cacheState
+    }
 
     const items = result.items
     const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
 
     try {
-      console.log('[major-list]', {
-        keyword: keyword || '(all)',
-        page,
-        perPage,
-        count: items.length,
-        total: totalCount
-      })
     } catch (_) {}
 
     const freshnessRecordPromise = recordListFreshness(c.env.KV, {
@@ -15341,10 +18840,10 @@ app.get('/major', async (c) => {
 
     if (c.executionCtx && 'waitUntil' in c.executionCtx) {
       c.executionCtx.waitUntil(
-        freshnessRecordPromise.catch((err) => console.error('[freshness][major]', err))
+        freshnessRecordPromise.catch(() => {})
       )
     } else {
-      freshnessRecordPromise.catch((err) => console.error('[freshness][major]', err))
+      freshnessRecordPromise.catch(() => {})
     }
 
     // 공통 함수 renderMajorCard 사용
@@ -15393,7 +18892,7 @@ app.get('/major', async (c) => {
     const content = `
       <div class="max-w-[1400px] mx-auto px-4 md:px-6">
         <!-- 히어로 섹션 with 그라데이션 블렌딩 -->
-        <div class="relative text-center pt-12 pb-12 mb-6 space-y-7">
+        <div class="relative text-center pt-2 pb-12 mb-6 space-y-7">
           <!-- 배경 글로우 + 하단 페이드 -->
           <div class="absolute inset-0 -z-10 overflow-hidden">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-wiki-secondary/8 via-wiki-secondary/5 to-transparent rounded-full blur-[120px]"></div>
@@ -15715,7 +19214,6 @@ app.get('/major', async (c) => {
           // 로컬 개발 환경에서는 KV가 없을 수 있으므로 조용히 처리
           const isLocalDev = !c.env.KV && !c.env.DB
           if (!isLocalDev) {
-            console.warn('KV cache failed, attempting direct D1 query:', error.message)
           }
           const directResult = await searchUnifiedMajors(
           {
@@ -15870,7 +19368,6 @@ app.get('/major', async (c) => {
         // 로컬 개발 환경에서는 D1이 없을 수 있으므로 조용히 처리
         const isLocalDev = !c.env.KV && !c.env.DB
         if (!isLocalDev) {
-          console.error('Direct D1 query also failed:', fallbackError)
         }
       }
     }
@@ -15878,7 +19375,6 @@ app.get('/major', async (c) => {
     // 로컬 개발 환경에서는 D1이 없을 수 있으므로 조용히 처리
     const isLocalDev = !c.env.KV && !c.env.DB
     if (!isLocalDev) {
-      console.error('Major list route error:', error)
     }
     c.status(500)
     const fallbackHtml = renderDetailFallback({
@@ -15970,7 +19466,6 @@ app.put('/api/howto/:id/update', requireAuth, async (c) => {
     
     return c.json({ success: true, message: '저장되었습니다' })
   } catch (error) {
-    console.error('[update howto] Error:', error)
     return c.json({ success: false, error: '저장 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -16035,9 +19530,7 @@ app.delete('/api/howto/:id', requireAuth, async (c) => {
       for (const key of imageKeysToDelete) {
         try {
           await c.env.UPLOADS.delete(key)
-          console.log(`[delete howto] R2 이미지 삭제: ${key}`)
         } catch (e) {
-          console.error(`[delete howto] R2 이미지 삭제 실패: ${key}`, e)
         }
       }
     }
@@ -16047,7 +19540,6 @@ app.delete('/api/howto/:id', requireAuth, async (c) => {
     
     return c.json({ success: true, message: '삭제되었습니다' })
   } catch (error) {
-    console.error('[delete howto] Error:', error)
     return c.json({ success: false, error: '삭제 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -16311,13 +19803,17 @@ app.get('/howto', async (c) => {
   ` : ''
 
   const content = `
-    <div class="max-w-[1400px] mx-auto px-4 py-8">
+    <div class="max-w-[1400px] mx-auto px-4 pb-8">
       <!-- 헤더 섹션 -->
-      <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 sm:gap-6 mb-6">
-        <div>
-          <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">${keyword ? `"${escapeHtml(keyword)}" 검색 결과` : 'HowTo 가이드'}</h1>
-          <p class="text-wiki-muted">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우를 공유합니다'}</p>
+      <header class="mb-8 space-y-3">
+        <div class="flex items-center gap-2 text-xs text-blue-300 font-semibold uppercase tracking-[0.2em]">
+          <i class="fas fa-book-open"></i><span>${keyword ? '검색 결과' : 'HowTo'}</span>
         </div>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div>
+            <h1 class="text-3xl md:text-4xl font-bold text-white">${keyword ? `"${escapeHtml(keyword)}" 검색 결과` : 'HowTo 가이드'}</h1>
+            <p class="text-wiki-muted text-[15px] mt-1">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우를 공유합니다'}</p>
+          </div>
         <a href="${user ? '/howto/write' : '/login?redirect=/howto/write'}" 
            class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 min-h-[40px] sm:min-h-[44px] bg-wiki-primary/70 hover:bg-wiki-primary/80 text-white text-sm sm:text-base font-medium rounded-xl transition shrink-0 self-end md:self-center"
            ${!user ? 'data-require-login="true"' : ''}>
@@ -16375,7 +19871,6 @@ app.get('/howto', async (c) => {
     )
   )
   } catch (error) {
-    console.error('[howto list] Error:', error)
     return c.text('HowTo 페이지를 불러오는 중 오류가 발생했습니다.', 500)
   }
 })
@@ -16384,8 +19879,9 @@ app.get('/howto', async (c) => {
 app.get('/login', (c) => {
   const queryRedirect = c.req.query('redirect')
   const referer = c.req.header('Referer')
+  const loginError = c.req.query('error')
   let redirect = queryRedirect || '/'
-  
+
   // Referer가 있고 내부 URL이면 사용
   if (!queryRedirect && referer) {
     try {
@@ -16399,14 +19895,18 @@ app.get('/login', (c) => {
       // URL 파싱 실패 시 기본값 사용
     }
   }
-  
+
   const user = getOptionalUser(c)
-  
+
   // 이미 로그인한 경우 리다이렉트
   if (user) {
     return c.redirect(redirect)
   }
-  
+
+  const errorMsg = loginError === '1' ? '아이디 또는 비밀번호가 일치하지 않습니다.'
+    : loginError === '2' ? '로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.'
+    : ''
+
   const content = `
     <div class="min-h-[60vh] flex items-center justify-center px-4 pt-16 md:pt-0">
       <div class="max-w-md w-full">
@@ -16415,12 +19915,12 @@ app.get('/login', (c) => {
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-wiki-primary/10 mb-6">
             <i class="fas fa-user-circle text-3xl text-wiki-primary"></i>
           </div>
-          
-          <h1 class="text-2xl font-bold text-white mb-2">로그인이 필요합니다</h1>
-          <p class="text-wiki-muted mb-8">계속하려면 로그인해주세요</p>
-          
+
+          <h1 class="text-2xl font-bold text-white mb-2">로그인</h1>
+          <p class="text-wiki-muted mb-6">계속하려면 로그인해주세요</p>
+
           <!-- Google 로그인 버튼 -->
-          <a href="/auth/google?return_url=${encodeURIComponent(redirect)}" 
+          <a href="/auth/google?return_url=${encodeURIComponent(redirect)}"
              class="flex items-center justify-center gap-3 w-full px-6 py-3.5 bg-white hover:bg-gray-50 text-gray-800 font-medium rounded-xl transition shadow-sm">
             <svg class="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -16430,9 +19930,47 @@ app.get('/login', (c) => {
             </svg>
             <span>Google로 계속하기</span>
           </a>
-          
+
+          <!-- 구분선 -->
+          <div class="flex items-center gap-3 my-6">
+            <div class="flex-1 h-px bg-wiki-border/40"></div>
+            <span class="text-xs text-wiki-muted">또는</span>
+            <div class="flex-1 h-px bg-wiki-border/40"></div>
+          </div>
+
+          <!-- 테스트 계정 로그인 -->
+          <form method="POST" action="/auth/test-login" class="text-left">
+            <input type="hidden" name="redirect" value="${redirect.replace(/"/g, '&quot;')}" />
+
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs text-wiki-muted mb-1.5">아이디</label>
+                <input type="text" name="id" autocomplete="username"
+                  class="w-full px-4 py-2.5 bg-wiki-bg/80 border border-wiki-border/50 rounded-lg text-white text-sm placeholder-wiki-muted/60 focus:border-wiki-primary focus:outline-none transition"
+                  placeholder="아이디를 입력하세요" />
+              </div>
+              <div>
+                <label class="block text-xs text-wiki-muted mb-1.5">비밀번호</label>
+                <input type="password" name="pw" autocomplete="current-password"
+                  class="w-full px-4 py-2.5 bg-wiki-bg/80 border border-wiki-border/50 rounded-lg text-white text-sm placeholder-wiki-muted/60 focus:border-wiki-primary focus:outline-none transition"
+                  placeholder="비밀번호를 입력하세요" />
+              </div>
+            </div>
+
+            ${errorMsg ? `
+              <p class="mt-3 text-xs text-red-400 text-center">
+                <i class="fas fa-exclamation-circle mr-1"></i>${errorMsg}
+              </p>
+            ` : ''}
+
+            <button type="submit"
+              class="w-full mt-4 px-6 py-2.5 bg-wiki-primary hover:bg-wiki-primary/80 text-white font-medium rounded-lg transition text-sm">
+              로그인
+            </button>
+          </form>
+
           <p class="text-xs text-wiki-muted mt-6 leading-relaxed">
-            로그인하면 <a href="/terms" class="text-wiki-primary hover:underline py-1 inline-block">이용약관</a> 및 
+            로그인하면 <a href="/terms" class="text-wiki-primary hover:underline py-1 inline-block">이용약관</a> 및
             <a href="/privacy" class="text-wiki-primary hover:underline py-1 inline-block">개인정보처리방침</a>에 동의하게 됩니다.
           </p>
         </div>
@@ -16449,309 +19987,11 @@ app.get('/login', (c) => {
   )
 })
 
-// 이용약관 페이지
-app.get('/terms', (c) => {
-  const content = `
-    <div class="max-w-4xl mx-auto px-4 py-12">
-      <header class="mb-10">
-        <h1 class="text-3xl font-bold text-white mb-3">이용약관</h1>
-        <p class="text-wiki-muted">최종 수정일: 2024년 11월 30일</p>
-      </header>
-      
-      <div class="prose prose-invert max-w-none space-y-8 text-wiki-text">
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제1조 (목적)</h2>
-          <p class="leading-relaxed">
-            이 약관은 CareerWiki(이하 "회사")가 제공하는 커리어 정보 서비스(이하 "서비스")의 이용조건 및 절차, 
-            회사와 이용자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
-          </p>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제2조 (정의)</h2>
-          <ul class="list-disc list-inside space-y-2">
-            <li><strong>"서비스"</strong>란 회사가 제공하는 직업·전공 정보, HowTo 가이드, 커뮤니티 기능 등 일체의 서비스를 의미합니다.</li>
-            <li><strong>"이용자"</strong>란 이 약관에 따라 회사가 제공하는 서비스를 이용하는 회원 및 비회원을 말합니다.</li>
-            <li><strong>"회원"</strong>이란 회사에 개인정보를 제공하여 회원등록을 한 자로서, 서비스를 계속적으로 이용할 수 있는 자를 말합니다.</li>
-            <li><strong>"콘텐츠"</strong>란 회원이 서비스 내에 게시한 글, 댓글, 이미지 등 모든 정보를 말합니다.</li>
-          </ul>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제3조 (약관의 효력 및 변경)</h2>
-          <ol class="list-decimal list-inside space-y-2">
-            <li>이 약관은 서비스 화면에 게시하거나 기타의 방법으로 이용자에게 공지함으로써 효력이 발생합니다.</li>
-            <li>회사는 필요하다고 인정되는 경우 이 약관을 변경할 수 있으며, 변경된 약관은 제1항과 같은 방법으로 공지합니다.</li>
-            <li>이용자는 변경된 약관에 동의하지 않을 경우 서비스 이용을 중단하고 탈퇴할 수 있습니다.</li>
-          </ol>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제4조 (회원가입)</h2>
-          <ol class="list-decimal list-inside space-y-2">
-            <li>회원가입은 이용자가 약관에 동의한 후 소셜 로그인(Google)을 통해 가입 신청을 하고, 회사가 이를 승낙함으로써 체결됩니다.</li>
-            <li>회사는 다음 각 호에 해당하는 신청에 대해서는 승낙하지 않거나 사후에 이용계약을 해지할 수 있습니다.
-              <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
-                <li>타인의 정보를 도용한 경우</li>
-                <li>허위 정보를 기재한 경우</li>
-                <li>서비스 운영을 방해하거나 방해할 우려가 있는 경우</li>
-              </ul>
-            </li>
-          </ol>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제5조 (서비스 이용)</h2>
-          <ol class="list-decimal list-inside space-y-2">
-            <li>서비스는 회사의 업무상 또는 기술상 특별한 지장이 없는 한 연중무휴, 1일 24시간 제공함을 원칙으로 합니다.</li>
-            <li>회사는 서비스 개선, 시스템 점검 등의 사유로 서비스를 일시 중단할 수 있습니다.</li>
-            <li>회사는 무료로 제공하는 서비스의 일부 또는 전부를 변경, 중단, 종료할 수 있습니다.</li>
-          </ol>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제6조 (회원의 의무)</h2>
-          <p class="mb-3">회원은 다음 각 호의 행위를 하여서는 안 됩니다.</p>
-          <ul class="list-disc list-inside space-y-2">
-            <li>타인의 정보 도용</li>
-            <li>회사가 게시한 정보의 무단 변경</li>
-            <li>회사가 허용하지 않은 정보의 송신 또는 게시</li>
-            <li>회사 및 제3자의 저작권 등 지적재산권 침해</li>
-            <li>회사 및 제3자의 명예를 손상시키거나 업무를 방해하는 행위</li>
-            <li>음란·폭력적인 콘텐츠 게시</li>
-            <li>서비스의 안정적인 운영을 방해하는 행위</li>
-          </ul>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제7조 (콘텐츠의 관리)</h2>
-          <ol class="list-decimal list-inside space-y-2">
-            <li>회원이 게시한 콘텐츠의 저작권은 해당 회원에게 귀속됩니다.</li>
-            <li>회사는 회원이 게시한 콘텐츠가 다음 각 호에 해당하는 경우 사전 통지 없이 삭제하거나 블라인드 처리할 수 있습니다.
-              <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
-                <li>타인의 명예를 훼손하거나 권리를 침해하는 내용</li>
-                <li>불법 정보 또는 음란물</li>
-                <li>영리 목적의 광고성 게시물</li>
-                <li>기타 관련 법령 또는 이 약관에 위반되는 내용</li>
-              </ul>
-            </li>
-          </ol>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제8조 (면책조항)</h2>
-          <ol class="list-decimal list-inside space-y-2">
-            <li>회사는 천재지변, 전쟁, 기간통신사업자의 서비스 중단 등 불가항력으로 인한 서비스 중단에 대해 책임을 지지 않습니다.</li>
-            <li>회사는 이용자가 서비스를 이용하여 기대하는 결과를 얻지 못한 것에 대해 책임을 지지 않습니다.</li>
-            <li>회사는 이용자가 게시한 정보의 신뢰성, 정확성에 대해 책임을 지지 않습니다.</li>
-            <li>회사가 제공하는 직업·전공 정보는 참고용이며, 실제 의사결정에 대한 책임은 이용자에게 있습니다.</li>
-          </ol>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제9조 (분쟁 해결)</h2>
-          <ol class="list-decimal list-inside space-y-2">
-            <li>회사와 이용자 간에 발생한 분쟁에 관한 소송은 대한민국 서울중앙지방법원을 관할 법원으로 합니다.</li>
-            <li>회사와 이용자 간의 분쟁에는 대한민국 법을 적용합니다.</li>
-          </ol>
-        </section>
-        
-        <section class="pt-6 border-t border-wiki-border/40">
-          <p class="text-sm text-wiki-muted">
-            <strong>부칙</strong><br>
-            이 약관은 2024년 11월 30일부터 시행합니다.
-          </p>
-        </section>
-      </div>
-    </div>
-  `
-  
-  return c.html(
-    renderLayoutWithContext(c, content, '이용약관 - Careerwiki', 'Careerwiki 서비스 이용약관')
-  )
-})
+// 이용약관 페이지 (레거시 URL → /legal/terms 리다이렉트)
+app.get('/terms', (c) => c.redirect('/legal/terms', 301))
 
-// 개인정보처리방침 페이지
-app.get('/privacy', (c) => {
-  const content = `
-    <div class="max-w-4xl mx-auto px-4 py-12">
-      <header class="mb-10">
-        <h1 class="text-3xl font-bold text-white mb-3">개인정보처리방침</h1>
-        <p class="text-wiki-muted">최종 수정일: 2024년 11월 30일</p>
-      </header>
-      
-      <div class="prose prose-invert max-w-none space-y-8 text-wiki-text">
-        <section>
-          <p class="leading-relaxed">
-            CareerWiki(이하 "회사")는 개인정보보호법, 정보통신망 이용촉진 및 정보보호 등에 관한 법률 등 
-            관련 법령에 따라 이용자의 개인정보를 보호하고, 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 
-            다음과 같이 개인정보처리방침을 수립·공개합니다.
-          </p>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제1조 (수집하는 개인정보 항목)</h2>
-          <p class="mb-3">회사는 서비스 제공을 위해 다음의 개인정보를 수집합니다.</p>
-          
-          <div class="bg-wiki-card/30 border border-wiki-border/40 rounded-xl p-5 space-y-4">
-            <div>
-              <h4 class="font-semibold text-white mb-2">1. 회원가입 시 (Google 소셜 로그인)</h4>
-              <ul class="list-disc list-inside text-sm space-y-1">
-                <li><strong>필수항목:</strong> 이메일 주소, 이름(닉네임), 프로필 이미지</li>
-                <li><strong>자동수집:</strong> 서비스 이용 기록, 접속 로그, 쿠키, 접속 IP 정보</li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="font-semibold text-white mb-2">2. 서비스 이용 과정</h4>
-              <ul class="list-disc list-inside text-sm space-y-1">
-                <li>게시글, 댓글 작성 시: 작성 내용, 작성 시간</li>
-                <li>익명 게시 시: IP 주소 해시값 (복호화 불가)</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제2조 (개인정보의 수집 및 이용목적)</h2>
-          <ul class="list-disc list-inside space-y-2">
-            <li><strong>회원 관리:</strong> 회원제 서비스 이용에 따른 본인확인, 개인식별, 불량회원 관리</li>
-            <li><strong>서비스 제공:</strong> 콘텐츠 제공, 맞춤형 서비스 제공</li>
-            <li><strong>서비스 개선:</strong> 서비스 이용 통계 분석, 신규 서비스 개발</li>
-            <li><strong>고객 응대:</strong> 문의사항 처리, 공지사항 전달</li>
-          </ul>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제3조 (개인정보의 보유 및 이용기간)</h2>
-          <p class="mb-3">회사는 원칙적으로 개인정보 수집 및 이용목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다.</p>
-          
-          <div class="bg-wiki-card/30 border border-wiki-border/40 rounded-xl p-5 space-y-3">
-            <div class="flex items-start gap-3">
-              <span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary text-xs font-medium rounded">회원 탈퇴 시</span>
-              <span class="text-sm">즉시 파기 (단, 관계 법령에 따라 보존이 필요한 경우 해당 기간까지 보관)</span>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary text-xs font-medium rounded">접속 기록</span>
-              <span class="text-sm">3개월 (통신비밀보호법)</span>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary text-xs font-medium rounded">계약/청약철회 기록</span>
-              <span class="text-sm">5년 (전자상거래법)</span>
-            </div>
-          </div>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제4조 (개인정보의 제3자 제공)</h2>
-          <p class="leading-relaxed">
-            회사는 원칙적으로 이용자의 개인정보를 외부에 제공하지 않습니다. 
-            다만, 다음의 경우에는 예외로 합니다.
-          </p>
-          <ul class="list-disc list-inside space-y-2 mt-3">
-            <li>이용자가 사전에 동의한 경우</li>
-            <li>법령의 규정에 의거하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우</li>
-          </ul>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제5조 (개인정보 처리의 위탁)</h2>
-          <p class="mb-3">회사는 서비스 제공을 위해 다음과 같이 개인정보 처리업무를 위탁하고 있습니다.</p>
-          
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm border border-wiki-border/40 rounded-xl overflow-hidden">
-              <thead class="bg-wiki-card/50">
-                <tr>
-                  <th class="px-4 py-3 text-left font-semibold text-white">수탁업체</th>
-                  <th class="px-4 py-3 text-left font-semibold text-white">위탁 업무</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="border-t border-wiki-border/40">
-                  <td class="px-4 py-3">Google LLC</td>
-                  <td class="px-4 py-3">소셜 로그인 인증</td>
-                </tr>
-                <tr class="border-t border-wiki-border/40">
-                  <td class="px-4 py-3">Cloudflare Inc.</td>
-                  <td class="px-4 py-3">서비스 호스팅, CDN 제공</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제6조 (이용자의 권리와 행사방법)</h2>
-          <p class="mb-3">이용자는 언제든지 다음의 권리를 행사할 수 있습니다.</p>
-          <ul class="list-disc list-inside space-y-2">
-            <li><strong>열람권:</strong> 자신의 개인정보에 대한 열람을 요청할 수 있습니다.</li>
-            <li><strong>정정권:</strong> 자신의 개인정보에 오류가 있을 경우 정정을 요청할 수 있습니다.</li>
-            <li><strong>삭제권:</strong> 자신의 개인정보 삭제를 요청할 수 있습니다.</li>
-            <li><strong>처리정지권:</strong> 자신의 개인정보 처리 정지를 요청할 수 있습니다.</li>
-          </ul>
-          <p class="mt-3 text-sm text-wiki-muted">
-            위 권리 행사는 서비스 내 설정 메뉴 또는 이메일(contact@careerwiki.org)을 통해 가능합니다.
-          </p>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제7조 (쿠키의 사용)</h2>
-          <ol class="list-decimal list-inside space-y-2">
-            <li><strong>쿠키 사용 목적:</strong> 로그인 상태 유지, 이용자 맞춤형 서비스 제공</li>
-            <li><strong>쿠키 관리:</strong> 이용자는 웹 브라우저 설정을 통해 쿠키 저장을 거부하거나 삭제할 수 있습니다. 다만, 쿠키 저장을 거부할 경우 일부 서비스 이용에 제한이 있을 수 있습니다.</li>
-          </ol>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제8조 (개인정보의 안전성 확보조치)</h2>
-          <p class="mb-3">회사는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 취하고 있습니다.</p>
-          <ul class="list-disc list-inside space-y-2">
-            <li>개인정보 암호화 저장 및 전송 시 SSL/TLS 암호화</li>
-            <li>해킹 등에 대비한 기술적 대책</li>
-            <li>개인정보 접근 권한 최소화</li>
-            <li>정기적인 보안 점검</li>
-          </ul>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제9조 (개인정보 보호책임자)</h2>
-          <div class="bg-wiki-card/30 border border-wiki-border/40 rounded-xl p-5">
-            <p class="mb-2"><strong>개인정보 보호책임자</strong></p>
-            <ul class="text-sm space-y-1">
-              <li>담당: CareerWiki 개인정보보호팀</li>
-              <li>이메일: contact@careerwiki.org</li>
-            </ul>
-            <p class="mt-4 text-sm text-wiki-muted">
-              개인정보 처리에 관한 불만 처리 및 피해 구제를 위해 아래 기관에 문의하실 수 있습니다.
-            </p>
-            <ul class="text-sm mt-2 space-y-1">
-              <li>개인정보침해신고센터: (국번없이) 118</li>
-              <li>개인정보분쟁조정위원회: 1833-6972</li>
-            </ul>
-          </div>
-        </section>
-        
-        <section>
-          <h2 class="text-xl font-semibold text-white mb-4">제10조 (방침의 변경)</h2>
-          <p class="leading-relaxed">
-            이 개인정보처리방침은 법령·정책 또는 보안기술의 변경에 따라 내용이 추가·삭제 및 수정될 수 있으며, 
-            변경 시에는 서비스 내 공지사항을 통해 고지합니다.
-          </p>
-        </section>
-        
-        <section class="pt-6 border-t border-wiki-border/40">
-          <p class="text-sm text-wiki-muted">
-            <strong>부칙</strong><br>
-            이 개인정보처리방침은 2024년 11월 30일부터 시행합니다.
-          </p>
-        </section>
-      </div>
-    </div>
-  `
-  
-  return c.html(
-    renderLayoutWithContext(c, content, '개인정보처리방침 - Careerwiki', 'Careerwiki 개인정보처리방침')
-  )
-})
+// 개인정보처리방침 페이지 (레거시 URL → /legal/privacy 리다이렉트)
+app.get('/privacy', (c) => c.redirect('/legal/privacy', 301))
 
 // 내 작성 가이드 목록 페이지 - /user/drafts로 리다이렉트
 app.get('/howto/my-drafts', requireAuth, (c) => {
@@ -16763,7 +20003,7 @@ app.get('/howto/my-drafts', requireAuth, (c) => {
 app.get('/user/drafts', requireAuth, async (c) => {
   const user = c.get('user')
   if (!user) {
-    return c.redirect('/auth/google?return_url=/user/drafts')
+    return c.redirect('/login?redirect=/user/drafts')
   }
   
   const filter = c.req.query('filter') || 'all'
@@ -17037,13 +20277,13 @@ app.get('/howto/write', requireAuth, async (c) => {
                    class="w-full px-4 py-3 pr-10 bg-wiki-card/50 border border-wiki-border/40 rounded-xl text-white text-lg font-semibold placeholder-wiki-muted focus:border-wiki-primary outline-none transition"
                    placeholder="가이드 제목을 입력하세요"
                    value="" />
-            <span id="title-check" class="absolute right-3 top-1/2 -translate-y-1/2 text-lg hidden">
+            <span id="title-check" class="absolute right-3 top-1/2 -translate-y-1/2 text-lg" style="display:none">
               <i class="fas fa-spinner fa-spin text-wiki-muted" id="title-loading"></i>
-              <i class="fas fa-check-circle text-green-500 hidden" id="title-ok"></i>
-              <i class="fas fa-times-circle text-red-500 hidden" id="title-error"></i>
+              <i class="fas fa-check-circle text-green-500" id="title-ok" style="display:none"></i>
+              <i class="fas fa-times-circle text-red-500" id="title-error" style="display:none"></i>
             </span>
           </div>
-          <p id="title-error-msg" class="mt-1 text-xs text-red-400 hidden"></p>
+          <p id="title-error-msg" class="mt-1 text-xs text-red-400" style="display:none"></p>
         </div>
         
         <!-- 요약 -->
@@ -17531,8 +20771,9 @@ app.get('/howto/write', requireAuth, async (c) => {
       
       // 제목 중복 체크 상태
       let titleCheckTimer = null;
+      let titleCheckAbort = null;
       let isTitleAvailable = true;
-      
+
       function initTitleCheck() {
         const titleInput = document.getElementById('field-title');
         const titleCheck = document.getElementById('title-check');
@@ -17540,75 +20781,89 @@ app.get('/howto/write', requireAuth, async (c) => {
         const titleOk = document.getElementById('title-ok');
         const titleError = document.getElementById('title-error');
         const titleErrorMsg = document.getElementById('title-error-msg');
-        
+
         if (!titleInput) return;
-        
+
+        // style.display 사용 (FA 아이콘에 hidden 클래스가 작동하지 않음)
+        function show(el) { if (el) el.style.display = ''; }
+        function hide(el) { if (el) el.style.display = 'none'; }
+
         titleInput.addEventListener('input', () => {
           hasUnsavedChanges = true;
           updateSaveStatus('unsaved');
-          
+
           clearTimeout(titleCheckTimer);
+          if (titleCheckAbort) { titleCheckAbort.abort(); titleCheckAbort = null; }
           const title = titleInput.value.trim();
-          
+
           // 빈 값이면 숨김
           if (!title) {
-            titleCheck.classList.add('hidden');
-            titleErrorMsg.classList.add('hidden');
+            hide(titleCheck);
+            hide(titleErrorMsg);
             isTitleAvailable = true;
             return;
           }
-          
+
           // 2자 미만이면 바로 에러
           if (title.length < 2) {
-            titleCheck.classList.remove('hidden');
-            titleLoading.classList.add('hidden');
-            titleOk.classList.add('hidden');
-            titleError.classList.remove('hidden');
+            show(titleCheck);
+            hide(titleLoading);
+            hide(titleOk);
+            show(titleError);
             titleErrorMsg.textContent = '제목은 최소 2자 이상이어야 합니다';
-            titleErrorMsg.classList.remove('hidden');
+            show(titleErrorMsg);
             isTitleAvailable = false;
             return;
           }
-          
+
           // 로딩 표시
-          titleCheck.classList.remove('hidden');
-          titleLoading.classList.remove('hidden');
-          titleOk.classList.add('hidden');
-          titleError.classList.add('hidden');
-          titleErrorMsg.classList.add('hidden');
-          
+          show(titleCheck);
+          show(titleLoading);
+          hide(titleOk);
+          hide(titleError);
+          hide(titleErrorMsg);
+
           // 500ms 후 API 호출
           titleCheckTimer = setTimeout(async () => {
+            const ac = new AbortController();
+            titleCheckAbort = ac;
+            const timeout = setTimeout(() => ac.abort(), 8000);
             try {
-              const res = await fetch('/api/howto/check-title?title=' + encodeURIComponent(title));
+              const res = await fetch('/api/howto/check-title?title=' + encodeURIComponent(title), { signal: ac.signal });
+              clearTimeout(timeout);
+              if (ac.signal.aborted) return;
               const data = await res.json();
-              
-              titleLoading.classList.add('hidden');
-              
+
+              hide(titleLoading);
+
               if (data.success && data.available) {
-                titleOk.classList.remove('hidden');
-                titleError.classList.add('hidden');
-                titleErrorMsg.classList.add('hidden');
+                show(titleOk);
+                hide(titleError);
+                hide(titleErrorMsg);
                 isTitleAvailable = true;
               } else {
-                titleOk.classList.add('hidden');
-                titleError.classList.remove('hidden');
+                hide(titleOk);
+                show(titleError);
                 titleErrorMsg.textContent = data.reason || '사용할 수 없는 제목입니다';
-                titleErrorMsg.classList.remove('hidden');
+                show(titleErrorMsg);
                 isTitleAvailable = false;
               }
             } catch (err) {
-              titleLoading.classList.add('hidden');
-              titleOk.classList.add('hidden');
-              titleError.classList.remove('hidden');
-              titleErrorMsg.textContent = '제목 확인 중 오류가 발생했습니다';
-              titleErrorMsg.classList.remove('hidden');
+              clearTimeout(timeout);
+              if (ac.signal.aborted) {
+                if (titleCheckAbort !== ac) return;
+              }
+              hide(titleLoading);
+              hide(titleOk);
+              show(titleError);
+              titleErrorMsg.textContent = '제목 확인에 실패했습니다. 잠시 후 다시 시도해주세요.';
+              show(titleErrorMsg);
               isTitleAvailable = false;
             }
           }, 500);
         });
       }
-      
+
       // 초안 저장 (없으면 새로 생성)
       async function saveDraft() {
         clearAllFieldErrors();
@@ -17823,7 +21078,6 @@ app.get('/howto/write', requireAuth, async (c) => {
               }
             } catch (err) {
               if (err?.name !== 'AbortError') {
-                console.error('[autocomplete] Error:', err);
               }
             }
           };
@@ -18063,7 +21317,6 @@ app.get('/howto/write', requireAuth, async (c) => {
           }
         })
         .catch(err => {
-          console.error('썸네일 업로드 오류:', err);
           alert('썸네일 업로드 중 오류가 발생했습니다.');
         });
       }
@@ -18187,13 +21440,13 @@ app.get('/howto/draft/:id', requireAuth, async (c) => {
                    class="w-full px-4 py-3 pr-10 bg-wiki-card/50 border border-wiki-border/40 rounded-xl text-white text-lg font-semibold placeholder-wiki-muted focus:border-wiki-primary outline-none transition"
                    placeholder="가이드 제목을 입력하세요"
                    value="${escapeHtml(draft.title || '')}" />
-            <span id="title-check" class="absolute right-3 top-1/2 -translate-y-1/2 text-lg hidden">
+            <span id="title-check" class="absolute right-3 top-1/2 -translate-y-1/2 text-lg" style="display:none">
               <i class="fas fa-spinner fa-spin text-wiki-muted" id="title-loading"></i>
-              <i class="fas fa-check-circle text-green-500 hidden" id="title-ok"></i>
-              <i class="fas fa-times-circle text-red-500 hidden" id="title-error"></i>
+              <i class="fas fa-check-circle text-green-500" id="title-ok" style="display:none"></i>
+              <i class="fas fa-times-circle text-red-500" id="title-error" style="display:none"></i>
             </span>
           </div>
-          <p id="title-error-msg" class="mt-1 text-xs text-red-400 hidden"></p>
+          <p id="title-error-msg" class="mt-1 text-xs text-red-400" style="display:none"></p>
         </div>
         
         <!-- 요약 -->
@@ -18486,7 +21739,6 @@ app.get('/howto/draft/:id', requireAuth, async (c) => {
       const CONTENT_JSON = (CONTENT_JSON_RAW && CONTENT_JSON_RAW.length > 10 && CONTENT_JSON_RAW !== '{}') ? JSON.parse(CONTENT_JSON_RAW) : null;
       const CONTENT_HTML = ${JSON.stringify(draft.contentHtml || '<p></p>')};
       const INITIAL_CONTENT = CONTENT_JSON || CONTENT_HTML;
-      console.log('[draft] CONTENT_JSON:', CONTENT_JSON ? 'exists' : 'null', 'CONTENT_HTML length:', CONTENT_HTML.length);
       let currentVersion = DRAFT_VERSION;
       let hasUnsavedChanges = false;
       let tiptapEditor = null;  // Tiptap 에디터 인스턴스
@@ -18528,7 +21780,6 @@ app.get('/howto/draft/:id', requireAuth, async (c) => {
           });
           window.HowToEditorInstance = tiptapEditor;
         } else {
-          console.error('Tiptap 에디터 번들이 로드되지 않았습니다');
         }
         
         // 자동완성 초기화
@@ -18853,9 +22104,10 @@ app.get('/howto/draft/:id', requireAuth, async (c) => {
       
       // 제목 중복 체크 상태
       let titleCheckTimer = null;
+      let titleCheckAbort = null;
       let isTitleAvailable = true;
       const EXCLUDE_PAGE_ID = HAS_PUBLISHED_VERSION ? PUBLISHED_PAGE_ID : null;
-      
+
       function initTitleCheck() {
         const titleInput = document.getElementById('field-title');
         const titleCheck = document.getElementById('title-check');
@@ -18863,73 +22115,87 @@ app.get('/howto/draft/:id', requireAuth, async (c) => {
         const titleOk = document.getElementById('title-ok');
         const titleError = document.getElementById('title-error');
         const titleErrorMsg = document.getElementById('title-error-msg');
-        
+
         if (!titleInput) return;
-        
+
+        // style.display 사용 (FA 아이콘에 hidden 클래스가 작동하지 않음)
+        function show(el) { if (el) el.style.display = ''; }
+        function hide(el) { if (el) el.style.display = 'none'; }
+
         titleInput.addEventListener('input', () => {
           hasUnsavedChanges = true;
           updateSaveStatus('unsaved');
-          
+
           clearTimeout(titleCheckTimer);
+          if (titleCheckAbort) { titleCheckAbort.abort(); titleCheckAbort = null; }
           const title = titleInput.value.trim();
-          
+
           // 빈 값이면 숨김
           if (!title) {
-            titleCheck.classList.add('hidden');
-            titleErrorMsg.classList.add('hidden');
+            hide(titleCheck);
+            hide(titleErrorMsg);
             isTitleAvailable = true;
             return;
           }
-          
+
           // 2자 미만이면 바로 에러
           if (title.length < 2) {
-            titleCheck.classList.remove('hidden');
-            titleLoading.classList.add('hidden');
-            titleOk.classList.add('hidden');
-            titleError.classList.remove('hidden');
+            show(titleCheck);
+            hide(titleLoading);
+            hide(titleOk);
+            show(titleError);
             titleErrorMsg.textContent = '제목은 최소 2자 이상이어야 합니다';
-            titleErrorMsg.classList.remove('hidden');
+            show(titleErrorMsg);
             isTitleAvailable = false;
             return;
           }
-          
+
           // 로딩 표시
-          titleCheck.classList.remove('hidden');
-          titleLoading.classList.remove('hidden');
-          titleOk.classList.add('hidden');
-          titleError.classList.add('hidden');
-          titleErrorMsg.classList.add('hidden');
-          
+          show(titleCheck);
+          show(titleLoading);
+          hide(titleOk);
+          hide(titleError);
+          hide(titleErrorMsg);
+
           // 500ms 후 API 호출
           titleCheckTimer = setTimeout(async () => {
+            const ac = new AbortController();
+            titleCheckAbort = ac;
+            const timeout = setTimeout(() => ac.abort(), 8000);
             try {
               let url = '/api/howto/check-title?title=' + encodeURIComponent(title);
               if (EXCLUDE_PAGE_ID) {
                 url += '&excludeId=' + EXCLUDE_PAGE_ID;
               }
-              const res = await fetch(url);
+              const res = await fetch(url, { signal: ac.signal });
+              clearTimeout(timeout);
+              if (ac.signal.aborted) return;
               const data = await res.json();
-              
-              titleLoading.classList.add('hidden');
-              
+
+              hide(titleLoading);
+
               if (data.success && data.available) {
-                titleOk.classList.remove('hidden');
-                titleError.classList.add('hidden');
-                titleErrorMsg.classList.add('hidden');
+                show(titleOk);
+                hide(titleError);
+                hide(titleErrorMsg);
                 isTitleAvailable = true;
               } else {
-                titleOk.classList.add('hidden');
-                titleError.classList.remove('hidden');
+                hide(titleOk);
+                show(titleError);
                 titleErrorMsg.textContent = data.reason || '사용할 수 없는 제목입니다';
-                titleErrorMsg.classList.remove('hidden');
+                show(titleErrorMsg);
                 isTitleAvailable = false;
               }
             } catch (err) {
-              titleLoading.classList.add('hidden');
-              titleOk.classList.add('hidden');
-              titleError.classList.remove('hidden');
-              titleErrorMsg.textContent = '제목 확인 중 오류가 발생했습니다';
-              titleErrorMsg.classList.remove('hidden');
+              clearTimeout(timeout);
+              if (ac.signal.aborted) {
+                if (titleCheckAbort !== ac) return;
+              }
+              hide(titleLoading);
+              hide(titleOk);
+              show(titleError);
+              titleErrorMsg.textContent = '제목 확인에 실패했습니다. 잠시 후 다시 시도해주세요.';
+              show(titleErrorMsg);
               isTitleAvailable = false;
             }
           }, 500);
@@ -19472,7 +22738,6 @@ app.get('/howto/draft/:id', requireAuth, async (c) => {
               }
             } catch (err) {
               if (err?.name !== 'AbortError') {
-                console.error('[autocomplete] Error:', err);
               }
             }
           };
@@ -19693,10 +22958,6 @@ app.get('/howto/:slug/edit', requireAuth, async (c) => {
     const contentHtml = page.content || ''
     
     // 디버그 로그
-    console.log('[edit] page.id:', page.id, 'slug:', slug)
-    console.log('[edit] metaData keys:', Object.keys(metaData))
-    console.log('[edit] contentJson length:', contentJson.length, 'contentHtml length:', contentHtml.length)
-    console.log('[edit] tags:', metaData.tags?.length || 0, 'relatedJobs:', metaData.relatedJobs?.length || 0)
     
     const result = await createDraft(c.env.DB, {
       userId: user.id,
@@ -19893,8 +23154,11 @@ app.get('/howto/:slug', async (c) => {
       isDraftPublished: status === 'draft_published'
     })
     
+    const howtoOgImage = guideDetail.thumbnailUrl || undefined
     return c.html(
-      renderLayoutWithContext(c, content, `${dbResult.title} - Careerwiki`, dbResult.summary as string || '')
+      renderLayoutWithContext(c, content, `${dbResult.title} - Careerwiki`, dbResult.summary as string || '', false, {
+        ogImage: howtoOgImage
+      })
     )
   }
   
@@ -19958,31 +23222,30 @@ app.get('/search', async (c) => {
 
   if (keyword && c.env?.DB) {
     try {
-      // 직업 검색
-      console.log('[/search] 직업 검색 시작:', keyword)
-      const jobSearchResult = await searchUnifiedJobs(
-        { keyword, page: 1, perPage: 5 },
-        c.env
-      )
-      console.log('[/search] 직업 검색 결과:', jobSearchResult.items.length, '개')
-      
-      jobCardsHtml = jobSearchResult.items
+      // RAG 통합 검색 (임베딩 1회, Vectorize 1회, D1 병렬 보강)
+      const ragResult = await ragSearchUnified(c.env, keyword, {
+        jobsLimit: 5,
+        majorsLimit: 5,
+        howtosLimit: 5,
+      })
+
+      jobCardsHtml = ragResult.jobs.items
         .slice(0, 5)
         .map((entry) => renderJobCard(entry))
         .join('')
 
-      // 전공 검색
-      const majorSearchResult = await searchUnifiedMajors(
-        { keyword, page: 1, perPage: 5 },
-        c.env
-      )
-      
-      majorCardsHtml = majorSearchResult.items
+      majorCardsHtml = ragResult.majors.items
         .slice(0, 5)
         .map((entry) => renderMajorCard(entry))
         .join('')
+
+      // RAG howto 결과를 기존 howtoResults 형식으로 변환
+      howtoResults = ragResult.howtos.map(h => ({
+        href: `/howto/${h.slug}`,
+        title: h.title,
+        summary: h.summary,
+      }))
     } catch (error) {
-      console.error('검색 오류:', error)
     }
   }
 
@@ -20012,7 +23275,8 @@ app.get('/search', async (c) => {
     return [...new Set(tokens)].filter(t => t !== normalizedKw && t.length >= 2)
   }
   
-  if (keyword && c.env?.DB) {
+  if (keyword && c.env?.DB && howtoResults.length === 0) {
+    // RAG 결과가 없을 때만 LIKE 폴백으로 HowTo 검색
     try {
       const db = c.env.DB as any
       const howtoTokens = tokenizeHowtoKeyword(keyword)
@@ -20075,11 +23339,10 @@ app.get('/search', async (c) => {
         }
       })
     } catch (error) {
-      console.error('HowTo 검색 오류:', error)
       howtoResults = []
     }
-  } else if (c.env?.DB) {
-    // 검색어 없을 때 최신 HowTo 표시
+  } else if (c.env?.DB && !keyword) {
+    // 검색어 없을 때만 최신 HowTo 표시 (검색어 있으면 RAG 결과 유지)
     try {
       const db = c.env.DB as any
       const defaultQuery = `
@@ -20108,7 +23371,6 @@ app.get('/search', async (c) => {
         }
       })
     } catch (error) {
-      console.error('HowTo 기본 조회 오류:', error)
       howtoResults = []
     }
   }
@@ -20309,13 +23571,11 @@ app.get('/job/:slug', async (c) => {
           
           if (similarJobs.results?.length > 0) {
             similarJobs.results.forEach((job, idx) => {
-              console.log(`  ${idx + 1}. "${job.name}" (${job.id})`)
             })
           }
         }
       }
     } catch (error) {
-      console.error('D1 이름 검색 오류:', error)
     }
   }
   
@@ -20351,7 +23611,6 @@ app.get('/job/:slug', async (c) => {
       
       // job_id가 null인 경우 이름으로 직접 매칭
       if (!sources.results || sources.results.length === 0) {
-        console.log('job_id로 찾기 실패, 이름으로 매칭 시도:', jobRow.name)
         
         // normalized와 raw 둘 다 검색
         const normalizedSources = await db.prepare(`
@@ -20370,7 +23629,6 @@ app.get('/job/:slug', async (c) => {
         const uniqueResults = Array.from(new Map(allResults.map(item => [item.source_key, item])).values())
         
         sources = { results: uniqueResults, success: true, meta: normalizedSources.meta }
-        console.log(`매칭된 소스: ${uniqueResults.length}개`)
       }
 
       if (!sources.results || sources.results.length === 0) {
@@ -20390,7 +23648,6 @@ app.get('/job/:slug', async (c) => {
       
       return c.html(debugContent)
     } catch (error) {
-      console.error('Debug mode error:', error)
       c.status(500)
       return c.html(renderLayoutWithContext(c, renderDetailFallback({
         icon: 'fa-circle-exclamation',
@@ -20477,16 +23734,33 @@ app.get('/job/:slug', async (c) => {
               }
             }
           } catch (e) {
-            console.error('[Job ISR fetchData] Failed to query existing jobs:', e)
           }
         }
         
+        // 이 직업을 참조하는 HowTo 가이드 조회
+        let relatedHowtos: Array<{ slug: string; title: string; summary: string }> = []
+        try {
+          if (env?.DB && result.profile?.name) {
+            const namePattern = `%"relatedJobs":%"name":"${result.profile.name.replace(/[%_"\\]/g, '')}"%`
+            const { results: howtoResults } = await env.DB.prepare(`
+              SELECT slug, title, summary FROM pages
+              WHERE page_type = 'guide'
+                AND status IN ('published', 'draft_published')
+                AND meta_data LIKE ?
+              LIMIT 10
+            `).bind(namePattern).all() as { results: Array<{ slug: string; title: string; summary: string }> }
+            if (howtoResults) relatedHowtos = howtoResults
+          }
+        } catch {
+        }
+
         return {
           ...result,
-          existingJobSlugs
+          existingJobSlugs,
+          relatedHowtos
         }
       },
-      
+
       // Step 2: Render HTML
       renderHTML: (result) => {
         mark?.('render-start')
@@ -20502,20 +23776,21 @@ app.get('/job/:slug', async (c) => {
           profile.salary
         )
         const extraHead = [
-          '<meta property="og:type" content="article">',
           '<meta property="article:modified_time" content="' + new Date().toISOString() + '">',
           createJobJsonLd(profile, canonicalUrl)
         ].filter(Boolean).join('\n')
-        
+
         const content = renderUnifiedJobDetail({
           profile,
           partials: result.partials,
           sources: result.sources,
           rawApiData: result.rawApiData,
-          existingJobSlugs: result.existingJobSlugs
+          existingJobSlugs: result.existingJobSlugs,
+          relatedHowtos: result.relatedHowtos
         })
         mark?.('render-done')
-        
+
+        const jobOgImage = (profile as any).image_url || undefined
         return renderLayoutWithContext(c,
           content,
           escapeHtml(title),
@@ -20524,11 +23799,13 @@ app.get('/job/:slug', async (c) => {
           {
             canonical: canonicalUrl,
             ogUrl: canonicalUrl,
+            ogType: 'article',
+            ogImage: jobOgImage,
             extraHead
           }
         )
       },
-      
+
       // Step 3: Extract metadata
       extractMetadata: (result) => {
         const profile = result.profile!  // Non-null assertion (we already checked in fetchData)
@@ -20547,7 +23824,6 @@ app.get('/job/:slug', async (c) => {
     c
   ).catch((error) => {
     // Error handling
-    console.error('Job detail route error:', error)
     
     // Try sample fallback
     if (error.message === 'SAMPLE_FALLBACK') {
@@ -20562,7 +23838,6 @@ app.get('/job/:slug', async (c) => {
       
       const sample = findSampleJobDetail()
       if (sample) {
-        console.warn('Job detail fallback: serving synthetic sample for', slug)
         return renderSampleJobDetailPage(c, sample)
       }
     }
@@ -20627,7 +23902,7 @@ app.get('/major/:slug', async (c) => {
         .replace(/\)/g, '')
       
       const result = await db.prepare(
-        `SELECT id, name, is_active FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? ${activeCondition} LIMIT 1`
+        `SELECT id, name, is_active FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? ${activeCondition} ORDER BY CASE WHEN merged_profile_json IS NOT NULL AND merged_profile_json != '{}' THEN 0 ELSE 1 END LIMIT 1`
       ).bind(normalized).first() as { id: string; name: string; is_active: number } | null
       
       if (result?.id) {
@@ -20635,7 +23910,6 @@ app.get('/major/:slug', async (c) => {
       } else {
       }
     } catch (error) {
-      console.error('[Major Slug Resolution] D1 이름 검색 오류:', error)
     }
   }
   
@@ -20692,7 +23966,6 @@ app.get('/major/:slug', async (c) => {
       })
       return c.html(renderLayoutWithContext(c, fallbackHtml, '준비 중 - Careerwiki'))
     } catch (error) {
-      console.error('Debug mode error:', error)
       c.status(500)
       return c.html(renderLayoutWithContext(c, renderDetailFallback({
         icon: 'fa-circle-exclamation',
@@ -20738,7 +24011,6 @@ app.get('/major/:slug', async (c) => {
         
         
         if (!result.profile) {
-          console.error(`[Major ISR fetchData] Profile not found for resolvedId: "${resolvedId}"`)
           
           // Try sample data fallback
           const findSampleMajorDetail = () => {
@@ -20781,7 +24053,6 @@ app.get('/major/:slug', async (c) => {
               }
             }
           } catch (e) {
-            console.error('[Major ISR fetchData] Failed to query existing jobs:', e)
           }
         }
         
@@ -20811,10 +24082,26 @@ app.get('/major/:slug', async (c) => {
               }))
             }
           } catch (e) {
-            console.error('[Major ISR fetchData] Failed to query related majors by category:', e)
           }
         }
         
+        // 이 전공을 참조하는 HowTo 가이드 조회
+        let relatedHowtos: Array<{ slug: string; title: string; summary: string }> = []
+        try {
+          if (env?.DB && result.profile?.name) {
+            const namePattern = `%"relatedMajors":%"name":"${result.profile.name.replace(/[%_"\\]/g, '')}"%`
+            const { results: howtoResults } = await env.DB.prepare(`
+              SELECT slug, title, summary FROM pages
+              WHERE page_type = 'guide'
+                AND status IN ('published', 'draft_published')
+                AND meta_data LIKE ?
+              LIMIT 10
+            `).bind(namePattern).all() as { results: Array<{ slug: string; title: string; summary: string }> }
+            if (howtoResults) relatedHowtos = howtoResults
+          }
+        } catch {
+        }
+
         return {
           ...result,
           profile: {
@@ -20822,7 +24109,8 @@ app.get('/major/:slug', async (c) => {
             id: actualDbId
           },
           existingJobSlugs,
-          relatedMajorsByCategory
+          relatedMajorsByCategory,
+          relatedHowtos
         }
       },
 
@@ -20841,7 +24129,6 @@ app.get('/major/:slug', async (c) => {
           profile.jobProspect
         )
         const extraHead = [
-          '<meta property="og:type" content="article">',
           '<meta property="article:modified_time" content="' + new Date().toISOString() + '">',
           createMajorJsonLd(profile, canonicalUrl)
         ].filter(Boolean).join('\n')
@@ -20851,10 +24138,12 @@ app.get('/major/:slug', async (c) => {
           partials: result.partials,
           sources: result.sources,
           existingJobSlugs: result.existingJobSlugs,
-          relatedMajorsByCategory: result.relatedMajorsByCategory
+          relatedMajorsByCategory: result.relatedMajorsByCategory,
+          relatedHowtos: result.relatedHowtos
         })
         mark?.('render-done')
 
+        const majorOgImage = (profile as any).image_url || undefined
         return renderLayoutWithContext(c,
           content,
           escapeHtml(title),
@@ -20863,6 +24152,8 @@ app.get('/major/:slug', async (c) => {
           {
             canonical: canonicalUrl,
             ogUrl: canonicalUrl,
+            ogType: 'article',
+            ogImage: majorOgImage,
             extraHead
           }
         )
@@ -20886,7 +24177,6 @@ app.get('/major/:slug', async (c) => {
     c
   ).catch((error) => {
     // Error handling
-    console.error('Major detail route error:', error)
     
     // Try sample fallback
     if (error.message === 'SAMPLE_FALLBACK') {
@@ -20901,7 +24191,6 @@ app.get('/major/:slug', async (c) => {
       
       const sample = findSampleMajorDetail()
       if (sample) {
-        console.warn('Major detail fallback: serving synthetic sample for', slug)
         return renderSampleMajorDetailPage(c, sample)
       }
     }
@@ -21635,14 +24924,14 @@ const renderSampleHighlightCards = (
 const renderSampleJobHighlights = (limit = 3): string =>
   renderSampleHighlightCards(listSampleJobSummaries().slice(0, limit), 'job', {
     title: 'Phase 1 샘플 직업 살펴보기',
-    description: 'CareerWiki 통합 데이터가 준비되는 동안 합성 직업 샘플을 참고해 주세요.',
+    description: 'Careerwiki 통합 데이터가 준비되는 동안 합성 직업 샘플을 참고해 주세요.',
     badge: 'Phase 1 Synthetic Sample'
   })
 
 const renderSampleMajorHighlights = (limit = 3): string =>
   renderSampleHighlightCards(listSampleMajorSummaries().slice(0, limit), 'major', {
     title: 'Phase 1 샘플 전공 미리보기',
-    description: 'CareerWiki가 제공할 전공 데이터를 Phase 1 합성 샘플로 먼저 확인해 보세요.',
+    description: 'Careerwiki가 제공할 전공 데이터를 Phase 1 합성 샘플로 먼저 확인해 보세요.',
     badge: 'Phase 1 Synthetic Sample'
   })
 
@@ -21787,7 +25076,6 @@ function renderSampleJobDetailPageWithRawData(
     sample.snippet
   )
   const extraHead = [
-    '<meta property="og:type" content="article">',
     createJobJsonLd(sample.profile, canonicalUrl),
     createKeywordsMetaTag(sample.meta?.keywords),
     createArticleModifiedMeta(sample.meta?.updatedAt)
@@ -21809,6 +25097,7 @@ function renderSampleJobDetailPageWithRawData(
       {
         canonical: canonicalUrl,
         ogUrl: canonicalUrl,
+        ogType: 'article',
         extraHead
       }
     )
@@ -21830,7 +25119,6 @@ function renderSampleMajorDetailPage(
     sample.snippet
   )
   const extraHead = [
-    '<meta property="og:type" content="article">',
     createMajorJsonLd(sample.profile, canonicalUrl),
     createKeywordsMetaTag(sample.meta?.keywords),
     createArticleModifiedMeta(sample.meta?.updatedAt)
@@ -21851,6 +25139,7 @@ function renderSampleMajorDetailPage(
       {
         canonical: canonicalUrl,
         ogUrl: canonicalUrl,
+        ogType: 'article',
         extraHead
       }
     )
@@ -21872,7 +25161,6 @@ function renderSampleHowtoDetailPage(
     sample.snippet
   )
   const extraHead = [
-    '<meta property="og:type" content="article">',
     createKeywordsMetaTag(sample.meta?.keywords),
     createArticleModifiedMeta(sample.meta?.updatedAt),
     createHowtoJsonLd(sample.guide, canonicalUrl)
@@ -21897,6 +25185,7 @@ function renderSampleHowtoDetailPage(
       {
         canonical: canonicalUrl,
         ogUrl: canonicalUrl,
+        ogType: 'article',
         extraHead
       }
     )
@@ -22067,7 +25356,6 @@ const sendPerfAlertsToSlack = async (
       body: JSON.stringify(payload)
     })
   } catch (error) {
-    console.error('[perf-alert] slack notification failed', error)
   }
 }
 
@@ -22103,7 +25391,6 @@ app.post('/api/perf-metrics', async (c) => {
   try {
     // 로컬 개발 환경에서는 KV가 없을 수 있음
     if (!c.env.KV) {
-      console.warn('[perf-metrics] KV not available, skipping storage')
       return c.json({
         success: true,
         data: { id: 'local-dev-skip' },
@@ -22134,7 +25421,6 @@ app.post('/api/perf-metrics', async (c) => {
       alerts: result.alerts ?? []
     })
   } catch (error) {
-    console.error('[perf-metrics] failed to store', error)
     return c.json({ success: false, error: 'failed to store metrics' }, 500)
   }
 })
@@ -22168,7 +25454,6 @@ app.post('/api/feedback', requireAuth, async (c) => {
     })
     return c.json({ success: true, data: post })
   } catch (error) {
-    console.error('[feedback] create error', error)
     return c.json({ success: false, error: 'failed_to_create' }, 500)
   }
 })
@@ -22200,7 +25485,6 @@ app.get('/api/feedback', async (c) => {
     })
     return c.json({ success: true, data: result.items, total: result.total, page, pageSize })
   } catch (error) {
-    console.error('[feedback] list error', error)
     return c.json({ success: false, error: 'failed_to_list' }, 500)
   }
 })
@@ -22221,7 +25505,6 @@ app.get('/api/feedback/:id', async (c) => {
 
     return c.json({ success: true, data: item })
   } catch (error) {
-    console.error('[feedback] detail error', error)
     return c.json({ success: false, error: 'failed_to_get' }, 500)
   }
 })
@@ -22246,7 +25529,6 @@ app.post('/api/feedback/:id/reply', requireAdmin, async (c) => {
     })
     return c.json({ success: true, data: updated })
   } catch (error) {
-    console.error('[feedback] reply upsert error', error)
     return c.json({ success: false, error: 'failed_to_save_reply' }, 500)
   }
 })
@@ -22271,7 +25553,6 @@ app.put('/api/feedback/:id/reply', requireAdmin, async (c) => {
     })
     return c.json({ success: true, data: updated })
   } catch (error) {
-    console.error('[feedback] reply update error', error)
     return c.json({ success: false, error: 'failed_to_save_reply' }, 500)
   }
 })
@@ -22285,7 +25566,6 @@ app.delete('/api/feedback/:id/reply', requireAdmin, async (c) => {
     await deleteReply(c.env.DB, id)
     return c.json({ success: true })
   } catch (error) {
-    console.error('[feedback] reply delete error', error)
     return c.json({ success: false, error: 'failed_to_delete_reply' }, 500)
   }
 })
@@ -22300,7 +25580,6 @@ app.delete('/api/admin/feedback/:id', requireAdmin, async (c) => {
     await deleteFeedback(c.env.DB, id)
     return c.json({ success: true })
   } catch (error) {
-    console.error('[feedback] delete error', error)
     return c.json({ success: false, error: 'failed_to_delete' }, 500)
   }
 })
@@ -22340,7 +25619,6 @@ app.post('/api/feedback/:id/comments', requireAuth, async (c) => {
 
     return c.json({ success: true, data: comment })
   } catch (error) {
-    console.error('[feedback] add comment error', error)
     return c.json({ success: false, error: 'failed_to_add_comment' }, 500)
   }
 })
@@ -22364,7 +25642,6 @@ app.delete('/api/feedback/comments/:id', requireAuth, async (c) => {
     await deleteFeedbackComment(c.env.DB, commentId)
     return c.json({ success: true })
   } catch (error) {
-    console.error('[feedback] delete comment error', error)
     return c.json({ success: false, error: 'failed_to_delete_comment' }, 500)
   }
 })
@@ -22380,7 +25657,6 @@ app.patch('/api/feedback/:id/visibility', requireAdmin, async (c) => {
     const updated = await setVisibility(c.env.DB, id, isPrivate)
     return c.json({ success: true, data: updated })
   } catch (error) {
-    console.error('[feedback] visibility error', error)
     return c.json({ success: false, error: 'failed_to_update_visibility' }, 500)
   }
 })
@@ -22442,7 +25718,6 @@ app.get('/api/comments', async (c) => {
       }
     })
   } catch (error) {
-    console.error('[comments:list] failed', error)
     return c.json({ success: false, error: 'failed to load comments' }, 500)
   }
 })
@@ -22530,7 +25805,6 @@ app.post('/api/comments', async (c) => {
     if (message === 'AUTHOR_REQUIRED') {
       return c.json({ success: false, error: 'authentication required' }, 401)
     }
-    console.error('[comments:create] failed', error)
     return c.json({ success: false, error: 'failed to create comment' }, 500)
   }
 })
@@ -22587,7 +25861,6 @@ app.post('/api/comments/:id/like', async (c) => {
     if (message === 'VOTE_LIMIT_REACHED') {
       return c.json({ success: false, error: 'vote limit reached' }, 429)
     }
-    console.error('[comments:like] failed', error)
     return c.json({ success: false, error: 'failed to update like state' }, 500)
   }
 })
@@ -22639,7 +25912,6 @@ app.patch('/api/comments/:id', async (c) => {
     if (message === 'EMPTY_CONTENT') {
       return c.json({ success: false, error: 'content is required' }, 400)
     }
-    console.error('[comments:update] failed', error)
     return c.json({ success: false, error: 'failed to update comment' }, 500)
   }
 })
@@ -22685,7 +25957,6 @@ app.delete('/api/comments/:id', async (c) => {
     if (message === 'INVALID_PASSWORD') {
       return c.json({ success: false, error: 'invalid password' }, 403)
     }
-    console.error('[comments:delete] failed', error)
     return c.json({ success: false, error: 'failed to delete comment' }, 500)
   }
 })
@@ -22739,7 +26010,6 @@ app.post('/api/comments/:id/flag', async (c) => {
     if (message === 'REPORT_ALREADY_FILED') {
       return c.json({ success: false, error: 'duplicate report not allowed' }, 409)
     }
-    console.error('[comments:flag] failed', error)
     return c.json({ success: false, error: 'failed to flag comment' }, 500)
   }
 })
@@ -22756,7 +26026,6 @@ app.get('/api/comments/ip-blocks', async (c) => {
     const records = await listIpBlocks(c.env.DB, { includeReleased })
     return c.json({ success: true, data: records })
   } catch (error) {
-    console.error('[comments:ip-blocks:list] failed', error)
     return c.json({ success: false, error: 'failed to list ip blocks' }, 500)
   }
 })
@@ -22800,7 +26069,6 @@ app.post('/api/comments/ip-blocks', async (c) => {
     if (message === 'BLOCK_ACTOR_REQUIRED') {
       return c.json({ success: false, error: 'moderator identifier required' }, 400)
     }
-    console.error('[comments:ip-blocks:block] failed', error)
     return c.json({ success: false, error: 'failed to block ip' }, 500)
   }
 })
@@ -22845,7 +26113,6 @@ app.post('/api/comments/ip-blocks/:hash/release', async (c) => {
     if (message === 'RELEASE_ACTOR_REQUIRED') {
       return c.json({ success: false, error: 'moderator identifier required' }, 400)
     }
-    console.error('[comments:ip-blocks:release] failed', error)
     return c.json({ success: false, error: 'failed to release ip block' }, 500)
   }
 })
@@ -22861,7 +26128,6 @@ app.post('/api/perf-metrics', async (c) => {
   try {
     // 로컬 개발 환경에서는 KV가 없을 수 있음
     if (!c.env.KV) {
-      console.warn('[perf-metrics] KV not available, skipping storage')
       return c.json({ success: true, id: 'local-dev-skip' })
     }
 
@@ -23257,13 +26523,8 @@ app.get('/api/majors/search', async (c) => {
     const sort = c.req.query('sort') || 'relevance'
     const includeSources = parseSourcesQuery(c.req.query('sources'))
 
-    const result = await searchUnifiedMajors({
-      keyword: q,
-      page,
-      perPage,
-      sort,
-      includeSources
-    }, c.env)
+    // RAG 검색 (벡터 + LIKE 폴백)
+    const result = await ragSearchMajors(c.env, q, { page, perPage })
 
     return c.json({
       success: true,
@@ -23402,14 +26663,8 @@ app.get('/api/jobs/search', async (c) => {
     const sort = c.req.query('sort') || 'relevance'
     const includeSources = parseSourcesQuery(c.req.query('sources'))
 
-    const result = await searchUnifiedJobs({
-      keyword: q,
-      category,
-      page,
-      perPage,
-      sort,
-      includeSources
-    }, c.env)
+    // RAG 검색 (벡터 + LIKE 폴백)
+    const result = await ragSearchJobs(c.env, q, { page, perPage })
 
     return c.json({
       success: true,
@@ -23586,16 +26841,10 @@ app.get('/api/job/:id/edit-data', async (c) => {
               careernet: apiDataFromDb.careernet ?? null,
               goyong24: apiDataFromDb.goyong24 ?? null
             }
-            console.log('[edit-data] Loaded rawApiData from api_data_json:', {
-              careernet: rawApiData.careernet ? 'exists' : 'null',
-              goyong24: rawApiData.goyong24 ? 'exists' : 'null'
-            })
           } catch (parseError) {
-            console.error('[edit-data] Failed to parse api_data_json:', parseError)
           }
         }
       } catch (dbError) {
-        console.error('[edit-data] Failed to read api_data_json from DB:', dbError)
       }
     }
 
@@ -23670,7 +26919,6 @@ app.get('/api/job/:id/edit-data', async (c) => {
           }
         }
       } catch (dbError) {
-        console.error('[edit-data] Failed to resolve DB ID:', dbError)
         // DB 조회 실패 시 원본 id 사용
       }
     }
@@ -23719,9 +26967,7 @@ app.get('/api/job/:id/edit-data', async (c) => {
       overviewWork: {
         main: (() => {
           const raw = profile.overviewWork?.main || duties || ''
-          console.log('[Edit Data API] overviewWork.main raw type:', typeof raw, 'isArray:', Array.isArray(raw))
           if (Array.isArray(raw)) {
-            console.log('[Edit Data API] overviewWork.main array:', JSON.stringify(raw))
             return raw
           }
           if (typeof raw === 'string' && raw.trim()) {
@@ -23742,7 +26988,6 @@ app.get('/api/job/:id/edit-data', async (c) => {
                 sentences = sentenceSplit
               }
             }
-            console.log('[Edit Data API] overviewWork.main split result:', JSON.stringify(sentences))
             return sentences
           }
           return []
@@ -23811,7 +27056,6 @@ app.get('/api/job/:id/edit-data', async (c) => {
       entityType: 'job'
     })
   } catch (error) {
-    console.error('[edit-data] Error:', error)
     return c.json({
       success: false,
       error: error instanceof Error ? error.message : '편집 데이터 조회 실패'
@@ -23900,7 +27144,6 @@ app.get('/api/major/:id/edit-data', async (c) => {
           }
         }
       } catch (dbError) {
-        console.error('[major edit-data] Failed to resolve DB ID:', dbError)
         // DB 조회 실패 시 resolvedId 사용
         actualDbId = resolvedId
       }
@@ -23916,7 +27159,6 @@ app.get('/api/major/:id/edit-data', async (c) => {
           userContributedJson = JSON.parse(ucRow.user_contributed_json)
         }
       } catch (ucError) {
-        console.error('[major edit-data] Failed to load user_contributed_json:', ucError)
       }
     }
     
@@ -23933,7 +27175,6 @@ app.get('/api/major/:id/edit-data', async (c) => {
     )
 
     if (!result.profile) {
-      console.error(`[major edit-data] Profile not found for searchId: ${searchId}`)
       // 원본 slug로도 시도 (composite ID가 아닌 경우에만)
       if (searchId !== id && !id.includes(':')) {
         const retryResult = await getUnifiedMajorDetail(
@@ -23990,7 +27231,6 @@ app.get('/api/major/:id/edit-data', async (c) => {
                 actualDbId = dbResult.id
               }
             } catch (e) {
-              console.error('[major edit-data] Failed to resolve DB ID from retry:', e)
             }
           }
           
@@ -24022,7 +27262,6 @@ app.get('/api/major/:id/edit-data', async (c) => {
           }
         }
       } catch (e) {
-        console.error('[major edit-data] Failed to resolve DB ID from profile name:', e)
       }
     }
 
@@ -24230,7 +27469,6 @@ app.get('/api/major/:id/edit-data', async (c) => {
       entityType: 'major'
     })
   } catch (error) {
-    console.error('[major edit-data] Error:', error)
     return c.json({
       success: false,
       error: error instanceof Error ? error.message : '편집 데이터 조회 실패'
@@ -24270,7 +27508,6 @@ app.post('/api/job/cards', async (c) => {
       count: items.length
     })
   } catch (error) {
-    console.error('Job cards API error:', error)
     return c.json({
       error: error instanceof Error ? error.message : '카드 렌더링 실패',
       html: '',
@@ -24296,7 +27533,6 @@ app.post('/api/major/cards', async (c) => {
       count: items.length
     })
   } catch (error) {
-    console.error('Major cards API error:', error)
     return c.json({
       error: error instanceof Error ? error.message : '카드 렌더링 실패',
       html: '',
@@ -24447,7 +27683,7 @@ app.get('/majors/:id', async (c) => {
     // 이 함수는 ISR 캐시 생성용이므로 디버그 모드를 지원하지 않습니다.
     
     // SEO 최적화된 메타 정보
-    const pageTitle = `${majorName} 전공 정보 - 대학 학과, 진로, 취업 | CareerWiki`
+    const pageTitle = `${majorName} 전공 정보 - 대학 학과, 진로, 취업 | Careerwiki`
     const metaDescription = `${summary}. ${profile.mainSubjects?.length || 0}개 주요 과목, ${profile.relatedJobs?.length || 0}개 관련 직업, ${profile.universities?.length || 0}개 대학 정보 제공.`
     const canonicalUrl = `https://careerwiki.org/majors/${id}`
     
@@ -24460,10 +27696,9 @@ app.get('/majors/:id', async (c) => {
     
     // Schema.org JSON-LD 생성
     const extraHead = [
-      '<meta property="og:type" content="article">',
       createMajorJsonLd(profile, canonicalUrl)
     ].filter(Boolean).join('\n')
-    
+
     return c.html(renderLayoutWithContext(c,
       content,
       escapeHtml(pageTitle),
@@ -24472,12 +27707,12 @@ app.get('/majors/:id', async (c) => {
       {
         canonical: canonicalUrl,
         ogUrl: canonicalUrl,
+        ogType: 'article',
         extraHead
       }
     ))
     
   } catch (error) {
-    console.error('Major detail route error:', error)
     const fallbackHtml = renderDetailFallback({
       icon: 'fa-exclamation-circle',
       iconColor: 'text-red-500',
@@ -25033,7 +28268,6 @@ function generateProfileContentHtml(): string {
           document.getElementById('tab-career').classList.remove('hidden');
           
         } catch (error) {
-          console.error('Profile load error:', error);
           document.getElementById('loading-state').innerHTML = '<p class="text-red-400">프로필을 불러오는 중 오류가 발생했습니다.</p>';
         }
       }
@@ -25260,7 +28494,6 @@ function generateProfileContentHtml(): string {
             message.textContent = data.recommendation || '프로필이 변경되었습니다.';
           }
         } catch (error) {
-          console.error('Diff check error:', error);
         }
       }
       
@@ -25333,7 +28566,6 @@ function generateProfileContentHtml(): string {
             alert('저장 실패: ' + (data.message || '알 수 없는 오류'));
           }
         } catch (error) {
-          console.error('Save error:', error);
           alert('저장 중 오류가 발생했습니다.');
         }
       }
@@ -25373,7 +28605,6 @@ function generateProfileContentHtml(): string {
             }
           }
         } catch (error) {
-          console.error('Reanalyze error:', error);
           alert('재분석 요청 중 오류가 발생했습니다.');
         }
       }
@@ -25391,7 +28622,7 @@ function generateProfileContentHtml(): string {
 app.get('/user/ai-results', requireAuth, async (c) => {
   const user = c.get('user')
   if (!user) {
-    return c.redirect('/auth/google?return_url=/user/ai-results')
+    return c.redirect('/login?redirect=/user/ai-results')
   }
   
   const activeTab = (c.req.query('tab') || 'results') as 'results' | 'profile'
@@ -25404,13 +28635,18 @@ app.get('/user/ai-results', requireAuth, async (c) => {
     // 진행중인 모든 draft 조회 (완료된 것은 request_id도 함께 조회)
     // LEFT JOIN으로 ai_analysis_requests와 연결하여 request_id 가져오기
     const draftResults = await c.env.DB.prepare(`
-      SELECT 
-        d.id, d.session_id, d.analysis_type, d.current_step, 
+      SELECT
+        d.id, d.session_id, d.analysis_type, d.current_step,
         d.step1_answers_json, d.step4_answers_json, d.updated_at,
-        r.id as request_id
+        latest_req.id as request_id
       FROM analyzer_drafts d
-      LEFT JOIN ai_analysis_requests r ON d.session_id = r.session_id AND r.status = 'completed'
-      WHERE d.user_id = ? 
+      LEFT JOIN (
+        SELECT session_id, MAX(id) as id
+        FROM ai_analysis_requests
+        WHERE status = 'completed'
+        GROUP BY session_id
+      ) latest_req ON d.session_id = latest_req.session_id
+      WHERE d.user_id = ? AND d.session_id NOT LIKE 'edit-%'
       ORDER BY d.updated_at DESC
     `).bind(user.id).all<{
       id: number
@@ -25435,9 +28671,9 @@ app.get('/user/ai-results', requireAuth, async (c) => {
     const total = countResult?.total || 0
     const totalPages = Math.ceil(total / limit)
     
-    // 결과 조회
+    // 결과 조회 (버전 정보 포함)
     const results = await c.env.DB.prepare(`
-      SELECT 
+      SELECT
         r.id,
         r.request_id,
         r.result_json,
@@ -25446,7 +28682,10 @@ app.get('/user/ai-results', requireAuth, async (c) => {
         r.engine_version,
         CASE WHEN r.premium_report_json IS NOT NULL THEN 1 ELSE 0 END as has_premium_report,
         req.session_id,
-        req.analysis_type
+        req.analysis_type,
+        req.version_number,
+        req.version_note,
+        req.parent_request_id
       FROM ai_analysis_results r
       JOIN ai_analysis_requests req ON r.request_id = req.id
       WHERE req.user_id = ?
@@ -25463,6 +28702,9 @@ app.get('/user/ai-results', requireAuth, async (c) => {
       has_premium_report: number
       session_id: string
       analysis_type: string
+      version_number: number | null
+      version_note: string | null
+      parent_request_id: number | null
     }>()
     
     // 결과 파싱
@@ -25486,7 +28728,10 @@ app.get('/user/ai-results', requireAuth, async (c) => {
         confidence_score: r.confidence_score,
         created_at: r.created_at,
         engine_version: r.engine_version || 'v2',
-        has_premium_report: r.has_premium_report === 1
+        has_premium_report: r.has_premium_report === 1,
+        version_number: r.version_number || 1,
+        version_note: r.version_note || null,
+        parent_request_id: r.parent_request_id || null
       }
     })
     
@@ -25532,14 +28777,14 @@ app.get('/user/ai-results', requireAuth, async (c) => {
     // 탭 구조 컨텐츠
     const tabbedContent = `
       <!-- 메인 탭 네비게이션 -->
-      <div class="flex items-center gap-4 mb-6 border-b border-wiki-border/40 pb-4">
-        <a href="/user/ai-results?tab=results" 
-           class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${activeTab === 'results' ? 'bg-wiki-primary text-white' : 'text-wiki-muted hover:text-white hover:bg-wiki-card/50'}">
+      <div class="flex items-center gap-2 sm:gap-4 mb-6 border-b border-wiki-border/40 pb-4">
+        <a href="/user/ai-results?tab=results"
+           class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition ${activeTab === 'results' ? 'bg-wiki-primary text-white' : 'text-wiki-muted hover:text-white hover:bg-wiki-card/50'}">
           <i class="fas fa-robot"></i>
           <span>AI 추천</span>
         </a>
-        <a href="/user/ai-results?tab=profile" 
-           class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${activeTab === 'profile' ? 'bg-wiki-primary text-white' : 'text-wiki-muted hover:text-white hover:bg-wiki-card/50'}">
+        <a href="/user/ai-results?tab=profile"
+           class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition ${activeTab === 'profile' ? 'bg-wiki-primary text-white' : 'text-wiki-muted hover:text-white hover:bg-wiki-card/50'}">
           <i class="fas fa-user-circle"></i>
           <span>내 프로필</span>
         </a>
@@ -25606,7 +28851,6 @@ app.get('/user/ai-results', requireAuth, async (c) => {
                 alert('삭제에 실패했습니다. 다시 시도해주세요.');
               }
             } catch (error) {
-              console.error('Delete error:', error);
               alert('삭제 중 오류가 발생했습니다.');
             }
             
@@ -25639,7 +28883,6 @@ app.get('/user/ai-results', requireAuth, async (c) => {
                 alert('삭제에 실패했습니다. 다시 시도해주세요.');
               }
             } catch (error) {
-              console.error('Delete all error:', error);
               alert('삭제 중 오류가 발생했습니다.');
             }
           }
@@ -25659,7 +28902,6 @@ app.get('/user/ai-results', requireAuth, async (c) => {
     return c.html(renderLayoutWithContext(c, pageContent, 'AI 추천 - 마이페이지 - Careerwiki'))
     
   } catch (error) {
-    console.error('[User AI Results] Error:', error)
     const errorContent = renderUserLayoutContent({
       title: 'AI 추천',
       currentPath: '/user/ai-results',
@@ -25676,203 +28918,30 @@ app.get('/user/ai-results', requireAuth, async (c) => {
 app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
   const user = c.get('user')
   if (!user) {
-    return c.redirect('/auth/google?return_url=' + encodeURIComponent(c.req.path))
+    return c.redirect('/login?redirect=' + encodeURIComponent(c.req.path))
   }
-  
+
   const requestId = parseInt(c.req.param('requestId'), 10)
-  
+
   try {
-    // 결과 조회 (본인 것만 - req.user_id 또는 draft 소유권으로 확인)
+    // 결과 조회 - analysis_type만 확인하여 적절한 analyzer 페이지로 리다이렉트
     const result = await c.env.DB.prepare(`
-      SELECT
-        r.id,
-        r.request_id,
-        r.result_json,
-        r.premium_report_json,
-        r.confidence_score,
-        r.created_at,
-        r.engine_version,
-        req.session_id,
-        req.analysis_type
-      FROM ai_analysis_results r
-      JOIN ai_analysis_requests req ON r.request_id = req.id
+      SELECT req.analysis_type
+      FROM ai_analysis_requests req
       LEFT JOIN analyzer_drafts d ON req.session_id = d.session_id
       WHERE req.id = ? AND (req.user_id = ? OR d.user_id = ?)
     `).bind(requestId, user.id, user.id).first<{
-      id: number
-      request_id: number
-      result_json: string
-      premium_report_json: string | null
-      confidence_score: number | null
-      created_at: string
-      engine_version: string | null
-      session_id: string
       analysis_type: string
     }>()
     
     if (!result) {
-      const notFoundContent = renderUserLayoutContent({
-        title: '결과를 찾을 수 없음',
-        currentPath: '/user/ai-results',
-        children: `<div class="text-center py-16">
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="background: rgba(239, 68, 68, 0.1);">
-            <i class="fas fa-exclamation-triangle text-2xl text-red-400"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-white mb-3">결과를 찾을 수 없습니다</h3>
-          <p class="mb-6 text-wiki-muted">요청하신 분석 결과가 존재하지 않거나 접근 권한이 없습니다.</p>
-          <a href="/user/ai-results" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-wiki-primary/20 text-wiki-secondary">
-            <i class="fas fa-arrow-left"></i> 목록으로 돌아가기
-          </a>
-        </div>`,
-        username: user.username || user.email,
-        pictureUrl: user.custom_picture_url || user.picture_url || null,
-        role: user.role
-      })
-      return c.html(renderLayoutWithContext(c, notFoundContent, '결과 없음 - 마이페이지 - Careerwiki'))
+      return c.redirect('/user/ai-results')
     }
-    
-    // 결과 파싱
-    let parsedResult: any = {}
-    try {
-      parsedResult = JSON.parse(result.result_json)
-    } catch { }
-    
-    let premiumReport: any = null
-    if (result.premium_report_json) {
-      try {
-        premiumReport = JSON.parse(result.premium_report_json)
-      } catch { }
-    }
-    
-    const isJob = result.analysis_type === 'job'
-    const typeLabel = isJob ? '직업 추천' : '전공 추천'
-    
-    // 상세 결과 표시 콘텐츠
-    const content = `
-      <div class="max-w-4xl mx-auto">
-        <!-- 상단 네비게이션 -->
-        <div class="mb-6 flex items-center justify-between">
-          <a href="/user/ai-results" class="inline-flex items-center gap-2 text-sm transition hover:opacity-80" style="color: #9aa3c5;">
-            <i class="fas fa-arrow-left"></i> 목록으로
-          </a>
-          <button onclick="copyAllResults()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition hover:opacity-80" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6;">
-            <i class="fas fa-copy"></i> 결과 전체 복사
-          </button>
-        </div>
-        
-        <!-- 결과 헤더 -->
-        <div class="p-6 rounded-xl mb-6" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="w-12 h-12 rounded-xl flex items-center justify-center ${isJob ? 'bg-blue-500/20' : 'bg-emerald-500/20'}">
-              <i class="fas ${isJob ? 'fa-briefcase text-blue-400' : 'fa-university text-emerald-400'} text-xl"></i>
-            </div>
-            <div>
-              <h2 class="text-xl font-bold text-white">${typeLabel} 결과</h2>
-              <p class="text-sm" style="color: #9aa3c5;">${new Date(result.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-            </div>
-          </div>
-          ${result.confidence_score ? `
-            <div class="flex items-center gap-2">
-              <span class="text-sm" style="color: #9aa3c5;">신뢰도:</span>
-              <div class="flex-1 h-2 rounded-full max-w-xs" style="background: rgba(67, 97, 238, 0.2);">
-                <div class="h-full rounded-full" style="width: ${Math.round(result.confidence_score * 100)}%; background: linear-gradient(90deg, #4361ee, #64b5f6);"></div>
-              </div>
-              <span class="text-sm font-medium" style="color: #64b5f6;">${Math.round(result.confidence_score * 100)}%</span>
-            </div>
-          ` : ''}
-        </div>
-        
-        <!-- TOP 추천 -->
-        <div id="results-content" class="space-y-6">
-          ${(parsedResult.fit_top3 || []).length > 0 ? `
-            <div class="p-6 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
-              <h3 class="text-lg font-semibold text-white mb-4">
-                <i class="fas fa-trophy text-amber-400 mr-2"></i>TOP 추천
-              </h3>
-              <div class="space-y-3">
-                ${(parsedResult.fit_top3 || []).map((job: any, i: number) => `
-                  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: rgba(67, 97, 238, 0.05);">
-                    <span class="text-2xl font-bold ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-slate-300' : 'text-amber-600'}">${i + 1}</span>
-                    <div class="flex-1">
-                      <p class="font-medium text-white">${job.job_name || job.name || '알 수 없음'}</p>
-                      ${job.job_description ? `<p class="text-sm mt-1" style="color: #b4c5e4; line-height: 1.4;">${job.job_description.length > 120 ? job.job_description.substring(0, 120) + '...' : job.job_description}</p>` : ''}
-                      ${job.fit_score ? `<p class="text-sm mt-1" style="color: #64b5f6;">적합도: ${job.fit_score}점</p>` : ''}
-                    </div>
-                    ${job.slug ? `<a href="/${isJob ? 'job' : 'major'}/${job.slug}" class="text-sm hover:underline whitespace-nowrap" style="color: #4361ee;">상세 보기</a>` : ''}
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          ` : ''}
-          
-          ${premiumReport ? `
-            <!-- 프리미엄 리포트 요약 -->
-            <div class="p-6 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
-              <h3 class="text-lg font-semibold text-white mb-4">
-                <i class="fas fa-file-alt text-emerald-400 mr-2"></i>분석 요약
-              </h3>
-              ${premiumReport.summary_one_page?.headline ? `
-                <p class="text-white mb-4">${premiumReport.summary_one_page.headline}</p>
-              ` : ''}
-              ${premiumReport.summary_one_page?.top_takeaways?.length > 0 ? `
-                <ul class="space-y-2">
-                  ${premiumReport.summary_one_page.top_takeaways.map((t: string) => `
-                    <li class="flex items-start gap-2" style="color: #9aa3c5;">
-                      <i class="fas fa-check text-emerald-400 mt-1"></i>
-                      <span>${t}</span>
-                    </li>
-                  `).join('')}
-                </ul>
-              ` : ''}
-            </div>
-          ` : ''}
-          
-          ${parsedResult.llm_explanation ? `
-            <div class="p-6 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
-              <h3 class="text-lg font-semibold text-white mb-4">
-                <i class="fas fa-lightbulb text-amber-400 mr-2"></i>추천 이유
-              </h3>
-              <div class="prose prose-invert max-w-none" style="color: #9aa3c5;">
-                <p>${parsedResult.llm_explanation.like_reason || ''}</p>
-                <p>${parsedResult.llm_explanation.can_reason || ''}</p>
-              </div>
-            </div>
-          ` : ''}
-        </div>
-      </div>
-      
-      <script>
-        function copyAllResults() {
-          const content = document.getElementById('results-content');
-          if (!content) return;
-          
-          // 텍스트 추출 (이미지 제외)
-          const text = content.innerText;
-          const header = '=== AI 추천 결과 ===\\n' + '${typeLabel}\\n' + '생성일: ${new Date(result.created_at).toLocaleDateString('ko-KR')}\\n\\n';
-          
-          navigator.clipboard.writeText(header + text).then(() => {
-            alert('결과가 클립보드에 복사되었습니다!');
-          }).catch(err => {
-            console.error('복사 실패:', err);
-            alert('복사에 실패했습니다. 직접 선택하여 복사해주세요.');
-          });
-        }
-      </script>
-    `
-    
-    const detailPageContent = renderUserLayoutContent({
-      title: `${typeLabel} 결과`,
-      currentPath: '/user/ai-results',
-      children: content,
-      username: user.username || user.email,
-      pictureUrl: user.custom_picture_url || user.picture_url || null,
-      role: user.role
-    })
-    
-    return c.html(renderLayoutWithContext(c, detailPageContent, `${typeLabel} 결과 - 마이페이지 - Careerwiki`))
+
+    const analyzerPath = result.analysis_type === 'job' ? '/analyzer/job' : '/analyzer/major'
+    return c.redirect(`${analyzerPath}?view=${requestId}`)
     
   } catch (error) {
-    console.error('[User AI Result Detail] Error:', error)
     const errorPageContent = renderUserLayoutContent({
       title: '오류',
       currentPath: '/user/ai-results',
@@ -26048,7 +29117,6 @@ app.get('/user/bookmarks', requireAuth, async (c) => {
     bookmarkList = bookmarks.results || []
   } catch (e) {
     // 테이블이 없으면 빈 배열
-    console.log('[bookmarks] Table not found, showing empty')
   }
   
   // 타입별로 분류
@@ -26228,7 +29296,6 @@ app.post('/api/bookmark', async (c) => {
       return c.json({ success: true, saved: true, message: '저장되었습니다' })
     }
   } catch (e) {
-    console.error('[bookmark] Error:', e)
     return c.json({ success: false, error: 'db_error' }, 500)
   }
 })
@@ -26307,7 +29374,6 @@ app.post('/api/user/profile-image', requireAuth, async (c) => {
       message: '프로필 이미지가 업데이트되었습니다' 
     })
   } catch (e) {
-    console.error('[profile-image upload] Error:', e)
     return c.json({ success: false, error: '업로드 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -26337,16 +29403,89 @@ app.delete('/api/user/profile-image', requireAuth, async (c) => {
       message: '프로필 이미지가 기본으로 초기화되었습니다' 
     })
   } catch (e) {
-    console.error('[profile-image delete] Error:', e)
     return c.json({ success: false, error: '초기화 중 오류가 발생했습니다' }, 500)
   }
+})
+
+// ===== 세션 관리 API =====
+import { listUserSessions, destroySession, destroyAllUserSessions, getUserSessionEntries } from './utils/session'
+
+// GET /api/user/sessions - 내 활성 세션 목록
+app.get('/api/user/sessions', requireAuth, async (c) => {
+  const user = c.get('user')
+  const currentToken = c.get('sessionToken')
+  if (!user) return c.json({ error: 'unauthorized' }, 401)
+
+  try {
+    const sessions = await listUserSessions(c.env.KV, user.id, currentToken || undefined)
+    return c.json({ sessions })
+  } catch (e) {
+    return c.json({ sessions: [], error: 'Failed to load sessions' }, 200)
+  }
+})
+
+// DELETE /api/user/sessions/:prefix - 특정 세션 로그아웃
+app.delete('/api/user/sessions/:prefix', requireAuth, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.json({ error: 'unauthorized' }, 401)
+
+  const prefix = c.req.param('prefix')
+  const entries = await getUserSessionEntries(c.env.KV, user.id)
+  const target = entries.find(s => s.token.substring(0, 8) === prefix)
+  if (!target) return c.json({ error: 'Session not found' }, 404)
+
+  // 현재 세션은 삭제 불가
+  const currentToken = c.get('sessionToken')
+  if (currentToken === target.token) {
+    return c.json({ error: 'Cannot delete current session. Use logout instead.' }, 400)
+  }
+
+  await destroySession(c.env.KV, c.env.DB, target.token, 'user_logout', user.id)
+  return c.json({ success: true })
+})
+
+// POST /api/user/sessions/logout-others - 다른 기기 전체 로그아웃
+app.post('/api/user/sessions/logout-others', requireAuth, async (c) => {
+  const user = c.get('user')
+  const currentToken = c.get('sessionToken')
+  if (!user) return c.json({ error: 'unauthorized' }, 401)
+
+  const entries = await getUserSessionEntries(c.env.KV, user.id)
+  if (entries.length === 0) return c.json({ success: true, destroyed: 0 })
+
+  const others = entries.filter(s => s.token !== currentToken)
+  if (others.length === 0) return c.json({ success: true, destroyed: 0 })
+
+  // 세션 KV만 직접 삭제 (destroySession N번 호출 대신 병렬 삭제)
+  await Promise.all(others.map(s => c.env.KV.delete(`session:${s.token}`)))
+
+  // 인덱스를 현재 세션만 남긴 것으로 갱신
+  const current = entries.find(s => s.token === currentToken)
+  if (current) {
+    await c.env.KV.put(
+      `user-sessions:${user.id}`,
+      JSON.stringify({ sessions: [current] }),
+      { expirationTtl: 30 * 24 * 60 * 60 }
+    )
+  } else {
+    await c.env.KV.delete(`user-sessions:${user.id}`)
+  }
+
+  // 감사 로그 일괄 업데이트 (비차단)
+  c.executionCtx.waitUntil(
+    c.env.DB.prepare(`
+      UPDATE user_sessions SET expired_at = ?, logout_reason = ? WHERE user_id = ? AND expired_at IS NULL
+    `).bind(Math.floor(Date.now() / 1000), 'all_devices_logout', user.id).run().catch(() => {})
+  )
+
+  return c.json({ success: true, destroyed: others.length })
 })
 
 // Phase 3 Day 4: 개인 설정 페이지
 app.get('/user/settings', requireAuth, async (c) => {
   const user = c.get('user')
   if (!user) {
-    return c.redirect(`/auth/google?return_url=${encodeURIComponent(c.req.path + c.req.query())}`)
+    return c.redirect(`/login?redirect=${encodeURIComponent(c.req.path + c.req.query())}`)
   }
   
   const userData = {
@@ -26428,7 +29567,8 @@ app.get('/user/settings', requireAuth, async (c) => {
               </div>
             </div>
             
-            <!-- 이메일 -->
+            <!-- 이메일 (테스트 계정은 숨김) -->
+            ${user.google_id !== 'test-account' ? `
             <div>
               <label class="block text-sm font-medium text-wiki-text mb-2">이메일</label>
               <div class="px-4 py-2 bg-wiki-card border border-wiki-border rounded-lg text-wiki-text">
@@ -26436,6 +29576,7 @@ app.get('/user/settings', requireAuth, async (c) => {
               </div>
               <p class="text-xs text-wiki-muted mt-1">Google 계정 이메일입니다.</p>
             </div>
+            ` : ''}
           </div>
         </div>
         
@@ -26494,23 +29635,8 @@ app.get('/user/settings', requireAuth, async (c) => {
           </div>
         </div>
         
-        <!-- 보안 섹션 -->
-        <div class="bg-wiki-bg/50 p-6 rounded-xl border border-wiki-border">
-          <h2 class="text-xl font-semibold mb-4 text-wiki-text">
-            <i class="fas fa-shield-halved mr-2 text-wiki-primary"></i>보안
-          </h2>
-          
-          <div class="space-y-4">
-            <div>
-              <p class="text-sm text-wiki-muted mb-2">
-                Google OAuth를 통해 로그인하므로 별도의 비밀번호가 없습니다.
-              </p>
-              <p class="text-sm text-wiki-muted">
-                계정 보안은 Google 계정 설정에서 관리하세요.
-              </p>
-            </div>
-          </div>
-        </div>
+        <!-- 보안 섹션: 세션 관리 -->
+        ${renderSecurityPage()}
       </div>
     </div>
     
@@ -26702,6 +29828,12 @@ app.get('/user/settings', requireAuth, async (c) => {
   ))
 })
 
+// ===== 보안 설정 (세션 관리) 페이지 =====
+import { renderSecurityPage } from './templates/user/userSecurity'
+
+// /user/security → /user/settings 리다이렉트 (하위 호환)
+app.get('/user/security', (c) => c.redirect('/user/settings', 301))
+
 // ============================================================================
 // 사용자 API
 // ============================================================================
@@ -26725,7 +29857,6 @@ app.patch('/api/user/username', requireAuth, async (c) => {
     
     return c.json({ success: true, message: 'Username updated successfully' })
   } catch (error) {
-    console.error('❌ [User API] Failed to update username:', error)
     const errorMessage = error instanceof Error ? error.message : 'Failed to update username'
     return c.json({ success: false, error: errorMessage }, 400)
   }
@@ -26754,7 +29885,6 @@ app.post('/api/admin/seed-jobs', requireAdmin, async (c) => {
     if (background) {
       // 백그라운드로 실행
       const seedPromise = Promise.resolve({}).catch((err: unknown) => {
-        console.error('❌ Seed failed:', err)
         return {
           total: 0,
           processed: 0,
@@ -26778,17 +29908,144 @@ app.post('/api/admin/seed-jobs', requireAdmin, async (c) => {
       })
     } else {
       // 동기 실행 - 완료될 때까지 기다림
-      console.log('🌱 Starting seed job synchronously...')
       return c.json({ error: 'Deprecated' }, 501)
     }
     */
   } catch (error: unknown) {
-    console.error('❌ Seed start failed:', error)
     const errorMessage = error instanceof Error ? error.message : String(error)
     return c.json({ 
       error: 'Failed to start seed',
       details: errorMessage 
     }, 500)
+  }
+})
+
+// Admin API: Re-seed empty majors from CareerNet API
+// 30개 전공의 merged_profile_json이 NULL인 경우 CareerNet API에서 데이터를 가져와 채움
+app.post('/api/admin/reseed-empty-majors', async (c) => {
+  // Admin auth: JWT admin role OR ADMIN_SECRET header
+  const user = c.get('user')
+  const isAdminUser = user && ((user.role as string) === 'admin' || (user.role as string) === 'super-admin' || (user.role as string) === 'operator')
+  const secretHeader = c.req.header('X-Admin-Secret')
+  const hasSecretAuth = secretHeader && c.env.ADMIN_SECRET && secretHeader === c.env.ADMIN_SECRET
+  if (!isAdminUser && !hasSecretAuth) {
+    return c.json({ error: 'Admin authentication required' }, 401)
+  }
+  try {
+    const db = c.env.DB as D1Database
+    const { searchMajors, getMajorDetail, normalizeCareerNetMajorDetail } = await import('./api/careernetAPI')
+
+    // merged_profile_json이 NULL인 활성 전공 찾기
+    const emptyMajors = await db.prepare(`
+      SELECT id, name FROM majors
+      WHERE is_active = 1
+        AND (merged_profile_json IS NULL OR LENGTH(merged_profile_json) < 10)
+      ORDER BY name
+    `).all<{ id: string; name: string }>()
+
+    if (!emptyMajors.results || emptyMajors.results.length === 0) {
+      return c.json({ message: 'No empty majors found', total: 0 })
+    }
+
+    const results: Array<{ name: string; status: string; error?: string }> = []
+    let successCount = 0
+    let failedCount = 0
+
+    for (const major of emptyMajors.results) {
+      try {
+        // 1. CareerNet API로 이름 검색
+        const searchResults = await searchMajors({ keyword: major.name, perPage: 20 }, c.env)
+
+        if (!searchResults || searchResults.length === 0) {
+          results.push({ name: major.name, status: 'not_found', error: 'No CareerNet results' })
+          failedCount++
+          continue
+        }
+
+        // 2. 정확한 이름 매칭 또는 가장 유사한 결과 선택
+        const exactMatch = searchResults.find((r: any) => {
+          const mClass = (r.mClass || '').trim()
+          return mClass === major.name || mClass === major.name.replace(/학과$|과$/, '')
+        })
+        const bestMatch = exactMatch || searchResults[0]
+        const majorSeq = bestMatch.majorSeq
+
+        if (!majorSeq) {
+          results.push({ name: major.name, status: 'no_seq', error: 'No majorSeq in result' })
+          failedCount++
+          continue
+        }
+
+        // 3. 상세 정보 가져오기
+        const detail = await getMajorDetail(majorSeq, c.env)
+        if (!detail) {
+          results.push({ name: major.name, status: 'no_detail', error: 'Detail API returned null' })
+          failedCount++
+          continue
+        }
+
+        // 4. 정규화
+        const normalized = normalizeCareerNetMajorDetail(detail)
+
+        // 5. merged_profile_json 빌드 (ETL 형식과 호환)
+        const merged: any = {
+          ...normalized,
+          name: major.name, // DB의 이름 유지
+          heroSummary: normalized.summary ? normalized.summary.split(/[.?!。]/)[0]?.trim() + '.' : undefined,
+          categoryName: (bestMatch as any).facilName || (normalized as any).category?.name || undefined,
+          categoryDisplay: (bestMatch as any).facilName || (normalized as any).category?.name || undefined,
+          majorGb: (bestMatch as any).majorGb || '1',
+          sources: ['CAREERNET'],
+          sourceIds: { careernet: majorSeq }
+        }
+
+        // null/undefined 필드 정리
+        Object.keys(merged).forEach(key => {
+          if (merged[key] === null || merged[key] === undefined || merged[key] === '') {
+            delete merged[key]
+          }
+        })
+
+        // 6. DB 업데이트
+        await db.prepare(`
+          UPDATE majors
+          SET merged_profile_json = ?, careernet_id = ?, primary_source = 'CAREERNET'
+          WHERE id = ?
+        `).bind(JSON.stringify(merged), majorSeq, major.id).run()
+
+        results.push({ name: major.name, status: 'success' })
+        successCount++
+
+        // API 속도 제한 방지
+        await new Promise(resolve => setTimeout(resolve, 350))
+
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err)
+        results.push({ name: major.name, status: 'error', error: errMsg })
+        failedCount++
+      }
+    }
+
+    // ISR 캐시 무효화 (성공한 전공들)
+    const successNames = results.filter(r => r.status === 'success').map(r => r.name)
+    if (successNames.length > 0 && c.env.DB) {
+      try {
+        for (const name of successNames) {
+          await db.prepare(`DELETE FROM wiki_pages WHERE slug = ? AND page_type = 'major'`).bind(name).run()
+        }
+      } catch { /* cache invalidation is best-effort */ }
+    }
+
+    return c.json({
+      total: emptyMajors.results.length,
+      success: successCount,
+      failed: failedCount,
+      results
+    })
+
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error)
+    return c.json({ error: 'Reseed failed', details: msg }, 500)
   }
 })
 
@@ -27111,9 +30368,7 @@ app.delete('/api/job/:id', requireAuth, async (c) => {
         const fileKey = jobWithImage.image_url.replace('/uploads/', '')
         try {
           await c.env.UPLOADS.delete(fileKey)
-          console.log(`[Job Delete] R2 이미지 삭제: ${fileKey}`)
         } catch (e) {
-          console.error(`[Job Delete] R2 이미지 삭제 실패: ${fileKey}`, e)
         }
       }
       
@@ -27123,7 +30378,6 @@ app.delete('/api/job/:id', requireAuth, async (c) => {
           .run()
       } catch (e) {
         // revisions 테이블이 없어도 무시
-        console.log('[Job Delete] Revisions table may not exist, skipping:', e)
       }
       
       await c.env.DB.prepare('DELETE FROM jobs WHERE id = ?')
@@ -27134,10 +30388,9 @@ app.delete('/api/job/:id', requireAuth, async (c) => {
       c.executionCtx.waitUntil(
         import('./services/ai-analyzer/auto-tagger').then(({ deleteJobAttributes }) =>
           deleteJobAttributes(c.env.DB, jobId)
-        ).catch(err => console.error('[Job Delete] Auto-delete job_attributes failed:', err))
+        ).catch(() => {})
       )
 
-      console.log(`[Job Permanent Delete] Job "${job.name}" (${jobId}) permanently deleted by ${user.username || user.email}`)
       
       return c.json({
         success: true,
@@ -27149,7 +30402,6 @@ app.delete('/api/job/:id', requireAuth, async (c) => {
         .bind(Date.now(), jobId)
         .run()
       
-      console.log(`[Job Hide] Job "${job.name}" (${jobId}) hidden by ${user.username || user.email}`)
       
       return c.json({
         success: true,
@@ -27157,7 +30409,6 @@ app.delete('/api/job/:id', requireAuth, async (c) => {
       })
     }
   } catch (error) {
-    console.error('[Job Delete] Error:', error)
     return c.json({ success: false, error: 'DELETE_FAILED' }, 500)
   }
 })
@@ -27197,14 +30448,12 @@ app.post('/api/job/:id/restore', requireAuth, async (c) => {
       .bind(Date.now(), jobId)
       .run()
     
-    console.log(`[Job Restore] Job "${job.name}" (${jobId}) restored by ${user.username || user.email}`)
     
     return c.json({
       success: true,
       message: `직업 "${job.name}"이(가) 복구되었습니다.`
     })
   } catch (error) {
-    console.error('[Job Restore] Error:', error)
     return c.json({ success: false, error: 'RESTORE_FAILED' }, 500)
   }
 })
@@ -27237,7 +30486,6 @@ app.get('/api/job/hidden', requireAuth, async (c) => {
       jobs: jobs.results || []
     })
   } catch (error) {
-    console.error('[Job Hidden List] Error:', error)
     return c.json({ success: false, error: 'FETCH_FAILED' }, 500)
   }
 })
@@ -27313,7 +30561,6 @@ app.post('/api/job/create', requireAuth, async (c) => {
     const now = Date.now()
     
     // jobs 테이블에 INSERT (merged_profile_json, slug 포함)
-    console.log('[API] Inserting job:', { id, name, urlSlug, now })
     try {
       await c.env.DB.prepare(`
         INSERT INTO jobs (id, name, slug, user_contributed_json, merged_profile_json, user_last_updated_at, created_at, is_active, primary_source)
@@ -27327,14 +30574,11 @@ app.post('/api/job/create', requireAuth, async (c) => {
         now,
         now
       ).run()
-      console.log('[API] Job inserted successfully')
     } catch (insertError) {
-      console.error('[API] Job INSERT failed:', insertError)
       throw insertError
     }
     
     // 초기 revision 생성
-    console.log('[API] Creating revision...')
     try {
       const { createRevision } = await import('./services/revisionService')
       await createRevision(c.env.DB, {
@@ -27349,9 +30593,7 @@ app.post('/api/job/create', requireAuth, async (c) => {
         changedFields: Object.keys(userData),
         storeFullSnapshot: true
       })
-      console.log('[API] Revision created successfully')
     } catch (revisionError) {
-      console.error('[API] Revision creation failed:', revisionError)
       throw revisionError
     }
     
@@ -27365,7 +30607,6 @@ app.post('/api/job/create', requireAuth, async (c) => {
     
     if (geminiKey && evolinkKey && uploadsR2) {
       try {
-        console.log(`[API] Starting auto image generation for job: ${name}`)
         const { generateJobImage } = await import('./services/autoImageService')
         const baseUrl = new URL(c.req.url).origin
         
@@ -27385,7 +30626,6 @@ app.post('/api/job/create', requireAuth, async (c) => {
             UPDATE jobs SET image_url = ?, image_prompt = ? WHERE id = ?
           `).bind(imageUrl, imagePrompt, id).run()
           
-          console.log(`[API] Auto image generated for job ${name}: ${imageUrl}`)
         } else {
           // 이미지 생성 실패해도 프롬프트는 저장
           if (imageResult.imagePrompt) {
@@ -27394,14 +30634,11 @@ app.post('/api/job/create', requireAuth, async (c) => {
             `).bind(imageResult.imagePrompt, id).run()
             imagePrompt = imageResult.imagePrompt
           }
-          console.warn(`[API] Auto image failed for job ${name}: ${imageResult.error}`)
         }
       } catch (imageError) {
-        console.error('[API] Auto image generation error:', imageError)
         // 이미지 생성 실패해도 직업 생성은 성공으로 처리
       }
     } else {
-      console.log('[API] Skipping auto image: API keys not configured')
     }
     
     // 자동 태깅 (백그라운드 - 응답 블로킹 없음)
@@ -27415,7 +30652,17 @@ app.post('/api/job/create', requireAuth, async (c) => {
             user_contributed_json: JSON.stringify(userData),
             merged_profile_json: JSON.stringify(mergedProfile),
           }, openaiKeyForTag)
-        ).catch(err => console.error('[User Job Create] Auto-tag failed:', err))
+        ).catch(() => {})
+      )
+    }
+
+    // 자동 Vectorize 인덱싱 (백그라운드)
+    const openaiKeyForIdx = (c.env as any).OPENAI_API_KEY
+    if (openaiKeyForIdx && (c.env as any).VECTORIZE) {
+      c.executionCtx.waitUntil(
+        import('./services/ai-analyzer/vectorize-pipeline').then(({ indexSingleJob }) =>
+          indexSingleJob(c.env.DB, (c.env as any).VECTORIZE, openaiKeyForIdx, id)
+        ).catch(() => {})
       )
     }
 
@@ -27429,7 +30676,6 @@ app.post('/api/job/create', requireAuth, async (c) => {
     }, 201)
     
   } catch (error) {
-    console.error('[API] Create job error:', error)
     const message = error instanceof Error ? error.message : 'create failed'
     return c.json({ success: false, error: message }, 500)
   }
@@ -27478,9 +30724,7 @@ app.delete('/api/major/:id', requireAuth, async (c) => {
         const fileKey = majorWithImage.image_url.replace('/uploads/', '')
         try {
           await c.env.UPLOADS.delete(fileKey)
-          console.log(`[Major Delete] R2 이미지 삭제: ${fileKey}`)
         } catch (e) {
-          console.error(`[Major Delete] R2 이미지 삭제 실패: ${fileKey}`, e)
         }
       }
       
@@ -27490,14 +30734,12 @@ app.delete('/api/major/:id', requireAuth, async (c) => {
           .run()
       } catch (e) {
         // revisions 테이블이 없어도 무시
-        console.log('[Major Delete] Revisions table may not exist, skipping:', e)
       }
       
       await c.env.DB.prepare('DELETE FROM majors WHERE id = ?')
         .bind(majorId)
         .run()
       
-      console.log(`[Major Permanent Delete] Major "${major.name}" (${majorId}) permanently deleted by ${user.username || user.email}`)
       
       return c.json({
         success: true,
@@ -27509,7 +30751,6 @@ app.delete('/api/major/:id', requireAuth, async (c) => {
         .bind(Date.now(), majorId)
         .run()
       
-      console.log(`[Major Hide] Major "${major.name}" (${majorId}) hidden by ${user.username || user.email}`)
       
       return c.json({
         success: true,
@@ -27517,7 +30758,6 @@ app.delete('/api/major/:id', requireAuth, async (c) => {
       })
     }
   } catch (error) {
-    console.error('[Major Delete] Error:', error)
     return c.json({ success: false, error: 'DELETE_FAILED' }, 500)
   }
 })
@@ -27557,14 +30797,12 @@ app.post('/api/major/:id/restore', requireAuth, async (c) => {
       .bind(Date.now(), majorId)
       .run()
     
-    console.log(`[Major Restore] Major "${major.name}" (${majorId}) restored by ${user.username || user.email}`)
     
     return c.json({
       success: true,
       message: `전공 "${major.name}"이(가) 복구되었습니다.`
     })
   } catch (error) {
-    console.error('[Major Restore] Error:', error)
     return c.json({ success: false, error: 'RESTORE_FAILED' }, 500)
   }
 })
@@ -27597,7 +30835,6 @@ app.get('/api/major/hidden', requireAuth, async (c) => {
       majors: majors.results || []
     })
   } catch (error) {
-    console.error('[Major Hidden List] Error:', error)
     return c.json({ success: false, error: 'FETCH_FAILED' }, 500)
   }
 })
@@ -27709,7 +30946,6 @@ app.post('/api/major/create', requireAuth, async (c) => {
     
     if (geminiKey && evolinkKey && uploadsR2) {
       try {
-        console.log(`[API] Starting auto image generation for major: ${name}`)
         const { generateMajorImage } = await import('./services/autoImageService')
         const baseUrl = new URL(c.req.url).origin
         
@@ -27729,7 +30965,6 @@ app.post('/api/major/create', requireAuth, async (c) => {
             UPDATE majors SET image_url = ?, image_prompt = ? WHERE id = ?
           `).bind(imageUrl, imagePrompt, id).run()
           
-          console.log(`[API] Auto image generated for major ${name}: ${imageUrl}`)
         } else {
           // 이미지 생성 실패해도 프롬프트는 저장
           if (imageResult.imagePrompt) {
@@ -27738,16 +30973,23 @@ app.post('/api/major/create', requireAuth, async (c) => {
             `).bind(imageResult.imagePrompt, id).run()
             imagePrompt = imageResult.imagePrompt
           }
-          console.warn(`[API] Auto image failed for major ${name}: ${imageResult.error}`)
         }
       } catch (imageError) {
-        console.error('[API] Auto image generation error:', imageError)
         // 이미지 생성 실패해도 전공 생성은 성공으로 처리
       }
     } else {
-      console.log('[API] Skipping auto image: API keys not configured')
     }
     
+    // 자동 Vectorize 인덱싱 (백그라운드)
+    const openaiKeyForIdx = (c.env as any).OPENAI_API_KEY
+    if (openaiKeyForIdx && (c.env as any).VECTORIZE) {
+      c.executionCtx.waitUntil(
+        import('./services/ai-analyzer/vectorize-pipeline').then(({ indexSingleMajor }) =>
+          indexSingleMajor(c.env.DB, (c.env as any).VECTORIZE, openaiKeyForIdx, id)
+        ).catch(() => {})
+      )
+    }
+
     return c.json({
       success: true,
       id,
@@ -27756,9 +30998,8 @@ app.post('/api/major/create', requireAuth, async (c) => {
       imagePrompt,
       message: '전공이 생성되었습니다'
     }, 201)
-    
+
   } catch (error) {
-    console.error('[API] Create major error:', error)
     const message = error instanceof Error ? error.message : 'create failed'
     return c.json({ success: false, error: message }, 500)
   }
@@ -27815,7 +31056,16 @@ app.post('/api/admin/job', requireAdmin, async (c) => {
             name,
             admin_data_json: JSON.stringify({ summary, duties, salary, prospect, way }),
           }, openaiKey)
-        ).catch(err => console.error('[Admin Job Create] Auto-tag failed:', err))
+        ).catch(() => {})
+      )
+    }
+
+    // 자동 Vectorize 인덱싱 (백그라운드)
+    if (openaiKey && (c.env as any).VECTORIZE) {
+      c.executionCtx.waitUntil(
+        import('./services/ai-analyzer/vectorize-pipeline').then(({ indexSingleJob }) =>
+          indexSingleJob(c.env.DB, (c.env as any).VECTORIZE, openaiKey, id)
+        ).catch(() => {})
       )
     }
 
@@ -27827,7 +31077,6 @@ app.post('/api/admin/job', requireAdmin, async (c) => {
     }, 201)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'create failed'
-    console.error('[admin job create] Error:', error)
     
     const status = message.includes('REQUIRED') ? 400
       : message.includes('ALREADY_EXISTS') ? 409
@@ -27880,7 +31129,17 @@ app.post('/api/admin/major', requireAdmin, async (c) => {
       enterField,
       userId: user.id.toString()
     })
-    
+
+    // 자동 Vectorize 인덱싱 (백그라운드)
+    const openaiKeyForIdx = (c.env as any).OPENAI_API_KEY
+    if (openaiKeyForIdx && (c.env as any).VECTORIZE) {
+      c.executionCtx.waitUntil(
+        import('./services/ai-analyzer/vectorize-pipeline').then(({ indexSingleMajor }) =>
+          indexSingleMajor(c.env.DB, (c.env as any).VECTORIZE, openaiKeyForIdx, id)
+        ).catch(() => {})
+      )
+    }
+
     return c.json({
       success: true,
       id: result.id,
@@ -27889,7 +31148,6 @@ app.post('/api/admin/major', requireAdmin, async (c) => {
     }, 201)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'create failed'
-    console.error('[admin major create] Error:', error)
     
     const status = message.includes('REQUIRED') ? 400
       : message.includes('ALREADY_EXISTS') ? 409
@@ -27962,7 +31220,6 @@ app.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => {
     }
     
     if (!majorRecord) {
-      console.error(`[major edit] Major not found. Searched with: ${majorIdParam}`)
       return c.json({ success: false, error: 'MAJOR_NOT_FOUND' }, 404)
     }
     
@@ -28204,7 +31461,6 @@ app.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'edit failed'
-    console.error(`[major edit] Error:`, error)
     const status = message.includes('NOT_FOUND') ? 404 
       : message.includes('REQUIRED') || message.includes('INVALID') ? 400
       : message.includes('LIMIT') ? 403
@@ -28265,7 +31521,6 @@ app.post('/api/howto', requireAuth, async (c) => {
     }, 201)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'create failed'
-    console.error('[howto create] Error:', error)
     
     const status = message.includes('REQUIRED') ? 400
       : message.includes('INVALID') ? 400
@@ -28322,7 +31577,6 @@ app.post('/api/howto/:slug/edit', requireHowToEdit, async (c) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'edit failed'
-    console.error('[howto edit] Error:', error)
     
     const status = message.includes('NOT_FOUND') ? 404 
       : message.includes('NOT_AUTHOR') ? 403
@@ -28373,7 +31627,6 @@ app.get('/api/slug/check', authMiddleware, async (c) => {
       hasSuffix: result.slug !== baseSlug
     })
   } catch (error) {
-    console.error('[slug check] Error:', error)
     return c.json({ success: false, error: '슬러그 생성 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28392,7 +31645,6 @@ app.get('/api/slug/validate', authMiddleware, async (c) => {
     
     return c.json({ success: true, valid: result.valid, error: result.error })
   } catch (error) {
-    console.error('[slug validate] Error:', error)
     return c.json({ success: false, error: '검증 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28422,7 +31674,6 @@ app.get('/api/search', authMiddleware, async (c) => {
     
     return c.json({ success: true, results: result.results })
   } catch (error) {
-    console.error('[search] Error:', error)
     return c.json({ success: false, error: '검색 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28442,7 +31693,6 @@ app.get('/api/search/validate', authMiddleware, async (c) => {
     
     return c.json({ success: true, exists: result.exists, data: result.data })
   } catch (error) {
-    console.error('[validate] Error:', error)
     return c.json({ success: false, error: '검증 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28461,7 +31711,6 @@ app.get('/api/tags/popular', async (c) => {
     
     return c.json({ success: true, tags: result.tags })
   } catch (error) {
-    console.error('[popular tags] Error:', error)
     return c.json({ success: false, error: '태그 조회 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28542,7 +31791,6 @@ app.post('/api/howto/drafts', requireAuth, async (c) => {
     
     return c.json({ success: true, draftId: draftId }, 201)
   } catch (error) {
-    console.error('[create draft] Error:', error)
     return c.json({ success: false, error: '초안 생성 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28593,7 +31841,6 @@ app.get('/api/howto/check-title', async (c) => {
     
     return c.json({ success: true, available: true })
   } catch (error) {
-    console.error('[check-title] Error:', error)
     return c.json({ success: false, error: '제목 확인 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28650,7 +31897,6 @@ app.get('/api/job/categories', async (c) => {
     
     return c.json({ success: true, categories: allCategories })
   } catch (error) {
-    console.error('[job-categories] Error:', error)
     return c.json({ success: true, categories: [] })
   }
 })
@@ -28703,7 +31949,6 @@ app.get('/api/major/categories', async (c) => {
     
     return c.json({ success: true, categories: allCategories })
   } catch (error) {
-    console.error('[major-categories] Error:', error)
     return c.json({ success: true, categories: [] })
   }
 })
@@ -28744,7 +31989,6 @@ app.get('/api/job/check-name', async (c) => {
     
     return c.json({ success: true, available: true })
   } catch (error) {
-    console.error('[check-job-name] Error:', error)
     return c.json({ success: false, error: '직업명 확인 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28785,7 +32029,6 @@ app.get('/api/major/check-name', async (c) => {
     
     return c.json({ success: true, available: true })
   } catch (error) {
-    console.error('[check-major-name] Error:', error)
     return c.json({ success: false, error: '전공명 확인 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28807,7 +32050,6 @@ app.get('/api/howto/drafts', requireAuth, async (c) => {
     
     return c.json({ success: true, drafts: result.drafts, total: result.total })
   } catch (error) {
-    console.error('[list drafts] Error:', error)
     return c.json({ success: false, error: '초안 목록 조회 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28831,7 +32073,6 @@ app.get('/api/howto/drafts/:id', requireAuth, async (c) => {
     
     return c.json({ success: true, draft: result.draft })
   } catch (error) {
-    console.error('[get draft] Error:', error)
     return c.json({ success: false, error: '초안 조회 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28887,7 +32128,6 @@ app.put('/api/howto/drafts/:id', requireAuth, async (c) => {
     
     return c.json({ success: true, version: result.newVersion })
   } catch (error) {
-    console.error('[update draft] Error:', error)
     return c.json({ success: false, error: '초안 업데이트 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28938,9 +32178,7 @@ app.delete('/api/howto/drafts/:id', requireAuth, async (c) => {
       for (const key of imageKeysToDelete) {
         try {
           await c.env.UPLOADS.delete(key)
-          console.log(`[delete draft] R2 이미지 삭제: ${key}`)
         } catch (e) {
-          console.error(`[delete draft] R2 이미지 삭제 실패: ${key}`, e)
         }
       }
     }
@@ -28955,7 +32193,6 @@ app.delete('/api/howto/drafts/:id', requireAuth, async (c) => {
     
     return c.json({ success: true })
   } catch (error) {
-    console.error('[delete draft] Error:', error)
     return c.json({ success: false, error: '초안 삭제 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28979,7 +32216,6 @@ app.post('/api/howto/drafts/:id/submit', requireAuth, async (c) => {
     
     return c.json({ success: true, message: '검수 요청이 완료되었습니다' })
   } catch (error) {
-    console.error('[submit draft] Error:', error)
     return c.json({ success: false, error: '검수 요청 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -28992,7 +32228,6 @@ app.post('/api/howto/publish-direct', requireAuth, async (c) => {
     
     // 사용자 ID 필수 체크 (고아 데이터 방지)
     if (!user || !user.id) {
-      console.error('[publish-direct] Error: user.id is missing', user)
       return c.json({ success: false, error: '로그인이 필요합니다' }, 401)
     }
     
@@ -29012,14 +32247,12 @@ app.post('/api/howto/publish-direct', requireAuth, async (c) => {
     let existingPageId: number | null = null
     let existingSlug: string | null = null
     
-    console.log('[publish-direct] Input:', { draftId, title, userId: user.id })
     
     if (draftId) {
       const draftInfo = await c.env.DB.prepare(`
         SELECT published_page_id, slug FROM howto_drafts WHERE id = ? AND user_id = ?
       `).bind(draftId, user.id).first<{ published_page_id: number | null; slug: string | null }>()
       
-      console.log('[publish-direct] Draft info:', draftInfo)
       
       if (draftInfo?.published_page_id) {
         existingPageId = draftInfo.published_page_id
@@ -29027,7 +32260,6 @@ app.post('/api/howto/publish-direct', requireAuth, async (c) => {
       }
     }
     
-    console.log('[publish-direct] existingPageId:', existingPageId, 'existingSlug:', existingSlug)
     
     // HTML 생성 (Tiptap JSON → HTML)
     let finalContentHtml = contentHtml || ''
@@ -29149,9 +32381,18 @@ app.post('/api/howto/publish-direct', requireAuth, async (c) => {
       }
     }
     
+    // 자동 Vectorize 인덱싱 (백그라운드)
+    const openaiKeyForIdx = (c.env as any).OPENAI_API_KEY
+    if (openaiKeyForIdx && (c.env as any).VECTORIZE && pageId) {
+      c.executionCtx.waitUntil(
+        import('./services/ai-analyzer/vectorize-pipeline').then(({ indexSingleHowto }) =>
+          indexSingleHowto(c.env.DB, (c.env as any).VECTORIZE, openaiKeyForIdx, pageId!)
+        ).catch(() => {})
+      )
+    }
+
     return c.json({ success: true, slug, pageId, status: 'published' })
   } catch (error) {
-    console.error('[publish-direct] Error:', error)
     return c.json({ success: false, error: '발행 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -29196,7 +32437,6 @@ app.post('/api/howto/:pageId/publish-final', requireAuth, async (c) => {
     
     return c.json({ success: true })
   } catch (error) {
-    console.error('[publish-final] Error:', error)
     return c.json({ success: false, error: '발행 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -29209,7 +32449,6 @@ app.post('/api/howto/save-publish', requireAuth, async (c) => {
     
     // 사용자 ID 필수 체크 (고아 데이터 방지)
     if (!user || !user.id) {
-      console.error('[save-publish] Error: user.id is missing', user)
       return c.json({ success: false, error: '로그인이 필요합니다' }, 401)
     }
     
@@ -29252,19 +32491,16 @@ app.post('/api/howto/save-publish', requireAuth, async (c) => {
     }
     
     // 기존 발행 페이지 확인
-    console.log('[save-publish] Checking draft:', { draftId, userId: user.id })
     
     const draftInfo = await c.env.DB.prepare(`
       SELECT published_page_id, (SELECT status FROM pages WHERE id = published_page_id) as page_status
       FROM howto_drafts WHERE id = ? AND user_id = ?
     `).bind(draftId, user.id).first<{ published_page_id: number | null; page_status: string | null }>()
     
-    console.log('[save-publish] Raw draftInfo:', draftInfo)
     
     const publishedPageId = draftInfo?.published_page_id
     const currentStatus = draftInfo?.page_status || ''
     
-    console.log('[save-publish] Draft info:', { draftId, publishedPageId, currentStatus, title, userId: user.id })
     
     // 슬러그 생성 (항상 제목에서 새로 생성, guide: prefix 방지)
     const { generateSlug } = await import('./services/slugService')
@@ -29272,7 +32508,6 @@ app.post('/api/howto/save-publish', requireAuth, async (c) => {
     let slug = baseSlug
     let suffix = 2
     
-    console.log('[save-publish] Generated slug:', { baseSlug, slug, publishedPageId })
     
     // 중복 체크
     while (suffix <= 100) {
@@ -29384,7 +32619,6 @@ app.post('/api/howto/save-publish', requireAuth, async (c) => {
     
     return c.json({ success: true, slug, pageId: finalPageId, status: newStatus })
   } catch (error) {
-    console.error('[save-publish] Error:', error)
     return c.json({ success: false, error: '저장 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -29547,7 +32781,6 @@ app.post('/api/howto/drafts/:id/publish', requireAuth, async (c) => {
       url: '/howto/' + slug
     })
   } catch (error) {
-    console.error('[publish draft] Error:', error)
     return c.json({ success: false, error: '발행 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -29782,7 +33015,6 @@ app.get('/api/admin/howto/pending', requireAdmin, async (c) => {
     
     return c.json({ success: true, drafts: result.drafts, total: result.total })
   } catch (error) {
-    console.error('[pending reviews] Error:', error)
     return c.json({ success: false, error: '조회 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -29804,14 +33036,23 @@ app.post('/api/admin/howto/drafts/:id/approve', requireAdmin, async (c) => {
       return c.json({ success: false, error: result.error }, 400)
     }
     
-    return c.json({ 
-      success: true, 
+    // 자동 Vectorize 인덱싱 (백그라운드)
+    const openaiKeyForIdx = (c.env as any).OPENAI_API_KEY
+    if (openaiKeyForIdx && (c.env as any).VECTORIZE && result.howtoId) {
+      c.executionCtx.waitUntil(
+        import('./services/ai-analyzer/vectorize-pipeline').then(({ indexSingleHowto }) =>
+          indexSingleHowto(c.env.DB, (c.env as any).VECTORIZE, openaiKeyForIdx, result.howtoId!)
+        ).catch(() => {})
+      )
+    }
+
+    return c.json({
+      success: true,
       howtoId: result.howtoId,
       slug: result.slug,
       message: '승인되어 게시되었습니다'
     })
   } catch (error) {
-    console.error('[approve draft] Error:', error)
     return c.json({ success: false, error: '승인 처리 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -29841,7 +33082,6 @@ app.post('/api/admin/howto/drafts/:id/reject', requireAdmin, async (c) => {
     
     return c.json({ success: true, message: '반려 처리되었습니다' })
   } catch (error) {
-    console.error('[reject draft] Error:', error)
     return c.json({ success: false, error: '반려 처리 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -29903,7 +33143,6 @@ app.post('/api/upload', requireAuth, async (c) => {
     
     return c.json({ success: true, url: publicUrl })
   } catch (error) {
-    console.error('[upload simple] Error:', error)
     return c.json({ success: false, error: '업로드 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -29949,7 +33188,6 @@ app.post('/api/upload/prepare', requireAuth, async (c) => {
       expiresIn: 300 // 5분
     })
   } catch (error) {
-    console.error('[upload prepare] Error:', error)
     return c.json({ success: false, error: '업로드 준비 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -30006,7 +33244,6 @@ app.post('/api/upload/file', requireAuth, async (c) => {
       size: body.byteLength
     })
   } catch (error) {
-    console.error('[upload file] Error:', error)
     return c.json({ success: false, error: '파일 업로드 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -30087,7 +33324,11 @@ app.get('/uploads/*', async (c) => {
     const headers = new Headers()
     const contentType = object.httpMetadata?.contentType || getContentTypeByExtension(usedPath)
     headers.set('Content-Type', contentType)
-    headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+    // ?v= 캐시 버스터가 있으면 장기 캐시, 없으면 revalidate
+    const hasVersionParam = new URL(c.req.raw.url).searchParams.has('v')
+    headers.set('Cache-Control', hasVersionParam
+      ? 'public, max-age=31536000, immutable'
+      : 'public, max-age=3600, must-revalidate')
     headers.set('ETag', object.httpEtag)
     
     // If-None-Match 헤더 확인 (304 응답)
@@ -30136,41 +33377,61 @@ app.post('/api/image/generate', requireAuth, async (c) => {
       return c.json({ success: false, error: 'type과 slug가 필요합니다' }, 400)
     }
     
-    // DB에서 프롬프트 조회
-    let imagePrompt = promptOverride
+    // 프롬프트 결정: promptOverride → DB image_prompt → Gemini 자동 생성
+    let imagePrompt: string | undefined = promptOverride
     if (!imagePrompt) {
       const table = type === 'jobs' ? 'jobs' : 'majors'
+      const nameCol = type === 'jobs' ? 'name' : 'name'
       const record = await c.env.DB.prepare(`
-        SELECT image_prompt FROM ${table} WHERE slug = ?
-      `).bind(slug).first()
-      
-      if (!record || !record.image_prompt) {
-        return c.json({ success: false, error: '해당 항목의 프롬프트를 찾을 수 없습니다' }, 404)
+        SELECT image_prompt, ${nameCol} as item_name FROM ${table} WHERE slug = ?
+      `).bind(slug).first<{ image_prompt: string | null; item_name: string }>()
+
+      if (record?.image_prompt) {
+        imagePrompt = record.image_prompt
+      } else if (record?.item_name && c.env.GEMINI_API_KEY) {
+        // Gemini로 자동 프롬프트 생성
+        const { generateJobImagePrompt, generateMajorImagePrompt } = await import('./services/geminiService')
+        const geminiResult = type === 'jobs'
+          ? await generateJobImagePrompt(c.env.GEMINI_API_KEY, record.item_name)
+          : await generateMajorImagePrompt(c.env.GEMINI_API_KEY, record.item_name)
+
+        if (geminiResult.success && geminiResult.prompt) {
+          imagePrompt = geminiResult.prompt
+          // 생성된 프롬프트를 DB에 저장 (다음에 재사용)
+          await c.env.DB.prepare(`UPDATE ${table} SET image_prompt = ? WHERE slug = ?`)
+            .bind(imagePrompt, slug).run()
+        } else {
+          return c.json({ success: false, error: '이미지 프롬프트 자동 생성 실패' }, 500)
+        }
+      } else {
+        return c.json({ success: false, error: '해당 항목을 찾을 수 없습니다' }, 404)
       }
-      imagePrompt = record.image_prompt as string
     }
     
     // 콜백 URL 생성
     const baseUrl = new URL(c.req.url).origin
     const callbackUrl = `${baseUrl}/webhooks/image-completed`
     
-    // Z-Image Turbo API 호출
+    // Z-Image Turbo API 호출 (매번 다른 이미지를 위해 랜덤 seed 사용)
     const { requestImageGeneration } = await import('./services/imageGenerationService')
+    const randomSeed = Math.floor(Math.random() * 2147483647)
+    console.log(`[ImageGen] Requesting: type=${type}, slug=${slug}, seed=${randomSeed}, prompt="${(imagePrompt || '').substring(0, 80)}..."`)
     const result = await requestImageGeneration(apiKey, {
-      prompt: imagePrompt,
+      prompt: imagePrompt || '',
       size: '16:9',
+      seed: randomSeed,
       callback_url: callbackUrl
     })
-    
+
     if (!result.success || !result.data) {
       return c.json({ success: false, error: result.error || '이미지 생성 요청 실패' }, 500)
     }
-    
+
     // 태스크 정보를 KV에 저장 (콜백 시 사용)
     const taskMeta = {
       type,
       slug,
-      prompt: imagePrompt.substring(0, 200), // 프롬프트 요약
+      prompt: (imagePrompt || '').substring(0, 200), // 프롬프트 요약
       createdAt: Date.now(),
       createdBy: user.id
     }
@@ -30181,7 +33442,6 @@ app.post('/api/image/generate', requireAuth, async (c) => {
         expirationTtl: 86400 // 24시간
       })
     } else {
-      console.warn('[image/generate] KV not bound, task metadata not saved. Callback may not work.')
     }
     
     return c.json({
@@ -30191,7 +33451,6 @@ app.post('/api/image/generate', requireAuth, async (c) => {
       estimatedTime: result.data.task_info?.estimated_time || 10
     })
   } catch (error) {
-    console.error('[image/generate] Error:', error)
     return c.json({ success: false, error: '이미지 생성 요청 중 오류 발생' }, 500)
   }
 })
@@ -30210,8 +33469,8 @@ app.get('/api/image/status/:taskId', requireAuth, async (c) => {
     const result = await queryTaskStatus(apiKey, taskId)
     
     // 🔍 디버그: API 응답 로깅
-    console.log('[image/status] Raw response:', JSON.stringify(result.data, null, 2))
-    
+    console.log(`[ImageStatus] taskId=${taskId}, raw response:`, JSON.stringify(result.data).substring(0, 500))
+
     if (!result.success || !result.data) {
       return c.json({ success: false, error: result.error || '상태 조회 실패' }, 500)
     }
@@ -30224,9 +33483,9 @@ app.get('/api/image/status/:taskId', requireAuth, async (c) => {
 
     // results 배열 우선, data.url/urls는 fallback
     const imageUrl = (result.data as any).results?.[0] || (result.data as any).data?.url || (result.data as any).data?.urls?.[0] || (result.data as any).output?.url
-    
-    console.log('[image/status] Parsed:', { rawStatus, isCompleted, isFailed, hasImageUrl: !!imageUrl })
-    
+
+    console.log(`[ImageStatus] taskId=${taskId}, status=${rawStatus}, isCompleted=${isCompleted}, imageUrl=${imageUrl ? imageUrl.substring(0, 120) : 'null'}`)
+
     return c.json({
       success: true,
       taskId: result.data.id,
@@ -30235,7 +33494,6 @@ app.get('/api/image/status/:taskId', requireAuth, async (c) => {
       imageUrl
     })
   } catch (error) {
-    console.error('[image/status] Error:', error)
     return c.json({ success: false, error: '상태 조회 중 오류 발생' }, 500)
   }
 })
@@ -30267,21 +33525,47 @@ app.post('/api/image/save', requireAuth, async (c) => {
     const { uploadToR2 } = await import('./services/uploadService')
     
     // 이미지 다운로드
-    console.log('[image/save] Downloading image:', imageUrl)
+    console.log(`[ImageSave] Downloading from: ${imageUrl}`)
     const downloadResult = await downloadImage(imageUrl)
     if (!downloadResult.success || !downloadResult.data) {
-      console.error('[image/save] Download failed:', downloadResult.error)
-      return c.json({ success: false, error: downloadResult.error || '이미지 다운로드 실패' }, 500)
+      console.log(`[ImageSave] Download FAILED: ${downloadResult.error}`)
+      return c.json({ success: false, error: downloadResult.error || '이미지 다운로드 실패', debug: { imageUrl, downloadError: downloadResult.error } }, 500)
     }
-    
+
+    const downloadSize = downloadResult.data.byteLength
+    console.log(`[ImageSave] Downloaded: ${downloadSize} bytes, type=${downloadResult.contentType}, url=${imageUrl}`)
+
     // R2에 업로드 (기존 이미지 덮어쓰기)
-    const fileKey = generateImageFileKey(type, slug)
-    console.log('[image/save] Uploading to R2:', fileKey)
+    const actualContentType = downloadResult.contentType || 'image/png'
+    const fileKey = generateImageFileKey(type, slug, actualContentType)
+
+    // 기존 이미지가 다른 확장자 또는 다른 인코딩으로 저장되어 있을 수 있으므로
+    // 모든 변형(인코딩/디코딩 + 확장자)을 삭제
+    const extensions = ['webp', 'png', 'jpg']
+    const prefix = type === 'jobs' ? 'job' : 'major'
+    const safeSlug = slug.replace(/\//g, '_')
+    const encodedSlug = encodeURIComponent(safeSlug)
+    const decodedSlug = safeSlug  // 한글 그대로
+
+    for (const ext of extensions) {
+      // 인코딩된 키 (generateImageFileKey가 생성하는 형식)
+      const encodedKey = `${type}/${prefix}-${encodedSlug}.${ext}`
+      // 디코딩된 키 (기존 autoImageService 등이 저장한 형식)
+      const decodedKey = `${type}/${prefix}-${decodedSlug}.${ext}`
+
+      for (const oldKey of [encodedKey, decodedKey]) {
+        if (oldKey !== fileKey) {
+          try { await c.env.UPLOADS.delete(oldKey) } catch {}
+        }
+      }
+    }
+    console.log(`[ImageSave] Deleted old variants. Uploading new: key=${fileKey}`)
+
     const uploadResult = await uploadToR2(
       c.env.UPLOADS,
       fileKey,
       downloadResult.data,
-      downloadResult.contentType || 'image/png',
+      actualContentType,
       {
         source: 'z-image-turbo',
         taskId,
@@ -30290,10 +33574,11 @@ app.post('/api/image/save', requireAuth, async (c) => {
     )
     
     if (!uploadResult.success) {
-      console.error('[image/save] Upload failed:', uploadResult.error)
+      console.log(`[ImageSave] R2 upload FAILED: ${uploadResult.error}`)
       return c.json({ success: false, error: uploadResult.error || 'R2 업로드 실패' }, 500)
     }
-    
+    console.log(`[ImageSave] R2 upload OK: key=${fileKey}`)
+
     // DB 업데이트 (image_url 컬럼 + merged_profile_json 둘 다 업데이트)
     const baseUrl = new URL(c.req.url).origin
     const publicUrl = getImagePublicUrl(fileKey, baseUrl)
@@ -30319,26 +33604,55 @@ app.post('/api/image/save', requireAuth, async (c) => {
       `).bind(publicUrlWithCache, publicUrlWithCache, slug).run()
     }
     
-    console.log('[image/save] DB updated:', table, slug, publicUrl, 'changes:', updateResult.meta.changes)
     
-    // ISR 캐시 무효화 (wiki_pages에서 해당 페이지 삭제)
+    // CDN 캐시 퍼지 (페이지 + 이미지 URL 모두)
     try {
+      const baseUrl = new URL(c.req.url).origin
       const pageType = type === 'jobs' ? 'job' : 'major'
-      await c.env.DB.prepare(`
-        DELETE FROM wiki_pages WHERE slug LIKE ? AND page_type = ?
-      `).bind(`%${slug}%`, pageType).run()
-      console.log('[image/save] ISR cache invalidated for:', slug)
+      const pageUrl = `${baseUrl}/${pageType}/${encodeURIComponent(slug)}`
+      const imageUrlFull = `${baseUrl}${publicUrl}`  // /uploads/... 절대 URL
+
+      // 1) Workers Cache API — 페이지와 이미지 모두 퍼지
+      const cache = (caches as any).default
+      const urlsToPurge = [
+        pageUrl,
+        `${baseUrl}/${pageType}/${slug}`,
+        imageUrlFull,
+        `${imageUrlFull}?v=${Date.now()}`,
+      ]
+      for (const u of urlsToPurge) {
+        try { await cache.delete(new Request(u)) } catch {}
+      }
+      console.log(`[ImageSave] Cache purged: ${urlsToPurge.length} URLs`)
+
+      // 2) Cloudflare Zone Purge API (CF_ZONE_ID + CF_API_TOKEN 필요)
+      const zoneId = c.env.CF_ZONE_ID
+      const apiToken = c.env.CLOUDFLARE_API_TOKEN
+      if (zoneId && apiToken) {
+        // prefix_purge로 이미지 URL 변형 모두 퍼지
+        await fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/purge_cache`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            files: [
+              pageUrl,
+              `${baseUrl}/${pageType}/${slug}`,
+              imageUrlFull,
+            ]
+          })
+        })
+      }
     } catch (cacheError) {
-      console.warn('[image/save] Cache invalidation failed:', cacheError)
+      console.log(`[ImageSave] Cache purge error: ${cacheError}`)
     }
-    
-    return c.json({ 
-      success: true, 
-      imageUrl: publicUrl,
-      message: '이미지가 성공적으로 저장되었습니다. 페이지를 새로고침해주세요.'
+
+    return c.json({
+      success: true,
+      imageUrl: publicUrlWithCache,
+      message: '이미지가 성공적으로 저장되었습니다. 페이지를 새로고침해주세요.',
+      debug: { fileKey, downloadSize, actualContentType, sourceUrl: imageUrl, dbChanges: updateResult.meta.changes }
     })
   } catch (error) {
-    console.error('[image/save] Error:', error)
     return c.json({ success: false, error: '이미지 저장 중 오류 발생' }, 500)
   }
 })
@@ -30347,7 +33661,6 @@ app.post('/api/image/save', requireAuth, async (c) => {
 app.post('/webhooks/image-completed', async (c) => {
   try {
     const body = await c.req.json()
-    console.log('[webhook/image-completed] Received:', JSON.stringify(body).substring(0, 500))
     
     const { parseCallbackData, downloadImage, generateImageFileKey, getImagePublicUrl } = 
       await import('./services/imageGenerationService')
@@ -30356,7 +33669,6 @@ app.post('/webhooks/image-completed', async (c) => {
     // 콜백 데이터 파싱
     const taskData = parseCallbackData(body)
     if (!taskData) {
-      console.error('[webhook/image-completed] Invalid callback data')
       return c.json({ success: false, error: 'Invalid callback data' }, 400)
     }
     
@@ -30366,7 +33678,6 @@ app.post('/webhooks/image-completed', async (c) => {
     // 태스크 메타데이터 조회
     const taskMetaStr = await c.env.KV.get(`image-task:${taskId}`)
     if (!taskMetaStr) {
-      console.error('[webhook/image-completed] Task metadata not found:', taskId)
       return c.json({ success: false, error: 'Task metadata not found' }, 404)
     }
     
@@ -30380,7 +33691,6 @@ app.post('/webhooks/image-completed', async (c) => {
     
     // 실패 처리
     if (status === 'failed') {
-      console.error('[webhook/image-completed] Task failed:', taskId, taskData.error)
       // 실패 로그 저장 (선택사항)
       await c.env.KV.put(`image-task-failed:${taskId}`, JSON.stringify({
         ...taskMeta,
@@ -30392,21 +33702,18 @@ app.post('/webhooks/image-completed', async (c) => {
     
     // 완료가 아니면 무시
     if (status !== 'completed') {
-      console.log('[webhook/image-completed] Task not completed yet:', taskId, status)
       return c.json({ success: true, status })
     }
     
     // 이미지 URL 추출 (results 배열 우선)
     const imageUrl = taskData.results?.[0] || taskData.data?.url || taskData.data?.urls?.[0]
     if (!imageUrl) {
-      console.error('[webhook/image-completed] No image URL in callback:', taskId)
       return c.json({ success: false, error: 'No image URL' }, 400)
     }
     
     // 이미지 다운로드
     const downloadResult = await downloadImage(imageUrl)
     if (!downloadResult.success || !downloadResult.data) {
-      console.error('[webhook/image-completed] Download failed:', downloadResult.error)
       return c.json({ success: false, error: downloadResult.error }, 500)
     }
     
@@ -30425,7 +33732,6 @@ app.post('/webhooks/image-completed', async (c) => {
     )
     
     if (!uploadResult.success) {
-      console.error('[webhook/image-completed] Upload failed:', uploadResult.error)
       return c.json({ success: false, error: uploadResult.error }, 500)
     }
     
@@ -30440,7 +33746,6 @@ app.post('/webhooks/image-completed', async (c) => {
       WHERE slug = ?
     `).bind(publicUrl, taskMeta.slug).run()
     
-    console.log('[webhook/image-completed] Success:', taskMeta.type, taskMeta.slug, publicUrl)
     
     // 태스크 메타데이터 삭제
     await c.env.KV.delete(`image-task:${taskId}`)
@@ -30454,7 +33759,6 @@ app.post('/webhooks/image-completed', async (c) => {
     
     return c.json({ success: true, status: 'completed', imageUrl: publicUrl })
   } catch (error) {
-    console.error('[webhook/image-completed] Error:', error)
     return c.json({ success: false, error: 'Internal error' }, 500)
   }
 })
@@ -30505,7 +33809,6 @@ app.post('/api/howto/:slug/report', authMiddleware, async (c) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
-    console.error('[howto report] Error:', message)
     
     if (message === 'ALREADY_REPORTED') {
       return c.json({ success: false, error: '이미 신고한 글입니다' }, 400)
@@ -30541,7 +33844,6 @@ app.post('/api/admin/howto/:slug/blind', requireAdmin, async (c) => {
     
     return c.json({ success: true, message: '블라인드 처리되었습니다' })
   } catch (error) {
-    console.error('[howto blind] Error:', error)
     return c.json({ success: false, error: '처리 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -30565,7 +33867,6 @@ app.post('/api/admin/howto/:slug/unblind', requireAdmin, async (c) => {
     
     return c.json({ success: true, message: '블라인드가 해제되었습니다' })
   } catch (error) {
-    console.error('[howto unblind] Error:', error)
     return c.json({ success: false, error: '처리 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -30588,7 +33889,6 @@ app.get('/api/admin/howto/reports', requireAdmin, async (c) => {
     
     return c.json({ success: true, ...result })
   } catch (error) {
-    console.error('[howto reports] Error:', error)
     return c.json({ success: false, error: '조회 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -30613,7 +33913,6 @@ app.post('/api/admin/howto/reports/:id/resolve', requireAdmin, async (c) => {
       message: action === 'resolve' ? '신고가 처리되었습니다' : '신고가 기각되었습니다'
     })
   } catch (error) {
-    console.error('[howto report resolve] Error:', error)
     return c.json({ success: false, error: '처리 중 오류가 발생했습니다' }, 500)
   }
 })
@@ -30777,7 +34076,6 @@ app.get('/api/revision/:id', authMiddleware, async (c) => {
           }
         }
       } catch (error) {
-        console.error('[revision/:id] Failed to reconstruct full data:', error)
       }
     }
     
@@ -30915,7 +34213,6 @@ app.get('/api/major/:id/revisions', authMiddleware, async (c) => {
           }
         }
       } catch (dbError) {
-        console.error('[major revisions] Failed to resolve ID:', dbError)
       }
     }
     
@@ -30931,7 +34228,6 @@ app.get('/api/major/:id/revisions', authMiddleware, async (c) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'failed to list revisions'
-    console.error('[major revisions] Error:', error)
     return c.json({ success: false, error: message }, 500)
   }
 })
@@ -30963,7 +34259,6 @@ app.get('/api/howto/:slug/revisions', authMiddleware, async (c) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'failed to list revisions'
-    console.error('[howto revisions] Error:', error)
     return c.json({ success: false, error: message }, 500)
   }
 })
@@ -31048,14 +34343,68 @@ Sitemap: ${origin}/sitemap.xml
 })
 
 app.get('/sitemap.xml', async (c) => {
-  const url = new URL(c.req.url)
-  const origin = `${url.protocol}//${url.host}`
-  const urls = ['/job/software-developer', '/job/가상현실전문가', '/major/digital-marketing-major']
+  const origin = buildCanonicalUrl(c.req.url, '')
+
+  const staticPaths = [
+    '/',
+    '/job',
+    '/major',
+    '/howto',
+    '/help',
+    '/analyzer',
+    '/feedback',
+    '/legal/terms',
+    '/legal/privacy',
+  ]
+
+  const entries: Array<{ loc: string; lastmod?: string }> = staticPaths.map((p) => ({ loc: `${origin}${p}` }))
+
+  try {
+    const [jobRows, majorRows, howtoRows] = await Promise.all([
+      c.env.DB.prepare('SELECT id, name FROM jobs WHERE is_active = 1').all<{ id: string; name: string }>(),
+      c.env.DB.prepare('SELECT id, name FROM majors WHERE is_active = 1').all<{ id: string; name: string }>(),
+      c.env.DB.prepare(
+        "SELECT slug, updated_at FROM pages WHERE page_type = 'guide' AND status IN ('published', 'draft_published')"
+      ).all<{ slug: string; updated_at: string | null }>(),
+    ])
+
+    for (const row of jobRows.results) {
+      const slug = composeDetailSlug('job', row.name, row.id)
+      entries.push({ loc: `${origin}/job/${encodeURIComponent(slug)}` })
+    }
+
+    for (const row of majorRows.results) {
+      const slug = composeDetailSlug('major', row.name, row.id)
+      entries.push({ loc: `${origin}/major/${encodeURIComponent(slug)}` })
+    }
+
+    for (const row of howtoRows.results) {
+      if (row.slug) {
+        entries.push({
+          loc: `${origin}/howto/${encodeURIComponent(row.slug)}`,
+          lastmod: row.updated_at ? row.updated_at.split('T')[0] : undefined,
+        })
+      }
+    }
+  } catch {
+    // DB unavailable — return static pages only
+  }
+
+  const urlTags = entries
+    .map((e) => {
+      const lastmod = e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ''
+      return `<url><loc>${e.loc}</loc>${lastmod}</url>`
+    })
+    .join('\n')
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `<url><loc>${origin}${encodeURI(u)}</loc></url>`).join('\n')}
+${urlTags}
 </urlset>`
-  return c.text(xml, 200, { 'content-type': 'application/xml; charset=utf-8' })
+  return c.text(xml, 200, {
+    'content-type': 'application/xml; charset=utf-8',
+    'cache-control': 'public, max-age=3600',
+  })
 })
 
 // Global 404 fallback
@@ -31069,23 +34418,38 @@ app.notFound((c) => {
 export default app
 
 export const scheduled: ExportedHandlerScheduledHandler<Bindings> = async (event, env, ctx) => {
-  const run = Promise.all(
+  // SERP freshness 갱신
+  const serpRun = Promise.all(
     SERP_FRESHNESS_TARGETS.map(async (target) => {
       try {
         const result = await attemptScheduledRefresh(env.KV, env, target, {
           reason: event.cron ? `cron:${event.cron}` : 'scheduled-cron'
         })
         if (result.outcome === 'error') {
-          console.error('[freshness][scheduled]', target.id, result.error)
         }
       } catch (error) {
-        console.error('[freshness][scheduled]', target.id, error)
       }
     })
   )
 
-  ctx.waitUntil(run)
-  await run
+  // 미인덱싱 항목 자동 Vectorize 인덱싱 (직업/전공/HowTo)
+  const indexRun = (async () => {
+    const openaiApiKey = (env as any).OPENAI_API_KEY as string | undefined
+    if (!openaiApiKey || !env.VECTORIZE) return
+    try {
+      const { incrementalUpsertToVectorize, incrementalUpsertMajorsToVectorize, incrementalUpsertHowtosToVectorize } =
+        await import('./services/ai-analyzer/vectorize-pipeline')
+      await Promise.all([
+        incrementalUpsertToVectorize(env.DB, env.VECTORIZE, openaiApiKey, { maxJobs: 20 }),
+        incrementalUpsertMajorsToVectorize(env.DB, env.VECTORIZE, openaiApiKey, { maxItems: 20 }),
+        incrementalUpsertHowtosToVectorize(env.DB, env.VECTORIZE, openaiApiKey, { maxItems: 20 }),
+      ])
+    } catch {}
+  })()
+
+  const allRun = Promise.all([serpRun, indexRun])
+  ctx.waitUntil(allRun)
+  await allRun
 }
 
 // 🆕 API에서 원본 데이터를 다시 가져와서 api_data_json 업데이트
@@ -31201,7 +34565,6 @@ app.post('/api/job/:id/refetch-api-data', authMiddleware, async (c) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'failed to refetch API data'
-    console.error('[refetch-api-data] Error:', error)
     return c.json({ success: false, error: message }, 500)
   }
 })
@@ -31358,7 +34721,6 @@ app.get('/admin', requireAdmin, async (c) => {
       recentUsers: (recentUsers.results || []) as any[]
     }))
   } catch (error) {
-    console.error('Admin dashboard error:', error)
     return c.text('관리자 대시보드를 불러오는데 실패했습니다.', 500)
   }
 })
@@ -31378,7 +34740,6 @@ app.get('/admin/ai-analyzer', async (c, next) => {
   const host = c.req.header('host') || ''
   const isLocalhost = host.startsWith('localhost') || host.startsWith('127.0.0.1')
   if (isLocalhost) {
-    console.log('⚠️ [Admin] Localhost detected - skipping auth for admin')
     return next()
   }
   return requireAdmin(c as any, next)
@@ -31393,7 +34754,7 @@ app.get('/admin/ai-analyzer', async (c, next) => {
     ] = await Promise.all([
       db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE status = 'completed'").first<{ count: number }>().catch(() => ({ count: 0 })),
       db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests").first<{ count: number }>().catch(() => ({ count: 0 })),
-      db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE is_reanalysis = 1").first<{ count: number }>().catch(() => ({ count: 0 })),
+      db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE parent_request_id IS NOT NULL").first<{ count: number }>().catch(() => ({ count: 0 })),
       db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE requested_at >= datetime('now', '-24 hours')").first<{ count: number }>().catch(() => ({ count: 0 })),
       db.prepare("SELECT COUNT(*) as count FROM facts WHERE collected_at >= datetime('now', '-24 hours')").first<{ count: number }>().catch(() => ({ count: 0 })),
       db.prepare("SELECT COUNT(DISTINCT session_id) as count FROM ai_analysis_requests").first<{ count: number }>().catch(() => ({ count: 0 })),
@@ -31416,7 +34777,6 @@ app.get('/admin/ai-analyzer', async (c, next) => {
       },
     }))
   } catch (error) {
-    console.error('AI Analyzer admin error:', error)
     return c.text('AI Analyzer 관제판을 불러오는데 실패했습니다: ' + (error instanceof Error ? error.message : 'Unknown'), 500)
   }
 })
@@ -31437,7 +34797,6 @@ app.get('/admin/feedback', requireAdmin, async (c) => {
       })
     )
   } catch (error) {
-    console.error('Admin feedback page error:', error)
     return c.text('피드백 목록을 불러오는데 실패했습니다.', 500)
   }
 })
@@ -31473,7 +34832,6 @@ app.get('/admin/feedback/:id', requireAdmin, async (c) => {
       })
     )
   } catch (error) {
-    console.error('Admin feedback detail error:', error)
     return c.text('피드백을 불러오는데 실패했습니다.', 500)
   }
 })
@@ -31493,7 +34851,6 @@ app.patch('/api/admin/feedback/:id/status', requireAdmin, async (c) => {
     const updated = await updateFeedbackStatus(c.env.DB, id, status)
     return c.json({ success: true, status: updated?.status })
   } catch (error) {
-    console.error('[feedback] status update error', error)
     return c.json({ success: false, error: 'failed_to_update_status' }, 500)
   }
 })
@@ -31524,7 +34881,6 @@ app.get('/admin/users', requireAdmin, async (c) => {
       filters: { search, role, status }
     }))
   } catch (error) {
-    console.error('Admin users error:', error)
     return c.text('사용자 목록을 불러오는데 실패했습니다.', 500)
   }
 })
@@ -31628,7 +34984,6 @@ app.get('/admin/users/:id', requireAdmin, async (c) => {
       latestIp
     }))
   } catch (error) {
-    console.error('Admin user detail error:', error)
     return c.text('사용자 정보를 불러오는데 실패했습니다.', 500)
   }
 })
@@ -31665,7 +35020,6 @@ app.get('/api/admin/users/:id/comments', requireAdmin, async (c) => {
     
     return c.json({ success: true, data: comments })
   } catch (error) {
-    console.error('Admin user comments error:', error)
     return c.json({ success: false, error: 'Failed to get user comments' }, 500)
   }
 })
@@ -31684,7 +35038,7 @@ app.patch('/api/admin/users/:id', requireAdmin, async (c) => {
     
     // 차단
     if (body.action === 'ban') {
-      const success = await banUser(c.env.DB, userId, body.duration, body.reason)
+      const success = await banUser(c.env.DB, userId, body.duration, body.reason, c.env.KV)
       return c.json({ success })
     }
     
@@ -31696,7 +35050,6 @@ app.patch('/api/admin/users/:id', requireAdmin, async (c) => {
     
     return c.json({ success: false, error: 'Invalid action' }, 400)
   } catch (error) {
-    console.error('Admin user update error:', error)
     return c.json({ success: false, error: 'Failed to update user' }, 500)
   }
 })
@@ -31804,7 +35157,6 @@ app.get('/admin/content', requireAdmin, async (c) => {
       moderation: moderation ?? undefined
     }))
   } catch (error) {
-    console.error('Admin content error:', error)
     return c.text('편집 이력을 불러오는데 실패했습니다.', 500)
   }
 })
@@ -31830,7 +35182,6 @@ app.get('/api/admin/revisions', requireAdmin, async (c) => {
     
     return c.json({ success: true, data: result })
   } catch (error) {
-    console.error('Admin revisions API error:', error)
     return c.json({ success: false, error: 'Failed to fetch revisions' }, 500)
   }
 })
@@ -31853,7 +35204,6 @@ app.get('/api/admin/comments/moderation', requireAdmin, async (c) => {
       }
     })
   } catch (error) {
-    console.error('Admin comments moderation list error:', error)
     return c.json({ success: false, error: 'Failed to fetch comments' }, 500)
   }
 })
@@ -31868,7 +35218,6 @@ app.post('/api/admin/comments/:id/blind', requireAdmin, async (c) => {
     await setCommentStatus(c.env.DB, id, 'blinded')
     return c.json({ success: true })
   } catch (error) {
-    console.error('Admin comment blind error:', error)
     return c.json({ success: false, error: 'Failed to blind comment' }, 500)
   }
 })
@@ -31883,7 +35232,6 @@ app.post('/api/admin/comments/:id/unblind', requireAdmin, async (c) => {
     await setCommentStatus(c.env.DB, id, 'visible')
     return c.json({ success: true })
   } catch (error) {
-    console.error('Admin comment unblind error:', error)
     return c.json({ success: false, error: 'Failed to unblind comment' }, 500)
   }
 })
@@ -31898,7 +35246,6 @@ app.post('/api/admin/comments/:id/reset-reports', requireAdmin, async (c) => {
     await resetCommentReports(c.env.DB, id)
     return c.json({ success: true })
   } catch (error) {
-    console.error('Admin comment reset reports error:', error)
     return c.json({ success: false, error: 'Failed to reset reports' }, 500)
   }
 })
@@ -31913,7 +35260,6 @@ app.delete('/api/admin/comments/:id', requireAdmin, async (c) => {
     await deleteComment(c.env.DB, { commentId: id, userId: 'admin', userRole: 'admin' })
     return c.json({ success: true })
   } catch (error) {
-    console.error('Admin comment delete error:', error)
     return c.json({ success: false, error: 'Failed to delete comment' }, 500)
   }
 })
@@ -31924,7 +35270,6 @@ app.post('/api/admin/comments/cleanup-orphans', requireAdmin, async (c) => {
     const deleted = await deleteOrphanReplies(c.env.DB)
     return c.json({ success: true, deleted })
   } catch (error) {
-    console.error('Admin orphan cleanup error:', error)
     return c.json({ success: false, error: 'Failed to cleanup orphans' }, 500)
   }
 })
@@ -31943,7 +35288,6 @@ app.post('/api/admin/revisions/:id/restore', requireAdmin, async (c) => {
     const success = await restoreRevisionAdmin(c.env.DB, revisionId, user.id, body.reason)
     return c.json({ success })
   } catch (error) {
-    console.error('Admin restore revision error:', error)
     return c.json({ success: false, error: 'Failed to restore revision' }, 500)
   }
 })
@@ -31962,7 +35306,6 @@ app.get('/admin/stats', requireAdmin, async (c) => {
       ...stats
     }))
   } catch (error) {
-    console.error('Admin stats error:', error)
     return c.text('통계를 불러오는데 실패했습니다.', 500)
   }
 })
@@ -31978,7 +35321,6 @@ app.get('/api/admin/stats', requireAdmin, async (c) => {
     
     return c.json({ success: true, data: stats })
   } catch (error) {
-    console.error('Admin stats API error:', error)
     return c.json({ success: false, error: 'Failed to fetch stats' }, 500)
   }
 })
@@ -32019,7 +35361,6 @@ app.get('/api/similar-names/:type', async (c) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to find similar names'
-    console.error('[similar-names] Error:', error)
     return c.json({ success: false, error: message }, 500)
   }
 })
@@ -32063,7 +35404,6 @@ app.post('/api/name-mappings', async (c) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to save mappings'
-    console.error('[name-mappings] Error:', error)
     return c.json({ success: false, error: message }, 500)
   }
 })
@@ -32084,7 +35424,6 @@ app.get('/api/name-mappings/:type', async (c) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to get mappings'
-    console.error('[name-mappings] Error:', error)
     return c.json({ success: false, error: message }, 500)
   }
 })
@@ -32108,7 +35447,6 @@ app.delete('/api/name-mappings/:id', async (c) => {
     return c.json({ success: true })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to delete mapping'
-    console.error('[name-mappings] Error:', error)
     return c.json({ success: false, error: message }, 500)
   }
 })

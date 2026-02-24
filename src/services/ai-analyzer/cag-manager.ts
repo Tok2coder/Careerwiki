@@ -204,7 +204,6 @@ export async function loadCAGState(
       return JSON.parse(result.cag_state_json)
     }
   } catch (error) {
-    console.warn('[CAG] Failed to load state:', error)
   }
   
   return null
@@ -226,11 +225,24 @@ export async function saveCAGState(
       WHERE session_id = ?
     `).bind(stateJson, state.sessionId).run()
     
-    console.log('[CAG] State saved for session:', state.sessionId)
   } catch (error) {
-    console.error('[CAG] Failed to save state:', error)
     throw error
   }
+}
+
+// ============================================
+// CAG 상태 리셋 (재분석 시 누적 방지)
+// ============================================
+export async function resetCAGState(
+  db: D1Database,
+  sessionId: string
+): Promise<CAGState> {
+  const newState = createEmptyCAGState(sessionId)
+  try {
+    await saveCAGState(db, newState)
+  } catch (error) {
+  }
+  return newState
 }
 
 // ============================================
@@ -254,7 +266,6 @@ export async function getOrCreateCAGState(
     await saveCAGState(db, newState)
   } catch (error) {
     // 컬럼이 없으면 무시 (마이그레이션 전)
-    console.warn('[CAG] Could not save initial state (column may not exist):', error)
   }
   
   return newState

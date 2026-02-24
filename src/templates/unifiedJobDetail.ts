@@ -33,6 +33,7 @@ export interface UnifiedJobDetailTemplateParams {
     goyong24?: any
   }
   existingJobSlugs?: Map<string, string>  // DB에 존재하는 직업명 → slug 매핑
+  relatedHowtos?: Array<{ slug: string; title: string; summary: string }>  // 이 직업을 참조하는 HowTo
 }
 
 const SOURCE_DESCRIPTIONS: Record<DataSource, string> = {
@@ -2150,7 +2151,7 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
   `
 }
 
-const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<string, string>): string => {
+const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<string, string>, relatedHowtos?: Array<{ slug: string; title: string; summary: string }>): string => {
   const sections: string[] = []
 
   // 연관 직업 (ETL 구조화 필드 sidebarJobs 사용)
@@ -2295,29 +2296,33 @@ const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<stri
     }
   }
 
-  // 관련 HowTo 섹션 제거 (API 데이터만 표시)
-  // const recommendedHowtos = resolveRecommendedHowtos(profile.id)
-  // if (recommendedHowtos.length) {
-  //   const list = recommendedHowtos
-  //     .map(
-  //       (item) => `
-  //         <li>
-  //           <a href="${escapeHtml(item.href)}" class="flex flex-col gap-1 rounded-lg border border-wiki-border/40 md:border-wiki-border/70 bg-wiki-bg/60 px-3 py-2 md:px-4 md:py-3 content-text text-wiki-primary hover:border-wiki-primary hover:text-white transition">
-  //             <span class="font-semibold">${escapeHtml(item.label)}</span>
-  //             <span class="text-xs text-wiki-muted">CareerWiki HowTo</span>
-  //           </a>
-  //         </li>
-  //       `
-  //     )
-  //     .join('')
-  //   sections.push(
-  //     renderSidebarSection(
-  //       '관련 HowTo',
-  //       'fa-route',
-  //       `<ul class="space-y-2" role="list">${list}</ul>`
-  //     )
-  //   )
-  // }
+  // 관련 가이드 (이 직업을 참조하는 HowTo)
+  if (relatedHowtos?.length) {
+    const howtoList = relatedHowtos.map(howto => {
+      const summary = howto.summary ? escapeHtml(howto.summary.length > 60 ? howto.summary.slice(0, 60) + '…' : howto.summary) : ''
+      return `
+        <li>
+          <a href="/howto/${encodeURIComponent(howto.slug)}" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
+              <i class="fas fa-book-open text-xs" aria-hidden="true"></i>
+            </span>
+            <div class="min-w-0 flex-1">
+              <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors block truncate">${escapeHtml(howto.title)}</span>
+              ${summary ? `<p class="text-xs text-wiki-muted truncate mt-0.5">${summary}</p>` : ''}
+            </div>
+            <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all shrink-0" aria-hidden="true"></i>
+          </a>
+        </li>
+      `
+    }).join('')
+    sections.push(
+      renderSidebarSection(
+        '관련 가이드',
+        'fa-book-open',
+        `<ul class="space-y-2" role="list">${howtoList}</ul>`
+      )
+    )
+  }
 
   const organizations = renderOrganizationsList(profile)
   if (organizations) {
@@ -2962,7 +2967,7 @@ const buildJobDemoComments = (profile: UnifiedJobDetail): SampleCommentPayload[]
     },
     {
       author: 'CuriousMind',
-      content: 'CareerWiki HowTo 가이드를 읽고 나만의 학습 노트를 만들어 공유하면 커뮤니티 피드백을 받기 좋습니다.',
+      content: 'Careerwiki HowTo 가이드를 읽고 나만의 학습 노트를 만들어 공유하면 커뮤니티 피드백을 받기 좋습니다.',
       hoursAgo: 48
     }
   ]
@@ -3163,7 +3168,7 @@ const renderKecoCodeList = (profile: UnifiedJobDetail): string => {
 
 
 
-export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData, existingJobSlugs }: UnifiedJobDetailTemplateParams): string => {
+export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData, existingJobSlugs, relatedHowtos }: UnifiedJobDetailTemplateParams): string => {
   // profile은 merged_profile_json에서 파싱된 데이터 (평탄한 구조 + 계층적 구조 병행)
   // ETL에서 기본 필드들을 모두 포함하고 있음
   
@@ -3185,7 +3190,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
       if (typeof source === 'string') {
         return source
       }
-      return 'CareerWiki 통합 데이터'
+      return 'Careerwiki 통합 데이터'
     },
     telemetryVariant
   )
@@ -4669,7 +4674,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
     metaExtra: detailMetaExtra
   })
 
-  const sidebarContent = renderJobSidebar(profile, existingJobSlugs)
+  const sidebarContent = renderJobSidebar(profile, existingJobSlugs, relatedHowtos)
   const userSourcesFlat = normalizeUserSources((profile as any)._sources)
   const sourcesCollapsible = renderSourcesCollapsible(profile, sources, partials, userSourcesFlat)
   const heroImageUrl = (profile as any).image_url
@@ -4761,7 +4766,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
-    <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-8 md:mt-4" data-job-id="${escapeHtml(profile.id)}">
+    <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" data-job-id="${escapeHtml(profile.id)}">
       <section class="glass-card border px-6 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">
@@ -4800,27 +4805,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
                 역사
               </button>
               <div class="relative" data-share-root data-cw-telemetry-scope="job-hero-actions">
-                <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="${escapeHtml(detailPath)}" data-share-title="${escapeHtml(profile.name)}" data-cw-telemetry-component="job-share-trigger" data-cw-telemetry-action="share-open"${telemetryVariantAttr}>
+                <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="${escapeHtml(detailPath)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}" data-cw-telemetry-component="job-share-trigger" data-cw-telemetry-action="share-open"${telemetryVariantAttr}>
                   <i class="fas fa-share-nodes" aria-hidden="true"></i>
                   공유
                 </button>
-                <div class="absolute right-0 mt-2 w-72 rounded-xl border border-wiki-border/60 bg-wiki-bg/95 shadow-xl backdrop-blur hidden z-[1001]" data-share-panel data-cw-telemetry-component="job-share-panel" role="dialog" aria-modal="false" aria-label="링크 공유">
-                  <div class="flex items-center justify-between px-4 py-3 border-b border-wiki-border/60">
-                    <p class="text-sm font-semibold text-white">'${escapeHtml(profile.name)}' 공유하기</p>
-                    <button type="button" class="text-xs text-wiki-muted hover:text-white transition" data-share-close aria-label="닫기">
-                      <i class="fas fa-times" aria-hidden="true"></i>
-                    </button>
-                  </div>
-                  <div class="p-4 space-y-3">
-                    <div class="flex items-center gap-2">
-                      <input type="text" class="flex-1 px-3 py-2 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-xs text-white focus:outline-none" value="${escapeHtml(detailPath)}" readonly data-share-url>
-                      <button type="button" class="px-3 py-2 bg-wiki-primary text-white text-xs rounded-md hover:bg-blue-600 transition" data-share-copy data-cw-telemetry-component="job-share-copy" data-cw-telemetry-action="share-copy"${telemetryVariantAttr}>
-                        <i class="fas fa-copy mr-1" aria-hidden="true"></i>복사
-                      </button>
-                    </div>
-                    <p class="text-[11px] text-wiki-muted">복사 버튼을 누르면 링크가 클립보드에 저장됩니다.</p>
-                  </div>
-                </div>
               </div>
               <!-- 저장 버튼 -->
               <button 

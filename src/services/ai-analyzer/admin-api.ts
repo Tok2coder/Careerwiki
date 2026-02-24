@@ -142,7 +142,6 @@ adminAiApi.get('/overview', async (c) => {
     })
     
   } catch (error) {
-    console.error('Admin overview error:', error)
     return c.json({ 
       error: 'Failed to fetch overview',
       details: error instanceof Error ? error.message : String(error)
@@ -351,11 +350,143 @@ adminAiApi.get('/metrics', async (c) => {
     })
     
   } catch (error) {
-    console.error('Metrics fetch error:', error)
     return c.json({ 
       error: 'Failed to fetch metrics',
       details: error instanceof Error ? error.message : String(error)
     }, 500)
+  }
+})
+
+/**
+ * POST /admin/api/ai/retag-majors
+ * 전공 속성 자동 태깅 (major_attributes 테이블 채우기)
+ * batch_size: 한 번에 처리할 전공 수 (기본 10, 최대 30)
+ * offset: 시작 위치 (기본 0)
+ * 여러 번 호출하여 전체 전공을 처리해야 함
+ */
+adminAiApi.post('/retag-majors', async (c) => {
+  const db = c.env.DB
+  const openaiKey = (c.env as any).OPENAI_API_KEY
+  if (!openaiKey) {
+    return c.json({ error: 'OPENAI_API_KEY not configured' }, 500)
+  }
+
+  const body = await c.req.json<{ batch_size?: number; offset?: number }>().catch(() => ({}))
+  const batchSize = Math.min(Math.max(body.batch_size || 10, 1), 30)
+  const offset = Math.max(body.offset || 0, 0)
+
+  try {
+    // 미태깅 전공 조회
+    const majors = await db.prepare(`
+      SELECT m.id, m.name, m.merged_profile_json
+      FROM majors m
+      LEFT JOIN major_attributes ma ON m.id = ma.major_id
+      WHERE ma.major_id IS NULL AND m.name IS NOT NULL
+      ORDER BY m.id
+      LIMIT ? OFFSET ?
+    `).bind(batchSize, offset).all<{
+      id: number; name: string; merged_profile_json: string | null
+    }>()
+
+    const totalRemaining = await db.prepare(`
+      SELECT COUNT(*) as cnt FROM majors m
+      LEFT JOIN major_attributes ma ON m.id = ma.major_id
+      WHERE ma.major_id IS NULL AND m.name IS NOT NULL
+    `).first<{ cnt: number }>()
+
+    const { autoTagMajor } = await import('./auto-tagger-major')
+    const results: Array<{ major_id: number; major_name: string; success: boolean; error?: string }> = []
+
+    for (const major of majors.results || []) {
+      const result = await autoTagMajor(db, major, openaiKey)
+      results.push({
+        major_id: major.id,
+        major_name: major.name,
+        success: result.success,
+        error: result.error,
+      })
+    }
+
+    const successCount = results.filter(r => r.success).length
+    const failCount = results.filter(r => !r.success).length
+
+    return c.json({
+      processed: results.length,
+      success: successCount,
+      failed: failCount,
+      remaining: (totalRemaining?.cnt || 0) - successCount,
+      next_offset: offset + batchSize,
+      results,
+    })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
+/**
+ * POST /admin/api/ai/retag-all
+ * 전체 직업 재태깅 (v2 속성 추가용)
+ * batch_size: 한 번에 처리할 직업 수 (기본 10, 최대 50)
+ * offset: 시작 위치 (기본 0)
+ */
+adminAiApi.post('/retag-all', async (c) => {
+  const db = c.env.DB
+  const openaiKey = (c.env as any).OPENAI_API_KEY
+  if (!openaiKey) {
+    return c.json({ error: 'OPENAI_API_KEY not configured' }, 500)
+  }
+
+  const body = await c.req.json<{ batch_size?: number; offset?: number }>().catch(() => ({}))
+  const batchSize = Math.min(Math.max(body.batch_size || 10, 1), 50)
+  const offset = Math.max(body.offset || 0, 0)
+
+  try {
+    // v2 미태깅 직업 조회 (tagger_version이 v2가 아닌 것들)
+    const jobs = await db.prepare(`
+      SELECT j.id, j.name, j.api_data_json, j.merged_profile_json, j.user_contributed_json, j.admin_data_json
+      FROM jobs j
+      LEFT JOIN job_attributes ja ON j.id = ja.job_id AND ja.tagger_version = 'auto-inline-v2.0.0'
+      WHERE ja.job_id IS NULL
+      ORDER BY j.name
+      LIMIT ? OFFSET ?
+    `).bind(batchSize, offset).all<{
+      id: string; name: string
+      api_data_json: string | null; merged_profile_json: string | null
+      user_contributed_json: string | null; admin_data_json: string | null
+    }>()
+
+    const totalRemaining = await db.prepare(`
+      SELECT COUNT(*) as cnt FROM jobs j
+      LEFT JOIN job_attributes ja ON j.id = ja.job_id AND ja.tagger_version = 'auto-inline-v2.0.0'
+      WHERE ja.job_id IS NULL
+    `).first<{ cnt: number }>()
+
+    const { autoTagJob } = await import('./auto-tagger')
+    const results: Array<{ job_id: string; job_name: string; success: boolean; error?: string }> = []
+
+    for (const job of jobs.results || []) {
+      const result = await autoTagJob(db, job, openaiKey)
+      results.push({
+        job_id: job.id,
+        job_name: job.name,
+        success: result.success,
+        error: result.error,
+      })
+    }
+
+    const successCount = results.filter(r => r.success).length
+    const failCount = results.filter(r => !r.success).length
+
+    return c.json({
+      processed: results.length,
+      success: successCount,
+      failed: failCount,
+      remaining: (totalRemaining?.cnt || 0) - successCount,
+      next_offset: offset + batchSize,
+      results,
+    })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
   }
 })
 

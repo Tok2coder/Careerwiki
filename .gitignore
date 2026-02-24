@@ -88,6 +88,9 @@ migration_data/
 migration_backup.sql
 migration_schema*.sql
 
+# Tailwind CSS (빌드 시 자동 생성)
+public/static/tailwind.css
+
 # 빌드 아티팩트 & 데이터
 audit/
 audit_refresh/

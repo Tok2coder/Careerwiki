@@ -7,6 +7,7 @@
  */
 
 import type {
+  DataSource,
   EducationDistribution,
   JobKecoCodeInfo,
   JobOrganizationInfo,
@@ -133,7 +134,7 @@ const FETCH_HEADER_PROFILES: HeaderProfile[] = [
     headers: {
       Accept: 'application/xml,text/xml,*/*;q=0.9',
       'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-      'User-Agent': 'CareerwikiBot/1.0 (+https://careerwiki-phase1.pages.dev)',
+      'User-Agent': 'CareerwikiBot/1.0 (+https://careerwiki.org)',
       Referer: 'https://www.work24.go.kr/',
       Origin: 'https://www.work24.go.kr'
     }
@@ -165,7 +166,7 @@ const fetchXml = async (endpoint: string, params: Record<string, string>): Promi
           cacheEverything: false,
           cacheTtl: 0
         }
-      })
+      } as RequestInit)
 
       const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
       const body = await response.text()
@@ -173,26 +174,15 @@ const fetchXml = async (endpoint: string, params: Record<string, string>): Promi
       const isXml = contentType.includes('xml') || trimmed.startsWith('<')
 
       if (response.ok && isXml) {
-        if (attempt > 0) {
-          console.info(`[goyong24] ${endpoint} recovered with header profile "${profile.label}" (status ${response.status})`)
-        }
         return body
       }
 
       const snippet = sanitizeResponseSnippet(body)
       const label = `${response.status} ${response.statusText || 'Unknown'}`
       lastError = `${label}${snippet ? ` · ${snippet}` : ''}`
-      console.warn(`[goyong24] ${endpoint} attempt ${attempt + 1} (${profile.label}) failed: ${lastError}`)
-      
-      // 404 에러인 경우 상세 정보 로깅
-      if (response.status === 404) {
-        console.error(`[goyong24] 404 에러 - 엔드포인트 확인 필요: ${url}`)
-        console.error(`[goyong24] 응답 본문 (처음 500자): ${body.substring(0, 500)}`)
-      }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       lastError = message
-      console.warn(`[goyong24] ${endpoint} attempt ${attempt + 1} (${profile.label}) threw: ${message}`)
     }
   }
 
@@ -1342,7 +1332,7 @@ export const normalizeGoyong24JobDictionaryDetail = (
     summary: detail.jobDefiSumryCont || detail.jobDefiCont,
     description: detail.jobDefiCont,
     duties: detail.reprDutyCont || detail.execJobCont,
-    work: detail.execJobCont ? [detail.execJobCont] : undefined,
+    work: detail.execJobCont ? { summary: detail.execJobCont } : undefined,
     knowledge: detail.needKnowlgCont,
     abilities: detail.needAbilCont,
     interests: detail.jobIntrstCont,
@@ -1355,12 +1345,12 @@ export const normalizeGoyong24JobDictionaryDetail = (
     // 정제된 dJobICdNm 추가
     dJobICdNm: cleanedDJobICdNm,
     // optionJobInfo 필드들도 정제하여 추가
-    doWork: detail.doWork || null,
-    workStrong: detail.optionJobInfo?.workStrong || null,
-    workPlace: detail.optionJobInfo?.workPlace || null,
-    physicalAct: detail.optionJobInfo?.physicalAct || null,
-    eduLevel: detail.optionJobInfo?.eduLevel || null,
-    skillYear: detail.optionJobInfo?.skillYear || null,
+    doWork: detail.doWork || undefined,
+    workStrong: detail.optionJobInfo?.workStrong || undefined,
+    workPlace: detail.optionJobInfo?.workPlace || undefined,
+    physicalAct: detail.optionJobInfo?.physicalAct || undefined,
+    eduLevel: detail.optionJobInfo?.eduLevel || undefined,
+    skillYear: detail.optionJobInfo?.skillYear || undefined,
     workEnv: detail.optionJobInfo?.workEnv || null,
     similarNm: detail.optionJobInfo?.similarNm || null,
     connectJob: detail.optionJobInfo?.connectJob || null,
@@ -1425,7 +1415,6 @@ export async function fetchGoyong24JobDictionaryDetail(
     // Parse dJobSum element
     const dJobSumElements = xmlDoc.getElementsByTagName('dJobSum')
     if (!dJobSumElements || dJobSumElements.length === 0) {
-      console.warn(`[fetchGoyong24JobDictionaryDetail] No dJobSum found for ${dJobCd}:${dJobCdSeq}`)
       return null
     }
     
@@ -1513,7 +1502,6 @@ export async function fetchGoyong24JobDictionaryDetail(
     return result
 
   } catch (error) {
-    console.error(`[fetchGoyong24JobDictionaryDetail] Error for ${dJobCd}:${dJobCdSeq}:`, error)
     throw error
   }
 }

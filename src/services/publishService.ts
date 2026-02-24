@@ -173,7 +173,6 @@ export async function approveDraft(
     
     return { success: true, howtoId, slug }
   } catch (error) {
-    console.error('[approveDraft] Error:', error)
     return { success: false, error: '승인 처리 중 오류가 발생했습니다' }
   }
 }
@@ -210,7 +209,6 @@ export async function rejectDraft(
     
     return { success: true }
   } catch (error) {
-    console.error('[rejectDraft] Error:', error)
     return { success: false, error: '반려 처리 중 오류가 발생했습니다' }
   }
 }
@@ -247,7 +245,6 @@ export async function listPendingReviews(
       total: countResult?.total ?? 0
     }
   } catch (error) {
-    console.error('[listPendingReviews] Error:', error)
     return { success: false, error: '조회 중 오류가 발생했습니다' }
   }
 }

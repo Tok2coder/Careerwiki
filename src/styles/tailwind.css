@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 스크롤바 유무에 따른 레이아웃 시프트 방지 */
+html {
+  scrollbar-gutter: stable;
+}

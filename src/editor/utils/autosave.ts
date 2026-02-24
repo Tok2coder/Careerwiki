@@ -107,7 +107,6 @@ export function recoverFromLocalStorage(draftId: number): {
       return JSON.parse(data)
     }
   } catch (e) {
-    console.warn('Failed to recover from localStorage:', e)
   }
   return null
 }

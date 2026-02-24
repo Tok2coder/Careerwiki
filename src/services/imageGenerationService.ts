@@ -97,7 +97,6 @@ export async function requestImageGeneration(
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('[Z-Image] API Error:', response.status, errorText)
       
       // 에러 코드별 메시지
       const errorMessages: Record<number, string> = {
@@ -119,11 +118,9 @@ export async function requestImageGeneration(
     }
 
     const data: ZImageTaskResponse = await response.json()
-    console.log('[Z-Image] Task created:', data.id, 'Status:', data.status)
     
     return { success: true, data }
   } catch (error) {
-    console.error('[Z-Image] Request failed:', error)
     return { 
       success: false, 
       error: error instanceof Error ? error.message : '알 수 없는 오류' 
@@ -152,14 +149,12 @@ export async function queryTaskStatus(
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('[Z-Image] Query Error:', response.status, errorText)
       return { success: false, error: `HTTP ${response.status}` }
     }
 
     const data: ZImageTaskResponse = await response.json()
     return { success: true, data }
   } catch (error) {
-    console.error('[Z-Image] Query failed:', error)
     return { 
       success: false, 
       error: error instanceof Error ? error.message : '알 수 없는 오류' 
@@ -187,7 +182,6 @@ export async function downloadImage(
     
     return { success: true, data, contentType }
   } catch (error) {
-    console.error('[Z-Image] Download failed:', error)
     return { 
       success: false, 
       error: error instanceof Error ? error.message : '다운로드 오류' 
@@ -238,9 +232,8 @@ export function generateImageFileKey(
   const ext = extMap[contentType] || 'webp'
   // slug에 '/'가 포함되면 경로 구분자로 해석되므로 '_'로 대체
   const safeSlug = slug.replace(/\//g, '_')
-  // R2 키는 URL-인코딩된 형태로 통일 (기존 이미지들과 일관성 유지)
-  const encodedSlug = encodeURIComponent(safeSlug)
-  return `${type}/${prefix}-${encodedSlug}.${ext}`
+  // R2 키는 디코딩된 한글 그대로 저장 (서빙 라우트가 디코딩 키를 먼저 탐색)
+  return `${type}/${prefix}-${safeSlug}.${ext}`
 }
 
 /**

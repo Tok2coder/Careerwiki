@@ -131,7 +131,7 @@ export function renderFeedbackPage(options?: FeedbackPageOptions): string {
     `
     : `
       <div class="glass-card rounded-xl border border-wiki-border/60 p-4 text-sm text-wiki-muted">
-        피드백 작성은 <a href="/auth/google" data-login-link class="text-blue-400 hover:text-blue-300 font-semibold no-underline">로그인</a> 후 가능합니다.
+        피드백 작성은 <a href="/login" data-login-link class="text-blue-400 hover:text-blue-300 font-semibold no-underline">로그인</a> 후 가능합니다.
       </div>
     `
 
@@ -140,32 +140,17 @@ export function renderFeedbackPage(options?: FeedbackPageOptions): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>피드백 게시판 | 직업위키</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'wiki-bg': '#0a0a0f',
-            'wiki-card': '#12121a',
-            'wiki-border': '#2a2a3a',
-            'wiki-text': '#e4e4e7',
-            'wiki-muted': '#71717a',
-            'wiki-primary': '#6366f1',
-          }
-        }
-      }
-    }
-  </script>
+  <title>피드백 게시판 | Careerwiki</title>
+  <link href="/static/style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/tailwind.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   ${renderNavStyles()}
   <style>
     body { background-color: #0b1220; color: #dee3ff; }
     .glass-card { background: rgba(26, 26, 46, 0.8); border: 1px solid rgba(67, 97, 238, 0.2); backdrop-filter: blur(12px); }
   </style>
 </head>
-<body class="min-h-screen text-wiki-text">
+<body class="bg-wiki-bg text-wiki-text min-h-screen">
   ${renderNav(userMenuHtml)}
 
   <main class="max-w-[1400px] mx-auto px-4 pt-20 pb-10 sm:pt-12">

@@ -189,7 +189,6 @@ export async function filterProfanity(
       }
     } catch (e) {
       // 잘못된 정규식 패턴 무시
-      console.warn(`Invalid profanity pattern: ${rule.pattern}`)
     }
   }
   

@@ -13,7 +13,6 @@ export async function syncJobsWithAPI(env: any): Promise<{
   unchanged: number
   errors: string[]
 }> {
-  console.log('🔄 Starting biweekly job sync...')
   
   const stats = {
     total: 0,
@@ -27,7 +26,6 @@ export async function syncJobsWithAPI(env: any): Promise<{
     const jobIds = await getAllActiveJobIds(env.DB)
     stats.total = jobIds.length
     
-    console.log(`📊 Total jobs to sync: ${jobIds.length}`)
     
     // 2. 각 직업 순회하며 API 데이터 가져와서 비교
     for (const jobId of jobIds) {
@@ -35,7 +33,6 @@ export async function syncJobsWithAPI(env: any): Promise<{
         // Rate limiting: 각 요청 사이 500ms 대기
         await sleep(500)
         
-        console.log(`🔍 Checking ${jobId}...`)
         
         // API에서 최신 데이터 가져오기
         const result = await getUnifiedJobDetailWithRawData(
@@ -44,7 +41,6 @@ export async function syncJobsWithAPI(env: any): Promise<{
         )
         
         if (!result.profile) {
-          console.log(`⚠️ No data for ${jobId}, keeping existing data`)
           stats.unchanged++
           continue
         }
@@ -57,36 +53,25 @@ export async function syncJobsWithAPI(env: any): Promise<{
         )
         
         if (updated) {
-          console.log(`✅ Updated ${jobId}: ${changedFields.join(', ')}`)
           stats.updated++
         } else {
-          console.log(`✓ No changes for ${jobId}`)
           stats.unchanged++
         }
         
       } catch (error) {
         const errorMsg = `Error syncing ${jobId}: ${error}`
-        console.error(`❌ ${errorMsg}`)
         stats.errors.push(errorMsg)
       }
     }
     
     // 3. 결과 요약
-    console.log('📈 Sync completed!')
-    console.log(`   Total: ${stats.total}`)
-    console.log(`   Updated: ${stats.updated}`)
-    console.log(`   Unchanged: ${stats.unchanged}`)
-    console.log(`   Errors: ${stats.errors.length}`)
     
     // 4. 최근 업데이트 로그 출력
     const recentUpdates = await getRecentUpdates(env.DB, 10)
-    console.log('📋 Recent updates:')
     for (const update of recentUpdates) {
-      console.log(`   - ${update.jobName}: ${update.changedFields.join(', ')}`)
     }
     
   } catch (error) {
-    console.error('💥 Sync failed:', error)
     stats.errors.push(`Fatal error: ${error}`)
   }
   
@@ -122,7 +107,6 @@ export async function forceUpdateJob(
     
     return { success: updated, changedFields }
   } catch (error) {
-    console.error(`Error force updating ${jobId}:`, error)
     return { success: false, changedFields: [] }
   }
 }

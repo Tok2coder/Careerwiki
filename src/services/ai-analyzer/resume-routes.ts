@@ -71,7 +71,6 @@ resumeRoutes.post('/parse', async (c) => {
       career_state: parsedResumeToCareerState(parsed),
     })
   } catch (error) {
-    console.error('Resume parse error:', error)
     return c.json({
       error: 'INTERNAL_SERVER_ERROR',
       message: error instanceof Error ? error.message : 'Unknown error',

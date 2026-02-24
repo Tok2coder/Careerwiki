@@ -3,7 +3,7 @@
 -- 전공 추천 파이프라인의 스코어링, 필터링, LLM Judge에서 사용
 
 CREATE TABLE IF NOT EXISTS major_attributes (
-  major_id INTEGER PRIMARY KEY,
+  major_id TEXT PRIMARY KEY,
   major_name TEXT NOT NULL,
 
   -- 학문적 특성 (0-100)

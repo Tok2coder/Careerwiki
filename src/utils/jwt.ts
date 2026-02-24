@@ -50,10 +50,6 @@ export async function generateAccessToken(
     .setExpirationTime('1h') // 1시간
     .sign(secretKey)
   
-  console.log('🔐 [JWT] Access Token generated')
-  console.log('   User ID:', payload.userId)
-  console.log('   Role:', payload.role)
-  console.log('   Expires: 1 hour')
   
   return token
 }
@@ -86,14 +82,7 @@ export async function generateRefreshToken(
       { expirationTtl: 604800 }
     )
     
-    console.log('🔐 [JWT] Refresh Token stored in KV')
-    console.log('   User ID:', userId)
-    console.log('   Token:', refreshToken.substring(0, 20) + '...')
-    console.log('   Expires: 7 days')
   } else {
-    console.log('🔐 [JWT] Refresh Token generated (KV not configured)')
-    console.log('   User ID:', userId)
-    console.log('   Token:', refreshToken.substring(0, 20) + '...')
   }
   
   return refreshToken
@@ -114,9 +103,6 @@ export async function verifyAccessToken(
     const secretKey = getSecretKey(secret)
     const { payload } = await jwtVerify(token, secretKey)
     
-    console.log('✅ [JWT] Access Token verified')
-    console.log('   User ID:', payload.userId)
-    console.log('   Role:', payload.role)
     
     return {
       userId: payload.userId as number,
@@ -124,8 +110,6 @@ export async function verifyAccessToken(
       email: payload.email as string
     }
   } catch (error) {
-    console.log('❌ [JWT] Access Token verification failed')
-    console.log('   Error:', error instanceof Error ? error.message : 'Unknown error')
     return null
   }
 }
@@ -145,20 +129,14 @@ export async function verifyRefreshToken(
     const data = await kv.get(`refresh:${refreshToken}`)
     
     if (!data) {
-      console.log('❌ [JWT] Refresh Token not found in KV')
       return null
     }
     
     const parsed = JSON.parse(data) as { userId: number; createdAt: number }
     
-    console.log('✅ [JWT] Refresh Token verified')
-    console.log('   User ID:', parsed.userId)
-    console.log('   Created:', new Date(parsed.createdAt).toISOString())
     
     return parsed.userId
   } catch (error) {
-    console.log('❌ [JWT] Refresh Token verification failed')
-    console.log('   Error:', error instanceof Error ? error.message : 'Unknown error')
     return null
   }
 }
@@ -175,8 +153,6 @@ export async function deleteRefreshToken(
 ): Promise<void> {
   await kv.delete(`refresh:${refreshToken}`)
   
-  console.log('🗑️ [JWT] Refresh Token deleted from KV')
-  console.log('   Token:', refreshToken.substring(0, 20) + '...')
 }
 
 

@@ -571,7 +571,6 @@ const EditMode = {
       window.location.href = `/${entityType}/${encodeURIComponent(slug)}`;
       
     } catch (error) {
-      console.error('[EditMode] Create error:', error);
       this.showCreateError(error.message || '생성 중 오류가 발생했습니다.');
       
       submitBtn.disabled = false;
@@ -629,11 +628,9 @@ const EditMode = {
    * 편집 모드 진입
    */
   async enterEditMode() {
-    console.log('[EditMode] Entering edit mode for:', this.entityType, this.entityId);
     
     // 사용자 정보 로드 대기 (ISR 캐시 대응)
     if (!window.__USER_LOADED__) {
-      console.log('[EditMode] Waiting for user info to load...');
       await new Promise(resolve => {
         const checkUser = () => {
           if (window.__USER_LOADED__) {
@@ -646,7 +643,6 @@ const EditMode = {
         };
         checkUser();
       });
-      console.log('[EditMode] User info loaded:', window.__USER__);
     }
     
     this.isEditMode = true;
@@ -689,11 +685,8 @@ const EditMode = {
         this.entityId = result.entityId;
       }
       
-      console.log('[EditMode] Loaded edit data:', Object.keys(this.editData).length, 'fields');
-      console.log('[EditMode] Edit data detail:', this.editData);
       
     } catch (error) {
-      console.error('[EditMode] Load error:', error);
       this.editData = {};
     }
   },
@@ -1640,7 +1633,6 @@ const EditMode = {
           }
         } catch (err) {
           if (err?.name !== 'AbortError') {
-            console.error('[autocomplete] Error:', err);
           }
         }
       };
@@ -1881,7 +1873,6 @@ const EditMode = {
         alert(`숨기기 실패: ${errorMsg}`);
       }
     } catch (error) {
-      console.error('Hide error:', error);
       alert('숨기기 중 오류가 발생했습니다.');
     } finally {
       if (hideBtn) {
@@ -1950,7 +1941,6 @@ const EditMode = {
         alert(`삭제 실패: ${errorMsg}`);
       }
     } catch (error) {
-      console.error('Delete error:', error);
       alert('삭제 중 오류가 발생했습니다.');
     } finally {
       if (deleteBtn) {
@@ -1985,7 +1975,6 @@ const EditMode = {
           .map(item => (item.querySelector('input')?.value || '').trim())
           .filter(v => v.length > 0);
         newValue = items; // 배열로 저장 (템플릿에서 Array.isArray 체크)
-        console.log('[EditMode] Saving list field:', key, 'items:', items);
       }
       // 제목+설명 쌍 리스트
       else if (fieldType === 'pairList') {
@@ -2000,7 +1989,6 @@ const EditMode = {
           })
           .filter(Boolean);
         newValue = items;
-        console.log('[EditMode] Saving pairList field:', key, 'items:', items);
       }
       // 자동완성 타입 필드 (관련 직업, 관련 학과)
       else if (fieldType === 'autocomplete') {
@@ -2069,8 +2057,6 @@ const EditMode = {
       return;
     }
     
-    console.log('[EditMode] Changed fields:', changedFields);
-    console.log('[EditMode] Sources:', sources);
     
     // 로딩 상태
     saveBtn.disabled = true;
@@ -2082,7 +2068,6 @@ const EditMode = {
         sources: Object.keys(sources).length > 0 ? sources : undefined
       };
       
-      console.log('[EditMode] Sending payload:', payload);
       
       const endpoint = `/api/${this.entityType}/${encodeURIComponent(this.entityId)}/edit`;
       const response = await fetch(endpoint, {
@@ -2101,7 +2086,6 @@ const EditMode = {
       window.location.href = window.location.pathname + '?_t=' + Date.now();
       
     } catch (error) {
-      console.error('[EditMode] Save error:', error);
       alert('저장 중 오류가 발생했습니다: ' + error.message);
       
       saveBtn.disabled = false;

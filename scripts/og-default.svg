@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="50%" style="stop-color:#1e1b4b"/>
+      <stop offset="100%" style="stop-color:#172554"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="title-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#e0e7ff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.03">
+    <line x1="0" y1="0" x2="0" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="120" y1="0" x2="120" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="240" y1="0" x2="240" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="360" y1="0" x2="360" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="480" y1="0" x2="480" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="720" y1="0" x2="720" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="840" y1="0" x2="840" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="960" y1="0" x2="960" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="1080" y1="0" x2="1080" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="1200" y1="0" x2="1200" y2="630" stroke="white" stroke-width="1"/>
+  </g>
+
+  <!-- Decorative glow -->
+  <circle cx="200" cy="315" r="300" fill="#3b82f6" opacity="0.04"/>
+  <circle cx="1000" cy="315" r="300" fill="#8b5cf6" opacity="0.04"/>
+
+  <!-- Top accent bar -->
+  <rect x="0" y="0" width="1200" height="5" fill="url(#accent)"/>
+
+  <!-- Brain icon circle -->
+  <circle cx="600" cy="175" r="45" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.5"/>
+  <text x="600" y="192" font-size="40" fill="#3b82f6" font-family="sans-serif" text-anchor="middle">&#x1f9e0;</text>
+
+  <!-- Brand name -->
+  <text x="600" y="265" font-size="22" fill="#94a3b8" font-family="Noto Sans KR, sans-serif" text-anchor="middle" letter-spacing="8" font-weight="400">CAREERWIKI</text>
+
+  <!-- Main title (Korean) -->
+  <text x="600" y="340" font-size="52" fill="white" font-weight="700" font-family="Noto Sans KR, sans-serif" text-anchor="middle">AI 맞춤 진로 추천 플랫폼</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="400" font-size="24" fill="#94a3b8" font-family="Noto Sans KR, sans-serif" text-anchor="middle">AI 인터뷰 · 벡터 검색 · 맞춤 리포트</text>
+
+  <!-- Divider -->
+  <rect x="500" y="440" width="200" height="1.5" fill="#3b82f6" opacity="0.4" rx="1"/>
+
+  <!-- Features row -->
+  <text x="380" y="500" font-size="18" fill="#64748b" font-family="Noto Sans KR, sans-serif" text-anchor="middle">직업 추천</text>
+  <text x="600" y="500" font-size="18" fill="#64748b" font-family="Noto Sans KR, sans-serif" text-anchor="middle">전공 추천</text>
+  <text x="820" y="500" font-size="18" fill="#64748b" font-family="Noto Sans KR, sans-serif" text-anchor="middle">진로 리포트</text>
+
+  <!-- Dot separators -->
+  <circle cx="490" cy="496" r="2" fill="#475569"/>
+  <circle cx="710" cy="496" r="2" fill="#475569"/>
+
+  <!-- Domain -->
+  <text x="600" y="570" font-size="20" fill="#3b82f6" font-family="Noto Sans KR, sans-serif" text-anchor="middle" letter-spacing="1">careerwiki.org</text>
+
+  <!-- Bottom accent bar -->
+  <rect x="0" y="625" width="1200" height="5" fill="url(#accent)"/>
+</svg>

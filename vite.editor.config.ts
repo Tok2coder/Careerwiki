@@ -6,6 +6,9 @@ import { resolve } from 'path'
  * 클라이언트용 별도 번들로 생성
  */
 export default defineConfig({
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/editor/index.ts'),

@@ -5,7 +5,9 @@
     "dev": "npm run clean-port && npm run build && npx wrangler pages dev dist --d1=careerwiki-kr --r2=careerwiki-uploads --kv=KV --ip 0.0.0.0 --port 3000 --log-level info",
     "dev:local": "npm run build && npx wrangler pages dev dist --d1=careerwiki-kr --r2=careerwiki-uploads --kv=KV --local --ip 0.0.0.0 --port 3000",
     "dev:vite": "vite --port 3000",
-    "build": "vite build",
+    "build:css": "tailwindcss -i src/styles/tailwind.css -o public/static/tailwind.css --minify",
+    "dev:css": "tailwindcss -i src/styles/tailwind.css -o public/static/tailwind.css --watch",
+    "build": "npm run build:css && vite build",
     "build:editor": "vite build --config vite.editor.config.ts",
     "build:all": "npm run build:editor && npm run build",
     "preview": "wrangler pages dev dist",
@@ -32,6 +34,7 @@
     "images:generate-batch": "tsx scripts/generate_images.ts"
   },
   "dependencies": {
+    "@resvg/resvg-wasm": "^2.6.2",
     "@tiptap/core": "^3.11.1",
     "@tiptap/extension-color": "^3.11.1",
     "@tiptap/extension-font-family": "^3.11.1",
@@ -56,14 +59,17 @@
     "dotenv": "^17.2.3",
     "hono": "^4.9.9",
     "jose": "^6.1.2",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "vite-plugin-wasm": "^3.5.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251008.0",
     "@hono/vite-build": "^1.2.0",
     "@hono/vite-dev-server": "^0.18.2",
+    "@tailwindcss/typography": "^0.5.19",
     "better-sqlite3": "^12.4.1",
     "miniflare": "^4.20251011.2",
+    "tailwindcss": "^3.4.19",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",

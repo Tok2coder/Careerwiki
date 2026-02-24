@@ -4,7 +4,7 @@
  * 이 파일은 Cloudflare Workers 환경에서 사용되는 환경 변수와 바인딩을 정의합니다.
  */
 
-import type { D1Database, KVNamespace, R2Bucket } from '@cloudflare/workers-types'
+import type { D1Database, KVNamespace, R2Bucket, VectorizeIndex, Ai } from '@cloudflare/workers-types'
 
 export interface CloudflareBindings {
   // Database
@@ -40,9 +40,19 @@ export interface CloudflareBindings {
   OPENAI_API_KEY?: string
   GEMINI_API_KEY?: string
 
-  // Releases page: Cloudflare Pages API
+  // Cloudflare API (releases page 등)
+  CLOUDFLARE_ACCOUNT_ID?: string
+  CLOUDFLARE_API_TOKEN?: string
   CF_ACCOUNT_ID?: string
   CF_PAGES_API_TOKEN?: string
+  GITHUB_TOKEN?: string
+
+  // Cloudflare AI & Vectorize
+  VECTORIZE: VectorizeIndex
+  AI: Ai
+
+  // SEO
+  GOOGLE_SITE_VERIFICATION?: string
 }
 
 

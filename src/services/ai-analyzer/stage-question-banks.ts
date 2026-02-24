@@ -532,7 +532,7 @@ const POOL_JOB_SECOND: StageQuestion[] = [
 const POOL_MAJOR_COMMON: StageQuestion[] = [
   {
     question_id: 'major_favorite_subject',
-    stage_ids: ['major_elementary', 'major_middle', 'major_high'],
+    stage_ids: ['major_elementary', 'major_middle', 'major_high', 'major_freshman', 'major_student', 'major_graduate'],
     type: 'behavior',
     text: '가장 재미있거나 잘하는 과목은 뭔가요?',
     ui_type: 'checkbox',
@@ -556,7 +556,7 @@ const POOL_MAJOR_COMMON: StageQuestion[] = [
   },
   {
     question_id: 'major_dream_job',
-    stage_ids: ['major_elementary', 'major_middle', 'major_high'],
+    stage_ids: ['major_elementary', 'major_middle', 'major_high', 'major_freshman', 'major_student', 'major_graduate'],
     type: 'projection',
     text: '미래에 어떤 일을 하고 싶나요? (여러 개 선택 가능)',
     ui_type: 'checkbox',

@@ -63,7 +63,6 @@ async function withD1Retry<T>(
         throw error
       }
       
-      console.warn(`⚠️ D1 연결 오류 (시도 ${attempt}/${maxRetries}), ${delayMs}ms 후 재시도...`)
       await new Promise(resolve => setTimeout(resolve, delayMs * attempt))
     }
   }
@@ -789,7 +788,6 @@ export const searchUnifiedMajors = async (
             majorImageUrl = row.image_url || mergedProfile.image_url
             break
           } catch (parseError) {
-            console.error(`Failed to parse merged_profile_json for major ${row.id}:`, parseError)
           }
         }
       }
@@ -818,7 +816,6 @@ export const searchUnifiedMajors = async (
             try {
               apiData = JSON.parse(row.api_data_json)
             } catch (parseError) {
-              console.error(`Failed to parse api_data_json for major ${row.id}:`, parseError)
             }
           }
           
@@ -1037,7 +1034,6 @@ export const searchUnifiedMajors = async (
 
       items.push(entry)
     } catch (entryError) {
-      console.error(`Failed to process D1 major row:`, entryError)
     }
   })
 
@@ -1144,9 +1140,6 @@ export const searchUnifiedMajors = async (
     }
   }
   } catch (error) {
-    console.error('[searchUnifiedMajors] Error:', error)
-    console.error('[searchUnifiedMajors] Keyword:', keyword)
-    console.error('[searchUnifiedMajors] Stack:', error instanceof Error ? error.stack : 'No stack')
     
     // 에러 발생 시 빈 결과 반환 (500 에러 방지)
     return {
@@ -1233,7 +1226,6 @@ export const searchUnifiedJobs = async (
       ) as { results?: any[] }
       ftsRows = ftsResult?.results || []
     } catch (e) {
-      console.log('[searchUnifiedJobs] FTS error, falling back to LIKE search:', e)
       ftsRows = []
     }
 
@@ -1624,7 +1616,6 @@ export const searchUnifiedJobs = async (
 
       items.push(entry)
     } catch (entryError) {
-      console.error(`Failed to process D1 job row:`, entryError)
     }
   })
 
@@ -1798,7 +1789,6 @@ export const getUnifiedMajorDetail = async (
               userData = JSON.parse(mergedMajorRow.user_contributed_json as string)
             }
           } catch (error) {
-            console.error('[getUnifiedMajorDetail] Failed to parse user_contributed_json:', error)
           }
           
           try {
@@ -1806,7 +1796,6 @@ export const getUnifiedMajorDetail = async (
               adminData = JSON.parse(mergedMajorRow.admin_data_json as string)
             }
           } catch (error) {
-            console.error('[getUnifiedMajorDetail] Failed to parse admin_data_json:', error)
           }
           
           // 병합 적용 (admin > user > merged 우선순위) - 깊은 병합 사용
@@ -1875,7 +1864,6 @@ export const getUnifiedMajorDetail = async (
             sources: sourcesStatus
           }
         } catch (error) {
-          console.error('[getUnifiedMajorDetail] Failed to parse merged_profile_json:', error)
           // Fallback to old logic below
         }
       }
@@ -1968,7 +1956,6 @@ export const getUnifiedMajorDetail = async (
                   
                   if (careernetProfile && goyongProfile) break
                 } catch (error) {
-                  console.error(`[getUnifiedMajorDetail] JSON parse error:`, error)
                 }
               }
             }
@@ -1986,7 +1973,6 @@ export const getUnifiedMajorDetail = async (
                   userData = JSON.parse(firstRow.user_contributed_json as string)
                 }
               } catch (error) {
-                console.error('[getUnifiedMajorDetail] Failed to parse user_contributed_json:', error)
               }
               
               try {
@@ -1994,7 +1980,6 @@ export const getUnifiedMajorDetail = async (
                   adminData = JSON.parse(firstRow.admin_data_json as string)
                 }
               } catch (error) {
-                console.error('[getUnifiedMajorDetail] Failed to parse admin_data_json:', error)
               }
               
               enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, userData), adminData) as UnifiedMajorDetail
@@ -2029,7 +2014,7 @@ export const getUnifiedMajorDetail = async (
         return normalized
       }
       
-      const normalizedSearchName = normalizeMajorNameForSearch(id)
+      const normalizedSearchName = normalizeMajorNameForSearch(searchKey)
       
       // Try finding by name (Korean slug) in D1
       // ✅ 정규화된 이름으로도 검색하여 병합된 전공 찾기
@@ -2038,8 +2023,8 @@ export const getUnifiedMajorDetail = async (
         SELECT id, name, careernet_id, goyong24_id, api_data_json, user_contributed_json, admin_data_json 
         FROM majors 
         WHERE LOWER(name) = LOWER(?)
-      `).bind(id).all()
-      
+      `).bind(searchKey).all()
+
       // 2. 정확히 일치하는 것이 없으면 정규화된 이름으로 검색
       if (!allMajorRows.results || allMajorRows.results.length === 0) {
         // 모든 전공을 가져와서 정규화된 이름으로 필터링
@@ -2168,7 +2153,6 @@ export const getUnifiedMajorDetail = async (
                 break
               }
             } catch (error) {
-              console.error(`  ❌ JSON 파싱 오류 (레코드 ID: ${row.id}):`, error)
             }
           }
         }
@@ -2200,8 +2184,8 @@ export const getUnifiedMajorDetail = async (
           // 🔧 검색한 이름(id)과 정확히 일치하거나 정규화 후 일치하는 레코드의 name 우선 사용
           // 목록 페이지에서 병합된 이름과 URL slug가 다를 수 있으므로, 검색한 이름과 일치하는 것을 찾음
           // 1. 정확히 일치하는 것 먼저 찾기
-          let matchingRow = allMajorRows.results.find((row: any) => 
-            row.name && row.name.trim().toLowerCase() === id.toLowerCase()
+          let matchingRow = allMajorRows.results.find((row: any) =>
+            row.name && row.name.trim().toLowerCase() === searchKey.toLowerCase()
           )
           
           // 2. 정확히 일치하는 것이 없으면 정규화된 이름으로 찾기
@@ -2237,7 +2221,6 @@ export const getUnifiedMajorDetail = async (
               userData = JSON.parse(firstRow.user_contributed_json as string)
             }
           } catch (error) {
-            console.error('[getUnifiedMajorDetail] Failed to parse user_contributed_json:', error)
           }
           
           try {
@@ -2245,7 +2228,6 @@ export const getUnifiedMajorDetail = async (
               adminData = JSON.parse(firstRow.admin_data_json as string)
             }
           } catch (error) {
-            console.error('[getUnifiedMajorDetail] Failed to parse admin_data_json:', error)
           }
           
           // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
@@ -2265,7 +2247,6 @@ export const getUnifiedMajorDetail = async (
         // 조용히 API fallback으로 진행
       } else {
         // 다른 에러는 로그 남김
-        console.error('D1 major lookup error:', d1Error)
       }
       // Continue to API fallback
     }
@@ -2393,7 +2374,6 @@ export const getUnifiedMajorDetail = async (
             userData = JSON.parse(dbMajor.user_contributed_json)
           }
         } catch (error) {
-          console.error('[getUnifiedMajorDetail] Failed to parse user_contributed_json:', error)
         }
         
         try {
@@ -2401,7 +2381,6 @@ export const getUnifiedMajorDetail = async (
             adminData = JSON.parse(dbMajor.admin_data_json)
           }
         } catch (error) {
-          console.error('[getUnifiedMajorDetail] Failed to parse admin_data_json:', error)
         }
         
         // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
@@ -2410,7 +2389,6 @@ export const getUnifiedMajorDetail = async (
       } else {
       }
     } catch (dbError) {
-      console.error('[getUnifiedMajorDetail] Failed to merge user/admin data:', dbError)
     }
   }
 
@@ -2512,7 +2490,6 @@ export const getUnifiedJobDetail = async (
               userData = JSON.parse(mergedJobRow.user_contributed_json as string)
             }
           } catch (error) {
-            console.error('[getUnifiedJobDetail] Failed to parse user_contributed_json:', error)
           }
           
           try {
@@ -2520,7 +2497,6 @@ export const getUnifiedJobDetail = async (
               adminData = JSON.parse(mergedJobRow.admin_data_json as string)
             }
           } catch (error) {
-            console.error('[getUnifiedJobDetail] Failed to parse admin_data_json:', error)
           }
           
           // 병합 적용 (admin > user > merged 우선순위) - 깊은 병합 사용
@@ -2543,13 +2519,11 @@ export const getUnifiedJobDetail = async (
             sources: sourcesStatus
           }
         } catch (error) {
-          console.error('[getUnifiedJobDetail] Failed to parse merged_profile_json:', error)
           // Fallback to old logic below
         }
       }
       
     } catch (error) {
-      console.error('[getUnifiedJobDetail] Error checking merged data:', error)
       // Fallback to old logic below
     }
   }
@@ -2721,7 +2695,6 @@ export const getUnifiedJobDetailWithRawData = async (
               userData = JSON.parse(mergedJobRow.user_contributed_json as string)
             }
           } catch (error) {
-            console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json:', error)
           }
           
           try {
@@ -2729,7 +2702,6 @@ export const getUnifiedJobDetailWithRawData = async (
               adminData = JSON.parse(mergedJobRow.admin_data_json as string)
             }
           } catch (error) {
-            console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json:', error)
           }
           
           // 병합 적용 (admin > user > merged 우선순위) - 깊은 병합 사용
@@ -2756,7 +2728,6 @@ export const getUnifiedJobDetailWithRawData = async (
                 }
               }
             } catch (error) {
-              console.error('[getUnifiedJobDetailWithRawData] Failed to fetch raw sources:', error)
             }
           }
           
@@ -2786,7 +2757,6 @@ export const getUnifiedJobDetailWithRawData = async (
             }
           }
         } catch (error) {
-          console.error('[getUnifiedJobDetailWithRawData] Failed to parse merged_profile_json:', error)
           // Fallback to old logic below
         }
       }
@@ -2852,7 +2822,6 @@ export const getUnifiedJobDetailWithRawData = async (
                   break
                 }
               } catch (error) {
-                console.error(`  ❌ JSON 파싱 오류 (레코드 ID: ${row.id}):`, error)
               }
             }
           }
@@ -2877,7 +2846,6 @@ export const getUnifiedJobDetailWithRawData = async (
                 userData = JSON.parse(firstRow.user_contributed_json as string)
               }
             } catch (error) {
-              console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json:', error)
             }
             
             try {
@@ -2885,7 +2853,6 @@ export const getUnifiedJobDetailWithRawData = async (
                 adminData = JSON.parse(firstRow.admin_data_json as string)
               }
             } catch (error) {
-              console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json:', error)
             }
             
             // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
@@ -2970,7 +2937,6 @@ export const getUnifiedJobDetailWithRawData = async (
                         sourcesStatus.CAREERNET.count = 1
                       }
                     } catch (error) {
-                      console.error(`  ❌ JSON 파싱 오류 (동일 이름 커리어넷, 레코드 ID: ${sibling.id}):`, error)
                     }
                   }
 
@@ -2985,7 +2951,6 @@ export const getUnifiedJobDetailWithRawData = async (
                         sourcesStatus.GOYONG24.count = 1
                       }
                     } catch (error) {
-                      console.error(`  ❌ JSON 파싱 오류 (동일 이름 고용24, 레코드 ID: ${sibling.id}):`, error)
                     }
                   }
 
@@ -3011,7 +2976,6 @@ export const getUnifiedJobDetailWithRawData = async (
                   userData = JSON.parse(jobRow.user_contributed_json as string)
                 }
               } catch (error) {
-                console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json:', error)
               }
               
               try {
@@ -3019,7 +2983,6 @@ export const getUnifiedJobDetailWithRawData = async (
                   adminData = JSON.parse(jobRow.admin_data_json as string)
                 }
               } catch (error) {
-                console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json:', error)
               }
               
               // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
@@ -3042,7 +3005,6 @@ export const getUnifiedJobDetailWithRawData = async (
               }
             }
           } catch (parseError) {
-            console.error('Failed to parse D1 api_data_json (fallback):', parseError)
           }
         }
       }
@@ -3092,7 +3054,6 @@ export const getUnifiedJobDetailWithRawData = async (
                       break
                     }
                   } catch (e) {
-                    console.error(`  ❌ JSON 파싱 오류 (레코드 ID: ${otherRow.id}):`, e)
                   }
                 }
               }
@@ -3120,7 +3081,6 @@ export const getUnifiedJobDetailWithRawData = async (
                         sourcesStatus.CAREERNET.count = 1
                       }
                     } catch (error) {
-                      console.error(`  ❌ JSON 파싱 오류 (동일 이름 커리어넷, 레코드 ID: ${sibling.id}):`, error)
                     }
                   }
 
@@ -3135,7 +3095,6 @@ export const getUnifiedJobDetailWithRawData = async (
                         sourcesStatus.GOYONG24.count = 1
                       }
                     } catch (error) {
-                      console.error(`  ❌ JSON 파싱 오류 (동일 이름 고용24, 레코드 ID: ${sibling.id}):`, error)
                     }
                   }
 
@@ -3161,7 +3120,6 @@ export const getUnifiedJobDetailWithRawData = async (
                   userData = JSON.parse(jobRow.user_contributed_json as string)
                 }
               } catch (error) {
-                console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json:', error)
               }
               
               try {
@@ -3169,7 +3127,6 @@ export const getUnifiedJobDetailWithRawData = async (
                   adminData = JSON.parse(jobRow.admin_data_json as string)
                 }
               } catch (error) {
-                console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json:', error)
               }
               
               // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
@@ -3192,7 +3149,6 @@ export const getUnifiedJobDetailWithRawData = async (
               }
             }
           } catch (parseError) {
-            console.error('Failed to parse D1 api_data_json (fallback careernet_id):', parseError)
           }
         }
       }
@@ -3202,7 +3158,6 @@ export const getUnifiedJobDetailWithRawData = async (
         // 조용히 API fallback으로 진행
       } else {
         // 다른 에러는 로그 남김
-        console.error('D1 database query failed:', dbError)
       }
       // Continue to API fallback
     }
@@ -3362,7 +3317,6 @@ export const getUnifiedJobDetailWithRawData = async (
             userData = JSON.parse(dbJob.user_contributed_json)
           }
         } catch (error) {
-          console.error('[getUnifiedJobDetailWithRawData] Failed to parse user_contributed_json (API path):', error)
         }
         
         try {
@@ -3370,7 +3324,6 @@ export const getUnifiedJobDetailWithRawData = async (
             adminData = JSON.parse(dbJob.admin_data_json)
           }
         } catch (error) {
-          console.error('[getUnifiedJobDetailWithRawData] Failed to parse admin_data_json (API path):', error)
         }
         
         // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
@@ -3379,7 +3332,6 @@ export const getUnifiedJobDetailWithRawData = async (
     } catch (dbError) {
       // DB 조회 실패는 조용히 처리 (로컬 개발 환경 등)
       // 에러가 발생해도 기존 enhancedProfile을 그대로 사용
-      console.error('[getUnifiedJobDetailWithRawData] Failed to merge user_contributed_json (API path):', dbError)
     }
   }
 

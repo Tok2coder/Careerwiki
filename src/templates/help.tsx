@@ -3,7 +3,6 @@
  * - Search bar with client-side filtering
  * - Left category nav, right main content
  * - Links to feedback board (/feedback) and releases (/releases)
- * - Bottom usefulness widget (stubbed client-side only)
  */
 
 import { renderNav, renderNavStyles, renderNavScripts } from './partials/nav'
@@ -19,82 +18,89 @@ const SECTIONS: HelpSection[] = [
   {
     id: 'quickstart',
     title: '빠른 시작',
-    desc: '핵심 흐름',
+    desc: '처음 오셨나요?',
     items: [
-      { title: '통합검색', body: '상단 검색창 또는 /search에서 직업·전공·HowTo를 한번에 찾아보세요.' },
-      { title: '직업위키', body: '연봉·만족도·워라벨 메트릭과 요약/업무/전망 탭을 통해 직업을 파악하세요.' },
-      { title: '전공위키', body: '취업률·첫월급·만족도 메트릭과 관련 직업을 확인할 수 있습니다.' },
-      { title: 'HowTo 가이드', body: '취업/커리어 실무 가이드를 모았습니다. 필요한 키워드로 검색해 보세요.' }
+      { title: '검색으로 시작하기', body: '상단 검색창에 관심 있는 직업이나 전공 이름을 입력하세요. "간호사", "컴퓨터공학" 같은 키워드면 충분합니다. 직업·전공·HowTo 결과가 한번에 나타납니다.' },
+      { title: '직업위키 읽는 법', body: '직업 상세 페이지에서는 연봉(중간값 기준), 직무만족도(5점 척도), 워라벨 점수를 한눈에 볼 수 있습니다. 아래로 스크롤하면 하는 일, 필요 역량, 되는 법, 향후 전망을 탭별로 확인할 수 있습니다.' },
+      { title: '전공위키 읽는 법', body: '전공 상세 페이지에서는 졸업 후 취업률, 첫 직장 월급, 전공 만족도를 확인할 수 있습니다. 하단에는 이 전공 졸업 후 진출 가능한 직업 목록이 연결되어 있어 진로 탐색에 활용하세요.' },
+      { title: 'AI 추천 받기', body: '로그인 후 상단 메뉴의 "AI 추천"을 클릭하면, 나의 흥미·가치관·경험을 바탕으로 AI가 적합한 직업이나 전공을 추천해 줍니다. 약 5~10분 소요됩니다.' }
     ]
   },
   {
     id: 'guide',
-    title: '검색·상세 안내',
-    desc: '검색, 상세 탭, 통합검색 미리보기 활용법',
+    title: '검색 가이드',
+    desc: '원하는 정보를 빠르게 찾는 법',
     items: [
-      { title: '검색 키워드 팁', body: '2~3단어 구체적으로 입력하면 매칭 정확도가 올라갑니다.' },
-      { title: '직업 상세 읽기', body: '개요·연봉/만족도·직무내용·전망 순서로 탭이 구성되어 있습니다.' },
-      { title: '전공 상세 읽기', body: '취업률·첫월급·만족도와 관련 직업/HowTo 링크를 함께 제공합니다.' },
-      { title: '통합검색 더보기', body: '미리보기 하단 “직업 결과 더보기” 링크로 /job, /major 목록으로 이동하세요.' }
+      { title: '통합검색 활용', body: '상단 검색창은 AI 기반 의미 검색을 사용합니다. "돈 많이 버는 직업"처럼 자연어로도 검색할 수 있고, "IT 개발"처럼 분야명으로도 검색됩니다. 결과에서 직업·전공·HowTo를 각각 확인하세요.' },
+      { title: '직업 목록 탐색', body: '메뉴의 직업위키 또는 /job에서 전체 직업 목록을 볼 수 있습니다. 카테고리 필터로 관심 분야를 좁히거나, 연봉순·만족도순으로 정렬하여 비교해 보세요.' },
+      { title: '전공 목록 탐색', body: '메뉴의 전공위키 또는 /major에서 전체 전공 목록을 볼 수 있습니다. 계열별(인문, 사회, 공학 등) 필터를 활용하면 관심 분야를 빠르게 좁힐 수 있습니다.' },
+      { title: '데이터 수치 이해하기', body: '연봉은 해당 직업 종사자의 중간값(중위값)입니다. 만족도는 1~5점 척도, 워라벨도 1~5점 척도로 현직자 설문 결과입니다. 취업률은 해당 전공 졸업자 기준 취업률입니다.' }
     ]
   },
   {
     id: 'howto',
-    title: 'HowTo 이용',
-    desc: 'HowTo 활용법',
+    title: 'HowTo 가이드',
+    desc: '실무 중심 커리어 가이드',
     items: [
-      { title: '검색', body: '“이력서”, “면접”, “자격증”처럼 주제 키워드로 검색하세요.' },
-      { title: '목차 활용', body: '가이드 상단 목차를 사용해 필요한 섹션으로 바로 이동하세요.' },
-      { title: '신고', body: '부적절한 내용은 가이드 하단 신고 버튼으로 알려주세요.' }
+      { title: 'HowTo란?', body: '이력서 작성법, 면접 준비, 자격증 취득 가이드 등 실제 취업/커리어에 필요한 실무 가이드입니다. 각 가이드는 단계별로 구성되어 있어 순서대로 따라하면 됩니다.' },
+      { title: '가이드 찾기', body: '/howto 페이지에서 "이력서", "면접", "자격증", "포트폴리오" 같은 키워드로 검색하세요. 가이드 본문에서 목차를 클릭하면 원하는 섹션으로 바로 이동할 수 있습니다.' },
+      { title: '가이드 작성하기', body: '로그인 후 HowTo 페이지에서 직접 가이드를 작성할 수 있습니다. 마크다운 에디터를 지원하며, 작성한 가이드는 검토 후 공개됩니다. 마이페이지 > 작성 가이드에서 상태를 확인하세요.' },
+      { title: '댓글·신고', body: '가이드 하단에서 댓글로 질문하거나 추가 정보를 공유할 수 있습니다. 부정확하거나 부적절한 내용이 있으면 신고 버튼을 눌러주세요.' }
+    ]
+  },
+  {
+    id: 'ai',
+    title: 'AI 추천',
+    desc: 'AI 직업/전공 추천 서비스',
+    items: [
+      { title: '추천 과정 (5단계)', body: '① 직업/전공 추천 중 선택 → ② 흥미, 가치관, 기술, 선호, 제약사항을 슬라이더로 자가 평가 → ③ 본인의 경험과 강점을 서술형으로 작성 → ④ AI가 추가 심층 질문 3라운드 진행 → ⑤ 분석 결과 및 추천 직업/전공 확인' },
+      { title: '좋은 결과를 받으려면', body: '서술형 답변에서 구체적인 경험을 적을수록 AI 추천 정확도가 올라갑니다. "컴퓨터를 좋아한다"보다 "고등학교 때 파이썬으로 웹 크롤러를 만들어본 경험이 있다" 같은 구체적 서술이 효과적입니다.' },
+      { title: '결과 확인·공유', body: '추천 결과는 마이페이지 > AI 추천에서 언제든 다시 볼 수 있습니다. 각 추천 직업/전공을 클릭하면 해당 위키 페이지로 이동하여 상세 정보를 확인할 수 있습니다.' },
+      { title: '데이터 처리 안내', body: '입력한 자가 평가와 서술형 답변은 OpenAI API로 전송되어 분석됩니다. OpenAI는 이 데이터를 모델 학습에 사용하지 않습니다. 결과는 서비스 내에 저장되며 마이페이지에서 삭제할 수 있습니다.' }
     ]
   },
   {
     id: 'feedback',
     title: '피드백/문의',
-    desc: '버그 제보·제안 접수',
+    desc: '문제 신고와 기능 제안',
     items: [
-      { title: '피드백 남기기', body: '/feedback에서 버그·기능건의·질문을 등록하면 답변을 받습니다.' },
-      { title: '링크 첨부', body: '관련 페이지 URL을 선택 입력하면 처리 속도가 빨라집니다.' },
-      { title: '알려진 이슈', body: '해결 중인 문제는 “알려진 이슈” 섹션에서 먼저 확인하세요.' }
+      { title: '피드백 유형', body: '버그(오류·깨진 화면), 기능건의(새 기능·개선 요청), 질문(사용법·데이터 관련), 기타로 나뉩니다. 적절한 유형을 선택하면 더 빠르게 답변받을 수 있습니다.' },
+      { title: '효과적인 피드백 작성법', body: '문제가 발생한 페이지 URL을 "관련 링크"에 첨부하세요. 버그라면 "어떤 동작을 했을 때, 기대한 결과와 실제 결과가 어떻게 다른지" 적어주시면 빠른 해결에 도움이 됩니다.' },
+      { title: '답변 확인', body: '피드백에 관리자 답변이 달리면 해당 게시글에서 확인할 수 있습니다. 추가 질문이 있으면 댓글로 이어서 대화할 수 있습니다.' },
+      { title: '비공개 피드백', body: '개인정보가 포함된 문의는 비공개로 작성할 수 있습니다. 비공개 피드백은 작성자와 관리자만 볼 수 있습니다.' }
     ]
   },
   {
     id: 'account',
-    title: '계정/보안',
-    desc: '로그인 및 기본 정책',
+    title: '계정/설정',
+    desc: '로그인, 프로필, 탈퇴 안내',
     items: [
-      { title: '소셜 로그인', body: 'Google 로그인만 지원합니다. 로그인 후 피드백 작성·신고가 가능합니다.' },
-      { title: '닉네임 규칙', body: '2~16자, 한글/영문/숫자/._- 허용. 금칙어·중복은 불가합니다.' },
-      { title: '차단/해제', body: '운영 정책 위반 시 차단될 수 있으며 문의를 통해 이의 제기가 가능합니다.' },
-      { title: '회원 탈퇴', body: '현재 문의로 처리합니다. 셀프 탈퇴 기능은 준비 중입니다.' }
+      { title: '로그인', body: 'Google 계정으로 로그인합니다. 별도 회원가입 절차 없이 Google 로그인만으로 가입이 완료됩니다. 첫 로그인 시 닉네임 설정과 약관 동의 절차(온보딩)가 진행됩니다.' },
+      { title: '프로필 수정', body: '마이페이지 > 개인 설정에서 닉네임과 프로필 사진을 변경할 수 있습니다. 닉네임은 2~16자, 한글/영문/숫자/._-만 사용 가능하며 욕설·금칙어와 이미 사용 중인 닉네임은 불가합니다.' },
+      { title: '로그인 상태 유지', body: '로그인하면 30일간 세션이 유지됩니다. 7일 이상 접속하지 않으면 자동으로 로그아웃되며, 다시 로그인하면 됩니다.' },
+      { title: '회원 탈퇴', body: 'contact@careerwiki.org로 탈퇴를 요청하면 처리됩니다. 탈퇴 시 계정 정보, AI 추천 결과, 작성한 댓글이 삭제됩니다. 작성한 HowTo 가이드는 협의 후 처리합니다.' }
     ]
   },
   {
     id: 'community',
     title: '커뮤니티 가이드',
-    desc: '댓글 금칙어·신고·제재 요약 (전체 정책은 별도 페이지)',
+    desc: '댓글·신고·제재 규칙',
     items: [
-      { title: '금칙어/욕설 필터', body: '욕설·혐오·사칭 단어는 자동 치환/차단됩니다.' },
-      { title: '도배/광고 금지', body: '반복 게시·상업 링크는 제재 대상입니다.' },
-      { title: '신고 처리', body: '신고 누적 시 블라인드/차단되며 이의 제기 절차를 제공합니다.' }
+      { title: '댓글 작성', body: '직업·전공·HowTo 페이지 하단에서 댓글을 작성할 수 있습니다. 로그인 없이도 익명 댓글이 가능하며, 로그인 시 닉네임이 표시됩니다. 댓글에 공감/비공감을 눌러 의견을 표현할 수 있습니다.' },
+      { title: '자동 필터링', body: '욕설, 혐오 표현, 개인정보, 광고성 문구는 자동으로 감지되어 게시가 차단됩니다. 필터에 걸린 경우 해당 표현을 수정한 뒤 다시 작성하세요.' },
+      { title: '신고 및 제재', body: '부적절한 댓글은 신고 버튼으로 알려주세요. 신고가 일정 수 이상 누적되면 해당 댓글이 블라인드 처리됩니다. 반복적으로 위반하면 계정이 차단될 수 있습니다.' },
+      { title: '이의 제기', body: '부당한 차단이라고 생각되면 contact@careerwiki.org로 이의 제기할 수 있습니다. 전체 커뮤니티 정책은 별도 페이지에서 확인하세요.' }
     ]
   },
   {
     id: 'data',
-    title: '데이터 출처·정확성',
-    desc: '데이터 업데이트·정정 방법',
+    title: '데이터 출처',
+    desc: '어디서 온 데이터인가요?',
     items: [
-      { title: '업데이트 주기', body: '공공 API/파트너 데이터 동기화 후 캐시 만료 규칙에 따라 갱신됩니다.' },
-      { title: '정정 요청', body: '오류는 /feedback에서 “버그” 유형으로 제보해 주세요.' }
-    ]
-  },
-  {
-    id: 'accessibility',
-    title: '접근성',
-    desc: '키보드·스크린리더 팁',
-    items: [
-      { title: '키보드 내비', body: 'Tab/Shift+Tab으로 이동, Enter/Space로 액션을 수행합니다.' },
-      { title: '스크린리더', body: '주요 내비게이션에 landmark 역할이 지정되어 있습니다.' }
+      { title: '직업 데이터', body: '한국고용정보원(커리어넷)의 직업 정보를 기반으로 합니다. 연봉, 만족도, 워라벨 점수, 하는 일, 되는 법, 전망 등이 포함됩니다. 커리어넷에서 설문 조사 기반으로 수집한 데이터입니다.' },
+      { title: '전공 데이터', body: '고용노동부(고용24)의 학과 정보를 기반으로 합니다. 취업률, 첫 직장 월급, 전공 만족도, 개설 대학 수, 관련 직업 등이 포함됩니다.' },
+      { title: '데이터 한계', body: '공공데이터는 보통 1~2년 전 조사 결과입니다. 최신 트렌드와 차이가 있을 수 있으며, 신생 직업이나 소규모 전공은 데이터가 없을 수 있습니다. 참고 자료로 활용하되 실제 의사결정은 다양한 정보를 종합해서 하세요.' },
+      { title: '오류 제보', body: '데이터가 잘못되었거나 업데이트가 필요한 경우 /feedback에서 "버그" 유형으로 제보해 주세요. 해당 직업/전공 페이지 URL을 함께 첨부하면 빠르게 확인할 수 있습니다.' }
     ]
   },
   {
@@ -102,39 +108,23 @@ const SECTIONS: HelpSection[] = [
     title: 'FAQ',
     desc: '자주 묻는 질문',
     items: [
-      { title: '데이터 출처는?', body: '공공 데이터와 파트너 데이터를 사용합니다.' },
-      { title: '온보딩을 건너뛰었어요', body: '닉네임/동의가 필요하면 재로그인 시 온보딩이 다시 표시될 수 있습니다.' },
-      { title: '댓글이 안 올라가요', body: '욕설 필터 또는 일시적 차단 가능성. 금칙어를 제거해 보세요.' }
-    ]
-  },
-  {
-    id: 'known',
-    title: '알려진 이슈',
-    desc: '현재 인지한 문제',
-    items: [
-      { title: '이미지 로딩 지연', body: '저해상도 플레이스홀더 도입을 준비 중입니다.' }
+      { title: '비회원도 이용할 수 있나요?', body: '네, 직업위키·전공위키·HowTo 가이드 열람, 통합검색, 익명 댓글 작성은 로그인 없이 가능합니다. AI 추천, 피드백 작성, HowTo 가이드 작성, 북마크 기능은 로그인이 필요합니다.' },
+      { title: '연봉 데이터가 실제와 다른 거 같아요', body: '표시되는 연봉은 해당 직업 종사자의 중간값(중위값)으로, 경력·지역·회사 규모에 따라 실제와 차이가 있을 수 있습니다. 공공데이터 기반이라 조사 시점에 따른 시차도 있습니다.' },
+      { title: 'AI 추천 결과가 마음에 안 들어요', body: '서술형 답변을 더 구체적으로 수정하면 결과가 달라질 수 있습니다. 새로 분석을 시작하면 이전 결과와 별개의 새 결과를 받을 수 있습니다.' },
+      { title: '온보딩을 건너뛰었는데 어떻게 하나요?', body: '닉네임 설정이나 약관 동의가 완료되지 않으면 다음 로그인 시 온보딩이 다시 표시됩니다. 로그아웃 후 다시 로그인해 보세요.' },
+      { title: '댓글이 등록되지 않아요', body: '욕설 필터에 걸리면 댓글이 등록되지 않습니다. 문제가 되는 표현을 수정해 보세요. 계정이 차단된 경우에도 댓글 작성이 제한됩니다.' },
+      { title: '모바일에서도 잘 되나요?', body: '네, 모든 기능이 모바일 브라우저에서 정상 작동합니다. 별도 앱 설치는 필요 없습니다.' }
     ]
   },
   {
     id: 'legal',
-    title: '약관/개인정보 처리방침',
+    title: '약관/정책',
     desc: '법적 고지 문서',
     items: [
-      { title: '이용약관', body: '서비스 이용 시 준수해야 할 규칙입니다.' },
-      { title: '개인정보 처리방침', body: '개인정보 수집·보유·파기·문의 채널을 명시합니다.' }
+      { title: '이용약관', body: '서비스 이용 조건, 회원의 권리와 의무, 콘텐츠 관리, AI 생성 콘텐츠 면책, 분쟁 해결 등을 규정합니다. /legal/terms에서 전문을 확인하세요.' },
+      { title: '개인정보처리방침', body: '수집하는 개인정보 항목, 이용 목적, 보유 기간, 외부 위탁(Google·OpenAI·Cloudflare), 쿠키 사용, 이용자 권리 등을 안내합니다. /legal/privacy에서 전문을 확인하세요.' }
     ]
   }
-]
-
-const RELEASE_PREVIEW = [
-  { version: 'v0.7.3', date: '2025-12-09', title: '온보딩/욕설 필터/관리자 상세 개선' },
-  { version: 'v0.7.2', date: '2025-12-05', title: '댓글 블라인드 및 신고 UX 개선' },
-  { version: 'v0.7.1', date: '2025-11-30', title: '직업 상세 성능 튜닝 및 캐시 만료 정책 조정' }
-]
-
-const FEEDBACK_TEMPLATES = [
-  { title: '버그 제보 템플릿', body: '재현 단계, 기대 결과, 실제 결과, 환경(브라우저/OS), 스크린샷' },
-  { title: '기능 제안 템플릿', body: '문제 정의, 제안, 기대 효과, 참고 사례' }
 ]
 
 type HelpPageOptions = {
@@ -172,31 +162,14 @@ export function renderHelpPage(options?: HelpPageOptions): string {
 
   const tocLinks = SECTIONS.map((s) => `<a href="#${s.id}" class="block text-sm text-slate-300 hover:text-white py-2 min-h-[40px] flex items-center">${escapeHtml(s.title)}</a>`).join('')
 
-  const releaseList = RELEASE_PREVIEW.map((r) => `
-    <li class="p-3 rounded-lg glass-card border border-wiki-border/60 flex items-center justify-between">
-      <div>
-        <p class="font-semibold text-wiki-text">${escapeHtml(r.title)}</p>
-        <p class="text-xs text-wiki-muted">${escapeHtml(r.version)} · ${escapeHtml(r.date)}</p>
-      </div>
-      <a href="/releases" class="text-wiki-link text-sm hover:underline">보기</a>
-    </li>
-  `).join('')
-
-  const feedbackList = FEEDBACK_TEMPLATES.map((f) => `
-    <li class="p-3 rounded-lg glass-card border border-wiki-border/60">
-      <p class="font-semibold text-wiki-text">${escapeHtml(f.title)}</p>
-      <p class="text-sm text-wiki-muted mt-1">${escapeHtml(f.body)}</p>
-    </li>
-  `).join('')
-
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>도움말 | CareerWiki</title>
+  <title>도움말 | Careerwiki</title>
   <link href="/static/style.css" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/tailwind.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     body { background-color: #0b1220; color: #dee3ff; }
@@ -256,7 +229,6 @@ export function renderHelpPage(options?: HelpPageOptions): string {
           <a href="/help/community-guidelines" class="px-5 py-3 min-h-[44px] flex items-center justify-center rounded-lg border border-emerald-400/60 text-sm text-emerald-200 hover:bg-emerald-500/10">전체 정책 보기</a>
         </div>
 
-        <!-- Useful? widget -->
       </section>
     </div>
   </main>
@@ -285,22 +257,6 @@ export function renderHelpPage(options?: HelpPageOptions): string {
 
     searchInput.addEventListener('input', (e) => filter(e.target.value));
     filter('');
-
-    // Usefulness widget (client-only stub)
-    const btnYes = document.getElementById('btn-useful-yes');
-    const btnNo = document.getElementById('btn-useful-no');
-    const note = document.getElementById('useful-note');
-    function toast(msg, ok=true){
-      alert(msg);
-    }
-    btnYes.addEventListener('click', () => {
-      toast('의견이 기록되었습니다. 감사합니다!');
-      note.value = '';
-    });
-    btnNo.addEventListener('click', () => {
-      toast('의견이 기록되었습니다. 더 나은 경험을 만들겠습니다.');
-      note.value = '';
-    });
   </script>
 </body>
 </html>`;

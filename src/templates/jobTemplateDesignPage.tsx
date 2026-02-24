@@ -785,7 +785,6 @@ let work24DjobData: any = {}
       careernetData = buildSourceData(careernetSource.normalized_payload, careernetSource.raw_payload)
     }
   } catch (e) {
-    console.error('CareerNet 데이터 파싱 오류:', e)
   }
   
   try {
@@ -793,7 +792,6 @@ let work24DjobData: any = {}
       work24JobData = buildSourceData(work24JobSource.normalized_payload, work24JobSource.raw_payload)
     }
   } catch (e) {
-    console.error('Work24 Job 데이터 파싱 오류:', e)
   }
   
   try {
@@ -801,7 +799,6 @@ let work24DjobData: any = {}
       work24DjobData = buildSourceData(work24DjobSource.normalized_payload, work24DjobSource.raw_payload, true)
     }
   } catch (e) {
-    console.error('Work24 Djob 데이터 파싱 오류:', e)
   }
   
   // 필드별 데이터 추출

@@ -10,7 +10,7 @@ import { callOpenAI } from './openai-client'
 // ============================================
 // Constants
 // ============================================
-const TAGGER_VERSION = 'auto-inline-v1.0.0'
+const TAGGER_VERSION = 'auto-inline-v2.0.0'
 
 const VALID_WORK_HOURS = ['regular', 'overtime_some', 'overtime_frequent']
 const VALID_SHIFT_WORK = ['none', 'possible', 'required']
@@ -18,6 +18,10 @@ const VALID_TRAVEL = ['none', 'some', 'frequent']
 const VALID_REMOTE = ['none', 'partial', 'full']
 const VALID_DEGREE = ['none', 'college', 'bachelor', 'master', 'phd']
 const VALID_LICENSE = ['none', 'preferred', 'required', 'multiple_required']
+const VALID_PHYSICAL_DEMAND = ['low', 'medium', 'high', 'very_high']
+const VALID_WORK_ENVIRONMENT = ['office', 'field', 'factory', 'workshop', 'outdoor', 'hybrid', 'remote']
+const VALID_EMPLOYMENT_TYPE = ['permanent', 'contract', 'freelance', 'gig', 'temporary', 'seasonal']
+const VALID_JOB_TYPE = ['knowledge', 'service', 'manufacturing', 'crafts', 'manual_skilled', 'creative', 'analytical', 'management', 'field_work', 'transport']
 
 const TAGGING_SYSTEM_PROMPT = `당신은 CareerWiki의 직업 속성 태거입니다.
 주어진 직업 정보를 분석하여 구조화된 속성을 추출하세요.
@@ -40,6 +44,8 @@ const TAGGING_SYSTEM_PROMPT = `당신은 CareerWiki의 직업 속성 태거입�
 | creative | 정해진 절차대로 | 일부 창의성 | 창의성이 핵심 |
 | execution | 기획 위주 | 혼합 | 실행/구현 위주 |
 | people_facing | 고객 대면 없음 | 일부 대면 | 대부분 대면 |
+| decision_authority | 지시대로 실행 | 일부 재량 | 전략/의사결정 주도 |
+| repetitive_level | 매번 다른 업무 | 반복+변동 혼합 | 거의 동일한 반복 작업 |
 
 ### Enum 값
 - work_hours: regular | overtime_some | overtime_frequent
@@ -48,6 +54,10 @@ const TAGGING_SYSTEM_PROMPT = `당신은 CareerWiki의 직업 속성 태거입�
 - remote_possible: none | partial | full
 - degree_required: none | college | bachelor | master | phd
 - license_required: none | preferred | required | multiple_required
+- physical_demand: low(사무직) | medium(가끔 이동) | high(현장/육체노동) | very_high(중노동)
+- work_environment: office | field(현장) | factory(공장) | workshop(작업장) | outdoor(야외) | hybrid | remote
+- employment_type: permanent(정규직) | contract(계약직) | freelance | gig(긱) | temporary(임시직) | seasonal(계절직)
+- job_type: knowledge(지식노동) | service(서비스) | manufacturing(제조) | crafts(공예/숙련) | manual_skilled(현장기능) | creative(창작) | analytical(분석) | management(관리) | field_work(현장직) | transport(운송)
 
 ### 출력 형식 (JSON)
 {
@@ -61,12 +71,18 @@ const TAGGING_SYSTEM_PROMPT = `당신은 CareerWiki의 직업 속성 태거입�
   "creative": 0-100,
   "execution": 0-100,
   "people_facing": 0-100,
+  "decision_authority": 0-100,
+  "repetitive_level": 0-100,
   "work_hours": "regular|overtime_some|overtime_frequent",
   "shift_work": "none|possible|required",
   "travel": "none|some|frequent",
   "remote_possible": "none|partial|full",
   "degree_required": "none|college|bachelor|master|phd",
   "license_required": "none|preferred|required|multiple_required",
+  "physical_demand": "low|medium|high|very_high",
+  "work_environment": "office|field|factory|workshop|outdoor|hybrid|remote",
+  "employment_type": "permanent|contract|freelance|gig|temporary|seasonal",
+  "job_type": "knowledge|service|manufacturing|crafts|manual_skilled|creative|analytical|management|field_work|transport",
   "confidence": 0.5-1.0
 }`
 
@@ -148,12 +164,18 @@ function cleanTagResult(raw: any): any {
     creative: clamp(raw.creative, 0, 100),
     execution: clamp(raw.execution, 0, 100),
     people_facing: clamp(raw.people_facing, 0, 100),
+    decision_authority: clamp(raw.decision_authority, 0, 100),
+    repetitive_level: clamp(raw.repetitive_level, 0, 100),
     work_hours: VALID_WORK_HOURS.includes(raw.work_hours) ? raw.work_hours : 'regular',
     shift_work: VALID_SHIFT_WORK.includes(raw.shift_work) ? raw.shift_work : 'none',
     travel: VALID_TRAVEL.includes(raw.travel) ? raw.travel : 'none',
     remote_possible: VALID_REMOTE.includes(raw.remote_possible) ? raw.remote_possible : 'none',
     degree_required: VALID_DEGREE.includes(raw.degree_required) ? raw.degree_required : 'none',
     license_required: VALID_LICENSE.includes(raw.license_required) ? raw.license_required : 'none',
+    physical_demand: VALID_PHYSICAL_DEMAND.includes(raw.physical_demand) ? raw.physical_demand : 'medium',
+    work_environment: VALID_WORK_ENVIRONMENT.includes(raw.work_environment) ? raw.work_environment : 'office',
+    employment_type: VALID_EMPLOYMENT_TYPE.includes(raw.employment_type) ? raw.employment_type : 'permanent',
+    job_type: VALID_JOB_TYPE.includes(raw.job_type) ? raw.job_type : 'knowledge',
     confidence: clamp(raw.confidence || 0.7, 0.3, 1.0) / (raw.confidence > 1 ? 100 : 1),
   }
 }
@@ -173,7 +195,6 @@ export async function autoTagJob(
   },
   openaiApiKey: string,
 ): Promise<{ success: boolean; error?: string }> {
-  console.log(`[AutoTag] Tagging job: ${job.name} (${job.id})`)
 
   try {
     const jobInfo = buildJobInfoPrompt(job)
@@ -183,43 +204,44 @@ export async function autoTagJob(
       { role: 'user', content: `아래 직업에 대해 태깅 결과를 JSON으로 출력하세요.\n\n${jobInfo}` },
     ], {
       temperature: 0.3,
-      max_tokens: 500,
+      max_tokens: 700,
     })
 
     // JSON 파싱
     const jsonMatch = response.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
-      console.error(`[AutoTag] Failed to parse JSON for ${job.id}`)
       return { success: false, error: 'JSON_PARSE_FAILED' }
     }
 
     const raw = JSON.parse(jsonMatch[0])
     const cleaned = cleanTagResult(raw)
 
-    // DB INSERT (기존 있으면 무시)
+    // DB INSERT (재태깅 시 덮어쓰기)
     await db.prepare(`
-      INSERT OR IGNORE INTO job_attributes (
+      INSERT OR REPLACE INTO job_attributes (
         job_id, job_name,
         wlb, growth, stability, income,
         teamwork, solo_deep, analytical, creative, execution, people_facing,
+        decision_authority, repetitive_level,
         work_hours, shift_work, travel, remote_possible,
         degree_required, license_required,
+        physical_demand, work_environment, employment_type, job_type,
         _confidence, tagger_version, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       job.id, job.name,
       cleaned.wlb, cleaned.growth, cleaned.stability, cleaned.income,
       cleaned.teamwork, cleaned.solo_deep, cleaned.analytical, cleaned.creative, cleaned.execution, cleaned.people_facing,
+      cleaned.decision_authority, cleaned.repetitive_level,
       cleaned.work_hours, cleaned.shift_work, cleaned.travel, cleaned.remote_possible,
       cleaned.degree_required, cleaned.license_required,
+      cleaned.physical_demand, cleaned.work_environment, cleaned.employment_type, cleaned.job_type,
       cleaned.confidence, TAGGER_VERSION, 'tagged',
     ).run()
 
-    console.log(`[AutoTag] Success: ${job.name} (confidence: ${cleaned.confidence})`)
     return { success: true }
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error)
-    console.error(`[AutoTag] Failed for ${job.id}:`, msg)
     return { success: false, error: msg }
   }
 }
@@ -263,8 +285,6 @@ export async function deleteJobAttributes(
     await db.prepare('DELETE FROM job_attributes WHERE job_id = ?')
       .bind(jobId)
       .run()
-    console.log(`[AutoTag] Deleted job_attributes for job: ${jobId}`)
   } catch (error) {
-    console.error(`[AutoTag] Failed to delete job_attributes for ${jobId}:`, error)
   }
 }

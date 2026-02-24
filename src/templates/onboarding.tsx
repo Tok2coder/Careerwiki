@@ -30,8 +30,8 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>시작하기 | CareerWiki</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>시작하기 | Careerwiki</title>
+  <link rel="stylesheet" href="/static/tailwind.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -115,7 +115,7 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
       <!-- 로고 -->
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-          CareerWiki
+          Careerwiki
         </h1>
         <p class="text-slate-400 mt-2">
           ${userName ? `<span class="text-white font-medium">${escapeHtml(userName)}</span>님, 환영합니다!` : '환영합니다!'}

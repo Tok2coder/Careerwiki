@@ -98,14 +98,12 @@ export async function generateJobImage(
   
   try {
     // 1. Gemini로 이미지 프롬프트 생성
-    console.log(`[AutoImage] Generating prompt for job: ${jobName}`)
     const promptStart = Date.now()
     
     const promptResult = await generateJobImagePrompt(env.GEMINI_API_KEY, jobName)
     details.promptGenerationTime = Date.now() - promptStart
     
     if (!promptResult.success || !promptResult.prompt) {
-      console.error('[AutoImage] Prompt generation failed:', promptResult.error)
       return {
         success: false,
         error: `프롬프트 생성 실패: ${promptResult.error}`,
@@ -114,10 +112,8 @@ export async function generateJobImage(
     }
     
     const imagePrompt = promptResult.prompt
-    console.log(`[AutoImage] Prompt generated (${details.promptGenerationTime}ms)`)
     
     // 2. Evolink로 이미지 생성 요청
-    console.log(`[AutoImage] Requesting image generation...`)
     const imageStart = Date.now()
     
     const imageRequest = await requestImageGeneration(env.EVOLINK_API_KEY, {
@@ -127,7 +123,6 @@ export async function generateJobImage(
     })
     
     if (!imageRequest.success || !imageRequest.data) {
-      console.error('[AutoImage] Image request failed:', imageRequest.error)
       return {
         success: false,
         imagePrompt, // 프롬프트는 저장할 수 있도록 반환
@@ -138,14 +133,12 @@ export async function generateJobImage(
     
     const taskId = imageRequest.data.id
     details.taskId = taskId
-    console.log(`[AutoImage] Task created: ${taskId}`)
     
     // 3. 이미지 생성 완료 대기
     const completionResult = await waitForImageCompletion(env.EVOLINK_API_KEY, taskId)
     details.imageGenerationTime = Date.now() - imageStart
     
     if (!completionResult.success || !completionResult.imageUrl) {
-      console.error('[AutoImage] Image generation failed:', completionResult.error)
       return {
         success: false,
         imagePrompt,
@@ -154,13 +147,11 @@ export async function generateJobImage(
       }
     }
     
-    console.log(`[AutoImage] Image generated (${details.imageGenerationTime}ms)`)
     
     // 4. 이미지 다운로드
     const downloadResult = await downloadImage(completionResult.imageUrl)
     
     if (!downloadResult.success || !downloadResult.data) {
-      console.error('[AutoImage] Image download failed:', downloadResult.error)
       return {
         success: false,
         imagePrompt,
@@ -170,7 +161,6 @@ export async function generateJobImage(
     }
     
     // 5. R2에 업로드
-    console.log(`[AutoImage] Uploading to R2...`)
     const uploadStart = Date.now()
     
     const contentType = downloadResult.contentType || 'image/png'
@@ -189,7 +179,6 @@ export async function generateJobImage(
     details.uploadTime = Date.now() - uploadStart
     
     if (!uploadResult.success) {
-      console.error('[AutoImage] R2 upload failed:', uploadResult.error)
       return {
         success: false,
         imagePrompt,
@@ -199,7 +188,6 @@ export async function generateJobImage(
     }
     
     const publicUrl = getImagePublicUrl(fileKey, baseUrl)
-    console.log(`[AutoImage] Complete! URL: ${publicUrl}`)
     
     return {
       success: true,
@@ -209,7 +197,6 @@ export async function generateJobImage(
     }
     
   } catch (error) {
-    console.error('[AutoImage] Unexpected error:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : '알 수 없는 오류',
@@ -235,14 +222,12 @@ export async function generateMajorImage(
   
   try {
     // 1. Gemini로 이미지 프롬프트 생성
-    console.log(`[AutoImage] Generating prompt for major: ${majorName}`)
     const promptStart = Date.now()
     
     const promptResult = await generateMajorImagePrompt(env.GEMINI_API_KEY, majorName)
     details.promptGenerationTime = Date.now() - promptStart
     
     if (!promptResult.success || !promptResult.prompt) {
-      console.error('[AutoImage] Prompt generation failed:', promptResult.error)
       return {
         success: false,
         error: `프롬프트 생성 실패: ${promptResult.error}`,
@@ -251,10 +236,8 @@ export async function generateMajorImage(
     }
     
     const imagePrompt = promptResult.prompt
-    console.log(`[AutoImage] Prompt generated (${details.promptGenerationTime}ms)`)
     
     // 2. Evolink로 이미지 생성 요청
-    console.log(`[AutoImage] Requesting image generation...`)
     const imageStart = Date.now()
     
     const imageRequest = await requestImageGeneration(env.EVOLINK_API_KEY, {
@@ -264,7 +247,6 @@ export async function generateMajorImage(
     })
     
     if (!imageRequest.success || !imageRequest.data) {
-      console.error('[AutoImage] Image request failed:', imageRequest.error)
       return {
         success: false,
         imagePrompt,
@@ -275,14 +257,12 @@ export async function generateMajorImage(
     
     const taskId = imageRequest.data.id
     details.taskId = taskId
-    console.log(`[AutoImage] Task created: ${taskId}`)
     
     // 3. 이미지 생성 완료 대기
     const completionResult = await waitForImageCompletion(env.EVOLINK_API_KEY, taskId)
     details.imageGenerationTime = Date.now() - imageStart
     
     if (!completionResult.success || !completionResult.imageUrl) {
-      console.error('[AutoImage] Image generation failed:', completionResult.error)
       return {
         success: false,
         imagePrompt,
@@ -291,13 +271,11 @@ export async function generateMajorImage(
       }
     }
     
-    console.log(`[AutoImage] Image generated (${details.imageGenerationTime}ms)`)
     
     // 4. 이미지 다운로드
     const downloadResult = await downloadImage(completionResult.imageUrl)
     
     if (!downloadResult.success || !downloadResult.data) {
-      console.error('[AutoImage] Image download failed:', downloadResult.error)
       return {
         success: false,
         imagePrompt,
@@ -307,7 +285,6 @@ export async function generateMajorImage(
     }
     
     // 5. R2에 업로드
-    console.log(`[AutoImage] Uploading to R2...`)
     const uploadStart = Date.now()
     
     const contentType = downloadResult.contentType || 'image/png'
@@ -326,7 +303,6 @@ export async function generateMajorImage(
     details.uploadTime = Date.now() - uploadStart
     
     if (!uploadResult.success) {
-      console.error('[AutoImage] R2 upload failed:', uploadResult.error)
       return {
         success: false,
         imagePrompt,
@@ -336,7 +312,6 @@ export async function generateMajorImage(
     }
     
     const publicUrl = getImagePublicUrl(fileKey, baseUrl)
-    console.log(`[AutoImage] Complete! URL: ${publicUrl}`)
     
     return {
       success: true,
@@ -346,7 +321,6 @@ export async function generateMajorImage(
     }
     
   } catch (error) {
-    console.error('[AutoImage] Unexpected error:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : '알 수 없는 오류',

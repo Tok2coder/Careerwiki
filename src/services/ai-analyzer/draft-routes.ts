@@ -4,8 +4,6 @@
 // ============================================
 
 import { Hono } from 'hono'
-import { getCookie } from 'hono/cookie'
-import { verify } from 'hono/jwt'
 import type { D1Database, Ai } from '@cloudflare/workers-types'
 import {
   saveFactsToDb,
@@ -80,39 +78,19 @@ interface Env {
   OPENAI_API_KEY?: string
 }
 
-// Helper: JWT에서 사용자 조회 (에러 정보 포함)
+// Helper: 미들웨어에서 인증된 사용자 조회
 interface AuthResult {
   user: { id: number; username: string; role: string } | null
   error?: string
 }
 
-async function getUserFromCookie(c: any): Promise<AuthResult> {
-  const accessToken = getCookie(c, 'access_token')
-  
-  if (!accessToken) {
-    return { user: null, error: 'no_access_token' }
+function getUserFromContext(c: any): AuthResult {
+  const user = c.get('user')
+  if (!user) {
+    return { user: null, error: 'not_authenticated' }
   }
-  
-  try {
-    const payload = await verify(accessToken, c.env.JWT_SECRET, 'HS256') as any
-    
-    // JWT payload에서 userId 또는 id 사용 (auth.ts에서 userId로 생성)
-    const userId = payload?.userId || payload?.id
-    if (!userId) {
-      return { user: null, error: 'no_id_in_payload' }
-    }
-    
-    const user = await c.env.DB.prepare(
-      'SELECT id, username, role FROM users WHERE id = ?'
-    ).bind(userId).first()
-    
-    if (!user) {
-      return { user: null, error: 'user_not_found_in_db' }
-    }
-    
-    return { user }
-  } catch (e: any) {
-    return { user: null, error: 'jwt_verify_failed: ' + (e?.message || String(e)) }
+  return {
+    user: { id: user.id, username: user.username || '', role: user.role }
   }
 }
 
@@ -125,22 +103,13 @@ export const draftRoutes = new Hono<{ Bindings: Env }>()
 draftRoutes.post('/save', async (c) => {
   const db = c.env.DB
 
-  // 디버그: 쿠키 및 환경 변수 확인
-  const accessToken = getCookie(c, 'access_token')
-  const hasJwtSecret = !!c.env.JWT_SECRET
-  
-  // 로그인 체크 (쿠키에서 직접 JWT 검증)
-  const authResult = await getUserFromCookie(c)
+  // 로그인 체크 (미들웨어에서 인증된 사용자 사용)
+  const authResult = getUserFromContext(c)
   if (!authResult.user?.id) {
-    return c.json({ 
-      error: 'Login required', 
+    return c.json({
+      error: 'Login required',
       code: 'AUTH_REQUIRED',
-      debug: {
-        hasAccessToken: !!accessToken,
-        hasJwtSecret: hasJwtSecret,
-        tokenLength: accessToken ? accessToken.length : 0,
-        authError: authResult.error
-      }
+      debug: { authError: authResult.error }
     }, 401)
   }
   const userId = authResult.user.id
@@ -254,7 +223,6 @@ draftRoutes.post('/save', async (c) => {
         
         if (narrativeFacts && (narrativeFacts.highAliveMoment || narrativeFacts.lostMoment || narrativeFacts.life_story || narrativeFacts.storyAnswer)) {
           try {
-            console.log('[Draft Save] Updating memory from narrative_facts...')
             const updatedMemory = await updateMemory(
               c.env.AI || null,
               aggregatedProfile,
@@ -263,9 +231,7 @@ draftRoutes.post('/save', async (c) => {
             )
             aggregatedProfile.memory = updatedMemory
             updatedMemoryJson = JSON.stringify(updatedMemory)
-            console.log('[Draft Save] Memory updated from narrative_facts')
           } catch (memoryError) {
-            console.error('[Draft Save] Memory update failed:', memoryError)
           }
         }
         
@@ -280,11 +246,9 @@ draftRoutes.post('/save', async (c) => {
           .bind(JSON.stringify(aggregatedProfile), updatedMemoryJson, draftId)
           .run()
         
-        console.log(`[Draft Save] AggregatedProfile generated v${newProfileVersion}`)
       }
     } catch (profileError) {
       // 프로필 생성 실패해도 draft 저장은 성공 처리
-      console.error('[Draft Save] AggregatedProfile generation failed:', profileError)
     }
 
     // Facts 즉시 적재 (P0: Step별 delete+insert)
@@ -369,7 +333,6 @@ draftRoutes.post('/save', async (c) => {
       saved_at: new Date().toISOString(),
     })
   } catch (error) {
-    console.error('Draft save error:', error)
     return c.json({ error: 'Failed to save draft', details: String(error) }, 500)
   }
 })
@@ -384,7 +347,7 @@ draftRoutes.get('/load', async (c) => {
   c.header('Expires', '0')
 
   // 로그인 체크 (쿠키에서 직접 JWT 검증)
-  const authResult = await getUserFromCookie(c)
+  const authResult = getUserFromContext(c)
   if (!authResult.user?.id) {
     return c.json({ error: 'Login required', code: 'AUTH_REQUIRED' }, 401)
   }
@@ -414,6 +377,35 @@ draftRoutes.get('/load', async (c) => {
     }
 
     // JSON 파싱
+    const step4Parsed = draft.step4_answers_json ? JSON.parse(draft.step4_answers_json) : null
+
+    // round_answers 테이블에서 실제 저장된 답변 조회 (step4_answers_json과 병합)
+    let dbRoundAnswers: Array<{ questionId: string; questionText: string; roundNumber: number; answer: string }> = []
+    try {
+      const raResult = await db
+        .prepare(`SELECT question_id, question_text, round_number, answer FROM round_answers WHERE session_id = ? ORDER BY round_number, created_at`)
+        .bind(draft.session_id)
+        .all<{ question_id: string; question_text: string | null; round_number: number; answer: string }>()
+
+      if (raResult.results && raResult.results.length > 0) {
+        dbRoundAnswers = raResult.results.map(r => ({
+          questionId: r.question_id,
+          questionText: r.question_text || '',
+          roundNumber: r.round_number,
+          answer: r.answer,
+        }))
+      }
+    } catch (e) {
+    }
+
+    // step4_answers 보강: DB round_answers가 더 최신이면 사용
+    if (step4Parsed) {
+      const cachedAnswers = Array.isArray(step4Parsed.round_answers) ? step4Parsed.round_answers : []
+      if (dbRoundAnswers.length > 0 && dbRoundAnswers.length >= cachedAnswers.length) {
+        step4Parsed.round_answers = dbRoundAnswers
+      }
+    }
+
     const parsedDraft = {
       id: draft.id,
       session_id: draft.session_id,
@@ -423,7 +415,7 @@ draftRoutes.get('/load', async (c) => {
       step1_answers: draft.step1_answers_json ? JSON.parse(draft.step1_answers_json) : null,
       step2_answers: draft.step2_answers_json ? JSON.parse(draft.step2_answers_json) : null,
       step3_answers: draft.step3_answers_json ? JSON.parse(draft.step3_answers_json) : null,
-      step4_answers: draft.step4_answers_json ? JSON.parse(draft.step4_answers_json) : null,
+      step4_answers: step4Parsed,
       mini_module_result: draft.mini_module_result_json ? JSON.parse(draft.mini_module_result_json) : null,
       aggregated_profile: draft.aggregated_profile_json ? JSON.parse(draft.aggregated_profile_json) : null,
       memory: draft.memory_json ? JSON.parse(draft.memory_json) : null,
@@ -437,7 +429,6 @@ draftRoutes.get('/load', async (c) => {
       draft: parsedDraft,
     })
   } catch (error) {
-    console.error('Draft load error:', error)
     return c.json({ error: 'Failed to load draft', details: String(error) }, 500)
   }
 })
@@ -447,7 +438,7 @@ draftRoutes.delete('/delete', async (c) => {
   const db = c.env.DB
 
   // 로그인 체크 (쿠키에서 직접 JWT 검증)
-  const authResult = await getUserFromCookie(c)
+  const authResult = getUserFromContext(c)
   if (!authResult.user?.id) {
     return c.json({ error: 'Login required', code: 'AUTH_REQUIRED' }, 401)
   }
@@ -474,7 +465,6 @@ draftRoutes.delete('/delete', async (c) => {
 
     return c.json({ success: true, deleted_at: new Date().toISOString() })
   } catch (error) {
-    console.error('Draft delete error:', error)
     return c.json({ error: 'Failed to delete draft', details: String(error) }, 500)
   }
 })
@@ -484,7 +474,7 @@ draftRoutes.delete('/delete-all', async (c) => {
   const db = c.env.DB
 
   // 로그인 체크
-  const authResult = await getUserFromCookie(c)
+  const authResult = getUserFromContext(c)
   if (!authResult.user?.id) {
     return c.json({ error: 'Login required', code: 'AUTH_REQUIRED' }, 401)
   }
@@ -509,7 +499,6 @@ draftRoutes.delete('/delete-all', async (c) => {
       deleted_at: new Date().toISOString() 
     })
   } catch (error) {
-    console.error('Draft delete-all error:', error)
     return c.json({ error: 'Failed to delete all drafts', details: String(error) }, 500)
   }
 })
@@ -542,7 +531,6 @@ draftRoutes.get('/list', async (c) => {
       count: drafts.results?.length || 0,
     })
   } catch (error) {
-    console.error('Draft list error:', error)
     return c.json({ error: 'Failed to list drafts', details: String(error) }, 500)
   }
 })

@@ -162,7 +162,6 @@ export function renderJobETLInspectionPage(
         sourceData.rawFields = getAllFields(rawPayload)
       }
     } catch (e) {
-      console.error(`Failed to parse raw_payload for ${system}:`, e)
     }
     
     // Normalized payload 파싱
@@ -172,7 +171,6 @@ export function renderJobETLInspectionPage(
         sourceData.normalizedFields = getAllFields(normalizedPayload)
       }
     } catch (e) {
-      console.error(`Failed to parse normalized_payload for ${system}:`, e)
     }
   })
   
@@ -274,7 +272,7 @@ export function renderJobETLInspectionPage(
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>ETL 병합 로직 점검 - ${jobName}</title>
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/static/tailwind.css">
       <style>
         body { background: #0a0a0a; color: #e5e5e5; font-family: system-ui, -apple-system, sans-serif; }
         .field-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }

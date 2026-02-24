@@ -253,7 +253,7 @@ npx wrangler d1 migrations apply careerwiki --remote
 | Phase 8 | 2-3일 | 📋 예정 |
 | Phase 9 | 1일 | 📋 예정 |
 
-**배포 상태**: Production 환경 가동 중 (https://careerwiki-phase1.pages.dev)
+**배포 상태**: Production 환경 가동 중 (https://careerwiki.org)
 
 ---
 

@@ -427,7 +427,7 @@ analyzerRoutes.post('/analyze', async (c) => {
         logError('INVALID_STAGE', `Invalid stage: ${v3Payload.stage}`, { provided: v3Payload.stage })
         return c.json(createErrorResponse('INVALID_STAGE', `Invalid stage: ${v3Payload.stage}`, {
           provided: v3Payload.stage,
-          allowed: ['job_explore', 'job_student', 'job_early', 'major_explore', 'major_student', 'major_early']
+          allowed: ['job_explore', 'job_student', 'job_early', 'major_child', 'major_elementary', 'major_middle', 'major_high', 'major_freshman', 'major_student', 'major_graduate']
         }), 400)
       }
       stage = v3Payload.stage
@@ -4293,7 +4293,7 @@ analyzerRoutes.post('/add-context', async (c) => {
 // V3: 3라운드 심층 질문 생성 API (2026-01-16)
 // POST /api/ai-analyzer/v3/round-questions
 // ============================================
-import { generateRoundQuestions, buildSearchProfileFromAnswers } from './llm-interviewer'
+import { generateRoundQuestions, generateMajorRoundQuestions, buildSearchProfileFromAnswers } from './llm-interviewer'
 
 analyzerRoutes.post('/v3/round-questions', async (c) => {
   const env = c.env as Bindings
@@ -4303,6 +4303,7 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
     const body = await c.req.json<{
       session_id: string
       round_number: 1 | 2 | 3
+      analysis_type?: 'job' | 'major'
       narrative_facts?: { highAliveMoment: string; lostMoment: string; life_story?: string; storyAnswer?: string; existentialAnswer?: string }
       previous_round_answers?: Array<{
         questionId: string
@@ -4328,8 +4329,8 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
         internal_conflict_flags?: string[]
       }
     }>()
-    
-    const { session_id, round_number, narrative_facts, previous_round_answers, universal_answers, career_state, transition_signal, mini_module_result } = body
+
+    const { session_id, round_number, analysis_type, narrative_facts, previous_round_answers, universal_answers, career_state, transition_signal, mini_module_result } = body
     
     // 검증
     if (!session_id) {
@@ -4424,8 +4425,9 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
     
     // ============================================
     // LLM Interviewer 호출 (Gate 통과 + Memory + CAG 포함)
+    // analysis_type === 'major' → 전공용 인터뷰어, 그 외 → 직업용 인터뷰어
     // ============================================
-    const result = await generateRoundQuestions(env.AI || null, {
+    const interviewerInput = {
       sessionId: session_id,
       roundNumber: round_number,
       narrativeFacts: narrative_facts,
@@ -4434,9 +4436,12 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
       careerState: career_state,
       transitionSignal: transition_signal,
       miniModuleResult: mini_module_result,
-      memory: memoryData,  // 누적 메모리 전달!
-      openaiApiKey: (env as any).OPENAI_API_KEY,  // OpenAI API 키 전달
-    })
+      memory: memoryData,
+      openaiApiKey: (env as any).OPENAI_API_KEY,
+    }
+    const result = analysis_type === 'major'
+      ? await generateMajorRoundQuestions(env.AI || null, interviewerInput)
+      : await generateRoundQuestions(env.AI || null, interviewerInput)
     
     // ============================================
     // CAG: 생성된 질문 로그 기록 + 중복 필터
@@ -4985,7 +4990,7 @@ analyzerRoutes.post('/admin/reindex-all', async (c) => {
 // ============================================
 import { generateQSP, qspToPromptHints } from './qsp-generator'
 import { createEmptyAxisCoverage } from './axis-framework'
-import { incrementalUpsertToVectorize, countJobsNeedingIndexing } from './vectorize-pipeline'
+import { incrementalUpsertToVectorize, incrementalUpsertMajorsToVectorize, incrementalUpsertHowtosToVectorize, countJobsNeedingIndexing } from './vectorize-pipeline'
 
 // Fallback 심리분석 생성 (LLM 실패 시)
 function generateFallbackWorkStyle(miniModule: {
@@ -6404,6 +6409,62 @@ analyzerRoutes.post('/admin/incremental-upsert', async (c) => {
 import { JOB_PROFILE_COMPACT_VERSION } from '../../constants/embedding-versions'
 
 // ============================================
+// 전공 증분 업서트 API
+// ============================================
+analyzerRoutes.post('/admin/incremental-upsert-majors', async (c) => {
+  const env = c.env as Bindings
+  const db = env.DB
+  const openaiApiKey = c.env.OPENAI_API_KEY
+
+  if (!env.VECTORIZE) {
+    return c.json({ success: false, error: 'VECTORIZE_NOT_AVAILABLE' }, 503)
+  }
+  if (!openaiApiKey) {
+    return c.json({ success: false, error: 'OPENAI_API_KEY_NOT_SET' }, 503)
+  }
+
+  const payload = await c.req.json<{ max_items?: number }>().catch(() => ({}))
+  const maxItems = payload.max_items || 100
+
+  try {
+    const result = await incrementalUpsertMajorsToVectorize(
+      db, env.VECTORIZE, openaiApiKey, { maxItems }
+    )
+    return c.json({ success: true, ...result })
+  } catch (error) {
+    return c.json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' }, 500)
+  }
+})
+
+// ============================================
+// HowTo 증분 업서트 API
+// ============================================
+analyzerRoutes.post('/admin/incremental-upsert-howtos', async (c) => {
+  const env = c.env as Bindings
+  const db = env.DB
+  const openaiApiKey = c.env.OPENAI_API_KEY
+
+  if (!env.VECTORIZE) {
+    return c.json({ success: false, error: 'VECTORIZE_NOT_AVAILABLE' }, 503)
+  }
+  if (!openaiApiKey) {
+    return c.json({ success: false, error: 'OPENAI_API_KEY_NOT_SET' }, 503)
+  }
+
+  const payload = await c.req.json<{ max_items?: number }>().catch(() => ({}))
+  const maxItems = payload.max_items || 100
+
+  try {
+    const result = await incrementalUpsertHowtosToVectorize(
+      db, env.VECTORIZE, openaiApiKey, { maxItems }
+    )
+    return c.json({ success: true, ...result })
+  } catch (error) {
+    return c.json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' }, 500)
+  }
+})
+
+// ============================================
 // 자동화 시나리오 테스트 API
 // P0/P1/P2/P3 전체 기능 자동 검증
 // ============================================
@@ -7110,7 +7171,8 @@ function generateShareToken(): string {
 
 interface ShareData {
   v: number
-  jobs: Array<{ name: string; fit: number; slug: string }>
+  type?: 'job' | 'major'
+  jobs: Array<{ name: string; fit: number; slug: string; image_url?: string }>
   vision: string
   meta: {
     strengths: string[]
@@ -7125,26 +7187,32 @@ interface ShareData {
 function extractShareData(
   resultJson: any,
   premiumReport: any,
+  analysisType: string = 'job',
 ): ShareData {
   // 화이트리스트: 이 함수 밖의 데이터는 절대 공유 페이지에 도달 불가
-  const top5 = (resultJson.fit_top3 || []).slice(0, 5).map((j: any) => ({
-    name: safeStr(j.job_name, 30),
-    fit: Math.min(100, Math.max(0, Math.round(Number(j.fit_score) || 0))),
+  const isMajor = analysisType === 'major'
+  const sourceList = isMajor
+    ? (resultJson.fit_top_majors || resultJson.fit_top3 || resultJson.recommendations || [])
+    : (resultJson.fit_top3 || [])
+  const top5 = sourceList.slice(0, 5).map((j: any) => ({
+    name: safeStr(j.major_name || j.name || j.job_name, 30),
+    fit: Math.min(100, Math.max(0, Math.round(Number(j.fit_score || j.final_score) || 0))),
     slug: safeStr(j.slug, 60),
+    ...(j.image_url ? { image_url: safeStr(j.image_url, 200) } : {}),
   }))
 
   const vision = safeStr(premiumReport?.lifeVersionStatement?.oneLiner, 200)
 
   const mm = resultJson.mini_module_result || {}
   const meta = {
-    strengths: safeArr(mm.strength_top, 3, 20),
-    values: safeArr(mm.value_top, 3, 20),
-    cautions: safeArr(premiumReport?.stressTriggers, 3, 20),
-    likes: safeArr(mm.interest_top, 3, 20),
-    avoid: safeArr(mm.dealbreaker || mm.constraint_flags, 3, 20),
+    strengths: safeArr(mm.strength_top, 3, 30),
+    values: safeArr(mm.value_top, 3, 30),
+    cautions: safeArr(premiumReport?.stressTriggers, 3, 60),
+    likes: safeArr(mm.interest_top, 3, 30),
+    avoid: safeArr(mm.dealbreaker || mm.constraint_flags, 3, 60),
   }
 
-  return { v: 1, jobs: top5, vision, meta, createdAt: new Date().toISOString().split('T')[0] }
+  return { v: 1, type: isMajor ? 'major' : 'job', jobs: top5, vision, meta, createdAt: new Date().toISOString().split('T')[0] }
 }
 
 // POST /share - 공유 토큰 생성/재발급
@@ -7167,8 +7235,8 @@ analyzerRoutes.post('/share', async (c) => {
   try {
     // 1. 본인 결과인지 확인
     const request = await db.prepare(`
-      SELECT id, user_id FROM ai_analysis_requests WHERE id = ?
-    `).bind(request_id).first<{ id: number; user_id: string }>()
+      SELECT id, user_id, analysis_type FROM ai_analysis_requests WHERE id = ?
+    `).bind(request_id).first<{ id: number; user_id: string; analysis_type: string }>()
 
     if (!request) {
       return c.json(createErrorResponse('REQUEST_NOT_FOUND', 'Analysis request not found'), 404)
@@ -7212,7 +7280,7 @@ analyzerRoutes.post('/share', async (c) => {
       ? JSON.parse(analysisResult.premium_report_json)
       : null
 
-    const shareData = extractShareData(resultJson, premiumReport)
+    const shareData = extractShareData(resultJson, premiumReport, request.analysis_type)
     const shareDataJson = JSON.stringify(shareData)
 
     // 4. 토큰 생성 (UNIQUE 충돌 최대 2회 재시도)
@@ -7746,7 +7814,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
         }
       }
     } catch (saveError) {
-      // 저장 실패해도 결과 반환
+      console.error('[recommend-major] Result save failed:', saveError)
     }
 
     // 9. 응답 반환
@@ -7784,6 +7852,85 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
       'ANALYSIS_FAILED',
       error instanceof Error ? `${error.message} | ${error.stack?.split('\n')[1] || ''}` : 'Major recommendation failed'
     ), 500)
+  }
+})
+
+// ============================================
+// 저장된 결과 조회 API (리포트 뷰어용)
+// ============================================
+// 저장된 분석 결과를 displayResults() 형식으로 반환 (리포트 뷰용)
+analyzerRoutes.get('/saved-result/:requestId', async (c) => {
+  const requestId = parseInt(c.req.param('requestId'), 10)
+  if (!requestId || isNaN(requestId)) {
+    return c.json({ error: 'Invalid request_id' }, 400)
+  }
+
+  try {
+    const row = await c.env.DB.prepare(`
+      SELECT r.result_json, r.premium_report_json, r.confidence_score,
+             req.id as request_id, req.analysis_type, r.engine_version
+      FROM ai_analysis_results r
+      JOIN ai_analysis_requests req ON r.request_id = req.id
+      WHERE req.id = ?
+    `).bind(requestId).first<{
+      result_json: string
+      premium_report_json: string | null
+      confidence_score: number | null
+      request_id: number
+      analysis_type: string
+      engine_version: string | null
+    }>()
+
+    if (!row) {
+      return c.json({ error: 'Result not found' }, 404)
+    }
+
+    let result: any = {}
+    try { result = JSON.parse(row.result_json) } catch {}
+
+    let premiumReport: any = null
+    if (row.premium_report_json) {
+      try { premiumReport = JSON.parse(row.premium_report_json) } catch {}
+    }
+
+    // premium_report를 result에 병합 (displayResults가 기대하는 형식)
+    if (premiumReport) {
+      result.premium_report = premiumReport
+    } else if (result.premium_report) {
+      // result_json 내부에 premium_report가 포함된 경우 (premium_report_json 컬럼이 null일 때)
+      premiumReport = result.premium_report
+    }
+    if (row.engine_version) {
+      result.engine_version = row.engine_version
+    }
+    if (row.confidence_score) {
+      result.confidence = { score: row.confidence_score }
+    }
+
+    // 전공 결과 정규화: displayResults()가 result.recommendations 배열을 기대함
+    if (row.analysis_type === 'major' && !result.recommendations) {
+      const majors = result.fit_top_majors || result.fit_top3 || []
+      result.recommendations = majors.map((m: any) => ({
+        major_name: m.major_name || m.name || '추천 전공',
+        name: m.name || m.major_name || '추천 전공',
+        slug: m.slug || '',
+        major_id: m.major_id || null,
+        reason: m.rationale || m.reason || m.match_reason || '',
+        fit_score: m.fit_score || m.final_score || 0,
+        like_score: m.like_score || 0,
+        can_score: m.can_score || 0,
+        image_url: m.image_url || '',
+      }))
+    }
+
+    return c.json({
+      success: true,
+      request_id: row.request_id,
+      analysis_type: row.analysis_type,
+      result,
+    })
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch result' }, 500)
   }
 })
 

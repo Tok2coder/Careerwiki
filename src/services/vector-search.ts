@@ -1,12 +1,13 @@
 /**
  * vector-search.ts
- * 
- * Part 2.4: Vectorize 검색 서비스
- * AI 분석기 후보 생성(Recall)에 사용
- * 
- * Usage in routes.ts:
- *   import { searchSimilarJobs, generateQueryEmbedding } from './vector-search'
- *   const candidates = await searchSimilarJobs(c.env, userQuery, 200)
+ *
+ * @deprecated 이 모듈은 Workers AI bge-m3 (768d)를 사용하며,
+ * 현재 Vectorize 인덱스 (OpenAI text-embedding-3-small, 1536d)와 호환되지 않습니다.
+ *
+ * 검색은 src/services/rag-search.ts를 사용하세요.
+ * AI Analyzer 후보 생성은 vectorize-pipeline.ts의 searchCandidates()를 사용하세요.
+ *
+ * 이 파일은 다음 메이저 업데이트에서 삭제 예정입니다.
  */
 
 import type { VectorizeIndex, Ai } from '@cloudflare/workers-types'
@@ -55,7 +56,6 @@ export async function generateQueryEmbedding(
   query: string
 ): Promise<number[] | null> {
   if (!ai) {
-    console.warn('AI binding not available, skipping embedding generation')
     return null
   }
   
@@ -70,7 +70,6 @@ export async function generateQueryEmbedding(
     }
     return null
   } catch (error) {
-    console.error('Failed to generate embedding:', error)
     return null
   }
 }
@@ -88,7 +87,6 @@ export async function searchSimilar(
   options: VectorSearchOptions = {}
 ): Promise<VectorSearchResult[]> {
   if (!vectorize) {
-    console.warn('Vectorize binding not available')
     return []
   }
   
@@ -119,7 +117,6 @@ export async function searchSimilar(
         metadata: match.metadata as VectorSearchResult['metadata'],
       }))
   } catch (error) {
-    console.error('Vectorize search failed:', error)
     return []
   }
 }

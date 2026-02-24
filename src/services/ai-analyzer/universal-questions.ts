@@ -20,7 +20,10 @@ export const MAJOR_STAGES = [
   'major_elementary',  // 초등 (10~13)
   'major_middle',      // 중등 (13~16)
   'major_high',        // 고등 (16~19)
-  'major_transfer',    // 대학 (전과/복수)
+  'major_freshman',    // 대학 신입생 (전공 탐색)
+  'major_student',     // 대학 재학생 (전과/복수전공)
+  'major_graduate',    // 대학원 진학 (석/박사)
+  'major_transfer',    // 대학 (전과/복수) - legacy
 ] as const
 
 export type JobStage = typeof JOB_STAGES[number]
@@ -463,6 +466,33 @@ export const MAJOR_STAGE_METADATA: StageMetadata[] = [
     question_pool: 'POOL_MAJOR_HIGH',
   },
   {
+    stage_id: 'major_freshman',
+    label: '대학 신입생',
+    description: '전공 탐색 중',
+    emoji: '🎓',
+    target_age: '19~20',
+    experience_allowed: false,
+    question_pool: 'POOL_MAJOR_TRANSFER',
+  },
+  {
+    stage_id: 'major_student',
+    label: '대학 재학생',
+    description: '전과/복수전공 고려',
+    emoji: '📚',
+    target_age: '20~26',
+    experience_allowed: false,
+    question_pool: 'POOL_MAJOR_TRANSFER',
+  },
+  {
+    stage_id: 'major_graduate',
+    label: '대학원 진학',
+    description: '석/박사 준비',
+    emoji: '🔬',
+    target_age: '22~30',
+    experience_allowed: true,
+    question_pool: 'POOL_MAJOR_TRANSFER',
+  },
+  {
     stage_id: 'major_transfer',
     label: '대학생 (전과/복수)',
     description: '현재 대학생, 전과/복수전공',
@@ -528,6 +558,9 @@ export const INSIGHT_WORDING: Record<AnalysisStage, {
   major_elementary: { summary_prefix: '관심 과목을 보면, ', evidence_label: '좋아하는 과목' },
   major_middle: { summary_prefix: '적성 패턴을 보면, ', evidence_label: '관심사' },
   major_high: { summary_prefix: '진로 선호를 보면, ', evidence_label: '희망 계열' },
+  major_freshman: { summary_prefix: '전공 탐색 동기를 보면, ', evidence_label: '관심 전공' },
+  major_student: { summary_prefix: '전과/복수전공 동기를 보면, ', evidence_label: '현 전공 피드백' },
+  major_graduate: { summary_prefix: '대학원 진학 동기를 보면, ', evidence_label: '연구 관심사' },
   major_transfer: { summary_prefix: '전과 동기를 보면, ', evidence_label: '현 전공 피드백' },
 }
 

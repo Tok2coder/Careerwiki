@@ -2435,7 +2435,6 @@ const renderFieldComparisonTable = (rawApiData?: { careernet?: any; goyong24?: a
                 allSelectedPaths.push(...paths);
               }
             } catch (e) {
-              console.error('Failed to parse field paths:', e);
             }
           });
           
@@ -2598,7 +2597,7 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>API 데이터 디버그 - ${escapeHtml(jobTitle)}</title>
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/static/tailwind.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
       ${styles}
     </head>

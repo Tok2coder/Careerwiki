@@ -591,12 +591,12 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
 
   const mainColumn = `<div class="space-y-6 min-w-0 break-words overflow-x-hidden" style="min-width: 0; overflow-x: hidden;">${blogContent}</div>`
   const sidebarMarkup = hasSidebar
-    ? `<aside class="space-y-6 lg:sticky lg:top-28 lg:h-fit lg:self-start overflow-x-hidden" data-howto-sidebar style="min-width: 0; overflow-x: hidden;">${sidebarContent}</aside>`
+    ? `<aside class="space-y-6 lg:sticky lg:top-28 lg:h-fit lg:self-start" data-howto-sidebar>${sidebarContent}</aside>`
     : ''
 
   const layoutBlock = hasSidebar
     ? `
-        <div class="grid gap-6 sm:gap-8 grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)] lg:items-start overflow-x-hidden" data-howto-layout style="min-width: 0; overflow-x: hidden;">
+        <div class="grid gap-6 sm:gap-8 grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)] lg:items-start" data-howto-layout>
           ${mainColumn}
           ${sidebarMarkup}
         </div>
@@ -764,7 +764,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
         .howto-user-content { overflow-x: hidden; max-width: 100%; }
       }
     </style>
-    <div class="max-w-[1400px] mx-auto px-3 sm:px-4 md:px-6 space-y-4 md:space-y-8 py-4 md:py-8 md:mt-4" style="overflow-x: hidden;">
+    <div class="max-w-[1400px] mx-auto px-3 sm:px-4 md:px-6 space-y-4 md:space-y-8 py-4 md:py-4 md:-mt-12">
       <!-- 블라인드 알림 -->
       ${isBlinded ? `
         <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-red-400">
@@ -845,27 +845,10 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
             ` : ''}
             <!-- 공유 버튼 -->
             <div class="relative" data-share-root data-cw-telemetry-scope="howto-hero-actions">
-              <button type="button" class="px-3 sm:px-4 py-2 min-h-[40px] bg-wiki-primary text-white rounded-lg text-xs sm:text-sm hover:bg-blue-600 transition inline-flex items-center gap-1.5" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open">
+              <button type="button" class="px-3 sm:px-4 py-2 min-h-[40px] bg-wiki-primary text-white rounded-lg text-xs sm:text-sm hover:bg-blue-600 transition inline-flex items-center gap-1.5" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-share-og-image="${guide.thumbnailUrl ? escapeHtml(guide.thumbnailUrl) : '/images/og-default.png'}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open">
                 <i class="fas fa-share-nodes text-xs sm:text-sm" aria-hidden="true"></i>
                 <span class="hidden sm:inline">공유</span>
               </button>
-              <div class="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-72 max-w-[320px] rounded-xl border border-wiki-border/60 bg-wiki-bg/95 shadow-xl backdrop-blur hidden z-[1001]" data-share-panel data-cw-telemetry-component="howto-share-panel" role="dialog" aria-modal="false" aria-label="링크 공유">
-                <div class="flex items-center justify-between px-4 py-3 border-b border-wiki-border/60">
-                  <p class="text-sm font-semibold text-white truncate">'${escapeHtml(guide.title)}' 공유하기</p>
-                  <button type="button" class="text-xs text-wiki-muted hover:text-white transition shrink-0" data-share-close aria-label="닫기">
-                    <i class="fas fa-times" aria-hidden="true"></i>
-                  </button>
-                </div>
-                <div class="p-4 space-y-3">
-                  <div class="flex items-center gap-2">
-                    <input type="text" class="flex-1 px-3 py-2 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-xs text-white focus:outline-none min-w-0" value="${escapeHtml(canonicalPath)}" readonly data-share-url>
-                    <button type="button" class="px-3 py-2 bg-wiki-primary text-white text-xs rounded-md hover:bg-blue-600 transition shrink-0" data-share-copy data-cw-telemetry-component="howto-share-copy" data-cw-telemetry-action="share-copy">
-                      <i class="fas fa-copy mr-1" aria-hidden="true"></i>복사
-                    </button>
-                  </div>
-                  <p class="text-[11px] text-wiki-muted">복사 버튼을 누르면 링크가 클립보드에 저장됩니다.</p>
-                </div>
-              </div>
             </div>
             
             <!-- 신고 버튼 -->
@@ -904,9 +887,9 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
             </div>
             <div class="flex items-center gap-2">
               ${guide.authorPictureUrl 
-                ? `<img src="${escapeHtml(guide.authorPictureUrl)}" alt="${escapeHtml(guide.authorName || 'CareerWiki')}" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full object-cover" />`
+                ? `<img src="${escapeHtml(guide.authorPictureUrl)}" alt="${escapeHtml(guide.authorName || 'Careerwiki')}" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full object-cover" />`
                 : `<i class="far fa-user text-wiki-secondary text-xs sm:text-sm"></i>`}
-              <span class="text-white/80 font-medium">${escapeHtml(guide.authorName || 'CareerWiki')}</span>
+              <span class="text-white/80 font-medium">${escapeHtml(guide.authorName || 'Careerwiki')}</span>
             </div>
             <!-- 모바일: 조회수도 같은 줄에 -->
             <div class="flex sm:hidden items-center gap-2 ml-auto">
@@ -1127,31 +1110,17 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
               closeBtn.addEventListener('click', closeOverlay);
             }
             
-            // 모바일 공유 버튼
+            // 모바일 공유 버튼 → 글로벌 공유 모달 열기
             const mobileShareBtn = document.getElementById('mobile-share-btn');
             if (mobileShareBtn) {
-              mobileShareBtn.addEventListener('click', async function(e) {
+              mobileShareBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 closeOverlay();
-                
-                const shareUrl = window.location.origin + canonicalPath;
-                
-                if (navigator.share) {
-                  try {
-                    await navigator.share({ title: guideTitle, url: shareUrl });
-                  } catch (err) {
-                    if (err.name !== 'AbortError') {
-                      await navigator.clipboard.writeText(shareUrl);
-                      alert('링크가 복사되었습니다.');
-                    }
-                  }
-                } else {
-                  try {
-                    await navigator.clipboard.writeText(shareUrl);
-                    alert('링크가 복사되었습니다.');
-                  } catch (err) {
-                    alert('링크 복사에 실패했습니다: ' + shareUrl);
-                  }
+
+                // 글로벌 공유 모달의 트리거를 시뮬레이션
+                const shareTrigger = document.querySelector('[data-share-trigger]');
+                if (shareTrigger) {
+                  shareTrigger.click();
                 }
               });
             }

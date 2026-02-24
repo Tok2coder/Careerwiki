@@ -115,21 +115,18 @@ async function createDataSnapshot(
     try {
       apiData = result.api_data_json ? JSON.parse(result.api_data_json as string) : {}
     } catch (error) {
-      console.error('[createDataSnapshot] Failed to parse api_data_json:', error)
       apiData = {}
     }
     
     try {
       userData = result.user_contributed_json ? JSON.parse(result.user_contributed_json as string) : {}
     } catch (error) {
-      console.error('[createDataSnapshot] Failed to parse user_contributed_json:', error)
       userData = {}
     }
     
     try {
       adminData = result.admin_data_json ? JSON.parse(result.admin_data_json as string) : {}
     } catch (error) {
-      console.error('[createDataSnapshot] Failed to parse admin_data_json:', error)
       adminData = {}
     }
     
@@ -226,7 +223,6 @@ export async function editJob(
   }
   
   if (!job) {
-    console.error(`[editJob] Job not found. Searched with: ${jobIdParam}`)
     throw new Error('JOB_NOT_FOUND')
   }
   
@@ -261,7 +257,6 @@ export async function editJob(
       })
       
     } catch (error) {
-      console.error('[editJob] Failed to create initial revision:', error)
       currentSnapshot = await createDataSnapshot(db, 'job', jobId)
     }
   } else {
@@ -269,7 +264,6 @@ export async function editJob(
     try {
       currentSnapshot = JSON.parse(currentRevision.dataSnapshot)
     } catch (error) {
-      console.error('[editJob] Failed to parse current snapshot, creating new:', error)
       currentSnapshot = await createDataSnapshot(db, 'job', jobId)
     }
   }
@@ -315,21 +309,18 @@ export async function editJob(
   try {
     apiData = job.api_data_json ? JSON.parse(job.api_data_json as string) : {}
   } catch (error) {
-    console.error('[editJob] Failed to parse api_data_json:', error)
     apiData = {}
   }
   
   try {
     userData = job.user_contributed_json ? JSON.parse(job.user_contributed_json as string) : {}
   } catch (error) {
-    console.error('[editJob] Failed to parse user_contributed_json:', error)
     userData = {}
   }
   
   try {
     adminData = job.admin_data_json ? JSON.parse(job.admin_data_json as string) : {}
   } catch (error) {
-    console.error('[editJob] Failed to parse admin_data_json:', error)
     adminData = {}
   }
   
@@ -376,7 +367,6 @@ export async function editJob(
       storeFullSnapshot: false  // 변경사항만 저장 (용량 최적화)
     })
   } catch (error) {
-    console.error('[editJob] Failed to create revision:', error)
     throw new Error('REVISION_CREATION_FAILED')
   }
   
@@ -390,11 +380,9 @@ export async function editJob(
     `).bind(JSON.stringify(updatedUserData), now, jobId).run()
   } catch (error) {
     // 실패 시 생성된 revision 삭제 (보상 트랜잭션)
-    console.error('[editJob] Failed to update jobs table, rolling back revision:', error)
     try {
       await db.prepare(`DELETE FROM page_revisions WHERE id = ?`).bind(revision.id).run()
     } catch (rollbackError) {
-      console.error('[editJob] Failed to rollback revision:', rollbackError)
     }
     throw new Error('DATA_UPDATE_FAILED')
   }
@@ -496,21 +484,18 @@ export async function editMajor(
   try {
     apiData = major.api_data_json ? JSON.parse(major.api_data_json as string) : {}
   } catch (error) {
-    console.error('[editMajor] Failed to parse api_data_json:', error)
     apiData = {}
   }
   
   try {
     userData = major.user_contributed_json ? JSON.parse(major.user_contributed_json as string) : {}
   } catch (error) {
-    console.error('[editMajor] Failed to parse user_contributed_json:', error)
     userData = {}
   }
   
   try {
     adminData = major.admin_data_json ? JSON.parse(major.admin_data_json as string) : {}
   } catch (error) {
-    console.error('[editMajor] Failed to parse admin_data_json:', error)
     adminData = {}
   }
   
@@ -549,7 +534,6 @@ export async function editMajor(
       })
       
     } catch (error) {
-      console.error('[editMajor] Failed to create initial revision:', error)
       // 계속 진행 (초기 revision 생성 실패해도 편집은 가능)
     }
   }
@@ -582,7 +566,6 @@ export async function editMajor(
     })
     
   } catch (error) {
-    console.error('[editMajor] Failed to create revision:', error)
     throw new Error('REVISION_CREATION_FAILED')
   }
   
@@ -596,11 +579,9 @@ export async function editMajor(
     
   } catch (error) {
     // 실패 시 생성된 revision 삭제
-    console.error('[editMajor] Failed to update majors table, rolling back revision:', error)
     try {
       await db.prepare(`DELETE FROM page_revisions WHERE id = ?`).bind(revision.id).run()
     } catch (rollbackError) {
-      console.error('[editMajor] Failed to rollback revision:', rollbackError)
     }
     throw new Error('DATA_UPDATE_FAILED')
   }
@@ -722,7 +703,6 @@ export async function editHowTo(
       storeFullSnapshot: false  // 변경사항만 저장
     })
   } catch (error) {
-    console.error('[editHowTo] Failed to create revision:', error)
     throw new Error('REVISION_CREATION_FAILED')
   }
   
@@ -735,16 +715,13 @@ export async function editHowTo(
     `).bind(sanitizedContent, slug).run()
   } catch (error) {
     // 실패 시 생성된 revision 삭제
-    console.error('[editHowTo] Failed to update pages table, rolling back revision:', error)
     try {
       await db.prepare(`DELETE FROM page_revisions WHERE id = ?`).bind(revision.id).run()
     } catch (rollbackError) {
-      console.error('[editHowTo] Failed to rollback revision:', rollbackError)
     }
     throw new Error('DATA_UPDATE_FAILED')
   }
   
-  console.log(`[editHowTo] Edited HowTo: ${slug} by user ${payload.userId}`)
   
   // 캐시 무효화 (편집 후 ISR 캐시 삭제)
   await invalidatePageCache(db, {
@@ -863,7 +840,6 @@ export async function createHowTo(
     
     pageId = result.meta?.last_row_id as number
   } catch (error) {
-    console.error('[createHowTo] Failed to insert into pages:', error)
     throw new Error('CREATE_FAILED')
   }
   
@@ -893,16 +869,13 @@ export async function createHowTo(
     })
   } catch (error) {
     // revision 생성 실패 시 pages 삭제 (보상 트랜잭션)
-    console.error('[createHowTo] Failed to create revision, rolling back:', error)
     try {
       await db.prepare('DELETE FROM pages WHERE id = ?').bind(pageId).run()
     } catch (rollbackError) {
-      console.error('[createHowTo] Failed to rollback pages:', rollbackError)
     }
     throw new Error('REVISION_CREATION_FAILED')
   }
   
-  console.log(`[createHowTo] Created HowTo: ${normalizedSlug} by user ${payload.userId}`)
   
   return {
     success: true,
@@ -1014,7 +987,6 @@ export async function createJob(
       now
     ).run()
   } catch (error) {
-    console.error('[createJob] Failed to insert into jobs:', error)
     throw new Error('CREATE_FAILED')
   }
   
@@ -1049,16 +1021,13 @@ export async function createJob(
     })
   } catch (error) {
     // revision 생성 실패 시 jobs 삭제 (보상 트랜잭션)
-    console.error('[createJob] Failed to create revision, rolling back:', error)
     try {
       await db.prepare('DELETE FROM jobs WHERE id = ?').bind(jobId).run()
     } catch (rollbackError) {
-      console.error('[createJob] Failed to rollback jobs:', rollbackError)
     }
     throw new Error('REVISION_CREATION_FAILED')
   }
   
-  console.log(`[createJob] Created job: ${jobId} (${jobName}) by admin ${payload.userId}`)
   
   return {
     success: true,
@@ -1142,7 +1111,6 @@ export async function createMajor(
       now
     ).run()
   } catch (error) {
-    console.error('[createMajor] Failed to insert into majors:', error)
     throw new Error('CREATE_FAILED')
   }
   
@@ -1177,16 +1145,13 @@ export async function createMajor(
     })
   } catch (error) {
     // revision 생성 실패 시 majors 삭제 (보상 트랜잭션)
-    console.error('[createMajor] Failed to create revision, rolling back:', error)
     try {
       await db.prepare('DELETE FROM majors WHERE id = ?').bind(majorId).run()
     } catch (rollbackError) {
-      console.error('[createMajor] Failed to rollback majors:', rollbackError)
     }
     throw new Error('REVISION_CREATION_FAILED')
   }
   
-  console.log(`[createMajor] Created major: ${majorId} (${majorName}) by admin ${payload.userId}`)
   
   return {
     success: true,

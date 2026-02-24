@@ -181,7 +181,6 @@ export async function getOrGeneratePage<T>(
     
     return c.html(html)
   } catch (error) {
-    console.error(`[ISR Error] ${pageType}/${slug}:`, error)
     throw error
   }
 }

@@ -207,7 +207,6 @@ export async function reconstructFullData(
         }
       }
     } catch (error) {
-      console.error('[reconstructFullData] Failed to parse snapshot:', error)
       // 파싱 실패 시 이전 데이터 유지
     }
   }
@@ -247,7 +246,6 @@ export async function getCurrentRevisionFullData(
     // 변경사항만 저장된 경우 전체 데이터 재구성
     return await reconstructFullData(db, entityType, entityId, currentRevision.revisionNumber)
   } catch (error) {
-    console.error('[getCurrentRevisionFullData] Failed to parse/reconstruct:', error)
     return null
   }
 }
@@ -506,7 +504,6 @@ export async function restoreRevision(
       restoredData = snapshot
     }
   } catch (error) {
-    console.error('[restoreRevision] Failed to parse/reconstruct snapshot:', error)
     throw new Error('INVALID_SNAPSHOT')
   }
   

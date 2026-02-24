@@ -124,7 +124,6 @@ async function callGeminiAPI(
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('[Gemini] API Error:', response.status, errorText)
       return {
         success: false,
         error: `Gemini API 오류: HTTP ${response.status}`
@@ -144,7 +143,6 @@ async function callGeminiAPI(
     const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text
 
     if (!generatedText) {
-      console.error('[Gemini] No text in response:', JSON.stringify(data))
       return {
         success: false,
         error: '프롬프트 생성 결과가 비어있습니다'
@@ -157,14 +155,12 @@ async function callGeminiAPI(
       .replace(/^["']|["']$/g, '')
       .trim()
 
-    console.log('[Gemini] Generated prompt:', cleanedPrompt.substring(0, 100) + '...')
 
     return {
       success: true,
       prompt: cleanedPrompt
     }
   } catch (error) {
-    console.error('[Gemini] Request failed:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : '알 수 없는 오류'

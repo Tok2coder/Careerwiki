@@ -1,0 +1,3436 @@
+diff --git a/src/index.tsx b/src/index.tsx
+index cf7edcb..4e6ab4c 100644
+--- a/src/index.tsx
++++ b/src/index.tsx
+@@ -18,7 +18,8 @@ import {
+   MAJOR_STUDENT_OPTIONS,
+ } from './services/ai-analyzer/career-tree-types'
+ import { getUnifiedJobDetail, getUnifiedJobDetailWithRawData, getUnifiedMajorDetail, searchUnifiedJobs, searchUnifiedMajors } from './services/profileDataService'
+-import type { SourceStatusRecord } from './services/profileDataService'
++import { ragSearchUnified, ragSearchJobs, ragSearchMajors } from './services/rag-search'
++import type { SourceStatusRecord, UnifiedSearchResult, UnifiedMajorSummaryEntry } from './services/profileDataService'
+ import type { DataSource, UnifiedJobDetail, UnifiedMajorDetail } from './types/unifiedProfiles'
+ import { renderUnifiedJobDetail, createJobJsonLd } from './templates/unifiedJobDetail'
+ import { renderJobTemplateDesignPage } from './templates/jobTemplateDesignPage'
+@@ -67,6 +68,7 @@ import {
+ } from './services/aiAnalysisService'
+ // Phase 0: AI Analyzer Service (scoring-v0.2.1-final)
+ import { analyzerRoutes } from './services/ai-analyzer'
++import { svgToPng, getCachedOgImage, cacheOgImage } from './services/ogImageService'
+ import {
+   recordSerpInteraction,
+   getDailySerpSummary,
+@@ -201,8 +203,8 @@ type Bindings = {
+   DB: D1Database;
+   KV: KVNamespace;
+   UPLOADS: R2Bucket;  // R2 이미지 업로드
+-  VECTORIZE?: VectorizeIndex;  // Vectorize 인덱스 (AI 분석기 후보 검색)
+-  AI?: Ai;  // Workers AI (임베딩 생성)
++  VECTORIZE: VectorizeIndex;  // Vectorize 인덱스 (AI 분석기 후보 검색)
++  AI: Ai;  // Workers AI (임베딩 생성)
+   CAREER_NET_API_KEY?: string;
+   GOYONG24_MAJOR_API_KEY?: string;
+   GOYONG24_JOB_API_KEY?: string;
+@@ -216,7 +218,9 @@ type Bindings = {
+   GOOGLE_CLIENT_SECRET: string;
+   GOOGLE_CALLBACK_URL: string;
+   JWT_SECRET: string;
+-  // Releases page: Cloudflare Pages API
++  // Cloudflare API (releases page 등)
++  CLOUDFLARE_ACCOUNT_ID?: string;
++  CLOUDFLARE_API_TOKEN?: string;
+   CF_ACCOUNT_ID?: string;
+   CF_PAGES_API_TOKEN?: string;
+ }
+@@ -248,6 +252,49 @@ type Variables = {
+ 
+ const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()
+ 
++// Global error handler — 에러 원인 파악용
++app.onError((err, c) => {
++  console.error('[FATAL]', err?.message, err?.stack)
++  return c.text(`Error: ${err?.message}\nStack: ${err?.stack}`, 500)
++})
++
++// 임시 진단 엔드포인트 — 바인딩 확인용
++app.get('/api/debug/bindings', async (c) => {
++  const kvTest = { exists: !!c.env.KV, type: typeof c.env.KV }
++  const dbTest = { exists: !!c.env.DB, type: typeof c.env.DB }
++  let kvWrite = 'skip'
++  if (c.env.KV) {
++    try {
++      await c.env.KV.put('_test_binding', 'ok', { expirationTtl: 60 })
++      const val = await c.env.KV.get('_test_binding')
++      kvWrite = val === 'ok' ? 'ok' : `read_mismatch:${val}`
++      await c.env.KV.delete('_test_binding')
++    } catch (e: any) {
++      kvWrite = `error:${e?.message}`
++    }
++  }
++  let dbWrite = 'skip'
++  if (c.env.DB) {
++    try {
++      const r = await c.env.DB.prepare('SELECT 1 as v').first<{v:number}>()
++      dbWrite = r?.v === 1 ? 'ok' : `unexpected:${JSON.stringify(r)}`
++    } catch (e: any) {
++      dbWrite = `error:${e?.message}`
++    }
++  }
++  return c.json({ kv: kvTest, db: dbTest, kvWrite, dbWrite })
++})
++
++// www → non-www 301 리다이렉트
++app.use('*', async (c, next) => {
++  const url = new URL(c.req.url)
++  if (url.hostname.startsWith('www.')) {
++    url.hostname = url.hostname.slice(4)
++    return c.redirect(url.toString(), 301)
++  }
++  return next()
++})
++
+ // Middleware
+ app.use('*', cors())
+ app.use('*', renderer)
+@@ -279,6 +326,347 @@ app.route('/auth', auth)
+ // ============================================
+ app.route('/api/ai-analyzer', analyzerRoutes)
+ 
++// ============================================
++// 공유 미니카드 페이지 (공개, 로그인 불필요)
++// ============================================
++const BOT_UA_PATTERN = /bot|crawl|spider|slack|facebook|twitter|kakao|discord|preview|whatsapp|telegram|line|naver/i
++
++app.get('/share/:token', async (c) => {
++  const db = c.env.DB
++  const token = c.req.param('token')
++
++  if (!token || token.length < 8 || token.length > 32) {
++    return c.html(renderShareGonePage(), 410, {
++      'X-Robots-Tag': 'noindex, nofollow',
++    })
++  }
++
++  try {
++    const row = await db.prepare(`
++      SELECT share_token, share_data_json, share_version, is_revoked, expires_at
++      FROM share_tokens WHERE share_token = ?
++    `).bind(token).first<{
++      share_token: string
++      share_data_json: string
++      share_version: number
++      is_revoked: number
++      expires_at: string | null
++    }>()
++
++    if (!row) {
++      return c.html(renderShareGonePage(), 410, {
++        'X-Robots-Tag': 'noindex, nofollow',
++      })
++    }
++
++    // revoked / expired 확인
++    const isExpired = !row.expires_at || new Date(row.expires_at) < new Date()
++    if (row.is_revoked || isExpired) {
++      return c.html(renderShareGonePage(), 410, {
++        'X-Robots-Tag': 'noindex, nofollow',
++      })
++    }
++
++    // 봇이 아니면 view_count 증가 (atomic)
++    const ua = c.req.header('user-agent') || ''
++    if (!BOT_UA_PATTERN.test(ua)) {
++      c.executionCtx.waitUntil(
++        db.prepare(`
++          UPDATE share_tokens SET view_count = view_count + 1, last_viewed_at = CURRENT_TIMESTAMP
++          WHERE share_token = ?
++        `).bind(token).run()
++      )
++    }
++
++    // share_data_json 파싱 + 렌더
++    const data = JSON.parse(row.share_data_json) as {
++      v: number
++      jobs: Array<{ name: string; fit: number; slug: string }>
++      vision: string
++      meta: {
++        strengths: string[]
++        values: string[]
++        cautions: string[]
++        likes: string[]
++        avoid: string[]
++      }
++      createdAt: string
++    }
++
++    const html = renderShareCard(data, token)
++    return c.html(html, 200, {
++      'X-Robots-Tag': 'noindex, nofollow',
++      'Cache-Control': 'public, max-age=300',
++    })
++
++  } catch (error) {
++    console.error('[Share Page] Error:', error)
++    return c.html(renderShareGonePage(), 500, {
++      'X-Robots-Tag': 'noindex, nofollow',
++    })
++  }
++})
++
++// 미니카드 HTML 렌더링
++function renderShareCard(data: any, token: string): string {
++  const jobs = data.jobs || []
++  const meta = data.meta || {}
++  const vision = data.vision || ''
++
++  // OG description: Top 추천 직업 요약
++  const ogDesc = jobs.length > 0
++    ? `Top 추천: ${jobs.slice(0, 2).map((j: any) => `${j.name}(${j.fit}점)`).join(' · ')} 나도 무료로 해보기 →`
++    : 'AI가 분석한 나의 커리어 DNA — 나도 무료로 해보기 →'
++
++  // 직업 목록 HTML
++  const jobsHtml = jobs.map((j: any, i: number) => `
++    <div class="flex items-center justify-between py-2 ${i < jobs.length - 1 ? 'border-b border-gray-100' : ''}">
++      <div class="flex items-center gap-2">
++        <span class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">${i + 1}</span>
++        <span class="font-medium text-gray-800">${j.name}</span>
++      </div>
++      <span class="text-sm font-bold ${j.fit >= 85 ? 'text-indigo-600' : j.fit >= 70 ? 'text-blue-500' : 'text-gray-500'}">${j.fit}점</span>
++    </div>
++  `).join('')
++
++  // 태그 렌더
++  const renderTags = (items: string[], color: string) =>
++    items.filter(Boolean).map(t => `<span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium ${color}">#${t}</span>`).join(' ')
++
++  const strengthTags = renderTags(meta.strengths || [], 'bg-green-100 text-green-700')
++  const valueTags = renderTags(meta.values || [], 'bg-blue-100 text-blue-700')
++  const likeTags = renderTags(meta.likes || [], 'bg-purple-100 text-purple-700')
++  const cautionTags = renderTags(meta.cautions || [], 'bg-orange-100 text-orange-700')
++  const avoidTags = renderTags(meta.avoid || [], 'bg-red-100 text-red-700')
++
++  return `<!DOCTYPE html>
++<html lang="ko">
++<head>
++  <meta charset="UTF-8">
++  <meta name="viewport" content="width=device-width, initial-scale=1.0">
++  <title>AI가 분석한 나의 커리어 DNA — 커리어위키</title>
++  <meta property="og:title" content="AI가 분석한 나의 커리어 DNA — 커리어위키">
++  <meta property="og:description" content="${ogDesc}">
++  <meta property="og:type" content="website">
++  <meta property="og:url" content="https://careerwiki.org/share/${token}">
++  <meta property="og:image" content="https://careerwiki.org/share/${token}/og.png">
++  <meta property="og:image:width" content="800">
++  <meta property="og:image:height" content="418">
++  <meta name="twitter:card" content="summary_large_image">
++  <meta name="twitter:title" content="AI가 분석한 나의 커리어 DNA — 커리어위키">
++  <meta name="twitter:description" content="${ogDesc}">
++  <meta name="twitter:image" content="https://careerwiki.org/share/${token}/og.png">
++  <meta name="robots" content="noindex, nofollow">
++  <link rel="canonical" href="https://careerwiki.org/share/${token}">
++  <link rel="stylesheet" href="/static/tailwind.css">
++  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
++</head>
++<body class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen flex items-center justify-center p-4">
++  <div class="w-full max-w-md">
++    <!-- 메인 카드 -->
++    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
++      <!-- 헤더 -->
++      <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-5 text-white text-center">
++        <p class="text-xs opacity-80 mb-1">AI CAREER ANALYSIS</p>
++        <h1 class="text-xl font-bold">나의 커리어 DNA</h1>
++      </div>
++
++      <div class="px-6 py-5 space-y-5">
++        <!-- 추천 직업 -->
++        ${jobs.length > 0 ? `
++        <div>
++          <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
++            <i class="fas fa-trophy text-amber-500"></i> 추천 직업 Top ${Math.min(jobs.length, 5)}
++          </h2>
++          <div class="bg-gray-50 rounded-xl px-4 py-2">
++            ${jobsHtml}
++          </div>
++        </div>
++        ` : ''}
++
++        <!-- 커리어 비전 -->
++        ${vision ? `
++        <div>
++          <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
++            <i class="fas fa-star text-indigo-400"></i> 커리어 비전
++          </h2>
++          <p class="text-gray-700 text-sm leading-relaxed bg-indigo-50 rounded-xl px-4 py-3 italic">
++            "${vision}"
++          </p>
++        </div>
++        ` : ''}
++
++        <!-- 커리어 DNA 태그 -->
++        <div>
++          <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
++            <i class="fas fa-dna text-purple-400"></i> 커리어 DNA
++          </h2>
++          <div class="space-y-2 text-sm">
++            ${strengthTags ? `<div><span class="text-gray-500 text-xs w-10 inline-block">강점</span> ${strengthTags}</div>` : ''}
++            ${valueTags ? `<div><span class="text-gray-500 text-xs w-10 inline-block">가치</span> ${valueTags}</div>` : ''}
++            ${likeTags ? `<div><span class="text-gray-500 text-xs w-10 inline-block">관심</span> ${likeTags}</div>` : ''}
++            ${cautionTags ? `<div><span class="text-gray-500 text-xs w-10 inline-block">주의</span> ${cautionTags}</div>` : ''}
++            ${avoidTags ? `<div><span class="text-gray-500 text-xs w-10 inline-block">회피</span> ${avoidTags}</div>` : ''}
++          </div>
++        </div>
++
++        <!-- 안내 문구 -->
++        <p class="text-xs text-gray-400 text-center">
++          <i class="fas fa-info-circle"></i>
++          이 페이지는 요약본이며, 상세 분석 내용은 포함되지 않습니다.
++        </p>
++      </div>
++
++      <!-- CTA -->
++      <div class="px-6 pb-6">
++        <a href="/ai-analyzer?utm_source=share&utm_medium=og&utm_campaign=ai_report"
++           class="block w-full text-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold py-3.5 rounded-xl hover:opacity-90 transition-opacity">
++          <i class="fas fa-rocket mr-1"></i> 나도 무료로 커리어 DNA 보기
++        </a>
++      </div>
++    </div>
++
++    <!-- 푸터 -->
++    <div class="text-center mt-4 text-xs text-gray-400">
++      <a href="/" class="hover:text-gray-600">careerwiki.org</a>
++    </div>
++  </div>
++</body>
++</html>`
++}
++
++// 410 Gone 페이지 (OG 태그 포함!)
++function renderShareGonePage(): string {
++  return `<!DOCTYPE html>
++<html lang="ko">
++<head>
++  <meta charset="UTF-8">
++  <meta name="viewport" content="width=device-width, initial-scale=1.0">
++  <title>공유 링크 만료 — 커리어위키</title>
++  <meta property="og:title" content="AI 커리어 분석 — 커리어위키">
++  <meta property="og:description" content="나도 무료로 AI 커리어 DNA 분석 받아보기 →">
++  <meta property="og:image" content="https://careerwiki.org/images/og-share-card.png">
++  <meta name="robots" content="noindex, nofollow">
++  <link rel="stylesheet" href="/static/tailwind.css">
++  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
++</head>
++<body class="bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen flex items-center justify-center p-4">
++  <div class="w-full max-w-md text-center">
++    <div class="bg-white rounded-2xl shadow-lg px-8 py-10">
++      <div class="text-5xl mb-4 text-gray-300"><i class="fas fa-link-slash"></i></div>
++      <h1 class="text-xl font-bold text-gray-700 mb-2">이 공유 링크는 만료되었습니다</h1>
++      <p class="text-gray-400 text-sm mb-8">링크가 해제되었거나 유효기간이 지났습니다.</p>
++      <a href="/ai-analyzer?utm_source=share&utm_medium=expired&utm_campaign=ai_report"
++         class="inline-block bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity">
++        <i class="fas fa-rocket mr-1"></i> 나도 무료로 커리어 DNA 보기
++      </a>
++    </div>
++    <div class="mt-4 text-xs text-gray-400">
++      <a href="/" class="hover:text-gray-600">careerwiki.org</a>
++    </div>
++  </div>
++</body>
++</html>`
++}
++
++// ============================================
++// 공유 OG 이미지 (동적 SVG)
++// ============================================
++app.get('/share/:token/og.png', async (c) => {
++  const db = c.env.DB
++  const r2 = c.env.UPLOADS
++  const token = c.req.param('token')
++
++  if (!token) {
++    return c.redirect('/images/og-default.png', 302)
++  }
++
++  try {
++    // 1. R2 캐시 확인
++    const cached = await getCachedOgImage(r2, token)
++    if (cached) {
++      return new Response(cached.buffer as ArrayBuffer, {
++        status: 200,
++        headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' },
++      })
++    }
++
++    // 2. D1에서 share_data 조회
++    const row = await db.prepare(`
++      SELECT share_data_json FROM share_tokens
++      WHERE share_token = ? AND is_revoked = 0
++    `).bind(token).first<{ share_data_json: string }>()
++
++    if (!row) {
++      return c.redirect('/images/og-default.png', 302)
++    }
++
++    // 3. SVG 생성 → PNG 변환
++    const data = JSON.parse(row.share_data_json)
++    const svg = renderOgSvg(data.jobs || [], data.vision || '')
++    const png = await svgToPng(svg, r2)
++
++    // 4. R2에 캐시 저장 (non-blocking)
++    c.executionCtx.waitUntil(cacheOgImage(r2, token, png))
++
++    // 5. PNG 반환
++    return new Response(png.buffer as ArrayBuffer, {
++      status: 200,
++      headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' },
++    })
++  } catch (err) {
++    console.error('[OG] PNG generation failed:', err)
++    return c.redirect('/images/og-default.png', 302)
++  }
++})
++
++function renderOgSvg(jobs: Array<{ name: string; fit: number }>, vision = ''): string {
++  const rankColors = ['#fbbf24', '#94a3b8', '#cd7f32', '#9ca3af', '#9ca3af']
++  const jobLines = jobs.slice(0, 5).map((j, i) => {
++    const y = 195 + i * 44
++    const rank = `${i + 1}`
++    const fitColor = j.fit >= 85 ? '#818cf8' : j.fit >= 70 ? '#60a5fa' : '#9ca3af'
++    const badgeColor = rankColors[i] || '#9ca3af'
++    return `<circle cx="65" cy="${y - 7}" r="13" fill="${badgeColor}" opacity="0.9"/>
++    <text x="65" y="${y - 2}" font-size="13" fill="#1e1b4b" font-weight="bold" font-family="Noto Sans KR, sans-serif" text-anchor="middle">${rank}</text>
++    <text x="90" y="${y}" font-size="24" fill="#e0e0e0" font-family="Noto Sans KR, sans-serif">${j.name}</text>
++    <text x="720" y="${y}" font-size="24" fill="${fitColor}" font-weight="bold" font-family="Noto Sans KR, sans-serif" text-anchor="end">${j.fit}점</text>`
++  }).join('\n    ')
++
++  const visionLine = vision
++    ? `<text x="400" y="${195 + Math.min(jobs.length, 5) * 44 + 30}" font-size="16" fill="#a5b4fc" font-family="Noto Sans KR, sans-serif" text-anchor="middle" opacity="0.8">"${vision.slice(0, 60)}${vision.length > 60 ? '...' : ''}"</text>`
++    : ''
++
++  return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="418" viewBox="0 0 800 418">
++  <defs>
++    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
++      <stop offset="0%" style="stop-color:#1e1b4b"/>
++      <stop offset="100%" style="stop-color:#312e81"/>
++    </linearGradient>
++  </defs>
++  <rect width="800" height="418" fill="url(#bg)" rx="0"/>
++
++  <!-- Header -->
++  <text x="400" y="50" font-size="15" fill="#a5b4fc" font-family="Noto Sans KR, sans-serif" text-anchor="middle" letter-spacing="3">AI CAREER ANALYSIS</text>
++  <text x="400" y="90" font-size="32" fill="white" font-weight="bold" font-family="Noto Sans KR, sans-serif" text-anchor="middle">나의 커리어 DNA</text>
++
++  <!-- Divider -->
++  <line x1="200" y1="110" x2="600" y2="110" stroke="#4338ca" stroke-width="1" opacity="0.5"/>
++
++  <!-- Subtitle -->
++  <text x="400" y="145" font-size="16" fill="#c4b5fd" font-family="Noto Sans KR, sans-serif" text-anchor="middle">AI 추천 직업</text>
++
++  <!-- Job List -->
++  ${jobLines}
++
++  <!-- Vision -->
++  ${visionLine}
++
++  <!-- Footer -->
++  <text x="400" y="405" font-size="13" fill="#6366f1" font-family="Noto Sans KR, sans-serif" text-anchor="middle">careerwiki.org</text>
++</svg>`
++}
++
+ // ============================================
+ // 온보딩 라우트
+ // ============================================
+@@ -373,12 +761,18 @@ app.post('/api/onboarding', requireAuth, async (c) => {
+ 
+ // 약관 페이지
+ app.get('/legal/terms', async (c) => {
+-  return c.html(renderTermsPage())
++  const user = c.get('user')
++  const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
++  const userMenuHtml = renderUserMenu(userData)
++  return c.html(renderTermsPage({ userMenuHtml }))
+ })
+ 
+ // 개인정보처리방침 페이지
+ app.get('/legal/privacy', async (c) => {
+-  return c.html(renderPrivacyPage())
++  const user = c.get('user')
++  const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
++  const userMenuHtml = renderUserMenu(userData)
++  return c.html(renderPrivacyPage({ userMenuHtml }))
+ })
+ 
+ // Help Center
+@@ -468,185 +862,178 @@ app.get('/feedback/:id', async (c) => {
+   )
+ })
+ 
+-// Releases placeholder (with shared header)
++// 릴리즈 노트 (사용자 대상 — feat/fix만 필터링)
+ app.get('/releases', async (c) => {
+   const user = c.get('user')
+   const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
+   const userMenuHtml = renderUserMenu(userData)
+ 
+-  // --- Cloudflare Pages API로 배포 이력 가져오기 ---
+-  const accountId = c.env.CF_ACCOUNT_ID || ''
+-  const apiToken = c.env.CF_PAGES_API_TOKEN || ''
+-  const projectName = 'careerwiki-phase1'
+-
+-  interface DeploymentMeta {
+-    branch: string
+-    commitHash: string
+-    commitMessage: string
+-    createdOn: string
+-    status: string
+-    environment: string
+-  }
++  // --- GitHub API에서 커밋 가져오기 (공개 레포, 인증 불필요) ---
++  interface ReleaseNote { type: 'feat' | 'fix' | 'improve'; message: string; date: string; dateKey: string }
+ 
+-  let deployments: DeploymentMeta[] = []
++  let notes: ReleaseNote[] = []
+   let fetchError = false
+ 
+-  if (accountId && apiToken) {
+-    try {
+-      const cacheKey = new Request('https://releases-cache.internal/deployments')
+-      const cache = typeof caches !== 'undefined' ? (caches as any).default as Cache | undefined : null
++  const typeMap: Record<string, ReleaseNote['type']> = {
++    feat: 'feat', fix: 'fix', improve: 'improve', update: 'improve', perf: 'improve'
++  }
+ 
+-      let cachedResponse = cache ? await cache.match(cacheKey) : null
+-      if (cachedResponse) {
+-        deployments = await cachedResponse.json() as DeploymentMeta[]
+-      } else {
+-        const apiUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/pages/projects/${projectName}/deployments?per_page=30`
+-        const apiRes = await fetch(apiUrl, {
+-          headers: { 'Authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json' }
+-        })
+-        if (apiRes.ok) {
+-          const data = await apiRes.json() as { result?: any[] }
+-          const raw = (data.result || [])
+-            .filter((d: any) => d.environment === 'production')
+-            .slice(0, 20)
+-
+-          deployments = raw.map((d: any) => ({
+-            branch: d.deployment_trigger?.metadata?.branch || '',
+-            commitHash: d.deployment_trigger?.metadata?.commit_hash || '',
+-            commitMessage: d.deployment_trigger?.metadata?.commit_message || '직접 배포',
+-            createdOn: d.created_on || '',
+-            status: d.latest_stage?.status || 'unknown',
+-            environment: d.environment || 'production'
+-          }))
+-
+-          if (cache) {
+-            const cacheResponse = new Response(JSON.stringify(deployments), {
+-              headers: { 'Cache-Control': 'public, max-age=600' }
+-            })
+-            await cache.put(cacheKey, cacheResponse)
+-          }
+-        } else {
+-          fetchError = true
+-        }
+-      }
+-    } catch (e) {
+-      console.error('[Releases] API fetch error:', e)
+-      fetchError = true
++  try {
++    const cacheKey = new Request('https://releases-cache.internal/release-notes-v2')
++    const cache = typeof caches !== 'undefined' ? (caches as any).default as Cache | undefined : null
++    const cachedResponse = cache ? await cache.match(cacheKey) : null
++
++    if (cachedResponse) {
++      notes = await cachedResponse.json() as ReleaseNote[]
++    } else {
++      const apiUrl = 'https://api.github.com/repos/Tok2coder/Careerwiki/commits?sha=main&per_page=100'
++      const apiRes = await fetch(apiUrl, {
++        headers: { 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'CareerWiki-Releases' }
++      })
++      if (apiRes.ok) {
++        const commits = await apiRes.json() as any[]
++        for (const cm of commits) {
++          const msg: string = cm.commit?.message || ''
++          const firstLine = msg.split('\n')[0].trim()
++          // conventional commit: "feat: 메시지" or "fix: 메시지" or "feat(scope): 메시지"
++          const match = firstLine.match(/^(feat|fix|improve|update|perf)(\(.+?\))?:\s*(.+)$/i)
++          if (!match) continue
++          const rawType = match[1].toLowerCase()
++          const type = typeMap[rawType] || 'improve'
++          const body = match[3].trim()
++          if (!body) continue
++          const iso = cm.commit?.author?.date || cm.commit?.committer?.date || ''
++          const d = new Date(iso)
++          // KST (UTC+9)
++          const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000)
++          const dateKey = `${kst.getFullYear()}-${String(kst.getMonth() + 1).padStart(2, '0')}`
++          notes.push({ type, message: body.length > 100 ? body.slice(0, 97) + '...' : body, date: iso, dateKey })
++        }
++        if (cache) {
++          await cache.put(cacheKey, new Response(JSON.stringify(notes), { headers: { 'Cache-Control': 'public, max-age=600' } }))
++        }
++      } else { fetchError = true }
+     }
+-  } else {
++  } catch (e) {
++    console.error('[Releases] GitHub API error:', e)
+     fetchError = true
+   }
+ 
+-  // 날짜 포맷 (한국어)
+-  const fmtDate = (iso: string): string => {
+-    if (!iso) return ''
+-    const d = new Date(iso)
+-    const y = d.getFullYear()
+-    const m = d.getMonth() + 1
+-    const day = d.getDate()
+-    const h = d.getHours()
+-    const min = String(d.getMinutes()).padStart(2, '0')
+-    const ampm = h >= 12 ? '오후' : '오전'
+-    const h12 = h % 12 || 12
+-    return `${y}년 ${m}월 ${day}일 ${ampm} ${h12}:${min}`
+-  }
++  const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+ 
+-  // 상태 뱃지
+-  const statusBadge = (status: string): string => {
+-    switch (status) {
+-      case 'success': return '<span class="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-medium">성공</span>'
+-      case 'failure': return '<span class="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 font-medium">실패</span>'
+-      case 'active': case 'idle': return '<span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 font-medium">진행 중</span>'
+-      default: return `<span class="text-xs px-2 py-0.5 rounded-full bg-slate-500/20 text-slate-400 font-medium">${status}</span>`
+-    }
++  const typeLabel: Record<string, { icon: string; label: string; color: string; bg: string }> = {
++    feat:    { icon: 'fa-wand-magic-sparkles', label: '새 기능',  color: '#a78bfa', bg: 'rgba(167,139,250,0.15)' },
++    fix:     { icon: 'fa-bug',      label: '버그 수정', color: '#f87171', bg: 'rgba(248,113,113,0.15)' },
++    improve: { icon: 'fa-arrow-up', label: '개선',     color: '#60a5fa', bg: 'rgba(96,165,250,0.15)' },
+   }
+ 
+-  const dotClass = (status: string): string => {
+-    switch (status) {
+-      case 'success': return 'rl-dot-ok'
+-      case 'failure': return 'rl-dot-fail'
+-      case 'active': case 'idle': return 'rl-dot-prog'
+-      default: return 'rl-dot-ok'
+-    }
++  // 날짜별 그룹핑
++  const grouped = new Map<string, ReleaseNote[]>()
++  for (const n of notes) {
++    const arr = grouped.get(n.dateKey) || []
++    arr.push(n)
++    grouped.set(n.dateKey, arr)
+   }
+ 
+-  const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+-
+-  // 커밋 메시지 정리 (첫 줄, 120자 제한)
+-  const trimMsg = (msg: string): string => {
+-    const line = msg.split('\n')[0].trim()
+-    return line.length > 120 ? line.slice(0, 117) + '...' : line
++  const fmtDateHeader = (key: string): string => {
++    const [y, m] = key.split('-').map(Number)
++    return `${y}년 ${m}월`
+   }
+ 
+-  // 타임라인 HTML 생성
+-  let timelineHtml: string
+-  if (fetchError || deployments.length === 0) {
+-    timelineHtml = `
++  // 월 목록 (정렬됨: 최신 먼저)
++  const monthKeys = [...grouped.keys()]
++
++  // 각 월별 카드 HTML 생성 (data-month 속성으로 JS 토글)
++  let sectionsHtml = ''
++  if (fetchError || notes.length === 0) {
++    sectionsHtml = `
+       <div class="glass-card rounded-xl p-8 text-center" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.22);backdrop-filter:blur(14px);">
+-        <i class="fas fa-server text-3xl text-slate-400 mb-4 block"></i>
+-        <p class="text-white font-semibold mb-2">${fetchError ? '배포 이력을 불러올 수 없습니다' : '배포 이력이 없습니다'}</p>
+-        <p class="text-sm text-slate-400">${fetchError ? 'API 연결을 확인해 주세요. 잠시 후 다시 시도하세요.' : '아직 프로덕션 배포가 없습니다.'}</p>
++        <i class="fas fa-box-open text-3xl text-slate-400 mb-4 block"></i>
++        <p class="text-white font-semibold mb-2">${fetchError ? '업데이트 내역을 불러올 수 없습니다' : '아직 업데이트 내역이 없습니다'}</p>
++        <p class="text-sm text-slate-400">잠시 후 다시 시도해 주세요.</p>
+       </div>`
+   } else {
+-    const cards = deployments.map((d, i) => {
+-      const shortHash = d.commitHash ? d.commitHash.slice(0, 7) : ''
+-      const commitLink = shortHash
+-        ? `<a href="https://github.com/Tok2coder/Careerwiki/commit/${esc(d.commitHash)}" class="font-mono hover:underline" style="color:#64b5f6;" target="_blank" rel="noopener"><i class="fas fa-code-commit mr-1"></i>${shortHash}</a>`
+-        : ''
+-      const branchHtml = d.branch ? `<span><i class="fas fa-code-branch mr-1"></i>${esc(d.branch)}</span>` : ''
+-
+-      return `
+-        <div class="relative pl-10 sm:pl-12 ${i < deployments.length - 1 ? 'pb-6' : ''}">
+-          <div class="rl-dot ${dotClass(d.status)}"></div>
+-          <div class="glass-card rounded-xl p-4 sm:p-5" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.22);backdrop-filter:blur(14px);">
+-            <div class="flex flex-wrap items-center gap-2 mb-2">
+-              ${statusBadge(d.status)}
+-              <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 font-medium" style="color:#93c5fd;">production</span>
+-              <span class="text-xs ml-auto" style="color:#9aa3c5;">${fmtDate(d.createdOn)}</span>
+-            </div>
+-            <p class="text-white font-medium text-sm sm:text-base mb-1">${esc(trimMsg(d.commitMessage))}</p>
+-            <div class="flex flex-wrap items-center gap-3 text-xs" style="color:#9aa3c5;">
+-              ${branchHtml}
+-              ${commitLink}
++    for (const [dateKey, items] of grouped) {
++      const isFirst = dateKey === monthKeys[0]
++      const itemsHtml = items.map(n => {
++        const t = typeLabel[n.type] || typeLabel.improve
++        return `
++          <div class="flex items-start gap-3 py-3">
++            <span class="flex-shrink-0 mt-0.5 w-7 h-7 rounded-lg flex items-center justify-center text-xs" style="background:${t.bg};color:${t.color};"><i class="fas ${t.icon}"></i></span>
++            <div class="flex-1 min-w-0">
++              <p class="text-white text-sm sm:text-base leading-relaxed">${esc(n.message)}</p>
+             </div>
++            <span class="flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-medium" style="background:${t.bg};color:${t.color};">${t.label}</span>
++          </div>`
++      }).join('<div style="border-top:1px solid rgba(148,163,184,0.1);"></div>')
++
++      const fc = items.filter(n => n.type === 'feat').length
++      const xc = items.filter(n => n.type === 'fix').length
++      const ic = items.filter(n => n.type === 'improve').length
++
++      sectionsHtml += `
++        <div class="rl-month" data-month="${dateKey}" data-feat="${fc}" data-fix="${xc}" data-improve="${ic}" style="${isFirst ? '' : 'display:none;'}">
++          <div class="glass-card rounded-xl px-4 sm:px-5" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.15);backdrop-filter:blur(14px);">
++            ${itemsHtml}
+           </div>
+         </div>`
+-    }).join('')
+-
+-    timelineHtml = `<div class="relative"><div class="rl-line"></div>${cards}</div>`
++    }
+   }
+ 
++  // 드롭다운 옵션
++  const dropdownOptions = monthKeys.map((k, i) => {
++    const [y, m] = k.split('-').map(Number)
++    const count = grouped.get(k)!.length
++    return `<option value="${k}"${i === 0 ? ' selected' : ''}>${y}년 ${m}월 (${count}건)</option>`
++  }).join('')
++
+   return c.html(`<!DOCTYPE html>
+   <html lang="ko">
+     <head>
+       <meta charset="UTF-8" />
+       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-      <title>배포 이력 | CareerWiki</title>
++      <title>업데이트 내역 | CareerWiki</title>
+       <link href="/static/style.css" rel="stylesheet" />
+-      <script src="https://cdn.tailwindcss.com"></script>
++      <link rel="stylesheet" href="/static/tailwind.css">
+       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+       ${renderNavStyles()}
+-      <style>
+-        .rl-line{position:absolute;left:15px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#4361ee 0%,#64b5f6 50%,rgba(67,97,238,0.1) 100%);}
+-        .rl-dot{width:12px;height:12px;border-radius:50%;position:absolute;left:10px;top:20px;z-index:1;}
+-        .rl-dot-ok{background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.4);}
+-        .rl-dot-fail{background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,0.4);}
+-        .rl-dot-prog{background:#eab308;box-shadow:0 0 8px rgba(234,179,8,0.4);animation:rl-pulse 2s infinite;}
+-        @keyframes rl-pulse{0%,100%{opacity:1}50%{opacity:.5}}
+-        @media(max-width:640px){.rl-line{left:11px;}.rl-dot{left:6px;}}
+-      </style>
+     </head>
+     <body class="bg-wiki-bg text-wiki-text min-h-screen" style="background-color:#0b1220;color:#e6e8f5;">
+       ${renderNav(userMenuHtml)}
+-      <main class="max-w-[900px] mx-auto px-4 pt-20 pb-20 sm:pt-12">
+-        <div class="text-center mb-8">
+-          <p class="text-xs uppercase tracking-[0.2em] font-semibold mb-2" style="color:#93c5fd;">Releases</p>
+-          <h1 class="text-3xl md:text-4xl font-bold text-white">배포 이력</h1>
+-          <p class="text-sm mt-2" style="color:#9aa3c5;">프로덕션 환경에 배포된 최근 업데이트 내역입니다.</p>
++      <main class="max-w-[800px] mx-auto px-4 pt-20 pb-20 sm:pt-12">
++        <div class="text-center mb-6">
++          <p class="text-xs uppercase tracking-[0.2em] font-semibold mb-2" style="color:#93c5fd;">What's New</p>
++          <h1 class="text-3xl md:text-4xl font-bold text-white">업데이트 내역</h1>
++          <p class="text-sm mt-2" style="color:#9aa3c5;">CareerWiki에 추가된 새 기능과 개선 사항을 확인하세요.</p>
++        </div>
++        ${monthKeys.length > 0 ? `
++        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
++          <div id="rlStats" class="flex flex-wrap justify-center gap-3">
++          </div>
++          <select id="rlMonthSelect" onchange="rlSwitch(this.value)" class="px-4 py-2 rounded-lg text-sm font-medium" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.25);color:#e6e8f5;">
++            ${dropdownOptions}
++          </select>
++        </div>` : ''}
++        <div id="rlSections">
++          ${sectionsHtml}
+         </div>
+-        ${timelineHtml}
+       </main>
+       ${renderNavScripts()}
++      <script>
++      function rlSwitch(month){
++        document.querySelectorAll('.rl-month').forEach(function(el){
++          el.style.display=el.getAttribute('data-month')===month?'':'none';
++        });
++        var active=document.querySelector('.rl-month[data-month="'+month+'"]');
++        if(!active)return;
++        var fc=+active.getAttribute('data-feat'),xc=+active.getAttribute('data-fix'),ic=+active.getAttribute('data-improve');
++        document.getElementById('rlStats').innerHTML=
++          '<div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs" style="background:rgba(167,139,250,0.12);color:#a78bfa;"><i class="fas fa-wand-magic-sparkles"></i><span>새 기능 '+fc+'</span></div>'+
++          '<div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs" style="background:rgba(248,113,113,0.12);color:#f87171;"><i class="fas fa-bug"></i><span>버그 수정 '+xc+'</span></div>'+
++          '<div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs" style="background:rgba(96,165,250,0.12);color:#60a5fa;"><i class="fas fa-arrow-up"></i><span>개선 '+ic+'</span></div>';
++      }
++      rlSwitch(document.getElementById('rlMonthSelect')?.value||'');
++      </script>
+     </body>
+   </html>`)
+ })
+@@ -715,7 +1102,7 @@ const getLogoImage = (size: 'large' | 'small' = 'large') => {
+   const width = isLarge ? 360 : 180
+   const height = isLarge ? 90 : 40
+   
+-  return `<img src="${src}" alt="Careerwiki" width="${width}" height="${height}" class="logo-image" style="object-fit: contain;" />`
++  return `<img src="${src}" alt="CareerWiki" width="${width}" height="${height}" class="logo-image" style="object-fit: contain;" />`
+ }
+ 
+ // Legacy alias for backward compatibility
+@@ -727,13 +1114,17 @@ const isAdminRole = (role?: string | null) =>
+ // Helper function to render layout
+ const renderLayout = (
+   content: string,
+-  title = 'Careerwiki - AI 진로 분석 플랫폼',
++  title = 'CareerWiki - AI 진로 분석 플랫폼',
+   description = 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼',
+   isHomepage = false,
+   options?: {
+     extraHead?: string
+     canonical?: string
+     ogUrl?: string
++    ogImage?: string
++    ogImageWidth?: string
++    ogImageHeight?: string
++    ogType?: string
+     user?: { id: number; name: string | null; email: string; role: string; picture_url: string | null; custom_picture_url?: string | null; username: string | null } | null
+     context?: Context<{ Bindings: Bindings; Variables: Variables }>  // Phase 3 Day 4: Context를 통해 사용자 정보 자동 가져오기
+     ipAddress?: string | null  // Phase 3 Day 4: IP 주소 (비로그인 상태에서 표시)
+@@ -742,6 +1133,10 @@ const renderLayout = (
+   const canonicalUrl = options?.canonical ?? 'https://careerwiki.org'
+   const ogUrl = options?.ogUrl ?? canonicalUrl
+   const extraHead = options?.extraHead ?? ''
++  const ogImage = options?.ogImage ?? 'https://careerwiki.org/images/og-default.png'
++  const ogImageWidth = options?.ogImageWidth ?? '1200'
++  const ogImageHeight = options?.ogImageHeight ?? '630'
++  const ogType = options?.ogType ?? 'website'
+   
+   // Phase 3 Day 4: 사용자 정보 가져오기 (options.user 우선, 없으면 context에서 가져오기)
+   let user = options?.user ?? null
+@@ -773,33 +1168,22 @@ const renderLayout = (
+         <meta name="description" content="${description}">
+         <meta property="og:title" content="${title}">
+         <meta property="og:description" content="${description}">
+-        <meta property="og:type" content="website">
++        <meta property="og:type" content="${ogType}">
+         <meta property="og:url" content="${ogUrl}">
++        <meta property="og:image" content="${ogImage}">
++        <meta property="og:image:width" content="${ogImageWidth}">
++        <meta property="og:image:height" content="${ogImageHeight}">
++        <meta name="twitter:card" content="summary_large_image">
++        <meta name="twitter:title" content="${title}">
++        <meta name="twitter:description" content="${description}">
++        <meta name="twitter:image" content="${ogImage}">
+         <meta name="robots" content="index, follow">
+         <link rel="canonical" href="${canonicalUrl}">
+         <link rel="icon" type="image/png" href="/images/CWfavicon.png">
+-        <script src="https://cdn.tailwindcss.com"></script>
++        <link rel="stylesheet" href="/static/tailwind.css">
+         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+         <script src="https://unpkg.com/lucide@latest"></script>
+         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+-        <script>
+-          tailwind.config = {
+-            darkMode: 'class',
+-            theme: {
+-              extend: {
+-                colors: {
+-                  'wiki-bg': '#0f0f23',
+-                  'wiki-card': '#1a1a2e',
+-                  'wiki-border': '#2a2a3e',
+-                  'wiki-primary': '#4361ee',
+-                  'wiki-secondary': '#64b5f6',
+-                  'wiki-text': '#e0e0e0',
+-                  'wiki-muted': '#9ca3af',
+-                }
+-              }
+-            }
+-          }
+-        </script>
+         <script>
+           // 서버에서 주입하는 사용자 정보 (초기값, ISR 캐시 페이지에서는 null일 수 있음)
+           window.__USER__ = ${user ? JSON.stringify({ id: user.id, username: user.username, role: user.role, pictureUrl: user.custom_picture_url || user.picture_url || null }) : 'null'};
+@@ -1408,7 +1792,7 @@ const renderLayout = (
+                         <span class="text-wiki-muted/30">|</span>
+                         <a href="/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
+                     </div>
+-                    <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2025 Careerwiki</span>
++                    <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2025 CareerWiki</span>
+                 </div>
+                 
+                 <!-- Desktop: Original horizontal layout -->
+@@ -1433,7 +1817,7 @@ const renderLayout = (
+                             <span class="text-wiki-muted/30">|</span>
+                             <a href="/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
+                         </div>
+-                        <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2025 Careerwiki</span>
++                        <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2025 CareerWiki</span>
+                     </div>
+                 </div>
+             </div>
+@@ -1857,7 +2241,7 @@ app.get('/', (c) => {
+     </div>
+   `
+   
+-  return c.html(renderLayout(content, 'Careerwiki - AI 진로 분석 플랫폼', 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', true, { user: userData }))
++  return c.html(renderLayout(content, 'CareerWiki - AI 진로 분석 플랫폼', 'AI 기반 개인 맞춤형 진로 분석과 전략 리포트를 제공하는 플랫폼', true, { user: userData }))
+ })
+ 
+ // Phase 3 Day 4: renderLayout 헬퍼 함수 (자동으로 context 전달)
+@@ -1871,6 +2255,10 @@ const renderLayoutWithContext = (
+     extraHead?: string
+     canonical?: string
+     ogUrl?: string
++    ogImage?: string
++    ogImageWidth?: string
++    ogImageHeight?: string
++    ogType?: string
+     user?: { id: number; name: string | null; email: string; role: string; picture_url: string | null; custom_picture_url?: string | null; username: string | null } | null
+   }
+ ) => {
+@@ -1891,9 +2279,6 @@ app.get('/analyzer', (c) => {
+             <div class="grid md:grid-cols-2 gap-8 mt-8">
+                 <!-- Job Recommendation -->
+                 <a href="/analyzer/job" class="glass-card p-8 rounded-xl hover-glow block text-center group relative overflow-hidden">
+-                    <div class="absolute top-3 right-3 px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-xs font-bold text-emerald-400">
+-                        <i class="fas fa-gift mr-1"></i>베타 무료
+-                    </div>
+                     <i class="fas fa-briefcase text-6xl mb-4 text-wiki-secondary group-hover:text-wiki-primary transition"></i>
+                     <h3 class="text-2xl font-bold mb-3">직업 추천</h3>
+                     <p class="text-wiki-muted">
+@@ -1904,7 +2289,7 @@ app.get('/analyzer', (c) => {
+                         <span class="text-wiki-muted line-through text-sm">₩50,000</span>
+                         <span class="text-emerald-400 font-bold text-lg">무료</span>
+                     </div>
+-                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정 무료 제공</p>
++                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정</p>
+                     <div class="mt-4">
+                         <span class="px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block group-hover:bg-blue-600 transition">
+                             직업 추천받기 →
+@@ -1914,9 +2299,6 @@ app.get('/analyzer', (c) => {
+ 
+                 <!-- Major Recommendation -->
+                 <a href="/analyzer/major" class="glass-card p-8 rounded-xl hover-glow block text-center group relative overflow-hidden">
+-                    <div class="absolute top-3 right-3 px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-xs font-bold text-emerald-400">
+-                        <i class="fas fa-gift mr-1"></i>베타 무료
+-                    </div>
+                     <i class="fas fa-university text-6xl mb-4 text-wiki-secondary group-hover:text-wiki-primary transition"></i>
+                     <h3 class="text-2xl font-bold mb-3">전공 추천</h3>
+                     <p class="text-wiki-muted">
+@@ -1927,7 +2309,7 @@ app.get('/analyzer', (c) => {
+                         <span class="text-wiki-muted line-through text-sm">₩10,000</span>
+                         <span class="text-emerald-400 font-bold text-lg">무료</span>
+                     </div>
+-                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정 무료 제공</p>
++                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정</p>
+                     <div class="mt-4">
+                         <span class="px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block group-hover:bg-blue-600 transition">
+                             전공 추천받기 →
+@@ -1953,12 +2335,13 @@ app.get('/analyzer', (c) => {
+     </div>
+   `
+   
+-  return c.html(renderLayoutWithContext(c, content, 'AI 추천기 - Careerwiki'))
++  return c.html(renderLayoutWithContext(c, content, 'AI 추천기 - CareerWiki'))
+ })
+ 
+ // AI Job Analyzer v2.0.0 (Stage-based Universal Intake + Follow-up) - 로그인 필수
+ app.get('/analyzer/job', requireAuth, (c) => {
+-  const debugMode = c.req.query('debug') === 'true'
++  const user = c.get('user')
++  const debugMode = c.req.query('debug') === 'true' || isAdminRole(user?.role)
+   
+   // ============================================
+   // 통합 질문 데이터 (3단계 구조: 프로필 → 심층 → 결과)
+@@ -2882,7 +3265,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                 console.log('[🧪 Sample Test] searchProfile:', searchProfile);
+                 console.log('[🧪 Sample Test] mini_module_result:', mm);
+ 
+-                // v3/recommend API 직접 호출
++                // v3/recommend API 직접 호출 (Phase 1: 추천만, 리포트는 Phase 2)
+                 const response = await fetch('/api/ai-analyzer/v3/recommend', {
+                     method: 'POST',
+                     headers: { 'Content-Type': 'application/json' },
+@@ -2892,6 +3275,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                         mini_module_result: mm,
+                         topK: 800,
+                         judgeTopN: 20,
++                        skipReport: true,
+                         debug: true,
+                     })
+                 });
+@@ -2977,6 +3361,31 @@ app.get('/analyzer/job', requireAuth, (c) => {
+ 
+                     // 테스트 정보 배너 표시
+                     showTestResultBanner(persona, data.recommendations);
++
++                    // Phase 2: 프리미엄 리포트 비동기 생성
++                    (async () => {
++                        try {
++                            console.log('[🧪 Sample Test] Phase 2: 프리미엄 리포트 생성 시작...');
++                            const reportResponse = await fetch('/api/ai-analyzer/v3/recommend/report', {
++                                method: 'POST',
++                                headers: { 'Content-Type': 'application/json' },
++                                body: JSON.stringify({ session_id: testSessionId }),
++                            });
++                            if (reportResponse.ok) {
++                                const reportData = await reportResponse.json();
++                                if (reportData.premium_report) {
++                                    analyzeData.result.premium_report = reportData.premium_report;
++                                    console.log('[🧪 Sample Test] Phase 2: 프리미엄 리포트 수신 완료');
++                                    const activeTab = document.querySelector('.report-tab.active')?.getAttribute('data-tab');
++                                    displayResults(analyzeData);
++                                    if (activeTab) showReportTab(activeTab);
++                                    showTestResultBanner(persona, data.recommendations);
++                                }
++                            }
++                        } catch (reportError) {
++                            console.warn('[🧪 Sample Test] Phase 2 리포트 생성 실패:', reportError);
++                        }
++                    })();
+                 } else {
+                     throw new Error('추천 결과가 없습니다: ' + JSON.stringify(data));
+                 }
+@@ -3180,7 +3589,87 @@ app.get('/analyzer/job', requireAuth, (c) => {
+         let currentSessionId = null;
+         let currentRequestId = null;
+         let previousTop3 = [];
+-        
++
++        // ============================================
++        // Phase 3: 편집 모드 유틸리티
++        // ============================================
++        function showEditModeBanner() {
++            if (!window.__editMode) return;
++            const banner = document.createElement('div');
++            banner.id = 'edit-mode-banner';
++            banner.className = 'mb-4 p-3 rounded-xl border';
++            banner.style.cssText = 'border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.08);';
++            banner.innerHTML = '<div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2"><i class="fas fa-edit text-amber-400"></i><span class="text-amber-300 text-sm font-medium">수정 모드</span><span class="text-amber-200/70 text-xs">변경사항이 있으면 이후 단계가 초기화됩니다</span></div><button onclick="cancelEditMode()" class="px-3 py-1 text-xs rounded-lg border border-wiki-border text-wiki-muted hover:text-white transition">취소</button></div>';
++            const container = document.querySelector('.max-w-6xl') || document.querySelector('main');
++            if (container) container.insertBefore(banner, container.firstChild);
++        }
++
++        async function cancelEditMode() {
++            if (!window.__editMode) return;
++            try {
++                await fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
++                    method: 'DELETE', credentials: 'same-origin'
++                });
++            } catch (e) {}
++            window.location.href = '/user/ai-results/' + window.__sourceRequestId;
++        }
++
++        function getEditModePayloadExtras() {
++            if (!window.__editMode) return {};
++            return {
++                session_id: window.__originalSessionId,
++                edit_mode: true,
++                edit_session_id: window.__editSessionId,
++                source_request_id: window.__sourceRequestId,
++                version_note: '입력 수정',
++            };
++        }
++
++        // 편집 모드 변경 감지
++        function detectStep1Changes() {
++            if (!window.__editMode) return false;
++            return JSON.stringify(careerState) !== window.__editSnapshot.careerState
++                || JSON.stringify(universalAnswers) !== window.__editSnapshot.universalAnswers;
++        }
++        function detectNarrativeChanges() {
++            if (!window.__editMode) return false;
++            return JSON.stringify(window.narrativeFacts || {}) !== window.__editSnapshot.narrativeFacts;
++        }
++        function detectRoundChanges(roundNumber) {
++            if (!window.__editMode) return false;
++            const snapRounds = JSON.parse(window.__editSnapshot.roundAnswers);
++            const currRounds = window.roundAnswers || [];
++            const snapR = snapRounds.filter(a => a.roundNumber === roundNumber);
++            const currR = currRounds.filter(a => a.roundNumber === roundNumber);
++            return JSON.stringify(snapR) !== JSON.stringify(currR);
++        }
++
++        // 캐스케이드 리셋
++        function cascadeResetFromStep1() {
++            console.log('[EditMode] Step 1 변경 → Step 2 전체 초기화');
++            window.narrativeFacts = null;
++            window.roundAnswers = [];
++            window.roundQuestions = null;
++            window.currentRound = 0;
++            window.savedNarrativeQuestions = null;
++            window.__editSnapshot.narrativeFacts = '{}';
++            window.__editSnapshot.roundAnswers = '[]';
++        }
++        function cascadeResetFromNarrative() {
++            console.log('[EditMode] 서술형 변경 → 라운드 전체 초기화');
++            window.roundAnswers = [];
++            window.roundQuestions = null;
++            window.currentRound = 0;
++            window.__editSnapshot.roundAnswers = '[]';
++        }
++        function cascadeResetFromRound(roundNumber) {
++            console.log('[EditMode] Round', roundNumber, '변경 → 이후 라운드 초기화');
++            window.roundAnswers = (window.roundAnswers || []).filter(a => a.roundNumber <= roundNumber);
++            window.currentRound = roundNumber;
++            window.__editSnapshot.roundAnswers = JSON.stringify(window.roundAnswers);
++        }
++        // ============================================
++
+         // 프로필 서브스텝 이동 함수
+         function goToProfileStep1() {
+             profileSubStep = 1;
+@@ -4932,6 +5421,10 @@ app.get('/analyzer/job', requireAuth, (c) => {
+         
+         // Step 1 → Step 2 (심층 질문) 직접 이동
+         async function goToStep2Direct() {
++            // Phase 3: 편집 모드 캐스케이드 리셋
++            if (window.__editMode && detectStep1Changes()) {
++                cascadeResetFromStep1();
++            }
+             // 통합 질문 결과 계산
+             updateIntegratedUniversalAnswers();
+             
+@@ -5695,6 +6188,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                         session_id: currentSessionId,
+                         high_alive_moment: facts.highAliveMoment || facts.question1Answer || '',
+                         lost_moment: facts.lostMoment || facts.question2Answer || '',
++                        existential_answer: facts.existentialAnswer || undefined,
+                     })
+                 });
+ 
+@@ -6083,6 +6577,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
+         async function submitV3RoundAndContinue(currentRound, questions) {
+             const answers = collectV3RoundAnswers(questions);
+             if (!validateV3Answers(answers, questions)) return;
++
++            // Phase 3: 편집 모드 - 라운드 변경 시 이후 라운드 초기화
++            if (window.__editMode && detectRoundChanges(currentRound)) {
++                cascadeResetFromRound(currentRound);
++            }
+             
+             const nextBtn = document.getElementById('step3-next-btn');
+             const prevBtn = document.getElementById('step3-prev-btn');
+@@ -6160,6 +6659,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                         round_answers: window.roundAnswers,
+                         engine_version: 'v3',
+                         debug: DEBUG_MODE,
++                        ...getEditModePayloadExtras(),
+                     })
+                 });
+                 
+@@ -6196,19 +6696,29 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                         ].filter(Boolean),
+                     };
+                     
+-                    const recommendResponse = await fetch('/api/ai-analyzer/v3/recommend', {
+-                        method: 'POST',
+-                        headers: { 'Content-Type': 'application/json' },
+-                        body: JSON.stringify({
+-                            session_id: currentSessionId,
+-                            searchProfile: searchProfile,
+-                            mini_module_result: miniModule,
+-                            topK: 800,
+-                            judgeTopN: 20,
+-                            debug: DEBUG_MODE,
+-                        })
+-                    });
+-                    
++                    // Phase 1: 추천만 빠르게 (리포트는 Phase 2에서 비동기 생성)
++                    let recommendResponse;
++                    for (let attempt = 0; attempt <= 2; attempt++) {
++                        recommendResponse = await fetch('/api/ai-analyzer/v3/recommend', {
++                            method: 'POST',
++                            headers: { 'Content-Type': 'application/json' },
++                            body: JSON.stringify({
++                                session_id: currentSessionId,
++                                searchProfile: searchProfile,
++                                mini_module_result: miniModule,
++                                topK: 800,
++                                judgeTopN: 20,
++                                skipReport: true,
++                                debug: DEBUG_MODE,
++                            })
++                        });
++                        if (recommendResponse.ok || recommendResponse.status < 500) break;
++                        if (attempt < 2) {
++                            console.warn('[V3.1] 서버 오류 ' + recommendResponse.status + ', 재시도 ' + (attempt + 1) + '/2');
++                            await new Promise(r => setTimeout(r, 5000 * (attempt + 1)));
++                        }
++                    }
++
+                     const recommendData = await recommendResponse.json();
+ 
+                     // 🔍 DEBUG: API 응답 확인
+@@ -6315,11 +6825,62 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                 }
+                 
+                 hideLoading();
+-                
++
++                // 편집 모드: 분석 완료 → 결과 페이지로 이동
++                if (window.__editMode && analyzeData.request_id) {
++                    fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
++                        method: 'DELETE', credentials: 'same-origin'
++                    }).catch(() => {});
++                    window.location.href = '/user/ai-results/' + analyzeData.request_id;
++                    return;
++                }
++
+                 currentRequestId = analyzeData.request_id;
+                 displayResults(analyzeData);
+                 goToStep(3); // 결과 (3단계 구조)
+-                
++
++                // Phase 2: 프리미엄 리포트 비동기 생성 (결과 표시 후 백그라운드에서)
++                (async () => {
++                    // 리포트 로딩 표시
++                    const reportBanner = document.createElement('div');
++                    reportBanner.id = 'report-loading-banner';
++                    reportBanner.className = 'text-center py-3 px-4 rounded-xl mb-4';
++                    reportBanner.style.cssText = 'background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);';
++                    reportBanner.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><span class="text-sm" style="color: rgba(165,180,252,0.9);">심리분석 리포트를 생성하고 있습니다...</span>';
++                    const step3El = document.getElementById('step3');
++                    if (step3El && step3El.firstChild) {
++                        step3El.insertBefore(reportBanner, step3El.firstChild);
++                    }
++
++                    try {
++                        console.log('[V3.1] Phase 2: 프리미엄 리포트 생성 시작...');
++                        const reportResponse = await fetch('/api/ai-analyzer/v3/recommend/report', {
++                            method: 'POST',
++                            headers: { 'Content-Type': 'application/json' },
++                            body: JSON.stringify({ session_id: currentSessionId }),
++                        });
++
++                        document.getElementById('report-loading-banner')?.remove();
++
++                        if (reportResponse.ok) {
++                            const reportData = await reportResponse.json();
++                            if (reportData.premium_report) {
++                                analyzeData.result.premium_report = reportData.premium_report;
++                                console.log('[V3.1] Phase 2: 프리미엄 리포트 수신 완료, 화면 갱신');
++                                // 현재 활성 탭 저장 후 재렌더링
++                                const activeTab = document.querySelector('.report-tab.active')?.getAttribute('data-tab');
++                                displayResults(analyzeData);
++                                if (activeTab) showReportTab(activeTab);
++                            }
++                        } else {
++                            console.warn('[V3.1] Phase 2: 리포트 생성 실패 (추천 결과는 정상):', reportResponse.status);
++                        }
++                    } catch (reportError) {
++                        document.getElementById('report-loading-banner')?.remove();
++                        console.warn('[V3.1] Phase 2: 리포트 생성 오류 (추천 결과는 정상):', reportError);
++                    }
++                })();
++
+             } catch (error) {
+                 hideLoading();
+                 console.error('[V3] Analysis error:', error);
+@@ -6563,6 +7124,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
+             const savedQ0 = window.narrativeFacts?.storyAnswer || window.narrativeFacts?.life_story || '';
+             const savedQ1 = window.narrativeFacts?.question1Answer || window.narrativeFacts?.highAliveMoment || '';
+             const savedQ2 = window.narrativeFacts?.question2Answer || window.narrativeFacts?.lostMoment || '';
++            const savedQ3 = window.narrativeFacts?.existentialAnswer || '';
+             const savedCareerBg = window.narrativeFacts?.career_background || '';
+             
+             // 스토리 질문 (공통 - 모든 템플릿에서 첫 번째 질문)
+@@ -6746,6 +7308,39 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                     </div>
+                 </div>
+                 
++                <!-- 서술형 질문 3: 실존적 가치 질문 -->
++                <div class="question-block p-5 rounded-2xl mb-5" style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.05)); border: 1px solid rgba(168,85,247,0.2);">
++                    <label class="block text-lg font-semibold mb-3 text-white">
++                        <span class="mr-2">\u{1F30C}</span>
++                        마지막 7일
++                    </label>
++                    <div class="text-sm text-slate-300 mb-4 leading-relaxed space-y-2">
++                        <p>오늘 밤 9시, 모든 방송과 휴대폰에 긴급 뉴스가 뜹니다.</p>
++                        <p>과학적으로 확인된 사실이며, 정확히 7일 뒤 지구는 사라집니다. 생존 가능성은 없습니다.</p>
++                        <p>사람들은 각자의 방식으로 남은 시간을 보내기 시작합니다.</p>
++                        <p class="text-white font-medium pt-1">이 소식을 듣는 순간, 당신이 가장 먼저 떠올릴 행동은 무엇일 것 같나요?</p>
++                        <p class="text-white font-medium">어디로 가고 싶고, 누구를 만나고 싶고, 무엇을 하고 싶을 것 같나요?</p>
++                        <p class="text-white font-medium">그리고 왜 그것이 가장 먼저 떠올랐을까요?</p>
++                    </div>
++                    <textarea
++                        id="narrative_q3"
++                        name="narrative_q3"
++                        data-fact-key="narrative.existential_answer"
++                        rows="5"
++                        minlength="30"
++                        maxlength="5000"
++                        placeholder="가장 먼저 떠오르는 행동, 가고 싶은 곳, 만나고 싶은 사람, 그리고 그 이유를 자유롭게 적어주세요..."
++                        class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[100px]"
++                        style="background-color: rgba(15,15,35,1); border-color: rgba(168,85,247,0.3); color: #fff;"
++                        onfocus="this.style.borderColor='rgba(168,85,247,0.6)';"
++                        onblur="this.style.borderColor='rgba(168,85,247,0.3)'; validateNarrativeLength(this, 30);"
++                        oninput="updateNarrativeCounter(this, 5000);">\${savedQ3}</textarea>
++                    <div class="flex justify-between items-center mt-2">
++                        <span id="narrative_q3_hint" class="text-xs text-wiki-muted">최소 30자 / 현재 \${savedQ3.length}자</span>
++                        <span id="narrative_q3_counter" class="text-xs text-wiki-muted">\${savedQ3.length}자</span>
++                    </div>
++                </div>
++
+                 <!-- 추가 격려 문구 -->
+                 <div class="text-center text-xs text-wiki-muted/60 mt-6">
+                     <i class="fas fa-shield-alt mr-1"></i>
+@@ -6816,6 +7411,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                     updateNarrativeCounter(q2, 10000);
+                     validateNarrativeLength(q2, 50);
+                 }
++                const q3 = document.getElementById('narrative_q3');
++                if (q3 && q3.value) {
++                    updateNarrativeCounter(q3, 5000);
++                    validateNarrativeLength(q3, 30);
++                }
+             }, 100);
+         }
+         
+@@ -6870,9 +7470,14 @@ app.get('/analyzer/job', requireAuth, (c) => {
+             if (!validateNarrativeRequired()) {
+                 return;
+             }
+-            
++
+             // 서술형 답변 수집 및 저장
+             const narrativeFacts = collectNarrativeAnswers();
++
++            // Phase 3: 편집 모드 - 서술형 변경 시 라운드 데이터 초기화
++            if (window.__editMode && detectNarrativeChanges()) {
++                cascadeResetFromNarrative();
++            }
+             if (narrativeFacts) {
+                 await saveNarrativeFacts(narrativeFacts);
+             }
+@@ -6889,8 +7494,9 @@ app.get('/analyzer/job', requireAuth, (c) => {
+             const q0 = document.getElementById('narrative_q0');
+             const q1 = document.getElementById('narrative_q1');
+             const q2 = document.getElementById('narrative_q2');
++            const q3 = document.getElementById('narrative_q3');
+             const careerBg = document.getElementById('narrative_career_bg');
+-            
++
+             // 레거시 지원 (이전 버전 호환)
+             const legacyHighAlive = document.getElementById('narrative_high_alive');
+             const legacyLost = document.getElementById('narrative_lost');
+@@ -6906,6 +7512,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                     // 레거시 호환성 유지
+                     highAliveMoment: q1.value.trim(),
+                     lostMoment: q2.value.trim(),
++                    // 실존적 가치 질문 (7일 뒤 지구 멸망)
++                    existentialAnswer: q3?.value?.trim() || '',
+                     // 새로운 구조
+                     question1Answer: q1.value.trim(),
+                     question2Answer: q2.value.trim(),
+@@ -6969,7 +7577,16 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                 alert('두 번째 질문에 50자 이상 작성해주세요.');
+                 return false;
+             }
+-            
++
++            // 실존적 질문 검증 (최소 30자)
++            const q3El = document.getElementById('narrative_q3');
++            if (q3El && q3El.value.trim().length > 0 && q3El.value.trim().length < 30) {
++                q3El.style.borderColor = 'rgba(239, 68, 68, 0.5)';
++                q3El.focus();
++                alert('실존적 질문에 30자 이상 작성해주세요.');
++                return false;
++            }
++
+             return true;
+         }
+         
+@@ -7871,7 +8488,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
+             }
+ 
+             // V3: 프리미엄 리포트가 있으면 새 UI로 표시
+-            if (result.premium_report || result.engine_version === 'v3') {
++            if (result.premium_report || (result.engine_version && result.engine_version.startsWith('v3'))) {
+                 displayPremiumReportV3(result);
+                 return;
+             }
+@@ -7906,10 +8523,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                         <i class="fas fa-chevron-down text-[10px] transition-transform score-toggle-icon"></i>
+                     </button>
+                     <div class="score-details hidden mt-2 pt-2 border-t border-wiki-border/30">
+-                        <div class="text-sm text-wiki-muted mb-2">Fit: \${job.fit_score}</div>
+-                        <div class="flex gap-2 text-xs">
+-                            <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded">Like: \${job.like_score}</span>
+-                            <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded">Can: \${job.can_score}</span>
++                        <div class="p-3 rounded-lg" style="background-color: rgba(26,26,46,0.5);">
++                            \${getScoreExplanation(job.like_score, job.can_score, job.fit_score, job.risk_penalty || 0)}
+                         </div>
+                     </div>
+                 </div>
+@@ -8120,6 +8735,15 @@ app.get('/analyzer/job', requireAuth, (c) => {
+         }
+         
+         function displayPremiumReportV3(result) {
++            // 결과 단계: step indicator와 페이지 타이틀 숨김 (깔끔한 리포트 뷰)
++            const stepIndicator = document.getElementById('step-indicator');
++            if (stepIndicator) stepIndicator.style.display = 'none';
++            const pageTitle = document.querySelector('h1.text-3xl');
++            if (pageTitle) pageTitle.style.display = 'none';
++            // 계정 안내 배너도 숨김
++            const accountBanner = document.getElementById('account-warning-banner');
++            if (accountBanner) accountBanner.style.display = 'none';
++
+             const report = result.premium_report || {};
+             
+             // PremiumReport 타입 데이터 매핑 (백엔드 실제 필드에 맞춤)
+@@ -8334,22 +8958,50 @@ app.get('/analyzer/job', requireAuth, (c) => {
+ 
+             // 탭 UI 생성
+             container.innerHTML = \`
+-                <!-- V3 프리미엄 리포트 헤더 -->
+-                <div class="text-center mb-8">
+-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style="background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2)); border: 1px solid rgba(99,102,241,0.3);">
+-                        <span class="text-lg">✨</span>
+-                        <span class="text-sm font-medium" style="color: rgb(165,180,252);">프리미엄 리포트 V3</span>
+-                    </div>
+-                    <h2 class="text-2xl md:text-3xl font-bold mb-2">당신만의 커리어 분석 리포트</h2>
+-                    <p class="text-wiki-muted mb-4">AI가 분석한 당신의 커리어 방향성</p>
+-                    <!-- 테스트용 버튼들 -->
+-                    <div class="flex justify-center gap-3 flex-wrap">
++                <!-- 리포트 헤더 -->
++                <div class="text-center mb-6">
++                    <h2 class="text-2xl md:text-3xl font-bold mb-2 flex items-center justify-center gap-2">
++                        <span class="text-2xl">✨</span>
++                        당신만의 커리어 분석 리포트
++                    </h2>
++                    <p class="text-wiki-muted text-sm">AI가 분석한 당신의 커리어 방향성</p>
++                    <div class="flex justify-center gap-2 mt-3">
++                        <button onclick="shareReport()" id="share-report-btn" class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition" style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; cursor: pointer;">
++                            <i class="fas fa-share-alt"></i> 결과 공유하기
++                        </button>
++                        \${DEBUG_MODE ? \`
+                         <button onclick="copyAllReportContent()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6; border: 1px solid rgba(67, 97, 238, 0.3);">
+                             <i class="fas fa-copy"></i> 결과 전체 복사
+                         </button>
+-                        <button onclick="resetAnalyzer()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">
+-                            <i class="fas fa-redo"></i> 처음부터 다시
+-                        </button>
++                        \` : ''}
++                    </div>
++                </div>
++
++                <!-- 공유 모달 (숨김 상태) -->
++                <div id="share-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:9999; display:none;" onclick="if(event.target===this)closeShareModal()">
++                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#1a1a2e; border-radius:16px; padding:24px; width:90%; max-width:360px; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
++                        <div style="text-align:center; margin-bottom:16px;">
++                            <h3 style="font-size:18px; font-weight:700; color:#e0e0e0; margin:0;">결과 공유하기</h3>
++                        </div>
++                        <div style="display:flex; gap:8px; margin-bottom:16px;">
++                            <button onclick="copyShareLink()" id="copy-share-btn" style="flex:1; padding:10px; border-radius:10px; border:1px solid rgba(99,102,241,0.3); background:rgba(99,102,241,0.15); color:#a5b4fc; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
++                                <i class="fas fa-link"></i> 링크 복사
++                            </button>
++                            <button onclick="shareToX()" style="flex:1; padding:10px; border-radius:10px; border:1px solid rgba(99,102,241,0.3); background:rgba(99,102,241,0.15); color:#a5b4fc; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
++                                <i class="fab fa-x-twitter"></i> X 공유
++                            </button>
++                        </div>
++                        <p style="font-size:11px; color:#6b7280; text-align:center; margin-bottom:12px;">
++                            <i class="fas fa-info-circle"></i> 요약본만 공유됩니다. 상세 분석은 포함되지 않아요. (30일간 유효)
++                        </p>
++                        <div id="share-revoke-section" style="display:none; text-align:center; margin-bottom:8px;">
++                            <button onclick="revokeShare()" style="font-size:12px; color:#ef4444; background:none; border:none; cursor:pointer; text-decoration:underline;">
++                                <i class="fas fa-trash-alt"></i> 공유 해제하기
++                            </button>
++                        </div>
++                        <div style="text-align:center;">
++                            <button onclick="closeShareModal()" style="font-size:13px; color:#6b7280; background:none; border:none; cursor:pointer;">닫기</button>
++                        </div>
+                     </div>
+                 </div>
+                 
+@@ -8984,23 +9636,23 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                         </div>
+                     \` : ''}
+ 
+-                    <!-- 가치 우선순위 -->
++                    <!-- 가치 우선순위 (가로 배치) -->
+                     \${personal.value_priorities?.length > 0 ? \`
+                         <div class="mb-8">
+                             <h4 class="text-xl font-bold mb-4 flex items-center gap-2">
+                                 <span>⭐</span> 가치 우선순위
+                             </h4>
+-                            <div class="grid gap-3">
+-                                \${personal.value_priorities.map((v, i) => {
+-                                    const colors = ['rgba(168,85,247,0.2)', 'rgba(99,102,241,0.2)', 'rgba(59,130,246,0.2)', 'rgba(6,182,212,0.2)', 'rgba(16,185,129,0.2)', 'rgba(245,158,11,0.2)', 'rgba(239,68,68,0.2)'];
+-                                    const textColors = ['rgb(216,180,254)', 'rgb(165,180,252)', 'rgb(147,197,253)', 'rgb(103,232,249)', 'rgb(110,231,183)', 'rgb(253,224,71)', 'rgb(252,165,165)'];
+-                                    // 키워드 볼드 처리
++                            <div class="grid grid-cols-\${Math.min(personal.value_priorities.length, 3)} gap-3">
++                                \${personal.value_priorities.slice(0, 5).map((v, i) => {
++                                    const colors = ['rgba(168,85,247,0.2)', 'rgba(99,102,241,0.2)', 'rgba(59,130,246,0.2)', 'rgba(6,182,212,0.2)', 'rgba(16,185,129,0.2)'];
++                                    const textColors = ['rgb(216,180,254)', 'rgb(165,180,252)', 'rgb(147,197,253)', 'rgb(103,232,249)', 'rgb(110,231,183)'];
+                                     let text = translateToKorean(v).trim();
+-                                    if (!text.endsWith('.')) text += '.';
+-                                    text = text.replace(/(성장|수입|보상|워라밸|안정|의미|보람|인정|영향력|자율|도전|리스크)/g, '<strong style="color: ' + textColors[i % textColors.length] + '">$1</strong>');
+-                                    return \`<div class="p-4 rounded-xl flex items-start gap-3" style="background-color: \${colors[i % colors.length]}; border: 1px solid \${colors[i % colors.length].replace('0.2', '0.3')};">
+-                                        <span class="text-lg font-bold mt-0.5" style="color: \${textColors[i % textColors.length]};">#\${i + 1}</span>
+-                                        <span class="text-[15px] leading-relaxed text-wiki-text">\${text}</span>
++                                    // 짧은 값 레이블은 마침표 제거, 문장(10자+)만 마침표 유지
++                                    if (text.length < 10) text = text.replace(/\\.$/, '');
++                                    else if (!text.endsWith('.')) text += '.';
++                                    return \`<div class="p-3 md:p-4 rounded-xl flex items-center gap-2 justify-center" style="background-color: \${colors[i % colors.length]}; border: 1px solid \${colors[i % colors.length].replace('0.2', '0.3')};">
++                                        <span class="text-sm font-bold" style="color: \${textColors[i % textColors.length]};">#\${i + 1}</span>
++                                        <span class="text-[15px] font-semibold text-wiki-text">\${text}</span>
+                                     </div>\`;
+                                 }).join('')}
+                             </div>
+@@ -9106,9 +9758,9 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                         </div>
+                     \` : ''}
+ 
+-                    <!-- 내면 갈등 + 성장 곡선 (2열 그리드) -->
++                    <!-- 내면 갈등 + 성장 곡선 (둘 다 있으면 2열, 하나만 있으면 1열) -->
+                     \${(innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts) || growthCurve.type ? \`
+-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
++                        <div class="grid grid-cols-1 \${(innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts) && growthCurve.type ? 'md:grid-cols-2' : ''} gap-6 mb-8">
+                             <!-- 내면 갈등 분석 -->
+                             \${innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts ? \`
+                                 <div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.1)); border: 1px solid rgba(168,85,247,0.2);">
+@@ -9361,10 +10013,11 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                             <span class="text-3xl">📊</span>
+                             <span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">분석 상세 정보</span>
+                         </h2>
+-                        <p class="text-center text-wiki-muted text-sm mt-2">AI 추천의 근거와 신뢰도를 확인하세요.</p>
++                        <p class="text-center text-wiki-muted text-sm mt-2">AI 추천의 근거와 기술적 분석을 확인하세요.</p>
++                        <p class="text-center text-wiki-muted text-xs mt-1">엔진 버전: \${result.engine_version || 'unknown'}</p>
+                         <div class="mt-6 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+                     </div>
+-                    <p class="text-base text-wiki-muted mb-6">이 섹션은 AI 추천의 근거, 사용된 알고리즘, 그리고 신뢰도를 상세히 보여줍니다.</p>
++                    <p class="text-base text-wiki-muted mb-6">이 섹션은 AI 추천의 근거, 사용된 알고리즘, 그리고 점수 산출 과정을 상세히 보여줍니다.</p>
+ 
+                     <!-- 분석 파이프라인 설명 -->
+                     <div class="mb-8 p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(34,197,94,0.2);">
+@@ -9424,28 +10077,57 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                         </div>
+                     </div>
+ 
+-                    <!-- 신뢰도 섹션 -->
++                    <!-- AI 추천 시스템 작동 원리 -->
+                     <div class="mb-8 p-5 rounded-xl" style="background-color: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);">
+-                        <h4 class="text-xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 추천 신뢰도</h4>
+-                        <div class="flex items-center gap-4 mb-4">
+-                            <div class="text-4xl font-bold" style="color: rgb(99,102,241);">\${Math.round((report._confidence || 0.75) * 100)}%</div>
+-                            <div class="flex-1">
+-                                <div class="h-4 bg-wiki-border/30 rounded-full overflow-hidden">
+-                                    <div class="h-full bg-gradient-to-r from-wiki-primary to-wiki-secondary transition-all" style="width: \${Math.round((report._confidence || 0.75) * 100)}%"></div>
+-                                </div>
++                        <h4 class="text-xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 AI 추천은 이렇게 만들어집니다</h4>
++                        <p class="text-[15px] text-wiki-muted mb-5">이 리포트는 단순 키워드 매칭이 아닌, 3단계 AI 시스템을 거쳐 생성됩니다.</p>
++
++                        <!-- RAG: 벡터 검색 -->
++                        <div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
++                            <div class="flex items-center gap-2 mb-2">
++                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(34,197,94,0.2); color: rgb(34,197,94);">STEP 1</span>
++                                <span class="font-bold text-white text-base">RAG — 의미 기반 후보 검색</span>
+                             </div>
++                            <p class="text-[14px] text-wiki-muted leading-relaxed mb-2">당신의 답변 전체를 AI 임베딩(숫자 벡터)으로 변환한 뒤, 7,000개 직업 DB에서 <span class="text-emerald-400">의미적으로 가장 가까운 직업들</span>을 찾습니다.</p>
++                            <p class="text-[13px] text-wiki-muted/70">"데이터 분석을 좋아한다"고 답하면, 직업명에 '분석'이 없더라도 데이터 관련 업무를 하는 직업이 후보에 포함됩니다. 단순 키워드 검색과의 차이입니다.</p>
+                         </div>
+-                        <div class="text-base text-wiki-muted mb-4">
+-                            <p class="font-medium text-white mb-2">신뢰도란?</p>
+-                            <p>입력 데이터의 양과 질을 기반으로 계산됩니다. 답변이 구체적이고, 더 많은 질문에 응답할수록 신뢰도가 올라갑니다.</p>
++
++                        <!-- TAG: 절대 조건 필터 -->
++                        <div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
++                            <div class="flex items-center gap-2 mb-2">
++                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(251,191,36,0.2); color: rgb(251,191,36);">STEP 2</span>
++                                <span class="font-bold text-white text-base">TAG — 절대 조건 필터링</span>
++                            </div>
++                            <p class="text-[14px] text-wiki-muted leading-relaxed mb-2">후보 직업들의 속성 태그를 당신의 <span class="text-amber-400">제약 조건</span>과 대조합니다.</p>
++                            <p class="text-[13px] text-wiki-muted/70">"절대 안 돼" 수준의 제약은 해당 직업을 후보에서 완전히 제거합니다. "가능하면 피하고 싶다" 수준이면 제거 대신 Risk 감점이 적용되어 순위가 내려갑니다. 예: "야근 절대 불가" → 야간 근무 직업 제외, "출장 가능하면 싫다" → 출장 직업은 남되 감점.</p>
++                        </div>
++
++                        <!-- CAG: LLM 평가 -->
++                        <div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
++                            <div class="flex items-center gap-2 mb-2">
++                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(99,102,241,0.2); color: rgb(129,140,248);">STEP 3</span>
++                                <span class="font-bold text-white text-base">CAG — AI가 직접 평가</span>
++                            </div>
++                            <p class="text-[14px] text-wiki-muted leading-relaxed mb-2">남은 후보 직업 각각에 대해, GPT-4o-mini가 당신의 프로필 전체를 읽고 <span class="text-indigo-400">Like(좋아할 가능성)</span>와 <span class="text-blue-400">Can(잘할 가능성)</span> 점수를 매깁니다.</p>
++                            <p class="text-[13px] text-wiki-muted/70">AI는 단순히 숫자만 매기는 것이 아니라, "왜 이 직업을 좋아할지", "왜 잘할 수 있는지"에 대한 구체적인 이유도 함께 생성합니다. 각 직업 카드에 표시되는 Like/Can 이유가 바로 이 단계에서 만들어집니다.</p>
++                        </div>
++
++                        <!-- 최종 점수 -->
++                        <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
++                            <div class="flex items-center gap-2 mb-2">
++                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(168,85,247,0.2); color: rgb(192,132,252);">최종</span>
++                                <span class="font-bold text-white text-base">종합 점수 계산 (Fit)</span>
++                            </div>
++                            <p class="text-[14px] text-wiki-muted leading-relaxed mb-3">AI가 매긴 점수를 아래 공식으로 조합하여 최종 순위를 결정합니다.</p>
++                            <div class="p-3 rounded-lg text-center" style="background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);">
++                                <p class="text-base font-bold text-white" style="font-family: monospace;">Fit = Like + Can − Risk</p>
++                            </div>
++                            <div class="mt-3 space-y-1 text-[13px] text-wiki-muted/80">
++                                <p><span class="text-purple-400 font-medium">Like</span> — 좋아할 직업을 중요하게 반영합니다. 흥미와 가치관이 맞아야 오래 갈 수 있기 때문입니다.</p>
++                                <p><span class="text-blue-400 font-medium">Can</span> — 잘할 수 있는 직업도 함께 반영합니다. 강점과 역량이 맞아야 성과를 낼 수 있습니다.</p>
++                                <p><span class="text-red-400 font-medium">Risk</span> — 당신이 "절대 싫다"고 한 조건과 충돌하면 감점됩니다.</p>
++                            </div>
+                         </div>
+-                        <p class="text-base" style="color: rgba(165,180,252,0.9);">
+-                            \${(report._confidence || 0.75) >= 0.8
+-                                ? '✅ 충분한 정보를 바탕으로 신뢰도 높은 추천입니다.'
+-                                : (report._confidence || 0.75) >= 0.6
+-                                    ? '⚡ 기본적인 추천은 가능하지만, 더 많은 정보가 있으면 정확도가 올라갑니다.'
+-                                    : '⚠️ 제한된 정보로 추천했습니다. 추가 질문에 답변하시면 더 정확해집니다.'}
+-                        </p>
+                     </div>
+ 
+                     <!-- 점수 계산 방식 설명 -->
+@@ -9456,7 +10138,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                                 <span class="text-emerald-400 font-bold text-lg shrink-0">Fit</span>
+                                 <div>
+                                     <p class="text-white">종합 적합도</p>
+-                                    <p class="text-wiki-muted text-[15px]">Like × 0.55 + Can × 0.45 - Risk 로 계산됩니다. 좋아하면서 잘할 수 있는 직업이 높은 점수를 받습니다.</p>
++                                    <p class="text-wiki-muted text-[15px]">Like와 Can을 종합하고 Risk를 차감하여 계산됩니다. 좋아하면서 잘할 수 있는 직업이 높은 점수를 받습니다.</p>
+                                 </div>
+                             </div>
+                             <div class="flex items-start gap-3">
+@@ -9547,6 +10229,134 @@ app.get('/analyzer/job', requireAuth, (c) => {
+             document.querySelector('.report-tab[data-tab="' + tabId + '"]')?.classList.add('active');
+         }
+         
++        // ============================================
++        // 공유 기능
++        // ============================================
++        let _shareUrl = null;
++        let _shareToken = null;
++
++        async function shareReport() {
++            const requestId = new URLSearchParams(window.location.search).get('request_id');
++            if (!requestId) { alert('결과 ID가 없습니다.'); return; }
++
++            try {
++                const res = await fetch('/api/ai-analyzer/share', {
++                    method: 'POST',
++                    headers: { 'Content-Type': 'application/json' },
++                    body: JSON.stringify({ request_id: parseInt(requestId) }),
++                });
++                const json = await res.json();
++                if (!json.success) {
++                    alert(json.error || '공유 생성에 실패했습니다.');
++                    return;
++                }
++
++                _shareUrl = json.share_url;
++                _shareToken = json.token;
++
++                // 모바일: Web Share API 시도
++                if (navigator.share) {
++                    try {
++                        const data = window.currentReportData;
++                        const top3 = (data?.fit_top3 || []).slice(0, 3).map(function(j) { return j.job_name; }).join(', ');
++                        await navigator.share({
++                            title: 'AI가 분석한 나의 커리어 DNA',
++                            text: top3 ? 'Top 추천: ' + top3 : 'AI 커리어 분석 결과를 확인해보세요!',
++                            url: _shareUrl,
++                        });
++                        return; // 성공하면 모달 안 열어도 됨
++                    } catch (e) {
++                        if (e.name === 'AbortError') return; // 사용자 취소
++                        // Web Share 실패 → 모달로 fallback
++                    }
++                }
++
++                // 데스크톱: 모달 표시
++                showShareModal();
++            } catch (err) {
++                console.error('[Share]', err);
++                alert('공유 생성 중 오류가 발생했습니다.');
++            }
++        }
++
++        function showShareModal() {
++            const modal = document.getElementById('share-modal');
++            if (modal) modal.style.display = 'block';
++            // 이미 공유된 상태면 revoke 버튼 표시
++            if (_shareToken) {
++                const revokeSection = document.getElementById('share-revoke-section');
++                if (revokeSection) revokeSection.style.display = 'block';
++            }
++        }
++
++        function closeShareModal() {
++            const modal = document.getElementById('share-modal');
++            if (modal) modal.style.display = 'none';
++        }
++
++        async function copyShareLink() {
++            if (!_shareUrl) return;
++            try {
++                await navigator.clipboard.writeText(_shareUrl);
++                const btn = document.getElementById('copy-share-btn');
++                if (btn) {
++                    btn.innerHTML = '<i class="fas fa-check"></i> 복사 완료!';
++                    setTimeout(function() {
++                        btn.innerHTML = '<i class="fas fa-link"></i> 링크 복사';
++                    }, 2000);
++                }
++            } catch (e) {
++                // fallback
++                prompt('아래 링크를 복사하세요:', _shareUrl);
++            }
++        }
++
++        function shareToX() {
++            if (!_shareUrl) return;
++            const text = encodeURIComponent('AI가 분석한 나의 커리어 DNA');
++            const url = encodeURIComponent(_shareUrl);
++            window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url, '_blank', 'width=550,height=400');
++        }
++
++        async function revokeShare() {
++            if (!confirm('공유 링크를 해제하시겠습니까? 이미 공유된 링크가 즉시 무효화됩니다.')) return;
++
++            const requestId = new URLSearchParams(window.location.search).get('request_id');
++            try {
++                const res = await fetch('/api/ai-analyzer/share/revoke', {
++                    method: 'POST',
++                    headers: { 'Content-Type': 'application/json' },
++                    body: JSON.stringify({ request_id: parseInt(requestId) }),
++                });
++                const json = await res.json();
++                if (json.success) {
++                    _shareUrl = null;
++                    _shareToken = null;
++                    closeShareModal();
++                    alert('공유가 해제되었습니다.');
++                } else {
++                    alert('해제 실패: ' + (json.error || '알 수 없는 오류'));
++                }
++            } catch (err) {
++                alert('해제 중 오류가 발생했습니다.');
++            }
++        }
++
++        // 페이지 로드 시 공유 상태 확인 (버튼 텍스트 업데이트용)
++        (function checkShareStatus() {
++            const requestId = new URLSearchParams(window.location.search).get('request_id');
++            if (!requestId) return;
++            fetch('/api/ai-analyzer/share/status/' + requestId)
++                .then(function(r) { return r.json(); })
++                .then(function(json) {
++                    if (json.shared && json.share_url) {
++                        _shareUrl = json.share_url;
++                        _shareToken = json.token;
++                    }
++                })
++                .catch(function() { /* ignore */ });
++        })();
++
+         // 결과 전체 복사 기능 (데이터 기반 - DOM이 아닌 실제 데이터에서 추출)
+         function copyAllReportContent() {
+             const data = window.currentReportData;
+@@ -10040,20 +10850,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                     <!-- 점수 상세 (기본 숨김) -->
+                     <div class="score-details-compact hidden px-4 pb-3">
+                         <div class="p-3 rounded-lg" style="background-color: rgba(26,26,46,0.5);">
+-                            <div class="flex items-center gap-6 text-base">
+-                                <div class="flex items-center gap-1.5">
+-                                    <span class="text-emerald-400 font-semibold">\${fitScore}</span>
+-                                    <span class="text-wiki-muted">Fit</span>
+-                                </div>
+-                                <div class="flex items-center gap-1.5">
+-                                    <span class="text-purple-400 font-semibold">\${likeScore}</span>
+-                                    <span class="text-wiki-muted">Like</span>
+-                                </div>
+-                                <div class="flex items-center gap-1.5">
+-                                    <span class="text-blue-400 font-semibold">\${canScore}</span>
+-                                    <span class="text-wiki-muted">Can</span>
+-                                </div>
+-                            </div>
++                            \${getScoreExplanation(likeScore, canScore, fitScore, riskPenalty)}
+                         </div>
+                     </div>
+                 </div>
+@@ -10090,7 +10887,8 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                 const fitScore = job.scores?.fit || job.fit_score || '-';
+                 const likeScore = job.scores?.like || job.like_score || '-';
+                 const canScore = job.scores?.can || job.can_score || '-';
+-                
++                const riskPenalty = job.riskPenalty || job.risk_penalty || job.scores?.risk_penalty || 0;
++
+                 return \`
+                 <div class="glass-card p-5 rounded-xl group" style="border-left: 4px solid \${idx < 3 ? 'rgba(99,102,241,0.8)' : 'rgba(100,100,120,0.3)'};">
+                     <a href="/job/\${jobSlug}" target="_blank" rel="noopener noreferrer" class="block hover:opacity-90 transition">
+@@ -10148,26 +10946,15 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                         </button>
+                     </div>
+                     <div class="score-details hidden mt-3 pt-3 border-t border-wiki-border/30">
+-                        <div class="grid grid-cols-3 gap-2">
+-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(16,185,129,0.1);">
+-                                <div class="text-sm font-medium text-emerald-400">\${fitScore}</div>
+-                                <div class="text-xs text-wiki-muted">Fit</div>
+-                            </div>
+-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(168,85,247,0.1);">
+-                                <div class="text-sm font-medium text-purple-400">\${likeScore}</div>
+-                                <div class="text-xs text-wiki-muted">Like</div>
+-                            </div>
+-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(59,130,246,0.1);">
+-                                <div class="text-sm font-medium text-blue-400">\${canScore}</div>
+-                                <div class="text-xs text-wiki-muted">Can</div>
+-                            </div>
++                        <div class="p-3 rounded-lg" style="background-color: rgba(26,26,46,0.5);">
++                            \${getScoreExplanation(likeScore, canScore, fitScore, riskPenalty)}
+                         </div>
+                     </div>
+                 </div>
+                 \`;
+             }).join('');
+         }
+-        
++
+         // 직업 카드 렌더링
+         function renderJobCards(jobs, setId) {
+             if (!jobs || jobs.length === 0) {
+@@ -10220,20 +11007,9 @@ app.get('/analyzer/job', requireAuth, (c) => {
+                     
+                     <!-- 점수 상세 (기본 숨김) -->
+                     <div class="score-details hidden mt-3 pt-3 border-t border-wiki-border/30">
+-                        <!-- 점수 바 -->
+-                        <div class="grid grid-cols-3 gap-2 mb-3">
+-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(16,185,129,0.1);">
+-                                <div class="text-sm font-medium text-emerald-400">\${job.fitScore || job.fit_score || '-'}</div>
+-                                <div class="text-xs text-wiki-muted">Fit</div>
+-                            </div>
+-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(168,85,247,0.1);">
+-                                <div class="text-sm font-medium text-purple-400">\${job.desireScore || job.like_score || '-'}</div>
+-                                <div class="text-xs text-wiki-muted">Like</div>
+-                            </div>
+-                            <div class="text-center p-2 rounded-lg" style="background-color: rgba(59,130,246,0.1);">
+-                                <div class="text-sm font-medium text-blue-400">\${job.feasibilityScore || job.can_score || '-'}</div>
+-                                <div class="text-xs text-wiki-muted">Can</div>
+-                            </div>
++                        <!-- 점수 산출 과정 -->
++                        <div class="p-3 rounded-lg mb-3" style="background-color: rgba(26,26,46,0.5);">
++                            \${getScoreExplanation(job.desireScore || job.like_score, job.feasibilityScore || job.can_score, job.fitScore || job.fit_score, job.riskPenalty || job.risk_penalty || 0)}
+                         </div>
+                         
+                         <!-- 리스크 플래그 -->
+@@ -10257,6 +11033,23 @@ app.get('/analyzer/job', requireAuth, (c) => {
+             \`).join('');
+         }
+         
++        // 점수 산출 과정 설명 생성
++        function getScoreExplanation(likeVal, canVal, fitVal, riskVal) {
++            const like = parseInt(likeVal) || 0;
++            const can = parseInt(canVal) || 0;
++            const fit = parseInt(fitVal) || 0;
++            const risk = parseFloat(riskVal) || 0;
++            let html = '<div class="space-y-2.5 text-[13px]">';
++            html += '<div class="flex items-center justify-between"><span class="text-purple-400">💜 흥미(Like)</span><span class="text-purple-300 font-medium">' + like + '점</span></div>';
++            html += '<div class="flex items-center justify-between"><span class="text-blue-400">💪 역량(Can)</span><span class="text-blue-300 font-medium">' + can + '점</span></div>';
++            if (risk > 0) {
++                html += '<div class="flex items-center justify-between"><span class="text-red-400">⚠️ 리스크 감점</span><span class="text-red-300 font-medium">−' + risk + '</span></div>';
++            }
++            html += '<div class="border-t border-wiki-border/30 pt-2 mt-1 flex items-center justify-between"><span class="text-emerald-400 font-medium">= 적합도(Fit)</span><span class="text-emerald-400 font-bold text-base">' + fit + '점</span></div>';
++            html += '</div>';
++            return html;
++        }
++
+         // 점수 상세 토글
+         function toggleJobScores(btn) {
+             const card = btn.closest('.glass-card');
+@@ -11706,7 +12499,44 @@ app.get('/analyzer/job', requireAuth, (c) => {
+             // URL에서 session_id 확인 (AI 추천 메뉴에서 진행중 클릭 시)
+             const urlParams = new URLSearchParams(window.location.search);
+             const urlSessionId = urlParams.get('session_id');
+-            
++            const urlEditMode = urlParams.get('edit_mode') === 'true';
++            const urlSourceRequestId = urlParams.get('source_request_id');
++
++            // Phase 3: 편집 모드 진입
++            if (urlSessionId && urlEditMode && urlSourceRequestId) {
++                console.log('[EditMode] Entering edit mode for session:', urlSessionId);
++                const serverDraft = await loadDraftFromServer(urlSessionId);
++                if (!serverDraft) {
++                    alert('원본 데이터를 불러올 수 없습니다.');
++                    window.location.href = '/user/ai-results';
++                    return;
++                }
++
++                const editSessionId = 'edit-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
++                const restoredStep = applyServerDraft(serverDraft);
++                currentSessionId = editSessionId;
++
++                window.__editMode = true;
++                window.__originalSessionId = urlSessionId;
++                window.__editSessionId = editSessionId;
++                window.__sourceRequestId = parseInt(urlSourceRequestId, 10);
++                window.__editSnapshot = {
++                    careerState: JSON.stringify(careerState),
++                    universalAnswers: JSON.stringify(universalAnswers),
++                    narrativeFacts: JSON.stringify(window.narrativeFacts || {}),
++                    roundAnswers: JSON.stringify(window.roundAnswers || []),
++                };
++
++                setTimeout(() => {
++                    updateStep1Selection();
++                    showEditModeBanner();
++                    if (profileSubStep === 2) goToProfileStep2();
++                }, 200);
++
++                goToStep(1, true);
++                return;
++            }
++
+             if (urlSessionId) {
+                 // 서버에서 해당 session의 draft 불러오기
+                 console.log('[Init] Loading draft from server for session:', urlSessionId);
+@@ -11929,7 +12759,7 @@ app.get('/analyzer/job', requireAuth, (c) => {
+     </script>
+   `
+   
+-  return c.html(renderLayoutWithContext(c, content, 'AI 직업 추천 - Careerwiki'))
++  return c.html(renderLayoutWithContext(c, content, 'AI 직업 추천 - CareerWiki'))
+ })
+ 
+ // AI Major Analyzer v2.0.0 - 5단계 플로우 (직업 추천과 동일 구조)
+@@ -12369,11 +13199,90 @@ app.get('/analyzer/major', requireAuth, (c) => {
+             document.getElementById('loading-submessage').textContent = submessage;
+             overlay.classList.remove('hidden');
+         }
+-        
++
+         function hideLoading() {
+             document.getElementById('loading-overlay').classList.add('hidden');
+         }
+-        
++
++        // ============================================
++        // 편집 모드 유틸리티 (Major)
++        // ============================================
++        function showEditModeBanner() {
++            if (!window.__editMode) return;
++            const banner = document.createElement('div');
++            banner.id = 'edit-mode-banner';
++            banner.className = 'mb-4 p-3 rounded-xl border';
++            banner.style.cssText = 'border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.08);';
++            banner.innerHTML = \`
++              <div class="flex items-center justify-between flex-wrap gap-2">
++                <div class="flex items-center gap-2">
++                  <i class="fas fa-edit text-amber-400"></i>
++                  <span class="text-amber-300 text-sm font-medium">수정 모드</span>
++                  <span class="text-amber-200/70 text-xs">변경사항이 있으면 이후 단계가 초기화됩니다</span>
++                </div>
++                <button onclick="cancelEditMode()" class="px-3 py-1 text-xs rounded-lg border border-wiki-border text-wiki-muted hover:text-white transition">취소</button>
++              </div>\`;
++            const container = document.querySelector('.max-w-6xl') || document.querySelector('main');
++            if (container) container.insertBefore(banner, container.firstChild);
++        }
++
++        async function cancelEditMode() {
++            if (!window.__editMode) return;
++            try {
++                await fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
++                    method: 'DELETE', credentials: 'same-origin'
++                });
++            } catch (e) {}
++            window.location.href = '/user/ai-results/' + window.__sourceRequestId;
++        }
++
++        function getEditModePayloadExtras() {
++            if (!window.__editMode) return {};
++            return {
++                session_id: window.__originalSessionId,
++                edit_mode: true,
++                edit_session_id: window.__editSessionId,
++                source_request_id: window.__sourceRequestId,
++                version_note: '입력 수정',
++            };
++        }
++
++        function detectStep1Changes() {
++            if (!window.__editMode) return false;
++            return JSON.stringify(careerState) !== window.__editSnapshot.careerState;
++        }
++
++        function detectStep2Changes() {
++            if (!window.__editMode) return false;
++            return JSON.stringify(universalAnswers) !== window.__editSnapshot.universalAnswers;
++        }
++
++        function detectStep3Changes() {
++            if (!window.__editMode) return false;
++            return JSON.stringify(transitionSignalAnswers) !== window.__editSnapshot.transitionSignalAnswers;
++        }
++
++        function cascadeResetFromStep1() {
++            console.log('[EditMode Major] Step 1 변경 → Step 2+ 초기화');
++            universalAnswers = {};
++            transitionSignalAnswers = {};
++            followupAnswers = {};
++            window.__editSnapshot.universalAnswers = '{}';
++            window.__editSnapshot.transitionSignalAnswers = '{}';
++        }
++
++        function cascadeResetFromStep2() {
++            console.log('[EditMode Major] Step 2 변경 → Step 3+ 초기화');
++            transitionSignalAnswers = {};
++            followupAnswers = {};
++            window.__editSnapshot.transitionSignalAnswers = '{}';
++        }
++
++        function cascadeResetFromStep3() {
++            console.log('[EditMode Major] Step 3 변경 → followup 초기화');
++            followupAnswers = {};
++        }
++
+         // ============================================
+         // 이력서 업로드 처리 (전공 추천)
+         // ============================================
+@@ -13043,9 +13952,14 @@ app.get('/analyzer/major', requireAuth, (c) => {
+         }
+         
+         function goToStep2WithLoading() {
++            // 편집 모드: Step 1 변경 감지 → 이후 단계 초기화
++            if (window.__editMode && detectStep1Changes()) {
++                cascadeResetFromStep1();
++            }
++
+             // 서버에 자동 저장 (백그라운드)
+             saveDraftToServer();
+-            
++
+             showLoading('질문 구성 중...', '상황에 맞는 질문을 준비하고 있어요');
+             setTimeout(() => {
+                 renderUniversalQuestions();
+@@ -13053,7 +13967,7 @@ app.get('/analyzer/major', requireAuth, (c) => {
+                 hideLoading();
+             }, 600);
+         }
+-        
++
+         // 전이 신호 렌더링 (고급 UI)
+         function renderTransitionSignalForm() {
+             const container = document.getElementById('transition-signal-form');
+@@ -13242,10 +14156,15 @@ app.get('/analyzer/major', requireAuth, (c) => {
+         
+         async function submitUniversalAndGoToTransition() {
+             collectUniversalAnswers();
+-            
++
++            // 편집 모드: Step 2 변경 감지 → 이후 단계 초기화
++            if (window.__editMode && detectStep2Changes()) {
++                cascadeResetFromStep2();
++            }
++
+             // 서버에 자동 저장 (백그라운드)
+             saveDraftToServer();
+-            
++
+             showLoading('답변 저장 중...', '전이 신호 질문을 준비하고 있어요');
+             setTimeout(() => {
+                 try {
+@@ -13260,9 +14179,14 @@ app.get('/analyzer/major', requireAuth, (c) => {
+         }
+         
+         async function submitTransitionAndContinue() {
++            // 편집 모드: Step 3 변경 감지 → followup 초기화
++            if (window.__editMode && detectStep3Changes()) {
++                cascadeResetFromStep3();
++            }
++
+             // 서버에 자동 저장 (백그라운드)
+             saveDraftToServer();
+-            
++
+             showLoading('분석 중...', '맞춤 심층 질문을 구성하고 있어요');
+             
+             try {
+@@ -13279,16 +14203,25 @@ app.get('/analyzer/major', requireAuth, (c) => {
+                         transition_signal: transitionSignalAnswers,
+                         universal_answers: universalAnswers,
+                         debug: DEBUG_MODE,
++                        ...getEditModePayloadExtras(),
+                     })
+                 });
+-                
++
+                 const data = await response.json();
+                 hideLoading();
+-                
++
+                 if (data.result?.followup_questions?.length > 0) {
+                     renderFollowupQuestions(data.result.followup_questions);
+                     goToStep(4);
+                 } else {
++                    // 편집 모드: 분석 완료 → 결과 페이지로 이동
++                    if (window.__editMode && data.request_id) {
++                        fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
++                            method: 'DELETE', credentials: 'same-origin'
++                        }).catch(() => {});
++                        window.location.href = '/user/ai-results/' + data.request_id;
++                        return;
++                    }
+                     currentRequestId = data.request_id;
+                     displayResults(data);
+                     saveDraftAsCompletedMajor();  // 결과 저장
+@@ -13601,11 +14534,22 @@ app.get('/analyzer/major', requireAuth, (c) => {
+                         universal_answers: universalAnswers,
+                         followup_answers: followupAnswers,
+                         debug: DEBUG_MODE,
++                        ...getEditModePayloadExtras(),
+                     })
+                 });
+-                
++
+                 const data = await response.json();
+                 hideLoading();
++
++                // 편집 모드: 분석 완료 → 결과 페이지로 이동
++                if (window.__editMode && data.request_id) {
++                    fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
++                        method: 'DELETE', credentials: 'same-origin'
++                    }).catch(() => {});
++                    window.location.href = '/user/ai-results/' + data.request_id;
++                    return;
++                }
++
+                 currentRequestId = data.request_id;
+                 displayResults(data);
+                 saveDraftAsCompletedMajor();  // 결과 저장
+@@ -14032,10 +14976,64 @@ app.get('/analyzer/major', requireAuth, (c) => {
+         
+         document.addEventListener('DOMContentLoaded', async () => {
+             renderCareerStateForm();
+-            
++
+             const urlParams = new URLSearchParams(window.location.search);
+             const urlSessionId = urlParams.get('session_id');
+-            
++
++            // ============================================
++            // 편집 모드 초기화 (Major)
++            // ============================================
++            const urlEditMode = urlParams.get('edit_mode') === 'true';
++            const urlSourceRequestId = urlParams.get('source_request_id');
++
++            if (urlSessionId && urlEditMode && urlSourceRequestId) {
++                const serverDraft = await loadDraftFromServer(urlSessionId);
++                if (!serverDraft) {
++                    alert('원본 데이터를 불러올 수 없습니다.');
++                    window.location.href = '/user/ai-results';
++                    return;
++                }
++
++                const editSessionId = 'edit-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
++
++                // Draft 적용
++                currentSessionId = editSessionId;
++                if (serverDraft.step1_answers?.careerState || serverDraft.career_state) {
++                    Object.assign(careerState, serverDraft.step1_answers?.careerState || serverDraft.career_state);
++                }
++                if (serverDraft.step2_answers) {
++                    universalAnswers = serverDraft.step2_answers;
++                }
++                if (serverDraft.step3_answers) {
++                    transitionSignalAnswers = serverDraft.step3_answers;
++                }
++                if (serverDraft.step1_answers?.stage) {
++                    selectedStage = serverDraft.step1_answers.stage;
++                }
++
++                // 편집 모드 전역 상태
++                window.__editMode = true;
++                window.__originalSessionId = urlSessionId;
++                window.__editSessionId = editSessionId;
++                window.__sourceRequestId = parseInt(urlSourceRequestId, 10);
++
++                // 변경 감지용 스냅샷
++                window.__editSnapshot = {
++                    careerState: JSON.stringify(careerState),
++                    universalAnswers: JSON.stringify(universalAnswers),
++                    transitionSignalAnswers: JSON.stringify(transitionSignalAnswers),
++                };
++
++                // UI 복원 + 배너
++                setTimeout(() => {
++                    updateStep1Selection();
++                    showEditModeBanner();
++                }, 200);
++
++                goToStep(1);
++                return;
++            }
++
+             if (urlSessionId) {
+                 const serverDraft = await loadDraftFromServer(urlSessionId);
+                 if (serverDraft) {
+@@ -14085,7 +15083,7 @@ app.get('/analyzer/major', requireAuth, (c) => {
+     </script>
+   `
+   
+-  return c.html(renderLayoutWithContext(c, content, 'AI 전공 추천 - Careerwiki'))
++  return c.html(renderLayoutWithContext(c, content, 'AI 전공 추천 - CareerWiki'))
+ })
+ 
+ // Community Guidelines Help Page
+@@ -14186,7 +15184,7 @@ app.get('/help/community-guidelines', (c) => {
+   return c.html(
+     renderLayoutWithContext(c,
+       content,
+-      '커뮤니티 이용 정책 - Careerwiki',
++      '커뮤니티 이용 정책 - CareerWiki',
+       'CareerWiki 댓글 커뮤니티 운영 원칙과 BEST/신고/공감 정책 안내',
+       false,
+       { canonical: canonicalUrl, ogUrl: canonicalUrl }
+@@ -14819,17 +15817,13 @@ app.get('/job', async (c) => {
+   const isLoggedIn = !!user
+ 
+   try {
+-    // Direct D1 query - no KV cache
+-    const result = await searchUnifiedJobs(
+-      {
+-        keyword,
+-        page,
+-        perPage,
+-        includeSources,
+-        sort
+-      },
+-      c.env
+-    )
++    // RAG 검색 (키워드 + 기본 정렬) 또는 D1 직접 검색
++    const result = keyword && sort === 'relevance'
++      ? await ragSearchJobs(c.env, keyword, { page, perPage })
++      : await searchUnifiedJobs(
++          { keyword, page, perPage, includeSources, sort },
++          c.env
++        )
+ 
+     const items = result.items
+     const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+@@ -14840,7 +15834,8 @@ app.get('/job', async (c) => {
+         page,
+         perPage,
+         count: items.length,
+-        total: totalCount
++        total: totalCount,
++        rag: !!(keyword && sort === 'relevance')
+       })
+     } catch (_) {}
+ 
+@@ -14879,7 +15874,7 @@ app.get('/job', async (c) => {
+       ? `<script type="application/ld+json">${JSON.stringify({
+           '@context': 'https://schema.org',
+           '@type': 'ItemList',
+-          name: keyword ? `${keyword} 관련 직업 목록` : 'Careerwiki 직업 목록',
++          name: keyword ? `${keyword} 관련 직업 목록` : 'CareerWiki 직업 목록',
+           numberOfItems: jsonLdItems.length,
+           itemListOrder: 'https://schema.org/ItemListOrderAscending',
+           itemListElement: jsonLdItems
+@@ -15179,7 +16174,7 @@ app.get('/job', async (c) => {
+     
+     const hydratedContent = `${content}${hydrationScript}${sortScript}`
+ 
+-    const pageTitle = keyword ? `${keyword} 직업 검색 결과 - Careerwiki` : '직업위키 - Careerwiki'
++    const pageTitle = keyword ? `${keyword} 직업 검색 결과 - CareerWiki` : '직업위키 - CareerWiki'
+     const description = createMetaDescription(
+       keyword ? `${keyword} 관련 직업 정보를 확인하세요.` : undefined,
+       items[0]?.display?.summary,
+@@ -15283,33 +16278,41 @@ app.get('/major', async (c) => {
+ 
+   try {
+     const forceRefresh = c.req.query('refresh') === '1'
+-    const { value: result, cacheState } = await withKvCache(
+-      c.env.KV,
+-      buildListCacheKey('major', { keyword, page, perPage, includeSources, sort }),
+-      async () =>
+-        searchUnifiedMajors(
+-          {
+-            keyword,
++    const useRag = !!(keyword && sort === 'relevance')
++
++    let result: UnifiedSearchResult<UnifiedMajorSummaryEntry>
++    let cacheState: CacheState | undefined
++
++    if (useRag) {
++      // RAG 검색 (벡터 + LIKE 폴백) - 자체 KV 임베딩 캐시 사용
++      result = await ragSearchMajors(c.env, keyword, { page, perPage })
++      cacheState = undefined
++    } else {
++      // 기존 LIKE 검색 + KV 결과 캐시
++      const cached = await withKvCache(
++        c.env.KV,
++        buildListCacheKey('major', { keyword, page, perPage, includeSources, sort }),
++        async () =>
++          searchUnifiedMajors(
++            { keyword, page, perPage, includeSources, sort },
++            c.env
++          ),
++        {
++          staleSeconds: LIST_CACHE_STALE_SECONDS,
++          maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS,
++          metadata: {
++            type: 'major-list',
++            keyword: keyword || null,
+             page,
+             perPage,
+-            includeSources,
+-            sort
++            includeSources: includeSources ?? []
+           },
+-          c.env
+-        ),
+-      {
+-        staleSeconds: LIST_CACHE_STALE_SECONDS,
+-        maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS,
+-        metadata: {
+-          type: 'major-list',
+-          keyword: keyword || null,
+-          page,
+-          perPage,
+-          includeSources: includeSources ?? []
+-        },
+-        forceRefresh
+-      }
+-    )
++          forceRefresh
++        }
++      )
++      result = cached.value
++      cacheState = cached.cacheState
++    }
+ 
+     const items = result.items
+     const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+@@ -15320,7 +16323,8 @@ app.get('/major', async (c) => {
+         page,
+         perPage,
+         count: items.length,
+-        total: totalCount
++        total: totalCount,
++        rag: useRag
+       })
+     } catch (_) {}
+ 
+@@ -15381,7 +16385,7 @@ app.get('/major', async (c) => {
+       ? `<script type="application/ld+json">${JSON.stringify({
+           '@context': 'https://schema.org',
+           '@type': 'ItemList',
+-          name: keyword ? `${keyword} 관련 전공 목록` : 'Careerwiki 전공 목록',
++          name: keyword ? `${keyword} 관련 전공 목록` : 'CareerWiki 전공 목록',
+           numberOfItems: jsonLdItems.length,
+           itemListOrder: 'https://schema.org/ItemListOrderAscending',
+           itemListElement: jsonLdItems
+@@ -15687,7 +16691,7 @@ app.get('/major', async (c) => {
+     
+     const hydratedContent = `${content}${hydrationScript}${sortScript}`
+ 
+-    const pageTitle = keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki'
++    const pageTitle = keyword ? `${keyword} 전공 검색 결과 - CareerWiki` : '전공위키 - CareerWiki'
+     const description = createMetaDescription(
+       keyword ? `${keyword} 관련 전공 정보를 확인하세요.` : undefined,
+       items[0]?.display?.summary,
+@@ -15862,7 +16866,7 @@ app.get('/major', async (c) => {
+         return c.html(
+           renderLayoutWithContext(c,
+             `${content}${hydrationScript}`,
+-            keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki',
++            keyword ? `${keyword} 전공 검색 결과 - CareerWiki` : '전공위키 - CareerWiki',
+             keyword ? `${keyword} 관련 전공 정보를 확인하세요.` : '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.'
+           )
+         )
+@@ -15892,7 +16896,7 @@ app.get('/major', async (c) => {
+     return c.html(
+       renderLayoutWithContext(c,
+         fallbackHtml,
+-        '전공 목록 오류 - Careerwiki',
++        '전공 목록 오류 - CareerWiki',
+         '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+       )
+     )
+@@ -16362,7 +17366,7 @@ app.get('/howto', async (c) => {
+     </div>
+   `
+ 
+-  const title = keyword ? `"${keyword}" - HowTo 가이드 검색 - Careerwiki` : 'HowTo 가이드 - Careerwiki'
++  const title = keyword ? `"${keyword}" - HowTo 가이드 검색 - CareerWiki` : 'HowTo 가이드 - CareerWiki'
+   const description = keyword 
+     ? `"${keyword}" 검색 결과 - ${totalCount}개의 HowTo 가이드를 찾았습니다.`
+     : '실전 경험에서 나온 진짜 노하우를 공유하는 HowTo 가이드 모음입니다.'
+@@ -16443,8 +17447,8 @@ app.get('/login', (c) => {
+   return c.html(
+     renderLayoutWithContext(c,
+       content,
+-      '로그인 - Careerwiki',
+-      'Careerwiki에 로그인하세요'
++      '로그인 - CareerWiki',
++      'CareerWiki에 로그인하세요'
+     )
+   )
+ })
+@@ -16567,7 +17571,7 @@ app.get('/terms', (c) => {
+   `
+   
+   return c.html(
+-    renderLayoutWithContext(c, content, '이용약관 - Careerwiki', 'Careerwiki 서비스 이용약관')
++    renderLayoutWithContext(c, content, '이용약관 - CareerWiki', 'CareerWiki 서비스 이용약관')
+   )
+ })
+ 
+@@ -16749,7 +17753,7 @@ app.get('/privacy', (c) => {
+   `
+   
+   return c.html(
+-    renderLayoutWithContext(c, content, '개인정보처리방침 - Careerwiki', 'Careerwiki 개인정보처리방침')
++    renderLayoutWithContext(c, content, '개인정보처리방침 - CareerWiki', 'CareerWiki 개인정보처리방침')
+   )
+ })
+ 
+@@ -16981,7 +17985,7 @@ app.get('/user/drafts', requireAuth, async (c) => {
+   })
+   
+   return c.html(
+-    renderLayoutWithContext(c, pageContent, '작성 가이드 - 마이페이지 - Careerwiki', '내 초안과 가이드를 관리합니다')
++    renderLayoutWithContext(c, pageContent, '작성 가이드 - 마이페이지 - CareerWiki', '내 초안과 가이드를 관리합니다')
+   )
+ })
+ 
+@@ -18081,7 +19085,7 @@ app.get('/howto/write', requireAuth, async (c) => {
+   `
+   
+   return c.html(
+-    renderLayoutWithContext(c, content, 'HowTo 가이드 작성 - Careerwiki', '새 가이드를 작성합니다')
++    renderLayoutWithContext(c, content, 'HowTo 가이드 작성 - CareerWiki', '새 가이드를 작성합니다')
+   )
+ })
+ 
+@@ -18114,7 +19118,7 @@ app.get('/howto/draft/:id', requireAuth, async (c) => {
+         </a>
+       </div>
+     `
+-    return c.html(renderLayoutWithContext(c, content, '초안 없음 - Careerwiki', ''))
++    return c.html(renderLayoutWithContext(c, content, '초안 없음 - CareerWiki', ''))
+   }
+   
+   const draft = draftResult.draft!
+@@ -19598,7 +20602,7 @@ app.get('/howto/draft/:id', requireAuth, async (c) => {
+   return c.html(
+     renderLayoutWithContext(c,
+       content,
+-      'HowTo 작성 - Careerwiki',
++      'HowTo 작성 - CareerWiki',
+       '새 HowTo 가이드를 작성합니다',
+       false,
+       { extraHead: '<link rel="stylesheet" href="/static/howto-editor.css">' }
+@@ -19654,7 +20658,7 @@ app.get('/howto/:slug/edit', requireAuth, async (c) => {
+         </div>
+       `
+       return c.html(
+-        renderLayoutWithContext(c, content, '편집 권한 없음 - Careerwiki', '편집 권한이 없습니다')
++        renderLayoutWithContext(c, content, '편집 권한 없음 - CareerWiki', '편집 권한이 없습니다')
+       )
+     }
+     
+@@ -19721,7 +20725,7 @@ app.get('/howto/:slug/edit', requireAuth, async (c) => {
+           </a>
+         </div>
+       `
+-      return c.html(renderLayoutWithContext(c, content, '편집 실패 - Careerwiki', ''))
++      return c.html(renderLayoutWithContext(c, content, '편집 실패 - CareerWiki', ''))
+     }
+     
+     // draft에 원본 페이지 ID 기록
+@@ -19794,7 +20798,7 @@ app.get('/howto/:slug/edit', requireAuth, async (c) => {
+       </a>
+     </div>
+   `
+-  return c.html(renderLayoutWithContext(c, content, '편집 불가 - Careerwiki', ''))
++  return c.html(renderLayoutWithContext(c, content, '편집 불가 - CareerWiki', ''))
+ })
+ 
+ // HowTo 삭제 API (작성자 또는 관리자만)
+@@ -19845,7 +20849,7 @@ app.get('/howto/:slug', async (c) => {
+           </a>
+         </div>
+       `
+-      return c.html(renderLayoutWithContext(c, notFoundContent, '페이지를 찾을 수 없습니다 - Careerwiki', ''), 404)
++      return c.html(renderLayoutWithContext(c, notFoundContent, '페이지를 찾을 수 없습니다 - CareerWiki', ''), 404)
+     }
+     
+     // 조회수 증가 (비동기, 에러 무시)
+@@ -19894,7 +20898,7 @@ app.get('/howto/:slug', async (c) => {
+     })
+     
+     return c.html(
+-      renderLayoutWithContext(c, content, `${dbResult.title} - Careerwiki`, dbResult.summary as string || '')
++      renderLayoutWithContext(c, content, `${dbResult.title} - CareerWiki`, dbResult.summary as string || '')
+     )
+   }
+   
+@@ -19916,7 +20920,7 @@ app.get('/howto/:slug', async (c) => {
+     return c.html(
+       renderLayoutWithContext(c,
+         fallbackHtml,
+-        'HowTo 정보 없음 - Careerwiki',
++        'HowTo 정보 없음 - CareerWiki',
+         '요청한 HowTo 가이드를 찾을 수 없습니다.'
+       )
+     )
+@@ -19958,29 +20962,31 @@ app.get('/search', async (c) => {
+ 
+   if (keyword && c.env?.DB) {
+     try {
+-      // 직업 검색
+-      console.log('[/search] 직업 검색 시작:', keyword)
+-      const jobSearchResult = await searchUnifiedJobs(
+-        { keyword, page: 1, perPage: 5 },
+-        c.env
+-      )
+-      console.log('[/search] 직업 검색 결과:', jobSearchResult.items.length, '개')
+-      
+-      jobCardsHtml = jobSearchResult.items
++      // RAG 통합 검색 (임베딩 1회, Vectorize 1회, D1 병렬 보강)
++      console.log('[/search] RAG 통합 검색 시작:', keyword)
++      const ragResult = await ragSearchUnified(c.env, keyword, {
++        jobsLimit: 5,
++        majorsLimit: 5,
++        howtosLimit: 5,
++      })
++      console.log('[/search] RAG 결과:', ragResult.jobs.items.length, '직업,', ragResult.majors.items.length, '전공,', ragResult.howtos.length, '가이드')
++
++      jobCardsHtml = ragResult.jobs.items
+         .slice(0, 5)
+         .map((entry) => renderJobCard(entry))
+         .join('')
+ 
+-      // 전공 검색
+-      const majorSearchResult = await searchUnifiedMajors(
+-        { keyword, page: 1, perPage: 5 },
+-        c.env
+-      )
+-      
+-      majorCardsHtml = majorSearchResult.items
++      majorCardsHtml = ragResult.majors.items
+         .slice(0, 5)
+         .map((entry) => renderMajorCard(entry))
+         .join('')
++
++      // RAG howto 결과를 기존 howtoResults 형식으로 변환
++      howtoResults = ragResult.howtos.map(h => ({
++        href: `/howto/${h.slug}`,
++        title: h.title,
++        summary: h.summary,
++      }))
+     } catch (error) {
+       console.error('검색 오류:', error)
+     }
+@@ -20012,7 +21018,8 @@ app.get('/search', async (c) => {
+     return [...new Set(tokens)].filter(t => t !== normalizedKw && t.length >= 2)
+   }
+   
+-  if (keyword && c.env?.DB) {
++  if (keyword && c.env?.DB && howtoResults.length === 0) {
++    // RAG 결과가 없을 때만 LIKE 폴백으로 HowTo 검색
+     try {
+       const db = c.env.DB as any
+       const howtoTokens = tokenizeHowtoKeyword(keyword)
+@@ -20242,10 +21249,10 @@ app.get('/search', async (c) => {
+     </div>
+   `
+ 
+-  const title = keyword ? `${keyword} - Careerwiki 검색` : '검색 - Careerwiki'
++  const title = keyword ? `${keyword} - CareerWiki 검색` : '검색 - CareerWiki'
+   const description = keyword
+-    ? createMetaDescription(`"${keyword}"와 관련된 Careerwiki 직업, 전공 정보를 확인하세요.`)
+-    : 'Careerwiki에서 직업, 전공, HowTo 정보를 검색해보세요.'
++    ? createMetaDescription(`"${keyword}"와 관련된 CareerWiki 직업, 전공 정보를 확인하세요.`)
++    : 'CareerWiki에서 직업, 전공, HowTo 정보를 검색해보세요.'
+ 
+   return c.html(renderLayoutWithContext(c, content, escapeHtml(title), escapeHtml(description)))
+ })
+@@ -20382,7 +21389,7 @@ app.get('/job/:slug', async (c) => {
+           ctaLabel: '직업 목록으로'
+         })
+         c.status(404)
+-        return c.html(renderLayoutWithContext(c, fallbackHtml, '소스 데이터 없음 - Careerwiki'))
++        return c.html(renderLayoutWithContext(c, fallbackHtml, '소스 데이터 없음 - CareerWiki'))
+       }
+ 
+       // 3. 템플릿 디자인 페이지 렌더링
+@@ -20399,7 +21406,7 @@ app.get('/job/:slug', async (c) => {
+         description: '일시적인 오류가 발생했습니다.',
+         ctaHref: '/job',
+         ctaLabel: '직업위키로 돌아가기'
+-      }), '오류 - Careerwiki'))
++      }), '오류 - CareerWiki'))
+     }
+   }
+   
+@@ -20494,7 +21501,7 @@ app.get('/job/:slug', async (c) => {
+         const canonicalSlug = composeDetailSlug('job', profile.name, profile.id ?? resolvedId)
+         const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
+         const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+-        const title = `${profile.name} 직업 정보 - Careerwiki`
++        const title = `${profile.name} 직업 정보 - CareerWiki`
+         const description = createMetaDescription(
+           profile.summary,
+           profile.duties,
+@@ -20502,11 +21509,10 @@ app.get('/job/:slug', async (c) => {
+           profile.salary
+         )
+         const extraHead = [
+-          '<meta property="og:type" content="article">',
+           '<meta property="article:modified_time" content="' + new Date().toISOString() + '">',
+           createJobJsonLd(profile, canonicalUrl)
+         ].filter(Boolean).join('\n')
+-        
++
+         const content = renderUnifiedJobDetail({
+           profile,
+           partials: result.partials,
+@@ -20515,7 +21521,7 @@ app.get('/job/:slug', async (c) => {
+           existingJobSlugs: result.existingJobSlugs
+         })
+         mark?.('render-done')
+-        
++
+         return renderLayoutWithContext(c,
+           content,
+           escapeHtml(title),
+@@ -20524,6 +21530,7 @@ app.get('/job/:slug', async (c) => {
+           {
+             canonical: canonicalUrl,
+             ogUrl: canonicalUrl,
++            ogType: 'article',
+             extraHead
+           }
+         )
+@@ -20533,7 +21540,7 @@ app.get('/job/:slug', async (c) => {
+       extractMetadata: (result) => {
+         const profile = result.profile!  // Non-null assertion (we already checked in fetchData)
+         return {
+-          title: `${profile.name} 직업 정보 - Careerwiki`,
++          title: `${profile.name} 직업 정보 - CareerWiki`,
+           description: createMetaDescription(
+             profile.summary,
+             profile.duties,
+@@ -20586,7 +21593,7 @@ app.get('/job/:slug', async (c) => {
+     return c.html(
+       renderLayoutWithContext(c,
+         fallbackHtml,
+-        '직업 정보 로드 오류 - Careerwiki',
++        '직업 정보 로드 오류 - CareerWiki',
+         '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+       )
+     )
+@@ -20678,7 +21685,7 @@ app.get('/major/:slug', async (c) => {
+           ctaLabel: '전공 목록으로'
+         })
+         c.status(404)
+-        return c.html(renderLayoutWithContext(c, fallbackHtml, '소스 데이터 없음 - Careerwiki'))
++        return c.html(renderLayoutWithContext(c, fallbackHtml, '소스 데이터 없음 - CareerWiki'))
+       }
+ 
+       // 3. 필드 비교 (전공은 아직 미구현)
+@@ -20690,7 +21697,7 @@ app.get('/major/:slug', async (c) => {
+         ctaHref: '/majors',
+         ctaLabel: '전공 목록으로'
+       })
+-      return c.html(renderLayoutWithContext(c, fallbackHtml, '준비 중 - Careerwiki'))
++      return c.html(renderLayoutWithContext(c, fallbackHtml, '준비 중 - CareerWiki'))
+     } catch (error) {
+       console.error('Debug mode error:', error)
+       c.status(500)
+@@ -20701,7 +21708,7 @@ app.get('/major/:slug', async (c) => {
+         description: error instanceof Error ? error.message : '일시적인 오류가 발생했습니다.',
+         ctaHref: '/major',
+         ctaLabel: '전공 목록으로'
+-      }), '오류 - Careerwiki'))
++      }), '오류 - CareerWiki'))
+     }
+   }
+   
+@@ -20833,7 +21840,7 @@ app.get('/major/:slug', async (c) => {
+         const canonicalSlug = composeDetailSlug('major', profile.name, profile.id ?? resolvedId)
+         const canonicalPath = `/major/${encodeURIComponent(canonicalSlug)}`
+         const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+-        const title = `${profile.name} 전공 정보 - Careerwiki`
++        const title = `${profile.name} 전공 정보 - CareerWiki`
+         const description = createMetaDescription(
+           profile.summary,
+           profile.employmentRate,
+@@ -20841,7 +21848,6 @@ app.get('/major/:slug', async (c) => {
+           profile.jobProspect
+         )
+         const extraHead = [
+-          '<meta property="og:type" content="article">',
+           '<meta property="article:modified_time" content="' + new Date().toISOString() + '">',
+           createMajorJsonLd(profile, canonicalUrl)
+         ].filter(Boolean).join('\n')
+@@ -20863,6 +21869,7 @@ app.get('/major/:slug', async (c) => {
+           {
+             canonical: canonicalUrl,
+             ogUrl: canonicalUrl,
++            ogType: 'article',
+             extraHead
+           }
+         )
+@@ -20872,7 +21879,7 @@ app.get('/major/:slug', async (c) => {
+       extractMetadata: (result) => {
+         const profile = result.profile!  // Non-null assertion (we already checked in fetchData)
+         return {
+-          title: `${profile.name} 전공 정보 - Careerwiki`,
++          title: `${profile.name} 전공 정보 - CareerWiki`,
+           description: createMetaDescription(
+             profile.summary,
+             profile.employmentRate,
+@@ -20925,7 +21932,7 @@ app.get('/major/:slug', async (c) => {
+     return c.html(
+       renderLayoutWithContext(c,
+         fallbackHtml,
+-        '전공 정보 로드 오류 - Careerwiki',
++        '전공 정보 로드 오류 - CareerWiki',
+         '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+       )
+     )
+@@ -21046,7 +22053,7 @@ const createMetaDescription = (...candidates: Array<string | undefined | null>):
+     }
+     return `${normalized.slice(0, 157)}…`
+   }
+-  return 'Careerwiki는 고용24와 커리어넷 데이터를 통합해 제공하는 진로 정보 플랫폼입니다.'
++  return 'CareerWiki는 고용24와 커리어넷 데이터를 통합해 제공하는 진로 정보 플랫폼입니다.'
+ }
+ 
+ // ============================================================================
+@@ -21779,7 +22786,7 @@ function renderSampleJobDetailPageWithRawData(
+   const canonicalSlug = sample.meta?.canonicalSlug ?? composeDetailSlug('job', sample.profile.name, sample.profile.id)
+   const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
+   const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+-  const title = sample.meta?.title ?? `${sample.profile.name} 직업 정보 - Careerwiki`
++  const title = sample.meta?.title ?? `${sample.profile.name} 직업 정보 - CareerWiki`
+   const description = createMetaDescription(
+     sample.meta?.description,
+     sample.profile.summary,
+@@ -21787,7 +22794,6 @@ function renderSampleJobDetailPageWithRawData(
+     sample.snippet
+   )
+   const extraHead = [
+-    '<meta property="og:type" content="article">',
+     createJobJsonLd(sample.profile, canonicalUrl),
+     createKeywordsMetaTag(sample.meta?.keywords),
+     createArticleModifiedMeta(sample.meta?.updatedAt)
+@@ -21809,6 +22815,7 @@ function renderSampleJobDetailPageWithRawData(
+       {
+         canonical: canonicalUrl,
+         ogUrl: canonicalUrl,
++        ogType: 'article',
+         extraHead
+       }
+     )
+@@ -21822,7 +22829,7 @@ function renderSampleMajorDetailPage(
+   const canonicalSlug = sample.meta?.canonicalSlug ?? composeDetailSlug('major', sample.profile.name, sample.profile.id)
+   const canonicalPath = `/major/${encodeURIComponent(canonicalSlug)}`
+   const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+-  const title = sample.meta?.title ?? `${sample.profile.name} 전공 정보 - Careerwiki`
++  const title = sample.meta?.title ?? `${sample.profile.name} 전공 정보 - CareerWiki`
+   const description = createMetaDescription(
+     sample.meta?.description,
+     sample.profile.summary,
+@@ -21830,7 +22837,6 @@ function renderSampleMajorDetailPage(
+     sample.snippet
+   )
+   const extraHead = [
+-    '<meta property="og:type" content="article">',
+     createMajorJsonLd(sample.profile, canonicalUrl),
+     createKeywordsMetaTag(sample.meta?.keywords),
+     createArticleModifiedMeta(sample.meta?.updatedAt)
+@@ -21851,6 +22857,7 @@ function renderSampleMajorDetailPage(
+       {
+         canonical: canonicalUrl,
+         ogUrl: canonicalUrl,
++        ogType: 'article',
+         extraHead
+       }
+     )
+@@ -21865,14 +22872,13 @@ function renderSampleHowtoDetailPage(
+   const canonicalSlug = sample.meta?.canonicalSlug ?? sample.slug
+   const canonicalPath = `/howto/${encodeURIComponent(canonicalSlug)}`
+   const canonicalUrl = buildCanonicalUrl(c.req.url, canonicalPath)
+-  const title = sample.meta?.title ?? `${sample.guide.title} - Careerwiki HowTo`
++  const title = sample.meta?.title ?? `${sample.guide.title} - CareerWiki HowTo`
+   const description = createMetaDescription(
+     sample.meta?.description,
+     sample.guide.summary,
+     sample.snippet
+   )
+   const extraHead = [
+-    '<meta property="og:type" content="article">',
+     createKeywordsMetaTag(sample.meta?.keywords),
+     createArticleModifiedMeta(sample.meta?.updatedAt),
+     createHowtoJsonLd(sample.guide, canonicalUrl)
+@@ -21897,6 +22903,7 @@ function renderSampleHowtoDetailPage(
+       {
+         canonical: canonicalUrl,
+         ogUrl: canonicalUrl,
++        ogType: 'article',
+         extraHead
+       }
+     )
+@@ -23257,13 +24264,8 @@ app.get('/api/majors/search', async (c) => {
+     const sort = c.req.query('sort') || 'relevance'
+     const includeSources = parseSourcesQuery(c.req.query('sources'))
+ 
+-    const result = await searchUnifiedMajors({
+-      keyword: q,
+-      page,
+-      perPage,
+-      sort,
+-      includeSources
+-    }, c.env)
++    // RAG 검색 (벡터 + LIKE 폴백)
++    const result = await ragSearchMajors(c.env, q, { page, perPage })
+ 
+     return c.json({
+       success: true,
+@@ -23402,14 +24404,8 @@ app.get('/api/jobs/search', async (c) => {
+     const sort = c.req.query('sort') || 'relevance'
+     const includeSources = parseSourcesQuery(c.req.query('sources'))
+ 
+-    const result = await searchUnifiedJobs({
+-      keyword: q,
+-      category,
+-      page,
+-      perPage,
+-      sort,
+-      includeSources
+-    }, c.env)
++    // RAG 검색 (벡터 + LIKE 폴백)
++    const result = await ragSearchJobs(c.env, q, { page, perPage })
+ 
+     return c.json({
+       success: true,
+@@ -24409,7 +25405,7 @@ app.get('/majors/:id', async (c) => {
+       })
+       return c.html(renderLayoutWithContext(c,
+         fallbackHtml,
+-        '전공 정보 없음 - Careerwiki',
++        '전공 정보 없음 - CareerWiki',
+         '요청하신 전공 정보를 찾을 수 없습니다.'
+       ), 404)
+     }
+@@ -24460,10 +25456,9 @@ app.get('/majors/:id', async (c) => {
+     
+     // Schema.org JSON-LD 생성
+     const extraHead = [
+-      '<meta property="og:type" content="article">',
+       createMajorJsonLd(profile, canonicalUrl)
+     ].filter(Boolean).join('\n')
+-    
++
+     return c.html(renderLayoutWithContext(c,
+       content,
+       escapeHtml(pageTitle),
+@@ -24472,6 +25467,7 @@ app.get('/majors/:id', async (c) => {
+       {
+         canonical: canonicalUrl,
+         ogUrl: canonicalUrl,
++        ogType: 'article',
+         extraHead
+       }
+     ))
+@@ -24489,7 +25485,7 @@ app.get('/majors/:id', async (c) => {
+     c.status(500)
+     return c.html(renderLayoutWithContext(c,
+       fallbackHtml,
+-      '전공 정보 로드 오류 - Careerwiki',
++      '전공 정보 로드 오류 - CareerWiki',
+       '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+     ))
+   }
+@@ -25404,13 +26400,18 @@ app.get('/user/ai-results', requireAuth, async (c) => {
+     // 진행중인 모든 draft 조회 (완료된 것은 request_id도 함께 조회)
+     // LEFT JOIN으로 ai_analysis_requests와 연결하여 request_id 가져오기
+     const draftResults = await c.env.DB.prepare(`
+-      SELECT 
+-        d.id, d.session_id, d.analysis_type, d.current_step, 
++      SELECT
++        d.id, d.session_id, d.analysis_type, d.current_step,
+         d.step1_answers_json, d.step4_answers_json, d.updated_at,
+-        r.id as request_id
++        latest_req.id as request_id
+       FROM analyzer_drafts d
+-      LEFT JOIN ai_analysis_requests r ON d.session_id = r.session_id AND r.status = 'completed'
+-      WHERE d.user_id = ? 
++      LEFT JOIN (
++        SELECT session_id, MAX(id) as id
++        FROM ai_analysis_requests
++        WHERE status = 'completed'
++        GROUP BY session_id
++      ) latest_req ON d.session_id = latest_req.session_id
++      WHERE d.user_id = ? AND d.session_id NOT LIKE 'edit-%'
+       ORDER BY d.updated_at DESC
+     `).bind(user.id).all<{
+       id: number
+@@ -25435,9 +26436,9 @@ app.get('/user/ai-results', requireAuth, async (c) => {
+     const total = countResult?.total || 0
+     const totalPages = Math.ceil(total / limit)
+     
+-    // 결과 조회
++    // 결과 조회 (버전 정보 포함)
+     const results = await c.env.DB.prepare(`
+-      SELECT 
++      SELECT
+         r.id,
+         r.request_id,
+         r.result_json,
+@@ -25446,7 +26447,10 @@ app.get('/user/ai-results', requireAuth, async (c) => {
+         r.engine_version,
+         CASE WHEN r.premium_report_json IS NOT NULL THEN 1 ELSE 0 END as has_premium_report,
+         req.session_id,
+-        req.analysis_type
++        req.analysis_type,
++        req.version_number,
++        req.version_note,
++        req.parent_request_id
+       FROM ai_analysis_results r
+       JOIN ai_analysis_requests req ON r.request_id = req.id
+       WHERE req.user_id = ?
+@@ -25463,6 +26467,9 @@ app.get('/user/ai-results', requireAuth, async (c) => {
+       has_premium_report: number
+       session_id: string
+       analysis_type: string
++      version_number: number | null
++      version_note: string | null
++      parent_request_id: number | null
+     }>()
+     
+     // 결과 파싱
+@@ -25486,7 +26493,10 @@ app.get('/user/ai-results', requireAuth, async (c) => {
+         confidence_score: r.confidence_score,
+         created_at: r.created_at,
+         engine_version: r.engine_version || 'v2',
+-        has_premium_report: r.has_premium_report === 1
++        has_premium_report: r.has_premium_report === 1,
++        version_number: r.version_number || 1,
++        version_note: r.version_note || null,
++        parent_request_id: r.parent_request_id || null
+       }
+     })
+     
+@@ -25532,14 +26542,14 @@ app.get('/user/ai-results', requireAuth, async (c) => {
+     // 탭 구조 컨텐츠
+     const tabbedContent = `
+       <!-- 메인 탭 네비게이션 -->
+-      <div class="flex items-center gap-4 mb-6 border-b border-wiki-border/40 pb-4">
+-        <a href="/user/ai-results?tab=results" 
+-           class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${activeTab === 'results' ? 'bg-wiki-primary text-white' : 'text-wiki-muted hover:text-white hover:bg-wiki-card/50'}">
++      <div class="flex items-center gap-2 sm:gap-4 mb-6 border-b border-wiki-border/40 pb-4">
++        <a href="/user/ai-results?tab=results"
++           class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition ${activeTab === 'results' ? 'bg-wiki-primary text-white' : 'text-wiki-muted hover:text-white hover:bg-wiki-card/50'}">
+           <i class="fas fa-robot"></i>
+           <span>AI 추천</span>
+         </a>
+-        <a href="/user/ai-results?tab=profile" 
+-           class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${activeTab === 'profile' ? 'bg-wiki-primary text-white' : 'text-wiki-muted hover:text-white hover:bg-wiki-card/50'}">
++        <a href="/user/ai-results?tab=profile"
++           class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition ${activeTab === 'profile' ? 'bg-wiki-primary text-white' : 'text-wiki-muted hover:text-white hover:bg-wiki-card/50'}">
+           <i class="fas fa-user-circle"></i>
+           <span>내 프로필</span>
+         </a>
+@@ -25656,7 +26666,7 @@ app.get('/user/ai-results', requireAuth, async (c) => {
+       role: user.role
+     })
+     
+-    return c.html(renderLayoutWithContext(c, pageContent, 'AI 추천 - 마이페이지 - Careerwiki'))
++    return c.html(renderLayoutWithContext(c, pageContent, 'AI 추천 - 마이페이지 - CareerWiki'))
+     
+   } catch (error) {
+     console.error('[User AI Results] Error:', error)
+@@ -25668,7 +26678,7 @@ app.get('/user/ai-results', requireAuth, async (c) => {
+       pictureUrl: user.custom_picture_url || user.picture_url || null,
+       role: user.role
+     })
+-    return c.html(renderLayoutWithContext(c, errorContent, 'AI 추천 - 마이페이지 - Careerwiki'))
++    return c.html(renderLayoutWithContext(c, errorContent, 'AI 추천 - 마이페이지 - CareerWiki'))
+   }
+ })
+ 
+@@ -25693,7 +26703,10 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+         r.created_at,
+         r.engine_version,
+         req.session_id,
+-        req.analysis_type
++        req.analysis_type,
++        req.version_number,
++        req.version_note,
++        req.parent_request_id
+       FROM ai_analysis_results r
+       JOIN ai_analysis_requests req ON r.request_id = req.id
+       LEFT JOIN analyzer_drafts d ON req.session_id = d.session_id
+@@ -25708,6 +26721,9 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+       engine_version: string | null
+       session_id: string
+       analysis_type: string
++      version_number: number | null
++      version_note: string | null
++      parent_request_id: number | null
+     }>()
+     
+     if (!result) {
+@@ -25728,7 +26744,7 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+         pictureUrl: user.custom_picture_url || user.picture_url || null,
+         role: user.role
+       })
+-      return c.html(renderLayoutWithContext(c, notFoundContent, '결과 없음 - 마이페이지 - Careerwiki'))
++      return c.html(renderLayoutWithContext(c, notFoundContent, '결과 없음 - 마이페이지 - CareerWiki'))
+     }
+     
+     // 결과 파싱
+@@ -25746,25 +26762,71 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+     
+     const isJob = result.analysis_type === 'job'
+     const typeLabel = isJob ? '직업 추천' : '전공 추천'
+-    
++    const currentVersion = result.version_number || 1
++    const analyzerPath = isJob ? '/analyzer/job' : '/analyzer/major'
++
++    // 같은 session의 다른 버전들 조회
++    const versionSiblings = await c.env.DB.prepare(`
++      SELECT req.id as request_id, req.version_number, req.version_note, r.created_at
++      FROM ai_analysis_requests req
++      JOIN ai_analysis_results r ON r.request_id = req.id
++      WHERE req.session_id = ? AND req.id != ?
++      ORDER BY req.version_number ASC
++    `).bind(result.session_id, requestId).all<{
++      request_id: number
++      version_number: number | null
++      version_note: string | null
++      created_at: string
++    }>()
++    const versions = versionSiblings.results || []
++    const hasVersions = versions.length > 0
++
+     // 상세 결과 표시 콘텐츠
+     const content = `
+       <div class="max-w-4xl mx-auto">
+         <!-- 상단 네비게이션 -->
+-        <div class="mb-6 flex items-center justify-between">
+-          <a href="/user/ai-results" class="inline-flex items-center gap-2 text-sm transition hover:opacity-80" style="color: #9aa3c5;">
+-            <i class="fas fa-arrow-left"></i> 목록으로
+-          </a>
+-          <button onclick="copyAllResults()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition hover:opacity-80" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6;">
+-            <i class="fas fa-copy"></i> 결과 전체 복사
+-          </button>
++        <div class="mb-6 flex flex-col gap-3">
++          <div class="flex items-center justify-between">
++            <a href="/user/ai-results" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition hover:opacity-80" style="color: #9aa3c5;">
++              <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">목록으로</span>
++            </a>
++            <div class="flex items-center gap-2">
++              <button onclick="showEditWarningModal()" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition hover:opacity-80" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
++                <i class="fas fa-edit"></i> <span class="hidden sm:inline">입력 수정</span>
++              </button>
++              <button onclick="showAddContextModal()" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition hover:opacity-80" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
++                <i class="fas fa-plus"></i> <span class="hidden sm:inline">내용 추가</span>
++              </button>
++              <button onclick="copyAllResults()" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition hover:opacity-80" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6;">
++                <i class="fas fa-copy"></i> <span class="hidden sm:inline">결과 복사</span>
++              </button>
++            </div>
++          </div>
++          ${hasVersions ? `
++            <!-- 버전 네비게이션 -->
++            <div class="flex items-center gap-2 overflow-x-auto pb-1" style="scrollbar-width: none;">
++              ${versions.filter(v => (v.version_number || 1) < currentVersion).map(v => `
++                <a href="/user/ai-results/${v.request_id}" class="px-3 py-1.5 rounded-lg text-xs transition hover:bg-wiki-card/70 whitespace-nowrap" style="background: rgba(26, 26, 46, 0.4); color: #9aa3c5;">
++                  v${v.version_number || 1}${v.version_note ? ` · ${v.version_note}` : ''}
++                </a>
++              `).join('')}
++              <span class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap" style="background: rgba(67, 97, 238, 0.25); color: #64b5f6;">
++                v${currentVersion}${result.version_note ? ` · ${result.version_note}` : ' · 현재'}
++              </span>
++              ${versions.filter(v => (v.version_number || 1) > currentVersion).map(v => `
++                <a href="/user/ai-results/${v.request_id}" class="px-3 py-1.5 rounded-lg text-xs transition hover:bg-wiki-card/70 whitespace-nowrap" style="background: rgba(26, 26, 46, 0.4); color: #9aa3c5;">
++                  v${v.version_number || 1}${v.version_note ? ` · ${v.version_note}` : ''}
++                </a>
++              `).join('')}
++            </div>
++          ` : ''}
+         </div>
+         
+         <!-- 결과 헤더 -->
+-        <div class="p-6 rounded-xl mb-6" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
+-          <div class="flex items-center gap-4 mb-4">
+-            <div class="w-12 h-12 rounded-xl flex items-center justify-center ${isJob ? 'bg-blue-500/20' : 'bg-emerald-500/20'}">
+-              <i class="fas ${isJob ? 'fa-briefcase text-blue-400' : 'fa-university text-emerald-400'} text-xl"></i>
++        <div class="p-4 sm:p-6 rounded-xl mb-6" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
++          <div class="flex items-center gap-3 sm:gap-4 mb-4">
++            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${isJob ? 'bg-blue-500/20' : 'bg-emerald-500/20'}">
++              <i class="fas ${isJob ? 'fa-briefcase text-blue-400' : 'fa-university text-emerald-400'} text-lg sm:text-xl"></i>
+             </div>
+             <div>
+               <h2 class="text-xl font-bold text-white">${typeLabel} 결과</h2>
+@@ -25785,20 +26847,21 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+         <!-- TOP 추천 -->
+         <div id="results-content" class="space-y-6">
+           ${(parsedResult.fit_top3 || []).length > 0 ? `
+-            <div class="p-6 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
++            <div class="p-4 sm:p-6 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
+               <h3 class="text-lg font-semibold text-white mb-4">
+                 <i class="fas fa-trophy text-amber-400 mr-2"></i>TOP 추천
+               </h3>
+               <div class="space-y-3">
+                 ${(parsedResult.fit_top3 || []).map((job: any, i: number) => `
+-                  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: rgba(67, 97, 238, 0.05);">
+-                    <span class="text-2xl font-bold ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-slate-300' : 'text-amber-600'}">${i + 1}</span>
+-                    <div class="flex-1">
++                  <div class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg" style="background: rgba(67, 97, 238, 0.05);">
++                    <span class="text-xl sm:text-2xl font-bold ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-slate-300' : 'text-amber-600'}">${i + 1}</span>
++                    <div class="flex-1 min-w-0">
+                       <p class="font-medium text-white">${job.job_name || job.name || '알 수 없음'}</p>
+                       ${job.job_description ? `<p class="text-sm mt-1" style="color: #b4c5e4; line-height: 1.4;">${job.job_description.length > 120 ? job.job_description.substring(0, 120) + '...' : job.job_description}</p>` : ''}
+                       ${job.fit_score ? `<p class="text-sm mt-1" style="color: #64b5f6;">적합도: ${job.fit_score}점</p>` : ''}
++                      ${job.slug ? `<a href="/${isJob ? 'job' : 'major'}/${job.slug}" class="inline-block text-sm mt-1.5 hover:underline sm:hidden" style="color: #4361ee;">상세 보기 &rarr;</a>` : ''}
+                     </div>
+-                    ${job.slug ? `<a href="/${isJob ? 'job' : 'major'}/${job.slug}" class="text-sm hover:underline whitespace-nowrap" style="color: #4361ee;">상세 보기</a>` : ''}
++                    ${job.slug ? `<a href="/${isJob ? 'job' : 'major'}/${job.slug}" class="text-sm hover:underline whitespace-nowrap hidden sm:block" style="color: #4361ee;">상세 보기</a>` : ''}
+                   </div>
+                 `).join('')}
+               </div>
+@@ -25807,7 +26870,7 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+           
+           ${premiumReport ? `
+             <!-- 프리미엄 리포트 요약 -->
+-            <div class="p-6 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
++            <div class="p-4 sm:p-6 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
+               <h3 class="text-lg font-semibold text-white mb-4">
+                 <i class="fas fa-file-alt text-emerald-400 mr-2"></i>분석 요약
+               </h3>
+@@ -25828,7 +26891,7 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+           ` : ''}
+           
+           ${parsedResult.llm_explanation ? `
+-            <div class="p-6 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
++            <div class="p-4 sm:p-6 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(148, 163, 184, 0.15);">
+               <h3 class="text-lg font-semibold text-white mb-4">
+                 <i class="fas fa-lightbulb text-amber-400 mr-2"></i>추천 이유
+               </h3>
+@@ -25841,15 +26904,73 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+         </div>
+       </div>
+       
++      <!-- 내용 추가 모달 -->
++      <div id="add-context-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
++        <div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-md mx-4 shadow-2xl w-full">
++          <div class="mb-5">
++            <h3 class="text-lg font-bold text-white mb-2">
++              <i class="fas fa-plus text-emerald-400 mr-2"></i>추가 정보 입력
++            </h3>
++            <p class="text-sm text-wiki-muted">현재 분석에 반영하고 싶은 추가 정보를 자유롭게 작성해주세요.</p>
++          </div>
++          <textarea id="additional-context-text"
++                    class="w-full h-32 p-3 rounded-xl text-sm text-white placeholder-wiki-muted resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
++                    style="background: rgba(15, 15, 35, 0.6); border: 1px solid rgba(148, 163, 184, 0.2);"
++                    placeholder="예: 최근 데이터 분석 부트캠프를 수료했습니다. 재택근무가 가능한 직업을 선호합니다."
++                    minlength="30"></textarea>
++          <p id="context-char-count" class="text-xs mt-1 text-wiki-muted">0 / 최소 30자</p>
++          <div class="flex gap-3 mt-4">
++            <button onclick="hideAddContextModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">
++              취소
++            </button>
++            <button id="submit-context-btn" onclick="submitAdditionalContext()" disabled
++                    class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
++              추가 후 재분석
++            </button>
++          </div>
++        </div>
++      </div>
++
++      <!-- 입력 수정 경고 모달 -->
++      <div id="edit-warning-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
++        <div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-lg mx-4 shadow-2xl w-full max-h-[90vh] overflow-y-auto">
++          <div class="mb-5">
++            <div class="w-12 h-12 mx-auto mb-4 bg-amber-500/20 rounded-full flex items-center justify-center">
++              <i class="fas fa-exclamation-triangle text-xl text-amber-400"></i>
++            </div>
++            <h3 class="text-lg font-bold text-white text-center mb-2">입력 내용 수정 안내</h3>
++            <p class="text-sm text-wiki-muted text-center">기존에 입력했던 내용을 수정할 수 있습니다.<br>단, 수정 범위에 따라 이후 단계의 답변이 초기화될 수 있습니다.</p>
++          </div>
++          <div class="space-y-4 mb-6">
++            <div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);">
++              <p class="text-sm font-medium text-amber-300 mb-1">Step 1 (프로필 기본정보) 수정 시</p>
++              <p class="text-xs text-wiki-muted">Step 2(심층 질문)의 질문이 새로 생성되며, 기존 심층 질문 답변이 모두 초기화됩니다.</p>
++              <p class="text-xs text-wiki-muted/70 mt-1 italic">예: "경력 3년 마케터"를 "신입 개발자"로 변경하면, 마케터 기준으로 했던 심층 질문들이 개발자에 맞게 새로 만들어집니다.</p>
++            </div>
++            <div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);">
++              <p class="text-sm font-medium text-amber-300 mb-1">Step 2 (심층 질문) 답변 수정 시</p>
++              <p class="text-xs text-wiki-muted">수정한 라운드 이후의 질문들이 새로 생성되며, 해당 라운드 이후 답변이 초기화됩니다.</p>
++              <p class="text-xs text-wiki-muted/70 mt-1 italic">예: 라운드 1(동기)의 답변을 바꾸면, 라운드 2(회피)와 3(현실)의 질문이 새로 만들어져 다시 답해야 합니다.</p>
++            </div>
++          </div>
++          <div class="flex gap-3">
++            <button onclick="hideEditWarningModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">
++              취소
++            </button>
++            <a href="${analyzerPath}?session_id=${encodeURIComponent(result.session_id)}&edit_mode=true&source_request_id=${requestId}"
++               class="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium text-center">
++              수정 시작하기
++            </a>
++          </div>
++        </div>
++      </div>
++
+       <script>
+         function copyAllResults() {
+           const content = document.getElementById('results-content');
+           if (!content) return;
+-          
+-          // 텍스트 추출 (이미지 제외)
+           const text = content.innerText;
+           const header = '=== AI 추천 결과 ===\\n' + '${typeLabel}\\n' + '생성일: ${new Date(result.created_at).toLocaleDateString('ko-KR')}\\n\\n';
+-          
+           navigator.clipboard.writeText(header + text).then(() => {
+             alert('결과가 클립보드에 복사되었습니다!');
+           }).catch(err => {
+@@ -25857,6 +26978,62 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+             alert('복사에 실패했습니다. 직접 선택하여 복사해주세요.');
+           });
+         }
++
++        // 내용 추가 모달
++        function showAddContextModal() {
++          document.getElementById('add-context-modal').classList.remove('hidden');
++        }
++        function hideAddContextModal() {
++          document.getElementById('add-context-modal').classList.add('hidden');
++          document.getElementById('additional-context-text').value = '';
++          updateCharCount();
++        }
++        function updateCharCount() {
++          const textarea = document.getElementById('additional-context-text');
++          const count = textarea.value.length;
++          document.getElementById('context-char-count').textContent = count + ' / 최소 30자';
++          document.getElementById('submit-context-btn').disabled = count < 30;
++        }
++        document.getElementById('additional-context-text')?.addEventListener('input', updateCharCount);
++
++        async function submitAdditionalContext() {
++          const text = document.getElementById('additional-context-text').value.trim();
++          if (text.length < 30) return;
++
++          const btn = document.getElementById('submit-context-btn');
++          btn.disabled = true;
++          btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>재분석 중...';
++
++          try {
++            const res = await fetch('/api/ai-analyzer/add-context', {
++              method: 'POST',
++              headers: { 'Content-Type': 'application/json' },
++              body: JSON.stringify({ request_id: ${requestId}, additional_text: text })
++            });
++            const data = await res.json();
++            if (data.success && data.redirect_url) {
++              window.location.href = data.redirect_url;
++            } else if (data.success && data.new_request_id) {
++              window.location.href = '/user/ai-results/' + data.new_request_id;
++            } else {
++              alert('재분석 요청 실패: ' + (data.message || '알 수 없는 오류'));
++              btn.disabled = false;
++              btn.innerHTML = '추가 후 재분석';
++            }
++          } catch (err) {
++            alert('재분석 요청 중 오류가 발생했습니다.');
++            btn.disabled = false;
++            btn.innerHTML = '추가 후 재분석';
++          }
++        }
++
++        // 입력 수정 경고 모달
++        function showEditWarningModal() {
++          document.getElementById('edit-warning-modal').classList.remove('hidden');
++        }
++        function hideEditWarningModal() {
++          document.getElementById('edit-warning-modal').classList.add('hidden');
++        }
+       </script>
+     `
+     
+@@ -25869,7 +27046,7 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+       role: user.role
+     })
+     
+-    return c.html(renderLayoutWithContext(c, detailPageContent, `${typeLabel} 결과 - 마이페이지 - Careerwiki`))
++    return c.html(renderLayoutWithContext(c, detailPageContent, `${typeLabel} 결과 - 마이페이지 - CareerWiki`))
+     
+   } catch (error) {
+     console.error('[User AI Result Detail] Error:', error)
+@@ -25881,7 +27058,7 @@ app.get('/user/ai-results/:requestId', requireAuth, async (c) => {
+       pictureUrl: user.custom_picture_url || user.picture_url || null,
+       role: user.role
+     })
+-    return c.html(renderLayoutWithContext(c, errorPageContent, '오류 - 마이페이지 - Careerwiki'))
++    return c.html(renderLayoutWithContext(c, errorPageContent, '오류 - 마이페이지 - CareerWiki'))
+   }
+ })
+ 
+@@ -26020,7 +27197,7 @@ app.get('/user/comments', requireAuth, async (c) => {
+   })
+   
+   return c.html(
+-    renderLayoutWithContext(c, pageContent, '작성 댓글 - 마이페이지 - Careerwiki', '내가 작성한 댓글')
++    renderLayoutWithContext(c, pageContent, '작성 댓글 - 마이페이지 - CareerWiki', '내가 작성한 댓글')
+   )
+ })
+ 
+@@ -26152,7 +27329,7 @@ app.get('/user/bookmarks', requireAuth, async (c) => {
+   })
+   
+   return c.html(
+-    renderLayoutWithContext(c, pageContent, '저장함 - 마이페이지 - Careerwiki', '저장한 직업, 전공, HowTo')
++    renderLayoutWithContext(c, pageContent, '저장함 - 마이페이지 - CareerWiki', '저장한 직업, 전공, HowTo')
+   )
+ })
+ 
+@@ -26342,6 +27519,76 @@ app.delete('/api/user/profile-image', requireAuth, async (c) => {
+   }
+ })
+ 
++// ===== 세션 관리 API =====
++import { listUserSessions, destroySession, destroyAllUserSessions, getUserSessionEntries } from './utils/session'
++
++// GET /api/user/sessions - 내 활성 세션 목록
++app.get('/api/user/sessions', requireAuth, async (c) => {
++  const user = c.get('user')
++  const currentToken = c.get('sessionToken')
++  if (!user) return c.json({ error: 'unauthorized' }, 401)
++
++  const sessions = await listUserSessions(c.env.KV, user.id, currentToken || undefined)
++  return c.json({ sessions })
++})
++
++// DELETE /api/user/sessions/:prefix - 특정 세션 로그아웃
++app.delete('/api/user/sessions/:prefix', requireAuth, async (c) => {
++  const user = c.get('user')
++  if (!user) return c.json({ error: 'unauthorized' }, 401)
++
++  const prefix = c.req.param('prefix')
++  const entries = await getUserSessionEntries(c.env.KV, user.id)
++  const target = entries.find(s => s.token.substring(0, 8) === prefix)
++  if (!target) return c.json({ error: 'Session not found' }, 404)
++
++  // 현재 세션은 삭제 불가
++  const currentToken = c.get('sessionToken')
++  if (currentToken === target.token) {
++    return c.json({ error: 'Cannot delete current session. Use logout instead.' }, 400)
++  }
++
++  await destroySession(c.env.KV, c.env.DB, target.token, 'user_logout', user.id)
++  return c.json({ success: true })
++})
++
++// POST /api/user/sessions/logout-others - 다른 기기 전체 로그아웃
++app.post('/api/user/sessions/logout-others', requireAuth, async (c) => {
++  const user = c.get('user')
++  const currentToken = c.get('sessionToken')
++  if (!user) return c.json({ error: 'unauthorized' }, 401)
++
++  const entries = await getUserSessionEntries(c.env.KV, user.id)
++  if (entries.length === 0) return c.json({ success: true, destroyed: 0 })
++
++  const others = entries.filter(s => s.token !== currentToken)
++  if (others.length === 0) return c.json({ success: true, destroyed: 0 })
++
++  // 세션 KV만 직접 삭제 (destroySession N번 호출 대신 병렬 삭제)
++  await Promise.all(others.map(s => c.env.KV.delete(`session:${s.token}`)))
++
++  // 인덱스를 현재 세션만 남긴 것으로 갱신
++  const current = entries.find(s => s.token === currentToken)
++  if (current) {
++    await c.env.KV.put(
++      `user-sessions:${user.id}`,
++      JSON.stringify({ sessions: [current] }),
++      { expirationTtl: 30 * 24 * 60 * 60 }
++    )
++  } else {
++    await c.env.KV.delete(`user-sessions:${user.id}`)
++  }
++
++  // 감사 로그 일괄 업데이트 (비차단)
++  c.executionCtx.waitUntil(
++    c.env.DB.prepare(`
++      UPDATE user_sessions SET expired_at = ?, logout_reason = ? WHERE user_id = ? AND expired_at IS NULL
++    `).bind(Math.floor(Date.now() / 1000), 'all_devices_logout', user.id).run().catch(() => {})
++  )
++
++  return c.json({ success: true, destroyed: others.length })
++})
++
+ // Phase 3 Day 4: 개인 설정 페이지
+ app.get('/user/settings', requireAuth, async (c) => {
+   const user = c.get('user')
+@@ -26695,13 +27942,42 @@ app.get('/user/settings', requireAuth, async (c) => {
+   
+   return c.html(renderLayoutWithContext(c,
+     pageContent,
+-    '개인 설정 - 마이페이지 - Careerwiki',
++    '개인 설정 - 마이페이지 - CareerWiki',
+     '계정 설정 및 프로필 관리',
+     false,
+     { user: userData }
+   ))
+ })
+ 
++// ===== 보안 설정 (세션 관리) 페이지 =====
++import { renderSecurityPage } from './templates/user/userSecurity'
++
++app.get('/user/security', requireAuth, async (c) => {
++  const user = c.get('user')
++  if (!user) {
++    return c.redirect(`/auth/google?return_url=${encodeURIComponent('/user/security')}`)
++  }
++
++  const innerContent = renderSecurityPage()
++
++  const pageContent = renderUserLayoutContent({
++    title: '보안',
++    currentPath: '/user/security',
++    children: innerContent,
++    username: user.username || user.email || `user_${user.id}`,
++    pictureUrl: user.custom_picture_url || user.picture_url || null,
++    role: user.role,
++  })
++
++  return c.html(renderLayoutWithContext(c,
++    pageContent,
++    '보안 - 마이페이지 - CareerWiki',
++    '로그인 세션 관리',
++    false,
++    { user: { id: user.id, name: user.name, email: user.email, username: user.username, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, role: user.role } }
++  ))
++})
++
+ // ============================================================================
+ // 사용자 API
+ // ============================================================================
+@@ -31393,7 +32669,7 @@ app.get('/admin/ai-analyzer', async (c, next) => {
+     ] = await Promise.all([
+       db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE status = 'completed'").first<{ count: number }>().catch(() => ({ count: 0 })),
+       db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests").first<{ count: number }>().catch(() => ({ count: 0 })),
+-      db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE is_reanalysis = 1").first<{ count: number }>().catch(() => ({ count: 0 })),
++      db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE parent_request_id IS NOT NULL").first<{ count: number }>().catch(() => ({ count: 0 })),
+       db.prepare("SELECT COUNT(*) as count FROM ai_analysis_requests WHERE requested_at >= datetime('now', '-24 hours')").first<{ count: number }>().catch(() => ({ count: 0 })),
+       db.prepare("SELECT COUNT(*) as count FROM facts WHERE collected_at >= datetime('now', '-24 hours')").first<{ count: number }>().catch(() => ({ count: 0 })),
+       db.prepare("SELECT COUNT(DISTINCT session_id) as count FROM ai_analysis_requests").first<{ count: number }>().catch(() => ({ count: 0 })),
+@@ -31684,7 +32960,7 @@ app.patch('/api/admin/users/:id', requireAdmin, async (c) => {
+     
+     // 차단
+     if (body.action === 'ban') {
+-      const success = await banUser(c.env.DB, userId, body.duration, body.reason)
++      const success = await banUser(c.env.DB, userId, body.duration, body.reason, c.env.KV)
+       return c.json({ success })
+     }
+     

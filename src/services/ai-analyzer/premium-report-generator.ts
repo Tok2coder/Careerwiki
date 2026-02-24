@@ -63,7 +63,6 @@ function safeGenerate<T>(
     const result = generator()
     return { result, status: 'success' }
   } catch (error) {
-    console.error(`[PremiumReport] ${sectionName} 생성 실패:`, error)
     return {
       result: fallback,
       status: 'failed',

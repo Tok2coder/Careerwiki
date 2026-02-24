@@ -23,8 +23,8 @@ export function renderAdminLayout({ title, currentPath, children }: AdminLayoutP
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title} | CareerWiki 관리자</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>${title} | Careerwiki 관리자</title>
+  <link rel="stylesheet" href="/static/tailwind.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -82,7 +82,7 @@ export function renderAdminLayout({ title, currentPath, children }: AdminLayoutP
           <i class="fas fa-briefcase text-white"></i>
         </div>
         <div>
-          <h1 class="font-bold text-white">CareerWiki</h1>
+          <h1 class="font-bold text-white">Careerwiki</h1>
           <span class="text-xs text-slate-400">관리자 패널</span>
         </div>
       </a>

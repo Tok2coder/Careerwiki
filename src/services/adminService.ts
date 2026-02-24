@@ -2,7 +2,8 @@
  * 관리자 서비스 - DB 쿼리 함수 모음
  */
 
-import type { D1Database } from '@cloudflare/workers-types'
+import type { D1Database, KVNamespace } from '@cloudflare/workers-types'
+import { destroyAllUserSessions } from '../utils/session'
 
 // =============================================================================
 // 타입 정의
@@ -229,10 +230,11 @@ export async function banUser(
   db: D1Database,
   userId: number,
   duration: '1d' | '7d' | '30d' | 'permanent',
-  reason?: string
+  reason?: string,
+  kv?: KVNamespace
 ): Promise<boolean> {
   let bannedUntil: number | null = null
-  
+
   if (duration !== 'permanent') {
     const now = Math.floor(Date.now() / 1000)
     const durationMap: Record<string, number> = {
@@ -242,16 +244,24 @@ export async function banUser(
     }
     bannedUntil = now + durationMap[duration]
   }
-  
+
   const result = await db.prepare(`
-    UPDATE users 
-    SET is_banned = 1, 
-        ban_reason = ?, 
+    UPDATE users
+    SET is_banned = 1,
+        ban_reason = ?,
         banned_until = ?,
         updated_at = strftime('%s','now')
     WHERE id = ?
   `).bind(reason || null, bannedUntil, userId).run()
-  
+
+  // 밴 시 해당 유저의 모든 세션 즉시 파괴
+  if (result.meta.changes > 0 && kv) {
+    try {
+      await destroyAllUserSessions(kv, db, userId, 'ban')
+    } catch (error) {
+    }
+  }
+
   return result.meta.changes > 0
 }
 

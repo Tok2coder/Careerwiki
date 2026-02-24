@@ -132,7 +132,6 @@ const mergeUniversities = (
         
         // 디버깅: department 있는지 확인
         if (!item.department) {
-          console.log(`⚠️ 첫 등록 시 department 없음: ${normalizedName} (원본: ${name})`)
         }
       } else {
         // 이미 있음: 더 완전한 정보를 가진 것으로 업데이트
@@ -141,7 +140,6 @@ const mergeUniversities = (
         
         // 디버깅: 병합 시 department 업데이트 확인
         if (item.department && !existing.department) {
-          console.log(`✅ Department 업데이트: ${normalizedName} ← "${item.department}"`)
         }
         
         // 더 나은 값이 있으면 업데이트 (기존 값도 덮어씀)

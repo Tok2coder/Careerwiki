@@ -635,6 +635,176 @@ export const MAJOR_TEST_SCENARIOS: MajorTestScenario[] = [
       ],
     },
   },
+
+  // ============================================
+  // 시나리오 7: 호기심 많은 어린이
+  // ============================================
+  {
+    id: 'major_child_curious',
+    name: '호기심 많은 어린이',
+    description: '만들기와 탐험을 좋아하는 어린이 (미성년 제한 적용 확인)',
+    category: 'edge_case',
+    academicState: 'high_school_undecided' as AcademicState,
+
+    miniModule: {
+      interest_top: ['creating', 'problem_solving'],
+      value_top: ['growth', 'autonomy'],
+      strength_top: ['creative', 'fast_learning'],
+      constraint_flags: [],
+      workstyle_top: ['flexible'],
+      background_flags: [],
+      language_skills: [],
+      sacrifice_flags: [],
+      energy_drain_flags: ['repetition_drain'],
+      achievement_feedback_top: ['tangible_output_feedback', 'growth_feedback'],
+      execution_style: 'action_first',
+      impact_scope: 'impact_individual',
+      failure_response: 'pivot_on_failure',
+      persistence_anchor: 'growth_anchor',
+      external_expectation: 'neutral_to_expectation',
+    },
+
+    canValidationAnswers: {},
+    constraintIntensityAnswers: {},
+
+    llmFollowupAnswers: [
+      {
+        questionPattern: '좋아하|관심|재미',
+        answer: '레고 조립하고 그림 그리는 게 제일 재미있어요. 과학 실험도 좋아합니다.',
+        expectedFactKey: 'like.creative_activity',
+      },
+      {
+        questionPattern: '꿈|되고 싶|미래',
+        answer: '과학자나 게임 만드는 사람이 되고 싶어요.',
+        expectedFactKey: 'like.dream_job',
+      },
+    ],
+
+    expectedResults: {
+      topMajorKeywords: ['디자인', '미술', '공학', '과학', '게임', '교육'],
+      excludedMajorKeywords: [],
+      fitScoreRange: { min: 40, max: 90 },
+      balanceCheck: {
+        canShouldNotDominateLike: true,
+        likeCanGap: { max: 40 },
+      },
+      featuresApplied: {
+        tagFilterApplied: false,
+        internalConflictRisk: false,
+        diversityGuardApplied: true,
+        archetypeInjected: true,
+      },
+    },
+
+    careerState: 'student',
+    narrativeAnswers: {
+      motivation: '레고 만들기랑 그림 그리기를 좋아해요. 공룡이랑 우주도 좋아합니다.',
+      avoidance: '가만히 앉아서 글 읽는 건 지루해요.',
+      constraints: '아직 어린이라 잘 모르겠어요.',
+    },
+    roundFallbackAnswers: {
+      round1: [
+        '만들기를 좋아하고, 새로운 것을 배우면 신나요.',
+        '과학 실험할 때 가장 재미있어요.',
+        '게임을 좋아하는데, 직접 만들어보고 싶어요.',
+      ],
+      round2: [
+        '가만히 앉아서 외우는 건 싫어요.',
+        '혼자서 조용히 책만 읽는 건 좀 힘들어요.',
+        '너무 어려운 문제는 포기하고 싶어져요.',
+      ],
+      round3: [
+        '아직 잘 모르겠지만, 재미있는 걸 하고 싶어요.',
+        '부모님이 공부 열심히 하래요.',
+        '여러 가지를 해보고 싶어요.',
+      ],
+    },
+  },
+
+  // ============================================
+  // 시나리오 8: 관심사 탐색 초등학생
+  // ============================================
+  {
+    id: 'major_elementary_explorer',
+    name: '관심사 탐색 초등학생',
+    description: '수학과 사회에 관심 많은 초등학생 (미성년 제한 적용 확인)',
+    category: 'edge_case',
+    academicState: 'high_school_undecided' as AcademicState,
+
+    miniModule: {
+      interest_top: ['helping_teaching', 'data_numbers'],
+      value_top: ['meaning', 'growth'],
+      strength_top: ['communication', 'analytical'],
+      constraint_flags: [],
+      workstyle_top: ['team', 'structured'],
+      background_flags: [],
+      language_skills: [],
+      sacrifice_flags: ['willing_to_study'],
+      energy_drain_flags: ['cognitive_drain'],
+      achievement_feedback_top: ['helping_feedback', 'metric_feedback'],
+      execution_style: 'plan_first',
+      impact_scope: 'impact_individual',
+      failure_response: 'iterate_on_failure',
+      persistence_anchor: 'meaning_anchor',
+      external_expectation: 'external_structure_ok',
+    },
+
+    canValidationAnswers: {},
+    constraintIntensityAnswers: {},
+
+    llmFollowupAnswers: [
+      {
+        questionPattern: '과목|좋아하|잘하는',
+        answer: '수학이랑 사회를 좋아하고, 친구들한테 설명해주는 걸 잘해요.',
+        expectedFactKey: 'like.favorite_subject',
+      },
+      {
+        questionPattern: '꿈|되고 싶|미래',
+        answer: '선생님이나 의사 같은 사람을 돕는 직업이 되고 싶어요.',
+        expectedFactKey: 'like.dream_job',
+      },
+    ],
+
+    expectedResults: {
+      topMajorKeywords: ['교육', '심리', '사회', '수학교육', '의학', '간호'],
+      excludedMajorKeywords: [],
+      fitScoreRange: { min: 40, max: 90 },
+      balanceCheck: {
+        canShouldNotDominateLike: true,
+        likeCanGap: { max: 40 },
+      },
+      featuresApplied: {
+        tagFilterApplied: false,
+        internalConflictRisk: false,
+        diversityGuardApplied: true,
+        archetypeInjected: true,
+      },
+    },
+
+    careerState: 'student',
+    narrativeAnswers: {
+      motivation: '수학 문제 푸는 것과 친구들에게 설명해주는 것을 좋아합니다.',
+      avoidance: '너무 어려운 과학 실험은 좀 무서워요.',
+      constraints: '초등학생이라 아직 많이 배워야 해요.',
+    },
+    roundFallbackAnswers: {
+      round1: [
+        '친구들에게 문제를 설명해줄 때 보람을 느껴요.',
+        '수학 경시대회에 나가보고 싶어요.',
+        '사회 시간에 역사 이야기가 재미있어요.',
+      ],
+      round2: [
+        '혼자 오래 앉아서 하는 건 좀 힘들어요.',
+        '외우는 것이 너무 많으면 지쳐요.',
+        '발표할 때 떨려요.',
+      ],
+      round3: [
+        '아직 초등학생이지만, 공부를 열심히 하고 싶어요.',
+        '좋은 대학에 가고 싶어요.',
+        '부모님이 열심히 하라고 응원해주세요.',
+      ],
+    },
+  },
 ]
 
 // ============================================

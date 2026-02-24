@@ -165,7 +165,6 @@ async function generateTempUsername(db: D1Database): Promise<string> {
       return username
     }
     
-    console.log(`⚠️ [Auth] Username ${username} already exists, retrying...`)
   }
   
   // 최대 시도 횟수 초과 시 타임스탬프 기반 생성
@@ -182,15 +181,9 @@ export async function createUserFromOAuth(
 ): Promise<User> {
   const now = Math.floor(Date.now() / 1000) // UNIX timestamp
   
-  console.log('📝 [Auth] Creating new user in D1...')
-  console.log('   Provider:', profile.provider)
-  console.log('   Provider User ID:', profile.provider_user_id)
-  console.log('   Email:', profile.email)
-  console.log('   Name:', profile.name)
   
   // 임시 닉네임 생성 (온보딩에서 변경)
   const tempUsername = await generateTempUsername(db)
-  console.log('   Temp Username:', tempUsername)
   
   // google_id는 레거시 호환을 위해 provider_user_id와 동일하게 설정 (Google인 경우)
   const googleIdValue = profile.provider === 'google' ? profile.provider_user_id : ''
@@ -219,12 +212,9 @@ export async function createUserFromOAuth(
     .run()
   
   if (!result.success) {
-    console.error('❌ [Auth] Failed to create user:', result.error)
     throw new Error('Failed to create user in database')
   }
   
-  console.log('✅ [Auth] User created, ID:', result.meta.last_row_id)
-  console.log('   Onboarded: false (requires onboarding)')
   
   // 생성된 사용자 조회
   const user = await getUserById(db, result.meta.last_row_id as number)
@@ -265,8 +255,6 @@ export async function updateUser(
 ): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
   
-  console.log('📝 [Auth] Updating user in D1...')
-  console.log('   User ID:', userId)
   
   // 업데이트할 필드만 포함
   const updates: string[] = ['last_login_at = ?', 'updated_at = ?']
@@ -299,11 +287,9 @@ export async function updateUser(
     .run()
   
   if (!result.success) {
-    console.error('❌ [Auth] Failed to update user:', result.error)
     throw new Error('Failed to update user in database')
   }
   
-  console.log('✅ [Auth] User updated')
 }
 
 /**
@@ -317,7 +303,6 @@ export async function getOrCreateUserFromOAuth(
   db: D1Database,
   profile: OAuthProfile
 ): Promise<User> {
-  console.log('🔍 [Auth] Looking up user by provider:', profile.provider, profile.provider_user_id)
   
   // 1. 기존 사용자 조회 (새 방식)
   let user = await getUserByProvider(db, profile.provider, profile.provider_user_id)
@@ -328,7 +313,6 @@ export async function getOrCreateUserFromOAuth(
     
     // 레거시 사용자 발견 시 provider 필드 업데이트
     if (user && (!user.provider || !user.provider_user_id)) {
-      console.log('📝 [Auth] Migrating legacy Google user to provider format...')
       await db
         .prepare('UPDATE users SET provider = ?, provider_user_id = ? WHERE id = ?')
         .bind('google', profile.provider_user_id, user.id)
@@ -337,8 +321,6 @@ export async function getOrCreateUserFromOAuth(
   }
   
   if (user) {
-    console.log('✅ [Auth] Existing user found, ID:', user.id)
-    console.log('   Onboarded:', user.onboarded === 1)
     
     // 2. 기존 사용자라면 last_login_at 및 프로필 업데이트
     await updateUser(db, user.id, profile)
@@ -352,7 +334,6 @@ export async function getOrCreateUserFromOAuth(
     
     return user
   } else {
-    console.log('🆕 [Auth] New user, creating...')
     
     // 4. 신규 사용자 생성 (onboarded=0)
     return await createUserFromOAuth(db, profile)
@@ -385,7 +366,6 @@ export async function completeOnboarding(
   db: D1Database,
   userId: number
 ): Promise<void> {
-  console.log('✅ [Auth] Completing onboarding for user:', userId)
   
   const result = await db
     .prepare('UPDATE users SET onboarded = 1, updated_at = ? WHERE id = ?')
@@ -393,11 +373,9 @@ export async function completeOnboarding(
     .run()
   
   if (!result.success) {
-    console.error('❌ [Auth] Failed to complete onboarding:', result.error)
     throw new Error('Failed to complete onboarding')
   }
   
-  console.log('✅ [Auth] Onboarding completed')
 }
 
 /**
@@ -408,9 +386,6 @@ export async function updateNickname(
   userId: number,
   nickname: string
 ): Promise<void> {
-  console.log('📝 [Auth] Updating nickname...')
-  console.log('   User ID:', userId)
-  console.log('   New Nickname:', nickname)
   
   const result = await db
     .prepare('UPDATE users SET username = ?, updated_at = ? WHERE id = ?')
@@ -418,11 +393,9 @@ export async function updateNickname(
     .run()
   
   if (!result.success) {
-    console.error('❌ [Auth] Failed to update nickname:', result.error)
     throw new Error('Failed to update nickname')
   }
   
-  console.log('✅ [Auth] Nickname updated')
 }
 
 /**
@@ -433,9 +406,6 @@ export async function updateUserRole(
   userId: number,
   role: 'user' | 'expert' | 'admin'
 ): Promise<void> {
-  console.log('📝 [Auth] Updating user role...')
-  console.log('   User ID:', userId)
-  console.log('   New Role:', role)
   
   const result = await db
     .prepare('UPDATE users SET role = ?, updated_at = ? WHERE id = ?')
@@ -443,11 +413,9 @@ export async function updateUserRole(
     .run()
   
   if (!result.success) {
-    console.error('❌ [Auth] Failed to update user role:', result.error)
     throw new Error('Failed to update user role')
   }
   
-  console.log('✅ [Auth] User role updated')
 }
 
 /**
@@ -485,10 +453,6 @@ export async function banUser(
   reason: string,
   bannedUntil: number | null = null
 ): Promise<void> {
-  console.log('🚫 [Auth] Banning user...')
-  console.log('   User ID:', userId)
-  console.log('   Reason:', reason)
-  console.log('   Until:', bannedUntil ? new Date(bannedUntil * 1000).toISOString() : 'Permanent')
   
   const result = await db
     .prepare(`
@@ -500,11 +464,9 @@ export async function banUser(
     .run()
   
   if (!result.success) {
-    console.error('❌ [Auth] Failed to ban user:', result.error)
     throw new Error('Failed to ban user')
   }
   
-  console.log('✅ [Auth] User banned')
 }
 
 /**
@@ -514,8 +476,6 @@ export async function unbanUser(
   db: D1Database,
   userId: number
 ): Promise<void> {
-  console.log('✅ [Auth] Unbanning user...')
-  console.log('   User ID:', userId)
   
   const result = await db
     .prepare(`
@@ -527,11 +487,9 @@ export async function unbanUser(
     .run()
   
   if (!result.success) {
-    console.error('❌ [Auth] Failed to unban user:', result.error)
     throw new Error('Failed to unban user')
   }
   
-  console.log('✅ [Auth] User unbanned')
 }
 
 /**

@@ -18,6 +18,8 @@ const INTEREST_JOB_MAP: Record<string, { attrs: Record<string, number> }> = {
   problem_solving:  { attrs: { analytical: 0.6, creative: 0.2, execution: 0.2 } },
   creating:         { attrs: { creative: 0.8, analytical: 0.2 } },
   helping_teaching: { attrs: { people_facing: 0.7, teamwork: 0.3 } },
+  helping:          { attrs: { people_facing: 0.7, teamwork: 0.3 } },  // 돌봄/봉사 (helping_teaching alias)
+  helping_feedback: { attrs: { people_facing: 0.6, teamwork: 0.2, execution: 0.2 } },  // 직접 도움
   organizing:       { attrs: { execution: 0.6, teamwork: 0.4 } },
   influencing:      { attrs: { people_facing: 0.5, execution: 0.3, income: 0.2 } },
 }
@@ -27,6 +29,7 @@ const VALUE_JOB_MAP: Record<string, { attrs: Record<string, number>, baseAdd?: n
   growth:      { attrs: { growth: 1.0 } },
   stability:   { attrs: { stability: 1.0 } },
   income:      { attrs: { income: 1.0 } },
+  wlb:         { attrs: { wlb: 1.0 } },
   autonomy:    { attrs: { solo_deep: 0.6, wlb: 0.4 } },
   meaning:     { attrs: { people_facing: 0.3, growth: 0.3 }, baseAdd: 25 },
   recognition: { attrs: { income: 0.4, growth: 0.3, people_facing: 0.3 } },

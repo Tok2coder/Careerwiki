@@ -15,7 +15,7 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret_here
 
 # Google OAuth Callback URL
 # 로컬 환경: http://localhost:3000/auth/google/callback
-# 프로덕션: https://careerwiki-phase1.pages.dev/auth/google/callback
+# 프로덕션: https://careerwiki.org/auth/google/callback
 GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
 
 # JWT Secret Key (32+ characters recommended)

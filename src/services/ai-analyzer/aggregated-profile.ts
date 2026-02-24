@@ -291,7 +291,6 @@ export function buildAggregatedProfile(
         }
       }
     } catch (e) {
-      console.error('[buildAggregatedProfile] mini_module_result parse error:', e)
     }
   }
   
@@ -318,7 +317,6 @@ export function buildAggregatedProfile(
         }
       }
     } catch (e) {
-      console.error('[buildAggregatedProfile] career_state parse error:', e)
     }
   }
   
@@ -425,7 +423,6 @@ export function buildAggregatedProfile(
         }
       }
     } catch (e) {
-      console.error('[buildAggregatedProfile] step2 parse error:', e)
     }
   }
   
@@ -451,7 +448,6 @@ export function buildAggregatedProfile(
         }
       }
     } catch (e) {
-      console.error('[buildAggregatedProfile] step3 parse error:', e)
     }
   }
   
@@ -534,7 +530,6 @@ export function buildAggregatedProfile(
         }
       }
     } catch (e) {
-      console.error('[buildAggregatedProfile] step4 parse error:', e)
     }
   }
   
@@ -545,7 +540,6 @@ export function buildAggregatedProfile(
     try {
       profile.memory = JSON.parse(draft.memory_json)
     } catch (e) {
-      console.error('[buildAggregatedProfile] memory parse error:', e)
     }
   }
   

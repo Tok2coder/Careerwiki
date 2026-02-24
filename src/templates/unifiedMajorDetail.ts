@@ -30,6 +30,7 @@ export interface UnifiedMajorDetailTemplateParams {
   sources?: SourceStatusRecord
   existingJobSlugs?: Map<string, string>  // 직업명 → slug 매핑 (DB에 존재하는 직업)
   relatedMajorsByCategory?: RelatedMajorItem[]  // 같은 계열 전공 (자기 자신 제외)
+  relatedHowtos?: Array<{ slug: string; title: string; summary: string }>  // 이 전공을 참조하는 HowTo
 }
 
 // 전공 템플릿용 데이터 출처 레이블 (직업 템플릿과 다름)
@@ -936,7 +937,7 @@ const renderMajorSourcesCollapsible = (
   `
 }
 
-export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJobSlugs, relatedMajorsByCategory }: UnifiedMajorDetailTemplateParams): string => {
+export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJobSlugs, relatedMajorsByCategory, relatedHowtos }: UnifiedMajorDetailTemplateParams): string => {
   // categoryName 정리: ETL에서 이미 처리된 categoryDisplay 사용, 없으면 폴백
   const cleanCategoryName = (profile as any).categoryDisplay 
     || (profile.categoryName && profile.categoryName.split(',').length <= 2 ? profile.categoryName : undefined)
@@ -969,7 +970,6 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       chartData = rawChartData
     }
   } catch (e) {
-    console.error('[renderUnifiedMajorDetail] Failed to parse chartData:', e)
     chartData = null
   }
 
@@ -2293,6 +2293,34 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     }
   }
 
+  // 6-3. 관련 가이드 (이 전공을 참조하는 HowTo)
+  if (relatedHowtos?.length) {
+    const howtoList = relatedHowtos.map(howto => {
+      const summary = howto.summary ? escapeHtml(howto.summary.length > 60 ? howto.summary.slice(0, 60) + '…' : howto.summary) : ''
+      return `
+        <li>
+          <a href="/howto/${encodeURIComponent(howto.slug)}" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
+              <i class="fas fa-book-open text-xs" aria-hidden="true"></i>
+            </span>
+            <div class="min-w-0 flex-1">
+              <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors block truncate">${escapeHtml(howto.title)}</span>
+              ${summary ? `<p class="text-xs text-wiki-muted truncate mt-0.5">${summary}</p>` : ''}
+            </div>
+            <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all shrink-0" aria-hidden="true"></i>
+          </a>
+        </li>
+      `
+    }).join('')
+    sidebarSections.push(
+      renderSidebarSection(
+        '관련 가이드',
+        'fa-book-open',
+        `<ul class="space-y-2" role="list">${howtoList}</ul>`
+      )
+    )
+  }
+
   // 7. 추천 자격증 (계층 구조로 표시)
   const careernetLicenses = partials?.CAREERNET?.licenses || profile.licenses || []
   const goyong24Licenses = partials?.GOYONG24?.licenses || []
@@ -2600,7 +2628,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     : `<div class="space-y-6" data-major-layout>${tabLayout}</div>`
 
   return `
-    <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-8 md:mt-4" data-major-id="${escapeHtml(profile.id)}">
+    <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" data-major-id="${escapeHtml(profile.id)}">
       <section class="glass-card border px-6 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-major-hero>
         <div class="space-y-5">
           ${cleanCategoryName ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group"></i>${escapeHtml(cleanCategoryName)}</span>` : ''}
@@ -2632,27 +2660,10 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
                 역사
               </button>
               <div class="relative" data-share-root>
-                <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="/major/${escapeHtml(profile.id)}" data-share-title="${escapeHtml(profile.name)}">
+                <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="/major/${escapeHtml(profile.id)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}">
                   <i class="fas fa-share-nodes" aria-hidden="true"></i>
                   공유
                 </button>
-                <div class="absolute right-0 mt-2 w-72 rounded-xl border border-wiki-border/60 bg-wiki-bg/95 shadow-xl backdrop-blur hidden z-[1001]" data-share-panel role="dialog" aria-modal="false" aria-label="링크 공유">
-                  <div class="flex items-center justify-between px-4 py-3 border-b border-wiki-border/60">
-                    <p class="text-sm font-semibold text-white">'${escapeHtml(profile.name)}' 공유하기</p>
-                    <button type="button" class="text-xs text-wiki-muted hover:text-white transition" data-share-close aria-label="닫기">
-                      <i class="fas fa-times" aria-hidden="true"></i>
-                    </button>
-                  </div>
-                  <div class="p-4 space-y-3">
-                    <div class="flex items-center gap-2">
-                      <input type="text" class="flex-1 px-3 py-2 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-xs text-white focus:outline-none" value="/major/${escapeHtml(profile.id)}" readonly data-share-url>
-                      <button type="button" class="px-3 py-2 bg-wiki-primary text-white text-xs rounded-md hover:bg-blue-600 transition" data-share-copy>
-                        <i class="fas fa-copy mr-1" aria-hidden="true"></i>복사
-                      </button>
-                    </div>
-                    <p class="text-[11px] text-wiki-muted">복사 버튼을 누르면 링크가 클립보드에 저장됩니다.</p>
-                  </div>
-                </div>
               </div>
               <!-- 저장 버튼 -->
               <button 

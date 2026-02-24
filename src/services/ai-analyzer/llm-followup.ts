@@ -76,7 +76,6 @@ function extractQuestionFromResponse(response: any): string | null {
       }
     }
   } catch (e) {
-    console.warn('LLM JSON parse failed, using fallback')
   }
   return null // fallback: rule-based 원문 사용
 }
@@ -156,11 +155,9 @@ export async function generateLLMFollowups(
 
   // 3. OpenAI API 키가 없으면 rule-based 그대로 반환
   if (!openaiApiKey) {
-    console.log('[LLM Followup] OpenAI API key not available, using rule-based questions')
     return ruleBasedQuestions.slice(0, config.max_questions)
   }
 
-  console.log('[LLM Followup] Enhancing questions with OpenAI GPT-4o-mini')
 
   // 4. OpenAI로 질문 문장 재구성
   const enhancedQuestions = await Promise.all(
@@ -186,7 +183,6 @@ export async function generateLLMFollowups(
           question: enhancedText || q.question, // fallback to rule-based
         }
       } catch (error) {
-        console.error('LLM question enhancement failed:', error)
         return q // fallback to rule-based
       }
     })

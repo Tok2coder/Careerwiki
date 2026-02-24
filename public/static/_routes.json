@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/favicon.ico",
+    "/logo-capture.html",
+    "/logo-options.html",
+    "/static/*",
+    "/images/*"
+  ]
+}
+

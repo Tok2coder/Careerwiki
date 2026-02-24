@@ -38,6 +38,26 @@ import {
 } from '../../constants/embedding-versions'
 
 // ============================================
+// Vectorize ID 유틸리티 (64바이트 제한 대응)
+// ============================================
+// Vectorize ID는 UTF-8 64바이트 이내여야 함
+// 한글 major ID(예: "major:축산계열축산전공-낙농한우전공-양돈양계전공")가 초과할 수 있음
+// prefix:를 유지하면서 ID를 잘라 64바이트에 맞춤
+// 검색 시 metadata.original_id로 원본 DB ID 복구
+function toVectorizeId(prefix: string, id: string | number): string {
+  const full = `${prefix}:${id}`
+  const encoder = new TextEncoder()
+  if (encoder.encode(full).length <= 64) return full
+  // prefix: 부분은 유지하면서 id를 뒤에서부터 자름
+  const prefixPart = `${prefix}:`
+  let truncated = String(id)
+  while (encoder.encode(prefixPart + truncated).length > 64) {
+    truncated = truncated.slice(0, -1)
+  }
+  return prefixPart + truncated
+}
+
+// ============================================
 // 타입 정의
 // ============================================
 
@@ -599,6 +619,20 @@ export interface JobProfileData {
   workEnvironment?: string | null
   certifications?: string[] | null
   category?: string | null
+  // V2: Contextual Embedding용 속성 데이터
+  attributes?: {
+    income?: number | null
+    stability?: number | null
+    wlb?: number | null
+    growth?: number | null
+    analytical?: number | null
+    creative?: number | null
+    people_facing?: number | null
+    solo_deep?: number | null
+    teamwork?: number | null
+    execution?: number | null
+  } | null
+  relatedMajors?: string[] | null  // 관련 전공명
 }
 
 /**
@@ -613,60 +647,118 @@ export interface JobProfileData {
 export function buildJobProfileCompact(job: JobProfileData): string {
   // 직업명은 항상 필수
   const name = job.name || '미상'
-  
-  // 설명 텍스트 fallback 우선순위
-  const mainDesc = (
-    job.heroIntro || 
-    job.summary || 
-    job.description || 
-    ''
-  ).trim()
-  
+
+  // V2: 맥락 프리앰블 생성 (카테고리 + 핵심 속성 + 관련 전공)
+  const preamble = buildContextPreamble(job)
+
+  // 설명 텍스트 fallback 우선순위 (비문자열 방어)
+  const rawDesc = job.heroIntro || job.summary || job.description || ''
+  const mainDesc = (typeof rawDesc === 'string' ? rawDesc : '').trim()
+
   // 선택적 필드들 (있으면 추가)
-  const parts: string[] = [name]
-  
+  const parts: string[] = []
+
+  // 프리앰블이 있으면 맨 앞에 추가
+  if (preamble) {
+    parts.push(preamble)
+    parts.push('---')
+  }
+
+  parts.push(name)
+
   // 메인 설명 (최대 300자)
   if (mainDesc) {
     parts.push(mainDesc.slice(0, 300))
   }
-  
+
   // 핵심업무 (있으면)
-  if (job.duties && job.duties.trim()) {
-    parts.push(`핵심업무: ${job.duties.slice(0, 100)}`)
+  const dutiesStr = typeof job.duties === 'string' ? job.duties.trim() : ''
+  if (dutiesStr) {
+    parts.push(`핵심업무: ${dutiesStr.slice(0, 100)}`)
   }
-  
+
   // 필요역량 (있으면, 최대 5개)
-  if (job.skills && job.skills.length > 0) {
-    const validSkills = job.skills.filter(s => s && s.trim())
+  if (Array.isArray(job.skills) && job.skills.length > 0) {
+    const validSkills = job.skills.filter(s => typeof s === 'string' && s.trim())
     if (validSkills.length > 0) {
       parts.push(`필요역량: ${validSkills.slice(0, 5).join(', ')}`)
     }
   }
-  
+
   // 근무환경 (있으면)
-  if (job.workEnvironment && job.workEnvironment.trim()) {
-    parts.push(`환경: ${job.workEnvironment.slice(0, 50)}`)
+  const envStr = typeof job.workEnvironment === 'string' ? job.workEnvironment.trim() : ''
+  if (envStr) {
+    parts.push(`환경: ${envStr.slice(0, 50)}`)
   }
-  
+
   // 자격증 (있으면, 최대 3개)
-  if (job.certifications && job.certifications.length > 0) {
-    const validCerts = job.certifications.filter(c => c && c.trim())
+  if (Array.isArray(job.certifications) && job.certifications.length > 0) {
+    const validCerts = job.certifications.filter(c => typeof c === 'string' && c.trim())
     if (validCerts.length > 0) {
       parts.push(`자격: ${validCerts.slice(0, 3).join(', ')}`)
     }
   }
-  
-  // 카테고리 (있으면)
-  if (job.category && job.category.trim()) {
-    parts.push(job.category)
+
+  // 카테고리 (있으면, 프리앰블에 없는 경우만)
+  const catStr = typeof job.category === 'string' ? job.category.trim() : ''
+  if (!preamble && catStr) {
+    parts.push(catStr)
   }
-  
+
   // 최소 보장: name + category는 반드시 포함
   if (parts.length < 2) {
-    parts.push(job.category || '미분류')
+    parts.push(catStr || '미분류')
   }
-  
-  return parts.join(' ').substring(0, 1000)
+
+  // V2: 최대 길이 1200자 (프리앰블 포함)
+  return parts.join(' ').substring(0, 1200)
+}
+
+/**
+ * V2 맥락 프리앰블 생성: 카테고리 + 핵심 속성 + 관련 전공
+ * 50-150자 이내로 압축
+ */
+function buildContextPreamble(job: JobProfileData): string {
+  const fragments: string[] = []
+
+  // 1. 카테고리 컨텍스트
+  const catText = typeof job.category === 'string' ? job.category.trim() : ''
+  if (catText) {
+    fragments.push(`[${catText}]`)
+  }
+
+  // 2. 핵심 속성 (70+ 값만 하이라이트)
+  if (job.attributes) {
+    const attrLabels: { key: string; label: string }[] = [
+      { key: 'analytical', label: '분석' },
+      { key: 'creative', label: '창의' },
+      { key: 'execution', label: '실행' },
+      { key: 'people_facing', label: '대인' },
+      { key: 'solo_deep', label: '독립' },
+      { key: 'teamwork', label: '협업' },
+      { key: 'income', label: '고소득' },
+      { key: 'stability', label: '안정' },
+      { key: 'growth', label: '성장' },
+      { key: 'wlb', label: 'WLB' },
+    ]
+    const highlights: string[] = []
+    for (const { key, label } of attrLabels) {
+      const val = (job.attributes as any)[key] as number | null | undefined
+      if (val !== null && val !== undefined && val >= 70) {
+        highlights.push(label)
+      }
+    }
+    if (highlights.length > 0) {
+      fragments.push(`특성: ${highlights.slice(0, 4).join(', ')}`)
+    }
+  }
+
+  // 3. 관련 전공
+  if (job.relatedMajors && job.relatedMajors.length > 0) {
+    fragments.push(`관련전공: ${job.relatedMajors.slice(0, 3).join(', ')}`)
+  }
+
+  return fragments.join(' ')
 }
 
 /**
@@ -748,62 +840,110 @@ export async function indexJobsToVectorize(
   
   
   while (true) {
-    // jobs 테이블에서 직접 조회 (6,945개 전체)
+    // jobs + job_attributes LEFT JOIN 조회 (V2: 맥락 프리앰블용)
     const jobs = await db.prepare(`
-      SELECT 
-        id as job_id,
-        name as job_name,
-        merged_profile_json,
-        category
-      FROM jobs
-      WHERE is_active = 1
+      SELECT
+        j.id as job_id,
+        j.name as job_name,
+        j.merged_profile_json,
+        ja.income, ja.stability, ja.wlb, ja.growth,
+        ja.analytical, ja.creative, ja.people_facing, ja.solo_deep,
+        ja.teamwork, ja.execution
+      FROM jobs j
+      LEFT JOIN job_attributes ja ON j.id = ja.job_id
+      WHERE j.is_active = 1
       LIMIT ? OFFSET ?
     `).bind(batchSize, offset).all<{
       job_id: string
       job_name: string
       merged_profile_json: string | null
-      category: string | null
+      income: number | null
+      stability: number | null
+      wlb: number | null
+      growth: number | null
+      analytical: number | null
+      creative: number | null
+      people_facing: number | null
+      solo_deep: number | null
+      teamwork: number | null
+      execution: number | null
     }>()
-    
+
     if (!jobs.results || jobs.results.length === 0) break
-    
-    // buildJobProfileCompact로 인덱싱 텍스트 생성
+
+    // buildJobProfileCompact로 인덱싱 텍스트 생성 (V2: 속성 데이터 포함)
     const textsForEmbedding = jobs.results.map(job => {
+      // category는 merged_profile_json에서 추출
+      let category: string | null = null
+      if (job.merged_profile_json) {
+        try {
+          const p = JSON.parse(job.merged_profile_json)
+          category = p.category || p.heroCategory || p.분류 || null
+        } catch {}
+      }
       const profileData = parseJobProfileFromMergedJson(
         job.job_id,
         job.job_name,
         job.merged_profile_json,
-        job.category
+        category
       )
+      // V2: 속성 데이터 + 관련 전공 추가
+      profileData.attributes = {
+        income: job.income,
+        stability: job.stability,
+        wlb: job.wlb,
+        growth: job.growth,
+        analytical: job.analytical,
+        creative: job.creative,
+        people_facing: job.people_facing,
+        solo_deep: job.solo_deep,
+        teamwork: job.teamwork,
+        execution: job.execution,
+      }
+      // 관련 전공은 merged_profile_json에서 추출
+      if (job.merged_profile_json) {
+        try {
+          const profile = JSON.parse(job.merged_profile_json)
+          const majors = profile.relatedMajors || profile.related_majors || profile.관련학과 || []
+          if (Array.isArray(majors)) {
+            profileData.relatedMajors = majors
+              .slice(0, 3)
+              .map((m: any) => typeof m === 'string' ? m : m.name || '')
+              .filter(Boolean)
+          }
+        } catch {}
+      }
       return buildJobProfileCompact(profileData)
     })
-    
+
     try {
       // 배치로 임베딩 생성
       const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, textsForEmbedding)
-      
+
       // Vectorize에 배치 저장 (확장된 metadata 포함)
       const vectors = jobs.results.map((job, idx) => {
         // merged_profile_json에서 추가 metadata 추출
+        let category = ''
         let kscoMajor: string | undefined
         let kscoMid: string | undefined
         let educationLevel: string | undefined
-        
+
         if (job.merged_profile_json) {
           try {
             const profile = JSON.parse(job.merged_profile_json)
+            category = profile.category || profile.heroCategory || profile.분류 || ''
             kscoMajor = profile.ksco_major || profile.kscoMajor
             kscoMid = profile.ksco_mid || profile.kscoMid
             educationLevel = profile.education_level || profile.educationLevel || profile.학력
           } catch {}
         }
-        
+
         return {
           id: job.job_id,
           values: embeddings[idx],
           metadata: {
             job_name: job.job_name,
-            category: job.category || '',
+            category,
             // QSP 품질 강화용 metadata
             ksco_major: kscoMajor || '',
             ksco_mid: kscoMid || '',
@@ -909,11 +1049,12 @@ export async function indexMajorsToVectorize(
       const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, textsForEmbedding)
 
       const vectors = majors.results.map((m, idx) => ({
-        id: `major:${m.id}`,
+        id: toVectorizeId('major', m.id),
         values: embeddings[idx],
         metadata: {
           type: 'major',
           name: m.name,
+          original_id: m.id,
         },
       }))
 
@@ -933,6 +1074,73 @@ export async function indexMajorsToVectorize(
   }
 
   return { indexed, errors }
+}
+
+// ============================================
+// 전공 증분 인덱싱 (신규 또는 버전 불일치만)
+// ============================================
+export async function incrementalUpsertMajorsToVectorize(
+  db: D1Database,
+  vectorize: VectorizeIndex,
+  openaiApiKey: string,
+  options: { batchSize?: number; maxItems?: number } = {}
+): Promise<{ upserted: number; errors: number; lastError?: string }> {
+  const { batchSize = 50, maxItems = 200 } = options
+  const CURRENT_VERSION = 'MPC_V1'
+  let upserted = 0
+  let errors = 0
+  let lastError: string | undefined
+  let offset = 0
+
+  while (upserted < maxItems) {
+    const majors = await db.prepare(`
+      SELECT id, name, merged_profile_json
+      FROM majors
+      WHERE is_active = 1
+        AND (indexed_at IS NULL OR embedding_version != ?)
+      ORDER BY id
+      LIMIT ? OFFSET ?
+    `).bind(CURRENT_VERSION, batchSize, offset).all<{
+      id: string
+      name: string
+      merged_profile_json: string | null
+    }>()
+
+    if (!majors.results || majors.results.length === 0) break
+
+    const textsForEmbedding = majors.results.map(m =>
+      buildMajorProfileCompact({ name: m.name, merged_profile_json: m.merged_profile_json })
+    )
+
+    try {
+      const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, textsForEmbedding)
+
+      const vectors = majors.results.map((m, idx) => ({
+        id: toVectorizeId('major', m.id),
+        values: embeddings[idx],
+        metadata: { type: 'major', name: m.name, original_id: m.id },
+      }))
+
+      await vectorize.upsert(vectors)
+
+      for (const m of majors.results) {
+        await db.prepare(`
+          UPDATE majors SET indexed_at = datetime('now'), embedding_version = ?
+          WHERE id = ?
+        `).bind(CURRENT_VERSION, m.id).run()
+      }
+
+      upserted += majors.results.length
+    } catch (e) {
+      lastError = e instanceof Error ? e.message : String(e)
+      errors += majors.results.length
+    }
+
+    offset += batchSize
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+
+  return { upserted, errors, lastError }
 }
 
 // ============================================
@@ -1029,6 +1237,216 @@ export async function indexHowtosToVectorize(
   }
 
   return { indexed, errors }
+}
+
+// ============================================
+// HowTo 증분 인덱싱 (신규 또는 버전 불일치만)
+// ============================================
+export async function incrementalUpsertHowtosToVectorize(
+  db: D1Database,
+  vectorize: VectorizeIndex,
+  openaiApiKey: string,
+  options: { batchSize?: number; maxItems?: number } = {}
+): Promise<{ upserted: number; errors: number }> {
+  const { batchSize = 50, maxItems = 200 } = options
+  const CURRENT_VERSION = 'HPC_V1'
+  let upserted = 0
+  let errors = 0
+  let offset = 0
+
+  while (upserted < maxItems) {
+    const pages = await db.prepare(`
+      SELECT id, slug, title, summary, content
+      FROM pages
+      WHERE page_type IN ('guide', 'howto')
+        AND status = 'published'
+        AND (indexed_at IS NULL OR embedding_version != ?)
+      ORDER BY id
+      LIMIT ? OFFSET ?
+    `).bind(CURRENT_VERSION, batchSize, offset).all<{
+      id: number
+      slug: string
+      title: string
+      summary: string | null
+      content: string | null
+    }>()
+
+    if (!pages.results || pages.results.length === 0) break
+
+    const textsForEmbedding = pages.results.map(p =>
+      buildHowtoProfileCompact({ title: p.title, summary: p.summary, content: p.content })
+    )
+
+    try {
+      const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, textsForEmbedding)
+
+      const vectors = pages.results.map((p, idx) => ({
+        id: `howto:${p.id}`,
+        values: embeddings[idx],
+        metadata: { type: 'howto', title: p.title, slug: p.slug },
+      }))
+
+      await vectorize.upsert(vectors)
+
+      for (const p of pages.results) {
+        await db.prepare(`
+          UPDATE pages SET indexed_at = datetime('now'), embedding_version = ?
+          WHERE id = ?
+        `).bind(CURRENT_VERSION, p.id).run()
+      }
+
+      upserted += pages.results.length
+    } catch {
+      errors += pages.results.length
+    }
+
+    offset += batchSize
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+
+  return { upserted, errors }
+}
+
+// ============================================
+// 단일 항목 인덱싱 (생성/발행 시 백그라운드 호출용)
+// ============================================
+
+export async function indexSingleJob(
+  db: D1Database,
+  vectorize: VectorizeIndex,
+  openaiApiKey: string,
+  jobId: string
+): Promise<boolean> {
+  try {
+    const job = await db.prepare(`
+      SELECT
+        j.id as job_id, j.name as job_name, j.merged_profile_json,
+        ja.income, ja.stability, ja.wlb, ja.growth,
+        ja.analytical, ja.creative, ja.people_facing, ja.solo_deep,
+        ja.teamwork, ja.execution
+      FROM jobs j
+      LEFT JOIN job_attributes ja ON j.id = ja.job_id
+      WHERE j.id = ? AND j.is_active = 1
+    `).bind(jobId).first<{
+      job_id: string; job_name: string; merged_profile_json: string | null
+      income: number | null; stability: number | null; wlb: number | null; growth: number | null
+      analytical: number | null; creative: number | null; people_facing: number | null
+      solo_deep: number | null; teamwork: number | null; execution: number | null
+    }>()
+
+    if (!job) return false
+
+    // category는 merged_profile_json에서 추출
+    let category: string | null = null
+    let kscoMajor = '', kscoMid = '', educationLevel = ''
+    if (job.merged_profile_json) {
+      try {
+        const p = JSON.parse(job.merged_profile_json)
+        category = p.category || p.heroCategory || p.분류 || null
+        kscoMajor = p.ksco_major || p.kscoMajor || ''
+        kscoMid = p.ksco_mid || p.kscoMid || ''
+        educationLevel = p.education_level || p.educationLevel || p.학력 || ''
+      } catch {}
+    }
+
+    const profileData = parseJobProfileFromMergedJson(job.job_id, job.job_name, job.merged_profile_json, category)
+    profileData.attributes = {
+      income: job.income, stability: job.stability, wlb: job.wlb, growth: job.growth,
+      analytical: job.analytical, creative: job.creative, people_facing: job.people_facing,
+      solo_deep: job.solo_deep, teamwork: job.teamwork, execution: job.execution,
+    }
+    if (job.merged_profile_json) {
+      try {
+        const profile = JSON.parse(job.merged_profile_json)
+        const majors = profile.relatedMajors || profile.related_majors || profile.관련학과 || []
+        if (Array.isArray(majors)) {
+          profileData.relatedMajors = majors.slice(0, 3).map((m: any) => typeof m === 'string' ? m : m.name || '').filter(Boolean)
+        }
+      } catch {}
+    }
+
+    const text = buildJobProfileCompact(profileData)
+    const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, text)
+
+    await vectorize.upsert([{
+      id: job.job_id,
+      values: embeddings[0],
+      metadata: {
+        job_name: job.job_name,
+        category: category || '',
+        ksco_major: kscoMajor,
+        ksco_mid: kscoMid,
+        education_level: educationLevel,
+        embedding_version: JOB_PROFILE_COMPACT_VERSION,
+      },
+    }])
+
+    const version = getFullEmbeddingVersion()
+    await db.prepare(`UPDATE jobs SET indexed_at = datetime('now'), embedding_version = ? WHERE id = ?`).bind(version, jobId).run()
+    return true
+  } catch {
+    return false
+  }
+}
+
+export async function indexSingleMajor(
+  db: D1Database,
+  vectorize: VectorizeIndex,
+  openaiApiKey: string,
+  majorId: string
+): Promise<boolean> {
+  try {
+    const major = await db.prepare(`
+      SELECT id, name, merged_profile_json
+      FROM majors WHERE id = ? AND is_active = 1
+    `).bind(majorId).first<{ id: string; name: string; merged_profile_json: string | null }>()
+
+    if (!major) return false
+
+    const text = buildMajorProfileCompact({ name: major.name, merged_profile_json: major.merged_profile_json })
+    const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, text)
+
+    await vectorize.upsert([{
+      id: toVectorizeId('major', major.id),
+      values: embeddings[0],
+      metadata: { type: 'major', name: major.name, original_id: major.id },
+    }])
+
+    await db.prepare(`UPDATE majors SET indexed_at = datetime('now'), embedding_version = 'MPC_V1' WHERE id = ?`).bind(majorId).run()
+    return true
+  } catch {
+    return false
+  }
+}
+
+export async function indexSingleHowto(
+  db: D1Database,
+  vectorize: VectorizeIndex,
+  openaiApiKey: string,
+  pageId: number
+): Promise<boolean> {
+  try {
+    const page = await db.prepare(`
+      SELECT id, slug, title, summary, content
+      FROM pages WHERE id = ? AND page_type IN ('guide', 'howto') AND status = 'published'
+    `).bind(pageId).first<{ id: number; slug: string; title: string; summary: string | null; content: string | null }>()
+
+    if (!page) return false
+
+    const text = buildHowtoProfileCompact({ title: page.title, summary: page.summary, content: page.content })
+    const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, text)
+
+    await vectorize.upsert([{
+      id: `howto:${page.id}`,
+      values: embeddings[0],
+      metadata: { type: 'howto', title: page.title, slug: page.slug },
+    }])
+
+    await db.prepare(`UPDATE pages SET indexed_at = datetime('now'), embedding_version = 'HPC_V1' WHERE id = ?`).bind(pageId).run()
+    return true
+  } catch {
+    return false
+  }
 }
 
 // ============================================
@@ -1993,9 +2411,9 @@ export async function incrementalUpsertToVectorize(
   while (upserted + skipped < maxJobs) {
     // 신규 또는 버전 불일치 직업 조회
     const jobs = await db.prepare(`
-      SELECT id, name, merged_profile_json, category
+      SELECT id, name, merged_profile_json
       FROM jobs
-      WHERE is_active = 1 
+      WHERE is_active = 1
         AND (indexed_at IS NULL OR embedding_version != ?)
       ORDER BY id
       LIMIT ? OFFSET ?
@@ -2003,49 +2421,57 @@ export async function incrementalUpsertToVectorize(
       id: string
       name: string
       merged_profile_json: string | null
-      category: string | null
     }>()
-    
+
     if (!jobs.results || jobs.results.length === 0) {
       break
     }
-    
-    // 인덱싱 텍스트 생성
+
+    // 인덱싱 텍스트 생성 (category는 merged_profile_json에서 추출)
     const textsForEmbedding = jobs.results.map(job => {
+      let category: string | null = null
+      if (job.merged_profile_json) {
+        try {
+          const p = JSON.parse(job.merged_profile_json)
+          category = p.category || p.heroCategory || p.분류 || null
+        } catch {}
+      }
       const profileData = parseJobProfileFromMergedJson(
         job.id,
         job.name,
         job.merged_profile_json,
-        job.category
+        category
       )
       return buildJobProfileCompact(profileData)
     })
-    
+
     try {
       // OpenAI Embedding 생성
       const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, textsForEmbedding)
-      
+
       // Vectorize에 upsert
       const vectors = jobs.results.map((job, idx) => {
+        let category = ''
         let kscoMajor: string | undefined
         let kscoMid: string | undefined
         let educationLevel: string | undefined
-        
+
         if (job.merged_profile_json) {
           try {
             const profile = JSON.parse(job.merged_profile_json)
+            category = profile.category || profile.heroCategory || profile.분류 || ''
             kscoMajor = profile.ksco_major || profile.kscoMajor
             kscoMid = profile.ksco_mid || profile.kscoMid
             educationLevel = profile.education_level || profile.educationLevel
           } catch {}
         }
-        
+
         return {
           id: job.id,
           values: embeddings[idx],
           metadata: {
             job_name: job.name,
-            category: job.category || '',
+            category,
             ksco_major: kscoMajor || '',
             ksco_mid: kscoMid || '',
             education_level: educationLevel || '',
@@ -2402,26 +2828,36 @@ export async function buildLLMMajorSearchQuery(
 
   const userMessage = `사용자 프로파일:\n${profileParts.join('\n')}`
 
-  const response = await fetch('https://gateway.ai.cloudflare.com/v1/3587865378649966bfb0a814fce73c77/careerwiki/openai/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${openaiApiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: LLM_MAJOR_SEARCH_QUERY_PROMPT },
-        { role: 'user', content: userMessage },
-      ],
-      temperature: 0.3,
-      max_tokens: 300,
-    }),
-  })
+  let response: Response | null = null
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      response = await fetch('https://gateway.ai.cloudflare.com/v1/3587865378649966bfb0a814fce73c77/careerwiki/openai/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${openaiApiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: LLM_MAJOR_SEARCH_QUERY_PROMPT },
+            { role: 'user', content: userMessage },
+          ],
+          temperature: 0.3,
+          max_tokens: 300,
+        }),
+      })
+      if (response.ok) break
+      if (response.status < 500) break // 4xx는 재시도하지 않음
+    } catch (fetchError) {
+      if (attempt === 2) throw fetchError
+    }
+    if (attempt < 2) await new Promise(r => setTimeout(r, 1000 * (attempt + 1)))
+  }
 
-  if (!response.ok) {
-    const body = await response.text().catch(() => '')
-    throw new Error(`[LLM Major Search Query] API error ${response.status}: ${body.substring(0, 200)}`)
+  if (!response || !response.ok) {
+    const body = response ? await response.text().catch(() => '') : 'no response'
+    throw new Error(`[LLM Major Search Query] API error ${response?.status}: ${body.substring(0, 200)}`)
   }
 
   const data = await response.json() as any
@@ -2739,7 +3175,7 @@ export async function vectorResultsToScoredMajors(
         try {
           const profile = JSON.parse(attrs.merged_profile_json)
           majorDescription = (
-            profile.summary || profile.요약 || profile.description || ''
+            profile.overview?.summary || profile.summary || profile.요약 || profile.description || ''
           ).substring(0, 200) || undefined
         } catch {}
       }
@@ -2865,9 +3301,8 @@ export async function expandCandidatesV3ForMajors(
     throw new Error('[V3 Major Vectorize] miniModule이 필수입니다 - LLM 검색 쿼리 생성에 필요')
   }
 
-  const queries = await buildMultiSearchQueriesForMajor(miniModule, openaiApiKey)
-
   try {
+    const queries = await buildMultiSearchQueriesForMajor(miniModule, openaiApiKey)
     const vectorResults = await searchMajorCandidatesMultiQuery(vectorize, openaiApiKey, queries)
 
     const candidates = vectorResults.map(vr => ({
@@ -2882,15 +3317,14 @@ export async function expandCandidatesV3ForMajors(
       fallback_used: false,
     }
   } catch (vecError: any) {
-    if (vecError?.message?.includes('remotely') || vecError?.message?.includes('Vectorize')) {
-      const fallbackResult = await getFallbackMajorCandidatesV3(db, targetSize)
-      return {
-        candidates: fallbackResult,
-        total_searched: fallbackResult.length,
-        search_duration_ms: Date.now() - startTime,
-        fallback_used: true,
-      }
+    // LLM/Vectorize 검색 실패 시 DB fallback
+    console.error('[V3 Major Vectorize] 검색 실패, DB fallback 사용:', vecError?.message)
+    const fallbackResult = await getFallbackMajorCandidatesV3(db, targetSize)
+    return {
+      candidates: fallbackResult,
+      total_searched: fallbackResult.length,
+      search_duration_ms: Date.now() - startTime,
+      fallback_used: true,
     }
-    throw vecError
   }
 }

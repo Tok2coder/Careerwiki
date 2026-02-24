@@ -1,18 +1,19 @@
 /**
- * Phase 3 Day 2: 인증 Middleware
- * 
- * - authMiddleware: 모든 요청에서 JWT 검증, 사용자 정보를 Context에 저장
- * - requireAuth: 로그인 필수 체크
- * - requireRole: 특정 역할 필수 체크
+ * 인증 Middleware
+ *
+ * Dual-Mode: 세션 토큰 우선, JWT fallback (마이그레이션 기간)
+ * - session_token 쿠키 → KV 세션 검증
+ * - access_token 쿠키 → JWT 검증 (fallback, 자동 세션 마이그레이션)
  */
 
 import { createMiddleware } from 'hono/factory'
-import { getCookie } from 'hono/cookie'
+import { getCookie, setCookie, deleteCookie } from 'hono/cookie'
 import type { Context } from 'hono'
 import type { CloudflareBindings } from '../../worker-configuration'
 import { verifyAccessToken } from '../utils/jwt'
 import { getUserById } from '../utils/auth-helpers'
-import type { User } from '../utils/auth-helpers'
+import type { User, OAuthProvider } from '../utils/auth-helpers'
+import { validateSession, touchSession, destroySession, createSession, SESSION_COOKIE_MAX_AGE } from '../utils/session'
 
 /**
  * Context Variables 타입 확장
@@ -20,63 +21,105 @@ import type { User } from '../utils/auth-helpers'
 declare module 'hono' {
   interface ContextVariableMap {
     user: User | null
+    sessionToken: string | null
   }
 }
 
 /**
  * 인증 Middleware
- * 
- * 모든 요청에서 JWT Access Token을 검증하고,
- * 유효한 경우 Context에 사용자 정보를 저장합니다.
- * 
- * 로그인하지 않은 경우에도 요청은 계속 진행됩니다. (user = null)
+ *
+ * 1. session_token 쿠키 → KV 세션 검증 (새 방식)
+ * 2. access_token 쿠키 → JWT 검증 + 자동 세션 발급 (마이그레이션)
+ * 3. 둘 다 없으면 비로그인
  */
 export const authMiddleware = createMiddleware<{ Bindings: CloudflareBindings }>(
   async (c, next) => {
+    const sessionToken = getCookie(c, 'session_token')
+    const isHttps = c.req.header('x-forwarded-proto') === 'https' || c.req.url.startsWith('https://')
+
+    // ──────────── 1. 세션 토큰 검증 (새 방식) ────────────
+    if (sessionToken && c.env.KV) {
+      const session = await validateSession(c.env.KV, sessionToken)
+
+      if (session) {
+        const user = await getUserById(c.env.DB, session.userId)
+
+        if (user && user.is_banned !== 1) {
+          c.set('user', user)
+          c.set('sessionToken', sessionToken)
+
+          // Sliding window 갱신 (비동기, 응답 차단하지 않음)
+          c.executionCtx.waitUntil(touchSession(c.env.KV, sessionToken, session))
+
+          return next()
+        }
+
+        // 밴 유저 또는 삭제된 유저 → 세션 파괴
+        if (user && user.is_banned === 1) {
+          c.executionCtx.waitUntil(
+            destroySession(c.env.KV, c.env.DB, sessionToken, 'ban')
+          )
+        }
+        deleteCookie(c, 'session_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+      } else {
+        // KV에 세션 없음 (만료) → 쿠키 정리
+        deleteCookie(c, 'session_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+      }
+    }
+
+    // ──────────── 2. JWT fallback (마이그레이션) ────────────
     const accessToken = getCookie(c, 'access_token')
-    
-    // Access Token이 없으면 비로그인 상태
-    if (!accessToken) {
+
+    if (accessToken) {
+      const payload = await verifyAccessToken(accessToken, c.env.JWT_SECRET)
+
+      if (payload) {
+        const user = await getUserById(c.env.DB, payload.userId)
+
+        if (user && user.is_banned !== 1) {
+          c.set('user', user)
+          c.set('sessionToken', null)
+
+          // 자동 세션 마이그레이션: JWT 유저에게 세션 토큰 발급
+          if (c.env.KV) {
+            try {
+              const newToken = await createSession(c.env.KV, c.env.DB, user.id, {
+                ip: c.req.header('cf-connecting-ip') || 'unknown',
+                userAgent: c.req.header('user-agent') || 'unknown',
+                provider: (user.provider as OAuthProvider) || 'google',
+              })
+              setCookie(c, 'session_token', newToken, {
+                httpOnly: true,
+                secure: isHttps,
+                sameSite: 'Lax',
+                maxAge: SESSION_COOKIE_MAX_AGE,
+                path: '/',
+              })
+              c.set('sessionToken', newToken)
+
+              // 기존 JWT 쿠키 정리
+              deleteCookie(c, 'access_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+              deleteCookie(c, 'refresh_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+            } catch {
+              // 세션 생성 실패해도 JWT로 계속 진행
+            }
+          }
+
+          return next()
+        }
+      }
+
+      // JWT 검증 실패 → 쿠키 정리
       c.set('user', null)
+      c.set('sessionToken', null)
+      deleteCookie(c, 'access_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
+      deleteCookie(c, 'refresh_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
       return next()
     }
-    
-    // JWT 검증
-    const payload = await verifyAccessToken(accessToken, c.env.JWT_SECRET)
-    
-    if (!payload) {
-      // JWT 검증 실패 (만료 또는 변조)
-      c.set('user', null)
-      return next()
-    }
-    
-    // D1에서 사용자 정보 조회 (역할 변경 등을 위해)
-    const user = await getUserById(c.env.DB, payload.userId)
-    
-    if (!user) {
-      // 사용자가 DB에 없음 (삭제됨)
-      c.set('user', null)
-      return next()
-    }
-    
-    // 사용자 차단 확인
-    if (user.is_banned === 1) {
-      console.log('🚫 [Auth] Banned user attempted access')
-      console.log('   User ID:', user.id)
-      console.log('   Reason:', user.ban_reason)
-      
-      c.set('user', null)
-      return next()
-    }
-    
-    // Context에 사용자 정보 저장
-    c.set('user', user)
-    
-    console.log('✅ [Auth] User authenticated')
-    console.log('   User ID:', user.id)
-    console.log('   Email:', user.email)
-    console.log('   Role:', user.role)
-    
+
+    // ──────────── 3. 비로그인 ────────────
+    c.set('user', null)
+    c.set('sessionToken', null)
     return next()
   }
 )
@@ -91,14 +134,12 @@ export const requireAuth = createMiddleware<{ Bindings: CloudflareBindings }>(
     const user = c.get('user')
     
     if (!user) {
-      console.log('⛔ [Auth] Authentication required')
-      console.log('   Path:', c.req.path)
       
       // 현재 URL을 return_url로 저장
       const url = new URL(c.req.url)
       const pathWithQuery = url.pathname + url.search
       const returnUrl = encodeURIComponent(pathWithQuery || '/')
-      return c.redirect(`/auth/google?return_url=${returnUrl}`)
+      return c.redirect(`/login?redirect=${returnUrl}`)
     }
     
     return next()
@@ -115,7 +156,6 @@ export const requireRole = (minRole: 'user' | 'expert' | 'admin') => {
     const user = c.get('user')
     
     if (!user) {
-      console.log('⛔ [Auth] Authentication required for role check')
       return c.json({ error: 'Authentication required' }, 401)
     }
     
@@ -130,9 +170,6 @@ export const requireRole = (minRole: 'user' | 'expert' | 'admin') => {
     const requiredLevel = roleHierarchy[minRole] || 0
     
     if (userLevel < requiredLevel) {
-      console.log('⛔ [Auth] Insufficient permissions')
-      console.log('   User Role:', user.role, `(Level ${userLevel})`)
-      console.log('   Required Role:', minRole, `(Level ${requiredLevel})`)
       
       return c.json({ 
         error: 'Insufficient permissions',
@@ -141,9 +178,6 @@ export const requireRole = (minRole: 'user' | 'expert' | 'admin') => {
       }, 403)
     }
     
-    console.log('✅ [Auth] Role check passed')
-    console.log('   User Role:', user.role)
-    console.log('   Required Role:', minRole)
     
     return next()
   })
@@ -176,10 +210,7 @@ export const requireJobMajorEdit = createMiddleware<{ Bindings: CloudflareBindin
     
     // 익명 사용자도 허용 (비밀번호 검증은 API 엔드포인트에서 처리)
     if (user) {
-      console.log('✅ [Auth] Job/Major edit permission granted')
-      console.log('   User Role:', user.role)
     } else {
-      console.log('✅ [Auth] Anonymous edit allowed (password verification in API)')
     }
     
     return next()
@@ -200,13 +231,9 @@ export const requireHowToEdit = createMiddleware<{ Bindings: CloudflareBindings 
     
     // 로그인 필수
     if (!user) {
-      console.log('⛔ [Auth] HowTo edit requires login')
       return c.json({ error: 'LOGIN_REQUIRED', message: 'HowTo 편집은 로그인이 필요합니다.' }, 401)
     }
     
-      console.log('✅ [Auth] HowTo edit permission granted')
-    console.log('   User ID:', user.id)
-    console.log('   User Role:', user.role)
     
     return next()
   }

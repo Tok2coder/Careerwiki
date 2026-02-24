@@ -188,7 +188,6 @@ const EditSystem = {
     }
 
     if (!entityType || !entityId) {
-      console.error('[EditSystem] Cannot determine entity type/id');
       return;
     }
 
@@ -211,7 +210,6 @@ const EditSystem = {
    */
   async loadEditData() {
     const { entityType, entityId } = this.currentEntity;
-    console.log(`[EditSystem] Loading edit data for ${entityType}: ${entityId}`);
     
     try {
       let endpoint;
@@ -235,11 +233,9 @@ const EditSystem = {
       } else if (entityType === 'major') {
         endpoint = `${API_BASE}/major/${encodeURIComponent(normalizedEntityId)}/edit-data`;
       } else {
-        console.error('[EditSystem] Unsupported entity type for edit-data');
         return;
       }
 
-      console.log(`[EditSystem] Fetching from: ${endpoint} (normalized entityId: ${normalizedEntityId})`);
       const response = await fetch(endpoint);
       const result = await response.json();
 
@@ -249,7 +245,6 @@ const EditSystem = {
 
       // 데이터 검증
       if (!result.data) {
-        console.warn('[EditSystem] No data returned from edit-data API');
         this.editData = {};
       } else {
         this.editData = result.data;
@@ -258,31 +253,14 @@ const EditSystem = {
           const value = this.editData[key];
           return value !== null && value !== undefined && value !== '';
         });
-        console.log('[EditSystem] Loaded edit data:', dataKeys.length, 'total fields,', nonEmptyKeys.length, 'non-empty fields');
-        console.log('[EditSystem] Non-empty fields:', nonEmptyKeys);
-        console.log('[EditSystem] Sample values:', {
-          name: this.editData.name,
-          summary: this.editData.summary ? this.editData.summary.substring(0, 50) + '...' : 'empty',
-          duties: this.editData.duties ? this.editData.duties.substring(0, 50) + '...' : 'empty',
-          tags: this.editData.tags ? this.editData.tags.substring(0, 50) + '...' : 'empty'
-        });
       }
       
       // entityId 업데이트 (edit-data API에서 반환하는 실제 ID 사용)
       if (result.entityId) {
-        console.log(`[EditSystem] Updating entityId from "${this.currentEntity.entityId}" to "${result.entityId}"`);
         this.currentEntity.entityId = result.entityId;
       } else {
-        console.warn(`[EditSystem] No entityId returned from edit-data API`);
       }
     } catch (error) {
-      console.error('[EditSystem] Load edit data error:', error);
-      console.error('[EditSystem] Error details:', {
-        message: error.message,
-        stack: error.stack,
-        entityType: this.currentEntity.entityType,
-        entityId: this.currentEntity.entityId
-      });
       alert('편집 데이터를 불러오는데 실패했습니다: ' + (error.message || '알 수 없는 오류'));
       // 에러 발생 시 편집 모드 종료
       this.exitEditMode();
@@ -865,8 +843,6 @@ const EditSystem = {
       sources
     };
     
-    console.log(`[EditSystem] Temp saved field: ${fieldKey}, content length: ${content.length}`);
-    console.log(`[EditSystem] Current tempEdits keys:`, Object.keys(this.tempEdits));
     
     // UI 업데이트
     this.editData[fieldKey] = content;
@@ -907,7 +883,6 @@ const EditSystem = {
     }
     
     const { entityType, entityId } = this.currentEntity;
-    console.log(`[EditSystem] Saving all edits with entityId: "${entityId}", entityType: "${entityType}"`);
     
     try {
       // 모든 필드에 대해 서버에 저장
@@ -954,7 +929,6 @@ const EditSystem = {
       alert('모든 편집 내용이 저장되었습니다.');
       this.exitEditMode(true); // forceRefresh = true
     } catch (error) {
-      console.error('[EditSystem] Save all edits error:', error);
       alert(error.message || '저장 중 오류가 발생했습니다.');
     }
   },
@@ -1059,7 +1033,6 @@ const EditSystem = {
       this.exitEditMode(true); // forceRefresh = true
 
     } catch (error) {
-      console.error('[EditSystem] Save error:', error);
       alert(error.message || '저장 중 오류가 발생했습니다.');
     }
   },
@@ -1072,7 +1045,6 @@ const EditSystem = {
     const entityId = button.dataset.entityId;
 
     if (!entityType || !entityId) {
-      console.error('[EditSystem] Missing required data attributes');
       return;
     }
 
@@ -1091,7 +1063,6 @@ const EditSystem = {
     const field = button.dataset.field;
 
     if (!entityType || !entityId || !field) {
-      console.error('[EditSystem] Missing required data attributes');
       return;
     }
 
@@ -1439,7 +1410,6 @@ const EditSystem = {
       }, 1500);
 
     } catch (error) {
-      console.error('[EditSystem] Submit error:', error);
       this.showError(form, error.message || '편집 저장 중 오류가 발생했습니다.');
       
       // 제출 버튼 다시 활성화
@@ -1491,7 +1461,6 @@ const EditSystem = {
     const entityId = button.dataset.entityId;
 
     if (!entityType || !entityId) {
-      console.error('[EditSystem] Missing required data attributes for history');
       return;
     }
 
@@ -1644,7 +1613,6 @@ const EditSystem = {
         contentEl.innerHTML = this.renderRevisionsList(allRevisions, displayTotal, page, totalPages, limit);
       }
     } catch (error) {
-      console.error('[EditSystem] Failed to load revisions:', error);
       if (loadingEl) loadingEl.classList.add('hidden');
       if (contentEl) contentEl.classList.add('hidden');
       if (errorEl) {
@@ -1962,7 +1930,6 @@ const EditSystem = {
       // 페이지 전체 새로고침하여 변경사항 반영 (캐시 우회)
       window.location.reload();
     } catch (error) {
-      console.error('[EditSystem] Failed to restore revision:', error);
       alert(error.message || '되돌리기에 실패했습니다.');
     }
   },
@@ -2111,20 +2078,17 @@ const EditSystem = {
       
       try {
         const snapshot = JSON.parse(revision.dataSnapshot);
-        console.log('[Compare] Parsed snapshot:', snapshot);
         
         // 변경사항만 저장된 경우 (changes + previousValues)
         if (snapshot.changedFields !== undefined && snapshot.changes) {
           currentRevisionData = snapshot.changes;  // 새 값
           previousRevisionData = snapshot.previousValues || {};  // 이전 값
           useDeltaComparison = true;
-          console.log('[Compare] Using delta comparison - changes:', currentRevisionData, 'previousValues:', previousRevisionData);
         } else {
           // 전체 스냅샷인 경우
           currentRevisionData = snapshot;
         }
       } catch (error) {
-        console.error('[handleCompareRevision] Failed to parse dataSnapshot:', error);
       }
       
       // editFormattedData나 fullData가 있으면 우선 사용 (전체 데이터 비교)
@@ -2200,7 +2164,6 @@ const EditSystem = {
               previousRevisionData = {};
             }
           } catch (error) {
-            console.error('[handleCompareRevision] Failed to parse previous revision dataSnapshot:', error);
             previousRevisionData = {};
           }
         }
@@ -2249,7 +2212,6 @@ const EditSystem = {
       }
       
     } catch (error) {
-      console.error('[EditSystem] Failed to compare revision:', error);
       alert(error.message || '비교 중 오류가 발생했습니다.');
       
       // 로딩 모달 제거
@@ -2340,9 +2302,6 @@ const EditSystem = {
       return { added, removed, kept, newArr, oldArr };
     };
     
-    console.log('[Compare] Fields to compare:', fields.map(f => f.key));
-    console.log('[Compare] currentData keys:', Object.keys(currentData || {}));
-    console.log('[Compare] revisionData keys:', Object.keys(revisionData || {}));
     
     const comparisons = fields.map(field => {
       // 둘 다 동일한 방식으로 값 추출
@@ -2351,7 +2310,6 @@ const EditSystem = {
       
       // 디버그 로그 (overview.summary 등 주요 필드만)
       if (field.key.includes('overview') || field.key === 'property' || field.key === 'aptitude') {
-        console.log(`[Compare] Field "${field.key}":`, { currentValue, revisionValue });
       }
       
       const currentStr = normalizeForCompare(currentValue);
@@ -2742,7 +2700,6 @@ const CareerAPI = {
         meta: payload.meta || {}
       };
     } catch (error) {
-      console.error('학과 검색 오류:', error);
       return {
         items: [],
         meta: {
@@ -2792,7 +2749,6 @@ const CareerAPI = {
         sources: payload.sources || {}
       };
     } catch (error) {
-      console.error('학과 정보 조회 오류:', error);
       return null;
     }
   },
@@ -2828,7 +2784,6 @@ const CareerAPI = {
         categories: payload.categories || {}
       };
     } catch (error) {
-      console.error('직업 검색 오류:', error);
       return {
         items: [],
         meta: {
@@ -2874,7 +2829,6 @@ const CareerAPI = {
         sources: payload.sources || {}
       };
     } catch (error) {
-      console.error('직업 정보 조회 오류:', error);
       return null;
     }
   },
@@ -2891,7 +2845,6 @@ const CareerAPI = {
 
       return payload;
     } catch (error) {
-      console.error('카테고리 조회 오류:', error);
       return {
         jobCategories: {},
         aptitudeTypes: {},
@@ -2935,7 +2888,6 @@ const parseJsonScript = (id) => {
   try {
     return JSON.parse(el.textContent || '{}');
   } catch (error) {
-    console.warn(`[hydration] JSON parse 실패: ${id}`, error);
     return null;
   }
 };
@@ -2994,7 +2946,6 @@ const computePolicySignature = (policy) => {
     }
     return `policy-${Math.abs(hash)}`;
   } catch (error) {
-    console.warn('[telemetry] failed to compute policy signature', error);
     return null;
   }
 };
@@ -3457,7 +3408,6 @@ const Hydration = (() => {
             }
           }
         } catch (error) {
-          console.error('Sort API error:', error);
         }
       }
       
@@ -3605,7 +3555,6 @@ const Hydration = (() => {
             }
           }
         } catch (error) {
-          console.error('Sort API error:', error);
         }
       }
       
@@ -3968,15 +3917,7 @@ const DetailTabs = (() => {
     const triggers = Array.from(tabset.querySelectorAll('[data-cw-tab-trigger]'))
     const panels = Array.from(tabset.querySelectorAll('[data-cw-tab-panel]'))
 
-    // console.log('[DetailTabs] initTabset:', {
-    //   tabsetId: tabset.id,
-    //   entityType,
-    //   triggersFound: triggers.length,
-    //   panelsFound: panels.length
-    // })
-
     if (!triggers.length || !panels.length) {
-      console.warn('[DetailTabs] No triggers or panels found, skipping initialization')
       return
     }
 
@@ -4032,7 +3973,6 @@ const DetailTabs = (() => {
       trigger.addEventListener('click', (event) => {
         event.preventDefault()
         const targetId = trigger.getAttribute('data-tab-id')
-        // console.log('[DetailTabs] Tab clicked:', targetId, 'Current active:', tabset.dataset.activeTab)
         if (targetId) {
           activate(targetId, 'user')
           trigger.focus()
@@ -4160,9 +4100,7 @@ const DetailTabs = (() => {
 
   const init = (entityType) => {
     const tabsets = document.querySelectorAll(`[data-cw-tabset][data-entity-type="${entityType}"]`)
-    // console.log('[DetailTabs] Initializing tabs for entityType:', entityType, 'Found:', tabsets.length, 'tabsets')
     tabsets.forEach((tabset) => {
-      // console.log('[DetailTabs] Initializing tabset:', tabset.id, tabset.dataset)
       initTabset(tabset)
     })
   }
@@ -4269,7 +4207,6 @@ const DetailComments = (() => {
       const parsed = JSON.parse(policyJson)
       return normalizePolicy(parsed)
     } catch (error) {
-      console.warn('[comments] failed to parse policy dataset', error)
       return null
     }
   }
@@ -4511,7 +4448,6 @@ const DetailComments = (() => {
       setStatus(section, '답글이 등록되었습니다.', 'success')
       await loadComments(section, state, { silent: true })
     } catch (error) {
-      console.error('[comments] reply failed', error)
       setReplyWarning(box, '답글 등록에 실패했습니다. 잠시 후 다시 시도해주세요.')
     } finally {
       button.disabled = false
@@ -4522,15 +4458,10 @@ const DetailComments = (() => {
     section.querySelectorAll('[data-cw-comment-menu-panel]').forEach((panel) => {
       panel.classList.add('hidden')
       panel.setAttribute('aria-hidden', 'true')
-      panel.style.position = ''
-      panel.style.left = ''
-      panel.style.top = ''
-      panel.style.visibility = ''
     })
     section.querySelectorAll('[data-cw-comment-menu]').forEach((btn) => {
       btn.setAttribute('aria-expanded', 'false')
     })
-    // 이전에 열렸던 댓글 카드의 z-index 초기화
     section.querySelectorAll('[data-comment-id]').forEach((card) => {
       card.style.zIndex = ''
       card.style.position = ''
@@ -4552,7 +4483,7 @@ const DetailComments = (() => {
       commentCard.style.position = 'relative'
       commentCard.style.zIndex = '50'
     }
-    
+
     panel.classList.remove('hidden')
     panel.setAttribute('aria-hidden', 'false')
     button.setAttribute('aria-expanded', 'true')
@@ -5073,22 +5004,24 @@ const DetailComments = (() => {
     return `
       <li id="comment-${comment.id}" data-comment-id="${comment.id}" data-comment-status="${comment.status}" data-comment-best="${comment.isBest ? '1' : '0'}" class="${containerClasses}" aria-label="${commentAriaLabel}">
         <article class="space-y-3">
-          <header class="flex flex-wrap items-start justify-between gap-2 text-xs text-wiki-muted">
-            <div class="flex flex-wrap items-center gap-2">
-              ${profileImageHtml}
-              <span class="font-bold text-wiki-text text-sm">${escapeHtml(displayNickname)}</span>
-              ${adminBadge}
-              ${displayIpTag}
-              ${createdAt ? `<time class="text-wiki-muted" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
-              ${badges.join('')}
-              ${srStatusText}
+          <header class="flex items-start justify-between gap-2 text-xs text-wiki-muted">
+            <div style="min-width:0;flex:1">
+              <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                ${profileImageHtml}
+                <span class="font-bold text-wiki-text text-sm">${escapeHtml(displayNickname)}</span>
+                ${adminBadge}
+                ${displayIpTag}
+                ${createdAt ? `<time class="text-wiki-muted" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
+                ${srStatusText}
+              </div>
+              ${badges.length ? `<div class="flex flex-wrap gap-1 mt-1">${badges.join('')}</div>` : ''}
             </div>
-            <div class="relative flex items-center gap-2">
+            <div class="relative flex items-center gap-2" style="flex-shrink:0">
               ${moderatorInfo}
               <button type="button" class="p-1 text-wiki-muted hover:text-wiki-text" data-cw-comment-menu data-menu-id="${menuId}" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-ellipsis-v"></i>
               </button>
-              <div class="absolute right-0 top-full mt-2 z-50 min-w-[160px] rounded-lg border border-wiki-border bg-wiki-bg shadow-lg hidden" data-cw-comment-menu-panel data-menu-id="${menuId}" role="menu">
+              <div class="rounded-lg border border-wiki-border bg-wiki-bg shadow-lg hidden" style="position:absolute;right:0;top:100%;margin-top:4px;width:144px;z-index:9000;white-space:nowrap;" data-cw-comment-menu-panel data-menu-id="${menuId}" role="menu">
                 <button type="button" class="w-full text-left px-3 py-2 text-sm hover:bg-wiki-border/30 flex items-center gap-2" data-cw-comment-flag data-comment-id="${comment.id}" data-requires-auth="1" role="menuitem">
                   <i class="fas fa-flag"></i>신고
                 </button>
@@ -5423,7 +5356,6 @@ const DetailComments = (() => {
         try {
           controller.abort()
         } catch (err) {
-          console.warn('[comments] abort controller fallback', err)
         }
       }, 10000) : null
 
@@ -5444,13 +5376,11 @@ const DetailComments = (() => {
       try {
         payload = await response.json()
       } catch (err) {
-        console.error('[comments] JSON parse error', err, response.status, response.statusText)
         throw new Error(`Invalid response: ${response.status}`)
       }
       
     if (!response.ok || !payload?.success) {
         const errorMsg = payload?.error || `HTTP ${response.status}`
-        console.error('[comments] API error', errorMsg, payload)
         throw new Error(errorMsg)
       }
 
@@ -5569,7 +5499,6 @@ const DetailComments = (() => {
         governance: getGovernanceFromState(state)
       })
     } catch (error) {
-      console.error('[comments] loadComments error', error)
       section.dataset.commentsStatus = 'error'
       const message = error && error.name === 'AbortError'
         ? '댓글 응답이 지연되어 연결을 종료했습니다. 네트워크 상태를 확인한 후 다시 시도해주세요.'
@@ -6364,7 +6293,6 @@ const DetailComments = (() => {
         closeEditBoxes(section)
         await loadComments(section, state)
       } catch (error) {
-        console.error('[comments] edit failed', error)
         setEditStatus('댓글 수정에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error')
       } finally {
         delete submitBtn.dataset.commentBusy
@@ -6479,7 +6407,6 @@ const DetailComments = (() => {
       await loadComments(section, state)
       showToast('댓글이 삭제되었습니다.', 'success')
     } catch (error) {
-      console.error('[comments] delete failed', error)
       setStatus(section, '댓글 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error')
     } finally {
       delete button.dataset.commentBusy
@@ -7172,8 +7099,6 @@ const DOMUtils = {
 const PageInit = {
   // 홈페이지 초기화
   async initHome() {
-    // 인기 직업/전공 섹션 제거됨 (향후 리뉴얼 예정)
-    // console.log('Home page initialized');
   },
 
   // 검색 결과 페이지
@@ -7403,7 +7328,6 @@ const DemoDetailEnhancements = (() => {
       try {
         parsed = JSON.parse(raw)
       } catch (error) {
-        console.warn('[demo-comments] failed to parse sample comments', error)
         parsed = []
       }
       if (!Array.isArray(parsed) || !parsed.length) {
@@ -7435,100 +7359,168 @@ const DemoDetailEnhancements = (() => {
   }
 
   const initShare = () => {
-    document.querySelectorAll('[data-share-root]').forEach((root) => {
-      if (!(root instanceof HTMLElement)) {
-        return
-      }
-      const trigger = root.querySelector('[data-share-trigger]')
-      const panel = root.querySelector('[data-share-panel]')
-      const closeBtn = root.querySelector('[data-share-close]')
-      const copyBtn = root.querySelector('[data-share-copy]')
-      const urlInput = root.querySelector('[data-share-url]')
-      if (!trigger || !panel || !urlInput) {
-        return
-      }
+    const overlay = document.getElementById('share-modal-overlay')
+    const modal = document.getElementById('share-modal-global')
+    const urlInput = document.getElementById('share-modal-url')
+    const ogImg = document.getElementById('share-modal-og-img')
+    const ogTitleEl = document.getElementById('share-modal-og-title')
+    const thumbnail = document.getElementById('share-modal-thumbnail')
 
-      const resolveUrl = () => {
-        const path = trigger.getAttribute('data-share-path') || urlInput.value || window.location.pathname
-        try {
-          const absolute = new URL(path, window.location.origin)
-          urlInput.value = absolute.toString()
-          return absolute.toString()
-        } catch (_) {
-          urlInput.value = path
-          return path
-        }
-      }
+    if (!overlay || !modal || !urlInput) return
 
-      const hidePanel = () => {
-        panel.classList.add('hidden')
-        trigger.setAttribute('aria-expanded', 'false')
-      }
+    let currentUrl = ''
+    let currentTitle = ''
+    let currentOgImage = ''
 
-      const showPanel = () => {
-        resolveUrl()
-        panel.classList.remove('hidden')
-        trigger.setAttribute('aria-expanded', 'true')
-      }
+    const openModal = (url, title, ogImageUrl) => {
+      currentUrl = url
+      currentTitle = title
+      currentOgImage = ogImageUrl || ''
+      urlInput.value = url
+      if (ogTitleEl) ogTitleEl.textContent = title
 
-      trigger.addEventListener('click', (event) => {
-        event.preventDefault()
-        const isHidden = panel.classList.contains('hidden')
-        if (isHidden) {
-          showPanel()
+      if (ogImg && thumbnail) {
+        if (ogImageUrl) {
+          ogImg.src = ogImageUrl
+          ogImg.alt = title
+          thumbnail.classList.remove('hidden')
         } else {
-          hidePanel()
+          thumbnail.classList.add('hidden')
         }
-      })
-
-      if (closeBtn) {
-        closeBtn.addEventListener('click', (event) => {
-          event.preventDefault()
-          hidePanel()
-        })
       }
 
-      let originalCopyHtml = ''
-      if (copyBtn) {
-        originalCopyHtml = copyBtn.innerHTML
-        copyBtn.addEventListener('click', async (event) => {
-          event.preventDefault()
-          const url = resolveUrl()
-          try {
-            await navigator.clipboard.writeText(url)
-            copyBtn.classList.remove('bg-rose-600')
-            copyBtn.classList.add('bg-green-600')
-            copyBtn.innerHTML = '<i class="fas fa-check mr-1" aria-hidden="true"></i>복사됨'
-            setTimeout(() => {
-              copyBtn.classList.remove('bg-green-600')
-              copyBtn.innerHTML = originalCopyHtml
-            }, 1600)
-          } catch (error) {
-            console.warn('[share] clipboard write failed', error)
-            urlInput.select()
-            copyBtn.classList.remove('bg-green-600')
-            copyBtn.classList.add('bg-rose-600')
-            copyBtn.innerHTML = '<i class="fas fa-exclamation mr-1" aria-hidden="true"></i>복사 실패'
-            setTimeout(() => {
-              copyBtn.classList.remove('bg-rose-600')
-              copyBtn.innerHTML = originalCopyHtml
-            }, 1600)
-          }
-        })
-      }
+      overlay.classList.remove('hidden')
+      modal.classList.remove('hidden')
+      document.body.style.overflow = 'hidden'
+    }
 
-      document.addEventListener('click', (event) => {
-        if (!root.contains(event.target) && !panel.classList.contains('hidden')) {
-          hidePanel()
-        }
-      })
+    // AI 결과 등 외부에서 글로벌 공유 모달을 열 수 있도록 노출
+    window.__openShareModal = openModal
 
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !panel.classList.contains('hidden')) {
-          hidePanel()
+    const closeModal = () => {
+      overlay.classList.add('hidden')
+      modal.classList.add('hidden')
+      document.body.style.overflow = ''
+    }
+
+    // 닫기: 오버레이 + X 버튼
+    document.querySelectorAll('[data-share-modal-close]').forEach(function (el) {
+      el.addEventListener('click', closeModal)
+    })
+
+    // ESC 키
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal()
+    })
+
+    // 트리거 버튼들 (data-share-root 패턴)
+    document.querySelectorAll('[data-share-root]').forEach(function (root) {
+      var trigger = root.querySelector('[data-share-trigger]')
+      if (!trigger) return
+
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault()
+        var path = trigger.getAttribute('data-share-path') || window.location.pathname
+        var title = trigger.getAttribute('data-share-title') || document.title
+        var ogImage = trigger.getAttribute('data-share-og-image') || ''
+        try {
+          var url = new URL(path, window.location.origin).toString()
+        } catch (_) {
+          var url = window.location.origin + path
         }
+        openModal(url, title, ogImage)
       })
     })
+
+    // 복사 버튼
+    var copyBtn = document.querySelector('[data-share-modal-copy]')
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async function () {
+        try {
+          await navigator.clipboard.writeText(currentUrl)
+          copyBtn.textContent = '복사됨!'
+          copyBtn.classList.add('bg-green-600')
+          copyBtn.classList.remove('bg-wiki-primary')
+          setTimeout(function () {
+            copyBtn.textContent = '복사'
+            copyBtn.classList.remove('bg-green-600')
+            copyBtn.classList.add('bg-wiki-primary')
+          }, 1500)
+        } catch (err) {
+          urlInput.select()
+        }
+      })
+    }
+
+    // SNS: X (Twitter)
+    var xBtn = document.querySelector('[data-share-x]')
+    if (xBtn) {
+      xBtn.addEventListener('click', function () {
+        window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(currentUrl) + '&text=' + encodeURIComponent(currentTitle), '_blank', 'width=550,height=420')
+      })
+    }
+
+    // SNS: Facebook
+    var fbBtn = document.querySelector('[data-share-facebook]')
+    if (fbBtn) {
+      fbBtn.addEventListener('click', function () {
+        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(currentUrl), '_blank', 'width=550,height=420')
+      })
+    }
+
+    // SNS: LinkedIn
+    var linkedinBtn = document.querySelector('[data-share-linkedin]')
+    if (linkedinBtn) {
+      linkedinBtn.addEventListener('click', function () {
+        window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(currentUrl), '_blank', 'width=550,height=420')
+      })
+    }
+
+    // SNS: 카카오톡
+    var kakaoBtn = document.querySelector('[data-share-kakao]')
+    if (kakaoBtn) {
+      kakaoBtn.addEventListener('click', function () {
+        if (window.Kakao && window.Kakao.Share) {
+          var imgUrl = currentOgImage
+          if (imgUrl && !imgUrl.startsWith('http')) {
+            imgUrl = new URL(imgUrl, window.location.origin).toString()
+          }
+          window.Kakao.Share.sendDefault({
+            objectType: 'feed',
+            content: {
+              title: currentTitle,
+              description: 'Careerwiki에서 자세히 보기',
+              imageUrl: imgUrl || 'https://careerwiki.org/images/og-default.png',
+              link: { mobileWebUrl: currentUrl, webUrl: currentUrl }
+            },
+            buttons: [{
+              title: '자세히 보기',
+              link: { mobileWebUrl: currentUrl, webUrl: currentUrl }
+            }]
+          })
+        } else {
+          // SDK 미로드 시 fallback
+          if (navigator.share) {
+            navigator.share({ title: currentTitle, url: currentUrl }).catch(function(){})
+          } else {
+            alert('링크가 클립보드에 복사되었습니다.')
+            navigator.clipboard.writeText(currentUrl).catch(function(){})
+          }
+        }
+      })
+    }
+
+    // 모바일 네이티브 공유 (더보기)
+    var nativeBtn = document.querySelector('[data-share-native]')
+    if (nativeBtn) {
+      nativeBtn.addEventListener('click', async function () {
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: currentTitle, url: currentUrl })
+          } catch (_) { /* user cancelled */ }
+        }
+      })
+    }
   }
 
   const initSources = () => {
@@ -7600,17 +7592,21 @@ const AdminImageManager = (() => {
             이미지 재생성
           </h3>
           <p class="text-wiki-muted text-sm mb-4">
-            "${title}" 이미지를 새로 생성합니다.<br>
-            원하는 이미지 스타일을 입력해주세요.
+            "${title}" 이미지를 새로 생성합니다.
           </p>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-wiki-text mb-2">프롬프트 (이미지 설명)</label>
-            <textarea 
-              id="image-prompt-input" 
-              class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-xl text-white placeholder-wiki-muted focus:outline-none focus:border-wiki-primary resize-none"
-              rows="4"
-              placeholder="예: VR 글래스를 착용한 가상현실 전문가가 콘텐츠를 개발하고 있는 모습, 현대적인 사무실, 미래지향적인 분위기"
-            ></textarea>
+            <details class="group">
+              <summary class="cursor-pointer text-sm text-wiki-muted hover:text-wiki-text transition-colors flex items-center gap-1">
+                <i class="fas fa-chevron-right text-xs transition-transform group-open:rotate-90"></i>
+                직접 프롬프트 입력 (선택사항)
+              </summary>
+              <textarea
+                id="image-prompt-input"
+                class="w-full mt-2 px-4 py-3 bg-wiki-bg border border-wiki-border rounded-xl text-white placeholder-wiki-muted focus:outline-none focus:border-wiki-primary resize-none"
+                rows="3"
+                placeholder="비워두면 AI가 자동으로 프롬프트를 생성합니다"
+              ></textarea>
+            </details>
           </div>
           <div class="flex gap-3 justify-end">
             <button type="button" class="px-4 py-2 rounded-lg border border-wiki-border text-wiki-muted hover:text-white hover:border-wiki-text transition-colors" data-action="cancel">
@@ -7618,7 +7614,7 @@ const AdminImageManager = (() => {
             </button>
             <button type="button" class="px-4 py-2 rounded-lg bg-wiki-primary text-white hover:bg-wiki-primary/80 transition-colors flex items-center gap-2" data-action="generate">
               <i class="fas fa-magic"></i>
-              생성하기
+              자동 생성
             </button>
           </div>
           <div id="image-regen-status" class="mt-4 hidden">
@@ -7702,7 +7698,6 @@ const AdminImageManager = (() => {
             return saveData;
           }
         } catch (pollError) {
-          console.error('[AdminImageManager] Poll error:', pollError);
           throw pollError;
         }
         
@@ -7715,11 +7710,7 @@ const AdminImageManager = (() => {
 
     // 생성 버튼
     modal.querySelector('[data-action="generate"]').addEventListener('click', async () => {
-      const prompt = promptInput.value.trim();
-      if (!prompt) {
-        alert('프롬프트를 입력해주세요.');
-        return;
-      }
+      const prompt = promptInput ? promptInput.value.trim() : '';
 
       // 버튼 비활성화 및 상태 표시
       const generateBtn = modal.querySelector('[data-action="generate"]');
@@ -7735,7 +7726,7 @@ const AdminImageManager = (() => {
           body: JSON.stringify({
             type,
             slug,
-            promptOverride: prompt
+            ...(prompt ? { promptOverride: prompt } : {})
           })
         });
 
@@ -7749,25 +7740,43 @@ const AdminImageManager = (() => {
         const saveResult = await pollAndSaveImage(result.taskId, type, slug);
 
         // 성공 메시지
+        console.log('[ImageRegen] Save result:', JSON.stringify(saveResult));
+        const dbg = saveResult.debug || {};
+        const debugInfo = saveResult.debug ? `
+          <div class="mt-2 p-2 rounded bg-black/40 text-xs font-mono text-emerald-400/70 space-y-1">
+            <p>R2 Key: ${dbg.fileKey}</p>
+            <p>Download: ${dbg.downloadSize} bytes (${dbg.actualContentType})</p>
+            <p>Source: ${(dbg.sourceUrl || '').substring(0, 80)}...</p>
+            <p>DB changes: ${dbg.dbChanges}</p>
+          </div>` : '';
         statusDiv.innerHTML = `
-          <div class="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/20 border border-emerald-500/40">
-            <i class="fas fa-check-circle text-emerald-400"></i>
-            <div>
-              <p class="text-sm text-emerald-300 font-medium">이미지가 성공적으로 교체되었습니다!</p>
-              <p class="text-xs text-emerald-400/70 mt-1">
-                페이지를 새로고침하면 새 이미지를 확인할 수 있습니다.
-              </p>
+          <div class="p-3 rounded-lg bg-emerald-500/20 border border-emerald-500/40">
+            <div class="flex items-center gap-3">
+              <i class="fas fa-check-circle text-emerald-400"></i>
+              <div>
+                <p class="text-sm text-emerald-300 font-medium">이미지가 성공적으로 교체되었습니다!</p>
+                <p class="text-xs text-emerald-400/70 mt-1">
+                  <span id="regen-countdown">8</span>초 후 새로고침됩니다...
+                </p>
+              </div>
             </div>
+            ${debugInfo}
           </div>
         `;
 
-        // 2초 후 페이지 강제 새로고침 (캐시 무시)
-        setTimeout(() => {
-          // 캐시 버스터 쿼리 파라미터 추가하여 캐시 우회
-          const url = new URL(window.location.href);
-          url.searchParams.set('_t', Date.now());
-          window.location.href = url.toString();
-        }, 2000);
+        // 8초 카운트다운 후 새로고침 (디버그 확인 가능)
+        let countdown = 8;
+        const countdownEl = document.getElementById('regen-countdown');
+        const countdownInterval = setInterval(() => {
+          countdown--;
+          if (countdownEl) countdownEl.textContent = countdown;
+          if (countdown <= 0) {
+            clearInterval(countdownInterval);
+            const url = new URL(window.location.href);
+            url.searchParams.set('_t', Date.now());
+            window.location.href = url.toString();
+          }
+        }, 1000);
 
       } catch (err) {
         statusDiv.innerHTML = `
@@ -7834,12 +7843,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (/^\/major\//.test(normalizedPath)) {
     DetailPage.init('major');
+    DemoDetailEnhancements.init();
     AdminImageManager.init(); // 관리자 이미지 관리 초기화
   }
 
   if (/^\/howto\//.test(normalizedPath)) {
     DetailPage.init('guide');
     DemoDetailEnhancements.init();
+  }
+
+  // AI 추천 결과 페이지: 글로벌 공유 모달 초기화
+  if (/^\/analyzer\/(job|major)/.test(normalizedPath)) {
+    DemoDetailEnhancements.initShare();
   }
 
   if (normalizedPath === '/search') {

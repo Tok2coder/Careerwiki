@@ -235,7 +235,6 @@ export async function submitOnboarding(
 ): Promise<{ success: boolean; error?: string }> {
   const now = Math.floor(Date.now() / 1000)
   
-  console.log('📝 [Onboarding] Processing submission for user:', userId)
   
   // 1. 닉네임 검증
   const nicknameCheck = await checkNicknameAvailability(db, data.nickname, userId)
@@ -286,7 +285,6 @@ export async function submitOnboarding(
   try {
     // 6. 닉네임 저장
     await updateNickname(db, userId, data.nickname)
-    console.log('✅ [Onboarding] Nickname saved:', data.nickname)
     
     // 7. 유입경로 저장
     await db
@@ -305,7 +303,6 @@ export async function submitOnboarding(
         now
       )
       .run()
-    console.log('✅ [Onboarding] Attribution saved')
     
     // 8. 동의 저장
     for (const consent of data.consents) {
@@ -324,16 +321,13 @@ export async function submitOnboarding(
         )
         .run()
     }
-    console.log('✅ [Onboarding] Consents saved')
     
     // 9. 온보딩 완료 처리
     await completeOnboarding(db, userId)
-    console.log('✅ [Onboarding] Completed for user:', userId)
     
     return { success: true }
     
   } catch (error) {
-    console.error('❌ [Onboarding] Error:', error)
     return { success: false, error: '온보딩 처리 중 오류가 발생했습니다.' }
   }
 }

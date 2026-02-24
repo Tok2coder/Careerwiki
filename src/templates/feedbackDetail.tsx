@@ -5,6 +5,7 @@
  */
 
 import type { FeedbackComment } from '../services/feedbackService'
+import { renderNav, renderNavStyles, renderNavScripts } from './partials/nav'
 
 export interface FeedbackDetailPost {
   id: number
@@ -104,53 +105,32 @@ export function renderFeedbackDetailPage(props: FeedbackDetailPageProps): string
           </div>
         </form>
       `
-      : `<div class="text-center py-6 text-wiki-muted text-[15px]">댓글을 작성하려면 <a href="/auth/google" class="text-blue-400 hover:text-blue-300 font-semibold">로그인</a>이 필요합니다.</div>`
+      : `<div class="text-center py-6 text-wiki-muted text-[15px]">댓글을 작성하려면 <a href="/login" class="text-blue-400 hover:text-blue-300 font-semibold">로그인</a>이 필요합니다.</div>`
 
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(post.title)} - 피드백 | 직업위키</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'wiki-bg': '#0a0a0f',
-            'wiki-card': '#12121a',
-            'wiki-border': '#2a2a3a',
-            'wiki-text': '#e4e4e7',
-            'wiki-muted': '#71717a',
-            'wiki-primary': '#6366f1',
-          }
-        }
-      }
-    }
-  </script>
+  <title>${escapeHtml(post.title)} - 피드백 | Careerwiki</title>
+  <link href="/static/style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/tailwind.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  ${renderNavStyles()}
   <style>
-    body { background: #0a0a0f; }
+    body { background-color: #0b1220; color: #dee3ff; }
     .glass-card {
-      background: rgba(18, 18, 26, 0.8);
+      background: rgba(26, 26, 46, 0.8);
+      border: 1px solid rgba(67, 97, 238, 0.2);
       backdrop-filter: blur(12px);
     }
   </style>
 </head>
-<body class="min-h-screen text-wiki-text">
-  <!-- 헤더 -->
-  <header class="sticky top-0 z-40 border-b border-wiki-border/60 bg-wiki-bg/80 backdrop-blur-md">
-    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-      <a href="/" class="text-lg font-bold text-white">직업위키</a>
-      <nav class="flex items-center gap-4">
-        <a href="/feedback" class="text-sm text-wiki-muted hover:text-white transition-colors">피드백 게시판</a>
-        ${userMenuHtml}
-      </nav>
-    </div>
-  </header>
+<body class="bg-wiki-bg text-wiki-text min-h-screen">
+  ${renderNav(userMenuHtml)}
 
-  <main class="max-w-4xl mx-auto px-4 py-6 sm:py-8">
+  <main class="max-w-[1400px] mx-auto px-4 pt-20 pb-10 sm:pt-12">
+    <div class="max-w-4xl mx-auto">
     <!-- 뒤로가기 -->
     <div class="mb-6">
       <a href="/feedback" class="inline-flex items-center gap-2 px-3 py-2 min-h-[44px] text-wiki-muted hover:text-white hover:bg-wiki-card/50 rounded-lg transition-colors text-[15px]">
@@ -202,6 +182,7 @@ export function renderFeedbackDetailPage(props: FeedbackDetailPageProps): string
       <!-- 댓글 입력 -->
       ${commentFormHtml}
     </section>
+    </div>
   </main>
 
   <!-- Toast 컨테이너 -->
@@ -284,6 +265,8 @@ export function renderFeedbackDetailPage(props: FeedbackDetailPageProps): string
       });
     });
   </script>
+
+  ${renderNavScripts()}
 </body>
 </html>`
 }

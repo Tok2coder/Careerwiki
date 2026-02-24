@@ -249,14 +249,12 @@ ${inputContext}
       responseText = response.response || ''
     } else {
       // AI 없음 - 기존 메모리 유지
-      console.log('[updateMemory] No AI available, keeping existing memory')
       return existingMemory
     }
     
     // JSON 파싱
     const jsonMatch = responseText.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
-      console.error('[updateMemory] No JSON found in response')
       return existingMemory
     }
     
@@ -323,19 +321,10 @@ ${inputContext}
       ),
     }
     
-    console.log('[updateMemory] Memory updated:', {
-      stable_drivers: updatedMemory.stable_drivers.length,
-      recurring_fears: updatedMemory.recurring_fears.length,
-      decision_rules: updatedMemory.decision_rules.length,
-      contradictions: updatedMemory.contradictions.length,
-      open_loops: updatedMemory.open_loops.length,
-      emotional_triggers: updatedMemory.emotional_triggers.length,
-    })
     
     return updatedMemory
     
   } catch (error) {
-    console.error('[updateMemory] Error:', error)
     return existingMemory
   }
 }

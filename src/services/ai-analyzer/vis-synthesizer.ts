@@ -425,7 +425,6 @@ JSON 형식으로 답변: {"summary": "...", "suggested_angle": "..."}`
       }
     }
   } catch (error) {
-    console.warn('[VIS] LLM interpretation failed:', error)
   }
   
   // Fallback

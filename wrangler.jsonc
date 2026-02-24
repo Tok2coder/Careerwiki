@@ -30,17 +30,12 @@
     "remote": true
   }],
 
-  // KV Namespace 설정 (Phase 3: 인증 시스템)
-  // Day 2 시작 전 생성 필요:
-  // wrangler kv:namespace create "AUTH_KV"
-  // wrangler kv:namespace create "AUTH_KV" --preview
+  // KV Namespace 설정 (세션 저장소)
   "kv_namespaces": [
-    // Day 2 시작 전에 아래 주석 해제하고 ID 입력
-    // {
-    //   "binding": "AUTH_KV",
-    //   "id": "your_production_kv_id_here",
-    //   "preview_id": "your_preview_kv_id_here"
-    // }
+    {
+      "binding": "KV",
+      "id": "842ab2c49a76498290858293748de02a"
+    }
   ],
   
   // Vectorize 설정 (AI 분석기 후보 검색)

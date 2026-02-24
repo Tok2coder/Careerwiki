@@ -51,7 +51,6 @@ export async function search(
         return { success: false, error: '지원하지 않는 검색 도메인입니다' }
     }
   } catch (error) {
-    console.error(`[search ${domain}] Error:`, error)
     return { success: false, error: '검색 중 오류가 발생했습니다' }
   }
 }
@@ -90,7 +89,6 @@ async function searchJobs(
     
     return { success: true, results }
   } catch (error) {
-    console.error('[searchJobs] Error:', error)
     return { success: true, results: [] }  // 오류 시 빈 배열 반환
   }
 }
@@ -129,7 +127,6 @@ async function searchMajors(
     
     return { success: true, results }
   } catch (error) {
-    console.error('[searchMajors] Error:', error)
     return { success: true, results: [] }
   }
 }
@@ -171,7 +168,6 @@ async function searchHowtos(
     
     return { success: true, results }
   } catch (error) {
-    console.error('[searchHowtos] Error:', error)
     return { success: true, results: [] }
   }
 }
@@ -213,7 +209,6 @@ async function searchTags(
     
     return { success: true, results }
   } catch (error) {
-    console.error('[searchTags] Error:', error)
     return { success: true, results: [] }
   }
 }
@@ -248,7 +243,6 @@ export async function validateExists(
         return { exists: false }
     }
   } catch (error) {
-    console.error(`[validateExists ${domain}] Error:`, error)
     return { exists: false }
   }
 }
@@ -283,7 +277,6 @@ export async function getPopularTags(
     
     return { success: true, tags }
   } catch (error) {
-    console.error('[getPopularTags] Error:', error)
     return { success: false, error: '인기 태그 조회 중 오류가 발생했습니다' }
   }
 }

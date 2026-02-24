@@ -14,9 +14,9 @@ export function renderNotFoundPage(options?: NotFoundOptions): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>페이지를 찾을 수 없습니다 | CareerWiki</title>
+  <title>페이지를 찾을 수 없습니다 | Careerwiki</title>
   <link href="/static/style.css" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/tailwind.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   ${renderNavStyles()}
   <style>
@@ -24,7 +24,7 @@ export function renderNotFoundPage(options?: NotFoundOptions): string {
     .nf-hero {
       max-width: 960px;
       margin: 0 auto;
-      padding: 48px 20px 64px;
+      padding: 80px 20px 64px;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 28px;
@@ -104,6 +104,9 @@ export function renderNotFoundPage(options?: NotFoundOptions): string {
     .nf-btn:hover { transform: translateY(-1px); opacity: 0.98; }
     .nf-list { margin-top: 14px; padding-left: 18px; color: #c7cee7; }
     .nf-list li { margin-bottom: 6px; }
+    @media (min-width: 640px) {
+      .nf-hero { padding-top: 48px; }
+    }
     @media (max-width: 640px) {
       .nf-title { font-size: 24px; }
       .nf-card { padding: 22px; }

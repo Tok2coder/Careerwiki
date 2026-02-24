@@ -65,7 +65,6 @@ export class HowToEditorManager {
       : options.container
 
     if (!container) {
-      console.error('Editor container not found')
       return
     }
 
@@ -149,7 +148,6 @@ export class HowToEditorManager {
     // 초기 콘텐츠에서 각주 로드
     setTimeout(() => this.loadFootnotesFromContent(), 100)
 
-    console.log('HowTo Editor initialized')
   }
 
   // =====================================================
@@ -348,11 +346,9 @@ export class HowToEditorManager {
         try {
           const parsed = JSON.parse(localDraft)
           if (parsed.content) {
-            console.log('Recovered from localStorage')
             return parsed.content
           }
         } catch (e) {
-          console.warn('Local draft parse error:', e)
         }
       }
     }
@@ -594,7 +590,6 @@ export class HowToEditorManager {
         const urlInput = modal.querySelector('#footnote-url') as HTMLInputElement
         
         if (!textInput) {
-          console.error('각주 텍스트 입력 필드를 찾을 수 없습니다.')
           return
         }
         
@@ -615,7 +610,6 @@ export class HowToEditorManager {
 
         modal.remove()
       } catch (error) {
-        console.error('각주 저장 중 오류 발생:', error)
         alert('각주 저장 중 오류가 발생했습니다. 다시 시도해주세요.')
       }
     })
@@ -641,7 +635,6 @@ export class HowToEditorManager {
   private insertFootnote(id: number, text: string, url?: string) {
     try {
       if (!this.editor) {
-        console.warn('에디터가 초기화되지 않았습니다.')
         return
       }
       
@@ -654,7 +647,6 @@ export class HowToEditorManager {
       const result = this.editor.commands.insertFootnote({ id, text, url: url || '' })
       
       if (!result) {
-        console.warn('각주 삽입 실패: 커서 위치를 확인해주세요.')
         return
       }
       
@@ -664,7 +656,6 @@ export class HowToEditorManager {
       // 재정렬도 수행
       setTimeout(() => this.reorderFootnotes(), 10)
     } catch (error) {
-      console.error('각주 삽입 중 오류 발생:', error)
     }
   }
 
@@ -676,7 +667,6 @@ export class HowToEditorManager {
       this.editor.commands.updateFootnote(id, { text, url: url || '' })
       this.updateFootnotesList()
     } catch (error) {
-      console.error('각주 업데이트 중 오류 발생:', error)
     }
   }
 
@@ -707,7 +697,6 @@ export class HowToEditorManager {
       // 삭제 후 재정렬
       setTimeout(() => this.reorderFootnotes(), 10)
     } catch (error) {
-      console.error('각주 삭제 중 오류 발생:', error)
     }
   }
 
@@ -778,7 +767,6 @@ export class HowToEditorManager {
       
       this.updateFootnotesList()
     } catch (error) {
-      console.error('각주 재정렬 중 오류 발생:', error)
     }
   }
 
@@ -1276,7 +1264,6 @@ export class HowToEditorManager {
         })
       })
     } catch (e) {
-      console.error('Internal link search error:', e)
     }
   }
 
@@ -1453,7 +1440,6 @@ export class HowToEditorManager {
         }).run()
       }
     } catch (error) {
-      console.error('Image upload error:', error)
       this.onErrorCallback?.(error as Error)
     }
   }
@@ -1512,7 +1498,6 @@ export class HowToEditorManager {
         throw new Error(data.error || '저장 실패')
       }
     } catch (error) {
-      console.error('Auto-save error:', error)
       this.onErrorCallback?.(error as Error)
     }
   }

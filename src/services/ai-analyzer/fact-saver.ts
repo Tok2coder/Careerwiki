@@ -252,7 +252,6 @@ export async function saveFactsToDb(
         .run()
       saved++
     } catch (error) {
-      console.error(`Failed to save fact ${fact.fact_key}:`, error)
       errors++
     }
   }

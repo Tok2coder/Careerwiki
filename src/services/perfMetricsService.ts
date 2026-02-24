@@ -637,7 +637,6 @@ const updatePerfMetricsIndex = async (kv: KVNamespace, entry: PerfMetricsIndexEn
       }
     }
   } catch (error) {
-    console.warn('[perf-metrics] index parse failed', error)
   }
 
   current.entries = [entry, ...current.entries].slice(0, PERF_INDEX_MAX)

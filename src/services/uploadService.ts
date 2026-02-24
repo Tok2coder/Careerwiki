@@ -189,7 +189,6 @@ export async function uploadToR2(
     
     return { success: true }
   } catch (error) {
-    console.error('[R2 Upload] Error:', error)
     return { success: false, error: '파일 업로드에 실패했습니다' }
   }
 }
@@ -204,7 +203,6 @@ export async function getFromR2(
   try {
     return await bucket.get(fileKey)
   } catch (error) {
-    console.error('[R2 Get] Error:', error)
     return null
   }
 }
@@ -220,7 +218,6 @@ export async function deleteFromR2(
     await bucket.delete(fileKey)
     return { success: true }
   } catch (error) {
-    console.error('[R2 Delete] Error:', error)
     return { success: false, error: '파일 삭제에 실패했습니다' }
   }
 }

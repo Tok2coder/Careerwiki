@@ -252,6 +252,7 @@ const MAJOR_SCENARIOS = {
     name: 'STEM 지향 학생',
     type: 'major',
     careerState: 'student',
+    stage: 'major_high',
     academicState: 'high_school_regular',
     miniModule: {
       interest_top: ['data_numbers', 'problem_solving'],
@@ -292,6 +293,7 @@ const MAJOR_SCENARIOS = {
     name: '인문 지향 학생',
     type: 'major',
     careerState: 'student',
+    stage: 'major_high',
     academicState: 'high_school_early',
     miniModule: {
       interest_top: ['helping_teaching', 'organizing'],
@@ -332,6 +334,7 @@ const MAJOR_SCENARIOS = {
     name: '예술형 학생',
     type: 'major',
     careerState: 'student',
+    stage: 'major_high',
     academicState: 'high_school_undecided',
     miniModule: {
       interest_top: ['creating', 'influencing'],
@@ -371,6 +374,7 @@ const MAJOR_SCENARIOS = {
     name: '취업 중시 학생',
     type: 'major',
     careerState: 'student',
+    stage: 'major_high',
     academicState: 'high_school_regular',
     miniModule: {
       interest_top: ['organizing', 'data_numbers'],
@@ -410,6 +414,7 @@ const MAJOR_SCENARIOS = {
     name: '갈등형 학생',
     type: 'major',
     careerState: 'student',
+    stage: 'major_high',
     academicState: 'high_school_undecided',
     miniModule: {
       interest_top: ['creating', 'organizing'],
@@ -449,6 +454,7 @@ const MAJOR_SCENARIOS = {
     name: '수학 제약 학생',
     type: 'major',
     careerState: 'student',
+    stage: 'major_high',
     academicState: 'retake',
     miniModule: {
       interest_top: ['problem_solving', 'helping_teaching'],
@@ -480,6 +486,86 @@ const MAJOR_SCENARIOS = {
       round1: ['사람의 행동이나 사회 현상을 이해하는 데 관심이 많습니다.'],
       round2: ['수학이 나오면 머리가 하얘집니다. 절대 안 됩니다.'],
       round3: ['수능 수학 5등급이라 이과 계열은 불가능합니다.'],
+    },
+  },
+
+  major_child_curious: {
+    id: 'major_child_curious',
+    name: '호기심 많은 어린이',
+    type: 'major',
+    careerState: 'student',
+    stage: 'major_child',
+    academicState: null,
+    miniModule: {
+      interest_top: ['creating', 'problem_solving'],
+      value_top: ['growth', 'autonomy'],
+      strength_top: ['creative', 'fast_learning'],
+      constraint_flags: [],
+      workstyle_top: ['flexible'],
+      background_flags: [],
+      language_skills: [],
+      sacrifice_flags: [],
+      energy_drain_flags: ['repetition_drain'],
+      achievement_feedback_top: ['tangible_output_feedback', 'growth_feedback'],
+      execution_style: 'action_first',
+      impact_scope: 'impact_individual',
+      failure_response: 'pivot_on_failure',
+      persistence_anchor: 'growth_anchor',
+      external_expectation: 'neutral_to_expectation',
+    },
+    narrativeAnswers: {
+      motivation: '레고 만들기랑 그림 그리기를 좋아해요. 공룡이랑 우주도 좋아합니다.',
+      avoidance: '가만히 앉아서 글 읽는 건 지루해요.',
+      constraints: '아직 어린이라 잘 모르겠어요.',
+    },
+    llmPatterns: {
+      '좋아하|관심|재미': '레고 조립하고 그림 그리는 게 제일 재미있어요. 과학 실험도 좋아합니다.',
+      '꿈|되고 싶|미래': '과학자나 게임 만드는 사람이 되고 싶어요.',
+    },
+    roundFallbacks: {
+      round1: ['만들기를 좋아하고, 새로운 것을 배우면 신나요.'],
+      round2: ['가만히 앉아서 외우는 건 싫어요.'],
+      round3: ['아직 잘 모르겠지만, 재미있는 걸 하고 싶어요.'],
+    },
+  },
+
+  major_elementary_explorer: {
+    id: 'major_elementary_explorer',
+    name: '관심사 탐색 초등학생',
+    type: 'major',
+    careerState: 'student',
+    stage: 'major_elementary',
+    academicState: null,
+    miniModule: {
+      interest_top: ['helping_teaching', 'data_numbers'],
+      value_top: ['meaning', 'growth'],
+      strength_top: ['communication', 'analytical'],
+      constraint_flags: [],
+      workstyle_top: ['team', 'structured'],
+      background_flags: [],
+      language_skills: [],
+      sacrifice_flags: ['willing_to_study'],
+      energy_drain_flags: ['cognitive_drain'],
+      achievement_feedback_top: ['helping_feedback', 'metric_feedback'],
+      execution_style: 'plan_first',
+      impact_scope: 'impact_individual',
+      failure_response: 'iterate_on_failure',
+      persistence_anchor: 'meaning_anchor',
+      external_expectation: 'external_structure_ok',
+    },
+    narrativeAnswers: {
+      motivation: '수학 문제 푸는 것과 친구들에게 설명해주는 것을 좋아합니다.',
+      avoidance: '너무 어려운 과학 실험은 좀 무서워요.',
+      constraints: '초등학생이라 아직 많이 배워야 해요.',
+    },
+    llmPatterns: {
+      '과목|좋아하|잘하는': '수학이랑 사회를 좋아하고, 친구들한테 설명해주는 걸 잘해요.',
+      '꿈|되고 싶|미래': '선생님이나 의사 같은 사람을 돕는 직업이 되고 싶어요.',
+    },
+    roundFallbacks: {
+      round1: ['친구들에게 문제를 설명해줄 때 보람을 느껴요.'],
+      round2: ['혼자 오래 앉아서 하는 건 좀 힘들어요.'],
+      round3: ['아직 초등학생이지만, 공부를 열심히 하고 싶어요.'],
     },
   },
 };
@@ -958,10 +1044,20 @@ class ScenarioRunner {
       const duration = Date.now() - this.startTime;
       this.progressUI.log(`총 소요 시간: ${(duration / 1000).toFixed(1)}초`, 'success');
 
+      // 테스트 완료 후 draft 정리 (실제 사용자 분석에 영향 안 주도록)
+      try {
+        await fetch(`${this.API_BASE}/draft/delete?session_id=${encodeURIComponent(this.sessionId)}`, {
+          method: 'DELETE', credentials: 'same-origin'
+        });
+        this.progressUI.log('테스트 draft 정리 완료', 'info');
+      } catch (e) { /* draft 삭제 실패는 무시 */ }
+
       // 결과 페이지 열기 콜백 설정
       let onResultClick = null;
       if (this.options.autoNavigateToResult && this.requestId) {
-        const resultUrl = `/analyzer/job?request_id=${this.requestId}`;
+        const resultUrl = this.isMajorScenario
+          ? `/analyzer/major?view=${this.requestId}`
+          : `/analyzer/job?request_id=${this.requestId}`;
         this.progressUI.log(`결과 페이지: ${resultUrl}`, 'info');
         onResultClick = () => {
           window.open(resultUrl, '_blank');
@@ -1012,10 +1108,11 @@ class ScenarioRunner {
     // Universal Answers 변환 (미니모듈 → V3 포맷)
     const universalAnswers = this.convertMiniModuleToUniversal(miniModule);
 
-    // Stage 결정 (careerState 기반)
-    const stage = this.getStageFromCareerState(careerState);
+    // Stage 결정 (시나리오 직접 지정 우선, 없으면 careerState 기반)
+    const stage = this.scenario.stage || this.getStageFromCareerState(careerState);
 
     // 503 재시도 포함 (동시 테스트 시 Worker 동시 요청 한도 대비)
+    const analysisType = this.isMajorScenario ? 'major' : 'job';
     let response;
     const MAX_RETRIES = 2;
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
@@ -1024,11 +1121,12 @@ class ScenarioRunner {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           session_id: this.sessionId,
-          analysis_type: 'job',
+          analysis_type: analysisType,
           stage: stage,
           career_state: careerState,
           universal_answers: universalAnswers,
           mini_module_result: miniModule,
+          academic_state: this.isMajorScenario ? (this.scenario.academicState || 'high_school_undecided') : undefined,
           debug: true,
         }),
       });
@@ -1053,15 +1151,26 @@ class ScenarioRunner {
     await this.delay(this.options.delayBetweenSteps);
   }
 
-  // careerState → stage 변환
+  // careerState → stage 변환 (직업/전공 분기)
   getStageFromCareerState(careerState) {
-    const mapping = {
+    if (this.isMajorScenario) {
+      // 전공용 stages: major_middle, major_high, major_freshman, major_student, major_graduate
+      const majorMapping = {
+        'student': 'major_high',
+        'job_seeker': 'major_high',
+        'employed': 'major_student',
+        'career_changer': 'major_student',
+      };
+      return majorMapping[careerState] || 'major_high';
+    }
+    // 직업용 stages: job_explore, job_student, job_early, job_transition, job_second
+    const jobMapping = {
       'student': 'job_student',
       'job_seeker': 'job_explore',
       'employed': 'job_early',
       'career_changer': 'job_explore',
     };
-    return mapping[careerState] || 'job_explore';
+    return jobMapping[careerState] || 'job_explore';
   }
 
   // 미니모듈 결과 → Universal Answers 변환
@@ -1138,13 +1247,14 @@ class ScenarioRunner {
     };
     const purposeTag = purposeTagMap[round] || 'ENGINE';
 
-    // 1. 질문 요청
+    // 1. 질문 요청 (전공 시나리오면 analysis_type='major' 전달 → 전공용 인터뷰어 프롬프트 사용)
     const questionsResponse = await fetch(`${this.API_BASE}/v3/round-questions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         session_id: this.sessionId,
-        round_number: round,  // 'round' → 'round_number'
+        round_number: round,
+        analysis_type: this.isMajorScenario ? 'major' : 'job',
         narrative_facts: {
           highAliveMoment: this.answerGenerator.getNarrativeAnswer('motivation'),
           lostMoment: this.answerGenerator.getNarrativeAnswer('avoidance'),
@@ -1280,7 +1390,10 @@ class ScenarioRunner {
     // Phase 1: Judge (추천 + 점수 매기기) — 503 재시도 포함
     const recommendEndpoint = this.isMajorScenario ? '/v3/recommend-major' : '/v3/recommend';
     const phaseLabel = this.isMajorScenario ? '전공' : '직업';
-    this.progressUI.log(`Phase 1: ${phaseLabel} 추천 분석 중...`, 'info');
+    // 전공: skipReport=false (리포트를 추천 요청 내에서 인라인 생성)
+    // 직업: skipReport=true (리포트는 별도 /v3/recommend/report 엔드포인트에서 생성)
+    const skipReport = !this.isMajorScenario;
+    this.progressUI.log(`Phase 1: ${phaseLabel} 추천 분석 중${!skipReport ? ' (리포트 포함)' : ''}...`, 'info');
     let response;
     const MAX_RETRIES = 2;
     const requestBody = {
@@ -1290,7 +1403,7 @@ class ScenarioRunner {
       topK: 200,
       judgeTopN: 10,
       debug: true,
-      skipReport: true,
+      skipReport: skipReport,
     };
     if (this.isMajorScenario && this.scenario.academicState) {
       requestBody.academic_state = this.scenario.academicState;
@@ -1316,29 +1429,41 @@ class ScenarioRunner {
     const data = await response.json();
     this.progressUI.log(`Phase 1 완료: ${phaseLabel} 추천 완료`, 'success');
 
-    // Phase 2: Reporter (심리분석 리포트 생성)
-    this.progressUI.log('Phase 2: 심리분석 리포트 생성 중...', 'info');
-    try {
-      const reportResponse = await fetch(`${this.API_BASE}/v3/recommend/report`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: this.sessionId }),
-      });
-      if (reportResponse.ok) {
-        const reportData = await reportResponse.json();
-        data.premium_report = reportData.premium_report;
-        data.report_mode = reportData.report_mode;
-        const reportMode = reportData.report_mode || 'unknown';
-        if (reportMode === 'llm') {
-          this.progressUI.log('LLM 기반 리포트 생성 성공', 'success');
-        } else if (reportMode === 'fallback') {
-          this.progressUI.log('Fallback 리포트 사용', 'warning');
+    // Phase 2: Reporter (직업만 — 전공은 Phase 1에서 인라인 생성됨)
+    if (!this.isMajorScenario) {
+      this.progressUI.log('Phase 2: 심리분석 리포트 생성 중...', 'info');
+      try {
+        const reportResponse = await fetch(`${this.API_BASE}/v3/recommend/report`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: this.sessionId }),
+        });
+        if (reportResponse.ok) {
+          const reportData = await reportResponse.json();
+          data.premium_report = reportData.premium_report;
+          data.report_mode = reportData.report_mode;
+          const reportMode = reportData.report_mode || 'unknown';
+          if (reportMode === 'llm') {
+            this.progressUI.log('LLM 기반 리포트 생성 성공', 'success');
+          } else if (reportMode === 'fallback') {
+            this.progressUI.log('Fallback 리포트 사용', 'warning');
+          }
+        } else {
+          this.progressUI.log('리포트 생성 실패 (추천 결과는 정상)', 'warning');
         }
-      } else {
-        this.progressUI.log('리포트 생성 실패 (추천 결과는 정상)', 'warning');
+      } catch (reportError) {
+        this.progressUI.log('리포트 생성 중 오류 (추천 결과는 정상)', 'warning');
       }
-    } catch (reportError) {
-      this.progressUI.log('리포트 생성 중 오류 (추천 결과는 정상)', 'warning');
+    } else {
+      // 전공: /v3/recommend-major에서 리포트가 인라인으로 생성됨
+      const reportMode = data.report_mode || 'unknown';
+      if (reportMode === 'llm') {
+        this.progressUI.log('Phase 2: 전공 리포트 (인라인) 생성 성공', 'success');
+      } else if (reportMode === 'fallback') {
+        this.progressUI.log('Phase 2: 전공 리포트 Fallback 사용', 'warning');
+      } else if (reportMode === 'deferred') {
+        this.progressUI.log('Phase 2: 전공 리포트 지연 생성 (skipReport)', 'info');
+      }
     }
 
     if (this.isMajorScenario && data.recommendations && data.recommendations.top_majors && data.recommendations.top_majors.length > 0) {

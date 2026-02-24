@@ -45,7 +45,6 @@ export function dbRowToHowtoGuideDetail(row: DbHowtoRow): HowtoGuideDetail {
       metaData = JSON.parse(row.meta_data)
     }
   } catch {
-    console.warn('[dbRowToHowtoGuideDetail] Failed to parse meta_data')
   }
 
   const tags = metaData.tags || []

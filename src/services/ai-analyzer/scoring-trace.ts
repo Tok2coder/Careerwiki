@@ -73,13 +73,26 @@ const FACT_UNCERTAINTY_REDUCTION: Record<string, number> = {
   'anchor.non_negotiable_value': 0.2,
   'anchor.desired_emotion': 0.15,
   'anchor.dealbreaker': 0.12,
+
+  // Deep intake
+  'profile.mbti': 0.05,
+  'discovery.best_moment': 0.08,
+  'discovery.worst_moment': 0.08,
+  'motivation.change_reason': 0.06,
+  'priority.top1': 0.1,
+
+  // Universal answers
+  'profile.*': 0.04,
 }
 
 // ============================================
 // 확신도 계산 (P0-10 반영)
+// v3.10.6: roundAnswers + topScoreSpread 반영하여 유저별 차별화
 // ============================================
 export function calculateConfidenceScore(
-  facts: Array<{ fact_key: string; confidence_weight?: number; source?: string }>
+  facts: Array<{ fact_key: string; confidence_weight?: number; source?: string; value_json?: string }>,
+  roundAnswerCount?: number,
+  topScores?: number[]
 ): ConfidenceResult {
   const baseline = 0.3 // 최소 신뢰도
 
@@ -112,8 +125,58 @@ export function calculateConfidenceScore(
   // P0-10: source='followup' 개수에 따른 보정치 (개당 +0.04, 최대 +0.15)
   const followupBonus = Math.min(followupFacts.length * 0.04, 0.15)
 
-  // 최종 신뢰도 = baseline + Σ(uncertainty_reduction * weight) + followup 보정
-  const score = Math.min(baseline + totalReduction + followupBonus, 1.0)
+  // v3.11: fact 수 보너스
+  const factCountBonus = Math.min(facts.length * 0.008, 0.10)
+
+  // v3.11: 심층 질문 답변 수 반영 (개당 +0.04, 최대 +0.16)
+  const roundBonus = Math.min((roundAnswerCount || 0) * 0.04, 0.16)
+
+  // v3.12: 점수 분포 반영 — 전체 추천 직업의 분포 사용 (유저별 차별화)
+  let spreadBonus = 0
+  if (topScores && topScores.length >= 3) {
+    // 전체 점수의 표준편차 사용 (top3만의 max-min 대신)
+    const mean = topScores.reduce((s, v) => s + v, 0) / topScores.length
+    const variance = topScores.reduce((s, v) => s + (v - mean) ** 2, 0) / topScores.length
+    const std = Math.sqrt(variance)
+    // std 5 → +0.05, std 10 → +0.10, std 15+ → +0.15
+    spreadBonus = Math.min(std * 0.01, 0.15)
+
+    // 1위와 2위 갭 보너스 (명확한 1순위 = 높은 확신)
+    const sorted = [...topScores].sort((a, b) => b - a)
+    const topGap = sorted[0] - sorted[1]
+    if (topGap > 2) {
+      spreadBonus += Math.min((topGap - 2) * 0.008, 0.08)
+    }
+  } else if (topScores && topScores.length >= 2) {
+    const spread = Math.max(...topScores) - Math.min(...topScores)
+    spreadBonus = Math.min(spread * 0.004, 0.12)
+  }
+
+  // v3.12: 선택 다양성 보너스 — 배열형 fact에서 선택된 항목 수 기반
+  // 유저A: interest 2개, strength 1개 = 3개 → 정보 적음
+  // 유저B: interest 3개, strength 2개, value 2개 = 7개 → 정보 많음
+  let diversityBonus = 0
+  let totalSelections = 0
+  for (const f of facts) {
+    if (!f.value_json) continue
+    try {
+      const parsed = JSON.parse(f.value_json)
+      if (Array.isArray(parsed)) {
+        totalSelections += parsed.length
+      }
+    } catch { /* non-JSON fact, skip */ }
+  }
+  // 3개(기본) → +0, 8개(보통) → +0.05, 15개+(꼼꼼) → +0.12
+  if (totalSelections > 3) {
+    diversityBonus = Math.min((totalSelections - 3) * 0.01, 0.12)
+  }
+
+  // 최종 신뢰도
+  const score = Math.min(
+    baseline + totalReduction + followupBonus + factCountBonus + roundBonus + spreadBonus + diversityBonus,
+    0.95
+  )
+
 
   return {
     score,

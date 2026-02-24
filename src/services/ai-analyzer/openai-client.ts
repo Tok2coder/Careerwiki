@@ -41,42 +41,53 @@ export async function callOpenAI(
     model?: string
     temperature?: number
     max_tokens?: number
+    timeout_ms?: number  // v3.10.6: 개별 호출 타임아웃 (기본 25초)
   } = {}
 ): Promise<{ response: string; usage: OpenAIResponse['usage'] }> {
   const {
     model = OPENAI_MODEL,
     temperature = 0.7,
     max_tokens = 1500,
+    timeout_ms = 55000,  // 55초: 정상(5-15초)에선 안 걸리고, OpenAI 먹통일 때만 작동
   } = options
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature,
-      max_tokens,
-    }),
-  })
+  // v3.10.6: AbortController로 개별 OpenAI 호출 타임아웃 적용
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout_ms)
+
+  let response: Response
+  try {
+    response = await fetch('https://gateway.ai.cloudflare.com/v1/3587865378649966bfb0a814fce73c77/careerwiki/openai/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature,
+        max_tokens,
+      }),
+      signal: controller.signal,
+    })
+  } catch (err: any) {
+    clearTimeout(timeoutId)
+    if (err.name === 'AbortError') {
+      throw new Error(`OpenAI API timeout after ${timeout_ms}ms`)
+    }
+    throw err
+  } finally {
+    clearTimeout(timeoutId)
+  }
 
   if (!response.ok) {
     const error = await response.text()
-    console.error('[OpenAI] API Error:', response.status, error)
     throw new Error(`OpenAI API error: ${response.status} - ${error}`)
   }
 
   const data: OpenAIResponse = await response.json()
   
-  console.log('[OpenAI] Usage:', {
-    model,
-    prompt_tokens: data.usage.prompt_tokens,
-    completion_tokens: data.usage.completion_tokens,
-    total_tokens: data.usage.total_tokens,
-  })
 
   return {
     response: data.choices[0]?.message?.content || '',
@@ -139,38 +150,46 @@ export interface OpenAIEmbeddingResponse {
  */
 export async function generateOpenAIEmbedding(
   apiKey: string,
-  input: string | string[]
+  input: string | string[],
+  timeout_ms: number = 30000  // v3.10.6: 임베딩은 30초 (정상 2-3초, 먹통 방지용)
 ): Promise<{ embeddings: number[][]; usage: OpenAIEmbeddingResponse['usage'] }> {
   const texts = Array.isArray(input) ? input : [input]
-  
-  const response = await fetch('https://api.openai.com/v1/embeddings', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: OPENAI_EMBEDDING_MODEL,
-      input: texts,
-      dimensions: OPENAI_EMBEDDING_DIMENSIONS,
-    }),
-  })
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout_ms)
+
+  let response: Response
+  try {
+    response = await fetch('https://gateway.ai.cloudflare.com/v1/3587865378649966bfb0a814fce73c77/careerwiki/openai/embeddings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: OPENAI_EMBEDDING_MODEL,
+        input: texts,
+        dimensions: OPENAI_EMBEDDING_DIMENSIONS,
+      }),
+      signal: controller.signal,
+    })
+  } catch (err: any) {
+    clearTimeout(timeoutId)
+    if (err.name === 'AbortError') {
+      throw new Error(`OpenAI Embedding API timeout after ${timeout_ms}ms`)
+    }
+    throw err
+  } finally {
+    clearTimeout(timeoutId)
+  }
 
   if (!response.ok) {
     const error = await response.text()
-    console.error('[OpenAI Embedding] API Error:', response.status, error)
     throw new Error(`OpenAI Embedding API error: ${response.status} - ${error}`)
   }
 
   const data: OpenAIEmbeddingResponse = await response.json()
   
-  console.log('[OpenAI Embedding] Usage:', {
-    model: OPENAI_EMBEDDING_MODEL,
-    dimensions: OPENAI_EMBEDDING_DIMENSIONS,
-    input_count: texts.length,
-    prompt_tokens: data.usage.prompt_tokens,
-    total_tokens: data.usage.total_tokens,
-  })
 
   // 인덱스 순서대로 정렬하여 반환
   const sortedEmbeddings = data.data

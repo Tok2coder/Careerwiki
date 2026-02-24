@@ -309,7 +309,6 @@ profileRoutes.get('/', async (c) => {
       session_id: latestDraft?.session_id || null,
     })
   } catch (error) {
-    console.error('Profile fetch error:', error)
     return c.json({
       error: 'INTERNAL_SERVER_ERROR',
       message: error instanceof Error ? error.message : 'Unknown error',
@@ -456,7 +455,6 @@ profileRoutes.get('/diff', async (c) => {
       recommendation,
     })
   } catch (error) {
-    console.error('Profile diff error:', error)
     return c.json({
       error: 'INTERNAL_SERVER_ERROR',
       message: error instanceof Error ? error.message : 'Unknown error',
@@ -573,7 +571,6 @@ profileRoutes.patch('/', async (c) => {
       updated_at: new Date().toISOString(),
     })
   } catch (error) {
-    console.error('Profile update error:', error)
     return c.json({
       error: 'INTERNAL_SERVER_ERROR',
       message: error instanceof Error ? error.message : 'Unknown error',
@@ -695,7 +692,6 @@ profileRoutes.post('/quick-reanalyze', async (c) => {
       message: '빠른 재분석 요청이 생성되었습니다. 기존 데이터를 재사용하여 분석을 진행합니다.',
     })
   } catch (error) {
-    console.error('Quick reanalyze error:', error)
     return c.json({
       error: 'INTERNAL_SERVER_ERROR',
       message: error instanceof Error ? error.message : 'Unknown error',
@@ -736,7 +732,6 @@ profileRoutes.get('/summary', async (c) => {
       summary,
     })
   } catch (error) {
-    console.error('Profile summary error:', error)
     return c.json({
       error: 'INTERNAL_SERVER_ERROR',
       message: error instanceof Error ? error.message : 'Unknown error',

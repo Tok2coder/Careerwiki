@@ -13,7 +13,7 @@
 // 직업 프로필 인덱싱 텍스트 버전
 // ============================================
 // 변경 시 Vectorize 재인덱싱 필요
-export const JOB_PROFILE_COMPACT_VERSION = 'V1'
+export const JOB_PROFILE_COMPACT_VERSION = 'V2'
 
 // ============================================
 // SearchProfile 쿼리 텍스트 버전
@@ -25,6 +25,10 @@ export const SEARCH_PROFILE_QUERY_VERSION = 'V1'
 // 버전 히스토리 (변경 이력)
 // ============================================
 // JOB_PROFILE_COMPACT:
+//   V2: 2026-02-22 - Contextual Embedding
+//       구성: [카테고리/속성 맥락 프리앰블] + name + heroIntro/summary + duties + skills + environment + certifications
+//       프리앰블: job_attributes 기반 분야/속성/관련전공 컨텍스트 추가
+//       최대 길이: 1200자 (프리앰블 ~100-150자 + 원본 ~1000자)
 //   V1: 2026-01-27 - 초기 버전
 //       구성: name + heroIntro/summary + duties + skills + environment + certifications
 //       fallback: heroIntro → summary → description → category

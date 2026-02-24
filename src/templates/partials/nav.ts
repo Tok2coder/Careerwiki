@@ -3,40 +3,9 @@
  * Accepts userMenuHtml (rendered by renderUserMenu)
  */
 
-// SVG 로고 생성 함수 (index.tsx와 동일)
-let navLogoCounter = 0
-const getNavLogoSVG = (size: 'large' | 'small' = 'small') => {
-  navLogoCounter += 1
-  const gradientId = `navLogoGrad-${size}-${navLogoCounter}`
-  const fontSize = size === 'large' ? 56 : 28
-  const width = size === 'large' ? 360 : 180
-  const height = size === 'large' ? 90 : 40
-  const baselineOffset = size === 'large' ? 14 : 10
-  const centerX = width / 2
-  const centerY = height / 2 + baselineOffset
-
-  return `
-    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Careerwiki 로고">
-      <defs>
-        <linearGradient id="${gradientId}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#4361ee" />
-          <stop offset="100%" stop-color="#64b5f6" />
-        </linearGradient>
-      </defs>
-      <text
-        x="${centerX}"
-        y="${centerY}"
-        font-family="'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive"
-        font-size="${fontSize}"
-        font-weight="bold"
-        text-anchor="middle"
-        fill="url(#${gradientId})"
-        stroke="rgba(15, 23, 42, 0.35)"
-        stroke-width="1"
-        paint-order="stroke fill"
-      >Careerwiki</text>
-    </svg>
-  `
+// 헤더 로고 (PNG 이미지)
+const getNavLogoImage = () => {
+  return `<img src="/images/CWheaderlogo.png" alt="Careerwiki" width="180" height="40" style="object-fit: contain;" />`
 }
 
 export function renderNav(userMenuHtml: string): string {
@@ -48,7 +17,7 @@ export function renderNav(userMenuHtml: string): string {
         <!-- 기본 상태: 로고 (왼쪽) + 검색/햄버거 (오른쪽) -->
         <div id="mobile-nav-default" class="flex items-center justify-between w-full">
           <a href="/" class="flex items-center shrink-0 scale-75">
-            ${getNavLogoSVG('small')}
+            ${getNavLogoImage()}
           </a>
           <div class="flex items-center gap-1 shrink-0">
             <button id="mobile-search-btn" class="w-11 h-11 flex items-center justify-center rounded-lg text-wiki-muted hover:text-white hover:bg-wiki-primary/10 transition-all" aria-label="검색 열기">
@@ -89,7 +58,7 @@ export function renderNav(userMenuHtml: string): string {
       <!-- Desktop Navigation -->
       <div class="hidden md:flex w-full items-center gap-4 flex-nowrap">
         <a href="/" class="flex items-center shrink-0">
-          ${getNavLogoSVG('small')}
+          ${getNavLogoImage()}
         </a>
         <form action="/search" method="get" class="nav-search-shell min-w-[240px] max-w-md">
           <div class="nav-search-bar">
@@ -381,7 +350,7 @@ export function renderNavScripts(): string {
         const userMenuSection = document.getElementById('mobile-user-menu-section');
         if (userMenuSection) {
           userMenuSection.innerHTML = 
-            '<a href="/auth/google" data-login-link class="mobile-menu-link"><i class="fab fa-google"></i><span>Google로 로그인</span></a>' +
+            '<a href="/login" data-login-link class="mobile-menu-link"><i class="fas fa-sign-in-alt"></i><span>로그인</span></a>' +
             '<a href="/help" class="mobile-menu-link"><i class="fas fa-question-circle text-wiki-muted"></i><span>도움말</span></a>';
         }
         
@@ -441,9 +410,9 @@ export function renderNavScripts(): string {
               '<span id="user-ip-display" class="text-xs font-mono text-wiki-text font-medium">' + (ip || '로딩 중...') + '</span>' +
             '</div>' +
           '</div>' +
-          '<a href="/auth/google" data-login-link class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem">' +
+          '<a href="/login" data-login-link class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem">' +
             '<div class="flex items-center gap-3">' +
-              '<i class="fab fa-google text-xs w-4 text-center"></i>' +
+              '<i class="fas fa-sign-in-alt text-xs w-4 text-center"></i>' +
               '<span>로그인</span>' +
             '</div>' +
           '</a>'
@@ -490,7 +459,7 @@ export function renderNavScripts(): string {
       function updateLoginLinks() {
         const currentPath = window.location.pathname + window.location.search;
         document.querySelectorAll('[data-login-link]').forEach(function(link) {
-          link.setAttribute('href', '/auth/google?return_url=' + encodeURIComponent(currentPath));
+          link.setAttribute('href', '/login?redirect=' + encodeURIComponent(currentPath));
         });
       }
 

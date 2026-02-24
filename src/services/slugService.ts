@@ -133,7 +133,6 @@ export async function checkAndGenerateUniqueSlug(
       isUnique: candidateSlug === baseSlug  // suffix가 붙지 않았으면 true
     }
   } catch (error) {
-    console.error('[checkAndGenerateUniqueSlug] Error:', error)
     return { success: false, error: '슬러그 생성 중 오류가 발생했습니다' }
   }
 }
@@ -161,7 +160,6 @@ export async function getRedirectTarget(
     
     return { found: false }
   } catch (error) {
-    console.error('[getRedirectTarget] Error:', error)
     return { found: false }
   }
 }
@@ -190,7 +188,6 @@ export async function recordSlugHistory(
     
     return { success: true }
   } catch (error) {
-    console.error('[recordSlugHistory] Error:', error)
     return { success: false, error: '슬러그 히스토리 기록 중 오류가 발생했습니다' }
   }
 }

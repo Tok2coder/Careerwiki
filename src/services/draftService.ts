@@ -85,7 +85,6 @@ export async function createDraft(
     
     return { success: true, draftId: Number(result.meta.last_row_id) }
   } catch (error) {
-    console.error('[createDraft] Error:', error)
     return { success: false, error: '초안 생성 중 오류가 발생했습니다' }
   }
 }
@@ -188,7 +187,6 @@ export async function getDraft(
     
     return { success: true, draft }
   } catch (error) {
-    console.error('[getDraft] Error:', error)
     return { success: false, error: '초안 조회 중 오류가 발생했습니다' }
   }
 }
@@ -301,7 +299,6 @@ export async function updateDraft(
     
     return { success: true, newVersion: expectedVersion + 1 }
   } catch (error) {
-    console.error('[updateDraft] Error:', error)
     return { success: false, error: '초안 업데이트 중 오류가 발생했습니다' }
   }
 }
@@ -376,7 +373,6 @@ export async function listMyDrafts(
     
     return { success: true, drafts, total: countResult?.total ?? 0 }
   } catch (error) {
-    console.error('[listMyDrafts] Error:', error)
     return { success: false, error: '초안 목록 조회 중 오류가 발생했습니다' }
   }
 }
@@ -400,7 +396,6 @@ export async function deleteDraft(
     
     return { success: true }
   } catch (error) {
-    console.error('[deleteDraft] Error:', error)
     return { success: false, error: '초안 삭제 중 오류가 발생했습니다' }
   }
 }
@@ -466,7 +461,6 @@ export async function submitForReview(
     
     return { success: true }
   } catch (error) {
-    console.error('[submitForReview] Error:', error)
     return { success: false, error: '검수 요청 중 오류가 발생했습니다' }
   }
 }

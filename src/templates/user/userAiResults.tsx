@@ -13,6 +13,9 @@ export interface AiResultItem {
   created_at: string
   engine_version?: string
   has_premium_report?: boolean
+  version_number?: number
+  version_note?: string | null
+  parent_request_id?: number | null
 }
 
 export interface DraftItem {
@@ -147,10 +150,28 @@ function isAnalysisComplete(step: number): boolean {
 export function renderUserAiResultsContent({ results, filter, totalCount, page, totalPages, drafts = [], draft }: UserAiResultsProps): string {
   const jobResults = results.filter(r => r.analysis_type === 'job')
   const majorResults = results.filter(r => r.analysis_type === 'major')
-  
-  const filteredResults = filter === 'job' ? jobResults 
-    : filter === 'major' ? majorResults 
+
+  const filteredResults = filter === 'job' ? jobResults
+    : filter === 'major' ? majorResults
     : results
+
+  // 버전 그룹핑: 같은 session_id의 결과를 그룹으로 묶기
+  const sessionGroups = new Map<string, AiResultItem[]>()
+  for (const r of filteredResults) {
+    const key = r.session_id
+    if (!sessionGroups.has(key)) {
+      sessionGroups.set(key, [])
+    }
+    sessionGroups.get(key)!.push(r)
+  }
+  // 각 그룹 내에서 version_number 내림차순 정렬 (최신 먼저)
+  for (const [, group] of sessionGroups) {
+    group.sort((a, b) => (b.version_number || 1) - (a.version_number || 1))
+  }
+  // 그룹별 최신 결과를 기준으로 정렬
+  const sortedGroups = [...sessionGroups.values()].sort((a, b) => {
+    return new Date(b[0].created_at).getTime() - new Date(a[0].created_at).getTime()
+  })
     
   // drafts 배열 우선, 레거시 draft 호환
   const allDrafts = drafts.length > 0 ? drafts : (draft ? [draft] : [])
@@ -176,17 +197,17 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
         : continueUrl
       
       return `
-        <div class="relative p-5 rounded-xl border-2 transition-all hover:border-emerald-400/70 hover:shadow-lg hover:shadow-emerald-500/10 group"
+        <div class="relative p-4 sm:p-5 rounded-xl border-2 transition-all hover:border-emerald-400/70 hover:shadow-lg hover:shadow-emerald-500/10 group"
              style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%); border-color: rgba(16, 185, 129, 0.4);">
           <!-- 삭제 버튼 -->
-          <button onclick="deleteDraft('${draftItem.session_id}')" 
-                  class="absolute top-3 right-3 w-8 h-8 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/40 hover:text-red-300 transition-all flex items-center justify-center opacity-60 hover:opacity-100"
+          <button onclick="deleteDraft('${draftItem.session_id}')"
+                  class="absolute top-3 right-3 w-10 h-10 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/40 hover:text-red-300 transition-all flex items-center justify-center opacity-60 hover:opacity-100"
                   title="삭제">
             <i class="fas fa-trash text-sm"></i>
           </button>
-          
+
           <a href="${resultUrl}" class="block">
-            <div class="flex items-start justify-between gap-4 mb-4 pr-8">
+            <div class="flex items-start justify-between gap-4 mb-4 pr-10">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-emerald-500/20">
                   <i class="fas ${typeIcon} text-emerald-400"></i>
@@ -227,17 +248,17 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
     }
     
     return `
-      <div class="relative p-5 rounded-xl border-2 transition-all hover:border-amber-400/70 hover:shadow-lg hover:shadow-amber-500/10 group"
+      <div class="relative p-4 sm:p-5 rounded-xl border-2 transition-all hover:border-amber-400/70 hover:shadow-lg hover:shadow-amber-500/10 group"
            style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%); border-color: rgba(251, 191, 36, 0.4);">
         <!-- 삭제 버튼 -->
-        <button onclick="deleteDraft('${draftItem.session_id}')" 
-                class="absolute top-3 right-3 w-8 h-8 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/40 hover:text-red-300 transition-all flex items-center justify-center opacity-60 hover:opacity-100"
+        <button onclick="deleteDraft('${draftItem.session_id}')"
+                class="absolute top-3 right-3 w-10 h-10 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/40 hover:text-red-300 transition-all flex items-center justify-center opacity-60 hover:opacity-100"
                 title="삭제">
           <i class="fas fa-trash text-sm"></i>
         </button>
-        
+
         <a href="${continueUrl}" class="block">
-          <div class="flex items-start justify-between gap-4 mb-4 pr-8">
+          <div class="flex items-start justify-between gap-4 mb-4 pr-10">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-amber-500/20">
                 <i class="fas ${typeIcon} text-amber-400"></i>
@@ -278,24 +299,25 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
     `
   }
 
-  // 완료된 결과 카드
-  const renderResultCard = (result: AiResultItem) => {
+  // 완료된 결과 카드 (버전 정보 포함)
+  const renderResultCard = (result: AiResultItem, versionCount?: number) => {
     const isJob = result.analysis_type === 'job'
     const typeLabel = isJob ? '직업 추천' : '전공 추천'
     const typeIcon = isJob ? 'fa-briefcase' : 'fa-university'
     const typeColor = isJob ? 'text-blue-400' : 'text-emerald-400'
     const typeBg = isJob ? 'bg-blue-500/10' : 'bg-emerald-500/10'
-    
+
     const top3 = result.top_recommendations?.slice(0, 3) || []
-    const confidence = result.confidence_score 
-      ? Math.round(result.confidence_score * 100) 
+    const confidence = result.confidence_score
+      ? Math.round(result.confidence_score * 100)
       : null
-    
+    const version = result.version_number || 1
+    const hasVersions = versionCount && versionCount > 1
+
     return `
-      <a href="/user/ai-results/${result.request_id}" 
-         class="block p-5 rounded-xl border transition-all hover:border-wiki-primary/50 hover:shadow-lg hover:shadow-wiki-primary/5 group"
-         style="background: rgba(26, 26, 46, 0.6); border-color: rgba(148, 163, 184, 0.15);">
-        <div class="flex items-start justify-between gap-4 mb-4">
+      <div class="p-4 sm:p-5 rounded-xl border transition-all"
+           style="background: rgba(26, 26, 46, 0.6); border-color: rgba(148, 163, 184, 0.15);">
+        <div class="flex items-start justify-between gap-3 sm:gap-4 mb-4">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-lg flex items-center justify-center ${typeBg}">
               <i class="fas ${typeIcon} ${typeColor}"></i>
@@ -305,48 +327,71 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
               <p class="text-xs" style="color: #9aa3c5;">${formatRelativeTime(result.created_at)}</p>
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/20 text-emerald-400">
-              완료
-            </span>
-            ${result.engine_version === 'v3' ? `
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-500/20 text-purple-400">Premium</span>
+          <div class="flex items-center gap-1.5 flex-wrap justify-end">
+            ${result.engine_version && result.engine_version.startsWith('v3') ? `
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400">Premium</span>
             ` : ''}
-            ${confidence ? `
-              <span class="px-2 py-1 rounded-lg text-xs font-medium" style="background: rgba(67, 97, 238, 0.15); color: #64b5f6;">
-                ${confidence}%
+            ${hasVersions ? `
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-sky-500/20 text-sky-400">
+                v${version}
               </span>
             ` : ''}
           </div>
         </div>
-        
-        <!-- TOP 3 추천 -->
+
+        ${result.version_note ? `
+          <p class="text-xs mb-3" style="color: #9aa3c5;">
+            <i class="fas fa-tag mr-1"></i>${result.version_note}
+          </p>
+        ` : ''}
+
+        <!-- TOP 3 -->
         ${top3.length > 0 ? `
-          <div class="space-y-2">
-            <p class="text-xs font-medium" style="color: #9aa3c5;">TOP 3 추천</p>
-            <div class="flex flex-wrap gap-2">
-              ${top3.map((rec, i) => `
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm"
-                      style="background: rgba(67, 97, 238, 0.1); color: #e6e8f5;">
-                  <span class="text-xs font-bold ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-slate-300' : 'text-amber-600'}">
-                    ${i + 1}.
-                  </span>
-                  ${rec.name}
+          <div class="flex flex-wrap gap-2 mb-4">
+            ${top3.map((rec, i) => `
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm"
+                    style="background: rgba(67, 97, 238, 0.1); color: #e6e8f5;">
+                <span class="text-xs font-bold ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-slate-300' : 'text-amber-600'}">
+                  ${i + 1}.
                 </span>
-              `).join('')}
-            </div>
+                ${rec.name}
+              </span>
+            `).join('')}
           </div>
-        ` : `
-          <p class="text-sm" style="color: #9aa3c5;">추천 결과가 없습니다</p>
-        `}
-        
-        <div class="mt-4 pt-3 border-t flex items-center justify-between" style="border-color: rgba(148, 163, 184, 0.1);">
-          <span class="text-xs" style="color: #9aa3c5;">완료: ${formatDate(result.created_at)}</span>
-          <span class="text-xs text-wiki-primary group-hover:underline" style="color: #4361ee;">
-            결과 보기 <i class="fas fa-arrow-right ml-1"></i>
-          </span>
+        ` : ''}
+
+        <div class="pt-3 border-t flex items-center justify-between" style="border-color: rgba(148, 163, 184, 0.1);">
+          <span class="text-xs" style="color: #9aa3c5;">${hasVersions ? `v${version} · ` : ''}${formatDate(result.created_at)}</span>
+          <a href="/user/ai-results/${result.request_id}" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition hover:opacity-90"
+             style="background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%); color: #fff;">
+            <i class="fas fa-file-alt"></i>리포트 보기
+            <i class="fas fa-external-link-alt text-xs opacity-70"></i>
+          </a>
         </div>
-      </a>
+      </div>
+    `
+  }
+
+  // 버전 히스토리 (이전 버전들 표시)
+  const renderVersionHistory = (olderVersions: AiResultItem[]) => {
+    if (olderVersions.length === 0) return ''
+    return `
+      <div class="ml-4 pl-4 border-l-2 space-y-2" style="border-color: rgba(148, 163, 184, 0.1);">
+        ${olderVersions.map(v => `
+          <a href="/user/ai-results/${v.request_id}"
+             class="block p-3 rounded-lg transition hover:bg-wiki-card/50"
+             style="background: rgba(26, 26, 46, 0.3);">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="px-1.5 py-0.5 rounded text-xs font-medium bg-sky-500/15 text-sky-400/70">v${v.version_number || 1}</span>
+                <span class="text-xs" style="color: #9aa3c5;">${v.version_note || '최초 분석'}</span>
+              </div>
+              <span class="text-xs" style="color: #9aa3c5;">${formatRelativeTime(v.created_at)}</span>
+            </div>
+          </a>
+        `).join('')}
+      </div>
     `
   }
 
@@ -357,18 +402,18 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
   return `
       <!-- 필터 탭 -->
       <div class="flex items-center gap-2 mb-6 border-b border-wiki-border/40 pb-4 overflow-x-auto">
-        <a href="/user/ai-results?filter=all" 
-           class="px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap ${filter === 'all' ? 'text-white' : ''}"
+        <a href="/user/ai-results?filter=all"
+           class="px-4 py-2.5 rounded-lg text-sm font-medium transition whitespace-nowrap ${filter === 'all' ? 'text-white' : ''}"
            style="${filter === 'all' ? 'background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%);' : 'color: #9aa3c5;'}">
           전체
         </a>
-        <a href="/user/ai-results?filter=job" 
-           class="px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap ${filter === 'job' ? 'text-white' : ''}"
+        <a href="/user/ai-results?filter=job"
+           class="px-4 py-2.5 rounded-lg text-sm font-medium transition whitespace-nowrap ${filter === 'job' ? 'text-white' : ''}"
            style="${filter === 'job' ? 'background: rgba(59, 130, 246, 0.3); color: #fff;' : 'color: #9aa3c5;'}">
           <i class="fas fa-briefcase mr-1.5 text-blue-400"></i>직업 추천
         </a>
-        <a href="/user/ai-results?filter=major" 
-           class="px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap ${filter === 'major' ? 'text-white' : ''}"
+        <a href="/user/ai-results?filter=major"
+           class="px-4 py-2.5 rounded-lg text-sm font-medium transition whitespace-nowrap ${filter === 'major' ? 'text-white' : ''}"
            style="${filter === 'major' ? 'background: rgba(16, 185, 129, 0.3); color: #fff;' : 'color: #9aa3c5;'}">
           <i class="fas fa-university mr-1.5 text-emerald-400"></i>전공 추천
         </a>
@@ -377,7 +422,7 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
       <!-- 진행중 모두 삭제 버튼 (2개 이상일 때만) -->
       ${allDrafts.length >= 2 ? `
         <div class="flex justify-end mb-4">
-          <button onclick="deleteAllDrafts()" class="px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition flex items-center gap-2">
+          <button onclick="deleteAllDrafts()" class="px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition flex items-center gap-2">
             <i class="fas fa-trash"></i>
             진행중 모두 삭제 (${allDrafts.length}개)
           </button>
@@ -385,28 +430,47 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
       ` : ''}
       
       <!-- 결과 목록 -->
-      ${filteredDrafts.length > 0 || filteredResults.length > 0 ? `
+      ${filteredDrafts.length > 0 || sortedGroups.length > 0 ? `
         <div class="space-y-4">
           ${filteredDrafts.map(d => renderDraftCard(d)).join('')}
-          ${filteredResults.map(result => renderResultCard(result)).join('')}
+          ${sortedGroups.map(group => {
+            const latest = group[0]
+            const olderVersions = group.slice(1)
+            const groupId = `versions-${latest.session_id.replace(/[^a-zA-Z0-9]/g, '_')}`
+            return `
+              <div class="space-y-2">
+                ${renderResultCard(latest, group.length)}
+                ${olderVersions.length > 0 ? `
+                  <button onclick="document.getElementById('${groupId}').classList.toggle('hidden')"
+                          class="ml-4 text-xs px-3 py-1.5 rounded-lg transition hover:bg-wiki-card/50"
+                          style="color: #9aa3c5;">
+                    <i class="fas fa-history mr-1"></i>이전 버전 ${olderVersions.length}개
+                  </button>
+                  <div id="${groupId}" class="hidden">
+                    ${renderVersionHistory(olderVersions)}
+                  </div>
+                ` : ''}
+              </div>
+            `
+          }).join('')}
         </div>
         
         <!-- 페이지네이션 -->
         ${totalPages > 1 ? `
           <div class="flex items-center justify-center gap-2 mt-8">
             ${page > 1 ? `
-              <a href="/user/ai-results?filter=${filter}&page=${page - 1}" 
-                 class="px-4 py-2 rounded-lg text-sm transition" 
+              <a href="/user/ai-results?filter=${filter}&page=${page - 1}"
+                 class="px-5 py-2.5 rounded-lg text-sm transition"
                  style="background: rgba(26, 26, 46, 0.6); color: #9aa3c5;">
                 <i class="fas fa-chevron-left mr-1"></i> 이전
               </a>
             ` : ''}
-            <span class="px-4 py-2 text-sm" style="color: #9aa3c5;">
+            <span class="px-4 py-2.5 text-sm" style="color: #9aa3c5;">
               ${page} / ${totalPages}
             </span>
             ${page < totalPages ? `
-              <a href="/user/ai-results?filter=${filter}&page=${page + 1}" 
-                 class="px-4 py-2 rounded-lg text-sm transition" 
+              <a href="/user/ai-results?filter=${filter}&page=${page + 1}"
+                 class="px-5 py-2.5 rounded-lg text-sm transition"
                  style="background: rgba(26, 26, 46, 0.6); color: #9aa3c5;">
                 다음 <i class="fas fa-chevron-right ml-1"></i>
               </a>
@@ -414,7 +478,7 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
           </div>
         ` : ''}
       ` : `
-        <div class="text-center py-16">
+        <div class="text-center py-10 sm:py-16">
           <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6" style="background: rgba(67, 97, 238, 0.1);">
             <i class="fas fa-robot text-3xl" style="color: #4361ee;"></i>
           </div>

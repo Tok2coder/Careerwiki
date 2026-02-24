@@ -584,7 +584,7 @@ export const renderCtaGroup = ({ entityType, entityId, links }: CtaGroupOptions)
     >
       <div class="sr-only">
         <h2 id="${navId}-label">${escapeHtml(navLabel)}</h2>
-        <p id="${noteId}">CareerWiki 주요 전환 행동 모음입니다.</p>
+        <p id="${noteId}">Careerwiki 주요 전환 행동 모음입니다.</p>
         <p id="${instructionsId}">각 버튼은 Enter 또는 Space 키로 실행할 수 있으며, 링크는 새 탭에서 열릴 수 있습니다.</p>
       </div>
       <ul class="flex flex-wrap gap-3" role="list" data-cw-telemetry-component="cta-list">

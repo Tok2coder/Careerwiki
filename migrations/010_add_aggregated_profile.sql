@@ -8,17 +8,11 @@
 -- - 언제든 buildAggregatedProfile()로 재생성 가능
 -- ============================================
 
--- 1. aggregated_profile_json 컬럼 추가 (Derived Cache)
-ALTER TABLE analyzer_drafts ADD COLUMN aggregated_profile_json TEXT;
+-- 컬럼이 이미 존재하므로 ALTER TABLE 생략 (이전에 수동 적용됨)
+-- ALTER TABLE analyzer_drafts ADD COLUMN aggregated_profile_json TEXT;
+-- ALTER TABLE analyzer_drafts ADD COLUMN memory_json TEXT;
+-- ALTER TABLE analyzer_drafts ADD COLUMN profile_version INTEGER DEFAULT 0;
+-- ALTER TABLE analyzer_drafts ADD COLUMN mini_module_result_json TEXT;
 
--- 2. memory_json 컬럼 추가 (Rolling Memory)
-ALTER TABLE analyzer_drafts ADD COLUMN memory_json TEXT;
-
--- 3. profile_version 컬럼 추가 (캐시 버전 관리)
-ALTER TABLE analyzer_drafts ADD COLUMN profile_version INTEGER DEFAULT 0;
-
--- 4. mini_module_result_json 컬럼 추가
-ALTER TABLE analyzer_drafts ADD COLUMN mini_module_result_json TEXT;
-
--- 5. 인덱스 추가 (성능 최적화)
+-- 인덱스만 idempotent하게 생성
 CREATE INDEX IF NOT EXISTS idx_analyzer_drafts_profile_version ON analyzer_drafts(profile_version);

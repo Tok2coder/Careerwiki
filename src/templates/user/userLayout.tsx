@@ -59,8 +59,8 @@ export function renderUserLayoutContent({ title, currentPath, children, username
             <!-- 모바일: 가로 스크롤 -->
             <div class="lg:hidden flex overflow-x-auto gap-1 p-2" style="scrollbar-width: none; -ms-overflow-style: none;">
               ${navItems.map(item => `
-                <a href="${item.path}" 
-                   class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition ${
+                <a href="${item.path}"
+                   class="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm whitespace-nowrap transition ${
                      currentPath === item.path || currentPath.startsWith(item.path + '/') 
                        ? 'bg-wiki-primary/20 text-white' 
                        : 'text-wiki-muted hover:text-white hover:bg-wiki-primary/10'
@@ -93,14 +93,14 @@ export function renderUserLayoutContent({ title, currentPath, children, username
         <main class="flex-1 min-w-0">
           <!-- 페이지 헤더 -->
           <header class="mb-6 pb-4 border-b border-wiki-border/30">
-            <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+            <h1 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
               <span class="w-1.5 h-8 rounded-full bg-gradient-to-b from-wiki-primary to-wiki-secondary"></span>
               ${title}
             </h1>
           </header>
           
           <!-- 페이지 내용 -->
-          <div class="glass-card rounded-xl p-4 sm:p-6">
+          <div class="glass-card rounded-xl p-3 sm:p-6">
             ${children}
           </div>
         </main>

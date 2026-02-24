@@ -2,7 +2,7 @@
 
 > **완전한 데이터 + 빠른 응답 + 사용자 기여 + AI 보강**을 결합한 차세대 진로 정보 플랫폼
 
-[![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-orange)](https://careerwiki-phase1.pages.dev)
+[![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-orange)](https://careerwiki.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## 🎯 프로젝트 비전
@@ -20,7 +20,7 @@ CareerWiki는 **Wikipedia의 협업 정신**과 **AI의 지능**을 결합하여
 
 ## 🌐 서비스 URL
 
-- **Production**: https://careerwiki-phase1.pages.dev
+- **Production**: https://careerwiki.org
 - **Latest Preview**: https://b5797c35.careerwiki-phase1.pages.dev
 - **Dev Sandbox**: https://3000-iy8xtwcphw6exxjb1hgnf-6532622b.e2b.dev
 - **GitHub**: https://github.com/[username]/careerwiki (연동 예정)

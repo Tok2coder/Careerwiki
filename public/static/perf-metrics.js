@@ -264,7 +264,6 @@
       });
       paintObserver.observe({ type: 'paint', buffered: true });
     } catch (error) {
-      console.debug('[perf-metrics] paint observer unavailable', error);
     }
 
     try {
@@ -280,7 +279,6 @@
       });
       lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
     } catch (error) {
-      console.debug('[perf-metrics] lcp observer unavailable', error);
     }
 
     try {
@@ -297,7 +295,6 @@
       });
       clsObserver.observe({ type: 'layout-shift', buffered: true });
     } catch (error) {
-      console.debug('[perf-metrics] cls observer unavailable', error);
     }
 
     try {
@@ -312,7 +309,6 @@
       });
       fidObserver.observe({ type: 'first-input', buffered: true });
     } catch (error) {
-      console.debug('[perf-metrics] fid observer unavailable', error);
     }
   };
 
@@ -397,11 +393,8 @@
         const blob = new Blob([payload], { type: 'application/json' });
         navigator.sendBeacon(METRICS_ENDPOINT, blob);
       } catch (error) {
-        console.warn('[perf-metrics] beacon failed, falling back to console', error);
-        console.info('[perf-metrics]', JSON.parse(payload));
       }
     } else {
-      console.info('[perf-metrics]', JSON.parse(payload));
     }
   };
 
