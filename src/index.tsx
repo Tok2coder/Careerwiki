@@ -96,6 +96,9 @@ import { feedbackRoutes } from './routes/feedback'
 import { adminRoutes } from './routes/admin'
 import { uploadRoutes } from './routes/upload'
 import { contentEditorRoutes } from './routes/content-editor'
+import { howtoEditorRoutes } from './routes/howto-editor'
+import { jobEditorRoutes } from './routes/job-editor'
+import { majorEditorRoutes } from './routes/major-editor'
 import { howtoRoutes } from './routes/howto'
 import { searchRoutes } from './routes/search'
 import { jobListRoutes } from './routes/job-list'
@@ -248,6 +251,9 @@ app.route('', feedbackRoutes)
 app.route('', adminRoutes)
 app.route('', uploadRoutes)
 app.route('', contentEditorRoutes)
+app.route('', howtoEditorRoutes)
+app.route('', jobEditorRoutes)
+app.route('', majorEditorRoutes)
 app.route('/howto', howtoRoutes)
 app.route('', jobListRoutes)      // /job (list) - BEFORE /job/:slug
 app.route('', majorListRoutes)    // /major (list) - BEFORE /major/:slug
