@@ -21,8 +21,8 @@ import { generateOpenAIEmbedding, callOpenAI } from './ai-analyzer/openai-client
 // ============================================
 // OpenAI text-embedding-3-small + cosine:
 //   0.5+ = 매우 관련, 0.35-0.5 = 관련, 0.25-0.35 = 약한 관련, <0.25 = 노이즈
-const MIN_VECTOR_SCORE = 0.3
-const MIN_VECTOR_SCORE_HOWTO = 0.5 // HowTo는 임베딩 수가 적어 관련 없는 것도 높은 점수 나옴
+const MIN_VECTOR_SCORE = 0.25
+const MIN_VECTOR_SCORE_HOWTO = 0.40 // HowTo는 임베딩 수가 적어 관련 없는 것도 높은 점수 나옴
 
 // ============================================
 // 쿼리 전처리: 속어/은어 확장 + 컨텍스트 보강
@@ -85,6 +85,17 @@ const SLANG_DICTIONARY: Record<string, string> = {
   // 법조 속어
   '로클럭': '재판연구원 판사 법원 법조인',
   '로클': '재판연구원 판사 법원 법조인',
+  // 추가 속어
+  '백수': '구직 무직 취업준비',
+  '취준생': '취업준비생 구직자 취업 면접',
+  '알바': '아르바이트 시간제 파트타임 근무',
+  '프리랜서': '자유직 프리랜서 자영업 1인기업',
+  '유튜버': '유튜브 크리에이터 콘텐츠 영상제작',
+  '인플루언서': '소셜미디어 인스타그래머 크리에이터 마케터',
+  '판검사': '판사 검사 법조인 법관',
+  '기레기': '기자 언론인 리포터',
+  '선생님': '교사 교원 교육자 강사',
+  '공시생': '공무원시험 공무원 공시 행정',
 }
 
 /**
@@ -92,31 +103,94 @@ const SLANG_DICTIONARY: Record<string, string> = {
  * 1. 속어/은어 → 표준 직업명으로 확장
  * 2. 짧은 쿼리 → 직업 컨텍스트 추가
  * 3. 추상적 쿼리 → LLM 기반 키워드 확장 (feature flag: ENABLE_QUERY_EXPANSION)
+ *
+ * 반환:
+ * - searchQuery: 임베딩용 — 속어 매칭 시 확장 텍스트만 (원본 속어 제외해 벡터 오염 방지)
+ * - keywordQuery: LIKE 키워드 검색용 — 원본 + 확장 텍스트
+ * - expansionTerms: 확장 키워드 배열
+ * - isSlangExpanded: 속어 매칭 여부
  */
 async function preprocessQuery(
   query: string,
   options?: { openaiApiKey?: string; kv?: KVNamespace; enableExpansion?: boolean }
-): Promise<{ expanded: string; original: string; keywordTerms: string[] }> {
+): Promise<{ searchQuery: string; keywordQuery: string; expansionTerms: string[]; isSlangExpanded: boolean }> {
   const trimmed = query.trim()
 
-  // 1. 속어 사전 매칭
-  const slangExpansion = SLANG_DICTIONARY[trimmed]
-  if (slangExpansion) {
-    const terms = slangExpansion.split(/\s+/).filter(t => t.length >= 2)
-    return { expanded: `${trimmed} ${slangExpansion}`, original: trimmed, keywordTerms: terms }
+  // 1. 속어 사전 — 완전 매칭
+  const exactSlangExpansion = SLANG_DICTIONARY[trimmed]
+  if (exactSlangExpansion) {
+    const terms = exactSlangExpansion.split(/\s+/).filter(t => t.length >= 2)
+    return {
+      searchQuery: exactSlangExpansion,            // 임베딩: 확장 텍스트만 (원본 속어 제외)
+      keywordQuery: `${trimmed} ${exactSlangExpansion}`, // LIKE: 원본 + 확장
+      expansionTerms: terms,
+      isSlangExpanded: true,
+    }
   }
 
-  // 부분 매칭 (사전 키가 쿼리에 포함된 경우)
+  // 부분 매칭 (사전 키가 쿼리에 포함된 경우) — 모든 매칭 결합 (복수 부분 매칭 허용)
+  const allExpansions: string[] = []
+  const allTermsSet = new Set<string>()
   for (const [slang, expansion] of Object.entries(SLANG_DICTIONARY)) {
     if (trimmed.includes(slang)) {
-      const terms = expansion.split(/\s+/).filter(t => t.length >= 2)
-      return { expanded: `${trimmed} ${expansion}`, original: trimmed, keywordTerms: terms }
+      allExpansions.push(expansion)
+      for (const t of expansion.split(/\s+/).filter(t => t.length >= 2)) {
+        allTermsSet.add(t)
+      }
+    }
+  }
+  if (allExpansions.length > 0) {
+    const combinedExpansion = allExpansions.join(' ')
+    const terms = Array.from(allTermsSet)
+    return {
+      searchQuery: `${trimmed} ${combinedExpansion}`, // 부분 매칭은 원본 유지 (문맥 필요)
+      keywordQuery: `${trimmed} ${combinedExpansion}`,
+      expansionTerms: terms,
+      isSlangExpanded: true,
+    }
+  }
+
+  // 1.5. 도메인 접미사 확장 (2-5글자, 속어 미매칭 시)
+  // 짧은 핵심어를 도메인 특화 직업/전공 변형으로 확장해 벡터 검색 정밀도 향상
+  const DOMAIN_SUFFIX_MAP: Record<string, string> = {
+    '간호': '간호사 간호학과 간호조무사',
+    '컴퓨터': '컴퓨터공학 소프트웨어개발자 프로그래머',
+    '경제': '경제학과 경제분석가 금융',
+    '법': '변호사 법학과 법무사 법조인',
+    '의사': '의사 의학과 내과 외과',
+    '교육': '교사 교육학과 강사 교수',
+    '디자인': '디자이너 시각디자인 UX디자인 그래픽디자인',
+    '음악': '음악가 음악학과 작곡 실용음악',
+    '미술': '미술가 미술학과 회화 조소',
+    '체육': '체육교사 체육학과 스포츠 트레이너',
+    '요리': '요리사 조리사 셰프 조리학과',
+    '건축': '건축가 건축학과 건축기사 건축설계',
+    '회계': '회계사 회계학과 세무사 경리',
+    '마케팅': '마케터 마케팅 광고 디지털마케팅',
+    '심리': '심리학 심리상담사 상담심리 임상심리',
+  }
+  if (trimmed.length >= 2 && trimmed.length <= 5) {
+    for (const [prefix, expansion] of Object.entries(DOMAIN_SUFFIX_MAP)) {
+      if (trimmed === prefix || (trimmed.length <= 5 && trimmed.includes(prefix))) {
+        const terms = expansion.split(/\s+/).filter(t => t.length >= 2)
+        return {
+          searchQuery: `${trimmed} ${expansion}`,
+          keywordQuery: `${trimmed} ${expansion}`,
+          expansionTerms: terms,
+          isSlangExpanded: false,
+        }
+      }
     }
   }
 
   // 2. 짧은 쿼리(1-2글자)에 직업 컨텍스트 추가
   if (trimmed.length <= 2) {
-    return { expanded: `${trimmed} 관련 직업 전문가`, original: trimmed, keywordTerms: [] }
+    return {
+      searchQuery: `${trimmed} 관련 직업 전문가`,
+      keywordQuery: trimmed,
+      expansionTerms: [],
+      isSlangExpanded: false,
+    }
   }
 
   // 3. LLM 기반 쿼리 확장 (추상적 쿼리 대상)
@@ -124,11 +198,16 @@ async function preprocessQuery(
     const expanded = await expandQueryWithLLM(trimmed, options.openaiApiKey, options.kv)
     if (expanded) {
       const terms = expanded.split(/[,\s]+/).map(t => t.trim()).filter(t => t.length >= 2)
-      return { expanded: `${trimmed} ${expanded}`, original: trimmed, keywordTerms: terms }
+      return {
+        searchQuery: `${trimmed} ${expanded}`,
+        keywordQuery: `${trimmed} ${expanded}`,
+        expansionTerms: terms,
+        isSlangExpanded: false,
+      }
     }
   }
 
-  return { expanded: trimmed, original: trimmed, keywordTerms: [] }
+  return { searchQuery: trimmed, keywordQuery: trimmed, expansionTerms: [], isSlangExpanded: false }
 }
 
 /**
@@ -194,7 +273,11 @@ const INTENT_PATTERNS: IntentPattern[] = [
   // 워라밸
   { pattern: /워라밸|여유|칼퇴|야근/, attribute: 'wlb', weight: 0.15 },
   // 성장
-  { pattern: /성장|발전|미래|전망|비전/, attribute: 'growth', weight: 0.15 },
+  { pattern: /성장|발전|미래|전망|비전|유망|뜨는/, attribute: 'growth', weight: 0.15 },
+  // HowTo: 방법/준비/절차 검색 (transactional intent)
+  { pattern: /되는\s?법|되려면|되는\s?방법|하는\s?법|하는\s?방법|어떻게|준비\s?방법|공부\s?방법/, attribute: 'howto', weight: 0.20 },
+  // HowTo: 자격증/시험/면허
+  { pattern: /자격증|시험|면허|합격|준비/, attribute: 'howto', weight: 0.15 },
   // 분석적
   { pattern: /분석적|데이터분석|논리적|통계분석/, attribute: 'analytical', weight: 0.12 },
   // 창의적
@@ -596,8 +679,10 @@ function rerankJobsByAttributes(
         }
       }
     }
-    // 원래 순위 페널티: 상위 결과일수록 유리, 하위 결과는 높은 boost 필요
-    const blendedScore = boost - (originalRank * 0.008)
+    // 원래 순위 페널티: 로그 스케일로 1-10위(0~0.05), 10-100위(0.05~0.10) 범위로 자연스럽게 감쇠
+    // 이전: originalRank * 0.008 → rank=20에서 0.16으로 boost 최대값(0.15) 초과
+    const rankPenalty = Math.log10(originalRank + 1) * 0.05
+    const blendedScore = boost - rankPenalty
     return { entry, originalRank, boost, blendedScore }
   })
 
@@ -695,14 +780,20 @@ export async function ragSearchUnified(
   try {
     // 0. 쿼리 전처리 (속어 확장 + 컨텍스트 + LLM 확장)
     const enableExpansion = !!(env as any).ENABLE_QUERY_EXPANSION
-    const { expanded: searchQuery, original: originalQuery, keywordTerms } = await preprocessQuery(query, {
+    const { searchQuery, expansionTerms: keywordTerms } = await preprocessQuery(query, {
       openaiApiKey, kv, enableExpansion,
     })
 
     // 0.5. 쿼리 의도 감지 (Re-ranking용)
     const intents = detectQueryIntents(query)
 
+    // howto intent 감지 시: howtosLimit 확장 + HowTo 벡터 임계값 추가 완화
+    const hasHowtoIntent = intents.some(i => i.attribute === 'howto')
+    const effectiveHowtosLimit = hasHowtoIntent ? Math.max(howtosLimit, 10) : howtosLimit
+    const effectiveHowtoVectorScore = hasHowtoIntent ? MIN_VECTOR_SCORE_HOWTO - 0.05 : MIN_VECTOR_SCORE_HOWTO
+
     // 1. 임베딩 생성 (KV 캐시 확인 → 없으면 OpenAI 호출)
+    // searchQuery: 속어 매칭 시 확장 텍스트만 사용 (원본 속어 제외해 벡터 오염 방지)
     let embedding = await getCachedEmbedding(kv, searchQuery)
     if (!embedding) {
       const controller = new AbortController()
@@ -720,6 +811,7 @@ export async function ragSearchUnified(
     }
 
     // 2. 하이브리드 검색: 벡터 + 키워드 병렬 실행 (확장 키워드 포함)
+    // originalQuery(= keywordQuery): LIKE 검색에는 원본 쿼리 사용
     const expansionTerms = keywordTerms.slice(0, 3) // 최대 3개 확장 키워드
     const [
       vectorResult,
@@ -729,9 +821,9 @@ export async function ragSearchUnified(
       ...expansionResults
     ] = await Promise.all([
       vectorize.query(embedding, { topK: 100, returnValues: false, returnMetadata: 'none' }),
-      keywordSearchJobIds(db, originalQuery, 30),
-      keywordSearchMajorIds(db, originalQuery, 30),
-      keywordSearchHowtoIds(db, originalQuery, 10),
+      keywordSearchJobIds(db, query, 30),
+      keywordSearchMajorIds(db, query, 30),
+      keywordSearchHowtoIds(db, query, 10),
       // 확장 키워드별 추가 검색 (직업 + 전공)
       ...expansionTerms.flatMap(term => [
         keywordSearchJobIds(db, term, 15),
@@ -764,7 +856,7 @@ export async function ragSearchUnified(
         vectorMajorIds.push(id)
         majorScores.set(id, match.score)
       } else if (match.id.startsWith('howto:')) {
-        if (match.score < MIN_VECTOR_SCORE_HOWTO) continue // HowTo는 더 높은 threshold
+        if (match.score < effectiveHowtoVectorScore) continue // HowTo는 더 높은 threshold (howto intent 시 완화)
         const id = parseInt(match.id.slice(6), 10)
         if (!isNaN(id)) vectorHowtoIds.push(id)
       } else {
@@ -779,7 +871,8 @@ export async function ragSearchUnified(
     const mergedHowtoIds = mergeIdsWithRRF(vectorHowtoIds, kwHowtos)
 
     // 정확 매치 우선 주입: 정확 일치 → 같은 카테고리 형제 → 확장 키워드 → RRF
-    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, originalQuery)
+    // injectExact* 함수는 원본 사용자 쿼리(query)를 기준으로 DB 이름 정확 매칭
+    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query)
 
     // 정확 직업 매치가 있고 관련 전공이 있으면, 벡터 전공 노이즈 필터링
     // 예: "변호사" 검색 시 벡터가 반환한 간호과/방사선과(score 0.3~0.4)를 제거
@@ -793,7 +886,7 @@ export async function ragSearchUnified(
     }
 
     const exactMajorIds = await injectExactMatchMajors(
-      db, filteredMajorIds, keywordTerms, originalQuery, exactJobResult.relatedMajorNames
+      db, filteredMajorIds, keywordTerms, query, exactJobResult.relatedMajorNames
     )
 
     // 4.5. 속성 기반 후보 추가: intent 감지 시 속성 상위 직업을 풀 끝에 추가
@@ -812,11 +905,12 @@ export async function ragSearchUnified(
         ? enrichMajorsFromD1(db, mergedMajorIds.slice(0, majorsLimit), majorScores)
         : Promise.resolve([]),
       mergedHowtoIds.length > 0
-        ? enrichHowtosFromD1(db, mergedHowtoIds.slice(0, howtosLimit))
+        ? enrichHowtosFromD1(db, mergedHowtoIds.slice(0, effectiveHowtosLimit))
         : Promise.resolve([]),
     ])
 
     // 6. 속성 기반 Re-ranking (intent 감지 시) + 최종 limit 적용
+    // howto intent는 직업 속성이 아니므로 rerankJobsByAttributes에서 무시됨 (validAttrs에 없음)
     const rankedJobs = rerankJobsByAttributes(jobResult.entries, jobResult.attributeMap, intents)
       .slice(0, jobsLimit)
 
@@ -829,7 +923,7 @@ export async function ragSearchUnified(
         ? supplementWithLike(env, query, 'majors', majorsLimit, majorEntries)
         : Promise.resolve(majorEntries),
       howtoEntries.length < 1
-        ? supplementHowtosWithLike(db, query, howtosLimit, howtoEntries)
+        ? supplementHowtosWithLike(db, query, effectiveHowtosLimit, howtoEntries)
         : Promise.resolve(howtoEntries),
     ])
 
@@ -839,8 +933,8 @@ export async function ragSearchUnified(
 
     const { relatedMajors, relatedHowtos } = await expandWithRelatedContent(
       db, supplementedJobs, existingMajorIds, existingHowtoIds,
-      { majors: Math.max(0, majorsLimit - supplementedMajors.length), howtos: Math.max(0, howtosLimit - supplementedHowtos.length) },
-      { original: originalQuery, keywordTerms }
+      { majors: Math.max(0, majorsLimit - supplementedMajors.length), howtos: Math.max(0, effectiveHowtosLimit - supplementedHowtos.length) },
+      { original: query, keywordTerms }
     )
 
     const finalMajors = [...supplementedMajors, ...relatedMajors].slice(0, majorsLimit)
@@ -848,7 +942,7 @@ export async function ragSearchUnified(
     // HowTo 최종 관련성 필터: 벡터/키워드 HowTo만 텍스트 필터 적용
     // 관계 기반 HowTo(relatedHowtos)는 howto_related_jobs DB 관계로 이미 검증됨 → 필터 없이 포함
     const howtoRelevanceTerms = [
-      originalQuery,
+      query,
       ...keywordTerms,
       ...supplementedJobs.slice(0, 5).map(j => j.profile.name),
     ].map(t => t.toLowerCase())
@@ -857,7 +951,7 @@ export async function ragSearchUnified(
       const s = (h.summary || '').toLowerCase()
       return howtoRelevanceTerms.some(term => t.includes(term) || s.includes(term))
     })
-    const finalHowtos = [...filteredSupplementedHowtos, ...relatedHowtos].slice(0, howtosLimit)
+    const finalHowtos = [...filteredSupplementedHowtos, ...relatedHowtos].slice(0, effectiveHowtosLimit)
 
     const defaultSources = createDefaultSourceStatus()
 
@@ -900,12 +994,13 @@ export async function ragSearchJobs(
   try {
     // 쿼리 전처리 + 의도 감지
     const enableExpansion = !!(env as any).ENABLE_QUERY_EXPANSION
-    const { expanded: searchQuery, original: originalQuery, keywordTerms } = await preprocessQuery(query, {
+    const { searchQuery, expansionTerms: keywordTerms } = await preprocessQuery(query, {
       openaiApiKey, kv, enableExpansion,
     })
     const intents = detectQueryIntents(query)
 
     // 하이브리드 검색: 벡터 + 키워드 병렬 (확장 키워드 포함)
+    // searchQuery: 임베딩용, query: LIKE 키워드 검색용 (원본 사용자 입력)
     let embedding = await getCachedEmbedding(kv, searchQuery)
     if (!embedding) {
       const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, searchQuery, 5000)
@@ -917,7 +1012,7 @@ export async function ragSearchJobs(
     const db = env.DB as unknown as D1Database
     const [vectorResult, kwJobsOriginal, ...expansionJobResults] = await Promise.all([
       vectorize.query(embedding, { topK: 100, returnValues: false, returnMetadata: 'none' }),
-      keywordSearchJobIds(db, originalQuery, 30),
+      keywordSearchJobIds(db, query, 30),
       ...expansionTerms.map(term => keywordSearchJobIds(db, term, 15)),
     ])
     const kwJobs = mergeKeywordHits([kwJobsOriginal, ...expansionJobResults as KeywordSearchHit[][]])
@@ -934,7 +1029,7 @@ export async function ragSearchJobs(
 
     // RRF 병합 + 정확 매치(카테고리 형제 포함) + 속성 후보 추가
     const rrfJobIds = mergeIdsWithRRF(vectorJobIds, kwJobs)
-    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, originalQuery)
+    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query)
     const mergedJobIds = await appendAttributeCandidates(db, exactJobResult.ids, intents, 8)
 
     // 페이지네이션 적용
@@ -985,11 +1080,12 @@ export async function ragSearchMajors(
   try {
     // 쿼리 전처리
     const enableExpansion = !!(env as any).ENABLE_QUERY_EXPANSION
-    const { expanded: searchQuery, original: originalQuery, keywordTerms } = await preprocessQuery(query, {
+    const { searchQuery, expansionTerms: keywordTerms } = await preprocessQuery(query, {
       openaiApiKey, kv, enableExpansion,
     })
 
     // 하이브리드 검색: 벡터 + 키워드 병렬 (확장 키워드 포함)
+    // searchQuery: 임베딩용, query: LIKE 키워드 검색용 (원본 사용자 입력)
     let embedding = await getCachedEmbedding(kv, searchQuery)
     if (!embedding) {
       const { embeddings } = await generateOpenAIEmbedding(openaiApiKey, searchQuery, 5000)
@@ -1001,7 +1097,7 @@ export async function ragSearchMajors(
     const db = env.DB as unknown as D1Database
     const [vectorResult, kwMajorsOriginal, ...expansionMajorResults] = await Promise.all([
       vectorize.query(embedding, { topK: 100, returnValues: false, returnMetadata: 'none' }),
-      keywordSearchMajorIds(db, originalQuery, 30),
+      keywordSearchMajorIds(db, query, 30),
       ...expansionTerms.map(term => keywordSearchMajorIds(db, term, 15)),
     ])
     const kwMajors = mergeKeywordHits([kwMajorsOriginal, ...expansionMajorResults as KeywordSearchHit[][]])
@@ -1018,7 +1114,7 @@ export async function ragSearchMajors(
 
     // RRF 병합 + 정확 매치 우선 주입 (원본 쿼리 + 확장 키워드)
     const rrfMajorIds = mergeIdsWithRRF(vectorMajorIds, kwMajors)
-    const mergedMajorIds = await injectExactMatchMajors(db, rrfMajorIds, keywordTerms, originalQuery)
+    const mergedMajorIds = await injectExactMatchMajors(db, rrfMajorIds, keywordTerms, query)
 
     const startIdx = (page - 1) * perPage
     const pageIds = mergedMajorIds.slice(startIdx, startIdx + perPage)
