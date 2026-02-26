@@ -15,6 +15,7 @@ import {
 import {
   getSampleHowtoGuide
 } from '../data/sampleRegistry'
+import { trackPageView } from '../utils/viewCounter'
 
 const howtoRoutes = new Hono<AppEnv>()
 
@@ -3253,8 +3254,16 @@ howtoRoutes.get('/:slug', async (c) => {
       return c.html(renderLayoutWithContext(c, notFoundContent, '페이지를 찾을 수 없습니다 - Careerwiki', ''), 404)
     }
     
-    // 조회수 증가 (비동기, 에러 무시)
-    c.env.DB.prepare(`UPDATE pages SET view_count = view_count + 1 WHERE id = ?`).bind(pageId).run().catch(() => {})
+    // 조회수 증가 (15분 중복 방지, 봇 필터)
+    const htUser = c.get('user') as { id?: number } | undefined
+    const viewCounted = trackPageView({
+      db: c.env.DB,
+      kv: c.env.KV,
+      pageId,
+      userAgent: c.req.header('user-agent') || '',
+      userId: htUser?.id,
+      ip: c.req.header('cf-connecting-ip') || 'unknown',
+    }).catch(() => false)
     
     // 북마크 수 조회 (user_bookmarks 테이블 사용)
     const bookmarkResult = await c.env.DB.prepare(`
@@ -3278,7 +3287,7 @@ howtoRoutes.get('/:slug', async (c) => {
       status: dbResult.status as string,
       created_at: dbResult.created_at as string,
       updated_at: dbResult.updated_at as string,
-      view_count: (dbResult.view_count as number || 0) + 1, // 현재 조회 포함
+      view_count: (dbResult.view_count as number || 0) + (await viewCounted ? 1 : 0),
       bookmark_count: bookmarkCount
     })
     

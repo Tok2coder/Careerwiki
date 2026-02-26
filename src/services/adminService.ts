@@ -575,9 +575,9 @@ export async function getAnalyticsStats(db: D1Database, params: StatsParams): Pr
 
   const topJobsResult = await db
     .prepare(`
-      SELECT slug, title as name, 'job' as type, COALESCE(view_count, 0) as views
-      FROM pages
-      WHERE page_type = 'job'
+      SELECT slug, name, 'job' as type, COALESCE(view_count, 0) as views
+      FROM jobs
+      WHERE is_active = 1
       ORDER BY view_count DESC
       LIMIT ?
     `)
@@ -586,9 +586,9 @@ export async function getAnalyticsStats(db: D1Database, params: StatsParams): Pr
 
   const topMajorsResult = await db
     .prepare(`
-      SELECT slug, title as name, 'major' as type, COALESCE(view_count, 0) as views
-      FROM pages
-      WHERE page_type = 'major'
+      SELECT slug, name, 'major' as type, COALESCE(view_count, 0) as views
+      FROM majors
+      WHERE is_active = 1
       ORDER BY view_count DESC
       LIMIT ?
     `)

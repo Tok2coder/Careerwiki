@@ -12,6 +12,7 @@ import {
   buildCanonicalUrl, createMetaDescription, escapeHtml, renderLayoutWithContext, parseSourcesQuery
 } from '../utils/shared-helpers'
 import { getSampleJobDetail } from '../data/sampleRegistry'
+import { trackJobView } from '../utils/viewCounter'
 
 const jobDetailRoutes = new Hono<AppEnv>()
 
@@ -161,6 +162,19 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
       }), '오류 - Careerwiki'))
     }
   }
+
+  // 조회수 추적 (비동기, 페이지 렌더링 차단하지 않음)
+  const user = c.get('user') as { id?: number } | undefined
+  c.executionCtx.waitUntil(
+    trackJobView({
+      db: c.env.DB,
+      kv: c.env.KV,
+      slug,
+      userAgent: c.req.header('user-agent') || '',
+      userId: user?.id,
+      ip: c.req.header('cf-connecting-ip') || 'unknown',
+    }).catch(() => {})
+  )
 
   // 🆕 ISR (Incremental Static Regeneration) with wiki_pages cache
   return getOrGeneratePage(

@@ -9,6 +9,7 @@
 import { Hono } from 'hono'
 import type { AppEnv } from '../types/app'
 import { svgToPng, getCachedOgImage, cacheOgImage } from '../services/ogImageService'
+import { trackShareView } from '../utils/viewCounter'
 
 const shareRoutes = new Hono<AppEnv>()
 
@@ -50,16 +51,18 @@ shareRoutes.get('/share/:token', async (c) => {
       })
     }
 
-    // 봇이 아니면 view_count 증가 (atomic)
-    const ua = c.req.header('user-agent') || ''
-    if (!BOT_UA_PATTERN.test(ua)) {
-      c.executionCtx.waitUntil(
-        db.prepare(`
-          UPDATE share_tokens SET view_count = view_count + 1, last_viewed_at = CURRENT_TIMESTAMP
-          WHERE share_token = ?
-        `).bind(token).run()
-      )
-    }
+    // 조회수 증가 (15분 중복 방지 + 봇 필터)
+    const shareUser = c.get('user') as { id?: number } | undefined
+    c.executionCtx.waitUntil(
+      trackShareView({
+        db,
+        kv: c.env.KV,
+        token,
+        userAgent: c.req.header('user-agent') || '',
+        userId: shareUser?.id,
+        ip: c.req.header('cf-connecting-ip') || 'unknown',
+      }).catch(() => {})
+    )
 
     // share_data_json 파싱 + 렌더
     const data = JSON.parse(row.share_data_json) as {
