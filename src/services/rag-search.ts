@@ -117,11 +117,90 @@ const SLANG_DICTIONARY: Record<string, string> = {
 // 추상적/탐색적 쿼리 패턴 → 다양한 직업 카테고리로 확장 (부분 매칭)
 // 속어 사전 이전에 체크하며, 매칭 시 확장 텍스트만 searchQuery로 사용 (속어와 동일 로직)
 const ABSTRACT_QUERY_MAP: Record<string, string> = {
+  // 탐색적 쿼리: "뭘 하지?" 계열
   '뭐 할지 모르겠': '소프트웨어개발자 간호사 회계사 교사 경찰관 그래픽디자이너',
   '어떤 직업': '소프트웨어개발자 교사 간호사 변호사 경찰관 그래픽디자이너',
   '진로 고민': '소프트웨어개발자 간호사 교사 회계사 마케터 경찰관',
   '진로를 모르': '소프트웨어개발자 간호사 교사 경찰관 그래픽디자이너 회계사',
   '하고 싶은 게 없': '소프트웨어개발자 간호사 교사 사무직 경찰관 회계사',
+  // 자연어 문장 패턴: 조사/어미 → 핵심 키워드 변환
+  '집에서 할 수 있': '재택근무 프리랜서 원격근무 소프트웨어개발자 웹디자이너 번역가',
+  '재택': '재택근무 프리랜서 원격근무 소프트웨어개발자 웹디자이너 번역가',
+  '하기 좋은 직업': '소프트웨어개발자 간호사 교사 공무원 회계사 디자이너',
+  '추천 직업': '소프트웨어개발자 간호사 교사 공무원 회계사 디자이너',
+  '유망': '소프트웨어개발자 데이터분석가 인공지능엔지니어 간호사 약사',
+  '미래': '인공지능엔지니어 데이터분석가 로봇공학자 드론조종사 바이오연구원',
+  '뜨는': '인공지능엔지니어 데이터분석가 콘텐츠크리에이터 드론조종사 바이오연구원',
+  '없이 할 수 있': '자격증없이 경력없이 사무보조원 배달기사 콜센터상담원 판매원',
+  '문과': '교사 공무원 변호사 회계사 마케터 사회복지사',
+  '문과 추천': '교사 공무원 변호사 회계사 마케터 사회복지사',
+  '이과': '소프트웨어개발자 의사 약사 엔지니어 연구원 데이터분석가',
+  '이과 추천': '소프트웨어개발자 의사 약사 엔지니어 연구원 데이터분석가',
+  '전과자': '사회복지사 직업상담사 바리스타 요리사 배달기사',
+}
+
+// ============================================
+// 한국어 오타 교정
+// ============================================
+// 한국어 자모 분해 → 모음 혼동 교정 → 재조합
+// 흔한 오타 패턴: ㅐ↔ㅔ, 쌍자음 누락, ㅚ↔ㅙ↔ㅞ
+
+/** 한글 자모 분해 */
+function decomposeHangul(char: string): [number, number, number] | null {
+  const code = char.charCodeAt(0)
+  if (code < 0xAC00 || code > 0xD7A3) return null
+  const offset = code - 0xAC00
+  const cho = Math.floor(offset / (21 * 28))
+  const jung = Math.floor((offset % (21 * 28)) / 28)
+  const jong = offset % 28
+  return [cho, jung, jong]
+}
+
+/** 자모로 한글 조합 */
+function composeHangul(cho: number, jung: number, jong: number): string {
+  return String.fromCharCode(0xAC00 + cho * 21 * 28 + jung * 28 + jong)
+}
+
+// 모음 인덱스: ㅏ0 ㅐ1 ㅑ2 ㅒ3 ㅓ4 ㅔ5 ㅕ6 ㅖ7 ㅗ8 ㅘ9 ㅙ10 ㅚ11 ㅛ12 ㅜ13 ㅝ14 ㅞ15 ㅟ16 ㅠ17 ㅡ18 ㅢ19 ㅣ20
+// 혼동 그룹: {1(ㅐ), 5(ㅔ)}, {3(ㅒ), 7(ㅖ)}, {10(ㅙ), 11(ㅚ), 15(ㅞ)}
+const VOWEL_CONFUSION_MAP: Record<number, number[]> = {
+  1: [1, 5],     // ㅐ ↔ ㅔ
+  5: [5, 1],     // ㅔ ↔ ㅐ
+  3: [3, 7],     // ㅒ ↔ ㅖ
+  7: [7, 3],     // ㅖ ↔ ㅒ
+  10: [10, 11],  // ㅙ ↔ ㅚ
+  11: [11, 10],  // ㅚ ↔ ㅙ
+}
+
+/**
+ * 한국어 오타 교정: 모음 혼동 변형을 생성해 원본 뒤에 추가
+ * "프로그레머" → "프로그레머 프로그래머" (둘 다 검색)
+ * 벡터 임베딩에서 올바른 단어가 지배적이므로 오타 영향 최소화
+ */
+function correctKoreanTypo(query: string): string {
+  if (query.length > 12) return query // 긴 쿼리는 스킵
+
+  const chars = [...query]
+  const variantSet = new Set<string>()
+
+  for (let i = 0; i < chars.length; i++) {
+    const decomposed = decomposeHangul(chars[i])
+    if (!decomposed) continue
+    const [cho, jung, jong] = decomposed
+    const alternatives = VOWEL_CONFUSION_MAP[jung]
+    if (!alternatives) continue
+
+    for (const altJung of alternatives) {
+      if (altJung === jung) continue
+      const newChars = [...chars]
+      newChars[i] = composeHangul(cho, altJung, jong)
+      variantSet.add(newChars.join(''))
+    }
+  }
+
+  if (variantSet.size === 0) return query
+  // 원본 + 변형을 모두 포함 (벡터 검색: 올바른 쪽이 임베딩 지배)
+  return `${query} ${[...variantSet].join(' ')}`
 }
 
 /**
@@ -141,18 +220,30 @@ async function preprocessQuery(
   query: string,
   options?: { openaiApiKey?: string; kv?: KVNamespace; enableExpansion?: boolean }
 ): Promise<{ searchQuery: string; keywordQuery: string; expansionTerms: string[]; isSlangExpanded: boolean }> {
-  const trimmed = query.trim()
+  let trimmed = query.trim()
 
-  // 0. 추상적/탐색적 쿼리 패턴 — 부분 매칭 (속어보다 먼저 체크)
+  // -1. 오타 교정: 한국어 모음 혼동 (ㅐ↔ㅔ 등) 기반 교정
+  trimmed = correctKoreanTypo(trimmed)
+
+  // 0. 추상적/탐색적 쿼리 패턴 — 가장 긴 매칭 우선, 동일 길이면 쿼리 앞쪽 우선
+  let bestAbstractMatch: { pattern: string; expansion: string; pos: number } | null = null
   for (const [pattern, expansion] of Object.entries(ABSTRACT_QUERY_MAP)) {
-    if (trimmed.includes(pattern)) {
-      const terms = expansion.split(/\s+/).filter(t => t.length >= 2)
-      return {
-        searchQuery: expansion,                         // 임베딩: 확장 텍스트만 (원본 제외)
-        keywordQuery: `${trimmed} ${expansion}`,        // LIKE: 원본 + 확장
-        expansionTerms: terms,
-        isSlangExpanded: true,
+    const pos = trimmed.indexOf(pattern)
+    if (pos !== -1) {
+      if (!bestAbstractMatch ||
+          pattern.length > bestAbstractMatch.pattern.length ||
+          (pattern.length === bestAbstractMatch.pattern.length && pos < bestAbstractMatch.pos)) {
+        bestAbstractMatch = { pattern, expansion, pos }
       }
+    }
+  }
+  if (bestAbstractMatch) {
+    const terms = bestAbstractMatch.expansion.split(/\s+/).filter(t => t.length >= 2)
+    return {
+      searchQuery: bestAbstractMatch.expansion,          // 임베딩: 확장 텍스트만 (원본 제외)
+      keywordQuery: `${trimmed} ${bestAbstractMatch.expansion}`, // LIKE: 원본 + 확장
+      expansionTerms: terms,
+      isSlangExpanded: true,
     }
   }
 
@@ -223,8 +314,36 @@ async function preprocessQuery(
     }
   }
 
-  // 2. 짧은 쿼리(1-2글자)에 직업 컨텍스트 추가
+  // 2. 짧은 쿼리(1-2글자) 의미 매핑: 동음이의어 해소 + 구체적 직업 확장
   if (trimmed.length <= 2) {
+    const SHORT_QUERY_MAP: Record<string, string> = {
+      '돈': '고소득 연봉 높은 변호사 의사 회계사 금융',
+      '법': '변호사 판사 검사 법조인 법학',
+      '약': '약사 약학 제약 한약사',
+      '꽃': '플로리스트 화훼 원예사 꽃꽂이',
+      '글': '작가 기자 카피라이터 편집자 소설',
+      '차': '자동차정비사 자동차공학 모터스포츠',
+      '옷': '패션디자이너 의류 스타일리스트 섬유',
+      '집': '건축가 인테리어디자이너 부동산',
+      '배': '항해사 선박 해운 선장',
+      '숲': '산림치유지도사 조경 산림',
+      '별': '천문학 천문학자 우주과학',
+      '물': '수질환경기사 환경공학 수자원',
+      '불': '소방관 소방 방재',
+      '땅': '측량사 토목 부동산 감정평가사',
+      '말': '통역사 번역가 언어학',
+      'AI': '인공지능엔지니어 인공지능서비스개발자 데이터분석가',
+    }
+    const shortExpansion = SHORT_QUERY_MAP[trimmed]
+    if (shortExpansion) {
+      const terms = shortExpansion.split(/\s+/).filter(t => t.length >= 2)
+      return {
+        searchQuery: shortExpansion,
+        keywordQuery: `${trimmed} ${shortExpansion}`,
+        expansionTerms: terms,
+        isSlangExpanded: true,
+      }
+    }
     return {
       searchQuery: `${trimmed} 관련 직업 전문가`,
       keywordQuery: trimmed,
