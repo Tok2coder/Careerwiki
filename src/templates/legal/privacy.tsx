@@ -279,6 +279,8 @@ export function renderPrivacyPage(options?: PrivacyPageOptions): string {
     gtag('js', new Date());
     gtag('config', 'G-H9R83SJRRY');
   </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9810002715600854" crossorigin="anonymous"></script>
   ${renderNavStyles()}
 </head>
 <body class="bg-wiki-bg text-wiki-text min-h-screen">

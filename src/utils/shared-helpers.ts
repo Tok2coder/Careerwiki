@@ -188,8 +188,8 @@ export const renderLayout = (
           gtag('js', new Date());
           gtag('config', 'G-H9R83SJRRY');
         </script>
-        <!-- Google AdSense (Publisher ID 발급 후 주석 해제) -->
-        <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+        <!-- Google AdSense -->
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9810002715600854" crossorigin="anonymous"></script>
         ${extraHead}
         <style>
           body { background-color: #0b1220; color: #dee3ff; }
