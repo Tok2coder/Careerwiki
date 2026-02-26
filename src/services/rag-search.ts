@@ -332,6 +332,175 @@ function correctKoreanTypo(query: string): string {
 }
 
 // ============================================
+// 두벌식 키보드 역변환 (영타 → 한글)
+// ============================================
+
+const KEYBOARD_TO_JAMO: Record<string, { jamo: string; type: 'cho' | 'jung' }> = {
+  'q': { jamo: 'ㅂ', type: 'cho' }, 'Q': { jamo: 'ㅃ', type: 'cho' },
+  'w': { jamo: 'ㅈ', type: 'cho' }, 'W': { jamo: 'ㅉ', type: 'cho' },
+  'e': { jamo: 'ㄷ', type: 'cho' }, 'E': { jamo: 'ㄸ', type: 'cho' },
+  'r': { jamo: 'ㄱ', type: 'cho' }, 'R': { jamo: 'ㄲ', type: 'cho' },
+  't': { jamo: 'ㅅ', type: 'cho' }, 'T': { jamo: 'ㅆ', type: 'cho' },
+  'a': { jamo: 'ㅁ', type: 'cho' }, 's': { jamo: 'ㄴ', type: 'cho' },
+  'd': { jamo: 'ㅇ', type: 'cho' }, 'f': { jamo: 'ㄹ', type: 'cho' },
+  'g': { jamo: 'ㅎ', type: 'cho' }, 'z': { jamo: 'ㅋ', type: 'cho' },
+  'x': { jamo: 'ㅌ', type: 'cho' }, 'c': { jamo: 'ㅊ', type: 'cho' },
+  'v': { jamo: 'ㅍ', type: 'cho' },
+  'y': { jamo: 'ㅛ', type: 'jung' }, 'u': { jamo: 'ㅕ', type: 'jung' },
+  'i': { jamo: 'ㅑ', type: 'jung' },
+  'o': { jamo: 'ㅐ', type: 'jung' }, 'O': { jamo: 'ㅒ', type: 'jung' },
+  'p': { jamo: 'ㅔ', type: 'jung' }, 'P': { jamo: 'ㅖ', type: 'jung' },
+  'h': { jamo: 'ㅗ', type: 'jung' }, 'j': { jamo: 'ㅓ', type: 'jung' },
+  'k': { jamo: 'ㅏ', type: 'jung' }, 'l': { jamo: 'ㅣ', type: 'jung' },
+  'b': { jamo: 'ㅠ', type: 'jung' }, 'n': { jamo: 'ㅜ', type: 'jung' },
+  'm': { jamo: 'ㅡ', type: 'jung' },
+}
+
+const JAMO_TO_CHO_IDX: Record<string, number> = {
+  'ㄱ':0,'ㄲ':1,'ㄴ':2,'ㄷ':3,'ㄸ':4,'ㄹ':5,'ㅁ':6,'ㅂ':7,'ㅃ':8,
+  'ㅅ':9,'ㅆ':10,'ㅇ':11,'ㅈ':12,'ㅉ':13,'ㅊ':14,'ㅋ':15,'ㅌ':16,'ㅍ':17,'ㅎ':18,
+}
+const JAMO_TO_JUNG_IDX: Record<string, number> = {
+  'ㅏ':0,'ㅐ':1,'ㅑ':2,'ㅒ':3,'ㅓ':4,'ㅔ':5,'ㅕ':6,'ㅖ':7,'ㅗ':8,
+  'ㅘ':9,'ㅙ':10,'ㅚ':11,'ㅛ':12,'ㅜ':13,'ㅝ':14,'ㅞ':15,'ㅟ':16,'ㅠ':17,
+  'ㅡ':18,'ㅢ':19,'ㅣ':20,
+}
+const JAMO_TO_JONG_IDX: Record<string, number> = {
+  'ㄱ':1,'ㄲ':2,'ㄳ':3,'ㄴ':4,'ㄵ':5,'ㄶ':6,'ㄷ':7,'ㄹ':8,
+  'ㄺ':9,'ㄻ':10,'ㄼ':11,'ㄽ':12,'ㄾ':13,'ㄿ':14,'ㅀ':15,'ㅁ':16,
+  'ㅂ':17,'ㅄ':18,'ㅅ':19,'ㅆ':20,'ㅇ':21,'ㅈ':22,'ㅊ':23,'ㅋ':24,'ㅌ':25,'ㅍ':26,'ㅎ':27,
+}
+const COMPOUND_VOWEL: Record<string, Record<string, string>> = {
+  'ㅗ': { 'ㅏ': 'ㅘ', 'ㅐ': 'ㅙ', 'ㅣ': 'ㅚ' },
+  'ㅜ': { 'ㅓ': 'ㅝ', 'ㅔ': 'ㅞ', 'ㅣ': 'ㅟ' },
+  'ㅡ': { 'ㅣ': 'ㅢ' },
+}
+const COMPOUND_JONG_MAP: Record<string, Record<string, string>> = {
+  'ㄱ': { 'ㅅ': 'ㄳ' },
+  'ㄴ': { 'ㅈ': 'ㄵ', 'ㅎ': 'ㄶ' },
+  'ㄹ': { 'ㄱ': 'ㄺ', 'ㅁ': 'ㄻ', 'ㅂ': 'ㄼ', 'ㅅ': 'ㄽ', 'ㅌ': 'ㄾ', 'ㅍ': 'ㄿ', 'ㅎ': 'ㅀ' },
+  'ㅂ': { 'ㅅ': 'ㅄ' },
+}
+const DECOMPOSE_COMPOUND_JONG: Record<string, [string, string]> = {
+  'ㄳ':['ㄱ','ㅅ'], 'ㄵ':['ㄴ','ㅈ'], 'ㄶ':['ㄴ','ㅎ'],
+  'ㄺ':['ㄹ','ㄱ'], 'ㄻ':['ㄹ','ㅁ'], 'ㄼ':['ㄹ','ㅂ'],
+  'ㄽ':['ㄹ','ㅅ'], 'ㄾ':['ㄹ','ㅌ'], 'ㄿ':['ㄹ','ㅍ'], 'ㅀ':['ㄹ','ㅎ'],
+  'ㅄ':['ㅂ','ㅅ'],
+}
+
+/**
+ * 두벌식 키보드 역변환: 영타 입력을 한글로 변환
+ * "rksghtk" → "간호사", "qkfltmxk" → "바리스타"
+ * 한글 IME 오토마타로 자모를 음절로 조합
+ */
+function reverseKeyboardLayout(query: string): string | null {
+  if (!/^[a-zA-Z]{2,20}$/.test(query)) return null
+
+  // Step 1: ASCII → jamo 변환
+  const jamos: { jamo: string; type: 'cho' | 'jung' }[] = []
+  for (const ch of query) {
+    const mapped = KEYBOARD_TO_JAMO[ch]
+    if (!mapped) return null
+    jamos.push(mapped)
+  }
+
+  // Step 2: IME 오토마타로 음절 조합
+  const result: string[] = []
+  let cho: string | null = null
+  let jung: string | null = null
+  let jong: string | null = null
+
+  function flush() {
+    if (cho !== null && jung !== null) {
+      const ci = JAMO_TO_CHO_IDX[cho]
+      const ji = JAMO_TO_JUNG_IDX[jung]
+      const ki = jong ? (JAMO_TO_JONG_IDX[jong] || 0) : 0
+      if (ci !== undefined && ji !== undefined) {
+        result.push(composeHangul(ci, ji, ki))
+      }
+    } else if (cho !== null) {
+      result.push(cho)
+    } else if (jung !== null) {
+      result.push(jung)
+    }
+    cho = null; jung = null; jong = null
+  }
+
+  for (const { jamo, type } of jamos) {
+    if (type === 'cho') {
+      if (cho === null) {
+        // 빈 상태 → cho 설정
+        cho = jamo
+      } else if (jung === null) {
+        // cho만 있음 + 자음 → flush, 새 cho
+        flush()
+        cho = jamo
+      } else if (jong === null) {
+        // cho+jung 있음 + 자음 → jong 시도
+        if (JAMO_TO_JONG_IDX[jamo] !== undefined) {
+          jong = jamo
+        } else {
+          // ㄸ,ㅃ,ㅉ 등은 종성 불가 → flush, 새 cho
+          flush()
+          cho = jamo
+        }
+      } else {
+        // cho+jung+jong 있음 + 자음 → 복합 종성 시도
+        const compound: string | undefined = COMPOUND_JONG_MAP[jong]?.[jamo]
+        if (compound && JAMO_TO_JONG_IDX[compound] !== undefined) {
+          jong = compound
+        } else {
+          // 복합 불가 → flush, 새 cho
+          flush()
+          cho = jamo
+        }
+      }
+    } else {
+      // 모음 입력
+      if (cho === null && jung === null) {
+        // 빈 상태 + 모음 → 단독 모음 출력
+        jung = jamo
+        flush()
+      } else if (cho !== null && jung === null) {
+        // cho + 모음 → cho+jung 조합
+        jung = jamo
+      } else if (cho !== null && jung !== null && jong === null) {
+        // cho+jung + 모음 → 복합 모음 시도
+        const compound: string | undefined = COMPOUND_VOWEL[jung]?.[jamo]
+        if (compound) {
+          jung = compound
+        } else {
+          // 복합 불가 → flush, 단독 모음
+          flush()
+          jung = jamo
+          flush()
+        }
+      } else if (jong !== null) {
+        // cho+jung+jong + 모음 → jong 분해, 뒷부분이 새 cho
+        const decomposed: [string, string] | undefined = DECOMPOSE_COMPOUND_JONG[jong]
+        if (decomposed) {
+          jong = decomposed[0]
+          flush()
+          cho = decomposed[1]
+          jung = jamo
+        } else {
+          const prevJong = jong
+          jong = null
+          flush()
+          cho = prevJong
+          jung = jamo
+        }
+      }
+    }
+  }
+  flush()
+
+  const composed = result.join('')
+  if (!/[\uAC00-\uD7AF]/.test(composed)) return null
+  return composed
+}
+
+// ============================================
 // Jamo 레벨 퍼지 매칭 (오타 교정 fallback)
 // ============================================
 
@@ -440,6 +609,12 @@ async function preprocessQuery(
 
   if (!trimmed) {
     return { searchQuery: '', keywordQuery: '', expansionTerms: [], isSlangExpanded: false }
+  }
+
+  // -2. 영타 → 한타 변환 (두벌식 키보드 역변환)
+  const reversed = reverseKeyboardLayout(trimmed)
+  if (reversed) {
+    trimmed = reversed
   }
 
   // -1. 오타 교정: 한국어 모음 혼동 (ㅐ↔ㅔ 등) 기반 교정
@@ -839,7 +1014,8 @@ async function injectExactMatchJobs(
   mergedIds: string[],
   keywordTerms: string[],
   originalQuery?: string,
-  isSlangExpanded: boolean = false
+  isSlangExpanded: boolean = false,
+  vectorScores?: Map<string, number>
 ): Promise<{ ids: string[]; relatedMajorNames: string[] }> {
   const fallback = { ids: mergedIds, relatedMajorNames: [] }
   const allTerms = [
@@ -864,7 +1040,7 @@ async function injectExactMatchJobs(
       db.prepare(
         `SELECT id, name FROM jobs WHERE is_active = 1 AND name IN (${placeholders}) LIMIT 10`
       ).bind(...termsWithNoSpace).all<{ id: string; name: string }>(),
-      (originalQuery && originalQuery.length >= 2)
+      (originalQuery && originalQuery.length >= 2 && !isSlangExpanded)
         ? db.prepare(
             `SELECT id, name FROM jobs WHERE is_active = 1 AND (name LIKE ?||'%' OR name LIKE '%'||?||'%') LIMIT 15`
           ).bind(originalQuery, originalQuery).all<{ id: string; name: string }>()
@@ -900,7 +1076,18 @@ async function injectExactMatchJobs(
           if (!exactId) exactId = r.id
         }
       } else {
-        otherIds.push(r.id)
+        // 쿼리가 긴 이름 속에 묻힌 경우 제거 (판검사→전자기판검사기운영원 방지)
+        if (originalQuery) {
+          const pos = r.name.indexOf(originalQuery)
+          const ratio = originalQuery.length / r.name.length
+          if (pos > 0 && ratio < 0.35) {
+            // skip: query buried inside long name (low relevance)
+          } else {
+            otherIds.push(r.id)
+          }
+        } else {
+          otherIds.push(r.id)
+        }
       }
     }
   } catch {
@@ -951,11 +1138,31 @@ async function injectExactMatchJobs(
     } catch {}
   }
 
-  // 우선순위: 정확 매치 → 접두사 매치 → 같은 카테고리 형제 → 확장 키워드 매치 → RRF 결과
-  const priorityIds = [...exactIds, ...prefixIds, ...siblingIds, ...otherIds]
+  // 우선순위: 정확 매치 → 접두사 매치 → (필요시) 카테고리 형제 → 확장 키워드 매치 → RRF 결과
+  // exact+prefix가 3개 이상이면 siblingIds 생략 (이미 충분, 무관한 sidebar 노이즈 방지)
+  const needSiblings = exactIds.length + prefixIds.length < 3
+  const priorityIds = [...exactIds, ...prefixIds, ...(needSiblings ? siblingIds : []), ...otherIds]
   const prioritySet = new Set(priorityIds)
+  // 최종 위치 기준 벡터 스코어 재필터: priority 삽입으로 밀려난 저품질 결과 제거
+  // priority가 3개 이상이면 원래 RRF top-2가 #4+로 밀릴 수 있음 → 재필터
+  let remainingIds = mergedIds.filter(id => !prioritySet.has(id))
+  if (vectorScores && priorityIds.length >= 3) {
+    let bestVS = 0
+    for (const id of [...priorityIds, ...remainingIds].slice(0, 8)) {
+      const s = vectorScores.get(id)
+      if (s && s > bestVS) bestVS = s
+    }
+    if (bestVS > 0) {
+      const refilterMin = Math.max(0.40, bestVS * 0.88)
+      remainingIds = remainingIds.filter(id => {
+        const vs = vectorScores.get(id)
+        // 벡터 스코어 없는 결과(키워드 전용)는 유지, 스코어 미달이면 제거
+        return vs === undefined || vs >= refilterMin
+      })
+    }
+  }
   return {
-    ids: [...priorityIds, ...mergedIds.filter(id => !prioritySet.has(id))],
+    ids: [...priorityIds, ...remainingIds],
     relatedMajorNames,
   }
 }
@@ -1060,7 +1267,9 @@ function applyPostRRFQualityGate<T extends string | number>(
     const s = vectorScores.get(id)
     if (s && s > bestScore) bestScore = s
   }
-  const dynamicMin = Math.max(0.33, bestScore * 0.70)
+  // Position-dependent thresholds: #4+ 위치에 더 엄격한 임계값 적용
+  const dynamicMin3 = Math.max(0.33, bestScore * 0.70)  // position #3 (i=2)
+  const dynamicMin4 = Math.max(0.36, bestScore * 0.82)  // position #4+ (i>=3)
 
   const kept: T[] = []
   for (let i = 0; i < rrfIds.length; i++) {
@@ -1069,9 +1278,10 @@ function applyPostRRFQualityGate<T extends string | number>(
     if (i < 2) { kept.push(id); continue }
     // 키워드 매치된 결과는 무조건 유지
     if (keywordHitIds.has(id)) { kept.push(id); continue }
-    // 벡터 전용 결과: 동적 임계값 미달이면 제거
+    // 벡터 전용 결과: position-dependent 임계값 미달이면 제거
     const vs = vectorScores.get(id)
-    if (vs !== undefined && vs < dynamicMin) continue
+    const threshold = i < 3 ? dynamicMin3 : dynamicMin4
+    if (vs !== undefined && vs < threshold) continue
     // 벡터 점수 없는 결과(키워드 전용)는 유지
     kept.push(id)
   }
@@ -1631,7 +1841,7 @@ export async function ragSearchUnified(
 
     // 정확 매치 우선 주입: 정확 일치 → 같은 카테고리 형제 → 확장 키워드 → RRF
     // injectExact* 함수는 원본 사용자 쿼리(query)를 기준으로 DB 이름 정확 매칭
-    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query, isSlangExpanded)
+    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query, isSlangExpanded, jobScores)
 
     // 정확 직업 매치가 있고 관련 전공이 있으면, 벡터 전공 노이즈 필터링
     // 예: "변호사" 검색 시 벡터가 반환한 간호과/방사선과(score 0.3~0.4)를 제거
@@ -1820,7 +2030,7 @@ export async function ragSearchJobs(
       rrfJobIds = [...kwFirst, ...rest]
     }
     rrfJobIds = applyPostRRFQualityGate(rrfJobIds, jobScores, kwJobIdSet)
-    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query, isSlangExpanded)
+    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query, isSlangExpanded, jobScores)
     const mergedJobIds = await appendAttributeCandidates(db, exactJobResult.ids, intents, 15)
 
     // 페이지네이션 적용
