@@ -103,7 +103,10 @@ const SLANG_DICTIONARY: Record<string, string> = {
   '고연봉': '변호사 의사 치과의사 한의사 파일럿 회계사',
   '칼퇴': '사서 공무원 연구원 교사 사무직 기록물관리사',
   // 임베딩 오염 방지: "면접"→용접, "포트폴리오"→발포 방지 (DB 실존 직업명으로 확장)
-  '면접': '취업컨설턴트 인사사무원 헤드헌터 인사교육훈련사무원 커리어코치',
+  '면접 준비': '취업컨설턴트 커리어코치 인사사무원 인사교육훈련사무원 헤드헌터',
+  '면접 팁': '취업컨설턴트 커리어코치 인사사무원 인사교육훈련사무원 헤드헌터',
+  '면접': '취업컨설턴트 커리어코치 인사사무원 인사교육훈련사무원 헤드헌터',
+  '포트폴리오 만들기': 'PPT편집디자이너 인포그래픽디자이너 일러스트레이터 웹디자이너 모션그래픽디자이너',
   '포트폴리오': 'PPT편집디자이너 인포그래픽디자이너 웹디자이너 그래픽디자이너 일러스트레이터',
   // 의도 기반 부분 매칭 (자연어 표현 → 구체적 직업명)
   '연봉 높은': '고연봉 변호사 의사 치과의사 한의사 파일럿 회계사 금융전문가',
@@ -643,21 +646,25 @@ async function injectExactMatchJobs(
   let otherIds: string[] = []
   let exactId: string | null = null
   try {
-    const terms = [...new Set(allTerms)].slice(0, 8)
-    const placeholders = terms.map(() => '?').join(',')
-    // 정확 이름 매치 OR 원본 쿼리로 시작하는 직업 OR 원본 쿼리가 이름에 포함된 직업
-    // (예: "국어" → "국어교사", "심리학" → "심리상담사", "임상심리사")
+    // 공백 제거 버전도 IN 검색에 추가 (예: "웹 개발자" → "웹개발자" exact match)
+    // LIKE prefix에는 추가하지 않음 — prefix 매칭은 sidebarJobs 노이즈 유발
+    const noSpaceQuery = originalQuery ? originalQuery.replace(/\s+/g, '') : ''
+    const termsWithNoSpace = [...new Set([...allTerms, ...(noSpaceQuery.length >= 2 ? [noSpaceQuery] : [])])].slice(0, 10)
+    const placeholders = termsWithNoSpace.map(() => '?').join(',')
     const result = await db.prepare(
       `SELECT id, name FROM jobs WHERE is_active = 1 AND (name IN (${placeholders}) OR name LIKE ?||'%' OR name LIKE '%'||?||'%') LIMIT 20`
-    ).bind(...terms, originalQuery || '', originalQuery || '').all<{ id: string; name: string }>()
+    ).bind(...termsWithNoSpace, originalQuery || '', originalQuery || '').all<{ id: string; name: string }>()
     if (!result.results || result.results.length === 0) return fallback
     for (const r of result.results) {
       if (originalQuery && r.name === originalQuery) {
         exactIds.unshift(r.id)
         exactId = r.id
+      } else if (noSpaceQuery && r.name === noSpaceQuery) {
+        // 공백 제거 exact match: #1 순위 보장, sidebarJobs 주입은 안 함
+        exactIds.unshift(r.id)
       } else if (originalQuery && r.name.startsWith(originalQuery)) {
         prefixIds.push(r.id)
-        if (!exactId) exactId = r.id // 접두사 매치로 관련 직업 조회
+        if (!exactId) exactId = r.id
       } else {
         otherIds.push(r.id)
       }
@@ -1367,12 +1374,26 @@ export async function ragSearchUnified(
     const reranked = rerankJobsByAttributes(jobResult.entries, jobResult.attributeMap, intents)
     const categoryFilter = detectCategoryFilter(query)
     const compoundFiltered = applyCompoundFilter(reranked, jobResult.attributeMap, intents, categoryFilter)
-    // 복합 필터 결과가 부족하면 reranked에서 backfill (카테고리 외 결과로 보충)
+    // 복합 필터 결과가 부족하면 backfill (같은 카테고리 우선, 그 다음 나머지)
     let rankedJobs: UnifiedJobSummaryEntry[]
     if (compoundFiltered.length < jobsLimit && compoundFiltered !== reranked) {
       const existingIds = new Set(compoundFiltered.map(e => e.profile.id))
-      const backfill = reranked.filter(e => !existingIds.has(e.profile.id))
-      rankedJobs = [...compoundFiltered, ...backfill].slice(0, jobsLimit)
+      const remaining = reranked.filter(e => !existingIds.has(e.profile.id))
+      // 카테고리 필터가 있으면: 같은 카테고리 직업을 먼저 backfill
+      if (categoryFilter) {
+        const categoryKeywords = CATEGORY_FILTER_MAP[categoryFilter] || []
+        const sameCat = remaining.filter(e => {
+          const catName = e.display?.categoryName || ''
+          return categoryKeywords.some(kw => catName.includes(kw))
+        })
+        const otherCat = remaining.filter(e => {
+          const catName = e.display?.categoryName || ''
+          return !categoryKeywords.some(kw => catName.includes(kw))
+        })
+        rankedJobs = [...compoundFiltered, ...sameCat, ...otherCat].slice(0, jobsLimit)
+      } else {
+        rankedJobs = [...compoundFiltered, ...remaining].slice(0, jobsLimit)
+      }
     } else {
       rankedJobs = compoundFiltered.slice(0, jobsLimit)
     }
