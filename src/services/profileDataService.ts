@@ -17,11 +17,14 @@ import {
  * 예: { detailReady: { curriculum: [...] } }가 기존의 
  *     { detailReady: { recruit: [...], training: [...] } }를 덮어쓰지 않음
  */
+const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype'])
+
 function deepMergeProfile(target: any, source: any): any {
   if (!source) return target
   if (!target) return source
   const result = { ...target }
   for (const key of Object.keys(source)) {
+    if (DANGEROUS_KEYS.has(key)) continue
     if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
       // 중첩 객체는 깊은 병합
       result[key] = deepMergeProfile(result[key] || {}, source[key])
@@ -788,6 +791,7 @@ export const searchUnifiedMajors = async (
             majorImageUrl = row.image_url || mergedProfile.image_url
             break
           } catch (parseError) {
+            console.error('[profileData] merged_profile_json parse failed:', parseError)
           }
         }
       }
@@ -1034,6 +1038,7 @@ export const searchUnifiedMajors = async (
 
       items.push(entry)
     } catch (entryError) {
+      console.error('[profileData] job entry processing failed:', entryError)
     }
   })
 
@@ -1616,6 +1621,7 @@ export const searchUnifiedJobs = async (
 
       items.push(entry)
     } catch (entryError) {
+      console.error('[profileData] major entry processing failed:', entryError)
     }
   })
 
@@ -1956,6 +1962,7 @@ export const getUnifiedMajorDetail = async (
                   
                   if (careernetProfile && goyongProfile) break
                 } catch (error) {
+                  console.error('[profileData] source row parse failed:', error)
                 }
               }
             }
@@ -2434,7 +2441,7 @@ export const getUnifiedJobDetail = async (
                  user_contributed_json, admin_data_json,
                  image_url, image_alt
           FROM jobs 
-          WHERE id = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+          WHERE id = ? AND is_active = 1 AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
           LIMIT 1
         `).bind(id).first()
         if (mergedJobRow) {
@@ -2448,7 +2455,7 @@ export const getUnifiedJobDetail = async (
                  user_contributed_json, admin_data_json,
                  image_url, image_alt
           FROM jobs 
-          WHERE slug = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+          WHERE slug = ? AND is_active = 1 AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
           LIMIT 1
         `).bind(id).first()
         if (mergedJobRow) {
@@ -2465,7 +2472,7 @@ export const getUnifiedJobDetail = async (
                  user_contributed_json, admin_data_json,
                  image_url, image_alt
           FROM jobs 
-          WHERE name = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+          WHERE name = ? AND is_active = 1 AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
           LIMIT 1
         `).bind(id).first()
       }
@@ -2636,7 +2643,7 @@ export const getUnifiedJobDetailWithRawData = async (
                    user_contributed_json, admin_data_json,
                    image_url, image_alt
             FROM jobs 
-            WHERE id = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+            WHERE id = ? AND is_active = 1 AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
             LIMIT 1
           `).bind(id).first()
           if (mergedJobRow) {
@@ -2650,7 +2657,7 @@ export const getUnifiedJobDetailWithRawData = async (
                    user_contributed_json, admin_data_json,
                    image_url, image_alt
             FROM jobs 
-            WHERE slug = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+            WHERE slug = ? AND is_active = 1 AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
             LIMIT 1
           `).bind(id).first()
           if (mergedJobRow) {
@@ -2664,7 +2671,7 @@ export const getUnifiedJobDetailWithRawData = async (
                    user_contributed_json, admin_data_json,
                    image_url, image_alt
             FROM jobs 
-            WHERE name = ? AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
+            WHERE name = ? AND is_active = 1 AND merged_profile_json IS NOT NULL AND merged_profile_json != '{}'
             LIMIT 1
           `).bind(id).first()
           if (mergedJobRow) {

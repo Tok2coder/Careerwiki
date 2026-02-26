@@ -308,7 +308,11 @@ async function preprocessQuery(
   query: string,
   options?: { openaiApiKey?: string; kv?: KVNamespace; enableExpansion?: boolean }
 ): Promise<{ searchQuery: string; keywordQuery: string; expansionTerms: string[]; isSlangExpanded: boolean }> {
-  let trimmed = query.trim()
+  let trimmed = query.trim().slice(0, 200) // 최대 200자 제한
+
+  if (!trimmed) {
+    return { searchQuery: '', keywordQuery: '', expansionTerms: [], isSlangExpanded: false }
+  }
 
   // -1. 오타 교정: 한국어 모음 혼동 (ㅐ↔ㅔ 등) 기반 교정
   trimmed = correctKoreanTypo(trimmed)

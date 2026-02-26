@@ -259,12 +259,30 @@ function logError(
   console.error(`[AI-Analyzer] ${code}: ${message}`, context ? JSON.stringify(context) : '')
 }
 
+// Timing-safe 문자열 비교 (timing attack 방지)
+function timingSafeCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false
+  const encoder = new TextEncoder()
+  const bufA = encoder.encode(a)
+  const bufB = encoder.encode(b)
+  // crypto.subtle.timingSafeEqual은 Cloudflare Workers에서 지원
+  if (typeof crypto !== 'undefined' && crypto.subtle && typeof (crypto.subtle as any).timingSafeEqual === 'function') {
+    return (crypto.subtle as any).timingSafeEqual(bufA, bufB)
+  }
+  // fallback: 전체 바이트 비교 (short-circuit 없음)
+  let result = 0
+  for (let i = 0; i < bufA.length; i++) {
+    result |= bufA[i] ^ bufB[i]
+  }
+  return result === 0
+}
+
 // Admin 인증 확인 — user role 또는 X-Admin-Secret 헤더
 function checkAdminAuth(c: any): Response | null {
   const user = c.get('user')
   const isAdmin = user?.role === 'admin'
   const adminSecret = c.req.header('X-Admin-Secret')
-  const isSecretValid = adminSecret && c.env.ADMIN_SECRET && adminSecret === c.env.ADMIN_SECRET
+  const isSecretValid = adminSecret && c.env.ADMIN_SECRET && timingSafeCompare(adminSecret, c.env.ADMIN_SECRET)
   if (!isAdmin && !isSecretValid) {
     return c.json({ success: false, error: 'ADMIN_AUTH_REQUIRED', message: '관리자 권한이 필요합니다' }, 403)
   }
@@ -5015,7 +5033,7 @@ analyzerRoutes.post('/admin/reindex-all', async (c) => {
 // Interview Mode와 분리하여 설문 중 편향 방지
 // ============================================
 import { generateQSP, qspToPromptHints } from './qsp-generator'
-import { createEmptyAxisCoverage } from './axis-framework'
+import { createEmptyAxisCoverage, updateAxisCoverage } from './axis-framework'
 import { incrementalUpsertToVectorize, incrementalUpsertMajorsToVectorize, incrementalUpsertHowtosToVectorize, countJobsNeedingIndexing } from './vectorize-pipeline'
 
 // Fallback 심리분석 생성 (LLM 실패 시)
@@ -6343,8 +6361,38 @@ analyzerRoutes.post('/v3/interview/qsp', async (c) => {
       
       if (draft) {
         const aggregated = buildAggregatedProfile(draft)
-        // TODO: AggregatedProfile에서 AxisCoverage 추출
-        // 현재는 빈 커버리지 사용
+        // AggregatedProfile에서 AxisCoverage 추출
+        const a = aggregated.anchors
+        if (a.interest_top?.length) {
+          axisCoverage = updateAxisCoverage(axisCoverage, 'interest', {
+            confidence: Math.min(a.interest_top.length / 3, 1),
+            evidence: a.interest_top.slice(0, 5),
+          })
+        }
+        if (a.strength_top?.length) {
+          axisCoverage = updateAxisCoverage(axisCoverage, 'strength', {
+            confidence: Math.min(a.strength_top.length / 3, 1),
+            evidence: a.strength_top.slice(0, 5),
+          })
+        }
+        if (a.value_top?.length) {
+          axisCoverage = updateAxisCoverage(axisCoverage, 'values', {
+            confidence: Math.min(a.value_top.length / 3, 1),
+            evidence: a.value_top.slice(0, 5),
+          })
+        }
+        if (a.energy_drain_flags?.length || a.execution_style) {
+          axisCoverage = updateAxisCoverage(axisCoverage, 'work_style', {
+            confidence: 0.5,
+            evidence: [...(a.energy_drain_flags || []), a.execution_style].filter(Boolean).slice(0, 5) as string[],
+          })
+        }
+        if (a.impact_scope || a.external_expectation) {
+          axisCoverage = updateAxisCoverage(axisCoverage, 'people', {
+            confidence: 0.4,
+            evidence: [a.impact_scope, a.external_expectation].filter(Boolean) as string[],
+          })
+        }
       }
     }
     
