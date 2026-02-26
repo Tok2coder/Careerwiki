@@ -609,8 +609,11 @@ export async function searchJobs(params: SearchParams, env?: any): Promise<Job[]
     }));
     
   } catch (error) {
-    // API 오류 시 더미 데이터 반환 (개발용)
-    return getMockJobs(params.keyword);
+    // API 오류 시 Mock 데이터는 개발 환경에서만 사용
+    if (process.env.NODE_ENV === 'development' || process.env.ENVIRONMENT === 'development') {
+      return getMockJobs(params.keyword);
+    }
+    throw error; // 프로덕션에서는 에러를 전파
   }
 }
 

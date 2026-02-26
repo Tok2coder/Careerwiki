@@ -383,10 +383,11 @@ export async function editJob(
     try {
       await db.prepare(`DELETE FROM page_revisions WHERE id = ?`).bind(revision.id).run()
     } catch (rollbackError) {
+      console.error('[editService] Revision rollback failed — orphaned revision:', revision.id, rollbackError)
     }
     throw new Error('DATA_UPDATE_FAILED')
   }
-  
+
   // 익명 편집 카운트 증가 (IP 해시가 있는 경우만)
   if (!payload.userId && payload.ipHash) {
     await incrementAnonymousEditCount(db, 'job', jobId, payload.ipHash)
@@ -582,6 +583,7 @@ export async function editMajor(
     try {
       await db.prepare(`DELETE FROM page_revisions WHERE id = ?`).bind(revision.id).run()
     } catch (rollbackError) {
+      console.error('[editService] Rollback failed — orphaned revision:', revision?.id, rollbackError)
     }
     throw new Error('DATA_UPDATE_FAILED')
   }
@@ -718,6 +720,7 @@ export async function editHowTo(
     try {
       await db.prepare(`DELETE FROM page_revisions WHERE id = ?`).bind(revision.id).run()
     } catch (rollbackError) {
+      console.error('[editService] Rollback failed — orphaned revision:', revision?.id, rollbackError)
     }
     throw new Error('DATA_UPDATE_FAILED')
   }
@@ -872,6 +875,7 @@ export async function createHowTo(
     try {
       await db.prepare('DELETE FROM pages WHERE id = ?').bind(pageId).run()
     } catch (rollbackError) {
+      console.error('[editService] Rollback failed:', rollbackError)
     }
     throw new Error('REVISION_CREATION_FAILED')
   }
@@ -1024,6 +1028,7 @@ export async function createJob(
     try {
       await db.prepare('DELETE FROM jobs WHERE id = ?').bind(jobId).run()
     } catch (rollbackError) {
+      console.error('[editService] Rollback failed:', rollbackError)
     }
     throw new Error('REVISION_CREATION_FAILED')
   }
@@ -1148,6 +1153,7 @@ export async function createMajor(
     try {
       await db.prepare('DELETE FROM majors WHERE id = ?').bind(majorId).run()
     } catch (rollbackError) {
+      console.error('[editService] Rollback failed:', rollbackError)
     }
     throw new Error('REVISION_CREATION_FAILED')
   }

@@ -196,7 +196,10 @@ export function renderFeedbackDetailPage(props: FeedbackDetailPageProps): string
       var bgClass = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600';
       var icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
       toast.className = bgClass + ' text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2';
-      toast.innerHTML = '<i class="fas fa-' + icon + '"></i><span>' + message + '</span>';
+      var span = document.createElement('span');
+      span.textContent = message;
+      toast.innerHTML = '<i class="fas fa-' + icon + '"></i>';
+      toast.appendChild(span);
       container.appendChild(toast);
       setTimeout(function() { toast.remove(); }, 3000);
     }

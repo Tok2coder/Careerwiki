@@ -117,6 +117,10 @@ const EditSystem = {
    * 편집 모드 이벤트 리스너 등록
    */
   initEditModeEventListeners() {
+    // 중복 등록 방지
+    if (this._editListenersAttached) return;
+    this._editListenersAttached = true;
+
     // 편집 모드 저장/취소 버튼
     document.addEventListener('click', (e) => {
       const saveBtn = e.target.closest('[data-edit-save]');
@@ -1272,9 +1276,8 @@ const EditSystem = {
    * 로그인 여부 확인
    */
   isLoggedIn() {
-    // TODO: 실제 로그인 상태 확인 로직 구현
-    // 현재는 항상 익명으로 처리
-    return false;
+    // window.__USER__는 shared-helpers.ts의 /api/me 호출로 설정됨
+    return !!(window.__USER__ && window.__USER__.id);
   },
 
   /**
@@ -4140,7 +4143,10 @@ const DetailComments = (() => {
     const bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-wiki-primary'
     const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'
     toast.className = `${bgColor} text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 text-sm transform translate-x-full opacity-0 transition-all duration-300`
-    toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`
+    toast.innerHTML = `<i class="fas ${icon}"></i>`
+    const msgSpan = document.createElement('span')
+    msgSpan.textContent = message
+    toast.appendChild(msgSpan)
     container.appendChild(toast)
     
     // 애니메이션으로 표시
@@ -7566,6 +7572,9 @@ const DemoDetailEnhancements = (() => {
 const AdminImageManager = (() => {
   let isAdmin = false;
 
+  // XSS 방지용 HTML 이스케이프
+  const esc = (v = '') => String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
   // 관리자 여부 확인
   const checkAdminStatus = async () => {
     try {
@@ -7744,10 +7753,10 @@ const AdminImageManager = (() => {
         const dbg = saveResult.debug || {};
         const debugInfo = saveResult.debug ? `
           <div class="mt-2 p-2 rounded bg-black/40 text-xs font-mono text-emerald-400/70 space-y-1">
-            <p>R2 Key: ${dbg.fileKey}</p>
-            <p>Download: ${dbg.downloadSize} bytes (${dbg.actualContentType})</p>
-            <p>Source: ${(dbg.sourceUrl || '').substring(0, 80)}...</p>
-            <p>DB changes: ${dbg.dbChanges}</p>
+            <p>R2 Key: ${esc(dbg.fileKey)}</p>
+            <p>Download: ${esc(String(dbg.downloadSize))} bytes (${esc(dbg.actualContentType)})</p>
+            <p>Source: ${esc((dbg.sourceUrl || '').substring(0, 80))}...</p>
+            <p>DB changes: ${esc(String(dbg.dbChanges))}</p>
           </div>` : '';
         statusDiv.innerHTML = `
           <div class="p-3 rounded-lg bg-emerald-500/20 border border-emerald-500/40">
@@ -7782,7 +7791,7 @@ const AdminImageManager = (() => {
         statusDiv.innerHTML = `
           <div class="flex items-center gap-3 p-3 rounded-lg bg-red-500/20 border border-red-500/40">
             <i class="fas fa-exclamation-circle text-red-400"></i>
-            <span class="text-sm text-red-300">${err.message}</span>
+            <span class="text-sm text-red-300">${esc(err.message)}</span>
           </div>
         `;
         generateBtn.disabled = false;

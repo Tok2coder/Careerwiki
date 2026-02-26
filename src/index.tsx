@@ -58,7 +58,9 @@ const apiCacheHintMiddleware = async (c: any, next: any) => {
   await next()
   const path = c.req.path || ''
   if (path.startsWith('/api/') && !c.res.headers.get('Cache-Control')) {
-    c.header('Cache-Control', 'public, max-age=60, stale-while-revalidate=30')
+    // 인증된 API 응답이 CDN에 캐시되지 않도록 private 사용
+    // 공개 API만 별도로 public 캐시 설정해야 함
+    c.header('Cache-Control', 'private, no-store')
   }
 }
 
@@ -72,9 +74,10 @@ const errorLoggingMiddleware = async (c: any, next: any) => {
 
 const app = new Hono<AppEnv>()
 
-// Global error handler
+// Global error handler — 스택 트레이스를 클라이언트에 노출하지 않음
 app.onError((err, c) => {
-  return c.text(`Error: ${err?.message}\nStack: ${err?.stack}`, 500)
+  console.error('[GlobalError]', err?.message, err?.stack)
+  return c.text('Internal Server Error', 500)
 })
 
 // www → non-www 301 redirect

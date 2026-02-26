@@ -21,6 +21,17 @@ const auth = new Hono<{ Bindings: CloudflareBindings }>()
 const isHttpsRequest = (req: Request) =>
   req.header('x-forwarded-proto') === 'https' || req.url.startsWith('https://')
 
+// Open redirect 방지: 상대 경로만 허용, 외부 URL 차단
+function sanitizeReturnUrl(url: string | undefined): string {
+  const raw = url || '/'
+  // 프로토콜이 포함된 절대 URL이거나 //로 시작하면 차단
+  if (/^[a-zA-Z]+:\/\//.test(raw) || raw.startsWith('//')) {
+    return '/'
+  }
+  // /로 시작하는 상대 경로만 허용
+  return raw.startsWith('/') ? raw : '/'
+}
+
 /**
  * Google OAuth 로그인 시작
  * GET /auth/google
@@ -33,8 +44,7 @@ auth.get('/google', async (c) => {
   // 이미 로그인되어 있는지 체크 (세션 방식)
   const user = c.get('user')
   if (user) {
-    const returnUrl = c.req.query('return_url') || '/'
-    return c.redirect(returnUrl)
+    return c.redirect(sanitizeReturnUrl(c.req.query('return_url')))
   }
   
   // OAuth State (CSRF 방지)
@@ -50,7 +60,7 @@ auth.get('/google', async (c) => {
   })
   
   // Return URL 저장 (로그인 후 돌아갈 페이지)
-  const returnUrl = c.req.query('return_url') || '/'
+  const returnUrl = sanitizeReturnUrl(c.req.query('return_url'))
   setCookie(c, 'oauth_return_url', returnUrl, {
     httpOnly: true,
     secure: isHttps,
@@ -254,10 +264,9 @@ auth.post('/logout', async (c) => {
 
 
   const body = await c.req.parseBody()
-  const returnUrl = (body.return_url as string) || c.req.query('return_url') || '/'
-  const safeUrl = returnUrl.startsWith('/') ? returnUrl : '/'
+  const returnUrl = sanitizeReturnUrl((body.return_url as string) || c.req.query('return_url'))
 
-  return c.redirect(safeUrl)
+  return c.redirect(returnUrl)
 })
 
 /**
@@ -287,10 +296,7 @@ auth.get('/logout', async (c) => {
   deleteCookie(c, 'refresh_token', { path: '/', secure: isHttps, sameSite: 'Lax' })
 
 
-  const returnUrl = c.req.query('return_url') || '/'
-  const safeUrl = returnUrl.startsWith('/') ? returnUrl : '/'
-
-  return c.redirect(safeUrl)
+  return c.redirect(sanitizeReturnUrl(c.req.query('return_url')))
 })
 
 /**

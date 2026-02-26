@@ -769,7 +769,8 @@ class ScenarioProgressUI {
       this.container.remove();
       this.container = null;
     }
-    // Reset steps
+    // Reset steps and pause state
+    this.isPaused = false;
     this.steps = this.steps.map(s => ({ ...s, status: 'pending', detail: undefined }));
   }
 
@@ -1394,7 +1395,7 @@ class ScenarioRunner {
     // 직업: skipReport=true (리포트는 별도 /v3/recommend/report 엔드포인트에서 생성)
     const skipReport = !this.isMajorScenario;
     this.progressUI.log(`Phase 1: ${phaseLabel} 추천 분석 중${!skipReport ? ' (리포트 포함)' : ''}...`, 'info');
-    let response;
+    let response = null;
     const MAX_RETRIES = 2;
     const requestBody = {
       session_id: this.sessionId,
@@ -1409,19 +1410,25 @@ class ScenarioRunner {
       requestBody.academic_state = this.scenario.academicState;
     }
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-      response = await fetch(`${this.API_BASE}${recommendEndpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-      });
-      if (response.ok || response.status < 500) break;
-      if (attempt < MAX_RETRIES) {
-        this.progressUI.log(`⚠️ 서버 오류 ${response.status}, ${5 * (attempt + 1)}초 후 재시도... (${attempt + 1}/${MAX_RETRIES})`, 'warning');
+      try {
+        response = await fetch(`${this.API_BASE}${recommendEndpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        });
+        if (response.ok || response.status < 500) break;
+        if (attempt < MAX_RETRIES) {
+          this.progressUI.log(`⚠️ 서버 오류 ${response.status}, ${5 * (attempt + 1)}초 후 재시도... (${attempt + 1}/${MAX_RETRIES})`, 'warning');
+          await new Promise(r => setTimeout(r, 5000 * (attempt + 1)));
+        }
+      } catch (fetchError) {
+        if (attempt >= MAX_RETRIES) throw fetchError;
+        this.progressUI.log(`⚠️ 네트워크 오류, ${5 * (attempt + 1)}초 후 재시도... (${attempt + 1}/${MAX_RETRIES})`, 'warning');
         await new Promise(r => setTimeout(r, 5000 * (attempt + 1)));
       }
     }
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(`추천 요청 실패: ${response.status} - ${errorData.error || ''}`);
     }

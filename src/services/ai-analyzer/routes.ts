@@ -250,12 +250,25 @@ function createErrorResponse(
   }
 }
 
-// Error logging (development only - no file logging)
+// Error logging — console.error로 Cloudflare Workers 로그에 기록
 function logError(
-  code: ErrorCode, 
-  message: string, 
+  code: ErrorCode,
+  message: string,
   context?: Record<string, unknown>
 ): void {
+  console.error(`[AI-Analyzer] ${code}: ${message}`, context ? JSON.stringify(context) : '')
+}
+
+// Admin 인증 확인 — user role 또는 X-Admin-Secret 헤더
+function checkAdminAuth(c: any): Response | null {
+  const user = c.get('user')
+  const isAdmin = user?.role === 'admin'
+  const adminSecret = c.req.header('X-Admin-Secret')
+  const isSecretValid = adminSecret && c.env.ADMIN_SECRET && adminSecret === c.env.ADMIN_SECRET
+  if (!isAdmin && !isSecretValid) {
+    return c.json({ success: false, error: 'ADMIN_AUTH_REQUIRED', message: '관리자 권한이 필요합니다' }, 403)
+  }
+  return null
 }
 
 // ============================================
@@ -690,14 +703,12 @@ analyzerRoutes.post('/analyze', async (c) => {
     
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'
-    const stack = error instanceof Error ? error.stack : undefined
     logError('ANALYSIS_FAILED', message, {
       session_id: rawPayload.session_id,
-      stack
+      stack: error instanceof Error ? error.stack : undefined
     })
     return c.json(createErrorResponse('ANALYSIS_FAILED', 'Analysis failed', {
-      message,
-      stack,
+      message: '분석 중 오류가 발생했습니다. 다시 시도해주세요.',
       session_id: rawPayload.session_id
     }), 500)
   }
@@ -3952,18 +3963,19 @@ function extractLifeConstraints(facts: Fact[]): string[] {
 analyzerRoutes.post('/v3/report', async (c) => {
   const env = c.env as { DB: D1Database }
   const db = env.DB
-  
+
   try {
     const body = await c.req.json<{
       request_id: number
       session_id?: string
     }>()
-    
+
     // request_id로 분석 결과 조회 (ai_analysis_requests + ai_analysis_results JOIN)
     const requestRow = await db.prepare(`
-      SELECT 
-        req.id as request_id, 
-        req.prompt_payload as request_payload, 
+      SELECT
+        req.id as request_id,
+        req.prompt_payload as request_payload,
+        req.session_id,
         res.result_json
       FROM ai_analysis_requests req
       LEFT JOIN ai_analysis_results res ON req.id = res.request_id
@@ -3971,8 +3983,14 @@ analyzerRoutes.post('/v3/report', async (c) => {
     `).bind(body.request_id).first<{
       request_id: number
       request_payload: string
+      session_id: string | null
       result_json: string | null
     }>()
+
+    // 소유권 검증: session_id가 일치해야 접근 가능
+    if (requestRow && body.session_id && requestRow.session_id !== body.session_id) {
+      return c.json({ error: 'FORBIDDEN', message: '접근 권한이 없습니다' }, 403)
+    }
     
     if (!requestRow) {
       return c.json({ 
@@ -4845,6 +4863,8 @@ analyzerRoutes.get('/vectorize-test', async (c) => {
 // 관리자: 직업 데이터 재인덱싱 (OpenAI Embedding)
 // ============================================
 analyzerRoutes.post('/admin/reindex-jobs', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
   const openaiApiKey = (env as any).OPENAI_API_KEY
@@ -4900,6 +4920,8 @@ analyzerRoutes.post('/admin/reindex-jobs', async (c) => {
 // 관리자: 전공 데이터 재인덱싱
 // ============================================
 analyzerRoutes.post('/admin/reindex-majors', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
   const openaiApiKey = (env as any).OPENAI_API_KEY
@@ -4925,6 +4947,8 @@ analyzerRoutes.post('/admin/reindex-majors', async (c) => {
 // 관리자: HowTo/가이드 데이터 재인덱싱
 // ============================================
 analyzerRoutes.post('/admin/reindex-howtos', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
   const openaiApiKey = (env as any).OPENAI_API_KEY
@@ -4950,6 +4974,8 @@ analyzerRoutes.post('/admin/reindex-howtos', async (c) => {
 // 관리자: 전체 재인덱싱 (직업 + 전공 + HowTo)
 // ============================================
 analyzerRoutes.post('/admin/reindex-all', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
   const openaiApiKey = (env as any).OPENAI_API_KEY
@@ -6121,9 +6147,12 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     })
     
   } catch (error) {
+    logError('ANALYSIS_FAILED', error instanceof Error ? error.message : 'Recommendation failed', {
+      stack: error instanceof Error ? error.stack : undefined
+    })
     return c.json(createErrorResponse(
       'ANALYSIS_FAILED',
-      error instanceof Error ? `${error.message} | ${error.stack?.split('\n')[1] || ''}` : 'Recommendation failed'
+      '추천 분석 중 오류가 발생했습니다.'
     ), 500)
   }
 })
@@ -6364,6 +6393,8 @@ analyzerRoutes.post('/v3/interview/qsp', async (c) => {
 // Freeze v1.1: 인덱싱 상태 확인 API
 // ============================================
 analyzerRoutes.get('/admin/indexing-status', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
   
@@ -6391,6 +6422,8 @@ analyzerRoutes.get('/admin/indexing-status', async (c) => {
 // Freeze v1.1: 증분 업서트 API
 // ============================================
 analyzerRoutes.post('/admin/incremental-upsert', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
   const openaiApiKey = c.env.OPENAI_API_KEY
@@ -6433,6 +6466,8 @@ import { JOB_PROFILE_COMPACT_VERSION } from '../../constants/embedding-versions'
 // 전공 증분 업서트 API
 // ============================================
 analyzerRoutes.post('/admin/incremental-upsert-majors', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
   const openaiApiKey = c.env.OPENAI_API_KEY
@@ -6461,6 +6496,8 @@ analyzerRoutes.post('/admin/incremental-upsert-majors', async (c) => {
 // HowTo 증분 업서트 API
 // ============================================
 analyzerRoutes.post('/admin/incremental-upsert-howtos', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
   const openaiApiKey = c.env.OPENAI_API_KEY
@@ -6492,6 +6529,8 @@ analyzerRoutes.post('/admin/incremental-upsert-howtos', async (c) => {
 
 // 시나리오 목록 조회
 analyzerRoutes.get('/test/scenarios', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const scenarios = getAllScenarioSummary()
   return c.json({
     success: true,
@@ -6502,6 +6541,8 @@ analyzerRoutes.get('/test/scenarios', async (c) => {
 
 // 특정 시나리오 실행
 analyzerRoutes.post('/test/run-scenario', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
 
@@ -6998,6 +7039,8 @@ analyzerRoutes.post('/test/run-scenario', async (c) => {
 
 // 전체 시나리오 일괄 실행
 analyzerRoutes.post('/test/run-all', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const db = env.DB
 
@@ -7053,6 +7096,8 @@ analyzerRoutes.post('/test/run-all', async (c) => {
 // E2E 테스트용 LLM 답변 생성 엔드포인트
 // ============================================
 analyzerRoutes.post('/test/generate-answer', async (c) => {
+  const authError = checkAdminAuth(c)
+  if (authError) return authError
   const env = c.env as Bindings
   const openaiKey = env.OPENAI_API_KEY
 
