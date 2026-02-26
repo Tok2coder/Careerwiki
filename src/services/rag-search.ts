@@ -30,7 +30,7 @@ const MIN_VECTOR_SCORE_HOWTO = 0.40 // HowTo는 임베딩 수가 적어 관련 �
 
 const SLANG_DICTIONARY: Record<string, string> = {
   // 직업 은어/속어
-  '철밥통': '공무원 안정적인 직업',
+  '철밥통': '공무원 소방관 경찰관 군인 교사 우체국직원 공기업',
   '짭새': '경찰관 경찰',
   '짭': '경찰관 경찰',
   '땜장이': '용접기사 용접공',
@@ -96,13 +96,40 @@ const SLANG_DICTIONARY: Record<string, string> = {
   '기레기': '기자 언론인 리포터',
   '선생님': '교사 교원 교육자 강사',
   '공시생': '공무원시험 공무원 공시 행정',
+  // 전공명 → 구체적 직업명 확장 (벡터 공간에서 관련 직업으로 유도)
+  '심리학': '심리상담사 임상심리사 상담심리사 심리치료사 청소년상담사 심리학연구원',
+  // 워라밸/연봉/칼퇴 관련 속어
+  '워라밸': '사서 공무원 연구원 교사 사무직 학예사',
+  '고연봉': '변호사 의사 치과의사 한의사 파일럿 회계사',
+  '칼퇴': '사서 공무원 연구원 교사 사무직 기록물관리사',
+  // 임베딩 오염 방지: "면접"→용접, "포트폴리오"→발포 방지 (DB 실존 직업명으로 확장)
+  '면접': '취업컨설턴트 인사사무원 헤드헌터 인사교육훈련사무원 커리어코치',
+  '포트폴리오': 'PPT편집디자이너 인포그래픽디자이너 웹디자이너 그래픽디자이너 일러스트레이터',
+  // 의도 기반 부분 매칭 (자연어 표현 → 구체적 직업명)
+  '연봉 높은': '고연봉 변호사 의사 치과의사 한의사 파일럿 회계사 금융전문가',
+  '돈 많이 버는': '고소득 변호사 의사 금융전문가 파일럿 회계사',
+  '안정적': '공무원 공기업 교사 소방관 경찰관 군인',
+  '워라밸 좋은': '사서 공무원 연구원 교사 학예사 기록물관리사',
+  // IT/기술 분야 부분 매칭
+  'IT': '소프트웨어개발자 프로그래머 데이터분석가 시스템엔지니어 정보보안전문가',
+}
+
+// 추상적/탐색적 쿼리 패턴 → 다양한 직업 카테고리로 확장 (부분 매칭)
+// 속어 사전 이전에 체크하며, 매칭 시 확장 텍스트만 searchQuery로 사용 (속어와 동일 로직)
+const ABSTRACT_QUERY_MAP: Record<string, string> = {
+  '뭐 할지 모르겠': '소프트웨어개발자 간호사 회계사 교사 경찰관 그래픽디자이너',
+  '어떤 직업': '소프트웨어개발자 교사 간호사 변호사 경찰관 그래픽디자이너',
+  '진로 고민': '소프트웨어개발자 간호사 교사 회계사 마케터 경찰관',
+  '진로를 모르': '소프트웨어개발자 간호사 교사 경찰관 그래픽디자이너 회계사',
+  '하고 싶은 게 없': '소프트웨어개발자 간호사 교사 사무직 경찰관 회계사',
 }
 
 /**
  * 검색 쿼리 전처리:
- * 1. 속어/은어 → 표준 직업명으로 확장
- * 2. 짧은 쿼리 → 직업 컨텍스트 추가
- * 3. 추상적 쿼리 → LLM 기반 키워드 확장 (feature flag: ENABLE_QUERY_EXPANSION)
+ * 1. 추상적 쿼리 → 다양한 직업 카테고리로 확장 (ABSTRACT_QUERY_MAP)
+ * 2. 속어/은어 → 표준 직업명으로 확장
+ * 3. 짧은 쿼리 → 직업 컨텍스트 추가
+ * 4. 추상적 쿼리 → LLM 기반 키워드 확장 (feature flag: ENABLE_QUERY_EXPANSION)
  *
  * 반환:
  * - searchQuery: 임베딩용 — 속어 매칭 시 확장 텍스트만 (원본 속어 제외해 벡터 오염 방지)
@@ -115,6 +142,19 @@ async function preprocessQuery(
   options?: { openaiApiKey?: string; kv?: KVNamespace; enableExpansion?: boolean }
 ): Promise<{ searchQuery: string; keywordQuery: string; expansionTerms: string[]; isSlangExpanded: boolean }> {
   const trimmed = query.trim()
+
+  // 0. 추상적/탐색적 쿼리 패턴 — 부분 매칭 (속어보다 먼저 체크)
+  for (const [pattern, expansion] of Object.entries(ABSTRACT_QUERY_MAP)) {
+    if (trimmed.includes(pattern)) {
+      const terms = expansion.split(/\s+/).filter(t => t.length >= 2)
+      return {
+        searchQuery: expansion,                         // 임베딩: 확장 텍스트만 (원본 제외)
+        keywordQuery: `${trimmed} ${expansion}`,        // LIKE: 원본 + 확장
+        expansionTerms: terms,
+        isSlangExpanded: true,
+      }
+    }
+  }
 
   // 1. 속어 사전 — 완전 매칭
   const exactSlangExpansion = SLANG_DICTIONARY[trimmed]
@@ -449,10 +489,11 @@ async function injectExactMatchJobs(
   try {
     const terms = [...new Set(allTerms)].slice(0, 8)
     const placeholders = terms.map(() => '?').join(',')
-    // 정확 이름 매치 OR 원본 쿼리로 시작하는 직업 (예: "국어" → "국어교사")
+    // 정확 이름 매치 OR 원본 쿼리로 시작하는 직업 OR 원본 쿼리가 이름에 포함된 직업
+    // (예: "국어" → "국어교사", "심리학" → "심리상담사", "임상심리사")
     const result = await db.prepare(
-      `SELECT id, name FROM jobs WHERE is_active = 1 AND (name IN (${placeholders}) OR name LIKE ?||'%') LIMIT 15`
-    ).bind(...terms, originalQuery || '').all<{ id: string; name: string }>()
+      `SELECT id, name FROM jobs WHERE is_active = 1 AND (name IN (${placeholders}) OR name LIKE ?||'%' OR name LIKE '%'||?||'%') LIMIT 20`
+    ).bind(...terms, originalQuery || '', originalQuery || '').all<{ id: string; name: string }>()
     if (!result.results || result.results.length === 0) return fallback
     for (const r of result.results) {
       if (originalQuery && r.name === originalQuery) {
@@ -536,10 +577,11 @@ async function injectExactMatchMajors(
   try {
     const terms = [...new Set(allTerms)].slice(0, 10)
     const placeholders = terms.map(() => '?').join(',')
-    // 정확 이름 매치 OR 원본 쿼리로 시작하는 전공 (예: "국어" → "국어국문학과")
+    // 정확 이름 매치 OR 원본 쿼리로 시작하는 전공 OR 원본 쿼리가 이름에 포함된 전공
+    // (예: "국어" → "국어국문학과", "심리학" → "심리학과", "응용심리학과")
     const result = await db.prepare(
-      `SELECT id, name FROM majors WHERE is_active = 1 AND (name IN (${placeholders}) OR name LIKE ?||'%') LIMIT 10`
-    ).bind(...terms, originalQuery || '').all<{ id: string; name: string }>()
+      `SELECT id, name FROM majors WHERE is_active = 1 AND (name IN (${placeholders}) OR name LIKE ?||'%' OR name LIKE '%'||?||'%') LIMIT 15`
+    ).bind(...terms, originalQuery || '', originalQuery || '').all<{ id: string; name: string }>()
     if (!result.results || result.results.length === 0) return mergedIds
     const exactIds: string[] = []
     const prefixIds: string[] = []
@@ -641,7 +683,7 @@ async function appendAttributeCandidates(
       SELECT ja.job_id
       FROM job_attributes ja
       JOIN jobs j ON j.id = ja.job_id AND j.is_active = 1
-      WHERE ja.${primary.attribute} >= 70
+      WHERE ja.${primary.attribute} >= 60
       ORDER BY ja.${primary.attribute} DESC
       LIMIT ?
     `).bind(limit).all<{ job_id: string }>()
@@ -890,7 +932,7 @@ export async function ragSearchUnified(
     )
 
     // 4.5. 속성 기반 후보 추가: intent 감지 시 속성 상위 직업을 풀 끝에 추가
-    const mergedJobIds = await appendAttributeCandidates(db, exactJobResult.ids, intents, 8)
+    const mergedJobIds = await appendAttributeCandidates(db, exactJobResult.ids, intents, 15)
     const mergedMajorIds = exactMajorIds
 
     // 5. D1 병렬 보강 — 속성 후보까지 포함하도록 충분히 가져옴
@@ -1030,7 +1072,7 @@ export async function ragSearchJobs(
     // RRF 병합 + 정확 매치(카테고리 형제 포함) + 속성 후보 추가
     const rrfJobIds = mergeIdsWithRRF(vectorJobIds, kwJobs)
     const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query)
-    const mergedJobIds = await appendAttributeCandidates(db, exactJobResult.ids, intents, 8)
+    const mergedJobIds = await appendAttributeCandidates(db, exactJobResult.ids, intents, 15)
 
     // 페이지네이션 적용
     const startIdx = (page - 1) * perPage
