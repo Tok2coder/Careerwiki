@@ -136,6 +136,14 @@ export function renderTermsPage(options?: TermsPageOptions): string {
     body { background-color: #0b1220; color: #dee3ff; }
     .glass-card { background: rgba(26, 26, 46, 0.8); border: 1px solid rgba(67, 97, 238, 0.2); backdrop-filter: blur(12px); }
   </style>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H9R83SJRRY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H9R83SJRRY');
+  </script>
   ${renderNavStyles()}
 </head>
 <body class="bg-wiki-bg text-wiki-text min-h-screen">

@@ -45,7 +45,7 @@ export function renderPrivacyPage(options?: PrivacyPageOptions): string {
         <li>AI 추천 서비스: 이용자 프로필 분석 후 직업·전공 추천 (결과 저장 및 조회)</li>
         <li>콘텐츠 제공: 직업, 전공, HowTo 가이드 정보 제공</li>
         <li>커뮤니티 서비스: 댓글 작성, 신고, 공감/비공감</li>
-        <li>서비스 품질 개선: 성능 모니터링 (자체 수집, 서드파티 분석 도구 미사용)</li>
+        <li>서비스 품질 개선: 성능 모니터링, Google Analytics 4를 통한 이용 통계 분석</li>
         <li>부정 이용 방지: 부정 이용자 제재, 서비스 안정성 확보</li>
       </ul>
     `},
@@ -180,14 +180,51 @@ export function renderPrivacyPage(options?: PrivacyPageOptions): string {
           </tbody>
         </table>
       </div>
-      <p class="mt-3">서비스는 광고 목적의 쿠키나 서드파티 추적 쿠키를 사용하지 않습니다.
+      <p class="mt-3">서비스는 Google Analytics 및 Google AdSense를 통해 분석·광고 쿠키를 사용합니다.
       이용자는 웹 브라우저 설정을 통해 쿠키 저장을 거부할 수 있으나,
       이 경우 로그인 등 일부 서비스 이용이 제한될 수 있습니다.</p>
+      <div class="overflow-x-auto mt-3">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-slate-700">
+              <th class="py-2 px-3 text-left text-slate-400">쿠키</th>
+              <th class="py-2 px-3 text-left text-slate-400">용도</th>
+              <th class="py-2 px-3 text-left text-slate-400">유효 기간</th>
+              <th class="py-2 px-3 text-left text-slate-400">유형</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700/50">
+            <tr>
+              <td class="py-2 px-3 font-mono text-xs">_ga, _ga_*</td>
+              <td class="py-2 px-3">Google Analytics 방문자 식별</td>
+              <td class="py-2 px-3">2년</td>
+              <td class="py-2 px-3">분석</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3 font-mono text-xs">_gid</td>
+              <td class="py-2 px-3">Google Analytics 세션 식별</td>
+              <td class="py-2 px-3">24시간</td>
+              <td class="py-2 px-3">분석</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3 font-mono text-xs">__gads, __gpi</td>
+              <td class="py-2 px-3">Google AdSense 광고 맞춤</td>
+              <td class="py-2 px-3">13개월</td>
+              <td class="py-2 px-3">광고</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-3 text-sm text-slate-400">맞춤 광고를 거부하려면 <a href="https://adssettings.google.com" class="text-blue-400 hover:underline" target="_blank" rel="noopener">Google 광고 설정</a>에서 변경할 수 있습니다.</p>
     `},
-    { id: 'section-9', title: '9. 서비스 품질 모니터링', content: `
-      <p>서비스 품질 개선을 위해 페이지 로딩 속도, 응답 시간 등 성능 지표를 자체적으로 수집합니다.
-      이 데이터는 개인을 식별할 수 없는 형태로 수집되며, 외부 분석 서비스로 전송되지 않습니다.</p>
-      <p class="mt-2">서비스는 Google Analytics, Facebook Pixel 등 서드파티 분석·광고 도구를 사용하지 않습니다.</p>
+    { id: 'section-9', title: '9. 서비스 품질 모니터링 및 분석', content: `
+      <p>서비스 품질 개선을 위해 페이지 로딩 속도, 응답 시간 등 성능 지표를 자체적으로 수집합니다.</p>
+      <p class="mt-2">또한 서비스는 이용 통계 분석을 위해 <strong class="text-slate-200">Google Analytics 4</strong>를 사용합니다.
+      Google Analytics는 쿠키를 사용하여 이용자의 사이트 이용 방식에 대한 익명화된 통계 정보(페이지 조회 수, 세션 정보, 기기 및 브라우저 정보, 대략적인 지리적 위치)를 수집합니다.
+      수집된 데이터는 Google의 서버에 저장되며, <a href="https://policies.google.com/privacy" class="text-blue-400 hover:underline" target="_blank" rel="noopener">Google의 개인정보처리방침</a>에 따라 관리됩니다.</p>
+      <p class="mt-2">서비스 운영 비용 충당을 위해 <strong class="text-slate-200">Google AdSense</strong> 광고 서비스를 이용합니다.
+      Google AdSense는 이용자의 관심사에 기반한 광고를 제공하기 위해 쿠키 및 유사 기술을 사용합니다.
+      Google의 광고 쿠키 사용에 대한 상세 내용은 <a href="https://policies.google.com/technologies/ads" class="text-blue-400 hover:underline" target="_blank" rel="noopener">Google 광고 기술 정책</a>에서 확인하실 수 있습니다.</p>
     `},
     { id: 'section-10', title: '10. 개인정보 보호책임자', content: `
       <p>서비스는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한
@@ -234,6 +271,14 @@ export function renderPrivacyPage(options?: PrivacyPageOptions): string {
     body { background-color: #0b1220; color: #dee3ff; }
     .glass-card { background: rgba(26, 26, 46, 0.8); border: 1px solid rgba(67, 97, 238, 0.2); backdrop-filter: blur(12px); }
   </style>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H9R83SJRRY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H9R83SJRRY');
+  </script>
   ${renderNavStyles()}
 </head>
 <body class="bg-wiki-bg text-wiki-text min-h-screen">
