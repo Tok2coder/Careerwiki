@@ -140,8 +140,10 @@ const SLANG_DICTIONARY: Record<string, string> = {
   '기자': '기자 신문기자 방송기자 취재기자 영상기자 잡지기자',
   // "파일럿" → "파일편직원" 방지
   '파일럿': '항공기조종사 교관조종사 시험비행조종사 항공교통관제사',
-  // "개발자" → "인공어초개발자" 방지
+  // "개발자" → "인공어초개발자" 방지 (exact match only — "웹 개발자"는 별도 엔트리)
   '개발자': '웹개발자 모바일앱개발자 응용소프트웨어엔지니어 시스템소프트웨어엔지니어 게임개발프로듀서',
+  // "웹 개발자" → "개발자" SLANG 부분 매칭 방지 (exact match 우선)
+  '웹 개발자': '웹개발자 웹프로그래머 웹퍼블리셔 웹기획자',
   // === 외래어/신조어 (DB에 없는 용어) ===
   'N잡러': '미디어콘텐츠창작자크리에이터 디지털크리에이터 웹디자이너 번역가 작가 사진작가',
   '디지털노마드': '웹개발자 웹디자이너 번역가 작가 데이터분석가 프로그래머',
@@ -725,9 +727,24 @@ async function injectExactMatchJobs(
     const noSpaceQuery = originalQuery ? originalQuery.replace(/\s+/g, '') : ''
     const termsWithNoSpace = [...new Set([...allTerms, ...(noSpaceQuery.length >= 2 ? [noSpaceQuery] : [])])].slice(0, 10)
     const placeholders = termsWithNoSpace.map(() => '?').join(',')
-    const result = await db.prepare(
-      `SELECT id, name FROM jobs WHERE is_active = 1 AND (name IN (${placeholders}) OR name LIKE ?||'%' OR name LIKE '%'||?||'%') LIMIT 20`
-    ).bind(...termsWithNoSpace, originalQuery || '', originalQuery || '').all<{ id: string; name: string }>()
+    // IN과 LIKE를 분리: LIKE '%개발자%' 등 substring 매치가 많으면 IN 매치가 LIMIT에 밀림
+    const [inResult, likeResult] = await Promise.all([
+      db.prepare(
+        `SELECT id, name FROM jobs WHERE is_active = 1 AND name IN (${placeholders}) LIMIT 10`
+      ).bind(...termsWithNoSpace).all<{ id: string; name: string }>(),
+      (originalQuery && originalQuery.length >= 2)
+        ? db.prepare(
+            `SELECT id, name FROM jobs WHERE is_active = 1 AND (name LIKE ?||'%' OR name LIKE '%'||?||'%') LIMIT 15`
+          ).bind(originalQuery, originalQuery).all<{ id: string; name: string }>()
+        : Promise.resolve({ results: [] as { id: string; name: string }[] }),
+    ])
+    // 중복 제거하여 병합 (IN 매치 우선)
+    const seenIds = new Set<string>()
+    const result = { results: [...(inResult.results || []), ...(likeResult.results || [])].filter(r => {
+      if (seenIds.has(r.id)) return false
+      seenIds.add(r.id)
+      return true
+    }) }
     if (!result.results || result.results.length === 0) return fallback
     // keywordTerms의 정확 매치도 exactIds로 분류 (SLANG "판검사"→"판사","검사" 등)
     const keywordTermSet = new Set(keywordTerms.map(t => t.trim()).filter(t => t.length >= 2))
