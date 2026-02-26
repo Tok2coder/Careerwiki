@@ -4079,6 +4079,16 @@ function showMajorSet(setId) {
     if (activeBtn) activeBtn.classList.add('active');
 }
 
+function escapeHtmlMajor(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // ============================================
 // Major Card Rendering (V3 compact design)
 // ============================================
@@ -4192,7 +4202,7 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         // 썸네일
         if (imageUrl && imageUrl.trim()) {
             cardHtml += '<div class="flex-shrink-0 w-28 sm:w-32 relative overflow-hidden">';
-            cardHtml += '<img src="' + imageUrl + '" alt="' + majorName + '" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML=\\'<div class=\\\\\\'w-full h-full flex items-center justify-center\\\\\\' style=\\\\\\'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));\\\\\\' ><i class=\\\\\\'fas fa-graduation-cap text-2xl text-wiki-muted\\\\\\'></i></div>\\';" />';
+            cardHtml += '<img src="' + escapeHtmlMajor(imageUrl) + '" alt="' + escapeHtmlMajor(majorName) + '" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML=\\'<div class=\\\\\\'w-full h-full flex items-center justify-center\\\\\\' style=\\\\\\'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));\\\\\\' ><i class=\\\\\\'fas fa-graduation-cap text-2xl text-wiki-muted\\\\\\'></i></div>\\';" />';
             cardHtml += '<div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);"><span class="' + (idx < 3 ? 'text-sm' : 'text-xs font-bold text-wiki-muted') + '">' + rankBadge + '</span></div>';
             cardHtml += '</div>';
         } else {
@@ -4205,16 +4215,16 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         // 전공 정보 + 점수
         cardHtml += '<div class="flex-1 min-w-0 p-4 flex flex-col justify-between"><div>';
         cardHtml += '<div class="flex items-start justify-between gap-3 mb-1.5">';
-        cardHtml += '<a href="/major/' + majorSlug + '" target="_blank" rel="noopener noreferrer" class="group-hover:text-wiki-primary transition"><h4 class="font-bold text-lg text-white leading-tight">' + majorName + '</h4></a>';
+        cardHtml += '<a href="/major/' + encodeURIComponent(majorSlug) + '" target="_blank" rel="noopener noreferrer" class="group-hover:text-wiki-primary transition"><h4 class="font-bold text-lg text-white leading-tight">' + escapeHtmlMajor(majorName) + '</h4></a>';
         cardHtml += '<div class="flex-shrink-0 text-right"><span class="text-xl font-bold ' + mainScoreColor + '">' + mainScore + '</span><span class="text-xs text-wiki-muted ml-0.5">' + mainScoreLabel + '</span></div>';
         cardHtml += '</div>';
 
         if (fieldCategory) {
             var fieldCategoryKr = {engineering:'공학',natural_science:'자연과학',social_science:'사회과학',humanities:'인문학',arts:'예술/체육',medical:'의약/보건',education:'교육',business:'경영/경제',law:'법학',agriculture:'농림/수산',general:'기타'}[fieldCategory] || fieldCategory;
-            cardHtml += '<div class="text-xs text-wiki-muted mb-1.5">' + fieldCategoryKr + '</div>';
+            cardHtml += '<div class="text-xs text-wiki-muted mb-1.5">' + escapeHtmlMajor(fieldCategoryKr) + '</div>';
         }
         if (displayDescription) {
-            cardHtml += '<p class="text-[14px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">' + displayDescription + '</p>';
+            cardHtml += '<p class="text-[14px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">' + escapeHtmlMajor(displayDescription) + '</p>';
         }
         cardHtml += matchingTagsHtml;
         cardHtml += '</div>';
@@ -4240,7 +4250,7 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         cardHtml += '<div class="flex items-center justify-between px-4 pb-3 ' + (reasonOuterHtml ? '' : 'pt-0') + '">';
         cardHtml += '<button onclick="event.stopPropagation(); toggleMajorScoresCompact(this)" class="text-[13px] text-wiki-muted hover:text-wiki-primary transition flex items-center gap-1.5" title="상세 점수"><i class="fas fa-chart-bar"></i><span>상세 점수</span></button>';
         if (majorSlug) {
-            cardHtml += '<a href="/major/' + majorSlug + '" target="_blank" rel="noopener noreferrer" class="text-[13px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1"><span>상세 보기</span><i class="fas fa-arrow-right text-[11px]"></i></a>';
+            cardHtml += '<a href="/major/' + encodeURIComponent(majorSlug) + '" target="_blank" rel="noopener noreferrer" class="text-[13px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1"><span>상세 보기</span><i class="fas fa-arrow-right text-[11px]"></i></a>';
         }
         cardHtml += '</div>';
 

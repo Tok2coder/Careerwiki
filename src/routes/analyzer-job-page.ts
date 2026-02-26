@@ -6467,12 +6467,12 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                     const hasReasons = likeReason || canReason;
 
                                     return \`
-                                        <a href="/job/\${jobSlug}" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl transition-all hover:scale-[1.02] group"
+                                        <a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl transition-all hover:scale-[1.02] group"
                                            style="background: linear-gradient(135deg, rgba(\${idx === 0 ? '245,158,11' : idx === 1 ? '100,116,139' : '180,83,9'},0.15), rgba(\${idx === 0 ? '251,191,36' : idx === 1 ? '148,163,184' : '217,119,6'},0.05)); border: 1px solid rgba(\${idx === 0 ? '245,158,11' : idx === 1 ? '100,116,139' : '180,83,9'},0.3);">
                                             <!-- 썸네일 (없으면 placeholder) -->
                                             <div class="mb-3 overflow-hidden rounded-lg" style="aspect-ratio: 16/10;">
                                                 \${imageUrl ? \`
-                                                    <img src="\${imageUrl}" alt="\${jobName}"
+                                                    <img src="\${escapeHtmlJob(imageUrl)}" alt="\${escapeHtmlJob(jobName)}"
                                                          class="w-full h-full object-cover group-hover:scale-105 transition-transform"
                                                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
                                                     <div class="hidden w-full h-full items-center justify-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.1));">
@@ -6486,10 +6486,10 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                             </div>
                                             <div class="flex items-center gap-3 mb-3">
                                                 <span class="text-2xl">\${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</span>
-                                                <span class="font-bold text-lg text-white flex-1 line-clamp-1">\${jobName}</span>
+                                                <span class="font-bold text-lg text-white flex-1 line-clamp-1">\${escapeHtmlJob(jobName)}</span>
                                                 <span class="text-base font-bold" style="color: rgb(\${idx === 0 ? '251,191,36' : idx === 1 ? '148,163,184' : '217,119,6'});">Fit \${fitScore}</span>
                                             </div>
-                                            \${displayDescription ? \`<p class="text-base text-wiki-muted line-clamp-3 mb-3">\${displayDescription}</p>\` : ''}
+                                            \${displayDescription ? \`<p class="text-base text-wiki-muted line-clamp-3 mb-3">\${escapeHtmlJob(displayDescription)}</p>\` : ''}
                                             <!-- 잘할 이유 + 좋아할 이유 -->
                                             \${hasReasons ? \`
                                                 <div class="space-y-1.5 mt-3 p-3 rounded-lg" style="background: rgba(0,0,0,0.2);">
@@ -7907,6 +7907,16 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             document.querySelector('.job-set-tab[data-set="' + setId + '"]')?.classList.add('active');
         }
         
+        function escapeHtmlJob(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         // V3 직업 카드 렌더링 (PremiumReport 데이터 구조용) - 컴팩트 디자인
         // setId: 'overall' | 'fit' | 'desire'
         // profileInterp: ProfileInterpretation 데이터 (매칭 태그용)
@@ -8054,7 +8064,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <!-- 썸네일 (카드 높이 꽉 채움) -->
                         \${imageUrl && imageUrl.trim() ? \`
                             <div class="flex-shrink-0 w-28 sm:w-32 relative overflow-hidden">
-                                <img src="\${imageUrl}" alt="\${jobName}"
+                                <img src="\${escapeHtmlJob(imageUrl)}" alt="\${escapeHtmlJob(jobName)}"
                                      class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                      onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center\\' style=\\'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));\\' ><i class=\\'fas fa-briefcase text-2xl text-wiki-muted\\'></i></div>';" />
                                 <div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
@@ -8075,8 +8085,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <div>
                                 <!-- 직업명 + 메인 점수 -->
                                 <div class="flex items-start justify-between gap-3 mb-1.5">
-                                    <a href="/job/\${jobSlug}" target="_blank" rel="noopener noreferrer" class="group-hover:text-wiki-primary transition">
-                                        <h4 class="font-bold text-lg text-white leading-tight">\${jobName}</h4>
+                                    <a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="group-hover:text-wiki-primary transition">
+                                        <h4 class="font-bold text-lg text-white leading-tight">\${escapeHtmlJob(jobName)}</h4>
                                     </a>
                                     <div class="flex-shrink-0 text-right">
                                         <span class="text-xl font-bold \${mainScoreColor}">\${mainScore}</span>
@@ -8085,7 +8095,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 </div>
 
                                 <!-- 직업 설명 -->
-                                \${displayDescription ? \`<p class="text-[14px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">\${displayDescription}</p>\` : ''}
+                                \${displayDescription ? \`<p class="text-[14px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">\${escapeHtmlJob(displayDescription)}</p>\` : ''}
 
                                 <!-- 매칭 태그 -->
                                 \${matchingTagsHtml}
@@ -8151,7 +8161,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <i class="fas fa-chart-bar"></i>
                             <span>상세 점수</span>
                         </button>
-                        \${jobSlug ? \`<a href="/job/\${jobSlug}" target="_blank" rel="noopener noreferrer" class="text-[13px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1">
+                        \${jobSlug ? \`<a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="text-[13px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1">
                             <span>상세 보기</span>
                             <i class="fas fa-arrow-right text-[11px]"></i>
                         </a>\` : ''}
@@ -8202,17 +8212,17 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                 return \`
                 <div class="glass-card p-5 rounded-xl group" style="border-left: 4px solid \${idx < 3 ? 'rgba(99,102,241,0.8)' : 'rgba(100,100,120,0.3)'};">
-                    <a href="/job/\${jobSlug}" target="_blank" rel="noopener noreferrer" class="block hover:opacity-90 transition">
+                    <a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="block hover:opacity-90 transition">
                         \${imageUrl ? \`
                             <div class="mb-4 overflow-hidden rounded-lg" style="aspect-ratio: 16/9;">
-                                <img src="\${imageUrl}" alt="\${jobName}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                                <img src="\${escapeHtmlJob(imageUrl)}" alt="\${escapeHtmlJob(jobName)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                             </div>
                         \` : ''}
                         <div class="flex items-start justify-between mb-3">
                             <div class="flex items-center gap-3">
                                 <span class="text-2xl">\${idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '📌'}</span>
                                 <div>
-                                    <h4 class="font-bold text-lg group-hover:text-wiki-primary transition">\${jobName}</h4>
+                                    <h4 class="font-bold text-lg group-hover:text-wiki-primary transition">\${escapeHtmlJob(jobName)}</h4>
                                     <span class="text-xs text-wiki-primary">자세히 보기 →</span>
                                 </div>
                             </div>

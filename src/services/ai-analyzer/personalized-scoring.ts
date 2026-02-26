@@ -22,6 +22,13 @@ const INTEREST_JOB_MAP: Record<string, { attrs: Record<string, number> }> = {
   helping_feedback: { attrs: { people_facing: 0.6, teamwork: 0.2, execution: 0.2 } },  // 직접 도움
   organizing:       { attrs: { execution: 0.6, teamwork: 0.4 } },
   influencing:      { attrs: { people_facing: 0.5, execution: 0.3, income: 0.2 } },
+  // 확장 토큰 (시나리오/확장 입력용)
+  research:         { attrs: { analytical: 0.5, solo_deep: 0.3, creative: 0.2 } },
+  tech:             { attrs: { analytical: 0.5, execution: 0.3, creative: 0.2 } },
+  creative:         { attrs: { creative: 0.8, analytical: 0.2 } },  // 'creating' alias
+  design:           { attrs: { creative: 0.7, people_facing: 0.2, analytical: 0.1 } },
+  art:              { attrs: { creative: 0.9, solo_deep: 0.1 } },
+  routine:          { attrs: { execution: 0.6, stability: 0.4 } },
 }
 
 // 가치 → 직업 속성 매핑
@@ -33,14 +40,19 @@ const VALUE_JOB_MAP: Record<string, { attrs: Record<string, number>, baseAdd?: n
   autonomy:    { attrs: { solo_deep: 0.6, wlb: 0.4 } },
   meaning:     { attrs: { people_facing: 0.3, growth: 0.3 }, baseAdd: 25 },
   recognition: { attrs: { income: 0.4, growth: 0.3, people_facing: 0.3 } },
+  // 확장 토큰
+  expertise:   { attrs: { analytical: 0.5, growth: 0.5 } },
+  creativity:  { attrs: { creative: 1.0 } },
 }
 
 // 업무 스타일 → 직업 속성 매핑
 const WORKSTYLE_JOB_MAP: Record<string, { attrs: Record<string, number> }> = {
-  solo:       { attrs: { solo_deep: 1.0 } },
-  team:       { attrs: { teamwork: 1.0 } },
-  structured: { attrs: { execution: 0.6, stability: 0.4 } },
-  flexible:   { attrs: { creative: 0.5, wlb: 0.5 } },
+  solo:         { attrs: { solo_deep: 1.0 } },
+  solo_deep:    { attrs: { solo_deep: 1.0 } },    // 'solo' alias
+  team:         { attrs: { teamwork: 1.0 } },
+  team_harmony: { attrs: { teamwork: 1.0 } },     // 'team' alias
+  structured:   { attrs: { execution: 0.6, stability: 0.4 } },
+  flexible:     { attrs: { creative: 0.5, wlb: 0.5 } },
 }
 
 // 지속 동기 → 직업 속성 매핑
@@ -67,6 +79,18 @@ const ENERGY_DRAIN_PENALTIES: Record<string, (job: Record<string, any>) => numbe
   unpredictability_drain: (job) => {
     const sw = job.shift_work || 'none'
     return sw === 'required' ? -12 : sw === 'possible' ? -5 : 0
+  },
+  // 확장 토큰
+  routine_drain: (job) => ((job.execution || 0) > 70 && (job.creative || 0) < 30) ? -12 : (job.execution || 0) > 50 && (job.creative || 0) < 40 ? -6 : 0,
+  bureaucracy_drain: (job) => ((job.execution || 0) > 70 && (job.solo_deep || 0) < 30) ? -10 : 0,
+  uncertainty_drain: (job) => {
+    const st = job.stability || 0
+    const sw = job.shift_work || 'none'
+    let penalty = 0
+    if (st < 40) penalty -= 12
+    else if (st < 55) penalty -= 6
+    if (sw === 'required') penalty -= 5
+    return penalty
   },
 }
 
@@ -222,6 +246,9 @@ const SACRIFICE_BONUS: Record<string, number> = {
   low_initial_income: 2,
   ignore_social_pressure: 1,
   no_sacrifice: -5,
+  // 확장 토큰
+  unstable_hours: 3,
+  long_hours_ok: 3,
 }
 
 // 회복탄력성 보너스 (축소)

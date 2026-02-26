@@ -4,7 +4,7 @@
 
 CareerWiki는 한국어 진로 정보 위키 플랫폼. AI 기반 직업/전공 추천 + 사용자 편집 가능한 위키 시스템.
 - **Production**: https://careerwiki.org
-- **데이터**: 1,435개 전공 + 587개 직업
+- **데이터**: 608개 전공 + 6,945개 직업
 
 ## Tech Stack
 

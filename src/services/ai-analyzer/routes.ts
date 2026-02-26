@@ -5324,6 +5324,27 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         patterns: ['마케터', '홍보', '영업'],
         likePatterns: ['%마케터%', '%홍보%', '%영업%'],
       },
+      // 확장 토큰 (시나리오/확장 입력용)
+      creative: {  // 'creating' alias
+        patterns: ['디자이너', '기획자', '작가', '예술', '크리에이터'],
+        likePatterns: ['%디자이너%', '%기획자%', '%작가%', '%예술%', '%크리에이터%'],
+      },
+      design: {
+        patterns: ['디자이너', '그래픽', 'UI', 'UX', '시각'],
+        likePatterns: ['%디자이너%', '%그래픽%', '%UI%', '%UX%', '%시각%'],
+      },
+      art: {
+        patterns: ['예술', '작가', '일러스트', '미술', '공예'],
+        likePatterns: ['%예술%', '%작가%', '%일러스트%', '%미술%', '%공예%'],
+      },
+      research: {
+        patterns: ['연구원', '분석가', '리서처', '연구', '조사'],
+        likePatterns: ['%연구원%', '%분석가%', '%리서처%', '%연구%', '%조사%'],
+      },
+      routine: {
+        patterns: ['행정', '사무', '공무원', '경리', '총무'],
+        likePatterns: ['%행정%', '%사무%', '%공무원%', '%경리%', '%총무%'],
+      },
     }
 
     const existingJobIds = new Set(filteredJobs.map(j => String(j.job_id)))
