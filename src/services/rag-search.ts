@@ -21,7 +21,7 @@ import { generateOpenAIEmbedding, callOpenAI } from './ai-analyzer/openai-client
 // ============================================
 // OpenAI text-embedding-3-small + cosine:
 //   0.5+ = 매우 관련, 0.35-0.5 = 관련, 0.25-0.35 = 약한 관련, <0.25 = 노이즈
-const MIN_VECTOR_SCORE = 0.25
+const MIN_VECTOR_SCORE = 0.30
 const MIN_VECTOR_SCORE_HOWTO = 0.40 // HowTo는 임베딩 수가 적어 관련 없는 것도 높은 점수 나옴
 
 // ============================================
@@ -182,6 +182,16 @@ const SLANG_DICTIONARY: Record<string, string> = {
   '고고학자': '역사학연구원 학예사 문화재보존과학자 인류학연구원 고전번역가',
   '멋있는 직업': '항공기조종사 외교관 영화감독 프로게이머 건축가',
   '쉬운 직업': '판매원 경리사무원 바리스타 경비원 행정사무원',
+  // === 복합 직업명 (단순 substring SLANG 방지) ===
+  '게임개발자': '게임기획자 게임개발프로듀서 게임그래픽프로그래머 게임서버프로그래머 게임클라이언트프로그래머',
+  '게임 개발자': '게임기획자 게임개발프로듀서 게임그래픽프로그래머 게임서버프로그래머 게임클라이언트프로그래머',
+  // === 자격증/전문직 (DB에 정확한 이름 없는 경우) ===
+  '공인중개사': '부동산중개보조원 감정평가사 부동산펀드매니저 부동산정보분석사 부동산경매인',
+  // === 장비/기술 직업 ===
+  '드론조종사': '드론조종사 항공기조종사 항공우주공학기술자 교관조종사 시험비행조종사',
+  '천문학자': '천문학연구원 기상연구원 항공우주공학기술자 물리학연구원',
+  // === 산업 카테고리 (tail 노이즈 방지) ===
+  '호텔리어': '호텔컨시어지 호텔연회코디네이터 호텔현관사무원 호텔레비뉴매니저 숙박시설서비스원',
 }
 
 // 추상적/탐색적 쿼리 패턴 → 다양한 직업 카테고리로 확장 (부분 매칭)
@@ -260,9 +270,25 @@ const VOWEL_CONFUSION_MAP: Record<number, number[]> = {
   11: [11, 10],  // ㅚ ↔ ㅙ
 }
 
+// 초성 인덱스: ㄱ0 ㄲ1 ㄴ2 ㄷ3 ㄸ4 ㄹ5 ㅁ6 ㅂ7 ㅃ8 ㅅ9 ㅆ10 ㅇ11 ㅈ12 ㅉ13 ㅊ14 ㅋ15 ㅌ16 ㅍ17 ㅎ18
+// 혼동 그룹: 단자음↔쌍자음 (ㄱ↔ㄲ, ㄷ↔ㄸ, ㅂ↔ㅃ, ㅅ↔ㅆ, ㅈ↔ㅉ)
+const CHO_CONFUSION_MAP: Record<number, number[]> = {
+  0: [1],   // ㄱ → ㄲ
+  1: [0],   // ㄲ → ㄱ
+  3: [4],   // ㄷ → ㄸ
+  4: [3],   // ㄸ → ㄷ
+  7: [8],   // ㅂ → ㅃ
+  8: [7],   // ㅃ → ㅂ
+  9: [10],  // ㅅ → ㅆ
+  10: [9],  // ㅆ → ㅅ
+  12: [13], // ㅈ → ㅉ
+  13: [12], // ㅉ → ㅈ
+}
+
 /**
- * 한국어 오타 교정: 모음 혼동 변형을 생성해 원본 뒤에 추가
- * "프로그레머" → "프로그레머 프로그래머" (둘 다 검색)
+ * 한국어 오타 교정: 모음 혼동 + 초성(쌍자음) 혼동 변형 생성
+ * "프로그레머" → "프로그레머 프로그래머" (모음 ㅔ↔ㅐ)
+ * "빠리스타" → "빠리스타 바리스타" (초성 ㅃ↔ㅂ)
  * 벡터 임베딩에서 올바른 단어가 지배적이므로 오타 영향 최소화
  */
 function correctKoreanTypo(query: string): string {
@@ -275,20 +301,122 @@ function correctKoreanTypo(query: string): string {
     const decomposed = decomposeHangul(chars[i])
     if (!decomposed) continue
     const [cho, jung, jong] = decomposed
-    const alternatives = VOWEL_CONFUSION_MAP[jung]
-    if (!alternatives) continue
 
-    for (const altJung of alternatives) {
-      if (altJung === jung) continue
-      const newChars = [...chars]
-      newChars[i] = composeHangul(cho, altJung, jong)
-      variantSet.add(newChars.join(''))
+    // 모음 혼동 변형 (ㅐ↔ㅔ 등)
+    const vowelAlts = VOWEL_CONFUSION_MAP[jung]
+    if (vowelAlts) {
+      for (const altJung of vowelAlts) {
+        if (altJung === jung) continue
+        const newChars = [...chars]
+        newChars[i] = composeHangul(cho, altJung, jong)
+        variantSet.add(newChars.join(''))
+      }
+    }
+
+    // 초성 혼동 변형 (ㅂ↔ㅃ, ㅈ↔ㅉ 등)
+    const choAlts = CHO_CONFUSION_MAP[cho]
+    if (choAlts) {
+      for (const altCho of choAlts) {
+        const newChars = [...chars]
+        newChars[i] = composeHangul(altCho, jung, jong)
+        variantSet.add(newChars.join(''))
+      }
     }
   }
 
   if (variantSet.size === 0) return query
+  // 변형 최대 4개로 제한 (임베딩 희석 방지)
+  const variants = [...variantSet].slice(0, 4)
   // 원본 + 변형을 모두 포함 (벡터 검색: 올바른 쪽이 임베딩 지배)
-  return `${query} ${[...variantSet].join(' ')}`
+  return `${query} ${variants.join(' ')}`
+}
+
+// ============================================
+// Jamo 레벨 퍼지 매칭 (오타 교정 fallback)
+// ============================================
+
+/** 한글 문자열을 자모 시퀀스로 분해 (비교용) */
+function decomposeToJamoSequence(str: string): number[] {
+  const seq: number[] = []
+  for (const char of str) {
+    const decomposed = decomposeHangul(char)
+    if (decomposed) {
+      const [cho, jung, jong] = decomposed
+      seq.push(cho + 100)   // cho: 100-118
+      seq.push(jung + 200)  // jung: 200-220
+      if (jong > 0) seq.push(jong + 300) // jong: 301-327
+    } else {
+      seq.push(char.charCodeAt(0) + 1000) // 비한글
+    }
+  }
+  return seq
+}
+
+/** 자모 시퀀스 레벤슈타인 거리 (early exit 최적화) */
+function jamoLevenshtein(seq1: number[], seq2: number[], maxDist: number = 3): number {
+  const m = seq1.length, n = seq2.length
+  if (Math.abs(m - n) > maxDist) return maxDist + 1
+
+  let prev = Array.from({ length: n + 1 }, (_, i) => i)
+  for (let i = 1; i <= m; i++) {
+    const curr = [i]
+    let rowMin = i
+    for (let j = 1; j <= n; j++) {
+      const cost = seq1[i - 1] === seq2[j - 1] ? 0 : 1
+      curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost)
+      if (curr[j] < rowMin) rowMin = curr[j]
+    }
+    if (rowMin > maxDist) return maxDist + 1 // early exit
+    prev = curr
+  }
+  return prev[n]
+}
+
+/**
+ * DB 직업명 대상 자모 레벨 퍼지 매칭
+ * 벡터+키워드 검색이 모두 실패했을 때만 호출 (fallback)
+ * 첫 글자 prefix + 첫 2글자 substring으로 후보 생성 → Jamo 레벤슈타인 비교
+ * @returns 매칭된 직업명 or null (거리 ≤ 2인 최적 후보)
+ */
+async function fuzzyMatchJobName(
+  db: D1Database,
+  query: string
+): Promise<string | null> {
+  if (query.length < 2 || query.length > 8) return null
+  if (!/[\uAC00-\uD7AF]/.test(query)) return null
+
+  const queryJamo = decomposeToJamoSequence(query)
+  if (queryJamo.length === 0) return null
+
+  try {
+    const firstChar = query[0]
+    const firstTwo = query.slice(0, 2)
+    const result = await db.prepare(
+      `SELECT name FROM jobs WHERE is_active = 1
+       AND (name LIKE ?||'%' OR name LIKE '%'||?||'%')
+       LIMIT 80`
+    ).bind(firstChar, firstTwo).all<{ name: string }>()
+
+    if (!result.results || result.results.length === 0) return null
+
+    let bestName: string | null = null
+    let bestDist = 3 // 최대 허용 거리
+
+    for (const row of result.results) {
+      // 길이 차이가 너무 크면 스킵 (빠른 필터)
+      if (Math.abs(row.name.length - query.length) > 2) continue
+      const candidateJamo = decomposeToJamoSequence(row.name)
+      const dist = jamoLevenshtein(queryJamo, candidateJamo, bestDist)
+      if (dist < bestDist) {
+        bestDist = dist
+        bestName = row.name
+      }
+    }
+
+    return bestDist <= 2 ? bestName : null
+  } catch {
+    return null
+  }
 }
 
 /**
@@ -914,21 +1042,71 @@ function calculateAdaptiveRRFWeights(
 }
 
 /**
+ * Post-RRF 품질 게이트: 벡터 전용 저품질 결과 필터링
+ * - 상위 2개 결과는 항상 유지
+ * - #3 이후: 벡터 전용(키워드 미매칭) AND 점수 낮으면 제거
+ * - 동적 임계값: max(0.30, topScore × 0.60)
+ */
+function applyPostRRFQualityGate<T extends string | number>(
+  rrfIds: T[],
+  vectorScores: Map<T, number>,
+  keywordHitIds: Set<T>,
+): T[] {
+  if (rrfIds.length <= 3) return rrfIds
+
+  // top 5 중 최고 벡터 점수로 동적 임계값 산출
+  let bestScore = 0
+  for (const id of rrfIds.slice(0, 5)) {
+    const s = vectorScores.get(id)
+    if (s && s > bestScore) bestScore = s
+  }
+  const dynamicMin = Math.max(0.33, bestScore * 0.70)
+
+  const kept: T[] = []
+  for (let i = 0; i < rrfIds.length; i++) {
+    const id = rrfIds[i]
+    // 상위 2개는 무조건 유지
+    if (i < 2) { kept.push(id); continue }
+    // 키워드 매치된 결과는 무조건 유지
+    if (keywordHitIds.has(id)) { kept.push(id); continue }
+    // 벡터 전용 결과: 동적 임계값 미달이면 제거
+    const vs = vectorScores.get(id)
+    if (vs !== undefined && vs < dynamicMin) continue
+    // 벡터 점수 없는 결과(키워드 전용)는 유지
+    kept.push(id)
+  }
+  // 안전장치: 최소 3개 보장
+  return kept.length >= 3 ? kept : rrfIds
+}
+
+/**
  * 벡터 검색 ID 순위 + 키워드 검색 ID 순위를 RRF로 병합
+ * Score-aware: 벡터 점수가 낮은 결과는 RRF 점수 감쇠 (0.30→0.5배, 0.50+→1.0배)
  * 반환: 병합된 ID 배열 (RRF score 내림차순)
  */
 function mergeIdsWithRRF<T extends string | number>(
   vectorIds: T[],
   keywordHits: { id: T; keywordScore: number }[],
   vectorWeight: number = 0.7,
-  keywordWeight: number = 0.3
+  keywordWeight: number = 0.3,
+  vectorScores?: Map<T, number>
 ): T[] {
   const scoreMap = new Map<T, number>()
 
-  // 벡터 검색 RRF 점수
+  // 벡터 검색 RRF 점수 (Score-aware 감쇠 적용)
   for (let rank = 0; rank < vectorIds.length; rank++) {
     const id = vectorIds[rank]
-    const rrfScore = vectorWeight / (RRF_K + rank + 1)
+    let rrfScore = vectorWeight / (RRF_K + rank + 1)
+
+    // Score-aware: 벡터 유사도가 낮은 결과는 RRF 기여도 감쇠
+    if (vectorScores) {
+      const vScore = vectorScores.get(id)
+      if (vScore !== undefined) {
+        // quality: 0.30점 → 0.5배, 0.50점+ → 1.0배 (선형 보간)
+        const quality = Math.min(1.0, Math.max(0.5, (vScore - 0.20) / 0.30))
+        rrfScore *= quality
+      }
+    }
     scoreMap.set(id, (scoreMap.get(id) || 0) + rrfScore)
   }
 
@@ -1411,26 +1589,45 @@ export async function ragSearchUnified(
       }
     }
 
+    // 3.5. Jamo 퍼지 매칭 fallback: 벡터+키워드 모두 결과 부족 → 오타 가능성 → DB 퍼지 매칭
+    if (vectorJobIds.length < 2 && kwJobs.length < 2 && query.length >= 2 && query.length <= 8 && /[\uAC00-\uD7AF]/.test(query)) {
+      const fuzzyMatch = await fuzzyMatchJobName(db, query)
+      if (fuzzyMatch && fuzzyMatch !== query) {
+        // 교정된 이름으로 키워드 재검색
+        const correctedKw = await keywordSearchJobIds(db, fuzzyMatch, 30)
+        for (const hit of correctedKw) {
+          if (!kwJobs.some(k => k.id === hit.id)) {
+            kwJobs.push(hit)
+          }
+        }
+        keywordTerms.push(fuzzyMatch)
+      }
+    }
+
     // 4. Adaptive RRF 가중치 → 벡터 + 키워드 병합
     const rrfWeights = calculateAdaptiveRRFWeights(query, isSlangExpanded, vectorJobIds.length, kwJobs.length)
-    let rrfJobIds = mergeIdsWithRRF(vectorJobIds, kwJobs, rrfWeights.vectorWeight, rrfWeights.keywordWeight)
-    let rrfMajorIds = mergeIdsWithRRF(vectorMajorIds, kwMajors, rrfWeights.vectorWeight, rrfWeights.keywordWeight)
+    let rrfJobIds = mergeIdsWithRRF(vectorJobIds, kwJobs, rrfWeights.vectorWeight, rrfWeights.keywordWeight, jobScores)
+    let rrfMajorIds = mergeIdsWithRRF(vectorMajorIds, kwMajors, rrfWeights.vectorWeight, rrfWeights.keywordWeight, majorScores)
     const mergedHowtoIds = mergeIdsWithRRF(vectorHowtoIds, kwHowtos)
 
     // SLANG 확장된 쿼리에서 키워드 결과가 충분하면 → 키워드 결과를 최상위로 끌어올림
     // 벡터의 학술/도메인 노이즈(심리학→게이미피케이션) 방지
+    const kwJobIdSet = new Set(kwJobs.map(h => h.id))
     if (isSlangExpanded && kwJobs.length >= 3) {
-      const kwJobIdSet = new Set(kwJobs.map(h => h.id))
       const kwFirst = rrfJobIds.filter(id => kwJobIdSet.has(id))
       const rest = rrfJobIds.filter(id => !kwJobIdSet.has(id))
       rrfJobIds = [...kwFirst, ...rest]
     }
+    const kwMajorIdSet = new Set(kwMajors.map(h => h.id))
     if (isSlangExpanded && kwMajors.length >= 3) {
-      const kwMajorIdSet = new Set(kwMajors.map(h => h.id))
       const kwFirst = rrfMajorIds.filter(id => kwMajorIdSet.has(id))
       const rest = rrfMajorIds.filter(id => !kwMajorIdSet.has(id))
       rrfMajorIds = [...kwFirst, ...rest]
     }
+
+    // Post-RRF 품질 게이트: 벡터 전용 저품질 결과 제거 (#3 이후)
+    rrfJobIds = applyPostRRFQualityGate(rrfJobIds, jobScores, kwJobIdSet)
+    rrfMajorIds = applyPostRRFQualityGate(rrfMajorIds, majorScores, kwMajorIdSet)
 
     // 정확 매치 우선 주입: 정확 일치 → 같은 카테고리 형제 → 확장 키워드 → RRF
     // injectExact* 함수는 원본 사용자 쿼리(query)를 기준으로 DB 이름 정확 매칭
@@ -1613,15 +1810,16 @@ export async function ragSearchJobs(
       }
     }
 
-    // Adaptive RRF 가중치 → 병합 + SLANG 키워드 우선 + 정확 매치 + 속성 후보
+    // Adaptive RRF 가중치 → 병합 + SLANG 키워드 우선 + 품질 게이트 + 정확 매치 + 속성 후보
     const rrfWeights = calculateAdaptiveRRFWeights(query, isSlangExpanded, vectorJobIds.length, kwJobs.length)
-    let rrfJobIds = mergeIdsWithRRF(vectorJobIds, kwJobs, rrfWeights.vectorWeight, rrfWeights.keywordWeight)
+    let rrfJobIds = mergeIdsWithRRF(vectorJobIds, kwJobs, rrfWeights.vectorWeight, rrfWeights.keywordWeight, jobScores)
+    const kwJobIdSet = new Set(kwJobs.map(h => h.id))
     if (isSlangExpanded && kwJobs.length >= 3) {
-      const kwJobIdSet = new Set(kwJobs.map(h => h.id))
       const kwFirst = rrfJobIds.filter(id => kwJobIdSet.has(id))
       const rest = rrfJobIds.filter(id => !kwJobIdSet.has(id))
       rrfJobIds = [...kwFirst, ...rest]
     }
+    rrfJobIds = applyPostRRFQualityGate(rrfJobIds, jobScores, kwJobIdSet)
     const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query, isSlangExpanded)
     const mergedJobIds = await appendAttributeCandidates(db, exactJobResult.ids, intents, 15)
 
@@ -1702,9 +1900,11 @@ export async function ragSearchMajors(
       }
     }
 
-    // Adaptive RRF 가중치 → 병합 + 정확 매치 우선 주입
+    // Adaptive RRF 가중치 → 병합 + 품질 게이트 + 정확 매치 우선 주입
     const rrfWeights = calculateAdaptiveRRFWeights(query, isSlangExpanded, vectorMajorIds.length, kwMajors.length)
-    const rrfMajorIds = mergeIdsWithRRF(vectorMajorIds, kwMajors, rrfWeights.vectorWeight, rrfWeights.keywordWeight)
+    let rrfMajorIds = mergeIdsWithRRF(vectorMajorIds, kwMajors, rrfWeights.vectorWeight, rrfWeights.keywordWeight, majorScores)
+    const kwMajorIdSet = new Set(kwMajors.map(h => h.id))
+    rrfMajorIds = applyPostRRFQualityGate(rrfMajorIds, majorScores, kwMajorIdSet)
     const mergedMajorIds = await injectExactMatchMajors(db, rrfMajorIds, keywordTerms, query)
 
     const startIdx = (page - 1) * perPage
