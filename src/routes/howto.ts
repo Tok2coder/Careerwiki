@@ -294,9 +294,9 @@ howtoRoutes.get('/', async (c) => {
           </div>
         <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
           <a href="/howto/guide:%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9E%91%EC%84%B1%EB%B2%95"
-             class="inline-flex items-center gap-1.5 px-3 py-2 sm:py-3 min-h-[40px] sm:min-h-[44px] border border-white/20 hover:border-wiki-primary/50 text-wiki-muted hover:text-white text-sm font-medium rounded-xl transition">
-            <i class="fas fa-question-circle text-xs"></i>
-            <span>작성법</span>
+             class="inline-flex items-center justify-center w-[40px] sm:w-[44px] min-h-[40px] sm:min-h-[44px] border border-white/20 hover:border-wiki-primary/50 text-wiki-muted hover:text-white text-sm sm:text-base rounded-xl transition"
+             title="가이드 작성법">
+            <i class="fas fa-question-circle text-xs sm:text-sm"></i>
           </a>
           <a href="${user ? '/howto/write' : '/login?redirect=/howto/write'}"
              class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 min-h-[40px] sm:min-h-[44px] bg-wiki-primary/70 hover:bg-wiki-primary/80 text-white text-sm sm:text-base font-medium rounded-xl transition"
