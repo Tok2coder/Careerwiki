@@ -29,6 +29,10 @@ const INTEREST_JOB_MAP: Record<string, { attrs: Record<string, number> }> = {
   design:           { attrs: { creative: 0.7, people_facing: 0.2, analytical: 0.1 } },
   art:              { attrs: { creative: 0.9, solo_deep: 0.1 } },
   routine:          { attrs: { execution: 0.6, stability: 0.4 } },
+  // RIASEC 기반 확장 토큰
+  leadership:       { attrs: { people_facing: 0.4, execution: 0.3, teamwork: 0.3 } },  // E(Enterprising): 리더십, 관리, 설득
+  nature:           { attrs: { solo_deep: 0.4, execution: 0.3, stability: 0.3 } },      // R(Realistic): 자연/야외 환경 선호
+  physical_activity: { attrs: { execution: 0.5, teamwork: 0.3, solo_deep: 0.2 } },     // R(Realistic): 신체 활동 선호
 }
 
 // 가치 → 직업 속성 매핑
@@ -37,9 +41,9 @@ const VALUE_JOB_MAP: Record<string, { attrs: Record<string, number>, baseAdd?: n
   stability:   { attrs: { stability: 1.0 } },
   income:      { attrs: { income: 1.0 } },
   wlb:         { attrs: { wlb: 1.0 } },
-  autonomy:    { attrs: { solo_deep: 0.6, wlb: 0.4 } },
-  meaning:     { attrs: { people_facing: 0.3, growth: 0.3 }, baseAdd: 25 },
-  recognition: { attrs: { income: 0.4, growth: 0.3, people_facing: 0.3 } },
+  autonomy:    { attrs: { solo_deep: 0.3, creative: 0.3, growth: 0.25, analytical: 0.15 } },  // RIASEC: 자율성 = 독립적 판단+창의적 재량+성장기회
+  meaning:     { attrs: { people_facing: 0.4, growth: 0.3, creative: 0.2, stability: 0.1 } },  // 사회적 기여(S) + 성장(I) — baseAdd 제거
+  recognition: { attrs: { people_facing: 0.4, growth: 0.35, income: 0.25 } },  // 인정 = 대인 영향력 > 소득
   // 확장 토큰
   expertise:   { attrs: { analytical: 0.5, growth: 0.5 } },
   creativity:  { attrs: { creative: 1.0 } },
@@ -60,7 +64,7 @@ const ANCHOR_JOB_MAP: Record<string, { attrs: Record<string, number>, baseAdd?: 
   reward_anchor:    { attrs: { income: 1.0 } },
   growth_anchor:    { attrs: { growth: 1.0 } },
   stability_anchor: { attrs: { stability: 1.0 } },
-  meaning_anchor:   { attrs: { people_facing: 0.4 }, baseAdd: 25 },
+  meaning_anchor:   { attrs: { people_facing: 0.4, growth: 0.3, creative: 0.3 } },  // baseAdd 제거 — 속성 기반 매칭으로 전환
   people_anchor:    { attrs: { people_facing: 0.6, teamwork: 0.4 } },
   passion_anchor:   { attrs: { creative: 0.6, growth: 0.4 } },
 }
@@ -212,8 +216,8 @@ const STRENGTH_JOB_MAP: Record<string, { attr?: string, universal?: number }> = 
   creative:             { attr: 'creative' },
   communication:        { attr: 'people_facing' },
   structured_execution: { attr: 'execution' },
-  persistence:          { universal: 5 },
-  fast_learning:        { universal: 8 },
+  persistence:          { attr: 'growth' },       // 끈기 = 성장지향 직업에서 발휘 (RIASEC-I: 지적 끈기)
+  fast_learning:        { attr: 'analytical' },   // 빠른 학습력 = 분석력 필요 직업에서 유리
 }
 
 // 진입 장벽 페널티 테이블

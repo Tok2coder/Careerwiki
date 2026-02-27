@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 60      // 5개 × 12배치, 전부 병렬 처리
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.10.4'  // helping/helping_feedback 토큰 누락 수정 — 아키타입 파이프라인 전체 활성화
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.14.0'  // P0: 토큰 매핑 RIASEC 기반 수정 + 신입 유저 Feasibility 개선 + 가중치 조정
 
 // ============================================
 // Types
@@ -136,10 +136,18 @@ const JUDGE_SYSTEM_PROMPT = `당신은 커리어 매칭 전문가입니다. 사�
 - 배경 간접 관련 + 장벽 낮음 = **65-79**
 - 배경 무관 + 장벽 없음 = **50-60** (기본)
 - 배경 무관 + 장벽 있음 = **35-49**
-- [USER_BACKGROUND]가 없으면 진입장벽만으로 평가 (기본 55)
+- [USER_BACKGROUND]에 "배경 정보 없음"이면 → 신입으로 간주, **시니어/전문가급 직업은 Feasibility 35-45 이하!**
+- [USER_BACKGROUND]가 완전히 없으면 진입장벽만으로 평가 (기본 55)
 - ⚠️ 10개 직업 간 Feasibility 점수 범위가 최소 25점 이상 차이나야 합니다!
 - ⚠️ 배경과 무관한 직업은 반드시 60 이하로 평가하세요! 관련 직업과 차별화 필수!
 - ✅ "합리적 노력으로 진입 가능한가" + "배경이 얼마나 관련되는가"가 기준입니다
+
+**C. 경험 없는 사용자(신입/전환자) 특별 규칙 (필수!)**
+- [USER_BACKGROUND]에 "배경 정보 없음"이 있으면 → 이 사용자는 **관련 경력이 없는 신입**입니다
+- 시니어급 직업(CTO, 연구책임자, 수석, 관리자 등): Feasibility **30-40**
+- 경력 3-5년 필요 직업: Feasibility **40-55**
+- 신입 가능 직업(주니어, 인턴, 교육훈련 등): Feasibility **65-80**
+- sacrifice_flags에 willing_to_study/low_initial_income이 있으면 → 학습 의지 반영 +5-10
 
 ## 평가 기준 (기본)
 - Fit (0-100): 사용자의 강점, 성향, 작업 스타일이 직업과 얼마나 맞는가
@@ -666,6 +674,22 @@ function buildUserContext(
     parts.push(`\n[USER_BACKGROUND - Feasibility 평가 시 반드시 참조!]`)
     parts.push(bgParts.join('\n'))
     parts.push('[/USER_BACKGROUND]\n')
+  } else {
+    // P0-2: 배경 정보가 전혀 없는 경우 — 경험 없는 신입으로 명시
+    // 이 정보가 없으면 LLM이 Feasibility를 높게 줘서 시니어급 직업도 "가능"으로 평가함
+    const hasLowIncomeOk = miniModuleResult?.sacrifice_flags?.includes('low_initial_income')
+    const noBackground = !miniModuleResult?.background_flags?.length
+    if (noBackground) {
+      parts.push(`\n[USER_BACKGROUND - Feasibility 평가 시 반드시 참조!]`)
+      parts.push(`⚠️ 배경 정보 없음 — 관련 경력/자격/전공 정보가 제공되지 않았습니다.`)
+      parts.push(`→ 경험이 확인되지 않은 사용자입니다. Feasibility 평가 시 "신입/경험 없음" 기준으로 평가하세요.`)
+      if (hasLowIncomeOk) {
+        parts.push(`→ 초봉 낮아도 감수 가능 (low_initial_income) — 진입 난이도를 고려해 평가하세요.`)
+      }
+      parts.push(`→ 시니어/전문가급 직업(경력 5년+ 필요, 관리자, 연구책임자 등)의 Feasibility는 35-45 이하로 평가하세요.`)
+      parts.push(`→ 신입 친화적 직업(인턴, 주니어, 교육 직무 등)의 Feasibility는 65-80으로 평가하세요.`)
+      parts.push('[/USER_BACKGROUND]\n')
+    }
   }
 
   // Universal 답변
@@ -1301,11 +1325,11 @@ export function calculateStructuralRiskPenalty(
 }
 
 function calculateOverallScore(result: LLMJudgeResult): number {
-  // Overall = Fit*0.50 + Desire*0.40 + Feasibility*0.10 - RiskPenalty(capped at 3)
-  // v3.13: Feasibility(배경 적합도+진입장벽)를 10% 가중치로 공식에 포함
-  // Like/Can이 90% 유지 → 기존 순위 대부분 보존, 배경 관련 직업만 약간 상승
-  const raw = (result.fitScore * 0.50) + (result.desireScore * 0.40) + (result.feasibilityScore * 0.10)
-  const cappedRisk = Math.min(result.riskPenalty, 3)
+  // P0-3: Overall = Fit*0.45 + Desire*0.35 + Feasibility*0.20 - RiskPenalty(capped at 8)
+  // v3.14: Feasibility 가중치 10%→20% 상향 — 배경/경험 차이가 순위에 실질 반영되도록
+  // riskPenalty cap 3→8 — 강한 미스매치(Q8/Q9 충돌)가 순위에 의미있게 반영되도록
+  const raw = (result.fitScore * 0.45) + (result.desireScore * 0.35) + (result.feasibilityScore * 0.20)
+  const cappedRisk = Math.min(result.riskPenalty, 8)
   return Math.round(clamp(raw - cappedRisk, 0, 100))
 }
 
