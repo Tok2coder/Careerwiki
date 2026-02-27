@@ -714,7 +714,7 @@ export async function getCoverageStats(db: D1Database): Promise<CoverageStats> {
       FROM jobs
       WHERE is_active = 1
         AND (user_contributed_json IS NULL OR user_contributed_json = '{}')
-      ORDER BY view_count DESC NULLS LAST
+      ORDER BY COALESCE(view_count, 0) DESC
       LIMIT 10
     `).all<{ slug: string; name: string; viewCount: number }>(),
 
@@ -723,7 +723,7 @@ export async function getCoverageStats(db: D1Database): Promise<CoverageStats> {
       FROM majors
       WHERE is_active = 1
         AND (user_contributed_json IS NULL OR user_contributed_json = '{}')
-      ORDER BY view_count DESC NULLS LAST
+      ORDER BY COALESCE(view_count, 0) DESC
       LIMIT 10
     `).all<{ slug: string; name: string; viewCount: number }>()
   ])
@@ -827,9 +827,9 @@ export async function getDailyViewStats(db: D1Database, days: number = 30): Prom
     const result = await db.prepare(`
       SELECT stat_date, entity_type, total_views
       FROM daily_view_stats
-      WHERE stat_date >= date('now', '-' || ? || ' days')
+      WHERE stat_date >= date('now', '-${days} days')
       ORDER BY stat_date ASC
-    `).bind(days).all<{ stat_date: string; entity_type: string; total_views: number }>()
+    `).all<{ stat_date: string; entity_type: string; total_views: number }>()
 
     // 일별로 그룹핑
     const dayMap = new Map<string, { job: number; major: number; howto: number; share: number }>()
