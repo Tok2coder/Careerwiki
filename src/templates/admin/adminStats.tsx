@@ -2,7 +2,7 @@
  * 관리자 - 통계/애널리틱스 대시보드
  */
 import { renderAdminLayout } from './adminLayout'
-import type { AiConversionStats } from '../../services/adminService'
+import type { AiConversionStats, SearchStats } from '../../services/adminService'
 
 export interface AnalyticsProps {
   filters: {
@@ -30,6 +30,7 @@ export interface AnalyticsProps {
   }
   channels: Array<{ channel: string; visits: number; conversions: number; cvr: number }>
   aiConversion?: AiConversionStats
+  searchStats?: SearchStats
 }
 
 const metricCard = (label: string, value: string, tone: 'blue' | 'green' | 'amber' | 'red' | 'slate' = 'slate') => {
@@ -88,7 +89,7 @@ const renderTopTable = (title: string, items: { slug: string; name: string; type
 `
 
 export function renderAdminStats(props: AnalyticsProps): string {
-  const { filters, overall, jobs, majors, howtos, channels, aiConversion } = props
+  const { filters, overall, jobs, majors, howtos, channels, aiConversion, searchStats } = props
 
   const defaultEndDate = new Date().toISOString().split('T')[0]
   const defaultStartDate = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
@@ -107,6 +108,90 @@ export function renderAdminStats(props: AnalyticsProps): string {
         <td colspan="4" class="px-4 py-6 text-center text-slate-400">채널별 전환 데이터가 없습니다.</td>
       </tr>
     `
+
+  // 검색 패널 HTML
+  const maxQueryCount = Math.max(...(searchStats?.topQueries || []).map(q => q.count), 1)
+  const maxFailCount = Math.max(...(searchStats?.failedQueries || []).map(q => q.count), 1)
+
+  const searchPanel = `
+    <section data-tab-panel="search" class="space-y-4 hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        ${metricCard('총 검색', (searchStats?.totalSearches || 0).toLocaleString(), 'blue')}
+        ${metricCard('실패 검색 (0결과)', (searchStats?.failedSearches || 0).toLocaleString(), 'red')}
+        ${metricCard('실패율', searchStats && searchStats.totalSearches > 0 ? ((searchStats.failedSearches / searchStats.totalSearches) * 100).toFixed(1) + '%' : '0%', 'amber')}
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- 인기 검색어 TOP 20 -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <div class="p-4 border-b border-wiki-border/70 flex items-center gap-2">
+            <i class="fas fa-fire text-amber-400"></i>
+            <h3 class="text-lg font-semibold text-slate-100">인기 검색어 TOP 20</h3>
+          </div>
+          <div class="max-h-96 overflow-y-auto">
+            <table class="w-full">
+              <thead class="bg-wiki-card sticky top-0">
+                <tr>
+                  <th class="px-4 py-3 text-left text-slate-400 font-medium w-10">#</th>
+                  <th class="px-4 py-3 text-left text-slate-400 font-medium">검색어</th>
+                  <th class="px-4 py-3 text-right text-slate-400 font-medium w-20">횟수</th>
+                  <th class="px-4 py-3 text-slate-400 font-medium w-28 hidden sm:table-cell"></th>
+                </tr>
+              </thead>
+              <tbody>
+                ${(searchStats?.topQueries || []).length ? (searchStats?.topQueries || []).map((q, i) => `
+                  <tr class="border-t border-wiki-border/60 hover:bg-wiki-card/60">
+                    <td class="px-4 py-2 text-slate-500">${i + 1}</td>
+                    <td class="px-4 py-2 text-slate-200">${q.query}</td>
+                    <td class="px-4 py-2 text-right text-slate-200">${q.count.toLocaleString()}</td>
+                    <td class="px-4 py-2 hidden sm:table-cell">
+                      <div class="bg-slate-700/50 rounded-full h-1.5">
+                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: ${maxQueryCount > 0 ? Math.round((q.count / maxQueryCount) * 100) : 0}%"></div>
+                      </div>
+                    </td>
+                  </tr>
+                `).join('') : '<tr><td colspan="4" class="px-4 py-8 text-center text-slate-400">검색 데이터가 없습니다. 검색이 발생하면 여기에 표시됩니다.</td></tr>'}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 실패 키워드 (결과 0건) -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <div class="p-4 border-b border-wiki-border/70 flex items-center gap-2">
+            <i class="fas fa-exclamation-triangle text-rose-400"></i>
+            <h3 class="text-lg font-semibold text-slate-100">실패 키워드 (결과 0건)</h3>
+          </div>
+          <div class="max-h-96 overflow-y-auto">
+            <table class="w-full">
+              <thead class="bg-wiki-card sticky top-0">
+                <tr>
+                  <th class="px-4 py-3 text-left text-slate-400 font-medium w-10">#</th>
+                  <th class="px-4 py-3 text-left text-slate-400 font-medium">검색어</th>
+                  <th class="px-4 py-3 text-right text-slate-400 font-medium w-20">횟수</th>
+                  <th class="px-4 py-3 text-slate-400 font-medium w-28 hidden sm:table-cell"></th>
+                </tr>
+              </thead>
+              <tbody>
+                ${(searchStats?.failedQueries || []).length ? (searchStats?.failedQueries || []).map((q, i) => `
+                  <tr class="border-t border-wiki-border/60 hover:bg-wiki-card/60">
+                    <td class="px-4 py-2 text-slate-500">${i + 1}</td>
+                    <td class="px-4 py-2 text-rose-300">${q.query}</td>
+                    <td class="px-4 py-2 text-right text-slate-200">${q.count.toLocaleString()}</td>
+                    <td class="px-4 py-2 hidden sm:table-cell">
+                      <div class="bg-slate-700/50 rounded-full h-1.5">
+                        <div class="bg-rose-500 h-1.5 rounded-full" style="width: ${maxFailCount > 0 ? Math.round((q.count / maxFailCount) * 100) : 0}%"></div>
+                      </div>
+                    </td>
+                  </tr>
+                `).join('') : '<tr><td colspan="4" class="px-4 py-8 text-center text-slate-400">실패 검색어가 없습니다.</td></tr>'}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  `
 
   // AI 퍼널 패널 HTML
   const aiTrend = aiConversion?.dailyTrend || []
@@ -165,6 +250,7 @@ export function renderAdminStats(props: AnalyticsProps): string {
         <button type="button" data-tab="major" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">전공</button>
         <button type="button" data-tab="howto" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">HowTo</button>
         <button type="button" data-tab="ai-funnel" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">AI 퍼널</button>
+        <button type="button" data-tab="search" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">검색</button>
       </div>
     </div>
 
@@ -234,6 +320,9 @@ export function renderAdminStats(props: AnalyticsProps): string {
 
     <!-- AI 퍼널 -->
     ${aiPanel}
+
+    <!-- 검색 -->
+    ${searchPanel}
   `
 
   return renderAdminLayout({

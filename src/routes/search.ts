@@ -5,6 +5,7 @@ import { renderJobCard, renderMajorCard } from '../utils/card-renderers'
 import {
   escapeHtml, createMetaDescription, renderLayoutWithContext, cleanGuidePrefix
 } from '../utils/shared-helpers'
+import { logSearchQuery } from '../services/searchQueryLogger'
 
 const searchRoutes = new Hono<AppEnv>()
 
@@ -65,6 +66,18 @@ searchRoutes.get('/search', async (c) => {
         title: h.title,
         summary: h.summary,
       }))
+
+      // 검색어 로깅 (비동기, 응답 블로킹 없음)
+      const totalResults = ragResult.jobs.items.length + ragResult.majors.items.length + ragResult.howtos.length
+      if (c.executionCtx && 'waitUntil' in c.executionCtx) {
+        c.executionCtx.waitUntil(
+          logSearchQuery(c.env.DB, {
+            query: keyword,
+            resultCount: totalResults,
+            searchType: 'all'
+          })
+        )
+      }
     } catch (error) {
     }
   }

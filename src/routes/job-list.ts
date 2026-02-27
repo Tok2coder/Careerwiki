@@ -9,6 +9,7 @@ import {
   createMetaDescription, escapeHtml, renderLayoutWithContext,
   serializeForScript, getOptionalUser
 } from '../utils/shared-helpers'
+import { logSearchQuery } from '../services/searchQueryLogger'
 
 const jobListRoutes = new Hono<AppEnv>()
 
@@ -56,6 +57,17 @@ jobListRoutes.get('/job', async (c) => {
 
     const items = result.items
     const totalCount = typeof result.meta?.total === 'number' ? result.meta.total : items.length
+
+    // 검색어 로깅 (비동기)
+    if (keyword && c.executionCtx && 'waitUntil' in c.executionCtx) {
+      c.executionCtx.waitUntil(
+        logSearchQuery(c.env.DB, {
+          query: keyword,
+          resultCount: totalCount,
+          searchType: 'job'
+        })
+      )
+    }
 
     try {
     } catch (_) {}

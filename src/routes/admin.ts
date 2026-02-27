@@ -14,7 +14,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getCoverageStats } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getCoverageStats, getSearchStats } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -649,15 +649,17 @@ adminRoutes.get('/admin/stats', requireAdmin, async (c) => {
     const startDate = c.req.query('startDate') || new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
     const topLimit = parseInt(c.req.query('topLimit') || '10')
 
-    const [stats, aiConversion] = await Promise.all([
+    const [stats, aiConversion, searchStats] = await Promise.all([
       getAnalyticsStats(c.env.DB, { startDate, endDate, topLimit }),
-      getAiConversionStats(c.env.DB, { startDate, endDate })
+      getAiConversionStats(c.env.DB, { startDate, endDate }),
+      getSearchStats(c.env.DB, { startDate, endDate })
     ])
 
     return c.html(renderAdminStats({
       filters: { startDate, endDate, topLimit },
       ...stats,
-      aiConversion
+      aiConversion,
+      searchStats
     }))
   } catch (error) {
     return c.text('통계를 불러오는데 실패했습니다.', 500)
@@ -671,9 +673,12 @@ adminRoutes.get('/api/admin/stats', requireAdmin, async (c) => {
     const startDate = c.req.query('startDate') || new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
     const topLimit = parseInt(c.req.query('topLimit') || '10')
 
-    const stats = await getAnalyticsStats(c.env.DB, { startDate, endDate, topLimit })
+    const [stats, searchStats] = await Promise.all([
+      getAnalyticsStats(c.env.DB, { startDate, endDate, topLimit }),
+      getSearchStats(c.env.DB, { startDate, endDate })
+    ])
 
-    return c.json({ success: true, data: stats })
+    return c.json({ success: true, data: { ...stats, searchStats } })
   } catch (error) {
     return c.json({ success: false, error: 'Failed to fetch stats' }, 500)
   }

@@ -742,6 +742,69 @@ export async function getCoverageStats(db: D1Database): Promise<CoverageStats> {
 }
 
 /**
+ * 검색어 통계
+ */
+export interface SearchStats {
+  topQueries: Array<{ query: string; count: number }>
+  failedQueries: Array<{ query: string; count: number }>
+  totalSearches: number
+  failedSearches: number
+}
+
+export async function getSearchStats(db: D1Database, params: { startDate: string; endDate: string }): Promise<SearchStats> {
+  const { startDate, endDate } = params
+
+  try {
+    const [topResult, failedResult, totalResult] = await Promise.all([
+      // 인기 검색어 TOP 20
+      db.prepare(`
+        SELECT query, SUM(count) as total
+        FROM search_query_daily
+        WHERE stat_date BETWEEN ? AND ?
+        GROUP BY query
+        ORDER BY total DESC
+        LIMIT 20
+      `).bind(startDate, endDate).all<{ query: string; total: number }>(),
+
+      // 실패 검색어 TOP 20 (결과 0건)
+      db.prepare(`
+        SELECT query, SUM(zero_result_count) as fails
+        FROM search_query_daily
+        WHERE stat_date BETWEEN ? AND ?
+          AND zero_result_count > 0
+        GROUP BY query
+        ORDER BY fails DESC
+        LIMIT 20
+      `).bind(startDate, endDate).all<{ query: string; fails: number }>(),
+
+      // 전체 검색 수 + 실패 수
+      db.prepare(`
+        SELECT
+          COALESCE(SUM(count), 0) as totalSearches,
+          COALESCE(SUM(zero_result_count), 0) as failedSearches
+        FROM search_query_daily
+        WHERE stat_date BETWEEN ? AND ?
+      `).bind(startDate, endDate).first<{ totalSearches: number; failedSearches: number }>()
+    ])
+
+    return {
+      topQueries: (topResult.results || []).map(r => ({ query: r.query, count: r.total || 0 })),
+      failedQueries: (failedResult.results || []).map(r => ({ query: r.query, count: r.fails || 0 })),
+      totalSearches: totalResult?.totalSearches || 0,
+      failedSearches: totalResult?.failedSearches || 0
+    }
+  } catch (_e) {
+    // search_query_daily 테이블이 아직 없을 경우 빈 데이터 반환
+    return {
+      topQueries: [],
+      failedQueries: [],
+      totalSearches: 0,
+      failedSearches: 0
+    }
+  }
+}
+
+/**
  * 대시보드 요약 통계
  */
 export async function getDashboardStats(db: D1Database) {
