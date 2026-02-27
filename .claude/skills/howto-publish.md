@@ -275,7 +275,7 @@ curl -X POST https://careerwiki.org/api/image/generate \
   -d '{
     "type": "jobs",
     "slug": "howto-TOPIC-thumb",
-    "promptOverride": "A professional illustration of [주제 설명], clean modern style, 16:9 aspect ratio"
+    "promptOverride": "[아래 스타일 풀에서 랜덤 선택] + [주제 설명]"
   }'
 # → { "taskId": "task-unified-...", "estimatedTime": 32 }
 
@@ -286,6 +286,29 @@ curl https://careerwiki.org/api/image/status/TASK_ID \
 ```
 
 **중요**: 썸네일은 publish body의 `thumbnailUrl`에 evolink URL을 직접 넣으면 됨. /api/image/save 호출 불필요.
+
+### 5-1b. 이미지 스타일 풀 (매번 다른 스타일 사용!)
+
+**규칙**: 매 HowTo마다 이전 글과 다른 스타일을 선택한다. 기존 발행글의 썸네일 스타일과 겹치지 않게 로테이션.
+
+| # | 스타일명 | promptOverride 템플릿 | 분위기 |
+|---|---------|----------------------|--------|
+| 1 | **Isometric 3D** | `Isometric 3D illustration of [주제], vibrant colors, soft shadows, white background, game-like aesthetic` | 귀엽고 입체적 |
+| 2 | **Flat Vector** | `Minimal flat vector illustration of [주제], bold geometric shapes, limited color palette of 4 colors, no outlines` | 깔끔 모던 |
+| 3 | **Watercolor** | `Watercolor painting style illustration of [주제], soft pastel tones, artistic brush strokes, dreamy atmosphere` | 감성적 |
+| 4 | **Retro Pop** | `Retro pop art style illustration of [주제], halftone dots, bold primary colors, comic book aesthetic, vintage feel` | 복고 에너지 |
+| 5 | **Neon Gradient** | `Futuristic neon gradient illustration of [주제], dark background, glowing edges, cyberpunk-inspired, purple and teal tones` | 미래지향 |
+| 6 | **Line Art** | `Elegant line art illustration of [주제], single continuous line style, minimal detail, white background, gold accent color` | 세련 미니멀 |
+| 7 | **Paper Cut** | `Paper cut layered illustration of [주제], depth effect with shadows between layers, craft-like texture, warm colors` | 공예 느낌 |
+| 8 | **Pixel Art** | `Pixel art illustration of [주제], 16-bit retro game style, bright colors, nostalgic, clean pixel grid` | 레트로 게임 |
+
+**사용 예시**: 기존에 1(Isometric)과 2(Flat Vector)를 썼으면, 다음 글은 3~8 중에서 선택.
+
+**주제와 스타일 매칭 가이드**:
+- 체력/스포츠 주제 → Retro Pop, Isometric 3D
+- 시험/공부 주제 → Flat Vector, Line Art
+- 기술/IT 주제 → Neon Gradient, Pixel Art
+- 예술/감성 주제 → Watercolor, Paper Cut
 
 ### 5-2. 인라인 이미지 생성 (선택사항)
 
