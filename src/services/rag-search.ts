@@ -161,6 +161,10 @@ const SLANG_DICTIONARY: Record<string, string> = {
   '전문직': '변호사 회계사 세무사 변리사 건축가',
   '기술직': '전기기술자 기계기술자 건축시공기술자 용접공학기술자 배관공',
   '현장직': '건설시공기술자 전기기술자 건축배관공 용접원 설비기술자',
+  // === 분야 카테고리 ===
+  '의료': '의사 간호사 약사 치과의사 한의사 물리치료사',
+  '금융': '회계사 재무설계사 보험설계사 증권중개인 은행사무원 펀드매니저',
+  '교육': '교사 초등교사 중등교사 유치원교사 외국어강사 교육학교수',
   // === HR/인사 (임베딩이 "하수처리"로 오염) ===
   'HR 담당자': '인사사무원 인적자원전문가 인적자원컨설턴트 인사교육훈련사무원 노무사',
   'HR': '인사사무원 인적자원전문가 인적자원컨설턴트 인사교육훈련사무원 노무사',
@@ -604,11 +608,11 @@ async function fuzzyMatchJobName(
 async function preprocessQuery(
   query: string,
   options?: { openaiApiKey?: string; kv?: KVNamespace; enableExpansion?: boolean }
-): Promise<{ searchQuery: string; keywordQuery: string; expansionTerms: string[]; isSlangExpanded: boolean }> {
+): Promise<{ searchQuery: string; keywordQuery: string; expansionTerms: string[]; isSlangExpanded: boolean; normalizedQuery: string }> {
   let trimmed = query.trim().slice(0, 200) // 최대 200자 제한
 
   if (!trimmed) {
-    return { searchQuery: '', keywordQuery: '', expansionTerms: [], isSlangExpanded: false }
+    return { searchQuery: '', keywordQuery: '', expansionTerms: [], isSlangExpanded: false, normalizedQuery: '' }
   }
 
   // -2. 영타 → 한타 변환 (두벌식 키보드 역변환)
@@ -616,6 +620,9 @@ async function preprocessQuery(
   if (reversed) {
     trimmed = reversed
   }
+
+  // normalizedQuery: 키보드 변환 후, 오타 교정 전 (호출자에게 한글 원형 전달)
+  const normalizedQuery = trimmed
 
   // -1. 오타 교정: 한국어 모음 혼동 (ㅐ↔ㅔ 등) 기반 교정
   trimmed = correctKoreanTypo(trimmed)
@@ -639,6 +646,7 @@ async function preprocessQuery(
       keywordQuery: `${trimmed} ${bestAbstractMatch.expansion}`, // LIKE: 원본 + 확장
       expansionTerms: terms,
       isSlangExpanded: true,
+      normalizedQuery,
     }
   }
 
@@ -651,17 +659,29 @@ async function preprocessQuery(
       keywordQuery: `${trimmed} ${exactSlangExpansion}`, // LIKE: 원본 + 확장
       expansionTerms: terms,
       isSlangExpanded: true,
+      normalizedQuery,
     }
   }
 
   // 부분 매칭 (사전 키가 쿼리에 포함된 경우) — 모든 매칭 결합 (복수 부분 매칭 허용)
+  // 단, SLANG 키가 쿼리 내에서 독립 단어이거나 쿼리의 지배적 부분일 때만 매칭
+  // (예: "의료기기"에서 "의료" 부분매칭 방지 → "의료"는 "기기"와 복합어, 독립 아님)
   const allExpansions: string[] = []
   const allTermsSet = new Set<string>()
   for (const [slang, expansion] of Object.entries(SLANG_DICTIONARY)) {
     if (trimmed.includes(slang)) {
-      allExpansions.push(expansion)
-      for (const t of expansion.split(/\s+/).filter(t => t.length >= 2)) {
-        allTermsSet.add(t)
+      const pos = trimmed.indexOf(slang)
+      const endPos = pos + slang.length
+      const isAtEnd = endPos === trimmed.length
+      const isFollowedBySpace = endPos < trimmed.length && trimmed[endPos] === ' '
+      const isPrecededBySpace = pos === 0 || trimmed[pos - 1] === ' '
+      const isWordBoundary = (isPrecededBySpace && (isAtEnd || isFollowedBySpace))
+      const isDominant = slang.length >= trimmed.length * 0.6
+      if (isWordBoundary || isDominant) {
+        allExpansions.push(expansion)
+        for (const t of expansion.split(/\s+/).filter(t => t.length >= 2)) {
+          allTermsSet.add(t)
+        }
       }
     }
   }
@@ -673,6 +693,7 @@ async function preprocessQuery(
       keywordQuery: `${trimmed} ${combinedExpansion}`,
       expansionTerms: terms,
       isSlangExpanded: true,
+      normalizedQuery,
     }
   }
 
@@ -704,6 +725,7 @@ async function preprocessQuery(
           keywordQuery: `${trimmed} ${expansion}`,
           expansionTerms: terms,
           isSlangExpanded: false,
+          normalizedQuery,
         }
       }
     }
@@ -737,6 +759,7 @@ async function preprocessQuery(
         keywordQuery: `${trimmed} ${shortExpansion}`,
         expansionTerms: terms,
         isSlangExpanded: true,
+        normalizedQuery,
       }
     }
     return {
@@ -744,6 +767,7 @@ async function preprocessQuery(
       keywordQuery: trimmed,
       expansionTerms: [],
       isSlangExpanded: false,
+      normalizedQuery,
     }
   }
 
@@ -757,11 +781,12 @@ async function preprocessQuery(
         keywordQuery: `${trimmed} ${expanded}`,
         expansionTerms: terms,
         isSlangExpanded: false,
+        normalizedQuery,
       }
     }
   }
 
-  return { searchQuery: trimmed, keywordQuery: trimmed, expansionTerms: [], isSlangExpanded: false }
+  return { searchQuery: trimmed, keywordQuery: trimmed, expansionTerms: [], isSlangExpanded: false, normalizedQuery }
 }
 
 /**
@@ -1112,11 +1137,22 @@ async function injectExactMatchJobs(
           .map((j: any) => j.jobNm || j.name || j)
           .filter((n: any) => typeof n === 'string' && n.length >= 2)
           .slice(0, 8)
-        // SLANG 확장 쿼리: 관련 직업을 쿼리 키워드 관련 것만 필터링
-        // (예: "심리학" → sidebarJobs 중 "심리" 포함 직업만 유지, "게이미피케이션전문가" 등 제거)
-        if (isSlangExpanded && originalQuery && originalQuery.length >= 2) {
-          const queryRoot = originalQuery.length >= 3 ? originalQuery.slice(0, originalQuery.length - 1) : originalQuery
-          relatedJobNames = relatedJobNames.filter(name => name.includes(queryRoot))
+        // 관련 직업을 쿼리 키워드 관련 것만 필터링 (SLANG: strict, 일반 4+글자: soft)
+        if (originalQuery && originalQuery.length >= 2) {
+          if (isSlangExpanded) {
+            // SLANG: strict — queryRoot 포함 여부
+            const queryRoot = originalQuery.length >= 3 ? originalQuery.slice(0, originalQuery.length - 1) : originalQuery
+            relatedJobNames = relatedJobNames.filter(name => name.includes(queryRoot))
+          } else if (originalQuery.length >= 4) {
+            // 일반 4+글자: soft — 2글자 연속 부분 문자열 하나라도 포함
+            // (3글자 이하는 2-gram이 부족해 과잉 필터링 위험 → 스킵)
+            relatedJobNames = relatedJobNames.filter(name => {
+              for (let i = 0; i <= originalQuery!.length - 2; i++) {
+                if (name.includes(originalQuery!.slice(i, i + 2))) return true
+              }
+              return false
+            })
+          }
         }
         if (relatedJobNames.length > 0) {
           try {
@@ -1153,7 +1189,7 @@ async function injectExactMatchJobs(
       if (s && s > bestVS) bestVS = s
     }
     if (bestVS > 0) {
-      const refilterMin = Math.max(0.40, bestVS * 0.88)
+      const refilterMin = Math.max(0.42, bestVS * 0.90)
       remainingIds = remainingIds.filter(id => {
         const vs = vectorScores.get(id)
         // 벡터 스코어 없는 결과(키워드 전용)는 유지, 스코어 미달이면 제거
@@ -1720,7 +1756,7 @@ export async function ragSearchUnified(
   try {
     // 0. 쿼리 전처리 (속어 확장 + 컨텍스트 + LLM 확장)
     const enableExpansion = !!(env as any).ENABLE_QUERY_EXPANSION
-    const { searchQuery, expansionTerms: keywordTerms, isSlangExpanded } = await preprocessQuery(query, {
+    const { searchQuery, expansionTerms: keywordTerms, isSlangExpanded, normalizedQuery } = await preprocessQuery(query, {
       openaiApiKey, kv, enableExpansion,
     })
 
@@ -1734,7 +1770,7 @@ export async function ragSearchUnified(
 
     // 1. Multi-Query Vectorize: sub-query 생성 → 병렬 벡터 검색 (topK 100 한계 우회)
     // 단순 쿼리(sub-query 1개)면 기존과 동일한 성능, 복합 쿼리면 최대 500개 후보
-    const subQueries = generateSubQueries(query, searchQuery, intents, isSlangExpanded)
+    const subQueries = generateSubQueries(normalizedQuery, searchQuery, intents, isSlangExpanded)
     let vectorResult: VectorizeMatches
     try {
       vectorResult = await multiQueryVectorize(vectorize, openaiApiKey, kv, subQueries)
@@ -1755,9 +1791,9 @@ export async function ragSearchUnified(
       kwHowtos,
       ...expansionResults
     ] = await Promise.all([
-      keywordSearchJobIds(db, query, 30),
-      keywordSearchMajorIds(db, query, 30),
-      keywordSearchHowtoIds(db, query, 10),
+      keywordSearchJobIds(db, normalizedQuery, 30),
+      keywordSearchMajorIds(db, normalizedQuery, 30),
+      keywordSearchHowtoIds(db, normalizedQuery, 10),
       // 확장 키워드별 추가 검색 (직업 + 전공)
       ...expansionTerms.flatMap(term => [
         keywordSearchJobIds(db, term, 15),
@@ -1800,8 +1836,8 @@ export async function ragSearchUnified(
     }
 
     // 3.5. Jamo 퍼지 매칭 fallback: 벡터+키워드 모두 결과 부족 → 오타 가능성 → DB 퍼지 매칭
-    if (vectorJobIds.length < 2 && kwJobs.length < 2 && query.length >= 2 && query.length <= 8 && /[\uAC00-\uD7AF]/.test(query)) {
-      const fuzzyMatch = await fuzzyMatchJobName(db, query)
+    if (vectorJobIds.length < 2 && kwJobs.length < 2 && normalizedQuery.length >= 2 && normalizedQuery.length <= 8 && /[\uAC00-\uD7AF]/.test(normalizedQuery)) {
+      const fuzzyMatch = await fuzzyMatchJobName(db, normalizedQuery)
       if (fuzzyMatch && fuzzyMatch !== query) {
         // 교정된 이름으로 키워드 재검색
         const correctedKw = await keywordSearchJobIds(db, fuzzyMatch, 30)
@@ -1840,8 +1876,8 @@ export async function ragSearchUnified(
     rrfMajorIds = applyPostRRFQualityGate(rrfMajorIds, majorScores, kwMajorIdSet)
 
     // 정확 매치 우선 주입: 정확 일치 → 같은 카테고리 형제 → 확장 키워드 → RRF
-    // injectExact* 함수는 원본 사용자 쿼리(query)를 기준으로 DB 이름 정확 매칭
-    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query, isSlangExpanded, jobScores)
+    // injectExact* 함수는 normalizedQuery(키보드 변환 후 한글)를 기준으로 DB 이름 정확 매칭
+    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, normalizedQuery, isSlangExpanded, jobScores)
 
     // 정확 직업 매치가 있고 관련 전공이 있으면, 벡터 전공 노이즈 필터링
     // 예: "변호사" 검색 시 벡터가 반환한 간호과/방사선과(score 0.3~0.4)를 제거
@@ -1855,7 +1891,7 @@ export async function ragSearchUnified(
     }
 
     const exactMajorIds = await injectExactMatchMajors(
-      db, filteredMajorIds, keywordTerms, query, exactJobResult.relatedMajorNames
+      db, filteredMajorIds, keywordTerms, normalizedQuery, exactJobResult.relatedMajorNames
     )
 
     // 4.5. 속성 기반 후보 추가: intent 감지 시 속성 상위 직업을 풀 끝에 추가
@@ -1991,13 +2027,13 @@ export async function ragSearchJobs(
   try {
     // 쿼리 전처리 + 의도 감지
     const enableExpansion = !!(env as any).ENABLE_QUERY_EXPANSION
-    const { searchQuery, expansionTerms: keywordTerms, isSlangExpanded } = await preprocessQuery(query, {
+    const { searchQuery, expansionTerms: keywordTerms, isSlangExpanded, normalizedQuery } = await preprocessQuery(query, {
       openaiApiKey, kv, enableExpansion,
     })
     const intents = detectQueryIntents(query)
 
     // Multi-Query Vectorize + 키워드 병렬 검색 (N-gram sub-term 포함)
-    const subQueries = generateSubQueries(query, searchQuery, intents, isSlangExpanded)
+    const subQueries = generateSubQueries(normalizedQuery, searchQuery, intents, isSlangExpanded)
     const rawExpansionTerms = keywordTerms.slice(0, isSlangExpanded ? 6 : 3)
     const expansionTerms = isSlangExpanded
       ? [...new Set(rawExpansionTerms.flatMap(t => generateKoreanSubTerms(t)))].slice(0, 10)
@@ -2005,7 +2041,7 @@ export async function ragSearchJobs(
     const db = env.DB as unknown as D1Database
     const [vectorResult, kwJobsOriginal, ...expansionJobResults] = await Promise.all([
       multiQueryVectorize(vectorize, openaiApiKey, kv, subQueries),
-      keywordSearchJobIds(db, query, 30),
+      keywordSearchJobIds(db, normalizedQuery, 30),
       ...expansionTerms.map(term => keywordSearchJobIds(db, term, 15)),
     ])
     const kwJobs = mergeKeywordHits([kwJobsOriginal, ...expansionJobResults as KeywordSearchHit[][]])
@@ -2030,7 +2066,7 @@ export async function ragSearchJobs(
       rrfJobIds = [...kwFirst, ...rest]
     }
     rrfJobIds = applyPostRRFQualityGate(rrfJobIds, jobScores, kwJobIdSet)
-    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, query, isSlangExpanded, jobScores)
+    const exactJobResult = await injectExactMatchJobs(db, rrfJobIds, keywordTerms, normalizedQuery, isSlangExpanded, jobScores)
     const mergedJobIds = await appendAttributeCandidates(db, exactJobResult.ids, intents, 15)
 
     // 페이지네이션 적용
@@ -2081,13 +2117,13 @@ export async function ragSearchMajors(
   try {
     // 쿼리 전처리
     const enableExpansion = !!(env as any).ENABLE_QUERY_EXPANSION
-    const { searchQuery, expansionTerms: keywordTerms, isSlangExpanded } = await preprocessQuery(query, {
+    const { searchQuery, expansionTerms: keywordTerms, isSlangExpanded, normalizedQuery } = await preprocessQuery(query, {
       openaiApiKey, kv, enableExpansion,
     })
 
     // Multi-Query Vectorize + 키워드 병렬 검색 (N-gram sub-term 포함)
     const intents = detectQueryIntents(query)
-    const subQueries = generateSubQueries(query, searchQuery, intents, isSlangExpanded)
+    const subQueries = generateSubQueries(normalizedQuery, searchQuery, intents, isSlangExpanded)
     const rawExpansionTerms = keywordTerms.slice(0, isSlangExpanded ? 6 : 3)
     const expansionTerms = isSlangExpanded
       ? [...new Set(rawExpansionTerms.flatMap(t => generateKoreanSubTerms(t)))].slice(0, 10)
@@ -2095,7 +2131,7 @@ export async function ragSearchMajors(
     const db = env.DB as unknown as D1Database
     const [vectorResult, kwMajorsOriginal, ...expansionMajorResults] = await Promise.all([
       multiQueryVectorize(vectorize, openaiApiKey, kv, subQueries),
-      keywordSearchMajorIds(db, query, 30),
+      keywordSearchMajorIds(db, normalizedQuery, 30),
       ...expansionTerms.map(term => keywordSearchMajorIds(db, term, 15)),
     ])
     const kwMajors = mergeKeywordHits([kwMajorsOriginal, ...expansionMajorResults as KeywordSearchHit[][]])
@@ -2115,7 +2151,7 @@ export async function ragSearchMajors(
     let rrfMajorIds = mergeIdsWithRRF(vectorMajorIds, kwMajors, rrfWeights.vectorWeight, rrfWeights.keywordWeight, majorScores)
     const kwMajorIdSet = new Set(kwMajors.map(h => h.id))
     rrfMajorIds = applyPostRRFQualityGate(rrfMajorIds, majorScores, kwMajorIdSet)
-    const mergedMajorIds = await injectExactMatchMajors(db, rrfMajorIds, keywordTerms, query)
+    const mergedMajorIds = await injectExactMatchMajors(db, rrfMajorIds, keywordTerms, normalizedQuery)
 
     const startIdx = (page - 1) * perPage
     const pageIds = mergedMajorIds.slice(startIdx, startIdx + perPage)
