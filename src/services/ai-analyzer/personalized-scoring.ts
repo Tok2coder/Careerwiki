@@ -62,6 +62,7 @@ const ANCHOR_JOB_MAP: Record<string, { attrs: Record<string, number>, baseAdd?: 
   stability_anchor: { attrs: { stability: 1.0 } },
   meaning_anchor:   { attrs: { people_facing: 0.4 }, baseAdd: 25 },
   people_anchor:    { attrs: { people_facing: 0.6, teamwork: 0.4 } },
+  passion_anchor:   { attrs: { creative: 0.6, growth: 0.4 } },
 }
 
 // 에너지 소모 → 페널티 조건

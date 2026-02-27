@@ -303,6 +303,7 @@ export const TEST_SCENARIOS: TestScenario[] = [
       failure_response: 'analyze_improve',
       persistence_anchor: 'growth_anchor',
       external_expectation: 'ignore',
+      internal_conflict_flags: ['autonomy_vs_stability'],
     },
 
     canValidationAnswers: {
@@ -394,6 +395,7 @@ export const TEST_SCENARIOS: TestScenario[] = [
       failure_response: 'try_different',
       persistence_anchor: 'passion_anchor',
       external_expectation: 'ignore',
+      internal_conflict_flags: ['autonomy_vs_recognition'],
     },
 
     canValidationAnswers: {
@@ -426,7 +428,7 @@ export const TEST_SCENARIOS: TestScenario[] = [
       },
       featuresApplied: {
         growthCurveMatching: true,
-        internalConflictRisk: false,
+        internalConflictRisk: true,
         canBasedFilter: true,
         balanceCap: true,
       },
@@ -506,8 +508,8 @@ export const TEST_SCENARIOS: TestScenario[] = [
     ],
 
     expectedResults: {
-      topJobCategories: ['신입 가능', '교육 제공', '성장 가능'],
-      excludedJobCategories: ['시니어급', '전문가급'],
+      topJobCategories: ['데이터', '분석', '개발', 'IT', '주니어'],
+      excludedJobCategories: ['전문의', '변호사', '임원'],
       fitScoreRange: { min: 40, max: 75 },  // Can 부족으로 범위 낮음
       balanceCheck: {
         canShouldNotDominateLike: true,
@@ -572,6 +574,7 @@ export const TEST_SCENARIOS: TestScenario[] = [
       failure_response: 'analyze_improve',
       persistence_anchor: 'growth_anchor',
       external_expectation: 'selective_listen',
+      internal_conflict_flags: ['growth_vs_income'],
     },
 
     canValidationAnswers: {
@@ -613,7 +616,7 @@ export const TEST_SCENARIOS: TestScenario[] = [
       },
       featuresApplied: {
         growthCurveMatching: true,
-        internalConflictRisk: false,
+        internalConflictRisk: true,
         canBasedFilter: true,
         balanceCap: true,
       },
