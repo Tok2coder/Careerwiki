@@ -3,6 +3,7 @@
  */
 
 import { renderAdminLayout } from './adminLayout'
+import type { DailyViewStatsResult } from '../../services/adminService'
 
 export interface DashboardStats {
   totalJobs: number
@@ -34,10 +35,11 @@ export interface AdminDashboardProps {
   stats: DashboardStats
   recentEdits: RecentEdit[]
   recentUsers: RecentUser[]
+  dailyViews?: DailyViewStatsResult
 }
 
 export function renderAdminDashboard(props: AdminDashboardProps): string {
-  const { stats, recentEdits, recentUsers } = props
+  const { stats, recentEdits, recentUsers, dailyViews } = props
   
   const content = `
     <!-- 통계 카드 -->
@@ -103,6 +105,31 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
       </div>
     </div>
     
+    <!-- 방문자 추이 (일별 조회수) -->
+    ${dailyViews && dailyViews.daily.length > 0 ? `
+    <div class="glass-card rounded-xl p-4 sm:p-5 mb-6 sm:mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold flex items-center gap-2">
+          <i class="fas fa-chart-area text-blue-400"></i>
+          일별 조회수 추이 (최근 30일)
+        </h3>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="text-slate-400">일평균: <span class="text-white font-medium">${dailyViews.summary.avgDaily.toLocaleString()}</span></span>
+          ${dailyViews.summary.maxDay ? `
+            <span class="text-slate-400">최고: <span class="text-emerald-300 font-medium">${dailyViews.summary.maxDay.views.toLocaleString()}</span> (${dailyViews.summary.maxDay.date.slice(5)})</span>
+          ` : ''}
+        </div>
+      </div>
+      <div class="h-48 sm:h-64">
+        <canvas id="dailyViewChart" aria-label="일별 조회수 추이"></canvas>
+      </div>
+      <div class="flex items-center gap-4 mt-3 text-xs text-slate-400">
+        <span><span class="inline-block w-3 h-1.5 rounded bg-blue-500 mr-1"></span>직업</span>
+        <span><span class="inline-block w-3 h-1.5 rounded bg-purple-500 mr-1"></span>전공</span>
+        <span><span class="inline-block w-3 h-1.5 rounded bg-emerald-500 mr-1"></span>HowTo</span>
+      </div>
+    </div>` : ''}
+
     <!-- 최근 활동 -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- 최근 편집 -->
@@ -193,7 +220,72 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
   return renderAdminLayout({
     title: '운영 현황',
     currentPath: '/admin',
-    children: content
+    children: `
+    ${content}
+    ${dailyViews && dailyViews.daily.length > 0 ? `
+    <script>
+      (() => {
+        const ctx = document.getElementById('dailyViewChart');
+        if (!ctx) return;
+        const data = ${JSON.stringify(dailyViews.daily)};
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.map(d => d.date.slice(5)),
+            datasets: [
+              {
+                label: '직업',
+                data: data.map(d => d.job),
+                borderColor: '#60a5fa',
+                backgroundColor: 'rgba(96,165,250,0.1)',
+                fill: true,
+                tension: 0.3,
+                borderWidth: 2,
+                pointRadius: 2,
+              },
+              {
+                label: '전공',
+                data: data.map(d => d.major),
+                borderColor: '#a78bfa',
+                backgroundColor: 'rgba(167,139,250,0.1)',
+                fill: true,
+                tension: 0.3,
+                borderWidth: 2,
+                pointRadius: 2,
+              },
+              {
+                label: 'HowTo',
+                data: data.map(d => d.howto),
+                borderColor: '#34d399',
+                backgroundColor: 'rgba(52,211,153,0.1)',
+                fill: true,
+                tension: 0.3,
+                borderWidth: 2,
+                pointRadius: 2,
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  footer: (items) => '합계: ' + items.reduce((s, i) => s + (i.parsed.y || 0), 0).toLocaleString()
+                }
+              }
+            },
+            scales: {
+              x: { ticks: { color: '#94a3b8', maxTicksLimit: 10 }, grid: { color: 'rgba(148,163,184,0.08)' } },
+              y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.08)' } }
+            }
+          }
+        });
+      })();
+    </script>` : ''}
+  `
   })
 }
 

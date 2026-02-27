@@ -48,6 +48,12 @@ export async function trackPageView(ctx: ViewContext & { pageId: number }): Prom
     ctx.kv.put(kvKey, '1', { expirationTtl: VIEW_DEDUP_TTL }),
     ctx.db.prepare('UPDATE pages SET view_count = view_count + 1 WHERE id = ?')
       .bind(ctx.pageId).run(),
+    ctx.db.prepare(`
+      INSERT INTO daily_view_stats (stat_date, entity_type, total_views)
+      VALUES (date('now'), 'howto', 1)
+      ON CONFLICT (stat_date, entity_type)
+      DO UPDATE SET total_views = total_views + 1
+    `).run(),
   ])
   return true
 }
@@ -65,6 +71,12 @@ export async function trackJobView(ctx: ViewContext & { slug: string }): Promise
     ctx.kv.put(kvKey, '1', { expirationTtl: VIEW_DEDUP_TTL }),
     ctx.db.prepare('UPDATE jobs SET view_count = view_count + 1 WHERE slug = ?')
       .bind(ctx.slug).run(),
+    ctx.db.prepare(`
+      INSERT INTO daily_view_stats (stat_date, entity_type, total_views)
+      VALUES (date('now'), 'job', 1)
+      ON CONFLICT (stat_date, entity_type)
+      DO UPDATE SET total_views = total_views + 1
+    `).run(),
   ])
   return true
 }
@@ -82,6 +94,12 @@ export async function trackMajorView(ctx: ViewContext & { slug: string }): Promi
     ctx.kv.put(kvKey, '1', { expirationTtl: VIEW_DEDUP_TTL }),
     ctx.db.prepare('UPDATE majors SET view_count = view_count + 1 WHERE slug = ?')
       .bind(ctx.slug).run(),
+    ctx.db.prepare(`
+      INSERT INTO daily_view_stats (stat_date, entity_type, total_views)
+      VALUES (date('now'), 'major', 1)
+      ON CONFLICT (stat_date, entity_type)
+      DO UPDATE SET total_views = total_views + 1
+    `).run(),
   ])
   return true
 }
@@ -101,6 +119,12 @@ export async function trackShareView(ctx: ViewContext & { token: string }): Prom
       UPDATE share_tokens SET view_count = view_count + 1, last_viewed_at = CURRENT_TIMESTAMP
       WHERE share_token = ?
     `).bind(ctx.token).run(),
+    ctx.db.prepare(`
+      INSERT INTO daily_view_stats (stat_date, entity_type, total_views)
+      VALUES (date('now'), 'share', 1)
+      ON CONFLICT (stat_date, entity_type)
+      DO UPDATE SET total_views = total_views + 1
+    `).run(),
   ])
   return true
 }

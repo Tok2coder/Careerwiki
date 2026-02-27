@@ -805,6 +805,64 @@ export async function getSearchStats(db: D1Database, params: { startDate: string
 }
 
 /**
+ * 일별 조회수 추이 통계
+ */
+export interface DailyViewStatsResult {
+  daily: Array<{
+    date: string
+    job: number
+    major: number
+    howto: number
+    total: number
+  }>
+  summary: {
+    totalViews: number
+    avgDaily: number
+    maxDay: { date: string; views: number } | null
+  }
+}
+
+export async function getDailyViewStats(db: D1Database, days: number = 30): Promise<DailyViewStatsResult> {
+  try {
+    const result = await db.prepare(`
+      SELECT stat_date, entity_type, total_views
+      FROM daily_view_stats
+      WHERE stat_date >= date('now', '-' || ? || ' days')
+      ORDER BY stat_date ASC
+    `).bind(days).all<{ stat_date: string; entity_type: string; total_views: number }>()
+
+    // 일별로 그룹핑
+    const dayMap = new Map<string, { job: number; major: number; howto: number; share: number }>()
+    for (const row of (result.results || [])) {
+      if (!dayMap.has(row.stat_date)) {
+        dayMap.set(row.stat_date, { job: 0, major: 0, howto: 0, share: 0 })
+      }
+      const entry = dayMap.get(row.stat_date)!
+      if (row.entity_type === 'job') entry.job = row.total_views
+      else if (row.entity_type === 'major') entry.major = row.total_views
+      else if (row.entity_type === 'howto') entry.howto = row.total_views
+      else if (row.entity_type === 'share') entry.share = row.total_views
+    }
+
+    const daily = Array.from(dayMap.entries()).map(([date, counts]) => ({
+      date,
+      job: counts.job,
+      major: counts.major,
+      howto: counts.howto,
+      total: counts.job + counts.major + counts.howto + counts.share
+    }))
+
+    const totalViews = daily.reduce((sum, d) => sum + d.total, 0)
+    const avgDaily = daily.length > 0 ? Math.round(totalViews / daily.length) : 0
+    const maxEntry = daily.reduce((max, d) => d.total > (max?.views || 0) ? { date: d.date, views: d.total } : max, null as { date: string; views: number } | null)
+
+    return { daily, summary: { totalViews, avgDaily, maxDay: maxEntry } }
+  } catch {
+    return { daily: [], summary: { totalViews: 0, avgDaily: 0, maxDay: null } }
+  }
+}
+
+/**
  * 대시보드 요약 통계
  */
 export async function getDashboardStats(db: D1Database) {

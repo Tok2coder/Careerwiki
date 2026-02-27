@@ -14,7 +14,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getCoverageStats, getSearchStats } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getCoverageStats, getSearchStats, getDailyViewStats } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -77,6 +77,8 @@ adminRoutes.get('/admin', requireAdmin, async (c) => {
       LIMIT 5
     `).all()
 
+    const dailyViews = await getDailyViewStats(db, 30)
+
     return c.html(renderAdminDashboard({
       stats: {
         totalJobs: jobsResult?.count || 0,
@@ -86,7 +88,8 @@ adminRoutes.get('/admin', requireAdmin, async (c) => {
         cacheHitRate
       },
       recentEdits: (recentEdits.results || []) as any[],
-      recentUsers: (recentUsers.results || []) as any[]
+      recentUsers: (recentUsers.results || []) as any[],
+      dailyViews
     }))
   } catch (error) {
     return c.text('관리자 대시보드를 불러오는데 실패했습니다.', 500)
