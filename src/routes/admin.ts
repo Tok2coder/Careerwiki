@@ -14,7 +14,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getCoverageStats } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -490,6 +490,8 @@ adminRoutes.get('/admin/content', requireAdmin, async (c) => {
       hiddenAt: major.user_last_updated_at
     }))
 
+    const coverage = await getCoverageStats(c.env.DB)
+
     return c.html(renderAdminContent({
       activeTab,
       revisions: result.revisions as any[],
@@ -501,7 +503,8 @@ adminRoutes.get('/admin/content', requireAdmin, async (c) => {
       hiddenJobs,
       hiddenMajors,
       howtoReports: howtoReports ?? undefined,
-      moderation: moderation ?? undefined
+      moderation: moderation ?? undefined,
+      coverage
     }))
   } catch (error) {
     return c.text('편집 이력을 불러오는데 실패했습니다.', 500)
@@ -646,11 +649,15 @@ adminRoutes.get('/admin/stats', requireAdmin, async (c) => {
     const startDate = c.req.query('startDate') || new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
     const topLimit = parseInt(c.req.query('topLimit') || '10')
 
-    const stats = await getAnalyticsStats(c.env.DB, { startDate, endDate, topLimit })
+    const [stats, aiConversion] = await Promise.all([
+      getAnalyticsStats(c.env.DB, { startDate, endDate, topLimit }),
+      getAiConversionStats(c.env.DB, { startDate, endDate })
+    ])
 
     return c.html(renderAdminStats({
       filters: { startDate, endDate, topLimit },
-      ...stats
+      ...stats,
+      aiConversion
     }))
   } catch (error) {
     return c.text('통계를 불러오는데 실패했습니다.', 500)

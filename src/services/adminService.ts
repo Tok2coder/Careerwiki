@@ -633,6 +633,115 @@ export async function getAnalyticsStats(db: D1Database, params: StatsParams): Pr
 }
 
 /**
+ * AI 분석기 전환율 통계
+ */
+export interface AiConversionStats {
+  totalRequests: number
+  completedRequests: number
+  conversionRate: number
+  dailyTrend: Array<{ date: string; started: number; completed: number; rate: number }>
+}
+
+export async function getAiConversionStats(db: D1Database, params: { startDate: string; endDate: string }): Promise<AiConversionStats> {
+  const { startDate, endDate } = params
+
+  // 전체 전환율
+  const totalRow = await db.prepare(`
+    SELECT
+      COUNT(*) as total,
+      SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed
+    FROM ai_analysis_requests
+    WHERE parent_request_id IS NULL
+      AND DATE(requested_at) BETWEEN ? AND ?
+  `).bind(startDate, endDate).first<{ total: number; completed: number }>()
+
+  const totalRequests = totalRow?.total || 0
+  const completedRequests = totalRow?.completed || 0
+  const conversionRate = totalRequests > 0 ? (completedRequests / totalRequests) * 100 : 0
+
+  // 일별 추이
+  const dailyRows = await db.prepare(`
+    SELECT
+      DATE(requested_at) as date,
+      COUNT(*) as started,
+      SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed
+    FROM ai_analysis_requests
+    WHERE parent_request_id IS NULL
+      AND DATE(requested_at) BETWEEN ? AND ?
+    GROUP BY DATE(requested_at)
+    ORDER BY date DESC
+    LIMIT 30
+  `).bind(startDate, endDate).all<{ date: string; started: number; completed: number }>()
+
+  const dailyTrend = (dailyRows.results || []).map(r => ({
+    date: r.date,
+    started: r.started || 0,
+    completed: r.completed || 0,
+    rate: r.started > 0 ? Math.round((r.completed / r.started) * 1000) / 10 : 0
+  }))
+
+  return { totalRequests, completedRequests, conversionRate, dailyTrend }
+}
+
+/**
+ * 콘텐츠 커버리지 통계
+ */
+export interface CoverageStats {
+  jobs: { total: number; edited: number; rate: number }
+  majors: { total: number; edited: number; rate: number }
+  priorityJobs: Array<{ slug: string; name: string; viewCount: number }>
+  priorityMajors: Array<{ slug: string; name: string; viewCount: number }>
+}
+
+export async function getCoverageStats(db: D1Database): Promise<CoverageStats> {
+  const [jobCoverage, majorCoverage, priorityJobs, priorityMajors] = await Promise.all([
+    db.prepare(`
+      SELECT
+        COUNT(*) as total,
+        SUM(CASE WHEN user_contributed_json IS NOT NULL AND user_contributed_json != '{}' THEN 1 ELSE 0 END) as edited
+      FROM jobs WHERE is_active = 1
+    `).first<{ total: number; edited: number }>(),
+
+    db.prepare(`
+      SELECT
+        COUNT(*) as total,
+        SUM(CASE WHEN user_contributed_json IS NOT NULL AND user_contributed_json != '{}' THEN 1 ELSE 0 END) as edited
+      FROM majors WHERE is_active = 1
+    `).first<{ total: number; edited: number }>(),
+
+    db.prepare(`
+      SELECT slug, name, COALESCE(view_count, 0) as viewCount
+      FROM jobs
+      WHERE is_active = 1
+        AND (user_contributed_json IS NULL OR user_contributed_json = '{}')
+      ORDER BY view_count DESC NULLS LAST
+      LIMIT 10
+    `).all<{ slug: string; name: string; viewCount: number }>(),
+
+    db.prepare(`
+      SELECT slug, name, COALESCE(view_count, 0) as viewCount
+      FROM majors
+      WHERE is_active = 1
+        AND (user_contributed_json IS NULL OR user_contributed_json = '{}')
+      ORDER BY view_count DESC NULLS LAST
+      LIMIT 10
+    `).all<{ slug: string; name: string; viewCount: number }>()
+  ])
+
+  const jTotal = jobCoverage?.total || 0
+  const jEdited = jobCoverage?.edited || 0
+  const mTotal = majorCoverage?.total || 0
+  const mEdited = majorCoverage?.edited || 0
+
+  return {
+    jobs: { total: jTotal, edited: jEdited, rate: jTotal > 0 ? (jEdited / jTotal) * 100 : 0 },
+    majors: { total: mTotal, edited: mEdited, rate: mTotal > 0 ? (mEdited / mTotal) * 100 : 0 },
+    priorityJobs: (priorityJobs.results || []) as Array<{ slug: string; name: string; viewCount: number }>,
+    priorityMajors: (priorityMajors.results || []) as Array<{ slug: string; name: string; viewCount: number }>
+  }
+}
+
+/**
  * 대시보드 요약 통계
  */
 export async function getDashboardStats(db: D1Database) {

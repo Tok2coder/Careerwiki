@@ -3,6 +3,7 @@
  */
 
 import { renderAdminLayout } from './adminLayout'
+import type { CoverageStats } from '../../services/adminService'
 
 export interface RevisionRecord {
   id: number
@@ -82,16 +83,71 @@ export interface AdminContentProps {
     perPage: number
     totalPages: number
   }
+  coverage?: CoverageStats
 }
 
 export function renderAdminContent(props: AdminContentProps): string {
-  const { activeTab, revisions, total, page, perPage, totalPages, filters, hiddenJobs, hiddenMajors } = props
-  
+  const { activeTab, revisions, total, page, perPage, totalPages, filters, hiddenJobs, hiddenMajors, coverage } = props
+
   // 기본 날짜 설정 (최근 30일)
   const defaultEndDate = new Date().toISOString().split('T')[0]
   const defaultStartDate = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
-  
+
+  const coverageSection = coverage ? `
+    <div class="glass-card rounded-xl p-4 mb-4">
+      <h3 class="text-lg font-semibold mb-3 flex items-center gap-2 text-slate-100">
+        <i class="fas fa-map text-emerald-400"></i> 콘텐츠 커버리지
+      </h3>
+      <!-- 직업 -->
+      <div class="mb-3">
+        <div class="flex justify-between text-sm mb-1">
+          <span class="text-slate-300">직업 (${coverage.jobs.total}개)</span>
+          <span class="text-emerald-400">${coverage.jobs.edited}개 편집됨 (${coverage.jobs.rate.toFixed(1)}%)</span>
+        </div>
+        <div class="bg-slate-700/50 rounded-full h-2">
+          <div class="bg-blue-500 h-2 rounded-full" style="width: ${Math.min(coverage.jobs.rate, 100)}%"></div>
+        </div>
+      </div>
+      <!-- 전공 -->
+      <div class="mb-3">
+        <div class="flex justify-between text-sm mb-1">
+          <span class="text-slate-300">전공 (${coverage.majors.total}개)</span>
+          <span class="text-emerald-400">${coverage.majors.edited}개 편집됨 (${coverage.majors.rate.toFixed(1)}%)</span>
+        </div>
+        <div class="bg-slate-700/50 rounded-full h-2">
+          <div class="bg-purple-500 h-2 rounded-full" style="width: ${Math.min(coverage.majors.rate, 100)}%"></div>
+        </div>
+      </div>
+
+      <!-- 편집 우선순위 TOP 10 -->
+      <h4 class="text-sm font-medium text-slate-300 mt-4 mb-2">미편집 + 고조회수 TOP 10 (편집 우선순위)</h4>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <!-- 직업 -->
+        <div class="space-y-1">
+          <div class="text-xs text-blue-400 font-medium mb-1">직업</div>
+          ${coverage.priorityJobs.map((j, i) => `
+            <a href="/job/${j.slug}/edit" class="flex items-center justify-between text-sm bg-wiki-card/60 rounded px-3 py-1.5 hover:bg-wiki-card transition-colors">
+              <span class="text-slate-200 truncate">${i + 1}. ${escapeHtml(j.name)}</span>
+              <span class="text-slate-400 text-xs shrink-0 ml-2">${(j.viewCount || 0).toLocaleString()}회</span>
+            </a>
+          `).join('')}
+        </div>
+        <!-- 전공 -->
+        <div class="space-y-1">
+          <div class="text-xs text-purple-400 font-medium mb-1">전공</div>
+          ${coverage.priorityMajors.map((m, i) => `
+            <a href="/major/${m.slug}/edit" class="flex items-center justify-between text-sm bg-wiki-card/60 rounded px-3 py-1.5 hover:bg-wiki-card transition-colors">
+              <span class="text-slate-200 truncate">${i + 1}. ${escapeHtml(m.name)}</span>
+              <span class="text-slate-400 text-xs shrink-0 ml-2">${(m.viewCount || 0).toLocaleString()}회</span>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  ` : ''
+
   const content = `
+    ${coverageSection}
     <!-- 탭 네비게이션 -->
     <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
       <a href="/admin/content?tab=revisions" 

@@ -2,6 +2,7 @@
  * 관리자 - 통계/애널리틱스 대시보드
  */
 import { renderAdminLayout } from './adminLayout'
+import type { AiConversionStats } from '../../services/adminService'
 
 export interface AnalyticsProps {
   filters: {
@@ -28,6 +29,7 @@ export interface AnalyticsProps {
     topPages: { slug: string; name: string; type: string; views: number }[]
   }
   channels: Array<{ channel: string; visits: number; conversions: number; cvr: number }>
+  aiConversion?: AiConversionStats
 }
 
 const metricCard = (label: string, value: string, tone: 'blue' | 'green' | 'amber' | 'red' | 'slate' = 'slate') => {
@@ -86,7 +88,7 @@ const renderTopTable = (title: string, items: { slug: string; name: string; type
 `
 
 export function renderAdminStats(props: AnalyticsProps): string {
-  const { filters, overall, jobs, majors, howtos, channels } = props
+  const { filters, overall, jobs, majors, howtos, channels, aiConversion } = props
 
   const defaultEndDate = new Date().toISOString().split('T')[0]
   const defaultStartDate = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
@@ -106,20 +108,41 @@ export function renderAdminStats(props: AnalyticsProps): string {
       </tr>
     `
 
+  // AI 퍼널 패널 HTML
+  const aiTrend = aiConversion?.dailyTrend || []
+  const aiPanel = `
+    <section data-tab-panel="ai-funnel" class="space-y-4 hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        ${metricCard('총 분석 요청', (aiConversion?.totalRequests || 0).toLocaleString(), 'blue')}
+        ${metricCard('완료', (aiConversion?.completedRequests || 0).toLocaleString(), 'green')}
+        ${metricCard('전환율', (aiConversion?.conversionRate || 0).toFixed(1) + '%', (aiConversion?.conversionRate || 0) >= 50 ? 'green' : 'amber')}
+      </div>
+
+      <div class="glass-card rounded-xl p-4">
+        <h3 class="text-lg font-semibold text-slate-100 flex items-center gap-2 mb-3">
+          <i class="fas fa-chart-line text-violet-400"></i> 일별 전환율 추이
+        </h3>
+        <div class="h-64">
+          <canvas id="aiConversionChart"></canvas>
+        </div>
+      </div>
+    </section>
+  `
+
   const content = `
     <div class="glass-card rounded-xl p-3 sm:p-4 mb-4">
       <form id="analytics-filter" class="space-y-3 sm:space-y-0 sm:flex sm:flex-wrap sm:items-center sm:gap-4">
         <!-- 기간 필터 -->
         <div class="flex items-center gap-2">
-          <input type="date" name="startDate" value="${filters.startDate || defaultStartDate}" 
-            class="flex-1 sm:flex-none px-3 py-2 min-h-[44px] bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm" 
+          <input type="date" name="startDate" value="${filters.startDate || defaultStartDate}"
+            class="flex-1 sm:flex-none px-3 py-2 min-h-[44px] bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm"
             style="font-size: 16px;">
           <span class="text-slate-400 shrink-0">~</span>
-          <input type="date" name="endDate" value="${filters.endDate || defaultEndDate}" 
-            class="flex-1 sm:flex-none px-3 py-2 min-h-[44px] bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm" 
+          <input type="date" name="endDate" value="${filters.endDate || defaultEndDate}"
+            class="flex-1 sm:flex-none px-3 py-2 min-h-[44px] bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm"
             style="font-size: 16px;">
         </div>
-        
+
         <!-- TOP & 적용 버튼 -->
         <div class="flex gap-2">
           <select name="topLimit" class="px-3 py-2 min-h-[44px] bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm" style="font-size: 16px;">
@@ -127,7 +150,7 @@ export function renderAdminStats(props: AnalyticsProps): string {
             <option value="10" ${filters.topLimit === 10 ? 'selected' : ''}>TOP 10</option>
             <option value="20" ${filters.topLimit === 20 ? 'selected' : ''}>TOP 20</option>
           </select>
-          
+
           <button type="submit" class="px-4 py-2 min-h-[44px] bg-blue-600 hover:bg-blue-500 rounded-lg text-white transition-colors text-sm whitespace-nowrap">
             <i class="fas fa-sync-alt mr-1.5"></i>적용
           </button>
@@ -141,6 +164,7 @@ export function renderAdminStats(props: AnalyticsProps): string {
         <button type="button" data-tab="job" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">직업</button>
         <button type="button" data-tab="major" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">전공</button>
         <button type="button" data-tab="howto" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">HowTo</button>
+        <button type="button" data-tab="ai-funnel" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">AI 퍼널</button>
       </div>
     </div>
 
@@ -208,28 +232,8 @@ export function renderAdminStats(props: AnalyticsProps): string {
       ${renderTopTable('인기 HowTo', howtos.topPages || [])}
     </section>
 
-    <!-- Channels moved under dashboard -->
-    <div class="glass-card rounded-xl overflow-hidden mt-6 sm:mt-8">
-      <div class="p-4 border-b border-wiki-border/70 flex items-center gap-2">
-        <i class="fas fa-route text-cyan-400"></i>
-        <h3 class="text-lg font-semibold text-slate-100">유입 채널별 전환</h3>
-      </div>
-      <div>
-        <table class="w-full">
-          <thead class="bg-wiki-card">
-            <tr>
-              <th class="px-4 py-3 text-left text-slate-400 font-medium">채널</th>
-              <th class="px-4 py-3 text-right text-slate-400 font-medium">방문</th>
-              <th class="px-4 py-3 text-right text-slate-400 font-medium">전환</th>
-              <th class="px-4 py-3 text-right text-slate-400 font-medium">CVR</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${channelRows}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <!-- AI 퍼널 -->
+    ${aiPanel}
   `
 
   return renderAdminLayout({
@@ -246,6 +250,7 @@ export function renderAdminStats(props: AnalyticsProps): string {
               const active = btn.dataset.tab === key;
               btn.classList.toggle('bg-wiki-primary', active);
               btn.classList.toggle('text-white', active);
+              btn.classList.toggle('font-semibold', active);
               btn.classList.toggle('bg-wiki-card', !active);
               btn.classList.toggle('text-slate-200', !active);
             });
@@ -280,373 +285,48 @@ export function renderAdminStats(props: AnalyticsProps): string {
               }
             });
           }
+
+          // AI 전환율 차트
+          const aiCtx = document.getElementById('aiConversionChart');
+          if (aiCtx) {
+            const aiData = ${JSON.stringify(aiTrend.slice().reverse())};
+            new Chart(aiCtx, {
+              type: 'line',
+              data: {
+                labels: aiData.map(d => d.date.slice(5)),
+                datasets: [
+                  {
+                    label: '완료 수',
+                    data: aiData.map(d => d.completed),
+                    borderColor: '#34d399',
+                    backgroundColor: 'rgba(52,211,153,0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    yAxisID: 'y'
+                  },
+                  {
+                    label: '전환율(%)',
+                    data: aiData.map(d => d.rate),
+                    borderColor: '#a78bfa',
+                    backgroundColor: 'transparent',
+                    tension: 0.3,
+                    yAxisID: 'y1'
+                  }
+                ]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                  y1: { position: 'right', beginAtZero: true, max: 100, ticks: { color: '#94a3b8' }, grid: { drawOnChartArea: false } }
+                },
+                plugins: { legend: { labels: { color: '#e2e8f0' } } }
+              }
+            });
+          }
         })();
       </script>
     `
   })
 }
-/**
- * 관리자 - 통계 대시보드 페이지
- */
-
-import { renderAdminLayout } from './adminLayout'
-
-export interface DailyStats {
-  date: string
-  count: number
-  value?: number
-}
-
-export interface SearchPattern {
-  keyword: string
-  count: number
-}
-
-export interface TopPage {
-  slug: string
-  name: string
-  type: string
-  views: number
-}
-
-export interface AdminStatsProps {
-  serpInteractions: DailyStats[]
-  searchPatterns: SearchPattern[]
-  cacheStats: DailyStats[]
-  topPages: TopPage[]
-  filters: {
-    startDate: string
-    endDate: string
-    topLimit: number
-  }
-}
-
-export function renderAdminStatsLegacy(props: AdminStatsProps): string {
-  const { serpInteractions, searchPatterns, cacheStats, topPages, filters } = props
-  
-  // 기본 날짜 설정 (최근 30일)
-  const defaultEndDate = new Date().toISOString().split('T')[0]
-  const defaultStartDate = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
-  
-  // 차트 데이터 준비
-  const serpLabels = serpInteractions.map(s => s.date.slice(5))
-  const serpData = serpInteractions.map(s => s.count)
-  const cacheLabels = cacheStats.map(s => s.date.slice(5))
-  const cacheData = cacheStats.map(s => s.value || 0)
-  
-  const content = `
-    <style>
-      /* 달력 아이콘을 밝게 표시 */
-      #filterForm input[type="date"]::-webkit-calendar-picker-indicator {
-        filter: invert(1);
-      }
-    </style>
-    <!-- 필터 바 -->
-    <div class="glass-card rounded-xl p-4 mb-6">
-      <form id="filterForm" class="flex flex-wrap items-center gap-4">
-        <!-- 날짜 범위 -->
-        <div class="flex items-center gap-2">
-          <span class="text-slate-400">기간:</span>
-          <input 
-            type="date" 
-            name="startDate"
-            value="${filters.startDate || defaultStartDate}"
-            class="px-3 py-2 bg-slate-800 border border-wiki-border rounded-lg text-white placeholder:text-slate-400"
-          >
-          <span class="text-slate-400">~</span>
-          <input 
-            type="date" 
-            name="endDate"
-            value="${filters.endDate || defaultEndDate}"
-            class="px-3 py-2 bg-slate-800 border border-wiki-border rounded-lg text-white placeholder:text-slate-400"
-          >
-        </div>
-        
-        <!-- TOP 개수 -->
-        <div class="flex items-center gap-2">
-          <span class="text-slate-400">TOP:</span>
-          <select name="topLimit" class="px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white">
-            <option value="5" ${filters.topLimit === 5 ? 'selected' : ''}>5개</option>
-            <option value="10" ${filters.topLimit === 10 ? 'selected' : ''}>10개</option>
-            <option value="20" ${filters.topLimit === 20 ? 'selected' : ''}>20개</option>
-          </select>
-        </div>
-        
-        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white transition-colors">
-          <i class="fas fa-sync mr-2"></i>새로고침
-        </button>
-      </form>
-    </div>
-    
-    <!-- 차트 영역 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-      <!-- SERP 인터랙션 차트 -->
-      <div class="glass-card rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-          <i class="fas fa-chart-line text-blue-400"></i>
-          SERP 인터랙션 (일별)
-        </h3>
-        <div class="h-64">
-          <canvas id="serpChart"></canvas>
-        </div>
-      </div>
-      
-      <!-- 캐시 히트율 차트 -->
-      <div class="glass-card rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-          <i class="fas fa-bolt text-cyan-400"></i>
-          캐시 히트율 (일별)
-        </h3>
-        <div class="h-64">
-          <canvas id="cacheChart"></canvas>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 테이블 영역 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-      <!-- SERP 인터랙션 표 -->
-      <div class="glass-card rounded-xl overflow-hidden">
-        <div class="p-4 border-b border-slate-700/50">
-          <h3 class="text-lg font-semibold flex items-center gap-2">
-            <i class="fas fa-table text-blue-400"></i>
-            SERP 인터랙션 상세
-          </h3>
-        </div>
-        <div class="max-h-80 overflow-y-auto">
-          <table class="w-full">
-            <thead class="bg-slate-800/50 sticky top-0">
-              <tr>
-                <th class="px-4 py-3 text-left text-slate-400 font-medium">날짜</th>
-                <th class="px-4 py-3 text-right text-slate-400 font-medium">횟수</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${serpInteractions.length > 0 ? serpInteractions.map(s => `
-                <tr class="border-t border-slate-700/50 hover:bg-slate-700/20">
-                  <td class="px-4 py-2 text-white">${s.date}</td>
-                  <td class="px-4 py-2 text-right text-slate-300">${s.count.toLocaleString()}</td>
-                </tr>
-              `).join('') : `
-                <tr>
-                  <td colspan="2" class="px-4 py-8 text-center text-slate-400">데이터가 없습니다.</td>
-                </tr>
-              `}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      
-      <!-- 캐시 히트율 표 -->
-      <div class="glass-card rounded-xl overflow-hidden">
-        <div class="p-4 border-b border-slate-700/50">
-          <h3 class="text-lg font-semibold flex items-center gap-2">
-            <i class="fas fa-table text-cyan-400"></i>
-            캐시 히트율 상세
-          </h3>
-        </div>
-        <div class="max-h-80 overflow-y-auto">
-          <table class="w-full">
-            <thead class="bg-slate-800/50 sticky top-0">
-              <tr>
-                <th class="px-4 py-3 text-left text-slate-400 font-medium">날짜</th>
-                <th class="px-4 py-3 text-right text-slate-400 font-medium">총 요청</th>
-                <th class="px-4 py-3 text-right text-slate-400 font-medium">히트율</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${cacheStats.length > 0 ? cacheStats.map(s => `
-                <tr class="border-t border-slate-700/50 hover:bg-slate-700/20">
-                  <td class="px-4 py-2 text-white">${s.date}</td>
-                  <td class="px-4 py-2 text-right text-slate-300">${s.count.toLocaleString()}</td>
-                  <td class="px-4 py-2 text-right">
-                    <span class="${(s.value || 0) >= 80 ? 'text-green-400' : (s.value || 0) >= 50 ? 'text-yellow-400' : 'text-red-400'}">
-                      ${(s.value || 0).toFixed(1)}%
-                    </span>
-                  </td>
-                </tr>
-              `).join('') : `
-                <tr>
-                  <td colspan="3" class="px-4 py-8 text-center text-slate-400">데이터가 없습니다.</td>
-                </tr>
-              `}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 하단 테이블 영역 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- 검색 패턴 (카테고리) -->
-      <div class="glass-card rounded-xl overflow-hidden">
-        <div class="p-4 border-b border-slate-700/50">
-          <h3 class="text-lg font-semibold flex items-center gap-2">
-            <i class="fas fa-search text-purple-400"></i>
-            인기 카테고리 TOP ${filters.topLimit}
-          </h3>
-        </div>
-        <div class="max-h-80 overflow-y-auto">
-          <table class="w-full">
-            <thead class="bg-slate-800/50 sticky top-0">
-              <tr>
-                <th class="px-4 py-3 text-left text-slate-400 font-medium w-12">#</th>
-                <th class="px-4 py-3 text-left text-slate-400 font-medium">카테고리</th>
-                <th class="px-4 py-3 text-right text-slate-400 font-medium">횟수</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${searchPatterns.length > 0 ? searchPatterns.map((s, i) => `
-                <tr class="border-t border-slate-700/50 hover:bg-slate-700/20">
-                  <td class="px-4 py-2 text-slate-500">${i + 1}</td>
-                  <td class="px-4 py-2 text-white">${escapeHtml(s.keyword || '(없음)')}</td>
-                  <td class="px-4 py-2 text-right text-slate-300">${s.count.toLocaleString()}</td>
-                </tr>
-              `).join('') : `
-                <tr>
-                  <td colspan="3" class="px-4 py-8 text-center text-slate-400">데이터가 없습니다.</td>
-                </tr>
-              `}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      
-      <!-- TOP 페이지 -->
-      <div class="glass-card rounded-xl overflow-hidden">
-        <div class="p-4 border-b border-slate-700/50">
-          <h3 class="text-lg font-semibold flex items-center gap-2">
-            <i class="fas fa-fire text-orange-400"></i>
-            인기 페이지 TOP ${filters.topLimit}
-          </h3>
-        </div>
-        <div class="max-h-80 overflow-y-auto">
-          <table class="w-full">
-            <thead class="bg-slate-800/50 sticky top-0">
-              <tr>
-                <th class="px-4 py-3 text-left text-slate-400 font-medium w-12">#</th>
-                <th class="px-4 py-3 text-left text-slate-400 font-medium">페이지</th>
-                <th class="px-4 py-3 text-center text-slate-400 font-medium w-20">타입</th>
-                <th class="px-4 py-3 text-right text-slate-400 font-medium">조회</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${topPages.length > 0 ? topPages.map((p, i) => `
-                <tr class="border-t border-slate-700/50 hover:bg-slate-700/20">
-                  <td class="px-4 py-2 text-slate-500">${i + 1}</td>
-                  <td class="px-4 py-2">
-                    <a href="/${p.type}/${p.slug}" class="text-blue-400 hover:text-blue-300" target="_blank">
-                      ${escapeHtml(p.name || p.slug)}
-                    </a>
-                  </td>
-                  <td class="px-4 py-2 text-center">
-                    <span class="px-2 py-1 rounded text-xs ${
-                      p.type === 'job' ? 'bg-blue-500/20 text-blue-400' :
-                      p.type === 'major' ? 'bg-purple-500/20 text-purple-400' :
-                      'bg-green-500/20 text-green-400'
-                    }">${p.type}</span>
-                  </td>
-                  <td class="px-4 py-2 text-right text-slate-300">${p.views.toLocaleString()}</td>
-                </tr>
-              `).join('') : `
-                <tr>
-                  <td colspan="4" class="px-4 py-8 text-center text-slate-400">데이터가 없습니다.</td>
-                </tr>
-              `}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    
-    <script>
-      // Chart.js 차트 생성
-      document.addEventListener('DOMContentLoaded', function() {
-        // SERP 인터랙션 차트
-        const serpCtx = document.getElementById('serpChart').getContext('2d');
-        new Chart(serpCtx, {
-          type: 'line',
-          data: {
-            labels: ${JSON.stringify(serpLabels)},
-            datasets: [{
-              label: 'SERP 인터랙션',
-              data: ${JSON.stringify(serpData)},
-              borderColor: 'rgb(59, 130, 246)',
-              backgroundColor: 'rgba(59, 130, 246, 0.1)',
-              fill: true,
-              tension: 0.3
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false }
-            },
-            scales: {
-              x: {
-                grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                ticks: { color: 'rgb(148, 163, 184)' }
-              },
-              y: {
-                grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                ticks: { color: 'rgb(148, 163, 184)' },
-                beginAtZero: true
-              }
-            }
-          }
-        });
-        
-        // 캐시 히트율 차트
-        const cacheCtx = document.getElementById('cacheChart').getContext('2d');
-        new Chart(cacheCtx, {
-          type: 'bar',
-          data: {
-            labels: ${JSON.stringify(cacheLabels)},
-            datasets: [{
-              label: '캐시 히트율 (%)',
-              data: ${JSON.stringify(cacheData)},
-              backgroundColor: 'rgba(34, 211, 238, 0.6)',
-              borderColor: 'rgb(34, 211, 238)',
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false }
-            },
-            scales: {
-              x: {
-                grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                ticks: { color: 'rgb(148, 163, 184)' }
-              },
-              y: {
-                grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                ticks: { color: 'rgb(148, 163, 184)' },
-                beginAtZero: true,
-                max: 100
-              }
-            }
-          }
-        });
-      });
-    </script>
-  `
-  
-  return renderAdminLayout({
-    title: '통계',
-    currentPath: '/admin/stats',
-    children: content
-  })
-}
-
-function escapeHtml(text: string): string {
-  const map: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }
-  return String(text).replace(/[&<>"']/g, m => map[m])
-}
-
-
-
-
