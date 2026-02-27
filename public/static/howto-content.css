@@ -406,7 +406,8 @@
   margin: 1.5rem 0;
   position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   min-height: 3rem;
 }
 .howto-user-content .checkpoint-box::before {
@@ -439,7 +440,8 @@
   margin: 1.5rem 0;
   position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   min-height: 3rem;
 }
 .howto-user-content .conclusion-box::before {
@@ -517,6 +519,10 @@
   flex: 1;
   color: rgba(255,255,255,0.85);
   line-height: 1.7;
+}
+.howto-user-content .qna-question .qna-text p,
+.howto-user-content .qna-answer .qna-text p {
+  margin: 0;
 }
 
 /* 커리어 리스트 */

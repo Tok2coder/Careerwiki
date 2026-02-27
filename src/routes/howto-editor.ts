@@ -855,7 +855,7 @@ howtoEditorRoutes.post('/api/howto/publish-direct', requireAuth, async (c) => {
       return c.json({ success: false, error: '로그인이 필요합니다' }, 401)
     }
 
-    const { draftId, title, summary, contentJson, contentHtml, tags, relatedJobs, relatedMajors, relatedHowtos, thumbnailUrl } = body
+    const { draftId, title, summary, contentJson, contentHtml, tags, relatedJobs, relatedMajors, relatedHowtos, thumbnailUrl, updatePageId } = body
 
     if (!title || !title.trim()) {
       return c.json({ success: false, error: '제목을 입력해주세요' }, 400)
@@ -869,8 +869,18 @@ howtoEditorRoutes.post('/api/howto/publish-direct', requireAuth, async (c) => {
     let existingPageId: number | null = null
     let existingSlug: string | null = null
 
+    // updatePageId가 주어지면 기존 페이지를 직접 업데이트
+    if (updatePageId && typeof updatePageId === 'number') {
+      const pageInfo = await c.env.DB.prepare(`
+        SELECT id, slug FROM pages WHERE id = ? AND page_type = 'guide' AND author_id = ?
+      `).bind(updatePageId, user.id).first<{ id: number; slug: string }>()
+      if (pageInfo) {
+        existingPageId = pageInfo.id
+        existingSlug = pageInfo.slug
+      }
+    }
 
-    if (draftId) {
+    if (!existingPageId && draftId) {
       const draftInfo = await c.env.DB.prepare(`
         SELECT published_page_id, slug FROM howto_drafts WHERE id = ? AND user_id = ?
       `).bind(draftId, user.id).first<{ published_page_id: number | null; slug: string | null }>()
