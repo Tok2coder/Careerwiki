@@ -49,7 +49,9 @@ const metricCard = (label: string, value: string, tone: 'blue' | 'green' | 'ambe
   `
 }
 
-const renderTopTable = (title: string, items: { slug: string; name: string; type: string; views: number }[]) => `
+const renderTopTable = (title: string, items: { slug: string; name: string; type: string; views: number }[]) => {
+  const maxViews = Math.max(...items.map(i => i.views || 0), 1)
+  return `
   <div class="glass-card rounded-xl overflow-hidden">
     <div class="p-4 border-b border-wiki-border/70 flex items-center gap-2">
       <i class="fas fa-list-ol text-amber-400"></i>
@@ -62,6 +64,7 @@ const renderTopTable = (title: string, items: { slug: string; name: string; type
             <th class="px-4 py-3 text-left text-slate-400 font-medium w-12">#</th>
             <th class="px-4 py-3 text-left text-slate-400 font-medium">페이지</th>
             <th class="px-4 py-3 text-right text-slate-400 font-medium">조회</th>
+            <th class="px-4 py-3 text-slate-400 font-medium w-32 hidden sm:table-cell"></th>
           </tr>
         </thead>
         <tbody>
@@ -76,17 +79,22 @@ const renderTopTable = (title: string, items: { slug: string; name: string; type
                 <div class="text-xs text-slate-500">${p.slug}</div>
               </td>
               <td class="px-4 py-2 text-right text-slate-200">${(p.views || 0).toLocaleString()}</td>
+              <td class="px-4 py-2 hidden sm:table-cell">
+                <div class="bg-slate-700/50 rounded-full h-1.5">
+                  <div class="bg-blue-500 h-1.5 rounded-full" style="width: ${maxViews > 0 ? Math.round(((p.views || 0) / maxViews) * 100) : 0}%"></div>
+                </div>
+              </td>
             </tr>
           `).join('') : `
             <tr>
-              <td colspan="3" class="px-4 py-8 text-center text-slate-400">데이터가 없습니다.</td>
+              <td colspan="4" class="px-4 py-8 text-center text-slate-400">데이터가 없습니다.</td>
             </tr>
           `}
         </tbody>
       </table>
     </div>
   </div>
-`
+`}
 
 export function renderAdminStats(props: AnalyticsProps): string {
   const { filters, overall, jobs, majors, howtos, channels, aiConversion, searchStats } = props
@@ -243,8 +251,18 @@ export function renderAdminStats(props: AnalyticsProps): string {
       </form>
     </div>
 
-    <div class="glass-card rounded-xl p-2 mb-4 overflow-x-auto">
-      <div class="flex gap-2 min-w-max sm:min-w-0" data-analytics-tabs>
+    <div class="glass-card rounded-xl p-2 mb-4">
+      <!-- 모바일: select 드롭다운 -->
+      <select class="sm:hidden w-full px-3 py-2 min-h-[44px] bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm" style="font-size: 16px;" data-analytics-mobile-select>
+        <option value="dashboard">대시보드</option>
+        <option value="job">직업</option>
+        <option value="major">전공</option>
+        <option value="howto">HowTo</option>
+        <option value="ai-funnel">AI 퍼널</option>
+        <option value="search">검색</option>
+      </select>
+      <!-- 데스크톱: 탭 버튼 -->
+      <div class="hidden sm:flex gap-2" data-analytics-tabs>
         <button type="button" data-tab="dashboard" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-primary text-white text-sm font-semibold whitespace-nowrap">대시보드</button>
         <button type="button" data-tab="job" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">직업</button>
         <button type="button" data-tab="major" class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg bg-wiki-card text-slate-200 text-sm whitespace-nowrap">전공</button>
@@ -346,9 +364,17 @@ export function renderAdminStats(props: AnalyticsProps): string {
             panels.forEach(p => {
               p.classList.toggle('hidden', p.dataset.tabPanel !== key);
             });
+            // 모바일 select 동기화
+            const sel = document.querySelector('[data-analytics-mobile-select]');
+            if (sel) sel.value = key;
             localStorage.setItem('admin-analytics-tab', key);
           };
           tabs.forEach(btn => btn.addEventListener('click', () => activate(btn.dataset.tab)));
+          // 모바일 select 동기화
+          const mobileSelect = document.querySelector('[data-analytics-mobile-select]');
+          if (mobileSelect) {
+            mobileSelect.addEventListener('change', (e) => activate(e.target.value));
+          }
           const saved = localStorage.getItem('admin-analytics-tab');
           if (saved) activate(saved);
           else activate('dashboard');
