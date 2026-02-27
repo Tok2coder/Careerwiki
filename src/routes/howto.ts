@@ -3034,10 +3034,10 @@ howtoRoutes.get('/:slug/edit', requireAuth, async (c) => {
   
   // DB에서 HowTo 조회 (page_type = 'guide', published 또는 draft_published)
   const page = await c.env.DB.prepare(`
-    SELECT id, slug, title, summary, content, meta_data, author_id, status 
-    FROM pages 
+    SELECT id, slug, title, summary, content, meta_data, author_id, status, updated_at
+    FROM pages
     WHERE slug = ? AND page_type = 'guide' AND status IN ('published', 'draft_published')
-  `).bind(slug).first<{ id: number; slug: string; title: string; summary: string; content: string; meta_data: string; author_id: number | null; status: string }>()
+  `).bind(slug).first<{ id: number; slug: string; title: string; summary: string; content: string; meta_data: string; author_id: number | null; status: string; updated_at: string }>()
   
   // 샘플 데이터 확인 (DB에 없는 경우)
   const sample = getSampleHowtoGuide(slug)
@@ -3079,14 +3079,38 @@ howtoRoutes.get('/:slug/edit', requireAuth, async (c) => {
     
     // 이 페이지에 연결된 기존 draft가 있는지 확인
     const existingDraft = await c.env.DB.prepare(`
-      SELECT id FROM howto_drafts 
+      SELECT id, updated_at FROM howto_drafts
       WHERE user_id = ? AND published_page_id = ?
       ORDER BY updated_at DESC
       LIMIT 1
-    `).bind(user.id, page.id).first<{ id: number }>()
-    
+    `).bind(user.id, page.id).first<{ id: number; updated_at: string }>()
+
     if (existingDraft) {
-      // 기존 draft가 있으면 그것으로 이동
+      // 기존 draft가 원본 페이지보다 오래된 경우 → 페이지 데이터로 갱신
+      const pageUpdated = (page as any).updated_at || ''
+      const draftUpdated = existingDraft.updated_at || ''
+      if (pageUpdated && draftUpdated && pageUpdated > draftUpdated) {
+        // 최신 페이지 콘텐츠로 draft 동기화
+        let syncContentJson = ''
+        if (metaData.contentJson && metaData.contentJson !== '{}') {
+          syncContentJson = typeof metaData.contentJson === 'string'
+            ? metaData.contentJson
+            : JSON.stringify(metaData.contentJson)
+        }
+        await c.env.DB.prepare(`
+          UPDATE howto_drafts SET
+            title = ?, summary = ?, content_json = ?, content_html = ?,
+            thumbnail_url = ?, updated_at = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `).bind(
+          page.title,
+          page.summary || '',
+          syncContentJson,
+          page.content || '',
+          metaData.thumbnailUrl || '',
+          existingDraft.id
+        ).run()
+      }
       return c.redirect(`/howto/draft/${existingDraft.id}`)
     }
     

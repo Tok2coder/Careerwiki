@@ -414,8 +414,7 @@
   content: '✓';
   position: absolute;
   left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 1.25rem;
   width: 2rem;
   height: 2rem;
   background: linear-gradient(135deg, #22c55e, #16a34a);
@@ -448,8 +447,7 @@
   content: '💡';
   position: absolute;
   left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 1.25rem;
   font-size: 1.5rem;
   line-height: 1;
 }

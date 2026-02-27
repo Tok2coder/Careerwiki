@@ -939,6 +939,13 @@ howtoEditorRoutes.post('/api/howto/publish-direct', requireAuth, async (c) => {
           UPDATE howto_drafts SET slug = ? WHERE id = ?
         `).bind(slug, draftId).run()
       }
+
+      // publish-direct로 페이지가 업데이트되면 연결된 기존 draft를 삭제
+      // (편집 버튼 클릭 시 최신 페이지 데이터로 새 draft가 생성되도록)
+      await c.env.DB.prepare(`
+        DELETE FROM howto_drafts
+        WHERE published_page_id = ? AND id != ?
+      `).bind(existingPageId, draftId || 0).run()
     } else {
       let suffix = 2
 
