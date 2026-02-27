@@ -292,12 +292,19 @@ howtoRoutes.get('/', async (c) => {
             <h1 class="text-3xl md:text-4xl font-bold text-white">${keyword ? `"${escapeHtml(keyword)}" 검색 결과` : 'HowTo 가이드'}</h1>
             <p class="text-wiki-muted text-[15px] mt-1">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우를 공유합니다'}</p>
           </div>
-        <a href="${user ? '/howto/write' : '/login?redirect=/howto/write'}" 
-           class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 min-h-[40px] sm:min-h-[44px] bg-wiki-primary/70 hover:bg-wiki-primary/80 text-white text-sm sm:text-base font-medium rounded-xl transition shrink-0 self-end md:self-center"
-           ${!user ? 'data-require-login="true"' : ''}>
-          <i class="fas fa-plus text-xs sm:text-sm"></i>
-          <span>가이드 작성</span>
-        </a>
+        <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
+          <a href="/howto/guide:%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9E%91%EC%84%B1%EB%B2%95"
+             class="inline-flex items-center gap-1.5 px-3 py-2 sm:py-3 min-h-[40px] sm:min-h-[44px] border border-white/20 hover:border-wiki-primary/50 text-wiki-muted hover:text-white text-sm font-medium rounded-xl transition">
+            <i class="fas fa-question-circle text-xs"></i>
+            <span>작성법</span>
+          </a>
+          <a href="${user ? '/howto/write' : '/login?redirect=/howto/write'}"
+             class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 min-h-[40px] sm:min-h-[44px] bg-wiki-primary/70 hover:bg-wiki-primary/80 text-white text-sm sm:text-base font-medium rounded-xl transition"
+             ${!user ? 'data-require-login="true"' : ''}>
+            <i class="fas fa-plus text-xs sm:text-sm"></i>
+            <span>가이드 작성</span>
+          </a>
+        </div>
       </header>
       
       <!-- 검색창 -->
@@ -3234,14 +3241,19 @@ howtoRoutes.get('/:slug/edit', requireAuth, async (c) => {
 howtoRoutes.get('/:slug', async (c) => {
   const rawSlug = c.req.param('slug')
   
-  // guide: prefix가 있으면 정상 slug로 리다이렉트 (301 Permanent Redirect)
+  // guide: prefix 처리: DB에 해당 slug로 페이지가 있으면 정상 렌더링, 없으면 prefix 제거 후 리다이렉트
   const cleanedSlug = cleanGuidePrefix(rawSlug)
   if (cleanedSlug !== rawSlug) {
-    return c.redirect(`/howto/${encodeURIComponent(cleanedSlug)}`, 301)
+    const guidePageExists = await c.env.DB.prepare(
+      `SELECT id FROM pages WHERE slug = ? AND page_type = 'guide' AND status IN ('published', 'draft_published') LIMIT 1`
+    ).bind(rawSlug).first()
+    if (!guidePageExists) {
+      return c.redirect(`/howto/${encodeURIComponent(cleanedSlug)}`, 301)
+    }
   }
-  
-  const slug = cleanedSlug
-  
+
+  const slug = rawSlug
+
   // 먼저 DB에서 HowTo 검색 (page_type = 'guide', published 또는 draft_published)
   // 작성자 프로필 이미지도 함께 조회
   const dbResult = await c.env.DB.prepare(`

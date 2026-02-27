@@ -2696,7 +2696,7 @@ async function expandWithRelatedContent(
         ? db.prepare(`
             SELECT id, slug, title, summary, meta_data
             FROM pages
-            WHERE page_type = 'guide' AND status = 'published'
+            WHERE page_type = 'guide' AND status = 'published' AND slug NOT LIKE 'guide:%'
             LIMIT 50
           `).all<HowtoRow & { meta_data: string }>()
         : Promise.resolve({ results: [] as (HowtoRow & { meta_data: string })[] }),
