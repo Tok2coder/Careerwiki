@@ -490,5 +490,79 @@ adminAiApi.post('/retag-all', async (c) => {
   }
 })
 
+/**
+ * POST /admin/api/ai/retag-flat50
+ * flat-50 노이즈 직업 재태깅 (모든 주요 속성이 50인 직업)
+ * batch_size: 한 번에 처리할 직업 수 (기본 5, 최대 20)
+ * offset: 시작 위치 (기본 0)
+ */
+adminAiApi.post('/retag-flat50', async (c) => {
+  const db = c.env.DB
+  const openaiKey = (c.env as any).OPENAI_API_KEY
+  if (!openaiKey) {
+    return c.json({ error: 'OPENAI_API_KEY not configured' }, 500)
+  }
+
+  const body = await c.req.json<{ batch_size?: number; offset?: number }>().catch(() => ({}))
+  const batchSize = Math.min(Math.max(body.batch_size || 5, 1), 20)
+  const offset = Math.max(body.offset || 0, 0)
+
+  try {
+    // flat-50 직업 조회: 주요 4개 속성이 모두 50인 직업
+    const jobs = await db.prepare(`
+      SELECT j.id, j.name, j.api_data_json, j.merged_profile_json, j.user_contributed_json, j.admin_data_json
+      FROM jobs j
+      INNER JOIN job_attributes ja ON j.id = ja.job_id
+      WHERE ja.analytical = 50 AND ja.creative = 50 AND ja.execution = 50
+        AND ja.people_facing = 50
+      ORDER BY j.name
+      LIMIT ? OFFSET ?
+    `).bind(batchSize, offset).all<{
+      id: string; name: string
+      api_data_json: string | null; merged_profile_json: string | null
+      user_contributed_json: string | null; admin_data_json: string | null
+    }>()
+
+    const totalFlat50 = await db.prepare(`
+      SELECT COUNT(*) as cnt FROM jobs j
+      INNER JOIN job_attributes ja ON j.id = ja.job_id
+      WHERE ja.analytical = 50 AND ja.creative = 50 AND ja.execution = 50
+        AND ja.people_facing = 50
+    `).first<{ cnt: number }>()
+
+    // 기존 속성 삭제 후 재태깅 (flat-50이므로 안전하게 삭제 가능)
+    const { autoTagJob } = await import('./auto-tagger')
+    const results: Array<{ job_id: string; job_name: string; success: boolean; error?: string }> = []
+
+    for (const job of jobs.results || []) {
+      // 기존 flat-50 속성 행 삭제
+      await db.prepare('DELETE FROM job_attributes WHERE job_id = ?').bind(job.id).run()
+      // 새로운 속성으로 재태깅
+      const result = await autoTagJob(db, job, openaiKey)
+      results.push({
+        job_id: job.id,
+        job_name: job.name,
+        success: result.success,
+        error: result.error,
+      })
+    }
+
+    const successCount = results.filter(r => r.success).length
+    const failCount = results.filter(r => !r.success).length
+
+    return c.json({
+      total_flat50: totalFlat50?.cnt || 0,
+      processed: results.length,
+      success: successCount,
+      failed: failCount,
+      remaining: (totalFlat50?.cnt || 0) - successCount,
+      next_offset: offset + batchSize,
+      results,
+    })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
 export { adminAiApi }
 

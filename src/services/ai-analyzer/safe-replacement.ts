@@ -922,6 +922,12 @@ const NICHE_DOMAINS: NicheDomain[] = [
     exemptBackgrounds: ['license_cert'],
     exemptInterests: ['data_numbers', 'influencing'],
   },
+  {
+    // 제조현장 감독/반장 (사무직 지향 유저에게 부적절)
+    patterns: ['반장', '현장감독', '작업반장', '조장', '유지보수반장'],
+    exemptBackgrounds: ['license_cert', 'field_experience'],
+    exemptInterests: ['physical_activity'],
+  },
 ]
 
 // 유저 시그널을 기반으로 면제할 패턴 Set 구성

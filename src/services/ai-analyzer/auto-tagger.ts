@@ -59,6 +59,51 @@ const TAGGING_SYSTEM_PROMPT = `당신은 CareerWiki의 직업 속성 태거입�
 - employment_type: permanent(정규직) | contract(계약직) | freelance | gig(긱) | temporary(임시직) | seasonal(계절직)
 - job_type: knowledge(지식노동) | service(서비스) | manufacturing(제조) | crafts(공예/숙련) | manual_skilled(현장기능) | creative(창작) | analytical(분석) | management(관리) | field_work(현장직) | transport(운송)
 
+### 카테고리 필드 결정 규칙 (필수! 기본값으로 두지 마세요!)
+**⚠️ 아래 필드는 직업명과 업무 내용을 반드시 반영해야 합니다. 판단 근거 없이 기본값을 사용하지 마세요.**
+
+**job_type 판단 기준:**
+- "반장", "기사", "정비원", "기능사", "조립원", "용접" → manufacturing 또는 manual_skilled (knowledge 아님!)
+- "디자이너", "작가", "작곡", "아티스트", "PD" → creative
+- "분석가", "연구원", "데이터", "통계" → analytical
+- "감독", "관리자", "매니저", "팀장", "이사" → management
+- "운전", "배달", "택배", "조종사" → transport
+- "상담사", "서비스", "판매", "영업", "안내" → service
+- "소방관", "경찰", "군인", "현장직" → field_work
+
+**work_environment 판단 기준:**
+- "공장", "반장", "조립", "제조" → factory
+- "현장", "시공", "건설", "소방", "경비" → field
+- "야외", "농업", "조경", "해양" → outdoor
+- "정비", "용접", "목공" → workshop
+- "재택", "원격" → remote
+- 일반 사무직, IT, 연구 → office
+
+**physical_demand 판단 기준:**
+- 사무직, IT, 연구 → low
+- 영업, 교사, 의료(비수술) → medium
+- "반장", "정비", "기사", "조립", "건설" → high
+- "용접", "광부", "벌목", "소방" → very_high
+
+**employment_type 판단 기준:**
+- 공무원, 공기업 → permanent
+- "배우", "작가", "프리랜서", "개인사업" → freelance
+- "배달", "대리운전", "플랫폼" → gig
+
+**앵커 예시 (반드시 참고!):**
+| 직업 | job_type | work_environment | physical_demand | employment_type |
+|------|----------|-----------------|-----------------|-----------------|
+| 소방관 | field_work | field | high | permanent |
+| 배우 | creative | hybrid | medium | freelance |
+| 열처리반장 | manufacturing | factory | high | permanent |
+| 데이터분석가 | analytical | office | low | permanent |
+| 공무원 | knowledge | office | low | permanent |
+| 택배기사 | transport | field | high | gig |
+| 치과위생사 | service | office | medium | permanent |
+| 영화감독 | creative | field | medium | freelance |
+| 용접기능사 | manual_skilled | workshop | very_high | permanent |
+| 웹디자이너 | creative | office | low | permanent |
+
 ### 출력 형식 (JSON)
 {
   "wlb": 0-100,

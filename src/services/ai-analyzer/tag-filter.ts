@@ -1083,6 +1083,22 @@ export const MINI_MODULE_EXCLUSION_RULES: MiniModuleExclusionRule[] = [
       return prefersDecision === true && noDecisionAuthority
     },
   },
+  // 16. stability 중시 + structured/사무 선호 → 현장/제조직 Hard Exclusion
+  {
+    id: 'stability_office_vs_field_manufacturing',
+    description: '안정+사무 선호 → 제조현장직 제외',
+    shouldExclude: (mm, job) => {
+      const wantsStability = mm.value_top?.includes('stability')
+      const wantsStructured = mm.workstyle_top?.includes('structured') || mm.workstyle_top?.includes('team_harmony')
+      if (!wantsStability || !wantsStructured) return false
+
+      // 현장/제조 직업 판단 — 속성 + 직업명 복합
+      const isFieldByEnv = ['field', 'factory', 'workshop', 'outdoor'].includes(job.work_environment)
+      const isFieldByType = ['manufacturing', 'manual_skilled', 'field_work', 'crafts'].includes(job.job_type)
+      const isFieldByName = job.job_name && /반장|공장|현장|제조|조립|용접|배관|기능사|설치|건설|토목|포장|하역|운반|적재/.test(job.job_name)
+      return isFieldByEnv || isFieldByType || !!isFieldByName
+    },
+  },
 ]
 
 /**
