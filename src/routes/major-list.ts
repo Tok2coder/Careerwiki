@@ -474,8 +474,8 @@ majorListRoutes.get('/major', async (c) => {
 
     const pageTitle = keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki'
     const description = keyword
-      ? createMetaDescription(`"${keyword}" 관련 전공 ${totalCount}개의 취업률, 평균 월급, 만족도 정보를 확인하세요.`)
-      : `${totalCount}개 전공의 취업률, 평균 월급, 만족도 정보를 한눈에 확인하세요. Careerwiki 전공위키.`
+      ? createMetaDescription(`"${keyword}" 관련 전공의 취업률, 평균 월급, 만족도 정보를 확인하세요.`)
+      : '다양한 전공의 취업률, 평균 월급, 만족도 정보를 한눈에 확인하세요. Careerwiki 전공위키.'
 
     return c.html(
       renderLayoutWithContext(c,

@@ -410,8 +410,8 @@ jobListRoutes.get('/job', async (c) => {
 
     const pageTitle = keyword ? `${keyword} 직업 검색 결과 - Careerwiki` : '직업위키 - Careerwiki'
     const description = keyword
-      ? createMetaDescription(`"${keyword}" 관련 직업 ${totalCount}개의 연봉, 전망, 필요 역량 정보를 확인하세요.`)
-      : `${totalCount}개 직업의 연봉, 전망, 필요 역량 정보를 한눈에 확인하세요. Careerwiki 직업위키.`
+      ? createMetaDescription(`"${keyword}" 관련 직업의 연봉, 전망, 필요 역량 정보를 확인하세요.`)
+      : '다양한 직업의 연봉, 전망, 필요 역량 정보를 한눈에 확인하세요. Careerwiki 직업위키.'
 
     return c.html(
       renderLayoutWithContext(c,

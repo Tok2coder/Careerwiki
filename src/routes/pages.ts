@@ -533,7 +533,10 @@ pagesRoutes.get('/analyzer', (c) => {
     </div>
   `
   
-  return c.html(renderLayoutWithContext(c, content, 'AI 추천 - Careerwiki'))
+  return c.html(renderLayoutWithContext(c, content, 'AI 추천 - Careerwiki', 'AI 기반 맞춤형 직업·전공 추천으로 나에게 맞는 진로를 찾아보세요.', false, {
+    canonical: 'https://careerwiki.org/analyzer',
+    ogUrl: 'https://careerwiki.org/analyzer'
+  }))
 })
 
 // Community Guidelines Help Page
