@@ -93,24 +93,31 @@ function renderContentViewStatsSection(cvs: ContentViewStats): string {
       <div class="glass-card rounded-xl overflow-hidden">
         <div class="p-3 border-b border-wiki-border/70 flex items-center gap-2">
           <i class="fas ${icon} ${color}"></i>
-          <h4 class="text-sm font-semibold">${title}</h4>
+          <h4 class="text-base font-semibold">${title}</h4>
         </div>
         <div class="max-h-72 overflow-y-auto">
-          <table class="w-full text-sm">
+          <table class="w-full text-sm table-fixed">
+            <colgroup>
+              <col style="width:32px">
+              <col>
+              <col style="width:56px">
+              <col class="hidden sm:table-column" style="width:56px">
+              <col class="hidden lg:table-column" style="width:72px">
+            </colgroup>
             <thead class="bg-wiki-card sticky top-0">
               <tr>
-                <th class="px-3 py-2 text-left text-slate-400 font-medium w-8">#</th>
+                <th class="px-3 py-2 text-left text-slate-400 font-medium">#</th>
                 <th class="px-3 py-2 text-left text-slate-400 font-medium">이름</th>
                 <th class="px-3 py-2 text-right text-slate-400 font-medium">조회</th>
                 <th class="px-3 py-2 text-right text-slate-400 font-medium hidden sm:table-cell">저장</th>
-                <th class="px-3 py-2 text-slate-400 font-medium w-20 hidden lg:table-cell"></th>
+                <th class="px-3 py-2 text-slate-400 font-medium hidden lg:table-cell"></th>
               </tr>
             </thead>
             <tbody>
               ${items.length ? items.slice(0, 10).map((p, idx) => `
                 <tr class="border-t border-wiki-border/60 hover:bg-wiki-card/60">
                   <td class="px-3 py-1.5 text-slate-500">${idx + 1}</td>
-                  <td class="px-3 py-1.5"><a href="/${typePrefix}/${p.slug}" class="text-slate-200 hover:text-blue-400 transition-colors truncate block max-w-[200px]">${escapeHtml(p.name)}</a></td>
+                  <td class="px-3 py-1.5 max-w-0"><a href="/${typePrefix}/${p.slug}" class="text-slate-200 hover:text-blue-400 transition-colors truncate block">${escapeHtml(p.name)}</a></td>
                   <td class="px-3 py-1.5 text-right text-slate-200">${(p.views || 0).toLocaleString()}</td>
                   <td class="px-3 py-1.5 text-right text-slate-200 hidden sm:table-cell">${(p.bookmarks || 0).toLocaleString()}</td>
                   <td class="px-3 py-1.5 hidden lg:table-cell"><div class="bg-slate-700/50 rounded-full h-1.5"><div class="bg-blue-500 h-1.5 rounded-full" style="width: ${maxViews > 0 ? Math.round(((p.views || 0) / maxViews) * 100) : 0}%"></div></div></td>
@@ -124,7 +131,7 @@ function renderContentViewStatsSection(cvs: ContentViewStats): string {
   }
   return `
     <div class="glass-card rounded-xl p-4 mb-4">
-      <h3 class="text-lg font-semibold mb-3 flex items-center gap-2 text-slate-100">
+      <h3 class="text-xl font-bold mb-3 flex items-center gap-2 text-slate-100">
         <i class="fas fa-chart-bar text-blue-400"></i> 콘텐츠별 조회수 TOP 10
       </h3>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">

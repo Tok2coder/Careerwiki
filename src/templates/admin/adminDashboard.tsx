@@ -363,12 +363,13 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
                 x: { ticks: { color: '#94a3b8', maxTicksLimit: 10 }, grid: { color: 'rgba(148,163,184,0.08)' } },
                 y: {
                   type: 'linear', position: 'left', beginAtZero: true,
-                  ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.08)' },
+                  ticks: { color: '#94a3b8', callback: function(v) { return v + ' 조회'; } },
+                  grid: { color: 'rgba(148,163,184,0.08)' },
                   title: { display: false }
                 },
                 y1: {
                   type: 'linear', position: 'right', beginAtZero: true,
-                  ticks: { color: '#fb923c', stepSize: 1 },
+                  ticks: { color: '#fb923c', stepSize: 1, callback: function(v) { return v + ' 분석'; } },
                   grid: { drawOnChartArea: false },
                   title: { display: false }
                 }
