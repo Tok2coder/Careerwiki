@@ -139,7 +139,7 @@ export function renderAdminAiAnalyzer(props: AdminAiAnalyzerProps): string {
         <div id="sessionResult" class="hidden">
           <div class="mb-6">
             <h4 class="text-white font-medium mb-3"><i class="fas fa-stream mr-2 text-purple-400"></i>Events 타임라인</h4>
-            <div id="eventsTimeline" class="space-y-2 max-h-64 overflow-y-auto"></div>
+            <div id="eventsTimeline" class="space-y-2 admin-mini-scroll max-h-64 overflow-y-auto"></div>
           </div>
           <div class="mb-6">
             <h4 class="text-white font-medium mb-3"><i class="fas fa-file-alt mr-2 text-blue-400"></i>분석 요청</h4>

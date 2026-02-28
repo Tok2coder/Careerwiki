@@ -53,6 +53,12 @@ export function renderAdminLayout({ title, currentPath, children }: AdminLayoutP
     .stat-card:hover {
       transform: translateY(-2px);
     }
+    /* 다크 테마 커스텀 스크롤바 */
+    .admin-mini-scroll { scrollbar-width: thin; scrollbar-color: #475569 transparent; }
+    .admin-mini-scroll::-webkit-scrollbar { width: 5px; }
+    .admin-mini-scroll::-webkit-scrollbar-track { background: transparent; }
+    .admin-mini-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 9999px; }
+    .admin-mini-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
     /* 모바일 사이드바 */
     .sidebar-overlay {
       background: rgba(0, 0, 0, 0.5);

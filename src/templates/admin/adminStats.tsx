@@ -57,7 +57,7 @@ const renderTopTable = (title: string, items: { slug: string; name: string; type
       <i class="fas fa-list-ol text-amber-400"></i>
       <h3 class="text-lg font-semibold">${title}</h3>
     </div>
-    <div class="max-h-80 overflow-y-auto">
+    <div class="admin-mini-scroll max-h-80 overflow-y-auto">
       <table class="w-full">
         <thead class="bg-wiki-card sticky top-0">
           <tr>
@@ -140,7 +140,7 @@ export function renderAdminStats(props: AnalyticsProps): string {
             <i class="fas fa-fire text-amber-400"></i>
             <h3 class="text-lg font-semibold text-slate-100">인기 검색어 TOP 20</h3>
           </div>
-          <div class="max-h-96 overflow-y-auto">
+          <div class="admin-mini-scroll max-h-96 overflow-y-auto">
             <table class="w-full">
               <thead class="bg-wiki-card sticky top-0">
                 <tr>
@@ -174,7 +174,7 @@ export function renderAdminStats(props: AnalyticsProps): string {
             <i class="fas fa-exclamation-triangle text-rose-400"></i>
             <h3 class="text-lg font-semibold text-slate-100">실패 키워드 <span class="text-sm font-normal text-slate-400">(${(searchStats?.failedQueries || []).length}건)</span></h3>
           </div>
-          <div class="max-h-96 overflow-y-auto">
+          <div class="admin-mini-scroll max-h-96 overflow-y-auto">
             <table class="w-full">
               <thead class="bg-wiki-card sticky top-0">
                 <tr>

@@ -95,7 +95,7 @@ function renderContentViewStatsSection(cvs: ContentViewStats): string {
           <i class="fas ${icon} ${color}"></i>
           <h4 class="text-base font-semibold">${title}</h4>
         </div>
-        <div class="max-h-72 overflow-y-auto">
+        <div class="admin-mini-scroll max-h-80 overflow-y-auto">
           <table class="w-full text-sm table-fixed">
             <colgroup>
               <col style="width:32px">
@@ -150,8 +150,8 @@ export function renderAdminContent(props: AdminContentProps): string {
   const defaultEndDate = new Date().toISOString().split('T')[0]
   const defaultStartDate = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
 
-  // 신고 건수 합산
-  const reportCount = (props.moderation?.items?.filter(i => i.reportCount > 0).length || 0) + (props.howtoReports?.total || 0)
+  // HowTo 신고 건수
+  const howtoReportCount = props.howtoReports?.total || 0
 
   const content = `
     <!-- 콘텐츠별 조회수 TOP -->
@@ -180,17 +180,17 @@ export function renderAdminContent(props: AdminContentProps): string {
       </a>
       <a href="/admin/content?tab=reports"
          class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base flex items-center ${activeTab === 'reports'
-           ? 'bg-red-600 text-white'
+           ? 'bg-emerald-600 text-white'
            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">
-        <i class="fas fa-flag mr-1.5 sm:mr-2"></i>신고
-        ${reportCount > 0 ? `<span class="ml-1.5 sm:ml-2 px-1.5 sm:px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">${reportCount}</span>` : ''}
+        <i class="fas fa-lightbulb mr-1.5 sm:mr-2"></i>HowTo
+        ${howtoReportCount > 0 ? `<span class="ml-1.5 sm:ml-2 px-1.5 sm:px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">${howtoReportCount}</span>` : ''}
       </a>
     </div>
 
     ${activeTab === 'revisions' ? renderRevisionsTab(revisions, total, page, perPage, totalPages, filters, defaultStartDate, defaultEndDate) : ''}
     ${activeTab === 'archive' ? renderArchiveTab(hiddenJobs, hiddenMajors) : ''}
     ${activeTab === 'comments' ? renderCommentsModerationTab(props.moderation) : ''}
-    ${activeTab === 'reports' ? renderReportsTab(props.moderation, props.howtoReports) : ''}
+    ${activeTab === 'reports' ? renderReportsTab(props.howtoReports) : ''}
 
     <!-- Toast 컨테이너 -->
     <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
@@ -832,6 +832,7 @@ function renderCommentsModerationTab(moderation?: AdminContentProps['moderation'
             <tr>
               <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm whitespace-nowrap">ID</th>
               <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm">내용</th>
+              <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm whitespace-nowrap">게시글</th>
               <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm whitespace-nowrap">작성자</th>
               <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium text-xs sm:text-sm whitespace-nowrap">상태</th>
               <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium text-xs sm:text-sm whitespace-nowrap">신고</th>
@@ -839,16 +840,27 @@ function renderCommentsModerationTab(moderation?: AdminContentProps['moderation'
             </tr>
           </thead>
           <tbody>
-            ${items.length ? items.map((item) => `
+            ${items.length ? items.map((item) => {
+              const typeBadge = item.pageType === 'job'
+                ? '<span class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 rounded text-[10px] font-medium whitespace-nowrap">직업</span>'
+                : item.pageType === 'major'
+                  ? '<span class="px-1.5 py-0.5 bg-purple-500/20 text-purple-300 rounded text-[10px] font-medium whitespace-nowrap">전공</span>'
+                  : '<span class="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-[10px] font-medium whitespace-nowrap">HowTo</span>'
+              return `
               <tr class="border-t border-slate-700/50 hover:bg-slate-700/20 transition-colors">
                 <td class="px-2 sm:px-4 py-3 text-slate-400 text-xs sm:text-sm">${item.id}</td>
                 <td class="px-2 sm:px-4 py-3">
                   <div class="text-slate-200 text-xs sm:text-sm line-clamp-2">${escapeHtml(item.content || '') || '<span class="text-slate-500">내용 없음</span>'}</div>
-                  <div class="text-xs text-slate-500 mt-1 flex items-center gap-2 flex-wrap">
-                    <a href="${pageLink(item)}#comments" target="_blank" class="text-blue-400 hover:text-blue-300">
-                      <i class="fas fa-link mr-1"></i>${escapeHtml(item.title || item.slug)}
+                  <div class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+                    ${item.parentId ? '<span class="px-1.5 py-0.5 bg-slate-600/50 text-slate-300 rounded whitespace-nowrap">대댓글</span>' : '<span class="px-1.5 py-0.5 bg-slate-600/50 text-slate-300 rounded whitespace-nowrap">원댓글</span>'}
+                  </div>
+                </td>
+                <td class="px-2 sm:px-4 py-3">
+                  <div class="flex flex-col gap-1">
+                    ${typeBadge}
+                    <a href="${pageLink(item)}#comments" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 truncate max-w-[140px] block" title="${escapeHtml(item.title || item.slug)}">
+                      ${escapeHtml(item.title || item.slug)}
                     </a>
-                    ${item.parentId ? '<span class="px-2 py-0.5 bg-slate-600/50 text-slate-300 rounded whitespace-nowrap">대댓글</span>' : '<span class="px-2 py-0.5 bg-slate-600/50 text-slate-300 rounded whitespace-nowrap">원댓글</span>'}
                   </div>
                 </td>
                 <td class="px-2 sm:px-4 py-3 text-slate-300 text-xs sm:text-sm">
@@ -864,7 +876,7 @@ function renderCommentsModerationTab(moderation?: AdminContentProps['moderation'
                         : 'bg-green-500/20 text-green-300'
                   }">${item.status}</span>
                 </td>
-                <td class="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm text-slate-200 whitespace-nowrap">${item.reportCount}</td>
+                <td class="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm whitespace-nowrap">${item.reportCount > 0 ? `<span class="px-2 py-0.5 bg-red-500/20 text-red-300 rounded font-medium">${item.reportCount}</span>` : `<span class="text-slate-500">${item.reportCount}</span>`}</td>
                 <td class="px-2 sm:px-4 py-3 text-center">
                   <div class="flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
                     ${item.status === 'blinded' ? `
@@ -887,9 +899,9 @@ function renderCommentsModerationTab(moderation?: AdminContentProps['moderation'
                   </div>
                 </td>
               </tr>
-            `).join('') : `
+            `}).join('') : `
               <tr>
-                <td colspan="6" class="px-2 sm:px-4 py-12 text-center text-slate-400">
+                <td colspan="7" class="px-2 sm:px-4 py-12 text-center text-slate-400">
                   <i class="fas fa-inbox text-3xl mb-2"></i>
                   <p class="text-sm sm:text-base">블라인드/신고된 댓글이 없습니다.</p>
                 </td>
@@ -954,85 +966,12 @@ function renderCommentsModerationTab(moderation?: AdminContentProps['moderation'
 }
 
 function renderReportsTab(
-  moderation?: AdminContentProps['moderation'],
   howtoReports?: AdminContentProps['howtoReports']
 ): string {
-  const flaggedComments = moderation?.items?.filter(i => i.reportCount > 0) || []
   const howtoItems = howtoReports?.items || []
-  const totalReports = flaggedComments.length + howtoItems.length
 
   return `
     <div class="space-y-6">
-      <!-- 신고된 댓글 -->
-      <div class="glass-card rounded-xl overflow-hidden">
-        <div class="p-4 border-b border-slate-700/50">
-          <h3 class="text-lg font-semibold flex items-center gap-2">
-            <i class="fas fa-comment-slash text-rose-400"></i>
-            신고된 댓글 <span class="text-slate-400 font-normal">(${flaggedComments.length}건)</span>
-          </h3>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full min-w-[700px]">
-            <thead class="bg-slate-800/50">
-              <tr>
-                <th class="px-3 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm w-12">ID</th>
-                <th class="px-3 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm">내용</th>
-                <th class="px-3 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm w-24">작성자</th>
-                <th class="px-3 py-3 text-center text-slate-400 font-medium text-xs sm:text-sm w-16">신고</th>
-                <th class="px-3 py-3 text-center text-slate-400 font-medium text-xs sm:text-sm w-16">상태</th>
-                <th class="px-3 py-3 text-center text-slate-400 font-medium text-xs sm:text-sm w-32">작업</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${flaggedComments.length ? flaggedComments.map(item => {
-                const link = item.pageType === 'job' ? '/job/' + item.slug
-                  : item.pageType === 'major' ? '/major/' + item.slug
-                  : '/howto/' + item.slug
-                return `
-                  <tr class="border-t border-slate-700/50 hover:bg-slate-700/20 transition-colors">
-                    <td class="px-3 py-3 text-slate-400 text-sm">${item.id}</td>
-                    <td class="px-3 py-3">
-                      <div class="text-slate-200 text-sm line-clamp-2">${escapeHtml(item.content || '')}</div>
-                      <a href="${link}#comments" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 mt-1 inline-block">
-                        <i class="fas fa-link mr-1"></i>${escapeHtml(item.title || item.slug)}
-                      </a>
-                    </td>
-                    <td class="px-3 py-3 text-slate-300 text-sm">${escapeHtml(item.nickname || (item.isAnonymous ? '익명' : '사용자'))}</td>
-                    <td class="px-3 py-3 text-center">
-                      <span class="px-2 py-0.5 bg-red-500/20 text-red-300 rounded text-xs font-medium">${item.reportCount}</span>
-                    </td>
-                    <td class="px-3 py-3 text-center">
-                      <span class="px-2 py-0.5 rounded text-xs ${
-                        item.status === 'blinded' ? 'bg-red-500/20 text-red-300'
-                        : item.status === 'deleted' ? 'bg-slate-600/50 text-slate-300'
-                        : 'bg-green-500/20 text-green-300'
-                      }">${item.status}</span>
-                    </td>
-                    <td class="px-3 py-3 text-center">
-                      <div class="flex items-center justify-center gap-1">
-                        ${item.status === 'blinded' ? `
-                          <button class="report-mod-action px-2 py-1 text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded" data-action="unblind" data-id="${item.id}">해제</button>
-                        ` : `
-                          <button class="report-mod-action px-2 py-1 text-xs bg-amber-600 hover:bg-amber-500 text-white rounded" data-action="blind" data-id="${item.id}">블라인드</button>
-                        `}
-                        <button class="report-mod-action px-2 py-1 text-xs bg-red-600 hover:bg-red-500 text-white rounded" data-action="delete" data-id="${item.id}">삭제</button>
-                      </div>
-                    </td>
-                  </tr>
-                `
-              }).join('') : `
-                <tr>
-                  <td colspan="6" class="px-3 py-8 text-center text-slate-400">
-                    <i class="fas fa-check-circle text-2xl mb-2 text-green-400"></i>
-                    <p class="text-sm">신고된 댓글이 없습니다.</p>
-                  </td>
-                </tr>
-              `}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
       <!-- 신고된 HowTo -->
       <div class="glass-card rounded-xl overflow-hidden">
         <div class="p-4 border-b border-slate-700/50">
@@ -1086,30 +1025,6 @@ function renderReportsTab(
         </div>
       </div>
     </div>
-
-    <script>
-      document.querySelectorAll('.report-mod-action').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const action = btn.dataset.action;
-          const id = btn.dataset.id;
-          if (action === 'delete' && !confirm('해당 댓글을 삭제하시겠습니까?')) return;
-          const endpoints = {
-            blind: '/api/admin/comments/' + id + '/blind',
-            unblind: '/api/admin/comments/' + id + '/unblind',
-            delete: '/api/admin/comments/' + id
-          };
-          const method = action === 'delete' ? 'DELETE' : 'POST';
-          try {
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            const res = await fetch(endpoints[action], { method, headers: { "Content-Type": "application/json" } });
-            const data = await res.json().catch(() => ({}));
-            if (!data.success) { alert(data.error || '실패했습니다.'); location.reload(); return; }
-            location.reload();
-          } catch (err) { alert('요청 실패: ' + err.message); location.reload(); }
-        });
-      });
-    </script>
   `
 }
 

@@ -469,18 +469,8 @@ adminRoutes.get('/admin/content', requireAdmin, async (c) => {
     } else if (activeTab === 'archive') {
       // archive 탭에서는 howtoReports 로드하지 않음 (reports 탭으로 이동)
     } else if (activeTab === 'reports') {
-      // 신고 탭: 신고된 댓글 + 신고된 HowTo 모두 로드
-      const [flagged, reports] = await Promise.all([
-        listFlaggedComments(c.env.DB, 1, 100),
-        listHowtoReports(c.env.DB, { status: 'pending', limit: 100, offset: 0 })
-      ])
-      moderation = {
-        items: flagged.items,
-        total: flagged.total,
-        page: 1,
-        perPage: 100,
-        totalPages: 1
-      }
+      // HowTo 탭: 신고된 HowTo만 로드
+      const reports = await listHowtoReports(c.env.DB, { status: 'pending', limit: 100, offset: 0 })
       howtoReports = {
         items: reports.reports.map((r: any) => ({
           id: r.id,

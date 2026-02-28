@@ -60,21 +60,21 @@ function renderAttributionCharts(stats: UserAttributionStats): string {
       <div class="glass-card rounded-xl p-4">
         <h4 class="text-sm font-medium text-slate-400 mb-3"><i class="fas fa-route text-blue-400 mr-1.5"></i>유입 경로</h4>
         <div class="h-48"><canvas id="channelChart"></canvas></div>
-        <div class="mt-2 space-y-1 text-xs text-slate-400 max-h-24 overflow-y-auto">
+        <div class="mt-2 space-y-1 text-xs text-slate-400 admin-mini-scroll max-h-24 overflow-y-auto">
           ${stats.channelDistribution.map(c => `<div class="flex justify-between"><span>${CHANNEL_LABELS[c.channel] || c.channel}</span><span class="text-white">${c.count}</span></div>`).join('')}
         </div>
       </div>
       <div class="glass-card rounded-xl p-4">
         <h4 class="text-sm font-medium text-slate-400 mb-3"><i class="fas fa-compass text-emerald-400 mr-1.5"></i>관심 상태</h4>
         <div class="h-48"><canvas id="interestChart"></canvas></div>
-        <div class="mt-2 space-y-1 text-xs text-slate-400 max-h-24 overflow-y-auto">
+        <div class="mt-2 space-y-1 text-xs text-slate-400 admin-mini-scroll max-h-24 overflow-y-auto">
           ${stats.interestDistribution.map(c => `<div class="flex justify-between"><span>${INTEREST_LABELS[c.state] || c.state}</span><span class="text-white">${c.count}</span></div>`).join('')}
         </div>
       </div>
       <div class="glass-card rounded-xl p-4">
         <h4 class="text-sm font-medium text-slate-400 mb-3"><i class="fas fa-user-graduate text-purple-400 mr-1.5"></i>커리어 상태</h4>
         <div class="h-48"><canvas id="careerChart"></canvas></div>
-        <div class="mt-2 space-y-1 text-xs text-slate-400 max-h-24 overflow-y-auto">
+        <div class="mt-2 space-y-1 text-xs text-slate-400 admin-mini-scroll max-h-24 overflow-y-auto">
           ${stats.careerDistribution.map(c => `<div class="flex justify-between"><span>${CAREER_LABELS[c.state] || c.state}</span><span class="text-white">${c.count}</span></div>`).join('')}
         </div>
       </div>
