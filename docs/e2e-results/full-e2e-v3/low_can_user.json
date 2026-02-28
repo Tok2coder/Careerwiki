@@ -1,0 +1,3536 @@
+{
+  "scenario": {
+    "id": "low_can_user",
+    "name": "Can 부족 유저",
+    "description": "관심은 있지만 경험이 없는 신입/전환 유저",
+    "careerState": "job_seeker"
+  },
+  "timestamp": "2026-02-28T12:06:00.480Z",
+  "baseUrl": "https://careerwiki.org",
+  "sessionId": "e2e-test-1772280360480-70et99",
+  "requestId": 315,
+  "analyzeResponse": {
+    "success": true,
+    "request_id": 315,
+    "result": {
+      "engine_state": "phase2_stage_based",
+      "engine_version": "v3.14.0",
+      "mini_module_result": null,
+      "versions": {
+        "recipe": "recipe-v1.0.0",
+        "tagger": "tagger-v1.0.0",
+        "scoring": "scoring-v3.14.0"
+      },
+      "input_summary": {
+        "profile_revision_id": "rev-315-1772280363676",
+        "key_interests": [],
+        "key_skills": [],
+        "non_negotiables": [],
+        "preferences": [],
+        "facts_applied": 2,
+        "applied_rules": [
+          "profile.interest.keywords",
+          "profile.strength.keywords"
+        ],
+        "deep_intake_provided": false,
+        "insight_tags": [],
+        "stage": "job_explore",
+        "universal_facts_count": 2,
+        "life_constraints": [],
+        "confirmed_constraints": []
+      },
+      "fit_top3": [
+        {
+          "job_id": "1765283291483400",
+          "job_name": "군무원",
+          "slug": "군무원",
+          "image_url": "/uploads/jobs/job-군무원.webp",
+          "job_description": "군무원은 군부대에서 군인과 함께 근무하는 특정직 국가 공무원으로서 담당 직렬에 따라 기술, 연구, 일반 행정, 이미용 등에 대한 업무를 수행합니다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 75,
+          "like_score": 98,
+          "can_score": 69,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "관련 역량: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "분석 업무: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "관련 역량: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "창의성: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765284003930128",
+          "job_name": "수간호사",
+          "slug": "수간호사",
+          "image_url": "/uploads/jobs/job-수간호사.webp",
+          "job_description": "환자들에게 양질의 간호를 제공하기 위하여 간호업무 전반을 기획·감독·조정한다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 수간호사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "수간호사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 73,
+          "like_score": 95,
+          "can_score": 69,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "관련 역량: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "분석 업무: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "관련 역량: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "창의성: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765283920058623",
+          "job_name": "온실가스포집설비기술자",
+          "slug": "온실가스포집설비기술자",
+          "image_url": "/uploads/jobs/job-온실가스포집설비기술자.webp",
+          "job_description": "온실가스를 포집·저장·운송하는 설비를 기획하고 설계·개발한다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 온실가스포집설비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "온실가스포집설비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 71,
+          "like_score": 93,
+          "can_score": 66,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "관련 역량: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "60",
+                "label": "관련 역량: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "60",
+                "label": "창의성: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "분석 업무: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765283587998797",
+          "job_name": "임대차량영업소장",
+          "slug": "임대차량영업소장",
+          "image_url": "/uploads/jobs/job-임대차량영업소장.webp",
+          "job_description": "임대차량영업소의 업무를 총괄하여 관장한다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 임대차량영업소장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "임대차량영업소장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 69,
+          "like_score": 91,
+          "can_score": 66,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "관련 역량: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "분석 업무: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "관련 역량: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "창의성: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765284100895514",
+          "job_name": "화장품브랜드매니저",
+          "slug": "화장품브랜드매니저",
+          "image_url": "/uploads/jobs/job-화장품브랜드매니저.webp",
+          "job_description": "화장품 브랜드 비즈니스 전략 수립, 상품개발, 원가관리, 예산관리, 세일즈방향성 수립 등을 총괄한다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 화장품브랜드매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "화장품브랜드매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 66,
+          "like_score": 95,
+          "can_score": 79,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "80",
+                "label": "관련 역량: 80/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 17,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 80점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "80",
+                "label": "창의성: 80/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 17,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 80점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "\"data_numbers, tech, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "관련 역량: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,tech,problem_solving",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "분석 업무: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        }
+      ],
+      "like_top10": [
+        {
+          "job_id": "1765283550704490",
+          "job_name": "의약품연구기획자",
+          "slug": "의약품연구기획자",
+          "image_url": "/uploads/jobs/job-의약품연구기획자.webp",
+          "job_description": "의약품 신규 프로젝트의 발굴·기획 및 제품화를 위하여 개발요구사항을 분석하여 연구개발 목표를 설정하고, 연구개발 리스크를 파악하여 연구개발 수행체계를 수립한다.",
+          "fit_score": 61,
+          "like_score": 100,
+          "can_score": 69,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 의약품연구기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "의약품연구기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283971075863",
+          "job_name": "기능성식품연구원",
+          "slug": "기능성식품연구원",
+          "image_url": "/uploads/jobs/job-기능성식품연구원.webp",
+          "job_description": "결핍되기 쉬운 영양소 또는 인체에 유용한 기능을 가진 원료나 성분을 사용하여 건강을 유지하는데 도움을 주는 건강기능성식품을 연구·개발한다.",
+          "fit_score": 55,
+          "like_score": 100,
+          "can_score": 83,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "176528367306621",
+          "job_name": "광통신시스템개발자",
+          "slug": "광통신시스템개발자",
+          "image_url": "/uploads/jobs/job-광통신시스템개발자.webp",
+          "job_description": "광모듈을 이용한 가입자망 또는 전송망용 광통신용시스템을 설계 및 개발한다.",
+          "fit_score": 54,
+          "like_score": 100,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 광통신시스템개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "광통신시스템개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283738435535",
+          "job_name": "클라우드기술지원엔지니어",
+          "slug": "클라우드기술지원엔지니어",
+          "image_url": "/uploads/jobs/job-클라우드기술지원엔지니어.webp",
+          "job_description": "클라우드 서비스를 사용하는 고객의 기술적인 문제 및 요구사항을 파악하고 적절한 해결책을 제공한다.",
+          "fit_score": 53,
+          "like_score": 100,
+          "can_score": 77,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 클라우드기술지원엔지니어는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "클라우드기술지원엔지니어는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283992505504",
+          "job_name": "병리과전문의사",
+          "slug": "병리과전문의사",
+          "image_url": "/uploads/jobs/job-병리과전문의사.webp",
+          "job_description": "질병진단을 위해 환자로부터 채취된 조직검체, 체액검체(객담, 복수, 뇨 등), 혈액검체 등을 진단하고 결과를 담당 의사에게 통보한다.",
+          "fit_score": 41,
+          "like_score": 100,
+          "can_score": 65,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 병리과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "병리과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283291483400",
+          "job_name": "군무원",
+          "slug": "군무원",
+          "image_url": "/uploads/jobs/job-군무원.webp",
+          "job_description": "군무원은 군부대에서 군인과 함께 근무하는 특정직 국가 공무원으로서 담당 직렬에 따라 기술, 연구, 일반 행정, 이미용 등에 대한 업무를 수행합니다.",
+          "fit_score": 75,
+          "like_score": 98,
+          "can_score": 69,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284065977337",
+          "job_name": "ESG경영컨설턴트",
+          "slug": "esg경영컨설턴트",
+          "image_url": "/uploads/jobs/job-esg경영컨설턴트.webp",
+          "job_description": "기업의 지속가능경영 및 ESG 전략 유관분야(ESG경영 및 사업화 전략, ESG 투자/금융, 기후변화/환경경영 등)를 진단하고 이에 대한 해결책을 제시한다.",
+          "fit_score": 62,
+          "like_score": 98,
+          "can_score": 74,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] ESG경영컨설턴트는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "ESG경영컨설턴트는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284006487686",
+          "job_name": "종양전문간호사",
+          "slug": "종양전문간호사",
+          "image_url": "/uploads/jobs/job-종양전문간호사.webp",
+          "job_description": "환자로부터 암 위험 요인 등 자료를 수집하고 임상적 의사결정에 따라 간호서비스를 제공한다.",
+          "fit_score": 57,
+          "like_score": 98,
+          "can_score": 69,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 종양전문간호사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "종양전문간호사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283392049802",
+          "job_name": "특수교사",
+          "slug": "특수교사",
+          "image_url": "/uploads/jobs/job-특수교사.webp",
+          "job_description": "특수교사는 신체적, 정신적 장애를 겪고 있는 학생에게 유치원, 초등학교, 중학교, 고등학교에 준하는 교육과 생활에 필요한 지식 및 기능을 가르칩니다.",
+          "fit_score": 46,
+          "like_score": 98,
+          "can_score": 78,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 특수교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "특수교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284100895514",
+          "job_name": "화장품브랜드매니저",
+          "slug": "화장품브랜드매니저",
+          "image_url": "/uploads/jobs/job-화장품브랜드매니저.webp",
+          "job_description": "화장품 브랜드 비즈니스 전략 수립, 상품개발, 원가관리, 예산관리, 세일즈방향성 수립 등을 총괄한다.",
+          "fit_score": 66,
+          "like_score": 95,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 화장품브랜드매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "화장품브랜드매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        }
+      ],
+      "can_top10": [
+        {
+          "job_id": "176528418671499",
+          "job_name": "악단지휘자",
+          "slug": "악단지휘자",
+          "image_url": "/uploads/jobs/job-악단지휘자.webp",
+          "job_description": "관악기, 현악기 및 타악기를 연주하는 관현악단을 지휘한다.",
+          "fit_score": 41,
+          "like_score": 75,
+          "can_score": 93,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 악단지휘자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "악단지휘자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283290386996",
+          "job_name": "국악인",
+          "slug": "국악인",
+          "image_url": "/uploads/jobs/job-국악인.webp",
+          "job_description": "오랫동안 전승되어 온 전통음악을 계승하여 부른다.",
+          "fit_score": 58,
+          "like_score": 80,
+          "can_score": 83,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 국악인은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "국악인은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283971075863",
+          "job_name": "기능성식품연구원",
+          "slug": "기능성식품연구원",
+          "image_url": "/uploads/jobs/job-기능성식품연구원.webp",
+          "job_description": "결핍되기 쉬운 영양소 또는 인체에 유용한 기능을 가진 원료나 성분을 사용하여 건강을 유지하는데 도움을 주는 건강기능성식품을 연구·개발한다.",
+          "fit_score": 55,
+          "like_score": 100,
+          "can_score": 83,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284100895514",
+          "job_name": "화장품브랜드매니저",
+          "slug": "화장품브랜드매니저",
+          "image_url": "/uploads/jobs/job-화장품브랜드매니저.webp",
+          "job_description": "화장품 브랜드 비즈니스 전략 수립, 상품개발, 원가관리, 예산관리, 세일즈방향성 수립 등을 총괄한다.",
+          "fit_score": 66,
+          "like_score": 95,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 화장품브랜드매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "화장품브랜드매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284675203194",
+          "job_name": "반도체화학적기계적연마장비기술자",
+          "slug": "반도체화학적기계적연마장비기술자",
+          "image_url": "/uploads/jobs/job-반도체화학적기계적연마장비기술자.webp",
+          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 화학적기계적연마장비를 설치, 평가, 개선, 인증, 유지 관리한다.",
+          "fit_score": 63,
+          "like_score": 95,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체화학적기계적연마장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "반도체화학적기계적연마장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284671207740",
+          "job_name": "반도체사진현상장비기술자",
+          "slug": "반도체사진현상장비기술자",
+          "image_url": "/uploads/jobs/job-반도체사진현상장비기술자.webp",
+          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 사진현상 장비를 설치, 평가, 개선, 인증, 유지 관리한다.",
+          "fit_score": 63,
+          "like_score": 95,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체사진현상장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "반도체사진현상장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "176528367306621",
+          "job_name": "광통신시스템개발자",
+          "slug": "광통신시스템개발자",
+          "image_url": "/uploads/jobs/job-광통신시스템개발자.webp",
+          "job_description": "광모듈을 이용한 가입자망 또는 전송망용 광통신용시스템을 설계 및 개발한다.",
+          "fit_score": 54,
+          "like_score": 100,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 광통신시스템개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "광통신시스템개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "176528367306621",
+          "job_name": "광통신시스템개발자",
+          "slug": "광통신시스템개발자",
+          "image_url": "/uploads/jobs/job-광통신시스템개발자.webp",
+          "job_description": "광모듈을 이용한 가입자망 또는 전송망용 광통신용시스템을 설계 및 개발한다.",
+          "fit_score": 54,
+          "like_score": 100,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 광통신시스템개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "광통신시스템개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283392049802",
+          "job_name": "특수교사",
+          "slug": "특수교사",
+          "image_url": "/uploads/jobs/job-특수교사.webp",
+          "job_description": "특수교사는 신체적, 정신적 장애를 겪고 있는 학생에게 유치원, 초등학교, 중학교, 고등학교에 준하는 교육과 생활에 필요한 지식 및 기능을 가르칩니다.",
+          "fit_score": 46,
+          "like_score": 98,
+          "can_score": 78,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 특수교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "특수교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765285335377683",
+          "job_name": "리튬전지조립원",
+          "slug": "리튬전지조립원",
+          "image_url": "/uploads/jobs/job-리튬전지조립원.webp",
+          "job_description": "여러 가지 조립기계로 리튬1차전지를 조립한다.",
+          "fit_score": 62,
+          "like_score": 96,
+          "can_score": 76,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 리튬전지조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "리튬전지조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        }
+      ],
+      "caution_jobs": [
+        {
+          "job_id": "1765284100895514",
+          "job_name": "화장품브랜드매니저",
+          "slug": "화장품브랜드매니저",
+          "image_url": "/uploads/jobs/job-화장품브랜드매니저.webp",
+          "risk_penalty": 22
+        },
+        {
+          "job_id": "1765284677588138",
+          "job_name": "석유화학유틸리티관리자",
+          "slug": "석유화학유틸리티관리자",
+          "image_url": "/uploads/jobs/job-석유화학유틸리티관리자.webp",
+          "risk_penalty": 25
+        },
+        {
+          "job_id": "1765284675203194",
+          "job_name": "반도체화학적기계적연마장비기술자",
+          "slug": "반도체화학적기계적연마장비기술자",
+          "image_url": "/uploads/jobs/job-반도체화학적기계적연마장비기술자.webp",
+          "risk_penalty": 25
+        },
+        {
+          "job_id": "1765284671207740",
+          "job_name": "반도체사진현상장비기술자",
+          "slug": "반도체사진현상장비기술자",
+          "image_url": "/uploads/jobs/job-반도체사진현상장비기술자.webp",
+          "risk_penalty": 25
+        },
+        {
+          "job_id": "1765284065977337",
+          "job_name": "ESG경영컨설턴트",
+          "slug": "esg경영컨설턴트",
+          "image_url": "/uploads/jobs/job-esg경영컨설턴트.webp",
+          "risk_penalty": 25
+        }
+      ],
+      "followup_questions": [
+        {
+          "id": "explore_school_subject",
+          "type": "behavior",
+          "question": "학교에서 어떤 과목/활동 시간이 가장 기대되나요?",
+          "context": "Stage: job_explore",
+          "options": [
+            {
+              "value": "math",
+              "label": "수학",
+              "tags": [
+                "analytical"
+              ]
+            },
+            {
+              "value": "science",
+              "label": "과학",
+              "tags": [
+                "analytical",
+                "research"
+              ]
+            },
+            {
+              "value": "language",
+              "label": "국어/영어",
+              "tags": [
+                "communication"
+              ]
+            },
+            {
+              "value": "social",
+              "label": "사회",
+              "tags": [
+                "people",
+                "research"
+              ]
+            },
+            {
+              "value": "art",
+              "label": "미술",
+              "tags": [
+                "creative"
+              ]
+            },
+            {
+              "value": "music",
+              "label": "음악",
+              "tags": [
+                "creative"
+              ]
+            },
+            {
+              "value": "pe",
+              "label": "체육",
+              "tags": [
+                "physical"
+              ]
+            },
+            {
+              "value": "tech",
+              "label": "정보/기술",
+              "tags": [
+                "tech",
+                "analytical"
+              ]
+            }
+          ],
+          "fact_key": "discovery.favorite_subject",
+          "affects_attributes": [
+            "analytical",
+            "creative",
+            "people_facing"
+          ]
+        },
+        {
+          "id": "explore_school_subject",
+          "type": "behavior",
+          "question": "학교에서 어떤 과목/활동 시간이 가장 기대되나요?",
+          "context": "Stage: job_explore",
+          "options": [
+            {
+              "value": "math",
+              "label": "수학",
+              "tags": [
+                "analytical"
+              ]
+            },
+            {
+              "value": "science",
+              "label": "과학",
+              "tags": [
+                "analytical",
+                "research"
+              ]
+            },
+            {
+              "value": "language",
+              "label": "국어/영어",
+              "tags": [
+                "communication"
+              ]
+            },
+            {
+              "value": "social",
+              "label": "사회",
+              "tags": [
+                "people",
+                "research"
+              ]
+            },
+            {
+              "value": "art",
+              "label": "미술",
+              "tags": [
+                "creative"
+              ]
+            },
+            {
+              "value": "music",
+              "label": "음악",
+              "tags": [
+                "creative"
+              ]
+            },
+            {
+              "value": "pe",
+              "label": "체육",
+              "tags": [
+                "physical"
+              ]
+            },
+            {
+              "value": "tech",
+              "label": "정보/기술",
+              "tags": [
+                "tech",
+                "analytical"
+              ]
+            }
+          ],
+          "fact_key": "discovery.favorite_subject",
+          "affects_attributes": [
+            "analytical",
+            "creative",
+            "people_facing"
+          ]
+        },
+        {
+          "id": "explore_free_time",
+          "type": "behavior",
+          "question": "시간이 남을 때 주로 뭘 하나요?",
+          "context": "Stage: job_explore",
+          "options": [
+            {
+              "value": "games",
+              "label": "게임",
+              "tags": [
+                "analytical",
+                "tech"
+              ]
+            },
+            {
+              "value": "reading",
+              "label": "책/웹소설",
+              "tags": [
+                "solo_deep",
+                "learning"
+              ]
+            },
+            {
+              "value": "video",
+              "label": "영상 보기",
+              "tags": [
+                "creative",
+                "media"
+              ]
+            },
+            {
+              "value": "social",
+              "label": "친구들과 만남",
+              "tags": [
+                "people_facing"
+              ]
+            },
+            {
+              "value": "sports",
+              "label": "운동/스포츠",
+              "tags": [
+                "physical"
+              ]
+            },
+            {
+              "value": "hobby",
+              "label": "취미 활동 (그림, 음악 등)",
+              "tags": [
+                "creative"
+              ]
+            },
+            {
+              "value": "learn",
+              "label": "새로운 것 배우기",
+              "tags": [
+                "learning",
+                "growth"
+              ]
+            }
+          ],
+          "fact_key": "discovery.leisure_activity",
+          "affects_attributes": [
+            "creative",
+            "analytical",
+            "people_facing",
+            "solo_deep"
+          ]
+        },
+        {
+          "id": "explore_free_time",
+          "type": "behavior",
+          "question": "시간이 남을 때 주로 뭘 하나요?",
+          "context": "Stage: job_explore",
+          "options": [
+            {
+              "value": "games",
+              "label": "게임",
+              "tags": [
+                "analytical",
+                "tech"
+              ]
+            },
+            {
+              "value": "reading",
+              "label": "책/웹소설",
+              "tags": [
+                "solo_deep",
+                "learning"
+              ]
+            },
+            {
+              "value": "video",
+              "label": "영상 보기",
+              "tags": [
+                "creative",
+                "media"
+              ]
+            },
+            {
+              "value": "social",
+              "label": "친구들과 만남",
+              "tags": [
+                "people_facing"
+              ]
+            },
+            {
+              "value": "sports",
+              "label": "운동/스포츠",
+              "tags": [
+                "physical"
+              ]
+            },
+            {
+              "value": "hobby",
+              "label": "취미 활동 (그림, 음악 등)",
+              "tags": [
+                "creative"
+              ]
+            },
+            {
+              "value": "learn",
+              "label": "새로운 것 배우기",
+              "tags": [
+                "learning",
+                "growth"
+              ]
+            }
+          ],
+          "fact_key": "discovery.leisure_activity",
+          "affects_attributes": [
+            "creative",
+            "analytical",
+            "people_facing",
+            "solo_deep"
+          ]
+        },
+        {
+          "id": "explore_ideal_day",
+          "type": "projection",
+          "question": "미래의 이상적인 하루를 상상해본다면, 어떤 모습일까요?",
+          "context": "Stage: job_explore",
+          "options": [
+            {
+              "value": "office_team",
+              "label": "사무실에서 팀과 함께 프로젝트",
+              "tags": [
+                "team_collab",
+                "structured"
+              ]
+            },
+            {
+              "value": "remote_solo",
+              "label": "집에서 혼자 집중하며 일",
+              "tags": [
+                "solo_deep",
+                "remote"
+              ]
+            },
+            {
+              "value": "field_active",
+              "label": "현장에서 활동적으로 움직이며",
+              "tags": [
+                "physical",
+                "variety"
+              ]
+            },
+            {
+              "value": "meeting_people",
+              "label": "다양한 사람들 만나며",
+              "tags": [
+                "people_facing",
+                "variety"
+              ]
+            },
+            {
+              "value": "creative_free",
+              "label": "자유롭게 창작하며",
+              "tags": [
+                "creative",
+                "autonomous"
+              ]
+            }
+          ],
+          "fact_key": "projection.ideal_workday",
+          "affects_attributes": [
+            "solo_deep",
+            "team_collab",
+            "remote",
+            "people_facing"
+          ]
+        }
+      ],
+      "ux_flags": {
+        "has_caution_in_top3": true,
+        "has_unknown_in_top3": false,
+        "needs_followup_question": true,
+        "counts_before_filter": {
+          "safe_known": 133,
+          "safe_unknown": 169,
+          "caution": 198,
+          "total": 500
+        },
+        "counts_after_filter": {
+          "safe_known": 133,
+          "safe_unknown": 169,
+          "caution": 198,
+          "total": 500
+        }
+      },
+      "llm_explanation": "2개의 답변을 반영하여 추천했습니다.",
+      "generated_at": "2026-02-28T12:06:03.676Z",
+      "total_candidates": 6945,
+      "scored_candidates": 500,
+      "filtered_out_candidates": 0,
+      "user_insight": {
+        "summary": "더 많은 정보를 입력하시면 더 정확한 인사이트를 드릴 수 있어요.",
+        "key_traits": [],
+        "applied_facts": []
+      },
+      "phase4_applied": true,
+      "diversity_guard_active": true,
+      "diversity_changes": [
+        "친환경건축물인증관리사무원 → 화장품브랜드매니저 (Diversity Guard: other)",
+        "컨테이너부두운영관리자 → 임대차량영업소장 (Diversity Guard: other)"
+      ],
+      "analysis_stage": "job_explore",
+      "stage_specific_insights": [
+        "탐색 단계: 다양한 직업군을 폭넓게 검토하고 있습니다.",
+        "관심 분야를 기반으로 추천이 조정되었습니다."
+      ],
+      "premium_report": {
+        "report_id": "report-session-315-1772280363676",
+        "generated_at": "2026-02-28T12:06:03.676Z",
+        "session_id": "session-315",
+        "engine_version": "v3-rule",
+        "overall_status": "partial",
+        "sections_completed": 7,
+        "sections_total": 8,
+        "_confidence": 0.42659722209613155,
+        "_factsCount": 2,
+        "_answeredQuestions": 2,
+        "_candidatesScored": 100,
+        "_appliedRules": 4,
+        "executiveSummary": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 군무원 같은 분야를 시작점으로 고려해보세요.",
+        "workStyleNarrative": "작업 스타일 분석을 위해 더 많은 정보가 필요합니다.",
+        "workStyleMap": {
+          "analytical_vs_creative": 0,
+          "solo_vs_team": 0,
+          "structured_vs_flexible": 0,
+          "depth_vs_breadth": 0,
+          "guided_vs_autonomous": 0
+        },
+        "innerConflictAnalysis": "",
+        "conflictPatterns": [],
+        "growthCurveType": "분석 중",
+        "growthCurveDescription": "성장 곡선 분석을 위해 더 많은 정보가 필요합니다.",
+        "stressTriggers": [],
+        "lifeVersionStatement": {
+          "oneLiner": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 군무원 같은 분야를 시작점으로 고려해보세요.",
+          "expanded": [
+            "🎯 최적 추천: 군무원"
+          ]
+        },
+        "expertGuidance": {
+          "doNow": [
+            "관심 분야를 더 구체적으로 탐색해보세요."
+          ],
+          "learnNext": [
+            "관련 직업 정보와 요구 역량을 조사하세요."
+          ],
+          "avoidFor3Months": [],
+          "stopDoing": []
+        },
+        "profileInterpretation": {
+          "interests": [],
+          "interests_summary": "",
+          "strengths": [],
+          "strengths_summary": "",
+          "values": [],
+          "values_summary": "",
+          "constraints": [],
+          "constraints_summary": "",
+          "overall_profile": "프로필 분석을 위해 더 많은 정보가 필요합니다."
+        },
+        "metaCognition": {
+          "myArsenal": {
+            "strengths": [],
+            "weaknesses": []
+          },
+          "preferenceMap": {
+            "likes": [],
+            "fits": [],
+            "dislikes": []
+          },
+          "innerExploration": {
+            "valueAnalysis": "가치관 분석을 위해 더 많은 정보가 필요합니다.",
+            "identityInsight": "자기 이해를 위해 더 많은 질문에 답변해주세요.",
+            "innerConflicts": ""
+          },
+          "stressRecovery": {
+            "stressFactors": [],
+            "recoveryMethods": []
+          },
+          "growthPotential": {
+            "direction": "성장 방향을 분석 중입니다.",
+            "leveragePoints": [],
+            "counselorNote": "더 많은 정보가 모이면 맞춤형 조언을 드릴 수 있습니다."
+          },
+          "_meta": {
+            "generated_by": "rule"
+          }
+        },
+        "summary_one_page": {
+          "_meta": {
+            "status": "partial",
+            "confidence": 0.6,
+            "generated_by": "rule_enhanced"
+          },
+          "headline": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 군무원 같은 분야를 시작점으로 고려해보세요.",
+          "top_takeaways": [
+            "🎯 최적 추천: 군무원"
+          ],
+          "recommended_next_step": "군무원에 대해 더 알아보고, 관련 역량을 파악해보세요",
+          "recommendation_rationale": {
+            "included_because": [
+              "입력하신 관심사와 가치관을 기반으로 적합도가 높은 직업을 추천했습니다."
+            ],
+            "excluded_because": [
+              "명시적인 제외 조건이 없어 폭넓게 추천했습니다."
+            ]
+          }
+        },
+        "personal_analysis": {
+          "_meta": {
+            "status": "success",
+            "confidence": 0.8,
+            "generated_by": "rule_enhanced"
+          },
+          "personality_summary": "더 많은 정보를 입력하시면 더 정확한 인사이트를 드릴 수 있어요.",
+          "work_style_insights": [],
+          "value_priorities": [],
+          "potential_challenges": [],
+          "blind_spots_to_check": []
+        },
+        "key_hypotheses": {
+          "_meta": {
+            "status": "success",
+            "confidence": 0.75,
+            "generated_by": "rule"
+          },
+          "hypotheses": [
+            {
+              "hypothesis": "당신은 탐색적인 업무 환경에서 가장 잘 성장할 것입니다",
+              "confidence": 0.7,
+              "supporting_evidence": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                }
+              ],
+              "what_would_change_my_mind": "실제 업무 경험에서 다른 환경이 더 맞았다면 이 가설은 수정되어야 합니다"
+            },
+            {
+              "hypothesis": "방향 탐색이 직업 선택에서 가장 중요한 요소입니다",
+              "confidence": 0.8,
+              "supporting_evidence": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                }
+              ],
+              "what_would_change_my_mind": "실제 직업 생활에서 다른 가치가 더 중요해진다면 재평가가 필요합니다"
+            },
+            {
+              "hypothesis": "군무원 관련 분야가 당신에게 가장 적합한 직업군입니다",
+              "confidence": 0.75,
+              "supporting_evidence": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                }
+              ],
+              "what_would_change_my_mind": "해당 직업에 대한 추가 정보나 실제 경험이 다른 결과를 보여준다면 수정될 수 있습니다"
+            }
+          ]
+        },
+        "recommendations_top": {
+          "_meta": {
+            "status": "success",
+            "confidence": 0.85,
+            "generated_by": "rule"
+          },
+          "recommendations": [
+            {
+              "id": "1765283291483400",
+              "name": "군무원",
+              "fit_score": 75,
+              "personal_fit_reason": "군무원은 워라밸이 좋은 편, 수입 수준이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "창의성: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "군무원 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            },
+            {
+              "id": "1765284003930128",
+              "name": "수간호사",
+              "fit_score": 73,
+              "personal_fit_reason": "수간호사는 성장 가능성이 높음, 수입 수준이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "창의성: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "수간호사 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            },
+            {
+              "id": "1765284236065946",
+              "name": "친환경건축물인증관리사무원",
+              "fit_score": 71,
+              "personal_fit_reason": "친환경건축물인증관리사무원은 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "60",
+                    "label": "창의성: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "친환경건축물인증관리사무원 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            },
+            {
+              "id": "1765283920058623",
+              "name": "온실가스포집설비기술자",
+              "fit_score": 71,
+              "personal_fit_reason": "온실가스포집설비기술자는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "60",
+                    "label": "창의성: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "온실가스포집설비기술자 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            },
+            {
+              "id": "1765283590330950",
+              "name": "컨테이너부두운영관리자",
+              "fit_score": 71,
+              "personal_fit_reason": "컨테이너부두운영관리자는 성장 가능성이 높음, 안정성이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "\"data_numbers, tech, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"data_numbers, tech, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,tech,problem_solving",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "창의성: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "컨테이너부두운영관리자 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            }
+          ]
+        },
+        "recommendations_hold": {
+          "_meta": {
+            "status": "success",
+            "confidence": 0.7,
+            "generated_by": "rule"
+          },
+          "recommendations": [
+            {
+              "id": "1765283360062685",
+              "name": "자동차공학기술자",
+              "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
+              "conditions_to_reconsider": [
+                "우선순위가 변경되면 재고려할 수 있습니다"
+              ]
+            },
+            {
+              "id": "1765283928488460",
+              "name": "항공기기관사",
+              "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
+              "conditions_to_reconsider": [
+                "우선순위가 변경되면 재고려할 수 있습니다"
+              ]
+            }
+          ]
+        },
+        "plan_b_paths": {
+          "_meta": {
+            "status": "success",
+            "confidence": 0.6,
+            "generated_by": "rule"
+          },
+          "paths": [
+            {
+              "title": "안정성 우선 경로",
+              "when_this_is_better": "현재 상황에서 리스크를 최소화하고 싶다면",
+              "steps": [
+                "현재 역량을 활용할 수 있는 안정적인 직업 탐색",
+                "필요한 자격증이나 경험 쌓기",
+                "점진적으로 원하는 분야로 이동"
+              ]
+            },
+            {
+              "title": "빠른 전환 경로",
+              "when_this_is_better": "빠르게 새로운 분야로 이동하고 싶다면",
+              "steps": [
+                "핵심 기술 집중 학습 (3개월)",
+                "관련 프로젝트/포트폴리오 구축",
+                "군무원 관련 네트워킹 시작"
+              ]
+            }
+          ]
+        },
+        "next_questions": {
+          "_meta": {
+            "status": "success",
+            "confidence": 0.9,
+            "generated_by": "rule"
+          },
+          "questions": [
+            "가장 보람 있었던 업무 경험은 무엇인가요?",
+            "근무 지역이나 원격근무에 대한 선호가 있나요?",
+            "현재 생활에서 특별히 고려해야 할 제약이 있나요?"
+          ],
+          "expected_improvements": [
+            "더 정확한 성향 파악",
+            "숨겨진 가능성 발견",
+            "현실적 제약 반영"
+          ]
+        }
+      },
+      "llm_modules": {
+        "judge_used": false,
+        "judge_stats": null,
+        "reporter_used": false,
+        "env_check": {
+          "openai_key_exists": false,
+          "openai_key_prefix": null,
+          "ai_binding_exists": true,
+          "candidates_count": 100
+        }
+      },
+      "confidence": {
+        "score": 0.42659722209613155,
+        "level": "기본",
+        "description": "더 솔직하게 답해주시면 맞춤 추천이 가능해요"
+      },
+      "key_decision_variables": [],
+      "scoring_trace_summary": {
+        "total_features": 0,
+        "top_decision_variable": null
+      }
+    },
+    "facts_applied": 2,
+    "deep_intake_processed": false,
+    "stage": "job_explore"
+  },
+  "narrativeFactsInput": {
+    "high_alive_moment": "데이터 분석 분야에 정말 관심이 많습니다. 경험은 없지만 온라인 강의로 열심히 공부하고 있고, 부트캠프도 수료했습니다. 신입으로 기회를 얻고 싶습니다.",
+    "lost_moment": "배울 수 없는 단순 반복 업무는 피하고 싶습니다. 성장할 수 있는 환경이 중요합니다."
+  },
+  "narrativeFactsResponse": {
+    "success": true,
+    "session_id": "e2e-test-1772280360480-70et99",
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.3407
+      },
+      "duration": 0.3407,
+      "changes": 1,
+      "last_row_id": 189,
+      "changed_db": true,
+      "size_after": 324374528,
+      "rows_read": 8,
+      "rows_written": 3,
+      "total_attempts": 1
+    }
+  },
+  "rounds": [
+    {
+      "roundNumber": 1,
+      "questions": [
+        {
+          "questionText": "데이터 분석 분야에 대한 강한 관심을 말씀해주셨는데, 그 분야에서 활동할 때 어떤 감정을 느끼실 것 같으세요? 특히, 그 활동에서 어떤 점이 가장 매력적으로 다가오나요?",
+          "purposeTag": "ENGINE"
+        },
+        {
+          "questionText": "단순 반복 업무를 피하고 싶다고 하셨는데, 그 이유는 단순히 지루함 때문인지, 아니면 다른 이유가 있는 건가요? 어떤 업무에서 더 많은 성장과 전문성을 느끼실 것 같으신가요?",
+          "purposeTag": "ENGINE"
+        },
+        {
+          "questionText": "성장할 수 있는 환경이 중요하다고 하셨는데, 그 환경에서 어떤 요소가 특히 나에게 맞고 필요한지, 그리고 그런 환경에서 나는 어떤 모습을 하고 싶으신가요?",
+          "purposeTag": "ENGINE"
+        },
+        {
+          "questionText": "신입으로 기회를 얻고 싶다는 말씀을 하셨는데, 그 기회를 얻었을 때 어떤 모습으로 기억되고 싶으신가요? 그리고 그 과정에서 어떤 가치를 가장 중시하실 것 같으세요?",
+          "purposeTag": "ENGINE"
+        },
+        {
+          "questionText": "온라인 강의와 부트캠프를 통해 열심히 공부하고 계신데, 그 과정에서 어떤 순간이 가장 보람차고 즐거웠는지, 그때 느낀 감정은 어땠는지 이야기해주실 수 있나요?",
+          "purposeTag": "ENGINE"
+        }
+      ],
+      "answers": [
+        {
+          "questionId": "q_1_0",
+          "questionText": "데이터 분석 분야에 대한 강한 관심을 말씀해주셨는데, 그 분야에서 활동할 때 어떤 감정을 느끼실 것 같으세요? 특히, 그 활동에서 어떤 점이 가장 매력적으로 다가오나요?",
+          "purposeTag": "ENGINE",
+          "answer": "데이터로 인사이트를 발견하는 것에 매력을 느낍니다.",
+          "matchType": "fallback"
+        },
+        {
+          "questionId": "q_1_1",
+          "questionText": "단순 반복 업무를 피하고 싶다고 하셨는데, 그 이유는 단순히 지루함 때문인지, 아니면 다른 이유가 있는 건가요? 어떤 업무에서 더 많은 성장과 전문성을 느끼실 것 같으신가요?",
+          "purposeTag": "ENGINE",
+          "answer": "3년 안에 주니어 분석가로 독립적으로 업무할 수 있으면 좋겠습니다.",
+          "matchType": "fallback"
+        },
+        {
+          "questionId": "q_1_2",
+          "questionText": "성장할 수 있는 환경이 중요하다고 하셨는데, 그 환경에서 어떤 요소가 특히 나에게 맞고 필요한지, 그리고 그런 환경에서 나는 어떤 모습을 하고 싶으신가요?",
+          "purposeTag": "ENGINE",
+          "answer": "멘토가 있는 환경에서 빠르게 성장하고 싶습니다.",
+          "matchType": "fallback"
+        },
+        {
+          "questionId": "q_1_3",
+          "questionText": "신입으로 기회를 얻고 싶다는 말씀을 하셨는데, 그 기회를 얻었을 때 어떤 모습으로 기억되고 싶으신가요? 그리고 그 과정에서 어떤 가치를 가장 중시하실 것 같으세요?",
+          "purposeTag": "ENGINE",
+          "answer": "다른 분야에서 커리어 전환을 고려하고 있습니다.",
+          "matchType": "pattern",
+          "matchedPattern": "전환|커리어체인지|신입"
+        },
+        {
+          "questionId": "q_1_4",
+          "questionText": "온라인 강의와 부트캠프를 통해 열심히 공부하고 계신데, 그 과정에서 어떤 순간이 가장 보람차고 즐거웠는지, 그때 느낀 감정은 어땠는지 이야기해주실 수 있나요?",
+          "purposeTag": "ENGINE",
+          "answer": "이 분야에서 성장하고 전문성을 쌓고 싶습니다.",
+          "matchType": "default"
+        }
+      ],
+      "metadata": {
+        "generated_by": "llm",
+        "cag_filtered": 0,
+        "total_questions_asked": 0,
+        "collection_progress": {
+          "overall_percent": 0,
+          "like": {
+            "percent": 0,
+            "collected": 0,
+            "required": 3,
+            "verified": 0
+          },
+          "can": {
+            "percent": 0,
+            "collected": 0,
+            "required": 2,
+            "verified": 0
+          },
+          "risk": {
+            "percent": 0,
+            "collected": 0,
+            "required": 1,
+            "verified": 0
+          },
+          "needs_more": [
+            "like",
+            "can",
+            "risk"
+          ],
+          "is_sufficient": false,
+          "suggestion": "추가 정보 필요: 관심사/취향, 능력/경험, 제약조건"
+        }
+      }
+    },
+    {
+      "roundNumber": 2,
+      "questions": [
+        {
+          "questionText": "단순 반복 업무를 피하고 싶다고 하셨는데, 그 업무에서 어떤 구체적인 요소가 가장 힘들고 에너지를 소모하게 만드는지 말씀해주실 수 있을까요? 그때 느끼는 감정은 어떤가요?",
+          "purposeTag": "AVOIDANCE"
+        },
+        {
+          "questionText": "지금까지 경험한 조직이나 환경 중에서 '여기는 내 자리가 아니다'고 느낀 곳이 있으신가요? 그때 어떤 요소가 불편했는지, 그리고 그 감정에 대해 자세히 이야기해주실 수 있을까요?",
+          "purposeTag": "AVOIDANCE"
+        },
+        {
+          "questionText": "어떤 유형의 사람과 일할 때 가장 힘들게 느껴지시나요? 특히 그 사람들과의 소통에서 어떤 점이 가장 에너지를 소모하게 만들고, 그때 어떤 감정을 느끼시는지 궁금합니다.",
+          "purposeTag": "AVOIDANCE"
+        },
+        {
+          "questionText": "어떤 상황이 오면 '더 이상 못 버티겠다'고 느끼시는지, 그리고 그 상황이 얼마나 자주 발생하는지 말씀해주실 수 있을까요?",
+          "purposeTag": "AVOIDANCE"
+        }
+      ],
+      "answers": [
+        {
+          "questionId": "q_2_0",
+          "questionText": "단순 반복 업무를 피하고 싶다고 하셨는데, 그 업무에서 어떤 구체적인 요소가 가장 힘들고 에너지를 소모하게 만드는지 말씀해주실 수 있을까요? 그때 느끼는 감정은 어떤가요?",
+          "purposeTag": "AVOIDANCE",
+          "answer": "배움 없이 시간만 보내는 환경은 피하고 싶습니다.",
+          "matchType": "fallback"
+        },
+        {
+          "questionId": "q_2_1",
+          "questionText": "지금까지 경험한 조직이나 환경 중에서 '여기는 내 자리가 아니다'고 느낀 곳이 있으신가요? 그때 어떤 요소가 불편했는지, 그리고 그 감정에 대해 자세히 이야기해주실 수 있을까요?",
+          "purposeTag": "AVOIDANCE",
+          "answer": "관련 경험은 없지만 온라인 강의로 공부하고 있습니다.",
+          "matchType": "pattern",
+          "matchedPattern": "경험|경력|이력"
+        },
+        {
+          "questionId": "q_2_2",
+          "questionText": "어떤 유형의 사람과 일할 때 가장 힘들게 느껴지시나요? 특히 그 사람들과의 소통에서 어떤 점이 가장 에너지를 소모하게 만들고, 그때 어떤 감정을 느끼시는지 궁금합니다.",
+          "purposeTag": "AVOIDANCE",
+          "answer": "성장 기회 없는 단순 보조 업무만 하는 건 맞지 않습니다.",
+          "matchType": "fallback"
+        },
+        {
+          "questionId": "q_2_3",
+          "questionText": "어떤 상황이 오면 '더 이상 못 버티겠다'고 느끼시는지, 그리고 그 상황이 얼마나 자주 발생하는지 말씀해주실 수 있을까요?",
+          "purposeTag": "AVOIDANCE",
+          "answer": "피드백 없이 혼자 방치되는 건 힘들 것 같습니다.",
+          "matchType": "fallback"
+        }
+      ],
+      "metadata": {
+        "generated_by": "llm",
+        "cag_filtered": 0,
+        "total_questions_asked": 0,
+        "collection_progress": {
+          "overall_percent": 0,
+          "like": {
+            "percent": 0,
+            "collected": 0,
+            "required": 3,
+            "verified": 0
+          },
+          "can": {
+            "percent": 0,
+            "collected": 0,
+            "required": 2,
+            "verified": 0
+          },
+          "risk": {
+            "percent": 0,
+            "collected": 0,
+            "required": 1,
+            "verified": 0
+          },
+          "needs_more": [
+            "like",
+            "can",
+            "risk"
+          ],
+          "is_sufficient": false,
+          "suggestion": "추가 정보 필요: 관심사/취향, 능력/경험, 제약조건"
+        }
+      }
+    },
+    {
+      "roundNumber": 3,
+      "questions": [
+        {
+          "questionText": "데이터 분석 분야에 대한 강한 관심을 말씀해주셨어요. 이 분야에서 새로운 시도를 하려 할 때 가장 현실적인 제약은 무엇인가요? 그 제약이 어떤 감정을 불러일으키고, 완전히 없앨 수 없다면 어떻게 조금만 조정할 수 있을까요?",
+          "purposeTag": "INTEGRATION"
+        },
+        {
+          "questionText": "성장할 수 있는 환경이 중요하다고 하셨는데, 지금 당장 시작할 수 있는 가장 작은 행동은 무엇일까요? 그 행동을 막는 제약이 있다면 무엇인지도 함께 이야기해주실 수 있을까요?",
+          "purposeTag": "INTEGRATION"
+        },
+        {
+          "questionText": "멘토가 있는 환경에서 빠르게 성장하고 싶다고 하셨는데, 그 성장을 위해 포기할 수 있는 것은 무엇인가요? 그걸 실제로 포기한다고 상상했을 때 어떤 감정이 드시는지 궁금합니다.",
+          "purposeTag": "INTEGRATION"
+        },
+        {
+          "questionText": "3년 안에 주니어 분석가로 독립적으로 업무할 수 있으면 좋겠다고 말씀하셨는데, 그 목표를 위해 현재 맡고 있는 역할 중 내려놓기 어려운 것이 있을까요? 그 역할이 왜 중요한지, 그리고 변화할 수 있는 방법은 있을까요?",
+          "purposeTag": "INTEGRATION"
+        }
+      ],
+      "answers": [
+        {
+          "questionId": "q_3_0",
+          "questionText": "데이터 분석 분야에 대한 강한 관심을 말씀해주셨어요. 이 분야에서 새로운 시도를 하려 할 때 가장 현실적인 제약은 무엇인가요? 그 제약이 어떤 감정을 불러일으키고, 완전히 없앨 수 없다면 어떻게 조금만 조정할 수 있을까요?",
+          "purposeTag": "INTEGRATION",
+          "answer": "신입 평균 수준이면 감사합니다. 연봉보다 경험이 중요합니다.",
+          "matchType": "fallback"
+        },
+        {
+          "questionId": "q_3_1",
+          "questionText": "성장할 수 있는 환경이 중요하다고 하셨는데, 지금 당장 시작할 수 있는 가장 작은 행동은 무엇일까요? 그 행동을 막는 제약이 있다면 무엇인지도 함께 이야기해주실 수 있을까요?",
+          "purposeTag": "INTEGRATION",
+          "answer": "출퇴근 거리는 1시간 반까지 괜찮습니다.",
+          "matchType": "fallback"
+        },
+        {
+          "questionId": "q_3_2",
+          "questionText": "멘토가 있는 환경에서 빠르게 성장하고 싶다고 하셨는데, 그 성장을 위해 포기할 수 있는 것은 무엇인가요? 그걸 실제로 포기한다고 상상했을 때 어떤 감정이 드시는지 궁금합니다.",
+          "purposeTag": "INTEGRATION",
+          "answer": "인턴이나 계약직으로 시작해도 괜찮습니다.",
+          "matchType": "fallback"
+        },
+        {
+          "questionId": "q_3_3",
+          "questionText": "3년 안에 주니어 분석가로 독립적으로 업무할 수 있으면 좋겠다고 말씀하셨는데, 그 목표를 위해 현재 맡고 있는 역할 중 내려놓기 어려운 것이 있을까요? 그 역할이 왜 중요한지, 그리고 변화할 수 있는 방법은 있을까요?",
+          "purposeTag": "INTEGRATION",
+          "answer": "현실적인 조건 내에서 최선의 선택을 하고 싶습니다.",
+          "matchType": "default"
+        }
+      ],
+      "metadata": {
+        "generated_by": "llm",
+        "cag_filtered": 0,
+        "total_questions_asked": 0,
+        "collection_progress": {
+          "overall_percent": 0,
+          "like": {
+            "percent": 0,
+            "collected": 0,
+            "required": 3,
+            "verified": 0
+          },
+          "can": {
+            "percent": 0,
+            "collected": 0,
+            "required": 2,
+            "verified": 0
+          },
+          "risk": {
+            "percent": 0,
+            "collected": 0,
+            "required": 1,
+            "verified": 0
+          },
+          "needs_more": [
+            "like",
+            "can",
+            "risk"
+          ],
+          "is_sufficient": false,
+          "suggestion": "추가 정보 필요: 관심사/취향, 능력/경험, 제약조건"
+        }
+      }
+    }
+  ],
+  "recommendation": {
+    "top10": [
+      {
+        "rank": 1,
+        "jobName": "빅데이터전문가",
+        "fitScore": 73,
+        "likeScore": 80,
+        "canScore": 85,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '성장 발전 경력개발을 중시한다'고 하셨는데, 이 직업은 성장성 80/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 자격증이 우대되며(자격증우대), 초봉이 낮을 수 있습니다."
+      },
+      {
+        "rank": 2,
+        "jobName": "지능형교통체계유지관리자",
+        "fitScore": 72,
+        "likeScore": 80,
+        "canScore": 84,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '성장과 전문성을 중시한다'고 하셨는데, 이 직업은 성장성 80/100과 수입 80/100으로 높으며 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '유지관리 및 성능관리 분석'과 직접 연결됩니다. [리스크] 다만, 신입으로서 진입하는 직업이며, 학사 학력이 요구됩니다."
+      },
+      {
+        "rank": 3,
+        "jobName": "인공지능모델개발자",
+        "fitScore": 71,
+        "likeScore": 70,
+        "canScore": 95,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '모델 설계'와 연결됩니다. [리스크] 다만, 석사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다."
+      },
+      {
+        "rank": 4,
+        "jobName": "빅데이터아키텍처전문가",
+        "fitScore": 70,
+        "likeScore": 80,
+        "canScore": 83,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 석사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다."
+      },
+      {
+        "rank": 5,
+        "jobName": "IT컨설턴트",
+        "fitScore": 65,
+        "likeScore": 60,
+        "canScore": 82,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '문제 해결 논리, 성장 발전 경력개발'을 중요하게 생각하신다고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '자료 수집 및 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학위가 요구되며, 자격증은 우대 사항입니다."
+      },
+      {
+        "rank": 6,
+        "jobName": "공간정보데이터분석원",
+        "fitScore": 64,
+        "likeScore": 60,
+        "canScore": 82,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100과 워라밸 70/100으로 높습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 정시퇴근이 가능하지만 대면이 적은 환경이라 외부와의 소통이 제한될 수 있습니다."
+      },
+      {
+        "rank": 7,
+        "jobName": "경영컨설턴트",
+        "fitScore": 63,
+        "likeScore": 60,
+        "canScore": 82,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '성장과 전문성을 중시한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높고, 주 1-2회 야근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '문제 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 주 1-2회 야근이 필요하며(야근), 신입으로서의 진입 장벽이 있을 수 있습니다."
+      },
+      {
+        "rank": 8,
+        "jobName": "경영·진단전문가",
+        "fitScore": 63,
+        "likeScore": 60,
+        "canScore": 82,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '문제 해결을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 70/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '조직 분석'과 연결됩니다. [리스크] 다만, 팀워크가 중요하며(팀워크), 성장성 80/100으로 장기 성장 경로가 안정적입니다."
+      },
+      {
+        "rank": 9,
+        "jobName": "시스템소프트웨어개발자",
+        "fitScore": 63,
+        "likeScore": 70,
+        "canScore": 75,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '성장, 전문성, 수입을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 75/100으로 높고, 주1-2회 야근 조건이 있습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '시스템소프트웨어 개발'과 직접 연결됩니다. [리스크] 다만, 이 직업은 주1-2회 야근이 필요하며, 신입으로서 적응이 필요할 수 있습니다."
+      },
+      {
+        "rank": 10,
+        "jobName": "고객관리시스템(CRM)전문가",
+        "fitScore": 63,
+        "likeScore": 60,
+        "canScore": 82,
+        "riskPenalty": 10,
+        "bucket": "unknown",
+        "summary": "[좋아할 이유] '데이터 분석을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 안정성 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '고객 관리 시스템 분석'과 직접 연결됩니다. [리스크] 다만, 수입이 60/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다."
+      }
+    ],
+    "uxMetrics": null,
+    "processingTimeMs": 93445
+  },
+  "rawRecommendResponse": {
+    "success": true,
+    "mode": "recommendation",
+    "session_id": "e2e-test-1772280360480-70et99",
+    "request_id": 315,
+    "recommendations": {
+      "top_jobs": [
+        {
+          "job_id": "1765283724870359",
+          "job_name": "빅데이터전문가",
+          "job_description": "사람들의 행동패턴 또는 시장의 경제상황 등을 예측하며 데이터 속에 함축된 트렌드나 인사이트를 도출하고 이로부터 새로운 부가가치를 창출하기 위해 대량의 빅데이터를 관리하고 분석한다.",
+          "slug": "빅데이터전문가",
+          "image_url": "/uploads/jobs/job-빅데이터전문가.webp",
+          "fit_score": 73,
+          "like_score": 80,
+          "can_score": 85,
+          "feasibility_score": 75,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장 발전 경력개발을 중시한다'고 하셨는데, 이 직업은 성장성 80/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 자격증이 우대되며(자격증우대), 초봉이 낮을 수 있습니다.",
+          "like_reason": "성장 발전 경력개발을 중시한다고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 데이터 분석과 직접 연결됩니다. 학사 학력이 요구됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "데이터 분석 통계, 기술 개발 IT, 문제 해결 논리",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            },
+            {
+              "text": "성장 발전 경력개발, 전문성 숙련 전문가",
+              "source": {
+                "step": 2,
+                "questionId": "univ_value"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283736974318",
+          "job_name": "지능형교통체계유지관리자",
+          "job_description": "지능형교통체계의 유지관리 대상을 분석하여 계획을 수립하고 유지관리, 성능관리 및 유지관리 결과를 분석한다.",
+          "slug": "지능형교통체계유지관리자",
+          "image_url": "/uploads/jobs/job-지능형교통체계유지관리자.webp",
+          "fit_score": 72,
+          "like_score": 80,
+          "can_score": 84,
+          "feasibility_score": 70,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장과 전문성을 중시한다'고 하셨는데, 이 직업은 성장성 80/100과 수입 80/100으로 높으며 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '유지관리 및 성능관리 분석'과 직접 연결됩니다. [리스크] 다만, 신입으로서 진입하는 직업이며, 학사 학력이 요구됩니다.",
+          "like_reason": "'성장과 전문성을 중시한다고 하셨는데, 이 직업은 성장성 80/100과 수입 80/100으로 높고 정시퇴근 환경입니다'",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 유지관리 및 성능관리 분석과 직접 연결됩니다. 학사 학력이 요구됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "데이터 분석 통계, 기술 개발 IT, 문제 해결 논리",
+              "source": {
+                "step": 1,
+                "questionId": "univ_interest"
+              }
+            },
+            {
+              "text": "빠른 학습 습득, 끈기 인내 꾸준함, 분석력 논리 데이터",
+              "source": {
+                "step": 1,
+                "questionId": "user_strength"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "17652837101536",
+          "job_name": "인공지능모델개발자",
+          "job_description": "기획된 인공지능 서비스의 목적을 달성하기 위하여 모델 설계 및 검증, 학습 데이터 확보, 데이터 가공, 특징 추출, 품질 검증, 학습 등을 통해 최적화된 모델을 도출하고 성능을 개선한다.",
+          "slug": "인공지능모델개발자",
+          "image_url": "/uploads/jobs/job-인공지능모델개발자.webp",
+          "fit_score": 71,
+          "like_score": 70,
+          "can_score": 95,
+          "feasibility_score": 60,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '모델 설계'와 연결됩니다. [리스크] 다만, 석사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "성장을 중시한다고 하셨는데, 이 직업은 성장성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 모델 설계와 연결됩니다. 석사 학위 요구",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283724495863",
+          "job_name": "빅데이터아키텍처전문가",
+          "job_description": "정보시스템구축을 위해 업무 및 요구사항을 분석하여 모든 업무데이터를 데이터측면에서 체계화하여 설계한다.",
+          "slug": "빅데이터아키텍처전문가",
+          "image_url": "/uploads/jobs/job-빅데이터아키텍처전문가.webp",
+          "fit_score": 70,
+          "like_score": 80,
+          "can_score": 83,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 석사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "성장을 중시한다고 하셨는데, 이 직업은 성장성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 데이터 분석과 직접 연결됩니다. 석사 학위 요구",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283406071706",
+          "job_name": "IT컨설턴트",
+          "job_description": "IT컨설턴트는 기업의 인적, 물적 자원 및 모든 조건에 관련된 자료를 수집 및 분석하고, 최근의 기술과 활용 가능한 자원, 현재 상태를 고려해 시스템을 만들기 위한 전문적인 조언이나 자문을 하는 일을 합니다.",
+          "slug": "it컨설턴트",
+          "image_url": "/uploads/jobs/job-it컨설턴트.webp",
+          "fit_score": 65,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 75,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '문제 해결 논리, 성장 발전 경력개발'을 중요하게 생각하신다고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '자료 수집 및 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학위가 요구되며, 자격증은 우대 사항입니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 중요시한다고 하셨는데, 이 직업은 성장성 80/100이고 정시퇴근 환경입니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '자료 수집 및 분석'과 연결됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "문제 해결 논리, 성장 발전 경력개발, 전문성 숙련 전문가",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283770203611",
+          "job_name": "공간정보데이터분석원",
+          "job_description": "다양한 공간콘텐츠 및 서비스에 이용하기 위해 공간정보데이터를 편집·분석·가공한다.",
+          "slug": "공간정보데이터분석원",
+          "image_url": "/uploads/jobs/job-공간정보데이터분석원.webp",
+          "fit_score": 64,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 70,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100과 워라밸 70/100으로 높습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 정시퇴근이 가능하지만 대면이 적은 환경이라 외부와의 소통이 제한될 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 성장성 70/100과 워라밸 70/100으로 높습니다.",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283284144159",
+          "job_name": "경영컨설턴트",
+          "job_description": "경영컨설턴트는 경영과 경제에 대한 지식을 바탕으로 기업경영에 관한 문제점을 분석하고 대책을 연구하며, 사업 추진에 관한 상담과 자문을 제공합니다.",
+          "slug": "경영컨설턴트",
+          "image_url": "/uploads/jobs/job-경영컨설턴트.webp",
+          "fit_score": 63,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장과 전문성을 중시한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높고, 주 1-2회 야근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '문제 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 주 1-2회 야근이 필요하며(야근), 신입으로서의 진입 장벽이 있을 수 있습니다.",
+          "like_reason": "성장과 전문성을 중시한다고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높습니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 '문제 분석'과 직접 연결됩니다. 학사 학력 요구",
+          "evidence_quotes": [
+            {
+              "text": "데이터 분석 통계, 기술 개발 IT, 문제 해결 논리",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283414045777",
+          "job_name": "경영·진단전문가",
+          "job_description": "기업이나 조직의 경영과 관련된 현황과 문제점을 진단하기 위해 조직 기능이나 인사관리, 조직원 인식 등을 조사, 분석하고, 개선점을 제안하며, 개선 사항을 실행하기 위한 방안을 고안하고 자문 등을 한다.",
+          "slug": "경영진단전문가",
+          "image_url": "/uploads/jobs/job-경영진단전문가.webp",
+          "fit_score": 63,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '문제 해결을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 70/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '조직 분석'과 연결됩니다. [리스크] 다만, 팀워크가 중요하며(팀워크), 성장성 80/100으로 장기 성장 경로가 안정적입니다.",
+          "like_reason": "이 직업은 성장성 80/100, 수입 70/100으로 높습니다 문제 해결을 원한다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '조직 분석'은(는) 사용자의 '분석력이' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "문제 해결 논리, 데이터 분석 통계",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283334130333",
+          "job_name": "시스템소프트웨어개발자",
+          "job_description": "컴퓨터시스템의 동작, 제어 및 관리와 관련된 시스템소프트웨어를 개발한다.",
+          "slug": "시스템소프트웨어개발자",
+          "image_url": "/uploads/jobs/job-시스템소프트웨어개발자.webp",
+          "fit_score": 63,
+          "like_score": 70,
+          "can_score": 75,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장, 전문성, 수입을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 75/100으로 높고, 주1-2회 야근 조건이 있습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '시스템소프트웨어 개발'과 직접 연결됩니다. [리스크] 다만, 이 직업은 주1-2회 야근이 필요하며, 신입으로서 적응이 필요할 수 있습니다.",
+          "like_reason": "'성장, 전문성, 수입을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 75/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '시스템소프트웨어 개발'과 직접 연결됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "성장, 전문성, 수입을 원한다",
+              "source": {
+                "step": 1,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283285618176",
+          "job_name": "고객관리시스템(CRM)전문가",
+          "job_description": "고객관리시스템전문가는 고객과 관련된 기업의 내외부 자료를 분석 및 통합하여 사용자의 특성에 기초한 기업의 영업 활동을 지원하기 위한 정보시스템을 연구하고 설계하는 일을 합니다.",
+          "slug": "고객관리시스템crm전문가",
+          "image_url": "/uploads/jobs/job-고객관리시스템crm전문가.webp",
+          "fit_score": 63,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '데이터 분석을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 안정성 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '고객 관리 시스템 분석'과 직접 연결됩니다. [리스크] 다만, 수입이 60/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 성장성 80/100, 안정성 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점 — 핵심역량인 '고객 관리 시스템 분석'과 직접 연결됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "데이터 분석을 원한다",
+              "source": {
+                "step": 1,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283443277168",
+          "job_name": "교통영향평가원",
+          "job_description": "대량의 교통수요를 유발하거나 유발할 우려가 있는 사업을 시행하거나 시설을 설치할 경우 미리 당해사업의 시행 또는 시설의 설치로 인하여 발생할 교통장애 등 교통상의 각종 문제점을 검토·분석하고, 이에 대한 대책을 강구한다.",
+          "slug": "교통영향평가원",
+          "image_url": "/uploads/jobs/job-교통영향평가원.webp",
+          "fit_score": 63,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '문제해결을 원한다'고 하셨는데, 이 직업은 안정성 80/100, 성장성 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '교통 데이터 분석'과 직접 연결됩니다. [리스크] 다만, 수입이 60/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다.",
+          "like_reason": "이 직업은 안정성 80/100, 성장성 70/100으로 높습니다. 문제해결을 원한다 성향과 부합합니다",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '교통 데이터 분석'과 직접 부합합니다.",
+          "evidence_quotes": [
+            {
+              "text": "문제해결을 원한다",
+              "source": {
+                "step": 1,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283710803134",
+          "job_name": "인공지능연구원",
+          "job_description": "인간과 컴퓨터의 상호작용을 증진하는 데 필요한 지능형정보처리시스템을 연구·개발한다.",
+          "slug": "인공지능연구원",
+          "image_url": "/uploads/jobs/job-인공지능연구원.webp",
+          "fit_score": 62,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 60,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '문제 해결'에 흥미가 있다고 하셨고, 이 직업의 핵심역량인 '정보 처리 시스템 개발'과 연결됩니다. [리스크] 다만, 박사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "이 직업은 성장성 90/100이고 정시퇴근 환경입니다 성장을 중시한다 성향과 부합합니다",
+          "can_reason": "문제 해결에 흥미가 있다고 하셨고, 핵심역량인 정보 처리 시스템 개발과 부합합니다. 박사 학위 요구",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283437704460",
+          "job_name": "IT기술지원전문가",
+          "job_description": "IT기술지원전문가는 시스템 사용상의 고장이나 문제가 발생했을 때 이를 원활히 해결해주고 기술적인 지원을 제공한다.",
+          "slug": "it기술지원전문가",
+          "image_url": "/uploads/jobs/job-it기술지원전문가.webp",
+          "fit_score": 61,
+          "like_score": 70,
+          "can_score": 65,
+          "feasibility_score": 75,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '문제 해결'과 직접 연결됩니다. [리스크] 다만, 이 직업은 팀워크가 필요한 환경이며, 안정성 70/100으로 다소 변동성이 있을 수 있습니다.",
+          "like_reason": "'성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100이고 정시퇴근 환경입니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '문제 해결'과 직접 연결됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283844464238",
+          "job_name": "데이터엔지니어",
+          "job_description": "빅데이터서비스 운영지침에 따라 제공서비스를 모니터링하여 서비스의 가용성, 연속성 등을 관리하고 서비스 변경내역을 관리한다.",
+          "slug": "데이터엔지니어",
+          "image_url": "/uploads/jobs/job-데이터엔지니어.webp",
+          "fit_score": 69,
+          "like_score": 85,
+          "can_score": 72,
+          "feasibility_score": 70,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '문제 해결'이 흥미라고 하셨고, 이 직업의 핵심역량인 '서비스 관리'와 연결됩니다. [리스크] 다만, 학사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "이 직업은 성장성 80/100이고 정시퇴근 환경입니다 성장을 중시한다 성향과 부합합니다",
+          "can_reason": "문제 해결에 흥미가 있다고 하셨고, 핵심역량인 서비스 관리와 부합합니다. 학사 학위 요구",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283704562719",
+          "job_name": "클라우드플랫폼엔지니어",
+          "job_description": "클라우드 환경에서 애플리케이션과 서비스를 빠르고 효율적으로 개발, 배포, 확장할 수 있도록 개발환경, 프로그램과 서비스를 지원하는 기본 인프라 및 플랫폼, 워크플로우 및 도구를 설계, 구축하고 유지관리한다.",
+          "slug": "클라우드플랫폼엔지니어",
+          "image_url": "/uploads/jobs/job-클라우드플랫폼엔지니어.webp",
+          "fit_score": 59,
+          "like_score": 70,
+          "can_score": 63,
+          "feasibility_score": 70,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '기술 개발을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '클라우드 시스템 설계'와 연결됩니다. [리스크] 다만, 자격증이 우대되며(자격증우대), 초봉이 낮을 수 있습니다.",
+          "like_reason": "이 직업은 성장성 80/100, 수입 80/100으로 높습니다 기술 개발을 원한다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '클라우드 시스템 설계'은(는) 사용자의 '분석력이' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "기술 개발 IT, 문제 해결 논리",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283703251422",
+          "job_name": "인공지능서비스개발자",
+          "job_description": "인공지능서비스를 개발하기 위하여 요건 분석, 상위설계, 상세설계, 애플리케이션 개발, 모델 인터페이스 개발, 서비스 이행, 자원구성, 안전성 검토 등의 업무를 한다.",
+          "slug": "인공지능서비스개발자",
+          "image_url": "/uploads/jobs/job-인공지능서비스개발자.webp",
+          "fit_score": 58,
+          "like_score": 70,
+          "can_score": 62,
+          "feasibility_score": 70,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '기술 개발을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '인공지능 서비스 개발'과 연결됩니다. [리스크] 다만, 자격증이 요구될 수 있으며(자격증우대), 초봉이 낮을 수 있습니다.",
+          "like_reason": "기술 개발을 원한다고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높습니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 '인공지능 서비스 개발'과 연결됩니다. 정시퇴근 환경입니다",
+          "evidence_quotes": [
+            {
+              "text": "기술 개발 IT, 문제 해결 논리",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283705117310",
+          "job_name": "RPA개발자",
+          "job_description": "인공지능기술과 자동화프로그램(Uipth 등)을 활용하여 업무공정을 단순화하는 RPA(Robotic Process Automation)머신을 설계, 구축 및 운영한다.",
+          "slug": "rpa개발자",
+          "image_url": "/uploads/jobs/job-rpa개발자.webp",
+          "fit_score": 58,
+          "like_score": 70,
+          "can_score": 62,
+          "feasibility_score": 70,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '문제 해결을 원한다고 하셨는데, 이 직업은 성장성 80/100, 수입 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '업무 프로세스 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 기술 변화에 대한 적응이 필요할 수 있습니다.",
+          "like_reason": "이 직업은 성장성 80/100, 수입 70/100으로 높고 정시퇴근 환경입니다 문제 해결을 원한다 성향과 부합합니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 업무 프로세스 분석이 직접 부합합니다. 학사 학력이 요구됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "문제 해결을 원한다고 하셨는데",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283710457326",
+          "job_name": "인공지능엔지니어",
+          "job_description": "기계 스스로 데이터를 기반으로 학습하여 인식, 추론, 판단, 분류, 예측할 수 있도록 최적의 학습모델(알고리즘)을 구현한다.",
+          "slug": "인공지능엔지니어",
+          "image_url": "/uploads/jobs/job-인공지능엔지니어.webp",
+          "fit_score": 57,
+          "like_score": 70,
+          "can_score": 62,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '기술 개발 IT'에 흥미가 있다고 하셨는데, 이 직업은 성장성 85/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '최적의 학습모델 구현'과 연결됩니다. [리스크] 다만, 이 직업은 석사 학위가 요구되며 진입 장벽이 있을 수 있습니다.",
+          "like_reason": "이 직업은 성장성 85/100으로 높습니다. 기술 개발 IT 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '최적의 학습모델 구현'은(는) 사용자의 '분석력' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "기술 개발 IT, 데이터 분석 통계",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283711071239",
+          "job_name": "인공지능플랫폼설계개발전문가",
+          "job_description": "인공지능 플랫폼을 설계 및 개발한다.",
+          "slug": "인공지능플랫폼설계개발전문가",
+          "image_url": "/uploads/jobs/job-인공지능플랫폼설계개발전문가.webp",
+          "fit_score": 57,
+          "like_score": 70,
+          "can_score": 62,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '기술 개발 IT'에 흥미가 있다고 하셨는데, 이 직업은 성장성 85/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '인공지능 플랫폼 설계 및 개발'과 연결됩니다. [리스크] 다만, 이 직업은 석사 학위가 요구되며 진입 장벽이 있을 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 성장성 85/100으로 높습니다.",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "기술 개발 IT, 데이터 분석 통계",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283436299226",
+          "job_name": "IT테스터 및 IT QA전문가",
+          "job_description": "소프트웨어 등 IT제품의 출시에 앞서 테스트하여 문제점, 보완점 등을평가하거나 출시 제품의 품질에 대해 관리한다.",
+          "slug": "it테스터-및-it-qa전문가",
+          "image_url": "/uploads/jobs/job-it테스터-및-it-qa전문가.webp",
+          "fit_score": 57,
+          "like_score": 65,
+          "can_score": 62,
+          "feasibility_score": 70,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '문제해결을 원한다'고 하셨는데, 이 직업은 안정성 70/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '테스트 및 품질 관리'와 직접 연결됩니다. [리스크] 다만, 수입이 50/100으로 낮아 장기적으로 성장에 대한 우려가 있을 수 있습니다.",
+          "like_reason": "이 직업은 안정성 70/100, 워라밸 70/100으로 높습니다. 문제해결을 원한다 성향과 부합합니다",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '테스트 및 품질 관리'와 직접 부합합니다.",
+          "evidence_quotes": [
+            {
+              "text": "문제해결을 원한다",
+              "source": {
+                "step": 1,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283934945444",
+          "job_name": "지능형로봇연구원",
+          "job_description": "로봇이 외부환경에 대한 정보를 인식(Perception)할 수있는 관련기기, 알고리즘과 스스로 상황을 판단(Cognition)하여 자율적으로 동작(Manipulation)하는 지능형로봇(Intelligent Robots)을 연구·개발한다.",
+          "slug": "지능형로봇연구원",
+          "image_url": "/uploads/jobs/job-지능형로봇연구원.webp",
+          "fit_score": 56,
+          "like_score": 65,
+          "can_score": 62,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '기술 개발을 원한다고 하셨는데, 이 직업은 성장성 85/100, 수입 80/100으로 높습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '로봇 알고리즘 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 석사 학력이 요구되며, 전문성이 높아 진입 장벽이 있을 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 성장성 85/100, 수입 80/100으로 높습니다",
+          "can_reason": "분석력이 강점 — 핵심역량인 로봇 알고리즘 분석이 직접 연결됩니다. 석사 학력이 요구됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "기술 개발을 원한다고 하셨는데",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283442364599",
+          "job_name": "지리정보시스템전문가",
+          "job_description": "상하수도, 도로, 지하매설물 등 각종 지리정보의 데이터베이스를 구축,관리하기 위한 지리정보시스템을 설계하고, 이와 관련한 기술을 개발하고 활용방안을 연구한다.",
+          "slug": "지리정보시스템전문가",
+          "image_url": "/uploads/jobs/job-지리정보시스템전문가.webp",
+          "fit_score": 56,
+          "like_score": 65,
+          "can_score": 62,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '기술 개발을 원한다'고 하셨는데, 이 직업은 안정성 70/100, 성장성 75/100으로 높고 주1-2회 야근 조건이 있습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '지리정보 시스템 개발'과 직접 연결됩니다. [리스크] 다만, 주1-2회 야근이 필요하여 개인 시간 관리에 어려움이 있을 수 있습니다.",
+          "like_reason": "'기술 개발을 원한다'고 하셨는데, 이 직업은 안정성 70/100, 성장성 75/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '지리정보 시스템 개발'과 직접 연결됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "기술 개발을 원한다",
+              "source": {
+                "step": 1,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "176528377051354",
+          "job_name": "공간정보시스템설계분석가",
+          "job_description": "지상(도로, 건축물 등), 지하(상하수도, 가스 등의 지하매설물 등)의 각종 공간정보의 데이터베이스를 구축하고 관리하기 위한 공간정보시스템을 설계하고 분석한다.",
+          "slug": "공간정보시스템설계분석가",
+          "image_url": "/uploads/jobs/job-공간정보시스템설계분석가.webp",
+          "fit_score": 66,
+          "like_score": 80,
+          "can_score": 70,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100과 안정성 80/100으로 긍정적입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '시스템 설계'와 연결됩니다. [리스크] 다만, 이 직업은 정시퇴근이 가능하지만 대면이 적은 환경이라 팀원과의 소통이 제한될 수 있습니다.",
+          "like_reason": "'성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100과 안정성 80/100으로 긍정적입니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '시스템 설계'와 연결됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283426646339",
+          "job_name": "금융상품개발자",
+          "job_description": "금리변동률, 영업비용과 회사이익, 사회변화에 따른 금융상품에 대한 일반인의 수요를 고려하여 금융상품을 개발한다.",
+          "slug": "금융상품개발자",
+          "image_url": "/uploads/jobs/job-금융상품개발자.webp",
+          "fit_score": 56,
+          "like_score": 65,
+          "can_score": 62,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장 발전 경력개발을 중시한다'고 하셨는데, 이 직업은 안정성 70/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '데이터 분석 통계'에 흥미가 있다고 하셨고, 이 직업의 핵심역량인 '금융 데이터 분석'과 연결됩니다. [리스크] 다만, 이 직업은 자격증이 요구되지 않지만, 초봉이 낮을 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 안정성 70/100으로 높고 정시퇴근 환경입니다",
+          "can_reason": "데이터 분석 통계에 흥미가 있다고 하셨고, 핵심역량인 금융 데이터 분석과 연결됩니다. 학사 학력이 요구됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "데이터 분석 통계",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            },
+            {
+              "text": "성장 발전 경력개발",
+              "source": {
+                "step": 2,
+                "questionId": "univ_value"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "17652837321713",
+          "job_name": "클라우드시스템정보보안전문가",
+          "job_description": "클라우드시스템의 안정적인 운영을 위해 보안문제를 다룬다.",
+          "slug": "클라우드시스템정보보안전문가",
+          "image_url": "/uploads/jobs/job-클라우드시스템정보보안전문가.webp",
+          "fit_score": 53,
+          "like_score": 65,
+          "can_score": 55,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '기술 개발 IT, 문제 해결'에 흥미가 있다고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '보안문제 다루기'와 연결됩니다. [리스크] 다만, 이 직업은 자격증이 우대되며, 보안 관련 지식이 필요할 수 있습니다.",
+          "like_reason": "이 직업은 성장성 80/100으로 높습니다. 기술 개발 IT, 문제 해결 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '보안문제 다루기'은(는) 사용자의 '분석력' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "기술 개발 IT, 문제 해결",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765284105518967",
+          "job_name": "그로스매니저",
+          "job_description": "기업의 성장 계획을 입안, 실행 및 운영하고 개발, 마케팅 등 타 부서 관계자와 협의 조정하여 수익채널을 극대화한다.",
+          "slug": "그로스매니저",
+          "image_url": "/uploads/jobs/job-그로스매니저.webp",
+          "fit_score": 51,
+          "like_score": 60,
+          "can_score": 54,
+          "feasibility_score": 70,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장, 전문성'을 중요하게 생각하신다고 하셨는데, 이 직업은 성장성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '기업 성장 계획 입안 및 실행'과 연결됩니다. [리스크] 다만, 이 직업은 팀워크가 중요한 환경이며, 대면 소통이 필요할 수 있습니다.",
+          "like_reason": "'성장, 전문성'을 중요하게 생각하신다고 하셨는데, 이 직업은 성장성 90/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '기업 성장 계획 입안 및 실행'과 연결됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "성장, 전문성",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283706565555",
+          "job_name": "경영정보시스템개발자",
+          "job_description": "기업의 경영관리에 필요한 정보를 분석하여 해당 사업장에 적합한 시스템솔루션을 구축한다.",
+          "slug": "경영정보시스템개발자",
+          "image_url": "/uploads/jobs/job-경영정보시스템개발자.webp",
+          "fit_score": 50,
+          "like_score": 60,
+          "can_score": 53,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '정보 분석'과 연결됩니다. [리스크] 다만, 학사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 성장성 80/100이고 정시퇴근 환경입니다",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283713890186",
+          "job_name": "게임시스템디자이너",
+          "job_description": "사용자의 게임플레이에 필요한 개발작업을 위하여 기획목표에 따라 게임시스템을 분석, 설계하고 구체적인 시스템 구성요소를 구현하며 게임플레이를 위한 화면과 조작기능을 기획한다.",
+          "slug": "게임시스템디자이너",
+          "image_url": "/uploads/jobs/job-게임시스템디자이너.webp",
+          "fit_score": 49,
+          "like_score": 60,
+          "can_score": 52,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '문제 해결을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 70/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '게임 시스템 분석'과 연결됩니다. [리스크] 다만, 창의성이 요구되며(창의), 게임 산업에 대한 관심이 필요합니다.",
+          "like_reason": "특징적으로 이 직업은 성장성 80/100, 수입 70/100으로 높습니다",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "문제 해결 논리, 데이터 분석 통계",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283414312245",
+          "job_name": "광고·홍보·마케팅전문가",
+          "job_description": "특정상품 및 서비스에 대한 마케팅, 광고, 홍보의 필요성을 분석하고그에 따른 적절한 방안을 계획하며 실행한다.",
+          "slug": "광고홍보마케팅전문가",
+          "image_url": "/uploads/jobs/job-광고홍보마케팅전문가.webp",
+          "fit_score": 49,
+          "like_score": 60,
+          "can_score": 52,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장, 전문성, 수입을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '마케팅 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 성장성이 있지만 경쟁이 치열할 수 있습니다.",
+          "like_reason": "성장, 전문성, 수입을 원한다고 하셨는데, 이 직업은 성장성 80/100, 수입 70/100으로 높고 정시퇴근 환경입니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 마케팅 분석이 직접 연결됩니다. 학사 학력이 요구됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "성장, 전문성, 수입을 원한다고 하셨는데",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283926412955",
+          "job_name": "컴퓨터기반공학기술자",
+          "job_description": "소프트웨어 해석결과를 기반으로 제품의 문제점을 분석하고 개선안을 도출, 제품개발효율을 높이는 데 역할을 한다.",
+          "slug": "컴퓨터기반공학기술자",
+          "image_url": "/uploads/jobs/job-컴퓨터기반공학기술자.webp",
+          "fit_score": 49,
+          "like_score": 60,
+          "can_score": 52,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '전문성을 원한다고 하셨는데, 이 직업은 성장성 80/100, 수입 75/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '제품 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 기술 변화에 대한 적응이 필요할 수 있습니다.",
+          "like_reason": "전문성을 원한다고 하셨는데, 이 직업은 성장성 80/100, 수입 75/100으로 높고 정시퇴근 환경입니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 제품 분석이 직접 연결됩니다. 학사 학력이 요구됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "전문성을 원한다고 하셨는데",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283734648868",
+          "job_name": "인공지능서비스운영관리자",
+          "job_description": "인공지능 서비스의 체계적인 운영을 위하여 계획을 수립하고, 서비스 이용자 관리, 운영 환경 관리, 운영 모니터링, 운영 품질관리, 운영 장애관리, 운영수준 관리, 운영 개선 관리, 외부 인프라관리, 운영 지원 도구 관리 등을 한다.",
+          "slug": "인공지능서비스운영관리자",
+          "image_url": "/uploads/jobs/job-인공지능서비스운영관리자.webp",
+          "fit_score": 49,
+          "like_score": 60,
+          "can_score": 52,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '문제 해결을 원한다고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '운영 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 인공지능 기술 변화에 대한 적응이 필요할 수 있습니다.",
+          "like_reason": "이 직업은 성장성 80/100, 수입 80/100으로 높고 정시퇴근 환경입니다 문제 해결을 원한다 성향과 부합합니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 운영 분석이 직접 부합합니다. 학사 학력이 요구됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "문제 해결을 원한다고 하셨는데",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765284093997541",
+          "job_name": "공간정보융합서비스기획자",
+          "job_description": "공공정책, 자동차항법장치, 가상현실, 게임, 부동산, 마케팅, 대중교통, 숙박, 관광, 안전 등 다양한 공간정보융합서비스를 기획한다.",
+          "slug": "공간정보융합서비스기획자",
+          "image_url": "/uploads/jobs/job-공간정보융합서비스기획자.webp",
+          "fit_score": 48,
+          "like_score": 55,
+          "can_score": 52,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100으로 높지만, 워라밸이 50/100으로 다소 낮습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 요구조건인 '창의적 문제 해결'과 연결됩니다. [리스크] 다만, 이 직업은 정시퇴근은 가능하나 안정성이 50/100으로 다소 낮아 불확실성이 있을 수 있습니다.",
+          "like_reason": "이 직업은 성장성 70/100으로 높습니다. 성장을 중시한다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '창의적 문제 해결'은(는) 사용자의 '분석력' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765284361663730",
+          "job_name": "보험영업실적분석원",
+          "job_description": "신계약, 수납, 보험금지급, 대출 부문 등 보험영업실적을 기관별로 파악·분석하여 그 분석결과를 회사 경영기획자료로 활용하도록 관련 부서에 제공한다.",
+          "slug": "보험영업실적분석원",
+          "image_url": "/uploads/jobs/job-보험영업실적분석원.webp",
+          "fit_score": 56,
+          "like_score": 70,
+          "can_score": 60,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 60/100으로 다소 낮지만 워라밸은 70/100으로 높습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '영업 실적 분석'과 연결됩니다. [리스크] 다만, 이 직업은 팀워크가 필요한 환경이며, 안정성이 70/100으로 다소 변동성이 있을 수 있습니다.",
+          "like_reason": "이 직업은 성장성 60/100으로 다소 낮지만 워라밸은 70/100으로 높습니다. 성장을 중시한다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '영업 실적 분석'은(는) 사용자의 '분석력' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "Exploration-ready, prioritizes 성장, anchored by growth",
+              "source": {
+                "step": 1,
+                "questionId": "decision_summary"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283834589181",
+          "job_name": "반도체재료성능평가기술자",
+          "job_description": "반도체 공정기술 및 고객 요구성능을 이해하고, 재료개발 또는 생산계획수립을 지원하고, 반도체 재료의 분석, 시험평가, 보완, 검증작업을 반복·수행한다.",
+          "slug": "반도체재료성능평가기술자",
+          "image_url": "/uploads/jobs/job-반도체재료성능평가기술자.webp",
+          "fit_score": 48,
+          "like_score": 55,
+          "can_score": 52,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '전문성 숙련 전문가를 원한다'고 하셨는데, 이 직업은 안정성 70/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '문제 해결 논리'가 강점이라고 하셨고, 이 직업의 핵심역량인 '재료 분석'과 연결됩니다. [리스크] 다만, 이 직업은 성장성이 70/100으로 중간 수준이며, 초봉이 낮을 수 있습니다.",
+          "like_reason": "이 직업은 안정성 70/100으로 높고 정시퇴근 환경입니다 전문성 숙련 전문가를 원한다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '재료 분석'은(는) 사용자의 '문제 해결 논리가' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "문제 해결 논리",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            },
+            {
+              "text": "전문성 숙련 전문가",
+              "source": {
+                "step": 2,
+                "questionId": "univ_value"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283439100411",
+          "job_name": "정보보안전문가",
+          "job_description": "정보시스템과 정보자산을 보호하기 위해 보안정책을 수립하고, 시스템에 대한 접근 및 운영을 통제하며, 침입 발생시 신속히 탐지하여 즉각적으로 대응·복구한다.",
+          "slug": "정보보안전문가",
+          "image_url": "/uploads/jobs/job-정보보안전문가.webp",
+          "fit_score": 48,
+          "like_score": 55,
+          "can_score": 52,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '전문성 숙련 전문가를 원한다'고 하셨는데, 이 직업은 안정성 70/100으로 높고, 주1-2회 야근이 있습니다. [잘할 이유] '문제 해결 논리'가 강점이라고 하셨고, 이 직업의 핵심역량인 '정보 보호'와 연결됩니다. [리스크] 다만, 이 직업은 야근이 필요하고(주1-2회 야근), 초봉이 낮을 수 있습니다.",
+          "like_reason": "이 직업은 안정성 70/100으로 높고 주1-2회 야근이 있습니다. 전문성 숙련 전문가를 원한다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '정보 보호'은(는) 사용자의 '문제 해결 논리가' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "문제 해결 논리",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            },
+            {
+              "text": "전문성 숙련 전문가",
+              "source": {
+                "step": 2,
+                "questionId": "univ_value"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283834314245",
+          "job_name": "바이오세라믹재료품질관리원",
+          "job_description": "수요자의 요구에 적합한 품질의 생체재료를 합리적으로 생산하기 위해 수입·공정·출하검사 및 밸리데이션업무를 수행한다.",
+          "slug": "바이오세라믹재료품질관리원",
+          "image_url": "/uploads/jobs/job-바이오세라믹재료품질관리원.webp",
+          "fit_score": 41,
+          "like_score": 45,
+          "can_score": 45,
+          "feasibility_score": 65,
+          "risk_penalty": 10,
+          "rationale": "[좋아할 이유] '전문성 숙련 전문가를 원한다'고 하셨는데, 이 직업은 안정성 70/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '문제 해결 논리'가 강점이라고 하셨고, 이 직업의 핵심역량인 '품질 관리'와 연결됩니다. [리스크] 다만, 이 직업은 성장성이 60/100으로 낮아 장기 성장 경로가 제한적일 수 있습니다.",
+          "like_reason": "전문성 숙련 전문가를 원한다고 하셨는데, 이 직업은 안정성 70/100으로 높고 정시퇴근 환경입니다",
+          "can_reason": "문제 해결 논리가 강점이라고 하셨고, 핵심역량인 품질 관리와 연결됩니다. 학사 학력이 요구됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "문제 해결 논리",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            },
+            {
+              "text": "전문성 숙련 전문가",
+              "source": {
+                "step": 2,
+                "questionId": "univ_value"
+              }
+            }
+          ]
+        }
+      ],
+      "like_top10": [
+        {
+          "job_id": "1765283844464238",
+          "job_name": "데이터엔지니어",
+          "job_description": "빅데이터서비스 운영지침에 따라 제공서비스를 모니터링하여 서비스의 가용성, 연속성 등을 관리하고 서비스 변경내역을 관리한다.",
+          "slug": "데이터엔지니어",
+          "image_url": "/uploads/jobs/job-데이터엔지니어.webp",
+          "fit_score": 69,
+          "like_score": 85,
+          "can_score": 72,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '문제 해결'이 흥미라고 하셨고, 이 직업의 핵심역량인 '서비스 관리'와 연결됩니다. [리스크] 다만, 학사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "이 직업은 성장성 80/100이고 정시퇴근 환경입니다 성장을 중시한다 성향과 부합합니다",
+          "can_reason": "문제 해결에 흥미가 있다고 하셨고, 핵심역량인 서비스 관리와 부합합니다. 학사 학위 요구"
+        },
+        {
+          "job_id": "176528377051354",
+          "job_name": "공간정보시스템설계분석가",
+          "job_description": "지상(도로, 건축물 등), 지하(상하수도, 가스 등의 지하매설물 등)의 각종 공간정보의 데이터베이스를 구축하고 관리하기 위한 공간정보시스템을 설계하고 분석한다.",
+          "slug": "공간정보시스템설계분석가",
+          "image_url": "/uploads/jobs/job-공간정보시스템설계분석가.webp",
+          "fit_score": 66,
+          "like_score": 80,
+          "can_score": 70,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100과 안정성 80/100으로 긍정적입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '시스템 설계'와 연결됩니다. [리스크] 다만, 이 직업은 정시퇴근이 가능하지만 대면이 적은 환경이라 팀원과의 소통이 제한될 수 있습니다.",
+          "like_reason": "'성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100과 안정성 80/100으로 긍정적입니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '시스템 설계'와 연결됩니다."
+        },
+        {
+          "job_id": "1765283724495863",
+          "job_name": "빅데이터아키텍처전문가",
+          "job_description": "정보시스템구축을 위해 업무 및 요구사항을 분석하여 모든 업무데이터를 데이터측면에서 체계화하여 설계한다.",
+          "slug": "빅데이터아키텍처전문가",
+          "image_url": "/uploads/jobs/job-빅데이터아키텍처전문가.webp",
+          "fit_score": 70,
+          "like_score": 80,
+          "can_score": 83,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 석사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "성장을 중시한다고 하셨는데, 이 직업은 성장성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 데이터 분석과 직접 연결됩니다. 석사 학위 요구"
+        },
+        {
+          "job_id": "1765283736974318",
+          "job_name": "지능형교통체계유지관리자",
+          "job_description": "지능형교통체계의 유지관리 대상을 분석하여 계획을 수립하고 유지관리, 성능관리 및 유지관리 결과를 분석한다.",
+          "slug": "지능형교통체계유지관리자",
+          "image_url": "/uploads/jobs/job-지능형교통체계유지관리자.webp",
+          "fit_score": 72,
+          "like_score": 80,
+          "can_score": 84,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '성장과 전문성을 중시한다'고 하셨는데, 이 직업은 성장성 80/100과 수입 80/100으로 높으며 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '유지관리 및 성능관리 분석'과 직접 연결됩니다. [리스크] 다만, 신입으로서 진입하는 직업이며, 학사 학력이 요구됩니다.",
+          "like_reason": "'성장과 전문성을 중시한다고 하셨는데, 이 직업은 성장성 80/100과 수입 80/100으로 높고 정시퇴근 환경입니다'",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 유지관리 및 성능관리 분석과 직접 연결됩니다. 학사 학력이 요구됩니다."
+        },
+        {
+          "job_id": "1765283724870359",
+          "job_name": "빅데이터전문가",
+          "job_description": "사람들의 행동패턴 또는 시장의 경제상황 등을 예측하며 데이터 속에 함축된 트렌드나 인사이트를 도출하고 이로부터 새로운 부가가치를 창출하기 위해 대량의 빅데이터를 관리하고 분석한다.",
+          "slug": "빅데이터전문가",
+          "image_url": "/uploads/jobs/job-빅데이터전문가.webp",
+          "fit_score": 73,
+          "like_score": 80,
+          "can_score": 85,
+          "feasibility_score": 75,
+          "rationale": "[좋아할 이유] '성장 발전 경력개발을 중시한다'고 하셨는데, 이 직업은 성장성 80/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 자격증이 우대되며(자격증우대), 초봉이 낮을 수 있습니다.",
+          "like_reason": "성장 발전 경력개발을 중시한다고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 데이터 분석과 직접 연결됩니다. 학사 학력이 요구됩니다."
+        },
+        {
+          "job_id": "1765284361663730",
+          "job_name": "보험영업실적분석원",
+          "job_description": "신계약, 수납, 보험금지급, 대출 부문 등 보험영업실적을 기관별로 파악·분석하여 그 분석결과를 회사 경영기획자료로 활용하도록 관련 부서에 제공한다.",
+          "slug": "보험영업실적분석원",
+          "image_url": "/uploads/jobs/job-보험영업실적분석원.webp",
+          "fit_score": 56,
+          "like_score": 70,
+          "can_score": 60,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 60/100으로 다소 낮지만 워라밸은 70/100으로 높습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '영업 실적 분석'과 연결됩니다. [리스크] 다만, 이 직업은 팀워크가 필요한 환경이며, 안정성이 70/100으로 다소 변동성이 있을 수 있습니다.",
+          "like_reason": "이 직업은 성장성 60/100으로 다소 낮지만 워라밸은 70/100으로 높습니다. 성장을 중시한다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '영업 실적 분석'은(는) 사용자의 '분석력' 강점과 부합합니다"
+        },
+        {
+          "job_id": "1765283703251422",
+          "job_name": "인공지능서비스개발자",
+          "job_description": "인공지능서비스를 개발하기 위하여 요건 분석, 상위설계, 상세설계, 애플리케이션 개발, 모델 인터페이스 개발, 서비스 이행, 자원구성, 안전성 검토 등의 업무를 한다.",
+          "slug": "인공지능서비스개발자",
+          "image_url": "/uploads/jobs/job-인공지능서비스개발자.webp",
+          "fit_score": 58,
+          "like_score": 70,
+          "can_score": 62,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '기술 개발을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '인공지능 서비스 개발'과 연결됩니다. [리스크] 다만, 자격증이 요구될 수 있으며(자격증우대), 초봉이 낮을 수 있습니다.",
+          "like_reason": "기술 개발을 원한다고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높습니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 '인공지능 서비스 개발'과 연결됩니다. 정시퇴근 환경입니다"
+        },
+        {
+          "job_id": "1765283705117310",
+          "job_name": "RPA개발자",
+          "job_description": "인공지능기술과 자동화프로그램(Uipth 등)을 활용하여 업무공정을 단순화하는 RPA(Robotic Process Automation)머신을 설계, 구축 및 운영한다.",
+          "slug": "rpa개발자",
+          "image_url": "/uploads/jobs/job-rpa개발자.webp",
+          "fit_score": 58,
+          "like_score": 70,
+          "can_score": 62,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '문제 해결을 원한다고 하셨는데, 이 직업은 성장성 80/100, 수입 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '업무 프로세스 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 기술 변화에 대한 적응이 필요할 수 있습니다.",
+          "like_reason": "이 직업은 성장성 80/100, 수입 70/100으로 높고 정시퇴근 환경입니다 문제 해결을 원한다 성향과 부합합니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 업무 프로세스 분석이 직접 부합합니다. 학사 학력이 요구됩니다."
+        },
+        {
+          "job_id": "1765283710457326",
+          "job_name": "인공지능엔지니어",
+          "job_description": "기계 스스로 데이터를 기반으로 학습하여 인식, 추론, 판단, 분류, 예측할 수 있도록 최적의 학습모델(알고리즘)을 구현한다.",
+          "slug": "인공지능엔지니어",
+          "image_url": "/uploads/jobs/job-인공지능엔지니어.webp",
+          "fit_score": 57,
+          "like_score": 70,
+          "can_score": 62,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '기술 개발 IT'에 흥미가 있다고 하셨는데, 이 직업은 성장성 85/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '최적의 학습모델 구현'과 연결됩니다. [리스크] 다만, 이 직업은 석사 학위가 요구되며 진입 장벽이 있을 수 있습니다.",
+          "like_reason": "이 직업은 성장성 85/100으로 높습니다. 기술 개발 IT 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '최적의 학습모델 구현'은(는) 사용자의 '분석력' 강점과 부합합니다"
+        },
+        {
+          "job_id": "1765283711071239",
+          "job_name": "인공지능플랫폼설계개발전문가",
+          "job_description": "인공지능 플랫폼을 설계 및 개발한다.",
+          "slug": "인공지능플랫폼설계개발전문가",
+          "image_url": "/uploads/jobs/job-인공지능플랫폼설계개발전문가.webp",
+          "fit_score": 57,
+          "like_score": 70,
+          "can_score": 62,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '기술 개발 IT'에 흥미가 있다고 하셨는데, 이 직업은 성장성 85/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '인공지능 플랫폼 설계 및 개발'과 연결됩니다. [리스크] 다만, 이 직업은 석사 학위가 요구되며 진입 장벽이 있을 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 성장성 85/100으로 높습니다.",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다"
+        }
+      ],
+      "can_top10": [
+        {
+          "job_id": "17652837101536",
+          "job_name": "인공지능모델개발자",
+          "job_description": "기획된 인공지능 서비스의 목적을 달성하기 위하여 모델 설계 및 검증, 학습 데이터 확보, 데이터 가공, 특징 추출, 품질 검증, 학습 등을 통해 최적화된 모델을 도출하고 성능을 개선한다.",
+          "slug": "인공지능모델개발자",
+          "image_url": "/uploads/jobs/job-인공지능모델개발자.webp",
+          "fit_score": 71,
+          "like_score": 70,
+          "can_score": 95,
+          "feasibility_score": 60,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '모델 설계'와 연결됩니다. [리스크] 다만, 석사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "성장을 중시한다고 하셨는데, 이 직업은 성장성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 모델 설계와 연결됩니다. 석사 학위 요구"
+        },
+        {
+          "job_id": "1765283406071706",
+          "job_name": "IT컨설턴트",
+          "job_description": "IT컨설턴트는 기업의 인적, 물적 자원 및 모든 조건에 관련된 자료를 수집 및 분석하고, 최근의 기술과 활용 가능한 자원, 현재 상태를 고려해 시스템을 만들기 위한 전문적인 조언이나 자문을 하는 일을 합니다.",
+          "slug": "it컨설턴트",
+          "image_url": "/uploads/jobs/job-it컨설턴트.webp",
+          "fit_score": 65,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 75,
+          "rationale": "[좋아할 이유] '문제 해결 논리, 성장 발전 경력개발'을 중요하게 생각하신다고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '자료 수집 및 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학위가 요구되며, 자격증은 우대 사항입니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 중요시한다고 하셨는데, 이 직업은 성장성 80/100이고 정시퇴근 환경입니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '자료 수집 및 분석'과 연결됩니다."
+        },
+        {
+          "job_id": "1765283770203611",
+          "job_name": "공간정보데이터분석원",
+          "job_description": "다양한 공간콘텐츠 및 서비스에 이용하기 위해 공간정보데이터를 편집·분석·가공한다.",
+          "slug": "공간정보데이터분석원",
+          "image_url": "/uploads/jobs/job-공간정보데이터분석원.webp",
+          "fit_score": 64,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 70/100과 워라밸 70/100으로 높습니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 정시퇴근이 가능하지만 대면이 적은 환경이라 외부와의 소통이 제한될 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 성장성 70/100과 워라밸 70/100으로 높습니다.",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다"
+        },
+        {
+          "job_id": "1765283284144159",
+          "job_name": "경영컨설턴트",
+          "job_description": "경영컨설턴트는 경영과 경제에 대한 지식을 바탕으로 기업경영에 관한 문제점을 분석하고 대책을 연구하며, 사업 추진에 관한 상담과 자문을 제공합니다.",
+          "slug": "경영컨설턴트",
+          "image_url": "/uploads/jobs/job-경영컨설턴트.webp",
+          "fit_score": 63,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '성장과 전문성을 중시한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높고, 주 1-2회 야근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '문제 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 주 1-2회 야근이 필요하며(야근), 신입으로서의 진입 장벽이 있을 수 있습니다.",
+          "like_reason": "성장과 전문성을 중시한다고 하셨는데, 이 직업은 성장성 80/100, 수입 80/100으로 높습니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 '문제 분석'과 직접 연결됩니다. 학사 학력 요구"
+        },
+        {
+          "job_id": "1765283414045777",
+          "job_name": "경영·진단전문가",
+          "job_description": "기업이나 조직의 경영과 관련된 현황과 문제점을 진단하기 위해 조직 기능이나 인사관리, 조직원 인식 등을 조사, 분석하고, 개선점을 제안하며, 개선 사항을 실행하기 위한 방안을 고안하고 자문 등을 한다.",
+          "slug": "경영진단전문가",
+          "image_url": "/uploads/jobs/job-경영진단전문가.webp",
+          "fit_score": 63,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '문제 해결을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 수입 70/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 핵심역량인 '조직 분석'과 연결됩니다. [리스크] 다만, 팀워크가 중요하며(팀워크), 성장성 80/100으로 장기 성장 경로가 안정적입니다.",
+          "like_reason": "이 직업은 성장성 80/100, 수입 70/100으로 높습니다 문제 해결을 원한다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '조직 분석'은(는) 사용자의 '분석력이' 강점과 부합합니다"
+        },
+        {
+          "job_id": "1765283285618176",
+          "job_name": "고객관리시스템(CRM)전문가",
+          "job_description": "고객관리시스템전문가는 고객과 관련된 기업의 내외부 자료를 분석 및 통합하여 사용자의 특성에 기초한 기업의 영업 활동을 지원하기 위한 정보시스템을 연구하고 설계하는 일을 합니다.",
+          "slug": "고객관리시스템crm전문가",
+          "image_url": "/uploads/jobs/job-고객관리시스템crm전문가.webp",
+          "fit_score": 63,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '데이터 분석을 원한다'고 하셨는데, 이 직업은 성장성 80/100, 안정성 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '고객 관리 시스템 분석'과 직접 연결됩니다. [리스크] 다만, 수입이 60/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 성장성 80/100, 안정성 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점 — 핵심역량인 '고객 관리 시스템 분석'과 직접 연결됩니다."
+        },
+        {
+          "job_id": "1765283443277168",
+          "job_name": "교통영향평가원",
+          "job_description": "대량의 교통수요를 유발하거나 유발할 우려가 있는 사업을 시행하거나 시설을 설치할 경우 미리 당해사업의 시행 또는 시설의 설치로 인하여 발생할 교통장애 등 교통상의 각종 문제점을 검토·분석하고, 이에 대한 대책을 강구한다.",
+          "slug": "교통영향평가원",
+          "image_url": "/uploads/jobs/job-교통영향평가원.webp",
+          "fit_score": 63,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '문제해결을 원한다'고 하셨는데, 이 직업은 안정성 80/100, 성장성 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '교통 데이터 분석'과 직접 연결됩니다. [리스크] 다만, 수입이 60/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다.",
+          "like_reason": "이 직업은 안정성 80/100, 성장성 70/100으로 높습니다. 문제해결을 원한다 성향과 부합합니다",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 핵심역량인 '교통 데이터 분석'과 직접 부합합니다."
+        },
+        {
+          "job_id": "1765283710803134",
+          "job_name": "인공지능연구원",
+          "job_description": "인간과 컴퓨터의 상호작용을 증진하는 데 필요한 지능형정보처리시스템을 연구·개발한다.",
+          "slug": "인공지능연구원",
+          "image_url": "/uploads/jobs/job-인공지능연구원.webp",
+          "fit_score": 62,
+          "like_score": 60,
+          "can_score": 82,
+          "feasibility_score": 60,
+          "rationale": "[좋아할 이유] '성장을 중시한다'고 하셨는데, 이 직업은 성장성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '문제 해결'에 흥미가 있다고 하셨고, 이 직업의 핵심역량인 '정보 처리 시스템 개발'과 연결됩니다. [리스크] 다만, 박사 학위가 요구되며, 관련 경력이 없으므로 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "이 직업은 성장성 90/100이고 정시퇴근 환경입니다 성장을 중시한다 성향과 부합합니다",
+          "can_reason": "문제 해결에 흥미가 있다고 하셨고, 핵심역량인 정보 처리 시스템 개발과 부합합니다. 박사 학위 요구"
+        },
+        {
+          "job_id": "1765283724870359",
+          "job_name": "빅데이터전문가",
+          "job_description": "사람들의 행동패턴 또는 시장의 경제상황 등을 예측하며 데이터 속에 함축된 트렌드나 인사이트를 도출하고 이로부터 새로운 부가가치를 창출하기 위해 대량의 빅데이터를 관리하고 분석한다.",
+          "slug": "빅데이터전문가",
+          "image_url": "/uploads/jobs/job-빅데이터전문가.webp",
+          "fit_score": 73,
+          "like_score": 80,
+          "can_score": 85,
+          "feasibility_score": 75,
+          "rationale": "[좋아할 이유] '성장 발전 경력개발을 중시한다'고 하셨는데, 이 직업은 성장성 80/100으로 높고, 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '데이터 분석'과 직접 연결됩니다. [리스크] 다만, 이 직업은 자격증이 우대되며(자격증우대), 초봉이 낮을 수 있습니다.",
+          "like_reason": "성장 발전 경력개발을 중시한다고 하셨는데, 이 직업은 성장성 80/100으로 높고 정시퇴근 환경입니다",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 데이터 분석과 직접 연결됩니다. 학사 학력이 요구됩니다."
+        },
+        {
+          "job_id": "1765283736974318",
+          "job_name": "지능형교통체계유지관리자",
+          "job_description": "지능형교통체계의 유지관리 대상을 분석하여 계획을 수립하고 유지관리, 성능관리 및 유지관리 결과를 분석한다.",
+          "slug": "지능형교통체계유지관리자",
+          "image_url": "/uploads/jobs/job-지능형교통체계유지관리자.webp",
+          "fit_score": 72,
+          "like_score": 80,
+          "can_score": 84,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '성장과 전문성을 중시한다'고 하셨는데, 이 직업은 성장성 80/100과 수입 80/100으로 높으며 정시퇴근 환경입니다. [잘할 이유] '분석력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '유지관리 및 성능관리 분석'과 직접 연결됩니다. [리스크] 다만, 신입으로서 진입하는 직업이며, 학사 학력이 요구됩니다.",
+          "like_reason": "'성장과 전문성을 중시한다고 하셨는데, 이 직업은 성장성 80/100과 수입 80/100으로 높고 정시퇴근 환경입니다'",
+          "can_reason": "분석력이 강점이라고 하셨고, 핵심역량인 유지관리 및 성능관리 분석과 직접 연결됩니다. 학사 학력이 요구됩니다."
+        }
+      ],
+      "total_candidates": 609,
+      "filtered_count": 549,
+      "search_duration_ms": 3218
+    },
+    "premium_report": null,
+    "engine_version": "v3.14.0",
+    "report_mode": "deferred",
+    "search_profile_used": {
+      "desiredThemes": [
+        "데이터 분석 통계",
+        "기술 개발 IT",
+        "문제 해결 논리",
+        "성장 발전 경력개발",
+        "전문성 숙련 전문가",
+        "소득 연봉 보수"
+      ],
+      "dislikedThemes": [],
+      "strengthsHypothesis": [
+        "빠른 학습 습득",
+        "끈기 인내 꾸준함",
+        "분석력 논리 데이터"
+      ],
+      "environmentPreferences": [
+        "structured",
+        "team_harmony"
+      ],
+      "hardConstraints": [],
+      "riskSignals": [],
+      "keywords": [
+        "data analysis numerical quantitative",
+        "tech",
+        "problem solving analytical logical",
+        "fast learner adaptable quick study",
+        "persistent dedicated focused determined",
+        "analytical logical reasoning problem-solving",
+        "데이터 분석 통계",
+        "기술 개발 IT",
+        "문제 해결 논리",
+        "성장 발전 경력개발",
+        "전문성 숙련 전문가",
+        "소득 연봉 보수"
+      ]
+    },
+    "debug_info": {
+      "vectorize_topK": 800,
+      "judge_topN": 10,
+      "fallback_used": false,
+      "has_narrative_facts": false,
+      "round_answers_count": 0
+    },
+    "duration_ms": 93063
+  },
+  "timing": {
+    "analyzeMs": 3745,
+    "narrativeMs": 158,
+    "roundsMs": [
+      11681,
+      10428,
+      11402
+    ],
+    "roundAnswersMs": [
+      421,
+      377,
+      398
+    ],
+    "recommendMs": 93445,
+    "totalMs": 135083
+  },
+  "errors": []
+}

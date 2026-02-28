@@ -564,5 +564,76 @@ adminAiApi.post('/retag-flat50', async (c) => {
   }
 })
 
+/**
+ * POST /admin/api/ai/retag-category-defaults
+ * 카테고리 기본값(knowledge/office) 직업 재태깅
+ * flat-50이 아닌 직업 중 카테고리만 기본값인 직업을 대상으로 함
+ * batch_size: 한 번에 처리할 직업 수 (기본 5, 최대 20)
+ */
+adminAiApi.post('/retag-category-defaults', async (c) => {
+  const db = c.env.DB
+  const openaiKey = (c.env as any).OPENAI_API_KEY
+  if (!openaiKey) {
+    return c.json({ error: 'OPENAI_API_KEY not configured' }, 500)
+  }
+
+  const body = await c.req.json<{ batch_size?: number }>().catch(() => ({}))
+  const batchSize = Math.min(Math.max(body.batch_size || 5, 1), 20)
+
+  try {
+    // 카테고리 기본값 직업 조회: job_type='knowledge' AND work_environment='office'
+    // 단, flat-50은 제외 (이미 retag-flat50에서 처리)
+    const jobs = await db.prepare(`
+      SELECT j.id, j.name, j.api_data_json, j.merged_profile_json, j.user_contributed_json, j.admin_data_json
+      FROM jobs j
+      INNER JOIN job_attributes ja ON j.id = ja.job_id
+      WHERE ja.job_type = 'knowledge' AND ja.work_environment = 'office'
+        AND NOT (ja.analytical = 50 AND ja.creative = 50 AND ja.execution = 50 AND ja.people_facing = 50)
+      ORDER BY j.name
+      LIMIT ?
+    `).bind(batchSize).all<{
+      id: string; name: string
+      api_data_json: string | null; merged_profile_json: string | null
+      user_contributed_json: string | null; admin_data_json: string | null
+    }>()
+
+    const totalDefaults = await db.prepare(`
+      SELECT COUNT(*) as cnt FROM jobs j
+      INNER JOIN job_attributes ja ON j.id = ja.job_id
+      WHERE ja.job_type = 'knowledge' AND ja.work_environment = 'office'
+        AND NOT (ja.analytical = 50 AND ja.creative = 50 AND ja.execution = 50 AND ja.people_facing = 50)
+    `).first<{ cnt: number }>()
+
+    const { autoTagJob } = await import('./auto-tagger')
+    const results: Array<{ job_id: string; job_name: string; success: boolean; error?: string }> = []
+
+    for (const job of jobs.results || []) {
+      // 기존 속성 삭제 후 재태깅
+      await db.prepare('DELETE FROM job_attributes WHERE job_id = ?').bind(job.id).run()
+      const result = await autoTagJob(db, job, openaiKey)
+      results.push({
+        job_id: job.id,
+        job_name: job.name,
+        success: result.success,
+        error: result.error,
+      })
+    }
+
+    const successCount = results.filter(r => r.success).length
+    const failCount = results.filter(r => !r.success).length
+
+    return c.json({
+      total_category_defaults: totalDefaults?.cnt || 0,
+      processed: results.length,
+      success: successCount,
+      failed: failCount,
+      remaining: (totalDefaults?.cnt || 0) - successCount,
+      results,
+    })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
 export { adminAiApi }
 

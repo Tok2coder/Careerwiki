@@ -369,42 +369,77 @@ export function addQSPToHistory(
 // ============================================
 // 이미 물어본 질문인지 확인
 // ============================================
+// 토픽 키워드: 유사한 의미의 단어 그룹 → 같은 그룹이면 같은 토픽
+const TOPIC_SYNONYMS: Record<string, string[]> = {
+  '에너지': ['에너지', '활력', '지치', '소모', '충전', '동력', '힘', '피곤'],
+  '가치': ['가치', '중요', '포기', '타협', '우선순위', '절대', '원칙'],
+  '감정': ['감정', '느낌', '기분', '기쁨', '분노', '불안', '두려움', '즐거움'],
+  '관계': ['사람', '관계', '팀', '동료', '상사', '소통', '협업', '인간관계'],
+  '환경': ['환경', '조직', '문화', '분위기', '야근', '출퇴근', '워라밸'],
+  '성장': ['성장', '발전', '도전', '배움', '목표', '커리어', '전문성'],
+  '안정': ['안정', '안전', '보장', '걱정', '불확실', '리스크'],
+  '한계': ['한계', '못하는', '싫은', '버틸', '견딜', '회피'],
+}
+
+function getTopicGroup(word: string): string | null {
+  for (const [topic, synonyms] of Object.entries(TOPIC_SYNONYMS)) {
+    if (synonyms.some(s => word.includes(s) || s.includes(word))) {
+      return topic
+    }
+  }
+  return null
+}
+
 export function isQuestionAlreadyAsked(
   state: CAGState,
   questionText: string,
-  similarityThreshold: number = 0.8
+  similarityThreshold: number = 0.65
 ): boolean {
   // questionText가 없으면 중복 아님
   if (!questionText) return false
-  
+
   // 정확히 같은 질문
   if (state.asked_questions_log.some(q => q.questionText === questionText)) {
     return true
   }
-  
-  // 유사한 질문 (간단한 키워드 기반)
+
+  // 키워드 추출 (2자 이상)
   const keywords = questionText
     .split(/[^\w가-힣]+/)
     .filter(w => w.length > 1)
-  
+
+  // 토픽 그룹 추출 (새 질문)
+  const newTopics = new Set(
+    keywords.map(k => getTopicGroup(k)).filter((t): t is string => t !== null)
+  )
+
   for (const log of state.asked_questions_log) {
     // log.questionText가 없으면 스킵
     if (!log.questionText) continue
-    
+
     const logKeywords = log.questionText
       .split(/[^\w가-힣]+/)
       .filter(w => w.length > 1)
-    
-    // 키워드 겹침 비율
+
+    // 1. 키워드 Jaccard 유사도 (임계값 0.65로 낮춤)
     const intersection = keywords.filter(k => logKeywords.includes(k)).length
     const union = new Set([...keywords, ...logKeywords]).size
     const similarity = union > 0 ? intersection / union : 0
-    
+
     if (similarity >= similarityThreshold) {
       return true
     }
+
+    // 2. 토픽 그룹 유사도 (같은 토픽 그룹의 키워드가 2개 이상 겹치면 중복)
+    const logTopics = new Set(
+      logKeywords.map(k => getTopicGroup(k)).filter((t): t is string => t !== null)
+    )
+    const topicIntersection = [...newTopics].filter(t => logTopics.has(t))
+    if (topicIntersection.length >= 2) {
+      return true
+    }
   }
-  
+
   return false
 }
 
