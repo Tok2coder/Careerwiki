@@ -147,6 +147,8 @@ export interface TopPage {
   name: string
   type: string
   views: number
+  saves?: number
+  comments?: number
 }
 
 // =============================================================================
@@ -565,16 +567,16 @@ export async function getAnalyticsStats(db: D1Database, params: StatsParams): Pr
     .all<{ type: string; views: number }>()
   const byType = (byTypeRows.results || []).map((r) => ({ type: r.type || 'unknown', views: r.views || 0 }))
 
-  // 활성 사용자 (로그인 사용자)
+  // 활성 사용자 (로그인 사용자, 관리자 제외)
   const activeRow = await db
-    .prepare(`SELECT COUNT(*) as count FROM users WHERE last_login_at BETWEEN ? AND ?`)
+    .prepare(`SELECT COUNT(*) as count FROM users WHERE last_login_at BETWEEN ? AND ? AND id NOT IN (${EXCLUDED_USER_IDS_SUBQUERY})`)
     .bind(startTs, endTs)
     .first<{ count: number }>()
   const activeUsers = activeRow?.count || 0
 
-  // 신규 가입자
+  // 신규 가입자 (관리자 제외)
   const newRow = await db
-    .prepare(`SELECT COUNT(*) as count FROM users WHERE created_at BETWEEN ? AND ?`)
+    .prepare(`SELECT COUNT(*) as count FROM users WHERE created_at BETWEEN ? AND ? AND id NOT IN (${EXCLUDED_USER_IDS_SUBQUERY})`)
     .bind(startTs, endTs)
     .first<{ count: number }>()
   const newUsers = newRow?.count || 0
@@ -585,10 +587,12 @@ export async function getAnalyticsStats(db: D1Database, params: StatsParams): Pr
 
   const topJobsResult = await db
     .prepare(`
-      SELECT slug, name, 'job' as type, COALESCE(view_count, 0) as views
-      FROM jobs
-      WHERE is_active = 1
-      ORDER BY view_count DESC
+      SELECT j.slug, j.name, 'job' as type, COALESCE(j.view_count, 0) as views,
+        (SELECT COUNT(*) FROM user_bookmarks WHERE item_type = 'job' AND item_slug = j.slug) as saves,
+        (SELECT COUNT(*) FROM comments c JOIN pages p ON c.page_id = p.id WHERE p.page_type = 'job' AND p.slug = j.slug AND c.status = 'visible') as comments
+      FROM jobs j
+      WHERE j.is_active = 1
+      ORDER BY j.view_count DESC
       LIMIT ?
     `)
     .bind(topLimit)
@@ -596,10 +600,12 @@ export async function getAnalyticsStats(db: D1Database, params: StatsParams): Pr
 
   const topMajorsResult = await db
     .prepare(`
-      SELECT slug, name, 'major' as type, COALESCE(view_count, 0) as views
-      FROM majors
-      WHERE is_active = 1
-      ORDER BY view_count DESC
+      SELECT m.slug, m.name, 'major' as type, COALESCE(m.view_count, 0) as views,
+        (SELECT COUNT(*) FROM user_bookmarks WHERE item_type = 'major' AND item_slug = m.slug) as saves,
+        (SELECT COUNT(*) FROM comments c JOIN pages p ON c.page_id = p.id WHERE p.page_type = 'major' AND p.slug = m.slug AND c.status = 'visible') as comments
+      FROM majors m
+      WHERE m.is_active = 1
+      ORDER BY m.view_count DESC
       LIMIT ?
     `)
     .bind(topLimit)
@@ -607,11 +613,13 @@ export async function getAnalyticsStats(db: D1Database, params: StatsParams): Pr
 
   const topHowtoResult = await db
     .prepare(`
-      SELECT slug, title as name, 'howto' as type, COALESCE(view_count, 0) as views
-      FROM pages
-      WHERE page_type = 'guide'
-        AND slug NOT LIKE 'guide:%'
-      ORDER BY view_count DESC
+      SELECT p2.slug, p2.title as name, 'howto' as type, COALESCE(p2.view_count, 0) as views,
+        (SELECT COUNT(*) FROM user_bookmarks WHERE item_type = 'howto' AND item_slug = p2.slug) as saves,
+        (SELECT COUNT(*) FROM comments c WHERE c.page_id = p2.id AND c.status = 'visible') as comments
+      FROM pages p2
+      WHERE p2.page_type = 'guide'
+        AND p2.slug NOT LIKE 'guide:%'
+      ORDER BY p2.view_count DESC
       LIMIT ?
     `)
     .bind(topLimit)
@@ -663,6 +671,7 @@ export async function getAiConversionStats(db: D1Database, params: { startDate: 
     FROM ai_analysis_requests
     WHERE parent_request_id IS NULL
       AND DATE(requested_at) BETWEEN ? AND ?
+      AND CAST(user_id AS INTEGER) NOT IN (${EXCLUDED_USER_IDS_SUBQUERY})
   `).bind(startDate, endDate).first<{ total: number; completed: number }>()
 
   const totalRequests = totalRow?.total || 0
@@ -678,6 +687,7 @@ export async function getAiConversionStats(db: D1Database, params: { startDate: 
     FROM ai_analysis_requests
     WHERE parent_request_id IS NULL
       AND DATE(requested_at) BETWEEN ? AND ?
+      AND CAST(user_id AS INTEGER) NOT IN (${EXCLUDED_USER_IDS_SUBQUERY})
     GROUP BY DATE(requested_at)
     ORDER BY date DESC
     LIMIT 30
@@ -968,9 +978,16 @@ export async function getDashboardChartData(db: D1Database, days: number = 7): P
       analysisMap.set(row.stat_date, row.count)
     }
 
-    // 모든 날짜 합치기
-    const allDates = new Set([...dayMap.keys(), ...analysisMap.keys()])
-    const daily = Array.from(allDates).sort().map(date => {
+    // 전체 날짜 범위 생성 (빈 날짜도 0으로 채움)
+    const allDates: string[] = []
+    const now = new Date()
+    for (let i = days; i >= 0; i--) {
+      const d = new Date(now)
+      d.setDate(d.getDate() - i)
+      allDates.push(d.toISOString().split('T')[0])
+    }
+
+    const daily = allDates.map(date => {
       const counts = dayMap.get(date) || { job: 0, major: 0, howto: 0, share: 0 }
       return {
         date,
@@ -984,7 +1001,7 @@ export async function getDashboardChartData(db: D1Database, days: number = 7): P
 
     const totalViews = daily.reduce((sum, d) => sum + d.total, 0)
     const totalAnalyses = daily.reduce((sum, d) => sum + d.analyses, 0)
-    const avgDaily = daily.length > 0 ? Math.round(totalViews / daily.length) : 0
+    const avgDaily = allDates.length > 0 ? Math.round(totalViews / allDates.length) : 0
     const maxEntry = daily.reduce(
       (max, d) => d.total > (max?.views || 0) ? { date: d.date, views: d.total } : max,
       null as { date: string; views: number } | null
@@ -993,6 +1010,94 @@ export async function getDashboardChartData(db: D1Database, days: number = 7): P
     return { daily, summary: { totalViews, avgDaily, maxDay: maxEntry, totalAnalyses } }
   } catch {
     return { daily: [], summary: { totalViews: 0, avgDaily: 0, maxDay: null, totalAnalyses: 0 } }
+  }
+}
+
+/**
+ * 사용자 유입경로/관심/커리어 통계
+ */
+export interface UserAttributionStats {
+  channelDistribution: Array<{ channel: string; count: number }>
+  interestDistribution: Array<{ state: string; count: number }>
+  careerDistribution: Array<{ state: string; count: number }>
+  totalWithAttribution: number
+}
+
+export async function getUserAttributionStats(db: D1Database): Promise<UserAttributionStats> {
+  try {
+    const [channels, interests, careers, total] = await Promise.all([
+      db.prepare(`
+        SELECT self_channel as channel, COUNT(*) as count
+        FROM user_attributions
+        WHERE self_channel IS NOT NULL
+        GROUP BY self_channel
+        ORDER BY count DESC
+      `).all<{ channel: string; count: number }>(),
+      db.prepare(`
+        SELECT interest_state as state, COUNT(*) as count
+        FROM user_attributions
+        WHERE interest_state IS NOT NULL
+        GROUP BY interest_state
+        ORDER BY count DESC
+      `).all<{ state: string; count: number }>(),
+      db.prepare(`
+        SELECT career_state as state, COUNT(*) as count
+        FROM user_attributions
+        WHERE career_state IS NOT NULL
+        GROUP BY career_state
+        ORDER BY count DESC
+      `).all<{ state: string; count: number }>(),
+      db.prepare('SELECT COUNT(*) as count FROM user_attributions').first<{ count: number }>()
+    ])
+    return {
+      channelDistribution: (channels.results || []) as Array<{ channel: string; count: number }>,
+      interestDistribution: (interests.results || []) as Array<{ state: string; count: number }>,
+      careerDistribution: (careers.results || []) as Array<{ state: string; count: number }>,
+      totalWithAttribution: total?.count || 0
+    }
+  } catch {
+    return { channelDistribution: [], interestDistribution: [], careerDistribution: [], totalWithAttribution: 0 }
+  }
+}
+
+/**
+ * 콘텐츠별 조회수/저장수 TOP 통계
+ */
+export interface ContentViewStats {
+  topJobs: Array<{ slug: string; name: string; views: number; bookmarks: number }>
+  topMajors: Array<{ slug: string; name: string; views: number; bookmarks: number }>
+  topHowtos: Array<{ slug: string; name: string; views: number; bookmarks: number }>
+}
+
+export async function getContentViewStats(db: D1Database, limit: number = 20): Promise<ContentViewStats> {
+  try {
+    const [topJobs, topMajors, topHowtos] = await Promise.all([
+      db.prepare(`
+        SELECT j.slug, j.name, COALESCE(j.view_count, 0) as views,
+          (SELECT COUNT(*) FROM user_bookmarks WHERE item_type = 'job' AND item_slug = j.slug) as bookmarks
+        FROM jobs j WHERE j.is_active = 1
+        ORDER BY j.view_count DESC LIMIT ?
+      `).bind(limit).all<{ slug: string; name: string; views: number; bookmarks: number }>(),
+      db.prepare(`
+        SELECT m.slug, m.name, COALESCE(m.view_count, 0) as views,
+          (SELECT COUNT(*) FROM user_bookmarks WHERE item_type = 'major' AND item_slug = m.slug) as bookmarks
+        FROM majors m WHERE m.is_active = 1
+        ORDER BY m.view_count DESC LIMIT ?
+      `).bind(limit).all<{ slug: string; name: string; views: number; bookmarks: number }>(),
+      db.prepare(`
+        SELECT p.slug, p.title as name, COALESCE(p.view_count, 0) as views,
+          (SELECT COUNT(*) FROM user_bookmarks WHERE item_type = 'howto' AND item_slug = p.slug) as bookmarks
+        FROM pages p WHERE p.page_type = 'guide' AND p.slug NOT LIKE 'guide:%'
+        ORDER BY p.view_count DESC LIMIT ?
+      `).bind(limit).all<{ slug: string; name: string; views: number; bookmarks: number }>()
+    ])
+    return {
+      topJobs: (topJobs.results || []) as Array<{ slug: string; name: string; views: number; bookmarks: number }>,
+      topMajors: (topMajors.results || []) as Array<{ slug: string; name: string; views: number; bookmarks: number }>,
+      topHowtos: (topHowtos.results || []) as Array<{ slug: string; name: string; views: number; bookmarks: number }>
+    }
+  } catch {
+    return { topJobs: [], topMajors: [], topHowtos: [] }
   }
 }
 

@@ -35,21 +35,21 @@ export interface AnalyticsProps {
 
 const metricCard = (label: string, value: string, tone: 'blue' | 'green' | 'amber' | 'red' | 'slate' = 'slate') => {
   const toneMap: Record<string, string> = {
-    blue: 'text-blue-300 bg-blue-500/10',
-    green: 'text-emerald-300 bg-emerald-500/10',
-    amber: 'text-amber-300 bg-amber-500/10',
-    red: 'text-rose-300 bg-rose-500/10',
-    slate: 'text-slate-200 bg-slate-500/10'
+    blue: 'text-blue-300',
+    green: 'text-emerald-300',
+    amber: 'text-amber-300',
+    red: 'text-rose-300',
+    slate: 'text-slate-200'
   }
   return `
     <div class="glass-card rounded-xl p-4 border border-wiki-border/60">
       <div class="text-sm text-slate-400 mb-1">${label}</div>
-      <div class="text-2xl font-bold ${toneMap[tone]} px-2 py-1 rounded-lg inline-block">${value}</div>
+      <div class="text-2xl font-bold ${toneMap[tone]}">${value}</div>
     </div>
   `
 }
 
-const renderTopTable = (title: string, items: { slug: string; name: string; type: string; views: number }[]) => {
+const renderTopTable = (title: string, items: { slug: string; name: string; type: string; views: number; saves?: number; comments?: number }[]) => {
   const maxViews = Math.max(...items.map(i => i.views || 0), 1)
   return `
   <div class="glass-card rounded-xl overflow-hidden">
@@ -64,7 +64,9 @@ const renderTopTable = (title: string, items: { slug: string; name: string; type
             <th class="px-4 py-3 text-left text-slate-400 font-medium w-12">#</th>
             <th class="px-4 py-3 text-left text-slate-400 font-medium">페이지</th>
             <th class="px-4 py-3 text-right text-slate-400 font-medium">조회</th>
-            <th class="px-4 py-3 text-slate-400 font-medium w-32 hidden sm:table-cell"></th>
+            <th class="px-4 py-3 text-right text-slate-400 font-medium hidden sm:table-cell">저장</th>
+            <th class="px-4 py-3 text-right text-slate-400 font-medium hidden sm:table-cell">댓글</th>
+            <th class="px-4 py-3 text-slate-400 font-medium w-28 hidden lg:table-cell"></th>
           </tr>
         </thead>
         <tbody>
@@ -74,12 +76,14 @@ const renderTopTable = (title: string, items: { slug: string; name: string; type
               <td class="px-4 py-2 text-slate-200">
                 <div class="flex items-center gap-2">
                   <span class="px-2 py-0.5 text-[11px] rounded bg-slate-700/70 text-slate-200 uppercase">${p.type}</span>
-                  <span>${p.name || p.slug}</span>
+                  <a href="/${p.type === 'howto' ? 'howto' : p.type}/${p.slug}" class="hover:text-blue-400 transition-colors">${p.name || p.slug}</a>
                 </div>
                 <div class="text-xs text-slate-500">${p.slug}</div>
               </td>
               <td class="px-4 py-2 text-right text-slate-200">${(p.views || 0).toLocaleString()}</td>
-              <td class="px-4 py-2 hidden sm:table-cell">
+              <td class="px-4 py-2 text-right text-slate-200 hidden sm:table-cell">${(p.saves || 0).toLocaleString()}</td>
+              <td class="px-4 py-2 text-right text-slate-200 hidden sm:table-cell">${(p.comments || 0).toLocaleString()}</td>
+              <td class="px-4 py-2 hidden lg:table-cell">
                 <div class="bg-slate-700/50 rounded-full h-1.5">
                   <div class="bg-blue-500 h-1.5 rounded-full" style="width: ${maxViews > 0 ? Math.round(((p.views || 0) / maxViews) * 100) : 0}%"></div>
                 </div>
@@ -87,7 +91,7 @@ const renderTopTable = (title: string, items: { slug: string; name: string; type
             </tr>
           `).join('') : `
             <tr>
-              <td colspan="4" class="px-4 py-8 text-center text-slate-400">데이터가 없습니다.</td>
+              <td colspan="6" class="px-4 py-8 text-center text-slate-400">데이터가 없습니다.</td>
             </tr>
           `}
         </tbody>
@@ -168,7 +172,7 @@ export function renderAdminStats(props: AnalyticsProps): string {
         <div class="glass-card rounded-xl overflow-hidden">
           <div class="p-4 border-b border-wiki-border/70 flex items-center gap-2">
             <i class="fas fa-exclamation-triangle text-rose-400"></i>
-            <h3 class="text-lg font-semibold text-slate-100">실패 키워드 (결과 0건)</h3>
+            <h3 class="text-lg font-semibold text-slate-100">실패 키워드 <span class="text-sm font-normal text-slate-400">(${(searchStats?.failedQueries || []).length}건)</span></h3>
           </div>
           <div class="max-h-96 overflow-y-auto">
             <table class="w-full">

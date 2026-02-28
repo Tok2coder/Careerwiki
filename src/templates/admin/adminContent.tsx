@@ -3,7 +3,7 @@
  */
 
 import { renderAdminLayout } from './adminLayout'
-import type { CoverageStats } from '../../services/adminService'
+import type { ContentViewStats } from '../../services/adminService'
 
 export interface RevisionRecord {
   id: number
@@ -29,7 +29,7 @@ export interface HiddenItem {
 }
 
 export interface AdminContentProps {
-  activeTab: 'revisions' | 'archive' | 'comments'
+  activeTab: 'revisions' | 'archive' | 'comments' | 'reports'
   revisions: RevisionRecord[]
   total: number
   page: number
@@ -83,103 +83,111 @@ export interface AdminContentProps {
     perPage: number
     totalPages: number
   }
-  coverage?: CoverageStats
+  contentViewStats?: ContentViewStats
+}
+
+function renderContentViewStatsSection(cvs: ContentViewStats): string {
+  const renderMiniTable = (title: string, icon: string, color: string, items: Array<{ slug: string; name: string; views: number; bookmarks: number }>, typePrefix: string) => {
+    const maxViews = Math.max(...items.map(i => i.views || 0), 1)
+    return `
+      <div class="glass-card rounded-xl overflow-hidden">
+        <div class="p-3 border-b border-wiki-border/70 flex items-center gap-2">
+          <i class="fas ${icon} ${color}"></i>
+          <h4 class="text-sm font-semibold">${title}</h4>
+        </div>
+        <div class="max-h-72 overflow-y-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-wiki-card sticky top-0">
+              <tr>
+                <th class="px-3 py-2 text-left text-slate-400 font-medium w-8">#</th>
+                <th class="px-3 py-2 text-left text-slate-400 font-medium">이름</th>
+                <th class="px-3 py-2 text-right text-slate-400 font-medium">조회</th>
+                <th class="px-3 py-2 text-right text-slate-400 font-medium hidden sm:table-cell">저장</th>
+                <th class="px-3 py-2 text-slate-400 font-medium w-20 hidden lg:table-cell"></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${items.length ? items.slice(0, 10).map((p, idx) => `
+                <tr class="border-t border-wiki-border/60 hover:bg-wiki-card/60">
+                  <td class="px-3 py-1.5 text-slate-500">${idx + 1}</td>
+                  <td class="px-3 py-1.5"><a href="/${typePrefix}/${p.slug}" class="text-slate-200 hover:text-blue-400 transition-colors truncate block max-w-[200px]">${escapeHtml(p.name)}</a></td>
+                  <td class="px-3 py-1.5 text-right text-slate-200">${(p.views || 0).toLocaleString()}</td>
+                  <td class="px-3 py-1.5 text-right text-slate-200 hidden sm:table-cell">${(p.bookmarks || 0).toLocaleString()}</td>
+                  <td class="px-3 py-1.5 hidden lg:table-cell"><div class="bg-slate-700/50 rounded-full h-1.5"><div class="bg-blue-500 h-1.5 rounded-full" style="width: ${maxViews > 0 ? Math.round(((p.views || 0) / maxViews) * 100) : 0}%"></div></div></td>
+                </tr>
+              `).join('') : '<tr><td colspan="5" class="px-3 py-6 text-center text-slate-400">데이터 없음</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `
+  }
+  return `
+    <div class="glass-card rounded-xl p-4 mb-4">
+      <h3 class="text-lg font-semibold mb-3 flex items-center gap-2 text-slate-100">
+        <i class="fas fa-chart-bar text-blue-400"></i> 콘텐츠별 조회수 TOP 10
+      </h3>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        ${renderMiniTable('직업', 'fa-briefcase', 'text-blue-400', cvs.topJobs, 'job')}
+        ${renderMiniTable('전공', 'fa-graduation-cap', 'text-purple-400', cvs.topMajors, 'major')}
+        ${renderMiniTable('HowTo', 'fa-lightbulb', 'text-emerald-400', cvs.topHowtos, 'howto')}
+      </div>
+    </div>
+  `
 }
 
 export function renderAdminContent(props: AdminContentProps): string {
-  const { activeTab, revisions, total, page, perPage, totalPages, filters, hiddenJobs, hiddenMajors, coverage } = props
+  const { activeTab, revisions, total, page, perPage, totalPages, filters, hiddenJobs, hiddenMajors } = props
 
   // 기본 날짜 설정 (최근 30일)
   const defaultEndDate = new Date().toISOString().split('T')[0]
   const defaultStartDate = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
 
-  const coverageSection = coverage ? `
-    <div class="glass-card rounded-xl p-4 mb-4">
-      <h3 class="text-lg font-semibold mb-3 flex items-center gap-2 text-slate-100">
-        <i class="fas fa-map text-emerald-400"></i> 콘텐츠 커버리지
-      </h3>
-      <!-- 직업 -->
-      <div class="mb-3">
-        <div class="flex justify-between text-sm mb-1">
-          <span class="text-slate-300">직업 (${coverage.jobs.total}개)</span>
-          <span class="text-emerald-400">${coverage.jobs.edited}개 편집됨 (${coverage.jobs.rate.toFixed(1)}%)</span>
-        </div>
-        <div class="bg-slate-700/50 rounded-full h-2">
-          <div class="bg-blue-500 h-2 rounded-full" style="width: ${Math.min(coverage.jobs.rate, 100)}%"></div>
-        </div>
-      </div>
-      <!-- 전공 -->
-      <div class="mb-3">
-        <div class="flex justify-between text-sm mb-1">
-          <span class="text-slate-300">전공 (${coverage.majors.total}개)</span>
-          <span class="text-emerald-400">${coverage.majors.edited}개 편집됨 (${coverage.majors.rate.toFixed(1)}%)</span>
-        </div>
-        <div class="bg-slate-700/50 rounded-full h-2">
-          <div class="bg-purple-500 h-2 rounded-full" style="width: ${Math.min(coverage.majors.rate, 100)}%"></div>
-        </div>
-      </div>
-
-      <!-- 편집 우선순위 TOP 10 -->
-      <h4 class="text-sm font-medium text-slate-300 mt-4 mb-2">미편집 + 고조회수 TOP 10 (편집 우선순위)</h4>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <!-- 직업 -->
-        <div class="space-y-1">
-          <div class="text-xs text-blue-400 font-medium mb-1">직업</div>
-          ${coverage.priorityJobs.map((j, i) => `
-            <a href="/job/${j.slug}/edit" class="flex items-center justify-between text-sm bg-wiki-card/60 rounded px-3 py-1.5 hover:bg-wiki-card transition-colors">
-              <span class="text-slate-200 truncate">${i + 1}. ${escapeHtml(j.name)}</span>
-              <span class="text-slate-400 text-xs shrink-0 ml-2">${(j.viewCount || 0).toLocaleString()}회</span>
-            </a>
-          `).join('')}
-        </div>
-        <!-- 전공 -->
-        <div class="space-y-1">
-          <div class="text-xs text-purple-400 font-medium mb-1">전공</div>
-          ${coverage.priorityMajors.map((m, i) => `
-            <a href="/major/${m.slug}/edit" class="flex items-center justify-between text-sm bg-wiki-card/60 rounded px-3 py-1.5 hover:bg-wiki-card transition-colors">
-              <span class="text-slate-200 truncate">${i + 1}. ${escapeHtml(m.name)}</span>
-              <span class="text-slate-400 text-xs shrink-0 ml-2">${(m.viewCount || 0).toLocaleString()}회</span>
-            </a>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-  ` : ''
+  // 신고 건수 합산
+  const reportCount = (props.moderation?.items?.filter(i => i.reportCount > 0).length || 0) + (props.howtoReports?.total || 0)
 
   const content = `
-    ${coverageSection}
+    <!-- 콘텐츠별 조회수 TOP -->
+    ${props.contentViewStats ? renderContentViewStatsSection(props.contentViewStats) : ''}
+
     <!-- 탭 네비게이션 -->
     <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
-      <a href="/admin/content?tab=revisions" 
-         class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base flex items-center ${activeTab === 'revisions' 
-           ? 'bg-blue-600 text-white' 
+      <a href="/admin/content?tab=revisions"
+         class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base flex items-center ${activeTab === 'revisions'
+           ? 'bg-blue-600 text-white'
            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">
         <i class="fas fa-history mr-1.5 sm:mr-2"></i><span class="hidden sm:inline">편집 </span>이력
       </a>
-      <a href="/admin/content?tab=archive" 
-         class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base flex items-center ${activeTab === 'archive' 
-           ? 'bg-amber-600 text-white' 
+      <a href="/admin/content?tab=archive"
+         class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base flex items-center ${activeTab === 'archive'
+           ? 'bg-amber-600 text-white'
            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">
-        <i class="fas fa-archive mr-1.5 sm:mr-2"></i>페이지
+        <i class="fas fa-archive mr-1.5 sm:mr-2"></i>숨김/비활성
         ${(hiddenJobs.length + hiddenMajors.length) > 0 ? `<span class="ml-1.5 sm:ml-2 px-1.5 sm:px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">${hiddenJobs.length + hiddenMajors.length}</span>` : ''}
       </a>
-      <a href="/admin/content?tab=comments" 
-         class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base flex items-center ${activeTab === 'comments' 
-           ? 'bg-rose-600 text-white' 
+      <a href="/admin/content?tab=comments"
+         class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base flex items-center ${activeTab === 'comments'
+           ? 'bg-rose-600 text-white'
            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">
         <i class="fas fa-comments mr-1.5 sm:mr-2"></i>댓글
-        ${props.moderation && props.moderation.total > 0 ? `<span class="ml-1.5 sm:ml-2 px-1.5 sm:px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">${props.moderation.total}</span>` : ''}
+      </a>
+      <a href="/admin/content?tab=reports"
+         class="px-3 sm:px-4 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base flex items-center ${activeTab === 'reports'
+           ? 'bg-red-600 text-white'
+           : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">
+        <i class="fas fa-flag mr-1.5 sm:mr-2"></i>신고
+        ${reportCount > 0 ? `<span class="ml-1.5 sm:ml-2 px-1.5 sm:px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">${reportCount}</span>` : ''}
       </a>
     </div>
-    
+
     ${activeTab === 'revisions' ? renderRevisionsTab(revisions, total, page, perPage, totalPages, filters, defaultStartDate, defaultEndDate) : ''}
     ${activeTab === 'archive' ? renderArchiveTab(hiddenJobs, hiddenMajors) : ''}
     ${activeTab === 'comments' ? renderCommentsModerationTab(props.moderation) : ''}
-    ${activeTab === 'archive' ? renderHowtoReports(props.howtoReports) : ''}
-    
+    ${activeTab === 'reports' ? renderReportsTab(props.moderation, props.howtoReports) : ''}
+
     <!-- Toast 컨테이너 -->
     <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
-    
+
     <script>
       // Toast 표시
       function showToast(message, type = 'info') {
@@ -938,6 +946,166 @@ function renderCommentsModerationTab(moderation?: AdminContentProps['moderation'
   `
 }
 
+function renderReportsTab(
+  moderation?: AdminContentProps['moderation'],
+  howtoReports?: AdminContentProps['howtoReports']
+): string {
+  const flaggedComments = moderation?.items?.filter(i => i.reportCount > 0) || []
+  const howtoItems = howtoReports?.items || []
+  const totalReports = flaggedComments.length + howtoItems.length
+
+  return `
+    <div class="space-y-6">
+      <!-- 신고된 댓글 -->
+      <div class="glass-card rounded-xl overflow-hidden">
+        <div class="p-4 border-b border-slate-700/50">
+          <h3 class="text-lg font-semibold flex items-center gap-2">
+            <i class="fas fa-comment-slash text-rose-400"></i>
+            신고된 댓글 <span class="text-slate-400 font-normal">(${flaggedComments.length}건)</span>
+          </h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[700px]">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="px-3 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm w-12">ID</th>
+                <th class="px-3 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm">내용</th>
+                <th class="px-3 py-3 text-left text-slate-400 font-medium text-xs sm:text-sm w-24">작성자</th>
+                <th class="px-3 py-3 text-center text-slate-400 font-medium text-xs sm:text-sm w-16">신고</th>
+                <th class="px-3 py-3 text-center text-slate-400 font-medium text-xs sm:text-sm w-16">상태</th>
+                <th class="px-3 py-3 text-center text-slate-400 font-medium text-xs sm:text-sm w-32">작업</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${flaggedComments.length ? flaggedComments.map(item => {
+                const link = item.pageType === 'job' ? '/job/' + item.slug
+                  : item.pageType === 'major' ? '/major/' + item.slug
+                  : '/howto/' + item.slug
+                return `
+                  <tr class="border-t border-slate-700/50 hover:bg-slate-700/20 transition-colors">
+                    <td class="px-3 py-3 text-slate-400 text-sm">${item.id}</td>
+                    <td class="px-3 py-3">
+                      <div class="text-slate-200 text-sm line-clamp-2">${escapeHtml(item.content || '')}</div>
+                      <a href="${link}#comments" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 mt-1 inline-block">
+                        <i class="fas fa-link mr-1"></i>${escapeHtml(item.title || item.slug)}
+                      </a>
+                    </td>
+                    <td class="px-3 py-3 text-slate-300 text-sm">${escapeHtml(item.nickname || (item.isAnonymous ? '익명' : '사용자'))}</td>
+                    <td class="px-3 py-3 text-center">
+                      <span class="px-2 py-0.5 bg-red-500/20 text-red-300 rounded text-xs font-medium">${item.reportCount}</span>
+                    </td>
+                    <td class="px-3 py-3 text-center">
+                      <span class="px-2 py-0.5 rounded text-xs ${
+                        item.status === 'blinded' ? 'bg-red-500/20 text-red-300'
+                        : item.status === 'deleted' ? 'bg-slate-600/50 text-slate-300'
+                        : 'bg-green-500/20 text-green-300'
+                      }">${item.status}</span>
+                    </td>
+                    <td class="px-3 py-3 text-center">
+                      <div class="flex items-center justify-center gap-1">
+                        ${item.status === 'blinded' ? `
+                          <button class="report-mod-action px-2 py-1 text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded" data-action="unblind" data-id="${item.id}">해제</button>
+                        ` : `
+                          <button class="report-mod-action px-2 py-1 text-xs bg-amber-600 hover:bg-amber-500 text-white rounded" data-action="blind" data-id="${item.id}">블라인드</button>
+                        `}
+                        <button class="report-mod-action px-2 py-1 text-xs bg-red-600 hover:bg-red-500 text-white rounded" data-action="delete" data-id="${item.id}">삭제</button>
+                      </div>
+                    </td>
+                  </tr>
+                `
+              }).join('') : `
+                <tr>
+                  <td colspan="6" class="px-3 py-8 text-center text-slate-400">
+                    <i class="fas fa-check-circle text-2xl mb-2 text-green-400"></i>
+                    <p class="text-sm">신고된 댓글이 없습니다.</p>
+                  </td>
+                </tr>
+              `}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 신고된 HowTo -->
+      <div class="glass-card rounded-xl overflow-hidden">
+        <div class="p-4 border-b border-slate-700/50">
+          <h3 class="text-lg font-semibold flex items-center gap-2">
+            <i class="fas fa-flag text-rose-400"></i>
+            신고된 HowTo <span class="text-slate-400 font-normal">(${howtoItems.length}건)</span>
+          </h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="px-3 py-3 text-left text-slate-400 font-medium text-sm w-12">ID</th>
+                <th class="px-3 py-3 text-left text-slate-400 font-medium text-sm">제목</th>
+                <th class="px-3 py-3 text-left text-slate-400 font-medium text-sm w-28">신고 사유</th>
+                <th class="px-3 py-3 text-left text-slate-400 font-medium text-sm w-40">세부 사유</th>
+                <th class="px-3 py-3 text-left text-slate-400 font-medium text-sm w-24">일시</th>
+                <th class="px-3 py-3 text-left text-slate-400 font-medium text-sm w-20">상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${howtoItems.length ? howtoItems.map(item => `
+                <tr class="border-t border-slate-700/50 hover:bg-slate-700/20 transition-colors">
+                  <td class="px-3 py-3 text-slate-400 text-sm">${item.id}</td>
+                  <td class="px-3 py-3">
+                    <a href="/howto/${item.pageSlug}" target="_blank" class="text-blue-400 hover:text-blue-300 font-medium text-sm">
+                      ${escapeHtml(item.pageTitle || item.pageSlug)}
+                    </a>
+                  </td>
+                  <td class="px-3 py-3 text-slate-200 text-sm">${escapeHtml(item.reasonType || '')}</td>
+                  <td class="px-3 py-3 text-slate-300 text-sm truncate max-w-[200px]" title="${escapeHtml(item.reasonDetail || '')}">
+                    ${item.reasonDetail ? escapeHtml(item.reasonDetail) : '<span class="text-slate-500">-</span>'}
+                  </td>
+                  <td class="px-3 py-3 text-slate-400 text-sm">${formatDateTime(item.createdAt)}</td>
+                  <td class="px-3 py-3">
+                    <span class="px-2 py-0.5 rounded text-xs ${
+                      item.status === 'pending' ? 'bg-amber-500/20 text-amber-300' : 'bg-green-500/20 text-green-300'
+                    }">${escapeHtml(item.status || 'pending')}</span>
+                  </td>
+                </tr>
+              `).join('') : `
+                <tr>
+                  <td colspan="6" class="px-3 py-8 text-center text-slate-400">
+                    <i class="fas fa-check-circle text-2xl mb-2 text-green-400"></i>
+                    <p class="text-sm">신고된 HowTo가 없습니다.</p>
+                  </td>
+                </tr>
+              `}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll('.report-mod-action').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const action = btn.dataset.action;
+          const id = btn.dataset.id;
+          if (action === 'delete' && !confirm('해당 댓글을 삭제하시겠습니까?')) return;
+          const endpoints = {
+            blind: '/api/admin/comments/' + id + '/blind',
+            unblind: '/api/admin/comments/' + id + '/unblind',
+            delete: '/api/admin/comments/' + id
+          };
+          const method = action === 'delete' ? 'DELETE' : 'POST';
+          try {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            const res = await fetch(endpoints[action], { method, headers: { "Content-Type": "application/json" } });
+            const data = await res.json().catch(() => ({}));
+            if (!data.success) { alert(data.error || '실패했습니다.'); location.reload(); return; }
+            location.reload();
+          } catch (err) { alert('요청 실패: ' + err.message); location.reload(); }
+        });
+      });
+    </script>
+  `
+}
+
 function escapeHtml(text: string): string {
   const map: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }
   return String(text).replace(/[&<>"']/g, m => map[m])
@@ -955,9 +1123,11 @@ function formatDateTime(dateStr: string): string {
 
 function formatTimestamp(ts: number): string {
   if (!ts) return '-'
-  const date = new Date(ts)
-  return date.toLocaleDateString('ko-KR', { 
-    month: 'short', 
+  // UNIX seconds vs milliseconds 분기
+  const date = ts < 10_000_000_000 ? new Date(ts * 1000) : new Date(ts)
+  if (isNaN(date.getTime())) return '-'
+  return date.toLocaleDateString('ko-KR', {
+    month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit'

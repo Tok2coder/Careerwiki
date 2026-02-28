@@ -72,9 +72,9 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
   const { stats, recentEdits, recentUsers, chartData } = props
 
   const content = `
-    <!-- KPI 카드 -->
+    <!-- KPI 카드 (클릭 시 해당 탭 이동) -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4 mb-6 sm:mb-8">
-      <div class="stat-card glass-card rounded-xl p-3 sm:p-5">
+      <a href="/admin/users" class="stat-card glass-card rounded-xl p-3 sm:p-5 block">
         <div class="flex items-center gap-2 sm:gap-3">
           <div class="w-9 h-9 sm:w-12 sm:h-12 bg-green-500/20 rounded-lg flex items-center justify-center shrink-0">
             <i class="fas fa-users text-green-400 text-base sm:text-xl"></i>
@@ -84,9 +84,9 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
             <p class="text-slate-400 text-xs sm:text-sm">사용자</p>
           </div>
         </div>
-      </div>
+      </a>
 
-      <div class="stat-card glass-card rounded-xl p-3 sm:p-5">
+      <a href="/admin/content" class="stat-card glass-card rounded-xl p-3 sm:p-5 block">
         <div class="flex items-center gap-2 sm:gap-3">
           <div class="w-9 h-9 sm:w-12 sm:h-12 bg-blue-500/20 rounded-lg flex items-center justify-center shrink-0">
             <i class="fas fa-briefcase text-blue-400 text-base sm:text-xl"></i>
@@ -96,9 +96,9 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
             <p class="text-slate-400 text-xs sm:text-sm">총 직업</p>
           </div>
         </div>
-      </div>
+      </a>
 
-      <div class="stat-card glass-card rounded-xl p-3 sm:p-5">
+      <a href="/admin/content" class="stat-card glass-card rounded-xl p-3 sm:p-5 block">
         <div class="flex items-center gap-2 sm:gap-3">
           <div class="w-9 h-9 sm:w-12 sm:h-12 bg-purple-500/20 rounded-lg flex items-center justify-center shrink-0">
             <i class="fas fa-graduation-cap text-purple-400 text-base sm:text-xl"></i>
@@ -108,9 +108,9 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
             <p class="text-slate-400 text-xs sm:text-sm">총 전공</p>
           </div>
         </div>
-      </div>
+      </a>
 
-      <div class="stat-card glass-card rounded-xl p-3 sm:p-5">
+      <a href="/admin/stats" class="stat-card glass-card rounded-xl p-3 sm:p-5 block">
         <div class="flex items-center gap-2 sm:gap-3">
           <div class="w-9 h-9 sm:w-12 sm:h-12 bg-amber-500/20 rounded-lg flex items-center justify-center shrink-0">
             <i class="fas fa-eye text-amber-400 text-base sm:text-xl"></i>
@@ -120,9 +120,9 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
             <p class="text-slate-400 text-xs sm:text-sm">누적 방문</p>
           </div>
         </div>
-      </div>
+      </a>
 
-      <div class="stat-card glass-card rounded-xl p-3 sm:p-5 col-span-2 sm:col-span-1">
+      <a href="/admin/ai-analyzer" class="stat-card glass-card rounded-xl p-3 sm:p-5 block col-span-2 sm:col-span-1">
         <div class="flex items-center gap-2 sm:gap-3">
           <div class="w-9 h-9 sm:w-12 sm:h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center shrink-0">
             <i class="fas fa-brain text-cyan-400 text-base sm:text-xl"></i>
@@ -132,7 +132,7 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
             <p class="text-slate-400 text-xs sm:text-sm">누적 분석</p>
           </div>
         </div>
-      </div>
+      </a>
     </div>
 
     <!-- 조회수/분석 추이 차트 -->
@@ -164,19 +164,11 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
         <canvas id="dashboardChart" aria-label="조회수 및 분석 추이"></canvas>
       </div>
 
-      <!-- 범례 -->
-      <div class="flex items-center gap-4 mt-3 text-xs text-slate-400">
-        <span><span class="inline-block w-3 h-1.5 rounded bg-blue-500 mr-1"></span>직업</span>
-        <span><span class="inline-block w-3 h-1.5 rounded bg-purple-500 mr-1"></span>전공</span>
-        <span><span class="inline-block w-3 h-1.5 rounded bg-emerald-500 mr-1"></span>HowTo</span>
-        <span><span class="inline-block w-3 h-0.5 rounded bg-orange-400 mr-1 border border-orange-400"></span>분석</span>
-      </div>
-
       <!-- 데이터 테이블 -->
       <div class="mt-4 overflow-x-auto">
         <table class="w-full text-xs sm:text-sm" id="chartDataTable">
           <thead>
-            <tr class="text-slate-400 border-b border-slate-700/50">
+            <tr class="text-slate-400 border-b-2 border-slate-600">
               <th class="text-left py-2 px-2 font-medium">날짜</th>
               <th class="text-right py-2 px-2 font-medium">직업</th>
               <th class="text-right py-2 px-2 font-medium">전공</th>
@@ -186,8 +178,8 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
             </tr>
           </thead>
           <tbody id="chartTableBody">
-            ${(chartData?.daily || []).slice().reverse().map(d => `
-              <tr class="border-b border-slate-700/20 hover:bg-slate-700/10">
+            ${(chartData?.daily || []).slice().reverse().map((d, idx) => `
+              <tr class="border-b border-slate-700/20 hover:bg-slate-700/20 ${idx % 2 === 1 ? 'bg-slate-800/20' : ''}">
                 <td class="py-1.5 px-2 text-slate-300">${d.date.slice(5)}</td>
                 <td class="py-1.5 px-2 text-right text-blue-300">${d.job}</td>
                 <td class="py-1.5 px-2 text-right text-purple-300">${d.major}</td>
@@ -198,7 +190,7 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
             `).join('')}
           </tbody>
           <tfoot>
-            <tr class="border-t border-slate-600/50 font-medium">
+            <tr class="border-t-2 border-slate-600 font-medium bg-slate-700/20">
               <td class="py-2 px-2 text-slate-300">합계</td>
               <td class="py-2 px-2 text-right text-blue-300">${(chartData?.daily || []).reduce((s, d) => s + d.job, 0)}</td>
               <td class="py-2 px-2 text-right text-purple-300">${(chartData?.daily || []).reduce((s, d) => s + d.major, 0)}</td>
@@ -354,7 +346,10 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
               maintainAspectRatio: false,
               interaction: { mode: 'index', intersect: false },
               plugins: {
-                legend: { display: false },
+                legend: {
+                  display: true,
+                  labels: { color: '#94a3b8', usePointStyle: true, padding: 16, font: { size: 12 } }
+                },
                 tooltip: {
                   callbacks: {
                     footer: (items) => {

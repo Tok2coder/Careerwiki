@@ -3,6 +3,7 @@
  */
 
 import { renderAdminLayout } from './adminLayout'
+import type { UserAttributionStats } from '../../services/adminService'
 
 export interface UserRecord {
   id: number
@@ -30,12 +31,78 @@ export interface AdminUsersProps {
     role: string
     status: string
   }
+  attributionStats?: UserAttributionStats
+}
+
+const CHANNEL_LABELS: Record<string, string> = {
+  google_search: '구글 검색', naver_search: '네이버 검색', kakao_share: '카카오 공유',
+  instagram: '인스타그램', youtube: '유튜브', community: '커뮤니티',
+  school_academy: '학교/학원', friend_referral: '지인 추천', other: '기타'
+}
+
+const INTEREST_LABELS: Record<string, string> = {
+  job_search: '직업 탐색', major_search: '전공 탐색', career_change: '이직/전직',
+  consult_interest: '상담 관심', browsing: '둘러보기'
+}
+
+const CAREER_LABELS: Record<string, string> = {
+  high_school: '고등학생', university: '대학생', job_seeker: '구직자',
+  employed: '재직자', transition: '전환기', other: '기타'
+}
+
+function renderAttributionCharts(stats: UserAttributionStats): string {
+  if (stats.totalWithAttribution === 0) return ''
+
+  const chartColors = ['#60a5fa', '#34d399', '#fcd34d', '#f87171', '#a78bfa', '#38bdf8', '#f97316', '#ec4899', '#6ee7b7']
+
+  return `
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+      <div class="glass-card rounded-xl p-4">
+        <h4 class="text-sm font-medium text-slate-400 mb-3"><i class="fas fa-route text-blue-400 mr-1.5"></i>유입 경로</h4>
+        <div class="h-48"><canvas id="channelChart"></canvas></div>
+        <div class="mt-2 space-y-1 text-xs text-slate-400 max-h-24 overflow-y-auto">
+          ${stats.channelDistribution.map(c => `<div class="flex justify-between"><span>${CHANNEL_LABELS[c.channel] || c.channel}</span><span class="text-white">${c.count}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="glass-card rounded-xl p-4">
+        <h4 class="text-sm font-medium text-slate-400 mb-3"><i class="fas fa-compass text-emerald-400 mr-1.5"></i>관심 상태</h4>
+        <div class="h-48"><canvas id="interestChart"></canvas></div>
+        <div class="mt-2 space-y-1 text-xs text-slate-400 max-h-24 overflow-y-auto">
+          ${stats.interestDistribution.map(c => `<div class="flex justify-between"><span>${INTEREST_LABELS[c.state] || c.state}</span><span class="text-white">${c.count}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="glass-card rounded-xl p-4">
+        <h4 class="text-sm font-medium text-slate-400 mb-3"><i class="fas fa-user-graduate text-purple-400 mr-1.5"></i>커리어 상태</h4>
+        <div class="h-48"><canvas id="careerChart"></canvas></div>
+        <div class="mt-2 space-y-1 text-xs text-slate-400 max-h-24 overflow-y-auto">
+          ${stats.careerDistribution.map(c => `<div class="flex justify-between"><span>${CAREER_LABELS[c.state] || c.state}</span><span class="text-white">${c.count}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <script>
+    (() => {
+      const colors = ${JSON.stringify(chartColors)};
+      const opts = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+      function mkDoughnut(id, labels, data) {
+        const el = document.getElementById(id);
+        if (!el || data.every(v => v === 0)) return;
+        new Chart(el, { type: 'doughnut', data: { labels, datasets: [{ data, backgroundColor: labels.map((_,i) => colors[i % colors.length]), borderWidth: 1 }] }, options: opts });
+      }
+      mkDoughnut('channelChart', ${JSON.stringify(stats.channelDistribution.map(c => CHANNEL_LABELS[c.channel] || c.channel))}, ${JSON.stringify(stats.channelDistribution.map(c => c.count))});
+      mkDoughnut('interestChart', ${JSON.stringify(stats.interestDistribution.map(c => INTEREST_LABELS[c.state] || c.state))}, ${JSON.stringify(stats.interestDistribution.map(c => c.count))});
+      mkDoughnut('careerChart', ${JSON.stringify(stats.careerDistribution.map(c => CAREER_LABELS[c.state] || c.state))}, ${JSON.stringify(stats.careerDistribution.map(c => c.count))});
+    })();
+    </script>
+  `
 }
 
 export function renderAdminUsers(props: AdminUsersProps): string {
-  const { users, total, page, perPage, totalPages, filters } = props
-  
+  const { users, total, page, perPage, totalPages, filters, attributionStats } = props
+
   const content = `
+    <!-- 유입경로/관심/커리어 통계 -->
+    ${attributionStats ? renderAttributionCharts(attributionStats) : ''}
+
     <!-- 필터 바 -->
     <div class="glass-card rounded-xl p-4 mb-6">
       <form id="filterForm" class="flex flex-wrap items-center gap-4">

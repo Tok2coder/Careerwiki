@@ -14,7 +14,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getCoverageStats, getSearchStats, getDashboardChartData } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -238,13 +238,16 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
     const role = c.req.query('role') || 'all'
     const status = c.req.query('status') || 'all'
 
-    const result = await getUsers(c.env.DB, {
-      page,
-      perPage,
-      search,
-      role: role as any,
-      status: status as any
-    })
+    const [result, attrStats] = await Promise.all([
+      getUsers(c.env.DB, {
+        page,
+        perPage,
+        search,
+        role: role as any,
+        status: status as any
+      }),
+      getUserAttributionStats(c.env.DB)
+    ])
 
     return c.html(renderAdminUsers({
       users: result.users as any[],
@@ -252,7 +255,8 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
       page: result.page,
       perPage: result.perPage,
       totalPages: result.totalPages,
-      filters: { search, role, status }
+      filters: { search, role, status },
+      attributionStats: attrStats
     }))
   } catch (error) {
     return c.text('사용자 목록을 불러오는데 실패했습니다.', 500)
@@ -431,7 +435,7 @@ adminRoutes.patch('/api/admin/users/:id', requireAdmin, async (c) => {
 // 관리자 - 콘텐츠/편집 관리 페이지
 adminRoutes.get('/admin/content', requireAdmin, async (c) => {
   try {
-    const activeTab = (c.req.query('tab') || 'revisions') as 'revisions' | 'archive' | 'comments'
+    const activeTab = (c.req.query('tab') || 'revisions') as 'revisions' | 'archive' | 'comments' | 'reports'
     const page = parseInt(c.req.query('page') || '1')
     const perPage = parseInt(c.req.query('perPage') || '20')
     const entityType = c.req.query('entityType') || 'all'
@@ -463,9 +467,20 @@ adminRoutes.get('/admin/content', requireAdmin, async (c) => {
         totalPages: Math.max(1, Math.ceil(flagged.total / modPerPage))
       }
     } else if (activeTab === 'archive') {
-      const rptPage = page
-      const rptPerPage = perPage
-      const reports = await listHowtoReports(c.env.DB, { status: 'pending', limit: rptPerPage, offset: (rptPage - 1) * rptPerPage })
+      // archive 탭에서는 howtoReports 로드하지 않음 (reports 탭으로 이동)
+    } else if (activeTab === 'reports') {
+      // 신고 탭: 신고된 댓글 + 신고된 HowTo 모두 로드
+      const [flagged, reports] = await Promise.all([
+        listFlaggedComments(c.env.DB, 1, 100),
+        listHowtoReports(c.env.DB, { status: 'pending', limit: 100, offset: 0 })
+      ])
+      moderation = {
+        items: flagged.items,
+        total: flagged.total,
+        page: 1,
+        perPage: 100,
+        totalPages: 1
+      }
       howtoReports = {
         items: reports.reports.map((r: any) => ({
           id: r.id,
@@ -480,9 +495,9 @@ adminRoutes.get('/admin/content', requireAdmin, async (c) => {
           createdAt: r.created_at
         })),
         total: reports.total,
-        page: rptPage,
-        perPage: rptPerPage,
-        totalPages: Math.max(1, Math.ceil(reports.total / rptPerPage))
+        page: 1,
+        perPage: 100,
+        totalPages: 1
       }
     }
 
@@ -517,7 +532,7 @@ adminRoutes.get('/admin/content', requireAdmin, async (c) => {
       hiddenAt: major.user_last_updated_at
     }))
 
-    const coverage = await getCoverageStats(c.env.DB)
+    const contentViewStats = await getContentViewStats(c.env.DB, 10)
 
     return c.html(renderAdminContent({
       activeTab,
@@ -531,7 +546,7 @@ adminRoutes.get('/admin/content', requireAdmin, async (c) => {
       hiddenMajors,
       howtoReports: howtoReports ?? undefined,
       moderation: moderation ?? undefined,
-      coverage
+      contentViewStats
     }))
   } catch (error) {
     return c.text('편집 이력을 불러오는데 실패했습니다.', 500)
