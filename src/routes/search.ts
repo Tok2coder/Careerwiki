@@ -65,6 +65,8 @@ searchRoutes.get('/search', async (c) => {
         href: `/howto/${h.slug}`,
         title: h.title,
         summary: h.summary,
+        thumbnailUrl: h.thumbnailUrl,
+        tags: h.tags,
       }))
 
       // 검색어 로깅 (비동기, 응답 블로킹 없음)

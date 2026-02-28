@@ -1564,6 +1564,8 @@ export interface HowtoSearchResult {
   slug: string
   title: string
   summary?: string
+  thumbnailUrl?: string
+  tags?: string[]
 }
 
 export interface RagUnifiedResult {
@@ -2542,27 +2544,38 @@ async function enrichHowtosFromD1(
 
   const placeholders = howtoIds.map(() => '?').join(',')
   const result = await db.prepare(`
-    SELECT id, slug, title, summary
+    SELECT id, slug, title, summary, meta_data
     FROM pages
     WHERE id IN (${placeholders}) AND status = 'published'
   `).bind(...howtoIds).all()
 
   if (!result.results) return []
-  const rows = result.results as unknown as HowtoRow[]
+  const rows = result.results as unknown as (HowtoRow & { meta_data?: string })[]
 
   // Vectorize score 순서 유지
-  const rowMap = new Map<number, HowtoRow>()
+  const rowMap = new Map<number, (typeof rows)[number]>()
   for (const r of rows) rowMap.set(r.id, r)
 
   const entries: HowtoSearchResult[] = []
   for (const id of howtoIds) {
     const row = rowMap.get(id)
     if (!row) continue
+    let thumbnailUrl: string | undefined
+    let tags: string[] | undefined
+    if (row.meta_data) {
+      try {
+        const meta = JSON.parse(row.meta_data)
+        thumbnailUrl = meta.thumbnailUrl || undefined
+        tags = Array.isArray(meta.tags) ? meta.tags : undefined
+      } catch { /* ignore */ }
+    }
     entries.push({
       id: row.id,
       slug: row.slug,
       title: row.title,
       summary: row.summary || undefined,
+      thumbnailUrl,
+      tags,
     })
   }
 
