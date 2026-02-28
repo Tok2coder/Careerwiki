@@ -473,12 +473,9 @@ majorListRoutes.get('/major', async (c) => {
     const hydratedContent = `${content}${hydrationScript}${sortScript}`
 
     const pageTitle = keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki'
-    const description = createMetaDescription(
-      keyword ? `${keyword} 관련 전공 정보를 확인하세요.` : undefined,
-      items[0]?.display?.summary,
-      items[0]?.display?.employmentRate,
-      '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.'
-    )
+    const description = keyword
+      ? createMetaDescription(`"${keyword}" 관련 전공 ${totalCount}개의 취업률, 평균 월급, 만족도 정보를 확인하세요.`)
+      : `${totalCount}개 전공의 취업률, 평균 월급, 만족도 정보를 한눈에 확인하세요. Careerwiki 전공위키.`
 
     return c.html(
       renderLayoutWithContext(c,
@@ -489,7 +486,8 @@ majorListRoutes.get('/major', async (c) => {
         {
           canonical: canonicalUrl,
           ogUrl: canonicalUrl,
-          extraHead
+          extraHead,
+          ...(keyword ? { robots: 'noindex, follow' } : {})
         }
       )
     )

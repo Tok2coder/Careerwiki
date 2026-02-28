@@ -98,6 +98,7 @@ export const renderLayout = (
     ogImageWidth?: string
     ogImageHeight?: string
     ogType?: string
+    robots?: string
     user?: { id: number; name: string | null; email: string; role: string; picture_url: string | null; custom_picture_url?: string | null; username: string | null } | null
     context?: Context<{ Bindings: Bindings; Variables: Variables }>  // Phase 3 Day 4: Context를 통해 사용자 정보 자동 가져오기
     ipAddress?: string | null  // Phase 3 Day 4: IP 주소 (비로그인 상태에서 표시)
@@ -110,6 +111,7 @@ export const renderLayout = (
   const ogImageWidth = options?.ogImageWidth ?? '1200'
   const ogImageHeight = options?.ogImageHeight ?? '630'
   const ogType = options?.ogType ?? 'website'
+  const robots = options?.robots ?? 'index, follow'
   const googleVerification = options?.context?.env?.GOOGLE_SITE_VERIFICATION ?? ''
 
   // Phase 3 Day 4: 사용자 정보 가져오기 (options.user 우선, 없으면 context에서 가져오기)
@@ -148,7 +150,8 @@ export const renderLayout = (
         <meta name="twitter:title" content="${title}">
         <meta name="twitter:description" content="${description}">
         <meta name="twitter:image" content="${ogImage}">
-        <meta name="robots" content="index, follow">
+        <meta property="og:site_name" content="Careerwiki">
+        <meta name="robots" content="${robots}">
         ${googleVerification ? `<meta name="google-site-verification" content="${googleVerification}">` : ''}
         <link rel="canonical" href="${canonicalUrl}">
         <link rel="icon" type="image/png" href="/images/CWfavicon.png">
@@ -1232,6 +1235,7 @@ export const renderLayoutWithContext = (
     ogImageWidth?: string
     ogImageHeight?: string
     ogType?: string
+    robots?: string
     user?: { id: number; name: string | null; email: string; role: string; picture_url: string | null; custom_picture_url?: string | null; username: string | null } | null
   }
 ) => {

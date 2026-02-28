@@ -409,11 +409,9 @@ jobListRoutes.get('/job', async (c) => {
     const hydratedContent = `${content}${hydrationScript}${sortScript}`
 
     const pageTitle = keyword ? `${keyword} 직업 검색 결과 - Careerwiki` : '직업위키 - Careerwiki'
-    const description = createMetaDescription(
-      keyword ? `${keyword} 관련 직업 정보를 확인하세요.` : undefined,
-      items[0]?.display?.summary,
-      '직업 연봉과 전망, 필요 역량을 한눈에 확인하세요.'
-    )
+    const description = keyword
+      ? createMetaDescription(`"${keyword}" 관련 직업 ${totalCount}개의 연봉, 전망, 필요 역량 정보를 확인하세요.`)
+      : `${totalCount}개 직업의 연봉, 전망, 필요 역량 정보를 한눈에 확인하세요. Careerwiki 직업위키.`
 
     return c.html(
       renderLayoutWithContext(c,
@@ -424,7 +422,8 @@ jobListRoutes.get('/job', async (c) => {
         {
           canonical: canonicalUrl,
           ogUrl: canonicalUrl,
-          extraHead
+          extraHead,
+          ...(keyword ? { robots: 'noindex, follow' } : {})
         }
       )
     )

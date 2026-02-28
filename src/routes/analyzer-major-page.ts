@@ -5054,7 +5054,9 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
     </script>
   `
   
-  return c.html(renderLayoutWithContext(c, content, 'AI 전공 추천 - Careerwiki'))
+  return c.html(renderLayoutWithContext(c, content, 'AI 전공 추천 - Careerwiki', 'AI 기반 맞춤형 전공 추천 서비스', false, {
+    robots: 'noindex, nofollow'
+  }))
 })
 
 

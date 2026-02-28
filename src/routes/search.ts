@@ -345,7 +345,9 @@ searchRoutes.get('/search', async (c) => {
     ? createMetaDescription(`"${keyword}"와 관련된 Careerwiki 직업, 전공 정보를 확인하세요.`)
     : 'Careerwiki에서 직업, 전공, HowTo 정보를 검색해보세요.'
 
-  return c.html(renderLayoutWithContext(c, content, escapeHtml(title), escapeHtml(description)))
+  return c.html(renderLayoutWithContext(c, content, escapeHtml(title), escapeHtml(description), false, {
+    robots: 'noindex, follow'
+  }))
 })
 
 export { searchRoutes }

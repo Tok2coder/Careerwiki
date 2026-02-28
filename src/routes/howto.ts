@@ -344,15 +344,21 @@ howtoRoutes.get('/', async (c) => {
   `
 
   const title = keyword ? `"${keyword}" - HowTo 가이드 검색 - Careerwiki` : 'HowTo 가이드 - Careerwiki'
-  const description = keyword 
+  const description = keyword
     ? `"${keyword}" 검색 결과 - ${totalCount}개의 HowTo 가이드를 찾았습니다.`
-    : '실전 경험에서 나온 진짜 노하우를 공유하는 HowTo 가이드 모음입니다.'
+    : '실전 경험에서 나온 진로 노하우를 공유합니다. 자격증, 면접, 학과 선택 가이드를 확인하세요.'
 
   return c.html(
     renderLayoutWithContext(c,
       content,
       title,
-      description
+      description,
+      false,
+      {
+        canonical: 'https://careerwiki.org/howto',
+        ogUrl: 'https://careerwiki.org/howto',
+        ...(keyword ? { robots: 'noindex, follow' } : {})
+      }
     )
   )
   } catch (error) {
@@ -3345,9 +3351,13 @@ howtoRoutes.get('/:slug', async (c) => {
     })
     
     const howtoOgImage = guideDetail.thumbnailUrl || undefined
+    const howtoCanonical = `https://careerwiki.org/howto/${slug}`
     return c.html(
       renderLayoutWithContext(c, content, `${dbResult.title} - Careerwiki`, dbResult.summary as string || '', false, {
-        ogImage: howtoOgImage
+        ogImage: howtoOgImage,
+        canonical: howtoCanonical,
+        ogUrl: howtoCanonical,
+        ogType: 'article'
       })
     )
   }
