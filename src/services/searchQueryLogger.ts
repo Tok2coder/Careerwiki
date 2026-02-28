@@ -20,8 +20,10 @@ export async function logSearchQuery(db: D1Database, params: {
   query: string
   resultCount: number
   searchType: 'all' | 'job' | 'major'
+  role?: string  // 'admin' 이면 로깅 제외
 }): Promise<void> {
   try {
+    if (params.role === 'admin') return
     const sanitized = sanitizeQuery(params.query)
     if (!sanitized) return
 

@@ -33,6 +33,7 @@ interface ViewContext {
   userAgent: string
   userId?: number
   ip: string
+  role?: string  // 'admin' 이면 통계에서 제외
 }
 
 /**
@@ -40,6 +41,7 @@ interface ViewContext {
  */
 export async function trackPageView(ctx: ViewContext & { pageId: number }): Promise<boolean> {
   if (BOT_UA_PATTERN.test(ctx.userAgent)) return false
+  if (ctx.role === 'admin') return false
 
   const kvKey = `pv:${ctx.pageId}:${getIdentity(ctx.userId, ctx.ip)}`
   if (await ctx.kv.get(kvKey)) return false
@@ -63,6 +65,7 @@ export async function trackPageView(ctx: ViewContext & { pageId: number }): Prom
  */
 export async function trackJobView(ctx: ViewContext & { slug: string }): Promise<boolean> {
   if (BOT_UA_PATTERN.test(ctx.userAgent)) return false
+  if (ctx.role === 'admin') return false
 
   const kvKey = `jv:${ctx.slug}:${getIdentity(ctx.userId, ctx.ip)}`
   if (await ctx.kv.get(kvKey)) return false
@@ -86,6 +89,7 @@ export async function trackJobView(ctx: ViewContext & { slug: string }): Promise
  */
 export async function trackMajorView(ctx: ViewContext & { slug: string }): Promise<boolean> {
   if (BOT_UA_PATTERN.test(ctx.userAgent)) return false
+  if (ctx.role === 'admin') return false
 
   const kvKey = `mv:${ctx.slug}:${getIdentity(ctx.userId, ctx.ip)}`
   if (await ctx.kv.get(kvKey)) return false
@@ -109,6 +113,7 @@ export async function trackMajorView(ctx: ViewContext & { slug: string }): Promi
  */
 export async function trackShareView(ctx: ViewContext & { token: string }): Promise<boolean> {
   if (BOT_UA_PATTERN.test(ctx.userAgent)) return false
+  if (ctx.role === 'admin') return false
 
   const kvKey = `sv:${ctx.token}:${getIdentity(ctx.userId, ctx.ip)}`
   if (await ctx.kv.get(kvKey)) return false

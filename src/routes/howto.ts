@@ -3291,7 +3291,7 @@ howtoRoutes.get('/:slug', async (c) => {
     }
     
     // 조회수 증가 (15분 중복 방지, 봇 필터)
-    const htUser = c.get('user') as { id?: number } | undefined
+    const htUser = c.get('user') as { id?: number; role?: string } | undefined
     const viewCounted = trackPageView({
       db: c.env.DB,
       kv: c.env.KV,
@@ -3299,6 +3299,7 @@ howtoRoutes.get('/:slug', async (c) => {
       userAgent: c.req.header('user-agent') || '',
       userId: htUser?.id,
       ip: c.req.header('cf-connecting-ip') || 'unknown',
+      role: htUser?.role,
     }).catch(() => false)
     
     // 북마크 수 조회 (user_bookmarks 테이블 사용)

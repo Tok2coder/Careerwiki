@@ -6,6 +6,16 @@ import type { D1Database, KVNamespace } from '@cloudflare/workers-types'
 import { destroyAllUserSessions } from '../utils/session'
 
 // =============================================================================
+// 통계 제외 계정 (관리자/테스트)
+// =============================================================================
+
+/** 통계에서 제외할 관리자 계정 username 목록 (사용자 수 제외) */
+export const EXCLUDED_USERNAMES = ['Tok2', 'imgroot']
+
+/** SQL 서브쿼리: 제외 대상 user id 목록 */
+const EXCLUDED_USER_IDS_SUBQUERY = `SELECT id FROM users WHERE username IN ('Tok2', 'imgroot')`
+
+// =============================================================================
 // 타입 정의
 // =============================================================================
 
@@ -863,34 +873,126 @@ export async function getDailyViewStats(db: D1Database, days: number = 30): Prom
 }
 
 /**
- * 대시보드 요약 통계
+ * 대시보드 요약 통계 (KPI 카드 데이터)
  */
 export async function getDashboardStats(db: D1Database) {
-  const [jobs, majors, users, todayEdits, cacheStats] = await Promise.all([
+  const [jobs, majors, users, cumulativeViews, cumulativeAnalyses] = await Promise.all([
     db.prepare('SELECT COUNT(*) as count FROM jobs WHERE is_active = 1').first<{ count: number }>(),
     db.prepare('SELECT COUNT(*) as count FROM majors WHERE is_active = 1').first<{ count: number }>(),
     db.prepare('SELECT COUNT(*) as count FROM users').first<{ count: number }>(),
+    // 누적 방문 (전체 페이지뷰 합산)
     db.prepare(`
-      SELECT COUNT(*) as count FROM page_revisions 
-      WHERE created_at >= datetime('now', '-1 day')
-    `).first<{ count: number }>(),
+      SELECT
+        (SELECT COALESCE(SUM(view_count), 0) FROM jobs WHERE is_active = 1) +
+        (SELECT COALESCE(SUM(view_count), 0) FROM majors WHERE is_active = 1) +
+        (SELECT COALESCE(SUM(view_count), 0) FROM pages) as totalViews
+    `).first<{ totalViews: number }>(),
+    // 누적 분석 (관리자/E2E 제외)
     db.prepare(`
-      SELECT 
-        COUNT(*) as total,
-        SUM(CASE WHEN cache_status = 'HIT' THEN 1 ELSE 0 END) as hits
-      FROM serp_interaction_logs
-      WHERE recorded_at >= datetime('now', '-1 day')
-    `).first<{ total: number; hits: number }>()
+      SELECT COUNT(*) as count
+      FROM ai_analysis_requests
+      WHERE parent_request_id IS NULL
+        AND user_id IS NOT NULL
+        AND CAST(user_id AS INTEGER) NOT IN (${EXCLUDED_USER_IDS_SUBQUERY})
+    `).first<{ count: number }>()
   ])
-  
+
   return {
+    totalUsers: users?.count || 0,
     totalJobs: jobs?.count || 0,
     totalMajors: majors?.count || 0,
-    totalUsers: users?.count || 0,
-    todayEdits: todayEdits?.count || 0,
-    cacheHitRate: cacheStats && cacheStats.total > 0 
-      ? (cacheStats.hits / cacheStats.total) * 100 
-      : 0
+    cumulativeViews: cumulativeViews?.totalViews || 0,
+    cumulativeAnalyses: cumulativeAnalyses?.count || 0,
+  }
+}
+
+/**
+ * 대시보드 차트 데이터 (일별 조회수 + 분석 수)
+ */
+export interface DashboardChartData {
+  daily: Array<{
+    date: string
+    job: number
+    major: number
+    howto: number
+    total: number
+    analyses: number
+  }>
+  summary: {
+    totalViews: number
+    avgDaily: number
+    maxDay: { date: string; views: number } | null
+    totalAnalyses: number
+  }
+}
+
+export async function getDashboardChartData(db: D1Database, days: number = 7): Promise<DashboardChartData> {
+  try {
+    const [viewResult, analysisResult] = await Promise.all([
+      // 일별 조회수
+      db.prepare(`
+        SELECT stat_date, entity_type, total_views
+        FROM daily_view_stats
+        WHERE stat_date >= date('now', '-${days} days')
+        ORDER BY stat_date ASC
+      `).all<{ stat_date: string; entity_type: string; total_views: number }>(),
+      // 일별 분석 수 (관리자/E2E 제외)
+      db.prepare(`
+        SELECT DATE(requested_at) as stat_date, COUNT(*) as count
+        FROM ai_analysis_requests
+        WHERE parent_request_id IS NULL
+          AND user_id IS NOT NULL
+          AND CAST(user_id AS INTEGER) NOT IN (${EXCLUDED_USER_IDS_SUBQUERY})
+          AND requested_at >= date('now', '-${days} days')
+        GROUP BY DATE(requested_at)
+        ORDER BY stat_date ASC
+      `).all<{ stat_date: string; count: number }>()
+    ])
+
+    // 일별 조회수 그룹핑
+    const dayMap = new Map<string, { job: number; major: number; howto: number; share: number }>()
+    for (const row of (viewResult.results || [])) {
+      if (!dayMap.has(row.stat_date)) {
+        dayMap.set(row.stat_date, { job: 0, major: 0, howto: 0, share: 0 })
+      }
+      const entry = dayMap.get(row.stat_date)!
+      if (row.entity_type === 'job') entry.job = row.total_views
+      else if (row.entity_type === 'major') entry.major = row.total_views
+      else if (row.entity_type === 'howto') entry.howto = row.total_views
+      else if (row.entity_type === 'share') entry.share = row.total_views
+    }
+
+    // 분석 수 맵
+    const analysisMap = new Map<string, number>()
+    for (const row of (analysisResult.results || [])) {
+      analysisMap.set(row.stat_date, row.count)
+    }
+
+    // 모든 날짜 합치기
+    const allDates = new Set([...dayMap.keys(), ...analysisMap.keys()])
+    const daily = Array.from(allDates).sort().map(date => {
+      const counts = dayMap.get(date) || { job: 0, major: 0, howto: 0, share: 0 }
+      return {
+        date,
+        job: counts.job,
+        major: counts.major,
+        howto: counts.howto,
+        total: counts.job + counts.major + counts.howto + counts.share,
+        analyses: analysisMap.get(date) || 0,
+      }
+    })
+
+    const totalViews = daily.reduce((sum, d) => sum + d.total, 0)
+    const totalAnalyses = daily.reduce((sum, d) => sum + d.analyses, 0)
+    const avgDaily = daily.length > 0 ? Math.round(totalViews / daily.length) : 0
+    const maxEntry = daily.reduce(
+      (max, d) => d.total > (max?.views || 0) ? { date: d.date, views: d.total } : max,
+      null as { date: string; views: number } | null
+    )
+
+    return { daily, summary: { totalViews, avgDaily, maxDay: maxEntry, totalAnalyses } }
+  } catch {
+    return { daily: [], summary: { totalViews: 0, avgDaily: 0, maxDay: null, totalAnalyses: 0 } }
   }
 }
 

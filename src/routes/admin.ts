@@ -14,7 +14,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getCoverageStats, getSearchStats, getDailyViewStats } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getCoverageStats, getSearchStats, getDashboardChartData } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -28,71 +28,95 @@ adminRoutes.get('/admin', requireAdmin, async (c) => {
   try {
     const db = c.env.DB
 
-    // 통계 데이터 조회
-    const [jobsResult, majorsResult, usersResult, todayEditsResult] = await Promise.all([
-      db.prepare('SELECT COUNT(*) as count FROM jobs WHERE is_active = 1').first<{ count: number }>(),
-      db.prepare('SELECT COUNT(*) as count FROM majors WHERE is_active = 1').first<{ count: number }>(),
-      db.prepare('SELECT COUNT(*) as count FROM users').first<{ count: number }>(),
+    // KPI + 차트 + 최근 활동 병렬 조회
+    const [kpiStats, chartData, recentEdits, recentUsers] = await Promise.all([
+      // KPI 카드 데이터
+      (async () => {
+        const [jobs, majors, users, cViews, cAnalyses] = await Promise.all([
+          db.prepare('SELECT COUNT(*) as count FROM jobs WHERE is_active = 1').first<{ count: number }>(),
+          db.prepare('SELECT COUNT(*) as count FROM majors WHERE is_active = 1').first<{ count: number }>(),
+          db.prepare('SELECT COUNT(*) as count FROM users').first<{ count: number }>(),
+          db.prepare(`
+            SELECT
+              (SELECT COALESCE(SUM(view_count), 0) FROM jobs WHERE is_active = 1) +
+              (SELECT COALESCE(SUM(view_count), 0) FROM majors WHERE is_active = 1) +
+              (SELECT COALESCE(SUM(view_count), 0) FROM pages) as totalViews
+          `).first<{ totalViews: number }>(),
+          db.prepare(`
+            SELECT COUNT(*) as count FROM ai_analysis_requests
+            WHERE parent_request_id IS NULL
+              AND user_id IS NOT NULL
+              AND CAST(user_id AS INTEGER) NOT IN (
+                SELECT id FROM users WHERE username IN ('Tok2', 'imgroot')
+              )
+          `).first<{ count: number }>()
+        ])
+        return {
+          totalUsers: users?.count || 0,
+          totalJobs: jobs?.count || 0,
+          totalMajors: majors?.count || 0,
+          cumulativeViews: cViews?.totalViews || 0,
+          cumulativeAnalyses: cAnalyses?.count || 0,
+        }
+      })(),
+
+      // 차트 데이터 (기본 7일)
+      getDashboardChartData(db, 7),
+
+      // 최근 편집 5건 (관리자 계정 편집 제외)
       db.prepare(`
-        SELECT COUNT(*) as count FROM page_revisions
-        WHERE created_at >= datetime('now', '-1 day')
-      `).first<{ count: number }>()
+        SELECT
+          pr.id,
+          pr.entity_type as entityType,
+          pr.entity_id as entityId,
+          COALESCE(j.name, m.name, pr.entity_id) as entityName,
+          COALESCE(pr.editor_name, '익명') as editorName,
+          COALESCE(pr.editor_type, 'anonymous') as editorType,
+          pr.change_type as changeType,
+          pr.changed_fields as changedFields,
+          pr.created_at as createdAt
+        FROM page_revisions pr
+        LEFT JOIN jobs j ON pr.entity_type = 'job' AND pr.entity_id = j.id
+        LEFT JOIN majors m ON pr.entity_type = 'major' AND pr.entity_id = m.id
+        WHERE (pr.editor_id IS NULL OR CAST(pr.editor_id AS INTEGER) NOT IN (
+          SELECT id FROM users WHERE username IN ('Tok2', 'imgroot')
+        ))
+        ORDER BY pr.created_at DESC
+        LIMIT 5
+      `).all(),
+
+      // 최근 가입 사용자 5명
+      db.prepare(`
+        SELECT id, name, email, role, created_at as createdAt
+        FROM users
+        ORDER BY created_at DESC
+        LIMIT 5
+      `).all()
     ])
 
-    // 캐시 히트율 계산 (최근 24시간 SERP 데이터 기반)
-    const cacheStats = await db.prepare(`
-      SELECT
-        COUNT(*) as total,
-        SUM(CASE WHEN cache_status = 'HIT' THEN 1 ELSE 0 END) as hits
-      FROM serp_interaction_logs
-      WHERE recorded_at >= datetime('now', '-1 day')
-    `).first<{ total: number; hits: number }>()
-
-    const cacheHitRate = cacheStats && cacheStats.total > 0
-      ? (cacheStats.hits / cacheStats.total) * 100
-      : 0
-
-    // 최근 편집 5건
-    const recentEdits = await db.prepare(`
-      SELECT
-        pr.id,
-        pr.entity_type as entityType,
-        pr.entity_id as entityId,
-        COALESCE(j.name, m.name, pr.entity_id) as entityName,
-        COALESCE(pr.editor_name, '익명') as editorName,
-        COALESCE(pr.editor_type, 'anonymous') as editorType,
-        pr.created_at as createdAt
-      FROM page_revisions pr
-      LEFT JOIN jobs j ON pr.entity_type = 'job' AND pr.entity_id = j.id
-      LEFT JOIN majors m ON pr.entity_type = 'major' AND pr.entity_id = m.id
-      ORDER BY pr.created_at DESC
-      LIMIT 5
-    `).all()
-
-    // 최근 가입 사용자 5명
-    const recentUsers = await db.prepare(`
-      SELECT id, name, email, role, created_at as createdAt
-      FROM users
-      ORDER BY created_at DESC
-      LIMIT 5
-    `).all()
-
-    const dailyViews = await getDailyViewStats(db, 30)
-
     return c.html(renderAdminDashboard({
-      stats: {
-        totalJobs: jobsResult?.count || 0,
-        totalMajors: majorsResult?.count || 0,
-        totalUsers: usersResult?.count || 0,
-        todayEdits: todayEditsResult?.count || 0,
-        cacheHitRate
-      },
+      stats: kpiStats,
       recentEdits: (recentEdits.results || []) as any[],
       recentUsers: (recentUsers.results || []) as any[],
-      dailyViews
+      chartData
     }))
   } catch (error) {
+    console.error('Admin dashboard error:', error)
     return c.text('관리자 대시보드를 불러오는데 실패했습니다.', 500)
+  }
+})
+
+// ============================================
+// 대시보드 차트 API (기간 필터)
+// ============================================
+adminRoutes.get('/api/admin/dashboard-chart', requireAdmin, async (c) => {
+  try {
+    const days = parseInt(c.req.query('days') || '7', 10)
+    const safeDays = [1, 7, 30].includes(days) ? days : 7
+    const data = await getDashboardChartData(c.env.DB, safeDays)
+    return c.json(data)
+  } catch (error) {
+    return c.json({ daily: [], summary: { totalViews: 0, avgDaily: 0, maxDay: null, totalAnalyses: 0 } })
   }
 })
 

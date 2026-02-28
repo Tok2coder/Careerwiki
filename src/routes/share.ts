@@ -52,7 +52,7 @@ shareRoutes.get('/share/:token', async (c) => {
     }
 
     // 조회수 증가 (15분 중복 방지 + 봇 필터)
-    const shareUser = c.get('user') as { id?: number } | undefined
+    const shareUser = c.get('user') as { id?: number; role?: string } | undefined
     c.executionCtx.waitUntil(
       trackShareView({
         db,
@@ -61,6 +61,7 @@ shareRoutes.get('/share/:token', async (c) => {
         userAgent: c.req.header('user-agent') || '',
         userId: shareUser?.id,
         ip: c.req.header('cf-connecting-ip') || 'unknown',
+        role: shareUser?.role,
       }).catch(() => {})
     )
 

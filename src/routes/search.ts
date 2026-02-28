@@ -74,7 +74,8 @@ searchRoutes.get('/search', async (c) => {
           logSearchQuery(c.env.DB, {
             query: keyword,
             resultCount: totalResults,
-            searchType: 'all'
+            searchType: 'all',
+            role: (c.get('user') as { role?: string } | undefined)?.role,
           })
         )
       }

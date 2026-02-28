@@ -164,7 +164,7 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
   }
 
   // 조회수 추적 (비동기, 페이지 렌더링 차단하지 않음)
-  const user = c.get('user') as { id?: number } | undefined
+  const user = c.get('user') as { id?: number; role?: string } | undefined
   c.executionCtx.waitUntil(
     trackJobView({
       db: c.env.DB,
@@ -173,6 +173,7 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
       userAgent: c.req.header('user-agent') || '',
       userId: user?.id,
       ip: c.req.header('cf-connecting-ip') || 'unknown',
+      role: user?.role,
     }).catch(() => {})
   )
 

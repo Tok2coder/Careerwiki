@@ -64,7 +64,8 @@ jobListRoutes.get('/job', async (c) => {
         logSearchQuery(c.env.DB, {
           query: keyword,
           resultCount: totalCount,
-          searchType: 'job'
+          searchType: 'job',
+          role: (c.get('user') as { role?: string } | undefined)?.role,
         })
       )
     }

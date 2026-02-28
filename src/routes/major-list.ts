@@ -100,7 +100,8 @@ majorListRoutes.get('/major', async (c) => {
         logSearchQuery(c.env.DB, {
           query: keyword,
           resultCount: totalCount,
-          searchType: 'major'
+          searchType: 'major',
+          role: (c.get('user') as { role?: string } | undefined)?.role,
         })
       )
     }
