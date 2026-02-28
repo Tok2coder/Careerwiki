@@ -5,12 +5,14 @@ import { requireAuth } from '../middleware/auth'
 import {
   renderUserMenu, getLogoSVG, getOptionalUser,
   renderLayout, renderLayoutWithContext, escapeHtml,
-  buildCanonicalUrl, parseSourcesQuery, parseNumberParam
+  buildCanonicalUrl, parseSourcesQuery, parseNumberParam,
+  renderFooter
 } from '../utils/shared-helpers'
 import { renderOnboardingPage } from '../templates/onboarding'
 import { renderTermsPage } from '../templates/legal/terms'
 import { renderPrivacyPage } from '../templates/legal/privacy'
 import { renderHelpPage } from '../templates/help'
+import { renderAboutPage } from '../templates/about'
 import { renderNav, renderNavStyles, renderNavScripts } from '../templates/partials/nav'
 import {
   getOnboardingStatus,
@@ -187,6 +189,14 @@ pagesRoutes.get('/help', async (c) => {
   const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
   const userMenuHtml = renderUserMenu(userData)
   return c.html(renderHelpPage({ userMenuHtml }))
+})
+
+// About 페이지
+pagesRoutes.get('/about', async (c) => {
+  const user = c.get('user')
+  const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
+  const userMenuHtml = renderUserMenu(userData)
+  return c.html(renderAboutPage({ userMenuHtml }))
 })
 
 // 릴리즈 노트 (사용자 대상 — feat/fix만 필터링)
@@ -377,6 +387,7 @@ pagesRoutes.get('/releases', async (c) => {
       }
       rlSwitch(document.getElementById('rlMonthSelect')?.value||'');
       </script>
+      ${renderFooter()}
     </body>
   </html>`)
 })

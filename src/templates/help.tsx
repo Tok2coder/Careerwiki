@@ -6,6 +6,7 @@
  */
 
 import { renderNav, renderNavStyles, renderNavScripts } from './partials/nav'
+import { renderFooter } from '../utils/shared-helpers'
 
 type HelpSection = {
   id: string
@@ -194,6 +195,7 @@ export function renderHelpPage(options?: HelpPageOptions): string {
           <a href="/feedback" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-blue-300 hover:border-blue-500">피드백</a>
           <a href="/help/community-guidelines" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-emerald-200 hover:border-emerald-400">커뮤니티 정책</a>
           <a href="/releases" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-slate-200 hover:border-blue-500">릴리즈 노트</a>
+          <a href="/about" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-amber-200 hover:border-amber-400">소개</a>
         </div>
       </div>
       <div class="glass rounded-2xl p-4">
@@ -258,6 +260,7 @@ export function renderHelpPage(options?: HelpPageOptions): string {
     searchInput.addEventListener('input', (e) => filter(e.target.value));
     filter('');
   </script>
+  ${renderFooter()}
 </body>
 </html>`;
 }

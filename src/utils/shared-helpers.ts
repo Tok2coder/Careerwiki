@@ -81,6 +81,66 @@ export const getLogoImage = (size: 'large' | 'small' = 'large') => {
 // Legacy alias for backward compatibility
 export const getLogoSVG = getLogoImage
 
+/** 공통 Footer — 독립 HTML 페이지에서도 재사용 */
+export const renderFooter = (): string => `
+  <style>
+    .footer-nav-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 8px;
+      font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.02em;
+      color: rgba(200, 210, 255, 0.85);
+      background: transparent; border: none;
+      transition: all 0.2s ease; position: relative; white-space: nowrap;
+    }
+    .footer-nav-link::after {
+      content: ''; position: absolute; bottom: 4px; left: 14px; right: 14px;
+      height: 2px; background: linear-gradient(90deg, #4361ee, #64b5f6);
+      border-radius: 1px; transform: scaleX(0); transition: transform 0.2s ease;
+    }
+    .footer-nav-link:hover { color: #ffffff; background: rgba(100, 181, 246, 0.1); }
+    .footer-nav-link:hover::after { transform: scaleX(1); }
+  </style>
+  <footer class="relative mt-20 border-t border-wiki-border/30">
+    <div class="max-w-6xl mx-auto px-6 py-10">
+      <div class="flex md:hidden flex-col gap-6">
+        <nav class="flex flex-wrap items-center justify-center gap-2">
+          <a href="/analyzer" class="footer-nav-link">AI 추천</a>
+          <a href="/job" class="footer-nav-link">직업위키</a>
+          <a href="/major" class="footer-nav-link">전공위키</a>
+          <a href="/howto" class="footer-nav-link">HowTo</a>
+        </nav>
+      </div>
+      <div class="flex md:hidden flex-col items-center gap-3 pt-6 border-t border-wiki-border/20">
+        <div class="flex items-center gap-4 text-wiki-muted/60" style="font-size: 14px;">
+          <a href="/legal/terms" class="hover:text-wiki-muted transition-colors">이용약관</a>
+          <span class="text-wiki-muted/30">|</span>
+          <a href="/legal/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
+        </div>
+        <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2026 Careerwiki</span>
+      </div>
+      <div class="hidden md:flex items-center justify-between gap-8">
+        <a href="/" class="shrink-0 opacity-80 hover:opacity-100 transition-opacity">
+          ${getLogoSVG('small')}
+        </a>
+        <nav class="flex flex-wrap items-center gap-4">
+          <a href="/analyzer" class="footer-nav-link">AI 추천</a>
+          <a href="/job" class="footer-nav-link">직업위키</a>
+          <a href="/major" class="footer-nav-link">전공위키</a>
+          <a href="/howto" class="footer-nav-link">HowTo</a>
+        </nav>
+        <div class="flex flex-col items-end gap-2">
+          <div class="flex items-center gap-4 text-wiki-muted/60" style="font-size: 14px;">
+            <a href="/legal/terms" class="hover:text-wiki-muted transition-colors">이용약관</a>
+            <span class="text-wiki-muted/30">|</span>
+            <a href="/legal/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
+          </div>
+          <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2026 Careerwiki</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+`
+
 export const isAdminRole = (role?: string | null) =>
   role === 'admin' || role === 'super-admin' || role === 'operator'
 
@@ -717,99 +777,7 @@ export const renderLayout = (
         </main>
         ${renderNavScripts()}
 
-        <!-- Footer - Minimal with Beaver Nest Style -->
-        <style>
-            .footer-nav-link {
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                padding: 8px 14px;
-                border-radius: 8px;
-                font-size: 0.8125rem;
-                font-weight: 500;
-                letter-spacing: 0.02em;
-                color: rgba(200, 210, 255, 0.85);
-                background: transparent;
-                border: none;
-                transition: all 0.2s ease;
-                position: relative;
-                white-space: nowrap;
-            }
-            .footer-nav-link::after {
-                content: '';
-                position: absolute;
-                bottom: 4px;
-                left: 14px;
-                right: 14px;
-                height: 2px;
-                background: linear-gradient(90deg, #4361ee, #64b5f6);
-                border-radius: 1px;
-                transform: scaleX(0);
-                transition: transform 0.2s ease;
-            }
-            .footer-nav-link:hover {
-                color: #ffffff;
-                background: rgba(100, 181, 246, 0.1);
-            }
-            .footer-nav-link:hover::after {
-                transform: scaleX(1);
-            }
-        </style>
-        <footer class="relative mt-20 border-t border-wiki-border/30">
-            <div class="max-w-6xl mx-auto px-6 py-10">
-                <!-- Mobile: Logo top, Buttons in 2x2 grid below -->
-                <div class="flex md:hidden flex-col gap-6">
-                    <!-- Logo - centered (모바일에서 숨김) -->
-                    <a href="/" class="hidden mx-auto opacity-80 hover:opacity-100 transition-opacity">
-                        ${getLogoSVG('small')}
-                    </a>
-
-                    <!-- Navigation Links - Single row on mobile -->
-                    <nav class="flex flex-wrap items-center justify-center gap-2">
-                        <a href="/analyzer" class="footer-nav-link">AI 추천</a>
-                        <a href="/job" class="footer-nav-link">직업위키</a>
-                        <a href="/major" class="footer-nav-link">전공위키</a>
-                        <a href="/howto" class="footer-nav-link">HowTo</a>
-                    </nav>
-                </div>
-
-                <!-- Mobile: Copyright & Links (below) -->
-                <div class="flex md:hidden flex-col items-center gap-3 pt-6 border-t border-wiki-border/20">
-                    <div class="flex items-center gap-4 text-wiki-muted/60" style="font-size: 14px;">
-                        <a href="/terms" class="hover:text-wiki-muted transition-colors">이용약관</a>
-                        <span class="text-wiki-muted/30">|</span>
-                        <a href="/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
-                    </div>
-                    <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2026 Careerwiki</span>
-                </div>
-
-                <!-- Desktop: Original horizontal layout -->
-                <div class="hidden md:flex items-center justify-between gap-8">
-                    <!-- Logo -->
-                    <a href="/" class="shrink-0 opacity-80 hover:opacity-100 transition-opacity">
-                        ${getLogoSVG('small')}
-                    </a>
-
-                    <!-- Navigation Links - Horizontal -->
-                    <nav class="flex flex-wrap items-center gap-4">
-                        <a href="/analyzer" class="footer-nav-link">AI 추천</a>
-                        <a href="/job" class="footer-nav-link">직업위키</a>
-                        <a href="/major" class="footer-nav-link">전공위키</a>
-                        <a href="/howto" class="footer-nav-link">HowTo</a>
-                    </nav>
-
-                    <!-- Copyright & Links -->
-                    <div class="flex flex-col items-end gap-2">
-                        <div class="flex items-center gap-4 text-wiki-muted/60" style="font-size: 14px;">
-                            <a href="/terms" class="hover:text-wiki-muted transition-colors">이용약관</a>
-                            <span class="text-wiki-muted/30">|</span>
-                            <a href="/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
-                        </div>
-                        <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2026 Careerwiki</span>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        ${renderFooter()}
 
         <script>
             // Mobile header auto-hide on scroll

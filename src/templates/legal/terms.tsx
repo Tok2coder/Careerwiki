@@ -4,6 +4,7 @@
 
 import { CONSENT_VERSIONS } from '../../services/onboardingService'
 import { renderNav, renderNavStyles, renderNavScripts } from '../partials/nav'
+import { renderFooter } from '../../utils/shared-helpers'
 
 type TermsPageOptions = {
   userMenuHtml?: string
@@ -192,6 +193,7 @@ export function renderTermsPage(options?: TermsPageOptions): string {
   </main>
 
   ${renderNavScripts()}
+  ${renderFooter()}
 </body>
 </html>`;
 }

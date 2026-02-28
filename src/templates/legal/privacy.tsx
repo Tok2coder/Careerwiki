@@ -4,6 +4,7 @@
 
 import { CONSENT_VERSIONS } from '../../services/onboardingService'
 import { renderNav, renderNavStyles, renderNavScripts } from '../partials/nav'
+import { renderFooter } from '../../utils/shared-helpers'
 
 type PrivacyPageOptions = {
   userMenuHtml?: string
@@ -334,6 +335,7 @@ export function renderPrivacyPage(options?: PrivacyPageOptions): string {
   </main>
 
   ${renderNavScripts()}
+  ${renderFooter()}
 </body>
 </html>`;
 }

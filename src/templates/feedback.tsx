@@ -1,4 +1,5 @@
 import { renderNav, renderNavStyles, renderNavScripts } from './partials/nav'
+import { renderFooter } from '../utils/shared-helpers'
 
 export type FeedbackListItem = {
   id: number
@@ -256,6 +257,7 @@ export function renderFeedbackPage(options?: FeedbackPageOptions): string {
       });
     }
   </script>
+  ${renderFooter()}
 </body>
 </html>`
 }
