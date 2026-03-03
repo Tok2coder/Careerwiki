@@ -167,6 +167,15 @@ commentRoutes.post('/api/comments', async (c) => {
     if (message === 'AUTHOR_REQUIRED') {
       return c.json({ success: false, error: 'authentication required' }, 401)
     }
+    if (message === 'DAILY_LIMIT_REACHED') {
+      return c.json({ success: false, error: 'DAILY_LIMIT_REACHED' }, 429)
+    }
+    if (message === 'PASSWORD_REQUIRED') {
+      return c.json({ success: false, error: 'PASSWORD_REQUIRED' }, 400)
+    }
+    if (message === 'INVALID_PASSWORD') {
+      return c.json({ success: false, error: 'INVALID_PASSWORD' }, 400)
+    }
     return c.json({ success: false, error: 'failed to create comment' }, 500)
   }
 })
@@ -386,6 +395,9 @@ commentRoutes.patch('/api/comments/:id', async (c) => {
     if (message === 'EMPTY_CONTENT') {
       return c.json({ success: false, error: 'content is required' }, 400)
     }
+    if (message === 'PASSWORD_ATTEMPTS_EXCEEDED') {
+      return c.json({ success: false, error: 'PASSWORD_ATTEMPTS_EXCEEDED' }, 429)
+    }
     return c.json({ success: false, error: 'failed to update comment' }, 500)
   }
 })
@@ -433,6 +445,9 @@ commentRoutes.delete('/api/comments/:id', async (c) => {
     }
     if (message === 'INVALID_PASSWORD') {
       return c.json({ success: false, error: 'invalid password' }, 403)
+    }
+    if (message === 'PASSWORD_ATTEMPTS_EXCEEDED') {
+      return c.json({ success: false, error: 'PASSWORD_ATTEMPTS_EXCEEDED' }, 429)
     }
     return c.json({ success: false, error: 'failed to delete comment' }, 500)
   }

@@ -4113,16 +4113,16 @@ const DetailTabs = (() => {
 
 const DetailComments = (() => {
   const SECTION_STATE = new WeakMap()
-  const MAX_CONTENT_LENGTH = 1000
+  const MAX_CONTENT_LENGTH = 500
   const MAX_NICKNAME_LENGTH = 40
   const DEFAULT_MODERATOR_ROLES = ['super-admin', 'operator']
   const DEFAULT_POLICY = {
-    requiresAuth: true,
-    bestLikeThreshold: 8,
+    requiresAuth: false,
+    bestLikeThreshold: 5,
     bestLimit: 10,
-    reportBlindThreshold: 5,
-    dailyVoteLimit: 5,
-    voteWindowHours: 24,
+    reportBlindThreshold: 3,
+    dailyVoteLimit: 0,
+    voteWindowHours: 0,
     ipDisplayMode: 'masked',
     moderatorIpBlockEnabled: true,
     moderatorRoles: [...DEFAULT_MODERATOR_ROLES]
@@ -4642,10 +4642,15 @@ const DetailComments = (() => {
     if (section instanceof HTMLElement) {
       section.dataset.commentActiveTab = activeTab
     }
+    const allCount = parseInt(section.dataset?.commentAllCount || '0', 10)
+    const bestCount = parseInt(section.dataset?.commentBestCount || '0', 10)
     triggers.forEach((trigger) => {
       const target = trigger.getAttribute('data-comment-tab') === 'best' ? 'best' : 'all'
       const isActive = target === activeTab
       trigger.setAttribute('aria-selected', isActive ? 'true' : 'false')
+      // 탭 텍스트에 카운트 표시
+      const count = target === 'best' ? bestCount : allCount
+      trigger.textContent = target === 'best' ? `BEST (${count})` : `전체 댓글 (${count})`
       // 활성 상태: 파란 배경 + 흰 텍스트
       trigger.classList.toggle('bg-wiki-primary', isActive)
       trigger.classList.toggle('text-white', isActive)
@@ -5214,12 +5219,19 @@ const DetailComments = (() => {
     updateScoreboard(section, state, stats)
     updateGuidance(section, state, stats)
     updateSortButtons(section, state)
-    updateTabButtons(section, state)
 
     if (section instanceof HTMLElement) {
       section.dataset.commentAllCount = String(sortedAll.length)
       section.dataset.commentBestCount = String(sortedBest.length)
       section.dataset.commentBestThreshold = String(bestThreshold)
+    }
+
+    updateTabButtons(section, state)
+
+    // 헤더에 댓글 수 표시
+    const headerEl = section.querySelector('[data-cw-comments-header] h2')
+    if (headerEl) {
+      headerEl.textContent = `커뮤니티 댓글 (${sortedAll.length})`
     }
 
     const visibleCount = state?.activeTab === 'best' ? sortedBest.length : sortedAll.length
@@ -5749,6 +5761,9 @@ const DetailComments = (() => {
           const msg = '비밀번호는 숫자 4자리로 입력해주세요.'
           setStatus(section, '')
           setPasswordWarning(section, msg, 'error')
+        } else if (normalized.includes('DAILY_LIMIT_REACHED')) {
+          setStatus(section, '오늘 댓글 작성 한도에 도달했습니다.', 'error')
+          setPasswordWarning(section, '')
         } else {
           setStatus(section, '댓글 등록에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error')
           setPasswordWarning(section, '')
@@ -6293,6 +6308,10 @@ const DetailComments = (() => {
             setEditStatus('본인 댓글만 수정할 수 있습니다.', 'error')
             return
           }
+          if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_ATTEMPTS_EXCEEDED')) {
+            setEditStatus('비밀번호 시도 횟수를 초과했습니다. 내일 다시 시도해주세요.', 'error')
+            return
+          }
           throw new Error(msg)
         }
         setEditStatus('댓글이 수정되었습니다.', 'success')
@@ -6339,25 +6358,88 @@ const DetailComments = (() => {
     openEditBox(section, state, target)
   }
 
-  // 익명/로그인 여부에 따라 비밀번호 필요 여부 판단 (삭제/수정 공용)
-  const requestPasswordIfNeeded = (comment) => {
-    if (comment?.authorId && String(comment.authorId).trim()) {
-      // 로그인 사용자가 작성한 댓글: 비밀번호 불필요
-      return ''
+  // 삭제 모달 컨트롤러 캐시
+  const DELETE_MODAL_CACHE = new WeakMap()
+
+  const ensureDeleteModal = (section) => {
+    if (DELETE_MODAL_CACHE.has(section)) return DELETE_MODAL_CACHE.get(section)
+
+    const modal = section.querySelector('[data-cw-comment-delete-modal]')
+    if (!modal) return null
+
+    const backdrop = modal.querySelector('[data-cw-comment-delete-backdrop]')
+    const closeButtons = modal.querySelectorAll('[data-cw-comment-delete-close]')
+    const confirmBtn = modal.querySelector('[data-cw-comment-delete-confirm]')
+    const pwWrap = modal.querySelector('[data-cw-comment-delete-pw-wrap]')
+    const pwInput = modal.querySelector('[data-cw-comment-delete-password]')
+    const errorEl = modal.querySelector('[data-cw-comment-delete-error]')
+
+    let _resolve = null
+
+    const showError = (msg) => {
+      if (errorEl) {
+        errorEl.textContent = msg
+        errorEl.classList.remove('hidden')
+      }
     }
-    if (!comment?.isAnonymous) {
-      // 익명이 아니면 비밀번호 불필요
-      return ''
+    const clearError = () => {
+      if (errorEl) {
+        errorEl.textContent = ''
+        errorEl.classList.add('hidden')
+      }
     }
-    const password = window.prompt('익명 댓글 비밀번호 4자리를 입력하세요.')
-    if (password === null) {
-      return null
+
+    const close = (result) => {
+      modal.classList.add('hidden')
+      document.body.style.overflow = ''
+      clearError()
+      if (pwInput) pwInput.value = ''
+      if (_resolve) {
+        _resolve(result)
+        _resolve = null
+      }
     }
-    const trimmed = password.trim()
-    if (!/^\d{4}$/.test(trimmed)) {
-      return false
+
+    const open = (needsPassword) => {
+      clearError()
+      if (pwInput) pwInput.value = ''
+      if (pwWrap) {
+        pwWrap.classList.toggle('hidden', !needsPassword)
+      }
+      modal.classList.remove('hidden')
+      document.body.style.overflow = 'hidden'
+      if (needsPassword && pwInput) {
+        setTimeout(() => pwInput.focus(), 100)
+      }
+      return new Promise((resolve) => { _resolve = resolve })
     }
-    return trimmed
+
+    // 이벤트 바인딩
+    if (backdrop) backdrop.addEventListener('click', () => close(null))
+    closeButtons.forEach((btn) => btn.addEventListener('click', () => close(null)))
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', () => {
+        const needsPw = pwWrap && !pwWrap.classList.contains('hidden')
+        if (needsPw) {
+          const val = (pwInput?.value || '').trim()
+          if (!val) {
+            showError('비밀번호를 입력해주세요.')
+            return
+          }
+          if (!/^\d{4}$/.test(val)) {
+            showError('비밀번호는 숫자 4자리로 입력해주세요.')
+            return
+          }
+          close(val)
+        } else {
+          close('')
+        }
+      })
+    }
+
+    const controller = { open, close, showError, clearError }
+    DELETE_MODAL_CACHE.set(section, controller)
+    return controller
   }
 
   const handleDelete = async (section, state, button) => {
@@ -6376,16 +6458,16 @@ const DetailComments = (() => {
       return
     }
 
-    if (!window.confirm('이 댓글을 삭제하시겠습니까?')) {
+    const isMod = isModeratorRole(state.viewerRole, state)
+    const needsPassword = !isMod && target.isAnonymous && !(target.authorId && String(target.authorId).trim())
+
+    const deleteModal = ensureDeleteModal(section)
+    if (!deleteModal) {
+      setStatus(section, '삭제 기능을 사용할 수 없습니다.', 'error')
       return
     }
 
-    // 관리자/운영자는 비밀번호 없이 삭제 가능
-    const password = isModeratorRole(state.viewerRole, state) ? '' : requestPasswordIfNeeded(target)
-    if (password === false) {
-      setStatus(section, '비밀번호는 숫자 4자리로 입력해주세요.', 'error')
-      return
-    }
+    const password = await deleteModal.open(needsPassword)
     if (password === null) {
       return
     }
@@ -6401,11 +6483,17 @@ const DetailComments = (() => {
       if (!response.ok || !payload?.success) {
         const msg = (payload && payload.error) || `HTTP ${response.status}`
         if (typeof msg === 'string' && msg.toUpperCase().includes('INVALID_PASSWORD')) {
-          setStatus(section, '비밀번호가 올바르지 않습니다.', 'error')
+          deleteModal.showError('비밀번호가 올바르지 않습니다.')
+          deleteModal.open(needsPassword)
           return
         }
         if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_REQUIRED')) {
-          setStatus(section, '익명 댓글은 비밀번호가 필요합니다.', 'error')
+          deleteModal.showError('익명 댓글은 비밀번호가 필요합니다.')
+          deleteModal.open(needsPassword)
+          return
+        }
+        if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_ATTEMPTS_EXCEEDED')) {
+          setStatus(section, '비밀번호 시도 횟수를 초과했습니다. 내일 다시 시도해주세요.', 'error')
           return
         }
         throw new Error(msg)

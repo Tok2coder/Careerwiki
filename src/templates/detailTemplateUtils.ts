@@ -761,7 +761,7 @@ export const renderCommentsPlaceholder = ({
   const bestScoreboardMessage = escapeHtml(`좋아요 ${resolvedBestThreshold}개 이상 댓글은 BEST로 승격됩니다.`)
   const moderationScoreboardMessage = escapeHtml(`신고 ${resolvedReportThreshold}회 이상 시 자동으로 블라인드 처리됩니다.`)
   const bestEmptyMessage = escapeHtml('아직 BEST 댓글이 없습니다.')
-  const allEmptyMessage = escapeHtml(emptyLabel ?? '가장 먼저 의견을 남겨보세요.')
+  const allEmptyMessage = escapeHtml(emptyLabel ?? '아직 등록된 댓글이 없습니다. 가장 먼저 의견을 남겨주세요.')
 
   // 로그인 CTA 제거 - 익명 사용자도 댓글 작성 가능
   const loginCtaBlock = ''
@@ -828,7 +828,7 @@ export const renderCommentsPlaceholder = ({
               rows="4"
               maxlength="500"
               required
-              placeholder="타인의 권리를 침해하거나 명예를 훼손하거나, 욕설, 음란, 광고·홍보성 댓글은 운영원칙 및 관련 법률에 제재를 받을 수 있습니다. 그 외의 의견을 자유롭게 게시해보세요!"
+              placeholder="자유롭게 의견을 남겨주세요. (욕설, 광고 등은 제재될 수 있습니다)"
               class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none resize-y text-sm"
               aria-required="true"
               aria-describedby="${statusMessageId}"
@@ -977,6 +977,36 @@ export const renderCommentsPlaceholder = ({
       </div>
     </div>
     <!-- 댓글 신고 모달 -->
+    <div class="fixed inset-0 z-[2000] hidden" data-cw-comment-delete-modal role="dialog" aria-modal="true" aria-labelledby="${normalizedBase}-comment-delete-title">
+      <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" data-cw-comment-delete-backdrop></div>
+      <div class="fixed inset-0 flex items-center justify-center px-4">
+        <div class="w-full max-w-sm rounded-2xl bg-wiki-bg border border-wiki-border shadow-2xl" data-cw-comment-delete-dialog>
+          <div class="flex items-center justify-between px-6 py-4 border-b border-wiki-border">
+            <h3 id="${normalizedBase}-comment-delete-title" class="text-lg font-semibold text-white">댓글 삭제</h3>
+            <button type="button" class="text-wiki-muted hover:text-white transition" data-cw-comment-delete-close aria-label="닫기">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="p-6 space-y-4">
+            <p class="text-sm text-wiki-muted">이 댓글을 삭제하시겠습니까? 삭제된 댓글은 복구할 수 없습니다.</p>
+            <div class="hidden" data-cw-comment-delete-pw-wrap>
+              <label class="text-sm font-semibold text-white">비밀번호 (숫자 4자리)</label>
+              <input type="password" inputmode="numeric" maxlength="4" pattern="\\d{4}" class="mt-1 w-full rounded-lg border border-wiki-border bg-wiki-bg px-3 py-2 text-sm text-white focus:border-wiki-primary focus:outline-none" placeholder="비밀번호 입력" data-cw-comment-delete-password>
+            </div>
+            <div class="text-sm text-red-400 hidden" data-cw-comment-delete-error role="alert" aria-live="polite"></div>
+            <div class="flex items-center justify-between gap-3 pt-2">
+              <button type="button" class="flex-1 px-4 py-2 rounded-lg border border-wiki-border text-sm text-wiki-muted hover:text-white hover:border-wiki-primary transition" data-cw-comment-delete-close>
+                취소
+              </button>
+              <button type="button" class="flex-1 px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-sm font-semibold text-white transition" data-cw-comment-delete-confirm>
+                삭제하기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="fixed inset-0 z-[2000] hidden" data-cw-comment-report-modal role="dialog" aria-modal="true" aria-labelledby="${normalizedBase}-comment-report-title">
       <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" data-cw-comment-report-backdrop></div>
       <div class="fixed inset-0 flex items-center justify-center px-4">

@@ -358,7 +358,7 @@ const buildCommentCopy = (): {
       description: '익명·로그인 댓글과 BEST·신고 정책이 적용됩니다. 신고 3회 이상 시 자동 블라인드 처리됩니다.',
       feedbackLabel: '우선 적용 의견 보내기',
       notifyLabel: '업데이트 알림 받기',
-      emptyLabel: '가장 먼저 의견을 남겨주세요.'
+      emptyLabel: '아직 등록된 댓글이 없습니다. 가장 먼저 의견을 남겨주세요.'
     }
   }
 }
