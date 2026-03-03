@@ -5669,9 +5669,107 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           }
         })
 
-        // 🔍 DEBUG: topJobs에 image_url, job_description이 있는지 확인
-        if (topJobs.length > 0) {
-          const sample = topJobs[0]
+        // Phase 6-B: 코드 레벨 Relevance Post-Filter
+        // 유저의 interest_top 키워드와 직업명/설명이 전혀 관련 없으면 점수 보정
+        if (mmInterests.length > 0) {
+          // interest 토큰별 관련 키워드 수집
+          const relevanceKeywords: string[] = []
+          for (const interest of mmInterests) {
+            const config = ARCHETYPE_DB_QUERIES[interest]
+            if (config) relevanceKeywords.push(...config.patterns)
+          }
+          // 범용 키워드 추가 (interest 토큰에서 직접 파생)
+          const TOKEN_KEYWORDS: Record<string, string[]> = {
+            data_numbers: ['데이터', '분석', '통계', '수치', '빅데이터', 'AI', '인공지능', '머신러닝'],
+            tech: ['개발', '프로그래밍', 'IT', '소프트웨어', '시스템', '클라우드', '보안'],
+            creating: ['디자인', '창작', '기획', '콘텐츠', '게임', '영상', '광고'],
+            design: ['디자인', 'UI', 'UX', '시각', '그래픽', '인터페이스'],
+            helping_teaching: ['교육', '복지', '상담', '돌봄', '간호', '보육'],
+            organizing: ['행정', '관리', '사무', '기획', '총무', '경영'],
+            problem_solving: ['컨설팅', '전략', '분석', '연구', '기획'],
+            influencing: ['마케팅', '홍보', '영업', '커뮤니케이션'],
+            research: ['연구', '분석', '조사', '실험', 'R&D'],
+          }
+          for (const interest of mmInterests) {
+            if (TOKEN_KEYWORDS[interest]) relevanceKeywords.push(...TOKEN_KEYWORDS[interest])
+          }
+          const uniqueKeywords = [...new Set(relevanceKeywords)]
+
+          if (uniqueKeywords.length > 0) {
+            for (const job of topJobs) {
+              const jobName = (job as any).job_name || ''
+              const jobDesc = (job as any).job_description || ''
+              const searchText = `${jobName} ${jobDesc}`.toLowerCase()
+              const isRelevant = uniqueKeywords.some(kw => searchText.includes(kw.toLowerCase()))
+              if (!isRelevant) {
+                // 관련 없는 직업: like_score 상한 45, fit_score 상한 55
+                if ((job as any).like_score > 45) (job as any).like_score = 45
+                if ((job as any).fit_score > 55) (job as any).fit_score = 55
+                if ((job as any).final_score > 55) (job as any).final_score = 55
+              }
+            }
+          }
+        }
+
+        // Phase 6-C: Feasibility 코드 레벨 앵커 — Can부족 유저 보정
+        // background_flags가 비어있으면(경험 없음) 시니어/전문가급 직업의 can_score 상한 적용
+        const bgFlags = payload.mini_module_result?.background_flags || []
+        const hasNoBackground = bgFlags.length === 0
+        if (hasNoBackground) {
+          const SENIOR_KEYWORDS = ['수석', '책임', '시니어', '선임', '수장', '총괄', '관장', '원장', '소장', '부장', '팀장', '본부장', '실장', '이사', '전문가', '아키텍트', '리드', '매니저']
+          const ENTRY_KEYWORDS = ['주니어', '인턴', '보조', '사무원', '연구원', '교사', '간호사', '치료사', '사서', '상담사', '복지사']
+          for (const job of topJobs) {
+            const jobName = (job as any).job_name || ''
+            const isSenior = SENIOR_KEYWORDS.some(kw => jobName.includes(kw))
+            const isEntry = ENTRY_KEYWORDS.some(kw => jobName.includes(kw))
+            if (isSenior && !isEntry) {
+              // 시니어급 직업: can_score 상한 55, feasibility 상한 45
+              if ((job as any).can_score > 55) (job as any).can_score = 55
+              if ((job as any).feasibility_score > 45) (job as any).feasibility_score = 45
+              // fit 재계산: blended는 이미 적용됨, Judge 비중(70%)의 can 반영
+              const newOverall = Math.round(((job as any).like_score * 0.35) + ((job as any).can_score * 0.45) + ((job as any).feasibility_score * 0.20))
+              const cappedRisk = Math.min((job as any).risk_penalty || 0, 8)
+              const newFit = Math.max(0, Math.min(100, newOverall - cappedRisk))
+              if (newFit < (job as any).fit_score) {
+                (job as any).fit_score = newFit
+                ;(job as any).final_score = newFit
+              }
+            } else if (!isSenior && !isEntry) {
+              // 경력 무관한 일반 직업: can_score 상한 70
+              if ((job as any).can_score > 70) (job as any).can_score = 70
+            }
+            // entry-level 직업은 제한 없음 (신입 가능)
+          }
+        }
+
+        // Phase 6-D: riskPenalty 차별화 — constraint_flags 기반
+        // 유저의 constraint(회피 조건)와 직업 속성이 충돌하면 추가 패널티
+        const constraintFlags = payload.mini_module_result?.constraint_flags || []
+        if (constraintFlags.length > 0) {
+          const CONSTRAINT_JOB_CONFLICTS: Record<string, (jobName: string) => boolean> = {
+            'routine_drain': (name) => ['사무원', '관리원', '서기', '수위', '경비'].some(kw => name.includes(kw)),
+            'people_drain': (name) => ['영업', '상담', '안내', '접객', '서비스', '홍보', '판매'].some(kw => name.includes(kw)),
+            'unstable_hours': (name) => ['간호', '응급', '소방', '경찰', '야간', '교대', '운전', '배달'].some(kw => name.includes(kw)),
+            'low_initial_income': (name) => ['인턴', '봉사', '예술', '작가', '음악', '배우', '프리랜서'].some(kw => name.includes(kw)),
+            'physical_demand': (name) => ['반장', '현장', '공사', '설치', '정비', '용접', '배관', '건설'].some(kw => name.includes(kw)),
+          }
+          for (const job of topJobs) {
+            const jobName = (job as any).job_name || ''
+            let extraPenalty = 0
+            for (const constraint of constraintFlags) {
+              const conflictFn = CONSTRAINT_JOB_CONFLICTS[constraint]
+              if (conflictFn && conflictFn(jobName)) {
+                extraPenalty += 5  // 충돌당 5점 추가 패널티
+              }
+            }
+            if (extraPenalty > 0) {
+              const currentFit = (job as any).fit_score || 0
+              const newFit = Math.max(0, currentFit - extraPenalty)
+              ;(job as any).fit_score = newFit
+              ;(job as any).final_score = newFit
+              ;(job as any).risk_penalty = ((job as any).risk_penalty || 0) + extraPenalty
+            }
+          }
         }
       } catch (judgeError) {
         // LLM Judge 실패 시 에러 반환 (fallback 없음)
