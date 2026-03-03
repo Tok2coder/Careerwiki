@@ -1258,9 +1258,7 @@ pagesRoutes.get('/login', (c) => {
     return c.redirect(redirect)
   }
 
-  const errorMsg = loginError === '1' ? '아이디 또는 비밀번호가 일치하지 않습니다.'
-    : loginError === '2' ? '로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.'
-    : ''
+  const errorMsg = loginError ? '로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.' : ''
 
   const content = `
     <div class="min-h-[60vh] flex items-center justify-center px-4 pt-16 md:pt-0">
@@ -1286,43 +1284,11 @@ pagesRoutes.get('/login', (c) => {
             <span>Google로 계속하기</span>
           </a>
 
-          <!-- 구분선 -->
-          <div class="flex items-center gap-3 my-6">
-            <div class="flex-1 h-px bg-wiki-border/40"></div>
-            <span class="text-xs text-wiki-muted">또는</span>
-            <div class="flex-1 h-px bg-wiki-border/40"></div>
-          </div>
-
-          <!-- 테스트 계정 로그인 -->
-          <form method="POST" action="/auth/test-login" class="text-left">
-            <input type="hidden" name="redirect" value="${redirect.replace(/"/g, '&quot;')}" />
-
-            <div class="space-y-3">
-              <div>
-                <label class="block text-xs text-wiki-muted mb-1.5">아이디</label>
-                <input type="text" name="id" autocomplete="username"
-                  class="w-full px-4 py-2.5 bg-wiki-bg/80 border border-wiki-border/50 rounded-lg text-white text-sm placeholder-wiki-muted/60 focus:border-wiki-primary focus:outline-none transition"
-                  placeholder="아이디를 입력하세요" />
-              </div>
-              <div>
-                <label class="block text-xs text-wiki-muted mb-1.5">비밀번호</label>
-                <input type="password" name="pw" autocomplete="current-password"
-                  class="w-full px-4 py-2.5 bg-wiki-bg/80 border border-wiki-border/50 rounded-lg text-white text-sm placeholder-wiki-muted/60 focus:border-wiki-primary focus:outline-none transition"
-                  placeholder="비밀번호를 입력하세요" />
-              </div>
-            </div>
-
-            ${errorMsg ? `
-              <p class="mt-3 text-xs text-red-400 text-center">
-                <i class="fas fa-exclamation-circle mr-1"></i>${errorMsg}
-              </p>
-            ` : ''}
-
-            <button type="submit"
-              class="w-full mt-4 px-6 py-2.5 bg-wiki-primary hover:bg-wiki-primary/80 text-white font-medium rounded-lg transition text-sm">
-              로그인
-            </button>
-          </form>
+          ${errorMsg ? `
+            <p class="mt-4 text-xs text-red-400 text-center">
+              <i class="fas fa-exclamation-circle mr-1"></i>${errorMsg}
+            </p>
+          ` : ''}
 
           <p class="text-xs text-wiki-muted mt-6 leading-relaxed">
             로그인하면 <a href="/terms" class="text-wiki-primary hover:underline py-1 inline-block">이용약관</a> 및

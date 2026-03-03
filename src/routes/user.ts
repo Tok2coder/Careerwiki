@@ -2069,8 +2069,7 @@ userRoutes.get('/user/settings', requireAuth, async (c) => {
               </div>
             </div>
             
-            <!-- 이메일 (테스트 계정은 숨김) -->
-            ${user.google_id !== 'test-account' ? `
+            <!-- 이메일 -->
             <div>
               <label class="block text-sm font-medium text-wiki-text mb-2">이메일</label>
               <div class="px-4 py-2 bg-wiki-card border border-wiki-border rounded-lg text-wiki-text">
@@ -2078,7 +2077,6 @@ userRoutes.get('/user/settings', requireAuth, async (c) => {
               </div>
               <p class="text-xs text-wiki-muted mt-1">Google 계정 이메일입니다.</p>
             </div>
-            ` : ''}
           </div>
         </div>
         

@@ -60,6 +60,19 @@ const securityHeadersMiddleware = async (c: any, next: any) => {
   c.header('X-Frame-Options', 'DENY')
   c.header('Referrer-Policy', 'strict-origin-when-cross-origin')
   c.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+  c.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+  c.header(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
+    "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
+    "img-src 'self' data: blob: https:; " +
+    "font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
+    "connect-src 'self'; " +
+    "frame-src 'none'; " +
+    "object-src 'none'; " +
+    "base-uri 'self'"
+  )
 }
 
 const apiCacheHintMiddleware = async (c: any, next: any) => {
@@ -99,7 +112,7 @@ app.use('*', async (c, next) => {
 })
 
 // Global middleware
-app.use('*', cors())
+app.use('*', cors({ origin: 'https://careerwiki.org' }))
 app.use('*', renderer)
 app.use('*', errorLoggingMiddleware)
 app.use('*', timingMiddleware)
@@ -114,6 +127,33 @@ app.use('/images/*', serveStatic({ root: './public' }))
 
 // Auth middleware (all routes)
 app.use('*', authMiddleware)
+
+// Rate limiting: AI Analyzer POST endpoints (OpenAI 비용 방어)
+app.use('/api/ai-analyzer/*', async (c, next) => {
+  if (c.req.method !== 'POST') return next()
+  const ip = c.req.header('cf-connecting-ip') || c.req.header('x-forwarded-for') || 'unknown'
+  const key = `rl:ai:${ip}`
+  const KV = (c.env as any).KV
+  if (!KV) return next()
+  const now = Date.now()
+  const windowMs = 60_000
+  const maxRequests = 20
+  try {
+    const stored = await KV.get(key, 'json') as { count: number; resetAt: number } | null
+    if (stored && now < stored.resetAt) {
+      if (stored.count >= maxRequests) {
+        c.header('Retry-After', String(Math.ceil((stored.resetAt - now) / 1000)))
+        return c.json({ success: false, error: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.' }, 429)
+      }
+      await KV.put(key, JSON.stringify({ count: stored.count + 1, resetAt: stored.resetAt }), {
+        expirationTtl: Math.max(Math.ceil((stored.resetAt - now) / 1000), 1)
+      })
+    } else {
+      await KV.put(key, JSON.stringify({ count: 1, resetAt: now + windowMs }), { expirationTtl: 120 })
+    }
+  } catch { /* rate limit 실패 시 요청 허용 */ }
+  return next()
+})
 
 // Auth routes
 app.route('/auth', auth)
