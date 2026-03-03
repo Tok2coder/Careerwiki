@@ -4,6 +4,7 @@
  */
 import { Hono } from 'hono'
 import type { AppEnv } from '../types/app'
+import type { D1Database } from '@cloudflare/workers-types'
 import { authMiddleware, requireAuth, requireAdmin } from '../middleware/auth'
 import { getRevisionById, listRevisions, restoreRevision } from '../services/revisionService'
 import { findSimilarNames, saveNameMappings, deleteNameMapping, getExistingMappings } from '../services/similarNamesService'
@@ -57,7 +58,94 @@ contentEditorRoutes.post('/api/admin/seed-jobs', requireAdmin, async (c) => {
   }
 })
 
-// Admin API: Re-seed empty majors from CareerNet API
+// Admin API: 두 직업 병합 (source → target으로 합치고, source 비활성화)
+contentEditorRoutes.post('/api/admin/merge-jobs', async (c) => {
+  try {
+    const adminSecret = c.req.header('X-Admin-Secret')
+    const user = c.get('user')
+    const isAdmin = user?.role === 'admin'
+    const isSecretValid = adminSecret && adminSecret === c.env.ADMIN_SECRET
+
+    if (!isAdmin && !isSecretValid) {
+      return c.json({ success: false, error: 'Admin access required' }, 403)
+    }
+
+    const body = await c.req.json<{
+      sourceName: string
+      targetName: string
+    }>()
+
+    if (!body.sourceName || !body.targetName) {
+      return c.json({ success: false, error: 'sourceName and targetName are required' }, 400)
+    }
+
+    const db = c.env.DB as D1Database
+    const { sourceName, targetName } = body
+
+    const sourceJob = await db.prepare(
+      `SELECT id, slug, image_url, image_alt, image_credits FROM jobs WHERE name = ? AND is_active = 1`
+    ).bind(sourceName).first<any>()
+    const targetJob = await db.prepare(
+      `SELECT id, slug, image_url, image_alt, image_credits FROM jobs WHERE name = ? AND is_active = 1`
+    ).bind(targetName).first<any>()
+
+    if (!sourceJob) return c.json({ success: false, error: `Source job '${sourceName}' not found` }, 404)
+    if (!targetJob) return c.json({ success: false, error: `Target job '${targetName}' not found` }, 404)
+
+    // 1. name_mapping 등록 (이미 있으면 업데이트)
+    const { saveNameMapping } = await import('../services/similarNamesService')
+    await saveNameMapping(db, 'job', sourceName, targetName, {
+      similarityScore: 1.0,
+      matchReason: 'manual_merge',
+      createdBy: 'admin'
+    })
+
+    // 2. mergeJobProfiles 실행 (target 이름 기준)
+    const { mergeJobProfiles } = await import('../scripts/etl/mergeJobProfiles')
+    const mergeResult = await mergeJobProfiles(db, { jobNames: [targetName, sourceName] })
+
+    // 3. target job의 image_url 보존 (merge가 덮어썼을 수 있으므로)
+    if (targetJob.image_url) {
+      await db.prepare(
+        `UPDATE jobs SET image_url = ?, image_alt = ?, image_credits = ? WHERE name = ? AND is_active = 1`
+      ).bind(
+        targetJob.image_url,
+        targetJob.image_alt || null,
+        targetJob.image_credits || null,
+        targetName
+      ).run()
+    }
+
+    // 4. source job의 job_sources를 target으로 이관
+    await db.prepare(
+      `UPDATE job_sources SET job_id = ? WHERE job_id = ?`
+    ).bind(targetJob.id, sourceJob.id).run()
+
+    // 5. source job 비활성화
+    await db.prepare(
+      `UPDATE jobs SET is_active = 0 WHERE id = ?`
+    ).bind(sourceJob.id).run()
+
+    // 6. 캐시 무효화
+    await invalidatePageCache(db, { slug: targetJob.slug, pageType: 'job' })
+    await invalidatePageCache(db, { slug: sourceJob.slug, pageType: 'job' })
+
+    return c.json({
+      success: true,
+      message: `'${sourceName}' merged into '${targetName}'`,
+      mergeResult: {
+        total: mergeResult.total,
+        success: mergeResult.success,
+        failed: mergeResult.failed
+      },
+      deactivatedJobId: sourceJob.id,
+      targetJobId: targetJob.id
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to merge jobs'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
 
 // ============================================================================
 // Group F: Slug/Search validation
@@ -482,7 +570,7 @@ contentEditorRoutes.get('/api/howto/:slug/revisions', authMiddleware, async (c) 
     const offset = parseInt(c.req.query('offset') || '0', 10)
 
     const howto = await c.env.DB.prepare(
-      'SELECT slug FROM pages WHERE slug = ? AND page_type = \'guide\' AND status = \'published\''
+      'SELECT slug FROM pages WHERE slug = ? AND page_type = \'guide\' AND status IN (\'published\', \'draft_published\')'
     ).bind(slug).first()
 
     if (!howto) {

@@ -572,11 +572,12 @@ export async function editMajor(
   
   // majors 테이블 업데이트 (user_contributed_json에 저장, 실패 시 revision 롤백)
   try {
+    const now = Date.now()
     await db.prepare(`
-      UPDATE majors 
-      SET user_contributed_json = ?
+      UPDATE majors
+      SET user_contributed_json = ?, user_last_updated_at = ?
       WHERE id = ?
-    `).bind(JSON.stringify(updatedUserData), majorId).run()
+    `).bind(JSON.stringify(updatedUserData), now, majorId).run()
     
   } catch (error) {
     // 실패 시 생성된 revision 삭제
@@ -626,10 +627,10 @@ export async function editHowTo(
     throw new Error('LOGIN_REQUIRED')
   }
   
-  // HowTo 존재 확인 (작성자 정보 포함)
+  // HowTo 존재 확인 (작성자 정보 포함, draft_published도 편집 허용)
   const howto = await db.prepare(`
-    SELECT * FROM pages 
-    WHERE slug = ? AND page_type = 'guide' AND status = 'published'
+    SELECT * FROM pages
+    WHERE slug = ? AND page_type = 'guide' AND status IN ('published', 'draft_published')
   `).bind(slug).first()
   
   if (!howto) {

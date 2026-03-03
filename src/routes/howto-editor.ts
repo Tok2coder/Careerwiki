@@ -626,8 +626,8 @@ howtoEditorRoutes.delete('/api/howto/drafts/:id', requireAuth, async (c) => {
     }
 
     const draft = await c.env.DB.prepare(`
-      SELECT thumbnail_url, content_html FROM howto_drafts WHERE id = ? AND user_id = ?
-    `).bind(draftId, user.id).first<{ thumbnail_url: string | null; content_html: string | null }>()
+      SELECT thumbnail_url, content_html, content_json FROM howto_drafts WHERE id = ? AND user_id = ?
+    `).bind(draftId, user.id).first<{ thumbnail_url: string | null; content_html: string | null; content_json: string | null }>()
 
     if (!draft) {
       return c.json({ success: false, error: '초안을 찾을 수 없거나 삭제 권한이 없습니다' }, 404)
@@ -643,6 +643,27 @@ howtoEditorRoutes.delete('/api/howto/drafts/:id', requireAuth, async (c) => {
           imageKeysToDelete.push(key)
         }
       }
+    } else if (draft.content_json) {
+      // content_html이 없으면 content_json에서 image 노드의 src를 추출
+      try {
+        const contentObj = JSON.parse(draft.content_json)
+        const collectImages = (node: any) => {
+          if (!node) return
+          if (node.type === 'image' && node.attrs?.src) {
+            const src: string = node.attrs.src
+            if (src.startsWith('/uploads/')) {
+              const key = src.replace('/uploads/', '')
+              if (key && !imageKeysToDelete.includes(key)) {
+                imageKeysToDelete.push(key)
+              }
+            }
+          }
+          if (node.content && Array.isArray(node.content)) {
+            for (const child of node.content) collectImages(child)
+          }
+        }
+        collectImages(contentObj)
+      } catch {}
     }
 
     if (draft.thumbnail_url && draft.thumbnail_url.startsWith('/uploads/')) {
@@ -751,10 +772,13 @@ howtoEditorRoutes.post('/api/howto/drafts/:id/publish', requireAuth, async (c) =
     try {
       const contentObj = JSON.parse(d.contentJson)
       contentHtml = convertTiptapToHtml(contentObj)
+      if (!contentHtml || contentHtml.trim().length === 0) {
+        return c.json({ success: false, error: '본문 변환에 실패했습니다. 내용을 확인해주세요.' }, 400)
+      }
       footnotes = extractFootnotes(contentObj)
       firstImageUrl = extractFirstImage(contentObj)
     } catch {
-      contentHtml = '<p>내용을 불러올 수 없습니다.</p>'
+      return c.json({ success: false, error: '본문 형식이 올바르지 않습니다' }, 400)
     }
 
     const thumbnailUrl = d.thumbnailUrl || firstImageUrl || ''
@@ -979,6 +1003,9 @@ howtoEditorRoutes.post('/api/howto/publish-direct', requireAuth, async (c) => {
     }
 
     if (pageId) {
+      // 기존 관계 삭제 후 재삽입 (중복 방지)
+      await c.env.DB.prepare(`DELETE FROM page_relations WHERE page_id = ?`).bind(pageId).run()
+
       for (const job of (relatedJobs || [])) {
         if (!job.slug) continue
         const jobPage = await c.env.DB.prepare(`SELECT id FROM pages WHERE slug = ? AND page_type = 'job'`).bind(job.slug).first<{ id: number }>()
@@ -1114,20 +1141,27 @@ howtoEditorRoutes.post('/api/howto/save-publish', requireAuth, async (c) => {
     const publishedPageId = draftInfo?.published_page_id
     const currentStatus = draftInfo?.page_status || ''
 
-
     const { generateSlug } = await import('../services/slugService')
-    let baseSlug = cleanGuidePrefix(generateSlug(title))
-    let slug = baseSlug
-    let suffix = 2
 
-
-    while (suffix <= 100) {
-      const existing = await c.env.DB.prepare(
-        `SELECT id FROM pages WHERE page_type = 'guide' AND slug = ? ${publishedPageId ? 'AND id != ?' : ''} LIMIT 1`
-      ).bind(...(publishedPageId ? [slug, publishedPageId] : [slug])).first()
-      if (!existing) break
-      slug = baseSlug + '-' + suffix
-      suffix++
+    let slug: string
+    if (publishedPageId) {
+      // 기존 발행 페이지가 있으면 slug 보존 (변경 방지)
+      const existingPage = await c.env.DB.prepare(
+        `SELECT slug FROM pages WHERE id = ? AND page_type = 'guide' LIMIT 1`
+      ).bind(publishedPageId).first<{ slug: string }>()
+      slug = existingPage?.slug || cleanGuidePrefix(generateSlug(title))
+    } else {
+      let baseSlug = cleanGuidePrefix(generateSlug(title))
+      slug = baseSlug
+      let suffix = 2
+      while (suffix <= 100) {
+        const existing = await c.env.DB.prepare(
+          `SELECT id FROM pages WHERE page_type = 'guide' AND slug = ? LIMIT 1`
+        ).bind(slug).first()
+        if (!existing) break
+        slug = baseSlug + '-' + suffix
+        suffix++
+      }
     }
 
     let finalContentHtml = contentHtml || ''
