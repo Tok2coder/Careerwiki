@@ -417,7 +417,6 @@ pagesRoutes.get('/', (c) => {
                 <div class="flex justify-center">
                     ${getLogoSVG('large')}
                 </div>
-                <p class="text-center text-wiki-muted text-sm md:text-base mt-2 mb-1">내 관심과 강점으로 찾는 직업 · 6,900개 직업 · 600개 전공</p>
                 <div class="search-shell">
                     <form action="/search" method="get">
                         <div class="search-bar">
