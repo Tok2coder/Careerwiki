@@ -923,9 +923,14 @@ howtoEditorRoutes.post('/api/howto/publish-direct', requireAuth, async (c) => {
     try {
       const contentObj = JSON.parse(contentJson)
       finalContentHtml = convertTiptapToHtml(contentObj)
+      if (!finalContentHtml || finalContentHtml.trim().length === 0) {
+        return c.json({ success: false, error: '본문 변환에 실패했습니다. 내용을 확인해주세요.' }, 400)
+      }
       footnotes = extractFootnotes(contentObj)
       firstImageUrl = extractFirstImage(contentObj)
-    } catch {}
+    } catch {
+      return c.json({ success: false, error: '본문 형식이 올바르지 않습니다' }, 400)
+    }
 
     const finalThumbnail = thumbnailUrl || firstImageUrl || ''
 
@@ -1170,9 +1175,14 @@ howtoEditorRoutes.post('/api/howto/save-publish', requireAuth, async (c) => {
     try {
       const contentObj = JSON.parse(contentJson)
       finalContentHtml = convertTiptapToHtml(contentObj)
+      if (!finalContentHtml || finalContentHtml.trim().length === 0) {
+        return c.json({ success: false, error: '본문 변환에 실패했습니다. 내용을 확인해주세요.' }, 400)
+      }
       footnotes = extractFootnotes(contentObj)
       firstImageUrl = extractFirstImage(contentObj)
-    } catch {}
+    } catch {
+      return c.json({ success: false, error: '본문 형식이 올바르지 않습니다' }, 400)
+    }
 
     const finalThumbnail = thumbnailUrl || firstImageUrl || ''
 

@@ -830,10 +830,18 @@ export const setCommentVote = async (db: D1Database, payload: VotePayload): Prom
       await db.prepare('DELETE FROM comment_votes WHERE id = ?').bind(existing.id).run()
     }
   } else if (!existing) {
-    await db
-      .prepare('INSERT INTO comment_votes (comment_id, user_id, vote) VALUES (?, ?, ?)')
-      .bind(payload.commentId, payload.userId, voteValue)
-      .run()
+    try {
+      await db
+        .prepare('INSERT INTO comment_votes (comment_id, user_id, vote) VALUES (?, ?, ?)')
+        .bind(payload.commentId, payload.userId, voteValue)
+        .run()
+    } catch {
+      // UNIQUE constraint violation (race condition) → UPDATE로 폴백
+      await db
+        .prepare('UPDATE comment_votes SET vote = ?, updated_at = CURRENT_TIMESTAMP WHERE comment_id = ? AND user_id = ?')
+        .bind(voteValue, payload.commentId, payload.userId)
+        .run()
+    }
   } else if (existing.vote !== voteValue) {
     await db
       .prepare('UPDATE comment_votes SET vote = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
