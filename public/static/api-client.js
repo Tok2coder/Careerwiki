@@ -6462,43 +6462,48 @@ const DetailComments = (() => {
       return
     }
 
-    const password = await deleteModal.open(needsPassword)
-    if (password === null) {
-      return
-    }
-
-    button.dataset.commentBusy = '1'
-    try {
-      const response = await fetch(`/api/comments/${commentId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: password || undefined })
-      })
-      const payload = await response.json().catch(() => ({}))
-      if (!response.ok || !payload?.success) {
-        const msg = (payload && payload.error) || `HTTP ${response.status}`
-        if (typeof msg === 'string' && msg.toUpperCase().includes('INVALID_PASSWORD')) {
-          deleteModal.showError('비밀번호가 올바르지 않습니다.')
-          deleteModal.open(needsPassword)
-          return
-        }
-        if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_REQUIRED')) {
-          deleteModal.showError('익명 댓글은 비밀번호가 필요합니다.')
-          deleteModal.open(needsPassword)
-          return
-        }
-        if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_ATTEMPTS_EXCEEDED')) {
-          setStatus(section, '비밀번호 시도 횟수를 초과했습니다. 내일 다시 시도해주세요.', 'error')
-          return
-        }
-        throw new Error(msg)
+    // 비밀번호 재시도를 위한 루프
+    while (true) {
+      const password = await deleteModal.open(needsPassword)
+      if (password === null) {
+        return
       }
-      await loadComments(section, state)
-      showToast('댓글이 삭제되었습니다.', 'success')
-    } catch (error) {
-      setStatus(section, '댓글 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error')
-    } finally {
-      delete button.dataset.commentBusy
+
+      button.dataset.commentBusy = '1'
+      try {
+        const response = await fetch(`/api/comments/${commentId}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: password || undefined })
+        })
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok || !payload?.success) {
+          const msg = (payload && payload.error) || `HTTP ${response.status}`
+          if (typeof msg === 'string' && msg.toUpperCase().includes('INVALID_PASSWORD')) {
+            deleteModal.showError('비밀번호가 올바르지 않습니다.')
+            delete button.dataset.commentBusy
+            continue
+          }
+          if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_REQUIRED')) {
+            deleteModal.showError('익명 댓글은 비밀번호가 필요합니다.')
+            delete button.dataset.commentBusy
+            continue
+          }
+          if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_ATTEMPTS_EXCEEDED')) {
+            setStatus(section, '비밀번호 시도 횟수를 초과했습니다. 내일 다시 시도해주세요.', 'error')
+            return
+          }
+          throw new Error(msg)
+        }
+        await loadComments(section, state)
+        showToast('댓글이 삭제되었습니다.', 'success')
+        return
+      } catch (error) {
+        setStatus(section, '댓글 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error')
+        return
+      } finally {
+        delete button.dataset.commentBusy
+      }
     }
   }
 

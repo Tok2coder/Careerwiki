@@ -621,65 +621,47 @@ const checkDailyLimit = async (db: D1Database, pageId: number, ipHash: string | 
   return true
 }
 
-// 로그인 사용자 일일 댓글 제한 체크 (anonymous_daily_limits 테이블 재사용, page_id=0 sentinel)
+// 로그인 사용자 일일 댓글 제한 체크 (comments 테이블 직접 COUNT)
 const checkLoggedInDailyLimit = async (db: D1Database, authorId: string): Promise<boolean> => {
   const today = new Date().toISOString().split('T')[0]
-  const key = `user:${authorId}`
-  const limitRow = await db
-    .prepare('SELECT count FROM anonymous_daily_limits WHERE page_id = 0 AND ip_hash = ? AND date = ?')
-    .bind(key, today)
+  const row = await db
+    .prepare("SELECT COUNT(*) as cnt FROM comments WHERE author_id = ? AND created_at >= ? AND status = 'visible'")
+    .bind(authorId, today)
     .first()
 
-  const currentCount = limitRow ? Number(limitRow.count ?? 0) : 0
-  if (currentCount >= LOGGED_IN_DAILY_COMMENT_LIMIT) {
-    return false
-  }
-
-  if (limitRow) {
-    await db
-      .prepare('UPDATE anonymous_daily_limits SET count = count + 1 WHERE page_id = 0 AND ip_hash = ? AND date = ?')
-      .bind(key, today)
-      .run()
-  } else {
-    await db
-      .prepare('INSERT INTO anonymous_daily_limits (page_id, ip_hash, date, count) VALUES (0, ?, ?, 1)')
-      .bind(key, today)
-      .run()
-  }
-
-  return true
+  return Number(row?.cnt ?? 0) < LOGGED_IN_DAILY_COMMENT_LIMIT
 }
 
-// 비밀번호 시도 횟수 체크 (anonymous_daily_limits 테이블 재사용)
-const checkPasswordAttempts = async (db: D1Database, commentId: number): Promise<boolean> => {
+// 비밀번호 시도 횟수 체크 (anonymous_daily_limits 테이블 재사용, 댓글의 실제 page_id 사용)
+const checkPasswordAttempts = async (db: D1Database, commentId: number, pageId: number): Promise<boolean> => {
   const today = new Date().toISOString().split('T')[0]
   const key = `pwd:${commentId}`
   const limitRow = await db
-    .prepare('SELECT count FROM anonymous_daily_limits WHERE page_id = 0 AND ip_hash = ? AND date = ?')
-    .bind(key, today)
+    .prepare('SELECT count FROM anonymous_daily_limits WHERE page_id = ? AND ip_hash = ? AND date = ?')
+    .bind(pageId, key, today)
     .first()
 
   const currentCount = limitRow ? Number(limitRow.count ?? 0) : 0
   return currentCount < PASSWORD_MAX_ATTEMPTS
 }
 
-const recordPasswordFailure = async (db: D1Database, commentId: number): Promise<void> => {
+const recordPasswordFailure = async (db: D1Database, commentId: number, pageId: number): Promise<void> => {
   const today = new Date().toISOString().split('T')[0]
   const key = `pwd:${commentId}`
   const limitRow = await db
-    .prepare('SELECT count FROM anonymous_daily_limits WHERE page_id = 0 AND ip_hash = ? AND date = ?')
-    .bind(key, today)
+    .prepare('SELECT count FROM anonymous_daily_limits WHERE page_id = ? AND ip_hash = ? AND date = ?')
+    .bind(pageId, key, today)
     .first()
 
   if (limitRow) {
     await db
-      .prepare('UPDATE anonymous_daily_limits SET count = count + 1 WHERE page_id = 0 AND ip_hash = ? AND date = ?')
-      .bind(key, today)
+      .prepare('UPDATE anonymous_daily_limits SET count = count + 1 WHERE page_id = ? AND ip_hash = ? AND date = ?')
+      .bind(pageId, key, today)
       .run()
   } else {
     await db
-      .prepare('INSERT INTO anonymous_daily_limits (page_id, ip_hash, date, count) VALUES (0, ?, ?, 1)')
-      .bind(key, today)
+      .prepare('INSERT INTO anonymous_daily_limits (page_id, ip_hash, date, count) VALUES (?, ?, ?, 1)')
+      .bind(pageId, key, today)
       .run()
   }
 }
@@ -823,11 +805,11 @@ export const setCommentVote = async (db: D1Database, payload: VotePayload): Prom
   const voteValue: VoteValue = payload.direction === 'up' ? 1 : payload.direction === 'down' ? -1 : 0
 
   const target = await db
-    .prepare<{ author_id: string | null }>('SELECT author_id FROM comments WHERE id = ? LIMIT 1')
+    .prepare<{ author_id: string | null; status: string }>('SELECT author_id, status FROM comments WHERE id = ? LIMIT 1')
     .bind(payload.commentId)
     .first()
 
-  if (!target) {
+  if (!target || target.status === 'deleted') {
     throw new Error('COMMENT_NOT_FOUND')
   }
 
@@ -879,11 +861,11 @@ export const reportComment = async (db: D1Database, payload: ReportPayload): Pro
   }
 
   const target = await db
-    .prepare('SELECT id FROM comments WHERE id = ? LIMIT 1')
+    .prepare('SELECT id, status FROM comments WHERE id = ? LIMIT 1')
     .bind(payload.commentId)
     .first()
 
-  if (!target) {
+  if (!target || target.status === 'deleted') {
     throw new Error('COMMENT_NOT_FOUND')
   }
 
@@ -959,7 +941,7 @@ export const updateComment = async (db: D1Database, payload: UpdateCommentPayloa
 
   // 댓글 조회
   const comment = await db
-    .prepare('SELECT id, author_id, password_hash, is_anonymous FROM comments WHERE id = ? LIMIT 1')
+    .prepare('SELECT id, page_id, author_id, password_hash, is_anonymous, status FROM comments WHERE id = ? LIMIT 1')
     .bind(payload.commentId)
     .first()
 
@@ -967,6 +949,11 @@ export const updateComment = async (db: D1Database, payload: UpdateCommentPayloa
     throw new Error('COMMENT_NOT_FOUND')
   }
 
+  if (comment.status === 'deleted') {
+    throw new Error('COMMENT_NOT_FOUND')
+  }
+
+  const commentPageId = Number(comment.page_id)
   const authorId = typeof comment.author_id === 'string' ? comment.author_id : null
   const isAnonymous = Number(comment.is_anonymous ?? 0) === 1
   const passwordHash = typeof comment.password_hash === 'string' ? comment.password_hash : null
@@ -976,29 +963,29 @@ export const updateComment = async (db: D1Database, payload: UpdateCommentPayloa
     payload.userRole === 'admin' ||
     payload.userRole === 'super-admin' ||
     payload.userRole === 'operator'
-  
+
   if (!isAdmin) {
-  if (authorId) {
-    // 로그인 사용자 댓글: 작성자만 수정 가능
-    if (!payload.userId || payload.userId !== authorId) {
+    if (authorId) {
+      // 로그인 사용자 댓글: 작성자만 수정 가능
+      if (!payload.userId || payload.userId !== authorId) {
+        throw new Error('UNAUTHORIZED')
+      }
+    } else if (isAnonymous) {
+      // 익명 댓글: 비밀번호 확인 필요
+      if (!payload.password || !passwordHash) {
+        throw new Error('PASSWORD_REQUIRED')
+      }
+      const canAttempt = await checkPasswordAttempts(db, payload.commentId, commentPageId)
+      if (!canAttempt) {
+        throw new Error('PASSWORD_ATTEMPTS_EXCEEDED')
+      }
+      const isValid = await verifyPassword(payload.password, passwordHash)
+      if (!isValid) {
+        await recordPasswordFailure(db, payload.commentId, commentPageId)
+        throw new Error('INVALID_PASSWORD')
+      }
+    } else {
       throw new Error('UNAUTHORIZED')
-    }
-  } else if (isAnonymous) {
-    // 익명 댓글: 비밀번호 확인 필요
-    if (!payload.password || !passwordHash) {
-      throw new Error('PASSWORD_REQUIRED')
-    }
-    const canAttempt = await checkPasswordAttempts(db, payload.commentId)
-    if (!canAttempt) {
-      throw new Error('PASSWORD_ATTEMPTS_EXCEEDED')
-    }
-    const isValid = await verifyPassword(payload.password, passwordHash)
-    if (!isValid) {
-      await recordPasswordFailure(db, payload.commentId)
-      throw new Error('INVALID_PASSWORD')
-    }
-  } else {
-    throw new Error('UNAUTHORIZED')
     }
   }
 
@@ -1035,7 +1022,7 @@ export const updateComment = async (db: D1Database, payload: UpdateCommentPayloa
 export const deleteComment = async (db: D1Database, payload: DeleteCommentPayload): Promise<boolean> => {
   // 댓글 조회
   const comment = await db
-    .prepare('SELECT id, author_id, password_hash, is_anonymous FROM comments WHERE id = ? LIMIT 1')
+    .prepare('SELECT id, page_id, author_id, password_hash, is_anonymous, status FROM comments WHERE id = ? LIMIT 1')
     .bind(payload.commentId)
     .first()
 
@@ -1043,6 +1030,11 @@ export const deleteComment = async (db: D1Database, payload: DeleteCommentPayloa
     throw new Error('COMMENT_NOT_FOUND')
   }
 
+  if (comment.status === 'deleted') {
+    throw new Error('COMMENT_NOT_FOUND')
+  }
+
+  const commentPageId = Number(comment.page_id)
   const authorId = typeof comment.author_id === 'string' ? comment.author_id : null
   const isAnonymous = Number(comment.is_anonymous ?? 0) === 1
   const passwordHash = typeof comment.password_hash === 'string' ? comment.password_hash : null
@@ -1052,7 +1044,7 @@ export const deleteComment = async (db: D1Database, payload: DeleteCommentPayloa
     payload.userRole === 'admin' ||
     payload.userRole === 'super-admin' ||
     payload.userRole === 'operator'
-  
+
   if (!isAdmin) {
     if (authorId) {
       // 로그인 사용자 댓글: 작성자만 삭제 가능
@@ -1064,13 +1056,13 @@ export const deleteComment = async (db: D1Database, payload: DeleteCommentPayloa
       if (!payload.password || !passwordHash) {
         throw new Error('PASSWORD_REQUIRED')
       }
-      const canAttempt = await checkPasswordAttempts(db, payload.commentId)
+      const canAttempt = await checkPasswordAttempts(db, payload.commentId, commentPageId)
       if (!canAttempt) {
         throw new Error('PASSWORD_ATTEMPTS_EXCEEDED')
       }
       const isValid = await verifyPassword(payload.password, passwordHash)
       if (!isValid) {
-        await recordPasswordFailure(db, payload.commentId)
+        await recordPasswordFailure(db, payload.commentId, commentPageId)
         throw new Error('INVALID_PASSWORD')
       }
     } else {
