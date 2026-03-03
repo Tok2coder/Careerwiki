@@ -261,6 +261,24 @@ rationale은 반드시 다음 **3단계 템플릿**으로 작성하세요:
 ✓ 인용한 사용자 답변과 직업 정보 사이의 **연결 고리를 명시**
 ✓ 최소 3문장 이상, 최대 6문장 이하
 
+## ⚠️ Relevance Gate (관련성 필터 — 필수!)
+
+사용자의 명시적 관심 분야(interest_tokens, 서술형 답변 키워드)와 **직접 관련 없는 직업**에는 점수 상한을 적용하세요.
+
+### 판단 기준
+- 직업의 주요 업무/핵심역량이 사용자의 user_interest_tokens, user_value_tokens, 서술형 답변 키워드 중 **어느 것과도 의미적으로 연결되지 않는** 경우 = "관련 없는 직업"
+- 직업의 카테고리/분야가 사용자의 관심 영역과 완전히 다른 도메인인 경우 포함
+
+### 점수 상한 규칙
+- **관련 없는 직업**: desireScore 최대 45, overallScore 최대 55
+- 예: 데이터 분석 관심 유저 → "버섯연구원", "대중악기연주자" → desire 30-40, overall 45 이하
+- 예: 디자인 관심 유저 → "열처리반장", "농산물품질관리사" → desire 30-40, overall 45 이하
+- 예: 안정+사무 관심 유저 → "제조현장감독", "용접반장" → desire 30-40, overall 45 이하
+
+### 주의
+- 간접적으로라도 연결 가능한 직업(전이 가능 기술)은 관련 있는 것으로 판단
+- 관련 없는 직업은 likeReason에 "사용자의 관심 분야와 직접적 연관이 적습니다"를 명시
+
 ## 안전 규칙
 - 정신의학적 진단명을 사용하지 마세요
 - "~경향이 있다", "~패턴이 보인다" 등 완화된 표현 사용
@@ -839,10 +857,11 @@ JSON으로 반환하세요.`
         { role: 'system', content: JUDGE_SYSTEM_PROMPT },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.5,
+      temperature: 0.1,  // Phase 5: 0.5→0.1 (평가 일관성 극대화)
       max_tokens: 8000,  // 10개 직업 × ~600 토큰 = 6000 + 여유분 (likeReason/canReason 포함)
+      seed: 42,          // Phase 5: 동일 입력 → 동일 출력 보장
     })
-    
+
     // P0-2: 검증용 텍스트 풀 전달
     const results = parseJudgeResponse(response, candidates, userTextPool)
 
@@ -1843,6 +1862,17 @@ rationale은 반드시 다음 **3단계 템플릿**으로 작성하세요:
 ✓ 인용한 사용자 답변과 전공 정보 사이의 **연결 고리를 명시**
 ✓ 최소 3문장 이상, 최대 6문장 이하
 
+## ⚠️ Relevance Gate (관련성 필터 — 필수!)
+
+사용자의 명시적 관심 분야(interest_tokens, 서술형 답변 키워드)와 **직접 관련 없는 전공**에는 점수 상한을 적용하세요.
+
+### 판단 기준
+- 전공의 핵심 교과/진로가 사용자의 user_interest_tokens, user_value_tokens, 서술형 답변 키워드 중 **어느 것과도 의미적으로 연결되지 않는** 경우 = "관련 없는 전공"
+
+### 점수 상한 규칙
+- **관련 없는 전공**: desireScore 최대 45, overallScore 최대 55
+- 간접적으로라도 연결 가능한 전공(전이 가능 기술)은 관련 있는 것으로 판단
+
 ## 안전 규칙
 - 정신의학적 진단명을 사용하지 마세요
 - "~경향이 있다", "~패턴이 보인다" 등 완화된 표현 사용
@@ -2143,8 +2173,9 @@ JSON으로 반환하세요.`
         { role: 'system', content: MAJOR_JUDGE_SYSTEM_PROMPT },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.5,
+      temperature: 0.1,  // Phase 5: 0.5→0.1 (평가 일관성 극대화)
       max_tokens: 8000,
+      seed: 42,          // Phase 5: 동일 입력 → 동일 출력 보장
     })
 
     const mjResults = parseMajorJudgeResponse(response, candidates, userTextPool)

@@ -42,6 +42,7 @@ export async function callOpenAI(
     temperature?: number
     max_tokens?: number
     timeout_ms?: number  // v3.10.6: 개별 호출 타임아웃 (기본 25초)
+    seed?: number        // Phase 5: 재현성을 위한 seed (Judge 등 평가 단계용)
   } = {}
 ): Promise<{ response: string; usage: OpenAIResponse['usage'] }> {
   const {
@@ -49,6 +50,7 @@ export async function callOpenAI(
     temperature = 0.7,
     max_tokens = 1500,
     timeout_ms = 55000,  // 55초: 정상(5-15초)에선 안 걸리고, OpenAI 먹통일 때만 작동
+    seed,
   } = options
 
   // v3.10.6: AbortController로 개별 OpenAI 호출 타임아웃 적용
@@ -68,6 +70,7 @@ export async function callOpenAI(
         messages,
         temperature,
         max_tokens,
+        ...(seed !== undefined && { seed }),
       }),
       signal: controller.signal,
     })
@@ -107,6 +110,7 @@ export function createOpenAICompatibleRunner(apiKey: string) {
         messages: Array<{ role: string; content: string }>
         temperature?: number
         max_tokens?: number
+        seed?: number  // Phase 5: 재현성을 위한 seed
       }
     ): Promise<{ response: string }> {
       const result = await callOpenAI(
@@ -115,6 +119,7 @@ export function createOpenAICompatibleRunner(apiKey: string) {
         {
           temperature: options.temperature,
           max_tokens: options.max_tokens,
+          seed: options.seed,
         }
       )
       return { response: result.response }

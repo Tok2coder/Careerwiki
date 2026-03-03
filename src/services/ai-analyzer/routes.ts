@@ -5649,12 +5649,17 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         // 여기서 overallScore 상위 N개로 자르면 Like/Can이 동일해짐
         topJobs = judgeResults.results.map(result => {
           const originalJob = preFilteredJobs.find(j => j.job_id === result.job_id)
+          // Phase 5-A2: PS Score Blending — deterministic PS 30% + LLM Judge 70%
+          // PS 점수가 일관적이므로 Judge 변동을 안정화하는 앵커 역할
+          const psScore = originalJob?.final_score || 0
+          const judgeScore = result.overallScore
+          const blendedFit = Math.round(psScore * 0.3 + judgeScore * 0.7)
           return {
             ...originalJob,
             like_score: result.desireScore,       // Like = 흥미/가치 매칭
             can_score: result.fitScore,            // Can = 강점/역량 매칭
-            fit_score: result.overallScore,        // Fit = 종합 (Can×0.50 + Like×0.40 + Background×0.10 - Risk)
-            final_score: result.overallScore,
+            fit_score: blendedFit,                 // Phase 5: Blended (PS 30% + Judge 70%)
+            final_score: blendedFit,
             risk_penalty: result.riskPenalty,
             feasibility_score: result.feasibilityScore,  // 현실성 점수 (참고용)
             rationale: result.rationale,
