@@ -4642,15 +4642,10 @@ const DetailComments = (() => {
     if (section instanceof HTMLElement) {
       section.dataset.commentActiveTab = activeTab
     }
-    const allCount = parseInt(section.dataset?.commentAllCount || '0', 10)
-    const bestCount = parseInt(section.dataset?.commentBestCount || '0', 10)
     triggers.forEach((trigger) => {
       const target = trigger.getAttribute('data-comment-tab') === 'best' ? 'best' : 'all'
       const isActive = target === activeTab
       trigger.setAttribute('aria-selected', isActive ? 'true' : 'false')
-      // 탭 텍스트에 카운트 표시
-      const count = target === 'best' ? bestCount : allCount
-      trigger.textContent = target === 'best' ? `BEST (${count})` : `전체 댓글 (${count})`
       // 활성 상태: 파란 배경 + 흰 텍스트
       trigger.classList.toggle('bg-wiki-primary', isActive)
       trigger.classList.toggle('text-white', isActive)

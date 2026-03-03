@@ -90,22 +90,100 @@ scripts/                       # ETL 및 유틸리티 스크립트
 
 ## Workflow Rules
 
-### 작업 완료 시 필수 절차
-1. `npx tsc --noEmit` — 타입 체크 통과 확인
-2. `npm run build` — 빌드 성공 확인
-3. 관련 파일만 `git add` → `git commit`
-4. `npm run deploy` — Cloudflare Pages 배포
-5. careerwiki.org에서 동작 확인 (로컬 테스트 불필요, Vectorize는 프로덕션에서만 동작)
+### 1. 자가 검증 프로토콜 (Self-Verification)
 
-### 큰 작업 완료 시
-- `git push` 전에 **반드시 유저에게 확인** 요청
-- 푸시 전 점검사항 보고: 빌드 상태, 타입 에러, 변경 파일 목록, 배포 확인 여부
-- 유저 승인 후에만 push 실행
+코드 변경 시 **완료 선언 전** 반드시 아래 단계 수행:
 
-### 테스트
-- 로컬 dev 서버 사용하지 않음
-- 배포 후 careerwiki.org에서 직접 테스트
-- Vectorize, AI binding 등 Cloudflare 바인딩은 프로덕션에서만 정상 동작
+**Step 1: 기본 검증**
+- `npx tsc --noEmit` — 타입 에러 0개 확인
+- `npm run build` — 빌드 성공 확인
+- 변경한 코드를 `Read`로 다시 열어 의도대로인지 재확인
+
+**Step 2: 충돌/회귀 검증**
+- 변경한 함수를 `Grep`으로 검색 → import/호출하는 모든 파일에서 호환성 확인
+- 변경한 API 경로 → 프론트엔드 호출 코드와 일치 여부 확인
+- 공유 타입/유틸 변경 시 → 영향받는 전체 모듈 파악 후 이상 없음 확인
+- DB 스키마 변경 시 → 해당 컬럼 참조하는 모든 쿼리 확인
+
+**Step 3: 과거 실수 대조**
+- `memory/lessons-learned.md` 확인 → 동일/유사 실수 반복 여부 체크
+
+**Step 4: 오류 탐지**
+- edge case 누락, null/undefined 처리, SQL injection 가능성 점검
+- TailwindCSS 클래스 오타, JSX 닫힘 태그 누락, 이벤트 핸들러 누락 등 점검
+
+### 2. 배포 파이프라인 (Deploy Pipeline)
+
+검증 완료 후 **한 세트로 연속 실행** (중간에 멈추지 않음):
+
+```
+npx tsc --noEmit
+→ npm run build
+→ npm run deploy
+→ careerwiki.org에서 변경사항 동작 확인
+→ git add [변경파일만]
+→ git commit -m "feat/fix/chore: [한국어 설명]"
+→ git push
+```
+
+- 각 단계 실패 시 → 즉시 수정 후 파이프라인 처음부터 재시작
+- push까지 자동 실행 (별도 유저 승인 불필요)
+- 완료 후 변경 요약 보고
+
+### 3. 실수 학습 (Compound Learning)
+
+오류 발생, 빌드 실패, 잘못된 코드 발견 시:
+1. **즉시** `memory/lessons-learned.md`에 기록
+2. 포맷:
+   ```
+   ### [YYYY-MM-DD] 카테고리: 제목
+   - **상황**: 무엇을 하다가
+   - **원인**: 왜 발생했는지
+   - **해결**: 어떻게 고쳤는지
+   - **교훈**: 다음에 어떻게 방지하는지
+   ```
+3. 기존 항목과 중복이면 기존 항목 업데이트 (새로 추가 X)
+4. **새 작업 시작 전** 반드시 lessons-learned.md 확인
+
+### 4. 설계서 프로토콜 (Design Doc)
+
+다음 조건 중 **하나 이상** 해당 시 → 코드 작성 전 설계서 작성 (Plan Mode 사용):
+- 새 기능 추가 (3개 이상 파일 변경 예상)
+- DB 스키마 변경 (마이그레이션 추가)
+- API 엔드포인트 추가/변경
+- UI 페이지 또는 레이아웃 신규/대폭 변경
+
+**설계서 필수 항목:**
+
+```
+## 1. 기능 정의 (What)
+- 목적: 왜 만드는지
+- 범위: 포함 / 명시적 제외
+
+## 2. UI/레이아웃 (How it looks)
+- ASCII 목업 또는 상세 레이아웃 설명
+- 반응형 (모바일/데스크톱) 고려
+- 기존 디자인 패턴과의 일관성
+
+## 3. 동작 명세 (How it works)
+- 정상 플로우 (step by step)
+- 엣지 케이스 목록 + 처리 방식
+- 에러 처리
+
+## 4. 영향 분석 (Impact)
+- 변경/추가할 파일 목록
+- 기존 기능 영향 여부
+- DB 마이그레이션 필요 여부
+- 캐시 무효화 필요 여부
+```
+
+유저 승인 후 구현 시작.
+
+### 테스트 (중요)
+- **로컬 dev 서버(preview_start, npm run dev) 절대 사용 금지** — Cloudflare 바인딩(D1, Vectorize, AI, KV, R2)이 로컬에서 정상 동작하지 않음
+- **반드시 `npm run deploy`로 배포 후 careerwiki.org에서 직접 테스트**
+- 테스트는 Chrome MCP 도구(navigate, find, screenshot, javascript_tool 등)로 careerwiki.org 실서비스에서 수행
+- preview_* 도구는 이 프로젝트에서 사용하지 않음
 
 ## Critical Rules
 
