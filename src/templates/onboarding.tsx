@@ -36,21 +36,21 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { font-family: 'Noto Sans KR', sans-serif; }
-    body { 
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    body {
+      background: #0f0f23;
       min-height: 100vh;
     }
     .glass-card {
-      background: rgba(30, 41, 59, 0.9);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(148, 163, 184, 0.15);
+      background: rgba(26, 26, 46, 0.82);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(148, 163, 184, 0.22);
     }
     .step-indicator {
       transition: all 0.3s ease;
     }
     .step-indicator.active {
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+      background: linear-gradient(135deg, #4361ee, #64b5f6);
+      box-shadow: 0 0 20px rgba(67, 97, 238, 0.5);
     }
     .step-indicator.completed {
       background: #10b981;
@@ -86,12 +86,12 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
       background: rgba(16, 185, 129, 0.1);
     }
     .btn-primary {
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      background: linear-gradient(135deg, #4361ee, #64b5f6);
       transition: all 0.2s ease;
     }
     .btn-primary:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
     }
     .btn-primary:disabled {
       opacity: 0.5;
@@ -109,7 +109,7 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
     }
   </style>
 </head>
-<body class="text-slate-100">
+<body class="text-wiki-text">
   <div class="min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-lg">
       <!-- 로고 -->
@@ -148,19 +148,20 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
           <h2 class="text-xl font-semibold mb-2">닉네임을 정해주세요</h2>
           <p class="text-slate-400 text-sm mb-6">커리어위키에서 사용할 이름이에요.</p>
           
+          <label for="nickname" class="block text-sm text-wiki-muted mb-1">닉네임</label>
           <div class="relative">
             <input
               type="text"
               id="nickname"
               placeholder="2~16자, 한글/영문/숫자"
               maxlength="16"
-              class="input-field w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none"
+              class="input-field w-full px-4 py-3 bg-wiki-card/50 border border-wiki-border rounded-lg text-white placeholder-wiki-muted focus:outline-none"
             >
             <div id="nickname-status" class="nickname-status absolute right-3 top-1/2 -translate-y-1/2">
               <!-- 상태 아이콘 표시 -->
             </div>
           </div>
-          <p id="nickname-message" class="mt-2 text-sm text-slate-400"></p>
+          <p id="nickname-message" class="mt-2 text-sm text-wiki-muted" aria-live="polite" aria-atomic="true"></p>
           
           <button
             id="btn-step1-next"
@@ -259,7 +260,7 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
             <div class="flex-1">
               <div class="flex items-center justify-between">
                 <span class="font-medium">[필수] 이용약관 동의</span>
-                <a href="/legal/terms" target="_blank" class="text-sm text-blue-400 hover:underline">보기</a>
+                <a href="/legal/terms" target="_blank" rel="noopener" class="text-sm text-blue-400 hover:underline">보기</a>
               </div>
               <p class="text-xs text-slate-500 mt-1">버전: ${CONSENT_VERSIONS.terms}</p>
             </div>
@@ -271,7 +272,7 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
             <div class="flex-1">
               <div class="flex items-center justify-between">
                 <span class="font-medium">[필수] 개인정보 처리방침 동의</span>
-                <a href="/legal/privacy" target="_blank" class="text-sm text-blue-400 hover:underline">보기</a>
+                <a href="/legal/privacy" target="_blank" rel="noopener" class="text-sm text-blue-400 hover:underline">보기</a>
               </div>
               <p class="text-xs text-slate-500 mt-1">버전: ${CONSENT_VERSIONS.privacy}</p>
             </div>

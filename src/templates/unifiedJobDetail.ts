@@ -4776,7 +4776,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
             <div class="flex items-center gap-2 shrink-0">
               <button 
                 type="button" 
-                class="px-4 py-2 bg-wiki-secondary text-white rounded-lg text-sm hover:bg-purple-600 transition inline-flex items-center gap-2" 
+                class="px-4 py-2 min-h-[44px] bg-wiki-secondary text-white rounded-lg text-sm hover:bg-purple-600 transition inline-flex items-center gap-2"
                 data-edit-mode-trigger
                 data-entity-type="job"
                 data-entity-id="${escapeHtml(profile.id)}"
@@ -4791,7 +4791,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
               </button>
               <button 
                 type="button" 
-                class="px-4 py-2 bg-wiki-bg/60 border border-wiki-border/60 text-white rounded-lg text-sm hover:bg-wiki-bg/80 hover:border-wiki-primary/60 transition inline-flex items-center gap-2" 
+                class="px-4 py-2 min-h-[44px] bg-wiki-bg/60 border border-wiki-border/60 text-white rounded-lg text-sm hover:bg-wiki-bg/80 hover:border-wiki-primary/60 transition inline-flex items-center gap-2"
                 data-history-trigger
                 data-entity-type="job"
                 data-entity-id="${escapeHtml(profile.id)}"
@@ -4805,7 +4805,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
                 역사
               </button>
               <div class="relative" data-share-root data-cw-telemetry-scope="job-hero-actions">
-                <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="${escapeHtml(detailPath)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}" data-cw-telemetry-component="job-share-trigger" data-cw-telemetry-action="share-open"${telemetryVariantAttr}>
+                <button type="button" class="px-4 py-2 min-h-[44px] bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="${escapeHtml(detailPath)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}" data-cw-telemetry-component="job-share-trigger" data-cw-telemetry-action="share-open"${telemetryVariantAttr}>
                   <i class="fas fa-share-nodes" aria-hidden="true"></i>
                   공유
                 </button>

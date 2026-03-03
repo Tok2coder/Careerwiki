@@ -20,7 +20,7 @@ export function renderNotFoundPage(options?: NotFoundOptions): string {
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   ${renderNavStyles()}
   <style>
-    body { background: #0b1220; color: #e6e8f5; }
+    body { background: #0f0f23; color: #e0e0e0; }
     .nf-hero {
       max-width: 960px;
       margin: 0 auto;

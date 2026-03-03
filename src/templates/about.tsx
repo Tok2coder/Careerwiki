@@ -34,8 +34,7 @@ export function renderAboutPage(options?: AboutPageOptions): string {
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9810002715600854" crossorigin="anonymous"></script>
   ${renderNavStyles()}
   <style>
-    body { background-color: #0b1220; color: #dee3ff; }
-    .glass-card { background: rgba(26, 26, 46, 0.8); border: 1px solid rgba(67, 97, 238, 0.2); backdrop-filter: blur(12px); }
+    body { background-color: #0f0f23; color: #e0e0e0; }
   </style>
 </head>
 <body class="bg-wiki-bg text-wiki-text min-h-screen">

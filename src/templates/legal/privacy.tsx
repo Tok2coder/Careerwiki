@@ -269,8 +269,7 @@ export function renderPrivacyPage(options?: PrivacyPageOptions): string {
   <link rel="stylesheet" href="/static/tailwind.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    body { background-color: #0b1220; color: #dee3ff; }
-    .glass-card { background: rgba(26, 26, 46, 0.8); border: 1px solid rgba(67, 97, 238, 0.2); backdrop-filter: blur(12px); }
+    body { background-color: #0f0f23; color: #e0e0e0; }
   </style>
   <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-H9R83SJRRY"></script>

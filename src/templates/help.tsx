@@ -173,9 +173,8 @@ export function renderHelpPage(options?: HelpPageOptions): string {
   <link rel="stylesheet" href="/static/tailwind.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    body { background-color: #0b1220; color: #dee3ff; }
-    .glass { background: rgba(26, 26, 46, 0.8); border: 1px solid rgba(67, 97, 238, 0.2); backdrop-filter: blur(10px); }
-    .glass-card { background: rgba(26, 26, 46, 0.8); border: 1px solid rgba(67, 97, 238, 0.2); backdrop-filter: blur(12px); }
+    body { background-color: #0f0f23; color: #e0e0e0; }
+    .glass { background: rgba(26, 26, 46, 0.82); border: 1px solid rgba(148, 163, 184, 0.22); backdrop-filter: blur(14px); }
     .sticky-nav { position: sticky; top: 90px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
   </style>

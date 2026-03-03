@@ -211,6 +211,10 @@ searchRoutes.get('/search', async (c) => {
     }
   }
 
+  const jobCount = jobCardsHtml ? (jobCardsHtml.split('</article>').length - 1) : 0
+  const majorCount = majorCardsHtml ? (majorCardsHtml.split('</article>').length - 1) : 0
+  const howtoCount = howtoResults.length
+
   const content = `
     <div class="max-w-[1400px] mx-auto px-[2px] md:px-6 pt-4 md:pt-8 md:mt-8">
         <div class="mb-8">
@@ -234,6 +238,7 @@ searchRoutes.get('/search', async (c) => {
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <span class="w-2 h-6 bg-wiki-primary mr-3"></span>
                 직업위키
+                <span class="ml-2 text-sm font-normal text-wiki-muted">(${jobCount})</span>
             </h2>
             <div class="space-y-4">
                 ${jobCardsHtml}
@@ -251,6 +256,7 @@ searchRoutes.get('/search', async (c) => {
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <span class="w-2 h-6 bg-wiki-secondary mr-3"></span>
                 전공위키
+                <span class="ml-2 text-sm font-normal text-wiki-muted">(${majorCount})</span>
             </h2>
             <div class="space-y-4">
                 ${majorCardsHtml}
@@ -268,6 +274,7 @@ searchRoutes.get('/search', async (c) => {
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <span class="w-2 h-6 bg-amber-500 mr-3"></span>
                 HowTo 가이드
+                <span class="ml-2 text-sm font-normal text-wiki-muted">(${howtoCount})</span>
             </h2>
             <div class="space-y-4">
                 ${howtoResults.map(howto => `

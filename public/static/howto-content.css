@@ -37,15 +37,15 @@
 .howto-user-content [style*="text-align: center"] { text-align: center; }
 .howto-user-content [style*="text-align: right"] { text-align: right; }
 
-/* 내부 링크 - 민트색 */
+/* 내부 링크 */
 .howto-user-content a {
-  color: #00d4aa;
+  color: #64b5f6;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
 }
 .howto-user-content a:hover {
-  color: #00ffcc;
+  color: #90caf9;
 }
 
 /* 외부 링크 - 주황색 */

@@ -473,7 +473,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
         <p id="${instructionsId}">방향키로 탭을 이동하고 Enter 키로 선택할 수 있습니다. Home/End 키로 처음과 마지막 탭으로 이동합니다.</p>
       </header>
       <div
-        class="flex flex-wrap gap-2 px-2 md:px-4 pt-3 md:pt-4 bg-transparent md:bg-wiki-bg/70 border-b border-wiki-border/50 md:border-wiki-border"
+        class="flex flex-wrap gap-2 px-2 md:px-4 pt-3 md:pt-4 bg-wiki-bg/95 md:bg-wiki-bg/70 border-b border-wiki-border/50 md:border-wiki-border sticky top-0 z-30 backdrop-blur-sm"
         data-cw-tablist-container
       >
         <ul

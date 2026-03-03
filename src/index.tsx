@@ -54,6 +54,14 @@ const timingMiddleware = async (c: any, next: any) => {
   c.header('X-Response-Duration', String(Date.now() - t0))
 }
 
+const securityHeadersMiddleware = async (c: any, next: any) => {
+  await next()
+  c.header('X-Content-Type-Options', 'nosniff')
+  c.header('X-Frame-Options', 'DENY')
+  c.header('Referrer-Policy', 'strict-origin-when-cross-origin')
+  c.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+}
+
 const apiCacheHintMiddleware = async (c: any, next: any) => {
   await next()
   const path = c.req.path || ''
@@ -96,6 +104,7 @@ app.use('*', renderer)
 app.use('*', errorLoggingMiddleware)
 app.use('*', timingMiddleware)
 app.use('*', apiCacheHintMiddleware)
+app.use('*', securityHeadersMiddleware)
 
 // Static files
 // @ts-ignore - Cloudflare Workers types mismatch

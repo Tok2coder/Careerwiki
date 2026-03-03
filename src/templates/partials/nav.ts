@@ -137,9 +137,9 @@ export function renderNavStyles(): string {
   return `
   <style id="nav-shared-styles">
     /* Fallback theme tokens for pages that don't load full app CSS */
-    .bg-wiki-bg { background-color: #0b1220; }
-    .text-wiki-text { color: #e6e8f5; }
-    .text-wiki-muted { color: #9aa3c5; }
+    .bg-wiki-bg { background-color: #0f0f23; }
+    .text-wiki-text { color: #e0e0e0; }
+    .text-wiki-muted { color: #9ca3af; }
     .border-wiki-border { border-color: rgba(148, 163, 184, 0.25); }
     .glass-card { background: rgba(26, 26, 46, 0.82); border: 1px solid rgba(148, 163, 184, 0.22); backdrop-filter: blur(14px); }
     .header-icon-button { width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; color: rgba(200, 210, 255, 0.7); transition: all 0.2s ease; }

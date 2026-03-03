@@ -937,11 +937,11 @@ export const renderLayout = (
           })();
         </script>
 
-        <script src="/static/api-client.js?v=${Date.now()}"></script>
+        <script src="/static/api-client.js?v=20260303" defer></script>
 
         <!-- 편집 시스템 -->
-        <link rel="stylesheet" href="/static/edit-mode.css?v=${Date.now()}">
-        <script src="/static/edit-mode.js?v=${Date.now()}"></script>
+        <link rel="stylesheet" href="/static/edit-mode.css?v=20260303">
+        <script src="/static/edit-mode.js?v=20260303" defer></script>
 
         <!-- 북마크(저장) 기능 -->
         <script>
