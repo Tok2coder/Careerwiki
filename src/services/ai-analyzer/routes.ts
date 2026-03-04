@@ -4460,8 +4460,8 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
     }
     
     // ============================================
-    // LLM Interviewer 호출 (Gate 통과 + Memory + CAG 포함)
-    // analysis_type === 'major' → 전공용 인터뷰어, 그 외 → 직업용 인터뷰어
+    // Phase 7: R1 질문 캐싱 — 동일 프로필 → 동일 R1 질문 반환
+    // 일관성의 근본 원인(매번 다른 질문)을 해결
     // ============================================
     const interviewerInput = {
       sessionId: session_id,
@@ -4475,9 +4475,73 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
       memory: memoryData,
       openaiApiKey: (env as any).OPENAI_API_KEY,
     }
-    const result = analysis_type === 'major'
-      ? await generateMajorRoundQuestions(env.AI || null, interviewerInput)
-      : await generateRoundQuestions(env.AI || null, interviewerInput)
+
+    // R1 캐시: mini_module_result + narrative_facts를 해시하여 캐시 키 생성
+    let result: Awaited<ReturnType<typeof generateRoundQuestions>>
+    const analysisTypeKey = analysis_type || 'job'
+
+    if (round_number === 1 && mini_module_result) {
+      // 캐시 키 생성: interest/value/strength/constraint + narrative_facts
+      const cacheInput = JSON.stringify({
+        i: mini_module_result.interest_top?.sort(),
+        v: mini_module_result.value_top?.sort(),
+        s: mini_module_result.strength_top?.sort(),
+        c: mini_module_result.constraint_flags?.sort(),
+        h: narrative_facts?.highAliveMoment?.slice(0, 50),
+        l: narrative_facts?.lostMoment?.slice(0, 50),
+      })
+      // 간단한 해시: 32비트 FNV-1a
+      let hash = 0x811c9dc5
+      for (let i = 0; i < cacheInput.length; i++) {
+        hash ^= cacheInput.charCodeAt(i)
+        hash = (hash * 0x01000193) >>> 0
+      }
+      const profileHash = hash.toString(16).padStart(8, '0')
+
+      // 캐시 조회
+      try {
+        const cached = await db.prepare(
+          'SELECT questions_json FROM interview_question_cache WHERE profile_hash = ? AND analysis_type = ? AND round_number = 1'
+        ).bind(profileHash, analysisTypeKey).first<{ questions_json: string }>()
+
+        if (cached) {
+          // 캐시 히트 → LLM 호출 생략
+          await db.prepare(
+            'UPDATE interview_question_cache SET hit_count = hit_count + 1 WHERE profile_hash = ? AND analysis_type = ? AND round_number = 1'
+          ).bind(profileHash, analysisTypeKey).run()
+
+          const cachedQuestions = JSON.parse(cached.questions_json)
+          result = {
+            round: 1,
+            questions: cachedQuestions,
+            generatedBy: 'llm' as const,
+            metadata: { purpose: 'ENGINE' as const, theme: '욕망 탐색', targetAxis: ['interest', 'value'] as const },
+          }
+        } else {
+          // 캐시 미스 → LLM 호출 후 저장
+          result = analysisTypeKey === 'major'
+            ? await generateMajorRoundQuestions(env.AI || null, interviewerInput)
+            : await generateRoundQuestions(env.AI || null, interviewerInput)
+
+          // 캐시에 저장 (실패해도 무시)
+          try {
+            await db.prepare(
+              'INSERT OR REPLACE INTO interview_question_cache (profile_hash, analysis_type, round_number, questions_json) VALUES (?, ?, 1, ?)'
+            ).bind(profileHash, analysisTypeKey, JSON.stringify(result.questions)).run()
+          } catch { /* 캐시 저장 실패 무시 */ }
+        }
+      } catch {
+        // 캐시 테이블 없거나 오류 → 기존 로직 fallback
+        result = analysisTypeKey === 'major'
+          ? await generateMajorRoundQuestions(env.AI || null, interviewerInput)
+          : await generateRoundQuestions(env.AI || null, interviewerInput)
+      }
+    } else {
+      // R2, R3는 캐싱 없이 LLM 호출 (이전 답변에 의존하므로)
+      result = analysisTypeKey === 'major'
+        ? await generateMajorRoundQuestions(env.AI || null, interviewerInput)
+        : await generateRoundQuestions(env.AI || null, interviewerInput)
+    }
     
     // ============================================
     // CAG: 생성된 질문 로그 기록 + 중복 필터
@@ -5669,38 +5733,41 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           }
         })
 
-        // Phase 6-B: 코드 레벨 Relevance Post-Filter
-        // 유저의 interest_top 키워드와 직업명/설명이 전혀 관련 없으면 점수 보정
+        // Phase 7-B: 코드 레벨 Relevance Post-Filter (복합 키워드 매칭)
+        // "연구" 같은 범용 접미사만으로 통과하지 못하도록 도메인 키워드 AND 매칭
         if (mmInterests.length > 0) {
-          // interest 토큰별 관련 키워드 수집
-          const relevanceKeywords: string[] = []
+          // interest 토큰별 도메인 키워드 (직업명의 도메인 부분과 매칭)
+          // 토큰별 도메인 키워드 — 직업명에 이 키워드가 하나라도 있으면 관련 있는 것으로 판단
+          // 주의: "디자이너" ≠ "디자인" (한국어 형태소가 다름) — 둘 다 포함해야 함
+          const TOKEN_DOMAIN_KEYWORDS: Record<string, string[]> = {
+            data_numbers: ['데이터', '분석', '통계', '수치', '빅데이터', 'AI', '인공지능', '머신러닝', '알고리즘', '정보', '수학'],
+            tech: ['개발', '프로그래밍', 'IT', '소프트웨어', '시스템', '클라우드', '보안', '네트워크', '인공지능', '웹', '앱', '엔지니어'],
+            creating: ['디자인', '디자이너', '창작', '기획', '콘텐츠', '게임', '영상', '광고', '미디어', '크리에이터', '방송', '원화', '아트'],
+            creative: ['디자인', '디자이너', '창작', '기획', '콘텐츠', '게임', '영상', '광고', '미디어', '크리에이터', '방송', '원화', '아트'],
+            design: ['디자인', '디자이너', 'UI', 'UX', '시각', '그래픽', '인터페이스', '브랜드', '패션', '원화'],
+            art: ['예술', '미술', '공예', '일러스트', '작가', '디자인', '디자이너', '아트', '원화', '크리에이터'],
+            helping_teaching: ['교육', '복지', '상담', '돌봄', '간호', '보육', '치료', '심리', '사회', '아동', '교사', '강사'],
+            helping: ['교육', '복지', '상담', '돌봄', '간호', '보육', '치료', '심리', '사회', '아동', '지도원'],
+            helping_feedback: ['복지', '상담', '지도원', '간호', '돌봄', '치료'],
+            organizing: ['행정', '관리', '사무', '기획', '총무', '경영', '인사', '재무', '회계'],
+            problem_solving: ['컨설팅', '전략', '분석', '기획', '경영', '솔루션', '컨설턴트'],
+            influencing: ['마케팅', '홍보', '영업', '커뮤니케이션', '브랜드', '광고'],
+            research: ['연구', '데이터', '통계', '실험', 'R&D', '생명', '화학', '물리', '생물', '의학', '공학'],
+          }
+          // 도메인 키워드 수집 (TOKEN_DOMAIN_KEYWORDS만 사용)
+          // 아키타입 패턴(ARCHETYPE_DB_QUERIES)은 DB 주입용이므로 relevance filter에 포함하지 않음
+          // — "연구원", "분석가" 같은 범용 패턴이 국악연구원/버섯연구원을 통과시키는 버그 방지
+          const domainKeywords: string[] = []
           for (const interest of mmInterests) {
-            const config = ARCHETYPE_DB_QUERIES[interest]
-            if (config) relevanceKeywords.push(...config.patterns)
+            if (TOKEN_DOMAIN_KEYWORDS[interest]) domainKeywords.push(...TOKEN_DOMAIN_KEYWORDS[interest])
           }
-          // 범용 키워드 추가 (interest 토큰에서 직접 파생)
-          const TOKEN_KEYWORDS: Record<string, string[]> = {
-            data_numbers: ['데이터', '분석', '통계', '수치', '빅데이터', 'AI', '인공지능', '머신러닝'],
-            tech: ['개발', '프로그래밍', 'IT', '소프트웨어', '시스템', '클라우드', '보안'],
-            creating: ['디자인', '창작', '기획', '콘텐츠', '게임', '영상', '광고'],
-            design: ['디자인', 'UI', 'UX', '시각', '그래픽', '인터페이스'],
-            helping_teaching: ['교육', '복지', '상담', '돌봄', '간호', '보육'],
-            organizing: ['행정', '관리', '사무', '기획', '총무', '경영'],
-            problem_solving: ['컨설팅', '전략', '분석', '연구', '기획'],
-            influencing: ['마케팅', '홍보', '영업', '커뮤니케이션'],
-            research: ['연구', '분석', '조사', '실험', 'R&D'],
-          }
-          for (const interest of mmInterests) {
-            if (TOKEN_KEYWORDS[interest]) relevanceKeywords.push(...TOKEN_KEYWORDS[interest])
-          }
-          const uniqueKeywords = [...new Set(relevanceKeywords)]
+          const uniqueDomainKw = [...new Set(domainKeywords)]
 
-          if (uniqueKeywords.length > 0) {
+          if (uniqueDomainKw.length > 0) {
             for (const job of topJobs) {
               const jobName = (job as any).job_name || ''
-              const jobDesc = (job as any).job_description || ''
-              const searchText = `${jobName} ${jobDesc}`.toLowerCase()
-              const isRelevant = uniqueKeywords.some(kw => searchText.includes(kw.toLowerCase()))
+              // jobName만 검사 — job_description은 범용 키워드("분석", "기획" 등)를 포함해 오탐 유발
+              const isRelevant = uniqueDomainKw.some(kw => jobName.includes(kw))
               if (!isRelevant) {
                 // 관련 없는 직업: like_score 상한 45, fit_score 상한 55
                 if ((job as any).like_score > 45) (job as any).like_score = 45
@@ -6245,7 +6312,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           like_reason: job.like_reason || null,   // 좋아할 이유
           can_reason: job.can_reason || null,     // 잘할 이유
           evidence_quotes: job.evidence_quotes || [],
-        }))),
+        })).sort((a, b) => b.fit_score - a.fit_score)),
         like_top10: sanitizeJobListOutput(likeTop10),
         can_top10: sanitizeJobListOutput(canTop10),
         total_candidates: expansionResult.candidates.length,
