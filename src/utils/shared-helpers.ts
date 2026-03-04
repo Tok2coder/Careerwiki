@@ -389,6 +389,59 @@ export const renderLayout = (
             opacity: 1;
           }
 
+          /* 모바일 FAB 접이식 */
+          @media (max-width: 640px) {
+            .floating-nav {
+              right: 12px;
+              bottom: 12px;
+              gap: 8px;
+            }
+            .floating-nav-btn {
+              width: 40px;
+              height: 40px;
+              font-size: 16px;
+              border-radius: 10px;
+            }
+            .floating-nav-btn .label {
+              display: none;
+            }
+            /* 접이식: 기본 상태에서 하위 버튼 숨김 */
+            .floating-nav .fab-child {
+              opacity: 0;
+              pointer-events: none;
+              transform: scale(0.5) translateY(10px);
+              transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .floating-nav.fab-open .fab-child {
+              opacity: 1;
+              pointer-events: auto;
+              transform: scale(1) translateY(0);
+            }
+            .floating-nav .fab-child:nth-child(1) { transition-delay: 0.05s; }
+            .floating-nav .fab-child:nth-child(2) { transition-delay: 0.1s; }
+            .floating-nav .fab-child:nth-child(3) { transition-delay: 0.15s; }
+            /* 토글 버튼 */
+            .fab-toggle {
+              display: flex !important;
+            }
+            .fab-toggle-icon {
+              transition: transform 0.3s ease;
+            }
+            .floating-nav.fab-open .fab-toggle-icon {
+              transform: rotate(45deg);
+            }
+          }
+          @media (min-width: 641px) {
+            .fab-toggle {
+              display: none !important;
+            }
+            .floating-nav .fab-child {
+              opacity: 1 !important;
+              pointer-events: auto !important;
+              transform: none !important;
+            }
+          }
+
           .gradient-text {
             background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%);
             -webkit-background-clip: text;
@@ -826,21 +879,30 @@ export const renderLayout = (
 
         <!-- 플로팅 네비게이션 버튼 -->
         <div class="floating-nav" id="floating-nav">
-            <button class="floating-nav-btn floating-nav-scroll-top" id="scroll-top-btn" onclick="scrollToTop()" aria-label="맨 위로 이동">
+            <button class="floating-nav-btn fab-child floating-nav-scroll-top" id="scroll-top-btn" onclick="scrollToTop()" aria-label="맨 위로 이동">
                 <i class="fas fa-arrow-up"></i>
                 <span class="label">맨 위로</span>
             </button>
-            <button class="floating-nav-btn" id="toc-btn" onclick="scrollToTOC()" aria-label="목차로 이동">
+            <button class="floating-nav-btn fab-child" id="toc-btn" onclick="scrollToTOC()" aria-label="목차로 이동">
                 <i class="fas fa-list"></i>
                 <span class="label">목차</span>
             </button>
-            <button class="floating-nav-btn" id="comments-btn" onclick="scrollToComments()" aria-label="댓글로 이동">
+            <button class="floating-nav-btn fab-child" id="comments-btn" onclick="scrollToComments()" aria-label="댓글로 이동">
                 <i class="fas fa-comment"></i>
                 <span class="label">댓글</span>
+            </button>
+            <button class="floating-nav-btn fab-toggle" id="fab-toggle-btn" onclick="toggleFab()" aria-label="메뉴 열기/닫기">
+                <i class="fas fa-plus fab-toggle-icon"></i>
             </button>
         </div>
 
         <script>
+            // FAB 토글 (모바일 접이식)
+            function toggleFab() {
+                var nav = document.getElementById('floating-nav');
+                if (nav) nav.classList.toggle('fab-open');
+            }
+
             // 플로팅 네비게이션 함수
             function scrollToTop() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });

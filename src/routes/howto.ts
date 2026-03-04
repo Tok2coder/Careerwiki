@@ -136,13 +136,13 @@ howtoRoutes.get('/', async (c) => {
           
           // 모바일용 썸네일 (오른쪽)
           const thumbnailMobile = howto.thumbnailUrl 
-            ? `<div class="sm:hidden w-20 h-20 shrink-0 rounded-xl overflow-hidden">
+            ? `<div class="sm:hidden w-16 h-16 shrink-0 rounded-xl overflow-hidden">
                 <img src="${escapeHtml(howto.thumbnailUrl)}" 
                      alt="${escapeHtml(howto.title)}" 
                      class="w-full h-full object-cover"
                      loading="lazy" />
               </div>`
-            : `<div class="sm:hidden w-20 h-20 shrink-0 rounded-xl bg-gradient-to-br from-wiki-primary/20 to-amber-500/10 flex items-center justify-center">
+            : `<div class="sm:hidden w-16 h-16 shrink-0 rounded-xl bg-gradient-to-br from-wiki-primary/20 to-amber-500/10 flex items-center justify-center">
                 <i class="fas fa-book-open text-2xl text-wiki-primary/40"></i>
               </div>`
           

@@ -1096,10 +1096,10 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         // 커스텀 범례 생성 - 상위 5개만 표시, 텍스트 전체 표시 + 퍼센트 오른쪽 정렬
         const topItems = filteredLabels.slice(0, 5).map((label: string, i: number) => {
           const value = filteredValues[i] || 0
-          return `<div class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 min-w-[220px]">
-            <span class="w-3 h-3 rounded-full shrink-0" style="background: ${colors[i]}"></span>
-            <span class="text-[15px] text-white/90 flex-1">${escapeHtml(label)}</span>
-            <span class="text-[15px] text-wiki-secondary font-bold ml-auto">${value}%</span>
+          return `<div class="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/5 border border-white/10 min-w-0 sm:min-w-[220px]">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full shrink-0" style="background: ${colors[i]}"></span>
+            <span class="text-xs sm:text-[15px] text-white/90 flex-1 truncate">${escapeHtml(label)}</span>
+            <span class="text-xs sm:text-[15px] text-wiki-secondary font-bold ml-auto shrink-0">${value}%</span>
           </div>`
         }).join('')
         
@@ -1218,8 +1218,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         const gradColors = ['#10B981', '#3B82F6', '#F472B6']
         
         const gradLegendHtml = labels.map((label: string, i: number) => 
-          `<span class="inline-flex items-center gap-2 text-[15px]">
-            <span class="w-2.5 h-2.5 rounded-full" style="background: ${gradColors[i % gradColors.length]}"></span>
+          `<span class="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[15px]">
+            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" style="background: ${gradColors[i % gradColors.length]}"></span>
             <span class="text-white/80">${escapeHtml(label)}</span>
             <span class="text-wiki-secondary font-semibold">${values[i]}%</span>
           </span>`
@@ -1234,7 +1234,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
             <div class="relative p-3" style="height: 200px;">
               <canvas id="${chartId}"></canvas>
             </div>
-            <div class="flex flex-wrap justify-center gap-x-5 gap-y-2 mt-3">${gradLegendHtml}</div>
+            <div class="flex flex-wrap justify-center gap-x-3 sm:gap-x-5 gap-y-1.5 sm:gap-y-2 mt-3 px-1 sm:px-0">${gradLegendHtml}</div>
             <script>
               (function() {
                 const ctx = document.getElementById('${chartId}');
@@ -1277,8 +1277,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         
         // 진학률과 동일한 범례 스타일
         const empLegendHtml = labels.map((label: string, i: number) => 
-          `<span class="inline-flex items-center gap-2 text-[15px]">
-            <span class="w-2.5 h-2.5 rounded-full" style="background: ${empColors[i % empColors.length]}"></span>
+          `<span class="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[15px]">
+            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" style="background: ${empColors[i % empColors.length]}"></span>
             <span class="text-white/80">${escapeHtml(label)}</span>
             <span class="text-wiki-secondary font-semibold">${values[i]}%</span>
           </span>`
@@ -1293,7 +1293,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
             <div class="relative p-3" style="height: 200px;">
               <canvas id="${chartId}"></canvas>
             </div>
-            <div class="flex flex-wrap justify-center gap-x-5 gap-y-2 mt-3">${empLegendHtml}</div>
+            <div class="flex flex-wrap justify-center gap-x-3 sm:gap-x-5 gap-y-1.5 sm:gap-y-2 mt-3 px-1 sm:px-0">${empLegendHtml}</div>
             <script>
               (function() {
                 const ctx = document.getElementById('${chartId}');
@@ -1338,8 +1338,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         const salaryColors = ['#3B82F6', '#F472B6', '#FBBF24', '#10B981', '#8B5CF6']
         
         const salaryLegendHtml = labels.map((label: string, i: number) => 
-          `<span class="inline-flex items-center gap-2 text-[15px]">
-            <span class="w-2.5 h-2.5 rounded-full" style="background: ${salaryColors[i % salaryColors.length]}"></span>
+          `<span class="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[15px]">
+            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" style="background: ${salaryColors[i % salaryColors.length]}"></span>
             <span class="text-white/80">${escapeHtml(label)}</span>
             <span class="text-wiki-secondary font-semibold">${values[i]}%</span>
           </span>`
@@ -1354,7 +1354,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
             <div class="relative p-3" style="height: 200px;">
               <canvas id="${chartId}"></canvas>
             </div>
-            <div class="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-3">${salaryLegendHtml}</div>
+            <div class="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 sm:gap-y-2 mt-3 px-1 sm:px-0">${salaryLegendHtml}</div>
             <script>
               (function() {
                 const ctx = document.getElementById('${chartId}');
@@ -1397,8 +1397,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         const satColors = ['#EF4444', '#F97316', '#FBBF24', '#84CC16', '#166534']
         
         const satLegendHtml = labels.map((label: string, i: number) => 
-          `<span class="inline-flex items-center gap-2 text-[15px]">
-            <span class="w-2.5 h-2.5 rounded-full" style="background: ${satColors[i % satColors.length]}"></span>
+          `<span class="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[15px]">
+            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" style="background: ${satColors[i % satColors.length]}"></span>
             <span class="text-white/80">${escapeHtml(label)}</span>
             <span class="text-wiki-secondary font-semibold">${values[i]}%</span>
           </span>`
@@ -1413,7 +1413,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
             <div class="relative p-3" style="height: 200px;">
               <canvas id="${chartId}"></canvas>
             </div>
-            <div class="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-3">${satLegendHtml}</div>
+            <div class="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 sm:gap-y-2 mt-3 px-1 sm:px-0">${satLegendHtml}</div>
             <script>
               (function() {
                 const ctx = document.getElementById('${chartId}');

@@ -708,6 +708,9 @@
     -webkit-overflow-scrolling: touch;
     width: 100%;
   }
+  .howto-user-content th {
+    white-space: nowrap;
+  }
   
   .howto-user-content img {
     max-width: 100%;
