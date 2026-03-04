@@ -485,7 +485,7 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
         const initRev = await createRevision(c.env.DB, {
           entityType: 'job',
           entityId: jobId,
-          dataSnapshot: previousValues,
+          dataSnapshot: currentMerged,
           previousValues: {},
           editorId: null,
           editorType: 'system',
@@ -493,7 +493,7 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
           ipHash: null,
           changeType: 'initial',
           changeSummary: '원본 버전',
-          changedFields: Object.keys(previousValues),
+          changedFields: Object.keys(currentMerged),
           storeFullSnapshot: true
         })
         initialRevisionId = initRev.id

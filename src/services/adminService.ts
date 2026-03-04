@@ -390,7 +390,8 @@ export async function getRevisionById(db: D1Database, revisionId: number): Promi
 }
 
 /**
- * 리비전 복원
+ * 리비전 복원 (관리자용)
+ * revisionService.restoreRevision()에 위임하여 델타 재구성, merged_profile_json 갱신 등 동일 로직 사용
  */
 export async function restoreRevision(
   db: D1Database,
@@ -398,64 +399,26 @@ export async function restoreRevision(
   adminUserId: number,
   reason?: string
 ): Promise<boolean> {
-  // 복원할 리비전 조회
-  const revision = await getRevisionById(db, revisionId)
-  if (!revision) return false
-  
-  // 현재 리비전 해제
-  await db.prepare(`
-    UPDATE page_revisions 
-    SET is_current = 0 
-    WHERE entity_type = ? AND entity_id = ? AND is_current = 1
-  `).bind(revision.entity_type, revision.entity_id).run()
-  
-  // 새 리비전 번호 계산
-  const maxRevision = await db.prepare(`
-    SELECT MAX(revision_number) as maxNum 
-    FROM page_revisions 
-    WHERE entity_type = ? AND entity_id = ?
-  `).bind(revision.entity_type, revision.entity_id).first<{ maxNum: number }>()
-  
-  const newRevisionNumber = (maxRevision?.maxNum || 0) + 1
-  
-  // 복원 리비전 생성
-  await db.prepare(`
-    INSERT INTO page_revisions (
-      entity_type, entity_id, revision_number, is_current,
-      editor_id, editor_type, editor_name,
-      change_type, data_snapshot, created_at
-    ) VALUES (?, ?, ?, 1, ?, 'admin', ?, 'restore', ?, datetime('now'))
-  `).bind(
-    revision.entity_type,
-    revision.entity_id,
-    newRevisionNumber,
-    String(adminUserId),
-    reason || `리비전 #${revision.revision_number}에서 복원`,
-    revision.data_snapshot
-  ).run()
-  
-  // 실제 데이터 복원 (data_snapshot이 있는 경우)
-  if (revision.data_snapshot) {
-    const snapshot = JSON.parse(revision.data_snapshot)
-    
-    if (revision.entity_type === 'job') {
-      await db.prepare(`
-        UPDATE jobs 
-        SET user_contributed_json = ?,
-            user_last_updated_at = strftime('%s','now')
-        WHERE id = ?
-      `).bind(JSON.stringify(snapshot.userContributed || {}), revision.entity_id).run()
-    } else if (revision.entity_type === 'major') {
-      await db.prepare(`
-        UPDATE majors 
-        SET user_contributed_json = ?,
-            user_last_updated_at = strftime('%s','now')
-        WHERE id = ?
-      `).bind(JSON.stringify(snapshot.userContributed || {}), revision.entity_id).run()
-    }
+  const { restoreRevision: restoreRevisionCore } = await import('./revisionService')
+
+  // 관리자 이름 조회
+  const adminUser = await db.prepare('SELECT username FROM users WHERE id = ?')
+    .bind(adminUserId).first<{ username: string }>()
+  const adminName = adminUser?.username || `Admin ${adminUserId}`
+
+  try {
+    await restoreRevisionCore(
+      db,
+      revisionId,
+      String(adminUserId),
+      null,
+      adminName,
+      'admin'
+    )
+    return true
+  } catch {
+    return false
   }
-  
-  return true
 }
 
 // =============================================================================

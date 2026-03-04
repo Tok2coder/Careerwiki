@@ -467,7 +467,8 @@ export async function restoreRevision(
   revisionId: number,
   userId?: string | null,
   password?: string | null,
-  username?: string | null
+  username?: string | null,
+  editorTypeOverride?: 'user' | 'admin' | 'anonymous'
 ): Promise<RevisionRecord> {
   // 복원할 revision 조회
   const targetRevision = await getRevisionById(db, revisionId)
@@ -582,7 +583,7 @@ export async function restoreRevision(
     entityId: targetRevision.entityId,
     dataSnapshot: restoredData,
     editorId: userId ?? null,
-    editorType: userId ? 'user' : 'anonymous',
+    editorType: editorTypeOverride || (userId ? 'user' : 'anonymous'),
     editorName: editorDisplayName,
     changeType: 'restore',
     changeSummary: `r${targetRevision.revisionNumber} 버전으로 복원`,
