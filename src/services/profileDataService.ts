@@ -20,7 +20,7 @@ import {
 const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype'])
 
 function deepMergeProfile(target: any, source: any): any {
-  if (!source) return target
+  if (!source || (typeof source === 'object' && Object.keys(source).length === 0)) return target
   if (!target) return source
   const result = { ...target }
   for (const key of Object.keys(source)) {

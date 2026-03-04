@@ -55,6 +55,7 @@ export interface CreateRevisionPayload {
   sourceType?: 'website' | 'academic' | 'government' | 'news' | 'other' | null
   // 최적화 옵션: 전체 스냅샷 대신 변경사항만 저장할지 여부
   storeFullSnapshot?: boolean  // true면 전체 스냅샷, false면 변경사항만
+  fullDataForCheckpoint?: Record<string, any>  // 체크포인트용 전체 데이터 (10번째 편집마다 자동 전체 스냅샷)
 }
 
 /**
@@ -349,13 +350,22 @@ export async function createRevision(
   // 최적화: 전체 스냅샷 vs 변경사항만 저장
   // - initial, restore: 항상 전체 스냅샷
   // - edit: 기본적으로 변경사항만 저장 (storeFullSnapshot=true면 전체)
-  const shouldStoreFull = payload.storeFullSnapshot ?? 
+  const shouldStoreFull = payload.storeFullSnapshot ??
     (payload.changeType === 'initial' || payload.changeType === 'restore')
-  
+
+  // 10번째 편집마다 자동 체크포인트 (전체 스냅샷 강제 저장)
+  const isCheckpoint = !shouldStoreFull
+    && payload.changeType === 'edit'
+    && revisionNumber > 0
+    && revisionNumber % 10 === 0
+
   let dataSnapshotJson: string
-  if (shouldStoreFull) {
-    // 전체 스냅샷 저장
-    dataSnapshotJson = JSON.stringify(payload.dataSnapshot)
+  if (shouldStoreFull || isCheckpoint) {
+    // 전체 스냅샷 저장 (체크포인트: fullDataForCheckpoint 우선 사용)
+    const snapshotData = isCheckpoint && payload.fullDataForCheckpoint
+      ? payload.fullDataForCheckpoint
+      : payload.dataSnapshot
+    dataSnapshotJson = JSON.stringify(snapshotData)
   } else {
     // 변경사항만 저장 (용량 최적화)
     const changeSnapshot = {

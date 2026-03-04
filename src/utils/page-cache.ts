@@ -173,7 +173,7 @@ export async function getOrGeneratePage<T>(
       c.header('Cache-Control', 'no-cache, no-store, must-revalidate')
       c.header('X-Cache-Status', bypassCache ? 'BYPASS' : 'DEV-BYPASS')
     } else {
-      c.header('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800')
+      c.header('Cache-Control', 'public, max-age=300, s-maxage=0, stale-while-revalidate=86400')
       c.header('X-Cache-Status', cacheStatus)
     }
     c.header('X-Template-Version', currentVersion.toString())

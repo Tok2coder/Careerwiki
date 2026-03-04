@@ -649,7 +649,28 @@ const EditMode = {
     
     // 편집 데이터 로드
     await this.loadEditData();
-    
+
+    // 임시저장 복원 확인
+    const draftKey = `editDraft_${this.entityType}_${this.entityId}`;
+    const savedDraft = localStorage.getItem(draftKey);
+    if (savedDraft) {
+      try {
+        const draft = JSON.parse(savedDraft);
+        const agoMinutes = Math.round((Date.now() - draft.savedAt) / 60000);
+        if (agoMinutes < 1440 && draft.fields && Object.keys(draft.fields).length > 0) {
+          if (confirm(`${agoMinutes < 1 ? '방금' : agoMinutes + '분'} 전 임시저장된 편집 내용이 있습니다. 불러오시겠습니까?`)) {
+            for (const [key, val] of Object.entries(draft.fields)) {
+              this.setNestedValue(this.editData, key, val);
+            }
+          } else {
+            localStorage.removeItem(draftKey);
+          }
+        } else {
+          localStorage.removeItem(draftKey);
+        }
+      } catch { localStorage.removeItem(draftKey); }
+    }
+
     if (Object.keys(this.editData).length === 0) {
       alert('편집 데이터를 불러오는데 실패했습니다.');
       this.exitEditMode();
@@ -679,7 +700,9 @@ const EditMode = {
       }
       
       this.editData = result.data || {};
-      
+      // 충돌 감지용 타임스탬프 저장
+      this.baseTimestamp = result.lastUpdatedAt || null;
+
       // entityId 업데이트 (서버에서 반환한 실제 ID)
       if (result.entityId) {
         this.entityId = result.entityId;
@@ -1417,6 +1440,22 @@ const EditMode = {
     // flat 키가 없으면 nested 경로로 탐색 (예: obj.overview.summary)
     return path.split('.').reduce((current, key) => current?.[key], obj);
   },
+
+  /**
+   * 중첩 객체에 값 설정 (dot notation 지원)
+   */
+  setNestedValue(obj, path, value) {
+    if (!obj || !path) return;
+    const parts = path.split('.');
+    let current = obj;
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (!current[parts[i]] || typeof current[parts[i]] !== 'object') {
+        current[parts[i]] = {};
+      }
+      current = current[parts[i]];
+    }
+    current[parts[parts.length - 1]] = value;
+  },
   
   /**
    * 편집 모드 이벤트 바인딩
@@ -1573,6 +1612,17 @@ const EditMode = {
         this.exitEditMode();
       }
     });
+
+    // 자동저장 (10초 간격)
+    const draftKey = `editDraft_${this.entityType}_${this.entityId}`;
+    this._autosaveInterval = setInterval(() => {
+      try {
+        const fields = this.collectCurrentFields();
+        if (Object.keys(fields).length > 0) {
+          localStorage.setItem(draftKey, JSON.stringify({ fields, savedAt: Date.now() }));
+        }
+      } catch {}
+    }, 10000);
   },
   
   /**
@@ -1951,6 +2001,46 @@ const EditMode = {
   },
   
   /**
+   * 현재 편집 중인 필드 값 수집 (자동저장용)
+   */
+  collectCurrentFields() {
+    const fields = {};
+    document.querySelectorAll('[data-field-key]').forEach(element => {
+      const key = element.getAttribute('data-field-key');
+      const fieldType = element.getAttribute('data-field-type');
+      let value;
+
+      if (fieldType === 'list') {
+        const listItems = Array.from(element.querySelectorAll('.edit-list-item'));
+        listItems.sort((a, b) => parseInt(a.dataset.index || '0') - parseInt(b.dataset.index || '0'));
+        value = listItems.map(item => (item.querySelector('input')?.value || '').trim()).filter(v => v.length > 0);
+      } else if (fieldType === 'pairList') {
+        const listItems = Array.from(element.querySelectorAll('.edit-list-item'));
+        listItems.sort((a, b) => parseInt(a.dataset.index || '0') - parseInt(b.dataset.index || '0'));
+        value = listItems.map(item => {
+          const title = (item.querySelector('input')?.value || '').trim();
+          const desc = (item.querySelector('textarea')?.value || '').trim();
+          if (!title && !desc) return null;
+          return { title, description: desc };
+        }).filter(Boolean);
+      } else if (fieldType === 'autocomplete') {
+        const container = document.getElementById(`autocomplete-container-${key}`);
+        value = container ? Array.from(container.querySelectorAll('.edit-autocomplete-chip')).map(chip => ({
+          name: chip.dataset.name, slug: chip.dataset.slug
+        })) : [];
+      } else if (fieldType === 'tags') {
+        const container = document.getElementById(`tags-container-${key}`);
+        value = container ? [...new Set(Array.from(container.querySelectorAll('.edit-tag-chip')).map(chip => chip.dataset.tag).filter(t => t))] : [];
+      } else {
+        value = element.value?.trim() || '';
+      }
+
+      if (key) fields[key] = value;
+    });
+    return fields;
+  },
+
+  /**
    * 저장 처리
    */
   async handleSave() {
@@ -2065,7 +2155,8 @@ const EditMode = {
     try {
       const payload = {
         fields: changedFields,
-        sources: Object.keys(sources).length > 0 ? sources : undefined
+        sources: Object.keys(sources).length > 0 ? sources : undefined,
+        baseTimestamp: this.baseTimestamp || undefined
       };
       
       
@@ -2082,12 +2173,23 @@ const EditMode = {
         throw new Error(result.error || '저장에 실패했습니다.');
       }
       
+      // 임시저장 삭제
+      const draftKey = `editDraft_${this.entityType}_${this.entityId}`;
+      localStorage.removeItem(draftKey);
+      if (this._autosaveInterval) clearInterval(this._autosaveInterval);
+
       // 성공 - 페이지 새로고침 (편집 모드 종료, 캐시 무효화)
       window.location.href = window.location.pathname + '?_t=' + Date.now();
       
     } catch (error) {
-      alert('저장 중 오류가 발생했습니다: ' + error.message);
-      
+      if (error.message === 'CONFLICT' || (error.message && error.message.includes('CONFLICT'))) {
+        if (confirm('다른 사용자가 이미 이 페이지를 편집했습니다.\n새로고침하여 최신 내용을 확인하시겠습니까?\n\n(취소를 누르면 현재 편집 내용을 유지합니다)')) {
+          window.location.href = window.location.pathname + '?edit=true&_t=' + Date.now();
+        }
+      } else {
+        alert('저장 중 오류가 발생했습니다: ' + error.message);
+      }
+
       saveBtn.disabled = false;
       saveBtn.innerHTML = '<i class="fas fa-save mr-2"></i>저장';
     }
@@ -2097,6 +2199,12 @@ const EditMode = {
    * 편집 모드 종료
    */
   exitEditMode() {
+    // 자동저장 인터벌 정리
+    if (this._autosaveInterval) {
+      clearInterval(this._autosaveInterval);
+      this._autosaveInterval = null;
+    }
+
     if (this.isEditMode) {
       // 변경 확인
       const hasChanges = document.querySelectorAll('[data-field-key]').length > 0;

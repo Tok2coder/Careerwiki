@@ -604,11 +604,22 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
     })
     
     
+    // lastUpdatedAt 조회
+    let lastUpdatedAt: number | null = null
+    if (c.env.DB) {
+      try {
+        const jobMeta = await c.env.DB.prepare('SELECT user_last_updated_at FROM jobs WHERE id = ?')
+          .bind(actualDbId).first<{ user_last_updated_at: number | null }>()
+        lastUpdatedAt = jobMeta?.user_last_updated_at ?? null
+      } catch (_e) { /* ignore */ }
+    }
+
     return c.json({
       success: true,
       data: editData,
       entityId: actualDbId, // 실제 데이터베이스 ID 사용
-      entityType: 'job'
+      entityType: 'job',
+      lastUpdatedAt
     })
   } catch (error) {
     return c.json({
@@ -789,11 +800,21 @@ apiDataRoutes.get('/api/major/:id/edit-data', async (c) => {
             }
           }
           
+          // lastUpdatedAt 조회
+          let majorMetaRetry: { user_last_updated_at: number | null } | null = null
+          if (c.env.DB) {
+            try {
+              majorMetaRetry = await c.env.DB.prepare('SELECT user_last_updated_at FROM majors WHERE id = ?')
+                .bind(actualDbId || id).first<{ user_last_updated_at: number | null }>()
+            } catch (_e) { /* ignore */ }
+          }
+
           return c.json({
             success: true,
             data: editData,
             entityId: actualDbId || id,
-            entityType: 'major'
+            entityType: 'major',
+            lastUpdatedAt: majorMetaRetry?.user_last_updated_at ?? null
           })
         }
       }
@@ -1017,11 +1038,22 @@ apiDataRoutes.get('/api/major/:id/edit-data', async (c) => {
       _sources: (profile as any)._sources || {}
     }
 
+    // lastUpdatedAt 조회
+    let majorLastUpdatedAt: number | null = null
+    if (c.env.DB) {
+      try {
+        const majorMeta = await c.env.DB.prepare('SELECT user_last_updated_at FROM majors WHERE id = ?')
+          .bind(actualDbId).first<{ user_last_updated_at: number | null }>()
+        majorLastUpdatedAt = majorMeta?.user_last_updated_at ?? null
+      } catch (_e) { /* ignore */ }
+    }
+
     return c.json({
       success: true,
       data: editData,
       entityId: actualDbId, // 실제 데이터베이스 ID 사용
-      entityType: 'major'
+      entityType: 'major',
+      lastUpdatedAt: majorLastUpdatedAt
     })
   } catch (error) {
     return c.json({

@@ -713,7 +713,7 @@ const renderMajorSourcesCollapsible = (
     labels: SOURCE_LABELS,
     descriptions: SOURCE_DESCRIPTIONS,
     title: '출처',
-    description: '이 페이지에 노출된 주요 데이터 출처를 확인할 수 있습니다.'
+    description: '이 페이지에 노출된 주요 출처를 확인할 수 있습니다.'
   })
 
   // 사용자가 추가한 출처 (_sources) - 직업 템플릿과 동일
@@ -799,7 +799,7 @@ const renderMajorSourcesCollapsible = (
       >
         <span class="flex items-center gap-3">
           <i class="fas fa-database text-wiki-secondary text-lg" aria-hidden="true"></i>
-          <span class="text-base">데이터 출처</span>
+          <span class="text-base">출처</span>
         </span>
         <div class="flex items-center gap-3 text-sm text-wiki-muted">
           <span class="inline-flex items-center gap-1.5 rounded-full border border-wiki-secondary/30 bg-wiki-secondary/10 px-3 py-1.5 text-wiki-secondary font-medium">${escapeHtml(badgeLabel)}</span>

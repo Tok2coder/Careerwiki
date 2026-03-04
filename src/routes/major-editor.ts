@@ -5,7 +5,7 @@
 import { Hono } from 'hono'
 import type { AppEnv } from '../types/app'
 import { authMiddleware, requireAuth, requireAdmin, requireJobMajorEdit } from '../middleware/auth'
-import { editMajor, createMajor } from '../services/editService'
+import { createMajor } from '../services/editService'
 import { invalidatePageCache } from '../utils/page-cache'
 import { getOptionalUser, hashIpAddress, escapeHtml } from '../utils/shared-helpers'
 import type { R2Bucket } from '@cloudflare/workers-types'
@@ -467,6 +467,18 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
       return c.json({ success: false, error: 'MAJOR_NOT_FOUND' }, 404)
     }
 
+    // 동시 편집 충돌 감지
+    if (body.baseTimestamp) {
+      const currentTs = majorRecord.user_last_updated_at as number | null
+      if (currentTs && Number(currentTs) > Number(body.baseTimestamp)) {
+        return c.json({
+          success: false,
+          error: 'CONFLICT',
+          message: '다른 사용자가 이미 편집했습니다. 새로고침 후 다시 시도해주세요.'
+        }, 409)
+      }
+    }
+
     // 다중 필드 편집 (새로운 방식)
     if (body.fields && typeof body.fields === 'object') {
       const fields = body.fields as Record<string, any>
@@ -594,17 +606,14 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
         delete updatedMerged.jobProspect
       }
 
-      await c.env.DB.prepare(`
-        UPDATE majors SET user_contributed_json = ?, merged_profile_json = ?, user_last_updated_at = ?
-        WHERE id = ?
-      `).bind(JSON.stringify(updatedUserData), JSON.stringify(updatedMerged), now, majorId).run()
-
       const { createRevision, getCurrentRevision } = await import('../services/revisionService')
 
+      // ① 초기 리비전 생성 (첫 편집인 경우)
+      let initialRevisionId: number | null = null
       const existingRevision = await getCurrentRevision(c.env.DB, 'major', majorId)
       if (!existingRevision) {
         const originalSnapshot = currentMerged || {}
-        await createRevision(c.env.DB, {
+        const initRev = await createRevision(c.env.DB, {
           entityType: 'major',
           entityId: majorId,
           dataSnapshot: originalSnapshot,
@@ -618,22 +627,42 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
           changedFields: Object.keys(originalSnapshot),
           storeFullSnapshot: true
         })
+        initialRevisionId = initRev.id
       }
 
+      // ② 편집 리비전 생성
       const revision = await createRevision(c.env.DB, {
         entityType: 'major',
         entityId: majorId,
-        dataSnapshot: updatedMerged,
+        dataSnapshot: fields,
         previousValues,
         editorId: user?.id?.toString() ?? null,
         editorType: (['user', 'expert', 'admin'].includes(user?.role || '') ? user?.role : 'anonymous') as 'user' | 'expert' | 'admin' | 'anonymous',
         editorName: user?.username ?? (ipHash ? `익명` : '익명 사용자'),
         ipHash: ipHash ?? null,
         changeType: 'edit',
-        changeSummary: `${Object.keys(fields).length}개 필드 수정`,
+        changeSummary: changeSummary || `${Object.keys(fields).length}개 필드 수정`,
         changedFields: Object.keys(fields),
-        storeFullSnapshot: true
+        storeFullSnapshot: false,
+        fullDataForCheckpoint: updatedMerged
       })
+
+      // ③ DB UPDATE (실패 시 리비전 롤백)
+      try {
+        await c.env.DB.prepare(`
+          UPDATE majors SET user_contributed_json = ?, merged_profile_json = ?, user_last_updated_at = ?
+          WHERE id = ?
+        `).bind(JSON.stringify(updatedUserData), JSON.stringify(updatedMerged), now, majorId).run()
+      } catch (updateError) {
+        // 보상 트랜잭션: 생성한 리비전 삭제
+        try {
+          await c.env.DB.prepare('DELETE FROM page_revisions WHERE id = ?').bind(revision.id).run()
+          if (initialRevisionId) {
+            await c.env.DB.prepare('DELETE FROM page_revisions WHERE id = ?').bind(initialRevisionId).run()
+          }
+        } catch { /* 롤백 실패는 로그만 */ }
+        throw updateError
+      }
 
       await invalidatePageCache(c.env.DB, { majorId, pageType: 'major' })
 
@@ -644,40 +673,11 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
       })
     }
 
-    // 단일 필드 편집 (기존 방식 호환)
-    const field = typeof body.field === 'string' ? body.field : ''
-    const content = typeof body.content === 'string' ? body.content : ''
-    const source = typeof body.source === 'string' ? body.source : ''
-    const changeSummary = typeof body.changeSummary === 'string' ? body.changeSummary : undefined
-    const anonymous = Boolean(body.anonymous)
-    const password = typeof body.password === 'string' ? body.password : undefined
-
-    if (!field || !content) {
-      return c.json({ success: false, error: 'field and content are required' }, 400)
-    }
-
-    const result = await editMajor(c.env.DB, majorId, {
-      field,
-      content,
-      source,
-      changeSummary,
-      anonymous,
-      password,
-      ipHash: ipHash ?? undefined,
-      userId: user?.id?.toString(),
-      editorType: user?.role as 'user' | 'expert' | 'admin' | undefined
-    })
-
-    await invalidatePageCache(c.env.DB, {
-      majorId: majorId,
-      pageType: 'major'
-    })
-
+    // 단일 필드 편집 (기존 방식) → deprecated
     return c.json({
-      success: true,
-      revisionId: result.revisionId,
-      message: 'Edit saved successfully'
-    })
+      success: false,
+      error: '단일 필드 편집은 더 이상 지원되지 않습니다. { fields: {...} } 형식을 사용하세요.'
+    }, 400)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'edit failed'
     const status = message.includes('NOT_FOUND') ? 404
