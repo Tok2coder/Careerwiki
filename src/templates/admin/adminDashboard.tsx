@@ -152,10 +152,10 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
       </div>
 
       <!-- 요약 스탯 -->
-      <div class="flex items-center gap-4 sm:gap-6 mb-3 text-sm" id="chartSummary">
-        <span class="text-slate-400">기간 조회: <span class="text-white font-medium" id="summaryViews">${chartData?.summary.totalViews.toLocaleString() || '0'}</span></span>
-        <span class="text-slate-400">일평균: <span class="text-white font-medium" id="summaryAvg">${chartData?.summary.avgDaily.toLocaleString() || '0'}</span></span>
-        <span class="text-slate-400">분석: <span class="text-orange-300 font-medium" id="summaryAnalyses">${chartData?.summary.totalAnalyses.toLocaleString() || '0'}</span></span>
+      <div class="flex items-center gap-3 sm:gap-6 mb-3 text-xs sm:text-sm flex-wrap" id="chartSummary">
+        <span class="text-slate-400 whitespace-nowrap">기간 조회: <span class="text-white font-medium" id="summaryViews">${chartData?.summary.totalViews.toLocaleString() || '0'}</span></span>
+        <span class="text-slate-400 whitespace-nowrap">일평균: <span class="text-white font-medium" id="summaryAvg">${chartData?.summary.avgDaily.toLocaleString() || '0'}</span></span>
+        <span class="text-slate-400 whitespace-nowrap">분석: <span class="text-orange-300 font-medium" id="summaryAnalyses">${chartData?.summary.totalAnalyses.toLocaleString() || '0'}</span></span>
         ${chartData?.summary.maxDay ? `<span class="text-slate-400 hidden sm:inline">최고: <span class="text-emerald-300 font-medium" id="summaryMax">${chartData.summary.maxDay.views.toLocaleString()}</span> <span id="summaryMaxDate">(${chartData.summary.maxDay.date.slice(5)})</span></span>` : '<span class="hidden sm:inline" id="summaryMaxWrap"></span>'}
       </div>
 
@@ -169,12 +169,12 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
         <table class="w-full text-xs sm:text-sm" id="chartDataTable">
           <thead>
             <tr class="text-slate-400 border-b-2 border-slate-600">
-              <th class="text-left py-2 px-2 font-medium">날짜</th>
-              <th class="text-right py-2 px-2 font-medium">직업</th>
-              <th class="text-right py-2 px-2 font-medium">전공</th>
-              <th class="text-right py-2 px-2 font-medium">HowTo</th>
-              <th class="text-right py-2 px-2 font-medium">합계</th>
-              <th class="text-right py-2 px-2 font-medium text-orange-400">분석</th>
+              <th class="text-left py-2 px-2 font-medium whitespace-nowrap">날짜</th>
+              <th class="text-right py-2 px-2 font-medium whitespace-nowrap">직업</th>
+              <th class="text-right py-2 px-2 font-medium whitespace-nowrap">전공</th>
+              <th class="text-right py-2 px-2 font-medium whitespace-nowrap">HowTo</th>
+              <th class="text-right py-2 px-2 font-medium whitespace-nowrap">합계</th>
+              <th class="text-right py-2 px-2 font-medium text-orange-400 whitespace-nowrap">분석</th>
             </tr>
           </thead>
           <tbody id="chartTableBody">

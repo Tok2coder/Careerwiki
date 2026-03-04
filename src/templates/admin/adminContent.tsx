@@ -432,25 +432,25 @@ function renderRevisionsTab(
         <table class="w-full">
           <thead class="bg-slate-800/50">
             <tr>
-              <th class="px-4 py-3 text-left text-slate-400 font-medium w-20">#</th>
-              <th class="px-4 py-3 text-left text-slate-400 font-medium">페이지</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-20">타입</th>
-              <th class="px-4 py-3 text-left text-slate-400 font-medium">편집자</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-24">변경 유형</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-20">현재</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-36">일시</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-28">작업</th>
+              <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium whitespace-nowrap">#</th>
+              <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium whitespace-nowrap">페이지</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">타입</th>
+              <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium whitespace-nowrap hidden sm:table-cell">편집자</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap hidden sm:table-cell">변경 유형</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap hidden md:table-cell">현재</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap hidden md:table-cell">일시</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">작업</th>
             </tr>
           </thead>
           <tbody>
             ${revisions.length > 0 ? revisions.map(rev => `
               <tr class="border-t border-slate-700/50 hover:bg-slate-700/20 transition-colors">
-                <td class="px-4 py-3 text-slate-400 font-mono text-sm">
+                <td class="px-2 sm:px-4 py-3 text-slate-400 font-mono text-sm whitespace-nowrap">
                   r${rev.revisionNumber}
                 </td>
-                <td class="px-4 py-3">
+                <td class="px-2 sm:px-4 py-3">
                   <div>
-                    <a href="/${rev.entityType}/${rev.entityId}" 
+                    <a href="/${rev.entityType}/${rev.entityId}"
                        class="text-blue-400 hover:text-blue-300 font-medium"
                        target="_blank">
                       ${escapeHtml(rev.entityName || rev.entityId)}
@@ -462,14 +462,14 @@ function renderRevisionsTab(
                     </div>
                   ` : ''}
                 </td>
-                <td class="px-4 py-3 text-center">
+                <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
                   <span class="px-2 py-1 rounded text-xs ${
                     rev.entityType === 'job' ? 'bg-blue-500/20 text-blue-400' :
                     rev.entityType === 'major' ? 'bg-purple-500/20 text-purple-400' :
                     'bg-green-500/20 text-green-400'
                   }">${rev.entityType}</span>
                 </td>
-                <td class="px-4 py-3">
+                <td class="px-2 sm:px-4 py-3 hidden sm:table-cell whitespace-nowrap">
                   <span class="${
                     rev.editorType === 'admin' ? 'text-amber-400' :
                     rev.editorType === 'anonymous' ? 'text-slate-500' :
@@ -479,27 +479,27 @@ function renderRevisionsTab(
                   </span>
                   <span class="text-xs text-slate-500 ml-1">(${rev.editorType})</span>
                 </td>
-                <td class="px-4 py-3 text-center">
+                <td class="px-2 sm:px-4 py-3 text-center hidden sm:table-cell whitespace-nowrap">
                   <span class="px-2 py-1 rounded text-xs ${
                     rev.changeType === 'initial' ? 'bg-green-500/20 text-green-400' :
                     rev.changeType === 'restore' ? 'bg-amber-500/20 text-amber-400' :
                     'bg-slate-500/20 text-slate-400'
                   }">${formatChangeType(rev.changeType)}</span>
                 </td>
-                <td class="px-4 py-3 text-center">
+                <td class="px-2 sm:px-4 py-3 text-center hidden md:table-cell whitespace-nowrap">
                   ${rev.isCurrent ? `
                     <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">현재</span>
                   ` : `
                     <span class="text-slate-500">-</span>
                   `}
                 </td>
-                <td class="px-4 py-3 text-center text-sm text-slate-400">
+                <td class="px-2 sm:px-4 py-3 text-center text-sm text-slate-400 hidden md:table-cell whitespace-nowrap">
                   ${formatDateTime(rev.createdAt)}
                 </td>
-                <td class="px-4 py-3 text-center">
+                <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
                   ${!rev.isCurrent ? `
-                    <button 
-                      class="restore-btn px-3 py-1 bg-amber-600 hover:bg-amber-500 rounded text-sm text-white transition-colors"
+                    <button
+                      class="restore-btn px-2 sm:px-3 py-1 bg-amber-600 hover:bg-amber-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
                       data-revision-id="${rev.id}"
                       data-revision-number="${rev.revisionNumber}"
                       data-entity-name="${escapeHtml(rev.entityName || rev.entityId)}"
@@ -605,41 +605,41 @@ function renderArchiveTab(hiddenJobs: HiddenItem[], hiddenMajors: HiddenItem[]):
             <table class="w-full">
               <thead class="bg-slate-800/50">
                 <tr>
-                  <th class="px-4 py-3 text-left text-slate-400 font-medium">직업명</th>
-                  <th class="px-4 py-3 text-center text-slate-400 font-medium w-28">출처</th>
-                  <th class="px-4 py-3 text-center text-slate-400 font-medium w-36">숨긴 일시</th>
-                  <th class="px-4 py-3 text-center text-slate-400 font-medium w-44">작업</th>
+                  <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium whitespace-nowrap">직업명</th>
+                  <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">출처</th>
+                  <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap hidden sm:table-cell">숨긴 일시</th>
+                  <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">작업</th>
                 </tr>
               </thead>
               <tbody>
                 ${hiddenJobs.map(job => `
                   <tr class="border-t border-slate-700/50 hover:bg-slate-700/20 transition-colors">
-                    <td class="px-4 py-3">
+                    <td class="px-2 sm:px-4 py-3">
                       <span class="text-white font-medium">${escapeHtml(job.name)}</span>
                       <span class="text-xs text-slate-500 ml-2">${escapeHtml(job.id)}</span>
                     </td>
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
                       <span class="px-2 py-1 rounded text-xs ${
                         job.primarySource === 'USER' ? 'bg-green-500/20 text-green-400' :
                         job.primarySource === 'CAREERNET' ? 'bg-blue-500/20 text-blue-400' :
                         'bg-purple-500/20 text-purple-400'
                       }">${job.primarySource}</span>
                     </td>
-                    <td class="px-4 py-3 text-center text-sm text-slate-400">
+                    <td class="px-2 sm:px-4 py-3 text-center text-sm text-slate-400 whitespace-nowrap hidden sm:table-cell">
                       ${formatTimestamp(job.hiddenAt)}
                     </td>
-                    <td class="px-4 py-3 text-center">
-                      <div class="flex items-center justify-center gap-2">
-                        <button 
-                          class="archive-restore-btn px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-sm text-white transition-colors"
+                    <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
+                      <div class="flex items-center justify-center gap-1 sm:gap-2">
+                        <button
+                          class="archive-restore-btn px-2 sm:px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
                           data-entity-type="job"
                           data-entity-id="${escapeHtml(job.id)}"
                           data-entity-name="${escapeHtml(job.name)}"
                         >
                           <i class="fas fa-undo mr-1"></i>복구
                         </button>
-                        <button 
-                          class="archive-delete-btn px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-sm text-white transition-colors"
+                        <button
+                          class="archive-delete-btn px-2 sm:px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
                           data-entity-type="job"
                           data-entity-id="${escapeHtml(job.id)}"
                           data-entity-name="${escapeHtml(job.name)}"
@@ -675,41 +675,41 @@ function renderArchiveTab(hiddenJobs: HiddenItem[], hiddenMajors: HiddenItem[]):
             <table class="w-full">
               <thead class="bg-slate-800/50">
                 <tr>
-                  <th class="px-4 py-3 text-left text-slate-400 font-medium">전공명</th>
-                  <th class="px-4 py-3 text-center text-slate-400 font-medium w-28">출처</th>
-                  <th class="px-4 py-3 text-center text-slate-400 font-medium w-36">숨긴 일시</th>
-                  <th class="px-4 py-3 text-center text-slate-400 font-medium w-44">작업</th>
+                  <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium whitespace-nowrap">전공명</th>
+                  <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">출처</th>
+                  <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap hidden sm:table-cell">숨긴 일시</th>
+                  <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">작업</th>
                 </tr>
               </thead>
               <tbody>
                 ${hiddenMajors.map(major => `
                   <tr class="border-t border-slate-700/50 hover:bg-slate-700/20 transition-colors">
-                    <td class="px-4 py-3">
+                    <td class="px-2 sm:px-4 py-3">
                       <span class="text-white font-medium">${escapeHtml(major.name)}</span>
                       <span class="text-xs text-slate-500 ml-2">${escapeHtml(major.id)}</span>
                     </td>
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
                       <span class="px-2 py-1 rounded text-xs ${
                         major.primarySource === 'USER' ? 'bg-green-500/20 text-green-400' :
                         major.primarySource === 'CAREERNET' ? 'bg-blue-500/20 text-blue-400' :
                         'bg-purple-500/20 text-purple-400'
                       }">${major.primarySource}</span>
                     </td>
-                    <td class="px-4 py-3 text-center text-sm text-slate-400">
+                    <td class="px-2 sm:px-4 py-3 text-center text-sm text-slate-400 whitespace-nowrap hidden sm:table-cell">
                       ${formatTimestamp(major.hiddenAt)}
                     </td>
-                    <td class="px-4 py-3 text-center">
-                      <div class="flex items-center justify-center gap-2">
-                        <button 
-                          class="archive-restore-btn px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-sm text-white transition-colors"
+                    <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
+                      <div class="flex items-center justify-center gap-1 sm:gap-2">
+                        <button
+                          class="archive-restore-btn px-2 sm:px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
                           data-entity-type="major"
                           data-entity-id="${escapeHtml(major.id)}"
                           data-entity-name="${escapeHtml(major.name)}"
                         >
                           <i class="fas fa-undo mr-1"></i>복구
                         </button>
-                        <button 
-                          class="archive-delete-btn px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-sm text-white transition-colors"
+                        <button
+                          class="archive-delete-btn px-2 sm:px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
                           data-entity-type="major"
                           data-entity-id="${escapeHtml(major.id)}"
                           data-entity-name="${escapeHtml(major.name)}"

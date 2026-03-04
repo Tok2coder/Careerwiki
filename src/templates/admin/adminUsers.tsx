@@ -162,34 +162,34 @@ export function renderAdminUsers(props: AdminUsersProps): string {
         <table class="w-full">
           <thead class="bg-slate-800/50">
             <tr>
-              <th class="px-4 py-3 text-left text-slate-400 font-medium">사용자</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-24">역할</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-20">편집</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-20">댓글</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-28">상태</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-40">마지막 로그인</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-40">가입일</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium w-28">작업</th>
+              <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium whitespace-nowrap">사용자</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">역할</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">편집</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">댓글</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">상태</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap hidden md:table-cell">마지막 로그인</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap hidden md:table-cell">가입일</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">작업</th>
             </tr>
           </thead>
           <tbody>
             ${users.length > 0 ? users.map(user => `
               <tr class="border-t border-slate-700/50 hover:bg-slate-700/20 transition-colors">
-                <td class="px-4 py-3">
-                  <a href="/admin/users/${user.id}" class="flex items-center gap-3 hover:text-blue-300 transition-colors">
-                    <div class="w-10 h-10 bg-slate-600 rounded-full flex items-center justify-center">
-                      <i class="fas fa-user text-slate-400"></i>
+                <td class="px-2 sm:px-4 py-3">
+                  <a href="/admin/users/${user.id}" class="flex items-center gap-2 sm:gap-3 hover:text-blue-300 transition-colors">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-slate-600 rounded-full flex items-center justify-center shrink-0">
+                      <i class="fas fa-user text-slate-400 text-xs sm:text-base"></i>
                     </div>
-                    <div>
-                      <p class="text-white font-semibold">${escapeHtml(user.username || '닉네임 없음')}</p>
-                      <p class="text-sm text-slate-400">${escapeHtml(user.email)}</p>
-                      ${user.name ? `<p class="text-xs text-slate-500 mt-0.5">${escapeHtml(user.name)}</p>` : ''}
+                    <div class="min-w-0">
+                      <p class="text-white font-semibold text-sm sm:text-base truncate">${escapeHtml(user.username || '닉네임 없음')}</p>
+                      <p class="text-xs sm:text-sm text-slate-400 truncate">${escapeHtml(user.email)}</p>
+                      ${user.name ? `<p class="text-xs text-slate-500 mt-0.5 truncate">${escapeHtml(user.name)}</p>` : ''}
                     </div>
                   </a>
                 </td>
-                <td class="px-4 py-3 text-center">
-                  <select 
-                    class="role-select px-2 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white"
+                <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
+                  <select
+                    class="role-select px-1.5 sm:px-2 py-1 bg-slate-700 border border-slate-600 rounded text-xs sm:text-sm text-white"
                     data-user-id="${user.id}"
                     data-current-role="${user.role}"
                   >
@@ -198,34 +198,34 @@ export function renderAdminUsers(props: AdminUsersProps): string {
                     <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>관리자</option>
                   </select>
                 </td>
-                <td class="px-4 py-3 text-center text-white">${user.editCount}</td>
-                <td class="px-4 py-3 text-center text-white">${user.commentCount}</td>
-                <td class="px-4 py-3 text-center">
+                <td class="px-2 sm:px-4 py-3 text-center text-white whitespace-nowrap">${user.editCount}</td>
+                <td class="px-2 sm:px-4 py-3 text-center text-white whitespace-nowrap">${user.commentCount}</td>
+                <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
                   ${user.isBanned ? `
-                    <span class="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">
+                    <span class="px-1.5 sm:px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs whitespace-nowrap">
                       차단됨${user.bannedUntil ? ` (${formatBanExpiry(user.bannedUntil)})` : ' (영구)'}
                     </span>
                   ` : `
-                    <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">활성</span>
+                    <span class="px-1.5 sm:px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs whitespace-nowrap">활성</span>
                   `}
                 </td>
-                <td class="px-4 py-3 text-center text-sm text-slate-400 whitespace-nowrap">
+                <td class="px-2 sm:px-4 py-3 text-center text-sm text-slate-400 whitespace-nowrap hidden md:table-cell">
                   ${user.lastLoginAt ? formatTimestamp(user.lastLoginAt) : '-'}
                 </td>
-                <td class="px-4 py-3 text-center text-sm text-slate-400 whitespace-nowrap">
+                <td class="px-2 sm:px-4 py-3 text-center text-sm text-slate-400 whitespace-nowrap hidden md:table-cell">
                   ${formatTimestamp(user.createdAt)}
                 </td>
-                <td class="px-4 py-3 text-center">
+                <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
                   ${user.isBanned ? `
-                    <button 
-                      class="unban-btn px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-sm text-white transition-colors"
+                    <button
+                      class="unban-btn px-2 sm:px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
                       data-user-id="${user.id}"
                     >
                       <i class="fas fa-unlock mr-1"></i>해제
                     </button>
                   ` : `
-                    <button 
-                      class="ban-btn px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-sm text-white transition-colors"
+                    <button
+                      class="ban-btn px-2 sm:px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
                       data-user-id="${user.id}"
                       data-user-name="${escapeHtml(user.name || user.email)}"
                     >

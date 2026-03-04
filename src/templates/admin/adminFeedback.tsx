@@ -57,9 +57,9 @@ export function renderAdminFeedbackPage(props: AdminFeedbackPageProps): string {
           <td class="p-3 align-top text-xs text-slate-300 hidden sm:table-cell">
             <div class="px-2 py-1 rounded inline-flex items-center gap-2 bg-slate-700/70">${TYPE_LABEL[f.type] || f.type}</div>
           </td>
-          <td class="p-3 align-top text-xs">
-            <span class="px-2 py-1 rounded inline-flex items-center gap-2 ${f.status === 'closed' ? 'bg-slate-700 text-slate-200' : 'bg-emerald-700/50 text-emerald-100'}">${f.status.toUpperCase()}</span>
-            ${f.is_private ? '<div class="text-[11px] text-pink-200 mt-1">관리자 전용</div>' : ''}
+          <td class="p-3 align-top text-xs whitespace-nowrap">
+            <span class="px-2 py-1 rounded inline-flex items-center gap-2 whitespace-nowrap ${f.status === 'closed' ? 'bg-slate-700 text-slate-200' : 'bg-emerald-700/50 text-emerald-100'}">${f.status.toUpperCase()}</span>
+            ${f.is_private ? '<div class="text-[11px] text-pink-200 mt-1 whitespace-nowrap">관리자 전용</div>' : ''}
           </td>
           <td class="p-3 align-top text-xs hidden sm:table-cell">
             ${replyBadge}
@@ -94,11 +94,11 @@ export function renderAdminFeedbackPage(props: AdminFeedbackPageProps): string {
         <table class="min-w-full text-left">
           <thead class="bg-slate-900/60 text-xs text-slate-400">
             <tr>
-              <th class="p-3">제목/작성자</th>
-              <th class="p-3 hidden sm:table-cell">유형</th>
-              <th class="p-3">상태</th>
-              <th class="p-3 hidden sm:table-cell">답변</th>
-              <th class="p-3 hidden md:table-cell">작성일</th>
+              <th class="p-3 whitespace-nowrap">제목/작성자</th>
+              <th class="p-3 hidden sm:table-cell whitespace-nowrap">유형</th>
+              <th class="p-3 whitespace-nowrap">상태</th>
+              <th class="p-3 hidden sm:table-cell whitespace-nowrap">답변</th>
+              <th class="p-3 hidden md:table-cell whitespace-nowrap">작성일</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-800">

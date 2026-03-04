@@ -199,15 +199,15 @@ export function renderAdminUserDetail(props: AdminUserDetailProps): string {
             <i class="fas fa-id-card mr-2 text-slate-300"></i>계정 정보
           </h3>
           <div class="space-y-2 text-sm">
-            <div class="flex justify-between"><span class="text-slate-400">닉네임</span><span class="text-white">${escapeHtml(user.username || '닉네임 없음')}</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">이메일</span><span class="text-white">${escapeHtml(user.email)}</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">이름</span><span class="text-white">${escapeHtml(user.name || '-')}</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">프로바이더</span><span class="text-white capitalize">${escapeHtml(user.provider)}</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">Provider User ID</span><span class="text-white font-mono text-xs">${escapeHtml(user.providerUserId || '-')}</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">Google ID</span><span class="text-white font-mono text-xs">${escapeHtml(user.googleId || '-')}</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">가입일</span><span class="text-white">${formatDate(user.createdAt)}</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">마지막 로그인</span><span class="text-white">${user.lastLoginAt ? formatDateTime(user.lastLoginAt) : '-'}</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">최근 IP</span><span class="text-white">${latestIp ? escapeHtml(latestIp) : '-'}</span></div>
+            <div class="flex justify-between gap-2"><span class="text-slate-400 whitespace-nowrap shrink-0">닉네임</span><span class="text-white truncate">${escapeHtml(user.username || '닉네임 없음')}</span></div>
+            <div class="flex justify-between gap-2"><span class="text-slate-400 whitespace-nowrap shrink-0">이메일</span><span class="text-white truncate">${escapeHtml(user.email)}</span></div>
+            <div class="flex justify-between gap-2"><span class="text-slate-400 whitespace-nowrap shrink-0">이름</span><span class="text-white truncate">${escapeHtml(user.name || '-')}</span></div>
+            <div class="flex justify-between gap-2"><span class="text-slate-400 whitespace-nowrap shrink-0">프로바이더</span><span class="text-white capitalize whitespace-nowrap">${escapeHtml(user.provider)}</span></div>
+            <div class="flex justify-between gap-2"><span class="text-slate-400 whitespace-nowrap shrink-0">Provider ID</span><span class="text-white font-mono text-xs truncate">${escapeHtml(user.providerUserId || '-')}</span></div>
+            <div class="flex justify-between gap-2"><span class="text-slate-400 whitespace-nowrap shrink-0">Google ID</span><span class="text-white font-mono text-xs truncate">${escapeHtml(user.googleId || '-')}</span></div>
+            <div class="flex justify-between gap-2"><span class="text-slate-400 whitespace-nowrap shrink-0">가입일</span><span class="text-white whitespace-nowrap">${formatDate(user.createdAt)}</span></div>
+            <div class="flex justify-between gap-2"><span class="text-slate-400 whitespace-nowrap shrink-0">마지막 로그인</span><span class="text-white whitespace-nowrap">${user.lastLoginAt ? formatDateTime(user.lastLoginAt) : '-'}</span></div>
+            <div class="flex justify-between gap-2"><span class="text-slate-400 whitespace-nowrap shrink-0">최근 IP</span><span class="text-white whitespace-nowrap">${latestIp ? escapeHtml(latestIp) : '-'}</span></div>
           </div>
         </div>
       </div>
@@ -303,19 +303,19 @@ export function renderAdminUserDetail(props: AdminUserDetailProps): string {
               <table class="w-full text-sm">
                 <thead>
                   <tr class="text-slate-400 border-b border-slate-700">
-                    <th class="text-left py-2">유형</th>
-                    <th class="text-left py-2">버전</th>
-                    <th class="text-left py-2">동의일시</th>
-                    <th class="text-left py-2">IP</th>
+                    <th class="text-left py-2 whitespace-nowrap">유형</th>
+                    <th class="text-left py-2 whitespace-nowrap">버전</th>
+                    <th class="text-left py-2 whitespace-nowrap">동의일시</th>
+                    <th class="text-left py-2 whitespace-nowrap">IP</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${consents.map(consent => `
                     <tr class="border-b border-slate-700/50">
-                      <td class="py-2 text-white">${consent.type === 'terms' ? '이용약관' : '개인정보처리방침'}</td>
-                      <td class="py-2 text-slate-300 font-mono text-xs">${escapeHtml(consent.version)}</td>
-                      <td class="py-2 text-slate-300">${formatDateTime(consent.consentedAt)}</td>
-                      <td class="py-2 text-slate-400 font-mono text-xs">${consent.ip || '-'}</td>
+                      <td class="py-2 text-white whitespace-nowrap">${consent.type === 'terms' ? '이용약관' : '개인정보처리방침'}</td>
+                      <td class="py-2 text-slate-300 font-mono text-xs whitespace-nowrap">${escapeHtml(consent.version)}</td>
+                      <td class="py-2 text-slate-300 whitespace-nowrap">${formatDateTime(consent.consentedAt)}</td>
+                      <td class="py-2 text-slate-400 font-mono text-xs whitespace-nowrap">${consent.ip || '-'}</td>
                     </tr>
                   `).join('')}
                 </tbody>

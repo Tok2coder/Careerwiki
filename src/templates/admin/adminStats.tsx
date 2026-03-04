@@ -109,10 +109,10 @@ export function renderAdminStats(props: AnalyticsProps): string {
   const channelRows = channels.length
     ? channels.map((c) => `
       <tr class="border-t border-wiki-border/70 hover:bg-wiki-card/60">
-        <td class="px-4 py-2 text-slate-200">${c.channel}</td>
-        <td class="px-4 py-2 text-right text-slate-200">${c.visits.toLocaleString()}</td>
-        <td class="px-4 py-2 text-right text-slate-200">${c.conversions.toLocaleString()}</td>
-        <td class="px-4 py-2 text-right text-slate-200">${c.cvr.toFixed(1)}%</td>
+        <td class="px-2 sm:px-4 py-2 text-slate-200 whitespace-nowrap">${c.channel}</td>
+        <td class="px-2 sm:px-4 py-2 text-right text-slate-200 whitespace-nowrap">${c.visits.toLocaleString()}</td>
+        <td class="px-2 sm:px-4 py-2 text-right text-slate-200 whitespace-nowrap">${c.conversions.toLocaleString()}</td>
+        <td class="px-2 sm:px-4 py-2 text-right text-slate-200 whitespace-nowrap">${c.cvr.toFixed(1)}%</td>
       </tr>
     `).join('')
     : `
@@ -311,10 +311,10 @@ export function renderAdminStats(props: AnalyticsProps): string {
           <table class="w-full">
             <thead class="bg-wiki-card">
               <tr>
-                <th class="px-4 py-3 text-left text-slate-400 font-medium">채널</th>
-                <th class="px-4 py-3 text-right text-slate-400 font-medium">방문</th>
-                <th class="px-4 py-3 text-right text-slate-400 font-medium">전환</th>
-                <th class="px-4 py-3 text-right text-slate-400 font-medium">CVR</th>
+                <th class="px-2 sm:px-4 py-3 text-left text-slate-400 font-medium whitespace-nowrap">채널</th>
+                <th class="px-2 sm:px-4 py-3 text-right text-slate-400 font-medium whitespace-nowrap">방문</th>
+                <th class="px-2 sm:px-4 py-3 text-right text-slate-400 font-medium whitespace-nowrap">전환</th>
+                <th class="px-2 sm:px-4 py-3 text-right text-slate-400 font-medium whitespace-nowrap">CVR</th>
               </tr>
             </thead>
             <tbody>
