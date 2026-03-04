@@ -650,6 +650,9 @@ const EditMode = {
     // 편집 데이터 로드
     await this.loadEditData();
 
+    // 서버 원본 데이터 보존 (임시저장 복원 후 변경 감지용)
+    this._originalEditData = JSON.parse(JSON.stringify(this.editData));
+
     // 임시저장 복원 확인
     const draftKey = `editDraft_${this.entityType}_${this.entityId}`;
     const savedDraft = localStorage.getItem(draftKey);
@@ -2053,7 +2056,7 @@ const EditMode = {
     document.querySelectorAll('[data-field-key]').forEach(element => {
       const key = element.getAttribute('data-field-key');
       const fieldType = element.getAttribute('data-field-type');
-      const originalValue = this.getNestedValue(this.editData, key);
+      const originalValue = this.getNestedValue(this._originalEditData || this.editData, key);
       let newValue;
       
       // 리스트 타입 필드 (수행 직무 등) - 배열로 저장
