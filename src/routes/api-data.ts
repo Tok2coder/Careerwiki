@@ -382,9 +382,9 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
         }
         
         if (!dbResult) {
-          const normalizedSlug = id.toLowerCase()
+          const normalizedSlug = id.toLowerCase().replace(/[-,·ㆍ\/\s()]/g, '')
           dbResult = await c.env.DB.prepare(
-            'SELECT id, api_data_json FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+            'SELECT id, api_data_json FROM jobs WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
           ).bind(normalizedSlug).first<{ id: string; api_data_json: string | null }>()
         }
         
@@ -456,9 +456,9 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
     if (c.env.DB) {
       try {
         // slug로 조회 시도
-        const normalizedSlug = id.toLowerCase()
+        const normalizedSlug = id.toLowerCase().replace(/[-,·ㆍ\/\s()]/g, '')
         const dbResult = await c.env.DB.prepare(
-          'SELECT id FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+          'SELECT id FROM jobs WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
         ).bind(normalizedSlug).first<{ id: string }>()
         
         if (dbResult?.id) {
@@ -678,28 +678,26 @@ apiDataRoutes.get('/api/major/:id/edit-data', async (c) => {
           if (!dbResult) {
             // slug로 조회 시도 (정규화된 이름으로)
             const decodedSlug = decodeURIComponent(id)
-            const normalizedSlug = decodedSlug.toLowerCase()
-            
-            // 방법 1: 정규화된 이름으로 조회
+            const lowerSlug = decodedSlug.toLowerCase()
+            const normalizedSlug = lowerSlug.replace(/[-,·ㆍ\/\s()]/g, '')
+
+            // 방법 1: name_normalized 인덱스로 조회 (풀스캔 제거)
             dbResult = await c.env.DB.prepare(
-              'SELECT id FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+              'SELECT id FROM majors WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
             ).bind(normalizedSlug).first() as { id: string } | null
-            
-            
+
             if (!dbResult) {
               // 방법 2: 이름으로 직접 조회 (대소문자 무시)
               dbResult = await c.env.DB.prepare(
                 'SELECT id FROM majors WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
-              ).bind(normalizedSlug).first() as { id: string } | null
-              
+              ).bind(lowerSlug).first() as { id: string } | null
             }
-            
+
             if (!dbResult) {
               // 방법 3: 원본 slug로 조회
               dbResult = await c.env.DB.prepare(
                 'SELECT id FROM majors WHERE LOWER(name) = LOWER(?) AND is_active = 1 LIMIT 1'
               ).bind(decodedSlug).first() as { id: string } | null
-              
             }
           }
           

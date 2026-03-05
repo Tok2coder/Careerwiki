@@ -2357,12 +2357,12 @@ export const getUnifiedMajorDetail = async (
       // 여전히 찾지 못한 경우 slug로 시도
       if (!dbMajor && !id.includes(':')) {
         const decodedSlug = decodeURIComponent(id)
-        const normalizedSlug = decodedSlug.toLowerCase()
+        const normalizedSlug = decodedSlug.toLowerCase().replace(/[-,·ㆍ\/\s()]/g, '')
         dbMajor = await db.prepare(`
-          SELECT id, user_contributed_json, admin_data_json 
-          FROM majors 
-          WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? 
-          AND is_active = 1 
+          SELECT id, user_contributed_json, admin_data_json
+          FROM majors
+          WHERE name_normalized = ?
+          AND is_active = 1
           LIMIT 1
         `).bind(normalizedSlug).first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
         
@@ -3289,20 +3289,21 @@ export const getUnifiedJobDetailWithRawData = async (
       // 여전히 찾지 못한 경우 slug로 시도 (editJob과 동일한 로직)
       if (!dbJob) {
         const decodedSlug = decodeURIComponent(id)
-        const normalizedSlug = decodedSlug.toLowerCase()
-        
-        // 방법 1: 정규화된 이름으로 조회
+        const lowerSlug = decodedSlug.toLowerCase()
+        const normalizedSlug = lowerSlug.replace(/[-,·ㆍ\/\s()]/g, '')
+
+        // 방법 1: name_normalized 인덱스로 조회 (풀스캔 제거)
         dbJob = await db.prepare(
-          'SELECT id, user_contributed_json, admin_data_json FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+          'SELECT id, user_contributed_json, admin_data_json FROM jobs WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
         ).bind(normalizedSlug).first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
-        
+
         // 방법 2: 이름으로 직접 조회 (대소문자 무시)
         if (!dbJob) {
           dbJob = await db.prepare(
             'SELECT id, user_contributed_json, admin_data_json FROM jobs WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
-          ).bind(normalizedSlug).first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
+          ).bind(lowerSlug).first() as { id: string; user_contributed_json: string | null; admin_data_json: string | null } | null
         }
-        
+
         // 방법 3: 원본 slug로 조회
         if (!dbJob) {
           dbJob = await db.prepare(

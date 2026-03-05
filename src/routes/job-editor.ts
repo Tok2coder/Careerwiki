@@ -792,16 +792,17 @@ jobEditorRoutes.post('/api/job/:id/refetch-api-data', authMiddleware, async (c) 
 
       if (!job) {
         const decodedSlug = decodeURIComponent(jobId)
-        const normalizedSlug = decodedSlug.toLowerCase()
+        const lowerSlug = decodedSlug.toLowerCase()
+        const normalizedSlug = lowerSlug.replace(/[-,·ㆍ\/\s()]/g, '')
 
         job = await c.env.DB.prepare(
-          'SELECT id, name, careernet_id, goyong24_id FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+          'SELECT id, name, careernet_id, goyong24_id FROM jobs WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
         ).bind(normalizedSlug).first<{ id: string; name: string; careernet_id: string | null; goyong24_id: string | null }>()
 
         if (!job) {
           job = await c.env.DB.prepare(
             'SELECT id, name, careernet_id, goyong24_id FROM jobs WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
-          ).bind(normalizedSlug).first<{ id: string; name: string; careernet_id: string | null; goyong24_id: string | null }>()
+          ).bind(lowerSlug).first<{ id: string; name: string; careernet_id: string | null; goyong24_id: string | null }>()
         }
 
         if (!job) {
@@ -900,16 +901,17 @@ jobEditorRoutes.post('/api/job/:id/reset-contributions', authMiddleware, async (
 
       if (!job) {
         const decodedSlug = decodeURIComponent(jobId)
-        const normalizedSlug = decodedSlug.toLowerCase()
+        const lowerSlug = decodedSlug.toLowerCase()
+        const normalizedSlug = lowerSlug.replace(/[-,·ㆍ\/\s()]/g, '')
 
         job = await c.env.DB.prepare(
-          'SELECT id FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+          'SELECT id FROM jobs WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
         ).bind(normalizedSlug).first<{ id: string }>()
 
         if (!job) {
           job = await c.env.DB.prepare(
             'SELECT id FROM jobs WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
-          ).bind(normalizedSlug).first<{ id: string }>()
+          ).bind(lowerSlug).first<{ id: string }>()
         }
 
         if (!job) {

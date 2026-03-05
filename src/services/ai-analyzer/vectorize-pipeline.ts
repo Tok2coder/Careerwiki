@@ -521,11 +521,125 @@ export async function searchCandidatesMultiQuery(
 }
 
 // ============================================
+// facts 배열에서 Multi-Query 생성 (topK=100 제한 우회)
+// ============================================
+// Cloudflare Vectorize는 topK=100이 상한이므로,
+// facts를 차원별로 분해하여 3-5개 쿼리를 생성하고
+// searchCandidatesMultiQuery로 병렬 검색하여 300-500개 후보 확보
+// ============================================
+function buildMultiSearchQueriesFromFacts(
+  facts: Array<{ fact_key: string; value_json: string }>
+): string[] {
+  const queries: string[] = []
+
+  const interestParts: string[] = []
+  const valueParts: string[] = []
+  const strengthParts: string[] = []
+  const workstyleParts: string[] = []
+  const deepParts: string[] = []
+
+  const interestMap: Record<string, string> = {
+    '기술': 'technology engineering development',
+    '디자인': 'design creative artistic',
+    '비즈니스': 'business management leadership',
+    '데이터': 'data analysis quantitative',
+    '교육': 'education teaching training',
+    '의료': 'healthcare medical health',
+    '금융': 'finance banking investment',
+    '마케팅': 'marketing sales communication',
+  }
+  const priorityMapEn: Record<string, string> = {
+    growth: 'career growth learning development',
+    income: 'high salary compensation financial',
+    wlb: 'work-life balance flexible hours',
+    stability: 'job security stable employment',
+    meaning: 'meaningful work purpose impact',
+  }
+
+  for (const fact of facts) {
+    try {
+      const parsed = JSON.parse(fact.value_json)
+      const value = parsed.value || parsed
+
+      if (fact.fact_key.includes('interest')) {
+        if (Array.isArray(value)) {
+          const mapped = value.map((v: string) => interestMap[v] || v).join(' ')
+          interestParts.push(`interest: ${mapped}`)
+        } else if (typeof value === 'string') {
+          interestParts.push(`interest: ${value}`)
+        }
+      }
+
+      if (fact.fact_key.includes('priority')) {
+        valueParts.push(`value: ${priorityMapEn[value] || value}`)
+      }
+
+      if (fact.fact_key.includes('strength')) {
+        if (Array.isArray(value)) {
+          strengthParts.push(`strengths: ${value.join(' ')}`)
+        } else if (typeof value === 'string') {
+          strengthParts.push(`strengths: ${value}`)
+        }
+      }
+
+      if (fact.fact_key.includes('workstyle')) {
+        if (value === 'solo') {
+          workstyleParts.push('work style: independent autonomous focused')
+        } else if (value === 'team') {
+          workstyleParts.push('work style: collaborative team cooperative')
+        }
+      }
+
+      if (fact.fact_key.includes('deep_intake') || fact.fact_key.includes('discovery')) {
+        if (typeof value === 'string' && value.length > 5) {
+          deepParts.push(value.substring(0, 200))
+        }
+      }
+    } catch {
+      // 파싱 실패 시 무시
+    }
+  }
+
+  // 차원별 쿼리 구성 (각각 독립 검색 → 서로 다른 후보 커버)
+  if (interestParts.length > 0) {
+    queries.push(interestParts.join(' ').substring(0, 500))
+  }
+  if (valueParts.length > 0) {
+    queries.push(valueParts.join(' ').substring(0, 500))
+  }
+  if (strengthParts.length > 0) {
+    queries.push(strengthParts.join(' ').substring(0, 500))
+  }
+  if (workstyleParts.length > 0 || valueParts.length > 0) {
+    // 워크스타일 + 가치 조합 쿼리
+    const combined = [...workstyleParts, ...valueParts].join(' ').substring(0, 500)
+    if (combined) queries.push(combined)
+  }
+  if (deepParts.length > 0) {
+    queries.push(deepParts.join(' ').substring(0, 500))
+  }
+
+  // 종합 쿼리 (기존 buildSearchQuery 결과 - fallback 겸용)
+  const fallbackQuery = buildSearchQuery(facts)
+  queries.push(fallbackQuery)
+
+  // 중복 제거 및 최소 1개 보장
+  const unique = [...new Set(queries)].filter(q => q.trim().length > 0)
+  if (unique.length === 0) {
+    return ['career recommendation job matching professional work']
+  }
+  return unique
+}
+
+// ============================================
 // 후보군 확장 (메인 함수) - 벡터 검색 기반
 // ============================================
 // 2026-01-26: 태깅 의존도 완전 제거
 // - 벡터 검색 결과만 사용
 // - 모든 직업 검색 가능 (태깅 여부 무관)
+// 2026-03-05: Multi-Query 패턴으로 전환
+// - 단일 searchCandidates(topK=500) → searchCandidatesMultiQuery
+// - Vectorize topK=100 상한 우회: 3-5개 쿼리 × 100 = 300-500개 후보
 // ============================================
 export async function expandCandidates(
   db: D1Database,
@@ -538,7 +652,7 @@ export async function expandCandidates(
 ): Promise<CandidateExpansionResult> {
   const { targetSize = 500 } = options
   const startTime = Date.now()
-  
+
   // Vectorize 또는 OpenAI API 키가 없으면 fallback
   if (!vectorize || !openaiApiKey) {
     const fallbackResult = await getFallbackCandidates(db, targetSize)
@@ -549,22 +663,23 @@ export async function expandCandidates(
       fallback_used: true,
     }
   }
-  
+
   try {
-    // 1. 검색 쿼리 생성 (한국어 직접 사용 가능)
-    const query = buildSearchQuery(facts)
-    
-    // 2. 벡터 검색 (OpenAI Embedding 사용)
-    const vectorResults = await searchCandidates(vectorize, openaiApiKey, query, targetSize)
-    
-    
+    // 1. facts를 차원별로 분해하여 Multi-Query 생성
+    //    (Vectorize topK=100 상한 우회 — 여러 쿼리 병렬 검색)
+    const queries = buildMultiSearchQueriesFromFacts(facts)
+
+    // 2. Multi-Query 병렬 벡터 검색 (OpenAI Embedding 사용)
+    //    각 쿼리당 topK=100, 결과 합산 후 중복 제거
+    const vectorResults = await searchCandidatesMultiQuery(vectorize, openaiApiKey, queries)
+
     return {
       candidates: vectorResults,
       total_searched: vectorResults.length,
       search_duration_ms: Date.now() - startTime,
       fallback_used: false,
     }
-    
+
   } catch (error) {
     const fallbackResult = await getFallbackCandidates(db, targetSize)
     return {

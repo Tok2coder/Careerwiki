@@ -27,9 +27,10 @@ const VECTOR_DIMENSIONS = 768
 const VECTORIZE_INDEX = 'careerwiki-embeddings'
 const BATCH_SIZE = 20 // Workers AI 배치 크기 제한
 const D1_DATABASE = 'careerwiki-kr'
-const ACCOUNT_ID = '3587865378649966bfb0a814fce73c77'
-// Workers AI 전용 토큰 (D1/Vectorize 권한 불필요, AI 권한만 필요)
-const AI_API_TOKEN = 'koXCD2lF5brPHwZZO-oxLQW3PLuK9_-vQA7zr1AJ'
+// 환경변수에서 읽음 — 하드코딩 금지
+// CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN을 환경변수에 설정할 것
+const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID
+const AI_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN
 
 interface CLIArgs {
   type: 'job' | 'major' | 'howto' | 'all'
@@ -284,10 +285,21 @@ async function main() {
   console.log(`   Dry run: ${args.dryRun}`)
   console.log('')
   
-  // 하드코딩된 상수 사용 (환경변수 대신 - wrangler OAuth와 충돌 방지)
+  // 환경변수 검증
   const accountId = ACCOUNT_ID
   const apiToken = AI_API_TOKEN
-  
+
+  if (!accountId) {
+    console.error('오류: CLOUDFLARE_ACCOUNT_ID 환경변수가 설정되지 않았습니다.')
+    console.error('실행 전에 환경변수를 설정하세요: export CLOUDFLARE_ACCOUNT_ID=<your-account-id>')
+    process.exit(1)
+  }
+  if (!apiToken) {
+    console.error('오류: CLOUDFLARE_API_TOKEN 환경변수가 설정되지 않았습니다.')
+    console.error('실행 전에 환경변수를 설정하세요: export CLOUDFLARE_API_TOKEN=<your-api-token>')
+    process.exit(1)
+  }
+
   console.log(`   Account ID: ${accountId.slice(0, 8)}...`)
   console.log(`   API Token: ${apiToken.slice(0, 8)}...`)
   

@@ -462,16 +462,17 @@ contentEditorRoutes.get('/api/job/:id/revisions', authMiddleware, async (c) => {
 
       if (!job) {
         const decodedSlug = decodeURIComponent(jobId)
-        const normalizedSlug = decodedSlug.toLowerCase()
+        const lowerSlug = decodedSlug.toLowerCase()
+        const normalizedSlug = lowerSlug.replace(/[-,·ㆍ\/\s()]/g, '')
 
         job = await c.env.DB.prepare(
-          'SELECT id FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+          'SELECT id FROM jobs WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
         ).bind(normalizedSlug).first<{ id: string }>()
 
         if (!job) {
           job = await c.env.DB.prepare(
             'SELECT id FROM jobs WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
-          ).bind(normalizedSlug).first<{ id: string }>()
+          ).bind(lowerSlug).first<{ id: string }>()
         }
 
         if (!job) {
@@ -533,9 +534,9 @@ contentEditorRoutes.get('/api/major/:id/revisions', authMiddleware, async (c) =>
 
           if (!dbResult) {
             const decodedSlug = decodeURIComponent(majorId)
-            const normalizedSlug = decodedSlug.toLowerCase()
+            const normalizedSlug = decodedSlug.toLowerCase().replace(/[-,·ㆍ\/\s()]/g, '')
             dbResult = await db.prepare(
-              'SELECT id FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+              'SELECT id FROM majors WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
             ).bind(normalizedSlug).first() as { id: string } | null
 
             if (dbResult?.id) {

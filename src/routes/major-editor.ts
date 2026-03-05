@@ -441,16 +441,17 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
 
       if (!majorRecord) {
         const decodedSlug = decodeURIComponent(majorId)
-        const normalizedSlug = decodedSlug.toLowerCase()
+        const lowerSlug = decodedSlug.toLowerCase()
+        const normalizedSlug = lowerSlug.replace(/[-,·ㆍ\/\s()]/g, '')
 
         majorRecord = await c.env.DB.prepare(
-          'SELECT * FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+          'SELECT * FROM majors WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
         ).bind(normalizedSlug).first()
 
         if (!majorRecord) {
           majorRecord = await c.env.DB.prepare(
             'SELECT * FROM majors WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
-          ).bind(normalizedSlug).first()
+          ).bind(lowerSlug).first()
         }
 
         if (!majorRecord) {

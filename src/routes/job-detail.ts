@@ -51,12 +51,12 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
         ).bind(normalizedSlug).first() as { id: string; name: string; is_active: number } | null
       }
 
-      // 3. 여전히 못 찾으면 이름으로 검색
+      // 3. 여전히 못 찾으면 이름으로 검색 (name_normalized 인덱스 활용)
       if (!result) {
-        const normalized = decodedSlug.toLowerCase().replace(/-/g, '')
+        const normalized = decodedSlug.toLowerCase().replace(/[-,·ㆍ\/\s()]/g, '')
 
         result = await db.prepare(
-          `SELECT id, name, is_active FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? ${activeCondition} LIMIT 1`
+          `SELECT id, name, is_active FROM jobs WHERE name_normalized = ? ${activeCondition} LIMIT 1`
         ).bind(normalized).first() as { id: string; name: string; is_active: number } | null
       }
 

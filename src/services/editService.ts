@@ -194,20 +194,21 @@ export async function editJob(
     if (!job) {
       // slug 정규화 (URL 디코딩 포함)
       const decodedSlug = decodeURIComponent(jobId)
-      const normalizedSlug = decodedSlug.toLowerCase()
-      
-      // 방법 1: 정규화된 이름으로 조회
+      const lowerSlug = decodedSlug.toLowerCase()
+      const normalizedSlug = lowerSlug.replace(/[-,·ㆍ\/\s()]/g, '')
+
+      // 방법 1: name_normalized 인덱스로 조회 (풀스캔 제거)
       job = await db.prepare(
-        'SELECT * FROM jobs WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? AND is_active = 1 LIMIT 1'
+        'SELECT * FROM jobs WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
       ).bind(normalizedSlug).first()
-      
+
       // 방법 2: 이름으로 직접 조회 (대소문자 무시)
       if (!job) {
         job = await db.prepare(
           'SELECT * FROM jobs WHERE LOWER(name) = ? AND is_active = 1 LIMIT 1'
-        ).bind(normalizedSlug).first()
+        ).bind(lowerSlug).first()
       }
-      
+
       // 방법 3: 원본 slug로 조회
       if (!job) {
         job = await db.prepare(

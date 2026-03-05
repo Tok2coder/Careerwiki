@@ -50,7 +50,7 @@ majorDetailRoutes.get('/major/:slug', async (c) => {
         .replace(/\)/g, '')
 
       const result = await db.prepare(
-        `SELECT id, name, is_active FROM majors WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, "-", ""), ",", ""), "·", ""), "ㆍ", ""), "/", ""), " ", ""), "(", ""), ")", "")) = ? ${activeCondition} ORDER BY CASE WHEN merged_profile_json IS NOT NULL AND merged_profile_json != '{}' THEN 0 ELSE 1 END LIMIT 1`
+        `SELECT id, name, is_active FROM majors WHERE name_normalized = ? ${activeCondition} ORDER BY CASE WHEN merged_profile_json IS NOT NULL AND merged_profile_json != '{}' THEN 0 ELSE 1 END LIMIT 1`
       ).bind(normalized).first() as { id: string; name: string; is_active: number } | null
 
       if (result?.id) {

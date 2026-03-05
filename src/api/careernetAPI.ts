@@ -14,13 +14,12 @@ import type {
 } from '../types/unifiedProfiles';
 
 // Cloudflare Workers에서는 env 객체에서 환경변수를 가져옴
-// 개발 환경에서는 기본값 사용
-const getApiKey = (env?: any) => {
+// 키가 없으면 명시적으로 에러를 throw
+const getApiKey = (env?: any): string => {
   if (env?.CAREER_NET_API_KEY) {
     return env.CAREER_NET_API_KEY;
   }
-  // 개발용 기본 키
-  return 'd9e0285190fde074bef30031f17f669e';
+  throw new Error('CAREER_NET_API_KEY 환경변수가 설정되지 않았습니다. .dev.vars 또는 Cloudflare 대시보드에서 설정해주세요.');
 };
 
 // Base URLs - 직업정보 API(getOpenApi)는 종료됨, 직업백과 API만 사용
@@ -653,6 +652,7 @@ export async function getJobEncyclopedia(jobdicSeq: string, env?: any): Promise<
     // 직업백과 API 응답은 루트에 바로 모든 필드가 있음
     return data as JobEncyclopediaResponse;
   } catch (error) {
+    console.error(`[getJobEncyclopedia] 직업 코드 "${jobdicSeq}" 조회 실패:`, error instanceof Error ? error.message : String(error));
     return null;
   }
 }
