@@ -999,7 +999,7 @@ export const renderLayout = (
           })();
         </script>
 
-        <script src="/static/api-client.js?v=20260303" defer></script>
+        <script src="/static/api-client.js?v=20260305c" defer></script>
 
         <!-- 편집 시스템 -->
         <link rel="stylesheet" href="/static/edit-mode.css?v=20260303">

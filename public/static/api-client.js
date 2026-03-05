@@ -5017,7 +5017,7 @@ const DetailComments = (() => {
                 <span class="font-bold text-wiki-text text-sm">${escapeHtml(displayNickname)}</span>
                 ${adminBadge}
                 ${displayIpTag}
-                ${createdAt ? `<time class="text-wiki-muted" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
+                ${createdAt ? `<span class="text-wiki-muted select-none" style="margin:0 4px" aria-hidden="true">·</span><time class="text-wiki-muted" style="font-size:11px" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
                 ${srStatusText}
               </div>
               ${badges.length ? `<div class="flex flex-wrap gap-1 mt-1">${badges.join('')}</div>` : ''}
