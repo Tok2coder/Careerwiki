@@ -857,9 +857,9 @@ JSON으로 반환하세요.`
         { role: 'system', content: JUDGE_SYSTEM_PROMPT },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.1,  // Phase 5: 0.5→0.1 (평가 일관성 극대화)
-      max_tokens: 8000,  // 10개 직업 × ~600 토큰 = 6000 + 여유분 (likeReason/canReason 포함)
-      seed: 42,          // Phase 5: 동일 입력 → 동일 출력 보장
+      temperature: 0,    // Phase 9: 0→완전 결정론적 (평가 일관성 보장)
+      max_tokens: 8000,
+      seed: 42,
     })
 
     // P0-2: 검증용 텍스트 풀 전달
@@ -2173,9 +2173,9 @@ JSON으로 반환하세요.`
         { role: 'system', content: MAJOR_JUDGE_SYSTEM_PROMPT },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.1,  // Phase 5: 0.5→0.1 (평가 일관성 극대화)
+      temperature: 0,    // Phase 9: 0→완전 결정론적 (전공 평가도 동일)
       max_tokens: 8000,
-      seed: 42,          // Phase 5: 동일 입력 → 동일 출력 보장
+      seed: 42,
     })
 
     const mjResults = parseMajorJudgeResponse(response, candidates, userTextPool)

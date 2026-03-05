@@ -4460,8 +4460,9 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
     }
     
     // ============================================
-    // Phase 7: R1 질문 캐싱 — 동일 프로필 → 동일 R1 질문 반환
-    // 일관성의 근본 원인(매번 다른 질문)을 해결
+    // Phase 9: 전체 라운드(R1/R2/R3) 질문 캐싱
+    // 동일 프로필 + 동일 답변 → 동일 질문 반환 (일관성 보장)
+    // R1: profile hash, R2: profile+R1답변 hash, R3: profile+R2답변 hash
     // ============================================
     const interviewerInput = {
       sessionId: session_id,
@@ -4476,12 +4477,18 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
       openaiApiKey: (env as any).OPENAI_API_KEY,
     }
 
-    // R1 캐시: mini_module_result + narrative_facts를 해시하여 캐시 키 생성
     let result: Awaited<ReturnType<typeof generateRoundQuestions>>
     const analysisTypeKey = analysis_type || 'job'
 
-    if (round_number === 1 && mini_module_result) {
-      // 캐시 키 생성: interest/value/strength/constraint + narrative_facts
+    // 라운드별 메타데이터 (캐시 히트 시 복원용)
+    const ROUND_META_MAP: Record<number, { purpose: 'ENGINE' | 'AVOIDANCE' | 'INTEGRATION'; theme: string; targetAxis: readonly string[] }> = {
+      1: { purpose: 'ENGINE', theme: '욕망 탐색', targetAxis: ['interest', 'value'] },
+      2: { purpose: 'AVOIDANCE', theme: '회피 탐색', targetAxis: ['constraint', 'value'] },
+      3: { purpose: 'INTEGRATION', theme: '통합', targetAxis: ['interest', 'value', 'strength', 'constraint', 'workstyle'] },
+    }
+
+    if (mini_module_result && round_number >= 1 && round_number <= 3) {
+      // 캐시 키: 프로필 토큰 + 내러티브 + 이전 라운드 답변 (R2/R3용)
       const cacheInput = JSON.stringify({
         i: mini_module_result.interest_top?.sort(),
         v: mini_module_result.value_top?.sort(),
@@ -4489,8 +4496,10 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
         c: mini_module_result.constraint_flags?.sort(),
         h: narrative_facts?.highAliveMoment?.slice(0, 50),
         l: narrative_facts?.lostMoment?.slice(0, 50),
+        // R2/R3: 이전 답변 포함 → 같은 답변이면 같은 캐시 키
+        a: (previous_round_answers || []).map((a: any) => a.answer?.slice(0, 80)).sort(),
       })
-      // 간단한 해시: 32비트 FNV-1a
+      // FNV-1a 해시
       let hash = 0x811c9dc5
       for (let i = 0; i < cacheInput.length; i++) {
         hash ^= cacheInput.charCodeAt(i)
@@ -4501,21 +4510,22 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
       // 캐시 조회
       try {
         const cached = await db.prepare(
-          'SELECT questions_json FROM interview_question_cache WHERE profile_hash = ? AND analysis_type = ? AND round_number = 1'
-        ).bind(profileHash, analysisTypeKey).first<{ questions_json: string }>()
+          'SELECT questions_json FROM interview_question_cache WHERE profile_hash = ? AND analysis_type = ? AND round_number = ?'
+        ).bind(profileHash, analysisTypeKey, round_number).first<{ questions_json: string }>()
 
         if (cached) {
           // 캐시 히트 → LLM 호출 생략
           await db.prepare(
-            'UPDATE interview_question_cache SET hit_count = hit_count + 1 WHERE profile_hash = ? AND analysis_type = ? AND round_number = 1'
-          ).bind(profileHash, analysisTypeKey).run()
+            'UPDATE interview_question_cache SET hit_count = hit_count + 1 WHERE profile_hash = ? AND analysis_type = ? AND round_number = ?'
+          ).bind(profileHash, analysisTypeKey, round_number).run()
 
           const cachedQuestions = JSON.parse(cached.questions_json)
+          const meta = ROUND_META_MAP[round_number] || ROUND_META_MAP[1]
           result = {
-            round: 1,
+            round: round_number,
             questions: cachedQuestions,
             generatedBy: 'llm' as const,
-            metadata: { purpose: 'ENGINE' as const, theme: '욕망 탐색', targetAxis: ['interest', 'value'] as const },
+            metadata: meta,
           }
         } else {
           // 캐시 미스 → LLM 호출 후 저장
@@ -4526,8 +4536,8 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
           // 캐시에 저장 (실패해도 무시)
           try {
             await db.prepare(
-              'INSERT OR REPLACE INTO interview_question_cache (profile_hash, analysis_type, round_number, questions_json) VALUES (?, ?, 1, ?)'
-            ).bind(profileHash, analysisTypeKey, JSON.stringify(result.questions)).run()
+              'INSERT OR REPLACE INTO interview_question_cache (profile_hash, analysis_type, round_number, questions_json) VALUES (?, ?, ?, ?)'
+            ).bind(profileHash, analysisTypeKey, round_number, JSON.stringify(result.questions)).run()
           } catch { /* 캐시 저장 실패 무시 */ }
         }
       } catch {
@@ -4537,7 +4547,7 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
           : await generateRoundQuestions(env.AI || null, interviewerInput)
       }
     } else {
-      // R2, R3는 캐싱 없이 LLM 호출 (이전 답변에 의존하므로)
+      // mini_module_result 없음 → 캐시 불가, LLM 직접 호출
       result = analysisTypeKey === 'major'
         ? await generateMajorRoundQuestions(env.AI || null, interviewerInput)
         : await generateRoundQuestions(env.AI || null, interviewerInput)
@@ -5242,7 +5252,63 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
   
   try {
     const startTime = Date.now()
-    
+
+    // ============================================
+    // Phase 9: 추천 결과 캐싱 — 동일 프로필+답변 → 동일 결과 (일관성 보장)
+    // Workers AI(분산 GPU)가 temp=0에서도 비결정적이므로, 결과 자체를 캐싱
+    // ============================================
+    let recCacheHash: string | null = null
+    if (payload.mini_module_result) {
+      try {
+        // 캐시 키: mini_module 토큰 + narrative_facts + 모든 round_answers
+        const nfRow = await db.prepare(
+          'SELECT high_alive_moment, lost_moment FROM narrative_facts WHERE session_id = ?'
+        ).bind(session_id).first<{ high_alive_moment?: string; lost_moment?: string }>()
+        const raRows = await db.prepare(
+          'SELECT answer FROM round_answers WHERE session_id = ? ORDER BY round_number, question_id'
+        ).bind(session_id).all<{ answer: string }>()
+
+        const cacheInput = JSON.stringify({
+          i: payload.mini_module_result.interest_top?.sort(),
+          v: payload.mini_module_result.value_top?.sort(),
+          s: payload.mini_module_result.strength_top?.sort(),
+          c: payload.mini_module_result.constraint_flags?.sort(),
+          w: payload.mini_module_result.workstyle_top?.sort(),
+          h: nfRow?.high_alive_moment?.slice(0, 80),
+          l: nfRow?.lost_moment?.slice(0, 80),
+          a: raRows?.results?.map(r => r.answer?.slice(0, 60)) || [],
+        })
+        let hash = 0x811c9dc5
+        for (let ci = 0; ci < cacheInput.length; ci++) {
+          hash ^= cacheInput.charCodeAt(ci)
+          hash = (hash * 0x01000193) >>> 0
+        }
+        recCacheHash = hash.toString(16).padStart(8, '0')
+
+        // 캐시 조회
+        const cached = await db.prepare(
+          'SELECT result_json, premium_report_json FROM recommendation_result_cache WHERE profile_hash = ? AND analysis_type = ? AND engine_version = ?'
+        ).bind(recCacheHash, 'job', RECOMMENDATION_ENGINE_VERSION).first<{ result_json: string; premium_report_json?: string }>()
+
+        if (cached) {
+          // 캐시 히트 → 파이프라인 전체 생략
+          await db.prepare(
+            'UPDATE recommendation_result_cache SET hit_count = hit_count + 1 WHERE profile_hash = ? AND analysis_type = ? AND engine_version = ?'
+          ).bind(recCacheHash, 'job', RECOMMENDATION_ENGINE_VERSION).run()
+
+          const cachedResult = JSON.parse(cached.result_json)
+          const cachedPremium = cached.premium_report_json ? JSON.parse(cached.premium_report_json) : null
+          const duration = Date.now() - startTime
+          return c.json({
+            ...cachedResult,
+            session_id,
+            cache_hit: true,
+            duration_ms: duration,
+          })
+        }
+      } catch { /* 캐시 실패 → 정상 파이프라인 진행 */ }
+    }
+
     // 1. SearchProfile 확정
     let searchProfile = payload.searchProfile
     
@@ -6291,7 +6357,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       // 저장 실패해도 결과는 반환 (로그만 남김)
     }
 
-    return c.json({
+    const responseBody = {
       success: true,
       mode: 'recommendation',
       session_id,
@@ -6332,7 +6398,19 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         round_answers_count: roundAnswers.length,
       } : undefined,
       duration_ms: duration,
-    })
+    }
+
+    // Phase 9: 추천 결과 캐시 저장 (다음 동일 프로필 요청 시 즉시 반환)
+    if (recCacheHash) {
+      try {
+        const { session_id: _sid, request_id: _rid, duration_ms: _dur, ...cacheableResult } = responseBody
+        await db.prepare(
+          'INSERT OR REPLACE INTO recommendation_result_cache (profile_hash, analysis_type, engine_version, result_json, premium_report_json) VALUES (?, ?, ?, ?, ?)'
+        ).bind(recCacheHash, 'job', RECOMMENDATION_ENGINE_VERSION, JSON.stringify(cacheableResult), JSON.stringify(premiumReport)).run()
+      } catch { /* 캐시 저장 실패 무시 */ }
+    }
+
+    return c.json(responseBody)
     
   } catch (error) {
     logError('ANALYSIS_FAILED', error instanceof Error ? error.message : 'Recommendation failed', {

@@ -540,9 +540,9 @@ export async function generateRoundQuestions(
         { role: 'system', content: INTERVIEWER_SYSTEM_PROMPT },
         { role: 'user', content: userPrompt },
       ], {
-        temperature: 0.3,  // Phase 6: 0.7→0.3 (질문 일관성 향상 — 같은 프로필이면 유사한 질문 생성)
+        temperature: 0,    // Phase 9: 0→완전 결정론적 (R2/R3 캐시 미스 시에도 동일 질문)
         max_tokens: 1500,
-        seed: 42,          // Phase 6: 동일 프로필 → 동일 질문 경로 보장
+        seed: 42,
       })
       
       
@@ -1668,9 +1668,9 @@ export async function generateMajorRoundQuestions(
         { role: 'system', content: MAJOR_INTERVIEWER_SYSTEM_PROMPT },
         { role: 'user', content: userPrompt },
       ], {
-        temperature: 0.3,  // Phase 6: 0.7→0.3 (질문 일관성 향상)
+        temperature: 0,    // Phase 9: 0→완전 결정론적 (전공 추천도 동일)
         max_tokens: 1500,
-        seed: 42,          // Phase 6: 동일 프로필 → 동일 질문 경로 보장
+        seed: 42,
       })
 
 
