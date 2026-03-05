@@ -5431,6 +5431,10 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     }
 
     // 3-2. 필터링된 결과를 ScoredJob으로 변환
+    // ★ v3.16: tag-filter의 riskPenalty 보존 (이전에는 여기서 손실됨)
+    const riskPenaltyMap = new Map<string, number>(
+      tagFilterResult.passed.map(p => [p.job_id, p.riskPenalty])
+    )
     const tagPassedAsVectorResults = tagFilterResult.passed.map(p => ({
       job_id: p.job_id,
       job_name: p.job_name,
@@ -5440,6 +5444,17 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     let scoredJobs
     try {
       scoredJobs = await vectorResultsToScoredJobs(db, tagPassedAsVectorResults, payload.mini_module_result)
+
+      // ★ v3.16: 실제 risk penalty 적용 (하드코딩 10 → tag-filter 계산값)
+      scoredJobs = scoredJobs.map(j => {
+        const tagRisk = riskPenaltyMap.get(j.job_id) ?? 0
+        return {
+          ...j,
+          base_risk: tagRisk,
+          risk_penalty: tagRisk,
+          final_score: Math.round(0.55 * (j.like_score || 0) + 0.45 * (j.can_score || 0) - tagRisk),
+        }
+      })
       // v3.9.4: 정치직/임명직 필터링 (차관, 법원장 등 추천 부적합 직업 제거)
       scoredJobs = filterUnrealisticJobs(scoredJobs)
       // v3.9.9: 니치 소재/분야 직업 조건부 필터링 (배경이 받쳐줄 때는 통과)
@@ -5593,7 +5608,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         const personalized = calculatePersonalizedBaseScores(row, payload.mini_module_result)
         const baseLike = Math.min(100, personalized.like)
         const baseCan = Math.min(100, personalized.can)
-        const baseRisk = 10
+        const baseRisk = 0  // v3.16: archetype 직접 주입은 tag-filter 미경유이므로 risk 0
         const archetypeBoost = 12
         const boostedLike = Math.min(100, baseLike + archetypeBoost)
         const boostedCan = Math.min(100, baseCan + Math.round(archetypeBoost * 0.5))

@@ -549,6 +549,36 @@ export async function generateRoundQuestions(
       // JSON 파싱
       let questions = parseInterviewerResponse({ response: openaiResult.response }, roundNumber, template.purpose)
 
+      // ★ v3.16: 서버사이드 감정질문 강제 제한 (라운드당 최대 1개)
+      // LLM 프롬프트만으로는 감정질문 비율 통제 불가 → 구조적 강제
+      const EMOTION_QUESTION_PATTERNS = [
+        /어떤 (?:감정|느낌|기분)/,
+        /(?:느꼈|느끼셨|느끼나|느끼시|느끼는|느끼고|느끼세)/,
+        /(?:감정이|기분이|마음이) (?:어떠|어떤|어땠)/,
+        /(?:불안(?!정)|답답|두렵|무섭|화가|짜증|슬프|우울|외롭)/,  // 불안정 제외, 불안만 매칭
+        /감정적으로/,
+        /어떤 (?:마음|심정|기분)/,
+        /(?:힘드셨|힘들었|힘들게|괴로|고통스러)/,
+        /마음이 (?:어떠|움직|끌)/,
+        /(?:감정을|감정이|기분이|기분은) (?:느|드)/,  // "감정을 느끼" "감정이 드" "기분이 드"
+        /어떤 (?:감정|기분)(?:을|이|은)/,  // "어떤 감정을", "어떤 기분이"
+      ]
+      {
+        let emotionCount = 0
+        const beforeEmotionFilter = questions.length
+        questions = questions.filter(q => {
+          const isEmotion = EMOTION_QUESTION_PATTERNS.some(p => p.test(q.questionText))
+          if (isEmotion) {
+            emotionCount++
+            return emotionCount <= 1  // 첫 번째 감정질문만 통과
+          }
+          return true
+        })
+        if (beforeEmotionFilter > questions.length) {
+          // 감정질문 필터링됨
+        }
+      }
+
       // ★ CAG 기반 post-generation 중복 필터링
       if (input.cagState && questions.length > 0) {
         const beforeCount = questions.length

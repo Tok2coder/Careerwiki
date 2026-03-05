@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 60      // 5개 × 12배치, 전부 병렬 처리
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.15.0'  // 검색쿼리에 내러티브/인터뷰 키워드 반영 + 데이터 품질 페널티 + 앵커링 강화 + 감정질문 제한
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.16.0'  // Risk 파이프라인 복구 + 감정질문 서버사이드 강제 + 노이즈 직업 관련성 필터
 
 // ============================================
 // Types
@@ -1344,11 +1344,11 @@ export function calculateStructuralRiskPenalty(
 }
 
 function calculateOverallScore(result: LLMJudgeResult): number {
-  // P0-3: Overall = Fit*0.45 + Desire*0.35 + Feasibility*0.20 - RiskPenalty(capped at 8)
+  // P0-3: Overall = Fit*0.45 + Desire*0.35 + Feasibility*0.20 - RiskPenalty(capped at 15)
   // v3.14: Feasibility 가중치 10%→20% 상향 — 배경/경험 차이가 순위에 실질 반영되도록
-  // riskPenalty cap 3→8 — 강한 미스매치(Q8/Q9 충돌)가 순위에 의미있게 반영되도록
+  // v3.16: riskPenalty cap 8→15 — tag-filter의 실제 페널티가 전달되므로 cap 확대
   const raw = (result.fitScore * 0.45) + (result.desireScore * 0.35) + (result.feasibilityScore * 0.20)
-  const cappedRisk = Math.min(result.riskPenalty, 8)
+  const cappedRisk = Math.min(result.riskPenalty, 15)
   return Math.round(clamp(raw - cappedRisk, 0, 100))
 }
 
@@ -1685,6 +1685,64 @@ function sanitizeKeywordOvermatching(
       if (isPhysicalByAttrs || isPhysicalByName) {
         shouldPenalize = true
         reason = `도메인 불일치 (exec:${execution}, anal:${analytical}, name:${isPhysicalByName})`
+      }
+    }
+
+    // ===== 체크 3: 범용 suffix 도메인 불일치 (v3.16) =====
+    // "연구원", "분석원" 등 범용 suffix가 벡터 유사도로 유입되지만
+    // 유저의 관심 도메인과 무관한 경우 감점
+    if (!shouldPenalize && r.desireScore >= 55) {
+      const INTEREST_DOMAIN_KEYWORDS: Record<string, string[]> = {
+        data_numbers: ['데이터', '통계', '수학', '경제', '금융', '회계', 'IT', '컴퓨터', '정보'],
+        tech: ['소프트웨어', 'IT', '컴퓨터', '프로그래밍', '개발', '전자', '정보', '보안', '네트워크'],
+        problem_solving: ['경영', '컨설팅', '전략', 'IT', '시스템', '정책', '기획'],
+        creative: ['디자인', '예술', '미디어', '콘텐츠', '영상', '음악', '패션', '광고'],
+        creating: ['디자인', '예술', '미디어', '콘텐츠', '영상', '음악', '패션', '광고'],
+        design: ['디자인', '그래픽', 'UI', 'UX', '시각', '제품', '인테리어'],
+        helping: ['교육', '복지', '상담', '의료', '간호', '심리', '돌봄'],
+        helping_teaching: ['교육', '복지', '상담', '의료', '간호', '심리', '돌봄', '교사'],
+        organizing: ['행정', '경영', '관리', '기획', '인사', '총무', '사무'],
+        research: ['연구', '학술', '과학', '실험', '분석'],
+        influencing: ['마케팅', '홍보', '영업', '광고', '브랜드'],
+      }
+
+      const GENERIC_SUFFIXES = ['연구원', '분석원', '조사원', '시험원', '검사원']
+
+      const userDomainKeywords = interests
+        .flatMap(i => INTEREST_DOMAIN_KEYWORDS[i] || [])
+
+      if (userDomainKeywords.length > 0) {
+        const hasGenericSuffix = GENERIC_SUFFIXES.some(s => r.job_name.endsWith(s))
+        if (hasGenericSuffix) {
+          const nameMatchesDomain = userDomainKeywords.some(kw => r.job_name.includes(kw))
+          if (!nameMatchesDomain) {
+            shouldPenalize = true
+            reason = `범용 suffix 도메인 불일치 (${r.job_name})`
+          }
+        }
+      }
+    }
+
+    // ===== 체크 4: 명백한 도메인 불일치 직업명 패턴 (v3.16) =====
+    if (!shouldPenalize && r.desireScore >= 55) {
+      const NOISE_NAME_PATTERNS = [
+        /버섯|양봉|양잠|양식장|축산|낙농|임업|원예/,    // 농림축산
+        /광부|광산|채굴|채석/,                          // 광업
+        /용접|도금|주조|단조|열처리|선반|압출/,          // 제조현장 기술
+        /반장|조장|현장감독/,                            // 현장감독
+        /고무|섬유|피혁|유리|도자기|석재/,               // 특수 소재
+      ]
+
+      const hasPhysicalInterest = interests.some(i =>
+        ['nature', 'physical_activity', 'manufacturing', 'helping_feedback'].includes(i)
+      )
+
+      if (!hasPhysicalInterest) {
+        const isNoiseJob = NOISE_NAME_PATTERNS.some(p => p.test(r.job_name))
+        if (isNoiseJob) {
+          shouldPenalize = true
+          reason = `명백한 도메인 불일치 직업명 (${r.job_name})`
+        }
       }
     }
 
