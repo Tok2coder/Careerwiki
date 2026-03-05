@@ -155,6 +155,7 @@ app.use('/api/ai-analyzer/*', async (c, next) => {
   return next()
 })
 
+
 // Auth routes
 app.route('/auth', auth)
 
