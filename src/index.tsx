@@ -69,7 +69,7 @@ const securityHeadersMiddleware = async (c: any, next: any) => {
     "img-src 'self' data: blob: https:; " +
     "font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
     "connect-src 'self' https://www.google-analytics.com https://pagead2.googlesyndication.com https://cdn.jsdelivr.net https://t1.kakaocdn.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com https://www.googletagmanager.com; " +
-    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://www.google.com; " +
+    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://www.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google; " +
     "object-src 'none'; " +
     "base-uri 'self'"
   )
