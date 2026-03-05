@@ -2,17 +2,54 @@
 
 유저가 "HowTo 발행"이라고 말하면 이 스킬을 실행한다.
 CareerWiki HowTo 가이드를 기획 → 작성 → 이미지 생성 → 발행 → 검증하는 전체 워크플로우.
-**주제는 자율 선정**: 기존 발행 글과 겹치지 않는 실용적인 진로/취업 관련 주제를 선택한다.
+---
+
+## 0. 주제 선정 기준
+
+### 기본 원칙
+- 기존 발행 글과 겹치지 않는 실용적인 진로/취업 관련 주제
+- **시의성 우선**: 최근 핫한 이슈·정책 변화와 연결된 주제를 우선 선택한다
+
+### 주제 발굴 방법
+1. **최신 이슈 기반**: 웹 검색으로 최근 진로/취업/교육 관련 뉴스를 확인한다
+   - 예: 의대 증원 발표 → 의사가 되는 과정 중 특정 스텝(의사국시, 레지던트 지원 등)을 주제로
+   - 예: AI 붐 → 비전공자 AI 직무 전환 방법
+   - 예: 공무원 채용 변화 → 특정 공무원 시험 과목별 공부법
+2. **직업 상세 페이지 → 세부 스텝 딥다이브**: careerwiki.org의 직업 상세 페이지에는 "되는 법"이 개괄적으로 있다. 그 안의 수많은 스텝 중 **하나를 골라** 구체적 팁·공부법·노하우를 다룬다
+   - 의사 → 의사국시 공부법, USMLE 준비법, 레지던트 매칭 전략 등
+   - 변호사 → 변호사시험 과목별 전략, 로스쿨 면접 준비 등
+   - 약사 → 약사국시 과목별 공부법, 약대 편입 준비 등
+3. **다양한 카테고리 로테이션**: 연속으로 같은 분야(예: 시험 가이드만 3개 연속)를 발행하지 않는다
+
+### 주제 선정 프로세스
+```
+[1] 기존 발행글 목록 확인 (겹침 방지)
+[2] 웹 검색: "최근 진로 취업 교육 이슈 2026" 등으로 트렌드 파악
+[3] 이슈와 연결된 구체적 세부 주제 도출
+[4] 주제 확정 후 리서치 시작
+```
+
+### 제목 작성 규칙
+- **자유 형식**: 매번 다른 톤과 구조의 제목을 사용한다
+- **금지**: 매번 "OO 합격 가이드: OO" 같은 동일 패턴 반복
+- 제목 예시 (다양하게):
+  - "의사국시, 이렇게 공부하면 된다"
+  - "비전공자의 데이터 분석가 전환 로드맵"
+  - "로스쿨 면접 완전 정복 A to Z"
+  - "소방공무원 체력시험, 3개월 컷 넘는 훈련법"
+  - "공인중개사 시험 독학 가이드: 회차별 난이도와 전략"
+  - "웹 개발자 포트폴리오, 이것만은 꼭 넣어라"
+  - "간호사에서 전문간호사로: 자격 취득부터 연봉까지"
 
 ---
 
 ## 1. 전체 작업 순서
 
 ```
-[1] 주제 선정 & 리서치
+[1] 주제 선정 (위 기준 참조) & 리서치
 [2] Tiptap JSON 콘텐츠 작성
 [3] 썸네일 이미지 생성 (evolink API)
-[4] 인라인 이미지 생성 (선택)
+[4] 인라인 이미지 생성 (필수, 1~2개)
 [5] 관련 직업/전공 매핑
 [6] publish-direct API 호출
 [7] 배포 후 검증
@@ -285,7 +322,24 @@ curl https://careerwiki.org/api/image/status/TASK_ID \
 # → { "status": "completed", "imageUrl": "https://files.evolink.ai/..." }
 ```
 
-**중요**: 썸네일은 publish body의 `thumbnailUrl`에 evolink URL을 직접 넣으면 됨. /api/image/save 호출 불필요.
+**중요 — R2 저장 필수!**: evolink URL은 4~5일 후 만료된다. 반드시 `/api/image/save`를 호출하여 R2에 영구 저장해야 한다.
+
+```bash
+# Step 3: R2에 영구 저장 (필수!)
+curl -X POST https://careerwiki.org/api/image/save \
+  -H "Content-Type: application/json" \
+  -H "Cookie: session_token=SESSION_TOKEN" \
+  -d '{
+    "taskId": "TASK_ID",
+    "type": "jobs",
+    "slug": "HowTo-TOPIC",
+    "imageUrl": "https://files.evolink.ai/.../image.webp"
+  }'
+# → { "imageUrl": "/uploads/jobs/job-HowTo-TOPIC.webp?v=..." }
+# 이 /uploads/... 경로를 thumbnailUrl로 사용한다
+```
+
+publish body의 `thumbnailUrl`에는 R2 경로(`/uploads/jobs/job-HowTo-TOPIC.webp`)를 넣거나, 발행 후 DB를 `json_set(meta_data, '$.thumbnailUrl', R2경로)`로 업데이트한다.
 
 ### 5-1b. 이미지 스타일 풀 (매번 다른 스타일 사용!)
 
@@ -310,9 +364,53 @@ curl https://careerwiki.org/api/image/status/TASK_ID \
 - 기술/IT 주제 → Neon Gradient, Pixel Art
 - 예술/감성 주제 → Watercolor, Paper Cut
 
-### 5-2. 인라인 이미지 생성 (선택사항)
+### 5-2. 인라인 이미지 생성 (필수)
 
-글 중간에 인포그래픽이나 상황 이미지를 1~2개 추가할 때:
+모든 HowTo 가이드에는 본문 중간에 인포그래픽/상황 이미지를 **1~2개 필수**로 포함한다.
+텍스트만 있는 글은 가독성이 떨어지고 시각적 흥미가 부족하다.
+
+#### 프롬프트 작성 가이드
+
+**기본 프롬프트** (간단한 아이콘/인포그래픽):
+```
+An infographic showing [내용], clean vector style, white background
+```
+
+**고화질 프롬프트** (매 2~3개 글 중 최소 1개는 이 수준으로 작성):
+장면 묘사, 조명, 구도, 분위기를 구체적으로 지정하면 훨씬 퀄리티 높은 이미지가 나온다.
+
+```
+예시 1 (시험 공부 장면):
+A focused Korean university student studying late at night in a cozy study cafe,
+warm desk lamp casting golden light on open textbooks and handwritten notes,
+a laptop showing practice exam questions, coffee cup beside the desk,
+photorealistic style, shallow depth of field, cinematic lighting,
+warm amber and cool blue tones, 4K detail
+
+예시 2 (체력 훈련 장면):
+Dynamic action shot of a young Korean athlete sprinting on a red track field,
+early morning golden hour sunlight, motion blur on legs suggesting speed,
+Olympic-quality stadium in background, determined facial expression,
+professional sports photography style, high contrast, vivid colors
+
+예시 3 (직업 현장):
+A modern hospital emergency room scene with medical professionals in action,
+soft fluorescent lighting, medical equipment and monitors in background,
+a young Korean doctor reviewing patient charts on a tablet,
+documentary photography style, natural colors, authentic atmosphere
+
+예시 4 (기술/IT):
+Aerial view of a developer's dual-monitor workspace with code editor open,
+dark theme IDE showing colorful syntax-highlighted code,
+mechanical keyboard, succulent plant, and coffee mug on a clean minimal desk,
+tech aesthetic, cool blue and purple ambient lighting, ultra-detailed
+```
+
+**프롬프트 품질 규칙**:
+- 3개 글 연속으로 단순 프롬프트만 쓰지 않는다
+- 핵심 이미지(글의 메인 비주얼)는 고화질 프롬프트 권장
+- 보조 이미지(표 아래 아이콘 등)는 간단 프롬프트 OK
+- 한국인/한국 배경을 포함하면 독자 친근감 상승
 
 ```bash
 # evolink API로 생성 (slug을 howto 전용으로!)
@@ -322,14 +420,14 @@ curl -X POST https://careerwiki.org/api/image/generate \
   -d '{
     "type": "jobs",
     "slug": "howto-TOPIC-img1",
-    "promptOverride": "An infographic showing [내용], clean vector style, white background"
+    "promptOverride": "여기에 상세 프롬프트 작성"
   }'
 ```
 
-Tiptap JSON에 이미지 노드 삽입:
+인라인 이미지도 `/api/image/save`로 R2에 저장한 후, R2 경로를 사용한다:
 ```json
 { "type": "image", "attrs": {
-  "src": "https://files.evolink.ai/.../task-raphael-XXXX.webp",
+  "src": "/uploads/jobs/job-howto-TOPIC-img1.webp",
   "alt": "이미지 설명",
   "width": 720,
   "align": "center"
@@ -405,7 +503,7 @@ Cookie: session_token=SESSION_TOKEN
 [ ] 각주 번호가 본문에 [1], [2] 등으로 표시됨
 [ ] 각주가 위에서부터 1→2→3→4→5 순서로 등장함 (뒤죽박죽 아님!)
 [ ] 페이지 하단 "출처" 접이식 섹션에 각주 목록이 있음
-[ ] 인라인 이미지가 적절한 위치에 표시됨
+[ ] 인라인 이미지가 1~2개 적절한 위치에 표시됨 (필수!)
 [ ] QnA 블록의 Q/A 아이콘이 텍스트와 정렬됨
 [ ] checkpointBox/conclusionBox 아이콘이 첫 줄 왼쪽에 위치
 [ ] 내부 링크(/job/xxx, /major/xxx)가 작동함
@@ -502,9 +600,10 @@ curl -s "https://careerwiki.org/howto/SLUG?nocache=1" | \
    → POST /api/image/generate (slug: "howto-경찰체력시험-thumb")
    → 30초 대기 → status 확인 → evolink URL 획득
 
-5. 인라인 이미지 (선택)
+5. 인라인 이미지 (필수, 1~2개)
    → POST /api/image/generate (slug: "howto-경찰체력시험-img1")
-   → Tiptap JSON에 image 노드 삽입
+   → /api/image/save로 R2에 영구 저장
+   → Tiptap JSON에 image 노드 삽입 (R2 경로 사용)
 
 6. 관련 직업/전공 매핑
    → relatedJobs: [{ slug, name }] — name 필드 필수!
