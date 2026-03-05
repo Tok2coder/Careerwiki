@@ -229,6 +229,14 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
           throw new Error('PROFILE_NOT_FOUND')
         }
 
+        // 필수 필드 보완 — user_contributed_json만 있는 경우 id 등이 누락될 수 있음
+        if (!result.profile.id) {
+          result.profile.id = resolvedId
+        }
+        if (!result.profile.name) {
+          result.profile.name = slug || resolvedId
+        }
+
         // 관련 직업 중 DB에 존재하는 직업 매핑 조회
         let existingJobSlugs = new Map<string, string>()
         const sidebarJobs = result.profile.sidebarJobs

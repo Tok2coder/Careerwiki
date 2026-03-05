@@ -64,12 +64,12 @@ const securityHeadersMiddleware = async (c: any, next: any) => {
   c.header(
     'Content-Security-Policy',
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://t1.kakaocdn.net https://www.googletagmanager.com https://pagead2.googlesyndication.com https://www.google-analytics.com; " +
     "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
     "img-src 'self' data: blob: https:; " +
     "font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
-    "connect-src 'self'; " +
-    "frame-src 'none'; " +
+    "connect-src 'self' https://www.google-analytics.com https://pagead2.googlesyndication.com https://cdn.jsdelivr.net https://t1.kakaocdn.net; " +
+    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
     "object-src 'none'; " +
     "base-uri 'self'"
   )

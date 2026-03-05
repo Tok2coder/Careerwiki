@@ -2444,7 +2444,7 @@ const renderSourcesCollapsible = (
   partials?: Partial<Record<DataSource, UnifiedJobDetail | null>>,
   userSourcesFlatFromTemplate?: Array<{ id: number; fieldKey: string; text: string }>
 ): string => {
-  const normalizedId = profile.id.replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'default'
+  const normalizedId = (profile.id || profile.name || 'default').replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'default'
   const panelId = `job-source-panel-${normalizedId}`
   const normalizedSources = Array.isArray(profile.sources) ? profile.sources : []
 
