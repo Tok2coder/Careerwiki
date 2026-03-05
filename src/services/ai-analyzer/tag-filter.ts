@@ -403,7 +403,7 @@ export async function applyTagFilter(
     let totalPenalty = 0
     const warnings: string[] = []
     const appliedRules: Array<{ ruleId: string; warning: string; penalty: number }> = []
-    
+
     if (isTagged) {
       for (const rule of RISK_PENALTY_RULES) {
         const userHasConstraint = userConstraints[rule.userConstraint]
@@ -419,6 +419,35 @@ export async function applyTagFilter(
             })
           }
         }
+      }
+
+      // ★ 데이터 품질 페널티: 카테고리 필드가 전부 기본값이면 태깅 신뢰도 낮음
+      // 기본값: job_type='knowledge', work_environment='office', physical_demand='medium', employment_type='permanent'
+      const isAllDefaults =
+        attrs.job_type === 'knowledge' &&
+        attrs.work_environment === 'office' &&
+        attrs.physical_demand === 'medium' &&
+        attrs.employment_type === 'permanent'
+
+      // 수치 속성도 전부 50이면 flat-50 노이즈 (더 큰 페널티)
+      const isFlat50 = isAllDefaults &&
+        attrs.analytical === 50 && attrs.creative === 50 &&
+        attrs.execution === 50 && attrs.people_facing === 50
+
+      if (isFlat50) {
+        totalPenalty += 5
+        appliedRules.push({
+          ruleId: 'data_quality_flat50',
+          warning: '태깅 데이터 품질 낮음 (flat-50)',
+          penalty: 5,
+        })
+      } else if (isAllDefaults) {
+        totalPenalty += 3
+        appliedRules.push({
+          ruleId: 'data_quality_all_defaults',
+          warning: '카테고리 태깅 기본값',
+          penalty: 3,
+        })
       }
     }
     

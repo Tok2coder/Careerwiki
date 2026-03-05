@@ -2235,12 +2235,73 @@ function buildArchetypeQueries(miniModule: MiniModuleResult): string[] {
 }
 
 // ============================================
+// 인터뷰 답변에서 구체적 키워드 추출 → 검색 쿼리 추가
+// 유저가 실제로 말한 구체적 직업/분야명을 벡터 검색에 반영
+// ============================================
+function extractConcreteKeywordsFromText(texts: string[]): string[] {
+  const combined = texts.join(' ')
+  if (!combined || combined.length < 5) return []
+
+  // 구체적 직업/분야/활동 관련 키워드 패턴 (한국어)
+  const CONCRETE_PATTERNS = [
+    // 직업명 패턴
+    /(?:개발자|엔지니어|디자이너|기획자|연구원|분석가|컨설턴트|매니저|교사|의사|간호사|변호사|회계사|마케터|프로듀서|에디터|작가|기자|통역사|번역가|세무사|노무사|감정평가사|건축가|약사|수의사|치과의사|한의사|상담사|사서|큐레이터|아나운서)/g,
+    // IT/개발 분야
+    /(?:프론트엔드|백엔드|풀스택|데이터|AI|인공지능|머신러닝|딥러닝|클라우드|보안|네트워크|DevOps|QA|UX|UI)/g,
+    // 산업/분야
+    /(?:금융|교육|의료|헬스케어|제조|물류|유통|미디어|광고|게임|엔터테인먼트|바이오|제약|에너지|환경|건설|부동산|법률|회계|세무|무역|항공|해운|농업|식품|패션|뷰티|스포츠|문화|예술|음악|영화|방송|출판|IT|소프트웨어|하드웨어|반도체|자동차|로봇|우주항공)/g,
+    // 구체적 활동
+    /(?:프로그래밍|코딩|데이터분석|마케팅|영업|상담|교육|연구|설계|기획|관리|운영|제작|편집|번역|통역|회계|감사|법률|의료|간호|치료|재활)/g,
+  ]
+
+  const keywords = new Set<string>()
+  for (const pattern of CONCRETE_PATTERNS) {
+    const matches = combined.match(pattern)
+    if (matches) {
+      for (const m of matches) {
+        keywords.add(m)
+      }
+    }
+  }
+
+  return [...keywords]
+}
+
+/**
+ * 내러티브 + 인터뷰 답변에서 추가 검색 쿼리 생성
+ * miniModule 토큰의 추상적 키워드를 보완하는 구체적 쿼리
+ */
+export function buildNarrativeSearchQueries(
+  narrativeTexts: string[],
+  roundAnswerTexts: string[]
+): string[] {
+  const allTexts = [...narrativeTexts, ...roundAnswerTexts].filter(Boolean)
+  if (allTexts.length === 0) return []
+
+  const concreteKeywords = extractConcreteKeywordsFromText(allTexts)
+  if (concreteKeywords.length === 0) return []
+
+  const queries: string[] = []
+
+  // 구체적 키워드를 3-5개씩 묶어 검색 쿼리 생성
+  const chunkSize = Math.max(3, Math.ceil(concreteKeywords.length / 3))
+  for (let i = 0; i < concreteKeywords.length; i += chunkSize) {
+    const chunk = concreteKeywords.slice(i, i + chunkSize)
+    queries.push(`${chunk.join(' ')} 관련 직업`)
+  }
+
+  // 최대 3개 쿼리
+  return queries.slice(0, 3)
+}
+
+// ============================================
 // Multi-Search 쿼리 생성 (LLM 쿼리 분할 + 차원별 키워드)
 // 10-12개 쿼리로 벡터 공간의 다양한 영역 탐색
 // ============================================
 export async function buildMultiSearchQueries(
   miniModule: MiniModuleResult,
-  openaiApiKey: string
+  openaiApiKey: string,
+  narrativeData?: { narrativeTexts?: string[]; roundAnswerTexts?: string[] }
 ): Promise<string[]> {
   // 1. 기존 LLM 쿼리 (종합 직업명 리스트)
   const llmQuery = await buildLLMSearchQuery(miniModule, openaiApiKey)
@@ -2291,12 +2352,21 @@ export async function buildMultiSearchQueries(
   // 4. 커리어 아키타입 쿼리 (흥미+가치 조합 → 주류 직업군 보장)
   const archetypeQueries = buildArchetypeQueries(miniModule)
 
-  // 5. 모든 쿼리 결합 (종합 + 서브쿼리 + 차원별 + 아키타입)
+  // 5. 내러티브/인터뷰 답변에서 구체적 키워드 쿼리 (Phase 10: 검색 편향 해소)
+  const narrativeQueries = narrativeData
+    ? buildNarrativeSearchQueries(
+        narrativeData.narrativeTexts || [],
+        narrativeData.roundAnswerTexts || []
+      )
+    : []
+
+  // 6. 모든 쿼리 결합 (종합 + 서브쿼리 + 차원별 + 아키타입 + 내러티브)
   const allQueries = [
     llmQuery,            // 종합 (가장 중요)
     ...subQueries,       // LLM 출력 분할 (5-8개)
     ...dimensionQueries, // 흥미/강점/가치 한국어 차원 (2-3개)
     ...archetypeQueries, // 주류 커리어 패스 보장 (1-3개)
+    ...narrativeQueries, // 인터뷰 구체 키워드 (0-3개)
   ]
 
 
@@ -2345,9 +2415,10 @@ export async function expandCandidatesV3(
   options: {
     targetSize?: number
     miniModule?: MiniModuleResult
+    narrativeData?: { narrativeTexts?: string[]; roundAnswerTexts?: string[] }
   } = {}
 ): Promise<CandidateExpansionResult> {
-  const { targetSize = 500, miniModule } = options
+  const { targetSize = 500, miniModule, narrativeData } = options
   const startTime = Date.now()
 
   // Vectorize 또는 OpenAI API 키가 없으면 fallback
@@ -2366,7 +2437,7 @@ export async function expandCandidatesV3(
     throw new Error('[V3 Vectorize] miniModule이 필수입니다 - LLM 검색 쿼리 생성에 필요')
   }
 
-  const queries = await buildMultiSearchQueries(miniModule, openaiApiKey)
+  const queries = await buildMultiSearchQueries(miniModule, openaiApiKey, narrativeData)
 
   // 2. 벡터 검색 (Multi-Query 병렬 검색, OpenAI Embedding)
   // Vectorize 로컬 실행 불가 시 DB fallback (wrangler pages dev 한계)

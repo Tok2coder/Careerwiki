@@ -605,6 +605,64 @@ function detectBackgroundKeywords(text: string): string[] {
   return detectedCategories
 }
 
+/**
+ * 이전 답변에서 앵커링용 인용 가능 구절을 추출
+ * 2~15자 길이의 구체적이고 감정/가치가 담긴 핵심 표현을 찾음
+ */
+function extractQuotablePhrases(
+  previousAnswers: InterviewerInput['previousRoundAnswers'],
+  narrativeFacts?: InterviewerInput['narrativeFacts']
+): string[] {
+  const allTexts: string[] = []
+
+  // 이전 라운드 답변
+  for (const ans of previousAnswers) {
+    if (ans.answer && ans.answer.length > 5) {
+      allTexts.push(ans.answer)
+    }
+  }
+
+  // 내러티브 답변
+  if (narrativeFacts) {
+    if (narrativeFacts.highAliveMoment) allTexts.push(narrativeFacts.highAliveMoment)
+    if (narrativeFacts.lostMoment) allTexts.push(narrativeFacts.lostMoment)
+    if (narrativeFacts.existentialAnswer) allTexts.push(narrativeFacts.existentialAnswer)
+    const story = (narrativeFacts as any).life_story || (narrativeFacts as any).storyAnswer
+    if (story) allTexts.push(story)
+  }
+
+  if (allTexts.length === 0) return []
+
+  const phrases = new Set<string>()
+
+  for (const text of allTexts) {
+    // 패턴 1: "~것 같다/같아요" 류 가치 표현
+    const valuePatterns = text.match(/[가-힣a-zA-Z]{2,12}(?:이|가|을|를|은|는) (?:중요|싫|좋|힘들|두렵|불안|답답|보람|재미있|행복|걱정|만족|아쉬)[가-힣]{0,6}/g)
+    if (valuePatterns) valuePatterns.forEach(p => phrases.add(p.trim()))
+
+    // 패턴 2: 따옴표로 이미 강조된 구절
+    const quoted = text.match(/['"][^'"]{2,20}['"]/g)
+    if (quoted) quoted.forEach(q => phrases.add(q.replace(/['"]/g, '').trim()))
+
+    // 패턴 3: "~하고 싶다/싶어요" 류 욕망 표현
+    const desirePatterns = text.match(/[가-힣]{2,15}(?:하고 싶|되고 싶|갖고 싶|만들고 싶|살고 싶)[가-힣]{0,4}/g)
+    if (desirePatterns) desirePatterns.forEach(p => phrases.add(p.trim()))
+
+    // 패턴 4: "~때문에/때문이" 류 원인 표현
+    const causePatterns = text.match(/[가-힣]{2,12} ?때문[에이][가-힣]{0,4}/g)
+    if (causePatterns) causePatterns.forEach(p => phrases.add(p.trim()))
+
+    // 패턴 5: 짧은 문장 단위로 핵심 표현 (절대/반드시/가장/제일 등 강조 표현이 있는 절)
+    const emphasisPatterns = text.match(/(?:절대|반드시|가장|제일|진짜|정말|완전)[가-힣 ]{2,15}/g)
+    if (emphasisPatterns) emphasisPatterns.forEach(p => phrases.add(p.trim()))
+  }
+
+  // 2~20자 필터링 + 최대 8개
+  return [...phrases]
+    .filter(p => p.length >= 2 && p.length <= 20)
+    .slice(0, 8)
+}
+
 function buildInterviewContext(input: InterviewerInput): string {
   // P1-1: [USER_DATA] 태그로 사용자 입력 감싸기 (인젝션 방어)
   const parts: string[] = ['[USER_DATA]']
@@ -794,6 +852,19 @@ function buildInterviewContext(input: InterviewerInput): string {
       }
     }
     parts.push('')
+
+    // ★★★ QUOTABLE_PHRASES: 앵커링용 인용 가능 구절 추출 ★★★
+    // LLM이 STEP 4 앵커링 규칙을 따르기 쉽도록, 답변에서 인용할 만한 핵심 표현을 미리 추출
+    const quotablePhrases = extractQuotablePhrases(input.previousRoundAnswers, input.narrativeFacts)
+    if (quotablePhrases.length > 0) {
+      parts.push('[QUOTABLE_PHRASES - 앵커링용! 아래 구절을 질문에 인용하세요 (STEP 4 필수)]')
+      parts.push('**5개 질문 중 최소 3개에서 아래 구절 중 하나를 따옴표로 인용하세요:**')
+      quotablePhrases.forEach((phrase, i) => {
+        parts.push(`${i + 1}. "${phrase}"`)
+      })
+      parts.push('사용법: "말씀하신 \'구절\' 부분이 인상적인데요," → 질문')
+      parts.push('[/QUOTABLE_PHRASES]\n')
+    }
   }
   
   // 커리어 상태

@@ -5258,13 +5258,16 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     // Workers AI(분산 GPU)가 temp=0에서도 비결정적이므로, 결과 자체를 캐싱
     // ============================================
     let recCacheHash: string | null = null
+    // Phase 10: 내러티브/답변 데이터를 캐시 해시 + 검색 쿼리 양쪽에서 사용
+    let nfRow: { high_alive_moment?: string; lost_moment?: string } | null = null
+    let raRows: { results?: Array<{ answer: string }> } | null = null
     if (payload.mini_module_result) {
       try {
         // 캐시 키: mini_module 토큰 + narrative_facts + 모든 round_answers
-        const nfRow = await db.prepare(
+        nfRow = await db.prepare(
           'SELECT high_alive_moment, lost_moment FROM narrative_facts WHERE session_id = ?'
         ).bind(session_id).first<{ high_alive_moment?: string; lost_moment?: string }>()
-        const raRows = await db.prepare(
+        raRows = await db.prepare(
           'SELECT answer FROM round_answers WHERE session_id = ? ORDER BY round_number, question_id'
         ).bind(session_id).all<{ answer: string }>()
 
@@ -5386,6 +5389,12 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       vectorSearchProfile = buildSearchProfileFromMiniModule(payload.mini_module_result)
     }
 
+    // Phase 10: 내러티브/인터뷰 답변에서 구체적 키워드를 벡터 검색에 반영
+    const narrativeTexts: string[] = []
+    if (nfRow?.high_alive_moment) narrativeTexts.push(nfRow.high_alive_moment)
+    if (nfRow?.lost_moment) narrativeTexts.push(nfRow.lost_moment)
+    const roundAnswerTexts = (raRows?.results || []).map(r => r.answer).filter(Boolean)
+
     const expansionResult = await expandCandidatesV3(
       db,
       env.VECTORIZE,
@@ -5394,6 +5403,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       {
         targetSize: topK,
         miniModule: payload.mini_module_result,
+        narrativeData: { narrativeTexts, roundAnswerTexts },
       }
     )
 

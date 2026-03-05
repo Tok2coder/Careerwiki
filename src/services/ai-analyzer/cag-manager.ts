@@ -480,6 +480,19 @@ export interface CAGGuardResult {
   reason?: string
 }
 
+// 감정 질문 패턴: "느꼈나요", "기분이", "감정" 등
+const EMOTION_QUESTION_PATTERNS = [
+  /어떤 (?:감정|느낌|기분)/,
+  /(?:느꼈|느끼셨|느끼나|느끼시)/,
+  /(?:감정이|기분이|마음이) (?:어떠|어떤|어땠)/,
+  /(?:불안|답답|두렵|무섭|화가|짜증|슬프|우울|외롭)/,
+  /감정적으로/,
+]
+
+function isEmotionQuestion(text: string): boolean {
+  return EMOTION_QUESTION_PATTERNS.some(p => p.test(text))
+}
+
 export function cagGuardQuestion(
   state: CAGState,
   questionText: string,
@@ -487,34 +500,47 @@ export function cagGuardQuestion(
 ): CAGGuardResult {
   // 1. 이미 물어본 질문
   if (isQuestionAlreadyAsked(state, questionText)) {
-    return { 
-      allowed: false, 
-      reason: '이미 유사한 질문을 했습니다' 
+    return {
+      allowed: false,
+      reason: '이미 유사한 질문을 했습니다'
     }
   }
-  
+
   // 2. 이미 충분히 커버된 축
   if (targetAxis) {
     const axisState = state.axis_coverage_state[targetAxis]
     if (axisState.confidence > 0.8) {
-      return { 
-        allowed: false, 
-        reason: `${targetAxis} 축은 이미 충분한 정보가 있습니다` 
+      return {
+        allowed: false,
+        reason: `${targetAxis} 축은 이미 충분한 정보가 있습니다`
       }
     }
   }
-  
+
   // 3. 같은 라운드에서 너무 많은 질문
   const currentRoundQuestions = state.asked_questions_log.filter(
     q => q.round === state.currentRound
   )
   if (currentRoundQuestions.length >= 5) {
-    return { 
-      allowed: false, 
-      reason: '이 라운드에서 이미 충분한 질문을 했습니다' 
+    return {
+      allowed: false,
+      reason: '이 라운드에서 이미 충분한 질문을 했습니다'
     }
   }
-  
+
+  // 4. 감정 질문 제한: 같은 라운드에서 감정 질문은 1개까지만
+  if (isEmotionQuestion(questionText)) {
+    const emotionQuestionsInRound = currentRoundQuestions.filter(
+      q => q.questionText && isEmotionQuestion(q.questionText)
+    )
+    if (emotionQuestionsInRound.length >= 1) {
+      return {
+        allowed: false,
+        reason: '이 라운드에서 이미 감정 질문을 했습니다. 판단기준/권한/재량 질문으로 전환하세요',
+      }
+    }
+  }
+
   return { allowed: true }
 }
 

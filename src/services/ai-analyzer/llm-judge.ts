@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 60      // 5개 × 12배치, 전부 병렬 처리
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.14.0'  // P0: 토큰 매핑 RIASEC 기반 수정 + 신입 유저 Feasibility 개선 + 가중치 조정
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.15.0'  // 검색쿼리에 내러티브/인터뷰 키워드 반영 + 데이터 품질 페널티 + 앵커링 강화 + 감정질문 제한
 
 // ============================================
 // Types
