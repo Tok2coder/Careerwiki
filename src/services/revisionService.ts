@@ -9,6 +9,27 @@
 import type { D1Database } from '@cloudflare/workers-types'
 import { invalidatePageCache } from '../utils/page-cache'
 
+const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype'])
+
+/**
+ * 복원용 깊은 병합 (profileDataService.deepMergeProfile과 동일 로직)
+ * 중첩 객체를 깊은 병합하여 ETL 구조화 필드를 보존
+ */
+function deepMergeForRestore(target: any, source: any): any {
+  if (!source || (typeof source === 'object' && Object.keys(source).length === 0)) return target
+  if (!target) return source
+  const result = { ...target }
+  for (const key of Object.keys(source)) {
+    if (DANGEROUS_KEYS.has(key)) continue
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      result[key] = deepMergeForRestore(result[key] || {}, source[key])
+    } else if (source[key] !== undefined) {
+      result[key] = source[key]
+    }
+  }
+  return result
+}
+
 /**
  * Revision 레코드 타입
  */
@@ -519,50 +540,70 @@ export async function restoreRevision(
   }
   
   // 실제 데이터 복원 (jobs/majors/pages 테이블 업데이트)
-  // 🆕 복원 시: data_snapshot에 저장된 병합된 데이터를 user_contributed_json으로 저장
-  // api_data_json은 유지하여 원본 데이터 보존
-  // 이렇게 하면 user_contributed_json이 api_data_json보다 우선순위를 가지므로 복원된 데이터가 표시됨
+  // 복원 시: 리비전 스냅샷의 유저 편집 데이터를 user_contributed_json으로 저장
+  // merged_profile_json은 api_data + user_contributed + admin_data 3계층 머지로 재생성
+  // → ETL 구조화 필드(overviewWork 등)가 api_data_json에서 보존됨
   if (targetRevision.entityType === 'job') {
-    // 복원된 데이터를 user_contributed_json으로 저장
-    // 메타데이터 필드 제거
+    // 유저 편집 필드만 추출 (메타데이터 제외)
     const userContributedData: Record<string, any> = {}
     for (const [key, value] of Object.entries(restoredData)) {
-      // 메타데이터 필드는 제외
       if (!key.startsWith('_') && key !== 'id' && key !== 'name') {
         userContributedData[key] = value
       }
     }
-    
+
+    // 현재 api_data_json, admin_data_json 조회 (ETL 데이터 보존)
+    const jobRow = await db.prepare(
+      'SELECT api_data_json, admin_data_json FROM jobs WHERE id = ?'
+    ).bind(targetRevision.entityId).first<{ api_data_json: string | null, admin_data_json: string | null }>()
+
+    let apiData: any = {}
+    let adminData: any = {}
+    try { apiData = jobRow?.api_data_json ? JSON.parse(jobRow.api_data_json) : {} } catch {}
+    try { adminData = jobRow?.admin_data_json ? JSON.parse(jobRow.admin_data_json) : {} } catch {}
+
+    // 3계층 머지: api_data + user_contributed + admin_data
+    const mergedData = deepMergeForRestore(deepMergeForRestore(apiData, userContributedData), adminData)
+
     const now = Date.now()
     await db.prepare(`
-      UPDATE jobs 
+      UPDATE jobs
       SET user_contributed_json = ?, merged_profile_json = ?, user_last_updated_at = ?
       WHERE id = ?
     `).bind(
       JSON.stringify(userContributedData),
-      JSON.stringify(restoredData),
+      JSON.stringify(mergedData),
       now,
       targetRevision.entityId
     ).run()
-    
-    // api_data_json과 admin_data_json은 유지 (원본 데이터 보존)
   } else if (targetRevision.entityType === 'major') {
-    // 전공도 동일한 로직 적용
     const userContributedData: Record<string, any> = {}
     for (const [key, value] of Object.entries(restoredData)) {
       if (!key.startsWith('_') && key !== 'id' && key !== 'name') {
         userContributedData[key] = value
       }
     }
-    
+
+    // 현재 api_data_json, admin_data_json 조회
+    const majorRow = await db.prepare(
+      'SELECT api_data_json, admin_data_json FROM majors WHERE id = ?'
+    ).bind(targetRevision.entityId).first<{ api_data_json: string | null, admin_data_json: string | null }>()
+
+    let apiData: any = {}
+    let adminData: any = {}
+    try { apiData = majorRow?.api_data_json ? JSON.parse(majorRow.api_data_json) : {} } catch {}
+    try { adminData = majorRow?.admin_data_json ? JSON.parse(majorRow.admin_data_json) : {} } catch {}
+
+    const mergedData = deepMergeForRestore(deepMergeForRestore(apiData, userContributedData), adminData)
+
     const now = Date.now()
     await db.prepare(`
-      UPDATE majors 
+      UPDATE majors
       SET user_contributed_json = ?, merged_profile_json = ?, user_last_updated_at = ?
       WHERE id = ?
     `).bind(
       JSON.stringify(userContributedData),
-      JSON.stringify(restoredData),
+      JSON.stringify(mergedData),
       now,
       targetRevision.entityId
     ).run()
