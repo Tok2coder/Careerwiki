@@ -837,12 +837,13 @@ jobEditorRoutes.post('/api/job/:id/refetch-api-data', authMiddleware, async (c) 
       return c.json({ success: false, error: 'Failed to fetch data from API' }, 500)
     }
 
-    const rawApiData = result.rawApiData || { careernet: null, goyong24: null }
+    // rawApiData 제거됨 — profile(merged_profile_json) 데이터를 api_data_json에 저장
+    const apiData = result.profile
 
     const now = Date.now()
-    const apiDataJson = JSON.stringify(rawApiData)
+    const apiDataJson = JSON.stringify(apiData)
 
-    const normalized = JSON.stringify(rawApiData, Object.keys(rawApiData).sort())
+    const normalized = JSON.stringify(apiData, Object.keys(apiData as any).sort())
     const encoder = new TextEncoder()
     const dataBuffer = encoder.encode(normalized)
     const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer)

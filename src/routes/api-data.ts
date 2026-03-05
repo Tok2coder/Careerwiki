@@ -316,7 +316,7 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
       (profile as any).heroSummary ||
       (profile.summary || careernetSummary || goyong24Summary)?.split('\n')[0]?.trim() ||
       ''
-    let rawApiData = result.rawApiData || { careernet: null, goyong24: null }
+    // rawApiData 제거됨 — 모든 데이터를 profile(merged_profile_json)에서 직접 읽음
     
     // 헬퍼 함수: 배열에서 이름/텍스트 추출 (핵심 역량, 적성, 흥미, 관련학과, 교육과정, 진로탐색 등)
     const extractListItems = (list: any[] | null | undefined): string[] => {
@@ -361,51 +361,7 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
         .filter(Boolean)
     }
     
-    // 🆕 api_data_json을 직접 읽어서 rawApiData 보완
-    // getUnifiedJobDetailWithRawData가 careernet이 null이면 rawCareernetData를 설정하지 않을 수 있음
-    // 하지만 실제 api_data_json에는 { careernet: null, goyong24: {...} } 형식으로 저장되어 있을 수 있음
-    if (c.env.DB) {
-      try {
-        // 실제 DB ID로 조회
-        let dbResult = await c.env.DB.prepare(
-          'SELECT id, api_data_json FROM jobs WHERE id = ? AND is_active = 1 LIMIT 1'
-        ).bind(id).first<{ id: string; api_data_json: string | null }>()
-        
-        if (!dbResult && id.includes(':')) {
-          const parts = id.split(':')
-          if (parts.length > 1) {
-            const extractedId = parts[parts.length - 1].replace(/^G_/, '').replace(/^C_/, '')
-            dbResult = await c.env.DB.prepare(
-              'SELECT id, api_data_json FROM jobs WHERE id = ? AND is_active = 1 LIMIT 1'
-            ).bind(extractedId).first<{ id: string; api_data_json: string | null }>()
-          }
-        }
-        
-        if (!dbResult) {
-          const normalizedSlug = id.toLowerCase().replace(/[-,·ㆍ\/\s()]/g, '')
-          dbResult = await c.env.DB.prepare(
-            'SELECT id, api_data_json FROM jobs WHERE name_normalized = ? AND is_active = 1 LIMIT 1'
-          ).bind(normalizedSlug).first<{ id: string; api_data_json: string | null }>()
-        }
-        
-        if (dbResult?.api_data_json) {
-          try {
-            const apiDataFromDb = JSON.parse(dbResult.api_data_json)
-            // api_data_json의 구조를 그대로 사용 (careernet이 null이어도 포함)
-            rawApiData = {
-              careernet: apiDataFromDb.careernet ?? null,
-              goyong24: apiDataFromDb.goyong24 ?? null
-            }
-          } catch (parseError) {
-          }
-        }
-      } catch (dbError) {
-      }
-    }
-
-    // 실제 렌더링에 사용되는 병합 데이터 생성
-    const { mergeJobData } = await import('../services/jobDataMerger')
-    const mergedData = mergeJobData(rawApiData)
+    // 모든 데이터를 profile(merged_profile_json)에서 직접 읽음
 
     // 🆕 템플릿과 정확히 동일한 로직으로 필드 추출 (renderUnifiedJobDetail과 일치)
     // 템플릿에서는 profile이 이미 user_contributed_json과 admin_data_json이 병합된 결과를 사용
@@ -413,21 +369,17 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
     // 히어로 설명: 템플릿과 동일한 우선순위 (heroIntro > summary > goyong24)
     // 템플릿: const heroDescription = profile.heroIntro?.split('\n')[0]?.trim() || profile.summary || ...
     // 편집 모드에서도 실제 표시되는 데이터와 동일하게 표시
-    const summaryForEdit = 
-      profile.heroIntro ||  // heroIntro가 있으면 이것을 우선 사용
-      profile.summary || 
-      rawApiData?.goyong24?.duty?.jobSum || ''
+    const summaryForEdit =
+      profile.heroIntro ||
+      profile.summary || ''
 
-    // "하는 일" 섹션: 템플릿과 동일한 로직
-    // 템플릿: const workSummary = mergedData.work.summary || profile.summary
-    const workSummary = mergedData.work.summary || profile.summary || ''
-    
-    // 주요 업무: 템플릿과 동일한 로직
-    // 템플릿: workSimple이 있으면 그것을 사용, 없으면 profile.duties
-    const workSimple = mergedData.work.simple
+    // "하는 일" 섹션
+    const workSummary = profile.work?.summary || profile.summary || ''
+
+    // 주요 업무
+    const workSimple = profile.work?.simple
     let duties = ''
     if (workSimple && Array.isArray(workSimple) && workSimple.length > 0) {
-      // workSimple이 있으면 템플릿과 동일하게 처리
       duties = workSimple
         .map((item: any) => {
           const text = typeof item === 'string' ? item : item.work || item.list_content || ''
@@ -436,13 +388,11 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
         .filter(Boolean)
         .join('\n')
     } else if (profile.duties?.trim()) {
-      // workSimple이 없으면 profile.duties 사용 (템플릿과 동일)
       duties = profile.duties
     }
 
-    // 태그: 템플릿과 동일한 로직 (rawApiData.careernet.encyclopedia.tagList)
-    // 템플릿에서는 tagList를 rawApiData.careernet.encyclopedia.tagList에서 가져옴
-    const tagList = rawApiData?.careernet?.encyclopedia?.tagList || []
+    // 태그: profile에서 직접 읽기 (ETL에서 이미 포함)
+    const tagList = (profile as any).tagList || (profile as any).careernetOnly?.tagList || []
     const tagText = Array.isArray(tagList) 
       ? tagList.map((tag: any) => {
           // 템플릿과 동일한 로직: string이면 그대로, object면 tag 또는 list_content 추출
@@ -554,7 +504,7 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
       
       // 개요 - 커리어 전망
       overviewProspect: {
-        main: profile.overviewProspect?.main || mergedData.prospect.primary || profile.prospect || ''
+        main: profile.overviewProspect?.main || profile.prospect || ''
       },
       
       // 개요 - 핵심 능력·자격

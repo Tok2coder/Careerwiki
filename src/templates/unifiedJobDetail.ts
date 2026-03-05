@@ -28,10 +28,6 @@ export interface UnifiedJobDetailTemplateParams {
   profile: UnifiedJobDetail
   partials?: Partial<Record<DataSource, UnifiedJobDetail | null>>
   sources?: SourceStatusRecord
-  rawApiData?: {
-    careernet?: any
-    goyong24?: any
-  }
   existingJobSlugs?: Map<string, string>  // DB에 존재하는 직업명 → slug 매핑
   relatedHowtos?: Array<{ slug: string; title: string; summary: string }>  // 이 직업을 참조하는 HowTo
 }
@@ -3168,7 +3164,7 @@ const renderKecoCodeList = (profile: UnifiedJobDetail): string => {
 
 
 
-export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData, existingJobSlugs, relatedHowtos }: UnifiedJobDetailTemplateParams): string => {
+export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJobSlugs, relatedHowtos }: UnifiedJobDetailTemplateParams): string => {
   // profile은 merged_profile_json에서 파싱된 데이터 (평탄한 구조 + 계층적 구조 병행)
   // ETL에서 기본 필드들을 모두 포함하고 있음
   
@@ -3208,7 +3204,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
     (profile.summary ? safeTrim(profile.summary).replace(/\n+/g, ' ') : null) ||  // 줄바꿈 → 공백
     profile.work?.summary?.split('\n')[0]?.trim() ||
     profile.duties?.split('\n')[0]?.trim() ||
-    rawApiData?.goyong24?.duty?.jobSum?.trim()
+    profile.heroIntro?.trim()
 
   // normalizeBracketLabel 제거됨: ETL에서 이미 정제된 데이터 사용
   const renderWorkMetaCard = (title: string, icon: string, value: string): string => {
@@ -3460,23 +3456,6 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
   }
 
   const normalizedWorkMainDesc = normalizeComparableText(workMainDesc)
-  const careernetDutyCandidates: string[] = []
-  ;[
-    rawApiData?.careernet?.summary,
-    rawApiData?.careernet?.duties,
-    rawApiData?.careernet?.duty,
-    rawApiData?.careernet?.work,
-    rawApiData?.careernet?.performList,
-    rawApiData?.careernet?.encyclopedia?.summary,
-    rawApiData?.careernet?.encyclopedia?.performList
-  ].forEach((candidate) => {
-    collectStringValues(candidate).forEach((text) => careernetDutyCandidates.push(text))
-  })
-  const overviewUsesCareernetDuty =
-    normalizedWorkMainDesc.length > 0 &&
-    careernetDutyCandidates.some(
-      (candidate) => normalizeComparableText(candidate) === normalizedWorkMainDesc
-    )
 
   // Type B: 전망 (ETL 구조화 필드 overviewProspect 사용)
   const overviewProspect = profile.overviewProspect
@@ -4129,7 +4108,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
   // 1. Type C: 업무수행능력 분석 (고용24 원본 필드 → merged profile)
   const abilityComparison =
     profile.goyong24Only?.workEnvironment ||
-    rawApiData?.goyong24?.ablKnwEnv
+    profile.ablKnwEnv
   const abilityImportance = abilityComparison ? {
     withinJob: abilityComparison.jobAbilCmpr,
     betweenJobs: abilityComparison.jobAbil
@@ -4301,10 +4280,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
   const workEnvironmentData =
     abilityComparison ||
     profile.goyong24Only?.workEnvironment ||
-    rawApiData?.goyong24?.ablKnwEnv
+    profile.ablKnwEnv
   const workContext =
     profile.careernetOnly?.performList?.environment ||
-    rawApiData?.careernet?.encyclopedia?.performList?.environment
+    profile.performList?.environment
   
   if ((workEnvironmentData && (workEnvironmentData.jobsEnvCmpr || workEnvironmentData.jobsEnv)) ||
       (workContext && Array.isArray(workContext) && workContext.length > 0)) {
@@ -4395,7 +4374,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
   // 4. Type D: 고용24 전용 - 성격 특성 비교
   const personalityData =
     profile.goyong24Only?.personality ||
-    rawApiData?.goyong24?.chrIntrVals
+    profile.chrIntrVals
   if (personalityData && (personalityData.jobChrCmpr || personalityData.jobChr)) {
     const personalityHtml = renderComparisonTable(
       personalityData.jobChrCmpr,
@@ -4411,7 +4390,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
   // 5. Type D: 고용24 전용 - 흥미 분야 비교
   const interestData =
     profile.goyong24Only?.interest ||
-    rawApiData?.goyong24?.chrIntrVals
+    profile.chrIntrVals
   if (interestData && (interestData.jobIntrstCmpr || interestData.jobIntrst)) {
     const interestHtml = renderComparisonTable(
       interestData.jobIntrstCmpr,
@@ -4427,7 +4406,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
   // 6. Type D: 고용24 전용 - 가치관 비교
   const valuesData =
     profile.goyong24Only?.values ||
-    rawApiData?.goyong24?.chrIntrVals
+    profile.chrIntrVals
   if (valuesData && (valuesData.jobValsCmpr || valuesData.jobVals)) {
     const valuesHtml = renderComparisonTable(
       valuesData.jobValsCmpr,
@@ -4440,10 +4419,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, rawApiData,
     }
   }
 
-  // 7. Type D: 고용24 전용 - 업무활동 분석 (rawApiData 사용)
+  // 7. Type D: 고용24 전용 - 업무활동 분석
   const activityData =
     profile.goyong24Only?.activity ||
-    rawApiData?.goyong24?.actv
+    profile.actv
   const activityImportance = activityData ? {
     withinJob: activityData.jobActvImprtncCmpr,
     betweenJobs: activityData.jobActvImprtnc

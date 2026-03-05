@@ -311,23 +311,9 @@ contentEditorRoutes.get('/api/revision/:id', authMiddleware, async (c) => {
         }
 
         if (formatForEdit && revision.entityType === 'job' && fullData) {
-          const { mergeJobData } = await import('../services/jobDataMerger')
-
-          let rawApiData: { careernet: any; goyong24: any } = { careernet: null, goyong24: null }
-          if (fullData.careernet !== undefined || fullData.goyong24 !== undefined) {
-            rawApiData = {
-              careernet: fullData.careernet || null,
-              goyong24: fullData.goyong24 || null
-            }
-          } else {
-            rawApiData = fullData as any
-          }
-
-          const mergedData = mergeJobData(rawApiData)
-
           const profile = {
             name: fullData.name || '',
-            summary: fullData.summary || (rawApiData?.goyong24 as any)?.duty?.jobSum || '',
+            summary: fullData.summary || fullData.heroIntro || '',
             duties: fullData.duties || '',
             way: fullData.way || '',
             salary: fullData.salary || '',
@@ -346,10 +332,10 @@ contentEditorRoutes.get('/api/revision/:id', authMiddleware, async (c) => {
             majorDistribution: fullData.majorDistribution || null
           }
 
-          const summaryForEdit = profile.summary || (rawApiData?.goyong24 as any)?.duty?.jobSum || ''
-          const workSummary = mergedData.work.summary || profile.summary || ''
+          const summaryForEdit = profile.summary || ''
+          const workSummary = fullData.work?.summary || profile.summary || ''
 
-          const workSimple = mergedData.work.simple
+          const workSimple = fullData.work?.simple
           let duties = ''
           if (workSimple && Array.isArray(workSimple) && workSimple.length > 0) {
             duties = workSimple
@@ -363,7 +349,7 @@ contentEditorRoutes.get('/api/revision/:id', authMiddleware, async (c) => {
             duties = profile.duties
           }
 
-          const tagList = (rawApiData?.careernet as any)?.encyclopedia?.tagList || []
+          const tagList = fullData.tagList || fullData.careernetOnly?.tagList || []
           const tagText = Array.isArray(tagList)
             ? tagList.map((tag: any) => {
                 const tagText = typeof tag === 'string' ? tag : (tag?.tag || tag?.list_content || '')
@@ -397,9 +383,9 @@ contentEditorRoutes.get('/api/revision/:id', authMiddleware, async (c) => {
             heroCategory: heroCategory,
             duties: duties,
             way: profile.way || '',
-            salary: mergedData.salary.primary || profile.salary || '',
-            prospect: mergedData.prospect.primary || profile.prospect || '',
-            satisfaction: mergedData.satisfaction.primary || profile.satisfaction || '',
+            salary: profile.salary || '',
+            prospect: profile.prospect || '',
+            satisfaction: profile.satisfaction || '',
             status: profile.status || '',
             abilities: profile.abilities || '',
             knowledge: profile.knowledge || '',

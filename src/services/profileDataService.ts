@@ -2609,7 +2609,7 @@ export const getUnifiedJobDetail = async (
 export const getUnifiedJobDetailWithRawData = async (
   request: JobDetailRequest,
   env?: CareerWikiEnv
-): Promise<UnifiedDetailResult<UnifiedJobDetail> & { rawApiData?: { careernet?: any; goyong24?: any } }> => {
+): Promise<UnifiedDetailResult<UnifiedJobDetail>> => {
   const { id, careernetId, goyong24JobId, includeSources } = request
   const sourcesToUse = resolveIncludedSources(includeSources)
   const sourcesStatus = createInitialSourceStatus()
@@ -2619,8 +2619,6 @@ export const getUnifiedJobDetailWithRawData = async (
 
   let careernetProfile: UnifiedJobDetail | null = null
   let goyongProfile: UnifiedJobDetail | null = null
-  let rawCareernetData: any = null
-  let rawGoyong24Data: any = null
 
   // 🆕 Step 0: Try merged_profile_json first (ETL 결과 우선 사용)
   // ⚠️ 쿼리 파라미터가 명시적으로 있으면 D1 병합을 건너뛰고 직접 조회
@@ -2714,30 +2712,6 @@ export const getUnifiedJobDetailWithRawData = async (
           // 병합 적용 (admin > user > merged 우선순위) - 깊은 병합 사용
           merged = deepMergeProfile(deepMergeProfile(merged, userData), adminData) as UnifiedJobDetail
           
-          // rawApiData는 job_sources에서 가져오기 (디버그/편집용)
-          let rawCareernetData: any = null
-          let rawGoyong24Data: any = null
-          
-          if (mergedJobRow.careernet_id || mergedJobRow.goyong24_id) {
-            try {
-              const sources = await db.prepare(`
-                SELECT source_system, raw_payload
-                FROM job_sources
-                WHERE job_id = ?
-              `).bind(mergedJobRow.id).all()
-              
-              for (const source of sources.results || []) {
-                const rawPayload = JSON.parse(source.raw_payload || '{}')
-                if (source.source_system === 'CAREERNET') {
-                  rawCareernetData = rawPayload
-                } else if (source.source_system === 'WORK24_JOB' || source.source_system === 'WORK24_DJOB') {
-                  rawGoyong24Data = rawPayload
-                }
-              }
-            } catch (error) {
-            }
-          }
-          
           sourcesStatus.CAREERNET.attempted = !!mergedJobRow.careernet_id
           sourcesStatus.CAREERNET.count = mergedJobRow.careernet_id ? 1 : 0
           sourcesStatus.GOYONG24.attempted = !!mergedJobRow.goyong24_id
@@ -2758,10 +2732,6 @@ export const getUnifiedJobDetailWithRawData = async (
             profile: merged,
             partials: {},
             sources: sourcesStatus,
-            rawApiData: {
-              careernet: rawCareernetData,
-              goyong24: rawGoyong24Data
-            }
           }
         } catch (error) {
           // Fallback to old logic below
@@ -2802,7 +2772,7 @@ export const getUnifiedJobDetailWithRawData = async (
                   
                   // null이 아니고 실제 데이터가 있는 경우만 처리
                   if (careernetData && careernetData !== null && typeof careernetData === 'object') {
-                    rawCareernetData = careernetData
+    
                     careernetProfile = normalizeCareerNetJobDetail(careernetData)
                     sourcesStatus.CAREERNET.attempted = true
                     sourcesStatus.CAREERNET.count = 1
@@ -2817,7 +2787,7 @@ export const getUnifiedJobDetailWithRawData = async (
                   
                   // null이 아니고 실제 데이터가 있는 경우만 처리
                   if (goyong24Data && goyong24Data !== null && typeof goyong24Data === 'object') {
-                    rawGoyong24Data = goyong24Data
+    
                     goyongProfile = normalizeGoyong24JobDetail(goyong24Data)
                     sourcesStatus.GOYONG24.attempted = true
                     sourcesStatus.GOYONG24.count = 1
@@ -2878,10 +2848,6 @@ export const getUnifiedJobDetailWithRawData = async (
               profile: enhancedProfile,
               partials: partialsRecord,
               sources: sourcesStatus,
-              rawApiData: {
-                careernet: rawCareernetData,
-                goyong24: rawGoyong24Data
-              }
             }
           }
         }
@@ -2905,7 +2871,7 @@ export const getUnifiedJobDetailWithRawData = async (
             if (jobRow.careernet_id && sourcesToUse.includes('CAREERNET') && !careernetProfile) {
               const careernetData = apiData.careernet
               if (careernetData && careernetData !== null && typeof careernetData === 'object') {
-                rawCareernetData = careernetData
+
                 careernetProfile = normalizeCareerNetJobDetail(careernetData)
                 sourcesStatus.CAREERNET.attempted = true
                 sourcesStatus.CAREERNET.count = 1
@@ -2915,7 +2881,7 @@ export const getUnifiedJobDetailWithRawData = async (
             if (jobRow.goyong24_id && sourcesToUse.includes('GOYONG24') && !goyongProfile) {
               const goyong24Data = apiData.goyong24
               if (goyong24Data && goyong24Data !== null && typeof goyong24Data === 'object') {
-                rawGoyong24Data = goyong24Data
+
                 goyongProfile = normalizeGoyong24JobDetail(goyong24Data)
                 sourcesStatus.GOYONG24.attempted = true
                 sourcesStatus.GOYONG24.count = 1
@@ -2938,7 +2904,7 @@ export const getUnifiedJobDetailWithRawData = async (
                       const siblingData = JSON.parse(sibling.api_data_json || 'null')
                       const careernetData = siblingData?.careernet
                       if (careernetData && typeof careernetData === 'object') {
-                        rawCareernetData = careernetData
+        
                         careernetProfile = normalizeCareerNetJobDetail(careernetData)
                         sourcesStatus.CAREERNET.attempted = true
                         sourcesStatus.CAREERNET.count = 1
@@ -2952,7 +2918,7 @@ export const getUnifiedJobDetailWithRawData = async (
                       const siblingData = JSON.parse(sibling.api_data_json || 'null')
                       const goyong24Data = siblingData?.goyong24
                       if (goyong24Data && typeof goyong24Data === 'object') {
-                        rawGoyong24Data = goyong24Data
+        
                         goyongProfile = normalizeGoyong24JobDetail(goyong24Data)
                         sourcesStatus.GOYONG24.attempted = true
                         sourcesStatus.GOYONG24.count = 1
@@ -3005,10 +2971,6 @@ export const getUnifiedJobDetailWithRawData = async (
                 profile: enhancedProfile,
                 partials: partialsRecord,
                 sources: sourcesStatus,
-                rawApiData: {
-                  careernet: rawCareernetData,
-                  goyong24: rawGoyong24Data
-                }
               }
             }
           } catch (parseError) {
@@ -3033,7 +2995,7 @@ export const getUnifiedJobDetailWithRawData = async (
             if (jobRow.careernet_id && sourcesToUse.includes('CAREERNET') && !careernetProfile) {
               const careernetData = apiData.careernet
               if (careernetData && careernetData !== null && typeof careernetData === 'object') {
-                rawCareernetData = careernetData
+
                 careernetProfile = normalizeCareerNetJobDetail(careernetData)
                 sourcesStatus.CAREERNET.attempted = true
                 sourcesStatus.CAREERNET.count = 1
@@ -3054,7 +3016,7 @@ export const getUnifiedJobDetailWithRawData = async (
                     const otherApiData = JSON.parse(otherRow.api_data_json)
                     const goyong24Data = otherApiData.goyong24
                     if (goyong24Data && goyong24Data !== null && typeof goyong24Data === 'object') {
-                      rawGoyong24Data = goyong24Data
+      
                       goyongProfile = normalizeGoyong24JobDetail(goyong24Data)
                       sourcesStatus.GOYONG24.attempted = true
                       sourcesStatus.GOYONG24.count = 1
@@ -3082,7 +3044,7 @@ export const getUnifiedJobDetailWithRawData = async (
                       const siblingData = JSON.parse(sibling.api_data_json || 'null')
                       const careernetData = siblingData?.careernet
                       if (careernetData && typeof careernetData === 'object') {
-                        rawCareernetData = careernetData
+        
                         careernetProfile = normalizeCareerNetJobDetail(careernetData)
                         sourcesStatus.CAREERNET.attempted = true
                         sourcesStatus.CAREERNET.count = 1
@@ -3096,7 +3058,7 @@ export const getUnifiedJobDetailWithRawData = async (
                       const siblingData = JSON.parse(sibling.api_data_json || 'null')
                       const goyong24Data = siblingData?.goyong24
                       if (goyong24Data && typeof goyong24Data === 'object') {
-                        rawGoyong24Data = goyong24Data
+        
                         goyongProfile = normalizeGoyong24JobDetail(goyong24Data)
                         sourcesStatus.GOYONG24.attempted = true
                         sourcesStatus.GOYONG24.count = 1
@@ -3149,10 +3111,6 @@ export const getUnifiedJobDetailWithRawData = async (
                 profile: enhancedProfile,
                 partials: partialsRecord,
                 sources: sourcesStatus,
-                rawApiData: {
-                  careernet: rawCareernetData,
-                  goyong24: rawGoyong24Data
-                }
               }
             }
           } catch (parseError) {
@@ -3188,7 +3146,6 @@ export const getUnifiedJobDetailWithRawData = async (
       status.attempted = true
       try {
         const raw = await fetchCareerNetJobDetail(resolvedCareernetId, env)
-        rawCareernetData = raw
         if (raw) {
           careernetProfile = normalizeCareerNetJobDetail(raw)
           status.count = 1
@@ -3222,7 +3179,6 @@ export const getUnifiedJobDetailWithRawData = async (
       status.attempted = true
       try {
         const raw = await fetchGoyong24JobDetail(resolvedJobId, env as any)
-        rawGoyong24Data = raw
         goyongProfile = normalizeGoyong24JobDetail(raw)
         status.count = 1
       } catch (error) {
@@ -3347,9 +3303,5 @@ export const getUnifiedJobDetailWithRawData = async (
     profile: enhancedProfile,
     partials: partialsRecord,
     sources: sourcesStatus,
-    rawApiData: {
-      careernet: rawCareernetData || null,
-      goyong24: rawGoyong24Data || null
-    }
   }
 }

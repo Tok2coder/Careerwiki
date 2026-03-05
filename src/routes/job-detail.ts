@@ -309,7 +309,6 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
           profile,
           partials: result.partials,
           sources: result.sources,
-          rawApiData: result.rawApiData,
           existingJobSlugs: result.existingJobSlugs,
           relatedHowtos: result.relatedHowtos
         })

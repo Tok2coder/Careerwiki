@@ -742,13 +742,12 @@ export function renderSampleJobDetailPage(
   c: Context<{ Bindings: Bindings; Variables: Variables }>,
   sample: NonNullable<ReturnType<typeof getSampleJobDetail>>
 ) {
-  return renderSampleJobDetailPageWithRawData(c, sample, undefined)
+  return renderSampleJobDetailPageWithRawData(c, sample)
 }
 
 export function renderSampleJobDetailPageWithRawData(
   c: Context<{ Bindings: Bindings; Variables: Variables }>,
   sample: NonNullable<ReturnType<typeof getSampleJobDetail>>,
-  rawApiData?: { careernet?: any; goyong24?: any }
 ) {
   const canonicalSlug = sample.meta?.canonicalSlug ?? composeDetailSlug('job', sample.profile.name, sample.profile.id)
   const canonicalPath = `/job/${encodeURIComponent(canonicalSlug)}`
@@ -770,7 +769,6 @@ export function renderSampleJobDetailPageWithRawData(
     profile: sample.profile,
     partials: sample.partials ?? {},
     sources: sample.sources,
-    rawApiData // Pass rawApiData even for sample pages
   })
 
   return c.html(
