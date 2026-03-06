@@ -621,10 +621,10 @@ export const renderLayout = (
             min-height: 80px;
           }
           .menu-button:hover {
-            background: rgb(var(--ac, 67 97 238));
-            border-color: rgb(var(--ac, 67 97 238));
+            background: rgb(var(--ac, 67 97 238) / 0.25);
+            border-color: rgb(var(--ac, 67 97 238) / 0.6);
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgb(var(--ac, 67 97 238) / 0.4);
+            box-shadow: 0 4px 12px rgb(var(--ac, 67 97 238) / 0.15);
           }
           .menu-button:focus-visible {
             outline: 2px solid rgb(var(--ac, 67 97 238) / 0.8);
