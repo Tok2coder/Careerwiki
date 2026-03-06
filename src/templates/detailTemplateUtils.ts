@@ -60,12 +60,10 @@ export const formatRichText = (value?: string | null): string => {
     .join('')
 }
 
-export const renderChips = (items?: string[] | null, emptyText = '정보 없음', accent?: PageAccent): string => {
+export const renderChips = (items?: string[] | null, emptyText = '정보 없음'): string => {
   if (!items || items.length === 0) {
     return `<p class="content-text text-wiki-muted">${escapeHtml(emptyText)}</p>`
   }
-
-  const a = accent ? PAGE_ACCENT_CLASSES[accent] : PAGE_ACCENT_CLASSES.blue
 
   return `
     <ul class="space-y-1.5" role="list">
@@ -74,7 +72,7 @@ export const renderChips = (items?: string[] | null, emptyText = '정보 없음'
         .map((item) => `
           <li>
             <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-wiki-bg/40 border border-wiki-border/40 hover:border-wiki-primary/40 hover:bg-wiki-primary/5 transition-all duration-200">
-              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${a.chipBg} ${a.chipIcon}">
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-wiki-primary/15 text-wiki-secondary">
                 <i class="fas fa-certificate text-[9px]" aria-hidden="true"></i>
               </span>
               <span class="text-sm text-wiki-text font-medium">${escapeHtml(item.trim())}</span>
@@ -86,53 +84,12 @@ export const renderChips = (items?: string[] | null, emptyText = '정보 없음'
   `
 }
 
-// ── 페이지별 액센트 색상 시스템 ──
-export type PageAccent = 'blue' | 'emerald' | 'violet' | 'amber'
-
-export const PAGE_ACCENT_CLASSES: Record<PageAccent, {
-  iconBg: string
-  iconBorder: string
-  iconText: string
-  chipBg: string
-  chipIcon: string
-}> = {
-  blue: {
-    iconBg: 'from-blue-500/20 to-blue-400/20',
-    iconBorder: 'border-blue-500/30',
-    iconText: 'text-blue-400',
-    chipBg: 'bg-blue-500/15',
-    chipIcon: 'text-blue-400',
-  },
-  emerald: {
-    iconBg: 'from-emerald-500/20 to-teal-400/20',
-    iconBorder: 'border-emerald-500/30',
-    iconText: 'text-emerald-400',
-    chipBg: 'bg-emerald-500/15',
-    chipIcon: 'text-emerald-400',
-  },
-  violet: {
-    iconBg: 'from-violet-500/20 to-purple-400/20',
-    iconBorder: 'border-violet-500/30',
-    iconText: 'text-violet-400',
-    chipBg: 'bg-violet-500/15',
-    chipIcon: 'text-violet-400',
-  },
-  amber: {
-    iconBg: 'from-amber-500/20 to-yellow-400/20',
-    iconBorder: 'border-amber-500/30',
-    iconText: 'text-amber-400',
-    chipBg: 'bg-amber-500/15',
-    chipIcon: 'text-amber-400',
-  },
-}
-
 export interface BuildCardOptions {
   anchorId?: string
   telemetryScope?: string
   telemetryComponent?: string
   editButton?: EditButtonOptions  // 편집 버튼 옵션
   dataSources?: string[]  // 데이터 출처 목록 (CAREERNET, GOYONG24, WORK24_DJOB 등)
-  accent?: PageAccent  // 페이지별 액센트 색상
 }
 
 interface HeroImageRule {
@@ -239,8 +196,7 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
     return ''
   }
 
-  const { anchorId, telemetryScope, telemetryComponent, dataSources, accent } = options
-  const accentClasses = accent ? PAGE_ACCENT_CLASSES[accent] : PAGE_ACCENT_CLASSES.blue
+  const { anchorId, telemetryScope, telemetryComponent, dataSources } = options
   const className = `glass-card border px-6 py-6 md:px-6 rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
   const attributeParts: string[] = [`class="${className}"`, 'data-cw-detail-card']
 
@@ -271,8 +227,8 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
     <article ${attributeParts.join(' ')}>
       <h3 class="section-title flex items-center justify-between mb-5">
         <div class="flex items-center gap-3">
-        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br ${accentClasses.iconBg} border ${accentClasses.iconBorder}">
-          <i class="fas ${icon} ${accentClasses.iconText} text-sm"></i>
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30">
+          <i class="fas ${icon} text-wiki-secondary text-sm"></i>
         </span>
         <span>${escapeHtml(title)}</span>
         </div>
@@ -888,7 +844,7 @@ export const renderCommentsPlaceholder = ({
         </div>
         <button
           type="submit"
-          class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition"
+          class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm font-semibold hover:brightness-110 transition"
           data-cw-comment-submit
           data-cw-telemetry-action="comment-submit"
           data-cw-telemetry-component="comment-submit"

@@ -1573,7 +1573,7 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
     // 기존 로직 (범위 또는 일반 숫자)
     const matches = raw.match(/(\d[\d,]*)/g)
     if (!matches || !matches.length) {
-      return buildCard('임금 정보', 'fa-coins', `<p class="content-text text-wiki-text">${escapeHtml(raw)}</p>`, { ...(options ?? {}), accent: 'blue' })
+      return buildCard('임금 정보', 'fa-coins', `<p class="content-text text-wiki-text">${escapeHtml(raw)}</p>`, { ...(options ?? {}) })
     }
 
     const values = matches
@@ -1581,7 +1581,7 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
       .filter((value) => Number.isFinite(value) && value > 0)
 
     if (!values.length) {
-      return buildCard('임금 정보', 'fa-coins', `<p class="content-text text-wiki-text">${escapeHtml(raw)}</p>`, { ...(options ?? {}), accent: 'blue' })
+      return buildCard('임금 정보', 'fa-coins', `<p class="content-text text-wiki-text">${escapeHtml(raw)}</p>`, { ...(options ?? {}) })
     }
 
     const hasRange = raw.includes('~') && values.length >= 2
@@ -1644,7 +1644,7 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): s
         </div>
       </div>
     `,
-    { ...(options ?? {}), accent: 'blue' }
+    { ...(options ?? {}) }
   )
 }
 
@@ -1687,7 +1687,7 @@ const renderDistributionPieChart = (
 
   if (!numericEntries.length) {
     const listMarkup = renderDistributionList(distribution, labels)
-    return listMarkup ? buildCard(title, icon, listMarkup, { accent: 'blue' }) : ''
+    return listMarkup ? buildCard(title, icon, listMarkup, {}) : ''
   }
 
   // 고유 ID 생성
@@ -1765,7 +1765,7 @@ const renderDistributionPieChart = (
     </script>
   `
 
-  return buildCard(title, icon, chartHtml, { ...(options ?? {}), accent: 'blue' })
+  return buildCard(title, icon, chartHtml, { ...(options ?? {}) })
 }
 
 // 학력·전공 분포 통합 렌더링 함수
@@ -1942,7 +1942,7 @@ const renderCombinedDistributionCharts = (
     chartsHtml = renderSingleChart(majorData, '전공 분포', majorChartId, true)
   }
 
-  return buildCard('학력·전공 분포', 'fa-graduation-cap', chartsHtml, { ...(options ?? {}), accent: 'blue' })
+  return buildCard('학력·전공 분포', 'fa-graduation-cap', chartsHtml, { ...(options ?? {}) })
 }
 
 const renderDistributionBars = (
@@ -1979,7 +1979,7 @@ const renderDistributionBars = (
 
   if (!numericEntries.length) {
     const listMarkup = renderDistributionList(distribution, labels)
-    return listMarkup ? buildCard(title, icon, listMarkup, { accent: 'blue' }) : ''
+    return listMarkup ? buildCard(title, icon, listMarkup, {}) : ''
   }
 
   const maxValue = Math.max(...numericEntries.map((entry) => entry.numeric!))
@@ -2008,7 +2008,7 @@ const renderDistributionBars = (
     })
     .join('')
 
-  return buildCard(title, icon, `<div class="space-y-3">${bars}</div>`, { ...(options ?? {}), accent: 'blue' })
+  return buildCard(title, icon, `<div class="space-y-3">${bars}</div>`, { ...(options ?? {}) })
 }
 
 const normalizeAnchorValue = (value: string): string => {
@@ -3333,8 +3333,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       anchorId,
       telemetryScope: 'job-overview-card',
       telemetryComponent: 'job-overview-card',
-      dataSources,
-      accent: 'blue'
+      dataSources
     })
     if (safeTrim(cardMarkup)) {
       overviewCards.push({ id: anchorId, label: title, icon, markup: cardMarkup })
@@ -3350,8 +3349,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       anchorId,
       telemetryScope: 'job-detail-card',
       telemetryComponent: 'job-detail-card',
-      dataSources,
-      accent: 'blue'
+      dataSources
     })
     if (safeTrim(cardMarkup)) {
       detailCards.push({ id: anchorId, label: title, icon, markup: cardMarkup })
@@ -3965,7 +3963,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const characteristicsCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushCharacteristicsCard = (label: string, icon: string, markup: string, dataSources?: string[]) => {
     const id = anchorIdFactory('characteristics', label)
-    characteristicsCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, telemetryScope: 'job-characteristics-card', dataSources, accent: 'blue' }) })
+    characteristicsCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, telemetryScope: 'job-characteristics-card', dataSources }) })
   }
 
   // 지식 (charKnowledge) - 제거됨 (뒤의 고용24 지식 비교 테이블로 대체)

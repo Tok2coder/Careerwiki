@@ -844,6 +844,7 @@ export function renderSampleHowtoDetailPage(
     sample.snippet
   )
   const extraHead = [
+    '<style>:root{--wp:139 92 246;--ws:167 139 250}</style>',
     createKeywordsMetaTag(sample.meta?.keywords),
     createArticleModifiedMeta(sample.meta?.updatedAt),
     createHowtoJsonLd(sample.guide, canonicalUrl)

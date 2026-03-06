@@ -255,6 +255,7 @@ export const renderLayout = (
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9810002715600854" crossorigin="anonymous"></script>
         ${extraHead}
         <style>
+          :root { --wp: 67 97 238; --ws: 100 181 246; }
           body { background-color: #0b1220; color: #dee3ff; }
 
           /* 기본 콘텐츠 폰트 크기 정의 */
@@ -352,8 +353,8 @@ export const renderLayout = (
             align-items: center;
             justify-content: center;
             background: rgba(26, 26, 46, 0.75);
-            border: 1px solid rgba(100, 181, 246, 0.3);
-            color: #64b5f6;
+            border: 1px solid rgb(var(--ws) / 0.3);
+            color: rgb(var(--ws));
             font-size: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -443,7 +444,7 @@ export const renderLayout = (
           }
 
           .gradient-text {
-            background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%);
+            background: linear-gradient(135deg, rgb(var(--wp)) 0%, rgb(var(--ws)) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
           }
@@ -578,8 +579,8 @@ export const renderLayout = (
             transition: all 0.3s ease;
           }
           .progress-dot.active {
-            background: #4361ee;
-            box-shadow: 0 0 8px rgba(67, 97, 238, 0.5);
+            background: rgb(var(--wp));
+            box-shadow: 0 0 8px rgb(var(--wp) / 0.5);
           }
           .progress-dot.completed {
             background: #34d399;
@@ -593,12 +594,12 @@ export const renderLayout = (
             color: #92400e !important;
           }
           .wiki-link {
-            color: #64b5f6;
+            color: rgb(var(--ws));
             text-decoration: none;
             transition: all 0.2s;
           }
           .wiki-link:hover {
-            color: #4361ee;
+            color: rgb(var(--wp));
             text-decoration: underline;
           }
           .scrollbar-hide {
@@ -999,11 +1000,11 @@ export const renderLayout = (
           })();
         </script>
 
-        <script src="/static/api-client.js?v=20260305c" defer></script>
+        <script src="/static/api-client.js?v=20260306a" defer></script>
 
         <!-- 편집 시스템 -->
-        <link rel="stylesheet" href="/static/edit-mode.css?v=20260303">
-        <script src="/static/edit-mode.js?v=20260303" defer></script>
+        <link rel="stylesheet" href="/static/edit-mode.css?v=20260306a">
+        <script src="/static/edit-mode.js?v=20260306a" defer></script>
 
         <!-- 북마크(저장) 기능 -->
         <script>
@@ -1164,7 +1165,7 @@ export const renderLayout = (
       <div class="px-5 pb-5">
         <div class="flex items-center gap-2 bg-wiki-card border border-wiki-border/60 rounded-lg px-3 py-2.5">
           <input id="share-modal-url" type="text" readonly class="flex-1 bg-transparent text-sm text-white outline-none min-w-0 truncate">
-          <button type="button" data-share-modal-copy class="px-3 py-1.5 bg-wiki-primary text-white text-sm rounded-md hover:bg-blue-600 transition shrink-0">복사</button>
+          <button type="button" data-share-modal-copy class="px-3 py-1.5 bg-wiki-primary text-white text-sm rounded-md hover:brightness-110 transition shrink-0">복사</button>
         </div>
       </div>
     </div>

@@ -983,7 +983,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const overviewCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushOverviewCard = (label: string, icon: string, markup: string, dataSources?: string[]) => {
     const id = anchorIdFactory('overview', label)
-    overviewCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, dataSources, accent: 'emerald' }) })
+    overviewCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, dataSources }) })
   }
 
   // 특정 필드가 어느 출처에서 왔는지 판단하는 헬퍼 함수
@@ -1604,7 +1604,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const learningCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushLearningCard = (label: string, icon: string, markup: string) => {
     const id = anchorIdFactory('curriculum', label)
-    learningCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, accent: 'emerald' }) })
+    learningCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
   }
 
   // 0) 입학상황 섹션 (chartData.gender + chartData.applicant) - 첫 번째 섹션
@@ -1820,13 +1820,13 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     subjectSections.push(`
       <div class="pb-6 mb-8 border-b border-wiki-border/30">
         <h4 class="text-base font-bold text-wiki-secondary mb-3 flex items-center gap-2">
-          <span class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/15 text-blue-400">
+          <span class="flex h-8 w-8 items-center justify-center rounded-full bg-wiki-primary/15 text-wiki-secondary">
             <i class="fas fa-seedling text-xs"></i>
           </span>
           기초과목
         </h4>
         <div class="flex flex-wrap gap-2">
-          ${basicSubjects.map(subj => `<span class="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg text-sm text-blue-300 font-medium">${escapeHtml(subj)}</span>`).join('')}
+          ${basicSubjects.map(subj => `<span class="inline-flex items-center gap-1.5 px-3 py-2 bg-wiki-primary/10 border border-wiki-primary/20 rounded-lg text-sm text-wiki-secondary font-medium">${escapeHtml(subj)}</span>`).join('')}
         </div>
       </div>
     `)
@@ -1986,7 +1986,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const careerCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushCareerCard = (label: string, icon: string, markup: string) => {
     const id = anchorIdFactory('career', label)
-    careerCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, accent: 'emerald' }) })
+    careerCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
   }
 
   // 진로 전망 (jobProspect) - 상세정보 탭 진로 섹션에 표시
@@ -2039,7 +2039,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const universityCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushUniversityCard = (label: string, icon: string, markup: string) => {
     const id = anchorIdFactory('universities', label)
-    universityCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, accent: 'emerald' }) })
+    universityCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
   }
 
   const universitiesContent = renderUniversities(profile.universities)
@@ -2062,7 +2062,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const networkCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushNetworkCard = (label: string, icon: string, markup: string) => {
     const id = anchorIdFactory('network', label)
-    networkCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, accent: 'emerald' }) })
+    networkCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
   }
 
   // 추천 유사 전공은 히어로 태그로 이동됨 - 상세정보에서 제거
@@ -2660,7 +2660,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
                 역사
               </button>
               <div class="relative" data-share-root>
-                <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="/major/${escapeHtml(profile.id)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}">
+                <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:brightness-110 transition inline-flex items-center gap-2" data-share-trigger data-share-path="/major/${escapeHtml(profile.id)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}">
                   <i class="fas fa-share-nodes" aria-hidden="true"></i>
                   공유
                 </button>

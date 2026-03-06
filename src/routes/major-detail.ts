@@ -291,6 +291,7 @@ majorDetailRoutes.get('/major/:slug', async (c) => {
           profile.jobProspect
         )
         const extraHead = [
+          '<style>:root{--wp:16 185 129;--ws:45 212 191}</style>',
           '<meta property="article:modified_time" content="' + new Date().toISOString() + '">',
           createMajorJsonLd(profile, canonicalUrl)
         ].filter(Boolean).join('\n')
@@ -453,8 +454,9 @@ majorDetailRoutes.get('/majors/:id', async (c) => {
       sources: apiData.sources || {}
     })
 
-    // Schema.org JSON-LD 생성
+    // Schema.org JSON-LD 생성 + 전공 페이지 액센트 색상
     const extraHead = [
+      '<style>:root{--wp:16 185 129;--ws:45 212 191}</style>',
       createMajorJsonLd(profile, canonicalUrl)
     ].filter(Boolean).join('\n')
 
