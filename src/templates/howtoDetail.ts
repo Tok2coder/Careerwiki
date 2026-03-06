@@ -62,7 +62,7 @@ const renderSteps = (steps: HowtoGuideDetail['steps']): string => {
           const header = `
             <header class="mb-6">
               <h2 class="text-2xl md:text-3xl font-bold text-white mb-3 flex items-start gap-3">
-                <span class="text-wiki-primary font-bold">${index + 1}.</span>
+                <span class="text-violet-400 font-bold">${index + 1}.</span>
                 <span>${escapeHtml(step.title)}</span>
               </h2>
             </header>
@@ -71,16 +71,16 @@ const renderSteps = (steps: HowtoGuideDetail['steps']): string => {
             <div class="space-y-6">
               ${formatRichText(step.description)}
               ${step.keyActions && step.keyActions.length ? `
-                <div class="bg-wiki-bg/40 border-l-4 border-wiki-primary rounded-r-lg p-4 space-y-2" data-cw-telemetry-component="howto-step-actions">
-                  <h4 class="text-sm font-semibold text-wiki-primary uppercase tracking-wide mb-3">핵심 액션</h4>
+                <div class="bg-wiki-bg/40 border-l-4 border-violet-400 rounded-r-lg p-4 space-y-2" data-cw-telemetry-component="howto-step-actions">
+                  <h4 class="text-sm font-semibold text-violet-400 uppercase tracking-wide mb-3">핵심 액션</h4>
                   <ul class="space-y-2 list-disc list-inside text-base text-wiki-text" role="list">
                     ${step.keyActions.map((action) => `<li role="listitem">${escapeHtml(action)}</li>`).join('')}
                   </ul>
                 </div>
               ` : ''}
               ${step.expectedOutcome ? `
-                <div class="bg-wiki-secondary/10 border border-wiki-secondary/30 rounded-lg p-4 text-base text-wiki-text" aria-label="예상 산출물" data-cw-telemetry-component="howto-step-outcome">
-                  <span class="font-semibold text-wiki-secondary">💡 예상 산출물: </span>${escapeHtml(step.expectedOutcome)}
+                <div class="bg-purple-400/10 border border-purple-400/30 rounded-lg p-4 text-base text-wiki-text" aria-label="예상 산출물" data-cw-telemetry-component="howto-step-outcome">
+                  <span class="font-semibold text-purple-400">💡 예상 산출물: </span>${escapeHtml(step.expectedOutcome)}
                 </div>
               ` : ''}
             </div>
@@ -103,7 +103,7 @@ const renderResources = (resources?: HowtoGuideDetail['resources']): string => {
         .map((resource) => `
           <li class="border border-wiki-border rounded-xl p-4 bg-wiki-bg/60" data-cw-detail-card data-cw-telemetry-component="howto-resource" role="listitem">
             <div class="flex items-start gap-3">
-              <i class="fas fa-link text-wiki-secondary mt-1" aria-hidden="true"></i>
+              <i class="fas fa-link text-violet-400 mt-1" aria-hidden="true"></i>
               <div>
                 <a href="${escapeHtml(resource.url)}" target="_blank" rel="noopener" class="text-base font-semibold text-wiki-primary hover:text-wiki-secondary transition" data-cw-telemetry-action="resource-click">
                   ${escapeHtml(resource.label)}
@@ -222,7 +222,7 @@ const renderRecommendedSection = (
         ${items
           .map((item, index) => {
             const normalizedSlug = normalizeSlug(item.slug)
-            const badgeLabel = item.badge ? `<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-wiki-secondary">${escapeHtml(item.badge)}</span>` : ''
+            const badgeLabel = item.badge ? `<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-purple-400">${escapeHtml(item.badge)}</span>` : ''
             return `
               <li role="listitem" data-cw-telemetry-component="howto-related-card" data-related-slug="${escapeHtml(normalizedSlug)}" data-related-index="${index}">
                 <article class="glass-card p-5 rounded-xl space-y-2 border border-transparent hover:border-wiki-primary/60 transition" data-cw-detail-card>
@@ -249,7 +249,7 @@ const renderRelatedJobOrMajor = (action: NonNullable<HowtoGuideDetail['nextActio
   return `
     <li>
       <a href="${escapeHtml(action.href)}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200" data-cw-telemetry-action="sidebar-related-click">
-        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary">
+        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-500/10 text-violet-400">
           <i class="fas ${icon} text-xs" aria-hidden="true"></i>
         </span>
         <span class="flex-1 min-w-0 text-sm text-wiki-text hover:text-white font-medium">${escapeHtml(action.label)}</span>
@@ -267,7 +267,7 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
   return `
     <section class="glass-card border px-4 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-wiki-bg/30" data-howto-sidebar-section>
       <div class="flex items-center gap-2.5 pb-2 border-b border-wiki-border/30 md:border-0 md:pb-0">
-        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-wiki-secondary/15 text-wiki-secondary">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-violet-400">
           <i class="fas ${icon} text-sm" aria-hidden="true"></i>
         </span>
         <h3 class="text-base font-bold text-white">${escapeHtml(title)}</h3>
@@ -384,7 +384,7 @@ const renderSourcesCollapsible = (guide: HowtoGuideDetail): string => {
     .map((fn) => `
       <li class="footnote-item p-3 border border-wiki-border rounded-lg bg-wiki-bg/60 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-bg/80" data-source-entry="footnote" id="fn-${fn.id}" data-back-to="fnref-${fn.id}">
         <div class="flex items-start gap-3">
-          <span class="footnote-id flex-shrink-0 w-6 h-6 rounded-full bg-wiki-secondary/20 text-wiki-secondary text-xs font-bold flex items-center justify-center">${fn.id}</span>
+          <span class="footnote-id flex-shrink-0 w-6 h-6 rounded-full bg-purple-400/20 text-purple-400 text-xs font-bold flex items-center justify-center">${fn.id}</span>
           <div class="flex-1 min-w-0 footnote-text text-sm text-wiki-text">
             ${fn.url 
               ? `<span>${escapeHtml(fn.text)}</span>, <a href="${escapeHtml(fn.url)}" target="_blank" rel="noopener" class="text-wiki-primary hover:text-wiki-secondary transition break-all" style="word-break: break-all; overflow-wrap: anywhere;" onclick="event.stopPropagation()">${escapeHtml(fn.url)}</a>`
@@ -418,11 +418,11 @@ const renderSourcesCollapsible = (guide: HowtoGuideDetail): string => {
         aria-expanded="false"
       >
         <span class="flex items-center gap-3">
-          <i class="fas fa-book-open text-wiki-secondary text-lg" aria-hidden="true"></i>
+          <i class="fas fa-book-open text-violet-400 text-lg" aria-hidden="true"></i>
           <span class="text-base">출처</span>
         </span>
         <div class="flex items-center gap-3 text-sm text-wiki-muted">
-          <span class="inline-flex items-center gap-1.5 rounded-full border border-wiki-secondary/30 bg-wiki-secondary/10 px-3 py-1.5 text-wiki-secondary font-medium">${escapeHtml(badgeLabel)}</span>
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-purple-400/30 bg-purple-400/10 px-3 py-1.5 text-purple-400 font-medium">${escapeHtml(badgeLabel)}</span>
           <i id="${iconId}" class="fas fa-chevron-down text-base transition-transform duration-200" aria-hidden="true"></i>
         </div>
       </button>
@@ -476,7 +476,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
 
   const prerequisites = guide.prerequisites?.length
     ? `
-        <section class="bg-wiki-bg/30 border-l-4 border-wiki-primary rounded-r-lg p-5 space-y-3" aria-label="필수 준비 사항" data-cw-telemetry-component="howto-prerequisites-inline">
+        <section class="bg-wiki-bg/30 border-l-4 border-violet-400 rounded-r-lg p-5 space-y-3" aria-label="필수 준비 사항" data-cw-telemetry-component="howto-prerequisites-inline">
           <h3 class="text-lg font-semibold text-white mb-3">📋 필수 준비 사항</h3>
           <ul class="space-y-2 list-disc list-inside text-base text-wiki-text" role="list">
             ${guide.prerequisites.map((item) => `<li role="listitem">${escapeHtml(item)}</li>`).join('')}
@@ -660,9 +660,9 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
             setTimeout(function() {
               targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
               // 하이라이트 효과
-              targetEl.classList.add('ring-2', 'ring-wiki-primary');
+              targetEl.classList.add('ring-2', 'ring-violet-400');
               setTimeout(function() {
-                targetEl.classList.remove('ring-2', 'ring-wiki-primary');
+                targetEl.classList.remove('ring-2', 'ring-violet-400');
               }, 2000);
             }, 150);
           });
@@ -677,9 +677,9 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
               targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
               // 하이라이트 효과
               var parent = targetEl.closest('.footnote-ref') || targetEl;
-              parent.classList.add('bg-wiki-primary/20');
+              parent.classList.add('bg-violet-400/20');
               setTimeout(function() {
-                parent.classList.remove('bg-wiki-primary/20');
+                parent.classList.remove('bg-violet-400/20');
               }, 2000);
             }
           });
@@ -845,7 +845,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
             ` : ''}
             <!-- 공유 버튼 -->
             <div class="relative" data-share-root data-cw-telemetry-scope="howto-hero-actions">
-              <button type="button" class="px-3 sm:px-4 py-2 min-h-[40px] bg-wiki-primary text-white rounded-lg text-xs sm:text-sm hover:bg-blue-600 transition inline-flex items-center gap-1.5" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-share-og-image="${guide.thumbnailUrl ? escapeHtml(guide.thumbnailUrl) : '/images/og-default.png'}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open">
+              <button type="button" class="px-3 sm:px-4 py-2 min-h-[40px] bg-violet-500 text-white rounded-lg text-xs sm:text-sm hover:bg-violet-600 transition inline-flex items-center gap-1.5" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-share-og-image="${guide.thumbnailUrl ? escapeHtml(guide.thumbnailUrl) : '/images/og-default.png'}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open">
                 <i class="fas fa-share-nodes text-xs sm:text-sm" aria-hidden="true"></i>
                 <span class="sr-only">공유</span>
               </button>
@@ -882,13 +882,13 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 -mt-2 text-sm sm:text-[15px]">
           <div class="flex flex-wrap items-center gap-3 sm:gap-4 flex-1">
             <div class="flex items-center gap-2">
-              <i class="far fa-calendar-alt text-wiki-primary text-xs sm:text-sm"></i>
+              <i class="far fa-calendar-alt text-violet-400 text-xs sm:text-sm"></i>
               <span class="text-white/80 font-medium">${formatDate(guide.updatedAt)}</span>
             </div>
             <div class="flex items-center gap-2">
               ${guide.authorPictureUrl 
                 ? `<img src="${escapeHtml(guide.authorPictureUrl)}" alt="${escapeHtml(guide.authorName || 'Careerwiki')}" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full object-cover" />`
-                : `<i class="far fa-user text-wiki-secondary text-xs sm:text-sm"></i>`}
+                : `<i class="far fa-user text-violet-400 text-xs sm:text-sm"></i>`}
               <span class="text-white/80 font-medium">${escapeHtml(guide.authorName || 'Careerwiki')}</span>
             </div>
             <!-- 모바일: 조회수도 같은 줄에 -->
@@ -916,7 +916,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
         <!-- 태그 (이미지 밑에 배치) -->
         ${guide.tags.length ? `
           <div class="flex flex-wrap gap-2 pt-2" aria-label="주요 태그" data-cw-telemetry-component="howto-hero-tags">
-            ${guide.tags.map((tag) => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-medium border border-wiki-primary/25 hover:bg-wiki-primary/25 transition cursor-default"><i class="fas fa-tag text-[10px] opacity-70" aria-hidden="true"></i>${escapeHtml(tag)}</span>`).join('')}
+            ${guide.tags.map((tag) => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-500/15 text-xs text-violet-400 font-medium border border-violet-500/25 hover:bg-violet-500/25 transition cursor-default"><i class="fas fa-tag text-[10px] opacity-70" aria-hidden="true"></i>${escapeHtml(tag)}</span>`).join('')}
           </div>
         ` : ''}
       </section>

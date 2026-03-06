@@ -232,22 +232,66 @@ function renderShareCard(data: any, token: string): string {
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+      background: #0a0a1a;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 30% at 20% 60%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
+      overflow: hidden;
     }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 50% 15%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1.5px 1.5px at 70% 65%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1px 1px at 85% 30%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1.5px 1.5px at 40% 70%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 60% 90%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1.5px 1.5px at 25% 55%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 90% 50%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 5% 45%, rgba(255,255,255,0.35), transparent),
+        radial-gradient(1.5px 1.5px at 75% 10%, rgba(255,255,255,0.55), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 45% 25%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 65% 55%, rgba(167,139,250,0.6), transparent),
+        radial-gradient(1.5px 1.5px at 20% 75%, rgba(129,140,248,0.5), transparent),
+        radial-gradient(1px 1px at 80% 15%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 35% 85%, rgba(196,181,253,0.4), transparent);
+      animation: twinkle 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body > * { position: relative; z-index: 1; }
     .card {
       width: 100%;
       max-width: 480px;
-      background: rgba(26, 26, 46, 0.85);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(99, 102, 241, 0.2);
+      background: rgba(26, 26, 46, 0.88);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(99, 102, 241, 0.25);
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.1);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(99, 102, 241, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
     .header {
       background: linear-gradient(135deg, #6366f1, #a855f7);

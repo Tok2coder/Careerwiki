@@ -983,7 +983,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const overviewCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushOverviewCard = (label: string, icon: string, markup: string, dataSources?: string[]) => {
     const id = anchorIdFactory('overview', label)
-    overviewCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, dataSources }) })
+    overviewCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, dataSources, accent: 'emerald' }) })
   }
 
   // 특정 필드가 어느 출처에서 왔는지 판단하는 헬퍼 함수
@@ -1604,9 +1604,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const learningCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushLearningCard = (label: string, icon: string, markup: string) => {
     const id = anchorIdFactory('curriculum', label)
-    learningCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
+    learningCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, accent: 'emerald' }) })
   }
-  
+
   // 0) 입학상황 섹션 (chartData.gender + chartData.applicant) - 첫 번째 섹션
   if (chartData) {
     const admissionCharts: string[] = []
@@ -1986,7 +1986,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const careerCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushCareerCard = (label: string, icon: string, markup: string) => {
     const id = anchorIdFactory('career', label)
-    careerCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
+    careerCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, accent: 'emerald' }) })
   }
 
   // 진로 전망 (jobProspect) - 상세정보 탭 진로 섹션에 표시
@@ -2039,7 +2039,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const universityCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushUniversityCard = (label: string, icon: string, markup: string) => {
     const id = anchorIdFactory('universities', label)
-    universityCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
+    universityCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, accent: 'emerald' }) })
   }
 
   const universitiesContent = renderUniversities(profile.universities)
@@ -2062,7 +2062,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const networkCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushNetworkCard = (label: string, icon: string, markup: string) => {
     const id = anchorIdFactory('network', label)
-    networkCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id }) })
+    networkCards.push({ id, label, icon, markup: buildCard(label, icon, markup, { anchorId: id, accent: 'emerald' }) })
   }
 
   // 추천 유사 전공은 히어로 태그로 이동됨 - 상세정보에서 제거

@@ -273,27 +273,27 @@ export const renderLayout = (
             text-transform: uppercase;
             margin-bottom: 12px;
             padding-bottom: 8px;
-            border-bottom: 1px solid rgba(100, 181, 246, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             display: block;
             width: 100%;
           }
 
           /* 섹션 제목 - 더 강조되고 트렌디하게, 풀너비 굵은 보더 */
           .section-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
             color: #ffffff;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.02em;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 2px solid rgba(100, 181, 246, 0.3);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
             width: 100%;
           }
 
           /* 모바일 최적화 */
           @media (max-width: 768px) {
             .section-title {
-              font-size: 18px;
+              font-size: 19px;
             }
             .content-heading {
               font-size: 16px;
@@ -450,10 +450,10 @@ export const renderLayout = (
           .glass-card {
             background: rgba(26, 26, 46, 0.8);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(67, 97, 238, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
           }
           .hover-glow:hover {
-            box-shadow: 0 0 30px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
           }
 
