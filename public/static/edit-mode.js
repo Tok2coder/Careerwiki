@@ -2171,11 +2171,19 @@ const EditMode = {
       });
       
       const result = await response.json();
-      
+
+      // 편집 충돌 감지 → 충돌 배너 표시
+      if (response.status === 409 && result.error === 'CONFLICT') {
+        this.showEditModeConflictBanner(result.serverData, result.serverTimestamp);
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="fas fa-save mr-2"></i>저장';
+        return;
+      }
+
       if (!response.ok || !result.success) {
         throw new Error(result.error || '저장에 실패했습니다.');
       }
-      
+
       // 임시저장 삭제
       const draftKey = `editDraft_${this.entityType}_${this.entityId}`;
       localStorage.removeItem(draftKey);
@@ -2183,19 +2191,82 @@ const EditMode = {
 
       // 성공 - 페이지 새로고침 (편집 모드 종료, 캐시 무효화)
       window.location.href = window.location.pathname + '?_t=' + Date.now();
-      
+
     } catch (error) {
-      if (error.message === 'CONFLICT' || (error.message && error.message.includes('CONFLICT'))) {
-        if (confirm('다른 사용자가 이미 이 페이지를 편집했습니다.\n새로고침하여 최신 내용을 확인하시겠습니까?\n\n(취소를 누르면 현재 편집 내용을 유지합니다)')) {
-          window.location.href = window.location.pathname + '?edit=true&_t=' + Date.now();
-        }
-      } else {
-        alert('저장 중 오류가 발생했습니다: ' + error.message);
-      }
+      alert('저장 중 오류가 발생했습니다: ' + error.message);
 
       saveBtn.disabled = false;
       saveBtn.innerHTML = '<i class="fas fa-save mr-2"></i>저장';
     }
+  },
+
+  /**
+   * 편집 모드 충돌 배너 표시
+   */
+  showEditModeConflictBanner(serverData, serverTimestamp) {
+    // 기존 배너 제거
+    const existingBanner = document.getElementById('edit-conflict-banner');
+    if (existingBanner) existingBanner.remove();
+
+    const conflictFields = serverData ? Object.keys(serverData) : [];
+    const fieldList = conflictFields.length > 0
+      ? conflictFields.map(f => `<code class="px-1.5 py-0.5 bg-gray-800 rounded text-xs">${f}</code>`).join(', ')
+      : '';
+
+    const banner = document.createElement('div');
+    banner.id = 'edit-conflict-banner';
+    banner.className = 'fixed top-0 left-0 right-0 z-[9999] p-4 bg-red-900/95 border-b-2 border-red-500 backdrop-blur-sm shadow-2xl';
+    banner.innerHTML = `
+      <div class="max-w-4xl mx-auto flex items-start gap-4">
+        <svg class="w-6 h-6 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+        </svg>
+        <div class="flex-1">
+          <h3 class="text-base font-semibold text-red-200">편집 충돌 발생</h3>
+          <p class="text-sm text-red-300/80 mt-1">
+            다른 사용자가 이 페이지를 먼저 수정했습니다.
+            ${fieldList ? `<br>충돌 필드: ${fieldList}` : ''}
+          </p>
+          <p class="text-sm text-red-300/60 mt-1">
+            현재 편집 내용은 화면에 그대로 보존되어 있습니다.
+          </p>
+          <div class="flex flex-wrap gap-3 mt-3">
+            <button type="button" id="conflict-force-save"
+              class="px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 transition text-sm font-medium">
+              내 버전으로 강제 저장
+            </button>
+            <button type="button" id="conflict-reload-page"
+              class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition text-sm font-medium">
+              새로고침 (상대방 버전 확인)
+            </button>
+            <button type="button" id="conflict-dismiss"
+              class="px-4 py-2 rounded-lg border border-red-500/40 text-red-300 hover:text-white transition text-sm">
+              닫기 (편집 계속)
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.prepend(banner);
+
+    // 이벤트 핸들러
+    document.getElementById('conflict-force-save').onclick = async () => {
+      this.baseTimestamp = serverTimestamp;
+      banner.remove();
+      await this.handleSave();
+    };
+
+    document.getElementById('conflict-reload-page').onclick = () => {
+      window.location.href = window.location.pathname + '?edit=true&_t=' + Date.now();
+    };
+
+    document.getElementById('conflict-dismiss').onclick = () => {
+      banner.remove();
+    };
+
+    // 페이지 스크롤을 최상단으로
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   },
   
   /**

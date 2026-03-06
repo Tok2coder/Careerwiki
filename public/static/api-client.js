@@ -1077,7 +1077,7 @@ const EditSystem = {
   /**
    * 편집 모달 열기
    */
-  openEditModal({ entityType, entityId, field = null }) {
+  async openEditModal({ entityType, entityId, field = null }) {
     // 기존 모달이 있으면 닫기
     if (this.currentModal) {
       this.closeModal();
@@ -1085,9 +1085,27 @@ const EditSystem = {
 
     this.currentEntity = { entityType, entityId, field };
 
+    // 편집 데이터 + 타임스탬프 조회 (충돌 감지용)
+    try {
+      const endpoint = `${API_BASE}/${entityType}/${encodeURIComponent(entityId)}/edit-data`;
+      const response = await fetch(endpoint);
+      const result = await response.json();
+      if (result.success) {
+        this.editData = result.data || {};
+        this.editDataTimestamp = result.lastUpdatedAt || null;
+        if (result.entityId) {
+          this.currentEntity.entityId = result.entityId;
+        }
+      }
+    } catch (e) {
+      // 실패 시 빈 기본값으로 진행
+      this.editData = {};
+      this.editDataTimestamp = null;
+    }
+
     // 모달 HTML 생성
-    const modalHtml = this.createModalHtml({ entityType, entityId, field });
-    
+    const modalHtml = this.createModalHtml({ entityType, entityId: this.currentEntity.entityId, field });
+
     // 모달을 body에 추가
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = modalHtml;
@@ -1376,11 +1394,11 @@ const EditSystem = {
         throw new Error('지원하지 않는 엔티티 타입입니다.');
       }
 
-      // 요청 본문 구성
+      // 요청 본문 구성 (다중 필드 형식 + 충돌 감지용 타임스탬프)
       const payload = {
-        field: field || null,
-        content,
-        source
+        fields: { [field]: content },
+        sources: source ? { [field]: [{ text: source }] } : undefined,
+        baseTimestamp: this.editDataTimestamp || undefined
       };
 
       if (anonymous && password) {
@@ -1398,8 +1416,27 @@ const EditSystem = {
 
       const result = await response.json();
 
+      // 편집 충돌 감지 → 충돌 해결 UI 표시
+      if (response.status === 409 && result.error === 'CONFLICT') {
+        this.showConflictResolution({
+          field,
+          myContent: content,
+          mySource: source,
+          serverData: result.serverData,
+          serverTimestamp: result.serverTimestamp,
+          entityType,
+          entityId
+        });
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(result.error || result.message || '편집 저장에 실패했습니다.');
+      }
+
+      // 타임스탬프 업데이트 (후속 편집용)
+      if (result.newTimestamp) {
+        this.editDataTimestamp = result.newTimestamp;
       }
 
       // 성공 메시지 표시
@@ -1414,13 +1451,180 @@ const EditSystem = {
 
     } catch (error) {
       this.showError(form, error.message || '편집 저장 중 오류가 발생했습니다.');
-      
+
       // 제출 버튼 다시 활성화
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = '저장';
       }
     }
+  },
+
+  /**
+   * 편집 충돌 해결 모달 표시 (위키피디아 스타일)
+   */
+  showConflictResolution({ field, myContent, mySource, serverData, serverTimestamp, entityType, entityId }) {
+    // 기존 편집 모달 닫기
+    if (this.currentModal) {
+      this.currentModal.remove();
+      this.currentModal = null;
+    }
+
+    const fieldLabel = field ? this.getFieldLabel(entityType, field) : '필드';
+    const serverValue = serverData?.[field] ?? '(내용 없음)';
+    const serverValueDisplay = typeof serverValue === 'string' ? serverValue : JSON.stringify(serverValue, null, 2);
+
+    const escHtml = (str) => {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    };
+
+    const conflictHtml = `
+      <div data-conflict-modal-backdrop
+        class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+        role="dialog" aria-modal="true">
+        <div class="w-full max-w-3xl max-h-[90vh] bg-[#1a1d23] border border-gray-700/60 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+
+          <div class="px-6 py-4 border-b border-gray-700/60 bg-red-500/10">
+            <div class="flex items-center gap-3">
+              <svg class="w-6 h-6 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+              </svg>
+              <div>
+                <h2 class="text-lg font-semibold text-white">편집 충돌 발생</h2>
+                <p class="text-sm text-gray-400 mt-1">
+                  다른 사용자가 <strong class="text-white">${escHtml(fieldLabel)}</strong> 필드를 먼저 수정했습니다.
+                  아래에서 두 버전을 비교하고 선택하세요.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+
+            <div class="rounded-xl border border-blue-500/40 bg-blue-500/5 p-4">
+              <div class="flex items-center gap-2 mb-3">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
+                </svg>
+                <h3 class="text-sm font-semibold text-blue-300">현재 저장된 버전 (다른 사용자의 편집)</h3>
+              </div>
+              <div class="p-3 rounded-lg bg-[#0d1017] border border-gray-700/40 text-gray-300 text-sm whitespace-pre-wrap max-h-48 overflow-y-auto">${escHtml(serverValueDisplay)}</div>
+            </div>
+
+            <div class="rounded-xl border border-amber-500/40 bg-amber-500/5 p-4">
+              <div class="flex items-center gap-2 mb-3">
+                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                <h3 class="text-sm font-semibold text-amber-300">내가 작성한 버전</h3>
+              </div>
+              <div class="p-3 rounded-lg bg-[#0d1017] border border-gray-700/40 text-gray-300 text-sm whitespace-pre-wrap max-h-48 overflow-y-auto">${escHtml(myContent)}</div>
+            </div>
+
+            <div class="rounded-xl border border-green-500/40 bg-green-500/5 p-4">
+              <div class="flex items-center gap-2 mb-3">
+                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                </svg>
+                <h3 class="text-sm font-semibold text-green-300">직접 병합</h3>
+                <span class="text-xs text-gray-500">(두 버전을 조합하여 직접 작성)</span>
+              </div>
+              <textarea data-merge-content rows="8"
+                class="w-full px-4 py-3 rounded-lg bg-[#0d1017] border border-gray-700/60 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-y text-sm"
+                placeholder="위 두 버전을 참고하여 최종 내용을 작성하세요...">${escHtml(myContent)}</textarea>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 px-6 py-4 border-t border-gray-700/60">
+            <button type="button" data-conflict-use-server
+              class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition text-sm font-medium">
+              상대방 버전 유지
+            </button>
+            <button type="button" data-conflict-use-mine
+              class="px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 transition text-sm font-medium">
+              내 버전으로 덮어쓰기
+            </button>
+            <button type="button" data-conflict-use-merged
+              class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition text-sm font-medium">
+              병합 내용 저장
+            </button>
+            <button type="button" data-conflict-cancel
+              class="ml-auto px-4 py-2 rounded-lg border border-gray-700/60 text-gray-400 hover:text-white transition text-sm">
+              취소
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const container = document.createElement('div');
+    container.innerHTML = conflictHtml;
+    const modal = container.firstElementChild;
+    document.body.appendChild(modal);
+
+    // 충돌 해결 후 재저장 함수
+    const handleConflictSave = async (chosenContent) => {
+      const saveBtn = modal.querySelector('[data-conflict-use-mine]');
+      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '저장 중...'; }
+
+      const payload = {
+        fields: { [field]: chosenContent },
+        sources: mySource ? { [field]: [{ text: mySource }] } : undefined,
+        baseTimestamp: serverTimestamp
+      };
+
+      try {
+        const endpoint = `${API_BASE}/${entityType}/${encodeURIComponent(entityId)}/edit`;
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || '저장 실패');
+        }
+        modal.remove();
+        const url = new URL(window.location.href);
+        url.searchParams.set('_t', Date.now().toString());
+        window.location.replace(url.toString());
+      } catch (err) {
+        alert('저장 중 오류: ' + err.message);
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '재시도'; }
+      }
+    };
+
+    // 이벤트 핸들러
+    modal.querySelector('[data-conflict-use-server]').onclick = () => {
+      modal.remove();
+      const url = new URL(window.location.href);
+      url.searchParams.set('_t', Date.now().toString());
+      window.location.replace(url.toString());
+    };
+
+    modal.querySelector('[data-conflict-use-mine]').onclick = () => {
+      handleConflictSave(myContent);
+    };
+
+    modal.querySelector('[data-conflict-use-merged]').onclick = () => {
+      const mergedContent = modal.querySelector('[data-merge-content]').value.trim();
+      if (!mergedContent) {
+        alert('병합 내용을 입력해주세요.');
+        return;
+      }
+      handleConflictSave(mergedContent);
+    };
+
+    modal.querySelector('[data-conflict-cancel]').onclick = () => {
+      modal.remove();
+    };
+
+    // 배경 클릭으로 닫기
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
+    });
   },
 
   /**

@@ -362,10 +362,30 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
       if (body.baseTimestamp) {
         const currentTs = job.user_last_updated_at as number | null
         if (currentTs && Number(currentTs) > Number(body.baseTimestamp)) {
+          // 상대방이 저장한 데이터 추출 (충돌 해결 UI용)
+          let srvUserData: Record<string, any> = {}
+          let srvApiData: Record<string, any> = {}
+          let srvAdminData: Record<string, any> = {}
+          try { srvUserData = job.user_contributed_json ? JSON.parse(job.user_contributed_json as string) : {} } catch {}
+          try { srvApiData = job.api_data_json ? JSON.parse(job.api_data_json as string) : {} } catch {}
+          try { srvAdminData = job.admin_data_json ? JSON.parse(job.admin_data_json as string) : {} } catch {}
+          const serverMerged = { ...srvApiData, ...srvUserData, ...srvAdminData }
+
+          const requestedFieldKeys = Object.keys(fields)
+          const serverFieldValues: Record<string, any> = {}
+          for (const key of requestedFieldKeys) {
+            const parts = key.split('.')
+            let val: any = serverMerged
+            for (const part of parts) { val = val?.[part] }
+            serverFieldValues[key] = val ?? null
+          }
+
           return c.json({
             success: false,
             error: 'CONFLICT',
-            message: '다른 사용자가 이미 편집했습니다. 새로고침 후 다시 시도해주세요.'
+            message: '다른 사용자가 이미 편집했습니다.',
+            serverTimestamp: Number(currentTs),
+            serverData: serverFieldValues
           }, 409)
         }
       }
@@ -538,7 +558,8 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
       return c.json({
         success: true,
         revisionId: revision.id,
-        message: 'Edit saved successfully'
+        message: 'Edit saved successfully',
+        newTimestamp: now
       })
     }
 
