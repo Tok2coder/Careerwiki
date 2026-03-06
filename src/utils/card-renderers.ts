@@ -112,7 +112,7 @@ export const renderJobCard = (entry: { profile: any; display?: any }): string =>
   const jobSlug = composeDetailSlug('job', job.name, job.id)
   const jobUrl = `/job/${encodeURIComponent(jobSlug)}`
   const summary = escapeHtml(formatJobSummaryText(display.summary))
-  // categoryName이 객체일 수 있으므로 문자열 추출
+  // categoryName 추출: MECE 분류(classificationLarge) 우선 → 기존 heroCategory 폴백
   const rawCategoryName = display.categoryName || job.category?.name
   const normalizeCategory = (value: any): string => {
     let cat =
@@ -123,7 +123,7 @@ export const renderJobCard = (entry: { profile: any; display?: any }): string =>
     else if (cat.includes('>')) cat = cat.split('>')[0].trim()
     return cat
   }
-  const categoryName = normalizeCategory(rawCategoryName)
+  const categoryName = display.classificationLarge || normalizeCategory(rawCategoryName)
 
   const satisfactionGrade = getSatisfactionGrade(display.satisfaction)
 

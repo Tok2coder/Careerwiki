@@ -18,12 +18,14 @@ import {
   serializeForScript, getOptionalUser
 } from '../utils/shared-helpers'
 import { logSearchQuery } from '../services/searchQueryLogger'
+import { MAJOR_FIELD_LABELS, MAJOR_CATEGORIES } from '../constants/classification'
 
 const majorListRoutes = new Hono<AppEnv>()
 
 majorListRoutes.get('/major', async (c) => {
   const keywordRaw = c.req.query('q') || ''
   const keyword = keywordRaw.trim()
+  const category = c.req.query('category') || ''
   const includeSources = parseSourcesQuery(c.req.query('sources'))
   const page = parseNumberParam(c.req.query('page'), 1, { min: 1 })
   const perPage = 20 // 성능 최적화: 50 → 20 (이미지 로딩 시간 단축)
@@ -35,6 +37,7 @@ majorListRoutes.get('/major', async (c) => {
 
   const searchParams = new URLSearchParams()
   if (keyword) searchParams.set('q', keyword)
+  if (category) searchParams.set('category', category)
   if (includeSources?.length) searchParams.set('sources', includeSources.join(','))
   if (page > 1) searchParams.set('page', String(page))
   if (sort && sort !== 'relevance') searchParams.set('sort', sort)
@@ -55,7 +58,8 @@ majorListRoutes.get('/major', async (c) => {
 
   try {
     const forceRefresh = c.req.query('refresh') === '1'
-    const useRag = !!(keyword && sort === 'relevance')
+    // 카테고리 필터가 있으면 RAG를 건너뛰고 D1 직접 쿼리
+    const useRag = !!(keyword && sort === 'relevance' && !category)
 
     let result: UnifiedSearchResult<UnifiedMajorSummaryEntry>
     let cacheState: CacheState | undefined
@@ -68,10 +72,10 @@ majorListRoutes.get('/major', async (c) => {
       // 기존 LIKE 검색 + KV 결과 캐시
       const cached = await withKvCache(
         c.env.KV,
-        buildListCacheKey('major', { keyword, page, perPage, includeSources, sort }),
+        buildListCacheKey('major', { keyword, page, perPage, includeSources, sort, category }),
         async () =>
           searchUnifiedMajors(
-            { keyword, page, perPage, includeSources, sort },
+            { keyword, category, page, perPage, includeSources, sort },
             c.env
           ),
         {
@@ -135,11 +139,11 @@ majorListRoutes.get('/major', async (c) => {
     // 공통 함수 renderMajorCard 사용
     const majorCards = items.length
       ? items.map((entry) => renderMajorCard(entry)).join('')
-      : keyword
+      : keyword || category
         ? `<div class="glass-card p-8 rounded-2xl text-center col-span-full">
             <i class="fas fa-search text-4xl text-wiki-muted mb-4"></i>
-            <p class="text-lg text-wiki-muted">"${escapeHtml(keyword)}"에 해당하는 전공이 없습니다.</p>
-            <p class="text-sm text-wiki-muted mt-2">다른 검색어를 시도해보세요.</p>
+            <p class="text-lg text-wiki-muted">${category ? `"${escapeHtml(category)}" 계열에` : ''} ${keyword ? `"${escapeHtml(keyword)}"에` : ''} 해당하는 전공이 없습니다.</p>
+            <p class="text-sm text-wiki-muted mt-2">${category ? '<a href="/major" class="text-wiki-primary hover:underline">전체 전공 보기</a>' : '다른 검색어를 시도해보세요.'}</p>
           </div>`
         : `<div class="glass-card p-8 rounded-2xl text-center col-span-full">
             <i class="fas fa-graduation-cap text-4xl text-wiki-muted mb-4"></i>
@@ -150,8 +154,12 @@ majorListRoutes.get('/major', async (c) => {
     const cacheNotice = '' // renderCacheNotice(cacheState, { staleSeconds: LIST_CACHE_STALE_SECONDS, maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS })
 
     const sourceSummaryHtml = '' // 데이터 수집 상태 제거
-    const filterSummary = keyword ? `"${escapeHtml(keyword)}" 키워드` : '전체 전공'
-    const headingLabel = keyword ? `"${escapeHtml(keyword)}" 관련 전공` : '전공위키'
+    const filterSummary = category
+      ? `${escapeHtml(category)}${keyword ? ` · "${escapeHtml(keyword)}"` : ''}`
+      : keyword ? `"${escapeHtml(keyword)}" 키워드` : '전체 전공'
+    const headingLabel = category
+      ? escapeHtml(category)
+      : keyword ? `"${escapeHtml(keyword)}" 관련 전공` : '전공위키'
 
     const jsonLdItems = items.map((entry, index) => {
       const slug = composeDetailSlug('major', entry.profile.name, entry.profile.id)
@@ -202,6 +210,22 @@ majorListRoutes.get('/major', async (c) => {
               <span id="major-total-count">${totalCount}</span>개
             </span>
           </div>
+        </div>
+
+        <!-- 카테고리 필터 버튼 -->
+        <div class="flex flex-wrap gap-2 mb-4 justify-center">
+          <a href="/major${keyword ? `?q=${encodeURIComponent(keyword)}` : ''}"
+             class="px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${!category ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25' : 'bg-white/[0.05] text-white/60 hover:bg-white/[0.1] hover:text-white/80 border border-white/[0.08]'}">
+            전체
+          </a>
+          ${MAJOR_CATEGORIES.map(cat => {
+            const isActive = category === cat
+            const catUrl = `/major?category=${encodeURIComponent(cat)}${keyword ? `&q=${encodeURIComponent(keyword)}` : ''}`
+            return `<a href="${catUrl}"
+              class="px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${isActive ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25' : 'bg-white/[0.05] text-white/60 hover:bg-white/[0.1] hover:text-white/80 border border-white/[0.08]'}">
+              ${escapeHtml(cat)}
+            </a>`
+          }).join('')}
         </div>
 
         <form id="major-filter-form" data-hydration-target="major" method="get" class="mb-6">
@@ -293,6 +317,7 @@ majorListRoutes.get('/major', async (c) => {
           const buildPageUrl = (pageNum: number) => {
             const params = new URLSearchParams()
             if (keyword) params.set('q', keyword)
+            if (category) params.set('category', category)
             if (includeSources?.length) params.set('sources', includeSources.join(','))
             if (pageNum > 1) params.set('page', String(pageNum))
             return `/major${params.toString() ? `?${params.toString()}` : ''}`
@@ -472,10 +497,14 @@ majorListRoutes.get('/major', async (c) => {
 
     const hydratedContent = `${content}${hydrationScript}${sortScript}`
 
-    const pageTitle = keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki'
-    const description = keyword
-      ? createMetaDescription(`"${keyword}" 관련 전공의 취업률, 평균 월급, 만족도 정보를 확인하세요.`)
-      : '다양한 전공의 취업률, 평균 월급, 만족도 정보를 한눈에 확인하세요. Careerwiki 전공위키.'
+    const pageTitle = category
+      ? `${category} 전공 목록 - Careerwiki`
+      : keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki'
+    const description = category
+      ? createMetaDescription(`${category} 관련 전공의 취업률, 평균 월급, 만족도 정보를 확인하세요.`)
+      : keyword
+        ? createMetaDescription(`"${keyword}" 관련 전공의 취업률, 평균 월급, 만족도 정보를 확인하세요.`)
+        : '다양한 전공의 취업률, 평균 월급, 만족도 정보를 한눈에 확인하세요. Careerwiki 전공위키.'
 
     return c.html(
       renderLayoutWithContext(c,

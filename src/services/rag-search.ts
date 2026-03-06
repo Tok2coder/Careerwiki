@@ -2222,9 +2222,11 @@ async function enrichJobsFromD1(
       ja.income as attr_income, ja.stability as attr_stability, ja.wlb as attr_wlb,
       ja.growth as attr_growth, ja.analytical as attr_analytical, ja.creative as attr_creative,
       ja.people_facing as attr_people_facing, ja.solo_deep as attr_solo_deep,
-      ja.teamwork as attr_teamwork, ja.execution as attr_execution
+      ja.teamwork as attr_teamwork, ja.execution as attr_execution,
+      jc.large_category as classification_large, jc.medium_category as classification_medium
     FROM jobs j
     LEFT JOIN job_attributes ja ON j.id = ja.job_id
+    LEFT JOIN job_categories jc ON j.id = jc.job_id
     WHERE j.id IN (${placeholders}) AND j.is_active = 1
   `).bind(...jobIds).all()
 
@@ -2272,6 +2274,8 @@ function parseJobRowToEntry(row: {
   primary_source: string | null
   merged_profile_json: string | null
   image_url: string | null
+  classification_large?: string | null
+  classification_medium?: string | null
 }): UnifiedJobSummaryEntry {
   const profile = row.merged_profile_json ? safeJsonParse(row.merged_profile_json) : {}
   const jobName = profile.name || row.name || '알 수 없음'
@@ -2283,12 +2287,21 @@ function parseJobRowToEntry(row: {
     profile.heroIntro || profile.summary || profile.work?.summary || profile.duties || profile.overviewWork?.main || ''
   )
 
+  // DB 분류 테이블 우선, heroCategory 폴백
+  const classificationLarge = row.classification_large || ''
+  const classificationMedium = row.classification_medium || ''
+
   // 카테고리 추출
   let categoryName = ''
   let categoryLarge = ''
   let categoryMedium = ''
   let categorySmall = ''
-  if (profile.heroCategory) {
+
+  if (classificationLarge) {
+    categoryLarge = classificationLarge
+    categoryMedium = classificationMedium
+    categoryName = classificationLarge
+  } else if (profile.heroCategory) {
     if (typeof profile.heroCategory === 'string') {
       categoryName = pickPrimaryCategory(profile.heroCategory)
       categoryLarge = categoryName
@@ -2368,6 +2381,8 @@ function parseJobRowToEntry(row: {
       categoryLarge,
       categoryMedium,
       categorySmall,
+      classificationLarge,
+      classificationMedium,
       salary,
       satisfaction,
       wlb: String(wlb),

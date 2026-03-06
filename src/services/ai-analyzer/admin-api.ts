@@ -5,6 +5,16 @@ import { Hono } from 'hono'
 import type { D1Database } from '@cloudflare/workers-types'
 import { VERSIONS } from './types'
 import { TAGGER_VERSION } from './job-attributes-types'
+import {
+  JOB_LARGE_CATEGORIES,
+  JOB_MEDIUM_CATEGORIES,
+  CAREERNET_TO_STANDARD_MAPPING,
+  BREADCRUMB_ANOMALY_MAPPING,
+  MAJOR_FIELD_LABELS,
+  getClassificationPromptList,
+  fuzzyMatchLargeCategory,
+} from '../../constants/classification'
+import { callOpenAI } from './openai-client'
 
 // ============================================
 // Bindings
@@ -371,7 +381,7 @@ adminAiApi.post('/retag-majors', async (c) => {
     return c.json({ error: 'OPENAI_API_KEY not configured' }, 500)
   }
 
-  const body = await c.req.json<{ batch_size?: number; offset?: number }>().catch(() => ({}))
+  const body = await c.req.json().catch(() => ({})) as { batch_size?: number; offset?: number }
   const batchSize = Math.min(Math.max(body.batch_size || 10, 1), 30)
   const offset = Math.max(body.offset || 0, 0)
 
@@ -436,7 +446,7 @@ adminAiApi.post('/retag-all', async (c) => {
     return c.json({ error: 'OPENAI_API_KEY not configured' }, 500)
   }
 
-  const body = await c.req.json<{ batch_size?: number; offset?: number }>().catch(() => ({}))
+  const body = await c.req.json().catch(() => ({})) as { batch_size?: number; offset?: number }
   const batchSize = Math.min(Math.max(body.batch_size || 10, 1), 50)
   const offset = Math.max(body.offset || 0, 0)
 
@@ -503,7 +513,7 @@ adminAiApi.post('/retag-flat50', async (c) => {
     return c.json({ error: 'OPENAI_API_KEY not configured' }, 500)
   }
 
-  const body = await c.req.json<{ batch_size?: number; offset?: number }>().catch(() => ({}))
+  const body = await c.req.json().catch(() => ({})) as { batch_size?: number; offset?: number }
   const batchSize = Math.min(Math.max(body.batch_size || 5, 1), 20)
   const offset = Math.max(body.offset || 0, 0)
 
@@ -577,7 +587,7 @@ adminAiApi.post('/retag-category-defaults', async (c) => {
     return c.json({ error: 'OPENAI_API_KEY not configured' }, 500)
   }
 
-  const body = await c.req.json<{ batch_size?: number }>().catch(() => ({}))
+  const body = await c.req.json().catch(() => ({})) as { batch_size?: number }
   const batchSize = Math.min(Math.max(body.batch_size || 5, 1), 20)
 
   try {
@@ -629,6 +639,415 @@ adminAiApi.post('/retag-category-defaults', async (c) => {
       failed: failCount,
       remaining: (totalDefaults?.cnt || 0) - successCount,
       results,
+    })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
+// ============================================
+// 직업 MECE 분류 API
+// ============================================
+
+/**
+ * POST /admin/api/ai/classify/migrate-goyong24
+ * A그룹: breadcrumb 직업 530개를 job_categories로 이관
+ */
+adminAiApi.post('/classify/migrate-goyong24', async (c) => {
+  const db = c.env.DB
+  const body = await c.req.json().catch(() => ({})) as { batch_size?: number }
+  const batchSize = Math.min(Math.max(body.batch_size || 50, 1), 200)
+  try {
+    // breadcrumb 타입이면서 아직 job_categories에 없는 직업 (배치)
+    const jobs = await db.prepare(`
+      SELECT j.id, j.merged_profile_json
+      FROM jobs j
+      LEFT JOIN job_categories jc ON j.id = jc.job_id
+      WHERE j.is_active = 1
+        AND jc.job_id IS NULL
+        AND j.goyong24_id IS NOT NULL
+        AND j.merged_profile_json LIKE '%"type":"breadcrumb"%'
+      LIMIT ?
+    `).bind(batchSize).all<{ id: string; merged_profile_json: string }>()
+
+    const rows = jobs.results || []
+    let success = 0
+    let failed = 0
+    const errors: string[] = []
+
+    for (const row of rows) {
+      try {
+        const profile = JSON.parse(row.merged_profile_json || '{}')
+        let large = profile.heroCategory?.large || ''
+        const medium = profile.heroCategory?.medium || ''
+
+        if (!large) { failed++; continue }
+
+        // 이상값 매핑
+        if (BREADCRUMB_ANOMALY_MAPPING[large]) {
+          large = BREADCRUMB_ANOMALY_MAPPING[large]
+        }
+
+        // 유효한 대분류인지 검증
+        if (!JOB_LARGE_CATEGORIES.includes(large as any)) {
+          errors.push(`${row.id}: 알 수 없는 대분류 "${large}"`)
+          failed++
+          continue
+        }
+
+        await db.prepare(`
+          INSERT OR REPLACE INTO job_categories (job_id, large_category, medium_category, source, confidence)
+          VALUES (?, ?, ?, 'breadcrumb', 1.0)
+        `).bind(row.id, large, medium || null).run()
+        success++
+      } catch (e) {
+        failed++
+        errors.push(`${row.id}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
+    // 남은 개수 확인
+    const remainingResult = await db.prepare(`
+      SELECT COUNT(*) as cnt FROM jobs j
+      LEFT JOIN job_categories jc ON j.id = jc.job_id
+      WHERE j.is_active = 1 AND jc.job_id IS NULL
+        AND j.goyong24_id IS NOT NULL
+        AND j.merged_profile_json LIKE '%"type":"breadcrumb"%'
+    `).first<{ cnt: number }>()
+
+    return c.json({ processed: rows.length, success, failed, remaining: remainingResult?.cnt || 0, errors: errors.slice(0, 20) })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
+/**
+ * POST /admin/api/ai/classify/migrate-careernet
+ * B그룹: CareerNet single+classifications 직업 302개를 매핑하여 이관
+ */
+adminAiApi.post('/classify/migrate-careernet', async (c) => {
+  const db = c.env.DB
+  const body = await c.req.json().catch(() => ({})) as { batch_size?: number }
+  const batchSize = Math.min(Math.max(body.batch_size || 50, 1), 200)
+  try {
+    // CareerNet 분류가 있으면서 아직 job_categories에 없는 직업
+    const jobs = await db.prepare(`
+      SELECT j.id, j.merged_profile_json
+      FROM jobs j
+      LEFT JOIN job_categories jc ON j.id = jc.job_id
+      WHERE j.is_active = 1
+        AND jc.job_id IS NULL
+        AND j.careernet_id IS NOT NULL
+        AND j.merged_profile_json LIKE '%"classifications"%'
+        AND j.merged_profile_json LIKE '%"type":"single"%'
+      LIMIT ?
+    `).bind(batchSize).all<{ id: string; merged_profile_json: string }>()
+
+    const rows = jobs.results || []
+    let success = 0
+    let failed = 0
+    const errors: string[] = []
+
+    for (const row of rows) {
+      try {
+        const profile = JSON.parse(row.merged_profile_json || '{}')
+        const careernetLarge = profile.classifications?.large || ''
+        const standardLarge = CAREERNET_TO_STANDARD_MAPPING[careernetLarge]
+
+        if (!standardLarge) {
+          errors.push(`${row.id}: 매핑 없는 CareerNet 분류 "${careernetLarge}"`)
+          failed++
+          continue
+        }
+
+        // CareerNet 원본 분류를 medium에 보존
+        await db.prepare(`
+          INSERT OR REPLACE INTO job_categories (job_id, large_category, medium_category, source, confidence)
+          VALUES (?, ?, ?, 'careernet_mapping', 0.9)
+        `).bind(row.id, standardLarge, careernetLarge).run()
+        success++
+      } catch (e) {
+        failed++
+        errors.push(`${row.id}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
+    const remainingResult = await db.prepare(`
+      SELECT COUNT(*) as cnt FROM jobs j
+      LEFT JOIN job_categories jc ON j.id = jc.job_id
+      WHERE j.is_active = 1 AND jc.job_id IS NULL
+        AND j.careernet_id IS NOT NULL
+        AND j.merged_profile_json LIKE '%"classifications"%'
+        AND j.merged_profile_json LIKE '%"type":"single"%'
+    `).first<{ cnt: number }>()
+
+    return c.json({ processed: rows.length, success, failed, remaining: remainingResult?.cnt || 0, errors: errors.slice(0, 20) })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
+/**
+ * POST /admin/api/ai/classify/batch-llm
+ * C그룹: 미분류 직업을 LLM으로 배치 분류
+ * body: { batch_size?: number } (기본 10, 최대 30)
+ */
+adminAiApi.post('/classify/batch-llm', async (c) => {
+  const db = c.env.DB
+  const openaiKey = (c.env as any).OPENAI_API_KEY
+  if (!openaiKey) {
+    return c.json({ error: 'OPENAI_API_KEY not configured' }, 500)
+  }
+
+  const body = await c.req.json().catch(() => ({})) as { batch_size?: number }
+  const batchSize = Math.min(Math.max(body.batch_size || 10, 1), 30)
+
+  try {
+    // 미분류 직업 조회 (job_categories에 없는 active 직업)
+    const jobs = await db.prepare(`
+      SELECT j.id, j.name, j.merged_profile_json,
+             ja.job_type
+      FROM jobs j
+      LEFT JOIN job_attributes ja ON j.id = ja.job_id
+      WHERE j.is_active = 1
+        AND j.id NOT IN (SELECT job_id FROM job_categories)
+      ORDER BY j.name
+      LIMIT ?
+    `).bind(batchSize).all<{
+      id: string; name: string; merged_profile_json: string; job_type: string | null
+    }>()
+
+    const rows = jobs.results || []
+    if (rows.length === 0) {
+      const totalResult = await db.prepare(
+        `SELECT COUNT(*) as cnt FROM jobs WHERE is_active = 1`
+      ).first<{ cnt: number }>()
+      const classifiedResult = await db.prepare(
+        `SELECT COUNT(*) as cnt FROM job_categories`
+      ).first<{ cnt: number }>()
+      return c.json({
+        processed: 0, success: 0, failed: 0, remaining: 0,
+        total_jobs: totalResult?.cnt || 0,
+        total_classified: classifiedResult?.cnt || 0,
+        results: [],
+      })
+    }
+
+    // 남은 미분류 직업 수
+    const remainingResult = await db.prepare(`
+      SELECT COUNT(*) as cnt FROM jobs j
+      WHERE j.is_active = 1
+        AND j.id NOT IN (SELECT job_id FROM job_categories)
+    `).first<{ cnt: number }>()
+    const remainingCount = (remainingResult?.cnt || 0) - rows.length
+
+    const classificationList = getClassificationPromptList()
+    const results: Array<{ job_id: string; job_name: string; success: boolean; large?: string; medium?: string; error?: string }> = []
+    let successCount = 0
+    let failCount = 0
+
+    // 각 직업을 LLM으로 분류
+    for (const row of rows) {
+      try {
+        const profile = JSON.parse(row.merged_profile_json || '{}')
+        const heroIntro = profile.heroIntro || profile.summary || ''
+        const industry = profile.heroCategory?.value || profile.categoryName || ''
+        const jobType = row.job_type || ''
+
+        const prompt = `아래 직업을 분류 체계에서 골라 대분류(large)와 중분류(medium)로 분류하세요.
+
+## 직업 정보
+- 직업명: ${row.name}
+- 소개: ${heroIntro.substring(0, 300)}
+${industry ? `- 산업: ${industry}` : ''}
+${jobType ? `- 직업유형: ${jobType}` : ''}
+
+## 분류 체계 (반드시 아래 목록에서만 선택)
+${classificationList}
+
+## ⚠️ 주의사항
+- 대분류는 반드시 위 10개 중 하나를 **정확히 그대로** 사용하세요.
+- "제조직", "경비업" 등 목록에 없는 분류는 절대 사용하지 마세요.
+- 산업분류(KSIC)가 아닌 직업분류입니다.
+- 가스·전기·생산·제조 관련 직업 → "설치·정비·생산직"
+- 경비·보안·청소 관련 직업 → "미용·여행·숙박·음식·경비·청소직"
+
+## 응답 (JSON만)
+{"large": "대분류명", "medium": "중분류명"}`
+
+        const llmResult = await callOpenAI(
+          openaiKey,
+          [{ role: 'user', content: prompt }],
+          { temperature: 0.1, max_tokens: 100, model: 'gpt-4o-mini' }
+        )
+
+        const text = llmResult.response?.trim() || ''
+        // JSON 파싱 (코드블록 안에 있을 수도 있음)
+        const jsonMatch = text.match(/\{[\s\S]*?\}/)
+        if (!jsonMatch) {
+          throw new Error(`LLM 응답 파싱 실패: ${text.substring(0, 100)}`)
+        }
+
+        const parsed = JSON.parse(jsonMatch[0])
+        let large = parsed.large as string
+        const medium = parsed.medium as string | undefined
+        let confidence = 0.8
+
+        // 대분류 검증 (직접 매칭 → 퍼지 매칭 폴백)
+        if (!JOB_LARGE_CATEGORIES.includes(large as any)) {
+          const fuzzyResult = fuzzyMatchLargeCategory(large)
+          if (fuzzyResult) {
+            large = fuzzyResult
+            confidence = 0.6
+          } else {
+            throw new Error(`유효하지 않은 대분류: "${parsed.large}"`)
+          }
+        }
+
+        await db.prepare(`
+          INSERT OR REPLACE INTO job_categories (job_id, large_category, medium_category, source, confidence)
+          VALUES (?, ?, ?, 'llm', ?)
+        `).bind(row.id, large, medium || null, confidence).run()
+
+        results.push({ job_id: row.id, job_name: row.name, success: true, large, medium })
+        successCount++
+      } catch (e) {
+        const errMsg = e instanceof Error ? e.message : String(e)
+        results.push({ job_id: row.id, job_name: row.name, success: false, error: errMsg })
+        failCount++
+      }
+    }
+
+    return c.json({
+      processed: rows.length,
+      success: successCount,
+      failed: failCount,
+      remaining: Math.max(0, remainingCount),
+      results,
+    })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
+/**
+ * POST /admin/api/ai/classify/migrate-majors
+ * 전공 608개를 field_category → 한글 대분류로 이관
+ */
+adminAiApi.post('/classify/migrate-majors', async (c) => {
+  const db = c.env.DB
+  try {
+    const majors = await db.prepare(`
+      SELECT m.id, ma.field_category
+      FROM majors m
+      INNER JOIN major_attributes ma ON m.id = ma.major_id
+      WHERE m.is_active = 1
+        AND ma.field_category IS NOT NULL
+        AND m.id NOT IN (SELECT major_id FROM major_categories)
+    `).all<{ id: string; field_category: string }>()
+
+    const rows = majors.results || []
+    let success = 0
+    let failed = 0
+    const errors: string[] = []
+
+    for (const row of rows) {
+      try {
+        const label = MAJOR_FIELD_LABELS[row.field_category]
+        if (!label) {
+          errors.push(`${row.id}: 알 수 없는 field_category "${row.field_category}"`)
+          failed++
+          continue
+        }
+
+        await db.prepare(`
+          INSERT OR REPLACE INTO major_categories (major_id, large_category, source, confidence)
+          VALUES (?, ?, 'attribute', 1.0)
+        `).bind(row.id, label).run()
+        success++
+      } catch (e) {
+        failed++
+        errors.push(`${row.id}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
+    return c.json({ total: rows.length, success, failed, errors: errors.slice(0, 20) })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
+/**
+ * POST /admin/api/ai/classify/override
+ * 관리자 수동 분류 변경
+ * body: { job_id: string, large_category: string, medium_category?: string }
+ */
+adminAiApi.post('/classify/override', async (c) => {
+  const db = c.env.DB
+  const body = await c.req.json().catch(() => ({})) as {
+    job_id?: string; large_category?: string; medium_category?: string
+  }
+
+  if (!body.job_id || !body.large_category) {
+    return c.json({ error: 'job_id and large_category are required' }, 400)
+  }
+
+  if (!JOB_LARGE_CATEGORIES.includes(body.large_category as any)) {
+    return c.json({ error: `Invalid large_category: "${body.large_category}"` }, 400)
+  }
+
+  try {
+    await db.prepare(`
+      INSERT OR REPLACE INTO job_categories (job_id, large_category, medium_category, source, confidence, updated_at)
+      VALUES (?, ?, ?, 'admin', 1.0, unixepoch() * 1000)
+    `).bind(body.job_id, body.large_category, body.medium_category || null).run()
+
+    return c.json({ success: true, job_id: body.job_id, large_category: body.large_category })
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
+/**
+ * GET /admin/api/ai/classify/stats
+ * 분류 통계
+ */
+adminAiApi.get('/classify/stats', async (c) => {
+  const db = c.env.DB
+  try {
+    const [jobStats, majorStats, totalJobs, totalMajors] = await Promise.all([
+      db.prepare(`
+        SELECT large_category, COUNT(*) as cnt
+        FROM job_categories
+        GROUP BY large_category
+        ORDER BY cnt DESC
+      `).all<{ large_category: string; cnt: number }>(),
+      db.prepare(`
+        SELECT large_category, COUNT(*) as cnt
+        FROM major_categories
+        GROUP BY large_category
+        ORDER BY cnt DESC
+      `).all<{ large_category: string; cnt: number }>(),
+      db.prepare(`SELECT COUNT(*) as cnt FROM jobs WHERE is_active = 1`).first<{ cnt: number }>(),
+      db.prepare(`SELECT COUNT(*) as cnt FROM majors WHERE is_active = 1`).first<{ cnt: number }>(),
+    ])
+
+    const classifiedJobs = (jobStats.results || []).reduce((sum, r) => sum + r.cnt, 0)
+    const classifiedMajors = (majorStats.results || []).reduce((sum, r) => sum + r.cnt, 0)
+
+    return c.json({
+      jobs: {
+        total: totalJobs?.cnt || 0,
+        classified: classifiedJobs,
+        unclassified: (totalJobs?.cnt || 0) - classifiedJobs,
+        byCategory: jobStats.results || [],
+      },
+      majors: {
+        total: totalMajors?.cnt || 0,
+        classified: classifiedMajors,
+        unclassified: (totalMajors?.cnt || 0) - classifiedMajors,
+        byCategory: majorStats.results || [],
+      },
     })
   } catch (error) {
     return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)

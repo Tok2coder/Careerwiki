@@ -30,6 +30,7 @@ export interface UnifiedJobDetailTemplateParams {
   sources?: SourceStatusRecord
   existingJobSlugs?: Map<string, string>  // DB에 존재하는 직업명 → slug 매핑
   relatedHowtos?: Array<{ slug: string; title: string; summary: string }>  // 이 직업을 참조하는 HowTo
+  classificationData?: { large_category?: string; medium_category?: string }  // job_categories 테이블에서
 }
 
 const SOURCE_DESCRIPTIONS: Record<DataSource, string> = {
@@ -3164,7 +3165,7 @@ const renderKecoCodeList = (profile: UnifiedJobDetail): string => {
 
 
 
-export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJobSlugs, relatedHowtos }: UnifiedJobDetailTemplateParams): string => {
+export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJobSlugs, relatedHowtos, classificationData }: UnifiedJobDetailTemplateParams): string => {
   // profile은 merged_profile_json에서 파싱된 데이터 (평탄한 구조 + 계층적 구조 병행)
   // ETL에서 기본 필드들을 모두 포함하고 있음
   
@@ -3237,9 +3238,22 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     `
   }
   
-  // 히어로 카테고리 렌더링
+  // 히어로 카테고리 렌더링 (DB 분류 우선 → heroCategory 폴백)
   let categoryHtml = ''
-  if (profile.heroCategory) {
+  if (classificationData?.large_category) {
+    // DB 분류 데이터 우선 사용 (클릭 가능한 링크)
+    const largeLink = `/job?category=${encodeURIComponent(classificationData.large_category)}`
+    const largePart = `<a href="${largeLink}" class="hover:underline">${escapeHtml(classificationData.large_category)}</a>`
+    const mediumPart = classificationData.medium_category ? escapeHtml(classificationData.medium_category) : ''
+    const jobNamePart = escapeHtml(safeTrim(profile.name) || '')
+
+    categoryHtml = `
+      <nav class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-wiki-primary" aria-label="분류">
+        <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
+        ${largePart}${mediumPart ? ` <span class="text-wiki-muted/60">›</span> ${mediumPart}` : ''}
+      </nav>
+    `
+  } else if (profile.heroCategory) {
     // 문자열 형식 지원 (사용자 생성 데이터)
     if (typeof profile.heroCategory === 'string') {
       const categoryValue = safeTrim(profile.heroCategory)

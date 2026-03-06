@@ -169,6 +169,16 @@ jobEditorRoutes.post('/api/job/create', requireAuth, async (c) => {
       )
     }
 
+    // 자동 MECE 분류 (waitUntil — 실패해도 생성에 영향 없음)
+    const openaiKeyForClassify = (c.env as any).OPENAI_API_KEY
+    if (openaiKeyForClassify) {
+      c.executionCtx.waitUntil(
+        import('../services/classification-service').then(({ autoClassifyJob }) =>
+          autoClassifyJob(c.env.DB, { id, name, summary }, openaiKeyForClassify)
+        ).catch(() => {})
+      )
+    }
+
     const openaiKeyForIdx = (c.env as any).OPENAI_API_KEY
     if (openaiKeyForIdx && (c.env as any).VECTORIZE) {
       c.executionCtx.waitUntil(

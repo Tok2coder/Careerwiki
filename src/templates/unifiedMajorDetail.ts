@@ -31,6 +31,7 @@ export interface UnifiedMajorDetailTemplateParams {
   existingJobSlugs?: Map<string, string>  // 직업명 → slug 매핑 (DB에 존재하는 직업)
   relatedMajorsByCategory?: RelatedMajorItem[]  // 같은 계열 전공 (자기 자신 제외)
   relatedHowtos?: Array<{ slug: string; title: string; summary: string }>  // 이 전공을 참조하는 HowTo
+  classificationData?: { large_category?: string }  // major_categories 테이블에서
 }
 
 // 전공 템플릿용 데이터 출처 레이블 (직업 템플릿과 다름)
@@ -937,7 +938,7 @@ const renderMajorSourcesCollapsible = (
   `
 }
 
-export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJobSlugs, relatedMajorsByCategory, relatedHowtos }: UnifiedMajorDetailTemplateParams): string => {
+export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJobSlugs, relatedMajorsByCategory, relatedHowtos, classificationData }: UnifiedMajorDetailTemplateParams): string => {
   // categoryName 정리: ETL에서 이미 처리된 categoryDisplay 사용, 없으면 폴백
   const cleanCategoryName = (profile as any).categoryDisplay 
     || (profile.categoryName && profile.categoryName.split(',').length <= 2 ? profile.categoryName : undefined)
@@ -2631,7 +2632,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" data-major-id="${escapeHtml(profile.id)}">
       <section class="glass-card border px-6 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-major-hero>
         <div class="space-y-5">
-          ${cleanCategoryName ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group"></i>${escapeHtml(cleanCategoryName)}</span>` : ''}
+          ${classificationData?.large_category
+            ? `<a href="/major?category=${encodeURIComponent(classificationData.large_category)}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold hover:bg-wiki-primary/25 transition-colors"><i class="fas fa-layer-group"></i>${escapeHtml(classificationData.large_category)}</a>`
+            : cleanCategoryName
+              ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group"></i>${escapeHtml(cleanCategoryName)}</span>`
+              : ''}
           <div class="flex flex-wrap items-start justify-between gap-4">
             <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight">${escapeHtml(profile.name)}</h1>
             <div class="flex items-center gap-2 shrink-0">

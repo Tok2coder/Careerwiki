@@ -132,6 +132,7 @@ export interface UnifiedMajorSummaryEntry {
   display?: {
     summary?: string
     categoryName?: string
+    classificationLarge?: string  // major_categories 대분류
     employmentRate?: string
     salaryAfterGraduation?: string
     firstJobSalary?: string  // 첫직장임금(월)
@@ -140,6 +141,7 @@ export interface UnifiedMajorSummaryEntry {
     departmentName?: string  // 계열명 (고용24만)
     universityCount?: string  // 개설 대학 수
     relatedJobCount?: string  // 관련 직업 수
+    imageUrl?: string
   }
 }
 
@@ -164,9 +166,12 @@ export interface UnifiedJobSummaryEntry {
     categoryLarge?: string   // 대분류
     categoryMedium?: string  // 중분류
     categorySmall?: string   // 소분류
+    classificationLarge?: string  // MECE 대분류 (job_categories 테이블)
+    classificationMedium?: string // MECE 중분류 (job_categories 테이블)
     departmentName?: string  // 계열명 (고용24만)
     workStrong?: string      // 작업 강도 (직업사전)
     skillYear?: string       // 숙련기간 (직업사전)
+    imageUrl?: string        // 이미지 URL
   }
 }
 
@@ -419,10 +424,10 @@ const extractCanonicalSuffix = (value: string, prefix: string): string | undefin
  * Simplified version - only uses D1, no API fallbacks
  */
 export const searchUnifiedMajors = async (
-  params: { keyword?: string; page?: number; perPage?: number; includeSources?: DataSource[]; sort?: string },
+  params: { keyword?: string; category?: string; page?: number; perPage?: number; includeSources?: DataSource[]; sort?: string },
   env?: CareerWikiEnv
 ): Promise<UnifiedSearchResult<UnifiedMajorSummaryEntry>> => {
-  const { keyword = '', page = 1, perPage = 20, sort = 'relevance' } = params
+  const { keyword = '', category = '', page = 1, perPage = 20, sort = 'relevance' } = params
 
   // D1 database is required
   if (!env?.DB) {
@@ -431,8 +436,14 @@ export const searchUnifiedMajors = async (
 
   try {
     const db = env.DB as any
-    const conditions: string[] = ['is_active = 1']
+    const conditions: string[] = ['m.is_active = 1']
     const countBindings: any[] = []
+
+    // 카테고리 필터 (major_categories LEFT JOIN으로 처리)
+    if (category) {
+      conditions.push('mc.large_category = ?')
+      countBindings.push(category)
+    }
 
   // 🔍 검색어 정규화 함수 (오타/공백/특수문자 허용)
   const normalizeSearchTerm = (term: string): string => {
@@ -486,21 +497,21 @@ export const searchUnifiedMajors = async (
     // 토큰 검색 조건 생성 (관련 키워드로 매칭)
     let tokenConditions = ''
     if (useTokenSearch) {
-      const tokenClauses = tokens.map(() => 
-        `LOWER(name) LIKE LOWER(?) OR LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) LIKE LOWER(?)`
+      const tokenClauses = tokens.map(() =>
+        `LOWER(m.name) LIKE LOWER(?) OR LOWER(REPLACE(REPLACE(m.name, ' ', ''), '-', '')) LIKE LOWER(?)`
       ).join(' OR ')
       tokenConditions = ` OR (${tokenClauses})`
     }
-    
+
     // 여러 필드에서 검색 (OR 조건) + 토큰 검색
     conditions.push(`(
-      LOWER(name) LIKE LOWER(?) OR
-      LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) LIKE LOWER(?) OR
-      json_extract(merged_profile_json, '$.summary') LIKE ? OR
-      json_extract(merged_profile_json, '$.heroSummary') LIKE ? OR
-      json_extract(merged_profile_json, '$.categoryDisplay') LIKE ? OR
-      json_extract(merged_profile_json, '$.categoryName') LIKE ? OR
-      json_extract(merged_profile_json, '$.heroTags') LIKE ?
+      LOWER(m.name) LIKE LOWER(?) OR
+      LOWER(REPLACE(REPLACE(m.name, ' ', ''), '-', '')) LIKE LOWER(?) OR
+      json_extract(m.merged_profile_json, '$.summary') LIKE ? OR
+      json_extract(m.merged_profile_json, '$.heroSummary') LIKE ? OR
+      json_extract(m.merged_profile_json, '$.categoryDisplay') LIKE ? OR
+      json_extract(m.merged_profile_json, '$.categoryName') LIKE ? OR
+      json_extract(m.merged_profile_json, '$.heroTags') LIKE ?
       ${tokenConditions}
     )`)
     countBindings.push(
@@ -535,18 +546,18 @@ export const searchUnifiedMajors = async (
   let orderByClause = 'ORDER BY normalized_name'
   if (effectiveSort === 'employment-desc') {
     // 취업률 높은 순 - chartData에서 추출
-    orderByClause = `ORDER BY 
+    orderByClause = `ORDER BY
       CAST(COALESCE(
-        json_extract(merged_profile_json, '$.chartData[0].employment_rate[0].data'),
-        json_extract(merged_profile_json, '$.chartData.employment_rate[0].data'),
-        json_extract(merged_profile_json, '$.employmentRate'),
+        json_extract(m.merged_profile_json, '$.chartData[0].employment_rate[0].data'),
+        json_extract(m.merged_profile_json, '$.chartData.employment_rate[0].data'),
+        json_extract(m.merged_profile_json, '$.employmentRate'),
         '0'
       ) AS REAL) DESC, normalized_name`
   } else if (effectiveSort === 'salary-desc') {
     // 월급 높은 순 (졸업 후 첫 직장 월급)
-    orderByClause = `ORDER BY 
+    orderByClause = `ORDER BY
       CAST(COALESCE(
-        json_extract(merged_profile_json, '$.salaryAfterGraduation'),
+        json_extract(m.merged_profile_json, '$.salaryAfterGraduation'),
         '0'
       ) AS REAL) DESC, normalized_name`
   } else if (effectiveSort === 'name-asc') {
@@ -558,31 +569,33 @@ export const searchUnifiedMajors = async (
     const escapedSearchTerm = searchTerm.replace(/\\/g, '\\\\').replace(/'/g, "''")
     const escapedNormalizedTerm = normalizedSearchTerm.replace(/\\/g, '\\\\').replace(/'/g, "''")
     
-    orderByClause = `ORDER BY 
-      (CASE 
-        WHEN LOWER(name) = LOWER('${escapedSearchTerm}') THEN 0
-        WHEN LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) = LOWER('${escapedNormalizedTerm}') THEN 1
-        WHEN LOWER(name) LIKE LOWER('${escapedSearchTerm}%') THEN 2
-        WHEN LOWER(name) LIKE LOWER('%${escapedSearchTerm}%') THEN 3
-        WHEN LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) LIKE LOWER('%${escapedNormalizedTerm}%') THEN 4
+    orderByClause = `ORDER BY
+      (CASE
+        WHEN LOWER(m.name) = LOWER('${escapedSearchTerm}') THEN 0
+        WHEN LOWER(REPLACE(REPLACE(m.name, ' ', ''), '-', '')) = LOWER('${escapedNormalizedTerm}') THEN 1
+        WHEN LOWER(m.name) LIKE LOWER('${escapedSearchTerm}%') THEN 2
+        WHEN LOWER(m.name) LIKE LOWER('%${escapedSearchTerm}%') THEN 3
+        WHEN LOWER(REPLACE(REPLACE(m.name, ' ', ''), '-', '')) LIKE LOWER('%${escapedNormalizedTerm}%') THEN 4
         ELSE 5
       END),
-      (CASE WHEN json_extract(merged_profile_json, '$.employmentRate') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.firstJobSalary') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.firstJobSatisfaction') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.heroSummary') IS NOT NULL THEN 1 ELSE 0 END) DESC, normalized_name`
+      (CASE WHEN json_extract(m.merged_profile_json, '$.employmentRate') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(m.merged_profile_json, '$.firstJobSalary') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(m.merged_profile_json, '$.firstJobSatisfaction') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(m.merged_profile_json, '$.heroSummary') IS NOT NULL THEN 1 ELSE 0 END) DESC, normalized_name`
   } else {
     // 기본: 데이터 풍부도 순
-    orderByClause = `ORDER BY 
-      (CASE WHEN json_extract(merged_profile_json, '$.employmentRate') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.firstJobSalary') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.firstJobSatisfaction') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.heroSummary') IS NOT NULL THEN 1 ELSE 0 END) DESC, normalized_name`
+    orderByClause = `ORDER BY
+      (CASE WHEN json_extract(m.merged_profile_json, '$.employmentRate') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(m.merged_profile_json, '$.firstJobSalary') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(m.merged_profile_json, '$.firstJobSatisfaction') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(m.merged_profile_json, '$.heroSummary') IS NOT NULL THEN 1 ELSE 0 END) DESC, normalized_name`
   }
-  
+
   let uniqueNamesQuery = `
-    SELECT DISTINCT LOWER(name) as normalized_name, name as original_name, merged_profile_json
-    FROM majors
+    SELECT DISTINCT LOWER(m.name) as normalized_name, m.name as original_name, m.merged_profile_json,
+           mc.large_category AS classification_large
+    FROM majors m
+    LEFT JOIN major_categories mc ON m.id = mc.major_id
   `
   if (conditions.length > 0) {
     uniqueNamesQuery += ' WHERE ' + conditions.join(' AND ')
@@ -611,6 +624,14 @@ export const searchUnifiedMajors = async (
     }
   }
   
+  // 전공명 → 분류 매핑 (uniqueNames에서 추출)
+  const nameToClassification = new Map<string, string>()
+  uniqueNames.forEach((r: any) => {
+    if (r.classification_large) {
+      nameToClassification.set(r.original_name, r.classification_large)
+    }
+  })
+
   // Step 2: 해당 전공명들에 대한 모든 레코드 조회 (병합을 위해)
   const nameList = uniqueNames.map((r: any) => r.original_name)
   
@@ -642,7 +663,7 @@ export const searchUnifiedMajors = async (
   }
   
   // Step 3: 총 개수 계산 (전체 고유 전공명 수)
-  let countQuery = 'SELECT COUNT(DISTINCT LOWER(name)) as total FROM majors'
+  let countQuery = 'SELECT COUNT(DISTINCT LOWER(m.name)) as total FROM majors m LEFT JOIN major_categories mc ON m.id = mc.major_id'
   if (conditions.length > 0) {
     countQuery += ' WHERE ' + conditions.join(' AND ')
   }
@@ -1036,6 +1057,12 @@ export const searchUnifiedMajors = async (
         })()
       }
 
+      // DB 분류 데이터 추가 (major_categories 테이블에서)
+      const classificationLarge = nameToClassification.get(majorName)
+      if (classificationLarge && entry.display) {
+        entry.display.classificationLarge = classificationLarge
+      }
+
       items.push(entry)
     } catch (entryError) {
       console.error('[profileData] job entry processing failed:', entryError)
@@ -1291,8 +1318,14 @@ export const searchUnifiedJobs = async (
     }
   }
   // 🔧 FTS 결과가 없거나 FTS를 사용하지 않을 때 LIKE 폴백 검색
-  const conditions: string[] = ['merged_profile_json IS NOT NULL', 'is_active = 1']
+  const conditions: string[] = ['j.merged_profile_json IS NOT NULL', 'j.is_active = 1']
   const bindings: any[] = []
+
+  // 카테고리 필터 (job_categories LEFT JOIN으로 처리)
+  if (category) {
+    conditions.push('jc.large_category = ?')
+    bindings.push(category)
+  }
 
   // 🔍 검색어 정규화 함수 (오타/공백/특수문자 허용)
   const normalizeSearchTerm = (term: string): string => {
@@ -1352,21 +1385,21 @@ export const searchUnifiedJobs = async (
     // 토큰 검색 조건 생성 (관련 키워드로 매칭)
     let tokenConditions = ''
     if (useTokenSearch) {
-      const tokenClauses = tokens.map(() => 
-        `LOWER(name) LIKE LOWER(?) OR LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) LIKE LOWER(?)`
+      const tokenClauses = tokens.map(() =>
+        `LOWER(j.name) LIKE LOWER(?) OR LOWER(REPLACE(REPLACE(j.name, ' ', ''), '-', '')) LIKE LOWER(?)`
       ).join(' OR ')
       tokenConditions = ` OR (${tokenClauses})`
     }
-    
+
     // 여러 필드에서 검색 (OR 조건) + 토큰 검색
     conditions.push(`(
-      LOWER(name) LIKE LOWER(?) OR
-      LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) LIKE LOWER(?) OR
-      json_extract(merged_profile_json, '$.summary') LIKE ? OR
-      json_extract(merged_profile_json, '$.heroIntro') LIKE ? OR
-      json_extract(merged_profile_json, '$.categoryName') LIKE ? OR
-      json_extract(merged_profile_json, '$.heroTags') LIKE ? OR
-      json_extract(merged_profile_json, '$.keywords') LIKE ?
+      LOWER(j.name) LIKE LOWER(?) OR
+      LOWER(REPLACE(REPLACE(j.name, ' ', ''), '-', '')) LIKE LOWER(?) OR
+      json_extract(j.merged_profile_json, '$.summary') LIKE ? OR
+      json_extract(j.merged_profile_json, '$.heroIntro') LIKE ? OR
+      json_extract(j.merged_profile_json, '$.categoryName') LIKE ? OR
+      json_extract(j.merged_profile_json, '$.heroTags') LIKE ? OR
+      json_extract(j.merged_profile_json, '$.keywords') LIKE ?
       ${tokenConditions}
     )`)
     bindings.push(
@@ -1387,7 +1420,7 @@ export const searchUnifiedJobs = async (
   }
 
   // Step 1: 총 개수 계산 (ECONNRESET 등 연결 오류 시 자동 재시도)
-  let countQuery = `SELECT COUNT(*) as total FROM jobs WHERE ${conditions.join(' AND ')}`
+  let countQuery = `SELECT COUNT(*) as total FROM jobs j LEFT JOIN job_categories jc ON j.id = jc.job_id WHERE ${conditions.join(' AND ')}`
   const countResult = await withD1Retry(
     () => db.prepare(countQuery).bind(...bindings).first() as Promise<{ total: number } | null>
   )
@@ -1410,36 +1443,38 @@ export const searchUnifiedJobs = async (
   
   // 정렬 옵션에 따른 ORDER BY 절
   // 검색어가 있을 때: 관련성 우선순위 정렬 (정확 일치 > 부분 일치 > 토큰 일치)
-  let orderByClause = 'ORDER BY name'
+  let orderByClause = 'ORDER BY j.name'
   if (sort === 'name-asc') {
-    orderByClause = 'ORDER BY name'
+    orderByClause = 'ORDER BY j.name'
   } else if (sort === 'relevance' && searchTerm) {
     // 🔍 검색 관련성 우선순위: 정확 일치 > 시작 일치 > 부분 일치 > 토큰 일치 > 데이터 풍부도
-    orderByClause = `ORDER BY 
-      (CASE 
-        WHEN LOWER(name) = LOWER('${searchTerm.replace(/'/g, "''")}') THEN 0
-        WHEN LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) = LOWER('${normalizedSearchTerm.replace(/'/g, "''")}') THEN 1
-        WHEN LOWER(name) LIKE LOWER('${searchTerm.replace(/'/g, "''")}%') THEN 2
-        WHEN LOWER(name) LIKE LOWER('%${searchTerm.replace(/'/g, "''")}%') THEN 3
-        WHEN LOWER(REPLACE(REPLACE(name, ' ', ''), '-', '')) LIKE LOWER('%${normalizedSearchTerm.replace(/'/g, "''")}%') THEN 4
+    orderByClause = `ORDER BY
+      (CASE
+        WHEN LOWER(j.name) = LOWER('${searchTerm.replace(/'/g, "''")}') THEN 0
+        WHEN LOWER(REPLACE(REPLACE(j.name, ' ', ''), '-', '')) = LOWER('${normalizedSearchTerm.replace(/'/g, "''")}') THEN 1
+        WHEN LOWER(j.name) LIKE LOWER('${searchTerm.replace(/'/g, "''")}%') THEN 2
+        WHEN LOWER(j.name) LIKE LOWER('%${searchTerm.replace(/'/g, "''")}%') THEN 3
+        WHEN LOWER(REPLACE(REPLACE(j.name, ' ', ''), '-', '')) LIKE LOWER('%${normalizedSearchTerm.replace(/'/g, "''")}%') THEN 4
         ELSE 5
       END),
-      (CASE WHEN json_extract(merged_profile_json, '$.overviewSalary.sal') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.satisfaction') IS NOT NULL OR json_extract(merged_profile_json, '$.overviewSalary.jobSatis') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.wlb') IS NOT NULL OR json_extract(merged_profile_json, '$.detailWlb.wlb') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.heroIntro') IS NOT NULL OR json_extract(merged_profile_json, '$.summary') IS NOT NULL THEN 1 ELSE 0 END) DESC, name`
+      (CASE WHEN json_extract(j.merged_profile_json, '$.overviewSalary.sal') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(j.merged_profile_json, '$.satisfaction') IS NOT NULL OR json_extract(j.merged_profile_json, '$.overviewSalary.jobSatis') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(j.merged_profile_json, '$.wlb') IS NOT NULL OR json_extract(j.merged_profile_json, '$.detailWlb.wlb') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(j.merged_profile_json, '$.heroIntro') IS NOT NULL OR json_extract(j.merged_profile_json, '$.summary') IS NOT NULL THEN 1 ELSE 0 END) DESC, j.name`
   } else {
     // 기본: 데이터 풍부도 순 (여러 필드가 있는 항목 우선)
-    orderByClause = `ORDER BY 
-      (CASE WHEN json_extract(merged_profile_json, '$.overviewSalary.sal') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.satisfaction') IS NOT NULL OR json_extract(merged_profile_json, '$.overviewSalary.jobSatis') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.wlb') IS NOT NULL OR json_extract(merged_profile_json, '$.detailWlb.wlb') IS NOT NULL THEN 1 ELSE 0 END +
-       CASE WHEN json_extract(merged_profile_json, '$.heroIntro') IS NOT NULL OR json_extract(merged_profile_json, '$.summary') IS NOT NULL THEN 1 ELSE 0 END) DESC, name`
+    orderByClause = `ORDER BY
+      (CASE WHEN json_extract(j.merged_profile_json, '$.overviewSalary.sal') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(j.merged_profile_json, '$.satisfaction') IS NOT NULL OR json_extract(j.merged_profile_json, '$.overviewSalary.jobSatis') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(j.merged_profile_json, '$.wlb') IS NOT NULL OR json_extract(j.merged_profile_json, '$.detailWlb.wlb') IS NOT NULL THEN 1 ELSE 0 END +
+       CASE WHEN json_extract(j.merged_profile_json, '$.heroIntro') IS NOT NULL OR json_extract(j.merged_profile_json, '$.summary') IS NOT NULL THEN 1 ELSE 0 END) DESC, j.name`
   }
   
   const listQuery = `
-    SELECT id, name, slug, primary_source, merged_profile_json, image_url
-    FROM jobs 
+    SELECT j.id, j.name, j.slug, j.primary_source, j.merged_profile_json, j.image_url,
+           jc.large_category AS classification_large, jc.medium_category AS classification_medium
+    FROM jobs j
+    LEFT JOIN job_categories jc ON j.id = jc.job_id
     WHERE ${conditions.join(' AND ')}
     ${orderByClause}
     LIMIT ${perPage} OFFSET ${offset}
@@ -1473,19 +1508,27 @@ export const searchUnifiedJobs = async (
         profile.overviewWork?.main?.split('\n')[0]?.trim() ||
         ''
       
-      // 카테고리 추출 (heroCategory 우선, 브레드크럼이면 대분류만 사용)
+      // 카테고리 추출: DB job_categories 우선 → heroCategory 폴백
+      const classificationLarge = row.classification_large || ''
+      const classificationMedium = row.classification_medium || ''
+
       let categoryLarge = ''
       let categoryMedium = ''
       let categorySmall = ''
       let categoryName = ''
-      
-      if (typeof profile.heroCategory === 'string' || (profile.heroCategory && typeof profile.heroCategory === 'object')) {
+
+      if (classificationLarge) {
+        // DB 분류 테이블에 데이터가 있으면 우선 사용
+        categoryLarge = classificationLarge
+        categoryMedium = classificationMedium
+        categoryName = classificationLarge
+      } else if (typeof profile.heroCategory === 'string' || (profile.heroCategory && typeof profile.heroCategory === 'object')) {
         categoryName = pickPrimaryCategory(profile.heroCategory, jobName)
         categoryLarge = pickPrimaryCategory(profile.heroCategory, jobName)
         categoryMedium = typeof profile.heroCategory === 'object' ? (profile.heroCategory.medium || '') : ''
         categorySmall = typeof profile.heroCategory === 'object' ? (profile.heroCategory.small || '') : ''
       }
-      
+
       // heroCategory가 비었거나 직업명과 동일해 제거된 경우, 다른 계열 필드에서 폴백
       if (!categoryName) {
         categoryName = pickPrimaryCategory(profile.categoryName || profile.category?.name, jobName)
@@ -1610,6 +1653,8 @@ export const searchUnifiedJobs = async (
           categoryLarge,
           categoryMedium,
           categorySmall,
+          classificationLarge,
+          classificationMedium,
           salary,
           satisfaction,
           wlb,

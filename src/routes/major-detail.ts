@@ -264,6 +264,20 @@ majorDetailRoutes.get('/major/:slug', async (c) => {
         } catch {
         }
 
+        // 분류 데이터 조회 (major_categories 테이블)
+        let classificationData: { large_category?: string } | undefined
+        try {
+          if (env?.DB && actualDbId) {
+            const classRow = await env.DB.prepare(
+              'SELECT large_category FROM major_categories WHERE major_id = ?'
+            ).bind(actualDbId).first() as { large_category?: string } | null
+            if (classRow) {
+              classificationData = classRow
+            }
+          }
+        } catch {
+        }
+
         return {
           ...result,
           profile: {
@@ -272,7 +286,8 @@ majorDetailRoutes.get('/major/:slug', async (c) => {
           },
           existingJobSlugs,
           relatedMajorsByCategory,
-          relatedHowtos
+          relatedHowtos,
+          classificationData
         }
       },
 
@@ -302,7 +317,8 @@ majorDetailRoutes.get('/major/:slug', async (c) => {
           sources: result.sources,
           existingJobSlugs: result.existingJobSlugs,
           relatedMajorsByCategory: result.relatedMajorsByCategory,
-          relatedHowtos: result.relatedHowtos
+          relatedHowtos: result.relatedHowtos,
+          classificationData: result.classificationData
         })
         mark?.('render-done')
 

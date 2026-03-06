@@ -10,6 +10,7 @@ import {
   serializeForScript, getOptionalUser
 } from '../utils/shared-helpers'
 import { logSearchQuery } from '../services/searchQueryLogger'
+import { JOB_LARGE_CATEGORIES, JOB_LARGE_SHORT_LABELS, type JobLargeCategory } from '../constants/classification'
 
 const jobListRoutes = new Hono<AppEnv>()
 
@@ -24,9 +25,11 @@ jobListRoutes.get('/job', async (c) => {
   const userAgent = c.req.header('user-agent') || ''
   const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)
   const sort = c.req.query('sort') || 'relevance' // 정렬 옵션
+  const category = c.req.query('category') || '' // 카테고리 필터
 
   const searchParams = new URLSearchParams()
   if (keyword) searchParams.set('q', keyword)
+  if (category) searchParams.set('category', category)
   if (includeSources?.length) searchParams.set('sources', includeSources.join(','))
   if (page > 1) searchParams.set('page', String(page))
   if (sort && sort !== 'relevance') searchParams.set('sort', sort)
@@ -48,10 +51,11 @@ jobListRoutes.get('/job', async (c) => {
 
   try {
     // RAG 검색 (키워드 + 기본 정렬) 또는 D1 직접 검색
-    const result = keyword && sort === 'relevance'
+    // 카테고리 필터가 있으면 RAG 대신 D1 직접 쿼리 사용
+    const result = keyword && sort === 'relevance' && !category
       ? await ragSearchJobs(c.env, keyword, { page, perPage })
       : await searchUnifiedJobs(
-          { keyword, page, perPage, includeSources, sort },
+          { keyword, page, perPage, includeSources, sort, category },
           c.env
         )
 
@@ -73,6 +77,9 @@ jobListRoutes.get('/job', async (c) => {
     try {
     } catch (_) {}
 
+    // 카테고리 축약 라벨
+    const categoryShortLabel = category ? (JOB_LARGE_SHORT_LABELS[category as JobLargeCategory] || category) : ''
+
     // 공통 함수 renderJobCard 사용
     const jobCards = items.length
       ? items.map((entry) => renderJobCard(entry)).join('')
@@ -82,18 +89,28 @@ jobListRoutes.get('/job', async (c) => {
             <p class="text-lg text-wiki-muted">"${escapeHtml(keyword)}"에 해당하는 직업이 없습니다.</p>
             <p class="text-sm text-wiki-muted mt-2">다른 검색어를 시도해보세요.</p>
           </div>`
-        : `<div class="glass-card p-8 rounded-2xl text-center col-span-full">
-            <i class="fas fa-briefcase text-4xl text-wiki-muted mb-4"></i>
-            <p class="text-lg text-wiki-muted">등록된 직업이 없습니다.</p>
-          </div>`
+        : category
+          ? `<div class="glass-card p-8 rounded-2xl text-center col-span-full">
+              <i class="fas fa-folder-open text-4xl text-wiki-muted mb-4"></i>
+              <p class="text-lg text-wiki-muted">"${escapeHtml(categoryShortLabel)}" 분야에 등록된 직업이 없습니다.</p>
+              <p class="text-sm text-wiki-muted mt-2">분류 데이터가 아직 등록되지 않았을 수 있습니다.</p>
+            </div>`
+          : `<div class="glass-card p-8 rounded-2xl text-center col-span-full">
+              <i class="fas fa-briefcase text-4xl text-wiki-muted mb-4"></i>
+              <p class="text-lg text-wiki-muted">등록된 직업이 없습니다.</p>
+            </div>`
 
     // 🆕 캐시 알림 제거 (사용자에게 보이지 않도록)
     const cacheNotice = '' // renderCacheNotice(cacheState, { staleSeconds: LIST_CACHE_STALE_SECONDS, maxAgeSeconds: LIST_CACHE_MAX_AGE_SECONDS })
 
     // 🆕 데이터 소스 요약 제거 (사용자에게 혼란을 줄 수 있음)
     const sourceSummaryHtml = '' // renderSourceStatusSummary(result.meta?.sources, { id: 'job-source-summary' })
-    const filterSummary = keyword ? `"${escapeHtml(keyword)}" 키워드` : '전체 직업'
-    const headingLabel = keyword ? `"${escapeHtml(keyword)}" 관련 직업` : '직업위키'
+    const filterSummary = category
+      ? `${categoryShortLabel} 분야`
+      : keyword ? `"${escapeHtml(keyword)}" 키워드` : '전체 직업'
+    const headingLabel = category
+      ? `${categoryShortLabel}`
+      : keyword ? `"${escapeHtml(keyword)}" 관련 직업` : '직업위키'
 
     const jsonLdItems = items.map((entry, index) => {
       const slug = composeDetailSlug('job', entry.profile.name, entry.profile.id)
@@ -146,6 +163,26 @@ jobListRoutes.get('/job', async (c) => {
               <span id="job-total-count">${totalCount}</span>개
             </span>
           </div>
+        </div>
+
+        <!-- 카테고리 필터 버튼 -->
+        <div class="mb-4 flex flex-wrap gap-2 justify-center">
+          <a href="/job"
+             class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+               !category
+                 ? 'bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white shadow-lg shadow-wiki-primary/25'
+                 : 'bg-white/[0.05] border border-white/[0.08] text-white/70 hover:bg-white/[0.1] hover:text-white'
+             }">전체</a>
+          ${JOB_LARGE_CATEGORIES.map(cat => {
+            const shortLabel = JOB_LARGE_SHORT_LABELS[cat]
+            const isActive = category === cat
+            return `<a href="/job?category=${encodeURIComponent(cat)}"
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                 isActive
+                   ? 'bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white shadow-lg shadow-wiki-primary/25'
+                   : 'bg-white/[0.05] border border-white/[0.08] text-white/70 hover:bg-white/[0.1] hover:text-white'
+               }">${escapeHtml(shortLabel)}</a>`
+          }).join('\n          ')}
         </div>
 
         <form id="job-filter-form" data-hydration-target="job" method="get" class="mb-6">
@@ -230,6 +267,7 @@ jobListRoutes.get('/job', async (c) => {
           const buildPageUrl = (pageNum: number) => {
             const params = new URLSearchParams()
             if (keyword) params.set('q', keyword)
+            if (category) params.set('category', category)
             if (includeSources?.length) params.set('sources', includeSources.join(','))
             if (pageNum > 1) params.set('page', String(pageNum))
             return `/job${params.toString() ? `?${params.toString()}` : ''}`

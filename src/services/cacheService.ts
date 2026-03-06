@@ -234,7 +234,7 @@ export const buildListCacheKey = (
   if (params.keyword) {
     search.set('q', params.keyword.trim().toLowerCase())
   }
-  if (type === 'job' && params.category) {
+  if (params.category) {
     search.set('category', params.category.trim())
   }
   if (params.sort && params.sort !== 'relevance') {

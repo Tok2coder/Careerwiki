@@ -279,10 +279,25 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
         } catch {
         }
 
+        // 분류 데이터 조회 (job_categories 테이블)
+        let classificationData: { large_category?: string; medium_category?: string } | undefined
+        try {
+          if (env?.DB && result.profile?.id) {
+            const classRow = await env.DB.prepare(
+              'SELECT large_category, medium_category FROM job_categories WHERE job_id = ?'
+            ).bind(result.profile.id).first() as { large_category?: string; medium_category?: string } | null
+            if (classRow) {
+              classificationData = classRow
+            }
+          }
+        } catch {
+        }
+
         return {
           ...result,
           existingJobSlugs,
-          relatedHowtos
+          relatedHowtos,
+          classificationData
         }
       },
 
@@ -310,7 +325,8 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
           partials: result.partials,
           sources: result.sources,
           existingJobSlugs: result.existingJobSlugs,
-          relatedHowtos: result.relatedHowtos
+          relatedHowtos: result.relatedHowtos,
+          classificationData: result.classificationData
         })
         mark?.('render-done')
 
