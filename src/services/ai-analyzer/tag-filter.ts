@@ -326,6 +326,55 @@ export const RISK_PENALTY_RULES: RiskPenaltyRule[] = [
     penalty: 8,
     warningLabel: '출장이 잦은 직업',
   },
+  // v3.18: energy_drain + value → risk penalty 확장
+  {
+    id: 'no_travel_vs_sometimes',
+    userConstraint: 'no_travel',
+    jobAttribute: 'travel',
+    jobCondition: (value) => value === 'sometimes' || value === 'frequent' || value === 'always',
+    penalty: 10,
+    warningLabel: '출장 가능성 있는 직업',
+  },
+  {
+    id: 'people_drain_vs_people_facing',
+    userConstraint: 'people_drain',
+    jobAttribute: 'people_facing',
+    jobCondition: (value) => typeof value === 'number' && value >= 70,
+    penalty: 8,
+    warningLabel: '대인 접촉이 많은 직업',
+  },
+  {
+    id: 'routine_drain_vs_low_growth',
+    userConstraint: 'routine_drain',
+    jobAttribute: 'growth',
+    jobCondition: (value) => typeof value === 'number' && value < 40,
+    penalty: 6,
+    warningLabel: '성장 가능성이 낮은 직업',
+  },
+  {
+    id: 'uncertainty_drain_vs_low_stability',
+    userConstraint: 'uncertainty_drain',
+    jobAttribute: 'stability',
+    jobCondition: (value) => typeof value === 'number' && value < 50,
+    penalty: 8,
+    warningLabel: '고용 안정성이 낮은 직업',
+  },
+  {
+    id: 'time_pressure_drain_vs_overtime',
+    userConstraint: 'time_pressure_drain',
+    jobAttribute: 'work_hours',
+    jobCondition: (value) => value === 'overtime_frequent' || value === 'overtime_sometimes',
+    penalty: 6,
+    warningLabel: '마감 압박이 있을 수 있는 직업',
+  },
+  {
+    id: 'prefer_wlb_vs_low_wlb',
+    userConstraint: 'prefer_wlb',
+    jobAttribute: 'wlb',
+    jobCondition: (value) => typeof value === 'number' && value < 50,
+    penalty: 8,
+    warningLabel: '워라밸이 낮을 수 있는 직업',
+  },
 ]
 
 // ============================================

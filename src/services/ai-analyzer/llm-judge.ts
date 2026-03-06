@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 60      // 5개 × 12배치, 전부 병렬 처리
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.17.0'  // 감정질문 패턴 확장 + 노이즈 필터 강화 + UX 프로그레스바 + evidence 인용 보강
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.18.0'  // 노이즈 필터 확장, E2E 답변 패턴 강화, 감정질문 프롬프트 수정, Risk 차별화 12규칙, 앵커링 추출
 
 // ============================================
 // Types
@@ -1691,16 +1691,16 @@ function sanitizeKeywordOvermatching(
       }
     }
 
-    // ===== 체크 3: 범용 suffix 도메인 불일치 (v3.16) =====
+    // ===== 체크 3: 범용 suffix 도메인 불일치 (v3.16, v3.18 임계값 하향) =====
     // "연구원", "분석원" 등 범용 suffix가 벡터 유사도로 유입되지만
     // 유저의 관심 도메인과 무관한 경우 감점
-    if (!shouldPenalize && r.desireScore >= 55) {
+    if (!shouldPenalize && r.desireScore >= 50) {
       const INTEREST_DOMAIN_KEYWORDS: Record<string, string[]> = {
         data_numbers: ['데이터', '통계', '수학', '경제', '금융', '회계', 'IT', '컴퓨터', '정보', '보험', '증권'],
         tech: ['소프트웨어', 'IT', '컴퓨터', '프로그래밍', '개발', '전자', '정보', '보안', '네트워크', '인공지능', '로봇'],
         problem_solving: ['경영', '컨설팅', '전략', 'IT', '시스템', '정책', '기획', '법률', '특허'],
-        creative: ['디자인', '예술', '미디어', '콘텐츠', '영상', '음악', '패션', '광고', '방송', '게임'],
-        creating: ['디자인', '예술', '미디어', '콘텐츠', '영상', '음악', '패션', '광고', '방송', '게임'],
+        creative: ['디자인', '예술', '미디어', '콘텐츠', '영상', '대중음악', '실용음악', '패션', '광고', '방송', '게임'],
+        creating: ['디자인', '예술', '미디어', '콘텐츠', '영상', '대중음악', '실용음악', '패션', '광고', '방송', '게임'],
         design: ['디자인', '그래픽', 'UI', 'UX', '시각', '제품', '인테리어', '건축', '조경'],
         helping: ['교육', '복지', '상담', '의료', '간호', '심리', '돌봄', '재활', '치료'],
         helping_teaching: ['교육', '복지', '상담', '의료', '간호', '심리', '돌봄', '교사', '강사'],
@@ -1729,8 +1729,8 @@ function sanitizeKeywordOvermatching(
       }
     }
 
-    // ===== 체크 4: 명백한 도메인 불일치 직업명 패턴 (v3.16) =====
-    if (!shouldPenalize && r.desireScore >= 55) {
+    // ===== 체크 4: 명백한 도메인 불일치 직업명 패턴 (v3.16, v3.18 임계값 하향) =====
+    if (!shouldPenalize && r.desireScore >= 50) {
       const NOISE_NAME_PATTERNS = [
         /버섯|양봉|양잠|양식장|축산|낙농|임업/,          // 농림축산
         /광부|광산|채굴|채석/,                            // 광업
@@ -1741,6 +1741,12 @@ function sanitizeKeywordOvermatching(
         /식품가공|제분|도축|도정|양조/,                    // 식품가공
         /도배|미장|방수|타일|도장공/,                      // 건축현장
         /재봉|봉제|직조|편직|자수/,                        // 섬유가공
+        // v3.18: 추가 노이즈 패턴
+        /국악|전통음악|풍물/,                              // 전통예술
+        /기능성식품|건강기능|한약|한방/,                    // 식품/한의학
+        /목재|펄프|제지|합판/,                              // 목재/제지
+        /비파괴검사|방사선취급|초음파검사/,                 // 비파괴검사
+        /세탁|세차|청소업|방역/,                            // 서비스 현장
       ]
 
       const hasPhysicalInterest = interests.some(i =>
@@ -1757,9 +1763,11 @@ function sanitizeKeywordOvermatching(
     }
 
     if (shouldPenalize) {
-      const penalty = 15
+      const penalty = 20
       const before = r.desireScore
       r.desireScore = Math.max(r.desireScore - penalty, 45)
+      // v3.18: fitScore도 감점하여 overallScore 순위 하락 보장
+      r.fitScore = Math.max(r.fitScore - 12, 45)
       adjusted++
     }
   }

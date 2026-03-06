@@ -117,7 +117,15 @@ export interface UserConstraints {
   prefer_low_overtime?: boolean
   prefer_remote?: boolean
   prefer_stability?: boolean
+  prefer_wlb?: boolean             // v3.18: 워라밸 선호
   learning_window_months?: number
+
+  // v3.18: energy_drain → risk constraint 매핑
+  people_drain?: boolean           // 대인 접촉 에너지 소모
+  routine_drain?: boolean          // 루틴 업무 에너지 소모
+  uncertainty_drain?: boolean      // 불확실성 에너지 소모
+  time_pressure_drain?: boolean    // 시간 압박 에너지 소모
+  no_travel?: boolean              // 출장 불가
 }
 
 // ============================================
@@ -1001,6 +1009,7 @@ export interface RoundQuestion {
   minLengthGuidance: number    // 권장 최소 글자수
   intent?: string              // UI 노출용: "자율이 중요한 이유의 근원(경험/감정)을 확인"
   what_to_extract?: ExtractTarget[]  // 운영/학습용: 이 질문으로 뽑아내려는 데이터
+  anchor?: string              // v3.18: LLM이 참조한 유저 발언 (앵커링 검증용)
 }
 
 export interface RoundAnswer {

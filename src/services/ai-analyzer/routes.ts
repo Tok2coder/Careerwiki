@@ -5453,6 +5453,23 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       }, {} as { [key: string]: boolean }),
       {}
     )
+
+    // v3.18: energy_drain_flags + value_top → 추가 risk constraints
+    const mm = payload.mini_module_result
+    if (mm) {
+      const drainFlags = mm.energy_drain_flags || []
+      if (drainFlags.includes('people_drain')) userConstraints.people_drain = true
+      if (drainFlags.includes('routine_drain')) userConstraints.routine_drain = true
+      if (drainFlags.includes('uncertainty_drain')) userConstraints.uncertainty_drain = true
+      if (drainFlags.includes('time_pressure_drain')) userConstraints.time_pressure_drain = true
+
+      const values = mm.value_top || []
+      if (values.includes('wlb')) userConstraints.prefer_wlb = true
+      if (values.includes('stability') && !userConstraints.prefer_stability) userConstraints.prefer_stability = true
+
+      const constraints = mm.constraint_flags || []
+      if (constraints.includes('no_travel')) userConstraints.no_travel = true
+    }
     
     // 3-1. TAG Filter 먼저 적용 (VectorSearchResult 타입)
 
