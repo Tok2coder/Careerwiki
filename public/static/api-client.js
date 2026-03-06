@@ -1677,7 +1677,7 @@ const EditSystem = {
               <span class="text-sm text-white font-medium truncate">${this.escapeHtml(editorName)}</span>
             </div>
             <!-- 오른쪽: 버튼들 (grid로 고정 위치) -->
-            <div class="grid grid-cols-2 gap-2 shrink-0" style="grid-template-columns: 64px 80px;">
+            <div class="grid gap-2 shrink-0 grid-cols-[64px_80px]">
               <div class="flex justify-end">
                 ${rev.revisionNumber > 1 ? `
                   <button
@@ -5011,23 +5011,23 @@ const DetailComments = (() => {
       <li id="comment-${comment.id}" data-comment-id="${comment.id}" data-comment-status="${comment.status}" data-comment-best="${comment.isBest ? '1' : '0'}" class="${containerClasses}" aria-label="${commentAriaLabel}">
         <article class="space-y-3">
           <header class="flex items-start justify-between gap-2 text-xs text-wiki-muted">
-            <div style="min-width:0;flex:1">
+            <div class="min-w-0 flex-1">
               <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
                 ${profileImageHtml}
                 <span class="font-bold text-wiki-text text-sm">${escapeHtml(displayNickname)}</span>
                 ${adminBadge}
                 ${displayIpTag}
-                ${createdAt ? `<span class="text-wiki-muted select-none" style="margin:0 4px" aria-hidden="true">·</span><time class="text-wiki-muted" style="font-size:11px" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
+                ${createdAt ? `<span class="text-wiki-muted select-none mx-1" aria-hidden="true">·</span><time class="text-wiki-muted text-[11px]" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
                 ${srStatusText}
               </div>
               ${badges.length ? `<div class="flex flex-wrap gap-1 mt-1">${badges.join('')}</div>` : ''}
             </div>
-            <div class="relative flex items-center gap-2" style="flex-shrink:0">
+            <div class="relative flex items-center gap-2 shrink-0">
               ${moderatorInfo}
               <button type="button" class="p-1 text-wiki-muted hover:text-wiki-text" data-cw-comment-menu data-menu-id="${menuId}" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-ellipsis-v"></i>
               </button>
-              <div class="rounded-lg border border-wiki-border bg-wiki-bg shadow-lg hidden" style="position:absolute;right:0;top:100%;margin-top:4px;width:144px;z-index:9000;white-space:nowrap;" data-cw-comment-menu-panel data-menu-id="${menuId}" role="menu">
+              <div class="rounded-lg border border-wiki-border bg-wiki-bg shadow-lg hidden absolute right-0 top-full mt-1 w-36 z-[9000] whitespace-nowrap" data-cw-comment-menu-panel data-menu-id="${menuId}" role="menu">
                 <button type="button" class="w-full text-left px-3 py-2 text-sm hover:bg-wiki-border/30 flex items-center gap-2" data-cw-comment-flag data-comment-id="${comment.id}" data-requires-auth="1" role="menuitem">
                   <i class="fas fa-flag"></i>신고
                 </button>
@@ -5063,7 +5063,7 @@ const DetailComments = (() => {
         </article>
         <div class="mt-3 space-y-2 hidden" data-cw-reply-box data-parent-id="${comment.id}">
           <form data-cw-reply-form class="space-y-2">
-            <input type="text" name="username" autocomplete="username" aria-hidden="true" tabindex="-1" class="sr-only pointer-events-none" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
+            <input type="text" name="username" autocomplete="username" aria-hidden="true" tabindex="-1" class="sr-only pointer-events-none absolute -left-[9999px] w-px h-px opacity-0">
             <textarea rows="3" maxlength="500" class="w-full px-3 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm" data-cw-reply-content aria-label="답글 입력"></textarea>
             <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-wiki-muted">
               <div class="flex items-center gap-2 flex-1 min-w-[240px]">
@@ -7682,7 +7682,7 @@ const AdminImageManager = (() => {
     if (existingModal) existingModal.remove();
 
     const modalHtml = `
-      <div id="cw-image-regen-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4" style="background: rgba(0,0,0,0.8);">
+      <div id="cw-image-regen-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80">
         <div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-lg w-full shadow-2xl">
           <h3 class="text-xl font-bold text-white mb-4">
             <i class="fas fa-image mr-2 text-wiki-primary"></i>
