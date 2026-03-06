@@ -31,8 +31,8 @@ import {
 // 항상 GPT-4o-mini를 사용함. ai.run() 호출 시 타입 호환용으로만 존재.
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
-const MAX_TOTAL_CANDIDATES = 60      // 5개 × 12배치, 전부 병렬 처리
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.18.0'  // 노이즈 필터 확장, E2E 답변 패턴 강화, 감정질문 프롬프트 수정, Risk 차별화 12규칙, 앵커링 추출
+const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.19.0'  // Gradient Risk, 앵커링 측정 보정, 응답시간 최적화, 노이즈 정밀화
 
 // ============================================
 // Types
@@ -1748,6 +1748,11 @@ function sanitizeKeywordOvermatching(
         /목재|펄프|제지|합판/,                              // 목재/제지
         /비파괴검사|방사선취급|초음파검사/,                 // 비파괴검사
         /세탁|세차|청소업|방역/,                            // 서비스 현장
+        // v3.19: 경미한 노이즈 추가
+        /화학정보학|화학공학연구|화학분석/,                    // 화학 전문
+        /금융자동화기기|ATM|현금자동/,                        // 금융기기 하드웨어
+        /광통신|광섬유|광케이블/,                             // 광통신 하드웨어
+        /인쇄|제본|출판인쇄/,                                 // 인쇄업
       ]
 
       const hasPhysicalInterest = interests.some(i =>

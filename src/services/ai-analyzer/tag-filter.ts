@@ -378,6 +378,104 @@ export const RISK_PENALTY_RULES: RiskPenaltyRule[] = [
 ]
 
 // ============================================
+// v3.19: Gradient Risk — 연속 분포 달성
+// DB의 79%가 기본값(wlb=50, regular, none)이라 binary 규칙만으론 차별화 불가.
+// gradient 함수로 중간값에도 부분 페널티를 부여.
+// ============================================
+interface GradientRiskRule {
+  id: string
+  userConstraint: keyof UserConstraints
+  compute: (attrs: Record<string, unknown>) => { penalty: number; warning: string } | null
+}
+
+export const GRADIENT_RISK_RULES: GradientRiskRule[] = [
+  {
+    id: 'gradient_wlb',
+    userConstraint: 'prefer_wlb',
+    compute: (attrs) => {
+      const wlb = typeof attrs.wlb === 'number' ? attrs.wlb : 50
+      if (wlb >= 70) return null
+      if (wlb >= 60) return { penalty: 1, warning: '워라밸이 보통 수준' }
+      if (wlb >= 50) return { penalty: 3, warning: '워라밸이 다소 낮음' }
+      if (wlb >= 40) return { penalty: 5, warning: '워라밸이 낮은 편' }
+      return { penalty: 7, warning: '워라밸이 매우 낮음' }
+    },
+  },
+  {
+    id: 'gradient_stability',
+    userConstraint: 'uncertainty_drain',
+    compute: (attrs) => {
+      const stability = typeof attrs.stability === 'number' ? attrs.stability : 50
+      if (stability >= 70) return null
+      if (stability >= 60) return { penalty: 1, warning: '안정성 보통' }
+      if (stability >= 50) return { penalty: 2, warning: '안정성 다소 낮음' }
+      if (stability >= 40) return { penalty: 4, warning: '안정성 낮은 편' }
+      return { penalty: 6, warning: '안정성이 매우 낮음' }
+    },
+  },
+  {
+    id: 'gradient_people_facing',
+    userConstraint: 'people_drain',
+    compute: (attrs) => {
+      const pf = typeof attrs.people_facing === 'number' ? attrs.people_facing : 50
+      if (pf <= 45) return null
+      if (pf <= 55) return { penalty: 1, warning: '대인 접촉 보통' }
+      if (pf <= 70) return { penalty: 3, warning: '대인 접촉 다소 많음' }
+      if (pf <= 85) return { penalty: 5, warning: '대인 접촉 많은 편' }
+      return { penalty: 7, warning: '대인 접촉이 매우 많음' }
+    },
+  },
+  {
+    id: 'gradient_growth',
+    userConstraint: 'routine_drain',
+    compute: (attrs) => {
+      const growth = typeof attrs.growth === 'number' ? attrs.growth : 50
+      if (growth >= 65) return null
+      if (growth >= 55) return { penalty: 1, warning: '성장성 보통' }
+      if (growth >= 45) return { penalty: 2, warning: '성장성 다소 낮음' }
+      if (growth >= 35) return { penalty: 4, warning: '성장성 낮은 편' }
+      return { penalty: 6, warning: '성장성이 매우 낮음' }
+    },
+  },
+]
+
+// Always-on Baseline Risk: 유저 제약조건 무관, 직업 자체의 기본 리스크
+export function computeBaselineRisk(attrs: Record<string, unknown>): { penalty: number; details: Array<{ id: string; penalty: number; warning: string }> } {
+  const details: Array<{ id: string; penalty: number; warning: string }> = []
+  let penalty = 0
+
+  // 야근
+  if (attrs.work_hours === 'overtime_frequent') {
+    penalty += 3; details.push({ id: 'baseline_overtime_frequent', penalty: 3, warning: '야근 빈번' })
+  } else if (attrs.work_hours === 'overtime_some') {
+    penalty += 1; details.push({ id: 'baseline_overtime_some', penalty: 1, warning: '야근 가끔' })
+  }
+
+  // 교대근무
+  if (attrs.shift_work === 'required') {
+    penalty += 3; details.push({ id: 'baseline_shift_required', penalty: 3, warning: '교대근무 필수' })
+  } else if (attrs.shift_work === 'possible') {
+    penalty += 1; details.push({ id: 'baseline_shift_possible', penalty: 1, warning: '교대근무 가능' })
+  }
+
+  // 출장
+  if (attrs.travel === 'frequent') {
+    penalty += 2; details.push({ id: 'baseline_travel_frequent', penalty: 2, warning: '출장 잦음' })
+  } else if (attrs.travel === 'some') {
+    penalty += 1; details.push({ id: 'baseline_travel_some', penalty: 1, warning: '출장 가끔' })
+  }
+
+  // 비정규직
+  if (attrs.employment_type === 'freelance' || attrs.employment_type === 'gig') {
+    penalty += 3; details.push({ id: 'baseline_freelance', penalty: 3, warning: '프리랜서/긱' })
+  } else if (attrs.employment_type === 'contract') {
+    penalty += 2; details.push({ id: 'baseline_contract', penalty: 2, warning: '계약직' })
+  }
+
+  return { penalty: Math.min(penalty, 8), details }
+}
+
+// ============================================
 // Main Filter Function
 // ============================================
 export async function applyTagFilter(
@@ -448,12 +546,13 @@ export async function applyTagFilter(
       continue
     }
     
-    // Risk Penalty 계산
+    // Risk Penalty 계산 (v3.19: 3-layer system)
     let totalPenalty = 0
     const warnings: string[] = []
     const appliedRules: Array<{ ruleId: string; warning: string; penalty: number }> = []
 
     if (isTagged) {
+      // Layer 1: Binary Rules (기존 — 명확한 불일치)
       for (const rule of RISK_PENALTY_RULES) {
         const userHasConstraint = userConstraints[rule.userConstraint]
         if (userHasConstraint) {
@@ -470,15 +569,52 @@ export async function applyTagFilter(
         }
       }
 
+      // Layer 2: Gradient Rules (v3.19 — 중간값 차별화)
+      // gradient가 binary보다 세밀하므로, 같은 constraint에서 binary가 이미 발동했으면 gradient는 건너뜀
+      const appliedConstraints = new Set<string>(appliedRules.map(r => {
+        const rule = RISK_PENALTY_RULES.find(pr => pr.id === r.ruleId)
+        return rule?.userConstraint || ''
+      }).filter(Boolean))
+
+      for (const gradRule of GRADIENT_RISK_RULES) {
+        if (appliedConstraints.has(gradRule.userConstraint)) continue
+        const userHasConstraint = userConstraints[gradRule.userConstraint]
+        if (!userHasConstraint) continue
+        const result = gradRule.compute(attrs)
+        if (result) {
+          totalPenalty += result.penalty
+          warnings.push(result.warning)
+          appliedRules.push({
+            ruleId: gradRule.id,
+            warning: result.warning,
+            penalty: result.penalty,
+          })
+        }
+      }
+
+      // Layer 3: Baseline Risk (v3.19 — 직업 고유 리스크, 제약조건 무관)
+      // Layer 1+2가 이미 높은 경우 baseline 추가를 제한하여 과도한 누적 방지
+      if (totalPenalty < 10) {
+        const baseline = computeBaselineRisk(attrs)
+        if (baseline.penalty > 0) {
+          const cappedBaseline = Math.min(baseline.penalty, 10 - totalPenalty)
+          totalPenalty += cappedBaseline
+          for (const d of baseline.details) {
+            appliedRules.push({ ruleId: d.id, warning: d.warning, penalty: d.penalty })
+          }
+        }
+      }
+
+      // 전체 Risk 상한: Fit 점수를 과도하게 끌어내리지 않도록 15점으로 캡
+      totalPenalty = Math.min(totalPenalty, 15)
+
       // ★ 데이터 품질 페널티: 카테고리 필드가 전부 기본값이면 태깅 신뢰도 낮음
-      // 기본값: job_type='knowledge', work_environment='office', physical_demand='medium', employment_type='permanent'
       const isAllDefaults =
         attrs.job_type === 'knowledge' &&
         attrs.work_environment === 'office' &&
         attrs.physical_demand === 'medium' &&
         attrs.employment_type === 'permanent'
 
-      // 수치 속성도 전부 50이면 flat-50 노이즈 (더 큰 페널티)
       const isFlat50 = isAllDefaults &&
         attrs.analytical === 50 && attrs.creative === 50 &&
         attrs.execution === 50 && attrs.people_facing === 50
@@ -556,12 +692,16 @@ async function getJobAttributes(
   const BATCH_SIZE = 100
   const results = new Map<string, Record<string, any>>()
   
+  // v3.19: 순차→병렬 배치 조회 (D1 queueing 줄이기)
+  const batches: string[][] = []
   for (let i = 0; i < jobIds.length; i += BATCH_SIZE) {
-    const batch = jobIds.slice(i, i + BATCH_SIZE)
+    batches.push(jobIds.slice(i, i + BATCH_SIZE))
+  }
+
+  const batchResults = await Promise.all(batches.map(async (batch) => {
     const placeholders = batch.map(() => '?').join(',')
-    
     try {
-      const queryResult = await db.prepare(`
+      return await db.prepare(`
         SELECT
           job_id,
           work_hours,
@@ -613,14 +753,18 @@ async function getJobAttributes(
         decision_authority: number
         repetitive_level: number
       }>()
-      
-      for (const row of queryResult.results || []) {
-        results.set(row.job_id, row)
-      }
     } catch (error) {
+      return null
+    }
+  }))
+
+  for (const queryResult of batchResults) {
+    if (!queryResult) continue
+    for (const row of queryResult.results || []) {
+      results.set(row.job_id, row)
     }
   }
-  
+
   return results
 }
 

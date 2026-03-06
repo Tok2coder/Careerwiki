@@ -635,8 +635,9 @@ function generateTraceMarkdown(result: E2EResult, scenario: TestScenario): strin
 
     // Round quality assessment markers
     lines.push(``)
+    const ANCHOR_PATTERNS = /말씀하신|언급하신|하셨는데|하셨다고|싶다고 하셨|좋아한다고 하셨|있다고 하셨|없다고 하셨|않는다고|맞지 않다고|했던 경험|했을 때|하셨다면|하셨잖아|라고 하셨/
     const hasAnchor = round.questions.some(q =>
-      q.questionText.includes('\"') || q.questionText.includes('말씀하신') || q.questionText.includes('언급하신')
+      q.questionText.includes('\"') || ANCHOR_PATTERNS.test(q.questionText)
     )
     const duplicateCheck = checkDuplicateQuestions(result.rounds, round.roundNumber)
     lines.push(`**라운드 ${round.roundNumber} 품질 체크:**`)
@@ -754,9 +755,10 @@ function generateSummaryReport(results: E2EResult[]): string {
   for (const r of results) {
     const r1 = r.rounds[0], r2 = r.rounds[1], r3 = r.rounds[2]
     const genBy = r1?.metadata.generated_by || 'N/A'
+    const ANCHOR_RE = /말씀하신|언급하신|하셨는데|하셨다고|싶다고 하셨|좋아한다고 하셨|있다고 하셨|없다고 하셨|않는다고|맞지 않다고|했던 경험|했을 때|하셨다면|하셨잖아|라고 하셨/
     const hasAnchor = r.rounds.some(rd =>
       rd.questions.some(q =>
-        q.questionText.includes('말씀하신') || q.questionText.includes('언급하신') || q.questionText.includes('\"')
+        q.questionText.includes('\"') || ANCHOR_RE.test(q.questionText)
       )
     ) ? '✅' : '❌'
     const hasDup = r.rounds.some((_, i) => i > 0 && checkDuplicateQuestions(r.rounds, i + 1)) ? '❌' : '✅'

@@ -5926,6 +5926,11 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
             /목재|펄프|제지|합판/,
             /비파괴검사|방사선취급|초음파검사/,
             /세탁|세차|청소업|방역/,
+            // v3.19: 경미한 노이즈 추가 (llm-judge.ts와 동기화)
+            /화학정보학|화학공학연구|화학분석/,
+            /금융자동화기기|ATM|현금자동/,
+            /광통신|광섬유|광케이블/,
+            /인쇄|제본|출판인쇄/,
           ]
           const hasPhysicalInterest = mmInterests.some(i =>
             ['nature', 'physical_activity', 'manufacturing'].includes(i)
