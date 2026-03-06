@@ -8,8 +8,8 @@ export default {
         'wiki-bg': '#0f0f23',
         'wiki-card': '#1a1a2e',
         'wiki-border': '#2a2a3e',
-        'wiki-primary': 'rgb(var(--wp, 67 97 238) / <alpha-value>)',
-        'wiki-secondary': 'rgb(var(--ws, 100 181 246) / <alpha-value>)',
+        'wiki-primary': 'rgb(var(--wp) / <alpha-value>)',
+        'wiki-secondary': 'rgb(var(--ws) / <alpha-value>)',
         'wiki-text': '#e0e0e0',
         'wiki-muted': '#9ca3af',
       }

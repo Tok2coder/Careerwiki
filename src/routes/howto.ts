@@ -284,7 +284,7 @@ howtoRoutes.get('/', async (c) => {
     <div class="max-w-[1400px] mx-auto px-4 pb-8">
       <!-- 헤더 섹션 -->
       <header class="mb-8 space-y-3">
-        <div class="flex items-center gap-2 text-xs text-blue-300 font-semibold uppercase tracking-[0.2em]">
+        <div class="flex items-center gap-2 text-xs text-wiki-secondary font-semibold uppercase tracking-[0.2em]">
           <i class="fas fa-book-open"></i><span>${keyword ? '검색 결과' : 'HowTo'}</span>
         </div>
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -357,6 +357,7 @@ howtoRoutes.get('/', async (c) => {
       {
         canonical: 'https://careerwiki.org/howto',
         ogUrl: 'https://careerwiki.org/howto',
+        extraHead: '<style>:root{--wp:139 92 246;--ws:167 139 250}</style>',
         ...(keyword ? { robots: 'noindex, follow' } : {})
       }
     )

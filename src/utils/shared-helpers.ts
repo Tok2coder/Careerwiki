@@ -216,7 +216,7 @@ export const renderLayout = (
         <link rel="canonical" href="${canonicalUrl}">
         <link rel="icon" type="image/png" href="/images/CWfavicon.png">
         <link href="/static/style.css" rel="stylesheet" />
-        <link rel="stylesheet" href="/static/tailwind.css">
+        <link rel="stylesheet" href="/static/tailwind.css?v=2">
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/lucide@0.474.0/dist/umd/lucide.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>

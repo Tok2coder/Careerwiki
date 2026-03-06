@@ -173,7 +173,7 @@ majorListRoutes.get('/major', async (c) => {
         }).replace(/</g, '\\u003C')}</script>`
       : ''
 
-    const extraHead = [jsonLd].filter(Boolean).join('\n')
+    const extraHead = ['<style>:root{--wp:16 185 129;--ws:45 212 191}</style>', jsonLd].filter(Boolean).join('\n')
 
     const content = `
       <div class="max-w-[1400px] mx-auto px-4 md:px-6">
@@ -181,13 +181,13 @@ majorListRoutes.get('/major', async (c) => {
         <div class="relative text-center pt-2 pb-12 mb-6 space-y-7">
           <!-- 배경 글로우 + 하단 페이드 -->
           <div class="absolute inset-0 -z-10 overflow-hidden">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-wiki-secondary/8 via-wiki-secondary/5 to-transparent rounded-full blur-[120px]"></div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-wiki-primary/8 via-wiki-primary/5 to-transparent rounded-full blur-[120px]"></div>
           </div>
           <!-- 하단 그라데이션 페이드 -->
           <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-wiki-bg to-transparent -z-10"></div>
 
           <h1 class="text-[42px] md:text-[48px] lg:text-6xl font-extrabold leading-tight mb-2">
-            <span class="bg-gradient-to-r from-wiki-secondary via-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(168,85,247,0.3)]">
+            <span class="bg-gradient-to-r from-wiki-primary via-wiki-secondary to-wiki-primary bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(16,185,129,0.3)]">
             ${headingLabel}
             </span>
           </h1>
@@ -198,7 +198,7 @@ majorListRoutes.get('/major', async (c) => {
 
           <div class="flex items-center justify-center gap-3 text-sm">
             <span class="px-3 py-1.5 rounded-lg bg-wiki-bg/60 text-wiki-muted">${filterSummary}</span>
-            <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-secondary/20 to-purple-500/20 border border-wiki-secondary/30 text-white font-semibold">
+            <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30 text-white font-semibold">
               <span id="major-total-count">${totalCount}</span>개
             </span>
           </div>
@@ -208,9 +208,9 @@ majorListRoutes.get('/major', async (c) => {
           <div class="flex flex-row gap-2 sm:gap-3">
             <!-- 검색창 - 글래스모피즘 + 인셋 아이콘 -->
             <div class="flex-1 relative group min-w-0">
-              <div class="absolute inset-0 bg-gradient-to-r from-wiki-secondary/20 via-purple-500/20 to-wiki-secondary/20 rounded-2xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
-              <div class="relative flex items-center bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 group-focus-within:border-wiki-secondary/50 group-focus-within:shadow-lg group-focus-within:shadow-wiki-secondary/10">
-                <span class="pl-3 sm:pl-4 pr-1 sm:pr-2 text-wiki-muted/60 group-focus-within:text-wiki-secondary transition-colors duration-300">
+              <div class="absolute inset-0 bg-gradient-to-r from-wiki-primary/20 via-wiki-secondary/20 to-wiki-primary/20 rounded-2xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+              <div class="relative flex items-center bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 group-focus-within:border-wiki-primary/50 group-focus-within:shadow-lg group-focus-within:shadow-wiki-primary/10">
+                <span class="pl-3 sm:pl-4 pr-1 sm:pr-2 text-wiki-muted/60 group-focus-within:text-wiki-primary transition-colors duration-300">
                   <i class="fas fa-search text-sm"></i>
                 </span>
                 <input
@@ -222,7 +222,7 @@ majorListRoutes.get('/major', async (c) => {
                   class="flex-1 px-1 sm:px-2 py-2 sm:py-3.5 bg-transparent border-none focus:outline-none text-base text-white placeholder:text-wiki-muted/50 min-w-0"
                   style="font-size: 16px;"
                 />
-                <button type="submit" class="m-1 sm:m-1.5 px-3 sm:px-5 py-2 sm:py-2.5 min-h-[40px] sm:min-h-[44px] bg-gradient-to-r from-wiki-secondary to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-secondary/25 active:scale-95 transition-all duration-200">
+                <button type="submit" class="m-1 sm:m-1.5 px-3 sm:px-5 py-2 sm:py-2.5 min-h-[40px] sm:min-h-[44px] bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-primary/25 active:scale-95 transition-all duration-200">
                   <i class="fas fa-search sm:hidden"></i>
                   <span class="hidden sm:inline">검색</span>
                 </button>
@@ -231,7 +231,7 @@ majorListRoutes.get('/major', async (c) => {
             <!-- 정렬 + 새 전공 추가 버튼 -->
             <div class="flex items-center gap-2 shrink-0" id="major-hydration-toolbar">
               <div class="relative" data-dropdown="major-sort">
-                <button type="button" id="major-sort-trigger" class="flex items-center justify-center gap-2 px-3 sm:pl-4 sm:pr-3 py-2 sm:py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white/70 hover:bg-white/[0.06] hover:border-white/[0.1] focus:outline-none focus:border-wiki-secondary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px] min-h-[44px]">
+                <button type="button" id="major-sort-trigger" class="flex items-center justify-center gap-2 px-3 sm:pl-4 sm:pr-3 py-2 sm:py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white/70 hover:bg-white/[0.06] hover:border-white/[0.1] focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px] min-h-[44px]">
                   <i class="fas fa-sliders-h sm:hidden"></i>
                   <span id="major-sort-label" class="hidden sm:inline">${sort === 'employment-desc' ? '취업률 높은 순' : sort === 'salary-desc' ? '월급 높은 순' : sort === 'name-asc' ? '가나다 순' : '기본 순'}</span>
                   <i class="fas fa-chevron-down text-[10px] text-white/40 ml-auto transition-transform duration-200 hidden sm:inline" id="major-sort-chevron"></i>
@@ -239,19 +239,19 @@ majorListRoutes.get('/major', async (c) => {
                 <div id="major-sort-menu" class="absolute right-0 top-full mt-2 w-44 py-1.5 bg-[#1c2333]/95 backdrop-blur-xl border border-white/[0.08] rounded-xl shadow-2xl shadow-black/40 opacity-0 invisible translate-y-1 transition-all duration-200 z-50">
                   <div class="px-2 py-1.5 text-[10px] font-medium text-white/30 uppercase tracking-wider">정렬 기준</div>
                   <button type="button" data-sort="relevance" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group ${sort === 'relevance' ? 'active' : ''}">
-                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-secondary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-primary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
                     <span>기본 순</span>
                   </button>
                   <button type="button" data-sort="employment-desc" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group ${sort === 'employment-desc' ? 'active' : ''}">
-                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-secondary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-primary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
                     <span>취업률 높은 순</span>
                   </button>
                   <button type="button" data-sort="salary-desc" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group ${sort === 'salary-desc' ? 'active' : ''}">
-                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-secondary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-primary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
                     <span>월급 높은 순</span>
                   </button>
                   <button type="button" data-sort="name-asc" class="sort-option w-full px-3 py-2.5 text-left text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors duration-150 flex items-center gap-2.5 group ${sort === 'name-asc' ? 'active' : ''}">
-                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-secondary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-wiki-primary opacity-0 group-[.active]:opacity-100 transition-opacity"></span>
                     <span>가나다 순</span>
                   </button>
                 </div>
@@ -268,7 +268,7 @@ majorListRoutes.get('/major', async (c) => {
                 type="button"
                 id="create-major-btn"
                 data-create-entity="major"
-                class="flex items-center gap-1.5 px-4 py-3 bg-gradient-to-r from-wiki-secondary to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-secondary/25 active:scale-95 transition-all duration-200 whitespace-nowrap"
+                class="flex items-center gap-1.5 px-4 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-primary/25 active:scale-95 transition-all duration-200 whitespace-nowrap"
               >
                 <i class="fas fa-plus text-xs"></i>
                 추가
@@ -581,10 +581,10 @@ majorListRoutes.get('/major', async (c) => {
           <div class="max-w-[1400px] mx-auto px-4 md:px-6 md:mt-8">
             <div class="relative text-center pt-12 pb-12 mb-16 space-y-7">
               <div class="absolute inset-0 -z-10 overflow-hidden">
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-wiki-secondary/5 rounded-full blur-[100px]"></div>
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-wiki-primary/5 rounded-full blur-[100px]"></div>
               </div>
               <h1 class="text-[42px] md:text-[48px] lg:text-6xl font-extrabold leading-tight mb-2">
-                <span class="bg-gradient-to-r from-wiki-secondary via-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(168,85,247,0.3)]">
+                <span class="bg-gradient-to-r from-wiki-primary via-wiki-secondary to-wiki-primary bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(16,185,129,0.3)]">
                 ${keyword ? `"${escapeHtml(keyword)}" 관련 전공` : '전공위키'}
                 </span>
               </h1>
@@ -592,7 +592,7 @@ majorListRoutes.get('/major', async (c) => {
                 전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.
               </p>
               <div class="flex items-center justify-center gap-4 text-sm text-wiki-muted">
-                <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-blue-500/20 border border-wiki-primary/30 text-white font-semibold">
+                <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30 text-white font-semibold">
                   <span id="major-total-count">${totalCount}</span>개 전공
                 </span>
               </div>
@@ -645,7 +645,9 @@ majorListRoutes.get('/major', async (c) => {
           renderLayoutWithContext(c,
             `${content}${hydrationScript}`,
             keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki',
-            keyword ? `${keyword} 관련 전공 정보를 확인하세요.` : '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.'
+            keyword ? `${keyword} 관련 전공 정보를 확인하세요.` : '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.',
+            false,
+            { extraHead: '<style>:root{--wp:16 185 129;--ws:45 212 191}</style>' }
           )
         )
       } catch (fallbackError) {

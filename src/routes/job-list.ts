@@ -131,7 +131,7 @@ jobListRoutes.get('/job', async (c) => {
           <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-wiki-bg to-transparent -z-10"></div>
 
           <h1 class="text-[42px] md:text-[48px] lg:text-6xl font-extrabold leading-tight mb-2">
-            <span class="bg-gradient-to-r from-wiki-primary via-blue-400 to-wiki-secondary bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(59,130,246,0.3)]">
+            <span class="bg-gradient-to-r from-wiki-primary via-wiki-secondary to-wiki-primary bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(67,97,238,0.3)]">
             ${headingLabel}
             </span>
           </h1>
@@ -142,7 +142,7 @@ jobListRoutes.get('/job', async (c) => {
 
           <div class="flex items-center justify-center gap-3 text-sm">
             <span class="px-3 py-1.5 rounded-lg bg-wiki-bg/60 text-wiki-muted">${filterSummary}</span>
-            <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-blue-500/20 border border-wiki-primary/30 text-white font-semibold">
+            <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30 text-white font-semibold">
               <span id="job-total-count">${totalCount}</span>개
             </span>
           </div>
@@ -207,7 +207,7 @@ jobListRoutes.get('/job', async (c) => {
                 type="button"
                 id="create-job-btn"
                 data-create-entity="job"
-                class="flex items-center gap-1.5 px-4 py-3 bg-gradient-to-r from-wiki-primary to-blue-500 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-primary/25 active:scale-95 transition-all duration-200 whitespace-nowrap"
+                class="flex items-center gap-1.5 px-4 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-primary/25 active:scale-95 transition-all duration-200 whitespace-nowrap"
               >
                 <i class="fas fa-plus text-xs"></i>
                 추가

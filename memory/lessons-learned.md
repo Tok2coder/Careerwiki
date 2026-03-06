@@ -1,10 +1,10 @@
 # Lessons Learned
 
-### [2026-03-06] CSS: 페이지별 액센트 색상 — CSS 변수 오버라이드 순서 문제
-- **상황**: Tailwind `wiki-primary`를 CSS 변수 기반으로 전환 후, 전공 페이지에서 emerald 오버라이드가 적용 안 됨
-- **원인**: `extraHead`가 메인 `<style>` 블록 **앞에** 삽입되어, `:root` 기본값이 오버라이드를 덮어씀 (CSS cascade: 뒤에 나온 규칙이 우선)
-- **해결**: 메인 `<style>`에서 `:root` 기본값 제거, Tailwind `var(--wp, 67 97 238)` fallback에 의존. 비-Tailwind CSS에도 `var(--wp, 67 97 238)` fallback 추가
-- **교훈**: CSS 변수 오버라이드는 삽입 위치(cascade order) 확인 필수. fallback 값을 사용하면 순서 무관하게 동작
+### [2026-03-06] CSS: Tailwind 3 CSS 변수 색상 — 빌드 시 정적 해석 문제
+- **상황**: `wiki-primary: 'rgb(var(--wp, 67 97 238) / <alpha-value>)'`로 정의 후, gradient 클래스(`from-wiki-primary`)가 `#4361ee` 하드코딩으로 컴파일됨
+- **원인**: Tailwind 3이 `var(--wp, 67 97 238)` 의 fallback `67 97 238`을 빌드 시점에 정적 hex로 변환. gradient 유틸리티에서 CSS 변수가 런타임에 유지되지 않음
+- **해결**: (1) Tailwind config에서 fallback 제거: `'rgb(var(--wp) / <alpha-value>)'` (2) `@layer base { :root { --wp: 67 97 238 } }` 를 tailwind.css에 추가 (최저 우선순위 기본값) (3) 페이지별 extraHead `:root` 오버라이드가 base layer를 덮어씀
+- **교훈**: Tailwind CSS 변수 색상은 config에 fallback 넣지 말고, `@layer base`에서 기본값 설정. CDN 캐시로 새 CSS가 반영 안 될 수 있으므로 `?v=N` cache-busting 필수
 
 ### [2026-03-06] 디자인: 개별 클래스 교체 vs CSS 변수 시스템
 - **상황**: 첫 시도에서 `buildCard` 아이콘만 accent 파라미터로 색상 변경 → 나머지 130+ 요소는 여전히 blue
