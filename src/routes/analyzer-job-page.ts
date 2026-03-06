@@ -297,15 +297,34 @@ analyzerJobPage.get('/', requireAuth, (c) => {
         <!-- 로딩 오버레이 -->
         <!-- ============================================ -->
         <div id="loading-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-            <div class="glass-card p-8 rounded-2xl text-center max-w-sm mx-4">
-                <div class="relative w-16 h-16 mx-auto mb-4">
+            <div class="glass-card p-8 rounded-2xl text-center max-w-md mx-4">
+                <div class="relative w-16 h-16 mx-auto mb-5">
                     <div class="absolute inset-0 border-4 border-wiki-primary/30 rounded-full"></div>
                     <div class="absolute inset-0 border-4 border-transparent border-t-wiki-primary rounded-full animate-spin"></div>
                 </div>
                 <p id="loading-message" class="text-lg font-semibold text-white mb-2">처리 중...</p>
-                <p id="loading-submessage" class="text-sm text-wiki-muted">잠시만 기다려주세요</p>
+                <p id="loading-submessage" class="text-sm text-wiki-muted mb-5">잠시만 기다려주세요</p>
+                <!-- 프로그레스바 -->
+                <div id="loading-progress-container" class="hidden">
+                    <div class="w-full bg-white/10 rounded-full h-2 mb-3 overflow-hidden">
+                        <div id="loading-progress-bar" class="h-full rounded-full transition-all duration-700 ease-out"
+                             style="width: 0%; background: linear-gradient(90deg, #a855f7, #6366f1);"></div>
+                    </div>
+                    <div id="loading-steps" class="flex justify-between text-xs text-wiki-muted/70 px-1">
+                        <span id="step-1" class="text-wiki-primary font-medium">프로필 분석</span>
+                        <span id="step-2">직업 검색</span>
+                        <span id="step-3">적합도 분석</span>
+                        <span id="step-4">리포트 생성</span>
+                    </div>
+                </div>
+                <p id="loading-elapsed" class="hidden text-xs text-wiki-muted/50 mt-3"></p>
             </div>
         </div>
+        <!-- 토스트 알림 -->
+        <div id="toast-container" class="fixed top-6 right-6 z-[60] flex flex-col gap-3 pointer-events-none"></div>
+        <style>
+            @keyframes slideInRight { from { opacity:0; transform:translateX(100%); } to { opacity:1; transform:translateX(0); } }
+        </style>
         
         <!-- 이어하기/새로시작 모달 -->
         <div id="continue-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -1050,18 +1069,125 @@ analyzerJobPage.get('/', requireAuth, (c) => {
         // ============================================
         // 로딩 오버레이
         // ============================================
-        function showLoading(message, submessage = '잠시만 기다려주세요') {
+        let loadingTimer = null;
+        let loadingStartTime = 0;
+
+        const ANALYSIS_STEPS = [
+            { pct: 5, msg: '프로필 분석 중...', sub: '입력하신 정보를 분석하고 있어요', step: 1 },
+            { pct: 20, msg: '직업 데이터 검색 중...', sub: '6,900개 직업에서 후보를 찾고 있어요', step: 2 },
+            { pct: 45, msg: 'AI 적합도 분석 중...', sub: '각 직업의 적합도를 계산하고 있어요', step: 3 },
+            { pct: 65, msg: 'AI 적합도 분석 중...', sub: '거의 다 됐어요, 잠시만 더 기다려주세요', step: 3 },
+            { pct: 80, msg: '맞춤 리포트 생성 중...', sub: '분석 결과를 정리하고 있어요', step: 4 },
+            { pct: 92, msg: '마무리 중...', sub: '곧 결과를 보여드릴게요', step: 4 },
+        ];
+
+        function showLoading(message, submessage = '잠시만 기다려주세요', showProgress = false) {
             const overlay = document.getElementById('loading-overlay');
             const msgEl = document.getElementById('loading-message');
             const subEl = document.getElementById('loading-submessage');
+            const progressContainer = document.getElementById('loading-progress-container');
+            const elapsedEl = document.getElementById('loading-elapsed');
+
             if (msgEl) msgEl.textContent = message;
             if (subEl) subEl.textContent = submessage;
             if (overlay) overlay.classList.remove('hidden');
+
+            if (showProgress && progressContainer) {
+                progressContainer.classList.remove('hidden');
+                const bar = document.getElementById('loading-progress-bar');
+                if (bar) bar.style.width = '0%';
+
+                // 단계 텍스트 리셋
+                for (let i = 1; i <= 4; i++) {
+                    const stepEl = document.getElementById('step-' + i);
+                    if (stepEl) {
+                        stepEl.className = i === 1 ? 'text-wiki-primary font-medium' : 'text-wiki-muted/50';
+                    }
+                }
+
+                loadingStartTime = Date.now();
+                let stepIndex = 0;
+
+                // 프로그레스 애니메이션 시작
+                if (loadingTimer) clearInterval(loadingTimer);
+                loadingTimer = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - loadingStartTime) / 1000);
+                    if (elapsedEl) {
+                        elapsedEl.classList.remove('hidden');
+                        elapsedEl.textContent = elapsed + '초 경과';
+                    }
+
+                    // 단계별 진행
+                    if (stepIndex < ANALYSIS_STEPS.length) {
+                        const step = ANALYSIS_STEPS[stepIndex];
+                        if (bar) bar.style.width = step.pct + '%';
+                        if (msgEl) msgEl.textContent = step.msg;
+                        if (subEl) subEl.textContent = step.sub;
+
+                        // 단계 하이라이트
+                        for (let i = 1; i <= 4; i++) {
+                            const stepEl = document.getElementById('step-' + i);
+                            if (stepEl) {
+                                if (i < step.step) stepEl.className = 'text-emerald-400';
+                                else if (i === step.step) stepEl.className = 'text-wiki-primary font-medium';
+                                else stepEl.className = 'text-wiki-muted/50';
+                            }
+                        }
+                        stepIndex++;
+                    }
+
+                    // 120초 경과 시 안내
+                    if (elapsed >= 120 && elapsedEl) {
+                        elapsedEl.textContent = elapsed + '초 경과 — 네트워크 상태를 확인해주세요';
+                        elapsedEl.style.color = '#fbbf24';
+                    }
+                }, 2000);
+
+            } else if (progressContainer) {
+                progressContainer.classList.add('hidden');
+            }
         }
-        
+
         function hideLoading() {
             const overlay = document.getElementById('loading-overlay');
+            const elapsedEl = document.getElementById('loading-elapsed');
+            if (loadingTimer) { clearInterval(loadingTimer); loadingTimer = null; }
+            if (elapsedEl) elapsedEl.classList.add('hidden');
             if (overlay) overlay.classList.add('hidden');
+        }
+
+        // 토스트 알림 (alert 대체)
+        function showToast(message, type = 'error', duration = 6000) {
+            const container = document.getElementById('toast-container');
+            if (!container) { alert(message); return; }
+
+            const colors = {
+                error: 'border-red-500/50 bg-red-900/80 text-red-200',
+                success: 'border-emerald-500/50 bg-emerald-900/80 text-emerald-200',
+                warning: 'border-amber-500/50 bg-amber-900/80 text-amber-200',
+                info: 'border-blue-500/50 bg-blue-900/80 text-blue-200',
+            };
+            const icons = {
+                error: 'fas fa-exclamation-circle text-red-400',
+                success: 'fas fa-check-circle text-emerald-400',
+                warning: 'fas fa-exclamation-triangle text-amber-400',
+                info: 'fas fa-info-circle text-blue-400',
+            };
+
+            const toast = document.createElement('div');
+            toast.className = 'pointer-events-auto border rounded-xl px-5 py-4 shadow-2xl backdrop-blur-sm flex items-start gap-3 max-w-sm ' + (colors[type] || colors.error);
+            toast.style.animation = 'slideInRight 0.3s ease-out';
+            toast.innerHTML = '<i class="' + (icons[type] || icons.error) + ' text-lg mt-0.5"></i>'
+                + '<div class="flex-1"><p class="text-sm font-medium">' + message + '</p></div>'
+                + '<button onclick="this.parentElement.remove()" class="text-white/50 hover:text-white ml-2">&times;</button>';
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
         }
         
         // ============================================
@@ -3483,10 +3609,10 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 }
             } catch (error) {
                 hideLoading();
-                alert('오류가 발생했습니다: ' + error.message);
+                showToast(error.message || '오류가 발생했습니다. 다시 시도해주세요.', 'error');
             }
         }
-        
+
         // ============================================
         // V3: 3라운드 심층 질문 시스템
         // ============================================
@@ -3612,7 +3738,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 // 먼저 HTTP 상태 체크 (500 에러 등)
                 if (!response.ok) {
                     const errorText = await response.text().catch(() => 'Unknown server error');
-                    alert('질문 생성 중 서버 오류가 발생했습니다 (HTTP ' + response.status + ')\\n\\n잠시 후 다시 시도해주세요.');
+                    showToast('질문 생성 중 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
                     return;
                 }
                 
@@ -3620,7 +3746,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 
                 // API 에러 처리
                 if (data.error) {
-                    alert('질문 생성 중 오류가 발생했습니다: ' + (data.error || 'Unknown error') + '\\n\\n페이지를 새로고침하고 다시 시도해주세요.');
+                    showToast('질문 생성에 문제가 발생했습니다. 페이지를 새로고침 후 다시 시도해주세요.', 'error');
                     return;
                 }
                 
@@ -3639,11 +3765,11 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
                     // 질문이 없으면 에러 표시
-                    alert('질문을 생성하지 못했습니다. 페이지를 새로고침하고 다시 시도해주세요.');
+                    showToast('질문을 생성하지 못했습니다. 페이지를 새로고침 후 다시 시도해주세요.', 'warning');
                 }
             } catch (error) {
                 hideLoading();
-                alert('질문 생성 중 오류가 발생했습니다: ' + (error.message || 'Network error') + '\\n\\n페이지를 새로고침하고 다시 시도해주세요.');
+                showToast('네트워크 오류가 발생했습니다. 인터넷 연결을 확인 후 다시 시도해주세요.', 'error');
             }
         }
         
@@ -4171,7 +4297,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
             } catch (error) {
                 hideLoading();
-                alert('분석 중 오류가 발생했습니다: ' + error.message);
+                showToast(error.message || '분석 중 오류가 발생했습니다. 다시 시도해주세요.', 'error');
             }
         }
         
@@ -5585,10 +5711,10 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 }
             } catch (error) {
                 hideLoading();
-                alert('오류가 발생했습니다: ' + error.message);
+                showToast(error.message || '오류가 발생했습니다. 다시 시도해주세요.', 'error');
             }
         }
-        
+
         async function submitUniversalAndAnalyze() {
             collectUniversalAnswers();
             const btn = document.getElementById('analyze-btn-quick');
@@ -5596,14 +5722,19 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>분석 중...';
             }
-            showLoading('AI가 분석 중...', '맞춤 추천을 구성하고 있어요');
-            
+            showLoading('프로필 분석 중...', '입력하신 정보를 분석하고 있어요', true);
+
             try {
                 currentSessionId = 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-                
+
+                // 타임아웃 설정 (150초)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 150000);
+
                 const response = await fetch('/api/ai-analyzer/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal,
                     body: JSON.stringify({
                         session_id: currentSessionId,
                         analysis_type: selectedAnalysisType,
@@ -5612,16 +5743,23 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         debug: DEBUG_MODE,
                     })
                 });
-                
+
+                clearTimeout(timeoutId);
                 const data = await response.json();
-                
-                if (!response.ok) throw new Error(data.error || 'API 오류');
-                
+
+                if (!response.ok) throw new Error(data.details?.message || data.error || '분석 중 문제가 발생했습니다');
+
                 currentRequestId = data.request_id;
                 displayResults(data);
                 goToStep(3); // 결과 (3단계 구조)
             } catch (error) {
-                alert('분석 중 오류가 발생했습니다: ' + error.message);
+                if (error.name === 'AbortError') {
+                    showToast('분석 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.', 'warning', 8000);
+                } else if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
+                    showToast('네트워크 연결을 확인해주세요.', 'error');
+                } else {
+                    showToast(error.message || '분석 중 문제가 발생했습니다. 다시 시도해주세요.', 'error');
+                }
             } finally {
                 hideLoading();
                 if (btn) {
@@ -5731,7 +5869,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 displayResults(data);
                 goToStep(3); // 결과 (3단계 구조)
             } catch (error) {
-                alert('분석 중 오류가 발생했습니다: ' + error.message);
+                showToast(error.message || '분석 중 오류가 발생했습니다. 다시 시도해주세요.', 'error');
             } finally {
                 hideLoading();
                 btn.disabled = false;

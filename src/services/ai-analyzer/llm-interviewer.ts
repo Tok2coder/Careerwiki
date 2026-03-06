@@ -543,41 +543,15 @@ export async function generateRoundQuestions(
         temperature: 0,    // Phase 9: 0→완전 결정론적 (R2/R3 캐시 미스 시에도 동일 질문)
         max_tokens: 1500,
         seed: 42,
+        timeout_ms: 30000,  // v3.17: 30초 타임아웃 (2회 재시도 = 최대 60초, CF Workers 120초 제한 내)
       })
       
       
       // JSON 파싱
       let questions = parseInterviewerResponse({ response: openaiResult.response }, roundNumber, template.purpose)
 
-      // ★ v3.16: 서버사이드 감정질문 강제 제한 (라운드당 최대 1개)
-      // LLM 프롬프트만으로는 감정질문 비율 통제 불가 → 구조적 강제
-      const EMOTION_QUESTION_PATTERNS = [
-        /어떤 (?:감정|느낌|기분)/,
-        /(?:느꼈|느끼셨|느끼나|느끼시|느끼는|느끼고|느끼세)/,
-        /(?:감정이|기분이|마음이) (?:어떠|어떤|어땠)/,
-        /(?:불안(?!정)|답답|두렵|무섭|화가|짜증|슬프|우울|외롭)/,  // 불안정 제외, 불안만 매칭
-        /감정적으로/,
-        /어떤 (?:마음|심정|기분)/,
-        /(?:힘드셨|힘들었|힘들게|괴로|고통스러)/,
-        /마음이 (?:어떠|움직|끌)/,
-        /(?:감정을|감정이|기분이|기분은) (?:느|드)/,  // "감정을 느끼" "감정이 드" "기분이 드"
-        /어떤 (?:감정|기분)(?:을|이|은)/,  // "어떤 감정을", "어떤 기분이"
-      ]
-      {
-        let emotionCount = 0
-        const beforeEmotionFilter = questions.length
-        questions = questions.filter(q => {
-          const isEmotion = EMOTION_QUESTION_PATTERNS.some(p => p.test(q.questionText))
-          if (isEmotion) {
-            emotionCount++
-            return emotionCount <= 1  // 첫 번째 감정질문만 통과
-          }
-          return true
-        })
-        if (beforeEmotionFilter > questions.length) {
-          // 감정질문 필터링됨
-        }
-      }
+      // ★ v3.17: 감정질문 필터는 routes.ts post-cache에서 일괄 적용
+      // generateRoundQuestions 내부에서는 MIN_QUESTIONS_PER_ROUND 충족 우선
 
       // ★ CAG 기반 post-generation 중복 필터링
       if (input.cagState && questions.length > 0) {
@@ -1772,6 +1746,7 @@ export async function generateMajorRoundQuestions(
         temperature: 0,    // Phase 9: 0→완전 결정론적 (전공 추천도 동일)
         max_tokens: 1500,
         seed: 42,
+        timeout_ms: 30000,  // v3.17: 30초 타임아웃 (CF Workers 120초 제한 내)
       })
 
 

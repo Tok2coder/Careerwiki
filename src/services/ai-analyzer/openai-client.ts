@@ -120,6 +120,7 @@ export function createOpenAICompatibleRunner(apiKey: string) {
           temperature: options.temperature,
           max_tokens: options.max_tokens,
           seed: options.seed,
+          timeout_ms: 45000,  // v3.17: LLM Judge 배치 타임아웃 45초 (12배치 병렬, graceful degradation)
         }
       )
       return { response: result.response }

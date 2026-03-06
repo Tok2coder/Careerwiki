@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 60      // 5개 × 12배치, 전부 병렬 처리
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.16.0'  // Risk 파이프라인 복구 + 감정질문 서버사이드 강제 + 노이즈 직업 관련성 필터
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.17.0'  // 감정질문 패턴 확장 + 노이즈 필터 강화 + UX 프로그레스바 + evidence 인용 보강
 
 // ============================================
 // Types
@@ -457,7 +457,7 @@ export async function judgeCandidates(
   let llmCalls = 0
   let totalInvalidQuotes = 0
 
-  const MAX_RETRIES = 2  // 최대 재시도 횟수
+  const MAX_RETRIES = 1  // v3.17: 1회 재시도 (25s×2=최대 50s, CF 120s 내 여유 확보)
   const PARALLEL_BATCHES = 12  // v3.11: 5개×12배치 전부 병렬 (개별 호출 빠르게, 전체 wall time 절감)
 
   // 배치 목록 생성
@@ -467,7 +467,7 @@ export async function judgeCandidates(
   }
 
 
-  // 병렬 배치 처리 함수
+  // 병렬 배치 처리 함수 (v3.17: graceful degradation — 실패 시 빈 배열 반환)
   const processBatchWithRetry = async (batch: FilteredCandidate[], batchNumber: number): Promise<LLMJudgeResult[]> => {
     let lastError: Error | null = null
 
@@ -484,7 +484,10 @@ export async function judgeCandidates(
       }
     }
 
-    throw new Error(`LLM Judge batch ${batchNumber} failed after retries: ${lastError?.message}`)
+    // v3.17: 배치 실패 시 빈 배열 반환 (throw 대신 graceful degradation)
+    // 다른 배치의 결과는 보존되어 유저에게 일부라도 추천 가능
+    console.error(`LLM Judge batch ${batchNumber} failed after retries (skipping): ${lastError?.message}`)
+    return []
   }
 
   // 병렬 처리: PARALLEL_BATCHES개씩 동시에 처리
@@ -1693,17 +1696,20 @@ function sanitizeKeywordOvermatching(
     // 유저의 관심 도메인과 무관한 경우 감점
     if (!shouldPenalize && r.desireScore >= 55) {
       const INTEREST_DOMAIN_KEYWORDS: Record<string, string[]> = {
-        data_numbers: ['데이터', '통계', '수학', '경제', '금융', '회계', 'IT', '컴퓨터', '정보'],
-        tech: ['소프트웨어', 'IT', '컴퓨터', '프로그래밍', '개발', '전자', '정보', '보안', '네트워크'],
-        problem_solving: ['경영', '컨설팅', '전략', 'IT', '시스템', '정책', '기획'],
-        creative: ['디자인', '예술', '미디어', '콘텐츠', '영상', '음악', '패션', '광고'],
-        creating: ['디자인', '예술', '미디어', '콘텐츠', '영상', '음악', '패션', '광고'],
-        design: ['디자인', '그래픽', 'UI', 'UX', '시각', '제품', '인테리어'],
-        helping: ['교육', '복지', '상담', '의료', '간호', '심리', '돌봄'],
-        helping_teaching: ['교육', '복지', '상담', '의료', '간호', '심리', '돌봄', '교사'],
-        organizing: ['행정', '경영', '관리', '기획', '인사', '총무', '사무'],
-        research: ['연구', '학술', '과학', '실험', '분석'],
-        influencing: ['마케팅', '홍보', '영업', '광고', '브랜드'],
+        data_numbers: ['데이터', '통계', '수학', '경제', '금융', '회계', 'IT', '컴퓨터', '정보', '보험', '증권'],
+        tech: ['소프트웨어', 'IT', '컴퓨터', '프로그래밍', '개발', '전자', '정보', '보안', '네트워크', '인공지능', '로봇'],
+        problem_solving: ['경영', '컨설팅', '전략', 'IT', '시스템', '정책', '기획', '법률', '특허'],
+        creative: ['디자인', '예술', '미디어', '콘텐츠', '영상', '음악', '패션', '광고', '방송', '게임'],
+        creating: ['디자인', '예술', '미디어', '콘텐츠', '영상', '음악', '패션', '광고', '방송', '게임'],
+        design: ['디자인', '그래픽', 'UI', 'UX', '시각', '제품', '인테리어', '건축', '조경'],
+        helping: ['교육', '복지', '상담', '의료', '간호', '심리', '돌봄', '재활', '치료'],
+        helping_teaching: ['교육', '복지', '상담', '의료', '간호', '심리', '돌봄', '교사', '강사'],
+        organizing: ['행정', '경영', '관리', '기획', '인사', '총무', '사무', '물류', '유통'],
+        research: ['연구', '학술', '과학', '실험', '분석', '바이오', '화학', '물리'],
+        influencing: ['마케팅', '홍보', '영업', '광고', '브랜드', '커뮤니케이션'],
+        nature: ['환경', '생태', '자연', '동물', '식물', '산림', '해양', '농업', '원예'],
+        physical_activity: ['스포츠', '운동', '체육', '건강', '피트니스', '레저'],
+        social: ['사회', '봉사', '커뮤니티', '복지', 'NGO', '국제'],
       }
 
       const GENERIC_SUFFIXES = ['연구원', '분석원', '조사원', '시험원', '검사원']
@@ -1726,11 +1732,15 @@ function sanitizeKeywordOvermatching(
     // ===== 체크 4: 명백한 도메인 불일치 직업명 패턴 (v3.16) =====
     if (!shouldPenalize && r.desireScore >= 55) {
       const NOISE_NAME_PATTERNS = [
-        /버섯|양봉|양잠|양식장|축산|낙농|임업|원예/,    // 농림축산
-        /광부|광산|채굴|채석/,                          // 광업
-        /용접|도금|주조|단조|열처리|선반|압출/,          // 제조현장 기술
-        /반장|조장|현장감독/,                            // 현장감독
-        /고무|섬유|피혁|유리|도자기|석재/,               // 특수 소재
+        /버섯|양봉|양잠|양식장|축산|낙농|임업/,          // 농림축산
+        /광부|광산|채굴|채석/,                            // 광업
+        /용접|도금|주조|단조|열처리|선반|압출/,            // 제조현장 기술
+        /반장|조장|현장감독/,                              // 현장감독
+        /고무|섬유|피혁|유리|도자기|석재/,                 // 특수 소재
+        /가스설비|배관|보일러|냉동|냉방|공조/,             // 설비
+        /식품가공|제분|도축|도정|양조/,                    // 식품가공
+        /도배|미장|방수|타일|도장공/,                      // 건축현장
+        /재봉|봉제|직조|편직|자수/,                        // 섬유가공
       ]
 
       const hasPhysicalInterest = interests.some(i =>
@@ -2042,7 +2052,7 @@ export async function judgeMajorCandidates(
   let llmCalls = 0
   let totalInvalidQuotes = 0
 
-  const MAX_RETRIES = 2
+  const MAX_RETRIES = 1  // v3.17: 1회 재시도 (25s×2=최대 50s, CF 120s 내 여유 확보)
   const PARALLEL_BATCHES = 12  // 5개 × 12배치 전부 병렬
 
   // 배치 목록 생성
@@ -2051,7 +2061,7 @@ export async function judgeMajorCandidates(
     batches.push(limitedCandidates.slice(i, i + MAX_CANDIDATES_PER_BATCH))
   }
 
-  // 병렬 배치 처리 함수
+  // 병렬 배치 처리 함수 (v3.17: graceful degradation)
   const processBatchWithRetry = async (batch: FilteredMajorCandidate[], batchNumber: number): Promise<MajorJudgeResult[]> => {
     let lastError: Error | null = null
 
@@ -2068,7 +2078,9 @@ export async function judgeMajorCandidates(
       }
     }
 
-    throw new Error(`Major LLM Judge batch ${batchNumber} failed after retries: ${lastError?.message}`)
+    // v3.17: 배치 실패 시 빈 배열 반환 (graceful degradation)
+    console.error(`Major LLM Judge batch ${batchNumber} failed after retries (skipping): ${lastError?.message}`)
+    return []
   }
 
   // 병렬 처리: PARALLEL_BATCHES개씩 동시에 처리

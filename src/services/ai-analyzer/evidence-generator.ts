@@ -250,6 +250,50 @@ export const EVIDENCE_MAPPING_RULES: EvidenceMappingRule[] = [
     userLabelTemplate: '검증된 학습력 강점',
     jobLabelTemplate: '성장 기회: {jobValue}/100',
   },
+
+  // ============================================
+  // v3.17: 내러티브 인터뷰 팩트 매핑 (유저 발언 연결 강화)
+  // ============================================
+  {
+    userFactPattern: /^flow_condition$/,
+    jobAttributes: ['solo_deep', 'analytical', 'creative'],
+    matchLogic: { type: 'threshold', positive: 60, negative: 30 },
+    explanationTemplate: '몰입 조건으로 "{userValue}"을(를) 말씀하셨는데, 이 직업은 관련 특성이 {jobValue}점입니다',
+    userLabelTemplate: '몰입 조건: "{userValue}"',
+    jobLabelTemplate: '{attrName}: {jobValue}/100',
+  },
+  {
+    userFactPattern: /^success_definition$/,
+    jobAttributes: ['growth', 'income', 'stability'],
+    matchLogic: { type: 'threshold', positive: 60, negative: 30 },
+    explanationTemplate: '성공의 기준으로 "{userValue}"을(를) 중요하게 여기시는데, 이 직업은 해당 지표가 {jobValue}점입니다',
+    userLabelTemplate: '성공 기준: "{userValue}"',
+    jobLabelTemplate: '{attrName}: {jobValue}/100',
+  },
+  {
+    userFactPattern: /^energizer$/,
+    jobAttributes: ['creative', 'growth', 'people_facing'],
+    matchLogic: { type: 'threshold', positive: 55, negative: 30 },
+    explanationTemplate: '에너지를 얻는 상황으로 "{userValue}"을(를) 말씀하셨는데, 이 직업은 관련 특성이 {jobValue}점입니다',
+    userLabelTemplate: '활력원: "{userValue}"',
+    jobLabelTemplate: '{attrName}: {jobValue}/100',
+  },
+  {
+    userFactPattern: /^boundary$/,
+    jobAttributes: ['wlb', 'work_hours', 'shift_work', 'travel'],
+    matchLogic: { type: 'inverse', positive: 40, negative: 70 },
+    explanationTemplate: '"{userValue}" 상황은 피하고 싶다고 하셨는데, 이 직업은 관련 지표가 {jobValue}점입니다',
+    userLabelTemplate: '경계 조건: "{userValue}"',
+    jobLabelTemplate: '{attrName}: {jobValue}/100',
+  },
+  {
+    userFactPattern: /^hidden_fear$/,
+    jobAttributes: ['stability', 'growth'],
+    matchLogic: { type: 'threshold', positive: 65, negative: 35 },
+    explanationTemplate: '내면에서 "{userValue}"에 대한 걱정을 가지고 계시는데, 이 직업은 {attrName}이 {jobValue}점입니다',
+    userLabelTemplate: '내면 우려: "{userValue}"',
+    jobLabelTemplate: '{attrName}: {jobValue}/100',
+  },
 ]
 
 // ============================================
@@ -488,12 +532,26 @@ export function generateDefaultEvidence(
     .sort(([, a], [, b]) => (b as number) - (a as number))
     .slice(0, 3)
   
+  const ATTR_DESCRIPTIONS: Record<string, string> = {
+    wlb: '일과 삶의 균형이 잘 유지되는',
+    growth: '성장 가능성이 높은',
+    stability: '고용 안정성이 좋은',
+    income: '소득 수준이 높은',
+    creative: '창의적 역량을 활용할 수 있는',
+    analytical: '분석적 사고가 필요한',
+    solo_deep: '집중 업무 비중이 높은',
+    teamwork: '팀 협업이 활발한',
+    people_facing: '대인 관계가 중요한',
+    execution: '체계적 실행력이 요구되는',
+  }
+
   for (const [key, value] of attrEntries) {
+    const desc = ATTR_DESCRIPTIONS[key]
     defaultLinks.push({
       user_fact: {
-        key: 'default',
-        value: 'general_match',
-        label: '기본 적합도 분석',
+        key: 'attribute_highlight',
+        value: key,
+        label: `${ATTRIBUTE_LABELS[key] || key} 특성 분석`,
       },
       job_attribute: {
         key,
@@ -502,7 +560,9 @@ export function generateDefaultEvidence(
       },
       match_type: 'neutral',
       score_contribution: CONTRIBUTION_WEIGHTS.neutral.base,
-      explanation: `이 직업의 ${ATTRIBUTE_LABELS[key] || key}은(는) ${value}점으로 높은 편입니다`,
+      explanation: desc
+        ? `${desc} 직업입니다 (${ATTRIBUTE_LABELS[key] || key} ${value}점)`
+        : `이 직업의 ${ATTRIBUTE_LABELS[key] || key}은(는) ${value}점으로 높은 편입니다`,
     })
   }
   

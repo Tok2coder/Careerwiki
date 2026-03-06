@@ -736,6 +736,7 @@ async function generateSection(
       model: DEFAULT_MODEL,
       temperature: 0.6,
       max_tokens: 1500,  // 800 → 1500: 심리 분석 등 복잡한 JSON을 위해 증가
+      timeout_ms: 30000,  // v3.17: 30초 타임아웃 (8섹션 병렬, CF Workers 120초 대비)
     })
 
 
@@ -1852,6 +1853,7 @@ async function generateMajorSection(
       model: DEFAULT_MODEL,
       temperature: 0.6,
       max_tokens: 1500,
+      timeout_ms: 30000,  // v3.17: 30초 타임아웃 (8섹션 병렬, CF Workers 120초 대비)
     })
 
     const jsonMatch = text.match(/\{[\s\S]*\}/)
