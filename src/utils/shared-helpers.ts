@@ -255,7 +255,6 @@ export const renderLayout = (
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9810002715600854" crossorigin="anonymous"></script>
         ${extraHead}
         <style>
-          :root { --wp: 67 97 238; --ws: 100 181 246; }
           body { background-color: #0b1220; color: #dee3ff; }
 
           /* 기본 콘텐츠 폰트 크기 정의 */
@@ -353,8 +352,8 @@ export const renderLayout = (
             align-items: center;
             justify-content: center;
             background: rgba(26, 26, 46, 0.75);
-            border: 1px solid rgb(var(--ws) / 0.3);
-            color: rgb(var(--ws));
+            border: 1px solid rgb(var(--ws, 100 181 246) / 0.3);
+            color: rgb(var(--ws, 100 181 246));
             font-size: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -444,7 +443,7 @@ export const renderLayout = (
           }
 
           .gradient-text {
-            background: linear-gradient(135deg, rgb(var(--wp)) 0%, rgb(var(--ws)) 100%);
+            background: linear-gradient(135deg, rgb(var(--wp, 67 97 238)) 0%, rgb(var(--ws, 100 181 246)) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
           }
@@ -579,8 +578,8 @@ export const renderLayout = (
             transition: all 0.3s ease;
           }
           .progress-dot.active {
-            background: rgb(var(--wp));
-            box-shadow: 0 0 8px rgb(var(--wp) / 0.5);
+            background: rgb(var(--wp, 67 97 238));
+            box-shadow: 0 0 8px rgb(var(--wp, 67 97 238) / 0.5);
           }
           .progress-dot.completed {
             background: #34d399;
@@ -594,12 +593,12 @@ export const renderLayout = (
             color: #92400e !important;
           }
           .wiki-link {
-            color: rgb(var(--ws));
+            color: rgb(var(--ws, 100 181 246));
             text-decoration: none;
             transition: all 0.2s;
           }
           .wiki-link:hover {
-            color: rgb(var(--wp));
+            color: rgb(var(--wp, 67 97 238));
             text-decoration: underline;
           }
           .scrollbar-hide {

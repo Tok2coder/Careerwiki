@@ -3357,7 +3357,8 @@ howtoRoutes.get('/:slug', async (c) => {
         ogImage: howtoOgImage,
         canonical: howtoCanonical,
         ogUrl: howtoCanonical,
-        ogType: 'article'
+        ogType: 'article',
+        extraHead: '<style>:root{--wp:139 92 246;--ws:167 139 250}</style>'
       })
     )
   }

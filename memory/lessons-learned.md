@@ -1,5 +1,17 @@
 # Lessons Learned
 
+### [2026-03-06] CSS: 페이지별 액센트 색상 — CSS 변수 오버라이드 순서 문제
+- **상황**: Tailwind `wiki-primary`를 CSS 변수 기반으로 전환 후, 전공 페이지에서 emerald 오버라이드가 적용 안 됨
+- **원인**: `extraHead`가 메인 `<style>` 블록 **앞에** 삽입되어, `:root` 기본값이 오버라이드를 덮어씀 (CSS cascade: 뒤에 나온 규칙이 우선)
+- **해결**: 메인 `<style>`에서 `:root` 기본값 제거, Tailwind `var(--wp, 67 97 238)` fallback에 의존. 비-Tailwind CSS에도 `var(--wp, 67 97 238)` fallback 추가
+- **교훈**: CSS 변수 오버라이드는 삽입 위치(cascade order) 확인 필수. fallback 값을 사용하면 순서 무관하게 동작
+
+### [2026-03-06] 디자인: 개별 클래스 교체 vs CSS 변수 시스템
+- **상황**: 첫 시도에서 `buildCard` 아이콘만 accent 파라미터로 색상 변경 → 나머지 130+ 요소는 여전히 blue
+- **원인**: `wiki-primary`/`wiki-secondary`가 수백 곳에 사용되는데, 일부만 바꾸면 비일관적
+- **해결**: CSS 변수 시스템 (`--wp`, `--ws`)으로 전환 → 라우트에서 `extraHead` 한 줄로 전체 색상 변경
+- **교훈**: 테마 색상 변경은 개별 클래스 교체가 아닌 CSS 변수 레벨에서 해야 확장성/일관성 확보
+
 ### [2026-03-05] Risk: riskPenalty가 routes.ts에서 손실됨 ✅ 해결 (v3.16.0)
 - **상황**: tag-filter에서 riskPenalty(0~40) 계산했으나 최종 결과에 반영 안 됨 (모두 10)
 - **원인**: routes.ts L5434에서 FilteredCandidate → VectorSearchResult 변환 시 riskPenalty 필드 strip, vectorResultsToScoredJobs에서 baseRisk=10 하드코딩
