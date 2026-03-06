@@ -5461,10 +5461,16 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       if (drainFlags.includes('people_drain')) userConstraints.people_drain = true
       if (drainFlags.includes('routine_drain')) userConstraints.routine_drain = true
       if (drainFlags.includes('uncertainty_drain')) userConstraints.uncertainty_drain = true
-      if (drainFlags.includes('time_pressure_drain')) userConstraints.time_pressure_drain = true
+      if (drainFlags.includes('time_pressure_drain')) {
+        userConstraints.time_pressure_drain = true
+        userConstraints.prefer_low_overtime = true  // 시간 압박 드레인 → 야근 기피로 연결
+      }
 
       const values = mm.value_top || []
-      if (values.includes('wlb')) userConstraints.prefer_wlb = true
+      if (values.includes('wlb')) {
+        userConstraints.prefer_wlb = true
+        userConstraints.prefer_low_overtime = true  // WLB 중시 → 야근 기피로 연결
+      }
       if (values.includes('stability') && !userConstraints.prefer_stability) userConstraints.prefer_stability = true
 
       const constraints = mm.constraint_flags || []
@@ -5891,9 +5897,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
             helping: ['교육', '복지', '상담', '돌봄', '간호', '보육', '치료', '심리', '사회', '아동', '지도원'],
             helping_feedback: ['복지', '상담', '지도원', '간호', '돌봄', '치료'],
             organizing: ['행정', '관리', '사무', '기획', '총무', '경영', '인사', '재무', '회계'],
-            problem_solving: ['컨설팅', '전략', '분석', '기획', '경영', '솔루션', '컨설턴트'],
+            problem_solving: ['컨설팅', '전략', '분석', '기획', '솔루션', '컨설턴트', '경영컨설', '경영기획', '경영혁신'],
             influencing: ['마케팅', '홍보', '영업', '커뮤니케이션', '브랜드', '광고'],
-            research: ['연구', '데이터', '통계', '실험', 'R&D', '생명', '화학', '물리', '생물', '의학', '공학'],
+            research: ['데이터', '통계', '실험', 'R&D', '생명공학', '의학연구', '공학연구', 'AI연구', '인공지능연구', '경제연구', '정책연구'],
           }
           // 도메인 키워드 수집 (TOKEN_DOMAIN_KEYWORDS만 사용)
           // 아키타입 패턴(ARCHETYPE_DB_QUERIES)은 DB 주입용이므로 relevance filter에 포함하지 않음
@@ -5904,13 +5910,42 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           }
           const uniqueDomainKw = [...new Set(domainKeywords)]
 
+          // v3.18.1: 명백한 노이즈 직업명 패턴 (llm-judge.ts와 동기화)
+          const NOISE_JOB_PATTERNS = [
+            /버섯|양봉|양잠|양식장|축산|낙농|임업/,
+            /광부|광산|채굴|채석/,
+            /용접|도금|주조|단조|열처리|선반|압출/,
+            /반장|조장|현장감독/,
+            /고무|섬유|피혁|유리|도자기|석재/,
+            /가스설비|배관|보일러|냉동|냉방|공조/,
+            /식품가공|제분|도축|도정|양조/,
+            /도배|미장|방수|타일|도장공/,
+            /재봉|봉제|직조|편직|자수/,
+            /국악|전통음악|풍물/,
+            /기능성식품|건강기능|한약|한방/,
+            /목재|펄프|제지|합판/,
+            /비파괴검사|방사선취급|초음파검사/,
+            /세탁|세차|청소업|방역/,
+          ]
+          const hasPhysicalInterest = mmInterests.some(i =>
+            ['nature', 'physical_activity', 'manufacturing'].includes(i)
+          )
+
           if (uniqueDomainKw.length > 0) {
             for (const job of topJobs) {
               const jobName = (job as any).job_name || ''
-              // jobName만 검사 — job_description은 범용 키워드("분석", "기획" 등)를 포함해 오탐 유발
+
+              // 1차: 명백한 노이즈 직업은 무조건 캡 (물리적 흥미가 없는 한)
+              if (!hasPhysicalInterest && NOISE_JOB_PATTERNS.some(p => p.test(jobName))) {
+                if ((job as any).like_score > 45) (job as any).like_score = 45
+                if ((job as any).fit_score > 50) (job as any).fit_score = 50
+                if ((job as any).final_score > 50) (job as any).final_score = 50
+                continue
+              }
+
+              // 2차: 도메인 키워드 매칭
               const isRelevant = uniqueDomainKw.some(kw => jobName.includes(kw))
               if (!isRelevant) {
-                // 관련 없는 직업: like_score 상한 45, fit_score 상한 55
                 if ((job as any).like_score > 45) (job as any).like_score = 45
                 if ((job as any).fit_score > 55) (job as any).fit_score = 55
                 if ((job as any).final_score > 55) (job as any).final_score = 55
