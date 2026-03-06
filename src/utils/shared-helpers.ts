@@ -614,20 +614,20 @@ export const renderLayout = (
           }
           .menu-button {
             background: rgba(26, 26, 46, 0.9);
-            border: 1px solid rgba(67, 97, 238, 0.3);
+            border: 1px solid rgb(var(--ac, 67 97 238) / 0.3);
             padding: 16px 20px;
             border-radius: 12px;
             transition: all 0.3s;
             min-height: 80px;
           }
           .menu-button:hover {
-            background: #4361ee;
-            border-color: #4361ee;
+            background: rgb(var(--ac, 67 97 238));
+            border-color: rgb(var(--ac, 67 97 238));
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 5px 20px rgb(var(--ac, 67 97 238) / 0.4);
           }
           .menu-button:focus-visible {
-            outline: 2px solid #64b5f6;
+            outline: 2px solid rgb(var(--ac, 67 97 238) / 0.8);
             outline-offset: 2px;
           }
           /* 모바일에서 AI 분석(첫 번째)만 가로 배치 */
