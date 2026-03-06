@@ -847,7 +847,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
             <div class="relative" data-share-root data-cw-telemetry-scope="howto-hero-actions">
               <button type="button" class="px-3 sm:px-4 py-2 min-h-[40px] bg-wiki-primary text-white rounded-lg text-xs sm:text-sm hover:bg-blue-600 transition inline-flex items-center gap-1.5" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-share-og-image="${guide.thumbnailUrl ? escapeHtml(guide.thumbnailUrl) : '/images/og-default.png'}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open">
                 <i class="fas fa-share-nodes text-xs sm:text-sm" aria-hidden="true"></i>
-                <span class="hidden sm:inline">공유</span>
+                <span class="sr-only">공유</span>
               </button>
             </div>
             
