@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-03-07] HowTo: 주제 중복 발행 실수
+- **상황**: "소방공무원 체력시험"과 "공인중개사 독학" 주제를 새로 발행했는데, 이미 동일 주제의 기존 글(pageId 4001, 3944)이 존재했음
+- **원인**: 기존 발행 글 목록을 DB에서 확인하지 않고 주제를 선정함. 기존 글 제목과 미묘하게 달라서 겹치는지 인식 못함
+- **해결**: 중복 글 2개를 status='deleted'로 변경하고 새로운 주제(CPA, TOEFL)로 교체
+- **교훈**: howto-publish.md 스킬에 중복 방지 규칙 추가함. **주제 선정 전에 반드시 `SELECT id, title FROM pages WHERE page_type='guide' AND status='published'` SQL로 기존 글 전체 목록을 확인**해야 함. 제목이 달라도 같은 시험/자격증이면 중복
+
 ### [2026-03-06] CSS: Tailwind 3 CSS 변수 색상 — 빌드 시 정적 해석 문제
 - **상황**: `wiki-primary: 'rgb(var(--wp, 67 97 238) / <alpha-value>)'`로 정의 후, gradient 클래스(`from-wiki-primary`)가 `#4361ee` 하드코딩으로 컴파일됨
 - **원인**: Tailwind 3이 `var(--wp, 67 97 238)` 의 fallback `67 97 238`을 빌드 시점에 정적 hex로 변환. gradient 유틸리티에서 CSS 변수가 런타임에 유지되지 않음
