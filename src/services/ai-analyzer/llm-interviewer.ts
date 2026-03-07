@@ -567,6 +567,30 @@ export async function generateRoundQuestions(
         }
       }
 
+      // ★ v3.19.1: 서버사이드 라운드간 질문 중복 필터
+      // 이전 라운드 질문과 7단어 이상 겹치면 중복으로 판단하여 제거
+      // v3.19.2: MIN_QUESTIONS_PER_ROUND 이상 남을 때만 적용 (부족 에러 방지)
+      if (roundNumber > 1 && previousRoundAnswers.length > 0 && questions.length > 0) {
+        const prevQuestionTexts = previousRoundAnswers
+          .filter(a => a.questionText && a.questionText.length > 10)
+          .map(a => a.questionText!)
+        if (prevQuestionTexts.length > 0) {
+          const dedupFiltered = questions.filter(q => {
+            const qWords = q.questionText.split(/\s+/).filter(w => w.length > 2)
+            for (const prevText of prevQuestionTexts) {
+              const prevWords = new Set(prevText.split(/\s+/).filter(w => w.length > 2))
+              const overlap = qWords.filter(w => prevWords.has(w)).length
+              if (overlap >= 7) return false  // 7단어 이상 겹침 → 중복 제거
+            }
+            return true
+          })
+          // 필터 후에도 최소 질문 수 이상이면 적용, 아니면 원본 유지
+          if (dedupFiltered.length >= MIN_QUESTIONS_PER_ROUND) {
+            questions = dedupFiltered
+          }
+        }
+      }
+
       if (questions.length >= MIN_QUESTIONS_PER_ROUND) {
         return {
           round: roundNumber,

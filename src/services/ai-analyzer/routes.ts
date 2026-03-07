@@ -6019,6 +6019,76 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
             }
           }
         }
+
+        // ============================================
+        // Phase 6-E: 내러티브 키워드 친화도 보너스 (v3.19.1)
+        // 유저가 직접 언급한 직업 도메인 키워드가 직업명에 포함되면 +3 보너스
+        // → Top1이 유저의 실제 분야와 일치하도록 보정
+        // ============================================
+        const CAREER_FIELD_KEYWORDS: Record<string, string[]> = {
+          // 유저 텍스트의 키워드 → 직업명에서 찾을 패턴
+          '개발': ['개발', '프로그래머', '엔지니어'],
+          '프로그래밍': ['개발', '프로그래머', '엔지니어'],
+          '코딩': ['개발', '프로그래머', '엔지니어'],
+          '프론트엔드': ['개발', '프로그래머', 'UI', 'UX', '웹'],
+          '백엔드': ['개발', '프로그래머', '엔지니어', '서버'],
+          '풀스택': ['개발', '프로그래머', '엔지니어'],
+          'React': ['개발', '프로그래머', '웹'],
+          'TypeScript': ['개발', '프로그래머', '웹'],
+          'Python': ['개발', '프로그래머', '데이터', '분석'],
+          'SQL': ['데이터', '분석', '엔지니어'],
+          '디자인': ['디자이너', '디자인'],
+          'Figma': ['디자이너', 'UI', 'UX', '디자인'],
+          'Adobe': ['디자이너', '디자인', '그래픽'],
+          '일러스트': ['디자이너', '디자인', '일러스트'],
+          '브랜딩': ['디자이너', '브랜드', '마케터'],
+          '데이터': ['데이터', '분석', '빅데이터'],
+          '분석': ['분석', '데이터', '컨설턴트'],
+          '통계': ['분석', '데이터', '통계'],
+          '머신러닝': ['인공지능', 'AI', '모델', '엔지니어'],
+          '인공지능': ['인공지능', 'AI', '엔지니어'],
+          '공무원': ['공무원', '사무원', '행정', '공공'],
+          '행정': ['행정', '사무원', '관리자', '공공'],
+          '기획': ['기획자', '기획'],
+          '마케팅': ['마케팅', '마케터', '광고'],
+          '간호': ['간호사', '간호', '의료'],
+          '교사': ['교사', '교육', '강사'],
+          '교육': ['교사', '교육', '강사'],
+          '회계': ['회계', '세무', '재무'],
+          '법률': ['변호사', '법무', '법률'],
+          '상담': ['상담사', '상담', '심리'],
+        }
+
+        // 유저 텍스트 수집 (narrative facts + round answers)
+        const userTextsForAffinity: string[] = []
+        if (nfRow?.high_alive_moment) userTextsForAffinity.push(nfRow.high_alive_moment)
+        if (nfRow?.lost_moment) userTextsForAffinity.push(nfRow.lost_moment)
+        if (raRows?.results) {
+          for (const r of raRows.results) {
+            if (r.answer) userTextsForAffinity.push(r.answer)
+          }
+        }
+        const allUserText = userTextsForAffinity.join(' ')
+
+        // 유저 텍스트에서 직업 도메인 키워드 추출
+        const matchedJobPatterns = new Set<string>()
+        for (const [keyword, patterns] of Object.entries(CAREER_FIELD_KEYWORDS)) {
+          if (allUserText.includes(keyword)) {
+            for (const p of patterns) matchedJobPatterns.add(p)
+          }
+        }
+
+        // 매칭된 패턴이 있으면 보너스 적용
+        if (matchedJobPatterns.size > 0) {
+          for (const job of topJobs) {
+            const jobName = (job as any).job_name || ''
+            const hasAffinity = [...matchedJobPatterns].some(p => jobName.includes(p))
+            if (hasAffinity) {
+              ;(job as any).final_score = ((job as any).final_score || 0) + 3
+              ;(job as any).fit_score = ((job as any).fit_score || 0) + 3
+            }
+          }
+        }
       } catch (judgeError) {
         // LLM Judge 실패 시 에러 반환 (fallback 없음)
         const errorMessage = judgeError instanceof Error ? judgeError.message : String(judgeError)
@@ -6376,6 +6446,24 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         const totalJobCount = await db.prepare('SELECT COUNT(*) as cnt FROM jobs').first<{ cnt: number }>()
         premiumReport._totalJobCount = totalJobCount?.cnt || 0
       } catch (e) {
+      }
+    }
+
+    // ============================================
+    // 6-F. Spread Quality Floor (v3.19.2) — Spread ≤ 20 보장
+    // Top1 대비 20점 이상 낮은 직업은 제거하여 품질 바닥 보장
+    // 단, 최소 10개 결과는 보장 (결과 부족 방지)
+    // ============================================
+    if (topJobs.length > 10) {
+      const sortedForFloor = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
+      const top1Score = (sortedForFloor[0] as any)?.final_score || 0
+      const qualityFloor = top1Score - 20
+      const floorFiltered = topJobs.filter((j: any) => (j.final_score || 0) >= qualityFloor)
+      // 필터 후 10개 이상 남으면 적용, 아니면 상위 10개만 유지
+      if (floorFiltered.length >= 10) {
+        topJobs = floorFiltered
+      } else {
+        topJobs = sortedForFloor.slice(0, 10)
       }
     }
 
