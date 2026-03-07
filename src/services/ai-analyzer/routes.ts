@@ -4554,36 +4554,37 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
     }
     
     // ============================================
-    // v3.17: 감정질문 서버사이드 필터 (유일한 필터 지점)
+    // v3.21: 감정질문 서버사이드 필터 — 라운드당 0개로 완전 차단
+    // 프롬프트에서도 감정질문 금지를 명시하므로, 서버사이드는 이중 방어
     // generateRoundQuestions에서는 MIN_QUESTIONS 충족을 우선하고
-    // 이 지점에서만 감정질문을 라운드당 1개로 제한
+    // 이 지점에서 감정질문을 완전 제거
     // ============================================
     const EMOTION_PATTERNS_ROUTE = [
       /어떤 (?:감정|느낌|기분)/,
-      /(?:느꼈|느끼셨|느끼나|느끼시|느끼는|느끼고|느끼세|느끼실)/,
       /(?:감정이|기분이|마음이) (?:어떠|어떤|어땠)/,
-      /(?:불안(?!정)|답답|두렵|무섭|화가|짜증|슬프|우울|외롭)/,
       /감정적으로|정서적으로|내면적으로|심리적으로/,
       /어떤 (?:마음|심정|기분)/,
-      /(?:힘드셨|힘들었|힘들게|괴로|고통스러|지치|지친|속상|서운)/,
       /마음이 (?:어떠|움직|끌)/,
-      /(?:감정을|감정이|기분이|기분은) (?:느|드)/,
-      /어떤 (?:감정|기분)(?:을|이|은)/,
+      /감정(?:을|이|은|도|의)/,
       /마음속으로|마음 속에|가슴이 (?:뛰|답답|아프|떨)/,
-      /(?:행복|불행|만족|불만족)(?:하셨|했|한 적|감을)/,
-      /(?:스트레스|압박감|부담감)(?:을|이|는|도)? (?:느끼|받으|많이)/,
+      /(?:행복|불행)(?:하셨|했|한 적|감을|하다고)/,
+      /(?:스트레스|압박감|부담감)(?:을|이|는|도)? (?:느끼|받으|많이|주|준)/,
+      /(?:힘드셨|힘들었|힘들게|괴로|고통스러|속상|서운).*(?:나요|까요|는지)/,
     ]
     {
-      let emotionPassCount = 0
-      result.questions = result.questions.filter(q => {
+      // v3.21.7: 감정질문 필터 — 최소 1개 보장 (느끼다 false positive 제거)
+      const originalQuestions = [...result.questions]
+      const nonEmotionQs = result.questions.filter(q => {
         if (!q.questionText) return true
         const isEmotion = EMOTION_PATTERNS_ROUTE.some(p => p.test(q.questionText))
-        if (isEmotion) {
-          emotionPassCount++
-          return emotionPassCount <= 1
-        }
-        return true
+        return !isEmotion
       })
+      if (nonEmotionQs.length >= 1) {
+        result.questions = nonEmotionQs
+      } else {
+        // 모든 질문이 감정 → 첫 1개만 유지
+        result.questions = originalQuestions.slice(0, 1)
+      }
     }
 
     // ============================================
@@ -6078,14 +6079,41 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           }
         }
 
-        // 매칭된 패턴이 있으면 보너스 적용
-        if (matchedJobPatterns.size > 0) {
+        // 매칭된 패턴이 있으면 보너스 적용 (v3.21: 서브도메인 강화)
+        // 정확한 도메인 매칭 키워드 (유저가 "데이터분석"이라고 하면 데이터분석가에 +5)
+        const EXACT_DOMAIN_KEYWORDS: Record<string, string[]> = {
+          '데이터분석': ['데이터분석가', '데이터분석', '빅데이터'],
+          '데이터 분석': ['데이터분석가', '데이터분석', '빅데이터'],
+          '웹개발': ['웹개발', '웹프로그래머', '프론트엔드'],
+          '웹 개발': ['웹개발', '웹프로그래머', '프론트엔드'],
+          '게임개발': ['게임', '게임프로그래머', '게임개발'],
+          'UI디자인': ['UI', 'UX', '디자이너'],
+          'UX디자인': ['UI', 'UX', '디자이너'],
+        }
+
+        // 정확한 도메인 매칭 보너스 (+5, 일반 +3보다 높음)
+        const exactDomainPatterns = new Set<string>()
+        for (const [keyword, patterns] of Object.entries(EXACT_DOMAIN_KEYWORDS)) {
+          if (allUserText.includes(keyword)) {
+            for (const p of patterns) exactDomainPatterns.add(p)
+          }
+        }
+
+        if (matchedJobPatterns.size > 0 || exactDomainPatterns.size > 0) {
           for (const job of topJobs) {
             const jobName = (job as any).job_name || ''
-            const hasAffinity = [...matchedJobPatterns].some(p => jobName.includes(p))
-            if (hasAffinity) {
-              ;(job as any).final_score = ((job as any).final_score || 0) + 3
-              ;(job as any).fit_score = ((job as any).fit_score || 0) + 3
+            // 정확한 도메인 매칭은 +5
+            const hasExactDomain = [...exactDomainPatterns].some(p => jobName.includes(p))
+            if (hasExactDomain) {
+              ;(job as any).final_score = ((job as any).final_score || 0) + 5
+              ;(job as any).fit_score = ((job as any).fit_score || 0) + 5
+            } else {
+              // 일반 키워드 매칭은 +3
+              const hasAffinity = [...matchedJobPatterns].some(p => jobName.includes(p))
+              if (hasAffinity) {
+                ;(job as any).final_score = ((job as any).final_score || 0) + 3
+                ;(job as any).fit_score = ((job as any).fit_score || 0) + 3
+              }
             }
           }
         }
@@ -6450,28 +6478,60 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     }
 
     // ============================================
-    // 6-F. Spread Quality Floor (v3.20.2) — Spread ≤ 20 보장
-    // Top1 대비 20점 이상 낮은 직업은 제거하여 품질 바닥 보장
-    // 최소 8개 결과 보장
+    // 6-F. Risk Demotion (v3.21.7) — 안정 지향 유저의 고위험 직업 점수 하락
+    // Quality Floor 이전에 실행하여 디모트된 직업이 자연 탈락하도록 함
     // ============================================
-    if (topJobs.length > 8) {
+    {
+      const hasStabilityConstraint = Boolean(
+        (userConstraints as any).work_hours_strict ||
+        (userConstraints as any).no_travel ||
+        (userConstraints as any).prefer_wlb ||
+        (userConstraints as any).prefer_stability
+      )
+      if (hasStabilityConstraint) {
+        for (const job of topJobs) {
+          const risk = (job as any).risk_penalty || 0
+          if (risk >= 10) {
+            const extraPenalty = risk >= 12 ? 12 : 8
+            ;(job as any).final_score = Math.max(40, ((job as any).final_score || 0) - extraPenalty)
+            ;(job as any).fit_score = Math.max(40, ((job as any).fit_score || 0) - extraPenalty)
+          }
+        }
+      }
+    }
+
+    // Risk Demotion 이후, Quality Floor 이전에 백업 (백필 후보 풀 확보)
+    const allJudgedJobsBackup = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
+
+    // ============================================
+    // 6-G. Spread Quality Floor (v3.21.8) — Spread ≤ 20 보장
+    // Risk Demotion 이후 실행. guard >5로 소규모 풀에서도 작동
+    // 백필이 10개 보장하므로 공격적 필터링 가능
+    // ============================================
+    if (topJobs.length > 5) {
       const sortedForFloor = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
       const top1Score = (sortedForFloor[0] as any)?.final_score || 0
       const qualityFloor = top1Score - 20
       const floorFiltered = topJobs.filter((j: any) => (j.final_score || 0) >= qualityFloor)
-      if (floorFiltered.length >= 8) {
+      if (floorFiltered.length >= 5) {
         topJobs = floorFiltered
       } else {
-        topJobs = sortedForFloor.slice(0, Math.max(floorFiltered.length, 8))
+        topJobs = sortedForFloor.slice(0, Math.max(floorFiltered.length, 5))
       }
     }
 
-    // v3.20.2: 6-G Like Floor 제거 — 결과 수를 과도하게 줄여 Fit#10=0 유발
-    // Like score가 낮아도 Fit score가 높으면 유효한 추천이므로 Quality Floor만으로 충분
+    // ============================================
+    // 6-H. Ultra-Low Like Floor — like < 48 직업 제거
+    // ============================================
+    if (topJobs.length > 8) {
+      const likeFiltered = topJobs.filter((j: any) => (j.like_score || 50) >= 48)
+      if (likeFiltered.length >= 6) {
+        topJobs = likeFiltered
+      }
+    }
 
     // ============================================
-    // 6-H. 하드 노이즈 제거 (v3.20.2) — 명백한 도메인 불일치 직업 최종 제거
-    // 노이즈 직업은 결과 수에 관계없이 최대한 제거 (최소 5개 보장)
+    // 6-I. 하드 노이즈 제거 — 명백한 도메인 불일치 직업 최종 제거
     // ============================================
     const HARD_NOISE_PATTERNS = [
       /공간정보|지리정보시스템|GIS|측량|지적/,
@@ -6479,6 +6539,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       /광부|광산|채굴|채석/,
       /국악|전통음악|풍물/,
       /기능성식품|건강기능|한약|한방/,
+      /보험영업|보험설계/,
+      /A&R|음반기획/,
+      /공연기획|공연연출|무대감독/,
     ]
     if (topJobs.length > 5) {
       const noiseRemoved = topJobs.filter((j: any) => {
@@ -6487,6 +6550,50 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       })
       if (noiseRemoved.length >= 5) {
         topJobs = noiseRemoved
+      }
+    }
+
+    // ============================================
+    // 6-J. 최종 10개 결과 보장 (Progressive Backfill)
+    // 1단계: top1-20 threshold (strict, spread ≤ 20)
+    // 2단계: top1-25 threshold (relaxed, 잔여 슬롯만)
+    // 양 단계 모두 노이즈 필터 적용
+    // ============================================
+    if (topJobs.length < 10 && allJudgedJobsBackup.length > topJobs.length) {
+      const sortedCurrent = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
+      const currentTop1 = (sortedCurrent[0] as any)?.final_score || 0
+      const existingIds = new Set(topJobs.map((j: any) => j.job_id))
+      const noNoiseBackup = allJudgedJobsBackup
+        .filter((j: any) => !existingIds.has(j.job_id))
+        .filter((j: any) => !HARD_NOISE_PATTERNS.some(p => p.test((j as any).job_name || '')))
+
+      // 1단계: strict (top1-20)
+      const strictThreshold = currentTop1 - 20
+      const strictCandidates = noNoiseBackup.filter((j: any) => (j.final_score || 0) >= strictThreshold)
+      const needed1 = 10 - topJobs.length
+      const strictFill = strictCandidates.slice(0, needed1)
+      topJobs = [...topJobs, ...strictFill]
+
+      // 2단계: relaxed (top1-25) — 아직 10개 미만이면
+      if (topJobs.length < 10) {
+        const relaxedThreshold = currentTop1 - 25
+        const filledIds = new Set(topJobs.map((j: any) => j.job_id))
+        const relaxedCandidates = noNoiseBackup
+          .filter((j: any) => !filledIds.has(j.job_id))
+          .filter((j: any) => (j.final_score || 0) >= relaxedThreshold)
+        const needed2 = 10 - topJobs.length
+        topJobs = [...topJobs, ...relaxedCandidates.slice(0, needed2)]
+      }
+
+      // 3단계: safety net (absolute min 55) — 극단적 제약조건 시나리오용
+      if (topJobs.length < 10) {
+        const absoluteMin = Math.min(currentTop1 - 30, 55)
+        const filledIds3 = new Set(topJobs.map((j: any) => j.job_id))
+        const safetyCandidates = noNoiseBackup
+          .filter((j: any) => !filledIds3.has(j.job_id))
+          .filter((j: any) => (j.final_score || 0) >= absoluteMin)
+        const needed3 = 10 - topJobs.length
+        topJobs = [...topJobs, ...safetyCandidates.slice(0, needed3)]
       }
     }
 
