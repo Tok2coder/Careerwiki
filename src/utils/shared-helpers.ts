@@ -614,7 +614,7 @@ export const renderLayout = (
           }
           .menu-button {
             background: rgba(26, 26, 46, 0.9);
-            border: 1px solid rgb(var(--ac, 67 97 238) / 0.3);
+            border: 1px solid rgb(67 97 238 / 0.3);
             padding: 16px 20px;
             border-radius: 12px;
             transition: all 0.3s;
