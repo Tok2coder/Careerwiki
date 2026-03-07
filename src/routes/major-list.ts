@@ -239,8 +239,8 @@ majorListRoutes.get('/major', async (c) => {
             <!-- 정렬 + 새 전공 추가 버튼 -->
             <div class="flex items-stretch gap-2 shrink-0" id="major-hydration-toolbar">
               <div class="relative" data-dropdown="major-sort">
-                <button type="button" id="major-sort-trigger" class="flex items-center justify-center gap-2 h-full px-3 sm:pl-4 sm:pr-3 bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl text-[13px] text-white/70 hover:border-wiki-primary/30 focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px]">
-                  <i class="fas fa-sliders-h text-[13px] sm:hidden"></i>
+                <button type="button" id="major-sort-trigger" class="flex items-center justify-center gap-2 h-full px-3 sm:pl-4 sm:pr-3 bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl text-sm font-medium text-white/70 hover:border-wiki-primary/30 focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px]">
+                  <i class="fas fa-sliders-h text-xs sm:hidden"></i>
                   <span id="major-sort-label" class="hidden sm:inline">${sort === 'employment-desc' ? '취업률 높은 순' : sort === 'salary-desc' ? '월급 높은 순' : sort === 'name-asc' ? '가나다 순' : '기본 순'}</span>
                   <i class="fas fa-chevron-down text-[9px] text-white/40 ml-auto transition-transform duration-200 hidden sm:inline" id="major-sort-chevron"></i>
                 </button>
@@ -276,10 +276,10 @@ majorListRoutes.get('/major', async (c) => {
                 type="button"
                 id="create-major-btn"
                 data-create-entity="major"
-                class="flex items-center gap-1.5 px-4 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-primary/25 active:scale-95 transition-all duration-200 whitespace-nowrap"
+                class="flex items-center justify-center gap-1.5 h-full px-3 sm:px-3.5 bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl text-sm font-medium text-wiki-primary hover:border-wiki-primary/40 hover:bg-wiki-primary/10 active:scale-95 transition-all duration-200 whitespace-nowrap cursor-pointer"
               >
                 <i class="fas fa-plus text-xs"></i>
-                추가
+                <span class="hidden sm:inline">추가</span>
               </button>
               ` : ''}
             </div>
@@ -290,7 +290,7 @@ majorListRoutes.get('/major', async (c) => {
         <div class="mb-6 overflow-x-auto scrollbar-hide">
           <div class="flex gap-1.5 min-w-max">
             <a href="/major${keyword ? `?q=${encodeURIComponent(keyword)}` : ''}"
-               class="px-3 py-1 rounded-full text-[13px] whitespace-nowrap transition-all duration-200 ${
+               class="px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-200 ${
                  !category
                    ? 'bg-wiki-primary/15 text-wiki-primary border border-wiki-primary/40 font-semibold'
                    : 'text-white/50 hover:text-white/80 hover:bg-white/[0.06]'
@@ -299,7 +299,7 @@ majorListRoutes.get('/major', async (c) => {
               const isActive = category === cat
               const catUrl = `/major?category=${encodeURIComponent(cat)}${keyword ? `&q=${encodeURIComponent(keyword)}` : ''}`
               return `<a href="${catUrl}"
-                 class="px-3 py-1 rounded-full text-[13px] whitespace-nowrap transition-all duration-200 ${
+                 class="px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-200 ${
                    isActive
                      ? 'bg-wiki-primary/15 text-wiki-primary border border-wiki-primary/40 font-semibold'
                      : 'text-white/50 hover:text-white/80 hover:bg-white/[0.06]'

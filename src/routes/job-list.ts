@@ -192,8 +192,8 @@ jobListRoutes.get('/job', async (c) => {
             <!-- 정렬 + 새 직업 추가 버튼 -->
             <div class="flex items-stretch gap-2 shrink-0" id="job-hydration-toolbar">
               <div class="relative" data-dropdown="job-sort">
-                <button type="button" id="job-sort-trigger" class="flex items-center justify-center gap-2 h-full px-3 sm:pl-4 sm:pr-3 bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl text-[13px] text-white/70 hover:border-wiki-primary/30 focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px]">
-                  <i class="fas fa-sliders-h text-[13px] sm:hidden"></i>
+                <button type="button" id="job-sort-trigger" class="flex items-center justify-center gap-2 h-full px-3 sm:pl-4 sm:pr-3 bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl text-sm font-medium text-white/70 hover:border-wiki-primary/30 focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px]">
+                  <i class="fas fa-sliders-h text-xs sm:hidden"></i>
                   <span id="job-sort-label" class="hidden sm:inline">${sort === 'salary-desc' ? '연봉 높은 순' : sort === 'name-asc' ? '가나다 순' : '기본 순'}</span>
                   <i class="fas fa-chevron-down text-[9px] text-white/40 ml-auto transition-transform duration-200 hidden sm:inline" id="job-sort-chevron"></i>
                 </button>
@@ -224,10 +224,10 @@ jobListRoutes.get('/job', async (c) => {
                 type="button"
                 id="create-job-btn"
                 data-create-entity="job"
-                class="flex items-center gap-1.5 px-4 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-primary/25 active:scale-95 transition-all duration-200 whitespace-nowrap"
+                class="flex items-center justify-center gap-1.5 h-full px-3 sm:px-3.5 bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl text-sm font-medium text-wiki-primary hover:border-wiki-primary/40 hover:bg-wiki-primary/10 active:scale-95 transition-all duration-200 whitespace-nowrap cursor-pointer"
               >
                 <i class="fas fa-plus text-xs"></i>
-                추가
+                <span class="hidden sm:inline">추가</span>
               </button>
               ` : ''}
             </div>
@@ -238,7 +238,7 @@ jobListRoutes.get('/job', async (c) => {
         <div class="mb-6 overflow-x-auto scrollbar-hide">
           <div class="flex gap-1.5 min-w-max">
             <a href="/job"
-               class="px-3 py-1 rounded-full text-[13px] whitespace-nowrap transition-all duration-200 ${
+               class="px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-200 ${
                  !category
                    ? 'bg-wiki-primary/15 text-wiki-primary border border-wiki-primary/40 font-semibold'
                    : 'text-white/50 hover:text-white/80 hover:bg-white/[0.06]'
@@ -247,7 +247,7 @@ jobListRoutes.get('/job', async (c) => {
               const shortLabel = JOB_LARGE_SHORT_LABELS[cat]
               const isActive = category === cat
               return `<a href="/job?category=${encodeURIComponent(cat)}"
-                 class="px-3 py-1 rounded-full text-[13px] whitespace-nowrap transition-all duration-200 ${
+                 class="px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-200 ${
                    isActive
                      ? 'bg-wiki-primary/15 text-wiki-primary border border-wiki-primary/40 font-semibold'
                      : 'text-white/50 hover:text-white/80 hover:bg-white/[0.06]'
