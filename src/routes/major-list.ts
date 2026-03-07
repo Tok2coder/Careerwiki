@@ -212,23 +212,7 @@ majorListRoutes.get('/major', async (c) => {
           </div>
         </div>
 
-        <!-- 카테고리 필터 버튼 -->
-        <div class="flex flex-wrap gap-2 mb-4 justify-center">
-          <a href="/major${keyword ? `?q=${encodeURIComponent(keyword)}` : ''}"
-             class="px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${!category ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25' : 'bg-white/[0.05] text-white/60 hover:bg-white/[0.1] hover:text-white/80 border border-white/[0.08]'}">
-            전체
-          </a>
-          ${MAJOR_CATEGORIES.map(cat => {
-            const isActive = category === cat
-            const catUrl = `/major?category=${encodeURIComponent(cat)}${keyword ? `&q=${encodeURIComponent(keyword)}` : ''}`
-            return `<a href="${catUrl}"
-              class="px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${isActive ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25' : 'bg-white/[0.05] text-white/60 hover:bg-white/[0.1] hover:text-white/80 border border-white/[0.08]'}">
-              ${escapeHtml(cat)}
-            </a>`
-          }).join('')}
-        </div>
-
-        <form id="major-filter-form" data-hydration-target="major" method="get" class="mb-6">
+        <form id="major-filter-form" data-hydration-target="major" method="get" class="mb-3">
           <div class="flex flex-row gap-2 sm:gap-3">
             <!-- 검색창 - 글래스모피즘 + 인셋 아이콘 -->
             <div class="flex-1 relative group min-w-0">
@@ -253,12 +237,12 @@ majorListRoutes.get('/major', async (c) => {
               </div>
             </div>
             <!-- 정렬 + 새 전공 추가 버튼 -->
-            <div class="flex items-center gap-2 shrink-0" id="major-hydration-toolbar">
+            <div class="flex items-stretch gap-2 shrink-0" id="major-hydration-toolbar">
               <div class="relative" data-dropdown="major-sort">
-                <button type="button" id="major-sort-trigger" class="flex items-center justify-center gap-2 px-3 sm:pl-4 sm:pr-3 py-2 sm:py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white/70 hover:bg-white/[0.06] hover:border-white/[0.1] focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px] min-h-[44px]">
-                  <i class="fas fa-sliders-h sm:hidden"></i>
+                <button type="button" id="major-sort-trigger" class="flex items-center justify-center gap-2 h-full px-3 sm:pl-4 sm:pr-3 bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl text-[13px] text-white/70 hover:border-wiki-primary/30 focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px]">
+                  <i class="fas fa-sliders-h text-[13px] sm:hidden"></i>
                   <span id="major-sort-label" class="hidden sm:inline">${sort === 'employment-desc' ? '취업률 높은 순' : sort === 'salary-desc' ? '월급 높은 순' : sort === 'name-asc' ? '가나다 순' : '기본 순'}</span>
-                  <i class="fas fa-chevron-down text-[10px] text-white/40 ml-auto transition-transform duration-200 hidden sm:inline" id="major-sort-chevron"></i>
+                  <i class="fas fa-chevron-down text-[9px] text-white/40 ml-auto transition-transform duration-200 hidden sm:inline" id="major-sort-chevron"></i>
                 </button>
                 <div id="major-sort-menu" class="absolute right-0 top-full mt-2 w-44 py-1.5 bg-[#1c2333]/95 backdrop-blur-xl border border-white/[0.08] rounded-xl shadow-2xl shadow-black/40 opacity-0 invisible translate-y-1 transition-all duration-200 z-50">
                   <div class="px-2 py-1.5 text-[10px] font-medium text-white/30 uppercase tracking-wider">정렬 기준</div>
@@ -301,6 +285,28 @@ majorListRoutes.get('/major', async (c) => {
             </div>
           </div>
         </form>
+
+        <!-- 카테고리 필터 -->
+        <div class="mb-6 overflow-x-auto scrollbar-hide">
+          <div class="flex gap-1.5 min-w-max">
+            <a href="/major${keyword ? `?q=${encodeURIComponent(keyword)}` : ''}"
+               class="px-3 py-1 rounded-full text-[13px] whitespace-nowrap transition-all duration-200 ${
+                 !category
+                   ? 'bg-wiki-primary/15 text-wiki-primary border border-wiki-primary/40 font-semibold'
+                   : 'text-white/50 hover:text-white/80 hover:bg-white/[0.06]'
+               }">전체</a>
+            ${MAJOR_CATEGORIES.map(cat => {
+              const isActive = category === cat
+              const catUrl = `/major?category=${encodeURIComponent(cat)}${keyword ? `&q=${encodeURIComponent(keyword)}` : ''}`
+              return `<a href="${catUrl}"
+                 class="px-3 py-1 rounded-full text-[13px] whitespace-nowrap transition-all duration-200 ${
+                   isActive
+                     ? 'bg-wiki-primary/15 text-wiki-primary border border-wiki-primary/40 font-semibold'
+                     : 'text-white/50 hover:text-white/80 hover:bg-white/[0.06]'
+                 }">${escapeHtml(cat)}</a>`
+            }).join('\n            ')}
+          </div>
+        </div>
 
         ${cacheNotice}
 

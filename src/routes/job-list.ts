@@ -165,27 +165,7 @@ jobListRoutes.get('/job', async (c) => {
           </div>
         </div>
 
-        <!-- 카테고리 필터 버튼 -->
-        <div class="mb-4 flex flex-wrap gap-2 justify-center">
-          <a href="/job"
-             class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-               !category
-                 ? 'bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white shadow-lg shadow-wiki-primary/25'
-                 : 'bg-white/[0.05] border border-white/[0.08] text-white/70 hover:bg-white/[0.1] hover:text-white'
-             }">전체</a>
-          ${JOB_LARGE_CATEGORIES.map(cat => {
-            const shortLabel = JOB_LARGE_SHORT_LABELS[cat]
-            const isActive = category === cat
-            return `<a href="/job?category=${encodeURIComponent(cat)}"
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                 isActive
-                   ? 'bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white shadow-lg shadow-wiki-primary/25'
-                   : 'bg-white/[0.05] border border-white/[0.08] text-white/70 hover:bg-white/[0.1] hover:text-white'
-               }">${escapeHtml(shortLabel)}</a>`
-          }).join('\n          ')}
-        </div>
-
-        <form id="job-filter-form" data-hydration-target="job" method="get" class="mb-6">
+        <form id="job-filter-form" data-hydration-target="job" method="get" class="mb-3">
           <div class="flex flex-row gap-2 sm:gap-3">
             <!-- 검색창 - 글래스모피즘 + 인셋 아이콘 -->
             <div class="flex-1 relative group min-w-0">
@@ -210,12 +190,12 @@ jobListRoutes.get('/job', async (c) => {
               </div>
             </div>
             <!-- 정렬 + 새 직업 추가 버튼 -->
-            <div class="flex items-center gap-2 shrink-0" id="job-hydration-toolbar">
+            <div class="flex items-stretch gap-2 shrink-0" id="job-hydration-toolbar">
               <div class="relative" data-dropdown="job-sort">
-                <button type="button" id="job-sort-trigger" class="flex items-center justify-center gap-2 px-3 sm:pl-4 sm:pr-3 py-2 sm:py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white/70 hover:bg-white/[0.06] hover:border-white/[0.1] focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px] min-h-[44px]">
-                  <i class="fas fa-sliders-h sm:hidden"></i>
+                <button type="button" id="job-sort-trigger" class="flex items-center justify-center gap-2 h-full px-3 sm:pl-4 sm:pr-3 bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl text-[13px] text-white/70 hover:border-wiki-primary/30 focus:outline-none focus:border-wiki-primary/40 transition-all duration-200 cursor-pointer min-w-[44px] sm:min-w-[130px]">
+                  <i class="fas fa-sliders-h text-[13px] sm:hidden"></i>
                   <span id="job-sort-label" class="hidden sm:inline">${sort === 'salary-desc' ? '연봉 높은 순' : sort === 'name-asc' ? '가나다 순' : '기본 순'}</span>
-                  <i class="fas fa-chevron-down text-[10px] text-white/40 ml-auto transition-transform duration-200 hidden sm:inline" id="job-sort-chevron"></i>
+                  <i class="fas fa-chevron-down text-[9px] text-white/40 ml-auto transition-transform duration-200 hidden sm:inline" id="job-sort-chevron"></i>
                 </button>
                 <div id="job-sort-menu" class="absolute right-0 top-full mt-2 w-44 py-1.5 bg-[#1c2333]/95 backdrop-blur-xl border border-white/[0.08] rounded-xl shadow-2xl shadow-black/40 opacity-0 invisible translate-y-1 transition-all duration-200 z-50">
                   <div class="px-2 py-1.5 text-[10px] font-medium text-white/30 uppercase tracking-wider">정렬 기준</div>
@@ -253,6 +233,28 @@ jobListRoutes.get('/job', async (c) => {
             </div>
           </div>
         </form>
+
+        <!-- 카테고리 필터 -->
+        <div class="mb-6 overflow-x-auto scrollbar-hide">
+          <div class="flex gap-1.5 min-w-max">
+            <a href="/job"
+               class="px-3 py-1 rounded-full text-[13px] whitespace-nowrap transition-all duration-200 ${
+                 !category
+                   ? 'bg-wiki-primary/15 text-wiki-primary border border-wiki-primary/40 font-semibold'
+                   : 'text-white/50 hover:text-white/80 hover:bg-white/[0.06]'
+               }">전체</a>
+            ${JOB_LARGE_CATEGORIES.map(cat => {
+              const shortLabel = JOB_LARGE_SHORT_LABELS[cat]
+              const isActive = category === cat
+              return `<a href="/job?category=${encodeURIComponent(cat)}"
+                 class="px-3 py-1 rounded-full text-[13px] whitespace-nowrap transition-all duration-200 ${
+                   isActive
+                     ? 'bg-wiki-primary/15 text-wiki-primary border border-wiki-primary/40 font-semibold'
+                     : 'text-white/50 hover:text-white/80 hover:bg-white/[0.06]'
+                 }">${escapeHtml(shortLabel)}</a>`
+            }).join('\n            ')}
+          </div>
+        </div>
 
         ${cacheNotice}
 
