@@ -6450,9 +6450,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     }
 
     // ============================================
-    // 6-F. Spread Quality Floor (v3.19.3) — Spread ≤ 20 보장
+    // 6-F. Spread Quality Floor (v3.20.2) — Spread ≤ 20 보장
     // Top1 대비 20점 이상 낮은 직업은 제거하여 품질 바닥 보장
-    // 최소 8개 결과 보장 (v3.19.3: 10→8, 필터링 효과 강화)
+    // 최소 8개 결과 보장
     // ============================================
     if (topJobs.length > 8) {
       const sortedForFloor = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
@@ -6466,26 +6466,12 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       }
     }
 
-    // ============================================
-    // 6-G. Like 최소 임계치 필터 (v3.19.3) — 관심도 낮은 직업 제거
-    // like_score < 55인 직업은 유저 관심과 맞지 않는 노이즈일 가능성 높음
-    // 최소 8개 결과 보장
-    // ============================================
-    if (topJobs.length > 8) {
-      const MIN_LIKE_SCORE = 55
-      const likeFiltered = topJobs.filter((j: any) => {
-        const likeScore = (j as any).like_score ?? (j as any).base_like ?? 100
-        return likeScore >= MIN_LIKE_SCORE
-      })
-      if (likeFiltered.length >= 8) {
-        topJobs = likeFiltered
-      }
-    }
+    // v3.20.2: 6-G Like Floor 제거 — 결과 수를 과도하게 줄여 Fit#10=0 유발
+    // Like score가 낮아도 Fit score가 높으면 유효한 추천이므로 Quality Floor만으로 충분
 
     // ============================================
-    // 6-H. 하드 노이즈 제거 (v3.19.3) — 명백한 도메인 불일치 직업 최종 제거
-    // Judge 패널티(-25)로 점수가 낮아져도 결과가 적어 남아있는 노이즈를 확실히 제거
-    // 최소 8개 결과 보장
+    // 6-H. 하드 노이즈 제거 (v3.20.2) — 명백한 도메인 불일치 직업 최종 제거
+    // 노이즈 직업은 결과 수에 관계없이 최대한 제거 (최소 5개 보장)
     // ============================================
     const HARD_NOISE_PATTERNS = [
       /공간정보|지리정보시스템|GIS|측량|지적/,
@@ -6494,12 +6480,12 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       /국악|전통음악|풍물/,
       /기능성식품|건강기능|한약|한방/,
     ]
-    if (topJobs.length > 8) {
+    if (topJobs.length > 5) {
       const noiseRemoved = topJobs.filter((j: any) => {
         const jobName = (j as any).job_name || ''
         return !HARD_NOISE_PATTERNS.some(p => p.test(jobName))
       })
-      if (noiseRemoved.length >= 8) {
+      if (noiseRemoved.length >= 5) {
         topJobs = noiseRemoved
       }
     }
