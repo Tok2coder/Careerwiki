@@ -605,8 +605,8 @@ export async function applyTagFilter(
         }
       }
 
-      // 전체 Risk 상한: Fit 점수를 과도하게 끌어내리지 않도록 15점으로 캡
-      totalPenalty = Math.min(totalPenalty, 15)
+      // 전체 Risk 상한: Fit 점수를 과도하게 끌어내리지 않도록 12점으로 캡 (v3.19.1: 15→12, Spread 과다 방지)
+      totalPenalty = Math.min(totalPenalty, 12)
 
       // ★ 데이터 품질 페널티: 카테고리 필드가 전부 기본값이면 태깅 신뢰도 낮음
       const isAllDefaults =

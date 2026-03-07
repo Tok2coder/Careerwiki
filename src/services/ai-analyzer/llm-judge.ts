@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.19.0'  // Gradient Risk, 앵커링 측정 보정, 응답시간 최적화, 노이즈 정밀화
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.19.1'  // Risk cap 12, E2E 측정 보정 (추천시간/중복 threshold)
 
 // ============================================
 // Types

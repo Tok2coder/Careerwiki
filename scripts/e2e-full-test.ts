@@ -713,7 +713,7 @@ function checkDuplicateQuestions(rounds: RoundData[], currentRound: number): boo
       const cWords = cq.questionText.split(/\s+/).filter(w => w.length > 2)
       const pWords = new Set(pq.questionText.split(/\s+/).filter(w => w.length > 2))
       const overlap = cWords.filter(w => pWords.has(w)).length
-      if (overlap >= 5) return true
+      if (overlap >= 7) return true  // v3.19.1: 5→7 (한국어 기능어 공유로 인한 false positive 방지)
     }
   }
   return false
@@ -735,14 +735,14 @@ function generateSummaryReport(results: E2EResult[]): string {
   // Overall table
   lines.push(`## 추천 품질 요약`)
   lines.push(``)
-  lines.push(`| 시나리오 | Top1 직업 | Fit#1 | Fit#10 | Spread | 에러 | 총시간 |`)
-  lines.push(`|----------|----------|-------|--------|--------|------|--------|`)
+  lines.push(`| 시나리오 | Top1 직업 | Fit#1 | Fit#10 | Spread | 에러 | 추천시간 | 총시간 |`)
+  lines.push(`|----------|----------|-------|--------|--------|------|---------|--------|`)
 
   for (const r of results) {
     const top1 = r.recommendation.top10[0]
     const top10 = r.recommendation.top10[9]
     const spread = top1 && top10 ? top1.fitScore - top10.fitScore : 0
-    lines.push(`| ${r.scenario.name} | ${top1?.jobName || 'N/A'} | ${top1?.fitScore || 0} | ${top10?.fitScore || 0} | ${spread} | ${r.errors.length} | ${r.timing.totalMs}ms |`)
+    lines.push(`| ${r.scenario.name} | ${top1?.jobName || 'N/A'} | ${top1?.fitScore || 0} | ${top10?.fitScore || 0} | ${spread} | ${r.errors.length} | ${r.timing.recommendMs}ms | ${r.timing.totalMs}ms |`)
   }
   lines.push(``)
 
