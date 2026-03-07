@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.19.2'  // Keyword Affinity, Quality Floor(10개 보장), Dedup Guard
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.19.3a'  // 노이즈 강화(-25), Quality/Like Floor 가드 8, 하드 노이즈 제거(Phase 6-H)
 
 // ============================================
 // Types
@@ -1753,6 +1753,8 @@ function sanitizeKeywordOvermatching(
         /금융자동화기기|ATM|현금자동/,                        // 금융기기 하드웨어
         /광통신|광섬유|광케이블/,                             // 광통신 하드웨어
         /인쇄|제본|출판인쇄/,                                 // 인쇄업
+        // v3.19.3: 공간정보 계열 (GIS) — 벡터 검색에서 '데이터/분석/시스템' 키워드에 과매칭
+        /공간정보|지리정보시스템|GIS|측량|지적/,               // 공간정보/GIS
       ]
 
       const hasPhysicalInterest = interests.some(i =>
@@ -1769,11 +1771,10 @@ function sanitizeKeywordOvermatching(
     }
 
     if (shouldPenalize) {
-      const penalty = 20
       const before = r.desireScore
-      r.desireScore = Math.max(r.desireScore - penalty, 45)
-      // v3.18: fitScore도 감점하여 overallScore 순위 하락 보장
-      r.fitScore = Math.max(r.fitScore - 12, 45)
+      // v3.19.3: 패널티 강화 — 노이즈 직업이 Top10에 남지 않도록
+      r.desireScore = Math.max(r.desireScore - 30, 40)
+      r.fitScore = Math.max(r.fitScore - 25, 40)
       adjusted++
     }
   }

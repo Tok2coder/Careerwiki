@@ -6450,20 +6450,57 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     }
 
     // ============================================
-    // 6-F. Spread Quality Floor (v3.19.2) — Spread ≤ 20 보장
+    // 6-F. Spread Quality Floor (v3.19.3) — Spread ≤ 20 보장
     // Top1 대비 20점 이상 낮은 직업은 제거하여 품질 바닥 보장
-    // 단, 최소 10개 결과는 보장 (결과 부족 방지)
+    // 최소 8개 결과 보장 (v3.19.3: 10→8, 필터링 효과 강화)
     // ============================================
-    if (topJobs.length > 10) {
+    if (topJobs.length > 8) {
       const sortedForFloor = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
       const top1Score = (sortedForFloor[0] as any)?.final_score || 0
       const qualityFloor = top1Score - 20
       const floorFiltered = topJobs.filter((j: any) => (j.final_score || 0) >= qualityFloor)
-      // 필터 후 10개 이상 남으면 적용, 아니면 상위 10개만 유지
-      if (floorFiltered.length >= 10) {
+      if (floorFiltered.length >= 8) {
         topJobs = floorFiltered
       } else {
-        topJobs = sortedForFloor.slice(0, 10)
+        topJobs = sortedForFloor.slice(0, Math.max(floorFiltered.length, 8))
+      }
+    }
+
+    // ============================================
+    // 6-G. Like 최소 임계치 필터 (v3.19.3) — 관심도 낮은 직업 제거
+    // like_score < 55인 직업은 유저 관심과 맞지 않는 노이즈일 가능성 높음
+    // 최소 8개 결과 보장
+    // ============================================
+    if (topJobs.length > 8) {
+      const MIN_LIKE_SCORE = 55
+      const likeFiltered = topJobs.filter((j: any) => {
+        const likeScore = (j as any).like_score ?? (j as any).base_like ?? 100
+        return likeScore >= MIN_LIKE_SCORE
+      })
+      if (likeFiltered.length >= 8) {
+        topJobs = likeFiltered
+      }
+    }
+
+    // ============================================
+    // 6-H. 하드 노이즈 제거 (v3.19.3) — 명백한 도메인 불일치 직업 최종 제거
+    // Judge 패널티(-25)로 점수가 낮아져도 결과가 적어 남아있는 노이즈를 확실히 제거
+    // 최소 8개 결과 보장
+    // ============================================
+    const HARD_NOISE_PATTERNS = [
+      /공간정보|지리정보시스템|GIS|측량|지적/,
+      /버섯|양봉|양잠|양식장|축산|낙농|임업/,
+      /광부|광산|채굴|채석/,
+      /국악|전통음악|풍물/,
+      /기능성식품|건강기능|한약|한방/,
+    ]
+    if (topJobs.length > 8) {
+      const noiseRemoved = topJobs.filter((j: any) => {
+        const jobName = (j as any).job_name || ''
+        return !HARD_NOISE_PATTERNS.some(p => p.test(jobName))
+      })
+      if (noiseRemoved.length >= 8) {
+        topJobs = noiseRemoved
       }
     }
 

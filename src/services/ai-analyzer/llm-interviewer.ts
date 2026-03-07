@@ -602,12 +602,21 @@ export async function generateRoundQuestions(
       
       // 질문 수가 부족하면 재시도
       lastError = new Error(`Insufficient questions: got ${questions.length}, need ${MIN_QUESTIONS_PER_ROUND}`)
-      
+      // v3.19.3: 1~2개라도 있으면 마지막 시도에서 graceful 반환 (에러 방지)
+      if (attempt === 2 && questions.length > 0) {
+        return {
+          round: roundNumber,
+          questions,
+          generatedBy: 'llm',
+          metadata: { ...roundMeta, degraded: true, originalCount: questions.length },
+        }
+      }
+
     } catch (error) {
       lastError = error as Error
     }
   }
-  
+
   // 2회 시도 실패 시 에러 던지기
   throw lastError || new Error('Failed to generate questions after 2 attempts')
 }

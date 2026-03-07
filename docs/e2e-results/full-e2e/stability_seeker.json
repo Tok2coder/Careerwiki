@@ -5,24 +5,24 @@
     "description": "안정성과 워라밸을 중시하는 유저",
     "careerState": "job_seeker"
   },
-  "timestamp": "2026-03-07T07:48:21.661Z",
+  "timestamp": "2026-03-07T09:26:18.449Z",
   "baseUrl": "https://careerwiki.org",
-  "sessionId": "e2e-test-1772869701661-l765ym",
-  "requestId": 556,
+  "sessionId": "e2e-test-1772875578448-fgpt0s",
+  "requestId": 574,
   "analyzeResponse": {
     "success": true,
-    "request_id": 556,
+    "request_id": 574,
     "result": {
       "engine_state": "phase2_stage_based",
-      "engine_version": "v3.19.2",
+      "engine_version": "v3.19.3a",
       "mini_module_result": null,
       "versions": {
         "recipe": "recipe-v1.0.0",
         "tagger": "tagger-v1.0.0",
-        "scoring": "scoring-v3.19.2"
+        "scoring": "scoring-v3.19.3a"
       },
       "input_summary": {
-        "profile_revision_id": "rev-556-1772869706687",
+        "profile_revision_id": "rev-574-1772875582790",
         "key_interests": [],
         "key_skills": [],
         "non_negotiables": [],
@@ -41,16 +41,247 @@
       },
       "fit_top3": [
         {
-          "job_id": "1765283554863505",
-          "job_name": "대학학생처장",
-          "slug": "대학학생처장",
-          "image_url": "/uploads/jobs/job-대학학생처장.webp",
-          "job_description": "대학의 학생업무 전반을 총괄 조정·감독한다.",
-          "rationale": "[좋아할 이유] 대학학생처장은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 대학학생처장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "대학학생처장은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "대학학생처장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 58,
-          "like_score": 70,
+          "job_id": "1765283291483400",
+          "job_name": "군무원",
+          "slug": "군무원",
+          "image_url": "/uploads/jobs/job-군무원.webp",
+          "job_description": "군무원은 군부대에서 군인과 함께 근무하는 특정직 국가 공무원으로서 담당 직렬에 따라 기술, 연구, 일반 행정, 이미용 등에 대한 업무를 수행합니다.",
+          "rationale": "[좋아할 이유] 군무원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "군무원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 61,
+          "like_score": 73,
+          "can_score": 69,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "\"helping, organizing, routine\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "관련 역량: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "분석 업무: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "\"helping, organizing, routine\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "관련 역량: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "창의성: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765284739951129",
+          "job_name": "철망설치원",
+          "slug": "철망설치원",
+          "image_url": "/uploads/jobs/job-철망설치원.webp",
+          "job_description": "산업시설, 군사시설, 주택, 농장, 운동장 등에 철망, 앵글, 파이프 등 철물을 이용하여 보호 또는 방호용 울타리를 설치한다.",
+          "rationale": "[좋아할 이유] 철망설치원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 철망설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "철망설치원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "철망설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 60,
+          "like_score": 65,
+          "can_score": 75,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "\"helping, organizing, routine\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "관련 역량: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "분석 업무: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "\"helping, organizing, routine\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "55",
+                "label": "관련 역량: 55/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 13,
+              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 55점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "55",
+                "label": "창의성: 55/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 13,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 55점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765284676925874",
+          "job_name": "생산설비관리원",
+          "slug": "생산설비관리원",
+          "image_url": "/uploads/jobs/job-생산설비관리원.webp",
+          "job_description": "생산에 필요한 설비·치공구 계측기기 및 기계설비를 점검하고 유지·보수하며 설비를 개선·개발·발주·관리하는 일을 한다.",
+          "rationale": "[좋아할 이유] 생산설비관리원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 생산설비관리원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "생산설비관리원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "생산설비관리원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 57,
+          "like_score": 65,
+          "can_score": 70,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "\"helping, organizing, routine\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "관련 역량: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "분석 업무: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "\"helping, organizing, routine\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "관련 역량: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping,organizing,routine",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "창의성: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765283576096561",
+          "job_name": "토사석채취관리자",
+          "slug": "토사석채취관리자",
+          "image_url": "/uploads/jobs/job-토사석채취관리자.webp",
+          "job_description": "석산, 강, 해안, 호수 등에서 골재, 모래, 석재 등을 채취하는 작업을 총괄 관리하고, 관련 종사원들의 활동을 감독·조정한다.",
+          "rationale": "[좋아할 이유] 토사석채취관리자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 토사석채취관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "토사석채취관리자는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "토사석채취관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 53,
+          "like_score": 60,
           "can_score": 66,
           "risk_details": [],
           "evidence_links": [
@@ -118,17 +349,17 @@
           "dislike_warnings": []
         },
         {
-          "job_id": "1765283538435221",
-          "job_name": "정당고위임원",
-          "slug": "정당고위임원",
-          "image_url": "/uploads/jobs/job-정당고위임원.webp",
-          "job_description": "정당의 목표인 정권창출을 위하여 정당의 전반적인 정책을 결정하고 제반 정치활동을 기획·지휘·조정·통제하는 등 정당의 모든 업무를 총괄한다.",
-          "rationale": "[좋아할 이유] 정당고위임원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 정당고위임원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "정당고위임원은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "정당고위임원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 56,
-          "like_score": 63,
-          "can_score": 70,
+          "job_id": "1765284139113943",
+          "job_name": "게임개발프로듀서",
+          "slug": "게임개발프로듀서",
+          "image_url": "/uploads/jobs/job-게임개발프로듀서.webp",
+          "job_description": "게임의 기획·예산·제작에서부터 마케팅까지 게임 개발의 전반적 사항을 총괄한다.",
+          "rationale": "[좋아할 이유] 게임개발프로듀서는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 게임개발프로듀서는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "게임개발프로듀서는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "게임개발프로듀서는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 51,
+          "like_score": 65,
+          "can_score": 82,
           "risk_details": [],
           "evidence_links": [
             {
@@ -139,12 +370,12 @@
               },
               "job_attribute": {
                 "key": "creative",
-                "value": "60",
-                "label": "관련 역량: 60/100"
+                "value": "80",
+                "label": "관련 역량: 80/100"
               },
               "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+              "score_contribution": 17,
+              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 80점입니다"
             },
             {
               "user_fact": {
@@ -154,243 +385,12 @@
               },
               "job_attribute": {
                 "key": "creative",
-                "value": "60",
-                "label": "창의성: 60/100"
+                "value": "80",
+                "label": "창의성: 80/100"
               },
               "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "\"helping, organizing, routine\" 관심사"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "50",
-                "label": "관련 역량: 50/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 12,
-              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "분석적 업무 관심"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "50",
-                "label": "분석 업무: 50/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 12,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 50점입니다"
-            }
-          ],
-          "dislike_warnings": []
-        },
-        {
-          "job_id": "1765284061804940",
-          "job_name": "정부행정전문가(일반)",
-          "slug": "정부행정전문가일반",
-          "image_url": "/uploads/jobs/job-정부행정전문가일반.webp",
-          "job_description": "중앙 및 지방행정기관의 부서에서 정부 업무와 관련된 정책을 기획하고 의사결정을 하며 실무적인 책임을 진다.",
-          "rationale": "[좋아할 이유] 정부행정전문가(일반)는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 정부행정전문가(일반)는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "정부행정전문가(일반)는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "정부행정전문가(일반)는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 53,
-          "like_score": 63,
-          "can_score": 62,
-          "risk_details": [],
-          "evidence_links": [
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "\"helping, organizing, routine\" 관심사"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "분석적 업무 관심"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "분석 업무: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "\"helping, organizing, routine\" 관심사"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "50",
-                "label": "관련 역량: 50/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 12,
-              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "창의적 분야 관심"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "50",
-                "label": "창의성: 50/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 12,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
-            }
-          ],
-          "dislike_warnings": []
-        },
-        {
-          "job_id": "1765283934461739",
-          "job_name": "산업용로봇자동화설비제작기술자",
-          "slug": "산업용로봇자동화설비제작기술자",
-          "image_url": "/uploads/jobs/job-산업용로봇자동화설비제작기술자.webp",
-          "job_description": "산업용 로봇의 주변장치 및 자동화설비를 가공·조립·설치한다.",
-          "rationale": "[좋아할 이유] 산업용로봇자동화설비제작기술자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 산업용로봇자동화설비제작기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "산업용로봇자동화설비제작기술자는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "산업용로봇자동화설비제작기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 46,
-          "like_score": 71,
-          "can_score": 71,
-          "risk_details": [],
-          "evidence_links": [
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "\"helping, organizing, routine\" 관심사"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "70",
-                "label": "관련 역량: 70/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 15,
-              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 70점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "분석적 업무 관심"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "70",
-                "label": "분석 업무: 70/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 15,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 70점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "\"helping, organizing, routine\" 관심사"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "창의적 분야 관심"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "창의성: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-            }
-          ],
-          "dislike_warnings": []
-        },
-        {
-          "job_id": "1765283711862539",
-          "job_name": "지식관리시스템전문가",
-          "slug": "지식관리시스템전문가",
-          "image_url": "/uploads/jobs/job-지식관리시스템전문가.webp",
-          "job_description": "개인 및 조직원이 소유하고 있는 지적자산을 조직 내에 축적·활용할 수 있도록 하는 지식관리시스템을 설계하고 구축에 관한 솔루션을 제공한다.",
-          "rationale": "[좋아할 이유] 지식관리시스템전문가는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 지식관리시스템전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "지식관리시스템전문가는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "지식관리시스템전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 46,
-          "like_score": 68,
-          "can_score": 72,
-          "risk_details": [],
-          "evidence_links": [
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "\"helping, organizing, routine\" 관심사"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "70",
-                "label": "관련 역량: 70/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 15,
-              "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 70점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping,organizing,routine",
-                "label": "창의적 분야 관심"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "70",
-                "label": "창의성: 70/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 15,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 70점입니다"
+              "score_contribution": 17,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 80점입니다"
             },
             {
               "user_fact": {
@@ -428,302 +428,302 @@
       ],
       "like_top10": [
         {
-          "job_id": "1765283548991708",
-          "job_name": "사회과학연구관리자",
-          "slug": "사회과학연구관리자",
-          "image_url": "/uploads/jobs/job-사회과학연구관리자.webp",
-          "job_description": "경제학, 경영학 등 사회과학에 대한 상업, 비상업적 연구개발 등과 관련된 활동을 기획, 지휘 및 조정한다.",
-          "fit_score": 50,
-          "like_score": 75,
-          "can_score": 74,
-          "rationale": "[좋아할 이유] 사회과학연구관리자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 사회과학연구관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "사회과학연구관리자는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "사회과학연구관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "job_id": "1765283452152824",
+          "job_name": "소음진동기술자 및 연구원",
+          "slug": "소음진동기술자-및-연구원",
+          "image_url": "/uploads/jobs/job-소음진동기술자-및-연구원.webp",
+          "job_description": "각종 공사현장 등에서 기계 및 장비 등의 사용으로 발생하는 소음과 진동으로 인한 환경오염으로부터 환경을 관리·보전하고, 민원발생에 대한 대처방안을 계획·하는 업무를 수행한다.",
+          "fit_score": 47,
+          "like_score": 76,
+          "can_score": 68,
+          "rationale": "[좋아할 이유] 소음진동기술자 및 연구원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 소음진동기술자 및 연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "소음진동기술자 및 연구원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "소음진동기술자 및 연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283722050337",
-          "job_name": "공간정보데이터베이스관리자",
-          "slug": "공간정보데이터베이스관리자",
-          "image_url": "/uploads/jobs/job-공간정보데이터베이스관리자.webp",
-          "job_description": "안정적이고 지속적인 공간정보서비스를 운영하기 위해 공간정보 데이터베이스를 제공 및 갱신하고 관리한다.",
-          "fit_score": 48,
+          "job_id": "1765284006251716",
+          "job_name": "조산사",
+          "slug": "조산사",
+          "image_url": "/uploads/jobs/job-조산사.webp",
+          "job_description": "임산부의 임신, 분만, 산후관리와 신생아 관리를 돕고 임산부와 그 가족을 대상으로 가족계획, 여성암 예방 등 여성 건강 관리에 대해 교육한다.",
+          "fit_score": 42,
           "like_score": 75,
-          "can_score": 70,
-          "rationale": "[좋아할 이유] 공간정보데이터베이스관리자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 공간정보데이터베이스관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "공간정보데이터베이스관리자는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "공간정보데이터베이스관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_score": 63,
+          "rationale": "[좋아할 이유] 조산사는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 조산사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "조산사는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "조산사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283318940526",
-          "job_name": "비행기조종사",
-          "slug": "비행기조종사",
-          "image_url": "/uploads/jobs/job-비행기조종사.webp",
-          "job_description": "비행기조종사는 승객이나 화물을 운반하기 위해 여객기, 전투기, 경비행기, 헬리콥터 등을 조종합니다.",
-          "fit_score": 46,
-          "like_score": 75,
-          "can_score": 65,
-          "rationale": "[좋아할 이유] 비행기조종사는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 비행기조종사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "비행기조종사는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "비행기조종사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "176528341709323",
-          "job_name": "경영기획사무원",
-          "slug": "경영기획사무원",
-          "image_url": "/uploads/jobs/job-경영기획사무원.webp",
-          "job_description": "경영비전 및 방침을 수립하고 장·단기 경영계획과 전략을 수립하며 연도별 경영분석을 실시하며, 효율적인 경영이 이루어지도록 관리자를 지원하기 위하여 소관 업무를 기획·입안한다.",
+          "job_id": "17652837321713",
+          "job_name": "클라우드시스템정보보안전문가",
+          "slug": "클라우드시스템정보보안전문가",
+          "image_url": "/uploads/jobs/job-클라우드시스템정보보안전문가.webp",
+          "job_description": "클라우드시스템의 안정적인 운영을 위해 보안문제를 다룬다.",
           "fit_score": 39,
           "like_score": 75,
           "can_score": 77,
-          "rationale": "[좋아할 이유] 경영기획사무원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 경영기획사무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "경영기획사무원은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "경영기획사무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "rationale": "[좋아할 이유] 클라우드시스템정보보안전문가는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 클라우드시스템정보보안전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "클라우드시스템정보보안전문가는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "클라우드시스템정보보안전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283953399740",
-          "job_name": "수자원환경연구원",
-          "slug": "수자원환경연구원",
-          "image_url": "/uploads/jobs/job-수자원환경연구원.webp",
-          "job_description": "수자원환경 및 생태계 모니터링, 유역 오염원 관리와 오염물질의 저감 방안, 환경영향평가, 수질개선관리, 수질모델링, 수자원환경 정보구축을 위한 연구·개발을 한다.",
-          "fit_score": 48,
-          "like_score": 73,
-          "can_score": 74,
-          "rationale": "[좋아할 이유] 수자원환경연구원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 수자원환경연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "수자원환경연구원은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "수자원환경연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "job_id": "1765284729620354",
+          "job_name": "이동통신시스템유지보수원",
+          "slug": "이동통신시스템유지보수원",
+          "image_url": "/uploads/jobs/job-이동통신시스템유지보수원.webp",
+          "job_description": "이동통신서비스를 제공하기 위하여 통합망, 전송망, 엑세스망 운용 과정에서 발생하는 장애를 처리한다.",
+          "fit_score": 53,
+          "like_score": 74,
+          "can_score": 82,
+          "rationale": "[좋아할 이유] 이동통신시스템유지보수원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 이동통신시스템유지보수원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "이동통신시스템유지보수원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "이동통신시스템유지보수원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283397944643",
-          "job_name": "항공교통관제사",
-          "slug": "항공교통관제사",
-          "image_url": "/uploads/jobs/job-항공교통관제사.webp",
-          "job_description": "항공기의 운항을 통제하고 이·착륙 순서를 배정하여 안전한 이·착륙을 유도한다.",
+          "job_id": "1765285334967680",
+          "job_name": "리튬이온이차전지충방전원",
+          "slug": "리튬이온이차전지충방전원",
+          "image_url": "/uploads/jobs/job-리튬이온이차전지충방전원.webp",
+          "job_description": "조립이 완료된 방전상태의 셀을 활성화시키기 위해 충방전과 에이징(Aging)을 통해 리튬이온2차전지를 만든다.",
+          "fit_score": 50,
+          "like_score": 74,
+          "can_score": 77,
+          "rationale": "[좋아할 이유] 리튬이온이차전지충방전원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 리튬이온이차전지충방전원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "리튬이온이차전지충방전원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "리튬이온이차전지충방전원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283755455153",
+          "job_name": "플랜트프로젝트사업관리자",
+          "slug": "플랜트프로젝트사업관리자",
+          "image_url": "/uploads/jobs/job-플랜트프로젝트사업관리자.webp",
+          "job_description": "플랜트 EPC(Engineering, Procurement, Construction) 프로젝트 계약자가 계약에 정한 요구조건을 충족한 플랜트를 발주자에게 인도하기 위하여 프로젝트 계획을 수립하고 관리하는 업무를 수행한다.",
+          "fit_score": 50,
+          "like_score": 74,
+          "can_score": 76,
+          "rationale": "[좋아할 이유] 플랜트프로젝트사업관리자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 플랜트프로젝트사업관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "플랜트프로젝트사업관리자는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "플랜트프로젝트사업관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "176528369736954",
+          "job_name": "클라우드시스템엔지니어",
+          "slug": "클라우드시스템엔지니어",
+          "image_url": "/uploads/jobs/job-클라우드시스템엔지니어.webp",
+          "job_description": "클라우드 환경에서 인프라를 설계하고, 가상서버, 네트워크, 스토리지 등의 자원을 구성하여 인프라를 구축하고 이에 대한 유지보수 및 관리운영한다.",
           "fit_score": 46,
-          "like_score": 73,
+          "like_score": 74,
           "can_score": 68,
-          "rationale": "[좋아할 이유] 항공교통관제사는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 항공교통관제사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "항공교통관제사는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "항공교통관제사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "rationale": "[좋아할 이유] 클라우드시스템엔지니어는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 클라우드시스템엔지니어는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "클라우드시스템엔지니어는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "클라우드시스템엔지니어는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283439100411",
-          "job_name": "정보보안전문가",
-          "slug": "정보보안전문가",
-          "image_url": "/uploads/jobs/job-정보보안전문가.webp",
-          "job_description": "정보시스템과 정보자산을 보호하기 위해 보안정책을 수립하고, 시스템에 대한 접근 및 운영을 통제하며, 침입 발생시 신속히 탐지하여 즉각적으로 대응·복구한다.",
+          "job_id": "1765284681368867",
+          "job_name": "스마트공장시스템설치원",
+          "slug": "스마트공장시스템설치원",
+          "image_url": "/uploads/jobs/job-스마트공장시스템설치원.webp",
+          "job_description": "스마트공장 시스템의 사양을 검토하여 특성을 파악하고 하드웨어, 소프트웨어, 네트워크, 보안 설비 등을 설치한다.",
           "fit_score": 41,
-          "like_score": 73,
-          "can_score": 58,
-          "rationale": "[좋아할 이유] 정보보안전문가는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 정보보안전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "정보보안전문가는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "정보보안전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "like_score": 74,
+          "can_score": 82,
+          "rationale": "[좋아할 이유] 스마트공장시스템설치원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 스마트공장시스템설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "스마트공장시스템설치원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "스마트공장시스템설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283704002763",
-          "job_name": "자율주행소프트웨어개발자",
-          "slug": "자율주행소프트웨어개발자",
-          "image_url": "/uploads/jobs/job-자율주행소프트웨어개발자.webp",
-          "job_description": "자동차의 원활한 자율주행을 위하여 차량 센서, 인프라에서 수집한 데이터를 기반으로 인지하고 판단하여 자동차를 제어하는 소프트웨어를 개발한다.",
-          "fit_score": 36,
+          "job_id": "1765283291483400",
+          "job_name": "군무원",
+          "slug": "군무원",
+          "image_url": "/uploads/jobs/job-군무원.webp",
+          "job_description": "군무원은 군부대에서 군인과 함께 근무하는 특정직 국가 공무원으로서 담당 직렬에 따라 기술, 연구, 일반 행정, 이미용 등에 대한 업무를 수행합니다.",
+          "fit_score": 61,
           "like_score": 73,
-          "can_score": 74,
-          "rationale": "[좋아할 이유] 자율주행소프트웨어개발자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 자율주행소프트웨어개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "자율주행소프트웨어개발자는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "자율주행소프트웨어개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_score": 69,
+          "rationale": "[좋아할 이유] 군무원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "군무원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283704002763",
-          "job_name": "자율주행소프트웨어개발자",
-          "slug": "자율주행소프트웨어개발자",
-          "image_url": "/uploads/jobs/job-자율주행소프트웨어개발자.webp",
-          "job_description": "자동차의 원활한 자율주행을 위하여 차량 센서, 인프라에서 수집한 데이터를 기반으로 인지하고 판단하여 자동차를 제어하는 소프트웨어를 개발한다.",
-          "fit_score": 36,
+          "job_id": "1765284035936846",
+          "job_name": "수산업교사",
+          "slug": "수산업교사",
+          "image_url": "/uploads/jobs/job-수산업교사.webp",
+          "job_description": "수산·해양계열 고등학교에서 학생들에게 수산업과 해양에 대한 지식과 기술을 가르치기 위하여 수산업, 어업, 해양 및 관련 과목을 전문으로 교육한다.",
+          "fit_score": 60,
           "like_score": 73,
-          "can_score": 74,
-          "rationale": "[좋아할 이유] 자율주행소프트웨어개발자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 자율주행소프트웨어개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "자율주행소프트웨어개발자는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "자율주행소프트웨어개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284689895544",
-          "job_name": "태양열시스템정비원",
-          "slug": "태양열시스템정비원",
-          "image_url": "/uploads/jobs/job-태양열시스템정비원.webp",
-          "job_description": "사용 중 이상이 발생한 태양열 시스템의 정비 점검을 통해 이상부위를 점검하고 정비한다.",
-          "fit_score": 49,
-          "like_score": 71,
-          "can_score": 78,
-          "rationale": "[좋아할 이유] 태양열시스템정비원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 태양열시스템정비원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "태양열시스템정비원은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "태양열시스템정비원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_score": 67,
+          "rationale": "[좋아할 이유] 수산업교사는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 수산업교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "수산업교사는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "수산업교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         }
       ],
       "can_top10": [
         {
-          "job_id": "1765284187247330",
-          "job_name": "합창단지휘자",
-          "slug": "합창단지휘자",
-          "image_url": "/uploads/jobs/job-합창단지휘자.webp",
-          "job_description": "화음을 연출하기 위하여 합창단을 지휘하고 합창단원 및 합창단을 통솔한다.",
-          "fit_score": 27,
-          "like_score": 50,
-          "can_score": 92,
-          "rationale": "[좋아할 이유] 합창단지휘자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 합창단지휘자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "합창단지휘자는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "합창단지휘자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284790444847",
-          "job_name": "선물큐레이터",
-          "slug": "선물큐레이터",
-          "image_url": "/uploads/jobs/job-선물큐레이터.webp",
-          "job_description": "사회적이고 상대적인 관계나 상황 등을 고려해 선물을 기획, 제안, 추천, 제작, 포장, 디자인을 직접 수행하거나 기획조정한다.",
-          "fit_score": 34,
+          "job_id": "1765284788386961",
+          "job_name": "모사공",
+          "slug": "모사공",
+          "image_url": "/uploads/jobs/job-모사공.webp",
+          "job_description": "불화, 민화, 벽화, 풍속화 등 모사할 작품을 분석하여 현상모사, 복원모사, 고색복원모사 등 작업방법을 선정하고 모사의 형상과 색채를 분석하여 섬세한 선묘사를 하여 모사본을 제작한다.",
+          "fit_score": 33,
           "like_score": 71,
-          "can_score": 89,
-          "rationale": "[좋아할 이유] 선물큐레이터는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 선물큐레이터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "선물큐레이터는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "선물큐레이터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_score": 87,
+          "rationale": "[좋아할 이유] 모사공은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 모사공은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "모사공은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "모사공은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284152002467",
-          "job_name": "컴퓨터애니메이션감독",
-          "slug": "컴퓨터애니메이션감독",
-          "image_url": "/uploads/jobs/job-컴퓨터애니메이션감독.webp",
-          "job_description": "애니메이션의 기획에서 제작, 편집까지의 전반적인 작업을 총괄하고 관련 종사원들의 활동을 감독한다.",
-          "fit_score": 35,
-          "like_score": 63,
+          "job_id": "1765284104311115",
+          "job_name": "게임마케터",
+          "slug": "게임마케터",
+          "image_url": "/uploads/jobs/job-게임마케터.webp",
+          "job_description": "게임시장의 동향과 게임이용자들의 성향 등을 파악하여 게임의 홍보전략을 수립하고 소비자에게 게임을 홍보한다.",
+          "fit_score": 31,
+          "like_score": 70,
+          "can_score": 87,
+          "rationale": "[좋아할 이유] 게임마케터는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 게임마케터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "게임마케터는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "게임마케터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283346099254",
+          "job_name": "영화기획자",
+          "slug": "영화기획자",
+          "image_url": "/uploads/jobs/job-영화기획자.webp",
+          "job_description": "영화기획자는 영화의 기획에서부터 개봉에 이르는 전 과정에 대한 기획과 관리를 담당합니다.",
+          "fit_score": 51,
+          "like_score": 66,
           "can_score": 85,
-          "rationale": "[좋아할 이유] 컴퓨터애니메이션감독은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 컴퓨터애니메이션감독은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "컴퓨터애니메이션감독은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "컴퓨터애니메이션감독은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "rationale": "[좋아할 이유] 영화기획자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 영화기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "영화기획자는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "영화기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283450756976",
-          "job_name": "고무 및 플라스틱화학공학기술자 및 연구원",
-          "slug": "고무-및-플라스틱화학공학기술자-및-연구원",
-          "image_url": "/uploads/jobs/job-고무-및-플라스틱화학공학기술자-및-연구원.webp",
-          "job_description": "원료의 구조와 재질을 분석하여 새로운 합성물질을 연구하고 제품의 제조공정을 연구·분석한다.",
-          "fit_score": 38,
-          "like_score": 68,
-          "can_score": 83,
-          "rationale": "[좋아할 이유] 고무 및 플라스틱화학공학기술자 및 연구원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 고무 및 플라스틱화학공학기술자 및 연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "고무 및 플라스틱화학공학기술자 및 연구원은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "고무 및 플라스틱화학공학기술자 및 연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "job_id": "1765284729620354",
+          "job_name": "이동통신시스템유지보수원",
+          "slug": "이동통신시스템유지보수원",
+          "image_url": "/uploads/jobs/job-이동통신시스템유지보수원.webp",
+          "job_description": "이동통신서비스를 제공하기 위하여 통합망, 전송망, 엑세스망 운용 과정에서 발생하는 장애를 처리한다.",
+          "fit_score": 53,
+          "like_score": 74,
+          "can_score": 82,
+          "rationale": "[좋아할 이유] 이동통신시스템유지보수원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 이동통신시스템유지보수원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "이동통신시스템유지보수원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "이동통신시스템유지보수원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283455943446",
-          "job_name": "3D프린팅모델러",
-          "slug": "3d프린팅모델러",
-          "image_url": "/uploads/jobs/job-3d프린팅모델러.webp",
-          "job_description": "3D프린터를 조작·운영하여 고객의 요구에 따라 미니어처, 액세서리, 일상용품, 개인 편의제품, 기계부품, 시제품 등의 디지털도면을 모델링하고 출력한다.",
+          "job_id": "1765284191503208",
+          "job_name": "가구디자이너",
+          "slug": "가구디자이너",
+          "image_url": "/uploads/jobs/job-가구디자이너.webp",
+          "job_description": "시장조사를 통해서 경쟁력 있는 가구를 개발하고 디자인한다.",
           "fit_score": 36,
           "like_score": 70,
           "can_score": 81,
-          "rationale": "[좋아할 이유] 3D프린팅모델러는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 3D프린팅모델러는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "3D프린팅모델러는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "3D프린팅모델러는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "rationale": "[좋아할 이유] 가구디자이너는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 가구디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "가구디자이너는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "가구디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283292024544",
-          "job_name": "극작가",
-          "slug": "극작가",
-          "image_url": "/uploads/jobs/job-극작가.webp",
-          "job_description": "극작가는 어문학적 지식을 바탕으로 연극을 공연하기 위해 연극 주제에 적합한 문학작품을 새롭게 창작하거나 기존의 문학작품을 선정하여 연극의 형식에 맞게 각색합니다.",
-          "fit_score": 34,
-          "like_score": 63,
-          "can_score": 81,
-          "rationale": "[좋아할 이유] 극작가는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 극작가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "극작가는 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "극작가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "job_id": "1765283437147760",
+          "job_name": "게임프로그래머",
+          "slug": "게임프로그래머",
+          "image_url": "/uploads/jobs/job-게임프로그래머.webp",
+          "job_description": "게임프로그램의 구조를 설계하고 게임프로그래밍을 수행한다.",
+          "fit_score": 35,
+          "like_score": 65,
+          "can_score": 80,
+          "rationale": "[좋아할 이유] 게임프로그래머는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 게임프로그래머는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "게임프로그래머는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "게임프로그래머는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284689895544",
-          "job_name": "태양열시스템정비원",
-          "slug": "태양열시스템정비원",
-          "image_url": "/uploads/jobs/job-태양열시스템정비원.webp",
-          "job_description": "사용 중 이상이 발생한 태양열 시스템의 정비 점검을 통해 이상부위를 점검하고 정비한다.",
+          "job_id": "1765284674343693",
+          "job_name": "반도체칩절단장비기술자",
+          "slug": "반도체칩절단장비기술자",
+          "image_url": "/uploads/jobs/job-반도체칩절단장비기술자.webp",
+          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 칩절단장비를 설치, 평가, 개선, 인증, 유지 관리한다.",
           "fit_score": 49,
-          "like_score": 71,
-          "can_score": 78,
-          "rationale": "[좋아할 이유] 태양열시스템정비원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 태양열시스템정비원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "태양열시스템정비원은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "태양열시스템정비원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765285017386428",
-          "job_name": "도료제조원",
-          "slug": "도료제조원",
-          "image_url": "/uploads/jobs/job-도료제조원.webp",
-          "job_description": "각종 도료(페인트, 바니시, 에나멜, 래커 등)와 유사 피막 형성용 제품을 제조하고자 합성수지, 안료, 용제, 첨가제 등을 배합비율에 따라 혼합·분산·조정하는 용해기를 조작·관리한다.",
-          "fit_score": 46,
-          "like_score": 66,
-          "can_score": 77,
-          "rationale": "[좋아할 이유] 도료제조원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 도료제조원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "도료제조원은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "도료제조원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284724188647",
-          "job_name": "송변전설비보수원",
-          "slug": "송변전설비보수원",
-          "image_url": "/uploads/jobs/job-송변전설비보수원.webp",
-          "job_description": "발전소와 변전소, 변전소와 변전소로의 안정적인 전기공급을 위하여 각종 송·변전설비의 설치 및 보수에 대한 제반 업무를 수행한다.",
-          "fit_score": 48,
           "like_score": 70,
-          "can_score": 76,
-          "rationale": "[좋아할 이유] 송변전설비보수원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 송변전설비보수원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "송변전설비보수원은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "송변전설비보수원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 반도체칩절단장비기술자는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 반도체칩절단장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "반도체칩절단장비기술자는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "반도체칩절단장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284724480982",
-          "job_name": "송전전공",
-          "slug": "송전전공",
-          "image_url": "/uploads/jobs/job-송전전공.webp",
-          "job_description": "발전소에서 변전소 또는 변전소 간의 전력 수송을 위하여 철탑 또는 지하 전력구를 설치하며 애자 등을 장치하고 전력선을 부설한다.",
-          "fit_score": 46,
-          "like_score": 66,
-          "can_score": 76,
-          "rationale": "[좋아할 이유] 송전전공은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 송전전공은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "송전전공은 당신의 관심 분야와 연관된 직업입니다",
-          "can_reason": "송전전공은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "job_id": "1765284789839617",
+          "job_name": "석고형제작원",
+          "slug": "석고형제작원",
+          "image_url": "/uploads/jobs/job-석고형제작원.webp",
+          "job_description": "내화 제품이나 도자기 제품의 대량생산에 필요한 석고형을 제작한다.",
+          "fit_score": 48,
+          "like_score": 68,
+          "can_score": 78,
+          "rationale": "[좋아할 이유] 석고형제작원은 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 석고형제작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "석고형제작원은 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "석고형제작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284191503208",
+          "job_name": "가구디자이너",
+          "slug": "가구디자이너",
+          "image_url": "/uploads/jobs/job-가구디자이너.webp",
+          "job_description": "시장조사를 통해서 경쟁력 있는 가구를 개발하고 디자인한다.",
+          "fit_score": 36,
+          "like_score": 70,
+          "can_score": 81,
+          "rationale": "[좋아할 이유] 가구디자이너는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 가구디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "가구디자이너는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "가구디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284101880693",
+          "job_name": "관광두레PD",
+          "slug": "관광두레pd",
+          "image_url": "/uploads/jobs/job-관광두레pd.webp",
+          "job_description": "지역관광 활성화를 위해 지역주민들의 관광사업 공동체인 관광두레의 수요를 파악하고 사업계획 수립 등을 돕는다.",
+          "fit_score": 26,
+          "like_score": 65,
+          "can_score": 78,
+          "rationale": "[좋아할 이유] 관광두레PD는 당신의 관심 분야와 연관된 직업입니다 [잘할 이유] 관광두레PD는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "관광두레PD는 당신의 관심 분야와 연관된 직업입니다",
+          "can_reason": "관광두레PD는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         }
       ],
       "caution_jobs": [
         {
-          "job_id": "17652841979304",
-          "job_name": "공공디자이너",
-          "slug": "공공디자이너",
-          "image_url": "/uploads/jobs/job-공공디자이너.webp",
+          "job_id": "1765284729620354",
+          "job_name": "이동통신시스템유지보수원",
+          "slug": "이동통신시스템유지보수원",
+          "image_url": "/uploads/jobs/job-이동통신시스템유지보수원.webp",
+          "risk_penalty": 25
+        },
+        {
+          "job_id": "1765284123866152",
+          "job_name": "게임시나리오작가",
+          "slug": "게임시나리오작가",
+          "image_url": "/uploads/jobs/job-게임시나리오작가.webp",
           "risk_penalty": 22
         },
         {
-          "job_id": "1765283548991708",
-          "job_name": "사회과학연구관리자",
-          "slug": "사회과학연구관리자",
-          "image_url": "/uploads/jobs/job-사회과학연구관리자.webp",
-          "risk_penalty": 25
+          "job_id": "1765284139113943",
+          "job_name": "게임개발프로듀서",
+          "slug": "게임개발프로듀서",
+          "image_url": "/uploads/jobs/job-게임개발프로듀서.webp",
+          "risk_penalty": 22
         },
         {
-          "job_id": "1765284689895544",
-          "job_name": "태양열시스템정비원",
-          "slug": "태양열시스템정비원",
-          "image_url": "/uploads/jobs/job-태양열시스템정비원.webp",
-          "risk_penalty": 25
+          "job_id": "1765283346099254",
+          "job_name": "영화기획자",
+          "slug": "영화기획자",
+          "image_url": "/uploads/jobs/job-영화기획자.webp",
+          "risk_penalty": 24
         },
         {
-          "job_id": "1765283953399740",
-          "job_name": "수자원환경연구원",
-          "slug": "수자원환경연구원",
-          "image_url": "/uploads/jobs/job-수자원환경연구원.webp",
-          "risk_penalty": 25
-        },
-        {
-          "job_id": "1765283388857592",
-          "job_name": "토목공학기술자",
-          "slug": "토목공학기술자",
-          "image_url": "/uploads/jobs/job-토목공학기술자.webp",
+          "job_id": "1765285334967680",
+          "job_name": "리튬이온이차전지충방전원",
+          "slug": "리튬이온이차전지충방전원",
+          "image_url": "/uploads/jobs/job-리튬이온이차전지충방전원.webp",
           "risk_penalty": 25
         }
       ],
@@ -1011,58 +1011,79 @@
           ]
         },
         {
-          "id": "explore_ideal_day",
+          "id": "explore_dream_activity",
           "type": "projection",
-          "question": "미래의 이상적인 하루를 상상해본다면, 어떤 모습일까요?",
+          "question": "상상해보세요. 어떤 활동을 하고 있을 때 가장 신나고 시간이 빨리 갈 것 같아요?",
           "context": "Stage: job_explore",
           "options": [
             {
-              "value": "office_team",
-              "label": "사무실에서 팀과 함께 프로젝트",
+              "value": "create",
+              "label": "뭔가 새로운 걸 만들기",
               "tags": [
-                "team_collab",
-                "structured"
+                "creative"
               ]
             },
             {
-              "value": "remote_solo",
-              "label": "집에서 혼자 집중하며 일",
+              "value": "solve",
+              "label": "퍼즐이나 문제 풀기",
               "tags": [
-                "solo_deep",
-                "remote"
+                "analytical"
               ]
             },
             {
-              "value": "field_active",
-              "label": "현장에서 활동적으로 움직이며",
-              "tags": [
-                "physical",
-                "variety"
-              ]
-            },
-            {
-              "value": "meeting_people",
-              "label": "다양한 사람들 만나며",
+              "value": "help",
+              "label": "사람들 도와주기",
               "tags": [
                 "people_facing",
-                "variety"
+                "empathy"
               ]
             },
             {
-              "value": "creative_free",
-              "label": "자유롭게 창작하며",
+              "value": "organize",
+              "label": "정리하고 계획 세우기",
               "tags": [
-                "creative",
-                "autonomous"
+                "structured",
+                "execution"
+              ]
+            },
+            {
+              "value": "explore",
+              "label": "새로운 것 발견하기",
+              "tags": [
+                "growth",
+                "learning"
+              ]
+            },
+            {
+              "value": "perform",
+              "label": "무대에 서거나 발표하기",
+              "tags": [
+                "people_facing"
+              ]
+            },
+            {
+              "value": "build",
+              "label": "직접 손으로 만들기",
+              "tags": [
+                "execution",
+                "physical"
+              ]
+            },
+            {
+              "value": "research",
+              "label": "깊이 파고들어 조사하기",
+              "tags": [
+                "analytical",
+                "solo_deep"
               ]
             }
           ],
-          "fact_key": "projection.ideal_workday",
+          "fact_key": "discovery.dream_activity",
           "affects_attributes": [
-            "solo_deep",
-            "team_collab",
-            "remote",
-            "people_facing"
+            "creative",
+            "analytical",
+            "people_facing",
+            "solo_deep"
           ]
         }
       ],
@@ -1071,20 +1092,20 @@
         "has_unknown_in_top3": false,
         "needs_followup_question": true,
         "counts_before_filter": {
-          "safe_known": 154,
-          "safe_unknown": 121,
-          "caution": 225,
+          "safe_known": 166,
+          "safe_unknown": 135,
+          "caution": 199,
           "total": 500
         },
         "counts_after_filter": {
-          "safe_known": 154,
-          "safe_unknown": 121,
-          "caution": 225,
+          "safe_known": 166,
+          "safe_unknown": 135,
+          "caution": 199,
           "total": 500
         }
       },
       "llm_explanation": "2개의 답변을 반영하여 추천했습니다.",
-      "generated_at": "2026-03-07T07:48:26.687Z",
+      "generated_at": "2026-03-07T09:26:22.790Z",
       "total_candidates": 6945,
       "scored_candidates": 500,
       "filtered_out_candidates": 0,
@@ -1096,9 +1117,9 @@
       "phase4_applied": true,
       "diversity_guard_active": true,
       "diversity_changes": [
-        "재료공학기술자 → 산업용로봇자동화설비제작기술자 (Diversity Guard: other)",
-        "신재생에너지사업관리자 → 지식관리시스템전문가 (Diversity Guard: other)",
-        "공동주택관리사무소장 → 정부행정전문가(일반) (Diversity Guard: people_service)"
+        "수산업교사 → 생산설비관리원 (Diversity Guard: people_service)",
+        "상업교사 → 게임개발프로듀서 (Diversity Guard: people_service)",
+        "교도소장 → 토사석채취관리자 (Diversity Guard: people_service)"
       ],
       "analysis_stage": "job_explore",
       "stage_specific_insights": [
@@ -1106,19 +1127,19 @@
         "관심 분야를 기반으로 추천이 조정되었습니다."
       ],
       "premium_report": {
-        "report_id": "report-session-556-1772869706687",
-        "generated_at": "2026-03-07T07:48:26.687Z",
-        "session_id": "session-556",
+        "report_id": "report-session-574-1772875582790",
+        "generated_at": "2026-03-07T09:26:22.790Z",
+        "session_id": "session-574",
         "engine_version": "v3-rule",
         "overall_status": "partial",
         "sections_completed": 7,
         "sections_total": 8,
-        "_confidence": 0.4222547138624667,
+        "_confidence": 0.429652785917365,
         "_factsCount": 2,
         "_answeredQuestions": 2,
         "_candidatesScored": 100,
         "_appliedRules": 4,
-        "executiveSummary": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 대학학생처장 같은 분야를 시작점으로 고려해보세요.",
+        "executiveSummary": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 군무원 같은 분야를 시작점으로 고려해보세요.",
         "workStyleNarrative": "작업 스타일 분석을 위해 더 많은 정보가 필요합니다.",
         "workStyleMap": {
           "analytical_vs_creative": 0,
@@ -1133,9 +1154,9 @@
         "growthCurveDescription": "성장 곡선 분석을 위해 더 많은 정보가 필요합니다.",
         "stressTriggers": [],
         "lifeVersionStatement": {
-          "oneLiner": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 대학학생처장 같은 분야를 시작점으로 고려해보세요.",
+          "oneLiner": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 군무원 같은 분야를 시작점으로 고려해보세요.",
           "expanded": [
-            "🎯 최적 추천: 대학학생처장"
+            "🎯 최적 추천: 군무원"
           ]
         },
         "expertGuidance": {
@@ -1193,11 +1214,11 @@
             "confidence": 0.6,
             "generated_by": "rule_enhanced"
           },
-          "headline": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 대학학생처장 같은 분야를 시작점으로 고려해보세요.",
+          "headline": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 군무원 같은 분야를 시작점으로 고려해보세요.",
           "top_takeaways": [
-            "🎯 최적 추천: 대학학생처장"
+            "🎯 최적 추천: 군무원"
           ],
-          "recommended_next_step": "대학학생처장에 대해 더 알아보고, 관련 역량을 파악해보세요",
+          "recommended_next_step": "군무원에 대해 더 알아보고, 관련 역량을 파악해보세요",
           "recommendation_rationale": {
             "included_because": [
               "입력하신 관심사와 가치관을 기반으로 적합도가 높은 직업을 추천했습니다."
@@ -1222,7 +1243,7 @@
         "key_hypotheses": {
           "_meta": {
             "status": "success",
-            "confidence": 0.6933333333333334,
+            "confidence": 0.7033333333333333,
             "generated_by": "rule"
           },
           "hypotheses": [
@@ -1289,35 +1310,35 @@
                     "label": "\"helping, organizing, routine\" 관심사"
                   },
                   "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
+                    "key": "analytical",
+                    "value": "65",
+                    "label": "관련 역량: 65/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
                 },
                 {
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "helping,organizing,routine",
-                    "label": "창의적 분야 관심"
+                    "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
+                    "key": "analytical",
+                    "value": "65",
+                    "label": "분석 업무: 65/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
                 }
               ],
               "what_would_change_my_mind": "실제 직업 생활에서 다른 가치가 더 중요해진다면 재평가가 필요합니다"
             },
             {
-              "hypothesis": "대학학생처장 관련 분야가 당신에게 가장 적합한 직업군입니다",
-              "confidence": 0.58,
+              "hypothesis": "군무원 관련 분야가 당신에게 가장 적합한 직업군입니다",
+              "confidence": 0.61,
               "supporting_evidence": [
                 {
                   "user_fact": {
@@ -1377,10 +1398,10 @@
           },
           "recommendations": [
             {
-              "id": "1765283554863505",
-              "name": "대학학생처장",
-              "fit_score": 58,
-              "personal_fit_reason": "대학학생처장은 성장 가능성이 높음, 수입 수준이 높음 직업입니다.",
+              "id": "1765283291483400",
+              "name": "군무원",
+              "fit_score": 61,
+              "personal_fit_reason": "군무원은 워라밸이 좋은 편, 수입 수준이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1444,7 +1465,7 @@
                 }
               ],
               "growth_path_30_days": [
-                "대학학생처장 관련 기초 지식 학습",
+                "군무원 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1456,10 +1477,89 @@
               ]
             },
             {
-              "id": "1765283538435221",
-              "name": "정당고위임원",
-              "fit_score": 56,
-              "personal_fit_reason": "정당고위임원은 수입 수준이 높음, 안정성이 높음 직업입니다.",
+              "id": "1765284739951129",
+              "name": "철망설치원",
+              "fit_score": 60,
+              "personal_fit_reason": "철망설치원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping,organizing,routine",
+                    "label": "\"helping, organizing, routine\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "65",
+                    "label": "관련 역량: 65/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping,organizing,routine",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "65",
+                    "label": "분석 업무: 65/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping,organizing,routine",
+                    "label": "\"helping, organizing, routine\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "55",
+                    "label": "관련 역량: 55/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 13,
+                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 55점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping,organizing,routine",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "55",
+                    "label": "창의성: 55/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 13,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 55점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "철망설치원 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            },
+            {
+              "id": "1765284035936846",
+              "name": "수산업교사",
+              "fit_score": 60,
+              "personal_fit_reason": "수산업교사는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1523,7 +1623,7 @@
                 }
               ],
               "growth_path_30_days": [
-                "정당고위임원 관련 기초 지식 학습",
+                "수산업교사 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1535,105 +1635,11 @@
               ]
             },
             {
-              "id": "1765283596750395",
-              "name": "공동주택관리사무소장",
-              "fit_score": 56,
-              "personal_fit_reason": "공동주택관리사무소장은 수입 수준이 높음, 안정성이 높음 직업입니다.",
+              "id": "1765284035692553",
+              "name": "상업교사",
+              "fit_score": 60,
+              "personal_fit_reason": "상업교사는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
               "evidence_links": [
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping,organizing,routine",
-                    "label": "\"helping, organizing, routine\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping,organizing,routine",
-                    "label": "분석적 업무 관심"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "분석 업무: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping,organizing,routine",
-                    "label": "\"helping, organizing, routine\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "50",
-                    "label": "관련 역량: 50/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping,organizing,routine",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "50",
-                    "label": "창의성: 50/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
-                }
-              ],
-              "growth_path_30_days": [
-                "공동주택관리사무소장 관련 기초 지식 학습",
-                "관련 온라인 강의/자료 탐색",
-                "현직자 이야기 듣기 또는 직업 체험",
-                "필요 역량 파악 및 학습 계획 수립",
-                "작은 프로젝트로 실습 시작"
-              ],
-              "risks": [
-                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
-                "경쟁이 있을 수 있습니다."
-              ]
-            },
-            {
-              "id": "1765283364145434",
-              "name": "재료공학기술자",
-              "fit_score": 56,
-              "personal_fit_reason": "재료공학기술자는 성장 가능성이 높음, 수입 수준이 높음 직업입니다.",
-              "evidence_links": [
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping,organizing,routine",
-                    "label": "\"helping, organizing, routine\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
                 {
                   "user_fact": {
                     "key": "profile.interest.keywords",
@@ -1668,20 +1674,35 @@
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "helping,organizing,routine",
+                    "label": "\"helping, organizing, routine\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping,organizing,routine",
                     "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
                     "key": "analytical",
-                    "value": "60",
-                    "label": "분석 업무: 60/100"
+                    "value": "50",
+                    "label": "분석 업무: 50/100"
                   },
                   "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                  "score_contribution": 12,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 50점입니다"
                 }
               ],
               "growth_path_30_days": [
-                "재료공학기술자 관련 기초 지식 학습",
+                "상업교사 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1693,10 +1714,10 @@
               ]
             },
             {
-              "id": "1765284246757969",
-              "name": "신재생에너지사업관리자",
-              "fit_score": 55,
-              "personal_fit_reason": "신재생에너지사업관리자는 성장 가능성이 높음, 수입 수준이 높음 직업입니다.",
+              "id": "1765283556809753",
+              "name": "교도소장",
+              "fit_score": 58,
+              "personal_fit_reason": "교도소장은 수입 수준이 높음, 안정성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1706,27 +1727,12 @@
                   },
                   "job_attribute": {
                     "key": "analytical",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
                   },
                   "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping,organizing,routine",
-                    "label": "분석적 업무 관심"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "분석 업무: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                  "score_contribution": 12,
+                  "explanation": "\"helping, organizing, routine\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
                 },
                 {
                   "user_fact": {
@@ -1757,10 +1763,25 @@
                   "match_type": "positive",
                   "score_contribution": 12,
                   "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping,organizing,routine",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "50",
+                    "label": "분석 업무: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 50점입니다"
                 }
               ],
               "growth_path_30_days": [
-                "신재생에너지사업관리자 관련 기초 지식 학습",
+                "교도소장 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1781,16 +1802,16 @@
           },
           "recommendations": [
             {
-              "id": "1765284055131130",
-              "name": "체험학습강사",
+              "id": "1765284676925874",
+              "name": "생산설비관리원",
               "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
               "conditions_to_reconsider": [
                 "우선순위가 변경되면 재고려할 수 있습니다"
               ]
             },
             {
-              "id": "176528395388474",
-              "name": "재활용기술자",
+              "id": "1765284832895528",
+              "name": "만두피성형원",
               "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
               "conditions_to_reconsider": [
                 "우선순위가 변경되면 재고려할 수 있습니다"
@@ -1820,7 +1841,7 @@
               "steps": [
                 "핵심 기술 집중 학습 (3개월)",
                 "관련 프로젝트/포트폴리오 구축",
-                "대학학생처장 관련 네트워킹 시작"
+                "군무원 관련 네트워킹 시작"
               ]
             }
           ]
@@ -1855,7 +1876,7 @@
         }
       },
       "confidence": {
-        "score": 0.4222547138624667,
+        "score": 0.429652785917365,
         "level": "기본",
         "description": "더 솔직하게 답해주시면 맞춤 추천이 가능해요"
       },
@@ -1875,20 +1896,20 @@
   },
   "narrativeFactsResponse": {
     "success": true,
-    "session_id": "e2e-test-1772869701661-l765ym",
+    "session_id": "e2e-test-1772875578448-fgpt0s",
     "meta": {
       "served_by": "v3-prod",
       "served_by_region": "APAC",
       "served_by_colo": "KIX",
       "served_by_primary": true,
       "timings": {
-        "sql_duration_ms": 0.6661
+        "sql_duration_ms": 0.2976
       },
-      "duration": 0.6661,
+      "duration": 0.2976,
       "changes": 1,
-      "last_row_id": 430,
+      "last_row_id": 448,
       "changed_db": true,
-      "size_after": 350109696,
+      "size_after": 351686656,
       "rows_read": 8,
       "rows_written": 3,
       "total_attempts": 1
@@ -2081,112 +2102,102 @@
       {
         "rank": 1,
         "jobName": "공공행정사무원(일반)",
-        "fitScore": 85,
+        "fitScore": 86,
         "likeScore": 95,
-        "canScore": 87,
+        "canScore": 88,
         "riskPenalty": 0,
         "bucket": "unknown",
-        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무'와 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다."
+        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무 처리'와 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필요하지 않지만, 성장성 점수가 60/100으로 다소 낮아 장기적인 성장 경로가 제한적일 수 있습니다."
       },
       {
         "rank": 2,
-        "jobName": "공공행정전문가(일반)",
-        "fitScore": 80,
-        "likeScore": 84,
-        "canScore": 86,
+        "jobName": "경영지원관리자",
+        "fitScore": 81,
+        "likeScore": 89,
+        "canScore": 81,
         "riskPenalty": 0,
         "bucket": "unknown",
-        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 공공행정업무에서 의사결정과 실무적 책임이 요구됩니다. [리스크] 다만, 이 직업은 학사 학위가 요구되며, 경력에 따라 진입장벽이 있을 수 있습니다."
+        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정 및 경영지원 업무 기획'과 연결됩니다. [리스크] 다만, 성장성 60/100으로 장기 성장 경로가 제한적일 수 있습니다."
       },
       {
         "rank": 3,
-        "jobName": "공동주택관리사무원",
-        "fitScore": 78,
-        "likeScore": 78,
-        "canScore": 75,
-        "riskPenalty": 0,
+        "jobName": "정부행정관리자(일반)",
+        "fitScore": 80,
+        "likeScore": 95,
+        "canScore": 87,
+        "riskPenalty": 3,
         "bucket": "unknown",
-        "summary": "[좋아할 이유] '조직/관리'에 관심이 많다고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 공동주택 운영 및 관리가 핵심역량으로 연결됩니다. [리스크] 다만, 수입이 50/100으로 낮아 장기적인 재정적 안정성에 대한 우려가 있을 수 있습니다."
+        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무 기획 및 조정'과 직접 연결됩니다. [리스크] 다만, 이 직업은 고위공무원의 지휘 하에 업무를 수행해야 하므로, 상위 직급의 요구에 따라 스트레스를 받을 수 있습니다."
       },
       {
         "rank": 4,
-        "jobName": "감사관리자",
-        "fitScore": 75,
+        "jobName": "공공행정전문가(일반)",
+        "fitScore": 78,
         "likeScore": 89,
-        "canScore": 70,
+        "canScore": 80,
         "riskPenalty": 0,
         "bucket": "unknown",
-        "summary": "[좋아할 이유] '돌봄/봉사'에 관심이 많다고 하셨는데, 이 직업은 안정성 75/100, 워라밸 60/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 아동 및 청소년을 대상으로 하는 상담과 프로그램 개발이 핵심역량으로 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 교대근무가 가능하다는 점에서 불규칙한 근무시간이 우려될 수 있습니다."
+        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '공공행정업무 의사결정'과 연결됩니다. [리스크] 다만, 성장성 60/100으로 장기 성장 경로가 제한적일 수 있습니다."
       },
       {
         "rank": 5,
-        "jobName": "수신사무원",
+        "jobName": "금융위험관리관리자",
         "fitScore": 75,
         "likeScore": 78,
-        "canScore": 76,
-        "riskPenalty": 4,
+        "canScore": 78,
+        "riskPenalty": 0,
         "bucket": "unknown",
-        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 85/100, 워라밸 65/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 고객 상담 및 창구 업무가 핵심역량으로 연결됩니다. [리스크] 다만, 수입이 40/100으로 낮아 장기적인 재정적 안정성에 대한 우려가 있을 수 있습니다."
+        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 수입 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '위험 관리'와 연결됩니다. [리스크] 다만, 이 직업은 금융 관련 지식이 요구됩니다."
       },
       {
         "rank": 6,
-        "jobName": "정부행정관리자(일반)",
+        "jobName": "감사관리자",
         "fitScore": 71,
-        "likeScore": 78,
-        "canScore": 75,
-        "riskPenalty": 3,
+        "likeScore": 73,
+        "canScore": 73,
+        "riskPenalty": 0,
         "bucket": "unknown",
-        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무'와 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다."
+        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '감사업무 지휘 및 감독'과 연결됩니다. [리스크] 다만, 감사업무는 종종 높은 스트레스를 동반할 수 있으며, 팀워크가 요구됩니다."
       },
       {
         "rank": 7,
-        "jobName": "변호사사무원",
-        "fitScore": 71,
-        "likeScore": 73,
-        "canScore": 75,
-        "riskPenalty": 3,
+        "jobName": "수신사무원",
+        "fitScore": 69,
+        "likeScore": 67,
+        "canScore": 71,
+        "riskPenalty": 4,
         "bucket": "unknown",
-        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '분석'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 수입 점수가 50/100으로 낮아 장기적인 보상에 대한 불확실성이 있을 수 있습니다."
+        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 85/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '고객 상담 및 창구 업무'와 연결됩니다. [리스크] 다만, 수입이 40/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다."
       },
       {
         "rank": 8,
-        "jobName": "경영정보시스템개발자",
-        "fitScore": 68,
-        "likeScore": 78,
-        "canScore": 85,
-        "riskPenalty": 10,
+        "jobName": "사회복지사",
+        "fitScore": 67,
+        "likeScore": 89,
+        "canScore": 79,
+        "riskPenalty": 14,
         "bucket": "unknown",
-        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '분석'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 성장성 점수가 80/100으로 높아 장기적인 경로가 긍정적입니다."
+        "summary": "[좋아할 이유] '돌봄/봉사에 관심이 있다'고 하셨는데, 이 직업은 대면 90/100으로 높은 점수를 받고 있으며, 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '상담 및 프로그램 개발'과 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 교대근무가 가능하므로 근무시간이 불규칙할 수 있습니다."
       },
       {
         "rank": 9,
-        "jobName": "교육훈련사무원",
-        "fitScore": 68,
-        "likeScore": 78,
-        "canScore": 77,
-        "riskPenalty": 10,
-        "bucket": "unknown",
-        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '대면'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 수입 점수가 60/100으로 보통 수준입니다."
-      },
-      {
-        "rank": 10,
-        "jobName": "금융기관지점관리사무원",
+        "jobName": "직업능력개발훈련교사",
         "fitScore": 66,
-        "likeScore": 84,
-        "canScore": 69,
-        "riskPenalty": 10,
+        "likeScore": 60,
+        "canScore": 79,
+        "riskPenalty": 3,
         "bucket": "unknown",
-        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '대면'과 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다."
+        "summary": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 75/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '직업훈련 및 교육'과 연결됩니다. [리스크] 다만, 수입이 60/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다."
       }
     ],
     "uxMetrics": null,
-    "processingTimeMs": 82923
+    "processingTimeMs": 45732
   },
   "rawRecommendResponse": {
     "success": true,
     "mode": "recommendation",
-    "session_id": "e2e-test-1772869701661-l765ym",
-    "request_id": 556,
+    "session_id": "e2e-test-1772875578448-fgpt0s",
+    "request_id": 574,
     "recommendations": {
       "top_jobs": [
         {
@@ -2195,230 +2206,14 @@
           "job_description": "공사, 공단 및 정부출연 연구기관, 공공행정기관 등에서 법령과 업무처리 규정에 따라 각종 행정업무를 한다.",
           "slug": "공공행정사무원일반",
           "image_url": "/uploads/jobs/job-공공행정사무원일반.webp",
-          "fit_score": 85,
+          "fit_score": 86,
           "like_score": 95,
-          "can_score": 87,
+          "can_score": 88,
           "feasibility_score": 80,
           "risk_penalty": 0,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무'와 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다.",
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무 처리'와 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필요하지 않지만, 성장성 점수가 60/100으로 다소 낮아 장기적인 성장 경로가 제한적일 수 있습니다.",
           "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량 행정업무가 직접 연결됩니다. 자격증이 필수입니다.",
-          "evidence_quotes": [
-            {
-              "text": "안정을 중시한다",
-              "source": {
-                "step": 2,
-                "questionId": "univ_interest"
-              }
-            }
-          ]
-        },
-        {
-          "job_id": "1765284060519749",
-          "job_name": "공공행정전문가(일반)",
-          "job_description": "정부산하단체 및 공공기관에서 공공행정업무와 관련된 의사결정을 하고 실무적인 책임을 진다.",
-          "slug": "공공행정전문가일반",
-          "image_url": "/uploads/jobs/job-공공행정전문가일반.webp",
-          "fit_score": 80,
-          "like_score": 84,
-          "can_score": 86,
-          "feasibility_score": 85,
-          "risk_penalty": 0,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 공공행정업무에서 의사결정과 실무적 책임이 요구됩니다. [리스크] 다만, 이 직업은 학사 학위가 요구되며, 경력에 따라 진입장벽이 있을 수 있습니다.",
-          "like_reason": "이 직업은 안정성 90/100이고 정시퇴근 환경입니다. 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "'소통력'과 '실행력'이 강점이라고 하셨고, 공공행정업무에서 의사결정이 요구됩니다.",
-          "evidence_quotes": [
-            {
-              "text": "안정을 중시한다",
-              "source": {
-                "step": 2,
-                "questionId": "univ_interest"
-              }
-            }
-          ]
-        },
-        {
-          "job_id": "1765284338322404",
-          "job_name": "공동주택관리사무원",
-          "job_description": "공동주택 및 그 부대시설의 운영관리, 유지보수 및 안전관리 등을 위한 서무 및 회계업무를 수행한다.",
-          "slug": "공동주택관리사무원",
-          "image_url": "/uploads/jobs/job-공동주택관리사무원.webp",
-          "fit_score": 78,
-          "like_score": 78,
-          "can_score": 75,
-          "feasibility_score": 80,
-          "risk_penalty": 0,
-          "rationale": "[좋아할 이유] '조직/관리'에 관심이 많다고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 공동주택 운영 및 관리가 핵심역량으로 연결됩니다. [리스크] 다만, 수입이 50/100으로 낮아 장기적인 재정적 안정성에 대한 우려가 있을 수 있습니다.",
-          "like_reason": "'조직/관리'에 관심이 많다고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경입니다.",
-          "can_reason": "'소통력'과 '실행력'이 강점이라고 하셨고, 공동주택 관리가 핵심역량으로 연결됩니다.",
-          "evidence_quotes": [
-            {
-              "text": "조직/관리",
-              "source": {
-                "step": 2,
-                "questionId": "univ_interest"
-              }
-            }
-          ]
-        },
-        {
-          "job_id": "1765283542208228",
-          "job_name": "감사관리자",
-          "job_description": "정부부처, 공공기관, 기업 등에서 감사업무에 종사하는 사무원들을 지휘·감독한다.",
-          "slug": "감사관리자",
-          "image_url": "/uploads/jobs/job-감사관리자.webp",
-          "fit_score": 75,
-          "like_score": 89,
-          "can_score": 70,
-          "feasibility_score": 75,
-          "risk_penalty": 0,
-          "rationale": "[좋아할 이유] '돌봄/봉사'에 관심이 많다고 하셨는데, 이 직업은 안정성 75/100, 워라밸 60/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 아동 및 청소년을 대상으로 하는 상담과 프로그램 개발이 핵심역량으로 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 교대근무가 가능하다는 점에서 불규칙한 근무시간이 우려될 수 있습니다.",
-          "like_reason": "특징적으로 이 직업은 안정성 75/100이고 정시퇴근 환경입니다.",
-          "can_reason": "'소통력'과 '실행력'이 강점 — 아동 및 청소년 상담이 핵심역량으로 연결됩니다.",
-          "evidence_quotes": [
-            {
-              "text": "돌봄/봉사",
-              "source": {
-                "step": 2,
-                "questionId": "univ_interest"
-              }
-            }
-          ]
-        },
-        {
-          "job_id": "1765284373066487",
-          "job_name": "수신사무원",
-          "job_description": "고객(개인, 기업)의 수신상담, 예수금 및 채권 등의 통장(증서) 발행·해지·상환, 입출금 등 창구일선업무를 수행하고 주요 증서류관리, 전자금융업무관리, 시재관리, 일일마감 등의 업무를 수행한다.",
-          "slug": "수신사무원",
-          "image_url": "/uploads/jobs/job-수신사무원.webp",
-          "fit_score": 75,
-          "like_score": 78,
-          "can_score": 76,
-          "feasibility_score": 80,
-          "risk_penalty": 4,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 85/100, 워라밸 65/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 고객 상담 및 창구 업무가 핵심역량으로 연결됩니다. [리스크] 다만, 수입이 40/100으로 낮아 장기적인 재정적 안정성에 대한 우려가 있을 수 있습니다.",
-          "like_reason": "'안정을 중시한다'고 하셨는데, 이 직업은 안정성 85/100이고 정시퇴근 환경입니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 고객 상담이 핵심역량으로 연결됩니다.",
-          "evidence_quotes": [
-            {
-              "text": "안정을 중시한다",
-              "source": {
-                "step": 2,
-                "questionId": "univ_interest"
-              }
-            }
-          ]
-        },
-        {
-          "job_id": "1765283538830472",
-          "job_name": "정부행정관리자(일반)",
-          "job_description": "고위공무원의 포괄적인 지휘 하에 부처 내 다른 부서 관리자와 의논하여 해당 부서의 행정업무를 기획, 지휘 및 조정하거나 지방관서 기관장으로서 지방관서의 행정업무를 기획, 지휘 및 조정한다.",
-          "slug": "정부행정관리자일반",
-          "image_url": "/uploads/jobs/job-정부행정관리자일반.webp",
-          "fit_score": 71,
-          "like_score": 78,
-          "can_score": 75,
-          "feasibility_score": 70,
-          "risk_penalty": 3,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무'와 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다.",
-          "like_reason": "이 직업은 안정성 90/100이고 정시퇴근 환경이라 워라밸 70/100입니다 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량 행정업무가 직접 부합합니다. 자격증이 필수입니다.",
-          "evidence_quotes": [
-            {
-              "text": "안정을 중시한다",
-              "source": {
-                "step": 2,
-                "questionId": "univ_interest"
-              }
-            }
-          ]
-        },
-        {
-          "job_id": "1765284413083891",
-          "job_name": "변호사사무원",
-          "job_description": "변호사의 지휘하에 소송사건, 비송사건 및 일반법률 사건의 자료를 수집, 조사, 분석하고 관련 서류를 작성하는 등 변호사의 업무를 지원한다.",
-          "slug": "변호사사무원",
-          "image_url": "/uploads/jobs/job-변호사사무원.webp",
-          "fit_score": 71,
-          "like_score": 73,
-          "can_score": 75,
-          "feasibility_score": 80,
-          "risk_penalty": 3,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '분석'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 수입 점수가 50/100으로 낮아 장기적인 보상에 대한 불확실성이 있을 수 있습니다.",
-          "like_reason": "이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 핵심역량인 '분석'이 직접 부합합니다.",
-          "evidence_quotes": [
-            {
-              "text": "안정을 중시한다",
-              "source": {
-                "step": 2,
-                "questionId": "univ_interest"
-              }
-            }
-          ]
-        },
-        {
-          "job_id": "1765283706565555",
-          "job_name": "경영정보시스템개발자",
-          "job_description": "기업의 경영관리에 필요한 정보를 분석하여 해당 사업장에 적합한 시스템솔루션을 구축한다.",
-          "slug": "경영정보시스템개발자",
-          "image_url": "/uploads/jobs/job-경영정보시스템개발자.webp",
-          "fit_score": 68,
-          "like_score": 78,
-          "can_score": 85,
-          "feasibility_score": 80,
-          "risk_penalty": 10,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '분석'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 성장성 점수가 80/100으로 높아 장기적인 경로가 긍정적입니다.",
-          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "'소통력'과 '실행력'이 강점이라고 하셨고, 핵심역량인 '분석'과 '실행'이 직접 연결됩니다.",
-          "evidence_quotes": [
-            {
-              "text": "안정을 중시한다",
-              "source": {
-                "step": 2,
-                "questionId": "univ_interest"
-              }
-            }
-          ]
-        },
-        {
-          "job_id": "1765284254491906",
-          "job_name": "교육훈련사무원",
-          "job_description": "경영목표를 달성하거나 근로자의 능력을 개발하기 위해 교육훈련 프로그램을 기획하고 교육과정을 진행한다.",
-          "slug": "교육훈련사무원",
-          "image_url": "/uploads/jobs/job-교육훈련사무원.webp",
-          "fit_score": 68,
-          "like_score": 78,
-          "can_score": 77,
-          "feasibility_score": 80,
-          "risk_penalty": 10,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '대면'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 수입 점수가 60/100으로 보통 수준입니다.",
-          "like_reason": "특징적으로 이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "'소통력'과 '실행력'이 강점 — 핵심역량인 '대면'과 '실행'이 직접 연결됩니다.",
-          "evidence_quotes": [
-            {
-              "text": "안정을 중시한다",
-              "source": {
-                "step": 2,
-                "questionId": "univ_interest"
-              }
-            }
-          ]
-        },
-        {
-          "job_id": "1765284368255746",
-          "job_name": "금융기관지점관리사무원",
-          "job_description": "지역사업부의 관할하에 있는 지점 및 점포의 운영과 실적을 관리하며 영업점교육을 실시하는 업무를 수행한다.",
-          "slug": "금융기관지점관리사무원",
-          "image_url": "/uploads/jobs/job-금융기관지점관리사무원.webp",
-          "fit_score": 66,
-          "like_score": 84,
-          "can_score": 69,
-          "feasibility_score": 70,
-          "risk_penalty": 10,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '대면'과 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다.",
-          "like_reason": "이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량 대면이 직접 부합합니다. 전문대 학력이 요구됩니다.",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 행정업무 처리와 연결됩니다. 자격증은 필요하지 않습니다.",
           "evidence_quotes": [
             {
               "text": "안정을 중시한다",
@@ -2435,14 +2230,182 @@
           "job_description": "행정 및 경영지원 업무를 기획, 지휘 및 조정하는 업무를 수행한다.",
           "slug": "경영지원관리자",
           "image_url": "/uploads/jobs/job-경영지원관리자.webp",
-          "fit_score": 66,
-          "like_score": 62,
-          "can_score": 60,
+          "fit_score": 81,
+          "like_score": 89,
+          "can_score": 81,
+          "feasibility_score": 80,
+          "risk_penalty": 0,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정 및 경영지원 업무 기획'과 연결됩니다. [리스크] 다만, 성장성 60/100으로 장기 성장 경로가 제한적일 수 있습니다.",
+          "like_reason": "'안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 핵심역량인 '행정 및 경영지원 업무 기획'과 연결됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "안정을 중시한다",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283538830472",
+          "job_name": "정부행정관리자(일반)",
+          "job_description": "고위공무원의 포괄적인 지휘 하에 부처 내 다른 부서 관리자와 의논하여 해당 부서의 행정업무를 기획, 지휘 및 조정하거나 지방관서 기관장으로서 지방관서의 행정업무를 기획, 지휘 및 조정한다.",
+          "slug": "정부행정관리자일반",
+          "image_url": "/uploads/jobs/job-정부행정관리자일반.webp",
+          "fit_score": 80,
+          "like_score": 95,
+          "can_score": 87,
+          "feasibility_score": 80,
+          "risk_penalty": 3,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무 기획 및 조정'과 직접 연결됩니다. [리스크] 다만, 이 직업은 고위공무원의 지휘 하에 업무를 수행해야 하므로, 상위 직급의 요구에 따라 스트레스를 받을 수 있습니다.",
+          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 행정업무 기획 및 조정과 직접 연결됩니다. 학사 학력 요구",
+          "evidence_quotes": [
+            {
+              "text": "안정을 중시한다",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765284060519749",
+          "job_name": "공공행정전문가(일반)",
+          "job_description": "정부산하단체 및 공공기관에서 공공행정업무와 관련된 의사결정을 하고 실무적인 책임을 진다.",
+          "slug": "공공행정전문가일반",
+          "image_url": "/uploads/jobs/job-공공행정전문가일반.webp",
+          "fit_score": 78,
+          "like_score": 89,
+          "can_score": 80,
+          "feasibility_score": 80,
+          "risk_penalty": 0,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '공공행정업무 의사결정'과 연결됩니다. [리스크] 다만, 성장성 60/100으로 장기 성장 경로가 제한적일 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 안정성 90/100이고 정시퇴근 환경입니다.",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "안정을 중시한다",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283558539723",
+          "job_name": "금융위험관리관리자",
+          "job_description": "금융회사의 이익을 보전하고 손실을 방지하기 위해 금융위험 관리계획을 세우고 위험관리업무에 종사하는 종업원들의 활동을 지휘·감독한다.",
+          "slug": "금융위험관리관리자",
+          "image_url": "/uploads/jobs/job-금융위험관리관리자.webp",
+          "fit_score": 75,
+          "like_score": 78,
+          "can_score": 78,
           "feasibility_score": 70,
           "risk_penalty": 0,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 60/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 수입 점수가 70/100으로 보통 수준입니다.",
-          "like_reason": "이 직업은 안정성 60/100이고 정시퇴근 환경이라 워라밸 70/100입니다 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 핵심역량인 '실행'이 직접 부합합니다.",
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 수입 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '위험 관리'와 연결됩니다. [리스크] 다만, 이 직업은 금융 관련 지식이 요구됩니다.",
+          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 위험 관리가 연결됩니다.",
+          "evidence_quotes": [
+            {
+              "text": "안정을 중시한다",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283542208228",
+          "job_name": "감사관리자",
+          "job_description": "정부부처, 공공기관, 기업 등에서 감사업무에 종사하는 사무원들을 지휘·감독한다.",
+          "slug": "감사관리자",
+          "image_url": "/uploads/jobs/job-감사관리자.webp",
+          "fit_score": 71,
+          "like_score": 73,
+          "can_score": 73,
+          "feasibility_score": 70,
+          "risk_penalty": 0,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '감사업무 지휘 및 감독'과 연결됩니다. [리스크] 다만, 감사업무는 종종 높은 스트레스를 동반할 수 있으며, 팀워크가 요구됩니다.",
+          "like_reason": "특징적으로 이 직업은 안정성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "안정을 중시한다",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765284373066487",
+          "job_name": "수신사무원",
+          "job_description": "고객(개인, 기업)의 수신상담, 예수금 및 채권 등의 통장(증서) 발행·해지·상환, 입출금 등 창구일선업무를 수행하고 주요 증서류관리, 전자금융업무관리, 시재관리, 일일마감 등의 업무를 수행한다.",
+          "slug": "수신사무원",
+          "image_url": "/uploads/jobs/job-수신사무원.webp",
+          "fit_score": 69,
+          "like_score": 67,
+          "can_score": 71,
+          "feasibility_score": 70,
+          "risk_penalty": 4,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 85/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '고객 상담 및 창구 업무'와 연결됩니다. [리스크] 다만, 수입이 40/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다.",
+          "like_reason": "이 직업은 안정성 85/100이고 정시퇴근 환경입니다. 안정을 중시한다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '고객 상담 및 창구 업무'은(는) 사용자의 '소통력' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "안정을 중시한다",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283321394772",
+          "job_name": "사회복지사",
+          "job_description": "학교, 병원, 수용시설, 비수용시설, 국가기관 등에서 아동, 청소년, 장애인, 노인, 여성 등을 대상으로 그들의 재활과 사회복귀를 돕기 위해 사정, 진단, 상담, 프로그램 개발, 기획, 실시, 평가, 지원, 교육 등의 업무를 수행한다.",
+          "slug": "사회복지사",
+          "image_url": "/uploads/jobs/job-사회복지사.webp",
+          "fit_score": 67,
+          "like_score": 89,
+          "can_score": 79,
+          "feasibility_score": 75,
+          "risk_penalty": 14,
+          "rationale": "[좋아할 이유] '돌봄/봉사에 관심이 있다'고 하셨는데, 이 직업은 대면 90/100으로 높은 점수를 받고 있으며, 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '상담 및 프로그램 개발'과 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 교대근무가 가능하므로 근무시간이 불규칙할 수 있습니다.",
+          "like_reason": "이 직업은 대면 90/100으로 높은 점수를 받고 있습니다 돌봄/봉사에 관심이 있다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '상담 및 프로그램 개발'은(는) 사용자의 '소통력이' 강점과 부합합니다",
+          "evidence_quotes": [
+            {
+              "text": "돌봄/봉사에 관심이 있다",
+              "source": {
+                "step": 2,
+                "questionId": "univ_interest"
+              }
+            }
+          ]
+        },
+        {
+          "job_id": "1765283378205751",
+          "job_name": "직업능력개발훈련교사",
+          "job_description": "직업능력개발훈련교사는 직업전문학교나 공공직업훈련원 등에서 사람들에게 직업에 필요한 기능과 지식을 가르칩니다.",
+          "slug": "직업능력개발훈련교사",
+          "image_url": "/uploads/jobs/job-직업능력개발훈련교사.webp",
+          "fit_score": 66,
+          "like_score": 60,
+          "can_score": 79,
+          "feasibility_score": 70,
+          "risk_penalty": 3,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 75/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '직업훈련 및 교육'과 연결됩니다. [리스크] 다만, 수입이 60/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다.",
+          "like_reason": "'안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 핵심역량인 '직업훈련 및 교육'과 연결됩니다.",
           "evidence_quotes": [
             {
               "text": "안정을 중시한다",
@@ -2456,46 +2419,46 @@
       ],
       "like_top10": [
         {
+          "job_id": "1765283538830472",
+          "job_name": "정부행정관리자(일반)",
+          "job_description": "고위공무원의 포괄적인 지휘 하에 부처 내 다른 부서 관리자와 의논하여 해당 부서의 행정업무를 기획, 지휘 및 조정하거나 지방관서 기관장으로서 지방관서의 행정업무를 기획, 지휘 및 조정한다.",
+          "slug": "정부행정관리자일반",
+          "image_url": "/uploads/jobs/job-정부행정관리자일반.webp",
+          "fit_score": 80,
+          "like_score": 95,
+          "can_score": 87,
+          "feasibility_score": 80,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무 기획 및 조정'과 직접 연결됩니다. [리스크] 다만, 이 직업은 고위공무원의 지휘 하에 업무를 수행해야 하므로, 상위 직급의 요구에 따라 스트레스를 받을 수 있습니다.",
+          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 행정업무 기획 및 조정과 직접 연결됩니다. 학사 학력 요구"
+        },
+        {
           "job_id": "1765284236608752",
           "job_name": "공공행정사무원(일반)",
           "job_description": "공사, 공단 및 정부출연 연구기관, 공공행정기관 등에서 법령과 업무처리 규정에 따라 각종 행정업무를 한다.",
           "slug": "공공행정사무원일반",
           "image_url": "/uploads/jobs/job-공공행정사무원일반.webp",
-          "fit_score": 85,
+          "fit_score": 86,
           "like_score": 95,
-          "can_score": 87,
+          "can_score": 88,
           "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무'와 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다.",
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무 처리'와 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필요하지 않지만, 성장성 점수가 60/100으로 다소 낮아 장기적인 성장 경로가 제한적일 수 있습니다.",
           "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량 행정업무가 직접 연결됩니다. 자격증이 필수입니다."
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 행정업무 처리와 연결됩니다. 자격증은 필요하지 않습니다."
         },
         {
-          "job_id": "1765283542208228",
-          "job_name": "감사관리자",
-          "job_description": "정부부처, 공공기관, 기업 등에서 감사업무에 종사하는 사무원들을 지휘·감독한다.",
-          "slug": "감사관리자",
-          "image_url": "/uploads/jobs/job-감사관리자.webp",
-          "fit_score": 75,
+          "job_id": "1765283321394772",
+          "job_name": "사회복지사",
+          "job_description": "학교, 병원, 수용시설, 비수용시설, 국가기관 등에서 아동, 청소년, 장애인, 노인, 여성 등을 대상으로 그들의 재활과 사회복귀를 돕기 위해 사정, 진단, 상담, 프로그램 개발, 기획, 실시, 평가, 지원, 교육 등의 업무를 수행한다.",
+          "slug": "사회복지사",
+          "image_url": "/uploads/jobs/job-사회복지사.webp",
+          "fit_score": 67,
           "like_score": 89,
-          "can_score": 70,
+          "can_score": 79,
           "feasibility_score": 75,
-          "rationale": "[좋아할 이유] '돌봄/봉사'에 관심이 많다고 하셨는데, 이 직업은 안정성 75/100, 워라밸 60/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 아동 및 청소년을 대상으로 하는 상담과 프로그램 개발이 핵심역량으로 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 교대근무가 가능하다는 점에서 불규칙한 근무시간이 우려될 수 있습니다.",
-          "like_reason": "특징적으로 이 직업은 안정성 75/100이고 정시퇴근 환경입니다.",
-          "can_reason": "'소통력'과 '실행력'이 강점 — 아동 및 청소년 상담이 핵심역량으로 연결됩니다."
-        },
-        {
-          "job_id": "1765284368255746",
-          "job_name": "금융기관지점관리사무원",
-          "job_description": "지역사업부의 관할하에 있는 지점 및 점포의 운영과 실적을 관리하며 영업점교육을 실시하는 업무를 수행한다.",
-          "slug": "금융기관지점관리사무원",
-          "image_url": "/uploads/jobs/job-금융기관지점관리사무원.webp",
-          "fit_score": 66,
-          "like_score": 84,
-          "can_score": 69,
-          "feasibility_score": 70,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '대면'과 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다.",
-          "like_reason": "이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량 대면이 직접 부합합니다. 전문대 학력이 요구됩니다."
+          "rationale": "[좋아할 이유] '돌봄/봉사에 관심이 있다'고 하셨는데, 이 직업은 대면 90/100으로 높은 점수를 받고 있으며, 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '상담 및 프로그램 개발'과 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 교대근무가 가능하므로 근무시간이 불규칙할 수 있습니다.",
+          "like_reason": "이 직업은 대면 90/100으로 높은 점수를 받고 있습니다 돌봄/봉사에 관심이 있다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '상담 및 프로그램 개발'은(는) 사용자의 '소통력이' 강점과 부합합니다"
         },
         {
           "job_id": "1765284060519749",
@@ -2503,55 +2466,41 @@
           "job_description": "정부산하단체 및 공공기관에서 공공행정업무와 관련된 의사결정을 하고 실무적인 책임을 진다.",
           "slug": "공공행정전문가일반",
           "image_url": "/uploads/jobs/job-공공행정전문가일반.webp",
-          "fit_score": 80,
-          "like_score": 84,
-          "can_score": 86,
-          "feasibility_score": 85,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 공공행정업무에서 의사결정과 실무적 책임이 요구됩니다. [리스크] 다만, 이 직업은 학사 학위가 요구되며, 경력에 따라 진입장벽이 있을 수 있습니다.",
-          "like_reason": "이 직업은 안정성 90/100이고 정시퇴근 환경입니다. 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "'소통력'과 '실행력'이 강점이라고 하셨고, 공공행정업무에서 의사결정이 요구됩니다."
-        },
-        {
-          "job_id": "1765284338322404",
-          "job_name": "공동주택관리사무원",
-          "job_description": "공동주택 및 그 부대시설의 운영관리, 유지보수 및 안전관리 등을 위한 서무 및 회계업무를 수행한다.",
-          "slug": "공동주택관리사무원",
-          "image_url": "/uploads/jobs/job-공동주택관리사무원.webp",
           "fit_score": 78,
-          "like_score": 78,
-          "can_score": 75,
+          "like_score": 89,
+          "can_score": 80,
           "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '조직/관리'에 관심이 많다고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 공동주택 운영 및 관리가 핵심역량으로 연결됩니다. [리스크] 다만, 수입이 50/100으로 낮아 장기적인 재정적 안정성에 대한 우려가 있을 수 있습니다.",
-          "like_reason": "'조직/관리'에 관심이 많다고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경입니다.",
-          "can_reason": "'소통력'과 '실행력'이 강점이라고 하셨고, 공동주택 관리가 핵심역량으로 연결됩니다."
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '공공행정업무 의사결정'과 연결됩니다. [리스크] 다만, 성장성 60/100으로 장기 성장 경로가 제한적일 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 안정성 90/100이고 정시퇴근 환경입니다.",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다"
         },
         {
-          "job_id": "1765283538830472",
-          "job_name": "정부행정관리자(일반)",
-          "job_description": "고위공무원의 포괄적인 지휘 하에 부처 내 다른 부서 관리자와 의논하여 해당 부서의 행정업무를 기획, 지휘 및 조정하거나 지방관서 기관장으로서 지방관서의 행정업무를 기획, 지휘 및 조정한다.",
-          "slug": "정부행정관리자일반",
-          "image_url": "/uploads/jobs/job-정부행정관리자일반.webp",
-          "fit_score": 71,
-          "like_score": 78,
-          "can_score": 75,
-          "feasibility_score": 70,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무'와 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다.",
-          "like_reason": "이 직업은 안정성 90/100이고 정시퇴근 환경이라 워라밸 70/100입니다 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량 행정업무가 직접 부합합니다. 자격증이 필수입니다."
+          "job_id": "1765283407346795",
+          "job_name": "경영지원관리자",
+          "job_description": "행정 및 경영지원 업무를 기획, 지휘 및 조정하는 업무를 수행한다.",
+          "slug": "경영지원관리자",
+          "image_url": "/uploads/jobs/job-경영지원관리자.webp",
+          "fit_score": 81,
+          "like_score": 89,
+          "can_score": 81,
+          "feasibility_score": 80,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정 및 경영지원 업무 기획'과 연결됩니다. [리스크] 다만, 성장성 60/100으로 장기 성장 경로가 제한적일 수 있습니다.",
+          "like_reason": "'안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 핵심역량인 '행정 및 경영지원 업무 기획'과 연결됩니다."
         },
         {
-          "job_id": "1765284373066487",
-          "job_name": "수신사무원",
-          "job_description": "고객(개인, 기업)의 수신상담, 예수금 및 채권 등의 통장(증서) 발행·해지·상환, 입출금 등 창구일선업무를 수행하고 주요 증서류관리, 전자금융업무관리, 시재관리, 일일마감 등의 업무를 수행한다.",
-          "slug": "수신사무원",
-          "image_url": "/uploads/jobs/job-수신사무원.webp",
+          "job_id": "1765283558539723",
+          "job_name": "금융위험관리관리자",
+          "job_description": "금융회사의 이익을 보전하고 손실을 방지하기 위해 금융위험 관리계획을 세우고 위험관리업무에 종사하는 종업원들의 활동을 지휘·감독한다.",
+          "slug": "금융위험관리관리자",
+          "image_url": "/uploads/jobs/job-금융위험관리관리자.webp",
           "fit_score": 75,
           "like_score": 78,
-          "can_score": 76,
-          "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 85/100, 워라밸 65/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 고객 상담 및 창구 업무가 핵심역량으로 연결됩니다. [리스크] 다만, 수입이 40/100으로 낮아 장기적인 재정적 안정성에 대한 우려가 있을 수 있습니다.",
-          "like_reason": "'안정을 중시한다'고 하셨는데, 이 직업은 안정성 85/100이고 정시퇴근 환경입니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 고객 상담이 핵심역량으로 연결됩니다."
+          "can_score": 78,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 수입 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '위험 관리'와 연결됩니다. [리스크] 다만, 이 직업은 금융 관련 지식이 요구됩니다.",
+          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 위험 관리가 연결됩니다."
         },
         {
           "job_id": "1765284254491906",
@@ -2559,27 +2508,41 @@
           "job_description": "경영목표를 달성하거나 근로자의 능력을 개발하기 위해 교육훈련 프로그램을 기획하고 교육과정을 진행한다.",
           "slug": "교육훈련사무원",
           "image_url": "/uploads/jobs/job-교육훈련사무원.webp",
-          "fit_score": 68,
-          "like_score": 78,
-          "can_score": 77,
-          "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '대면'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 수입 점수가 60/100으로 보통 수준입니다.",
-          "like_reason": "특징적으로 이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "'소통력'과 '실행력'이 강점 — 핵심역량인 '대면'과 '실행'이 직접 연결됩니다."
+          "fit_score": 64,
+          "like_score": 73,
+          "can_score": 72,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '조직/관리 관심이 있다'고 하셨는데, 이 직업은 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '교육훈련 프로그램 기획'과 연결됩니다. [리스크] 다만, 이 직업은 혼자 깊이 있는 업무가 많아 고립감을 느낄 수 있습니다.",
+          "like_reason": "이 직업은 워라밸 70/100으로 높습니다 조직/관리 관심이 있다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '교육훈련 프로그램 기획'은(는) 사용자의 '소통력이' 강점과 부합합니다"
         },
         {
-          "job_id": "1765283706565555",
-          "job_name": "경영정보시스템개발자",
-          "job_description": "기업의 경영관리에 필요한 정보를 분석하여 해당 사업장에 적합한 시스템솔루션을 구축한다.",
-          "slug": "경영정보시스템개발자",
-          "image_url": "/uploads/jobs/job-경영정보시스템개발자.webp",
-          "fit_score": 68,
-          "like_score": 78,
-          "can_score": 85,
-          "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '분석'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 성장성 점수가 80/100으로 높아 장기적인 경로가 긍정적입니다.",
-          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "'소통력'과 '실행력'이 강점이라고 하셨고, 핵심역량인 '분석'과 '실행'이 직접 연결됩니다."
+          "job_id": "1765283542208228",
+          "job_name": "감사관리자",
+          "job_description": "정부부처, 공공기관, 기업 등에서 감사업무에 종사하는 사무원들을 지휘·감독한다.",
+          "slug": "감사관리자",
+          "image_url": "/uploads/jobs/job-감사관리자.webp",
+          "fit_score": 71,
+          "like_score": 73,
+          "can_score": 73,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '감사업무 지휘 및 감독'과 연결됩니다. [리스크] 다만, 감사업무는 종종 높은 스트레스를 동반할 수 있으며, 팀워크가 요구됩니다.",
+          "like_reason": "특징적으로 이 직업은 안정성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다"
+        },
+        {
+          "job_id": "1765284413083891",
+          "job_name": "변호사사무원",
+          "job_description": "변호사의 지휘하에 소송사건, 비송사건 및 일반법률 사건의 자료를 수집, 조사, 분석하고 관련 서류를 작성하는 등 변호사의 업무를 지원한다.",
+          "slug": "변호사사무원",
+          "image_url": "/uploads/jobs/job-변호사사무원.webp",
+          "fit_score": 65,
+          "like_score": 67,
+          "can_score": 65,
+          "feasibility_score": 65,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '자료 수집 및 분석'과 연결됩니다. [리스크] 다만, 이 직업은 혼자 깊이 있는 업무가 많아 고립감을 느낄 수 있습니다.",
+          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경입니다",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 자료 수집 및 분석과 연결됩니다. 학사 학력 요구"
         },
         {
           "job_id": "1765284017598599",
@@ -2587,13 +2550,13 @@
           "job_description": "응급환자의 상태를 전화상으로 파악하여 적절한 조치를 취하고 담당 지역의 의료자원에 대한 정보를 수집·관리한다.",
           "slug": "응급구조전문상담원",
           "image_url": "/uploads/jobs/job-응급구조전문상담원.webp",
-          "fit_score": 42,
-          "like_score": 60,
-          "can_score": 53,
-          "feasibility_score": 50,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 60/100으로 보통입니다. [잘할 이유] '소통력'이 강점이라고 하셨지만, 이 직업의 핵심역량인 '대면'과는 연결이 약합니다. [리스크] 다만, 이 직업은 주1-2회 야근과 교대근무가 필수이며, 자격증이 우대되어 진입장벽이 높습니다.",
-          "like_reason": "'안정을 중시한다고 하셨는데, 이 직업은 안정성 60/100입니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨지만, 이 직업의 핵심역량인 '대면'과는 연결이 약합니다."
+          "fit_score": 50,
+          "like_score": 66,
+          "can_score": 64,
+          "feasibility_score": 55,
+          "rationale": "[좋아할 이유] '안정'과 '수입'을 중시한다고 하셨는데, 이 직업은 안정성 60/100이지만 워라밸이 낮습니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '대면'과 연결됩니다. [리스크] 다만, 이 직업은 주1-2회 야근과 교대 근무가 필요해 시간 압박이 클 수 있습니다.",
+          "like_reason": "'안정'과 '수입'을 중시한다고 하셨는데, 이 직업은 안정성 60/100이지만 워라밸이 낮습니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 핵심역량인 '대면'과 연결됩니다."
         }
       ],
       "can_top10": [
@@ -2607,37 +2570,9 @@
           "like_score": 45,
           "can_score": 95,
           "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 95/100, 수입 85/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '법률 검토 및 판결'과 직접 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 법학 학사 학위가 요구됩니다.",
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 95/100, 수입 85/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '법률 검토 및 판결'과 직접 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며(자격증필수), 법률 지식이 요구됩니다.",
           "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 95/100이고 정시퇴근 환경입니다",
           "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 법률 검토가 직접 연결됩니다. 자격증이 필수입니다."
-        },
-        {
-          "job_id": "1765283706565555",
-          "job_name": "경영정보시스템개발자",
-          "job_description": "기업의 경영관리에 필요한 정보를 분석하여 해당 사업장에 적합한 시스템솔루션을 구축한다.",
-          "slug": "경영정보시스템개발자",
-          "image_url": "/uploads/jobs/job-경영정보시스템개발자.webp",
-          "fit_score": 68,
-          "like_score": 78,
-          "can_score": 85,
-          "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '분석'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 성장성 점수가 80/100으로 높아 장기적인 경로가 긍정적입니다.",
-          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "'소통력'과 '실행력'이 강점이라고 하셨고, 핵심역량인 '분석'과 '실행'이 직접 연결됩니다."
-        },
-        {
-          "job_id": "1765284060519749",
-          "job_name": "공공행정전문가(일반)",
-          "job_description": "정부산하단체 및 공공기관에서 공공행정업무와 관련된 의사결정을 하고 실무적인 책임을 진다.",
-          "slug": "공공행정전문가일반",
-          "image_url": "/uploads/jobs/job-공공행정전문가일반.webp",
-          "fit_score": 80,
-          "like_score": 84,
-          "can_score": 86,
-          "feasibility_score": 85,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 공공행정업무에서 의사결정과 실무적 책임이 요구됩니다. [리스크] 다만, 이 직업은 학사 학위가 요구되며, 경력에 따라 진입장벽이 있을 수 있습니다.",
-          "like_reason": "이 직업은 안정성 90/100이고 정시퇴근 환경입니다. 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "'소통력'과 '실행력'이 강점이라고 하셨고, 공공행정업무에서 의사결정이 요구됩니다."
         },
         {
           "job_id": "1765284236608752",
@@ -2645,13 +2580,27 @@
           "job_description": "공사, 공단 및 정부출연 연구기관, 공공행정기관 등에서 법령과 업무처리 규정에 따라 각종 행정업무를 한다.",
           "slug": "공공행정사무원일반",
           "image_url": "/uploads/jobs/job-공공행정사무원일반.webp",
-          "fit_score": 85,
+          "fit_score": 86,
+          "like_score": 95,
+          "can_score": 88,
+          "feasibility_score": 80,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무 처리'와 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필요하지 않지만, 성장성 점수가 60/100으로 다소 낮아 장기적인 성장 경로가 제한적일 수 있습니다.",
+          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 행정업무 처리와 연결됩니다. 자격증은 필요하지 않습니다."
+        },
+        {
+          "job_id": "1765283538830472",
+          "job_name": "정부행정관리자(일반)",
+          "job_description": "고위공무원의 포괄적인 지휘 하에 부처 내 다른 부서 관리자와 의논하여 해당 부서의 행정업무를 기획, 지휘 및 조정하거나 지방관서 기관장으로서 지방관서의 행정업무를 기획, 지휘 및 조정한다.",
+          "slug": "정부행정관리자일반",
+          "image_url": "/uploads/jobs/job-정부행정관리자일반.webp",
+          "fit_score": 80,
           "like_score": 95,
           "can_score": 87,
           "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무'와 연결됩니다. [리스크] 다만, 성장성 점수가 60/100으로 낮아 장기적인 경로가 제한적일 수 있습니다.",
-          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량 행정업무가 직접 연결됩니다. 자격증이 필수입니다."
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정업무 기획 및 조정'과 직접 연결됩니다. [리스크] 다만, 이 직업은 고위공무원의 지휘 하에 업무를 수행해야 하므로, 상위 직급의 요구에 따라 스트레스를 받을 수 있습니다.",
+          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 행정업무 기획 및 조정과 직접 연결됩니다. 학사 학력 요구"
         },
         {
           "job_id": "1765284060769120",
@@ -2662,88 +2611,102 @@
           "fit_score": 55,
           "like_score": 45,
           "can_score": 78,
-          "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '팀워크'와 직접 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며(자격증필수), 성장성 점수가 80/100으로 높아 장기적인 경로가 긍정적입니다.",
-          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량 팀워크가 직접 연결됩니다. 자격증이 필수입니다."
-        },
-        {
-          "job_id": "1765284413083891",
-          "job_name": "변호사사무원",
-          "job_description": "변호사의 지휘하에 소송사건, 비송사건 및 일반법률 사건의 자료를 수집, 조사, 분석하고 관련 서류를 작성하는 등 변호사의 업무를 지원한다.",
-          "slug": "변호사사무원",
-          "image_url": "/uploads/jobs/job-변호사사무원.webp",
-          "fit_score": 71,
-          "like_score": 73,
-          "can_score": 75,
-          "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '분석'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 수입 점수가 50/100으로 낮아 장기적인 보상에 대한 불확실성이 있을 수 있습니다.",
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '보건위생계획 수립'과 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 성장성 점수가 80/100으로 높지만, 불확실한 상황이 발생할 수 있습니다.",
           "like_reason": "이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다 안정을 중시한다 성향과 부합합니다",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 핵심역량인 '분석'이 직접 부합합니다."
+          "can_reason": "이 직업의 핵심역량 '보건위생계획 수립'은(는) 사용자의 '소통력이' 강점과 부합합니다"
         },
         {
-          "job_id": "1765284254491906",
-          "job_name": "교육훈련사무원",
-          "job_description": "경영목표를 달성하거나 근로자의 능력을 개발하기 위해 교육훈련 프로그램을 기획하고 교육과정을 진행한다.",
-          "slug": "교육훈련사무원",
-          "image_url": "/uploads/jobs/job-교육훈련사무원.webp",
-          "fit_score": 68,
-          "like_score": 78,
-          "can_score": 77,
-          "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '대면'과 '실행'이 직접 연결됩니다. [리스크] 다만, 이 직업은 학사 학력이 요구되며, 수입 점수가 60/100으로 보통 수준입니다.",
-          "like_reason": "특징적으로 이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 70/100입니다",
-          "can_reason": "'소통력'과 '실행력'이 강점 — 핵심역량인 '대면'과 '실행'이 직접 연결됩니다."
+          "job_id": "1765283378205751",
+          "job_name": "직업능력개발훈련교사",
+          "job_description": "직업능력개발훈련교사는 직업전문학교나 공공직업훈련원 등에서 사람들에게 직업에 필요한 기능과 지식을 가르칩니다.",
+          "slug": "직업능력개발훈련교사",
+          "image_url": "/uploads/jobs/job-직업능력개발훈련교사.webp",
+          "fit_score": 66,
+          "like_score": 60,
+          "can_score": 79,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 75/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '직업훈련 및 교육'과 연결됩니다. [리스크] 다만, 수입이 60/100으로 낮아 경제적 안정성에 대한 우려가 있을 수 있습니다.",
+          "like_reason": "'안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 핵심역량인 '직업훈련 및 교육'과 연결됩니다."
         },
         {
-          "job_id": "1765284373066487",
-          "job_name": "수신사무원",
-          "job_description": "고객(개인, 기업)의 수신상담, 예수금 및 채권 등의 통장(증서) 발행·해지·상환, 입출금 등 창구일선업무를 수행하고 주요 증서류관리, 전자금융업무관리, 시재관리, 일일마감 등의 업무를 수행한다.",
-          "slug": "수신사무원",
-          "image_url": "/uploads/jobs/job-수신사무원.webp",
+          "job_id": "1765283558539723",
+          "job_name": "금융위험관리관리자",
+          "job_description": "금융회사의 이익을 보전하고 손실을 방지하기 위해 금융위험 관리계획을 세우고 위험관리업무에 종사하는 종업원들의 활동을 지휘·감독한다.",
+          "slug": "금융위험관리관리자",
+          "image_url": "/uploads/jobs/job-금융위험관리관리자.webp",
           "fit_score": 75,
           "like_score": 78,
-          "can_score": 76,
-          "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 85/100, 워라밸 65/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 고객 상담 및 창구 업무가 핵심역량으로 연결됩니다. [리스크] 다만, 수입이 40/100으로 낮아 장기적인 재정적 안정성에 대한 우려가 있을 수 있습니다.",
-          "like_reason": "'안정을 중시한다'고 하셨는데, 이 직업은 안정성 85/100이고 정시퇴근 환경입니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 고객 상담이 핵심역량으로 연결됩니다."
+          "can_score": 78,
+          "feasibility_score": 70,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 수입 80/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '위험 관리'와 연결됩니다. [리스크] 다만, 이 직업은 금융 관련 지식이 요구됩니다.",
+          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경입니다",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 위험 관리가 연결됩니다."
         },
         {
-          "job_id": "1765284338322404",
-          "job_name": "공동주택관리사무원",
-          "job_description": "공동주택 및 그 부대시설의 운영관리, 유지보수 및 안전관리 등을 위한 서무 및 회계업무를 수행한다.",
-          "slug": "공동주택관리사무원",
-          "image_url": "/uploads/jobs/job-공동주택관리사무원.webp",
+          "job_id": "1765283407346795",
+          "job_name": "경영지원관리자",
+          "job_description": "행정 및 경영지원 업무를 기획, 지휘 및 조정하는 업무를 수행한다.",
+          "slug": "경영지원관리자",
+          "image_url": "/uploads/jobs/job-경영지원관리자.webp",
+          "fit_score": 81,
+          "like_score": 89,
+          "can_score": 81,
+          "feasibility_score": 80,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '행정 및 경영지원 업무 기획'과 연결됩니다. [리스크] 다만, 성장성 60/100으로 장기 성장 경로가 제한적일 수 있습니다.",
+          "like_reason": "'안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 핵심역량인 '행정 및 경영지원 업무 기획'과 연결됩니다."
+        },
+        {
+          "job_id": "1765284060519749",
+          "job_name": "공공행정전문가(일반)",
+          "job_description": "정부산하단체 및 공공기관에서 공공행정업무와 관련된 의사결정을 하고 실무적인 책임을 진다.",
+          "slug": "공공행정전문가일반",
+          "image_url": "/uploads/jobs/job-공공행정전문가일반.webp",
           "fit_score": 78,
-          "like_score": 78,
-          "can_score": 75,
+          "like_score": 89,
+          "can_score": 80,
           "feasibility_score": 80,
-          "rationale": "[좋아할 이유] '조직/관리'에 관심이 많다고 하셨는데, 이 직업은 안정성 80/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'과 '실행력'이 강점이라고 하셨고, 공동주택 운영 및 관리가 핵심역량으로 연결됩니다. [리스크] 다만, 수입이 50/100으로 낮아 장기적인 재정적 안정성에 대한 우려가 있을 수 있습니다.",
-          "like_reason": "'조직/관리'에 관심이 많다고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경입니다.",
-          "can_reason": "'소통력'과 '실행력'이 강점이라고 하셨고, 공동주택 관리가 핵심역량으로 연결됩니다."
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 90/100, 워라밸 70/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '공공행정업무 의사결정'과 연결됩니다. [리스크] 다만, 성장성 60/100으로 장기 성장 경로가 제한적일 수 있습니다.",
+          "like_reason": "특징적으로 이 직업은 안정성 90/100이고 정시퇴근 환경입니다.",
+          "can_reason": "사용자의 역량 프로필이 이 직업의 요구사항과 부합합니다"
         },
         {
-          "job_id": "1765284017598599",
-          "job_name": "응급구조전문상담원",
-          "job_description": "응급환자의 상태를 전화상으로 파악하여 적절한 조치를 취하고 담당 지역의 의료자원에 대한 정보를 수집·관리한다.",
-          "slug": "응급구조전문상담원",
-          "image_url": "/uploads/jobs/job-응급구조전문상담원.webp",
-          "fit_score": 42,
-          "like_score": 60,
-          "can_score": 53,
-          "feasibility_score": 50,
-          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 60/100으로 보통입니다. [잘할 이유] '소통력'이 강점이라고 하셨지만, 이 직업의 핵심역량인 '대면'과는 연결이 약합니다. [리스크] 다만, 이 직업은 주1-2회 야근과 교대근무가 필수이며, 자격증이 우대되어 진입장벽이 높습니다.",
-          "like_reason": "'안정을 중시한다고 하셨는데, 이 직업은 안정성 60/100입니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨지만, 이 직업의 핵심역량인 '대면'과는 연결이 약합니다."
+          "job_id": "1765283321394772",
+          "job_name": "사회복지사",
+          "job_description": "학교, 병원, 수용시설, 비수용시설, 국가기관 등에서 아동, 청소년, 장애인, 노인, 여성 등을 대상으로 그들의 재활과 사회복귀를 돕기 위해 사정, 진단, 상담, 프로그램 개발, 기획, 실시, 평가, 지원, 교육 등의 업무를 수행한다.",
+          "slug": "사회복지사",
+          "image_url": "/uploads/jobs/job-사회복지사.webp",
+          "fit_score": 67,
+          "like_score": 89,
+          "can_score": 79,
+          "feasibility_score": 75,
+          "rationale": "[좋아할 이유] '돌봄/봉사에 관심이 있다'고 하셨는데, 이 직업은 대면 90/100으로 높은 점수를 받고 있으며, 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '상담 및 프로그램 개발'과 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 교대근무가 가능하므로 근무시간이 불규칙할 수 있습니다.",
+          "like_reason": "이 직업은 대면 90/100으로 높은 점수를 받고 있습니다 돌봄/봉사에 관심이 있다 성향과 부합합니다",
+          "can_reason": "이 직업의 핵심역량 '상담 및 프로그램 개발'은(는) 사용자의 '소통력이' 강점과 부합합니다"
+        },
+        {
+          "job_id": "1765284684883263",
+          "job_name": "의약품생산지원기술자",
+          "job_description": "작업자의 안전과 위생, 제조설비 관리, 보관관리, 공기조화장치 관리, 제조용수 관리, 환경안전위생 관리 등의 정해진 업무를 GMP 규정에 따라 수행한다.",
+          "slug": "의약품생산지원기술자",
+          "image_url": "/uploads/jobs/job-의약품생산지원기술자.webp",
+          "fit_score": 55,
+          "like_score": 45,
+          "can_score": 74,
+          "feasibility_score": 80,
+          "rationale": "[좋아할 이유] '안정을 중시한다'고 하셨는데, 이 직업은 안정성 80/100, 워라밸 75/100으로 높고 정시퇴근 환경입니다. [잘할 이유] '소통력'이 강점이라고 하셨고, 이 직업의 핵심역량인 '제조설비 관리'와 연결됩니다. [리스크] 다만, 이 직업은 자격증이 필수이며, 성장성 점수가 65/100으로 다소 낮아 장기적인 성장 경로가 제한적일 수 있습니다.",
+          "like_reason": "안정을 중시한다고 하셨는데, 이 직업은 안정성 80/100이고 정시퇴근 환경이라 워라밸 75/100입니다",
+          "can_reason": "소통력이 강점이라고 하셨고, 핵심역량인 제조설비 관리와 연결됩니다. 자격증이 필수입니다."
         }
       ],
-      "total_candidates": 695,
-      "filtered_count": 604,
-      "search_duration_ms": 5735
+      "total_candidates": 709,
+      "filtered_count": 619,
+      "search_duration_ms": 4959
     },
     "premium_report": null,
-    "engine_version": "v3.19.2",
+    "engine_version": "v3.19.3a",
     "report_mode": "deferred",
     "search_profile_used": {
       "desiredThemes": [
@@ -2794,23 +2757,23 @@
       "has_narrative_facts": false,
       "round_answers_count": 0
     },
-    "duration_ms": 82446
+    "duration_ms": 45251
   },
   "timing": {
-    "analyzeMs": 4897,
+    "analyzeMs": 4199,
     "narrativeMs": 134,
     "roundsMs": [
-      431,
-      443,
-      9863
+      449,
+      451,
+      442
     ],
     "roundAnswersMs": [
-      366,
-      378,
-      387
+      380,
+      416,
+      411
     ],
-    "recommendMs": 82923,
-    "totalMs": 102846
+    "recommendMs": 45732,
+    "totalMs": 55627
   },
   "errors": []
 }
