@@ -31,3 +31,15 @@
 - **해결**: sanitizeKeywordOvermatching에 범용 suffix 도메인 불일치 체크 + 노이즈 직업명 패턴 감점 추가
 - **남은 이슈**: 내면갈등 시나리오에서 가스설비안전성연구원, 기능성식품연구원 일부 잔존 (interest 도메인 키워드 매칭 범위 조정 필요)
 - **교훈**: 벡터 검색 후 코드 기반 post-filter가 필수. LLM 프롬프트 기반 Relevance Gate만으로는 불안정
+
+### [2026-03-06] D1: json_extract 대량 호출 시 Memory Limit 초과
+- **상황**: migrate-goyong24 API에서 7000개 행에 `json_extract(merged_profile_json, ...)` 실행 → D1 메모리 한계 초과
+- **원인**: D1의 메모리 리밋이 있어서 대량 JSON 파싱은 실패함
+- **해결**: `LIKE '%"type":"breadcrumb"%'` 패턴 매칭 + `LEFT JOIN ... IS NULL` + LIMIT 배치 처리
+- **교훈**: D1에서 json_extract는 소규모(수백)만 가능. 대규모는 LIKE 패턴 또는 별도 컬럼 사용
+
+### [2026-03-06] LLM: GPT-4o-mini가 산업분류(KSIC)를 직업분류로 혼동
+- **상황**: 배치 LLM 분류에서 "제조직", "경비·경호 및 탐정업" 등 잘못된 카테고리 반환 (~30% 실패)
+- **원인**: merged_profile_json의 산업분류 코드가 프롬프트에 포함되어 LLM이 혼동
+- **해결**: (1) 프롬프트에 "산업분류(KSIC)가 아닌 직업분류" 강조 (2) 퍼지 매칭 폴백 (키워드→유효 카테고리) (3) 낮은 confidence(0.6) 부여
+- **교훈**: LLM에 분류 체계 제공 시 혼동 가능한 다른 분류 체계를 명시적으로 배제. 폴백 매핑으로 100% 분류율 확보
