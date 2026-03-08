@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.23.2'  // 프리필터 25개 확대 + 4-Tier 백필 절대 안전망 (10개 보장)
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.23.3'  // 백필 Like≥60 + Spread Cap 23 (인문 품질 안정화)
 
 // ============================================
 // Types

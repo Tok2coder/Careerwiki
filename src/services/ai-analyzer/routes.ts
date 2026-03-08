@@ -8465,6 +8465,20 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
       }
     }
 
+    // 6-K. Spread Cap — 과도한 점수 격차 방지 (10개 보장 우선, 초과분만 제거)
+    {
+      const sortedForSpread = [...topMajors].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
+      const spreadTop1 = (sortedForSpread[0] as any)?.final_score || 0
+      const maxSpread = 23
+      const spreadFloor = spreadTop1 - maxSpread
+      const spreadCapped = sortedForSpread.filter((m: any) => (m.final_score || 0) >= spreadFloor)
+      // 10개 이상 남을 때만 트리밍 (10개 보장이 최우선)
+      if (spreadCapped.length >= 10) {
+        topMajors = spreadCapped
+      }
+      // 10개 미만이면 Spread Cap 적용하지 않음 — 10개 유지가 더 중요
+    }
+
     // 6. LLM Reporter (전공 전용 — skipReport 시 건너뜀)
     let premiumReport: any = null
     let reportMode: 'llm' | 'fallback' | 'none' | 'deferred' = skipReport ? 'deferred' : 'none'
