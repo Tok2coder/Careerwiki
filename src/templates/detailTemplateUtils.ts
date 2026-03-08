@@ -1385,3 +1385,145 @@ export const sanitizeJson = (value: unknown): unknown => {
   return value ?? undefined
 }
 
+// ─── Unified Chart Data ───
+
+export interface UnifiedChartData {
+  chartType: 'bar' | 'doughnut' | 'horizontalBar'
+  title?: string
+  items: Array<{ label: string; value: number }>
+  unit?: string
+  note?: string
+  sortDescending?: boolean
+  maxValue?: number
+}
+
+/** Duck-type check: is `data` in the unified chart format? */
+export const isUnifiedChartData = (data: unknown): data is UnifiedChartData => {
+  if (!data || typeof data !== 'object') return false
+  const d = data as Record<string, unknown>
+  return 'chartType' in d && Array.isArray(d.items)
+}
+
+// 8-colour palette reused from existing charts
+const CHART_COLORS = [
+  'rgba(168, 85, 247, 0.8)',   // purple
+  'rgba(59, 130, 246, 0.8)',   // blue
+  'rgba(236, 72, 153, 0.8)',   // pink
+  'rgba(251, 191, 36, 0.8)',   // amber
+  'rgba(251, 146, 60, 0.8)',   // orange
+  'rgba(163, 163, 122, 0.8)',  // olive
+  'rgba(244, 165, 171, 0.8)',  // light pink
+  'rgba(16, 185, 129, 0.8)'    // green
+]
+
+/**
+ * Render a chart from the unified data format.
+ * Returns HTML with a <canvas> + inline <script> that calls Chart.js.
+ */
+export const renderUnifiedChart = (data: UnifiedChartData, idPrefix: string): string => {
+  if (!data.items || data.items.length === 0) return ''
+
+  // Optionally sort descending by value
+  let items = [...data.items]
+  if (data.sortDescending) {
+    items.sort((a, b) => b.value - a.value)
+  }
+
+  const labels = items.map(i => i.label)
+  const values = items.map(i => i.value)
+  const colors = items.map((_, idx) => CHART_COLORS[idx % CHART_COLORS.length])
+  const chartId = `unified-${idPrefix}-${Date.now()}`
+  const unit = data.unit || ''
+  const maxValue = data.maxValue ?? Math.max(...values, 10)
+
+  const titleHtml = data.title
+    ? `<h4 class="text-base font-bold text-wiki-secondary mb-4">${escapeHtml(data.title)}</h4>`
+    : ''
+  const noteHtml = data.note
+    ? `<p class="text-xs text-wiki-muted mt-3">※ ${escapeHtml(data.note)}</p>`
+    : ''
+
+  if (data.chartType === 'doughnut') {
+    // Doughnut chart + legend
+    const legendHtml = labels.map((label, i) =>
+      `<span class="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[15px]">
+        <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" style="background: ${colors[i]}"></span>
+        <span class="text-white/80">${escapeHtml(label)}</span>
+        <span class="text-wiki-secondary font-semibold">${values[i]}${escapeHtml(unit)}</span>
+      </span>`
+    ).join('')
+
+    return `
+      <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+        ${titleHtml}
+        <div class="relative p-3" style="height: 220px;">
+          <canvas id="${chartId}"></canvas>
+        </div>
+        <div class="flex flex-wrap justify-center gap-x-3 sm:gap-x-5 gap-y-1.5 sm:gap-y-2 mt-3 px-1 sm:px-0">${legendHtml}</div>
+        ${noteHtml}
+        <script>
+          (function(){
+            var ctx=document.getElementById('${chartId}');
+            if(ctx&&typeof Chart!=='undefined'){
+              new Chart(ctx,{
+                type:'doughnut',
+                data:{
+                  labels:${JSON.stringify(labels)},
+                  datasets:[{data:${JSON.stringify(values)},backgroundColor:${JSON.stringify(colors)},borderWidth:0,hoverOffset:8}]
+                },
+                options:{
+                  responsive:true,maintainAspectRatio:false,
+                  plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.label+': '+c.parsed+'${unit}'}}}}
+                }
+              });
+            }
+          })();
+        </script>
+      </div>`
+  }
+
+  // Bar or horizontalBar
+  const isHorizontal = data.chartType === 'horizontalBar'
+  return `
+    <div class="bg-white/5 rounded-2xl p-6 border border-wiki-border/50">
+      ${titleHtml}
+      <canvas id="${chartId}" style="max-height: ${isHorizontal ? Math.max(200, items.length * 40) : 400}px;"></canvas>
+      ${noteHtml}
+      <script>
+        (function(){
+          var ctx=document.getElementById('${chartId}');
+          if(ctx&&typeof Chart!=='undefined'){
+            new Chart(ctx,{
+              type:'bar',
+              data:{
+                labels:${JSON.stringify(labels)},
+                datasets:[{
+                  data:${JSON.stringify(values)},
+                  backgroundColor:${JSON.stringify(colors)},
+                  borderWidth:0,
+                  borderRadius:4,
+                  barThickness:'flex',
+                  maxBarThickness:50
+                }]
+              },
+              options:{
+                responsive:true,maintainAspectRatio:true,
+                indexAxis:'${isHorizontal ? 'y' : 'x'}',
+                scales:{
+                  ${isHorizontal ? 'x' : 'y'}:{
+                    beginAtZero:true,max:${maxValue},
+                    ticks:{color:'rgba(255,255,255,0.6)',font:{size:11},callback:function(v){return v+'${unit}'}}
+                  },
+                  ${isHorizontal ? 'y' : 'x'}:{
+                    ticks:{color:'rgba(255,255,255,0.8)',font:{size:12}}
+                  }
+                },
+                plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.${isHorizontal ? 'x' : 'y'}+'${unit}'}}}}
+              }
+            });
+          }
+        })();
+      </script>
+    </div>`
+}
+

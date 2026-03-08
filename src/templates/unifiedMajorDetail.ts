@@ -12,7 +12,9 @@ import {
   renderSourceBadges,
   renderSourcesPanel,
   renderAdSlot,
-  sanitizeJson
+  sanitizeJson,
+  isUnifiedChartData,
+  renderUnifiedChart
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { renderKoreaMap, normalizeRegionName, type RegionData } from '../components/koreaMap'
@@ -1060,16 +1062,21 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     }
     return []
   }
-  const hasFieldChart = chartData?.field && Array.isArray(chartData.field) && chartData.field.length > 0
+  const hasFieldChartUnified = isUnifiedChartData(chartData?.field)
+  const hasFieldChart = !hasFieldChartUnified && chartData?.field && Array.isArray(chartData.field) && chartData.field.length > 0
   const normalizedEnterField = normalizePairList(profile.enterField)
   const hasEnterField = normalizedEnterField.length > 0
   const hasCareerFields = !!(profile as any).careerFields?.trim() // 이색학과 진출 분야
-  
-  if (hasEnterField || hasFieldChart || hasCareerFields) {
+
+  if (hasEnterField || hasFieldChart || hasFieldChartUnified || hasCareerFields) {
     const enterFieldParts: string[] = []
-    
-    // 1. 차트 먼저 (chartData.field)
-    if (hasFieldChart) {
+
+    // 1-a. 통일 포맷 차트 (사용자 편집)
+    if (hasFieldChartUnified) {
+      enterFieldParts.push(renderUnifiedChart(chartData.field, 'field'))
+    }
+    // 1-b. 레거시 차트 (chartData.field)
+    else if (hasFieldChart) {
       const chartId = generateChartId('field-chart')
       const fieldLabels = chartData!.field!.map((item: { item?: string; data?: string }) => item.item || '')
       const fieldValues = chartData!.field!.map((item: { item?: string; data?: string }) => parseFloat(item.data || '0'))
@@ -1198,10 +1205,10 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   
   const hasAnyMetrics = profileAny.salary || profile.salaryAfterGraduation || profileAny.employment || profile.employmentRate
   const hasChartMetrics = chartData && (
-    chartData.after_graduation?.length ||
-    chartData.employment_rate?.length ||
-    chartData.avg_salary?.length ||
-    chartData.satisfaction?.length
+    isUnifiedChartData(chartData.after_graduation) || chartData.after_graduation?.length ||
+    isUnifiedChartData(chartData.employment_rate) || chartData.employment_rate?.length ||
+    isUnifiedChartData(chartData.avg_salary) || chartData.avg_salary?.length ||
+    isUnifiedChartData(chartData.satisfaction) || chartData.satisfaction?.length
   )
   
   if (hasAnyMetrics || hasChartMetrics) {
@@ -1212,7 +1219,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       const chartCards: string[] = []
       
       // 진학률 (after_graduation) - 도넛 차트
-      if (chartData?.after_graduation && chartData.after_graduation.length > 0) {
+      if (isUnifiedChartData(chartData?.after_graduation)) {
+        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.after_graduation, 'graduation')}</div>`)
+      } else if (chartData?.after_graduation && chartData.after_graduation.length > 0) {
         const chartId = generateChartId('graduation-chart')
         const labels = chartData.after_graduation.map((item: { item?: string; data?: string }) => item.item || '')
         const values = chartData.after_graduation.map((item: { item?: string; data?: string }) => parseFloat(item.data || '0'))
@@ -1270,7 +1279,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       }
       
       // 취업률 (employment_rate) - 바 차트 + 진학률과 동일한 범례 스타일
-      if (chartData?.employment_rate && chartData.employment_rate.length > 0) {
+      if (isUnifiedChartData(chartData?.employment_rate)) {
+        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.employment_rate, 'emprate')}</div>`)
+      } else if (chartData?.employment_rate && chartData.employment_rate.length > 0) {
         const chartId = generateChartId('emprate-chart')
         const labels = chartData.employment_rate.map((item: { item?: string; data?: string }) => item.item || '')
         const values = chartData.employment_rate.map((item: { item?: string; data?: string }) => parseFloat(item.data || '0'))
@@ -1332,7 +1343,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       }
       
       // 월평균 임금 분포 (avg_salary) - 도넛 차트
-      if (chartData?.avg_salary && chartData.avg_salary.length > 0) {
+      if (isUnifiedChartData(chartData?.avg_salary)) {
+        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.avg_salary, 'salary')}</div>`)
+      } else if (chartData?.avg_salary && chartData.avg_salary.length > 0) {
         const chartId = generateChartId('salary-chart')
         const labels = chartData.avg_salary.map((item: { item?: string; data?: string }) => item.item || '')
         const values = chartData.avg_salary.map((item: { item?: string; data?: string }) => parseFloat(item.data || '0'))
@@ -1390,7 +1403,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       }
       
       // 첫 직장 만족도 (satisfaction) - 도넛 차트
-      if (chartData?.satisfaction && chartData.satisfaction.length > 0) {
+      if (isUnifiedChartData(chartData?.satisfaction)) {
+        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.satisfaction, 'satisfaction')}</div>`)
+      } else if (chartData?.satisfaction && chartData.satisfaction.length > 0) {
         const chartId = generateChartId('satisfaction-chart')
         const labels = chartData.satisfaction.map((item: { item?: string; data?: string }) => item.item || '')
         const values = chartData.satisfaction.map((item: { item?: string; data?: string }) => parseFloat(item.data || '0'))
@@ -1611,19 +1626,28 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   // 0) 입학상황 섹션 (chartData.gender + chartData.applicant) - 첫 번째 섹션
   if (chartData) {
     const admissionCharts: string[] = []
-    
-    // 미리 ID와 데이터 준비
-    const genderChartId = (chartData.gender && Array.isArray(chartData.gender) && chartData.gender.length > 0) 
+
+    // 통일 포맷 감지: gender
+    if (isUnifiedChartData(chartData.gender)) {
+      admissionCharts.push(renderUnifiedChart(chartData.gender, 'gender'))
+    }
+    // 통일 포맷 감지: applicant
+    if (isUnifiedChartData(chartData.applicant)) {
+      admissionCharts.push(renderUnifiedChart(chartData.applicant, 'applicant'))
+    }
+
+    // 레거시: 미리 ID와 데이터 준비
+    const genderChartId = (!isUnifiedChartData(chartData.gender) && chartData.gender && Array.isArray(chartData.gender) && chartData.gender.length > 0)
       ? generateChartId('gender-chart') : null
-    const genderLabels = chartData.gender?.map((item: { item?: string; data?: string }) => item.item || '') || []
-    const genderValues = chartData.gender?.map((item: { item?: string; data?: string }) => parseFloat(item.data || '0')) || []
-    
-    const admissionChartId = (chartData.applicant && Array.isArray(chartData.applicant) && chartData.applicant.length > 0)
+    const genderLabels = (!isUnifiedChartData(chartData.gender) && chartData.gender?.map) ? chartData.gender.map((item: { item?: string; data?: string }) => item.item || '') : []
+    const genderValues = (!isUnifiedChartData(chartData.gender) && chartData.gender?.map) ? chartData.gender.map((item: { item?: string; data?: string }) => parseFloat(item.data || '0')) : []
+
+    const admissionChartId = (!isUnifiedChartData(chartData.applicant) && chartData.applicant && Array.isArray(chartData.applicant) && chartData.applicant.length > 0)
       ? generateChartId('admission-chart') : null
-    const applicantLabels = chartData.applicant?.map((item: { item?: string; data?: string }) => item.item || '') || []
-    const applicantValues = chartData.applicant?.map((item: { item?: string; data?: string }) => parseFloat(item.data || '0')) || []
-    
-    // 성별 비율 (도넛 차트) - 커스텀 범례로 데이터 표시
+    const applicantLabels = (!isUnifiedChartData(chartData.applicant) && chartData.applicant?.map) ? chartData.applicant.map((item: { item?: string; data?: string }) => item.item || '') : []
+    const applicantValues = (!isUnifiedChartData(chartData.applicant) && chartData.applicant?.map) ? chartData.applicant.map((item: { item?: string; data?: string }) => parseFloat(item.data || '0')) : []
+
+    // 성별 비율 (도넛 차트) - 커스텀 범례로 데이터 표시 (레거시)
     if (genderChartId) {
       const genderLegendHtml = genderLabels.map((label: string, i: number) => {
         const value = genderValues[i] || 0
@@ -1974,6 +1998,20 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       .join('')
     if (actItems) {
       pushLearningCard('진로 탐색 활동', 'fa-compass', `<div class="grid gap-3">${actItems}</div>`)
+    }
+  }
+
+  // 커스텀 차트 (사용자 추가)
+  const majorCustomCharts = (profile as any).customCharts
+  if (Array.isArray(majorCustomCharts) && majorCustomCharts.length > 0) {
+    for (let ci = 0; ci < majorCustomCharts.length; ci++) {
+      const cc = majorCustomCharts[ci]
+      if (isUnifiedChartData(cc)) {
+        const ccHtml = renderUnifiedChart(cc, `custom-${ci}`)
+        if (ccHtml) {
+          pushLearningCard(cc.title || `커스텀 차트 ${ci + 1}`, 'fa-chart-bar', ccHtml)
+        }
+      }
     }
   }
 

@@ -13,6 +13,136 @@ import { renderJobCard, renderMajorCard } from '../utils/card-renderers'
 import type { UnifiedJobDetail, UnifiedMajorDetail } from '../types/unifiedProfiles'
 import type { JobSourceRow, MajorSourceRow } from '../types/database'
 
+// ─── Chart data conversion helpers (legacy → unified format) ───
+
+interface UnifiedChartItem { label: string; value: number }
+interface UnifiedChartEditData {
+  chartType: 'bar' | 'doughnut' | 'horizontalBar'
+  title?: string
+  items: UnifiedChartItem[]
+  unit?: string
+  note?: string
+  sortDescending?: boolean
+  maxValue?: number
+}
+
+/** Check if data is already in unified chart format */
+function isUnifiedChart(data: unknown): data is UnifiedChartEditData {
+  if (!data || typeof data !== 'object') return false
+  const d = data as Record<string, unknown>
+  return 'chartType' in d && Array.isArray(d.items)
+}
+
+/** Convert job indicator data (detailIndicators) → unified */
+function convertIndicatorsToUnified(data: any): UnifiedChartEditData | null {
+  if (!data) return null
+  if (isUnifiedChart(data)) return data
+  if (!Array.isArray(data) || data.length === 0) return null
+
+  const items: UnifiedChartItem[] = []
+  const first = data[0]
+
+  // Type 2: { category: "a,b,c", description: "1,2,3" }
+  if (first?.category && first?.description) {
+    const cats = first.category.split(',').map((s: string) => s.trim())
+    const vals = first.description.split(',').map((s: string) => parseFloat(s.trim()) || 0)
+    for (let i = 0; i < cats.length; i++) {
+      if (cats[i]) items.push({ label: cats[i], value: vals[i] ?? 0 })
+    }
+  }
+  // Type 1: [{ indicator, indicator_data }]
+  else if (first?.indicator) {
+    if (typeof first.indicator === 'string' && first.indicator.includes(',')) {
+      const cats = first.indicator.split(',').map((s: string) => s.trim())
+      const vals = String(first.indicator_data || '').split(',').map((s: string) => parseFloat(s.trim()) || 0)
+      for (let i = 0; i < cats.length; i++) {
+        if (cats[i]) items.push({ label: cats[i], value: vals[i] ?? 0 })
+      }
+    } else {
+      for (const item of data) {
+        const lbl = item.indicator || '지표'
+        const val = typeof item.indicator_data === 'number' ? item.indicator_data : parseFloat(String(item.indicator_data)) || 0
+        items.push({ label: lbl, value: val })
+      }
+    }
+  }
+
+  return items.length > 0 ? { chartType: 'horizontalBar', title: '한국의 직업지표', items, unit: '점', sortDescending: true } : null
+}
+
+/** Korean label maps for distribution data keys */
+const EDUCATION_LABELS: Record<string, string> = {
+  middleSchoolOrLess: '중학교 이하',
+  highSchool: '고등학교',
+  college: '전문대',
+  university: '대학',
+  graduate: '석사 이상',
+  doctor: '박사'
+}
+const MAJOR_DIST_LABELS: Record<string, string> = {
+  humanities: '인문계열',
+  social: '사회계열',
+  education: '교육계열',
+  engineering: '공학계열',
+  natural: '자연계열',
+  medical: '의약계열',
+  artsSports: '예체능'
+}
+
+/** Convert { key: "value%" } distribution → unified */
+function convertDistributionToUnified(
+  data: Record<string, string | undefined> | null | undefined,
+  title: string, chartType: 'bar' | 'doughnut' | 'horizontalBar', unit: string,
+  labelMap?: Record<string, string>
+): UnifiedChartEditData | null {
+  if (!data) return null
+  if (isUnifiedChart(data)) return data as any
+  const entries = Object.entries(data).filter(([, v]) => v !== undefined && v !== null)
+  if (entries.length === 0) return null
+
+  const items: UnifiedChartItem[] = entries.map(([k, v]) => ({
+    label: labelMap?.[k] || k,
+    value: parseFloat(String(v).replace('%', '')) || 0
+  }))
+  return { chartType, title, items, unit, sortDescending: true }
+}
+
+/** Convert prospect data → unified */
+function convertProspectToUnified(data: any[] | undefined): UnifiedChartEditData | null {
+  if (!data || !Array.isArray(data) || data.length === 0) return null
+  if (isUnifiedChart(data)) return data as any
+
+  const labelMap: Record<string, string> = {
+    '증가': '증가', '다소 증가': '다소 증가', '유지': '유지',
+    '다소 감소': '다소 감소', '감소': '감소'
+  }
+  const items: UnifiedChartItem[] = data.map(item => ({
+    label: labelMap[item.jobProspectNm] || item.jobProspectNm || '',
+    value: parseFloat(item.jobProspectRatio) || 0
+  })).filter(i => i.label)
+
+  return items.length > 0 ? { chartType: 'bar', title: '재직자가 생각하는 일자리 전망', items, unit: '%',
+    note: '직업당 평균 30명의 재직자가 해당 직업의 향후 5년간 일자리 변화에 대해 응답한 결과입니다.' } : null
+}
+
+/** Convert major chartData items ({item, data}) → unified */
+function convertMajorChartToUnified(
+  data: any, title: string, chartType: 'bar' | 'doughnut' | 'horizontalBar', unit: string
+): UnifiedChartEditData | null {
+  if (!data) return null
+  if (isUnifiedChart(data)) return data
+  if (!Array.isArray(data) || data.length === 0) return null
+
+  const items: UnifiedChartItem[] = data
+    .map((item: { item?: string; data?: string }) => ({
+      label: item.item || '',
+      value: parseFloat(item.data || '0')
+    }))
+    .filter((i: UnifiedChartItem) => i.label)
+
+  return items.length > 0 ? { chartType, title, items, unit } : null
+}
+
 export const apiDataRoutes = new Hono<AppEnv>()
 
 // 학과정보 검색 API
@@ -541,7 +671,20 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
       sidebarJobs: extractListItems(profile.sidebarJobs),
       sidebarMajors: extractListItems(profile.sidebarMajors),
       sidebarCerts: extractListItems(profile.sidebarCerts),
-      
+
+      // 차트 데이터 (레거시→통일 포맷 변환)
+      detailIndicators: convertIndicatorsToUnified(profile.detailIndicators),
+      detailEducation: {
+        educationDistribution: convertDistributionToUnified(
+          profile.detailEducation?.educationDistribution, '학력 분포', 'bar', '%', EDUCATION_LABELS
+        ),
+        majorDistribution: convertDistributionToUnified(
+          profile.detailEducation?.majorDistribution, '전공 분포', 'doughnut', '%', MAJOR_DIST_LABELS
+        )
+      },
+      prospectChart: convertProspectToUnified(profile.overviewProspect?.jobSumProspect ?? undefined),
+      customCharts: (profile as any).customCharts || [],
+
       // 사용자가 추가한 출처 (수정/삭제 가능)
       _sources: (profile as any)._sources || {}
     }
@@ -732,7 +875,25 @@ apiDataRoutes.get('/api/major/:id/edit-data', async (c) => {
             relateSubject: profile.relateSubject || '',
             enterField: typeof profile.enterField === 'string' ? profile.enterField : (profile.enterField ? JSON.stringify(profile.enterField, null, 2) : ''),
             jobProspect: profile.jobProspect || '',
-            careerAct: profile.careerAct || ''
+            careerAct: profile.careerAct || '',
+
+            // 차트 데이터 (레거시→통일 포맷 변환)
+            chartData: (() => {
+              let cd: any = (profile as any).chartData
+              if (typeof cd === 'string') { try { cd = JSON.parse(cd) } catch { cd = null } }
+              if (Array.isArray(cd)) cd = cd[0]
+              if (!cd) return {}
+              return {
+                after_graduation: convertMajorChartToUnified(cd.after_graduation, '졸업 후 진로', 'doughnut', '%'),
+                employment_rate: convertMajorChartToUnified(cd.employment_rate, '취업률', 'bar', '%'),
+                avg_salary: convertMajorChartToUnified(cd.avg_salary, '평균 연봉', 'bar', '만원'),
+                satisfaction: convertMajorChartToUnified(cd.satisfaction, '만족도', 'bar', '점'),
+                field: convertMajorChartToUnified(cd.field, '진출 분야', 'bar', '%'),
+                gender: convertMajorChartToUnified(cd.gender, '성비', 'doughnut', '%'),
+                applicant: convertMajorChartToUnified(cd.applicant, '입학 현황', 'bar', '명'),
+              }
+            })(),
+            customCharts: (profile as any).customCharts || []
           }
           
           // 프로필 이름으로 실제 DB ID 찾기

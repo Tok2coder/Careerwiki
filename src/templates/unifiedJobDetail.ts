@@ -19,7 +19,9 @@ import {
   renderSourcesPanel,
   sanitizeJson,
   renderAdSlot,
-  SampleCommentPayload
+  SampleCommentPayload,
+  isUnifiedChartData,
+  renderUnifiedChart
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { getAbilityIcon } from '../utils/abilityIconMapper'
@@ -3482,7 +3484,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     : null
   
   let prospectChartHtml = ''
-  if (jobSumProspect && Array.isArray(jobSumProspect) && jobSumProspect.length > 0) {
+  // 통일 포맷 전망 차트 (사용자 편집) 확인
+  const prospectChartUnified = (profile as any).prospectChart
+  if (isUnifiedChartData(prospectChartUnified)) {
+    prospectChartHtml = renderUnifiedChart(prospectChartUnified, 'prospect')
+  } else if (jobSumProspect && Array.isArray(jobSumProspect) && jobSumProspect.length > 0) {
     // 전망 레이블 매핑
     const labelMap: Record<string, string> = {
       '증가': '증가',
@@ -3873,10 +3879,14 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
 
   // 한국의 직업지표 (ETL 구조화 필드 detailIndicators 사용) - 소개 탭
   const indicatorChartData = profile.detailIndicators
-  if (indicatorChartData && Array.isArray(indicatorChartData) && indicatorChartData.length > 0) {
-    const indicatorHtml = renderIndicatorChart(indicatorChartData)
+  if (indicatorChartData) {
+    let indicatorHtml = ''
+    if (isUnifiedChartData(indicatorChartData)) {
+      indicatorHtml = renderUnifiedChart(indicatorChartData, 'indicator')
+    } else if (Array.isArray(indicatorChartData) && indicatorChartData.length > 0) {
+      indicatorHtml = renderIndicatorChart(indicatorChartData)
+    }
     if (indicatorHtml) {
-      // 직업지표는 고용24에서 제공
       const indicatorSources = getFieldSources(p => p?.detailIndicators)
       pushOverviewCard('한국의 직업지표', 'fa-chart-bar', indicatorHtml, indicatorSources.length > 0 ? indicatorSources : ['GOYONG24'])
     }
@@ -3888,18 +3898,30 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const majorDistribution = detailEducation?.majorDistribution
   const combinedAnchor = anchorIdFactory('overview', '학력·전공 분포')
   const educationSources = getFieldSources(p => p?.detailEducation?.educationDistribution || p?.detailEducation?.majorDistribution)
-  const combinedCard = renderCombinedDistributionCharts(
-    educationDistribution,
-    majorDistribution,
-    {
-      anchorId: combinedAnchor,
-      telemetryScope: 'job-overview-card',
-      telemetryComponent: 'job-overview-education-major',
-      dataSources: educationSources.length > 0 ? educationSources : ['GOYONG24']
+
+  // 통일 포맷이면 개별 렌더링, 아니면 레거시 결합 렌더링
+  if (isUnifiedChartData(educationDistribution) || isUnifiedChartData(majorDistribution)) {
+    const parts: string[] = []
+    if (isUnifiedChartData(educationDistribution)) parts.push(renderUnifiedChart(educationDistribution, 'edu-dist'))
+    if (isUnifiedChartData(majorDistribution)) parts.push(renderUnifiedChart(majorDistribution, 'major-dist'))
+    if (parts.length > 0) {
+      const distHtml = `<div class="space-y-4">${parts.join('')}</div>`
+      overviewCards.push({ id: combinedAnchor, label: '학력·전공 분포', icon: 'fa-graduation-cap', markup: buildCard('학력·전공 분포', 'fa-graduation-cap', distHtml, { anchorId: combinedAnchor, telemetryScope: 'job-overview-card', dataSources: educationSources.length > 0 ? educationSources : ['GOYONG24'] }) })
     }
-  )
-  if (combinedCard) {
-    overviewCards.push({ id: combinedAnchor, label: '학력·전공 분포', icon: 'fa-graduation-cap', markup: combinedCard })
+  } else {
+    const combinedCard = renderCombinedDistributionCharts(
+      educationDistribution,
+      majorDistribution,
+      {
+        anchorId: combinedAnchor,
+        telemetryScope: 'job-overview-card',
+        telemetryComponent: 'job-overview-education-major',
+        dataSources: educationSources.length > 0 ? educationSources : ['GOYONG24']
+      }
+    )
+    if (combinedCard) {
+      overviewCards.push({ id: combinedAnchor, label: '학력·전공 분포', icon: 'fa-graduation-cap', markup: combinedCard })
+    }
   }
 
   // 워라밸 & 사회적 기여도 (ETL 구조화 필드 detailWlb 사용) - 소개 탭
@@ -3944,6 +3966,20 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     // 워라밸/사회적 평가는 주로 고용24에서 제공
     const wlbSources = getFieldSources(p => p?.detailWorkLifeBalance?.wlb || p?.detailWorkLifeBalance?.social)
     pushOverviewCard('워라밸 & 사회적 평가', 'fa-heart', gridLayout, wlbSources.length > 0 ? wlbSources : ['GOYONG24'])
+  }
+
+  // 커스텀 차트 (사용자 추가)
+  const customCharts = (profile as any).customCharts
+  if (Array.isArray(customCharts) && customCharts.length > 0) {
+    for (let ci = 0; ci < customCharts.length; ci++) {
+      const cc = customCharts[ci]
+      if (isUnifiedChartData(cc)) {
+        const ccHtml = renderUnifiedChart(cc, `custom-${ci}`)
+        if (ccHtml) {
+          pushOverviewCard(cc.title || `커스텀 차트 ${ci + 1}`, 'fa-chart-bar', ccHtml)
+        }
+      }
+    }
   }
 
   // 소개 탭 섹션 순서 재정렬

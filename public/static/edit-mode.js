@@ -1020,6 +1020,35 @@ const EditMode = {
               ]
             }
           ]
+        },
+        {
+          title: '소개 - 직업지표 차트',
+          section: 'overview',
+          fields: [
+            { key: 'detailIndicators', label: '한국의 직업지표', type: 'chart' }
+          ]
+        },
+        {
+          title: '소개 - 학력·전공 분포',
+          section: 'overview',
+          fields: [
+            { key: 'detailEducation.educationDistribution', label: '학력 분포', type: 'chart' },
+            { key: 'detailEducation.majorDistribution', label: '전공 분포', type: 'chart' }
+          ]
+        },
+        {
+          title: '소개 - 일자리 전망 차트',
+          section: 'overview',
+          fields: [
+            { key: 'prospectChart', label: '일자리 전망', type: 'chart' }
+          ]
+        },
+        {
+          title: '커스텀 차트',
+          section: 'custom',
+          fields: [
+            { key: 'customCharts', label: '커스텀 차트 목록', type: 'chartList' }
+          ]
         }
       ];
     } else {
@@ -1162,6 +1191,26 @@ const EditMode = {
               '공인회계사, 세무사, 경영지도사',
               '간호사 면허, 물리치료사, 임상병리사'
             ]}
+          ]
+        },
+        {
+          title: '상세정보 - 통계 차트',
+          section: 'details',
+          fields: [
+            { key: 'chartData.after_graduation', label: '졸업 후 진로', type: 'chart' },
+            { key: 'chartData.employment_rate', label: '취업률', type: 'chart' },
+            { key: 'chartData.avg_salary', label: '평균 연봉', type: 'chart' },
+            { key: 'chartData.satisfaction', label: '만족도', type: 'chart' },
+            { key: 'chartData.field', label: '진출 분야', type: 'chart' },
+            { key: 'chartData.gender', label: '성비', type: 'chart' },
+            { key: 'chartData.applicant', label: '입학 현황', type: 'chart' }
+          ]
+        },
+        {
+          title: '커스텀 차트',
+          section: 'custom',
+          fields: [
+            { key: 'customCharts', label: '커스텀 차트 목록', type: 'chartList' }
           ]
         }
       ];
@@ -1348,6 +1397,151 @@ const EditMode = {
           class="w-full px-4 py-3 bg-wiki-bg/70 border border-wiki-border/60 rounded-xl text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 focus:border-transparent transition"
         >
         <div id="tags-container-${field.key}" class="flex flex-wrap gap-2 mt-3">${tagsHtml}</div>
+      `;
+    } else if (field.type === 'chart') {
+      // 통일 차트 에디터
+      const chartData = (value && typeof value === 'object' && value.chartType) ? value : null;
+      const chartType = chartData?.chartType || 'bar';
+      const items = chartData?.items || [];
+      const unit = chartData?.unit || '%';
+      const note = chartData?.note || '';
+      const sortDesc = chartData?.sortDescending !== false;
+      const chartTitle = chartData?.title || field.label;
+
+      const itemsHtml = items.length > 0
+        ? items.map((item, idx) => `
+          <div class="flex items-center gap-2 edit-chart-item" data-index="${idx}">
+            <input type="text" value="${this.escapeHtml(item.label)}" placeholder="항목명"
+              class="flex-1 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50" data-chart-label>
+            <input type="number" value="${item.value}" placeholder="값" step="any"
+              class="w-24 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50" data-chart-value>
+            <button type="button" class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition remove-chart-item" title="삭제">
+              <i class="fas fa-times text-xs"></i>
+            </button>
+          </div>
+        `).join('')
+        : `
+          <div class="flex items-center gap-2 edit-chart-item" data-index="0">
+            <input type="text" value="" placeholder="항목명"
+              class="flex-1 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50" data-chart-label>
+            <input type="number" value="" placeholder="값" step="any"
+              class="w-24 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50" data-chart-value>
+            <button type="button" class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition remove-chart-item" title="삭제">
+              <i class="fas fa-times text-xs"></i>
+            </button>
+          </div>
+        `;
+
+      inputHtml = `
+        <div id="field-${field.key}" data-field-key="${field.key}" data-field-type="chart" class="space-y-4 p-4 bg-wiki-bg/30 border border-wiki-border/40 rounded-xl">
+          <div class="flex flex-wrap gap-3 items-center">
+            <label class="text-xs text-wiki-muted">차트 유형:</label>
+            <select data-chart-type class="px-3 py-1.5 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50">
+              <option value="bar" ${chartType === 'bar' ? 'selected' : ''}>세로 바</option>
+              <option value="horizontalBar" ${chartType === 'horizontalBar' ? 'selected' : ''}>가로 바</option>
+              <option value="doughnut" ${chartType === 'doughnut' ? 'selected' : ''}>도넛</option>
+            </select>
+            <label class="text-xs text-wiki-muted">단위:</label>
+            <input type="text" value="${this.escapeHtml(unit)}" data-chart-unit placeholder="%, 점, 명..."
+              class="w-20 px-3 py-1.5 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50">
+            <label class="flex items-center gap-1.5 text-xs text-wiki-muted cursor-pointer">
+              <input type="checkbox" ${sortDesc ? 'checked' : ''} data-chart-sort class="rounded border-wiki-border/60 bg-wiki-bg/70 text-${gradientFrom}">
+              높은 순 정렬
+            </label>
+          </div>
+
+          <div class="space-y-2 edit-chart-items">
+            ${itemsHtml}
+          </div>
+
+          <div class="flex gap-2">
+            <button type="button" class="px-3 py-1.5 text-xs bg-${gradientFrom}/20 text-${gradientFrom} rounded-lg hover:bg-${gradientFrom}/30 transition add-chart-item">
+              <i class="fas fa-plus mr-1"></i>항목 추가
+            </button>
+          </div>
+
+          <div>
+            <label class="text-xs text-wiki-muted">참고문구 (선택):</label>
+            <input type="text" value="${this.escapeHtml(note)}" data-chart-note placeholder="차트 하단 참고 문구"
+              class="w-full mt-1 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50">
+          </div>
+
+          <div>
+            <button type="button" class="px-3 py-1.5 text-xs bg-wiki-bg/50 text-wiki-muted rounded-lg hover:bg-wiki-bg/70 transition chart-preview-btn">
+              <i class="fas fa-eye mr-1"></i>미리보기
+            </button>
+            <div class="mt-2 chart-preview-container hidden">
+              <canvas class="chart-preview-canvas" style="max-height: 250px;"></canvas>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-2 border-t border-wiki-border/20">
+            <label class="flex items-center gap-1.5 text-xs text-red-400 cursor-pointer">
+              <input type="checkbox" data-chart-delete class="rounded border-red-500/60 bg-wiki-bg/70 text-red-500">
+              이 차트 삭제 (ETL 데이터 비활성화)
+            </label>
+          </div>
+        </div>
+      `;
+    } else if (field.type === 'chartList') {
+      // 커스텀 차트 목록
+      const charts = Array.isArray(value) ? value : [];
+      const chartsHtml = charts.map((chart, idx) => {
+        const ct = (chart && chart.chartType) ? chart : { chartType: 'bar', items: [], unit: '%', title: '' };
+        const citems = ct.items || [];
+        const citemsHtml = citems.length > 0
+          ? citems.map((item, i) => `
+            <div class="flex items-center gap-2 edit-chart-item" data-index="${i}">
+              <input type="text" value="${this.escapeHtml(item.label)}" placeholder="항목명"
+                class="flex-1 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50" data-chart-label>
+              <input type="number" value="${item.value}" placeholder="값" step="any"
+                class="w-24 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50" data-chart-value>
+              <button type="button" class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition remove-chart-item" title="삭제">
+                <i class="fas fa-times text-xs"></i>
+              </button>
+            </div>
+          `).join('')
+          : '';
+
+        return `
+          <div class="p-4 bg-wiki-bg/30 border border-wiki-border/40 rounded-xl space-y-3 custom-chart-editor" data-chart-index="${idx}">
+            <div class="flex items-center gap-2">
+              <input type="text" value="${this.escapeHtml(ct.title || '')}" placeholder="차트 제목" data-chart-title
+                class="flex-1 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm font-semibold placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50">
+              <button type="button" class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition remove-custom-chart" title="차트 삭제">
+                <i class="fas fa-trash text-xs"></i>
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-3 items-center">
+              <select data-chart-type class="px-3 py-1.5 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50">
+                <option value="bar" ${ct.chartType === 'bar' ? 'selected' : ''}>세로 바</option>
+                <option value="horizontalBar" ${ct.chartType === 'horizontalBar' ? 'selected' : ''}>가로 바</option>
+                <option value="doughnut" ${ct.chartType === 'doughnut' ? 'selected' : ''}>도넛</option>
+              </select>
+              <input type="text" value="${this.escapeHtml(ct.unit || '%')}" data-chart-unit placeholder="단위"
+                class="w-20 px-3 py-1.5 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50">
+              <label class="flex items-center gap-1.5 text-xs text-wiki-muted cursor-pointer">
+                <input type="checkbox" ${ct.sortDescending !== false ? 'checked' : ''} data-chart-sort class="rounded border-wiki-border/60 bg-wiki-bg/70 text-${gradientFrom}">
+                정렬
+              </label>
+            </div>
+            <div class="space-y-2 edit-chart-items">${citemsHtml}</div>
+            <button type="button" class="px-3 py-1.5 text-xs bg-${gradientFrom}/20 text-${gradientFrom} rounded-lg hover:bg-${gradientFrom}/30 transition add-chart-item">
+              <i class="fas fa-plus mr-1"></i>항목 추가
+            </button>
+            <input type="text" value="${this.escapeHtml(ct.note || '')}" data-chart-note placeholder="참고문구 (선택)"
+              class="w-full px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/50">
+          </div>
+        `;
+      }).join('');
+
+      inputHtml = `
+        <div id="field-${field.key}" data-field-key="${field.key}" data-field-type="chartList" class="space-y-4">
+          <div class="custom-charts-container space-y-4">${chartsHtml}</div>
+          <button type="button" class="w-full px-4 py-3 text-sm bg-${gradientFrom}/10 text-${gradientFrom} border border-${gradientFrom}/30 border-dashed rounded-xl hover:bg-${gradientFrom}/20 transition add-custom-chart">
+            <i class="fas fa-plus mr-2"></i>새 차트 추가
+          </button>
+        </div>
       `;
     } else if (field.type === 'textarea') {
       const displayValue = Array.isArray(value) ? value.join(', ') : value;
@@ -1655,6 +1849,110 @@ const EditMode = {
       }
     });
     
+    // 차트 에디터 이벤트 (이벤트 위임)
+    document.addEventListener('click', (e) => {
+      // 차트 항목 추가
+      const addChartBtn = e.target.closest('.add-chart-item');
+      if (addChartBtn) {
+        const container = addChartBtn.closest('[data-field-type="chart"], .custom-chart-editor');
+        const itemsContainer = container?.querySelector('.edit-chart-items');
+        if (itemsContainer) {
+          const isJob = this.entityType === 'job';
+          const gf = isJob ? 'wiki-primary' : 'wiki-secondary';
+          const idx = itemsContainer.querySelectorAll('.edit-chart-item').length;
+          const newItem = document.createElement('div');
+          newItem.className = 'flex items-center gap-2 edit-chart-item';
+          newItem.setAttribute('data-index', idx);
+          newItem.innerHTML = `
+            <input type="text" value="" placeholder="항목명"
+              class="flex-1 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gf}/50" data-chart-label>
+            <input type="number" value="" placeholder="값" step="any"
+              class="w-24 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gf}/50" data-chart-value>
+            <button type="button" class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition remove-chart-item" title="삭제">
+              <i class="fas fa-times text-xs"></i>
+            </button>
+          `;
+          itemsContainer.appendChild(newItem);
+        }
+      }
+
+      // 차트 항목 삭제
+      const removeChartBtn = e.target.closest('.remove-chart-item');
+      if (removeChartBtn) {
+        const item = removeChartBtn.closest('.edit-chart-item');
+        if (item) item.remove();
+      }
+
+      // 커스텀 차트 삭제
+      const removeCustomChart = e.target.closest('.remove-custom-chart');
+      if (removeCustomChart) {
+        const editor = removeCustomChart.closest('.custom-chart-editor');
+        if (editor) editor.remove();
+      }
+
+      // 새 커스텀 차트 추가
+      const addCustomChart = e.target.closest('.add-custom-chart');
+      if (addCustomChart) {
+        const container = addCustomChart.previousElementSibling; // .custom-charts-container
+        if (container) {
+          const isJob = this.entityType === 'job';
+          const gf = isJob ? 'wiki-primary' : 'wiki-secondary';
+          const idx = container.querySelectorAll('.custom-chart-editor').length;
+          const newChart = document.createElement('div');
+          newChart.className = 'p-4 bg-wiki-bg/30 border border-wiki-border/40 rounded-xl space-y-3 custom-chart-editor';
+          newChart.setAttribute('data-chart-index', idx);
+          newChart.innerHTML = `
+            <div class="flex items-center gap-2">
+              <input type="text" value="" placeholder="차트 제목" data-chart-title
+                class="flex-1 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm font-semibold placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gf}/50">
+              <button type="button" class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition remove-custom-chart" title="차트 삭제">
+                <i class="fas fa-trash text-xs"></i>
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-3 items-center">
+              <select data-chart-type class="px-3 py-1.5 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm focus:outline-none focus:ring-1 focus:ring-${gf}/50">
+                <option value="bar" selected>세로 바</option>
+                <option value="horizontalBar">가로 바</option>
+                <option value="doughnut">도넛</option>
+              </select>
+              <input type="text" value="%" data-chart-unit placeholder="단위"
+                class="w-20 px-3 py-1.5 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm focus:outline-none focus:ring-1 focus:ring-${gf}/50">
+              <label class="flex items-center gap-1.5 text-xs text-wiki-muted cursor-pointer">
+                <input type="checkbox" checked data-chart-sort class="rounded border-wiki-border/60 bg-wiki-bg/70 text-${gf}">
+                정렬
+              </label>
+            </div>
+            <div class="space-y-2 edit-chart-items">
+              <div class="flex items-center gap-2 edit-chart-item" data-index="0">
+                <input type="text" value="" placeholder="항목명"
+                  class="flex-1 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gf}/50" data-chart-label>
+                <input type="number" value="" placeholder="값" step="any"
+                  class="w-24 px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gf}/50" data-chart-value>
+                <button type="button" class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition remove-chart-item" title="삭제">
+                  <i class="fas fa-times text-xs"></i>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="px-3 py-1.5 text-xs bg-${gf}/20 text-${gf} rounded-lg hover:bg-${gf}/30 transition add-chart-item">
+              <i class="fas fa-plus mr-1"></i>항목 추가
+            </button>
+            <input type="text" value="" data-chart-note placeholder="참고문구 (선택)"
+              class="w-full px-3 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white text-sm placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gf}/50">
+          `;
+          container.appendChild(newChart);
+        }
+      }
+
+      // 차트 미리보기
+      const previewBtn = e.target.closest('.chart-preview-btn');
+      if (previewBtn) {
+        const chartContainer = previewBtn.closest('[data-field-type="chart"]');
+        if (chartContainer) {
+          this.renderChartPreview(chartContainer);
+        }
+      }
+    });
+
     // 자동완성 필드 초기화
     this.initAutocompleteFields();
     
@@ -2098,6 +2396,10 @@ const EditMode = {
       } else if (fieldType === 'tags') {
         const container = document.getElementById(`tags-container-${key}`);
         value = container ? [...new Set(Array.from(container.querySelectorAll('.edit-tag-chip')).map(chip => chip.dataset.tag).filter(t => t))] : [];
+      } else if (fieldType === 'chart') {
+        value = this.collectChartData(element);
+      } else if (fieldType === 'chartList') {
+        value = this.collectChartListData(element);
       } else {
         value = element.value?.trim() || '';
       }
@@ -2105,6 +2407,130 @@ const EditMode = {
       if (key) fields[key] = value;
     });
     return fields;
+  },
+
+  /** Collect unified chart data from a chart editor container */
+  collectChartData(container) {
+    // Check if delete is checked
+    const deleteCheck = container.querySelector('[data-chart-delete]');
+    if (deleteCheck?.checked) return null;
+
+    const chartType = container.querySelector('[data-chart-type]')?.value || 'bar';
+    const unit = container.querySelector('[data-chart-unit]')?.value || '';
+    const note = container.querySelector('[data-chart-note]')?.value || '';
+    const sortDescending = container.querySelector('[data-chart-sort]')?.checked ?? true;
+
+    const items = [];
+    container.querySelectorAll('.edit-chart-item').forEach(row => {
+      const label = row.querySelector('[data-chart-label]')?.value?.trim();
+      const val = parseFloat(row.querySelector('[data-chart-value]')?.value);
+      if (label && !isNaN(val)) items.push({ label, value: val });
+    });
+
+    if (items.length === 0) return null;
+    const result = { chartType, items, sortDescending };
+    if (unit) result.unit = unit;
+    if (note) result.note = note;
+    // Preserve title from the original data if exists
+    const titleInput = container.querySelector('[data-chart-title]');
+    if (titleInput) result.title = titleInput.value?.trim() || '';
+    return result;
+  },
+
+  /** Collect chartList data from a chartList editor */
+  collectChartListData(container) {
+    const charts = [];
+    container.querySelectorAll('.custom-chart-editor').forEach(editor => {
+      const chartType = editor.querySelector('[data-chart-type]')?.value || 'bar';
+      const unit = editor.querySelector('[data-chart-unit]')?.value || '';
+      const note = editor.querySelector('[data-chart-note]')?.value || '';
+      const sortDescending = editor.querySelector('[data-chart-sort]')?.checked ?? true;
+      const title = editor.querySelector('[data-chart-title]')?.value?.trim() || '';
+
+      const items = [];
+      editor.querySelectorAll('.edit-chart-item').forEach(row => {
+        const label = row.querySelector('[data-chart-label]')?.value?.trim();
+        const val = parseFloat(row.querySelector('[data-chart-value]')?.value);
+        if (label && !isNaN(val)) items.push({ label, value: val });
+      });
+
+      if (items.length > 0) {
+        const chart = { chartType, items, sortDescending };
+        if (title) chart.title = title;
+        if (unit) chart.unit = unit;
+        if (note) chart.note = note;
+        charts.push(chart);
+      }
+    });
+    return charts;
+  },
+
+  /** Render chart preview inside a chart editor */
+  renderChartPreview(container) {
+    const previewContainer = container.querySelector('.chart-preview-container');
+    const canvas = container.querySelector('.chart-preview-canvas');
+    if (!previewContainer || !canvas || typeof Chart === 'undefined') return;
+
+    const chartData = this.collectChartData(container);
+    if (!chartData || !chartData.items || chartData.items.length === 0) {
+      previewContainer.classList.add('hidden');
+      return;
+    }
+
+    previewContainer.classList.remove('hidden');
+
+    // Destroy existing chart if any
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) existingChart.destroy();
+
+    const colors = [
+      'rgba(168, 85, 247, 0.8)', 'rgba(59, 130, 246, 0.8)',
+      'rgba(236, 72, 153, 0.8)', 'rgba(251, 191, 36, 0.8)',
+      'rgba(251, 146, 60, 0.8)', 'rgba(163, 163, 122, 0.8)',
+      'rgba(244, 165, 171, 0.8)', 'rgba(16, 185, 129, 0.8)'
+    ];
+
+    let items = [...chartData.items];
+    if (chartData.sortDescending) items.sort((a, b) => b.value - a.value);
+
+    const labels = items.map(i => i.label);
+    const values = items.map(i => i.value);
+    const bgColors = items.map((_, i) => colors[i % colors.length]);
+
+    const isDoughnut = chartData.chartType === 'doughnut';
+    const isHorizontal = chartData.chartType === 'horizontalBar';
+
+    new Chart(canvas, {
+      type: isDoughnut ? 'doughnut' : 'bar',
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          backgroundColor: bgColors,
+          borderWidth: 0,
+          borderRadius: isDoughnut ? undefined : 4,
+          barThickness: isDoughnut ? undefined : 'flex',
+          maxBarThickness: isDoughnut ? undefined : 50
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        indexAxis: isHorizontal ? 'y' : 'x',
+        plugins: { legend: { display: false } },
+        ...(isDoughnut ? {} : {
+          scales: {
+            [isHorizontal ? 'x' : 'y']: {
+              beginAtZero: true,
+              ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 11 } }
+            },
+            [isHorizontal ? 'y' : 'x']: {
+              ticks: { color: 'rgba(255,255,255,0.8)', font: { size: 12 } }
+            }
+          }
+        })
+      }
+    });
   },
 
   /**
@@ -2171,6 +2597,10 @@ const EditMode = {
         } else {
           newValue = [];
         }
+      } else if (fieldType === 'chart') {
+        newValue = this.collectChartData(element);
+      } else if (fieldType === 'chartList') {
+        newValue = this.collectChartListData(element);
       } else if (element.placeholder?.includes('쉼표로 구분') || key.includes('Majors') || key.includes('Subjects')) {
         // 기타 배열 필드
         newValue = element.value.trim().split(',').map(t => t.trim()).filter(t => t.length > 0);
