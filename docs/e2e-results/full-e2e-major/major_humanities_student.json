@@ -6,24 +6,24 @@
     "careerState": "student",
     "academicState": "high_school_early"
   },
-  "timestamp": "2026-03-08T07:55:08.492Z",
+  "timestamp": "2026-03-08T10:35:22.184Z",
   "baseUrl": "https://careerwiki.org",
-  "sessionId": "e2e-major-1772956508491-xf1myw",
-  "requestId": 741,
+  "sessionId": "e2e-major-1772966122184-65of48",
+  "requestId": 790,
   "analyzeResponse": {
     "success": true,
-    "request_id": 741,
+    "request_id": 790,
     "result": {
       "engine_state": "phase2_stage_based",
-      "engine_version": "v3.23.1",
+      "engine_version": "v3.23.2",
       "mini_module_result": null,
       "versions": {
         "recipe": "recipe-v1.0.0",
         "tagger": "tagger-v1.0.0",
-        "scoring": "scoring-v3.23.1"
+        "scoring": "scoring-v3.23.2"
       },
       "input_summary": {
-        "profile_revision_id": "rev-741-1772956511442",
+        "profile_revision_id": "rev-790-1772966125202",
         "key_interests": [],
         "key_skills": [],
         "non_negotiables": [],
@@ -42,94 +42,17 @@
       },
       "fit_top3": [
         {
-          "job_id": "1765283538830472",
-          "job_name": "정부행정관리자(일반)",
-          "slug": "정부행정관리자일반",
-          "image_url": "/uploads/jobs/job-정부행정관리자일반.webp",
-          "job_description": "고위공무원의 포괄적인 지휘 하에 부처 내 다른 부서 관리자와 의논하여 해당 부서의 행정업무를 기획, 지휘 및 조정하거나 지방관서 기관장으로서 지방관서의 행정업무를 기획, 지휘 및 조정한다.",
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 정부행정관리자(일반)는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765284005772312",
+          "job_name": "장기이식코디네이터",
+          "slug": "장기이식코디네이터",
+          "image_url": "/uploads/jobs/job-장기이식코디네이터.webp",
+          "job_description": "장기이식을 시행하는 의료기관에서 장기 기증자와 이식 대상자를 연결하고, 장기이식과 관련된 의학적, 법적, 행정적 절차가 원활하게 이루어질 수 있도록 조정·중재하며, 장기기증 활성화를 위해 홍보기획을 한다.",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 장기이식코디네이터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "정부행정관리자(일반)는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 61,
-          "like_score": 73,
-          "can_score": 69,
-          "risk_details": [],
-          "evidence_links": [
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping_teaching,organizing",
-                "label": "\"helping_teaching, organizing\" 관심사"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping_teaching,organizing",
-                "label": "분석적 업무 관심"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "분석 업무: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping_teaching,organizing",
-                "label": "\"helping_teaching, organizing\" 관심사"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "50",
-                "label": "관련 역량: 50/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 12,
-              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping_teaching,organizing",
-                "label": "창의적 분야 관심"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "50",
-                "label": "창의성: 50/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 12,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
-            }
-          ],
-          "dislike_warnings": []
-        },
-        {
-          "job_id": "1765284003930128",
-          "job_name": "수간호사",
-          "slug": "수간호사",
-          "image_url": "/uploads/jobs/job-수간호사.webp",
-          "job_description": "환자들에게 양질의 간호를 제공하기 위하여 간호업무 전반을 기획·감독·조정한다.",
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 수간호사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "수간호사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_reason": "장기이식코디네이터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "fit_score": 60,
-          "like_score": 70,
-          "can_score": 69,
+          "like_score": 73,
+          "can_score": 66,
           "risk_details": [],
           "evidence_links": [
             {
@@ -196,17 +119,17 @@
           "dislike_warnings": []
         },
         {
-          "job_id": "1765284831848133",
-          "job_name": "마카로니제조원",
-          "slug": "마카로니제조원",
-          "image_url": "/uploads/jobs/job-마카로니제조원.webp",
-          "job_description": "마카로니를 제조하고자 재료를 혼합하고 압출하는 압착기를 조작·관리한다.",
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 마카로니제조원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765284734014675",
+          "job_name": "케이블포설원",
+          "slug": "케이블포설원",
+          "image_url": "/uploads/jobs/job-케이블포설원.webp",
+          "job_description": "전기선로용 및 통신용 단심케이블, 다심케이블 및 광케이블을 포설하기 위해 동도·관로 등을 매설하고 포설루트에 따라 케이블을 배열·투입·인출한다.",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 케이블포설원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "마카로니제조원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 58,
-          "like_score": 64,
-          "can_score": 72,
+          "can_reason": "케이블포설원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 60,
+          "like_score": 66,
+          "can_score": 74,
           "risk_details": [],
           "evidence_links": [
             {
@@ -228,36 +151,6 @@
               "user_fact": {
                 "key": "profile.interest.keywords",
                 "value": "helping_teaching,organizing",
-                "label": "\"helping_teaching, organizing\" 관심사"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping_teaching,organizing",
-                "label": "창의적 분야 관심"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "창의성: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping_teaching,organizing",
                 "label": "분석적 업무 관심"
               },
               "job_attribute": {
@@ -268,53 +161,6 @@
               "match_type": "positive",
               "score_contribution": 14,
               "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
-            }
-          ],
-          "dislike_warnings": []
-        },
-        {
-          "job_id": "1765283678592190",
-          "job_name": "방송설비기술자",
-          "slug": "방송설비기술자",
-          "image_url": "/uploads/jobs/job-방송설비기술자.webp",
-          "job_description": "라디오와 텔레비전 방송설비의 구입·설치·보수에 관련된 활동을 지시·조정한다.",
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 방송설비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "방송설비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 52,
-          "like_score": 63,
-          "can_score": 62,
-          "risk_details": [],
-          "evidence_links": [
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping_teaching,organizing",
-                "label": "\"helping_teaching, organizing\" 관심사"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "helping_teaching,organizing",
-                "label": "분석적 업무 관심"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "분석 업무: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
             },
             {
               "user_fact": {
@@ -350,17 +196,171 @@
           "dislike_warnings": []
         },
         {
-          "job_id": "176528420912498",
-          "job_name": "게임UI디자이너",
-          "slug": "게임ui디자이너",
-          "image_url": "/uploads/jobs/job-게임ui디자이너.webp",
-          "job_description": "게임 사용자에게 유용한 플레이 경험을 제공할 수 있도록 게임에 등장하는 다양한 정보를 시각적으로 표현한다.",
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 게임UI디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765284739951129",
+          "job_name": "철망설치원",
+          "slug": "철망설치원",
+          "image_url": "/uploads/jobs/job-철망설치원.webp",
+          "job_description": "산업시설, 군사시설, 주택, 농장, 운동장 등에 철망, 앵글, 파이프 등 철물을 이용하여 보호 또는 방호용 울타리를 설치한다.",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 철망설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "게임UI디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 51,
-          "like_score": 70,
-          "can_score": 82,
+          "can_reason": "철망설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 60,
+          "like_score": 65,
+          "can_score": 75,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping_teaching,organizing",
+                "label": "\"helping_teaching, organizing\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "관련 역량: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping_teaching,organizing",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "분석 업무: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping_teaching,organizing",
+                "label": "\"helping_teaching, organizing\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "55",
+                "label": "관련 역량: 55/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 13,
+              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 55점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping_teaching,organizing",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "55",
+                "label": "창의성: 55/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 13,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 55점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765284827354835",
+          "job_name": "양념제분기조작원",
+          "slug": "양념제분기조작원",
+          "image_url": "/uploads/jobs/job-양념제분기조작원.webp",
+          "job_description": "각종 양념을 제조하기 위해 사용되는 원료(계피, 고추, 생강, 마늘 등)를 분쇄하는 제분기를 조작·관리한다.",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 양념제분기조작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "양념제분기조작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 56,
+          "like_score": 64,
+          "can_score": 69,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping_teaching,organizing",
+                "label": "\"helping_teaching, organizing\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "관련 역량: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping_teaching,organizing",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "분석 업무: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping_teaching,organizing",
+                "label": "\"helping_teaching, organizing\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "관련 역량: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "helping_teaching,organizing",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "창의성: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765284101132808",
+          "job_name": "화장품상품기획자",
+          "slug": "화장품상품기획자",
+          "image_url": "/uploads/jobs/job-화장품상품기획자.webp",
+          "job_description": "새로운 화장품을 개발하거나 기존기능을 개선하기 위해 기획업무를 하고 제품이 개발될 때까지 관리한다.",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 화장품상품기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "화장품상품기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 48,
+          "like_score": 68,
+          "can_score": 72,
           "risk_details": [],
           "evidence_links": [
             {
@@ -371,12 +371,12 @@
               },
               "job_attribute": {
                 "key": "creative",
-                "value": "90",
-                "label": "관련 역량: 90/100"
+                "value": "70",
+                "label": "관련 역량: 70/100"
               },
               "match_type": "positive",
-              "score_contribution": 18,
-              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 90점입니다"
+              "score_contribution": 15,
+              "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 70점입니다"
             },
             {
               "user_fact": {
@@ -386,12 +386,12 @@
               },
               "job_attribute": {
                 "key": "creative",
-                "value": "90",
-                "label": "창의성: 90/100"
+                "value": "70",
+                "label": "창의성: 70/100"
               },
               "match_type": "positive",
-              "score_contribution": 18,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 90점입니다"
+              "score_contribution": 15,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 70점입니다"
             },
             {
               "user_fact": {
@@ -442,69 +442,82 @@
           "can_reason": "정밀화학연구기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283991781488",
-          "job_name": "내과전문의사",
-          "slug": "내과전문의사",
-          "image_url": "/uploads/jobs/job-내과전문의사.webp",
-          "job_description": "인체 내부기관의 질병 및 장애를 진단하고 치료한다.",
-          "fit_score": 29,
+          "job_id": "176528328956547",
+          "job_name": "교장",
+          "slug": "교장",
+          "image_url": "/uploads/jobs/job-교장.webp",
+          "job_description": "교장은 초등학교나 중학교, 고등학교, 특수학교를 대표하는 책임자로서 학교의 교육, 행정 및 기타 운영 활동에 관련된 모든 제반 사항을 기획하고 조정하는 일을 합니다.",
+          "fit_score": 46,
           "like_score": 78,
-          "can_score": 65,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 내과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 69,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 교장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "내과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "교장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283753263724",
-          "job_name": "빌딩정보모델링(BIM)매니저",
-          "slug": "빌딩정보모델링bim매니저",
-          "image_url": "/uploads/jobs/job-빌딩정보모델링bim매니저.webp",
-          "job_description": "프로젝트의 성격과 특수성을 감안하여 최적의 발주방식을 결정하며, 계약관리, 설계관리, 시공관리, 안전관리, 리스크관리, 유지관리 등 프로젝트 전반에 걸쳐 BIM컨설턴트로서 역할을 한다.",
-          "fit_score": 51,
+          "job_id": "1765283533778267",
+          "job_name": "공공기관임원",
+          "slug": "공공기관임원",
+          "image_url": "/uploads/jobs/job-공공기관임원.webp",
+          "job_description": "정부 산하 단체 및 관련 공공기관의 정책 수행을 기획, 조직 및 통제한다.",
+          "fit_score": 50,
           "like_score": 75,
-          "can_score": 77,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 빌딩정보모델링(BIM)매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 75,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 공공기관임원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "빌딩정보모델링(BIM)매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "공공기관임원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "17652837101536",
-          "job_name": "인공지능모델개발자",
-          "slug": "인공지능모델개발자",
-          "image_url": "/uploads/jobs/job-인공지능모델개발자.webp",
-          "job_description": "기획된 인공지능 서비스의 목적을 달성하기 위하여 모델 설계 및 검증, 학습 데이터 확보, 데이터 가공, 특징 추출, 품질 검증, 학습 등을 통해 최적화된 모델을 도출하고 성능을 개선한다.",
+          "job_id": "1765284079455276",
+          "job_name": "금융회사자산운용가",
+          "slug": "금융회사자산운용가",
+          "image_url": "/uploads/jobs/job-금융회사자산운용가.webp",
+          "job_description": "금융회사의 고유자산을 안정적으로 유지 및 증식하기 위하여 회사 명의로 각종 금융투자 및 부동산투자를 한다.",
+          "fit_score": 48,
+          "like_score": 75,
+          "can_score": 70,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 금융회사자산운용가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "금융회사자산운용가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283971075863",
+          "job_name": "기능성식품연구원",
+          "slug": "기능성식품연구원",
+          "image_url": "/uploads/jobs/job-기능성식품연구원.webp",
+          "job_description": "결핍되기 쉬운 영양소 또는 인체에 유용한 기능을 가진 원료나 성분을 사용하여 건강을 유지하는데 도움을 주는 건강기능성식품을 연구·개발한다.",
           "fit_score": 42,
           "like_score": 75,
           "can_score": 83,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 인공지능모델개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "인공지능모델개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "176528329335928",
-          "job_name": "기계공학 기술자ㆍ연구원",
-          "slug": "기계공학-기술자연구원",
-          "image_url": "/uploads/jobs/job-기계공학-기술자연구원.webp",
-          "job_description": "기계공학 기술자ㆍ연구원은 다양한 산업과 연관된 기계, 기구, 산업 설비, 생산시스템 등을 연구, 개발, 설계, 제조하고, 생산 공정을 운영, 감독하는 업무를 수행합니다.",
-          "fit_score": 42,
+          "job_id": "1765283646341940",
+          "job_name": "금융연구원",
+          "slug": "금융연구원",
+          "image_url": "/uploads/jobs/job-금융연구원.webp",
+          "job_description": "국내외 경제환경 변화에 대응하여 금융산업의 업무조정 및 각종 금융제도의 선진화방안을 연구한다.",
+          "fit_score": 40,
           "like_score": 75,
-          "can_score": 83,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기계공학 기술자ㆍ연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 금융연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "기계공학 기술자ㆍ연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "금융연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283734648868",
-          "job_name": "인공지능서비스운영관리자",
-          "slug": "인공지능서비스운영관리자",
-          "image_url": "/uploads/jobs/job-인공지능서비스운영관리자.webp",
-          "job_description": "인공지능 서비스의 체계적인 운영을 위하여 계획을 수립하고, 서비스 이용자 관리, 운영 환경 관리, 운영 모니터링, 운영 품질관리, 운영 장애관리, 운영수준 관리, 운영 개선 관리, 외부 인프라관리, 운영 지원 도구 관리 등을 한다.",
+          "job_id": "1765283736974318",
+          "job_name": "지능형교통체계유지관리자",
+          "slug": "지능형교통체계유지관리자",
+          "image_url": "/uploads/jobs/job-지능형교통체계유지관리자.webp",
+          "job_description": "지능형교통체계의 유지관리 대상을 분석하여 계획을 수립하고 유지관리, 성능관리 및 유지관리 결과를 분석한다.",
           "fit_score": 39,
           "like_score": 75,
           "can_score": 77,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 인공지능서비스운영관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 지능형교통체계유지관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "인공지능서비스운영관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "지능형교통체계유지관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
           "job_id": "1765283731743780",
@@ -520,59 +533,33 @@
           "can_reason": "클라우드보안담당자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284748747494",
-          "job_name": "석편수",
-          "slug": "석편수",
-          "image_url": "/uploads/jobs/job-석편수.webp",
-          "job_description": "전통한식기법으로 한옥, 성곽, 능, 누곽, 사원, 사찰, 궁궐 등의 석구조물과 국가유산을 건립 및 복원하는 작업을 관리하고 한식석공을 관리·감독한다.",
-          "fit_score": 34,
-          "like_score": 74,
-          "can_score": 85,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 석편수는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "176528410137899",
+          "job_name": "휴대폰UI/UX기획자",
+          "slug": "휴대폰uiux기획자",
+          "image_url": "/uploads/jobs/job-휴대폰uiux기획자.webp",
+          "job_description": "편리한 사용자의 니즈와 목표를 검토하고 사용자 요구사항을 반영한 UI/UX의 기능과 콘텐츠를 기획한다.",
+          "fit_score": 39,
+          "like_score": 75,
+          "can_score": 78,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 휴대폰UI/UX기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "석편수는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "휴대폰UI/UX기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283538830472",
-          "job_name": "정부행정관리자(일반)",
-          "slug": "정부행정관리자일반",
-          "image_url": "/uploads/jobs/job-정부행정관리자일반.webp",
-          "job_description": "고위공무원의 포괄적인 지휘 하에 부처 내 다른 부서 관리자와 의논하여 해당 부서의 행정업무를 기획, 지휘 및 조정하거나 지방관서 기관장으로서 지방관서의 행정업무를 기획, 지휘 및 조정한다.",
-          "fit_score": 61,
-          "like_score": 73,
-          "can_score": 69,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 정부행정관리자(일반)는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765283553332422",
+          "job_name": "대학교총장",
+          "slug": "대학교총장",
+          "image_url": "/uploads/jobs/job-대학교총장.webp",
+          "job_description": "대학을 대표하여 대외적인 활동을 하며 학내의 전반적인 정책을 결정하고 학내 업무 전반을 총괄 관리한다.",
+          "fit_score": 38,
+          "like_score": 75,
+          "can_score": 75,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 대학교총장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "정부행정관리자(일반)는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284748747494",
-          "job_name": "석편수",
-          "slug": "석편수",
-          "image_url": "/uploads/jobs/job-석편수.webp",
-          "job_description": "전통한식기법으로 한옥, 성곽, 능, 누곽, 사원, 사찰, 궁궐 등의 석구조물과 국가유산을 건립 및 복원하는 작업을 관리하고 한식석공을 관리·감독한다.",
-          "fit_score": 34,
-          "like_score": 74,
-          "can_score": 85,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 석편수는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "석편수는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "대학교총장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         }
       ],
       "can_top10": [
-        {
-          "job_id": "1765284790150693",
-          "job_name": "석제품제작원",
-          "slug": "석제품제작원",
-          "image_url": "/uploads/jobs/job-석제품제작원.webp",
-          "job_description": "장식용 건축석재, 석상, 기념비, 장식품 등을 제작하기 위해 제품이 요구하는 규격과 주제에 알맞은 도안을 구상하고 작업계획을 수립하여 석제품을 제작한다.",
-          "fit_score": 33,
-          "like_score": 69,
-          "can_score": 89,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 석제품제작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "석제품제작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
         {
           "job_id": "1765284227847114",
           "job_name": "공연기획자",
@@ -587,144 +574,157 @@
           "can_reason": "공연기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284748747494",
-          "job_name": "석편수",
-          "slug": "석편수",
-          "image_url": "/uploads/jobs/job-석편수.webp",
-          "job_description": "전통한식기법으로 한옥, 성곽, 능, 누곽, 사원, 사찰, 궁궐 등의 석구조물과 국가유산을 건립 및 복원하는 작업을 관리하고 한식석공을 관리·감독한다.",
-          "fit_score": 34,
-          "like_score": 74,
-          "can_score": 85,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 석편수는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "석편수는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283747897841",
-          "job_name": "건축설계사",
-          "slug": "건축설계사",
-          "image_url": "/uploads/jobs/job-건축설계사.webp",
-          "job_description": "각종 건축물을 계획하고 설계한다.",
-          "fit_score": 41,
-          "like_score": 73,
-          "can_score": 84,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 건축설계사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "건축설계사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "17652837101536",
-          "job_name": "인공지능모델개발자",
-          "slug": "인공지능모델개발자",
-          "image_url": "/uploads/jobs/job-인공지능모델개발자.webp",
-          "job_description": "기획된 인공지능 서비스의 목적을 달성하기 위하여 모델 설계 및 검증, 학습 데이터 확보, 데이터 가공, 특징 추출, 품질 검증, 학습 등을 통해 최적화된 모델을 도출하고 성능을 개선한다.",
+          "job_id": "1765283971075863",
+          "job_name": "기능성식품연구원",
+          "slug": "기능성식품연구원",
+          "image_url": "/uploads/jobs/job-기능성식품연구원.webp",
+          "job_description": "결핍되기 쉬운 영양소 또는 인체에 유용한 기능을 가진 원료나 성분을 사용하여 건강을 유지하는데 도움을 주는 건강기능성식품을 연구·개발한다.",
           "fit_score": 42,
           "like_score": 75,
           "can_score": 83,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 인공지능모델개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "인공지능모델개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "176528329335928",
-          "job_name": "기계공학 기술자ㆍ연구원",
-          "slug": "기계공학-기술자연구원",
-          "image_url": "/uploads/jobs/job-기계공학-기술자연구원.webp",
-          "job_description": "기계공학 기술자ㆍ연구원은 다양한 산업과 연관된 기계, 기구, 산업 설비, 생산시스템 등을 연구, 개발, 설계, 제조하고, 생산 공정을 운영, 감독하는 업무를 수행합니다.",
-          "fit_score": 42,
-          "like_score": 75,
-          "can_score": 83,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기계공학 기술자ㆍ연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765284146713700",
+          "job_name": "방송책임프로듀서",
+          "slug": "방송책임프로듀서",
+          "image_url": "/uploads/jobs/job-방송책임프로듀서.webp",
+          "job_description": "담당 방송프로그램의 기획 및 제작을 총괄 관리의 책임을 지고, 관련 종사원들의 활동을 관리·감독한다.",
+          "fit_score": 47,
+          "like_score": 60,
+          "can_score": 82,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 방송책임프로듀서는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "기계공학 기술자ㆍ연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "방송책임프로듀서는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284670362738",
-          "job_name": "반도체FAB시설운영기술자",
-          "slug": "반도체fab시설운영기술자",
-          "image_url": "/uploads/jobs/job-반도체fab시설운영기술자.webp",
-          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 FAB 온도, 습도, 청정도 등의 클린룸 환경, 물류자동화, 운영프로그램 등 관련 시설을 설치, 평가, 개선, 인증, 유지 관리한다.",
+          "job_id": "1765284200534822",
+          "job_name": "전시디자이너",
+          "slug": "전시디자이너",
+          "image_url": "/uploads/jobs/job-전시디자이너.webp",
+          "job_description": "박물관, 과학관, 미술관, 기업 전시관, 기업 시연회, 쇼룸, 순회전시 등 대중을 상대로 전시하는 공간을 디자인한다.",
+          "fit_score": 46,
+          "like_score": 60,
+          "can_score": 80,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 전시디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "전시디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284673959131",
+          "job_name": "반도체칩본딩장비기술자",
+          "slug": "반도체칩본딩장비기술자",
+          "image_url": "/uploads/jobs/job-반도체칩본딩장비기술자.webp",
+          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 칩본딩장비를 설치, 평가, 개선, 인증, 유지 관리한다.",
           "fit_score": 49,
           "like_score": 70,
           "can_score": 79,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체FAB시설운영기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체칩본딩장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "반도체FAB시설운영기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "반도체칩본딩장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284735114600",
-          "job_name": "해저케이블보호원",
-          "slug": "해저케이블보호원",
-          "image_url": "/uploads/jobs/job-해저케이블보호원.webp",
-          "job_description": "해저케이블 절체 사고를 예방하기 위한 감시 업무를 수행하고, 고장 발생 시 유지보수 업무를 지도 및 관리하며, 관련 홍보 및 교육을 실시한다.",
-          "fit_score": 33,
-          "like_score": 73,
+          "job_id": "1765284671207740",
+          "job_name": "반도체사진현상장비기술자",
+          "slug": "반도체사진현상장비기술자",
+          "image_url": "/uploads/jobs/job-반도체사진현상장비기술자.webp",
+          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 사진현상 장비를 설치, 평가, 개선, 인증, 유지 관리한다.",
+          "fit_score": 49,
+          "like_score": 70,
           "can_score": 79,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 해저케이블보호원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체사진현상장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "해저케이블보호원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "반도체사진현상장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283753263724",
-          "job_name": "빌딩정보모델링(BIM)매니저",
-          "slug": "빌딩정보모델링bim매니저",
-          "image_url": "/uploads/jobs/job-빌딩정보모델링bim매니저.webp",
-          "job_description": "프로젝트의 성격과 특수성을 감안하여 최적의 발주방식을 결정하며, 계약관리, 설계관리, 시공관리, 안전관리, 리스크관리, 유지관리 등 프로젝트 전반에 걸쳐 BIM컨설턴트로서 역할을 한다.",
-          "fit_score": 51,
+          "job_id": "1765284734587340",
+          "job_name": "통신선로시험원",
+          "slug": "통신선로시험원",
+          "image_url": "/uploads/jobs/job-통신선로시험원.webp",
+          "job_description": "단락, 잡음, 수신불량, 발신고장 등 신고된 고장내역을 시험·조사하기 위하여 통신선로를 시험·관리 및 운용한다.",
+          "fit_score": 49,
+          "like_score": 70,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 통신선로시험원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "통신선로시험원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283646341940",
+          "job_name": "금융연구원",
+          "slug": "금융연구원",
+          "image_url": "/uploads/jobs/job-금융연구원.webp",
+          "job_description": "국내외 경제환경 변화에 대응하여 금융산업의 업무조정 및 각종 금융제도의 선진화방안을 연구한다.",
+          "fit_score": 40,
           "like_score": 75,
-          "can_score": 77,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 빌딩정보모델링(BIM)매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 금융연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "빌딩정보모델링(BIM)매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "금융연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283901772860",
-          "job_name": "건축설비설계기술자",
-          "slug": "건축설비설계기술자",
-          "image_url": "/uploads/jobs/job-건축설비설계기술자.webp",
-          "job_description": "건축구조물의 기계설비를 구성하기 위하여 기본계획을 수립하고 설계도를 작성한다.",
-          "fit_score": 32,
-          "like_score": 63,
-          "can_score": 77,
-          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 건축설비설계기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765285335682279",
+          "job_name": "리튬폴리머전지조립원",
+          "slug": "리튬폴리머전지조립원",
+          "image_url": "/uploads/jobs/job-리튬폴리머전지조립원.webp",
+          "job_description": "제조된 전극과 격리막을 알루미늄 팩에 포장하고 전해액을 주입하여 주로 휴대용기기에 사용되는 리튬폴리머 2차전지를 제조한다.",
+          "fit_score": 51,
+          "like_score": 74,
+          "can_score": 78,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 리튬폴리머전지조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "건축설비설계기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "리튬폴리머전지조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284734587340",
+          "job_name": "통신선로시험원",
+          "slug": "통신선로시험원",
+          "image_url": "/uploads/jobs/job-통신선로시험원.webp",
+          "job_description": "단락, 잡음, 수신불량, 발신고장 등 신고된 고장내역을 시험·조사하기 위하여 통신선로를 시험·관리 및 운용한다.",
+          "fit_score": 49,
+          "like_score": 70,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 도움/교육 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 통신선로시험원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "도움/교육 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "통신선로시험원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         }
       ],
       "caution_jobs": [
         {
-          "job_id": "1765283753263724",
-          "job_name": "빌딩정보모델링(BIM)매니저",
-          "slug": "빌딩정보모델링bim매니저",
-          "image_url": "/uploads/jobs/job-빌딩정보모델링bim매니저.webp",
+          "job_id": "1765284100895514",
+          "job_name": "화장품브랜드매니저",
+          "slug": "화장품브랜드매니저",
+          "image_url": "/uploads/jobs/job-화장품브랜드매니저.webp",
+          "risk_penalty": 22
+        },
+        {
+          "job_id": "1765285335682279",
+          "job_name": "리튬폴리머전지조립원",
+          "slug": "리튬폴리머전지조립원",
+          "image_url": "/uploads/jobs/job-리튬폴리머전지조립원.webp",
           "risk_penalty": 25
         },
         {
-          "job_id": "176528420912498",
-          "job_name": "게임UI디자이너",
-          "slug": "게임ui디자이너",
-          "image_url": "/uploads/jobs/job-게임ui디자이너.webp",
-          "risk_penalty": 24
-        },
-        {
-          "job_id": "1765284670362738",
-          "job_name": "반도체FAB시설운영기술자",
-          "slug": "반도체fab시설운영기술자",
-          "image_url": "/uploads/jobs/job-반도체fab시설운영기술자.webp",
+          "job_id": "1765283533778267",
+          "job_name": "공공기관임원",
+          "slug": "공공기관임원",
+          "image_url": "/uploads/jobs/job-공공기관임원.webp",
           "risk_penalty": 25
         },
         {
-          "job_id": "1765284209876297",
-          "job_name": "게임배경원화디자이너",
-          "slug": "게임배경원화디자이너",
-          "image_url": "/uploads/jobs/job-게임배경원화디자이너.webp",
+          "job_id": "1765284202608861",
+          "job_name": "광고그래픽디자이너",
+          "slug": "광고그래픽디자이너",
+          "image_url": "/uploads/jobs/job-광고그래픽디자이너.webp",
           "risk_penalty": 24
         },
         {
-          "job_id": "1765283551817365",
-          "job_name": "정밀화학연구기획자",
-          "slug": "정밀화학연구기획자",
-          "image_url": "/uploads/jobs/job-정밀화학연구기획자.webp",
+          "job_id": "1765283755455153",
+          "job_name": "플랜트프로젝트사업관리자",
+          "slug": "플랜트프로젝트사업관리자",
+          "image_url": "/uploads/jobs/job-플랜트프로젝트사업관리자.webp",
           "risk_penalty": 25
         }
       ],
@@ -1113,20 +1113,20 @@
         "has_unknown_in_top3": false,
         "needs_followup_question": true,
         "counts_before_filter": {
-          "safe_known": 165,
-          "safe_unknown": 129,
-          "caution": 206,
+          "safe_known": 163,
+          "safe_unknown": 125,
+          "caution": 212,
           "total": 500
         },
         "counts_after_filter": {
-          "safe_known": 165,
-          "safe_unknown": 129,
-          "caution": 206,
+          "safe_known": 163,
+          "safe_unknown": 125,
+          "caution": 212,
           "total": 500
         }
       },
       "llm_explanation": "2개의 답변을 반영하여 추천했습니다.",
-      "generated_at": "2026-03-08T07:55:11.442Z",
+      "generated_at": "2026-03-08T10:35:25.202Z",
       "total_candidates": 6945,
       "scored_candidates": 500,
       "filtered_out_candidates": 0,
@@ -1138,26 +1138,26 @@
       "phase4_applied": true,
       "diversity_guard_active": true,
       "diversity_changes": [
-        "대학학생처장 → 방송설비기술자 (Diversity Guard: other)",
-        "마카로니제조원 → 게임UI디자이너 (Diversity Guard: other)",
-        "수산업교사 → 마카로니제조원 (Diversity Guard: people_service)"
+        "철망설치원 → 양념제분기조작원 (Diversity Guard: people_service)",
+        "마카로니제조원 → 화장품상품기획자 (Diversity Guard: other)",
+        "리벳원 → 철망설치원 (Diversity Guard: other)"
       ],
       "analysis_stage": "major_high",
       "stage_specific_insights": [],
       "premium_report": {
-        "report_id": "report-session-741-1772956511442",
-        "generated_at": "2026-03-08T07:55:11.442Z",
-        "session_id": "session-741",
+        "report_id": "report-session-790-1772966125202",
+        "generated_at": "2026-03-08T10:35:25.202Z",
+        "session_id": "session-790",
         "engine_version": "v3-rule",
         "overall_status": "partial",
         "sections_completed": 7,
         "sections_total": 8,
-        "_confidence": 0.4293766385365573,
+        "_confidence": 0.4282329024445519,
         "_factsCount": 2,
         "_answeredQuestions": 2,
         "_candidatesScored": 100,
         "_appliedRules": 4,
-        "executiveSummary": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 정부행정관리자(일반) 같은 분야를 시작점으로 고려해보세요.",
+        "executiveSummary": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 장기이식코디네이터 같은 분야를 시작점으로 고려해보세요.",
         "workStyleNarrative": "작업 스타일 분석을 위해 더 많은 정보가 필요합니다.",
         "workStyleMap": {
           "analytical_vs_creative": 0,
@@ -1172,9 +1172,9 @@
         "growthCurveDescription": "성장 곡선 분석을 위해 더 많은 정보가 필요합니다.",
         "stressTriggers": [],
         "lifeVersionStatement": {
-          "oneLiner": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 정부행정관리자(일반) 같은 분야를 시작점으로 고려해보세요.",
+          "oneLiner": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 장기이식코디네이터 같은 분야를 시작점으로 고려해보세요.",
           "expanded": [
-            "🎯 최적 추천: 정부행정관리자(일반)"
+            "🎯 최적 추천: 장기이식코디네이터"
           ]
         },
         "expertGuidance": {
@@ -1232,11 +1232,11 @@
             "confidence": 0.6,
             "generated_by": "rule_enhanced"
           },
-          "headline": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 정부행정관리자(일반) 같은 분야를 시작점으로 고려해보세요.",
+          "headline": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 장기이식코디네이터 같은 분야를 시작점으로 고려해보세요.",
           "top_takeaways": [
-            "🎯 최적 추천: 정부행정관리자(일반)"
+            "🎯 최적 추천: 장기이식코디네이터"
           ],
-          "recommended_next_step": "정부행정관리자(일반)에 대해 더 알아보고, 관련 역량을 파악해보세요",
+          "recommended_next_step": "장기이식코디네이터에 대해 더 알아보고, 관련 역량을 파악해보세요",
           "recommendation_rationale": {
             "included_because": [
               "입력하신 관심사와 가치관을 기반으로 적합도가 높은 직업을 추천했습니다."
@@ -1261,7 +1261,7 @@
         "key_hypotheses": {
           "_meta": {
             "status": "success",
-            "confidence": 0.7033333333333333,
+            "confidence": 0.7000000000000001,
             "generated_by": "rule"
           },
           "hypotheses": [
@@ -1329,12 +1329,12 @@
                   },
                   "job_attribute": {
                     "key": "analytical",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
+                    "value": "65",
+                    "label": "관련 역량: 65/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
                 },
                 {
                   "user_fact": {
@@ -1344,19 +1344,19 @@
                   },
                   "job_attribute": {
                     "key": "analytical",
-                    "value": "60",
-                    "label": "분석 업무: 60/100"
+                    "value": "65",
+                    "label": "분석 업무: 65/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
                 }
               ],
               "what_would_change_my_mind": "실제 직업 생활에서 다른 가치가 더 중요해진다면 재평가가 필요합니다"
             },
             {
-              "hypothesis": "정부행정관리자(일반) 관련 분야가 당신에게 가장 적합한 직업군입니다",
-              "confidence": 0.61,
+              "hypothesis": "장기이식코디네이터 관련 분야가 당신에게 가장 적합한 직업군입니다",
+              "confidence": 0.6,
               "supporting_evidence": [
                 {
                   "user_fact": {
@@ -1416,89 +1416,10 @@
           },
           "recommendations": [
             {
-              "id": "1765283538830472",
-              "name": "정부행정관리자(일반)",
-              "fit_score": 61,
-              "personal_fit_reason": "정부행정관리자(일반)은(는) 워라밸이 좋은 편, 수입 수준이 높음 직업입니다.",
-              "evidence_links": [
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping_teaching,organizing",
-                    "label": "\"helping_teaching, organizing\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping_teaching,organizing",
-                    "label": "분석적 업무 관심"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "분석 업무: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping_teaching,organizing",
-                    "label": "\"helping_teaching, organizing\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "50",
-                    "label": "관련 역량: 50/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping_teaching,organizing",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "50",
-                    "label": "창의성: 50/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
-                }
-              ],
-              "growth_path_30_days": [
-                "정부행정관리자(일반) 관련 기초 지식 학습",
-                "관련 온라인 강의/자료 탐색",
-                "현직자 이야기 듣기 또는 직업 체험",
-                "필요 역량 파악 및 학습 계획 수립",
-                "작은 프로젝트로 실습 시작"
-              ],
-              "risks": [
-                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
-                "경쟁이 있을 수 있습니다."
-              ]
-            },
-            {
-              "id": "1765284003930128",
-              "name": "수간호사",
+              "id": "1765284005772312",
+              "name": "장기이식코디네이터",
               "fit_score": 60,
-              "personal_fit_reason": "수간호사는 성장 가능성이 높음, 수입 수준이 높음 직업입니다.",
+              "personal_fit_reason": "장기이식코디네이터는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1562,7 +1483,7 @@
                 }
               ],
               "growth_path_30_days": [
-                "수간호사 관련 기초 지식 학습",
+                "장기이식코디네이터 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1574,10 +1495,10 @@
               ]
             },
             {
-              "id": "1765284035936846",
-              "name": "수산업교사",
+              "id": "1765284739951129",
+              "name": "철망설치원",
               "fit_score": 60,
-              "personal_fit_reason": "수산업교사는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
+              "personal_fit_reason": "철망설치원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1586,43 +1507,13 @@
                     "label": "\"helping_teaching, organizing\" 관심사"
                   },
                   "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping_teaching,organizing",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "helping_teaching,organizing",
-                    "label": "\"helping_teaching, organizing\" 관심사"
-                  },
-                  "job_attribute": {
                     "key": "analytical",
-                    "value": "50",
-                    "label": "관련 역량: 50/100"
+                    "value": "65",
+                    "label": "관련 역량: 65/100"
                   },
                   "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                  "score_contribution": 14,
+                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
                 },
                 {
                   "user_fact": {
@@ -1632,16 +1523,46 @@
                   },
                   "job_attribute": {
                     "key": "analytical",
-                    "value": "50",
-                    "label": "분석 업무: 50/100"
+                    "value": "65",
+                    "label": "분석 업무: 65/100"
                   },
                   "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 50점입니다"
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping_teaching,organizing",
+                    "label": "\"helping_teaching, organizing\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "55",
+                    "label": "관련 역량: 55/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 13,
+                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 55점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping_teaching,organizing",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "55",
+                    "label": "창의성: 55/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 13,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 55점입니다"
                 }
               ],
               "growth_path_30_days": [
-                "수산업교사 관련 기초 지식 학습",
+                "철망설치원 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1653,10 +1574,10 @@
               ]
             },
             {
-              "id": "1765283554863505",
-              "name": "대학학생처장",
-              "fit_score": 58,
-              "personal_fit_reason": "대학학생처장은 성장 가능성이 높음, 수입 수준이 높음 직업입니다.",
+              "id": "1765284734014675",
+              "name": "케이블포설원",
+              "fit_score": 60,
+              "personal_fit_reason": "케이블포설원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1666,12 +1587,12 @@
                   },
                   "job_attribute": {
                     "key": "analytical",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
+                    "value": "65",
+                    "label": "관련 역량: 65/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
                 },
                 {
                   "user_fact": {
@@ -1681,12 +1602,12 @@
                   },
                   "job_attribute": {
                     "key": "analytical",
-                    "value": "60",
-                    "label": "분석 업무: 60/100"
+                    "value": "65",
+                    "label": "분석 업무: 65/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
                 },
                 {
                   "user_fact": {
@@ -1720,7 +1641,7 @@
                 }
               ],
               "growth_path_30_days": [
-                "대학학생처장 관련 기초 지식 학습",
+                "케이블포설원 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1809,6 +1730,85 @@
                 "새로운 분야 적응에 시간이 필요할 수 있습니다.",
                 "경쟁이 있을 수 있습니다."
               ]
+            },
+            {
+              "id": "1765284736983404",
+              "name": "리벳원",
+              "fit_score": 57,
+              "personal_fit_reason": "리벳원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping_teaching,organizing",
+                    "label": "\"helping_teaching, organizing\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping_teaching,organizing",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping_teaching,organizing",
+                    "label": "\"helping_teaching, organizing\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"helping_teaching, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "helping_teaching,organizing",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "창의성: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "리벳원 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
             }
           ]
         },
@@ -1820,16 +1820,16 @@
           },
           "recommendations": [
             {
-              "id": "1765284689457896",
-              "name": "타이어주형수리원",
+              "id": "1765284236608752",
+              "name": "공공행정사무원(일반)",
               "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
               "conditions_to_reconsider": [
                 "우선순위가 변경되면 재고려할 수 있습니다"
               ]
             },
             {
-              "id": "1765283591854505",
-              "name": "도시민박운영자",
+              "id": "1765284832895528",
+              "name": "만두피성형원",
               "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
               "conditions_to_reconsider": [
                 "우선순위가 변경되면 재고려할 수 있습니다"
@@ -1859,7 +1859,7 @@
               "steps": [
                 "핵심 기술 집중 학습 (3개월)",
                 "관련 프로젝트/포트폴리오 구축",
-                "정부행정관리자(일반) 관련 네트워킹 시작"
+                "장기이식코디네이터 관련 네트워킹 시작"
               ]
             }
           ]
@@ -1894,7 +1894,7 @@
         }
       },
       "confidence": {
-        "score": 0.4293766385365573,
+        "score": 0.4282329024445519,
         "level": "기본",
         "description": "더 솔직하게 답해주시면 맞춤 추천이 가능해요"
       },
@@ -1914,20 +1914,20 @@
   },
   "narrativeFactsResponse": {
     "success": true,
-    "session_id": "e2e-major-1772956508491-xf1myw",
+    "session_id": "e2e-major-1772966122184-65of48",
     "meta": {
       "served_by": "v3-prod",
       "served_by_region": "APAC",
       "served_by_colo": "KIX",
       "served_by_primary": true,
       "timings": {
-        "sql_duration_ms": 0.8011
+        "sql_duration_ms": 0.2638
       },
-      "duration": 0.8011,
+      "duration": 0.2638,
       "changes": 1,
-      "last_row_id": 615,
+      "last_row_id": 664,
       "changed_db": true,
-      "size_after": 366399488,
+      "size_after": 369639424,
       "rows_read": 8,
       "rows_written": 3,
       "total_attempts": 1
@@ -2189,197 +2189,134 @@
     "top10": [
       {
         "rank": 1,
-        "majorName": "사회복지과",
+        "majorName": "철학·윤리학과",
         "fitScore": 92,
         "likeScore": 95,
         "canScore": 95,
         "riskPenalty": 0,
-        "fieldCategory": "social_science",
-        "summary": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 심리학이 필요하여 일부 충족이 필요합니다."
+        "fieldCategory": "humanities",
+        "summary": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다."
       },
       {
         "rank": 2,
-        "majorName": "철학·윤리학과",
-        "fitScore": 89,
-        "likeScore": 88,
-        "canScore": 94,
+        "majorName": "역사·고고학과",
+        "fitScore": 84,
+        "likeScore": 87,
+        "canScore": 85,
         "riskPenalty": 0,
         "fieldCategory": "humanities",
-        "summary": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다."
+        "summary": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문헌 분석과 비판적 사고가 필요한 이 전공은 독해작문 70/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다."
       },
       {
         "rank": 3,
-        "majorName": "행정학과",
-        "fitScore": 84,
-        "likeScore": 88,
-        "canScore": 85,
-        "riskPenalty": 0,
-        "fieldCategory": "social_science",
-        "summary": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 의사소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 정치학, 경제학, 사회학이 필요하여 일부 충족이 필요합니다."
-      },
-      {
-        "rank": 4,
-        "majorName": "아동·청소년복지학과",
+        "majorName": "교정보호학과",
         "fitScore": 83,
-        "likeScore": 88,
+        "likeScore": 87,
         "canScore": 84,
         "riskPenalty": 0,
         "fieldCategory": "social_science",
-        "summary": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회복지학과 심리학이 필요하여 일부 충족이 필요합니다."
+        "summary": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 사회복지와 심리 상담이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 70/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 법학과 사회학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다."
+      },
+      {
+        "rank": 4,
+        "majorName": "생물교육과",
+        "fitScore": 78,
+        "likeScore": 78,
+        "canScore": 83,
+        "riskPenalty": 0,
+        "fieldCategory": "general",
+        "summary": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 능력과 과학적 사고가 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 화학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다."
       },
       {
         "rank": 5,
-        "majorName": "역사·고고학과",
-        "fitScore": 80,
-        "likeScore": 81,
-        "canScore": 83,
+        "majorName": "보건행정과",
+        "fitScore": 78,
+        "likeScore": 62,
+        "canScore": 94,
         "riskPenalty": 0,
-        "fieldCategory": "humanities",
-        "summary": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 50/100으로 사람들과의 상호작용이 필요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 70/100이 요구되는 이 전공은 문헌 분석과 비판적 사고가 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다."
+        "fieldCategory": "medical",
+        "summary": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 병원행정사무원과 관련된 의사소통과 문서 관리가 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 보건 분야에서의 의미 있는 기여가 가능합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 의사소통과 데이터 분석이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 보건학과 행정학이 필요합니다."
       },
       {
         "rank": 6,
-        "majorName": "호텔·관광경영학과",
-        "fitScore": 76,
-        "likeScore": 81,
+        "majorName": "교양사회과학부",
+        "fitScore": 75,
+        "likeScore": 78,
         "canScore": 75,
         "riskPenalty": 0,
-        "fieldCategory": "business",
-        "summary": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 고객서비스와 의사소통이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 고객서비스가 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 경영학과 외국어가 필요하여 일부 충족이 필요합니다."
+        "fieldCategory": "social_science",
+        "summary": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 비판적 사고와 의사소통 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '사회학', '심리학', '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다."
       },
       {
         "rank": 7,
-        "majorName": "경영정보학과",
-        "fitScore": 69,
-        "likeScore": 74,
-        "canScore": 65,
+        "majorName": "농업교육과",
+        "fitScore": 75,
+        "likeScore": 70,
+        "canScore": 82,
         "riskPenalty": 0,
-        "fieldCategory": "business",
-        "summary": "[흥미 근거] '조직/관리'에 대한 관심이 있으시다고 하셨는데, 경영정보학과는 경영 컨설턴트와 같은 직업을 통해 조직 관리에 기여할 수 있습니다. [적성 근거] 또한, 분석 능력이 핵심 역량으로 요구되며, 이는 '소통력'과 연결될 수 있습니다. [리스크] 그러나, 이 전공은 경영학과 정보기술을 선이수과목으로 요구하며, 이는 사용자의 배경과 맞지 않을 수 있습니다."
+        "fieldCategory": "education",
+        "summary": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 농업계열교사와 관련된 교육 방법론이 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 교육적 가치가 높습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 교육 방법론과 문제 해결 능력이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 농업학, 생명과학, 교육학이 필요합니다."
       },
       {
         "rank": 8,
-        "majorName": "일반사회교육과",
-        "fitScore": 67,
-        "likeScore": 74,
-        "canScore": 64,
+        "majorName": "환경교육과",
+        "fitScore": 74,
+        "likeScore": 78,
+        "canScore": 74,
         "riskPenalty": 0,
         "fieldCategory": "education",
-        "summary": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 교육적 지도력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 사회적 의사소통이 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 교육학이 필요하여 일부 충족이 필요합니다."
+        "summary": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 환경문제 해결능력과 의사소통 능력이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 지구과학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다."
       },
       {
         "rank": 9,
-        "majorName": "경영학과",
-        "fitScore": 64,
-        "likeScore": 66,
-        "canScore": 63,
+        "majorName": "자연계교육과",
+        "fitScore": 70,
+        "likeScore": 70,
+        "canScore": 73,
         "riskPenalty": 0,
-        "fieldCategory": "business",
-        "summary": "[흥미 근거] '조직/관리'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 분석 능력과 문제 해결 능력이 요구되는 이 전공은 경영 관련 지식이 필요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '경제학'과 '통계학'이 필요하며, 경쟁률이 보통 수준인 60/100입니다."
+        "fieldCategory": "education",
+        "summary": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 방법론과 커뮤니케이션 능력이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 물리학, 화학, 생물학이 필요하여 진입이 다소 어려울 수 있습니다."
       },
       {
         "rank": 10,
-        "majorName": "물리교육과",
-        "fitScore": 56,
-        "likeScore": 59,
-        "canScore": 55,
+        "majorName": "경영학과",
+        "fitScore": 66,
+        "likeScore": 70,
+        "canScore": 65,
         "riskPenalty": 0,
-        "fieldCategory": "education",
-        "summary": "[흥미 근거] '도움/가르침'에 대한 관심이 있으시다고 하셨는데, 이 전공은 교육 방법론이 핵심 역량으로 포함되어 있습니다. [적성 근거] 그러나, 이 전공은 물리학 지식이 필요하고, 수학집중도가 50/100으로 낮아 수학적 요구가 존재합니다. [리스크] 또한, 선이수과목으로 물리학과 수학이 요구되며, 이는 '수학 불가'라는 조건과 충돌하여 진입이 어려울 수 있습니다."
+        "fieldCategory": "business",
+        "summary": "[흥미 근거] '조직/관리에도 관심이 있다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문제 해결 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 높고, 선이수과목으로 '경제학'과 '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다."
       }
     ],
     "uxMetrics": null,
-    "processingTimeMs": 64897
+    "processingTimeMs": 56641
   },
   "rawRecommendResponse": {
     "success": true,
     "mode": "major_recommendation",
-    "session_id": "e2e-major-1772956508491-xf1myw",
-    "request_id": 741,
+    "session_id": "e2e-major-1772966122184-65of48",
+    "request_id": 790,
     "recommendations": {
       "top_majors": [
-        {
-          "major_id": "major:사회복지과",
-          "major_name": "사회복지과",
-          "major_description": "사회복지 전문 인력을 양성하는 학과",
-          "slug": "사회복지과",
-          "image_url": "/uploads/majors/major-사회복지과.webp",
-          "fit_score": 92,
-          "like_score": 95,
-          "can_score": 95,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다.",
-          "risk_reason": "선이수과목으로 사회학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 사회학",
-            "2학기: 심리학 + 상담 기초",
-            "3학기: 전공 심화"
-          ]
-        },
         {
           "major_id": "major:철학윤리학과",
           "major_name": "철학·윤리학과",
           "major_description": "철학과는 철학적 사고와 표현 능력을 기르는 학문으로, 윤리학과는 현대사회의 다양한 현상에 대한 가치관을 확립하는 학문입니다.",
           "slug": "철학윤리학과",
           "image_url": "/uploads/majors/major-철학윤리학과.webp",
-          "fit_score": 89,
-          "like_score": 88,
-          "can_score": 94,
+          "fit_score": 92,
+          "like_score": 95,
+          "can_score": 95,
           "feasibility_score": 65,
           "field_category": "humanities",
-          "rationale": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다.",
-          "like_reason": "'도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다.",
-          "risk_reason": "경쟁률이 보통 수준인 50/100이며, 선이수과목으로 '철학개론'과 '윤리학'이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다.",
+          "risk_reason": "'선이수과목으로 '철학개론'과 '윤리학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 철학개론 + 윤리학",
             "2학기: 비판적 사고 + 논리적 글쓰기",
             "3학기: 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:행정학과",
-          "major_name": "행정학과",
-          "major_description": "행정학과는 정부와 국민, 공공부문과 민간부문의 상호작용을 연구하며 효율적인 국가 운영을 목표로 하는 학과입니다.",
-          "slug": "행정학과",
-          "image_url": "/uploads/majors/major-행정학과.webp",
-          "fit_score": 84,
-          "like_score": 88,
-          "can_score": 85,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 의사소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 정치학, 경제학, 사회학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 의사소통 능력이 중요합니다.",
-          "risk_reason": "선이수과목으로 정치학, 경제학, 사회학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 정치학",
-            "2학기: 경제학 + 사회학",
-            "3학기: 전공 심화"
-          ]
-        },
-        {
-          "major_id": "major:아동청소년복지학과",
-          "major_name": "아동·청소년복지학과",
-          "major_description": "아동·청소년복지학과는 아동과 청소년을 위한 복지 정책과 지원을 배우는 전공입니다.",
-          "slug": "아동청소년복지학과",
-          "image_url": "/uploads/majors/major-아동청소년복지학과.webp",
-          "fit_score": 83,
-          "like_score": 88,
-          "can_score": 84,
-          "feasibility_score": 60,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회복지학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다.",
-          "risk_reason": "선이수과목으로 사회복지학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 사회복지학",
-            "2학기: 심리학 + 상담 기초",
-            "3학기: 전공 심화"
           ]
         },
         {
@@ -2388,15 +2325,15 @@
           "major_description": "역사와 고고학을 통해 과거의 문화와 사회를 연구하는 전공.",
           "slug": "역사고고학과",
           "image_url": "/uploads/majors/major-역사고고학과.webp",
-          "fit_score": 80,
-          "like_score": 81,
-          "can_score": 83,
+          "fit_score": 84,
+          "like_score": 87,
+          "can_score": 85,
           "feasibility_score": 65,
           "field_category": "humanities",
-          "rationale": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 50/100으로 사람들과의 상호작용이 필요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 70/100이 요구되는 이 전공은 문헌 분석과 비판적 사고가 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다.",
-          "like_reason": "'도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 50/100으로 사람들과의 상호작용이 필요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 독해작문 70/100이 요구되는 이 전공은 문헌 분석과 비판적 사고가 중요합니다.",
-          "risk_reason": "경쟁률이 보통 수준인 50/100이며, 선이수과목으로 '역사', '사회', '문헌학'이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문헌 분석과 비판적 사고가 필요한 이 전공은 독해작문 70/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 문헌 분석과 비판적 사고가 필요한 이 전공은 독해작문 70/100이 요구됩니다.",
+          "risk_reason": "'선이수과목으로 '역사', '사회', '문헌학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 역사 + 사회",
             "2학기: 문헌학 + 비판적 사고",
@@ -2404,66 +2341,150 @@
           ]
         },
         {
-          "major_id": "major:호텔관광경영학과",
-          "major_name": "호텔·관광경영학과",
-          "major_description": "호텔 및 관광 산업에 대한 전문 지식과 실무 교육을 제공하는 전공",
-          "slug": "호텔관광경영학과",
-          "image_url": "/uploads/majors/major-호텔관광경영학과.webp",
-          "fit_score": 76,
-          "like_score": 81,
-          "can_score": 75,
+          "major_id": "major:교정보호학과",
+          "major_name": "교정보호학과",
+          "major_description": "범죄자의 교정교화와 사회복귀를 도모하기 위한 과학적 교정처우의 이론과 경험적 연구를 병행하는 학문.",
+          "slug": "교정보호학과",
+          "image_url": "/uploads/majors/major-교정보호학과.webp",
+          "fit_score": 83,
+          "like_score": 87,
+          "can_score": 84,
           "feasibility_score": 60,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 고객서비스와 의사소통이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 고객서비스가 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 경영학과 외국어가 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 고객서비스와 의사소통이 핵심입니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 고객서비스가 소통 능력과 연결됩니다.",
-          "risk_reason": "선이수과목으로 경영학과 외국어가 필요하여 일부 충족이 필요합니다.",
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 사회복지와 심리 상담이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 70/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 법학과 사회학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 사회복지와 심리 상담이 핵심입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 70/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "법학과 사회학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
           "semester_plan": [
-            "1학기: 기초 교양 + 경영학",
-            "2학기: 외국어 + 고객서비스",
-            "3학기: 전공 심화"
+            "1학기: 사회학 + 심리학 기초",
+            "2학기: 법학 + 상담 기술",
+            "3학기: 실습 및 현장 경험"
           ]
         },
         {
-          "major_id": "major:경영정보학과",
-          "major_name": "경영정보학과",
-          "major_description": "경영정보학과는 경영학과 정보기술의 융합을 통해 비즈니스 문제를 해결하는 전공입니다.",
-          "slug": "경영정보학과",
-          "image_url": "/uploads/majors/major-경영정보학과.webp",
-          "fit_score": 69,
-          "like_score": 74,
-          "can_score": 65,
+          "major_id": "major:생물교육과",
+          "major_name": "생물교육과",
+          "major_description": "생물교육과는 생물 분야를 중점적으로 다루며 과학교육의 방향을 제시하는 전공입니다.",
+          "slug": "생물교육과",
+          "image_url": "/uploads/majors/major-생물교육과.webp",
+          "fit_score": 78,
+          "like_score": 78,
+          "can_score": 83,
+          "feasibility_score": 55,
+          "field_category": "general",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 능력과 과학적 사고가 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 화학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 능력과 과학적 사고가 중요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "생물학과 화학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 생물학 기초 + 교육학 개론",
+            "2학기: 교육 방법론 + 실습",
+            "3학기: 전공 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:보건행정과",
+          "major_name": "보건행정과",
+          "major_description": "보건행정과는 보건의료 서비스와 관련된 전문지식을 학습하여 보건 및 병원행정 업무를 효율적으로 처리하는 기술인을 양성하는 전공입니다.",
+          "slug": "보건행정과",
+          "image_url": "/uploads/majors/major-보건행정과.webp",
+          "fit_score": 78,
+          "like_score": 62,
+          "can_score": 94,
           "feasibility_score": 65,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리'에 대한 관심이 있으시다고 하셨는데, 경영정보학과는 경영 컨설턴트와 같은 직업을 통해 조직 관리에 기여할 수 있습니다. [적성 근거] 또한, 분석 능력이 핵심 역량으로 요구되며, 이는 '소통력'과 연결될 수 있습니다. [리스크] 그러나, 이 전공은 경영학과 정보기술을 선이수과목으로 요구하며, 이는 사용자의 배경과 맞지 않을 수 있습니다.",
-          "like_reason": "경영정보학과는 경영 컨설턴트와 같은 직업을 통해 '조직/관리'에 대한 관심과 잘 맞습니다.",
-          "can_reason": "분석 능력이 핵심 역량으로 요구되며, 이는 '소통력'과 연결될 수 있습니다.",
-          "risk_reason": "이 전공은 경영학과 정보기술을 선이수과목으로 요구하며, 이는 사용자의 배경과 맞지 않을 수 있습니다.",
+          "field_category": "medical",
+          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 병원행정사무원과 관련된 의사소통과 문서 관리가 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 보건 분야에서의 의미 있는 기여가 가능합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 의사소통과 데이터 분석이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 보건학과 행정학이 필요합니다.",
+          "like_reason": "'도움/가르침'에 대한 관심이 있으신데, 이 전공은 병원행정사무원과 관련된 의사소통과 문서 관리가 필요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 의사소통과 데이터 분석이 필요합니다.",
+          "risk_reason": "경쟁률이 50/100으로 보통이며, 선이수과목으로 보건학과 행정학이 필요합니다.",
           "semester_plan": [
-            "1학기: 경영학 기초 + 정보기술",
-            "2학기: 데이터 분석 + 경영 전략",
-            "3학기: 실습 및 프로젝트"
+            "1학기: 보건학 기초",
+            "2학기: 행정학 기초",
+            "3학기: 의사소통 및 문서 관리"
           ]
         },
         {
-          "major_id": "major:일반사회교육과",
-          "major_name": "일반사회교육과",
-          "major_description": "일반사회교육과는 사회과의 이론을 교육자로서 습득하고 중등학생의 민주시민으로 성장하도록 돕는 전공입니다.",
-          "slug": "일반사회교육과",
-          "image_url": "/uploads/majors/major-일반사회교육과.webp",
-          "fit_score": 67,
-          "like_score": 74,
-          "can_score": 64,
+          "major_id": "major:교양사회과학부",
+          "major_name": "교양사회과학부",
+          "major_description": "교양사회과학 분야는 사회계열 내의 특정 전공학과에 대한 전문과정의 기초를 닦는 것을 목적으로 합니다.",
+          "slug": "교양사회과학부",
+          "image_url": "/uploads/majors/major-교양사회과학부.webp",
+          "fit_score": 75,
+          "like_score": 78,
+          "can_score": 75,
+          "feasibility_score": 65,
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 비판적 사고와 의사소통 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '사회학', '심리학', '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 비판적 사고와 의사소통 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다.",
+          "risk_reason": "'선이수과목으로 '사회학', '심리학', '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "semester_plan": [
+            "1학기: 사회학 + 심리학",
+            "2학기: 통계학 + 비판적 사고",
+            "3학기: 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:농업교육과",
+          "major_name": "농업교육과",
+          "major_description": "농업교육과는 농업과 교육의 융합을 통해 농촌 지역 개발과 첨단 농업 전문가 양성을 목표로 하는 전공입니다.",
+          "slug": "농업교육과",
+          "image_url": "/uploads/majors/major-농업교육과.webp",
+          "fit_score": 75,
+          "like_score": 70,
+          "can_score": 82,
+          "feasibility_score": 60,
+          "field_category": "education",
+          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 농업계열교사와 관련된 교육 방법론이 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 교육적 가치가 높습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 교육 방법론과 문제 해결 능력이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 농업학, 생명과학, 교육학이 필요합니다.",
+          "like_reason": "'도움/가르침'에 대한 관심이 있으신데, 이 전공은 농업계열교사와 관련된 교육 방법론이 필요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 교육 방법론과 문제 해결 능력이 필요합니다.",
+          "risk_reason": "경쟁률이 50/100으로 보통이며, 선이수과목으로 농업학, 생명과학, 교육학이 필요합니다.",
+          "semester_plan": [
+            "1학기: 농업 교육 기초",
+            "2학기: 생명과학 기초",
+            "3학기: 교육 방법론 심화"
+          ]
+        },
+        {
+          "major_id": "major:환경교육과",
+          "major_name": "환경교육과",
+          "major_description": "환경문제 해결을 위한 교육 전문 인력 양성",
+          "slug": "환경교육과",
+          "image_url": "/uploads/majors/major-환경교육과.webp",
+          "fit_score": 74,
+          "like_score": 78,
+          "can_score": 74,
+          "feasibility_score": 60,
+          "field_category": "education",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 환경문제 해결능력과 의사소통 능력이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 지구과학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 환경문제 해결능력과 의사소통 능력이 중요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "생물학과 지구과학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 환경과학 기초 + 교육학 개론",
+            "2학기: 환경문제 해결 방법론 + 실습",
+            "3학기: 전공 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:자연계교육과",
+          "major_name": "자연계교육과",
+          "major_description": "자연계교육과는 가정과 과학 분야의 교사를 양성하는 전공입니다.",
+          "slug": "자연계교육과",
+          "image_url": "/uploads/majors/major-자연계교육과.webp",
+          "fit_score": 70,
+          "like_score": 70,
+          "can_score": 73,
           "feasibility_score": 55,
           "field_category": "education",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 교육적 지도력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 사회적 의사소통이 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 교육학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 교육적 지도력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 사회적 의사소통이 소통 능력과 연결됩니다.",
-          "risk_reason": "선이수과목으로 사회학과 교육학이 필요하여 일부 충족이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 방법론과 커뮤니케이션 능력이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 물리학, 화학, 생물학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 방법론과 커뮤니케이션 능력이 핵심입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "선이수과목으로 물리학, 화학, 생물학이 필요하여 진입이 다소 어려울 수 있습니다.",
           "semester_plan": [
-            "1학기: 기초 교양 + 사회학",
-            "2학기: 교육학 + 교육적 지도력",
-            "3학기: 전공 심화"
+            "1학기: 기초 과학 + 교육학 개론",
+            "2학기: 교육 방법론 + 실습",
+            "3학기: 전공 심화 과목"
           ]
         },
         {
@@ -2472,126 +2493,42 @@
           "major_description": "경영학과는 기업 운영과 관리에 필요한 이론과 실무를 배우는 전공입니다.",
           "slug": "경영학과",
           "image_url": "/uploads/majors/major-경영학과.webp",
-          "fit_score": 64,
-          "like_score": 66,
-          "can_score": 63,
-          "feasibility_score": 65,
+          "fit_score": 66,
+          "like_score": 70,
+          "can_score": 65,
+          "feasibility_score": 50,
           "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 분석 능력과 문제 해결 능력이 요구되는 이 전공은 경영 관련 지식이 필요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '경제학'과 '통계학'이 필요하며, 경쟁률이 보통 수준인 60/100입니다.",
-          "like_reason": "'조직/관리'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 중요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 분석 능력과 문제 해결 능력이 요구되는 이 전공은 경영 관련 지식이 필요합니다.",
-          "risk_reason": "이 전공은 선이수과목으로 '경제학'과 '통계학'이 필요하며, 경쟁률이 보통 수준인 60/100입니다.",
+          "rationale": "[흥미 근거] '조직/관리에도 관심이 있다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문제 해결 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 높고, 선이수과목으로 '경제학'과 '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'조직/관리에도 관심이 있다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 문제 해결 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다.",
+          "risk_reason": "'경쟁률이 60/100으로 높고, 선이수과목으로 '경제학'과 '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 경제학 + 경영학 기초",
-            "2학기: 마케팅 + 조직 관리",
+            "2학기: 통계학 + 문제 해결",
             "3학기: 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:물리교육과",
-          "major_name": "물리교육과",
-          "major_description": "물리교육과는 물리학과 과학교육을 통해 중ㆍ고등학교 과학교사를 양성하는 전공입니다.",
-          "slug": "물리교육과",
-          "image_url": "/uploads/majors/major-물리교육과.webp",
-          "fit_score": 56,
-          "like_score": 59,
-          "can_score": 55,
-          "feasibility_score": 45,
-          "field_category": "education",
-          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으시다고 하셨는데, 이 전공은 교육 방법론이 핵심 역량으로 포함되어 있습니다. [적성 근거] 그러나, 이 전공은 물리학 지식이 필요하고, 수학집중도가 50/100으로 낮아 수학적 요구가 존재합니다. [리스크] 또한, 선이수과목으로 물리학과 수학이 요구되며, 이는 '수학 불가'라는 조건과 충돌하여 진입이 어려울 수 있습니다.",
-          "like_reason": "이 전공은 교육 방법론이 핵심 역량으로 포함되어 있어 '도움/가르침'에 대한 관심과 잘 맞습니다.",
-          "can_reason": "물리학 지식이 필요하지만, 수학집중도가 50/100으로 낮아 수학적 요구가 존재합니다.",
-          "risk_reason": "선이수과목으로 물리학과 수학이 요구되며, 이는 '수학 불가'라는 조건과 충돌하여 진입이 어려울 수 있습니다.",
-          "semester_plan": [
-            "1학기: 기초 물리학 + 교육학 개론",
-            "2학기: 물리 실험 + 교육 방법론",
-            "3학기: 교육 실습"
           ]
         }
       ],
       "fit_top10": [
         {
-          "major_id": "major:사회복지과",
-          "major_name": "사회복지과",
-          "major_description": "사회복지 전문 인력을 양성하는 학과",
-          "slug": "사회복지과",
-          "image_url": "/uploads/majors/major-사회복지과.webp",
-          "fit_score": 92,
-          "like_score": 95,
-          "can_score": 95,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다.",
-          "risk_reason": "선이수과목으로 사회학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 사회학",
-            "2학기: 심리학 + 상담 기초",
-            "3학기: 전공 심화"
-          ]
-        },
-        {
           "major_id": "major:철학윤리학과",
           "major_name": "철학·윤리학과",
           "major_description": "철학과는 철학적 사고와 표현 능력을 기르는 학문으로, 윤리학과는 현대사회의 다양한 현상에 대한 가치관을 확립하는 학문입니다.",
           "slug": "철학윤리학과",
           "image_url": "/uploads/majors/major-철학윤리학과.webp",
-          "fit_score": 89,
-          "like_score": 88,
-          "can_score": 94,
+          "fit_score": 92,
+          "like_score": 95,
+          "can_score": 95,
           "feasibility_score": 65,
           "field_category": "humanities",
-          "rationale": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다.",
-          "like_reason": "'도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다.",
-          "risk_reason": "경쟁률이 보통 수준인 50/100이며, 선이수과목으로 '철학개론'과 '윤리학'이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다.",
+          "risk_reason": "'선이수과목으로 '철학개론'과 '윤리학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 철학개론 + 윤리학",
             "2학기: 비판적 사고 + 논리적 글쓰기",
             "3학기: 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:행정학과",
-          "major_name": "행정학과",
-          "major_description": "행정학과는 정부와 국민, 공공부문과 민간부문의 상호작용을 연구하며 효율적인 국가 운영을 목표로 하는 학과입니다.",
-          "slug": "행정학과",
-          "image_url": "/uploads/majors/major-행정학과.webp",
-          "fit_score": 84,
-          "like_score": 88,
-          "can_score": 85,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 의사소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 정치학, 경제학, 사회학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 의사소통 능력이 중요합니다.",
-          "risk_reason": "선이수과목으로 정치학, 경제학, 사회학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 정치학",
-            "2학기: 경제학 + 사회학",
-            "3학기: 전공 심화"
-          ]
-        },
-        {
-          "major_id": "major:아동청소년복지학과",
-          "major_name": "아동·청소년복지학과",
-          "major_description": "아동·청소년복지학과는 아동과 청소년을 위한 복지 정책과 지원을 배우는 전공입니다.",
-          "slug": "아동청소년복지학과",
-          "image_url": "/uploads/majors/major-아동청소년복지학과.webp",
-          "fit_score": 83,
-          "like_score": 88,
-          "can_score": 84,
-          "feasibility_score": 60,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회복지학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다.",
-          "risk_reason": "선이수과목으로 사회복지학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 사회복지학",
-            "2학기: 심리학 + 상담 기초",
-            "3학기: 전공 심화"
           ]
         },
         {
@@ -2600,15 +2537,15 @@
           "major_description": "역사와 고고학을 통해 과거의 문화와 사회를 연구하는 전공.",
           "slug": "역사고고학과",
           "image_url": "/uploads/majors/major-역사고고학과.webp",
-          "fit_score": 80,
-          "like_score": 81,
-          "can_score": 83,
+          "fit_score": 84,
+          "like_score": 87,
+          "can_score": 85,
           "feasibility_score": 65,
           "field_category": "humanities",
-          "rationale": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 50/100으로 사람들과의 상호작용이 필요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 70/100이 요구되는 이 전공은 문헌 분석과 비판적 사고가 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다.",
-          "like_reason": "'도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 50/100으로 사람들과의 상호작용이 필요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 독해작문 70/100이 요구되는 이 전공은 문헌 분석과 비판적 사고가 중요합니다.",
-          "risk_reason": "경쟁률이 보통 수준인 50/100이며, 선이수과목으로 '역사', '사회', '문헌학'이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문헌 분석과 비판적 사고가 필요한 이 전공은 독해작문 70/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 문헌 분석과 비판적 사고가 필요한 이 전공은 독해작문 70/100이 요구됩니다.",
+          "risk_reason": "'선이수과목으로 '역사', '사회', '문헌학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 역사 + 사회",
             "2학기: 문헌학 + 비판적 사고",
@@ -2616,66 +2553,150 @@
           ]
         },
         {
-          "major_id": "major:호텔관광경영학과",
-          "major_name": "호텔·관광경영학과",
-          "major_description": "호텔 및 관광 산업에 대한 전문 지식과 실무 교육을 제공하는 전공",
-          "slug": "호텔관광경영학과",
-          "image_url": "/uploads/majors/major-호텔관광경영학과.webp",
-          "fit_score": 76,
-          "like_score": 81,
-          "can_score": 75,
+          "major_id": "major:교정보호학과",
+          "major_name": "교정보호학과",
+          "major_description": "범죄자의 교정교화와 사회복귀를 도모하기 위한 과학적 교정처우의 이론과 경험적 연구를 병행하는 학문.",
+          "slug": "교정보호학과",
+          "image_url": "/uploads/majors/major-교정보호학과.webp",
+          "fit_score": 83,
+          "like_score": 87,
+          "can_score": 84,
           "feasibility_score": 60,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 고객서비스와 의사소통이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 고객서비스가 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 경영학과 외국어가 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 고객서비스와 의사소통이 핵심입니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 고객서비스가 소통 능력과 연결됩니다.",
-          "risk_reason": "선이수과목으로 경영학과 외국어가 필요하여 일부 충족이 필요합니다.",
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 사회복지와 심리 상담이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 70/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 법학과 사회학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 사회복지와 심리 상담이 핵심입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 70/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "법학과 사회학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
           "semester_plan": [
-            "1학기: 기초 교양 + 경영학",
-            "2학기: 외국어 + 고객서비스",
-            "3학기: 전공 심화"
+            "1학기: 사회학 + 심리학 기초",
+            "2학기: 법학 + 상담 기술",
+            "3학기: 실습 및 현장 경험"
           ]
         },
         {
-          "major_id": "major:경영정보학과",
-          "major_name": "경영정보학과",
-          "major_description": "경영정보학과는 경영학과 정보기술의 융합을 통해 비즈니스 문제를 해결하는 전공입니다.",
-          "slug": "경영정보학과",
-          "image_url": "/uploads/majors/major-경영정보학과.webp",
-          "fit_score": 69,
-          "like_score": 74,
-          "can_score": 65,
+          "major_id": "major:생물교육과",
+          "major_name": "생물교육과",
+          "major_description": "생물교육과는 생물 분야를 중점적으로 다루며 과학교육의 방향을 제시하는 전공입니다.",
+          "slug": "생물교육과",
+          "image_url": "/uploads/majors/major-생물교육과.webp",
+          "fit_score": 78,
+          "like_score": 78,
+          "can_score": 83,
+          "feasibility_score": 55,
+          "field_category": "general",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 능력과 과학적 사고가 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 화학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 능력과 과학적 사고가 중요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "생물학과 화학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 생물학 기초 + 교육학 개론",
+            "2학기: 교육 방법론 + 실습",
+            "3학기: 전공 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:보건행정과",
+          "major_name": "보건행정과",
+          "major_description": "보건행정과는 보건의료 서비스와 관련된 전문지식을 학습하여 보건 및 병원행정 업무를 효율적으로 처리하는 기술인을 양성하는 전공입니다.",
+          "slug": "보건행정과",
+          "image_url": "/uploads/majors/major-보건행정과.webp",
+          "fit_score": 78,
+          "like_score": 62,
+          "can_score": 94,
           "feasibility_score": 65,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리'에 대한 관심이 있으시다고 하셨는데, 경영정보학과는 경영 컨설턴트와 같은 직업을 통해 조직 관리에 기여할 수 있습니다. [적성 근거] 또한, 분석 능력이 핵심 역량으로 요구되며, 이는 '소통력'과 연결될 수 있습니다. [리스크] 그러나, 이 전공은 경영학과 정보기술을 선이수과목으로 요구하며, 이는 사용자의 배경과 맞지 않을 수 있습니다.",
-          "like_reason": "경영정보학과는 경영 컨설턴트와 같은 직업을 통해 '조직/관리'에 대한 관심과 잘 맞습니다.",
-          "can_reason": "분석 능력이 핵심 역량으로 요구되며, 이는 '소통력'과 연결될 수 있습니다.",
-          "risk_reason": "이 전공은 경영학과 정보기술을 선이수과목으로 요구하며, 이는 사용자의 배경과 맞지 않을 수 있습니다.",
+          "field_category": "medical",
+          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 병원행정사무원과 관련된 의사소통과 문서 관리가 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 보건 분야에서의 의미 있는 기여가 가능합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 의사소통과 데이터 분석이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 보건학과 행정학이 필요합니다.",
+          "like_reason": "'도움/가르침'에 대한 관심이 있으신데, 이 전공은 병원행정사무원과 관련된 의사소통과 문서 관리가 필요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 의사소통과 데이터 분석이 필요합니다.",
+          "risk_reason": "경쟁률이 50/100으로 보통이며, 선이수과목으로 보건학과 행정학이 필요합니다.",
           "semester_plan": [
-            "1학기: 경영학 기초 + 정보기술",
-            "2학기: 데이터 분석 + 경영 전략",
-            "3학기: 실습 및 프로젝트"
+            "1학기: 보건학 기초",
+            "2학기: 행정학 기초",
+            "3학기: 의사소통 및 문서 관리"
           ]
         },
         {
-          "major_id": "major:일반사회교육과",
-          "major_name": "일반사회교육과",
-          "major_description": "일반사회교육과는 사회과의 이론을 교육자로서 습득하고 중등학생의 민주시민으로 성장하도록 돕는 전공입니다.",
-          "slug": "일반사회교육과",
-          "image_url": "/uploads/majors/major-일반사회교육과.webp",
-          "fit_score": 67,
-          "like_score": 74,
-          "can_score": 64,
+          "major_id": "major:교양사회과학부",
+          "major_name": "교양사회과학부",
+          "major_description": "교양사회과학 분야는 사회계열 내의 특정 전공학과에 대한 전문과정의 기초를 닦는 것을 목적으로 합니다.",
+          "slug": "교양사회과학부",
+          "image_url": "/uploads/majors/major-교양사회과학부.webp",
+          "fit_score": 75,
+          "like_score": 78,
+          "can_score": 75,
+          "feasibility_score": 65,
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 비판적 사고와 의사소통 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '사회학', '심리학', '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 비판적 사고와 의사소통 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다.",
+          "risk_reason": "'선이수과목으로 '사회학', '심리학', '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "semester_plan": [
+            "1학기: 사회학 + 심리학",
+            "2학기: 통계학 + 비판적 사고",
+            "3학기: 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:농업교육과",
+          "major_name": "농업교육과",
+          "major_description": "농업교육과는 농업과 교육의 융합을 통해 농촌 지역 개발과 첨단 농업 전문가 양성을 목표로 하는 전공입니다.",
+          "slug": "농업교육과",
+          "image_url": "/uploads/majors/major-농업교육과.webp",
+          "fit_score": 75,
+          "like_score": 70,
+          "can_score": 82,
+          "feasibility_score": 60,
+          "field_category": "education",
+          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 농업계열교사와 관련된 교육 방법론이 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 교육적 가치가 높습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 교육 방법론과 문제 해결 능력이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 농업학, 생명과학, 교육학이 필요합니다.",
+          "like_reason": "'도움/가르침'에 대한 관심이 있으신데, 이 전공은 농업계열교사와 관련된 교육 방법론이 필요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 교육 방법론과 문제 해결 능력이 필요합니다.",
+          "risk_reason": "경쟁률이 50/100으로 보통이며, 선이수과목으로 농업학, 생명과학, 교육학이 필요합니다.",
+          "semester_plan": [
+            "1학기: 농업 교육 기초",
+            "2학기: 생명과학 기초",
+            "3학기: 교육 방법론 심화"
+          ]
+        },
+        {
+          "major_id": "major:환경교육과",
+          "major_name": "환경교육과",
+          "major_description": "환경문제 해결을 위한 교육 전문 인력 양성",
+          "slug": "환경교육과",
+          "image_url": "/uploads/majors/major-환경교육과.webp",
+          "fit_score": 74,
+          "like_score": 78,
+          "can_score": 74,
+          "feasibility_score": 60,
+          "field_category": "education",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 환경문제 해결능력과 의사소통 능력이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 지구과학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 환경문제 해결능력과 의사소통 능력이 중요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "생물학과 지구과학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 환경과학 기초 + 교육학 개론",
+            "2학기: 환경문제 해결 방법론 + 실습",
+            "3학기: 전공 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:자연계교육과",
+          "major_name": "자연계교육과",
+          "major_description": "자연계교육과는 가정과 과학 분야의 교사를 양성하는 전공입니다.",
+          "slug": "자연계교육과",
+          "image_url": "/uploads/majors/major-자연계교육과.webp",
+          "fit_score": 70,
+          "like_score": 70,
+          "can_score": 73,
           "feasibility_score": 55,
           "field_category": "education",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 교육적 지도력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 사회적 의사소통이 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 교육학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 교육적 지도력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 사회적 의사소통이 소통 능력과 연결됩니다.",
-          "risk_reason": "선이수과목으로 사회학과 교육학이 필요하여 일부 충족이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 방법론과 커뮤니케이션 능력이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 물리학, 화학, 생물학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 방법론과 커뮤니케이션 능력이 핵심입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "선이수과목으로 물리학, 화학, 생물학이 필요하여 진입이 다소 어려울 수 있습니다.",
           "semester_plan": [
-            "1학기: 기초 교양 + 사회학",
-            "2학기: 교육학 + 교육적 지도력",
-            "3학기: 전공 심화"
+            "1학기: 기초 과학 + 교육학 개론",
+            "2학기: 교육 방법론 + 실습",
+            "3학기: 전공 심화 과목"
           ]
         },
         {
@@ -2684,126 +2705,42 @@
           "major_description": "경영학과는 기업 운영과 관리에 필요한 이론과 실무를 배우는 전공입니다.",
           "slug": "경영학과",
           "image_url": "/uploads/majors/major-경영학과.webp",
-          "fit_score": 64,
-          "like_score": 66,
-          "can_score": 63,
-          "feasibility_score": 65,
+          "fit_score": 66,
+          "like_score": 70,
+          "can_score": 65,
+          "feasibility_score": 50,
           "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 분석 능력과 문제 해결 능력이 요구되는 이 전공은 경영 관련 지식이 필요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '경제학'과 '통계학'이 필요하며, 경쟁률이 보통 수준인 60/100입니다.",
-          "like_reason": "'조직/관리'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 중요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 분석 능력과 문제 해결 능력이 요구되는 이 전공은 경영 관련 지식이 필요합니다.",
-          "risk_reason": "이 전공은 선이수과목으로 '경제학'과 '통계학'이 필요하며, 경쟁률이 보통 수준인 60/100입니다.",
+          "rationale": "[흥미 근거] '조직/관리에도 관심이 있다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문제 해결 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 높고, 선이수과목으로 '경제학'과 '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'조직/관리에도 관심이 있다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 문제 해결 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다.",
+          "risk_reason": "'경쟁률이 60/100으로 높고, 선이수과목으로 '경제학'과 '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 경제학 + 경영학 기초",
-            "2학기: 마케팅 + 조직 관리",
+            "2학기: 통계학 + 문제 해결",
             "3학기: 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:물리교육과",
-          "major_name": "물리교육과",
-          "major_description": "물리교육과는 물리학과 과학교육을 통해 중ㆍ고등학교 과학교사를 양성하는 전공입니다.",
-          "slug": "물리교육과",
-          "image_url": "/uploads/majors/major-물리교육과.webp",
-          "fit_score": 56,
-          "like_score": 59,
-          "can_score": 55,
-          "feasibility_score": 45,
-          "field_category": "education",
-          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으시다고 하셨는데, 이 전공은 교육 방법론이 핵심 역량으로 포함되어 있습니다. [적성 근거] 그러나, 이 전공은 물리학 지식이 필요하고, 수학집중도가 50/100으로 낮아 수학적 요구가 존재합니다. [리스크] 또한, 선이수과목으로 물리학과 수학이 요구되며, 이는 '수학 불가'라는 조건과 충돌하여 진입이 어려울 수 있습니다.",
-          "like_reason": "이 전공은 교육 방법론이 핵심 역량으로 포함되어 있어 '도움/가르침'에 대한 관심과 잘 맞습니다.",
-          "can_reason": "물리학 지식이 필요하지만, 수학집중도가 50/100으로 낮아 수학적 요구가 존재합니다.",
-          "risk_reason": "선이수과목으로 물리학과 수학이 요구되며, 이는 '수학 불가'라는 조건과 충돌하여 진입이 어려울 수 있습니다.",
-          "semester_plan": [
-            "1학기: 기초 물리학 + 교육학 개론",
-            "2학기: 물리 실험 + 교육 방법론",
-            "3학기: 교육 실습"
           ]
         }
       ],
       "like_top10": [
         {
-          "major_id": "major:사회복지과",
-          "major_name": "사회복지과",
-          "major_description": "사회복지 전문 인력을 양성하는 학과",
-          "slug": "사회복지과",
-          "image_url": "/uploads/majors/major-사회복지과.webp",
-          "fit_score": 92,
-          "like_score": 95,
-          "can_score": 95,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다.",
-          "risk_reason": "선이수과목으로 사회학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 사회학",
-            "2학기: 심리학 + 상담 기초",
-            "3학기: 전공 심화"
-          ]
-        },
-        {
           "major_id": "major:철학윤리학과",
           "major_name": "철학·윤리학과",
           "major_description": "철학과는 철학적 사고와 표현 능력을 기르는 학문으로, 윤리학과는 현대사회의 다양한 현상에 대한 가치관을 확립하는 학문입니다.",
           "slug": "철학윤리학과",
           "image_url": "/uploads/majors/major-철학윤리학과.webp",
-          "fit_score": 89,
-          "like_score": 88,
-          "can_score": 94,
+          "fit_score": 92,
+          "like_score": 95,
+          "can_score": 95,
           "feasibility_score": 65,
           "field_category": "humanities",
-          "rationale": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다.",
-          "like_reason": "'도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다.",
-          "risk_reason": "경쟁률이 보통 수준인 50/100이며, 선이수과목으로 '철학개론'과 '윤리학'이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다.",
+          "risk_reason": "'선이수과목으로 '철학개론'과 '윤리학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 철학개론 + 윤리학",
             "2학기: 비판적 사고 + 논리적 글쓰기",
             "3학기: 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:행정학과",
-          "major_name": "행정학과",
-          "major_description": "행정학과는 정부와 국민, 공공부문과 민간부문의 상호작용을 연구하며 효율적인 국가 운영을 목표로 하는 학과입니다.",
-          "slug": "행정학과",
-          "image_url": "/uploads/majors/major-행정학과.webp",
-          "fit_score": 84,
-          "like_score": 88,
-          "can_score": 85,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 의사소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 정치학, 경제학, 사회학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 의사소통 능력이 중요합니다.",
-          "risk_reason": "선이수과목으로 정치학, 경제학, 사회학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 정치학",
-            "2학기: 경제학 + 사회학",
-            "3학기: 전공 심화"
-          ]
-        },
-        {
-          "major_id": "major:아동청소년복지학과",
-          "major_name": "아동·청소년복지학과",
-          "major_description": "아동·청소년복지학과는 아동과 청소년을 위한 복지 정책과 지원을 배우는 전공입니다.",
-          "slug": "아동청소년복지학과",
-          "image_url": "/uploads/majors/major-아동청소년복지학과.webp",
-          "fit_score": 83,
-          "like_score": 88,
-          "can_score": 84,
-          "feasibility_score": 60,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회복지학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다.",
-          "risk_reason": "선이수과목으로 사회복지학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 사회복지학",
-            "2학기: 심리학 + 상담 기초",
-            "3학기: 전공 심화"
           ]
         },
         {
@@ -2812,15 +2749,15 @@
           "major_description": "역사와 고고학을 통해 과거의 문화와 사회를 연구하는 전공.",
           "slug": "역사고고학과",
           "image_url": "/uploads/majors/major-역사고고학과.webp",
-          "fit_score": 80,
-          "like_score": 81,
-          "can_score": 83,
+          "fit_score": 84,
+          "like_score": 87,
+          "can_score": 85,
           "feasibility_score": 65,
           "field_category": "humanities",
-          "rationale": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 50/100으로 사람들과의 상호작용이 필요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 70/100이 요구되는 이 전공은 문헌 분석과 비판적 사고가 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다.",
-          "like_reason": "'도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 50/100으로 사람들과의 상호작용이 필요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 독해작문 70/100이 요구되는 이 전공은 문헌 분석과 비판적 사고가 중요합니다.",
-          "risk_reason": "경쟁률이 보통 수준인 50/100이며, 선이수과목으로 '역사', '사회', '문헌학'이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문헌 분석과 비판적 사고가 필요한 이 전공은 독해작문 70/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 문헌 분석과 비판적 사고가 필요한 이 전공은 독해작문 70/100이 요구됩니다.",
+          "risk_reason": "'선이수과목으로 '역사', '사회', '문헌학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 역사 + 사회",
             "2학기: 문헌학 + 비판적 사고",
@@ -2828,66 +2765,129 @@
           ]
         },
         {
-          "major_id": "major:호텔관광경영학과",
-          "major_name": "호텔·관광경영학과",
-          "major_description": "호텔 및 관광 산업에 대한 전문 지식과 실무 교육을 제공하는 전공",
-          "slug": "호텔관광경영학과",
-          "image_url": "/uploads/majors/major-호텔관광경영학과.webp",
-          "fit_score": 76,
-          "like_score": 81,
-          "can_score": 75,
+          "major_id": "major:교정보호학과",
+          "major_name": "교정보호학과",
+          "major_description": "범죄자의 교정교화와 사회복귀를 도모하기 위한 과학적 교정처우의 이론과 경험적 연구를 병행하는 학문.",
+          "slug": "교정보호학과",
+          "image_url": "/uploads/majors/major-교정보호학과.webp",
+          "fit_score": 83,
+          "like_score": 87,
+          "can_score": 84,
           "feasibility_score": 60,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 고객서비스와 의사소통이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 고객서비스가 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 경영학과 외국어가 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 고객서비스와 의사소통이 핵심입니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 고객서비스가 소통 능력과 연결됩니다.",
-          "risk_reason": "선이수과목으로 경영학과 외국어가 필요하여 일부 충족이 필요합니다.",
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 사회복지와 심리 상담이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 70/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 법학과 사회학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 사회복지와 심리 상담이 핵심입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 70/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "법학과 사회학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
           "semester_plan": [
-            "1학기: 기초 교양 + 경영학",
-            "2학기: 외국어 + 고객서비스",
-            "3학기: 전공 심화"
+            "1학기: 사회학 + 심리학 기초",
+            "2학기: 법학 + 상담 기술",
+            "3학기: 실습 및 현장 경험"
           ]
         },
         {
-          "major_id": "major:경영정보학과",
-          "major_name": "경영정보학과",
-          "major_description": "경영정보학과는 경영학과 정보기술의 융합을 통해 비즈니스 문제를 해결하는 전공입니다.",
-          "slug": "경영정보학과",
-          "image_url": "/uploads/majors/major-경영정보학과.webp",
-          "fit_score": 69,
-          "like_score": 74,
-          "can_score": 65,
+          "major_id": "major:생물교육과",
+          "major_name": "생물교육과",
+          "major_description": "생물교육과는 생물 분야를 중점적으로 다루며 과학교육의 방향을 제시하는 전공입니다.",
+          "slug": "생물교육과",
+          "image_url": "/uploads/majors/major-생물교육과.webp",
+          "fit_score": 78,
+          "like_score": 78,
+          "can_score": 83,
+          "feasibility_score": 55,
+          "field_category": "general",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 능력과 과학적 사고가 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 화학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 능력과 과학적 사고가 중요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "생물학과 화학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 생물학 기초 + 교육학 개론",
+            "2학기: 교육 방법론 + 실습",
+            "3학기: 전공 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:교양사회과학부",
+          "major_name": "교양사회과학부",
+          "major_description": "교양사회과학 분야는 사회계열 내의 특정 전공학과에 대한 전문과정의 기초를 닦는 것을 목적으로 합니다.",
+          "slug": "교양사회과학부",
+          "image_url": "/uploads/majors/major-교양사회과학부.webp",
+          "fit_score": 75,
+          "like_score": 78,
+          "can_score": 75,
           "feasibility_score": 65,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리'에 대한 관심이 있으시다고 하셨는데, 경영정보학과는 경영 컨설턴트와 같은 직업을 통해 조직 관리에 기여할 수 있습니다. [적성 근거] 또한, 분석 능력이 핵심 역량으로 요구되며, 이는 '소통력'과 연결될 수 있습니다. [리스크] 그러나, 이 전공은 경영학과 정보기술을 선이수과목으로 요구하며, 이는 사용자의 배경과 맞지 않을 수 있습니다.",
-          "like_reason": "경영정보학과는 경영 컨설턴트와 같은 직업을 통해 '조직/관리'에 대한 관심과 잘 맞습니다.",
-          "can_reason": "분석 능력이 핵심 역량으로 요구되며, 이는 '소통력'과 연결될 수 있습니다.",
-          "risk_reason": "이 전공은 경영학과 정보기술을 선이수과목으로 요구하며, 이는 사용자의 배경과 맞지 않을 수 있습니다.",
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 비판적 사고와 의사소통 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '사회학', '심리학', '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 비판적 사고와 의사소통 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다.",
+          "risk_reason": "'선이수과목으로 '사회학', '심리학', '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
-            "1학기: 경영학 기초 + 정보기술",
-            "2학기: 데이터 분석 + 경영 전략",
-            "3학기: 실습 및 프로젝트"
+            "1학기: 사회학 + 심리학",
+            "2학기: 통계학 + 비판적 사고",
+            "3학기: 심화 과목"
           ]
         },
         {
-          "major_id": "major:일반사회교육과",
-          "major_name": "일반사회교육과",
-          "major_description": "일반사회교육과는 사회과의 이론을 교육자로서 습득하고 중등학생의 민주시민으로 성장하도록 돕는 전공입니다.",
-          "slug": "일반사회교육과",
-          "image_url": "/uploads/majors/major-일반사회교육과.webp",
-          "fit_score": 67,
-          "like_score": 74,
-          "can_score": 64,
+          "major_id": "major:환경교육과",
+          "major_name": "환경교육과",
+          "major_description": "환경문제 해결을 위한 교육 전문 인력 양성",
+          "slug": "환경교육과",
+          "image_url": "/uploads/majors/major-환경교육과.webp",
+          "fit_score": 74,
+          "like_score": 78,
+          "can_score": 74,
+          "feasibility_score": 60,
+          "field_category": "education",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 환경문제 해결능력과 의사소통 능력이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 지구과학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 환경문제 해결능력과 의사소통 능력이 중요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "생물학과 지구과학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 환경과학 기초 + 교육학 개론",
+            "2학기: 환경문제 해결 방법론 + 실습",
+            "3학기: 전공 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:농업교육과",
+          "major_name": "농업교육과",
+          "major_description": "농업교육과는 농업과 교육의 융합을 통해 농촌 지역 개발과 첨단 농업 전문가 양성을 목표로 하는 전공입니다.",
+          "slug": "농업교육과",
+          "image_url": "/uploads/majors/major-농업교육과.webp",
+          "fit_score": 75,
+          "like_score": 70,
+          "can_score": 82,
+          "feasibility_score": 60,
+          "field_category": "education",
+          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 농업계열교사와 관련된 교육 방법론이 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 교육적 가치가 높습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 교육 방법론과 문제 해결 능력이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 농업학, 생명과학, 교육학이 필요합니다.",
+          "like_reason": "'도움/가르침'에 대한 관심이 있으신데, 이 전공은 농업계열교사와 관련된 교육 방법론이 필요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 교육 방법론과 문제 해결 능력이 필요합니다.",
+          "risk_reason": "경쟁률이 50/100으로 보통이며, 선이수과목으로 농업학, 생명과학, 교육학이 필요합니다.",
+          "semester_plan": [
+            "1학기: 농업 교육 기초",
+            "2학기: 생명과학 기초",
+            "3학기: 교육 방법론 심화"
+          ]
+        },
+        {
+          "major_id": "major:자연계교육과",
+          "major_name": "자연계교육과",
+          "major_description": "자연계교육과는 가정과 과학 분야의 교사를 양성하는 전공입니다.",
+          "slug": "자연계교육과",
+          "image_url": "/uploads/majors/major-자연계교육과.webp",
+          "fit_score": 70,
+          "like_score": 70,
+          "can_score": 73,
           "feasibility_score": 55,
           "field_category": "education",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 교육적 지도력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 사회적 의사소통이 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 교육학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 교육적 지도력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 사회적 의사소통이 소통 능력과 연결됩니다.",
-          "risk_reason": "선이수과목으로 사회학과 교육학이 필요하여 일부 충족이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 방법론과 커뮤니케이션 능력이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 물리학, 화학, 생물학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 방법론과 커뮤니케이션 능력이 핵심입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "선이수과목으로 물리학, 화학, 생물학이 필요하여 진입이 다소 어려울 수 있습니다.",
           "semester_plan": [
-            "1학기: 기초 교양 + 사회학",
-            "2학기: 교육학 + 교육적 지도력",
-            "3학기: 전공 심화"
+            "1학기: 기초 과학 + 교육학 개론",
+            "2학기: 교육 방법론 + 실습",
+            "3학기: 전공 심화 과목"
           ]
         },
         {
@@ -2896,80 +2896,59 @@
           "major_description": "경영학과는 기업 운영과 관리에 필요한 이론과 실무를 배우는 전공입니다.",
           "slug": "경영학과",
           "image_url": "/uploads/majors/major-경영학과.webp",
-          "fit_score": 64,
-          "like_score": 66,
-          "can_score": 63,
-          "feasibility_score": 65,
+          "fit_score": 66,
+          "like_score": 70,
+          "can_score": 65,
+          "feasibility_score": 50,
           "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 분석 능력과 문제 해결 능력이 요구되는 이 전공은 경영 관련 지식이 필요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '경제학'과 '통계학'이 필요하며, 경쟁률이 보통 수준인 60/100입니다.",
-          "like_reason": "'조직/관리'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 중요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 분석 능력과 문제 해결 능력이 요구되는 이 전공은 경영 관련 지식이 필요합니다.",
-          "risk_reason": "이 전공은 선이수과목으로 '경제학'과 '통계학'이 필요하며, 경쟁률이 보통 수준인 60/100입니다.",
+          "rationale": "[흥미 근거] '조직/관리에도 관심이 있다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문제 해결 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 높고, 선이수과목으로 '경제학'과 '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'조직/관리에도 관심이 있다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 문제 해결 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다.",
+          "risk_reason": "'경쟁률이 60/100으로 높고, 선이수과목으로 '경제학'과 '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 경제학 + 경영학 기초",
-            "2학기: 마케팅 + 조직 관리",
+            "2학기: 통계학 + 문제 해결",
             "3학기: 심화 과목"
           ]
         },
         {
-          "major_id": "major:물리교육과",
-          "major_name": "물리교육과",
-          "major_description": "물리교육과는 물리학과 과학교육을 통해 중ㆍ고등학교 과학교사를 양성하는 전공입니다.",
-          "slug": "물리교육과",
-          "image_url": "/uploads/majors/major-물리교육과.webp",
-          "fit_score": 56,
-          "like_score": 59,
-          "can_score": 55,
-          "feasibility_score": 45,
-          "field_category": "education",
-          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으시다고 하셨는데, 이 전공은 교육 방법론이 핵심 역량으로 포함되어 있습니다. [적성 근거] 그러나, 이 전공은 물리학 지식이 필요하고, 수학집중도가 50/100으로 낮아 수학적 요구가 존재합니다. [리스크] 또한, 선이수과목으로 물리학과 수학이 요구되며, 이는 '수학 불가'라는 조건과 충돌하여 진입이 어려울 수 있습니다.",
-          "like_reason": "이 전공은 교육 방법론이 핵심 역량으로 포함되어 있어 '도움/가르침'에 대한 관심과 잘 맞습니다.",
-          "can_reason": "물리학 지식이 필요하지만, 수학집중도가 50/100으로 낮아 수학적 요구가 존재합니다.",
-          "risk_reason": "선이수과목으로 물리학과 수학이 요구되며, 이는 '수학 불가'라는 조건과 충돌하여 진입이 어려울 수 있습니다.",
+          "major_id": "major:보건행정과",
+          "major_name": "보건행정과",
+          "major_description": "보건행정과는 보건의료 서비스와 관련된 전문지식을 학습하여 보건 및 병원행정 업무를 효율적으로 처리하는 기술인을 양성하는 전공입니다.",
+          "slug": "보건행정과",
+          "image_url": "/uploads/majors/major-보건행정과.webp",
+          "fit_score": 78,
+          "like_score": 62,
+          "can_score": 94,
+          "feasibility_score": 65,
+          "field_category": "medical",
+          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 병원행정사무원과 관련된 의사소통과 문서 관리가 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 보건 분야에서의 의미 있는 기여가 가능합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 의사소통과 데이터 분석이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 보건학과 행정학이 필요합니다.",
+          "like_reason": "'도움/가르침'에 대한 관심이 있으신데, 이 전공은 병원행정사무원과 관련된 의사소통과 문서 관리가 필요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 의사소통과 데이터 분석이 필요합니다.",
+          "risk_reason": "경쟁률이 50/100으로 보통이며, 선이수과목으로 보건학과 행정학이 필요합니다.",
           "semester_plan": [
-            "1학기: 기초 물리학 + 교육학 개론",
-            "2학기: 물리 실험 + 교육 방법론",
-            "3학기: 교육 실습"
+            "1학기: 보건학 기초",
+            "2학기: 행정학 기초",
+            "3학기: 의사소통 및 문서 관리"
           ]
         }
       ],
       "can_top10": [
         {
-          "major_id": "major:사회복지과",
-          "major_name": "사회복지과",
-          "major_description": "사회복지 전문 인력을 양성하는 학과",
-          "slug": "사회복지과",
-          "image_url": "/uploads/majors/major-사회복지과.webp",
-          "fit_score": 92,
-          "like_score": 95,
-          "can_score": 95,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다.",
-          "risk_reason": "선이수과목으로 사회학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 사회학",
-            "2학기: 심리학 + 상담 기초",
-            "3학기: 전공 심화"
-          ]
-        },
-        {
           "major_id": "major:철학윤리학과",
           "major_name": "철학·윤리학과",
           "major_description": "철학과는 철학적 사고와 표현 능력을 기르는 학문으로, 윤리학과는 현대사회의 다양한 현상에 대한 가치관을 확립하는 학문입니다.",
           "slug": "철학윤리학과",
           "image_url": "/uploads/majors/major-철학윤리학과.webp",
-          "fit_score": 89,
-          "like_score": 88,
-          "can_score": 94,
+          "fit_score": 92,
+          "like_score": 95,
+          "can_score": 95,
           "feasibility_score": 65,
           "field_category": "humanities",
-          "rationale": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다.",
-          "like_reason": "'도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다.",
-          "risk_reason": "경쟁률이 보통 수준인 50/100이며, 선이수과목으로 '철학개론'과 '윤리학'이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다. [적성 근거] '소통력이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 '철학개론'과 '윤리학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 70/100으로 사람들과의 상호작용이 중요합니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 독해작문 80/100이 요구되는 이 전공은 논리적 글쓰기와 비판적 사고가 핵심입니다.",
+          "risk_reason": "'선이수과목으로 '철학개론'과 '윤리학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 철학개론 + 윤리학",
             "2학기: 비판적 사고 + 논리적 글쓰기",
@@ -2977,45 +2956,24 @@
           ]
         },
         {
-          "major_id": "major:행정학과",
-          "major_name": "행정학과",
-          "major_description": "행정학과는 정부와 국민, 공공부문과 민간부문의 상호작용을 연구하며 효율적인 국가 운영을 목표로 하는 학과입니다.",
-          "slug": "행정학과",
-          "image_url": "/uploads/majors/major-행정학과.webp",
-          "fit_score": 84,
-          "like_score": 88,
-          "can_score": 85,
+          "major_id": "major:보건행정과",
+          "major_name": "보건행정과",
+          "major_description": "보건행정과는 보건의료 서비스와 관련된 전문지식을 학습하여 보건 및 병원행정 업무를 효율적으로 처리하는 기술인을 양성하는 전공입니다.",
+          "slug": "보건행정과",
+          "image_url": "/uploads/majors/major-보건행정과.webp",
+          "fit_score": 78,
+          "like_score": 62,
+          "can_score": 94,
           "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 의사소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 정치학, 경제학, 사회학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 의사소통 능력이 중요합니다.",
-          "risk_reason": "선이수과목으로 정치학, 경제학, 사회학이 필요하여 일부 충족이 필요합니다.",
+          "field_category": "medical",
+          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 병원행정사무원과 관련된 의사소통과 문서 관리가 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 보건 분야에서의 의미 있는 기여가 가능합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 의사소통과 데이터 분석이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 보건학과 행정학이 필요합니다.",
+          "like_reason": "'도움/가르침'에 대한 관심이 있으신데, 이 전공은 병원행정사무원과 관련된 의사소통과 문서 관리가 필요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 의사소통과 데이터 분석이 필요합니다.",
+          "risk_reason": "경쟁률이 50/100으로 보통이며, 선이수과목으로 보건학과 행정학이 필요합니다.",
           "semester_plan": [
-            "1학기: 기초 교양 + 정치학",
-            "2학기: 경제학 + 사회학",
-            "3학기: 전공 심화"
-          ]
-        },
-        {
-          "major_id": "major:아동청소년복지학과",
-          "major_name": "아동·청소년복지학과",
-          "major_description": "아동·청소년복지학과는 아동과 청소년을 위한 복지 정책과 지원을 배우는 전공입니다.",
-          "slug": "아동청소년복지학과",
-          "image_url": "/uploads/majors/major-아동청소년복지학과.webp",
-          "fit_score": 83,
-          "like_score": 88,
-          "can_score": 84,
-          "feasibility_score": 60,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다. [리스크] 다만, 이 전공은 선이수과목으로 사회복지학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 상담 능력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 상담 능력이 소통 능력과 잘 맞습니다.",
-          "risk_reason": "선이수과목으로 사회복지학과 심리학이 필요하여 일부 충족이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 교양 + 사회복지학",
-            "2학기: 심리학 + 상담 기초",
-            "3학기: 전공 심화"
+            "1학기: 보건학 기초",
+            "2학기: 행정학 기초",
+            "3학기: 의사소통 및 문서 관리"
           ]
         },
         {
@@ -3024,15 +2982,15 @@
           "major_description": "역사와 고고학을 통해 과거의 문화와 사회를 연구하는 전공.",
           "slug": "역사고고학과",
           "image_url": "/uploads/majors/major-역사고고학과.webp",
-          "fit_score": 80,
-          "like_score": 81,
-          "can_score": 83,
+          "fit_score": 84,
+          "like_score": 87,
+          "can_score": 85,
           "feasibility_score": 65,
           "field_category": "humanities",
-          "rationale": "[흥미 근거] '도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 50/100으로 사람들과의 상호작용이 필요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 독해작문 70/100이 요구되는 이 전공은 문헌 분석과 비판적 사고가 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하며, 경쟁률이 보통 수준인 50/100입니다.",
-          "like_reason": "'도움/가르침'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 자율성 50/100으로 사람들과의 상호작용이 필요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 독해작문 70/100이 요구되는 이 전공은 문헌 분석과 비판적 사고가 중요합니다.",
-          "risk_reason": "경쟁률이 보통 수준인 50/100이며, 선이수과목으로 '역사', '사회', '문헌학'이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문헌 분석과 비판적 사고가 필요한 이 전공은 독해작문 70/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '역사', '사회', '문헌학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 문헌 분석과 비판적 사고가 필요한 이 전공은 독해작문 70/100이 요구됩니다.",
+          "risk_reason": "'선이수과목으로 '역사', '사회', '문헌학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 역사 + 사회",
             "2학기: 문헌학 + 비판적 사고",
@@ -3040,66 +2998,129 @@
           ]
         },
         {
-          "major_id": "major:호텔관광경영학과",
-          "major_name": "호텔·관광경영학과",
-          "major_description": "호텔 및 관광 산업에 대한 전문 지식과 실무 교육을 제공하는 전공",
-          "slug": "호텔관광경영학과",
-          "image_url": "/uploads/majors/major-호텔관광경영학과.webp",
-          "fit_score": 76,
-          "like_score": 81,
-          "can_score": 75,
+          "major_id": "major:교정보호학과",
+          "major_name": "교정보호학과",
+          "major_description": "범죄자의 교정교화와 사회복귀를 도모하기 위한 과학적 교정처우의 이론과 경험적 연구를 병행하는 학문.",
+          "slug": "교정보호학과",
+          "image_url": "/uploads/majors/major-교정보호학과.webp",
+          "fit_score": 83,
+          "like_score": 87,
+          "can_score": 84,
           "feasibility_score": 60,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 고객서비스와 의사소통이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 고객서비스가 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 경영학과 외국어가 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 고객서비스와 의사소통이 핵심입니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 고객서비스가 소통 능력과 연결됩니다.",
-          "risk_reason": "선이수과목으로 경영학과 외국어가 필요하여 일부 충족이 필요합니다.",
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 사회복지와 심리 상담이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 70/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 법학과 사회학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 사회복지와 심리 상담이 핵심입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 70/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "법학과 사회학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
           "semester_plan": [
-            "1학기: 기초 교양 + 경영학",
-            "2학기: 외국어 + 고객서비스",
-            "3학기: 전공 심화"
+            "1학기: 사회학 + 심리학 기초",
+            "2학기: 법학 + 상담 기술",
+            "3학기: 실습 및 현장 경험"
           ]
         },
         {
-          "major_id": "major:경영정보학과",
-          "major_name": "경영정보학과",
-          "major_description": "경영정보학과는 경영학과 정보기술의 융합을 통해 비즈니스 문제를 해결하는 전공입니다.",
-          "slug": "경영정보학과",
-          "image_url": "/uploads/majors/major-경영정보학과.webp",
-          "fit_score": 69,
-          "like_score": 74,
-          "can_score": 65,
+          "major_id": "major:생물교육과",
+          "major_name": "생물교육과",
+          "major_description": "생물교육과는 생물 분야를 중점적으로 다루며 과학교육의 방향을 제시하는 전공입니다.",
+          "slug": "생물교육과",
+          "image_url": "/uploads/majors/major-생물교육과.webp",
+          "fit_score": 78,
+          "like_score": 78,
+          "can_score": 83,
+          "feasibility_score": 55,
+          "field_category": "general",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 능력과 과학적 사고가 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 화학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 능력과 과학적 사고가 중요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "생물학과 화학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 생물학 기초 + 교육학 개론",
+            "2학기: 교육 방법론 + 실습",
+            "3학기: 전공 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:농업교육과",
+          "major_name": "농업교육과",
+          "major_description": "농업교육과는 농업과 교육의 융합을 통해 농촌 지역 개발과 첨단 농업 전문가 양성을 목표로 하는 전공입니다.",
+          "slug": "농업교육과",
+          "image_url": "/uploads/majors/major-농업교육과.webp",
+          "fit_score": 75,
+          "like_score": 70,
+          "can_score": 82,
+          "feasibility_score": 60,
+          "field_category": "education",
+          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으신데, 이 전공은 농업계열교사와 관련된 교육 방법론이 필요합니다. 이 전공의 사회성 점수가 50/100으로 낮지만, 교육적 가치가 높습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 교육 방법론과 문제 해결 능력이 필요합니다. 수학집중도가 50/100으로 낮아 수학적 요구가 적습니다. [리스크] 이 전공은 경쟁률이 50/100으로 보통이며, 선이수과목으로 농업학, 생명과학, 교육학이 필요합니다.",
+          "like_reason": "'도움/가르침'에 대한 관심이 있으신데, 이 전공은 농업계열교사와 관련된 교육 방법론이 필요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 교육 방법론과 문제 해결 능력이 필요합니다.",
+          "risk_reason": "경쟁률이 50/100으로 보통이며, 선이수과목으로 농업학, 생명과학, 교육학이 필요합니다.",
+          "semester_plan": [
+            "1학기: 농업 교육 기초",
+            "2학기: 생명과학 기초",
+            "3학기: 교육 방법론 심화"
+          ]
+        },
+        {
+          "major_id": "major:교양사회과학부",
+          "major_name": "교양사회과학부",
+          "major_description": "교양사회과학 분야는 사회계열 내의 특정 전공학과에 대한 전문과정의 기초를 닦는 것을 목적으로 합니다.",
+          "slug": "교양사회과학부",
+          "image_url": "/uploads/majors/major-교양사회과학부.webp",
+          "fit_score": 75,
+          "like_score": 78,
+          "can_score": 75,
           "feasibility_score": 65,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리'에 대한 관심이 있으시다고 하셨는데, 경영정보학과는 경영 컨설턴트와 같은 직업을 통해 조직 관리에 기여할 수 있습니다. [적성 근거] 또한, 분석 능력이 핵심 역량으로 요구되며, 이는 '소통력'과 연결될 수 있습니다. [리스크] 그러나, 이 전공은 경영학과 정보기술을 선이수과목으로 요구하며, 이는 사용자의 배경과 맞지 않을 수 있습니다.",
-          "like_reason": "경영정보학과는 경영 컨설턴트와 같은 직업을 통해 '조직/관리'에 대한 관심과 잘 맞습니다.",
-          "can_reason": "분석 능력이 핵심 역량으로 요구되며, 이는 '소통력'과 연결될 수 있습니다.",
-          "risk_reason": "이 전공은 경영학과 정보기술을 선이수과목으로 요구하며, 이는 사용자의 배경과 맞지 않을 수 있습니다.",
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 비판적 사고와 의사소통 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 '사회학', '심리학', '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'도움/가르침에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 비판적 사고와 의사소통 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다.",
+          "risk_reason": "'선이수과목으로 '사회학', '심리학', '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
-            "1학기: 경영학 기초 + 정보기술",
-            "2학기: 데이터 분석 + 경영 전략",
-            "3학기: 실습 및 프로젝트"
+            "1학기: 사회학 + 심리학",
+            "2학기: 통계학 + 비판적 사고",
+            "3학기: 심화 과목"
           ]
         },
         {
-          "major_id": "major:일반사회교육과",
-          "major_name": "일반사회교육과",
-          "major_description": "일반사회교육과는 사회과의 이론을 교육자로서 습득하고 중등학생의 민주시민으로 성장하도록 돕는 전공입니다.",
-          "slug": "일반사회교육과",
-          "image_url": "/uploads/majors/major-일반사회교육과.webp",
-          "fit_score": 67,
-          "like_score": 74,
-          "can_score": 64,
+          "major_id": "major:환경교육과",
+          "major_name": "환경교육과",
+          "major_description": "환경문제 해결을 위한 교육 전문 인력 양성",
+          "slug": "환경교육과",
+          "image_url": "/uploads/majors/major-환경교육과.webp",
+          "fit_score": 74,
+          "like_score": 78,
+          "can_score": 74,
+          "feasibility_score": 60,
+          "field_category": "education",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 환경문제 해결능력과 의사소통 능력이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 생물학과 지구과학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 환경문제 해결능력과 의사소통 능력이 중요합니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "생물학과 지구과학의 선이수과목이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 환경과학 기초 + 교육학 개론",
+            "2학기: 환경문제 해결 방법론 + 실습",
+            "3학기: 전공 심화 과목"
+          ]
+        },
+        {
+          "major_id": "major:자연계교육과",
+          "major_name": "자연계교육과",
+          "major_description": "자연계교육과는 가정과 과학 분야의 교사를 양성하는 전공입니다.",
+          "slug": "자연계교육과",
+          "image_url": "/uploads/majors/major-자연계교육과.webp",
+          "fit_score": 70,
+          "like_score": 70,
+          "can_score": 73,
           "feasibility_score": 55,
           "field_category": "education",
-          "rationale": "[흥미 근거] '도움/가르침'을 원하신다고 하셨는데, 이 전공은 교육적 지도력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 사회적 의사소통이 소통 능력과 연결됩니다. [리스크] 다만, 이 전공은 선이수과목으로 사회학과 교육학이 필요하여 일부 충족이 필요합니다.",
-          "like_reason": "'도움/가르침'을 원하신다고 하셨는데, 이 전공은 교육적 지도력이 중요하며 사회성 70/100으로 사람들과의 상호작용이 많습니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공의 핵심역량인 사회적 의사소통이 소통 능력과 연결됩니다.",
-          "risk_reason": "선이수과목으로 사회학과 교육학이 필요하여 일부 충족이 필요합니다.",
+          "rationale": "[흥미 근거] '도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 방법론과 커뮤니케이션 능력이 핵심입니다. [적성 근거] '소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다. [리스크] 다만, 이 전공은 선이수과목으로 물리학, 화학, 생물학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'도움/가르침'에 관심이 있다고 하셨는데, 이 전공은 교육 방법론과 커뮤니케이션 능력이 핵심입니다.",
+          "can_reason": "'소통력'이 강점이라고 하셨고, 이 전공은 사회성이 60/100으로 소통 능력이 중요합니다.",
+          "risk_reason": "선이수과목으로 물리학, 화학, 생물학이 필요하여 진입이 다소 어려울 수 있습니다.",
           "semester_plan": [
-            "1학기: 기초 교양 + 사회학",
-            "2학기: 교육학 + 교육적 지도력",
-            "3학기: 전공 심화"
+            "1학기: 기초 과학 + 교육학 개론",
+            "2학기: 교육 방법론 + 실습",
+            "3학기: 전공 심화 과목"
           ]
         },
         {
@@ -3108,49 +3129,28 @@
           "major_description": "경영학과는 기업 운영과 관리에 필요한 이론과 실무를 배우는 전공입니다.",
           "slug": "경영학과",
           "image_url": "/uploads/majors/major-경영학과.webp",
-          "fit_score": 64,
-          "like_score": 66,
-          "can_score": 63,
-          "feasibility_score": 65,
+          "fit_score": 66,
+          "like_score": 70,
+          "can_score": 65,
+          "feasibility_score": 50,
           "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 중요합니다. [적성 근거] '소통력'이 강점이라고 하셨고, 분석 능력과 문제 해결 능력이 요구되는 이 전공은 경영 관련 지식이 필요합니다. [리스크] 다만, 이 전공은 선이수과목으로 '경제학'과 '통계학'이 필요하며, 경쟁률이 보통 수준인 60/100입니다.",
-          "like_reason": "'조직/관리'에 관심이 많다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 중요합니다.",
-          "can_reason": "'소통력'이 강점이라고 하셨고, 분석 능력과 문제 해결 능력이 요구되는 이 전공은 경영 관련 지식이 필요합니다.",
-          "risk_reason": "이 전공은 선이수과목으로 '경제학'과 '통계학'이 필요하며, 경쟁률이 보통 수준인 60/100입니다.",
+          "rationale": "[흥미 근거] '조직/관리에도 관심이 있다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다. [적성 근거] '소통력이 강점이라고 하셨고, 문제 해결 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 높고, 선이수과목으로 '경제학'과 '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
+          "like_reason": "'조직/관리에도 관심이 있다고 하셨는데, 이 전공은 사회성 50/100과 팀워크 50/100이 요구되어 협력적인 학습 환경이 조성됩니다.",
+          "can_reason": "'소통력이 강점이라고 하셨고, 문제 해결 능력이 필요한 이 전공은 독해작문 50/100이 요구됩니다.",
+          "risk_reason": "'경쟁률이 60/100으로 높고, 선이수과목으로 '경제학'과 '통계학'이 필요하여, 해당 과목을 이수하지 않았다면 진입에 어려움이 있을 수 있습니다.",
           "semester_plan": [
             "1학기: 경제학 + 경영학 기초",
-            "2학기: 마케팅 + 조직 관리",
+            "2학기: 통계학 + 문제 해결",
             "3학기: 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:물리교육과",
-          "major_name": "물리교육과",
-          "major_description": "물리교육과는 물리학과 과학교육을 통해 중ㆍ고등학교 과학교사를 양성하는 전공입니다.",
-          "slug": "물리교육과",
-          "image_url": "/uploads/majors/major-물리교육과.webp",
-          "fit_score": 56,
-          "like_score": 59,
-          "can_score": 55,
-          "feasibility_score": 45,
-          "field_category": "education",
-          "rationale": "[흥미 근거] '도움/가르침'에 대한 관심이 있으시다고 하셨는데, 이 전공은 교육 방법론이 핵심 역량으로 포함되어 있습니다. [적성 근거] 그러나, 이 전공은 물리학 지식이 필요하고, 수학집중도가 50/100으로 낮아 수학적 요구가 존재합니다. [리스크] 또한, 선이수과목으로 물리학과 수학이 요구되며, 이는 '수학 불가'라는 조건과 충돌하여 진입이 어려울 수 있습니다.",
-          "like_reason": "이 전공은 교육 방법론이 핵심 역량으로 포함되어 있어 '도움/가르침'에 대한 관심과 잘 맞습니다.",
-          "can_reason": "물리학 지식이 필요하지만, 수학집중도가 50/100으로 낮아 수학적 요구가 존재합니다.",
-          "risk_reason": "선이수과목으로 물리학과 수학이 요구되며, 이는 '수학 불가'라는 조건과 충돌하여 진입이 어려울 수 있습니다.",
-          "semester_plan": [
-            "1학기: 기초 물리학 + 교육학 개론",
-            "2학기: 물리 실험 + 교육 방법론",
-            "3학기: 교육 실습"
           ]
         }
       ],
-      "total_candidates": 244,
+      "total_candidates": 258,
       "filtered_count": 30,
-      "search_duration_ms": 3956
+      "search_duration_ms": 3925
     },
     "premium_report": null,
-    "engine_version": "v3.23.1",
+    "engine_version": "v3.23.2",
     "report_mode": "deferred",
     "search_profile_used": {
       "desiredThemes": [
@@ -3192,23 +3192,23 @@
       "has_narrative_facts": false,
       "round_answers_count": 0
     },
-    "duration_ms": 64897
+    "duration_ms": 56641
   },
   "timing": {
-    "analyzeMs": 3509,
-    "narrativeMs": 148,
+    "analyzeMs": 3458,
+    "narrativeMs": 652,
     "roundsMs": [
-      470,
-      445,
-      451
+      844,
+      427,
+      421
     ],
     "roundAnswersMs": [
-      396,
-      401,
-      400
+      375,
+      369,
+      381
     ],
-    "recommendMs": 64980,
-    "totalMs": 74238
+    "recommendMs": 56710,
+    "totalMs": 66661
   },
   "errors": []
 }

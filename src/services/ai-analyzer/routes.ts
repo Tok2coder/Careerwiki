@@ -8263,16 +8263,16 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
     const diversityResult = enforceMajorDiversity(filteredMajors, 5, 30)
     filteredMajors = diversityResult.diversified
 
-    // 4-2. 사전 필터된 상위 후보군 (Like/Can/Final 3축 분리)
+    // 4-2. 사전 필터된 상위 후보군 (Like/Can/Final 3축 분리) — 25개씩 확보하여 Judge 풀 확대
     const likeBiased = [...filteredMajors]
       .sort((a, b) => (b.like_score || 0) - (a.like_score || 0))
-      .slice(0, 20)
+      .slice(0, 25)
     const canBiased = [...filteredMajors]
       .sort((a, b) => (b.can_score || 0) - (a.can_score || 0))
-      .slice(0, 20)
+      .slice(0, 25)
     const finalBiased = [...filteredMajors]
       .sort((a, b) => (b.final_score || 0) - (a.final_score || 0))
-      .slice(0, 20)
+      .slice(0, 25)
 
     const preFilterIdSet = new Set<string>()
     const preFilteredMajors: typeof filteredMajors = []
@@ -8413,7 +8413,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
       }
     }
 
-    // 6-J. 3-Tier Progressive Backfill — 10개 보장
+    // 6-J. 4-Tier Progressive Backfill — 10개 절대 보장
     if (topMajors.length < 10 && allJudgedMajorsBackup.length > topMajors.length) {
       const sortedCurrent = [...topMajors].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
       const currentTop1 = (sortedCurrent[0] as any)?.final_score || 0
@@ -8446,6 +8446,22 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
           .filter((m: any) => !filledIds3.has(String(m.major_id)))
           .filter((m: any) => (m.final_score || 0) >= absoluteMin)
         topMajors = [...topMajors, ...safetyCandidates.slice(0, 10 - topMajors.length)]
+      }
+
+      // 4단계: 절대 안전망 — 점수 임계값 없이 노이즈 아닌 모든 Judge 후보 투입
+      if (topMajors.length < 10) {
+        const filledIds4 = new Set(topMajors.map((m: any) => String(m.major_id)))
+        const absoluteCandidates = noNoiseBackup
+          .filter((m: any) => !filledIds4.has(String(m.major_id)))
+        topMajors = [...topMajors, ...absoluteCandidates.slice(0, 10 - topMajors.length)]
+      }
+
+      // 5단계: 최종 폴백 — 노이즈 필터도 해제하고 Judge 결과에서 채움 (10개 미달 방지)
+      if (topMajors.length < 10) {
+        const filledIds5 = new Set(topMajors.map((m: any) => String(m.major_id)))
+        const allRemainingBackup = allJudgedMajorsBackup
+          .filter((m: any) => !filledIds5.has(String(m.major_id)))
+        topMajors = [...topMajors, ...allRemainingBackup.slice(0, 10 - topMajors.length)]
       }
     }
 

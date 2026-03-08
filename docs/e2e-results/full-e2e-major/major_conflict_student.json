@@ -6,24 +6,24 @@
     "careerState": "student",
     "academicState": "high_school_undecided"
   },
-  "timestamp": "2026-03-08T07:58:36.838Z",
+  "timestamp": "2026-03-08T10:38:37.614Z",
   "baseUrl": "https://careerwiki.org",
-  "sessionId": "e2e-major-1772956716838-m4h8wu",
-  "requestId": 744,
+  "sessionId": "e2e-major-1772966317613-xh0ank",
+  "requestId": 793,
   "analyzeResponse": {
     "success": true,
-    "request_id": 744,
+    "request_id": 793,
     "result": {
       "engine_state": "phase2_stage_based",
-      "engine_version": "v3.23.1",
+      "engine_version": "v3.23.2",
       "mini_module_result": null,
       "versions": {
         "recipe": "recipe-v1.0.0",
         "tagger": "tagger-v1.0.0",
-        "scoring": "scoring-v3.23.1"
+        "scoring": "scoring-v3.23.2"
       },
       "input_summary": {
-        "profile_revision_id": "rev-744-1772956720681",
+        "profile_revision_id": "rev-793-1772966321130",
         "key_interests": [],
         "key_skills": [],
         "non_negotiables": [],
@@ -42,171 +42,17 @@
       },
       "fit_top3": [
         {
-          "job_id": "1765284036427187",
-          "job_name": "실기교사",
-          "slug": "실기교사",
-          "image_url": "/uploads/jobs/job-실기교사.webp",
-          "job_description": "실업계 고등학교, 고등기술학교 및 일반중등학교의 부속실습시설에서 농업·공업·상업·해운·예능·가정·체육 및 기타 전문교과의 각 학과별 실기를 지도한다.",
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 실기교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765283291483400",
+          "job_name": "군무원",
+          "slug": "군무원",
+          "image_url": "/uploads/jobs/job-군무원.webp",
+          "job_description": "군무원은 군부대에서 군인과 함께 근무하는 특정직 국가 공무원으로서 담당 직렬에 따라 기술, 연구, 일반 행정, 이미용 등에 대한 업무를 수행합니다.",
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "실기교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 60,
+          "can_reason": "군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 61,
           "like_score": 73,
-          "can_score": 67,
-          "risk_details": [],
-          "evidence_links": [
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "creating,organizing",
-                "label": "\"creating, organizing\" 관심사"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "creating,organizing",
-                "label": "창의적 분야 관심"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "창의성: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "creating,organizing",
-                "label": "\"creating, organizing\" 관심사"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "50",
-                "label": "관련 역량: 50/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 12,
-              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "creating,organizing",
-                "label": "분석적 업무 관심"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "50",
-                "label": "분석 업무: 50/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 12,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 50점입니다"
-            }
-          ],
-          "dislike_warnings": []
-        },
-        {
-          "job_id": "1765284130482539",
-          "job_name": "편집장",
-          "slug": "편집장",
-          "image_url": "/uploads/jobs/job-편집장.webp",
-          "job_description": "신문, 잡지, 책 등 각종 출판물을 발간하기 위한 취재·편집 업무를 총괄 관리하고 관련 종사자들의 활동을 감독·조정한다.",
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 편집장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "편집장은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 58,
-          "like_score": 65,
-          "can_score": 72,
-          "risk_details": [],
-          "evidence_links": [
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "creating,organizing",
-                "label": "\"creating, organizing\" 관심사"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "creating,organizing",
-                "label": "\"creating, organizing\" 관심사"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "creating,organizing",
-                "label": "창의적 분야 관심"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "창의성: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "creating,organizing",
-                "label": "분석적 업무 관심"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "분석 업무: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
-            }
-          ],
-          "dislike_warnings": []
-        },
-        {
-          "job_id": "1765284378671620",
-          "job_name": "여신사후관리사무원",
-          "slug": "여신사후관리사무원",
-          "image_url": "/uploads/jobs/job-여신사후관리사무원.webp",
-          "job_description": "연체대출금에 대한 채권회수, 우량고객에 대한 일상적인 관계형성, 관리대상기업에 대한 특별감리 등 여신사후 관리업무를 수행한다.",
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 여신사후관리사무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "여신사후관리사무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 55,
-          "like_score": 68,
-          "can_score": 62,
+          "can_score": 69,
           "risk_details": [],
           "evidence_links": [
             {
@@ -273,16 +119,170 @@
           "dislike_warnings": []
         },
         {
-          "job_id": "1765285059670609",
-          "job_name": "의약세병기조작원",
-          "slug": "의약세병기조작원",
-          "image_url": "/uploads/jobs/job-의약세병기조작원.webp",
-          "job_description": "의약품을 충진하기 위하여 준비된 공병을 세척하는 자동세병기계를 조작한다.",
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 의약세병기조작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765284739951129",
+          "job_name": "철망설치원",
+          "slug": "철망설치원",
+          "image_url": "/uploads/jobs/job-철망설치원.webp",
+          "job_description": "산업시설, 군사시설, 주택, 농장, 운동장 등에 철망, 앵글, 파이프 등 철물을 이용하여 보호 또는 방호용 울타리를 설치한다.",
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 철망설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "의약세병기조작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 54,
-          "like_score": 64,
+          "can_reason": "철망설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 60,
+          "like_score": 65,
+          "can_score": 75,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "creating,organizing",
+                "label": "\"creating, organizing\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "관련 역량: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "creating,organizing",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "분석 업무: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "creating,organizing",
+                "label": "\"creating, organizing\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "55",
+                "label": "관련 역량: 55/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 13,
+              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 55점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "creating,organizing",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "55",
+                "label": "창의성: 55/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 13,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 55점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765284338322404",
+          "job_name": "공동주택관리사무원",
+          "slug": "공동주택관리사무원",
+          "image_url": "/uploads/jobs/job-공동주택관리사무원.webp",
+          "job_description": "공동주택 및 그 부대시설의 운영관리, 유지보수 및 안전관리 등을 위한 서무 및 회계업무를 수행한다.",
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 공동주택관리사무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "공동주택관리사무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 57,
+          "like_score": 65,
+          "can_score": 69,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "creating,organizing",
+                "label": "\"creating, organizing\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "관련 역량: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "creating,organizing",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "분석 업무: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "creating,organizing",
+                "label": "\"creating, organizing\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "관련 역량: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "creating,organizing",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "창의성: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765284668998125",
+          "job_name": "매듭기수리원",
+          "slug": "매듭기수리원",
+          "image_url": "/uploads/jobs/job-매듭기수리원.webp",
+          "job_description": "끊어진 실을 이어 주는 매듭기(Knotter)를 수리한다.",
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 매듭기수리원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "매듭기수리원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 50,
+          "like_score": 56,
           "can_score": 65,
           "risk_details": [],
           "evidence_links": [
@@ -350,17 +350,17 @@
           "dislike_warnings": []
         },
         {
-          "job_id": "1765284106756839",
-          "job_name": "소셜네트워크서비스마케터",
-          "slug": "소셜네트워크서비스마케터",
-          "image_url": "/uploads/jobs/job-소셜네트워크서비스마케터.webp",
-          "job_description": "인터넷, SNS(블로그, 트위터, 미투데이, 페이스북 등), 휴대폰 등 디지털 매체를 활용하여 마케팅업무를 수행한다.",
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 소셜네트워크서비스마케터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765284788100655",
+          "job_name": "돗자리제조원",
+          "slug": "돗자리제조원",
+          "image_url": "/uploads/jobs/job-돗자리제조원.webp",
+          "job_description": "완초(왕골)나 짚을 엮어 돗자리를 제조한다.",
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 돗자리제조원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "소셜네트워크서비스마케터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 49,
-          "like_score": 70,
-          "can_score": 76,
+          "can_reason": "돗자리제조원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 48,
+          "like_score": 65,
+          "can_score": 77,
           "risk_details": [],
           "evidence_links": [
             {
@@ -371,12 +371,12 @@
               },
               "job_attribute": {
                 "key": "creative",
-                "value": "80",
-                "label": "관련 역량: 80/100"
+                "value": "70",
+                "label": "관련 역량: 70/100"
               },
               "match_type": "positive",
-              "score_contribution": 17,
-              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 80점입니다"
+              "score_contribution": 15,
+              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 70점입니다"
             },
             {
               "user_fact": {
@@ -386,12 +386,12 @@
               },
               "job_attribute": {
                 "key": "creative",
-                "value": "80",
-                "label": "창의성: 80/100"
+                "value": "70",
+                "label": "창의성: 70/100"
               },
               "match_type": "positive",
-              "score_contribution": 17,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 80점입니다"
+              "score_contribution": 15,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 70점입니다"
             },
             {
               "user_fact": {
@@ -401,12 +401,12 @@
               },
               "job_attribute": {
                 "key": "analytical",
-                "value": "60",
-                "label": "관련 역량: 60/100"
+                "value": "65",
+                "label": "관련 역량: 65/100"
               },
               "match_type": "positive",
               "score_contribution": 14,
-              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+              "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
             },
             {
               "user_fact": {
@@ -416,12 +416,12 @@
               },
               "job_attribute": {
                 "key": "analytical",
-                "value": "60",
-                "label": "분석 업무: 60/100"
+                "value": "65",
+                "label": "분석 업무: 65/100"
               },
               "match_type": "positive",
               "score_contribution": 14,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
             }
           ],
           "dislike_warnings": []
@@ -429,214 +429,56 @@
       ],
       "like_top10": [
         {
-          "job_id": "1765283393158842",
-          "job_name": "판사",
-          "slug": "판사",
-          "image_url": "/uploads/jobs/job-%ED%8C%90%EC%82%AC.webp?v=1771818250136",
-          "job_description": "재판을 진행하며, 변호사와 검사의 논쟁, 변호사 및 증인의 진술, 사건증거 등 재판에 관련된 자료들을 검토하고 법률에 근거해 판결을 내린다.",
-          "fit_score": 31,
-          "like_score": 80,
-          "can_score": 67,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 판사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "판사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283314686996",
-          "job_name": "변리사",
-          "slug": "변리사",
-          "image_url": "/uploads/jobs/job-변리사.webp",
-          "job_description": "새로운 기술, 발명, 디자인, 상표 등의 권리취득을 위한 상담과 지원을 해주고, 특허의 취득 및 권리보호를 위한 업무를 대행한다.",
-          "fit_score": 49,
-          "like_score": 79,
-          "can_score": 67,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 변리사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "변리사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283550704490",
-          "job_name": "의약품연구기획자",
-          "slug": "의약품연구기획자",
-          "image_url": "/uploads/jobs/job-의약품연구기획자.webp",
-          "job_description": "의약품 신규 프로젝트의 발굴·기획 및 제품화를 위하여 개발요구사항을 분석하여 연구개발 목표를 설정하고, 연구개발 리스크를 파악하여 연구개발 수행체계를 수립한다.",
-          "fit_score": 49,
+          "job_id": "1765283992505504",
+          "job_name": "병리과전문의사",
+          "slug": "병리과전문의사",
+          "image_url": "/uploads/jobs/job-병리과전문의사.webp",
+          "job_description": "질병진단을 위해 환자로부터 채취된 조직검체, 체액검체(객담, 복수, 뇨 등), 혈액검체 등을 진단하고 결과를 담당 의사에게 통보한다.",
+          "fit_score": 29,
           "like_score": 78,
-          "can_score": 69,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 의약품연구기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 65,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 병리과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "의약품연구기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "병리과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284001934910",
-          "job_name": "감염관리전문간호사",
-          "slug": "감염관리전문간호사",
-          "image_url": "/uploads/jobs/job-감염관리전문간호사.webp",
-          "job_description": "병원 내 감염을 예방하고 관리하기 위해 감염 여부를 조사하고 예방계획을 수립·실시하며 감염관리 규정, 지침, 정책 등을 마련한다.",
-          "fit_score": 49,
-          "like_score": 78,
+          "job_id": "1765283548991708",
+          "job_name": "사회과학연구관리자",
+          "slug": "사회과학연구관리자",
+          "image_url": "/uploads/jobs/job-사회과학연구관리자.webp",
+          "job_description": "경제학, 경영학 등 사회과학에 대한 상업, 비상업적 연구개발 등과 관련된 활동을 기획, 지휘 및 조정한다.",
+          "fit_score": 50,
+          "like_score": 75,
+          "can_score": 74,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 사회과학연구관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "사회과학연구관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283920636454",
+          "job_name": "원전설비연구원",
+          "slug": "원전설비연구원",
+          "image_url": "/uploads/jobs/job-원전설비연구원.webp",
+          "job_description": "원자력발전설비를 안전하고 효율적으로 운영, 관리를 위하여 설비의 진단, 운전 및 정비에 관한 기술을 개발하고 현장업무를 지원한다.",
+          "fit_score": 48,
+          "like_score": 75,
           "can_score": 70,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 감염관리전문간호사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 원전설비연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "감염관리전문간호사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "원전설비연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283533778267",
-          "job_name": "공공기관임원",
-          "slug": "공공기관임원",
-          "image_url": "/uploads/jobs/job-공공기관임원.webp",
-          "job_description": "정부 산하 단체 및 관련 공공기관의 정책 수행을 기획, 조직 및 통제한다.",
-          "fit_score": 50,
-          "like_score": 75,
-          "can_score": 75,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 공공기관임원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "공공기관임원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283461819712",
-          "job_name": "비뇨기과의사",
-          "slug": "비뇨기과의사",
-          "image_url": "/uploads/jobs/job-비뇨기과의사.webp",
-          "job_description": "비뇨생식기관의 질병과 장애를 진료한다.",
-          "fit_score": 46,
-          "like_score": 75,
-          "can_score": 65,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 비뇨기과의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "비뇨기과의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283695953853",
-          "job_name": "커넥티드카소프트웨어개발자",
-          "slug": "커넥티드카소프트웨어개발자",
-          "image_url": "/uploads/jobs/job-커넥티드카소프트웨어개발자.webp",
-          "job_description": "자동차와 연결될 수 있는 모든 대상과의 양방향 통신을 통해 안전성, 편의성 향상 및 이동공간에서의 새로운 서비스 창출을 위한 HMI, 보안, 콘텐츠 소프트웨어를 개발한다.",
-          "fit_score": 37,
-          "like_score": 74,
-          "can_score": 75,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 커넥티드카소프트웨어개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "커넥티드카소프트웨어개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283314133190",
-          "job_name": "법무사",
-          "slug": "법무사",
-          "image_url": "/uploads/jobs/job-법무사.webp",
-          "job_description": "다른 사람의 요청에 의해 법원과 검찰청에 제출할 서류를 작성하고 제출하며, 등기 및 공탁(법적인 절차에 따라 돈이나 증권을 공탁기관에 맡기는 것) 사건의 신청 대리에 관한 모든 업무를 수행합니다.",
-          "fit_score": 27,
-          "like_score": 74,
-          "can_score": 65,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 법무사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "법무사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283695953853",
-          "job_name": "커넥티드카소프트웨어개발자",
-          "slug": "커넥티드카소프트웨어개발자",
-          "image_url": "/uploads/jobs/job-커넥티드카소프트웨어개발자.webp",
-          "job_description": "자동차와 연결될 수 있는 모든 대상과의 양방향 통신을 통해 안전성, 편의성 향상 및 이동공간에서의 새로운 서비스 창출을 위한 HMI, 보안, 콘텐츠 소프트웨어를 개발한다.",
-          "fit_score": 37,
-          "like_score": 74,
-          "can_score": 75,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 커넥티드카소프트웨어개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "커넥티드카소프트웨어개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283314133190",
-          "job_name": "법무사",
-          "slug": "법무사",
-          "image_url": "/uploads/jobs/job-법무사.webp",
-          "job_description": "다른 사람의 요청에 의해 법원과 검찰청에 제출할 서류를 작성하고 제출하며, 등기 및 공탁(법적인 절차에 따라 돈이나 증권을 공탁기관에 맡기는 것) 사건의 신청 대리에 관한 모든 업무를 수행합니다.",
-          "fit_score": 27,
-          "like_score": 74,
-          "can_score": 65,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 법무사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "법무사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        }
-      ],
-      "can_top10": [
-        {
-          "job_id": "1765284200983863",
-          "job_name": "조명디자이너",
-          "slug": "조명디자이너",
-          "image_url": "/uploads/jobs/job-조명디자이너.webp",
-          "job_description": "건축물의 조명을 디자인한다.",
-          "fit_score": 45,
-          "like_score": 60,
-          "can_score": 80,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 조명디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "조명디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284684883263",
-          "job_name": "의약품생산지원기술자",
-          "slug": "의약품생산지원기술자",
-          "image_url": "/uploads/jobs/job-의약품생산지원기술자.webp",
-          "job_description": "작업자의 안전과 위생, 제조설비 관리, 보관관리, 공기조화장치 관리, 제조용수 관리, 환경안전위생 관리 등의 정해진 업무를 GMP 규정에 따라 수행한다.",
-          "fit_score": 50,
-          "like_score": 71,
-          "can_score": 79,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 의약품생산지원기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "의약품생산지원기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284734587340",
-          "job_name": "통신선로시험원",
-          "slug": "통신선로시험원",
-          "image_url": "/uploads/jobs/job-통신선로시험원.webp",
-          "job_description": "단락, 잡음, 수신불량, 발신고장 등 신고된 고장내역을 시험·조사하기 위하여 통신선로를 시험·관리 및 운용한다.",
-          "fit_score": 49,
-          "like_score": 70,
-          "can_score": 79,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 통신선로시험원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "통신선로시험원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284143714399",
-          "job_name": "만화영화연출가",
-          "slug": "만화영화연출가",
-          "image_url": "/uploads/jobs/job-만화영화연출가.webp",
-          "job_description": "만화영화를 제작하기 위한 기획, 제작, 스토리구성 등에 종사하는 작업원들을 지휘·감독한다.",
-          "fit_score": 45,
-          "like_score": 60,
-          "can_score": 79,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 만화영화연출가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "만화영화연출가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284152303813",
-          "job_name": "편성프로듀서",
-          "slug": "편성프로듀서",
-          "image_url": "/uploads/jobs/job-편성프로듀서.webp",
-          "job_description": "텔레비전 및 라디오 방송의 방송시간대별 프로그램 편성을 총괄한다.",
+          "job_id": "176528329335928",
+          "job_name": "기계공학 기술자ㆍ연구원",
+          "slug": "기계공학-기술자연구원",
+          "image_url": "/uploads/jobs/job-기계공학-기술자연구원.webp",
+          "job_description": "기계공학 기술자ㆍ연구원은 다양한 산업과 연관된 기계, 기구, 산업 설비, 생산시스템 등을 연구, 개발, 설계, 제조하고, 생산 공정을 운영, 감독하는 업무를 수행합니다.",
           "fit_score": 42,
-          "like_score": 55,
-          "can_score": 79,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 편성프로듀서는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "편성프로듀서는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283646341940",
-          "job_name": "금융연구원",
-          "slug": "금융연구원",
-          "image_url": "/uploads/jobs/job-금융연구원.webp",
-          "job_description": "국내외 경제환경 변화에 대응하여 금융산업의 업무조정 및 각종 금융제도의 선진화방안을 연구한다.",
-          "fit_score": 40,
           "like_score": 75,
-          "can_score": 79,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 금융연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 83,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기계공학 기술자ㆍ연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "금융연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "기계공학 기술자ㆍ연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
           "job_id": "1765283710803134",
@@ -652,46 +494,211 @@
           "can_reason": "인공지능연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283711432539",
-          "job_name": "증강현실전문가",
-          "slug": "증강현실전문가",
-          "image_url": "/uploads/jobs/job-증강현실전문가.webp",
-          "job_description": "모니터나 스크린, 스마트폰의 액정 등의 화면을 통해 현실세계에 각종 정보 및 가상현실을 합성하는 증강현실시스템을 개발한다.",
-          "fit_score": 35,
+          "job_id": "1765283291483400",
+          "job_name": "군무원",
+          "slug": "군무원",
+          "image_url": "/uploads/jobs/job-군무원.webp",
+          "job_description": "군무원은 군부대에서 군인과 함께 근무하는 특정직 국가 공무원으로서 담당 직렬에 따라 기술, 연구, 일반 행정, 이미용 등에 대한 업무를 수행합니다.",
+          "fit_score": 61,
+          "like_score": 73,
+          "can_score": 69,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283310507673",
+          "job_name": "반도체공학기술자",
+          "slug": "반도체공학기술자",
+          "image_url": "/uploads/jobs/job-반도체공학기술자.webp",
+          "job_description": "반도체공학기술자는 냉장고, 텔레비전, 세탁기 등의 가전제품과 의료기기, 컴퓨터, 휴대폰 등 전자제품에 사용되는 반도체의 기술적 성능을 개선하거나 새로운 기능과 성능을 갖춘 반도체를 개발합니다.",
+          "fit_score": 55,
+          "like_score": 73,
+          "can_score": 60,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체공학기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "반도체공학기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284382273173",
+          "job_name": "은행기업금융상담역",
+          "slug": "은행기업금융상담역",
+          "image_url": "/uploads/jobs/job-은행기업금융상담역.webp",
+          "job_description": "은행에서 기업고객의 자금수요를 적기에 제공할 수 있도록 기업대출에 관련된 제반 실무를 진행한다.",
+          "fit_score": 28,
+          "like_score": 73,
+          "can_score": 68,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 은행기업금융상담역은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "은행기업금융상담역은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283463514731",
+          "job_name": "소아청소년과의사",
+          "slug": "소아청소년과의사",
+          "image_url": "/uploads/jobs/job-소아청소년과의사.webp",
+          "job_description": "소아 및 청소년의 보건증진과 질병의 예방 및 치료를 담당한다.",
+          "fit_score": 28,
+          "like_score": 73,
+          "can_score": 68,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 소아청소년과의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "소아청소년과의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283937205725",
+          "job_name": "선박커미셔닝 엔지니어",
+          "slug": "선박커미셔닝-엔지니어",
+          "image_url": "/uploads/jobs/job-선박커미셔닝-엔지니어.webp",
+          "job_description": "선박, 해양설비에 설치된 각종기기를 검사기관 또는 관련 법규에 따라 커미셔닝을 통해 설계 및 제작 사양에 부합하는지 점검, 수리, 시험·검사한다.",
+          "fit_score": 37,
           "like_score": 71,
-          "can_score": 78,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 증강현실전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 77,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 선박커미셔닝 엔지니어는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "증강현실전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "선박커미셔닝 엔지니어는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        }
+      ],
+      "can_top10": [
+        {
+          "job_id": "1765283290090670",
+          "job_name": "구성작가",
+          "slug": "구성작가",
+          "image_url": "/uploads/jobs/job-구성작가.webp",
+          "job_description": "구성작가는 문예 창작과 관련된 지식을 바탕으로 드라마를 제외한 그 외 프로그램들의 기획과 구성, 대본 작성 등에 참여합니다.",
+          "fit_score": 37,
+          "like_score": 65,
+          "can_score": 85,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 구성작가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "구성작가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284661645154",
-          "job_name": "전동차정비관리자",
-          "slug": "전동차정비관리자",
-          "image_url": "/uploads/jobs/job-전동차정비관리자.webp",
-          "job_description": "전동차 정비 및 검수에 관한 관리·감독 업무를 수행한다.",
-          "fit_score": 30,
-          "like_score": 68,
-          "can_score": 78,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 전동차정비관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765283278043521",
+          "job_name": "가상현실전문가",
+          "slug": "가상현실전문가",
+          "image_url": "/uploads/jobs/job-가상현실전문가.webp",
+          "job_description": "이용자가 실제 세계와 유사한 느낌을 갖도록 3D모델링 및 VRML 등의 기술을 이용해 3차원 가상현실시스템을 개발한다.",
+          "fit_score": 34,
+          "like_score": 63,
+          "can_score": 84,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 가상현실전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "전동차정비관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "가상현실전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283533778267",
-          "job_name": "공공기관임원",
-          "slug": "공공기관임원",
-          "image_url": "/uploads/jobs/job-공공기관임원.webp",
-          "job_description": "정부 산하 단체 및 관련 공공기관의 정책 수행을 기획, 조직 및 통제한다.",
-          "fit_score": 50,
+          "job_id": "176528329335928",
+          "job_name": "기계공학 기술자ㆍ연구원",
+          "slug": "기계공학-기술자연구원",
+          "image_url": "/uploads/jobs/job-기계공학-기술자연구원.webp",
+          "job_description": "기계공학 기술자ㆍ연구원은 다양한 산업과 연관된 기계, 기구, 산업 설비, 생산시스템 등을 연구, 개발, 설계, 제조하고, 생산 공정을 운영, 감독하는 업무를 수행합니다.",
+          "fit_score": 42,
           "like_score": 75,
-          "can_score": 75,
-          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 공공기관임원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 83,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기계공학 기술자ㆍ연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "공공기관임원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "기계공학 기술자ㆍ연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284148347861",
+          "job_name": "영화라인프로듀서",
+          "slug": "영화라인프로듀서",
+          "image_url": "/uploads/jobs/job-영화라인프로듀서.webp",
+          "job_description": "영화제작부의 실무적인 역할을 수행하며 프로듀서에 의해 결제된 단기간의 예산을 집행한다.",
+          "fit_score": 47,
+          "like_score": 60,
+          "can_score": 82,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 영화라인프로듀서는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "영화라인프로듀서는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284749945907",
+          "job_name": "내장목공",
+          "slug": "내장목공",
+          "image_url": "/uploads/jobs/job-내장목공.webp",
+          "job_description": "건축물 내부의 장식, 방음, 실용성 제고를 목적으로 목재를 이용하여 방음설비 및 마루, 칸막이, 천정, 목(木)장식품 등을 제작하고 설치한다.",
+          "fit_score": 29,
+          "like_score": 69,
+          "can_score": 81,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 내장목공은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "내장목공은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284670641577",
+          "job_name": "반도체계측검사장비기술자",
+          "slug": "반도체계측검사장비기술자",
+          "image_url": "/uploads/jobs/job-반도체계측검사장비기술자.webp",
+          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 계측검사 장비를 설치, 평가, 개선, 인증, 유지 관리한다.",
+          "fit_score": 50,
+          "like_score": 70,
+          "can_score": 80,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체계측검사장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "반도체계측검사장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284670641577",
+          "job_name": "반도체계측검사장비기술자",
+          "slug": "반도체계측검사장비기술자",
+          "image_url": "/uploads/jobs/job-반도체계측검사장비기술자.webp",
+          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 계측검사 장비를 설치, 평가, 개선, 인증, 유지 관리한다.",
+          "fit_score": 50,
+          "like_score": 70,
+          "can_score": 80,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체계측검사장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "반도체계측검사장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283598788869",
+          "job_name": "관상어종자전문가",
+          "slug": "관상어종자전문가",
+          "image_url": "/uploads/jobs/job-관상어종자전문가.webp",
+          "job_description": "새로운 관상어종자를 연구하고 시험하여 개발하며 관련하여 관계자에게 교육하고 보급한다.",
+          "fit_score": 28,
+          "like_score": 55,
+          "can_score": 80,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 관상어종자전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "관상어종자전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765285379122323",
+          "job_name": "박막트랜지스터모듈조립원",
+          "slug": "박막트랜지스터모듈조립원",
+          "image_url": "/uploads/jobs/job-박막트랜지스터모듈조립원.webp",
+          "job_description": "편광필름이 부착이 된 상하판에 TAB(Tape Automated Bonding)을 부착하고 구동회로(Driving IC)를 실장(實裝, Mounting)하며 PCB(Printed Circuit Board) 조립과 백라이트 부분을 연결하여 박막트랜지스터모듈을 완성한다.",
+          "fit_score": 48,
+          "like_score": 71,
+          "can_score": 76,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 박막트랜지스터모듈조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "박막트랜지스터모듈조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284739951129",
+          "job_name": "철망설치원",
+          "slug": "철망설치원",
+          "image_url": "/uploads/jobs/job-철망설치원.webp",
+          "job_description": "산업시설, 군사시설, 주택, 농장, 운동장 등에 철망, 앵글, 파이프 등 철물을 이용하여 보호 또는 방호용 울타리를 설치한다.",
+          "fit_score": 60,
+          "like_score": 65,
+          "can_score": 75,
+          "rationale": "[좋아할 이유] 창작/창의 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 철망설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "창작/창의 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "철망설치원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         }
       ],
       "caution_jobs": [
+        {
+          "job_id": "1765284670641577",
+          "job_name": "반도체계측검사장비기술자",
+          "slug": "반도체계측검사장비기술자",
+          "image_url": "/uploads/jobs/job-반도체계측검사장비기술자.webp",
+          "risk_penalty": 25
+        },
         {
           "job_id": "1765284684883263",
           "job_name": "의약품생산지원기술자",
@@ -700,24 +707,10 @@
           "risk_penalty": 25
         },
         {
-          "job_id": "1765283533778267",
-          "job_name": "공공기관임원",
-          "slug": "공공기관임원",
-          "image_url": "/uploads/jobs/job-공공기관임원.webp",
-          "risk_penalty": 25
-        },
-        {
-          "job_id": "1765284100160559",
-          "job_name": "패션기술디자이너",
-          "slug": "패션기술디자이너",
-          "image_url": "/uploads/jobs/job-패션기술디자이너.webp",
-          "risk_penalty": 24
-        },
-        {
-          "job_id": "1765283314686996",
-          "job_name": "변리사",
-          "slug": "변리사",
-          "image_url": "/uploads/jobs/job-변리사.webp",
+          "job_id": "1765283548991708",
+          "job_name": "사회과학연구관리자",
+          "slug": "사회과학연구관리자",
+          "image_url": "/uploads/jobs/job-사회과학연구관리자.webp",
           "risk_penalty": 25
         },
         {
@@ -726,6 +719,13 @@
           "slug": "게임월드빌더",
           "image_url": "/uploads/jobs/job-게임월드빌더.webp",
           "risk_penalty": 24
+        },
+        {
+          "job_id": "1765284670915978",
+          "job_name": "반도체금속막증착장비기술자",
+          "slug": "반도체금속막증착장비기술자",
+          "image_url": "/uploads/jobs/job-반도체금속막증착장비기술자.webp",
+          "risk_penalty": 25
         }
       ],
       "followup_questions": [
@@ -1113,20 +1113,20 @@
         "has_unknown_in_top3": false,
         "needs_followup_question": true,
         "counts_before_filter": {
-          "safe_known": 155,
-          "safe_unknown": 118,
-          "caution": 227,
+          "safe_known": 147,
+          "safe_unknown": 141,
+          "caution": 212,
           "total": 500
         },
         "counts_after_filter": {
-          "safe_known": 155,
-          "safe_unknown": 118,
-          "caution": 227,
+          "safe_known": 147,
+          "safe_unknown": 141,
+          "caution": 212,
           "total": 500
         }
       },
       "llm_explanation": "2개의 답변을 반영하여 추천했습니다.",
-      "generated_at": "2026-03-08T07:58:40.681Z",
+      "generated_at": "2026-03-08T10:38:41.130Z",
       "total_candidates": 6945,
       "scored_candidates": 500,
       "filtered_out_candidates": 0,
@@ -1138,26 +1138,26 @@
       "phase4_applied": true,
       "diversity_guard_active": true,
       "diversity_changes": [
-        "수산업교사 → 의약세병기조작원 (Diversity Guard: people_service)",
-        "능형망제조원 → 소셜네트워크서비스마케터 (Diversity Guard: other)",
-        "두부제조원 → 여신사후관리사무원 (Diversity Guard: other)"
+        "마카로니제조원 → 돗자리제조원 (Diversity Guard: other)",
+        "축융가공원 → 매듭기수리원 (Diversity Guard: other)",
+        "모유수유전문가 → 공동주택관리사무원 (Diversity Guard: people_service)"
       ],
       "analysis_stage": "major_high",
       "stage_specific_insights": [],
       "premium_report": {
-        "report_id": "report-session-744-1772956720681",
-        "generated_at": "2026-03-08T07:58:40.681Z",
-        "session_id": "session-744",
+        "report_id": "report-session-793-1772966321130",
+        "generated_at": "2026-03-08T10:38:41.130Z",
+        "session_id": "session-793",
         "engine_version": "v3-rule",
         "overall_status": "partial",
         "sections_completed": 7,
         "sections_total": 8,
-        "_confidence": 0.42760300618612096,
+        "_confidence": 0.4273207598886106,
         "_factsCount": 2,
         "_answeredQuestions": 2,
         "_candidatesScored": 100,
         "_appliedRules": 4,
-        "executiveSummary": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 실기교사 같은 분야를 시작점으로 고려해보세요.",
+        "executiveSummary": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 군무원 같은 분야를 시작점으로 고려해보세요.",
         "workStyleNarrative": "작업 스타일 분석을 위해 더 많은 정보가 필요합니다.",
         "workStyleMap": {
           "analytical_vs_creative": 0,
@@ -1172,9 +1172,9 @@
         "growthCurveDescription": "성장 곡선 분석을 위해 더 많은 정보가 필요합니다.",
         "stressTriggers": [],
         "lifeVersionStatement": {
-          "oneLiner": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 실기교사 같은 분야를 시작점으로 고려해보세요.",
+          "oneLiner": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 군무원 같은 분야를 시작점으로 고려해보세요.",
           "expanded": [
-            "🎯 최적 추천: 실기교사"
+            "🎯 최적 추천: 군무원"
           ]
         },
         "expertGuidance": {
@@ -1232,11 +1232,11 @@
             "confidence": 0.6,
             "generated_by": "rule_enhanced"
           },
-          "headline": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 실기교사 같은 분야를 시작점으로 고려해보세요.",
+          "headline": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 군무원 같은 분야를 시작점으로 고려해보세요.",
           "top_takeaways": [
-            "🎯 최적 추천: 실기교사"
+            "🎯 최적 추천: 군무원"
           ],
-          "recommended_next_step": "실기교사에 대해 더 알아보고, 관련 역량을 파악해보세요",
+          "recommended_next_step": "군무원에 대해 더 알아보고, 관련 역량을 파악해보세요",
           "recommendation_rationale": {
             "included_because": [
               "입력하신 관심사와 가치관을 기반으로 적합도가 높은 직업을 추천했습니다."
@@ -1261,7 +1261,7 @@
         "key_hypotheses": {
           "_meta": {
             "status": "success",
-            "confidence": 0.7000000000000001,
+            "confidence": 0.7033333333333333,
             "generated_by": "rule"
           },
           "hypotheses": [
@@ -1276,7 +1276,7 @@
                     "label": "\"creating, organizing\" 관심사"
                   },
                   "job_attribute": {
-                    "key": "creative",
+                    "key": "analytical",
                     "value": "60",
                     "label": "관련 역량: 60/100"
                   },
@@ -1288,16 +1288,16 @@
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "creating,organizing",
-                    "label": "창의적 분야 관심"
+                    "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
-                    "key": "creative",
+                    "key": "analytical",
                     "value": "60",
-                    "label": "창의성: 60/100"
+                    "label": "분석 업무: 60/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
                 },
                 {
                   "user_fact": {
@@ -1306,7 +1306,7 @@
                     "label": "\"creating, organizing\" 관심사"
                   },
                   "job_attribute": {
-                    "key": "analytical",
+                    "key": "creative",
                     "value": "50",
                     "label": "관련 역량: 50/100"
                   },
@@ -1328,35 +1328,35 @@
                     "label": "\"creating, organizing\" 관심사"
                   },
                   "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
+                    "key": "analytical",
+                    "value": "65",
+                    "label": "관련 역량: 65/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
                 },
                 {
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "creating,organizing",
-                    "label": "창의적 분야 관심"
+                    "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
+                    "key": "analytical",
+                    "value": "65",
+                    "label": "분석 업무: 65/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
                 }
               ],
               "what_would_change_my_mind": "실제 직업 생활에서 다른 가치가 더 중요해진다면 재평가가 필요합니다"
             },
             {
-              "hypothesis": "실기교사 관련 분야가 당신에게 가장 적합한 직업군입니다",
-              "confidence": 0.6,
+              "hypothesis": "군무원 관련 분야가 당신에게 가장 적합한 직업군입니다",
+              "confidence": 0.61,
               "supporting_evidence": [
                 {
                   "user_fact": {
@@ -1365,7 +1365,7 @@
                     "label": "\"creating, organizing\" 관심사"
                   },
                   "job_attribute": {
-                    "key": "creative",
+                    "key": "analytical",
                     "value": "60",
                     "label": "관련 역량: 60/100"
                   },
@@ -1377,16 +1377,16 @@
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "creating,organizing",
-                    "label": "창의적 분야 관심"
+                    "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
-                    "key": "creative",
+                    "key": "analytical",
                     "value": "60",
-                    "label": "창의성: 60/100"
+                    "label": "분석 업무: 60/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
                 },
                 {
                   "user_fact": {
@@ -1395,7 +1395,7 @@
                     "label": "\"creating, organizing\" 관심사"
                   },
                   "job_attribute": {
-                    "key": "analytical",
+                    "key": "creative",
                     "value": "50",
                     "label": "관련 역량: 50/100"
                   },
@@ -1416,168 +1416,10 @@
           },
           "recommendations": [
             {
-              "id": "1765284036427187",
-              "name": "실기교사",
-              "fit_score": 60,
-              "personal_fit_reason": "실기교사는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
-              "evidence_links": [
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "\"creating, organizing\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "\"creating, organizing\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "50",
-                    "label": "관련 역량: 50/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "분석적 업무 관심"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "50",
-                    "label": "분석 업무: 50/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 50점입니다"
-                }
-              ],
-              "growth_path_30_days": [
-                "실기교사 관련 기초 지식 학습",
-                "관련 온라인 강의/자료 탐색",
-                "현직자 이야기 듣기 또는 직업 체험",
-                "필요 역량 파악 및 학습 계획 수립",
-                "작은 프로젝트로 실습 시작"
-              ],
-              "risks": [
-                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
-                "경쟁이 있을 수 있습니다."
-              ]
-            },
-            {
-              "id": "1765284035936846",
-              "name": "수산업교사",
-              "fit_score": 60,
-              "personal_fit_reason": "수산업교사는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
-              "evidence_links": [
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "\"creating, organizing\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "\"creating, organizing\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "50",
-                    "label": "관련 역량: 50/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "분석적 업무 관심"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "50",
-                    "label": "분석 업무: 50/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 12,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 50점입니다"
-                }
-              ],
-              "growth_path_30_days": [
-                "수산업교사 관련 기초 지식 학습",
-                "관련 온라인 강의/자료 탐색",
-                "현직자 이야기 듣기 또는 직업 체험",
-                "필요 역량 파악 및 학습 계획 수립",
-                "작은 프로젝트로 실습 시작"
-              ],
-              "risks": [
-                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
-                "경쟁이 있을 수 있습니다."
-              ]
-            },
-            {
-              "id": "1765284130482539",
-              "name": "편집장",
-              "fit_score": 58,
-              "personal_fit_reason": "편집장은 수입 수준이 높음, 안정성이 높음 직업입니다.",
+              "id": "1765283291483400",
+              "name": "군무원",
+              "fit_score": 61,
+              "personal_fit_reason": "군무원은 워라밸이 좋은 편, 수입 수준이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1593,36 +1435,6 @@
                   "match_type": "positive",
                   "score_contribution": 14,
                   "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "\"creating, organizing\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
                 },
                 {
                   "user_fact": {
@@ -1638,10 +1450,40 @@
                   "match_type": "positive",
                   "score_contribution": 14,
                   "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "\"creating, organizing\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "창의성: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
                 }
               ],
               "growth_path_30_days": [
-                "편집장 관련 기초 지식 학습",
+                "군무원 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1653,10 +1495,89 @@
               ]
             },
             {
-              "id": "1765284736703654",
-              "name": "능형망제조원",
+              "id": "1765284739951129",
+              "name": "철망설치원",
+              "fit_score": 60,
+              "personal_fit_reason": "철망설치원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "\"creating, organizing\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "65",
+                    "label": "관련 역량: 65/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "65",
+                    "label": "분석 업무: 65/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "\"creating, organizing\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "55",
+                    "label": "관련 역량: 55/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 13,
+                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 55점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "55",
+                    "label": "창의성: 55/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 13,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 55점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "철망설치원 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            },
+            {
+              "id": "1765284831848133",
+              "name": "마카로니제조원",
               "fit_score": 58,
-              "personal_fit_reason": "능형망제조원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
+              "personal_fit_reason": "마카로니제조원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1677,6 +1598,36 @@
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "creating,organizing",
+                    "label": "\"creating, organizing\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "60",
+                    "label": "창의성: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
                     "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
@@ -1687,40 +1638,10 @@
                   "match_type": "positive",
                   "score_contribution": 14,
                   "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "\"creating, organizing\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "55",
-                    "label": "관련 역량: 55/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 13,
-                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 55점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "creating,organizing",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "55",
-                    "label": "창의성: 55/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 13,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 55점입니다"
                 }
               ],
               "growth_path_30_days": [
-                "능형망제조원 관련 기초 지식 학습",
+                "마카로니제조원 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1732,10 +1653,89 @@
               ]
             },
             {
-              "id": "1765284830950627",
-              "name": "두부제조원",
+              "id": "1765284002896752",
+              "name": "모유수유전문가",
+              "fit_score": 58,
+              "personal_fit_reason": "모유수유전문가는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "\"creating, organizing\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "\"creating, organizing\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"creating, organizing\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "creating,organizing",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "창의성: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "모유수유전문가 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            },
+            {
+              "id": "1765284942694440",
+              "name": "축융가공원",
               "fit_score": 57,
-              "personal_fit_reason": "두부제조원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
+              "personal_fit_reason": "축융가공원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1799,7 +1799,7 @@
                 }
               ],
               "growth_path_30_days": [
-                "두부제조원 관련 기초 지식 학습",
+                "축융가공원 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1820,16 +1820,16 @@
           },
           "recommendations": [
             {
-              "id": "1765284941152193",
-              "name": "직물방축가공원",
+              "id": "1765284338322404",
+              "name": "공동주택관리사무원",
               "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
               "conditions_to_reconsider": [
                 "우선순위가 변경되면 재고려할 수 있습니다"
               ]
             },
             {
-              "id": "1765283678336983",
-              "name": "방송망운영기사",
+              "id": "1765284143061792",
+              "name": "라이브사운드엔지니어",
               "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
               "conditions_to_reconsider": [
                 "우선순위가 변경되면 재고려할 수 있습니다"
@@ -1859,7 +1859,7 @@
               "steps": [
                 "핵심 기술 집중 학습 (3개월)",
                 "관련 프로젝트/포트폴리오 구축",
-                "실기교사 관련 네트워킹 시작"
+                "군무원 관련 네트워킹 시작"
               ]
             }
           ]
@@ -1894,7 +1894,7 @@
         }
       },
       "confidence": {
-        "score": 0.42760300618612096,
+        "score": 0.4273207598886106,
         "level": "기본",
         "description": "더 솔직하게 답해주시면 맞춤 추천이 가능해요"
       },
@@ -1914,20 +1914,20 @@
   },
   "narrativeFactsResponse": {
     "success": true,
-    "session_id": "e2e-major-1772956716838-m4h8wu",
+    "session_id": "e2e-major-1772966317613-xh0ank",
     "meta": {
       "served_by": "v3-prod",
       "served_by_region": "APAC",
       "served_by_colo": "KIX",
       "served_by_primary": true,
       "timings": {
-        "sql_duration_ms": 0.3052
+        "sql_duration_ms": 0.2403
       },
-      "duration": 0.3052,
+      "duration": 0.2403,
       "changes": 1,
-      "last_row_id": 618,
+      "last_row_id": 667,
       "changed_db": true,
-      "size_after": 366579712,
+      "size_after": 369811456,
       "rows_read": 8,
       "rows_written": 3,
       "total_attempts": 1
@@ -2189,134 +2189,134 @@
     "top10": [
       {
         "rank": 1,
-        "majorName": "디지털디자인학과",
-        "fitScore": 90,
+        "majorName": "공업디자인학과",
+        "fitScore": 89,
         "likeScore": 95,
-        "canScore": 90,
+        "canScore": 88,
         "riskPenalty": 0,
         "fieldCategory": "arts",
-        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '디지털 디자인'이 창의적 문제 해결과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다."
+        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의적 사고'와 잘 맞습니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '조형학'을 충족해야 합니다."
       },
       {
         "rank": 2,
         "majorName": "패션디자인학과",
         "fitScore": 88,
-        "likeScore": 90,
-        "canScore": 89,
+        "likeScore": 84,
+        "canScore": 95,
         "riskPenalty": 0,
         "fieldCategory": "arts",
-        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 100/100으로 창의적 사고가 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 취업률 60/100으로 상대적으로 낮습니다."
+        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 감각이 핵심입니다. [리스크] 다만, 경쟁률이 80/100으로 높고, 선이수과목으로 디자인 기초가 필요합니다."
       },
       {
         "rank": 3,
         "majorName": "컴퓨터디자인학과",
-        "fitScore": 88,
-        "likeScore": 86,
-        "canScore": 95,
+        "fitScore": 87,
+        "likeScore": 89,
+        "canScore": 87,
         "riskPenalty": 0,
         "fieldCategory": "arts",
-        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의성'이 창작과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 프로그래밍'이 필요합니다."
+        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 소프트웨어 활용 능력이 핵심입니다. [리스크] 다만, 이 전공은 취업률이 60/100으로 상대적으로 낮습니다."
       },
       {
         "rank": 4,
-        "majorName": "실내디자인학과",
+        "majorName": "실내디자인과",
         "fitScore": 83,
-        "likeScore": 81,
-        "canScore": 88,
-        "riskPenalty": 0,
-        "fieldCategory": "arts",
-        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창의성'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다."
-      },
-      {
-        "rank": 5,
-        "majorName": "디자인학과",
-        "fitScore": 82,
-        "likeScore": 86,
-        "canScore": 81,
-        "riskPenalty": 0,
-        "fieldCategory": "arts",
-        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다."
-      },
-      {
-        "rank": 6,
-        "majorName": "산업디자인학과",
-        "fitScore": 80,
-        "likeScore": 77,
+        "likeScore": 84,
         "canScore": 86,
         "riskPenalty": 0,
         "fieldCategory": "arts",
-        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목이 필요합니다."
+        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 구성 능력과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '색채학'이 필요합니다."
       },
       {
-        "rank": 7,
-        "majorName": "의류·의상학과",
-        "fitScore": 80,
-        "likeScore": 77,
+        "rank": 5,
+        "majorName": "산업디자인학과",
+        "fitScore": 81,
+        "likeScore": 78,
         "canScore": 85,
         "riskPenalty": 0,
         "fieldCategory": "arts",
-        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다. [적성 근거] '창의성'이 강점이라고 하셨고, 이 전공은 디자인 감각과 소재 이해가 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다."
+        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 경쟁률이 60/100으로 보통이며, 선이수과목으로 디자인 기초가 필요합니다."
+      },
+      {
+        "rank": 6,
+        "majorName": "실내디자인학과",
+        "fitScore": 81,
+        "likeScore": 78,
+        "canScore": 85,
+        "riskPenalty": 0,
+        "fieldCategory": "arts",
+        "summary": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '건축학 개론'이 필요합니다."
+      },
+      {
+        "rank": 7,
+        "majorName": "디자인학과",
+        "fitScore": 76,
+        "likeScore": 73,
+        "canScore": 81,
+        "riskPenalty": 0,
+        "fieldCategory": "arts",
+        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요합니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목으로 미술과 디자인 기초가 필요합니다."
       },
       {
         "rank": 8,
-        "majorName": "광고·홍보학과",
-        "fitScore": 75,
-        "likeScore": 81,
-        "canScore": 72,
+        "majorName": "디지털디자인학과",
+        "fitScore": 76,
+        "likeScore": 73,
+        "canScore": 80,
         "riskPenalty": 0,
-        "fieldCategory": "business",
-        "summary": "[흥미 근거] '조직/관리 행정 사무 경영지원에 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다."
+        "fieldCategory": "arts",
+        "summary": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 디지털 디자인과 창의적 문제 해결이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다."
       },
       {
         "rank": 9,
-        "majorName": "건축학과",
+        "majorName": "경영학과",
         "fitScore": 73,
-        "likeScore": 72,
-        "canScore": 77,
+        "likeScore": 84,
+        "canScore": 66,
         "riskPenalty": 0,
-        "fieldCategory": "engineering",
-        "summary": "[흥미 근거] '자율성 자유 독립을 원한다고 하셨는데, 이 전공은 자율성 50/100으로 중간 정도입니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 80/100으로 창의적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 석사 이상 진학이 일반적이라 진입이 어려울 수 있습니다."
+        "fieldCategory": "business",
+        "summary": "[흥미 근거] '자율성 자유 독립'을 원하신다고 하셨는데, 경영학과는 자율성 50/100으로 보통입니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 분석 능력과 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 경제학과 통계학이 필요하여 진입이 다소 어려울 수 있습니다."
       },
       {
         "rank": 10,
-        "majorName": "철학·윤리학과",
+        "majorName": "의류·의상학과",
         "fitScore": 71,
-        "likeScore": 68,
-        "canScore": 71,
+        "likeScore": 67,
+        "canScore": 74,
         "riskPenalty": 0,
-        "fieldCategory": "humanities",
-        "summary": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 자율성이 70/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '비판적 사고'가 창의적 사고와 연결됩니다. [리스크] 이 전공은 경쟁률이 50/100으로 낮고, 선이수과목이 필요하지 않아 진입이 용이합니다."
+        "fieldCategory": "arts",
+        "summary": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 디자인 감각과 마케팅 전략이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '패션 디자인'과 '섬유학'이 필요합니다."
       }
     ],
     "uxMetrics": null,
-    "processingTimeMs": 35404
+    "processingTimeMs": 41762
   },
   "rawRecommendResponse": {
     "success": true,
     "mode": "major_recommendation",
-    "session_id": "e2e-major-1772956716838-m4h8wu",
-    "request_id": 744,
+    "session_id": "e2e-major-1772966317613-xh0ank",
+    "request_id": 793,
     "recommendations": {
       "top_majors": [
         {
-          "major_id": "major:디지털디자인학과",
-          "major_name": "디지털디자인학과",
-          "major_description": "디지털 콘텐츠 분야의 전문 인력을 양성하는 전공",
-          "slug": "디지털디자인학과",
-          "image_url": "/uploads/majors/major-디지털디자인학과.webp",
-          "fit_score": 90,
+          "major_id": "major:공업디자인학과",
+          "major_name": "공업디자인학과",
+          "major_description": "공업디자인학과는 산업 제품의 디자인을 통해 경쟁력을 높이는 기술과 전략을 배우는 전공입니다.",
+          "slug": "공업디자인학과",
+          "image_url": "/uploads/majors/major-공업디자인학과.webp",
+          "fit_score": 89,
           "like_score": 95,
-          "can_score": 90,
+          "can_score": 88,
           "feasibility_score": 70,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '디지털 디자인'이 창의적 문제 해결과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '디지털 디자인'이 창의적 문제 해결과 연결됩니다",
-          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다'",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의적 사고'와 잘 맞습니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '조형학'을 충족해야 합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의적 사고'와 잘 맞습니다.",
+          "risk_reason": "경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다.",
           "semester_plan": [
-            "1학기: 디자인 기초 + 컴퓨터 그래픽스",
-            "2학기: 디지털 디자인 기초",
-            "3학기: 창의적 프로젝트"
+            "1학기: 디자인 기초 + 조형학",
+            "2학기: 색채학 + 전공 심화",
+            "3학기: 프로젝트 기반 실습"
           ]
         },
         {
@@ -2326,18 +2326,18 @@
           "slug": "패션디자인학과",
           "image_url": "/uploads/majors/major-패션디자인학과.webp",
           "fit_score": 88,
-          "like_score": 90,
-          "can_score": 89,
-          "feasibility_score": 70,
+          "like_score": 84,
+          "can_score": 95,
+          "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 100/100으로 창의적 사고가 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 취업률 60/100으로 상대적으로 낮습니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 감각이 핵심입니다. [리스크] 다만, 경쟁률이 80/100으로 높고, 선이수과목으로 디자인 기초가 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다.",
-          "can_reason": "'창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 100/100으로 창의적 사고가 핵심입니다.",
-          "risk_reason": "'경쟁률 80/100으로 높고, 취업률 60/100으로 상대적으로 낮습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 감각이 핵심입니다.",
+          "risk_reason": "'경쟁률이 80/100으로 높고, 선이수과목으로 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 디자인 기초 및 색채학",
-            "2학기: 패턴 제작 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 패턴 제작",
+            "3학기: 실습 및 프로젝트"
           ]
         },
         {
@@ -2346,61 +2346,40 @@
           "major_description": "컴퓨터디자인학과는 디자인과 컴퓨터 기술을 융합하여 창의적인 디자인 인재를 양성하는 전공입니다.",
           "slug": "컴퓨터디자인학과",
           "image_url": "/uploads/majors/major-컴퓨터디자인학과.webp",
-          "fit_score": 88,
-          "like_score": 86,
-          "can_score": 95,
-          "feasibility_score": 65,
+          "fit_score": 87,
+          "like_score": 89,
+          "can_score": 87,
+          "feasibility_score": 75,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의성'이 창작과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 프로그래밍'이 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의성'이 창작과 연결됩니다",
-          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다'",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 소프트웨어 활용 능력이 핵심입니다. [리스크] 다만, 이 전공은 취업률이 60/100으로 상대적으로 낮습니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 소프트웨어 활용 능력이 핵심입니다.",
+          "risk_reason": "이 전공은 취업률이 60/100으로 상대적으로 낮습니다.",
           "semester_plan": [
             "1학기: 디자인 기초 + 컴퓨터 프로그래밍",
-            "2학기: 컴퓨터 디자인 기초",
-            "3학기: 창의적 프로젝트"
+            "2학기: 그래픽 디자인 + 웹 디자인",
+            "3학기: 포트폴리오 제작 + 실습"
           ]
         },
         {
-          "major_id": "major:실내디자인학과",
-          "major_name": "실내디자인학과",
-          "major_description": "실내디자인은 인간이 생활하는 모든 실내 공간을 아름답고 기능적으로 디자인하는 전공입니다.",
-          "slug": "실내디자인학과",
-          "image_url": "/uploads/majors/major-실내디자인학과.webp",
+          "major_id": "major:실내디자인과",
+          "major_name": "실내디자인과",
+          "major_description": "실내디자인은 인간의 생활환경을 아름답고 기능적으로 구성하는 전공입니다.",
+          "slug": "실내디자인과",
+          "image_url": "/uploads/majors/major-실내디자인과.webp",
           "fit_score": 83,
-          "like_score": 81,
-          "can_score": 88,
+          "like_score": 84,
+          "can_score": 86,
           "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창의성'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 구성 능력과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '색채학'이 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창의성이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다'",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 공간 구성 능력과 소통 능력이 핵심입니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '색채학'이 필요합니다'",
           "semester_plan": [
-            "1학기: 디자인 기초 + 전공 입문",
-            "2학기: 공간 디자인 기초",
-            "3학기: 실습 중심의 프로젝트"
-          ]
-        },
-        {
-          "major_id": "major:디자인학과",
-          "major_name": "디자인학과",
-          "major_description": "디자인학과는 인간생활의 편리함과 아름다움을 추구하는 디자인 전반에 대한 지식과 이론을 습득하고 실기를 하는 전공입니다.",
-          "slug": "디자인학과",
-          "image_url": "/uploads/majors/major-디자인학과.webp",
-          "fit_score": 82,
-          "like_score": 86,
-          "can_score": 81,
-          "feasibility_score": 68,
-          "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
-          "semester_plan": [
-            "1학기: 미술 및 디자인 기초",
-            "2학기: 실습 및 프로젝트",
-            "3학기: 전공 심화 과목"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 공간 구성 기초",
+            "3학기: 실습 프로젝트"
           ]
         },
         {
@@ -2409,19 +2388,103 @@
           "major_description": "산업 디자인은 시각 디자인, 제품 디자인, 환경 디자인 등 다양한 분야에 적용되는 디자인 전공입니다.",
           "slug": "산업디자인학과",
           "image_url": "/uploads/majors/major-산업디자인학과.webp",
-          "fit_score": 80,
-          "like_score": 77,
-          "can_score": 86,
+          "fit_score": 81,
+          "like_score": 78,
+          "can_score": 85,
+          "feasibility_score": 70,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 경쟁률이 60/100으로 보통이며, 선이수과목으로 디자인 기초가 필요합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 디자인 기초가 필요합니다.'",
+          "semester_plan": [
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 3D 모델링",
+            "3학기: 프로젝트 및 실습"
+          ]
+        },
+        {
+          "major_id": "major:실내디자인학과",
+          "major_name": "실내디자인학과",
+          "major_description": "실내디자인은 인간이 생활하는 모든 실내 공간을 아름답고 기능적으로 디자인하는 전공입니다.",
+          "slug": "실내디자인학과",
+          "image_url": "/uploads/majors/major-실내디자인학과.webp",
+          "fit_score": 81,
+          "like_score": 78,
+          "can_score": 85,
+          "feasibility_score": 70,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '건축학 개론'이 필요합니다.",
+          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다'",
+          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '건축학 개론'이 필요합니다'",
+          "semester_plan": [
+            "1학기: 디자인 기초 + 건축학 개론",
+            "2학기: 공간 디자인 기초",
+            "3학기: 실습 프로젝트"
+          ]
+        },
+        {
+          "major_id": "major:디자인학과",
+          "major_name": "디자인학과",
+          "major_description": "디자인학과는 인간생활의 편리함과 아름다움을 추구하는 디자인 전반에 대한 지식과 이론을 습득하고 실기를 하는 전공입니다.",
+          "slug": "디자인학과",
+          "image_url": "/uploads/majors/major-디자인학과.webp",
+          "fit_score": 76,
+          "like_score": 73,
+          "can_score": 81,
           "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목이 필요합니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요합니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목으로 미술과 디자인 기초가 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목이 필요합니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요합니다.",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 미술과 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 디자인 기초 및 색채학",
-            "2학기: 3D 모델링 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 미술 + 디자인 기초",
+            "2학기: 실습 및 프로젝트",
+            "3학기: 전공 심화"
+          ]
+        },
+        {
+          "major_id": "major:디지털디자인학과",
+          "major_name": "디지털디자인학과",
+          "major_description": "디지털 콘텐츠 분야의 전문 인력을 양성하는 전공",
+          "slug": "디지털디자인학과",
+          "image_url": "/uploads/majors/major-디지털디자인학과.webp",
+          "fit_score": 76,
+          "like_score": 73,
+          "can_score": 80,
+          "feasibility_score": 65,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 디지털 디자인과 창의적 문제 해결이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다.",
+          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 디지털 디자인과 창의적 문제 해결이 핵심입니다'",
+          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다'",
+          "semester_plan": [
+            "1학기: 디자인 기초 + 컴퓨터 그래픽스",
+            "2학기: 디지털 디자인 기초",
+            "3학기: 실습 프로젝트"
+          ]
+        },
+        {
+          "major_id": "major:경영학과",
+          "major_name": "경영학과",
+          "major_description": "경영학과는 기업 운영과 관리에 필요한 이론과 실무를 배우는 전공입니다.",
+          "slug": "경영학과",
+          "image_url": "/uploads/majors/major-경영학과.webp",
+          "fit_score": 73,
+          "like_score": 84,
+          "can_score": 66,
+          "feasibility_score": 65,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '자율성 자유 독립'을 원하신다고 하셨는데, 경영학과는 자율성 50/100으로 보통입니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 분석 능력과 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 경제학과 통계학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'자율성 자유 독립'을 원하신다고 하셨는데, 경영학과는 자율성 50/100으로 보통입니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 분석 능력과 문제 해결 능력이 핵심입니다.",
+          "risk_reason": "선이수과목으로 경제학과 통계학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 기초 경영학 + 경제학",
+            "2학기: 통계학 + 경영 이론",
+            "3학기: 마케팅 + 재무 관리"
           ]
         },
         {
@@ -2430,19 +2493,40 @@
           "major_description": "의류·의상학과는 섬유·패션산업에 기여할 전문인을 양성하는 학과입니다.",
           "slug": "의류의상학과",
           "image_url": "/uploads/majors/major-의류의상학과.webp",
-          "fit_score": 80,
-          "like_score": 77,
-          "can_score": 85,
-          "feasibility_score": 65,
+          "fit_score": 71,
+          "like_score": 67,
+          "can_score": 74,
+          "feasibility_score": 70,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다. [적성 근거] '창의성'이 강점이라고 하셨고, 이 전공은 디자인 감각과 소재 이해가 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 디자인 감각과 마케팅 전략이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '패션 디자인'과 '섬유학'이 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다'",
-          "can_reason": "'창의성이 강점이라고 하셨고, 이 전공은 디자인 감각과 소재 이해가 핵심입니다'",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 디자인 감각과 마케팅 전략이 핵심입니다'",
+          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목으로 '패션 디자인'과 '섬유학'이 필요합니다'",
           "semester_plan": [
-            "1학기: 패션 디자인 기초 + 섬유학",
-            "2학기: 마케팅 기초",
-            "3학기: 실습 중심의 프로젝트"
+            "1학기: 패션 디자인 + 섬유학",
+            "2학기: 디자인 기초",
+            "3학기: 실습 프로젝트"
+          ]
+        },
+        {
+          "major_id": "major:건축공학과",
+          "major_name": "건축공학과",
+          "major_description": "건축공학은 다양한 용도의 건축물과 공간을 만들기 위한 공학적 및 사회적 지식을 종합하여 배우는 학과입니다.",
+          "slug": "건축공학과",
+          "image_url": "/uploads/majors/major-건축공학과.webp",
+          "fit_score": 70,
+          "like_score": 67,
+          "can_score": 73,
+          "feasibility_score": 65,
+          "field_category": "engineering",
+          "rationale": "[흥미 근거] '안정적인 직업을 원한다고 하셨는데, 이 전공은 취업률이 60/100으로 보통입니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '프로젝트 관리'와 연결됩니다. [리스크] 다만, 이 전공은 수학과 물리 선이수과목이 필요하며, 경쟁률이 60/100으로 보통입니다.",
+          "like_reason": "'안정적인 직업을 원한다고 하셨는데, 이 전공은 취업률이 60/100으로 보통입니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '프로젝트 관리'와 연결됩니다.",
+          "risk_reason": "수학과 물리 선이수과목이 필요하며, 경쟁률이 60/100으로 보통입니다.",
+          "semester_plan": [
+            "1학기: 기초 수학 + 물리",
+            "2학기: 건축 설계 기초",
+            "3학기: 프로젝트 관리"
           ]
         },
         {
@@ -2451,105 +2535,42 @@
           "major_description": "광고기획, 홍보기획, 광고제작 등을 교육하는 전공",
           "slug": "광고홍보학과",
           "image_url": "/uploads/majors/major-광고홍보학과.webp",
-          "fit_score": 75,
-          "like_score": 81,
+          "fit_score": 69,
+          "like_score": 67,
           "can_score": 72,
-          "feasibility_score": 65,
+          "feasibility_score": 60,
           "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리 행정 사무 경영지원에 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'조직/관리 행정 사무 경영지원에 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
+          "rationale": "[흥미 근거] '조직/관리에도 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 분석 능력이 필요합니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목으로 커뮤니케이션이 필요합니다.",
+          "like_reason": "'조직/관리에도 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 분석 능력이 필요합니다.",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 커뮤니케이션이 필요합니다.'",
           "semester_plan": [
-            "1학기: 커뮤니케이션 및 마케팅 기초",
-            "2학기: 디자인 및 실습",
-            "3학기: 전공 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:건축학과",
-          "major_name": "건축학과",
-          "major_description": "건축학과는 건축 설계 및 건축 관련 기술을 배우는 전공입니다.",
-          "slug": "건축학과",
-          "image_url": "/uploads/majors/major-건축학과.webp",
-          "fit_score": 73,
-          "like_score": 72,
-          "can_score": 77,
-          "feasibility_score": 60,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '자율성 자유 독립을 원한다고 하셨는데, 이 전공은 자율성 50/100으로 중간 정도입니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 80/100으로 창의적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 석사 이상 진학이 일반적이라 진입이 어려울 수 있습니다.",
-          "like_reason": "'자율성 자유 독립을 원한다고 하셨는데, 이 전공은 자율성 50/100으로 중간 정도입니다.",
-          "can_reason": "'창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 80/100으로 창의적 사고가 중요합니다.",
-          "risk_reason": "'경쟁률 80/100으로 높고, 취업률 70/100으로 상대적으로 낮습니다.",
-          "semester_plan": [
-            "1학기: 기초 수학 및 물리",
-            "2학기: 디자인 기초 및 실습",
-            "3학기: 전공 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:철학윤리학과",
-          "major_name": "철학·윤리학과",
-          "major_description": "철학과는 철학적 사고와 표현 능력을 기르는 학문으로, 윤리학과는 현대사회의 다양한 현상에 대한 가치관을 확립하는 학문입니다.",
-          "slug": "철학윤리학과",
-          "image_url": "/uploads/majors/major-철학윤리학과.webp",
-          "fit_score": 71,
-          "like_score": 68,
-          "can_score": 71,
-          "feasibility_score": 80,
-          "field_category": "humanities",
-          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 자율성이 70/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '비판적 사고'가 창의적 사고와 연결됩니다. [리스크] 이 전공은 경쟁률이 50/100으로 낮고, 선이수과목이 필요하지 않아 진입이 용이합니다.",
-          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 자율성이 70/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '비판적 사고'가 창의적 사고와 연결됩니다",
-          "risk_reason": "'경쟁률이 50/100으로 낮고, 선이수과목이 필요하지 않아 진입이 용이합니다'",
-          "semester_plan": [
-            "1학기: 철학개론",
-            "2학기: 윤리학",
-            "3학기: 비판적 사고"
-          ]
-        },
-        {
-          "major_id": "major:신문방송학과",
-          "major_name": "신문방송학과",
-          "major_description": "신문방송학과는 멀티미디어 종합정보통신사업에 기여할 전문 인력을 양성하는 학과입니다.",
-          "slug": "신문방송학과",
-          "image_url": "/uploads/majors/major-신문방송학과.webp",
-          "fit_score": 71,
-          "like_score": 77,
-          "can_score": 68,
-          "feasibility_score": 60,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 자율성이 50/100으로 낮습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '커뮤니케이션 능력'이 실행력과 연결되지만, 창의성이 70/100으로 높아 창의적 사고가 필요합니다. [리스크] 경쟁률이 60/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 자율성이 50/100으로 낮습니다'",
-          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '커뮤니케이션 능력'이 실행력과 연결됩니다",
-          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목이 필요합니다'",
-          "semester_plan": [
-            "1학기: 커뮤니케이션",
-            "2학기: 미디어 이론",
-            "3학기: 저널리즘"
+            "1학기: 커뮤니케이션 + 마케팅",
+            "2학기: 광고 기획",
+            "3학기: 실습 및 프로젝트"
           ]
         }
       ],
       "fit_top10": [
         {
-          "major_id": "major:디지털디자인학과",
-          "major_name": "디지털디자인학과",
-          "major_description": "디지털 콘텐츠 분야의 전문 인력을 양성하는 전공",
-          "slug": "디지털디자인학과",
-          "image_url": "/uploads/majors/major-디지털디자인학과.webp",
-          "fit_score": 90,
+          "major_id": "major:공업디자인학과",
+          "major_name": "공업디자인학과",
+          "major_description": "공업디자인학과는 산업 제품의 디자인을 통해 경쟁력을 높이는 기술과 전략을 배우는 전공입니다.",
+          "slug": "공업디자인학과",
+          "image_url": "/uploads/majors/major-공업디자인학과.webp",
+          "fit_score": 89,
           "like_score": 95,
-          "can_score": 90,
+          "can_score": 88,
           "feasibility_score": 70,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '디지털 디자인'이 창의적 문제 해결과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '디지털 디자인'이 창의적 문제 해결과 연결됩니다",
-          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다'",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의적 사고'와 잘 맞습니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '조형학'을 충족해야 합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의적 사고'와 잘 맞습니다.",
+          "risk_reason": "경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다.",
           "semester_plan": [
-            "1학기: 디자인 기초 + 컴퓨터 그래픽스",
-            "2학기: 디지털 디자인 기초",
-            "3학기: 창의적 프로젝트"
+            "1학기: 디자인 기초 + 조형학",
+            "2학기: 색채학 + 전공 심화",
+            "3학기: 프로젝트 기반 실습"
           ]
         },
         {
@@ -2559,18 +2580,18 @@
           "slug": "패션디자인학과",
           "image_url": "/uploads/majors/major-패션디자인학과.webp",
           "fit_score": 88,
-          "like_score": 90,
-          "can_score": 89,
-          "feasibility_score": 70,
+          "like_score": 84,
+          "can_score": 95,
+          "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 100/100으로 창의적 사고가 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 취업률 60/100으로 상대적으로 낮습니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 감각이 핵심입니다. [리스크] 다만, 경쟁률이 80/100으로 높고, 선이수과목으로 디자인 기초가 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다.",
-          "can_reason": "'창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 100/100으로 창의적 사고가 핵심입니다.",
-          "risk_reason": "'경쟁률 80/100으로 높고, 취업률 60/100으로 상대적으로 낮습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 감각이 핵심입니다.",
+          "risk_reason": "'경쟁률이 80/100으로 높고, 선이수과목으로 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 디자인 기초 및 색채학",
-            "2학기: 패턴 제작 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 패턴 제작",
+            "3학기: 실습 및 프로젝트"
           ]
         },
         {
@@ -2579,61 +2600,40 @@
           "major_description": "컴퓨터디자인학과는 디자인과 컴퓨터 기술을 융합하여 창의적인 디자인 인재를 양성하는 전공입니다.",
           "slug": "컴퓨터디자인학과",
           "image_url": "/uploads/majors/major-컴퓨터디자인학과.webp",
-          "fit_score": 88,
-          "like_score": 86,
-          "can_score": 95,
-          "feasibility_score": 65,
+          "fit_score": 87,
+          "like_score": 89,
+          "can_score": 87,
+          "feasibility_score": 75,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의성'이 창작과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 프로그래밍'이 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의성'이 창작과 연결됩니다",
-          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다'",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 소프트웨어 활용 능력이 핵심입니다. [리스크] 다만, 이 전공은 취업률이 60/100으로 상대적으로 낮습니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 소프트웨어 활용 능력이 핵심입니다.",
+          "risk_reason": "이 전공은 취업률이 60/100으로 상대적으로 낮습니다.",
           "semester_plan": [
             "1학기: 디자인 기초 + 컴퓨터 프로그래밍",
-            "2학기: 컴퓨터 디자인 기초",
-            "3학기: 창의적 프로젝트"
+            "2학기: 그래픽 디자인 + 웹 디자인",
+            "3학기: 포트폴리오 제작 + 실습"
           ]
         },
         {
-          "major_id": "major:실내디자인학과",
-          "major_name": "실내디자인학과",
-          "major_description": "실내디자인은 인간이 생활하는 모든 실내 공간을 아름답고 기능적으로 디자인하는 전공입니다.",
-          "slug": "실내디자인학과",
-          "image_url": "/uploads/majors/major-실내디자인학과.webp",
+          "major_id": "major:실내디자인과",
+          "major_name": "실내디자인과",
+          "major_description": "실내디자인은 인간의 생활환경을 아름답고 기능적으로 구성하는 전공입니다.",
+          "slug": "실내디자인과",
+          "image_url": "/uploads/majors/major-실내디자인과.webp",
           "fit_score": 83,
-          "like_score": 81,
-          "can_score": 88,
+          "like_score": 84,
+          "can_score": 86,
           "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창의성'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 구성 능력과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '색채학'이 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창의성이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다'",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 공간 구성 능력과 소통 능력이 핵심입니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '색채학'이 필요합니다'",
           "semester_plan": [
-            "1학기: 디자인 기초 + 전공 입문",
-            "2학기: 공간 디자인 기초",
-            "3학기: 실습 중심의 프로젝트"
-          ]
-        },
-        {
-          "major_id": "major:디자인학과",
-          "major_name": "디자인학과",
-          "major_description": "디자인학과는 인간생활의 편리함과 아름다움을 추구하는 디자인 전반에 대한 지식과 이론을 습득하고 실기를 하는 전공입니다.",
-          "slug": "디자인학과",
-          "image_url": "/uploads/majors/major-디자인학과.webp",
-          "fit_score": 82,
-          "like_score": 86,
-          "can_score": 81,
-          "feasibility_score": 68,
-          "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
-          "semester_plan": [
-            "1학기: 미술 및 디자인 기초",
-            "2학기: 실습 및 프로젝트",
-            "3학기: 전공 심화 과목"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 공간 구성 기초",
+            "3학기: 실습 프로젝트"
           ]
         },
         {
@@ -2642,19 +2642,103 @@
           "major_description": "산업 디자인은 시각 디자인, 제품 디자인, 환경 디자인 등 다양한 분야에 적용되는 디자인 전공입니다.",
           "slug": "산업디자인학과",
           "image_url": "/uploads/majors/major-산업디자인학과.webp",
-          "fit_score": 80,
-          "like_score": 77,
-          "can_score": 86,
+          "fit_score": 81,
+          "like_score": 78,
+          "can_score": 85,
+          "feasibility_score": 70,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 경쟁률이 60/100으로 보통이며, 선이수과목으로 디자인 기초가 필요합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 디자인 기초가 필요합니다.'",
+          "semester_plan": [
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 3D 모델링",
+            "3학기: 프로젝트 및 실습"
+          ]
+        },
+        {
+          "major_id": "major:실내디자인학과",
+          "major_name": "실내디자인학과",
+          "major_description": "실내디자인은 인간이 생활하는 모든 실내 공간을 아름답고 기능적으로 디자인하는 전공입니다.",
+          "slug": "실내디자인학과",
+          "image_url": "/uploads/majors/major-실내디자인학과.webp",
+          "fit_score": 81,
+          "like_score": 78,
+          "can_score": 85,
+          "feasibility_score": 70,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '건축학 개론'이 필요합니다.",
+          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다'",
+          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '건축학 개론'이 필요합니다'",
+          "semester_plan": [
+            "1학기: 디자인 기초 + 건축학 개론",
+            "2학기: 공간 디자인 기초",
+            "3학기: 실습 프로젝트"
+          ]
+        },
+        {
+          "major_id": "major:디자인학과",
+          "major_name": "디자인학과",
+          "major_description": "디자인학과는 인간생활의 편리함과 아름다움을 추구하는 디자인 전반에 대한 지식과 이론을 습득하고 실기를 하는 전공입니다.",
+          "slug": "디자인학과",
+          "image_url": "/uploads/majors/major-디자인학과.webp",
+          "fit_score": 76,
+          "like_score": 73,
+          "can_score": 81,
           "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목이 필요합니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요합니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목으로 미술과 디자인 기초가 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목이 필요합니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요합니다.",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 미술과 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 디자인 기초 및 색채학",
-            "2학기: 3D 모델링 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 미술 + 디자인 기초",
+            "2학기: 실습 및 프로젝트",
+            "3학기: 전공 심화"
+          ]
+        },
+        {
+          "major_id": "major:디지털디자인학과",
+          "major_name": "디지털디자인학과",
+          "major_description": "디지털 콘텐츠 분야의 전문 인력을 양성하는 전공",
+          "slug": "디지털디자인학과",
+          "image_url": "/uploads/majors/major-디지털디자인학과.webp",
+          "fit_score": 76,
+          "like_score": 73,
+          "can_score": 80,
+          "feasibility_score": 65,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 디지털 디자인과 창의적 문제 해결이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다.",
+          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 디지털 디자인과 창의적 문제 해결이 핵심입니다'",
+          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다'",
+          "semester_plan": [
+            "1학기: 디자인 기초 + 컴퓨터 그래픽스",
+            "2학기: 디지털 디자인 기초",
+            "3학기: 실습 프로젝트"
+          ]
+        },
+        {
+          "major_id": "major:경영학과",
+          "major_name": "경영학과",
+          "major_description": "경영학과는 기업 운영과 관리에 필요한 이론과 실무를 배우는 전공입니다.",
+          "slug": "경영학과",
+          "image_url": "/uploads/majors/major-경영학과.webp",
+          "fit_score": 73,
+          "like_score": 84,
+          "can_score": 66,
+          "feasibility_score": 65,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '자율성 자유 독립'을 원하신다고 하셨는데, 경영학과는 자율성 50/100으로 보통입니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 분석 능력과 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 경제학과 통계학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'자율성 자유 독립'을 원하신다고 하셨는데, 경영학과는 자율성 50/100으로 보통입니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 분석 능력과 문제 해결 능력이 핵심입니다.",
+          "risk_reason": "선이수과목으로 경제학과 통계학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 기초 경영학 + 경제학",
+            "2학기: 통계학 + 경영 이론",
+            "3학기: 마케팅 + 재무 관리"
           ]
         },
         {
@@ -2663,105 +2747,63 @@
           "major_description": "의류·의상학과는 섬유·패션산업에 기여할 전문인을 양성하는 학과입니다.",
           "slug": "의류의상학과",
           "image_url": "/uploads/majors/major-의류의상학과.webp",
-          "fit_score": 80,
-          "like_score": 77,
-          "can_score": 85,
-          "feasibility_score": 65,
-          "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다. [적성 근거] '창의성'이 강점이라고 하셨고, 이 전공은 디자인 감각과 소재 이해가 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다'",
-          "can_reason": "'창의성이 강점이라고 하셨고, 이 전공은 디자인 감각과 소재 이해가 핵심입니다'",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다'",
-          "semester_plan": [
-            "1학기: 패션 디자인 기초 + 섬유학",
-            "2학기: 마케팅 기초",
-            "3학기: 실습 중심의 프로젝트"
-          ]
-        },
-        {
-          "major_id": "major:광고홍보학과",
-          "major_name": "광고·홍보학과",
-          "major_description": "광고기획, 홍보기획, 광고제작 등을 교육하는 전공",
-          "slug": "광고홍보학과",
-          "image_url": "/uploads/majors/major-광고홍보학과.webp",
-          "fit_score": 75,
-          "like_score": 81,
-          "can_score": 72,
-          "feasibility_score": 65,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리 행정 사무 경영지원에 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'조직/관리 행정 사무 경영지원에 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
-          "semester_plan": [
-            "1학기: 커뮤니케이션 및 마케팅 기초",
-            "2학기: 디자인 및 실습",
-            "3학기: 전공 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:건축학과",
-          "major_name": "건축학과",
-          "major_description": "건축학과는 건축 설계 및 건축 관련 기술을 배우는 전공입니다.",
-          "slug": "건축학과",
-          "image_url": "/uploads/majors/major-건축학과.webp",
-          "fit_score": 73,
-          "like_score": 72,
-          "can_score": 77,
-          "feasibility_score": 60,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '자율성 자유 독립을 원한다고 하셨는데, 이 전공은 자율성 50/100으로 중간 정도입니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 80/100으로 창의적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 석사 이상 진학이 일반적이라 진입이 어려울 수 있습니다.",
-          "like_reason": "'자율성 자유 독립을 원한다고 하셨는데, 이 전공은 자율성 50/100으로 중간 정도입니다.",
-          "can_reason": "'창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 80/100으로 창의적 사고가 중요합니다.",
-          "risk_reason": "'경쟁률 80/100으로 높고, 취업률 70/100으로 상대적으로 낮습니다.",
-          "semester_plan": [
-            "1학기: 기초 수학 및 물리",
-            "2학기: 디자인 기초 및 실습",
-            "3학기: 전공 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:철학윤리학과",
-          "major_name": "철학·윤리학과",
-          "major_description": "철학과는 철학적 사고와 표현 능력을 기르는 학문으로, 윤리학과는 현대사회의 다양한 현상에 대한 가치관을 확립하는 학문입니다.",
-          "slug": "철학윤리학과",
-          "image_url": "/uploads/majors/major-철학윤리학과.webp",
           "fit_score": 71,
-          "like_score": 68,
-          "can_score": 71,
-          "feasibility_score": 80,
-          "field_category": "humanities",
-          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 자율성이 70/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '비판적 사고'가 창의적 사고와 연결됩니다. [리스크] 이 전공은 경쟁률이 50/100으로 낮고, 선이수과목이 필요하지 않아 진입이 용이합니다.",
-          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 자율성이 70/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '비판적 사고'가 창의적 사고와 연결됩니다",
-          "risk_reason": "'경쟁률이 50/100으로 낮고, 선이수과목이 필요하지 않아 진입이 용이합니다'",
+          "like_score": 67,
+          "can_score": 74,
+          "feasibility_score": 70,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 디자인 감각과 마케팅 전략이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '패션 디자인'과 '섬유학'이 필요합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 디자인 감각과 마케팅 전략이 핵심입니다'",
+          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목으로 '패션 디자인'과 '섬유학'이 필요합니다'",
           "semester_plan": [
-            "1학기: 철학개론",
-            "2학기: 윤리학",
-            "3학기: 비판적 사고"
+            "1학기: 패션 디자인 + 섬유학",
+            "2학기: 디자인 기초",
+            "3학기: 실습 프로젝트"
           ]
         }
       ],
       "like_top10": [
         {
-          "major_id": "major:디지털디자인학과",
-          "major_name": "디지털디자인학과",
-          "major_description": "디지털 콘텐츠 분야의 전문 인력을 양성하는 전공",
-          "slug": "디지털디자인학과",
-          "image_url": "/uploads/majors/major-디지털디자인학과.webp",
-          "fit_score": 90,
+          "major_id": "major:공업디자인학과",
+          "major_name": "공업디자인학과",
+          "major_description": "공업디자인학과는 산업 제품의 디자인을 통해 경쟁력을 높이는 기술과 전략을 배우는 전공입니다.",
+          "slug": "공업디자인학과",
+          "image_url": "/uploads/majors/major-공업디자인학과.webp",
+          "fit_score": 89,
           "like_score": 95,
-          "can_score": 90,
+          "can_score": 88,
           "feasibility_score": 70,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '디지털 디자인'이 창의적 문제 해결과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '디지털 디자인'이 창의적 문제 해결과 연결됩니다",
-          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다'",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의적 사고'와 잘 맞습니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '조형학'을 충족해야 합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의적 사고'와 잘 맞습니다.",
+          "risk_reason": "경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다.",
           "semester_plan": [
-            "1학기: 디자인 기초 + 컴퓨터 그래픽스",
-            "2학기: 디지털 디자인 기초",
-            "3학기: 창의적 프로젝트"
+            "1학기: 디자인 기초 + 조형학",
+            "2학기: 색채학 + 전공 심화",
+            "3학기: 프로젝트 기반 실습"
+          ]
+        },
+        {
+          "major_id": "major:컴퓨터디자인학과",
+          "major_name": "컴퓨터디자인학과",
+          "major_description": "컴퓨터디자인학과는 디자인과 컴퓨터 기술을 융합하여 창의적인 디자인 인재를 양성하는 전공입니다.",
+          "slug": "컴퓨터디자인학과",
+          "image_url": "/uploads/majors/major-컴퓨터디자인학과.webp",
+          "fit_score": 87,
+          "like_score": 89,
+          "can_score": 87,
+          "feasibility_score": 75,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 소프트웨어 활용 능력이 핵심입니다. [리스크] 다만, 이 전공은 취업률이 60/100으로 상대적으로 낮습니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 소프트웨어 활용 능력이 핵심입니다.",
+          "risk_reason": "이 전공은 취업률이 60/100으로 상대적으로 낮습니다.",
+          "semester_plan": [
+            "1학기: 디자인 기초 + 컴퓨터 프로그래밍",
+            "2학기: 그래픽 디자인 + 웹 디자인",
+            "3학기: 포트폴리오 제작 + 실습"
           ]
         },
         {
@@ -2771,39 +2813,60 @@
           "slug": "패션디자인학과",
           "image_url": "/uploads/majors/major-패션디자인학과.webp",
           "fit_score": 88,
-          "like_score": 90,
-          "can_score": 89,
-          "feasibility_score": 70,
-          "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 100/100으로 창의적 사고가 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 취업률 60/100으로 상대적으로 낮습니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다.",
-          "can_reason": "'창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 100/100으로 창의적 사고가 핵심입니다.",
-          "risk_reason": "'경쟁률 80/100으로 높고, 취업률 60/100으로 상대적으로 낮습니다.",
-          "semester_plan": [
-            "1학기: 디자인 기초 및 색채학",
-            "2학기: 패턴 제작 및 실습",
-            "3학기: 전공 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:컴퓨터디자인학과",
-          "major_name": "컴퓨터디자인학과",
-          "major_description": "컴퓨터디자인학과는 디자인과 컴퓨터 기술을 융합하여 창의적인 디자인 인재를 양성하는 전공입니다.",
-          "slug": "컴퓨터디자인학과",
-          "image_url": "/uploads/majors/major-컴퓨터디자인학과.webp",
-          "fit_score": 88,
-          "like_score": 86,
+          "like_score": 84,
           "can_score": 95,
           "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의성'이 창작과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 프로그래밍'이 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의성'이 창작과 연결됩니다",
-          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다'",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 감각이 핵심입니다. [리스크] 다만, 경쟁률이 80/100으로 높고, 선이수과목으로 디자인 기초가 필요합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 감각이 핵심입니다.",
+          "risk_reason": "'경쟁률이 80/100으로 높고, 선이수과목으로 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 디자인 기초 + 컴퓨터 프로그래밍",
-            "2학기: 컴퓨터 디자인 기초",
-            "3학기: 창의적 프로젝트"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 패턴 제작",
+            "3학기: 실습 및 프로젝트"
+          ]
+        },
+        {
+          "major_id": "major:경영학과",
+          "major_name": "경영학과",
+          "major_description": "경영학과는 기업 운영과 관리에 필요한 이론과 실무를 배우는 전공입니다.",
+          "slug": "경영학과",
+          "image_url": "/uploads/majors/major-경영학과.webp",
+          "fit_score": 73,
+          "like_score": 84,
+          "can_score": 66,
+          "feasibility_score": 65,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '자율성 자유 독립'을 원하신다고 하셨는데, 경영학과는 자율성 50/100으로 보통입니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 분석 능력과 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 경제학과 통계학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'자율성 자유 독립'을 원하신다고 하셨는데, 경영학과는 자율성 50/100으로 보통입니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 분석 능력과 문제 해결 능력이 핵심입니다.",
+          "risk_reason": "선이수과목으로 경제학과 통계학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "semester_plan": [
+            "1학기: 기초 경영학 + 경제학",
+            "2학기: 통계학 + 경영 이론",
+            "3학기: 마케팅 + 재무 관리"
+          ]
+        },
+        {
+          "major_id": "major:건축공학과",
+          "major_name": "건축공학과",
+          "major_description": "건축공학은 다양한 용도의 건축물과 공간을 만들기 위한 공학적 및 사회적 지식을 종합하여 배우는 학과입니다.",
+          "slug": "건축공학과",
+          "image_url": "/uploads/majors/major-건축공학과.webp",
+          "fit_score": 70,
+          "like_score": 67,
+          "can_score": 73,
+          "feasibility_score": 65,
+          "field_category": "engineering",
+          "rationale": "[흥미 근거] '안정적인 직업을 원한다고 하셨는데, 이 전공은 취업률이 60/100으로 보통입니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '프로젝트 관리'와 연결됩니다. [리스크] 다만, 이 전공은 수학과 물리 선이수과목이 필요하며, 경쟁률이 60/100으로 보통입니다.",
+          "like_reason": "'안정적인 직업을 원한다고 하셨는데, 이 전공은 취업률이 60/100으로 보통입니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '프로젝트 관리'와 연결됩니다.",
+          "risk_reason": "수학과 물리 선이수과목이 필요하며, 경쟁률이 60/100으로 보통입니다.",
+          "semester_plan": [
+            "1학기: 기초 수학 + 물리",
+            "2학기: 건축 설계 기초",
+            "3학기: 프로젝트 관리"
           ]
         },
         {
@@ -2812,82 +2875,82 @@
           "major_description": "광고기획, 홍보기획, 광고제작 등을 교육하는 전공",
           "slug": "광고홍보학과",
           "image_url": "/uploads/majors/major-광고홍보학과.webp",
-          "fit_score": 75,
-          "like_score": 81,
+          "fit_score": 69,
+          "like_score": 67,
           "can_score": 72,
-          "feasibility_score": 65,
+          "feasibility_score": 60,
           "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리 행정 사무 경영지원에 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'조직/관리 행정 사무 경영지원에 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
+          "rationale": "[흥미 근거] '조직/관리에도 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 분석 능력이 필요합니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목으로 커뮤니케이션이 필요합니다.",
+          "like_reason": "'조직/관리에도 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 분석 능력이 필요합니다.",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 커뮤니케이션이 필요합니다.'",
           "semester_plan": [
-            "1학기: 커뮤니케이션 및 마케팅 기초",
-            "2학기: 디자인 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 커뮤니케이션 + 마케팅",
+            "2학기: 광고 기획",
+            "3학기: 실습 및 프로젝트"
           ]
         },
         {
-          "major_id": "major:신문방송학과",
-          "major_name": "신문방송학과",
-          "major_description": "신문방송학과는 멀티미디어 종합정보통신사업에 기여할 전문 인력을 양성하는 학과입니다.",
-          "slug": "신문방송학과",
-          "image_url": "/uploads/majors/major-신문방송학과.webp",
-          "fit_score": 71,
-          "like_score": 77,
-          "can_score": 68,
-          "feasibility_score": 60,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 자율성이 50/100으로 낮습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '커뮤니케이션 능력'이 실행력과 연결되지만, 창의성이 70/100으로 높아 창의적 사고가 필요합니다. [리스크] 경쟁률이 60/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 자율성이 50/100으로 낮습니다'",
-          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '커뮤니케이션 능력'이 실행력과 연결됩니다",
-          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목이 필요합니다'",
+          "major_id": "major:실내디자인과",
+          "major_name": "실내디자인과",
+          "major_description": "실내디자인은 인간의 생활환경을 아름답고 기능적으로 구성하는 전공입니다.",
+          "slug": "실내디자인과",
+          "image_url": "/uploads/majors/major-실내디자인과.webp",
+          "fit_score": 83,
+          "like_score": 84,
+          "can_score": 86,
+          "feasibility_score": 65,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 구성 능력과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '색채학'이 필요합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 공간 구성 능력과 소통 능력이 핵심입니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '색채학'이 필요합니다'",
           "semester_plan": [
-            "1학기: 커뮤니케이션",
-            "2학기: 미디어 이론",
-            "3학기: 저널리즘"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 공간 구성 기초",
+            "3학기: 실습 프로젝트"
           ]
         },
         {
-          "major_id": "major:건축학과",
-          "major_name": "건축학과",
-          "major_description": "건축학과는 건축 설계 및 건축 관련 기술을 배우는 전공입니다.",
-          "slug": "건축학과",
-          "image_url": "/uploads/majors/major-건축학과.webp",
-          "fit_score": 73,
-          "like_score": 72,
-          "can_score": 77,
-          "feasibility_score": 60,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '자율성 자유 독립을 원한다고 하셨는데, 이 전공은 자율성 50/100으로 중간 정도입니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 80/100으로 창의적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 석사 이상 진학이 일반적이라 진입이 어려울 수 있습니다.",
-          "like_reason": "'자율성 자유 독립을 원한다고 하셨는데, 이 전공은 자율성 50/100으로 중간 정도입니다.",
-          "can_reason": "'창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 80/100으로 창의적 사고가 중요합니다.",
-          "risk_reason": "'경쟁률 80/100으로 높고, 취업률 70/100으로 상대적으로 낮습니다.",
+          "major_id": "major:산업디자인학과",
+          "major_name": "산업디자인학과",
+          "major_description": "산업 디자인은 시각 디자인, 제품 디자인, 환경 디자인 등 다양한 분야에 적용되는 디자인 전공입니다.",
+          "slug": "산업디자인학과",
+          "image_url": "/uploads/majors/major-산업디자인학과.webp",
+          "fit_score": 81,
+          "like_score": 78,
+          "can_score": 85,
+          "feasibility_score": 70,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 경쟁률이 60/100으로 보통이며, 선이수과목으로 디자인 기초가 필요합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 기초 수학 및 물리",
-            "2학기: 디자인 기초 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 3D 모델링",
+            "3학기: 프로젝트 및 실습"
           ]
         },
         {
-          "major_id": "major:철학윤리학과",
-          "major_name": "철학·윤리학과",
-          "major_description": "철학과는 철학적 사고와 표현 능력을 기르는 학문으로, 윤리학과는 현대사회의 다양한 현상에 대한 가치관을 확립하는 학문입니다.",
-          "slug": "철학윤리학과",
-          "image_url": "/uploads/majors/major-철학윤리학과.webp",
-          "fit_score": 71,
-          "like_score": 68,
-          "can_score": 71,
-          "feasibility_score": 80,
-          "field_category": "humanities",
-          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 자율성이 70/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '비판적 사고'가 창의적 사고와 연결됩니다. [리스크] 이 전공은 경쟁률이 50/100으로 낮고, 선이수과목이 필요하지 않아 진입이 용이합니다.",
-          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 자율성이 70/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '비판적 사고'가 창의적 사고와 연결됩니다",
-          "risk_reason": "'경쟁률이 50/100으로 낮고, 선이수과목이 필요하지 않아 진입이 용이합니다'",
+          "major_id": "major:실내디자인학과",
+          "major_name": "실내디자인학과",
+          "major_description": "실내디자인은 인간이 생활하는 모든 실내 공간을 아름답고 기능적으로 디자인하는 전공입니다.",
+          "slug": "실내디자인학과",
+          "image_url": "/uploads/majors/major-실내디자인학과.webp",
+          "fit_score": 81,
+          "like_score": 78,
+          "can_score": 85,
+          "feasibility_score": 70,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '건축학 개론'이 필요합니다.",
+          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다'",
+          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '건축학 개론'이 필요합니다'",
           "semester_plan": [
-            "1학기: 철학개론",
-            "2학기: 윤리학",
-            "3학기: 비판적 사고"
+            "1학기: 디자인 기초 + 건축학 개론",
+            "2학기: 공간 디자인 기초",
+            "3학기: 실습 프로젝트"
           ]
         },
         {
@@ -2896,107 +2959,23 @@
           "major_description": "디자인학과는 인간생활의 편리함과 아름다움을 추구하는 디자인 전반에 대한 지식과 이론을 습득하고 실기를 하는 전공입니다.",
           "slug": "디자인학과",
           "image_url": "/uploads/majors/major-디자인학과.webp",
-          "fit_score": 82,
-          "like_score": 86,
+          "fit_score": 76,
+          "like_score": 73,
           "can_score": 81,
-          "feasibility_score": 68,
+          "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요합니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목으로 미술과 디자인 기초가 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요합니다.",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 미술과 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 미술 및 디자인 기초",
+            "1학기: 미술 + 디자인 기초",
             "2학기: 실습 및 프로젝트",
-            "3학기: 전공 심화 과목"
-          ]
-        },
-        {
-          "major_id": "major:실내디자인학과",
-          "major_name": "실내디자인학과",
-          "major_description": "실내디자인은 인간이 생활하는 모든 실내 공간을 아름답고 기능적으로 디자인하는 전공입니다.",
-          "slug": "실내디자인학과",
-          "image_url": "/uploads/majors/major-실내디자인학과.webp",
-          "fit_score": 83,
-          "like_score": 81,
-          "can_score": 88,
-          "feasibility_score": 65,
-          "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창의성'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창의성이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다'",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다'",
-          "semester_plan": [
-            "1학기: 디자인 기초 + 전공 입문",
-            "2학기: 공간 디자인 기초",
-            "3학기: 실습 중심의 프로젝트"
-          ]
-        },
-        {
-          "major_id": "major:산업디자인학과",
-          "major_name": "산업디자인학과",
-          "major_description": "산업 디자인은 시각 디자인, 제품 디자인, 환경 디자인 등 다양한 분야에 적용되는 디자인 전공입니다.",
-          "slug": "산업디자인학과",
-          "image_url": "/uploads/majors/major-산업디자인학과.webp",
-          "fit_score": 80,
-          "like_score": 77,
-          "can_score": 86,
-          "feasibility_score": 65,
-          "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목이 필요합니다.",
-          "semester_plan": [
-            "1학기: 디자인 기초 및 색채학",
-            "2학기: 3D 모델링 및 실습",
-            "3학기: 전공 심화 과목"
+            "3학기: 전공 심화"
           ]
         }
       ],
       "can_top10": [
-        {
-          "major_id": "major:컴퓨터디자인학과",
-          "major_name": "컴퓨터디자인학과",
-          "major_description": "컴퓨터디자인학과는 디자인과 컴퓨터 기술을 융합하여 창의적인 디자인 인재를 양성하는 전공입니다.",
-          "slug": "컴퓨터디자인학과",
-          "image_url": "/uploads/majors/major-컴퓨터디자인학과.webp",
-          "fit_score": 88,
-          "like_score": 86,
-          "can_score": 95,
-          "feasibility_score": 65,
-          "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의성'이 창작과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 프로그래밍'이 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의성'이 창작과 연결됩니다",
-          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다'",
-          "semester_plan": [
-            "1학기: 디자인 기초 + 컴퓨터 프로그래밍",
-            "2학기: 컴퓨터 디자인 기초",
-            "3학기: 창의적 프로젝트"
-          ]
-        },
-        {
-          "major_id": "major:디지털디자인학과",
-          "major_name": "디지털디자인학과",
-          "major_description": "디지털 콘텐츠 분야의 전문 인력을 양성하는 전공",
-          "slug": "디지털디자인학과",
-          "image_url": "/uploads/majors/major-디지털디자인학과.webp",
-          "fit_score": 90,
-          "like_score": 95,
-          "can_score": 90,
-          "feasibility_score": 70,
-          "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '디지털 디자인'이 창의적 문제 해결과 연결됩니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '컴퓨터 그래픽스'가 필요합니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '디지털 디자인'이 창의적 문제 해결과 연결됩니다",
-          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다'",
-          "semester_plan": [
-            "1학기: 디자인 기초 + 컴퓨터 그래픽스",
-            "2학기: 디지털 디자인 기초",
-            "3학기: 창의적 프로젝트"
-          ]
-        },
         {
           "major_id": "major:패션디자인학과",
           "major_name": "패션디자인학과",
@@ -3004,39 +2983,81 @@
           "slug": "패션디자인학과",
           "image_url": "/uploads/majors/major-패션디자인학과.webp",
           "fit_score": 88,
-          "like_score": 90,
-          "can_score": 89,
-          "feasibility_score": 70,
+          "like_score": 84,
+          "can_score": 95,
+          "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 100/100으로 창의적 사고가 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 취업률 60/100으로 상대적으로 낮습니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 감각이 핵심입니다. [리스크] 다만, 경쟁률이 80/100으로 높고, 선이수과목으로 디자인 기초가 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 100/100으로 매우 높습니다.",
-          "can_reason": "'창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 100/100으로 창의적 사고가 핵심입니다.",
-          "risk_reason": "'경쟁률 80/100으로 높고, 취업률 60/100으로 상대적으로 낮습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 감각이 핵심입니다.",
+          "risk_reason": "'경쟁률이 80/100으로 높고, 선이수과목으로 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 디자인 기초 및 색채학",
-            "2학기: 패턴 제작 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 패턴 제작",
+            "3학기: 실습 및 프로젝트"
           ]
         },
         {
-          "major_id": "major:건축학과",
-          "major_name": "건축학과",
-          "major_description": "건축학과는 건축 설계 및 건축 관련 기술을 배우는 전공입니다.",
-          "slug": "건축학과",
-          "image_url": "/uploads/majors/major-건축학과.webp",
-          "fit_score": 73,
-          "like_score": 72,
-          "can_score": 77,
-          "feasibility_score": 60,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '자율성 자유 독립을 원한다고 하셨는데, 이 전공은 자율성 50/100으로 중간 정도입니다. [적성 근거] '창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 80/100으로 창의적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률 80/100으로 높고, 석사 이상 진학이 일반적이라 진입이 어려울 수 있습니다.",
-          "like_reason": "'자율성 자유 독립을 원한다고 하셨는데, 이 전공은 자율성 50/100으로 중간 정도입니다.",
-          "can_reason": "'창의성 독창이 강점이라고 하셨고, 이 전공은 창의성 80/100으로 창의적 사고가 중요합니다.",
-          "risk_reason": "'경쟁률 80/100으로 높고, 취업률 70/100으로 상대적으로 낮습니다.",
+          "major_id": "major:공업디자인학과",
+          "major_name": "공업디자인학과",
+          "major_description": "공업디자인학과는 산업 제품의 디자인을 통해 경쟁력을 높이는 기술과 전략을 배우는 전공입니다.",
+          "slug": "공업디자인학과",
+          "image_url": "/uploads/majors/major-공업디자인학과.webp",
+          "fit_score": 89,
+          "like_score": 95,
+          "can_score": 88,
+          "feasibility_score": 70,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의적 사고'와 잘 맞습니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목인 '디자인 기초'와 '조형학'을 충족해야 합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '창의적 사고'와 잘 맞습니다.",
+          "risk_reason": "경쟁률이 70/100으로 보통이며, 선이수과목이 필요합니다.",
           "semester_plan": [
-            "1학기: 기초 수학 및 물리",
-            "2학기: 디자인 기초 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 디자인 기초 + 조형학",
+            "2학기: 색채학 + 전공 심화",
+            "3학기: 프로젝트 기반 실습"
+          ]
+        },
+        {
+          "major_id": "major:컴퓨터디자인학과",
+          "major_name": "컴퓨터디자인학과",
+          "major_description": "컴퓨터디자인학과는 디자인과 컴퓨터 기술을 융합하여 창의적인 디자인 인재를 양성하는 전공입니다.",
+          "slug": "컴퓨터디자인학과",
+          "image_url": "/uploads/majors/major-컴퓨터디자인학과.webp",
+          "fit_score": 87,
+          "like_score": 89,
+          "can_score": 87,
+          "feasibility_score": 75,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 소프트웨어 활용 능력이 핵심입니다. [리스크] 다만, 이 전공은 취업률이 60/100으로 상대적으로 낮습니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공은 디자인 소프트웨어 활용 능력이 핵심입니다.",
+          "risk_reason": "이 전공은 취업률이 60/100으로 상대적으로 낮습니다.",
+          "semester_plan": [
+            "1학기: 디자인 기초 + 컴퓨터 프로그래밍",
+            "2학기: 그래픽 디자인 + 웹 디자인",
+            "3학기: 포트폴리오 제작 + 실습"
+          ]
+        },
+        {
+          "major_id": "major:건축공학과",
+          "major_name": "건축공학과",
+          "major_description": "건축공학은 다양한 용도의 건축물과 공간을 만들기 위한 공학적 및 사회적 지식을 종합하여 배우는 학과입니다.",
+          "slug": "건축공학과",
+          "image_url": "/uploads/majors/major-건축공학과.webp",
+          "fit_score": 70,
+          "like_score": 67,
+          "can_score": 73,
+          "feasibility_score": 65,
+          "field_category": "engineering",
+          "rationale": "[흥미 근거] '안정적인 직업을 원한다고 하셨는데, 이 전공은 취업률이 60/100으로 보통입니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '프로젝트 관리'와 연결됩니다. [리스크] 다만, 이 전공은 수학과 물리 선이수과목이 필요하며, 경쟁률이 60/100으로 보통입니다.",
+          "like_reason": "'안정적인 직업을 원한다고 하셨는데, 이 전공은 취업률이 60/100으로 보통입니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '프로젝트 관리'와 연결됩니다.",
+          "risk_reason": "수학과 물리 선이수과목이 필요하며, 경쟁률이 60/100으로 보통입니다.",
+          "semester_plan": [
+            "1학기: 기초 수학 + 물리",
+            "2학기: 건축 설계 기초",
+            "3학기: 프로젝트 관리"
           ]
         },
         {
@@ -3045,82 +3066,61 @@
           "major_description": "광고기획, 홍보기획, 광고제작 등을 교육하는 전공",
           "slug": "광고홍보학과",
           "image_url": "/uploads/majors/major-광고홍보학과.webp",
-          "fit_score": 75,
-          "like_score": 81,
+          "fit_score": 69,
+          "like_score": 67,
           "can_score": 72,
+          "feasibility_score": 60,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '조직/관리에도 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 분석 능력이 필요합니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목으로 커뮤니케이션이 필요합니다.",
+          "like_reason": "'조직/관리에도 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 분석 능력이 필요합니다.",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 커뮤니케이션이 필요합니다.'",
+          "semester_plan": [
+            "1학기: 커뮤니케이션 + 마케팅",
+            "2학기: 광고 기획",
+            "3학기: 실습 및 프로젝트"
+          ]
+        },
+        {
+          "major_id": "major:경영학과",
+          "major_name": "경영학과",
+          "major_description": "경영학과는 기업 운영과 관리에 필요한 이론과 실무를 배우는 전공입니다.",
+          "slug": "경영학과",
+          "image_url": "/uploads/majors/major-경영학과.webp",
+          "fit_score": 73,
+          "like_score": 84,
+          "can_score": 66,
           "feasibility_score": 65,
           "field_category": "business",
-          "rationale": "[흥미 근거] '조직/관리 행정 사무 경영지원에 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'조직/관리 행정 사무 경영지원에 흥미가 있다고 하셨는데, 이 전공은 커뮤니케이션 능력이 중요합니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목이 필요합니다.",
+          "rationale": "[흥미 근거] '자율성 자유 독립'을 원하신다고 하셨는데, 경영학과는 자율성 50/100으로 보통입니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 분석 능력과 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 선이수과목으로 경제학과 통계학이 필요하여 진입이 다소 어려울 수 있습니다.",
+          "like_reason": "'자율성 자유 독립'을 원하신다고 하셨는데, 경영학과는 자율성 50/100으로 보통입니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 분석 능력과 문제 해결 능력이 핵심입니다.",
+          "risk_reason": "선이수과목으로 경제학과 통계학이 필요하여 진입이 다소 어려울 수 있습니다.",
           "semester_plan": [
-            "1학기: 커뮤니케이션 및 마케팅 기초",
-            "2학기: 디자인 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 기초 경영학 + 경제학",
+            "2학기: 통계학 + 경영 이론",
+            "3학기: 마케팅 + 재무 관리"
           ]
         },
         {
-          "major_id": "major:철학윤리학과",
-          "major_name": "철학·윤리학과",
-          "major_description": "철학과는 철학적 사고와 표현 능력을 기르는 학문으로, 윤리학과는 현대사회의 다양한 현상에 대한 가치관을 확립하는 학문입니다.",
-          "slug": "철학윤리학과",
-          "image_url": "/uploads/majors/major-철학윤리학과.webp",
-          "fit_score": 71,
-          "like_score": 68,
-          "can_score": 71,
-          "feasibility_score": 80,
-          "field_category": "humanities",
-          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 자율성이 70/100으로 높습니다. [적성 근거] '창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '비판적 사고'가 창의적 사고와 연결됩니다. [리스크] 이 전공은 경쟁률이 50/100으로 낮고, 선이수과목이 필요하지 않아 진입이 용이합니다.",
-          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 자율성이 70/100으로 높습니다'",
-          "can_reason": "'창작/예술'이 강점이라고 하셨고, 이 전공의 핵심역량인 '비판적 사고'가 창의적 사고와 연결됩니다",
-          "risk_reason": "'경쟁률이 50/100으로 낮고, 선이수과목이 필요하지 않아 진입이 용이합니다'",
-          "semester_plan": [
-            "1학기: 철학개론",
-            "2학기: 윤리학",
-            "3학기: 비판적 사고"
-          ]
-        },
-        {
-          "major_id": "major:신문방송학과",
-          "major_name": "신문방송학과",
-          "major_description": "신문방송학과는 멀티미디어 종합정보통신사업에 기여할 전문 인력을 양성하는 학과입니다.",
-          "slug": "신문방송학과",
-          "image_url": "/uploads/majors/major-신문방송학과.webp",
-          "fit_score": 71,
-          "like_score": 77,
-          "can_score": 68,
-          "feasibility_score": 60,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 자율성이 50/100으로 낮습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '커뮤니케이션 능력'이 실행력과 연결되지만, 창의성이 70/100으로 높아 창의적 사고가 필요합니다. [리스크] 경쟁률이 60/100으로 보통이며, 선이수과목이 필요합니다.",
-          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 자율성이 50/100으로 낮습니다'",
-          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '커뮤니케이션 능력'이 실행력과 연결됩니다",
-          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목이 필요합니다'",
-          "semester_plan": [
-            "1학기: 커뮤니케이션",
-            "2학기: 미디어 이론",
-            "3학기: 저널리즘"
-          ]
-        },
-        {
-          "major_id": "major:실내디자인학과",
-          "major_name": "실내디자인학과",
-          "major_description": "실내디자인은 인간이 생활하는 모든 실내 공간을 아름답고 기능적으로 디자인하는 전공입니다.",
-          "slug": "실내디자인학과",
-          "image_url": "/uploads/majors/major-실내디자인학과.webp",
+          "major_id": "major:실내디자인과",
+          "major_name": "실내디자인과",
+          "major_description": "실내디자인은 인간의 생활환경을 아름답고 기능적으로 구성하는 전공입니다.",
+          "slug": "실내디자인과",
+          "image_url": "/uploads/majors/major-실내디자인과.webp",
           "fit_score": 83,
-          "like_score": 81,
-          "can_score": 88,
+          "like_score": 84,
+          "can_score": 86,
           "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '창의성'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 구성 능력과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '색채학'이 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
-          "can_reason": "'창의성이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다'",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 공간 구성 능력과 소통 능력이 핵심입니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '색채학'이 필요합니다'",
           "semester_plan": [
-            "1학기: 디자인 기초 + 전공 입문",
-            "2학기: 공간 디자인 기초",
-            "3학기: 실습 중심의 프로젝트"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 공간 구성 기초",
+            "3학기: 실습 프로젝트"
           ]
         },
         {
@@ -3129,49 +3129,70 @@
           "major_description": "산업 디자인은 시각 디자인, 제품 디자인, 환경 디자인 등 다양한 분야에 적용되는 디자인 전공입니다.",
           "slug": "산업디자인학과",
           "image_url": "/uploads/majors/major-산업디자인학과.webp",
-          "fit_score": 80,
-          "like_score": 77,
-          "can_score": 86,
-          "feasibility_score": 65,
+          "fit_score": 81,
+          "like_score": 78,
+          "can_score": 85,
+          "feasibility_score": 70,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목이 필요합니다.",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다. [리스크] 다만, 경쟁률이 60/100으로 보통이며, 선이수과목으로 디자인 기초가 필요합니다.",
           "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
-          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
-          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목이 필요합니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 핵심입니다.",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 디자인 기초 및 색채학",
-            "2학기: 3D 모델링 및 실습",
-            "3학기: 전공 심화 과목"
+            "1학기: 디자인 기초 + 색채학",
+            "2학기: 3D 모델링",
+            "3학기: 프로젝트 및 실습"
           ]
         },
         {
-          "major_id": "major:의류의상학과",
-          "major_name": "의류·의상학과",
-          "major_description": "의류·의상학과는 섬유·패션산업에 기여할 전문인을 양성하는 학과입니다.",
-          "slug": "의류의상학과",
-          "image_url": "/uploads/majors/major-의류의상학과.webp",
-          "fit_score": 80,
-          "like_score": 77,
+          "major_id": "major:실내디자인학과",
+          "major_name": "실내디자인학과",
+          "major_description": "실내디자인은 인간이 생활하는 모든 실내 공간을 아름답고 기능적으로 디자인하는 전공입니다.",
+          "slug": "실내디자인학과",
+          "image_url": "/uploads/majors/major-실내디자인학과.webp",
+          "fit_score": 81,
+          "like_score": 78,
           "can_score": 85,
+          "feasibility_score": 70,
+          "field_category": "arts",
+          "rationale": "[흥미 근거] '자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '건축학 개론'이 필요합니다.",
+          "like_reason": "'자율성을 중시한다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다'",
+          "can_reason": "'실행력이 강점이라고 하셨고, 이 전공은 공간 디자인과 소통 능력이 핵심입니다'",
+          "risk_reason": "'경쟁률 70/100으로 보통이며, 선이수과목으로 '디자인 기초'와 '건축학 개론'이 필요합니다'",
+          "semester_plan": [
+            "1학기: 디자인 기초 + 건축학 개론",
+            "2학기: 공간 디자인 기초",
+            "3학기: 실습 프로젝트"
+          ]
+        },
+        {
+          "major_id": "major:디자인학과",
+          "major_name": "디자인학과",
+          "major_description": "디자인학과는 인간생활의 편리함과 아름다움을 추구하는 디자인 전반에 대한 지식과 이론을 습득하고 실기를 하는 전공입니다.",
+          "slug": "디자인학과",
+          "image_url": "/uploads/majors/major-디자인학과.webp",
+          "fit_score": 76,
+          "like_score": 73,
+          "can_score": 81,
           "feasibility_score": 65,
           "field_category": "arts",
-          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다. [적성 근거] '창의성'이 강점이라고 하셨고, 이 전공은 디자인 감각과 소재 이해가 핵심입니다. [리스크] 다만, 이 전공은 경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다.",
-          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 70/100으로 높습니다'",
-          "can_reason": "'창의성이 강점이라고 하셨고, 이 전공은 디자인 감각과 소재 이해가 핵심입니다'",
-          "risk_reason": "'경쟁률 70/100으로 보통이며, 신입으로 진입하기에 적합할 수 있습니다'",
+          "rationale": "[흥미 근거] '창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다. [적성 근거] '실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요합니다. [리스크] 다만, 경쟁률이 70/100으로 보통이며, 선이수과목으로 미술과 디자인 기초가 필요합니다.",
+          "like_reason": "'창작/디자인에 흥미가 있다고 하셨는데, 이 전공은 창의성 80/100으로 높습니다.",
+          "can_reason": "'실행력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요합니다.",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 미술과 디자인 기초가 필요합니다.'",
           "semester_plan": [
-            "1학기: 패션 디자인 기초 + 섬유학",
-            "2학기: 마케팅 기초",
-            "3학기: 실습 중심의 프로젝트"
+            "1학기: 미술 + 디자인 기초",
+            "2학기: 실습 및 프로젝트",
+            "3학기: 전공 심화"
           ]
         }
       ],
-      "total_candidates": 276,
+      "total_candidates": 268,
       "filtered_count": 30,
-      "search_duration_ms": 4455
+      "search_duration_ms": 5626
     },
     "premium_report": null,
-    "engine_version": "v3.23.1",
+    "engine_version": "v3.23.2",
     "report_mode": "deferred",
     "search_profile_used": {
       "desiredThemes": [
@@ -3212,23 +3233,23 @@
       "has_narrative_facts": false,
       "round_answers_count": 0
     },
-    "duration_ms": 35404
+    "duration_ms": 41762
   },
   "timing": {
-    "analyzeMs": 4433,
-    "narrativeMs": 143,
+    "analyzeMs": 3941,
+    "narrativeMs": 122,
     "roundsMs": [
-      453,
-      450,
-      439
+      417,
+      421,
+      428
     ],
     "roundAnswersMs": [
-      394,
-      387,
-      398
+      388,
+      375,
+      389
     ],
-    "recommendMs": 35481,
-    "totalMs": 45603
+    "recommendMs": 41836,
+    "totalMs": 51346
   },
   "errors": []
 }
