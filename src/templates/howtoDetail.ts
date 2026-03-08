@@ -1,6 +1,6 @@
 import type { HowtoGuideDetail } from '../types/howto'
 import type { CommentPolicyAttributes } from './detailTemplateUtils'
-import { renderCommentsPlaceholder, resolveCommentPolicy, renderAdSlot } from './detailTemplateUtils'
+import { renderCommentsPlaceholder, resolveCommentPolicy, renderAdSlot, sanitizeJson } from './detailTemplateUtils'
 
 const escapeHtml = (value?: string | null): string => {
   if (!value) return ''
@@ -1324,4 +1324,52 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
       </script>
     </div>
   `
+}
+
+/** Schema.org JSON-LD for HowTo detail pages */
+export const createHowtoJsonLd = (guide: HowtoGuideDetail, canonicalUrl: string): string => {
+  const hasSteps = guide.steps && guide.steps.length > 0
+
+  const jsonLd = sanitizeJson(hasSteps ? {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: guide.title,
+    description: guide.summary,
+    image: guide.thumbnailUrl,
+    dateModified: guide.updatedAt,
+    author: guide.authorName ? {
+      '@type': 'Person',
+      name: guide.authorName
+    } : undefined,
+    estimatedTime: guide.estimatedDuration,
+    keywords: guide.tags?.join(', '),
+    step: guide.steps.map((step, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: step.title,
+      text: step.description,
+      url: `${canonicalUrl}#${step.id}`
+    }))
+  } : {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: guide.title,
+    description: guide.summary,
+    image: guide.thumbnailUrl,
+    dateModified: guide.updatedAt,
+    author: guide.authorName ? {
+      '@type': 'Person',
+      name: guide.authorName
+    } : undefined,
+    keywords: guide.tags?.join(', '),
+    publisher: {
+      '@type': 'Organization',
+      name: 'Careerwiki',
+      url: 'https://careerwiki.org'
+    }
+  })
+
+  if (!jsonLd) return ''
+  const script = JSON.stringify(jsonLd).replace(/</g, '\\u003c')
+  return `<script type="application/ld+json">${script}</script>`
 }

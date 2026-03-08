@@ -3336,11 +3336,11 @@ howtoRoutes.get('/:slug', async (c) => {
     })
     
     // renderHowtoGuideDetail 템플릿 사용
-    const { renderHowtoGuideDetail } = await import('../templates/howtoDetail')
-    
+    const { renderHowtoGuideDetail, createHowtoJsonLd } = await import('../templates/howtoDetail')
+
     // CSS 링크 추가
     const cssLink = '<link rel="stylesheet" href="/static/howto-editor.css">'
-    
+
     const content = cssLink + renderHowtoGuideDetail(guideDetail, {
       currentUserId: user?.id ? parseInt(user.id) : null,
       currentUserRole: user?.role || null,
@@ -3350,16 +3350,17 @@ howtoRoutes.get('/:slug', async (c) => {
       blindReason: null,
       isDraftPublished: status === 'draft_published'
     })
-    
+
     const howtoOgImage = guideDetail.thumbnailUrl || undefined
     const howtoCanonical = `https://careerwiki.org/howto/${slug}`
+    const howtoJsonLd = createHowtoJsonLd(guideDetail, howtoCanonical)
     return c.html(
       renderLayoutWithContext(c, content, `${dbResult.title} - Careerwiki`, dbResult.summary as string || '', false, {
         ogImage: howtoOgImage,
         canonical: howtoCanonical,
         ogUrl: howtoCanonical,
         ogType: 'article',
-        extraHead: '<style>:root{--wp:139 92 246;--ws:167 139 250}</style>'
+        extraHead: '<style>:root{--wp:139 92 246;--ws:167 139 250}</style>' + howtoJsonLd
       })
     )
   }
