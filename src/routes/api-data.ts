@@ -634,7 +634,17 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
       
       // 개요 - 커리어 전망
       overviewProspect: {
-        main: profile.overviewProspect?.main || profile.prospect || ''
+        main: (() => {
+          const raw = profile.overviewProspect?.main || profile.prospect || ''
+          if (Array.isArray(raw)) {
+            // 배열인 경우 텍스트 추출하여 줄바꿈으로 연결
+            return raw.map((item: any) => {
+              if (typeof item === 'string') return item.trim()
+              return (item?.list_content || item?.text || item?.value || '').trim()
+            }).filter(Boolean).join('\n')
+          }
+          return typeof raw === 'string' ? raw : ''
+        })()
       },
       
       // 개요 - 핵심 능력·자격
@@ -651,7 +661,14 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
         aptitudeList: extractListItems(profile.overviewAptitude?.aptitudeList)
           || extractListItems(profile.aptitudeList),
         interestList: extractListItems(profile.overviewAptitude?.interestList)
-          || extractListItems(profile.interestList)
+          || extractListItems(profile.interestList),
+        satisfaction: {
+          value: (() => {
+            const sat = profile.overviewAptitude?.satisfaction?.value
+            if (sat !== undefined && sat !== null) return String(sat)
+            return ''
+          })()
+        }
       },
       
       // 개요 - 여담 (리스트 형식)
@@ -659,18 +676,40 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
         ? profile.trivia.split(/\n|•/).map((s: string) => s.trim()).filter(Boolean)
         : (Array.isArray(profile.trivia) ? profile.trivia : []),
       
+      // 개요 - 임금 정보
+      overviewSalary: {
+        sal: profile.overviewSalary?.sal || profile.overviewSalary?.wage || profile.salary || ''
+      },
+
+      // 과정 - 워라밸 & 사회적 평가
+      detailWlb: {
+        wlb: profile.detailWlb?.wlb || '',
+        social: profile.detailWlb?.social || ''
+      },
+
       // 상세정보 - 직업 준비하기
       detailReady: {
         curriculum: extractListItems(profile.detailReady?.curriculum),
         recruit: extractListItems(profile.detailReady?.recruit),
         training: extractListItems(profile.detailReady?.training),
-        researchList: extractListItems(profile.detailReady?.researchList)
+        researchList: extractListItems(profile.detailReady?.researchList),
+        certificate: extractListItems(profile.detailReady?.certificate)
       },
-      
+
       // 사이드바 - 연관 정보
       sidebarJobs: extractListItems(profile.sidebarJobs),
       sidebarMajors: extractListItems(profile.sidebarMajors),
       sidebarCerts: extractListItems(profile.sidebarCerts),
+      sidebarOrgs: (() => {
+        const orgs = profile.sidebarOrgs
+        if (!Array.isArray(orgs)) return []
+        return orgs
+          .filter((org: any) => org?.name?.trim())
+          .map((org: any) => ({
+            name: (org.name || '').trim(),
+            url: (org.url || '').trim()
+          }))
+      })(),
 
       // 차트 데이터 (레거시→통일 포맷 변환)
       detailIndicators: convertIndicatorsToUnified(profile.detailIndicators),
@@ -876,6 +915,7 @@ apiDataRoutes.get('/api/major/:id/edit-data', async (c) => {
             enterField: typeof profile.enterField === 'string' ? profile.enterField : (profile.enterField ? JSON.stringify(profile.enterField, null, 2) : ''),
             jobProspect: profile.jobProspect || '',
             careerAct: profile.careerAct || '',
+            licenses: extractListItems(profile.licenses),
 
             // 차트 데이터 (레거시→통일 포맷 변환)
             chartData: (() => {
@@ -1142,7 +1182,26 @@ apiDataRoutes.get('/api/major/:id/edit-data', async (c) => {
       sidebarJobs: mapAutocompleteItems((profile as any).sidebarJobs || profile.relatedJobs, 'job'),
       sidebarMajors: mapAutocompleteItems((profile as any).sidebarMajors || profile.relatedMajors, 'major'),
       sidebarHowtos: mapAutocompleteItems((profile as any).sidebarHowtos, 'howto'),
-      
+      licenses: extractListItems(profile.licenses || (profile as any).partials?.CAREERNET?.licenses),
+
+      // 차트 데이터 (레거시→통일 포맷 변환)
+      chartData: (() => {
+        let cd: any = (profile as any).chartData
+        if (typeof cd === 'string') { try { cd = JSON.parse(cd) } catch { cd = null } }
+        if (Array.isArray(cd)) cd = cd[0]
+        if (!cd) return {}
+        return {
+          after_graduation: convertMajorChartToUnified(cd.after_graduation, '졸업 후 진로', 'doughnut', '%'),
+          employment_rate: convertMajorChartToUnified(cd.employment_rate, '취업률', 'bar', '%'),
+          avg_salary: convertMajorChartToUnified(cd.avg_salary, '평균 연봉', 'bar', '만원'),
+          satisfaction: convertMajorChartToUnified(cd.satisfaction, '만족도', 'bar', '점'),
+          field: convertMajorChartToUnified(cd.field, '진출 분야', 'bar', '%'),
+          gender: convertMajorChartToUnified(cd.gender, '성비', 'doughnut', '%'),
+          applicant: convertMajorChartToUnified(cd.applicant, '입학 현황', 'bar', '명'),
+        }
+      })(),
+      customCharts: (profile as any).customCharts || [],
+
       // 사용자 출처 (편집창에서 다중 입력 지원)
       _sources: (profile as any)._sources || {}
     }
