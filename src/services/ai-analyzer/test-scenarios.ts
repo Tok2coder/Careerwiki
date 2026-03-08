@@ -738,6 +738,229 @@ export const TEST_SCENARIOS: TestScenario[] = [
       ],
     },
   },
+
+  // ============================================
+  // 시나리오 7: 사회공헌형 유저 (Social Impact)
+  // ============================================
+  {
+    id: 'social_impact',
+    name: '사회공헌형 유저',
+    description: '사회 기여와 교육에 관심 있는 이타적 유저',
+    category: 'basic',
+
+    miniModule: {
+      interest_top: ['helping_others', 'education', 'social_contribution'],
+      value_top: ['meaning', 'stability', 'social_impact'],
+      strength_top: ['communication', 'persistence', 'structured_execution'],
+      constraint_flags: ['prefer_wlb'],
+      workstyle_top: ['team_harmony', 'structured'],
+      background_flags: ['volunteer_experience'],
+      language_skills: [] as Array<{ language: string; level: 'basic' | 'business' | 'native' }>,
+      sacrifice_flags: ['low_initial_income'],
+      energy_drain_flags: ['routine_drain'],
+      achievement_feedback_top: ['social_impact', 'recognition'],
+      execution_style: 'planner',
+      impact_scope: 'wide_impact',
+      failure_response: 'seek_support',
+      persistence_anchor: 'meaning_anchor',
+      external_expectation: 'consider_carefully',
+    },
+
+    canValidationAnswers: {
+      'can_communication': 'work_experience_1to3',
+      'can_structured_execution': 'project_experience',
+    },
+
+    constraintIntensityAnswers: {
+      'intensity_wlb': 'prefer_avoid',
+    },
+
+    llmFollowupAnswers: [
+      { questionPattern: '교육|가르치|학생|학교', answer: '대학에서 교육봉사 2년 했습니다. 학생들이 이해하는 순간을 볼 때 가장 보람 있었어요.' },
+      { questionPattern: '사회|봉사|기여|공헌|NPO|NGO', answer: 'NGO에서 인턴 경험이 있고, 사회 문제를 해결하는 일에 관심이 많습니다. 환경이나 교육 분야에서 기여하고 싶어요.' },
+      { questionPattern: '동기|원동력|에너지|보람', answer: '다른 사람에게 도움이 될 때 가장 큰 보람을 느낍니다. 사회에 의미 있는 변화를 만들고 싶어요.' },
+      { questionPattern: '관계|사람|팀|소통|협업', answer: '다양한 배경의 사람들과 협업하는 것을 좋아합니다. 소통하고 함께 문제를 풀어가는 과정이 좋아요.' },
+      { questionPattern: '싫|피하|스트레스|답답', answer: '이윤만 추구하고 사회적 가치를 무시하는 조직은 맞지 않습니다. 의미 없는 업무에 시간 쓰는 것이 가장 스트레스예요.' },
+      { questionPattern: '환경|분위기|조직|문화', answer: '가치관이 비슷한 동료들과 미션 중심으로 일하는 조직이 좋습니다. 수평적이고 협력적인 문화를 선호해요.' },
+      { questionPattern: '강점|잘하|능력|역량|자신', answer: '공감 능력과 소통 능력이 강점입니다. 프레젠테이션이나 글쓰기도 잘하는 편이에요.' },
+      { questionPattern: '약점|부족|개선|못하', answer: '숫자나 데이터 분석은 약합니다. 재무적인 부분은 아직 배워야 할 게 많아요.' },
+      { questionPattern: '가치|중요|의미|핵심', answer: '일의 사회적 의미가 가장 중요합니다. 돈보다는 보람과 기여감을 우선시해요.' },
+      { questionPattern: '현실|제약|조건|연봉|급여', answer: '연봉이 높지 않아도 괜찮지만 최소 3000만원은 필요합니다. 워라밸이 보장되어야 해요.' },
+      { questionPattern: '시간.*모르|몰입|빠져|집중', answer: '교육 프로그램을 기획하거나 사람들과 워크숍을 진행할 때 시간 가는 줄 몰라요.' },
+      { questionPattern: '미래|5년|10년|계획|목표', answer: '5년 후에는 사회적 기업이나 교육 기관에서 프로그램 디렉터가 되고 싶습니다.' },
+      { questionPattern: '성장|커리어|발전', answer: '사회복지사 자격증을 준비하고 있고, 교육학 석사도 고려 중입니다.' },
+      { questionPattern: '야근|근무시간|워라밸', answer: '규칙적인 근무시간이 중요합니다. 저녁에는 개인 봉사활동 시간을 갖고 싶어요.' },
+      { questionPattern: '경험|프로젝트|했던|해본', answer: '대학 교육봉사 2년, NGO 인턴 6개월, 지역사회 환경 캠페인 기획 경험이 있습니다.' },
+    ],
+
+    expectedResults: {
+      topJobCategories: ['교육', '사회복지', 'NGO', '공공'],
+      excludedJobCategories: ['현장직', '금융투자', '영업'],
+      fitScoreRange: { min: 55, max: 90 },
+      balanceCheck: { canShouldNotDominateLike: true, likeCanGap: { max: 30 } },
+      featuresApplied: { growthCurveMatching: true, internalConflictRisk: false, canBasedFilter: true, balanceCap: true },
+    },
+
+    careerState: 'job_seeker',
+    narrativeAnswers: {
+      motivation: '사회에 기여하고 사람들을 돕는 일을 하고 싶습니다. 교육이나 복지 분야에서 의미 있는 변화를 만들 수 있는 직업을 찾고 있어요.',
+      avoidance: '이윤만 추구하는 기업이나 사회적 가치가 없는 일은 피하고 싶습니다. 경쟁적이고 개인주의적인 환경도 맞지 않아요.',
+      constraints: '연봉이 높지 않아도 괜찮지만 기본 생활은 가능해야 합니다. 워라밸이 보장되는 환경이 중요합니다.',
+    },
+    roundFallbackAnswers: {
+      round1: ['사람들에게 도움이 되는 일을 할 때 가장 행복합니다.', '교육봉사 경험이 진로를 결정하는 데 큰 영향을 줬어요.', '사회 문제 해결에 관심이 많습니다.', '공감 능력과 소통이 제 강점이에요.', '비영리 단체에서의 경험이 가장 기억에 남아요.'],
+      round2: ['돈만 추구하는 조직은 동기부여가 안 됩니다.', '의미 없는 서류 작업만 하는 건 힘들어요.', '사람과의 관계에서 에너지를 얻는 편입니다.', '경쟁적인 환경보다 협력적인 환경이 맞아요.', '가치관이 맞지 않는 조직은 오래 다닐 수 없을 것 같아요.'],
+      round3: ['연봉 3000만원 이상이면 괜찮습니다.', '정시 퇴근이 가능한 직장을 원합니다.', '사회복지사 자격증을 따려고 준비 중입니다.', '수도권 내 출퇴근 가능한 곳을 찾고 있어요.', '봉사활동과 병행할 수 있는 근무 형태가 좋겠어요.'],
+    },
+  },
+
+  // ============================================
+  // 시나리오 8: 예술/창작 지향 유저 (Artistic)
+  // ============================================
+  {
+    id: 'artistic_user',
+    name: '예술/창작 유저',
+    description: '글쓰기, 영상, 예술 분야에 관심 있는 유저',
+    category: 'basic',
+
+    miniModule: {
+      interest_top: ['creative', 'art_design', 'media_content'],
+      value_top: ['autonomy', 'meaning', 'creativity'],
+      strength_top: ['creative', 'communication', 'persistence'],
+      constraint_flags: ['remote_preferred'],
+      workstyle_top: ['solo_deep', 'flexible'],
+      background_flags: ['portfolio'],
+      language_skills: [] as Array<{ language: string; level: 'basic' | 'business' | 'native' }>,
+      sacrifice_flags: ['low_initial_income', 'unstable_hours'],
+      energy_drain_flags: ['routine_drain', 'bureaucracy_drain'],
+      achievement_feedback_top: ['mastery', 'audience_response'],
+      execution_style: 'improviser',
+      impact_scope: 'wide_impact',
+      failure_response: 'creative_pivot',
+      persistence_anchor: 'passion_anchor',
+      external_expectation: 'independent_path',
+    },
+
+    canValidationAnswers: {
+      'can_creative': 'portfolio_available',
+      'can_communication': 'project_experience',
+    },
+
+    constraintIntensityAnswers: {
+      'intensity_remote': 'must_have',
+    },
+
+    llmFollowupAnswers: [
+      { questionPattern: '글쓰기|작가|소설|시나리오|콘텐츠', answer: '단편소설과 에세이를 써왔고, 블로그에 연재도 했습니다. 스토리텔링이 제 핵심 역량이에요.' },
+      { questionPattern: '영상|유튜브|미디어|촬영|편집', answer: '1인 미디어로 유튜브 채널을 운영한 경험이 있어요. 촬영, 편집, 기획까지 혼자 했습니다.' },
+      { questionPattern: '동기|원동력|에너지|보람', answer: '제 작품이 누군가에게 감동을 줄 때 가장 큰 보람을 느낍니다. 창작 과정 자체가 에너지를 줘요.' },
+      { questionPattern: '관계|사람|팀|소통|협업', answer: '혼자 작업하는 시간이 절대적으로 필요합니다. 하지만 좋은 피드백을 주는 소수의 동료는 소중해요.' },
+      { questionPattern: '싫|피하|스트레스|답답', answer: '정해진 틀 안에서만 일하는 건 질식할 것 같아요. 창의성이 필요 없는 반복 업무가 가장 싫습니다.' },
+      { questionPattern: '환경|분위기|조직|문화', answer: '카페나 작업실 같은 자유로운 공간에서 일하고 싶어요. 재택 근무가 필수입니다.' },
+      { questionPattern: '강점|잘하|능력|역량|자신', answer: '글쓰기와 스토리텔링이 최대 강점입니다. 영상 편집과 디자인도 독학으로 배웠어요.' },
+      { questionPattern: '약점|부족|개선|못하', answer: '규칙적인 생활이 어렵고, 마감 압박에 약한 편이에요. 행정적인 업무는 정말 못합니다.' },
+      { questionPattern: '가치|중요|의미|핵심', answer: '자유롭게 표현할 수 있는 환경이 가장 중요합니다. 돈보다 하고 싶은 일을 하는 게 우선이에요.' },
+      { questionPattern: '현실|제약|조건|연봉|급여', answer: '초기 수입이 적어도 감수할 수 있습니다. 대신 시간적 자유가 필요해요.' },
+      { questionPattern: '시간.*모르|몰입|빠져|집중', answer: '글을 쓰거나 영상 편집할 때 밤새도록 시간 가는 줄 모릅니다.' },
+      { questionPattern: '미래|5년|10년|계획|목표', answer: '5년 내 출판 작가 또는 콘텐츠 크리에이터로 자리잡고 싶습니다.' },
+      { questionPattern: '경험|프로젝트|했던|해본', answer: '단편소설 공모전 입상, 유튜브 채널 구독자 3천명, 프리랜서 카피라이팅 경험이 있어요.' },
+      { questionPattern: '성장|커리어|발전', answer: '창작 워크숍이나 마스터클래스에 참여하면서 계속 역량을 키우고 싶어요.' },
+      { questionPattern: '야근|근무시간|워라밸', answer: '근무시간보다 결과물로 평가받고 싶어요. 새벽에 작업해도 낮에 쉴 수 있으면 좋겠습니다.' },
+    ],
+
+    expectedResults: {
+      topJobCategories: ['작가', '콘텐츠', '크리에이터', '편집', '기획'],
+      excludedJobCategories: ['공장', '현장직', '회계', '금융'],
+      fitScoreRange: { min: 55, max: 90 },
+      balanceCheck: { canShouldNotDominateLike: true, likeCanGap: { max: 30 } },
+      featuresApplied: { growthCurveMatching: true, internalConflictRisk: false, canBasedFilter: true, balanceCap: true },
+    },
+
+    careerState: 'freelancer',
+    narrativeAnswers: {
+      motivation: '글쓰기와 영상 제작이 제 삶의 중심입니다. 스토리텔링을 통해 사람들에게 감동과 영감을 주고 싶습니다. 창작으로 먹고살 수 있는 직업을 찾고 있어요.',
+      avoidance: '정해진 틀 안에서 반복적으로 일하는 건 정말 싫습니다. 창의성이 필요 없는 업무나 관료적인 조직은 피하고 싶어요.',
+      constraints: '초기 수입이 적어도 감수할 수 있지만, 시간적 자유는 반드시 필요합니다. 재택이나 자유 근무가 가능해야 합니다.',
+    },
+    roundFallbackAnswers: {
+      round1: ['글쓰기가 제 정체성의 핵심입니다.', '영상 편집과 촬영도 독학으로 배웠어요.', '창작물이 사람들에게 감동을 줄 때 가장 행복합니다.', '자유로운 환경에서 일할 때 최고의 결과물이 나와요.', '스토리텔링 능력이 제 최대 강점입니다.'],
+      round2: ['반복 업무는 창의성을 죽입니다.', '관료적인 조직은 절대 맞지 않아요.', '마감에 쫓기는 건 힘들지만 감수할 수 있어요.', '사무실에 9시 출근하는 생활은 어렵습니다.', '누군가 지시하는 대로만 하는 건 참기 어려워요.'],
+      round3: ['프리랜서 형태로 일할 수 있으면 가장 좋겠습니다.', '초기 수입 2000만원대도 감수 가능합니다.', '카페나 공유오피스에서 자유롭게 작업하고 싶어요.', '포트폴리오를 계속 쌓아가면서 성장하고 싶습니다.', '글쓰기 관련 교육이나 멘토링을 받고 싶어요.'],
+    },
+  },
+
+  // ============================================
+  // 시나리오 9: 창업/비즈니스 유저 (Entrepreneurial)
+  // ============================================
+  {
+    id: 'entrepreneurial',
+    name: '창업/비즈니스 유저',
+    description: '사업을 시작하거나 경영에 관심 있는 유저',
+    category: 'basic',
+
+    miniModule: {
+      interest_top: ['business_management', 'leadership', 'innovation'],
+      value_top: ['income', 'autonomy', 'growth'],
+      strength_top: ['communication', 'fast_learning', 'creative'],
+      constraint_flags: [] as string[],
+      workstyle_top: ['flexible', 'team_harmony'],
+      background_flags: ['startup_experience'],
+      language_skills: [{ language: 'english', level: 'business' }],
+      sacrifice_flags: ['unstable_hours', 'high_stress'],
+      energy_drain_flags: ['bureaucracy_drain'],
+      achievement_feedback_top: ['autonomy', 'financial_success'],
+      execution_style: 'improviser',
+      impact_scope: 'wide_impact',
+      failure_response: 'pivot_quickly',
+      persistence_anchor: 'vision_anchor',
+      external_expectation: 'independent_path',
+    },
+
+    canValidationAnswers: {
+      'can_communication': 'work_experience_3plus',
+      'can_fast_learning': 'work_experience_1to3',
+    },
+
+    constraintIntensityAnswers: {},
+
+    llmFollowupAnswers: [
+      { questionPattern: '사업|창업|스타트업|대표', answer: '작은 온라인 쇼핑몰을 6개월 운영해본 경험이 있습니다. 마케팅부터 물류까지 혼자 했어요.' },
+      { questionPattern: '리더십|팀빌딩|경영|관리', answer: '이전 직장에서 5명 규모 팀을 리드한 경험이 있습니다. 사람들의 강점을 파악해서 배치하는 걸 잘해요.' },
+      { questionPattern: '동기|원동력|에너지|보람', answer: '내 사업을 키워가는 과정이 가장 흥미진진합니다. 내가 만든 것이 시장에서 인정받을 때 최고로 보람차요.' },
+      { questionPattern: '관계|사람|팀|소통|협업', answer: '투자자, 파트너, 고객 등 다양한 이해관계자와 소통하는 것을 즐깁니다. 네트워킹이 사업의 핵심이라고 생각해요.' },
+      { questionPattern: '싫|피하|스트레스|답답', answer: '남의 밑에서 지시만 받는 건 답답합니다. 느린 의사결정과 관료주의가 가장 스트레스예요.' },
+      { questionPattern: '환경|분위기|조직|문화', answer: '빠르게 움직이고 실험하는 스타트업 문화가 맞아요. 내가 의사결정권을 갖는 환경이 필요합니다.' },
+      { questionPattern: '강점|잘하|능력|역량|자신', answer: '설득력 있는 프레젠테이션과 빠른 학습이 강점이에요. 새로운 분야를 빠르게 파악하는 능력이 있어요.' },
+      { questionPattern: '약점|부족|개선|못하', answer: '재무 관리와 회계는 약합니다. 디테일한 실행보다 큰 그림을 그리는 편이라 꼼꼼함이 부족해요.' },
+      { questionPattern: '가치|중요|의미|핵심', answer: '자율성과 경제적 자유가 가장 중요합니다. 내가 만든 비즈니스로 성공하고 싶어요.' },
+      { questionPattern: '현실|제약|조건|연봉|급여', answer: '초기에는 수입이 불안정해도 괜찮습니다. 3-5년 내 사업으로 연 1억 이상을 목표로 하고 있어요.' },
+      { questionPattern: '시간.*모르|몰입|빠져|집중', answer: '사업 아이디어를 구체화하거나 사업계획서를 쓸 때 밤새 몰입합니다.' },
+      { questionPattern: '미래|5년|10년|계획|목표', answer: '3년 내 자기 사업을 안정화시키고, 5년 후에는 직원 10명 이상의 회사를 만들고 싶습니다.' },
+      { questionPattern: '경험|프로젝트|했던|해본', answer: '온라인 쇼핑몰 운영 6개월, 이전 직장 팀리드 2년, 각종 사이드 프로젝트 경험이 있어요.' },
+      { questionPattern: '성장|커리어|발전', answer: 'MBA나 경영 관련 프로그램을 수강하면서 체계적인 경영 역량을 키우고 싶습니다.' },
+      { questionPattern: '야근|근무시간|워라밸', answer: '사업을 위해서라면 야근이나 주말 근무도 기꺼이 할 수 있습니다. 내 일이니까요.' },
+    ],
+
+    expectedResults: {
+      topJobCategories: ['경영', '창업', '컨설턴트', '마케팅', '기획'],
+      excludedJobCategories: ['공장', '현장직', '단순사무'],
+      fitScoreRange: { min: 55, max: 90 },
+      balanceCheck: { canShouldNotDominateLike: true, likeCanGap: { max: 30 } },
+      featuresApplied: { growthCurveMatching: true, internalConflictRisk: false, canBasedFilter: true, balanceCap: true },
+    },
+
+    careerState: 'employed',
+    narrativeAnswers: {
+      motivation: '내 사업을 만들어서 성공하고 싶습니다. 리더십과 사업 아이디어가 있고, 시장에서 인정받는 제품이나 서비스를 만드는 것이 목표입니다.',
+      avoidance: '남의 밑에서 지시만 받는 환경은 답답합니다. 관료적이고 느린 조직, 창의성 없는 반복 업무는 피하고 싶어요.',
+      constraints: '사업을 위해서 야근이나 불안정한 수입도 감수할 수 있습니다. 대신 의사결정 자율성은 반드시 필요합니다.',
+    },
+    roundFallbackAnswers: {
+      round1: ['사업을 운영하면서 성장하는 것이 꿈입니다.', '온라인 쇼핑몰을 직접 운영해본 경험이 있어요.', '사람들의 문제를 해결하는 비즈니스를 만들고 싶습니다.', '리더십과 네트워킹이 제 강점이에요.', '새로운 시장 기회를 찾는 것에 흥미를 느낍니다.'],
+      round2: ['관료적인 조직에서는 오래 못 버텨요.', '의사결정권이 없는 자리는 답답합니다.', '지시만 받는 업무는 동기부여가 안 돼요.', '느린 변화와 비효율이 가장 스트레스입니다.', '안정적이지만 성장이 없는 건 감옥 같아요.'],
+      round3: ['초기에 수입이 적어도 3-5년 후를 보고 투자할 수 있어요.', '야근이든 주말 근무든 내 사업을 위해서라면 기꺼이 합니다.', 'MBA 프로그램을 수강하면서 역량을 키우고 싶어요.', '수도권에서 사업을 시작할 계획입니다.', '공유오피스에서 시작해서 점점 키워가고 싶어요.'],
+    },
+  },
 ]
 
 // ============================================

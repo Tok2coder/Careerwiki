@@ -159,6 +159,12 @@ export interface MajorUserConstraints {
   high_competition_avoid?: boolean
   low_employment_avoid?: boolean
   reading_heavy_avoid?: boolean
+  // Energy drain → 전공 risk (v3.23: 직업 패리티)
+  people_drain?: boolean
+  routine_drain?: boolean
+  cognitive_drain?: boolean
+  // Value-based constraints
+  prefer_stability?: boolean
 }
 
 // 학업 상태 (전공 추천에서 Feasibility 평가용)

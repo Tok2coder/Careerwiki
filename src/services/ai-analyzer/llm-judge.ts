@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.22.3'  // 3-Tier Progressive Backfill(top1-20→25→30/55), 10개 보장
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.23.1'  // 전공 Judge 후보 풀 확장 (30개) + 농업학 노이즈 추가
 
 // ============================================
 // Types
@@ -2121,6 +2121,9 @@ export async function judgeMajorCandidates(
     }
   }
 
+  // v3.23: 전공 노이즈 필터 (직업 sanitizeKeywordOvermatching 대응)
+  sanitizeMajorNoiseOvermatching(results, miniModuleResult)
+
   // 퍼센타일 리스케일링: fitScore/desireScore를 45-95 범위로 강제 분산
   majorPercentileRescale(results)
 
@@ -2147,6 +2150,51 @@ export async function judgeMajorCandidates(
       averageFitScore: average(scoredResults.map(r => r.fitScore)),
       averageDesireScore: average(scoredResults.map(r => r.desireScore)),
     },
+  }
+}
+
+// ============================================
+// v3.23: 전공 노이즈 필터 (직업 sanitizeKeywordOvermatching 대응)
+// LLM Judge 결과에서 명백한 노이즈 전공 감점
+// ============================================
+const MAJOR_NOISE_NAME_PATTERNS = [
+  /축산학|낙농학|양봉|양잠/,           // 농축산
+  /임산학|임학|산림학|산림자원/,        // 산림
+  /광산학|광업공학|자원공학/,           // 광업
+  /선박공학|조선공학|해양공학/,         // 조선 (관심 명시 없는 한)
+  /군사학|국방공학|무기체계/,           // 군사
+  /한의학|한약학/,                      // 한의학 (극도로 제한적)
+  /치의학|치위생/,                      // 치의학 (별도 입시)
+  /수의학|수의예과/,                    // 수의학 (별도 입시)
+  /농업학|농학과|원예학/,               // 농업 (도메인 한정)
+]
+
+// 관심사가 명시적으로 이 도메인이면 노이즈 아님
+const MAJOR_NOISE_EXEMPT_INTERESTS = new Set([
+  'nature', 'physical_activity', 'helping_feedback',
+  'agriculture', 'forestry', 'marine', 'military', 'veterinary', 'dental', 'oriental_medicine',
+])
+
+function sanitizeMajorNoiseOvermatching(
+  results: MajorJudgeResult[],
+  miniModuleResult?: any,
+): void {
+  if (!results.length) return
+
+  const interests = new Set<string>(miniModuleResult?.interest_top || [])
+
+  // 유저가 명시적으로 관련 도메인 관심을 표현하면 노이즈 필터 면제
+  const hasExemptInterest = [...interests].some(i => MAJOR_NOISE_EXEMPT_INTERESTS.has(i))
+
+  if (hasExemptInterest) return
+
+  for (const r of results) {
+    const name = r.major_name || ''
+    const isNoise = MAJOR_NOISE_NAME_PATTERNS.some(p => p.test(name))
+    if (isNoise && r.desireScore >= 50) {
+      r.desireScore = Math.max(40, r.desireScore - 25)
+      r.fitScore = Math.max(40, r.fitScore - 20)
+    }
   }
 }
 

@@ -8198,7 +8198,8 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
     for (const c of (payload.mini_module_result?.constraint_flags || [])) {
       constraintMap[c] = 'true'
     }
-    const majorUserConstraints = extractMajorUserConstraints(constraintMap)
+    // v3.23: miniModuleResult 전달하여 drain_flags→constraint 매핑 활성화
+    const majorUserConstraints = extractMajorUserConstraints(constraintMap, payload.mini_module_result)
 
     let tagFilterResult
     try {
@@ -8206,6 +8207,11 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
     } catch (tagError) {
       throw tagError
     }
+
+    // v3.23: riskPenaltyMap 보존 (직업 v3.16 패턴 — 타입 변환 시 손실 방지)
+    const majorRiskPenaltyMap = new Map<string, number>(
+      tagFilterResult.passed.map((p: any) => [String(p.major_id), p.riskPenalty])
+    )
 
     // 3-2. 필터 통과한 후보를 ScoredMajor로 변환
     const tagPassedAsVectorResults = tagFilterResult.passed.map((p: any) => ({
@@ -8217,6 +8223,17 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
     let scoredMajors
     try {
       scoredMajors = await vectorResultsToScoredMajors(db, tagPassedAsVectorResults, payload.mini_module_result)
+
+      // v3.23: tag-filter의 riskPenalty를 final_score에 반영 (직업 v3.16 패턴)
+      scoredMajors = scoredMajors.map(m => {
+        const tagRisk = majorRiskPenaltyMap.get(String(m.major_id)) ?? 0
+        return {
+          ...m,
+          base_risk: tagRisk,
+          risk_penalty: tagRisk,
+          final_score: Math.round(0.55 * (m.like_score || 0) + 0.45 * (m.can_score || 0) - tagRisk),
+        }
+      })
     } catch (scoreError) {
       throw scoreError
     }
@@ -8242,8 +8259,8 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
       // 주입 실패 시 원본 유지
     }
 
-    // 4-1. Diversity Guard (같은 field_category 3개 이하)
-    const diversityResult = enforceMajorDiversity(filteredMajors)
+    // 4-1. Diversity Guard (같은 field_category 5개 이하, Judge 후보 풀 확장)
+    const diversityResult = enforceMajorDiversity(filteredMajors, 5, 30)
     filteredMajors = diversityResult.diversified
 
     // 4-2. 사전 필터된 상위 후보군 (Like/Can/Final 3축 분리)
@@ -8321,6 +8338,115 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
       }
     } else {
       return c.json(createErrorResponse('INTERNAL_ERROR', 'OpenAI API 키가 설정되지 않았습니다'), 500)
+    }
+
+    // ============================================
+    // Phase 6: 전공 결과 정제 파이프라인 (v3.23 — 직업 v3.22.3 패리티)
+    // 순서: 6-F Risk Demotion → Backup → 6-G Quality Floor → 6-H Like Floor → 6-I Hard Noise → 6-J Backfill
+    // ============================================
+
+    // 6-F. Risk Demotion — 제약 유저의 고위험 전공 점수 하락
+    {
+      const hasMathConstraint = Boolean(majorUserConstraints.math_impossible)
+      const hasLabConstraint = Boolean(majorUserConstraints.lab_impossible)
+      const hasStabilityConstraint = Boolean(majorUserConstraints.prefer_stability)
+      if (hasMathConstraint || hasLabConstraint || hasStabilityConstraint) {
+        for (const major of topMajors) {
+          const risk = (major as any).risk_penalty || 0
+          if (risk >= 8) {
+            const extraPenalty = risk >= 12 ? 12 : 8
+            ;(major as any).final_score = Math.max(40, ((major as any).final_score || 0) - extraPenalty)
+            ;(major as any).fit_score = Math.max(40, ((major as any).fit_score || 0) - extraPenalty)
+          }
+        }
+      }
+    }
+
+    // Backup 생성 — Risk Demotion 후, Quality Floor 전 (Backfill 후보 풀)
+    const allJudgedMajorsBackup = [...topMajors].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
+
+    // 6-G. Quality Floor — top1-20 이상만 유지 (최소 5개 보장)
+    if (topMajors.length > 5) {
+      const sortedForFloor = [...topMajors].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
+      const top1Score = (sortedForFloor[0] as any)?.final_score || 0
+      const qualityFloor = top1Score - 20
+      const floorFiltered = topMajors.filter((m: any) => (m.final_score || 0) >= qualityFloor)
+      if (floorFiltered.length >= 5) {
+        topMajors = floorFiltered
+      } else {
+        topMajors = sortedForFloor.slice(0, Math.max(floorFiltered.length, 5))
+      }
+    }
+
+    // 6-H. Like Floor — like < 48 제거 (최소 6개 보장)
+    if (topMajors.length > 8) {
+      const likeFiltered = topMajors.filter((m: any) => (m.like_score || 50) >= 48)
+      if (likeFiltered.length >= 6) {
+        topMajors = likeFiltered
+      }
+    }
+
+    // 6-I. Hard Noise Removal — 명백한 도메인 불일치 전공 제거
+    const MAJOR_HARD_NOISE_PATTERNS = [
+      /^군사학$|국방|무기체계/,
+      /한의학|한약학/,
+      /치의학|치위생/,
+      /수의학|수의예/,
+      /항공운항|항공조종/,
+      /선박공학|해양공학|조선공학/,
+      /광산|광업|자원공학/,
+      /축산학|낙농/,
+      /농업학|농학과|원예학/,
+    ]
+    // 유저 관심사에 관련 도메인이 있으면 노이즈 필터 면제
+    const mmInterestsForNoise = new Set<string>(payload.mini_module_result?.interest_top || [])
+    const hasExemptMajorInterest = ['nature', 'physical_activity', 'helping_feedback', 'military', 'veterinary', 'dental', 'marine', 'agriculture', 'forestry', 'oriental_medicine']
+      .some(i => mmInterestsForNoise.has(i))
+
+    if (!hasExemptMajorInterest && topMajors.length > 5) {
+      const noiseRemoved = topMajors.filter((m: any) => {
+        const majorName = (m as any).major_name || ''
+        return !MAJOR_HARD_NOISE_PATTERNS.some(p => p.test(majorName))
+      })
+      if (noiseRemoved.length >= 5) {
+        topMajors = noiseRemoved
+      }
+    }
+
+    // 6-J. 3-Tier Progressive Backfill — 10개 보장
+    if (topMajors.length < 10 && allJudgedMajorsBackup.length > topMajors.length) {
+      const sortedCurrent = [...topMajors].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
+      const currentTop1 = (sortedCurrent[0] as any)?.final_score || 0
+      const existingIds = new Set(topMajors.map((m: any) => String(m.major_id)))
+      const noNoiseBackup = allJudgedMajorsBackup
+        .filter((m: any) => !existingIds.has(String(m.major_id)))
+        .filter((m: any) => !hasExemptMajorInterest ? !MAJOR_HARD_NOISE_PATTERNS.some(p => p.test((m as any).major_name || '')) : true)
+
+      // 1단계: strict (top1-20)
+      const strictThreshold = currentTop1 - 20
+      const strictCandidates = noNoiseBackup.filter((m: any) => (m.final_score || 0) >= strictThreshold)
+      const needed1 = 10 - topMajors.length
+      topMajors = [...topMajors, ...strictCandidates.slice(0, needed1)]
+
+      // 2단계: relaxed (top1-25)
+      if (topMajors.length < 10) {
+        const relaxedThreshold = currentTop1 - 25
+        const filledIds = new Set(topMajors.map((m: any) => String(m.major_id)))
+        const relaxedCandidates = noNoiseBackup
+          .filter((m: any) => !filledIds.has(String(m.major_id)))
+          .filter((m: any) => (m.final_score || 0) >= relaxedThreshold)
+        topMajors = [...topMajors, ...relaxedCandidates.slice(0, 10 - topMajors.length)]
+      }
+
+      // 3단계: safety net (top1-30 또는 abs 55)
+      if (topMajors.length < 10) {
+        const absoluteMin = Math.min(currentTop1 - 30, 55)
+        const filledIds3 = new Set(topMajors.map((m: any) => String(m.major_id)))
+        const safetyCandidates = noNoiseBackup
+          .filter((m: any) => !filledIds3.has(String(m.major_id)))
+          .filter((m: any) => (m.final_score || 0) >= absoluteMin)
+        topMajors = [...topMajors, ...safetyCandidates.slice(0, 10 - topMajors.length)]
+      }
     }
 
     // 6. LLM Reporter (전공 전용 — skipReport 시 건너뜀)

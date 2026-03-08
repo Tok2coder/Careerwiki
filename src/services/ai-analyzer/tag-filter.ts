@@ -1982,6 +1982,47 @@ export const MAJOR_RISK_PENALTY_RULES: MajorRiskPenaltyRule[] = [
     penalty: 8,
     warningLabel: '독해/작문이 일부 필요한 전공',
   },
+  // v3.23: 에너지 드레인 + 안정성 규칙 (직업 패리티)
+  {
+    id: 'cognitive_drain_vs_high_rigor',
+    userConstraint: 'cognitive_drain',
+    majorAttribute: 'academic_rigor',
+    majorCondition: (val) => typeof val === 'number' && val > 70 && val <= 85,
+    penalty: 8,
+    warningLabel: '학업 강도가 높은 전공',
+  },
+  {
+    id: 'routine_drain_vs_high_lab',
+    userConstraint: 'routine_drain',
+    majorAttribute: 'lab_practical',
+    majorCondition: (val) => typeof val === 'number' && val > 70 && val <= 90,
+    penalty: 6,
+    warningLabel: '반복적 실험/실습이 많은 전공',
+  },
+  {
+    id: 'people_drain_vs_high_social',
+    userConstraint: 'people_drain',
+    majorAttribute: 'social_interaction',
+    majorCondition: (val) => typeof val === 'number' && val > 60 && val <= 75,
+    penalty: 6,
+    warningLabel: '대인 상호작용이 많은 전공',
+  },
+  {
+    id: 'prefer_stability_vs_low_employment',
+    userConstraint: 'prefer_stability',
+    majorAttribute: 'employment_rate',
+    majorCondition: (val) => typeof val === 'number' && val < 40,
+    penalty: 10,
+    warningLabel: '취업률이 낮은 전공 (안정성 중시 유저)',
+  },
+  {
+    id: 'prefer_stability_vs_high_competition',
+    userConstraint: 'prefer_stability',
+    majorAttribute: 'competition_level',
+    majorCondition: (val) => typeof val === 'number' && val > 80 && val <= 100,
+    penalty: 8,
+    warningLabel: '경쟁률이 매우 높은 전공 (안정성 중시 유저)',
+  },
 ]
 
 // ============================================
@@ -2056,6 +2097,9 @@ export async function applyMajorTagFilter(
         }
       }
     }
+
+    // v3.23: riskPenalty cap 12 (직업은 35-40, 전공은 규칙 수가 적으므로 12로 제한)
+    totalPenalty = Math.min(totalPenalty, 12)
 
     if (totalPenalty > 0) {
       withRiskPenalty++
@@ -2147,7 +2191,8 @@ async function getMajorAttributes(
 // 전공 제약조건 추출 (설문 응답에서)
 // ============================================
 export function extractMajorUserConstraints(
-  universalAnswers: Record<string, string | string[]>
+  universalAnswers: Record<string, string | string[]>,
+  miniModuleResult?: any
 ): MajorUserConstraints {
   const constraints: MajorUserConstraints = {}
 
@@ -2159,6 +2204,21 @@ export function extractMajorUserConstraints(
     if (arr.includes('high_competition_avoid')) constraints.high_competition_avoid = true
     if (arr.includes('low_employment_avoid')) constraints.low_employment_avoid = true
     if (arr.includes('reading_heavy_avoid')) constraints.reading_heavy_avoid = true
+  }
+
+  // v3.23: energy_drain_flags + value_top → 추가 risk constraints (직업 패리티)
+  if (miniModuleResult) {
+    const drainFlags = miniModuleResult.energy_drain_flags || []
+    if (drainFlags.includes('people_drain')) constraints.people_drain = true
+    if (drainFlags.includes('routine_drain')) constraints.routine_drain = true
+    if (drainFlags.includes('cognitive_drain')) constraints.cognitive_drain = true
+
+    const values = miniModuleResult.value_top || []
+    if (values.includes('stability') && !constraints.prefer_stability) constraints.prefer_stability = true
+
+    const constraintFlags = miniModuleResult.constraint_flags || []
+    if (constraintFlags.includes('math_impossible') && !constraints.math_impossible) constraints.math_impossible = true
+    if (constraintFlags.includes('lab_impossible') && !constraints.lab_impossible) constraints.lab_impossible = true
   }
 
   return constraints
