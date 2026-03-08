@@ -860,7 +860,6 @@ const EditMode = {
               '의료, 헬스케어, 환자케어, 병원',
               '금융, 투자, 분석, 컨설팅'
             ]},
-            { key: 'heroCategory', label: '직업 분류', type: 'text', examples: ['IT/소프트웨어', '의료/보건', '금융/경제'] }
           ]
         },
         {
@@ -877,7 +876,17 @@ const EditMode = {
             { key: 'overviewWork.physicalAct', label: '육체활동', type: 'text', examples: ['가벼운 활동 (컴퓨터 작업 위주)', '중간 활동 (이동, 서서 일함)', '높은 활동 (중량물 취급)'] }
           ]
         },
-        // 커리어 전망은 API 데이터 기반이므로 편집 불가 (제외)
+        {
+          title: '개요 - 커리어 전망',
+          section: 'overview',
+          fields: [
+            { key: 'overviewProspect.main', label: '전망 설명', type: 'textarea', examples: [
+              'AI/빅데이터 산업 성장에 따라 향후 10년간 수요가 꾸준히 증가할 것으로 전망됩니다.',
+              '고령화 사회 진입에 따라 간호 인력에 대한 수요가 지속적으로 증가하고 있습니다.',
+              '핀테크 등 금융 혁신에 따라 기존 역할은 변화하고 있으나, 전문 분석가의 수요는 유지됩니다.'
+            ]}
+          ]
+        },
         {
           title: '개요 - 핵심 능력·자격',
           section: 'overview',
@@ -897,6 +906,17 @@ const EditMode = {
           ]
         },
         {
+          title: '개요 - 임금 정보',
+          section: 'overview',
+          fields: [
+            { key: 'overviewSalary.sal', label: '임금 정보', type: 'textarea', examples: [
+              '신입 연봉 3,000~4,000만 원, 경력 5년 이상 시 5,000~8,000만 원 수준입니다.',
+              '병원 규모에 따라 차이가 크며, 대학병원 기준 초봉 약 3,500만 원입니다.',
+              '성과급 포함 시 연봉 범위가 넓으며, 금융권 평균 연봉은 5,000만 원 이상입니다.'
+            ]}
+          ]
+        },
+        {
           title: '개요 - 적성 및 흥미',
           section: 'overview',
           fields: [
@@ -909,7 +929,8 @@ const EditMode = {
               '탐구형, 현실형',
               '사회형, 관습형',
               '예술형, 진취형'
-            ]}
+            ]},
+            { key: 'overviewAptitude.satisfaction.value', label: '직업 만족도', type: 'text', examples: ['높음 (상위 20%)', '보통', '매우 높음 (상위 10%)'] }
           ]
         },
         {
@@ -920,6 +941,22 @@ const EditMode = {
               '소프트웨어 개발자는 원격 근무가 가능한 직업 중 하나입니다',
               '최근 코로나19 이후 많은 기업들이 재택근무를 도입하면서 개발자들의 워라밸이 크게 개선되었습니다',
               '개발자 커뮤니티 활동이 활발하며, 오픈소스 기여나 기술 블로그 운영이 경력 발전에 도움이 됩니다'
+            ]}
+          ]
+        },
+        {
+          title: '상세정보 - 워라밸 & 사회적 평가',
+          section: 'details',
+          fields: [
+            { key: 'detailWlb.wlb', label: '워라밸 지수', type: 'textarea', examples: [
+              '주 40시간 근무가 일반적이며, 재택근무/유연근무가 확산되고 있습니다.',
+              '교대 근무, 야간 근무가 잦아 워라밸 유지가 어려운 편입니다.',
+              '계절적 업무량 변동이 있으나 전반적으로 안정적인 근무 환경입니다.'
+            ]},
+            { key: 'detailWlb.social', label: '사회적 기여도', type: 'textarea', examples: [
+              '디지털 인프라 구축에 핵심적인 역할을 하며 사회 전반에 기여합니다.',
+              '환자 건강 회복과 건강 증진에 직접적으로 기여하는 직업입니다.',
+              '경제 시스템의 안정성과 기업 성장에 중요한 역할을 합니다.'
             ]}
           ]
         },
@@ -946,6 +983,11 @@ const EditMode = {
               '프로그래밍 동아리 활동\n해커톤, 코딩 대회 참가\nIT 기업 인턴십\n개인 프로젝트 및 포트폴리오',
               '병원 봉사활동\n보건 관련 동아리\n응급처치 교육 이수\n의료기관 견학',
               '모의투자 대회 참가\n금융 관련 학회 활동\n증권사 인턴십\n재무 분석 프로젝트'
+            ]},
+            { key: 'detailReady.certificate', label: '추천 자격증', type: 'tags', examples: [
+              '정보처리기사, SQLD, AWS Certified',
+              '간호사 면허, BLS, ACLS',
+              'CFA, FRM, 투자자산운용사'
             ]}
           ]
         },
@@ -967,7 +1009,16 @@ const EditMode = {
               '정보처리기사, SQLD, AWS Certified Developer',
               '간호사 면허, BLS, ACLS',
               'CFA, FRM, 투자자산운용사'
-            ]}
+            ]},
+            { key: 'sidebarOrgs', label: '관련 기관', type: 'pairList',
+              pairKeys: { first: 'name', second: 'url' },
+              placeholders: { first: '기관명', second: 'URL (https://...)' },
+              examples: [
+                '한국소프트웨어산업협회 / https://www.sw.or.kr',
+                '대한간호협회 / https://www.koreanurse.or.kr',
+                '금융투자협회 / https://www.kofia.or.kr'
+              ]
+            }
           ]
         }
       ];
@@ -988,7 +1039,6 @@ const EditMode = {
               '경영학, 무역학, 회계학, 경제학',
               '간호학, 보건학, 의료정보학'
             ]},
-            { key: 'categoryName', label: '계열', type: 'text', examples: ['공학계열', '상경계열', '의약계열'] }
           ]
         },
         {
@@ -1106,6 +1156,11 @@ const EditMode = {
               '백엔드 개발자 로드맵, 데이터 분석 포트폴리오 만들기, 보안 엔지니어 되기',
               '스타트업 마케팅 전략, 재무제표 읽기, 컨설팅 케이스 인터뷰 준비',
               '간호사 국가고시 준비, 병원 실습 가이드, 보건직 공무원 준비'
+            ]},
+            { key: 'licenses', label: '추천 자격증', type: 'tags', examples: [
+              '정보처리기사, 정보보안기사, SQLD',
+              '공인회계사, 세무사, 경영지도사',
+              '간호사 면허, 물리치료사, 임상병리사'
             ]}
           ]
         }
@@ -1189,23 +1244,28 @@ const EditMode = {
         </button>
       `;
     } else if (field.type === 'pairList') {
-      // 제목+설명 쌍 리스트
+      // 제목+설명 쌍 리스트 (커스텀 키 지원: pairKeys, placeholders)
+      const pk = field.pairKeys || { first: 'title', second: 'description' };
+      const ph = field.placeholders || { first: '제목을 입력하세요', second: '설명을 입력하세요' };
       let items = [];
       if (Array.isArray(value)) {
-        items = value.map(v => ({ title: v.title || v.name || '', description: v.description || v.desc || v.text || '' }));
+        items = value.map(v => ({
+          first: v[pk.first] || v.title || v.name || '',
+          second: v[pk.second] || v.description || v.desc || v.url || v.text || ''
+        }));
       } else if (typeof value === 'string' && value.trim()) {
-        items = [{ title: value.trim(), description: '' }];
+        items = [{ first: value.trim(), second: '' }];
       }
-      if (items.length === 0) items = [{ title: '', description: '' }];
-      
+      if (items.length === 0) items = [{ first: '', second: '' }];
+
       const itemsHtml = items.map((item, idx) => `
         <div class="space-y-2 edit-list-item" data-index="${idx}">
           <div class="flex items-start gap-2">
             <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
             <input
               type="text"
-              value="${this.escapeHtml(item.title || '')}"
-              placeholder="제목을 입력하세요"
+              value="${this.escapeHtml(item.first || '')}"
+              placeholder="${this.escapeHtml(ph.first)}"
               class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition"
             >
             <button type="button" class="flex-shrink-0 w-8 h-8 mt-1 flex items-center justify-center text-wiki-muted hover:text-red-400 hover:bg-red-400/10 rounded-lg transition remove-list-item-btn">
@@ -1214,14 +1274,14 @@ const EditMode = {
           </div>
           <textarea
             rows="3"
-            placeholder="설명을 입력하세요"
+            placeholder="${this.escapeHtml(ph.second)}"
             class="w-full px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 focus:border-transparent transition resize-y"
-          >${this.escapeHtml(item.description || '')}</textarea>
+          >${this.escapeHtml(item.second || '')}</textarea>
         </div>
       `).join('');
-      
+
       inputHtml = `
-        <div id="pairlist-container-${field.key}" data-field-key="${field.key}" data-field-type="pairList" class="space-y-3">
+        <div id="pairlist-container-${field.key}" data-field-key="${field.key}" data-field-type="pairList" data-pair-first="${pk.first}" data-pair-second="${pk.second}" data-ph-first="${this.escapeHtml(ph.first)}" data-ph-second="${this.escapeHtml(ph.second)}" class="space-y-3">
           ${itemsHtml}
         </div>
         <button
@@ -1336,7 +1396,7 @@ const EditMode = {
     // 히어로 섹션 및 사이드바 필드는 출처 추가 불가
     const noSourceFields = [
       'name', 'summary', 'heroSummary', 'heroCategory', 'heroTags', 'categoryName',  // 히어로 필드
-      'sidebarJobs', 'sidebarMajors', 'sidebarHowtos', 'sidebarCerts'  // 사이드바 필드
+      'sidebarJobs', 'sidebarMajors', 'sidebarHowtos', 'sidebarCerts', 'sidebarOrgs', 'licenses'  // 사이드바 필드
     ];
     const isNoSourceField = noSourceFields.includes(field.key);
     
@@ -1834,11 +1894,13 @@ const EditMode = {
   /**
    * 제목+설명 쌍 리스트 항목 추가
    */
-  addPairItem(container, fieldKey, title = '', description = '') {
+  addPairItem(container, fieldKey, first = '', second = '') {
     const isJob = this.entityType === 'job';
     const gradientFrom = isJob ? 'wiki-primary' : 'wiki-secondary';
     const idx = container.querySelectorAll('.edit-list-item').length;
-    
+    const phFirst = container.dataset.phFirst || '제목을 입력하세요';
+    const phSecond = container.dataset.phSecond || '설명을 입력하세요';
+
     const item = document.createElement('div');
     item.className = 'space-y-2 edit-list-item';
     item.dataset.index = idx;
@@ -1847,8 +1909,8 @@ const EditMode = {
         <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
         <input
           type="text"
-          value="${this.escapeHtml(title)}"
-          placeholder="제목을 입력하세요"
+          value="${this.escapeHtml(first)}"
+          placeholder="${this.escapeHtml(phFirst)}"
           class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition"
         >
         <button type="button" class="flex-shrink-0 w-8 h-8 mt-1 flex items-center justify-center text-wiki-muted hover:text-red-400 hover:bg-red-400/10 rounded-lg transition remove-list-item-btn">
@@ -1857,9 +1919,9 @@ const EditMode = {
       </div>
       <textarea
         rows="3"
-        placeholder="설명을 입력하세요"
+        placeholder="${this.escapeHtml(phSecond)}"
         class="w-full px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 focus:border-transparent transition resize-y"
-      >${this.escapeHtml(description)}</textarea>
+      >${this.escapeHtml(second)}</textarea>
     `;
     
     container.appendChild(item);
@@ -2018,13 +2080,15 @@ const EditMode = {
         listItems.sort((a, b) => parseInt(a.dataset.index || '0') - parseInt(b.dataset.index || '0'));
         value = listItems.map(item => (item.querySelector('input')?.value || '').trim()).filter(v => v.length > 0);
       } else if (fieldType === 'pairList') {
+        const pairFirst = element.dataset.pairFirst || 'title';
+        const pairSecond = element.dataset.pairSecond || 'description';
         const listItems = Array.from(element.querySelectorAll('.edit-list-item'));
         listItems.sort((a, b) => parseInt(a.dataset.index || '0') - parseInt(b.dataset.index || '0'));
         value = listItems.map(item => {
-          const title = (item.querySelector('input')?.value || '').trim();
-          const desc = (item.querySelector('textarea')?.value || '').trim();
-          if (!title && !desc) return null;
-          return { title, description: desc };
+          const first = (item.querySelector('input')?.value || '').trim();
+          const second = (item.querySelector('textarea')?.value || '').trim();
+          if (!first && !second) return null;
+          return { [pairFirst]: first, [pairSecond]: second };
         }).filter(Boolean);
       } else if (fieldType === 'autocomplete') {
         const container = document.getElementById(`autocomplete-container-${key}`);
@@ -2069,16 +2133,18 @@ const EditMode = {
           .filter(v => v.length > 0);
         newValue = items; // 배열로 저장 (템플릿에서 Array.isArray 체크)
       }
-      // 제목+설명 쌍 리스트
+      // 제목+설명 쌍 리스트 (커스텀 키 지원)
       else if (fieldType === 'pairList') {
+        const pairFirst = element.dataset.pairFirst || 'title';
+        const pairSecond = element.dataset.pairSecond || 'description';
         const listItems = Array.from(element.querySelectorAll('.edit-list-item'));
         listItems.sort((a, b) => parseInt(a.dataset.index || '0') - parseInt(b.dataset.index || '0'));
         const items = listItems
           .map(item => {
-            const title = (item.querySelector('input')?.value || '').trim();
-            const desc = (item.querySelector('textarea')?.value || '').trim();
-            if (!title && !desc) return null;
-            return { title, description: desc };
+            const first = (item.querySelector('input')?.value || '').trim();
+            const second = (item.querySelector('textarea')?.value || '').trim();
+            if (!first && !second) return null;
+            return { [pairFirst]: first, [pairSecond]: second };
           })
           .filter(Boolean);
         newValue = items;
