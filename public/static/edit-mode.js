@@ -863,7 +863,7 @@ const EditMode = {
           ]
         },
         {
-          title: '개요 - 주요 업무',
+          title: '소개 - 주요 업무',
           section: 'overview',
           fields: [
             { key: 'overviewWork.main', label: '수행 직무', type: 'list', examples: [
@@ -877,7 +877,7 @@ const EditMode = {
           ]
         },
         {
-          title: '개요 - 커리어 전망',
+          title: '소개 - 커리어 전망',
           section: 'overview',
           fields: [
             { key: 'overviewProspect.main', label: '전망 설명', type: 'textarea', examples: [
@@ -888,7 +888,7 @@ const EditMode = {
           ]
         },
         {
-          title: '개요 - 핵심 능력·자격',
+          title: '소개 - 핵심 능력·자격',
           section: 'overview',
           fields: [
             { key: 'overviewAbilities.abilityList', label: '핵심 역량', type: 'tags', examples: [
@@ -906,7 +906,7 @@ const EditMode = {
           ]
         },
         {
-          title: '개요 - 임금 정보',
+          title: '소개 - 임금 정보',
           section: 'overview',
           fields: [
             { key: 'overviewSalary.sal', label: '임금 정보', type: 'textarea', examples: [
@@ -917,7 +917,7 @@ const EditMode = {
           ]
         },
         {
-          title: '개요 - 적성 및 흥미',
+          title: '소개 - 적성 및 흥미',
           section: 'overview',
           fields: [
             { key: 'overviewAptitude.aptitudeList', label: '적성', type: 'tags', examples: [
@@ -934,7 +934,7 @@ const EditMode = {
           ]
         },
         {
-          title: '개요 - 여담',
+          title: '소개 - 여담',
           section: 'overview',
           fields: [
             { key: 'trivia', label: '여담', type: 'list', examples: [
@@ -945,7 +945,7 @@ const EditMode = {
           ]
         },
         {
-          title: '상세정보 - 워라밸 & 사회적 평가',
+          title: '과정 - 워라밸 & 사회적 평가',
           section: 'details',
           fields: [
             { key: 'detailWlb.wlb', label: '워라밸 지수', type: 'textarea', examples: [
@@ -961,7 +961,7 @@ const EditMode = {
           ]
         },
         {
-          title: '상세정보 - 직업 준비하기',
+          title: '과정 - 직업 준비하기',
           section: 'details',
           fields: [
             { key: 'detailReady.curriculum', label: '정규 교육과정', type: 'list', examples: [

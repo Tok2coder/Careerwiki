@@ -1002,8 +1002,8 @@ export const renderLayout = (
         <script src="/static/api-client.js?v=20260306a" defer></script>
 
         <!-- 편집 시스템 -->
-        <link rel="stylesheet" href="/static/edit-mode.css?v=20260306a">
-        <script src="/static/edit-mode.js?v=20260306a" defer></script>
+        <link rel="stylesheet" href="/static/edit-mode.css?v=20260308a">
+        <script src="/static/edit-mode.js?v=20260308a" defer></script>
 
         <!-- 북마크(저장) 기능 -->
         <script>
