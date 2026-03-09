@@ -25,7 +25,7 @@ export const TEMPLATE_VERSIONS = {
    * Used for: /job/:slug pages
    * Current features: ETL 개선 완료, 배열 필드 타입 체크 추가
    */
-  JOB: 214,  // 댓글 안내문 개선 + 유튜브 링크 섹션 추가
+  JOB: 215,  // 커리어트리 섹션 추가
 
   /**
    * Guide page template version

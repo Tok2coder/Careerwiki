@@ -6,6 +6,7 @@ import { Hono } from 'hono'
 import type { AppEnv } from '../types/app'
 import { requireAdmin } from '../middleware/auth'
 import { adminAiApi } from '../services/ai-analyzer/admin-api'
+import { careerTreeAdminRoutes } from './admin-career-tree'
 import { renderAdminDashboard } from '../templates/admin/adminDashboard'
 import { renderAdminAiAnalyzer } from '../templates/admin/adminAiAnalyzer'
 import { renderAdminFeedbackPage } from '../templates/admin/adminFeedback'
@@ -126,6 +127,7 @@ adminRoutes.get('/api/admin/dashboard-chart', requireAdmin, async (c) => {
 
 // Admin API 마운트
 adminRoutes.route('/admin/api/ai', adminAiApi)
+adminRoutes.route('', careerTreeAdminRoutes)
 
 // AI Analyzer 관제판 페이지 (개발환경: localhost 접근 시 인증 우회)
 adminRoutes.get('/admin/ai-analyzer', async (c, next) => {

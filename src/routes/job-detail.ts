@@ -293,11 +293,23 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
         } catch {
         }
 
+        // 커리어트리 조회 (이 직업 페이지에 연결된 유명 인물 커리어 경로)
+        let careerTrees: import('../types/careerTree').CareerTreeForJob[] = []
+        try {
+          if (env?.DB) {
+            const jobSlug = slug
+            const { getCareerTreesForJob } = await import('../services/careerTreeService')
+            careerTrees = await getCareerTreesForJob(env.DB, jobSlug)
+          }
+        } catch {
+        }
+
         return {
           ...result,
           existingJobSlugs,
           relatedHowtos,
-          classificationData
+          classificationData,
+          careerTrees
         }
       },
 
@@ -326,7 +338,8 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
           sources: result.sources,
           existingJobSlugs: result.existingJobSlugs,
           relatedHowtos: result.relatedHowtos,
-          classificationData: result.classificationData
+          classificationData: result.classificationData,
+          careerTrees: result.careerTrees
         })
         mark?.('render-done')
 

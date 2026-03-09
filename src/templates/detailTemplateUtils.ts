@@ -1619,3 +1619,152 @@ export const renderUnifiedChart = (data: UnifiedChartData, idPrefix: string): st
     </div>`
 }
 
+// ─── 커리어트리 렌더링 ─────────────────────────────────────
+
+import type { CareerTreeForJob, CareerTreeStage } from '../types/careerTree'
+
+/**
+ * 커리어트리 섹션 전체 렌더링
+ * - 기본 2명 표시 + "더보기" 토글
+ * - 각 인물: 인물 카드 + 세로 타임라인
+ */
+export const renderCareerTreeSection = (
+  trees: CareerTreeForJob[],
+  currentJobSlug: string
+): string => {
+  if (!trees || trees.length === 0) return ''
+
+  const INITIAL_SHOW = 2
+  const visibleTrees = trees.slice(0, INITIAL_SHOW)
+  const hiddenTrees = trees.slice(INITIAL_SHOW)
+
+  let html = `
+    <div class="space-y-6">
+      <p class="text-sm text-wiki-muted">이 직업과 관련된 유명 인물의 실제 커리어 경로입니다.</p>
+      ${visibleTrees.map(tree => renderPersonCareerTree(tree)).join('')}`
+
+  if (hiddenTrees.length > 0) {
+    html += `
+      <div id="career-tree-hidden" class="hidden space-y-6">
+        ${hiddenTrees.map(tree => renderPersonCareerTree(tree)).join('')}
+      </div>
+      <button
+        onclick="document.getElementById('career-tree-hidden').classList.toggle('hidden');this.querySelector('span').textContent=document.getElementById('career-tree-hidden').classList.contains('hidden')?'더보기 (${hiddenTrees.length}명)':'접기'"
+        class="w-full py-2.5 text-sm font-medium text-wiki-secondary hover:text-wiki-primary border border-wiki-border/40 rounded-lg hover:bg-wiki-primary/5 transition-all"
+      >
+        <span>더보기 (${hiddenTrees.length}명)</span>
+      </button>`
+  }
+
+  html += '</div>'
+  return html
+}
+
+/** 개별 인물의 커리어트리 (인물 카드 + 타임라인) */
+function renderPersonCareerTree(tree: CareerTreeForJob): string {
+  const nameEn = tree.personNameEn ? ` <span class="text-wiki-muted font-normal">(${escapeHtml(tree.personNameEn)})</span>` : ''
+  const title = tree.personTitle ? `<p class="text-sm text-wiki-muted mt-0.5">${escapeHtml(tree.personTitle)}</p>` : ''
+
+  // 인물 이미지 또는 폴백 아이콘
+  const imageHtml = tree.personImageUrl
+    ? `<img src="${escapeHtml(tree.personImageUrl)}" alt="${escapeHtml(tree.personName)}" class="w-12 h-12 rounded-full object-cover border-2 border-wiki-border/40" loading="lazy">`
+    : `<div class="w-12 h-12 rounded-full bg-wiki-primary/10 border-2 border-wiki-border/40 flex items-center justify-center">
+        <i class="fas fa-user text-wiki-secondary text-lg"></i>
+      </div>`
+
+  const timeline = renderCareerTimeline(tree.stages, tree.highlightStageIndex)
+
+  return `
+    <div class="rounded-xl border border-wiki-border/40 bg-wiki-bg/30 overflow-hidden">
+      <!-- 인물 헤더 -->
+      <div class="flex items-center gap-3 px-4 py-3 border-b border-wiki-border/30">
+        ${imageHtml}
+        <div class="min-w-0">
+          <h4 class="text-base font-bold text-wiki-text">${escapeHtml(tree.personName)}${nameEn}</h4>
+          ${title}
+        </div>
+      </div>
+      <!-- 타임라인 -->
+      <div class="px-4 py-4">
+        ${timeline}
+      </div>
+    </div>`
+}
+
+/** 세로 타임라인 렌더링 */
+function renderCareerTimeline(
+  stages: CareerTreeStage[],
+  highlightIndex: number | null
+): string {
+  if (!stages || stages.length === 0) return '<p class="text-sm text-wiki-muted">경로 정보가 없습니다.</p>'
+
+  // stages를 order 순으로 정렬
+  const sorted = [...stages].sort((a, b) => a.order - b.order)
+
+  const nodes = sorted.map((stage, i) => {
+    const isHighlight = highlightIndex !== null && i === highlightIndex
+    const isLast = i === sorted.length - 1
+
+    // 노드 점 스타일
+    const dotClass = isHighlight
+      ? 'w-3.5 h-3.5 rounded-full bg-[rgb(var(--wp))] border-2 border-[rgb(var(--wp))] shadow-[0_0_8px_rgba(var(--wp),0.4)]'
+      : 'w-3.5 h-3.5 rounded-full bg-wiki-bg border-2 border-wiki-border'
+
+    // 카드 배경
+    const cardBg = isHighlight
+      ? 'bg-[rgb(var(--wp))]/5 border border-[rgb(var(--wp))]/20 rounded-lg px-3 py-2'
+      : 'px-3 py-2'
+
+    // 타이틀 색상
+    const titleClass = isHighlight
+      ? 'text-sm font-bold text-[rgb(var(--wp))]'
+      : 'text-sm font-semibold text-wiki-text'
+
+    // 연결선 (마지막 노드 제외)
+    const connectorLine = !isLast
+      ? '<div class="absolute left-[6.5px] top-[18px] bottom-[-8px] w-0.5 bg-wiki-border/50"></div>'
+      : ''
+
+    // 조직 + 기간
+    const meta: string[] = []
+    if (stage.organization) meta.push(escapeHtml(stage.organization))
+    if (stage.years) meta.push(escapeHtml(stage.years))
+    const metaHtml = meta.length > 0
+      ? `<p class="text-xs text-wiki-muted mt-0.5">${meta.join(' · ')}</p>`
+      : ''
+
+    // 설명
+    const descHtml = stage.description
+      ? `<p class="text-xs text-wiki-muted/80 mt-1">${escapeHtml(stage.description)}</p>`
+      : ''
+
+    // 현재 페이지 표시 라벨
+    const currentLabel = isHighlight
+      ? '<span class="inline-flex items-center ml-2 px-1.5 py-0.5 text-[10px] font-medium bg-[rgb(var(--wp))]/15 text-[rgb(var(--wp))] rounded">현재 직업</span>'
+      : ''
+
+    // job_slug 링크 (하이라이트가 아닌 경우 다른 직업 페이지로 이동 가능)
+    let titleContent = `${escapeHtml(stage.title)}${currentLabel}`
+    if (!isHighlight && stage.job_slug) {
+      titleContent = `<a href="/job/${encodeURIComponent(stage.job_slug)}" class="hover:underline decoration-wiki-secondary/40">${escapeHtml(stage.title)}</a>${currentLabel}`
+    }
+
+    return `
+      <div class="relative flex gap-3 ${!isLast ? 'pb-4' : ''}">
+        <!-- 연결선 + 점 -->
+        <div class="relative flex-shrink-0 w-3.5 mt-2.5">
+          ${connectorLine}
+          <div class="${dotClass}"></div>
+        </div>
+        <!-- 내용 -->
+        <div class="flex-1 ${cardBg}">
+          <p class="${titleClass}">${titleContent}</p>
+          ${metaHtml}
+          ${descHtml}
+        </div>
+      </div>`
+  })
+
+  return `<div class="space-y-0">${nodes.join('')}</div>`
+}
+

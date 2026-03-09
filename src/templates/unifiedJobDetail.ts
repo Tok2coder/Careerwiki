@@ -23,7 +23,8 @@ import {
   isUnifiedChartData,
   renderUnifiedChart,
   extractYouTubeVideoId,
-  renderYouTubeSection
+  renderYouTubeSection,
+  renderCareerTreeSection
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { getAbilityIcon } from '../utils/abilityIconMapper'
@@ -35,6 +36,7 @@ export interface UnifiedJobDetailTemplateParams {
   existingJobSlugs?: Map<string, string>  // DB에 존재하는 직업명 → slug 매핑
   relatedHowtos?: Array<{ slug: string; title: string; summary: string }>  // 이 직업을 참조하는 HowTo
   classificationData?: { large_category?: string; medium_category?: string }  // job_categories 테이블에서
+  careerTrees?: import('../types/careerTree').CareerTreeForJob[]  // 커리어트리 데이터
 }
 
 const SOURCE_DESCRIPTIONS: Record<DataSource, string> = {
@@ -3169,7 +3171,7 @@ const renderKecoCodeList = (profile: UnifiedJobDetail): string => {
 
 
 
-export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJobSlugs, relatedHowtos, classificationData }: UnifiedJobDetailTemplateParams): string => {
+export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJobSlugs, relatedHowtos, classificationData, careerTrees }: UnifiedJobDetailTemplateParams): string => {
   // profile은 merged_profile_json에서 파싱된 데이터 (평탄한 구조 + 계층적 구조 병행)
   // ETL에서 기본 필드들을 모두 포함하고 있음
   
@@ -4166,6 +4168,15 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     }
   }
 
+  // ── 커리어트리 섹션 ──
+  if (careerTrees && careerTrees.length > 0) {
+    const jobSlug = (profile as any).slug || composeDetailSlug('job', profile.name, profile.id)
+    const careerTreeBody = renderCareerTreeSection(careerTrees, jobSlug)
+    if (careerTreeBody) {
+      pushDetailCard('커리어트리', 'fa-route', careerTreeBody)
+    }
+  }
+
   // 한국의 직업지표는 개요 탭으로 이동 (중복 제거)
 
   // 1. Type C: 업무수행능력 분석 (고용24 원본 필드 → merged profile)
@@ -4630,7 +4641,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   // 과정 탭 섹션 순서 재정렬
   const detailSectionOrder = [
     '핵심 능력·자격',
-    '직업 준비하기'
+    '직업 준비하기',
+    '커리어트리'
   ]
   detailCards.sort((a, b) => {
     const aIndex = detailSectionOrder.indexOf(a.label)
