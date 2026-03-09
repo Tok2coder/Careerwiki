@@ -8379,7 +8379,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
 
     // ============================================
     // Phase 6: 전공 결과 정제 파이프라인 (v3.23 — 직업 v3.22.3 패리티)
-    // 순서: 6-F Risk Demotion → Backup → 6-G Quality Floor → 6-H Like Floor → 6-I Hard Noise → 6-J Backfill
+    // 순서: 6-F Risk Demotion → Backup → 6-G Quality Floor → 6-H Like Floor → 6-I Hard Noise → 6-J Backfill → 6-K Spread Cap → 6-L Dedup Guard
     // ============================================
 
     // 6-F. Risk Demotion — 제약 유저의 고위험 전공 점수 하락
@@ -8514,6 +8514,57 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
         topMajors = spreadCapped
       }
       // 10개 미만이면 Spread Cap 적용하지 않음 — 10개 유지가 더 중요
+    }
+
+    // ============================================
+    // 6-L. 전공명 변형 Dedup Guard (X과 ↔ X학과 / X학과 ↔ X학부)
+    // 같은 base에서 ~과와 ~학과 (또는 ~학과와 ~학부)가 Top10에 동시 노출 방지
+    // 예: 간호과 ↔ 간호학과, 국제학과 ↔ 국제학부
+    // ============================================
+    if (topMajors.length > 5) {
+      const majorDedupRemoveIds = new Set<string>()
+      // base → [{id, name, score}] 그룹핑
+      const majorBaseGroups = new Map<string, Array<{ id: string; name: string; score: number }>>()
+
+      for (const m of topMajors) {
+        const mName: string = (m as any).major_name || ''
+        const mId: string = (m as any).major_id || ''
+        const mScore: number = (m as any).final_score || 0
+        let base = ''
+
+        // 접미사 우선순위: 공학과 > 학과 > 학부 > 과
+        if (mName.endsWith('공학과')) {
+          base = mName.slice(0, -3) // 공학과 제거
+        } else if (mName.endsWith('학과')) {
+          base = mName.slice(0, -2) // 학과 제거
+        } else if (mName.endsWith('학부')) {
+          base = mName.slice(0, -2) // 학부 제거
+        } else if (mName.endsWith('과') && mName.length > 1) {
+          base = mName.slice(0, -1) // 과 제거
+        }
+
+        if (base && base.length >= 2) {
+          if (!majorBaseGroups.has(base)) majorBaseGroups.set(base, [])
+          majorBaseGroups.get(base)!.push({ id: mId, name: mName, score: mScore })
+        }
+      }
+
+      // 같은 base에 2개 이상 있으면 점수 높은 것만 유지
+      for (const [base, group] of majorBaseGroups) {
+        if (group.length >= 2) {
+          const sorted = group.sort((a, b) => b.score - a.score)
+          for (let i = 1; i < sorted.length; i++) {
+            majorDedupRemoveIds.add(sorted[i].id)
+          }
+          console.log(`[6-L Major Dedup] "${base}" 그룹: ${sorted.map(g => g.name).join(', ')} → 유지: ${sorted[0].name}`)
+        }
+      }
+
+      if (majorDedupRemoveIds.size > 0) {
+        const beforeDedup = topMajors.length
+        topMajors = topMajors.filter((m: any) => !majorDedupRemoveIds.has(m.major_id))
+        console.log(`[6-L Major Dedup] ${majorDedupRemoveIds.size}개 변형 중복 제거 (${beforeDedup} → ${topMajors.length})`)
+      }
     }
 
     // 6. LLM Reporter (전공 전용 — skipReport 시 건너뜀)
