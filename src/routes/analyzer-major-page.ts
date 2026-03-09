@@ -3902,7 +3902,7 @@ function buildRecommendationsTabMajor(profileInterpretation, overallTop5, fitTop
             html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(239,68,68,0.1);"><span class="text-red-400">🚫</span><div><div class="text-base font-semibold text-red-400">제약</div><div class="text-[15px] text-white">' + profileInterpretation.constraints.slice(0, 2).map(function(c) { return c.label; }).join(', ') + '</div></div></div>';
         }
         html += '</div>';
-        html += '<p class="text-[15px] text-wiki-muted">이 조건들을 종합하여 <span class="text-wiki-primary font-medium">' + (overallTop5.length || fitTop10.length) + '개</span>의 전공을 추천합니다.</p>';
+        html += '<p class="text-[15px] text-wiki-muted">이 조건들을 종합하여 <span class="text-wiki-primary font-medium">' + (fitTop10.length || overallTop5.length) + '개</span>의 전공을 추천합니다.</p>';
         html += '</div>';
     }
 
@@ -3915,7 +3915,7 @@ function buildRecommendationsTabMajor(profileInterpretation, overallTop5, fitTop
 
     // 전공 카드들
     html += '<div id="major-cards-container">';
-    var initialMajors = (overallTop5.length > 0 ? overallTop5 : fitTop10).slice(0, 5);
+    var initialMajors = (fitTop10.length > 0 ? fitTop10 : overallTop5).slice(0, 10);
     html += renderMajorCardsV3(initialMajors, 'overall', profileInterpretation);
     html += '</div>';
 
@@ -4067,7 +4067,7 @@ function showMajorSet(setId) {
 
     var majorList = [];
 
-    if (setId === 'overall') majorList = (data.overallTop5 || data.fitTop10 || []).slice(0, 5);
+    if (setId === 'overall') majorList = (data.fitTop10 || data.overallTop5 || []).slice(0, 10);
     else if (setId === 'fit') majorList = (data.fitTop10 || []).slice(0, 10);
     else if (setId === 'desire') majorList = (data.likeTop10 || data.fitTop10 || []).slice(0, 10);
 
@@ -4101,6 +4101,16 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
     profileInterp = profileInterp || null;
 
     return majors.map(function(major, idx) {
+        // 종합 추천 탭: 2단 섹션 구분 (Top 5 + 탐색해볼 전공)
+        var sectionHeader = '';
+        if (setId === 'overall' && majors.length > 5) {
+            if (idx === 0) {
+                sectionHeader = '<div class="mb-4"><h3 class="text-lg font-bold flex items-center gap-2"><span>🎯</span><span class="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">당신에게 맞는 전공</span></h3><p class="text-sm mt-1" style="color: rgba(148,163,184,0.7);">AI가 분석한 최적의 전공 추천</p></div>';
+            } else if (idx === 5) {
+                sectionHeader = '<div class="mt-8 mb-4 pt-5" style="border-top: 1px solid rgba(99,102,241,0.15);"><h3 class="text-lg font-bold flex items-center gap-2"><span>🧭</span><span class="text-wiki-muted">탐색해볼 전공</span></h3><p class="text-sm mt-1" style="color: rgba(148,163,184,0.7);">관심을 넓혀볼 수 있는 전공들이에요</p></div>';
+            }
+        }
+
         var majorName = major.major_name || major.major_id || '전공';
         var majorSlug = major.slug || major.major_id || '';
         var imageUrl = major.image_url || '';
@@ -4261,7 +4271,7 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
 
         cardHtml += '</div>'; // close card
 
-        return cardHtml;
+        return sectionHeader + cardHtml;
     }).join('');
 }
 
