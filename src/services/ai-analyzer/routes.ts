@@ -6598,6 +6598,43 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     }
 
     // ============================================
+    // 6-K. 의미적 유사 직업 Dedup Guard
+    // 같은 직업의 다른 표기가 Top10에 동시 노출되는 것 방지
+    // ============================================
+    const SEMANTIC_DEDUP_GROUPS = [
+      ['배우', '연기자'],
+      ['번역가', '번역사'],
+      ['통역가', '통역사'],
+      ['분석가', '분석사', '애널리스트'],
+      ['기자', '리포터', '저널리스트'],
+      ['감독', '디렉터'],
+      ['요리사', '셰프', '조리사'],
+      ['상담사', '상담원', '카운슬러'],
+    ]
+    if (topJobs.length > 5) {
+      const toRemoveIds = new Set<string>()
+      for (const group of SEMANTIC_DEDUP_GROUPS) {
+        // 그룹 내 suffix 매칭으로 직업 찾기 (정확히 끝나는 것만)
+        const matched = topJobs.filter(j =>
+          group.some(suffix => j.job_name === suffix || j.job_name.endsWith(suffix)) &&
+          !toRemoveIds.has(j.job_id)
+        )
+        if (matched.length >= 2) {
+          // 점수 높은 것 유지, 나머지 제거
+          const sorted = matched.sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
+          for (let i = 1; i < sorted.length; i++) {
+            toRemoveIds.add(sorted[i].job_id)
+          }
+        }
+      }
+      if (toRemoveIds.size > 0) {
+        const before = topJobs.length
+        topJobs = topJobs.filter((j: any) => !toRemoveIds.has(j.job_id))
+        console.log(`[6-K Semantic Dedup] ${toRemoveIds.size}개 의미적 중복 제거 (${before} → ${topJobs.length})`)
+      }
+    }
+
+    // ============================================
     // 7. 결과 저장 (ai_analysis_requests + ai_analysis_results)
     // ============================================
     const resultToSave = {
