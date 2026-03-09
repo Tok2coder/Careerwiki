@@ -934,6 +934,15 @@ const EditMode = {
           ]
         },
         {
+          title: '소개 - 관련 영상',
+          section: 'overview',
+          fields: [
+            { key: 'youtubeLinks', label: '유튜브 영상', type: 'youtubeLinks', examples: [
+              'https://youtube.com/watch?v=...'
+            ]}
+          ]
+        },
+        {
           title: '소개 - 여담',
           section: 'overview',
           fields: [
@@ -1109,6 +1118,15 @@ const EditMode = {
               '기업 및 산업체: 안경원, 콘택트렌즈 업체, 안경·광학 기기 유통, 렌즈/안경테 업체, 광통신·광정보 업체, 귀금속 도금 업체',
               '정부 및 공공기관: 과학기술정보통신부 등 공공기관',
               '연구기관: 시력보정/광학 관련 연구소'
+            ]}
+          ]
+        },
+        {
+          title: '개요 - 관련 영상',
+          section: 'overview',
+          fields: [
+            { key: 'youtubeLinks', label: '유튜브 영상', type: 'youtubeLinks', examples: [
+              'https://youtube.com/watch?v=...'
             ]}
           ]
         },
@@ -1340,6 +1358,67 @@ const EditMode = {
         >
           <i class="fas fa-plus"></i>
           항목 추가
+        </button>
+      `;
+    } else if (field.type === 'youtubeLinks') {
+      // 유튜브 영상 링크 리스트 (URL + 제목 + 설명)
+      let items = [];
+      if (Array.isArray(value)) {
+        items = value.map(v => ({
+          url: v.url || '',
+          title: v.title || '',
+          description: v.description || ''
+        }));
+      }
+      if (items.length === 0) items = [{ url: '', title: '', description: '' }];
+
+      const itemsHtml = items.map((item, idx) => `
+        <div class="space-y-2 edit-youtube-item" data-index="${idx}">
+          <div class="flex items-start gap-2">
+            <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-red-500/20 text-red-400 text-xs font-bold mt-2">
+              <i class="fab fa-youtube text-xs"></i>
+            </span>
+            <input
+              type="url"
+              value="${this.escapeHtml(item.url || '')}"
+              placeholder="YouTube URL (https://youtube.com/watch?v=...)"
+              data-yt-url
+              class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition"
+            >
+            <button type="button" class="flex-shrink-0 w-8 h-8 mt-1 flex items-center justify-center text-wiki-muted hover:text-red-400 hover:bg-red-400/10 rounded-lg transition remove-list-item-btn">
+              <i class="fas fa-trash-alt text-sm"></i>
+            </button>
+          </div>
+          <div class="flex gap-2 pl-8">
+            <input
+              type="text"
+              value="${this.escapeHtml(item.title || '')}"
+              placeholder="영상 제목 (선택)"
+              data-yt-title
+              class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition text-sm"
+            >
+            <input
+              type="text"
+              value="${this.escapeHtml(item.description || '')}"
+              placeholder="한 줄 설명 (선택)"
+              data-yt-desc
+              class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition text-sm"
+            >
+          </div>
+        </div>
+      `).join('');
+
+      inputHtml = `
+        <div id="youtube-container-${field.key}" data-field-key="${field.key}" data-field-type="youtubeLinks" class="space-y-3">
+          ${itemsHtml}
+        </div>
+        <button
+          type="button"
+          data-add-youtube-item="${field.key}"
+          class="mt-3 px-4 py-2 text-sm font-medium text-${gradientFrom} bg-${gradientFrom}/10 hover:bg-${gradientFrom}/20 rounded-lg transition flex items-center gap-2"
+        >
+          <i class="fas fa-plus"></i>
+          영상 추가
         </button>
       `;
     } else if (field.type === 'autocomplete') {
@@ -1821,16 +1900,26 @@ const EditMode = {
         }
       });
     });
-    
+    // 유튜브 영상 항목 추가 이벤트
+    document.querySelectorAll('[data-add-youtube-item]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-add-youtube-item');
+        const container = document.getElementById(`youtube-container-${key}`);
+        if (container) {
+          this.addYouTubeItem(container, key);
+        }
+      });
+    });
+
     // 리스트 항목 삭제 이벤트 (이벤트 위임)
     document.addEventListener('click', (e) => {
       const removeBtn = e.target.closest('.remove-list-item-btn');
       if (removeBtn) {
-        const item = removeBtn.closest('.edit-list-item');
+        const item = removeBtn.closest('.edit-list-item') || removeBtn.closest('.edit-youtube-item');
         if (item) {
           item.remove();
           // 인덱스 재정렬
-          const container = item.closest('[data-field-type="list"], [data-field-type="pairList"]');
+          const container = item.closest('[data-field-type="list"], [data-field-type="pairList"], [data-field-type="youtubeLinks"]');
           if (container) {
             this.reindexListItems(container);
           }
@@ -2227,13 +2316,63 @@ const EditMode = {
   },
   
   /**
+   * 유튜브 영상 항목 추가
+   */
+  addYouTubeItem(container, fieldKey) {
+    const isJob = this.entityType === 'job';
+    const gradientFrom = isJob ? 'wiki-primary' : 'wiki-secondary';
+    const idx = container.querySelectorAll('.edit-youtube-item').length;
+
+    const item = document.createElement('div');
+    item.className = 'space-y-2 edit-youtube-item';
+    item.dataset.index = idx;
+    item.innerHTML = `
+      <div class="flex items-start gap-2">
+        <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-red-500/20 text-red-400 text-xs font-bold mt-2">
+          <i class="fab fa-youtube text-xs"></i>
+        </span>
+        <input
+          type="url"
+          value=""
+          placeholder="YouTube URL (https://youtube.com/watch?v=...)"
+          data-yt-url
+          class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition"
+        >
+        <button type="button" class="flex-shrink-0 w-8 h-8 mt-1 flex items-center justify-center text-wiki-muted hover:text-red-400 hover:bg-red-400/10 rounded-lg transition remove-list-item-btn">
+          <i class="fas fa-trash-alt text-sm"></i>
+        </button>
+      </div>
+      <div class="flex gap-2 pl-8">
+        <input
+          type="text"
+          value=""
+          placeholder="영상 제목 (선택)"
+          data-yt-title
+          class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition text-sm"
+        >
+        <input
+          type="text"
+          value=""
+          placeholder="한 줄 설명 (선택)"
+          data-yt-desc
+          class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition text-sm"
+        >
+      </div>
+    `;
+
+    container.appendChild(item);
+    item.querySelector('[data-yt-url]')?.focus();
+  },
+
+  /**
    * 리스트 항목 인덱스 재정렬
    */
   reindexListItems(container) {
-    container.querySelectorAll('.edit-list-item').forEach((item, idx) => {
+    const listSelector = container.dataset.fieldType === 'youtubeLinks' ? '.edit-youtube-item' : '.edit-list-item';
+    container.querySelectorAll(listSelector).forEach((item, idx) => {
       item.dataset.index = idx;
       const badge = item.querySelector('span');
-      if (badge) {
+      if (badge && container.dataset.fieldType !== 'youtubeLinks') {
         badge.textContent = idx + 1;
       }
     });
@@ -2396,6 +2535,14 @@ const EditMode = {
       } else if (fieldType === 'tags') {
         const container = document.getElementById(`tags-container-${key}`);
         value = container ? [...new Set(Array.from(container.querySelectorAll('.edit-tag-chip')).map(chip => chip.dataset.tag).filter(t => t))] : [];
+      } else if (fieldType === 'youtubeLinks') {
+        value = Array.from(element.querySelectorAll('.edit-youtube-item'))
+          .map(item => ({
+            url: (item.querySelector('[data-yt-url]')?.value || '').trim(),
+            title: (item.querySelector('[data-yt-title]')?.value || '').trim(),
+            description: (item.querySelector('[data-yt-desc]')?.value || '').trim()
+          }))
+          .filter(item => item.url);
       } else if (fieldType === 'chart') {
         value = this.collectChartData(element);
       } else if (fieldType === 'chartList') {
@@ -2597,6 +2744,14 @@ const EditMode = {
         } else {
           newValue = [];
         }
+      } else if (fieldType === 'youtubeLinks') {
+        newValue = Array.from(element.querySelectorAll('.edit-youtube-item'))
+          .map(item => ({
+            url: (item.querySelector('[data-yt-url]')?.value || '').trim(),
+            title: (item.querySelector('[data-yt-title]')?.value || '').trim(),
+            description: (item.querySelector('[data-yt-desc]')?.value || '').trim()
+          }))
+          .filter(item => item.url);
       } else if (fieldType === 'chart') {
         newValue = this.collectChartData(element);
       } else if (fieldType === 'chartList') {

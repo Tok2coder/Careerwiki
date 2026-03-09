@@ -5841,6 +5841,41 @@ const DetailComments = (() => {
     form.dataset.commentFormBound = '1'
     const submitButton = form.querySelector('[data-cw-comment-submit]')
 
+    // 태그 프롬프트 버튼 핸들러
+    const promptsContainer = form.querySelector('[data-cw-comment-prompts]')
+    if (promptsContainer) {
+      const textarea = form.querySelector('[data-cw-comment-content]')
+      const defaultPlaceholder = textarea?.getAttribute('placeholder') || ''
+      const entityLabel = state.entityType === 'major' ? '전공' : state.entityType === 'howto' ? '가이드' : '직업'
+      const PROMPT_PLACEHOLDERS = {
+        question: `이 ${entityLabel}에 대해 궁금한 점을 물어보세요`,
+        info: '알고 있는 정보나 팁을 공유해주세요',
+        experience: '직접 경험한 이야기를 들려주세요',
+        cheer: `이 ${entityLabel}에 관심 있는 분들에게 한마디!`
+      }
+      promptsContainer.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-comment-prompt]')
+        if (!btn || !textarea) return
+        const promptKey = btn.dataset.commentPrompt
+        const isActive = btn.classList.contains('border-wiki-primary/50')
+        // 다른 버튼 비활성화
+        promptsContainer.querySelectorAll('[data-comment-prompt]').forEach(b => {
+          b.classList.remove('border-wiki-primary/50', 'text-wiki-primary', 'bg-wiki-primary/10')
+          b.classList.add('border-wiki-border', 'text-wiki-muted', 'bg-wiki-bg')
+        })
+        if (isActive) {
+          // 토글 off → 기본 placeholder 복원
+          textarea.setAttribute('placeholder', defaultPlaceholder)
+        } else {
+          // 토글 on → 선택된 placeholder 적용
+          btn.classList.remove('border-wiki-border', 'text-wiki-muted', 'bg-wiki-bg')
+          btn.classList.add('border-wiki-primary/50', 'text-wiki-primary', 'bg-wiki-primary/10')
+          textarea.setAttribute('placeholder', PROMPT_PLACEHOLDERS[promptKey] || defaultPlaceholder)
+        }
+        textarea.focus()
+      })
+    }
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault()
       if (state.submitting) {

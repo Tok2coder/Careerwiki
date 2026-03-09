@@ -18,14 +18,14 @@ export const TEMPLATE_VERSIONS = {
    * Used for: /major/:slug pages
    * Current features: ETL 병합 필드 사용 (heroSummary, categoryDisplay, heroTags)
    */
-  MAJOR: 275,  // R2 image_url 전달 추가
+  MAJOR: 276,  // 댓글 안내문 개선 + 유튜브 링크 섹션 추가
 
   /**
    * Job detail page template version
    * Used for: /job/:slug pages
    * Current features: ETL 개선 완료, 배열 필드 타입 체크 추가
    */
-  JOB: 213,  // DB image_url 쿼리에 포함 및 profile에 병합
+  JOB: 214,  // 댓글 안내문 개선 + 유튜브 링크 섹션 추가
 
   /**
    * Guide page template version

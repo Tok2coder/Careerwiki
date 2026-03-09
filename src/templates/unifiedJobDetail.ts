@@ -21,7 +21,9 @@ import {
   renderAdSlot,
   SampleCommentPayload,
   isUnifiedChartData,
-  renderUnifiedChart
+  renderUnifiedChart,
+  extractYouTubeVideoId,
+  renderYouTubeSection
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { getAbilityIcon } from '../utils/abilityIconMapper'
@@ -3845,6 +3847,16 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     pushOverviewCard('적성 및 흥미', 'fa-heart', traitBlocks.join(''), traitSources.length > 0 ? traitSources : normalizedProfileSources.filter(s => s === 'CAREERNET' || s === 'GOYONG24' || s === 'WORK24_DJOB'))
   }
 
+  // 관련 영상 (youtubeLinks) - 유튜브 임베드 카드
+  const youtubeLinks = (profile as any).youtubeLinks
+  if (Array.isArray(youtubeLinks) && youtubeLinks.length > 0) {
+    const validLinks = youtubeLinks.filter((l: any) => l?.url && extractYouTubeVideoId(l.url))
+    if (validLinks.length > 0) {
+      const ytHtml = renderYouTubeSection(validLinks)
+      pushOverviewCard('관련 영상', 'fa-video', ytHtml)
+    }
+  }
+
   // 여담 (trivia) - 리스트 형식
   let triviaItems: string[] = []
   if (Array.isArray(profile.trivia)) {
@@ -3991,6 +4003,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     '워라밸 & 사회적 평가',
     '적성 및 흥미',
     '임금 정보',
+    '관련 영상',
     '여담'
   ]
   overviewCards.sort((a, b) => {
@@ -4690,8 +4703,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     },
     ctaLinks: [],
     comments: {
-      title: `${profile.name} 커뮤니티 이야기`,
-      description: `${profile.name} 역할에서 겪은 성장 전략과 인사이트를 공유해주세요.`,
+      title: `${profile.name} 커뮤니티`,
+      description: `${profile.name}에 대해 자유롭게 이야기해주세요.`,
       feedbackLabel: '피드백 남기기',
       notifyLabel: '알림 받기',
       emptyLabel: `아직 등록된 댓글이 없습니다. 가장 먼저 의견을 남겨주세요.`,

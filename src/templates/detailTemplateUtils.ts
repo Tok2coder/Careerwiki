@@ -679,6 +679,76 @@ export const buildCommentGovernanceItems = (policy: Required<CommentPolicyAttrib
   return governanceItems
 }
 
+// ────────── YouTube Section Helpers ──────────
+
+export const extractYouTubeVideoId = (url: string): string | null => {
+  const match = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/
+  )
+  return match ? match[1] : null
+}
+
+export interface YouTubeLink {
+  url: string
+  title?: string
+  description?: string
+}
+
+export const renderYouTubeSection = (links: YouTubeLink[]): string => {
+  const validLinks = links.filter(l => l?.url && extractYouTubeVideoId(l.url))
+  if (validLinks.length === 0) return ''
+
+  const maxVisible = 3
+  const visibleLinks = validLinks.slice(0, maxVisible)
+  const hiddenLinks = validLinks.slice(maxVisible)
+
+  const renderCard = (link: YouTubeLink): string => {
+    const videoId = extractYouTubeVideoId(link.url)!
+    const thumbUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+    const displayTitle = escapeHtml(link.title?.trim() || link.url)
+    const desc = link.description?.trim()
+
+    return `
+      <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer"
+         class="flex gap-3 p-3 rounded-xl bg-wiki-bg/60 border border-wiki-border/40
+                hover:border-wiki-primary/40 hover:bg-wiki-primary/5 transition group">
+        <div class="flex-shrink-0 w-[120px] sm:w-[140px] aspect-video rounded-lg overflow-hidden bg-wiki-card relative">
+          <img src="${thumbUrl}"
+               alt="" class="w-full h-full object-cover" loading="lazy">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-8 h-8 rounded-full bg-red-600/90 flex items-center justify-center">
+              <i class="fas fa-play text-white text-xs ml-0.5"></i>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-wiki-text line-clamp-2
+             group-hover:text-wiki-primary transition">${displayTitle}</p>
+          ${desc ? `<p class="text-xs text-wiki-muted mt-1 line-clamp-1">${escapeHtml(desc)}</p>` : ''}
+          <p class="text-xs text-wiki-muted mt-1.5">
+            <i class="fab fa-youtube text-red-500 mr-1"></i>YouTube
+          </p>
+        </div>
+      </a>`
+  }
+
+  const visibleHtml = visibleLinks.map(renderCard).join('')
+  const hiddenHtml = hiddenLinks.length > 0
+    ? `
+      <div class="hidden" data-cw-youtube-more>
+        ${hiddenLinks.map(renderCard).join('')}
+      </div>
+      <button type="button"
+        class="w-full mt-2 py-2 text-sm text-wiki-muted hover:text-wiki-primary transition text-center"
+        onclick="const more=this.previousElementSibling;if(more){more.classList.toggle('hidden');this.textContent=more.classList.contains('hidden')?'더보기 (${hiddenLinks.length}개)':'접기'}"
+      >더보기 (${hiddenLinks.length}개)</button>`
+    : ''
+
+  return `<div class="space-y-3">${visibleHtml}${hiddenHtml}</div>`
+}
+
+// ────────── Comments Section ──────────
+
 export interface CommentsPlaceholderOptions {
   entityType: DetailComponentEntityType
   entityId: string
@@ -820,6 +890,28 @@ export const renderCommentsPlaceholder = ({
           <div class="flex items-center gap-2 text-xs text-wiki-muted cursor-pointer" data-cw-comment-reply-indicator hidden>
             <span class="px-2 py-1 rounded bg-wiki-border/40 text-wiki-text" data-cw-comment-reply-label></span>
           </div>
+          <div class="flex flex-wrap gap-1.5 mb-2" data-cw-comment-prompts>
+            <button type="button" data-comment-prompt="question"
+              class="px-3 py-1.5 text-xs rounded-full border border-wiki-border bg-wiki-bg
+              hover:border-wiki-primary/50 hover:text-wiki-primary text-wiki-muted transition">
+              <i class="fas fa-question-circle mr-1"></i>궁금한 점
+            </button>
+            <button type="button" data-comment-prompt="info"
+              class="px-3 py-1.5 text-xs rounded-full border border-wiki-border bg-wiki-bg
+              hover:border-wiki-primary/50 hover:text-wiki-primary text-wiki-muted transition">
+              <i class="fas fa-lightbulb mr-1"></i>정보 공유
+            </button>
+            <button type="button" data-comment-prompt="experience"
+              class="px-3 py-1.5 text-xs rounded-full border border-wiki-border bg-wiki-bg
+              hover:border-wiki-primary/50 hover:text-wiki-primary text-wiki-muted transition">
+              <i class="fas fa-user-check mr-1"></i>경험담
+            </button>
+            <button type="button" data-comment-prompt="cheer"
+              class="px-3 py-1.5 text-xs rounded-full border border-wiki-border bg-wiki-bg
+              hover:border-wiki-primary/50 hover:text-wiki-primary text-wiki-muted transition">
+              <i class="fas fa-heart mr-1"></i>응원 한마디
+            </button>
+          </div>
           <div>
             <label class="sr-only" for="${escapeHtml(contentId)}">댓글 작성</label>
             <textarea
@@ -828,7 +920,7 @@ export const renderCommentsPlaceholder = ({
               rows="4"
               maxlength="500"
               required
-              placeholder="자유롭게 의견을 남겨주세요. (욕설, 광고 등은 제재될 수 있습니다)"
+              placeholder="${entityType === 'major' ? '이 전공에 대해 자유롭게 이야기해주세요' : entityType === 'guide' ? '이 가이드에 대해 자유롭게 이야기해주세요' : '이 직업에 대해 자유롭게 이야기해주세요'}"
               class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none resize-y text-sm"
               aria-required="true"
               aria-describedby="${statusMessageId}"

@@ -14,7 +14,9 @@ import {
   renderAdSlot,
   sanitizeJson,
   isUnifiedChartData,
-  renderUnifiedChart
+  renderUnifiedChart,
+  extractYouTubeVideoId,
+  renderYouTubeSection
 } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { renderKoreaMap, normalizeRegionName, type RegionData } from '../components/koreaMap'
@@ -1542,6 +1544,16 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     }
   }
 
+  // 관련 영상 (youtubeLinks) - 유튜브 임베드 카드
+  const youtubeLinks = (profile as any).youtubeLinks
+  if (Array.isArray(youtubeLinks) && youtubeLinks.length > 0) {
+    const validLinks = youtubeLinks.filter((l: any) => l?.url && extractYouTubeVideoId(l.url))
+    if (validLinks.length > 0) {
+      const ytHtml = renderYouTubeSection(validLinks)
+      pushOverviewCard('관련 영상', 'fa-video', ytHtml)
+    }
+  }
+
   // 여담 (trivia) - 개요 탭 마지막에 표시
   const triviaSource = (profile as any)?.trivia
   if (triviaSource) {
@@ -2187,11 +2199,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     },
     ctaLinks: [],
     comments: {
-      title: '재학생 · 졸업생 의견',
-      description: '댓글, 리액션, 신고 기능을 사용할 수 있습니다.',
+      title: `${profile.name} 커뮤니티`,
+      description: `${profile.name}에 대해 자유롭게 이야기해주세요.`,
       feedbackLabel: '우선 적용 의견 보내기',
       notifyLabel: '알림 받기',
-      emptyLabel: `아직 등록된 댓글이 없습니다. ${profile.name}에 대한 경험을 공유해주세요.`,
+      emptyLabel: `아직 등록된 댓글이 없습니다. ${profile.name}에 대해 자유롭게 이야기해주세요.`,
       showForm: true  // 익명 사용자도 댓글 작성 가능
     },
     partials,

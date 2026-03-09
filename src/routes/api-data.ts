@@ -711,6 +711,19 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
           }))
       })(),
 
+      // 유튜브 영상 링크
+      youtubeLinks: (() => {
+        const links = (profile as any).youtubeLinks
+        if (!Array.isArray(links)) return []
+        return links
+          .filter((l: any) => l?.url?.trim())
+          .map((l: any) => ({
+            url: (l.url || '').trim(),
+            title: (l.title || '').trim(),
+            description: (l.description || '').trim()
+          }))
+      })(),
+
       // 차트 데이터 (레거시→통일 포맷 변환)
       detailIndicators: convertIndicatorsToUnified(profile.detailIndicators),
       detailEducation: {
@@ -933,9 +946,20 @@ apiDataRoutes.get('/api/major/:id/edit-data', async (c) => {
                 applicant: convertMajorChartToUnified(cd.applicant, '입학 현황', 'bar', '명'),
               }
             })(),
-            customCharts: (profile as any).customCharts || []
+            customCharts: (profile as any).customCharts || [],
+            youtubeLinks: (() => {
+              const links = (profile as any).youtubeLinks
+              if (!Array.isArray(links)) return []
+              return links
+                .filter((l: any) => l?.url?.trim())
+                .map((l: any) => ({
+                  url: (l.url || '').trim(),
+                  title: (l.title || '').trim(),
+                  description: (l.description || '').trim()
+                }))
+            })()
           }
-          
+
           // 프로필 이름으로 실제 DB ID 찾기
           if (c.env.DB && profile.name) {
             try {
@@ -1201,6 +1225,19 @@ apiDataRoutes.get('/api/major/:id/edit-data', async (c) => {
         }
       })(),
       customCharts: (profile as any).customCharts || [],
+
+      // 유튜브 영상 링크
+      youtubeLinks: (() => {
+        const links = (profile as any).youtubeLinks
+        if (!Array.isArray(links)) return []
+        return links
+          .filter((l: any) => l?.url?.trim())
+          .map((l: any) => ({
+            url: (l.url || '').trim(),
+            title: (l.title || '').trim(),
+            description: (l.description || '').trim()
+          }))
+      })(),
 
       // 사용자 출처 (편집창에서 다중 입력 지원)
       _sources: (profile as any)._sources || {}
