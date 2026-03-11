@@ -1738,15 +1738,10 @@ function renderCareerTimeline(
       ? `<p class="text-xs text-wiki-muted/80 mt-1">${escapeHtml(stage.description)}</p>`
       : ''
 
-    // 현재 페이지 표시 라벨
-    const currentLabel = isHighlight
-      ? '<span class="inline-flex items-center ml-2 px-1.5 py-0.5 text-[10px] font-medium bg-[rgb(var(--wp))]/15 text-[rgb(var(--wp))] rounded">현재 직업</span>'
-      : ''
-
     // job_slug 링크 (하이라이트가 아닌 경우 다른 직업 페이지로 이동 가능)
-    let titleContent = `${escapeHtml(stage.title)}${currentLabel}`
+    let titleContent = escapeHtml(stage.title)
     if (!isHighlight && stage.job_slug) {
-      titleContent = `<a href="/job/${encodeURIComponent(stage.job_slug)}" class="hover:underline decoration-wiki-secondary/40">${escapeHtml(stage.title)}</a>${currentLabel}`
+      titleContent = `<a href="/job/${encodeURIComponent(stage.job_slug)}" class="hover:underline decoration-wiki-secondary/40">${escapeHtml(stage.title)}</a>`
     }
 
     return `
