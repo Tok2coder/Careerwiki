@@ -1073,12 +1073,15 @@ analyzerJobPage.get('/', requireAuth, (c) => {
         let loadingStartTime = 0;
 
         const ANALYSIS_STEPS = [
-            { pct: 5, msg: '프로필 분석 중...', sub: '입력하신 정보를 분석하고 있어요', step: 1 },
-            { pct: 20, msg: '직업 데이터 검색 중...', sub: '6,900개 직업에서 후보를 찾고 있어요', step: 2 },
-            { pct: 45, msg: 'AI 적합도 분석 중...', sub: '각 직업의 적합도를 계산하고 있어요', step: 3 },
-            { pct: 65, msg: 'AI 적합도 분석 중...', sub: '거의 다 됐어요, 잠시만 더 기다려주세요', step: 3 },
-            { pct: 80, msg: '맞춤 리포트 생성 중...', sub: '분석 결과를 정리하고 있어요', step: 4 },
-            { pct: 92, msg: '마무리 중...', sub: '곧 결과를 보여드릴게요', step: 4 },
+            { pct: 5,  msg: '프로필 분석 중...',         sub: '입력하신 정보를 분석하고 있어요',       step: 1, delayMs: 3000 },
+            { pct: 15, msg: '직업 데이터 검색 중...',     sub: '6,900개 직업에서 후보를 찾고 있어요',  step: 2, delayMs: 8000 },
+            { pct: 30, msg: 'AI 적합도 분석 중...',       sub: '각 직업의 적합도를 계산하고 있어요',   step: 2, delayMs: 15000 },
+            { pct: 45, msg: 'AI 적합도 분석 중...',       sub: '최적의 후보를 선별하고 있어요',        step: 3, delayMs: 25000 },
+            { pct: 55, msg: '심층 평가 중...',            sub: 'AI가 각 직업을 세밀하게 평가해요',     step: 3, delayMs: 40000 },
+            { pct: 65, msg: '심층 평가 중...',            sub: '거의 다 됐어요, 잠시만 더 기다려주세요', step: 3, delayMs: 55000 },
+            { pct: 75, msg: '심리분석 리포트 작성 중...', sub: '맞춤 분석 리포트를 작성하고 있어요',   step: 4, delayMs: 70000 },
+            { pct: 85, msg: '심리분석 리포트 작성 중...', sub: '깊이 있는 분석을 정리하고 있어요',     step: 4, delayMs: 85000 },
+            { pct: 92, msg: '마무리 중...',               sub: '곧 결과를 보여드릴게요',               step: 4, delayMs: 100000 },
         ];
 
         function showLoading(message, submessage = '잠시만 기다려주세요', showProgress = false) {
@@ -1106,42 +1109,46 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 }
 
                 loadingStartTime = Date.now();
-                let stepIndex = 0;
 
-                // 프로그레스 애니메이션 시작
+                // 시간 기반 프로그레스 애니메이션
                 if (loadingTimer) clearInterval(loadingTimer);
                 loadingTimer = setInterval(() => {
-                    const elapsed = Math.floor((Date.now() - loadingStartTime) / 1000);
+                    const elapsedMs = Date.now() - loadingStartTime;
+                    const elapsed = Math.floor(elapsedMs / 1000);
                     if (elapsedEl) {
                         elapsedEl.classList.remove('hidden');
-                        elapsedEl.textContent = elapsed + '초 경과';
-                    }
-
-                    // 단계별 진행
-                    if (stepIndex < ANALYSIS_STEPS.length) {
-                        const step = ANALYSIS_STEPS[stepIndex];
-                        if (bar) bar.style.width = step.pct + '%';
-                        if (msgEl) msgEl.textContent = step.msg;
-                        if (subEl) subEl.textContent = step.sub;
-
-                        // 단계 하이라이트
-                        for (let i = 1; i <= 4; i++) {
-                            const stepEl = document.getElementById('step-' + i);
-                            if (stepEl) {
-                                if (i < step.step) stepEl.className = 'text-emerald-400';
-                                else if (i === step.step) stepEl.className = 'text-wiki-primary font-medium';
-                                else stepEl.className = 'text-wiki-muted/50';
-                            }
+                        if (elapsed >= 150) {
+                            elapsedEl.textContent = elapsed + '초 경과 — 네트워크 상태를 확인해주세요';
+                            elapsedEl.style.color = '#fbbf24';
+                        } else {
+                            elapsedEl.textContent = elapsed + '초 경과';
+                            elapsedEl.style.color = '';
                         }
-                        stepIndex++;
                     }
 
-                    // 120초 경과 시 안내
-                    if (elapsed >= 120 && elapsedEl) {
-                        elapsedEl.textContent = elapsed + '초 경과 — 네트워크 상태를 확인해주세요';
-                        elapsedEl.style.color = '#fbbf24';
+                    // 경과 시간에 맞는 스텝 찾기
+                    let activeStep = ANALYSIS_STEPS[0];
+                    for (let i = ANALYSIS_STEPS.length - 1; i >= 0; i--) {
+                        if (elapsedMs >= ANALYSIS_STEPS[i].delayMs) {
+                            activeStep = ANALYSIS_STEPS[i];
+                            break;
+                        }
                     }
-                }, 2000);
+
+                    if (bar) bar.style.width = activeStep.pct + '%';
+                    if (msgEl) msgEl.textContent = activeStep.msg;
+                    if (subEl) subEl.textContent = activeStep.sub;
+
+                    // 단계 하이라이트
+                    for (let i = 1; i <= 4; i++) {
+                        const stepEl = document.getElementById('step-' + i);
+                        if (stepEl) {
+                            if (i < activeStep.step) stepEl.className = 'text-emerald-400';
+                            else if (i === activeStep.step) stepEl.className = 'text-wiki-primary font-medium';
+                            else stepEl.className = 'text-wiki-muted/50';
+                        }
+                    }
+                }, 1000);
 
             } else if (progressContainer) {
                 progressContainer.classList.add('hidden');
@@ -1151,9 +1158,30 @@ analyzerJobPage.get('/', requireAuth, (c) => {
         function hideLoading() {
             const overlay = document.getElementById('loading-overlay');
             const elapsedEl = document.getElementById('loading-elapsed');
+            const bar = document.getElementById('loading-progress-bar');
+            const progressContainer = document.getElementById('loading-progress-container');
+            const msgEl = document.getElementById('loading-message');
+            const subEl = document.getElementById('loading-submessage');
+
             if (loadingTimer) { clearInterval(loadingTimer); loadingTimer = null; }
-            if (elapsedEl) elapsedEl.classList.add('hidden');
-            if (overlay) overlay.classList.add('hidden');
+
+            // 프로그레스 바가 보이면 100%로 스냅 후 짧은 딜레이
+            if (bar && progressContainer && !progressContainer.classList.contains('hidden')) {
+                bar.style.width = '100%';
+                if (msgEl) msgEl.textContent = '완료!';
+                if (subEl) subEl.textContent = '결과를 표시합니다';
+                for (let i = 1; i <= 4; i++) {
+                    const stepEl = document.getElementById('step-' + i);
+                    if (stepEl) stepEl.className = 'text-emerald-400';
+                }
+                setTimeout(() => {
+                    if (elapsedEl) elapsedEl.classList.add('hidden');
+                    if (overlay) overlay.classList.add('hidden');
+                }, 600);
+            } else {
+                if (elapsedEl) elapsedEl.classList.add('hidden');
+                if (overlay) overlay.classList.add('hidden');
+            }
         }
 
         // 토스트 알림 (alert 대체)
@@ -4104,7 +4132,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 // ★★★ LLM 모듈 확인용 콘솔 로그 ★★★
                 
                 // 2. Recommendation Mode API (최신 Vectorize+TAG 추천)
-                showLoading('추천 생성 중...', 'AI가 최적의 직업을 찾고 있어요');
+                showLoading('추천 생성 중...', 'AI가 최적의 직업을 찾고 있어요', true);
                 
                 try {
                     // SearchProfile 구성
@@ -4138,7 +4166,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 mini_module_result: miniModule,
                                 topK: 800,
                                 judgeTopN: 20,
-                                skipReport: true,
+                                skipReport: false,
                                 debug: DEBUG_MODE,
                             })
                         });
@@ -4256,44 +4284,6 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 currentRequestId = analyzeData.request_id;
                 displayResults(analyzeData);
                 goToStep(3); // 결과 (3단계 구조)
-
-                // Phase 2: 프리미엄 리포트 비동기 생성 (결과 표시 후 백그라운드에서)
-                (async () => {
-                    // 리포트 로딩 표시
-                    const reportBanner = document.createElement('div');
-                    reportBanner.id = 'report-loading-banner';
-                    reportBanner.className = 'text-center py-3 px-4 rounded-xl mb-4';
-                    reportBanner.style.cssText = 'background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);';
-                    reportBanner.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><span class="text-sm" style="color: rgba(165,180,252,0.9);">심리분석 리포트를 생성하고 있습니다...</span>';
-                    const step3El = document.getElementById('step3');
-                    if (step3El && step3El.firstChild) {
-                        step3El.insertBefore(reportBanner, step3El.firstChild);
-                    }
-
-                    try {
-                        const reportResponse = await fetch('/api/ai-analyzer/v3/recommend/report', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ session_id: currentSessionId }),
-                        });
-
-                        document.getElementById('report-loading-banner')?.remove();
-
-                        if (reportResponse.ok) {
-                            const reportData = await reportResponse.json();
-                            if (reportData.premium_report) {
-                                analyzeData.result.premium_report = reportData.premium_report;
-                                // 현재 활성 탭 저장 후 재렌더링
-                                const activeTab = document.querySelector('.report-tab.active')?.getAttribute('data-tab');
-                                displayResults(analyzeData);
-                                if (activeTab) showReportTab(activeTab);
-                            }
-                        } else {
-                        }
-                    } catch (reportError) {
-                        document.getElementById('report-loading-banner')?.remove();
-                    }
-                })();
 
             } catch (error) {
                 hideLoading();

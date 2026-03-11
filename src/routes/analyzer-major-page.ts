@@ -115,11 +115,27 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
         </div>
         
         <!-- 로딩 오버레이 -->
-        <div id="loading-overlay" class="hidden fixed inset-0 bg-wiki-bg/90 z-50 flex items-center justify-center">
-            <div class="text-center">
-                <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-wiki-primary mx-auto mb-4"></div>
-                <p class="text-xl font-semibold" id="loading-message">분석 중...</p>
-                <p class="text-wiki-muted text-sm mt-2" id="loading-submessage">잠시만 기다려주세요</p>
+        <div id="loading-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+            <div class="glass-card p-8 rounded-2xl text-center max-w-md mx-4">
+                <div class="relative w-16 h-16 mx-auto mb-5">
+                    <div class="absolute inset-0 border-4 border-wiki-primary/30 rounded-full"></div>
+                    <div class="absolute inset-0 border-4 border-transparent border-t-wiki-primary rounded-full animate-spin"></div>
+                </div>
+                <p id="loading-message" class="text-lg font-semibold text-white mb-2">처리 중...</p>
+                <p id="loading-submessage" class="text-sm text-wiki-muted mb-5">잠시만 기다려주세요</p>
+                <div id="loading-progress-container" class="hidden">
+                    <div class="w-full bg-white/10 rounded-full h-2 mb-3 overflow-hidden">
+                        <div id="loading-progress-bar" class="h-full rounded-full transition-all duration-700 ease-out"
+                             style="width: 0%; background: linear-gradient(90deg, #a855f7, #6366f1);"></div>
+                    </div>
+                    <div id="loading-steps" class="flex justify-between text-xs text-wiki-muted/70 px-1">
+                        <span id="step-1" class="text-wiki-primary font-medium">프로필 분석</span>
+                        <span id="step-2">전공 검색</span>
+                        <span id="step-3">적합도 분석</span>
+                        <span id="step-4">리포트 생성</span>
+                    </div>
+                </div>
+                <p id="loading-elapsed" class="hidden text-xs text-wiki-muted/50 mt-3"></p>
             </div>
         </div>
         
@@ -394,16 +410,113 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             constraints: {}
         };
         
-        // 로딩
-        function showLoading(message, submessage = '잠시만 기다려주세요') {
+        // 로딩 (시간 기반 프로그레스)
+        let loadingTimer = null;
+        let loadingStartTime = 0;
+
+        const ANALYSIS_STEPS_MAJOR = [
+            { pct: 5,  msg: '프로필 분석 중...',         sub: '입력하신 정보를 분석하고 있어요',       step: 1, delayMs: 3000 },
+            { pct: 15, msg: '전공 데이터 검색 중...',     sub: '607개 전공에서 후보를 찾고 있어요',    step: 2, delayMs: 10000 },
+            { pct: 28, msg: 'AI 적합도 분석 중...',       sub: '각 전공의 적합도를 계산하고 있어요',   step: 2, delayMs: 20000 },
+            { pct: 40, msg: 'AI 적합도 분석 중...',       sub: '최적의 후보를 선별하고 있어요',        step: 3, delayMs: 35000 },
+            { pct: 52, msg: '심층 평가 중...',            sub: 'AI가 각 전공을 세밀하게 평가해요',     step: 3, delayMs: 50000 },
+            { pct: 62, msg: '심층 평가 중...',            sub: '거의 다 됐어요, 잠시만 더 기다려주세요', step: 3, delayMs: 65000 },
+            { pct: 72, msg: '심리분석 리포트 작성 중...', sub: '맞춤 분석 리포트를 작성하고 있어요',   step: 4, delayMs: 80000 },
+            { pct: 82, msg: '심리분석 리포트 작성 중...', sub: '깊이 있는 분석을 정리하고 있어요',     step: 4, delayMs: 95000 },
+            { pct: 90, msg: '마무리 중...',               sub: '곧 결과를 보여드릴게요',               step: 4, delayMs: 110000 },
+        ];
+
+        function showLoading(message, submessage = '잠시만 기다려주세요', showProgress = false) {
             const overlay = document.getElementById('loading-overlay');
-            document.getElementById('loading-message').textContent = message;
-            document.getElementById('loading-submessage').textContent = submessage;
-            overlay.classList.remove('hidden');
+            const msgEl = document.getElementById('loading-message');
+            const subEl = document.getElementById('loading-submessage');
+            const progressContainer = document.getElementById('loading-progress-container');
+            const elapsedEl = document.getElementById('loading-elapsed');
+
+            if (msgEl) msgEl.textContent = message;
+            if (subEl) subEl.textContent = submessage;
+            if (overlay) overlay.classList.remove('hidden');
+
+            if (showProgress && progressContainer) {
+                progressContainer.classList.remove('hidden');
+                const bar = document.getElementById('loading-progress-bar');
+                if (bar) bar.style.width = '0%';
+
+                for (let i = 1; i <= 4; i++) {
+                    const stepEl = document.getElementById('step-' + i);
+                    if (stepEl) {
+                        stepEl.className = i === 1 ? 'text-wiki-primary font-medium' : 'text-wiki-muted/50';
+                    }
+                }
+
+                loadingStartTime = Date.now();
+                if (loadingTimer) clearInterval(loadingTimer);
+                loadingTimer = setInterval(() => {
+                    const elapsedMs = Date.now() - loadingStartTime;
+                    const elapsed = Math.floor(elapsedMs / 1000);
+                    if (elapsedEl) {
+                        elapsedEl.classList.remove('hidden');
+                        if (elapsed >= 150) {
+                            elapsedEl.textContent = elapsed + '초 경과 — 네트워크 상태를 확인해주세요';
+                            elapsedEl.style.color = '#fbbf24';
+                        } else {
+                            elapsedEl.textContent = elapsed + '초 경과';
+                            elapsedEl.style.color = '';
+                        }
+                    }
+
+                    let activeStep = ANALYSIS_STEPS_MAJOR[0];
+                    for (let i = ANALYSIS_STEPS_MAJOR.length - 1; i >= 0; i--) {
+                        if (elapsedMs >= ANALYSIS_STEPS_MAJOR[i].delayMs) {
+                            activeStep = ANALYSIS_STEPS_MAJOR[i];
+                            break;
+                        }
+                    }
+
+                    if (bar) bar.style.width = activeStep.pct + '%';
+                    if (msgEl) msgEl.textContent = activeStep.msg;
+                    if (subEl) subEl.textContent = activeStep.sub;
+
+                    for (let i = 1; i <= 4; i++) {
+                        const stepEl = document.getElementById('step-' + i);
+                        if (stepEl) {
+                            if (i < activeStep.step) stepEl.className = 'text-emerald-400';
+                            else if (i === activeStep.step) stepEl.className = 'text-wiki-primary font-medium';
+                            else stepEl.className = 'text-wiki-muted/50';
+                        }
+                    }
+                }, 1000);
+            } else if (progressContainer) {
+                progressContainer.classList.add('hidden');
+            }
         }
 
         function hideLoading() {
-            document.getElementById('loading-overlay').classList.add('hidden');
+            const overlay = document.getElementById('loading-overlay');
+            const elapsedEl = document.getElementById('loading-elapsed');
+            const bar = document.getElementById('loading-progress-bar');
+            const progressContainer = document.getElementById('loading-progress-container');
+            const msgEl = document.getElementById('loading-message');
+            const subEl = document.getElementById('loading-submessage');
+
+            if (loadingTimer) { clearInterval(loadingTimer); loadingTimer = null; }
+
+            if (bar && progressContainer && !progressContainer.classList.contains('hidden')) {
+                bar.style.width = '100%';
+                if (msgEl) msgEl.textContent = '완료!';
+                if (subEl) subEl.textContent = '결과를 표시합니다';
+                for (let i = 1; i <= 4; i++) {
+                    const stepEl = document.getElementById('step-' + i);
+                    if (stepEl) stepEl.className = 'text-emerald-400';
+                }
+                setTimeout(() => {
+                    if (elapsedEl) elapsedEl.classList.add('hidden');
+                    if (overlay) overlay.classList.add('hidden');
+                }, 600);
+            } else {
+                if (elapsedEl) elapsedEl.classList.add('hidden');
+                if (overlay) overlay.classList.add('hidden');
+            }
         }
 
         // ============================================
@@ -2630,7 +2743,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             showLoading('답변 저장 중...', '마지막 답변을 저장하고 있어요');
             await saveV3RoundAnswersMajor(3, answers);
 
-            showLoading('AI가 분석 중...', '최적의 전공을 찾고 있어요');
+            showLoading('AI가 분석 중...', '최적의 전공을 찾고 있어요', true);
 
             try {
                 const response = await fetch('/api/ai-analyzer/analyze', {
@@ -2674,7 +2787,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
         }
 
         async function submitFollowupsAndAnalyze() {
-            showLoading('AI가 분석 중...', '최적의 전공을 찾고 있어요');
+            showLoading('AI가 분석 중...', '최적의 전공을 찾고 있어요', true);
             
             try {
                 const response = await fetch('/api/ai-analyzer/analyze', {
