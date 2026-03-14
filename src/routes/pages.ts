@@ -480,66 +480,165 @@ pagesRoutes.get('/analyzer', (c) => {
         </div>`
 
   const content = `
-    <div class="max-w-6xl mx-auto px-4 md:px-6 pt-0 md:pt-2">
-        <div class="text-center mb-6">
-            <h1 class="text-3xl md:text-4xl font-bold text-white">
-                <i class="fas fa-brain mr-2 text-wiki-primary"></i>AI 추천
+    <style>
+      @keyframes sparkle-float {
+        0%, 100% { opacity: 0; transform: translateY(0) scale(0); }
+        20% { opacity: 1; transform: translateY(-10px) scale(1); }
+        80% { opacity: 0.6; transform: translateY(-40px) scale(0.8); }
+      }
+      @keyframes glow-pulse {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 0.7; }
+      }
+      .sparkle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: white;
+        pointer-events: none;
+        animation: sparkle-float 3s ease-in-out infinite;
+      }
+      .analyzer-card {
+        background: linear-gradient(to bottom right, #1a1a2e, #16162a, #1a1a2e);
+        border: 1px solid rgba(255,255,255,0.06);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .analyzer-card:hover {
+        border-color: rgba(99,102,241,0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      }
+      .analyzer-card-popular {
+        border-color: rgba(99,102,241,0.25);
+        box-shadow: 0px -8px 80px 0px rgba(99,102,241,0.15);
+      }
+      .analyzer-card-popular:hover {
+        border-color: rgba(99,102,241,0.5);
+        box-shadow: 0px -8px 120px 0px rgba(99,102,241,0.25);
+      }
+      .analyzer-btn {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        transition: all 0.3s ease;
+      }
+      .analyzer-btn:hover {
+        background: linear-gradient(135deg, #818cf8, #6366f1);
+        box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+      }
+      .analyzer-btn-outline {
+        background: transparent;
+        border: 1px solid rgba(99,102,241,0.4);
+        transition: all 0.3s ease;
+      }
+      .analyzer-btn-outline:hover {
+        background: rgba(99,102,241,0.1);
+        border-color: rgba(99,102,241,0.7);
+      }
+    </style>
+
+    <div class="relative max-w-5xl mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-8">
+        <!-- Background glow -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full"
+                 style="background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%); animation: glow-pulse 4s ease-in-out infinite;"></div>
+        </div>
+        <!-- Grid pattern -->
+        <div class="absolute inset-0 pointer-events-none opacity-[0.03]" aria-hidden="true"
+             style="background-image: linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px); background-size: 70px 70px;"></div>
+
+        <!-- Header -->
+        <div class="relative text-center mb-10 md:mb-12">
+            <p class="text-indigo-400 text-sm font-medium tracking-widest uppercase mb-3">AI-Powered Career Discovery</p>
+            <h1 class="text-3xl md:text-5xl font-bold text-white leading-tight">
+                나에게 맞는 진로를<br>
+                <span class="bg-gradient-to-r from-indigo-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">AI가 찾아드립니다</span>
             </h1>
-            <p class="text-wiki-muted text-sm md:text-base mt-2 max-w-lg mx-auto leading-relaxed">
-                LLM 심층 인터뷰와 벡터 시맨틱 검색으로<br class="hidden md:inline"> 수천 개의 직업·전공 중 나에게 맞는 진로를 찾아드립니다
+            <p class="text-neutral-400 text-sm md:text-base mt-4 max-w-lg mx-auto leading-relaxed">
+                LLM 심층 인터뷰와 벡터 시맨틱 검색으로<br class="hidden md:inline"> 수천 개의 직업·전공 중 최적의 선택을 추천합니다
             </p>
         </div>
 
-        <div class="glass-card p-6 md:p-8 rounded-2xl">
-            <h2 class="text-xl md:text-2xl font-bold mb-6 text-center">무엇을 추천받고 싶으신가요?</h2>
+        <!-- Cards -->
+        <div class="relative grid md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
+            <!-- Job Recommendation (Popular) -->
+            <a href="/analyzer/job" class="analyzer-card analyzer-card-popular rounded-2xl pt-10 pb-8 px-8 block text-center group relative overflow-hidden mt-4">
+                <!-- Sparkles -->
+                <div class="sparkle" style="top:10%; left:15%; animation-delay:0s;"></div>
+                <div class="sparkle" style="top:20%; right:20%; animation-delay:0.8s;"></div>
+                <div class="sparkle" style="bottom:30%; left:25%; animation-delay:1.6s;"></div>
+                <div class="sparkle" style="top:60%; right:10%; animation-delay:2.2s;"></div>
 
-            <div class="grid md:grid-cols-2 gap-6 md:gap-8">
-                <!-- Job Recommendation -->
-                <a href="/analyzer/job" class="glass-card p-8 rounded-xl hover-glow block text-center group relative overflow-hidden">
-                    <i class="fas fa-briefcase text-6xl mb-4 text-wiki-secondary group-hover:text-wiki-primary transition"></i>
-                    <h3 class="text-2xl font-bold mb-3">직업 추천</h3>
-                    <p class="text-wiki-muted">
+                <!-- Popular badge -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <span class="px-4 py-1 text-xs font-semibold rounded-full bg-indigo-500 text-white shadow-lg shadow-indigo-500/30">
+                        POPULAR
+                    </span>
+                </div>
+
+                <div>
+                    <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/20">
+                        <i class="fas fa-briefcase text-3xl text-indigo-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-white">직업 추천</h3>
+                    <p class="text-neutral-400 text-sm leading-relaxed mb-5">
                         나의 성향, 능력, 가치관을 바탕으로<br>
                         적합한 직업을 AI가 추천해드립니다
                     </p>
-                    <div class="mt-4 flex items-center justify-center gap-2">
-                        <span class="text-wiki-muted line-through text-sm">₩50,000</span>
-                        <span class="text-emerald-400 font-bold text-lg">무료</span>
-                    </div>
-                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정</p>
-                    <div class="mt-4">
-                        <span class="px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block group-hover:bg-blue-600 transition">
-                            직업 추천받기 →
-                        </span>
-                    </div>
-                </a>
 
-                <!-- Major Recommendation -->
-                <a href="/analyzer/major" class="glass-card p-8 rounded-xl hover-glow block text-center group relative overflow-hidden">
-                    <i class="fas fa-university text-6xl mb-4 text-wiki-secondary group-hover:text-wiki-primary transition"></i>
-                    <h3 class="text-2xl font-bold mb-3">전공 추천</h3>
-                    <p class="text-wiki-muted">
-                        나의 적성, 흥미, 목표를 분석하여<br>
-                        최적의 전공을 AI가 추천해드립니다
-                    </p>
-                    <div class="mt-4 flex items-center justify-center gap-2">
-                        <span class="text-wiki-muted line-through text-sm">₩10,000</span>
-                        <span class="text-emerald-400 font-bold text-lg">무료</span>
+                    <div class="flex items-center justify-center gap-3 mb-1">
+                        <span class="text-neutral-500 line-through text-sm">₩50,000</span>
+                        <span class="text-emerald-400 font-bold text-xl">무료</span>
                     </div>
-                    <p class="text-xs text-emerald-400/70 mt-1">베타 기간 한정</p>
-                    <div class="mt-4">
-                        <span class="px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block group-hover:bg-blue-600 transition">
-                            전공 추천받기 →
-                        </span>
+                    <p class="text-xs text-emerald-400/60 mb-6">베타 기간 한정</p>
+
+                    <div class="space-y-2 text-left text-sm text-neutral-300 mb-6">
+                        <div class="flex items-center gap-2"><i class="fas fa-check text-indigo-400 text-xs"></i> 6,945개 직업 데이터베이스</div>
+                        <div class="flex items-center gap-2"><i class="fas fa-check text-indigo-400 text-xs"></i> AI 심층 인터뷰 3라운드</div>
+                        <div class="flex items-center gap-2"><i class="fas fa-check text-indigo-400 text-xs"></i> 맞춤형 프리미엄 리포트</div>
                     </div>
-                </a>
-            </div>
-            
+
+                    <span class="analyzer-btn w-full px-6 py-3 text-white rounded-xl inline-block font-semibold">
+                        직업 추천받기 →
+                    </span>
+                </div>
+            </a>
+
+            <!-- Major Recommendation -->
+            <a href="/analyzer/major" class="analyzer-card rounded-2xl p-8 block text-center group relative overflow-hidden mt-4 md:mt-0">
+                <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500/15 to-cyan-500/15 flex items-center justify-center border border-blue-500/15">
+                    <i class="fas fa-university text-3xl text-blue-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2 text-white">전공 추천</h3>
+                <p class="text-neutral-400 text-sm leading-relaxed mb-5">
+                    나의 적성, 흥미, 목표를 분석하여<br>
+                    최적의 전공을 AI가 추천해드립니다
+                </p>
+
+                <div class="flex items-center justify-center gap-3 mb-1">
+                    <span class="text-neutral-500 line-through text-sm">₩10,000</span>
+                    <span class="text-emerald-400 font-bold text-xl">무료</span>
+                </div>
+                <p class="text-xs text-emerald-400/60 mb-6">베타 기간 한정</p>
+
+                <div class="space-y-2 text-left text-sm text-neutral-300 mb-6">
+                    <div class="flex items-center gap-2"><i class="fas fa-check text-blue-400 text-xs"></i> 608개 전공 데이터베이스</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-check text-blue-400 text-xs"></i> AI 심층 인터뷰 3라운드</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-check text-blue-400 text-xs"></i> 맞춤형 분석 리포트</div>
+                </div>
+
+                <span class="analyzer-btn-outline w-full px-6 py-3 text-indigo-300 rounded-xl inline-block font-semibold">
+                    전공 추천받기 →
+                </span>
+            </a>
+        </div>
+
+        <!-- Banner -->
+        <div class="relative max-w-4xl mx-auto">
             ${bannerHtml}
-            
-            <div class="mt-6 text-center text-wiki-muted text-sm">
-                <p>AI 추천은 개인정보를 안전하게 처리하며, 결과는 참고용으로만 활용하시기 바랍니다.</p>
-            </div>
+        </div>
+
+        <div class="relative mt-6 text-center text-neutral-500 text-xs">
+            <p>AI 추천은 개인정보를 안전하게 처리하며, 결과는 참고용으로만 활용하시기 바랍니다.</p>
         </div>
     </div>
   `
