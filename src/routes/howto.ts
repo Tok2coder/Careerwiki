@@ -391,7 +391,12 @@ howtoRoutes.get('/write', requireAuth, async (c) => {
     const content = `
     <!-- Tiptap CDN -->
     <link rel="stylesheet" href="/static/howto-editor.css">
-    
+    <style>
+      @keyframes tagIn { from { opacity:0; transform:scale(0.8) translateY(-8px); filter:blur(6px); } to { opacity:1; transform:scale(1) translateY(0); filter:blur(0); } }
+      @keyframes tagOut { to { opacity:0; transform:scale(0.8) translateY(-8px); filter:blur(6px); } }
+      .tag-chip { animation: tagIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+    </style>
+
     <div class="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
       <!-- 헤더 -->
       <header class="mb-6">
@@ -1349,14 +1354,18 @@ howtoRoutes.get('/write', requireAuth, async (c) => {
         const container = document.getElementById('tags-container');
         if (!container) return;
         const chip = document.createElement('span');
-        chip.className = 'inline-flex items-center gap-1 px-3 py-1 bg-wiki-primary/10 text-wiki-primary rounded-full text-sm';
-        chip.innerHTML = escapeHtml(tag) + '<button type="button" class="hover:text-red-400 ml-1" onclick="removeTag(this, \\'' + escapeHtml(tag.replace(/'/g, "\\\\'")) + '\\')"><i class="fas fa-times text-xs"></i></button>';
+        chip.className = 'tag-chip inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm text-white shadow-lg backdrop-blur-sm';
+        chip.style.background = 'rgba(17,17,17,0.6)';
+        chip.style.boxShadow = '0 0 10px rgba(0,0,0,0.2)';
+        chip.innerHTML = escapeHtml(tag) + '<button type="button" class="tag-remove-btn flex items-center justify-center w-5 h-5 rounded-full hover:bg-white/10 transition-colors" onclick="removeTag(this, \\'' + escapeHtml(tag.replace(/'/g, "\\\\'")) + '\\')"><i class="fas fa-times text-[10px]"></i></button>';
         container.appendChild(chip);
       }
       
       function removeTag(btn, tag) {
         selectedTags = selectedTags.filter(t => t !== tag);
-        btn.parentElement.remove();
+        const chip = btn.parentElement;
+        chip.style.animation = 'tagOut 0.25s ease forwards';
+        setTimeout(() => chip.remove(), 250);
         hasUnsavedChanges = true;
         updateSaveStatus('unsaved');
       }
@@ -1546,7 +1555,12 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
   const content = `
     <!-- Tiptap CDN -->
     <link rel="stylesheet" href="/static/howto-editor.css">
-    
+    <style>
+      @keyframes tagIn { from { opacity:0; transform:scale(0.8) translateY(-8px); filter:blur(6px); } to { opacity:1; transform:scale(1) translateY(0); filter:blur(0); } }
+      @keyframes tagOut { to { opacity:0; transform:scale(0.8) translateY(-8px); filter:blur(6px); } }
+      .tag-chip { animation: tagIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+    </style>
+
     <div class="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
       <!-- 헤더 -->
       <header class="mb-6">
@@ -2997,13 +3011,16 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
       // 태그 칩 추가
       function addTagChip(container, tag) {
         const chip = document.createElement('span');
-        chip.className = 'inline-flex items-center gap-1 px-2 py-1 bg-wiki-card/50 border border-wiki-border/40 rounded-lg text-xs text-wiki-text';
-        chip.innerHTML = escapeHtml(tag) + '<button type="button" class="hover:text-red-400 ml-1">&times;</button>';
-        
+        chip.className = 'tag-chip inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm text-white shadow-lg backdrop-blur-sm';
+        chip.style.background = 'rgba(17,17,17,0.6)';
+        chip.style.boxShadow = '0 0 10px rgba(0,0,0,0.2)';
+        chip.innerHTML = escapeHtml(tag) + '<button type="button" class="tag-remove-btn flex items-center justify-center w-5 h-5 rounded-full hover:bg-white/10 transition-colors">&times;</button>';
+
         chip.querySelector('button').addEventListener('click', () => {
-          chip.remove();
+          chip.style.animation = 'tagOut 0.25s ease forwards';
+          setTimeout(() => chip.remove(), 250);
         });
-        
+
         container.appendChild(chip);
       }
       
