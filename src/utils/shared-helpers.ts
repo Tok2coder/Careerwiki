@@ -100,7 +100,8 @@ export const renderFooter = (): string => `
     .footer-nav-link:hover { color: #ffffff; background: rgba(100, 181, 246, 0.1); }
     .footer-nav-link:hover::after { transform: scaleX(1); }
   </style>
-  <footer class="relative mt-20 border-t border-wiki-border/30">
+  <footer class="relative mt-20 border-t border-wiki-border/20" style="background: radial-gradient(40% 80px at 50% 0%, rgba(99,102,241,0.06), transparent);">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 h-px rounded-full" style="background: rgba(99,102,241,0.3); filter: blur(1px);"></div>
     <div class="max-w-6xl mx-auto px-6 py-10">
       <div class="flex md:hidden flex-col gap-6">
         <nav class="flex flex-wrap items-center justify-center gap-2">
