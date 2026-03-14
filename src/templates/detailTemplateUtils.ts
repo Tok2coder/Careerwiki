@@ -1642,14 +1642,17 @@ export const renderCareerTreeSection = (
 
   // 1명이면 네비게이션 불필요
   const nav = total > 1 ? `
-    <div class="flex items-center justify-between mt-4">
-      <button onclick="ctNav(-1)" class="ct-prev flex items-center gap-1.5 px-3 py-1.5 text-sm text-wiki-muted hover:text-wiki-text rounded-lg hover:bg-wiki-primary/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>
-        <i class="fas fa-chevron-left text-xs"></i> 이전
-      </button>
-      <span class="ct-counter text-xs text-wiki-muted">1 / ${total}</span>
-      <button onclick="ctNav(1)" class="ct-next flex items-center gap-1.5 px-3 py-1.5 text-sm text-wiki-muted hover:text-wiki-text rounded-lg hover:bg-wiki-primary/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-        다음 <i class="fas fa-chevron-right text-xs"></i>
-      </button>
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-sm text-wiki-muted">이 직업과 관련된 인물의 실제 커리어 경로입니다.</p>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <button onclick="ctNav(-1)" class="ct-prev p-1.5 text-wiki-muted hover:text-wiki-text rounded-md hover:bg-wiki-primary/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled aria-label="이전 인물">
+          <i class="fas fa-chevron-left text-xs"></i>
+        </button>
+        <span class="ct-counter text-xs text-wiki-muted tabular-nums min-w-[3ch] text-center">${total > 1 ? `1 / ${total}` : ''}</span>
+        <button onclick="ctNav(1)" class="ct-next p-1.5 text-wiki-muted hover:text-wiki-text rounded-md hover:bg-wiki-primary/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" aria-label="다음 인물">
+          <i class="fas fa-chevron-right text-xs"></i>
+        </button>
+      </div>
     </div>` : ''
 
   const script = total > 1 ? `
@@ -1667,11 +1670,13 @@ export const renderCareerTreeSection = (
     })();
     </script>` : ''
 
+  const desc = total <= 1 ? '<p class="text-sm text-wiki-muted mb-4">이 직업과 관련된 인물의 실제 커리어 경로입니다.</p>' : ''
+
   return `
     <div>
-      <p class="text-sm text-wiki-muted mb-4">이 직업과 관련된 인물의 실제 커리어 경로입니다.</p>
-      ${panels}
       ${nav}
+      ${desc}
+      ${panels}
     </div>
     ${script}`
 }
