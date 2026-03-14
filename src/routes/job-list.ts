@@ -159,9 +159,6 @@ jobListRoutes.get('/job', async (c) => {
 
           <div class="flex items-center justify-center gap-3 text-sm">
             <span class="px-3 py-1.5 rounded-lg bg-wiki-bg/60 text-wiki-muted">${filterSummary}</span>
-            <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30 text-white font-semibold">
-              <span id="job-total-count">${totalCount}</span>개
-            </span>
           </div>
         </div>
 
@@ -352,7 +349,7 @@ jobListRoutes.get('/job', async (c) => {
               ${pageButtons.join('')}
             </nav>
             <p class="text-center text-xs text-wiki-muted mt-4">
-              ${page}페이지 / 총 ${totalPages}페이지 (${totalCount}개 직업)
+              ${page}페이지 / 총 ${totalPages}페이지
             </p>
           `
         })()}

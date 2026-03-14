@@ -277,7 +277,7 @@ howtoRoutes.get('/', async (c) => {
         </span>
       `}
     </nav>
-    <p class="text-center text-sm text-wiki-muted mt-4">${page}페이지 / 총 ${totalPages}페이지 (${totalCount}개 가이드)</p>
+    <p class="text-center text-sm text-wiki-muted mt-4">${page}페이지 / 총 ${totalPages}페이지</p>
   ` : ''
 
   const content = `

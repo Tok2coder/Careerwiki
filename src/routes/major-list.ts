@@ -406,7 +406,7 @@ majorListRoutes.get('/major', async (c) => {
               ${pageButtons.join('')}
             </nav>
             <p class="text-center text-xs text-wiki-muted mt-4">
-              ${page}페이지 / 총 ${totalPages}페이지 (${actualTotalCount}개 전공)
+              ${page}페이지 / 총 ${totalPages}페이지
             </p>
           `
         })()}
@@ -608,7 +608,7 @@ majorListRoutes.get('/major', async (c) => {
             ${pageButtons.join('')}
           </nav>
           <p class="text-center text-xs text-wiki-muted mt-4">
-            ${page}페이지 / 총 ${totalPages}페이지 (${totalCount}개 전공)
+            ${page}페이지 / 총 ${totalPages}페이지
           </p>
         ` : ''
 
@@ -626,11 +626,6 @@ majorListRoutes.get('/major', async (c) => {
               <p class="text-lg md:text-xl text-wiki-text/90 max-w-2xl mx-auto font-medium leading-relaxed">
                 전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.
               </p>
-              <div class="flex items-center justify-center gap-4 text-sm text-wiki-muted">
-                <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30 text-white font-semibold">
-                  <span id="major-total-count">${totalCount}</span>개 전공
-                </span>
-              </div>
             </div>
             <form method="get" action="/major" class="glass-card rounded-xl p-6 mb-6" id="major-filter-form">
               <div class="flex flex-col md:flex-row gap-4 items-end">
