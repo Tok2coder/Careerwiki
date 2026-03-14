@@ -548,12 +548,6 @@ pagesRoutes.get('/analyzer', (c) => {
                     </div>
                     <p class="text-xs text-emerald-400/70 mb-5">베타 기간 한정</p>
 
-                    <div class="space-y-2 text-left text-sm text-neutral-300 mb-6 px-1">
-                        <div class="flex items-center gap-2"><i class="fas fa-check text-indigo-400 text-xs"></i> AI 심층 인터뷰 3라운드</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check text-indigo-400 text-xs"></i> 맞춤형 프리미엄 리포트</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check text-indigo-400 text-xs"></i> 직업별 성장 전망 분석</div>
-                    </div>
-
                     <span class="az-btn-primary w-full px-6 py-3 text-white rounded-lg inline-block font-semibold">
                         직업 추천받기 →
                     </span>
@@ -576,12 +570,6 @@ pagesRoutes.get('/analyzer', (c) => {
                         <span class="text-emerald-400 font-bold text-lg">무료</span>
                     </div>
                     <p class="text-xs text-emerald-400/70 mb-5">베타 기간 한정</p>
-
-                    <div class="space-y-2 text-left text-sm text-neutral-300 mb-6 px-1">
-                        <div class="flex items-center gap-2"><i class="fas fa-check text-blue-400 text-xs"></i> AI 심층 인터뷰 3라운드</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check text-blue-400 text-xs"></i> 맞춤형 분석 리포트</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check text-blue-400 text-xs"></i> 진로 적합도 평가</div>
-                    </div>
 
                     <span class="w-full px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block font-semibold transition group-hover:bg-blue-600">
                         전공 추천받기 →
