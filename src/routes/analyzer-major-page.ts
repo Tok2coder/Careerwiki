@@ -122,7 +122,14 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                     <div class="absolute inset-0 border-4 border-transparent border-t-wiki-primary rounded-full animate-spin"></div>
                 </div>
                 <p id="loading-message" class="text-lg font-semibold text-white mb-2">처리 중...</p>
-                <p id="loading-submessage" class="text-sm text-wiki-muted mb-5">잠시만 기다려주세요</p>
+                <p id="loading-submessage" class="text-sm text-wiki-muted mb-3">잠시만 기다려주세요</p>
+                <div id="loading-progress-wrap" class="w-full mt-2">
+                    <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <div id="loading-progress-bar" class="h-full rounded-full"
+                             style="width: 0%; background: linear-gradient(90deg, #a855f7, #6366f1, #818cf8); box-shadow: 0 0 12px rgba(99,102,241,0.4); transition: width 0.3s ease-out;"></div>
+                    </div>
+                    <p id="loading-progress-text" class="text-[11px] text-white/40 mt-2"></p>
+                </div>
             </div>
         </div>
         <!-- 상단 프로그레스 바 (Skeleton 모드용) -->
@@ -579,7 +586,9 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             }, 800);
         }
 
-        function showLoading(message, submessage = '잠시만 기다려주세요', showProgress = false) {
+        var modalProgressTimer = null;
+
+        function showLoading(message, submessage = '잠시만 기다려주세요', showProgress = false, expectedSec = 5) {
             if (showProgress) {
                 showSkeletonLoading();
                 return;
@@ -590,11 +599,51 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             if (msgEl) msgEl.textContent = message;
             if (subEl) subEl.textContent = submessage;
             if (overlay) overlay.classList.remove('hidden');
+
+            startModalProgress(expectedSec);
+        }
+
+        function startModalProgress(expectedSec) {
+            const bar = document.getElementById('loading-progress-bar');
+            const text = document.getElementById('loading-progress-text');
+            if (!bar) return;
+            bar.style.width = '0%';
+            if (modalProgressTimer) clearInterval(modalProgressTimer);
+
+            const startTime = Date.now();
+            const k = 3.0 / expectedSec;
+
+            text.textContent = '약 ' + expectedSec + '초 소요';
+            modalProgressTimer = setInterval(function() {
+                const elapsed = (Date.now() - startTime) / 1000;
+                const pct = Math.min(95, 95 * (1 - Math.exp(-k * elapsed)));
+                bar.style.width = pct.toFixed(1) + '%';
+
+                const remaining = Math.max(1, Math.ceil(expectedSec - elapsed));
+                if (elapsed < expectedSec) {
+                    text.textContent = '약 ' + remaining + '초 남음';
+                } else {
+                    text.textContent = '거의 완료...';
+                }
+            }, 100);
         }
 
         function hideLoading() {
-            const overlay = document.getElementById('loading-overlay');
-            if (overlay) overlay.classList.add('hidden');
+            const bar = document.getElementById('loading-progress-bar');
+            const text = document.getElementById('loading-progress-text');
+            if (bar) bar.style.width = '100%';
+            if (text) text.textContent = '';
+            if (modalProgressTimer) {
+                clearInterval(modalProgressTimer);
+                modalProgressTimer = null;
+            }
+
+            setTimeout(function() {
+                const overlay = document.getElementById('loading-overlay');
+                if (overlay) overlay.classList.add('hidden');
+                if (bar) bar.style.width = '0%';
+            }, 250);
+
             hideSkeletonLoading();
         }
 

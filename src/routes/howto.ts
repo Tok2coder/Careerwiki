@@ -1138,8 +1138,14 @@ howtoRoutes.get('/write', requireAuth, async (c) => {
           if (publishBtn) {
             publishBtn.disabled = true;
             publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>발행 중...';
+            publishBtn.style.position = 'relative';
+            publishBtn.style.overflow = 'hidden';
+            const stripe = document.createElement('div');
+            stripe.style.cssText = 'position:absolute;bottom:0;left:0;height:2px;width:0%;border-radius:9999px;background:linear-gradient(90deg,#a855f7,#6366f1);transition:width 4s cubic-bezier(0.1,0.8,0.2,1);';
+            publishBtn.appendChild(stripe);
+            requestAnimationFrame(() => stripe.style.width = '95%');
           }
-          
+
           // 바로 발행 API 호출
           const res = await fetch('/api/howto/publish-direct', {
             method: 'POST',
@@ -2061,7 +2067,13 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
           const originalHtml = btn.innerHTML;
           btn.disabled = true;
           btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>삭제 중...';
-          
+          btn.style.position = 'relative';
+          btn.style.overflow = 'hidden';
+          const stripe = document.createElement('div');
+          stripe.style.cssText = 'position:absolute;bottom:0;left:0;height:2px;width:0%;border-radius:9999px;background:linear-gradient(90deg,#ef4444,#f97316);transition:width 3s cubic-bezier(0.1,0.8,0.2,1);';
+          btn.appendChild(stripe);
+          requestAnimationFrame(() => stripe.style.width = '95%');
+
           try {
             // 발행된 페이지가 있으면 페이지 삭제 API, 없으면 초안 삭제 API 호출
             const deleteUrl = HAS_PUBLISHED_VERSION && PUBLISHED_PAGE_ID
@@ -2713,7 +2725,9 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
         try {
           // 로딩 표시
           placeholder.classList.remove('hidden');
-          placeholder.innerHTML = '<i class="fas fa-spinner fa-spin text-3xl text-wiki-primary"></i><p class="text-sm text-wiki-muted">업로드 중...</p>';
+          placeholder.innerHTML = '<i class="fas fa-spinner fa-spin text-3xl text-wiki-primary"></i><p class="text-sm text-wiki-muted mt-2">업로드 중...</p><div class="w-32 h-1 bg-white/10 rounded-full overflow-hidden mt-2"><div id="upload-progress-bar" class="h-full rounded-full" style="width:0%;background:linear-gradient(90deg,#a855f7,#6366f1);transition:width 0.3s ease-out;box-shadow:0 0 8px rgba(99,102,241,0.3);"></div></div>';
+          var uploadStart = Date.now();
+          var uploadTimer = setInterval(function() { var el = document.getElementById('upload-progress-bar'); if (!el) { clearInterval(uploadTimer); return; } var pct = Math.min(90, 90 * (1 - Math.exp(-0.3 * (Date.now() - uploadStart) / 1000))); el.style.width = pct + '%'; }, 100);
           
           // FormData로 업로드
           const formData = new FormData();
@@ -2726,6 +2740,7 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
           
           const data = await res.json();
           
+          clearInterval(uploadTimer);
           if (data.success && data.url) {
             thumbnailUrl = data.url;
             hiddenField.value = data.url;
@@ -2737,6 +2752,7 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
             throw new Error(data.error || '업로드 실패');
           }
         } catch (err) {
+          clearInterval(uploadTimer);
           // 원래 상태로 복구
           placeholder.innerHTML = '<i class="fas fa-image text-3xl text-wiki-muted"></i><p class="text-sm text-wiki-muted">클릭하여 이미지 업로드 또는 드래그 앤 드롭</p><p class="text-xs text-wiki-muted/60">없으면 본문의 첫 번째 이미지가 자동으로 사용됩니다</p>';
           showMessage('error', err.message || '썸네일 업로드에 실패했습니다.');
