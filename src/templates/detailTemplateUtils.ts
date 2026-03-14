@@ -1634,30 +1634,46 @@ export const renderCareerTreeSection = (
 ): string => {
   if (!trees || trees.length === 0) return ''
 
-  const INITIAL_SHOW = 2
-  const visibleTrees = trees.slice(0, INITIAL_SHOW)
-  const hiddenTrees = trees.slice(INITIAL_SHOW)
+  const total = trees.length
+  const panels = trees.map((tree, i) => {
+    const card = renderPersonCareerTree(tree)
+    return `<div class="ct-panel${i === 0 ? '' : ' hidden'}" data-ct-idx="${i}">${card}</div>`
+  }).join('')
 
-  let html = `
-    <div class="space-y-6">
-      <p class="text-sm text-wiki-muted">이 직업과 관련된 유명 인물의 실제 커리어 경로입니다.</p>
-      ${visibleTrees.map(tree => renderPersonCareerTree(tree)).join('')}`
+  // 1명이면 네비게이션 불필요
+  const nav = total > 1 ? `
+    <div class="flex items-center justify-between mt-4">
+      <button onclick="ctNav(-1)" class="ct-prev flex items-center gap-1.5 px-3 py-1.5 text-sm text-wiki-muted hover:text-wiki-text rounded-lg hover:bg-wiki-primary/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+        <i class="fas fa-chevron-left text-xs"></i> 이전
+      </button>
+      <span class="ct-counter text-xs text-wiki-muted">1 / ${total}</span>
+      <button onclick="ctNav(1)" class="ct-next flex items-center gap-1.5 px-3 py-1.5 text-sm text-wiki-muted hover:text-wiki-text rounded-lg hover:bg-wiki-primary/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+        다음 <i class="fas fa-chevron-right text-xs"></i>
+      </button>
+    </div>` : ''
 
-  if (hiddenTrees.length > 0) {
-    html += `
-      <div id="career-tree-hidden" class="hidden space-y-6">
-        ${hiddenTrees.map(tree => renderPersonCareerTree(tree)).join('')}
-      </div>
-      <button
-        onclick="document.getElementById('career-tree-hidden').classList.toggle('hidden');this.querySelector('span').textContent=document.getElementById('career-tree-hidden').classList.contains('hidden')?'더보기 (${hiddenTrees.length}명)':'접기'"
-        class="w-full py-2.5 text-sm font-medium text-wiki-secondary hover:text-wiki-primary border border-wiki-border/40 rounded-lg hover:bg-wiki-primary/5 transition-all"
-      >
-        <span>더보기 (${hiddenTrees.length}명)</span>
-      </button>`
-  }
+  const script = total > 1 ? `
+    <script>
+    (function(){
+      var cur=0,total=${total};
+      window.ctNav=function(d){
+        document.querySelector('.ct-panel[data-ct-idx="'+cur+'"]').classList.add('hidden');
+        cur=Math.max(0,Math.min(total-1,cur+d));
+        document.querySelector('.ct-panel[data-ct-idx="'+cur+'"]').classList.remove('hidden');
+        document.querySelector('.ct-counter').textContent=(cur+1)+' / '+total;
+        document.querySelector('.ct-prev').disabled=cur===0;
+        document.querySelector('.ct-next').disabled=cur===total-1;
+      };
+    })();
+    </script>` : ''
 
-  html += '</div>'
-  return html
+  return `
+    <div>
+      <p class="text-sm text-wiki-muted mb-4">이 직업과 관련된 인물의 실제 커리어 경로입니다.</p>
+      ${panels}
+      ${nav}
+    </div>
+    ${script}`
 }
 
 /** 개별 인물의 커리어트리 (인물 카드 + 타임라인) */
