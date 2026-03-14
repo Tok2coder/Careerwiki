@@ -2403,6 +2403,8 @@ const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; t
     'overviewWork.main', 'overviewWork.physicalAct', 'overviewWork.mentalAct',
     'overviewAbilities.abilityList', 'overviewAbilities.aptitudeList', 'overviewAbilities.interestList',
     'trivia',
+    // 되는 방법 / 임금 / 전망
+    'way', 'overviewSalary.sal', 'overviewProspect.main',
     // 상세정보 탭
     'detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList',
     // 사이드바
@@ -2506,20 +2508,30 @@ const renderSourcesCollapsible = (
           'detailReady.training': '필요 교육/훈련',
           'detailReady.researchList': '진로 탐색 활동',
           'sidebarJobs': '관련 직업',
+          'way': '되는 방법',
+          'overviewSalary.sal': '임금 정보',
+          'overviewProspect.main': '전망 정보',
           'sidebarMajors': '관련 학과',
           'sidebarCerts': '추천 자격증'
         }
         const fieldLabel = fieldLabels[source.fieldKey] || source.fieldKey
+        // URL을 감지하여 클릭 가능한 링크로 변환
+        const linkifyText = (text: string): string => {
+          return escapeHtml(text).replace(
+            /https?:\/\/[^\s,)<>]+/g,
+            (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary underline hover:text-wiki-primary/80">${url}</a>`
+          )
+        }
         return `
-          <li class="user-source-item p-3 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10" 
-              id="user-fn-${source.id}" 
+          <li class="user-source-item p-3 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10"
+              id="user-fn-${source.id}"
               data-back-to="user-fnref-${source.id}"
               data-field-key="${escapeHtml(source.fieldKey)}">
             <div class="flex items-start gap-3">
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-xs font-bold flex items-center justify-center">${source.id}</span>
               <div class="flex-1 text-sm">
                 <span class="text-wiki-muted">[${escapeHtml(fieldLabel)}]</span>
-                <span class="text-wiki-text ml-2">${escapeHtml(source.text)}</span>
+                <span class="text-wiki-text ml-2">${linkifyText(source.text)}</span>
               </div>
             </div>
           </li>
