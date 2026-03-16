@@ -32,7 +32,13 @@ const stripHtmlTags = (html: string): string => {
     .trim()
 }
 
-export const formatRichText = (value?: string | null, fieldKey?: string): string => {
+/**
+ * footnoteMap: 필드별 로컬번호 → 전역번호 매핑
+ * 예: { 'way': { '1': 5, '2': 6 }, 'overviewProspect.main': { '1': 9, '2': 10 } }
+ */
+export type FootnoteMap = Record<string, Record<string, number>>
+
+export const formatRichText = (value?: string | null, fieldKey?: string, footnoteMap?: FootnoteMap): string => {
   if (!value || !value.trim()) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
@@ -50,8 +56,8 @@ export const formatRichText = (value?: string | null, fieldKey?: string): string
     .replace(/\u00A0/g, ' ')          // Non-breaking space → 일반 공백
     .replace(/[^\S\n]+/g, ' ')        // 연속 공백 정리 (줄바꿈 보존)
 
-  // 필드키를 ID에 포함 (필드 간 번호 충돌 방지)
-  const idPrefix = fieldKey ? `user-fnref-${fieldKey.replace(/\./g, '-')}-` : 'user-fnref-'
+  // 필드별 로컬 번호 → 전역 번호 매핑
+  const fieldMap = (footnoteMap && fieldKey) ? footnoteMap[fieldKey] : null
 
   return cleanedValue
     .trim()
@@ -59,9 +65,13 @@ export const formatRichText = (value?: string | null, fieldKey?: string): string
     .map((paragraph) => {
       let safe = escapeHtml(paragraph.trim()).replace(/\n/g, '<br>')
       // 인라인 각주 [N] → 클릭 가능한 superscript 링크로 변환
+      // footnoteMap이 있으면 로컬 번호를 전역 번호로 변환
       safe = safe.replace(
         /\[(\d+)\]/g,
-        (_match, num) => `<sup class="user-footnote-ref cursor-pointer transition" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-primary,#64b5f6);background:rgba(100,181,246,0.12);border-radius:9999px;margin-left:2px;vertical-align:super;line-height:1;" data-source-id="${num}" data-field-key="${fieldKey || ''}" id="${idPrefix}${num}" title="출처 [${num}]">${num}</sup>`
+        (_match, localNum) => {
+          const globalNum = fieldMap ? (fieldMap[localNum] ?? localNum) : localNum
+          return `<sup class="user-footnote-ref cursor-pointer transition" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-primary,#64b5f6);background:rgba(100,181,246,0.12);border-radius:9999px;margin-left:2px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="출처 [${globalNum}]">${globalNum}</sup>`
+        }
       )
       return `<p class="content-text leading-relaxed text-wiki-text">${safe}</p>`
     })

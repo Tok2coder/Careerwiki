@@ -2539,24 +2539,21 @@ const renderSourcesCollapsible = (
             (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary underline hover:text-wiki-primary/80" onclick="event.stopPropagation()">${url}</a>`
           )
         }
-        // 소스 텍스트에서 [N] 번호 추출하여 필드키 기반 각주 ID 생성
-        const footnoteMatch = source.text.match(/^\[(\d+)\]/)
-        const footnoteNum = footnoteMatch ? footnoteMatch[1] : null
-        const fieldIdPrefix = source.fieldKey.replace(/\./g, '-')
-        const backToId = footnoteNum
-          ? `user-fnref-${fieldIdPrefix}-${footnoteNum}`
-          : `user-fnref-${source.id}`
+        // 전역 번호(source.id)를 직접 사용 — 페이지 전체에서 1~N 통합
+        const globalNum = source.id
+        // 소스 텍스트에서 [N] 접두사 제거 (표시는 전역 번호 배지로 대체)
+        const cleanText = source.text.replace(/^\[\d+\]\s*/, '')
         return `
           <li class="user-source-item p-3 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10"
-              id="user-fn-${source.id}"
-              data-back-to="${backToId}"
+              id="user-fn-${globalNum}"
+              data-back-to="user-fnref-${globalNum}"
               data-field-key="${escapeHtml(source.fieldKey)}"
               ${navAttr}>
             <div class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-xs font-bold flex items-center justify-center">${footnoteNum || source.id}</span>
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-xs font-bold flex items-center justify-center">${globalNum}</span>
               <div class="flex-1 text-sm">
                 <span class="text-wiki-muted ${sectionInfo ? 'underline decoration-dotted cursor-pointer hover:text-wiki-primary' : ''}">[${escapeHtml(fieldLabel)}]</span>
-                <span class="text-wiki-text ml-2">${linkifyText(source.text)}</span>
+                <span class="text-wiki-text ml-2">${linkifyText(cleanText)}</span>
               </div>
             </div>
           </li>
@@ -2646,20 +2643,8 @@ const renderSourcesCollapsible = (
         document.querySelectorAll('.user-footnote-ref').forEach(function(ref) {
           ref.addEventListener('click', function(e) {
             e.preventDefault();
-            var sourceId = this.getAttribute('data-source-id');
-            var fieldKey = this.getAttribute('data-field-key');
-            // 필드키+번호로 정확한 출처 매칭: data-back-to가 이 각주 ID인 소스 아이템 찾기
-            var myId = this.id;
-            var targetEl = null;
-            document.querySelectorAll('.user-source-item').forEach(function(item) {
-              if (item.getAttribute('data-back-to') === myId) {
-                targetEl = item;
-              }
-            });
-            // 폴백: 기존 방식 (소스 번호로 직접 찾기)
-            if (!targetEl) {
-              targetEl = document.getElementById('user-fn-' + sourceId);
-            }
+            var globalNum = this.getAttribute('data-source-id');
+            var targetEl = document.getElementById('user-fn-' + globalNum);
             if (!targetEl) return;
 
             // 출처 섹션 펼치기
@@ -3254,6 +3239,19 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     telemetryVariant
   )
   */
+  // ── 사용자 출처 전역 번호 매핑 (페이지 전체에서 1~N 통합 번호) ──
+  const userSourcesFlat = normalizeUserSources((profile as any)._sources)
+  // footnoteMap: { fieldKey: { localNum: globalNum } }
+  // 소스 텍스트에서 [N]을 파싱하여 필드별 로컬→전역 매핑
+  const footnoteMap: Record<string, Record<string, number>> = {}
+  for (const source of userSourcesFlat) {
+    const m = source.text.match(/^\[(\d+)\]/)
+    if (m) {
+      if (!footnoteMap[source.fieldKey]) footnoteMap[source.fieldKey] = {}
+      footnoteMap[source.fieldKey][m[1]] = source.id // source.id = 전역 번호 (1~N)
+    }
+  }
+
   // 히어로 섹션 데이터 (ETL에서 병합된 필드 사용)
   const normalizedSources = Array.isArray(profile.sources) ? profile.sources : []
   const hasOnlyWork24DictionarySources =
@@ -3682,13 +3680,17 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     } else if (typeof prospectPrimary === 'string' && safeTrim(prospectPrimary)) {
       // 문자열인 경우 줄바꿈을 블록으로 변환 (실제 내용이 있을 때만)
       const lines = prospectPrimary.split('\n').filter(line => safeTrim(line))
+      const prospectFieldMap = footnoteMap['overviewProspect.main'] || null
       if (lines.length > 1) {
         prospectHtml = `<div class="space-y-2">${lines.map(line => {
-          const safeLine = escapeHtml(line).replace(/\[(\d+)\]/g, (_m: string, num: string) => `<sup class="user-footnote-ref cursor-pointer transition" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-primary,#64b5f6);background:rgba(100,181,246,0.12);border-radius:9999px;margin-left:2px;vertical-align:super;line-height:1;" data-source-id="${num}" data-field-key="overviewProspect.main" id="user-fnref-overviewProspect-main-${num}" title="출처 [${num}]">${num}</sup>`)
+          const safeLine = escapeHtml(line).replace(/\[(\d+)\]/g, (_m: string, localNum: string) => {
+            const globalNum = prospectFieldMap ? (prospectFieldMap[localNum] ?? localNum) : localNum
+            return `<sup class="user-footnote-ref cursor-pointer transition" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-primary,#64b5f6);background:rgba(100,181,246,0.12);border-radius:9999px;margin-left:2px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="출처 [${globalNum}]">${globalNum}</sup>`
+          })
           return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${safeLine}</div>`
         }).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       } else if (lines.length === 1) {
-        prospectHtml = `${formatRichText(prospectPrimary, 'overviewProspect.main')}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+        prospectHtml = `${formatRichText(prospectPrimary, 'overviewProspect.main', footnoteMap)}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       }
     }
     
@@ -4154,7 +4156,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     // 사용자 기여 way 텍스트 (인라인 각주 포함) — 맨 위에 표시
     const userWay = (profile as any).way as string | undefined
     if (userWay && safeTrim(userWay)) {
-      readyBlocks.push(`<div><h3 class="content-heading">되는 방법</h3>${formatRichText(userWay, 'way')}</div>`)
+      readyBlocks.push(`<div><h3 class="content-heading">되는 방법</h3>${formatRichText(userWay, 'way', footnoteMap)}</div>`)
     }
 
     // 헬퍼: 객체 또는 문자열에서 텍스트 추출
@@ -4797,7 +4799,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   })
 
   const sidebarContent = renderJobSidebar(profile, existingJobSlugs, relatedHowtos)
-  const userSourcesFlat = normalizeUserSources((profile as any)._sources)
+  // userSourcesFlat은 함수 초반에서 이미 생성됨 (전역 번호 매핑용)
   const sourcesCollapsible = renderSourcesCollapsible(profile, sources, partials, userSourcesFlat)
   const heroImageUrl = (profile as any).image_url
   const heroImageAlt = (profile as any).image_alt ?? `${profile.name} 직업 종사자가 업무를 수행하는 모습`
@@ -5005,6 +5007,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             const fieldKey = source.fieldKey;
             const mapping = fieldMap[fieldKey];
             if (!mapping) return;
+            // 소스 텍스트에 [N]이 있으면 본문에 이미 인라인 각주가 있으므로 heading에 추가하지 않음
+            if (/^\[\d+\]/.test(source.text)) return;
             
             const fieldLabel = mapping[0];
             
