@@ -101,33 +101,54 @@ LIMIT 3
 - **금지**: 구버전 `/cnet/front/base/job/jobView.do?SEQ=` (목록 페이지로 리다이렉트됨)
 - DB에서 `careernet_job_cd` 확인하여 seq 파라미터로 사용
 
-### 2-3. 리서치 결과 포맷
+### 2-3. 인라인 각주 시스템 (핵심!)
 
-직업별로 아래 형태로 정리:
+**모든 사실/통계에 인라인 각주 `[N]`을 달아야 한다.** 렌더링 시 자동으로 클릭 가능한 superscript로 변환됨.
+
+#### 텍스트 + 각주 작성 규칙
+1. 각 문장 끝에 `[N]` 번호를 붙인다 (위키피디아 스타일)
+2. 같은 필드 안에서 번호는 1부터 순서대로
+3. 출처 텍스트는 `[N] 출처명 URL` 형식
+4. **한 필드에 최소 3개 이상, 최대 8개 이내 각주**
+
+#### 예시
 ```
 ## 간호사 (ID: 1765283280202496)
 
 ### way (되는 방법)
-[작성할 텍스트]
+간호사가 되려면 4년제 간호학과 또는 3년제 간호전문대학을 졸업하고 간호사 국가시험에 합격해야 합니다[1]. 2024년 간호사 국가시험 합격률은 95.4%로 매년 높은 합격률을 유지하고 있습니다[2]. 면허 취득 후 대부분 종합병원에서 1~2년간 신규간호사 과정을 거치며 실무를 익힙니다[3].
 
-### overviewSalary.sal (임금)
-조사년도:2022년, 임금 하위(25%) 255만원, 평균(50%) 295만원, 상위(25%) 363만원
-※ 공식 25/50/75 백분위 수치가 없으면 "없음"
+전문간호사가 되려면 3년 이상 임상 경력 후 전문간호사 교육기관에서 2년 과정을 이수하고 자격시험에 합격해야 합니다[4]. 최근 간호법 제정으로 독자적 간호 판단 영역이 확대되는 추세입니다[5].
 
 ### overviewProspect.main (전망)
-[작성할 텍스트]
+향후 10년간 간호사 고용은 연평균 2.8% 증가할 것으로 전망됩니다[1]. 인구 고령화로 65세 이상 인구가 20%를 넘어서면서 간호 수요가 급증하고 있습니다[2]. 간호간병통합서비스 확대로 약 3만 명의 추가 인력이 필요합니다[3].
 
-### trivia (여담)
-["항목1", "항목2", "항목3"]
+### 출처 (필드별 분리, [N] 번호 필수!)
+way 출처:
+- [1] 대한간호협회 간호사 되기 안내 https://www.koreanurse.or.kr/about_KNA/nurse.php
+- [2] 한국보건의료인국가시험원 2024 통계 https://www.kuksiwon.or.kr/peryear/fixExamResultList.do
+- [3] 서울대학교병원 간호부 신규간호사 안내 https://nursing.snuh.org/content/nursing/recruit.do
+- [4] 보건복지부 전문간호사 제도 안내 https://www.mohw.go.kr/menu.es?mid=a10706020500
+- [5] 간호법 제정 보도 - 법률신문 https://www.lawtimes.co.kr/news/191234
 
-### 출처 (세부 URL 필수!)
-- way: 커리어넷 간호사 직업정보 https://www.career.go.kr/cloud/w/job/view?seq=354
-- way: 워크넷 간호사 https://www.work24.go.kr/wk/a/b/1500/acdmcrProfDtl.do?profSeq=3040
-- salary: 한국고용정보원 KNOW 간호사 https://know.work.go.kr/職업명/임금
-- prospect: 한국직업전망 2023 https://www.keis.or.kr/...
+prospect 출처:
+- [1] 한국고용정보원 중장기 인력수급전망 https://www.keis.or.kr/...
+- [2] 통계청 장래인구추계 https://kosis.kr/statHtml/...
+- [3] 보건복지부 간호간병통합서비스 확대 보도자료 https://www.mohw.go.kr/...
 ```
 
-**출처 URL이 실제로 접근 가능한지 WebFetch로 검증 필수. 404면 대체 URL 찾기.**
+### 2-4. 콘텐츠 작성 원칙
+
+**API에 이미 있는 정보를 반복하지 않는다.** 커리어넷/워크넷 데이터는 이미 페이지에 표시 중.
+
+새로 추가할 정보:
+- **현장 실무 정보**: 실제 취업 루트, 신규 입사 과정, 실무 팁
+- **최신 통계/트렌드**: 최근 합격률, 취업률, 업계 변화
+- **법/제도 변경**: 관련 법률 개정, 자격 제도 변화
+- **현실적 조언**: 필요 경력, 실제 연봉 범위, 커리어 패스
+- **해외/대안 경로**: 해외 취업, 비전통적 진입 경로
+
+**출처 URL이 실제로 접근 가능한지 curl로 검증 필수. 404면 대체 URL 찾기.**
 
 ---
 
@@ -140,31 +161,38 @@ Content-Type: application/json
 Cookie: session=SESSION_TOKEN
 ```
 
-### 3-2. 요청 Body
+### 3-2. 요청 Body (인라인 각주 포함)
+
+**중요: sources의 `text`와 `url`은 반드시 분리하여 전송한다.**
 
 ```json
 {
   "fields": {
-    "way": "이 직업이 되기 위해서는...\n\n필요한 학력...",
+    "way": "간호사가 되려면 4년제 간호학과 또는 3년제 간호전문대학을 졸업하고 간호사 국가시험에 합격해야 합니다[1]. 2024년 간호사 국가시험 합격률은 95.4%입니다[2].\n\n면허 취득 후 대부분 종합병원에서 1~2년간 신규간호사 과정을 거칩니다[3]. 전문간호사가 되려면 3년 이상 경력 후 교육기관 2년 과정 이수가 필요합니다[4].",
     "overviewSalary.sal": "조사년도:2022년, 임금 하위(25%) 255만원, 평균(50%) 295만원, 상위(25%) 363만원",
-    "overviewProspect.main": "향후 5~10년간...",
-    "trivia": "[\"사실1\", \"사실2\", \"사실3\"]"
+    "overviewProspect.main": "향후 10년간 간호사 고용은 연평균 2.8% 증가 전망입니다[1]. 65세 이상 인구가 20%를 넘어서며 간호 수요가 급증하고 있습니다[2]. 간호간병통합서비스 확대로 약 3만 명의 추가 인력이 필요합니다[3].",
+    "trivia": "[\"사실1[1]\", \"사실2[2]\", \"사실3[3]\"]"
   },
   "sources": {
     "way": [
-      {"text": "커리어넷 간호사 직업정보 https://www.career.go.kr/cloud/w/job/view?seq=354"},
-      {"text": "워크넷 간호사 https://www.work24.go.kr/wk/a/b/1500/acdmcrProfDtl.do?profSeq=3040"}
-    ],
-    "overviewSalary.sal": [
-      {"text": "한국고용정보원 KNOW https://know.work.go.kr/..."}
+      {"text": "[1] 대한간호협회 간호사 되기 안내", "url": "https://www.koreanurse.or.kr/about_KNA/nurse.php"},
+      {"text": "[2] 한국보건의료인국가시험원 2024 통계", "url": "https://www.kuksiwon.or.kr/peryear/fixExamResultList.do"},
+      {"text": "[3] 서울대학교병원 간호부 신규간호사 안내", "url": "https://nursing.snuh.org/content/nursing/recruit.do"},
+      {"text": "[4] 보건복지부 전문간호사 제도 안내", "url": "https://www.mohw.go.kr/menu.es?mid=a10706020500"}
     ],
     "overviewProspect.main": [
-      {"text": "한국직업전망 2023 https://www.keis.or.kr/..."}
+      {"text": "[1] 한국고용정보원 중장기 인력수급전망", "url": "https://www.keis.or.kr/..."},
+      {"text": "[2] 통계청 장래인구추계", "url": "https://kosis.kr/statHtml/..."},
+      {"text": "[3] 보건복지부 간호간병통합서비스 확대 보도자료", "url": "https://www.mohw.go.kr/..."}
     ]
   },
-  "changeSummary": "way, salary, prospect, trivia 필드 보완"
+  "changeSummary": "way, prospect 필드 보완 (다양한 출처 인라인 각주 포함)"
 }
 ```
+
+> **⚠️ 출처 형식 필수사항**: `text`에는 출처 설명만, `url`에는 링크만 분리 저장.
+> - ✅ `{"text": "[1] 대한간호협회 안내", "url": "https://..."}`
+> - ❌ `{"text": "[1] 대한간호협회 안내 https://..."}`  ← URL이 text에 합쳐지면 렌더링 시 링크 안 됨
 
 ### 3-3. 필드별 주의사항
 
@@ -199,15 +227,24 @@ Cookie: session=SESSION_TOKEN
 
 ---
 
+### 3-6. Google Indexing 자동 알림
+
+편집 API로 저장이 성공하면 **자동으로** Google Indexing API에 URL 업데이트 알림이 전송된다.
+- 별도 작업 불필요 — 코드에서 `waitUntil`로 백그라운드 처리
+- 실패해도 편집 저장에 영향 없음
+- Google이 보통 수 시간~1일 내에 크롤링하여 인덱스 업데이트
+
+---
+
 ## 4. 프로덕션 검증
 
 편집 API 호출 후 반드시 프로덕션에서 확인:
 
-### 4-1. Playwright MCP로 확인
+### 4-1. curl/WebFetch로 확인
 ```
-1. browser_navigate → https://careerwiki.org/job/{slug}
-2. browser_snapshot → 페이지 구조 확인
-3. "출처" 버튼 클릭 → 사용자 추가 출처 확인
+1. curl https://careerwiki.org/job/{slug} → HTML 응답에서 필드 데이터 포함 여부 확인
+2. WebFetch로 페이지 로드 → 렌더링된 콘텐츠 확인
+3. 출처 섹션에 인라인 각주 번호 [N]이 superscript로 변환되었는지 확인
 ```
 
 ### 4-2. 확인 항목
@@ -217,6 +254,8 @@ Cookie: session=SESSION_TOKEN
 [ ] prospect: "커리어 전망" 섹션에 표시됨
 [ ] trivia: 여담 섹션에 불릿 리스트로 표시됨
 [ ] 출처: 한국어 라벨 ([되는 방법], [임금 정보] 등) + 클릭 가능한 URL
+[ ] 인라인 각주: 텍스트 내 [N]이 클릭 가능한 superscript로 렌더링됨
+[ ] 각주 번호 매칭: 텍스트의 [N]과 출처의 [N]이 일치함
 [ ] 기존 데이터 유지: 기존에 있던 다른 필드가 사라지지 않았음
 ```
 

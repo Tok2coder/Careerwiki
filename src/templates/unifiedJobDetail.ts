@@ -2551,8 +2551,12 @@ const renderSourcesCollapsible = (
         const sourceUrl = (source as any).url || ''
         let urlHostname = ''
         try { urlHostname = new URL(sourceUrl).hostname.replace('www.', '') } catch { urlHostname = sourceUrl.slice(0, 40) }
-        const urlHtml = sourceUrl
-          ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary hover:text-wiki-primary/80 inline-flex items-center gap-1 mt-1" onclick="event.stopPropagation()"><svg class="w-3 h-3 inline flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg><span class="text-xs underline truncate max-w-[240px]">${escapeHtml(urlHostname)}</span></a>`
+        // 출처 텍스트를 URL 링크로 감싸기 (위키피디아 스타일)
+        const sourceTextHtml = sourceUrl
+          ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-wiki-text hover:text-wiki-primary underline decoration-wiki-primary/40 hover:decoration-wiki-primary transition" onclick="event.stopPropagation()">${linkifyText(cleanText) || escapeHtml(urlHostname)}</a>`
+          : `<span class="text-wiki-text">${linkifyText(cleanText)}</span>`
+        const domainBadge = sourceUrl && cleanText
+          ? `<span class="text-[11px] text-wiki-muted ml-1">(${escapeHtml(urlHostname)})</span>`
           : ''
         return `
           <li class="user-source-item p-3 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10"
@@ -2564,8 +2568,7 @@ const renderSourcesCollapsible = (
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-xs font-bold flex items-center justify-center">${globalNum}</span>
               <div class="flex-1 text-sm">
                 <span class="text-wiki-muted ${sectionInfo ? 'underline decoration-dotted cursor-pointer hover:text-wiki-primary' : ''}">[${escapeHtml(fieldLabel)}]</span>
-                <span class="text-wiki-text ml-2">${linkifyText(cleanText)}</span>
-                ${urlHtml}
+                <span class="ml-2">${sourceTextHtml}${domainBadge}</span>
               </div>
             </div>
           </li>
