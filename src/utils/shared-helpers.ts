@@ -165,6 +165,8 @@ export const renderLayout = (
     ipAddress?: string | null  // Phase 3 Day 4: IP 주소 (비로그인 상태에서 표시)
   }
 ) => {
+  // 리터럴 \n을 공백으로 변환 (meta description에 노출 방지)
+  description = description.replace(/\\n/g, ' ').replace(/\s{2,}/g, ' ').trim()
   const canonicalUrl = options?.canonical ?? 'https://careerwiki.org'
   const ogUrl = options?.ogUrl ?? canonicalUrl
   const extraHead = options?.extraHead ?? ''

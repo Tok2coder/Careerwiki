@@ -350,7 +350,7 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
       if (fields['overviewWork.main']) {
       }
 
-      if (Object.keys(fields).length === 0) {
+      if (Object.keys(fields).length === 0 && (!sources || Object.keys(sources).length === 0)) {
         return c.json({ success: false, error: 'No fields to update' }, 400)
       }
 
@@ -465,9 +465,13 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
             ? source
             : [source]
           const normalized = sourceArray
-            .map((s: any) => (s?.text || s?.url || '').trim())
+            .map((s: any) => {
+              const text = (s?.text || '').trim()
+              const url = (s?.url || '').trim()
+              if (!text && !url) return null
+              return { id: nextId++, text: text || url, ...(url ? { url } : {}) }
+            })
             .filter(Boolean)
-            .map(text => ({ id: nextId++, text }))
 
           if (normalized.length > 0) {
             updatedUserData._sources[key] = normalized

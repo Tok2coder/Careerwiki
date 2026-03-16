@@ -718,4 +718,168 @@ adminRoutes.get('/api/admin/stats', requireAdmin, async (c) => {
   }
 })
 
+// ─── Google Search Console 재인덱싱 API ───
+
+/**
+ * JWT 생성 (Google 서비스 계정 인증용)
+ * RS256 서명으로 access_token을 발급받기 위한 JWT assertion
+ */
+async function createGoogleJWT(email: string, privateKeyPem: string, scope: string): Promise<string> {
+  const header = { alg: 'RS256', typ: 'JWT' }
+  const now = Math.floor(Date.now() / 1000)
+  const payload = {
+    iss: email,
+    scope,
+    aud: 'https://oauth2.googleapis.com/token',
+    iat: now,
+    exp: now + 3600,
+  }
+
+  const enc = (obj: any) => btoa(JSON.stringify(obj)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  const headerB64 = enc(header)
+  const payloadB64 = enc(payload)
+  const signingInput = `${headerB64}.${payloadB64}`
+
+  // PEM → CryptoKey
+  const pemBody = privateKeyPem
+    .replace(/-----BEGIN (?:RSA )?PRIVATE KEY-----/g, '')
+    .replace(/-----END (?:RSA )?PRIVATE KEY-----/g, '')
+    .replace(/\\n/g, '')
+    .replace(/\s/g, '')
+  const binaryDer = Uint8Array.from(atob(pemBody), c => c.charCodeAt(0))
+  const cryptoKey = await crypto.subtle.importKey(
+    'pkcs8', binaryDer.buffer,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false, ['sign']
+  )
+
+  const signature = await crypto.subtle.sign(
+    'RSASSA-PKCS1-v1_5',
+    cryptoKey,
+    new TextEncoder().encode(signingInput)
+  )
+  const sigB64 = btoa(String.fromCharCode(...new Uint8Array(signature)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+
+  return `${signingInput}.${sigB64}`
+}
+
+async function getGoogleAccessToken(email: string, privateKey: string, scope: string): Promise<string> {
+  const jwt = await createGoogleJWT(email, privateKey, scope)
+  const resp = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`,
+  })
+  const data = await resp.json() as any
+  if (!data.access_token) throw new Error(`Google OAuth failed: ${JSON.stringify(data)}`)
+  return data.access_token
+}
+
+// POST /admin/api/reindex — 최근 수정된 직업/전공 URL을 Google에 재인덱싱 요청
+adminRoutes.post('/admin/api/reindex', async (c) => {
+  // requireAdmin OR X-Admin-Secret header
+  const user = c.get('user')
+  const isAdminUser = user && ((user.role as string) === 'admin' || (user.role as string) === 'super-admin' || (user.role as string) === 'operator')
+  const secretHeader = c.req.header('X-Admin-Secret')
+  const hasSecretAuth = secretHeader && c.env.ADMIN_SECRET && secretHeader === c.env.ADMIN_SECRET
+  if (!isAdminUser && !hasSecretAuth) {
+    return c.json({ error: 'Admin authentication required' }, 401)
+  }
+  const email = c.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
+  const privateKey = c.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
+  if (!email || !privateKey) {
+    return c.json({ success: false, error: 'Google 서비스 계정 미설정 (GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY)' }, 400)
+  }
+
+  try {
+    const body = await c.req.json<{ urls?: string[] }>()
+    let urls = body.urls || []
+
+    // URL 지정 없으면 최근 7일 내 수정된 직업/전공 자동 수집
+    if (urls.length === 0) {
+      const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+      const [jobs, majors] = await Promise.all([
+        c.env.DB.prepare('SELECT name FROM jobs WHERE is_active = 1 AND user_last_updated_at > ?').bind(sevenDaysAgo).all<{ name: string }>(),
+        c.env.DB.prepare('SELECT name FROM majors WHERE is_active = 1 AND user_last_updated_at > ?').bind(sevenDaysAgo).all<{ name: string }>(),
+      ])
+      for (const r of jobs.results) urls.push(`https://careerwiki.org/job/${encodeURIComponent(r.name)}`)
+      for (const r of majors.results) urls.push(`https://careerwiki.org/major/${encodeURIComponent(r.name)}`)
+    }
+
+    if (urls.length === 0) {
+      return c.json({ success: true, message: '재인덱싱할 URL이 없습니다', submitted: 0 })
+    }
+
+    // Google Indexing API access token
+    const accessToken = await getGoogleAccessToken(email, privateKey, 'https://www.googleapis.com/auth/indexing')
+
+    const results: Array<{ url: string; status: string }> = []
+    // 배치로 전송 (Google 할당량: ~200/일)
+    for (const url of urls.slice(0, 200)) {
+      try {
+        const resp = await fetch('https://indexing.googleapis.com/v3/urlNotifications:publish', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ url, type: 'URL_UPDATED' }),
+        })
+        const data = await resp.json() as any
+        results.push({ url, status: resp.ok ? 'submitted' : (data.error?.message || `HTTP ${resp.status}`) })
+      } catch (e: any) {
+        results.push({ url, status: `error: ${e.message}` })
+      }
+    }
+
+    const successCount = results.filter(r => r.status === 'submitted').length
+    return c.json({
+      success: true,
+      message: `${successCount}/${results.length}개 URL 인덱싱 요청 완료`,
+      submitted: successCount,
+      total: results.length,
+      results,
+    })
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// GET /admin/api/reindex/status — 최근 수정된 페이지 목록 확인
+adminRoutes.get('/admin/api/reindex/status', async (c) => {
+  const user = c.get('user')
+  const isAdminUser = user && ((user.role as string) === 'admin' || (user.role as string) === 'super-admin' || (user.role as string) === 'operator')
+  const secretHeader = c.req.header('X-Admin-Secret')
+  const hasSecretAuth = secretHeader && c.env.ADMIN_SECRET && secretHeader === c.env.ADMIN_SECRET
+  if (!isAdminUser && !hasSecretAuth) {
+    return c.json({ error: 'Admin authentication required' }, 401)
+  }
+  try {
+    const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+    const [jobs, majors] = await Promise.all([
+      c.env.DB.prepare('SELECT name, user_last_updated_at FROM jobs WHERE is_active = 1 AND user_last_updated_at > ? ORDER BY user_last_updated_at DESC').bind(sevenDaysAgo).all<{ name: string; user_last_updated_at: number }>(),
+      c.env.DB.prepare('SELECT name, user_last_updated_at FROM majors WHERE is_active = 1 AND user_last_updated_at > ? ORDER BY user_last_updated_at DESC').bind(sevenDaysAgo).all<{ name: string; user_last_updated_at: number }>(),
+    ])
+
+    const safeDate = (ts: number | null | undefined): string => {
+      if (!ts) return 'unknown'
+      try { return new Date(ts).toISOString() } catch { return String(ts) }
+    }
+    const pages = [
+      ...jobs.results.map(r => ({ type: 'job', name: r.name, url: `https://careerwiki.org/job/${encodeURIComponent(r.name)}`, updatedAt: safeDate(r.user_last_updated_at) })),
+      ...majors.results.map(r => ({ type: 'major', name: r.name, url: `https://careerwiki.org/major/${encodeURIComponent(r.name)}`, updatedAt: safeDate(r.user_last_updated_at) })),
+    ]
+
+    return c.json({
+      success: true,
+      hasCredentials: !!(c.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && c.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY),
+      recentlyUpdated: pages.length,
+      pages,
+    })
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
 export { adminRoutes }

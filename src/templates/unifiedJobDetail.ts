@@ -151,7 +151,7 @@ const renderDutyBulletList = (value?: string | null): string => {
     return formatRichText(value)
   }
 
-  const normalizedValue = value.replace(/\r/g, '\n')
+  const normalizedValue = value.replace(/\\n/g, '\n').replace(/\r/g, '\n')
   let sentences = normalizedValue
     .split(/\n+/)
     .map((line) => safeTrim(line).replace(/^[\d\-\.\)\(]+\s*/, ''))
@@ -2392,54 +2392,58 @@ const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<stri
 }
 
 // 사용자 추가 출처를 평탄화하여 공통으로 활용 (페이지 표시 순서대로 정렬, 1부터 번호 부여)
-const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; text: string }> => {
+const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; text: string; url?: string }> => {
   if (!src || typeof src !== 'object') return []
-  
-  // 필드 표시 순서 (개요 탭 → 상세정보 탭)
+
+  // 필드 표시 순서 (소개 탭 → 과정 탭)
   const fieldOrder: string[] = [
     // 히어로 섹션
     'summary', 'heroCategory', 'heroTags',
-    // 개요 탭
+    // 소개 탭
     'overviewWork.main', 'overviewWork.physicalAct', 'overviewWork.mentalAct',
     'overviewAbilities.abilityList', 'overviewAbilities.aptitudeList', 'overviewAbilities.interestList',
     'trivia',
-    // 되는 방법 / 임금 / 전망
-    'way', 'overviewSalary.sal', 'overviewProspect.main',
+    'overviewSalary.sal', 'overviewProspect.main',
+    // 과정 탭 (되는 방법)
+    'way',
     // 상세정보 탭
     'detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList',
     // 사이드바
     'sidebarMajors', 'sidebarCerts'
   ]
-  
-  const flat: Array<{ id: number; fieldKey: string; text: string; displayOrder: number; originalId: number }> = []
-  
+
+  const flat: Array<{ id: number; fieldKey: string; text: string; url?: string; displayOrder: number; originalId: number }> = []
+
   for (const [fieldKey, val] of Object.entries(src)) {
     const arr = Array.isArray(val) ? val : [val]
     arr.forEach((item: any) => {
-      const text = (item?.text || item?.url || '').trim()
-      if (!text) return
+      const text = (item?.text || '').trim()
+      const url = (item?.url || '').trim()
+      if (!text && !url) return
       const originalId = item?.id || 0
       const displayOrder = fieldOrder.indexOf(fieldKey)
-      flat.push({ 
+      flat.push({
         id: 0, // 나중에 순서대로 재부여
-        fieldKey, 
-        text, 
+        fieldKey,
+        text: text || url,
+        url: url || undefined,
         displayOrder: displayOrder >= 0 ? displayOrder : 999,
-        originalId 
+        originalId
       })
     })
   }
-  
+
   // 표시 순서대로 정렬 후 1부터 번호 재부여
   flat.sort((a, b) => {
     if (a.displayOrder !== b.displayOrder) return a.displayOrder - b.displayOrder
     return a.originalId - b.originalId // 같은 필드 내에서는 입력 순서
   })
-  
+
   return flat.map((item, idx) => ({
     id: idx + 1, // 1부터 순차 번호
     fieldKey: item.fieldKey,
-    text: item.text
+    text: item.text,
+    url: item.url
   }))
 }
 
@@ -2447,7 +2451,7 @@ const renderSourcesCollapsible = (
   profile: UnifiedJobDetail,
   sources?: SourceStatusRecord,
   partials?: Partial<Record<DataSource, UnifiedJobDetail | null>>,
-  userSourcesFlatFromTemplate?: Array<{ id: number; fieldKey: string; text: string }>
+  userSourcesFlatFromTemplate?: Array<{ id: number; fieldKey: string; text: string; url?: string }>
 ): string => {
   const normalizedId = (profile.id || profile.name || 'default').replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'default'
   const panelId = `job-source-panel-${normalizedId}`
@@ -2543,6 +2547,13 @@ const renderSourcesCollapsible = (
         const globalNum = source.id
         // 소스 텍스트에서 [N] 접두사 제거 (표시는 전역 번호 배지로 대체)
         const cleanText = source.text.replace(/^\[\d+\]\s*/, '')
+        // URL 링크 렌더링
+        const sourceUrl = (source as any).url || ''
+        let urlHostname = ''
+        try { urlHostname = new URL(sourceUrl).hostname.replace('www.', '') } catch { urlHostname = sourceUrl.slice(0, 40) }
+        const urlHtml = sourceUrl
+          ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary hover:text-wiki-primary/80 inline-flex items-center gap-1 mt-1" onclick="event.stopPropagation()"><svg class="w-3 h-3 inline flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg><span class="text-xs underline truncate max-w-[240px]">${escapeHtml(urlHostname)}</span></a>`
+          : ''
         return `
           <li class="user-source-item p-3 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10"
               id="user-fn-${globalNum}"
@@ -2554,6 +2565,7 @@ const renderSourcesCollapsible = (
               <div class="flex-1 text-sm">
                 <span class="text-wiki-muted ${sectionInfo ? 'underline decoration-dotted cursor-pointer hover:text-wiki-primary' : ''}">[${escapeHtml(fieldLabel)}]</span>
                 <span class="text-wiki-text ml-2">${linkifyText(cleanText)}</span>
+                ${urlHtml}
               </div>
             </div>
           </li>

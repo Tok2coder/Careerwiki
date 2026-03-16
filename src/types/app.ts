@@ -35,6 +35,9 @@ export type Bindings = {
   CF_PAGES_API_TOKEN?: string;
   GITHUB_TOKEN?: string;
   GOOGLE_SITE_VERIFICATION?: string;
+  // Google Search Console / Indexing API (서비스 계정)
+  GOOGLE_SERVICE_ACCOUNT_EMAIL?: string;
+  GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?: string;
 }
 
 // User 타입 (auth-helpers에서 정의)

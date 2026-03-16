@@ -48,6 +48,9 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
     ? stripHtmlTags(value)
     : value
 
+  // 리터럴 \n을 실제 줄바꿈으로 변환
+  cleanedValue = cleanedValue.replace(/\\n/g, '\n')
+
   // 깨진 문자 및 특수 기호 제거 (□, ■, ▢, �, 제어문자 등)
   cleanedValue = cleanedValue
     .replace(/[\u25A0-\u25FF]/g, '')  // 기하학적 도형 (□, ■, ▢ 등)
@@ -70,7 +73,7 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
         /\[(\d+)\]/g,
         (_match, localNum) => {
           const globalNum = fieldMap ? (fieldMap[localNum] ?? localNum) : localNum
-          return `<sup class="user-footnote-ref cursor-pointer transition" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-primary,#64b5f6);background:rgba(100,181,246,0.12);border-radius:9999px;margin-left:2px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="출처 [${globalNum}]">${globalNum}</sup>`
+          return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#64b5f6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="출처 [${globalNum}]">[${globalNum}]</sup>`
         }
       )
       return `<p class="content-text leading-relaxed text-wiki-text">${safe}</p>`

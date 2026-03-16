@@ -1387,8 +1387,8 @@ pagesRoutes.get('/sitemap.xml', async (c) => {
 
   try {
     const [jobRows, majorRows, howtoRows] = await Promise.all([
-      c.env.DB.prepare('SELECT id, name FROM jobs WHERE is_active = 1').all<{ id: string; name: string }>(),
-      c.env.DB.prepare('SELECT id, name FROM majors WHERE is_active = 1').all<{ id: string; name: string }>(),
+      c.env.DB.prepare('SELECT id, name, COALESCE(user_last_updated_at, admin_last_updated_at, api_last_updated_at) as last_updated FROM jobs WHERE is_active = 1').all<{ id: string; name: string; last_updated: number | null }>(),
+      c.env.DB.prepare('SELECT id, name, COALESCE(user_last_updated_at, admin_last_updated_at, api_last_updated_at) as last_updated FROM majors WHERE is_active = 1').all<{ id: string; name: string; last_updated: number | null }>(),
       c.env.DB.prepare(
         "SELECT slug, updated_at FROM pages WHERE page_type = 'guide' AND status IN ('published', 'draft_published')"
       ).all<{ slug: string; updated_at: string | null }>(),
@@ -1396,12 +1396,14 @@ pagesRoutes.get('/sitemap.xml', async (c) => {
 
     for (const row of jobRows.results) {
       const slug = composeDetailSlug('job', row.name, row.id)
-      entries.push({ loc: `${origin}/job/${encodeURIComponent(slug)}` })
+      const lastmod = row.last_updated ? new Date(row.last_updated).toISOString().split('T')[0] : undefined
+      entries.push({ loc: `${origin}/job/${encodeURIComponent(slug)}`, lastmod })
     }
 
     for (const row of majorRows.results) {
       const slug = composeDetailSlug('major', row.name, row.id)
-      entries.push({ loc: `${origin}/major/${encodeURIComponent(slug)}` })
+      const lastmod = row.last_updated ? new Date(row.last_updated).toISOString().split('T')[0] : undefined
+      entries.push({ loc: `${origin}/major/${encodeURIComponent(slug)}`, lastmod })
     }
 
     for (const row of howtoRows.results) {
