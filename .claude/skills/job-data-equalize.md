@@ -1,7 +1,7 @@
 # 직업 정보 수준 평준화 스킬
 
 유저가 "정보 수준 평준화", "직업 데이터 보완", "job data equalize" 등을 말하면 이 스킬을 실행한다.
-지정된 직업(들)의 빈 필드를 리서치하여 채우고, 출처와 함께 편집 API로 업데이트하는 전체 워크플로우.
+대상 직업(들)의 **모든 필드**를 점검하고, 기존 데이터의 최신성을 검증하며, 빈 필드를 리서치하여 채우고, 출처와 함께 편집 API로 업데이트하는 전체 워크플로우.
 
 ---
 
@@ -10,7 +10,7 @@
 ### 세션 토큰
 편집 API 호출에 필요. 유저에게 요청하거나 기존 대화에서 재사용.
 ```
-Cookie: session=SESSION_TOKEN
+Cookie: session_token=SESSION_TOKEN
 ```
 
 ### 대상 직업 결정
@@ -30,34 +30,40 @@ ORDER BY missing_count DESC, name
 LIMIT 30
 ```
 
+### DB 쿼리 실행 방법
+```bash
+npx wrangler d1 execute careerwiki-kr --remote --command "SQL문"
+```
+
 ---
 
 ## 1. 현황 분석 (Analyst)
 
-### 1-1. 대상 직업 데이터 확인
+### 1-1. 대상 직업 데이터 **전수 점검**
+
+**모든 필드를 체크한다** — 빈 필드만이 아니라 기존 데이터도 최신성 확인.
+
 ```sql
 SELECT id, name, slug,
-  CASE WHEN json_extract(merged_profile_json, '$.way') IS NOT NULL AND json_extract(merged_profile_json, '$.way') != '' THEN 'O' ELSE 'X' END as has_way,
-  CASE WHEN json_extract(merged_profile_json, '$.overviewSalary.sal') IS NOT NULL THEN 'O' ELSE 'X' END as has_salary,
-  CASE WHEN json_extract(merged_profile_json, '$.overviewProspect.main') IS NOT NULL AND json_extract(merged_profile_json, '$.overviewProspect.main') != '' THEN 'O' ELSE 'X' END as has_prospect,
-  CASE WHEN json_extract(merged_profile_json, '$.trivia') IS NOT NULL THEN 'O' ELSE 'X' END as has_trivia,
-  json_extract(api_data_json, '$.careernet.encyclopedia.baseInfo.job_cd') as careernet_job_cd,
-  json_extract(api_data_json, '$.careernet.encyclopedia.baseInfo.emp_job_cd') as emp_job_cd
+  substr(json_extract(merged_profile_json, '$.way'), 1, 200) as way_preview,
+  substr(json_extract(merged_profile_json, '$.overviewProspect.main'), 1, 200) as prospect_preview,
+  json_extract(merged_profile_json, '$.overviewSalary.sal') as salary,
+  json_extract(merged_profile_json, '$.trivia') as trivia,
+  json_extract(user_contributed_json, '$._sources') IS NOT NULL as has_sources
 FROM jobs WHERE name IN ('직업명1', '직업명2') AND is_active = 1
 ```
 
-### 1-2. 기존 데이터 "모범 사례" 확인
-빈 필드가 없는 직업 2-3개를 찾아 **실제 포맷/톤/깊이**를 파악:
-```sql
-SELECT name,
-  substr(json_extract(merged_profile_json, '$.way'), 1, 200) as way_sample,
-  substr(json_extract(merged_profile_json, '$.overviewProspect.main'), 1, 200) as prospect_sample
-FROM jobs WHERE is_active = 1
-  AND json_extract(merged_profile_json, '$.way') IS NOT NULL AND json_extract(merged_profile_json, '$.way') != ''
-  AND json_extract(merged_profile_json, '$.overviewSalary.sal') IS NOT NULL
-  AND json_extract(merged_profile_json, '$.overviewProspect.main') IS NOT NULL
-LIMIT 3
-```
+### 1-2. 점검 항목
+
+| 필드 | 점검 내용 |
+|------|----------|
+| `summary` | 정확성, 최신성, 충분한 분량인지 |
+| `overviewWork.main` | 수행직무 누락/구식 여부 |
+| `way` | 최신 자격요건, 교육과정, 합격률 |
+| `overviewSalary.sal` | 최신 통계 여부 (연도 확인) |
+| `overviewProspect.main` | 최신 고용 전망 |
+| `trivia` | 있는지, 내용이 흥미로운지 |
+| `_sources` | 출처가 있는지, URL이 유효한지 |
 
 ---
 
@@ -70,7 +76,7 @@ LIMIT 3
 | `way` | 줄바꿈(\n) 단락 구분 | 200-500자 | 학력→자격증→단계별 경로→실무 팁 |
 | `overviewSalary.sal` | "조사년도:YYYY년, 임금 하위(25%) N만원, 평균(50%) N만원, 상위(25%) N만원" | 정확한 형식 필수 | 25th/50th/75th 백분위 공식 통계만. 없으면 건너뜀 |
 | `overviewProspect.main` | 단락 텍스트 | 200-400자 | "~전망됩니다" 객관적 톤 |
-| `trivia` | string[] (JSON 배열) | 3-5개 항목 | 흥미로운 사실, 업계 에피소드 |
+| `trivia` | string[] (JSON 배열) | **1~2개만** | 유저 기여용 공간이므로 최소한으로. 가장 흥미로운 사실 하나만 |
 
 ### 2-2. 리서치 범위 (핵심!)
 
@@ -106,40 +112,36 @@ LIMIT 3
 **모든 사실/통계에 인라인 각주 `[N]`을 달아야 한다.** 렌더링 시 자동으로 클릭 가능한 superscript로 변환됨.
 
 #### 텍스트 + 각주 작성 규칙
-1. 각 문장 끝에 `[N]` 번호를 붙인다 (위키피디아 스타일)
+1. **각주는 마침표 뒤에 붙인다**: `합격해야 합니다.[1]` (O) / `합격해야 합니다[1].` (X)
 2. 같은 필드 안에서 번호는 1부터 순서대로
-3. 출처 텍스트는 `[N] 출처명 URL` 형식
-4. **한 필드에 최소 3개 이상, 최대 8개 이내 각주**
+3. 출처 텍스트는 `[N] 출처명` 형식 (URL은 별도 필드)
+4. **한 필드에 최소 2개 이상, 최대 6개 이내 각주**
+5. 렌더링에서 `다[N].` → `다.[N]` 자동 정규화가 있지만, 처음부터 올바른 위치에 작성할 것
 
 #### 예시
 ```
 ## 간호사 (ID: 1765283280202496)
 
 ### way (되는 방법)
-간호사가 되려면 4년제 간호학과 또는 3년제 간호전문대학을 졸업하고 간호사 국가시험에 합격해야 합니다[1]. 2024년 간호사 국가시험 합격률은 95.4%로 매년 높은 합격률을 유지하고 있습니다[2]. 면허 취득 후 대부분 종합병원에서 1~2년간 신규간호사 과정을 거치며 실무를 익힙니다[3].
-
-전문간호사가 되려면 3년 이상 임상 경력 후 전문간호사 교육기관에서 2년 과정을 이수하고 자격시험에 합격해야 합니다[4]. 최근 간호법 제정으로 독자적 간호 판단 영역이 확대되는 추세입니다[5].
+간호사가 되려면 4년제 간호학과 또는 3년제 간호전문대학을 졸업하고 간호사 국가시험에 합격해야 합니다.[1] 2024년 간호사 국가시험 합격률은 95.4%로 매년 높은 합격률을 유지하고 있습니다.[2] 면허 취득 후 대부분 종합병원에서 1~2년간 신규간호사 과정을 거치며 실무를 익힙니다.[3]
 
 ### overviewProspect.main (전망)
-향후 10년간 간호사 고용은 연평균 2.8% 증가할 것으로 전망됩니다[1]. 인구 고령화로 65세 이상 인구가 20%를 넘어서면서 간호 수요가 급증하고 있습니다[2]. 간호간병통합서비스 확대로 약 3만 명의 추가 인력이 필요합니다[3].
+향후 10년간 간호사 고용은 연평균 2.8% 증가할 것으로 전망됩니다.[1] 인구 고령화로 간호 수요가 급증하고 있습니다.[2]
 
-### 출처 (필드별 분리, [N] 번호 필수!)
+### 출처 (필드별 분리)
 way 출처:
-- [1] 대한간호협회 간호사 되기 안내 https://www.koreanurse.or.kr/about_KNA/nurse.php
-- [2] 한국보건의료인국가시험원 2024 통계 https://www.kuksiwon.or.kr/peryear/fixExamResultList.do
-- [3] 서울대학교병원 간호부 신규간호사 안내 https://nursing.snuh.org/content/nursing/recruit.do
-- [4] 보건복지부 전문간호사 제도 안내 https://www.mohw.go.kr/menu.es?mid=a10706020500
-- [5] 간호법 제정 보도 - 법률신문 https://www.lawtimes.co.kr/news/191234
+- [1] 대한간호협회 간호사 되기 안내 | URL: https://www.koreanurse.or.kr/about_KNA/nurse.php
+- [2] 한국보건의료인국가시험원 2024 통계 | URL: https://www.kuksiwon.or.kr/...
 
 prospect 출처:
-- [1] 한국고용정보원 중장기 인력수급전망 https://www.keis.or.kr/...
-- [2] 통계청 장래인구추계 https://kosis.kr/statHtml/...
-- [3] 보건복지부 간호간병통합서비스 확대 보도자료 https://www.mohw.go.kr/...
+- [1] 한국고용정보원 중장기 인력수급전망 | URL: https://www.keis.or.kr/...
 ```
 
 ### 2-4. 콘텐츠 작성 원칙
 
 **API에 이미 있는 정보를 반복하지 않는다.** 커리어넷/워크넷 데이터는 이미 페이지에 표시 중.
+
+**기존 데이터가 있을 때**: 더 최신이거나 더 정확한 정보가 있으면 덮어쓸 수 있다. 단, changeSummary에 "기존 데이터 대비 변경 사유" 기록 필수.
 
 새로 추가할 정보:
 - **현장 실무 정보**: 실제 취업 루트, 신규 입사 과정, 실무 팁
@@ -158,7 +160,7 @@ prospect 출처:
 ```
 POST https://careerwiki.org/api/job/{id}/edit
 Content-Type: application/json
-Cookie: session=SESSION_TOKEN
+Cookie: session_token=SESSION_TOKEN
 ```
 
 ### 3-2. 요청 Body (인라인 각주 포함)
@@ -168,25 +170,21 @@ Cookie: session=SESSION_TOKEN
 ```json
 {
   "fields": {
-    "way": "간호사가 되려면 4년제 간호학과 또는 3년제 간호전문대학을 졸업하고 간호사 국가시험에 합격해야 합니다[1]. 2024년 간호사 국가시험 합격률은 95.4%입니다[2].\n\n면허 취득 후 대부분 종합병원에서 1~2년간 신규간호사 과정을 거칩니다[3]. 전문간호사가 되려면 3년 이상 경력 후 교육기관 2년 과정 이수가 필요합니다[4].",
-    "overviewSalary.sal": "조사년도:2022년, 임금 하위(25%) 255만원, 평균(50%) 295만원, 상위(25%) 363만원",
-    "overviewProspect.main": "향후 10년간 간호사 고용은 연평균 2.8% 증가 전망입니다[1]. 65세 이상 인구가 20%를 넘어서며 간호 수요가 급증하고 있습니다[2]. 간호간병통합서비스 확대로 약 3만 명의 추가 인력이 필요합니다[3].",
-    "trivia": "[\"사실1[1]\", \"사실2[2]\", \"사실3[3]\"]"
+    "way": "간호사가 되려면 4년제 간호학과를 졸업하고 국가시험에 합격해야 합니다.[1] 2024년 합격률은 95.4%입니다.[2]\n\n면허 취득 후 종합병원에서 1~2년간 신규간호사 과정을 거칩니다.[3]",
+    "overviewProspect.main": "향후 10년간 고용은 연평균 2.8% 증가 전망입니다.[1]",
+    "trivia": "[\"치과의사 한 명이 평생 진료하는 환자 수는 약 15만 명에 달한다.\"]"
   },
   "sources": {
     "way": [
       {"text": "[1] 대한간호협회 간호사 되기 안내", "url": "https://www.koreanurse.or.kr/about_KNA/nurse.php"},
       {"text": "[2] 한국보건의료인국가시험원 2024 통계", "url": "https://www.kuksiwon.or.kr/peryear/fixExamResultList.do"},
-      {"text": "[3] 서울대학교병원 간호부 신규간호사 안내", "url": "https://nursing.snuh.org/content/nursing/recruit.do"},
-      {"text": "[4] 보건복지부 전문간호사 제도 안내", "url": "https://www.mohw.go.kr/menu.es?mid=a10706020500"}
+      {"text": "[3] 서울대학교병원 간호부", "url": "https://nursing.snuh.org/content/nursing/recruit.do"}
     ],
     "overviewProspect.main": [
-      {"text": "[1] 한국고용정보원 중장기 인력수급전망", "url": "https://www.keis.or.kr/..."},
-      {"text": "[2] 통계청 장래인구추계", "url": "https://kosis.kr/statHtml/..."},
-      {"text": "[3] 보건복지부 간호간병통합서비스 확대 보도자료", "url": "https://www.mohw.go.kr/..."}
+      {"text": "[1] 한국고용정보원 인력수급전망", "url": "https://www.keis.or.kr/..."}
     ]
   },
-  "changeSummary": "way, prospect 필드 보완 (다양한 출처 인라인 각주 포함)"
+  "changeSummary": "way 최신 합격률 보완, prospect 최신 전망 업데이트, trivia 1개 추가"
 }
 ```
 
@@ -198,10 +196,10 @@ Cookie: session=SESSION_TOKEN
 
 | 필드 | 포맷 | 주의 |
 |------|------|------|
-| `way` | string (줄바꿈 \n 포함) | 기존 `way` 데이터 있으면 **덮어쓰지 말고** 보완만 |
+| `way` | string (줄바꿈 \n 포함) | 기존보다 나은 내용이면 덮어쓰기 가능. changeSummary에 사유 기록 |
 | `overviewSalary.sal` | 정확한 형식 문자열 | "조사년도:YYYY년, 임금 하위(25%) N만원, 평균(50%) N만원, 상위(25%) N만원" — 이 형식이 아니면 차트 깨짐 |
-| `overviewProspect.main` | string | 기존 전망 있으면 보완만 |
-| `trivia` | JSON 문자열화된 배열 | `"[\"항목1\", \"항목2\"]"` 형태로 전송 |
+| `overviewProspect.main` | string | 기존보다 최신 데이터면 덮어쓰기 가능 |
+| `trivia` | JSON 문자열화된 배열 | `"[\"항목1\"]"` — **최대 2개까지만**. 유저 기여용 공간 |
 
 ### 3-4. 출처 소스 키 매핑
 
@@ -240,11 +238,9 @@ Cookie: session=SESSION_TOKEN
 
 편집 API 호출 후 반드시 프로덕션에서 확인:
 
-### 4-1. curl/WebFetch로 확인
-```
-1. curl https://careerwiki.org/job/{slug} → HTML 응답에서 필드 데이터 포함 여부 확인
-2. WebFetch로 페이지 로드 → 렌더링된 콘텐츠 확인
-3. 출처 섹션에 인라인 각주 번호 [N]이 superscript로 변환되었는지 확인
+### 4-1. curl로 확인
+```bash
+curl -s "https://careerwiki.org/job/{slug}?nocache=1" | grep "확인할 키워드"
 ```
 
 ### 4-2. 확인 항목
@@ -252,11 +248,11 @@ Cookie: session=SESSION_TOKEN
 [ ] way(되는 방법): "과정" 탭에 표시됨
 [ ] salary: 임금 차트가 정상 렌더링 (하위/평균/상위 바 차트)
 [ ] prospect: "커리어 전망" 섹션에 표시됨
-[ ] trivia: 여담 섹션에 불릿 리스트로 표시됨
-[ ] 출처: 한국어 라벨 ([되는 방법], [임금 정보] 등) + 클릭 가능한 URL
-[ ] 인라인 각주: 텍스트 내 [N]이 클릭 가능한 superscript로 렌더링됨
-[ ] 각주 번호 매칭: 텍스트의 [N]과 출처의 [N]이 일치함
-[ ] 기존 데이터 유지: 기존에 있던 다른 필드가 사라지지 않았음
+[ ] trivia: 여담 섹션에 1~2개 불릿으로 표시됨
+[ ] 출처: 필드별 그룹핑 + 클릭 가능한 URL
+[ ] 인라인 각주: 마침표 뒤에 [N] superscript 표시
+[ ] 각주 번호 매칭: 텍스트의 [N]과 출처의 [N]이 일치
+[ ] 기존 데이터 유지: 다른 필드가 사라지지 않았음
 ```
 
 ---
@@ -265,21 +261,20 @@ Cookie: session=SESSION_TOKEN
 
 ### 단일 직업
 ```
-1. DB에서 해당 직업의 현재 데이터 확인 (빈 필드 파악)
-2. 빈 필드만 리서치 (이미 채워진 필드는 건드리지 않음)
-3. 세부 출처 URL 수집 + WebFetch 검증
-4. 편집 API 호출
+1. DB에서 해당 직업의 현재 데이터 전수 점검 (빈 필드 + 기존 데이터 최신성)
+2. 웹 리서치 (기존 데이터 검증 + 빈 필드 채우기)
+3. 세부 출처 URL 수집 + curl 검증
+4. 편집 API 호출 (changeSummary에 변경 사유 상세 기록)
 5. 프로덕션 확인
 ```
 
 ### 대량 (10개 이상)
 ```
 1. Analyst Agent → 전체 현황 분석 + 대상 선별
-2. Researcher Agent(들) → 병렬 리서치 (5-7개씩 배치)
-3. Content Creator Agent → 포맷 가공 (기존 모범 사례와 톤 일치)
-4. Team Leader → 품질 검수 (출처 URL 유효성, 포맷 일관성)
-5. Implementer Agent(들) → 병렬 API 호출 (5-7개씩 배치)
-6. 프로덕션 샘플 검증 (배치당 1-2개)
+2. Researcher Agent(들) → 병렬 리서치 (3-5개씩 배치)
+   - 각 Agent가 리서치 + 편집 API 호출까지 직접 수행
+3. QA Agent → 랜덤 3-5개 프로덕션 확인
+4. 결과 보고
 ```
 
 ---
@@ -287,10 +282,11 @@ Cookie: session=SESSION_TOKEN
 ## 6. 절대 금지
 
 - 출처 없는 통계/수치 입력
-- 기존 데이터 덮어쓰기 (기존 데이터가 있으면 보완만)
 - 메인 도메인만 출처로 기록 (https://www.career.go.kr ← 이렇게 하면 안 됨)
 - salary 형식 미준수 (차트 깨짐)
 - 공식 25/50/75 백분위 수치 없는 직업에 salary 추정치 입력
+- trivia 3개 이상 작성 (유저 기여용 공간이므로 1~2개만)
+- 각주를 마침표 앞에 배치 (`합니다[1].` ← 금지. `합니다.[1]`이 올바른 형식)
 - `.dev.vars` 커밋, `DROP TABLE`, `DELETE FROM` (WHERE 없이)
 
 ---
@@ -299,6 +295,6 @@ Cookie: session=SESSION_TOKEN
 
 모든 API 호출에 인증 필요:
 ```
-Cookie: session=SESSION_TOKEN
+Cookie: session_token=SESSION_TOKEN
 ```
 토큰은 유저에게 요청하거나, 기존 대화에서 재사용.

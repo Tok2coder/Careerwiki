@@ -2399,11 +2399,12 @@ const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; t
   const fieldOrder: string[] = [
     // 히어로 섹션
     'summary', 'heroCategory', 'heroTags',
-    // 소개 탭
+    // 소개 탭 (UI 표시 순서: 주요업무 → 전망 → 적성 → 임금 → 여담)
     'overviewWork.main', 'overviewWork.physicalAct', 'overviewWork.mentalAct',
+    'overviewProspect.main',
     'overviewAbilities.abilityList', 'overviewAbilities.aptitudeList', 'overviewAbilities.interestList',
+    'overviewSalary.sal',
     'trivia',
-    'overviewSalary.sal', 'overviewProspect.main',
     // 과정 탭 (되는 방법)
     'way',
     // 상세정보 탭
@@ -3260,12 +3261,17 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   // footnoteMap: { fieldKey: { localNum: globalNum } }
   // 소스 텍스트에서 [N]을 파싱하여 필드별 로컬→전역 매핑
   const footnoteMap: Record<string, Record<string, number>> = {}
+  // sourceTextMap: 전역번호 → 출처 설명 텍스트 (각주 hover 시 표시)
+  const sourceTextMap: Record<number, string> = {}
   for (const source of userSourcesFlat) {
     const m = source.text.match(/^\[(\d+)\]/)
     if (m) {
       if (!footnoteMap[source.fieldKey]) footnoteMap[source.fieldKey] = {}
       footnoteMap[source.fieldKey][m[1]] = source.id // source.id = 전역 번호 (1~N)
     }
+    // [N] 접두사 제거한 출처 설명을 전역 번호로 매핑
+    const cleanDesc = source.text.replace(/^\[\d+\]\s*/, '').trim()
+    if (cleanDesc) sourceTextMap[source.id] = cleanDesc
   }
 
   // 히어로 섹션 데이터 (ETL에서 병합된 필드 사용)
@@ -3706,7 +3712,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${safeLine}</div>`
         }).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       } else if (lines.length === 1) {
-        prospectHtml = `${formatRichText(prospectPrimary, 'overviewProspect.main', footnoteMap)}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+        prospectHtml = `${formatRichText(prospectPrimary, 'overviewProspect.main', footnoteMap, sourceTextMap)}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       }
     }
     
@@ -3948,7 +3954,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   if (triviaItems.length > 0) {
     const triviaList = triviaItems
       .map(item => {
-        const rendered = formatRichText(item, 'trivia', footnoteMap)
+        const rendered = formatRichText(item, 'trivia', footnoteMap, sourceTextMap)
         return `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${rendered}</span></li>`
       })
       .join('')
@@ -4174,7 +4180,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     // 사용자 기여 way 텍스트 (인라인 각주 포함) — 맨 위에 표시
     const userWay = (profile as any).way as string | undefined
     if (userWay && safeTrim(userWay)) {
-      readyBlocks.push(`<div><h3 class="content-heading">되는 방법</h3>${formatRichText(userWay, 'way', footnoteMap)}</div>`)
+      readyBlocks.push(`<div><h3 class="content-heading">되는 방법</h3>${formatRichText(userWay, 'way', footnoteMap, sourceTextMap)}</div>`)
     }
 
     // 헬퍼: 객체 또는 문자열에서 텍스트 추출

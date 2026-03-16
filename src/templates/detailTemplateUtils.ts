@@ -35,10 +35,12 @@ const stripHtmlTags = (html: string): string => {
 /**
  * footnoteMap: 필드별 로컬번호 → 전역번호 매핑
  * 예: { 'way': { '1': 5, '2': 6 }, 'overviewProspect.main': { '1': 9, '2': 10 } }
+ * sourceTextMap: 전역번호 → 출처 설명 텍스트 (각주 hover 시 표시)
+ * 예: { 5: '대한간호협회 간호사 되기 안내', 6: '한국보건의료인국가시험원 2024 통계' }
  */
 export type FootnoteMap = Record<string, Record<string, number>>
 
-export const formatRichText = (value?: string | null, fieldKey?: string, footnoteMap?: FootnoteMap): string => {
+export const formatRichText = (value?: string | null, fieldKey?: string, footnoteMap?: FootnoteMap, sourceTextMap?: Record<number, string>): string => {
   if (!value || !value.trim()) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
@@ -75,7 +77,9 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
         /\[(\d+)\]/g,
         (_match, localNum) => {
           const globalNum = fieldMap ? (fieldMap[localNum] ?? localNum) : localNum
-          return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#64b5f6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="출처 [${globalNum}]">[${globalNum}]</sup>`
+          const sourceDesc = sourceTextMap?.[globalNum] || ''
+          const titleText = sourceDesc ? sourceDesc.replace(/"/g, '&quot;') : `출처 [${globalNum}]`
+          return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#64b5f6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleText}">[${globalNum}]</sup>`
         }
       )
       return `<p class="content-text leading-relaxed text-wiki-text">${safe}</p>`
@@ -1396,22 +1400,30 @@ export const renderSourcesPanel = ({
       return hasData || hasError
     })
 
-  // API 출처를 한 줄에 나란히 표시 (그리드)
+  // API 출처를 한 줄에 나란히 표시 (그리드) + 설명 포함
   const sourceCount = validSources.length
   const gridCols = sourceCount >= 3 ? 'grid-cols-3' : sourceCount === 2 ? 'grid-cols-2' : 'grid-cols-1'
   const entries = validSources.length > 0
     ? `<div class="grid ${gridCols} gap-2">${validSources.map((source) => {
         const hasData = Boolean(partials?.[source])
+        const status = sources?.[source]
+        const note = hasData ? '통합 데이터에 포함됨' : status?.error ?? ''
         const icon = hasData ? 'fa-circle-check text-green-400' : 'fa-circle-exclamation text-amber-300'
         const clickableClass = hasData ? 'cursor-pointer hover:border-wiki-primary/60 hover:bg-wiki-primary/5' : ''
+        const descLine = descriptions?.[source] ? `<p class="text-[11px] text-wiki-muted mt-1">${escapeHtml(descriptions[source] ?? '')}</p>` : ''
+        const noteLine = note ? `<p class="text-[10px] text-wiki-muted/70 mt-0.5">${escapeHtml(note)}</p>` : ''
         return `
           <div
             class="p-3 border border-wiki-border rounded-lg bg-wiki-bg/60 transition text-center ${clickableClass}"
             data-source-entry="${escapeHtml(source)}"
             data-source-has-data="${hasData ? 'true' : 'false'}"
           >
-            <i class="fas ${icon} mr-1.5" aria-hidden="true"></i>
-            <span class="text-sm font-semibold text-wiki-text">${escapeHtml(labels[source] ?? source)}</span>
+            <div>
+              <i class="fas ${icon} mr-1" aria-hidden="true"></i>
+              <span class="text-sm font-semibold text-wiki-text">${escapeHtml(labels[source] ?? source)}</span>
+            </div>
+            ${descLine}
+            ${noteLine}
           </div>
         `
       }).join('')}</div>`
