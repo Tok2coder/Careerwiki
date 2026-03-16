@@ -67,6 +67,8 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
     .split(/\n{2,}/)
     .map((paragraph) => {
       let safe = escapeHtml(paragraph.trim()).replace(/\n/g, '<br>')
+      // 각주 위치 정규화: "했다[N]." → "했다.[N]" (마침표 뒤에 각주)
+      safe = safe.replace(/(\[(\d+)\])([.。])/g, '$3$1')
       // 인라인 각주 [N] → 클릭 가능한 superscript 링크로 변환
       // footnoteMap이 있으면 로컬 번호를 전역 번호로 변환
       safe = safe.replace(
@@ -1387,45 +1389,33 @@ export const renderSourcesPanel = ({
   description,
   annotations
 }: SourcesPanelOptions): string => {
-  const entries = (Object.keys(labels) as DataSource[])
-    .map((source) => {
-      const status = sources?.[source]
+  const validSources = (Object.keys(labels) as DataSource[])
+    .filter((source) => {
       const hasData = Boolean(partials?.[source])
-      const note = hasData ? '통합 데이터에 포함되었습니다.' : status?.error ?? null
-
-      if (!hasData && !status?.error) {
-        return ''
-      }
-
-      const icon = hasData ? 'fa-circle-check text-green-400' : 'fa-circle-exclamation text-amber-300'
-      const descriptionLine = descriptions?.[source]
-        ? `<p class="text-xs text-wiki-muted">${escapeHtml(descriptions[source] ?? '')}</p>`
-        : ''
-      const noteLine = note ? `<p class="text-xs text-wiki-muted">${escapeHtml(note)}</p>` : ''
-
-      // 데이터가 있는 출처만 클릭 가능 (하이라이트 기능)
-      const clickableClass = hasData ? 'cursor-pointer hover:border-wiki-primary/60 hover:bg-wiki-primary/5' : ''
-      const clickableHint = hasData ? `<span class="text-[10px] text-wiki-muted/70 ml-2">(클릭하여 표시)</span>` : ''
-      
-      return `
-        <li
-          class="p-3 border border-wiki-border rounded-lg bg-wiki-bg/60 transition ${clickableClass}"
-          data-source-entry="${escapeHtml(source)}"
-          data-source-has-data="${hasData ? 'true' : 'false'}"
-        >
-          <div class="flex items-start gap-3">
-            <i class="fas ${icon} mt-1" aria-hidden="true"></i>
-            <div class="space-y-1">
-              <p class="text-sm font-semibold text-wiki-text">${escapeHtml(labels[source] ?? source)}${clickableHint}</p>
-              ${descriptionLine}
-              ${noteLine}
-            </div>
-          </div>
-        </li>
-      `
+      const hasError = Boolean(sources?.[source]?.error)
+      return hasData || hasError
     })
-    .filter((entry) => entry && entry.trim().length > 0)
-    .join('')
+
+  // API 출처를 한 줄에 나란히 표시 (그리드)
+  const sourceCount = validSources.length
+  const gridCols = sourceCount >= 3 ? 'grid-cols-3' : sourceCount === 2 ? 'grid-cols-2' : 'grid-cols-1'
+  const entries = validSources.length > 0
+    ? `<div class="grid ${gridCols} gap-2">${validSources.map((source) => {
+        const hasData = Boolean(partials?.[source])
+        const icon = hasData ? 'fa-circle-check text-green-400' : 'fa-circle-exclamation text-amber-300'
+        const clickableClass = hasData ? 'cursor-pointer hover:border-wiki-primary/60 hover:bg-wiki-primary/5' : ''
+        return `
+          <div
+            class="p-3 border border-wiki-border rounded-lg bg-wiki-bg/60 transition text-center ${clickableClass}"
+            data-source-entry="${escapeHtml(source)}"
+            data-source-has-data="${hasData ? 'true' : 'false'}"
+          >
+            <i class="fas ${icon} mr-1.5" aria-hidden="true"></i>
+            <span class="text-sm font-semibold text-wiki-text">${escapeHtml(labels[source] ?? source)}</span>
+          </div>
+        `
+      }).join('')}</div>`
+    : ''
 
   const annotationsMarkup = annotations?.length
     ? `
@@ -1456,7 +1446,7 @@ export const renderSourcesPanel = ({
         <h3 class="text-lg font-semibold text-wiki-text">${escapeHtml(title)}</h3>
         ${descriptionMarkup}
       </div>
-      ${entries ? `<ul class="space-y-3">${entries}</ul>` : ''}
+      ${entries || ''}
       ${annotationsMarkup}
     </div>
   `

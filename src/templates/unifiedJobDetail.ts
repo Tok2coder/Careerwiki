@@ -2490,88 +2490,89 @@ const renderSourcesCollapsible = (
     description: '이 페이지에 노출된 주요 출처를 확인할 수 있습니다.'
   })
 
-  // 사용자 출처 HTML 생성
+  // 사용자 출처 HTML 생성 — 필드별 그룹핑
+  const fieldLabels: Record<string, string> = {
+    'summary': '직업 설명', 'heroCategory': '직업 분류', 'heroTags': '태그',
+    'overviewWork.main': '수행 직무', 'overviewWork.workStrong': '작업강도',
+    'overviewWork.workPlace': '작업장소', 'overviewWork.physicalAct': '육체활동',
+    'overviewAbilities.abilityList': '핵심 역량', 'overviewAbilities.technKnow': '활용 기술',
+    'overviewAptitude.aptitudeList': '적성', 'overviewAptitude.interestList': '흥미',
+    'trivia': '여담', 'detailReady.curriculum': '정규 교육과정',
+    'detailReady.recruit': '채용 정보', 'detailReady.training': '필요 교육/훈련',
+    'detailReady.researchList': '진로 탐색 활동', 'sidebarJobs': '관련 직업',
+    'way': '되는 방법', 'overviewSalary.sal': '임금 정보',
+    'overviewProspect.main': '전망 정보', 'sidebarMajors': '관련 학과', 'sidebarCerts': '추천 자격증'
+  }
+  const fieldSectionMap: Record<string, { tab: string; section: string }> = {
+    'summary': { tab: 'overview', section: 'overview' },
+    'overviewWork.main': { tab: 'overview', section: 'overview-주요-업무' },
+    'overviewSalary.sal': { tab: 'overview', section: 'overview-임금-정보' },
+    'overviewProspect.main': { tab: 'overview', section: 'overview-커리어-전망' },
+    'overviewAbilities.abilityList': { tab: 'overview', section: 'overview-적성-및-흥미' },
+    'way': { tab: 'details', section: 'details-직업-준비하기' },
+    'detailReady.curriculum': { tab: 'details', section: 'details-직업-준비하기' },
+    'detailReady.recruit': { tab: 'details', section: 'details-직업-준비하기' },
+    'detailReady.training': { tab: 'details', section: 'details-직업-준비하기' },
+    'trivia': { tab: 'overview', section: 'overview' },
+  }
+  const linkifyText = (text: string): string => {
+    return escapeHtml(text).replace(
+      /https?:\/\/[^\s,)<>]+/g,
+      (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary underline hover:text-wiki-primary/80" onclick="event.stopPropagation()">${url}</a>`
+    )
+  }
+  const renderSourceItem = (source: { id: number; fieldKey: string; text: string; url?: string }) => {
+    const sectionInfo = fieldSectionMap[source.fieldKey]
+    const navAttr = sectionInfo
+      ? `data-nav-tab="${sectionInfo.tab}" data-nav-section="${sectionInfo.section}"`
+      : ''
+    const globalNum = source.id
+    const cleanText = source.text.replace(/^\[\d+\]\s*/, '')
+    const sourceUrl = (source as any).url || ''
+    let urlHostname = ''
+    try { urlHostname = new URL(sourceUrl).hostname.replace('www.', '') } catch { urlHostname = sourceUrl.slice(0, 40) }
+    const sourceTextHtml = sourceUrl
+      ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-wiki-text hover:text-wiki-primary underline decoration-wiki-primary/40 hover:decoration-wiki-primary transition" onclick="event.stopPropagation()">${linkifyText(cleanText) || escapeHtml(urlHostname)}</a>`
+      : `<span class="text-wiki-text">${linkifyText(cleanText)}</span>`
+    const domainBadge = sourceUrl && cleanText
+      ? `<span class="text-[11px] text-wiki-muted ml-1">(${escapeHtml(urlHostname)})</span>`
+      : ''
+    return `
+      <li class="user-source-item p-2.5 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10"
+          id="user-fn-${globalNum}"
+          data-back-to="user-fnref-${globalNum}"
+          data-field-key="${escapeHtml(source.fieldKey)}"
+          ${navAttr}>
+        <div class="flex items-start gap-2.5">
+          <span class="flex-shrink-0 w-5 h-5 rounded-full bg-wiki-primary/20 text-wiki-primary text-[11px] font-bold flex items-center justify-center">${globalNum}</span>
+          <div class="flex-1 text-sm">${sourceTextHtml}${domainBadge}</div>
+        </div>
+      </li>
+    `
+  }
+
+  // 필드별 그룹핑
+  const groupedSources = new Map<string, typeof userSourcesFlat>()
+  for (const source of userSourcesFlat) {
+    const key = source.fieldKey
+    if (!groupedSources.has(key)) groupedSources.set(key, [])
+    groupedSources.get(key)!.push(source)
+  }
+
   const userSourcesHtml = userSourcesFlat.length > 0
-    ? userSourcesFlat.map((source) => {
-        // 필드 키를 읽기 쉬운 레이블로 변환
-        const fieldLabels: Record<string, string> = {
-          'summary': '직업 설명',
-          'heroCategory': '직업 분류',
-          'heroTags': '태그',
-          'overviewWork.main': '수행 직무',
-          'overviewWork.workStrong': '작업강도',
-          'overviewWork.workPlace': '작업장소',
-          'overviewWork.physicalAct': '육체활동',
-          'overviewAbilities.abilityList': '핵심 역량',
-          'overviewAbilities.technKnow': '활용 기술',
-          'overviewAptitude.aptitudeList': '적성',
-          'overviewAptitude.interestList': '흥미',
-          'trivia': '여담',
-          'detailReady.curriculum': '정규 교육과정',
-          'detailReady.recruit': '채용 정보',
-          'detailReady.training': '필요 교육/훈련',
-          'detailReady.researchList': '진로 탐색 활동',
-          'sidebarJobs': '관련 직업',
-          'way': '되는 방법',
-          'overviewSalary.sal': '임금 정보',
-          'overviewProspect.main': '전망 정보',
-          'sidebarMajors': '관련 학과',
-          'sidebarCerts': '추천 자격증'
-        }
-        const fieldLabel = fieldLabels[source.fieldKey] || source.fieldKey
-        // 필드 키 → 페이지 내 섹션 매핑
-        const fieldSectionMap: Record<string, { tab: string; section: string }> = {
-          'summary': { tab: 'overview', section: 'overview' },
-          'overviewWork.main': { tab: 'overview', section: 'overview-주요-업무' },
-          'overviewSalary.sal': { tab: 'overview', section: 'overview-임금-정보' },
-          'overviewProspect.main': { tab: 'overview', section: 'overview-커리어-전망' },
-          'overviewAbilities.abilityList': { tab: 'overview', section: 'overview-적성-및-흥미' },
-          'way': { tab: 'details', section: 'details-직업-준비하기' },
-          'detailReady.curriculum': { tab: 'details', section: 'details-직업-준비하기' },
-          'detailReady.recruit': { tab: 'details', section: 'details-직업-준비하기' },
-          'detailReady.training': { tab: 'details', section: 'details-직업-준비하기' },
-          'trivia': { tab: 'overview', section: 'overview' },
-        }
-        const sectionInfo = fieldSectionMap[source.fieldKey]
-        const navAttr = sectionInfo
-          ? `data-nav-tab="${sectionInfo.tab}" data-nav-section="${sectionInfo.section}"`
-          : ''
-        // URL을 감지하여 클릭 가능한 링크로 변환
-        const linkifyText = (text: string): string => {
-          return escapeHtml(text).replace(
-            /https?:\/\/[^\s,)<>]+/g,
-            (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary underline hover:text-wiki-primary/80" onclick="event.stopPropagation()">${url}</a>`
-          )
-        }
-        // 전역 번호(source.id)를 직접 사용 — 페이지 전체에서 1~N 통합
-        const globalNum = source.id
-        // 소스 텍스트에서 [N] 접두사 제거 (표시는 전역 번호 배지로 대체)
-        const cleanText = source.text.replace(/^\[\d+\]\s*/, '')
-        // URL 링크 렌더링
-        const sourceUrl = (source as any).url || ''
-        let urlHostname = ''
-        try { urlHostname = new URL(sourceUrl).hostname.replace('www.', '') } catch { urlHostname = sourceUrl.slice(0, 40) }
-        // 출처 텍스트를 URL 링크로 감싸기 (위키피디아 스타일)
-        const sourceTextHtml = sourceUrl
-          ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-wiki-text hover:text-wiki-primary underline decoration-wiki-primary/40 hover:decoration-wiki-primary transition" onclick="event.stopPropagation()">${linkifyText(cleanText) || escapeHtml(urlHostname)}</a>`
-          : `<span class="text-wiki-text">${linkifyText(cleanText)}</span>`
-        const domainBadge = sourceUrl && cleanText
-          ? `<span class="text-[11px] text-wiki-muted ml-1">(${escapeHtml(urlHostname)})</span>`
-          : ''
+    ? Array.from(groupedSources.entries()).map(([fieldKey, sources]) => {
+        const label = fieldLabels[fieldKey] || fieldKey
+        const sectionInfo = fieldSectionMap[fieldKey]
+        const navClass = sectionInfo ? 'cursor-pointer hover:text-wiki-primary' : ''
+        const navAttr = sectionInfo ? `data-nav-tab="${sectionInfo.tab}" data-nav-section="${sectionInfo.section}"` : ''
+        const items = sources.map(renderSourceItem).join('')
         return `
-          <li class="user-source-item p-3 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10"
-              id="user-fn-${globalNum}"
-              data-back-to="user-fnref-${globalNum}"
-              data-field-key="${escapeHtml(source.fieldKey)}"
-              ${navAttr}>
-            <div class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-xs font-bold flex items-center justify-center">${globalNum}</span>
-              <div class="flex-1 text-sm">
-                <span class="text-wiki-muted ${sectionInfo ? 'underline decoration-dotted cursor-pointer hover:text-wiki-primary' : ''}">[${escapeHtml(fieldLabel)}]</span>
-                <span class="ml-2">${sourceTextHtml}${domainBadge}</span>
-              </div>
-            </div>
-          </li>
+          <div class="mb-4 last:mb-0">
+            <h5 class="text-xs font-semibold text-wiki-muted mb-2 flex items-center gap-1.5 ${navClass}" ${navAttr}>
+              <i class="fas fa-tag text-[10px]"></i>${escapeHtml(label)}
+            </h5>
+            <ol class="space-y-1.5">${items}</ol>
+          </div>
         `
       }).join('')
     : ''
@@ -2601,9 +2602,9 @@ const renderSourcesCollapsible = (
         <i class="fas fa-user-edit text-wiki-primary"></i>
         사용자 추가 출처
       </h4>
-      <ol class="space-y-2">
+      <div>
         ${userSourcesHtml}
-      </ol>
+      </div>
     </div>
   ` : ''
 
@@ -3946,9 +3947,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   
   if (triviaItems.length > 0) {
     const triviaList = triviaItems
-      .map(item => `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(item)}</span></li>`)
+      .map(item => {
+        const rendered = formatRichText(item, 'trivia', footnoteMap)
+        return `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${rendered}</span></li>`
+      })
       .join('')
-    // 여담은 사용자 기여 데이터 (출처 정보 없음)
     pushOverviewCard('여담', 'fa-comment-dots', `<ul class="space-y-2">${triviaList}</ul>`)
   }
 
