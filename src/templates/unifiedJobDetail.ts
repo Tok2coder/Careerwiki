@@ -4148,16 +4148,23 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   // 필요기술 및 지식은 overviewAbilities.technKnow로 이동됨 (개요 탭에서 표시)
   
   // 5.5. 직업 준비하기
-  if (detailReady) {
+  {
     const readyBlocks: string[] = []
-    
+
+    // 사용자 기여 way 텍스트 (인라인 각주 포함) — 맨 위에 표시
+    const userWay = (profile as any).way as string | undefined
+    if (userWay && safeTrim(userWay)) {
+      readyBlocks.push(`<div><h3 class="content-heading">되는 방법</h3>${formatRichText(userWay, 'way')}</div>`)
+    }
+
     // 헬퍼: 객체 또는 문자열에서 텍스트 추출
     const extractReadyItem = (item: any, key: string): string => {
       if (typeof item === 'string') return item
       if (item && typeof item === 'object') return item[key] || item.name || item.value || ''
       return ''
     }
-    
+
+  if (detailReady) {
     // 정규 교육과정 (제일 먼저 표시)
     if (detailReady.curriculum && Array.isArray(detailReady.curriculum) && detailReady.curriculum.length > 0) {
       const currList = detailReady.curriculum
@@ -4220,6 +4227,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       }
     }
     
+    } // end if (detailReady)
+
     if (readyBlocks.length > 0) {
       // 직업 준비하기 출처 판단
       const readySources = getFieldSources(p => p?.detailReady?.curriculum || p?.detailReady?.training || p?.way)
