@@ -9,6 +9,7 @@ import { editHowTo, createHowTo } from '../services/editService'
 import { invalidatePageCache } from '../utils/page-cache'
 import { getOptionalUser, escapeHtml, cleanGuidePrefix } from '../utils/shared-helpers'
 import type { R2Bucket } from '@cloudflare/workers-types'
+import { notifyGoogleIndexing } from '../utils/google-indexing'
 
 const howtoEditorRoutes = new Hono<AppEnv>()
 
@@ -855,6 +856,13 @@ howtoEditorRoutes.post('/api/howto/drafts/:id/publish', requireAuth, async (c) =
 
     await c.env.DB.prepare('DELETE FROM howto_drafts WHERE id = ?').bind(draftId).run()
 
+    // Google Indexing API 자동 알림
+    if (slug) {
+      c.executionCtx.waitUntil(
+        notifyGoogleIndexing(c.env, `https://careerwiki.org/howto/${encodeURIComponent(slug)}`)
+      )
+    }
+
     return c.json({
       success: true,
       message: '발행이 완료되었습니다',
@@ -1045,6 +1053,13 @@ howtoEditorRoutes.post('/api/howto/publish-direct', requireAuth, async (c) => {
         import('../services/ai-analyzer/vectorize-pipeline').then(({ indexSingleHowto }) =>
           indexSingleHowto(c.env.DB, (c.env as any).VECTORIZE, openaiKeyForIdx, pageId!)
         ).catch(() => {})
+      )
+    }
+
+    // Google Indexing API 자동 알림
+    if (slug) {
+      c.executionCtx.waitUntil(
+        notifyGoogleIndexing(c.env, `https://careerwiki.org/howto/${encodeURIComponent(slug)}`)
       )
     }
 
@@ -1260,6 +1275,13 @@ howtoEditorRoutes.post('/api/howto/save-publish', requireAuth, async (c) => {
       }
     }
 
+    // Google Indexing API 자동 알림 (published 상태인 경우만)
+    if (slug && (newStatus === 'published' || newStatus === 'draft_published')) {
+      c.executionCtx.waitUntil(
+        notifyGoogleIndexing(c.env, `https://careerwiki.org/howto/${encodeURIComponent(slug)}`)
+      )
+    }
+
     return c.json({ success: true, slug, pageId: finalPageId, status: newStatus })
   } catch (error) {
     return c.json({ success: false, error: '저장 중 오류가 발생했습니다' }, 500)
@@ -1461,8 +1483,8 @@ howtoEditorRoutes.put('/api/howto/:id/update', requireAuth, async (c) => {
 
     // 권한 확인 (작성자 또는 관리자만)
     const page = await c.env.DB.prepare(
-      'SELECT author_id FROM pages WHERE id = ? AND page_type = ?'
-    ).bind(pageId, 'guide').first<{ author_id: number | null }>()
+      'SELECT author_id, slug FROM pages WHERE id = ? AND page_type = ?'
+    ).bind(pageId, 'guide').first<{ author_id: number | null; slug: string | null }>()
 
     if (!page) {
       return c.json({ success: false, error: 'HowTo를 찾을 수 없습니다' }, 404)
@@ -1517,6 +1539,13 @@ howtoEditorRoutes.put('/api/howto/:id/update', requireAuth, async (c) => {
       SET title = ?, summary = ?, content = ?, meta_data = ?, updated_at = ?
       WHERE id = ?
     `).bind(title.trim(), summary || '', contentHtml || '', metaData, now, pageId).run()
+
+    // Google Indexing API 자동 알림
+    if (page?.slug) {
+      c.executionCtx.waitUntil(
+        notifyGoogleIndexing(c.env, `https://careerwiki.org/howto/${encodeURIComponent(page.slug)}`)
+      )
+    }
 
     return c.json({ success: true, message: '저장되었습니다' })
   } catch (error) {
