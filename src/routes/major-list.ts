@@ -288,21 +288,21 @@ majorListRoutes.get('/major', async (c) => {
 
         <!-- 카테고리 필터 -->
         <div class="mb-6 overflow-x-auto scrollbar-hide">
-          <div class="flex gap-0 min-w-max bg-white/[0.025] backdrop-blur-xl border border-white/[0.06] rounded-[14px] p-[5px]">
+          <div class="flex gap-1 min-w-max bg-wiki-card/40 rounded-xl p-1">
             <a href="/major${keyword ? `?q=${encodeURIComponent(keyword)}` : ''}"
-               class="px-4 py-2.5 rounded-[9px] text-sm whitespace-nowrap transition-all duration-200 ${
+               class="px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all duration-200 ${
                  !category
-                   ? 'bg-wiki-primary/12 text-wiki-secondary font-semibold shadow-sm'
-                   : 'text-white/40 hover:text-white/70 hover:bg-white/[0.03]'
+                   ? 'bg-wiki-primary/15 text-wiki-secondary font-semibold'
+                   : 'text-wiki-muted hover:text-white hover:bg-white/[0.05]'
                }">전체</a>
             ${MAJOR_CATEGORIES.map(cat => {
               const isActive = category === cat
               const catUrl = `/major?category=${encodeURIComponent(cat)}${keyword ? `&q=${encodeURIComponent(keyword)}` : ''}`
               return `<a href="${catUrl}"
-                 class="px-4 py-2.5 rounded-[9px] text-sm whitespace-nowrap transition-all duration-200 ${
+                 class="px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all duration-200 ${
                    isActive
-                     ? 'bg-wiki-primary/12 text-wiki-secondary font-semibold shadow-sm'
-                     : 'text-white/40 hover:text-white/70 hover:bg-white/[0.03]'
+                     ? 'bg-wiki-primary/15 text-wiki-secondary font-semibold'
+                     : 'text-wiki-muted hover:text-white hover:bg-white/[0.05]'
                  }">${escapeHtml(cat)}</a>`
             }).join('\n            ')}
           </div>
