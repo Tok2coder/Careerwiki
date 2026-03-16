@@ -72,30 +72,34 @@ LIMIT 3
 | `overviewProspect.main` | 단락 텍스트 | 200-400자 | "~전망됩니다" 객관적 톤 |
 | `trivia` | string[] (JSON 배열) | 3-5개 항목 | 흥미로운 사실, 업계 에피소드 |
 
-### 2-2. 출처 수집 규칙 (핵심!)
+### 2-2. 리서치 범위 (핵심!)
 
-**반드시 실제 세부 페이지 URL을 수집한다. 메인 도메인(https://www.career.go.kr)만 기록하면 안 됨.**
+**커리어넷/워크넷에만 의존하지 않는다. 웹 전체에서 실질적으로 도움되는 정보를 수집한다.**
 
-#### 커리어넷 (되는 방법, 전망)
-1. DB에서 `careernet_job_cd` 확인
-2. URL 구성: `https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ={job_cd}`
-3. 해당 URL이 유효한지 WebFetch로 확인
-4. 유효하지 않으면 웹 검색: `"커리어넷" "{직업명}" site:career.go.kr`
+리서치 순서:
+1. **웹 검색으로 광범위 수집**: `"{직업명}" 되는법`, `"{직업명}" 연봉`, `"{직업명}" 전망 2025` 등으로 검색
+2. **다양한 출처 활용**: 공식 통계뿐 아니라 협회, 뉴스, 실무자 인터뷰, 업계 보고서 등
+3. **실질적 가치 우선**: 단순 개론보다 현장감 있는 정보 (취업 루트, 실제 연봉 범위, 업계 트렌드 등)
 
-#### 한국고용정보원 (임금, 전망)
-1. 웹 검색: `"{직업명}" 임금 site:keis.or.kr` 또는 `"{직업명}" 직업전망 site:keis.or.kr`
-2. 한국직업전망서: `https://www.keis.or.kr/user/extra/main/2108/publication/publicationList/jsp/LayOutPage.do`
-3. KNOW: `https://know.work.go.kr/` → 직업 검색 → 해당 직업 페이지 URL
+#### 출처 유형별 가이드
 
-#### 워크넷/고용24 (되는 방법, 임금)
-1. DB에서 `emp_job_cd` 확인
-2. 웹 검색: `"{직업명}" site:work24.go.kr` 또는 `"{직업명}" site:work.go.kr`
-3. 실제 직업 상세 페이지 URL 수집
+| 우선순위 | 출처 유형 | 예시 | 수집 정보 |
+|---------|----------|------|----------|
+| 1 | **해당 직업 협회/단체** | 대한간호협회, 한국바리스타협회 등 | 자격요건, 회원 현황, 교육과정 |
+| 2 | **정부 통계/공식 사이트** | 커리어넷, 워크넷, KOSIS, KEIS | 임금 통계, 고용 전망 |
+| 3 | **뉴스/보도자료** | 주요 언론사, 업계 전문 매체 | 업계 트렌드, 정책 변화, 시장 동향 |
+| 4 | **대학/교육기관** | 관련 학과, 자격증 시험원 | 교육과정, 자격시험 정보 |
+| 5 | **커뮤니티/후기** | 블로그, 지식인 (참고만) | 실무 경험, 현실적 조언 (팩트체크 필수) |
 
-#### 기타 공신력 있는 출처
-- 해당 직업 관련 협회/학회 공식 사이트
-- 국가통계포털 (kosis.kr)
-- 한국직업능력연구원 (krivet.re.kr)
+#### 출처 URL 수집 규칙
+- **반드시 실제 세부 페이지 URL**을 수집한다. 메인 도메인만 기록하면 안 됨
+- 모든 URL은 `curl -s -o /dev/null -w "%{http_code} %{redirect_url}"` 로 접속+리다이렉트 검증
+- **구글 검색 결과의 URL을 맹신하지 않는다** — 사이트 리뉴얼로 URL이 변경되었을 수 있음
+
+#### 커리어넷 URL 형식
+- 정확한 형식: `https://www.career.go.kr/cloud/w/job/view?seq={job_cd}`
+- **금지**: 구버전 `/cnet/front/base/job/jobView.do?SEQ=` (목록 페이지로 리다이렉트됨)
+- DB에서 `careernet_job_cd` 확인하여 seq 파라미터로 사용
 
 ### 2-3. 리서치 결과 포맷
 
@@ -117,7 +121,7 @@ LIMIT 3
 ["항목1", "항목2", "항목3"]
 
 ### 출처 (세부 URL 필수!)
-- way: 커리어넷 간호사 직업정보 https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=354
+- way: 커리어넷 간호사 직업정보 https://www.career.go.kr/cloud/w/job/view?seq=354
 - way: 워크넷 간호사 https://www.work24.go.kr/wk/a/b/1500/acdmcrProfDtl.do?profSeq=3040
 - salary: 한국고용정보원 KNOW 간호사 https://know.work.go.kr/職업명/임금
 - prospect: 한국직업전망 2023 https://www.keis.or.kr/...
@@ -148,7 +152,7 @@ Cookie: session=SESSION_TOKEN
   },
   "sources": {
     "way": [
-      {"text": "커리어넷 간호사 직업정보 https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=354"},
+      {"text": "커리어넷 간호사 직업정보 https://www.career.go.kr/cloud/w/job/view?seq=354"},
       {"text": "워크넷 간호사 https://www.work24.go.kr/wk/a/b/1500/acdmcrProfDtl.do?profSeq=3040"}
     ],
     "overviewSalary.sal": [

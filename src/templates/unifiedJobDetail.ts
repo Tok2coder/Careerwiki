@@ -2515,22 +2515,40 @@ const renderSourcesCollapsible = (
           'sidebarCerts': '추천 자격증'
         }
         const fieldLabel = fieldLabels[source.fieldKey] || source.fieldKey
+        // 필드 키 → 페이지 내 섹션 매핑
+        const fieldSectionMap: Record<string, { tab: string; section: string }> = {
+          'summary': { tab: 'overview', section: 'overview' },
+          'overviewWork.main': { tab: 'overview', section: 'overview-주요-업무' },
+          'overviewSalary.sal': { tab: 'overview', section: 'overview-임금-정보' },
+          'overviewProspect.main': { tab: 'overview', section: 'overview-커리어-전망' },
+          'overviewAbilities.abilityList': { tab: 'overview', section: 'overview-적성-및-흥미' },
+          'way': { tab: 'details', section: 'details-직업-준비하기' },
+          'detailReady.curriculum': { tab: 'details', section: 'details-직업-준비하기' },
+          'detailReady.recruit': { tab: 'details', section: 'details-직업-준비하기' },
+          'detailReady.training': { tab: 'details', section: 'details-직업-준비하기' },
+          'trivia': { tab: 'overview', section: 'overview' },
+        }
+        const sectionInfo = fieldSectionMap[source.fieldKey]
+        const navAttr = sectionInfo
+          ? `data-nav-tab="${sectionInfo.tab}" data-nav-section="${sectionInfo.section}"`
+          : ''
         // URL을 감지하여 클릭 가능한 링크로 변환
         const linkifyText = (text: string): string => {
           return escapeHtml(text).replace(
             /https?:\/\/[^\s,)<>]+/g,
-            (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary underline hover:text-wiki-primary/80">${url}</a>`
+            (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary underline hover:text-wiki-primary/80" onclick="event.stopPropagation()">${url}</a>`
           )
         }
         return `
           <li class="user-source-item p-3 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10"
               id="user-fn-${source.id}"
               data-back-to="user-fnref-${source.id}"
-              data-field-key="${escapeHtml(source.fieldKey)}">
+              data-field-key="${escapeHtml(source.fieldKey)}"
+              ${navAttr}>
             <div class="flex items-start gap-3">
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-xs font-bold flex items-center justify-center">${source.id}</span>
               <div class="flex-1 text-sm">
-                <span class="text-wiki-muted">[${escapeHtml(fieldLabel)}]</span>
+                <span class="text-wiki-muted ${sectionInfo ? 'underline decoration-dotted cursor-pointer hover:text-wiki-primary' : ''}">[${escapeHtml(fieldLabel)}]</span>
                 <span class="text-wiki-text ml-2">${linkifyText(source.text)}</span>
               </div>
             </div>
@@ -2650,14 +2668,21 @@ const renderSourcesCollapsible = (
           item.addEventListener('click', function() {
             var backTo = this.getAttribute('data-back-to');
             var fieldKey = this.getAttribute('data-field-key');
+            var navTab = this.getAttribute('data-nav-tab');
+            var navSection = this.getAttribute('data-nav-section');
             var targetEl = document.getElementById(backTo);
-            
-            // 필드 키에 따라 필요한 탭 결정
-            var targetTabId = null;
-            if (fieldKey) {
+
+            // data-nav-section이 있으면 해당 섹션으로 이동 (API로 추가된 출처)
+            if (!targetEl && navSection) {
+              targetEl = document.getElementById(navSection);
+            }
+
+            // 필드 키에 따라 필요한 탭 결정 (data-nav-tab 우선)
+            var targetTabId = navTab || null;
+            if (!targetTabId && fieldKey) {
               // 상세정보 필드
               var detailFields = ['detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList'];
-              if (fieldKey.startsWith('detail') || detailFields.some(function(f) { return fieldKey.startsWith(f) || fieldKey === f; })) {
+              if (fieldKey.startsWith('detail') || fieldKey === 'way' || detailFields.some(function(f) { return fieldKey.startsWith(f) || fieldKey === f; })) {
                 targetTabId = 'details';  // 탭 ID는 'details' (복수형)
               } else if (fieldKey.startsWith('overview') || fieldKey === 'summary' || fieldKey === 'heroCategory' || fieldKey === 'heroTags' || fieldKey === 'trivia') {
                 targetTabId = 'overview';
@@ -3639,7 +3664,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       // 문자열인 경우 줄바꿈을 블록으로 변환 (실제 내용이 있을 때만)
       const lines = prospectPrimary.split('\n').filter(line => safeTrim(line))
       if (lines.length > 1) {
-        prospectHtml = `<div class="space-y-2">${lines.map(line => `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${escapeHtml(line)}</div>`).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+        prospectHtml = `<div class="space-y-2">${lines.map(line => {
+          const safeLine = escapeHtml(line).replace(/\[(\d+)\]/g, (_m: string, num: string) => `<sup class="user-footnote-ref inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-wiki-primary bg-wiki-primary/10 rounded-full cursor-pointer hover:bg-wiki-primary/20 transition ml-0.5" data-source-id="${num}" id="user-fnref-${num}" title="출처 [${num}]">${num}</sup>`)
+          return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${safeLine}</div>`
+        }).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       } else if (lines.length === 1) {
         prospectHtml = `${formatRichText(prospectPrimary)}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       }

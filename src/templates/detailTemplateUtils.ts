@@ -54,7 +54,12 @@ export const formatRichText = (value?: string | null): string => {
     .trim()
     .split(/\n{2,}/)
     .map((paragraph) => {
-      const safe = escapeHtml(paragraph.trim()).replace(/\n/g, '<br>')
+      let safe = escapeHtml(paragraph.trim()).replace(/\n/g, '<br>')
+      // 인라인 각주 [N] → 클릭 가능한 superscript 링크로 변환
+      safe = safe.replace(
+        /\[(\d+)\]/g,
+        (_match, num) => `<sup class="user-footnote-ref inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-wiki-primary bg-wiki-primary/10 rounded-full cursor-pointer hover:bg-wiki-primary/20 transition ml-0.5" data-source-id="${num}" id="user-fnref-${num}" title="출처 [${num}]">${num}</sup>`
+      )
       return `<p class="content-text leading-relaxed text-wiki-text">${safe}</p>`
     })
     .join('')
