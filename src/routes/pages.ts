@@ -543,7 +543,7 @@ pagesRoutes.get('/analyzer', (c) => {
                     </p>
 
                     <div class="flex items-center justify-center gap-2 mb-1">
-                        <span class="text-wiki-muted line-through text-sm">₩50,000</span>
+                        <span class="text-wiki-muted line-through text-sm">유료</span>
                         <span class="text-emerald-400 font-bold text-lg">무료</span>
                     </div>
                     <p class="text-xs text-emerald-400/70 mb-5">베타 기간 한정</p>
@@ -566,7 +566,7 @@ pagesRoutes.get('/analyzer', (c) => {
                     </p>
 
                     <div class="flex items-center justify-center gap-2 mb-1">
-                        <span class="text-wiki-muted line-through text-sm">₩10,000</span>
+                        <span class="text-wiki-muted line-through text-sm">유료</span>
                         <span class="text-emerald-400 font-bold text-lg">무료</span>
                     </div>
                     <p class="text-xs text-emerald-400/70 mb-5">베타 기간 한정</p>
