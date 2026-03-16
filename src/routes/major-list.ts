@@ -290,7 +290,7 @@ majorListRoutes.get('/major', async (c) => {
         <div class="mb-6 overflow-x-auto scrollbar-hide">
           <div class="flex gap-1 min-w-max bg-wiki-card/40 rounded-xl p-1">
             <a href="/major${keyword ? `?q=${encodeURIComponent(keyword)}` : ''}"
-               class="px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all duration-200 ${
+               class="px-3.5 py-2 rounded-lg text-base whitespace-nowrap transition-all duration-200 ${
                  !category
                    ? 'bg-wiki-primary/15 text-wiki-secondary font-semibold'
                    : 'text-wiki-muted hover:text-white hover:bg-white/[0.05]'
@@ -299,7 +299,7 @@ majorListRoutes.get('/major', async (c) => {
               const isActive = category === cat
               const catUrl = `/major?category=${encodeURIComponent(cat)}${keyword ? `&q=${encodeURIComponent(keyword)}` : ''}`
               return `<a href="${catUrl}"
-                 class="px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all duration-200 ${
+                 class="px-3.5 py-2 rounded-lg text-base whitespace-nowrap transition-all duration-200 ${
                    isActive
                      ? 'bg-wiki-primary/15 text-wiki-secondary font-semibold'
                      : 'text-wiki-muted hover:text-white hover:bg-white/[0.05]'

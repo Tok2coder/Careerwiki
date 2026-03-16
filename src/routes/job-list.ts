@@ -235,7 +235,7 @@ jobListRoutes.get('/job', async (c) => {
         <div class="mb-6 overflow-x-auto scrollbar-hide">
           <div class="flex gap-1 min-w-max bg-wiki-card/40 rounded-xl p-1">
             <a href="/job"
-               class="px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all duration-200 ${
+               class="px-3.5 py-2 rounded-lg text-base whitespace-nowrap transition-all duration-200 ${
                  !category
                    ? 'bg-wiki-primary/15 text-wiki-secondary font-semibold'
                    : 'text-wiki-muted hover:text-white hover:bg-white/[0.05]'
@@ -244,7 +244,7 @@ jobListRoutes.get('/job', async (c) => {
               const shortLabel = JOB_LARGE_SHORT_LABELS[cat]
               const isActive = category === cat
               return `<a href="/job?category=${encodeURIComponent(cat)}"
-                 class="px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all duration-200 ${
+                 class="px-3.5 py-2 rounded-lg text-base whitespace-nowrap transition-all duration-200 ${
                    isActive
                      ? 'bg-wiki-primary/15 text-wiki-secondary font-semibold'
                      : 'text-wiki-muted hover:text-white hover:bg-white/[0.05]'
