@@ -99,8 +99,18 @@ const EditMode = {
         this.closeCreateModal();
       }
     });
+
+    // 뒤로가기 시 편집 모드 종료 → 원래 페이지 복원
+    window.addEventListener('popstate', () => {
+      if (this.isEditMode && this._originalContent) {
+        this.isEditMode = false;
+        document.body.innerHTML = this._originalContent;
+        document.body.removeAttribute('data-edit-mode');
+        this._originalContent = null;
+      }
+    });
   },
-  
+
   /**
    * 새 문서 생성 모달 표시
    */
