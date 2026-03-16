@@ -9,6 +9,7 @@ import { createMajor } from '../services/editService'
 import { invalidatePageCache } from '../utils/page-cache'
 import { getOptionalUser, hashIpAddress, escapeHtml } from '../utils/shared-helpers'
 import type { R2Bucket } from '@cloudflare/workers-types'
+import { notifyGoogleIndexing } from '../utils/google-indexing'
 
 const majorEditorRoutes = new Hono<AppEnv>()
 
@@ -691,6 +692,14 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
       }
 
       await invalidatePageCache(c.env.DB, { majorId, pageType: 'major' })
+
+      // Google Indexing API 자동 알림 (fire-and-forget)
+      const majorName = (majorRecord as any)?.name as string
+      if (majorName) {
+        c.executionCtx.waitUntil(
+          notifyGoogleIndexing(c.env, `https://careerwiki.org/major/${encodeURIComponent(majorName)}`)
+        )
+      }
 
       return c.json({
         success: true,

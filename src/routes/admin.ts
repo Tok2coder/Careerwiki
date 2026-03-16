@@ -719,62 +719,7 @@ adminRoutes.get('/api/admin/stats', requireAdmin, async (c) => {
 })
 
 // ─── Google Search Console 재인덱싱 API ───
-
-/**
- * JWT 생성 (Google 서비스 계정 인증용)
- * RS256 서명으로 access_token을 발급받기 위한 JWT assertion
- */
-async function createGoogleJWT(email: string, privateKeyPem: string, scope: string): Promise<string> {
-  const header = { alg: 'RS256', typ: 'JWT' }
-  const now = Math.floor(Date.now() / 1000)
-  const payload = {
-    iss: email,
-    scope,
-    aud: 'https://oauth2.googleapis.com/token',
-    iat: now,
-    exp: now + 3600,
-  }
-
-  const enc = (obj: any) => btoa(JSON.stringify(obj)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-  const headerB64 = enc(header)
-  const payloadB64 = enc(payload)
-  const signingInput = `${headerB64}.${payloadB64}`
-
-  // PEM → CryptoKey
-  const pemBody = privateKeyPem
-    .replace(/-----BEGIN (?:RSA )?PRIVATE KEY-----/g, '')
-    .replace(/-----END (?:RSA )?PRIVATE KEY-----/g, '')
-    .replace(/\\n/g, '')
-    .replace(/\s/g, '')
-  const binaryDer = Uint8Array.from(atob(pemBody), c => c.charCodeAt(0))
-  const cryptoKey = await crypto.subtle.importKey(
-    'pkcs8', binaryDer.buffer,
-    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
-    false, ['sign']
-  )
-
-  const signature = await crypto.subtle.sign(
-    'RSASSA-PKCS1-v1_5',
-    cryptoKey,
-    new TextEncoder().encode(signingInput)
-  )
-  const sigB64 = btoa(String.fromCharCode(...new Uint8Array(signature)))
-    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-
-  return `${signingInput}.${sigB64}`
-}
-
-async function getGoogleAccessToken(email: string, privateKey: string, scope: string): Promise<string> {
-  const jwt = await createGoogleJWT(email, privateKey, scope)
-  const resp = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`,
-  })
-  const data = await resp.json() as any
-  if (!data.access_token) throw new Error(`Google OAuth failed: ${JSON.stringify(data)}`)
-  return data.access_token
-}
+import { notifyGoogleIndexing, getGoogleAccessToken } from '../utils/google-indexing'
 
 // POST /admin/api/reindex — 최근 수정된 직업/전공 URL을 Google에 재인덱싱 요청
 adminRoutes.post('/admin/api/reindex', async (c) => {
