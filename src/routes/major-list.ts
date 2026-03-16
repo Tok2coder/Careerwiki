@@ -287,7 +287,17 @@ majorListRoutes.get('/major', async (c) => {
         </form>
 
         <!-- 카테고리 필터 -->
-        <div class="mb-6 overflow-x-auto scrollbar-hide">
+        <div class="mb-6 md:hidden">
+          <select onchange="location.href=this.value"
+                  class="w-full px-4 py-2.5 rounded-xl text-base bg-wiki-card/60 text-white border border-white/[0.08] appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%239ca3af%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.23%207.21a.75.75%200%20011.06.02L10%2011.168l3.71-3.938a.75.75%200%20111.08%201.04l-4.25%204.5a.75.75%200%2001-1.08%200l-4.25-4.5a.75.75%200%2001.02-1.06z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat pr-10 focus:outline-none focus:ring-1 focus:ring-wiki-primary/30">
+            <option value="/major${keyword ? `?q=${encodeURIComponent(keyword)}` : ''}" ${!category ? 'selected' : ''}>전체</option>
+            ${MAJOR_CATEGORIES.map(cat => {
+              const catUrl = `/major?category=${encodeURIComponent(cat)}${keyword ? `&q=${encodeURIComponent(keyword)}` : ''}`
+              return `<option value="${catUrl}" ${category === cat ? 'selected' : ''}>${escapeHtml(cat)}</option>`
+            }).join('\n            ')}
+          </select>
+        </div>
+        <div class="mb-6 overflow-x-auto scrollbar-hide hidden md:block">
           <div class="flex gap-1 min-w-max bg-wiki-card/40 rounded-xl p-1">
             <a href="/major${keyword ? `?q=${encodeURIComponent(keyword)}` : ''}"
                class="px-3.5 py-2 rounded-lg text-base whitespace-nowrap transition-all duration-200 ${
