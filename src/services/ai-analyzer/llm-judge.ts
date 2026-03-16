@@ -788,6 +788,12 @@ async function judgeBatch(
     if (info?.certifications && info.certifications.length > 0) {
       parts.push(`  관련자격: ${info.certifications.join(', ')}`)
     }
+    if (info?.way) {
+      parts.push(`  되는방법: ${info.way}`)
+    }
+    if (info?.prospect) {
+      parts.push(`  전망: ${info.prospect}`)
+    }
 
     // ★ job_attributes 수치 추가 (LLM이 구체적 근거로 인용하도록!)
     const attrs = (c as any).attributes as Record<string, any> | undefined
@@ -1467,6 +1473,8 @@ interface JobDetailInfo {
   incomeRange?: string       // 연봉 범위
   requiredEducation?: string // 필요 학력
   certifications?: string[]  // 관련 자격증
+  way?: string               // 되는 방법 (사용자 보완 데이터)
+  prospect?: string          // 전망 (사용자 보완 데이터)
 }
 
 async function getJobInfos(
@@ -1509,7 +1517,9 @@ async function getJobInfos(
                json_extract(merged_profile_json, '$.educationRequired') as educationRequired,
                json_extract(merged_profile_json, '$.certifications') as certifications,
                json_extract(merged_profile_json, '$.suitablePersonality') as suitablePersonality,
-               json_extract(merged_profile_json, '$.growthPotential') as growthPotential
+               json_extract(merged_profile_json, '$.growthPotential') as growthPotential,
+               json_extract(merged_profile_json, '$.way') as way,
+               json_extract(merged_profile_json, '$.overviewProspect.main') as prospect
         FROM jobs
         WHERE id IN (${placeholders})
       `).bind(...batchIds).all<{
@@ -1524,6 +1534,8 @@ async function getJobInfos(
         certifications: string | null
         suitablePersonality: string | null
         growthPotential: string | null
+        way: string | null
+        prospect: string | null
       }>()
 
       if (queryResult.results) {
@@ -1568,6 +1580,10 @@ async function getJobInfos(
         }
       }
       
+      // way 필드에서 인라인 각주 [N] 제거 (LLM에 불필요)
+      const cleanWay = row.way ? row.way.replace(/\[\d+\]/g, '').trim() : undefined
+      const cleanProspect = row.prospect ? row.prospect.replace(/\[\d+\]/g, '').trim() : undefined
+
       results.set(row.id, {
         description,
         careerPath,
@@ -1576,6 +1592,8 @@ async function getJobInfos(
         incomeRange: row.incomeInfo || undefined,
         requiredEducation: row.educationRequired || undefined,
         certifications,
+        way: cleanWay ? cleanWay.substring(0, 200) : undefined,
+        prospect: cleanProspect ? cleanProspect.substring(0, 150) : undefined,
       })
     }
   } catch (error) {
