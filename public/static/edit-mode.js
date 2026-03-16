@@ -80,7 +80,9 @@ const EditMode = {
         e.preventDefault();
         this.detectEntityFromUrl();
         if (this.entityType && this.entityId) {
-          window.location.href = window.location.pathname + '?edit=true';
+          // URL만 변경 (리로드 없이) → 바로 편집 모드 진입
+          history.pushState(null, '', window.location.pathname + '?edit=true');
+          this.enterEditMode();
         }
       }
       
