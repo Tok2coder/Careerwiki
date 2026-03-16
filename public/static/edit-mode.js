@@ -640,7 +640,9 @@ const EditMode = {
    * 편집 모드 진입
    */
   async enterEditMode() {
-    
+    // 즉시 로딩 오버레이 표시 (API 호출 대기 동안)
+    this._showLoadingOverlay();
+
     // 사용자 정보 로드 대기 (ISR 캐시 대응)
     if (!window.__USER_LOADED__) {
       await new Promise(resolve => {
@@ -687,15 +689,32 @@ const EditMode = {
     }
 
     if (Object.keys(this.editData).length === 0) {
+      this._removeLoadingOverlay();
       alert('편집 데이터를 불러오는데 실패했습니다.');
       this.exitEditMode();
       return;
     }
     
-    // 편집 모드 UI 렌더링
+    // 로딩 오버레이 제거 후 편집 모드 UI 렌더링
+    this._removeLoadingOverlay();
     this.renderEditModeUI();
   },
-  
+
+  /** 로딩 오버레이 표시 */
+  _showLoadingOverlay() {
+    if (document.getElementById('edit-loading-overlay')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'edit-loading-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);backdrop-filter:blur(2px)';
+    overlay.innerHTML = '<div style="text-align:center;color:#fff"><div style="width:36px;height:36px;border:3px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px"></div><div style="font-size:14px">편집 모드 로딩 중...</div></div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>';
+    document.body.appendChild(overlay);
+  },
+
+  /** 로딩 오버레이 제거 */
+  _removeLoadingOverlay() {
+    document.getElementById('edit-loading-overlay')?.remove();
+  },
+
   /**
    * 편집 데이터 로드
    */
