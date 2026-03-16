@@ -2791,7 +2791,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
                 footnoteRef.className = 'user-footnote-ref ml-1 inline-flex align-middle cursor-pointer';
                 footnoteRef.id = 'user-fnref-' + sourceId;
                 footnoteRef.setAttribute('data-source-id', sourceId);
-                footnoteRef.innerHTML = '<span class="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-wiki-secondary/20 text-wiki-secondary hover:bg-wiki-secondary/30 transition">' + sourceId + '</span>';
+                footnoteRef.innerHTML = '<span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-secondary,#a78bfa);background:rgba(167,139,250,0.12);border-radius:9999px;">' + sourceId + '</span>';
                 
                 // flex justify-between로 밀리는 문제를 피하기 위해 텍스트 컨테이너에 부착
                 const attachTarget =

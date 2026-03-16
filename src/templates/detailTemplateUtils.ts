@@ -61,7 +61,7 @@ export const formatRichText = (value?: string | null, fieldKey?: string): string
       // 인라인 각주 [N] → 클릭 가능한 superscript 링크로 변환
       safe = safe.replace(
         /\[(\d+)\]/g,
-        (_match, num) => `<sup class="user-footnote-ref inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-wiki-primary bg-wiki-primary/10 rounded-full cursor-pointer hover:bg-wiki-primary/20 transition ml-0.5" data-source-id="${num}" data-field-key="${fieldKey || ''}" id="${idPrefix}${num}" title="출처 [${num}]">${num}</sup>`
+        (_match, num) => `<sup class="user-footnote-ref cursor-pointer transition" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-primary,#64b5f6);background:rgba(100,181,246,0.12);border-radius:9999px;margin-left:2px;vertical-align:super;line-height:1;" data-source-id="${num}" data-field-key="${fieldKey || ''}" id="${idPrefix}${num}" title="출처 [${num}]">${num}</sup>`
       )
       return `<p class="content-text leading-relaxed text-wiki-text">${safe}</p>`
     })

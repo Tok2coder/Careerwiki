@@ -3684,7 +3684,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const lines = prospectPrimary.split('\n').filter(line => safeTrim(line))
       if (lines.length > 1) {
         prospectHtml = `<div class="space-y-2">${lines.map(line => {
-          const safeLine = escapeHtml(line).replace(/\[(\d+)\]/g, (_m: string, num: string) => `<sup class="user-footnote-ref inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-wiki-primary bg-wiki-primary/10 rounded-full cursor-pointer hover:bg-wiki-primary/20 transition ml-0.5" data-source-id="${num}" data-field-key="overviewProspect.main" id="user-fnref-overviewProspect-main-${num}" title="출처 [${num}]">${num}</sup>`)
+          const safeLine = escapeHtml(line).replace(/\[(\d+)\]/g, (_m: string, num: string) => `<sup class="user-footnote-ref cursor-pointer transition" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-primary,#64b5f6);background:rgba(100,181,246,0.12);border-radius:9999px;margin-left:2px;vertical-align:super;line-height:1;" data-source-id="${num}" data-field-key="overviewProspect.main" id="user-fnref-overviewProspect-main-${num}" title="출처 [${num}]">${num}</sup>`)
           return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${safeLine}</div>`
         }).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       } else if (lines.length === 1) {
@@ -5011,7 +5011,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
                 footnoteRef.className = 'user-footnote-ref ml-1 inline-flex align-middle cursor-pointer';
                 footnoteRef.id = 'user-fnref-' + sourceId;
                 footnoteRef.setAttribute('data-source-id', sourceId);
-                footnoteRef.innerHTML = '<span class="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-wiki-primary/20 text-wiki-primary hover:bg-wiki-primary/30 transition">' + sourceId + '</span>';
+                footnoteRef.innerHTML = '<span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-primary,#64b5f6);background:rgba(100,181,246,0.12);border-radius:9999px;">' + sourceId + '</span>';
                 
                 // flex justify-between로 멀어지는 문제를 피하기 위해 텍스트 컨테이너에 부착
                 const attachTarget =
