@@ -32,16 +32,16 @@ const stripHtmlTags = (html: string): string => {
     .trim()
 }
 
-export const formatRichText = (value?: string | null): string => {
+export const formatRichText = (value?: string | null, fieldKey?: string): string => {
   if (!value || !value.trim()) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
   }
 
   // HTML 태그가 포함되어 있으면 제거
-  let cleanedValue = value.includes('<') || value.includes('>') 
+  let cleanedValue = value.includes('<') || value.includes('>')
     ? stripHtmlTags(value)
     : value
-  
+
   // 깨진 문자 및 특수 기호 제거 (□, ■, ▢, �, 제어문자 등)
   cleanedValue = cleanedValue
     .replace(/[\u25A0-\u25FF]/g, '')  // 기하학적 도형 (□, ■, ▢ 등)
@@ -49,6 +49,9 @@ export const formatRichText = (value?: string | null): string => {
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')  // 제어문자 (탭/개행/CR 제외)
     .replace(/\u00A0/g, ' ')          // Non-breaking space → 일반 공백
     .replace(/[^\S\n]+/g, ' ')        // 연속 공백 정리 (줄바꿈 보존)
+
+  // 필드키를 ID에 포함 (필드 간 번호 충돌 방지)
+  const idPrefix = fieldKey ? `user-fnref-${fieldKey.replace(/\./g, '-')}-` : 'user-fnref-'
 
   return cleanedValue
     .trim()
@@ -58,7 +61,7 @@ export const formatRichText = (value?: string | null): string => {
       // 인라인 각주 [N] → 클릭 가능한 superscript 링크로 변환
       safe = safe.replace(
         /\[(\d+)\]/g,
-        (_match, num) => `<sup class="user-footnote-ref inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-wiki-primary bg-wiki-primary/10 rounded-full cursor-pointer hover:bg-wiki-primary/20 transition ml-0.5" data-source-id="${num}" id="user-fnref-${num}" title="출처 [${num}]">${num}</sup>`
+        (_match, num) => `<sup class="user-footnote-ref inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-wiki-primary bg-wiki-primary/10 rounded-full cursor-pointer hover:bg-wiki-primary/20 transition ml-0.5" data-source-id="${num}" data-field-key="${fieldKey || ''}" id="${idPrefix}${num}" title="출처 [${num}]">${num}</sup>`
       )
       return `<p class="content-text leading-relaxed text-wiki-text">${safe}</p>`
     })

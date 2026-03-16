@@ -2539,14 +2539,21 @@ const renderSourcesCollapsible = (
             (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary underline hover:text-wiki-primary/80" onclick="event.stopPropagation()">${url}</a>`
           )
         }
+        // 소스 텍스트에서 [N] 번호 추출하여 필드키 기반 각주 ID 생성
+        const footnoteMatch = source.text.match(/^\[(\d+)\]/)
+        const footnoteNum = footnoteMatch ? footnoteMatch[1] : null
+        const fieldIdPrefix = source.fieldKey.replace(/\./g, '-')
+        const backToId = footnoteNum
+          ? `user-fnref-${fieldIdPrefix}-${footnoteNum}`
+          : `user-fnref-${source.id}`
         return `
           <li class="user-source-item p-3 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10"
               id="user-fn-${source.id}"
-              data-back-to="user-fnref-${source.id}"
+              data-back-to="${backToId}"
               data-field-key="${escapeHtml(source.fieldKey)}"
               ${navAttr}>
             <div class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-xs font-bold flex items-center justify-center">${source.id}</span>
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-xs font-bold flex items-center justify-center">${footnoteNum || source.id}</span>
               <div class="flex-1 text-sm">
                 <span class="text-wiki-muted ${sectionInfo ? 'underline decoration-dotted cursor-pointer hover:text-wiki-primary' : ''}">[${escapeHtml(fieldLabel)}]</span>
                 <span class="text-wiki-text ml-2">${linkifyText(source.text)}</span>
@@ -2640,9 +2647,21 @@ const renderSourcesCollapsible = (
           ref.addEventListener('click', function(e) {
             e.preventDefault();
             var sourceId = this.getAttribute('data-source-id');
-            var targetEl = document.getElementById('user-fn-' + sourceId);
+            var fieldKey = this.getAttribute('data-field-key');
+            // 필드키+번호로 정확한 출처 매칭: data-back-to가 이 각주 ID인 소스 아이템 찾기
+            var myId = this.id;
+            var targetEl = null;
+            document.querySelectorAll('.user-source-item').forEach(function(item) {
+              if (item.getAttribute('data-back-to') === myId) {
+                targetEl = item;
+              }
+            });
+            // 폴백: 기존 방식 (소스 번호로 직접 찾기)
+            if (!targetEl) {
+              targetEl = document.getElementById('user-fn-' + sourceId);
+            }
             if (!targetEl) return;
-            
+
             // 출처 섹션 펼치기
             var sourceSection = document.querySelector('[data-source-collapsible]');
             if (sourceSection) {
@@ -2651,7 +2670,7 @@ const renderSourcesCollapsible = (
                 toggleBtn.click();
               }
             }
-            
+
             // 스크롤 이동
             setTimeout(function() {
               targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -3665,11 +3684,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const lines = prospectPrimary.split('\n').filter(line => safeTrim(line))
       if (lines.length > 1) {
         prospectHtml = `<div class="space-y-2">${lines.map(line => {
-          const safeLine = escapeHtml(line).replace(/\[(\d+)\]/g, (_m: string, num: string) => `<sup class="user-footnote-ref inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-wiki-primary bg-wiki-primary/10 rounded-full cursor-pointer hover:bg-wiki-primary/20 transition ml-0.5" data-source-id="${num}" id="user-fnref-${num}" title="출처 [${num}]">${num}</sup>`)
+          const safeLine = escapeHtml(line).replace(/\[(\d+)\]/g, (_m: string, num: string) => `<sup class="user-footnote-ref inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-wiki-primary bg-wiki-primary/10 rounded-full cursor-pointer hover:bg-wiki-primary/20 transition ml-0.5" data-source-id="${num}" data-field-key="overviewProspect.main" id="user-fnref-overviewProspect-main-${num}" title="출처 [${num}]">${num}</sup>`)
           return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${safeLine}</div>`
         }).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       } else if (lines.length === 1) {
-        prospectHtml = `${formatRichText(prospectPrimary)}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+        prospectHtml = `${formatRichText(prospectPrimary, 'overviewProspect.main')}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
       }
     }
     
