@@ -13,6 +13,7 @@ export type FieldInputType =
   | 'list'           // 한 줄씩 입력하는 리스트
   | 'autocomplete'   // 엔티티 검색(관련 직업/전공/HowTo)
   | 'pairList'       // 제목+설명 쌍 리스트
+  | 'linkList'       // 텍스트+URL 링크 리스트
 
 // 필드가 속한 섹션/탭
 export type FieldSection = 

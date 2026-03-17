@@ -1452,6 +1452,60 @@ const EditMode = {
           영상 추가
         </button>
       `;
+    } else if (field.type === 'linkList') {
+      // 텍스트+URL 링크 리스트 (채용 정보 등)
+      let items = [];
+      if (Array.isArray(value)) {
+        items = value.map(v => {
+          if (typeof v === 'string') return { text: v, url: '' };
+          return { text: v.text || v.name || '', url: v.url || '' };
+        });
+      } else if (typeof value === 'string' && value.trim()) {
+        items = value.trim().split('\n').filter(l => l.trim()).map(l => ({ text: l.trim(), url: '' }));
+      }
+      if (items.length === 0) items = [{ text: '', url: '' }];
+
+      const itemsHtml = items.map((item, idx) => `
+        <div class="space-y-1.5 edit-link-item" data-index="${idx}">
+          <div class="flex items-start gap-2">
+            <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
+            <input
+              type="text"
+              value="${this.escapeHtml(item.text || '')}"
+              placeholder="사이트명 (예: 한국산림복지진흥원 채용 게시판)"
+              data-link-text
+              class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition"
+            >
+            <button type="button" class="flex-shrink-0 w-8 h-8 mt-1 flex items-center justify-center text-wiki-muted hover:text-red-400 hover:bg-red-400/10 rounded-lg transition remove-list-item-btn">
+              <i class="fas fa-trash-alt text-sm"></i>
+            </button>
+          </div>
+          <div class="flex items-center gap-2 pl-8">
+            <i class="fas fa-link text-wiki-muted text-xs flex-shrink-0"></i>
+            <input
+              type="url"
+              value="${this.escapeHtml(item.url || '')}"
+              placeholder="URL (선택, 예: https://www.example.com/recruit)"
+              data-link-url
+              class="flex-1 px-3 py-1.5 bg-wiki-bg/50 border border-wiki-border/40 rounded-lg text-wiki-muted placeholder-wiki-muted/60 focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 focus:text-white transition text-sm"
+            >
+          </div>
+        </div>
+      `).join('');
+
+      inputHtml = `
+        <div id="linklist-container-${field.key}" data-field-key="${field.key}" data-field-type="linkList" class="space-y-3">
+          ${itemsHtml}
+        </div>
+        <button
+          type="button"
+          data-add-link-item="${field.key}"
+          class="mt-3 px-4 py-2 text-sm font-medium text-${gradientFrom} bg-${gradientFrom}/10 hover:bg-${gradientFrom}/20 rounded-lg transition flex items-center gap-2"
+        >
+          <i class="fas fa-plus"></i>
+          링크 추가
+        </button>
+      `;
     } else if (field.type === 'autocomplete') {
       // 자동완성 필드: 기존 직업/학과에서 검색하여 선택
       const items = Array.isArray(value) ? value : [];
@@ -1942,15 +1996,26 @@ const EditMode = {
       });
     });
 
+    // 링크 리스트 항목 추가 이벤트
+    document.querySelectorAll('[data-add-link-item]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-add-link-item');
+        const container = document.getElementById(`linklist-container-${key}`);
+        if (container) {
+          this.addLinkItem(container, key);
+        }
+      });
+    });
+
     // 리스트 항목 삭제 이벤트 (이벤트 위임)
     document.addEventListener('click', (e) => {
       const removeBtn = e.target.closest('.remove-list-item-btn');
       if (removeBtn) {
-        const item = removeBtn.closest('.edit-list-item') || removeBtn.closest('.edit-youtube-item');
+        const item = removeBtn.closest('.edit-list-item') || removeBtn.closest('.edit-youtube-item') || removeBtn.closest('.edit-link-item');
         if (item) {
           item.remove();
           // 인덱스 재정렬
-          const container = item.closest('[data-field-type="list"], [data-field-type="pairList"], [data-field-type="youtubeLinks"]');
+          const container = item.closest('[data-field-type="list"], [data-field-type="pairList"], [data-field-type="youtubeLinks"], [data-field-type="linkList"]');
           if (container) {
             this.reindexListItems(container);
           }
@@ -2396,14 +2461,58 @@ const EditMode = {
   },
 
   /**
+   * 링크 리스트 항목 추가
+   */
+  addLinkItem(container, fieldKey) {
+    const isJob = this.entityType === 'job';
+    const gradientFrom = isJob ? 'wiki-primary' : 'wiki-secondary';
+    const idx = container.querySelectorAll('.edit-link-item').length;
+
+    const item = document.createElement('div');
+    item.className = 'space-y-1.5 edit-link-item';
+    item.dataset.index = idx;
+    item.innerHTML = `
+      <div class="flex items-start gap-2">
+        <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
+        <input
+          type="text"
+          value=""
+          placeholder="사이트명 (예: 한국산림복지진흥원 채용 게시판)"
+          data-link-text
+          class="flex-1 px-4 py-2 bg-wiki-bg/70 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 transition"
+        >
+        <button type="button" class="flex-shrink-0 w-8 h-8 mt-1 flex items-center justify-center text-wiki-muted hover:text-red-400 hover:bg-red-400/10 rounded-lg transition remove-list-item-btn">
+          <i class="fas fa-trash-alt text-sm"></i>
+        </button>
+      </div>
+      <div class="flex items-center gap-2 pl-8">
+        <i class="fas fa-link text-wiki-muted text-xs flex-shrink-0"></i>
+        <input
+          type="url"
+          value=""
+          placeholder="URL (선택, 예: https://www.example.com/recruit)"
+          data-link-url
+          class="flex-1 px-3 py-1.5 bg-wiki-bg/50 border border-wiki-border/40 rounded-lg text-wiki-muted placeholder-wiki-muted/60 focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 focus:text-white transition text-sm"
+        >
+      </div>
+    `;
+
+    container.appendChild(item);
+    item.querySelector('[data-link-text]')?.focus();
+  },
+
+  /**
    * 리스트 항목 인덱스 재정렬
    */
   reindexListItems(container) {
-    const listSelector = container.dataset.fieldType === 'youtubeLinks' ? '.edit-youtube-item' : '.edit-list-item';
+    const fieldType = container.dataset.fieldType;
+    const listSelector = fieldType === 'youtubeLinks' ? '.edit-youtube-item'
+      : fieldType === 'linkList' ? '.edit-link-item'
+      : '.edit-list-item';
     container.querySelectorAll(listSelector).forEach((item, idx) => {
       item.dataset.index = idx;
       const badge = item.querySelector('span');
-      if (badge && container.dataset.fieldType !== 'youtubeLinks') {
+      if (badge && fieldType !== 'youtubeLinks') {
         badge.textContent = idx + 1;
       }
     });
@@ -2574,6 +2683,16 @@ const EditMode = {
             description: (item.querySelector('[data-yt-desc]')?.value || '').trim()
           }))
           .filter(item => item.url);
+      } else if (fieldType === 'linkList') {
+        value = Array.from(element.querySelectorAll('.edit-link-item'))
+          .map(item => {
+            const text = (item.querySelector('[data-link-text]')?.value || '').trim();
+            const url = (item.querySelector('[data-link-url]')?.value || '').trim();
+            if (!text) return null;
+            // URL이 있으면 {text, url} 객체, 없으면 plain string
+            return url ? { text, url } : text;
+          })
+          .filter(Boolean);
       } else if (fieldType === 'chart') {
         value = this.collectChartData(element);
       } else if (fieldType === 'chartList') {

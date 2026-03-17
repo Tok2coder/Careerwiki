@@ -219,10 +219,10 @@ export const JOB_FIELDS: EditFieldConfig[] = [
   {
     key: 'detailReady.recruit',
     label: '채용 정보',
-    inputType: 'textarea',
+    inputType: 'linkList',
     section: 'details',
     sectionGroup: '직업 준비하기',
-    placeholder: '채용 관련 정보를 입력하세요',
+    placeholder: '채용 사이트명을 입력하세요',
     minLength: 0,
     maxLength: DEFAULT_MAX_LENGTH,
     accessType: 'editable'
