@@ -397,7 +397,7 @@ export function getChannelLabel(channel: string): string {
     kakao_share: '카카오톡 공유',
     instagram: '인스타그램',
     youtube: '유튜브',
-    community: '커뮤니티',
+    community: '커뮤니티 (디시, 블라인드, 아카라이브 등)',
     school_academy: '학교/학원',
     friend_referral: '지인 추천',
     other: '기타'
