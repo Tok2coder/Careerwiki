@@ -6709,7 +6709,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                                     const likeReason = job.like_reason || extractLikeReason(rationale);
                                     const canReason = job.can_reason || extractCanReason(rationale);
-                                    const hasReasons = likeReason || canReason;
+                                    const feasibilityReason = job.feasibility_reason || '';
+                                    const hasReasons = likeReason || canReason || feasibilityReason;
 
                                     return \`
                                         <a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl transition-all hover:scale-[1.02] group"
@@ -6740,6 +6741,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                                 <div class="space-y-1.5 mt-3 p-3 rounded-lg" style="background: rgba(0,0,0,0.2);">
                                                     \${likeReason ? \`<p class="text-[13px] leading-relaxed text-purple-300/90"><span class="text-purple-400 font-medium">💜 Like:</span> \${likeReason}</p>\` : ''}
                                                     \${canReason ? \`<p class="text-[13px] leading-relaxed text-blue-300/90"><span class="text-blue-400 font-medium">💪 Can:</span> \${canReason}</p>\` : ''}
+                                                    \${feasibilityReason ? \`<p class="text-[13px] leading-relaxed text-amber-300/90"><span class="text-amber-400 font-medium">🎯 배경:</span> \${feasibilityReason}</p>\` : ''}
                                                 </div>
                                             \` : (rationale && !rationale.includes('자동 생성된 결과') ? \`
                                                 <p class="text-[13px] text-emerald-400/80 mt-3">💡 \${rationale}</p>
@@ -7863,7 +7865,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 hideAddContextModal();
                 showLoading('재분석 중...', '추가 정보를 반영하여 다시 분석하고 있어요', true);
 
-                // 4. 기존 세션 데이터로 재분석 (analyze + recommend)
+                // 4. /v3/recommend만 호출 (세션 데이터는 이미 DB에 있음, /analyze는 불필요)
                 const miniModule = window.miniModuleResult || {};
                 const searchProfile = {
                     desiredThemes: [
@@ -7882,26 +7884,6 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     ].filter(Boolean),
                 };
 
-                // analyze API 호출 (기존 세션 + 추가 컨텍스트 포함)
-                const analyzeResponse = await fetch('/api/ai-analyzer/analyze', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        session_id: currentSessionId,
-                        analysis_type: selectedAnalysisType || data.analysis_type || 'job',
-                        stage: selectedStage,
-                        career_state: careerState,
-                        transition_signal: transitionSignalAnswers,
-                        universal_answers: universalAnswers,
-                        narrative_facts: window.narrativeFacts,
-                        round_answers: window.roundAnswers,
-                        engine_version: 'v3',
-                        debug: DEBUG_MODE,
-                    })
-                });
-                const analyzeData = await analyzeResponse.json();
-
-                // recommend API 호출 (추가 컨텍스트가 analyzer_facts에 반영됨)
                 const recommendResponse = await fetch('/api/ai-analyzer/v3/recommend', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -7917,9 +7899,9 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 });
                 const recommendData = await recommendResponse.json();
 
-                // 결과 병합
+                // 결과 구성 (displayResults가 기대하는 형식으로)
+                const analyzeData = { result: {}, request_id: null };
                 if (recommendData.success && recommendData.recommendations) {
-                    if (!analyzeData.result) analyzeData.result = {};
                     if (recommendData.recommendations.top_jobs) {
                         analyzeData.result.fit_top3 = recommendData.recommendations.top_jobs.slice(0, 10).map(job => ({
                             job_id: job.job_id, job_name: job.job_name, job_description: job.job_description || '',
@@ -7951,9 +7933,10 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     if (recommendData.premium_report) {
                         analyzeData.result.premium_report = recommendData.premium_report;
                     }
-                    if (recommendData.request_id) {
-                        analyzeData.request_id = recommendData.request_id;
-                    }
+                    analyzeData.result.engine_version = recommendData.engine_version || 'v3';
+                    analyzeData.request_id = recommendData.request_id;
+                } else {
+                    throw new Error(recommendData.error || '추천 결과를 생성할 수 없습니다.');
                 }
 
                 hideLoading();
@@ -8325,6 +8308,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 let mainScore, mainScoreLabel, mainScoreColor;
                 let likeReasonText = job.like_reason || extractLikeReason(rationale) || '';
                 let canReasonText = job.can_reason || extractCanReason(rationale) || '';
+                let feasibilityReasonText = job.feasibility_reason || '';
 
                 // 자동 생성 결과 필터링
                 const isAutoGenerated = rationale.includes('자동 생성된 결과') || rationale.includes('LLM 분석이 진행되지');
@@ -8365,10 +8349,12 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 if (setId === 'overall') {
                     if (likeReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[13px] w-12">💜 Like</span><p class="text-[14px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
                     if (canReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[13px] w-12">💪 Can</span><p class="text-[14px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
+                    if (feasibilityReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-amber-400 font-medium shrink-0 text-[13px] w-12">🎯 배경</span><p class="text-[14px] text-amber-300/90 leading-relaxed">' + feasibilityReasonText + '</p></div>';
                 } else if (setId === 'desire') {
                     if (likeReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[13px] w-12">💜 Like</span><p class="text-[14px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
                 } else {
                     if (canReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[13px] w-12">💪 Can</span><p class="text-[14px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
+                    if (feasibilityReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-amber-400 font-medium shrink-0 text-[13px] w-12">🎯 배경</span><p class="text-[14px] text-amber-300/90 leading-relaxed">' + feasibilityReasonText + '</p></div>';
                 }
 
                 const rankBadge = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : \`\${idx + 1}\`;

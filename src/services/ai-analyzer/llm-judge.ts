@@ -304,6 +304,7 @@ ${INJECTION_DEFENSE}
       "first30DaysPlan": ["실행 계획 1", "실행 계획 2", "실행 계획 3"],
       "likeReason": "(📊 속성점수 필수 인용!) 예: '안정을 중시한다고 하셨는데, 이 직업은 안정성 90/100이고 정시퇴근 환경이라 워라밸 85/100입니다'",
       "canReason": "(📊 속성점수+핵심역량 필수 인용!) 예: '분석력이 강점이라고 하셨고, 핵심역량 SQL/통계가 직접 연결됩니다. 학사 학력 요구'",
+      "feasibilityReason": "(배경적합도 설명) 예: '학생 신분이라 진입장벽이 낮은 이 직업은 전공 무관으로 시작 가능합니다' 또는 '경력 3년차로 관련 실무 경험이 유리합니다'",
       "riskReason": "(📊 속성점수+근무조건 인용!) 예: '출장을 피하고 싶다 하셨는데, 가끔출장이 있고 성장성 45/100입니다'"
     }
   ]
@@ -2003,7 +2004,8 @@ ${INJECTION_DEFENSE}
       "semesterPlan": ["1학기: 기초 교양 + 전공 입문", "2학기: 전공 기초 심화", "3학기: 전공 핵심 과목"],
       "likeReason": "(📊 속성점수 필수 인용!) 예: '창의적 활동을 좋아한다고 하셨는데, 이 전공은 창의성 88/100이고 자율성 80/100입니다'",
       "canReason": "(📊 속성점수+핵심역량 필수 인용!) 예: '분석력이 강점이라고 하셨고, 수학집중도 85/100으로 분석 역량이 핵심입니다'",
-      "riskReason": "(📊 속성점수 인용!) 예: '경쟁률 80/100으로 높고, 취업률 55/100으로 상대적으로 낮습니다'"
+      "riskReason": "(📊 속성점수 인용!) 예: '경쟁률 80/100으로 높고, 취업률 55/100으로 상대적으로 낮습니다'",
+      "feasibilityReason": "(배경적합도 설명) 예: '고교 이과 계열이라 선이수과목이 충족되고, 경쟁률 45/100으로 진입장벽이 낮습니다' 또는 '문과 배경이지만 수학집중도 30/100으로 수학 부담이 적어 전환 가능합니다'"
     }
   ]
 }`
@@ -2047,6 +2049,7 @@ export interface MajorJudgeResult {
   canReason?: string
   riskReason?: string
   semesterPlan?: string[]  // 학기별 계획
+  feasibilityReason?: string  // 배경적합도 이유
 }
 
 // ============================================
@@ -2417,6 +2420,7 @@ function parseMajorJudgeResponse(
         likeReason: major.likeReason || undefined,
         canReason: major.canReason || undefined,
         riskReason: major.riskReason || undefined,
+        feasibilityReason: major.feasibilityReason || undefined,
         semesterPlan: major.semesterPlan || [],
       }
 

@@ -1050,6 +1050,7 @@ export interface LLMJudgeResult {
   rationale: string          // 추천 이유 3-6문장
   likeReason?: string        // 좋아할 이유 (흥미/가치 연결)
   canReason?: string         // 잘할 이유 (강점/스타일 매칭)
+  feasibilityReason?: string // 배경적합 이유 (학력/경력/진입장벽)
   first30DaysPlan: string[]  // 30일 실행 계획 3개
 }
 

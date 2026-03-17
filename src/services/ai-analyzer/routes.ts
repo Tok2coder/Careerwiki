@@ -5909,6 +5909,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
             rationale: result.rationale,
             like_reason: result.likeReason,   // 좋아할 이유
             can_reason: result.canReason,     // 잘할 이유
+            feasibility_reason: result.feasibilityReason,  // 배경적합 이유
             evidence_quotes: result.evidenceQuotes,
           }
         })
@@ -8409,6 +8410,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
             rationale: result.rationale,
             like_reason: result.likeReason,
             can_reason: result.canReason,
+            feasibility_reason: result.feasibilityReason,
             risk_reason: result.riskReason,
             evidence_quotes: result.evidenceQuotes,
             semester_plan: result.semesterPlan,
