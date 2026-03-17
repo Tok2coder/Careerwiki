@@ -1552,55 +1552,51 @@ const renderDistributionList = (distribution?: Record<string, string | undefined
 
 const formatSalaryValue = (value: number): string => `${value.toLocaleString('ko-KR')}만원`
 
-const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions): string => {
+const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions, footnoteMap?: Record<string, Record<string, number>>, sourceTextMap?: Record<number, string>): string => {
   if (!salary || !safeTrim(salary)) {
     return ''
   }
 
   const raw = safeTrim(salary)
-  
-  // 고용24 형식 파싱: "하위(25%) 8450만원, 평균(50%) 10000만원, 상위(25%) 14200만원"
+
+  // 고용24 공식 형식 파싱: "하위(25%) 8450만원, 평균(50%) 10000만원, 상위(25%) 14200만원"
   const goyong24Pattern = /하위\(25%\)\s*([\d,]+)만원.*?평균\(50%\)\s*([\d,]+)만원.*?상위\(25%\)\s*([\d,]+)만원/
   const goyong24Match = raw.match(goyong24Pattern)
-  
+
+  // 커리어넷 공식 형식: "조사년도:YYYY년, 임금 하위(25%) N만원, 평균(50%) N만원, 상위(25%) N만원"
+  const careernetPattern = /임금\s*하위\(25%\)\s*([\d,]+)만원.*?평균\(50%\)\s*([\d,]+)만원.*?상위\(25%\)\s*([\d,]+)만원/
+  const careernetMatch = raw.match(careernetPattern)
+
   let dataset: { label: string; value: number }[] = []
-  
-  if (goyong24Match) {
-    // 고용24 데이터 파싱
-    const lower = Number.parseInt(goyong24Match[1].replace(/,/g, ''), 10)
-    const median = Number.parseInt(goyong24Match[2].replace(/,/g, ''), 10)
-    const upper = Number.parseInt(goyong24Match[3].replace(/,/g, ''), 10)
-    
-    dataset = [
-      { label: '하위 25%', value: lower },
-      { label: '평균 50%', value: median },
-      { label: '상위 25%', value: upper }
-    ]
-  } else {
-    // 기존 로직 (범위 또는 일반 숫자)
-    const matches = raw.match(/(\d[\d,]*)/g)
-    if (!matches || !matches.length) {
-      return buildCard('임금 정보', 'fa-coins', `<p class="content-text text-wiki-text">${escapeHtml(raw)}</p>`, { ...(options ?? {}) })
+
+  if (goyong24Match || careernetMatch) {
+    const m = goyong24Match || careernetMatch
+    if (m) {
+      const lower = Number.parseInt(m[1].replace(/,/g, ''), 10)
+      const median = Number.parseInt(m[2].replace(/,/g, ''), 10)
+      const upper = Number.parseInt(m[3].replace(/,/g, ''), 10)
+      dataset = [
+        { label: '하위 25%', value: lower },
+        { label: '평균 50%', value: median },
+        { label: '상위 25%', value: upper }
+      ]
     }
-
-    const values = matches
-      .map((value) => Number.parseInt(value.replace(/,/g, ''), 10))
-      .filter((value) => Number.isFinite(value) && value > 0)
-
-    if (!values.length) {
-      return buildCard('임금 정보', 'fa-coins', `<p class="content-text text-wiki-text">${escapeHtml(raw)}</p>`, { ...(options ?? {}) })
+  } else if (raw.includes('~') && raw.match(/(\d[\d,]*)/g)?.length === 2) {
+    // 범위 형식: "3,000~5,000만원"
+    const matches = raw.match(/(\d[\d,]*)/g)!
+    const values = matches.map(v => Number.parseInt(v.replace(/,/g, ''), 10)).filter(v => Number.isFinite(v) && v > 0)
+    if (values.length === 2) {
+      dataset = [
+        { label: '하한', value: values[0] },
+        { label: '상한', value: values[1] }
+      ]
     }
+  }
 
-    const hasRange = raw.includes('~') && values.length >= 2
-    dataset = hasRange
-      ? [
-          { label: '하한', value: values[0] },
-          { label: '상한', value: values[1] }
-        ]
-      : values.map((value, index) => ({
-          label: index === 0 ? '평균' : `지표 ${index + 1}`,
-          value
-        }))
+  // 공식 형식이 아닌 사용자 기여 텍스트 → 각주 지원하는 텍스트로 렌더링 (차트 X)
+  if (dataset.length === 0) {
+    const textHtml = formatRichText(raw, 'overviewSalary.sal', footnoteMap, sourceTextMap)
+    return buildCard('임금 정보', 'fa-coins', `<div data-cw-telemetry-component="job-salary-card">${textHtml}</div>`, { ...(options ?? {}) })
   }
 
   const maxValue = Math.max(...dataset.map((item) => item.value))
@@ -2546,7 +2542,7 @@ const renderSourcesCollapsible = (
           ${navAttr}>
         <div class="flex items-start gap-2.5">
           <span class="flex-shrink-0 w-5 h-5 rounded-full bg-wiki-primary/20 text-wiki-primary text-[11px] font-bold flex items-center justify-center">${globalNum}</span>
-          <div class="flex-1 text-sm">${sourceTextHtml}${domainBadge}</div>
+          <div class="flex-1 min-w-0 text-sm break-words">${sourceTextHtml}${domainBadge}</div>
         </div>
       </li>
     `
@@ -3978,7 +3974,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     telemetryScope: 'job-overview-card',
     telemetryComponent: 'job-overview-salary-card',
     dataSources: salarySources
-  })
+  }, footnoteMap, sourceTextMap)
   if (salaryCard) {
     overviewCards.push({ id: salaryAnchor, label: '임금 정보', icon: 'fa-coins', markup: salaryCard })
   }
@@ -4898,7 +4894,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
 
   const mainColumn = `<div class="space-y-6 min-w-0">${tabLayout}</div>`
   const sidebarMarkup = hasSidebar
-    ? `<aside class="space-y-6 lg:sticky lg:top-28 lg:h-fit lg:self-start" data-job-sidebar>${sidebarContent}</aside>`
+    ? `<aside class="space-y-6 lg:sticky lg:top-28 lg:h-fit lg:self-start min-w-0" data-job-sidebar>${sidebarContent}</aside>`
     : ''
 
   const layoutBlock = hasSidebar
@@ -4921,7 +4917,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
-    <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" data-job-id="${escapeHtml(profile.id)}">
+    <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
       <section class="glass-card border px-6 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">
