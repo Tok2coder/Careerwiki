@@ -4332,6 +4332,8 @@ analyzerRoutes.post('/add-context', async (c) => {
     return c.json({
       success: true,
       new_request_id: newReqResult.id,
+      session_id: existingReq.session_id,
+      analysis_type: existingReq.analysis_type,
       version_number: newVersion,
       redirect_url: analyzerUrl,
       message: '추가 정보가 저장되었습니다. 재분석을 진행합니다.',

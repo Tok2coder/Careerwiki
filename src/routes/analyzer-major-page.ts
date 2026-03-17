@@ -4616,17 +4616,27 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
                     return;
                 }
 
-                // 2. 모달 닫기 + 로딩 표시
+                // 2. session_id 복원
+                if (!currentSessionId && data.session_id) {
+                    currentSessionId = data.session_id;
+                }
+                if (!currentSessionId) {
+                    alert('세션 정보가 없습니다. 페이지를 새로고침 후 다시 시도해주세요.');
+                    if (btn) { btn.disabled = false; btn.innerHTML = '추가 후 재분석'; }
+                    return;
+                }
+
+                // 3. 모달 닫기 + 로딩 표시
                 hideAddContextModal();
                 showLoading('재분석 중...', '추가 정보를 반영하여 다시 분석하고 있어요', true);
 
-                // 3. 기존 세션 데이터로 재분석
+                // 4. 기존 세션 데이터로 재분석
                 const response = await fetch('/api/ai-analyzer/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         session_id: currentSessionId,
-                        analysis_type: selectedAnalysisType,
+                        analysis_type: selectedAnalysisType || data.analysis_type || 'major',
                         stage: selectedStage || 'major_high',
                         career_state: careerState,
                         transition_signal: transitionSignalAnswers,
