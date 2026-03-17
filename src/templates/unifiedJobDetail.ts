@@ -3944,11 +3944,18 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
 
   // 여담 (trivia) - 리스트 형식
   let triviaItems: string[] = []
-  if (Array.isArray(profile.trivia)) {
-    triviaItems = profile.trivia.filter((item: any) => typeof item === 'string' && safeTrim(item))
-  } else if (typeof profile.trivia === 'string' && safeTrim(profile.trivia)) {
-    // 문자열인 경우 줄바꿈 또는 •로 분리
-    triviaItems = profile.trivia.split(/\n|•/).map((s: string) => s.trim()).filter(Boolean)
+  let rawTrivia = profile.trivia
+  // 방어: JSON 배열 문자열 '["텍스트"]' 형태면 파싱
+  if (typeof rawTrivia === 'string' && rawTrivia.trim().startsWith('[')) {
+    try {
+      const parsed = JSON.parse(rawTrivia)
+      if (Array.isArray(parsed)) rawTrivia = parsed
+    } catch { /* 파싱 실패 시 원본 사용 */ }
+  }
+  if (Array.isArray(rawTrivia)) {
+    triviaItems = (rawTrivia as any[]).filter((item: any) => typeof item === 'string' && safeTrim(item))
+  } else if (typeof rawTrivia === 'string' && safeTrim(rawTrivia)) {
+    triviaItems = rawTrivia.split(/\n|•/).map((s: string) => s.trim()).filter(Boolean)
   }
   
   if (triviaItems.length > 0) {
