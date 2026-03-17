@@ -4293,7 +4293,7 @@ analyzerRoutes.post('/add-context', async (c) => {
       INSERT INTO ai_analysis_requests (
         user_id, session_id, analysis_type, status,
         parent_request_id, version_number, version_note,
-        prompt_payload, created_at
+        prompt_payload, requested_at
       ) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, datetime('now'))
       RETURNING id
     `).bind(
