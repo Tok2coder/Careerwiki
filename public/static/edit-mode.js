@@ -1709,7 +1709,18 @@ const EditMode = {
       `;
     } else if (field.type === 'textarea') {
       const displayValue = Array.isArray(value) ? value.join(', ') : value;
+      // 출처 삽입 가능 필드: 히어로/사이드바 제외
+      const canCite = !['name', 'summary', 'heroSummary', 'heroCategory', 'heroTags', 'categoryName', 'sidebarJobs', 'sidebarMajors', 'sidebarHowtos', 'sidebarCerts', 'sidebarOrgs', 'licenses'].includes(field.key);
+      const toolbarHtml = canCite ? `
+        <div class="flex items-center gap-2 mb-1.5">
+          <button type="button" data-insert-cite="${field.key}" class="px-2.5 py-1 text-xs font-medium text-${gradientFrom} bg-${gradientFrom}/10 hover:bg-${gradientFrom}/20 rounded-md transition flex items-center gap-1" title="커서 위치에 출처 번호를 삽입하고 출처 입력란을 추가합니다">
+            <i class="fas fa-quote-right text-[10px]"></i> 출처 삽입
+          </button>
+          <span class="text-[11px] text-wiki-muted">클릭하면 커서 위치에 [N] 자동 삽입</span>
+        </div>
+      ` : '';
       inputHtml = `
+        ${toolbarHtml}
         <textarea
           id="field-${field.key}"
           data-field-key="${field.key}"
@@ -1758,34 +1769,47 @@ const EditMode = {
     ];
     const isNoSourceField = noSourceFields.includes(field.key);
     
-    // 기존 출처 표시 + 새 출처 입력 필드 (리스트 형태) - 히어로/사이드바 필드 제외
+    // 기존 출처 표시 + 새 출처 입력 필드 (번호 자동 + text/url 분리) - 히어로/사이드바 필드 제외
     let sourceHtml = '';
     if (!isNoSourceField) {
       const existingSource = this.editData?._sources?.[field.key];
-      const existingSourceTexts = Array.isArray(existingSource)
-        ? existingSource.map(s => s?.text || s?.url || '').filter(Boolean)
-        : (existingSource ? [existingSource.text || existingSource.url || ''] : []);
-      
-      // 기존 출처가 있으면 표시, 없으면 빈 input 하나 미리 추가
-      const sourceItems = existingSourceTexts.length > 0 
-        ? existingSourceTexts 
-        : [''];  // 빈 input 하나 미리 추가
-      
-      const sourceItemsHtml = sourceItems.map((text, idx) => `
-        <div class="flex items-center gap-2 edit-source-item" data-source-index="${idx}">
-          <i class="fas fa-bookmark text-xs text-${gradientFrom}/60"></i>
-          <input
-            type="text"
-            value="${this.escapeHtml(text)}"
-            placeholder="출처를 입력하세요"
-            class="flex-1 px-3 py-1.5 text-sm bg-wiki-bg/50 border border-wiki-border/40 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/30 transition"
-          >
-          <button type="button" class="text-wiki-muted hover:text-red-400 transition remove-source-btn">
-            <i class="fas fa-times text-xs"></i>
-          </button>
+      const existingSources = Array.isArray(existingSource)
+        ? existingSource.map(s => {
+            const rawText = s?.text || '';
+            // [N] 접두사 파싱 → 순수 텍스트만 추출
+            const cleanText = rawText.replace(/^\[\d+\]\s*/, '');
+            return { text: cleanText, url: s?.url || '' };
+          }).filter(s => s.text || s.url)
+        : (existingSource ? [{ text: (existingSource.text || '').replace(/^\[\d+\]\s*/, ''), url: existingSource.url || '' }] : []);
+
+      const sourceItemsHtml = existingSources.map((src, idx) => `
+        <div class="edit-source-item rounded-lg border border-wiki-border/30 bg-wiki-bg/30 p-2.5" data-source-index="${idx}">
+          <div class="flex items-start gap-2">
+            <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded bg-${gradientFrom}/20 text-${gradientFrom} text-[10px] font-bold mt-0.5 source-num-badge">${idx + 1}</span>
+            <input
+              type="text"
+              value="${this.escapeHtml(src.text)}"
+              placeholder="출처 설명 (예: 한국산림복지진흥원 — 숲해설사 안내)"
+              data-source-text
+              class="flex-1 px-3 py-1.5 text-sm bg-wiki-bg/50 border border-wiki-border/40 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/30 transition"
+            >
+            <button type="button" class="flex-shrink-0 text-wiki-muted hover:text-red-400 transition remove-source-btn mt-0.5" title="출처 삭제">
+              <i class="fas fa-times text-xs"></i>
+            </button>
+          </div>
+          <div class="flex items-center gap-2 mt-1.5 pl-7">
+            <i class="fas fa-link text-wiki-muted text-[10px] flex-shrink-0"></i>
+            <input
+              type="url"
+              value="${this.escapeHtml(src.url)}"
+              placeholder="URL (선택, 예: https://www.example.com/page)"
+              data-source-url
+              class="flex-1 px-3 py-1 text-xs bg-wiki-bg/40 border border-wiki-border/30 rounded-lg text-wiki-muted placeholder-wiki-muted/50 focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/30 focus:text-white transition"
+            >
+          </div>
         </div>
       `).join('');
-      
+
       sourceHtml = `
         <div class="mt-2" data-source-container="${field.key}">
           <button
@@ -1794,9 +1818,9 @@ const EditMode = {
             class="text-xs text-wiki-muted hover:text-${gradientFrom} transition flex items-center gap-1"
           >
             <i class="fas fa-link"></i>
-            출처 ${existingSourceTexts.length > 0 ? `(${existingSourceTexts.length})` : '추가'}
+            출처 ${existingSources.length > 0 ? `(${existingSources.length})` : '추가'}
           </button>
-          <div id="source-${field.key}" class="${existingSourceTexts.length > 0 ? '' : 'hidden '}mt-2 space-y-2" data-source-list="${field.key}">
+          <div id="source-${field.key}" class="${existingSources.length > 0 ? '' : 'hidden '}mt-2 space-y-2" data-source-list="${field.key}">
             ${sourceItemsHtml}
             <button
               type="button"
@@ -1933,17 +1957,52 @@ const EditMode = {
       });
     });
     
-    // 출처 삭제 이벤트 (이벤트 위임)
+    // 출처 삭제 이벤트 (이벤트 위임) — 삭제 후 번호 재정렬
     document.addEventListener('click', (e) => {
       const removeBtn = e.target.closest('.remove-source-btn');
       if (removeBtn) {
         const sourceItem = removeBtn.closest('.edit-source-item');
         if (sourceItem) {
+          const sourceList = sourceItem.closest('[data-source-list]');
           sourceItem.remove();
+          if (sourceList) this.reindexSourceItems(sourceList);
         }
       }
     });
-    
+
+    // "출처 삽입" 버튼 — textarea 커서 위치에 [N] 삽입 + 소스 항목 추가
+    document.querySelectorAll('[data-insert-cite]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-insert-cite');
+        const textarea = document.getElementById(`field-${key}`);
+        const sourceList = document.querySelector(`[data-source-list="${key}"]`);
+        const sourceContainer = document.getElementById(`source-${key}`);
+        if (!textarea || !sourceList) return;
+
+        // 소스 섹션 열기
+        if (sourceContainer?.classList.contains('hidden')) {
+          sourceContainer.classList.remove('hidden');
+        }
+
+        // 다음 번호 계산
+        const nextNum = sourceList.querySelectorAll('.edit-source-item').length + 1;
+
+        // textarea 커서 위치에 [N] 삽입
+        const start = textarea.selectionStart || textarea.value.length;
+        const end = textarea.selectionEnd || start;
+        const insertText = `[${nextNum}]`;
+        textarea.value = textarea.value.substring(0, start) + insertText + textarea.value.substring(end);
+        // 커서를 삽입 뒤로 이동
+        const newPos = start + insertText.length;
+        textarea.selectionStart = newPos;
+        textarea.selectionEnd = newPos;
+        textarea.focus();
+
+        // 소스 항목 추가
+        this.addSourceItem(sourceList, key, '', '');
+      });
+    });
+
     // 태그 입력 이벤트
     document.querySelectorAll('[data-field-type="tags"]').forEach(input => {
       const key = input.getAttribute('data-field-key');
@@ -2312,27 +2371,40 @@ const EditMode = {
   /**
    * 출처 항목 추가
    */
-  addSourceItem(sourceList, fieldKey, value = '') {
+  addSourceItem(sourceList, fieldKey, text = '', url = '') {
     const isJob = this.entityType === 'job';
     const gradientFrom = isJob ? 'wiki-primary' : 'wiki-secondary';
     const idx = sourceList.querySelectorAll('.edit-source-item').length;
-    
+
     const item = document.createElement('div');
-    item.className = 'flex items-center gap-2 edit-source-item';
+    item.className = 'edit-source-item rounded-lg border border-wiki-border/30 bg-wiki-bg/30 p-2.5';
     item.dataset.sourceIndex = idx;
     item.innerHTML = `
-      <i class="fas fa-bookmark text-xs text-${gradientFrom}/60"></i>
-      <input
-        type="text"
-        value="${this.escapeHtml(value)}"
-        placeholder="출처를 입력하세요"
-        class="flex-1 px-3 py-1.5 text-sm bg-wiki-bg/50 border border-wiki-border/40 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/30 transition"
-      >
-      <button type="button" class="text-wiki-muted hover:text-red-400 transition remove-source-btn">
-        <i class="fas fa-times text-xs"></i>
-      </button>
+      <div class="flex items-start gap-2">
+        <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded bg-${gradientFrom}/20 text-${gradientFrom} text-[10px] font-bold mt-0.5 source-num-badge">${idx + 1}</span>
+        <input
+          type="text"
+          value="${this.escapeHtml(text)}"
+          placeholder="출처 설명 (예: 한국산림복지진흥원 — 숲해설사 안내)"
+          data-source-text
+          class="flex-1 px-3 py-1.5 text-sm bg-wiki-bg/50 border border-wiki-border/40 rounded-lg text-white placeholder-wiki-muted focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/30 transition"
+        >
+        <button type="button" class="flex-shrink-0 text-wiki-muted hover:text-red-400 transition remove-source-btn mt-0.5" title="출처 삭제">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+      <div class="flex items-center gap-2 mt-1.5 pl-7">
+        <i class="fas fa-link text-wiki-muted text-[10px] flex-shrink-0"></i>
+        <input
+          type="url"
+          value="${this.escapeHtml(url)}"
+          placeholder="URL (선택, 예: https://www.example.com/page)"
+          data-source-url
+          class="flex-1 px-3 py-1 text-xs bg-wiki-bg/40 border border-wiki-border/30 rounded-lg text-wiki-muted placeholder-wiki-muted/50 focus:outline-none focus:ring-1 focus:ring-${gradientFrom}/30 focus:text-white transition"
+        >
+      </div>
     `;
-    
+
     // "출처 추가" 버튼 앞에 삽입
     const addBtn = sourceList.querySelector('[data-add-source]');
     if (addBtn) {
@@ -2340,9 +2412,22 @@ const EditMode = {
     } else {
       sourceList.appendChild(item);
     }
-    
-    // 새로 추가된 input에 포커스
-    item.querySelector('input')?.focus();
+
+    // 새로 추가된 text input에 포커스
+    item.querySelector('[data-source-text]')?.focus();
+    // 번호 배지 재정렬
+    this.reindexSourceItems(sourceList);
+  },
+
+  /**
+   * 출처 항목 번호 배지 재정렬
+   */
+  reindexSourceItems(sourceList) {
+    sourceList.querySelectorAll('.edit-source-item').forEach((item, idx) => {
+      item.dataset.sourceIndex = idx;
+      const badge = item.querySelector('.source-num-badge');
+      if (badge) badge.textContent = idx + 1;
+    });
   },
 
   /**
@@ -2927,17 +3012,24 @@ const EditMode = {
         changedFields[key] = newValue;
       }
       
-      // 출처 확인 (추가/수정/삭제) - 리스트 형태로 수집
+      // 출처 확인 (추가/수정/삭제) — text/url 분리 수집 + [N] 접두사 자동 생성
       const sourceList = document.querySelector(`[data-source-list="${key}"]`);
       if (sourceList) {
-        const sourceItems = Array.from(sourceList.querySelectorAll('.edit-source-item input'));
-        const sourceTexts = sourceItems.map(input => input.value?.trim()).filter(Boolean);
-        
+        const sourceItems = Array.from(sourceList.querySelectorAll('.edit-source-item'));
+        const collectedSources = sourceItems.map((item, idx) => {
+          const text = (item.querySelector('[data-source-text]')?.value || '').trim();
+          const url = (item.querySelector('[data-source-url]')?.value || '').trim();
+          if (!text && !url) return null;
+          // [N] 접두사 자동 생성 — 유저가 직접 입력할 필요 없음
+          const numberedText = `[${idx + 1}] ${text || url}`;
+          return { text: numberedText, ...(url ? { url } : {}) };
+        }).filter(Boolean);
+
         // 기존에 출처가 있었는지 확인
         const hadSources = this.editData?._sources?.[key];
-        
-        if (sourceTexts.length > 0) {
-          sources[key] = sourceTexts.map((text) => ({ text }));
+
+        if (collectedSources.length > 0) {
+          sources[key] = collectedSources;
         } else if (hadSources) {
           // 기존 출처가 있었는데 다 삭제된 경우
           sources[key] = { delete: true };
