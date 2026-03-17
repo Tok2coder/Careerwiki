@@ -4284,9 +4284,9 @@ analyzerRoutes.post('/add-context', async (c) => {
 
     // 추가 컨텍스트를 analyzer_facts에 저장
     await db.prepare(`
-      INSERT INTO analyzer_facts (user_id, session_id, fact_key, value_json, value_text, source, confidence_weight, created_at)
-      VALUES (?, ?, 'additional_context', ?, ?, 'user_input', 1.0, datetime('now'))
-    `).bind(userId, existingReq.session_id, JSON.stringify(trimmedText), trimmedText).run()
+      INSERT INTO analyzer_facts (user_id, session_id, request_id, fact_key, value_json, value_text, source, confidence_weight, created_at)
+      VALUES (?, ?, ?, 'additional_context', ?, ?, 'user_input', 1.0, datetime('now'))
+    `).bind(userId, existingReq.session_id, request_id, JSON.stringify(trimmedText), trimmedText).run()
 
     // 새 버전 요청 생성
     const newReqResult = await db.prepare(`
