@@ -105,6 +105,17 @@ export const JOB_FIELDS: EditFieldConfig[] = [
     maxLength: 500,
     accessType: 'editable'
   },
+  {
+    key: 'overviewWork.mentalAct',
+    label: '정신활동',
+    inputType: 'text',
+    section: 'overview',
+    sectionGroup: '주요 업무',
+    placeholder: '예: 분석적 사고, 창의적 활동',
+    minLength: 0,
+    maxLength: 500,
+    accessType: 'editable'
+  },
 
   // 개요 탭 - 커리어 전망
   {
@@ -191,25 +202,73 @@ export const JOB_FIELDS: EditFieldConfig[] = [
     accessType: 'editable'
   },
 
+  // 개요 탭 - 여담
+  {
+    key: 'trivia',
+    label: '여담',
+    inputType: 'textarea',
+    section: 'overview',
+    sectionGroup: '여담',
+    placeholder: '이 직업에 관한 흥미로운 사실이나 여담을 입력하세요',
+    minLength: 0,
+    maxLength: DEFAULT_MAX_LENGTH,
+    accessType: 'editable'
+  },
+
+  // 과정 탭 - 되는 방법
+  {
+    key: 'way',
+    label: '되는 방법',
+    inputType: 'textarea',
+    section: 'details',
+    sectionGroup: '되는 방법',
+    placeholder: '이 직업이 되기 위한 경로를 설명하세요',
+    minLength: 0,
+    maxLength: DEFAULT_MAX_LENGTH,
+    accessType: 'editable'
+  },
+
   // 상세정보 탭 - 워라밸 & 사회적 평가
   {
     key: 'detailWlb.wlb',
-    label: '워라밸',
+    label: '워라밸 지수',
+    inputType: 'text',
+    section: 'details',
+    sectionGroup: '워라밸 & 사회적 평가',
+    placeholder: '예: 보통이상, 좋음, 보통미만',
+    minLength: 0,
+    maxLength: 200,
+    accessType: 'editable'
+  },
+  {
+    key: 'detailWlb.wlbDetail',
+    label: '워라밸 상세',
     inputType: 'textarea',
     section: 'details',
     sectionGroup: '워라밸 & 사회적 평가',
-    placeholder: '일과 생활의 균형에 대해 설명하세요',
+    placeholder: '근무 형태, 근무 시간, 휴가 등 워라밸 상세 정보를 입력하세요',
     minLength: 0,
     maxLength: DEFAULT_MAX_LENGTH,
     accessType: 'editable'
   },
   {
     key: 'detailWlb.social',
-    label: '사회적 평가',
+    label: '사회적 기여도',
+    inputType: 'text',
+    section: 'details',
+    sectionGroup: '워라밸 & 사회적 평가',
+    placeholder: '예: 좋음, 보통이상, 보통미만',
+    minLength: 0,
+    maxLength: 200,
+    accessType: 'editable'
+  },
+  {
+    key: 'detailWlb.socialDetail',
+    label: '사회적 기여도 상세',
     inputType: 'textarea',
     section: 'details',
     sectionGroup: '워라밸 & 사회적 평가',
-    placeholder: '사회적 인식과 평가에 대해 설명하세요',
+    placeholder: '사회적 기여, 인식, 평판 등 상세 정보를 입력하세요',
     minLength: 0,
     maxLength: DEFAULT_MAX_LENGTH,
     accessType: 'editable'
