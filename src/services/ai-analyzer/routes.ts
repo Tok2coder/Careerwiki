@@ -3262,6 +3262,7 @@ async function runAnalysisV3(
         miniModuleResult: miniModuleResult,
         careerState: v2CareerState,
         careerBackground: v2CareerBackground,
+        additionalContext: additionalContextText,
       }
       llmJudgeResults = await judgeCandidates(openaiKey, db, judgeInput)
       llmJudgeUsed = true
@@ -3381,6 +3382,20 @@ async function runAnalysisV3(
   } catch (roundError) {
   }
 
+  // Additional Context 조회 (사용자가 추가한 텍스트)
+  let additionalContextText: string | undefined
+  try {
+    const acRows = await db.prepare(`
+      SELECT value_text FROM analyzer_facts
+      WHERE session_id = ? AND fact_key = 'additional_context'
+      ORDER BY created_at DESC
+    `).bind(payload.session_id).all<{ value_text: string }>()
+    if (acRows.results && acRows.results.length > 0) {
+      additionalContextText = acRows.results.map(r => r.value_text).join('\n\n')
+    }
+  } catch (acError) {
+  }
+
   // roundAnswers 병합: DB 우선, deep_intake는 fallback
   const finalRoundAnswers = dbRoundAnswers.length > 0
     ? dbRoundAnswers
@@ -3394,11 +3409,12 @@ async function runAnalysisV3(
         sessionId,
         judgeResults: llmJudgeResults?.results || [],
         searchProfile,
-        narrativeFacts,  // ★ 추가!
-        roundAnswers: finalRoundAnswers,  // ★ DB에서 조회한 실제 답변 사용!
+        narrativeFacts,
+        roundAnswers: finalRoundAnswers,
         universalAnswers: universalAnswers,
         hardCutList,
         miniModuleResult,
+        additionalContext: additionalContextText,
       }
       premiumReport = await generateLLMPremiumReport(
         env?.AI || null,
@@ -5287,6 +5303,19 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
   try {
     const startTime = Date.now()
 
+    // Additional Context 조회 (사용자가 추가한 텍스트)
+    let additionalContextForRecommend: string | undefined
+    try {
+      const acRows = await db.prepare(`
+        SELECT value_text FROM analyzer_facts
+        WHERE session_id = ? AND fact_key = 'additional_context'
+        ORDER BY created_at DESC
+      `).bind(session_id).all<{ value_text: string }>()
+      if (acRows.results && acRows.results.length > 0) {
+        additionalContextForRecommend = acRows.results.map(r => r.value_text).join('\n\n')
+      }
+    } catch { /* non-critical */ }
+
     // ============================================
     // Phase 9: 추천 결과 캐싱 — 동일 프로필+답변 → 동일 결과 (일관성 보장)
     // Workers AI(분산 GPU)가 temp=0에서도 비결정적이므로, 결과 자체를 캐싱
@@ -5846,6 +5875,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           miniModuleResult: payload.mini_module_result,
           careerState,
           careerBackground,
+          additionalContext: additionalContextForRecommend,
         }
 
         const judgeResults = await judgeCandidates(openaiApiKey, db, judgeInput)
@@ -6223,6 +6253,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           universalAnswers: {},
           hardCutList,
           miniModuleResult: payload.mini_module_result,
+          additionalContext: additionalContextForRecommend,
         }
 
         premiumReport = await generateLLMPremiumReport(
@@ -6860,6 +6891,19 @@ analyzerRoutes.post('/v3/recommend/report', async (c) => {
       roundAnswers = raResult.value.results.map(r => ({ roundNumber: r.round_number as 1|2|3, questionId: r.question_id, answer: r.answer }))
     }
 
+    // 4. Additional Context 조회
+    let deferredAdditionalContext: string | undefined
+    try {
+      const acRows = await db.prepare(`
+        SELECT value_text FROM analyzer_facts
+        WHERE session_id = ? AND fact_key = 'additional_context'
+        ORDER BY created_at DESC
+      `).bind(session_id).all<{ value_text: string }>()
+      if (acRows.results && acRows.results.length > 0) {
+        deferredAdditionalContext = acRows.results.map(r => r.value_text).join('\n\n')
+      }
+    } catch { /* non-critical */ }
+
     // 4. LLM Reporter 호출
     const reporterInput: ReporterInput = {
       sessionId: session_id,
@@ -6880,6 +6924,7 @@ analyzerRoutes.post('/v3/recommend/report', async (c) => {
       universalAnswers: {},
       hardCutList: [],
       miniModuleResult,
+      additionalContext: deferredAdditionalContext,
     }
 
     const premiumReport = await generateLLMPremiumReport(env?.AI || null, reporterInput, openaiApiKey)
@@ -8342,6 +8387,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
           searchProfile,
           miniModuleResult: payload.mini_module_result,
           academicState: payload.academic_state,
+          additionalContext: majorAdditionalContext,
         }
 
         const judgeResults = await judgeMajorCandidates(openaiApiKey, db, judgeInput)
@@ -8573,6 +8619,19 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
     let narrativeFacts: { highAliveMoment: string; lostMoment: string; existentialAnswer?: string } | undefined
     let roundAnswers: RoundAnswer[] = []
 
+    // Additional Context 조회 (사용자가 추가한 텍스트) — Judge에도 사용
+    let majorAdditionalContext: string | undefined
+    try {
+      const acRows = await db.prepare(`
+        SELECT value_text FROM analyzer_facts
+        WHERE session_id = ? AND fact_key = 'additional_context'
+        ORDER BY created_at DESC
+      `).bind(session_id).all<{ value_text: string }>()
+      if (acRows.results && acRows.results.length > 0) {
+        majorAdditionalContext = acRows.results.map(r => r.value_text).join('\n\n')
+      }
+    } catch { /* non-critical */ }
+
     if (!skipReport) {
       const [narrativeResult, roundAnswersResult] = await Promise.allSettled([
         db.prepare(`SELECT high_alive_moment, lost_moment, existential_answer FROM narrative_facts WHERE session_id = ?`)
@@ -8630,6 +8689,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
             universalAnswers: {},
             hardCutList: [],
             miniModuleResult: payload.mini_module_result,
+            additionalContext: majorAdditionalContext,
           }
 
           premiumReport = await generateMajorPremiumReport(

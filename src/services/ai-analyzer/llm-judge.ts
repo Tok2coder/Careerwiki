@@ -48,6 +48,8 @@ export interface JudgeInput {
   // 배경 데이터 (Feasibility 평가에 반영)
   careerState?: { role_identity: string; career_stage_years: string }
   careerBackground?: string  // "전공/학과, 직무/업종, 경력 기간"
+  // 사용자가 추가한 보충 정보
+  additionalContext?: string
 }
 
 export interface JudgeOutput {
@@ -434,7 +436,7 @@ export async function judgeCandidates(
   db: D1Database,
   input: JudgeInput
 ): Promise<JudgeOutput> {
-  const { candidates, searchProfile, narrativeFacts, roundAnswers, universalAnswers, miniModuleResult, careerState, careerBackground } = input
+  const { candidates, searchProfile, narrativeFacts, roundAnswers, universalAnswers, miniModuleResult, careerState, careerBackground, additionalContext } = input
 
   // 후보 수 제한
   const limitedCandidates = candidates.slice(0, MAX_TOTAL_CANDIDATES)
@@ -446,9 +448,14 @@ export async function judgeCandidates(
 
   // OpenAI 호환 러너 생성
   const ai = createOpenAICompatibleRunner(openaiApiKey)
-  
+
   // 사용자 컨텍스트 구성 (미니모듈 결과 포함)
-  const userContext = buildUserContext(narrativeFacts, roundAnswers, universalAnswers, miniModuleResult, careerState, careerBackground)
+  let userContext = buildUserContext(narrativeFacts, roundAnswers, universalAnswers, miniModuleResult, careerState, careerBackground)
+
+  // 추가 컨텍스트가 있으면 반영 (사용자가 결과 확인 후 추가한 보충 정보)
+  if (additionalContext) {
+    userContext += `\n\n[추가 정보 - 사용자가 결과 확인 후 보충 제공]\n"${additionalContext}"\n⚠️ 이 정보를 반드시 점수 평가에 반영하세요. 사용자의 추가 맥락이므로 기존 답변과 함께 종합적으로 고려하세요.\n[/추가 정보]`
+  }
   
   // P0-2: 사용자 텍스트 풀 구성 (검증용)
   const userTextPool = buildUserTextPool(narrativeFacts, roundAnswers, universalAnswers)
@@ -2012,6 +2019,7 @@ export interface MajorJudgeInput {
   universalAnswers?: Record<string, string | string[]>
   miniModuleResult?: MiniModuleResult
   academicState?: string  // 'high_school_early' | 'high_school_regular' | etc.
+  additionalContext?: string
 }
 
 export interface MajorJudgeOutput {
@@ -2061,7 +2069,7 @@ export async function judgeMajorCandidates(
   db: D1Database,
   input: MajorJudgeInput
 ): Promise<MajorJudgeOutput> {
-  const { candidates, searchProfile, narrativeFacts, roundAnswers, universalAnswers, miniModuleResult, academicState } = input
+  const { candidates, searchProfile, narrativeFacts, roundAnswers, universalAnswers, miniModuleResult, academicState, additionalContext } = input
 
   // 후보 수 제한
   const limitedCandidates = candidates.slice(0, MAX_TOTAL_CANDIDATES)
@@ -2075,7 +2083,12 @@ export async function judgeMajorCandidates(
   const ai = createOpenAICompatibleRunner(openaiApiKey)
 
   // 사용자 컨텍스트 구성 (미니모듈 결과 포함)
-  const userContext = buildUserContext(narrativeFacts, roundAnswers, universalAnswers, miniModuleResult)
+  let userContext = buildUserContext(narrativeFacts, roundAnswers, universalAnswers, miniModuleResult)
+
+  // 추가 컨텍스트가 있으면 반영
+  if (additionalContext) {
+    userContext += `\n\n[추가 정보 - 사용자가 결과 확인 후 보충 제공]\n"${additionalContext}"\n⚠️ 이 정보를 반드시 점수 평가에 반영하세요. 사용자의 추가 맥락이므로 기존 답변과 함께 종합적으로 고려하세요.\n[/추가 정보]`
+  }
 
   // 사용자 텍스트 풀 구성 (검증용)
   const userTextPool = buildUserTextPool(narrativeFacts, roundAnswers, universalAnswers)
