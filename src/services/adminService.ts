@@ -935,6 +935,133 @@ export async function getUniqueVisitorStats(db: D1Database): Promise<UniqueVisit
   }
 }
 
+// =============================================================================
+// 방문자 목록 (unique_visitor_daily + page_revisions 크로스)
+// =============================================================================
+
+export interface VisitorRecord {
+  ipHash: string
+  visitDays: number
+  firstVisit: string
+  lastVisit: string
+  editCount: number
+}
+
+export interface VisitorListResult {
+  visitors: VisitorRecord[]
+  total: number
+  page: number
+  perPage: number
+  totalPages: number
+}
+
+export async function getVisitorList(db: D1Database, params: {
+  page?: number
+  perPage?: number
+  sort?: 'recent' | 'frequent' | 'edits'
+}): Promise<VisitorListResult> {
+  const page = params.page || 1
+  const perPage = params.perPage || 30
+  const offset = (page - 1) * perPage
+
+  const orderBy = params.sort === 'frequent' ? 'visitDays DESC'
+    : params.sort === 'edits' ? 'editCount DESC'
+    : 'lastVisit DESC'
+
+  try {
+    const [countRes, listRes] = await Promise.all([
+      db.prepare(`SELECT COUNT(DISTINCT ip_hash) as c FROM unique_visitor_daily`).first<{ c: number }>(),
+      db.prepare(`
+        SELECT
+          uv.ip_hash as ipHash,
+          COUNT(DISTINCT uv.stat_date) as visitDays,
+          MIN(uv.stat_date) as firstVisit,
+          MAX(uv.stat_date) as lastVisit,
+          COALESCE(pr.cnt, 0) as editCount
+        FROM unique_visitor_daily uv
+        LEFT JOIN (
+          SELECT ip_hash, COUNT(*) as cnt FROM page_revisions WHERE ip_hash IS NOT NULL GROUP BY ip_hash
+        ) pr ON pr.ip_hash = uv.ip_hash
+        GROUP BY uv.ip_hash
+        ORDER BY ${orderBy}
+        LIMIT ? OFFSET ?
+      `).bind(perPage, offset).all<VisitorRecord>(),
+    ])
+    const total = countRes?.c || 0
+    return {
+      visitors: listRes.results || [],
+      total,
+      page,
+      perPage,
+      totalPages: Math.ceil(total / perPage),
+    }
+  } catch {
+    return { visitors: [], total: 0, page, perPage, totalPages: 0 }
+  }
+}
+
+// =============================================================================
+// 편집자별 리비전 조회 (user_id 또는 ip_hash 기반)
+// =============================================================================
+
+export interface EditorRevisionRecord {
+  id: number
+  entityType: string
+  entityId: string
+  entityName: string | null
+  revisionNumber: number
+  changeType: string | null
+  changedFields: string | null
+  createdAt: string
+}
+
+export async function getRevisionsByEditor(db: D1Database, params: {
+  editorId?: string
+  ipHash?: string
+  page?: number
+  perPage?: number
+}): Promise<{ revisions: EditorRevisionRecord[]; total: number; page: number; totalPages: number }> {
+  const page = params.page || 1
+  const perPage = params.perPage || 50
+  const offset = (page - 1) * perPage
+
+  let where: string
+  const binds: any[] = []
+  if (params.editorId) {
+    where = 'pr.editor_id = ?'
+    binds.push(params.editorId)
+  } else if (params.ipHash) {
+    where = 'pr.ip_hash = ?'
+    binds.push(params.ipHash)
+  } else {
+    return { revisions: [], total: 0, page, totalPages: 0 }
+  }
+
+  const [countRes, listRes] = await Promise.all([
+    db.prepare(`SELECT COUNT(*) as c FROM page_revisions pr WHERE ${where}`).bind(...binds).first<{ c: number }>(),
+    db.prepare(`
+      SELECT
+        pr.id,
+        pr.entity_type as entityType,
+        pr.entity_id as entityId,
+        COALESCE(j.name, m.name, pr.entity_id) as entityName,
+        pr.revision_number as revisionNumber,
+        pr.change_type as changeType,
+        pr.changed_fields as changedFields,
+        pr.created_at as createdAt
+      FROM page_revisions pr
+      LEFT JOIN jobs j ON pr.entity_type = 'job' AND pr.entity_id = j.id
+      LEFT JOIN majors m ON pr.entity_type = 'major' AND pr.entity_id = m.id
+      WHERE ${where}
+      ORDER BY pr.created_at DESC
+      LIMIT ? OFFSET ?
+    `).bind(...binds, perPage, offset).all<EditorRevisionRecord>(),
+  ])
+
+  const total = countRes?.c || 0
+  return { revisions: listRes.results || [], total, page, totalPages: Math.ceil(total / perPage) }
+}
+
 export async function getDashboardChartData(db: D1Database, days: number = 7): Promise<DashboardChartData> {
   try {
     const [viewResult, analysisResult] = await Promise.all([

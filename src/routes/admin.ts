@@ -15,7 +15,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -238,7 +238,54 @@ adminRoutes.get('/admin/feedback/:id', requireAdmin, async (c) => {
 // 관리자 - 사용자 관리 페이지
 adminRoutes.get('/admin/users', requireAdmin, async (c) => {
   try {
+    const tab = (c.req.query('tab') || 'users') as 'users' | 'visitors' | 'revisions'
     const page = parseInt(c.req.query('page') || '1')
+
+    // 편집 이력 탭
+    if (tab === 'revisions') {
+      const editorId = c.req.query('editor') || undefined
+      const ipHash = c.req.query('ip') || undefined
+      const result = await getRevisionsByEditor(c.env.DB, { editorId, ipHash, page, perPage: 50 })
+
+      let editorLabel = ''
+      if (editorId) {
+        const user = await c.env.DB.prepare('SELECT username, email FROM users WHERE id = ?').bind(editorId).first<{ username: string | null; email: string }>()
+        editorLabel = user ? (user.username || user.email) : `사용자 #${editorId}`
+      } else if (ipHash) {
+        editorLabel = `IP ${ipHash}`
+      }
+
+      return c.html(renderAdminUsers({
+        activeTab: 'revisions',
+        users: [], total: 0, page: 1, perPage: 20, totalPages: 0,
+        filters: { search: '', role: 'all', status: 'all' },
+        editorRevisions: result.revisions,
+        editorRevisionsTotal: result.total,
+        editorRevisionsPage: result.page,
+        editorRevisionsTotalPages: result.totalPages,
+        editorLabel,
+        editorId,
+        editorIpHash: ipHash,
+      }))
+    }
+
+    // 방문자 탭
+    if (tab === 'visitors') {
+      const sort = (c.req.query('sort') || 'recent') as 'recent' | 'frequent' | 'edits'
+      const result = await getVisitorList(c.env.DB, { page, perPage: 30, sort })
+      return c.html(renderAdminUsers({
+        activeTab: 'visitors',
+        users: [], total: 0, page: 1, perPage: 20, totalPages: 0,
+        filters: { search: '', role: 'all', status: 'all' },
+        visitors: result.visitors,
+        visitorsTotal: result.total,
+        visitorsPage: result.page,
+        visitorsTotalPages: result.totalPages,
+        visitorSort: sort,
+      }))
+    }
+
+    // 사용자 탭 (기본)
     const perPage = parseInt(c.req.query('perPage') || '20')
     const search = c.req.query('search') || ''
     const role = c.req.query('role') || 'all'
@@ -256,6 +303,7 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
     ])
 
     return c.html(renderAdminUsers({
+      activeTab: 'users',
       users: result.users as any[],
       total: result.total,
       page: result.page,
@@ -677,6 +725,84 @@ adminRoutes.post('/api/admin/revisions/:id/restore', requireAdmin, async (c) => 
     return c.json({ success })
   } catch (error) {
     return c.json({ success: false, error: 'Failed to restore revision' }, 500)
+  }
+})
+
+// 관리자 API - 개별 리비전 되돌리기 (편집 이력 탭에서 사용)
+adminRoutes.post('/api/admin/revert-revision', requireAdmin, async (c) => {
+  try {
+    const user = c.get('user')
+    if (!user) return c.json({ success: false, error: 'Unauthorized' }, 401)
+    const body = await c.req.json<{ revisionId: number }>()
+    const success = await restoreRevisionAdmin(c.env.DB, body.revisionId, user.id)
+    return c.json({ success })
+  } catch (error) {
+    return c.json({ success: false, error: 'Failed to revert' }, 500)
+  }
+})
+
+// 관리자 API - 편집자별 전체 되돌리기
+adminRoutes.post('/api/admin/bulk-revert', requireAdmin, async (c) => {
+  try {
+    const user = c.get('user')
+    if (!user) return c.json({ success: false, error: 'Unauthorized' }, 401)
+    const body = await c.req.json<{ editorId?: string; ipHash?: string }>()
+
+    if (!body.editorId && !body.ipHash) {
+      return c.json({ success: false, error: 'editorId or ipHash required' }, 400)
+    }
+
+    // 해당 편집자의 모든 편집 리비전 조회 (edit 타입만, initial/restore 제외)
+    let where: string
+    const binds: any[] = []
+    if (body.editorId) {
+      where = "editor_id = ? AND change_type = 'edit'"
+      binds.push(body.editorId)
+    } else {
+      where = "ip_hash = ? AND change_type = 'edit'"
+      binds.push(body.ipHash)
+    }
+
+    const revisions = await c.env.DB.prepare(`
+      SELECT id, entity_type, entity_id FROM page_revisions
+      WHERE ${where}
+      ORDER BY created_at ASC
+    `).bind(...binds).all<{ id: number; entity_type: string; entity_id: string }>()
+
+    const revisionRows = revisions.results || []
+    if (revisionRows.length === 0) {
+      return c.json({ success: true, revertedCount: 0 })
+    }
+
+    // 각 엔티티별로 가장 오래된 리비전의 이전 버전으로 복원
+    // → 해당 편집자가 처음 편집하기 전 상태로 되돌림
+    const entityMap = new Map<string, number>()
+    for (const r of revisionRows) {
+      const key = `${r.entity_type}:${r.entity_id}`
+      if (!entityMap.has(key)) {
+        // 이 편집자의 첫 편집 직전 리비전 찾기
+        const prevRevision = await c.env.DB.prepare(`
+          SELECT id FROM page_revisions
+          WHERE entity_type = ? AND entity_id = ? AND id < ?
+          ORDER BY revision_number DESC LIMIT 1
+        `).bind(r.entity_type, r.entity_id, r.id).first<{ id: number }>()
+        if (prevRevision) {
+          entityMap.set(key, prevRevision.id)
+        }
+      }
+    }
+
+    let revertedCount = 0
+    for (const [, prevRevId] of entityMap) {
+      try {
+        await restoreRevisionAdmin(c.env.DB, prevRevId, user.id)
+        revertedCount++
+      } catch { /* skip failed */ }
+    }
+
+    return c.json({ success: true, revertedCount })
+  } catch (error) {
+    return c.json({ success: false, error: 'Bulk revert failed' }, 500)
   }
 })
 

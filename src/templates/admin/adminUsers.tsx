@@ -3,7 +3,7 @@
  */
 
 import { renderAdminLayout } from './adminLayout'
-import type { UserAttributionStats } from '../../services/adminService'
+import type { UserAttributionStats, VisitorRecord, EditorRevisionRecord } from '../../services/adminService'
 
 export interface UserRecord {
   id: number
@@ -21,6 +21,7 @@ export interface UserRecord {
 }
 
 export interface AdminUsersProps {
+  activeTab: 'users' | 'visitors' | 'revisions'
   users: UserRecord[]
   total: number
   page: number
@@ -32,6 +33,20 @@ export interface AdminUsersProps {
     status: string
   }
   attributionStats?: UserAttributionStats
+  // 방문자 탭
+  visitors?: VisitorRecord[]
+  visitorsTotal?: number
+  visitorsPage?: number
+  visitorsTotalPages?: number
+  visitorSort?: string
+  // 편집 이력 탭
+  editorRevisions?: EditorRevisionRecord[]
+  editorRevisionsTotal?: number
+  editorRevisionsPage?: number
+  editorRevisionsTotalPages?: number
+  editorLabel?: string  // "사용자 #5" or "IP abc123"
+  editorId?: string
+  editorIpHash?: string
 }
 
 const CHANNEL_LABELS: Record<string, string> = {
@@ -96,10 +111,317 @@ function renderAttributionCharts(stats: UserAttributionStats): string {
   `
 }
 
-export function renderAdminUsers(props: AdminUsersProps): string {
-  const { users, total, page, perPage, totalPages, filters, attributionStats } = props
+function renderVisitorsTab(props: AdminUsersProps): string {
+  const { visitors = [], visitorsTotal = 0, visitorsPage = 1, visitorsTotalPages = 0, visitorSort = 'recent' } = props
 
-  const content = `
+  return `
+    <!-- 정렬 옵션 -->
+    <div class="glass-card rounded-xl p-4 mb-6">
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-slate-400">정렬:</span>
+        <a href="?tab=visitors&sort=recent" class="px-3 py-1.5 rounded-lg text-sm transition-colors ${visitorSort === 'recent' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">최근 방문</a>
+        <a href="?tab=visitors&sort=frequent" class="px-3 py-1.5 rounded-lg text-sm transition-colors ${visitorSort === 'frequent' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">방문 빈도</a>
+        <a href="?tab=visitors&sort=edits" class="px-3 py-1.5 rounded-lg text-sm transition-colors ${visitorSort === 'edits' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">편집 수</a>
+      </div>
+    </div>
+
+    <!-- 방문자 테이블 -->
+    <div class="glass-card rounded-xl overflow-hidden mb-6">
+      <div class="p-4 border-b border-slate-700/50">
+        <h3 class="text-lg font-semibold">
+          <i class="fas fa-globe text-teal-400 mr-2"></i>
+          방문자 목록 <span class="text-slate-400 font-normal">(${visitorsTotal.toLocaleString()}명)</span>
+        </h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-slate-800/50">
+            <tr>
+              <th class="px-4 py-3 text-left text-slate-400 font-medium">IP 해시</th>
+              <th class="px-4 py-3 text-center text-slate-400 font-medium">방문 일수</th>
+              <th class="px-4 py-3 text-center text-slate-400 font-medium">첫 방문</th>
+              <th class="px-4 py-3 text-center text-slate-400 font-medium">마지막 방문</th>
+              <th class="px-4 py-3 text-center text-slate-400 font-medium">편집 수</th>
+              <th class="px-4 py-3 text-center text-slate-400 font-medium">작업</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${visitors.length > 0 ? visitors.map(v => `
+              <tr class="border-t border-slate-700/50 hover:bg-slate-700/20">
+                <td class="px-4 py-3">
+                  <code class="text-sm text-blue-300 bg-slate-800 px-2 py-0.5 rounded">${escapeHtml(String(v.ipHash))}</code>
+                </td>
+                <td class="px-4 py-3 text-center text-white">${v.visitDays}일</td>
+                <td class="px-4 py-3 text-center text-sm text-slate-400">${v.firstVisit}</td>
+                <td class="px-4 py-3 text-center text-sm text-slate-400">${v.lastVisit}</td>
+                <td class="px-4 py-3 text-center">
+                  ${Number(v.editCount) > 0
+                    ? `<span class="text-amber-400 font-medium">${v.editCount}</span>`
+                    : `<span class="text-slate-500">0</span>`}
+                </td>
+                <td class="px-4 py-3 text-center">
+                  ${Number(v.editCount) > 0 ? `
+                    <a href="?tab=revisions&ip=${encodeURIComponent(String(v.ipHash))}"
+                       class="px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs text-white transition-colors">
+                      <i class="fas fa-history mr-1"></i>편집 이력
+                    </a>
+                  ` : '-'}
+                </td>
+              </tr>
+            `).join('') : `
+              <tr>
+                <td colspan="6" class="px-4 py-12 text-center text-slate-400">
+                  <i class="fas fa-ghost text-3xl mb-2"></i>
+                  <p>방문자 데이터가 없습니다. 데이터 수집이 시작되면 여기에 표시됩니다.</p>
+                </td>
+              </tr>
+            `}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    ${visitorsTotalPages > 1 ? `
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        ${visitorsPage > 1 ? `
+          <a href="?tab=visitors&sort=${visitorSort}&page=${visitorsPage - 1}"
+             class="min-w-[44px] min-h-[44px] px-3 py-2 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded text-white transition-colors">
+            <i class="fas fa-chevron-left"></i>
+          </a>
+        ` : ''}
+        ${generatePagination(visitorsPage, visitorsTotalPages).map(p => p === '...' ? `
+          <span class="min-w-[44px] min-h-[44px] px-3 py-2 flex items-center justify-center text-slate-500">...</span>
+        ` : `
+          <a href="?tab=visitors&sort=${visitorSort}&page=${p}"
+             class="min-w-[44px] min-h-[44px] px-3 py-2 flex items-center justify-center ${Number(p) === visitorsPage ? 'bg-blue-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-white'} rounded transition-colors">
+            ${p}
+          </a>
+        `).join('')}
+        ${visitorsPage < visitorsTotalPages ? `
+          <a href="?tab=visitors&sort=${visitorSort}&page=${visitorsPage + 1}"
+             class="min-w-[44px] min-h-[44px] px-3 py-2 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded text-white transition-colors">
+            <i class="fas fa-chevron-right"></i>
+          </a>
+        ` : ''}
+      </div>
+    ` : ''}
+  `
+}
+
+function renderRevisionsTab(props: AdminUsersProps): string {
+  const { editorRevisions = [], editorRevisionsTotal = 0, editorLabel = '', editorId, editorIpHash } = props
+
+  const changeTypeLabel: Record<string, string> = {
+    initial: '최초', edit: '편집', restore: '복원', merge: '병합'
+  }
+  const entityTypeLabel: Record<string, string> = {
+    job: '직업', major: '전공', howto: 'HowTo'
+  }
+
+  return `
+    <div class="glass-card rounded-xl p-4 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-white">
+            <i class="fas fa-history text-amber-400 mr-2"></i>
+            ${escapeHtml(editorLabel)}의 편집 이력
+            <span class="text-slate-400 font-normal">(${editorRevisionsTotal}건)</span>
+          </h3>
+          <p class="text-sm text-slate-400 mt-1">
+            <a href="?tab=${editorId ? 'users' : 'visitors'}" class="text-blue-400 hover:text-blue-300">
+              <i class="fas fa-arrow-left mr-1"></i>목록으로 돌아가기
+            </a>
+          </p>
+        </div>
+        ${editorRevisionsTotal > 0 ? `
+          <button id="bulkRevertBtn"
+            class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm text-white transition-colors"
+            data-editor-id="${editorId || ''}"
+            data-ip-hash="${editorIpHash || ''}"
+            data-count="${editorRevisionsTotal}">
+            <i class="fas fa-undo mr-1.5"></i>전체 되돌리기
+          </button>
+        ` : ''}
+      </div>
+    </div>
+
+    ${editorRevisions.length > 0 ? `
+      <div class="glass-card rounded-xl overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="px-4 py-3 text-left text-slate-400 font-medium">유형</th>
+                <th class="px-4 py-3 text-left text-slate-400 font-medium">대상</th>
+                <th class="px-4 py-3 text-center text-slate-400 font-medium">리비전</th>
+                <th class="px-4 py-3 text-center text-slate-400 font-medium">변경 유형</th>
+                <th class="px-4 py-3 text-center text-slate-400 font-medium">변경 필드</th>
+                <th class="px-4 py-3 text-center text-slate-400 font-medium">일시</th>
+                <th class="px-4 py-3 text-center text-slate-400 font-medium">작업</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${editorRevisions.map(r => {
+                const entityUrl = r.entityType === 'job' ? `/job/${r.entityId}`
+                  : r.entityType === 'major' ? `/major/${r.entityId}`
+                  : `/howto/${r.entityId}`
+                return `
+                  <tr class="border-t border-slate-700/50 hover:bg-slate-700/20">
+                    <td class="px-4 py-3">
+                      <span class="px-2 py-0.5 rounded text-xs ${
+                        r.entityType === 'job' ? 'bg-blue-500/20 text-blue-300' :
+                        r.entityType === 'major' ? 'bg-purple-500/20 text-purple-300' :
+                        'bg-emerald-500/20 text-emerald-300'
+                      }">${entityTypeLabel[r.entityType] || r.entityType}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <a href="${entityUrl}" class="text-blue-400 hover:text-blue-300 text-sm" target="_blank">
+                        ${escapeHtml(String(r.entityName || r.entityId))}
+                      </a>
+                    </td>
+                    <td class="px-4 py-3 text-center text-sm text-slate-300">r${r.revisionNumber}</td>
+                    <td class="px-4 py-3 text-center">
+                      <span class="text-xs text-slate-400">${changeTypeLabel[r.changeType || ''] || r.changeType || '-'}</span>
+                    </td>
+                    <td class="px-4 py-3 text-center text-xs text-slate-500 max-w-[200px] truncate">
+                      ${r.changedFields || '-'}
+                    </td>
+                    <td class="px-4 py-3 text-center text-xs text-slate-400 whitespace-nowrap">${r.createdAt}</td>
+                    <td class="px-4 py-3 text-center">
+                      <button class="revert-btn px-2 py-1 bg-amber-600 hover:bg-amber-500 rounded text-xs text-white transition-colors"
+                        data-revision-id="${r.id}">
+                        <i class="fas fa-undo mr-1"></i>되돌리기
+                      </button>
+                    </td>
+                  </tr>
+                `
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ` : `
+      <div class="glass-card rounded-xl p-12 text-center text-slate-400">
+        <i class="fas fa-check-circle text-3xl mb-2 text-green-400"></i>
+        <p>편집 이력이 없습니다.</p>
+      </div>
+    `}
+
+    <!-- 되돌리기 스크립트 -->
+    <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
+    <script>
+      function showToast(message, type) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const bgClass = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600';
+        toast.className = bgClass + ' text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2';
+        toast.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i><span>' + message + '</span>';
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+      }
+
+      // 개별 되돌리기
+      document.querySelectorAll('.revert-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('이 리비전의 이전 상태로 되돌리시겠습니까?')) return;
+          const revId = btn.dataset.revisionId;
+          try {
+            const res = await fetch('/api/admin/revert-revision', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ revisionId: Number(revId) })
+            });
+            const data = await res.json();
+            if (data.success) {
+              showToast('되돌리기 완료', 'success');
+              btn.disabled = true;
+              btn.classList.add('opacity-50');
+            } else {
+              showToast(data.error || '되돌리기 실패', 'error');
+            }
+          } catch (e) {
+            showToast('요청 실패: ' + e.message, 'error');
+          }
+        });
+      });
+
+      // 전체 되돌리기
+      const bulkBtn = document.getElementById('bulkRevertBtn');
+      if (bulkBtn) {
+        bulkBtn.addEventListener('click', async () => {
+          const count = bulkBtn.dataset.count;
+          if (!confirm('이 편집자의 모든 편집(' + count + '건)을 되돌리시겠습니까? 각 엔티티의 가장 이전 리비전으로 복원됩니다.')) return;
+          bulkBtn.disabled = true;
+          bulkBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i>처리 중...';
+          try {
+            const body = {};
+            if (bulkBtn.dataset.editorId) body.editorId = bulkBtn.dataset.editorId;
+            if (bulkBtn.dataset.ipHash) body.ipHash = bulkBtn.dataset.ipHash;
+            const res = await fetch('/api/admin/bulk-revert', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (data.success) {
+              showToast('총 ' + data.revertedCount + '건 되돌리기 완료', 'success');
+              setTimeout(() => location.reload(), 1500);
+            } else {
+              showToast(data.error || '되돌리기 실패', 'error');
+              bulkBtn.disabled = false;
+              bulkBtn.innerHTML = '<i class="fas fa-undo mr-1.5"></i>전체 되돌리기';
+            }
+          } catch (e) {
+            showToast('요청 실패: ' + e.message, 'error');
+            bulkBtn.disabled = false;
+            bulkBtn.innerHTML = '<i class="fas fa-undo mr-1.5"></i>전체 되돌리기';
+          }
+        });
+      }
+    </script>
+  `
+}
+
+export function renderAdminUsers(props: AdminUsersProps): string {
+  const { activeTab, users, total, page, perPage, totalPages, filters, attributionStats } = props
+
+  // 탭 내비게이션
+  const tabs = `
+    <div class="flex items-center gap-1 mb-6 border-b border-slate-700/50 pb-0">
+      <a href="?tab=users"
+         class="px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'users' ? 'border-blue-500 text-white' : 'border-transparent text-slate-400 hover:text-white'}">
+        <i class="fas fa-users mr-1.5"></i>사용자
+      </a>
+      <a href="?tab=visitors"
+         class="px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'visitors' ? 'border-teal-500 text-white' : 'border-transparent text-slate-400 hover:text-white'}">
+        <i class="fas fa-globe mr-1.5"></i>방문자
+      </a>
+      ${activeTab === 'revisions' ? `
+        <span class="px-4 py-3 text-sm font-medium border-b-2 border-amber-500 text-white">
+          <i class="fas fa-history mr-1.5"></i>편집 이력
+        </span>
+      ` : ''}
+    </div>
+  `
+
+  // 탭별 콘텐츠
+  if (activeTab === 'visitors') {
+    return renderAdminLayout({
+      title: '사용자 관리',
+      currentPath: '/admin/users',
+      children: tabs + renderVisitorsTab(props)
+    })
+  }
+
+  if (activeTab === 'revisions') {
+    return renderAdminLayout({
+      title: '사용자 관리',
+      currentPath: '/admin/users',
+      children: tabs + renderRevisionsTab(props)
+    })
+  }
+
+  const content = tabs + `
     <!-- 유입경로/관심/커리어 통계 -->
     ${attributionStats ? renderAttributionCharts(attributionStats) : ''}
 
@@ -216,22 +538,31 @@ export function renderAdminUsers(props: AdminUsersProps): string {
                   ${formatTimestamp(user.createdAt)}
                 </td>
                 <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
-                  ${user.isBanned ? `
-                    <button
-                      class="unban-btn px-2 sm:px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
-                      data-user-id="${user.id}"
-                    >
-                      <i class="fas fa-unlock mr-1"></i>해제
-                    </button>
-                  ` : `
-                    <button
-                      class="ban-btn px-2 sm:px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
-                      data-user-id="${user.id}"
-                      data-user-name="${escapeHtml(user.name || user.email)}"
-                    >
-                      <i class="fas fa-ban mr-1"></i>차단
-                    </button>
-                  `}
+                  <div class="flex items-center justify-center gap-1.5">
+                    ${user.editCount > 0 ? `
+                      <a href="?tab=revisions&editor=${user.id}"
+                         class="px-2 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs text-white transition-colors"
+                         title="편집 이력">
+                        <i class="fas fa-history"></i>
+                      </a>
+                    ` : ''}
+                    ${user.isBanned ? `
+                      <button
+                        class="unban-btn px-2 sm:px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
+                        data-user-id="${user.id}"
+                      >
+                        <i class="fas fa-unlock mr-1"></i>해제
+                      </button>
+                    ` : `
+                      <button
+                        class="ban-btn px-2 sm:px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-xs sm:text-sm text-white transition-colors whitespace-nowrap"
+                        data-user-id="${user.id}"
+                        data-user-name="${escapeHtml(user.name || user.email)}"
+                      >
+                        <i class="fas fa-ban mr-1"></i>차단
+                      </button>
+                    `}
+                  </div>
                 </td>
               </tr>
             `).join('') : `
