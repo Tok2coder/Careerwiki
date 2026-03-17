@@ -4603,23 +4603,55 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
             }
 
             try {
+                // 1. 추가 컨텍스트 저장
                 const res = await fetch('/api/ai-analyzer/add-context', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ request_id: currentRequestId, additional_text: text })
                 });
                 const data = await res.json();
-                if (data.success && data.redirect_url) {
-                    window.location.href = data.redirect_url;
-                } else if (data.success && data.new_request_id) {
-                    window.location.href = '/user/ai-results/' + data.new_request_id;
-                } else {
+                if (!data.success) {
                     alert('재분석 요청 실패: ' + (data.message || '알 수 없는 오류'));
                     if (btn) { btn.disabled = false; btn.innerHTML = '추가 후 재분석'; }
+                    return;
                 }
+
+                // 2. 모달 닫기 + 로딩 표시
+                hideAddContextModal();
+                showLoading('재분석 중...', '추가 정보를 반영하여 다시 분석하고 있어요', true);
+
+                // 3. 기존 세션 데이터로 재분석
+                const response = await fetch('/api/ai-analyzer/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        analysis_type: selectedAnalysisType,
+                        stage: selectedStage || 'major_high',
+                        career_state: careerState,
+                        transition_signal: transitionSignalAnswers,
+                        universal_answers: universalAnswers,
+                        narrative_facts: window.narrativeFacts,
+                        round_answers: window.roundAnswers,
+                        engine_version: 'v3',
+                        academic_state: window.academicState || undefined,
+                        debug: DEBUG_MODE,
+                    })
+                });
+                const analyzeData = await response.json();
+
+                hideLoading();
+                currentRequestId = analyzeData.request_id;
+                displayResults(analyzeData);
+                // success toast
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-[10000] px-6 py-3 rounded-xl text-sm font-medium border border-emerald-500/50 bg-emerald-900/80 text-emerald-200 shadow-lg backdrop-blur-sm';
+                toast.textContent = '추가 정보가 반영된 새로운 분석 결과입니다.';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 5000);
             } catch (err) {
-                alert('재분석 요청 중 오류가 발생했습니다.');
-                if (btn) { btn.disabled = false; btn.innerHTML = '추가 후 재분석'; }
+                hideLoading();
+                alert('재분석 중 오류가 발생했습니다: ' + err.message);
             }
         }
 

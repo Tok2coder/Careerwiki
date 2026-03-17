@@ -1,5 +1,17 @@
 # Lessons Learned
 
+### [2026-03-17] add-context 기능: DB 스키마 검증 없이 INSERT 작성하면 연쇄 실패
+- **상황**: 추가 정보 입력(add-context) 엔드포인트에서 4개 버그 연쇄 발생 — (1) user_id TEXT vs INTEGER 타입 불일치 → 404 (2) analyzer_facts CHECK constraint 누락 → SQLITE_CONSTRAINT (3) created_at 대신 requested_at 컬럼명 → SQLITE_ERROR (4) redirect 후 빈 페이지 → 프론트엔드 핸들러 없음
+- **원인**: DB 테이블 스키마를 직접 확인하지 않고 INSERT 문 작성. 기존 코드 참고 없이 컬럼명/타입을 추정
+- **해결**: 각 오류 순차 수정 후, redirect 대신 in-place 재분석으로 전환 (모달 닫기 → 로딩 → analyze API → 결과 표시)
+- **교훈**: 새 INSERT/UPDATE 작성 시 반드시 (1) `.schema 테이블명`으로 컬럼/타입/CHECK 확인 (2) 기존 INSERT 코드 grep해서 패턴 참조 (3) 프론트엔드 redirect URL의 수신 핸들러 존재 여부 확인
+
+### [2026-03-17] 동적 DOM 요소: getElementById 대신 이벤트 위임 사용
+- **상황**: 추가 정보 모달의 textarea에 input 이벤트 리스너가 동작하지 않아 글자 수 카운트/버튼 활성화 안됨
+- **원인**: `document.getElementById('additional-context-text')?.addEventListener('input', ...)` — 스크립트 로드 시점에 해당 DOM 요소가 아직 없음 (모달은 나중에 동적 생성)
+- **해결**: `document.addEventListener('input', function(e) { if (e.target.id === 'additional-context-text') ... })` 이벤트 위임
+- **교훈**: 동적으로 생성되는 요소에 이벤트를 바인딩할 때는 항상 document/부모 레벨 이벤트 위임 사용
+
 ### [2026-03-17] 임금 필드: 자유 텍스트 넣으면 차트가 깨진다
 - **상황**: 숲해설사 임금에 "하위 25% 약 2,200만원, 중위 50% 약 3,100만원..." 형태의 자유 텍스트를 넣음
 - **원인**: 임금 차트 렌더러가 텍스트에서 모든 숫자를 추출하여 개별 지표 바로 표시. "25", "2200", "50" 등이 각각 별도 막대가 됨

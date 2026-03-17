@@ -7836,23 +7836,123 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             }
 
             try {
+                // 1. 추가 컨텍스트 저장
                 const res = await fetch('/api/ai-analyzer/add-context', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ request_id: currentRequestId, additional_text: text })
                 });
                 const data = await res.json();
-                if (data.success && data.redirect_url) {
-                    window.location.href = data.redirect_url;
-                } else if (data.success && data.new_request_id) {
-                    window.location.href = '/user/ai-results/' + data.new_request_id;
-                } else {
+                if (!data.success) {
                     alert('재분석 요청 실패: ' + (data.message || '알 수 없는 오류'));
                     if (btn) { btn.disabled = false; btn.innerHTML = '추가 후 재분석'; }
+                    return;
                 }
+
+                // 2. 모달 닫기 + 로딩 표시
+                hideAddContextModal();
+                showLoading('재분석 중...', '추가 정보를 반영하여 다시 분석하고 있어요', true);
+
+                // 3. 기존 세션 데이터로 재분석 (analyze + recommend)
+                const miniModule = window.miniModuleResult || {};
+                const searchProfile = {
+                    desiredThemes: [
+                        ...(miniModule.interest_top || []),
+                        ...(miniModule.value_top || []),
+                        ...(universalAnswers.univ_interest || []),
+                    ].filter(Boolean),
+                    dislikedThemes: universalAnswers.univ_dislike || [],
+                    strengthsHypothesis: miniModule.strength_top || [],
+                    environmentPreferences: [],
+                    hardConstraints: miniModule.constraint_flags || [],
+                    riskSignals: [],
+                    keywords: [
+                        ...(miniModule.interest_top || []),
+                        ...(universalAnswers.univ_interest || []),
+                    ].filter(Boolean),
+                };
+
+                // analyze API 호출 (기존 세션 + 추가 컨텍스트 포함)
+                const analyzeResponse = await fetch('/api/ai-analyzer/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        analysis_type: selectedAnalysisType,
+                        stage: selectedStage,
+                        career_state: careerState,
+                        transition_signal: transitionSignalAnswers,
+                        universal_answers: universalAnswers,
+                        narrative_facts: window.narrativeFacts,
+                        round_answers: window.roundAnswers,
+                        engine_version: 'v3',
+                        debug: DEBUG_MODE,
+                    })
+                });
+                const analyzeData = await analyzeResponse.json();
+
+                // recommend API 호출 (추가 컨텍스트가 analyzer_facts에 반영됨)
+                const recommendResponse = await fetch('/api/ai-analyzer/v3/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        searchProfile: searchProfile,
+                        mini_module_result: miniModule,
+                        topK: 800,
+                        judgeTopN: 20,
+                        skipReport: false,
+                        debug: DEBUG_MODE,
+                    })
+                });
+                const recommendData = await recommendResponse.json();
+
+                // 결과 병합
+                if (recommendData.success && recommendData.recommendations) {
+                    if (!analyzeData.result) analyzeData.result = {};
+                    if (recommendData.recommendations.top_jobs) {
+                        analyzeData.result.fit_top3 = recommendData.recommendations.top_jobs.slice(0, 10).map(job => ({
+                            job_id: job.job_id, job_name: job.job_name, job_description: job.job_description || '',
+                            slug: job.slug || '', image_url: job.image_url || '',
+                            fit_score: job.fit_score, like_score: job.like_score, can_score: job.can_score,
+                            feasibility_score: job.feasibility_score || 0,
+                            rationale: job.rationale || '', like_reason: job.like_reason || '', can_reason: job.can_reason || '',
+                            evidence_quotes: job.evidence_quotes || [], risk_details: [], evidence_links: [],
+                        }));
+                    }
+                    if (recommendData.recommendations.like_top10) {
+                        analyzeData.result.like_top10 = recommendData.recommendations.like_top10.map(job => ({
+                            job_id: job.job_id, job_name: job.job_name, job_description: job.job_description || '',
+                            slug: job.slug || '', image_url: job.image_url || '',
+                            fit_score: job.fit_score, like_score: job.like_score, can_score: job.can_score,
+                            feasibility_score: job.feasibility_score || 0,
+                            rationale: job.rationale || '', like_reason: job.like_reason || '', can_reason: job.can_reason || '',
+                        }));
+                    }
+                    if (recommendData.recommendations.can_top10) {
+                        analyzeData.result.can_top10 = recommendData.recommendations.can_top10.map(job => ({
+                            job_id: job.job_id, job_name: job.job_name, job_description: job.job_description || '',
+                            slug: job.slug || '', image_url: job.image_url || '',
+                            fit_score: job.fit_score, like_score: job.like_score, can_score: job.can_score,
+                            feasibility_score: job.feasibility_score || 0,
+                            rationale: job.rationale || '', like_reason: job.like_reason || '', can_reason: job.can_reason || '',
+                        }));
+                    }
+                    if (recommendData.premium_report) {
+                        analyzeData.result.premium_report = recommendData.premium_report;
+                    }
+                    if (recommendData.request_id) {
+                        analyzeData.request_id = recommendData.request_id;
+                    }
+                }
+
+                hideLoading();
+                currentRequestId = analyzeData.request_id;
+                displayResults(analyzeData);
+                showToast('추가 정보가 반영된 새로운 분석 결과입니다.', 'success');
             } catch (err) {
-                alert('재분석 요청 중 오류가 발생했습니다.');
-                if (btn) { btn.disabled = false; btn.innerHTML = '추가 후 재분석'; }
+                hideLoading();
+                alert('재분석 중 오류가 발생했습니다: ' + err.message);
             }
         }
 
