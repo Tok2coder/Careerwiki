@@ -349,7 +349,7 @@ pagesRoutes.get('/releases', async (c) => {
     </head>
     <body class="bg-wiki-bg text-wiki-text min-h-screen">
       ${renderNav(userMenuHtml)}
-      <main class="max-w-[1400px] mx-auto px-4 pt-20 pb-10 sm:pt-12">
+      <main class="max-w-[1400px] mx-auto px-2 md:px-4 pt-20 pb-10 sm:pt-12">
         <header class="mb-8 space-y-3">
           <div class="flex items-center gap-2 text-xs text-blue-300 font-semibold uppercase tracking-[0.2em]">
             <i class="fas fa-rocket"></i><span>업데이트 내역</span>
@@ -508,7 +508,7 @@ pagesRoutes.get('/analyzer', (c) => {
       }
     </style>
 
-    <div class="max-w-6xl mx-auto px-4 md:px-6 pt-0 md:pt-2">
+    <div class="max-w-6xl mx-auto px-2 md:px-6 pt-0 md:pt-2">
         <!-- Header -->
         <div class="text-center mb-6">
             <h1 class="text-3xl md:text-4xl font-bold text-white">
@@ -639,7 +639,7 @@ pagesRoutes.get('/help/community-guidelines', (c) => {
 
   const canonicalUrl = buildCanonicalUrl(c.req.url, '/help/community-guidelines')
   const content = `
-    <div class="max-w-[1400px] mx-auto px-4 pb-10">
+    <div class="max-w-[1400px] mx-auto px-2 md:px-4 pb-10">
       <section class="space-y-10">
       <header class="mb-8 space-y-3">
         <div class="flex items-center gap-2 text-xs text-blue-300 font-semibold uppercase tracking-[0.2em]">

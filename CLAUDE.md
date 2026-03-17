@@ -182,9 +182,8 @@ npx tsc --noEmit
 ### 테스트 (중요)
 - **로컬 dev 서버(preview_start, npm run dev) 절대 사용 금지** — Cloudflare 바인딩(D1, Vectorize, AI, KV, R2)이 로컬에서 정상 동작하지 않음
 - **반드시 `npm run deploy`로 배포 후 careerwiki.org에서 직접 테스트**
-- **Playwright MCP 도구(`mcp__playwright__*`)로 테스트** — `browser_navigate`, `browser_snapshot`, `browser_take_screenshot`, `browser_click` 등
-- **Chrome 확장프로그램 도구(`mcp__Claude_in_Chrome__*`) 절대 사용 금지** — 연결 끊김/Detached 에러 빈발. `tabs_context_mcp`, `navigate`, `computer`, `find`, `read_page` 등 전부 금지
-- preview_* 도구는 이 프로젝트에서 사용하지 않음
+- **프로덕션 확인은 `curl`/`WebFetch`로** — HTML 가져와서 grep/확인. 간단하고 빠름
+- **MCP 도구 전체 사용 금지** — `mcp__playwright__*`, `mcp__Claude_in_Chrome__*`, `preview_*` 등 모든 MCP 도구 사용하지 않음. curl/WebFetch로 충분함
 
 ## Critical Rules
 

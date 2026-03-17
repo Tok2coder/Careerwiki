@@ -125,7 +125,7 @@ export function renderFeedbackDetailPage(props: FeedbackDetailPageProps): string
 <body class="bg-wiki-bg text-wiki-text min-h-screen">
   ${renderNav(userMenuHtml)}
 
-  <main class="max-w-[1400px] mx-auto px-4 pt-20 pb-10 sm:pt-12">
+  <main class="max-w-[1400px] mx-auto px-2 md:px-4 pt-20 pb-10 sm:pt-12">
     <div class="max-w-4xl mx-auto">
     <!-- 뒤로가기 -->
     <div class="mb-6">

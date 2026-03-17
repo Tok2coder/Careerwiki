@@ -32,7 +32,7 @@ export function renderUserLayoutContent({ title, currentPath, children, username
       : '일반 회원'
   
   return `
-    <div class="max-w-[1400px] mx-auto px-4 pt-4 pb-10 sm:pt-8">
+    <div class="max-w-[1400px] mx-auto px-2 md:px-4 pt-4 pb-10 sm:pt-8">
       <div class="flex flex-col lg:flex-row gap-6">
         
         <!-- 좌측 사이드바 (모바일: 가로 스크롤 탭, 데스크톱: 세로 메뉴) -->

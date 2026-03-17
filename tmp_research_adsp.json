@@ -1,0 +1,519 @@
+{
+  "certification_name": "ADsP (데이터분석 준전문가, Advanced Data Analytics Semi-Professional)",
+  "issuing_body": "한국데이터산업진흥원 (K-DATA)",
+  "certification_type": "국가공인 민간자격",
+  "research_date": "2026-03-14",
+
+  "1_exam_structure": {
+    "summary": "필기시험만 존재 (실기 없음), PBT(Paper Based Test) 방식",
+    "total_questions": 50,
+    "total_score": 100,
+    "time_limit_minutes": 90,
+    "question_type": "객관식 (4지선다)",
+    "points_per_question": 2,
+    "subjects": [
+      {
+        "number": 1,
+        "name": "데이터 이해",
+        "questions": 10,
+        "score": 20,
+        "min_pass_score": 8,
+        "min_pass_questions": 4,
+        "topics": ["데이터의 이해", "데이터의 가치와 미래", "빅데이터", "데이터 사이언스"]
+      },
+      {
+        "number": 2,
+        "name": "데이터 분석 기획",
+        "questions": 10,
+        "score": 20,
+        "min_pass_score": 8,
+        "min_pass_questions": 4,
+        "topics": ["분석 마스터플랜", "분석 거버넌스", "분석 방법론", "분석 프레임워크"]
+      },
+      {
+        "number": 3,
+        "name": "데이터 분석",
+        "questions": 30,
+        "score": 60,
+        "min_pass_score": 24,
+        "min_pass_questions": 12,
+        "topics": ["R 프로그래밍 기초", "통계분석", "정형 데이터 마이닝", "비정형 데이터 마이닝"]
+      }
+    ],
+    "pass_criteria": {
+      "total_min_score": 60,
+      "total_min_questions": 30,
+      "subject_min_rate": "과목당 40% 이상 (과목별 과락 존재)",
+      "note": "60점 이상이어도 한 과목에서 40% 미만 득점하면 불합격"
+    },
+    "sources": [
+      "https://www.dataq.or.kr/www/sub/a_06.do",
+      "https://www.wowpass.com/ExamInfo/235475",
+      "https://namu.wiki/w/%EA%B5%AD%EA%B0%80%EA%B3%B5%EC%9D%B8%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D%20%EC%A0%84%EB%AC%B8%EA%B0%80"
+    ]
+  },
+
+  "2_pass_rate_statistics": {
+    "summary": "평균 합격률 50~65% 수준으로 필기시험 중 중간 난이도",
+    "yearly_data": [
+      { "year": 2022, "pass_rate_pct": 63, "note": "안정적 합격률" },
+      { "year": 2023, "pass_rate_pct": 64.14, "note": "소폭 상승" },
+      { "year": "2024-2025", "pass_rate_pct_range": "50~55", "note": "난이도 상승으로 소폭 하락 추세 (일부 출처)" }
+    ],
+    "note": "2025년 하반기~2026년 합격률은 아직 공식 발표되지 않음. 회차별 편차 존재 (40%대~60%대)",
+    "sources": [
+      "https://www.wowpass.com/ExamInfo/235475",
+      "https://community.linkareer.com/employment_data/5324589",
+      "https://namu.wiki/w/%EA%B5%AD%EA%B0%80%EA%B3%B5%EC%9D%B8%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D%20%EC%A0%84%EB%AC%B8%EA%B0%80"
+    ]
+  },
+
+  "3_subject_difficulty": {
+    "subject_1_데이터이해": {
+      "difficulty": "하 (쉬움)",
+      "description": "암기 위주, 기출문제와 유사한 패턴 반복. 용어와 개념 위주로 8문제 이상 맞추기 비교적 수월.",
+      "tip": "디테일한 부분과 시사적인 내용도 출제되므로 최신 트렌드 용어도 학습 필요"
+    },
+    "subject_2_데이터분석기획": {
+      "difficulty": "하~중 (쉬운 편)",
+      "description": "가장 정형적인 문제 포맷. 분석 마스터플랜, 분석 거버넌스 관련 문제가 반복 출제. 암기 중심.",
+      "tip": "고득점 전략 파트 — 빅데이터 분석 방법 흐름, 거버넌스 체계를 정리하면 안정적 점수 확보"
+    },
+    "subject_3_데이터분석": {
+      "difficulty": "중~상 (어려운 편)",
+      "description": "R 언어 기초, 통계 분석, 데이터 마이닝 등 비전공자에게 난해. 전체 30문항으로 비중 최대(60점). 신유형 문제 포함으로 체감 난이도 높음.",
+      "hard_topics": ["조건부확률", "혼동행렬 (정확도, 특이도 등)", "군집분석 거리 계산 (유클리드, 맨해튼)", "연관성 분석 계산", "R 함수와 데이터 조작"],
+      "tip": "기출 60% 이상 반복 출제되므로 기출 패턴 암기 후 개념 이해 병행"
+    },
+    "overall_difficulty": "ITQ, 컴활2급보다 약간 어렵고, 정보처리기사보다는 쉬운 수준. 비전공자도 충분히 독학 합격 가능.",
+    "sources": [
+      "https://yddaily.com/data-analysis-adsp-past-exam-46th-restored/",
+      "https://spartaclub.kr/blog/everything-adsp",
+      "https://brunch.co.kr/@youngestsalon/113",
+      "https://tired-o.github.io/posts/certificate-adsp/"
+    ]
+  },
+
+  "4_recommended_materials": {
+    "textbooks": [
+      {
+        "name": "2026 데이터에듀 ADsP 데이터분석 준전문가 (13판)",
+        "publisher": "데이터에듀",
+        "description": "가장 유명한 기본서. 핵심만 담아 두껍지 않음. 정오표 제공. 출퇴근길 학습에 적합한 분량.",
+        "edition": "13판 (2025.12.26 발행)",
+        "url": "https://www.dataedu.kr/"
+      },
+      {
+        "name": "2026 이지패스 ADsP 데이터분석 준전문가",
+        "publisher": "위키북스",
+        "author": "박현민",
+        "description": "1,904문항 수록. 수험서 앱 제공 (31회차 기출 및 모의고사). 문제 양이 압도적.",
+        "url": "https://product.kyobobook.co.kr/detail/S000218736039"
+      },
+      {
+        "name": "2025 시나공 ADsP 데이터분석 준전문가 기출문제의 재구성",
+        "publisher": "길벗",
+        "description": "기출문제 중심 교재. 리디북스 전자책으로도 제공.",
+        "url": "https://ridibooks.com/books/754044599"
+      },
+      {
+        "name": "2025 ADsP 한 권으로 끝내기 (이론+요약 문제)",
+        "publisher": "이패스비즈",
+        "description": "이론과 문제를 한 권에 압축한 교재.",
+        "url": "https://www.epassbiz.com/online/view.asp?ProductID=100008234"
+      }
+    ],
+    "online_courses": [
+      {
+        "name": "훈쌤과 함께하는 ADsP 4주 최단기 합격패스",
+        "platform": "패스트캠퍼스",
+        "type": "유료 (1년 수강)",
+        "url": "https://fastcampus.co.kr/data_online_adsphun"
+      },
+      {
+        "name": "와우패스 ADsP 강의",
+        "platform": "와우패스",
+        "type": "유료 (합격 시 환급, 불합격 시 기간 연장)",
+        "description": "노베이스 추천. 파랭이 교재 포함.",
+        "url": "https://wowpass.com/DATAAS/ADSP/ASPS00001001"
+      },
+      {
+        "name": "데이터에듀 온라인 강의",
+        "platform": "데이터에듀",
+        "type": "유료",
+        "description": "짧은 강의 길이로 시간 활용 편리",
+        "url": "https://www.dataedu.kr/"
+      },
+      {
+        "name": "ADsP 에센셜",
+        "platform": "인프런",
+        "type": "유료",
+        "description": "44회, 45회 기출문제 풀이 포함",
+        "url": "https://www.inflearn.com/notices/1645840"
+      }
+    ],
+    "free_resources": [
+      {
+        "name": "와우패스 유튜브 채널",
+        "type": "무료 유튜브",
+        "description": "ADsP 전용 무료 강의 제공"
+      },
+      {
+        "name": "미어캣 유튜브 채널",
+        "type": "무료 유튜브",
+        "description": "ADsP 핵심 개념 정리 강의"
+      },
+      {
+        "name": "누리잡 (NuriJob)",
+        "type": "무료 온라인",
+        "description": "ADsP 무료 강의 제공"
+      },
+      {
+        "name": "뉴비티 (newbt.kr) 기출문제 은행",
+        "type": "무료 CBT",
+        "description": "온라인 기출문제 풀이 시스템",
+        "url": "https://newbt.kr/%EC%8B%9C%ED%97%98/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D%20%EC%A4%80%EC%A0%84%EB%AC%B8%EA%B0%80"
+      }
+    ],
+    "sources": [
+      "https://community.linkareer.com/honeytips/2815115",
+      "https://community.linkareer.com/employment_data/4568947",
+      "https://heoni00.github.io/adsp/adsp-01/",
+      "https://fastcampus.co.kr/data_online_adsphun"
+    ]
+  },
+
+  "5_pass_tips_from_reviews": {
+    "top_tips": [
+      {
+        "tip": "기출문제 최소 3~5회독 반복 풀이",
+        "detail": "문제 유형이 60% 이상 반복되므로 기출 패턴 암기가 합격의 핵심. 최근 5개년(10회차) 기출 집중.",
+        "frequency": "거의 모든 합격 후기에서 언급"
+      },
+      {
+        "tip": "3과목(데이터 분석)에 공부 시간 60% 이상 투자",
+        "detail": "비중 60점으로 가장 크고, 난이도도 높음. 1~2과목은 암기로 빠르게 정리하고 3과목에 집중.",
+        "frequency": "대부분의 후기에서 언급"
+      },
+      {
+        "tip": "오답노트 작성 및 취약 영역 집중 복습",
+        "detail": "틀린 문제를 유형별로 정리하면 효율적. 특히 통계 공식과 R 함수는 반복 오답이 잦음.",
+        "frequency": "자주 언급"
+      },
+      {
+        "tip": "시험 전 2주간 모의고사로 시간 관리 연습",
+        "detail": "90분 안에 50문항을 풀어야 하므로 문항당 평균 1.8분. 모의고사로 페이스 조절 연습.",
+        "frequency": "자주 언급"
+      },
+      {
+        "tip": "핵심 용어와 약어 정리표 만들기",
+        "detail": "CRISP-DM, KDD, SEMMA 등 분석 방법론 약어, 통계 용어가 자주 출제. 별도 정리표 작성 추천.",
+        "frequency": "간간이 언급"
+      },
+      {
+        "tip": "이론 학습 시 '왜'를 이해하면 암기보다 효율적",
+        "detail": "단순 암기로는 신유형 문제 대응이 어려움. 개념의 관계와 흐름을 이해하면 응용 가능.",
+        "frequency": "경험자 후기에서 언급"
+      }
+    ],
+    "common_mistakes": [
+      "1~2과목만 집중하고 3과목을 소홀히 하여 과락",
+      "기출문제 없이 이론서만 읽어 실전 감각 부족",
+      "R 언어 파트를 아예 포기하고 시험에 응시",
+      "시험 시간 배분 실패 — 앞부분에 시간 과다 소비"
+    ],
+    "sources": [
+      "https://brunch.co.kr/@youngestsalon/113",
+      "https://brunch.co.kr/@lazykes/196",
+      "https://tired-o.github.io/posts/certificate-adsp/",
+      "https://heoni00.github.io/adsp/adsp-01/",
+      "https://community.linkareer.com/employment_data/4568947"
+    ]
+  },
+
+  "6_sqld_comparison_and_parallel_strategy": {
+    "comparison": {
+      "ADsP": {
+        "focus": "통계적 사고 + 분석 프로세스 이해 (이론형)",
+        "exam_type": "객관식 50문항, 90분",
+        "coding": "R 언어 기초 개념 출제 (코딩 직접 작성 X)",
+        "strength": "문과 성향에 유리, 암기 중심",
+        "difficulty": "SQLD보다 쉬운 편 (코딩 없음)"
+      },
+      "SQLD": {
+        "focus": "데이터베이스 설계 + SQL 작성 능력 (실무형)",
+        "exam_type": "객관식 40문항 + 단답형 10문항, 90분",
+        "coding": "SQL 쿼리 작성/해석 필수",
+        "strength": "이과 성향에 유리, SQL 실무 능력",
+        "difficulty": "ADsP보다 약간 어려움 (코딩 이해 필요)"
+      }
+    },
+    "parallel_strategy": {
+      "recommended_order": "SQLD 먼저 → ADsP (SQL 문법과 데이터 구조를 익힌 후 분석으로 확장)",
+      "alternative_order": "ADsP 먼저 → SQLD (이론 기반을 잡고 실무로 확장, 문과 성향에 적합)",
+      "combined_period": "직장인 기준 주 3회 공부 시 10~12주면 둘 다 합격 가능",
+      "synergy": "SQLD(데이터 추출) + ADsP(데이터 해석) = 데이터 리터러시 역량 완성",
+      "next_step": "ADsP + SQLD 취득 후 → 빅데이터분석기사 or ADP(데이터분석전문가)로 확장"
+    },
+    "sources": [
+      "https://learningspoons.com/website/blog/detail/insight_adsp_sqld/",
+      "https://boase.doublej0124.com/entry/Spec-SQLD-%EB%95%84%EB%8B%A4%EB%A9%B4-%EB%AC%B4%EC%A1%B0%EA%B1%B4-ADsP-%EB%8F%84%EC%A0%84%ED%95%98%EC%84%B8%EC%9A%94-%EB%B9%84%EC%A0%84%EA%B3%B5%EC%9E%90-%EB%82%9C%EC%9D%B4%EB%8F%84-%EB%B9%84%EA%B5%90-2026%EB%85%84-%EC%8C%8D%EA%B8%B0%EC%82%AC-%EC%99%84%EC%84%B1-%EB%A1%9C%EB%93%9C%EB%A7%B5",
+      "https://community.linkareer.com/mentoring/4031952",
+      "https://001.silver-sunny.com/2025/12/sqld-adsp-data-license-tips.html"
+    ]
+  },
+
+  "7_preparation_period": {
+    "by_background": [
+      {
+        "type": "비전공자 (노베이스)",
+        "period": "3~4주 (하루 2~3시간 기준)",
+        "note": "1~2과목 암기 1주 + 3과목 집중 2주 + 기출 풀이 1주"
+      },
+      {
+        "type": "관련 전공자 (통계/컴퓨터공학 등)",
+        "period": "1~2주",
+        "note": "기출문제 풀이 중심으로 빠르게 합격 가능"
+      },
+      {
+        "type": "재응시자",
+        "period": "1주 미만",
+        "note": "취약 과목 집중 복습"
+      },
+      {
+        "type": "직장인 (주 3회 학습)",
+        "period": "6~8주",
+        "note": "출퇴근 시간 활용, 주말 집중 학습 병행"
+      }
+    ],
+    "realistic_average": "비전공자 기준 약 1개월, 하루 2시간 × 주 5일 학습",
+    "sources": [
+      "https://valuable12.com/entry/ADsP-%EA%B0%9C%EC%9A%94-2025-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95-%EB%82%9C%EC%9D%B4%EB%8F%84-%EC%A4%80%EB%B9%84%EB%B0%A9%EB%B2%95-%EC%A4%80%EB%B9%84%EA%B8%B0%EA%B0%84-%EC%9E%90%EB%A3%8C-%EA%B3%B5%EB%B6%80%EB%B2%95",
+      "https://community.linkareer.com/employment_data/4568947",
+      "https://spartaclub.kr/blog/everything-adsp"
+    ]
+  },
+
+  "8_exam_schedule_2026": {
+    "sessions": [
+      {
+        "session": "제48회",
+        "registration": "2026-01-05 ~ 2026-01-09",
+        "exam_date": "2026-02-07 (토)",
+        "score_preview": "2026-02-27 ~ 2026-03-03",
+        "result_announcement": "2026-03-06",
+        "status": "종료"
+      },
+      {
+        "session": "제49회",
+        "registration": "2026-04-13 ~ 2026-04-17",
+        "exam_date": "2026-05-16 (토)",
+        "score_preview": "2026-05-29 이후",
+        "result_announcement": "미정",
+        "status": "예정"
+      },
+      {
+        "session": "제50회",
+        "registration": "2026-07-06 ~ 2026-07-10",
+        "exam_date": "2026-08-08 (토)",
+        "score_preview": "미정",
+        "result_announcement": "미정",
+        "status": "예정"
+      },
+      {
+        "session": "제51회",
+        "registration": "2026-09-28 ~ 2026-10-02",
+        "exam_date": "2026-10-31 (토)",
+        "score_preview": "미정",
+        "result_announcement": "미정",
+        "status": "예정"
+      }
+    ],
+    "exam_fee_krw": 30000,
+    "registration_site": "https://www.dataq.or.kr/",
+    "notes": [
+      "연 4회 시행",
+      "수험표 발행: 시험일 2주 전 금요일 16:00부터",
+      "결과발표 시간: 10:00",
+      "응시 자격 제한 없음 (누구나 응시 가능)"
+    ],
+    "sources": [
+      "https://www.dataq.or.kr/www/accept/schedule.do",
+      "https://community.linkareer.com/employment_data/5324589",
+      "https://statisticsplaybook.com/data-analysis-certifications-in-2026/",
+      "https://www.wowpass.com/ExamInfo/235475"
+    ]
+  },
+
+  "9_career_utility": {
+    "summary": "데이터 분석 역량의 '기본 증명' 수단. 취업 결정 요소는 아니지만 관심과 기초 역량을 보여주는 플러스 알파.",
+    "useful_for": [
+      "공기업 입사 시 자격증 가산점 (일부 기관)",
+      "IT기업 데이터 관련 직무 지원 시 기본 역량 증명",
+      "마케팅/컨설팅 직무에서 데이터 이해도 어필",
+      "ADP(데이터분석전문가) 응시 자격 취득을 위한 사전 단계",
+      "대학 학점 인정 (일부 대학)",
+      "비전공자의 데이터 분야 커리어 전환 시 입문 자격"
+    ],
+    "limitations": [
+      "그 자체로 취업을 결정짓는 자격증은 아님",
+      "실무 역량을 직접 증명하지는 않음 (이론 위주)",
+      "데이터 분석가 채용 시 포트폴리오와 실무 경험이 더 중요",
+      "단독으로는 연봉 협상에 큰 영향 없음"
+    ],
+    "career_path": "ADsP → SQLD → 빅데이터분석기사 → ADP (데이터분석전문가) or SQLP",
+    "recommended_for": [
+      "데이터 분석 커리어를 시작하려는 비전공자",
+      "석박사/실무 경력 없이 ADP 응시 자격이 필요한 사람",
+      "데이터 관련 이론적 기초를 쌓고 싶은 학생",
+      "이력서에 데이터 관심도를 보여주고 싶은 취준생"
+    ],
+    "sources": [
+      "https://sprint.codeit.kr/blog/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D-%EC%A4%80%EC%A0%84%EB%AC%B8%EA%B0%80-%EC%9E%90%EA%B2%A9%EC%A6%9Dadsp-%EC%B7%A8%EC%97%85%EC%97%90-%EB%8F%84%EC%9B%80%EC%9D%B4-%EB%90%A0%EA%B9%8C",
+      "https://heoni00.github.io/adsp/adsp-02/",
+      "https://brunch.co.kr/@lazykes/196",
+      "https://kernel.fastcampus.co.kr/insight_DATAadsp"
+    ]
+  },
+
+  "10_non_major_difficulties": {
+    "hardest_areas": [
+      {
+        "area": "통계 분석 개념",
+        "difficulty_level": "높음",
+        "details": "조건부확률, 가설검정, 회귀분석, 분산분석 등 통계 이론. 수학적 배경 없으면 개념 이해에 시간 소요.",
+        "solution": "공식 암기보다 '왜 쓰는지' 맥락 이해 → 기출문제에서 패턴 파악"
+      },
+      {
+        "area": "혼동행렬 (Confusion Matrix) 계산",
+        "difficulty_level": "중상",
+        "details": "정확도, 특이도, 민감도, 정밀도 등 개념 혼동이 잦음. 계산 문제 출제.",
+        "solution": "2x2 표를 반복 그려보며 각 지표 공식 체화"
+      },
+      {
+        "area": "R 프로그래밍 함수",
+        "difficulty_level": "중상",
+        "details": "프로그래밍 경험 없는 비전공자에게 R 함수(apply, merge, subset 등)와 데이터 조작이 생소.",
+        "solution": "직접 코딩하지 않아도 됨. 함수의 입출력 패턴만 기출에서 반복 학습"
+      },
+      {
+        "area": "군집분석 거리 계산",
+        "difficulty_level": "중",
+        "details": "유클리드 거리, 맨해튼 거리, 마할라노비스 거리 등 공식과 적용 상황.",
+        "solution": "공식 자체는 간단한 산수 — 개념만 명확히 이해하면 풀 수 있음"
+      },
+      {
+        "area": "분석 방법론 약어 구분",
+        "difficulty_level": "중",
+        "details": "CRISP-DM, KDD, SEMMA 등 유사한 방법론의 단계와 차이를 혼동.",
+        "solution": "비교표를 만들어 각 방법론의 핵심 차이점만 정리"
+      }
+    ],
+    "encouragement": "통계를 전문적으로 다루는 학과가 산업공학과 외에는 잘 없어서, 대부분의 응시자가 비전공 상태에서 시작. 기출 유형 60% 이상 반복되므로 패턴 학습으로 충분히 극복 가능.",
+    "sources": [
+      "https://namu.wiki/w/%EA%B5%AD%EA%B0%80%EA%B3%B5%EC%9D%B8%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D%20%EC%A0%84%EB%AC%B8%EA%B0%80",
+      "https://spartaclub.kr/blog/everything-adsp",
+      "https://learningspoons.com/website/blog/detail/insight_adsp_sqld/",
+      "https://douxkorea.com/entry/2025-ADsP-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%99%84%EC%A0%84%EC%A0%95%EB%A6%AC-%E2%80%93-%EC%8B%9C%ED%97%98-%EC%A0%95%EB%B3%B4%EB%B6%80%ED%84%B0-%ED%95%A9%EA%B2%A9-%EC%A0%84%EB%9E%B5%EA%B9%8C%EC%A7%80-%ED%95%9C-%EB%B2%88%EC%97%90"
+    ]
+  },
+
+  "all_sources": [
+    {
+      "id": 1,
+      "title": "한국데이터산업진흥원 공식 사이트 (dataq.or.kr)",
+      "url": "https://www.dataq.or.kr/www/accept/schedule.do",
+      "used_for": "시험 일정, 공식 시험 구조, 합격 기준"
+    },
+    {
+      "id": 2,
+      "title": "나무위키 - 국가공인 데이터분석 전문가",
+      "url": "https://namu.wiki/w/%EA%B5%AD%EA%B0%80%EA%B3%B5%EC%9D%B8%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D%20%EC%A0%84%EB%AC%B8%EA%B0%80",
+      "used_for": "합격률 통계, 시험 구조, 과목별 난이도"
+    },
+    {
+      "id": 3,
+      "title": "와우패스 ADsP 수험정보",
+      "url": "https://www.wowpass.com/ExamInfo/235475",
+      "used_for": "2026 시험 일정, 합격 기준, 과목 구성"
+    },
+    {
+      "id": 4,
+      "title": "링커리어 - 2026 ADsP 시험일정",
+      "url": "https://community.linkareer.com/employment_data/5324589",
+      "used_for": "시험 일정, SQLD 차이, 합격률"
+    },
+    {
+      "id": 5,
+      "title": "브런치 - ADsP 합격 후기",
+      "url": "https://brunch.co.kr/@youngestsalon/113",
+      "used_for": "합격 후기, 과목별 체감 난이도, 공부법"
+    },
+    {
+      "id": 6,
+      "title": "브런치 - ADsP 합격 후기와 자격증의 함정",
+      "url": "https://brunch.co.kr/@lazykes/196",
+      "used_for": "취업 활용도, 자격증 한계, 현실적 평가"
+    },
+    {
+      "id": 7,
+      "title": "스파르타클럽 - ADsP 자격증 따는 법",
+      "url": "https://spartaclub.kr/blog/everything-adsp",
+      "used_for": "공부법, 비전공자 난이도, 준비 전략"
+    },
+    {
+      "id": 8,
+      "title": "ITability - ADsP 준비 후기와 팁",
+      "url": "https://tired-o.github.io/posts/certificate-adsp/",
+      "used_for": "합격 팁, 과목별 공부법, 교재 후기"
+    },
+    {
+      "id": 9,
+      "title": "링커리어 - ADsP 한달 독학 비전공자 공부법",
+      "url": "https://community.linkareer.com/employment_data/4568947",
+      "used_for": "비전공자 공부법, 교재 추천, 무료 유튜브 추천"
+    },
+    {
+      "id": 10,
+      "title": "코드잇 - ADsP 자격증 취업에 도움이 될까?",
+      "url": "https://sprint.codeit.kr/blog/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D-%EC%A4%80%EC%A0%84%EB%AC%B8%EA%B0%80-%EC%9E%90%EA%B2%A9%EC%A6%9Dadsp-%EC%B7%A8%EC%97%85%EC%97%90-%EB%8F%84%EC%9B%80%EC%9D%B4-%EB%90%A0%EA%B9%8C",
+      "used_for": "취업 활용도, 커리어 가치"
+    },
+    {
+      "id": 11,
+      "title": "러닝스푼즈 - ADSP와 SQLD 비교",
+      "url": "https://learningspoons.com/website/blog/detail/insight_adsp_sqld/",
+      "used_for": "SQLD 차이점, 병행 전략"
+    },
+    {
+      "id": 12,
+      "title": "Heoni Tech - ADsP 비전공자 독학 공부법",
+      "url": "https://heoni00.github.io/adsp/adsp-01/",
+      "used_for": "교재 추천, 기출문제 활용법, 비전공자 팁"
+    },
+    {
+      "id": 13,
+      "title": "통계놀이터 - 2026년 데이터 분석 자격증 시험일정",
+      "url": "https://statisticsplaybook.com/data-analysis-certifications-in-2026/",
+      "used_for": "2026 시험 일정, 최단기간 합격 전략"
+    },
+    {
+      "id": 14,
+      "title": "이지패스 ADsP 교재 (교보문고)",
+      "url": "https://product.kyobobook.co.kr/detail/S000218736039",
+      "used_for": "교재 정보"
+    },
+    {
+      "id": 15,
+      "title": "패스트캠퍼스 - ADsP 4주 최단기 합격패스",
+      "url": "https://fastcampus.co.kr/data_online_adsphun",
+      "used_for": "인강 정보"
+    },
+    {
+      "id": 16,
+      "title": "YD Daily - ADsP 46회 기출문제 복원 및 해설",
+      "url": "https://yddaily.com/data-analysis-adsp-past-exam-46th-restored/",
+      "used_for": "최근 기출 난이도, 과목별 분석"
+    }
+  ]
+}

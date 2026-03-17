@@ -1,0 +1,542 @@
+{
+  "certName": "AWS Certified Solutions Architect – Associate (SAA-C03)",
+  "certNameKo": "AWS 공인 솔루션즈 아키텍트 – 어소시에이트",
+  "lastUpdated": "2026-03-17",
+
+  "sources": [
+    {
+      "title": "AWS 공식 SAA-C03 시험 안내",
+      "url": "https://aws.amazon.com/certification/certified-solutions-architect-associate/",
+      "keyFacts": ["공식 시험 개요, 도메인 비율, 응시 요건 안내"]
+    },
+    {
+      "title": "AWS SAA-C03 시험 가이드 (공식 PDF)",
+      "url": "https://docs.aws.amazon.com/aws-certification/latest/examguides/solutions-architect-associate-03.html",
+      "keyFacts": ["4개 도메인 상세 출제 비율", "Domain 1: 보안 아키텍처 설계 30%", "Domain 2: 복원력 있는 아키텍처 설계 26%", "Domain 3: 고성능 아키텍처 설계 24%", "Domain 4: 비용 최적화 아키텍처 설계 20%"]
+    },
+    {
+      "title": "AWS Certification Pass Rates 2026 – StudyTech",
+      "url": "https://studytech.ai/blog/aws-certification-pass-rates-2026",
+      "keyFacts": ["SAA 추정 합격률 60-75%", "AWS 공식 합격률 미공개", "모의시험 85% 이상 시 합격 확률 90%+"]
+    },
+    {
+      "title": "세달 동안 AWS Certification 3개 딴 썰 (SAA-C03, DAS-C01, MLS-C01)",
+      "url": "https://velog.io/@nohraemong/세달-동안-AWS-Certification-3개-딴-썰-시험-후기-합격-꿀팁-등",
+      "keyFacts": ["3개월에 3개 자격증 취득", "SAA 2주 준비 후 합격", "Udemy Stephane Maarek 강의 + 모의시험 추천"]
+    },
+    {
+      "title": "AWS SAA C03 시험 후기 (2025-04)",
+      "url": "https://brunch.co.kr/@@uSr/4449",
+      "keyFacts": ["2025년 기준 덤프 비중 줄어듦", "시험장에서 생각보다 어려웠다는 체감", "한국어 시험 가능, 영문 전환 버튼 있음"]
+    },
+    {
+      "title": "AWS SAA-C03 합격 후기 + 공부 방법",
+      "url": "https://velog.io/@suzu11/AWS-SAA-C03-합격-후기-공부-방법",
+      "keyFacts": ["EC2, VPC, S3, RDS, Lambda 등 핵심 서비스 중심 학습", "300-500개 연습 문제 권장"]
+    },
+    {
+      "title": "AWS Solutions Architect - Associate (SAA) 자격 취득 후기",
+      "url": "https://musma.github.io/2020/02/03/qualify-for-aws-solutions-architect-association.html",
+      "keyFacts": ["Best Practice 중심 출제", "IAM, VPC, EC2 경험 있으면 수월", "FAQ 문서 숙지 중요"]
+    },
+    {
+      "title": "AWS 자격증 공부법 – Integerous DevLog",
+      "url": "https://ryan-han.com/post/aws/certificate/",
+      "keyFacts": ["A Cloud Guru 강의 추천", "AWS FAQ 문서 필수 학습", "아마존 웹 서비스를 다루는 기술 책 추천"]
+    },
+    {
+      "title": "AWS 자격증 완벽 가이드: 초보자부터 전문가까지 (2025)",
+      "url": "https://lhjeantaxlab.com/entry/AWS-자격증-완벽-가이드-초보자부터-전문가까지-총정리-2025년-최신",
+      "keyFacts": ["자격증 14종 구조", "CLP → SAA → SAP 로드맵", "난이도별/직무별 분류"]
+    },
+    {
+      "title": "AWS Certification Types and Levels – 2025 Updates",
+      "url": "https://www.smileshark.kr/en/post/aws-certification-guide-2025-updates-1",
+      "keyFacts": ["2025년 자격증 체계 변경사항", "CloudOps Engineer 신설", "SysOps Admin 종료"]
+    },
+    {
+      "title": "AWS 클라우드 자격증 종류와 취업 전망 2025 – 평생배움",
+      "url": "https://lifelearn.kr/blog/0021-aws-cloud-certifications-job-prospects-2025/",
+      "keyFacts": ["Associate 보유자 평균 연봉 6,000만원", "Professional 보유자 8,000만~1억원", "자격증 없으면 서류 탈락 사례 증가"]
+    },
+    {
+      "title": "클라우드 엔지니어가 하는 일, 커리어 로드맵, 초봉",
+      "url": "https://brunch.co.kr/@likelion/127",
+      "keyFacts": ["클라우드 엔지니어 수요 지속 증가", "대기업-스타트업 모두 채용 활발"]
+    },
+    {
+      "title": "클라우드 엔지니어의 역할과 연봉 전망",
+      "url": "https://three-moon.com/36",
+      "keyFacts": ["글로벌 클라우드 시장 1조 달러 돌파 전망", "AWS 자격증 보유 시 10-20% 연봉 프리미엄"]
+    },
+    {
+      "title": "AWS SAA-C03 Cost In 2026",
+      "url": "https://passitexams.com/articles/saa-c03-certification-cost/",
+      "keyFacts": ["시험 비용 150 USD", "Global Retake Promotion 25% 할인"]
+    },
+    {
+      "title": "Ultimate AWS Certified Solutions Architect Associate (SAA) – Stephane Maarek, Udemy",
+      "url": "https://www.udemy.com/course/best-aws-certified-solutions-architect-associate/",
+      "keyFacts": ["가장 인기 있는 SAA 강의", "한글자막 지원", "600+ 슬라이드", "235만 수강생"]
+    },
+    {
+      "title": "AWS Solutions Architect Associate 자격증 4회 모의고사 (한국어) – Udemy",
+      "url": "https://www.udemy.com/course/aws-solutions-architect-associate-4/",
+      "keyFacts": ["한국어 모의고사 4세트", "상세 해설 포함"]
+    },
+    {
+      "title": "AWS 프리 티어 – 무료 클라우드 컴퓨팅 서비스",
+      "url": "https://aws.amazon.com/free/",
+      "keyFacts": ["60개 이상 서비스 무료 실습", "2025년 7월부터 $200 크레딧 방식으로 변경"]
+    },
+    {
+      "title": "최신 AWS 한국어 실습 가이드 – AWS 한국 블로그",
+      "url": "https://aws.amazon.com/ko/blogs/korea/aws-korean-hands-on-labs-guides/",
+      "keyFacts": ["100여 개 한국어 실습 가이드", "10분/30분/1시간 단위 실습"]
+    },
+    {
+      "title": "Pearson VUE AWS 인증 시험",
+      "url": "https://www.pearsonvue.com/us/en/aws.html",
+      "keyFacts": ["시험 접수 플랫폼", "테스트 센터 및 온라인 시험 지원"]
+    },
+    {
+      "title": "AWS SAA 시험 준비, 대상 서비스 목록, 덤프 문제 사이트",
+      "url": "https://bythebluebay.com/information/technology/aws-saa-testguide-dump/",
+      "keyFacts": ["시험 대상 서비스 전체 목록", "ExamTopics 등 덤프 사이트 안내"]
+    },
+    {
+      "title": "AWS 자격증이란? 종류·쓸모·추천 로드맵 한눈에 정리 – 링커리어",
+      "url": "https://community.linkareer.com/employment_data/5211421",
+      "keyFacts": ["자격증별 쓸모 정리", "취업/이직 시 활용도"]
+    },
+    {
+      "title": "AWS SAA-C03 합격 후기 – I Luv Console",
+      "url": "https://rerewww.github.io/aws/aws-saa/",
+      "keyFacts": ["덤프에서 50-60% 출제", "ExamTopics 300문항으로 커버 가능"]
+    },
+    {
+      "title": "클라우드 인프라 엔지니어 양성과정 – 2026년 상반기 모집",
+      "url": "https://www.devtimes.co.kr/news/466287",
+      "keyFacts": ["국비 무료 교육", "우수 교육생 AWS 자격증 응시료 지원"]
+    },
+    {
+      "title": "AWS 자격증 SAA 취득 공부 자료 – Eric's DevLog",
+      "url": "https://kyungyeon.dev/posts/104/",
+      "keyFacts": ["공부 자료 모음", "핵심 서비스별 정리"]
+    },
+    {
+      "title": "(자격증) AWS 아키 따는 법 – 2025",
+      "url": "https://brunch.co.kr/@topasvga/233",
+      "keyFacts": ["3개월 준비 권장", "기본 책 1권 필수", "실무 능력 중시"]
+    }
+  ],
+
+  "examInfo": {
+    "examCode": "SAA-C03",
+    "fullName": "AWS Certified Solutions Architect – Associate",
+    "fullNameKo": "AWS 공인 솔루션즈 아키텍트 – 어소시에이트",
+    "cost": {
+      "original": "150 USD (약 20만원)",
+      "discountPromotion": "2025-2026 Global Retake Promotion: 25% 할인 (112.50 USD) + 불합격 시 1회 무료 재시험"
+    },
+    "duration": "130분 (2시간 10분)",
+    "questionCount": 65,
+    "scoredQuestions": 50,
+    "unscoredQuestions": 15,
+    "questionTypes": ["객관식 (4지선다)", "복수 응답 (5개 중 2-3개 선택)"],
+    "passingScore": "720/1000",
+    "language": "한국어 포함 (영문 전환 버튼 지원)",
+    "testingPlatforms": ["Pearson VUE (테스트 센터 + 온라인)", "PSI (테스트 센터 + 온라인)"],
+    "validityPeriod": "3년 (갱신 시 재시험 또는 상위 자격 취득)",
+    "prerequisites": "공식 선수 요건 없음 (AWS 경력 1년 이상 권장)",
+    "estimatedPassRate": "60-75% (AWS 공식 미공개, 커뮤니티 추정)",
+    "domains": [
+      {
+        "domain": "Domain 1: Design Secure Architectures",
+        "domainKo": "보안 아키텍처 설계",
+        "weight": "30%",
+        "keyTopics": ["IAM 정책/역할", "VPC 보안 그룹/NACL", "암호화 (KMS, CloudHSM)", "AWS Organizations", "AWS Shield/WAF"]
+      },
+      {
+        "domain": "Domain 2: Design Resilient Architectures",
+        "domainKo": "복원력 있는 아키텍처 설계",
+        "weight": "26%",
+        "keyTopics": ["Multi-AZ/Multi-Region", "Auto Scaling", "ELB", "재해 복구 전략", "데이터 백업"]
+      },
+      {
+        "domain": "Domain 3: Design High-Performing Architectures",
+        "domainKo": "고성능 아키텍처 설계",
+        "weight": "24%",
+        "keyTopics": ["EC2 인스턴스 유형 선택", "ElastiCache/DAX", "CloudFront", "S3 Transfer Acceleration", "데이터베이스 선택 (RDS vs DynamoDB)"]
+      },
+      {
+        "domain": "Domain 4: Design Cost-Optimized Architectures",
+        "domainKo": "비용 최적화 아키텍처 설계",
+        "weight": "20%",
+        "keyTopics": ["EC2 요금 모델 (온디맨드/예약/스팟)", "S3 스토리지 클래스", "AWS Cost Explorer", "적정 규모 조정", "Savings Plans"]
+      }
+    ],
+    "registrationSteps": [
+      "1. AWS Certification 계정 생성 (aws.amazon.com/certification)",
+      "2. Pearson VUE 또는 PSI에서 시험 예약",
+      "3. 시험 형태 선택: 테스트 센터 방문 또는 온라인 감독 시험",
+      "4. 등록 시 영문 이름이 신분증과 반드시 일치해야 함",
+      "5. 시험 당일 유효한 신분증 2개 지참 (테스트 센터)"
+    ],
+    "recentChanges2025": [
+      "2025년 기점 덤프 비중 확 줄어듦 (문제 풀 확대)",
+      "Global Retake Promotion 실시 (2025.11~2026.03)",
+      "SysOps Administrator Associate (SOA-C02) → CloudOps Engineer Associate (SOA-C03)로 전환"
+    ]
+  },
+
+  "studyTips": {
+    "recommendedStudyPeriod": {
+      "beginner": "2-3개월 (비전공자, AWS 경험 없음)",
+      "intermediate": "1-2개월 (IT 경력자, AWS 기본 경험)",
+      "experienced": "2-4주 (AWS 실무 1년+)"
+    },
+    "studyOrder": [
+      "1단계: AWS 기초 개념 학습 (클라우드 개념, 리전/AZ, IAM 기초) – 1-2주",
+      "2단계: 핵심 서비스 심화 (EC2, S3, VPC, RDS, Lambda, CloudFront, Route53) – 2-4주",
+      "3단계: 아키텍처 설계 패턴 (고가용성, 확장성, 보안, 비용 최적화) – 1-2주",
+      "4단계: 모의시험 풀이 (300-500문제) + 오답 정리 – 2-3주",
+      "5단계: AWS FAQ + 백서(Whitepaper) 정독 – 시험 직전 1주"
+    ],
+    "coreServicesToMaster": [
+      "EC2 (인스턴스 유형, AMI, 요금 모델, 배치 그룹)",
+      "S3 (스토리지 클래스, 버저닝, 수명 주기 정책, 암호화)",
+      "VPC (서브넷, 보안 그룹, NACL, NAT Gateway, VPN, Direct Connect)",
+      "IAM (정책, 역할, MFA, 교차 계정 액세스)",
+      "RDS (Multi-AZ, Read Replica, Aurora)",
+      "DynamoDB (파티션 키, GSI/LSI, DAX)",
+      "Lambda (서버리스, 트리거, 동시성)",
+      "ELB + Auto Scaling (ALB vs NLB, 대상 그룹)",
+      "CloudFront (CDN, OAI, 캐시 정책)",
+      "Route 53 (라우팅 정책, 장애 조치)",
+      "SQS/SNS/EventBridge (비동기 메시징)",
+      "KMS/CloudTrail/Config (보안 및 거버넌스)"
+    ],
+    "recommendedCourses": {
+      "korean": [
+        {
+          "title": "AWS Solutions Architect Associate 자격증 4회 모의고사 (한국어)",
+          "platform": "Udemy",
+          "url": "https://www.udemy.com/course/aws-solutions-architect-associate-4/",
+          "price": "세일 시 약 15,000-25,000원",
+          "description": "한국어 모의고사 4세트 + 상세 해설"
+        },
+        {
+          "title": "[2023 최신] AWS SAA/SAP 자격증 마스터 클래스 260제+",
+          "platform": "패스트캠퍼스",
+          "url": "https://fastcampus.co.kr/dev_online_upaws",
+          "price": "유료",
+          "description": "한국어 SAA+SAP 통합 과정"
+        },
+        {
+          "title": "AWS 한국어 실습 가이드 (공식)",
+          "platform": "AWS",
+          "url": "https://aws.amazon.com/ko/blogs/korea/aws-korean-hands-on-labs-guides/",
+          "price": "무료",
+          "description": "100여 개 서비스별 실습 가이드"
+        }
+      ],
+      "english": [
+        {
+          "title": "Ultimate AWS Certified Solutions Architect Associate (SAA) – Stephane Maarek",
+          "platform": "Udemy",
+          "url": "https://www.udemy.com/course/best-aws-certified-solutions-architect-associate/",
+          "price": "세일 시 약 15,000-25,000원",
+          "description": "가장 인기 있는 SAA 강의, 한글자막 지원, 600+ 슬라이드, 235만 수강생. SAA 준비의 정석."
+        },
+        {
+          "title": "AWS Certified Solutions Architect Associate 2026 (SAA-C03) – Neal Davis",
+          "platform": "Udemy",
+          "url": "https://www.udemy.com/course/aws-certified-solutions-architect-associate-certification-saa-c03/",
+          "price": "세일 시 약 15,000-25,000원",
+          "description": "상세한 실습 중심 강의"
+        },
+        {
+          "title": "A Cloud Guru – AWS Certified Solutions Architect Associate",
+          "platform": "A Cloud Guru (Pluralsight)",
+          "url": "https://acloudguru.com",
+          "price": "월 $35~",
+          "description": "시험 대비 정석 강의, 핸즈온 랩 포함"
+        }
+      ]
+    },
+    "recommendedBooks": [
+      {
+        "title": "아마존 웹 서비스를 다루는 기술",
+        "author": "이재홍",
+        "description": "한국어 AWS 입문서, 온라인 원고 공개. 영어 강의 전 기초 개념 잡기 좋음."
+      },
+      {
+        "title": "AWS Certified Solutions Architect Study Guide (SAA-C03)",
+        "author": "Ben Piper, David Clinton",
+        "description": "Sybex 공식 학습 가이드. 도메인별 체계적 정리."
+      },
+      {
+        "title": "1주만에 끝내는 AWS SAA-C03 Dump 문제 2025",
+        "author": "정성환",
+        "description": "알라딘 전자책. 최신 기출 문제 정리."
+      }
+    ],
+    "studyMethodForBeginners": {
+      "phase1_foundation": {
+        "period": "1-2주",
+        "tasks": [
+          "AWS Cloud Practitioner 수준의 기초 개념 학습",
+          "클라우드 vs 온프레미스, AWS 글로벌 인프라 이해",
+          "AWS 프리티어 계정 생성 + 콘솔 탐색",
+          "IAM 사용자/역할/정책 직접 만들어보기"
+        ]
+      },
+      "phase2_coreServices": {
+        "period": "3-4주",
+        "tasks": [
+          "Stephane Maarek Udemy 강의 수강 (핵심 서비스 위주)",
+          "EC2 인스턴스 생성/종료, S3 버킷 생성 실습",
+          "VPC 생성, 서브넷/라우팅 테이블/보안 그룹 설정",
+          "RDS Multi-AZ, Lambda 함수 생성 실습",
+          "각 서비스 AWS FAQ 읽기"
+        ]
+      },
+      "phase3_architecture": {
+        "period": "2-3주",
+        "tasks": [
+          "Well-Architected Framework 5대 원칙 학습",
+          "3-Tier 아키텍처, 서버리스 아키텍처 패턴 이해",
+          "재해 복구 전략 4단계 (Backup & Restore → Pilot Light → Warm Standby → Multi-Site)",
+          "비용 최적화 전략 학습"
+        ]
+      },
+      "phase4_examPrep": {
+        "period": "2-3주",
+        "tasks": [
+          "모의시험 300-500문제 풀기 (Udemy, ExamTopics)",
+          "오답 노트 작성 + 해당 서비스 재학습",
+          "시험 직전 AWS FAQ/백서 빠르게 정독",
+          "모의시험 85% 이상 나올 때까지 반복"
+        ]
+      }
+    }
+  },
+
+  "practiceResources": {
+    "mockExams": [
+      {
+        "name": "Udemy – Stephane Maarek Practice Exams",
+        "url": "https://www.udemy.com/course/aws-solutions-architect-associate-saa-c03-practice-test-2025/",
+        "description": "고품질 모의시험 6세트 (390문제), 상세 해설",
+        "price": "세일 시 약 15,000원"
+      },
+      {
+        "name": "Tutorials Dojo – SAA-C03 Practice Exams",
+        "url": "https://tutorialsdojo.com/aws-certified-solutions-architect-associate-saa-c03/",
+        "description": "Jon Bonso의 모의시험, Cheat Sheet 포함",
+        "price": "$15"
+      },
+      {
+        "name": "AWS 공식 Practice Exam",
+        "url": "https://aws.amazon.com/certification/certification-prep/",
+        "description": "공식 모의시험 20문제 무료",
+        "price": "무료"
+      },
+      {
+        "name": "ExamTopics – SAA-C03 기출문제",
+        "url": "https://www.examtopics.com/exams/amazon/aws-certified-solutions-architect-associate-saa-c03/",
+        "description": "커뮤니티 기반 기출 문제 + 답안 토론. 약 300문항 무료.",
+        "note": "일부 답이 틀릴 수 있으므로 커뮤니티 토론 확인 필수"
+      }
+    ],
+    "dumpUsageTips": [
+      "덤프는 보조 교재로만 활용 — 개념 이해 없이 덤프만으로는 합격 어려움",
+      "2025년 이후 문제 풀이 변경되어 덤프 적중률 50-60%로 하락",
+      "ExamTopics 등 무료 덤프 300문항을 풀되, 커뮤니티 토론에서 정답 검증 필수",
+      "덤프 문제를 외우지 말고 '왜 이 답이 맞는지' 서비스 원리를 이해하는 것이 핵심",
+      "유료 덤프(크몽, SPOTO 등)는 문제 수는 많지만 품질 편차 큼 — Udemy 모의시험 우선 추천"
+    ],
+    "labEnvironment": {
+      "awsFreeTier": {
+        "description": "AWS 프리 티어: 가입 후 12개월간 주요 서비스 무료 사용",
+        "url": "https://aws.amazon.com/free/",
+        "changes2025": "2025년 7월부터 서비스별 무료 할당 대신 $200 크레딧 방식으로 변경. 가입 시 $100 + 활동 시 $100 추가.",
+        "keyFreeServices": [
+          "EC2: t2.micro/t3.micro 750시간/월",
+          "S3: 5GB 스토리지",
+          "RDS: db.t2.micro 750시간/월",
+          "Lambda: 100만 요청/월",
+          "DynamoDB: 25GB 스토리지, 25 WCU/RCU"
+        ]
+      },
+      "handsOnLabs": [
+        {
+          "name": "AWS 공식 한국어 실습 가이드",
+          "url": "https://aws.amazon.com/ko/blogs/korea/aws-korean-hands-on-labs-guides/",
+          "description": "100여 개 서비스별 10분/30분/1시간 실습"
+        },
+        {
+          "name": "AWS Skill Builder",
+          "url": "https://skillbuilder.aws",
+          "description": "AWS 공식 무료 학습 플랫폼, SAA 학습 경로 포함"
+        },
+        {
+          "name": "AWS Workshops",
+          "url": "https://workshops.aws",
+          "description": "주제별 워크숍 자료 (서버리스, 컨테이너, ML 등)"
+        }
+      ],
+      "setupTips": [
+        "프리티어 계정은 반드시 Billing Alert 설정 — 예상치 못한 과금 방지",
+        "실습 후 리소스 삭제 습관화 (특히 EC2, RDS, NAT Gateway)",
+        "AWS CloudFormation으로 실습 환경 자동 생성/삭제 활용",
+        "비용 걱정 없는 연습: IAM, S3, Lambda, DynamoDB는 프리티어 범위 넓음"
+      ]
+    }
+  },
+
+  "certRoadmap": {
+    "awsCertStructure": {
+      "foundational": [
+        {
+          "name": "AWS Certified Cloud Practitioner (CLF-C02)",
+          "nameKo": "클라우드 프랙티셔너",
+          "difficulty": "입문",
+          "recommended": "AWS 완전 초보자, 비전공자 첫 자격증으로 추천",
+          "cost": "100 USD"
+        }
+      ],
+      "associate": [
+        {
+          "name": "AWS Certified Solutions Architect – Associate (SAA-C03)",
+          "nameKo": "솔루션즈 아키텍트 어소시에이트",
+          "difficulty": "중급",
+          "recommended": "가장 인기 있는 자격증. AWS 핵심 서비스 전반 학습. 대부분의 AWS 사용자에게 추천.",
+          "cost": "150 USD"
+        },
+        {
+          "name": "AWS Certified Developer – Associate (DVA-C02)",
+          "nameKo": "디벨로퍼 어소시에이트",
+          "difficulty": "중급",
+          "recommended": "개발자 직무 중심. SAA와 70% 내용 겹침.",
+          "cost": "150 USD"
+        },
+        {
+          "name": "AWS Certified CloudOps Engineer – Associate (SOA-C03)",
+          "nameKo": "클라우드옵스 엔지니어 어소시에이트",
+          "difficulty": "중급",
+          "recommended": "운영/모니터링 중심. 2025년 SysOps Admin에서 전환. 실습형 문제 포함.",
+          "cost": "150 USD"
+        }
+      ],
+      "professional": [
+        {
+          "name": "AWS Certified Solutions Architect – Professional (SAP-C02)",
+          "nameKo": "솔루션즈 아키텍트 프로페셔널",
+          "difficulty": "고급",
+          "recommended": "SAA 합격 후 2년+ AWS 경력자. 복잡한 아키텍처 설계 능력 검증.",
+          "cost": "300 USD"
+        },
+        {
+          "name": "AWS Certified DevOps Engineer – Professional (DOP-C02)",
+          "nameKo": "데브옵스 엔지니어 프로페셔널",
+          "difficulty": "고급",
+          "recommended": "CI/CD, IaC, 모니터링 전문가용.",
+          "cost": "300 USD"
+        }
+      ],
+      "specialty": [
+        {
+          "name": "AWS Certified Machine Learning – Specialty (MLS-C01)",
+          "nameKo": "머신러닝 스페셜티",
+          "difficulty": "전문",
+          "cost": "300 USD"
+        },
+        {
+          "name": "AWS Certified Security – Specialty (SCS-C02)",
+          "nameKo": "보안 스페셜티",
+          "difficulty": "전문",
+          "cost": "300 USD"
+        },
+        {
+          "name": "AWS Certified Database – Specialty (DBS-C01)",
+          "nameKo": "데이터베이스 스페셜티",
+          "difficulty": "전문",
+          "cost": "300 USD"
+        },
+        {
+          "name": "AWS Certified Advanced Networking – Specialty (ANS-C01)",
+          "nameKo": "고급 네트워킹 스페셜티",
+          "difficulty": "전문",
+          "cost": "300 USD"
+        },
+        {
+          "name": "AWS Certified Data Engineer – Associate (DEA-C01)",
+          "nameKo": "데이터 엔지니어 어소시에이트",
+          "difficulty": "중급",
+          "cost": "150 USD"
+        },
+        {
+          "name": "AWS Certified AI Practitioner (AIF-C01)",
+          "nameKo": "AI 프랙티셔너",
+          "difficulty": "입문",
+          "cost": "100 USD"
+        }
+      ]
+    },
+    "recommendedPaths": {
+      "cloudEngineer": "CLF → SAA → SOA(CloudOps) → SAP",
+      "developer": "CLF → DVA → SAA → DOP",
+      "architect": "CLF → SAA → SAP → Security/Networking Specialty",
+      "dataEngineer": "CLF → SAA → DEA → MLS",
+      "quickPath": "SAA 바로 시작 (CLF 건너뛰기) — IT 경력자에게 추천"
+    },
+    "certBenefits": [
+      "합격 시 50% 할인 바우처 제공 (다음 시험용)",
+      "AWS Certified 디지털 배지 (Credly) 발급",
+      "AWS Certified 글로벌 커뮤니티 접근",
+      "AWS re:Invent 등 이벤트 전용 라운지 이용"
+    ],
+    "totalActiveCerts2025": "142만+ 활성 자격증, 105만+ 고유 보유자 (2025년 1월 기준)"
+  },
+
+  "careerOutlook": {
+    "jobTitles": [
+      "클라우드 엔지니어",
+      "클라우드 아키텍트",
+      "AWS 솔루션즈 아키텍트",
+      "DevOps 엔지니어",
+      "클라우드 인프라 엔지니어",
+      "SRE (Site Reliability Engineer)",
+      "클라우드 컨설턴트",
+      "클라우드 보안 엔지니어"
+    ],
+    "salaryKorea": {
+      "entry": "3,500만~5,000만원 (신입/주니어, 자격증 보유)",
+      "associateCertHolder": "약 6,000만원 (Associate 자격증 보유자 평균)",
+      "professionalCertHolder": "8,000만~1억원 (Professional/Specialty 보유자)",
+      "certPremium": "자격증 보유 시 비보유 대비 10-20% 연봉 프리미엄",
+      "seniorArchitect": "1억~1.5억원+ (시니어 클라우드 아키텍트, 대기업/외국계)"
+    },
+    "marketOutlook": {
+      "globalCloudMarket": "2025년 글로벌 클라우드 시장 1조 달러 돌파 전망",
+      "demandTrend": "대기업~스타트업 전 규모에서 클라우드 인프라 채용 활발",
+      "keyDrivers": ["디지털 전환 가속화", "AI/ML 인프라 수요 증가", "하이브리드/멀티 클라우드 전략 확대"],
+      "hiringTrend2025": "AWS 자격증 없으면 서류 탈락시키는 기업 증가",
+      "governmentSupport": "국비 무료 클라우드 엔지니어 양성과정 운영 (2026년 상반기 모집 진행 중)"
+    },
+    "topHiringCompanies": [
+      "AWS 파트너사 (메가존클라우드, 베스핀글로벌, GS네오텍 등)",
+      "대기업 IT 계열사 (삼성SDS, LG CNS, SK C&C 등)",
+      "금융권 (KB국민은행, 신한은행 등 클라우드 전환 중)",
+      "스타트업/유니콘 (쿠팡, 토스, 당근마켓 등)",
+      "외국계 기업 (AWS, Microsoft, Google 한국 지사)"
+    ],
+    "careerGrowthPath": [
+      "주니어 클라우드 엔지니어 (SAA) → 시니어 엔지니어 (SAP) → 클라우드 아키텍트",
+      "클라우드 엔지니어 → DevOps 엔지니어 → SRE → Platform Engineer",
+      "클라우드 컨설턴트 → 프리세일즈 아키텍트 → 기술 총괄"
+    ]
+  }
+}

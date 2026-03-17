@@ -1,0 +1,394 @@
+{
+  "type": "doc",
+  "content": [
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "ADsP가 뭔데, 왜 따야 하나" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "ADsP(Advanced Data Analytics Semi-Professional)는 한국데이터산업진흥원이 주관하는 " },
+      { "type": "text", "text": "국가공인 민간자격", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "이다. 이름이 거창하지만, 핵심은 \"데이터를 읽고 해석하는 기초 체력\"을 검증하는 시험이다. 응시 자격 제한이 없어 전공, 학력, 경력과 무관하게 누구나 볼 수 있다" },
+      { "type": "footnote", "attrs": { "id": 1, "text": "한국데이터산업진흥원 공식 사이트 — ADsP 시험 안내", "url": "https://www.dataq.or.kr/www/sub/a_06.do" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "2025년 기준 SQLD 응시자가 전년 대비 21.3% 증가했고, ADsP 역시 매년 응시자가 늘고 있다" },
+      { "type": "footnote", "attrs": { "id": 2, "text": "링커리어 — 2026 데이터 자격증 시험일정 및 합격률", "url": "https://community.linkareer.com/employment_data/5324589" } },
+      { "type": "text", "text": ". 데이터 분석이 마케팅, 기획, 영업까지 퍼지면서 \"이과만의 영역\"이 아니게 된 것이다. ADsP는 그 진입 장벽을 가장 낮은 곳에서 열어주는 자격증이다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "솔직히 말하면, ADsP 하나로 취업이 결정되지는 않는다. 하지만 " },
+      { "type": "text", "text": "데이터에 관심이 있다는 신호", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "를 이력서에 남길 수 있고, ADP(데이터분석전문가) 응시 자격의 사전 단계이기도 하다" },
+      { "type": "footnote", "attrs": { "id": 3, "text": "코드잇 — ADsP 자격증, 취업에 도움이 될까?", "url": "https://sprint.codeit.kr/blog/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D-%EC%A4%80%EC%A0%84%EB%AC%B8%EA%B0%80-%EC%9E%90%EA%B2%A9%EC%A6%9Dadsp-%EC%B7%A8%EC%97%85%EC%97%90-%EB%8F%84%EC%9B%80%EC%9D%B4-%EB%90%A0%EA%B9%8C" } },
+      { "type": "text", "text": ". 비전공자가 데이터 분야에 발을 들이려면 가장 먼저 거쳐야 할 관문이다." }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "시험 구조: 3과목 50문항 90분" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "ADsP는 " },
+      { "type": "text", "text": "필기시험만", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": " 존재한다. 실기가 없다. PBT(종이시험) 방식으로, 4지선다 객관식 50문항을 90분 안에 풀면 된다. 응시료는 3만 원이다" },
+      { "type": "footnote", "attrs": { "id": 4, "text": "와우패스 — ADsP 수험정보 및 합격 기준", "url": "https://www.wowpass.com/ExamInfo/235475" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "table", "content": [
+      { "type": "tableRow", "content": [
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문항 수" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "배점" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과락 기준" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "난이도" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1. 데이터 이해" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "10문항" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "20점" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "8점 (4문항)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★☆☆ 쉬움" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2. 데이터 분석 기획" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "10문항" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "20점" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "8점 (4문항)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★☆ 보통" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3. 데이터 분석" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "30문항" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "60점" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "24점 (12문항)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★ 어려움" }] }] }
+      ] }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "합격 기준은 " },
+      { "type": "text", "text": "총점 60점 이상 + 과목별 40% 이상", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "이다. 전체 점수가 60점을 넘어도 한 과목에서 40% 미만을 받으면 불합격 처리된다. 3과목이 60점 배점으로 가장 비중이 크면서 난이도도 높으니, 여기에 공부 시간의 절반 이상을 투자해야 한다." }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "과목별 난이도와 공략법" }] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "1과목: 데이터 이해 — 가볍게 암기하면 끝" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "데이터의 정의, 빅데이터 특성(3V), 데이터 사이언스 개념 등을 다룬다. 기출 반복률이 높아서 문제집만 2~3번 돌려도 8문제 이상은 맞출 수 있다. 다만 최근에는 시사적인 용어(데이터 레이크, 메타버스, MLOps 등)도 간간이 출제되므로 최신 트렌드 용어도 한 번 훑어두는 게 좋다" },
+      { "type": "footnote", "attrs": { "id": 5, "text": "스파르타클럽 — ADsP 자격증 따는 법 총정리", "url": "https://spartaclub.kr/blog/everything-adsp" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "2과목: 데이터 분석 기획 — 고득점 안전판" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "분석 마스터플랜, 분석 거버넌스, CRISP-DM·KDD·SEMMA 같은 분석 방법론이 핵심이다. 문제 유형이 매우 정형적이어서 기출 패턴만 익히면 만점에 가까운 점수를 받을 수 있다. 약어와 단계를 비교표로 정리해두면 효율적이다." }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "3과목: 데이터 분석 — 여기서 갈린다" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "R 프로그래밍 기초, 통계분석, 데이터 마이닝까지 범위가 넓고 깊다. 비전공자가 가장 어려워하는 구간이 여기다" },
+      { "type": "footnote", "attrs": { "id": 6, "text": "브런치 — ADsP 합격 후기 (과목별 체감 난이도)", "url": "https://brunch.co.kr/@youngestsalon/113" } },
+      { "type": "text", "text": ". 특히 " },
+      { "type": "text", "text": "혼동행렬 계산, 군집분석 거리 공식, R 함수 해석", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "이 체감 난이도를 끌어올리는 3대장이다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "하지만 공포심과 달리, 실제 시험에서는 기출 유형이 60% 이상 반복된다" },
+      { "type": "footnote", "attrs": { "id": 7, "text": "Heoni Tech — ADsP 비전공자 독학 공부법", "url": "https://heoni00.github.io/adsp/adsp-01/" } },
+      { "type": "text", "text": ". R 코드를 직접 작성하는 문제는 나오지 않는다. 함수의 입출력 패턴만 알면 된다. 통계 공식도 전부 외울 필요 없이, 기출에서 자주 나오는 5~6개 공식만 확실히 잡으면 과락은 넘긴다." }
+    ] },
+    { "type": "table", "content": [
+      { "type": "tableRow", "content": [
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3과목 킬러 토픽" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "왜 어려운가" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "대처법" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "혼동행렬" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "정확도·특이도·민감도·정밀도 개념 혼동" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2×2 표를 반복 그리며 체화" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "군집분석 거리" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "유클리드·맨해튼 공식 구분" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "공식 자체는 간단한 산수 — 개념만 명확히" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "R 함수" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "프로그래밍 경험 없으면 생소" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "코딩 불필요, 입출력 패턴만 기출에서 반복 학습" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "조건부확률" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "베이즈 정리 활용 문제 까다로움" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출 패턴 3~4유형만 반복 풀이" }] }] }
+      ] }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "비전공자 4주 독학 플랜" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "비전공자 기준 하루 2~3시간 투자하면 약 4주면 충분하다. 관련 전공자라면 1~2주로 단축할 수 있다" },
+      { "type": "footnote", "attrs": { "id": 8, "text": "링커리어 — ADsP 한달 독학 비전공자 공부법", "url": "https://community.linkareer.com/employment_data/4568947" } },
+      { "type": "text", "text": ". 아래는 실제 합격자 후기를 종합한 4주 플랜이다." }
+    ] },
+    { "type": "table", "content": [
+      { "type": "tableRow", "content": [
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "주차" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "내용" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "목표" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1주차" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1·2과목 이론 정리 + 기출 1회독" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "암기 과목 빠르게 정리" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2주차" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3과목 이론 정리 (통계·R·마이닝)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "개념 이해 + 공식 정리" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3주차" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출문제 3~5회독 (전 과목)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "오답노트 작성, 패턴 체화" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "4주차" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "모의고사 2~3회 + 취약 영역 보강" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시간 관리 연습 (90분 50문항)" }] }] }
+      ] }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "직장인이라면 주 3회 학습 기준 6~8주를 잡는 게 현실적이다. 출퇴근 시간에 이론서를 읽고, 주말에 기출을 집중적으로 푸는 방식이 효과적이다." }
+    ] },
+
+    { "type": "image", "attrs": {
+      "src": "/uploads/jobs/job-howto-adsp-img1.webp",
+      "alt": "데이터 분석 공부를 하고 있는 학생의 모습",
+      "width": 720,
+      "align": "center"
+    } },
+
+    { "type": "checkpointBox", "content": [
+      { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "과락 함정, 반드시 주의할 3가지" }] },
+      { "type": "bulletList", "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "총점 60점 넘어도 한 과목 40% 미만이면 불합격", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 1과목이 쉽다고 공부를 안 하면 4문항 미만으로 과락 위험" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "3과목에만 올인하면 1·2과목에서 과락", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 암기 과목이라도 기출 1회독은 필수" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "시간 배분 실패", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 50문항 90분이면 문항당 1.8분. 앞부분에 시간을 과다 소비하면 3과목 30문항을 급하게 풀게 된다" }
+        ] }] }
+      ] }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "교재·인강 추천: 돈 아끼는 조합" }] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "교재 (1권이면 충분하다)" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "합격자 후기에서 가장 많이 언급되는 교재 3종을 정리했다. 1권만 깊이 파는 게 여러 권 얕게 보는 것보다 낫다." }
+    ] },
+    { "type": "table", "content": [
+      { "type": "tableRow", "content": [
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교재" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "특징" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "추천 대상" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "데이터에듀 ADsP 13판" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가장 유명한 기본서. 핵심만 담아 두껍지 않음" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "빠르게 합격하고 싶은 사람" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "이지패스 ADsP 2026" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1,904문항 수록. 수험서 앱 제공" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문제를 많이 풀어야 안심되는 사람" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시나공 기출문제의 재구성" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출 중심. 전자책 제공" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출만으로 빠르게 끝내고 싶은 사람" }] }] }
+      ] }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "인강 (무료로도 합격 가능)" }] },
+    { "type": "bulletList", "content": [
+      { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+        { "type": "text", "text": "무료", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ": 와우패스 유튜브, 미어캣 유튜브, 뉴비티(newbt.kr) 기출문제 은행 — 교재 1권 + 이 무료 자원이면 충분하다" }
+      ] }] },
+      { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+        { "type": "text", "text": "유료", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ": 패스트캠퍼스 '훈쌤 4주 합격패스', 와우패스 강의(불합격 시 기간 연장), 인프런 ADsP 에센셜 — 혼자 공부가 어려운 노베이스에게 추천" },
+        { "type": "footnote", "attrs": { "id": 9, "text": "패스트캠퍼스 — ADsP 4주 최단기 합격패스 강의 소개", "url": "https://fastcampus.co.kr/data_online_adsphun" } }
+      ] }] }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "SQLD와 뭐가 다르고, 같이 따야 하나" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "ADsP와 " },
+      { "type": "text", "text": "SQLD", "marks": [{ "type": "link", "attrs": { "href": "/howto/SQLD-비전공자도-두-달이면-충분하다" } }] },
+      { "type": "text", "text": "는 데이터 자격증 \"쌍둥이\"로 자주 비교된다. 결론부터 말하면, 둘 다 따는 게 이상적이고, 순서는 본인 성향에 달렸다" },
+      { "type": "footnote", "attrs": { "id": 10, "text": "러닝스푼즈 — ADsP와 SQLD 비교 분석", "url": "https://learningspoons.com/website/blog/detail/insight_adsp_sqld/" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "table", "content": [
+      { "type": "tableRow", "content": [
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비교 항목" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "ADsP" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "SQLD" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "핵심 역량" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "데이터 해석·분석 이론" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "SQL 쿼리 작성·DB 설계" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문제 유형" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "객관식 50문항" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "객관식 40 + 단답형 10" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "코딩" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "없음 (R 개념만)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "SQL 작성/해석 필수" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "유리한 성향" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문과형 (암기 중심)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "이과형 (실무 중심)" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "난이도" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★☆" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★" }] }] }
+      ] }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "병행 전략: 문과 성향이면 ADsP 먼저 → SQLD, 이과 성향이면 SQLD 먼저 → ADsP. 주 3회 학습 기준 10~12주면 둘 다 합격 가능하다. SQLD(데이터 추출) + ADsP(데이터 해석) = " },
+      { "type": "text", "text": "데이터 리터러시 역량 완성", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "이라는 공식이 성립한다." }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "2026년 시험 일정과 접수 안내" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "ADsP는 연 4회 시행된다. 2026년 남은 시험 일정은 다음과 같다" },
+      { "type": "footnote", "attrs": { "id": 11, "text": "한국데이터산업진흥원 — 2026년 시험 일정표", "url": "https://www.dataq.or.kr/www/accept/schedule.do" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "table", "content": [
+      { "type": "tableRow", "content": [
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "회차" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "접수 기간" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험일" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "결과 발표" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제49회" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "4/13~4/17" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5/16 (토)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5월 말" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제50회" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "7/6~7/10" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "8/8 (토)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "미정" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제51회" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "9/28~10/2" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "10/31 (토)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "미정" }] }] }
+      ] }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "접수는 dataq.or.kr에서 진행하며, 응시료는 3만 원이다. 접수 기간이 5일로 짧으니 미리 캘린더에 등록해두는 게 좋다." }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "합격 이후, 어디로 가야 하나" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "ADsP를 땄다고 바로 " },
+      { "type": "text", "text": "데이터 분석가", "marks": [{ "type": "link", "attrs": { "href": "/job/데이터-분석가" } }] },
+      { "type": "text", "text": "가 되는 건 아니다. ADsP는 시작점이지 종착점이 아니다. 자격증 로드맵은 이렇게 이어진다:" }
+    ] },
+    { "type": "orderedList", "content": [
+      { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+        { "type": "text", "text": "ADsP", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " (데이터 분석 이론 기초)" }
+      ] }] },
+      { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+        { "type": "text", "text": "SQLD", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " (SQL 실무 역량)" }
+      ] }] },
+      { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+        { "type": "text", "text": "빅데이터분석기사", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " (실기 포함, 국가기술자격)" }
+      ] }] },
+      { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+        { "type": "text", "text": "ADP", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " (데이터분석전문가, 최상위)" }
+      ] }] }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "현실적으로 취업 시장에서 ADsP 단독으로는 결정적 무기가 되지 않는다" },
+      { "type": "footnote", "attrs": { "id": 12, "text": "브런치 — ADsP 합격 후기와 자격증의 함정", "url": "https://brunch.co.kr/@lazykes/196" } },
+      { "type": "text", "text": ". 하지만 ADsP + SQLD 조합이면 '데이터를 다룰 줄 아는 사람'이라는 인식을 줄 수 있다. 특히 비IT 직군(마케팅, 기획, 컨설팅)에서 데이터 역량을 어필하려는 사람에게 효과적이다." }
+    ] },
+
+    { "type": "horizontalRule" },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "자주 묻는 질문" }] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "문과생인데 ADsP 따는 게 의미 있나요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "오히려 문과생에게 더 유리한 시험이다. 1·2과목은 순수 암기이고, 3과목도 코딩 없이 개념 이해와 기출 패턴 학습으로 충분히 합격할 수 있다. 마케팅, 기획, 컨설팅 직무에서 데이터 역량을 보여주는 좋은 수단이다." }] }
+      ] }
+    ] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "ADsP와 SQLD 중 하나만 딴다면 어느 쪽이 낫나요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "IT/개발 직군 지원이라면 SQLD가 더 실용적이다. 비IT 직군(마케팅, 경영, 기획)이라면 ADsP가 범용성이 높다. 가능하면 둘 다 따는 걸 추천하지만, 시간이 없다면 지원 직무 기준으로 선택하면 된다." }] }
+      ] }
+    ] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "R 프로그래밍을 전혀 몰라도 합격할 수 있나요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "충분히 가능하다. 시험에서 R 코드를 직접 작성하는 문제는 나오지 않는다. apply, merge, subset 같은 핵심 함수의 입출력 패턴만 기출에서 반복 학습하면 된다. R을 설치할 필요도 없다." }] }
+      ] }
+    ] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "합격률이 60%대라는데, 쉬운 시험인가요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "평균 합격률은 50~65%로 중간 수준이다. 다만 최근에는 신유형 출제가 늘면서 난이도가 올라가는 추세다. '쉬운 시험'이라고 방심하면 3과목에서 과락날 수 있으니 기출 중심으로 꼼꼼히 준비해야 한다." }] }
+      ] }
+    ] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "교재 없이 무료 자료만으로 합격할 수 있나요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "가능은 하지만 비효율적이다. 뉴비티 무료 CBT와 유튜브 강의로 합격한 사례도 있으나, 체계적 학습을 위해 교재 1권(약 2만 원)은 투자하는 게 시간 대비 효율이 훨씬 좋다." }] }
+      ] }
+    ] },
+
+    { "type": "conclusionBox", "content": [
+      { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "ADsP 합격 핵심 정리" }] },
+      { "type": "bulletList", "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3과목(데이터 분석)에 공부 시간 60% 이상 투자하되, 1·2과목 과락 방지도 잊지 말 것" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출문제 최소 3회독이 합격의 핵심 — 60% 이상 유형이 반복된다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자 4주, 전공자 2주면 충분. 직장인은 6~8주 잡을 것" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "ADsP는 시작점이다 — SQLD와 함께 따면 데이터 리터러시 역량이 완성된다" }] }] }
+      ] }
+    ] }
+  ]
+}

@@ -1,0 +1,681 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "경비지도사, 2차 커트라인 90점의 벽을 넘는 법" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비지도사는 경찰청이 주관하고 한국산업인력공단이 시행하는 국가전문자격이다. 경비업법에 따라 경비업체는 일정 규모 이상이면 경비지도사를 반드시 선임해야 하므로" },
+        { "type": "footnote", "attrs": { "id": 1, "text": "Q-net 경비지도사 공식", "url": "https://www.q-net.or.kr/site/security" } },
+        { "type": "text", "text": ", 법적 의무 선임 제도가 수요를 뒷받침하는 몇 안 되는 자격증이다. " },
+        { "type": "text", "text": "경호원", "marks": [{ "type": "link", "attrs": { "href": "/job/경호원" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "경찰관", "marks": [{ "type": "link", "attrs": { "href": "/job/경찰관" } }] },
+        { "type": "text", "text": " 등 보안·치안 분야 종사자뿐 아니라 만 18세 이상이면 학력·경력 제한 없이 누구나 응시할 수 있어 진입 장벽이 낮다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "문제는 합격률이다. 1차 시험은 절대평가로 과목당 40점 이상, 평균 60점 이상이면 합격이지만, 2차 시험은 ", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "상대평가로 선발인원 내에서 고득점순", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로 뽑는다. 2023년 기준 일반경비지도사 2차 합격률은 약 7.82%에 불과하다" },
+        { "type": "footnote", "attrs": { "id": 2, "text": "2025 경비지도사 합격률 분석", "url": "https://welfarenote.com/2025년-경비지도사-시험-일정-1차-2차-응시자격-합격률/" } },
+        { "type": "text", "text": ". 2차 커트라인은 평균 90~95점대로, 단순 암기가 아닌 정밀한 전략이 필요하다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "이 가이드에서는 시험 구조, 과목별 공략법, 교재 선택, 학습 계획, 합격자 실전 팁까지 한 번에 정리한다. 1차를 넘기는 것은 시작일 뿐, 2차에서 90점 이상을 안정적으로 확보하는 방법에 집중한다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": { "src": "/uploads/jobs/job-howto-security-guard-img1.webp", "alt": "경비지도사 시험 공부 장면", "width": 720, "align": "center" }
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "시험 구조: 1차·2차 동시 시행의 함정" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비지도사 시험은 1차와 2차를 같은 날 동시에 치른다. 이 구조가 의미하는 바는 명확하다 — 1차만 겨우 넘기는 수준으로는 2차 합격이 불가능하다. 처음부터 2차 합격을 목표로 잡고, 1차는 자연스럽게 통과하는 수준의 실력을 만들어야 한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "일반경비지도사와 기계경비지도사로 구분되며, 대부분의 응시자는 일반경비지도사를 선택한다. 2025년 기준 선발 인원은 일반 840명, 기계 60명이다" },
+        { "type": "footnote", "attrs": { "id": 3, "text": "2026 경비지도사 시험일정", "url": "https://jeb1.search-knowledge.co.kr/236" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "시험 기본 정보" }]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "항목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1차 시험" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2차 시험" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "법학개론 + 민간경비론" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경비업법(필수) + 선택 1과목" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문항 수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "80문항 (과목당 40문항)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "80문항 (과목당 40문항)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험 시간" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "80분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "80분" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격 기준" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "절대평가 (과목 40+, 평균 60+)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "상대평가 (고득점순 선발)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시 자격" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "만 18세 이상 (학력·경력 무관)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1차 합격자" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격률 (일반)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 54.94%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 7.82%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격률 (기계)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 51.15%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 20.55%" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2차 선택과목은 일반경비지도사의 경우 경호학, 범죄학, 소방학 중 택 1이고, 기계경비지도사는 기계경비개론이 필수다. 대부분의 합격자는 경호학을 선택한다 — 출제 범위가 상대적으로 좁고, 기출 반복률이 높기 때문이다" },
+        { "type": "footnote", "attrs": { "id": 4, "text": "법률저널 경비지도사 공부방법", "url": "http://www.lec.co.kr/news/articleView.html?idxno=40480" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "과목별 공략법: 어디에 시간을 쏟을 것인가" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비지도사 시험의 핵심 딜레마는 이것이다. 1차는 절대평가이므로 '넘기면 되는' 시험이고, 2차는 상대평가이므로 '남보다 잘 봐야 하는' 시험이다. 같은 날 두 시험을 모두 치르기 때문에, 시간 배분 전략이 합격을 좌우한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "1차 과목: 안정적으로 넘기기" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "법학개론", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "은 비전공자에게 가장 까다로운 과목이다. 헌법, 민법, 형법의 기본 개념을 폭넓게 다루며, 법률 용어 자체가 생소해서 초반에 벽을 느끼기 쉽다. 하지만 기출문제를 분석해보면 반복 출제되는 영역이 명확하다 — 헌법의 기본권, 민법의 법률행위, 형법의 위법성 조각사유가 매년 나온다. 이 부분만 집중해도 과락은 충분히 넘긴다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "민간경비론", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "은 경비업의 역사, 원리, 운영 체계를 다루는 과목이다. 난이도는 중간 수준으로, 2차의 경비업법과 내용이 상당 부분 겹친다. 민간경비론을 탄탄하게 공부하면 경비업법 학습에도 시너지가 난다" },
+        { "type": "footnote", "attrs": { "id": 5, "text": "경비지도사 현실 후기", "url": "https://review1004.com/경비지도사-현실-난이도-연봉-준비기간-후기-합격률/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "2차 과목: 90점 이상을 만드는 곳" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비업법", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "은 2차 필수과목이다. 경비업법 본법, 시행령, 시행규칙의 조문을 거의 통째로 암기해야 한다. '제○조 제○항'까지 정확히 묻는 문제가 빈번하므로, 조문 번호까지 외우는 수준이 필요하다. 특히 경비원 결격사유, 경비지도사 선임 기준, 과태료·벌칙 규정은 매년 단골 출제 영역이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경호학", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "(선택과목)은 합격자의 약 80%가 선택하는 과목이다. 이유는 단순하다 — 출제 범위가 다른 선택과목보다 좁고, 기출 반복률이 높다. 경호의 원리, 근접경호 기법, 경호작전 수행 절차 등이 주요 내용이며, 3~4개월 집중하면 고득점이 가능하다" },
+        { "type": "footnote", "attrs": { "id": 6, "text": "합격률 커트라인 분석", "url": "https://beomtachi.com/경비지도사-합격률-커트라인/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "난이도" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "특징" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학습 전략" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "법학개론 (1차)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★★☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자에게 가장 어려움, 범위 넓음" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출 빈출 영역 집중, 과락 방지" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "민간경비론 (1차)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★☆☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경비업법과 내용 겹침, 이해 위주" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2차 경비업법과 병행 학습" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경비업법 (2차 필수)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★★☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "조문 번호까지 정확히 암기 필요" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "법 조문 회독 + 기출 반복" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경호학 (2차 선택)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★☆☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가장 많이 선택, 기출 반복률 높음" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출 10년치 반복, 요약 정리" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "범죄학 (2차 선택)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★★☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "이론 범위 넓음, 학자 이론 암기 많음" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비추천 — 경호학 대비 효율 낮음" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "소방학 (2차 선택)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★☆☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "소방 관련 법규 + 기술, 별도 영역" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "소방 경력자에게만 추천" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "✓ 과목별 시간 배분 전략" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "전체 학습 시간의 60%를 2차 과목(경비업법 + 경호학)에, 40%를 1차 과목(법학개론 + 민간경비론)에 투자한다. 1차는 과목당 40점 이상 + 평균 60점이면 충분하지만, 2차는 평균 90~95점이 커트라인이다. 시간 투자 비율을 거꾸로 가져가는 수험생이 많은데, 이 경우 1차는 합격하지만 2차에서 탈락하는 전형적인 패턴에 빠진다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "교재·인강 선택과 기출문제 활용법" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비지도사 시장은 에듀윌과 시대에듀가 양분하고 있다. 각 플랫폼의 특성이 다르므로 학습 스타일에 맞게 선택해야 한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "주요 인강·교재 비교" }]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "구분" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "에듀윌" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시대에듀" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "EBS" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "특징" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "65개월 연속 1위, 합격 시 100% 환급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "17년 전통, 강사진 두터움" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "저렴, 기본 이론 정리에 적합" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "장점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "체계적 커리큘럼, 환급 동기부여" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "다양한 강좌 구성, 심화 과정" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가격 부담 적음, 접근성 높음" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "추천 대상" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자, 처음 도전하는 수험생" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "재시험생, 특정 과목 보강 필요 시" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "예산이 제한적인 수험생" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "에듀윌은 경비지도사 분야에서 가장 높은 점유율을 갖고 있으며, 합격 시 수강료를 전액 환급해주는 제도로 유명하다" },
+        { "type": "footnote", "attrs": { "id": 7, "text": "에듀윌 경비지도사", "url": "https://guard.eduwill.net/sites/home" } },
+        { "type": "text", "text": ". 시대에듀는 17년간 경비지도사 강좌를 운영해온 노하우가 강점이다" },
+        { "type": "footnote", "attrs": { "id": 8, "text": "시대에듀 경비지도사", "url": "https://www.sdedu.co.kr/cp/?cat_id=001002" } },
+        { "type": "text", "text": ". 어떤 플랫폼을 선택하든, " },
+        { "type": "text", "text": "한 교재를 완벽하게 소화하는 것이 여러 교재를 넘나드는 것보다 압도적으로 효과적이다", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "기출문제 무료 풀이 사이트" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "기출문제는 합격의 핵심이다. 다음 사이트에서 무료로 풀 수 있다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "에듀윌 — 최근 10년치 기출 + 해설 제공" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Q-net(한국산업인력공단) — 공식 기출문제 원본" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국경비지도사협회 — 기출 + 모의시험" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "comcbt.com — CBT 방식 무료 모의고사 (실전 연습에 최적)" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "합격자들이 공통적으로 강조하는 것은 기출 10년치를 10~15회 반복하는 것이다" },
+        { "type": "footnote", "attrs": { "id": 9, "text": "경비지도사 자격증 가이드", "url": "https://gopass.kr/security-instructor-certification-guide/" } },
+        { "type": "text", "text": ". 단순히 문제를 푸는 것이 아니라, 오답의 선지가 왜 틀린지까지 설명할 수 있어야 한다. 이 수준에 도달하면 95점 이상이 안정적으로 나온다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "학습 계획: 비전공자 8개월 로드맵" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "관련 전공자는 6개월, 비전공자는 8~12개월이 일반적인 준비 기간이다. 집중 학습이 가능한 환경이라면 4~6개월로 단축할 수 있다" },
+        { "type": "footnote", "attrs": { "id": 10, "text": "시험 준비기간 안내", "url": "https://hrdncs.co.kr/bbs/board.php?bo_table=c_notice2&wr_id=307" } },
+        { "type": "text", "text": ". 아래는 비전공자 기준 8개월 플랜이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Phase 1: 기초 다지기 (1~2개월차)" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전 과목 기본서 1회독 — 완벽한 이해보다 흐름 파악이 목표" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "법학개론: 헌법·민법·형법 기본 구조를 잡는다. 법률 용어에 익숙해지는 것이 이 단계의 핵심이다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "민간경비론 + 경비업법: 동시에 학습한다 — 내용이 70% 이상 겹치기 때문" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경호학: 기본 개념 정리. 경호의 3원칙, 경호작전 5단계 등 프레임워크를 머리에 넣는다" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Phase 2: 심화 + 기출 시작 (3~5개월차)" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기본서 2~3회독 + 기출문제 풀이 병행" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경비업법 조문을 하나씩 분석한다 — 조문 번호, 시행령·시행규칙 연결까지" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출 5개년치를 최소 3회 이상 반복. 틀린 문제는 별도 오답 노트에 정리" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "요약집을 직접 만들기 시작한다 — 남이 만든 요약보다 직접 만든 요약이 3배 효과적이다" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Phase 3: 실전 마무리 (6~8개월차)" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출 10개년치 10~15회 반복 — 문제를 보면 답이 아니라 '왜 이 답인지'가 먼저 떠오르는 수준까지" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실전 모의고사로 시간 배분 연습. 80분 안에 80문항을 안정적으로 풀 수 있어야 한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경비업법 최신 개정사항 반드시 체크 — 매년 1~2개의 개정 조항이 출제된다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2차 모의고사에서 안정적으로 95점 이상 나오는지 확인. 90점 미만이면 경비업법 조문 회독을 추가한다" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "합격자들의 실전 팁 5가지" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비지도사 시험에서 반복적으로 등장하는 합격 전략이 있다. 커트라인이 90점대인 시험에서 합격한 사람들의 공통된 조언을 정리한다" },
+        { "type": "footnote", "attrs": { "id": 11, "text": "나무위키 경비지도사", "url": "https://namu.wiki/w/경비지도사" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "1. 기출 10년치를 10회 이상 반복한다" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비지도사 시험은 기출 반복률이 높은 시험이다. 특히 경비업법과 경호학은 동일한 조문·개념이 표현만 바꿔서 반복 출제된다. 10년치 기출을 10회 반복하면 새로운 문제도 기존 패턴의 변형이라는 것을 체감하게 된다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "2. 한 교재를 완벽하게 소화한다" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "여러 교재를 넘나드는 것은 시간 낭비다. 에듀윌이든 시대에듀든, 한 교재를 선택했으면 그 교재의 모든 페이지를 3회 이상 읽는 것이 효과적이다. 교재 간 내용 차이는 미미하고, 핵심은 반복 횟수에 있다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "3. 요약집은 반드시 직접 만든다" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "시중의 요약집을 사서 읽는 것보다, 자신이 직접 요약을 만드는 과정이 학습 효과가 훨씬 크다. 특히 경비업법의 조문 요약, 경호학의 핵심 개념 카드를 직접 정리하면, 시험장에서 기억 인출 속도가 눈에 띄게 빨라진다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "4. 선택과목은 경호학이 정답이다" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "범죄학이나 소방학이 더 쉬워 보일 수 있지만, 데이터가 말해준다. 합격자의 대다수가 경호학을 선택했고, 기출 반복률도 경호학이 가장 높다. 소방학은 경비 분야와 직접적 관련이 적어 학습 동기 유지가 어렵고, 범죄학은 이론의 범위가 넓어 고득점이 어렵다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "5. 전 과목 흐름을 먼저 파악한다" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "처음부터 한 과목에 매달리면 전체 감을 잡지 못한 채 시간이 흘러간다. 첫 1개월은 모든 과목의 기본서를 빠르게 훑으며 전체 구조를 이해하는 데 써야 한다. 이 과정에서 과목 간 연결 고리(민간경비론↔경비업법, 법학개론↔경비업법)를 발견하면 학습 효율이 급격히 올라간다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "취업 전망과 연봉: 합격 후의 현실" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비지도사의 최대 강점은 법적 의무 선임 제도에 있다. 경비업법에 따라 경비원 100명 이상을 보유한 업체는 경비지도사를 반드시 선임해야 한다. 이는 시장 수요가 법으로 보장된다는 의미다" },
+        { "type": "footnote", "attrs": { "id": 12, "text": "경비지도사 취업전망", "url": "https://gooinjob.com/guard/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "연봉 수준은 다음과 같다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "초봉: 2,500~3,000만 원 (경비업체 취업 기준)", "marks": [{ "type": "bold" }] }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "평균: 3,500~5,000만 원 (경력 3~7년)", "marks": [{ "type": "bold" }] }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경력자: 5,000~6,000만 원 (10년 이상, 대형 업체)", "marks": [{ "type": "bold" }] }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비지도사는 경비업체, 보안 컨설팅 회사, 대형 건물 관리 회사, 공공기관 등에서 활동할 수 있다. " },
+        { "type": "text", "text": "보안컨설턴트", "marks": [{ "type": "link", "attrs": { "href": "/job/보안컨설턴트" } }] },
+        { "type": "text", "text": "로 진로를 확장하거나, 경비업체를 직접 창업하는 경우도 있다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "시너지 자격증" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "경비지도사와 함께 취득하면 경쟁력이 높아지는 자격증이 있다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "청원경찰 — 경비지도사와 업무 영역이 겹치며, 공공기관 취업에 유리하다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "신변보호사 — 개인 경호 분야 전문성 강화" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "소방안전관리자 — 건물 안전관리 통합 역량, 대형 빌딩 관리 시 필수" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CCTV설치관리사 — 기계경비와 시너지, 보안 시스템 구축 역량" }] }] }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "💡 핵심 정리" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1차는 절대평가(평균 60+), 2차는 상대평가(고득점순) — 커트라인 90~95점" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학습 시간의 60%를 2차 과목(경비업법 + 경호학)에 집중 투자해야 한다" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "선택과목은 경호학이 가장 유리하다 — 기출 반복률 높고 범위 좁음" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출 10년치 10회 이상 반복이 합격의 결정적 요인이다" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자 8~12개월, 전공자 6개월, 집중 학습 시 4~6개월이면 합격 가능하다" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "법적 의무 선임 제도로 수요가 보장되며, 평균 연봉 3,500~5,000만 원이다" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "비전공자인데 경비지도사 독학이 가능한가?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "가능하다. 만 18세 이상이면 학력·경력 제한 없이 누구나 응시할 수 있고, 실제 합격자 중 비전공자 비율이 상당히 높다. 다만 법학개론이 비전공자에게 가장 큰 허들이므로, 인강을 활용해 법률 용어에 먼저 익숙해지는 것을 추천한다. 독학 시 8~12개월, 인강 병행 시 6~8개월을 잡으면 된다." }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "일반경비지도사와 기계경비지도사, 어떤 것을 선택해야 하나?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "대부분의 수험생에게는 일반경비지도사가 적합하다. 선발 인원이 일반 840명 대 기계 60명으로 압도적으로 많고, 취업 시장에서의 수요도 일반이 훨씬 넓다. 기계경비지도사는 CCTV, 출입통제 시스템 등 기계경비 분야에 특화되어 있어, 관련 업종 경력자가 아니라면 일반을 선택하는 것이 합리적이다. 다만 기계경비의 2차 합격률(약 20%)이 일반(약 7.8%)보다 높으므로, 경쟁률 측면에서는 기계가 유리할 수 있다." }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "2차 커트라인이 정말 90점 이상인가?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "그렇다. 일반경비지도사 2차 커트라인은 최근 수년간 평균 90~95점대를 유지하고 있다. 2차가 상대평가이기 때문에 선발 인원 내에서 고득점순으로 합격이 결정되며, 응시자 수 대비 선발 인원이 적어 커트라인이 매우 높게 형성된다. 기계경비지도사는 85~88점 수준으로 상대적으로 낮지만, 역시 만만한 수준은 아니다. 모의고사에서 안정적으로 95점 이상이 나올 때까지 연습해야 안심할 수 있다." }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "경비지도사 자격증 취득 후 어디에 취업할 수 있나?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "경비업체가 가장 대표적인 취업처다. 경비업법에 따라 경비원 100명 이상 업체는 경비지도사를 반드시 선임해야 하므로, 대형 경비업체에서의 수요가 꾸준하다. 이외에도 대형 건물·쇼핑몰 보안 관리, 공공기관 시설 경비, 보안 컨설팅 회사, 이벤트·행사 경호 업체 등으로 진출할 수 있다. 경력이 쌓이면 경비업체를 직접 창업하거나, 보안 컨설턴트로 독립하는 경로도 있다." }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "1차 면제 제도가 있나?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "있다. 경찰 공무원으로 7년 이상 재직한 경력이 있거나, 경비업법에서 정하는 특정 조건을 충족하면 1차 시험이 면제된다. 군 헌병 부사관 출신도 일부 조건 하에 면제가 가능하다. 다만 면제 조건은 매년 시행 공고에서 정확히 확인해야 하며, 대부분의 일반 수험생에게는 해당되지 않는다. 1차 면제 대상이라면 2차에만 집중할 수 있어 합격 가능성이 크게 높아진다." }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "경비지도사 시험 준비에 드는 총 비용은 얼마인가?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "독학의 경우 교재비 5~8만 원 + 응시료 정도로 총 10~15만 원이면 충분하다. 인강을 수강할 경우 플랫폼에 따라 30~60만 원 수준이다. 에듀윌의 경우 합격 시 수강료를 100% 환급해주는 제도가 있어, 합격만 하면 실질 비용이 크게 줄어든다. 기출문제는 Q-net, comcbt.com 등에서 무료로 풀 수 있으므로 별도 비용이 들지 않는다." }] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -40,7 +40,7 @@ export function renderAboutPage(options?: AboutPageOptions): string {
 <body class="bg-wiki-bg text-wiki-text min-h-screen">
   ${renderNav(userMenuHtml)}
 
-  <main class="max-w-[1400px] mx-auto px-4 pt-20 pb-10 sm:pt-12">
+  <main class="max-w-[1400px] mx-auto px-2 md:px-4 pt-20 pb-10 sm:pt-12">
     <header class="mb-8 space-y-3">
       <div class="flex items-center gap-2 text-xs text-blue-300 font-semibold uppercase tracking-[0.2em]">
         <i class="fas fa-info-circle"></i><span>About Us</span>

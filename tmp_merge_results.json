@@ -1,0 +1,398 @@
+{
+  "success": 0,
+  "fail": 38,
+  "errors": [
+    {
+      "pair": {
+        "source": "금속공학기술자(일반)",
+        "target": "금속공학기술자",
+        "sourceId": "1765283815922270",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "기술영업원(일반)",
+        "target": "기술영업원",
+        "sourceId": "1765284117153855",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "무역사무원(일반)",
+        "target": "무역사무원",
+        "sourceId": "1765284300967519",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "미장공(일반)",
+        "target": "미장공",
+        "sourceId": "1765284762542987",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "방수공(일반)",
+        "target": "방수공",
+        "sourceId": "176528476446030",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "번역가(일반)",
+        "target": "번역가",
+        "sourceId": "176528413315854",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "사무보조원(일반)",
+        "target": "사무보조원",
+        "sourceId": "1765284352353506",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "사진사(일반)",
+        "target": "사진사",
+        "sourceId": "176528428079866",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "사회복지사(일반)",
+        "target": "사회복지사",
+        "sourceId": "1765284018725598",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "수의사(일반)",
+        "target": "수의사",
+        "sourceId": "1765283999434618",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "여행안내원(일반)",
+        "target": "여행안내원",
+        "sourceId": "1765284476110766",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "용접원(일반)",
+        "target": "용접원",
+        "sourceId": "1765284767148921",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "재단사(일반)",
+        "target": "재단사",
+        "sourceId": "1765284591522891",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "재봉사(일반)",
+        "target": "재봉사",
+        "sourceId": "1765284597945529",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "정부행정관리자(일반)",
+        "target": "정부행정관리자",
+        "sourceId": "1765283538830472",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "제품디자이너(일반)",
+        "target": "제품디자이너",
+        "sourceId": "1765284193004540",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "조적공(일반)",
+        "target": "조적공",
+        "sourceId": "1765284757033275",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "직업운동선수(일반)",
+        "target": "직업운동선수",
+        "sourceId": "1765284340552314",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "청소원(일반)",
+        "target": "청소원",
+        "sourceId": "1765285602125649",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "청원경찰(일반)",
+        "target": "청원경찰",
+        "sourceId": "1765284449403381",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "측량사(일반)",
+        "target": "측량사",
+        "sourceId": "1765283773347725",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "캐드원(일반)",
+        "target": "캐드원",
+        "sourceId": "1765283984914451",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "통역가(일반)",
+        "target": "통역가",
+        "sourceId": "1765284134664831",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "품질관리사무원(일반)",
+        "target": "품질관리사무원",
+        "sourceId": "1765284295130493",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "한약사(일반)",
+        "target": "한약사",
+        "sourceId": "1765284001435439",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "환경시험원(일반)",
+        "target": "환경시험원",
+        "sourceId": "1765283964060235",
+        "reason": "general_variant",
+        "score": 1
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "단조원(단조기조작원)",
+        "target": "단조원",
+        "sourceId": "1765283508859237",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "단조기조작원"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "도장원(도장기조작원)",
+        "target": "도장원",
+        "sourceId": "1765283509488974",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "도장기조작원"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "비디오저널리스트(VJ)",
+        "target": "비디오저널리스트",
+        "sourceId": "1765283318135451",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "VJ"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "세탁원(다림질원)",
+        "target": "세탁원",
+        "sourceId": "1765283484278463",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "다림질원"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "용접원(용접기조작원)",
+        "target": "용접원",
+        "sourceId": "1765283509185312",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "용접기조작원"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "인쇄기조작원(무늬롤)",
+        "target": "인쇄기조작원",
+        "sourceId": "1765285546541722",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "무늬롤"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "제관원(제관기조작원)",
+        "target": "제관원",
+        "sourceId": "1765283507865324",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "제관기조작원"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "주조원(주조기조작원)",
+        "target": "주조원",
+        "sourceId": "1765283508540766",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "주조기조작원"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "철골공(강구조물건립원)",
+        "target": "철골공",
+        "sourceId": "1765283494168126",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "강구조물건립원"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "투자분석가(애널리스트)",
+        "target": "투자분석가",
+        "sourceId": "1765283391523178",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "애널리스트"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "판금원(판금기조작원)",
+        "target": "판금원",
+        "sourceId": "176528350820180",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "판금기조작원"
+      },
+      "error": "Admin access required"
+    },
+    {
+      "pair": {
+        "source": "학예사(큐레이터)",
+        "target": "학예사",
+        "sourceId": "1765283396873691",
+        "reason": "bracket_variant",
+        "score": 0.95,
+        "note": "큐레이터"
+      },
+      "error": "Admin access required"
+    }
+  ]
+}

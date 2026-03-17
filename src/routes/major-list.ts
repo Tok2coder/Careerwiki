@@ -184,7 +184,7 @@ majorListRoutes.get('/major', async (c) => {
     const extraHead = ['<style>:root{--wp:16 185 129;--ws:45 212 191}</style>', jsonLd].filter(Boolean).join('\n')
 
     const content = `
-      <div class="max-w-[1400px] mx-auto px-4 md:px-6">
+      <div class="max-w-[1400px] mx-auto px-2 md:px-6">
         <!-- 히어로 섹션 with 그라데이션 블렌딩 -->
         <div class="relative text-center pt-2 pb-12 mb-6 space-y-7">
           <!-- 배경 글로우 + 하단 페이드 -->
@@ -629,7 +629,7 @@ majorListRoutes.get('/major', async (c) => {
         ` : ''
 
         const content = `
-          <div class="max-w-[1400px] mx-auto px-4 md:px-6 md:mt-8">
+          <div class="max-w-[1400px] mx-auto px-2 md:px-6 md:mt-8">
             <div class="relative text-center pt-12 pb-12 mb-16 space-y-7">
               <div class="absolute inset-0 -z-10 overflow-hidden">
                 <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-wiki-primary/5 rounded-full blur-[100px]"></div>

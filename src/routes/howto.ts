@@ -281,7 +281,7 @@ howtoRoutes.get('/', async (c) => {
   ` : ''
 
   const content = `
-    <div class="max-w-[1400px] mx-auto px-4 pb-8">
+    <div class="max-w-[1400px] mx-auto px-2 md:px-4 pb-8">
       <!-- 헤더 섹션 -->
       <header class="mb-8 space-y-3">
         <div class="flex items-center gap-2 text-xs text-wiki-secondary font-semibold uppercase tracking-[0.2em]">

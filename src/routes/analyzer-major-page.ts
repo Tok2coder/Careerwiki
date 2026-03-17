@@ -79,7 +79,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
   const identityAnchorPatternsJson = JSON.stringify(IDENTITY_ANCHOR_PATTERNS)
   
   const content = `
-    <div class="max-w-6xl mx-auto px-4 md:px-6 pt-0 md:pt-2">
+    <div class="max-w-6xl mx-auto px-2 md:px-6 pt-0 md:pt-2">
         <h1 class="text-3xl md:text-4xl font-bold mb-6 text-center text-white">
             <i class="fas fa-university mr-2 text-wiki-primary"></i>AI 전공 추천
             ${debugMode ? '<span class="ml-2 text-sm bg-yellow-500 text-black px-2 py-1 rounded">DEBUG MODE</span>' : ''}

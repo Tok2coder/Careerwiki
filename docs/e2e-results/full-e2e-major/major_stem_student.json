@@ -6,13 +6,13 @@
     "careerState": "student",
     "academicState": "high_school_regular"
   },
-  "timestamp": "2026-03-08T12:15:49.710Z",
+  "timestamp": "2026-03-09T03:35:27.649Z",
   "baseUrl": "https://careerwiki.org",
-  "sessionId": "e2e-major-1772972149710-jdr6pr",
-  "requestId": 829,
+  "sessionId": "e2e-major-1773027327648-k0nmz8",
+  "requestId": 838,
   "analyzeResponse": {
     "success": true,
-    "request_id": 829,
+    "request_id": 838,
     "result": {
       "engine_state": "phase2_stage_based",
       "engine_version": "v3.23.3",
@@ -23,7 +23,7 @@
         "scoring": "scoring-v3.23.3"
       },
       "input_summary": {
-        "profile_revision_id": "rev-829-1772972154055",
+        "profile_revision_id": "rev-838-1773027332632",
         "key_interests": [],
         "key_skills": [],
         "non_negotiables": [],
@@ -42,17 +42,17 @@
       },
       "fit_top3": [
         {
-          "job_id": "1765284036710680",
-          "job_name": "외국어교사",
-          "slug": "외국어교사",
-          "image_url": "/uploads/jobs/job-외국어교사.webp",
-          "job_description": "초·중·고등학교에서 학생들의 외국어능력을 키우기 위하여 외국어 및 관련 과목을 전문으로 교육한다.",
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 외국어교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765284738925841",
+          "job_name": "철골조립원",
+          "slug": "철골조립원",
+          "image_url": "/uploads/jobs/job-철골조립원.webp",
+          "job_description": "건축구조물의 골조를 건립하기 위해 강철부재를 조립하고 설치한다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 철골조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "외국어교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 62,
-          "like_score": 75,
-          "can_score": 69,
+          "can_reason": "철골조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 59,
+          "like_score": 64,
+          "can_score": 76,
           "risk_details": [],
           "evidence_links": [
             {
@@ -69,6 +69,83 @@
               "match_type": "positive",
               "score_contribution": 14,
               "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,problem_solving",
+                "label": "분석적 업무 관심"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "60",
+                "label": "분석 업무: 60/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,problem_solving",
+                "label": "\"data_numbers, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "관련 역량: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,problem_solving",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "50",
+                "label": "창의성: 50/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 12,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+            }
+          ],
+          "dislike_warnings": []
+        },
+        {
+          "job_id": "1765284832365467",
+          "job_name": "만두소제조원",
+          "slug": "만두소제조원",
+          "image_url": "/uploads/jobs/job-만두소제조원.webp",
+          "job_description": "각종 재료(고기, 김치, 야채 등)를 조미향신료와 혼합해 만두소를 제조하는 기계를 조작·관리한다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 만두소제조원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "만두소제조원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 58,
+          "like_score": 64,
+          "can_score": 72,
+          "risk_details": [],
+          "evidence_links": [
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,problem_solving",
+                "label": "\"data_numbers, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "analytical",
+                "value": "65",
+                "label": "관련 역량: 65/100"
+              },
+              "match_type": "positive",
+              "score_contribution": 14,
+              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 65점입니다"
             },
             {
               "user_fact": {
@@ -108,104 +185,27 @@
               },
               "job_attribute": {
                 "key": "analytical",
-                "value": "60",
-                "label": "분석 업무: 60/100"
+                "value": "65",
+                "label": "분석 업무: 65/100"
               },
               "match_type": "positive",
               "score_contribution": 14,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
             }
           ],
           "dislike_warnings": []
         },
         {
-          "job_id": "1765284036186296",
-          "job_name": "수학교사",
-          "slug": "수학교사",
-          "image_url": "/uploads/jobs/job-수학교사.webp",
-          "job_description": "중·고등학교에서 학생들에게 수리력과 논리적 사고력을 향상시키기 위하여 수학, 실용수학, 미분과 적분, 확률과 통계, 이산수학 및 관련 과목을 전문으로 교육한다.",
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 수학교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765283590675656",
+          "job_name": "컨테이너화물집하장운영관리자",
+          "slug": "컨테이너화물집하장운영관리자",
+          "image_url": "/uploads/jobs/job-컨테이너화물집하장운영관리자.webp",
+          "job_description": "컨테이너화물집하장(CFS:Container Freight Station)에서 화물의 반출 및 반입업무를 관리하고, 집하소의 설비와 인력을 총괄 관리한다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 컨테이너화물집하장운영관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "수학교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 62,
-          "like_score": 75,
-          "can_score": 69,
-          "risk_details": [],
-          "evidence_links": [
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "data_numbers,problem_solving",
-                "label": "\"data_numbers, problem_solving\" 관심사"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "data_numbers,problem_solving",
-                "label": "\"data_numbers, problem_solving\" 관심사"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "data_numbers,problem_solving",
-                "label": "창의적 분야 관심"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "창의성: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "data_numbers,problem_solving",
-                "label": "분석적 업무 관심"
-              },
-              "job_attribute": {
-                "key": "analytical",
-                "value": "60",
-                "label": "분석 업무: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
-            }
-          ],
-          "dislike_warnings": []
-        },
-        {
-          "job_id": "1765283291483400",
-          "job_name": "군무원",
-          "slug": "군무원",
-          "image_url": "/uploads/jobs/job-군무원.webp",
-          "job_description": "군무원은 군부대에서 군인과 함께 근무하는 특정직 국가 공무원으로서 담당 직렬에 따라 기술, 연구, 일반 행정, 이미용 등에 대한 업무를 수행합니다.",
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 61,
-          "like_score": 73,
+          "can_reason": "컨테이너화물집하장운영관리자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 57,
+          "like_score": 66,
           "can_score": 69,
           "risk_details": [],
           "evidence_links": [
@@ -273,17 +273,17 @@
           "dislike_warnings": []
         },
         {
-          "job_id": "1765283920058623",
-          "job_name": "온실가스포집설비기술자",
-          "slug": "온실가스포집설비기술자",
-          "image_url": "/uploads/jobs/job-온실가스포집설비기술자.webp",
-          "job_description": "온실가스를 포집·저장·운송하는 설비를 기획하고 설계·개발한다.",
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 온실가스포집설비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "176528539617563",
+          "job_name": "연료전지스택컨디셔닝조작원",
+          "slug": "연료전지스택컨디셔닝조작원",
+          "image_url": "/uploads/jobs/job-연료전지스택컨디셔닝조작원.webp",
+          "job_description": "조립된 연료전지 스택(Stack)을 구성하는 단전지들을 활성화하고, 유기물 등의 불순물을 제거하기 위해 컨디셔닝 설비를 운전한다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 연료전지스택컨디셔닝조작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "온실가스포집설비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 57,
-          "like_score": 68,
-          "can_score": 66,
+          "can_reason": "연료전지스택컨디셔닝조작원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 54,
+          "like_score": 65,
+          "can_score": 63,
           "risk_details": [],
           "evidence_links": [
             {
@@ -294,42 +294,12 @@
               },
               "job_attribute": {
                 "key": "analytical",
-                "value": "60",
-                "label": "관련 역량: 60/100"
+                "value": "50",
+                "label": "관련 역량: 50/100"
               },
               "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "data_numbers,problem_solving",
-                "label": "\"data_numbers, problem_solving\" 관심사"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "관련 역량: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-            },
-            {
-              "user_fact": {
-                "key": "profile.interest.keywords",
-                "value": "data_numbers,problem_solving",
-                "label": "창의적 분야 관심"
-              },
-              "job_attribute": {
-                "key": "creative",
-                "value": "60",
-                "label": "창의성: 60/100"
-              },
-              "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+              "score_contribution": 12,
+              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
             },
             {
               "user_fact": {
@@ -339,28 +309,58 @@
               },
               "job_attribute": {
                 "key": "analytical",
-                "value": "60",
-                "label": "분석 업무: 60/100"
+                "value": "50",
+                "label": "분석 업무: 50/100"
               },
               "match_type": "positive",
-              "score_contribution": 14,
-              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+              "score_contribution": 12,
+              "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 50점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,problem_solving",
+                "label": "\"data_numbers, problem_solving\" 관심사"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "40",
+                "label": "관련 역량: 40/100"
+              },
+              "match_type": "neutral",
+              "score_contribution": 5,
+              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 40점입니다"
+            },
+            {
+              "user_fact": {
+                "key": "profile.interest.keywords",
+                "value": "data_numbers,problem_solving",
+                "label": "창의적 분야 관심"
+              },
+              "job_attribute": {
+                "key": "creative",
+                "value": "40",
+                "label": "창의성: 40/100"
+              },
+              "match_type": "neutral",
+              "score_contribution": 5,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 40점입니다"
             }
           ],
           "dislike_warnings": []
         },
         {
-          "job_id": "1765284103805713",
-          "job_name": "간접광고마케터",
-          "slug": "간접광고마케터",
-          "image_url": "/uploads/jobs/job-간접광고마케터.webp",
-          "job_description": "PPL(Product PLacement:텔레비전 드라마나 예능프로그램 속에 제품을 등장시키는 광고기법)을 기획하고 진행한다.",
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 간접광고마케터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765284095999892",
+          "job_name": "브랜드개발자",
+          "slug": "브랜드개발자",
+          "image_url": "/uploads/jobs/job-브랜드개발자.webp",
+          "job_description": "소비자의 기호에 맞추어 상품의 시장경쟁력을 높일 수 있는 상품명이나 회사명을 제작한다.",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 브랜드개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "간접광고마케터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "fit_score": 50,
-          "like_score": 65,
-          "can_score": 82,
+          "can_reason": "브랜드개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "fit_score": 48,
+          "like_score": 68,
+          "can_score": 72,
           "risk_details": [],
           "evidence_links": [
             {
@@ -371,12 +371,12 @@
               },
               "job_attribute": {
                 "key": "creative",
-                "value": "90",
-                "label": "관련 역량: 90/100"
+                "value": "70",
+                "label": "관련 역량: 70/100"
               },
               "match_type": "positive",
-              "score_contribution": 18,
-              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 90점입니다"
+              "score_contribution": 15,
+              "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 70점입니다"
             },
             {
               "user_fact": {
@@ -386,12 +386,12 @@
               },
               "job_attribute": {
                 "key": "creative",
-                "value": "90",
-                "label": "창의성: 90/100"
+                "value": "70",
+                "label": "창의성: 70/100"
               },
               "match_type": "positive",
-              "score_contribution": 18,
-              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 90점입니다"
+              "score_contribution": 15,
+              "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 70점입니다"
             },
             {
               "user_fact": {
@@ -429,82 +429,17 @@
       ],
       "like_top10": [
         {
-          "job_id": "1765283393158842",
-          "job_name": "판사",
-          "slug": "판사",
-          "image_url": "/uploads/jobs/job-%ED%8C%90%EC%82%AC.webp?v=1771818250136",
-          "job_description": "재판을 진행하며, 변호사와 검사의 논쟁, 변호사 및 증인의 진술, 사건증거 등 재판에 관련된 자료들을 검토하고 법률에 근거해 판결을 내린다.",
-          "fit_score": 31,
-          "like_score": 80,
-          "can_score": 67,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 판사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "판사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283991781488",
-          "job_name": "내과전문의사",
-          "slug": "내과전문의사",
-          "image_url": "/uploads/jobs/job-내과전문의사.webp",
-          "job_description": "인체 내부기관의 질병 및 장애를 진단하고 치료한다.",
-          "fit_score": 29,
-          "like_score": 78,
-          "can_score": 65,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 내과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "내과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284036710680",
-          "job_name": "외국어교사",
-          "slug": "외국어교사",
-          "image_url": "/uploads/jobs/job-외국어교사.webp",
-          "job_description": "초·중·고등학교에서 학생들의 외국어능력을 키우기 위하여 외국어 및 관련 과목을 전문으로 교육한다.",
-          "fit_score": 62,
+          "job_id": "1765283971075863",
+          "job_name": "기능성식품연구원",
+          "slug": "기능성식품연구원",
+          "image_url": "/uploads/jobs/job-기능성식품연구원.webp",
+          "job_description": "결핍되기 쉬운 영양소 또는 인체에 유용한 기능을 가진 원료나 성분을 사용하여 건강을 유지하는데 도움을 주는 건강기능성식품을 연구·개발한다.",
+          "fit_score": 42,
           "like_score": 75,
-          "can_score": 69,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 외국어교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 83,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "외국어교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284036186296",
-          "job_name": "수학교사",
-          "slug": "수학교사",
-          "image_url": "/uploads/jobs/job-수학교사.webp",
-          "job_description": "중·고등학교에서 학생들에게 수리력과 논리적 사고력을 향상시키기 위하여 수학, 실용수학, 미분과 적분, 확률과 통계, 이산수학 및 관련 과목을 전문으로 교육한다.",
-          "fit_score": 62,
-          "like_score": 75,
-          "can_score": 69,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 수학교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "수학교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283753263724",
-          "job_name": "빌딩정보모델링(BIM)매니저",
-          "slug": "빌딩정보모델링bim매니저",
-          "image_url": "/uploads/jobs/job-빌딩정보모델링bim매니저.webp",
-          "job_description": "프로젝트의 성격과 특수성을 감안하여 최적의 발주방식을 결정하며, 계약관리, 설계관리, 시공관리, 안전관리, 리스크관리, 유지관리 등 프로젝트 전반에 걸쳐 BIM컨설턴트로서 역할을 한다.",
-          "fit_score": 51,
-          "like_score": 75,
-          "can_score": 77,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 빌딩정보모델링(BIM)매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "빌딩정보모델링(BIM)매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283996946139",
-          "job_name": "해부병리과전문의사",
-          "slug": "해부병리과전문의사",
-          "image_url": "/uploads/jobs/job-해부병리과전문의사.webp",
-          "job_description": "조직검사 또는 세포검사를 통하여 질병의 원인, 장기나 조직의 변화, 사인 등을 진단·규명한다.",
-          "fit_score": 43,
-          "like_score": 75,
-          "can_score": 59,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 해부병리과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "해부병리과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
           "job_id": "1765283605671199",
@@ -533,170 +468,249 @@
           "can_reason": "산업용로봇자동화통합시스템제어기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283934703558",
-          "job_name": "산업용로봇자동화통합시스템제어기술자",
-          "slug": "산업용로봇자동화통합시스템제어기술자",
-          "image_url": "/uploads/jobs/job-산업용로봇자동화통합시스템제어기술자.webp",
-          "job_description": "산업용 로봇과 주변설비를 제어하는 자동화시스템을 개발한다.",
-          "fit_score": 38,
-          "like_score": 74,
-          "can_score": 77,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 산업용로봇자동화통합시스템제어기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "job_id": "1765283893952854",
+          "job_name": "발전전기공무기술원",
+          "slug": "발전전기공무기술원",
+          "image_url": "/uploads/jobs/job-발전전기공무기술원.webp",
+          "job_description": "발전소의 원활한 운영을 위하여 발전전기설비의 유지·정비를 위한 제반 기술공무를 수행한다.",
+          "fit_score": 44,
+          "like_score": 73,
+          "can_score": 65,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 발전전기공무기술원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "산업용로봇자동화통합시스템제어기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "발전전기공무기술원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283291483400",
-          "job_name": "군무원",
-          "slug": "군무원",
-          "image_url": "/uploads/jobs/job-군무원.webp",
-          "job_description": "군무원은 군부대에서 군인과 함께 근무하는 특정직 국가 공무원으로서 담당 직렬에 따라 기술, 연구, 일반 행정, 이미용 등에 대한 업무를 수행합니다.",
-          "fit_score": 61,
+          "job_id": "1765283893952854",
+          "job_name": "발전전기공무기술원",
+          "slug": "발전전기공무기술원",
+          "image_url": "/uploads/jobs/job-발전전기공무기술원.webp",
+          "job_description": "발전소의 원활한 운영을 위하여 발전전기설비의 유지·정비를 위한 제반 기술공무를 수행한다.",
+          "fit_score": 44,
           "like_score": 73,
-          "can_score": 69,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "can_score": 65,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 발전전기공무기술원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "군무원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "발전전기공무기술원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284381471459",
+          "job_name": "은행개인금융상담역",
+          "slug": "은행개인금융상담역",
+          "image_url": "/uploads/jobs/job-은행개인금융상담역.webp",
+          "job_description": "은행에서 개인고객이 필요로 하는 자금수요에 맞추어 적기에 대출할 수 있도록 관련 채권보전절차를 거쳐 대출을 실시하며, 대출조건에 따라 원리금을 회수한다.",
+          "fit_score": 42,
+          "like_score": 73,
+          "can_score": 66,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 은행개인금융상담역은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "은행개인금융상담역은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284093749716",
+          "job_name": "게임플랫폼사업기획자",
+          "slug": "게임플랫폼사업기획자",
+          "image_url": "/uploads/jobs/job-게임플랫폼사업기획자.webp",
+          "job_description": "게임플랫폼 서비스를 기획하고 프로젝트를 관리한다.",
+          "fit_score": 40,
+          "like_score": 73,
+          "can_score": 81,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 게임플랫폼사업기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "게임플랫폼사업기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283703251422",
+          "job_name": "인공지능서비스개발자",
+          "slug": "인공지능서비스개발자",
+          "image_url": "/uploads/jobs/job-인공지능서비스개발자.webp",
+          "job_description": "인공지능서비스를 개발하기 위하여 요건 분석, 상위설계, 상세설계, 애플리케이션 개발, 모델 인터페이스 개발, 서비스 이행, 자원구성, 안전성 검토 등의 업무를 한다.",
+          "fit_score": 36,
+          "like_score": 73,
+          "can_score": 74,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 인공지능서비스개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "인공지능서비스개발자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283463233607",
+          "job_name": "가정의학과의사",
+          "slug": "가정의학과의사",
+          "image_url": "/uploads/jobs/job-가정의학과의사.webp",
+          "job_description": "질병의 조기발견과 관리, 질병의 예방과 건강 상태의 유지를 위해 환자와 그 가족에게 지속적이고 포괄적인 의료서비스를 제공한다.",
+          "fit_score": 28,
+          "like_score": 73,
+          "can_score": 68,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 가정의학과의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "가정의학과의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283994980412",
+          "job_name": "이비인후과전문의사",
+          "slug": "이비인후과전문의사",
+          "image_url": "/uploads/jobs/job-이비인후과전문의사.webp",
+          "job_description": "귀, 코, 목의 질병을 진료하여 적절한 치료를 한다.",
+          "fit_score": 28,
+          "like_score": 73,
+          "can_score": 68,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 이비인후과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "이비인후과전문의사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         }
       ],
       "can_top10": [
         {
-          "job_id": "1765283713583486",
-          "job_name": "게임레벨디자이너",
-          "slug": "게임레벨디자이너",
-          "image_url": "/uploads/jobs/job-게임레벨디자이너.webp",
-          "job_description": "사용자가 게임플레이를 통해서 핵심욕구를 적절히 충족할 수 있도록 기획목표에 따라 게임의 레벨구조를 분석하고, 레벨의 내용과 요소를 설계하며, 게임밸런스를 기획한다.",
+          "job_id": "1765284105518967",
+          "job_name": "그로스매니저",
+          "slug": "그로스매니저",
+          "image_url": "/uploads/jobs/job-그로스매니저.webp",
+          "job_description": "기업의 성장 계획을 입안, 실행 및 운영하고 개발, 마케팅 등 타 부서 관계자와 협의 조정하여 수익채널을 극대화한다.",
           "fit_score": 39,
           "like_score": 70,
-          "can_score": 87,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 게임레벨디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "게임레벨디자이너는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284789569134",
-          "job_name": "상감원",
-          "slug": "상감원",
-          "image_url": "/uploads/jobs/job-상감원.webp",
-          "job_description": "목공예품에 상감(象嵌)효과를 주기 위해 바탕목을 음각하여 상감재를 접착·조립한다.",
-          "fit_score": 40,
-          "like_score": 70,
-          "can_score": 86,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 상감원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "상감원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765284227847114",
-          "job_name": "공연기획자",
-          "slug": "공연기획자",
-          "image_url": "/uploads/jobs/job-공연기획자.webp",
-          "job_description": "공연작품을 무대에 올리기 위해 작품 선정, 홍보, 마케팅, 공연결과 평가 등 제반 과정을 기획하고 추진한다.",
-          "fit_score": 35,
-          "like_score": 70,
-          "can_score": 86,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 공연기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "공연기획자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283747897841",
-          "job_name": "건축설계사",
-          "slug": "건축설계사",
-          "image_url": "/uploads/jobs/job-건축설계사.webp",
-          "job_description": "각종 건축물을 계획하고 설계한다.",
-          "fit_score": 41,
-          "like_score": 73,
           "can_score": 84,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 건축설계사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 그로스매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "건축설계사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "그로스매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283450756976",
-          "job_name": "고무 및 플라스틱화학공학기술자 및 연구원",
-          "slug": "고무-및-플라스틱화학공학기술자-및-연구원",
-          "image_url": "/uploads/jobs/job-고무-및-플라스틱화학공학기술자-및-연구원.webp",
-          "job_description": "원료의 구조와 재질을 분석하여 새로운 합성물질을 연구하고 제품의 제조공정을 연구·분석한다.",
-          "fit_score": 38,
-          "like_score": 68,
+          "job_id": "1765283971075863",
+          "job_name": "기능성식품연구원",
+          "slug": "기능성식품연구원",
+          "image_url": "/uploads/jobs/job-기능성식품연구원.webp",
+          "job_description": "결핍되기 쉬운 영양소 또는 인체에 유용한 기능을 가진 원료나 성분을 사용하여 건강을 유지하는데 도움을 주는 건강기능성식품을 연구·개발한다.",
+          "fit_score": 42,
+          "like_score": 75,
           "can_score": 83,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 고무 및 플라스틱화학공학기술자 및 연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "고무 및 플라스틱화학공학기술자 및 연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "기능성식품연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765283752591791",
-          "job_name": "녹색건축인증심사전문가",
-          "slug": "녹색건축인증심사전문가",
-          "image_url": "/uploads/jobs/job-녹색건축인증심사전문가.webp",
-          "job_description": "친환경건축물인증신청에 대해 관련규정에 적합한지 심사한다.",
-          "fit_score": 40,
-          "like_score": 74,
+          "job_id": "1765284103805713",
+          "job_name": "간접광고마케터",
+          "slug": "간접광고마케터",
+          "image_url": "/uploads/jobs/job-간접광고마케터.webp",
+          "job_description": "PPL(Product PLacement:텔레비전 드라마나 예능프로그램 속에 제품을 등장시키는 광고기법)을 기획하고 진행한다.",
+          "fit_score": 50,
+          "like_score": 65,
+          "can_score": 82,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 간접광고마케터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "간접광고마케터는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765283568214930",
+          "job_name": "영화제작자",
+          "slug": "영화제작자",
+          "image_url": "/uploads/jobs/job-영화제작자.webp",
+          "job_description": "영화 제작을 위해 시나리오, 영화감독 등을 선정하고, 제작비 투자 및 사용, 상영극장 섭외 등 제작 및 영화상영에 관한 업무 전반을 총괄한다.",
+          "fit_score": 49,
+          "like_score": 63,
+          "can_score": 82,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 영화제작자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "영화제작자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284672110517",
+          "job_name": "반도체소자패키지검사장비기술자",
+          "slug": "반도체소자패키지검사장비기술자",
+          "image_url": "/uploads/jobs/job-반도체소자패키지검사장비기술자.webp",
+          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 소자패키지검사 장비를 설치, 평가, 개선, 인증, 유지 관리한다.",
+          "fit_score": 50,
+          "like_score": 70,
           "can_score": 80,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 녹색건축인증심사전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체소자패키지검사장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "녹색건축인증심사전문가는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "반도체소자패키지검사장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284671499583",
-          "job_name": "반도체세정장비기술자",
-          "slug": "반도체세정장비기술자",
-          "image_url": "/uploads/jobs/job-반도체세정장비기술자.webp",
-          "job_description": "반도체 소자 품질수율 및 생산성 향상 활동을 지원하기 위해 세정 장비를 설치, 평가, 개선, 인증, 유지 관리한다.",
+          "job_id": "1765284135426479",
+          "job_name": "국악연구원",
+          "slug": "국악연구원",
+          "image_url": "/uploads/jobs/job-국악연구원.webp",
+          "job_description": "국악에 대한 학술·정책을 연구하고 국악 관련 콘텐츠 개발 및 국악기의 연구·개선·복원 업무를 한다.",
+          "fit_score": 35,
+          "like_score": 65,
+          "can_score": 80,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 국악연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "국악연구원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284684883263",
+          "job_name": "의약품생산지원기술자",
+          "slug": "의약품생산지원기술자",
+          "image_url": "/uploads/jobs/job-의약품생산지원기술자.webp",
+          "job_description": "작업자의 안전과 위생, 제조설비 관리, 보관관리, 공기조화장치 관리, 제조용수 관리, 환경안전위생 관리 등의 정해진 업무를 GMP 규정에 따라 수행한다.",
+          "fit_score": 50,
+          "like_score": 71,
+          "can_score": 79,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 의약품생산지원기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "의약품생산지원기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284670030723",
+          "job_name": "반도체FAB설비관리기술자",
+          "slug": "반도체fab설비관리기술자",
+          "image_url": "/uploads/jobs/job-반도체fab설비관리기술자.webp",
+          "job_description": "반도체장비 동작 및 제조공정을 위한 유틸리티 장치의 설치, 운전, 환경안전관리 및 사전예방정비, 공정가스, 화학약품, 금속재료 등의 저장, 취급, 응급조치 등 유지관리 업무를 수행한다.",
           "fit_score": 49,
           "like_score": 70,
           "can_score": 79,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체세정장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 반도체FAB설비관리기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "반도체세정장비기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "반도체FAB설비관리기술자는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         },
         {
-          "job_id": "1765284689895544",
-          "job_name": "태양열시스템정비원",
-          "slug": "태양열시스템정비원",
-          "image_url": "/uploads/jobs/job-태양열시스템정비원.webp",
-          "job_description": "사용 중 이상이 발생한 태양열 시스템의 정비 점검을 통해 이상부위를 점검하고 정비한다.",
-          "fit_score": 49,
-          "like_score": 71,
-          "can_score": 78,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 태양열시스템정비원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "태양열시스템정비원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283392049802",
-          "job_name": "특수교사",
-          "slug": "특수교사",
-          "image_url": "/uploads/jobs/job-특수교사.webp",
-          "job_description": "특수교사는 신체적, 정신적 장애를 겪고 있는 학생에게 유치원, 초등학교, 중학교, 고등학교에 준하는 교육과 생활에 필요한 지식 및 기능을 가르칩니다.",
-          "fit_score": 32,
-          "like_score": 73,
-          "can_score": 78,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 특수교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
-          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "특수교사는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
-        },
-        {
-          "job_id": "1765283753263724",
-          "job_name": "빌딩정보모델링(BIM)매니저",
-          "slug": "빌딩정보모델링bim매니저",
-          "image_url": "/uploads/jobs/job-빌딩정보모델링bim매니저.webp",
-          "job_description": "프로젝트의 성격과 특수성을 감안하여 최적의 발주방식을 결정하며, 계약관리, 설계관리, 시공관리, 안전관리, 리스크관리, 유지관리 등 프로젝트 전반에 걸쳐 BIM컨설턴트로서 역할을 한다.",
-          "fit_score": 51,
-          "like_score": 75,
+          "job_id": "1765284239044247",
+          "job_name": "고객경험매니저",
+          "slug": "고객경험매니저",
+          "image_url": "/uploads/jobs/job-고객경험매니저.webp",
+          "job_description": "기업의 제품 및 서비스 이용 과정에서 고객이 겪는 경험을 최적화하기 위해 고객 경험 분석 및 개선, 고객 여정 관리, 고객경험 전략 설계, 고객 불만 해결 및 대응, 브랜드 이미지 및 충성도 강화 등의 업무를 한다.",
+          "fit_score": 27,
+          "like_score": 65,
           "can_score": 77,
-          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 빌딩정보모델링(BIM)매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 고객경험매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
           "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
-          "can_reason": "빌딩정보모델링(BIM)매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+          "can_reason": "고객경험매니저는 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
+        },
+        {
+          "job_id": "1765284738925841",
+          "job_name": "철골조립원",
+          "slug": "철골조립원",
+          "image_url": "/uploads/jobs/job-철골조립원.webp",
+          "job_description": "건축구조물의 골조를 건립하기 위해 강철부재를 조립하고 설치한다.",
+          "fit_score": 59,
+          "like_score": 64,
+          "can_score": 76,
+          "rationale": "[좋아할 이유] 데이터/숫자 관심사와 매칭되는 업무 환경입니다 [잘할 이유] 철골조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다",
+          "like_reason": "데이터/숫자 관심사와 매칭되는 업무 환경입니다",
+          "can_reason": "철골조립원은 당신의 역량으로 충분히 도전할 수 있는 분야입니다"
         }
       ],
       "caution_jobs": [
         {
-          "job_id": "1765283753263724",
-          "job_name": "빌딩정보모델링(BIM)매니저",
-          "slug": "빌딩정보모델링bim매니저",
-          "image_url": "/uploads/jobs/job-빌딩정보모델링bim매니저.webp",
+          "job_id": "1765284672110517",
+          "job_name": "반도체소자패키지검사장비기술자",
+          "slug": "반도체소자패키지검사장비기술자",
+          "image_url": "/uploads/jobs/job-반도체소자패키지검사장비기술자.webp",
+          "risk_penalty": 25
+        },
+        {
+          "job_id": "1765284677588138",
+          "job_name": "석유화학유틸리티관리자",
+          "slug": "석유화학유틸리티관리자",
+          "image_url": "/uploads/jobs/job-석유화학유틸리티관리자.webp",
+          "risk_penalty": 25
+        },
+        {
+          "job_id": "1765284684883263",
+          "job_name": "의약품생산지원기술자",
+          "slug": "의약품생산지원기술자",
+          "image_url": "/uploads/jobs/job-의약품생산지원기술자.webp",
           "risk_penalty": 25
         },
         {
@@ -707,24 +721,10 @@
           "risk_penalty": 23
         },
         {
-          "job_id": "1765284689895544",
-          "job_name": "태양열시스템정비원",
-          "slug": "태양열시스템정비원",
-          "image_url": "/uploads/jobs/job-태양열시스템정비원.webp",
-          "risk_penalty": 25
-        },
-        {
-          "job_id": "1765284671499583",
-          "job_name": "반도체세정장비기술자",
-          "slug": "반도체세정장비기술자",
-          "image_url": "/uploads/jobs/job-반도체세정장비기술자.webp",
-          "risk_penalty": 25
-        },
-        {
-          "job_id": "1765283961025921",
-          "job_name": "신재생에너지안전기술연구원",
-          "slug": "신재생에너지안전기술연구원",
-          "image_url": "/uploads/jobs/job-신재생에너지안전기술연구원.webp",
+          "job_id": "1765284670030723",
+          "job_name": "반도체FAB설비관리기술자",
+          "slug": "반도체fab설비관리기술자",
+          "image_url": "/uploads/jobs/job-반도체fab설비관리기술자.webp",
           "risk_penalty": 25
         }
       ],
@@ -1113,20 +1113,20 @@
         "has_unknown_in_top3": false,
         "needs_followup_question": true,
         "counts_before_filter": {
-          "safe_known": 182,
-          "safe_unknown": 127,
-          "caution": 191,
+          "safe_known": 159,
+          "safe_unknown": 115,
+          "caution": 226,
           "total": 500
         },
         "counts_after_filter": {
-          "safe_known": 182,
-          "safe_unknown": 127,
-          "caution": 191,
+          "safe_known": 159,
+          "safe_unknown": 115,
+          "caution": 226,
           "total": 500
         }
       },
       "llm_explanation": "2개의 답변을 반영하여 추천했습니다.",
-      "generated_at": "2026-03-08T12:15:54.055Z",
+      "generated_at": "2026-03-09T03:35:32.632Z",
       "total_candidates": 6945,
       "scored_candidates": 500,
       "filtered_out_candidates": 0,
@@ -1138,26 +1138,26 @@
       "phase4_applied": true,
       "diversity_guard_active": true,
       "diversity_changes": [
-        "수학교사 → 온실가스포집설비기술자 (Diversity Guard: people_service)",
-        "최고운영책임자 → 수학교사 (Diversity Guard: other)",
-        "케이블포설원 → 간접광고마케터 (Diversity Guard: other)"
+        "노인전문간호사 → 연료전지스택컨디셔닝조작원 (Diversity Guard: people_service)",
+        "건설코디네이터 → 브랜드개발자 (Diversity Guard: people_service)",
+        "관리치과위생사 → 컨테이너화물집하장운영관리자 (Diversity Guard: people_service)"
       ],
       "analysis_stage": "major_high",
       "stage_specific_insights": [],
       "premium_report": {
-        "report_id": "report-session-829-1772972154055",
-        "generated_at": "2026-03-08T12:15:54.055Z",
-        "session_id": "session-829",
+        "report_id": "report-session-838-1773027332632",
+        "generated_at": "2026-03-09T03:35:32.632Z",
+        "session_id": "session-838",
         "engine_version": "v3-rule",
         "overall_status": "partial",
         "sections_completed": 7,
         "sections_total": 8,
-        "_confidence": 0.43345330426010503,
+        "_confidence": 0.427890437438204,
         "_factsCount": 2,
         "_answeredQuestions": 2,
         "_candidatesScored": 100,
         "_appliedRules": 4,
-        "executiveSummary": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 외국어교사 같은 분야를 시작점으로 고려해보세요.",
+        "executiveSummary": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 철골조립원 같은 분야를 시작점으로 고려해보세요.",
         "workStyleNarrative": "작업 스타일 분석을 위해 더 많은 정보가 필요합니다.",
         "workStyleMap": {
           "analytical_vs_creative": 0,
@@ -1172,9 +1172,9 @@
         "growthCurveDescription": "성장 곡선 분석을 위해 더 많은 정보가 필요합니다.",
         "stressTriggers": [],
         "lifeVersionStatement": {
-          "oneLiner": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 외국어교사 같은 분야를 시작점으로 고려해보세요.",
+          "oneLiner": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 철골조립원 같은 분야를 시작점으로 고려해보세요.",
           "expanded": [
-            "🎯 최적 추천: 외국어교사"
+            "🎯 최적 추천: 철골조립원"
           ]
         },
         "expertGuidance": {
@@ -1232,11 +1232,11 @@
             "confidence": 0.6,
             "generated_by": "rule_enhanced"
           },
-          "headline": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 외국어교사 같은 분야를 시작점으로 고려해보세요.",
+          "headline": "당신은 탐색형 인재입니다. 다양한 경험을 통해 자신의 강점과 관심사를 발견하고, 철골조립원 같은 분야를 시작점으로 고려해보세요.",
           "top_takeaways": [
-            "🎯 최적 추천: 외국어교사"
+            "🎯 최적 추천: 철골조립원"
           ],
-          "recommended_next_step": "외국어교사에 대해 더 알아보고, 관련 역량을 파악해보세요",
+          "recommended_next_step": "철골조립원에 대해 더 알아보고, 관련 역량을 파악해보세요",
           "recommendation_rationale": {
             "included_because": [
               "입력하신 관심사와 가치관을 기반으로 적합도가 높은 직업을 추천했습니다."
@@ -1261,7 +1261,7 @@
         "key_hypotheses": {
           "_meta": {
             "status": "success",
-            "confidence": 0.7066666666666667,
+            "confidence": 0.6966666666666667,
             "generated_by": "rule"
           },
           "hypotheses": [
@@ -1288,31 +1288,31 @@
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "data_numbers,problem_solving",
-                    "label": "\"data_numbers, problem_solving\" 관심사"
+                    "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
-                    "key": "creative",
+                    "key": "analytical",
                     "value": "60",
-                    "label": "관련 역량: 60/100"
+                    "label": "분석 업무: 60/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
                 },
                 {
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "data_numbers,problem_solving",
-                    "label": "창의적 분야 관심"
+                    "label": "\"data_numbers, problem_solving\" 관심사"
                   },
                   "job_attribute": {
                     "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
                   },
                   "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                  "score_contribution": 12,
+                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
                 }
               ],
               "what_would_change_my_mind": "실제 업무 경험에서 다른 환경이 더 맞았다면 이 가설은 수정되어야 합니다"
@@ -1340,23 +1340,23 @@
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "data_numbers,problem_solving",
-                    "label": "\"data_numbers, problem_solving\" 관심사"
+                    "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
-                    "key": "creative",
+                    "key": "analytical",
                     "value": "60",
-                    "label": "관련 역량: 60/100"
+                    "label": "분석 업무: 60/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
                 }
               ],
               "what_would_change_my_mind": "실제 직업 생활에서 다른 가치가 더 중요해진다면 재평가가 필요합니다"
             },
             {
-              "hypothesis": "외국어교사 관련 분야가 당신에게 가장 적합한 직업군입니다",
-              "confidence": 0.62,
+              "hypothesis": "철골조립원 관련 분야가 당신에게 가장 적합한 직업군입니다",
+              "confidence": 0.59,
               "supporting_evidence": [
                 {
                   "user_fact": {
@@ -1377,31 +1377,31 @@
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "data_numbers,problem_solving",
-                    "label": "\"data_numbers, problem_solving\" 관심사"
+                    "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
-                    "key": "creative",
+                    "key": "analytical",
                     "value": "60",
-                    "label": "관련 역량: 60/100"
+                    "label": "분석 업무: 60/100"
                   },
                   "match_type": "positive",
                   "score_contribution": 14,
-                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
                 },
                 {
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "data_numbers,problem_solving",
-                    "label": "창의적 분야 관심"
+                    "label": "\"data_numbers, problem_solving\" 관심사"
                   },
                   "job_attribute": {
                     "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
                   },
                   "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                  "score_contribution": 12,
+                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
                 }
               ],
               "what_would_change_my_mind": "해당 직업에 대한 추가 정보나 실제 경험이 다른 결과를 보여준다면 수정될 수 있습니다"
@@ -1416,168 +1416,10 @@
           },
           "recommendations": [
             {
-              "id": "1765284036710680",
-              "name": "외국어교사",
-              "fit_score": 62,
-              "personal_fit_reason": "외국어교사는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
-              "evidence_links": [
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
-                    "label": "\"data_numbers, problem_solving\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
-                    "label": "\"data_numbers, problem_solving\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
-                    "label": "분석적 업무 관심"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "분석 업무: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
-                }
-              ],
-              "growth_path_30_days": [
-                "외국어교사 관련 기초 지식 학습",
-                "관련 온라인 강의/자료 탐색",
-                "현직자 이야기 듣기 또는 직업 체험",
-                "필요 역량 파악 및 학습 계획 수립",
-                "작은 프로젝트로 실습 시작"
-              ],
-              "risks": [
-                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
-                "경쟁이 있을 수 있습니다."
-              ]
-            },
-            {
-              "id": "1765284036186296",
-              "name": "수학교사",
-              "fit_score": 62,
-              "personal_fit_reason": "수학교사는 워라밸이 좋은 편, 성장 가능성이 높음 직업입니다.",
-              "evidence_links": [
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
-                    "label": "\"data_numbers, problem_solving\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
-                    "label": "\"data_numbers, problem_solving\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
-                    "label": "분석적 업무 관심"
-                  },
-                  "job_attribute": {
-                    "key": "analytical",
-                    "value": "60",
-                    "label": "분석 업무: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
-                }
-              ],
-              "growth_path_30_days": [
-                "수학교사 관련 기초 지식 학습",
-                "관련 온라인 강의/자료 탐색",
-                "현직자 이야기 듣기 또는 직업 체험",
-                "필요 역량 파악 및 학습 계획 수립",
-                "작은 프로젝트로 실습 시작"
-              ],
-              "risks": [
-                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
-                "경쟁이 있을 수 있습니다."
-              ]
-            },
-            {
-              "id": "1765283291483400",
-              "name": "군무원",
-              "fit_score": 61,
-              "personal_fit_reason": "군무원은 워라밸이 좋은 편, 수입 수준이 높음 직업입니다.",
+              "id": "1765284738925841",
+              "name": "철골조립원",
+              "fit_score": 59,
+              "personal_fit_reason": "철골조립원은 수입 수준이 높음, 안정성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1641,7 +1483,7 @@
                 }
               ],
               "growth_path_30_days": [
-                "군무원 관련 기초 지식 학습",
+                "철골조립원 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1653,10 +1495,10 @@
               ]
             },
             {
-              "id": "1765283541418388",
-              "name": "최고운영책임자",
-              "fit_score": 61,
-              "personal_fit_reason": "최고운영책임자는 성장 가능성이 높음, 수입 수준이 높음 직업입니다.",
+              "id": "1765284002182889",
+              "name": "노인전문간호사",
+              "fit_score": 58,
+              "personal_fit_reason": "노인전문간호사는 성장 가능성이 높음, 안정성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1677,36 +1519,6 @@
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "data_numbers,problem_solving",
-                    "label": "\"data_numbers, problem_solving\" 관심사"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "관련 역량: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
-                    "label": "창의적 분야 관심"
-                  },
-                  "job_attribute": {
-                    "key": "creative",
-                    "value": "60",
-                    "label": "창의성: 60/100"
-                  },
-                  "match_type": "positive",
-                  "score_contribution": 14,
-                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
-                },
-                {
-                  "user_fact": {
-                    "key": "profile.interest.keywords",
-                    "value": "data_numbers,problem_solving",
                     "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
@@ -1717,10 +1529,40 @@
                   "match_type": "positive",
                   "score_contribution": 14,
                   "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
+                    "label": "\"data_numbers, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "창의성: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
                 }
               ],
               "growth_path_30_days": [
-                "최고운영책임자 관련 기초 지식 학습",
+                "노인전문간호사 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1732,10 +1574,10 @@
               ]
             },
             {
-              "id": "1765284734014675",
-              "name": "케이블포설원",
-              "fit_score": 60,
-              "personal_fit_reason": "케이블포설원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
+              "id": "1765284832365467",
+              "name": "만두소제조원",
+              "fit_score": 58,
+              "personal_fit_reason": "만두소제조원은 워라밸이 좋은 편, 안정성이 높음 직업입니다.",
               "evidence_links": [
                 {
                   "user_fact": {
@@ -1756,6 +1598,36 @@
                   "user_fact": {
                     "key": "profile.interest.keywords",
                     "value": "data_numbers,problem_solving",
+                    "label": "\"data_numbers, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "60",
+                    "label": "창의성: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
                     "label": "분석적 업무 관심"
                   },
                   "job_attribute": {
@@ -1766,6 +1638,55 @@
                   "match_type": "positive",
                   "score_contribution": 14,
                   "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 65점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "만두소제조원 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            },
+            {
+              "id": "1765283749337724",
+              "name": "건설코디네이터",
+              "fit_score": 57,
+              "personal_fit_reason": "건설코디네이터는 성장 가능성이 높음, 안정성이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
+                    "label": "\"data_numbers, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
                 },
                 {
                   "user_fact": {
@@ -1799,7 +1720,86 @@
                 }
               ],
               "growth_path_30_days": [
-                "케이블포설원 관련 기초 지식 학습",
+                "건설코디네이터 관련 기초 지식 학습",
+                "관련 온라인 강의/자료 탐색",
+                "현직자 이야기 듣기 또는 직업 체험",
+                "필요 역량 파악 및 학습 계획 수립",
+                "작은 프로젝트로 실습 시작"
+              ],
+              "risks": [
+                "새로운 분야 적응에 시간이 필요할 수 있습니다.",
+                "경쟁이 있을 수 있습니다."
+              ]
+            },
+            {
+              "id": "1765284010919792",
+              "name": "관리치과위생사",
+              "fit_score": 57,
+              "personal_fit_reason": "관리치과위생사는 성장 가능성이 높음, 안정성이 높음 직업입니다.",
+              "evidence_links": [
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
+                    "label": "\"data_numbers, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "관련 역량: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
+                    "label": "분석적 업무 관심"
+                  },
+                  "job_attribute": {
+                    "key": "analytical",
+                    "value": "60",
+                    "label": "분석 업무: 60/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 14,
+                  "explanation": "분석적 업무에 관심 있으시다고 하셨는데, 이 직업의 분석 업무 비중은 60점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
+                    "label": "\"data_numbers, problem_solving\" 관심사"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "관련 역량: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "\"data_numbers, problem_solving\" 분야에 관심 있으시다고 하셨는데, 이 직업은 관련 역량이 50점입니다"
+                },
+                {
+                  "user_fact": {
+                    "key": "profile.interest.keywords",
+                    "value": "data_numbers,problem_solving",
+                    "label": "창의적 분야 관심"
+                  },
+                  "job_attribute": {
+                    "key": "creative",
+                    "value": "50",
+                    "label": "창의성: 50/100"
+                  },
+                  "match_type": "positive",
+                  "score_contribution": 12,
+                  "explanation": "창의적인 분야에 관심 있으시다고 하셨는데, 이 직업의 창의성 요구도는 50점입니다"
+                }
+              ],
+              "growth_path_30_days": [
+                "관리치과위생사 관련 기초 지식 학습",
                 "관련 온라인 강의/자료 탐색",
                 "현직자 이야기 듣기 또는 직업 체험",
                 "필요 역량 파악 및 학습 계획 수립",
@@ -1820,16 +1820,16 @@
           },
           "recommendations": [
             {
-              "id": "1765284236065946",
-              "name": "친환경건축물인증관리사무원",
+              "id": "1765283590675656",
+              "name": "컨테이너화물집하장운영관리자",
               "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
               "conditions_to_reconsider": [
                 "우선순위가 변경되면 재고려할 수 있습니다"
               ]
             },
             {
-              "id": "1765283920058623",
-              "name": "온실가스포집설비기술자",
+              "id": "1765283662464658",
+              "name": "식물공장생산관리자",
               "why_on_hold": "현재 우선순위에서는 다른 직업들이 더 적합합니다",
               "conditions_to_reconsider": [
                 "우선순위가 변경되면 재고려할 수 있습니다"
@@ -1859,7 +1859,7 @@
               "steps": [
                 "핵심 기술 집중 학습 (3개월)",
                 "관련 프로젝트/포트폴리오 구축",
-                "외국어교사 관련 네트워킹 시작"
+                "철골조립원 관련 네트워킹 시작"
               ]
             }
           ]
@@ -1894,7 +1894,7 @@
         }
       },
       "confidence": {
-        "score": 0.43345330426010503,
+        "score": 0.427890437438204,
         "level": "기본",
         "description": "더 솔직하게 답해주시면 맞춤 추천이 가능해요"
       },
@@ -1914,20 +1914,20 @@
   },
   "narrativeFactsResponse": {
     "success": true,
-    "session_id": "e2e-major-1772972149710-jdr6pr",
+    "session_id": "e2e-major-1773027327648-k0nmz8",
     "meta": {
       "served_by": "v3-prod",
       "served_by_region": "APAC",
       "served_by_colo": "KIX",
       "served_by_primary": true,
       "timings": {
-        "sql_duration_ms": 0.2744
+        "sql_duration_ms": 0.3714
       },
-      "duration": 0.2744,
+      "duration": 0.3714,
       "changes": 1,
-      "last_row_id": 703,
+      "last_row_id": 712,
       "changed_db": true,
-      "size_after": 371933184,
+      "size_after": 372592640,
       "rows_read": 8,
       "rows_written": 3,
       "total_attempts": 1
@@ -2190,155 +2190,155 @@
     "top10": [
       {
         "rank": 1,
-        "majorName": "통계학과",
-        "fitScore": 93,
-        "likeScore": 95,
-        "canScore": 95,
-        "riskPenalty": 0,
-        "fieldCategory": "social_science",
-        "summary": "[흥미 근거] '데이터 분석 통계'에 관심이 많다고 하셨는데, 이 전공은 학문엄격도 70/100과 수학집중도 80/100으로 데이터 분석에 필요한 기초가 튼튼합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞아떨어집니다. [리스크] 다만, 이 전공은 석사 진학이 선호되며, 선이수과목으로 수학과 통계학이 필요합니다."
-      },
-      {
-        "rank": 2,
         "majorName": "컴퓨터과학과",
-        "fitScore": 87,
-        "likeScore": 89,
+        "fitScore": 90,
+        "likeScore": 95,
         "canScore": 88,
         "riskPenalty": 0,
         "fieldCategory": "engineering",
-        "summary": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 데이터 분석과 문제 해결 능력이 핵심역량으로, 학문엄격도가 80/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다."
+        "summary": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량이며, 학문엄격도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다."
+      },
+      {
+        "rank": 2,
+        "majorName": "통계학과",
+        "fitScore": 90,
+        "likeScore": 89,
+        "canScore": 95,
+        "riskPenalty": 0,
+        "fieldCategory": "social_science",
+        "summary": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원하신다고 하셨는데, 이 전공은 학문엄격도가 70/100, 수학집중도가 80/100으로 데이터 해석과 분석에 강점을 가지고 있습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞습니다. [리스크] 다만, 이 전공은 석사 이상 진학이 일반적이며, 선이수과목으로 수학과 통계학이 필요합니다."
       },
       {
         "rank": 3,
         "majorName": "정보·통신공학과",
-        "fitScore": 81,
-        "likeScore": 84,
+        "fitScore": 83,
+        "likeScore": 89,
         "canScore": 81,
         "riskPenalty": 0,
         "fieldCategory": "engineering",
-        "summary": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 프로그래밍과 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다."
+        "summary": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다."
       },
       {
         "rank": 4,
-        "majorName": "경영정보학과",
-        "fitScore": 81,
-        "likeScore": 84,
-        "canScore": 80,
+        "majorName": "산업경영학과",
+        "fitScore": 78,
+        "likeScore": 70,
+        "canScore": 87,
         "riskPenalty": 0,
         "fieldCategory": "business",
-        "summary": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다."
+        "summary": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 수학, 통계학이 필요합니다."
       },
       {
         "rank": 5,
-        "majorName": "산업경영과",
-        "fitScore": 78,
-        "likeScore": 78,
-        "canScore": 79,
-        "riskPenalty": 0,
-        "fieldCategory": "business",
-        "summary": "[흥미 근거] '문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 낮고, 선이수과목으로 경영학과 수학이 필요합니다."
-      },
-      {
-        "rank": 6,
         "majorName": "컴퓨터공학과",
-        "fitScore": 75,
-        "likeScore": 78,
+        "fitScore": 77,
+        "likeScore": 83,
         "canScore": 74,
         "riskPenalty": 0,
         "fieldCategory": "engineering",
-        "summary": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 알고리즘 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 70/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다."
+        "summary": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 70/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다."
+      },
+      {
+        "rank": 6,
+        "majorName": "경영정보학과",
+        "fitScore": 77,
+        "likeScore": 76,
+        "canScore": 80,
+        "riskPenalty": 0,
+        "fieldCategory": "business",
+        "summary": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다."
       },
       {
         "rank": 7,
-        "majorName": "세무·회계학과",
-        "fitScore": 72,
-        "likeScore": 73,
+        "majorName": "산업경영과",
+        "fitScore": 76,
+        "likeScore": 83,
         "canScore": 73,
         "riskPenalty": 0,
         "fieldCategory": "business",
-        "summary": "[흥미 근거] '데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다."
+        "summary": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 문제 해결 능력 70/100과 성장성 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 보통이며, 선이수과목으로 경영학, 수학, 통계학이 필요합니다."
       },
       {
         "rank": 8,
-        "majorName": "경제학과",
-        "fitScore": 72,
-        "likeScore": 73,
-        "canScore": 72,
+        "majorName": "회계학과",
+        "fitScore": 76,
+        "likeScore": 76,
+        "canScore": 79,
         "riskPenalty": 0,
-        "fieldCategory": "social_science",
-        "summary": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 경제 분석과 문제 해결 능력이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 수학과 통계학이 필요합니다."
+        "fieldCategory": "business",
+        "summary": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 분석 능력 70/100과 소득잠재력 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 회계 지식과 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 수학과 경제학이 필요합니다."
       },
       {
         "rank": 9,
-        "majorName": "산업공학과",
-        "fitScore": 70,
-        "likeScore": 67,
-        "canScore": 71,
-        "riskPenalty": 0,
-        "fieldCategory": "engineering",
-        "summary": "[흥미 근거] '문제 해결'에 관심이 있다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 학문엄격도 70/100과 수학집중도 60/100이 분석적 사고를 요구합니다. [리스크] 이 전공은 선이수과목으로 수학, 물리, 경제학이 필요하여 진입 장벽이 있을 수 있습니다."
-      },
-      {
-        "rank": 10,
         "majorName": "컴퓨터과",
-        "fitScore": 68,
-        "likeScore": 73,
+        "fitScore": 70,
+        "likeScore": 76,
         "canScore": 66,
         "riskPenalty": 0,
         "fieldCategory": "engineering",
-        "summary": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 시스템 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 60/100으로 보통입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 60/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다."
+        "summary": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 60/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다."
+      },
+      {
+        "rank": 10,
+        "majorName": "세무·회계학과",
+        "fitScore": 67,
+        "likeScore": 64,
+        "canScore": 72,
+        "riskPenalty": 0,
+        "fieldCategory": "business",
+        "summary": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 회계 지식이 필요합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다."
       }
     ],
     "uxMetrics": null,
-    "processingTimeMs": 41016
+    "processingTimeMs": 71207
   },
   "rawRecommendResponse": {
     "success": true,
     "mode": "major_recommendation",
-    "session_id": "e2e-major-1772972149710-jdr6pr",
-    "request_id": 829,
+    "session_id": "e2e-major-1773027327648-k0nmz8",
+    "request_id": 838,
     "recommendations": {
       "top_majors": [
-        {
-          "major_id": "major:통계학과",
-          "major_name": "통계학과",
-          "major_description": "통계학은 수학적 지식을 바탕으로 다양한 현상을 분석하는 학문입니다.",
-          "slug": "통계학과",
-          "image_url": "/uploads/majors/major-통계학과.webp",
-          "fit_score": 93,
-          "like_score": 95,
-          "can_score": 95,
-          "feasibility_score": 75,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '데이터 분석 통계'에 관심이 많다고 하셨는데, 이 전공은 학문엄격도 70/100과 수학집중도 80/100으로 데이터 분석에 필요한 기초가 튼튼합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞아떨어집니다. [리스크] 다만, 이 전공은 석사 진학이 선호되며, 선이수과목으로 수학과 통계학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'에 관심이 많다고 하셨는데, 이 전공은 학문엄격도 70/100과 수학집중도 80/100으로 데이터 분석에 필요한 기초가 튼튼합니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞아떨어집니다.",
-          "risk_reason": "이 전공은 석사 진학이 선호되며, 선이수과목으로 수학과 통계학이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 통계학",
-            "2학기: 데이터 분석 기법",
-            "3학기: 고급 통계 모델링"
-          ]
-        },
         {
           "major_id": "major:컴퓨터과학과",
           "major_name": "컴퓨터과학과",
           "major_description": "컴퓨터과학은 컴퓨터와 정보기술 관련 이론과 기술을 연구하는 학문입니다.",
           "slug": "컴퓨터과학과",
           "image_url": "/uploads/majors/major-컴퓨터과학과.webp",
-          "fit_score": 87,
-          "like_score": 89,
+          "fit_score": 90,
+          "like_score": 95,
           "can_score": 88,
           "feasibility_score": 75,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 데이터 분석과 문제 해결 능력이 핵심역량으로, 학문엄격도가 80/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 데이터 분석과 문제 해결 능력이 핵심역량으로, 학문엄격도가 80/100, 수학집중도가 80/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량이며, 학문엄격도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량이며, 학문엄격도가 80/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 프로그래밍 입문",
             "2학기: 데이터 구조 + 알고리즘",
-            "3학기: 데이터베이스 시스템"
+            "3학기: 데이터베이스 + 문제 해결"
+          ]
+        },
+        {
+          "major_id": "major:통계학과",
+          "major_name": "통계학과",
+          "major_description": "통계학은 수학적 지식을 바탕으로 다양한 현상을 분석하는 학문입니다.",
+          "slug": "통계학과",
+          "image_url": "/uploads/majors/major-통계학과.webp",
+          "fit_score": 90,
+          "like_score": 89,
+          "can_score": 95,
+          "feasibility_score": 70,
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원하신다고 하셨는데, 이 전공은 학문엄격도가 70/100, 수학집중도가 80/100으로 데이터 해석과 분석에 강점을 가지고 있습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞습니다. [리스크] 다만, 이 전공은 석사 이상 진학이 일반적이며, 선이수과목으로 수학과 통계학이 필요합니다.",
+          "like_reason": "'데이터 분석 통계'를 원하신다고 하셨는데, 이 전공은 수학집중도가 80/100으로 데이터 분석에 적합합니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞습니다.",
+          "risk_reason": "경쟁률 70/100으로 보통이며, 석사 이상 진학이 일반적입니다.",
+          "semester_plan": [
+            "1학기: 기초 통계학",
+            "2학기: 데이터 분석 기법",
+            "3학기: 고급 통계 모델링"
           ]
         },
         {
@@ -2347,19 +2347,61 @@
           "major_description": "정보와 통신 기술을 연구하고 개발하는 전공",
           "slug": "정보통신공학과",
           "image_url": "/uploads/majors/major-정보통신공학과.webp",
-          "fit_score": 81,
-          "like_score": 84,
+          "fit_score": 83,
+          "like_score": 89,
           "can_score": 81,
           "feasibility_score": 70,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 프로그래밍과 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 80/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 프로그래밍과 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 물리",
-            "2학기: 프로그래밍 기초 + 데이터 통신",
-            "3학기: 네트워크 설계"
+            "2학기: 프로그래밍 기초 + 통신 기술",
+            "3학기: 데이터 분석 + 문제 해결"
+          ]
+        },
+        {
+          "major_id": "major:산업경영학과",
+          "major_name": "산업경영학과",
+          "major_description": "산업경영학은 기업과 관련된 경영 의사결정의 문제들을 과학적 분석 방법으로 해결하는 학문입니다.",
+          "slug": "산업경영학과",
+          "image_url": "/uploads/majors/major-산업경영학과.webp",
+          "fit_score": 78,
+          "like_score": 70,
+          "can_score": 87,
+          "feasibility_score": 60,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 수학, 통계학이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 수학, 통계학이 필요합니다'",
+          "semester_plan": [
+            "1학기: 경영학 기초 + 수학 기초",
+            "2학기: 통계학 기초",
+            "3학기: 산업 경영 시스템 심화"
+          ]
+        },
+        {
+          "major_id": "major:컴퓨터공학과",
+          "major_name": "컴퓨터공학과",
+          "major_description": "IT와 정보통신 기술을 기반으로 한 첨단 공학 분야",
+          "slug": "컴퓨터공학과",
+          "image_url": "/uploads/majors/major-컴퓨터공학과.webp",
+          "fit_score": 77,
+          "like_score": 83,
+          "can_score": 74,
+          "feasibility_score": 65,
+          "field_category": "engineering",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 70/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 70/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.'",
+          "semester_plan": [
+            "1학기: 기초 수학 + 물리",
+            "2학기: 프로그래밍 기초 + 알고리즘",
+            "3학기: 데이터베이스 + 문제 해결"
           ]
         },
         {
@@ -2368,15 +2410,15 @@
           "major_description": "경영정보학과는 경영학과 정보기술의 융합을 통해 비즈니스 문제를 해결하는 전공입니다.",
           "slug": "경영정보학과",
           "image_url": "/uploads/majors/major-경영정보학과.webp",
-          "fit_score": 81,
-          "like_score": 84,
+          "fit_score": 77,
+          "like_score": 76,
           "can_score": 80,
-          "feasibility_score": 70,
+          "feasibility_score": 65,
           "field_category": "business",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다'",
           "semester_plan": [
             "1학기: 경영학 기초 + 정보기술 입문",
             "2학기: 데이터 분석 기초",
@@ -2389,103 +2431,40 @@
           "major_description": "산업경영과는 공학지식과 과학적 경영기법을 활용하여 산업 현장의 문제를 관리하고 해결하는 학문입니다.",
           "slug": "산업경영과",
           "image_url": "/uploads/majors/major-산업경영과.webp",
-          "fit_score": 78,
-          "like_score": 78,
-          "can_score": 79,
-          "feasibility_score": 70,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 낮고, 선이수과목으로 경영학과 수학이 필요합니다.",
-          "like_reason": "'문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 50/100으로 낮고, 선이수과목으로 경영학과 수학이 필요합니다.",
-          "semester_plan": [
-            "1학기: 경영학 기초 + 수학 기초",
-            "2학기: 통계학 기초",
-            "3학기: 문제 해결 기법"
-          ]
-        },
-        {
-          "major_id": "major:컴퓨터공학과",
-          "major_name": "컴퓨터공학과",
-          "major_description": "IT와 정보통신 기술을 기반으로 한 첨단 공학 분야",
-          "slug": "컴퓨터공학과",
-          "image_url": "/uploads/majors/major-컴퓨터공학과.webp",
-          "fit_score": 75,
-          "like_score": 78,
-          "can_score": 74,
-          "feasibility_score": 65,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 알고리즘 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 70/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 알고리즘 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 70/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 70/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 수학 + 물리",
-            "2학기: 프로그래밍 기초 + 알고리즘",
-            "3학기: 소프트웨어 공학"
-          ]
-        },
-        {
-          "major_id": "major:세무회계학과",
-          "major_name": "세무·회계학과",
-          "major_description": "회계 및 세무에 관한 이론과 실무를 교육하여 세무전문가를 양성하는 전공",
-          "slug": "세무회계학과",
-          "image_url": "/uploads/majors/major-세무회계학과.webp",
-          "fit_score": 72,
-          "like_score": 73,
+          "fit_score": 76,
+          "like_score": 83,
           "can_score": 73,
           "feasibility_score": 65,
           "field_category": "business",
-          "rationale": "[흥미 근거] '데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 문제 해결 능력 70/100과 성장성 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 보통이며, 선이수과목으로 경영학, 수학, 통계학이 필요합니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 문제 해결 능력 70/100과 성장성 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심역량으로 요구됩니다.",
+          "risk_reason": "경쟁률 50/100으로 보통이며, 선이수과목으로 경영학, 수학, 통계학이 필요합니다.",
           "semester_plan": [
-            "1학기: 회계학 기초 + 세법 기초",
-            "2학기: 경영학 기초",
-            "3학기: 세무 실무"
+            "1학기: 경영학 기초 + 수학",
+            "2학기: 통계학 + 문제 해결 기법",
+            "3학기: 실무 프로젝트"
           ]
         },
         {
-          "major_id": "major:경제학과",
-          "major_name": "경제학과",
-          "major_description": "경제학과는 경제 이론과 실제를 연구하는 학문입니다.",
-          "slug": "경제학과",
-          "image_url": "/uploads/majors/major-경제학과.webp",
-          "fit_score": 72,
-          "like_score": 73,
-          "can_score": 72,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 경제 분석과 문제 해결 능력이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 수학과 통계학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 경제 분석과 문제 해결 능력이 요구됩니다.",
-          "risk_reason": "선이수과목으로 수학과 통계학이 필요합니다.",
+          "major_id": "major:회계학과",
+          "major_name": "회계학과",
+          "major_description": "회계학은 기업과 경제 주체들이 합리적인 의사결정을 할 수 있도록 정보를 제공하는 학문입니다.",
+          "slug": "회계학과",
+          "image_url": "/uploads/majors/major-회계학과.webp",
+          "fit_score": 76,
+          "like_score": 76,
+          "can_score": 79,
+          "feasibility_score": 60,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 분석 능력 70/100과 소득잠재력 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 회계 지식과 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 수학과 경제학이 필요합니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 분석 능력 70/100과 소득잠재력 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 회계 지식과 분석 능력이 핵심역량으로 요구됩니다.",
+          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 수학과 경제학이 필요합니다.",
           "semester_plan": [
-            "1학기: 기초 경제학 + 수학",
-            "2학기: 미시경제학 + 통계학",
-            "3학기: 거시경제학"
-          ]
-        },
-        {
-          "major_id": "major:산업공학과",
-          "major_name": "산업공학과",
-          "major_description": "산업공학은 기술과 경영학을 바탕으로 효율적이고 생산적인 시스템을 설계하고 운영하는 분야입니다.",
-          "slug": "산업공학과",
-          "image_url": "/uploads/majors/major-산업공학과.webp",
-          "fit_score": 70,
-          "like_score": 67,
-          "can_score": 71,
-          "feasibility_score": 75,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '문제 해결'에 관심이 있다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 학문엄격도 70/100과 수학집중도 60/100이 분석적 사고를 요구합니다. [리스크] 이 전공은 선이수과목으로 수학, 물리, 경제학이 필요하여 진입 장벽이 있을 수 있습니다.",
-          "like_reason": "'문제 해결'에 관심이 있다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 학문엄격도 70/100과 수학집중도 60/100이 분석적 사고를 요구합니다.",
-          "risk_reason": "이 전공은 선이수과목으로 수학, 물리, 경제학이 필요하여 진입 장벽이 있을 수 있습니다.",
-          "semester_plan": [
-            "1학기: 기초 산업공학",
-            "2학기: 생산 관리",
-            "3학기: 품질 관리"
+            "1학기: 회계 기초 + 수학",
+            "2학기: 경제학 + 재무 회계",
+            "3학기: 세무 회계"
           ]
         },
         {
@@ -2494,63 +2473,84 @@
           "major_description": "정보산업을 선도하는 핵심적인 학문 분야로, 소프트웨어 및 하드웨어 이론과 실무를 배웁니다.",
           "slug": "컴퓨터과",
           "image_url": "/uploads/majors/major-컴퓨터과.webp",
-          "fit_score": 68,
-          "like_score": 73,
+          "fit_score": 70,
+          "like_score": 76,
           "can_score": 66,
-          "feasibility_score": 60,
+          "feasibility_score": 65,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 시스템 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 60/100으로 보통입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 60/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 시스템 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 60/100으로 보통입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 60/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 60/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 60/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 정보과학",
             "2학기: 프로그래밍 기초 + 시스템 설계",
-            "3학기: 데이터베이스 관리"
+            "3학기: 데이터베이스 + 문제 해결"
+          ]
+        },
+        {
+          "major_id": "major:세무회계학과",
+          "major_name": "세무·회계학과",
+          "major_description": "회계 및 세무에 관한 이론과 실무를 교육하여 세무전문가를 양성하는 전공",
+          "slug": "세무회계학과",
+          "image_url": "/uploads/majors/major-세무회계학과.webp",
+          "fit_score": 67,
+          "like_score": 64,
+          "can_score": 72,
+          "feasibility_score": 55,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 회계 지식이 필요합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 회계 지식이 필요합니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다'",
+          "semester_plan": [
+            "1학기: 회계학 기초 + 세법 기초",
+            "2학기: 경영학 기초",
+            "3학기: 세무 회계 심화"
           ]
         }
       ],
       "fit_top10": [
         {
-          "major_id": "major:통계학과",
-          "major_name": "통계학과",
-          "major_description": "통계학은 수학적 지식을 바탕으로 다양한 현상을 분석하는 학문입니다.",
-          "slug": "통계학과",
-          "image_url": "/uploads/majors/major-통계학과.webp",
-          "fit_score": 93,
-          "like_score": 95,
-          "can_score": 95,
-          "feasibility_score": 75,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '데이터 분석 통계'에 관심이 많다고 하셨는데, 이 전공은 학문엄격도 70/100과 수학집중도 80/100으로 데이터 분석에 필요한 기초가 튼튼합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞아떨어집니다. [리스크] 다만, 이 전공은 석사 진학이 선호되며, 선이수과목으로 수학과 통계학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'에 관심이 많다고 하셨는데, 이 전공은 학문엄격도 70/100과 수학집중도 80/100으로 데이터 분석에 필요한 기초가 튼튼합니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞아떨어집니다.",
-          "risk_reason": "이 전공은 석사 진학이 선호되며, 선이수과목으로 수학과 통계학이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 통계학",
-            "2학기: 데이터 분석 기법",
-            "3학기: 고급 통계 모델링"
-          ]
-        },
-        {
           "major_id": "major:컴퓨터과학과",
           "major_name": "컴퓨터과학과",
           "major_description": "컴퓨터과학은 컴퓨터와 정보기술 관련 이론과 기술을 연구하는 학문입니다.",
           "slug": "컴퓨터과학과",
           "image_url": "/uploads/majors/major-컴퓨터과학과.webp",
-          "fit_score": 87,
-          "like_score": 89,
+          "fit_score": 90,
+          "like_score": 95,
           "can_score": 88,
           "feasibility_score": 75,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 데이터 분석과 문제 해결 능력이 핵심역량으로, 학문엄격도가 80/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 데이터 분석과 문제 해결 능력이 핵심역량으로, 학문엄격도가 80/100, 수학집중도가 80/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량이며, 학문엄격도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량이며, 학문엄격도가 80/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 프로그래밍 입문",
             "2학기: 데이터 구조 + 알고리즘",
-            "3학기: 데이터베이스 시스템"
+            "3학기: 데이터베이스 + 문제 해결"
+          ]
+        },
+        {
+          "major_id": "major:통계학과",
+          "major_name": "통계학과",
+          "major_description": "통계학은 수학적 지식을 바탕으로 다양한 현상을 분석하는 학문입니다.",
+          "slug": "통계학과",
+          "image_url": "/uploads/majors/major-통계학과.webp",
+          "fit_score": 90,
+          "like_score": 89,
+          "can_score": 95,
+          "feasibility_score": 70,
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원하신다고 하셨는데, 이 전공은 학문엄격도가 70/100, 수학집중도가 80/100으로 데이터 해석과 분석에 강점을 가지고 있습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞습니다. [리스크] 다만, 이 전공은 석사 이상 진학이 일반적이며, 선이수과목으로 수학과 통계학이 필요합니다.",
+          "like_reason": "'데이터 분석 통계'를 원하신다고 하셨는데, 이 전공은 수학집중도가 80/100으로 데이터 분석에 적합합니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞습니다.",
+          "risk_reason": "경쟁률 70/100으로 보통이며, 석사 이상 진학이 일반적입니다.",
+          "semester_plan": [
+            "1학기: 기초 통계학",
+            "2학기: 데이터 분석 기법",
+            "3학기: 고급 통계 모델링"
           ]
         },
         {
@@ -2559,19 +2559,61 @@
           "major_description": "정보와 통신 기술을 연구하고 개발하는 전공",
           "slug": "정보통신공학과",
           "image_url": "/uploads/majors/major-정보통신공학과.webp",
-          "fit_score": 81,
-          "like_score": 84,
+          "fit_score": 83,
+          "like_score": 89,
           "can_score": 81,
           "feasibility_score": 70,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 프로그래밍과 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 80/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 프로그래밍과 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 물리",
-            "2학기: 프로그래밍 기초 + 데이터 통신",
-            "3학기: 네트워크 설계"
+            "2학기: 프로그래밍 기초 + 통신 기술",
+            "3학기: 데이터 분석 + 문제 해결"
+          ]
+        },
+        {
+          "major_id": "major:산업경영학과",
+          "major_name": "산업경영학과",
+          "major_description": "산업경영학은 기업과 관련된 경영 의사결정의 문제들을 과학적 분석 방법으로 해결하는 학문입니다.",
+          "slug": "산업경영학과",
+          "image_url": "/uploads/majors/major-산업경영학과.webp",
+          "fit_score": 78,
+          "like_score": 70,
+          "can_score": 87,
+          "feasibility_score": 60,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 수학, 통계학이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 수학, 통계학이 필요합니다'",
+          "semester_plan": [
+            "1학기: 경영학 기초 + 수학 기초",
+            "2학기: 통계학 기초",
+            "3학기: 산업 경영 시스템 심화"
+          ]
+        },
+        {
+          "major_id": "major:컴퓨터공학과",
+          "major_name": "컴퓨터공학과",
+          "major_description": "IT와 정보통신 기술을 기반으로 한 첨단 공학 분야",
+          "slug": "컴퓨터공학과",
+          "image_url": "/uploads/majors/major-컴퓨터공학과.webp",
+          "fit_score": 77,
+          "like_score": 83,
+          "can_score": 74,
+          "feasibility_score": 65,
+          "field_category": "engineering",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 70/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 70/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.'",
+          "semester_plan": [
+            "1학기: 기초 수학 + 물리",
+            "2학기: 프로그래밍 기초 + 알고리즘",
+            "3학기: 데이터베이스 + 문제 해결"
           ]
         },
         {
@@ -2580,15 +2622,15 @@
           "major_description": "경영정보학과는 경영학과 정보기술의 융합을 통해 비즈니스 문제를 해결하는 전공입니다.",
           "slug": "경영정보학과",
           "image_url": "/uploads/majors/major-경영정보학과.webp",
-          "fit_score": 81,
-          "like_score": 84,
+          "fit_score": 77,
+          "like_score": 76,
           "can_score": 80,
-          "feasibility_score": 70,
+          "feasibility_score": 65,
           "field_category": "business",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다'",
           "semester_plan": [
             "1학기: 경영학 기초 + 정보기술 입문",
             "2학기: 데이터 분석 기초",
@@ -2601,103 +2643,40 @@
           "major_description": "산업경영과는 공학지식과 과학적 경영기법을 활용하여 산업 현장의 문제를 관리하고 해결하는 학문입니다.",
           "slug": "산업경영과",
           "image_url": "/uploads/majors/major-산업경영과.webp",
-          "fit_score": 78,
-          "like_score": 78,
-          "can_score": 79,
-          "feasibility_score": 70,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 낮고, 선이수과목으로 경영학과 수학이 필요합니다.",
-          "like_reason": "'문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 50/100으로 낮고, 선이수과목으로 경영학과 수학이 필요합니다.",
-          "semester_plan": [
-            "1학기: 경영학 기초 + 수학 기초",
-            "2학기: 통계학 기초",
-            "3학기: 문제 해결 기법"
-          ]
-        },
-        {
-          "major_id": "major:컴퓨터공학과",
-          "major_name": "컴퓨터공학과",
-          "major_description": "IT와 정보통신 기술을 기반으로 한 첨단 공학 분야",
-          "slug": "컴퓨터공학과",
-          "image_url": "/uploads/majors/major-컴퓨터공학과.webp",
-          "fit_score": 75,
-          "like_score": 78,
-          "can_score": 74,
-          "feasibility_score": 65,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 알고리즘 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 70/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 알고리즘 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 70/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 70/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 수학 + 물리",
-            "2학기: 프로그래밍 기초 + 알고리즘",
-            "3학기: 소프트웨어 공학"
-          ]
-        },
-        {
-          "major_id": "major:세무회계학과",
-          "major_name": "세무·회계학과",
-          "major_description": "회계 및 세무에 관한 이론과 실무를 교육하여 세무전문가를 양성하는 전공",
-          "slug": "세무회계학과",
-          "image_url": "/uploads/majors/major-세무회계학과.webp",
-          "fit_score": 72,
-          "like_score": 73,
+          "fit_score": 76,
+          "like_score": 83,
           "can_score": 73,
           "feasibility_score": 65,
           "field_category": "business",
-          "rationale": "[흥미 근거] '데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 문제 해결 능력 70/100과 성장성 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 보통이며, 선이수과목으로 경영학, 수학, 통계학이 필요합니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 문제 해결 능력 70/100과 성장성 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심역량으로 요구됩니다.",
+          "risk_reason": "경쟁률 50/100으로 보통이며, 선이수과목으로 경영학, 수학, 통계학이 필요합니다.",
           "semester_plan": [
-            "1학기: 회계학 기초 + 세법 기초",
-            "2학기: 경영학 기초",
-            "3학기: 세무 실무"
+            "1학기: 경영학 기초 + 수학",
+            "2학기: 통계학 + 문제 해결 기법",
+            "3학기: 실무 프로젝트"
           ]
         },
         {
-          "major_id": "major:경제학과",
-          "major_name": "경제학과",
-          "major_description": "경제학과는 경제 이론과 실제를 연구하는 학문입니다.",
-          "slug": "경제학과",
-          "image_url": "/uploads/majors/major-경제학과.webp",
-          "fit_score": 72,
-          "like_score": 73,
-          "can_score": 72,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 경제 분석과 문제 해결 능력이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 수학과 통계학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 경제 분석과 문제 해결 능력이 요구됩니다.",
-          "risk_reason": "선이수과목으로 수학과 통계학이 필요합니다.",
+          "major_id": "major:회계학과",
+          "major_name": "회계학과",
+          "major_description": "회계학은 기업과 경제 주체들이 합리적인 의사결정을 할 수 있도록 정보를 제공하는 학문입니다.",
+          "slug": "회계학과",
+          "image_url": "/uploads/majors/major-회계학과.webp",
+          "fit_score": 76,
+          "like_score": 76,
+          "can_score": 79,
+          "feasibility_score": 60,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 분석 능력 70/100과 소득잠재력 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 회계 지식과 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 수학과 경제학이 필요합니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 분석 능력 70/100과 소득잠재력 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 회계 지식과 분석 능력이 핵심역량으로 요구됩니다.",
+          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 수학과 경제학이 필요합니다.",
           "semester_plan": [
-            "1학기: 기초 경제학 + 수학",
-            "2학기: 미시경제학 + 통계학",
-            "3학기: 거시경제학"
-          ]
-        },
-        {
-          "major_id": "major:산업공학과",
-          "major_name": "산업공학과",
-          "major_description": "산업공학은 기술과 경영학을 바탕으로 효율적이고 생산적인 시스템을 설계하고 운영하는 분야입니다.",
-          "slug": "산업공학과",
-          "image_url": "/uploads/majors/major-산업공학과.webp",
-          "fit_score": 70,
-          "like_score": 67,
-          "can_score": 71,
-          "feasibility_score": 75,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '문제 해결'에 관심이 있다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 학문엄격도 70/100과 수학집중도 60/100이 분석적 사고를 요구합니다. [리스크] 이 전공은 선이수과목으로 수학, 물리, 경제학이 필요하여 진입 장벽이 있을 수 있습니다.",
-          "like_reason": "'문제 해결'에 관심이 있다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 학문엄격도 70/100과 수학집중도 60/100이 분석적 사고를 요구합니다.",
-          "risk_reason": "이 전공은 선이수과목으로 수학, 물리, 경제학이 필요하여 진입 장벽이 있을 수 있습니다.",
-          "semester_plan": [
-            "1학기: 기초 산업공학",
-            "2학기: 생산 관리",
-            "3학기: 품질 관리"
+            "1학기: 회계 기초 + 수학",
+            "2학기: 경제학 + 재무 회계",
+            "3학기: 세무 회계"
           ]
         },
         {
@@ -2706,63 +2685,84 @@
           "major_description": "정보산업을 선도하는 핵심적인 학문 분야로, 소프트웨어 및 하드웨어 이론과 실무를 배웁니다.",
           "slug": "컴퓨터과",
           "image_url": "/uploads/majors/major-컴퓨터과.webp",
-          "fit_score": 68,
-          "like_score": 73,
+          "fit_score": 70,
+          "like_score": 76,
           "can_score": 66,
-          "feasibility_score": 60,
+          "feasibility_score": 65,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 시스템 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 60/100으로 보통입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 60/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 시스템 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 60/100으로 보통입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 60/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 60/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 60/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 정보과학",
             "2학기: 프로그래밍 기초 + 시스템 설계",
-            "3학기: 데이터베이스 관리"
+            "3학기: 데이터베이스 + 문제 해결"
+          ]
+        },
+        {
+          "major_id": "major:세무회계학과",
+          "major_name": "세무·회계학과",
+          "major_description": "회계 및 세무에 관한 이론과 실무를 교육하여 세무전문가를 양성하는 전공",
+          "slug": "세무회계학과",
+          "image_url": "/uploads/majors/major-세무회계학과.webp",
+          "fit_score": 67,
+          "like_score": 64,
+          "can_score": 72,
+          "feasibility_score": 55,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 회계 지식이 필요합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 회계 지식이 필요합니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다'",
+          "semester_plan": [
+            "1학기: 회계학 기초 + 세법 기초",
+            "2학기: 경영학 기초",
+            "3학기: 세무 회계 심화"
           ]
         }
       ],
       "like_top10": [
         {
-          "major_id": "major:통계학과",
-          "major_name": "통계학과",
-          "major_description": "통계학은 수학적 지식을 바탕으로 다양한 현상을 분석하는 학문입니다.",
-          "slug": "통계학과",
-          "image_url": "/uploads/majors/major-통계학과.webp",
-          "fit_score": 93,
-          "like_score": 95,
-          "can_score": 95,
-          "feasibility_score": 75,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '데이터 분석 통계'에 관심이 많다고 하셨는데, 이 전공은 학문엄격도 70/100과 수학집중도 80/100으로 데이터 분석에 필요한 기초가 튼튼합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞아떨어집니다. [리스크] 다만, 이 전공은 석사 진학이 선호되며, 선이수과목으로 수학과 통계학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'에 관심이 많다고 하셨는데, 이 전공은 학문엄격도 70/100과 수학집중도 80/100으로 데이터 분석에 필요한 기초가 튼튼합니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞아떨어집니다.",
-          "risk_reason": "이 전공은 석사 진학이 선호되며, 선이수과목으로 수학과 통계학이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 통계학",
-            "2학기: 데이터 분석 기법",
-            "3학기: 고급 통계 모델링"
-          ]
-        },
-        {
           "major_id": "major:컴퓨터과학과",
           "major_name": "컴퓨터과학과",
           "major_description": "컴퓨터과학은 컴퓨터와 정보기술 관련 이론과 기술을 연구하는 학문입니다.",
           "slug": "컴퓨터과학과",
           "image_url": "/uploads/majors/major-컴퓨터과학과.webp",
-          "fit_score": 87,
-          "like_score": 89,
+          "fit_score": 90,
+          "like_score": 95,
           "can_score": 88,
           "feasibility_score": 75,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 데이터 분석과 문제 해결 능력이 핵심역량으로, 학문엄격도가 80/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 데이터 분석과 문제 해결 능력이 핵심역량으로, 학문엄격도가 80/100, 수학집중도가 80/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량이며, 학문엄격도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량이며, 학문엄격도가 80/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 프로그래밍 입문",
             "2학기: 데이터 구조 + 알고리즘",
-            "3학기: 데이터베이스 시스템"
+            "3학기: 데이터베이스 + 문제 해결"
+          ]
+        },
+        {
+          "major_id": "major:통계학과",
+          "major_name": "통계학과",
+          "major_description": "통계학은 수학적 지식을 바탕으로 다양한 현상을 분석하는 학문입니다.",
+          "slug": "통계학과",
+          "image_url": "/uploads/majors/major-통계학과.webp",
+          "fit_score": 90,
+          "like_score": 89,
+          "can_score": 95,
+          "feasibility_score": 70,
+          "field_category": "social_science",
+          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원하신다고 하셨는데, 이 전공은 학문엄격도가 70/100, 수학집중도가 80/100으로 데이터 해석과 분석에 강점을 가지고 있습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞습니다. [리스크] 다만, 이 전공은 석사 이상 진학이 일반적이며, 선이수과목으로 수학과 통계학이 필요합니다.",
+          "like_reason": "'데이터 분석 통계'를 원하신다고 하셨는데, 이 전공은 수학집중도가 80/100으로 데이터 분석에 적합합니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞습니다.",
+          "risk_reason": "경쟁률 70/100으로 보통이며, 석사 이상 진학이 일반적입니다.",
+          "semester_plan": [
+            "1학기: 기초 통계학",
+            "2학기: 데이터 분석 기법",
+            "3학기: 고급 통계 모델링"
           ]
         },
         {
@@ -2771,61 +2771,19 @@
           "major_description": "정보와 통신 기술을 연구하고 개발하는 전공",
           "slug": "정보통신공학과",
           "image_url": "/uploads/majors/major-정보통신공학과.webp",
-          "fit_score": 81,
-          "like_score": 84,
+          "fit_score": 83,
+          "like_score": 89,
           "can_score": 81,
           "feasibility_score": 70,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 프로그래밍과 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 80/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 프로그래밍과 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 물리",
-            "2학기: 프로그래밍 기초 + 데이터 통신",
-            "3학기: 네트워크 설계"
-          ]
-        },
-        {
-          "major_id": "major:경영정보학과",
-          "major_name": "경영정보학과",
-          "major_description": "경영정보학과는 경영학과 정보기술의 융합을 통해 비즈니스 문제를 해결하는 전공입니다.",
-          "slug": "경영정보학과",
-          "image_url": "/uploads/majors/major-경영정보학과.webp",
-          "fit_score": 81,
-          "like_score": 84,
-          "can_score": 80,
-          "feasibility_score": 70,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
-          "semester_plan": [
-            "1학기: 경영학 기초 + 정보기술 입문",
-            "2학기: 데이터 분석 기초",
-            "3학기: 경영정보 시스템 심화"
-          ]
-        },
-        {
-          "major_id": "major:산업경영과",
-          "major_name": "산업경영과",
-          "major_description": "산업경영과는 공학지식과 과학적 경영기법을 활용하여 산업 현장의 문제를 관리하고 해결하는 학문입니다.",
-          "slug": "산업경영과",
-          "image_url": "/uploads/majors/major-산업경영과.webp",
-          "fit_score": 78,
-          "like_score": 78,
-          "can_score": 79,
-          "feasibility_score": 70,
-          "field_category": "business",
-          "rationale": "[흥미 근거] '문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 낮고, 선이수과목으로 경영학과 수학이 필요합니다.",
-          "like_reason": "'문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 50/100으로 낮고, 선이수과목으로 경영학과 수학이 필요합니다.",
-          "semester_plan": [
-            "1학기: 경영학 기초 + 수학 기초",
-            "2학기: 통계학 기초",
-            "3학기: 문제 해결 기법"
+            "2학기: 프로그래밍 기초 + 통신 기술",
+            "3학기: 데이터 분석 + 문제 해결"
           ]
         },
         {
@@ -2834,61 +2792,82 @@
           "major_description": "IT와 정보통신 기술을 기반으로 한 첨단 공학 분야",
           "slug": "컴퓨터공학과",
           "image_url": "/uploads/majors/major-컴퓨터공학과.webp",
-          "fit_score": 75,
-          "like_score": 78,
+          "fit_score": 77,
+          "like_score": 83,
           "can_score": 74,
           "feasibility_score": 65,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 알고리즘 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 70/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 알고리즘 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 70/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 70/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 70/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 70/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 물리",
             "2학기: 프로그래밍 기초 + 알고리즘",
-            "3학기: 소프트웨어 공학"
+            "3학기: 데이터베이스 + 문제 해결"
           ]
         },
         {
-          "major_id": "major:세무회계학과",
-          "major_name": "세무·회계학과",
-          "major_description": "회계 및 세무에 관한 이론과 실무를 교육하여 세무전문가를 양성하는 전공",
-          "slug": "세무회계학과",
-          "image_url": "/uploads/majors/major-세무회계학과.webp",
-          "fit_score": 72,
-          "like_score": 73,
+          "major_id": "major:산업경영과",
+          "major_name": "산업경영과",
+          "major_description": "산업경영과는 공학지식과 과학적 경영기법을 활용하여 산업 현장의 문제를 관리하고 해결하는 학문입니다.",
+          "slug": "산업경영과",
+          "image_url": "/uploads/majors/major-산업경영과.webp",
+          "fit_score": 76,
+          "like_score": 83,
           "can_score": 73,
           "feasibility_score": 65,
           "field_category": "business",
-          "rationale": "[흥미 근거] '데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 문제 해결 능력 70/100과 성장성 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 보통이며, 선이수과목으로 경영학, 수학, 통계학이 필요합니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 문제 해결 능력 70/100과 성장성 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심역량으로 요구됩니다.",
+          "risk_reason": "경쟁률 50/100으로 보통이며, 선이수과목으로 경영학, 수학, 통계학이 필요합니다.",
           "semester_plan": [
-            "1학기: 회계학 기초 + 세법 기초",
-            "2학기: 경영학 기초",
-            "3학기: 세무 실무"
+            "1학기: 경영학 기초 + 수학",
+            "2학기: 통계학 + 문제 해결 기법",
+            "3학기: 실무 프로젝트"
           ]
         },
         {
-          "major_id": "major:경제학과",
-          "major_name": "경제학과",
-          "major_description": "경제학과는 경제 이론과 실제를 연구하는 학문입니다.",
-          "slug": "경제학과",
-          "image_url": "/uploads/majors/major-경제학과.webp",
-          "fit_score": 72,
-          "like_score": 73,
-          "can_score": 72,
+          "major_id": "major:경영정보학과",
+          "major_name": "경영정보학과",
+          "major_description": "경영정보학과는 경영학과 정보기술의 융합을 통해 비즈니스 문제를 해결하는 전공입니다.",
+          "slug": "경영정보학과",
+          "image_url": "/uploads/majors/major-경영정보학과.webp",
+          "fit_score": 77,
+          "like_score": 76,
+          "can_score": 80,
           "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 경제 분석과 문제 해결 능력이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 수학과 통계학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 경제 분석과 문제 해결 능력이 요구됩니다.",
-          "risk_reason": "선이수과목으로 수학과 통계학이 필요합니다.",
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다'",
           "semester_plan": [
-            "1학기: 기초 경제학 + 수학",
-            "2학기: 미시경제학 + 통계학",
-            "3학기: 거시경제학"
+            "1학기: 경영학 기초 + 정보기술 입문",
+            "2학기: 데이터 분석 기초",
+            "3학기: 경영정보 시스템 심화"
+          ]
+        },
+        {
+          "major_id": "major:회계학과",
+          "major_name": "회계학과",
+          "major_description": "회계학은 기업과 경제 주체들이 합리적인 의사결정을 할 수 있도록 정보를 제공하는 학문입니다.",
+          "slug": "회계학과",
+          "image_url": "/uploads/majors/major-회계학과.webp",
+          "fit_score": 76,
+          "like_score": 76,
+          "can_score": 79,
+          "feasibility_score": 60,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 분석 능력 70/100과 소득잠재력 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 회계 지식과 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 수학과 경제학이 필요합니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 분석 능력 70/100과 소득잠재력 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 회계 지식과 분석 능력이 핵심역량으로 요구됩니다.",
+          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 수학과 경제학이 필요합니다.",
+          "semester_plan": [
+            "1학기: 회계 기초 + 수학",
+            "2학기: 경제학 + 재무 회계",
+            "3학기: 세무 회계"
           ]
         },
         {
@@ -2897,40 +2876,61 @@
           "major_description": "정보산업을 선도하는 핵심적인 학문 분야로, 소프트웨어 및 하드웨어 이론과 실무를 배웁니다.",
           "slug": "컴퓨터과",
           "image_url": "/uploads/majors/major-컴퓨터과.webp",
-          "fit_score": 68,
-          "like_score": 73,
+          "fit_score": 70,
+          "like_score": 76,
           "can_score": 66,
-          "feasibility_score": 60,
+          "feasibility_score": 65,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 시스템 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 60/100으로 보통입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 60/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 시스템 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 60/100으로 보통입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 60/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 60/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 60/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 정보과학",
             "2학기: 프로그래밍 기초 + 시스템 설계",
-            "3학기: 데이터베이스 관리"
+            "3학기: 데이터베이스 + 문제 해결"
           ]
         },
         {
-          "major_id": "major:산업공학과",
-          "major_name": "산업공학과",
-          "major_description": "산업공학은 기술과 경영학을 바탕으로 효율적이고 생산적인 시스템을 설계하고 운영하는 분야입니다.",
-          "slug": "산업공학과",
-          "image_url": "/uploads/majors/major-산업공학과.webp",
-          "fit_score": 70,
-          "like_score": 67,
-          "can_score": 71,
-          "feasibility_score": 75,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '문제 해결'에 관심이 있다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 학문엄격도 70/100과 수학집중도 60/100이 분석적 사고를 요구합니다. [리스크] 이 전공은 선이수과목으로 수학, 물리, 경제학이 필요하여 진입 장벽이 있을 수 있습니다.",
-          "like_reason": "'문제 해결'에 관심이 있다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 학문엄격도 70/100과 수학집중도 60/100이 분석적 사고를 요구합니다.",
-          "risk_reason": "이 전공은 선이수과목으로 수학, 물리, 경제학이 필요하여 진입 장벽이 있을 수 있습니다.",
+          "major_id": "major:산업경영학과",
+          "major_name": "산업경영학과",
+          "major_description": "산업경영학은 기업과 관련된 경영 의사결정의 문제들을 과학적 분석 방법으로 해결하는 학문입니다.",
+          "slug": "산업경영학과",
+          "image_url": "/uploads/majors/major-산업경영학과.webp",
+          "fit_score": 78,
+          "like_score": 70,
+          "can_score": 87,
+          "feasibility_score": 60,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 수학, 통계학이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 수학, 통계학이 필요합니다'",
           "semester_plan": [
-            "1학기: 기초 산업공학",
-            "2학기: 생산 관리",
-            "3학기: 품질 관리"
+            "1학기: 경영학 기초 + 수학 기초",
+            "2학기: 통계학 기초",
+            "3학기: 산업 경영 시스템 심화"
+          ]
+        },
+        {
+          "major_id": "major:세무회계학과",
+          "major_name": "세무·회계학과",
+          "major_description": "회계 및 세무에 관한 이론과 실무를 교육하여 세무전문가를 양성하는 전공",
+          "slug": "세무회계학과",
+          "image_url": "/uploads/majors/major-세무회계학과.webp",
+          "fit_score": 67,
+          "like_score": 64,
+          "can_score": 72,
+          "feasibility_score": 55,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 회계 지식이 필요합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 회계 지식이 필요합니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다'",
+          "semester_plan": [
+            "1학기: 회계학 기초 + 세법 기초",
+            "2학기: 경영학 기초",
+            "3학기: 세무 회계 심화"
           ]
         }
       ],
@@ -2941,15 +2941,15 @@
           "major_description": "통계학은 수학적 지식을 바탕으로 다양한 현상을 분석하는 학문입니다.",
           "slug": "통계학과",
           "image_url": "/uploads/majors/major-통계학과.webp",
-          "fit_score": 93,
-          "like_score": 95,
+          "fit_score": 90,
+          "like_score": 89,
           "can_score": 95,
-          "feasibility_score": 75,
+          "feasibility_score": 70,
           "field_category": "social_science",
-          "rationale": "[흥미 근거] '데이터 분석 통계'에 관심이 많다고 하셨는데, 이 전공은 학문엄격도 70/100과 수학집중도 80/100으로 데이터 분석에 필요한 기초가 튼튼합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞아떨어집니다. [리스크] 다만, 이 전공은 석사 진학이 선호되며, 선이수과목으로 수학과 통계학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'에 관심이 많다고 하셨는데, 이 전공은 학문엄격도 70/100과 수학집중도 80/100으로 데이터 분석에 필요한 기초가 튼튼합니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞아떨어집니다.",
-          "risk_reason": "이 전공은 석사 진학이 선호되며, 선이수과목으로 수학과 통계학이 필요합니다.",
+          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원하신다고 하셨는데, 이 전공은 학문엄격도가 70/100, 수학집중도가 80/100으로 데이터 해석과 분석에 강점을 가지고 있습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞습니다. [리스크] 다만, 이 전공은 석사 이상 진학이 일반적이며, 선이수과목으로 수학과 통계학이 필요합니다.",
+          "like_reason": "'데이터 분석 통계'를 원하신다고 하셨는데, 이 전공은 수학집중도가 80/100으로 데이터 분석에 적합합니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 핵심역량인 '데이터 해석'이 분석력과 잘 맞습니다.",
+          "risk_reason": "경쟁률 70/100으로 보통이며, 석사 이상 진학이 일반적입니다.",
           "semester_plan": [
             "1학기: 기초 통계학",
             "2학기: 데이터 분석 기법",
@@ -2962,19 +2962,40 @@
           "major_description": "컴퓨터과학은 컴퓨터와 정보기술 관련 이론과 기술을 연구하는 학문입니다.",
           "slug": "컴퓨터과학과",
           "image_url": "/uploads/majors/major-컴퓨터과학과.webp",
-          "fit_score": 87,
-          "like_score": 89,
+          "fit_score": 90,
+          "like_score": 95,
           "can_score": 88,
           "feasibility_score": 75,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 데이터 분석과 문제 해결 능력이 핵심역량으로, 학문엄격도가 80/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 데이터 분석과 문제 해결 능력이 핵심역량으로, 학문엄격도가 80/100, 수학집중도가 80/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량이며, 학문엄격도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량이며, 학문엄격도가 80/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 70/100으로 보통이며, 선이수과목으로 수학과 정보기술이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 프로그래밍 입문",
             "2학기: 데이터 구조 + 알고리즘",
-            "3학기: 데이터베이스 시스템"
+            "3학기: 데이터베이스 + 문제 해결"
+          ]
+        },
+        {
+          "major_id": "major:산업경영학과",
+          "major_name": "산업경영학과",
+          "major_description": "산업경영학은 기업과 관련된 경영 의사결정의 문제들을 과학적 분석 방법으로 해결하는 학문입니다.",
+          "slug": "산업경영학과",
+          "image_url": "/uploads/majors/major-산업경영학과.webp",
+          "fit_score": 78,
+          "like_score": 70,
+          "can_score": 87,
+          "feasibility_score": 60,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 수학, 통계학이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 수학, 통계학이 필요합니다'",
+          "semester_plan": [
+            "1학기: 경영학 기초 + 수학 기초",
+            "2학기: 통계학 기초",
+            "3학기: 산업 경영 시스템 심화"
           ]
         },
         {
@@ -2983,19 +3004,19 @@
           "major_description": "정보와 통신 기술을 연구하고 개발하는 전공",
           "slug": "정보통신공학과",
           "image_url": "/uploads/majors/major-정보통신공학과.webp",
-          "fit_score": 81,
-          "like_score": 84,
+          "fit_score": 83,
+          "like_score": 89,
           "can_score": 81,
           "feasibility_score": 70,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 80/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 프로그래밍과 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 80/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 프로그래밍과 문제 해결 능력이 중요하며, 수학집중도 80/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 80/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 물리",
-            "2학기: 프로그래밍 기초 + 데이터 통신",
-            "3학기: 네트워크 설계"
+            "2학기: 프로그래밍 기초 + 통신 기술",
+            "3학기: 데이터 분석 + 문제 해결"
           ]
         },
         {
@@ -3004,15 +3025,15 @@
           "major_description": "경영정보학과는 경영학과 정보기술의 융합을 통해 비즈니스 문제를 해결하는 전공입니다.",
           "slug": "경영정보학과",
           "image_url": "/uploads/majors/major-경영정보학과.webp",
-          "fit_score": 81,
-          "like_score": 84,
+          "fit_score": 77,
+          "like_score": 76,
           "can_score": 80,
-          "feasibility_score": 70,
+          "feasibility_score": 65,
           "field_category": "business",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심 역량입니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 경영학과 정보기술이 필요합니다'",
           "semester_plan": [
             "1학기: 경영학 기초 + 정보기술 입문",
             "2학기: 데이터 분석 기초",
@@ -3020,24 +3041,24 @@
           ]
         },
         {
-          "major_id": "major:산업경영과",
-          "major_name": "산업경영과",
-          "major_description": "산업경영과는 공학지식과 과학적 경영기법을 활용하여 산업 현장의 문제를 관리하고 해결하는 학문입니다.",
-          "slug": "산업경영과",
-          "image_url": "/uploads/majors/major-산업경영과.webp",
-          "fit_score": 78,
-          "like_score": 78,
+          "major_id": "major:회계학과",
+          "major_name": "회계학과",
+          "major_description": "회계학은 기업과 경제 주체들이 합리적인 의사결정을 할 수 있도록 정보를 제공하는 학문입니다.",
+          "slug": "회계학과",
+          "image_url": "/uploads/majors/major-회계학과.webp",
+          "fit_score": 76,
+          "like_score": 76,
           "can_score": 79,
-          "feasibility_score": 70,
+          "feasibility_score": 60,
           "field_category": "business",
-          "rationale": "[흥미 근거] '문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 낮고, 선이수과목으로 경영학과 수학이 필요합니다.",
-          "like_reason": "'문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 50/100으로 낮고, 선이수과목으로 경영학과 수학이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 분석 능력 70/100과 소득잠재력 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 회계 지식과 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 수학과 경제학이 필요합니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 분석 능력 70/100과 소득잠재력 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 회계 지식과 분석 능력이 핵심역량으로 요구됩니다.",
+          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 수학과 경제학이 필요합니다.",
           "semester_plan": [
-            "1학기: 경영학 기초 + 수학 기초",
-            "2학기: 통계학 기초",
-            "3학기: 문제 해결 기법"
+            "1학기: 회계 기초 + 수학",
+            "2학기: 경제학 + 재무 회계",
+            "3학기: 세무 회계"
           ]
         },
         {
@@ -3046,19 +3067,40 @@
           "major_description": "IT와 정보통신 기술을 기반으로 한 첨단 공학 분야",
           "slug": "컴퓨터공학과",
           "image_url": "/uploads/majors/major-컴퓨터공학과.webp",
-          "fit_score": 75,
-          "like_score": 78,
+          "fit_score": 77,
+          "like_score": 83,
           "can_score": 74,
           "feasibility_score": 65,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 알고리즘 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 70/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 알고리즘 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 70/100으로 높습니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 70/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 70/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 70/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학, 물리, 컴퓨터 프로그래밍이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 물리",
             "2학기: 프로그래밍 기초 + 알고리즘",
-            "3학기: 소프트웨어 공학"
+            "3학기: 데이터베이스 + 문제 해결"
+          ]
+        },
+        {
+          "major_id": "major:산업경영과",
+          "major_name": "산업경영과",
+          "major_description": "산업경영과는 공학지식과 과학적 경영기법을 활용하여 산업 현장의 문제를 관리하고 해결하는 학문입니다.",
+          "slug": "산업경영과",
+          "image_url": "/uploads/majors/major-산업경영과.webp",
+          "fit_score": 76,
+          "like_score": 83,
+          "can_score": 73,
+          "feasibility_score": 65,
+          "field_category": "business",
+          "rationale": "[흥미 근거] '문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 문제 해결 능력 70/100과 성장성 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심역량으로 요구됩니다. [리스크] 다만, 이 전공은 경쟁률 50/100으로 보통이며, 선이수과목으로 경영학, 수학, 통계학이 필요합니다.",
+          "like_reason": "'문제 해결 논리, 성장 발전 경력개발'을 원하신다고 하셨는데, 이 전공은 문제 해결 능력 70/100과 성장성 70/100으로 높습니다.",
+          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 분석 능력이 핵심역량으로 요구됩니다.",
+          "risk_reason": "경쟁률 50/100으로 보통이며, 선이수과목으로 경영학, 수학, 통계학이 필요합니다.",
+          "semester_plan": [
+            "1학기: 경영학 기초 + 수학",
+            "2학기: 통계학 + 문제 해결 기법",
+            "3학기: 실무 프로젝트"
           ]
         },
         {
@@ -3067,61 +3109,19 @@
           "major_description": "회계 및 세무에 관한 이론과 실무를 교육하여 세무전문가를 양성하는 전공",
           "slug": "세무회계학과",
           "image_url": "/uploads/majors/major-세무회계학과.webp",
-          "fit_score": 72,
-          "like_score": 73,
-          "can_score": 73,
-          "feasibility_score": 65,
+          "fit_score": 67,
+          "like_score": 64,
+          "can_score": 72,
+          "feasibility_score": 55,
           "field_category": "business",
-          "rationale": "[흥미 근거] '데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심 역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심 역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다.",
-          "risk_reason": "경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 분석 능력과 회계 지식이 필요합니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다. [리스크] 다만, 이 전공은 경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 분석 능력과 회계 지식이 필요합니다'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 학문엄격도 50/100, 수학집중도 50/100으로 분석적 사고를 요구합니다'",
+          "risk_reason": "'경쟁률 60/100으로 보통이며, 선이수과목으로 회계학과 세법이 필요합니다'",
           "semester_plan": [
             "1학기: 회계학 기초 + 세법 기초",
             "2학기: 경영학 기초",
-            "3학기: 세무 실무"
-          ]
-        },
-        {
-          "major_id": "major:경제학과",
-          "major_name": "경제학과",
-          "major_description": "경제학과는 경제 이론과 실제를 연구하는 학문입니다.",
-          "slug": "경제학과",
-          "image_url": "/uploads/majors/major-경제학과.webp",
-          "fit_score": 72,
-          "like_score": 73,
-          "can_score": 72,
-          "feasibility_score": 65,
-          "field_category": "social_science",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 분석 능력과 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 경제 분석과 문제 해결 능력이 요구됩니다. [리스크] 다만, 이 전공은 선이수과목으로 수학과 통계학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계'를 원한다고 하셨는데, 이 전공은 분석 능력이 핵심역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 경제 분석과 문제 해결 능력이 요구됩니다.",
-          "risk_reason": "선이수과목으로 수학과 통계학이 필요합니다.",
-          "semester_plan": [
-            "1학기: 기초 경제학 + 수학",
-            "2학기: 미시경제학 + 통계학",
-            "3학기: 거시경제학"
-          ]
-        },
-        {
-          "major_id": "major:산업공학과",
-          "major_name": "산업공학과",
-          "major_description": "산업공학은 기술과 경영학을 바탕으로 효율적이고 생산적인 시스템을 설계하고 운영하는 분야입니다.",
-          "slug": "산업공학과",
-          "image_url": "/uploads/majors/major-산업공학과.webp",
-          "fit_score": 70,
-          "like_score": 67,
-          "can_score": 71,
-          "feasibility_score": 75,
-          "field_category": "engineering",
-          "rationale": "[흥미 근거] '문제 해결'에 관심이 있다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공의 학문엄격도 70/100과 수학집중도 60/100이 분석적 사고를 요구합니다. [리스크] 이 전공은 선이수과목으로 수학, 물리, 경제학이 필요하여 진입 장벽이 있을 수 있습니다.",
-          "like_reason": "'문제 해결'에 관심이 있다고 하셨는데, 이 전공은 문제 해결 능력이 핵심역량입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공의 학문엄격도 70/100과 수학집중도 60/100이 분석적 사고를 요구합니다.",
-          "risk_reason": "이 전공은 선이수과목으로 수학, 물리, 경제학이 필요하여 진입 장벽이 있을 수 있습니다.",
-          "semester_plan": [
-            "1학기: 기초 산업공학",
-            "2학기: 생산 관리",
-            "3학기: 품질 관리"
+            "3학기: 세무 회계 심화"
           ]
         },
         {
@@ -3130,25 +3130,25 @@
           "major_description": "정보산업을 선도하는 핵심적인 학문 분야로, 소프트웨어 및 하드웨어 이론과 실무를 배웁니다.",
           "slug": "컴퓨터과",
           "image_url": "/uploads/majors/major-컴퓨터과.webp",
-          "fit_score": 68,
-          "like_score": 73,
+          "fit_score": 70,
+          "like_score": 76,
           "can_score": 66,
-          "feasibility_score": 60,
+          "feasibility_score": 65,
           "field_category": "engineering",
-          "rationale": "[흥미 근거] '데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 시스템 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 60/100으로 보통입니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 60/100으로 분석적 사고가 요구됩니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
-          "like_reason": "'데이터 분석 통계, 문제 해결 논리'를 원한다고 하셨는데, 이 전공은 문제 해결과 시스템 설계가 핵심역량으로, 학문엄격도가 70/100, 수학집중도가 60/100으로 보통입니다.",
-          "can_reason": "'분석력'이 강점이라고 하셨고, 이 전공은 문제 해결 능력이 중요하며, 수학집중도 60/100으로 분석적 사고가 요구됩니다.",
-          "risk_reason": "경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
+          "rationale": "[흥미 근거] '문제 해결 논리를 좋아한다'고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다. [적성 근거] '분석력'이 강점이라고 하셨고, 이 전공은 수학집중도 60/100으로 분석적 사고가 중요합니다. [리스크] 다만, 이 전공은 경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.",
+          "like_reason": "'문제 해결 논리를 좋아한다고 하셨는데, 이 전공은 문제 해결이 핵심역량이며, 학문엄격도가 70/100으로 높습니다.'",
+          "can_reason": "'분석력이 강점이라고 하셨고, 이 전공은 수학집중도 60/100으로 분석적 사고가 중요합니다.'",
+          "risk_reason": "'경쟁률이 60/100으로 보통이며, 선이수과목으로 수학과 정보과학이 필요합니다.'",
           "semester_plan": [
             "1학기: 기초 수학 + 정보과학",
             "2학기: 프로그래밍 기초 + 시스템 설계",
-            "3학기: 데이터베이스 관리"
+            "3학기: 데이터베이스 + 문제 해결"
           ]
         }
       ],
-      "total_candidates": 273,
+      "total_candidates": 225,
       "filtered_count": 30,
-      "search_duration_ms": 3676
+      "search_duration_ms": 8918
     },
     "premium_report": null,
     "engine_version": "v3.23.3",
@@ -3191,23 +3191,23 @@
       "has_narrative_facts": false,
       "round_answers_count": 0
     },
-    "duration_ms": 41016
+    "duration_ms": 71207
   },
   "timing": {
-    "analyzeMs": 4727,
-    "narrativeMs": 566,
+    "analyzeMs": 5714,
+    "narrativeMs": 149,
     "roundsMs": [
-      873,
-      447,
-      423
+      470,
+      492,
+      429
     ],
     "roundAnswersMs": [
-      379,
-      380,
-      397
+      415,
+      409,
+      424
     ],
-    "recommendMs": 41089,
-    "totalMs": 52309
+    "recommendMs": 71292,
+    "totalMs": 82822
   },
   "errors": []
 }

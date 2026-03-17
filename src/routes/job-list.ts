@@ -137,7 +137,7 @@ jobListRoutes.get('/job', async (c) => {
     const extraHead = [jsonLd, mobileScrollStyle].filter(Boolean).join('\n')
 
     const content = `
-      <div class="max-w-[1400px] mx-auto px-4 md:px-6">
+      <div class="max-w-[1400px] mx-auto px-2 md:px-6">
         <!-- 히어로 섹션 with 그라데이션 블렌딩 -->
         <div class="relative text-center pt-2 pb-12 mb-6 space-y-7">
           <!-- 배경 글로우 + 하단 페이드 -->

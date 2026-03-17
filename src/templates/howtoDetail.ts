@@ -764,7 +764,7 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
         .howto-user-content { overflow-x: hidden; max-width: 100%; }
       }
     </style>
-    <div class="max-w-[1400px] mx-auto px-3 sm:px-4 md:px-6 space-y-4 md:space-y-8 py-4 md:py-4 md:-mt-12">
+    <div class="max-w-[1400px] mx-auto px-2 sm:px-4 md:px-6 space-y-4 md:space-y-8 py-4 md:py-4 md:-mt-12">
       <!-- 블라인드 알림 -->
       ${isBlinded ? `
         <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-red-400">

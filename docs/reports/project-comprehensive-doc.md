@@ -1,4 +1,4 @@
-# CareerWiki 프로젝트 종합 문서
+# Careerwiki 프로젝트 종합 문서
 
 > **작성일**: 2026-03-03
 > **기준**: 프로덕션 운영 중인 main 브랜치 (commit f4ab654)
@@ -30,7 +30,7 @@
 
 ### 한 줄 요약
 
-**CareerWiki**는 한국어 진로 정보 위키 + AI 맞춤 추천 플랫폼이다.
+**Careerwiki**는 한국어 진로 정보 위키 + AI 맞춤 추천 플랫폼이다.
 
 ### 핵심 수치
 
@@ -616,7 +616,7 @@ CREATE INDEX idx_embedding_metadata_type ON embedding_metadata(entity_type, enti
 
 ### 6.1 개요
 
-CareerWiki의 핵심 차별 기능. 사용자의 성격, 가치관, 능력, 제약 조건을 파악하여 최적의 직업/전공을 추천한다.
+Careerwiki의 핵심 차별 기능. 사용자의 성격, 가치관, 능력, 제약 조건을 파악하여 최적의 직업/전공을 추천한다.
 
 **핵심 공식**: `Fit = 0.5 × Like + 0.5 × Can - Risk`
 
@@ -1203,4 +1203,4 @@ public/static/
 
 ---
 
-> **문서 끝** — CareerWiki 프로젝트 종합 문서 (2026-03-03)
+> **문서 끝** — Careerwiki 프로젝트 종합 문서 (2026-03-03)

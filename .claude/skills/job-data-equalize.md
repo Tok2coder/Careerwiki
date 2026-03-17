@@ -89,8 +89,10 @@ FROM jobs WHERE name IN ('직업명1', '직업명2') AND is_active = 1
 | 활용 기술 | `overviewAbilities.technKnow` | `string` | 공식 직업사전 또는 검증된 출처 |
 | 학력 분포 | `detailEducation.educationDistribution` | `{highSchool:string, college:string, ...}` | 고용24 재직자 조사 통계만 |
 | 전공 분포 | `detailEducation.majorDistribution` | `{natural:string, education:string, ...}` | 고용24 재직자 조사 통계만 |
-| 워라밸 | `detailWlb.wlb` | `string` | 고용24 재직자 조사 또는 검증된 출처 |
-| 사회적 기여 | `detailWlb.social` | `string` | 고용24 재직자 조사 또는 검증된 출처 |
+| 워라밸 등급 | `detailWlb.wlb` | `string` (짧은 등급: 보통미만/보통이상/좋음/매우좋음) | 고용24 재직자 조사 |
+| 워라밸 상세 | `detailWlb.wlbDetail` | `string` (인라인 각주 지원) | 검증된 출처 |
+| 사회적 기여 등급 | `detailWlb.social` | `string` (짧은 등급) | 고용24 재직자 조사 |
+| 사회적 기여 상세 | `detailWlb.socialDetail` | `string` (인라인 각주 지원) | 검증된 출처 |
 | 정규 교육과정 | `detailReady.curriculum` | `string[]` | 대학 교과과정, 양성기관 커리큘럼 공식 페이지 |
 | 채용 정보 | `detailReady.recruit` | `string[]` | 실제 채용 공고/채용 채널 |
 | 필요 훈련 | `detailReady.training` | `string[]` | 공식 양성과정, 교육기관 정보 |
@@ -124,6 +126,33 @@ FROM jobs WHERE name IN ('직업명1', '직업명2') AND is_active = 1
   "majorDistribution": {"natural":"35","education":"20"}
 }
 ```
+
+**`detailWlb`도 통째로 객체로 (등급 + 상세 설명 분리):**
+```json
+"detailWlb": {
+  "wlb": "보통이상",
+  "social": "좋음",
+  "wlbDetail": "주 5일, 일 8시간 근무가 기본이다.[1] 계절성 근무 구조이다.[2]",
+  "socialDetail": "산림교육 수혜자 1,782만 명으로 증가했다.[1] 다층적 역할을 수행한다.[2]"
+}
+```
+
+**`detailReady`도 통째로 객체로:**
+```json
+"detailReady": {
+  "curriculum": ["산림교육론 (12시간 이상)", "산림생태계 (42시간 이상)"],
+  "recruit": ["한국산림복지진흥원 채용 게시판 (fowi.or.kr)", "산림청 채용정보 게시판"]
+}
+```
+
+### 1-5. 각주 렌더링 지원 필드 (formatRichText 적용)
+
+아래 필드들은 인라인 `[N]` 각주가 자동으로 클릭 가능한 superscript + 툴팁으로 변환된다:
+- `way`, `overviewProspect.main`, `overviewSalary.sal`, `trivia`, `summary` (기존)
+- `detailWlb.wlbDetail`, `detailWlb.socialDetail` (2026-03-17 적용, wlb/social은 짧은 등급이므로 각주 불필요)
+- `overviewAbilities.technKnow` (2026-03-15 적용)
+
+**curriculum, recruit, training은 배열이므로 각주 없이 항목만 나열한다.**
 
 ---
 
