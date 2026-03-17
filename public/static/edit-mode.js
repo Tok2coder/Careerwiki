@@ -26,7 +26,48 @@ const EditMode = {
     // 이미 초기화되었으면 스킵 (중복 초기화 방지)
     if (this._initialized) return;
     this._initialized = true;
-    
+
+    // 리치 에디터 CSS 주입
+    if (!document.getElementById('rich-editor-styles')) {
+      const style = document.createElement('style');
+      style.id = 'rich-editor-styles';
+      style.textContent = `
+        .rich-editor-content:empty::before {
+          content: attr(data-placeholder);
+          color: rgba(148, 163, 184, 0.5);
+          pointer-events: none;
+        }
+        .rich-editor-cite {
+          display: inline;
+          font-size: 11px;
+          font-weight: 600;
+          color: var(--wiki-primary, #64b5f6);
+          margin: 0 1px;
+          vertical-align: super;
+          line-height: 1;
+          cursor: default;
+          background: rgba(100, 181, 246, 0.1);
+          padding: 0 2px;
+          border-radius: 2px;
+          user-select: all;
+        }
+        .rich-editor-link {
+          color: var(--wiki-primary, #64b5f6);
+          text-decoration: underline;
+          text-decoration-color: rgba(100, 181, 246, 0.4);
+          cursor: pointer;
+          user-select: all;
+          border-radius: 2px;
+          padding: 0 1px;
+        }
+        .rich-editor-link:hover {
+          background: rgba(100, 181, 246, 0.1);
+          text-decoration-color: var(--wiki-primary, #64b5f6);
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
     this.bindEvents();
     
     // URL에서 편집 모드 확인
@@ -1708,27 +1749,44 @@ const EditMode = {
         </div>
       `;
     } else if (field.type === 'textarea') {
-      const displayValue = Array.isArray(value) ? value.join(', ') : value;
-      // 출처 삽입 가능 필드: 히어로/사이드바 제외
+      const displayValue = Array.isArray(value) ? value.join(', ') : (value || '');
+      // 출처/링크 삽입 가능 필드: 히어로/사이드바 제외
       const canCite = !['name', 'summary', 'heroSummary', 'heroCategory', 'heroTags', 'categoryName', 'sidebarJobs', 'sidebarMajors', 'sidebarHowtos', 'sidebarCerts', 'sidebarOrgs', 'licenses'].includes(field.key);
-      const toolbarHtml = canCite ? `
-        <div class="flex items-center gap-2 mb-1.5">
-          <button type="button" data-insert-cite="${field.key}" class="px-2.5 py-1 text-xs font-medium text-${gradientFrom} bg-${gradientFrom}/10 hover:bg-${gradientFrom}/20 rounded-md transition flex items-center gap-1" title="커서 위치에 출처 번호를 삽입하고 출처 입력란을 추가합니다">
-            <i class="fas fa-quote-right text-[10px]"></i> 출처 삽입
-          </button>
-          <span class="text-[11px] text-wiki-muted">클릭하면 커서 위치에 [N] 자동 삽입</span>
-        </div>
-      ` : '';
-      inputHtml = `
-        ${toolbarHtml}
-        <textarea
-          id="field-${field.key}"
-          data-field-key="${field.key}"
-          rows="4"
-          placeholder="${field.label}을(를) 입력하세요"
-          class="w-full px-4 py-3 bg-wiki-bg/70 border border-wiki-border/60 rounded-xl text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 focus:border-transparent transition resize-y"
-        >${this.escapeHtml(displayValue)}</textarea>
-      `;
+      const richHtml = canCite ? this.textToRichHtml(displayValue) : this.escapeHtml(displayValue).replace(/\n/g, '<br>');
+      if (canCite) {
+        // 리치 에디터: contenteditable + 툴바
+        inputHtml = `
+          <div class="rich-editor-wrapper" data-field-key="${field.key}" data-field-type="richtext">
+            <div class="flex items-center gap-1 px-2 py-1.5 bg-wiki-bg/50 border border-wiki-border/40 border-b-0 rounded-t-xl">
+              <button type="button" data-rich-cite="${field.key}" class="px-2 py-1 text-xs font-medium text-${gradientFrom} bg-${gradientFrom}/10 hover:bg-${gradientFrom}/20 rounded transition flex items-center gap-1" title="출처 번호 삽입">
+                <i class="fas fa-quote-right text-[10px]"></i> 출처
+              </button>
+              <button type="button" data-rich-link="${field.key}" class="px-2 py-1 text-xs font-medium text-${gradientFrom} bg-${gradientFrom}/10 hover:bg-${gradientFrom}/20 rounded transition flex items-center gap-1" title="링크 삽입">
+                <i class="fas fa-link text-[10px]"></i> 링크
+              </button>
+              <span class="ml-auto text-[10px] text-wiki-muted/60">출처·링크가 실제 페이지처럼 표시됩니다</span>
+            </div>
+            <div
+              id="field-${field.key}"
+              contenteditable="true"
+              data-placeholder="${field.label}을(를) 입력하세요"
+              class="rich-editor-content w-full min-h-[100px] px-4 py-3 bg-wiki-bg/70 border border-wiki-border/60 rounded-b-xl text-white text-[15px] leading-relaxed focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 focus:border-transparent transition overflow-auto"
+              style="max-height:400px; white-space:pre-wrap; word-break:break-word;"
+            >${richHtml}</div>
+          </div>
+        `;
+      } else {
+        // 일반 textarea (히어로/사이드바)
+        inputHtml = `
+          <textarea
+            id="field-${field.key}"
+            data-field-key="${field.key}"
+            rows="4"
+            placeholder="${field.label}을(를) 입력하세요"
+            class="w-full px-4 py-3 bg-wiki-bg/70 border border-wiki-border/60 rounded-xl text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-${gradientFrom}/50 focus:border-transparent transition resize-y"
+          >${this.escapeHtml(displayValue)}</textarea>
+        `;
+      }
     } else {
       const displayValue = Array.isArray(value) ? value.join(', ') : value;
       
@@ -1970,14 +2028,15 @@ const EditMode = {
       }
     });
 
-    // "출처 삽입" 버튼 — textarea 커서 위치에 [N] 삽입 + 소스 항목 추가
-    document.querySelectorAll('[data-insert-cite]').forEach(btn => {
+    // 리치 에디터: "출처" 버튼 — 커서 위치에 스타일된 [N] 배지 삽입 + 소스 항목 추가
+    document.querySelectorAll('[data-rich-cite]').forEach(btn => {
+      btn.addEventListener('mousedown', (e) => e.preventDefault()); // focus 유지
       btn.addEventListener('click', () => {
-        const key = btn.getAttribute('data-insert-cite');
-        const textarea = document.getElementById(`field-${key}`);
+        const key = btn.getAttribute('data-rich-cite');
+        const editor = document.getElementById(`field-${key}`);
         const sourceList = document.querySelector(`[data-source-list="${key}"]`);
         const sourceContainer = document.getElementById(`source-${key}`);
-        if (!textarea || !sourceList) return;
+        if (!editor || !sourceList) return;
 
         // 소스 섹션 열기
         if (sourceContainer?.classList.contains('hidden')) {
@@ -1987,20 +2046,77 @@ const EditMode = {
         // 다음 번호 계산
         const nextNum = sourceList.querySelectorAll('.edit-source-item').length + 1;
 
-        // textarea 커서 위치에 [N] 삽입
-        const start = textarea.selectionStart || textarea.value.length;
-        const end = textarea.selectionEnd || start;
-        const insertText = `[${nextNum}]`;
-        textarea.value = textarea.value.substring(0, start) + insertText + textarea.value.substring(end);
-        // 커서를 삽입 뒤로 이동
-        const newPos = start + insertText.length;
-        textarea.selectionStart = newPos;
-        textarea.selectionEnd = newPos;
-        textarea.focus();
+        // 에디터에 focus 복원 후 배지 삽입
+        editor.focus();
+        this.restoreSelection();
+        const badge = document.createElement('sup');
+        badge.className = 'rich-editor-cite';
+        badge.contentEditable = 'false';
+        badge.dataset.cite = nextNum;
+        badge.title = `출처 [${nextNum}]`;
+        badge.textContent = `[${nextNum}]`;
+        this.insertNodeAtCursor(badge);
 
         // 소스 항목 추가
         this.addSourceItem(sourceList, key, '', '');
       });
+    });
+
+    // 리치 에디터: "링크" 버튼 — 선택 텍스트를 링크로 변환
+    document.querySelectorAll('[data-rich-link]').forEach(btn => {
+      btn.addEventListener('mousedown', (e) => e.preventDefault()); // focus 유지
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-rich-link');
+        const editor = document.getElementById(`field-${key}`);
+        if (!editor) return;
+
+        editor.focus();
+        this.restoreSelection();
+
+        const sel = window.getSelection();
+        const selectedText = sel?.toString()?.trim() || '';
+
+        const url = prompt('링크 URL을 입력하세요:', 'https://');
+        if (!url || url === 'https://') return;
+
+        const displayText = selectedText || prompt('표시할 텍스트를 입력하세요:', '') || url;
+
+        // 선택 영역 삭제
+        if (sel && sel.rangeCount > 0) {
+          const range = sel.getRangeAt(0);
+          range.deleteContents();
+        }
+
+        // 링크 노드 생성 및 삽입
+        const link = document.createElement('a');
+        link.href = url;
+        link.className = 'rich-editor-link';
+        link.contentEditable = 'false';
+        link.dataset.linkText = displayText;
+        link.dataset.linkUrl = url;
+        link.title = url;
+        link.target = '_blank';
+        link.innerHTML = `${this.escapeHtml(displayText)}<i class="fas fa-external-link-alt" style="font-size:9px;margin-left:3px;opacity:0.5;"></i>`;
+        this.insertNodeAtCursor(link);
+        // 링크 뒤에 공백 삽입 (편집 이어가기 위해)
+        const space = document.createTextNode('\u00A0');
+        this.insertNodeAtCursor(space);
+      });
+    });
+
+    // 리치 에디터: selection 저장 (툴바 버튼 클릭 전에)
+    document.querySelectorAll('.rich-editor-content').forEach(editor => {
+      // paste 시 순수 텍스트만 허용
+      editor.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const text = e.clipboardData?.getData('text/plain') || '';
+        // 줄바꿈 보존하면서 HTML로 삽입
+        const html = this.escapeHtml(text).replace(/\n/g, '<br>');
+        document.execCommand('insertHTML', false, html);
+      });
+      // selection 변경 시 저장 (툴바 클릭 전 복원용)
+      editor.addEventListener('mouseup', () => this.saveSelection());
+      editor.addEventListener('keyup', () => this.saveSelection());
     });
 
     // 태그 입력 이벤트
@@ -2782,6 +2898,10 @@ const EditMode = {
         value = this.collectChartData(element);
       } else if (fieldType === 'chartList') {
         value = this.collectChartListData(element);
+      } else if (fieldType === 'richtext') {
+        // 리치 에디터 → 평문 변환
+        const editorEl = element.querySelector('.rich-editor-content') || document.getElementById(`field-${key}`);
+        value = editorEl ? this.richHtmlToText(editorEl) : '';
       } else {
         value = element.value?.trim() || '';
       }
@@ -2991,6 +3111,10 @@ const EditMode = {
         newValue = this.collectChartData(element);
       } else if (fieldType === 'chartList') {
         newValue = this.collectChartListData(element);
+      } else if (fieldType === 'richtext') {
+        // 리치 에디터 → 평문 변환
+        const editorEl = element.querySelector('.rich-editor-content') || document.getElementById(`field-${key}`);
+        newValue = editorEl ? this.richHtmlToText(editorEl) : '';
       } else if (element.placeholder?.includes('쉼표로 구분') || key.includes('Majors') || key.includes('Subjects')) {
         // 기타 배열 필드
         newValue = element.value.trim().split(',').map(t => t.trim()).filter(t => t.length > 0);
@@ -3198,6 +3322,104 @@ const EditMode = {
   /**
    * HTML 이스케이프
    */
+  // ── Rich Text Editor 헬퍼 ──
+
+  /**
+   * 평문 → 리치 HTML 변환 (에디터 표시용)
+   * [N] → 스타일된 출처 배지, [텍스트](url) → 링크, \n → <br>
+   */
+  textToRichHtml(text) {
+    if (!text) return '';
+    let html = this.escapeHtml(text);
+    // [텍스트](url) 마크다운 링크 → <a> (footnote보다 먼저 처리)
+    html = html.replace(/\[([^\]]+?)\]\((https?:\/\/[^)]+)\)/g,
+      '<a href="$2" class="rich-editor-link" contenteditable="false" data-link-text="$1" data-link-url="$2" title="$2">$1<i class="fas fa-external-link-alt" style="font-size:9px;margin-left:3px;opacity:0.5;"></i></a>');
+    // [N] 출처 번호 → 스타일된 배지 (링크가 아닌 것만)
+    html = html.replace(/\[(\d+)\]/g,
+      '<sup class="rich-editor-cite" contenteditable="false" data-cite="$1" title="출처 [$1]">[$1]</sup>');
+    // 줄바꿈 → <br>
+    html = html.replace(/\n/g, '<br>');
+    return html;
+  },
+
+  /**
+   * 리치 HTML → 평문 변환 (저장용)
+   * 출처 배지 → [N], 링크 → [텍스트](url), <br> → \n
+   */
+  richHtmlToText(container) {
+    let result = '';
+    const walk = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        result += node.textContent;
+        return;
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+      const tag = node.tagName;
+      // 출처 배지 → [N]
+      if (tag === 'SUP' && node.classList?.contains('rich-editor-cite')) {
+        result += `[${node.dataset.cite || node.textContent.replace(/[\[\]]/g, '')}]`;
+        return;
+      }
+      // 링크 → [텍스트](url)
+      if (tag === 'A' && node.classList?.contains('rich-editor-link')) {
+        const linkText = node.dataset.linkText || node.textContent.replace(/\s*$/, '');
+        const linkUrl = node.dataset.linkUrl || node.href;
+        result += `[${linkText}](${linkUrl})`;
+        return;
+      }
+      // <br> → 줄바꿈
+      if (tag === 'BR') {
+        result += '\n';
+        return;
+      }
+      // <div>/<p> → 줄바꿈 (contenteditable이 Enter 시 생성)
+      if ((tag === 'DIV' || tag === 'P') && node !== container) {
+        if (result.length > 0 && !result.endsWith('\n')) result += '\n';
+      }
+      // 자식 순회
+      for (const child of node.childNodes) {
+        walk(child);
+      }
+    };
+    walk(container);
+    return result.replace(/\n+$/, ''); // 뒤쪽 빈 줄 제거
+  },
+
+  /**
+   * contenteditable 커서 위치에 HTML 노드 삽입
+   */
+  insertNodeAtCursor(node) {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(node);
+    // 커서를 삽입 노드 뒤로 이동
+    range.setStartAfter(node);
+    range.setEndAfter(node);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  },
+
+  /**
+   * 현재 selection 저장/복원 (툴바 버튼 클릭 시 focus 유지)
+   */
+  savedSelection: null,
+  saveSelection() {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      this.savedSelection = sel.getRangeAt(0).cloneRange();
+    }
+  },
+  restoreSelection() {
+    if (this.savedSelection) {
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(this.savedSelection);
+      this.savedSelection = null;
+    }
+  },
+
   escapeHtml(str) {
     if (!str) return '';
     return String(str)

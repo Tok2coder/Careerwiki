@@ -71,6 +71,17 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
       let safe = escapeHtml(paragraph.trim()).replace(/\n/g, '<br>')
       // 각주 위치 정규화: "했다[N]." → "했다.[N]" (마침표 뒤에 각주)
       safe = safe.replace(/(\[(\d+)\])([.。])/g, '$3$1')
+      // 마크다운 링크 [텍스트](url) → 클릭 가능한 <a> 태그로 변환
+      // ⚠️ 각주 변환보다 먼저 처리해야 [N](url) 패턴이 충돌하지 않음
+      safe = safe.replace(
+        /\[([^\]]+?)\]\((https?:\/\/[^)]+)\)/g,
+        (_match, text, url) => {
+          let domain = ''
+          try { domain = new URL(url).hostname.replace('www.', '') } catch {}
+          const domainHtml = domain ? ` <span class="text-wiki-muted text-xs">(${escapeHtml(domain)})</span>` : ''
+          return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary hover:underline">${text}</a>${domainHtml}`
+        }
+      )
       // 인라인 각주 [N] → 클릭 가능한 superscript 링크로 변환
       // footnoteMap이 있으면 로컬 번호를 전역 번호로 변환
       safe = safe.replace(
