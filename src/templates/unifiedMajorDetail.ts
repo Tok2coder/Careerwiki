@@ -811,7 +811,7 @@ const renderMajorSourcesCollapsible = (
           <i id="${iconId}" class="fas fa-chevron-down text-base transition-transform duration-200" aria-hidden="true"></i>
         </div>
       </button>
-      <div class="border-t border-wiki-border/60 hidden bg-wiki-bg/45 px-6 py-5" id="${panelId}">
+      <div class="border-t border-wiki-border/60 hidden bg-wiki-bg/45 px-4 py-5" id="${panelId}">
         ${panel || ''}
         ${userSourcesSection}
       </div>
@@ -2679,8 +2679,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     : `<div class="space-y-6" data-major-layout>${tabLayout}</div>`
 
   return `
-    <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" data-major-id="${escapeHtml(profile.id)}">
-      <section class="glass-card border px-6 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-major-hero>
+    <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" data-major-id="${escapeHtml(profile.id)}">
+      <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-major-hero>
         <div class="space-y-5">
           ${classificationData?.large_category
             ? `<a href="/major?category=${encodeURIComponent(classificationData.large_category)}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold hover:bg-wiki-primary/25 transition-colors"><i class="fas fa-layer-group"></i>${escapeHtml(classificationData.large_category)}</a>`

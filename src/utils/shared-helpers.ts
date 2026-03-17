@@ -828,7 +828,7 @@ export const renderLayout = (
         ${!isHomepage ? `${renderNav(renderUserMenu(user))}` : ''}
 
         <!-- Main Content -->
-        <main class="${isHomepage ? '' : 'mx-auto pt-20 sm:pt-12'}">
+        <main class="${isHomepage ? '' : 'mx-auto pt-20 sm:pt-12'}" style="${isHomepage ? '' : 'overflow-x: clip;'}">
             ${content}
         </main>
         ${renderNavScripts()}
