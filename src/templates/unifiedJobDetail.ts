@@ -4231,12 +4231,29 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       }
     }
     
-    // 채용 정보
+    // 채용 정보 — 소스 URL 매칭하여 링크로 렌더링
     if (detailReady.recruit && Array.isArray(detailReady.recruit) && detailReady.recruit.length > 0) {
+      // recruit 소스의 URL→hostname 매핑 (텍스트 내 도메인과 매칭용)
+      const recruitSources = userSourcesFlat.filter(s => s.fieldKey === 'detailReady.recruit' && s.url)
       const recruitList = detailReady.recruit
         .map(item => extractReadyItem(item, 'recruit'))
         .filter(text => !!safeTrim(text))
-        .map(text => `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(text)}</span></li>`)
+        .map(text => {
+          // 텍스트에서 (domain.name) 패턴 추출
+          const domainMatch = text.match(/\(([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\)/)
+          if (domainMatch) {
+            const domain = domainMatch[1].toLowerCase()
+            // 소스 URL 중 hostname이 매칭되는 것 찾기
+            const matchedSource = recruitSources.find(s => {
+              try { return new URL(s.url!).hostname.replace('www.', '').includes(domain.replace('www.', '')) } catch { return false }
+            })
+            if (matchedSource?.url) {
+              const displayText = text.replace(/\s*\([a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\)\s*$/, '')
+              return `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span><a href="${escapeHtml(matchedSource.url)}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary hover:underline">${escapeHtml(displayText)}</a> <span class="text-wiki-muted text-xs">(${escapeHtml(domain)})</span></span></li>`
+            }
+          }
+          return `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(text)}</span></li>`
+        })
         .join('')
       if (recruitList) {
         readyBlocks.push(`<div class="${readyBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">채용 정보</h3><ul class="space-y-2">${recruitList}</ul></div>`)
@@ -5080,13 +5097,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
                 footnoteRef.textContent = '[' + sourceId + ']';
                 
                 // flex justify-between로 멀어지는 문제를 피하기 위해 텍스트 컨테이너에 부착
+                // ⚠️ firstElementChild 사용 금지 — 이전 badge <sup>을 가리켜서 중첩됨
                 const attachTarget =
                   heading.querySelector('.section-title-text') ||
                   heading.querySelector('.content-heading-text') ||
                   heading.querySelector('.flex.items-center') ||
-                  heading.firstElementChild ||
                   heading;
-                
+
                 attachTarget.appendChild(footnoteRef);
                 
                 // 클릭 이벤트 등록 - 데이터 출처 섹션으로 이동
