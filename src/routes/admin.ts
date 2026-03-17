@@ -15,7 +15,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution, getAiUsageDistribution } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -308,7 +308,7 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
     const role = c.req.query('role') || 'all'
     const status = c.req.query('status') || 'all'
 
-    const [result, attrStats] = await Promise.all([
+    const [result, attrStats, aiUsageDist] = await Promise.all([
       getUsers(c.env.DB, {
         page,
         perPage,
@@ -316,7 +316,8 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
         role: role as any,
         status: status as any
       }),
-      getUserAttributionStats(c.env.DB)
+      getUserAttributionStats(c.env.DB),
+      getAiUsageDistribution(c.env.DB),
     ])
 
     return c.html(renderAdminUsers({
@@ -327,7 +328,8 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
       perPage: result.perPage,
       totalPages: result.totalPages,
       filters: { search, role, status },
-      attributionStats: attrStats
+      attributionStats: attrStats,
+      aiUsageDistribution: aiUsageDist,
     }))
   } catch (error) {
     return c.text('사용자 목록을 불러오는데 실패했습니다.', 500)

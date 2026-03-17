@@ -162,50 +162,60 @@ export async function getUsers(db: D1Database, params: UserListParams): Promise<
   const page = params.page || 1
   const perPage = params.perPage || 20
   const offset = (page - 1) * perPage
-  
+
   let whereClause = '1=1'
   const queryParams: any[] = []
-  
+
   // 검색
   if (params.search) {
     whereClause += ' AND (email LIKE ? OR name LIKE ? OR username LIKE ?)'
     queryParams.push(`%${params.search}%`, `%${params.search}%`, `%${params.search}%`)
   }
-  
+
   // 역할 필터
   if (params.role && params.role !== 'all') {
     whereClause += ' AND role = ?'
     queryParams.push(params.role)
   }
-  
+
   // 상태 필터
   if (params.status === 'banned') {
     whereClause += ' AND is_banned = 1'
   } else if (params.status === 'active') {
     whereClause += ' AND is_banned = 0'
   }
-  
+
   // 총 개수 조회
   const countResult = await db.prepare(`
     SELECT COUNT(*) as total FROM users WHERE ${whereClause}
   `).bind(...queryParams).first<{ total: number }>()
-  
+
   const total = countResult?.total || 0
-  
-  // 사용자 목록 조회
+
+  // 사용자 목록 조회 (AI 추천 사용 횟수 포함)
   const result = await db.prepare(`
-    SELECT 
-      id, google_id as googleId, provider, provider_user_id as providerUserId,
-      email, name, username, picture_url as pictureUrl,
-      role, edit_count as editCount, comment_count as commentCount,
-      is_banned as isBanned, ban_reason as banReason, banned_until as bannedUntil,
-      last_login_at as lastLoginAt, created_at as createdAt
-    FROM users 
-    WHERE ${whereClause}
-    ORDER BY created_at DESC
+    SELECT
+      u.id, u.google_id as googleId, u.provider, u.provider_user_id as providerUserId,
+      u.email, u.name, u.username, u.picture_url as pictureUrl,
+      u.role, u.edit_count as editCount, u.comment_count as commentCount,
+      u.is_banned as isBanned, u.ban_reason as banReason, u.banned_until as bannedUntil,
+      u.last_login_at as lastLoginAt, u.created_at as createdAt,
+      COALESCE(ai.jobRecs, 0) as aiJobCount,
+      COALESCE(ai.majorRecs, 0) as aiMajorCount
+    FROM users u
+    LEFT JOIN (
+      SELECT CAST(user_id AS INTEGER) as uid,
+        SUM(CASE WHEN analysis_type = 'job' THEN 1 ELSE 0 END) as jobRecs,
+        SUM(CASE WHEN analysis_type = 'major' THEN 1 ELSE 0 END) as majorRecs
+      FROM ai_analysis_requests
+      WHERE status = 'completed' AND parent_request_id IS NULL
+      GROUP BY CAST(user_id AS INTEGER)
+    ) ai ON ai.uid = u.id
+    WHERE ${whereClause.replace(/\b(email|name|username|role|is_banned)\b/g, 'u.$1')}
+    ORDER BY u.created_at DESC
     LIMIT ? OFFSET ?
   `).bind(...queryParams, perPage, offset).all()
-  
+
   return {
     users: (result.results || []).map(u => ({
       ...u,
@@ -215,6 +225,35 @@ export async function getUsers(db: D1Database, params: UserListParams): Promise<
     page,
     perPage,
     totalPages: Math.ceil(total / perPage)
+  }
+}
+
+// AI 추천 사용 분포 통계
+export interface AiUsageDistribution {
+  jobOnly: number
+  majorOnly: number
+  both: number
+  none: number
+}
+
+export async function getAiUsageDistribution(db: D1Database): Promise<AiUsageDistribution> {
+  try {
+    const res = await db.prepare(`
+      SELECT
+        SUM(CASE WHEN jobCnt > 0 AND majorCnt = 0 THEN 1 ELSE 0 END) as jobOnly,
+        SUM(CASE WHEN jobCnt = 0 AND majorCnt > 0 THEN 1 ELSE 0 END) as majorOnly,
+        SUM(CASE WHEN jobCnt > 0 AND majorCnt > 0 THEN 1 ELSE 0 END) as both,
+        SUM(CASE WHEN jobCnt = 0 AND majorCnt = 0 THEN 1 ELSE 0 END) as none
+      FROM (
+        SELECT u.id,
+          COALESCE((SELECT COUNT(*) FROM ai_analysis_requests WHERE CAST(user_id AS INTEGER) = u.id AND analysis_type = 'job' AND status = 'completed' AND parent_request_id IS NULL), 0) as jobCnt,
+          COALESCE((SELECT COUNT(*) FROM ai_analysis_requests WHERE CAST(user_id AS INTEGER) = u.id AND analysis_type = 'major' AND status = 'completed' AND parent_request_id IS NULL), 0) as majorCnt
+        FROM users u
+      )
+    `).first<AiUsageDistribution>()
+    return res || { jobOnly: 0, majorOnly: 0, both: 0, none: 0 }
+  } catch {
+    return { jobOnly: 0, majorOnly: 0, both: 0, none: 0 }
   }
 }
 

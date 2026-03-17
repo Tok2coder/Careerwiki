@@ -3,7 +3,7 @@
  */
 
 import { renderAdminLayout } from './adminLayout'
-import type { UserAttributionStats, VisitorRecord, EditorRevisionRecord, VisitorPageView, RefererDistribution } from '../../services/adminService'
+import type { UserAttributionStats, VisitorRecord, EditorRevisionRecord, VisitorPageView, RefererDistribution, AiUsageDistribution } from '../../services/adminService'
 
 export interface UserRecord {
   id: number
@@ -18,6 +18,8 @@ export interface UserRecord {
   bannedUntil: number | null
   lastLoginAt: number | null
   createdAt: number
+  aiJobCount?: number
+  aiMajorCount?: number
 }
 
 export interface AdminUsersProps {
@@ -52,6 +54,8 @@ export interface AdminUsersProps {
   visitorDetailIp?: string
   // 유입경로 분포
   refererDistribution?: RefererDistribution[]
+  // AI 추천 사용 분포
+  aiUsageDistribution?: AiUsageDistribution
 }
 
 const CHANNEL_LABELS: Record<string, string> = {
@@ -155,6 +159,52 @@ function renderRefererChart(dist: RefererDistribution[]): string {
         data: {
           labels: ${JSON.stringify(labels)},
           datasets: [{ data: ${JSON.stringify(data)}, backgroundColor: ${JSON.stringify(chartColors.slice(0, dist.length))}, borderWidth: 1 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    })();
+    </script>
+  `
+}
+
+function renderAiUsageChart(dist: AiUsageDistribution): string {
+  const total = (dist.jobOnly || 0) + (dist.majorOnly || 0) + (dist.both || 0) + (dist.none || 0)
+  if (total === 0) return ''
+  const used = (dist.jobOnly || 0) + (dist.majorOnly || 0) + (dist.both || 0)
+  const labels = ['직업만', '전공만', '둘 다', '미사용']
+  const data = [dist.jobOnly || 0, dist.majorOnly || 0, dist.both || 0, dist.none || 0]
+  const colors = ['#60a5fa', '#a78bfa', '#34d399', '#475569']
+
+  return `
+    <div class="glass-card rounded-xl p-4 mb-6">
+      <h4 class="text-sm font-medium text-slate-400 mb-3">
+        <i class="fas fa-robot text-emerald-400 mr-1.5"></i>AI 추천 사용 현황
+        <span class="text-slate-500 ml-1">(${used}/${total}명 사용, ${total > 0 ? ((used / total) * 100).toFixed(0) : 0}%)</span>
+      </h4>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
+        <div class="h-48 flex justify-center"><canvas id="aiUsageChart"></canvas></div>
+        <div class="space-y-2">
+          ${labels.map((label, i) => {
+            const pct = total > 0 ? ((data[i] / total) * 100).toFixed(1) : '0'
+            return `<div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:${colors[i]}"></span>
+              <span class="text-slate-300 flex-1">${label}</span>
+              <span class="text-white font-medium">${data[i]}명</span>
+              <span class="text-slate-500 text-xs w-14 text-right">${pct}%</span>
+            </div>`
+          }).join('')}
+        </div>
+      </div>
+    </div>
+    <script>
+    (() => {
+      const el = document.getElementById('aiUsageChart');
+      if (!el) return;
+      new Chart(el, {
+        type: 'doughnut',
+        data: {
+          labels: ${JSON.stringify(labels)},
+          datasets: [{ data: ${JSON.stringify(data)}, backgroundColor: ${JSON.stringify(colors)}, borderWidth: 1 }]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
@@ -521,7 +571,7 @@ function renderVisitorDetailTab(props: AdminUsersProps): string {
 }
 
 export function renderAdminUsers(props: AdminUsersProps): string {
-  const { activeTab, users, total, page, perPage, totalPages, filters, attributionStats } = props
+  const { activeTab, users, total, page, perPage, totalPages, filters, attributionStats, aiUsageDistribution } = props
 
   // 탭 내비게이션
   const tabs = `
@@ -568,8 +618,9 @@ export function renderAdminUsers(props: AdminUsersProps): string {
   }
 
   const content = tabs + `
-    <!-- 유입경로/관심/커리어 통계 -->
+    <!-- 유입경로/관심/커리어 통계 + AI 추천 사용 -->
     ${attributionStats ? renderAttributionCharts(attributionStats) : ''}
+    ${aiUsageDistribution ? renderAiUsageChart(aiUsageDistribution) : ''}
 
     <!-- 필터 바 -->
     <div class="glass-card rounded-xl p-4 mb-6">
@@ -634,6 +685,7 @@ export function renderAdminUsers(props: AdminUsersProps): string {
               <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">역할</th>
               <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">편집</th>
               <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">댓글</th>
+              <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">AI 추천</th>
               <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap">상태</th>
               <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap hidden md:table-cell">마지막 로그인</th>
               <th class="px-2 sm:px-4 py-3 text-center text-slate-400 font-medium whitespace-nowrap hidden md:table-cell">가입일</th>
@@ -668,6 +720,17 @@ export function renderAdminUsers(props: AdminUsersProps): string {
                 </td>
                 <td class="px-2 sm:px-4 py-3 text-center text-white whitespace-nowrap">${user.editCount}</td>
                 <td class="px-2 sm:px-4 py-3 text-center text-white whitespace-nowrap">${user.commentCount}</td>
+                <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
+                  ${(() => {
+                    const j = Number(user.aiJobCount) || 0
+                    const m = Number(user.aiMajorCount) || 0
+                    if (j === 0 && m === 0) return '<span class="text-slate-500">-</span>'
+                    const badges: string[] = []
+                    if (j > 0) badges.push(`<span class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 rounded text-xs">직업 ${j}</span>`)
+                    if (m > 0) badges.push(`<span class="px-1.5 py-0.5 bg-purple-500/20 text-purple-300 rounded text-xs">전공 ${m}</span>`)
+                    return badges.join(' ')
+                  })()}
+                </td>
                 <td class="px-2 sm:px-4 py-3 text-center whitespace-nowrap">
                   ${user.isBanned ? `
                     <span class="px-1.5 sm:px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs whitespace-nowrap">
@@ -713,7 +776,7 @@ export function renderAdminUsers(props: AdminUsersProps): string {
               </tr>
             `).join('') : `
               <tr>
-                <td colspan="8" class="px-4 py-12 text-center text-slate-400">
+                <td colspan="9" class="px-4 py-12 text-center text-slate-400">
                   <i class="fas fa-search text-3xl mb-2"></i>
                   <p>조건에 맞는 사용자가 없습니다.</p>
                 </td>
