@@ -2138,7 +2138,7 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
   }
 
   return `
-    <section class="glass-card border px-4 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-wiki-bg/30" data-job-sidebar-section>
+    <section class="glass-card mobile-borderless border px-4 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-wiki-bg/30" data-job-sidebar-section>
       <div class="flex items-center gap-2.5 pb-2 border-b border-wiki-border/30 md:border-0 md:pb-0">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-wiki-secondary/15 text-wiki-secondary">
           <i class="fas ${icon} text-sm" aria-hidden="true"></i>

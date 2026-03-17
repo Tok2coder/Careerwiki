@@ -224,7 +224,7 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
   }
 
   const { anchorId, telemetryScope, telemetryComponent, dataSources } = options
-  const className = `glass-card border px-4 py-6 md:px-6 rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
+  const className = `glass-card mobile-borderless border px-4 py-6 md:px-6 rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
   const attributeParts: string[] = [`class="${className}"`, 'data-cw-detail-card']
 
   if (anchorId) {
@@ -480,7 +480,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
   return `
     <section
       id="${tabsetId}"
-      class="glass-card border p-0 rounded-2xl overflow-hidden"
+      class="glass-card mobile-borderless border p-0 rounded-2xl overflow-hidden"
       data-cw-tabset
       data-tabset-id="${tabsetId}"
       data-entity-type="${entityType}"
