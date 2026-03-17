@@ -4244,7 +4244,7 @@ analyzerRoutes.post('/add-context', async (c) => {
   if (!authUser?.id) {
     return c.json({ error: 'UNAUTHORIZED', message: 'Login required' }, 401)
   }
-  const userId = authUser.id
+  const userId = String(authUser.id)
 
   try {
     const { request_id, additional_text } = await c.req.json<{
@@ -5266,7 +5266,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
 
   // 인증된 사용자 정보 가져오기 (있으면)
   const authUser = c.get('user') as { id: number } | undefined
-  const userId = authUser?.id || null
+  const userId = authUser?.id?.toString() || null
 
   const { session_id, draft_id, topK = 800, judgeTopN = 20, debug = false, skipReport = false } = payload
   
@@ -8169,7 +8169,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
   const payload = await c.req.json<any>()
 
   const authUser = c.get('user') as { id: number } | undefined
-  const userId = authUser?.id || null
+  const userId = authUser?.id?.toString() || null
 
   const { session_id, draft_id, topK = 800, judgeTopN = 20, debug = false, skipReport = false } = payload
 
