@@ -956,7 +956,7 @@ const renderTags = (tagList: any[]): string => {
   }
 
   return `
-    <section class="glass-card p-6 md:p-7 rounded-3xl border border-wiki-border/70 bg-gradient-to-br from-wiki-bg/90 via-wiki-bg/65 to-wiki-bg/40">
+    <section class="glass-card px-4 py-6 md:p-7 rounded-3xl border border-wiki-border/70 bg-gradient-to-br from-wiki-bg/90 via-wiki-bg/65 to-wiki-bg/40">
       <header class="flex items-center gap-3 mb-4">
         <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/30 via-purple-500/30 to-blue-400/20 text-white">
           <i class="fas fa-tags text-lg"></i>
@@ -2399,7 +2399,9 @@ const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; t
     'overviewWork.main', 'overviewWork.physicalAct', 'overviewWork.mentalAct',
     'overviewProspect.main',
     'overviewAbilities.abilityList', 'overviewAbilities.aptitudeList', 'overviewAbilities.interestList',
+    'overviewAbilities.technKnow',
     'overviewSalary.sal',
+    'detailWlb.wlb', 'detailWlb.social',
     'trivia',
     // 과정 탭 (되는 방법)
     'way',
@@ -3123,7 +3125,7 @@ const renderQuickStats = (
 
   return `
     <section
-      class="glass-card p-6 md:p-7 rounded-3xl border border-wiki-border/70 bg-gradient-to-br from-wiki-bg/90 via-wiki-bg/65 to-wiki-bg/40 space-y-6"
+      class="glass-card px-4 py-6 md:p-7 rounded-3xl border border-wiki-border/70 bg-gradient-to-br from-wiki-bg/90 via-wiki-bg/65 to-wiki-bg/40 space-y-6"
       aria-label="핵심 지표"
       data-cw-telemetry-component="job-quick-stats"
       data-cw-telemetry-scope="job-quick-stats"
@@ -3780,7 +3782,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   // 활용 기술 (overviewAbilities.technKnow)
   const technKnow = overviewAbilities?.technKnow
   if (typeof technKnow === 'string' && technKnow?.trim()) {
-    abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading">활용 기술</h3>${formatRichText(technKnow)}</div>`)
+    abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading">활용 기술</h3>${formatRichText(technKnow, 'overviewAbilities.technKnow', footnoteMap, sourceTextMap)}</div>`)
   }
 
   const trainingMetaCards: string[] = []
@@ -4042,7 +4044,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           </div>
           <div class="flex-1 min-w-0">
             <h3 class="text-sm font-semibold text-purple-400 uppercase tracking-wide mb-2">워라밸 지수</h3>
-            <p class="content-text text-white text-sm leading-relaxed">${escapeHtml(wlb)}</p>
+            <div class="content-text text-white text-sm leading-relaxed">${formatRichText(wlb, 'detailWlb.wlb', footnoteMap, sourceTextMap)}</div>
           </div>
         </div>
       `)
@@ -4057,7 +4059,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           </div>
           <div class="flex-1 min-w-0">
             <h3 class="text-sm font-semibold text-green-400 uppercase tracking-wide mb-2">사회적 기여도</h3>
-            <p class="content-text text-white text-sm leading-relaxed">${escapeHtml(social)}</p>
+            <div class="content-text text-white text-sm leading-relaxed">${formatRichText(social, 'detailWlb.social', footnoteMap, sourceTextMap)}</div>
           </div>
         </div>
       `)
@@ -4917,8 +4919,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
   return `
-    <div class="max-w-[1400px] mx-auto px-4 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
-      <section class="glass-card border px-6 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
+    <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
+      <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">
             ${categoryHtml || (profile.category?.name ? `<span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-wiki-primary"><i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>${escapeHtml(profile.category.name)}</span>` : '')}
