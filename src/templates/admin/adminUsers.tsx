@@ -117,7 +117,12 @@ function renderAttributionCharts(stats: UserAttributionStats): string {
 }
 
 function renderRefererChart(dist: RefererDistribution[]): string {
-  if (!dist || dist.length === 0) return ''
+  if (!dist || dist.length === 0) return `
+    <div class="glass-card rounded-xl p-4 mb-6">
+      <h4 class="text-sm font-medium text-slate-400 mb-3"><i class="fas fa-chart-pie text-teal-400 mr-1.5"></i>유입 경로 분포</h4>
+      <p class="text-slate-500 text-sm py-8 text-center">아직 유입경로 데이터가 수집되지 않았습니다. 방문자가 페이지를 조회하면 자동으로 집계됩니다.</p>
+    </div>
+  `
   const chartColors = ['#60a5fa', '#34d399', '#fcd34d', '#f87171', '#a78bfa', '#38bdf8', '#f97316', '#ec4899', '#6ee7b7', '#94a3b8']
   const labels = dist.map(d => d.referer)
   const data = dist.map(d => d.count)
