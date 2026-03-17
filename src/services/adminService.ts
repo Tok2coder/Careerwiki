@@ -945,6 +945,8 @@ export interface VisitorRecord {
   firstVisit: string
   lastVisit: string
   editCount: number
+  pageViews: number
+  topReferer: string | null
 }
 
 export interface VisitorListResult {
@@ -977,11 +979,18 @@ export async function getVisitorList(db: D1Database, params: {
           COUNT(DISTINCT uv.stat_date) as visitDays,
           MIN(uv.stat_date) as firstVisit,
           MAX(uv.stat_date) as lastVisit,
-          COALESCE(pr.cnt, 0) as editCount
+          COALESCE(pr.cnt, 0) as editCount,
+          COALESCE(pv.pvCount, 0) as pageViews,
+          pv.topReferer
         FROM unique_visitor_daily uv
         LEFT JOIN (
           SELECT ip_hash, COUNT(*) as cnt FROM page_revisions WHERE ip_hash IS NOT NULL GROUP BY ip_hash
         ) pr ON pr.ip_hash = uv.ip_hash
+        LEFT JOIN (
+          SELECT ip_hash, COUNT(*) as pvCount,
+            (SELECT referer FROM visitor_page_views v2 WHERE v2.ip_hash = visitor_page_views.ip_hash AND v2.referer IS NOT NULL ORDER BY v2.created_at DESC LIMIT 1) as topReferer
+          FROM visitor_page_views GROUP BY ip_hash
+        ) pv ON pv.ip_hash = uv.ip_hash
         GROUP BY uv.ip_hash
         ORDER BY ${orderBy}
         LIMIT ? OFFSET ?
@@ -997,6 +1006,40 @@ export async function getVisitorList(db: D1Database, params: {
     }
   } catch {
     return { visitors: [], total: 0, page, perPage, totalPages: 0 }
+  }
+}
+
+// 방문자 상세: 페이지뷰 이력
+export interface VisitorPageView {
+  pageType: string
+  pageId: string
+  pageName: string | null
+  referer: string | null
+  createdAt: string
+}
+
+export async function getVisitorPageViews(db: D1Database, ipHash: string, limit: number = 50): Promise<VisitorPageView[]> {
+  try {
+    const res = await db.prepare(`
+      SELECT
+        vpv.page_type as pageType,
+        vpv.page_id as pageId,
+        CASE vpv.page_type
+          WHEN 'job' THEN (SELECT name FROM jobs WHERE slug = vpv.page_id)
+          WHEN 'major' THEN (SELECT name FROM majors WHERE slug = vpv.page_id)
+          WHEN 'howto' THEN (SELECT title FROM pages WHERE id = CAST(vpv.page_id AS INTEGER))
+          ELSE vpv.page_id
+        END as pageName,
+        vpv.referer,
+        vpv.created_at as createdAt
+      FROM visitor_page_views vpv
+      WHERE vpv.ip_hash = ?
+      ORDER BY vpv.created_at DESC
+      LIMIT ?
+    `).bind(ipHash, limit).all<VisitorPageView>()
+    return res.results || []
+  } catch {
+    return []
   }
 }
 

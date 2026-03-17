@@ -15,7 +15,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -238,8 +238,21 @@ adminRoutes.get('/admin/feedback/:id', requireAdmin, async (c) => {
 // 관리자 - 사용자 관리 페이지
 adminRoutes.get('/admin/users', requireAdmin, async (c) => {
   try {
-    const tab = (c.req.query('tab') || 'users') as 'users' | 'visitors' | 'revisions'
+    const tab = (c.req.query('tab') || 'users') as 'users' | 'visitors' | 'revisions' | 'visitor-detail'
     const page = parseInt(c.req.query('page') || '1')
+
+    // 방문자 상세 탭
+    if (tab === 'visitor-detail') {
+      const ipHash = c.req.query('ip') || ''
+      const pageViews = await getVisitorPageViews(c.env.DB, ipHash, 100)
+      return c.html(renderAdminUsers({
+        activeTab: 'visitor-detail',
+        users: [], total: 0, page: 1, perPage: 20, totalPages: 0,
+        filters: { search: '', role: 'all', status: 'all' },
+        visitorDetail: pageViews,
+        visitorDetailIp: ipHash,
+      }))
+    }
 
     // 편집 이력 탭
     if (tab === 'revisions') {

@@ -174,6 +174,7 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
       userId: user?.id,
       ip: c.req.header('cf-connecting-ip') || 'unknown',
       role: user?.role,
+      referer: c.req.header('referer') || undefined,
     }).catch(() => {})
   )
 

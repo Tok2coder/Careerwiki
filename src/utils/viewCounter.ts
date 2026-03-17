@@ -23,6 +23,32 @@ async function recordUniqueVisitor(db: D1Database, ip: string): Promise<void> {
 }
 
 /**
+ * Referer URL에서 도메인만 추출 (개인정보 보호 — 쿼리스트링 제거)
+ */
+function extractRefererDomain(referer?: string): string | null {
+  if (!referer) return null
+  try {
+    const url = new URL(referer)
+    return url.hostname
+  } catch {
+    return referer.slice(0, 100) // URL 파싱 실패 시 앞부분만
+  }
+}
+
+/**
+ * 방문 페이지뷰 상세 기록 (visitor_page_views 테이블)
+ */
+async function recordPageView(db: D1Database, ip: string, pageType: string, pageId: string, referer?: string): Promise<void> {
+  const ipH = hashIp(ip)
+  const ref = extractRefererDomain(referer)
+  try {
+    await db.prepare(
+      `INSERT INTO visitor_page_views (ip_hash, page_type, page_id, referer) VALUES (?, ?, ?, ?)`
+    ).bind(ipH, pageType, pageId, ref).run()
+  } catch { /* 테이블 없으면 무시 */ }
+}
+
+/**
  * IP를 간단한 해시로 변환 (개인정보 보호)
  */
 function hashIp(ip: string): string {
@@ -46,6 +72,7 @@ interface ViewContext {
   userId?: number
   ip: string
   role?: string  // 'admin' 이면 통계에서 제외
+  referer?: string  // HTTP Referer 헤더
 }
 
 /**
@@ -69,6 +96,7 @@ export async function trackPageView(ctx: ViewContext & { pageId: number }): Prom
       DO UPDATE SET total_views = total_views + 1
     `).run(),
     recordUniqueVisitor(ctx.db, ctx.ip),
+    recordPageView(ctx.db, ctx.ip, 'howto', String(ctx.pageId), ctx.referer),
   ])
   return true
 }
@@ -94,6 +122,7 @@ export async function trackJobView(ctx: ViewContext & { slug: string }): Promise
       DO UPDATE SET total_views = total_views + 1
     `).run(),
     recordUniqueVisitor(ctx.db, ctx.ip),
+    recordPageView(ctx.db, ctx.ip, 'job', ctx.slug, ctx.referer),
   ])
   return true
 }
@@ -119,6 +148,7 @@ export async function trackMajorView(ctx: ViewContext & { slug: string }): Promi
       DO UPDATE SET total_views = total_views + 1
     `).run(),
     recordUniqueVisitor(ctx.db, ctx.ip),
+    recordPageView(ctx.db, ctx.ip, 'major', ctx.slug, ctx.referer),
   ])
   return true
 }
@@ -146,6 +176,7 @@ export async function trackShareView(ctx: ViewContext & { token: string }): Prom
       DO UPDATE SET total_views = total_views + 1
     `).run(),
     recordUniqueVisitor(ctx.db, ctx.ip),
+    recordPageView(ctx.db, ctx.ip, 'share', ctx.token, ctx.referer),
   ])
   return true
 }

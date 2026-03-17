@@ -3,7 +3,7 @@
  */
 
 import { renderAdminLayout } from './adminLayout'
-import type { UserAttributionStats, VisitorRecord, EditorRevisionRecord } from '../../services/adminService'
+import type { UserAttributionStats, VisitorRecord, EditorRevisionRecord, VisitorPageView } from '../../services/adminService'
 
 export interface UserRecord {
   id: number
@@ -21,7 +21,7 @@ export interface UserRecord {
 }
 
 export interface AdminUsersProps {
-  activeTab: 'users' | 'visitors' | 'revisions'
+  activeTab: 'users' | 'visitors' | 'revisions' | 'visitor-detail'
   users: UserRecord[]
   total: number
   page: number
@@ -47,6 +47,9 @@ export interface AdminUsersProps {
   editorLabel?: string  // "사용자 #5" or "IP abc123"
   editorId?: string
   editorIpHash?: string
+  // 방문자 상세
+  visitorDetail?: VisitorPageView[]
+  visitorDetailIp?: string
 }
 
 const CHANNEL_LABELS: Record<string, string> = {
@@ -139,9 +142,10 @@ function renderVisitorsTab(props: AdminUsersProps): string {
             <tr>
               <th class="px-4 py-3 text-left text-slate-400 font-medium">IP 해시</th>
               <th class="px-4 py-3 text-center text-slate-400 font-medium">방문 일수</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium">첫 방문</th>
+              <th class="px-4 py-3 text-center text-slate-400 font-medium">페이지뷰</th>
+              <th class="px-4 py-3 text-left text-slate-400 font-medium">유입 경로</th>
               <th class="px-4 py-3 text-center text-slate-400 font-medium">마지막 방문</th>
-              <th class="px-4 py-3 text-center text-slate-400 font-medium">편집 수</th>
+              <th class="px-4 py-3 text-center text-slate-400 font-medium">편집</th>
               <th class="px-4 py-3 text-center text-slate-400 font-medium">작업</th>
             </tr>
           </thead>
@@ -149,28 +153,31 @@ function renderVisitorsTab(props: AdminUsersProps): string {
             ${visitors.length > 0 ? visitors.map(v => `
               <tr class="border-t border-slate-700/50 hover:bg-slate-700/20">
                 <td class="px-4 py-3">
-                  <code class="text-sm text-blue-300 bg-slate-800 px-2 py-0.5 rounded">${escapeHtml(String(v.ipHash))}</code>
+                  <a href="?tab=visitor-detail&ip=${encodeURIComponent(String(v.ipHash))}" class="hover:underline">
+                    <code class="text-sm text-blue-300 bg-slate-800 px-2 py-0.5 rounded">${escapeHtml(String(v.ipHash))}</code>
+                  </a>
                 </td>
                 <td class="px-4 py-3 text-center text-white">${v.visitDays}일</td>
-                <td class="px-4 py-3 text-center text-sm text-slate-400">${v.firstVisit}</td>
+                <td class="px-4 py-3 text-center text-white">${Number(v.pageViews) || 0}</td>
+                <td class="px-4 py-3 text-sm text-slate-400 max-w-[180px] truncate">
+                  ${v.topReferer ? `<i class="fas fa-external-link-alt text-xs mr-1 text-slate-500"></i>${escapeHtml(String(v.topReferer))}` : '<span class="text-slate-600">직접 방문</span>'}
+                </td>
                 <td class="px-4 py-3 text-center text-sm text-slate-400">${v.lastVisit}</td>
                 <td class="px-4 py-3 text-center">
                   ${Number(v.editCount) > 0
-                    ? `<span class="text-amber-400 font-medium">${v.editCount}</span>`
+                    ? `<a href="?tab=revisions&ip=${encodeURIComponent(String(v.ipHash))}" class="text-amber-400 font-medium hover:underline">${v.editCount}</a>`
                     : `<span class="text-slate-500">0</span>`}
                 </td>
                 <td class="px-4 py-3 text-center">
-                  ${Number(v.editCount) > 0 ? `
-                    <a href="?tab=revisions&ip=${encodeURIComponent(String(v.ipHash))}"
-                       class="px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs text-white transition-colors">
-                      <i class="fas fa-history mr-1"></i>편집 이력
-                    </a>
-                  ` : '-'}
+                  <a href="?tab=visitor-detail&ip=${encodeURIComponent(String(v.ipHash))}"
+                     class="px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs text-white transition-colors">
+                    <i class="fas fa-eye mr-1"></i>상세
+                  </a>
                 </td>
               </tr>
             `).join('') : `
               <tr>
-                <td colspan="6" class="px-4 py-12 text-center text-slate-400">
+                <td colspan="7" class="px-4 py-12 text-center text-slate-400">
                   <i class="fas fa-ghost text-3xl mb-2"></i>
                   <p>방문자 데이터가 없습니다. 데이터 수집이 시작되면 여기에 표시됩니다.</p>
                 </td>
@@ -382,6 +389,85 @@ function renderRevisionsTab(props: AdminUsersProps): string {
   `
 }
 
+function renderVisitorDetailTab(props: AdminUsersProps): string {
+  const { visitorDetail = [], visitorDetailIp = '' } = props
+
+  const pageTypeLabel: Record<string, string> = {
+    job: '직업', major: '전공', howto: 'HowTo', share: '공유'
+  }
+  const pageTypeBadge: Record<string, string> = {
+    job: 'bg-blue-500/20 text-blue-300',
+    major: 'bg-purple-500/20 text-purple-300',
+    howto: 'bg-emerald-500/20 text-emerald-300',
+    share: 'bg-amber-500/20 text-amber-300',
+  }
+
+  return `
+    <div class="glass-card rounded-xl p-4 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-white">
+            <i class="fas fa-eye text-teal-400 mr-2"></i>
+            방문자 <code class="text-sm text-blue-300 bg-slate-800 px-2 py-0.5 rounded">${escapeHtml(visitorDetailIp)}</code> 활동 내역
+            <span class="text-slate-400 font-normal">(최근 ${visitorDetail.length}건)</span>
+          </h3>
+          <p class="text-sm text-slate-400 mt-1">
+            <a href="?tab=visitors" class="text-blue-400 hover:text-blue-300">
+              <i class="fas fa-arrow-left mr-1"></i>방문자 목록으로
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    ${visitorDetail.length > 0 ? `
+      <div class="glass-card rounded-xl overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="px-4 py-3 text-left text-slate-400 font-medium">유형</th>
+                <th class="px-4 py-3 text-left text-slate-400 font-medium">페이지</th>
+                <th class="px-4 py-3 text-left text-slate-400 font-medium">유입 경로</th>
+                <th class="px-4 py-3 text-center text-slate-400 font-medium">시간</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${visitorDetail.map(pv => {
+                const url = pv.pageType === 'job' ? `/job/${pv.pageId}`
+                  : pv.pageType === 'major' ? `/major/${pv.pageId}`
+                  : pv.pageType === 'howto' ? `/howto/${pv.pageId}`
+                  : '#'
+                return `
+                  <tr class="border-t border-slate-700/50 hover:bg-slate-700/20">
+                    <td class="px-4 py-3">
+                      <span class="px-2 py-0.5 rounded text-xs ${pageTypeBadge[pv.pageType] || 'bg-slate-500/20 text-slate-300'}">${pageTypeLabel[pv.pageType] || pv.pageType}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <a href="${url}" class="text-blue-400 hover:text-blue-300 text-sm" target="_blank">
+                        ${escapeHtml(String(pv.pageName || pv.pageId))}
+                      </a>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-slate-400 max-w-[200px] truncate">
+                      ${pv.referer ? escapeHtml(String(pv.referer)) : '<span class="text-slate-600">직접 방문</span>'}
+                    </td>
+                    <td class="px-4 py-3 text-center text-xs text-slate-400 whitespace-nowrap">${pv.createdAt}</td>
+                  </tr>
+                `
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ` : `
+      <div class="glass-card rounded-xl p-12 text-center text-slate-400">
+        <i class="fas fa-hourglass text-3xl mb-2"></i>
+        <p>아직 페이지뷰 데이터가 없습니다. 데이터 수집이 시작되면 여기에 표시됩니다.</p>
+      </div>
+    `}
+  `
+}
+
 export function renderAdminUsers(props: AdminUsersProps): string {
   const { activeTab, users, total, page, perPage, totalPages, filters, attributionStats } = props
 
@@ -418,6 +504,14 @@ export function renderAdminUsers(props: AdminUsersProps): string {
       title: '사용자 관리',
       currentPath: '/admin/users',
       children: tabs + renderRevisionsTab(props)
+    })
+  }
+
+  if (activeTab === 'visitor-detail') {
+    return renderAdminLayout({
+      title: '사용자 관리',
+      currentPath: '/admin/users',
+      children: tabs + renderVisitorDetailTab(props)
     })
   }
 

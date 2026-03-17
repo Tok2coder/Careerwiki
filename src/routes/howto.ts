@@ -3340,6 +3340,7 @@ howtoRoutes.get('/:slug', async (c) => {
       userId: htUser?.id,
       ip: c.req.header('cf-connecting-ip') || 'unknown',
       role: htUser?.role,
+      referer: c.req.header('referer') || undefined,
     }).catch(() => false)
     
     // 북마크 수 조회 (user_bookmarks 테이블 사용)

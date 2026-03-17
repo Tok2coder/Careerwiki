@@ -62,6 +62,7 @@ shareRoutes.get('/share/:token', async (c) => {
         userId: shareUser?.id,
         ip: c.req.header('cf-connecting-ip') || 'unknown',
         role: shareUser?.role,
+        referer: c.req.header('referer') || undefined,
       }).catch(() => {})
     )
 
