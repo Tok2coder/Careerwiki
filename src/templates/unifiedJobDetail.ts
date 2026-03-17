@@ -2501,7 +2501,9 @@ const renderSourcesCollapsible = (
     'detailReady.recruit': '채용 정보', 'detailReady.training': '필요 교육/훈련',
     'detailReady.researchList': '진로 탐색 활동', 'sidebarJobs': '관련 직업',
     'way': '되는 방법', 'overviewSalary.sal': '임금 정보',
-    'overviewProspect.main': '전망 정보', 'sidebarMajors': '관련 학과', 'sidebarCerts': '추천 자격증'
+    'overviewProspect.main': '전망 정보', 'sidebarMajors': '관련 학과', 'sidebarCerts': '추천 자격증',
+    'detailWlb.wlbDetail': '워라밸 지수 상세', 'detailWlb.socialDetail': '사회적 평가 상세',
+    'overviewWork.mentalAct': '정신활동'
   }
   const fieldSectionMap: Record<string, { tab: string; section: string }> = {
     'summary': { tab: 'overview', section: 'overview' },
@@ -2509,6 +2511,9 @@ const renderSourcesCollapsible = (
     'overviewSalary.sal': { tab: 'overview', section: 'overview-임금-정보' },
     'overviewProspect.main': { tab: 'overview', section: 'overview-커리어-전망' },
     'overviewAbilities.abilityList': { tab: 'overview', section: 'overview-적성-및-흥미' },
+    'overviewAbilities.technKnow': { tab: 'overview', section: 'overview-적성-및-흥미' },
+    'detailWlb.wlbDetail': { tab: 'overview', section: 'overview-워라밸-지수' },
+    'detailWlb.socialDetail': { tab: 'overview', section: 'overview-워라밸-지수' },
     'way': { tab: 'details', section: 'details-직업-준비하기' },
     'detailReady.curriculum': { tab: 'details', section: 'details-직업-준비하기' },
     'detailReady.recruit': { tab: 'details', section: 'details-직업-준비하기' },
@@ -5054,8 +5059,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             const fieldKey = source.fieldKey;
             const mapping = fieldMap[fieldKey];
             if (!mapping) return;
-            // 소스 텍스트에 [N]이 있으면 본문에 이미 인라인 각주가 있으므로 heading에 추가하지 않음
-            if (/^\\[\\d+\\]/.test(source.text)) return;
+            // 이미 본문에 인라인 각주(user-fnref-N)가 렌더링되어 있으면 heading badge 불필요
+            if (document.getElementById('user-fnref-' + sourceId)) return;
             
             const fieldLabel = mapping[0];
             
