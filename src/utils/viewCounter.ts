@@ -11,6 +11,18 @@ const BOT_UA_PATTERN = /bot|crawl|spider|slack|facebook|twitter|kakao|discord|te
 const VIEW_DEDUP_TTL = 900 // 15분 (초)
 
 /**
+ * 순방문자 기록 (일별 IP 해시 기반, INSERT OR IGNORE로 중복 무시)
+ */
+async function recordUniqueVisitor(db: D1Database, ip: string): Promise<void> {
+  const ipH = hashIp(ip)
+  try {
+    await db.prepare(
+      `INSERT OR IGNORE INTO unique_visitor_daily (stat_date, ip_hash) VALUES (date('now'), ?)`
+    ).bind(ipH).run()
+  } catch { /* 테이블 없으면 무시 */ }
+}
+
+/**
  * IP를 간단한 해시로 변환 (개인정보 보호)
  */
 function hashIp(ip: string): string {
@@ -56,6 +68,7 @@ export async function trackPageView(ctx: ViewContext & { pageId: number }): Prom
       ON CONFLICT (stat_date, entity_type)
       DO UPDATE SET total_views = total_views + 1
     `).run(),
+    recordUniqueVisitor(ctx.db, ctx.ip),
   ])
   return true
 }
@@ -80,6 +93,7 @@ export async function trackJobView(ctx: ViewContext & { slug: string }): Promise
       ON CONFLICT (stat_date, entity_type)
       DO UPDATE SET total_views = total_views + 1
     `).run(),
+    recordUniqueVisitor(ctx.db, ctx.ip),
   ])
   return true
 }
@@ -104,6 +118,7 @@ export async function trackMajorView(ctx: ViewContext & { slug: string }): Promi
       ON CONFLICT (stat_date, entity_type)
       DO UPDATE SET total_views = total_views + 1
     `).run(),
+    recordUniqueVisitor(ctx.db, ctx.ip),
   ])
   return true
 }
@@ -130,6 +145,7 @@ export async function trackShareView(ctx: ViewContext & { token: string }): Prom
       ON CONFLICT (stat_date, entity_type)
       DO UPDATE SET total_views = total_views + 1
     `).run(),
+    recordUniqueVisitor(ctx.db, ctx.ip),
   ])
   return true
 }

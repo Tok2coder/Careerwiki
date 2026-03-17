@@ -15,7 +15,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -29,8 +29,8 @@ adminRoutes.get('/admin', requireAdmin, async (c) => {
   try {
     const db = c.env.DB
 
-    // KPI + 차트 + 최근 활동 병렬 조회
-    const [kpiStats, chartData, recentEdits, recentUsers] = await Promise.all([
+    // KPI + 차트 + 최근 활동 + UV 통계 병렬 조회
+    const [kpiStats, chartData, recentEdits, recentUsers, uvStats] = await Promise.all([
       // KPI 카드 데이터
       (async () => {
         const [jobs, majors, users, cViews, cAnalyses] = await Promise.all([
@@ -92,14 +92,18 @@ adminRoutes.get('/admin', requireAdmin, async (c) => {
         FROM users
         ORDER BY created_at DESC
         LIMIT 5
-      `).all()
+      `).all(),
+
+      // 순방문자 통계
+      getUniqueVisitorStats(db)
     ])
 
     return c.html(renderAdminDashboard({
       stats: kpiStats,
       recentEdits: (recentEdits.results || []) as any[],
       recentUsers: (recentUsers.results || []) as any[],
-      chartData
+      chartData,
+      uvStats
     }))
   } catch (error) {
     console.error('Admin dashboard error:', error)

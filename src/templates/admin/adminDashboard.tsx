@@ -6,7 +6,7 @@
  */
 
 import { renderAdminLayout } from './adminLayout'
-import type { DashboardChartData } from '../../services/adminService'
+import type { DashboardChartData, UniqueVisitorStats } from '../../services/adminService'
 
 export interface DashboardStats {
   totalUsers: number
@@ -41,6 +41,7 @@ export interface AdminDashboardProps {
   recentEdits: RecentEdit[]
   recentUsers: RecentUser[]
   chartData?: DashboardChartData
+  uvStats?: UniqueVisitorStats
 }
 
 const FIELD_LABELS: Record<string, string> = {
@@ -69,7 +70,7 @@ function getChangeTypeBadge(changeType: string | null): string {
 }
 
 export function renderAdminDashboard(props: AdminDashboardProps): string {
-  const { stats, recentEdits, recentUsers, chartData } = props
+  const { stats, recentEdits, recentUsers, chartData, uvStats } = props
 
   const content = `
     <!-- KPI 카드 (클릭 시 해당 탭 이동) -->
@@ -134,6 +135,71 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
         </div>
       </a>
     </div>
+
+    <!-- 순방문자 (UV) -->
+    ${uvStats ? `
+    <div class="glass-card rounded-xl p-4 sm:p-5 mb-6 sm:mb-8">
+      <h3 class="text-lg font-semibold flex items-center gap-2 mb-4">
+        <i class="fas fa-fingerprint text-teal-400"></i>
+        순방문자 (UV)
+        <span class="text-xs font-normal text-slate-400 ml-1">IP 기반 중복 제거</span>
+      </h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+          <p class="text-xl sm:text-2xl font-bold text-white">${uvStats.today.toLocaleString()}</p>
+          <p class="text-xs text-slate-400 mt-1">오늘 (DAU)</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+          <p class="text-xl sm:text-2xl font-bold text-white">${uvStats.yesterday.toLocaleString()}</p>
+          <p class="text-xs text-slate-400 mt-1">어제</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+          <p class="text-xl sm:text-2xl font-bold text-white">${uvStats.last7days.toLocaleString()}</p>
+          <p class="text-xs text-slate-400 mt-1">7일 (WAU)</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+          <p class="text-xl sm:text-2xl font-bold text-teal-400">${uvStats.last30days.toLocaleString()}</p>
+          <p class="text-xs text-slate-400 mt-1">30일 (MAU)</p>
+        </div>
+      </div>
+      ${uvStats.dailyTrend.length > 1 ? `
+      <div class="h-32 sm:h-40">
+        <canvas id="uvChart"></canvas>
+      </div>
+      <script>
+        (() => {
+          const ctx = document.getElementById('uvChart');
+          if (!ctx) return;
+          const labels = ${JSON.stringify(uvStats.dailyTrend.map(d => d.date.slice(5)))};
+          const data = ${JSON.stringify(uvStats.dailyTrend.map(d => d.count))};
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels,
+              datasets: [{
+                label: '순방문자',
+                data,
+                backgroundColor: 'rgba(45, 212, 191, 0.3)',
+                borderColor: 'rgb(45, 212, 191)',
+                borderWidth: 1,
+                borderRadius: 3,
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ticks: { color: '#94a3b8', font: { size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 15 }, grid: { display: false } },
+                y: { beginAtZero: true, ticks: { color: '#94a3b8', stepSize: 1 }, grid: { color: 'rgba(148,163,184,0.08)' } }
+              }
+            }
+          });
+        })();
+      </script>
+      ` : '<p class="text-center text-slate-500 text-sm py-4">데이터 수집 중... (페이지 조회 시 자동 기록됩니다)</p>'}
+    </div>
+    ` : ''}
 
     <!-- 조회수/분석 추이 차트 -->
     <div class="glass-card rounded-xl p-4 sm:p-5 mb-6 sm:mb-8">

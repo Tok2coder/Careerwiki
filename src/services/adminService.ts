@@ -899,6 +899,42 @@ export interface DashboardChartData {
   }
 }
 
+/** 순방문자(UV) 통계 */
+export interface UniqueVisitorStats {
+  today: number
+  yesterday: number
+  last7days: number
+  last30days: number
+  dailyTrend: Array<{ date: string; count: number }>
+}
+
+export async function getUniqueVisitorStats(db: D1Database): Promise<UniqueVisitorStats> {
+  try {
+    const [today, yesterday, last7, last30, trend] = await Promise.all([
+      db.prepare(`SELECT COUNT(*) as c FROM unique_visitor_daily WHERE stat_date = date('now')`).first<{ c: number }>(),
+      db.prepare(`SELECT COUNT(*) as c FROM unique_visitor_daily WHERE stat_date = date('now', '-1 day')`).first<{ c: number }>(),
+      db.prepare(`SELECT COUNT(DISTINCT ip_hash) as c FROM unique_visitor_daily WHERE stat_date >= date('now', '-7 days')`).first<{ c: number }>(),
+      db.prepare(`SELECT COUNT(DISTINCT ip_hash) as c FROM unique_visitor_daily WHERE stat_date >= date('now', '-30 days')`).first<{ c: number }>(),
+      db.prepare(`
+        SELECT stat_date as date, COUNT(*) as count
+        FROM unique_visitor_daily
+        WHERE stat_date >= date('now', '-30 days')
+        GROUP BY stat_date
+        ORDER BY stat_date
+      `).all<{ date: string; count: number }>(),
+    ])
+    return {
+      today: today?.c || 0,
+      yesterday: yesterday?.c || 0,
+      last7days: last7?.c || 0,
+      last30days: last30?.c || 0,
+      dailyTrend: trend.results || [],
+    }
+  } catch {
+    return { today: 0, yesterday: 0, last7days: 0, last30days: 0, dailyTrend: [] }
+  }
+}
+
 export async function getDashboardChartData(db: D1Database, days: number = 7): Promise<DashboardChartData> {
   try {
     const [viewResult, analysisResult] = await Promise.all([
