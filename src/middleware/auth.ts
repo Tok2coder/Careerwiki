@@ -197,22 +197,47 @@ export const requireAdmin = requireRole('admin')
  */
 export const requireExpert = requireRole('expert')
 
+/** IP를 간단한 해시로 변환 (viewCounter.ts와 동일) */
+function hashIp(ip: string): string {
+  let hash = 0
+  for (let i = 0; i < ip.length; i++) {
+    const char = ip.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash |= 0
+  }
+  return Math.abs(hash).toString(36)
+}
+
 /**
  * 직업/전공 페이지 편집 권한 체크
- * 
- * Phase 4: 익명 편집 허용
- * - 로그인 사용자: 모든 역할 허용
- * - 익명 사용자: 비밀번호 검증은 API 엔드포인트에서 처리
+ *
+ * - 로그인 사용자: 차단(is_banned) 여부 확인
+ * - 익명 사용자: IP 해시 차단 여부 확인
+ * - 비밀번호 검증은 API 엔드포인트에서 처리
  */
 export const requireJobMajorEdit = createMiddleware<{ Bindings: CloudflareBindings }>(
   async (c, next) => {
     const user = c.get('user')
-    
-    // 익명 사용자도 허용 (비밀번호 검증은 API 엔드포인트에서 처리)
-    if (user) {
-    } else {
+
+    // 로그인 사용자 차단 확인
+    if (user && (user as any).is_banned === 1) {
+      return c.json({ error: 'BANNED', message: '차단된 계정입니다. 편집이 제한됩니다.' }, 403)
     }
-    
+
+    // 비로그인 사용자 IP 차단 확인
+    if (!user) {
+      const ip = c.req.header('cf-connecting-ip') || c.req.header('x-forwarded-for') || 'unknown'
+      const ipH = hashIp(ip)
+      try {
+        const banned = await c.env.DB.prepare(
+          `SELECT 1 FROM banned_ips WHERE ip_hash = ? AND (banned_until IS NULL OR banned_until > datetime('now'))`
+        ).bind(ipH).first()
+        if (banned) {
+          return c.json({ error: 'IP_BANNED', message: '편집이 제한된 IP입니다.' }, 403)
+        }
+      } catch { /* 테이블 없으면 무시 */ }
+    }
+
     return next()
   }
 )

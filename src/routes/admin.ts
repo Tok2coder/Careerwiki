@@ -15,7 +15,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution, getAiUsageDistribution } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution, getAiUsageDistribution, banIp, unbanIp } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -822,6 +822,32 @@ adminRoutes.post('/api/admin/bulk-revert', requireAdmin, async (c) => {
     return c.json({ success: true, revertedCount })
   } catch (error) {
     return c.json({ success: false, error: 'Bulk revert failed' }, 500)
+  }
+})
+
+// 관리자 API - IP 차단
+adminRoutes.post('/api/admin/ban-ip', requireAdmin, async (c) => {
+  try {
+    const user = c.get('user')
+    if (!user) return c.json({ success: false, error: 'Unauthorized' }, 401)
+    const body = await c.req.json<{ ipHash: string; reason?: string }>()
+    if (!body.ipHash) return c.json({ success: false, error: 'ipHash required' }, 400)
+    const success = await banIp(c.env.DB, body.ipHash, body.reason || null, user.id)
+    return c.json({ success })
+  } catch (error) {
+    return c.json({ success: false, error: 'Failed to ban IP' }, 500)
+  }
+})
+
+// 관리자 API - IP 차단 해제
+adminRoutes.post('/api/admin/unban-ip', requireAdmin, async (c) => {
+  try {
+    const body = await c.req.json<{ ipHash: string }>()
+    if (!body.ipHash) return c.json({ success: false, error: 'ipHash required' }, 400)
+    const success = await unbanIp(c.env.DB, body.ipHash)
+    return c.json({ success })
+  } catch (error) {
+    return c.json({ success: false, error: 'Failed to unban IP' }, 500)
   }
 })
 

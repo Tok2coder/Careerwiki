@@ -1330,6 +1330,50 @@ export async function getContentViewStats(db: D1Database, limit: number = 20): P
   }
 }
 
+// =============================================================================
+// IP 차단 관리
+// =============================================================================
 
+export async function banIp(db: D1Database, ipHash: string, reason: string | null, bannedBy: number): Promise<boolean> {
+  try {
+    await db.prepare(`
+      INSERT OR REPLACE INTO banned_ips (ip_hash, reason, banned_by, banned_at)
+      VALUES (?, ?, ?, datetime('now'))
+    `).bind(ipHash, reason, bannedBy).run()
+    return true
+  } catch {
+    return false
+  }
+}
 
+export async function unbanIp(db: D1Database, ipHash: string): Promise<boolean> {
+  try {
+    await db.prepare(`DELETE FROM banned_ips WHERE ip_hash = ?`).bind(ipHash).run()
+    return true
+  } catch {
+    return false
+  }
+}
+
+export async function isIpBanned(db: D1Database, ipHash: string): Promise<boolean> {
+  try {
+    const row = await db.prepare(`
+      SELECT 1 FROM banned_ips WHERE ip_hash = ? AND (banned_until IS NULL OR banned_until > datetime('now'))
+    `).bind(ipHash).first()
+    return !!row
+  } catch {
+    return false
+  }
+}
+
+export async function getBannedIps(db: D1Database): Promise<Array<{ ipHash: string; reason: string | null; bannedAt: string }>> {
+  try {
+    const res = await db.prepare(`
+      SELECT ip_hash as ipHash, reason, banned_at as bannedAt FROM banned_ips ORDER BY banned_at DESC
+    `).all<{ ipHash: string; reason: string | null; bannedAt: string }>()
+    return res.results || []
+  } catch {
+    return []
+  }
+}
 

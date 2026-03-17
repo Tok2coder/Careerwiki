@@ -271,10 +271,18 @@ function renderVisitorsTab(props: AdminUsersProps): string {
                     : `<span class="text-slate-500">0</span>`}
                 </td>
                 <td class="px-4 py-3 text-center">
-                  <a href="?tab=visitor-detail&ip=${encodeURIComponent(String(v.ipHash))}"
-                     class="px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs text-white transition-colors">
-                    <i class="fas fa-eye mr-1"></i>상세
-                  </a>
+                  <div class="flex items-center justify-center gap-1.5">
+                    <a href="?tab=visitor-detail&ip=${encodeURIComponent(String(v.ipHash))}"
+                       class="px-2 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs text-white transition-colors"
+                       title="상세 보기">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <button onclick="banIpAction('${escapeHtml(String(v.ipHash))}')"
+                       class="px-2 py-1 bg-red-600 hover:bg-red-500 rounded text-xs text-white transition-colors"
+                       title="IP 편집 차단">
+                      <i class="fas fa-ban"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
             `).join('') : `
@@ -314,6 +322,47 @@ function renderVisitorsTab(props: AdminUsersProps): string {
         ` : ''}
       </div>
     ` : ''}
+
+    <script>
+    async function banIpAction(ipHash) {
+      const reason = prompt('차단 사유를 입력하세요 (선택):');
+      if (reason === null) return; // 취소
+      try {
+        const res = await fetch('/api/admin/ban-ip', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ipHash, reason: reason || '트롤 편집' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('IP가 편집 차단되었습니다: ' + ipHash);
+        } else {
+          alert('차단 실패: ' + (data.error || '알 수 없는 오류'));
+        }
+      } catch (e) {
+        alert('오류 발생: ' + e.message);
+      }
+    }
+    async function unbanIpAction(ipHash) {
+      if (!confirm(ipHash + ' IP 차단을 해제할까요?')) return;
+      try {
+        const res = await fetch('/api/admin/unban-ip', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ipHash })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('차단이 해제되었습니다.');
+          location.reload();
+        } else {
+          alert('해제 실패: ' + (data.error || '알 수 없는 오류'));
+        }
+      } catch (e) {
+        alert('오류 발생: ' + e.message);
+      }
+    }
+    </script>
   `
 }
 
