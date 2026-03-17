@@ -2138,7 +2138,7 @@ const renderSidebarSection = (title: string, icon: string, body: string): string
   }
 
   return `
-    <section class="glass-card mobile-borderless border px-4 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-wiki-bg/30" data-job-sidebar-section>
+    <section class="glass-card border px-4 py-4 md:px-5 md:py-5 rounded-lg md:rounded-2xl space-y-4 bg-wiki-bg/30" data-job-sidebar-section>
       <div class="flex items-center gap-2.5 pb-2 border-b border-wiki-border/30 md:border-0 md:pb-0">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-wiki-secondary/15 text-wiki-secondary">
           <i class="fas ${icon} text-sm" aria-hidden="true"></i>
@@ -2401,7 +2401,7 @@ const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; t
     'overviewAbilities.abilityList', 'overviewAbilities.aptitudeList', 'overviewAbilities.interestList',
     'overviewAbilities.technKnow',
     'overviewSalary.sal',
-    'detailWlb.wlb', 'detailWlb.social',
+    'detailWlb.wlb', 'detailWlb.social', 'detailWlb.wlbDetail', 'detailWlb.socialDetail',
     'trivia',
     // 과정 탭 (되는 방법)
     'way',
@@ -4032,10 +4032,12 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const detailWlb = profile.detailWlb
   const wlb = detailWlb?.wlb
   const social = detailWlb?.social
+  const wlbDetail = (detailWlb as any)?.wlbDetail
+  const socialDetail = (detailWlb as any)?.socialDetail
   if (wlb || social) {
     const wlbCards = []
-    
-    // 워라밸 카드
+
+    // 워라밸 카드 (짧은 등급만)
     if (wlb) {
       wlbCards.push(`
         <div class="flex items-center gap-4 p-5 rounded-2xl border border-purple-500/30 bg-purple-500/5">
@@ -4044,13 +4046,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           </div>
           <div class="flex-1 min-w-0">
             <h3 class="text-sm font-semibold text-purple-400 uppercase tracking-wide mb-2">워라밸 지수</h3>
-            <div class="content-text text-white text-sm leading-relaxed">${formatRichText(wlb, 'detailWlb.wlb', footnoteMap, sourceTextMap)}</div>
+            <p class="content-text text-white text-sm leading-relaxed">${escapeHtml(wlb)}</p>
           </div>
         </div>
       `)
     }
-    
-    // 사회적 기여도 카드
+
+    // 사회적 기여도 카드 (짧은 등급만)
     if (social) {
       wlbCards.push(`
         <div class="flex items-center gap-4 p-5 rounded-2xl border border-green-500/30 bg-green-500/5">
@@ -4059,14 +4061,27 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           </div>
           <div class="flex-1 min-w-0">
             <h3 class="text-sm font-semibold text-green-400 uppercase tracking-wide mb-2">사회적 기여도</h3>
-            <div class="content-text text-white text-sm leading-relaxed">${formatRichText(social, 'detailWlb.social', footnoteMap, sourceTextMap)}</div>
+            <p class="content-text text-white text-sm leading-relaxed">${escapeHtml(social)}</p>
           </div>
         </div>
       `)
     }
-    
-    // 그리드 레이아웃: 한 줄에 두 개 (큰 화면), 작은 화면에서는 세로로
-    const gridLayout = `<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">${wlbCards.join('')}</div>`
+
+    // 그리드 레이아웃 + 상세 설명 (wlbDetail/socialDetail)
+    let gridLayout = `<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">${wlbCards.join('')}</div>`
+
+    // 상세 설명이 있으면 카드 아래에 표시
+    const detailBlocks: string[] = []
+    if (typeof wlbDetail === 'string' && wlbDetail.trim()) {
+      detailBlocks.push(`<div><h4 class="text-xs font-semibold text-purple-400 uppercase tracking-wide mb-2">워라밸 상세</h4>${formatRichText(wlbDetail, 'detailWlb.wlbDetail', footnoteMap, sourceTextMap)}</div>`)
+    }
+    if (typeof socialDetail === 'string' && socialDetail.trim()) {
+      detailBlocks.push(`<div><h4 class="text-xs font-semibold text-green-400 uppercase tracking-wide mb-2">사회적 기여 상세</h4>${formatRichText(socialDetail, 'detailWlb.socialDetail', footnoteMap, sourceTextMap)}</div>`)
+    }
+    if (detailBlocks.length > 0) {
+      gridLayout += `<div class="mt-4 space-y-4">${detailBlocks.join('')}</div>`
+    }
+
     // 워라밸/사회적 평가는 주로 고용24에서 제공
     const wlbSources = getFieldSources(p => p?.detailWorkLifeBalance?.wlb || p?.detailWorkLifeBalance?.social)
     pushOverviewCard('워라밸 & 사회적 평가', 'fa-heart', gridLayout, wlbSources.length > 0 ? wlbSources : ['GOYONG24'])
