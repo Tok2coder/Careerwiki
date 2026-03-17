@@ -480,7 +480,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
   return `
     <section
       id="${tabsetId}"
-      class="glass-card mobile-borderless border p-0 rounded-2xl overflow-hidden"
+      class="glass-card border p-0 rounded-2xl overflow-hidden"
       data-cw-tabset
       data-tabset-id="${tabsetId}"
       data-entity-type="${entityType}"
