@@ -61,6 +61,27 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
     .replace(/\u00A0/g, ' ')          // Non-breaking space → 일반 공백
     .replace(/[^\S\n]+/g, ' ')        // 연속 공백 정리 (줄바꿈 보존)
 
+  // 중복 각주 자동 제거: 같은 [N]이 여러 번 나오면 마지막 것만 남김
+  // 규칙: "같은 각주 번호는 본문에 1회만, 마지막에만"
+  const fnDedup = /\[(\d+)\](?!\()/g  // 마크다운 링크 [N](url) 제외
+  const fnPositions = new Map<string, number[]>()
+  let fnMatch: RegExpExecArray | null
+  while ((fnMatch = fnDedup.exec(cleanedValue)) !== null) {
+    const num = fnMatch[1]
+    if (!fnPositions.has(num)) fnPositions.set(num, [])
+    fnPositions.get(num)!.push(fnMatch.index)
+  }
+  for (const [num, positions] of fnPositions) {
+    if (positions.length > 1) {
+      // 뒤에서부터 제거해야 인덱스 안 깨짐 (마지막 것은 유지)
+      const toRemove = positions.slice(0, -1).reverse()
+      for (const pos of toRemove) {
+        const marker = `[${num}]`
+        cleanedValue = cleanedValue.substring(0, pos) + cleanedValue.substring(pos + marker.length)
+      }
+    }
+  }
+
   // 필드별 로컬 번호 → 전역 번호 매핑
   const fieldMap = (footnoteMap && fieldKey) ? footnoteMap[fieldKey] : null
 
