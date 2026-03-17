@@ -424,7 +424,12 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
       const deepMerge = (target: any, source: any): any => {
         for (const key of Object.keys(source)) {
           if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-            target[key] = deepMerge(target[key] || {}, source[key])
+            // target[key]가 객체가 아니면 (문자열, 숫자, null 등) 덮어쓰기
+            if (target[key] && typeof target[key] === 'object' && !Array.isArray(target[key])) {
+              target[key] = deepMerge(target[key], source[key])
+            } else {
+              target[key] = source[key]
+            }
           } else {
             target[key] = source[key]
           }
