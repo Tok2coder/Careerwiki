@@ -26,7 +26,7 @@ import { FontSize } from './extensions/font-size'
 import { CustomBlockquote } from './extensions/custom-blockquote'
 import { CustomBulletList } from './extensions/custom-bullet-list'
 import { createSlashMenu, type SlashMenuItem } from './ui/slash-menu'
-import { uploadImage } from './utils/upload'
+import { uploadImage, validateImageFile } from './utils/upload'
 
 export interface EditorOptions {
   container: string | HTMLElement
@@ -275,7 +275,7 @@ export class HowToEditorManager {
         heading: { levels: [1, 2, 3] },
         blockquote: false, // CustomBlockquote 사용
         bulletList: false, // CustomBulletList 사용 (자동 변환 비활성화)
-        history: {
+        undoRedo: {
           depth: 100,
           newGroupDelay: 500,
         },
@@ -1431,12 +1431,17 @@ export class HowToEditorManager {
   }
 
   private async handleImageUpload(file: File) {
+    const validation = validateImageFile(file)
+    if (!validation.valid) {
+      this.onErrorCallback?.(new Error(validation.error))
+      return
+    }
     try {
       const url = await uploadImage(file)
       if (url) {
-        this.editor?.chain().focus().setImage({ 
-          src: url, 
-          alt: file.name 
+        this.editor?.chain().focus().setImage({
+          src: url,
+          alt: file.name
         }).run()
       }
     } catch (error) {

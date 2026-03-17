@@ -150,8 +150,12 @@ export function convertTiptapToHtml(doc: any): string {
         const bqClass = `blockquote-align-${bqAlign} blockquote-size-${bqSize}`
         return '<blockquote class="' + bqClass + '" data-align="' + bqAlign + '" data-size="' + bqSize + '">' + (node.content?.map(processNode).join('') || '') + '</blockquote>'
 
-      case 'codeBlock':
-        return '<pre><code>' + escapeHtml(node.content?.[0]?.text || '') + '</code></pre>'
+      case 'codeBlock': {
+        const lang = node.attrs?.language
+        const langAttr = lang ? ' class="language-' + lang + '"' : ''
+        const codeText = node.content?.map((n: any) => n.text || '').join('') || ''
+        return '<pre><code' + langAttr + '>' + escapeHtml(codeText) + '</code></pre>'
+      }
 
       case 'horizontalRule':
         return '<hr>'
@@ -179,13 +183,19 @@ export function convertTiptapToHtml(doc: any): string {
       case 'tableRow':
         return '<tr>' + (node.content?.map(processNode).join('') || '') + '</tr>'
 
-      case 'tableCell':
+      case 'tableCell': {
+        const colspan = node.attrs?.colspan > 1 ? ' colspan="' + node.attrs.colspan + '"' : ''
+        const rowspan = node.attrs?.rowspan > 1 ? ' rowspan="' + node.attrs.rowspan + '"' : ''
         const cellBg = node.attrs?.backgroundColor
         const cellStyle = cellBg ? ' style="background-color:' + cellBg + '"' : ''
-        return '<td' + cellStyle + '>' + (node.content?.map(processNode).join('') || '') + '</td>'
+        return '<td' + colspan + rowspan + cellStyle + '>' + (node.content?.map(processNode).join('') || '') + '</td>'
+      }
 
-      case 'tableHeader':
-        return '<th>' + (node.content?.map(processNode).join('') || '') + '</th>'
+      case 'tableHeader': {
+        const thColspan = node.attrs?.colspan > 1 ? ' colspan="' + node.attrs.colspan + '"' : ''
+        const thRowspan = node.attrs?.rowspan > 1 ? ' rowspan="' + node.attrs.rowspan + '"' : ''
+        return '<th' + thColspan + thRowspan + '>' + (node.content?.map(processNode).join('') || '') + '</th>'
+      }
 
       case 'checkpointBox':
         return '<div class="checkpoint-box">' + (node.content?.map(processNode).join('') || '') + '</div>'
@@ -208,9 +218,12 @@ export function convertTiptapToHtml(doc: any): string {
       case 'careerListItem':
         return '<div class="career-list-item">' + (node.content?.map(processNode).join('') || '') + '</div>'
 
-      case 'footnote':
+      case 'footnote': {
         const fnId = node.attrs?.id || 1
-        return '<sup class="footnote-ref"><a href="#fn-' + fnId + '" id="fnref-' + fnId + '" data-footnote-id="' + fnId + '">' + fnId + '</a></sup>'
+        const fnText = escapeHtml(node.attrs?.text || '')
+        const fnUrl = node.attrs?.url ? ' data-footnote-url="' + escapeHtml(node.attrs.url) + '"' : ''
+        return '<sup class="footnote-ref" data-footnote="" data-footnote-id="' + fnId + '" data-footnote-text="' + fnText + '"' + fnUrl + '><a href="#fn-' + fnId + '" id="fnref-' + fnId + '" data-footnote-id="' + fnId + '">' + fnId + '</a></sup>'
+      }
 
       case 'hardBreak':
         return '<br>'
@@ -242,7 +255,7 @@ howtoEditorRoutes.post('/api/howto', requireAuth, async (c) => {
     try {
       body = await c.req.json()
     } catch {
-      return c.json({ success: false, error: 'invalid json body' }, 400)
+      return c.json({ success: false, error: '요청 형식이 올바르지 않습니다' }, 400)
     }
 
     const title = typeof body.title === 'string' ? body.title.trim() : ''
@@ -251,16 +264,16 @@ howtoEditorRoutes.post('/api/howto', requireAuth, async (c) => {
     const content = typeof body.content === 'string' ? body.content : ''
 
     if (!title) {
-      return c.json({ success: false, error: 'title is required' }, 400)
+      return c.json({ success: false, error: '제목을 입력해주세요' }, 400)
     }
     if (!slug) {
-      return c.json({ success: false, error: 'slug is required' }, 400)
+      return c.json({ success: false, error: 'URL 슬러그를 입력해주세요' }, 400)
     }
     if (!summary) {
-      return c.json({ success: false, error: 'summary is required' }, 400)
+      return c.json({ success: false, error: '요약을 입력해주세요' }, 400)
     }
     if (!content) {
-      return c.json({ success: false, error: 'content is required' }, 400)
+      return c.json({ success: false, error: '본문을 입력해주세요' }, 400)
     }
 
     const result = await createHowTo(c.env.DB, {
@@ -279,7 +292,7 @@ howtoEditorRoutes.post('/api/howto', requireAuth, async (c) => {
       message: 'HowTo created successfully'
     }, 201)
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'create failed'
+    const message = error instanceof Error ? error.message : '작성 중 오류가 발생했습니다'
 
     const status = message.includes('REQUIRED') ? 400
       : message.includes('INVALID') ? 400
@@ -305,7 +318,7 @@ howtoEditorRoutes.post('/api/howto/:slug/edit', requireHowToEdit, async (c) => {
     try {
       body = await c.req.json()
     } catch {
-      return c.json({ success: false, error: 'invalid json body' }, 400)
+      return c.json({ success: false, error: '요청 형식이 올바르지 않습니다' }, 400)
     }
 
     const content = typeof body.content === 'string' ? body.content : ''
@@ -313,7 +326,7 @@ howtoEditorRoutes.post('/api/howto/:slug/edit', requireHowToEdit, async (c) => {
     const changeSummary = typeof body.changeSummary === 'string' ? body.changeSummary : undefined
 
     if (!content) {
-      return c.json({ success: false, error: 'content is required' }, 400)
+      return c.json({ success: false, error: '본문을 입력해주세요' }, 400)
     }
 
     const result = await editHowTo(c.env.DB, slug, {
@@ -335,7 +348,7 @@ howtoEditorRoutes.post('/api/howto/:slug/edit', requireHowToEdit, async (c) => {
       message: 'Edit saved successfully'
     })
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'edit failed'
+    const message = error instanceof Error ? error.message : '편집 중 오류가 발생했습니다'
 
     const status = message.includes('NOT_FOUND') ? 404
       : message.includes('NOT_AUTHOR') ? 403
@@ -674,20 +687,21 @@ howtoEditorRoutes.delete('/api/howto/drafts/:id', requireAuth, async (c) => {
       }
     }
 
-    if (imageKeysToDelete.length > 0 && c.env.UPLOADS) {
-      for (const key of imageKeysToDelete) {
-        try {
-          await c.env.UPLOADS.delete(key)
-        } catch (e) {
-        }
-      }
-    }
-
     const { deleteDraft } = await import('../services/draftService')
     const result = await deleteDraft(c.env.DB, draftId, user.id)
 
     if (!result.success) {
       return c.json({ success: false, error: result.error }, 404)
+    }
+
+    if (imageKeysToDelete.length > 0 && c.env.UPLOADS) {
+      for (const key of imageKeysToDelete) {
+        try {
+          await c.env.UPLOADS.delete(key)
+        } catch (e) {
+          console.error('R2 image cleanup failed:', e)
+        }
+      }
     }
 
     return c.json({ success: true })
@@ -1144,12 +1158,15 @@ howtoEditorRoutes.post('/api/howto/save-publish', requireAuth, async (c) => {
       }
       draftId = draftResult.draftId
     } else {
-      await c.env.DB.prepare(`
+      const updateResult = await c.env.DB.prepare(`
         UPDATE howto_drafts SET
           title = ?, summary = ?, content_json = ?, content_html = ?, thumbnail_url = ?,
           updated_at = ?, version = version + 1
         WHERE id = ? AND user_id = ?
       `).bind(title, summary || '', contentJson, contentHtml || '', thumbnailUrl || '', now, draftId, user.id).run()
+      if (!updateResult.success) {
+        return c.json({ success: false, error: '초안 업데이트에 실패했습니다' }, 500)
+      }
     }
 
     const draftInfo = await c.env.DB.prepare(`
