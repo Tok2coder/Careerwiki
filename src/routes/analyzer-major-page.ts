@@ -4584,7 +4584,11 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
             const btn = document.getElementById('submit-context-btn');
             if (btn) btn.disabled = count < 30;
         }
-        document.getElementById('additional-context-text')?.addEventListener('input', updateContextCharCount);
+        document.addEventListener('input', function(e) {
+            if (e.target && e.target.id === 'additional-context-text') {
+                updateContextCharCount();
+            }
+        });
 
         async function submitAdditionalContext() {
             const textarea = document.getElementById('additional-context-text');

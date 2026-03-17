@@ -7816,7 +7816,12 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             const btn = document.getElementById('submit-context-btn');
             if (btn) btn.disabled = count < 30;
         }
-        document.getElementById('additional-context-text')?.addEventListener('input', updateContextCharCount);
+        // 동적 생성되는 textarea에 이벤트 위임 (displayPremiumReportV3 후 DOM에 추가됨)
+        document.addEventListener('input', function(e) {
+            if (e.target && e.target.id === 'additional-context-text') {
+                updateContextCharCount();
+            }
+        });
 
         async function submitAdditionalContext() {
             const textarea = document.getElementById('additional-context-text');
