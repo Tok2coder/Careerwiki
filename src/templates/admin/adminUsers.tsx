@@ -3,7 +3,7 @@
  */
 
 import { renderAdminLayout } from './adminLayout'
-import type { UserAttributionStats, VisitorRecord, EditorRevisionRecord, VisitorPageView } from '../../services/adminService'
+import type { UserAttributionStats, VisitorRecord, EditorRevisionRecord, VisitorPageView, RefererDistribution } from '../../services/adminService'
 
 export interface UserRecord {
   id: number
@@ -50,6 +50,8 @@ export interface AdminUsersProps {
   // 방문자 상세
   visitorDetail?: VisitorPageView[]
   visitorDetailIp?: string
+  // 유입경로 분포
+  refererDistribution?: RefererDistribution[]
 }
 
 const CHANNEL_LABELS: Record<string, string> = {
@@ -114,10 +116,55 @@ function renderAttributionCharts(stats: UserAttributionStats): string {
   `
 }
 
-function renderVisitorsTab(props: AdminUsersProps): string {
-  const { visitors = [], visitorsTotal = 0, visitorsPage = 1, visitorsTotalPages = 0, visitorSort = 'recent' } = props
+function renderRefererChart(dist: RefererDistribution[]): string {
+  if (!dist || dist.length === 0) return ''
+  const chartColors = ['#60a5fa', '#34d399', '#fcd34d', '#f87171', '#a78bfa', '#38bdf8', '#f97316', '#ec4899', '#6ee7b7', '#94a3b8']
+  const labels = dist.map(d => d.referer)
+  const data = dist.map(d => d.count)
+  const total = data.reduce((a, b) => a + b, 0)
 
   return `
+    <div class="glass-card rounded-xl p-4 mb-6">
+      <h4 class="text-sm font-medium text-slate-400 mb-3"><i class="fas fa-chart-pie text-teal-400 mr-1.5"></i>유입 경로 분포 <span class="text-slate-500">(총 ${total.toLocaleString()}건)</span></h4>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
+        <div class="h-56 flex justify-center"><canvas id="refererChart"></canvas></div>
+        <div class="space-y-1.5 text-sm admin-mini-scroll max-h-56 overflow-y-auto">
+          ${dist.map((d, i) => {
+            const pct = total > 0 ? ((d.count / total) * 100).toFixed(1) : '0'
+            return `<div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:${chartColors[i % chartColors.length]}"></span>
+              <span class="text-slate-300 flex-1 truncate">${escapeHtml(d.referer)}</span>
+              <span class="text-white font-medium">${d.count.toLocaleString()}</span>
+              <span class="text-slate-500 text-xs w-12 text-right">${pct}%</span>
+            </div>`
+          }).join('')}
+        </div>
+      </div>
+    </div>
+    <script>
+    (() => {
+      const el = document.getElementById('refererChart');
+      if (!el) return;
+      new Chart(el, {
+        type: 'doughnut',
+        data: {
+          labels: ${JSON.stringify(labels)},
+          datasets: [{ data: ${JSON.stringify(data)}, backgroundColor: ${JSON.stringify(chartColors.slice(0, dist.length))}, borderWidth: 1 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    })();
+    </script>
+  `
+}
+
+function renderVisitorsTab(props: AdminUsersProps): string {
+  const { visitors = [], visitorsTotal = 0, visitorsPage = 1, visitorsTotalPages = 0, visitorSort = 'recent', refererDistribution } = props
+
+  return `
+    <!-- 유입경로 차트 -->
+    ${renderRefererChart(refererDistribution || [])}
+
     <!-- 정렬 옵션 -->
     <div class="glass-card rounded-xl p-4 mb-6">
       <div class="flex items-center gap-3">

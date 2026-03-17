@@ -1009,6 +1009,27 @@ export async function getVisitorList(db: D1Database, params: {
   }
 }
 
+// 유입경로 분포
+export interface RefererDistribution {
+  referer: string
+  count: number
+}
+
+export async function getRefererDistribution(db: D1Database, limit = 10): Promise<RefererDistribution[]> {
+  try {
+    const res = await db.prepare(`
+      SELECT COALESCE(referer, '직접 방문') as referer, COUNT(*) as count
+      FROM visitor_page_views
+      GROUP BY COALESCE(referer, '직접 방문')
+      ORDER BY count DESC
+      LIMIT ?
+    `).bind(limit).all<RefererDistribution>()
+    return res.results || []
+  } catch {
+    return []
+  }
+}
+
 // 방문자 상세: 페이지뷰 이력
 export interface VisitorPageView {
   pageType: string

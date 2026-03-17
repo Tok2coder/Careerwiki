@@ -15,7 +15,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews } from '../services/adminService'
+import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
 import { listHowtoReports } from '../services/howtoReportService'
@@ -285,7 +285,10 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
     // 방문자 탭
     if (tab === 'visitors') {
       const sort = (c.req.query('sort') || 'recent') as 'recent' | 'frequent' | 'edits'
-      const result = await getVisitorList(c.env.DB, { page, perPage: 30, sort })
+      const [result, refererDist] = await Promise.all([
+        getVisitorList(c.env.DB, { page, perPage: 30, sort }),
+        getRefererDistribution(c.env.DB, 10),
+      ])
       return c.html(renderAdminUsers({
         activeTab: 'visitors',
         users: [], total: 0, page: 1, perPage: 20, totalPages: 0,
@@ -295,6 +298,7 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
         visitorsPage: result.page,
         visitorsTotalPages: result.totalPages,
         visitorSort: sort,
+        refererDistribution: refererDist,
       }))
     }
 
