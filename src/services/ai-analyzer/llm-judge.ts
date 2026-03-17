@@ -1781,6 +1781,8 @@ function sanitizeKeywordOvermatching(
         /인쇄|제본|출판인쇄/,                                 // 인쇄업
         // v3.19.3: 공간정보 계열 (GIS) — 벡터 검색에서 '데이터/분석/시스템' 키워드에 과매칭
         /공간정보|지리정보시스템|GIS|측량|지적/,               // 공간정보/GIS
+        // 선출직/임명직 고위공직 — 일반 취업 추천 부적합
+        /교육감|국회의원|도지사|군수|구청장/,
       ]
 
       const hasPhysicalInterest = interests.some(i =>
