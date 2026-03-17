@@ -644,6 +644,159 @@
   text-decoration: underline;
 }
 
+/* YouTube 임베드 */
+.howto-user-content .youtube-embed {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+}
+.howto-user-content .youtube-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0.75rem;
+}
+
+/* 콜아웃 박스 */
+.howto-user-content .callout-box {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  border: 1px solid;
+}
+.howto-user-content .callout-box .callout-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  line-height: 1.6;
+}
+.howto-user-content .callout-box .callout-content {
+  flex: 1;
+  min-width: 0;
+}
+.howto-user-content .callout-box .callout-content p {
+  margin: 0;
+}
+.howto-user-content .callout-tip {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.04));
+  border-color: rgba(59, 130, 246, 0.35);
+}
+.howto-user-content .callout-warning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.04));
+  border-color: rgba(245, 158, 11, 0.35);
+}
+.howto-user-content .callout-danger {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.04));
+  border-color: rgba(239, 68, 68, 0.35);
+}
+.howto-user-content .callout-info {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(139, 92, 246, 0.04));
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+/* 토글/접기 블록 */
+.howto-user-content .toggle-block {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+.howto-user-content .toggle-block summary {
+  padding: 0.875rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.03);
+  transition: background 0.2s;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.howto-user-content .toggle-block summary::before {
+  content: '▶';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: rgba(255, 255, 255, 0.5);
+}
+.howto-user-content .toggle-block[open] summary::before {
+  transform: rotate(90deg);
+}
+.howto-user-content .toggle-block summary::-webkit-details-marker {
+  display: none;
+}
+.howto-user-content .toggle-block summary:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.howto-user-content .toggle-block .toggle-content {
+  padding: 0.75rem 1.25rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* 이미지 캡션 */
+.howto-user-content figcaption {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+/* 목차(TOC) */
+.howto-toc {
+  background: rgba(79, 143, 255, 0.06);
+  border: 1px solid rgba(79, 143, 255, 0.2);
+  border-radius: 0.75rem;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+}
+.howto-toc summary {
+  padding: 0.875rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.howto-toc summary::-webkit-details-marker { display: none; }
+.howto-toc summary::before {
+  content: '📑';
+  font-size: 1rem;
+}
+.howto-toc-list {
+  padding: 0 1.25rem 1rem;
+  margin: 0;
+  list-style: none;
+}
+.howto-toc-list li {
+  padding: 0.25rem 0;
+}
+.howto-toc-list li a {
+  color: #64b5f6;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+.howto-toc-list li a:hover {
+  color: #90caf9;
+  text-decoration: underline;
+}
+.howto-toc-list .toc-h3 {
+  padding-left: 1rem;
+}
+
 /* =====================================================
    모바일 최적화
    ===================================================== */

@@ -58,6 +58,17 @@ export const ResizableImage = Image.extend({
           }
         },
       },
+      caption: {
+        default: '',
+        parseHTML: (element) => {
+          const fig = element.closest('figure')
+          const figcaption = fig?.querySelector('figcaption')
+          return figcaption?.textContent || ''
+        },
+        renderHTML: (attributes) => {
+          return { 'data-caption': attributes.caption || '' }
+        },
+      },
     }
   },
 
@@ -122,7 +133,32 @@ export const ResizableImage = Image.extend({
         <button type="button" data-action="delete" title="삭제"><i class="fas fa-trash"></i></button>
       `
 
+      // 캡션 입력 필드
+      const captionEl = document.createElement('figcaption')
+      captionEl.className = 'image-caption-input'
+      captionEl.contentEditable = 'true'
+      captionEl.setAttribute('placeholder', '캡션 입력 (선택)')
+      captionEl.textContent = node.attrs.caption || ''
+      captionEl.addEventListener('blur', () => {
+        if (typeof getPos === 'function') {
+          const pos = getPos()
+          if (pos != null) {
+            editor.commands.command(({ tr }) => {
+              tr.setNodeMarkup(pos, undefined, { ...node.attrs, caption: captionEl.textContent || '' })
+              return true
+            })
+          }
+        }
+      })
+      captionEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          captionEl.blur()
+        }
+      })
+
       container.appendChild(img)
+      container.appendChild(captionEl)
       container.appendChild(toolbar)
 
       // 툴바 위치 조정 (화면 밖으로 나가지 않도록)

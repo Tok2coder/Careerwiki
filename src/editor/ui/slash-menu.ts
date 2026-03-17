@@ -27,10 +27,15 @@ const SLASH_MENU_ITEMS: SlashMenuItem[] = [
   { command: 'conclusionBox', label: '결론/요약 박스', icon: 'fa-lightbulb', keywords: 'conclusion summary 결론 요약 정리', group: '커스텀 블록' },
   { command: 'qnaBlock', label: 'Q&A 블록', icon: 'fa-question-circle', keywords: 'qna question answer 질문 답변', group: '커스텀 블록' },
   { command: 'careerList', label: '커리어 목록', icon: 'fa-list-check', keywords: 'career list 커리어 직업 목록', group: '커스텀 블록' },
-  
+  { command: 'calloutTip', label: '💡 팁 박스', icon: 'fa-lightbulb', keywords: 'tip callout 팁 안내 도움말', group: '커스텀 블록' },
+  { command: 'calloutWarning', label: '⚠️ 주의 박스', icon: 'fa-exclamation-triangle', keywords: 'warning callout 주의 경고 안내', group: '커스텀 블록' },
+  { command: 'calloutDanger', label: '🚨 위험 박스', icon: 'fa-exclamation-circle', keywords: 'danger callout 위험 금지 경고', group: '커스텀 블록' },
+  { command: 'toggleBlock', label: '접기/펼치기', icon: 'fa-caret-square-down', keywords: 'toggle collapse details 접기 펼치기 토글', group: '커스텀 블록' },
+
   // 미디어
   { command: 'image', label: '이미지', icon: 'fa-image', keywords: 'image picture 이미지 사진 그림', group: '미디어' },
   { command: 'table', label: '표', icon: 'fa-table', keywords: 'table 표 테이블', group: '미디어' },
+  { command: 'youtube', label: 'YouTube 동영상', icon: 'fa-youtube', keywords: 'youtube video 유튜브 동영상 영상', group: '미디어' },
   
   // 참조
   { command: 'footnote', label: '각주 (출처)', icon: 'fa-asterisk', keywords: 'footnote reference 각주 출처 참조 주석', group: '참조' },

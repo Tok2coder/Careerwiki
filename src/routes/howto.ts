@@ -541,6 +541,20 @@ howtoRoutes.get('/write', requireAuth, async (c) => {
             <button type="button" data-action="italic" title="기울임 (Ctrl+I)"><i class="fas fa-italic"></i></button>
             <button type="button" data-action="underline" title="밑줄 (Ctrl+U)"><i class="fas fa-underline"></i></button>
             <button type="button" data-action="strike" title="취소선"><i class="fas fa-strikethrough"></i></button>
+            <button type="button" data-action="code" title="인라인 코드"><i class="fas fa-terminal"></i></button>
+            <div class="toolbar-dropdown highlight-dropdown">
+              <button type="button" title="형광펜" class="toolbar-btn flex items-center gap-1.5"><i class="fas fa-highlighter"></i><i class="fas fa-chevron-down text-[10px] opacity-60"></i></button>
+              <div class="highlight-menu hidden">
+                <div class="color-grid">
+                  <button type="button" data-highlight="#fde68a" style="background:#fde68a" title="노랑"></button>
+                  <button type="button" data-highlight="#bbf7d0" style="background:#bbf7d0" title="초록"></button>
+                  <button type="button" data-highlight="#bfdbfe" style="background:#bfdbfe" title="파랑"></button>
+                  <button type="button" data-highlight="#fbcfe8" style="background:#fbcfe8" title="분홍"></button>
+                  <button type="button" data-highlight="#c4b5fd" style="background:#c4b5fd" title="보라"></button>
+                </div>
+                <button type="button" data-highlight="" class="color-reset">형광펜 제거</button>
+              </div>
+            </div>
           </div>
           <div class="toolbar-group">
             <!-- 폰트 -->
@@ -601,6 +615,7 @@ howtoRoutes.get('/write', requireAuth, async (c) => {
                 <button type="button" data-action="alignLeft"><i class="fas fa-align-left"></i> 왼쪽</button>
                 <button type="button" data-action="alignCenter"><i class="fas fa-align-center"></i> 중앙</button>
                 <button type="button" data-action="alignRight"><i class="fas fa-align-right"></i> 오른쪽</button>
+                <button type="button" data-action="alignJustify"><i class="fas fa-align-justify"></i> 양쪽</button>
               </div>
             </div>
             <!-- 커스텀 블록 -->
@@ -612,6 +627,11 @@ howtoRoutes.get('/write', requireAuth, async (c) => {
                 <button type="button" data-action="checkpointBox"><i class="fas fa-check-circle text-green-500"></i> 체크포인트</button>
                 <button type="button" data-action="conclusionBox"><i class="fas fa-lightbulb text-wiki-primary"></i> 결론 박스</button>
                 <button type="button" data-action="qnaBlock"><i class="fas fa-question-circle text-amber-500"></i> Q&A</button>
+                <button type="button" data-action="careerList"><i class="fas fa-list-check text-emerald-400"></i> 커리어 목록</button>
+                <button type="button" data-action="calloutTip"><i class="fas fa-lightbulb text-blue-400"></i> 팁 박스</button>
+                <button type="button" data-action="calloutWarning"><i class="fas fa-exclamation-triangle text-amber-400"></i> 주의 박스</button>
+                <button type="button" data-action="calloutDanger"><i class="fas fa-exclamation-circle text-red-400"></i> 위험 박스</button>
+                <button type="button" data-action="toggleBlock"><i class="fas fa-caret-square-down text-slate-400"></i> 접기/펼치기</button>
               </div>
             </div>
           </div>
@@ -632,6 +652,7 @@ howtoRoutes.get('/write', requireAuth, async (c) => {
             <button type="button" data-action="image" title="이미지"><i class="fas fa-image"></i></button>
             <button type="button" data-action="table" title="표"><i class="fas fa-table"></i></button>
             <button type="button" data-action="codeBlock" title="코드 블록"><i class="fas fa-code"></i></button>
+            <button type="button" data-action="youtube" title="YouTube 동영상"><i class="fab fa-youtube"></i></button>
           </div>
           <div class="toolbar-group">
             <button type="button" data-action="undo" title="실행 취소 (Ctrl+Z)"><i class="fas fa-undo"></i></button>
@@ -1722,6 +1743,20 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
             <button type="button" data-action="italic" title="기울임 (Ctrl+I)"><i class="fas fa-italic"></i></button>
             <button type="button" data-action="underline" title="밑줄 (Ctrl+U)"><i class="fas fa-underline"></i></button>
             <button type="button" data-action="strike" title="취소선"><i class="fas fa-strikethrough"></i></button>
+            <button type="button" data-action="code" title="인라인 코드"><i class="fas fa-terminal"></i></button>
+            <div class="toolbar-dropdown highlight-dropdown">
+              <button type="button" title="형광펜" class="toolbar-btn flex items-center gap-1.5"><i class="fas fa-highlighter"></i><i class="fas fa-chevron-down text-[10px] opacity-60"></i></button>
+              <div class="highlight-menu hidden">
+                <div class="color-grid">
+                  <button type="button" data-highlight="#fde68a" style="background:#fde68a" title="노랑"></button>
+                  <button type="button" data-highlight="#bbf7d0" style="background:#bbf7d0" title="초록"></button>
+                  <button type="button" data-highlight="#bfdbfe" style="background:#bfdbfe" title="파랑"></button>
+                  <button type="button" data-highlight="#fbcfe8" style="background:#fbcfe8" title="분홍"></button>
+                  <button type="button" data-highlight="#c4b5fd" style="background:#c4b5fd" title="보라"></button>
+                </div>
+                <button type="button" data-highlight="" class="color-reset">형광펜 제거</button>
+              </div>
+            </div>
           </div>
           <div class="toolbar-group">
             <!-- 폰트 -->
@@ -1782,6 +1817,7 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
                 <button type="button" data-action="alignLeft"><i class="fas fa-align-left"></i> 왼쪽</button>
                 <button type="button" data-action="alignCenter"><i class="fas fa-align-center"></i> 중앙</button>
                 <button type="button" data-action="alignRight"><i class="fas fa-align-right"></i> 오른쪽</button>
+                <button type="button" data-action="alignJustify"><i class="fas fa-align-justify"></i> 양쪽</button>
               </div>
             </div>
             <!-- 커스텀 블록 -->
@@ -1793,6 +1829,11 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
                 <button type="button" data-action="checkpointBox"><i class="fas fa-check-circle text-green-500"></i> 체크포인트</button>
                 <button type="button" data-action="conclusionBox"><i class="fas fa-lightbulb text-wiki-primary"></i> 결론 박스</button>
                 <button type="button" data-action="qnaBlock"><i class="fas fa-question-circle text-amber-500"></i> Q&A</button>
+                <button type="button" data-action="careerList"><i class="fas fa-list-check text-emerald-400"></i> 커리어 목록</button>
+                <button type="button" data-action="calloutTip"><i class="fas fa-lightbulb text-blue-400"></i> 팁 박스</button>
+                <button type="button" data-action="calloutWarning"><i class="fas fa-exclamation-triangle text-amber-400"></i> 주의 박스</button>
+                <button type="button" data-action="calloutDanger"><i class="fas fa-exclamation-circle text-red-400"></i> 위험 박스</button>
+                <button type="button" data-action="toggleBlock"><i class="fas fa-caret-square-down text-slate-400"></i> 접기/펼치기</button>
               </div>
             </div>
           </div>
@@ -1813,6 +1854,7 @@ howtoRoutes.get('/draft/:id', requireAuth, async (c) => {
             <button type="button" data-action="image" title="이미지"><i class="fas fa-image"></i></button>
             <button type="button" data-action="table" title="표"><i class="fas fa-table"></i></button>
             <button type="button" data-action="codeBlock" title="코드 블록"><i class="fas fa-code"></i></button>
+            <button type="button" data-action="youtube" title="YouTube 동영상"><i class="fab fa-youtube"></i></button>
           </div>
           <div class="toolbar-group">
             <button type="button" data-action="undo" title="실행 취소 (Ctrl+Z)"><i class="fas fa-undo"></i></button>

@@ -93,6 +93,7 @@
 .font-menu,
 .custom-block-menu,
 .color-menu,
+.highlight-menu,
 .size-menu,
 .row-menu,
 .col-menu,
@@ -117,6 +118,7 @@
 .font-menu.hidden,
 .custom-block-menu.hidden,
 .color-menu.hidden,
+.highlight-menu.hidden,
 .size-menu.hidden,
 .row-menu.hidden,
 .col-menu.hidden,
@@ -130,6 +132,7 @@
 .toolbar-dropdown.is-open .font-menu,
 .toolbar-dropdown.is-open .custom-block-menu,
 .toolbar-dropdown.is-open .color-menu,
+.toolbar-dropdown.is-open .highlight-menu,
 .toolbar-dropdown.is-open .size-menu,
 .toolbar-dropdown.is-open .row-menu,
 .toolbar-dropdown.is-open .col-menu,
@@ -169,6 +172,18 @@
 .color-menu .color-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  gap: 0.375rem;
+  padding: 0.5rem;
+}
+
+/* 형광펜 메뉴 레이아웃 */
+.highlight-menu {
+  min-width: 160px;
+}
+
+.highlight-menu .color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.375rem;
   padding: 0.5rem;
 }
@@ -275,6 +290,7 @@
 }
 
 .color-menu .color-reset,
+.highlight-menu .color-reset,
 .cell-color-menu .color-reset {
   display: block;
   width: calc(100% - 1rem);
@@ -290,6 +306,7 @@
 }
 
 .color-menu .color-reset:hover,
+.highlight-menu .color-reset:hover,
 .cell-color-menu .color-reset:hover {
   background: rgba(255, 255, 255, 0.1);
   color: white;
@@ -443,16 +460,16 @@
 /* =====================================================
    링크
    ===================================================== */
-/* 내부 링크 - 민트색 */
+/* 내부 링크 - 파란색 */
 .howto-editor-content .ProseMirror a {
-  color: #00d4aa !important;
+  color: #64b5f6 !important;
   text-decoration: none !important;
   font-weight: 500;
   transition: color 0.2s;
 }
 
 .howto-editor-content .ProseMirror a:hover {
-  color: #00ffcc !important;
+  color: #90caf9 !important;
 }
 
 /* 외부 링크 - 주황색 */
@@ -584,12 +601,111 @@
   line-height: 1.25rem;
 }
 
+/* 체크리스트 - .task-list / .task-item 클래스 (렌더링된 HTML용) */
+.howto-editor-content ul.task-list,
+.howto-editor-content .task-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0;
+}
+
+.howto-editor-content ul.task-list li,
+.howto-editor-content .task-list li,
+.howto-editor-content .task-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.875rem;
+  padding: 0.625rem 0.875rem;
+  margin: 0.375rem 0;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.5rem;
+  min-height: 2.5rem;
+}
+
+.howto-editor-content ul.task-list li:hover,
+.howto-editor-content .task-list li:hover,
+.howto-editor-content .task-item:hover {
+  background: rgba(79, 143, 255, 0.05);
+  border-color: rgba(79, 143, 255, 0.15);
+}
+
+.howto-editor-content ul.task-list li label,
+.howto-editor-content .task-list li label,
+.howto-editor-content .task-item label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.howto-editor-content ul.task-list li input[type="checkbox"],
+.howto-editor-content .task-list li input[type="checkbox"],
+.howto-editor-content .task-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(79, 143, 255, 0.5);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  position: relative;
+  background: transparent;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.howto-editor-content ul.task-list li input[type="checkbox"]:checked,
+.howto-editor-content .task-list li input[type="checkbox"]:checked,
+.howto-editor-content .task-item input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #4f8fff, #8b5cf6);
+  border-color: transparent;
+}
+
+.howto-editor-content ul.task-list li input[type="checkbox"]:checked::after,
+.howto-editor-content .task-list li input[type="checkbox"]:checked::after,
+.howto-editor-content .task-item input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.howto-editor-content ul.task-list li[data-checked="true"] div,
+.howto-editor-content .task-list li[data-checked="true"] div,
+.howto-editor-content .task-item[data-checked="true"] span {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.howto-editor-content ul.task-list li div,
+.howto-editor-content .task-list li div,
+.howto-editor-content .task-item div,
+.howto-editor-content .task-item span {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.howto-editor-content ul.task-list li div p,
+.howto-editor-content .task-list li div p,
+.howto-editor-content .task-item p {
+  margin: 0;
+}
+
 /* =====================================================
    코드 블록
    ===================================================== */
 .howto-editor-content .ProseMirror pre {
-  background: #000000;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.5rem;
   padding: 1rem;
   overflow-x: auto;
@@ -652,8 +768,8 @@
   border-collapse: collapse !important;
   margin: 0 !important;
   padding: 0 !important;
-  background: rgba(15, 20, 30, 0.6);
-  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 0.75rem;
   overflow: hidden;
   table-layout: fixed !important;
   border: 1px solid rgba(79, 143, 255, 0.3);
@@ -673,12 +789,12 @@
   font-weight: 600;
   text-align: left;
   padding: 0.875rem 1rem;
-  border: 1px solid rgba(79, 143, 255, 0.2);
+  border: 1px solid rgba(79, 143, 255, 0.3);
   color: #fff;
 }
 
 .howto-editor-content .ProseMirror td {
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.9);
   position: relative;
@@ -1019,6 +1135,117 @@
 
 .howto-editor-content .ProseMirror .career-list-item .career-list-content p {
   margin: 0;
+}
+
+/* 이미지 캡션 입력 */
+.image-caption-input {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  margin-top: 0.25rem;
+  outline: none;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: border-color 0.2s;
+  min-height: 1.5rem;
+  cursor: text;
+}
+.image-caption-input:focus {
+  border-color: rgba(79, 143, 255, 0.3);
+  color: #d1d5db;
+}
+.image-caption-input:empty::before {
+  content: attr(placeholder);
+  color: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+/* YouTube 임베드 */
+.howto-editor-content .ProseMirror .youtube-embed {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+}
+.howto-editor-content .ProseMirror .youtube-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0.75rem;
+}
+
+/* 콜아웃 박스 */
+.howto-editor-content .ProseMirror .callout-box {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  border: 1px solid;
+}
+.howto-editor-content .ProseMirror .callout-box .callout-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  line-height: 1.6;
+}
+.howto-editor-content .ProseMirror .callout-box .callout-content {
+  flex: 1;
+  min-width: 0;
+}
+.howto-editor-content .ProseMirror .callout-box .callout-content p {
+  margin: 0;
+}
+.howto-editor-content .ProseMirror .callout-tip {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.04));
+  border-color: rgba(59, 130, 246, 0.35);
+}
+.howto-editor-content .ProseMirror .callout-warning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.04));
+  border-color: rgba(245, 158, 11, 0.35);
+}
+.howto-editor-content .ProseMirror .callout-danger {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.04));
+  border-color: rgba(239, 68, 68, 0.35);
+}
+.howto-editor-content .ProseMirror .callout-info {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(139, 92, 246, 0.04));
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+/* 토글/접기 블록 */
+.howto-editor-content .ProseMirror .toggle-block {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+.howto-editor-content .ProseMirror .toggle-block summary {
+  padding: 0.875rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.03);
+}
+.howto-editor-content .ProseMirror .toggle-block .toggle-content {
+  padding: 0.75rem 1.25rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* 이미지 캡션 */
+.howto-editor-content .ProseMirror figcaption {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  line-height: 1.5;
 }
 
 /* 기존 ul/li 기반 스타일 (호환성) */
@@ -1753,7 +1980,7 @@
 }
 
 .footnote-link:hover {
-  color: #00d4aa;
+  color: #90caf9;
 }
 
 /* =====================================================

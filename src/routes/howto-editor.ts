@@ -175,7 +175,9 @@ export function convertTiptapToHtml(doc: any): string {
           (imgStyle ? ' style="' + imgStyle + '"' : '') +
           ' loading="lazy" class="rounded-lg"'
 
-        return '<figure class="image-wrapper image-align-' + imgAlign + '" data-align="' + imgAlign + '"><img' + imgAttrs + '></figure>'
+        const captionText = node.attrs?.caption
+        const figcaption = captionText ? '<figcaption>' + escapeHtml(captionText) + '</figcaption>' : ''
+        return '<figure class="image-wrapper image-align-' + imgAlign + '" data-align="' + imgAlign + '"><img' + imgAttrs + '>' + figcaption + '</figure>'
 
       case 'table':
         return '<table>' + (node.content?.map(processNode).join('') || '') + '</table>'
@@ -194,7 +196,9 @@ export function convertTiptapToHtml(doc: any): string {
       case 'tableHeader': {
         const thColspan = node.attrs?.colspan > 1 ? ' colspan="' + node.attrs.colspan + '"' : ''
         const thRowspan = node.attrs?.rowspan > 1 ? ' rowspan="' + node.attrs.rowspan + '"' : ''
-        return '<th' + thColspan + thRowspan + '>' + (node.content?.map(processNode).join('') || '') + '</th>'
+        const thBg = node.attrs?.backgroundColor
+        const thStyle = thBg ? ' style="background-color:' + thBg + '"' : ''
+        return '<th' + thColspan + thRowspan + thStyle + '>' + (node.content?.map(processNode).join('') || '') + '</th>'
       }
 
       case 'checkpointBox':
@@ -223,6 +227,23 @@ export function convertTiptapToHtml(doc: any): string {
         const fnText = escapeHtml(node.attrs?.text || '')
         const fnUrl = node.attrs?.url ? ' data-footnote-url="' + escapeHtml(node.attrs.url) + '"' : ''
         return '<sup class="footnote-ref" data-footnote="" data-footnote-id="' + fnId + '" data-footnote-text="' + fnText + '"' + fnUrl + '><a href="#fn-' + fnId + '" id="fnref-' + fnId + '" data-footnote-id="' + fnId + '">' + fnId + '</a></sup>'
+      }
+
+      case 'youtube': {
+        const videoSrc = escapeHtml(node.attrs?.src || '')
+        return '<div class="youtube-embed"><iframe src="' + videoSrc + '" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" loading="lazy"></iframe></div>'
+      }
+
+      case 'calloutBox': {
+        const calloutType = node.attrs?.type || 'info'
+        const calloutIcons: Record<string, string> = { tip: '💡', warning: '⚠️', danger: '🚨', info: 'ℹ️' }
+        const icon = calloutIcons[calloutType] || 'ℹ️'
+        return '<div class="callout-box callout-' + calloutType + '" data-callout="' + calloutType + '"><span class="callout-icon">' + icon + '</span><div class="callout-content">' + (node.content?.map(processNode).join('') || '') + '</div></div>'
+      }
+
+      case 'toggleBlock': {
+        const summary = escapeHtml(node.attrs?.summary || '클릭하여 펼치기')
+        return '<details class="toggle-block"><summary>' + summary + '</summary><div class="toggle-content">' + (node.content?.map(processNode).join('') || '') + '</div></details>'
       }
 
       case 'hardBreak':

@@ -25,6 +25,9 @@ import { SlashCommandExtension } from './extensions/slash-command'
 import { FontSize } from './extensions/font-size'
 import { CustomBlockquote } from './extensions/custom-blockquote'
 import { CustomBulletList } from './extensions/custom-bullet-list'
+import { YoutubeEmbed } from './extensions/youtube-embed'
+import { CalloutBox } from './extensions/callout-box'
+import { ToggleBlock } from './extensions/toggle-block'
 import { createSlashMenu, type SlashMenuItem } from './ui/slash-menu'
 import { uploadImage, validateImageFile } from './utils/upload'
 
@@ -334,6 +337,9 @@ export class HowToEditorManager {
         onHide: () => this.hideSlashMenu(),
         onFilter: (query: string) => this.filterSlashMenu(query)
       }),
+      YoutubeEmbed,
+      CalloutBox,
+      ToggleBlock,
       ...getCustomNodes()
     ]
   }
@@ -456,6 +462,24 @@ export class HowToEditorManager {
       case 'careerList':
         this.insertCareerList()
         break
+      case 'youtube':
+        this.promptYoutube()
+        break
+      case 'calloutTip':
+        this.insertCallout('tip')
+        break
+      case 'calloutWarning':
+        this.insertCallout('warning')
+        break
+      case 'calloutDanger':
+        this.insertCallout('danger')
+        break
+      case 'calloutInfo':
+        this.insertCallout('info')
+        break
+      case 'toggleBlock':
+        this.insertToggleBlock()
+        break
       case 'footnote':
         this.promptFootnote()
         break
@@ -500,6 +524,31 @@ export class HowToEditorManager {
         { type: 'careerListItem', content: [] },
         { type: 'careerListItem', content: [] }
       ]
+    }).run()
+  }
+
+  private promptYoutube() {
+    const url = prompt('YouTube URL을 입력하세요:')
+    if (!url) return
+    // @ts-ignore
+    this.editor?.commands.setYoutubeVideo({ src: url })
+  }
+
+  private insertCallout(type: string) {
+    this.editor?.chain().focus().insertContent({
+      type: 'calloutBox',
+      attrs: { type },
+      content: [{ type: 'paragraph' }],
+    }).run()
+  }
+
+  private insertToggleBlock() {
+    const summary = prompt('접기/펼치기 제목:')
+    if (!summary) return
+    this.editor?.chain().focus().insertContent({
+      type: 'toggleBlock',
+      attrs: { summary },
+      content: [{ type: 'paragraph' }],
     }).run()
   }
 
@@ -845,7 +894,11 @@ export class HowToEditorManager {
       btn.addEventListener('click', (e) => {
         e.preventDefault()
         const color = (btn as HTMLElement).dataset.highlight
-        if (color) this.editor?.chain().focus().toggleHighlight({ color }).run()
+        if (color) {
+          this.editor?.chain().focus().toggleHighlight({ color }).run()
+        } else {
+          this.editor?.chain().focus().unsetHighlight().run()
+        }
       })
     })
 
@@ -992,6 +1045,12 @@ export class HowToEditorManager {
       case 'conclusionBox': this.insertConclusionBox(); break
       case 'qnaBlock': this.insertQnABlock(); break
       case 'careerList': this.insertCareerList(); break
+      case 'youtube': this.promptYoutube(); break
+      case 'calloutTip': this.insertCallout('tip'); break
+      case 'calloutWarning': this.insertCallout('warning'); break
+      case 'calloutDanger': this.insertCallout('danger'); break
+      case 'calloutInfo': this.insertCallout('info'); break
+      case 'toggleBlock': this.insertToggleBlock(); break
       case 'footnote': this.promptFootnote(); break
       case 'undo': chain.undo().run(); break
       case 'redo': chain.redo().run(); break
