@@ -2395,17 +2395,18 @@ const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; t
   const fieldOrder: string[] = [
     // 히어로 섹션
     'summary', 'heroCategory', 'heroTags',
-    // 소개 탭 (UI 표시 순서: 주요업무 → 전망 → 적성 → 임금 → 여담)
+    // 소개 탭 (UI 렌더링 순서와 동일하게 — 각주 번호가 페이지 스크롤 순서대로 매겨짐)
     'overviewWork.main', 'overviewWork.physicalAct', 'overviewWork.mentalAct',
     'overviewProspect.main',
+    'detailWlb.wlb', 'detailWlb.social', 'detailWlb.wlbDetail', 'detailWlb.socialDetail',
+    'overviewSalary.sal',
+    'trivia',
+    // 상세정보 탭 (핵심 능력/자격)
     'overviewAbilities.abilityList', 'overviewAbilities.aptitudeList', 'overviewAbilities.interestList',
     'overviewAbilities.technKnow',
-    'overviewSalary.sal',
-    'detailWlb.wlb', 'detailWlb.social', 'detailWlb.wlbDetail', 'detailWlb.socialDetail',
-    'trivia',
     // 과정 탭 (되는 방법)
     'way',
-    // 상세정보 탭
+    // 상세정보 탭 (직업 준비하기)
     'detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList',
     // 사이드바
     'sidebarMajors', 'sidebarCerts'
