@@ -1565,13 +1565,8 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             renderNarrativeStepMajor();
         }
 
-        // 전이 신호 렌더링 (전공 전용)
-        function renderTransitionSignalForm() {
-            const container = document.getElementById('transition-signal-form');
-            if (!container) {
-                return;
-            }
-            const MAJOR_SIGNAL_QUESTIONS = [
+        // 전공 전이 신호 질문 정의 (updateChipOrder에서도 접근 필요하므로 상위 스코프)
+        const MAJOR_SIGNAL_QUESTIONS = [
                 { question_id: 'trans_desired_type', text: '전공 선택 후 어떤 준비를 하고 싶나요?', help: '최대 3개까지 선택 (선택 순서 = 우선순위)', ui_type: 'chips', max_selections: 3, options: [
                     { value: 'campus_life', label: '대학생활 계획', emoji: '🏫' },
                     { value: 'certification', label: '자격증/스펙 준비', emoji: '📜' },
@@ -1616,7 +1611,14 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                     { value: '20', label: '10~20시간', emoji: '💪' },
                     { value: '40', label: '20시간 이상', emoji: '🏃' },
                 ], fact_key: 'transition.time_invest_hours_bucket' },
-            ];
+        ];
+
+        // 전이 신호 렌더링 (전공 전용)
+        function renderTransitionSignalForm() {
+            const container = document.getElementById('transition-signal-form');
+            if (!container) {
+                return;
+            }
             container.innerHTML = MAJOR_SIGNAL_QUESTIONS.map(q => {
                 if (q.ui_type === 'chips') {
                     return \`
