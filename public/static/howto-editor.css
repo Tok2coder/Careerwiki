@@ -1161,42 +1161,129 @@
   pointer-events: none;
 }
 
-/* YouTube 임베드 */
-.howto-editor-content .ProseMirror .youtube-embed {
+/* YouTube 임베드 (에디터 NodeView) */
+.howto-editor-content .ProseMirror .youtube-editor-wrapper {
   position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-  overflow: hidden;
   margin: 1.5rem 0;
   border-radius: 0.75rem;
-  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
-.howto-editor-content .ProseMirror .youtube-embed iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
+.howto-editor-content .ProseMirror .youtube-preview {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+.howto-editor-content .ProseMirror .youtube-thumb {
   width: 100%;
   height: 100%;
-  border: none;
-  border-radius: 0.75rem;
+  object-fit: cover;
+}
+.howto-editor-content .ProseMirror .youtube-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+.howto-editor-content .ProseMirror .youtube-url-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+}
+.howto-editor-content .ProseMirror .youtube-delete-btn,
+.howto-editor-content .ProseMirror .youtube-edit-btn {
+  position: absolute;
+  top: 0.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.howto-editor-content .ProseMirror .youtube-delete-btn {
+  right: 0.5rem;
+}
+.howto-editor-content .ProseMirror .youtube-edit-btn {
+  right: 3rem;
+}
+.howto-editor-content .ProseMirror .youtube-editor-wrapper:hover .youtube-delete-btn,
+.howto-editor-content .ProseMirror .youtube-editor-wrapper:hover .youtube-edit-btn {
+  opacity: 1;
+}
+.howto-editor-content .ProseMirror .youtube-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.8);
+}
+.howto-editor-content .ProseMirror .youtube-edit-btn:hover {
+  background: rgba(59, 130, 246, 0.8);
 }
 
 /* 콜아웃 박스 */
 .howto-editor-content .ProseMirror .callout-box {
-  display: flex;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
   border-radius: 0.75rem;
   margin: 1.5rem 0;
   border: 1px solid;
+  overflow: hidden;
+}
+.howto-editor-content .ProseMirror .callout-box .callout-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
 }
 .howto-editor-content .ProseMirror .callout-box .callout-icon {
-  font-size: 1.25rem;
+  font-size: 1rem;
   flex-shrink: 0;
-  line-height: 1.6;
+}
+.howto-editor-content .ProseMirror .callout-box .callout-label {
+  flex-shrink: 0;
+}
+.howto-editor-content .ProseMirror .callout-type-selector {
+  display: none;
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  gap: 0.25rem;
+}
+.howto-editor-content .ProseMirror .callout-box:hover .callout-type-selector {
+  display: flex;
+}
+.howto-editor-content .ProseMirror .callout-type-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.howto-editor-content .ProseMirror .callout-type-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
 }
 .howto-editor-content .ProseMirror .callout-box .callout-content {
-  flex: 1;
+  padding: 0.75rem 1.25rem;
   min-width: 0;
 }
 .howto-editor-content .ProseMirror .callout-box .callout-content p {
@@ -1219,24 +1306,58 @@
   border-color: rgba(139, 92, 246, 0.35);
 }
 
-/* 토글/접기 블록 */
-.howto-editor-content .ProseMirror .toggle-block {
+/* 토글/접기 블록 (에디터 NodeView) */
+.howto-editor-content .ProseMirror .toggle-editor-wrapper {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.75rem;
   margin: 1.5rem 0;
   overflow: hidden;
 }
-.howto-editor-content .ProseMirror .toggle-block summary {
-  padding: 0.875rem 1.25rem;
+.howto-editor-content .ProseMirror .toggle-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: default;
+}
+.howto-editor-content .ProseMirror .toggle-arrow {
   cursor: pointer;
+  user-select: none;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.15s;
+  padding: 0.25rem;
+  line-height: 1;
+}
+.howto-editor-content .ProseMirror .toggle-arrow:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+.howto-editor-content .ProseMirror .toggle-summary-text {
+  flex: 1;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.03);
+  outline: none;
+  min-width: 0;
+  cursor: text;
 }
-.howto-editor-content .ProseMirror .toggle-block .toggle-content {
+.howto-editor-content .ProseMirror .toggle-summary-text:empty::before {
+  content: attr(placeholder);
+  color: rgba(255, 255, 255, 0.3);
+}
+.howto-editor-content .ProseMirror .toggle-summary-text:focus {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  margin: -0.125rem -0.375rem;
+}
+.howto-editor-content .ProseMirror .toggle-editor-wrapper .toggle-content {
   padding: 0.75rem 1.25rem 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.howto-editor-content .ProseMirror .toggle-editor-wrapper.toggle-closed .toggle-content {
+  display: none;
 }
 
 /* 이미지 캡션 */
