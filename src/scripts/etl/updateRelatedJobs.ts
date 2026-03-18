@@ -122,53 +122,74 @@ export async function updateRelatedJobs(
   }
   
   try {
-    // 1. 모든 직업 가져오기
-    let query = `
-      SELECT id, name, slug, merged_profile_json
+    // === Phase 1: 분류/태그 데이터만 경량 로드 (json_extract로 메모리 절약) ===
+    let metaQuery = `
+      SELECT
+        id, name, slug,
+        json_extract(merged_profile_json, '$.detailClassification') as classification_json,
+        json_extract(merged_profile_json, '$.heroTags') as hero_tags_json,
+        json_extract(merged_profile_json, '$.sidebarJobs') as sidebar_jobs_json,
+        json_extract(merged_profile_json, '$.relatedJobs') as related_jobs_json
       FROM jobs
       WHERE merged_profile_json IS NOT NULL
     `
-    
     if (options.limit) {
-      query += ` LIMIT ${options.limit}`
+      metaQuery += ` LIMIT ${options.limit}`
     }
-    
-    const { results: jobs } = await db.prepare(query).all<{
+
+    const { results: jobMeta } = await db.prepare(metaQuery).all<{
       id: string
       name: string
       slug: string
-      merged_profile_json: string
+      classification_json: string | null
+      hero_tags_json: string | null
+      sidebar_jobs_json: string | null
+      related_jobs_json: string | null
     }>()
-    
-    if (!jobs || jobs.length === 0) {
+
+    if (!jobMeta || jobMeta.length === 0) {
       console.log('ℹ️  No jobs found')
       return progress
     }
-    
-    progress.total = jobs.length
-    console.log(`📊 Found ${progress.total} jobs to process`)
-    
+
+    progress.total = jobMeta.length
+    console.log(`📊 Found ${progress.total} jobs to process (lightweight mode)`)
+
     // 2. 분류 코드별 직업 맵 생성
-    const kecoToJobs = new Map<string, Set<string>>()      // keco코드 → 직업명 Set
-    const empJobNmToJobs = new Map<string, Set<string>>()  // 고용직업분류명 → 직업명 Set
-    const stdJobNmToJobs = new Map<string, Set<string>>()  // 표준직업분류명 → 직업명 Set
-    const dJobECdNmToJobs = new Map<string, Set<string>>() // 직업사전분류명 → 직업명 Set
-    
-    // 3. 각 직업의 분류 정보 수집
-    const jobProfiles = new Map<string, any>()
-    
-    for (const job of jobs) {
+    const kecoToJobs = new Map<string, Set<string>>()
+    const empJobNmToJobs = new Map<string, Set<string>>()
+    const stdJobNmToJobs = new Map<string, Set<string>>()
+    const dJobECdNmToJobs = new Map<string, Set<string>>()
+
+    // 3. 각 직업의 메타 정보 수집
+    interface JobMeta {
+      id: string
+      slug: string
+      classification: any
+      heroTags: string[]
+      existingSidebarJobs: string[]
+      existingRelatedJobs: string[]
+    }
+    const jobMetaMap = new Map<string, JobMeta>()
+
+    for (const job of jobMeta) {
       try {
-        const profile = JSON.parse(job.merged_profile_json)
-        jobProfiles.set(job.name, {
+        const classification = job.classification_json ? JSON.parse(job.classification_json) : null
+        const heroTags = job.hero_tags_json ? JSON.parse(job.hero_tags_json) : []
+        const sidebarJobs = job.sidebar_jobs_json ? JSON.parse(job.sidebar_jobs_json) : []
+        const relatedJobs = job.related_jobs_json ? JSON.parse(job.related_jobs_json) : []
+
+        jobMetaMap.set(job.name, {
           id: job.id,
           slug: job.slug,
-          profile
+          classification,
+          heroTags: Array.isArray(heroTags) ? heroTags.map((t: any) => typeof t === 'string' ? t : '') : [],
+          existingSidebarJobs: Array.isArray(sidebarJobs) ? sidebarJobs.map((j: any) => typeof j === 'string' ? j : j?.name || '').filter(Boolean) : [],
+          existingRelatedJobs: Array.isArray(relatedJobs) ? relatedJobs.map((j: any) => typeof j === 'string' ? j : j?.name || '').filter(Boolean) : [],
         })
-        
-        const classification = profile.detailClassification
+
         if (!classification) continue
-        
+
         // kecoList 처리
         if (Array.isArray(classification.kecoList)) {
           classification.kecoList.forEach((keco: any) => {
@@ -179,45 +200,39 @@ export async function updateRelatedJobs(
             }
           })
         }
-        
-        // empJobNm 처리
+
         if (classification.empJobNm) {
           const key = classification.empJobNm.trim()
           if (!empJobNmToJobs.has(key)) empJobNmToJobs.set(key, new Set())
           empJobNmToJobs.get(key)!.add(job.name)
         }
-        
-        // stdJobNm 처리
+
         if (classification.stdJobNm) {
           const key = classification.stdJobNm.trim()
           if (!stdJobNmToJobs.has(key)) stdJobNmToJobs.set(key, new Set())
           stdJobNmToJobs.get(key)!.add(job.name)
         }
-        
-        // dJobECdNm 처리 (이미 대괄호 제거된 상태)
+
         if (classification.dJobECdNm) {
           const key = classification.dJobECdNm.trim()
           if (!dJobECdNmToJobs.has(key)) dJobECdNmToJobs.set(key, new Set())
           dJobECdNmToJobs.get(key)!.add(job.name)
         }
-        
+
       } catch (e) {
-        console.warn(`⚠️ Failed to parse profile for ${job.name}:`, e)
+        console.warn(`⚠️ Failed to parse meta for ${job.name}:`, e)
       }
     }
     
     // === v2: heroTags → jobName 교차매칭 맵 ===
-    // tag가 다른 직업의 이름과 일치하면 관련직업
-    const allJobNames = new Set(jobs.map(j => j.name))
-    const tagToOwnerJobs = new Map<string, Set<string>>()  // tag → 이 tag를 가진 직업들
+    const allJobNames = new Set(jobMeta.map(j => j.name))
+    const tagToOwnerJobs = new Map<string, Set<string>>()
 
-    for (const job of jobs) {
-      const info = jobProfiles.get(job.name)
-      if (!info) continue
-      const tags = info.profile.heroTags
-      if (!Array.isArray(tags)) continue
-      for (const tag of tags) {
-        const t = typeof tag === 'string' ? tag.trim() : ''
+    for (const job of jobMeta) {
+      const meta = jobMetaMap.get(job.name)
+      if (!meta) continue
+      for (const tag of meta.heroTags) {
+        const t = tag.trim()
         if (!t || t === job.name) continue
         if (!tagToOwnerJobs.has(t)) tagToOwnerJobs.set(t, new Set())
         tagToOwnerJobs.get(t)!.add(job.name)
@@ -240,7 +255,7 @@ export async function updateRelatedJobs(
 
     // === v2: 이름 핵심 키워드 유사도 맵 ===
     const keywordToJobs = new Map<string, Set<string>>()
-    for (const job of jobs) {
+    for (const job of jobMeta) {
       const keywords = extractDomainKeywords(job.name)
       for (const kw of keywords) {
         if (!keywordToJobs.has(kw)) keywordToJobs.set(kw, new Set())
@@ -256,8 +271,8 @@ export async function updateRelatedJobs(
     }
 
     // === v2: 도메인 동의어 그룹 매칭 ===
-    const domainGroupToJobs = new Map<number, Set<string>>()  // groupIndex → jobNames
-    for (const job of jobs) {
+    const domainGroupToJobs = new Map<number, Set<string>>()
+    for (const job of jobMeta) {
       for (let gi = 0; gi < DOMAIN_SYNONYM_GROUPS.length; gi++) {
         const group = DOMAIN_SYNONYM_GROUPS[gi]
         if (group.some(word => job.name.includes(word))) {
@@ -276,206 +291,127 @@ export async function updateRelatedJobs(
     console.log(`   - keyword matches: ${validKeywords.size} keywords`)
     console.log(`   - domain synonym groups: ${domainGroupToJobs.size} groups (${DOMAIN_SYNONYM_GROUPS.length} defined)`)
     
-    // 4. 각 직업의 연관직업 업데이트
-    for (const job of jobs) {
+    // === Phase 2: 각 직업의 연관직업 계산 (메모리 경량) ===
+    // 먼저 모든 직업의 새 관련직업을 계산
+    const newRelatedMap = new Map<string, string[]>()
+
+    for (const job of jobMeta) {
       try {
-        const jobInfo = jobProfiles.get(job.name)
-        if (!jobInfo) continue
-        
-        const profile = jobInfo.profile
-        const classification = profile.detailClassification || {}
-        
-        // 현재 연관직업 Set
+        const meta = jobMetaMap.get(job.name)
+        if (!meta) continue
+
+        const classification = meta.classification || {}
         const currentRelatedJobs = new Set<string>()
-        
-        // 기존 sidebarJobs에서 시작
-        if (Array.isArray(profile.sidebarJobs)) {
-          profile.sidebarJobs.forEach((j: any) => {
-            const name = typeof j === 'string' ? j : j?.name
-            if (name && name !== job.name) currentRelatedJobs.add(name)
-          })
-        }
-        
-        // 기존 relatedJobs에서도 추가
-        if (Array.isArray(profile.relatedJobs)) {
-          profile.relatedJobs.forEach((j: any) => {
-            const name = typeof j === 'string' ? j : j?.name
-            if (name && name !== job.name) currentRelatedJobs.add(name)
-          })
-        }
-        
-        // 4.1 분류 코드에서 직업명 추출하여 추가
-        // kecoList.kecoNm
+
+        // 기존 sidebarJobs/relatedJobs 유지
+        meta.existingSidebarJobs.forEach(n => { if (n !== job.name) currentRelatedJobs.add(n) })
+        meta.existingRelatedJobs.forEach(n => { if (n !== job.name) currentRelatedJobs.add(n) })
+
+        // 4.1 kecoList.kecoNm에서 직업명 추출
         if (Array.isArray(classification.kecoList)) {
           classification.kecoList.forEach((keco: any) => {
             const kecoNm = keco?.kecoNm || keco?.name
-            if (kecoNm && kecoNm !== job.name) {
-              currentRelatedJobs.add(kecoNm)
-            }
+            if (kecoNm && kecoNm !== job.name) currentRelatedJobs.add(kecoNm)
           })
         }
-        
-        // empJobNm, stdJobNm (이름 자체가 직업명일 수 있음)
-        // 하지만 보통 분류명이므로, 같은 분류의 직업들을 추가하는 게 맞음
-        
-        // 4.2 같은 분류코드를 가진 직업들 추가
-        // 같은 KECO 코드를 가진 직업들
+
+        // 4.2 같은 분류코드를 가진 직업들
         if (Array.isArray(classification.kecoList)) {
           classification.kecoList.forEach((keco: any) => {
             const code = keco?.kecoCd || keco?.code
-            if (code) {
-              const sameCodeJobs = kecoToJobs.get(code)
-              if (sameCodeJobs) {
-                sameCodeJobs.forEach(relatedName => {
-                  if (relatedName !== job.name) {
-                    currentRelatedJobs.add(relatedName)
-                  }
-                })
-              }
-            }
+            if (code) kecoToJobs.get(code)?.forEach(n => { if (n !== job.name) currentRelatedJobs.add(n) })
           })
         }
-        
-        // 같은 empJobNm을 가진 직업들
         if (classification.empJobNm) {
-          const sameEmpJobs = empJobNmToJobs.get(classification.empJobNm.trim())
-          if (sameEmpJobs) {
-            sameEmpJobs.forEach(relatedName => {
-              if (relatedName !== job.name) {
-                currentRelatedJobs.add(relatedName)
-              }
-            })
-          }
+          empJobNmToJobs.get(classification.empJobNm.trim())?.forEach(n => { if (n !== job.name) currentRelatedJobs.add(n) })
         }
-        
-        // 같은 stdJobNm을 가진 직업들
         if (classification.stdJobNm) {
-          const sameStdJobs = stdJobNmToJobs.get(classification.stdJobNm.trim())
-          if (sameStdJobs) {
-            sameStdJobs.forEach(relatedName => {
-              if (relatedName !== job.name) {
-                currentRelatedJobs.add(relatedName)
-              }
-            })
-          }
+          stdJobNmToJobs.get(classification.stdJobNm.trim())?.forEach(n => { if (n !== job.name) currentRelatedJobs.add(n) })
         }
-        
-        // 같은 dJobECdNm을 가진 직업들
         if (classification.dJobECdNm) {
-          const sameDJobJobs = dJobECdNmToJobs.get(classification.dJobECdNm.trim())
-          if (sameDJobJobs) {
-            sameDJobJobs.forEach(relatedName => {
-              if (relatedName !== job.name) {
-                currentRelatedJobs.add(relatedName)
-              }
-            })
-          }
+          dJobECdNmToJobs.get(classification.dJobECdNm.trim())?.forEach(n => { if (n !== job.name) currentRelatedJobs.add(n) })
         }
 
         // 4.3 (v2) heroTags 교차매칭
-        const tagMatches = heroTagCrossMatches.get(job.name)
-        if (tagMatches) {
-          tagMatches.forEach(relatedName => {
-            if (relatedName !== job.name) {
-              currentRelatedJobs.add(relatedName)
-            }
-          })
-        }
+        heroTagCrossMatches.get(job.name)?.forEach(n => { if (n !== job.name) currentRelatedJobs.add(n) })
 
         // 4.4 (v2) 이름 핵심 키워드 유사도
-        const myKeywords = extractDomainKeywords(job.name)
-        for (const kw of myKeywords) {
-          const sameKwJobs = validKeywords.get(kw)
-          if (sameKwJobs) {
-            sameKwJobs.forEach(relatedName => {
-              if (relatedName !== job.name) {
-                currentRelatedJobs.add(relatedName)
-              }
-            })
-          }
+        for (const kw of extractDomainKeywords(job.name)) {
+          validKeywords.get(kw)?.forEach(n => { if (n !== job.name) currentRelatedJobs.add(n) })
         }
 
         // 4.5 (v2) 도메인 동의어 그룹 매칭 (그룹 크기 40 이하만)
         for (let gi = 0; gi < DOMAIN_SYNONYM_GROUPS.length; gi++) {
-          const group = DOMAIN_SYNONYM_GROUPS[gi]
-          if (group.some(word => job.name.includes(word))) {
+          if (DOMAIN_SYNONYM_GROUPS[gi].some(word => job.name.includes(word))) {
             const groupJobs = domainGroupToJobs.get(gi)
             if (groupJobs && groupJobs.size <= 40) {
-              groupJobs.forEach(relatedName => {
-                if (relatedName !== job.name) {
-                  currentRelatedJobs.add(relatedName)
-                }
-              })
+              groupJobs.forEach(n => { if (n !== job.name) currentRelatedJobs.add(n) })
             }
           }
         }
 
-        // 4.6 양방향 관계 보장: 다른 직업이 이 직업을 연관직업으로 가지면 역방향 추가
-        for (const [otherName, otherInfo] of jobProfiles) {
-          if (otherName === job.name) continue
-          
-          const otherProfile = otherInfo.profile
-          const otherRelated = [
-            ...(otherProfile.sidebarJobs || []),
-            ...(otherProfile.relatedJobs || [])
-          ]
-          
-          const hasThisJob = otherRelated.some((j: any) => {
-            const name = typeof j === 'string' ? j : j?.name
-            return name === job.name
-          })
-          
-          if (hasThisJob) {
-            currentRelatedJobs.add(otherName)
-          }
-        }
-        
-        // 5. 업데이트할 연관직업 배열 생성
-        const updatedRelatedJobs = Array.from(currentRelatedJobs)
-          .filter(name => name && name !== job.name)  // 자기 자신 제외
-          .sort()
-        
-        // 6. 변경 사항 확인
-        const existingJobs = new Set([
-          ...(profile.sidebarJobs || []).map((j: any) => typeof j === 'string' ? j : j?.name),
-          ...(profile.relatedJobs || []).map((j: any) => typeof j === 'string' ? j : j?.name)
-        ])
-        
-        const hasChanges = updatedRelatedJobs.length !== existingJobs.size ||
-          updatedRelatedJobs.some(name => !existingJobs.has(name))
-        
-        if (!hasChanges) {
-          progress.skipped++
-          continue
-        }
-        
-        // 7. 프로필 업데이트
-        profile.sidebarJobs = updatedRelatedJobs
-        profile.relatedJobs = updatedRelatedJobs  // 기존 호환성 유지
-        
-        if (!options.dryRun) {
-          await db.prepare(`
-            UPDATE jobs
-            SET merged_profile_json = ?
-            WHERE id = ?
-          `).bind(JSON.stringify(profile), job.id).run()
-        }
-        
-        progress.updated++
-        
-        if (progress.updated % 50 === 0) {
-          console.log(`📊 Progress: ${progress.updated}/${progress.total} updated`)
-        }
-        
+        newRelatedMap.set(job.name, Array.from(currentRelatedJobs).filter(n => n && n !== job.name).sort())
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error)
-        console.error(`❌ ${job.name}: ${errorMessage}`)
-        progress.errors.push({
-          jobName: job.name,
-          error: errorMessage
-        })
+        progress.errors.push({ jobName: job.name, error: errorMessage })
       }
     }
+
+    // 4.6 양방향 관계 보장 (별도 패스)
+    for (const [jobName, relatedList] of newRelatedMap) {
+      for (const relatedName of relatedList) {
+        const otherList = newRelatedMap.get(relatedName)
+        if (otherList && !otherList.includes(jobName)) {
+          otherList.push(jobName)
+          otherList.sort()
+        }
+      }
+    }
+
+    // === Phase 3: 변경된 직업만 DB 업데이트 (배치) ===
+    const BATCH_SIZE = 50
+    const updateQueue: { id: string; name: string; newRelated: string[] }[] = []
+
+    for (const job of jobMeta) {
+      const meta = jobMetaMap.get(job.name)
+      if (!meta) continue
+
+      const newRelated = newRelatedMap.get(job.name) || []
+      const existingJobs = new Set([...meta.existingSidebarJobs, ...meta.existingRelatedJobs])
+      const hasChanges = newRelated.length !== existingJobs.size ||
+        newRelated.some(name => !existingJobs.has(name))
+
+      if (!hasChanges) {
+        progress.skipped++
+        continue
+      }
+
+      updateQueue.push({ id: meta.id, name: job.name, newRelated })
+    }
+
+    console.log(`📊 ${updateQueue.length} jobs need updating, ${progress.skipped} skipped`)
+
+    if (!options.dryRun) {
+      // 배치 업데이트: json_set으로 sidebarJobs/relatedJobs만 교체 (전체 프로필 로드 불필요)
+      for (let i = 0; i < updateQueue.length; i += BATCH_SIZE) {
+        const batch = updateQueue.slice(i, i + BATCH_SIZE)
+        const stmts = batch.map(item =>
+          db.prepare(`
+            UPDATE jobs
+            SET merged_profile_json = json_set(
+              merged_profile_json,
+              '$.sidebarJobs', json(?),
+              '$.relatedJobs', json(?)
+            )
+            WHERE id = ?
+          `).bind(JSON.stringify(item.newRelated), JSON.stringify(item.newRelated), item.id)
+        )
+        await db.batch(stmts)
+        console.log(`📊 Batch ${Math.floor(i / BATCH_SIZE) + 1}: updated ${Math.min(i + BATCH_SIZE, updateQueue.length)}/${updateQueue.length}`)
+      }
+    }
+
+    progress.updated = updateQueue.length
     
     console.log('\n✅ Related Jobs Update Complete')
     console.log(`   Updated: ${progress.updated}`)

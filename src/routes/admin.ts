@@ -1002,4 +1002,36 @@ adminRoutes.get('/admin/api/reindex/status', async (c) => {
   }
 })
 
+// POST /admin/api/update-related-jobs — 관련직업 재계산 (v2: heroTags + keyword + domain)
+import { updateRelatedJobs } from '../scripts/etl/updateRelatedJobs'
+
+adminRoutes.post('/admin/api/update-related-jobs', async (c) => {
+  const user = c.get('user')
+  const isAdminUser = user && ((user.role as string) === 'admin' || (user.role as string) === 'super-admin' || (user.role as string) === 'operator')
+  const secretHeader = c.req.header('X-Admin-Secret')
+  const hasSecretAuth = secretHeader && c.env.ADMIN_SECRET && secretHeader === c.env.ADMIN_SECRET
+  if (!isAdminUser && !hasSecretAuth) {
+    return c.json({ error: 'Admin authentication required' }, 401)
+  }
+
+  try {
+    const body = await c.req.json<{ dryRun?: boolean; limit?: number }>().catch(() => ({}))
+    const result = await updateRelatedJobs(c.env.DB, {
+      dryRun: (body as any)?.dryRun ?? false,
+      limit: (body as any)?.limit,
+    })
+    return c.json({
+      success: true,
+      total: result.total,
+      updated: result.updated,
+      skipped: result.skipped,
+      errors: result.errors.length,
+      errorDetails: result.errors.slice(0, 20),
+      durationSec: ((Date.now() - result.startTime) / 1000).toFixed(1),
+    })
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
 export { adminRoutes }
