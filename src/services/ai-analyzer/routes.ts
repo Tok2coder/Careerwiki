@@ -4765,68 +4765,65 @@ analyzerRoutes.post('/v3/round-answers', async (c) => {
     }
 
     // ============================================
-    // Memory 업데이트 (Round 답변 저장 후)
+    // Memory 업데이트 (Round 답변 저장 후) — waitUntil로 비동기 처리
+    // 응답을 먼저 보내고, LLM 호출(updateMemory)은 백그라운드에서 실행
     // ============================================
-    let memoryUpdated = false
-    try {
-      // 1. Draft에서 현재 AggregatedProfile 조회
-      const draft = await db
-        .prepare('SELECT * FROM analyzer_drafts WHERE session_id = ?')
-        .bind(session_id)
-        .first<any>()
-      
-      if (draft) {
-        // 2. 기존 profile 가져오기 또는 생성
-        let aggregatedProfile: AggregatedProfile
-        if (draft.aggregated_profile_json) {
-          aggregatedProfile = JSON.parse(draft.aggregated_profile_json)
-        } else {
-          aggregatedProfile = createEmptyProfile(draft.profile_version || 0)
+    if (c.executionCtx && 'waitUntil' in c.executionCtx) {
+      c.executionCtx.waitUntil((async () => {
+        try {
+          const draft = await db
+            .prepare('SELECT * FROM analyzer_drafts WHERE session_id = ?')
+            .bind(session_id)
+            .first<any>()
+
+          if (draft) {
+            let aggregatedProfile: AggregatedProfile
+            if (draft.aggregated_profile_json) {
+              aggregatedProfile = JSON.parse(draft.aggregated_profile_json)
+            } else {
+              aggregatedProfile = createEmptyProfile(draft.profile_version || 0)
+            }
+
+            const roundAnswers = answers.map(ans => ({
+              questionId: ans.question_id,
+              roundNumber: round_number,
+              answer: ans.answer,
+              answeredAt: new Date().toISOString(),
+            }))
+
+            const updatedMemory = await updateMemory(
+              env.AI || null,
+              aggregatedProfile,
+              { type: 'round_answers', data: roundAnswers, roundNumber: round_number },
+              (env as any).OPENAI_API_KEY
+            )
+
+            aggregatedProfile.memory = updatedMemory
+            await db
+              .prepare(`
+                UPDATE analyzer_drafts SET
+                  memory_json = ?,
+                  aggregated_profile_json = ?
+                WHERE session_id = ?
+              `)
+              .bind(
+                JSON.stringify(updatedMemory),
+                JSON.stringify(aggregatedProfile),
+                session_id
+              )
+              .run()
+          }
+        } catch (memoryError: any) {
+          // Memory 업데이트 실패해도 답변 저장은 이미 성공
         }
-        
-        // 3. Round 답변을 RoundAnswer 형식으로 변환
-        const roundAnswers = answers.map(ans => ({
-          questionId: ans.question_id,
-          roundNumber: round_number,
-          answer: ans.answer,
-          answeredAt: new Date().toISOString(),
-        }))
-        
-        // 4. Memory 업데이트 호출
-        const updatedMemory = await updateMemory(
-          env.AI || null,
-          aggregatedProfile,
-          { type: 'round_answers', data: roundAnswers, roundNumber: round_number },
-          (env as any).OPENAI_API_KEY
-        )
-        
-        // 5. Draft에 memory_json 저장
-        aggregatedProfile.memory = updatedMemory
-        await db
-          .prepare(`
-            UPDATE analyzer_drafts SET
-              memory_json = ?,
-              aggregated_profile_json = ?
-            WHERE session_id = ?
-          `)
-          .bind(
-            JSON.stringify(updatedMemory),
-            JSON.stringify(aggregatedProfile),
-            session_id
-          )
-          .run()
-        
-        memoryUpdated = true
-      }
-    } catch (memoryError: any) {
-      // Memory 업데이트 실패해도 답변 저장은 성공
+      })())
     }
-    
+
     return c.json({
       success: true,
       saved_count: successCount,
       round_number,
-      memory_updated: memoryUpdated,
+      memory_updated: false, // waitUntil로 비동기 처리되므로 항상 false
       collection_progress: collectionProgressSummary,
     })
     

@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-03-18] round-answers 무한 로딩: LLM 호출을 응답 전에 동기적으로 실행하면 안 된다
+- **상황**: "답변 저장 중..." 스피너가 10분 이상 멈춤. 사용자가 마지막 라운드 답변 제출 후 결과 페이지로 진행 불가
+- **원인**: `/v3/round-answers` 서버 핸들러가 DB 저장 후 `updateMemory()` (OpenAI LLM 호출, 최대 55초) 를 동기적으로 await한 뒤에야 응답 반환. Worker 시간 초과 시 클라이언트 fetch가 영원히 대기
+- **해결**: (1) 서버: `c.executionCtx.waitUntil()`로 memory 업데이트를 응답 이후 백그라운드 실행 (2) 클라이언트: AbortController로 30초 타임아웃 추가, 타임아웃 시에도 분석 단계로 계속 진행
+- **교훈**: API 응답 경로에 LLM/외부 API 호출 넣지 말 것. 부가 작업(memory, analytics)은 반드시 `waitUntil`로 분리. 클라이언트 fetch에는 항상 AbortController 타임아웃 설정
+
 ### [2026-03-17] add-context 기능: DB 스키마 검증 없이 INSERT 작성하면 연쇄 실패
 - **상황**: 추가 정보 입력(add-context) 엔드포인트에서 4개 버그 연쇄 발생 — (1) user_id TEXT vs INTEGER 타입 불일치 → 404 (2) analyzer_facts CHECK constraint 누락 → SQLITE_CONSTRAINT (3) created_at 대신 requested_at 컬럼명 → SQLITE_ERROR (4) redirect 후 빈 페이지 → 프론트엔드 핸들러 없음
 - **원인**: DB 테이블 스키마를 직접 확인하지 않고 INSERT 문 작성. 기존 코드 참고 없이 컬럼명/타입을 추정

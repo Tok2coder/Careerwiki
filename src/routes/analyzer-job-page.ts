@@ -4503,8 +4503,11 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             }
             
             
-            // 서버 저장
+            // 서버 저장 (30초 타임아웃)
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+
                 const response = await fetch('/api/ai-analyzer/v3/round-answers', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -4512,9 +4515,11 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         session_id: currentSessionId,
                         round_number: roundNumber,
                         answers: answers,
-                    })
+                    }),
+                    signal: controller.signal,
                 });
-                
+                clearTimeout(timeoutId);
+
                 // 먼저 HTTP 상태 체크 (500 에러 등)
                 if (!response.ok) {
                     const errorText = await response.text().catch(() => 'Unknown error');
@@ -4522,19 +4527,23 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     // 로컬에는 저장되었으므로 진행은 계속
                     return false;
                 }
-                
+
                 const data = await response.json();
-                
+
                 // P0-1: 상세 에러 표시
                 if (!data.success) {
                     showErrorToast('라운드 ' + roundNumber + ' 답변 저장 실패: ' + (data.detail || data.error || 'Unknown error'));
                     // 로컬에는 저장되었으므로 진행은 계속
                     return false;
                 }
-                
+
                 return true;
-                
+
             } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.warn('Round ' + roundNumber + ' 답변 저장 타임아웃 — 분석 단계로 계속 진행');
+                    return true; // 타임아웃이어도 서버에서는 DB 저장 완료됐을 가능성 높음
+                }
                 showErrorToast('라운드 ' + roundNumber + ' 답변 저장 중 오류 발생: ' + (error.message || 'Network error'));
                 // 로컬에는 저장되었으므로 진행은 계속
                 return false;
