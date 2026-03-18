@@ -529,7 +529,7 @@ pagesRoutes.get('/analyzer', (c) => {
                     <!-- POPULAR 뱃지 — 카드 우상단 -->
                     <span class="absolute top-4 right-4 px-3 py-0.5 text-[10px] font-bold tracking-wider rounded-full text-white uppercase"
                           style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
-                        Popular
+                        인기
                     </span>
 
                     <div class="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center"
