@@ -64,6 +64,34 @@ const EditMode = {
           background: rgba(100, 181, 246, 0.1);
           text-decoration-color: var(--wiki-primary, #64b5f6);
         }
+        /* 드래그앤드롭 순서 변경 */
+        .edit-drag-handle {
+          cursor: grab;
+          user-select: none;
+          opacity: 0.35;
+          transition: opacity 0.15s;
+          font-size: 14px;
+          letter-spacing: -1px;
+        }
+        .edit-drag-handle:hover { opacity: 0.8; }
+        .edit-drag-handle:active { cursor: grabbing; }
+        .edit-dragging {
+          opacity: 0.4;
+          border: 1px dashed rgba(100, 181, 246, 0.5) !important;
+          background: rgba(100, 181, 246, 0.05) !important;
+        }
+        .edit-drag-over-top {
+          border-top: 2px solid var(--wiki-primary, #64b5f6) !important;
+          margin-top: -1px;
+        }
+        .edit-drag-over-bottom {
+          border-bottom: 2px solid var(--wiki-primary, #64b5f6) !important;
+          margin-bottom: -1px;
+        }
+        .edit-tag-chip[draggable="true"] { cursor: grab; }
+        .edit-tag-chip.edit-dragging { opacity: 0.4; }
+        .edit-autocomplete-chip[draggable="true"] { cursor: grab; }
+        .edit-autocomplete-chip.edit-dragging { opacity: 0.4; }
       `;
       document.head.appendChild(style);
     }
@@ -1355,8 +1383,9 @@ const EditMode = {
       }
       
       const itemsHtml = items.map((item, idx) => `
-        <div class="flex items-start gap-2 edit-list-item" data-index="${idx}">
-          <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
+        <div class="flex items-start gap-2 edit-list-item" data-index="${idx}" draggable="true">
+          <span class="edit-drag-handle flex-shrink-0 w-4 flex items-center justify-center mt-2.5" title="드래그하여 순서 변경">⠿</span>
+          <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2 edit-item-badge">${idx + 1}</span>
           <input
             type="text"
             value="${this.escapeHtml(item)}"
@@ -1398,9 +1427,10 @@ const EditMode = {
       if (items.length === 0) items = [{ first: '', second: '' }];
 
       const itemsHtml = items.map((item, idx) => `
-        <div class="space-y-2 edit-list-item" data-index="${idx}">
+        <div class="space-y-2 edit-list-item" data-index="${idx}" draggable="true">
           <div class="flex items-start gap-2">
-            <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
+            <span class="edit-drag-handle flex-shrink-0 w-4 flex items-center justify-center mt-2.5" title="드래그하여 순서 변경">⠿</span>
+            <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2 edit-item-badge">${idx + 1}</span>
             <input
               type="text"
               value="${this.escapeHtml(item.first || '')}"
@@ -1445,8 +1475,9 @@ const EditMode = {
       if (items.length === 0) items = [{ url: '', title: '', description: '' }];
 
       const itemsHtml = items.map((item, idx) => `
-        <div class="space-y-2 edit-youtube-item" data-index="${idx}">
+        <div class="space-y-2 edit-youtube-item" data-index="${idx}" draggable="true">
           <div class="flex items-start gap-2">
+            <span class="edit-drag-handle flex-shrink-0 w-4 flex items-center justify-center mt-2.5" title="드래그하여 순서 변경">⠿</span>
             <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-red-500/20 text-red-400 text-xs font-bold mt-2">
               <i class="fab fa-youtube text-xs"></i>
             </span>
@@ -1507,9 +1538,10 @@ const EditMode = {
       if (items.length === 0) items = [{ text: '', url: '' }];
 
       const itemsHtml = items.map((item, idx) => `
-        <div class="space-y-1.5 edit-link-item" data-index="${idx}">
+        <div class="space-y-1.5 edit-link-item" data-index="${idx}" draggable="true">
           <div class="flex items-start gap-2">
-            <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
+            <span class="edit-drag-handle flex-shrink-0 w-4 flex items-center justify-center mt-2.5" title="드래그하여 순서 변경">⠿</span>
+            <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2 edit-item-badge">${idx + 1}</span>
             <input
               type="text"
               value="${this.escapeHtml(item.text || '')}"
@@ -1555,8 +1587,9 @@ const EditMode = {
         const slug = typeof item === 'string' ? item : (item?.slug || item?.name || '');
         if (!name) return '';
         return `
-          <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-${gradientFrom}/10 border border-${gradientFrom}/30 text-${gradientFrom} rounded-lg text-sm edit-autocomplete-chip" 
-                data-name="${this.escapeHtml(name)}" data-slug="${this.escapeHtml(slug)}">
+          <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-${gradientFrom}/10 border border-${gradientFrom}/30 text-${gradientFrom} rounded-lg text-sm edit-autocomplete-chip"
+                data-name="${this.escapeHtml(name)}" data-slug="${this.escapeHtml(slug)}" draggable="true">
+            <span class="edit-drag-handle text-xs mr-0.5">⠿</span>
             <i class="fas ${field.domain === 'jobs' ? 'fa-briefcase' : 'fa-graduation-cap'} text-xs opacity-70"></i>
             ${this.escapeHtml(name)}
             <button type="button" class="hover:text-red-400 ml-1 remove-autocomplete-btn"><i class="fas fa-times text-xs"></i></button>
@@ -1585,7 +1618,8 @@ const EditMode = {
       // 태그 필드: 칩 형태로 표시
       const tags = Array.isArray(value) ? value : (typeof value === 'string' && value ? value.split(',').map(t => t.trim()).filter(Boolean) : []);
       const tagsHtml = tags.map(tag => `
-        <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-${gradientFrom}/10 text-${gradientFrom} rounded-full text-sm edit-tag-chip" data-tag="${this.escapeHtml(tag)}">
+        <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-${gradientFrom}/10 text-${gradientFrom} rounded-full text-sm edit-tag-chip" data-tag="${this.escapeHtml(tag)}" draggable="true">
+          <span class="edit-drag-handle text-xs mr-0.5">⠿</span>
           ${this.escapeHtml(tag)}
           <button type="button" class="hover:text-red-400 ml-1 remove-tag-btn"><i class="fas fa-times text-xs"></i></button>
         </span>
@@ -1841,8 +1875,9 @@ const EditMode = {
         : (existingSource ? [{ text: (existingSource.text || '').replace(/^\[\d+\]\s*/, ''), url: existingSource.url || '' }] : []);
 
       const sourceItemsHtml = existingSources.map((src, idx) => `
-        <div class="edit-source-item rounded-lg border border-wiki-border/30 bg-wiki-bg/30 p-2.5" data-source-index="${idx}">
+        <div class="edit-source-item rounded-lg border border-wiki-border/30 bg-wiki-bg/30 p-2.5" data-source-index="${idx}" draggable="true">
           <div class="flex items-start gap-2">
+            <span class="edit-drag-handle flex-shrink-0 w-3 flex items-center justify-center mt-1 text-[10px]" title="드래그하여 순서 변경">⠿</span>
             <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded bg-${gradientFrom}/20 text-${gradientFrom} text-[10px] font-bold mt-0.5 source-num-badge">${idx + 1}</span>
             <input
               type="text"
@@ -2188,16 +2223,16 @@ const EditMode = {
       if (removeBtn) {
         const item = removeBtn.closest('.edit-list-item') || removeBtn.closest('.edit-youtube-item') || removeBtn.closest('.edit-link-item');
         if (item) {
-          item.remove();
-          // 인덱스 재정렬
+          // container를 remove 전에 찾기
           const container = item.closest('[data-field-type="list"], [data-field-type="pairList"], [data-field-type="youtubeLinks"], [data-field-type="linkList"]');
+          item.remove();
           if (container) {
             this.reindexListItems(container);
           }
         }
       }
     });
-    
+
     // 태그 삭제 이벤트 (이벤트 위임)
     document.addEventListener('click', (e) => {
       const removeBtn = e.target.closest('.remove-tag-btn');
@@ -2208,6 +2243,9 @@ const EditMode = {
         }
       }
     });
+
+    // ═══ 드래그앤드롭 순서 변경 ═══
+    this._initDragAndDrop();
     
     // 차트 에디터 이벤트 (이벤트 위임)
     document.addEventListener('click', (e) => {
@@ -2495,8 +2533,10 @@ const EditMode = {
     const item = document.createElement('div');
     item.className = 'edit-source-item rounded-lg border border-wiki-border/30 bg-wiki-bg/30 p-2.5';
     item.dataset.sourceIndex = idx;
+    item.draggable = true;
     item.innerHTML = `
       <div class="flex items-start gap-2">
+        <span class="edit-drag-handle flex-shrink-0 w-3 flex items-center justify-center mt-1 text-[10px]" title="드래그하여 순서 변경">⠿</span>
         <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded bg-${gradientFrom}/20 text-${gradientFrom} text-[10px] font-bold mt-0.5 source-num-badge">${idx + 1}</span>
         <input
           type="text"
@@ -2557,8 +2597,10 @@ const EditMode = {
     const item = document.createElement('div');
     item.className = 'flex items-start gap-2 edit-list-item';
     item.dataset.index = idx;
+    item.draggable = true;
     item.innerHTML = `
-      <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
+      <span class="edit-drag-handle flex-shrink-0 w-4 flex items-center justify-center mt-2.5" title="드래그하여 순서 변경">⠿</span>
+      <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2 edit-item-badge">${idx + 1}</span>
       <input
         type="text"
         value="${this.escapeHtml(value)}"
@@ -2569,9 +2611,8 @@ const EditMode = {
         <i class="fas fa-trash-alt text-sm"></i>
       </button>
     `;
-    
+
     container.appendChild(item);
-    // 새로 추가된 input에 포커스
     item.querySelector('input')?.focus();
   },
 
@@ -2588,9 +2629,11 @@ const EditMode = {
     const item = document.createElement('div');
     item.className = 'space-y-2 edit-list-item';
     item.dataset.index = idx;
+    item.draggable = true;
     item.innerHTML = `
       <div class="flex items-start gap-2">
-        <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
+        <span class="edit-drag-handle flex-shrink-0 w-4 flex items-center justify-center mt-2.5" title="드래그하여 순서 변경">⠿</span>
+        <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2 edit-item-badge">${idx + 1}</span>
         <input
           type="text"
           value="${this.escapeHtml(first)}"
@@ -2623,8 +2666,10 @@ const EditMode = {
     const item = document.createElement('div');
     item.className = 'space-y-2 edit-youtube-item';
     item.dataset.index = idx;
+    item.draggable = true;
     item.innerHTML = `
       <div class="flex items-start gap-2">
+        <span class="edit-drag-handle flex-shrink-0 w-4 flex items-center justify-center mt-2.5" title="드래그하여 순서 변경">⠿</span>
         <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-red-500/20 text-red-400 text-xs font-bold mt-2">
           <i class="fab fa-youtube text-xs"></i>
         </span>
@@ -2672,9 +2717,11 @@ const EditMode = {
     const item = document.createElement('div');
     item.className = 'space-y-1.5 edit-link-item';
     item.dataset.index = idx;
+    item.draggable = true;
     item.innerHTML = `
       <div class="flex items-start gap-2">
-        <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2">${idx + 1}</span>
+        <span class="edit-drag-handle flex-shrink-0 w-4 flex items-center justify-center mt-2.5" title="드래그하여 순서 변경">⠿</span>
+        <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-${gradientFrom}/20 text-${gradientFrom} text-xs font-bold mt-2 edit-item-badge">${idx + 1}</span>
         <input
           type="text"
           value=""
@@ -2712,10 +2759,127 @@ const EditMode = {
       : '.edit-list-item';
     container.querySelectorAll(listSelector).forEach((item, idx) => {
       item.dataset.index = idx;
-      const badge = item.querySelector('span');
+      const badge = item.querySelector('.edit-item-badge');
       if (badge && fieldType !== 'youtubeLinks') {
         badge.textContent = idx + 1;
       }
+    });
+  },
+
+  /**
+   * 드래그앤드롭 순서 변경 초기화
+   */
+  _initDragAndDrop() {
+    let dragItem = null;
+    let dragContainer = null;
+
+    // --- 리스트 항목 (list, pairList, youtubeLinks, linkList) ---
+    const getListItem = (el) => el?.closest('.edit-list-item, .edit-youtube-item, .edit-link-item, .edit-source-item');
+    const getListContainer = (el) => el?.closest('[data-field-type="list"], [data-field-type="pairList"], [data-field-type="youtubeLinks"], [data-field-type="linkList"], [data-source-list]');
+
+    document.addEventListener('dragstart', (e) => {
+      const handle = e.target.closest('.edit-drag-handle');
+      const item = getListItem(e.target);
+      // 리스트 항목: 핸들로만 드래그 시작
+      if (handle && item && getListContainer(item)) {
+        dragItem = item;
+        dragContainer = getListContainer(item);
+        item.classList.add('edit-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', '');
+        return;
+      }
+      // 태그/autocomplete 칩: 칩 자체로 드래그
+      const chip = e.target.closest('.edit-tag-chip[draggable], .edit-autocomplete-chip[draggable]');
+      if (chip) {
+        dragItem = chip;
+        dragContainer = chip.parentElement;
+        chip.classList.add('edit-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', '');
+        return;
+      }
+    });
+
+    document.addEventListener('dragover', (e) => {
+      if (!dragItem) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+
+      // 리스트 항목
+      if (getListContainer(dragItem)) {
+        const overItem = getListItem(e.target);
+        if (!overItem || overItem === dragItem || !dragContainer.contains(overItem)) return;
+        // 위/아래 판단
+        const rect = overItem.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        // 기존 표시 제거
+        dragContainer.querySelectorAll('.edit-drag-over-top, .edit-drag-over-bottom').forEach(el => {
+          el.classList.remove('edit-drag-over-top', 'edit-drag-over-bottom');
+        });
+        if (e.clientY < midY) {
+          overItem.classList.add('edit-drag-over-top');
+        } else {
+          overItem.classList.add('edit-drag-over-bottom');
+        }
+        return;
+      }
+
+      // 태그/autocomplete 칩
+      const chip = dragItem.closest('.edit-tag-chip, .edit-autocomplete-chip') ? dragItem : null;
+      if (chip) {
+        const overChip = e.target.closest('.edit-tag-chip, .edit-autocomplete-chip');
+        if (!overChip || overChip === chip || !dragContainer.contains(overChip)) return;
+        const rect = overChip.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (e.clientX < midX) {
+          dragContainer.insertBefore(chip, overChip);
+        } else {
+          dragContainer.insertBefore(chip, overChip.nextSibling);
+        }
+      }
+    });
+
+    document.addEventListener('drop', (e) => {
+      if (!dragItem) return;
+      e.preventDefault();
+
+      // 리스트 항목
+      if (getListContainer(dragItem)) {
+        const overTop = dragContainer.querySelector('.edit-drag-over-top');
+        const overBottom = dragContainer.querySelector('.edit-drag-over-bottom');
+        if (overTop) {
+          dragContainer.insertBefore(dragItem, overTop);
+        } else if (overBottom) {
+          dragContainer.insertBefore(dragItem, overBottom.nextSibling);
+        }
+        // 정리
+        dragContainer.querySelectorAll('.edit-drag-over-top, .edit-drag-over-bottom').forEach(el => {
+          el.classList.remove('edit-drag-over-top', 'edit-drag-over-bottom');
+        });
+        // 소스 리스트인지 일반 리스트인지에 따라 다른 reindex 호출
+        if (dragContainer.hasAttribute('data-source-list')) {
+          this.reindexSourceItems(dragContainer);
+        } else {
+          this.reindexListItems(dragContainer);
+        }
+      }
+
+      dragItem.classList.remove('edit-dragging');
+      dragItem = null;
+      dragContainer = null;
+    });
+
+    document.addEventListener('dragend', (e) => {
+      if (dragItem) {
+        dragItem.classList.remove('edit-dragging');
+      }
+      // 전체 표시 정리
+      document.querySelectorAll('.edit-drag-over-top, .edit-drag-over-bottom, .edit-dragging').forEach(el => {
+        el.classList.remove('edit-drag-over-top', 'edit-drag-over-bottom', 'edit-dragging');
+      });
+      dragItem = null;
+      dragContainer = null;
     });
   },
   
