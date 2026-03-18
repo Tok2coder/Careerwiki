@@ -1213,6 +1213,37 @@ export const MINI_MODULE_EXCLUSION_RULES: MiniModuleExclusionRule[] = [
       return hasPhysicalConstraint === true && isManualLabor
     },
   },
+  // 10a. 시각 장애 → 시각 의존 직업 제외
+  {
+    id: 'disability_visual_vs_visual_jobs',
+    description: '시각 장애 → 시각 의존 직업 제외',
+    shouldExclude: (mm, job) => {
+      if (mm.disability_type !== 'visual') return false
+      return !!(job.job_name && /디자이너|그래픽|일러스트|화가|사진|영상|촬영|운전|조종사|파일럿|감정사|감별사|미술|색채|시각|편집|카메라|영화|애니메이|만화|웹툰/.test(job.job_name))
+    },
+  },
+  // 10b. 청각 장애 → 청각 의존 직업 제외
+  {
+    id: 'disability_hearing_vs_audio_jobs',
+    description: '청각 장애 → 청각 의존 직업 제외',
+    shouldExclude: (mm, job) => {
+      if (mm.disability_type !== 'hearing') return false
+      return !!(job.job_name && /콜센터|텔레마케터|전화상담|통역|음악|음향|작곡|DJ|아나운서|방송|성우|청능사|속기사/.test(job.job_name))
+    },
+  },
+  // 10c. 지체 장애 → 이동/체력 의존 직업 제외 (physical_constraint보다 넓음)
+  {
+    id: 'disability_mobility_vs_physical_jobs',
+    description: '지체 장애 → 이동/체력 의존 직업 제외',
+    shouldExclude: (mm, job) => {
+      if (mm.disability_type !== 'mobility') return false
+      const isPhysical = (job.physical_demand === 'high' || job.physical_demand === 'very_high') ||
+        (job.work_environment === 'field' || job.work_environment === 'factory' ||
+         job.work_environment === 'outdoor') ||
+        !!(job.job_name && /운동|체육|스포츠|무용|댄서|소방|경호|경찰|군인|배달|택배|설치|정비|건설|석공|용접|경비|택시|버스|트럭|조종|파일럿/.test(job.job_name))
+      return isPhysical
+    },
+  },
   // 11. repetition_drain + 제조/공예/숙련직 → Hard Exclusion (더 강력)
   {
     id: 'repetition_drain_vs_skilled_crafts',

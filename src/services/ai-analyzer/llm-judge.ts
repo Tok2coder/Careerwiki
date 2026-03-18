@@ -621,7 +621,18 @@ function buildUserContext(
     parts.push(`user_value_tokens: ${mm.value_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
     parts.push(`user_strength_tokens: ${mm.strength_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
     parts.push(`user_constraint_flags: ${mm.constraint_flags.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
-    
+
+    // 장애 유형 정보
+    if (mm.disability_type) {
+      const disabilityLabels: Record<string, string> = {
+        visual: '시각 장애',
+        hearing: '청각 장애',
+        mobility: '지체 장애',
+        other: '기타 장애',
+      }
+      parts.push(`user_disability_type: ${disabilityLabels[mm.disability_type] || mm.disability_type} — ⚠️ 이 장애 유형과 직업/전공의 물리적 요구사항 충돌 여부를 Feasibility/Risk에 반영하세요`)
+    }
+
     // 🆕 Q8-Q12 심층 분기 토큰
     if (mm.sacrifice_flags?.length) {
       parts.push(`user_sacrifice_flags (Hard Bias): ${mm.sacrifice_flags.map(t => TOKEN_TO_KOREAN[t] || t).join(', ')}`)

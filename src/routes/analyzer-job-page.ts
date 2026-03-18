@@ -3293,10 +3293,50 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 btn.classList.add('mm-selected');
             }
             
+            // physical_constraint 선택 시 장애 유형 서브패널 표시
+            if (moduleKey === 'constraint' && token === 'physical_constraint') {
+                const existingSub = document.getElementById('disability-type-sub');
+                if (selections.includes('physical_constraint') && !existingSub) {
+                    const subHtml = \`
+                        <div id="disability-type-sub" class="col-span-1 md:col-span-2 p-4 rounded-xl border-2 mt-1"
+                             style="background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.3);">
+                            <p class="text-sm text-amber-300 font-medium mb-3">♿ 해당하는 유형을 선택해주세요 (선택사항)</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button type="button" onclick="selectDisabilityType('visual', this)" class="disability-chip px-3 py-2 text-sm rounded-lg border transition-all" style="border-color: rgba(42,42,62,0.5); background: rgba(26,26,46,0.7); color: #fff;" data-dtype="visual">👁️ 시각 장애</button>
+                                <button type="button" onclick="selectDisabilityType('hearing', this)" class="disability-chip px-3 py-2 text-sm rounded-lg border transition-all" style="border-color: rgba(42,42,62,0.5); background: rgba(26,26,46,0.7); color: #fff;" data-dtype="hearing">👂 청각 장애</button>
+                                <button type="button" onclick="selectDisabilityType('mobility', this)" class="disability-chip px-3 py-2 text-sm rounded-lg border transition-all" style="border-color: rgba(42,42,62,0.5); background: rgba(26,26,46,0.7); color: #fff;" data-dtype="mobility">🦽 지체 장애</button>
+                                <button type="button" onclick="selectDisabilityType('other', this)" class="disability-chip px-3 py-2 text-sm rounded-lg border transition-all" style="border-color: rgba(42,42,62,0.5); background: rgba(26,26,46,0.7); color: #fff;" data-dtype="other">➕ 기타</button>
+                            </div>
+                        </div>\`;
+                    btn.closest('.grid')?.insertAdjacentHTML('beforeend', subHtml);
+                } else if (!selections.includes('physical_constraint') && existingSub) {
+                    existingSub.remove();
+                    window.selectedDisabilityType = undefined;
+                }
+            }
+
             updateMiniModuleCount(moduleKey);
             updateMiniModuleNextButton();
         }
-        
+
+        function selectDisabilityType(dtype, btn) {
+            const isSelected = btn.classList.contains('disability-selected');
+            // 모든 칩 초기화
+            document.querySelectorAll('.disability-chip').forEach(c => {
+                c.style.borderColor = 'rgba(42,42,62,0.5)';
+                c.style.backgroundColor = 'rgba(26,26,46,0.7)';
+                c.classList.remove('disability-selected');
+            });
+            if (isSelected) {
+                window.selectedDisabilityType = undefined;
+            } else {
+                btn.style.borderColor = 'rgba(245,158,11,0.5)';
+                btn.style.backgroundColor = 'rgba(245,158,11,0.15)';
+                btn.classList.add('disability-selected');
+                window.selectedDisabilityType = dtype;
+            }
+        }
+
         function updateMiniModuleCount(moduleKey) {
             const countEl = document.getElementById('mm-selection-count');
             if (!countEl) return;
@@ -3383,7 +3423,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 }
             }
             
-            return {
+            const result = {
                 interest_top,
                 value_top,
                 strength_top,
@@ -3391,6 +3431,11 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 internal_conflict_flags: internal_conflict_flags.length > 0 ? internal_conflict_flags : undefined,
                 raw_selections: { ...miniModuleSelections },
             };
+            // 장애 유형 추가
+            if (window.selectedDisabilityType) {
+                result.disability_type = window.selectedDisabilityType;
+            }
+            return result;
         }
         
         function summarizeMiniModuleResultLocal(result) {

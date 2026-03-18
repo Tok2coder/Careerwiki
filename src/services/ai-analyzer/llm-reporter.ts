@@ -581,7 +581,17 @@ function buildReporterContext(
       ...(mm.energy_drain_flags || []).map(t => TOKEN_TO_KOREAN[t] || t),
     ]
     parts.push(`제약 조건: ${allConstraints.join(', ') || '없음'}`)
-    
+
+    if (mm.disability_type) {
+      const disabilityLabels: Record<string, string> = {
+        visual: '시각 장애 — 시각에 의존하지 않는 업무 환경이 필요합니다',
+        hearing: '청각 장애 — 음성 소통보다 텍스트/비주얼 기반 소통이 적합합니다',
+        mobility: '지체 장애 — 재택근무나 사무직 위주의 환경이 적합합니다',
+        other: '기타 장애 — 개인 상황에 맞는 환경 고려가 필요합니다',
+      }
+      parts.push(`♿ 장애 유형: ${disabilityLabels[mm.disability_type] || mm.disability_type}`)
+    }
+
     if (mm.internal_conflict_flags?.length) {
       parts.push(`⚡ 내부 충돌 감지: ${mm.internal_conflict_flags.join(', ')} - 리포트에서 반드시 언급`)
     }
@@ -1898,6 +1908,16 @@ function buildMajorReporterContext(
       ...(mm.energy_drain_flags || []).map(t => TOKEN_TO_KOREAN[t] || t),
     ]
     parts.push(`제약 조건: ${allConstraints.join(', ') || '없음'}`)
+
+    if (mm.disability_type) {
+      const disabilityLabels: Record<string, string> = {
+        visual: '시각 장애 — 시각에 의존하지 않는 학습 환경이 필요합니다',
+        hearing: '청각 장애 — 강의 자막/필기 지원 등 청각 보조가 필요합니다',
+        mobility: '지체 장애 — 캠퍼스 접근성과 실험/실습 대안이 필요합니다',
+        other: '기타 장애 — 개인 상황에 맞는 학습 환경 고려가 필요합니다',
+      }
+      parts.push(`♿ 장애 유형: ${disabilityLabels[mm.disability_type] || mm.disability_type}`)
+    }
 
     if (mm.internal_conflict_flags?.length) {
       parts.push(`⚡ 내부 충돌 감지: ${mm.internal_conflict_flags.join(', ')} - 리포트에서 반드시 언급`)

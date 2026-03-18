@@ -42,6 +42,9 @@ export interface MiniModuleResult {
   persistence_anchor?: string          // Q14. 버팀 앵커 - 단일 선택
   external_expectation?: string        // Q15. 타인 기대 반응 - 단일 선택
   
+  // 장애 유형 (physical_constraint 선택 시 세부 유형)
+  disability_type?: 'visual' | 'hearing' | 'mobility' | 'other'
+
   // 신뢰도/일관성 신호 (보강 1)
   low_confidence_flags?: string[]      // 예: ['interest', 'value'] - 고르게 선택됨
   internal_conflict_flags?: string[]   // 예: ['autonomy_vs_stability'] - 충돌 가치

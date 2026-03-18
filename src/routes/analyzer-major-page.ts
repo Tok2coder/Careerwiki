@@ -1272,6 +1272,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 { type: 'family', label: '가족 의견', emoji: '👨‍👩‍👧', description: '가족 의견을 고려해야 해요', placeholder: '예: 부모님이 특정 전공을 원하심, 가업이 있음 등', details: [{ value: 'parent_opinion', label: '부모님 의견 고려' }, { value: 'family_business', label: '가업 승계 고려' }, { value: 'family_care', label: '가족 돌봄 필요' }] },
                 { type: 'subject', label: '과목/적성 제약', emoji: '📐', description: '특정 과목이나 활동이 부담돼요', placeholder: '예: 수학을 못함, 실험 수업이 부담됨 등', details: [{ value: 'math_science_hard', label: '수학/과학 기피' }, { value: 'language_hard', label: '외국어 어려움' }, { value: 'practical_hard', label: '실기/실험 부담' }] },
                 { type: 'duration', label: '기간/과정 제약', emoji: '⏳', description: '수업 기간이나 과정이 부담돼요', placeholder: '예: 4년 이내 졸업 원함, 대학원 필수 전공 기피 등', details: [{ value: 'fast_graduation', label: '빠른 졸업 원함' }, { value: 'no_grad_required', label: '대학원 필수 기피' }, { value: 'internship_burden', label: '실습 기간 부담' }] },
+                { type: 'health', label: '건강/장애 제약', emoji: '♿', description: '건강이나 장애로 인한 제약이 있어요', placeholder: '예: 장시간 실험이 어려움, 시각/청각 보조 필요 등', details: [{ value: 'visual_disability', label: '👁️ 시각 장애' }, { value: 'hearing_disability', label: '👂 청각 장애' }, { value: 'mobility_disability', label: '🦽 지체 장애' }, { value: 'energy_limit', label: '🔋 체력/에너지 제약' }] },
             ];
 
             container.innerHTML = \`
@@ -1460,8 +1461,22 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             
             // 스타일 즉시 적용
             applyDetailTagStyle(btnEl, !isCurrentlySelected);
+
+            // 장애 유형 → miniModuleResult에 반영
+            if (type === 'health') {
+                const disabilityMap = { visual_disability: 'visual', hearing_disability: 'hearing', mobility_disability: 'mobility' };
+                const details = careerState.constraints[type]?.details || [];
+                const found = details.find(d => disabilityMap[d]);
+                if (!window.miniModuleResult) window.miniModuleResult = {};
+                window.miniModuleResult.disability_type = found ? disabilityMap[found] : undefined;
+                // physical_constraint도 추가
+                if (!window.miniModuleResult.constraint_flags) window.miniModuleResult.constraint_flags = [];
+                if (found && !window.miniModuleResult.constraint_flags.includes('physical_constraint')) {
+                    window.miniModuleResult.constraint_flags.push('physical_constraint');
+                }
+            }
         }
-        
+
         function updateConstraintCustomDetailMajor(type, value) {
             if (!careerState.constraints[type]) return;
             careerState.constraints[type].custom_detail = value;
