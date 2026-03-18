@@ -1729,7 +1729,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             });
             
             if (arr.length > 0) {
-                const q = TRANSITION_SIGNAL_QUESTIONS.find(q => q.question_id === questionId);
+                const q = MAJOR_SIGNAL_QUESTIONS.find(q => q.question_id === questionId) || TRANSITION_SIGNAL_QUESTIONS.find(q => q.question_id === questionId);
                 const labels = arr.map((v, i) => {
                     const opt = q?.options.find(o => o.value === v);
                     const btn = container.querySelector(\`[data-value="\${v}"]\`);
