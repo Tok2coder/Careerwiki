@@ -4271,8 +4271,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             // 3분 글로벌 타임아웃 안전장치
             var globalTimeout = setTimeout(function() {
                 hideLoading();
-                alert('요청 시간이 초과되었습니다 (3분). 페이지를 새로고침 후 다시 시도해주세요.');
-            }, 180000);
+                alert('요청 시간이 초과되었습니다 (6분). 페이지를 새로고침 후 다시 시도해주세요.');
+            }, 360000);
 
             // skeleton 모드를 처음부터 사용 — progress bar 리셋 방지
             showLoading('분석 중...', '전문가급 리포트를 생성하고 있어요', true);
@@ -4290,7 +4290,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             try {
                 // 1. 기존 분석 API (리포트 생성) — 150초 타임아웃
                 var analyzeController = new AbortController();
-                var analyzeTimeout = setTimeout(function() { analyzeController.abort(); }, 150000);
+                var analyzeTimeout = setTimeout(function() { analyzeController.abort(); }, 300000); // 직업: 5분 (후보 6945개 + 리포트 생성)
 
                 const analyzeResponse = await fetch('/api/ai-analyzer/analyze', {
                     method: 'POST',
@@ -4454,7 +4454,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             } catch (error) {
                 hideLoading();
                 if (error.name === 'AbortError') {
-                    alert('분석 시간이 초과되었습니다 (2분 30초). 잠시 후 다시 시도해주세요.');
+                    alert('분석 시간이 초과되었습니다 (5분). 잠시 후 다시 시도해주세요.');
                 } else {
                     showToast(error.message || '분석 중 오류가 발생했습니다. 다시 시도해주세요.', 'error');
                 }
@@ -5898,9 +5898,9 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             try {
                 currentSessionId = 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 
-                // 타임아웃 설정 (150초)
+                // 타임아웃 설정 (5분 — 직업 추천은 후보 6945개 + 리포트 생성으로 오래 걸림)
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 150000);
+                const timeoutId = setTimeout(() => controller.abort(), 300000);
 
                 const response = await fetch('/api/ai-analyzer/analyze', {
                     method: 'POST',
