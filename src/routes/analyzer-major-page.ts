@@ -14,7 +14,6 @@ import {
   ROLE_IDENTITY_OPTIONS,
   CAREER_STAGE_OPTIONS,
   TRANSITION_STATUS_OPTIONS,
-  SKILL_LEVEL_OPTIONS,
   CONSTRAINT_OPTIONS,
   TRANSITION_SIGNAL_QUESTIONS,
   IDENTITY_ANCHOR_PATTERNS
@@ -73,7 +72,6 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
   const roleIdentityOptionsJson = JSON.stringify(ROLE_IDENTITY_OPTIONS)
   const careerStageOptionsJson = JSON.stringify(CAREER_STAGE_OPTIONS)
   const transitionStatusOptionsJson = JSON.stringify(TRANSITION_STATUS_OPTIONS)
-  const skillLevelOptionsJson = JSON.stringify(SKILL_LEVEL_OPTIONS)
   const constraintOptionsJson = JSON.stringify(CONSTRAINT_OPTIONS)
   const transitionSignalQuestionsJson = JSON.stringify(TRANSITION_SIGNAL_QUESTIONS)
   const identityAnchorPatternsJson = JSON.stringify(IDENTITY_ANCHOR_PATTERNS)
@@ -255,29 +253,11 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 
                 <!-- 구분선 -->
                 <div class="border-t border-wiki-border/30"></div>
-                
-                <!-- 축 4: 숙련도 -->
-                <div class="state-axis-section" data-axis="skill_level">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">4</div>
-                        <h3 class="text-lg font-bold">관심 분야에서의 숙련도는?</h3>
-                    </div>
-                    <div class="ml-11 mb-4 p-3 bg-violet-500/10 rounded-lg border border-violet-500/20">
-                        <p class="text-sm text-violet-300">
-                            <i class="fas fa-lightbulb mr-2"></i>
-                            현재 학력과 무관하게, <strong>앞으로 가고 싶은 분야</strong> 기준으로 선택해주세요
-                        </p>
-                    </div>
-                    <div class="grid grid-cols-3 md:grid-cols-5 gap-3" id="skill-level-options"></div>
-                </div>
-                
-                <!-- 구분선 -->
-                <div class="border-t border-wiki-border/30"></div>
-                
-                <!-- 축 5: 제약 조건 -->
+
+                <!-- 축 4: 제약 조건 -->
                 <div class="state-axis-section" data-axis="constraints">
                     <div class="flex items-center gap-3 mb-2">
-                        <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">5</div>
+                        <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">4</div>
                         <h3 class="text-lg font-bold">현재 제약이 있나요?</h3>
                         <span class="px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs rounded-full">선택사항</span>
                     </div>
@@ -291,7 +271,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
 
             <!-- 기본 정보 (관심사) -->
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">6</div>
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">5</div>
                 <h3 class="text-lg font-bold">관심사 & 기본 정보</h3>
             </div>
             <form id="universal-form">
@@ -303,7 +283,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
 
             <!-- 앞으로의 방향 (전이 신호) -->
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">7</div>
+                <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">6</div>
                 <h3 class="text-lg font-bold">앞으로의 방향</h3>
             </div>
             <p class="text-sm text-wiki-muted mb-4 ml-11">원하는 변화와 목표를 알려주세요</p>
@@ -396,7 +376,6 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
         const ROLE_IDENTITY_OPTIONS = ${roleIdentityOptionsJson};
         const CAREER_STAGE_OPTIONS = ${careerStageOptionsJson};
         const TRANSITION_STATUS_OPTIONS = ${transitionStatusOptionsJson};
-        const SKILL_LEVEL_OPTIONS = ${skillLevelOptionsJson};
         const CONSTRAINT_OPTIONS = ${constraintOptionsJson};
         const TRANSITION_SIGNAL_QUESTIONS = ${transitionSignalQuestionsJson};
         const IDENTITY_ANCHOR_PATTERNS = ${identityAnchorPatternsJson};
@@ -424,10 +403,9 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             role_identity: null,
             career_stage_years: null,
             transition_status: null,
-            skill_level: null,
             constraints: {}
         };
-        
+
         // 로딩 (시간 기반 프로그레스)
         let loadingTimer = null;
         let loadingStartTime = 0;
@@ -884,12 +862,6 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 if (transBtn && !transBtn.classList.contains('selected')) transBtn.click();
             }
             
-            // 숙련도 선택
-            if (careerStateFromResume.skill_level !== undefined && careerStateFromResume.skill_level !== null) {
-                const skillBtn = document.querySelector(\`#skill-level-options [data-value="\${careerStateFromResume.skill_level}"]\`);
-                if (skillBtn) skillBtn.click();
-            }
-            
         }
         
         // ============================================
@@ -899,33 +871,27 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             middle: {
                 career_stage: ['univ', 'grad', 'work_exp'],
                 transition_status: ['major_change', 'double_major'],
-                skill_level: [3, 4],
                 reasons: {
                     career_stage: '중학생은 선택할 수 없어요',
-                    transition_status: '대학 입학 후 선택할 수 있어요',
-                    skill_level: '아직 해당 단계가 아니에요'
+                    transition_status: '대학 입학 후 선택할 수 있어요'
                 }
             },
             high: {
                 career_stage: ['grad', 'work_exp'],
                 transition_status: ['major_change', 'double_major'],
-                skill_level: [4],
                 reasons: {
                     career_stage: '고등학생은 선택할 수 없어요',
-                    transition_status: '대학 입학 후 선택할 수 있어요',
-                    skill_level: '아직 해당 단계가 아니에요'
+                    transition_status: '대학 입학 후 선택할 수 있어요'
                 }
             },
             univ: {
                 career_stage: [],
                 transition_status: [],
-                skill_level: [],
                 reasons: {}
             },
             grad: {
                 career_stage: [],
                 transition_status: [],
-                skill_level: [],
                 reasons: {}
             }
         };
@@ -940,7 +906,6 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             renderStudentTypeOptions();
             renderMajorPurposeOptions();
             updateTransitionStatusOptionsMajor();
-            updateSkillLevelOptionsMajor();
             renderConstraintOptionsMajor();
             renderUniversalQuestions();
             renderTransitionSignalForm();
@@ -1014,7 +979,6 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             // 다른 축들 업데이트
             setTimeout(() => {
                 updateTransitionStatusOptionsMajor();
-                updateSkillLevelOptionsMajor();
             }, 150);
 
             checkStep1Completion();
@@ -1191,70 +1155,6 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             }
             
             updateTransitionStatusOptionsMajor();
-            checkStep1Completion();
-        }
-        
-        // 숙련도 (다크 테마 레벨 게이지)
-        function updateSkillLevelOptionsMajor() {
-            const container = document.getElementById('skill-level-options');
-            if (!container) return;
-            
-            const rules = studentType && STUDENT_TYPE_DISABLED_RULES[studentType] 
-                ? STUDENT_TYPE_DISABLED_RULES[studentType] 
-                : { skill_level: [], reasons: {} };
-            const disabledValues = rules.skill_level || [];
-            const reason = rules.reasons?.skill_level || '현재 상태에서 선택할 수 없어요';
-            
-            if (disabledValues.includes(careerState.skill_level)) {
-                careerState.skill_level = null;
-            }
-            
-            container.innerHTML = SKILL_LEVEL_OPTIONS.map((opt, idx) => {
-                const isDisabled = disabledValues.includes(opt.value);
-                const isSelected = careerState.skill_level === opt.value;
-                const levelBars = idx + 1;
-                
-                return \`
-                    <button type="button" \${isDisabled ? '' : \`onclick="selectSkillLevelMajor(\${opt.value}, this)"\`}
-                            class="skill-btn group relative rounded-xl p-3 transition-all duration-300 \${
-                                isDisabled 
-                                    ? 'bg-wiki-bg/50 cursor-not-allowed opacity-40' 
-                                    : isSelected 
-                                        ? 'bg-violet-500/20 border border-violet-500 shadow-lg shadow-violet-500/20' 
-                                        : 'bg-wiki-card/80 border border-wiki-border/50 hover:border-violet-500/50 hover:bg-wiki-card'
-                            }"
-                            data-value="\${opt.value}" \${isDisabled ? 'disabled' : ''}>
-                        \${isDisabled ? \`
-                            <div class="absolute top-2 right-2">
-                                <svg class="w-3.5 h-3.5 text-wiki-muted/50" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                        \` : ''}
-                        <div class="flex gap-1 mb-2 justify-center">
-                            \${[1,2,3,4,5].map(i => \`
-                                <div class="w-3 h-6 rounded-sm transition-all duration-300 \${
-                                    i <= levelBars 
-                                        ? isDisabled ? 'bg-wiki-muted/30' : isSelected ? 'bg-violet-500' : 'bg-wiki-muted/50'
-                                        : 'bg-wiki-border/30'
-                                }"></div>
-                            \`).join('')}
-                        </div>
-                        <div class="font-semibold text-sm \${isDisabled ? 'text-wiki-muted/50' : isSelected ? 'text-violet-400' : 'text-white'}">\${opt.label}</div>
-                        <div class="text-xs \${isDisabled ? 'text-wiki-muted/30' : 'text-wiki-muted'} mt-0.5">\${opt.description}</div>
-                        \${isDisabled ? \`
-                            <div class="disabled-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-black/90 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 border border-wiki-border/30">
-                                🔒 \${reason}
-                            </div>
-                        \` : ''}
-                    </button>
-                \`;
-            }).join('');
-        }
-        
-        function selectSkillLevelMajor(value, btnEl) {
-            careerState.skill_level = value;
-            updateSkillLevelOptionsMajor();
             checkStep1Completion();
         }
         
@@ -1507,8 +1407,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             const hasStudentType = studentType !== null;
             const hasMajorPurpose = majorPurpose !== null;
             const hasTransition = Array.isArray(careerState.transition_status) && careerState.transition_status.length > 0;
-            const hasSkillLevel = careerState.skill_level !== null;
-            const isComplete = hasStudentType && hasMajorPurpose && hasTransition && hasSkillLevel;
+            const isComplete = hasStudentType && hasMajorPurpose && hasTransition;
             const nextBtn = document.getElementById('step1-next-btn');
             nextBtn.disabled = !isComplete;
             if (isComplete) nextBtn.classList.add('hover-glow');
@@ -4858,8 +4757,8 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
             universalAnswers = {};
             followupAnswers = {};
             transitionSignalAnswers = {};
-            careerState = { role_identity: null, career_stage_years: null, transition_status: null, skill_level: null, constraints: {} };
-            
+            careerState = { role_identity: null, career_stage_years: null, transition_status: null, constraints: {} };
+
             document.querySelectorAll('.axis-btn, .constraint-btn, .chip-btn, .radio-btn, .trans-chip, .trans-radio, .trans-checkbox').forEach(btn => {
                 btn.classList.remove('ring-2', 'ring-wiki-primary', 'ring-emerald-400', 'ring-amber-400', 'bg-wiki-primary/10', 'bg-emerald-400/10', 'bg-amber-400/10', 'border-wiki-primary', 'border-emerald-400', 'border-amber-400');
             });
@@ -5257,7 +5156,7 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
             pendingDraft = null;
             pendingServerDraft = null;
             currentSessionId = '';  // 세션 ID 초기화
-            careerState = { role_identity: null, career_stage_years: null, transition_status: null, skill_level: null, constraints: {} };
+            careerState = { role_identity: null, career_stage_years: null, transition_status: null, constraints: {} };
             universalAnswers = {};
             transitionSignalAnswers = {};
             window.roundAnswers = [];
