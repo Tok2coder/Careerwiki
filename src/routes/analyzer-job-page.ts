@@ -4338,7 +4338,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         ].filter(Boolean),
                     };
                     
-                    // Phase 1: 추천만 빠르게 (리포트는 Phase 2에서 비동기 생성)
+                    // 추천 + 리포트 한번에 생성
                     let recommendResponse;
                     for (let attempt = 0; attempt <= 2; attempt++) {
                         recommendResponse = await fetch('/api/ai-analyzer/v3/recommend', {
@@ -4350,7 +4350,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 mini_module_result: miniModule,
                                 topK: 800,
                                 judgeTopN: 20,
-                                skipReport: true,
+                                skipReport: false,
                                 debug: DEBUG_MODE,
                             })
                         });
@@ -4409,28 +4409,6 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     };
 
                     mergeRecommendations(recommendData);
-
-                    // Phase 2: 리포트를 백그라운드에서 생성 (추천 결과 먼저 표시)
-                    // premium_report가 없으면 Phase 2 비동기 호출
-                    if (!analyzeData.result?.premium_report) {
-                        // Phase 1 결과를 먼저 표시 (리포트 없이)
-                        analyzeData.result.engine_version = 'v3';
-
-                        // Phase 2: 리포트 비동기 생성
-                        fetch('/api/ai-analyzer/v3/recommend/report', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ session_id: currentSessionId })
-                        }).then(r => r.json()).then(reportData => {
-                            if (reportData.success && reportData.premium_report) {
-                                analyzeData.result.premium_report = reportData.premium_report;
-                                // 리포트 도착 → 전체 UI 다시 렌더링
-                                displayPremiumReportV3(analyzeData.result);
-                            }
-                        }).catch(() => {
-                            // 리포트 실패해도 추천 결과는 이미 표시됨
-                        });
-                    }
                 } catch (recommendError) {
                     // Recommendation Mode 실패해도 기존 결과는 표시
                 }
