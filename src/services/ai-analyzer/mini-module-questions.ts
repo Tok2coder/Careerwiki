@@ -1249,7 +1249,7 @@ export function generateDecisionSummary(result: MiniModuleResult): string {
   
   const hasConservativeFlags = 
     result.sacrifice_flags?.includes('no_sacrifice') ||
-    result.constraint_flags.includes('uncertainty_constraint')
+    (result.constraint_flags || []).includes('uncertainty_constraint')
   
   // 2. 탐색 준비 상태
   if (hasConservativeFlags) {
@@ -1283,7 +1283,7 @@ export function generateDecisionSummary(result: MiniModuleResult): string {
   }
   
   // 4. 핵심 가치 (Top 1)
-  if (result.value_top.length > 0) {
+  if ((result.value_top || []).length > 0) {
     const topValue = TOKEN_TO_KOREAN[result.value_top[0]] || result.value_top[0]
     parts.push(`prioritizes ${topValue}`)
   }
@@ -1394,10 +1394,10 @@ export function enrichSearchProfileWithDecisionSummary(
 export function summarizeMiniModuleResult(result: MiniModuleResult): string {
   const parts: string[] = []
   
-  parts.push(`흥미: ${result.interest_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
-  parts.push(`가치: ${result.value_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
-  parts.push(`강점: ${result.strength_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
-  parts.push(`제약: ${result.constraint_flags.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
+  parts.push(`흥미: ${(result.interest_top || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
+  parts.push(`가치: ${(result.value_top || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
+  parts.push(`강점: ${(result.strength_top || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
+  parts.push(`제약: ${(result.constraint_flags || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
   
   // 신규 모듈 (2026-01-28 추가)
   if (result.sacrifice_flags?.length) {

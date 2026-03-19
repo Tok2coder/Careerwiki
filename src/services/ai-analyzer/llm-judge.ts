@@ -617,10 +617,10 @@ function buildUserContext(
     }
     
     parts.push('[판단 기준 토큰 - 점수 계산의 핵심 근거!]')
-    parts.push(`user_interest_tokens: ${mm.interest_top.map((t, i) => `[${i + 1}순위] ${TOKEN_TO_KOREAN[t] || t}`).join(', ') || '미정'} — ⚠️ 1순위 흥미가 desire 점수에 가장 큰 영향!`)
-    parts.push(`user_value_tokens: ${mm.value_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
-    parts.push(`user_strength_tokens: ${mm.strength_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
-    parts.push(`user_constraint_flags: ${mm.constraint_flags.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
+    parts.push(`user_interest_tokens: ${(mm.interest_top || []).map((t, i) => `[${i + 1}순위] ${TOKEN_TO_KOREAN[t] || t}`).join(', ') || '미정'} — ⚠️ 1순위 흥미가 desire 점수에 가장 큰 영향!`)
+    parts.push(`user_value_tokens: ${(mm.value_top || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
+    parts.push(`user_strength_tokens: ${(mm.strength_top || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
+    parts.push(`user_constraint_flags: ${(mm.constraint_flags || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '없음'}`)
 
     // 장애 유형 정보
     if (mm.disability_type) {

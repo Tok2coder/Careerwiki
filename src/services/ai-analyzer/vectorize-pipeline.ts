@@ -187,22 +187,22 @@ export function buildSearchProfileFromMiniModule(
 
   // desiredThemes: 흥미 + 가치
   const desiredThemes: string[] = [
-    ...miniModule.interest_top.map(t => interestKorean[t] || t),
-    ...miniModule.value_top.map(t => valueKorean[t] || t),
+    ...(miniModule.interest_top || []).map(t => interestKorean[t] || t),
+    ...(miniModule.value_top || []).map(t => valueKorean[t] || t),
   ]
 
   // strengthsHypothesis: 강점
-  const strengthsHypothesis: string[] = miniModule.strength_top.map(t => strengthKorean[t] || t)
+  const strengthsHypothesis: string[] = (miniModule.strength_top || []).map(t => strengthKorean[t] || t)
 
   // hardConstraints: 제약 플래그
   const hardConstraints: string[] = miniModule.constraint_flags || []
 
   // keywords: 검색 키워드 (영어 + 한국어 혼합, 가치 한국어 포함)
   const keywords: string[] = [
-    ...miniModule.interest_top.map(t => TOKEN_TO_ENGLISH[t] || t),
-    ...miniModule.strength_top.map(t => TOKEN_TO_ENGLISH[t] || t),
-    ...miniModule.interest_top.map(t => interestKorean[t] || t),
-    ...miniModule.value_top.map(t => valueKorean[t] || t),
+    ...(miniModule.interest_top || []).map(t => TOKEN_TO_ENGLISH[t] || t),
+    ...(miniModule.strength_top || []).map(t => TOKEN_TO_ENGLISH[t] || t),
+    ...(miniModule.interest_top || []).map(t => interestKorean[t] || t),
+    ...(miniModule.value_top || []).map(t => valueKorean[t] || t),
   ]
 
   // dislikedThemes: 에너지 소모 플래그에서 추출
