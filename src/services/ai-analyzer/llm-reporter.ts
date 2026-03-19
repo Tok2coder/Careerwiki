@@ -1900,11 +1900,11 @@ function buildMajorReporterContext(
   if (miniModuleResult) {
     const mm = miniModuleResult
     parts.push('\n[판단 구조 요약 - 전공 추천의 핵심 축!]')
-    parts.push(`흥미 Top2: ${mm.interest_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
-    parts.push(`가치 Top2: ${mm.value_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
-    parts.push(`강점 Top2: ${mm.strength_top.map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
+    parts.push(`흥미 Top2: ${(mm.interest_top || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
+    parts.push(`가치 Top2: ${(mm.value_top || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
+    parts.push(`강점 Top2: ${(mm.strength_top || []).map(t => TOKEN_TO_KOREAN[t] || t).join(', ') || '미정'}`)
     const allConstraints = [
-      ...mm.constraint_flags.map(t => TOKEN_TO_KOREAN[t] || t),
+      ...(mm.constraint_flags || []).map(t => TOKEN_TO_KOREAN[t] || t),
       ...(mm.energy_drain_flags || []).map(t => TOKEN_TO_KOREAN[t] || t),
     ]
     parts.push(`제약 조건: ${allConstraints.join(', ') || '없음'}`)

@@ -3263,8 +3263,8 @@ function displayPremiumReportV3Major(result) {
     const majorRecs = report.majorRecommendations || {};
 
     const overallTop5 = fitTopMajors.length > 0 ? fitTopMajors.slice(0, 5) : (majorRecs.overallTop5 || []);
-    const fitTop10 = (result.can_top10 || recs.fit_top10 || fitTopMajors || []).slice(0, 10);
-    const likeTop10 = (result.like_top10 || recs.like_top10 || majorRecs.desireTop10 || []).slice(0, 10);
+    const fitTop10 = (recs.can_top10 || result.can_top10 || fitTopMajors || []).slice(0, 10);
+    const likeTop10 = (recs.like_top10 || result.like_top10 || majorRecs.desireTop10 || []).slice(0, 10);
 
     // 결과 컨테이너 초기화
     const container = document.getElementById('step3');
