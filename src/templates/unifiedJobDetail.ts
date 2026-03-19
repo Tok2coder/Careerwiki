@@ -4081,10 +4081,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     // 상세 설명이 있으면 카드 아래에 표시
     const detailBlocks: string[] = []
     if (typeof wlbDetail === 'string' && wlbDetail.trim()) {
-      detailBlocks.push(`<div><h4 class="text-xs font-semibold text-purple-400 uppercase tracking-wide mb-2">워라밸 상세</h4>${formatRichText(wlbDetail, 'detailWlb.wlbDetail', footnoteMap, sourceTextMap)}</div>`)
+      detailBlocks.push(`<div><h4 class="text-sm font-semibold text-purple-400 tracking-wide mb-2">워라밸</h4>${formatRichText(wlbDetail, 'detailWlb.wlbDetail', footnoteMap, sourceTextMap)}</div>`)
     }
     if (typeof socialDetail === 'string' && socialDetail.trim()) {
-      detailBlocks.push(`<div><h4 class="text-xs font-semibold text-green-400 uppercase tracking-wide mb-2">사회적 기여 상세</h4>${formatRichText(socialDetail, 'detailWlb.socialDetail', footnoteMap, sourceTextMap)}</div>`)
+      detailBlocks.push(`<div><h4 class="text-sm font-semibold text-green-400 tracking-wide mb-2">사회적 기여</h4>${formatRichText(socialDetail, 'detailWlb.socialDetail', footnoteMap, sourceTextMap)}</div>`)
     }
     if (detailBlocks.length > 0) {
       gridLayout += `<div class="mt-4 space-y-4">${detailBlocks.join('')}</div>`
