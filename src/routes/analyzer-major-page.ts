@@ -1444,6 +1444,64 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             });
         }
         
+        // ★ v3.24: miniModuleResult 구성 (전공용)
+        // 직업 추천의 updateIntegratedUniversalAnswers() 에 대응
+        function buildMiniModuleResultMajor() {
+            // interest_top: univ_interest에서 상위 2개
+            const interest_top = (universalAnswers.univ_interest || []).slice(0, 2);
+
+            // value_top: univ_priority (radio → 배열로 변환)
+            const rawPriority = universalAnswers.univ_priority;
+            const value_top = rawPriority
+                ? (Array.isArray(rawPriority) ? rawPriority : [rawPriority]).filter(Boolean).slice(0, 2)
+                : [];
+
+            // strength_top: 전공 추천에는 직접적인 강점 질문이 없으므로
+            // univ_good_subjects + univ_workstyle 조합으로 추론
+            const SUBJECT_TO_STRENGTH = {
+                'math': 'analytical', 'science': 'analytical',
+                'art': 'creative', 'music': 'creative',
+                'english': 'communication', 'korean': 'communication',
+                'social': 'structured_execution', 'history': 'persistence',
+            };
+            const goodSubjects = universalAnswers.univ_good_subjects || [];
+            const strengthSet = new Set();
+            for (const subj of goodSubjects) {
+                if (SUBJECT_TO_STRENGTH[subj]) strengthSet.add(SUBJECT_TO_STRENGTH[subj]);
+            }
+            // workstyle도 강점 힌트로 활용
+            const ws = universalAnswers.univ_workstyle;
+            if (ws === 'theory') strengthSet.add('analytical');
+            if (ws === 'practice') strengthSet.add('fast_learning');
+            if (ws === 'discuss') strengthSet.add('communication');
+            const strength_top = Array.from(strengthSet).slice(0, 2);
+
+            // constraint_flags: careerState.constraints에서 추출
+            const constraint_flags = [];
+            if (careerState.constraints) {
+                for (const [type, data] of Object.entries(careerState.constraints)) {
+                    if (data && data.has_constraint) {
+                        constraint_flags.push(type + '_constraint');
+                    }
+                }
+            }
+
+            window.miniModuleResult = {
+                interest_top,
+                value_top,
+                strength_top,
+                constraint_flags,
+                raw_selections: {
+                    interest: universalAnswers.univ_interest || [],
+                    value: value_top,
+                    strength: strength_top,
+                    constraint: constraint_flags,
+                    good_subjects: goodSubjects,
+                    workstyle: ws || null,
+                }
+            };
+        }
+
         async function goToStep2WithLoading() {
             // 편집 모드: 변경 감지 → 이후 단계 초기화
             if (window.__editMode && detectStep1Changes()) {
@@ -1452,6 +1510,9 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
 
             // 관심사 + 전이신호 답변 수집
             collectUniversalAnswers();
+
+            // ★ v3.24: miniModuleResult 구성 (직업 추천 updateIntegratedUniversalAnswers에 대응)
+            buildMiniModuleResultMajor();
 
             // 세션 ID 생성
             currentSessionId = currentSessionId || 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
