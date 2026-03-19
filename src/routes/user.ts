@@ -1218,9 +1218,10 @@ userRoutes.get('/user/ai-results', requireAuth, async (c) => {
       let topRecs: Array<{ name: string; score?: number }> = []
       try {
         const parsed = JSON.parse(r.result_json)
-        const fitTop3 = parsed.fit_top3 || []
-        topRecs = fitTop3.slice(0, 3).map((j: any) => ({
-          name: j.job_name || j.name || '알 수 없음',
+        // 직업: fit_top3, 전공: fit_top_majors
+        const fitTop = parsed.fit_top3 || parsed.fit_top_majors || []
+        topRecs = fitTop.slice(0, 3).map((j: any) => ({
+          name: j.job_name || j.major_name || j.name || '알 수 없음',
           score: j.fit_score
         }))
       } catch { }
