@@ -61,29 +61,50 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
     .replace(/\u00A0/g, ' ')          // Non-breaking space → 일반 공백
     .replace(/[^\S\n]+/g, ' ')        // 연속 공백 정리 (줄바꿈 보존)
 
-  // 중복 각주 자동 제거: 같은 [N]이 여러 번 나오면 마지막 것만 남김
-  // 규칙: "같은 각주 번호는 본문에 1회만, 마지막에만"
-  const fnDedup = /\[(\d+)\](?!\()/g  // 마크다운 링크 [N](url) 제외
-  const fnPositions = new Map<string, number[]>()
-  let fnMatch: RegExpExecArray | null
-  while ((fnMatch = fnDedup.exec(cleanedValue)) !== null) {
-    const num = fnMatch[1]
-    if (!fnPositions.has(num)) fnPositions.set(num, [])
-    fnPositions.get(num)!.push(fnMatch.index)
+  // ── 각주 정규화: 중복 제거 + 전역 번호 적용 ──
+  // 같은 [N]이 여러 번 등장하면 마지막 것만 남기고,
+  // footnoteMap으로 로컬번호 → 전역번호(페이지 통합 1~N)로 변환.
+  // 나무위키처럼 페이지 전체에서 순서대로 이어지는 번호 체계.
+
+  const fieldMap = (footnoteMap && fieldKey) ? footnoteMap[fieldKey] : null
+
+  // Phase 1: 중복 제거 (같은 [N]이 여러 번 → 마지막 것만 유지)
+  const fnScan = /\[(\d+)\](?!\()/g
+  const fnOccurrences = new Map<string, number[]>()
+  let scanMatch: RegExpExecArray | null
+  while ((scanMatch = fnScan.exec(cleanedValue)) !== null) {
+    const num = scanMatch[1]
+    if (!fnOccurrences.has(num)) fnOccurrences.set(num, [])
+    fnOccurrences.get(num)!.push(scanMatch.index)
   }
-  for (const [num, positions] of fnPositions) {
+
+  // 첫 번째 것을 남기고 나머지 제거 (순서 보존을 위해 — 마지막 대신 첫 것 유지)
+  const positionsToRemove: Array<{ pos: number; len: number }> = []
+  for (const [num, positions] of fnOccurrences) {
     if (positions.length > 1) {
-      // 뒤에서부터 제거해야 인덱스 안 깨짐 (마지막 것은 유지)
-      const toRemove = positions.slice(0, -1).reverse()
-      for (const pos of toRemove) {
-        const marker = `[${num}]`
-        cleanedValue = cleanedValue.substring(0, pos) + cleanedValue.substring(pos + marker.length)
+      for (let i = 1; i < positions.length; i++) {
+        positionsToRemove.push({ pos: positions[i], len: `[${num}]`.length })
       }
     }
   }
+  positionsToRemove.sort((a, b) => b.pos - a.pos)
+  for (const { pos, len } of positionsToRemove) {
+    cleanedValue = cleanedValue.substring(0, pos) + cleanedValue.substring(pos + len)
+  }
 
-  // 필드별 로컬 번호 → 전역 번호 매핑
-  const fieldMap = (footnoteMap && fieldKey) ? footnoteMap[fieldKey] : null
+  // Phase 2: 로컬번호 → 전역번호 치환 (페이지 전체 통합 번호)
+  // footnoteMap이 있으면 [1] → [7], [2] → [8] 등으로 변환
+  // 없으면 원본 번호 유지
+  if (fieldMap) {
+    cleanedValue = cleanedValue.replace(
+      /\[(\d+)\](?!\()/g,
+      (_match, localNum) => {
+        const globalNum = fieldMap[localNum] ?? parseInt(localNum)
+        return `[__GN${globalNum}__]` // 임시 마커 (재치환 충돌 방지)
+      }
+    )
+    cleanedValue = cleanedValue.replace(/\[__GN(\d+)__\]/g, '[$1]')
+  }
 
   return cleanedValue
     .trim()
@@ -104,11 +125,11 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
         }
       )
       // 인라인 각주 [N] → 클릭 가능한 superscript 링크로 변환
-      // footnoteMap이 있으면 로컬 번호를 전역 번호로 변환
+      // 이미 전역번호로 변환된 상태이므로 그대로 표시
       safe = safe.replace(
         /\[(\d+)\]/g,
-        (_match, localNum) => {
-          const globalNum = fieldMap ? (fieldMap[localNum] ?? localNum) : localNum
+        (_match, numStr) => {
+          const globalNum = parseInt(numStr)
           const sourceDesc = sourceTextMap?.[globalNum] || ''
           const titleText = sourceDesc ? sourceDesc.replace(/"/g, '&quot;') : `출처 [${globalNum}]`
           return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#64b5f6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleText}">[${globalNum}]</sup>`

@@ -2398,7 +2398,7 @@ const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; t
     // 소개 탭 (UI 렌더링 순서와 동일하게 — 각주 번호가 페이지 스크롤 순서대로 매겨짐)
     'overviewWork.main', 'overviewWork.physicalAct', 'overviewWork.mentalAct',
     'overviewProspect.main',
-    'detailWlb.wlb', 'detailWlb.social', 'detailWlb.wlbDetail', 'detailWlb.socialDetail',
+    'detailWlb', 'detailWlb.wlb', 'detailWlb.social', 'detailWlb.wlbDetail', 'detailWlb.socialDetail',
     'overviewSalary.sal',
     'trivia',
     // 상세정보 탭 (핵심 능력/자격)
@@ -3267,11 +3267,23 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const footnoteMap: Record<string, Record<string, number>> = {}
   // sourceTextMap: 전역번호 → 출처 설명 텍스트 (각주 hover 시 표시)
   const sourceTextMap: Record<number, string> = {}
+  // 소스 키 → 렌더링 필드키 매핑 (소스 저장 키와 formatRichText 호출 키가 다른 경우)
+  const sourceKeyAliases: Record<string, string[]> = {
+    'detailWlb': ['detailWlb.wlbDetail', 'detailWlb.socialDetail'],
+  }
   for (const source of userSourcesFlat) {
     const m = source.text.match(/^\[(\d+)\]/)
     if (m) {
       if (!footnoteMap[source.fieldKey]) footnoteMap[source.fieldKey] = {}
       footnoteMap[source.fieldKey][m[1]] = source.id // source.id = 전역 번호 (1~N)
+      // 별칭 키에도 동일 매핑 등록 (detailWlb → detailWlb.wlbDetail 등)
+      const aliases = sourceKeyAliases[source.fieldKey]
+      if (aliases) {
+        for (const alias of aliases) {
+          if (!footnoteMap[alias]) footnoteMap[alias] = {}
+          footnoteMap[alias][m[1]] = source.id
+        }
+      }
     }
     // [N] 접두사 제거한 출처 설명을 전역 번호로 매핑
     const cleanDesc = source.text.replace(/^\[\d+\]\s*/, '').trim()
