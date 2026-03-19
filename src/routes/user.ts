@@ -1443,9 +1443,11 @@ userRoutes.get('/user/ai-results', requireAuth, async (c) => {
             if (!pendingDeleteRequestId) return;
 
             try {
-              const response = await fetch('/api/ai-analyzer/result/delete?request_id=' + encodeURIComponent(pendingDeleteRequestId), {
-                method: 'DELETE',
-                credentials: 'same-origin'
+              const response = await fetch('/api/ai-analyzer/result/delete', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ request_id: pendingDeleteRequestId })
               });
 
               if (response.ok) {

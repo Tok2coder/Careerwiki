@@ -9005,8 +9005,8 @@ analyzerRoutes.get('/saved-result/:requestId', async (c) => {
   }
 })
 
-// DELETE /api/ai-analyzer/result/delete - AI 추천 결과 삭제
-analyzerRoutes.delete('/result/delete', async (c) => {
+// POST /api/ai-analyzer/result/delete - AI 추천 결과 삭제
+analyzerRoutes.post('/result/delete', async (c) => {
   const db = c.env.DB
   const authUser = c.get('user') as { id: number } | undefined
   if (!authUser?.id) {
@@ -9014,7 +9014,14 @@ analyzerRoutes.delete('/result/delete', async (c) => {
   }
   const userId = String(authUser.id)
 
-  const requestId = c.req.query('request_id')
+  // query param 또는 body에서 request_id 가져오기
+  let requestId = c.req.query('request_id')
+  if (!requestId) {
+    try {
+      const body = await c.req.json<{ request_id?: number | string }>()
+      requestId = body.request_id ? String(body.request_id) : null
+    } catch { /* ignore */ }
+  }
   if (!requestId) {
     return c.json({ error: 'request_id required' }, 400)
   }
@@ -9040,6 +9047,7 @@ analyzerRoutes.delete('/result/delete', async (c) => {
 
     return c.json({ success: true, deleted_request_id: Number(requestId) })
   } catch (error) {
+    console.error('[result/delete] Error:', error)
     return c.json({ error: 'Failed to delete result', details: String(error) }, 500)
   }
 })
