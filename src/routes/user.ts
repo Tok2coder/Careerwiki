@@ -1172,7 +1172,7 @@ userRoutes.get('/user/ai-results', requireAuth, async (c) => {
       JOIN ai_analysis_requests req ON r.request_id = req.id
       WHERE req.user_id = ?
       ${filter !== 'all' ? 'AND req.analysis_type = ?' : ''}
-    `).bind(...(filter !== 'all' ? [user.id, filter] : [user.id])).first<{ total: number }>()
+    `).bind(...(filter !== 'all' ? [String(user.id), filter] : [String(user.id)])).first<{ total: number }>()
     
     const total = countResult?.total || 0
     const totalPages = Math.ceil(total / limit)
@@ -1198,7 +1198,7 @@ userRoutes.get('/user/ai-results', requireAuth, async (c) => {
       ${filter !== 'all' ? 'AND req.analysis_type = ?' : ''}
       ORDER BY r.created_at DESC
       LIMIT ? OFFSET ?
-    `).bind(...(filter !== 'all' ? [user.id, filter, limit, offset] : [user.id, limit, offset])).all<{
+    `).bind(...(filter !== 'all' ? [String(user.id), filter, limit, offset] : [String(user.id), limit, offset])).all<{
       id: number
       request_id: number
       result_json: string
@@ -1437,7 +1437,7 @@ userRoutes.get('/user/ai-results/:requestId', requireAuth, async (c) => {
       FROM ai_analysis_requests req
       LEFT JOIN analyzer_drafts d ON req.session_id = d.session_id
       WHERE req.id = ? AND (req.user_id = ? OR d.user_id = ?)
-    `).bind(requestId, user.id, user.id).first<{
+    `).bind(requestId, String(user.id), user.id).first<{
       analysis_type: string
     }>()
     

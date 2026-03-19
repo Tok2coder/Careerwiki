@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-03-19] D1 바인딩 타입 불일치: integer로 bind하면 text 컬럼 매칭 실패
+- **상황**: `/user/ai-results` 페이지에서 결과가 0개로 표시. DB에는 11개 결과 존재. `ai_analysis_requests.user_id`는 TEXT("1")로 저장, 쿼리는 `user.id`(integer 1)를 bind
+- **원인**: D1 API에서 `.bind(1)` (integer) → `WHERE user_id = ?`에서 TEXT "1"과 비교 시 0건 반환. wrangler d1 execute는 SQLite 네이티브 타입 변환으로 동작하지만, D1 API는 strict type comparison
+- **해결**: `ai_analysis_requests.user_id` 쿼리 시 `String(user.id)`로 bind. user.ts, history-routes.ts, profile-routes.ts 4곳 수정
+- **교훈**: D1에서 TEXT 컬럼에 integer를 bind하면 매칭 실패. `typeof()` 확인 후 bind 타입 맞출 것. wrangler d1 execute 결과를 맹신하지 말 것 (D1 API와 동작 다름)
+
 ### [2026-03-19] 클라이언트 fetch에 타임아웃 없으면 무한 로딩 가능
 - **상황**: waitUntil 서버 수정 후에도 "답변 저장 중..." 무한 로딩 재발. analyze 엔드포인트(60-120초)에 타임아웃 없어 Cloudflare Worker 시간초과 시 클라이언트가 영원히 대기
 - **원인**: round-answers에만 30초 AbortController 적용. 뒤이어 호출되는 `/api/ai-analyzer/analyze`에는 타임아웃 없음
@@ -12,11 +18,12 @@
 - **해결**: (1) 서버: `c.executionCtx.waitUntil()`로 memory 업데이트를 응답 이후 백그라운드 실행 (2) 클라이언트: AbortController로 30초 타임아웃 추가, 타임아웃 시에도 분석 단계로 계속 진행
 - **교훈**: API 응답 경로에 LLM/외부 API 호출 넣지 말 것. 부가 작업(memory, analytics)은 반드시 `waitUntil`로 분리. 클라이언트 fetch에는 항상 AbortController 타임아웃 설정
 
-### [2026-03-17] add-context 기능: DB 스키마 검증 없이 INSERT 작성하면 연쇄 실패
-- **상황**: 추가 정보 입력(add-context) 엔드포인트에서 4개 버그 연쇄 발생 — (1) user_id TEXT vs INTEGER 타입 불일치 → 404 (2) analyzer_facts CHECK constraint 누락 → SQLITE_CONSTRAINT (3) created_at 대신 requested_at 컬럼명 → SQLITE_ERROR (4) redirect 후 빈 페이지 → 프론트엔드 핸들러 없음
-- **원인**: DB 테이블 스키마를 직접 확인하지 않고 INSERT 문 작성. 기존 코드 참고 없이 컬럼명/타입을 추정
-- **해결**: 각 오류 순차 수정 후, redirect 대신 in-place 재분석으로 전환 (모달 닫기 → 로딩 → analyze API → 결과 표시)
-- **교훈**: 새 INSERT/UPDATE 작성 시 반드시 (1) `.schema 테이블명`으로 컬럼/타입/CHECK 확인 (2) 기존 INSERT 코드 grep해서 패턴 참조 (3) 프론트엔드 redirect URL의 수신 핸들러 존재 여부 확인
+### [2026-03-17/19] DB 스키마 검증 없이 INSERT 작성하면 연쇄 실패 (재발!)
+- **상황(03-17)**: add-context 엔드포인트에서 `created_at` 대신 `requested_at` 등 4개 버그 연쇄 발생
+- **상황(03-19 재발)**: `/v3/recommend` 및 `/v3/recommend-major` ELSE 브랜치에서도 동일한 `created_at` 컬럼명 오류 발견. `ai_analysis_requests` 테이블에 `created_at`은 없고 `requested_at`만 존재. try-catch에 잡혀 silent failure → 전공 추천 결과 미저장
+- **원인**: 이전 수정 시 add-context만 고치고 recommend 엔드포인트의 동일 패턴을 grep으로 찾지 않음
+- **해결**: (1) 두 엔드포인트 모두 `created_at` → `requested_at` 수정 (2) `grep 'ai_analysis_requests.*created_at'`로 전체 확인
+- **교훈**: 같은 유형의 버그 수정 시 반드시 `grep`으로 동일 패턴 전체 검색 후 일괄 수정. 한 곳만 고치면 다른 곳에서 재발
 
 ### [2026-03-17] 동적 DOM 요소: getElementById 대신 이벤트 위임 사용
 - **상황**: 추가 정보 모달의 textarea에 input 이벤트 리스너가 동작하지 않아 글자 수 카운트/버튼 활성화 안됨

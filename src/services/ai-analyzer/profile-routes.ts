@@ -126,7 +126,7 @@ async function collectProfileData(db: D1Database, userId: number): Promise<{
       ORDER BY r.created_at DESC
       LIMIT 1
     `)
-    .bind(userId)
+    .bind(String(userId))
     .first<{
       id: number
       created_at: string

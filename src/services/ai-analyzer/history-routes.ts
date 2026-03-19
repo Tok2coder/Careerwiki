@@ -90,7 +90,7 @@ historyRoutes.get('/', async (c) => {
         JOIN ai_analysis_requests req ON r.request_id = req.id
         WHERE req.user_id = ?
       `)
-      .bind(userId)
+      .bind(String(userId))
       .first<{ total: number }>()
 
     const total = countResult?.total || 0
@@ -118,7 +118,7 @@ historyRoutes.get('/', async (c) => {
         ORDER BY r.created_at DESC
         LIMIT ? OFFSET ?
       `)
-      .bind(userId, limit, offset)
+      .bind(String(userId), limit, offset)
       .all<{
         id: number
         request_id: number
@@ -222,7 +222,7 @@ historyRoutes.get('/:id', async (c) => {
         JOIN ai_analysis_requests req ON r.request_id = req.id
         WHERE r.id = ? AND req.user_id = ?
       `)
-      .bind(resultId, userId)
+      .bind(resultId, String(userId))
       .first<{
         id: number
         request_id: number
