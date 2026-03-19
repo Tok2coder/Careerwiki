@@ -8,7 +8,7 @@ export interface AiResultItem {
   request_id: number
   session_id: string
   analysis_type: 'job' | 'major'
-  top_recommendations: Array<{ name: string; score?: number }>
+  top_recommendations: Array<{ name: string; score?: number; image_url?: string | null; slug?: string | null }>
   confidence_score: number | null
   created_at: string
   engine_version?: string
@@ -176,9 +176,18 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
   // drafts 배열 우선, 레거시 draft 호환
   const allDrafts = drafts.length > 0 ? drafts : (draft ? [draft] : [])
   
+  // 이미 결과가 있는 세션의 완료된 드래프트는 제외 (중복 표시 방지)
+  const resultSessionIds = new Set(filteredResults.map(r => r.session_id))
+  const deduplicatedDrafts = allDrafts.filter(d => {
+    const isComplete = isAnalysisComplete(d.current_step)
+    // 완료된 드래프트인데 이미 결과 카드가 있으면 숨김
+    if (isComplete && resultSessionIds.has(d.session_id)) return false
+    return true
+  })
+
   // 필터에 따른 draft 필터링
-  const filteredDrafts = filter === 'all' ? allDrafts
-    : allDrafts.filter(d => d.analysis_type === filter)
+  const filteredDrafts = filter === 'all' ? deduplicatedDrafts
+    : deduplicatedDrafts.filter(d => d.analysis_type === filter)
 
   // 진행중인 draft 카드
   const renderDraftCard = (draftItem: DraftItem) => {
@@ -306,18 +315,30 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
     const typeIcon = isJob ? 'fa-briefcase' : 'fa-university'
     const typeColor = isJob ? 'text-blue-400' : 'text-emerald-400'
     const typeBg = isJob ? 'bg-blue-500/10' : 'bg-emerald-500/10'
+    const detailPath = isJob ? '/job/' : '/major/'
 
-    const top3 = result.top_recommendations?.slice(0, 3) || []
-    const confidence = result.confidence_score
-      ? Math.round(result.confidence_score * 100)
-      : null
+    const top5 = result.top_recommendations?.slice(0, 5) || []
     const version = result.version_number || 1
     const hasVersions = versionCount && versionCount > 1
 
+    // 메달 색상
+    const medalColors = ['text-amber-400', 'text-slate-300', 'text-amber-600', 'text-blue-400', 'text-purple-400']
+    // 기본 placeholder 아이콘
+    const placeholderIcon = isJob ? 'fa-briefcase' : 'fa-graduation-cap'
+
     return `
-      <div class="p-4 sm:p-5 rounded-xl border transition-all"
+      <div class="relative p-4 sm:p-5 rounded-xl border transition-all hover:border-slate-500/30"
            style="background: rgba(26, 26, 46, 0.6); border-color: rgba(148, 163, 184, 0.15);">
-        <div class="flex items-start justify-between gap-3 sm:gap-4 mb-4">
+        <!-- 삭제 버튼 -->
+        <button onclick="deleteResult(${result.request_id})"
+                class="absolute top-3 right-3 w-8 h-8 rounded-lg bg-red-500/10 text-red-400/50 hover:bg-red-500/30 hover:text-red-300 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100 hover:!opacity-100"
+                style="opacity: 0.3;"
+                title="삭제"
+                onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.3'">
+          <i class="fas fa-trash text-xs"></i>
+        </button>
+
+        <div class="flex items-start justify-between gap-3 sm:gap-4 mb-4 pr-8">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-lg flex items-center justify-center ${typeBg}">
               <i class="fas ${typeIcon} ${typeColor}"></i>
@@ -345,18 +366,36 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
           </p>
         ` : ''}
 
-        <!-- TOP 3 -->
-        ${top3.length > 0 ? `
-          <div class="flex flex-wrap gap-2 mb-4">
-            ${top3.map((rec, i) => `
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm"
-                    style="background: rgba(67, 97, 238, 0.1); color: #e6e8f5;">
-                <span class="text-xs font-bold ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-slate-300' : 'text-amber-600'}">
-                  ${i + 1}.
-                </span>
-                ${rec.name}
-              </span>
-            `).join('')}
+        <!-- TOP 5 썸네일 카드 -->
+        ${top5.length > 0 ? `
+          <div class="grid grid-cols-5 gap-2 mb-4">
+            ${top5.map((rec, i) => {
+              const slug = rec.slug || encodeURIComponent(rec.name)
+              const link = `${detailPath}${slug}`
+              return `
+                <a href="${link}" class="group/card flex flex-col items-center text-center rounded-lg p-1.5 sm:p-2 transition hover:bg-white/5" title="${rec.name}${rec.score ? ` (Fit ${rec.score})` : ''}">
+                  <div class="relative w-full aspect-square rounded-lg overflow-hidden mb-1.5 bg-wiki-bg/50">
+                    ${rec.image_url
+                      ? `<img src="${rec.image_url}" alt="${rec.name}" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+                      : ''}
+                    <div class="absolute inset-0 ${rec.image_url ? 'hidden' : 'flex'} items-center justify-center" style="background: linear-gradient(135deg, rgba(67,97,238,0.15) 0%, rgba(100,181,246,0.1) 100%);">
+                      <i class="fas ${placeholderIcon} text-lg" style="color: rgba(148,163,184,0.4);"></i>
+                    </div>
+                    <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${i === 0 ? 'bg-amber-500 text-black' : i === 1 ? 'bg-slate-400 text-black' : i === 2 ? 'bg-amber-700 text-white' : 'bg-slate-600 text-white'}">
+                      ${i + 1}
+                    </div>
+                    ${rec.score ? `
+                      <div class="absolute bottom-0 inset-x-0 py-0.5 text-center text-[10px] font-bold text-white" style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
+                        Fit ${rec.score}
+                      </div>
+                    ` : ''}
+                  </div>
+                  <span class="text-[11px] sm:text-xs leading-tight text-white/80 group-hover/card:text-white line-clamp-2 w-full">
+                    ${rec.name}
+                  </span>
+                </a>
+              `
+            }).join('')}
           </div>
         ` : ''}
 
@@ -420,11 +459,11 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
       </div>
       
       <!-- 진행중 모두 삭제 버튼 (2개 이상일 때만) -->
-      ${allDrafts.length >= 2 ? `
+      ${deduplicatedDrafts.length >= 2 ? `
         <div class="flex justify-end mb-4">
           <button onclick="deleteAllDrafts()" class="px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition flex items-center gap-2">
             <i class="fas fa-trash"></i>
-            진행중 모두 삭제 (${allDrafts.length}개)
+            진행중 모두 삭제 (${deduplicatedDrafts.length}개)
           </button>
         </div>
       ` : ''}

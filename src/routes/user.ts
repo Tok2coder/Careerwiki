@@ -1214,33 +1214,75 @@ userRoutes.get('/user/ai-results', requireAuth, async (c) => {
     }>()
     
     // 결과 파싱
-    const parsedResults: AiResultItem[] = (results.results || []).map(r => {
+    // 1단계: result_json에서 추천 이름 추출 (5개)
+    const rawParsed = (results.results || []).map(r => {
       let topRecs: Array<{ name: string; score?: number }> = []
       try {
         const parsed = JSON.parse(r.result_json)
-        // 직업: fit_top3, 전공: fit_top_majors
         const fitTop = parsed.fit_top3 || parsed.fit_top_majors || []
-        topRecs = fitTop.slice(0, 3).map((j: any) => ({
+        topRecs = fitTop.slice(0, 5).map((j: any) => ({
           name: j.job_name || j.major_name || j.name || '알 수 없음',
           score: j.fit_score
         }))
       } catch { }
-      
-      return {
-        id: r.id,
-        request_id: r.request_id,
-        session_id: r.session_id,
-        analysis_type: r.analysis_type as 'job' | 'major',
-        top_recommendations: topRecs,
-        confidence_score: r.confidence_score,
-        created_at: r.created_at,
-        engine_version: r.engine_version || 'v2',
-        has_premium_report: r.has_premium_report === 1,
-        version_number: r.version_number || 1,
-        version_note: r.version_note || null,
-        parent_request_id: r.parent_request_id || null
-      }
+      return { ...r, topRecs }
     })
+
+    // 2단계: 모든 추천 이름을 모아서 이미지/slug 일괄 조회
+    const allJobNames = new Set<string>()
+    const allMajorNames = new Set<string>()
+    for (const r of rawParsed) {
+      for (const rec of r.topRecs) {
+        if (r.analysis_type === 'job') allJobNames.add(rec.name)
+        else allMajorNames.add(rec.name)
+      }
+    }
+
+    const imageMap = new Map<string, { image_url: string | null; slug: string | null }>()
+
+    // 직업 이미지 조회
+    if (allJobNames.size > 0) {
+      const names = [...allJobNames]
+      const placeholders = names.map(() => '?').join(',')
+      const jobImages = await c.env.DB.prepare(
+        `SELECT name, image_url, slug FROM jobs WHERE name IN (${placeholders})`
+      ).bind(...names).all<{ name: string; image_url: string | null; slug: string | null }>()
+      for (const j of jobImages.results || []) {
+        imageMap.set(j.name, { image_url: j.image_url, slug: j.slug })
+      }
+    }
+
+    // 전공 이미지 조회
+    if (allMajorNames.size > 0) {
+      const names = [...allMajorNames]
+      const placeholders = names.map(() => '?').join(',')
+      const majorImages = await c.env.DB.prepare(
+        `SELECT name, image_url, slug FROM majors WHERE name IN (${placeholders})`
+      ).bind(...names).all<{ name: string; image_url: string | null; slug: string | null }>()
+      for (const m of majorImages.results || []) {
+        imageMap.set(m.name, { image_url: m.image_url, slug: m.slug })
+      }
+    }
+
+    // 3단계: 최종 결과 조립
+    const parsedResults: AiResultItem[] = rawParsed.map(r => ({
+      id: r.id,
+      request_id: r.request_id,
+      session_id: r.session_id,
+      analysis_type: r.analysis_type as 'job' | 'major',
+      top_recommendations: r.topRecs.map(rec => ({
+        ...rec,
+        image_url: imageMap.get(rec.name)?.image_url || null,
+        slug: imageMap.get(rec.name)?.slug || null
+      })),
+      confidence_score: r.confidence_score,
+      created_at: r.created_at,
+      engine_version: r.engine_version || 'v2',
+      has_premium_report: r.has_premium_report === 1,
+      version_number: r.version_number || 1,
+      version_note: r.version_note || null,
+      parent_request_id: r.parent_request_id || null
+    }))
     
     const resultsContent = renderUserAiResultsContent({
       results: parsedResults,
@@ -1302,7 +1344,28 @@ userRoutes.get('/user/ai-results', requireAuth, async (c) => {
         <p class="text-wiki-muted mb-6">AI 추천을 받으면 여기서 분석 결과를 확인할 수 있습니다.</p>
         ${resultsContent}
         
-        <!-- 삭제 확인 모달 -->
+        <!-- 결과 삭제 확인 모달 -->
+        <div id="delete-result-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+          <div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-sm mx-4 shadow-2xl">
+            <div class="text-center mb-6">
+              <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center">
+                <i class="fas fa-trash text-2xl text-white"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">AI 추천 결과 삭제</h3>
+              <p class="text-wiki-muted text-sm">정말 삭제하시겠습니까?<br>리포트와 추천 결과가 영구 삭제됩니다.</p>
+            </div>
+            <div class="flex gap-3">
+              <button onclick="hideDeleteResultModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">
+                취소
+              </button>
+              <button onclick="confirmDeleteResult()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium">
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 드래프트 삭제 확인 모달 -->
         <div id="delete-draft-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
           <div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-sm mx-4 shadow-2xl">
             <div class="text-center mb-6">
@@ -1364,6 +1427,39 @@ userRoutes.get('/user/ai-results', requireAuth, async (c) => {
             hideDeleteModal();
           }
           
+          let pendingDeleteRequestId = null;
+
+          function deleteResult(requestId) {
+            pendingDeleteRequestId = requestId;
+            document.getElementById('delete-result-modal').classList.remove('hidden');
+          }
+
+          function hideDeleteResultModal() {
+            document.getElementById('delete-result-modal').classList.add('hidden');
+            pendingDeleteRequestId = null;
+          }
+
+          async function confirmDeleteResult() {
+            if (!pendingDeleteRequestId) return;
+
+            try {
+              const response = await fetch('/api/ai-analyzer/result/delete?request_id=' + encodeURIComponent(pendingDeleteRequestId), {
+                method: 'DELETE',
+                credentials: 'same-origin'
+              });
+
+              if (response.ok) {
+                window.location.reload();
+              } else {
+                alert('삭제에 실패했습니다. 다시 시도해주세요.');
+              }
+            } catch (error) {
+              alert('삭제 중 오류가 발생했습니다.');
+            }
+
+            hideDeleteResultModal();
+          }
+
           async function deleteAllDrafts() {
             if (!confirm('진행중인 모든 분석을 삭제하시겠습니까?\\n이 작업은 되돌릴 수 없습니다.')) {
               return;

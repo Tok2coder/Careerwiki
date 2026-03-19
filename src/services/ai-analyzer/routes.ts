@@ -9005,4 +9005,43 @@ analyzerRoutes.get('/saved-result/:requestId', async (c) => {
   }
 })
 
+// DELETE /api/ai-analyzer/result/delete - AI 추천 결과 삭제
+analyzerRoutes.delete('/result/delete', async (c) => {
+  const db = c.env.DB
+  const authUser = c.get('user') as { id: number } | undefined
+  if (!authUser?.id) {
+    return c.json({ error: 'Login required' }, 401)
+  }
+  const userId = String(authUser.id)
+
+  const requestId = c.req.query('request_id')
+  if (!requestId) {
+    return c.json({ error: 'request_id required' }, 400)
+  }
+
+  try {
+    // 해당 요청이 이 유저의 것인지 확인 + session_id 가져오기
+    const req = await db.prepare(
+      'SELECT id, session_id FROM ai_analysis_requests WHERE id = ? AND user_id = ?'
+    ).bind(requestId, userId).first<{ id: number; session_id: string }>()
+
+    if (!req) {
+      return c.json({ error: 'Not found or not authorized' }, 404)
+    }
+
+    // 결과 삭제
+    await db.prepare('DELETE FROM ai_analysis_results WHERE request_id = ?').bind(requestId).run()
+    // 요청 레코드 삭제
+    await db.prepare('DELETE FROM ai_analysis_requests WHERE id = ?').bind(requestId).run()
+    // 관련 드래프트도 삭제 (같은 session_id)
+    if (req.session_id) {
+      await db.prepare('DELETE FROM analyzer_drafts WHERE session_id = ? AND user_id = ?').bind(req.session_id, userId).run()
+    }
+
+    return c.json({ success: true, deleted_request_id: Number(requestId) })
+  } catch (error) {
+    return c.json({ error: 'Failed to delete result', details: String(error) }, 500)
+  }
+})
+
 export { analyzerRoutes }
