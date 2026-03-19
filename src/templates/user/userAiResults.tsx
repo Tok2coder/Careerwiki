@@ -368,26 +368,27 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
 
         <!-- TOP 5 추천 목록 -->
         ${top5.length > 0 ? `
-          <div class="flex flex-wrap gap-1.5 mb-4">
+          <div class="grid grid-cols-5 gap-1.5 sm:gap-2 mb-4">
             ${top5.map((rec, i) => {
               const slug = rec.slug || encodeURIComponent(rec.name)
               const link = `${detailPath}${slug}`
-              const rankBg = i === 0 ? 'bg-amber-500 text-black' : i === 1 ? 'bg-slate-400 text-black' : i === 2 ? 'bg-amber-700 text-white' : 'bg-slate-600/80 text-white'
+              const rankBg = i === 0 ? 'background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;' : i === 1 ? 'background:linear-gradient(135deg,#94a3b8,#64748b);color:#000;' : i === 2 ? 'background:linear-gradient(135deg,#b45309,#92400e);color:#fff;' : 'background:rgba(100,116,139,0.6);color:#fff;'
               return `
-                <a href="${link}" class="inline-flex items-center gap-1.5 pl-0.5 pr-2.5 py-0.5 rounded-full transition hover:bg-white/10" style="background: rgba(67,97,238,0.08);" title="${rec.name}${rec.score ? ` (Fit ${rec.score})` : ''}">
-                  <div class="relative w-7 h-7 rounded-full overflow-hidden flex-shrink-0 bg-wiki-bg/60">
+                <a href="${link}" class="group/card flex flex-col items-center text-center transition hover:scale-105" title="${rec.name}${rec.score ? ` (Fit ${rec.score})` : ''}">
+                  <div class="relative w-full rounded-lg overflow-hidden bg-wiki-bg/60" style="padding-bottom:100%;">
                     ${rec.image_url
-                      ? `<img src="${rec.image_url}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+                      ? `<img src="${rec.image_url}" alt="${rec.name}" class="absolute inset-0 w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
                       : ''}
-                    <div class="${rec.image_url ? 'hidden' : 'flex'} absolute inset-0 items-center justify-center" style="background: linear-gradient(135deg, rgba(67,97,238,0.2) 0%, rgba(100,181,246,0.15) 100%);">
-                      <i class="fas ${placeholderIcon} text-[10px]" style="color: rgba(148,163,184,0.5);"></i>
+                    <div class="absolute inset-0 ${rec.image_url ? 'hidden' : 'flex'} items-center justify-center" style="background: linear-gradient(135deg, rgba(67,97,238,0.15) 0%, rgba(100,181,246,0.1) 100%);">
+                      <i class="fas ${placeholderIcon} text-base sm:text-lg" style="color: rgba(148,163,184,0.4);"></i>
                     </div>
-                    <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold ${rankBg}" style="line-height:1;">
+                    <div class="absolute top-0 left-0 w-5 h-5 sm:w-6 sm:h-6 rounded-br-lg flex items-center justify-center text-[10px] sm:text-xs font-extrabold" style="${rankBg}">
                       ${i + 1}
                     </div>
                   </div>
-                  <span class="text-xs text-white/90 truncate max-w-[120px] sm:max-w-[140px]">${rec.name}</span>
-                  ${rec.score ? `<span class="text-[10px] font-semibold text-blue-400/80">${rec.score}</span>` : ''}
+                  <p class="mt-1 text-[10px] sm:text-[11px] leading-tight text-white/80 group-hover/card:text-white line-clamp-2 w-full px-0.5">
+                    ${rec.name}
+                  </p>
                 </a>
               `
             }).join('')}
