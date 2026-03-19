@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-03-19] 클라이언트 fetch에 타임아웃 없으면 무한 로딩 가능
+- **상황**: waitUntil 서버 수정 후에도 "답변 저장 중..." 무한 로딩 재발. analyze 엔드포인트(60-120초)에 타임아웃 없어 Cloudflare Worker 시간초과 시 클라이언트가 영원히 대기
+- **원인**: round-answers에만 30초 AbortController 적용. 뒤이어 호출되는 `/api/ai-analyzer/analyze`에는 타임아웃 없음
+- **해결**: (1) analyze fetch에 150초 AbortController (2) 함수 레벨 3분 글로벌 타임아웃 (3) showLoading 모드 전환 시 progress bar 리셋 방지 (skeleton 처음부터 사용)
+- **교훈**: 하나의 flow에 여러 fetch가 있으면 **모든 fetch에** 타임아웃 필요. 또한 showLoading을 여러 번 호출하면 progress bar가 리셋되므로, 장시간 작업은 처음부터 skeleton 모드 사용
+
 ### [2026-03-18] round-answers 무한 로딩: LLM 호출을 응답 전에 동기적으로 실행하면 안 된다
 - **상황**: "답변 저장 중..." 스피너가 10분 이상 멈춤. 사용자가 마지막 라운드 답변 제출 후 결과 페이지로 진행 불가
 - **원인**: `/v3/round-answers` 서버 핸들러가 DB 저장 후 `updateMemory()` (OpenAI LLM 호출, 최대 55초) 를 동기적으로 await한 뒤에야 응답 반환. Worker 시간 초과 시 클라이언트 fetch가 영원히 대기

@@ -4264,33 +4264,34 @@ analyzerJobPage.get('/', requireAuth, (c) => {
         async function submitV3RoundAndAnalyze(questions) {
             const answers = collectV3RoundAnswers(questions);
             if (!validateV3Answers(answers, questions)) return;
-            
+
             const nextBtn = document.getElementById('step3-next-btn');
             const prevBtn = document.getElementById('step3-prev-btn');
-            
-            // 저장부터 로딩 표시
-            showLoading('답변 저장 중...', '마지막 답변을 저장하고 있어요');
-            
+
+            // 3분 글로벌 타임아웃 안전장치
+            var globalTimeout = setTimeout(function() {
+                hideLoading();
+                alert('요청 시간이 초과되었습니다 (3분). 페이지를 새로고침 후 다시 시도해주세요.');
+            }, 180000);
+
+            // skeleton 모드를 처음부터 사용 — progress bar 리셋 방지
+            showLoading('분석 중...', '전문가급 리포트를 생성하고 있어요', true);
+
             // 버튼 비활성화
             if (nextBtn) {
                 nextBtn.disabled = true;
-                nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>저장 중...';
+                nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>분석 중...';
             }
             if (prevBtn) prevBtn.setAttribute('disabled', 'true');
-            
+
             // 마지막 라운드 답변 저장
             await saveV3RoundAnswers(3, answers, questions);
-            
-            // ============================================
-            // Freeze v1.1: Recommendation Mode 통합
-            // - 기존 분석 API 호출 (리포트 생성용)
-            // - 새 Recommend API 호출 (최신 Vectorize+TAG 기반 추천)
-            // ============================================
-            // Skeleton 모드: 즉시 결과 페이지로 전환 + 프로그레스 바
-            showLoading('분석 중...', '전문가급 리포트를 생성하고 있어요', true);
 
             try {
-                // 1. 기존 분석 API (리포트 생성)
+                // 1. 기존 분석 API (리포트 생성) — 150초 타임아웃
+                var analyzeController = new AbortController();
+                var analyzeTimeout = setTimeout(function() { analyzeController.abort(); }, 150000);
+
                 const analyzeResponse = await fetch('/api/ai-analyzer/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -4306,8 +4307,10 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         engine_version: 'v3',
                         debug: DEBUG_MODE,
                         ...getEditModePayloadExtras(),
-                    })
+                    }),
+                    signal: analyzeController.signal,
                 });
+                clearTimeout(analyzeTimeout);
                 
                 const analyzeData = await analyzeResponse.json();
                 
@@ -4435,6 +4438,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 // 편집 모드: 분석 완료 → 결과 페이지로 이동
                 if (window.__editMode && analyzeData.request_id) {
                     hideLoading();
+                    clearTimeout(globalTimeout);
                     fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
                         method: 'DELETE', credentials: 'same-origin'
                     }).catch(() => {});
@@ -4449,7 +4453,13 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
             } catch (error) {
                 hideLoading();
-                showToast(error.message || '분석 중 오류가 발생했습니다. 다시 시도해주세요.', 'error');
+                if (error.name === 'AbortError') {
+                    alert('분석 시간이 초과되었습니다 (2분 30초). 잠시 후 다시 시도해주세요.');
+                } else {
+                    showToast(error.message || '분석 중 오류가 발생했습니다. 다시 시도해주세요.', 'error');
+                }
+            } finally {
+                clearTimeout(globalTimeout);
             }
         }
         
@@ -8341,11 +8351,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 const jobSlug = job.slug || job.job_id || '';
                 // 이미지 URL 인코딩 (한글 파일명 처리)
                 let imageUrl = job.image_url || '';
-                if (imageUrl && imageUrl.includes('/uploads/')) {
-                    const parts = imageUrl.split('/');
-                    const filename = parts.pop();
-                    imageUrl = parts.join('/') + '/' + encodeURIComponent(filename);
-                }
+                // 브라우저가 <img src>에서 한글 URL 인코딩을 자동 처리 — encodeURIComponent 불필요
                 const rationale = job.rationale || job.one_line_why || '';
                 const description = (job.job_description || job.description || job.summary || '').replace(/\\n\\n/g, ' ').replace(/\\n/g, ' ').trim();
                 // fallback 1: rationale에서 첫 문장 추출 (자동 생성 아닌 경우)

@@ -603,6 +603,26 @@ export async function generateRoundQuestions(
         }
       }
 
+      // ★ v3.24: False Anchoring Filter — LLM이 사용자가 하지 않은 말을 인용하는 질문 제거
+      if (questions.length > MIN_QUESTIONS_PER_ROUND) {
+        const userTexts: string[] = []
+        for (const ans of previousRoundAnswers) {
+          if (ans.answer && ans.answer.length > 5) userTexts.push(ans.answer)
+        }
+        if (narrativeFacts) {
+          for (const key of ['highAliveMoment', 'lostMoment', 'existentialAnswer', 'life_story', 'storyAnswer', 'career_background']) {
+            const val = (narrativeFacts as any)[key]
+            if (val && typeof val === 'string') userTexts.push(val)
+          }
+        }
+        if (userTexts.length > 0) {
+          const anchorFiltered = removeFalseAnchors(questions, userTexts)
+          if (anchorFiltered.length >= MIN_QUESTIONS_PER_ROUND) {
+            questions = anchorFiltered
+          }
+        }
+      }
+
       if (questions.length >= MIN_QUESTIONS_PER_ROUND) {
         return {
           round: roundNumber,
@@ -611,7 +631,7 @@ export async function generateRoundQuestions(
           metadata: roundMeta,
         }
       }
-      
+
       // 질문 수가 부족하면 재시도
       lastError = new Error(`Insufficient questions: got ${questions.length}, need ${MIN_QUESTIONS_PER_ROUND}`)
       // v3.19.3: 1~2개라도 있으면 마지막 시도에서 graceful 반환 (에러 방지)
@@ -1096,6 +1116,110 @@ const ILLOGICAL_PATTERNS = [
 
 function isIllogicalQuestion(text: string): boolean {
   return ILLOGICAL_PATTERNS.some(p => p.test(text))
+}
+
+// ============================================
+// ★ v3.24: False Anchoring 필터 — LLM이 사용자가 하지 않은 말을 인용하는 것 방지
+// ============================================
+
+// 질문에서 인용 패턴을 추출하는 정규식
+const QUOTE_EXTRACTION_PATTERNS = [
+  // '...'라고/이라고/라는 — 한글 따옴표
+  /[''']([^''']{3,30})['''](?:라고|이라고|라는)/g,
+  // "..."라고 — 큰따옴표
+  /["""]([^"""\n]{3,30})["""](?:라고|이라고|라는)/g,
+  // '...'라고 — 일반 따옴표
+  /['"]([^'"\n]{3,30})['"](?:라고|이라고|라는)/g,
+  // ~라고 하셨는데/말씀하셨는데/느꼈다고 하셨는데 — 따옴표 없는 인용
+  /(.{4,25})(?:라고 하셨|라고 말씀하셨|느꼈다고 하셨|했다고 하셨|이라고 하셨)(?:는데|잖아요|죠|네요)/g,
+]
+
+// 인용 부분을 제거하는 정규식 (질문 텍스트에서 거짓 인용 구간 삭제)
+const QUOTE_REMOVAL_PATTERNS = [
+  /['''"""][^'''"""\n]{3,30}['''"""](?:라고|이라고|라는)\s*(?:하셨는데|말씀하셨는데|느끼셨다고 하셨는데|느꼈다고 하셨는데)[,.]?\s*/g,
+  /.{4,25}(?:라고 하셨|라고 말씀하셨|느꼈다고 하셨|했다고 하셨|이라고 하셨)(?:는데|잖아요|죠|네요)[,.]?\s*/g,
+]
+
+/**
+ * 사용자 텍스트에 인용구가 존재하는지 fuzzy 매칭
+ * 1차: 정확한 substring 검사
+ * 2차: 60%+ 문자 일치 (슬라이딩 윈도우)
+ */
+function fuzzyContains(haystack: string, needle: string): boolean {
+  // 공백/구두점 정규화
+  const normHay = haystack.replace(/\s+/g, ' ').toLowerCase()
+  const normNeedle = needle.replace(/\s+/g, ' ').toLowerCase().trim()
+
+  if (normNeedle.length < 3) return true  // 너무 짧으면 검증 불가 → 통과
+
+  // 1차: 정확한 substring
+  if (normHay.includes(normNeedle)) return true
+
+  // 2차: 60% 문자 일치 (슬라이딩 윈도우)
+  const needleChars = normNeedle.replace(/\s/g, '')
+  const hayChars = normHay.replace(/\s/g, '')
+  const windowSize = Math.ceil(needleChars.length * 1.5)
+
+  for (let i = 0; i <= hayChars.length - needleChars.length; i++) {
+    const window = hayChars.slice(i, i + windowSize)
+    let matchCount = 0
+    const windowSet = new Set(window)
+    for (const ch of needleChars) {
+      if (windowSet.has(ch)) matchCount++
+    }
+    if (matchCount / needleChars.length >= 0.6) return true
+  }
+  return false
+}
+
+/**
+ * LLM이 생성한 질문에서 거짓 앵커링(사용자가 말하지 않은 인용)을 감지하고 제거
+ */
+function removeFalseAnchors(
+  questions: RoundQuestion[],
+  userTexts: string[]
+): RoundQuestion[] {
+  if (userTexts.length === 0) return questions
+
+  const allUserText = userTexts.join(' ')
+
+  return questions.map(q => {
+    let text = q.questionText
+    let hasFalseAnchor = false
+
+    for (const pattern of QUOTE_EXTRACTION_PATTERNS) {
+      pattern.lastIndex = 0
+      let match
+      while ((match = pattern.exec(text)) !== null) {
+        const quoted = match[1].trim()
+        if (quoted.length < 3) continue
+
+        if (!fuzzyContains(allUserText, quoted)) {
+          hasFalseAnchor = true
+          break
+        }
+      }
+      if (hasFalseAnchor) break
+    }
+
+    if (hasFalseAnchor) {
+      // 거짓 인용 부분만 제거, 나머지 질문은 유지
+      let cleaned = text
+      for (const removePattern of QUOTE_REMOVAL_PATTERNS) {
+        removePattern.lastIndex = 0
+        cleaned = cleaned.replace(removePattern, '')
+      }
+      cleaned = cleaned.trim()
+      // 앞부분이 접속사로 시작하면 정리
+      cleaned = cleaned.replace(/^[,.\s]+/, '').trim()
+
+      // 제거 후 질문이 너무 짧으면 전체 필터링
+      if (cleaned.length < 15) return null
+      return { ...q, questionText: cleaned, anchor: undefined }
+    }
+
+    return q
+  }).filter((q): q is RoundQuestion => q !== null)
 }
 
 // ============================================

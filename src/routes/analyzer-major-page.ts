@@ -2895,12 +2895,21 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             const answers = collectV3RoundAnswersMajor(questions);
             if (!validateV3AnswersMajor(answers, questions)) return;
 
-            showLoading('답변 저장 중...', '마지막 답변을 저장하고 있어요');
+            // 3분 글로벌 타임아웃 안전장치
+            var globalTimeout = setTimeout(function() {
+                hideLoading();
+                alert('요청 시간이 초과되었습니다 (3분). 페이지를 새로고침 후 다시 시도해주세요.');
+            }, 180000);
+
+            // skeleton 모드를 처음부터 사용 — progress bar 리셋 방지
+            showLoading('AI가 분석 중...', '최적의 전공을 찾고 있어요', true);
             await saveV3RoundAnswersMajor(3, answers);
 
-            showLoading('AI가 분석 중...', '최적의 전공을 찾고 있어요', true);
-
             try {
+                // 150초 타임아웃 — analyze 엔드포인트 hang 방지
+                var analyzeController = new AbortController();
+                var analyzeTimeout = setTimeout(function() { analyzeController.abort(); }, 150000);
+
                 const response = await fetch('/api/ai-analyzer/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -2917,13 +2926,16 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         academic_state: window.academicState || undefined,
                         debug: DEBUG_MODE,
                         ...getEditModePayloadExtras(),
-                    })
+                    }),
+                    signal: analyzeController.signal,
                 });
+                clearTimeout(analyzeTimeout);
 
                 const data = await response.json();
 
                 if (window.__editMode && data.request_id) {
                     hideLoading();
+                    clearTimeout(globalTimeout);
                     fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
                         method: 'DELETE', credentials: 'same-origin'
                     }).catch(() => {});
@@ -2937,7 +2949,13 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 hideSkeletonLoading();
             } catch (error) {
                 hideLoading();
-                alert('분석 중 오류가 발생했습니다: ' + error.message);
+                if (error.name === 'AbortError') {
+                    alert('분석 시간이 초과되었습니다 (2분 30초). 잠시 후 다시 시도해주세요.');
+                } else {
+                    alert('분석 중 오류가 발생했습니다: ' + error.message);
+                }
+            } finally {
+                clearTimeout(globalTimeout);
             }
         }
 
@@ -4384,11 +4402,7 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         var majorName = major.major_name || major.major_id || '전공';
         var majorSlug = major.slug || major.major_id || '';
         var imageUrl = major.image_url || '';
-        if (imageUrl && imageUrl.includes('/uploads/')) {
-            var parts = imageUrl.split('/');
-            var filename = parts.pop();
-            imageUrl = parts.join('/') + '/' + encodeURIComponent(filename);
-        }
+        // 브라우저가 <img src>에서 한글 URL 인코딩을 자동 처리 — encodeURIComponent 불필요
         var rationale = major.rationale || major.one_line_why || '';
         var description = (major.major_description || major.description || major.summary || '').replace(/\\n\\n/g, ' ').replace(/\\n/g, ' ').trim();
         var displayDescription = description || '';
