@@ -8377,6 +8377,87 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
       attributes: major.attributes,
     }))
 
+    // 4-3. Additional Context 조회 (사용자가 추가한 텍스트) — Judge + Reporter 공용
+    let majorAdditionalContext: string | undefined
+    try {
+      const acRows = await db.prepare(`
+        SELECT value_text FROM analyzer_facts
+        WHERE session_id = ? AND fact_key = 'additional_context'
+        ORDER BY created_at DESC
+      `).bind(session_id).all<{ value_text: string }>()
+      if (acRows.results && acRows.results.length > 0) {
+        majorAdditionalContext = acRows.results.map(r => r.value_text).join('\n\n')
+      }
+    } catch { /* non-critical */ }
+
+    // 4-4. DB에서 narrativeFacts, roundAnswers, universalAnswers 로드 (Judge 컨텍스트용)
+    let narrativeFactsForJudge: { highAliveMoment: string; lostMoment: string; existentialAnswer?: string } | undefined
+    let roundAnswersForJudge: Array<{ roundNumber: 1 | 2 | 3; questionId: string; answer: string }> = []
+    let universalAnswersForJudge: Record<string, string | string[]> = {}
+
+    try {
+      const [narrativeResult, roundAnswersResult, userFactsResult] = await Promise.allSettled([
+        db.prepare(`
+          SELECT high_alive_moment, lost_moment, existential_answer
+          FROM narrative_facts
+          WHERE session_id = ?
+        `).bind(session_id).first<{
+          high_alive_moment: string | null
+          lost_moment: string | null
+          existential_answer: string | null
+        }>(),
+        db.prepare(`
+          SELECT round_number, question_id, answer
+          FROM round_answers
+          WHERE session_id = ?
+          ORDER BY round_number, question_id
+        `).bind(session_id).all<{
+          round_number: number
+          question_id: string
+          answer: string
+        }>(),
+        db.prepare(`
+          SELECT fact_key, fact_value
+          FROM user_facts
+          WHERE session_id = ?
+        `).bind(session_id).all<{
+          fact_key: string
+          fact_value: string
+        }>(),
+      ])
+
+      if (narrativeResult.status === 'fulfilled' && narrativeResult.value) {
+        const row = narrativeResult.value
+        if (row.high_alive_moment || row.lost_moment) {
+          narrativeFactsForJudge = {
+            highAliveMoment: row.high_alive_moment || '',
+            lostMoment: row.lost_moment || '',
+            existentialAnswer: row.existential_answer || undefined,
+          }
+        }
+      }
+
+      if (roundAnswersResult.status === 'fulfilled' && roundAnswersResult.value?.results?.length) {
+        roundAnswersForJudge = roundAnswersResult.value.results.map(row => ({
+          roundNumber: row.round_number as 1 | 2 | 3,
+          questionId: row.question_id,
+          answer: row.answer,
+        }))
+      }
+
+      if (userFactsResult.status === 'fulfilled' && userFactsResult.value?.results?.length) {
+        for (const row of userFactsResult.value.results) {
+          try {
+            universalAnswersForJudge[row.fact_key] = JSON.parse(row.fact_value)
+          } catch {
+            universalAnswersForJudge[row.fact_key] = row.fact_value
+          }
+        }
+      }
+    } catch (dbLoadErr) {
+      // DB 로드 실패 시 빈 값으로 계속 진행
+    }
+
     // 5. LLM Judge (전공 전용)
     let topMajors: any[]
 
@@ -8385,6 +8466,9 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
         const judgeInput: MajorJudgeInput = {
           candidates: candidatesForJudge,
           searchProfile,
+          narrativeFacts: narrativeFactsForJudge,
+          roundAnswers: roundAnswersForJudge,
+          universalAnswers: universalAnswersForJudge,
           miniModuleResult: payload.mini_module_result,
           academicState: payload.academic_state,
           additionalContext: majorAdditionalContext,
@@ -8619,19 +8703,6 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
     let reportMode: 'llm' | 'fallback' | 'none' | 'deferred' = skipReport ? 'deferred' : 'none'
     let narrativeFacts: { highAliveMoment: string; lostMoment: string; existentialAnswer?: string } | undefined
     let roundAnswers: RoundAnswer[] = []
-
-    // Additional Context 조회 (사용자가 추가한 텍스트) — Judge에도 사용
-    let majorAdditionalContext: string | undefined
-    try {
-      const acRows = await db.prepare(`
-        SELECT value_text FROM analyzer_facts
-        WHERE session_id = ? AND fact_key = 'additional_context'
-        ORDER BY created_at DESC
-      `).bind(session_id).all<{ value_text: string }>()
-      if (acRows.results && acRows.results.length > 0) {
-        majorAdditionalContext = acRows.results.map(r => r.value_text).join('\n\n')
-      }
-    } catch { /* non-critical */ }
 
     if (!skipReport) {
       const [narrativeResult, roundAnswersResult] = await Promise.allSettled([
