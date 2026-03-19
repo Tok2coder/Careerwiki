@@ -6725,9 +6725,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       } else {
         // 새 request 생성
         const insertResult = await db.prepare(`
-          INSERT INTO ai_analysis_requests (session_id, user_id, analysis_type, status, processed_at, created_at)
-          VALUES (?, ?, 'job', 'completed', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-        `).bind(session_id, effectiveUserId).run()
+          INSERT INTO ai_analysis_requests (session_id, user_id, analysis_type, prompt_payload, status, processed_at, created_at)
+          VALUES (?, ?, 'job', ?, 'completed', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        `).bind(session_id, effectiveUserId, JSON.stringify(searchProfile || {})).run()
         savedRequestId = insertResult.meta?.last_row_id as number || null
       }
 
@@ -8854,8 +8854,8 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
         await db.prepare(`UPDATE ai_analysis_requests SET status = 'completed', processed_at = CURRENT_TIMESTAMP, user_id = COALESCE(user_id, ?) WHERE id = ?`)
           .bind(effectiveUserId, savedRequestId).run()
       } else {
-        const insertResult = await db.prepare(`INSERT INTO ai_analysis_requests (session_id, user_id, analysis_type, status, processed_at, created_at) VALUES (?, ?, 'major', 'completed', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`)
-          .bind(session_id, effectiveUserId).run()
+        const insertResult = await db.prepare(`INSERT INTO ai_analysis_requests (session_id, user_id, analysis_type, prompt_payload, status, processed_at, created_at) VALUES (?, ?, 'major', ?, 'completed', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`)
+          .bind(session_id, effectiveUserId, JSON.stringify(searchProfile || {})).run()
         savedRequestId = insertResult.meta?.last_row_id as number || null
       }
 

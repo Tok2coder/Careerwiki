@@ -2939,6 +2939,10 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 displayResults(data);
                 saveDraftAsCompletedMajor();
                 hideSkeletonLoading();
+                // URL 업데이트: ?view={request_id}로 변경하여 결과 재방문 가능
+                if (data.request_id) {
+                    history.replaceState(null, '', '/analyzer/major?view=' + data.request_id);
+                }
             } catch (error) {
                 hideLoading();
                 if (error.name === 'AbortError') {
@@ -2999,6 +3003,9 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 displayResults(data);
                 saveDraftAsCompletedMajor();
                 hideSkeletonLoading();
+                if (data.request_id) {
+                    history.replaceState(null, '', '/analyzer/major?view=' + data.request_id);
+                }
             } catch (error) {
                 hideLoading();
                 alert('오류가 발생했습니다: ' + error.message);
