@@ -348,16 +348,11 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
               <p class="text-xs" style="color: #9aa3c5;">${formatRelativeTime(result.created_at)}</p>
             </div>
           </div>
-          <div class="flex items-center gap-1.5 flex-wrap justify-end">
-            ${result.engine_version && result.engine_version.startsWith('v3') ? `
-              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400">Premium</span>
-            ` : ''}
-            ${hasVersions ? `
-              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-sky-500/20 text-sky-400">
-                v${version}
-              </span>
-            ` : ''}
-          </div>
+          ${hasVersions ? `
+            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-sky-500/20 text-sky-400">
+              v${version}
+            </span>
+          ` : ''}
         </div>
 
         ${result.version_note ? `
