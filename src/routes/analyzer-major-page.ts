@@ -3257,13 +3257,14 @@ function displayPremiumReportV3Major(result) {
     // 메타인지 분석 결과
     const metaCognition = report.metaCognition || null;
 
-    // 전공 추천 데이터
-    const fitTopMajors = result.fit_top_majors || [];
+    // 전공 추천 데이터 (라이브 응답: recommendations.top_majors, 저장된 결과: fit_top_majors)
+    const recs = result.recommendations || {};
+    const fitTopMajors = result.fit_top_majors || recs.top_majors || recs.fit_top10 || [];
     const majorRecs = report.majorRecommendations || {};
 
     const overallTop5 = fitTopMajors.length > 0 ? fitTopMajors.slice(0, 5) : (majorRecs.overallTop5 || []);
-    const fitTop10 = (result.can_top10 || fitTopMajors || []).slice(0, 10);
-    const likeTop10 = (result.like_top10 || majorRecs.desireTop10 || []).slice(0, 10);
+    const fitTop10 = (result.can_top10 || recs.fit_top10 || fitTopMajors || []).slice(0, 10);
+    const likeTop10 = (result.like_top10 || recs.like_top10 || majorRecs.desireTop10 || []).slice(0, 10);
 
     // 결과 컨테이너 초기화
     const container = document.getElementById('step3');
