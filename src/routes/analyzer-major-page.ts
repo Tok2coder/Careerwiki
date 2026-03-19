@@ -2789,6 +2789,28 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             }
         }
 
+        // 전공 추천용 searchProfile 빌드
+        function buildSearchProfileForMajor() {
+            const miniModule = window.miniModuleResult || {};
+            const interests = universalAnswers.univ_interest || [];
+            return {
+                desiredThemes: [
+                    ...(miniModule.interest_top || []),
+                    ...(miniModule.value_top || []),
+                    ...interests,
+                ].filter(Boolean),
+                dislikedThemes: universalAnswers.univ_dislike || [],
+                strengthsHypothesis: miniModule.strength_top || [],
+                environmentPreferences: [],
+                hardConstraints: miniModule.constraint_flags || [],
+                riskSignals: [],
+                keywords: [
+                    ...(miniModule.interest_top || []),
+                    ...interests,
+                ].filter(Boolean),
+            };
+        }
+
         // V3: 마지막 라운드 후 분석 시작
         async function submitV3RoundAndAnalyzeMajor(questions) {
             const answers = collectV3RoundAnswersMajor(questions);
@@ -2805,32 +2827,42 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             await saveV3RoundAnswersMajor(3, answers);
 
             try {
-                // 150초 타임아웃 — analyze 엔드포인트 hang 방지
+                // 150초 타임아웃 — recommend-major 엔드포인트 hang 방지
                 var analyzeController = new AbortController();
                 var analyzeTimeout = setTimeout(function() { analyzeController.abort(); }, 150000);
 
-                const response = await fetch('/api/ai-analyzer/analyze', {
+                const response = await fetch('/api/ai-analyzer/v3/recommend-major', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         session_id: currentSessionId,
-                        analysis_type: selectedAnalysisType,
-                        stage: selectedStage || 'major_high',
-                        career_state: careerState,
-                        transition_signal: transitionSignalAnswers,
-                        universal_answers: universalAnswers,
-                        narrative_facts: window.narrativeFacts,
-                        round_answers: window.roundAnswers,
-                        engine_version: 'v3',
+                        searchProfile: buildSearchProfileForMajor(),
+                        mini_module_result: window.miniModuleResult || {},
                         academic_state: window.academicState || undefined,
+                        topK: 600,
+                        judgeTopN: 15,
+                        skipReport: false,
                         debug: DEBUG_MODE,
-                        ...getEditModePayloadExtras(),
                     }),
                     signal: analyzeController.signal,
                 });
                 clearTimeout(analyzeTimeout);
 
-                const data = await response.json();
+                const recData = await response.json();
+
+                if (!recData.success) {
+                    throw new Error(recData.error || '전공 추천 결과를 생성할 수 없습니다.');
+                }
+
+                // displayResults가 기대하는 형식으로 변환
+                const data = {
+                    result: {
+                        recommendations: recData.recommendations,
+                        premium_report: recData.premium_report,
+                        engine_version: recData.engine_version || 'v3',
+                    },
+                    request_id: recData.request_id,
+                };
 
                 if (window.__editMode && data.request_id) {
                     hideLoading();
@@ -2862,24 +2894,35 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             showLoading('AI가 분석 중...', '최적의 전공을 찾고 있어요', true);
 
             try {
-                const response = await fetch('/api/ai-analyzer/analyze', {
+                const response = await fetch('/api/ai-analyzer/v3/recommend-major', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         session_id: currentSessionId,
-                        analysis_type: selectedAnalysisType,
-                        stage: selectedStage || 'major_high',
-                        career_state: careerState,
-                        transition_signal: transitionSignalAnswers,
-                        universal_answers: universalAnswers,
-                        followup_answers: followupAnswers,
+                        searchProfile: buildSearchProfileForMajor(),
+                        mini_module_result: window.miniModuleResult || {},
                         academic_state: window.academicState || undefined,
+                        topK: 600,
+                        judgeTopN: 15,
+                        skipReport: false,
                         debug: DEBUG_MODE,
-                        ...getEditModePayloadExtras(),
                     })
                 });
 
-                const data = await response.json();
+                const recData = await response.json();
+
+                if (!recData.success) {
+                    throw new Error(recData.error || '전공 추천 결과를 생성할 수 없습니다.');
+                }
+
+                const data = {
+                    result: {
+                        recommendations: recData.recommendations,
+                        premium_report: recData.premium_report,
+                        engine_version: recData.engine_version || 'v3',
+                    },
+                    request_id: recData.request_id,
+                };
 
                 // 편집 모드: 분석 완료 → 결과 페이지로 이동
                 if (window.__editMode && data.request_id) {
