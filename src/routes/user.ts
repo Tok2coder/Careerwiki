@@ -748,35 +748,120 @@ function generateProfileContentHtml(): string {
       // 페이지 로드 시 데이터 가져오기
       document.addEventListener('DOMContentLoaded', loadProfile);
       
+      let allProfiles = null; // { job, major }
+
       async function loadProfile() {
         try {
           const res = await fetch('/api/ai-analyzer/profile');
           const data = await res.json();
-          
+
           if (!data.success) {
             document.getElementById('loading-state').classList.add('hidden');
             document.getElementById('empty-state').classList.remove('hidden');
             return;
           }
-          
+
           profileData = data.profile;
-          
+          allProfiles = data.profiles; // { job: {...}, major: {...} } or null
+
           // 메타데이터 업데이트
           updateMetadata(data.metadata);
-          
-          // 데이터 렌더링
-          renderProfile(data.profile);
-          
+
+          // profiles가 있으면 직업/전공 분리 렌더링, 없으면 기존 방식
+          if (allProfiles && (allProfiles.job || allProfiles.major)) {
+            renderSplitProfiles(allProfiles);
+          } else {
+            renderProfile(data.profile);
+          }
+
           // 변경사항 체크
           checkForChanges();
-          
+
           // 로딩 숨기고 첫 번째 탭 표시
           document.getElementById('loading-state').classList.add('hidden');
           document.getElementById('tab-career').classList.remove('hidden');
-          
+
         } catch (error) {
           document.getElementById('loading-state').innerHTML = '<p class="text-red-400">프로필을 불러오는 중 오류가 발생했습니다.</p>';
         }
+      }
+
+      function renderSplitProfiles(profiles) {
+        // 직업/전공 프로필을 career 탭 안에 분리하여 렌더링
+        const careerTab = document.getElementById('tab-career');
+        if (!careerTab) return;
+
+        let html = '';
+
+        if (profiles.job) {
+          html += renderProfileSection('직업 추천 프로필', 'fa-briefcase', 'blue', profiles.job);
+        }
+        if (profiles.major) {
+          html += renderProfileSection('전공 추천 프로필', 'fa-graduation-cap', 'emerald', profiles.major);
+        }
+
+        careerTab.innerHTML = html;
+
+        // narrative 탭도 채우기
+        const latest = profiles.job || profiles.major;
+        if (latest && latest.narrative) {
+          if (latest.narrative.highAliveMoment) {
+            setText('field-highAliveMoment', latest.narrative.highAliveMoment);
+          }
+          if (latest.narrative.lostMoment) {
+            setText('field-lostMoment', latest.narrative.lostMoment);
+          }
+          if (latest.narrative.round_answers && latest.narrative.round_answers.length > 0) {
+            const container = document.getElementById('round-answers-container');
+            if (container) {
+              container.innerHTML = latest.narrative.round_answers.map(function(ra, i) {
+                return '<div class="profile-card p-4 rounded-xl bg-wiki-card/30 border border-wiki-border/30">' +
+                  '<h4 class="text-sm font-medium text-wiki-muted mb-3">' + escapeHtml(ra.question || ('질문 #' + (i+1))) + '</h4>' +
+                  '<p class="text-white leading-relaxed">' + escapeHtml(ra.answer || '-') + '</p>' +
+                '</div>';
+              }).join('');
+            }
+          }
+        }
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      }
+
+      function renderProfileSection(title, icon, color, prof) {
+        const ua = prof.universal_answers || {};
+        const cs = prof.career_state || {};
+
+        function tagHtml(items, colorCls) {
+          if (!items || items.length === 0) return '<span class="text-wiki-muted text-sm">-</span>';
+          return items.map(function(item) {
+            return '<span class="px-2.5 py-1 rounded-lg text-xs border ' + colorCls + '">' + escapeHtml(String(item)) + '</span>';
+          }).join(' ');
+        }
+
+        const updatedAt = prof.updated_at ? new Date(prof.updated_at.replace(' ', 'T') + 'Z').toLocaleDateString('ko-KR') : '-';
+
+        return '<div class="mb-6">' +
+          '<div class="flex items-center gap-2 mb-4">' +
+            '<i class="fas ' + icon + ' text-' + color + '-400"></i>' +
+            '<h3 class="text-base font-semibold text-white">' + title + '</h3>' +
+            '<span class="text-xs text-wiki-muted ml-auto">' + updatedAt + '</span>' +
+          '</div>' +
+          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
+            (cs.role_identity ? '<div class="p-3 rounded-xl bg-wiki-card/30 border border-wiki-border/30"><h4 class="text-xs text-wiki-muted mb-1">역할</h4><p class="text-sm text-white font-medium">' + escapeHtml(cs.role_identity) + '</p></div>' : '') +
+            (cs.career_stage_years ? '<div class="p-3 rounded-xl bg-wiki-card/30 border border-wiki-border/30"><h4 class="text-xs text-wiki-muted mb-1">경력 단계</h4><p class="text-sm text-white font-medium">' + escapeHtml(cs.career_stage_years) + '</p></div>' : '') +
+            (ua.workstyle_social ? '<div class="p-3 rounded-xl bg-wiki-card/30 border border-wiki-border/30"><h4 class="text-xs text-wiki-muted mb-1">업무 스타일</h4><p class="text-sm text-white font-medium">' + escapeHtml(ua.workstyle_social) + '</p></div>' : '') +
+          '</div>' +
+          '<div class="space-y-3 mt-3">' +
+            (ua.interest && ua.interest.length > 0 ? '<div class="p-3 rounded-xl bg-wiki-card/30 border border-wiki-border/30"><h4 class="text-xs text-wiki-muted mb-2">관심 분야</h4><div class="flex flex-wrap gap-1.5">' + tagHtml(ua.interest, 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30') + '</div></div>' : '') +
+            (prof.values && prof.values.length > 0 ? '<div class="p-3 rounded-xl bg-wiki-card/30 border border-wiki-border/30"><h4 class="text-xs text-wiki-muted mb-2">가치관</h4><div class="flex flex-wrap gap-1.5">' + tagHtml(prof.values, 'bg-purple-500/20 text-purple-300 border-purple-500/30') + '</div></div>' : '') +
+            (ua.strength && ua.strength.length > 0 ? '<div class="p-3 rounded-xl bg-wiki-card/30 border border-wiki-border/30"><h4 class="text-xs text-wiki-muted mb-2">강점</h4><div class="flex flex-wrap gap-1.5">' + tagHtml(ua.strength, 'bg-blue-500/20 text-blue-300 border-blue-500/30') + '</div></div>' : '') +
+            (prof.constraints && prof.constraints.length > 0 ? '<div class="p-3 rounded-xl bg-wiki-card/30 border border-wiki-border/30"><h4 class="text-xs text-wiki-muted mb-2">제약 조건</h4><div class="flex flex-wrap gap-1.5">' + tagHtml(prof.constraints, 'bg-red-500/20 text-red-300 border-red-500/30') + '</div></div>' : '') +
+            (prof.good_subjects && prof.good_subjects.length > 0 ? '<div class="p-3 rounded-xl bg-wiki-card/30 border border-wiki-border/30"><h4 class="text-xs text-wiki-muted mb-2">잘하는 과목</h4><div class="flex flex-wrap gap-1.5">' + tagHtml(prof.good_subjects, 'bg-amber-500/20 text-amber-300 border-amber-500/30') + '</div></div>' : '') +
+          '</div>' +
+        '</div>';
       }
       
       function updateMetadata(metadata) {

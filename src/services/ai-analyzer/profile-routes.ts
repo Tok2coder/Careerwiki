@@ -291,7 +291,7 @@ export const profileRoutes = new Hono<{ Bindings: Env }>()
 
 // ============================================
 // GET /api/analyzer/profile
-// 사용자 프로필 통합 조회
+// 사용자 프로필 통합 조회 (user_profiles 우선, draft fallback)
 // ============================================
 profileRoutes.get('/', async (c) => {
   const userId = getUserIdFromContext(c)
@@ -300,11 +300,98 @@ profileRoutes.get('/', async (c) => {
   }
 
   try {
-    const { profile, metadata, latestDraft } = await collectProfileData(c.env.DB, userId)
+    const db = c.env.DB
+
+    // 1. user_profiles에서 직업/전공 프로필 조회
+    const profiles = await db.prepare(
+      'SELECT * FROM user_profiles WHERE user_id = ?'
+    ).bind(userId).all<{
+      id: number; analysis_type: string
+      role_identity: string | null; career_stage: string | null
+      skill_level: number | null
+      interests_json: string | null; values_json: string | null
+      strengths_json: string | null; constraints_json: string | null
+      workstyle: string | null; drains_json: string | null
+      sacrifices_json: string | null; good_subjects_json: string | null
+      narrative_json: string | null; last_request_id: number | null
+      updated_at: string
+    }>()
+
+    const jobProfile = profiles.results?.find(p => p.analysis_type === 'job')
+    const majorProfile = profiles.results?.find(p => p.analysis_type === 'major')
+
+    // user_profiles가 있으면 그걸 사용
+    if (jobProfile || majorProfile) {
+      const parseJson = (s: string | null) => {
+        if (!s) return null
+        try { return JSON.parse(s) } catch { return null }
+      }
+
+      const mapProfile = (p: typeof jobProfile) => {
+        if (!p) return null
+        return {
+          career_state: {
+            role_identity: p.role_identity,
+            career_stage_years: p.career_stage,
+            skill_level: p.skill_level,
+          },
+          universal_answers: {
+            interest: parseJson(p.interests_json) || [],
+            strength: parseJson(p.strengths_json) || [],
+            dislike: [],
+            priority: null,
+            workstyle_social: p.workstyle,
+          },
+          values: parseJson(p.values_json) || [],
+          constraints: parseJson(p.constraints_json) || [],
+          good_subjects: parseJson(p.good_subjects_json) || [],
+          narrative: parseJson(p.narrative_json),
+          updated_at: p.updated_at,
+          last_request_id: p.last_request_id,
+        }
+      }
+
+      const latestProfile = jobProfile && majorProfile
+        ? (new Date(jobProfile.updated_at) > new Date(majorProfile.updated_at) ? jobProfile : majorProfile)
+        : (jobProfile || majorProfile)!
+
+      // 레거시 호환: 기존 profile 구조도 반환 (가장 최신 프로필 기준)
+      const latest = mapProfile(latestProfile)
+      const legacyProfile = {
+        career_state: latest?.career_state || null,
+        universal_answers: latest?.universal_answers || null,
+        transition_signal: null as any,
+        narrative_facts: latest?.narrative?.highAliveMoment || latest?.narrative?.lostMoment
+          ? { highAliveMoment: latest.narrative.highAliveMoment, lostMoment: latest.narrative.lostMoment }
+          : null,
+        round_answers: latest?.narrative?.round_answers || [],
+        resume_data: { skills: [] as string[], certifications: [] as string[], industries: [] as string[] },
+      }
+
+      return c.json({
+        success: true,
+        profile: legacyProfile,
+        profiles: {
+          job: mapProfile(jobProfile),
+          major: mapProfile(majorProfile),
+        },
+        metadata: {
+          last_updated_at: latestProfile.updated_at,
+          last_analysis_at: latestProfile.updated_at,
+          total_facts_count: (profiles.results?.length || 0),
+          data_completeness: calculateCompleteness(latestProfile),
+        },
+        session_id: null,
+      })
+    }
+
+    // 2. fallback: 기존 draft 기반
+    const { profile, metadata, latestDraft } = await collectProfileData(db, userId)
 
     return c.json({
       success: true,
       profile,
+      profiles: null,
       metadata,
       session_id: latestDraft?.session_id || null,
     })
@@ -315,6 +402,17 @@ profileRoutes.get('/', async (c) => {
     }, 500)
   }
 })
+
+function calculateCompleteness(p: { role_identity: string | null; interests_json: string | null; strengths_json: string | null; narrative_json: string | null; values_json: string | null }): number {
+  let filled = 0
+  const total = 5
+  if (p.role_identity) filled++
+  if (p.interests_json) filled++
+  if (p.strengths_json) filled++
+  if (p.values_json) filled++
+  if (p.narrative_json) filled++
+  return filled / total
+}
 
 // ============================================
 // GET /api/analyzer/profile/diff

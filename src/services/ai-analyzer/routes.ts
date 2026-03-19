@@ -4,6 +4,7 @@
 
 import { Hono } from 'hono'
 import type { D1Database, VectorizeIndex, Ai } from '@cloudflare/workers-types'
+import { saveUserProfile } from './profile-saver'
 import {
   VERSIONS,
   assertConstraintType,
@@ -6754,6 +6755,22 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         }
 
       }
+
+      // 프로필 영구 저장 (user_profiles 테이블)
+      if (savedRequestId && effectiveUserId) {
+        try {
+          await saveUserProfile(db, {
+            userId: effectiveUserId,
+            analysisType: 'job',
+            requestId: savedRequestId,
+            miniModuleResult: payload.mini_module_result || {},
+            narrativeFacts: narrativeFacts || null,
+            roundAnswers: roundAnswers || null,
+          })
+        } catch (profileErr) {
+          console.error('[recommend] Profile save error:', profileErr)
+        }
+      }
     } catch (saveError) {
       // 저장 실패해도 결과는 반환 (로그만 남김)
     }
@@ -8882,6 +8899,22 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
         if (!updateResult.meta?.changes || updateResult.meta.changes === 0) {
           await db.prepare(`INSERT INTO ai_analysis_results (request_id, result_json, engine_version, premium_report_json, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)`)
             .bind(savedRequestId, resultJson, RECOMMENDATION_ENGINE_VERSION, premiumJson).run()
+        }
+      }
+
+      // 프로필 영구 저장 (user_profiles 테이블)
+      if (savedRequestId && effectiveUserId) {
+        try {
+          await saveUserProfile(db, {
+            userId: String(effectiveUserId),
+            analysisType: 'major',
+            requestId: savedRequestId,
+            miniModuleResult: payload.mini_module_result || {},
+            narrativeFacts: narrativeFacts || null,
+            roundAnswers: roundAnswers || null,
+          })
+        } catch (profileErr) {
+          console.error('[recommend-major] Profile save error:', profileErr)
         }
       }
     } catch (saveError) {
