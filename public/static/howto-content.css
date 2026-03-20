@@ -763,9 +763,9 @@
 .howto-toc summary {
   padding: 1rem 1.5rem;
   cursor: pointer;
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: #64b5f6;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #c084fc;
   letter-spacing: 0.06em;
   list-style: none;
   display: flex;
@@ -778,7 +778,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 .howto-toc summary:hover {
-  color: #90caf9;
+  color: #d8b4fe;
 }
 .howto-toc summary::-webkit-details-marker { display: none; }
 .howto-toc summary::after {
@@ -821,10 +821,10 @@
 .howto-toc-list li a .toc-num {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #64b5f6;
+  color: #c084fc;
   min-width: 1.25rem;
   font-variant-numeric: tabular-nums;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 /* =====================================================
