@@ -58,7 +58,15 @@ export async function getCareerTreesForJob(
 
   if (!results || results.length === 0) return []
 
-  return results.map(row => ({
+  // 같은 career_tree_id 중복 제거 (첫 번째 것만 유지)
+  const seen = new Set<number>()
+  const unique = results.filter(row => {
+    if (seen.has(row.id)) return false
+    seen.add(row.id)
+    return true
+  })
+
+  return unique.map(row => ({
     ...parseCareerTree(row),
     highlightStageIndex: row.stage_index,
   }))
@@ -204,10 +212,12 @@ async function syncJobLinks(
     'DELETE FROM career_tree_job_links WHERE career_tree_id = ?'
   ).bind(careerTreeId).run()
 
-  // stages에서 job_slug 수집
+  // stages에서 job_slug 수집 (같은 slug는 첫 등장 stage만 — 중복 카드 방지)
   const linksToInsert: Array<{ jobSlug: string; stageIndex: number }> = []
+  const seenSlugs = new Set<string>()
   stages.forEach((stage, index) => {
-    if (stage.job_slug) {
+    if (stage.job_slug && !seenSlugs.has(stage.job_slug)) {
+      seenSlugs.add(stage.job_slug)
       linksToInsert.push({ jobSlug: stage.job_slug, stageIndex: index })
     }
   })
