@@ -19,6 +19,7 @@
   font-weight: 600;
   margin: 1.75rem 0 0.875rem;
   color: #fff;
+  scroll-margin-top: 100px;
 }
 .howto-user-content h3 {
   font-size: 1.25rem;
