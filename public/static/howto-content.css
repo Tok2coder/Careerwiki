@@ -753,48 +753,78 @@
 
 /* 목차(TOC) */
 .howto-toc {
-  background: rgba(79, 143, 255, 0.06);
-  border: 1px solid rgba(79, 143, 255, 0.2);
-  border-radius: 0.75rem;
-  margin: 1.5rem 0 2rem;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  margin: 1.5rem 0 2.5rem;
   overflow: hidden;
+  backdrop-filter: blur(4px);
 }
 .howto-toc summary {
-  padding: 0.875rem 1.25rem;
+  padding: 1rem 1.5rem;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   list-style: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-.howto-toc summary::-webkit-details-marker { display: none; }
-.howto-toc summary::before {
-  content: '📑';
-  font-size: 1rem;
-}
-.howto-toc-list {
-  padding: 0 1.25rem 1rem;
-  margin: 0;
-  list-style: none;
-}
-.howto-toc-list li {
-  padding: 0.25rem 0;
-}
-.howto-toc-list li a {
-  color: #64b5f6;
-  text-decoration: none;
-  font-size: 0.875rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: color 0.2s;
 }
-.howto-toc-list li a:hover {
-  color: #90caf9;
-  text-decoration: underline;
+.howto-toc[open] summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
-.howto-toc-list .toc-h3 {
-  padding-left: 1rem;
+.howto-toc summary:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+.howto-toc summary::-webkit-details-marker { display: none; }
+.howto-toc summary::after {
+  content: '';
+  margin-left: auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s;
+}
+.howto-toc[open] summary::after {
+  transform: rotate(-135deg);
+}
+.howto-toc-list {
+  padding: 0.75rem 1.5rem 1rem;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+.howto-toc-list li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  transition: all 0.15s;
+}
+.howto-toc-list li a:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+.howto-toc-list li a .toc-num {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.25);
+  min-width: 1.25rem;
+  font-variant-numeric: tabular-nums;
 }
 
 /* =====================================================

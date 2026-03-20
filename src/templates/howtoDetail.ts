@@ -2,42 +2,40 @@ import type { HowtoGuideDetail } from '../types/howto'
 import type { CommentPolicyAttributes } from './detailTemplateUtils'
 import { renderCommentsPlaceholder, resolveCommentPolicy, renderAdSlot, sanitizeJson } from './detailTemplateUtils'
 
-// 본문 HTML에서 h2/h3를 파싱하여 id를 부여하고 TOC를 생성
+// 본문 HTML에서 h2를 파싱하여 id를 부여하고 TOC를 생성 (H2만 표시)
 function generateTocFromHtml(html: string): { processedHtml: string; tocHtml: string } {
-  const headings: Array<{ level: number; text: string; id: string }> = []
+  const headings: Array<{ text: string; id: string }> = []
   let counter = 0
 
-  // h2/h3 태그에 id 부여
+  // h2/h3 태그에 id 부여 (앵커 링크용)
   const processedHtml = html.replace(/<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi, (match, level, attrs, content) => {
     counter++
     const id = 'heading-' + counter
-    // 태그 내부의 HTML 태그 제거하여 순수 텍스트 추출
     const text = content.replace(/<[^>]+>/g, '').trim()
-    if (text) {
-      headings.push({ level: parseInt(level), text, id })
+    // H2만 TOC에 추가
+    if (text && level === '2') {
+      headings.push({ text, id })
     }
-    // 기존 id가 있으면 유지, 없으면 추가
     if (attrs.includes('id=')) {
       return match
     }
     return `<h${level}${attrs} id="${id}">${content}</h${level}>`
   })
 
-  // 3개 미만이면 TOC 미생성
+  // H2가 3개 미만이면 TOC 미생성
   if (headings.length < 3) {
     return { processedHtml, tocHtml: '' }
   }
 
-  const tocItems = headings.map(h => {
-    const indent = h.level === 3 ? ' class="toc-h3"' : ''
-    return `<li${indent}><a href="#${h.id}">${escapeHtml(h.text)}</a></li>`
+  const tocItems = headings.map((h, i) => {
+    return `<li><a href="#${h.id}"><span class="toc-num">${String(i + 1).padStart(2, '0')}</span>${escapeHtml(h.text)}</a></li>`
   }).join('\n')
 
   const tocHtml = `
     <nav class="howto-toc">
       <details open>
         <summary>목차</summary>
-        <ul class="howto-toc-list">${tocItems}</ul>
+        <ol class="howto-toc-list">${tocItems}</ol>
       </details>
     </nav>`
 
