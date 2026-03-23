@@ -450,6 +450,32 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
       }
 
       if (sources && Object.keys(sources).length > 0) {
+        // ── _sources 키 정규화 ──
+        // 에이전트가 잘못된 형식으로 보내는 경우 자동 보정
+        const normalizedSources: Record<string, any> = {}
+        const sourceKeyNormalizeMap: Record<string, string> = {
+          'way_sources': 'way',
+          'overviewSalary_sources': 'overviewSalary.sal',
+          'overviewProspect_sources': 'overviewProspect.main',
+          'trivia_sources': 'trivia',
+          'detailWlb_sources': 'detailWlb.wlbDetail',
+          'detailWlb_social_sources': 'detailWlb.socialDetail',
+          'salary_sources': 'overviewSalary.sal',
+          'prospect_sources': 'overviewProspect.main',
+        }
+        for (const [rawKey, val] of Object.entries(sources)) {
+          // 1) 알려진 잘못된 키 매핑
+          let corrected = sourceKeyNormalizeMap[rawKey] || rawKey
+          // 2) _sources 접미사 제거
+          corrected = corrected.replace(/_sources$/, '')
+          // 3) 순수 숫자 키 거부 (필드명이어야 함)
+          if (/^\d+$/.test(corrected)) {
+            console.warn(`[edit-api] Rejected numeric source key "${rawKey}" — must be a field name`)
+            continue
+          }
+          normalizedSources[corrected] = val
+        }
+
         updatedUserData._sources = updatedUserData._sources || {}
         const existingIds: number[] = []
         Object.values(updatedUserData._sources).forEach((val: any) => {
@@ -461,7 +487,7 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
         })
         let nextId = Math.max(0, ...existingIds) + 1
 
-        for (const [key, source] of Object.entries(sources)) {
+        for (const [key, source] of Object.entries(normalizedSources)) {
           if ((source as any)?.delete) {
             delete updatedUserData._sources[key]
             continue

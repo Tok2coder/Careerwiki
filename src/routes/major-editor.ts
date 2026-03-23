@@ -563,6 +563,26 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
       }
 
       if (sources && Object.keys(sources).length > 0) {
+        // ── _sources 키 정규화 (잘못된 형식 자동 보정) ──
+        const normalizedSources: Record<string, any> = {}
+        const sourceKeyNormalizeMap: Record<string, string> = {
+          'way_sources': 'way',
+          'overviewSalary_sources': 'overviewSalary.sal',
+          'overviewProspect_sources': 'overviewProspect.main',
+          'trivia_sources': 'trivia',
+          'detailWlb_sources': 'detailWlb.wlbDetail',
+          'detailWlb_social_sources': 'detailWlb.socialDetail',
+        }
+        for (const [rawKey, val] of Object.entries(sources)) {
+          let corrected = sourceKeyNormalizeMap[rawKey] || rawKey
+          corrected = corrected.replace(/_sources$/, '')
+          if (/^\d+$/.test(corrected)) {
+            console.warn(`[edit-api] Rejected numeric source key "${rawKey}"`)
+            continue
+          }
+          normalizedSources[corrected] = val
+        }
+
         updatedUserData._sources = updatedUserData._sources || {}
         const existingIds: number[] = []
         Object.values(updatedUserData._sources).forEach((val: any) => {
@@ -574,7 +594,7 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
         })
         let nextId = Math.max(0, ...existingIds) + 1
 
-        for (const [key, source] of Object.entries(sources)) {
+        for (const [key, source] of Object.entries(normalizedSources)) {
           if ((source as any)?.delete) {
             delete updatedUserData._sources[key]
             continue
