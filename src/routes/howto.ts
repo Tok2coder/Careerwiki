@@ -171,8 +171,11 @@ howtoRoutes.get('/', async (c) => {
                 ${thumbnailDesktop}
                 
                 <div class="p-4 sm:p-5">
-                  <!-- 모바일: 제목+태그 왼쪽 + 썸네일 오른쪽 -->
+                  <!-- 모바일: 썸네일 왼쪽 + 제목+태그 오른쪽 -->
                   <div class="flex sm:block gap-3">
+                    <!-- 모바일: 썸네일 왼쪽 -->
+                    ${thumbnailMobile}
+
                     <div class="flex-1 min-w-0 space-y-1.5 sm:space-y-3">
                       <!-- 태그 -->
                       ${tagsHtml ? `<div class="flex flex-wrap gap-1.5 sm:gap-2">${tagsHtml}</div>` : ''}
@@ -185,9 +188,6 @@ howtoRoutes.get('/', async (c) => {
                       <!-- 설명 (데스크탑만 여기에 표시) -->
                       <p class="hidden sm:block text-[15px] text-wiki-muted/90 line-clamp-2 leading-relaxed">${escapeHtml(howto.snippet)}</p>
                     </div>
-
-                    <!-- 모바일: 썸네일 오른쪽 -->
-                    ${thumbnailMobile}
                   </div>
 
                   <!-- 모바일: 설명을 썸네일 아래 전체 너비로 표시 -->
