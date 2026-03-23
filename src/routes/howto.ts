@@ -292,7 +292,7 @@ howtoRoutes.get('/', async (c) => {
             <h1 class="text-[32px] md:text-[48px] font-extrabold text-white leading-tight">${keyword
               ? `"${escapeHtml(keyword)}" 검색 결과`
               : `<span class="bg-gradient-to-r from-wiki-primary to-wiki-secondary bg-clip-text text-transparent">HowTo</span> 가이드`}</h1>
-            <p class="text-wiki-muted/80 text-[13px] md:text-[15px] mt-1">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우'}</p>
+            <p class="text-wiki-text/90 text-base md:text-lg mt-1 font-medium">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우'}</p>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <a href="/howto/guide:%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9E%91%EC%84%B1%EB%B2%95"
