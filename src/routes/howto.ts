@@ -289,7 +289,7 @@ howtoRoutes.get('/', async (c) => {
       <header class="mb-4 md:mb-6">
         <div class="flex items-end justify-between gap-3">
           <div class="min-w-0">
-            <h1 class="text-2xl md:text-4xl font-extrabold text-white leading-tight">${keyword
+            <h1 class="text-[32px] md:text-[48px] font-extrabold text-white leading-tight">${keyword
               ? `"${escapeHtml(keyword)}" 검색 결과`
               : `<span class="bg-gradient-to-r from-wiki-primary to-wiki-secondary bg-clip-text text-transparent">HowTo</span> 가이드`}</h1>
             <p class="text-wiki-muted/80 text-[13px] md:text-[15px] mt-1">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우'}</p>
