@@ -285,41 +285,30 @@ howtoRoutes.get('/', async (c) => {
 
   const content = `
     <div class="max-w-[1400px] mx-auto px-2 md:px-4 pb-8">
-      <!-- 히어로 섹션 -->
-      <div class="relative text-center pt-2 pb-8 md:pb-12 mb-4 md:mb-6 space-y-4 md:space-y-7">
-        <!-- 배경 글로우 -->
-        <div class="absolute inset-0 -z-10 overflow-hidden">
-          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] md:w-[800px] h-[300px] md:h-[400px] bg-gradient-to-b from-wiki-primary/8 via-wiki-primary/5 to-transparent rounded-full blur-[120px]"></div>
+      <!-- 헤더 섹션 -->
+      <header class="mb-4 md:mb-6">
+        <div class="flex items-end justify-between gap-3">
+          <div class="min-w-0">
+            <h1 class="text-2xl md:text-4xl font-extrabold text-white leading-tight">${keyword
+              ? `"${escapeHtml(keyword)}" 검색 결과`
+              : `<span class="bg-gradient-to-r from-wiki-primary to-wiki-secondary bg-clip-text text-transparent">HowTo</span> 가이드`}</h1>
+            <p class="text-wiki-muted/80 text-[13px] md:text-[15px] mt-1">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우'}</p>
+          </div>
+          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <a href="/howto/guide:%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9E%91%EC%84%B1%EB%B2%95"
+               class="relative group inline-flex items-center justify-center w-[36px] sm:w-[44px] h-[36px] sm:h-[44px] bg-wiki-primary/10 border border-wiki-primary/30 text-wiki-secondary hover:bg-wiki-primary/20 hover:border-wiki-primary/50 rounded-xl transition-all duration-200">
+              <i class="fas fa-question text-xs sm:text-base"></i>
+              <span class="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-wiki-card border border-wiki-border rounded-lg text-[11px] text-wiki-muted whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-lg">가이드 작성법</span>
+            </a>
+            <a href="${user ? '/howto/write' : '/login?redirect=/howto/write'}"
+               class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 h-[36px] sm:h-[44px] bg-gradient-to-r from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/40 text-white text-[13px] sm:text-base font-semibold rounded-xl hover:from-wiki-primary/30 hover:to-wiki-secondary/30 hover:border-wiki-primary/60 transition-all duration-200"
+               ${!user ? 'data-require-login="true"' : ''}>
+              <i class="fas fa-pen-nib text-xs sm:text-sm"></i>
+              <span>작성</span>
+            </a>
+          </div>
         </div>
-        <div class="absolute bottom-0 left-0 right-0 h-16 md:h-24 bg-gradient-to-t from-wiki-bg to-transparent -z-10"></div>
-
-        <h1 class="text-[32px] md:text-[48px] lg:text-6xl font-extrabold leading-tight">
-          <span class="bg-gradient-to-r from-wiki-primary via-wiki-secondary to-wiki-primary bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(67,97,238,0.3)]">
-            ${keyword ? `"${escapeHtml(keyword)}" 검색 결과` : 'HowTo 가이드'}
-          </span>
-        </h1>
-
-        <p class="text-base md:text-xl text-wiki-text/90 max-w-2xl mx-auto font-medium leading-relaxed">
-          ${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우를 공유합니다'}
-        </p>
-
-        <div class="flex items-center justify-center gap-2 sm:gap-3">
-          <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30 text-white text-sm font-semibold">
-            ${totalCount}개 가이드
-          </span>
-          <a href="/howto/guide:%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9E%91%EC%84%B1%EB%B2%95"
-             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-wiki-bg/60 text-wiki-muted text-sm hover:text-white hover:bg-wiki-primary/10 transition-all duration-200">
-            <i class="fas fa-question-circle text-xs"></i>
-            <span>작성법</span>
-          </a>
-          <a href="${user ? '/howto/write' : '/login?redirect=/howto/write'}"
-             class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg bg-wiki-primary/20 border border-wiki-primary/40 text-white text-sm font-medium hover:bg-wiki-primary/30 transition-all duration-200"
-             ${!user ? 'data-require-login="true"' : ''}>
-            <i class="fas fa-pen-nib text-xs"></i>
-            <span>가이드 작성</span>
-          </a>
-        </div>
-      </div>
+      </header>
 
       <!-- 검색창 -->
       <form action="/howto" method="get" class="mb-4 md:mb-6">
