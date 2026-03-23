@@ -171,24 +171,27 @@ howtoRoutes.get('/', async (c) => {
                 ${thumbnailDesktop}
                 
                 <div class="p-4 sm:p-5">
-                  <!-- 모바일: 가로 레이아웃 (텍스트 왼쪽 + 썸네일 오른쪽) -->
+                  <!-- 모바일: 제목+태그 왼쪽 + 썸네일 오른쪽 -->
                   <div class="flex sm:block gap-3">
                     <div class="flex-1 min-w-0 space-y-1.5 sm:space-y-3">
                       <!-- 태그 -->
                       ${tagsHtml ? `<div class="flex flex-wrap gap-1.5 sm:gap-2">${tagsHtml}</div>` : ''}
-                      
+
                       <!-- 제목 -->
                       <h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-wiki-primary transition-colors line-clamp-2">
                         ${escapeHtml(howto.title)}
                       </h2>
-                      
-                      <!-- 설명 -->
-                      <p class="text-[13px] sm:text-[15px] text-wiki-muted/90 line-clamp-2 leading-relaxed">${escapeHtml(howto.snippet)}</p>
+
+                      <!-- 설명 (데스크탑만 여기에 표시) -->
+                      <p class="hidden sm:block text-[15px] text-wiki-muted/90 line-clamp-2 leading-relaxed">${escapeHtml(howto.snippet)}</p>
                     </div>
-                    
+
                     <!-- 모바일: 썸네일 오른쪽 -->
                     ${thumbnailMobile}
                   </div>
+
+                  <!-- 모바일: 설명을 썸네일 아래 전체 너비로 표시 -->
+                  <p class="sm:hidden text-[13px] text-wiki-muted/90 line-clamp-2 leading-relaxed mt-2">${escapeHtml(howto.snippet)}</p>
                   
                   <!-- 하단 정보 (글쓴이, 날짜, 댓글/저장 수) -->
                   <div class="flex items-center justify-between pt-2 mt-2 sm:pt-3 sm:mt-3 border-t border-wiki-border/30">
