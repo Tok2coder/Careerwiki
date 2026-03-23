@@ -287,7 +287,7 @@ howtoRoutes.get('/', async (c) => {
     <div class="max-w-[1400px] mx-auto px-2 md:px-4 pb-8">
       <!-- 헤더 섹션 -->
       <header class="mb-4 md:mb-6">
-        <div class="flex items-center justify-between gap-3">
+        <div class="flex items-end justify-between gap-3">
           <div class="min-w-0">
             <h1 class="text-2xl md:text-4xl font-bold text-white">${keyword ? `"${escapeHtml(keyword)}" 검색 결과` : 'HowTo 가이드'}</h1>
             <p class="text-wiki-muted text-[13px] md:text-[15px] mt-0.5 md:mt-1">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우'}</p>
