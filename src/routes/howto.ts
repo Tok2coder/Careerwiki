@@ -286,30 +286,28 @@ howtoRoutes.get('/', async (c) => {
   const content = `
     <div class="max-w-[1400px] mx-auto px-2 md:px-4 pb-8">
       <!-- 헤더 섹션 -->
-      <header class="mb-5 md:mb-8 space-y-2 md:space-y-3">
-        <div class="flex items-center gap-2 text-xs text-wiki-secondary font-semibold uppercase tracking-[0.2em]">
-          <i class="fas fa-book-open"></i><span>${keyword ? '검색 결과' : 'HowTo'}</span>
-        </div>
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div>
-            <h1 class="text-3xl md:text-4xl font-bold text-white">${keyword ? `"${escapeHtml(keyword)}" 검색 결과` : 'HowTo 가이드'}</h1>
-            <p class="text-wiki-muted text-[15px] mt-1">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우를 공유합니다'}</p>
+      <header class="mb-4 md:mb-6">
+        <div class="flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <h1 class="text-2xl md:text-4xl font-bold text-white">${keyword ? `"${escapeHtml(keyword)}" 검색 결과` : 'HowTo 가이드'}</h1>
+            <p class="text-wiki-muted text-[13px] md:text-[15px] mt-0.5 md:mt-1">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우'}</p>
           </div>
-        <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
-          <a href="/howto/guide:%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9E%91%EC%84%B1%EB%B2%95"
-             class="relative group inline-flex items-center justify-center w-[40px] sm:w-[44px] h-[40px] sm:h-[44px] bg-wiki-primary/10 border border-wiki-primary/30 text-wiki-secondary hover:bg-wiki-primary/20 hover:border-wiki-primary/50 rounded-xl transition-all duration-200">
-            <i class="fas fa-question text-sm sm:text-base"></i>
-            <span class="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-wiki-card border border-wiki-border rounded-lg text-[11px] text-wiki-muted whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-lg">가이드 작성법</span>
-          </a>
-          <a href="${user ? '/howto/write' : '/login?redirect=/howto/write'}"
-             class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 h-[40px] sm:h-[44px] bg-wiki-primary/10 border border-wiki-primary/30 text-white text-sm sm:text-base font-medium rounded-xl hover:bg-wiki-primary/20 hover:border-wiki-primary/50 transition-all duration-200"
-             ${!user ? 'data-require-login="true"' : ''}>
-            <i class="fas fa-plus text-xs sm:text-sm"></i>
-            <span>가이드 작성</span>
-          </a>
+          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <a href="/howto/guide:%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9E%91%EC%84%B1%EB%B2%95"
+               class="relative group inline-flex items-center justify-center w-[36px] sm:w-[44px] h-[36px] sm:h-[44px] bg-wiki-primary/10 border border-wiki-primary/30 text-wiki-secondary hover:bg-wiki-primary/20 hover:border-wiki-primary/50 rounded-xl transition-all duration-200">
+              <i class="fas fa-question text-xs sm:text-base"></i>
+              <span class="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-wiki-card border border-wiki-border rounded-lg text-[11px] text-wiki-muted whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-lg">가이드 작성법</span>
+            </a>
+            <a href="${user ? '/howto/write' : '/login?redirect=/howto/write'}"
+               class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 h-[36px] sm:h-[44px] bg-wiki-primary/10 border border-wiki-primary/30 text-white text-[13px] sm:text-base font-medium rounded-xl hover:bg-wiki-primary/20 hover:border-wiki-primary/50 transition-all duration-200"
+               ${!user ? 'data-require-login="true"' : ''}>
+              <i class="fas fa-plus text-xs sm:text-sm"></i>
+              <span>작성</span>
+            </a>
+          </div>
         </div>
       </header>
-      
+
       <!-- 검색창 -->
       <form action="/howto" method="get" class="mb-4 md:mb-6">
         <div class="flex flex-row gap-2 sm:gap-3">
