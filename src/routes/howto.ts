@@ -118,7 +118,7 @@ howtoRoutes.get('/', async (c) => {
         .map((howto) => {
           const tagsHtml = howto.tags && howto.tags.length
             ? howto.tags.slice(0, 3).map((tag: string) => 
-                `<span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-wiki-primary/10 text-wiki-primary/80 border border-wiki-primary/20">${escapeHtml(tag)}</span>`
+                `<span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10px] font-semibold uppercase tracking-wider bg-wiki-primary/10 text-wiki-primary/80 border border-wiki-primary/20">${escapeHtml(tag)}</span>`
               ).join('')
             : ''
           
@@ -136,13 +136,13 @@ howtoRoutes.get('/', async (c) => {
           
           // 모바일용 썸네일 (오른쪽)
           const thumbnailMobile = howto.thumbnailUrl 
-            ? `<div class="sm:hidden w-16 h-16 shrink-0 rounded-xl overflow-hidden">
-                <img src="${escapeHtml(howto.thumbnailUrl)}" 
-                     alt="${escapeHtml(howto.title)}" 
+            ? `<div class="sm:hidden w-20 h-20 shrink-0 rounded-xl overflow-hidden">
+                <img src="${escapeHtml(howto.thumbnailUrl)}"
+                     alt="${escapeHtml(howto.title)}"
                      class="w-full h-full object-cover"
                      loading="lazy" />
               </div>`
-            : `<div class="sm:hidden w-16 h-16 shrink-0 rounded-xl bg-gradient-to-br from-wiki-primary/20 to-amber-500/10 flex items-center justify-center">
+            : `<div class="sm:hidden w-20 h-20 shrink-0 rounded-xl bg-gradient-to-br from-wiki-primary/20 to-amber-500/10 flex items-center justify-center">
                 <i class="fas fa-book-open text-2xl text-wiki-primary/40"></i>
               </div>`
           
@@ -165,7 +165,7 @@ howtoRoutes.get('/', async (c) => {
           `
           
           return `
-            <article class="group bg-wiki-card/50 border border-wiki-border/40 rounded-2xl overflow-hidden hover:border-wiki-primary/40 hover:shadow-lg hover:shadow-wiki-primary/5 transition-all duration-300">
+            <article class="group bg-wiki-card/50 border border-wiki-border/40 mobile-borderless rounded-2xl overflow-hidden hover:border-wiki-primary/40 hover:shadow-lg hover:shadow-wiki-primary/5 transition-all duration-300">
               <a href="/howto/${encodeURIComponent(howto.slug)}" class="block">
                 <!-- 데스크탑: 썸네일 상단 -->
                 ${thumbnailDesktop}
@@ -191,7 +191,7 @@ howtoRoutes.get('/', async (c) => {
                   </div>
                   
                   <!-- 하단 정보 (글쓴이, 날짜, 댓글/저장 수) -->
-                  <div class="flex items-center justify-between pt-3 mt-3 border-t border-wiki-border/30">
+                  <div class="flex items-center justify-between pt-2 mt-2 sm:pt-3 sm:mt-3 border-t border-wiki-border/30">
                     <div class="flex items-center gap-1.5 text-[13px] text-wiki-muted/70">
                       <span class="inline-flex items-center gap-1">
                         ${howto.authorPictureUrl 
@@ -283,7 +283,7 @@ howtoRoutes.get('/', async (c) => {
   const content = `
     <div class="max-w-[1400px] mx-auto px-2 md:px-4 pb-8">
       <!-- 헤더 섹션 -->
-      <header class="mb-8 space-y-3">
+      <header class="mb-5 md:mb-8 space-y-2 md:space-y-3">
         <div class="flex items-center gap-2 text-xs text-wiki-secondary font-semibold uppercase tracking-[0.2em]">
           <i class="fas fa-book-open"></i><span>${keyword ? '검색 결과' : 'HowTo'}</span>
         </div>
@@ -308,7 +308,7 @@ howtoRoutes.get('/', async (c) => {
       </header>
       
       <!-- 검색창 -->
-      <form action="/howto" method="get" class="mb-6">
+      <form action="/howto" method="get" class="mb-4 md:mb-6">
         <div class="flex flex-row gap-2 sm:gap-3">
           <div class="flex-1 relative group min-w-0">
             <div class="relative flex items-center bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 group-focus-within:border-wiki-primary/50 group-focus-within:shadow-lg group-focus-within:shadow-wiki-primary/10">
@@ -333,7 +333,7 @@ howtoRoutes.get('/', async (c) => {
       </form>
       
       <!-- 가이드 목록 (그리드) -->
-      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
         ${cards}
         ${emptyState}
       </section>
