@@ -643,17 +643,28 @@ majorListRoutes.get('/major', async (c) => {
                 전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.
               </p>
             </div>
-            <form method="get" action="/major" class="glass-card rounded-xl p-6 mb-6" id="major-filter-form">
-              <div class="flex flex-col md:flex-row gap-4 items-end">
-                <div class="flex-1 w-full">
-                  <label for="major-keyword" class="block text-sm text-wiki-muted mb-2">검색어</label>
-                  <input type="text" id="major-keyword" name="q" value="${escapeHtml(keyword)}" placeholder="전공명으로 검색..." class="w-full px-4 py-3 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none" />
-                </div>
-                <div class="flex gap-2 justify-end">
-                  <button type="submit" class="px-6 py-3 bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-semibold rounded-lg hover-glow transition">
-                    <i class="fas fa-search mr-2"></i>검색
-                  </button>
-                  <a href="/major" class="px-6 py-3 bg-wiki-bg border border-wiki-border text-wiki-muted font-semibold rounded-lg hover:border-wiki-primary transition">초기화</a>
+            <form method="get" action="/major" id="major-filter-form">
+              <div class="flex flex-row gap-2 sm:gap-3">
+                <div class="flex-1 relative group min-w-0">
+                  <div class="absolute inset-0 bg-gradient-to-r from-wiki-primary/20 via-wiki-secondary/20 to-wiki-primary/20 rounded-2xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+                  <div class="relative flex items-center bg-wiki-bg/40 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 group-focus-within:border-wiki-primary/50 group-focus-within:shadow-lg group-focus-within:shadow-wiki-primary/10">
+                    <span class="pl-3 sm:pl-4 pr-1 sm:pr-2 text-wiki-muted/60 group-focus-within:text-wiki-primary transition-colors duration-300">
+                      <i class="fas fa-search text-sm"></i>
+                    </span>
+                    <input
+                      id="major-keyword"
+                      type="text"
+                      name="q"
+                      value="${escapeHtml(keyword)}"
+                      placeholder="전공 검색..."
+                      class="flex-1 px-1 sm:px-2 py-2 sm:py-3.5 bg-transparent border-none focus:outline-none text-base text-white placeholder:text-wiki-muted/50 min-w-0"
+                      style="font-size: 16px;"
+                    />
+                    <button type="submit" class="m-1 sm:m-1.5 px-3 sm:px-5 py-2 sm:py-2.5 min-h-[40px] sm:min-h-[44px] bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-wiki-primary/25 active:scale-95 transition-all duration-200">
+                      <i class="fas fa-search sm:hidden"></i>
+                      <span class="hidden sm:inline">검색</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </form>

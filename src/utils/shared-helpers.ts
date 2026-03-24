@@ -456,8 +456,9 @@ export const renderLayout = (
           .glass-card {
             background: linear-gradient(145deg, rgba(17, 24, 39, 0.8), rgba(15, 20, 35, 0.65));
             backdrop-filter: blur(14px);
-            border: 1px solid rgba(99, 102, 241, 0.06);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
           }
           @media (max-width: 767px) {
             .glass-card.mobile-borderless {
@@ -465,11 +466,13 @@ export const renderLayout = (
               border-radius: 12px;
             }
           }
-          .glass-card {
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+          .glass-card.hover-lift:hover {
+            border-color: rgba(148, 163, 184, 0.15);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
           }
           .hover-glow:hover {
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
             transition: all 0.3s ease;
           }
 
@@ -514,9 +517,23 @@ export const renderLayout = (
             background: rgba(255, 255, 255, 0.05);
           }
 
+          /* 통일 입력창 스타일 */
+          .cw-input {
+            width: 100%;
+            padding: 0.625rem 1rem;
+            background: rgba(15, 20, 35, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 0.75rem;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+          }
+          .cw-input::placeholder { color: rgba(148, 163, 184, 0.5); }
+          .cw-input:focus { outline: none; border-color: rgba(67, 97, 238, 0.5); box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.08); background: rgba(15, 20, 35, 0.7); }
+
           /* 전역 인터랙션 */
           a, button, input, select { transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
-          :focus-visible { outline: 2px solid rgba(99, 102, 241, 0.5); outline-offset: 2px; }
+          :focus-visible { outline: 2px solid rgba(67, 97, 238, 0.5); outline-offset: 2px; }
 
           /* 페이지 진입 애니메이션 */
           @keyframes cw-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
