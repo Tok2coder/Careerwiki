@@ -77,27 +77,49 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
   const identityAnchorPatternsJson = JSON.stringify(IDENTITY_ANCHOR_PATTERNS)
   
   const content = `
+    <style>
+      .cw-step-circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; transition: all 0.3s ease; }
+      @media (min-width: 768px) { .cw-step-circle { width: 40px; height: 40px; font-size: 15px; } }
+      .cw-step-circle.active { background: linear-gradient(135deg, rgb(79,70,229), rgb(139,92,246)); color: white; box-shadow: 0 0 16px rgba(99,102,241,0.4); }
+      .cw-step-circle.done { background: linear-gradient(135deg, rgb(16,185,129), rgb(52,211,153)); color: white; }
+      .cw-step-circle.inactive { background: rgba(30,41,59,0.8); color: #475569; border: 1px solid rgba(99,102,241,0.15); }
+      .cw-step-line { width: 32px; height: 2px; background: rgba(30,41,59,0.8); transition: background 0.3s; }
+      @media (min-width: 768px) { .cw-step-line { width: 48px; } }
+      .cw-step-line.done { background: linear-gradient(90deg, rgb(16,185,129), rgb(79,70,229)); }
+      .cw-step-line.active { background: linear-gradient(90deg, rgb(79,70,229), rgba(99,102,241,0.2)); }
+      .cw-step-label { font-size: 11px; margin-top: 4px; color: #475569; transition: color 0.3s; }
+      .cw-step-label.active { color: #a5b4fc; }
+      .cw-step-label.done { color: #6ee7b7; }
+      .chip-option.selected { background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(139,92,246,0.15)) !important; color: #c4b5fd !important; border-color: rgba(139,92,246,0.4) !important; box-shadow: 0 0 8px rgba(139,92,246,0.15); }
+      .chip-option { transition: all 0.25s ease; }
+      .chip-option:hover:not(.selected) { border-color: rgba(99,102,241,0.3); color: #cbd5e1; background: rgba(99,102,241,0.06) !important; }
+      .report-tab { border: 1px solid transparent; transition: all 0.25s ease; white-space: nowrap; }
+      .report-tab:hover:not(.active) { color: #94a3b8; background: rgba(99,102,241,0.06); }
+      .report-tab.active { background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(139,92,246,0.15)); color: #e2e8f0; border-color: rgba(99,102,241,0.3); box-shadow: 0 0 12px rgba(99,102,241,0.15); }
+      #report-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-wrap: nowrap !important; }
+      #report-tabs::-webkit-scrollbar { display: none; }
+    </style>
     <div class="max-w-6xl mx-auto px-2 md:px-6 pt-0 md:pt-2">
         <h1 class="text-3xl md:text-4xl font-bold mb-6 text-center text-white">
             <i class="fas fa-university mr-2 text-wiki-primary"></i>AI 전공 추천
             ${debugMode ? '<span class="ml-2 text-sm bg-yellow-500 text-black px-2 py-1 rounded">DEBUG MODE</span>' : ''}
         </h1>
 
-        <!-- Step Indicator (5단계) -->
-        <div class="flex justify-center items-center gap-2 md:gap-4 mb-6 flex-wrap" id="step-indicator">
-            <div class="step-dot flex flex-col items-center active" data-step="1">
-                <span class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-wiki-primary text-white rounded-full font-bold text-sm md:text-base">1</span>
-                <span class="text-xs mt-1">프로필</span>
+        <!-- Step Indicator (3단계: 프로필→심층→결과) -->
+        <div class="flex justify-center items-center gap-2 md:gap-4 mb-6" id="step-indicator">
+            <div class="step-dot flex flex-col items-center" data-step="1">
+                <div class="cw-step-circle active">1</div>
+                <span class="cw-step-label active">프로필</span>
             </div>
-            <div class="w-8 md:w-12 h-0.5 bg-wiki-border"></div>
+            <div class="cw-step-line active" data-line="1"></div>
             <div class="step-dot flex flex-col items-center" data-step="2">
-                <span class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-wiki-card text-wiki-muted rounded-full font-bold text-sm md:text-base">2</span>
-                <span class="text-xs mt-1">심층</span>
+                <div class="cw-step-circle inactive">2</div>
+                <span class="cw-step-label">심층</span>
             </div>
-            <div class="w-8 md:w-12 h-0.5 bg-wiki-border"></div>
+            <div class="cw-step-line" data-line="2"></div>
             <div class="step-dot flex flex-col items-center" data-step="3">
-                <span class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-wiki-card text-wiki-muted rounded-full font-bold text-sm md:text-base">3</span>
-                <span class="text-xs mt-1">결과</span>
+                <div class="cw-step-circle inactive">3</div>
+                <span class="cw-step-label">결과</span>
             </div>
         </div>
         
@@ -1260,7 +1282,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 btnEl.classList.add('border-solid', 'shadow-lg');
                 btnEl.classList.remove('border-dashed');
                 btnEl.style.borderColor = '#10b981';
-                btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                btnEl.style.backgroundColor = '';
                 checkEl.classList.remove('opacity-0');
                 checkEl.classList.add('opacity-100');
                 checkEl.style.backgroundColor = '#10b981';
@@ -1426,21 +1448,32 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 warningBanner.style.display = step === 1 ? 'block' : 'none';
             }
 
-            document.querySelectorAll('.step-dot').forEach(dot => {
-                const dotStep = parseInt(dot.dataset.step);
-                const circle = dot.querySelector('span');
-                if (dotStep === step) {
-                    dot.classList.add('active');
-                    circle.classList.remove('bg-wiki-card', 'text-wiki-muted');
-                    circle.classList.add('bg-wiki-primary', 'text-white');
-                } else if (dotStep < step) {
-                    circle.classList.remove('bg-wiki-card', 'text-wiki-muted');
-                    circle.classList.add('bg-wiki-secondary', 'text-white');
+            // Step indicator UI 업데이트 (gradient + done ✓)
+            document.querySelectorAll('.step-dot').forEach((el) => {
+                const circle = el.querySelector('.cw-step-circle');
+                const label = el.querySelector('.cw-step-label');
+                const stepNum = parseInt(el.dataset.step, 10);
+                if (!circle) return;
+                circle.classList.remove('active', 'done', 'inactive');
+                if (label) label.classList.remove('active', 'done');
+                if (stepNum < step) {
+                    circle.classList.add('done');
+                    circle.innerHTML = '<i class="fas fa-check" style="font-size:14px;"></i>';
+                    if (label) label.classList.add('done');
+                } else if (stepNum === step) {
+                    circle.classList.add('active');
+                    circle.textContent = String(stepNum);
+                    if (label) label.classList.add('active');
                 } else {
-                    dot.classList.remove('active');
-                    circle.classList.remove('bg-wiki-primary', 'bg-wiki-secondary', 'text-white');
-                    circle.classList.add('bg-wiki-card', 'text-wiki-muted');
+                    circle.classList.add('inactive');
+                    circle.textContent = String(stepNum);
                 }
+            });
+            document.querySelectorAll('.cw-step-line').forEach((line) => {
+                const lineNum = parseInt(line.dataset.line, 10);
+                line.classList.remove('done', 'active');
+                if (lineNum < step) line.classList.add('done');
+                else if (lineNum === step) line.classList.add('active');
             });
         }
         
@@ -1663,7 +1696,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 btnEl.querySelector('.chip-rank')?.classList.remove('flex');
             } else if (arr.length < maxSelections) {
                 arr.push(value);
-                btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                btnEl.style.backgroundColor = '';
                 btnEl.style.borderColor = '#10b981';
                 btnEl.style.color = '#34d399';
             }
@@ -1725,7 +1758,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             
             if (!isSelected) {
                 transitionSignalAnswers[questionId] = value;
-                btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                btnEl.style.backgroundColor = '';
                 btnEl.style.borderColor = '#10b981';
                 btnEl.querySelector('.radio-circle').style.borderColor = '#10b981';
                 btnEl.querySelector('.radio-dot')?.classList.remove('hidden');
@@ -1748,7 +1781,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 btnEl.querySelector('.chip-check')?.classList.remove('flex');
             } else {
                 arr.push(value);
-                btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                btnEl.style.backgroundColor = '';
                 btnEl.style.borderColor = '#10b981';
                 btnEl.style.color = '#34d399';
                 btnEl.querySelector('.chip-check')?.classList.remove('hidden');
@@ -1999,7 +2032,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                     }
                     
                     btnEl.classList.add('selected');
-                    btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                    btnEl.style.backgroundColor = '';
                     btnEl.style.borderColor = '#10b981';
                     btnEl.style.color = '#34d399';
                     btnEl.querySelector('.chip-check')?.classList.remove('hidden');
@@ -2042,7 +2075,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                     });
                     universalAnswers[questionId] = '_unknown';
                 } else {
-                    btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                    btnEl.style.backgroundColor = '';
                     btnEl.style.borderColor = '#10b981';
                     btnEl.querySelector('.radio-circle').style.borderColor = '#10b981';
                     btnEl.querySelector('.radio-dot')?.classList.remove('hidden');

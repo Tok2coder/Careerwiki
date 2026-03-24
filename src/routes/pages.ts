@@ -483,24 +483,33 @@ pagesRoutes.get('/analyzer', (c) => {
     <style>
       .az-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        position: relative; overflow: hidden;
+      }
+      .az-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, rgb(79,70,229), rgb(139,92,246));
+        opacity: 0; transition: opacity 0.3s;
       }
       .az-card:hover {
         transform: translateY(-4px);
       }
+      .az-card:hover::before { opacity: 1; }
       .az-card-job {
-        border-color: rgba(99,102,241,0.15);
-        box-shadow: 0 0 40px rgba(99,102,241,0.06);
+        border-color: rgba(99,102,241,0.12);
       }
       .az-card-job:hover {
-        border-color: rgba(99,102,241,0.35);
-        box-shadow: 0 8px 40px rgba(99,102,241,0.12), 0 0 80px rgba(99,102,241,0.06);
+        border-color: rgba(99,102,241,0.3);
+        box-shadow: 0 8px 32px rgba(99,102,241,0.1), 0 0 60px rgba(99,102,241,0.04);
+      }
+      .az-card-major {
+        border-color: rgba(99,102,241,0.12);
       }
       .az-card-major:hover {
-        border-color: rgba(96,165,250,0.3);
-        box-shadow: 0 8px 40px rgba(96,165,250,0.08);
+        border-color: rgba(99,102,241,0.3);
+        box-shadow: 0 8px 32px rgba(99,102,241,0.1), 0 0 60px rgba(99,102,241,0.04);
       }
       .az-btn-primary {
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        background: linear-gradient(135deg, rgb(79,70,229), rgb(139,92,246));
         transition: all 0.3s ease;
       }
       .az-btn-primary:hover {
@@ -515,7 +524,7 @@ pagesRoutes.get('/analyzer', (c) => {
                 <i class="fas fa-brain mr-2 text-wiki-primary"></i>AI 추천
             </h1>
             <p class="text-wiki-muted text-sm md:text-base mt-2 max-w-lg mx-auto leading-relaxed">
-                LLM 심층 인터뷰와 벡터 시맨틱 검색으로<br class="hidden md:inline"> 수천 개의 직업·전공 중 나에게 맞는 진로를 찾아드립니다
+                심층 인터뷰와 AI 분석으로<br class="hidden md:inline"> 나에게 딱 맞는 진로를 찾아드립니다
             </p>
         </div>
 
@@ -556,8 +565,8 @@ pagesRoutes.get('/analyzer', (c) => {
                 <!-- Major Recommendation -->
                 <a href="/analyzer/major" class="glass-card az-card az-card-major p-8 rounded-xl block text-center group relative cw-card-hover">
                     <div class="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center"
-                         style="background: linear-gradient(135deg, rgba(96,165,250,0.12), rgba(34,211,238,0.08)); border: 1px solid rgba(96,165,250,0.15);">
-                        <i class="fas fa-university text-3xl text-blue-400"></i>
+                         style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1)); border: 1px solid rgba(99,102,241,0.2);">
+                        <i class="fas fa-university text-3xl text-indigo-400"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-3">전공 추천</h3>
                     <p class="text-wiki-muted text-sm leading-relaxed mb-5">
@@ -571,7 +580,7 @@ pagesRoutes.get('/analyzer', (c) => {
                     </div>
                     <p class="text-xs text-emerald-400/70 mb-5">베타 기간 한정</p>
 
-                    <span class="w-full px-6 py-3 bg-wiki-primary text-white rounded-lg inline-block font-semibold transition group-hover:bg-blue-600">
+                    <span class="az-btn-primary w-full px-6 py-3 text-white rounded-lg inline-block font-semibold">
                         전공 추천받기 →
                     </span>
                 </a>

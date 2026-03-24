@@ -258,6 +258,101 @@ analyzerJobPage.get('/', requireAuth, (c) => {
   const identityAnchorPatternsJson = JSON.stringify(IDENTITY_ANCHOR_PATTERNS)
   
   const content = `
+    <style>
+      /* Step indicator */
+      .cw-step-circle {
+        width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 14px; transition: all 0.3s ease;
+      }
+      @media (min-width: 768px) { .cw-step-circle { width: 40px; height: 40px; font-size: 15px; } }
+      .cw-step-circle.active {
+        background: linear-gradient(135deg, rgb(79,70,229), rgb(139,92,246));
+        color: white; box-shadow: 0 0 16px rgba(99,102,241,0.4);
+      }
+      .cw-step-circle.done {
+        background: linear-gradient(135deg, rgb(16,185,129), rgb(52,211,153));
+        color: white;
+      }
+      .cw-step-circle.inactive {
+        background: rgba(30,41,59,0.8); color: #475569;
+        border: 1px solid rgba(99,102,241,0.15);
+      }
+      .cw-step-line { width: 32px; height: 2px; background: rgba(30,41,59,0.8); transition: background 0.3s; }
+      @media (min-width: 768px) { .cw-step-line { width: 48px; } }
+      .cw-step-line.done { background: linear-gradient(90deg, rgb(16,185,129), rgb(79,70,229)); }
+      .cw-step-line.active { background: linear-gradient(90deg, rgb(79,70,229), rgba(99,102,241,0.2)); }
+      .cw-step-label { font-size: 11px; margin-top: 4px; color: #475569; transition: color 0.3s; }
+      .cw-step-label.active { color: #a5b4fc; }
+      .cw-step-label.done { color: #6ee7b7; }
+
+      /* Chip selection: violet theme */
+      .chip-option.selected {
+        background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(139,92,246,0.15)) !important;
+        color: #c4b5fd !important; border-color: rgba(139,92,246,0.4) !important;
+        box-shadow: 0 0 8px rgba(139,92,246,0.15);
+      }
+      .chip-option { transition: all 0.25s ease; }
+      .chip-option:hover:not(.selected) {
+        border-color: rgba(99,102,241,0.3); color: #cbd5e1;
+        background: rgba(99,102,241,0.06) !important;
+      }
+
+      /* Textarea focus glow */
+      .cw-ta {
+        background: rgba(15,23,42,0.8) !important; border: 1px solid rgba(148,163,184,0.1) !important;
+        border-radius: 12px; transition: all 0.25s ease;
+      }
+      .cw-ta:focus {
+        outline: none; border-color: rgba(139,92,246,0.5) !important;
+        box-shadow: 0 0 0 3px rgba(139,92,246,0.1), 0 0 20px rgba(139,92,246,0.08);
+      }
+
+      /* Report tabs */
+      .report-tab {
+        border: 1px solid transparent; transition: all 0.25s ease; white-space: nowrap;
+      }
+      .report-tab:hover:not(.active) {
+        color: #94a3b8; background: rgba(99,102,241,0.06);
+      }
+      .report-tab.active {
+        background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(139,92,246,0.15));
+        color: #e2e8f0; border-color: rgba(99,102,241,0.3);
+        box-shadow: 0 0 12px rgba(99,102,241,0.15);
+      }
+      #report-tabs {
+        overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        flex-wrap: nowrap !important;
+      }
+      #report-tabs::-webkit-scrollbar { display: none; }
+
+      /* Round progress bar */
+      .cw-round-bar { height: 4px; border-radius: 2px; flex: 1; max-width: 80px; transition: all 0.3s; }
+      .cw-round-bar.done { background: linear-gradient(90deg, #10b981, #34d399); }
+      .cw-round-bar.active { background: linear-gradient(90deg, rgb(79,70,229), rgb(139,92,246)); box-shadow: 0 0 8px rgba(99,102,241,0.3); }
+      .cw-round-bar.inactive { background: rgba(30,41,59,0.8); }
+
+      /* Meta cognition cards: top accent bar */
+      .cw-meta-card {
+        background: rgba(17,24,39,0.6); border: 1px solid rgba(148,163,184,0.08);
+        border-radius: 12px; position: relative; overflow: hidden; transition: all 0.3s;
+      }
+      .cw-meta-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: var(--meta-accent, rgb(99,102,241));
+      }
+      .cw-meta-card:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+
+      /* Vision card */
+      .cw-vision-card {
+        padding: 24px; border-radius: 16px; position: relative; overflow: hidden;
+        background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(139,92,246,0.08));
+        border: 1px solid rgba(99,102,241,0.2);
+      }
+      .cw-vision-card::before {
+        content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+        background: linear-gradient(180deg, rgb(79,70,229), rgb(139,92,246), rgb(212,168,83));
+      }
+    </style>
     <div class="max-w-6xl mx-auto px-2 md:px-6 pt-0 md:pt-2">
         <h1 class="text-3xl md:text-4xl font-bold mb-6 text-center text-white">
             <i class="fas fa-briefcase mr-2 text-wiki-primary"></i>AI 직업 추천
@@ -265,20 +360,20 @@ analyzerJobPage.get('/', requireAuth, (c) => {
         </h1>
 
         <!-- Step Indicator (3단계: 프로필→심층→결과) -->
-        <div class="flex justify-center items-center gap-2 md:gap-4 mb-6 flex-wrap" id="step-indicator">
-            <div class="step-dot flex flex-col items-center active" data-step="1">
-                <span class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-wiki-primary text-white rounded-full font-bold text-sm md:text-base">1</span>
-                <span class="text-xs mt-1">프로필</span>
+        <div class="flex justify-center items-center gap-2 md:gap-4 mb-6" id="step-indicator">
+            <div class="step-dot flex flex-col items-center" data-step="1">
+                <div class="cw-step-circle active">1</div>
+                <span class="cw-step-label active">프로필</span>
             </div>
-            <div class="w-8 md:w-12 h-0.5 bg-wiki-border"></div>
+            <div class="cw-step-line active" data-line="1"></div>
             <div class="step-dot flex flex-col items-center" data-step="2">
-                <span class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-wiki-border text-wiki-muted rounded-full font-bold text-sm md:text-base">2</span>
-                <span class="text-xs mt-1">심층</span>
+                <div class="cw-step-circle inactive">2</div>
+                <span class="cw-step-label">심층</span>
             </div>
-            <div class="w-8 md:w-12 h-0.5 bg-wiki-border"></div>
+            <div class="cw-step-line" data-line="2"></div>
             <div class="step-dot flex flex-col items-center" data-step="3">
-                <span class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-wiki-border text-wiki-muted rounded-full font-bold text-sm md:text-base">3</span>
-                <span class="text-xs mt-1">결과</span>
+                <div class="cw-step-circle inactive">3</div>
+                <span class="cw-step-label">결과</span>
             </div>
         </div>
         
@@ -469,7 +564,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 <!-- 축 1: 역할 정체성 -->
                 <div class="state-axis-section" data-axis="role_identity">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-br from-wiki-primary to-wiki-secondary rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">1</div>
+                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-lg" style="background:linear-gradient(135deg,rgb(79,70,229),rgb(99,102,241));">1</div>
                         <h3 class="text-lg font-bold">현재 나는?</h3>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="role-options">
@@ -483,7 +578,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 <!-- 축 2: 경력 연차 -->
                 <div class="state-axis-section" data-axis="career_stage_years">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">2</div>
+                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-lg" style="background:linear-gradient(135deg,rgb(79,70,229),rgb(124,58,237));opacity:0.9;">2</div>
                         <h3 class="text-lg font-bold">경력은?</h3>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="career-stage-options">
@@ -497,7 +592,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 <!-- 축 3: 현재 목표 (다중 선택) -->
                 <div class="state-axis-section" data-axis="transition_status">
                     <div class="flex items-center gap-3 mb-2">
-                        <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">3</div>
+                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-lg" style="background:linear-gradient(135deg,rgb(99,102,241),rgb(139,92,246));opacity:0.85;">3</div>
                         <h3 class="text-lg font-bold">현재 목표는?</h3>
                         <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-xs rounded-full">복수 선택</span>
                     </div>
@@ -513,7 +608,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 <!-- 축 4: 숙련도 (관심 분야 기준) -->
                 <div class="state-axis-section" data-axis="skill_level">
                     <div class="flex items-center gap-3 mb-2">
-                        <div class="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">4</div>
+                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-lg" style="background:linear-gradient(135deg,rgb(124,58,237),rgb(139,92,246));opacity:0.8;">4</div>
                         <h3 class="text-lg font-bold">관심 분야에서의 숙련도는?</h3>
                     </div>
                     <div class="ml-11 mb-4 p-3 bg-violet-500/10 rounded-lg border border-violet-500/20">
@@ -533,7 +628,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 <!-- 축 5: 제약 조건 (다중 선택) -->
                 <div class="state-axis-section" data-axis="constraints">
                     <div class="flex items-center gap-3 mb-2">
-                        <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg">5</div>
+                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-lg" style="background:linear-gradient(135deg,rgb(139,92,246),rgb(167,139,250));opacity:0.75;">5</div>
                         <h3 class="text-lg font-bold">현재 제약이 있나요?</h3>
                         <span class="px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs rounded-full">선택사항</span>
                     </div>
@@ -1602,6 +1697,37 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             container.insertBefore(banner, firstChild);
         }
         
+        // Step indicator UI 업데이트 (gradient + done ✓)
+        function updateStepIndicatorUI(activeStep) {
+            document.querySelectorAll('.step-dot').forEach((el) => {
+                const circle = el.querySelector('.cw-step-circle');
+                const label = el.querySelector('.cw-step-label');
+                const stepNum = parseInt(el.dataset.step, 10);
+                if (!circle) return;
+                circle.classList.remove('active', 'done', 'inactive');
+                if (label) label.classList.remove('active', 'done');
+                if (stepNum < activeStep) {
+                    circle.classList.add('done');
+                    circle.innerHTML = '<i class="fas fa-check" style="font-size:14px;"></i>';
+                    if (label) label.classList.add('done');
+                } else if (stepNum === activeStep) {
+                    circle.classList.add('active');
+                    circle.textContent = String(stepNum);
+                    if (label) label.classList.add('active');
+                } else {
+                    circle.classList.add('inactive');
+                    circle.textContent = String(stepNum);
+                }
+            });
+            // 연결선 업데이트
+            document.querySelectorAll('.cw-step-line').forEach((line) => {
+                const lineNum = parseInt(line.dataset.line, 10);
+                line.classList.remove('done', 'active');
+                if (lineNum < activeStep) line.classList.add('done');
+                else if (lineNum === activeStep) line.classList.add('active');
+            });
+        }
+
         function goToStep(step, skipRender = false) {
             // 현재 Step의 스크롤 위치 저장 (떠나기 전)
             if (currentStep && visitedSteps[currentStep] !== undefined) {
@@ -1652,19 +1778,9 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 }
             }
 
-            // 인디케이터 업데이트
-            document.querySelectorAll('.step-dot').forEach((el) => {
-                const circle = el.querySelector('span:first-child');
-                const stepNum = parseInt(el.dataset.step, 10);
-                if (stepNum <= step) {
-                    circle.classList.remove('bg-wiki-border', 'text-wiki-muted');
-                    circle.classList.add('bg-wiki-primary', 'text-white');
-                } else {
-                    circle.classList.add('bg-wiki-border', 'text-wiki-muted');
-                    circle.classList.remove('bg-wiki-primary', 'text-white');
-                }
-            });
-            
+            // 인디케이터 업데이트 (gradient + done ✓)
+            updateStepIndicatorUI(step);
+
             // 스크롤 위치 관리: 처음 방문 → 맨 위, 재방문 → 이전 위치
             setTimeout(() => {
                 if (visitedSteps[step] !== undefined) {
@@ -2118,7 +2234,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                         <label class="text-xs font-medium mb-2 block" style="color: rgb(148,163,184)">추가 설명 (선택)</label>
                                         <div class="relative">
                                             <textarea class="constraint-textarea w-full px-4 py-3 text-sm border rounded-lg transition-all resize-none"
-                                                      style="border-color: rgba(42,42,62,0.5); background-color: rgba(15,15,35,1); color: #fff;"
+                                                      style="border-color: rgba(42,42,62,0.5); background-color: rgba(15,23,42,0.8); color: #fff;"
                                                       rows="2"
                                                       placeholder="\${opt.placeholder}"
                                                       onfocus="this.style.borderColor='rgba(245,158,11,0.5)';"
@@ -2144,7 +2260,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 btnEl.classList.add('border-solid', 'shadow-lg');
                 btnEl.classList.remove('border-dashed');
                 btnEl.style.borderColor = '#10b981';
-                btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                btnEl.style.backgroundColor = '';
                 checkEl.classList.remove('opacity-0');
                 checkEl.classList.add('opacity-100');
                 checkEl.style.backgroundColor = '#10b981';
@@ -3644,7 +3760,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             } else if (arr.length < maxSelections) {
                 // 새로 선택
                 arr.push(value);
-                btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                btnEl.style.backgroundColor = '';
                 btnEl.style.borderColor = '#10b981';
                 btnEl.style.color = '#34d399';
             }
@@ -3710,7 +3826,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             
             if (!isSelected) {
                 transitionSignalAnswers[questionId] = value;
-                btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                btnEl.style.backgroundColor = '';
                 btnEl.style.borderColor = '#10b981';
                 btnEl.querySelector('.radio-circle').style.borderColor = '#10b981';
                 btnEl.querySelector('.radio-dot')?.classList.remove('hidden');
@@ -3736,7 +3852,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 btnEl.querySelector('.chip-check')?.classList.remove('flex');
             } else {
                 arr.push(value);
-                btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                btnEl.style.backgroundColor = '';
                 btnEl.style.borderColor = '#10b981';
                 btnEl.style.color = '#34d399';
                 btnEl.querySelector('.chip-check')?.classList.remove('hidden');
@@ -4030,7 +4146,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 minlength="\${q.minLengthGuidance || 30}"
                                 placeholder="자유롭게 적어주세요..."
                                 class="w-full px-4 py-3 rounded-xl border transition-all resize-none"
-                                style="background-color: rgba(15,15,35,1); border-color: rgba(67,97,238,0.3); color: #fff;"
+                                style="background-color: rgba(15,23,42,0.8); border-color: rgba(67,97,238,0.3); color: #fff;"
                                 onfocus="this.style.borderColor='rgba(67,97,238,0.6)';"
                                 onblur="this.style.borderColor='rgba(67,97,238,0.3)';"
                                 oninput="updateV3Counter(this)"></textarea>
@@ -4061,17 +4177,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             // Step 인디케이터 업데이트 - 심층 단계(2) 표시
             currentStep = 2;
             window.currentStep = 2;
-            document.querySelectorAll('.step-dot').forEach((el) => {
-                const circle = el.querySelector('span:first-child');
-                const stepNum = parseInt(el.dataset.step, 10);
-                if (stepNum <= 2) {
-                    circle.classList.remove('bg-wiki-border', 'text-wiki-muted');
-                    circle.classList.add('bg-wiki-primary', 'text-white');
-                } else {
-                    circle.classList.add('bg-wiki-border', 'text-wiki-muted');
-                    circle.classList.remove('bg-wiki-primary', 'text-white');
-                }
-            });
+            updateStepIndicatorUI(2);
             
             // Step 2 버튼 텍스트 업데이트
             const analyzeBtn = document.getElementById('analyze-btn');
@@ -4749,7 +4855,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         maxlength="5000"
                         placeholder="\${storyQuestion.placeholder}"
                         class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[100px]"
-                        style="background-color: rgba(15,15,35,1); border-color: rgba(\${q0Colors[0]},0.3); color: #fff;"
+                        style="background-color: rgba(15,23,42,0.8); border-color: rgba(\${q0Colors[0]},0.3); color: #fff;"
                         onfocus="this.style.borderColor='rgba(\${q0Colors[0]},0.6)';"
                         onblur="this.style.borderColor='rgba(\${q0Colors[0]},0.3)'; validateNarrativeLength(this, 30);"
                         oninput="updateNarrativeCounter(this, 5000);">\${savedQ0}</textarea>
@@ -4794,7 +4900,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             placeholder="\${careerBackgroundQuestion.placeholder}"
                             value="\${savedCareerBg}"
                             class="w-full px-4 py-3 rounded-xl border transition-all"
-                            style="background-color: rgba(15,15,35,1); border-color: rgba(\${careerBgColors[0]},0.3); color: #fff;"
+                            style="background-color: rgba(15,23,42,0.8); border-color: rgba(\${careerBgColors[0]},0.3); color: #fff;"
                             onfocus="this.style.borderColor='rgba(\${careerBgColors[0]},0.6)';"
                             onblur="this.style.borderColor='rgba(\${careerBgColors[0]},0.3)';"
                         />
@@ -4822,7 +4928,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         maxlength="10000"
                         placeholder="\${q1.placeholder}"
                         class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[120px]"
-                        style="background-color: rgba(15,15,35,1); border-color: rgba(\${q1Colors[0]},0.3); color: #fff;"
+                        style="background-color: rgba(15,23,42,0.8); border-color: rgba(\${q1Colors[0]},0.3); color: #fff;"
                         onfocus="this.style.borderColor='rgba(\${q1Colors[0]},0.6)';"
                         onblur="this.style.borderColor='rgba(\${q1Colors[0]},0.3)'; validateNarrativeLength(this, 50);"
                         oninput="updateNarrativeCounter(this, 10000);">\${savedQ1}</textarea>
@@ -4850,7 +4956,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         maxlength="10000"
                         placeholder="\${q2.placeholder}"
                         class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[120px]"
-                        style="background-color: rgba(15,15,35,1); border-color: rgba(\${q2Colors[0]},0.3); color: #fff;"
+                        style="background-color: rgba(15,23,42,0.8); border-color: rgba(\${q2Colors[0]},0.3); color: #fff;"
                         onfocus="this.style.borderColor='rgba(\${q2Colors[0]},0.6)';"
                         onblur="this.style.borderColor='rgba(\${q2Colors[0]},0.3)'; validateNarrativeLength(this, 50);"
                         oninput="updateNarrativeCounter(this, 10000);">\${savedQ2}</textarea>
@@ -4883,7 +4989,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         maxlength="5000"
                         placeholder="가장 먼저 떠오르는 행동, 가고 싶은 곳, 만나고 싶은 사람, 그리고 그 이유를 자유롭게 적어주세요..."
                         class="w-full px-4 py-3 rounded-xl border transition-all resize-y min-h-[100px]"
-                        style="background-color: rgba(15,15,35,1); border-color: rgba(168,85,247,0.3); color: #fff;"
+                        style="background-color: rgba(15,23,42,0.8); border-color: rgba(168,85,247,0.3); color: #fff;"
                         onfocus="this.style.borderColor='rgba(168,85,247,0.6)';"
                         onblur="this.style.borderColor='rgba(168,85,247,0.3)'; validateNarrativeLength(this, 30);"
                         oninput="updateNarrativeCounter(this, 5000);">\${savedQ3}</textarea>
@@ -4913,19 +5019,9 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             // Step 인디케이터 업데이트 - 심층 단계 (Step 2) 표시
             currentStep = 2;
             window.currentStep = 2;
-            document.querySelectorAll('.step-dot').forEach((el) => {
-                const circle = el.querySelector('span:first-child');
-                const stepNum = parseInt(el.dataset.step, 10);
-                if (stepNum <= 2) {
-                    circle.classList.remove('bg-wiki-border', 'text-wiki-muted');
-                    circle.classList.add('bg-wiki-primary', 'text-white');
-                } else {
-                    circle.classList.add('bg-wiki-border', 'text-wiki-muted');
-                    circle.classList.remove('bg-wiki-primary', 'text-white');
-                }
-            });
-            
-            
+            updateStepIndicatorUI(2);
+
+
             // Step 2 버튼 업데이트
             const analyzeBtn = document.getElementById('analyze-btn');
             if (analyzeBtn) {
@@ -5295,7 +5391,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                       rows="3"
                                       placeholder="예: 장애의 종류, 돌봄 대상과 시간, 경제적 상황 등 구체적으로 적어주시면 더 정확한 추천이 가능해요"
                                       class="w-full px-4 py-3 rounded-xl border transition-all resize-none"
-                                      style="background-color: rgba(15,15,35,1); border-color: rgba(42,42,62,0.5); color: #fff;"
+                                      style="background-color: rgba(15,23,42,0.8); border-color: rgba(42,42,62,0.5); color: #fff;"
                                       onfocus="this.style.borderColor='rgba(67,97,238,0.5)';"
                                       onblur="this.style.borderColor='rgba(42,42,62,0.5)'; updateLifeConstraintDetail(this.value);"></textarea>
                             <p class="text-xs mt-1" style="color: rgba(148,163,184,0.6)">입력한 내용은 추천 정확도를 높이는 데에만 사용됩니다</p>
@@ -5342,7 +5438,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 optionsHtml = \`
                     <textarea name="\${q.id}" rows="3" placeholder="\${q.placeholder || ''}"
                               class="w-full px-4 py-3 rounded-xl border transition-all resize-none"
-                              style="background-color: rgba(15,15,35,1); border-color: rgba(42,42,62,0.5); color: #fff;"
+                              style="background-color: rgba(15,23,42,0.8); border-color: rgba(42,42,62,0.5); color: #fff;"
                               onfocus="this.style.borderColor='rgba(67,97,238,0.5)';"
                               onblur="this.style.borderColor='rgba(42,42,62,0.5)';"></textarea>
                     \${privacyWarning}
@@ -5447,7 +5543,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     
                     // 새 선택
                     btnEl.classList.add('selected');
-                    btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                    btnEl.style.backgroundColor = '';
                     btnEl.style.borderColor = '#10b981';
                     btnEl.style.color = '#34d399';
                     btnEl.querySelector('.chip-check')?.classList.remove('hidden');
@@ -5575,7 +5671,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 opt.style.color = 'rgb(148,163,184)';
             });
             btnEl.classList.add('selected');
-            btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+            btnEl.style.backgroundColor = '';
             btnEl.style.borderColor = '#10b981';
             btnEl.style.color = '#34d399';
             
@@ -5624,7 +5720,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 opt.style.color = 'rgb(148,163,184)';
             });
             btnEl.classList.add('selected');
-            btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+            btnEl.style.backgroundColor = '';
             btnEl.style.borderColor = '#10b981';
             btnEl.style.color = '#34d399';
             
@@ -5653,7 +5749,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
             
             // 칩 스타일 업데이트
             btnEl.classList.add('selected');
-            btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+            btnEl.style.backgroundColor = '';
             btnEl.style.borderColor = '#10b981';
             btnEl.style.color = '#34d399';
             btnEl.querySelector('.chip-check')?.classList.remove('hidden');
@@ -5783,7 +5879,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         btn.style.pointerEvents = 'none';
                     });
                 } else {
-                    btnEl.style.backgroundColor = 'rgba(16,185,129,0.2)';
+                    btnEl.style.backgroundColor = '';
                     btnEl.style.borderColor = '#10b981';
                     btnEl.querySelector('.radio-circle').style.borderColor = '#10b981';
                     btnEl.querySelector('.radio-dot')?.classList.remove('hidden');
@@ -6488,7 +6584,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         profileDesc = '<p class="text-[15px] text-wiki-muted mt-3 leading-relaxed">' + finalText + '</p>';
                     }
                 }
-                careerVisionHtml = '<div class="mb-6 p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.1)); border: 1px solid rgba(251,191,36,0.3);"><p class="text-lg md:text-xl font-semibold leading-relaxed" style="color: rgb(251,191,36);">"' + translateToKorean(lifeVersion.oneLiner) + '"</p>' + profileDesc + '</div>';
+                careerVisionHtml = '<div class="cw-vision-card mb-6"><p class="text-lg md:text-xl font-semibold leading-relaxed pl-4" style="color: #e2e8f0;"><span style="color:#d4a853;">"</span>' + translateToKorean(lifeVersion.oneLiner) + '<span style="color:#d4a853;">"</span></p>' + (profileDesc ? '<div class="pl-4">' + profileDesc + '</div>' : '') + '</div>';
             } else if (personal.personality_summary) {
                 const highlightedText = personal.personality_summary.replace(/'([^']+)'/g, '<strong class="text-wiki-secondary font-bold">&#39;$1&#39;</strong>');
                 careerVisionHtml = '<div class="mb-6 p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.3);"><p class="text-lg leading-relaxed text-white">💫 ' + highlightedText + '</p></div>';
@@ -6580,14 +6676,14 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             })()}
                                 <!-- 핵심 강점 -->
                                 \${metaCognition.myArsenal?.strengths?.length > 0 ? \`
-                                    <div class="p-4 rounded-xl" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);">
+                                    <div class="cw-meta-card p-4" style="--meta-accent: #4ade80;">
                                         <div class="flex items-center gap-2 mb-2">
                                             <span class="text-lg">💪</span>
-                                            <h5 class="font-bold text-green-400 text-[15px]">핵심 강점</h5>
+                                            <h5 class="font-bold text-[15px]" style="color:#e2e8f0;">핵심 강점</h5>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5">
                                             \${metaCognition.myArsenal.strengths.slice(0, 3).map(s => \`
-                                                <span class="px-2.5 py-1 rounded text-[15px] font-medium" style="background-color: rgba(34,197,94,0.15); color: rgb(134,239,172);">\${translateToKorean(s.trait)}</span>
+                                                <span class="px-2.5 py-1 rounded-lg text-[13px] font-medium" style="background: rgba(79,70,229,0.12); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.15);">\${translateToKorean(s.trait)}</span>
                                             \`).join('')}
                                         </div>
                                     </div>
@@ -6595,14 +6691,14 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                                 <!-- 핵심 가치 -->
                                 \${profileInterpretation?.values?.length > 0 ? \`
-                                    <div class="p-4 rounded-xl" style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2);">
+                                    <div class="cw-meta-card p-4" style="--meta-accent: #a78bfa;">
                                         <div class="flex items-center gap-2 mb-2">
                                             <span class="text-lg">⭐</span>
-                                            <h5 class="font-bold text-purple-400 text-[15px]">핵심 가치</h5>
+                                            <h5 class="font-bold text-[15px]" style="color:#e2e8f0;">핵심 가치</h5>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5">
                                             \${profileInterpretation.values.slice(0, 3).map(v => \`
-                                                <span class="px-2.5 py-1 rounded text-[15px] font-medium" style="background-color: rgba(168,85,247,0.15); color: rgb(216,180,254);">\${translateToKorean(v.label)}</span>
+                                                <span class="px-2.5 py-1 rounded-lg text-[13px] font-medium" style="background: rgba(139,92,246,0.12); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.15);">\${translateToKorean(v.label)}</span>
                                             \`).join('')}
                                         </div>
                                     </div>
@@ -6610,10 +6706,10 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                                 <!-- 스트레스 주의점 -->
                                 \${metaCognition.stressRecovery?.stressFactors?.length > 0 ? \`
-                                    <div class="p-4 rounded-xl" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);">
+                                    <div class="cw-meta-card p-4" style="--meta-accent: #fb923c;">
                                         <div class="flex items-center gap-2 mb-2">
                                             <span class="text-lg">⚠️</span>
-                                            <h5 class="font-bold text-red-400 text-[15px]">주의점</h5>
+                                            <h5 class="font-bold text-[15px]" style="color:#e2e8f0;">주의점</h5>
                                             <span class="relative group cursor-help">
                                                 <i class="fas fa-question-circle text-wiki-muted text-xs"></i>
                                                 <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(30,30,40,0.95); border: 1px solid rgba(255,255,255,0.1);">이 항목들은 에너지가 소모되거나 스트레스를 유발할 수 있는 요인입니다.<br/>커리어 선택 시 이 요인들을 고려하면 번아웃을 예방할 수 있습니다.</span>
@@ -6621,7 +6717,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                         </div>
                                         <div class="flex flex-wrap gap-1.5">
                                             \${metaCognition.stressRecovery.stressFactors.slice(0, 2).map(s => \`
-                                                <span class="px-2.5 py-1 rounded text-[15px] font-medium" style="background-color: rgba(239,68,68,0.15); color: rgb(252,165,165);">\${translateToKorean(s.factor)}</span>
+                                                <span class="px-2.5 py-1 rounded-lg text-[13px] font-medium" style="background: rgba(251,146,60,0.1); color: #fdba74; border: 1px solid rgba(251,146,60,0.15);">\${translateToKorean(s.factor)}</span>
                                             \`).join('')}
                                         </div>
                                     </div>
@@ -8495,8 +8591,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                         <span class="text-[11px] text-emerald-400/80 font-medium">Fit</span>
                                         <span class="text-[11px] text-emerald-400 font-semibold">\${fitScore}</span>
                                     </div>
-                                    <div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);">
-                                        <div class="h-full rounded-full transition-all" style="width: \${Math.min(fitNum, 100)}%; background: rgb(52,211,153);"></div>
+                                    <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
+                                        <div class="h-full rounded-full transition-all" style="width: \${Math.min(fitNum, 100)}%; background: linear-gradient(90deg, #10b981, #34d399);"></div>
                                     </div>
                                 </div>
                                 <div class="flex-1">
@@ -8504,8 +8600,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                         <span class="text-[11px] text-purple-400/80 font-medium">Like</span>
                                         <span class="text-[11px] text-purple-400 font-semibold">\${likeScore}</span>
                                     </div>
-                                    <div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);">
-                                        <div class="h-full rounded-full transition-all" style="width: \${Math.min(likeNum2, 100)}%; background: rgb(168,85,247);"></div>
+                                    <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
+                                        <div class="h-full rounded-full transition-all" style="width: \${Math.min(likeNum2, 100)}%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
                                     </div>
                                 </div>
                                 <div class="flex-1">
@@ -8513,8 +8609,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                         <span class="text-[11px] text-blue-400/80 font-medium">Can</span>
                                         <span class="text-[11px] text-blue-400 font-semibold">\${canScore}</span>
                                     </div>
-                                    <div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);">
-                                        <div class="h-full rounded-full transition-all" style="width: \${Math.min(canNum2, 100)}%; background: rgb(96,165,250);"></div>
+                                    <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
+                                        <div class="h-full rounded-full transition-all" style="width: \${Math.min(canNum2, 100)}%; background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
                                     </div>
                                 </div>
                                 \${parseInt(bgScore) > 0 ? \`<div class="flex-1">
@@ -10243,15 +10339,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         document.getElementById('step3')?.classList.remove('hidden');
                         currentStep = 4;
                         window.currentStep = 4;
-                        // 인디케이터 업데이트
-                        document.querySelectorAll('.step-dot').forEach((el) => {
-                            const circle = el.querySelector('span:first-child');
-                            const stepNum = parseInt(el.dataset.step, 10);
-                            if (stepNum <= 4) {
-                                circle.classList.remove('bg-wiki-border', 'text-wiki-muted');
-                                circle.classList.add('bg-wiki-primary', 'text-white');
-                            }
-                        });
+                        updateStepIndicatorUI(4);
                     } else {
                         goToStep(restoredStep, true);
                     }
