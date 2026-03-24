@@ -539,30 +539,23 @@ export const renderLayout = (
            * Phase 6: 섹션별 강조 시스템
            * ============================================ */
 
-          /* 히어로 섹션 강조 - 더 강한 그라데이션 배경 */
+          /* 히어로 섹션 강조 - full-width 그라데이션 */
           .cw-hero {
             position: relative;
-            overflow: hidden;
           }
           .cw-hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -20%;
-            width: 60%;
-            height: 200%;
-            background: radial-gradient(ellipse, rgba(67, 97, 238, 0.08) 0%, transparent 70%);
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: calc(100% + 160px);
+            background:
+              radial-gradient(ellipse 50% 80% at 15% 30%, rgba(67, 97, 238, 0.09) 0%, transparent 70%),
+              radial-gradient(ellipse 45% 70% at 85% 60%, rgba(99, 102, 241, 0.07) 0%, transparent 70%);
             pointer-events: none;
-          }
-          .cw-hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50%;
-            right: -20%;
-            width: 50%;
-            height: 200%;
-            background: radial-gradient(ellipse, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
-            pointer-events: none;
+            z-index: -1;
           }
 
           /* 섹션 구분선 - 부드러운 그라데이션 */
