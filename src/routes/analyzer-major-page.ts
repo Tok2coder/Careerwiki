@@ -3038,11 +3038,16 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
 
                 currentRequestId = data.request_id;
                 displayResults(data);
-                saveDraftAsCompletedMajor();
                 hideSkeletonLoading();
-                if (data.request_id) {
-                    history.replaceState(null, '', '/analyzer/major?view=' + data.request_id);
+
+                // 완료 후 draft 정리 (새로고침 시 "이어서 하기" 방지)
+                if (currentSessionId) {
+                    fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(currentSessionId), {
+                        method: 'DELETE', credentials: 'same-origin'
+                    }).catch(() => {});
                 }
+                localStorage.removeItem('analyzer_draft_major');
+                localStorage.removeItem('analyzer_draft_major_timestamp');
             } catch (error) {
                 hideLoading();
                 alert('오류가 발생했습니다: ' + error.message);
@@ -3051,6 +3056,13 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
         
         function displayResults(data) {
             const result = data.result || data;
+
+            // URL을 ?view={request_id}로 업데이트 (새로고침 시 바로 결과 표시)
+            const reqId = data.request_id || currentRequestId;
+            if (reqId && !new URLSearchParams(window.location.search).get('view')) {
+                const newUrl = window.location.pathname + '?view=' + reqId;
+                window.history.replaceState(null, '', newUrl);
+            }
 
             // V3 프리미엄 리포트가 있으면 4탭 UI 표시
             if (result.premium_report) {

@@ -4536,6 +4536,15 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 // skeleton이 이미 step3에 있으므로 goToStep 불필요 — displayResults가 innerHTML 교체
                 hideSkeletonLoading();
 
+                // 완료 후 draft 정리 (새로고침 시 "이어서 하기" 방지)
+                if (currentSessionId) {
+                    fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(currentSessionId), {
+                        method: 'DELETE', credentials: 'same-origin'
+                    }).catch(() => {});
+                }
+                localStorage.removeItem('analyzer_draft');
+                localStorage.removeItem('analyzer_draft_timestamp');
+
             } catch (error) {
                 hideLoading();
                 if (error.name === 'AbortError') {
@@ -6132,7 +6141,14 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 showErrorToast('분석 결과를 불러올 수 없습니다: ' + (data?.error || '데이터가 없습니다'));
                 return;
             }
-            
+
+            // URL을 ?view={request_id}로 업데이트 (새로고침 시 바로 결과 표시)
+            const reqId = data.request_id || currentRequestId;
+            if (reqId && !new URLSearchParams(window.location.search).get('view')) {
+                const newUrl = window.location.pathname + '?view=' + reqId;
+                window.history.replaceState(null, '', newUrl);
+            }
+
             const result = data.result;
 
             // mini_module_result 복원 (DB에서 로드 시 window에 없을 수 있음)
@@ -6649,7 +6665,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     </div>
 
                     <!-- ✨ 커리어 비전 (요약 탭 첫 섹션) -->
-                    <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                    <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                         <span>✨</span> 커리어 비전
                     </h4>
                     \${careerVisionHtml}
@@ -6657,7 +6673,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 📊 메타인지 요약 (요약 탭) -->
                     \${metaCognition ? \`
                         <div class="mt-8 mb-8">
-                            <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                                 <span>📊</span> 메타인지
                                 <button onclick="showReportTab('psychology')" class="ml-auto px-3 py-1.5 rounded-lg text-[16px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
                                     <span>자세히 보기</span>
@@ -6730,7 +6746,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 🆕 나의 커리어 프로필 (프로필 해석) -->
                     \${profileInterpretation ? \`
                         <div class="mt-8 mb-8">
-                            <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                                 <span>🧬</span> 나의 커리어 프로필
                             </h4>
 
