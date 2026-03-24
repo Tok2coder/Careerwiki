@@ -18,14 +18,14 @@ export const TEMPLATE_VERSIONS = {
    * Used for: /major/:slug pages
    * Current features: ETL 병합 필드 사용 (heroSummary, categoryDisplay, heroTags)
    */
-  MAJOR: 276,  // 댓글 안내문 개선 + 유튜브 링크 섹션 추가
+  MAJOR: 277,  // 히어로 분류/태그/출처 번호 흰색 처리
 
   /**
    * Job detail page template version
    * Used for: /job/:slug pages
    * Current features: ETL 개선 완료, 배열 필드 타입 체크 추가
    */
-  JOB: 215,  // 커리어트리 섹션 추가
+  JOB: 216,  // 히어로 분류/태그/출처 번호 흰색 처리
 
   /**
    * Guide page template version

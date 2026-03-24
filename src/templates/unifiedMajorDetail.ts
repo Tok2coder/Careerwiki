@@ -753,7 +753,7 @@ const renderMajorSourcesCollapsible = (
             data-back-to="user-fnref-${source.id}"
             data-field-key="${escapeHtml(source.fieldKey)}">
           <div class="flex items-start gap-3">
-            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-secondary/20 text-wiki-secondary text-xs font-bold flex items-center justify-center">${source.id}</span>
+            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-secondary/20 text-white text-xs font-bold flex items-center justify-center">${source.id}</span>
             <div class="flex-1 text-sm">
               <span class="text-wiki-muted">[${escapeHtml(fieldLabel)}]</span>
               <span class="text-wiki-text ml-2">${escapeHtml(source.text)}</span>
@@ -2632,7 +2632,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const visibleTags = heroTags.slice(0, visibleLimit)
   const hiddenTags = heroTags.slice(visibleLimit)
   
-  const majorTagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-wiki-primary font-medium hover:bg-wiki-primary/20 transition'
+  const majorTagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-white font-medium hover:bg-wiki-primary/20 transition'
   
   const visibleTagsHtml = visibleTags
     .map(tag => `<span class="${majorTagClass}"><i class="fas fa-graduation-cap text-[10px]"></i>${escapeHtml(tag)}</span>`)
@@ -2683,9 +2683,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-major-hero>
         <div class="space-y-5">
           ${classificationData?.large_category
-            ? `<a href="/major?category=${encodeURIComponent(classificationData.large_category)}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold hover:bg-wiki-primary/25 transition-colors"><i class="fas fa-layer-group"></i>${escapeHtml(classificationData.large_category)}</a>`
+            ? `<a href="/major?category=${encodeURIComponent(classificationData.large_category)}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-white font-semibold hover:bg-wiki-primary/25 transition-colors"><i class="fas fa-layer-group"></i>${escapeHtml(classificationData.large_category)}</a>`
             : cleanCategoryName
-              ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-wiki-primary font-semibold"><i class="fas fa-layer-group"></i>${escapeHtml(cleanCategoryName)}</span>`
+              ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-xs text-white font-semibold"><i class="fas fa-layer-group"></i>${escapeHtml(cleanCategoryName)}</span>`
               : ''}
           <div class="flex flex-wrap items-start justify-between gap-4">
             <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight">${escapeHtml(profile.name)}</h1>
