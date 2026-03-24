@@ -134,7 +134,8 @@ jobListRoutes.get('/job', async (c) => {
 
     // 모바일 메트릭 스크롤 스타일 (스크롤바 숨기기)
     const mobileScrollStyle = `<style>.mobile-metric-scroll::-webkit-scrollbar{display:none;}</style>`
-    const extraHead = [jsonLd, mobileScrollStyle].filter(Boolean).join('\n')
+    const jobTheme = '<style>:root{--wp:79 70 229;--ws:99 102 241}</style>'
+    const extraHead = [jsonLd, mobileScrollStyle, jobTheme].filter(Boolean).join('\n')
 
     const content = `
       <div class="max-w-[1400px] mx-auto px-2 md:px-6">
@@ -148,7 +149,7 @@ jobListRoutes.get('/job', async (c) => {
           <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-wiki-bg to-transparent -z-10"></div>
 
           <h1 class="text-[42px] md:text-[48px] lg:text-6xl font-extrabold leading-tight mb-2">
-            <span class="bg-gradient-to-r from-indigo-300 via-violet-400 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(79,70,229,0.3)]">
+            <span class="bg-gradient-to-r from-indigo-200 via-indigo-400 to-blue-300 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(79,70,229,0.3)]">
             ${headingLabel}
             </span>
           </h1>

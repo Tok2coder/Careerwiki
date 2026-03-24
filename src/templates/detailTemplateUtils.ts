@@ -245,7 +245,7 @@ export const renderHeroImage = (
           onerror="this.onerror=null; this.src='${DEFAULT_HERO_IMAGE}'; this.alt='${escapeHtml(title ?? '')} 대표 이미지 준비 중';"
         >
         <div class="absolute inset-0 bg-gradient-to-b from-black/35 via-wiki-bg/20 to-wiki-bg/80 mix-blend-multiply"></div>
-        <div class="absolute inset-0 bg-gradient-to-tr from-wiki-primary/30 via-transparent to-wiki-secondary/40 mix-blend-screen"></div>
+        <div class="absolute inset-0 bg-gradient-to-tr from-wiki-primary/15 via-transparent to-wiki-secondary/20 mix-blend-screen"></div>
         <div class="absolute inset-6 rounded-2xl border border-white/10 pointer-events-none"></div>
       </div>
       <!-- 관리자용 이미지 재생성 버튼 (클라이언트에서 동적으로 표시) -->

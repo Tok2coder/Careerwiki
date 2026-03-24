@@ -181,7 +181,7 @@ majorListRoutes.get('/major', async (c) => {
         }).replace(/</g, '\\u003C')}</script>`
       : ''
 
-    const extraHead = ['<style>:root{--wp:16 185 129;--ws:45 212 191}</style>', jsonLd].filter(Boolean).join('\n')
+    const extraHead = ['<style>:root{--wp:16 185 129;--ws:52 211 153}</style>', jsonLd].filter(Boolean).join('\n')
 
     const content = `
       <div class="max-w-[1400px] mx-auto px-2 md:px-6">
@@ -693,7 +693,7 @@ majorListRoutes.get('/major', async (c) => {
             keyword ? `${keyword} 전공 검색 결과 - Careerwiki` : '전공위키 - Careerwiki',
             keyword ? `${keyword} 관련 전공 정보를 확인하세요.` : '전공별 커리큘럼과 진로 정보를 통합 데이터로 확인하세요.',
             false,
-            { extraHead: '<style>:root{--wp:16 185 129;--ws:45 212 191}</style>' }
+            { extraHead: '<style>:root{--wp:16 185 129;--ws:52 211 153}</style>' }
           )
         )
       } catch (fallbackError) {

@@ -94,10 +94,10 @@ export const renderFooter = (): string => `
     }
     .footer-nav-link::after {
       content: ''; position: absolute; bottom: 4px; left: 14px; right: 14px;
-      height: 2px; background: linear-gradient(90deg, rgb(var(--wp, 79 70 229)), rgb(var(--ws, 139 92 246)));
+      height: 2px; background: linear-gradient(90deg, rgb(var(--wp, 79 70 229)), rgb(var(--ws, 99 102 241)));
       border-radius: 1px; transform: scaleX(0); transition: transform 0.2s ease;
     }
-    .footer-nav-link:hover { color: #ffffff; background: rgba(139, 92, 246, 0.08); }
+    .footer-nav-link:hover { color: #ffffff; background: rgba(99, 102, 241, 0.08); }
     .footer-nav-link:hover::after { transform: scaleX(1); }
   </style>
   <footer class="relative mt-20 border-t border-wiki-border/20" style="background: radial-gradient(40% 80px at 50% 0%, rgba(79,70,229,0.06), transparent);">
@@ -278,7 +278,7 @@ export const renderLayout = (
             letter-spacing: -0.01em;
             margin-bottom: 12px;
             padding-bottom: 8px;
-            border-bottom: 1px solid rgba(139, 92, 246, 0.08);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.08);
             display: block;
             width: 100%;
           }
@@ -291,7 +291,7 @@ export const renderLayout = (
             letter-spacing: -0.025em;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 2px solid rgba(139, 92, 246, 0.12);
+            border-bottom: 2px solid rgba(99, 102, 241, 0.12);
             width: 100%;
           }
 
@@ -357,8 +357,8 @@ export const renderLayout = (
             align-items: center;
             justify-content: center;
             background: rgba(17, 24, 39, 0.75);
-            border: 1px solid rgb(var(--ws, 139 92 246) / 0.3);
-            color: rgb(var(--ws, 139 92 246));
+            border: 1px solid rgb(var(--ws, 99 102 241) / 0.3);
+            color: rgb(var(--ws, 99 102 241));
             font-size: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -368,7 +368,7 @@ export const renderLayout = (
           }
           .floating-nav-btn:hover {
             background: rgba(79, 70, 229, 0.85);
-            border-color: rgba(139, 92, 246, 0.6);
+            border-color: rgba(99, 102, 241, 0.6);
             color: #ffffff;
             transform: translateX(-4px);
             box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
@@ -379,7 +379,7 @@ export const renderLayout = (
             white-space: nowrap;
             padding: 8px 14px;
             background: rgba(17, 24, 39, 0.95);
-            border: 1px solid rgba(139, 92, 246, 0.4);
+            border: 1px solid rgba(99, 102, 241, 0.4);
             border-radius: 8px;
             font-size: 13px;
             font-weight: 600;
@@ -448,14 +448,14 @@ export const renderLayout = (
           }
 
           .gradient-text {
-            background: linear-gradient(135deg, rgb(var(--wp, 79 70 229)) 0%, rgb(var(--ws, 139 92 246)) 50%, rgb(var(--wa, 212 168 83)) 100%);
+            background: linear-gradient(135deg, rgb(var(--wp, 79 70 229)) 0%, rgb(var(--ws, 99 102 241)) 50%, rgb(var(--wa, 212 168 83)) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
           }
           .glass-card {
             background: linear-gradient(145deg, rgba(17, 24, 39, 0.8), rgba(15, 20, 35, 0.65));
             backdrop-filter: blur(14px);
-            border: 1px solid rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(99, 102, 241, 0.06);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.03);
           }
           @media (max-width: 767px) {
@@ -489,16 +489,16 @@ export const renderLayout = (
           }
           .cw-btn-secondary {
             background: transparent;
-            color: rgb(var(--ws, 139 92 246));
+            color: rgb(var(--ws, 99 102 241));
             font-weight: 500;
             padding: 0.5rem 1.25rem;
             border-radius: 0.75rem;
-            border: 1px solid rgb(var(--ws, 139 92 246) / 0.3);
+            border: 1px solid rgb(var(--ws, 99 102 241) / 0.3);
             transition: all 0.2s ease;
           }
           .cw-btn-secondary:hover {
-            background: rgb(var(--ws, 139 92 246) / 0.1);
-            border-color: rgb(var(--ws, 139 92 246) / 0.5);
+            background: rgb(var(--ws, 99 102 241) / 0.1);
+            border-color: rgb(var(--ws, 99 102 241) / 0.5);
           }
           .cw-btn-ghost {
             background: transparent;
@@ -515,7 +515,7 @@ export const renderLayout = (
 
           /* 전역 인터랙션 */
           a, button, input, select { transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
-          :focus-visible { outline: 2px solid rgba(139, 92, 246, 0.5); outline-offset: 2px; }
+          :focus-visible { outline: 2px solid rgba(99, 102, 241, 0.5); outline-offset: 2px; }
 
           /* 페이지 진입 애니메이션 */
           @keyframes cw-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -657,7 +657,7 @@ export const renderLayout = (
             color: #92400e !important;
           }
           .wiki-link {
-            color: rgb(var(--ws, 139 92 246));
+            color: rgb(var(--ws, 99 102 241));
             text-decoration: none;
             transition: all 0.2s;
           }
@@ -678,7 +678,7 @@ export const renderLayout = (
           }
           .menu-button {
             background: rgba(17, 24, 39, 0.7);
-            border: 1px solid rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.12);
             padding: 16px 20px;
             border-radius: 16px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -775,7 +775,7 @@ export const renderLayout = (
             padding: 6px 10px 6px 16px;
             border-radius: 9999px;
             background: rgba(17, 24, 39, 0.6);
-            border: 1px solid rgba(139, 92, 246, 0.18);
+            border: 1px solid rgba(99, 102, 241, 0.18);
             box-shadow: 0 10px 28px rgba(6, 11, 24, 0.4);
             transition: border 0.3s ease, box-shadow 0.3s ease;
           }
@@ -810,7 +810,7 @@ export const renderLayout = (
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            background: linear-gradient(135deg, rgb(var(--wp, 79 70 229)) 0%, rgb(var(--ws, 139 92 246)) 100%);
+            background: linear-gradient(135deg, rgb(var(--wp, 79 70 229)) 0%, rgb(var(--ws, 99 102 241)) 100%);
             color: #ffffff;
             box-shadow: 0 10px 22px rgba(79, 70, 229, 0.3);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -821,7 +821,7 @@ export const renderLayout = (
             box-shadow: 0 14px 32px rgba(79, 70, 229, 0.45);
           }
           .search-button:focus-visible {
-            outline: 2px solid rgba(139, 92, 246, 0.7);
+            outline: 2px solid rgba(99, 102, 241, 0.7);
             outline-offset: 3px;
           }
           /* 헤더 아이콘 버튼 - 터치 타겟 44px 보장 */
@@ -838,10 +838,10 @@ export const renderLayout = (
           }
           .header-icon-button:hover {
             color: #ffffff;
-            background-color: rgba(139, 92, 246, 0.1);
+            background-color: rgba(99, 102, 241, 0.1);
           }
           .header-icon-button:focus-visible {
-            outline: 2px solid rgba(139, 92, 246, 0.7);
+            outline: 2px solid rgba(99, 102, 241, 0.7);
             outline-offset: 2px;
           }
           .header-icon-button {

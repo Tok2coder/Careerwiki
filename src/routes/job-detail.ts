@@ -329,6 +329,7 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
           profile.salary
         )
         const extraHead = [
+          '<style>:root{--wp:79 70 229;--ws:99 102 241}</style>',
           '<meta property="article:modified_time" content="' + new Date().toISOString() + '">',
           createJobJsonLd(profile, canonicalUrl)
         ].filter(Boolean).join('\n')
