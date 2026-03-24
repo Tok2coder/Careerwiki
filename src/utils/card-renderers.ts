@@ -473,8 +473,16 @@ export const renderMajorCard = (entry: { profile: any; display?: any }): string 
 
             <!-- 전공 정보 -->
             <div class="flex-1 space-y-3 sm:space-y-4 min-w-0 sm:max-w-[60%] pr-[84px] sm:pr-0">
-              <!-- 헤더: 전공명 -->
+              <!-- 헤더: 계열 + 전공명 -->
               <div class="space-y-1.5 sm:space-y-2">
+                ${categoryName ? `
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-emerald-500/10 text-emerald-400/80 border border-emerald-500/20">
+                      <i class="fas fa-graduation-cap text-[7px] sm:text-[8px]"></i>
+                      ${escapeHtml(categoryName)}
+                    </span>
+                  </div>
+                ` : ''}
                 <h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
                   ${escapeHtml(major.name)}
                 </h2>
