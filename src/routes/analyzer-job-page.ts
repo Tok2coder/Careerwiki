@@ -8498,14 +8498,14 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 // 이유 HTML 생성 (카드 내부에 표시)
                 let reasonOuterHtml = '';
                 if (setId === 'overall') {
-                    if (likeReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[16px] w-12">💜 Like</span><p class="text-[16px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
-                    if (canReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[16px] w-12">💪 Can</span><p class="text-[16px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
-                    if (feasibilityReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-amber-400 font-medium shrink-0 text-[16px] w-12">🎯 배경</span><p class="text-[16px] text-amber-300/90 leading-relaxed">' + feasibilityReasonText + '</p></div>';
+                    if (likeReasonText) reasonOuterHtml += '<p class="text-[15px] text-purple-300/90 leading-relaxed"><span class="text-purple-400 font-medium">💜 Like:</span> ' + likeReasonText + '</p>';
+                    if (canReasonText) reasonOuterHtml += '<p class="text-[15px] text-blue-300/90 leading-relaxed"><span class="text-blue-400 font-medium">💪 Can:</span> ' + canReasonText + '</p>';
+                    if (feasibilityReasonText) reasonOuterHtml += '<p class="text-[15px] text-amber-300/90 leading-relaxed"><span class="text-amber-400 font-medium">🎯 배경:</span> ' + feasibilityReasonText + '</p>';
                 } else if (setId === 'desire') {
-                    if (likeReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[16px] w-12">💜 Like</span><p class="text-[16px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
+                    if (likeReasonText) reasonOuterHtml = '<p class="text-[15px] text-purple-300/90 leading-relaxed"><span class="text-purple-400 font-medium">💜 Like:</span> ' + likeReasonText + '</p>';
                 } else {
-                    if (canReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[16px] w-12">💪 Can</span><p class="text-[16px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
-                    if (feasibilityReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-amber-400 font-medium shrink-0 text-[16px] w-12">🎯 배경</span><p class="text-[16px] text-amber-300/90 leading-relaxed">' + feasibilityReasonText + '</p></div>';
+                    if (canReasonText) reasonOuterHtml = '<p class="text-[15px] text-blue-300/90 leading-relaxed"><span class="text-blue-400 font-medium">💪 Can:</span> ' + canReasonText + '</p>';
+                    if (feasibilityReasonText) reasonOuterHtml += '<p class="text-[15px] text-amber-300/90 leading-relaxed"><span class="text-amber-400 font-medium">🎯 배경:</span> ' + feasibilityReasonText + '</p>';
                 }
 
                 const rankBadge = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : \`\${idx + 1}\`;
@@ -8645,10 +8645,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                     <!-- 하단: 추천 이유 (Like/Can) -->
                     \${reasonOuterHtml ? \`
-                    <div class="px-4 pb-4 pt-0">
-                        <div class="p-3 rounded-xl space-y-2" style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.1);">
-                            \${reasonOuterHtml}
-                        </div>
+                    <div class="px-4 pb-4 pt-1 space-y-1.5" style="border-top: 1px solid rgba(99,102,241,0.08);">
+                        \${reasonOuterHtml}
                     </div>
                     \` : ''}
 
