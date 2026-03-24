@@ -8612,8 +8612,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                         <div class="h-full rounded-full transition-all" style="width: \${Math.min(fitNum, 100)}%; background: linear-gradient(90deg, #10b981, #34d399);"></div>
                                     </div>
                                     <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 rounded-lg text-[13px] text-white whitespace-nowrap opacity-0 group-hover/fit:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(15,23,42,0.95); border: 1px solid rgba(16,185,129,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                                        <span class="text-emerald-400 font-medium">적합도(Fit)</span> = Like + Can\${parseInt(bgScore) > 0 ? ' + Bg' : ''}\${parseFloat(riskPenalty) > 0 ? ' − Risk' : ''}<br/>
-                                        <span class="text-emerald-300 font-bold">\${fitScore}점</span>
+                                        <span class="text-emerald-400 font-medium">적합도(Fit)</span> = Like + Can\${parseInt(bgScore) > 0 ? ' + Bg' : ''}\${parseFloat(riskPenalty) > 0 ? ' − Risk' : ''} → <span class="text-emerald-300 font-bold">\${fitScore}점</span>
                                     </div>
                                 </div>
                                 <div class="flex-1 relative group/like cursor-default">
