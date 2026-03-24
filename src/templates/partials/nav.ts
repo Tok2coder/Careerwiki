@@ -87,11 +87,11 @@ export function renderNav(userMenuHtml: string): string {
   </nav>
   
   <!-- Mobile Menu (햄버거 클릭 시 표시) -->
-  <div id="mobile-menu" class="fixed top-[57px] left-0 right-0 bottom-0 z-40 overflow-y-auto" style="display: none; background: rgba(6, 11, 24, 0.98); backdrop-filter: blur(24px);">
+  <div id="mobile-menu" class="fixed top-[57px] left-0 right-0 bottom-0 z-40 overflow-y-auto" style="display: none; background: rgba(11, 18, 32, 0.98); backdrop-filter: blur(20px);">
     <div class="mx-auto w-full max-w-[1400px] py-4 px-4">
       
       <!-- 1) 사용자 정보 (IP 또는 사용자 ID) -->
-      <div class="mb-4 px-4 py-3 rounded-xl" style="background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(99, 102, 241, 0.1);">
+      <div class="mb-4 px-4 py-3 rounded-xl" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(100, 181, 246, 0.1);">
         <div class="flex items-center gap-3">
           <div id="mobile-user-avatar" class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
             <i class="fas fa-user"></i>
@@ -105,23 +105,23 @@ export function renderNav(userMenuHtml: string): string {
       
       <!-- 2) 메인 메뉴: AI 추천, HowTo -->
       <div class="flex gap-2 mb-4">
-        <a href="/analyzer" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-white font-medium transition-all" style="background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(99, 102, 241, 0.12);">
+        <a href="/analyzer" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-white font-medium transition-all" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(100, 181, 246, 0.15);">
           <i class="fas fa-brain text-emerald-400"></i>
           <span>AI 추천</span>
         </a>
-        <a href="/howto" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-white font-medium transition-all" style="background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(99, 102, 241, 0.12);">
+        <a href="/howto" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-white font-medium transition-all" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(100, 181, 246, 0.15);">
           <i class="fas fa-route text-amber-400"></i>
           <span>HowTo</span>
         </a>
       </div>
       
       <!-- 3) 사용자 메뉴 (로그인 상태에 따라 변경) -->
-      <div id="mobile-user-menu-section" class="mb-4 rounded-xl overflow-hidden" style="background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(99, 102, 241, 0.1);">
+      <div id="mobile-user-menu-section" class="mb-4 rounded-xl overflow-hidden" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(100, 181, 246, 0.1);">
         <!-- JavaScript로 동적 렌더링 -->
       </div>
       
       <!-- 4) 하단: 개인설정, 도움말, 로그아웃 -->
-      <div id="mobile-bottom-section" class="rounded-xl overflow-hidden" style="background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(99, 102, 241, 0.1);">
+      <div id="mobile-bottom-section" class="rounded-xl overflow-hidden" style="background: rgba(26, 26, 46, 0.6); border: 1px solid rgba(100, 181, 246, 0.1);">
         <div id="mobile-settings-section">
           <!-- JavaScript로 동적 렌더링 -->
         </div>
@@ -137,14 +137,14 @@ export function renderNavStyles(): string {
   return `
   <style id="nav-shared-styles">
     /* Fallback theme tokens for pages that don't load full app CSS */
-    .bg-wiki-bg { background-color: #0a0f1e; }
-    .text-wiki-text { color: #e2e8f0; }
-    .text-wiki-muted { color: #94a3b8; }
-    .border-wiki-border { border-color: rgba(99, 102, 241, 0.12); }
-    .glass-card { background: linear-gradient(145deg, rgba(17, 24, 39, 0.8), rgba(15, 20, 35, 0.65)); border: 1px solid rgba(99, 102, 241, 0.06); backdrop-filter: blur(14px); }
+    .bg-wiki-bg { background-color: #0f0f23; }
+    .text-wiki-text { color: #e0e0e0; }
+    .text-wiki-muted { color: #9ca3af; }
+    .border-wiki-border { border-color: rgba(148, 163, 184, 0.25); }
+    .glass-card { background: rgba(26, 26, 46, 0.82); border: 1px solid rgba(148, 163, 184, 0.22); backdrop-filter: blur(14px); }
     .header-icon-button { width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; color: rgba(200, 210, 255, 0.7); transition: all 0.2s ease; }
-    .header-icon-button:hover { color: #ffffff; background: rgba(99, 102, 241, 0.1); }
-    .header-icon-button:focus-visible { outline: 2px solid rgba(99, 102, 241, 0.7); outline-offset: 2px; }
+    .header-icon-button:hover { color: #ffffff; background: rgba(100, 181, 246, 0.15); }
+    .header-icon-button:focus-visible { outline: 2px solid #64b5f6; outline-offset: 2px; }
     /* 유저 아이콘 일관성: 모든 페이지에서 동일한 크기 보장 */
     #user-menu-btn { width: 38px; height: 38px; padding: 7px; }
     #user-menu-btn img,
@@ -174,19 +174,19 @@ export function renderNavStyles(): string {
     #user-menu-dropdown .border-wiki-border\\/30 { border-color: rgba(100, 116, 139, 0.18) !important; }
     #user-menu-dropdown .border-wiki-border\\/50 { border-color: rgba(100, 116, 139, 0.18) !important; }
     .nav-search-shell { width: 100%; }
-    .nav-search-bar { display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 14px; border-radius: 9999px; background: rgba(17, 24, 39, 0.55); border: 1px solid rgba(99, 102, 241, 0.15); transition: border 0.3s ease, box-shadow 0.3s ease; }
-    .nav-search-bar:focus-within { border-color: rgba(79, 70, 229, 0.5); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08), 0 10px 26px rgba(79, 70, 229, 0.2); }
+    .nav-search-bar { display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 14px; border-radius: 9999px; background: rgba(26, 26, 46, 0.55); border: 1px solid rgba(100, 181, 246, 0.25); transition: border 0.2s ease, box-shadow 0.2s ease; }
+    .nav-search-bar:focus-within { border-color: #4361ee; box-shadow: 0 10px 26px rgba(67, 97, 238, 0.25); }
     .nav-search-input { flex: 1; background: transparent; border: none; color: #dee3ff; font-size: 13px; line-height: 1.4; }
     .nav-search-input::placeholder { color: #7f88a8; }
     .nav-search-input:focus { outline: none; }
-    .nav-search-button { width: 32px; height: 32px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; border: none; background: linear-gradient(135deg, rgb(var(--wp, 79 70 229)) 0%, rgb(var(--ws, 99 102 241)) 100%); color: #ffffff; font-size: 14px; box-shadow: 0 6px 14px rgba(79, 70, 229, 0.25); transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
-    .nav-search-button:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(79, 70, 229, 0.35); }
-    .nav-search-button:focus-visible { outline: 2px solid rgba(99, 102, 241, 0.7); outline-offset: 2px; }
+    .nav-search-button { width: 32px; height: 32px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; border: none; background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%); color: #ffffff; font-size: 14px; box-shadow: 0 6px 14px rgba(67, 97, 238, 0.25); transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
+    .nav-search-button:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(67, 97, 238, 0.35); }
+    .nav-search-button:focus-visible { outline: 2px solid #64b5f6; outline-offset: 2px; }
     .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.02em; color: rgba(200, 210, 255, 0.85); background: transparent; border: none; transition: all 0.2s ease; position: relative; white-space: nowrap; }
-    .nav-link::after { content: ''; position: absolute; bottom: 4px; left: 14px; right: 14px; height: 2px; background: linear-gradient(90deg, rgb(var(--wp, 79 70 229)), rgb(var(--ws, 99 102 241))); border-radius: 1px; transform: scaleX(0); transition: transform 0.2s ease; }
-    .nav-link:hover { color: #ffffff; background: rgba(99, 102, 241, 0.08); }
+    .nav-link::after { content: ''; position: absolute; bottom: 4px; left: 14px; right: 14px; height: 2px; background: linear-gradient(90deg, #4361ee, #64b5f6); border-radius: 1px; transform: scaleX(0); transition: transform 0.2s ease; }
+    .nav-link:hover { color: #ffffff; background: rgba(100, 181, 246, 0.1); }
     .nav-link:hover::after { transform: scaleX(1); }
-    .nav-link:focus-visible { outline: 2px solid rgba(99, 102, 241, 0.7); outline-offset: 2px; }
+    .nav-link:focus-visible { outline: 2px solid #64b5f6; outline-offset: 2px; }
     .nav-link .nav-icon { font-size: 0.875rem; opacity: 0.85; }
     
     /* Mobile Menu Item Styles */
@@ -200,7 +200,7 @@ export function renderNavStyles(): string {
       transition: all 0.2s ease;
     }
     .mobile-menu-link:hover, .mobile-menu-link:active {
-      background: rgba(79, 70, 229, 0.1);
+      background: rgba(67, 97, 238, 0.1);
     }
     .mobile-menu-link i {
       width: 18px;
