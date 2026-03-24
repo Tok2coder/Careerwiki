@@ -80,7 +80,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
     <style>
       @media (min-width: 768px) {
         #step3 { font-size: 16px; }
-        #step3 .text-\[11px\], #step3 .text-\[13px\], #step3 .text-\[14px\],
+        #step3 .text-\\[11px\\], #step3 .text-\\[13px\\], #step3 .text-\\[14px\\], #step3 .text-\\[15px\\],
         #step3 .text-xs, #step3 .text-sm { font-size: 16px !important; }
       }
       .cw-step-circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; transition: all 0.3s ease; }
