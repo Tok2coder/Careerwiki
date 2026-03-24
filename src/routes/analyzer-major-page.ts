@@ -325,10 +325,10 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
 
         <!-- Step 2: 심층 인터뷰 (V3) -->
         <div id="step2" class="step-content hidden glass-card p-6 md:p-8 rounded-2xl mb-6">
-            <h2 class="text-xl font-bold mb-2 text-center">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2 text-center">
                 <i class="fas fa-comments text-wiki-primary mr-2"></i>심층 질문 기초
             </h2>
-            <p class="text-center text-wiki-muted mb-6 text-sm" id="step2-subtitle">당신의 이야기를 자유롭게 들려주세요</p>
+            <p class="text-center text-wiki-muted mb-6 text-base" id="step2-subtitle">당신의 이야기를 자유롭게 들려주세요</p>
 
             <div id="followup-questions-form" class="space-y-6"></div>
 

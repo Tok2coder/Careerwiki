@@ -700,10 +700,10 @@ analyzerJobPage.get('/', requireAuth, (c) => {
         <!-- Step 2: 심층 질문 (LLM Follow-up) -->
         <!-- ============================================ -->
         <div id="step2" class="step-content hidden glass-card p-6 md:p-8 rounded-2xl mb-6">
-            <h2 class="text-xl font-bold mb-2 text-center">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2 text-center">
                 <i class="fas fa-user-astronaut text-purple-400 mr-2"></i>심층 질문 (1~2분)
             </h2>
-            <p class="text-center text-wiki-muted mb-6 text-sm" id="step2-subtitle">
+            <p class="text-center text-wiki-muted mb-6 text-base" id="step2-subtitle">
                 더 정확한 추천을 위한 맞춤 질문이에요
             </p>
             
