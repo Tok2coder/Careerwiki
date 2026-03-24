@@ -195,7 +195,7 @@ majorListRoutes.get('/major', async (c) => {
           <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-wiki-bg to-transparent -z-10"></div>
 
           <h1 class="text-[42px] md:text-[48px] lg:text-6xl font-extrabold leading-tight mb-2">
-            <span class="bg-gradient-to-r from-indigo-400 via-violet-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(79,70,229,0.3)]">
+            <span class="bg-gradient-to-r from-emerald-300 via-teal-400 to-emerald-300 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(16,185,129,0.3)]">
             ${headingLabel}
             </span>
           </h1>
@@ -635,7 +635,7 @@ majorListRoutes.get('/major', async (c) => {
                 <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-wiki-primary/5 rounded-full blur-[100px]"></div>
               </div>
               <h1 class="text-[42px] md:text-[48px] lg:text-6xl font-extrabold leading-tight mb-2">
-                <span class="bg-gradient-to-r from-indigo-400 via-violet-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(79,70,229,0.3)]">
+                <span class="bg-gradient-to-r from-emerald-300 via-teal-400 to-emerald-300 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(16,185,129,0.3)]">
                 ${keyword ? `"${escapeHtml(keyword)}" 관련 전공` : '전공위키'}
                 </span>
               </h1>

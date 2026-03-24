@@ -26,6 +26,7 @@ export default {
   safelist: [
     // AI Analyzer 축 색상 (동적 문자열 결합)
     'text-cyan-400', 'text-blue-400', 'text-violet-400', 'text-amber-400', 'text-emerald-400', 'text-indigo-400', 'text-slate-400',
+    'text-amber-400/70', 'text-indigo-400/70', 'text-emerald-400/70', 'text-violet-400/70',
     'group-hover:text-indigo-400', 'group-hover:text-amber-400', 'group-hover:text-emerald-400', 'group-hover:text-violet-400',
     'bg-cyan-400/80', 'bg-blue-400/80', 'bg-violet-400/80', 'bg-amber-400/80', 'bg-emerald-400/80',
     // HowTo 페이지 직접 사용 violet/purple 클래스 (howtoDetail.ts)
