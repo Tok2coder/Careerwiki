@@ -3725,7 +3725,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             const globalNum = prospectFieldMap ? (prospectFieldMap[localNum] ?? localNum) : localNum
             const srcDesc = sourceTextMap?.[globalNum] || ''
             const titleTxt = srcDesc ? srcDesc.replace(/"/g, '&quot;') : `출처 [${globalNum}]`
-            return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#64b5f6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleTxt}">[${globalNum}]</sup>`
+            return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleTxt}">[${globalNum}]</sup>`
           })
           return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${safeLine}</div>`
         }).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
@@ -5118,7 +5118,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
                 footnoteRef.className = 'user-footnote-ref ml-1 inline-flex align-middle cursor-pointer';
                 footnoteRef.id = 'user-fnref-' + sourceId;
                 footnoteRef.setAttribute('data-source-id', sourceId);
-                footnoteRef.style.cssText = 'font-size:11px;font-weight:600;color:var(--wiki-primary,#64b5f6);margin-left:1px;vertical-align:super;line-height:1;';
+                footnoteRef.style.cssText = 'font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;';
                 footnoteRef.textContent = '[' + sourceId + ']';
                 
                 // flex justify-between로 멀어지는 문제를 피하기 위해 텍스트 컨테이너에 부착

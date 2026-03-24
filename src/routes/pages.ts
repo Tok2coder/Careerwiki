@@ -430,20 +430,20 @@ pagesRoutes.get('/', (c) => {
                     </form>
                 </div>
                 <div class="pillar-grid w-full">
-                    <a href="/analyzer" class="menu-button text-center group" style="--ac:245 158 11">
-                        <i class="fas fa-brain text-2xl mb-2 text-blue-400 group-hover:text-amber-400 transition-colors"></i>
+                    <a href="/analyzer" class="menu-button text-center group" style="--ac:212 168 83">
+                        <i class="fas fa-brain text-2xl mb-2 text-slate-400 group-hover:text-amber-400 transition-colors"></i>
                         <div class="text-sm">AI 추천</div>
                     </a>
-                    <a href="/job" class="menu-button text-center group" style="--ac:67 97 238">
-                        <i class="fas fa-briefcase text-2xl mb-2 text-blue-400 group-hover:text-white transition-colors"></i>
+                    <a href="/job" class="menu-button text-center group" style="--ac:79 70 229">
+                        <i class="fas fa-briefcase text-2xl mb-2 text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
                         <div class="text-sm">직업위키</div>
                     </a>
                     <a href="/major" class="menu-button text-center group" style="--ac:16 185 129">
-                        <i class="fas fa-university text-2xl mb-2 text-blue-400 group-hover:text-emerald-400 transition-colors"></i>
+                        <i class="fas fa-university text-2xl mb-2 text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
                         <div class="text-sm">전공위키</div>
                     </a>
                     <a href="/howto" class="menu-button text-center group" style="--ac:139 92 246">
-                        <i class="fas fa-route text-2xl mb-2 text-blue-400 group-hover:text-violet-400 transition-colors"></i>
+                        <i class="fas fa-route text-2xl mb-2 text-slate-400 group-hover:text-violet-400 transition-colors"></i>
                         <div class="text-sm">HowTo</div>
                     </a>
                 </div>

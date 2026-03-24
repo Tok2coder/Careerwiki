@@ -132,7 +132,7 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
           const globalNum = parseInt(numStr)
           const sourceDesc = sourceTextMap?.[globalNum] || ''
           const titleText = sourceDesc ? sourceDesc.replace(/"/g, '&quot;') : `출처 [${globalNum}]`
-          return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#64b5f6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleText}">[${globalNum}]</sup>`
+          return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleText}">[${globalNum}]</sup>`
         }
       )
       return `<p class="content-text leading-relaxed text-wiki-text">${safe}</p>`
@@ -277,7 +277,7 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
   }
 
   const { anchorId, telemetryScope, telemetryComponent, dataSources } = options
-  const className = `glass-card mobile-borderless border px-4 py-6 md:px-6 rounded-xl space-y-3${anchorId ? ' scroll-mt-28' : ''}`
+  const className = `glass-card mobile-borderless border px-4 py-5 md:px-6 md:py-6 rounded-2xl space-y-4${anchorId ? ' scroll-mt-28' : ''}`
   const attributeParts: string[] = [`class="${className}"`, 'data-cw-detail-card']
 
   if (anchorId) {

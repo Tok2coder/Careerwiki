@@ -148,7 +148,7 @@ jobListRoutes.get('/job', async (c) => {
           <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-wiki-bg to-transparent -z-10"></div>
 
           <h1 class="text-[42px] md:text-[48px] lg:text-6xl font-extrabold leading-tight mb-2">
-            <span class="bg-gradient-to-r from-wiki-primary via-wiki-secondary to-wiki-primary bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(67,97,238,0.3)]">
+            <span class="bg-gradient-to-r from-indigo-400 via-violet-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(79,70,229,0.3)]">
             ${headingLabel}
             </span>
           </h1>

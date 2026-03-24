@@ -54,7 +54,7 @@ export const renderUserMenu = (
         id="user-menu-dropdown"
         class="hidden absolute right-0 top-full mt-1 w-56 glass-card rounded-lg border border-wiki-border/50 shadow-xl py-1 z-50"
         role="menu"
-        style="background: rgba(26, 26, 46, 0.98); backdrop-filter: blur(16px);"
+        style="background: rgba(17, 24, 39, 0.98); backdrop-filter: blur(16px);"
       >
         <!-- 드롭다운 내용은 클라이언트에서 nav.ts의 hydrateUserMenu()가 렌더링 -->
         <div class="px-4 py-3 text-center text-wiki-muted text-sm">
@@ -94,14 +94,14 @@ export const renderFooter = (): string => `
     }
     .footer-nav-link::after {
       content: ''; position: absolute; bottom: 4px; left: 14px; right: 14px;
-      height: 2px; background: linear-gradient(90deg, #4361ee, #64b5f6);
+      height: 2px; background: linear-gradient(90deg, rgb(var(--wp, 79 70 229)), rgb(var(--ws, 139 92 246)));
       border-radius: 1px; transform: scaleX(0); transition: transform 0.2s ease;
     }
-    .footer-nav-link:hover { color: #ffffff; background: rgba(100, 181, 246, 0.1); }
+    .footer-nav-link:hover { color: #ffffff; background: rgba(139, 92, 246, 0.08); }
     .footer-nav-link:hover::after { transform: scaleX(1); }
   </style>
-  <footer class="relative mt-20 border-t border-wiki-border/20" style="background: radial-gradient(40% 80px at 50% 0%, rgba(99,102,241,0.06), transparent);">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 h-px rounded-full" style="background: rgba(99,102,241,0.3); filter: blur(1px);"></div>
+  <footer class="relative mt-20 border-t border-wiki-border/20" style="background: radial-gradient(40% 80px at 50% 0%, rgba(79,70,229,0.06), transparent);">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 h-px rounded-full" style="background: rgba(79,70,229,0.3); filter: blur(1px);"></div>
     <div class="max-w-6xl mx-auto px-6 py-10">
       <div class="flex md:hidden flex-col gap-6">
         <nav class="flex flex-wrap items-center justify-center gap-2">
@@ -220,6 +220,7 @@ export const renderLayout = (
         <link rel="icon" type="image/png" href="/images/CWfavicon.png">
         <link href="/static/style.css" rel="stylesheet" />
         <link rel="stylesheet" href="/static/tailwind.css?v=2">
+        <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/lucide@0.474.0/dist/umd/lucide.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -258,38 +259,39 @@ export const renderLayout = (
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9810002715600854" crossorigin="anonymous"></script>
         ${extraHead}
         <style>
-          body { background-color: #0b1220; color: #dee3ff; }
+          body { background-color: #060b18; color: #e2e8f0; font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; }
 
           /* 기본 콘텐츠 폰트 크기 정의 */
           .content-text {
             font-size: 15px;
-            line-height: 1.7;
-            color: #d1d5db;
+            line-height: 1.8;
+            color: #cbd5e1;
+            letter-spacing: -0.01em;
+            word-break: keep-all;
           }
 
-          /* 소제목 스타일 - 명확하고 구분되게, 풀너비 얇은 보더 */
+          /* 소제목 스타일 */
           .content-heading {
             font-size: 16px;
-            font-weight: 700;
-            color: #f3f4f6;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
+            font-weight: 600;
+            color: #f1f5f9;
+            letter-spacing: -0.01em;
             margin-bottom: 12px;
             padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.08);
             display: block;
             width: 100%;
           }
 
-          /* 섹션 제목 - 더 강조되고 트렌디하게, 풀너비 굵은 보더 */
+          /* 섹션 제목 */
           .section-title {
             font-size: 22px;
             font-weight: 700;
             color: #ffffff;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.025em;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 2px solid rgba(139, 92, 246, 0.12);
             width: 100%;
           }
 
@@ -299,7 +301,7 @@ export const renderLayout = (
               font-size: 19px;
             }
             .content-heading {
-              font-size: 16px;
+              font-size: 15px;
             }
             /* 모바일 네비게이션 로고 크기 조정 */
             nav img[alt*="로고"] {
@@ -354,9 +356,9 @@ export const renderLayout = (
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(26, 26, 46, 0.75);
-            border: 1px solid rgb(var(--ws, 100 181 246) / 0.3);
-            color: rgb(var(--ws, 100 181 246));
+            background: rgba(17, 24, 39, 0.75);
+            border: 1px solid rgb(var(--ws, 139 92 246) / 0.3);
+            color: rgb(var(--ws, 139 92 246));
             font-size: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -365,23 +367,23 @@ export const renderLayout = (
             position: relative;
           }
           .floating-nav-btn:hover {
-            background: rgba(67, 97, 238, 0.85);
-            border-color: rgba(100, 181, 246, 0.6);
+            background: rgba(79, 70, 229, 0.85);
+            border-color: rgba(139, 92, 246, 0.6);
             color: #ffffff;
             transform: translateX(-4px);
-            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
           }
           .floating-nav-btn .label {
             position: absolute;
             right: 64px;
             white-space: nowrap;
             padding: 8px 14px;
-            background: rgba(26, 26, 46, 0.95);
-            border: 1px solid rgba(100, 181, 246, 0.4);
+            background: rgba(17, 24, 39, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.4);
             border-radius: 8px;
             font-size: 13px;
             font-weight: 600;
-            color: #e0e0e0;
+            color: #e2e8f0;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
@@ -446,14 +448,15 @@ export const renderLayout = (
           }
 
           .gradient-text {
-            background: linear-gradient(135deg, rgb(var(--wp, 67 97 238)) 0%, rgb(var(--ws, 100 181 246)) 100%);
+            background: linear-gradient(135deg, rgb(var(--wp, 79 70 229)) 0%, rgb(var(--ws, 139 92 246)) 50%, rgb(var(--wa, 212 168 83)) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
           }
           .glass-card {
-            background: rgba(26, 26, 46, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(145deg, rgba(17, 24, 39, 0.8), rgba(15, 20, 35, 0.65));
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(139, 92, 246, 0.06);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.03);
           }
           @media (max-width: 767px) {
             .glass-card.mobile-borderless {
@@ -461,10 +464,62 @@ export const renderLayout = (
               border-radius: 12px;
             }
           }
+          .glass-card {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+          }
           .hover-glow:hover {
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
           }
+
+          /* 버튼 시스템 */
+          .cw-btn-primary {
+            background: linear-gradient(135deg, #d4a853 0%, #c49340 100%);
+            color: #0a0f1e;
+            font-weight: 600;
+            padding: 0.625rem 1.5rem;
+            border-radius: 0.75rem;
+            border: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(212, 168, 83, 0.25);
+          }
+          .cw-btn-primary:hover {
+            box-shadow: 0 4px 16px rgba(212, 168, 83, 0.35);
+            transform: translateY(-1px);
+          }
+          .cw-btn-secondary {
+            background: transparent;
+            color: rgb(var(--ws, 139 92 246));
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgb(var(--ws, 139 92 246) / 0.3);
+            transition: all 0.2s ease;
+          }
+          .cw-btn-secondary:hover {
+            background: rgb(var(--ws, 139 92 246) / 0.1);
+            border-color: rgb(var(--ws, 139 92 246) / 0.5);
+          }
+          .cw-btn-ghost {
+            background: transparent;
+            color: #94a3b8;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            transition: all 0.2s ease;
+          }
+          .cw-btn-ghost:hover {
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.05);
+          }
+
+          /* 전역 인터랙션 */
+          a, button, input, select { transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+          :focus-visible { outline: 2px solid rgba(139, 92, 246, 0.5); outline-offset: 2px; }
+
+          /* 페이지 진입 애니메이션 */
+          @keyframes cw-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+          .cw-fade-in { animation: cw-fade-in 0.4s ease-out; }
 
           /* ============================================
            * AI Analyzer Professional UI Styles
@@ -489,7 +544,7 @@ export const renderLayout = (
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, transparent 0%, rgba(67, 97, 238, 0.05) 100%);
+            background: linear-gradient(135deg, transparent 0%, rgba(79, 70, 229, 0.05) 100%);
             opacity: 0;
             transition: opacity 0.3s ease;
           }
@@ -569,13 +624,13 @@ export const renderLayout = (
 
           /* 전이 신호 카드 스타일 */
           .transition-card {
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(26, 26, 46, 0.7) 100%);
-            border: 1px solid rgba(67, 97, 238, 0.2);
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.9) 0%, rgba(17, 24, 39, 0.7) 100%);
+            border: 1px solid rgba(79, 70, 229, 0.2);
             transition: all 0.3s ease;
           }
           .transition-card:hover {
-            border-color: rgba(67, 97, 238, 0.4);
-            box-shadow: 0 4px 20px rgba(67, 97, 238, 0.15);
+            border-color: rgba(79, 70, 229, 0.4);
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.15);
           }
 
           /* 진행 표시 도트 */
@@ -587,8 +642,8 @@ export const renderLayout = (
             transition: all 0.3s ease;
           }
           .progress-dot.active {
-            background: rgb(var(--wp, 67 97 238));
-            box-shadow: 0 0 8px rgb(var(--wp, 67 97 238) / 0.5);
+            background: rgb(var(--wp, 79 70 229));
+            box-shadow: 0 0 8px rgb(var(--wp, 79 70 229) / 0.5);
           }
           .progress-dot.completed {
             background: #34d399;
@@ -602,12 +657,12 @@ export const renderLayout = (
             color: #92400e !important;
           }
           .wiki-link {
-            color: rgb(var(--ws, 100 181 246));
+            color: rgb(var(--ws, 139 92 246));
             text-decoration: none;
             transition: all 0.2s;
           }
           .wiki-link:hover {
-            color: rgb(var(--wp, 67 97 238));
+            color: rgb(var(--wp, 79 70 229));
             text-decoration: underline;
           }
           .scrollbar-hide {
@@ -622,21 +677,21 @@ export const renderLayout = (
             display: none;
           }
           .menu-button {
-            background: rgba(26, 26, 46, 0.9);
-            border: 1px solid rgb(67 97 238 / 0.3);
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(139, 92, 246, 0.12);
             padding: 16px 20px;
-            border-radius: 12px;
-            transition: all 0.3s;
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             min-height: 80px;
           }
           .menu-button:hover {
-            background: rgb(var(--ac, 67 97 238) / 0.25);
-            border-color: rgb(var(--ac, 67 97 238) / 0.6);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgb(var(--ac, 67 97 238) / 0.15);
+            background: rgb(var(--ac, 79 70 229) / 0.15);
+            border-color: rgb(var(--ac, 79 70 229) / 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgb(var(--ac, 79 70 229) / 0.15);
           }
           .menu-button:focus-visible {
-            outline: 2px solid rgb(var(--ac, 67 97 238) / 0.8);
+            outline: 2px solid rgb(var(--ac, 79 70 229) / 0.8);
             outline-offset: 2px;
           }
           /* 모바일에서 AI 분석(첫 번째)만 가로 배치 */
@@ -719,14 +774,14 @@ export const renderLayout = (
             gap: 8px;
             padding: 6px 10px 6px 16px;
             border-radius: 9999px;
-            background: rgba(26, 26, 46, 0.6);
-            border: 1px solid rgba(100, 181, 246, 0.28);
-            box-shadow: 0 10px 28px rgba(15, 15, 35, 0.35);
-            transition: border 0.2s ease, box-shadow 0.2s ease;
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.18);
+            box-shadow: 0 10px 28px rgba(6, 11, 24, 0.4);
+            transition: border 0.3s ease, box-shadow 0.3s ease;
           }
           .search-shell .search-bar:focus-within {
-            border-color: #4361ee;
-            box-shadow: 0 16px 40px rgba(67, 97, 238, 0.25);
+            border-color: rgba(79, 70, 229, 0.5);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08), 0 16px 40px rgba(79, 70, 229, 0.2);
           }
           .search-shell input {
             flex: 1;
@@ -755,18 +810,18 @@ export const renderLayout = (
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%);
+            background: linear-gradient(135deg, rgb(var(--wp, 79 70 229)) 0%, rgb(var(--ws, 139 92 246)) 100%);
             color: #ffffff;
-            box-shadow: 0 10px 22px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 10px 22px rgba(79, 70, 229, 0.3);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
           }
           .search-button:hover {
             transform: translateY(-1px);
-            box-shadow: 0 14px 32px rgba(67, 97, 238, 0.45);
+            box-shadow: 0 14px 32px rgba(79, 70, 229, 0.45);
           }
           .search-button:focus-visible {
-            outline: 2px solid #64b5f6;
+            outline: 2px solid rgba(139, 92, 246, 0.7);
             outline-offset: 3px;
           }
           /* 헤더 아이콘 버튼 - 터치 타겟 44px 보장 */
@@ -778,15 +833,15 @@ export const renderLayout = (
             min-height: 44px;
             padding: 10px;
             border-radius: 8px;
-            color: #9ca3af;
+            color: #94a3b8;
             transition: color 0.2s ease, background-color 0.2s ease;
           }
           .header-icon-button:hover {
-            color: #e0e0e0;
-            background-color: rgba(67, 97, 238, 0.1);
+            color: #ffffff;
+            background-color: rgba(139, 92, 246, 0.1);
           }
           .header-icon-button:focus-visible {
-            outline: 2px solid #64b5f6;
+            outline: 2px solid rgba(139, 92, 246, 0.7);
             outline-offset: 2px;
           }
           .header-icon-button {
