@@ -435,7 +435,7 @@ pagesRoutes.get('/', (c) => {
                         <div class="text-sm">AI 추천</div>
                     </a>
                     <a href="/job" class="menu-button text-center group" style="--ac:79 70 229">
-                        <i class="fas fa-briefcase text-2xl mb-2 text-indigo-400 group-hover:text-white transition-colors"></i>
+                        <i class="fas fa-briefcase text-2xl mb-2 text-indigo-400 group-hover:text-blue-300 transition-colors"></i>
                         <div class="text-sm">직업위키</div>
                     </a>
                     <a href="/major" class="menu-button text-center group" style="--ac:16 185 129">
