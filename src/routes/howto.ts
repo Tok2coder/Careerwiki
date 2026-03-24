@@ -286,7 +286,7 @@ howtoRoutes.get('/', async (c) => {
   const content = `
     <div class="max-w-[1400px] mx-auto px-2 md:px-4 pb-8">
       <!-- 히어로 섹션 -->
-      <header class="relative mb-4 md:mb-6 pt-4 pb-6 md:pt-6 md:pb-8 rounded-2xl overflow-hidden">
+      <header class="relative mb-4 md:mb-6 pt-4 pb-6 md:pt-10 md:pb-12 rounded-2xl overflow-hidden">
         <!-- 배경: 도트 패턴 + gradient overlay -->
         <div class="absolute inset-0 -z-10" style="background-image: radial-gradient(rgba(148,163,184,0.08) 1px, transparent 1px); background-size: 20px 20px;"></div>
         <div class="absolute inset-0 -z-10" style="background: radial-gradient(ellipse 80% 60% at 20% 40%, rgba(67,97,238,0.08) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 70%, rgba(99,102,241,0.06) 0%, transparent 60%);"></div>
@@ -296,7 +296,7 @@ howtoRoutes.get('/', async (c) => {
             <h1 class="text-[32px] md:text-[48px] font-extrabold text-white leading-tight">${keyword
               ? `"${escapeHtml(keyword)}" 검색 결과`
               : `<span class="bg-gradient-to-r from-wiki-primary to-wiki-secondary bg-clip-text text-transparent">HowTo</span> 가이드`}</h1>
-            <p class="text-wiki-text/90 text-base md:text-lg mt-1 font-medium">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우를 공유합니다'}</p>
+            <p class="text-wiki-text/90 text-base md:text-lg mt-1 font-medium">${keyword ? `${totalCount}개의 가이드를 찾았습니다` : '실전 경험에서 나온 진짜 노하우'}</p>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <a href="/howto/guide:%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9E%91%EC%84%B1%EB%B2%95"
