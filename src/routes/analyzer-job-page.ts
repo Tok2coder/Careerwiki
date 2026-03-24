@@ -8601,42 +8601,55 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 \` : ''}
                             </div>
 
-                            <!-- 점수 바 -->
+                            <!-- 점수 바 (hover 시 설명 표시) -->
                             <div class="flex items-center gap-3 mt-3 pt-2.5" style="border-top: 1px solid rgba(255,255,255,0.06);">
-                                <div class="flex-1">
+                                <div class="flex-1 relative group/fit cursor-default">
                                     <div class="flex items-center justify-between mb-1">
-                                        <span class="text-[16px] text-emerald-400/80 font-medium">Fit</span>
-                                        <span class="text-[16px] text-emerald-400 font-semibold">\${fitScore}</span>
+                                        <span class="text-[13px] text-emerald-400/80 font-medium">Fit</span>
+                                        <span class="text-[13px] text-emerald-400 font-semibold">\${fitScore}</span>
                                     </div>
                                     <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
                                         <div class="h-full rounded-full transition-all" style="width: \${Math.min(fitNum, 100)}%; background: linear-gradient(90deg, #10b981, #34d399);"></div>
                                     </div>
+                                    <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 rounded-lg text-[13px] text-white whitespace-nowrap opacity-0 group-hover/fit:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(15,23,42,0.95); border: 1px solid rgba(16,185,129,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                        <span class="text-emerald-400 font-medium">적합도(Fit)</span> = Like + Can\${parseInt(bgScore) > 0 ? ' + Bg' : ''}\${parseFloat(riskPenalty) > 0 ? ' − Risk' : ''}<br/>
+                                        <span class="text-emerald-300 font-bold">\${fitScore}점</span>
+                                    </div>
                                 </div>
-                                <div class="flex-1">
+                                <div class="flex-1 relative group/like cursor-default">
                                     <div class="flex items-center justify-between mb-1">
-                                        <span class="text-[16px] text-purple-400/80 font-medium">Like</span>
-                                        <span class="text-[16px] text-purple-400 font-semibold">\${likeScore}</span>
+                                        <span class="text-[13px] text-purple-400/80 font-medium">Like</span>
+                                        <span class="text-[13px] text-purple-400 font-semibold">\${likeScore}</span>
                                     </div>
                                     <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
                                         <div class="h-full rounded-full transition-all" style="width: \${Math.min(likeNum2, 100)}%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
                                     </div>
+                                    <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 rounded-lg text-[13px] text-white whitespace-nowrap opacity-0 group-hover/like:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(15,23,42,0.95); border: 1px solid rgba(139,92,246,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                        <span class="text-purple-400 font-medium">💜 흥미(Like)</span> <span class="text-purple-300 font-bold">\${likeScore}점</span>
+                                    </div>
                                 </div>
-                                <div class="flex-1">
+                                <div class="flex-1 relative group/can cursor-default">
                                     <div class="flex items-center justify-between mb-1">
-                                        <span class="text-[16px] text-blue-400/80 font-medium">Can</span>
-                                        <span class="text-[16px] text-blue-400 font-semibold">\${canScore}</span>
+                                        <span class="text-[13px] text-blue-400/80 font-medium">Can</span>
+                                        <span class="text-[13px] text-blue-400 font-semibold">\${canScore}</span>
                                     </div>
                                     <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
                                         <div class="h-full rounded-full transition-all" style="width: \${Math.min(canNum2, 100)}%; background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
                                     </div>
-                                </div>
-                                \${parseInt(bgScore) > 0 ? \`<div class="flex-1">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <span class="text-[16px] text-amber-400/80 font-medium">Bg</span>
-                                        <span class="text-[16px] text-amber-400 font-semibold">\${bgScore}</span>
+                                    <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 rounded-lg text-[13px] text-white whitespace-nowrap opacity-0 group-hover/can:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(15,23,42,0.95); border: 1px solid rgba(59,130,246,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                        <span class="text-blue-400 font-medium">💪 역량(Can)</span> <span class="text-blue-300 font-bold">\${canScore}점</span>
                                     </div>
-                                    <div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);">
-                                        <div class="h-full rounded-full transition-all" style="width: \${Math.min(parseInt(bgScore) || 0, 100)}%; background: rgb(251,191,36);"></div>
+                                </div>
+                                \${parseInt(bgScore) > 0 ? \`<div class="flex-1 relative group/bg cursor-default">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-[13px] text-amber-400/80 font-medium">Bg</span>
+                                        <span class="text-[13px] text-amber-400 font-semibold">\${bgScore}</span>
+                                    </div>
+                                    <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
+                                        <div class="h-full rounded-full transition-all" style="width: \${Math.min(parseInt(bgScore) || 0, 100)}%; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+                                    </div>
+                                    <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 rounded-lg text-[13px] text-white whitespace-nowrap opacity-0 group-hover/bg:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(15,23,42,0.95); border: 1px solid rgba(245,158,11,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                        <span class="text-amber-400 font-medium">🎓 배경(Bg)</span> <span class="text-amber-300 font-bold">\${bgScore}점</span>
                                     </div>
                                 </div>\` : ''}
                             </div>
@@ -8645,28 +8658,17 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                     <!-- 하단: 추천 이유 (Like/Can) -->
                     \${reasonOuterHtml ? \`
-                    <div class="px-4 pb-4 pt-1 space-y-1.5" style="border-top: 1px solid rgba(99,102,241,0.08);">
+                    <div class="px-4 pb-4 pt-3 space-y-1.5" style="border-top: 1px solid rgba(255,255,255,0.06);">
                         \${reasonOuterHtml}
                     </div>
                     \` : ''}
 
                     <!-- 하단 액션 바 -->
-                    <div class="flex items-center justify-between px-4 pb-3 \${reasonOuterHtml ? '' : 'pt-0'}">
-                        <button onclick="event.stopPropagation(); toggleJobScoresCompact(this)" class="text-[16px] text-wiki-muted hover:text-wiki-primary transition flex items-center gap-1.5" title="상세 점수">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>상세 점수</span>
-                        </button>
-                        \${jobSlug ? \`<a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="text-[16px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1">
+                    <div class="flex items-center justify-end px-4 pb-3 \${reasonOuterHtml ? '' : 'pt-0'}">
+                        \${jobSlug ? \`<a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="text-[15px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1">
                             <span>상세 보기</span>
-                            <i class="fas fa-arrow-right text-[16px]"></i>
+                            <i class="fas fa-arrow-right text-[13px]"></i>
                         </a>\` : ''}
-                    </div>
-
-                    <!-- 점수 상세 (기본 숨김) -->
-                    <div class="score-details-compact hidden px-4 pb-3">
-                        <div class="p-3 rounded-lg" style="background-color: rgba(26,26,46,0.5);">
-                            \${getScoreExplanation(likeScore, canScore, fitScore, riskPenalty, bgScore)}
-                        </div>
                     </div>
                 </div>
                 \`;
