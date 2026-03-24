@@ -63,7 +63,32 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
       if (result?.id) {
         resolvedId = result.id as string
       } else {
-        // Only show "NO MATCH FOUND" if actually no match
+        // 4. name_mapping에서 병합된 직업인지 확인 → target으로 리다이렉트
+        const slugAsName = decodedSlug.replace(/-/g, ' ')
+        const normalizedForMapping = decodedSlug.toLowerCase().replace(/[-,·ㆍ\/\s()]/g, '')
+
+        // 비활성화된 job에서 원래 이름 찾기
+        const inactiveJob = await db.prepare(
+          `SELECT name FROM jobs WHERE (slug = ? OR name_normalized = ?) AND is_active = 0 LIMIT 1`
+        ).bind(decodedSlug, normalizedForMapping).first<{ name: string }>()
+
+        if (inactiveJob?.name) {
+          // name_mappings에서 target 찾기
+          const mapping = await db.prepare(
+            `SELECT target_name FROM name_mappings WHERE type = 'job' AND source_name = ? AND is_active = 1 LIMIT 1`
+          ).bind(inactiveJob.name).first<{ target_name: string }>()
+
+          if (mapping?.target_name) {
+            // target job의 slug 찾기
+            const targetJob = await db.prepare(
+              `SELECT slug FROM jobs WHERE name = ? AND is_active = 1 LIMIT 1`
+            ).bind(mapping.target_name).first<{ slug: string }>()
+
+            if (targetJob?.slug) {
+              return c.redirect(`/job/${encodeURIComponent(targetJob.slug)}`, 301)
+            }
+          }
+        }
 
         // Try to find similar names for debugging
         const firstWord = decodedSlug.split('-')[0]
