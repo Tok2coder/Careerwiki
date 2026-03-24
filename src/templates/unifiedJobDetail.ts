@@ -3346,8 +3346,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     const jobNamePart = escapeHtml(safeTrim(profile.name) || '')
 
     categoryHtml = `
-      <nav class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-purple-300" aria-label="분류">
-        <i class="fas fa-sitemap text-[11px] text-wiki-primary" aria-hidden="true"></i>
+      <nav class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300" aria-label="분류">
+        <i class="fas fa-sitemap text-[12px] text-wiki-primary" aria-hidden="true"></i>
         ${largePart}${mediumPart ? ` <span class="text-purple-300/60">›</span> ${mediumPart}` : ''}
       </nav>
     `
@@ -3357,8 +3357,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const categoryValue = safeTrim(profile.heroCategory)
       if (categoryValue) {
         categoryHtml = `
-          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-purple-300">
-            <i class="fas fa-sitemap text-[11px] text-wiki-primary" aria-hidden="true"></i>
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300">
+            <i class="fas fa-sitemap text-[12px] text-wiki-primary" aria-hidden="true"></i>
             ${escapeHtml(categoryValue)}
           </span>
         `
@@ -3394,12 +3394,12 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             }
           </style>
           <!-- 데스크톱: 전체 표시 -->
-          <span class="job-bc-desktop hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-purple-300">
+          <span class="job-bc-desktop hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300">
             <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
             ${largePart}${mediumPart ? ` <span class="text-purple-300/60">›</span> ${mediumPart}` : ''}${smallPart ? ` <span class="text-purple-300/60">›</span> ${smallPart}` : ''}
           </span>
           <!-- 모바일: 클릭하여 단계적 확장 -->
-          <span class="job-bc-mobile inline-flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-purple-300 cursor-pointer select-none active:bg-wiki-primary/10" data-lv="1" data-max="${totalLevels}" onclick="(function(e){var el=e.currentTarget;if(!el)return;var lv=parseInt(el.getAttribute('data-lv')||'1',10);var mx=parseInt(el.getAttribute('data-max')||'1',10);var nxt=lv>=mx?1:lv+1;el.setAttribute('data-lv',String(nxt));})(event)">
+          <span class="job-bc-mobile inline-flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300 cursor-pointer select-none active:bg-wiki-primary/10" data-lv="1" data-max="${totalLevels}" onclick="(function(e){var el=e.currentTarget;if(!el)return;var lv=parseInt(el.getAttribute('data-lv')||'1',10);var mx=parseInt(el.getAttribute('data-max')||'1',10);var nxt=lv>=mx?1:lv+1;el.setAttribute('data-lv',String(nxt));})(event)">
             <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
             <span class="bc-l">${largePart}</span>
             ${mediumPart ? `<span class="bc-sep-m text-purple-300/60">›</span><span class="bc-m">${mediumPart}</span>` : ''}
@@ -3421,8 +3421,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const categoryValue = safeTrim(profile.heroCategory.value)
       if (categoryValue) {
         categoryHtml = `
-          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-purple-300">
-            <i class="fas fa-sitemap text-[11px] text-wiki-primary" aria-hidden="true"></i>
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300">
+            <i class="fas fa-sitemap text-[12px] text-wiki-primary" aria-hidden="true"></i>
             ${escapeHtml(categoryValue)}
           </span>
         `
@@ -4926,7 +4926,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     const visibleTags = validTags.slice(0, visibleLimit)
     const hiddenTags = validTags.slice(visibleLimit)
     
-    const tagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-purple-300 font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition'
+    const tagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-[14px] text-purple-300 font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition'
     
     const visibleTagsHtml = visibleTags
       .map(tag => `<span class="${tagClass}"><i class="fas fa-tag text-[10px] text-wiki-primary" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
@@ -4988,7 +4988,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">
-            ${categoryHtml || (profile.category?.name ? `<span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-purple-300"><i class="fas fa-sitemap text-[11px] text-wiki-primary" aria-hidden="true"></i>${escapeHtml(profile.category.name)}</span>` : '')}
+            ${categoryHtml || (profile.category?.name ? `<span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300"><i class="fas fa-sitemap text-[12px] text-wiki-primary" aria-hidden="true"></i>${escapeHtml(profile.category.name)}</span>` : '')}
             <div class="flex flex-wrap items-start justify-between gap-4">
               <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight">${escapeHtml(heroTitle)}</h1>
             <div class="flex items-center gap-2 shrink-0">
