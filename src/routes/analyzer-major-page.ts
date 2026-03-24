@@ -80,8 +80,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
     <style>
       @media (min-width: 768px) {
         #step3 { font-size: 16px; }
-        #step3 .text-\\[11px\\], #step3 .text-\\[13px\\], #step3 .text-\\[14px\\], #step3 .text-\\[15px\\],
-        #step3 .text-xs, #step3 .text-sm { font-size: 16px !important; }
+        #step3 { font-size: 16px; }
       }
       .cw-step-circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; transition: all 0.3s ease; }
       @media (min-width: 768px) { .cw-step-circle { width: 40px; height: 40px; font-size: 15px; } }
@@ -3395,7 +3394,7 @@ function displayPremiumReportV3Major(result) {
             if (parts.length > 0) {
                 const joined = parts.join(', ');
                 const finalText = joined.endsWith('.') ? joined : joined + '의 프로필입니다.';
-                profileDesc = '<p class="text-[15px] text-wiki-muted mt-3 leading-relaxed">' + finalText + '</p>';
+                profileDesc = '<p class="text-base text-wiki-muted mt-3 leading-relaxed">' + finalText + '</p>';
             }
         }
         careerVisionHtml = '<div class="mb-6 p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.1)); border: 1px solid rgba(251,191,36,0.3);"><p class="text-lg md:text-xl font-semibold leading-relaxed" style="color: rgb(251,191,36);">"' + translateToKorean(lifeVersion.oneLiner) + '"</p>' + profileDesc + '</div>';
@@ -3472,7 +3471,7 @@ function displayPremiumReportV3Major(result) {
                 <div class="mt-8 mb-8">
                     <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                         <span>📊</span> 메타인지
-                        <button onclick="showReportTabMajor('psychology')" class="ml-auto px-3 py-1.5 rounded-lg text-[13px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
+                        <button onclick="showReportTabMajor('psychology')" class="ml-auto px-3 py-1.5 rounded-lg text-[16px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
                             <span>자세히 보기</span>
                             <i class="fas fa-chevron-right text-[10px]"></i>
                         </button>
@@ -3493,11 +3492,11 @@ function displayPremiumReportV3Major(result) {
                             <div class="p-4 rounded-xl" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);">
                                 <div class="flex items-center gap-2 mb-2">
                                     <span class="text-lg">💪</span>
-                                    <h5 class="font-bold text-green-400 text-[15px]">핵심 강점</h5>
+                                    <h5 class="font-bold text-green-400 text-base">핵심 강점</h5>
                                 </div>
                                 <div class="flex flex-wrap gap-1.5">
                                     \${metaCognition.myArsenal.strengths.slice(0, 3).map(s => \`
-                                        <span class="px-2.5 py-1 rounded text-[15px] font-medium" style="background-color: rgba(34,197,94,0.15); color: rgb(134,239,172);">\${translateToKorean(s.trait)}</span>
+                                        <span class="px-2.5 py-1 rounded text-base font-medium" style="background-color: rgba(34,197,94,0.15); color: rgb(134,239,172);">\${translateToKorean(s.trait)}</span>
                                     \`).join('')}
                                 </div>
                             </div>
@@ -3508,11 +3507,11 @@ function displayPremiumReportV3Major(result) {
                             <div class="p-4 rounded-xl" style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2);">
                                 <div class="flex items-center gap-2 mb-2">
                                     <span class="text-lg">⭐</span>
-                                    <h5 class="font-bold text-purple-400 text-[15px]">핵심 가치</h5>
+                                    <h5 class="font-bold text-purple-400 text-base">핵심 가치</h5>
                                 </div>
                                 <div class="flex flex-wrap gap-1.5">
                                     \${profileInterpretation.values.slice(0, 3).map(v => \`
-                                        <span class="px-2.5 py-1 rounded text-[15px] font-medium" style="background-color: rgba(168,85,247,0.15); color: rgb(216,180,254);">\${translateToKorean(v.label)}</span>
+                                        <span class="px-2.5 py-1 rounded text-base font-medium" style="background-color: rgba(168,85,247,0.15); color: rgb(216,180,254);">\${translateToKorean(v.label)}</span>
                                     \`).join('')}
                                 </div>
                             </div>
@@ -3523,7 +3522,7 @@ function displayPremiumReportV3Major(result) {
                             <div class="p-4 rounded-xl" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);">
                                 <div class="flex items-center gap-2 mb-2">
                                     <span class="text-lg">⚠️</span>
-                                    <h5 class="font-bold text-red-400 text-[15px]">주의점</h5>
+                                    <h5 class="font-bold text-red-400 text-base">주의점</h5>
                                     <span class="relative group cursor-help">
                                         <i class="fas fa-question-circle text-wiki-muted text-xs"></i>
                                         <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(30,30,40,0.95); border: 1px solid rgba(255,255,255,0.1);">이 항목들은 에너지가 소모되거나 스트레스를 유발할 수 있는 요인입니다.<br/>전공 선택 시 이 요인들을 고려하면 번아웃을 예방할 수 있습니다.</span>
@@ -3531,7 +3530,7 @@ function displayPremiumReportV3Major(result) {
                                 </div>
                                 <div class="flex flex-wrap gap-1.5">
                                     \${metaCognition.stressRecovery.stressFactors.slice(0, 2).map(s => \`
-                                        <span class="px-2.5 py-1 rounded text-[15px] font-medium" style="background-color: rgba(239,68,68,0.15); color: rgb(252,165,165);">\${translateToKorean(s.factor)}</span>
+                                        <span class="px-2.5 py-1 rounded text-base font-medium" style="background-color: rgba(239,68,68,0.15); color: rgb(252,165,165);">\${translateToKorean(s.factor)}</span>
                                     \`).join('')}
                                 </div>
                             </div>
@@ -3564,13 +3563,13 @@ function displayPremiumReportV3Major(result) {
                         const constraintsSpan = profileIsOdd && profileLastSection === 'constraints' ? 'md:col-span-2' : '';
                         return '<div class="' + profileGridClass + '">' +
 
-                        (profileInterpretation.interests?.length > 0 ? '<div class="p-4 rounded-xl ' + interestsSpan + '" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💚</span><h5 class="font-bold text-green-400 text-[15px]">좋아하는 것</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.interests_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.interests.map(item => '<div class="pl-3 border-l-2 border-green-500/30"><div class="font-medium text-green-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '에 대한 관심이 높습니다.') + '</div></div>').join('') + '</div></div>' : '') +
+                        (profileInterpretation.interests?.length > 0 ? '<div class="p-4 rounded-xl ' + interestsSpan + '" style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💚</span><h5 class="font-bold text-green-400 text-base">좋아하는 것</h5></div><p class="text-base text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.interests_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.interests.map(item => '<div class="pl-3 border-l-2 border-green-500/30"><div class="font-medium text-green-300 text-base">' + translateToKorean(item.label) + '</div><div class="text-base text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '에 대한 관심이 높습니다.') + '</div></div>').join('') + '</div></div>' : '') +
 
-                        (profileInterpretation.strengths?.length > 0 ? '<div class="p-4 rounded-xl ' + strengthsSpan + '" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💪</span><h5 class="font-bold text-blue-400 text-[15px]">잘하는 것</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.strengths_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.strengths.map(item => '<div class="pl-3 border-l-2 border-blue-500/30"><div class="font-medium text-blue-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '이(가) 강점입니다.') + '</div></div>').join('') + '</div></div>' : '') +
+                        (profileInterpretation.strengths?.length > 0 ? '<div class="p-4 rounded-xl ' + strengthsSpan + '" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">💪</span><h5 class="font-bold text-blue-400 text-base">잘하는 것</h5></div><p class="text-base text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.strengths_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.strengths.map(item => '<div class="pl-3 border-l-2 border-blue-500/30"><div class="font-medium text-blue-300 text-base">' + translateToKorean(item.label) + '</div><div class="text-base text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '이(가) 강점입니다.') + '</div></div>').join('') + '</div></div>' : '') +
 
-                        (profileInterpretation.values?.length > 0 ? '<div class="p-4 rounded-xl ' + valuesSpan + '" style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">⭐</span><h5 class="font-bold text-purple-400 text-[15px]">중요한 가치</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.values_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.values.map(item => '<div class="pl-3 border-l-2 border-purple-500/30"><div class="font-medium text-purple-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '을(를) 중요하게 여깁니다.') + '</div></div>').join('') + '</div></div>' : '') +
+                        (profileInterpretation.values?.length > 0 ? '<div class="p-4 rounded-xl ' + valuesSpan + '" style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">⭐</span><h5 class="font-bold text-purple-400 text-base">중요한 가치</h5></div><p class="text-base text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.values_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.values.map(item => '<div class="pl-3 border-l-2 border-purple-500/30"><div class="font-medium text-purple-300 text-base">' + translateToKorean(item.label) + '</div><div class="text-base text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning || item.label + '을(를) 중요하게 여깁니다.') + '</div></div>').join('') + '</div></div>' : '') +
 
-                        (profileInterpretation.constraints?.length > 0 ? '<div class="p-4 rounded-xl ' + constraintsSpan + '" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">🚫</span><h5 class="font-bold text-red-400 text-[15px]">피하고 싶은 것</h5></div><p class="text-[15px] text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.constraints_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.constraints.map(item => '<div class="pl-3 border-l-2 border-red-500/30"><div class="font-medium text-red-300 text-[15px]">' + translateToKorean(item.label) + '</div><div class="text-[15px] text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning) + '</div></div>').join('') + '</div></div>' : '') +
+                        (profileInterpretation.constraints?.length > 0 ? '<div class="p-4 rounded-xl ' + constraintsSpan + '" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);"><div class="flex items-center gap-2 mb-3"><span class="text-lg">🚫</span><h5 class="font-bold text-red-400 text-base">피하고 싶은 것</h5></div><p class="text-base text-wiki-muted mb-3">' + translateToKorean(profileInterpretation.constraints_summary || '') + '</p><div class="space-y-3">' + profileInterpretation.constraints.map(item => '<div class="pl-3 border-l-2 border-red-500/30"><div class="font-medium text-red-300 text-base">' + translateToKorean(item.label) + '</div><div class="text-base text-wiki-muted mt-1 leading-relaxed">' + translateToKorean(item.meaning) + '</div></div>').join('') + '</div></div>' : '') +
 
                         '</div>';
                     })()}
@@ -3586,7 +3585,7 @@ function displayPremiumReportV3Major(result) {
                         learningStyleMap.structured_vs_exploratory < 0 ? '📋 체계적 학습' : learningStyleMap.structured_vs_exploratory > 0 ? '🔍 탐구적 학습' : null,
                         learningStyleMap.guided_vs_autonomous > 0 ? '🚀 자기주도 학습' : null,
                     ].filter(Boolean).map(hint => \`
-                        <span class="px-3 py-1.5 rounded-full text-[13px] font-medium" style="background: rgba(99,102,241,0.1); color: rgb(165,180,252); border: 1px solid rgba(99,102,241,0.2);">\${hint}</span>
+                        <span class="px-3 py-1.5 rounded-full text-[16px] font-medium" style="background: rgba(99,102,241,0.1); color: rgb(165,180,252); border: 1px solid rgba(99,102,241,0.2);">\${hint}</span>
                     \`).join('')}
                 </div>
             \` : ''}
@@ -3597,7 +3596,7 @@ function displayPremiumReportV3Major(result) {
                     <p class="text-base md:text-lg" style="color: rgb(253,224,71);">
                         <span class="font-medium">🎯 이런 당신에게 맞는 전공</span>
                     </p>
-                    <p class="text-[15px] text-wiki-muted mt-2">
+                    <p class="text-base text-wiki-muted mt-2">
                         \${(() => {
                             const parts = [];
                             const pi = profileInterpretation;
@@ -3623,7 +3622,7 @@ function displayPremiumReportV3Major(result) {
                 <div class="mt-6 pt-4 border-t border-wiki-border/30">
                     <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                         <span>🏆</span> 추천 전공 Top 3
-                        <button onclick="showReportTabMajor('recommendations')" class="ml-auto px-3 py-1.5 rounded-lg text-[13px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
+                        <button onclick="showReportTabMajor('recommendations')" class="ml-auto px-3 py-1.5 rounded-lg text-[16px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
                             <span>더보기</span>
                             <i class="fas fa-chevron-right text-[10px]"></i>
                         </button>
@@ -3668,12 +3667,12 @@ function displayPremiumReportV3Major(result) {
                                         \${displayDescription ? \`<p class="text-base text-wiki-muted line-clamp-3 mb-3">\${displayDescription}</p>\` : ''}
                                         \${hasReasons ? \`
                                             <div class="space-y-1.5 mt-3 p-3 rounded-lg" style="background: rgba(0,0,0,0.2);">
-                                                \${likeReason ? \`<p class="text-[13px] leading-relaxed text-purple-300/90"><span class="text-purple-400 font-medium">💜 Like:</span> \${likeReason}</p>\` : ''}
-                                                \${canReason ? \`<p class="text-[13px] leading-relaxed text-blue-300/90"><span class="text-blue-400 font-medium">💪 Can:</span> \${canReason}</p>\` : ''}
-                                                \${feasibilityReason ? \`<p class="text-[13px] leading-relaxed text-amber-300/90"><span class="text-amber-400 font-medium">🎯 배경:</span> \${feasibilityReason}</p>\` : ''}
+                                                \${likeReason ? \`<p class="text-[16px] leading-relaxed text-purple-300/90"><span class="text-purple-400 font-medium">💜 Like:</span> \${likeReason}</p>\` : ''}
+                                                \${canReason ? \`<p class="text-[16px] leading-relaxed text-blue-300/90"><span class="text-blue-400 font-medium">💪 Can:</span> \${canReason}</p>\` : ''}
+                                                \${feasibilityReason ? \`<p class="text-[16px] leading-relaxed text-amber-300/90"><span class="text-amber-400 font-medium">🎯 배경:</span> \${feasibilityReason}</p>\` : ''}
                                             </div>
                                         \` : (rationale && !rationale.includes('자동 생성된 결과') ? \`
-                                            <p class="text-[13px] text-emerald-400/80 mt-3">💡 \${rationale}</p>
+                                            <p class="text-[16px] text-emerald-400/80 mt-3">💡 \${rationale}</p>
                                         \` : '')}
                                 </a>
                             \`;
@@ -3764,16 +3763,16 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
 
         if (metaCognition?.innerExploration?.innerConflicts) {
             html += '<div class="p-4 rounded-xl mb-4" style="background-color: rgba(236,72,153,0.08); border-left: 3px solid rgba(236,72,153,0.5);">';
-            html += '<div class="text-[15px] font-medium text-pink-300 mb-2">🎭 알아두면 좋은 내적 갈등</div>';
-            html += '<p class="text-[15px] text-wiki-muted leading-relaxed">' + translateToKorean(metaCognition.innerExploration.innerConflicts) + '</p>';
+            html += '<div class="text-base font-medium text-pink-300 mb-2">🎭 알아두면 좋은 내적 갈등</div>';
+            html += '<p class="text-base text-wiki-muted leading-relaxed">' + translateToKorean(metaCognition.innerExploration.innerConflicts) + '</p>';
             html += '</div>';
         }
         if (metaCognition?.innerExploration?.valueAnalysis) {
             html += '<details class="group">';
-            html += '<summary class="cursor-pointer text-[15px] text-violet-400 font-medium hover:text-violet-300 flex items-center gap-2">';
+            html += '<summary class="cursor-pointer text-base text-violet-400 font-medium hover:text-violet-300 flex items-center gap-2">';
             html += '<span>📖</span><span class="group-open:hidden">▶ 추가 설명</span><span class="hidden group-open:inline">▼ 추가 설명</span>';
             html += '</summary>';
-            html += '<div class="mt-3 p-4 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(139,92,246,0.05);">' + translateToKorean(metaCognition.innerExploration.valueAnalysis) + '</div>';
+            html += '<div class="mt-3 p-4 rounded-lg text-base text-wiki-muted leading-relaxed" style="background-color: rgba(139,92,246,0.05);">' + translateToKorean(metaCognition.innerExploration.valueAnalysis) + '</div>';
             html += '</details>';
         }
         html += '</div>';
@@ -3798,7 +3797,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
             var text = translateToKorean(ws).trim();
             if (!text.endsWith('.') && !text.endsWith('다.') && !text.endsWith('요.') && !text.endsWith('니다.')) text += '.';
             text = text.replace(/(성장|도전|학습|몰입|성취감|자율|창의성|분석|문제|해결|독립|협업|리더십|꼼꼼|유연|안정|전문성|체계)/g, '<strong class="text-indigo-400">$1</strong>');
-            html += '<div class="p-4 rounded-xl bg-wiki-bg/50 flex items-start gap-4" style="border: 1px solid rgba(99,102,241,0.1);"><span class="text-wiki-primary text-lg mt-0.5">✓</span><span class="text-[15px] leading-relaxed text-wiki-text">' + text + '</span></div>';
+            html += '<div class="p-4 rounded-xl bg-wiki-bg/50 flex items-start gap-4" style="border: 1px solid rgba(99,102,241,0.1);"><span class="text-wiki-primary text-lg mt-0.5">✓</span><span class="text-base leading-relaxed text-wiki-text">' + text + '</span></div>';
         });
         html += '</div></div>';
     }
@@ -3815,7 +3814,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
             var text = translateToKorean(v).trim();
             if (text.length < 10) text = text.replace(/\\.$/, '');
             else if (!text.endsWith('.')) text += '.';
-            html += '<div class="p-3 md:p-4 rounded-xl flex items-center gap-2 justify-center" style="background-color: ' + colors[i % colors.length] + '; border: 1px solid ' + colors[i % colors.length].replace('0.2', '0.3') + ';"><span class="text-sm font-bold" style="color: ' + textColors[i % textColors.length] + ';">#' + (i + 1) + '</span><span class="text-[15px] font-semibold text-wiki-text">' + text + '</span></div>';
+            html += '<div class="p-3 md:p-4 rounded-xl flex items-center gap-2 justify-center" style="background-color: ' + colors[i % colors.length] + '; border: 1px solid ' + colors[i % colors.length].replace('0.2', '0.3') + ';"><span class="text-sm font-bold" style="color: ' + textColors[i % textColors.length] + ';">#' + (i + 1) + '</span><span class="text-base font-semibold text-wiki-text">' + text + '</span></div>';
         });
         html += '</div></div>';
     }
@@ -3826,7 +3825,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
         html += '<h4 class="text-xl font-bold mb-4 text-orange-400 flex items-center gap-2"><span>⚠️</span> 주의할 점</h4>';
         html += '<ul class="space-y-3">';
         personal.potential_challenges.forEach(function(c) {
-            html += '<li class="flex items-center gap-3"><span class="text-orange-400">•</span><span class="text-[15px] leading-relaxed text-wiki-text">' + c + '</span></li>';
+            html += '<li class="flex items-center gap-3"><span class="text-orange-400">•</span><span class="text-base leading-relaxed text-wiki-text">' + c + '</span></li>';
         });
         html += '</ul></div>';
     }
@@ -3837,7 +3836,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
         html += '<h4 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2"><span>🔍</span> 점검할 블라인드 스팟</h4>';
         html += '<ul class="space-y-3">';
         personal.blind_spots_to_check.forEach(function(b) {
-            html += '<li class="flex items-center gap-3"><span class="text-red-400">•</span><span class="text-[15px] leading-relaxed text-wiki-text">' + b + '</span></li>';
+            html += '<li class="flex items-center gap-3"><span class="text-red-400">•</span><span class="text-base leading-relaxed text-wiki-text">' + b + '</span></li>';
         });
         html += '</ul></div>';
     }
@@ -3892,11 +3891,11 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
             if (innerConflict.patterns?.length > 0) {
                 html += '<p class="text-lg font-bold mb-3" style="color: rgb(216,180,254);">' + innerConflict.patterns[0] + '</p>';
             }
-            html += '<p class="text-[15px] leading-relaxed text-wiki-text mb-4">' + innerConflict.analysis + '</p>';
+            html += '<p class="text-base leading-relaxed text-wiki-text mb-4">' + innerConflict.analysis + '</p>';
             if (innerConflict.patterns?.length > 1) {
                 html += '<div class="mt-4 pt-4 border-t border-purple-400/20"><span class="text-sm text-purple-300 font-semibold">기타 갈등 패턴:</span><ul class="mt-3 space-y-2">';
                 innerConflict.patterns.slice(1).forEach(function(p) {
-                    html += '<li class="flex items-center gap-3"><span class="text-purple-400">•</span><span class="text-[15px] leading-relaxed text-wiki-muted">' + p + '</span></li>';
+                    html += '<li class="flex items-center gap-3"><span class="text-purple-400">•</span><span class="text-base leading-relaxed text-wiki-muted">' + p + '</span></li>';
                 });
                 html += '</ul></div>';
             }
@@ -3907,7 +3906,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
             html += '<h4 class="text-xl font-bold mb-4 text-emerald-400 flex items-center gap-2"><span>📈</span> 성장 곡선 유형</h4>';
             html += '<p class="text-lg font-bold mb-3" style="color: rgb(52,211,153);">' + translateToKorean(growthCurve.type) + '</p>';
             if (growthCurve.description) {
-                html += '<p class="text-[15px] leading-relaxed text-wiki-text">' + growthCurve.description + '</p>';
+                html += '<p class="text-base leading-relaxed text-wiki-text">' + growthCurve.description + '</p>';
             }
             html += '</div>';
         }
@@ -3957,7 +3956,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     if (studyGuidance.doNow?.length > 0 || studyGuidance.stopDoing?.length > 0 || studyGuidance.experiment?.length > 0 || studyGuidance.studyTips?.length > 0) {
         html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.1)); border: 1px solid rgba(34,197,94,0.2);">';
         html += '<h4 class="text-xl font-bold mb-2 text-green-400 flex items-center gap-2"><span>🧭</span> 학습 가이드</h4>';
-        html += '<p class="text-[15px] text-wiki-muted mb-5">지금 당장 실천할 수 있는 구체적인 조언입니다.</p>';
+        html += '<p class="text-base text-wiki-muted mb-5">지금 당장 실천할 수 있는 구체적인 조언입니다.</p>';
 
         var activeSections = [];
         if (studyGuidance.doNow?.length > 0) activeSections.push('doNow');
@@ -3979,28 +3978,28 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
         if (studyGuidance.doNow?.length > 0) {
             html += '<div class="p-5 rounded-xl ' + doNowSpan + '" style="background-color: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.15);"><div class="text-base font-bold text-green-400 mb-3 flex items-center gap-2"><span class="text-xl">✅</span> 지금 시작할 것</div><ul class="space-y-2">';
             studyGuidance.doNow.slice(0, 3).forEach(function(d) {
-                html += '<li class="flex items-center gap-3"><span class="text-green-400">•</span><span class="text-[15px] text-wiki-text">' + translateToKorean(d) + '</span></li>';
+                html += '<li class="flex items-center gap-3"><span class="text-green-400">•</span><span class="text-base text-wiki-text">' + translateToKorean(d) + '</span></li>';
             });
             html += '</ul></div>';
         }
         if (studyGuidance.stopDoing?.length > 0) {
             html += '<div class="p-5 rounded-xl ' + stopSpan + '" style="background-color: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.15);"><div class="text-base font-bold text-red-400 mb-3 flex items-center gap-2"><span class="text-xl">🚫</span> 그만해야 할 것</div><ul class="space-y-2">';
             studyGuidance.stopDoing.slice(0, 3).forEach(function(s) {
-                html += '<li class="flex items-center gap-3"><span class="text-red-400">•</span><span class="text-[15px] text-wiki-text">' + translateToKorean(s) + '</span></li>';
+                html += '<li class="flex items-center gap-3"><span class="text-red-400">•</span><span class="text-base text-wiki-text">' + translateToKorean(s) + '</span></li>';
             });
             html += '</ul></div>';
         }
         if (studyGuidance.experiment?.length > 0) {
             html += '<div class="p-5 rounded-xl ' + experimentSpan + '" style="background-color: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.15);"><div class="text-base font-bold text-amber-400 mb-3 flex items-center gap-2"><span class="text-xl">🧪</span> 시도해볼 것</div><ul class="space-y-2">';
             studyGuidance.experiment.slice(0, 3).forEach(function(e) {
-                html += '<li class="flex items-center gap-3"><span class="text-amber-400">•</span><span class="text-[15px] text-wiki-text">' + translateToKorean(e) + '</span></li>';
+                html += '<li class="flex items-center gap-3"><span class="text-amber-400">•</span><span class="text-base text-wiki-text">' + translateToKorean(e) + '</span></li>';
             });
             html += '</ul></div>';
         }
         if (studyGuidance.studyTips?.length > 0) {
             html += '<div class="p-5 rounded-xl ' + tipsSpan + '" style="background-color: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.15);"><div class="text-base font-bold text-blue-400 mb-3 flex items-center gap-2"><span class="text-xl">📚</span> 학습 팁</div><ul class="space-y-2">';
             studyGuidance.studyTips.slice(0, 3).forEach(function(t) {
-                html += '<li class="flex items-center gap-3"><span class="text-blue-400">•</span><span class="text-[15px] text-wiki-text">' + translateToKorean(t) + '</span></li>';
+                html += '<li class="flex items-center gap-3"><span class="text-blue-400">•</span><span class="text-base text-wiki-text">' + translateToKorean(t) + '</span></li>';
             });
             html += '</ul></div>';
         }
@@ -4012,7 +4011,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     if (stressProfile.profile) {
         html += '<div class="p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(251,146,60,0.1)); border: 1px solid rgba(239,68,68,0.2);">';
         html += '<h4 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2"><span>😰</span> 스트레스 프로필</h4>';
-        html += '<p class="text-[15px] leading-relaxed text-wiki-text mb-4">' + stressProfile.profile + '</p>';
+        html += '<p class="text-base leading-relaxed text-wiki-text mb-4">' + stressProfile.profile + '</p>';
         if (stressProfile.triggers?.length > 0) {
             html += '<div class="mt-4 pt-4 border-t border-red-400/20"><span class="text-sm text-red-300 font-semibold">주요 트리거:</span><div class="mt-3 flex flex-wrap gap-2">';
             stressProfile.triggers.forEach(function(t) {
@@ -4046,31 +4045,31 @@ function buildMetaCognitionSectionsMajor(metaCognition, profileInterpretation) {
         metaCognition.myArsenal.strengths.forEach(function(s, i) {
             var icons = { '분석력': '🔍', '창작/예술': '🎨', '소통력': '💬', '체계적 실행력': '📋', '끈기': '💪', '빠른 학습': '⚡', '리더십': '👑', '공감 능력': '🤝', '꼼꼼함': '🔬', '적응력': '🌊' };
             var icon = icons[translateToKorean(s.trait)] || '✨';
-            html += '<button onclick="document.getElementById(\\'strength-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-4 py-2 rounded-full text-[15px] font-semibold cursor-pointer transition-all hover:scale-105" style="background-color: rgba(34,197,94,0.15); color: rgb(134,239,172);">' + icon + ' ' + translateToKorean(s.trait) + '</button>';
+            html += '<button onclick="document.getElementById(\\'strength-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-4 py-2 rounded-full text-base font-semibold cursor-pointer transition-all hover:scale-105" style="background-color: rgba(34,197,94,0.15); color: rgb(134,239,172);">' + icon + ' ' + translateToKorean(s.trait) + '</button>';
         });
         html += '</div>';
         metaCognition.myArsenal.strengths.forEach(function(s, i) {
-            html += '<div id="strength-detail-' + i + '" class="hidden mb-3 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed animate-fadeIn" style="background-color: rgba(34,197,94,0.05); border-left: 2px solid rgba(34,197,94,0.3);"><span class="font-medium text-green-300">' + translateToKorean(s.trait) + ':</span><span class="ml-1">' + s.meaning + '</span></div>';
+            html += '<div id="strength-detail-' + i + '" class="hidden mb-3 p-3 rounded-lg text-base text-wiki-muted leading-relaxed animate-fadeIn" style="background-color: rgba(34,197,94,0.05); border-left: 2px solid rgba(34,197,94,0.3);"><span class="font-medium text-green-300">' + translateToKorean(s.trait) + ':</span><span class="ml-1">' + s.meaning + '</span></div>';
         });
         if (metaCognition.myArsenal.counselorNote) {
-            html += '<div class="mt-3 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-[15px] font-medium mb-1" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-[15px] text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.myArsenal.counselorNote) + '</p></div>';
+            html += '<div class="mt-3 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-base font-medium mb-1" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-base text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.myArsenal.counselorNote) + '</p></div>';
         }
     } else {
-        html += '<p class="text-[15px] text-wiki-muted">강점 분석을 위해 더 많은 정보가 필요합니다.</p>';
+        html += '<p class="text-base text-wiki-muted">강점 분석을 위해 더 많은 정보가 필요합니다.</p>';
     }
 
     if (metaCognition.myArsenal?.weaknesses?.length > 0) {
         html += '<div class="mt-5 pt-4 border-t border-wiki-border/20">';
-        html += '<div class="text-[15px] font-medium text-orange-400 mb-3 flex items-center gap-2"><span>⚠️</span> 개선 가능 영역</div>';
+        html += '<div class="text-base font-medium text-orange-400 mb-3 flex items-center gap-2"><span>⚠️</span> 개선 가능 영역</div>';
         html += '<div class="flex flex-wrap gap-2 mb-3">';
         metaCognition.myArsenal.weaknesses.forEach(function(w) {
-            html += '<span class="px-3 py-1.5 rounded-full text-[15px]" style="background-color: rgba(251,146,60,0.1); color: rgb(253,186,116);">' + translateToKorean(w.trait) + '</span>';
+            html += '<span class="px-3 py-1.5 rounded-full text-base" style="background-color: rgba(251,146,60,0.1); color: rgb(253,186,116);">' + translateToKorean(w.trait) + '</span>';
         });
         html += '</div>';
-        html += '<details class="group"><summary class="cursor-pointer text-[15px] text-wiki-muted hover:text-wiki-primary flex items-center gap-1"><span class="group-open:hidden">▶ 극복 방향 보기</span><span class="hidden group-open:inline">▼ 접기</span></summary>';
+        html += '<details class="group"><summary class="cursor-pointer text-base text-wiki-muted hover:text-wiki-primary flex items-center gap-1"><span class="group-open:hidden">▶ 극복 방향 보기</span><span class="hidden group-open:inline">▼ 접기</span></summary>';
         html += '<div class="mt-3 space-y-2 pl-2 border-l-2 border-orange-500/20">';
         metaCognition.myArsenal.weaknesses.forEach(function(w) {
-            html += '<div class="text-[15px]"><span class="font-medium text-orange-300">' + translateToKorean(w.trait) + ':</span><span class="text-wiki-muted ml-1">' + w.meaning + '</span></div>';
+            html += '<div class="text-base"><span class="font-medium text-orange-300">' + translateToKorean(w.trait) + ':</span><span class="text-wiki-muted ml-1">' + w.meaning + '</span></div>';
         });
         html += '</div></details></div>';
     }
@@ -4084,43 +4083,43 @@ function buildMetaCognitionSectionsMajor(metaCognition, profileInterpretation) {
 
     // 좋아하는 것
     if (metaCognition.preferenceMap?.likes?.length > 0) {
-        html += '<div><div class="text-[15px] font-medium text-green-400 mb-2">💚 좋아하는 것</div><div class="flex flex-wrap gap-1.5 mb-2">';
+        html += '<div><div class="text-base font-medium text-green-400 mb-2">💚 좋아하는 것</div><div class="flex flex-wrap gap-1.5 mb-2">';
         metaCognition.preferenceMap.likes.forEach(function(l, i) {
             var icons = { '기술/IT': '💻', '문제해결': '🧩', '창작/예술': '🎨', '데이터/숫자': '📊', '사람 돕기': '🤲', '조직/관리': '📋', '영향력': '📢', '연구/탐구': '🔬', '리딩': '👑', '빌딩': '🏗️' };
             var icon = icons[translateToKorean(l.item)] || '💚';
-            html += '<button onclick="document.getElementById(\\'like-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-2.5 py-1 rounded-lg text-[15px] font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(34,197,94,0.12); color: rgb(134,239,172);">' + icon + ' ' + translateToKorean(l.item) + '</button>';
+            html += '<button onclick="document.getElementById(\\'like-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-2.5 py-1 rounded-lg text-base font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(34,197,94,0.12); color: rgb(134,239,172);">' + icon + ' ' + translateToKorean(l.item) + '</button>';
         });
         html += '</div>';
         metaCognition.preferenceMap.likes.forEach(function(l, i) {
-            html += '<div id="like-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(34,197,94,0.05); border-left: 2px solid rgba(34,197,94,0.3);"><span class="font-medium text-green-300">' + translateToKorean(l.item) + ':</span><span class="ml-1">' + translateToKorean(l.why) + '</span></div>';
+            html += '<div id="like-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-base text-wiki-muted leading-relaxed" style="background-color: rgba(34,197,94,0.05); border-left: 2px solid rgba(34,197,94,0.3);"><span class="font-medium text-green-300">' + translateToKorean(l.item) + ':</span><span class="ml-1">' + translateToKorean(l.why) + '</span></div>';
         });
         html += '</div>';
     }
 
     // 피하고 싶은 것
     if (metaCognition.preferenceMap?.dislikes?.length > 0) {
-        html += '<div><div class="text-[15px] font-medium text-red-400 mb-2">🚫 피하고 싶은 것</div><div class="flex flex-wrap gap-1.5 mb-2">';
+        html += '<div><div class="text-base font-medium text-red-400 mb-2">🚫 피하고 싶은 것</div><div class="flex flex-wrap gap-1.5 mb-2">';
         metaCognition.preferenceMap.dislikes.forEach(function(d, i) {
             var icons = { '불규칙한 근무시간': '⏰', '재택 선호': '🏠', '야근 없음': '🌙', '출장 없음': '✈️', '교대근무 없음': '🔄', '시간 제약': '⏳', '수입 제약': '💰', '체력 제약': '🏋️', '불확실성 제약': '❓' };
             var icon = icons[translateToKorean(d.item)] || '🚫';
-            html += '<button onclick="document.getElementById(\\'dislike-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-2.5 py-1 rounded-lg text-[15px] font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(239,68,68,0.12); color: rgb(252,165,165);">' + icon + ' ' + translateToKorean(d.item) + '</button>';
+            html += '<button onclick="document.getElementById(\\'dislike-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-2.5 py-1 rounded-lg text-base font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(239,68,68,0.12); color: rgb(252,165,165);">' + icon + ' ' + translateToKorean(d.item) + '</button>';
         });
         html += '</div>';
         metaCognition.preferenceMap.dislikes.forEach(function(d, i) {
-            html += '<div id="dislike-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(239,68,68,0.05); border-left: 2px solid rgba(239,68,68,0.3);"><span class="font-medium text-red-300">' + translateToKorean(d.item) + ':</span><span class="ml-1">' + translateToKorean(d.why) + '</span></div>';
+            html += '<div id="dislike-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-base text-wiki-muted leading-relaxed" style="background-color: rgba(239,68,68,0.05); border-left: 2px solid rgba(239,68,68,0.3);"><span class="font-medium text-red-300">' + translateToKorean(d.item) + ':</span><span class="ml-1">' + translateToKorean(d.why) + '</span></div>';
         });
         html += '</div>';
     }
 
     // 잘 맞는 것
     if (metaCognition.preferenceMap?.fits?.length > 0) {
-        html += '<div><div class="text-[15px] font-medium text-blue-400 mb-2">💙 잘 맞는 것</div><div class="flex flex-wrap gap-1.5 mb-2">';
+        html += '<div><div class="text-base font-medium text-blue-400 mb-2">💙 잘 맞는 것</div><div class="flex flex-wrap gap-1.5 mb-2">';
         metaCognition.preferenceMap.fits.forEach(function(f, i) {
-            html += '<button onclick="document.getElementById(\\'fit-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-2.5 py-1 rounded-lg text-[15px] font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(59,130,246,0.12); color: rgb(147,197,253);">💙 ' + translateToKorean(f.item) + '</button>';
+            html += '<button onclick="document.getElementById(\\'fit-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-2.5 py-1 rounded-lg text-base font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(59,130,246,0.12); color: rgb(147,197,253);">💙 ' + translateToKorean(f.item) + '</button>';
         });
         html += '</div>';
         metaCognition.preferenceMap.fits.forEach(function(f, i) {
-            html += '<div id="fit-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(59,130,246,0.05); border-left: 2px solid rgba(59,130,246,0.3);"><span class="font-medium text-blue-300">' + translateToKorean(f.item) + ':</span><span class="ml-1">' + translateToKorean(f.why) + '</span></div>';
+            html += '<div id="fit-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-base text-wiki-muted leading-relaxed" style="background-color: rgba(59,130,246,0.05); border-left: 2px solid rgba(59,130,246,0.3);"><span class="font-medium text-blue-300">' + translateToKorean(f.item) + ':</span><span class="ml-1">' + translateToKorean(f.why) + '</span></div>';
         });
         html += '</div>';
     }
@@ -4129,7 +4128,7 @@ function buildMetaCognitionSectionsMajor(metaCognition, profileInterpretation) {
 
     // 상담사 노트
     if (metaCognition.preferenceMap?.counselorNote) {
-        html += '<div class="mt-4 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-[15px] font-medium mb-1" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-[15px] text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.preferenceMap.counselorNote) + '</p></div>';
+        html += '<div class="mt-4 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-base font-medium mb-1" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-base text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.preferenceMap.counselorNote) + '</p></div>';
     }
 
     html += '</div>'; // close 선호도 요약
@@ -4148,25 +4147,25 @@ function buildMetaCognitionSectionsMajor(metaCognition, profileInterpretation) {
         metaCognition.stressRecovery.stressFactors.forEach(function(s, i) {
             var icons = { '반복 업무 피로': '🔄', '관료주의 스트레스': '📑', '사람 상대 피로': '👥', '인지 과부하': '🧠', '시간 압박': '⏰', '책임감 부담': '⚖️', '예측 불가': '🌪️', '갈등 상황': '💢', '멀티태스킹': '🔀', '불확실성': '❓' };
             var icon = icons[translateToKorean(s.factor)] || '⚡';
-            html += '<button onclick="document.getElementById(\\'stress-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-3 py-1.5 rounded-full text-[15px] font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(239,68,68,0.12); color: rgb(252,165,165);">' + icon + ' ' + translateToKorean(s.factor) + '</button>';
+            html += '<button onclick="document.getElementById(\\'stress-detail-' + i + '\\').classList.toggle(\\'hidden\\'); this.classList.toggle(\\'ring-2\\')" class="px-3 py-1.5 rounded-full text-base font-medium cursor-pointer transition-all hover:scale-105" style="background-color: rgba(239,68,68,0.12); color: rgb(252,165,165);">' + icon + ' ' + translateToKorean(s.factor) + '</button>';
         });
         html += '</div>';
         metaCognition.stressRecovery.stressFactors.forEach(function(s, i) {
-            html += '<div id="stress-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(239,68,68,0.05); border-left: 2px solid rgba(239,68,68,0.3);"><span class="font-medium text-red-300">' + translateToKorean(s.factor) + ':</span><span class="ml-1">' + translateToKorean(s.why) + '</span></div>';
+            html += '<div id="stress-detail-' + i + '" class="hidden mb-2 p-3 rounded-lg text-base text-wiki-muted leading-relaxed" style="background-color: rgba(239,68,68,0.05); border-left: 2px solid rgba(239,68,68,0.3);"><span class="font-medium text-red-300">' + translateToKorean(s.factor) + ':</span><span class="ml-1">' + translateToKorean(s.why) + '</span></div>';
         });
         if (metaCognition.stressRecovery.counselorNote) {
-            html += '<div class="mt-3 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-[15px] font-medium mb-1" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-[15px] text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.stressRecovery.counselorNote) + '</p></div>';
+            html += '<div class="mt-3 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-base font-medium mb-1" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-base text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.stressRecovery.counselorNote) + '</p></div>';
         }
         if (metaCognition.stressRecovery?.recoveryMethods?.length > 0) {
             html += '<div class="mt-4 pt-4 border-t border-wiki-border/20">';
-            html += '<div class="text-[15px] font-medium text-emerald-400 mb-2 flex items-center gap-2"><span>🌿</span> 회복 방법</div>';
+            html += '<div class="text-base font-medium text-emerald-400 mb-2 flex items-center gap-2"><span>🌿</span> 회복 방법</div>';
             html += '<div class="flex flex-wrap gap-2 mb-3">';
             metaCognition.stressRecovery.recoveryMethods.forEach(function(r) {
-                html += '<span class="px-3 py-1.5 rounded-full text-[15px] font-medium" style="background-color: rgba(16,185,129,0.12); color: rgb(110,231,183);">' + translateToKorean(r.factor) + '</span>';
+                html += '<span class="px-3 py-1.5 rounded-full text-base font-medium" style="background-color: rgba(16,185,129,0.12); color: rgb(110,231,183);">' + translateToKorean(r.factor) + '</span>';
             });
             html += '</div>';
-            html += '<details class="group"><summary class="cursor-pointer text-[15px] text-wiki-muted hover:text-wiki-primary flex items-center gap-1"><span class="group-open:hidden">▶ 왜 회복되는지 이해하기</span><span class="hidden group-open:inline">▼ 접기</span></summary>';
-            html += '<div class="mt-3 space-y-2 text-[15px]">';
+            html += '<details class="group"><summary class="cursor-pointer text-base text-wiki-muted hover:text-wiki-primary flex items-center gap-1"><span class="group-open:hidden">▶ 왜 회복되는지 이해하기</span><span class="hidden group-open:inline">▼ 접기</span></summary>';
+            html += '<div class="mt-3 space-y-2 text-base">';
             metaCognition.stressRecovery.recoveryMethods.forEach(function(r) {
                 html += '<div class="p-3 rounded-lg" style="background-color: rgba(16,185,129,0.05);"><span class="font-medium text-emerald-300">' + translateToKorean(r.factor) + ':</span><span class="text-wiki-muted ml-1">' + translateToKorean(r.why) + '</span></div>';
             });
@@ -4184,16 +4183,16 @@ function buildMetaCognitionSectionsMajor(metaCognition, profileInterpretation) {
             metaCognition.growthPotential.leveragePoints.forEach(function(p) {
                 var icons = { '분석력': '🔍', '창작/예술': '🎨', '소통력': '💬', '체계적 실행력': '📋', '끈기': '💪', '빠른 학습': '⚡', '리더십': '👑', '공감 능력': '🤝', '꼼꼼함': '🔬', '적응력': '🌊' };
                 var icon = icons[translateToKorean(p)] || '✨';
-                html += '<span class="px-3 py-1.5 rounded-full text-[15px] font-medium" style="background-color: rgba(16,185,129,0.12); color: rgb(110,231,183);">' + icon + ' ' + translateToKorean(p) + '</span>';
+                html += '<span class="px-3 py-1.5 rounded-full text-base font-medium" style="background-color: rgba(16,185,129,0.12); color: rgb(110,231,183);">' + icon + ' ' + translateToKorean(p) + '</span>';
             });
             html += '</div>';
         }
         if (metaCognition.growthPotential.counselorNote) {
-            html += '<div class="p-4 rounded-xl mb-4" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-[15px] font-medium mb-2" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-[15px] text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.growthPotential.counselorNote) + '</p></div>';
+            html += '<div class="p-4 rounded-xl mb-4" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.05)); border-left: 3px solid rgba(251,191,36,0.5);"><div class="text-base font-medium mb-2" style="color: rgb(251,191,36);">💡 상담사 노트</div><p class="text-base text-wiki-text leading-relaxed italic">' + translateToKorean(metaCognition.growthPotential.counselorNote) + '</p></div>';
         }
         if (metaCognition.growthPotential.direction) {
-            html += '<details class="group"><summary class="cursor-pointer text-[15px] text-wiki-muted hover:text-wiki-primary flex items-center gap-1"><span class="group-open:hidden">▶ 성장 방향 상세 보기</span><span class="hidden group-open:inline">▼ 접기</span></summary>';
-            html += '<div class="mt-3 p-4 rounded-lg text-[15px] text-wiki-muted leading-relaxed" style="background-color: rgba(16,185,129,0.05);">🎯 ' + translateToKorean(metaCognition.growthPotential.direction) + '</div>';
+            html += '<details class="group"><summary class="cursor-pointer text-base text-wiki-muted hover:text-wiki-primary flex items-center gap-1"><span class="group-open:hidden">▶ 성장 방향 상세 보기</span><span class="hidden group-open:inline">▼ 접기</span></summary>';
+            html += '<div class="mt-3 p-4 rounded-lg text-base text-wiki-muted leading-relaxed" style="background-color: rgba(16,185,129,0.05);">🎯 ' + translateToKorean(metaCognition.growthPotential.direction) + '</div>';
             html += '</details>';
         }
         html += '</div>';
@@ -4227,27 +4226,27 @@ function buildRecommendationsTabMajor(profileInterpretation, overallTop5, fitTop
         html += '<h4 class="text-lg font-bold mb-3 flex items-center gap-2" style="color: rgb(165,180,252);"><span>📌</span> 당신의 프로필 기반 추천</h4>';
         html += '<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">';
         if (profileInterpretation.interests?.length > 0) {
-            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(34,197,94,0.1);"><span class="text-green-400">💚</span><div><div class="text-base font-semibold text-green-400">흥미</div><div class="text-[15px] text-white">' + profileInterpretation.interests.slice(0, 2).map(function(i) { return i.label; }).join(', ') + '</div></div></div>';
+            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(34,197,94,0.1);"><span class="text-green-400">💚</span><div><div class="text-base font-semibold text-green-400">흥미</div><div class="text-base text-white">' + profileInterpretation.interests.slice(0, 2).map(function(i) { return i.label; }).join(', ') + '</div></div></div>';
         }
         if (profileInterpretation.strengths?.length > 0) {
-            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(59,130,246,0.1);"><span class="text-blue-400">💪</span><div><div class="text-base font-semibold text-blue-400">강점</div><div class="text-[15px] text-white">' + profileInterpretation.strengths.slice(0, 2).map(function(s) { return s.label; }).join(', ') + '</div></div></div>';
+            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(59,130,246,0.1);"><span class="text-blue-400">💪</span><div><div class="text-base font-semibold text-blue-400">강점</div><div class="text-base text-white">' + profileInterpretation.strengths.slice(0, 2).map(function(s) { return s.label; }).join(', ') + '</div></div></div>';
         }
         if (profileInterpretation.values?.length > 0) {
-            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(168,85,247,0.1);"><span class="text-purple-400">⭐</span><div><div class="text-base font-semibold text-purple-400">가치</div><div class="text-[15px] text-white">' + profileInterpretation.values.slice(0, 2).map(function(v) { return v.label; }).join(', ') + '</div></div></div>';
+            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(168,85,247,0.1);"><span class="text-purple-400">⭐</span><div><div class="text-base font-semibold text-purple-400">가치</div><div class="text-base text-white">' + profileInterpretation.values.slice(0, 2).map(function(v) { return v.label; }).join(', ') + '</div></div></div>';
         }
         if (profileInterpretation.constraints?.length > 0) {
-            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(239,68,68,0.1);"><span class="text-red-400">🚫</span><div><div class="text-base font-semibold text-red-400">제약</div><div class="text-[15px] text-white">' + profileInterpretation.constraints.slice(0, 2).map(function(c) { return c.label; }).join(', ') + '</div></div></div>';
+            html += '<div class="flex items-center gap-2 p-2 rounded-lg" style="background: rgba(239,68,68,0.1);"><span class="text-red-400">🚫</span><div><div class="text-base font-semibold text-red-400">제약</div><div class="text-base text-white">' + profileInterpretation.constraints.slice(0, 2).map(function(c) { return c.label; }).join(', ') + '</div></div></div>';
         }
         html += '</div>';
-        html += '<p class="text-[15px] text-wiki-muted">이 조건들을 종합하여 <span class="text-wiki-primary font-medium">' + (fitTop10.length || overallTop5.length) + '개</span>의 전공을 추천합니다.</p>';
+        html += '<p class="text-base text-wiki-muted">이 조건들을 종합하여 <span class="text-wiki-primary font-medium">' + (fitTop10.length || overallTop5.length) + '개</span>의 전공을 추천합니다.</p>';
         html += '</div>';
     }
 
     // 3세트 탭
     html += '<div class="flex gap-3 mb-6">';
-    html += '<button onclick="showMajorSet(\\'overall\\')" class="major-set-tab active flex-1 px-5 py-3.5 rounded-xl text-[15px] font-medium" data-set="overall"><span class="flex items-center justify-center gap-2"><span class="text-lg">🏆</span><span>종합 추천</span></span></button>';
-    html += '<button onclick="showMajorSet(\\'fit\\')" class="major-set-tab flex-1 px-5 py-3.5 rounded-xl text-[15px] font-medium" data-set="fit"><span class="flex items-center justify-center gap-2"><span class="text-lg">💪</span><span>잘 맞을 것 같은 전공</span></span></button>';
-    html += '<button onclick="showMajorSet(\\'desire\\')" class="major-set-tab flex-1 px-5 py-3.5 rounded-xl text-[15px] font-medium" data-set="desire"><span class="flex items-center justify-center gap-2"><span class="text-lg">💖</span><span>좋아할만한 전공</span></span></button>';
+    html += '<button onclick="showMajorSet(\\'overall\\')" class="major-set-tab active flex-1 px-5 py-3.5 rounded-xl text-base font-medium" data-set="overall"><span class="flex items-center justify-center gap-2"><span class="text-lg">🏆</span><span>종합 추천</span></span></button>';
+    html += '<button onclick="showMajorSet(\\'fit\\')" class="major-set-tab flex-1 px-5 py-3.5 rounded-xl text-base font-medium" data-set="fit"><span class="flex items-center justify-center gap-2"><span class="text-lg">💪</span><span>잘 맞을 것 같은 전공</span></span></button>';
+    html += '<button onclick="showMajorSet(\\'desire\\')" class="major-set-tab flex-1 px-5 py-3.5 rounded-xl text-base font-medium" data-set="desire"><span class="flex items-center justify-center gap-2"><span class="text-lg">💖</span><span>좋아할만한 전공</span></span></button>';
     html += '</div>';
 
     // 전공 카드들
@@ -4280,10 +4279,10 @@ function buildDetailsTabMajor(result, report) {
     html += '<div class="mb-8 p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(34,197,94,0.2);">';
     html += '<h4 class="text-xl font-bold mb-4 text-emerald-400">🔬 분석 파이프라인</h4>';
     html += '<div class="space-y-4 text-base">';
-    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">1</span><div><p class="font-medium text-white">벡터 검색 (Vectorize)</p><p class="text-wiki-muted text-[15px]">당신의 답변을 임베딩으로 변환하여 전공 DB에서 의미적으로 유사한 후보를 검색합니다.</p></div></div>';
-    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">2</span><div><p class="font-medium text-white">TAG 필터링 (Hard Constraints)</p><p class="text-wiki-muted text-[15px]">학습 환경, 선호도 등 절대 조건에 맞지 않는 전공을 제외합니다.</p></div></div>';
-    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">3</span><div><p class="font-medium text-white">LLM Judge (GPT-4o-mini)</p><p class="text-wiki-muted text-[15px]">남은 후보 전공에 대해 AI가 Like/Can/Fit 점수를 계산하고, 추천 이유를 생성합니다.</p></div></div>';
-    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">4</span><div><p class="font-medium text-white">LLM Reporter (심리분석)</p><p class="text-wiki-muted text-[15px]">당신의 미니모듈 결과를 바탕으로 학습 스타일과 전공 방향을 분석합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">1</span><div><p class="font-medium text-white">벡터 검색 (Vectorize)</p><p class="text-wiki-muted text-base">당신의 답변을 임베딩으로 변환하여 전공 DB에서 의미적으로 유사한 후보를 검색합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">2</span><div><p class="font-medium text-white">TAG 필터링 (Hard Constraints)</p><p class="text-wiki-muted text-base">학습 환경, 선호도 등 절대 조건에 맞지 않는 전공을 제외합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">3</span><div><p class="font-medium text-white">LLM Judge (GPT-4o-mini)</p><p class="text-wiki-muted text-base">남은 후보 전공에 대해 AI가 Like/Can/Fit 점수를 계산하고, 추천 이유를 생성합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">4</span><div><p class="font-medium text-white">LLM Reporter (심리분석)</p><p class="text-wiki-muted text-base">당신의 미니모듈 결과를 바탕으로 학습 스타일과 전공 방향을 분석합니다.</p></div></div>';
     html += '</div></div>';
 
     // 입력 데이터 요약
@@ -4299,41 +4298,41 @@ function buildDetailsTabMajor(result, report) {
     // AI 추천 시스템 작동 원리
     html += '<div class="mb-8 p-5 rounded-xl" style="background-color: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);">';
     html += '<h4 class="text-xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 AI 추천은 이렇게 만들어집니다</h4>';
-    html += '<p class="text-[15px] text-wiki-muted mb-5">이 리포트는 단순 키워드 매칭이 아닌, 3단계 AI 시스템을 거쳐 생성됩니다.</p>';
+    html += '<p class="text-base text-wiki-muted mb-5">이 리포트는 단순 키워드 매칭이 아닌, 3단계 AI 시스템을 거쳐 생성됩니다.</p>';
 
     // STEP 1 RAG
-    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(34,197,94,0.2); color: rgb(34,197,94);">STEP 1</span><span class="font-bold text-white text-base">RAG — 의미 기반 후보 검색</span></div><p class="text-[14px] text-wiki-muted leading-relaxed mb-2">당신의 답변 전체를 AI 임베딩(숫자 벡터)으로 변환한 뒤, 전공 DB에서 <span class="text-emerald-400">의미적으로 가장 가까운 전공들</span>을 찾습니다.</p><p class="text-[13px] text-wiki-muted/70">"데이터 분석을 좋아한다"고 답하면, 전공명에 \\'분석\\'이 없더라도 데이터 관련 학습을 하는 전공이 후보에 포함됩니다.</p></div>';
+    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(34,197,94,0.2); color: rgb(34,197,94);">STEP 1</span><span class="font-bold text-white text-base">RAG — 의미 기반 후보 검색</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-2">당신의 답변 전체를 AI 임베딩(숫자 벡터)으로 변환한 뒤, 전공 DB에서 <span class="text-emerald-400">의미적으로 가장 가까운 전공들</span>을 찾습니다.</p><p class="text-[16px] text-wiki-muted/70">"데이터 분석을 좋아한다"고 답하면, 전공명에 \\'분석\\'이 없더라도 데이터 관련 학습을 하는 전공이 후보에 포함됩니다.</p></div>';
 
     // STEP 2 TAG
-    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(251,191,36,0.2); color: rgb(251,191,36);">STEP 2</span><span class="font-bold text-white text-base">TAG — 절대 조건 필터링</span></div><p class="text-[14px] text-wiki-muted leading-relaxed mb-2">후보 전공들의 속성 태그를 당신의 <span class="text-amber-400">제약 조건</span>과 대조합니다.</p><p class="text-[13px] text-wiki-muted/70">"절대 안 돼" 수준의 제약은 해당 전공을 후보에서 완전히 제거합니다.</p></div>';
+    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(251,191,36,0.2); color: rgb(251,191,36);">STEP 2</span><span class="font-bold text-white text-base">TAG — 절대 조건 필터링</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-2">후보 전공들의 속성 태그를 당신의 <span class="text-amber-400">제약 조건</span>과 대조합니다.</p><p class="text-[16px] text-wiki-muted/70">"절대 안 돼" 수준의 제약은 해당 전공을 후보에서 완전히 제거합니다.</p></div>';
 
     // STEP 3 CAG
-    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(99,102,241,0.2); color: rgb(129,140,248);">STEP 3</span><span class="font-bold text-white text-base">CAG — AI가 직접 평가</span></div><p class="text-[14px] text-wiki-muted leading-relaxed mb-2">남은 후보 전공 각각에 대해, GPT-4o-mini가 당신의 프로필 전체를 읽고 <span class="text-indigo-400">Like(좋아할 가능성)</span>와 <span class="text-blue-400">Can(잘할 가능성)</span> 점수를 매깁니다.</p><p class="text-[13px] text-wiki-muted/70">AI는 단순히 숫자만 매기는 것이 아니라, "왜 이 전공을 좋아할지", "왜 잘할 수 있는지"에 대한 구체적인 이유도 함께 생성합니다.</p></div>';
+    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(99,102,241,0.2); color: rgb(129,140,248);">STEP 3</span><span class="font-bold text-white text-base">CAG — AI가 직접 평가</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-2">남은 후보 전공 각각에 대해, GPT-4o-mini가 당신의 프로필 전체를 읽고 <span class="text-indigo-400">Like(좋아할 가능성)</span>와 <span class="text-blue-400">Can(잘할 가능성)</span> 점수를 매깁니다.</p><p class="text-[16px] text-wiki-muted/70">AI는 단순히 숫자만 매기는 것이 아니라, "왜 이 전공을 좋아할지", "왜 잘할 수 있는지"에 대한 구체적인 이유도 함께 생성합니다.</p></div>';
 
     // 최종 점수
-    html += '<div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(168,85,247,0.2); color: rgb(192,132,252);">최종</span><span class="font-bold text-white text-base">종합 점수 계산 (Fit)</span></div><p class="text-[14px] text-wiki-muted leading-relaxed mb-3">AI가 매긴 점수를 아래 공식으로 조합하여 최종 순위를 결정합니다.</p>';
+    html += '<div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(168,85,247,0.2); color: rgb(192,132,252);">최종</span><span class="font-bold text-white text-base">종합 점수 계산 (Fit)</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-3">AI가 매긴 점수를 아래 공식으로 조합하여 최종 순위를 결정합니다.</p>';
     html += '<div class="p-3 rounded-lg text-center" style="background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);"><p class="text-base font-bold text-white" style="font-family: monospace;">Fit = Like + Can + Background</p></div>';
-    html += '<div class="mt-3 space-y-1 text-[13px] text-wiki-muted/80"><p><span class="text-purple-400 font-medium">Like</span> — 좋아할 전공을 중요하게 반영합니다. 흥미와 가치관이 맞아야 오래 갈 수 있기 때문입니다.</p><p><span class="text-blue-400 font-medium">Can</span> — 잘할 수 있는 전공도 함께 반영합니다. 강점과 역량이 맞아야 성과를 낼 수 있습니다.</p><p><span class="text-amber-400 font-medium">Background</span> — 경력, 학력, 경험이 전공과 얼마나 관련 있는지 평가합니다.</p></div>';
+    html += '<div class="mt-3 space-y-1 text-[16px] text-wiki-muted/80"><p><span class="text-purple-400 font-medium">Like</span> — 좋아할 전공을 중요하게 반영합니다. 흥미와 가치관이 맞아야 오래 갈 수 있기 때문입니다.</p><p><span class="text-blue-400 font-medium">Can</span> — 잘할 수 있는 전공도 함께 반영합니다. 강점과 역량이 맞아야 성과를 낼 수 있습니다.</p><p><span class="text-amber-400 font-medium">Background</span> — 경력, 학력, 경험이 전공과 얼마나 관련 있는지 평가합니다.</p></div>';
     html += '</div></div>';
 
     // 점수 계산 방식
     html += '<div class="mb-8 rounded-xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.08);">';
     html += '<div class="px-5 py-3" style="background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08);"><h4 class="text-base font-bold text-wiki-text">💡 점수 계산 방식</h4></div>';
     html += '<div class="divide-y" style="--tw-divide-opacity: 0.06; --tw-divide-color: rgba(255,255,255,var(--tw-divide-opacity));">';
-    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(52,211,153);"><span class="text-emerald-400 font-bold text-sm w-10 shrink-0 text-center">Fit</span><span class="text-white text-sm font-medium w-20 shrink-0">종합 적합도</span><span class="text-wiki-muted text-[13px]">Like + Can + Background 종합</span></div>';
-    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(168,85,247);"><span class="text-purple-400 font-bold text-sm w-10 shrink-0 text-center">Like</span><span class="text-white text-sm font-medium w-20 shrink-0">좋아할 가능성</span><span class="text-wiki-muted text-[13px]">관심 분야, 가치관, 우선순위와 전공 특성의 일치도</span></div>';
-    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(96,165,250);"><span class="text-blue-400 font-bold text-sm w-10 shrink-0 text-center">Can</span><span class="text-white text-sm font-medium w-20 shrink-0">잘할 가능성</span><span class="text-wiki-muted text-[13px]">강점, 학습 스타일, 경험과 전공 요구사항의 적합도</span></div>';
-    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(251,191,36);"><span class="text-amber-400 font-bold text-sm w-10 shrink-0 text-center">Bg</span><span class="text-white text-sm font-medium w-20 shrink-0">배경 적합도</span><span class="text-wiki-muted text-[13px]">경력, 학력, 자격증, 경험 등 배경의 도움 정도</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(52,211,153);"><span class="text-emerald-400 font-bold text-sm w-10 shrink-0 text-center">Fit</span><span class="text-white text-sm font-medium w-20 shrink-0">종합 적합도</span><span class="text-wiki-muted text-[16px]">Like + Can + Background 종합</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(168,85,247);"><span class="text-purple-400 font-bold text-sm w-10 shrink-0 text-center">Like</span><span class="text-white text-sm font-medium w-20 shrink-0">좋아할 가능성</span><span class="text-wiki-muted text-[16px]">관심 분야, 가치관, 우선순위와 전공 특성의 일치도</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(96,165,250);"><span class="text-blue-400 font-bold text-sm w-10 shrink-0 text-center">Can</span><span class="text-white text-sm font-medium w-20 shrink-0">잘할 가능성</span><span class="text-wiki-muted text-[16px]">강점, 학습 스타일, 경험과 전공 요구사항의 적합도</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(251,191,36);"><span class="text-amber-400 font-bold text-sm w-10 shrink-0 text-center">Bg</span><span class="text-white text-sm font-medium w-20 shrink-0">배경 적합도</span><span class="text-wiki-muted text-[16px]">경력, 학력, 자격증, 경험 등 배경의 도움 정도</span></div>';
     html += '</div></div>';
 
     // 데이터 소스
     html += '<div class="p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(99,102,241,0.05)); border: 1px solid rgba(139,92,246,0.2);">';
     html += '<h4 class="text-xl font-bold mb-4 text-purple-400">📚 데이터 소스</h4>';
     html += '<div class="grid md:grid-cols-2 gap-4 text-base">';
-    html += '<div><p class="font-medium text-white mb-1">전공 정보</p><p class="text-wiki-muted text-[15px]">커리어넷 + 대학 정보 데이터 통합</p></div>';
-    html += '<div><p class="font-medium text-white mb-1">전공 속성 태깅</p><p class="text-wiki-muted text-[15px]">major_attributes 테이블: 학습환경, 진로 방향 등 속성</p></div>';
-    html += '<div><p class="font-medium text-white mb-1">임베딩 모델</p><p class="text-wiki-muted text-[15px]">OpenAI text-embedding-3-small (1536차원)</p></div>';
-    html += '<div><p class="font-medium text-white mb-1">판단 모델</p><p class="text-wiki-muted text-[15px]">GPT-4o-mini (Like/Can/Fit 점수 및 추천 이유 생성)</p></div>';
+    html += '<div><p class="font-medium text-white mb-1">전공 정보</p><p class="text-wiki-muted text-base">커리어넷 + 대학 정보 데이터 통합</p></div>';
+    html += '<div><p class="font-medium text-white mb-1">전공 속성 태깅</p><p class="text-wiki-muted text-base">major_attributes 테이블: 학습환경, 진로 방향 등 속성</p></div>';
+    html += '<div><p class="font-medium text-white mb-1">임베딩 모델</p><p class="text-wiki-muted text-base">OpenAI text-embedding-3-small (1536차원)</p></div>';
+    html += '<div><p class="font-medium text-white mb-1">판단 모델</p><p class="text-wiki-muted text-base">GPT-4o-mini (Like/Can/Fit 점수 및 추천 이유 생성)</p></div>';
     html += '</div></div>';
 
     html += '</div>'; // close tab-details
@@ -4495,14 +4494,14 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         // 이유 HTML 생성
         var reasonOuterHtml = '';
         if (setId === 'overall') {
-            if (likeReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[13px] w-12">💜 Like</span><p class="text-[14px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
-            if (canReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[13px] w-12">💪 Can</span><p class="text-[14px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
-            if (feasibilityReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-amber-400 font-medium shrink-0 text-[13px] w-12">🎯 배경</span><p class="text-[14px] text-amber-300/90 leading-relaxed">' + feasibilityReasonText + '</p></div>';
+            if (likeReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[16px] w-12">💜 Like</span><p class="text-[16px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
+            if (canReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[16px] w-12">💪 Can</span><p class="text-[16px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
+            if (feasibilityReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-amber-400 font-medium shrink-0 text-[16px] w-12">🎯 배경</span><p class="text-[16px] text-amber-300/90 leading-relaxed">' + feasibilityReasonText + '</p></div>';
         } else if (setId === 'desire') {
-            if (likeReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[13px] w-12">💜 Like</span><p class="text-[14px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
+            if (likeReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-purple-400 font-medium shrink-0 text-[16px] w-12">💜 Like</span><p class="text-[16px] text-purple-300/90 leading-relaxed">' + likeReasonText + '</p></div>';
         } else {
-            if (canReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[13px] w-12">💪 Can</span><p class="text-[14px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
-            if (feasibilityReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-amber-400 font-medium shrink-0 text-[13px] w-12">🎯 배경</span><p class="text-[14px] text-amber-300/90 leading-relaxed">' + feasibilityReasonText + '</p></div>';
+            if (canReasonText) reasonOuterHtml = '<div class="flex gap-3 items-start"><span class="text-blue-400 font-medium shrink-0 text-[16px] w-12">💪 Can</span><p class="text-[16px] text-blue-300/90 leading-relaxed">' + canReasonText + '</p></div>';
+            if (feasibilityReasonText) reasonOuterHtml += '<div class="flex gap-3 items-start"><span class="text-amber-400 font-medium shrink-0 text-[16px] w-12">🎯 배경</span><p class="text-[16px] text-amber-300/90 leading-relaxed">' + feasibilityReasonText + '</p></div>';
         }
 
         var rankBadge = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '' + (idx + 1);
@@ -4570,18 +4569,18 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
             cardHtml += '<div class="text-xs text-wiki-muted mb-1.5">' + escapeHtmlMajor(fieldCategoryKr) + '</div>';
         }
         if (displayDescription) {
-            cardHtml += '<p class="text-[14px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">' + escapeHtmlMajor(displayDescription) + '</p>';
+            cardHtml += '<p class="text-[16px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">' + escapeHtmlMajor(displayDescription) + '</p>';
         }
         cardHtml += matchingTagsHtml;
         cardHtml += '</div>';
 
         // 점수 바
         cardHtml += '<div class="flex items-center gap-3 mt-3 pt-2.5" style="border-top: 1px solid rgba(255,255,255,0.06);">';
-        cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-emerald-400/80 font-medium">Fit</span><span class="text-[11px] text-emerald-400 font-semibold">' + fitScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(fitNum, 100) + '%; background: rgb(52,211,153);"></div></div></div>';
-        cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-purple-400/80 font-medium">Like</span><span class="text-[11px] text-purple-400 font-semibold">' + likeScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(likeNum2, 100) + '%; background: rgb(168,85,247);"></div></div></div>';
-        cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-blue-400/80 font-medium">Can</span><span class="text-[11px] text-blue-400 font-semibold">' + canScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(canNum2, 100) + '%; background: rgb(96,165,250);"></div></div></div>';
+        cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[16px] text-emerald-400/80 font-medium">Fit</span><span class="text-[16px] text-emerald-400 font-semibold">' + fitScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(fitNum, 100) + '%; background: rgb(52,211,153);"></div></div></div>';
+        cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[16px] text-purple-400/80 font-medium">Like</span><span class="text-[16px] text-purple-400 font-semibold">' + likeScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(likeNum2, 100) + '%; background: rgb(168,85,247);"></div></div></div>';
+        cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[16px] text-blue-400/80 font-medium">Can</span><span class="text-[16px] text-blue-400 font-semibold">' + canScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(canNum2, 100) + '%; background: rgb(96,165,250);"></div></div></div>';
         if (parseInt(bgScore) > 0) {
-            cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[11px] text-amber-400/80 font-medium">Bg</span><span class="text-[11px] text-amber-400 font-semibold">' + bgScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(parseInt(bgScore) || 0, 100) + '%; background: rgb(251,191,36);"></div></div></div>';
+            cardHtml += '<div class="flex-1"><div class="flex items-center justify-between mb-1"><span class="text-[16px] text-amber-400/80 font-medium">Bg</span><span class="text-[16px] text-amber-400 font-semibold">' + bgScore + '</span></div><div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);"><div class="h-full rounded-full transition-all" style="width: ' + Math.min(parseInt(bgScore) || 0, 100) + '%; background: rgb(251,191,36);"></div></div></div>';
         }
         cardHtml += '</div>';
 
@@ -4594,9 +4593,9 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
 
         // 하단 액션 바
         cardHtml += '<div class="flex items-center justify-between px-4 pb-3 ' + (reasonOuterHtml ? '' : 'pt-0') + '">';
-        cardHtml += '<button onclick="event.stopPropagation(); toggleMajorScoresCompact(this)" class="text-[13px] text-wiki-muted hover:text-wiki-primary transition flex items-center gap-1.5" title="상세 점수"><i class="fas fa-chart-bar"></i><span>상세 점수</span></button>';
+        cardHtml += '<button onclick="event.stopPropagation(); toggleMajorScoresCompact(this)" class="text-[16px] text-wiki-muted hover:text-wiki-primary transition flex items-center gap-1.5" title="상세 점수"><i class="fas fa-chart-bar"></i><span>상세 점수</span></button>';
         if (majorSlug) {
-            cardHtml += '<a href="/major/' + encodeURIComponent(majorSlug) + '" target="_blank" rel="noopener noreferrer" class="text-[13px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1"><span>상세 보기</span><i class="fas fa-arrow-right text-[11px]"></i></a>';
+            cardHtml += '<a href="/major/' + encodeURIComponent(majorSlug) + '" target="_blank" rel="noopener noreferrer" class="text-[16px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1"><span>상세 보기</span><i class="fas fa-arrow-right text-[16px]"></i></a>';
         }
         cardHtml += '</div>';
 
@@ -4619,7 +4618,7 @@ function getScoreExplanationMajor(likeVal, canVal, fitVal, bgVal) {
     var can = parseInt(canVal) || 0;
     var fit = parseInt(fitVal) || 0;
     var bg = parseInt(bgVal) || 0;
-    var html = '<div class="space-y-2.5 text-[13px]">';
+    var html = '<div class="space-y-2.5 text-[16px]">';
     html += '<div class="flex items-center justify-between"><span class="text-purple-400">💜 흥미(Like)</span><span class="text-purple-300 font-medium">' + like + '점</span></div>';
     html += '<div class="flex items-center justify-between"><span class="text-blue-400">💪 역량(Can)</span><span class="text-blue-300 font-medium">' + can + '점</span></div>';
     if (bg > 0) {
