@@ -255,6 +255,24 @@ export const buildListCacheKey = (
   return keySuffix ? `list:${type}:${keySuffix}` : `list:${type}:default`
 }
 
+/**
+ * 목록 페이지 KV 캐시 무효화 (이미지 변경 등 목록에 영향을 주는 업데이트 시 호출)
+ * KV list() API로 prefix 매치 후 삭제
+ */
+export const invalidateListCache = async (
+  kv: KVNamespace,
+  type: 'job' | 'major'
+): Promise<number> => {
+  const prefix = `list:${type}:`
+  let deleted = 0
+  try {
+    const keys = await kv.list({ prefix, limit: 100 })
+    await Promise.all(keys.keys.map(k => kv.delete(k.name)))
+    deleted = keys.keys.length
+  } catch {}
+  return deleted
+}
+
 export const secondsToHuman = (seconds: number): string => {
   if (seconds <= 0) return '0초'
   const units: Array<[number, string]> = [

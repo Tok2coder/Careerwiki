@@ -548,6 +548,14 @@ uploadRoutes.post('/api/image/save', requireAuth, async (c) => {
       }
       console.log(`[ImageSave] Cache purged: ${urlsToPurge.length} URLs`)
 
+      // 1.5) KV 목록 캐시 무효화 (썸네일 갱신)
+      if (c.env.KV) {
+        const { invalidateListCache } = await import('../services/cacheService')
+        const listType = pageType as 'job' | 'major'
+        const deleted = await invalidateListCache(c.env.KV, listType)
+        console.log(`[ImageSave] List KV cache purged: ${deleted} keys for ${listType}`)
+      }
+
       // 2) Cloudflare Zone Purge API (CF_ZONE_ID + CF_API_TOKEN 필요)
       const zoneId = c.env.CF_ZONE_ID
       const apiToken = c.env.CLOUDFLARE_API_TOKEN
@@ -669,6 +677,13 @@ uploadRoutes.post('/webhooks/image-completed', async (c) => {
       WHERE slug = ?
     `).bind(publicUrl, taskMeta.slug).run()
 
+
+    // 목록 KV 캐시 무효화 (썸네일 갱신)
+    if (c.env.KV) {
+      const { invalidateListCache } = await import('../services/cacheService')
+      const listType = (taskMeta.type === 'jobs' ? 'job' : 'major') as 'job' | 'major'
+      await invalidateListCache(c.env.KV, listType)
+    }
 
     // 태스크 메타데이터 삭제
     await c.env.KV.delete(`image-task:${taskId}`)
