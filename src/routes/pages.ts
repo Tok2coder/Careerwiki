@@ -430,19 +430,19 @@ pagesRoutes.get('/', (c) => {
                     </form>
                 </div>
                 <div class="pillar-grid w-full">
-                    <a href="/analyzer" class="menu-button text-center group cw-card-hover" style="--ac:212 168 83">
+                    <a href="/analyzer" class="menu-button text-center group cw-card-hover cw-fade-in" style="--ac:212 168 83; animation-delay: 0.15s; animation-fill-mode: backwards;">
                         <i class="fas fa-brain text-2xl mb-2 text-indigo-400 group-hover:text-amber-400 transition-colors"></i>
                         <div class="text-sm">AI 추천</div>
                     </a>
-                    <a href="/job" class="menu-button text-center group cw-card-hover" style="--ac:79 70 229">
+                    <a href="/job" class="menu-button text-center group cw-card-hover cw-fade-in" style="--ac:79 70 229; animation-delay: 0.25s; animation-fill-mode: backwards;">
                         <i class="fas fa-briefcase text-2xl mb-2 text-indigo-400 group-hover:text-blue-300 transition-colors"></i>
                         <div class="text-sm">직업위키</div>
                     </a>
-                    <a href="/major" class="menu-button text-center group cw-card-hover" style="--ac:16 185 129">
+                    <a href="/major" class="menu-button text-center group cw-card-hover cw-fade-in" style="--ac:16 185 129; animation-delay: 0.35s; animation-fill-mode: backwards;">
                         <i class="fas fa-university text-2xl mb-2 text-indigo-400 group-hover:text-emerald-400 transition-colors"></i>
                         <div class="text-sm">전공위키</div>
                     </a>
-                    <a href="/howto" class="menu-button text-center group cw-card-hover" style="--ac:139 92 246">
+                    <a href="/howto" class="menu-button text-center group cw-card-hover cw-fade-in" style="--ac:139 92 246; animation-delay: 0.45s; animation-fill-mode: backwards;">
                         <i class="fas fa-route text-2xl mb-2 text-indigo-400 group-hover:text-violet-400 transition-colors"></i>
                         <div class="text-sm">HowTo</div>
                     </a>
