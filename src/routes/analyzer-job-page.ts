@@ -6824,7 +6824,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- TOP 3 직업 카드 (요약 탭) -->
                     \${overallTop5.length > 0 ? \`
                         <div class="mt-6 pt-4 border-t border-wiki-border/30">
-                            <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                                 <span>🏆</span> 추천 직업 Top 3
                                 <button onclick="showReportTab('recommendations')" class="ml-auto px-3 py-1.5 rounded-lg text-[16px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
                                     <span>더보기</span>
@@ -6926,7 +6926,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- ============================================ -->
                     \${personal.personality_summary || metaCognition?.innerExploration?.identityInsight ? \`
                         <div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.3);">
-                            <h4 class="text-xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>
+                            <h4 class="text-2xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>
                             <p class="text-base md:text-lg leading-relaxed text-white mb-4">
                                 \${(() => {
                                     // LLM identityInsight 우선, 없으면 personality_summary fallback
@@ -6974,7 +6974,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         </div>
                     \` : \`
                         <div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.2);">
-                            <h4 class="text-xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>
+                            <h4 class="text-2xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>
                             <p class="text-base md:text-lg leading-relaxed text-wiki-muted">심층 분석을 위해 더 많은 정보가 필요합니다. 심층 질문에 자세히 답변해주시면 더 정확한 분석이 가능합니다.</p>
                         </div>
                     \`}
@@ -7250,7 +7250,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 작업 스타일 인사이트 -->
                     \${personal.work_style_insights?.length > 0 ? \`
                         <div class="mb-8">
-                            <h4 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-4 flex items-center gap-2">
                                 <span>🎨</span> 작업 스타일
                             </h4>
                             <div class="grid gap-3">
@@ -7279,7 +7279,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 가치 우선순위 (가로 배치) -->
                     \${personal.value_priorities?.length > 0 ? \`
                         <div class="mb-8">
-                            <h4 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-4 flex items-center gap-2">
                                 <span>⭐</span> 가치 우선순위
                             </h4>
                             <div class="grid grid-cols-\${Math.min(personal.value_priorities.length, 3)} gap-3">
@@ -7302,7 +7302,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 잠재적 도전 -->
                     \${personal.potential_challenges?.length > 0 ? \`
                         <div class="mb-8 p-5 rounded-xl" style="background-color: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.2);">
-                            <h4 class="text-xl font-bold mb-4 text-orange-400 flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-4 text-orange-400 flex items-center gap-2">
                                 <span>⚠️</span> 주의할 점
                             </h4>
                             <ul class="space-y-3">
@@ -7319,7 +7319,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 블라인드 스팟 -->
                     \${personal.blind_spots_to_check?.length > 0 ? \`
                         <div class="mb-8 p-5 rounded-xl" style="background-color: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);">
-                            <h4 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-4 text-red-400 flex items-center gap-2">
                                 <span>🔍</span> 점검할 블라인드 스팟
                             </h4>
                             <ul class="space-y-3">
@@ -7336,7 +7336,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 미니모듈 결과 기반 기본 분석 (데이터가 없을 때) -->
                     \${!personal.work_style_insights?.length && window.miniModuleResult ? \`
                         <div class="mb-8">
-                            <h4 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-4 flex items-center gap-2">
                                 <span>📊</span> 선택 기반 분석
                             </h4>
                             <p class="text-sm text-wiki-muted mb-4">미니모듈에서 선택한 내용을 기반으로 한 기초 분석입니다.</p>
@@ -7368,7 +7368,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 작업 스타일 5축 시각화 (개선된 버전) -->
                     \${workStyleMap && (workStyleMap.analytical_vs_creative !== 0 || workStyleMap.solo_vs_team !== 0) ? \`
                         <div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(59,130,246,0.1)); border: 1px solid rgba(6,182,212,0.2);">
-                            <h4 class="text-xl font-bold mb-2 text-cyan-400 flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-2 text-cyan-400 flex items-center gap-2">
                                 <span>📊</span> 작업 스타일 5축 분석
                             </h4>
                             <p class="text-sm text-wiki-muted mb-5">각 축의 중앙은 균형 상태이며, 좌우로 치우칠수록 해당 성향이 강합니다.</p>
@@ -7407,7 +7407,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <!-- 내면 갈등 분석 -->
                             \${innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts ? \`
                                 <div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.1)); border: 1px solid rgba(168,85,247,0.2);">
-                                    <h4 class="text-xl font-bold mb-4 text-purple-400 flex items-center gap-2">
+                                    <h4 class="text-2xl font-bold mb-4 text-purple-400 flex items-center gap-2">
                                         <span>💭</span> 내면 갈등 분석
                                     </h4>
                                     \${innerConflict.patterns?.length > 0 ? \`
@@ -7433,7 +7433,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <!-- 성장 곡선 -->
                             \${growthCurve.type ? \`
                                 <div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(52,211,153,0.1)); border: 1px solid rgba(16,185,129,0.2);">
-                                    <h4 class="text-xl font-bold mb-4 text-emerald-400 flex items-center gap-2">
+                                    <h4 class="text-2xl font-bold mb-4 text-emerald-400 flex items-center gap-2">
                                         <span>📈</span> 성장 곡선 유형
                                     </h4>
                                     <p class="text-lg font-bold mb-3" style="color: rgb(52,211,153);">\${translateToKorean(growthCurve.type)}</p>
@@ -7448,7 +7448,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 전환 타이밍 (30/60/90일 계획) -->
                     \${transitionTiming.day30?.goal || transitionTiming.day60?.goal || transitionTiming.day90?.goal ? \`
                         <div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(99,102,241,0.1)); border: 1px solid rgba(59,130,246,0.2);">
-                            <h4 class="text-xl font-bold mb-2 text-blue-400 flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-2 text-blue-400 flex items-center gap-2">
                                 <span>📅</span> 30/60/90일 전환 계획
                             </h4>
                             <p class="text-sm text-wiki-muted mb-5">단계별 목표와 실행 계획을 통해 체계적으로 전환을 준비하세요.</p>
@@ -7505,7 +7505,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 전문가 가이던스 -->
                     \${expertGuidance.doNow?.length > 0 || expertGuidance.stopDoing?.length > 0 || expertGuidance.learnNext?.length > 0 ? \`
                         <div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.1)); border: 1px solid rgba(34,197,94,0.2);">
-                            <h4 class="text-xl font-bold mb-2 text-green-400 flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-2 text-green-400 flex items-center gap-2">
                                 <span>🧭</span> 전문가 가이던스
                             </h4>
                             <p class="text-base text-wiki-muted mb-5">지금 당장 실천할 수 있는 구체적인 조언입니다.</p>
@@ -7541,7 +7541,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <!-- 스트레스 프로필 상세 -->
                     \${stressProfile.profile ? \`
                         <div class="p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(251,146,60,0.1)); border: 1px solid rgba(239,68,68,0.2);">
-                            <h4 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2">
+                            <h4 class="text-2xl font-bold mb-4 text-red-400 flex items-center gap-2">
                                 <span>😰</span> 스트레스 프로필
                             </h4>
                             <p class="text-base leading-relaxed text-wiki-text mb-4">\${stressProfile.profile}</p>
@@ -7664,7 +7664,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                     <!-- 분석 파이프라인 설명 -->
                     <div class="mb-8 p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(34,197,94,0.2);">
-                        <h4 class="text-xl font-bold mb-4 text-emerald-400">🔬 분석 파이프라인</h4>
+                        <h4 class="text-2xl font-bold mb-4 text-emerald-400">🔬 분석 파이프라인</h4>
                         <div class="space-y-4 text-base">
                             <div class="flex items-start gap-3">
                                 <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">1</span>
@@ -7699,7 +7699,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                     <!-- 입력 데이터 요약 -->
                     <div class="mb-8">
-                        <h4 class="text-xl font-bold mb-4">📝 분석에 사용된 입력 데이터</h4>
+                        <h4 class="text-2xl font-bold mb-4">📝 분석에 사용된 입력 데이터</h4>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="p-4 rounded-xl bg-wiki-bg/50 text-center">
                                 <div class="text-3xl font-bold text-wiki-primary">\${report._factsCount || 0}</div>
@@ -7722,7 +7722,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                     <!-- AI 추천 시스템 작동 원리 -->
                     <div class="mb-8 p-5 rounded-xl" style="background-color: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);">
-                        <h4 class="text-xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 AI 추천은 이렇게 만들어집니다</h4>
+                        <h4 class="text-2xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 AI 추천은 이렇게 만들어집니다</h4>
                         <p class="text-base text-wiki-muted mb-5">이 리포트는 단순 키워드 매칭이 아닌, 3단계 AI 시스템을 거쳐 생성됩니다.</p>
 
                         <!-- RAG: 벡터 검색 -->
@@ -7810,7 +7810,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
 
                     <!-- 데이터 소스 -->
                     <div class="p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(99,102,241,0.05)); border: 1px solid rgba(139,92,246,0.2);">
-                        <h4 class="text-xl font-bold mb-4 text-purple-400">📚 데이터 소스</h4>
+                        <h4 class="text-2xl font-bold mb-4 text-purple-400">📚 데이터 소스</h4>
                         <div class="grid md:grid-cols-2 gap-4 text-base">
                             <div>
                                 <p class="font-medium text-white mb-1">직업 정보</p>
@@ -8586,7 +8586,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                         <h4 class="font-bold text-lg text-white leading-tight">\${escapeHtmlJob(jobName)}</h4>
                                     </a>
                                     <div class="flex-shrink-0 text-right">
-                                        <span class="text-xl font-bold \${mainScoreColor}">\${mainScore}</span>
+                                        <span class="text-2xl font-bold \${mainScoreColor}">\${mainScore}</span>
                                         <span class="text-xs text-wiki-muted ml-0.5">\${mainScoreLabel}</span>
                                     </div>
                                 </div>
@@ -8939,7 +8939,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     
                     <!-- 헤더 -->
                     <div class="mb-6">
-                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <h3 class="text-2xl font-bold text-white flex items-center gap-2">
                             <i class="fas fa-quote-left text-emerald-400"></i>
                             <span>\${jobName} 추천 근거</span>
                         </h3>

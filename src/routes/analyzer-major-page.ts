@@ -3473,7 +3473,7 @@ function displayPremiumReportV3Major(result) {
             </div>
 
             <!-- 전공 비전 -->
-            <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+            <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                 <span>✨</span> 전공 비전
             </h4>
             \${careerVisionHtml}
@@ -3481,7 +3481,7 @@ function displayPremiumReportV3Major(result) {
             <!-- 메타인지 요약 (요약 탭) -->
             \${metaCognition ? \`
                 <div class="mt-8 mb-8">
-                    <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                    <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                         <span>📊</span> 메타인지
                         <button onclick="showReportTabMajor('psychology')" class="ml-auto px-3 py-1.5 rounded-lg text-[16px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
                             <span>자세히 보기</span>
@@ -3554,7 +3554,7 @@ function displayPremiumReportV3Major(result) {
             <!-- 나의 전공 프로필 (프로필 해석) -->
             \${profileInterpretation ? \`
                 <div class="mt-8 mb-8">
-                    <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                    <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                         <span>🧬</span> 나의 전공 프로필
                     </h4>
 
@@ -3632,7 +3632,7 @@ function displayPremiumReportV3Major(result) {
             <!-- TOP 3 전공 카드 (요약 탭) -->
             \${overallTop5.length > 0 ? \`
                 <div class="mt-6 pt-4 border-t border-wiki-border/30">
-                    <h4 class="text-xl font-bold mb-4 text-wiki-text flex items-center gap-2">
+                    <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2">
                         <span>🏆</span> 추천 전공 Top 3
                         <button onclick="showReportTabMajor('recommendations')" class="ml-auto px-3 py-1.5 rounded-lg text-[16px] font-medium text-wiki-primary bg-wiki-primary/10 hover:bg-wiki-primary/20 transition-all flex items-center gap-1.5">
                             <span>더보기</span>
@@ -3751,7 +3751,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     // 핵심 요약
     if (personal.personality_summary || metaCognition?.innerExploration?.identityInsight) {
         html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.3);">';
-        html += '<h4 class="text-xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>';
+        html += '<h4 class="text-2xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>';
         html += '<p class="text-base md:text-lg leading-relaxed text-white mb-4">';
         var rawText = metaCognition?.innerExploration?.identityInsight || personal.personality_summary || '';
         var styled = rawText.replace(/'([^']+)'/g, '<strong class="text-wiki-secondary font-bold">$1</strong>');
@@ -3790,7 +3790,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
         html += '</div>';
     } else {
         html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.2);">';
-        html += '<h4 class="text-xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>';
+        html += '<h4 class="text-2xl font-bold mb-3" style="color: rgb(165,180,252);">💫 핵심 요약</h4>';
         html += '<p class="text-base md:text-lg leading-relaxed text-wiki-muted">심층 분석을 위해 더 많은 정보가 필요합니다. 심층 질문에 자세히 답변해주시면 더 정확한 분석이 가능합니다.</p>';
         html += '</div>';
     }
@@ -3803,7 +3803,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     // 작업 스타일 인사이트
     if (personal.work_style_insights?.length > 0) {
         html += '<div class="mb-8">';
-        html += '<h4 class="text-xl font-bold mb-4 flex items-center gap-2"><span>🎨</span> 학습 스타일</h4>';
+        html += '<h4 class="text-2xl font-bold mb-4 flex items-center gap-2"><span>🎨</span> 학습 스타일</h4>';
         html += '<div class="grid gap-3">';
         personal.work_style_insights.forEach(function(ws) {
             var text = translateToKorean(ws).trim();
@@ -3817,7 +3817,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     // 가치 우선순위
     if (personal.value_priorities?.length > 0) {
         html += '<div class="mb-8">';
-        html += '<h4 class="text-xl font-bold mb-4 flex items-center gap-2"><span>⭐</span> 가치 우선순위</h4>';
+        html += '<h4 class="text-2xl font-bold mb-4 flex items-center gap-2"><span>⭐</span> 가치 우선순위</h4>';
         var gridCols = Math.min(personal.value_priorities.length, 3);
         html += '<div class="grid grid-cols-' + gridCols + ' gap-3">';
         var colors = ['rgba(168,85,247,0.2)', 'rgba(99,102,241,0.2)', 'rgba(59,130,246,0.2)', 'rgba(6,182,212,0.2)', 'rgba(16,185,129,0.2)'];
@@ -3834,7 +3834,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     // 잠재적 도전
     if (personal.potential_challenges?.length > 0) {
         html += '<div class="mb-8 p-5 rounded-xl" style="background-color: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.2);">';
-        html += '<h4 class="text-xl font-bold mb-4 text-orange-400 flex items-center gap-2"><span>⚠️</span> 주의할 점</h4>';
+        html += '<h4 class="text-2xl font-bold mb-4 text-orange-400 flex items-center gap-2"><span>⚠️</span> 주의할 점</h4>';
         html += '<ul class="space-y-3">';
         personal.potential_challenges.forEach(function(c) {
             html += '<li class="flex items-center gap-3"><span class="text-orange-400">•</span><span class="text-base leading-relaxed text-wiki-text">' + c + '</span></li>';
@@ -3845,7 +3845,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     // 블라인드 스팟
     if (personal.blind_spots_to_check?.length > 0) {
         html += '<div class="mb-8 p-5 rounded-xl" style="background-color: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);">';
-        html += '<h4 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2"><span>🔍</span> 점검할 블라인드 스팟</h4>';
+        html += '<h4 class="text-2xl font-bold mb-4 text-red-400 flex items-center gap-2"><span>🔍</span> 점검할 블라인드 스팟</h4>';
         html += '<ul class="space-y-3">';
         personal.blind_spots_to_check.forEach(function(b) {
             html += '<li class="flex items-center gap-3"><span class="text-red-400">•</span><span class="text-base leading-relaxed text-wiki-text">' + b + '</span></li>';
@@ -3856,7 +3856,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     // 학습 스타일 5축 시각화
     if (learningStyleMap && (learningStyleMap.theoretical_vs_practical !== 0 || learningStyleMap.solo_vs_collaborative !== 0)) {
         html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(59,130,246,0.1)); border: 1px solid rgba(6,182,212,0.2);">';
-        html += '<h4 class="text-xl font-bold mb-2 text-cyan-400 flex items-center gap-2"><span>📊</span> 학습 스타일 5축 분석</h4>';
+        html += '<h4 class="text-2xl font-bold mb-2 text-cyan-400 flex items-center gap-2"><span>📊</span> 학습 스타일 5축 분석</h4>';
         html += '<p class="text-sm text-wiki-muted mb-5">각 축의 중앙은 균형 상태이며, 좌우로 치우칠수록 해당 성향이 강합니다.</p>';
         html += '<div class="space-y-5">';
 
@@ -3899,7 +3899,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
         html += '<div class="grid grid-cols-1 ' + (bothExist ? 'md:grid-cols-2' : '') + ' gap-6 mb-8">';
         if (innerConflict.analysis && !metaCognition?.innerExploration?.innerConflicts) {
             html += '<div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.1)); border: 1px solid rgba(168,85,247,0.2);">';
-            html += '<h4 class="text-xl font-bold mb-4 text-purple-400 flex items-center gap-2"><span>💭</span> 내면 갈등 분석</h4>';
+            html += '<h4 class="text-2xl font-bold mb-4 text-purple-400 flex items-center gap-2"><span>💭</span> 내면 갈등 분석</h4>';
             if (innerConflict.patterns?.length > 0) {
                 html += '<p class="text-lg font-bold mb-3" style="color: rgb(216,180,254);">' + innerConflict.patterns[0] + '</p>';
             }
@@ -3915,7 +3915,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
         }
         if (growthCurve.type) {
             html += '<div class="p-5 md:p-6 rounded-2xl h-full" style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(52,211,153,0.1)); border: 1px solid rgba(16,185,129,0.2);">';
-            html += '<h4 class="text-xl font-bold mb-4 text-emerald-400 flex items-center gap-2"><span>📈</span> 성장 곡선 유형</h4>';
+            html += '<h4 class="text-2xl font-bold mb-4 text-emerald-400 flex items-center gap-2"><span>📈</span> 성장 곡선 유형</h4>';
             html += '<p class="text-lg font-bold mb-3" style="color: rgb(52,211,153);">' + translateToKorean(growthCurve.type) + '</p>';
             if (growthCurve.description) {
                 html += '<p class="text-base leading-relaxed text-wiki-text">' + growthCurve.description + '</p>';
@@ -3928,7 +3928,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     // 학기별 로드맵
     if (academicTimeline.semester1?.goal || academicTimeline.semester2?.goal || academicTimeline.semester3_4?.goal || academicTimeline.beyond?.goal) {
         html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(99,102,241,0.1)); border: 1px solid rgba(59,130,246,0.2);">';
-        html += '<h4 class="text-xl font-bold mb-2 text-blue-400 flex items-center gap-2"><span>📅</span> 학기별 로드맵</h4>';
+        html += '<h4 class="text-2xl font-bold mb-2 text-blue-400 flex items-center gap-2"><span>📅</span> 학기별 로드맵</h4>';
         html += '<p class="text-sm text-wiki-muted mb-5">학기별 목표와 실행 계획을 통해 체계적으로 학업을 준비하세요.</p>';
         html += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">';
 
@@ -3967,7 +3967,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     // 학습 가이드
     if (studyGuidance.doNow?.length > 0 || studyGuidance.stopDoing?.length > 0 || studyGuidance.experiment?.length > 0 || studyGuidance.studyTips?.length > 0) {
         html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.1)); border: 1px solid rgba(34,197,94,0.2);">';
-        html += '<h4 class="text-xl font-bold mb-2 text-green-400 flex items-center gap-2"><span>🧭</span> 학습 가이드</h4>';
+        html += '<h4 class="text-2xl font-bold mb-2 text-green-400 flex items-center gap-2"><span>🧭</span> 학습 가이드</h4>';
         html += '<p class="text-base text-wiki-muted mb-5">지금 당장 실천할 수 있는 구체적인 조언입니다.</p>';
 
         var activeSections = [];
@@ -4022,7 +4022,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     // 스트레스 프로필 상세
     if (stressProfile.profile) {
         html += '<div class="p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(251,146,60,0.1)); border: 1px solid rgba(239,68,68,0.2);">';
-        html += '<h4 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2"><span>😰</span> 스트레스 프로필</h4>';
+        html += '<h4 class="text-2xl font-bold mb-4 text-red-400 flex items-center gap-2"><span>😰</span> 스트레스 프로필</h4>';
         html += '<p class="text-base leading-relaxed text-wiki-text mb-4">' + stressProfile.profile + '</p>';
         if (stressProfile.triggers?.length > 0) {
             html += '<div class="mt-4 pt-4 border-t border-red-400/20"><span class="text-sm text-red-300 font-semibold">주요 트리거:</span><div class="mt-3 flex flex-wrap gap-2">';
@@ -4289,7 +4289,7 @@ function buildDetailsTabMajor(result, report) {
 
     // 분석 파이프라인 설명
     html += '<div class="mb-8 p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(34,197,94,0.2);">';
-    html += '<h4 class="text-xl font-bold mb-4 text-emerald-400">🔬 분석 파이프라인</h4>';
+    html += '<h4 class="text-2xl font-bold mb-4 text-emerald-400">🔬 분석 파이프라인</h4>';
     html += '<div class="space-y-4 text-base">';
     html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">1</span><div><p class="font-medium text-white">벡터 검색 (Vectorize)</p><p class="text-wiki-muted text-base">당신의 답변을 임베딩으로 변환하여 전공 DB에서 의미적으로 유사한 후보를 검색합니다.</p></div></div>';
     html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">2</span><div><p class="font-medium text-white">TAG 필터링 (Hard Constraints)</p><p class="text-wiki-muted text-base">학습 환경, 선호도 등 절대 조건에 맞지 않는 전공을 제외합니다.</p></div></div>';
@@ -4299,7 +4299,7 @@ function buildDetailsTabMajor(result, report) {
 
     // 입력 데이터 요약
     html += '<div class="mb-8">';
-    html += '<h4 class="text-xl font-bold mb-4">📝 분석에 사용된 입력 데이터</h4>';
+    html += '<h4 class="text-2xl font-bold mb-4">📝 분석에 사용된 입력 데이터</h4>';
     html += '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
     html += '<div class="p-4 rounded-xl bg-wiki-bg/50 text-center"><div class="text-3xl font-bold text-wiki-primary">' + (report._factsCount || 0) + '</div><div class="text-base text-wiki-muted mt-1">수집된 팩트</div></div>';
     html += '<div class="p-4 rounded-xl bg-wiki-bg/50 text-center"><div class="text-3xl font-bold text-emerald-400">' + (report._answeredQuestions || 0) + '</div><div class="text-base text-wiki-muted mt-1">답변한 질문</div></div>';
@@ -4309,7 +4309,7 @@ function buildDetailsTabMajor(result, report) {
 
     // AI 추천 시스템 작동 원리
     html += '<div class="mb-8 p-5 rounded-xl" style="background-color: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);">';
-    html += '<h4 class="text-xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 AI 추천은 이렇게 만들어집니다</h4>';
+    html += '<h4 class="text-2xl font-bold mb-4" style="color: rgb(165,180,252);">🎯 AI 추천은 이렇게 만들어집니다</h4>';
     html += '<p class="text-base text-wiki-muted mb-5">이 리포트는 단순 키워드 매칭이 아닌, 3단계 AI 시스템을 거쳐 생성됩니다.</p>';
 
     // STEP 1 RAG
@@ -4339,7 +4339,7 @@ function buildDetailsTabMajor(result, report) {
 
     // 데이터 소스
     html += '<div class="p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(99,102,241,0.05)); border: 1px solid rgba(139,92,246,0.2);">';
-    html += '<h4 class="text-xl font-bold mb-4 text-purple-400">📚 데이터 소스</h4>';
+    html += '<h4 class="text-2xl font-bold mb-4 text-purple-400">📚 데이터 소스</h4>';
     html += '<div class="grid md:grid-cols-2 gap-4 text-base">';
     html += '<div><p class="font-medium text-white mb-1">전공 정보</p><p class="text-wiki-muted text-base">커리어넷 + 대학 정보 데이터 통합</p></div>';
     html += '<div><p class="font-medium text-white mb-1">전공 속성 태깅</p><p class="text-wiki-muted text-base">major_attributes 테이블: 학습환경, 진로 방향 등 속성</p></div>';
@@ -4573,7 +4573,7 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         cardHtml += '<div class="flex-1 min-w-0 p-4 flex flex-col justify-between"><div>';
         cardHtml += '<div class="flex items-start justify-between gap-3 mb-1.5">';
         cardHtml += '<a href="/major/' + encodeURIComponent(majorSlug) + '" target="_blank" rel="noopener noreferrer" class="group-hover:text-wiki-primary transition"><h4 class="font-bold text-lg text-white leading-tight">' + escapeHtmlMajor(majorName) + '</h4></a>';
-        cardHtml += '<div class="flex-shrink-0 text-right"><span class="text-xl font-bold ' + mainScoreColor + '">' + mainScore + '</span><span class="text-xs text-wiki-muted ml-0.5">' + mainScoreLabel + '</span></div>';
+        cardHtml += '<div class="flex-shrink-0 text-right"><span class="text-2xl font-bold ' + mainScoreColor + '">' + mainScore + '</span><span class="text-xs text-wiki-muted ml-0.5">' + mainScoreLabel + '</span></div>';
         cardHtml += '</div>';
 
         if (fieldCategory) {
