@@ -259,7 +259,7 @@ export const renderLayout = (
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9810002715600854" crossorigin="anonymous"></script>
         ${extraHead}
         <style>
-          html { font-size: 101%; }
+          html { font-size: 105%; }
           body { background-color: #060b18; color: #e2e8f0; font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; }
 
           /* 기본 콘텐츠 폰트 크기 정의 */
