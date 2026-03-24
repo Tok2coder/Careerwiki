@@ -6630,13 +6630,13 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <span class="text-2xl">✨</span>
                         당신만의 커리어 분석 리포트
                     </h2>
-                    <p class="text-wiki-muted text-sm">AI가 분석한 당신의 커리어 방향성</p>
+                    <p class="text-wiki-muted text-base">AI가 분석한 당신의 커리어 방향성</p>
                     <div class="flex justify-center items-center gap-2 mt-3">
-                        <button onclick="shareReport()" id="share-report-btn" class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition" style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; cursor: pointer;">
+                        <button onclick="shareReport()" id="share-report-btn" class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-base font-medium transition" style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; cursor: pointer;">
                             <i class="fas fa-share-alt"></i> 공유
                         </button>
                         \${DEBUG_MODE ? \`
-                        <button onclick="copyAllReportContent()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6; border: 1px solid rgba(67, 97, 238, 0.3);">
+                        <button onclick="copyAllReportContent()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-base font-medium transition" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6; border: 1px solid rgba(67, 97, 238, 0.3);">
                             <i class="fas fa-copy"></i> 결과 전체 복사
                         </button>
                         \` : ''}
@@ -6660,7 +6660,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <span class="text-3xl">📋</span>
                             <span class="bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">요약</span>
                         </h2>
-                        <p class="text-center text-wiki-muted text-sm mt-2">당신의 커리어 분석 핵심을 한눈에 확인하세요.</p>
+                        <p class="text-center text-wiki-muted text-base mt-2">당신의 커리어 분석 핵심을 한눈에 확인하세요.</p>
                         <div class="mt-6 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
                     </div>
 
@@ -6728,8 +6728,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                             <span class="text-lg">⚠️</span>
                                             <h5 class="font-bold text-base" style="color:#e2e8f0;">주의점</h5>
                                             <span class="relative group cursor-help">
-                                                <i class="fas fa-question-circle text-wiki-muted text-xs"></i>
-                                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(30,30,40,0.95); border: 1px solid rgba(255,255,255,0.1);">이 항목들은 에너지가 소모되거나 스트레스를 유발할 수 있는 요인입니다.<br/>커리어 선택 시 이 요인들을 고려하면 번아웃을 예방할 수 있습니다.</span>
+                                                <i class="fas fa-question-circle text-wiki-muted text-sm"></i>
+                                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-sm text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(30,30,40,0.95); border: 1px solid rgba(255,255,255,0.1);">이 항목들은 에너지가 소모되거나 스트레스를 유발할 수 있는 요인입니다.<br/>커리어 선택 시 이 요인들을 고려하면 번아웃을 예방할 수 있습니다.</span>
                                             </span>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5">
@@ -6894,12 +6894,12 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                             <!-- 잘할 이유 + 좋아할 이유 -->
                                             \${hasReasons ? \`
                                                 <div class="space-y-1.5 mt-3 p-3 rounded-lg" style="background: rgba(0,0,0,0.2);">
-                                                    \${likeReason ? \`<p class="text-[16px] leading-relaxed text-purple-300/90"><span class="text-purple-400 font-medium">💜 Like:</span> \${likeReason}</p>\` : ''}
-                                                    \${canReason ? \`<p class="text-[16px] leading-relaxed text-blue-300/90"><span class="text-blue-400 font-medium">💪 Can:</span> \${canReason}</p>\` : ''}
-                                                    \${feasibilityReason ? \`<p class="text-[16px] leading-relaxed text-amber-300/90"><span class="text-amber-400 font-medium">🎯 배경:</span> \${feasibilityReason}</p>\` : ''}
+                                                    \${likeReason ? \`<p class="text-[14px] leading-relaxed text-purple-300/90"><span class="text-purple-400 font-medium">💜 Like:</span> \${likeReason}</p>\` : ''}
+                                                    \${canReason ? \`<p class="text-[14px] leading-relaxed text-blue-300/90"><span class="text-blue-400 font-medium">💪 Can:</span> \${canReason}</p>\` : ''}
+                                                    \${feasibilityReason ? \`<p class="text-[14px] leading-relaxed text-amber-300/90"><span class="text-amber-400 font-medium">🎯 배경:</span> \${feasibilityReason}</p>\` : ''}
                                                 </div>
                                             \` : (rationale && !rationale.includes('자동 생성된 결과') ? \`
-                                                <p class="text-[16px] text-emerald-400/80 mt-3">💡 \${rationale}</p>
+                                                <p class="text-[14px] text-emerald-400/80 mt-3">💡 \${rationale}</p>
                                             \` : '')}
                                         </a>
                                     \`;
@@ -6917,7 +6917,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <span class="text-3xl">📊</span>
                             <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">메타인지</span>
                         </h2>
-                        <p class="text-center text-wiki-muted text-sm mt-2">자기 자신에 대한 깊은 이해와 내면 탐구.</p>
+                        <p class="text-center text-wiki-muted text-base mt-2">자기 자신에 대한 깊은 이해와 내면 탐구.</p>
                         <div class="mt-6 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
                     </div>
 
@@ -7291,7 +7291,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                     if (text.length < 10) text = text.replace(/\\.$/, '');
                                     else if (!text.endsWith('.')) text += '.';
                                     return \`<div class="p-3 md:p-4 rounded-xl flex items-center gap-2 justify-center" style="background-color: \${colors[i % colors.length]}; border: 1px solid \${colors[i % colors.length].replace('0.2', '0.3')};">
-                                        <span class="text-sm font-bold" style="color: \${textColors[i % textColors.length]};">#\${i + 1}</span>
+                                        <span class="text-base font-bold" style="color: \${textColors[i % textColors.length]};">#\${i + 1}</span>
                                         <span class="text-base font-semibold text-wiki-text">\${text}</span>
                                     </div>\`;
                                 }).join('')}
@@ -7339,22 +7339,22 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <h4 class="text-2xl font-bold mb-4 flex items-center gap-2">
                                 <span>📊</span> 선택 기반 분석
                             </h4>
-                            <p class="text-sm text-wiki-muted mb-4">미니모듈에서 선택한 내용을 기반으로 한 기초 분석입니다.</p>
+                            <p class="text-base text-wiki-muted mb-4">미니모듈에서 선택한 내용을 기반으로 한 기초 분석입니다.</p>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="p-4 rounded-xl" style="background-color: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15);">
-                                    <div class="text-sm font-semibold text-indigo-400 mb-2">흥미 영역</div>
+                                    <div class="text-base font-semibold text-indigo-400 mb-2">흥미 영역</div>
                                     <div class="text-base text-wiki-text">\${(window.miniModuleResult.interest_top || []).map(t => translateToKorean(t)).join(', ') || '미선택'}</div>
                                 </div>
                                 <div class="p-4 rounded-xl" style="background-color: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.15);">
-                                    <div class="text-sm font-semibold text-purple-400 mb-2">중요 가치</div>
+                                    <div class="text-base font-semibold text-purple-400 mb-2">중요 가치</div>
                                     <div class="text-base text-wiki-text">\${(window.miniModuleResult.value_top || []).map(t => translateToKorean(t)).join(', ') || '미선택'}</div>
                                 </div>
                                 <div class="p-4 rounded-xl" style="background-color: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15);">
-                                    <div class="text-sm font-semibold text-emerald-400 mb-2">강점</div>
+                                    <div class="text-base font-semibold text-emerald-400 mb-2">강점</div>
                                     <div class="text-base text-wiki-text">\${(window.miniModuleResult.strength_top || []).map(t => translateToKorean(t)).join(', ') || '미선택'}</div>
                                 </div>
                                 <div class="p-4 rounded-xl" style="background-color: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.15);">
-                                    <div class="text-sm font-semibold text-orange-400 mb-2">제약 조건</div>
+                                    <div class="text-base font-semibold text-orange-400 mb-2">제약 조건</div>
                                     <div class="text-base text-wiki-text">\${(window.miniModuleResult.constraint_flags || []).map(t => translateToKorean(t)).join(', ') || '없음'}</div>
                                 </div>
                             </div>
@@ -7371,7 +7371,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <h4 class="text-2xl font-bold mb-2 text-cyan-400 flex items-center gap-2">
                                 <span>📊</span> 작업 스타일 5축 분석
                             </h4>
-                            <p class="text-sm text-wiki-muted mb-5">각 축의 중앙은 균형 상태이며, 좌우로 치우칠수록 해당 성향이 강합니다.</p>
+                            <p class="text-base text-wiki-muted mb-5">각 축의 중앙은 균형 상태이며, 좌우로 치우칠수록 해당 성향이 강합니다.</p>
                             <div class="space-y-5">
                                 \${[
                                     { left: '분석형', right: '창의형', value: workStyleMap.analytical_vs_creative, color: 'cyan', leftDesc: '데이터와 논리 기반 접근을 선호합니다', rightDesc: '새로운 아이디어와 창의적 접근을 선호합니다', balanceDesc: '분석과 창의성을 균형 있게 활용합니다' },
@@ -7382,7 +7382,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 ].map(axis => \`
                                     <div>
                                         <div class="flex items-center gap-4">
-                                            <span class="text-sm w-24 text-right \${axis.value < 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted'}">\${axis.left}</span>
+                                            <span class="text-base w-24 text-right \${axis.value < 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted'}">\${axis.left}</span>
                                             <div class="flex-1 h-3 bg-wiki-border/20 rounded-full relative overflow-hidden">
                                                 <div class="absolute top-0 left-1/2 w-px h-full bg-wiki-muted/40 z-10"></div>
                                                 \${axis.value === 0
@@ -7392,9 +7392,9 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                                             ? 'left: 50%; width: ' + Math.max(axis.value / 2, 3) + '%;'
                                                             : 'right: 50%; width: ' + Math.max(Math.abs(axis.value) / 2, 3) + '%;'}"></div>\`}
                                             </div>
-                                            <span class="text-sm w-24 \${axis.value > 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted'}">\${axis.right}</span>
+                                            <span class="text-base w-24 \${axis.value > 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted'}">\${axis.right}</span>
                                         </div>
-                                        <p class="text-xs text-wiki-muted mt-1 text-center">\${Math.abs(axis.value) >= 15 ? (axis.value < 0 ? axis.leftDesc : axis.rightDesc) : axis.balanceDesc}</p>
+                                        <p class="text-sm text-wiki-muted mt-1 text-center">\${Math.abs(axis.value) >= 15 ? (axis.value < 0 ? axis.leftDesc : axis.rightDesc) : axis.balanceDesc}</p>
                                     </div>
                                 \`).join('')}
                             </div>
@@ -7416,7 +7416,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                     <p class="text-base leading-relaxed text-wiki-text mb-4">\${innerConflict.analysis}</p>
                                     \${innerConflict.patterns?.length > 1 ? \`
                                         <div class="mt-4 pt-4 border-t border-purple-400/20">
-                                            <span class="text-sm text-purple-300 font-semibold">기타 갈등 패턴:</span>
+                                            <span class="text-base text-purple-300 font-semibold">기타 갈등 패턴:</span>
                                             <ul class="mt-3 space-y-2">
                                                 \${innerConflict.patterns.slice(1).map(p => \`
                                                     <li class="flex items-center gap-3">
@@ -7451,51 +7451,51 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <h4 class="text-2xl font-bold mb-2 text-blue-400 flex items-center gap-2">
                                 <span>📅</span> 30/60/90일 전환 계획
                             </h4>
-                            <p class="text-sm text-wiki-muted mb-5">단계별 목표와 실행 계획을 통해 체계적으로 전환을 준비하세요.</p>
+                            <p class="text-base text-wiki-muted mb-5">단계별 목표와 실행 계획을 통해 체계적으로 전환을 준비하세요.</p>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 \${transitionTiming.day30?.goal ? \`
                                     <div class="p-4 rounded-xl" style="background-color: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.15);">
-                                        <div class="text-sm font-bold text-blue-300 mb-3 flex items-center gap-2">
+                                        <div class="text-base font-bold text-blue-300 mb-3 flex items-center gap-2">
                                             <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">30</span>
                                             첫 30일
                                         </div>
                                         <div class="text-base font-semibold text-white mb-3">\${transitionTiming.day30.goal}</div>
                                         \${transitionTiming.day30.actions?.length > 0 ? \`
-                                            <ul class="text-sm text-wiki-muted space-y-2 mb-3">
+                                            <ul class="text-base text-wiki-muted space-y-2 mb-3">
                                                 \${transitionTiming.day30.actions.slice(0,2).map(a => \`<li class="flex items-center gap-2"><span class="text-blue-400">•</span> \${a}</li>\`).join('')}
                                             </ul>
                                         \` : ''}
-                                        \${transitionTiming.day30.milestone ? \`<div class="text-sm text-blue-400 font-medium">✓ \${transitionTiming.day30.milestone}</div>\` : ''}
+                                        \${transitionTiming.day30.milestone ? \`<div class="text-base text-blue-400 font-medium">✓ \${transitionTiming.day30.milestone}</div>\` : ''}
                                     </div>
                                 \` : ''}
                                 \${transitionTiming.day60?.goal ? \`
                                     <div class="p-4 rounded-xl" style="background-color: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.15);">
-                                        <div class="text-sm font-bold text-indigo-300 mb-3 flex items-center gap-2">
+                                        <div class="text-base font-bold text-indigo-300 mb-3 flex items-center gap-2">
                                             <span class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold">60</span>
                                             60일차
                                         </div>
                                         <div class="text-base font-semibold text-white mb-3">\${transitionTiming.day60.goal}</div>
                                         \${transitionTiming.day60.actions?.length > 0 ? \`
-                                            <ul class="text-sm text-wiki-muted space-y-2 mb-3">
+                                            <ul class="text-base text-wiki-muted space-y-2 mb-3">
                                                 \${transitionTiming.day60.actions.slice(0,2).map(a => \`<li class="flex items-center gap-2"><span class="text-indigo-400">•</span> \${a}</li>\`).join('')}
                                             </ul>
                                         \` : ''}
-                                        \${transitionTiming.day60.milestone ? \`<div class="text-sm text-indigo-400 font-medium">✓ \${transitionTiming.day60.milestone}</div>\` : ''}
+                                        \${transitionTiming.day60.milestone ? \`<div class="text-base text-indigo-400 font-medium">✓ \${transitionTiming.day60.milestone}</div>\` : ''}
                                     </div>
                                 \` : ''}
                                 \${transitionTiming.day90?.goal ? \`
                                     <div class="p-4 rounded-xl" style="background-color: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.15);">
-                                        <div class="text-sm font-bold text-violet-300 mb-3 flex items-center gap-2">
+                                        <div class="text-base font-bold text-violet-300 mb-3 flex items-center gap-2">
                                             <span class="w-8 h-8 rounded-full bg-violet-500/20 flex items-center justify-center text-violet-400 font-bold">90</span>
                                             90일차
                                         </div>
                                         <div class="text-base font-semibold text-white mb-3">\${transitionTiming.day90.goal}</div>
                                         \${transitionTiming.day90.actions?.length > 0 ? \`
-                                            <ul class="text-sm text-wiki-muted space-y-2 mb-3">
+                                            <ul class="text-base text-wiki-muted space-y-2 mb-3">
                                                 \${transitionTiming.day90.actions.slice(0,2).map(a => \`<li class="flex items-center gap-2"><span class="text-violet-400">•</span> \${a}</li>\`).join('')}
                                             </ul>
                                         \` : ''}
-                                        \${transitionTiming.day90.milestone ? \`<div class="text-sm text-violet-400 font-medium">✓ \${transitionTiming.day90.milestone}</div>\` : ''}
+                                        \${transitionTiming.day90.milestone ? \`<div class="text-base text-violet-400 font-medium">✓ \${transitionTiming.day90.milestone}</div>\` : ''}
                                     </div>
                                 \` : ''}
                             </div>
@@ -7547,10 +7547,10 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <p class="text-base leading-relaxed text-wiki-text mb-4">\${stressProfile.profile}</p>
                             \${stressProfile.triggers?.length > 0 ? \`
                                 <div class="mt-4 pt-4 border-t border-red-400/20">
-                                    <span class="text-sm text-red-300 font-semibold">주요 트리거:</span>
+                                    <span class="text-base text-red-300 font-semibold">주요 트리거:</span>
                                     <div class="mt-3 flex flex-wrap gap-2">
                                         \${stressProfile.triggers.map(t => \`
-                                            <span class="px-3 py-1.5 rounded-lg text-sm font-medium" style="background-color: rgba(239,68,68,0.15); color: rgb(252,165,165);">\${t}</span>
+                                            <span class="px-3 py-1.5 rounded-lg text-base font-medium" style="background-color: rgba(239,68,68,0.15); color: rgb(252,165,165);">\${t}</span>
                                         \`).join('')}
                                     </div>
                                 </div>
@@ -7567,7 +7567,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <span class="text-3xl">💼</span>
                             <span class="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">추천 직업</span>
                         </h2>
-                        <p class="text-center text-wiki-muted text-sm mt-2">당신에게 맞는 직업을 AI가 분석했습니다.</p>
+                        <p class="text-center text-wiki-muted text-base mt-2">당신에게 맞는 직업을 AI가 분석했습니다.</p>
                         <div class="mt-6 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
                     </div>
 
@@ -7656,8 +7656,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <span class="text-3xl">📊</span>
                             <span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">분석 상세 정보</span>
                         </h2>
-                        <p class="text-center text-wiki-muted text-sm mt-2">AI 추천의 근거와 기술적 분석을 확인하세요.</p>
-                        <p class="text-center text-wiki-muted text-xs mt-1">엔진 버전: \${result.engine_version || 'unknown'}</p>
+                        <p class="text-center text-wiki-muted text-base mt-2">AI 추천의 근거와 기술적 분석을 확인하세요.</p>
+                        <p class="text-center text-wiki-muted text-sm mt-1">엔진 버전: \${result.engine_version || 'unknown'}</p>
                         <div class="mt-6 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
                     </div>
                     <p class="text-base text-wiki-muted mb-6">이 섹션은 AI 추천의 근거, 사용된 알고리즘, 그리고 점수 산출 과정을 상세히 보여줍니다.</p>
@@ -7667,28 +7667,28 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <h4 class="text-2xl font-bold mb-4 text-emerald-400">🔬 분석 파이프라인</h4>
                         <div class="space-y-4 text-base">
                             <div class="flex items-start gap-3">
-                                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">1</span>
+                                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">1</span>
                                 <div>
                                     <p class="font-medium text-white">벡터 검색 (Vectorize)</p>
                                     <p class="text-wiki-muted text-base">당신의 답변을 임베딩으로 변환하여 7,000개 직업 DB에서 의미적으로 유사한 후보를 검색합니다.</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-3">
-                                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">2</span>
+                                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">2</span>
                                 <div>
                                     <p class="font-medium text-white">TAG 필터링 (Hard Constraints)</p>
                                     <p class="text-wiki-muted text-base">워라밸, 원격근무, 자격요건 등 절대 조건에 맞지 않는 직업을 제외합니다.</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-3">
-                                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">3</span>
+                                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">3</span>
                                 <div>
                                     <p class="font-medium text-white">LLM Judge (GPT-4o-mini)</p>
                                     <p class="text-wiki-muted text-base">남은 후보 60개에 대해 AI가 Like/Can/Fit 점수를 계산하고, 추천 이유를 생성합니다.</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-3">
-                                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">4</span>
+                                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">4</span>
                                 <div>
                                     <p class="font-medium text-white">LLM Reporter (심리분석)</p>
                                     <p class="text-wiki-muted text-base">당신의 미니모듈 결과를 바탕으로 업무 스타일과 커리어 방향을 분석합니다.</p>
@@ -7728,7 +7728,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <!-- RAG: 벡터 검색 -->
                         <div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
                             <div class="flex items-center gap-2 mb-2">
-                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(34,197,94,0.2); color: rgb(34,197,94);">STEP 1</span>
+                                <span class="text-sm font-bold px-2 py-0.5 rounded" style="background: rgba(34,197,94,0.2); color: rgb(34,197,94);">STEP 1</span>
                                 <span class="font-bold text-white text-base">RAG — 의미 기반 후보 검색</span>
                             </div>
                             <p class="text-[16px] text-wiki-muted leading-relaxed mb-2">당신의 답변 전체를 AI 임베딩(숫자 벡터)으로 변환한 뒤, 7,000개 직업 DB에서 <span class="text-emerald-400">의미적으로 가장 가까운 직업들</span>을 찾습니다.</p>
@@ -7738,7 +7738,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <!-- TAG: 절대 조건 필터 -->
                         <div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
                             <div class="flex items-center gap-2 mb-2">
-                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(251,191,36,0.2); color: rgb(251,191,36);">STEP 2</span>
+                                <span class="text-sm font-bold px-2 py-0.5 rounded" style="background: rgba(251,191,36,0.2); color: rgb(251,191,36);">STEP 2</span>
                                 <span class="font-bold text-white text-base">TAG — 절대 조건 필터링</span>
                             </div>
                             <p class="text-[16px] text-wiki-muted leading-relaxed mb-2">후보 직업들의 속성 태그를 당신의 <span class="text-amber-400">제약 조건</span>과 대조합니다.</p>
@@ -7748,7 +7748,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <!-- CAG: LLM 평가 -->
                         <div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
                             <div class="flex items-center gap-2 mb-2">
-                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(99,102,241,0.2); color: rgb(129,140,248);">STEP 3</span>
+                                <span class="text-sm font-bold px-2 py-0.5 rounded" style="background: rgba(99,102,241,0.2); color: rgb(129,140,248);">STEP 3</span>
                                 <span class="font-bold text-white text-base">CAG — AI가 직접 평가</span>
                             </div>
                             <p class="text-[16px] text-wiki-muted leading-relaxed mb-2">남은 후보 직업 각각에 대해, GPT-4o-mini가 당신의 프로필 전체를 읽고 <span class="text-indigo-400">Like(좋아할 가능성)</span>와 <span class="text-blue-400">Can(잘할 가능성)</span> 점수를 매깁니다.</p>
@@ -7758,7 +7758,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <!-- 최종 점수 -->
                         <div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
                             <div class="flex items-center gap-2 mb-2">
-                                <span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(168,85,247,0.2); color: rgb(192,132,252);">최종</span>
+                                <span class="text-sm font-bold px-2 py-0.5 rounded" style="background: rgba(168,85,247,0.2); color: rgb(192,132,252);">최종</span>
                                 <span class="font-bold text-white text-base">종합 점수 계산 (Fit)</span>
                             </div>
                             <p class="text-[16px] text-wiki-muted leading-relaxed mb-3">AI가 매긴 점수를 아래 공식으로 조합하여 최종 순위를 결정합니다.</p>
@@ -7781,28 +7781,28 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         </div>
                         <div class="divide-y" style="--tw-divide-opacity: 0.06; --tw-divide-color: rgba(255,255,255,var(--tw-divide-opacity));">
                             <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(52,211,153);">
-                                <span class="text-emerald-400 font-bold text-sm w-10 shrink-0 text-center">Fit</span>
-                                <span class="text-white text-sm font-medium w-20 shrink-0">종합 적합도</span>
+                                <span class="text-emerald-400 font-bold text-base w-10 shrink-0 text-center">Fit</span>
+                                <span class="text-white text-base font-medium w-20 shrink-0">종합 적합도</span>
                                 <span class="text-wiki-muted text-[16px]">Like + Can + Background 종합, Risk 차감</span>
                             </div>
                             <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(168,85,247);">
-                                <span class="text-purple-400 font-bold text-sm w-10 shrink-0 text-center">Like</span>
-                                <span class="text-white text-sm font-medium w-20 shrink-0">좋아할 가능성</span>
+                                <span class="text-purple-400 font-bold text-base w-10 shrink-0 text-center">Like</span>
+                                <span class="text-white text-base font-medium w-20 shrink-0">좋아할 가능성</span>
                                 <span class="text-wiki-muted text-[16px]">관심 분야, 가치관, 우선순위와 직업 특성의 일치도</span>
                             </div>
                             <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(96,165,250);">
-                                <span class="text-blue-400 font-bold text-sm w-10 shrink-0 text-center">Can</span>
-                                <span class="text-white text-sm font-medium w-20 shrink-0">잘할 가능성</span>
+                                <span class="text-blue-400 font-bold text-base w-10 shrink-0 text-center">Can</span>
+                                <span class="text-white text-base font-medium w-20 shrink-0">잘할 가능성</span>
                                 <span class="text-wiki-muted text-[16px]">강점, 업무 스타일, 경험과 직업 요구사항의 적합도</span>
                             </div>
                             <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(251,191,36);">
-                                <span class="text-amber-400 font-bold text-sm w-10 shrink-0 text-center">Bg</span>
-                                <span class="text-white text-sm font-medium w-20 shrink-0">배경 적합도</span>
+                                <span class="text-amber-400 font-bold text-base w-10 shrink-0 text-center">Bg</span>
+                                <span class="text-white text-base font-medium w-20 shrink-0">배경 적합도</span>
                                 <span class="text-wiki-muted text-[16px]">경력, 전공, 자격증, 해외경험 등 배경의 도움 정도</span>
                             </div>
                             <div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(248,113,113);">
-                                <span class="text-red-400 font-bold text-sm w-10 shrink-0 text-center">Risk</span>
-                                <span class="text-white text-sm font-medium w-20 shrink-0">위험 요소</span>
+                                <span class="text-red-400 font-bold text-base w-10 shrink-0 text-center">Risk</span>
+                                <span class="text-white text-base font-medium w-20 shrink-0">위험 요소</span>
                                 <span class="text-wiki-muted text-[16px]">피하고 싶은 조건과 직업 환경 충돌 시 페널티</span>
                             </div>
                         </div>
@@ -7835,12 +7835,12 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 <!-- 하단: 입력 수정 + 내용 추가 버튼 -->
                 <div class="flex flex-col sm:flex-row gap-3 justify-center mt-8">
                     <button onclick="showEditWarningModal()"
-                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition hover:opacity-80"
+                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-base font-medium transition hover:opacity-80"
                         style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);">
                         <i class="fas fa-edit"></i> 입력한 내용 수정
                     </button>
                     <button onclick="showAddContextModal()"
-                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition hover:opacity-80"
+                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-base font-medium transition hover:opacity-80"
                         style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">
                         <i class="fas fa-plus"></i> 새로운 내용 추가
                     </button>
@@ -7854,23 +7854,23 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 <i class="fas fa-exclamation-triangle text-xl text-amber-400"></i>
                             </div>
                             <h3 class="text-lg font-bold text-white text-center mb-2">입력 내용 수정 안내</h3>
-                            <p class="text-sm text-wiki-muted text-center">기존에 입력했던 내용을 수정할 수 있습니다.<br>단, 수정 범위에 따라 이후 단계의 답변이 초기화될 수 있습니다.</p>
+                            <p class="text-base text-wiki-muted text-center">기존에 입력했던 내용을 수정할 수 있습니다.<br>단, 수정 범위에 따라 이후 단계의 답변이 초기화될 수 있습니다.</p>
                         </div>
                         <div class="space-y-4 mb-6">
                             <div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);">
-                                <p class="text-sm font-medium text-amber-300 mb-1">Step 1 (프로필 기본정보) 수정 시</p>
-                                <p class="text-xs text-wiki-muted">Step 2(심층 질문)의 질문이 새로 생성되며, 기존 심층 질문 답변이 모두 초기화됩니다.</p>
+                                <p class="text-base font-medium text-amber-300 mb-1">Step 1 (프로필 기본정보) 수정 시</p>
+                                <p class="text-sm text-wiki-muted">Step 2(심층 질문)의 질문이 새로 생성되며, 기존 심층 질문 답변이 모두 초기화됩니다.</p>
                             </div>
                             <div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);">
-                                <p class="text-sm font-medium text-amber-300 mb-1">Step 2 (심층 질문) 답변 수정 시</p>
-                                <p class="text-xs text-wiki-muted">수정한 라운드 이후의 질문들이 새로 생성되며, 해당 라운드 이후 답변이 초기화됩니다.</p>
+                                <p class="text-base font-medium text-amber-300 mb-1">Step 2 (심층 질문) 답변 수정 시</p>
+                                <p class="text-sm text-wiki-muted">수정한 라운드 이후의 질문들이 새로 생성되며, 해당 라운드 이후 답변이 초기화됩니다.</p>
                             </div>
                         </div>
                         <div class="flex gap-3">
-                            <button onclick="hideEditWarningModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">
+                            <button onclick="hideEditWarningModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-base font-medium">
                                 취소
                             </button>
-                            <button onclick="navigateToEditMode()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium">
+                            <button onclick="navigateToEditMode()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:opacity-90 transition text-base font-medium">
                                 수정 시작하기
                             </button>
                         </div>
@@ -7884,20 +7884,20 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <h3 class="text-lg font-bold text-white mb-2">
                                 <i class="fas fa-plus text-emerald-400 mr-2"></i>추가 정보 입력
                             </h3>
-                            <p class="text-sm text-wiki-muted">현재 분석에 반영하고 싶은 추가 정보를 자유롭게 작성해주세요.</p>
+                            <p class="text-base text-wiki-muted">현재 분석에 반영하고 싶은 추가 정보를 자유롭게 작성해주세요.</p>
                         </div>
                         <textarea id="additional-context-text"
-                                  class="w-full h-32 p-3 rounded-xl text-sm text-white placeholder-wiki-muted resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                                  class="w-full h-32 p-3 rounded-xl text-base text-white placeholder-wiki-muted resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                                   style="background: rgba(15, 15, 35, 0.6); border: 1px solid rgba(148, 163, 184, 0.2);"
                                   placeholder="예: 최근 데이터 분석 부트캠프를 수료했습니다. 재택근무가 가능한 직업을 선호합니다."
                                   minlength="30"></textarea>
-                        <p id="context-char-count" class="text-xs mt-1 text-wiki-muted">0 / 최소 30자</p>
+                        <p id="context-char-count" class="text-sm mt-1 text-wiki-muted">0 / 최소 30자</p>
                         <div class="flex gap-3 mt-4">
-                            <button onclick="hideAddContextModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">
+                            <button onclick="hideAddContextModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-base font-medium">
                                 취소
                             </button>
                             <button id="submit-context-btn" onclick="submitAdditionalContext()" disabled
-                                    class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                                    class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:opacity-90 transition text-base font-medium disabled:opacity-50 disabled:cursor-not-allowed">
                                 추가 후 재분석
                             </button>
                         </div>
@@ -8540,7 +8540,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 const matchingTagsHtml = matchingTags.length > 0 ? \`
                     <div class="flex flex-wrap gap-1.5 mt-2">
                         \${matchingTags.map(tag => \`
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-sm"
                                   style="background: rgba(\${tag.color === 'green' ? '34,197,94' : tag.color === 'blue' ? '59,130,246' : '16,185,129'},0.15); color: rgb(\${tag.color === 'green' ? '134,239,172' : tag.color === 'blue' ? '147,197,253' : '110,231,183'});">
                                 <span>\${tag.icon}</span>
                                 <span>\${tag.label}</span>
@@ -8565,14 +8565,14 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                      class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                      onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center\\' style=\\'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));\\' ><i class=\\'fas fa-briefcase text-2xl text-wiki-muted\\'></i></div>';" />
                                 <div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
-                                    <span class="\${idx < 3 ? 'text-sm' : 'text-xs font-bold text-wiki-muted'}">\${rankBadge}</span>
+                                    <span class="\${idx < 3 ? 'text-base' : 'text-sm font-bold text-wiki-muted'}">\${rankBadge}</span>
                                 </div>
                             </div>
                         \` : \`
                             <div class="flex-shrink-0 w-28 sm:w-32 relative flex items-center justify-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));">
                                 <i class="fas fa-briefcase text-2xl text-wiki-muted"></i>
                                 <div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6);">
-                                    <span class="\${idx < 3 ? 'text-sm' : 'text-xs font-bold text-wiki-muted'}">\${rankBadge}</span>
+                                    <span class="\${idx < 3 ? 'text-base' : 'text-sm font-bold text-wiki-muted'}">\${rankBadge}</span>
                                 </div>
                             </div>
                         \`}
@@ -8587,7 +8587,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                     </a>
                                     <div class="flex-shrink-0 text-right">
                                         <span class="text-2xl font-bold \${mainScoreColor}">\${mainScore}</span>
-                                        <span class="text-xs text-wiki-muted ml-0.5">\${mainScoreLabel}</span>
+                                        <span class="text-sm text-wiki-muted ml-0.5">\${mainScoreLabel}</span>
                                     </div>
                                 </div>
 
@@ -8720,45 +8720,45 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 <span class="text-2xl">\${idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '📌'}</span>
                                 <div>
                                     <h4 class="font-bold text-lg group-hover:text-wiki-primary transition">\${escapeHtmlJob(jobName)}</h4>
-                                    <span class="text-xs text-wiki-primary">자세히 보기 →</span>
+                                    <span class="text-sm text-wiki-primary">자세히 보기 →</span>
                                 </div>
                             </div>
                         </div>
                     </a>
                     \${dislikeWarnings.length > 0 ? \`
                         <div class="p-2 rounded-lg mb-3" style="background-color: rgba(251,146,60,0.15); border: 1px solid rgba(251,146,60,0.3);">
-                            <div class="text-xs space-y-1">
+                            <div class="text-sm space-y-1">
                                 \${dislikeWarnings.map(w => \`<div class="\${w.severity === 'high' ? 'text-orange-400 font-medium' : 'text-amber-400/80'}">\${w.label}</div>\`).join('')}
                             </div>
                         </div>
                     \` : ''}
                     \${rationale ? \`
                         <div class="mb-3 p-3 rounded-lg" style="background-color: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.15);">
-                            <div class="text-xs font-medium text-emerald-400 mb-1">💡 추천 이유</div>
-                            <p class="text-sm text-white/90">\${rationale}</p>
+                            <div class="text-sm font-medium text-emerald-400 mb-1">💡 추천 이유</div>
+                            <p class="text-base text-white/90">\${rationale}</p>
                         </div>
                     \` : ''}
-                    \${description ? \`<p class="text-sm text-wiki-muted/80 mb-3 line-clamp-2">\${description}</p>\` : ''}
+                    \${description ? \`<p class="text-base text-wiki-muted/80 mb-3 line-clamp-2">\${description}</p>\` : ''}
                     \${growthPath.length > 0 ? \`
                         <div class="p-3 rounded-lg mb-3" style="background-color: rgba(99,102,241,0.1);">
-                            <div class="text-xs font-medium text-indigo-400 mb-2">🚀 성장 경로</div>
-                            <ol class="text-xs text-wiki-muted space-y-1 list-decimal list-inside">
+                            <div class="text-sm font-medium text-indigo-400 mb-2">🚀 성장 경로</div>
+                            <ol class="text-sm text-wiki-muted space-y-1 list-decimal list-inside">
                                 \${growthPath.slice(0, 3).map(p => \`<li>\${p}</li>\`).join('')}
                             </ol>
                         </div>
                     \` : ''}
                     \${risks.length > 0 ? \`
                         <div class="p-2 rounded-lg mb-3" style="background-color: rgba(239,68,68,0.1);">
-                            <div class="text-xs text-red-400">\${risks.slice(0, 2).map(r => '⚠️ ' + r).join(' · ')}</div>
+                            <div class="text-sm text-red-400">\${risks.slice(0, 2).map(r => '⚠️ ' + r).join(' · ')}</div>
                         </div>
                     \` : ''}
                     <div class="flex items-center gap-3 mt-2 flex-wrap">
-                        <button onclick="toggleJobScores(this)" class="flex items-center gap-1.5 text-xs text-wiki-muted hover:text-wiki-primary transition">
+                        <button onclick="toggleJobScores(this)" class="flex items-center gap-1.5 text-sm text-wiki-muted hover:text-wiki-primary transition">
                             <i class="fas fa-info-circle"></i>
                             <span>상세 점수</span>
                             <i class="fas fa-chevron-down text-[10px] transition-transform score-toggle-icon"></i>
                         </button>
-                        <button onclick="showJobEvidence('\${job.job_id || job.slug}', '\${jobName}')" class="flex items-center gap-1.5 text-xs text-wiki-muted hover:text-emerald-400 transition evidence-trigger">
+                        <button onclick="showJobEvidence('\${job.job_id || job.slug}', '\${jobName}')" class="flex items-center gap-1.5 text-sm text-wiki-muted hover:text-emerald-400 transition evidence-trigger">
                             <i class="fas fa-search"></i>
                             <span>근거 보기</span>
                         </button>
@@ -8795,7 +8795,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 <span class="text-2xl">\${idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '📌'}</span>
                                 <div>
                                     <h4 class="font-bold text-lg group-hover:text-wiki-primary transition">\${job.job_name}</h4>
-                                    <span class="text-xs text-wiki-primary">자세히 보기 →</span>
+                                    <span class="text-sm text-wiki-primary">자세히 보기 →</span>
                                 </div>
                             </div>
                         </div>
@@ -8803,21 +8803,21 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     
                     <!-- 추천 이유 -->
                     \${job.rationale ? \`
-                        <p class="text-sm text-wiki-muted mb-3">\${job.rationale}</p>
+                        <p class="text-base text-wiki-muted mb-3">\${job.rationale}</p>
                     \` : ''}
                     
                     <!-- 30일 플랜 -->
                     \${job.first30DaysPlan?.length > 0 ? \`
                         <div class="p-3 rounded-lg mb-3" style="background-color: rgba(99,102,241,0.1);">
-                            <div class="text-xs font-medium text-indigo-400 mb-2">🚀 30일 실행 플랜</div>
-                            <ol class="text-xs text-wiki-muted space-y-1 list-decimal list-inside">
+                            <div class="text-sm font-medium text-indigo-400 mb-2">🚀 30일 실행 플랜</div>
+                            <ol class="text-sm text-wiki-muted space-y-1 list-decimal list-inside">
                                 \${job.first30DaysPlan.map(p => \`<li>\${p}</li>\`).join('')}
                             </ol>
                         </div>
                     \` : ''}
                     
                     <!-- 상세 점수 토글 버튼 -->
-                    <button onclick="toggleJobScores(this)" class="flex items-center gap-1.5 text-xs text-wiki-muted hover:text-wiki-primary transition mt-2">
+                    <button onclick="toggleJobScores(this)" class="flex items-center gap-1.5 text-sm text-wiki-muted hover:text-wiki-primary transition mt-2">
                         <i class="fas fa-info-circle"></i>
                         <span>상세 점수 보기</span>
                         <i class="fas fa-chevron-down text-[10px] transition-transform score-toggle-icon"></i>
@@ -8833,15 +8833,15 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <!-- 리스크 플래그 -->
                         \${job.riskFlags?.length > 0 ? \`
                             <div class="flex flex-wrap gap-1 mb-3">
-                                \${job.riskFlags.map(f => \`<span class="px-2 py-0.5 bg-red-500/20 text-red-300 rounded text-xs">⚠️ \${f}</span>\`).join('')}
+                                \${job.riskFlags.map(f => \`<span class="px-2 py-0.5 bg-red-500/20 text-red-300 rounded text-sm">⚠️ \${f}</span>\`).join('')}
                             </div>
                         \` : ''}
                         
                         <!-- 근거 인용 -->
                         \${job.evidenceQuotes?.length > 0 ? \`
                             <div class="p-3 rounded-lg" style="background-color: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2);">
-                                <div class="text-xs font-medium text-amber-400 mb-2">📝 근거 인용</div>
-                                <ul class="text-xs text-wiki-muted space-y-1">
+                                <div class="text-sm font-medium text-amber-400 mb-2">📝 근거 인용</div>
+                                <ul class="text-sm text-wiki-muted space-y-1">
                                     \${job.evidenceQuotes.slice(0, 3).map(eq => \`<li>"<em>\${eq.text}</em>"</li>\`).join('')}
                                 </ul>
                             </div>
@@ -8943,7 +8943,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <i class="fas fa-quote-left text-emerald-400"></i>
                             <span>\${jobName} 추천 근거</span>
                         </h3>
-                        <p class="text-sm text-wiki-muted mt-1">아래 내용을 바탕으로 이 직업이 추천되었습니다</p>
+                        <p class="text-base text-wiki-muted mt-1">아래 내용을 바탕으로 이 직업이 추천되었습니다</p>
                     </div>
                     
                     <!-- Evidence 목록 (인용 스타일) -->
@@ -8957,12 +8957,12 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 return \`
                                     <div class="pl-4 py-2" style="border-left: 3px solid \${borderColor};">
                                         <!-- 인용문 (사용자 답변) -->
-                                        <p class="text-sm text-white/90 italic mb-1">
+                                        <p class="text-base text-white/90 italic mb-1">
                                             "\${ev.user_fact?.label || ev.user_fact?.value || '(데이터 없음)'}"
                                         </p>
                                         
                                         <!-- 출처 -->
-                                        <div class="flex items-center gap-2 text-xs text-wiki-muted">
+                                        <div class="flex items-center gap-2 text-sm text-wiki-muted">
                                             <i class="fas fa-bookmark"></i>
                                             <span>출처: \${sourceLabel}</span>
                                         </div>
@@ -8970,7 +8970,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                         <!-- 매칭 설명 (있으면) -->
                                         \${ev.explanation ? \`
                                             <div class="mt-2 p-2 rounded-lg" style="background-color: rgba(99,102,241,0.08);">
-                                                <p class="text-xs text-indigo-300/80">
+                                                <p class="text-sm text-indigo-300/80">
                                                     <i class="fas fa-link mr-1"></i>
                                                     \${ev.explanation}
                                                 </p>
@@ -8979,7 +8979,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                         
                                         <!-- 직업 특성 매칭 -->
                                         \${ev.job_attribute?.label ? \`
-                                            <div class="mt-1 text-xs text-wiki-muted/70">
+                                            <div class="mt-1 text-sm text-wiki-muted/70">
                                                 → 직업 특성: \${ev.job_attribute.label}
                                             </div>
                                         \` : ''}
@@ -8991,13 +8991,13 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <div class="text-center py-12">
                             <i class="fas fa-quote-left text-4xl text-wiki-muted/30 mb-4"></i>
                             <p class="text-wiki-muted">아직 구체적인 근거 데이터가 없습니다.</p>
-                            <p class="text-sm text-wiki-muted/60 mt-2">심층 질문에 더 자세히 답변하시면 근거가 추가됩니다.</p>
+                            <p class="text-base text-wiki-muted/60 mt-2">심층 질문에 더 자세히 답변하시면 근거가 추가됩니다.</p>
                         </div>
                     \`}
                     
                     <!-- 닫기 버튼 -->
                     <div class="mt-6 pt-4 border-t border-wiki-border/30 text-center">
-                        <button onclick="closeEvidenceModal()" class="px-6 py-2 rounded-lg text-sm font-medium transition" 
+                        <button onclick="closeEvidenceModal()" class="px-6 py-2 rounded-lg text-base font-medium transition" 
                                 style="background: rgba(99,102,241,0.2); color: rgb(165,180,252); border: 1px solid rgba(99,102,241,0.3);">
                             닫기
                         </button>
@@ -9023,7 +9023,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
         function renderWorkStyleBar(leftLabel, rightLabel, value) {
             const normalizedValue = ((value || 0) + 100) / 2; // -100~100 → 0~100
             return \`
-                <div class="flex items-center gap-2 text-xs">
+                <div class="flex items-center gap-2 text-sm">
                     <span class="w-16 text-right text-wiki-muted">\${leftLabel}</span>
                     <div class="flex-1 h-2 bg-wiki-border rounded-full overflow-hidden">
                         <div class="h-full bg-gradient-to-r from-wiki-primary to-wiki-secondary transition-all" style="width: \${normalizedValue}%"></div>
@@ -9045,13 +9045,13 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                         <div class="w-10 h-10 rounded-full bg-\${color}-500/20 flex items-center justify-center text-\${color}-400 font-bold">\${day}</div>
                         <div>
                             <div class="font-bold">Day \${day}</div>
-                            <div class="text-sm text-wiki-muted">\${data.goal}</div>
+                            <div class="text-base text-wiki-muted">\${data.goal}</div>
                         </div>
                     </div>
-                    <ul class="text-sm space-y-1 mb-3">
+                    <ul class="text-base space-y-1 mb-3">
                         \${(data.actions || []).map(a => \`<li>• \${a}</li>\`).join('')}
                     </ul>
-                    <div class="text-xs text-wiki-muted">📍 마일스톤: \${data.milestone}</div>
+                    <div class="text-sm text-wiki-muted">📍 마일스톤: \${data.milestone}</div>
                 </div>
             \`;
         }
@@ -9136,12 +9136,12 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 <div class="flex items-start gap-3 p-2 bg-wiki-bg/50 rounded-lg">
                     <span class="text-amber-400">•</span>
                     <div class="flex-1">
-                        <span class="text-sm">\${kd.label || kd.fact_key || kd}</span>
-                        \${kd.impact ? \`<span class="text-xs text-wiki-muted ml-2">(영향도: \${kd.impact})</span>\` : ''}
+                        <span class="text-base">\${kd.label || kd.fact_key || kd}</span>
+                        \${kd.impact ? \`<span class="text-sm text-wiki-muted ml-2">(영향도: \${kd.impact})</span>\` : ''}
                     </div>
                 </div>
             \`).join('');
-            document.getElementById('key-decisions').innerHTML = decisionsHtml || '<p class="text-wiki-muted text-sm">결정 변수 정보가 없습니다.</p>';
+            document.getElementById('key-decisions').innerHTML = decisionsHtml || '<p class="text-wiki-muted text-base">결정 변수 정보가 없습니다.</p>';
             
             card.classList.remove('hidden');
         }
@@ -9194,8 +9194,8 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <span class="text-xl">💡</span>
                     <div>
                         <div class="font-semibold text-purple-300">\${t.trait}</div>
-                        <div class="text-sm text-wiki-muted">\${t.evidence}</div>
-                        <div class="text-xs text-green-400 mt-1">→ \${t.score_impact}</div>
+                        <div class="text-base text-wiki-muted">\${t.evidence}</div>
+                        <div class="text-sm text-green-400 mt-1">→ \${t.score_impact}</div>
                     </div>
                 </div>
             \`).join('');
@@ -9242,13 +9242,13 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                 <span class="text-yellow-300">\${i+1}. \${s.job_name}</span>
                                 <span class="text-green-400">Fit: \${s.final_fit}</span>
                             </div>
-                            <div class="text-slate-400 text-xs">
+                            <div class="text-slate-400 text-sm">
                                 Base: L\${s.base_like}/C\${s.base_can}/R\${s.base_risk} → 
                                 Final: L\${s.final_like}/C\${s.final_can}/R\${s.final_risk}
                             </div>
-                            \${s.like_boosts.length > 0 ? \`<div class="text-green-300 text-xs">Like ↑: \${s.like_boosts.map(b => b.rule).join(', ')}</div>\` : ''}
-                            \${s.can_boosts.length > 0 ? \`<div class="text-blue-300 text-xs">Can ↑: \${s.can_boosts.map(b => b.rule).join(', ')}</div>\` : ''}
-                            \${s.risk_boosts.length > 0 ? \`<div class="text-red-300 text-xs">Risk ↑: \${s.risk_boosts.map(b => b.rule).join(', ')}</div>\` : ''}
+                            \${s.like_boosts.length > 0 ? \`<div class="text-green-300 text-sm">Like ↑: \${s.like_boosts.map(b => b.rule).join(', ')}</div>\` : ''}
+                            \${s.can_boosts.length > 0 ? \`<div class="text-blue-300 text-sm">Can ↑: \${s.can_boosts.map(b => b.rule).join(', ')}</div>\` : ''}
+                            \${s.risk_boosts.length > 0 ? \`<div class="text-red-300 text-sm">Risk ↑: \${s.risk_boosts.map(b => b.rule).join(', ')}</div>\` : ''}
                         </div>
                     \`).join('');
                 } else {
@@ -9338,7 +9338,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     <span class="\${biasCapApplied ? 'text-yellow-400' : 'text-slate-500'}">
                         Research Bias Cap: \${biasCapApplied ? '✓ 적용됨' : '✗ 미적용'}
                     </span>
-                    \${result.diversity_changes?.length > 0 ? \`<div class="text-xs text-yellow-300 mt-1">변경: \${result.diversity_changes.join(', ')}</div>\` : ''}
+                    \${result.diversity_changes?.length > 0 ? \`<div class="text-sm text-yellow-300 mt-1">변경: \${result.diversity_changes.join(', ')}</div>\` : ''}
                 \`;
             }
         }
@@ -9703,7 +9703,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     
                     document.getElementById('continue-modal-info').innerHTML = 
                         '<strong class="text-white">' + stepNames[serverDraft.current_step] + '</strong>까지 진행됨<br>' +
-                        '<span class="text-xs">마지막 작업: ' + dateStr + '</span>';
+                        '<span class="text-sm">마지막 작업: ' + dateStr + '</span>';
                     
                     document.getElementById('continue-modal').classList.remove('hidden');
                     return 'modal';
@@ -9744,7 +9744,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     
                     document.getElementById('continue-modal-info').innerHTML = 
                         '<strong class="text-white">' + stepNames[draft.currentStep] + '</strong>까지 진행됨<br>' +
-                        '<span class="text-xs">마지막 작업: ' + dateStr + '</span>';
+                        '<span class="text-sm">마지막 작업: ' + dateStr + '</span>';
                     
                     document.getElementById('continue-modal').classList.remove('hidden');
                     return 'modal'; // 모달 표시 중
@@ -10436,9 +10436,9 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                                     <i class="fas fa-flask"></i>
                                     <div>
                                         <div class="font-medium">테스트 시나리오: \${testData.scenario?.name || scenarioId}</div>
-                                        <div class="text-sm opacity-80">검증 점수: \${testData.verification?.score || 0}/100 (\${testData.verification?.passed ? '통과' : '실패'})</div>
+                                        <div class="text-base opacity-80">검증 점수: \${testData.verification?.score || 0}/100 (\${testData.verification?.passed ? '통과' : '실패'})</div>
                                     </div>
-                                    <button onclick="goToStep(1); this.closest('.fixed').remove();" class="ml-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded text-sm font-medium transition">
+                                    <button onclick="goToStep(1); this.closest('.fixed').remove();" class="ml-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded text-base font-medium transition">
                                         테스트 종료
                                     </button>
                                     <button onclick="this.parentElement.remove()" class="hover:bg-white/20 p-1 rounded">

@@ -664,10 +664,10 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
               <div class="flex items-center justify-between flex-wrap gap-2">
                 <div class="flex items-center gap-2">
                   <i class="fas fa-edit text-amber-400"></i>
-                  <span class="text-amber-300 text-sm font-medium">수정 모드</span>
-                  <span class="text-amber-200/70 text-xs">변경사항이 있으면 이후 단계가 초기화됩니다</span>
+                  <span class="text-amber-300 text-base font-medium">수정 모드</span>
+                  <span class="text-amber-200/70 text-sm">변경사항이 있으면 이후 단계가 초기화됩니다</span>
                 </div>
-                <button onclick="cancelEditMode()" class="px-3 py-1 text-xs rounded-lg border border-wiki-border text-wiki-muted hover:text-white transition">취소</button>
+                <button onclick="cancelEditMode()" class="px-3 py-1 text-sm rounded-lg border border-wiki-border text-wiki-muted hover:text-white transition">취소</button>
               </div>\`;
             const container = document.querySelector('.max-w-6xl') || document.querySelector('main');
             if (container) container.insertBefore(banner, container.firstChild);
@@ -958,7 +958,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                     <div class="relative z-10">
                         <div class="text-3xl mb-2 transform group-hover:scale-110 transition-transform">\${opt.emoji}</div>
                         <div class="font-semibold text-white">\${opt.label}</div>
-                        <div class="text-xs text-wiki-muted mt-1">\${opt.description}</div>
+                        <div class="text-sm text-wiki-muted mt-1">\${opt.description}</div>
                     </div>
                 </button>
             \`).join('');
@@ -1018,9 +1018,9 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 { value: 'high_school_undecided', label: '미정', description: '아직 결정 전' },
                 { value: 'retake', label: '재수', description: '재수/반수' },
             ];
-            return '<div class="mt-3 pl-2 border-l-2 border-cyan-500/30"><p class="text-xs text-wiki-muted mb-2">입시 전형 선택 (선택사항)</p><div class="flex flex-wrap gap-2">' +
+            return '<div class="mt-3 pl-2 border-l-2 border-cyan-500/30"><p class="text-sm text-wiki-muted mb-2">입시 전형 선택 (선택사항)</p><div class="flex flex-wrap gap-2">' +
                 options.map(opt =>
-                    '<button type="button" onclick="selectHighSubType(\\'' + opt.value + '\\', this)" class="sub-option-btn px-3 py-1.5 text-xs rounded-lg border border-wiki-border/50 bg-wiki-card/60 text-wiki-muted hover:border-cyan-500/50 hover:text-white transition-all" data-value="' + opt.value + '">' +
+                    '<button type="button" onclick="selectHighSubType(\\'' + opt.value + '\\', this)" class="sub-option-btn px-3 py-1.5 text-sm rounded-lg border border-wiki-border/50 bg-wiki-card/60 text-wiki-muted hover:border-cyan-500/50 hover:text-white transition-all" data-value="' + opt.value + '">' +
                     '<span class="font-medium">' + opt.label + '</span> <span class="text-wiki-muted/70">· ' + opt.description + '</span></button>'
                 ).join('') +
                 '</div></div>';
@@ -1033,9 +1033,9 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 { value: 'current', label: '재학생', description: '전과/복수전공', stage: 'major_student' },
                 { value: 'graduate', label: '대학원 준비', description: '석·박사 진학', stage: 'major_graduate' },
             ];
-            return '<div class="mt-3 pl-2 border-l-2 border-cyan-500/30"><p class="text-xs text-wiki-muted mb-2">상세 유형 선택 (선택사항)</p><div class="flex flex-wrap gap-2">' +
+            return '<div class="mt-3 pl-2 border-l-2 border-cyan-500/30"><p class="text-sm text-wiki-muted mb-2">상세 유형 선택 (선택사항)</p><div class="flex flex-wrap gap-2">' +
                 options.map(opt =>
-                    '<button type="button" onclick="selectUnivSubType(\\'' + opt.value + '\\', \\'' + opt.stage + '\\', this)" class="sub-option-btn px-3 py-1.5 text-xs rounded-lg border border-wiki-border/50 bg-wiki-card/60 text-wiki-muted hover:border-cyan-500/50 hover:text-white transition-all" data-value="' + opt.value + '">' +
+                    '<button type="button" onclick="selectUnivSubType(\\'' + opt.value + '\\', \\'' + opt.stage + '\\', this)" class="sub-option-btn px-3 py-1.5 text-sm rounded-lg border border-wiki-border/50 bg-wiki-card/60 text-wiki-muted hover:border-cyan-500/50 hover:text-white transition-all" data-value="' + opt.value + '">' +
                     '<span class="font-medium">' + opt.label + '</span> <span class="text-wiki-muted/70">· ' + opt.description + '</span></button>'
                 ).join('') +
                 '</div></div>';
@@ -1082,8 +1082,8 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         data-value="\${opt.value}">
                     <div class="relative z-10">
                         <div class="text-2xl mb-2">\${opt.emoji}</div>
-                        <div class="font-semibold text-sm text-white">\${opt.label}</div>
-                        <div class="text-xs text-wiki-muted mt-0.5">\${opt.description}</div>
+                        <div class="font-semibold text-base text-white">\${opt.label}</div>
+                        <div class="text-sm text-wiki-muted mt-0.5">\${opt.description}</div>
                     </div>
                 </button>
             \`).join('');
@@ -1156,10 +1156,10 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                             </div>
                         \` : ''}
                         <div class="text-2xl mb-2 \${isDisabled ? 'grayscale opacity-50' : ''}">\${opt.emoji}</div>
-                        <div class="font-semibold text-sm \${isDisabled ? 'text-wiki-muted/50' : isSelected ? 'text-emerald-400' : 'text-white'}">\${opt.label}</div>
-                        <div class="text-xs mt-1 \${isDisabled ? 'text-wiki-muted/30' : isSelected ? 'text-emerald-300/80' : 'text-wiki-muted'}">\${opt.description}</div>
+                        <div class="font-semibold text-base \${isDisabled ? 'text-wiki-muted/50' : isSelected ? 'text-emerald-400' : 'text-white'}">\${opt.label}</div>
+                        <div class="text-sm mt-1 \${isDisabled ? 'text-wiki-muted/30' : isSelected ? 'text-emerald-300/80' : 'text-wiki-muted'}">\${opt.description}</div>
                         \${isDisabled ? \`
-                            <div class="disabled-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-black/90 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 border border-wiki-border/30">
+                            <div class="disabled-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-black/90 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 border border-wiki-border/30">
                                 🔒 \${reason}
                             </div>
                         \` : ''}
@@ -1210,7 +1210,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                             <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform" style="background-color: rgba(16,185,129,0.2);">✅</div>
                             <div class="text-left flex-1">
                                 <div class="font-semibold text-white">제약 없음</div>
-                                <div class="text-sm" style="color: rgb(148,163,184)">특별한 제약 조건 없이 모든 전공 고려</div>
+                                <div class="text-base" style="color: rgb(148,163,184)">특별한 제약 조건 없이 모든 전공 고려</div>
                             </div>
                             <div class="w-6 h-6 rounded-full border flex items-center justify-center no-constraint-check opacity-0 transition-opacity" style="border-color: rgba(42,42,62,0.5);">
                                 <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
@@ -1222,7 +1222,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 </div>
                 <div class="flex items-center gap-4 mb-4">
                     <div class="flex-1 h-px" style="background-color: rgba(42,42,62,0.3)"></div>
-                    <span class="text-xs font-medium" style="color: rgb(148,163,184)">또는 제약 조건 선택</span>
+                    <span class="text-sm font-medium" style="color: rgb(148,163,184)">또는 제약 조건 선택</span>
                     <div class="flex-1 h-px" style="background-color: rgba(42,42,62,0.3)"></div>
                 </div>
                 <div id="constraint-list" class="grid gap-3">
@@ -1237,10 +1237,10 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl flex-shrink-0" style="background-color: rgba(245,158,11,0.2);">\${opt.emoji}</div>
                                 <div class="flex-1 min-w-0">
                                     <div class="font-semibold text-white">\${opt.label}</div>
-                                    <div class="text-sm truncate" style="color: rgb(148,163,184)">\${opt.description}</div>
+                                    <div class="text-base truncate" style="color: rgb(148,163,184)">\${opt.description}</div>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <div class="constraint-badge hidden px-2 py-1 text-amber-400 text-xs font-medium rounded-full" style="background-color: rgba(245,158,11,0.2);">선택됨</div>
+                                    <div class="constraint-badge hidden px-2 py-1 text-amber-400 text-sm font-medium rounded-full" style="background-color: rgba(245,158,11,0.2);">선택됨</div>
                                     <svg class="constraint-chevron w-5 h-5 transition-transform duration-300" style="color: rgb(148,163,184)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                     </svg>
@@ -1249,11 +1249,11 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                             <div class="constraint-detail hidden border-t" style="border-color: rgba(42,42,62,0.3); background-color: rgba(15,15,35,0.5);">
                                 <div class="p-4 space-y-4">
                 <div>
-                                        <label class="text-xs font-medium mb-2 block" style="color: rgb(148,163,184)">구체적인 상황 (선택)</label>
+                                        <label class="text-sm font-medium mb-2 block" style="color: rgb(148,163,184)">구체적인 상황 (선택)</label>
                                         <div class="flex flex-wrap gap-2">
                                             \${opt.details.map(d => \`
                                                 <button type="button" onclick="selectConstraintDetailMajor('\${opt.type}', '\${d.value}', this)"
-                                                        class="detail-tag px-3 py-1.5 text-sm rounded-full border"
+                                                        class="detail-tag px-3 py-1.5 text-base rounded-full border"
                                                         data-value="\${d.value}">
                                                     \${d.label}
                                                 </button>
@@ -1261,8 +1261,8 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 </div>
                                     </div>
                                     <div>
-                                        <label class="text-xs font-medium mb-2 block" style="color: rgb(148,163,184)">추가 설명 (선택)</label>
-                                        <textarea class="w-full px-4 py-3 text-sm border rounded-lg transition-all resize-none"
+                                        <label class="text-sm font-medium mb-2 block" style="color: rgb(148,163,184)">추가 설명 (선택)</label>
+                                        <textarea class="w-full px-4 py-3 text-base border rounded-lg transition-all resize-none"
                                                   style="border-color: rgba(42,42,62,0.5); background-color: rgba(15,15,35,1); color: #fff;"
                                                   rows="2" placeholder="\${opt.placeholder}"
                                                   onfocus="this.style.borderColor='rgba(245,158,11,0.5)';"
@@ -1621,7 +1621,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                     return \`
                         <div class="trans-question p-5 rounded-2xl mb-5" style="background-color: rgba(26,26,46,0.5); border: 1px solid rgba(42,42,62,0.3);" data-question-id="\${q.question_id}">
                             <h4 class="font-semibold mb-2 text-white">\${q.text}</h4>
-                            <p class="text-xs mb-3" style="color: rgb(100,116,139)">최대 \${q.max_selections || 3}개까지 선택 (선택 순서 = 우선순위)</p>
+                            <p class="text-sm mb-3" style="color: rgb(100,116,139)">최대 \${q.max_selections || 3}개까지 선택 (선택 순서 = 우선순위)</p>
                             <div class="flex flex-wrap gap-2">
                                 \${q.options.map((opt, idx) => \`
                                     <button type="button" onclick="selectTransitionChip('\${q.question_id}', '\${opt.value}', this, \${q.max_selections || 3})"
@@ -1632,11 +1632,11 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                                             <span class="text-lg">\${opt.emoji}</span>
                                             <span>\${opt.label}</span>
                                         </span>
-                                        <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-xs font-bold hidden chip-rank"></div>
+                                        <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-sm font-bold hidden chip-rank"></div>
                                     </button>
                                 \`).join('')}
                             </div>
-                            <div class="selected-order mt-3 text-sm hidden p-3 rounded-lg" style="background-color: rgba(16,185,129,0.1); color: #34d399;"></div>
+                            <div class="selected-order mt-3 text-base hidden p-3 rounded-lg" style="background-color: rgba(16,185,129,0.1); color: #34d399;"></div>
                         </div>
                     \`;
                 } else if (q.ui_type === 'radio') {
@@ -1675,7 +1675,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                                             <span class="text-lg">\${opt.emoji}</span>
                                             <span>\${opt.label}</span>
                                         </span>
-                                        <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-xs font-bold hidden chip-check">✓</div>
+                                        <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-sm font-bold hidden chip-check">✓</div>
                                     </button>
                                 \`).join('')}
                             </div>
@@ -1892,7 +1892,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                                             \${opt.emoji ? \`<span class="text-lg">\${opt.emoji}</span>\` : ''}
                                             <span>\${opt.label}</span>
                                         </span>
-                                        <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-xs font-bold hidden chip-check">✓</div>
+                                        <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-sm font-bold hidden chip-check">✓</div>
                                     </button>
                                 \`).join('')}
                                 \${q.allow_unknown ? \`
@@ -1904,11 +1904,11 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                                             <span class="text-lg">❓</span>
                                             <span>\${q.unknown_label}</span>
                                         </span>
-                                        <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-slate-500 text-white items-center justify-center text-xs font-bold hidden chip-check">✓</div>
+                                        <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-slate-500 text-white items-center justify-center text-sm font-bold hidden chip-check">✓</div>
                                     </button>
                                 \` : ''}
                             </div>
-                            \${q.max_selections ? \`<p class="text-xs mt-2" style="color: rgb(100,116,139)">최대 \${q.max_selections}개 선택 가능</p>\` : ''}
+                            \${q.max_selections ? \`<p class="text-sm mt-2" style="color: rgb(100,116,139)">최대 \${q.max_selections}개 선택 가능</p>\` : ''}
                     </div>
                     \`;
                 } else if (q.ui_type === 'radio') {
@@ -2099,7 +2099,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             container.innerHTML = questions.map((q, i) => \`
                 <div class="followup-question p-5 rounded-2xl mb-5" style="background-color: rgba(26,26,46,0.5); border: 1px solid rgba(42,42,62,0.3);" data-question-id="followup_\${q.id || i}">
                     <div class="flex items-start gap-4 mb-4">
-                        <span class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background: linear-gradient(135deg, #a855f7, #6366f1); color: white;">\${i + 1}</span>
+                        <span class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-base font-bold" style="background: linear-gradient(135deg, #a855f7, #6366f1); color: white;">\${i + 1}</span>
                         <h4 class="font-semibold text-white text-lg leading-relaxed">\${q.question}</h4>
                     </div>
                     \${q.options ? \`
@@ -2246,7 +2246,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             container.innerHTML = \`
                 <!-- 격려 문구 -->
                 <div class="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-xl p-4 mb-6">
-                    <p class="text-emerald-300 text-sm">
+                    <p class="text-emerald-300 text-base">
                         <i class="fas fa-lightbulb mr-2"></i>
                         자세히 (구체적인 상황, 감정, 이유를 솔직하게) 작성할수록 AI가 더 정확한 전공 추천을 드릴 수 있어요.
                     </p>
@@ -2259,7 +2259,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         간략하게 지금까지의 이야기를 들려주세요
                         <span class="text-red-400 ml-1">*</span>
                     </label>
-                    <p class="text-sm text-wiki-muted mb-4">학교생활, 관심 분야, 고민 등 배경을 간략히 적어주세요. AI가 맥락을 이해하는 데 도움이 돼요.</p>
+                    <p class="text-base text-wiki-muted mb-4">학교생활, 관심 분야, 고민 등 배경을 간략히 적어주세요. AI가 맥락을 이해하는 데 도움이 돼요.</p>
                     <textarea
                         id="narrative_q0"
                         name="narrative_q0"
@@ -2274,8 +2274,8 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         onblur="this.style.borderColor='rgba(100,116,139,0.3)';"
                         oninput="updateNarrativeCounterMajor(this, 5000);">\${savedQ0}</textarea>
                     <div class="flex justify-between items-center mt-2">
-                        <span id="narrative_q0_hint" class="text-xs text-wiki-muted">최소 \${minLenStory}자 / 현재 \${savedQ0.length}자</span>
-                        <span id="narrative_q0_counter" class="text-xs text-wiki-muted">\${savedQ0.length}자</span>
+                        <span id="narrative_q0_hint" class="text-sm text-wiki-muted">최소 \${minLenStory}자 / 현재 \${savedQ0.length}자</span>
+                        <span id="narrative_q0_counter" class="text-sm text-wiki-muted">\${savedQ0.length}자</span>
                     </div>
                 </div>
 
@@ -2286,7 +2286,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         \${q1.text}
                         <span class="text-red-400 ml-1">*</span>
                     </label>
-                    <p class="text-sm text-wiki-muted mb-4">구체적인 상황, 감정, 이유를 자유롭게 적어주세요</p>
+                    <p class="text-base text-wiki-muted mb-4">구체적인 상황, 감정, 이유를 자유롭게 적어주세요</p>
                     <textarea
                         id="narrative_q1"
                         name="narrative_q1"
@@ -2302,8 +2302,8 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         onblur="this.style.borderColor='rgba(\${q1Colors[0]},0.3)';"
                         oninput="updateNarrativeCounterMajor(this, 10000);">\${savedQ1}</textarea>
                     <div class="flex justify-between items-center mt-2">
-                        <span id="narrative_q1_hint" class="text-xs text-wiki-muted">최소 \${minLenQ}자 / 현재 \${savedQ1.length}자</span>
-                        <span id="narrative_q1_counter" class="text-xs text-wiki-muted">\${savedQ1.length}자</span>
+                        <span id="narrative_q1_hint" class="text-sm text-wiki-muted">최소 \${minLenQ}자 / 현재 \${savedQ1.length}자</span>
+                        <span id="narrative_q1_counter" class="text-sm text-wiki-muted">\${savedQ1.length}자</span>
                     </div>
                 </div>
 
@@ -2314,7 +2314,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         \${q2.text}
                         <span class="text-red-400 ml-1">*</span>
                     </label>
-                    <p class="text-sm text-wiki-muted mb-4">구체적인 상황, 감정, 이유를 자유롭게 적어주세요</p>
+                    <p class="text-base text-wiki-muted mb-4">구체적인 상황, 감정, 이유를 자유롭게 적어주세요</p>
                     <textarea
                         id="narrative_q2"
                         name="narrative_q2"
@@ -2330,8 +2330,8 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         onblur="this.style.borderColor='rgba(\${q2Colors[0]},0.3)';"
                         oninput="updateNarrativeCounterMajor(this, 10000);">\${savedQ2}</textarea>
                     <div class="flex justify-between items-center mt-2">
-                        <span id="narrative_q2_hint" class="text-xs text-wiki-muted">최소 \${minLenQ}자 / 현재 \${savedQ2.length}자</span>
-                        <span id="narrative_q2_counter" class="text-xs text-wiki-muted">\${savedQ2.length}자</span>
+                        <span id="narrative_q2_hint" class="text-sm text-wiki-muted">최소 \${minLenQ}자 / 현재 \${savedQ2.length}자</span>
+                        <span id="narrative_q2_counter" class="text-sm text-wiki-muted">\${savedQ2.length}자</span>
                     </div>
                 </div>
 
@@ -2341,7 +2341,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         <span class="mr-2">\u{1F30C}</span>
                         마지막 7일
                     </label>
-                    <div class="text-sm text-slate-300 mb-4 leading-relaxed space-y-2">
+                    <div class="text-base text-slate-300 mb-4 leading-relaxed space-y-2">
                         <p>오늘 밤 9시, 모든 방송과 휴대폰에 긴급 뉴스가 뜹니다.</p>
                         <p>정확히 7일 뒤 지구는 사라집니다. 생존 가능성은 없습니다.</p>
                         <p class="text-white font-medium pt-1">이 소식을 듣는 순간, 가장 먼저 떠올릴 행동은 무엇일 것 같나요?</p>
@@ -2361,12 +2361,12 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         onblur="this.style.borderColor='rgba(168,85,247,0.3)';"
                         oninput="updateNarrativeCounterMajor(this, 5000);">\${savedQ3}</textarea>
                     <div class="flex justify-between items-center mt-2">
-                        <span id="narrative_q3_hint" class="text-xs text-wiki-muted">최소 20자 / 현재 \${savedQ3.length}자</span>
-                        <span id="narrative_q3_counter" class="text-xs text-wiki-muted">\${savedQ3.length}자</span>
+                        <span id="narrative_q3_hint" class="text-sm text-wiki-muted">최소 20자 / 현재 \${savedQ3.length}자</span>
+                        <span id="narrative_q3_counter" class="text-sm text-wiki-muted">\${savedQ3.length}자</span>
                     </div>
                 </div>
 
-                <div class="text-center text-xs text-wiki-muted/60 mt-6">
+                <div class="text-center text-sm text-wiki-muted/60 mt-6">
                     <i class="fas fa-shield-alt mr-1"></i>
                     입력하신 내용은 추천에만 사용되며, 외부에 공개되지 않습니다.
                 </div>
@@ -2649,7 +2649,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         <span class="text-3xl">\${meta.emoji}</span>
                         <div class="text-left">
                             <div class="text-lg font-bold text-white">\${meta.title}</div>
-                            <div class="text-sm text-wiki-muted">\${meta.subtitle}</div>
+                            <div class="text-base text-wiki-muted">\${meta.subtitle}</div>
                         </div>
                     </div>
 
@@ -2657,14 +2657,14 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                     <div class="flex items-center justify-center gap-3 mb-4">
                         \${[1, 2, 3].map(r => \`
                             <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all \${r === roundNumber ? 'bg-gradient-to-r ' + meta.color + ' text-white scale-110' : r < roundNumber ? 'bg-emerald-500 text-white' : 'bg-wiki-card text-wiki-muted'}">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-base font-bold transition-all \${r === roundNumber ? 'bg-gradient-to-r ' + meta.color + ' text-white scale-110' : r < roundNumber ? 'bg-emerald-500 text-white' : 'bg-wiki-card text-wiki-muted'}">
                                     \${r < roundNumber ? '✓' : r}
                                 </div>
                                 \${r < 3 ? '<div class="w-8 h-0.5 ' + (r < roundNumber ? 'bg-emerald-500' : 'bg-wiki-border') + '"></div>' : ''}
                             </div>
                         \`).join('')}
                     </div>
-                    <div class="text-xs text-wiki-muted">Round \${roundNumber} / 3</div>
+                    <div class="text-sm text-wiki-muted">Round \${roundNumber} / 3</div>
                 </div>
 
                 <!-- 질문들 -->
@@ -2672,7 +2672,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                     \${questions.map((q, idx) => \`
                         <div class="question-block p-5 rounded-2xl" style="background: linear-gradient(135deg, rgba(26,26,46,0.8), rgba(36,36,56,0.5)); border: 1px solid rgba(67,97,238,0.2);">
                             <label class="block text-lg font-semibold mb-3 text-white">
-                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-sm mr-2">\${idx + 1}</span>
+                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-wiki-primary/20 text-wiki-primary text-base mr-2">\${idx + 1}</span>
                                 \${q.questionText}
                             </label>
                             <textarea
@@ -2687,8 +2687,8 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                                 onblur="this.style.borderColor='rgba(67,97,238,0.3)';"
                                 oninput="updateV3CounterMajor(this)"></textarea>
                             <div class="flex justify-between items-center mt-2">
-                                <span class="text-xs text-wiki-muted">최소 \${q.minLengthGuidance || 30}자</span>
-                                <span id="v3_q_\${q.id}_counter" class="text-xs text-wiki-muted">0자</span>
+                                <span class="text-sm text-wiki-muted">최소 \${q.minLengthGuidance || 30}자</span>
+                                <span id="v3_q_\${q.id}_counter" class="text-sm text-wiki-muted">0자</span>
                             </div>
                         </div>
                     \`).join('')}
@@ -2762,8 +2762,8 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                             <i class="fas fa-exclamation-triangle text-2xl text-yellow-400"></i>
                         </div>
                         <h3 class="text-lg font-bold text-white mb-2">이전 단계로 돌아가시겠습니까?</h3>
-                        <p class="text-wiki-muted text-sm">이전 단계의 내용을 수정하면 심층 질문이 새로 생성될 수 있습니다.</p>
-                        <p class="text-yellow-400 text-sm mt-2"><i class="fas fa-info-circle mr-1"></i>기존 답변이 초기화될 수 있습니다.</p>
+                        <p class="text-wiki-muted text-base">이전 단계의 내용을 수정하면 심층 질문이 새로 생성될 수 있습니다.</p>
+                        <p class="text-yellow-400 text-base mt-2"><i class="fas fa-info-circle mr-1"></i>기존 답변이 초기화될 수 있습니다.</p>
                     </div>
                     <div class="flex gap-3">
                         <button id="prev-warning-cancel" class="flex-1 px-4 py-3 bg-wiki-bg border border-wiki-border rounded-xl text-white hover:bg-wiki-card transition">
@@ -3101,10 +3101,10 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         <span class="text-2xl font-bold text-wiki-primary">#\${i + 1}</span>
                         <h3 class="text-lg font-bold group-hover:text-wiki-primary transition">\${rec.major_name || rec.name || '추천 전공'}</h3>
                     </div>
-                    <p class="text-wiki-muted text-sm mb-2">\${rec.reason || rec.match_reason || ''}</p>
-                    \${rec.fit_score ? \`<div class="text-sm text-wiki-secondary">적합도: \${Math.round(rec.fit_score)}점</div>\` : ''}
-                    \${rec.field_category ? \`<div class="text-xs text-wiki-muted mt-1">\${rec.field_category}</div>\` : ''}
-                    <div class="text-xs text-wiki-primary mt-2 opacity-0 group-hover:opacity-100 transition">자세히 보기 →</div>
+                    <p class="text-wiki-muted text-base mb-2">\${rec.reason || rec.match_reason || ''}</p>
+                    \${rec.fit_score ? \`<div class="text-base text-wiki-secondary">적합도: \${Math.round(rec.fit_score)}점</div>\` : ''}
+                    \${rec.field_category ? \`<div class="text-sm text-wiki-muted mt-1">\${rec.field_category}</div>\` : ''}
+                    <div class="text-sm text-wiki-primary mt-2 opacity-0 group-hover:opacity-100 transition">자세히 보기 →</div>
                 </a>
             \`).join('');
         }
@@ -3438,13 +3438,13 @@ function displayPremiumReportV3Major(result) {
                 <span class="text-2xl">✨</span>
                 당신만의 전공 분석 리포트
             </h2>
-            <p class="text-wiki-muted text-sm">AI가 분석한 당신의 전공 방향성</p>
+            <p class="text-wiki-muted text-base">AI가 분석한 당신의 전공 방향성</p>
             <div class="flex justify-center items-center gap-2 mt-3">
-                <button onclick="shareReportMajor()" id="share-report-btn" class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition" style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; cursor: pointer;">
+                <button onclick="shareReportMajor()" id="share-report-btn" class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-base font-medium transition" style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; cursor: pointer;">
                     <i class="fas fa-share-alt"></i> 공유
                 </button>
                 \${DEBUG_MODE ? \`
-                <button onclick="copyAllReportContent()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6; border: 1px solid rgba(67, 97, 238, 0.3);">
+                <button onclick="copyAllReportContent()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-base font-medium transition" style="background: rgba(67, 97, 238, 0.2); color: #64b5f6; border: 1px solid rgba(67, 97, 238, 0.3);">
                     <i class="fas fa-copy"></i> 결과 전체 복사
                 </button>
                 \` : ''}
@@ -3468,7 +3468,7 @@ function displayPremiumReportV3Major(result) {
                     <span class="text-3xl">📋</span>
                     <span class="bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">요약</span>
                 </h2>
-                <p class="text-center text-wiki-muted text-sm mt-2">당신의 전공 분석 핵심을 한눈에 확인하세요.</p>
+                <p class="text-center text-wiki-muted text-base mt-2">당신의 전공 분석 핵심을 한눈에 확인하세요.</p>
                 <div class="mt-6 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
             </div>
 
@@ -3536,8 +3536,8 @@ function displayPremiumReportV3Major(result) {
                                     <span class="text-lg">⚠️</span>
                                     <h5 class="font-bold text-red-400 text-base">주의점</h5>
                                     <span class="relative group cursor-help">
-                                        <i class="fas fa-question-circle text-wiki-muted text-xs"></i>
-                                        <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(30,30,40,0.95); border: 1px solid rgba(255,255,255,0.1);">이 항목들은 에너지가 소모되거나 스트레스를 유발할 수 있는 요인입니다.<br/>전공 선택 시 이 요인들을 고려하면 번아웃을 예방할 수 있습니다.</span>
+                                        <i class="fas fa-question-circle text-wiki-muted text-sm"></i>
+                                        <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-sm text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(30,30,40,0.95); border: 1px solid rgba(255,255,255,0.1);">이 항목들은 에너지가 소모되거나 스트레스를 유발할 수 있는 요인입니다.<br/>전공 선택 시 이 요인들을 고려하면 번아웃을 예방할 수 있습니다.</span>
                                     </span>
                                 </div>
                                 <div class="flex flex-wrap gap-1.5">
@@ -3675,7 +3675,7 @@ function displayPremiumReportV3Major(result) {
                                             <span class="font-bold text-lg text-white flex-1 line-clamp-1">\${majorName}</span>
                                             <span class="text-base font-bold" style="color: rgb(\${idx === 0 ? '251,191,36' : idx === 1 ? '148,163,184' : '217,119,6'});">Fit \${fitScore}</span>
                                         </div>
-                                        \${major.field_category ? \`<div class="text-xs text-wiki-muted mb-2">\${{engineering:'공학',natural_science:'자연과학',social_science:'사회과학',humanities:'인문학',arts:'예술/체육',medical:'의약/보건',education:'교육',business:'경영/경제',law:'법학',agriculture:'농림/수산',general:'기타'}[major.field_category] || major.field_category}</div>\` : ''}
+                                        \${major.field_category ? \`<div class="text-sm text-wiki-muted mb-2">\${{engineering:'공학',natural_science:'자연과학',social_science:'사회과학',humanities:'인문학',arts:'예술/체육',medical:'의약/보건',education:'교육',business:'경영/경제',law:'법학',agriculture:'농림/수산',general:'기타'}[major.field_category] || major.field_category}</div>\` : ''}
                                         \${displayDescription ? \`<p class="text-base text-wiki-muted line-clamp-3 mb-3">\${displayDescription}</p>\` : ''}
                                         \${hasReasons ? \`
                                             <div class="space-y-1.5 mt-3 p-3 rounded-lg" style="background: rgba(0,0,0,0.2);">
@@ -3744,7 +3744,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     html += '<span class="text-3xl">📊</span>';
     html += '<span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">메타인지</span>';
     html += '</h2>';
-    html += '<p class="text-center text-wiki-muted text-sm mt-2">자기 자신에 대한 깊은 이해와 내면 탐구.</p>';
+    html += '<p class="text-center text-wiki-muted text-base mt-2">자기 자신에 대한 깊은 이해와 내면 탐구.</p>';
     html += '<div class="mt-6 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>';
     html += '</div>';
 
@@ -3826,7 +3826,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
             var text = translateToKorean(v).trim();
             if (text.length < 10) text = text.replace(/\\.$/, '');
             else if (!text.endsWith('.')) text += '.';
-            html += '<div class="p-3 md:p-4 rounded-xl flex items-center gap-2 justify-center" style="background-color: ' + colors[i % colors.length] + '; border: 1px solid ' + colors[i % colors.length].replace('0.2', '0.3') + ';"><span class="text-sm font-bold" style="color: ' + textColors[i % textColors.length] + ';">#' + (i + 1) + '</span><span class="text-base font-semibold text-wiki-text">' + text + '</span></div>';
+            html += '<div class="p-3 md:p-4 rounded-xl flex items-center gap-2 justify-center" style="background-color: ' + colors[i % colors.length] + '; border: 1px solid ' + colors[i % colors.length].replace('0.2', '0.3') + ';"><span class="text-base font-bold" style="color: ' + textColors[i % textColors.length] + ';">#' + (i + 1) + '</span><span class="text-base font-semibold text-wiki-text">' + text + '</span></div>';
         });
         html += '</div></div>';
     }
@@ -3857,7 +3857,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     if (learningStyleMap && (learningStyleMap.theoretical_vs_practical !== 0 || learningStyleMap.solo_vs_collaborative !== 0)) {
         html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(59,130,246,0.1)); border: 1px solid rgba(6,182,212,0.2);">';
         html += '<h4 class="text-2xl font-bold mb-2 text-cyan-400 flex items-center gap-2"><span>📊</span> 학습 스타일 5축 분석</h4>';
-        html += '<p class="text-sm text-wiki-muted mb-5">각 축의 중앙은 균형 상태이며, 좌우로 치우칠수록 해당 성향이 강합니다.</p>';
+        html += '<p class="text-base text-wiki-muted mb-5">각 축의 중앙은 균형 상태이며, 좌우로 치우칠수록 해당 성향이 강합니다.</p>';
         html += '<div class="space-y-5">';
 
         var axes = [
@@ -3872,7 +3872,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
             var val = axis.value || 0;
             html += '<div>';
             html += '<div class="flex items-center gap-4">';
-            html += '<span class="text-sm w-24 text-right ' + (val < 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted') + '">' + axis.left + '</span>';
+            html += '<span class="text-base w-24 text-right ' + (val < 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted') + '">' + axis.left + '</span>';
             html += '<div class="flex-1 h-3 bg-wiki-border/20 rounded-full relative overflow-hidden">';
             html += '<div class="absolute top-0 left-1/2 w-px h-full bg-wiki-muted/40 z-10"></div>';
             if (val === 0) {
@@ -3884,9 +3884,9 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
                 html += '<div class="absolute top-0 h-full bg-' + axis.color + '-400/80 rounded-full transition-all" style="' + barStyle + '"></div>';
             }
             html += '</div>';
-            html += '<span class="text-sm w-24 ' + (val > 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted') + '">' + axis.right + '</span>';
+            html += '<span class="text-base w-24 ' + (val > 0 ? 'text-' + axis.color + '-400 font-semibold' : 'text-wiki-muted') + '">' + axis.right + '</span>';
             html += '</div>';
-            html += '<p class="text-xs text-wiki-muted mt-1 text-center">' + (Math.abs(val) >= 15 ? (val < 0 ? axis.leftDesc : axis.rightDesc) : axis.balanceDesc) + '</p>';
+            html += '<p class="text-sm text-wiki-muted mt-1 text-center">' + (Math.abs(val) >= 15 ? (val < 0 ? axis.leftDesc : axis.rightDesc) : axis.balanceDesc) + '</p>';
             html += '</div>';
         });
 
@@ -3905,7 +3905,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
             }
             html += '<p class="text-base leading-relaxed text-wiki-text mb-4">' + innerConflict.analysis + '</p>';
             if (innerConflict.patterns?.length > 1) {
-                html += '<div class="mt-4 pt-4 border-t border-purple-400/20"><span class="text-sm text-purple-300 font-semibold">기타 갈등 패턴:</span><ul class="mt-3 space-y-2">';
+                html += '<div class="mt-4 pt-4 border-t border-purple-400/20"><span class="text-base text-purple-300 font-semibold">기타 갈등 패턴:</span><ul class="mt-3 space-y-2">';
                 innerConflict.patterns.slice(1).forEach(function(p) {
                     html += '<li class="flex items-center gap-3"><span class="text-purple-400">•</span><span class="text-base leading-relaxed text-wiki-muted">' + p + '</span></li>';
                 });
@@ -3929,7 +3929,7 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
     if (academicTimeline.semester1?.goal || academicTimeline.semester2?.goal || academicTimeline.semester3_4?.goal || academicTimeline.beyond?.goal) {
         html += '<div class="mb-8 p-5 md:p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(99,102,241,0.1)); border: 1px solid rgba(59,130,246,0.2);">';
         html += '<h4 class="text-2xl font-bold mb-2 text-blue-400 flex items-center gap-2"><span>📅</span> 학기별 로드맵</h4>';
-        html += '<p class="text-sm text-wiki-muted mb-5">학기별 목표와 실행 계획을 통해 체계적으로 학업을 준비하세요.</p>';
+        html += '<p class="text-base text-wiki-muted mb-5">학기별 목표와 실행 계획을 통해 체계적으로 학업을 준비하세요.</p>';
         html += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">';
 
         var semesters = [
@@ -3942,20 +3942,20 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
         semesters.forEach(function(sem) {
             if (sem.data?.goal) {
                 html += '<div class="p-4 rounded-xl" style="background-color: ' + sem.colorBg + '0.1); border: 1px solid ' + sem.colorBg + '0.15);">';
-                html += '<div class="text-sm font-bold ' + sem.colorText + ' mb-3 flex items-center gap-2">';
+                html += '<div class="text-base font-bold ' + sem.colorText + ' mb-3 flex items-center gap-2">';
                 html += '<span class="w-8 h-8 rounded-full bg-' + sem.color + '-500/20 flex items-center justify-center text-' + sem.color + '-400 font-bold">' + sem.num + '</span>';
                 html += sem.label;
                 html += '</div>';
                 html += '<div class="text-base font-semibold text-white mb-3">' + sem.data.goal + '</div>';
                 if (sem.data.actions?.length > 0) {
-                    html += '<ul class="text-sm text-wiki-muted space-y-2 mb-3">';
+                    html += '<ul class="text-base text-wiki-muted space-y-2 mb-3">';
                     sem.data.actions.slice(0, 2).forEach(function(a) {
                         html += '<li class="flex items-center gap-2"><span class="text-' + sem.color + '-400">•</span> ' + a + '</li>';
                     });
                     html += '</ul>';
                 }
                 if (sem.data.milestone) {
-                    html += '<div class="text-sm text-' + sem.color + '-400 font-medium">✓ ' + sem.data.milestone + '</div>';
+                    html += '<div class="text-base text-' + sem.color + '-400 font-medium">✓ ' + sem.data.milestone + '</div>';
                 }
                 html += '</div>';
             }
@@ -4025,9 +4025,9 @@ function buildPsychologyTabMajor(personal, metaCognition, profileInterpretation,
         html += '<h4 class="text-2xl font-bold mb-4 text-red-400 flex items-center gap-2"><span>😰</span> 스트레스 프로필</h4>';
         html += '<p class="text-base leading-relaxed text-wiki-text mb-4">' + stressProfile.profile + '</p>';
         if (stressProfile.triggers?.length > 0) {
-            html += '<div class="mt-4 pt-4 border-t border-red-400/20"><span class="text-sm text-red-300 font-semibold">주요 트리거:</span><div class="mt-3 flex flex-wrap gap-2">';
+            html += '<div class="mt-4 pt-4 border-t border-red-400/20"><span class="text-base text-red-300 font-semibold">주요 트리거:</span><div class="mt-3 flex flex-wrap gap-2">';
             stressProfile.triggers.forEach(function(t) {
-                html += '<span class="px-3 py-1.5 rounded-lg text-sm font-medium" style="background-color: rgba(239,68,68,0.15); color: rgb(252,165,165);">' + t + '</span>';
+                html += '<span class="px-3 py-1.5 rounded-lg text-base font-medium" style="background-color: rgba(239,68,68,0.15); color: rgb(252,165,165);">' + t + '</span>';
             });
             html += '</div></div>';
         }
@@ -4228,7 +4228,7 @@ function buildRecommendationsTabMajor(profileInterpretation, overallTop5, fitTop
     html += '<span class="text-3xl">🎓</span>';
     html += '<span class="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">추천 전공</span>';
     html += '</h2>';
-    html += '<p class="text-center text-wiki-muted text-sm mt-2">당신에게 맞는 전공을 AI가 분석했습니다.</p>';
+    html += '<p class="text-center text-wiki-muted text-base mt-2">당신에게 맞는 전공을 AI가 분석했습니다.</p>';
     html += '<div class="mt-6 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>';
     html += '</div>';
 
@@ -4281,8 +4281,8 @@ function buildDetailsTabMajor(result, report) {
     html += '<div id="tab-details" class="report-tab-content hidden glass-card p-6 md:p-8 rounded-2xl mb-6">';
     html += '<div class="mb-8 pb-6">';
     html += '<h2 class="text-2xl md:text-3xl font-bold text-center flex items-center justify-center gap-3"><span class="text-3xl">📊</span><span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">분석 상세 정보</span></h2>';
-    html += '<p class="text-center text-wiki-muted text-sm mt-2">AI 추천의 근거와 기술적 분석을 확인하세요.</p>';
-    html += '<p class="text-center text-wiki-muted text-xs mt-1">엔진 버전: ' + (result.engine_version || 'unknown') + '</p>';
+    html += '<p class="text-center text-wiki-muted text-base mt-2">AI 추천의 근거와 기술적 분석을 확인하세요.</p>';
+    html += '<p class="text-center text-wiki-muted text-sm mt-1">엔진 버전: ' + (result.engine_version || 'unknown') + '</p>';
     html += '<div class="mt-6 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>';
     html += '</div>';
     html += '<p class="text-base text-wiki-muted mb-6">이 섹션은 AI 추천의 근거, 사용된 알고리즘, 그리고 점수 산출 과정을 상세히 보여줍니다.</p>';
@@ -4291,10 +4291,10 @@ function buildDetailsTabMajor(result, report) {
     html += '<div class="mb-8 p-5 rounded-xl" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(34,197,94,0.2);">';
     html += '<h4 class="text-2xl font-bold mb-4 text-emerald-400">🔬 분석 파이프라인</h4>';
     html += '<div class="space-y-4 text-base">';
-    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">1</span><div><p class="font-medium text-white">벡터 검색 (Vectorize)</p><p class="text-wiki-muted text-base">당신의 답변을 임베딩으로 변환하여 전공 DB에서 의미적으로 유사한 후보를 검색합니다.</p></div></div>';
-    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">2</span><div><p class="font-medium text-white">TAG 필터링 (Hard Constraints)</p><p class="text-wiki-muted text-base">학습 환경, 선호도 등 절대 조건에 맞지 않는 전공을 제외합니다.</p></div></div>';
-    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">3</span><div><p class="font-medium text-white">LLM Judge (GPT-4o-mini)</p><p class="text-wiki-muted text-base">남은 후보 전공에 대해 AI가 Like/Can/Fit 점수를 계산하고, 추천 이유를 생성합니다.</p></div></div>';
-    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">4</span><div><p class="font-medium text-white">LLM Reporter (심리분석)</p><p class="text-wiki-muted text-base">당신의 미니모듈 결과를 바탕으로 학습 스타일과 전공 방향을 분석합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">1</span><div><p class="font-medium text-white">벡터 검색 (Vectorize)</p><p class="text-wiki-muted text-base">당신의 답변을 임베딩으로 변환하여 전공 DB에서 의미적으로 유사한 후보를 검색합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">2</span><div><p class="font-medium text-white">TAG 필터링 (Hard Constraints)</p><p class="text-wiki-muted text-base">학습 환경, 선호도 등 절대 조건에 맞지 않는 전공을 제외합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">3</span><div><p class="font-medium text-white">LLM Judge (GPT-4o-mini)</p><p class="text-wiki-muted text-base">남은 후보 전공에 대해 AI가 Like/Can/Fit 점수를 계산하고, 추천 이유를 생성합니다.</p></div></div>';
+    html += '<div class="flex items-start gap-3"><span class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">4</span><div><p class="font-medium text-white">LLM Reporter (심리분석)</p><p class="text-wiki-muted text-base">당신의 미니모듈 결과를 바탕으로 학습 스타일과 전공 방향을 분석합니다.</p></div></div>';
     html += '</div></div>';
 
     // 입력 데이터 요약
@@ -4313,16 +4313,16 @@ function buildDetailsTabMajor(result, report) {
     html += '<p class="text-base text-wiki-muted mb-5">이 리포트는 단순 키워드 매칭이 아닌, 3단계 AI 시스템을 거쳐 생성됩니다.</p>';
 
     // STEP 1 RAG
-    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(34,197,94,0.2); color: rgb(34,197,94);">STEP 1</span><span class="font-bold text-white text-base">RAG — 의미 기반 후보 검색</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-2">당신의 답변 전체를 AI 임베딩(숫자 벡터)으로 변환한 뒤, 전공 DB에서 <span class="text-emerald-400">의미적으로 가장 가까운 전공들</span>을 찾습니다.</p><p class="text-[16px] text-wiki-muted/70">"데이터 분석을 좋아한다"고 답하면, 전공명에 \\'분석\\'이 없더라도 데이터 관련 학습을 하는 전공이 후보에 포함됩니다.</p></div>';
+    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-sm font-bold px-2 py-0.5 rounded" style="background: rgba(34,197,94,0.2); color: rgb(34,197,94);">STEP 1</span><span class="font-bold text-white text-base">RAG — 의미 기반 후보 검색</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-2">당신의 답변 전체를 AI 임베딩(숫자 벡터)으로 변환한 뒤, 전공 DB에서 <span class="text-emerald-400">의미적으로 가장 가까운 전공들</span>을 찾습니다.</p><p class="text-[16px] text-wiki-muted/70">"데이터 분석을 좋아한다"고 답하면, 전공명에 \\'분석\\'이 없더라도 데이터 관련 학습을 하는 전공이 후보에 포함됩니다.</p></div>';
 
     // STEP 2 TAG
-    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(251,191,36,0.2); color: rgb(251,191,36);">STEP 2</span><span class="font-bold text-white text-base">TAG — 절대 조건 필터링</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-2">후보 전공들의 속성 태그를 당신의 <span class="text-amber-400">제약 조건</span>과 대조합니다.</p><p class="text-[16px] text-wiki-muted/70">"절대 안 돼" 수준의 제약은 해당 전공을 후보에서 완전히 제거합니다.</p></div>';
+    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-sm font-bold px-2 py-0.5 rounded" style="background: rgba(251,191,36,0.2); color: rgb(251,191,36);">STEP 2</span><span class="font-bold text-white text-base">TAG — 절대 조건 필터링</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-2">후보 전공들의 속성 태그를 당신의 <span class="text-amber-400">제약 조건</span>과 대조합니다.</p><p class="text-[16px] text-wiki-muted/70">"절대 안 돼" 수준의 제약은 해당 전공을 후보에서 완전히 제거합니다.</p></div>';
 
     // STEP 3 CAG
-    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(99,102,241,0.2); color: rgb(129,140,248);">STEP 3</span><span class="font-bold text-white text-base">CAG — AI가 직접 평가</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-2">남은 후보 전공 각각에 대해, GPT-4o-mini가 당신의 프로필 전체를 읽고 <span class="text-indigo-400">Like(좋아할 가능성)</span>와 <span class="text-blue-400">Can(잘할 가능성)</span> 점수를 매깁니다.</p><p class="text-[16px] text-wiki-muted/70">AI는 단순히 숫자만 매기는 것이 아니라, "왜 이 전공을 좋아할지", "왜 잘할 수 있는지"에 대한 구체적인 이유도 함께 생성합니다.</p></div>';
+    html += '<div class="mb-5 p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-sm font-bold px-2 py-0.5 rounded" style="background: rgba(99,102,241,0.2); color: rgb(129,140,248);">STEP 3</span><span class="font-bold text-white text-base">CAG — AI가 직접 평가</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-2">남은 후보 전공 각각에 대해, GPT-4o-mini가 당신의 프로필 전체를 읽고 <span class="text-indigo-400">Like(좋아할 가능성)</span>와 <span class="text-blue-400">Can(잘할 가능성)</span> 점수를 매깁니다.</p><p class="text-[16px] text-wiki-muted/70">AI는 단순히 숫자만 매기는 것이 아니라, "왜 이 전공을 좋아할지", "왜 잘할 수 있는지"에 대한 구체적인 이유도 함께 생성합니다.</p></div>';
 
     // 최종 점수
-    html += '<div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold px-2 py-0.5 rounded" style="background: rgba(168,85,247,0.2); color: rgb(192,132,252);">최종</span><span class="font-bold text-white text-base">종합 점수 계산 (Fit)</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-3">AI가 매긴 점수를 아래 공식으로 조합하여 최종 순위를 결정합니다.</p>';
+    html += '<div class="p-4 rounded-xl" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"><div class="flex items-center gap-2 mb-2"><span class="text-sm font-bold px-2 py-0.5 rounded" style="background: rgba(168,85,247,0.2); color: rgb(192,132,252);">최종</span><span class="font-bold text-white text-base">종합 점수 계산 (Fit)</span></div><p class="text-[16px] text-wiki-muted leading-relaxed mb-3">AI가 매긴 점수를 아래 공식으로 조합하여 최종 순위를 결정합니다.</p>';
     html += '<div class="p-3 rounded-lg text-center" style="background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);"><p class="text-base font-bold text-white" style="font-family: monospace;">Fit = Like + Can + Background</p></div>';
     html += '<div class="mt-3 space-y-1 text-[16px] text-wiki-muted/80"><p><span class="text-purple-400 font-medium">Like</span> — 좋아할 전공을 중요하게 반영합니다. 흥미와 가치관이 맞아야 오래 갈 수 있기 때문입니다.</p><p><span class="text-blue-400 font-medium">Can</span> — 잘할 수 있는 전공도 함께 반영합니다. 강점과 역량이 맞아야 성과를 낼 수 있습니다.</p><p><span class="text-amber-400 font-medium">Background</span> — 경력, 학력, 경험이 전공과 얼마나 관련 있는지 평가합니다.</p></div>';
     html += '</div></div>';
@@ -4331,10 +4331,10 @@ function buildDetailsTabMajor(result, report) {
     html += '<div class="mb-8 rounded-xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.08);">';
     html += '<div class="px-5 py-3" style="background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08);"><h4 class="text-base font-bold text-wiki-text">💡 점수 계산 방식</h4></div>';
     html += '<div class="divide-y" style="--tw-divide-opacity: 0.06; --tw-divide-color: rgba(255,255,255,var(--tw-divide-opacity));">';
-    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(52,211,153);"><span class="text-emerald-400 font-bold text-sm w-10 shrink-0 text-center">Fit</span><span class="text-white text-sm font-medium w-20 shrink-0">종합 적합도</span><span class="text-wiki-muted text-[16px]">Like + Can + Background 종합</span></div>';
-    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(168,85,247);"><span class="text-purple-400 font-bold text-sm w-10 shrink-0 text-center">Like</span><span class="text-white text-sm font-medium w-20 shrink-0">좋아할 가능성</span><span class="text-wiki-muted text-[16px]">관심 분야, 가치관, 우선순위와 전공 특성의 일치도</span></div>';
-    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(96,165,250);"><span class="text-blue-400 font-bold text-sm w-10 shrink-0 text-center">Can</span><span class="text-white text-sm font-medium w-20 shrink-0">잘할 가능성</span><span class="text-wiki-muted text-[16px]">강점, 학습 스타일, 경험과 전공 요구사항의 적합도</span></div>';
-    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(251,191,36);"><span class="text-amber-400 font-bold text-sm w-10 shrink-0 text-center">Bg</span><span class="text-white text-sm font-medium w-20 shrink-0">배경 적합도</span><span class="text-wiki-muted text-[16px]">경력, 학력, 자격증, 경험 등 배경의 도움 정도</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(52,211,153);"><span class="text-emerald-400 font-bold text-base w-10 shrink-0 text-center">Fit</span><span class="text-white text-base font-medium w-20 shrink-0">종합 적합도</span><span class="text-wiki-muted text-[16px]">Like + Can + Background 종합</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(168,85,247);"><span class="text-purple-400 font-bold text-base w-10 shrink-0 text-center">Like</span><span class="text-white text-base font-medium w-20 shrink-0">좋아할 가능성</span><span class="text-wiki-muted text-[16px]">관심 분야, 가치관, 우선순위와 전공 특성의 일치도</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(96,165,250);"><span class="text-blue-400 font-bold text-base w-10 shrink-0 text-center">Can</span><span class="text-white text-base font-medium w-20 shrink-0">잘할 가능성</span><span class="text-wiki-muted text-[16px]">강점, 학습 스타일, 경험과 전공 요구사항의 적합도</span></div>';
+    html += '<div class="flex items-center gap-4 px-5 py-3" style="border-left: 3px solid rgb(251,191,36);"><span class="text-amber-400 font-bold text-base w-10 shrink-0 text-center">Bg</span><span class="text-white text-base font-medium w-20 shrink-0">배경 적합도</span><span class="text-wiki-muted text-[16px]">경력, 학력, 자격증, 경험 등 배경의 도움 정도</span></div>';
     html += '</div></div>';
 
     // 데이터 소스
@@ -4359,8 +4359,8 @@ function buildBottomButtonsMajor() {
     var html = '';
 
     html += '<div class="flex flex-col sm:flex-row gap-3 justify-center mt-8">';
-    html += '<button onclick="showEditWarningModal()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition hover:opacity-80" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);"><i class="fas fa-edit"></i> 입력한 내용 수정</button>';
-    html += '<button onclick="showAddContextModal()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition hover:opacity-80" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);"><i class="fas fa-plus"></i> 새로운 내용 추가</button>';
+    html += '<button onclick="showEditWarningModal()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-base font-medium transition hover:opacity-80" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);"><i class="fas fa-edit"></i> 입력한 내용 수정</button>';
+    html += '<button onclick="showAddContextModal()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-base font-medium transition hover:opacity-80" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);"><i class="fas fa-plus"></i> 새로운 내용 추가</button>';
     html += '</div>';
 
     // 입력 수정 경고 모달
@@ -4368,26 +4368,26 @@ function buildBottomButtonsMajor() {
     html += '<div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-lg mx-4 shadow-2xl w-full max-h-[90vh] overflow-y-auto">';
     html += '<div class="mb-5"><div class="w-12 h-12 mx-auto mb-4 bg-amber-500/20 rounded-full flex items-center justify-center"><i class="fas fa-exclamation-triangle text-xl text-amber-400"></i></div>';
     html += '<h3 class="text-lg font-bold text-white text-center mb-2">입력 내용 수정 안내</h3>';
-    html += '<p class="text-sm text-wiki-muted text-center">기존에 입력했던 내용을 수정할 수 있습니다.<br>단, 수정 범위에 따라 이후 단계의 답변이 초기화될 수 있습니다.</p></div>';
+    html += '<p class="text-base text-wiki-muted text-center">기존에 입력했던 내용을 수정할 수 있습니다.<br>단, 수정 범위에 따라 이후 단계의 답변이 초기화될 수 있습니다.</p></div>';
     html += '<div class="space-y-4 mb-6">';
-    html += '<div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);"><p class="text-sm font-medium text-amber-300 mb-1">Step 1 (프로필 기본정보) 수정 시</p><p class="text-xs text-wiki-muted">Step 2(심층 질문)의 질문이 새로 생성되며, 기존 심층 질문 답변이 모두 초기화됩니다.</p></div>';
-    html += '<div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);"><p class="text-sm font-medium text-amber-300 mb-1">Step 2 (심층 질문) 답변 수정 시</p><p class="text-xs text-wiki-muted">수정한 라운드 이후의 질문들이 새로 생성되며, 해당 라운드 이후 답변이 초기화됩니다.</p></div>';
+    html += '<div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);"><p class="text-base font-medium text-amber-300 mb-1">Step 1 (프로필 기본정보) 수정 시</p><p class="text-sm text-wiki-muted">Step 2(심층 질문)의 질문이 새로 생성되며, 기존 심층 질문 답변이 모두 초기화됩니다.</p></div>';
+    html += '<div class="p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);"><p class="text-base font-medium text-amber-300 mb-1">Step 2 (심층 질문) 답변 수정 시</p><p class="text-sm text-wiki-muted">수정한 라운드 이후의 질문들이 새로 생성되며, 해당 라운드 이후 답변이 초기화됩니다.</p></div>';
     html += '</div>';
     html += '<div class="flex gap-3">';
-    html += '<button onclick="hideEditWarningModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">취소</button>';
-    html += '<button onclick="navigateToEditMode()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium">수정 시작하기</button>';
+    html += '<button onclick="hideEditWarningModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-base font-medium">취소</button>';
+    html += '<button onclick="navigateToEditMode()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:opacity-90 transition text-base font-medium">수정 시작하기</button>';
     html += '</div></div></div>';
 
     // 내용 추가 모달
     html += '<div id="add-context-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">';
     html += '<div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-md mx-4 shadow-2xl w-full">';
     html += '<div class="mb-5"><h3 class="text-lg font-bold text-white mb-2"><i class="fas fa-plus text-emerald-400 mr-2"></i>추가 정보 입력</h3>';
-    html += '<p class="text-sm text-wiki-muted">현재 분석에 반영하고 싶은 추가 정보를 자유롭게 작성해주세요.</p></div>';
-    html += '<textarea id="additional-context-text" class="w-full h-32 p-3 rounded-xl text-sm text-white placeholder-wiki-muted resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50" style="background: rgba(15, 15, 35, 0.6); border: 1px solid rgba(148, 163, 184, 0.2);" placeholder="예: 수학에 관심이 많고 프로그래밍을 좋아합니다. 실험보다는 이론 학습을 선호합니다." minlength="30"></textarea>';
-    html += '<p id="context-char-count" class="text-xs mt-1 text-wiki-muted">0 / 최소 30자</p>';
+    html += '<p class="text-base text-wiki-muted">현재 분석에 반영하고 싶은 추가 정보를 자유롭게 작성해주세요.</p></div>';
+    html += '<textarea id="additional-context-text" class="w-full h-32 p-3 rounded-xl text-base text-white placeholder-wiki-muted resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50" style="background: rgba(15, 15, 35, 0.6); border: 1px solid rgba(148, 163, 184, 0.2);" placeholder="예: 수학에 관심이 많고 프로그래밍을 좋아합니다. 실험보다는 이론 학습을 선호합니다." minlength="30"></textarea>';
+    html += '<p id="context-char-count" class="text-sm mt-1 text-wiki-muted">0 / 최소 30자</p>';
     html += '<div class="flex gap-3 mt-4">';
-    html += '<button onclick="hideAddContextModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-sm font-medium">취소</button>';
-    html += '<button id="submit-context-btn" onclick="submitAdditionalContext()" disabled class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:opacity-90 transition text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">추가 후 재분석</button>';
+    html += '<button onclick="hideAddContextModal()" class="flex-1 px-4 py-2.5 bg-wiki-bg border border-wiki-border text-white rounded-xl hover:bg-wiki-card transition text-base font-medium">취소</button>';
+    html += '<button id="submit-context-btn" onclick="submitAdditionalContext()" disabled class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:opacity-90 transition text-base font-medium disabled:opacity-50 disabled:cursor-not-allowed">추가 후 재분석</button>';
     html += '</div></div></div>';
 
     return html;
@@ -4453,9 +4453,9 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         var sectionHeader = '';
         if (setId === 'overall' && majors.length > 5) {
             if (idx === 0) {
-                sectionHeader = '<div class="mb-4"><h3 class="text-lg font-bold flex items-center gap-2"><span>🎯</span><span class="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">당신에게 맞는 전공</span></h3><p class="text-sm mt-1" style="color: rgba(148,163,184,0.7);">AI가 분석한 최적의 전공 추천</p></div>';
+                sectionHeader = '<div class="mb-4"><h3 class="text-lg font-bold flex items-center gap-2"><span>🎯</span><span class="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">당신에게 맞는 전공</span></h3><p class="text-base mt-1" style="color: rgba(148,163,184,0.7);">AI가 분석한 최적의 전공 추천</p></div>';
             } else if (idx === 5) {
-                sectionHeader = '<div class="mt-8 mb-4 pt-5" style="border-top: 1px solid rgba(99,102,241,0.15);"><h3 class="text-lg font-bold flex items-center gap-2"><span>🧭</span><span class="text-wiki-muted">탐색해볼 전공</span></h3><p class="text-sm mt-1" style="color: rgba(148,163,184,0.7);">관심을 넓혀볼 수 있는 전공들이에요</p></div>';
+                sectionHeader = '<div class="mt-8 mb-4 pt-5" style="border-top: 1px solid rgba(99,102,241,0.15);"><h3 class="text-lg font-bold flex items-center gap-2"><span>🧭</span><span class="text-wiki-muted">탐색해볼 전공</span></h3><p class="text-base mt-1" style="color: rgba(148,163,184,0.7);">관심을 넓혀볼 수 있는 전공들이에요</p></div>';
             }
         }
 
@@ -4539,7 +4539,7 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
             matchingTags.forEach(function(tag) {
                 var rgb = tag.color === 'green' ? '34,197,94' : '59,130,246';
                 var textRgb = tag.color === 'green' ? '134,239,172' : '147,197,253';
-                matchingTagsHtml += '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs" style="background: rgba(' + rgb + ',0.15); color: rgb(' + textRgb + ');"><span>' + tag.icon + '</span><span>' + tag.label + '</span></span>';
+                matchingTagsHtml += '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-sm" style="background: rgba(' + rgb + ',0.15); color: rgb(' + textRgb + ');"><span>' + tag.icon + '</span><span>' + tag.label + '</span></span>';
             });
             matchingTagsHtml += '</div>';
         }
@@ -4560,12 +4560,12 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         if (imageUrl && imageUrl.trim()) {
             cardHtml += '<div class="flex-shrink-0 w-28 sm:w-32 relative overflow-hidden">';
             cardHtml += '<img src="' + escapeHtmlMajor(imageUrl) + '" alt="' + escapeHtmlMajor(majorName) + '" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML=\\'<div class=\\\\\\'w-full h-full flex items-center justify-center\\\\\\' style=\\\\\\'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));\\\\\\' ><i class=\\\\\\'fas fa-graduation-cap text-2xl text-wiki-muted\\\\\\'></i></div>\\';" />';
-            cardHtml += '<div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);"><span class="' + (idx < 3 ? 'text-sm' : 'text-xs font-bold text-wiki-muted') + '">' + rankBadge + '</span></div>';
+            cardHtml += '<div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);"><span class="' + (idx < 3 ? 'text-base' : 'text-sm font-bold text-wiki-muted') + '">' + rankBadge + '</span></div>';
             cardHtml += '</div>';
         } else {
             cardHtml += '<div class="flex-shrink-0 w-28 sm:w-32 relative flex items-center justify-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));">';
             cardHtml += '<i class="fas fa-graduation-cap text-2xl text-wiki-muted"></i>';
-            cardHtml += '<div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6);"><span class="' + (idx < 3 ? 'text-sm' : 'text-xs font-bold text-wiki-muted') + '">' + rankBadge + '</span></div>';
+            cardHtml += '<div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6);"><span class="' + (idx < 3 ? 'text-base' : 'text-sm font-bold text-wiki-muted') + '">' + rankBadge + '</span></div>';
             cardHtml += '</div>';
         }
 
@@ -4573,12 +4573,12 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         cardHtml += '<div class="flex-1 min-w-0 p-4 flex flex-col justify-between"><div>';
         cardHtml += '<div class="flex items-start justify-between gap-3 mb-1.5">';
         cardHtml += '<a href="/major/' + encodeURIComponent(majorSlug) + '" target="_blank" rel="noopener noreferrer" class="group-hover:text-wiki-primary transition"><h4 class="font-bold text-lg text-white leading-tight">' + escapeHtmlMajor(majorName) + '</h4></a>';
-        cardHtml += '<div class="flex-shrink-0 text-right"><span class="text-2xl font-bold ' + mainScoreColor + '">' + mainScore + '</span><span class="text-xs text-wiki-muted ml-0.5">' + mainScoreLabel + '</span></div>';
+        cardHtml += '<div class="flex-shrink-0 text-right"><span class="text-2xl font-bold ' + mainScoreColor + '">' + mainScore + '</span><span class="text-sm text-wiki-muted ml-0.5">' + mainScoreLabel + '</span></div>';
         cardHtml += '</div>';
 
         if (fieldCategory) {
             var fieldCategoryKr = {engineering:'공학',natural_science:'자연과학',social_science:'사회과학',humanities:'인문학',arts:'예술/체육',medical:'의약/보건',education:'교육',business:'경영/경제',law:'법학',agriculture:'농림/수산',general:'기타'}[fieldCategory] || fieldCategory;
-            cardHtml += '<div class="text-xs text-wiki-muted mb-1.5">' + escapeHtmlMajor(fieldCategoryKr) + '</div>';
+            cardHtml += '<div class="text-sm text-wiki-muted mb-1.5">' + escapeHtmlMajor(fieldCategoryKr) + '</div>';
         }
         if (displayDescription) {
             cardHtml += '<p class="text-[16px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">' + escapeHtmlMajor(displayDescription) + '</p>';
@@ -4790,7 +4790,7 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
                 displayResults(analyzeData);
                 // success toast
                 const toast = document.createElement('div');
-                toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-[10000] px-6 py-3 rounded-xl text-sm font-medium border border-emerald-500/50 bg-emerald-900/80 text-emerald-200 shadow-lg backdrop-blur-sm';
+                toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-[10000] px-6 py-3 rounded-xl text-base font-medium border border-emerald-500/50 bg-emerald-900/80 text-emerald-200 shadow-lg backdrop-blur-sm';
                 toast.textContent = '추가 정보가 반영된 새로운 분석 결과입니다.';
                 document.body.appendChild(toast);
                 setTimeout(() => toast.remove(), 5000);
@@ -4878,11 +4878,11 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
                 <div class="flex items-start gap-3 p-2 bg-wiki-bg/50 rounded-lg">
                     <span class="text-amber-400">•</span>
                     <div class="flex-1">
-                        <span class="text-sm">\${kd.label || kd.fact_key || kd}</span>
+                        <span class="text-base">\${kd.label || kd.fact_key || kd}</span>
                     </div>
                 </div>
             \`).join('');
-            document.getElementById('key-decisions').innerHTML = decisionsHtml || '<p class="text-wiki-muted text-sm">결정 변수 정보가 없습니다.</p>';
+            document.getElementById('key-decisions').innerHTML = decisionsHtml || '<p class="text-wiki-muted text-base">결정 변수 정보가 없습니다.</p>';
             
             card.classList.remove('hidden');
         }
@@ -4957,7 +4957,7 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
 
                     document.getElementById('continue-modal-info').innerHTML =
                         '<strong class="text-white">' + (stepNamesMap[serverDraft.current_step] || '프로필') + '</strong>까지 진행됨<br>' +
-                        '<span class="text-xs">마지막 작업: ' + dateStr + '</span>';
+                        '<span class="text-sm">마지막 작업: ' + dateStr + '</span>';
                     
                     document.getElementById('continue-modal').classList.remove('hidden');
                     return 'modal';
@@ -4994,7 +4994,7 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
 
                     document.getElementById('continue-modal-info').innerHTML =
                         '<strong class="text-white">' + (stepNamesMap[draft.currentStep] || '프로필') + '</strong>까지 진행됨<br>' +
-                        '<span class="text-xs">마지막 작업: ' + dateStr + '</span>';
+                        '<span class="text-sm">마지막 작업: ' + dateStr + '</span>';
                     
                     document.getElementById('continue-modal').classList.remove('hidden');
                     return 'modal';
