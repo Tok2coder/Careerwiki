@@ -121,6 +121,52 @@ contentEditorRoutes.post('/api/admin/merge-jobs', async (c) => {
       `UPDATE job_sources SET job_id = ? WHERE job_id = ?`
     ).bind(targetJob.id, sourceJob.id).run()
 
+    // 4-1. user_contributed_json 병합 (source → target, target 우선)
+    const sourceUCJ = await db.prepare(
+      `SELECT user_contributed_json FROM jobs WHERE id = ?`
+    ).bind(sourceJob.id).first<{ user_contributed_json: string | null }>()
+    const targetUCJ = await db.prepare(
+      `SELECT user_contributed_json FROM jobs WHERE id = ?`
+    ).bind(targetJob.id).first<{ user_contributed_json: string | null }>()
+    if (sourceUCJ?.user_contributed_json && sourceUCJ.user_contributed_json.length > 2) {
+      try {
+        const srcData = JSON.parse(sourceUCJ.user_contributed_json)
+        const tgtData = targetUCJ?.user_contributed_json ? JSON.parse(targetUCJ.user_contributed_json) : {}
+        // target에 없는 필드만 source에서 가져오기 (target 우선)
+        for (const key of Object.keys(srcData)) {
+          if (!(key in tgtData) || tgtData[key] === null || tgtData[key] === '') {
+            tgtData[key] = srcData[key]
+          } else if (key === 'sidebarMajors' || key === 'sidebarCerts' || key === 'sidebarJobs') {
+            // 배열 필드는 합치고 중복 제거
+            if (Array.isArray(tgtData[key]) && Array.isArray(srcData[key])) {
+              const merged = [...new Set([...tgtData[key], ...srcData[key]])]
+              tgtData[key] = merged
+            }
+          } else if (key === '_sources') {
+            // sources는 target 것 유지 (번호 충돌 방지)
+          }
+        }
+        await db.prepare(
+          `UPDATE jobs SET user_contributed_json = ? WHERE id = ?`
+        ).bind(JSON.stringify(tgtData), targetJob.id).run()
+      } catch { /* JSON parse 실패 시 무시 */ }
+    }
+
+    // 4-2. career_tree_job_links 이관 (source slug → target slug)
+    await db.prepare(
+      `UPDATE career_tree_job_links SET job_slug = ? WHERE job_slug = ?`
+    ).bind(targetJob.slug, sourceJob.slug).run()
+
+    // 4-3. job_attributes 이관 (source → target, 중복 무시)
+    await db.prepare(
+      `UPDATE OR IGNORE job_attributes SET job_id = ? WHERE job_id = ?`
+    ).bind(targetJob.id, sourceJob.id).run()
+
+    // 4-4. page_revisions 이관 (entity_type + entity_id 기반)
+    await db.prepare(
+      `UPDATE page_revisions SET entity_id = ? WHERE entity_id = ? AND entity_type = 'job'`
+    ).bind(targetJob.id, sourceJob.id).run()
+
     // 5. source job 비활성화
     await db.prepare(
       `UPDATE jobs SET is_active = 0 WHERE id = ?`
