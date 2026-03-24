@@ -8555,7 +8555,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 const canNum2 = parseInt(canScore) || 0;
 
                 return \`
-                <div class="rounded-2xl overflow-hidden group transition-all mb-4" style="background: linear-gradient(135deg, rgba(30,30,50,0.9), rgba(25,25,45,0.95)); border: 1px solid rgba(99,102,241,\${idx < 3 ? '0.25' : '0.12'});">
+                <a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="block rounded-2xl overflow-hidden group transition-all mb-4 hover:scale-[1.01] cursor-pointer" style="background: linear-gradient(135deg, rgba(30,30,50,0.9), rgba(25,25,45,0.95)); border: 1px solid rgba(99,102,241,\${idx < 3 ? '0.25' : '0.12'});">
                     <!-- 상단: 썸네일 + 직업 정보 -->
                     <div class="flex items-stretch">
                         <!-- 썸네일 (카드 높이 꽉 채움) -->
@@ -8582,9 +8582,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                             <div>
                                 <!-- 직업명 + 메인 점수 -->
                                 <div class="flex items-start justify-between gap-3 mb-1.5">
-                                    <a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="group-hover:text-wiki-primary transition">
-                                        <h4 class="font-bold text-lg text-white leading-tight">\${escapeHtmlJob(jobName)}</h4>
-                                    </a>
+                                    <h4 class="font-bold text-lg text-white leading-tight group-hover:text-wiki-primary transition">\${escapeHtmlJob(jobName)}</h4>
                                     <div class="flex-shrink-0 text-right">
                                         <span class="text-2xl font-bold \${mainScoreColor}">\${mainScore}</span>
                                         <span class="text-sm text-wiki-muted ml-0.5">\${mainScoreLabel}</span>
@@ -8662,14 +8660,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     </div>
                     \` : ''}
 
-                    <!-- 하단 액션 바 -->
-                    <div class="flex items-center justify-end px-4 pb-3 \${reasonOuterHtml ? '' : 'pt-0'}">
-                        \${jobSlug ? \`<a href="/job/\${encodeURIComponent(jobSlug)}" target="_blank" rel="noopener noreferrer" class="text-[15px] text-wiki-primary hover:text-indigo-300 font-medium transition flex items-center gap-1">
-                            <span>상세 보기</span>
-                            <i class="fas fa-arrow-right text-[13px]"></i>
-                        </a>\` : ''}
-                    </div>
-                </div>
+                </a>
                 \`;
             }).join('');
         }
