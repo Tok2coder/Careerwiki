@@ -430,19 +430,19 @@ pagesRoutes.get('/', (c) => {
                     </form>
                 </div>
                 <div class="pillar-grid w-full">
-                    <a href="/analyzer" class="menu-button text-center group" style="--ac:212 168 83">
+                    <a href="/analyzer" class="menu-button text-center group cw-card-hover" style="--ac:212 168 83">
                         <i class="fas fa-brain text-2xl mb-2 text-indigo-400 group-hover:text-amber-400 transition-colors"></i>
                         <div class="text-sm">AI 추천</div>
                     </a>
-                    <a href="/job" class="menu-button text-center group" style="--ac:79 70 229">
+                    <a href="/job" class="menu-button text-center group cw-card-hover" style="--ac:79 70 229">
                         <i class="fas fa-briefcase text-2xl mb-2 text-indigo-400 group-hover:text-blue-300 transition-colors"></i>
                         <div class="text-sm">직업위키</div>
                     </a>
-                    <a href="/major" class="menu-button text-center group" style="--ac:16 185 129">
+                    <a href="/major" class="menu-button text-center group cw-card-hover" style="--ac:16 185 129">
                         <i class="fas fa-university text-2xl mb-2 text-indigo-400 group-hover:text-emerald-400 transition-colors"></i>
                         <div class="text-sm">전공위키</div>
                     </a>
-                    <a href="/howto" class="menu-button text-center group" style="--ac:139 92 246">
+                    <a href="/howto" class="menu-button text-center group cw-card-hover" style="--ac:139 92 246">
                         <i class="fas fa-route text-2xl mb-2 text-indigo-400 group-hover:text-violet-400 transition-colors"></i>
                         <div class="text-sm">HowTo</div>
                     </a>
@@ -525,7 +525,7 @@ pagesRoutes.get('/analyzer', (c) => {
             <!-- Cards -->
             <div class="grid md:grid-cols-2 gap-6 md:gap-8">
                 <!-- Job Recommendation -->
-                <a href="/analyzer/job" class="glass-card az-card az-card-job p-8 rounded-xl block text-center group relative">
+                <a href="/analyzer/job" class="glass-card az-card az-card-job p-8 rounded-xl block text-center group relative cw-card-hover">
                     <!-- POPULAR 뱃지 — 카드 우상단 -->
                     <span class="absolute top-4 right-4 px-3 py-0.5 text-[10px] font-bold tracking-wider rounded-full text-white uppercase"
                           style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
@@ -554,7 +554,7 @@ pagesRoutes.get('/analyzer', (c) => {
                 </a>
 
                 <!-- Major Recommendation -->
-                <a href="/analyzer/major" class="glass-card az-card az-card-major p-8 rounded-xl block text-center group relative">
+                <a href="/analyzer/major" class="glass-card az-card az-card-major p-8 rounded-xl block text-center group relative cw-card-hover">
                     <div class="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center"
                          style="background: linear-gradient(135deg, rgba(96,165,250,0.12), rgba(34,211,238,0.08)); border: 1px solid rgba(96,165,250,0.15);">
                         <i class="fas fa-university text-3xl text-blue-400"></i>

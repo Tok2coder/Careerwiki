@@ -535,9 +535,140 @@ export const renderLayout = (
           a, button, input, select { transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
           :focus-visible { outline: 2px solid rgba(67, 97, 238, 0.5); outline-offset: 2px; }
 
+          /* ============================================
+           * Phase 6: 섹션별 강조 시스템
+           * ============================================ */
+
+          /* 히어로 섹션 강조 - 더 강한 그라데이션 배경 */
+          .cw-hero {
+            position: relative;
+            overflow: hidden;
+          }
+          .cw-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(67, 97, 238, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+          }
+          .cw-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            right: -20%;
+            width: 50%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+          }
+
+          /* 섹션 구분선 - 부드러운 그라데이션 */
+          .cw-section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.15), transparent);
+            margin: 2rem 0;
+          }
+
+          /* ============================================
+           * Phase 7: 미세한 인터랙션 / 애니메이션
+           * ============================================ */
+
           /* 페이지 진입 애니메이션 */
           @keyframes cw-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
           .cw-fade-in { animation: cw-fade-in 0.4s ease-out; }
+
+          /* 스크롤 시 나타나는 fade-up 애니메이션 */
+          @keyframes cw-fade-up {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .cw-animate {
+            opacity: 0;
+            transform: translateY(24px);
+          }
+          .cw-animate.cw-visible {
+            animation: cw-fade-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          }
+          .cw-animate.cw-visible:nth-child(2) { animation-delay: 0.06s; }
+          .cw-animate.cw-visible:nth-child(3) { animation-delay: 0.12s; }
+          .cw-animate.cw-visible:nth-child(4) { animation-delay: 0.18s; }
+          .cw-animate.cw-visible:nth-child(5) { animation-delay: 0.24s; }
+          .cw-animate.cw-visible:nth-child(6) { animation-delay: 0.30s; }
+
+          /* 카드 호버 - 부드러운 리프트 */
+          .cw-card-hover {
+            transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.25s ease;
+          }
+          .cw-card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+          }
+
+          /* 링크/버튼 부드러운 밑줄 애니메이션 */
+          .cw-underline-hover {
+            position: relative;
+          }
+          .cw-underline-hover::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgb(var(--wp, 67 97 238)), rgb(var(--ws, 99 102 241)));
+            border-radius: 1px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          }
+          .cw-underline-hover:hover::after {
+            transform: scaleX(1);
+          }
+
+          /* 펄스 강조 (CTA 주목용) */
+          @keyframes cw-pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.3); }
+            50% { box-shadow: 0 0 0 8px rgba(67, 97, 238, 0); }
+          }
+          .cw-pulse {
+            animation: cw-pulse-glow 2.5s ease-in-out infinite;
+          }
+
+          /* 부드러운 shimmer 효과 (로딩/강조) */
+          @keyframes cw-shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+          }
+          .cw-shimmer {
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: cw-shimmer 3s ease-in-out infinite;
+          }
+
+          /* 부드러운 스케일 호버 (이미지/썸네일) */
+          .cw-img-hover {
+            overflow: hidden;
+            border-radius: inherit;
+          }
+          .cw-img-hover img {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          }
+          .cw-img-hover:hover img {
+            transform: scale(1.04);
+          }
+
+          /* prefers-reduced-motion 존중 */
+          @media (prefers-reduced-motion: reduce) {
+            .cw-animate, .cw-card-hover, .cw-img-hover img, .cw-pulse, .cw-shimmer {
+              animation: none !important;
+              transition: none !important;
+              transform: none !important;
+              opacity: 1 !important;
+            }
+          }
 
           /* ============================================
            * AI Analyzer Professional UI Styles
@@ -1251,6 +1382,18 @@ export const renderLayout = (
       </div>
     </div>
 
+    <script>
+    /* Phase 7: 스크롤 fade-up 애니메이션 (IntersectionObserver) */
+    (function(){
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ e.target.classList.add('cw-visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.cw-animate').forEach(function(el){ io.observe(el); });
+    })();
+    </script>
     </body>
     </html>
   `

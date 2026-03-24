@@ -165,7 +165,7 @@ howtoRoutes.get('/', async (c) => {
           `
           
           return `
-            <article class="group bg-wiki-card/50 border border-wiki-border/40 mobile-borderless rounded-2xl overflow-hidden hover:border-wiki-primary/40 hover:shadow-lg hover:shadow-wiki-primary/5 transition-all duration-300">
+            <article class="group cw-animate bg-wiki-card/50 border border-wiki-border/40 mobile-borderless rounded-2xl overflow-hidden hover:border-wiki-primary/40 hover:shadow-lg hover:shadow-wiki-primary/5 hover:-translate-y-1 transition-all duration-300">
               <a href="/howto/${encodeURIComponent(howto.slug)}" class="block">
                 <!-- 데스크탑: 썸네일 상단 -->
                 ${thumbnailDesktop}
@@ -286,7 +286,7 @@ howtoRoutes.get('/', async (c) => {
   const content = `
     <div class="max-w-[1400px] mx-auto px-2 md:px-4 pb-8">
       <!-- 헤더 섹션 -->
-      <header class="mb-4 md:mb-6">
+      <header class="mb-4 md:mb-6 cw-hero">
         <div class="flex items-end justify-between gap-3">
           <div class="min-w-0">
             <h1 class="text-[32px] md:text-[48px] font-extrabold text-white leading-tight">${keyword

@@ -186,7 +186,7 @@ majorListRoutes.get('/major', async (c) => {
     const content = `
       <div class="max-w-[1400px] mx-auto px-2 md:px-6">
         <!-- 히어로 섹션 with 그라데이션 블렌딩 -->
-        <div class="relative text-center pt-2 pb-12 mb-6 space-y-7">
+        <div class="relative text-center pt-2 pb-12 mb-6 space-y-7 cw-hero">
           <!-- 배경 글로우 + 하단 페이드 -->
           <div class="absolute inset-0 -z-10 overflow-hidden">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-wiki-primary/8 via-wiki-primary/5 to-transparent rounded-full blur-[120px]"></div>

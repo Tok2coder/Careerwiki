@@ -259,7 +259,7 @@ export const renderJobCard = (entry: { profile: any; display?: any }): string =>
        </div>`
 
   return `
-    <article class="group relative">
+    <article class="group relative cw-animate">
         <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
           <!-- 배경 그라데이션 글로우 -->
         <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
@@ -455,7 +455,7 @@ export const renderMajorCard = (entry: { profile: any; display?: any }): string 
        </div>`
 
   return `
-    <article class="group relative">
+    <article class="group relative cw-animate">
       <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1">
         <!-- 배경 그라데이션 글로우 -->
         <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
