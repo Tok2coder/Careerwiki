@@ -4929,11 +4929,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     const tagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-xs text-purple-300 font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition'
     
     const visibleTagsHtml = visibleTags
-      .map(tag => `<span class="${tagClass}"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
+      .map(tag => `<span class="${tagClass}"><i class="fas fa-tag text-[10px] text-wiki-primary" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
       .join('')
-    
+
     const hiddenTagsHtml = hiddenTags
-      .map(tag => `<span class="${tagClass}"><i class="fas fa-tag text-[10px]" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
+      .map(tag => `<span class="${tagClass}"><i class="fas fa-tag text-[10px] text-wiki-primary" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
       .join('')
     
     const containerId = `job-tags-${Date.now()}`

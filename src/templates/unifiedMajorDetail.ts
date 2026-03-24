@@ -2635,11 +2635,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const majorTagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-xs text-purple-300 font-medium hover:bg-wiki-primary/20 transition'
   
   const visibleTagsHtml = visibleTags
-    .map(tag => `<span class="${majorTagClass}"><i class="fas fa-graduation-cap text-[10px]"></i>${escapeHtml(tag)}</span>`)
+    .map(tag => `<span class="${majorTagClass}"><i class="fas fa-graduation-cap text-[10px] text-wiki-primary"></i>${escapeHtml(tag)}</span>`)
     .join('')
-  
+
   const hiddenTagsHtml = hiddenTags
-    .map(tag => `<span class="${majorTagClass}"><i class="fas fa-graduation-cap text-[10px]"></i>${escapeHtml(tag)}</span>`)
+    .map(tag => `<span class="${majorTagClass}"><i class="fas fa-graduation-cap text-[10px] text-wiki-primary"></i>${escapeHtml(tag)}</span>`)
     .join('')
   
   const majorContainerId = `major-tags-${Date.now()}`
