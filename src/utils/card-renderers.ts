@@ -281,8 +281,8 @@ export const renderJobCard = (entry: { profile: any; display?: any }): string =>
               <div class="space-y-1.5 sm:space-y-2">
                 ${categoryName ? `
                   <div class="flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-0.5 rounded-md sm:rounded-md rounded-full sm:rounded-md text-[9px] sm:text-[10px] text-xs sm:text-[10px] font-semibold sm:font-semibold font-medium sm:font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20">
-                      <i class="fas fa-folder text-[7px] sm:text-[8px] text-[10px] sm:text-[8px]"></i>
+                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold tracking-wide" style="background:rgba(148,163,184,0.1);color:rgba(203,213,225,0.85);border:1px solid rgba(148,163,184,0.15);">
+                      <i class="fas fa-folder text-[8px]" style="color:rgba(148,163,184,0.6);"></i>
                       ${escapeHtml(categoryName)}
                     </span>
                   </div>
@@ -333,13 +333,18 @@ export const renderMajorCard = (entry: { profile: any; display?: any }): string 
   const majorSlug = composeDetailSlug('major', major.name, major.id)
   const majorUrl = `/major/${encodeURIComponent(majorSlug)}`
   const summary = escapeHtml(formatMajorSummaryText(display.summary))
-  // 계열 이름: 객체일 수 있으므로 문자열 추출, 콤마가 2개 이하인 경우에만 표시
-  const rawCategoryName = typeof display.categoryName === 'string'
-    ? display.categoryName
-    : (display.categoryName?.value || display.categoryName?.large || display.categoryName?.name || '')
-  const categoryName = rawCategoryName && rawCategoryName.split(',').length <= 2
-    ? rawCategoryName
-    : undefined
+  // 계열 이름: classificationLarge 우선 → categoryName 폴백 (직업 카드와 동일 로직)
+  const rawMajorCategoryName = display.categoryName || major.category?.name
+  const normalizeMajorCategory = (value: any): string => {
+    let cat =
+      typeof value === 'string'
+        ? value
+        : (value?.value || value?.large || value?.name || value?.medium || value?.small || '')
+    if (cat.includes('›')) cat = cat.split('›')[0].trim()
+    else if (cat.includes('>')) cat = cat.split('>')[0].trim()
+    return cat
+  }
+  const categoryName = display.classificationLarge || normalizeMajorCategory(rawMajorCategoryName)
 
   const satisfactionGrade = getSatisfactionGrade(display.firstJobSatisfaction)
 
@@ -477,8 +482,8 @@ export const renderMajorCard = (entry: { profile: any; display?: any }): string 
               <div class="space-y-1.5 sm:space-y-2">
                 ${categoryName ? `
                   <div class="flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-emerald-500/10 text-emerald-400/80 border border-emerald-500/20">
-                      <i class="fas fa-graduation-cap text-[7px] sm:text-[8px]"></i>
+                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold tracking-wide" style="background:rgba(148,163,184,0.1);color:rgba(203,213,225,0.85);border:1px solid rgba(148,163,184,0.15);">
+                      <i class="fas fa-graduation-cap text-[8px]" style="color:rgba(148,163,184,0.6);"></i>
                       ${escapeHtml(categoryName)}
                     </span>
                   </div>
