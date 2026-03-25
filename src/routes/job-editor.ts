@@ -515,6 +515,22 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
         delete updatedUserData._sources
       }
 
+      // ── 각주 경고: 본문에 [N]이 있는데 해당 필드 sources가 없으면 응답에 경고 포함 ──
+      const footnoteWarnings: string[] = []
+      const footnoteFieldKeys = ['way', 'overviewSalary.sal', 'overviewProspect.main', 'trivia', 'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'summary']
+      for (const fk of footnoteFieldKeys) {
+        const parts = fk.split('.')
+        let fieldVal: any = updatedUserData
+        for (const p of parts) { fieldVal = fieldVal?.[p] }
+        if (typeof fieldVal === 'string' && /\[\d+\]/.test(fieldVal)) {
+          // 본문에 [N] 각주가 있음 → sources 확인
+          const hasSources = updatedUserData._sources?.[fk] && Array.isArray(updatedUserData._sources[fk]) && updatedUserData._sources[fk].length > 0
+          if (!hasSources) {
+            footnoteWarnings.push(`⚠️ ${fk}: 본문에 [N] 각주가 있지만 해당 필드의 sources가 없습니다`)
+          }
+        }
+      }
+
       const now = Date.now()
 
       let currentMerged: any = {}
@@ -613,7 +629,8 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
         success: true,
         revisionId: revision.id,
         message: 'Edit saved successfully',
-        newTimestamp: now
+        newTimestamp: now,
+        ...(footnoteWarnings.length > 0 ? { warnings: footnoteWarnings } : {})
       })
     }
 
