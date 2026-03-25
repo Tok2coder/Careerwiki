@@ -766,7 +766,7 @@
   cursor: pointer;
   font-weight: 800;
   font-size: 1.05rem;
-  color: #c084fc;
+  color: rgba(203,213,225,0.85);
   letter-spacing: 0.06em;
   list-style: none;
   display: flex;
@@ -822,10 +822,9 @@
 .howto-toc-list li a .toc-num {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #c084fc;
+  color: rgba(203,213,225,0.85);
   min-width: 1.25rem;
   font-variant-numeric: tabular-nums;
-  opacity: 0.7;
 }
 
 /* =====================================================

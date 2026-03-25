@@ -2073,7 +2073,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
             data-toc-target="${escapeHtml(item.id)}"
             data-toc-index="${index}"
           >
-            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-wiki-primary/25 text-xs font-semibold text-wiki-primary">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold" style="background:rgba(99,102,241,0.15);color:rgba(203,213,225,0.85);">
               ${index + 1}
             </span>
             <span class="text-sm text-wiki-text">${escapeHtml(item.label)}</span>
@@ -2092,7 +2092,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
       aria-label="${escapeHtml(heading)}"
     >
       <header class="mb-4 flex items-center gap-3">
-        <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-wiki-primary/15 text-wiki-primary">
+        <span class="flex h-10 w-10 items-center justify-center rounded-2xl" style="background:rgba(99,102,241,0.1);color:rgba(203,213,225,0.85);">
           <i class="fas ${headingIcon} text-lg" aria-hidden="true"></i>
         </span>
         <h3 class="text-base md:text-lg font-bold text-white leading-tight">${escapeHtml(heading)}</h3>
