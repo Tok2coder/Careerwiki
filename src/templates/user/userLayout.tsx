@@ -57,10 +57,10 @@ export function renderUserLayoutContent({ title, currentPath, children, username
           <!-- 네비게이션 (모바일: 가로, 데스크톱: 세로) -->
           <nav class="glass-card rounded-xl overflow-hidden">
             <!-- 모바일: 가로 스크롤 -->
-            <div class="lg:hidden flex overflow-x-auto gap-1 p-2" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <div class="lg:hidden flex overflow-x-auto gap-1 p-2" style="scrollbar-width: none; -ms-overflow-style: none; font-size: 15px;">
               ${navItems.map(item => `
                 <a href="${item.path}"
-                   class="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm whitespace-nowrap transition ${
+                   class="flex items-center gap-2 px-3 py-2.5 rounded-lg whitespace-nowrap transition ${
                      currentPath === item.path || currentPath.startsWith(item.path + '/') 
                        ? 'bg-wiki-primary/20 text-white' 
                        : 'text-wiki-muted hover:text-white hover:bg-wiki-primary/10'
@@ -72,10 +72,10 @@ export function renderUserLayoutContent({ title, currentPath, children, username
             </div>
             
             <!-- 데스크톱: 세로 메뉴 -->
-            <div class="hidden lg:block p-2 space-y-1">
+            <div class="hidden lg:block p-2 space-y-1" style="font-size: 15px;">
               ${navItems.map(item => `
                 <a href="${item.path}" 
-                   class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition ${
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                      currentPath === item.path || currentPath.startsWith(item.path + '/') 
                        ? 'bg-wiki-primary/15 text-white border-l-3 border-wiki-primary' 
                        : 'text-wiki-muted hover:text-white hover:bg-wiki-primary/10'

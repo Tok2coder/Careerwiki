@@ -222,8 +222,8 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
                   <i class="fas ${typeIcon} text-emerald-400"></i>
                 </div>
                 <div>
-                  <h4 class="text-base font-bold text-white">${typeLabel}</h4>
-                  <p class="text-xs text-emerald-300/70">${formatRelativeTime(draftItem.updated_at)}</p>
+                  <h4 class="font-bold text-white" style="font-size:15px;">${typeLabel}</h4>
+                  <p style="font-size:13px;" class="text-emerald-300/70">${formatRelativeTime(draftItem.updated_at)}</p>
                 </div>
               </div>
               <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white">
@@ -239,7 +239,7 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
                 </div>
                 <span class="text-xs text-emerald-300">완료</span>
               </div>
-              <p class="text-sm text-white/80">
+              <p style="font-size:14px;" class="text-white/80">
                 <i class="fas fa-check-circle text-emerald-400 mr-1"></i>
                 분석 완료! 결과를 확인하세요
               </p>
@@ -274,7 +274,7 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
               </div>
               <div>
                 <h4 class="text-base font-bold text-white">${typeLabel}</h4>
-                <p class="text-xs text-amber-300/70">${formatRelativeTime(draftItem.updated_at)}</p>
+                <p style="font-size:13px;" class="text-amber-300/70">${formatRelativeTime(draftItem.updated_at)}</p>
               </div>
             </div>
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-black">
@@ -291,7 +291,7 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
               </div>
               <span class="text-xs text-amber-300">${calculateProgress(draftItem.current_step, draftItem.profile_sub_step, draftItem.current_round)}%</span>
             </div>
-            <p class="text-sm text-white/80">
+            <p style="font-size:14px;" class="text-white/80">
               <i class="fas fa-map-marker-alt text-amber-400 mr-1"></i>
               ${getCurrentStepLabel(draftItem.current_step, draftItem.profile_sub_step, draftItem.current_round)}
             </p>
@@ -344,8 +344,8 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
               <i class="fas ${typeIcon} ${typeColor}"></i>
             </div>
             <div>
-              <span class="text-sm font-medium text-white">${typeLabel}</span>
-              <p class="text-xs" style="color: #9aa3c5;">${formatRelativeTime(result.created_at)}</p>
+              <span class="font-medium text-white" style="font-size:15px;">${typeLabel}</span>
+              <p style="font-size:13px; color: #9aa3c5;">${formatRelativeTime(result.created_at)}</p>
             </div>
           </div>
           ${hasVersions ? `
@@ -381,7 +381,7 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
                       ${i + 1}
                     </div>
                   </div>
-                  <p class="mt-1 text-[10px] sm:text-[11px] leading-tight text-white/80 group-hover/card:text-white line-clamp-2 w-full px-0.5">
+                  <p class="mt-1 text-[11px] sm:text-[12px] leading-tight text-white/80 group-hover/card:text-white line-clamp-2 w-full px-0.5">
                     ${rec.name}
                   </p>
                 </a>
@@ -391,9 +391,10 @@ export function renderUserAiResultsContent({ results, filter, totalCount, page, 
         ` : ''}
 
         <div class="pt-3 border-t flex items-center justify-between" style="border-color: rgba(148, 163, 184, 0.1);">
-          <span class="text-xs" style="color: #9aa3c5;">${hasVersions ? `v${version} · ` : ''}${formatDate(result.created_at)}</span>
+          <span style="font-size:13px; color: #9aa3c5;">${hasVersions ? `v${version} · ` : ''}${formatDate(result.created_at)}</span>
           <a href="/user/ai-results/${result.request_id}" target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition hover:opacity-90"
+             class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition hover:opacity-90"
+             style="font-size:14px;"
              style="background: linear-gradient(135deg, #4361ee 0%, #64b5f6 100%); color: #fff;">
             <i class="fas fa-file-alt"></i>리포트 보기
             <i class="fas fa-external-link-alt text-xs opacity-70"></i>
