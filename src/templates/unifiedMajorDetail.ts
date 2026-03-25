@@ -124,7 +124,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'curriculum' | 'career' | 'un
             data-toc-target="${escapeHtml(item.id)}"
             data-toc-index="${index}"
           >
-            <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold" style="background:rgba(99,102,241,0.25);color:rgba(203,213,225,0.85);">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold" style="background:rgba(16,185,129,0.2);color:rgba(203,213,225,0.85);">
               ${index + 1}
             </span>
             <span class="text-wiki-text">${escapeHtml(item.label)}</span>
@@ -141,7 +141,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'curriculum' | 'career' | 'un
       aria-label="${escapeHtml(heading)}"
     >
       <header class="mb-4 flex items-center gap-3">
-        <span class="flex h-10 w-10 items-center justify-center rounded-2xl" style="background:rgba(99,102,241,0.1);color:rgba(203,213,225,0.85);">
+        <span class="flex h-10 w-10 items-center justify-center rounded-2xl" style="background:rgba(16,185,129,0.1);color:rgba(203,213,225,0.85);">
           <i class="fas ${headingIcon} text-lg" aria-hidden="true"></i>
         </span>
         <h3 class="font-bold text-white leading-tight" style="font-size:19px;">${escapeHtml(heading)}</h3>
