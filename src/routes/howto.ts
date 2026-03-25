@@ -302,7 +302,7 @@ howtoRoutes.get('/', async (c) => {
             <a href="/howto/guide:%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9E%91%EC%84%B1%EB%B2%95"
                class="relative group inline-flex items-center justify-center w-[36px] sm:w-[44px] h-[36px] sm:h-[44px] bg-wiki-primary/10 border border-wiki-primary/30 text-wiki-secondary hover:bg-wiki-primary/20 hover:border-wiki-primary/50 rounded-xl transition-all duration-200">
               <i class="fas fa-question text-xs sm:text-base"></i>
-              <span class="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-wiki-card border border-wiki-border rounded-lg text-[11px] text-wiki-muted whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-lg">가이드 작성법</span>
+              <span class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-wiki-card border border-wiki-border rounded-lg text-[11px] text-wiki-muted whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-lg">가이드 작성법</span>
             </a>
             <a href="${user ? '/howto/write' : '/login?redirect=/howto/write'}"
                class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 h-[36px] sm:h-[44px] bg-gradient-to-r from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/40 text-white text-[13px] sm:text-base font-semibold rounded-xl hover:from-wiki-primary/30 hover:to-wiki-secondary/30 hover:border-wiki-primary/60 transition-all duration-200"
