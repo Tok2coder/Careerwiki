@@ -11,6 +11,7 @@ export interface CareerTreeStage {
   years?: string              // 기간 (예: '1998-2011', '2011-현재')
   description?: string        // 한 줄 설명
   job_slug?: string | null    // CW 직업 페이지 슬러그 (있으면 링크)
+  major_slug?: string | null  // CW 전공 페이지 슬러그 (있으면 링크)
 }
 
 /** DB row → 파싱된 커리어트리 */

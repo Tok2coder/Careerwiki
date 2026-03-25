@@ -1824,9 +1824,16 @@ function renderCareerTimeline(
       ? '<div class="absolute left-[6.5px] top-[18px] bottom-[-8px] w-0.5 bg-wiki-border/50"></div>'
       : ''
 
-    // 조직 + 기간
+    // 조직 + 기간 (전공 링크 지원)
     const meta: string[] = []
-    if (stage.organization) meta.push(escapeHtml(stage.organization))
+    if (stage.organization) {
+      const orgText = escapeHtml(stage.organization)
+      if ((stage as any).major_slug) {
+        meta.push(`<a href="/major/${encodeURIComponent((stage as any).major_slug)}" class="hover:underline decoration-wiki-secondary/40">${orgText}</a>`)
+      } else {
+        meta.push(orgText)
+      }
+    }
     if (stage.years) meta.push(escapeHtml(stage.years))
     const metaHtml = meta.length > 0
       ? `<p class="text-xs text-wiki-muted mt-0.5">${meta.join(' · ')}</p>`
