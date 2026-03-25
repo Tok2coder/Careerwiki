@@ -2066,7 +2066,8 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
         <li data-toc-order="${index + 1}">
           <a
             href="#${escapeHtml(item.id)}"
-            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 md:py-3 text-sm text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
+            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 md:py-3 text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
+            style="font-size:16px;"
             data-cw-telemetry-action="toc-link"
             data-cw-telemetry-component="section-toc-link"
             data-cw-telemetry-scope="${sectionKey}-toc"
@@ -2076,7 +2077,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
             <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold" style="background:rgba(99,102,241,0.25);color:rgba(203,213,225,0.85);">
               ${index + 1}
             </span>
-            <span class="text-sm text-wiki-text">${escapeHtml(item.label)}</span>
+            <span class="text-wiki-text">${escapeHtml(item.label)}</span>
           </a>
         </li>
       `)
@@ -2095,7 +2096,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
         <span class="flex h-10 w-10 items-center justify-center rounded-2xl" style="background:rgba(99,102,241,0.1);color:rgba(203,213,225,0.85);">
           <i class="fas ${headingIcon} text-lg" aria-hidden="true"></i>
         </span>
-        <h3 class="text-base md:text-lg font-bold text-white leading-tight">${escapeHtml(heading)}</h3>
+        <h3 class="font-bold text-white leading-tight" style="font-size:19px;">${escapeHtml(heading)}</h3>
       </header>
       <ol class="space-y-2 list-none" data-section-toc-items>
         ${listMarkup}
