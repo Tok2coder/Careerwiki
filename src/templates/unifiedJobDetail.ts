@@ -4926,14 +4926,15 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     const visibleTags = validTags.slice(0, visibleLimit)
     const hiddenTags = validTags.slice(visibleLimit)
     
-    const tagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 text-[14px] text-purple-300 font-medium border border-wiki-primary/20 hover:bg-wiki-primary/20 transition'
+    const tagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[14px] font-medium hover:opacity-80 transition'
+    const tagStyle = 'background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);'
     
     const visibleTagsHtml = visibleTags
-      .map(tag => `<span class="${tagClass}"><i class="fas fa-tag text-[10px] text-wiki-primary" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
+      .map(tag => `<span class="${tagClass}" style="${tagStyle}"><i class="fas fa-tag text-[10px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
       .join('')
 
     const hiddenTagsHtml = hiddenTags
-      .map(tag => `<span class="${tagClass}"><i class="fas fa-tag text-[10px] text-wiki-primary" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
+      .map(tag => `<span class="${tagClass}" style="${tagStyle}"><i class="fas fa-tag text-[10px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>${escapeHtml(safeTrim(tag))}</span>`)
       .join('')
     
     const containerId = `job-tags-${Date.now()}`
