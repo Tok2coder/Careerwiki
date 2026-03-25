@@ -2415,7 +2415,9 @@ const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; t
 
   const flat: Array<{ id: number; fieldKey: string; text: string; url?: string; displayOrder: number; originalId: number }> = []
 
-  for (const [fieldKey, val] of Object.entries(src)) {
+  for (const [rawFieldKey, val] of Object.entries(src)) {
+    // "way[1]", "overviewSalary.sal[2]" 같은 잘못된 키 → "way", "overviewSalary.sal"로 정규화
+    const fieldKey = rawFieldKey.replace(/\[\d+\]$/, '')
     const arr = Array.isArray(val) ? val : [val]
     arr.forEach((item: any) => {
       const text = (item?.text || '').trim()
