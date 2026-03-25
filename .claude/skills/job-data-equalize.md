@@ -201,7 +201,13 @@ FROM jobs WHERE name IN ('직업명1', '직업명2') AND is_active = 1
 |------|----------|------------|----------|
 | 관련 직업 | `sidebarJobs` | `string[]` | `SELECT name FROM jobs WHERE is_active=1 AND name IN (...)` |
 | 관련 전공 | `sidebarMajors` | `string[]` | `SELECT name FROM majors WHERE is_active=1 AND name IN (...)` |
-| 추천 자격증 | `sidebarCerts` | `[{name:string, url:string\|null}]` | 자격증명 정확성 확인 |
+| 추천 자격증 | `sidebarCerts` | `[{name:string, url:string\|null}]` | 아래 기준 참고 |
+
+**sidebarCerts 선정 기준:**
+- ✅ **필수 자격증**: 이 직업을 하려면 반드시 필요 (예: 변호사→"변호사 자격증", 간호사→"간호사 면허")
+- ✅ **추천 자격증**: 있으면 경쟁력 상승하는 관련 자격 (예: 변호사→"법무사", "변리사")
+- ❌ **시험 자체**: 자격증이 아닌 시험은 넣지 않음 (예: LEET, 사법시험, TOEIC)
+- ❌ **명칭**: "~시험"이 아닌 "~자격증", "~면허", "~자격" 형태로 (예: "변호사시험" ❌ → "변호사 자격증" ✅)
 
 **관련 직업/전공 선정 기준:**
 - **핵심만** — 7~12개 이내로 정말 관련 있는 것만
