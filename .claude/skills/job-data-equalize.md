@@ -92,15 +92,19 @@ CareerWiki 직업에는 이미 커리어넷/고용24 API 데이터가 `merged_pr
 | `overviewSalary.sal` | 수치만 | 이미 user_contributed_json에 서술이 있으면 유지. 없으면 맥락 서술 추가 |
 | `overviewProspect.main` | 전망 텍스트 있음 | 이미 user_contributed_json에 서술이 있으면 유지. 없으면 최신 트렌드 추가 |
 
-### 건드리지 않음 (API 데이터가 충분)
+### API에 있으면 스킵, 없으면 리서치해서 채움
 
-| 필드 | 이유 |
-|------|------|
-| `overviewWork.main` | API에서 잘 제공됨 |
-| `overviewAbilities` | API에서 구조화 데이터 제공 |
-| `overviewAptitude` | API에서 구조화 데이터 제공 |
-| `detailEducation` | API에서 학력/전공 분포 제공 |
-| `detailWlb.wlb` / `detailWlb.social` | API에서 등급 제공 (등급 자체는 건드리지 않고, Detail만 추가) |
+아래 필드들은 보통 API에서 제공되지만, **마이너 직업은 API 데이터가 없을 수 있다.** 반드시 확인 후 판단.
+
+| 필드 | API 있을 때 | API 없을 때 (null) |
+|------|-----------|-------------------|
+| `overviewWork.main` | 스킵 | 수행 직무 서술형 작성 |
+| `overviewAbilities` | 스킵 | abilityList, technKnow 등 리서치 후 작성 |
+| `overviewAptitude` | 스킵 | aptitudeList, interestList 리서치 후 작성 |
+| `detailEducation` | 스킵 | educationDistribution, majorDistribution 가능한 범위에서 작성 |
+| `detailWlb.wlb` / `detailWlb.social` | 스킵 (등급 자체는 건드리지 않고, Detail만 추가) | 등급 + Detail 모두 작성 |
+
+**확인 방법**: merged_profile_json에서 해당 키가 null이거나 빈 객체이면 → 리서치해서 채움
 
 ### 판단 순서
 ```
@@ -112,7 +116,9 @@ CareerWiki 직업에는 이미 커리어넷/고용24 API 데이터가 `merged_pr
 2. merged_profile_json에 API 데이터가 있는가?
    → "항상 새로 작성" 필드 → API와 무관하게 작성
    → "보강 가능" 필드 → API가 충분하면 스킵, 부족하면 보강
-   → "건드리지 않음" 필드 → 스킵
+   → "API에 있으면 스킵" 필드 → API 데이터 있으면 스킵, **없으면(null) 리서치해서 채움**
+
+⚠️ 마이너 직업은 API 데이터가 대부분 비어있을 수 있다. "스킵" 판단 전 반드시 실제 데이터 유무를 확인할 것.
 ```
 
 **핵심: "이 직업이 되고 싶은 학생/취준생에게 실질적으로 도움이 되는 정보"를 최우선으로 채운다.** trivia/wlb만 채우고 끝내면 **실패**.
@@ -708,6 +714,14 @@ Cookie: session_token={SESSION_TOKEN}
 ## 보강 가능 (이미 서술형이 있으면 건드리지 않음)
 - overviewSalary.sal — 맥락 서술 추가 (user_contributed에 이미 있으면 유지)
 - overviewProspect.main — 최신 트렌드 추가 (user_contributed에 이미 있으면 유지)
+
+## API 데이터 없으면 리서치해서 채울 필드 (merged_profile_json 확인 필수!)
+마이너 직업은 아래 필드가 비어있을 수 있다. null이면 리서치해서 채움:
+- overviewWork.main — 수행 직무 서술
+- overviewAbilities — abilityList, technKnow
+- overviewAptitude — aptitudeList, interestList
+- detailEducation — educationDistribution, majorDistribution
+- detailWlb.wlb / detailWlb.social — 등급 (보통이상/좋음 등)
 
 ## 편집 API
 POST https://careerwiki.org/api/job/{JOB_ID}/edit
