@@ -34,7 +34,7 @@ function generateTocFromHtml(html: string): { processedHtml: string; tocHtml: st
   const tocHtml = `
     <nav class="howto-toc">
       <details open>
-        <summary>목차</summary>
+        <summary><span class="toc-icon"><i class="fas fa-list-check"></i></span>목차</summary>
         <ol class="howto-toc-list">${tocItems}</ol>
       </details>
     </nav>`
