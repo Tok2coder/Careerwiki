@@ -308,7 +308,7 @@ export const buildCard = (title: string, icon: string, body: string, options: Bu
       <h3 class="section-title flex items-center justify-between mb-5">
         <div class="flex items-center gap-3">
         <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-wiki-primary/20 to-wiki-secondary/20 border border-wiki-primary/30">
-          <i class="fas ${icon} text-wiki-secondary text-sm"></i>
+          <i class="fas ${icon} text-sm" style="color:rgba(203,213,225,0.85);"></i>
         </span>
         <span>${escapeHtml(title)}</span>
         </div>

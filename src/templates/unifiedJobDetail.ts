@@ -2073,7 +2073,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
             data-toc-target="${escapeHtml(item.id)}"
             data-toc-index="${index}"
           >
-            <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold" style="background:rgba(99,102,241,0.15);color:rgba(203,213,225,0.85);">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold" style="background:rgba(99,102,241,0.25);color:rgba(203,213,225,0.85);">
               ${index + 1}
             </span>
             <span class="text-sm text-wiki-text">${escapeHtml(item.label)}</span>
