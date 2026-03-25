@@ -264,7 +264,7 @@ export const renderLayout = (
 
           /* 기본 콘텐츠 폰트 크기 정의 */
           .content-text {
-            font-size: 15px;
+            font-size: 16px;
             line-height: 1.8;
             color: #cbd5e1;
             letter-spacing: -0.01em;

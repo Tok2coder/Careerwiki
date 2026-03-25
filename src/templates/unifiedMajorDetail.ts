@@ -120,7 +120,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'curriculum' | 'career' | 'un
           <a
             href="#${escapeHtml(item.id)}"
             class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 md:py-3 text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
-            style="font-size:16px;"
+            style="font-size:15px;"
             data-toc-target="${escapeHtml(item.id)}"
             data-toc-index="${index}"
           >
