@@ -276,22 +276,20 @@ export const renderJobCard = (entry: { profile: any; display?: any }): string =>
             </div>
 
             <!-- 직업 정보 -->
-            <div class="flex-1 space-y-3 sm:space-y-4 min-w-0 sm:max-w-[60%] pr-[84px] sm:pr-0">
+            <div class="flex-1 space-y-1.5 sm:space-y-2 min-w-0 sm:max-w-[60%] pr-[84px] sm:pr-0">
               <!-- 헤더: 카테고리 + 직업명 -->
-              <div class="space-y-1.5 sm:space-y-2">
-                ${categoryName ? `
-                  <div class="flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold tracking-wide" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
-                      <i class="fas fa-folder text-[8px]" style="color:rgba(129,140,248,0.7);"></i>
-                      ${escapeHtml(categoryName)}
-                    </span>
-                  </div>
-                ` : ''}
+              ${categoryName ? `
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold tracking-wide" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
+                    <i class="fas fa-folder text-[8px]" style="color:rgba(129,140,248,0.7);"></i>
+                    ${escapeHtml(categoryName)}
+                  </span>
+                </div>
+              ` : ''}
 
-                <h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
-                  ${escapeHtml(job.name)}
-                </h2>
-              </div>
+              <h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">
+                ${escapeHtml(job.name)}
+              </h2>
 
               <!-- 설명 -->
               <p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">
