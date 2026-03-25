@@ -92,19 +92,27 @@ CareerWiki 직업에는 이미 커리어넷/고용24 API 데이터가 `merged_pr
 | `overviewSalary.sal` | 수치만 | 이미 user_contributed_json에 서술이 있으면 유지. 없으면 맥락 서술 추가 |
 | `overviewProspect.main` | 전망 텍스트 있음 | 이미 user_contributed_json에 서술이 있으면 유지. 없으면 최신 트렌드 추가 |
 
-### API에 있으면 스킵, 없으면 리서치해서 채움
+### API에 있으면 스킵, 없으면 **공식 출처가 있을 때만** 채움
 
-아래 필드들은 보통 API에서 제공되지만, **마이너 직업은 API 데이터가 없을 수 있다.** 반드시 확인 후 판단.
+아래 필드들은 보통 API에서 제공되지만, **마이너 직업은 API 데이터가 없을 수 있다.**
 
 | 필드 | API 있을 때 | API 없을 때 (null) |
 |------|-----------|-------------------|
-| `overviewWork.main` | 스킵 | 수행 직무 서술형 작성 |
-| `overviewAbilities` | 스킵 | abilityList, technKnow 등 리서치 후 작성 |
-| `overviewAptitude` | 스킵 | aptitudeList, interestList 리서치 후 작성 |
-| `detailEducation` | 스킵 | educationDistribution, majorDistribution 가능한 범위에서 작성 |
-| `detailWlb.wlb` / `detailWlb.social` | 스킵 (등급 자체는 건드리지 않고, Detail만 추가) | 등급 + Detail 모두 작성 |
+| `overviewWork.main` | 스킵 | 수행 직무 서술형 작성 (출처 필수) |
+| `overviewAbilities.technKnow` | 스킵 | 서술형 텍스트 작성 가능 (출처+각주 필수) |
+| `detailWlb.wlb` / `detailWlb.social` | 스킵 | 등급 + Detail 모두 작성 (출처 필수) |
 
-**확인 방법**: merged_profile_json에서 해당 키가 null이거나 빈 객체이면 → 리서치해서 채움
+**⚠️ 아래 필드는 공식 통계만 허용 — 추정값/AI 생성 수치 절대 금지:**
+
+| 필드 | 허용 출처 | 출처 없으면 |
+|------|----------|-----------|
+| `overviewAbilities.abilityList` (점수) | 커리어넷 KNOW 데이터만 | **null 유지 (채우지 않음)** |
+| `overviewAptitude` (적성/흥미/만족도) | 커리어넷 재직자 조사만 | **null 유지 (채우지 않음)** |
+| `detailEducation` (학력/전공 분포 %) | 고용24 재직자 조사만 | **null 유지 (채우지 않음)** |
+
+이 필드들은 수치/퍼센트이므로 출처 없이 지어내면 거짓 정보가 됨. **빈 칸이 거짓 정보보다 100배 낫다.**
+
+**확인 방법**: merged_profile_json에서 해당 키가 null이거나 빈 객체이면 → 공식 출처 있을 때만 채움, 없으면 null 유지
 
 ### 판단 순서
 ```
@@ -715,13 +723,17 @@ Cookie: session_token={SESSION_TOKEN}
 - overviewSalary.sal — 맥락 서술 추가 (user_contributed에 이미 있으면 유지)
 - overviewProspect.main — 최신 트렌드 추가 (user_contributed에 이미 있으면 유지)
 
-## API 데이터 없으면 리서치해서 채울 필드 (merged_profile_json 확인 필수!)
-마이너 직업은 아래 필드가 비어있을 수 있다. null이면 리서치해서 채움:
-- overviewWork.main — 수행 직무 서술
-- overviewAbilities — abilityList, technKnow
-- overviewAptitude — aptitudeList, interestList
-- detailEducation — educationDistribution, majorDistribution
-- detailWlb.wlb / detailWlb.social — 등급 (보통이상/좋음 등)
+## API 데이터 없으면 채울 수 있는 필드 (merged_profile_json 확인 필수!)
+마이너 직업은 아래 필드가 비어있을 수 있다:
+- overviewWork.main — 수행 직무 서술 (출처+각주 필수)
+- overviewAbilities.technKnow — 활용 기술 서술 (출처+각주 필수)
+- detailWlb.wlb / detailWlb.social — 등급 (출처 필수)
+
+**⚠️ 아래 필드는 공식 통계 없으면 절대 채우지 않음 (null 유지!):**
+- overviewAbilities.abilityList (점수) — 커리어넷 KNOW만 허용
+- overviewAptitude (적성/흥미/만족도) — 커리어넷 재직자 조사만 허용
+- detailEducation (학력/전공 분포 %) — 고용24 재직자 조사만 허용
+- **추정값/AI 생성 수치 절대 금지. 빈 칸 >> 거짓 정보.**
 
 ## 편집 API
 POST https://careerwiki.org/api/job/{JOB_ID}/edit
@@ -804,7 +816,8 @@ done
 ## 8. 절대 금지
 
 - **출처 없는 데이터 입력 (텍스트든 구조화 데이터든)** ← 최우선 원칙
-- **추정값/AI 생성 수치 입력** (만족도, 학력분포 %, 역량 점수 등을 근거 없이 추정 금지)
+- **추정값/AI 생성 수치 입력** (만족도, 학력분포 %, 역량 점수, 적성/흥미 등을 근거 없이 추정하면 **거짓 정보**)
+- **abilityList 점수, aptitudeList, interestList, satisfaction, educationDistribution, majorDistribution을 공식 통계 없이 채우기** — 커리어넷 KNOW 또는 고용24 재직자 조사에서 직접 확인된 수치만 허용. 출처 못 찾으면 **null 유지**
 - 출처 없는 통계/수치 입력
 - 메인 도메인만 출처로 기록 (https://www.career.go.kr ← 이렇게 하면 안 됨)
 - salary에 추정치 입력 (출처 있는 데이터만)
