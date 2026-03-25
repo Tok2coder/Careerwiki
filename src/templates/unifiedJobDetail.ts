@@ -3346,9 +3346,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     const jobNamePart = escapeHtml(safeTrim(profile.name) || '')
 
     categoryHtml = `
-      <nav class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300" aria-label="분류">
-        <i class="fas fa-sitemap text-[12px] text-wiki-primary" aria-hidden="true"></i>
-        ${largePart}${mediumPart ? ` <span class="text-purple-300/60">›</span> ${mediumPart}` : ''}
+      <nav class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[14px] font-medium" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);" aria-label="분류">
+        <i class="fas fa-sitemap text-[12px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>
+        ${largePart}${mediumPart ? ` <span style="color:rgba(129,140,248,0.4);">›</span> ${mediumPart}` : ''}
       </nav>
     `
   } else if (profile.heroCategory) {
@@ -3357,8 +3357,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const categoryValue = safeTrim(profile.heroCategory)
       if (categoryValue) {
         categoryHtml = `
-          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300">
-            <i class="fas fa-sitemap text-[12px] text-wiki-primary" aria-hidden="true"></i>
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[14px] font-medium" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
+            <i class="fas fa-sitemap text-[12px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>
             ${escapeHtml(categoryValue)}
           </span>
         `
@@ -3394,24 +3394,24 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             }
           </style>
           <!-- 데스크톱: 전체 표시 -->
-          <span class="job-bc-desktop hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300">
-            <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
-            ${largePart}${mediumPart ? ` <span class="text-purple-300/60">›</span> ${mediumPart}` : ''}${smallPart ? ` <span class="text-purple-300/60">›</span> ${smallPart}` : ''}
+          <span class="job-bc-desktop hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[14px] font-medium" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
+            <i class="fas fa-sitemap text-[11px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>
+            ${largePart}${mediumPart ? ` <span style="color:rgba(129,140,248,0.4);">›</span> ${mediumPart}` : ''}${smallPart ? ` <span style="color:rgba(129,140,248,0.4);">›</span> ${smallPart}` : ''}
           </span>
           <!-- 모바일: 클릭하여 단계적 확장 -->
-          <span class="job-bc-mobile inline-flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300 cursor-pointer select-none active:bg-wiki-primary/10" data-lv="1" data-max="${totalLevels}" onclick="(function(e){var el=e.currentTarget;if(!el)return;var lv=parseInt(el.getAttribute('data-lv')||'1',10);var mx=parseInt(el.getAttribute('data-max')||'1',10);var nxt=lv>=mx?1:lv+1;el.setAttribute('data-lv',String(nxt));})(event)">
-            <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
+          <span class="job-bc-mobile inline-flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-full text-[14px] font-medium cursor-pointer select-none" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);" data-lv="1" data-max="${totalLevels}" onclick="(function(e){var el=e.currentTarget;if(!el)return;var lv=parseInt(el.getAttribute('data-lv')||'1',10);var mx=parseInt(el.getAttribute('data-max')||'1',10);var nxt=lv>=mx?1:lv+1;el.setAttribute('data-lv',String(nxt));})(event)">
+            <i class="fas fa-sitemap text-[11px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>
             <span class="bc-l">${largePart}</span>
-            ${mediumPart ? `<span class="bc-sep-m text-purple-300/60">›</span><span class="bc-m">${mediumPart}</span>` : ''}
-            ${smallPart ? `<span class="bc-sep-s text-purple-300/60">›</span><span class="bc-s">${smallPart}</span>` : ''}
+            ${mediumPart ? `<span class="bc-sep-m" style="color:rgba(129,140,248,0.4);">›</span><span class="bc-m">${mediumPart}</span>` : ''}
+            ${smallPart ? `<span class="bc-sep-s" style="color:rgba(129,140,248,0.4);">›</span><span class="bc-s">${smallPart}</span>` : ''}
             <i class="fas fa-chevron-right bc-expand text-[9px] text-wiki-muted/70 ml-0.5" aria-hidden="true"></i>
           </span>
         `
       } else {
         // 1개 레벨만 있으면 기존 방식
         categoryHtml = `
-          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-xs font-medium text-wiki-primary">
-            <i class="fas fa-sitemap text-[11px]" aria-hidden="true"></i>
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
+            <i class="fas fa-sitemap text-[11px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>
             ${largePart || mediumPart || smallPart}
           </span>
         `
@@ -3421,8 +3421,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const categoryValue = safeTrim(profile.heroCategory.value)
       if (categoryValue) {
         categoryHtml = `
-          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-wiki-bg/70 border border-wiki-border/60 text-[14px] font-medium text-purple-300">
-            <i class="fas fa-sitemap text-[12px] text-wiki-primary" aria-hidden="true"></i>
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[14px] font-medium" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
+            <i class="fas fa-sitemap text-[12px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>
             ${escapeHtml(categoryValue)}
           </span>
         `

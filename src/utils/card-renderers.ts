@@ -281,8 +281,8 @@ export const renderJobCard = (entry: { profile: any; display?: any }): string =>
               <div class="space-y-1.5 sm:space-y-2">
                 ${categoryName ? `
                   <div class="flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold tracking-wide" style="background:rgba(148,163,184,0.1);color:rgba(203,213,225,0.85);border:1px solid rgba(148,163,184,0.15);">
-                      <i class="fas fa-folder text-[8px]" style="color:rgba(148,163,184,0.6);"></i>
+                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold tracking-wide" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
+                      <i class="fas fa-folder text-[8px]" style="color:rgba(129,140,248,0.7);"></i>
                       ${escapeHtml(categoryName)}
                     </span>
                   </div>
@@ -482,8 +482,8 @@ export const renderMajorCard = (entry: { profile: any; display?: any }): string 
               <div class="space-y-1.5 sm:space-y-2">
                 ${categoryName ? `
                   <div class="flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold tracking-wide" style="background:rgba(148,163,184,0.1);color:rgba(203,213,225,0.85);border:1px solid rgba(148,163,184,0.15);">
-                      <i class="fas fa-graduation-cap text-[8px]" style="color:rgba(148,163,184,0.6);"></i>
+                    <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold tracking-wide" style="background:rgba(16,185,129,0.08);color:rgba(110,231,183,0.85);border:1px solid rgba(16,185,129,0.2);">
+                      <i class="fas fa-graduation-cap text-[8px]" style="color:rgba(52,211,153,0.7);"></i>
                       ${escapeHtml(categoryName)}
                     </span>
                   </div>
