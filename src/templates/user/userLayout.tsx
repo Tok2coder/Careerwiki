@@ -49,7 +49,7 @@ export function renderUserLayoutContent({ title, currentPath, children, username
               `}
               <div class="flex-1 min-w-0">
                 <p class="font-semibold text-white truncate">${username || '사용자'}</p>
-                <p class="text-xs text-wiki-muted">${roleText}</p>
+                <p class="text-wiki-muted" style="font-size:13px;">${roleText}</p>
               </div>
             </div>
           </div>
