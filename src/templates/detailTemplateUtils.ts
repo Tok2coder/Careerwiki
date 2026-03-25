@@ -440,8 +440,8 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
   const renderTabButton = (entry: TabEntry, index: number, isIconOnly: boolean) => {
     const isActive = index === 0
     const baseClasses = isIconOnly
-      ? 'px-3 py-3 text-sm font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
-      : 'px-4 md:px-4 py-3 md:py-3 text-sm md:text-sm font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
+      ? 'px-3 py-3 font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
+      : 'px-4 md:px-4 py-3 md:py-3 font-semibold transition border-b-2 rounded-t-none md:rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-wiki-primary/70'
     const activeClasses = isActive
       ? 'text-white border-wiki-primary bg-transparent md:bg-wiki-border/30'
       : 'text-wiki-muted border-transparent hover:text-white hover:border-wiki-border'
@@ -471,6 +471,7 @@ export const renderTabset = ({ entityType, entityId, entries, fallback }: Tabset
           aria-label="${isIconOnly ? escapeHtml(entry.label) : ''}"
           tabindex="${isActive ? '0' : '-1'}"
           class="${baseClasses} ${activeClasses}"
+          style="font-size:15px;"
           ${titleAttr}
           ${iconOnlyAttr}
           data-cw-tab-trigger
