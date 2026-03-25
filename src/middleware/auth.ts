@@ -117,7 +117,21 @@ export const authMiddleware = createMiddleware<{ Bindings: CloudflareBindings }>
       return next()
     }
 
-    // ──────────── 3. 비로그인 ────────────
+    // ──────────── 3. X-Admin-Secret 헤더 인증 (CLI/자동화용) ────────────
+    const adminSecret = c.req.header('X-Admin-Secret')
+    if (adminSecret && c.env.ADMIN_SECRET && adminSecret === c.env.ADMIN_SECRET) {
+      // admin 역할 유저를 찾아서 세팅
+      const adminUser = await c.env.DB.prepare(
+        `SELECT * FROM users WHERE role = 'admin' LIMIT 1`
+      ).first<User>()
+      if (adminUser) {
+        c.set('user', adminUser)
+        c.set('sessionToken', null)
+        return next()
+      }
+    }
+
+    // ──────────── 4. 비로그인 ────────────
     c.set('user', null)
     c.set('sessionToken', null)
     return next()
