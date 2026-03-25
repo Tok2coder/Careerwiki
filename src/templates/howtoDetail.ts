@@ -45,6 +45,7 @@ function generateTocFromHtml(html: string): { processedHtml: string; tocHtml: st
 const escapeHtml = (value?: string | null): string => {
   if (!value) return ''
   return value
+    .replace(/<br\s*\/?>/gi, ' ')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

@@ -12,6 +12,7 @@ export const escapeHtml = (value?: string | null | unknown): string => {
   // 문자열이 아닌 경우 문자열로 변환 시도
   const strValue = typeof value === 'string' ? value : String(value)
   return strValue
+    .replace(/<br\s*\/?>/gi, ' ')  // <br> 태그를 공백으로 치환
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

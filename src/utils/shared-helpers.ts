@@ -1566,6 +1566,7 @@ export const formatEmploymentRate = (rate: string | undefined): string | undefin
 
 export const escapeHtml = (value: string): string =>
   value
+    .replace(/<br\s*\/?>/gi, ' ')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
