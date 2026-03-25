@@ -3272,20 +3272,31 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const sourceKeyAliases: Record<string, string[]> = {
     'detailWlb': ['detailWlb.wlbDetail', 'detailWlb.socialDetail'],
   }
+  // 필드별 로컬 카운터 (source.text에 [N] prefix가 없는 경우 자동 부여)
+  const fieldLocalCounter: Record<string, number> = {}
   for (const source of userSourcesFlat) {
     const m = source.text.match(/^\[(\d+)\]/)
+    let localNum: string
     if (m) {
-      if (!footnoteMap[source.fieldKey]) footnoteMap[source.fieldKey] = {}
-      footnoteMap[source.fieldKey][m[1]] = source.id // source.id = 전역 번호 (1~N)
-      // 별칭 키에도 동일 매핑 등록 (detailWlb → detailWlb.wlbDetail 등)
-      const aliases = sourceKeyAliases[source.fieldKey]
-      if (aliases) {
-        for (const alias of aliases) {
-          if (!footnoteMap[alias]) footnoteMap[alias] = {}
-          footnoteMap[alias][m[1]] = source.id
-        }
+      localNum = m[1]
+    } else {
+      // [N] prefix 없는 source → 필드 내 순서대로 로컬 번호 자동 부여
+      if (!fieldLocalCounter[source.fieldKey]) fieldLocalCounter[source.fieldKey] = 0
+      fieldLocalCounter[source.fieldKey]++
+      localNum = String(fieldLocalCounter[source.fieldKey])
+    }
+
+    if (!footnoteMap[source.fieldKey]) footnoteMap[source.fieldKey] = {}
+    footnoteMap[source.fieldKey][localNum] = source.id // source.id = 전역 번호 (1~N)
+    // 별칭 키에도 동일 매핑 등록 (detailWlb → detailWlb.wlbDetail 등)
+    const aliases = sourceKeyAliases[source.fieldKey]
+    if (aliases) {
+      for (const alias of aliases) {
+        if (!footnoteMap[alias]) footnoteMap[alias] = {}
+        footnoteMap[alias][localNum] = source.id
       }
     }
+
     // [N] 접두사 제거한 출처 설명을 전역 번호로 매핑
     const cleanDesc = source.text.replace(/^\[\d+\]\s*/, '').trim()
     if (cleanDesc) sourceTextMap[source.id] = cleanDesc

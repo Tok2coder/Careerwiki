@@ -74,12 +74,23 @@ npx wrangler d1 execute careerwiki-kr --remote --json --command "SELECT merged_p
 - 더 최신 **정부/공공 통계**(커리어넷·고용24·통계청·교육부 등)가 확인될 때만
 - 민간 출처(언론, 블로그 등)로는 절대 API 데이터를 덮어쓰지 않는다
 
-**에이전트가 집중해야 할 순수 신규 필드:**
-- `trivia` — API에 없음
-- `detailWlb.wlbDetail`, `detailWlb.socialDetail` — API에는 등급(wlb, social)만 있고 상세 설명 없음
-- `sidebarCerts` 보강 — API 데이터가 부족한 경우
-- 커리어트리 — API에 없음
-- `way` — `detailEducation`에 학력 분포만 있고 구체적 진출 경로 설명이 없는 경우
+**에이전트가 반드시 채워야 할 필드 (우선순위 순):**
+
+1. **`way` (되는 방법)** — 가장 중요! API의 `detailEducation`은 학력 분포 통계일 뿐. user_contributed_json의 `way`는 "이 직업이 되려면 구체적으로 어떻게 해야 하는지"를 서술하는 필드다. 학과 선택, 자격시험 준비, 실무 경험 쌓기, 채용 경로 등 실질적 가이드를 작성해야 한다. merged_profile_json에 `way` 키가 있더라도 그것이 user_contributed_json에서 온 게 아니라면 (= 내용이 구체적 서술이 아니라 수치/리스트라면) 새로 작성한다.
+
+2. **`detailReady`** — curriculum(교과과정), recruit(채용경로), certificate(자격증), training(교육기관) 등 실질적 준비 정보. API에 jobReadyList가 있어도 보통 간략하므로, 더 구체적인 내용으로 보강.
+
+3. **`sidebarCerts`** — 관련 자격증 목록. API에 relatedCertificates가 있어도 보통 1~2개뿐. 실제 도움이 되는 자격증을 추가.
+
+4. **`sidebarMajors`** — 관련 학과. 기존 데이터가 부족하면 보강. DB 존재 검증 필수.
+
+5. **`trivia` (여담)** — API에 없음. 흥미로운 사실, 역사, 통계 등.
+
+6. **`detailWlb.wlbDetail`, `detailWlb.socialDetail`** — API에는 등급만 있고 상세 설명 없음.
+
+7. **커리어트리** — API에 없음. **반드시 wrangler d1 execute로 career_trees + career_tree_job_links 테이블에 직접 INSERT해야 한다.** edit-data API로는 추가 불가. 한국인 공인만. 없으면 추가하지 않음.
+
+**핵심: "이 직업이 되고 싶은 학생/취준생에게 실질적으로 도움이 되는 정보"를 최우선으로 채운다.** trivia/wlb만 채우고 끝내지 말 것.
 
 ---
 
@@ -341,13 +352,31 @@ prospect 출처:
 - [1] 한국고용정보원 중장기 인력수급전망 | URL: https://www.keis.or.kr/...
 ```
 
-### 2-5. 콘텐츠 작성 원칙
+### 2-5. 콘텐츠 작성 원칙 — "모든 필드 전수 점검, 빠짐없이 채우기"
 
-**API에 이미 있는 정보를 반복하지 않는다.** 커리어넷/워크넷 데이터는 이미 페이지에 표시 중.
+**목표**: 이 직업에 관심 있는 유저가 한 페이지에서 필요한 모든 정보를 얻을 수 있게 한다. 모든 필드를 체계적으로 점검하고, 빈 것은 채우고, 오래된 것은 최신화한다.
 
-**기존 데이터가 있을 때**: 더 최신이거나 더 정확한 정보가 있으면 덮어쓸 수 있다. 단, changeSummary에 "기존 데이터 대비 변경 사유" 기록 필수.
+#### 필드별 처리 기준
 
-새로 추가할 정보:
+| 상태 | 처리 |
+|------|------|
+| **빈 필드 (null)** | 반드시 채운다. 출처를 찾을 수 없는 경우에만 비워둠 |
+| **API 데이터만 있음** | API 데이터는 학력분포/수치 위주. **서술형 보강이 필요한 필드(way, prospect, salary 등)는 현장감 있는 텍스트를 추가** |
+| **이미 user_contributed_json에 있음** | 내용이 충분하면 건드리지 않음. 오래됐거나(2년+) 부실하면 최신화 |
+
+#### 필수 채워야 할 필드 (건너뛰면 안 됨)
+
+1. **way** (되는 방법) — 가장 중요. 구체적 진입 루트, 시험 정보, 자격요건, 현실적 경로
+2. **detailReady** — curriculum(교과목), recruit(채용경로), training(양성과정)
+3. **sidebarCerts** — 관련 자격증 + URL (DB 존재 확인)
+4. **sidebarMajors** — 관련 전공 (DB 존재 확인)
+5. **커리어트리** — 한국인 공인만. wrangler d1 execute로 career_trees + career_tree_job_links INSERT
+6. **trivia** — 흥미로운 사실 1개
+7. **detailWlb** — wlbDetail + socialDetail 서술형
+8. **overviewSalary.sal** — API 수치만 있으면 맥락 있는 서술 추가
+9. **overviewProspect.main** — API 전망만 있으면 최신 트렌드/이슈 추가
+
+#### 추가할 정보의 기준 — "유저에게 실질적 도움이 되는가?"
 - **현장 실무 정보**: 실제 취업 루트, 신규 입사 과정, 실무 팁
 - **최신 통계/트렌드**: 최근 합격률, 취업률, 업계 변화
 - **법/제도 변경**: 관련 법률 개정, 자격 제도 변화
