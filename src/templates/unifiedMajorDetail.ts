@@ -2633,14 +2633,15 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const visibleTags = heroTags.slice(0, visibleLimit)
   const hiddenTags = heroTags.slice(visibleLimit)
   
-  const majorTagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wiki-primary/10 border border-wiki-primary/20 text-[14px] text-emerald-300 font-medium hover:bg-wiki-primary/20 transition'
+  const majorTagClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[14px] font-medium hover:opacity-80 transition'
+  const majorTagStyle = 'background:rgba(16,185,129,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(16,185,129,0.2);'
   
   const visibleTagsHtml = visibleTags
-    .map(tag => `<span class="${majorTagClass}"><i class="fas fa-graduation-cap text-[10px] text-wiki-primary"></i>${escapeHtml(tag)}</span>`)
+    .map(tag => `<span class="${majorTagClass}" style="${majorTagStyle}"><i class="fas fa-graduation-cap text-[10px]" style="color:rgba(110,231,183,0.7);"></i>${escapeHtml(tag)}</span>`)
     .join('')
 
   const hiddenTagsHtml = hiddenTags
-    .map(tag => `<span class="${majorTagClass}"><i class="fas fa-graduation-cap text-[10px] text-wiki-primary"></i>${escapeHtml(tag)}</span>`)
+    .map(tag => `<span class="${majorTagClass}" style="${majorTagStyle}"><i class="fas fa-graduation-cap text-[10px]" style="color:rgba(110,231,183,0.7);"></i>${escapeHtml(tag)}</span>`)
     .join('')
   
   const majorContainerId = `major-tags-${Date.now()}`
@@ -2684,9 +2685,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-major-hero>
         <div class="space-y-5">
           ${classificationData?.large_category
-            ? `<a href="/major?category=${encodeURIComponent(classificationData.large_category)}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-[14px] text-emerald-300 font-semibold hover:bg-wiki-primary/25 transition-colors"><i class="fas fa-layer-group text-wiki-primary"></i>${escapeHtml(classificationData.large_category)}</a>`
+            ? `<a href="/major?category=${encodeURIComponent(classificationData.large_category)}" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[14px] font-semibold hover:opacity-80 transition-colors" style="background:rgba(16,185,129,0.1);color:rgba(203,213,225,0.85);border:1px solid rgba(16,185,129,0.2);"><i class="fas fa-layer-group" style="color:rgba(110,231,183,0.7);"></i>${escapeHtml(classificationData.large_category)}</a>`
             : cleanCategoryName
-              ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-wiki-primary/15 text-[14px] text-emerald-300 font-semibold"><i class="fas fa-layer-group text-wiki-primary"></i>${escapeHtml(cleanCategoryName)}</span>`
+              ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[14px] font-semibold" style="background:rgba(16,185,129,0.1);color:rgba(203,213,225,0.85);border:1px solid rgba(16,185,129,0.2);"><i class="fas fa-layer-group" style="color:rgba(110,231,183,0.7);"></i>${escapeHtml(cleanCategoryName)}</span>`
               : ''}
           <div class="flex flex-wrap items-start justify-between gap-4">
             <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight">${escapeHtml(profile.name)}</h1>
@@ -2736,7 +2737,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
               </button>
             </div>
           </div>
-          ${heroDescription ? `<p class="text-[15px] text-wiki-muted leading-relaxed">${escapeHtml(heroDescription)}</p>` : ''}
+          ${heroDescription ? `<p class="text-[15px] sm:text-[16px] text-wiki-muted leading-relaxed">${escapeHtml(heroDescription)}</p>` : ''}
           ${heroImage}
           ${heroTagsMarkup}
         </div>
