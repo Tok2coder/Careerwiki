@@ -273,7 +273,7 @@ export const renderLayout = (
 
           /* 소제목 스타일 */
           .content-heading {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             color: #f1f5f9;
             letter-spacing: -0.01em;
@@ -302,7 +302,7 @@ export const renderLayout = (
               font-size: 19px;
             }
             .content-heading {
-              font-size: 15px;
+              font-size: 16px;
             }
             /* 모바일 네비게이션 로고 크기 조정 */
             nav img[alt*="로고"] {
