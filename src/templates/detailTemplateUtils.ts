@@ -812,19 +812,19 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
             </p>
           </div>
         </div>
-        <!-- 데스크톱: 세로 카드 (컴팩트) -->
-        <div class="hidden md:block">
-          <div class="relative overflow-hidden" style="height:120px;">
+        <!-- 데스크톱: 가로 배치 (컴팩트) -->
+        <div class="hidden md:flex gap-3 p-3 items-center">
+          <div class="flex-shrink-0 w-[140px] aspect-video rounded-lg overflow-hidden bg-wiki-card relative">
             <img src="${thumbUrl}" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
             <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition">
-              <div class="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center shadow-lg shadow-red-600/30 group-hover:scale-110 transition-transform">
+              <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center shadow-lg shadow-red-600/30 group-hover:scale-110 transition-transform">
                 <i class="fas fa-play text-white text-xs ml-0.5"></i>
               </div>
             </div>
           </div>
-          <div class="px-3 py-2.5">
-            <p class="text-sm font-semibold text-wiki-text line-clamp-2 group-hover:text-white transition leading-snug">${displayTitle}</p>
-            <p class="text-[11px] text-wiki-muted mt-1.5 flex items-center gap-1">
+          <div class="flex-1 min-w-0">
+            <p class="content-heading !mb-0 line-clamp-2 group-hover:text-white transition">${displayTitle}</p>
+            <p class="text-xs text-wiki-muted mt-1 flex items-center gap-1">
               <i class="fab fa-youtube text-red-500"></i><span>YouTube</span>
             </p>
           </div>
@@ -844,7 +844,7 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
       >더보기 (${hiddenLinks.length}개)</button>`
     : ''
 
-  return `<div class="space-y-3 md:grid md:grid-cols-3 md:gap-3 md:space-y-0">${visibleHtml}${hiddenHtml}</div>`
+  return `<div class="space-y-3">${visibleHtml}${hiddenHtml}</div>`
 }
 
 // ────────── Comments Section ──────────
