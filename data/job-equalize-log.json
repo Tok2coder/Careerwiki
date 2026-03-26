@@ -1795,5 +1795,29 @@
     "careerTree": [
       "최재천 (생명과학부 석좌교수)"
     ]
+  },
+  {
+    "id": "1765283282842748",
+    "name": "건축사",
+    "slug": "건축사",
+    "productionUrl": "https://careerwiki.org/job/건축사",
+    "completedAt": "2026-03-26T14:22:22.425Z",
+    "revision": 480,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb",
+      "detailReady",
+      "sidebarCerts",
+      "sidebarMajors",
+      "sidebarJobs",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "승효상 (이로재 건축사무소 대표, 초대 서울시 총괄건축가)"
+    ]
   }
 ]
