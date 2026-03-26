@@ -792,25 +792,43 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
 
     return `
       <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer"
-         class="flex gap-4 p-4 rounded-xl border border-wiki-border/40
+         class="block rounded-xl border border-wiki-border/40 overflow-hidden
                 hover:border-red-500/30 hover:shadow-lg hover:shadow-red-500/5 transition-all duration-300 group"
          style="background: linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));">
-        <div class="flex-shrink-0 w-[140px] sm:w-[180px] aspect-video rounded-xl overflow-hidden bg-wiki-card relative shadow-md">
-          <img src="${thumbUrl}"
-               alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
-          <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition">
-            <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center shadow-lg shadow-red-600/30 group-hover:scale-110 transition-transform">
-              <i class="fas fa-play text-white text-sm ml-0.5"></i>
+        <!-- 모바일: 가로 배치 -->
+        <div class="flex gap-3 p-3 md:hidden">
+          <div class="flex-shrink-0 w-[130px] aspect-video rounded-lg overflow-hidden bg-wiki-card relative">
+            <img src="${thumbUrl}" alt="" class="w-full h-full object-cover" loading="lazy">
+            <div class="absolute inset-0 flex items-center justify-center bg-black/20">
+              <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center">
+                <i class="fas fa-play text-white text-xs ml-0.5"></i>
+              </div>
             </div>
           </div>
+          <div class="flex-1 min-w-0 flex flex-col justify-center">
+            <p class="text-sm font-semibold text-wiki-text line-clamp-2 group-hover:text-white transition">${displayTitle}</p>
+            <p class="text-xs text-wiki-muted mt-1.5 flex items-center gap-1">
+              <i class="fab fa-youtube text-red-500"></i><span>YouTube</span>
+            </p>
+          </div>
         </div>
-        <div class="flex-1 min-w-0 flex flex-col justify-center">
-          <p class="text-base font-semibold text-wiki-text line-clamp-2
-             group-hover:text-white transition">${displayTitle}</p>
-          ${desc ? `<p class="text-sm text-wiki-muted mt-1.5 line-clamp-2">${escapeHtml(desc)}</p>` : ''}
-          <p class="text-xs text-wiki-muted mt-2 flex items-center gap-1.5">
-            <i class="fab fa-youtube text-red-500"></i><span>YouTube에서 보기</span>
-          </p>
+        <!-- 데스크톱: 세로 카드 -->
+        <div class="hidden md:block">
+          <div class="aspect-video relative overflow-hidden">
+            <img src="${thumbUrl}" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+            <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition">
+              <div class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center shadow-lg shadow-red-600/30 group-hover:scale-110 transition-transform">
+                <i class="fas fa-play text-white text-base ml-0.5"></i>
+              </div>
+            </div>
+          </div>
+          <div class="p-4">
+            <p class="text-base font-semibold text-wiki-text line-clamp-2 group-hover:text-white transition leading-snug">${displayTitle}</p>
+            ${desc ? `<p class="text-sm text-wiki-muted mt-1.5 line-clamp-1">${escapeHtml(desc)}</p>` : ''}
+            <p class="text-xs text-wiki-muted mt-2 flex items-center gap-1.5">
+              <i class="fab fa-youtube text-red-500"></i><span>YouTube에서 보기</span>
+            </p>
+          </div>
         </div>
       </a>`
   }
@@ -827,7 +845,7 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
       >더보기 (${hiddenLinks.length}개)</button>`
     : ''
 
-  return `<div class="space-y-3">${visibleHtml}${hiddenHtml}</div>`
+  return `<div class="space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0">${visibleHtml}${hiddenHtml}</div>`
 }
 
 // ────────── Comments Section ──────────
