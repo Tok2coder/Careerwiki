@@ -823,7 +823,7 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
             </div>
           </div>
           <div class="px-3 py-2.5">
-            <p class="text-sm font-medium text-wiki-text line-clamp-2 group-hover:text-white transition leading-snug">${displayTitle}</p>
+            <p class="text-base font-semibold text-wiki-text line-clamp-2 group-hover:text-white transition leading-snug">${displayTitle}</p>
             <p class="text-[11px] text-wiki-muted mt-1 flex items-center gap-1">
               <i class="fab fa-youtube text-red-500"></i><span>YouTube</span>
             </p>
