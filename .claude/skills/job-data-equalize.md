@@ -252,6 +252,17 @@ SELECT name FROM jobs WHERE is_active=1 AND name IN ('직업1','직업2','직업
 | 채용 정보 | `detailReady.recruit` | `string[]` | 실제 채용 공고/채용 채널 |
 | 필요 훈련 | `detailReady.training` | `string[]` | 공식 양성과정, 교육기관 정보 |
 | 진로 탐색 활동 | `detailReady.researchList` | `[{title:string}]` | 실제 프로그램/기관명 |
+| 관련 영상 | `youtubeLinks` | `[{url:string, title?:string}]` | 유튜브 영상 URL. 해당 직업 소개/인터뷰/다큐 등. 공식 채널 우선 |
+| 직업지표 | `detailIndicators` | `{chartType:"horizontalBar", items:[{label:string, value:number}], unit:"점"}` | 고용24 재직자 조사만 허용. 항목: 융합성/대인관계/창의성/일가정균형/소득수준/고용유지/사회공헌 (0~100점) |
+| 커스텀 차트 | `customCharts` | `[{title:string, chartType:string, items:[{label:string, value:number}], unit:string}]` | 해당 직업 특유의 시각화. 예: 연차별 연봉, 분야별 취업률 등. 공식 통계만 |
+
+**youtubeLinks 선정 기준:**
+- ✅ 해당 직업 소개 영상 (EBS 직업백과, 커리어넷 등 공식 채널)
+- ✅ 현직자 인터뷰/브이로그 (구독자 1만+ 채널)
+- ✅ 다큐/뉴스 리포트 (방송사 공식 채널)
+- ❌ 광고/홍보 영상, 비공식 re-upload, 저품질 채널
+- URL 형식: `https://www.youtube.com/watch?v=VIDEO_ID` 또는 `https://youtu.be/VIDEO_ID`
+- **반드시 영상이 실제로 존재하는지 curl로 HTTP 200 확인**
 
 ### 1-4. 구조화 데이터 전송 시 주의사항
 
@@ -761,6 +772,12 @@ Cookie: session_token={SESSION_TOKEN}
 6. **detailWlb** — wlbDetail(워라밸 상세) + socialDetail(사회적 기여 상세)
 7. **커리어트리** — wrangler d1 execute로 career_trees + career_tree_job_links INSERT
 
+## 추가 채울 필드 (찾을 수 있으면 채움)
+- **youtubeLinks** — [{url, title}]. 해당 직업 소개/인터뷰 유튜브 영상. 공식채널 우선. URL 실존 확인 필수
+- **detailIndicators** — 고용24 재직자 조사 직업지표 7항목(융합성/대인관계/창의성/일가정균형/소득수준/고용유지/사회공헌). 공식 통계만!
+- **customCharts** — 해당 직업 특유의 시각화 데이터 (연차별 연봉 등). 공식 통계만!
+- **sidebarJobs** — string[]. 관련 직업. DB 존재 확인 필수
+
 ## 보강 가능 (이미 서술형이 있으면 건드리지 않음)
 - overviewSalary.sal — 맥락 서술 추가 (user_contributed에 이미 있으면 유지)
 - overviewProspect.main — 최신 트렌드 추가 (user_contributed에 이미 있으면 유지)
@@ -814,6 +831,12 @@ cd C:/Users/PC/Careerwiki && npx wrangler d1 execute careerwiki-kr --remote --co
 편집 API 응답에 `warnings` 배열이 있으면 → **sources 누락 문제가 있다는 뜻!**
 즉시 sources를 추가하여 재편집해야 한다.
 예: {"success":true, "warnings":["⚠️ trivia: 본문에 [N] 각주가 있지만 해당 필드의 sources가 없습니다"]}
+
+## 출처 검증 (편집 API 호출 전 필수!)
+모든 출처 URL에 대해:
+1. `curl -s -o /dev/null -w "%{http_code}" "URL"` → 200/301 아니면 대체 URL 찾기
+2. `WebFetch(URL, "이 페이지에서 [넣으려는 수치/사실]을 찾아줘")` → 실제로 존재하는지 대조
+3. 유튜브 링크는 `curl -s -o /dev/null -w "%{http_code}" "https://www.youtube.com/oembed?url=URL"` → 200이면 존재
 
 ## 프로덕션 확인
 curl -s "https://careerwiki.org/job/{slug}?nocache=1" | grep "확인 키워드"
