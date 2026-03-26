@@ -3545,7 +3545,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
         }
       }
       if (workMainContent) {
-        introBlocks.push(`<div><h4 class="text-base font-semibold text-white mb-2">수행 직무</h4>${workMainContent}</div>`)
+        introBlocks.push(`<div><h4 class="content-heading">수행 직무</h4>${workMainContent}</div>`)
       }
     }
     
