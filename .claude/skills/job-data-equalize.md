@@ -790,9 +790,25 @@ trivia→"trivia", wlbDetail→"detailWlb.wlbDetail", socialDetail→"detailWlb.
 - 각 [N]은 해당 필드 내에서 1부터 순차. 같은 번호 2회 등장 절대 금지
 - 마침표 뒤에: 합니다.[1] (O) / 합니다[1]. (X)
 
+## sidebarCerts 규칙
+- ✅ 자격증/면허: "변호사 자격증", "간호사 면허" (O)
+- ❌ 시험 자체: "LEET", "사법시험", "TOEIC" (X) — 시험은 자격증이 아님
+- 명칭: "~시험" 아닌 "~자격증/~면허" 형태로
+
+## 커리어트리 규칙 (중요!)
+1. **진입 경로 중심 5단계**: 준비→진입→초기→성장→정점
+2. **전직 스테이지 절대 제외** (국회의원, 감독, CEO 등 해당 직업 이후 전직)
+3. **수상/기록은 description에만** (독립 스테이지 금지)
+4. **하이라이트(stage_index)는 해당 직업을 시작한 스테이지**
+5. **한국인만**. 적합 인물 없으면 추가하지 않음
+6. **정치적 균형**: 특정 정치 성향에 편중되지 않도록. 가급적 비정치인 선정
+7. **person_title**: 해당 직업 내 정체성만 (전직 직함 제외)
+8. 학과 언급 시 **major_slug** 포함하여 내부 링크 연결
+
 ## 커리어트리 INSERT 방법
 cd C:/Users/PC/Careerwiki && npx wrangler d1 execute careerwiki-kr --remote --command "INSERT INTO career_trees (person_name, person_name_en, person_title, person_image_url, stages_json, display_priority, is_active, created_at, updated_at) VALUES ('인물명', 'English', '한줄소개', NULL, '[stages_json]', 100, 1, strftime('%s','now')*1000, strftime('%s','now')*1000)"
 → ID 확인 → career_tree_job_links INSERT (같은 job_slug 1개만!)
+→ stage_index는 **해당 직업을 시작한 스테이지** (0-indexed)
 
 ## API 응답 경고 확인 (필수!)
 편집 API 응답에 `warnings` 배열이 있으면 → **sources 누락 문제가 있다는 뜻!**
