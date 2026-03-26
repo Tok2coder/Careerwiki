@@ -702,8 +702,8 @@ export async function mergeJobProfiles(
           
           let tags: string[] = []
           if (typeof source === 'string') {
-            // 문자열: 쉼표/공백 기준 split
-            tags = source.split(/[,，\s]+/).map(t => t.trim()).filter(t => t.length > 0)
+            // 문자열: 쉼표 기준 split (공백 split 금지 — 설명문이 단어별로 쪼개짐)
+            tags = source.split(/[,，]+/).map(t => t.trim()).filter(t => t.length > 0)
           } else if (Array.isArray(source)) {
             // 배열: 그대로 사용
             tags = source.map(t => typeof t === 'string' ? t.trim() : String(t).trim()).filter(t => t.length > 0)
@@ -942,7 +942,7 @@ export async function mergeJobProfiles(
             const connectJobValues = new Set<string>()
             const connectJob = djobData?.connectJob || djobData?.optionJobInfo?.connectJob
             if (typeof connectJob === 'string') {
-              connectJob.split(/[,，\s]+/).forEach((j: string) => {
+              connectJob.split(/[,，]+/).forEach((j: string) => {
                 if (j.trim()) connectJobValues.add(j.trim())
               })
             } else if (Array.isArray(connectJob)) {
@@ -1075,7 +1075,7 @@ export async function mergeJobProfiles(
             // WORK24_DJOB.optionJobInfo.certLic
             const djobCerts = djobData?.certLic || djobRaw?.optionJobInfo?.certLic
             if (typeof djobCerts === 'string') {
-              djobCerts.split(/[,，\s]+/).forEach((c: string) => {
+              djobCerts.split(/[,，]+/).forEach((c: string) => {
                 const key = c.trim()
                 if (key && !seen.has(key) && !isAlreadyIncluded(key)) {
                   seen.add(key)
