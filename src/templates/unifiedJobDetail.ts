@@ -1613,10 +1613,18 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions, fo
     }
   }
 
-  // 공식 형식이 아닌 사용자 기여 텍스트 → 각주 지원하는 텍스트로 렌더링 (차트 X)
+  // 단순 숫자만 있는 경우 (예: "5076") → 평균 단일 바로 표시
   if (dataset.length === 0) {
-    const textHtml = formatRichText(raw, 'overviewSalary.sal', footnoteMap, sourceTextMap)
-    return buildCard('임금 정보', 'fa-coins', `<div data-cw-telemetry-component="job-salary-card">${textHtml}</div>`, { ...(options ?? {}) })
+    const numOnly = raw.replace(/[,\s만원]/g, '')
+    const parsed = Number.parseInt(numOnly, 10)
+    if (/^\d+$/.test(numOnly) && Number.isFinite(parsed) && parsed > 0) {
+      const formatted = parsed.toLocaleString('ko-KR')
+      dataset = [{ label: '평균', value: parsed }]
+    } else {
+      // 공식 형식이 아닌 사용자 기여 텍스트 → 각주 지원하는 텍스트로 렌더링 (차트 X)
+      const textHtml = formatRichText(raw, 'overviewSalary.sal', footnoteMap, sourceTextMap)
+      return buildCard('임금 정보', 'fa-coins', `<div data-cw-telemetry-component="job-salary-card">${textHtml}</div>`, { ...(options ?? {}) })
+    }
   }
 
   const maxValue = Math.max(...dataset.map((item) => item.value))

@@ -342,7 +342,11 @@ export const renderMajorCard = (entry: { profile: any; display?: any }): string 
     else if (cat.includes('>')) cat = cat.split('>')[0].trim()
     return cat
   }
-  const categoryName = display.classificationLarge || normalizeMajorCategory(rawMajorCategoryName)
+  const rawCategory = display.classificationLarge || normalizeMajorCategory(rawMajorCategoryName)
+  // 콤마가 2개 이상이면 관련학과 목록이므로 계열 아님 → 제외, 50자 초과도 제외
+  const categoryName = (rawCategory && rawCategory.split(',').length <= 2 && rawCategory.length <= 50)
+    ? rawCategory
+    : undefined
 
   const satisfactionGrade = getSatisfactionGrade(display.firstJobSatisfaction)
 
