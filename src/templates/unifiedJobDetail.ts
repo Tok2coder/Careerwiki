@@ -4079,8 +4079,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             <i class="fas fa-balance-scale text-3xl text-purple-400"></i>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-sm font-semibold text-purple-400 uppercase tracking-wide mb-2">워라밸 지수</h3>
-            <p class="content-text text-white text-sm leading-relaxed">${escapeHtml(wlb)}</p>
+            <h3 class="content-heading" style="border:none; padding:0; margin-bottom:8px;">워라밸 지수</h3>
+            <p class="content-text text-white leading-relaxed">${escapeHtml(wlb)}</p>
           </div>
         </div>
       `)
@@ -4094,8 +4094,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             <i class="fas fa-hands-helping text-3xl text-green-400"></i>
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-sm font-semibold text-green-400 uppercase tracking-wide mb-2">사회적 기여도</h3>
-            <p class="content-text text-white text-sm leading-relaxed">${escapeHtml(social)}</p>
+            <h3 class="content-heading" style="border:none; padding:0; margin-bottom:8px;">사회적 기여도</h3>
+            <p class="content-text text-white leading-relaxed">${escapeHtml(social)}</p>
           </div>
         </div>
       `)
@@ -4107,10 +4107,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     // 상세 설명이 있으면 카드 아래에 표시
     const detailBlocks: string[] = []
     if (typeof wlbDetail === 'string' && wlbDetail.trim()) {
-      detailBlocks.push(`<div><h4 class="text-sm font-semibold text-purple-400 tracking-wide mb-2">워라밸</h4>${formatRichText(wlbDetail, 'detailWlb.wlbDetail', footnoteMap, sourceTextMap)}</div>`)
+      detailBlocks.push(`<div><h4 class="content-heading">워라밸</h4>${formatRichText(wlbDetail, 'detailWlb.wlbDetail', footnoteMap, sourceTextMap)}</div>`)
     }
     if (typeof socialDetail === 'string' && socialDetail.trim()) {
-      detailBlocks.push(`<div><h4 class="text-sm font-semibold text-green-400 tracking-wide mb-2">사회적 기여</h4>${formatRichText(socialDetail, 'detailWlb.socialDetail', footnoteMap, sourceTextMap)}</div>`)
+      detailBlocks.push(`<div><h4 class="content-heading">사회적 기여</h4>${formatRichText(socialDetail, 'detailWlb.socialDetail', footnoteMap, sourceTextMap)}</div>`)
     }
     if (detailBlocks.length > 0) {
       gridLayout += `<div class="mt-4 space-y-4">${detailBlocks.join('')}</div>`
