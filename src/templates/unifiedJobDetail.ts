@@ -93,6 +93,20 @@ const safeTrim = (value: any): string => {
   return value.trim()  // ✅ Fixed: value가 string일 때는 직접 trim() 호출
 }
 
+/**
+ * 배열 항목에서 표시 텍스트 안전 추출
+ * 객체인 경우 주요 키를 우선순위대로 시도하여 문자열 반환
+ */
+const extractDisplayText = (item: any): string => {
+  if (item === null || item === undefined) return ''
+  if (typeof item === 'string') return item
+  if (typeof item === 'object') {
+    return item.name || item.title || item.label || item.envNm || item.actvNm ||
+      item.aptitude || item.interest || ''
+  }
+  return String(item)
+}
+
 const normalizeComparableText = (value?: string | null): string => {
   if (!value) return ''
   return safeTrim(value).replace(/\s+/g, ' ')
@@ -137,7 +151,7 @@ const renderDutyListItems = (items: string[]): string => {
   return items
     .map(
       (sentence) => `
-        <li class="flex items-start gap-2 text-[15px] leading-relaxed text-wiki-text" data-job-duty-item>
+        <li class="flex items-start gap-2 text-base leading-relaxed text-wiki-text" data-job-duty-item>
           <span class="text-wiki-primary mt-0.5 text-xs font-semibold">▶</span>
           <span>${escapeHtml(sentence)}</span>
         </li>
@@ -923,7 +937,7 @@ const renderResearchBullets = (researchList: any[]): string => {
   const list = normalizedItems
     .map(
       (text) =>
-        `<li class="flex items-start gap-2 text-[15px] leading-relaxed text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(
+        `<li class="flex items-start gap-2 text-base leading-relaxed text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(
           text
         )}</span></li>`
     )
@@ -4937,7 +4951,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   
   let heroTagsMarkup = ''
   if (profile.heroTags && Array.isArray(profile.heroTags) && profile.heroTags.length > 0) {
-    const validTags = profile.heroTags.filter(tag => isValidTag(tag))
+    // 객체 안전 처리: 객체가 섞여 있을 수 있으므로 문자열로 변환 후 필터
+    const validTags = profile.heroTags.map((tag: any) => extractDisplayText(tag)).filter(tag => isValidTag(tag))
     const visibleLimit = 15
     const hasMore = validTags.length > visibleLimit
     

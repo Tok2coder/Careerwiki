@@ -62,6 +62,27 @@ const safeTrim = (value: any): string => {
 }
 
 /**
+ * 배열 항목에서 표시 텍스트 안전 추출
+ * 객체인 경우 주요 키를 우선순위대로 시도하여 문자열 반환
+ * DB에 저장된 "[object Object]" 문자열도 필터링
+ */
+const extractDisplayText = (item: any): string => {
+  if (item === null || item === undefined) return ''
+  if (typeof item === 'string') {
+    if (item === '[object Object]' || item.includes('[object Object]')) return ''
+    return item
+  }
+  if (typeof item === 'object') {
+    const text = item.name || item.title || item.SBJECT_NM || item.SUBJECT_NM || item.subject_name ||
+      item.act_name || item.ACT_NM || item.gradeuate || item.field_name ||
+      item.envNm || item.actvNm || item.label || ''
+    if (typeof text !== 'string') return ''
+    return text
+  }
+  return String(item)
+}
+
+/**
  * 취업률 포맷 함수: "70% 이상" 같은 텍스트에서 숫자 추출 후 소수점 1자리까지 반올림
  */
 const formatEmploymentRate = (rate: string | undefined): string | undefined => {
@@ -1176,9 +1197,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
           const name = item.title || ''
           const desc = item.description || ''
           if (desc) {
-            return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-[15px] text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
+            return `<div class="mb-3"><span class="font-semibold text-wiki-text">${escapeHtml(name)}</span><p class="text-base text-wiki-muted mt-1">${escapeHtml(desc)}</p></div>`
           }
-          return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-[15px] text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
+          return `<span class="inline-block px-3 py-1 bg-wiki-bg/60 border border-wiki-border/70 rounded-full text-base text-wiki-text mr-2 mb-2">${escapeHtml(name)}</span>`
         })
         .join('')
       if (enterItems) {
@@ -1189,7 +1210,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     // 3. 이색학과 진출 분야 (careerFields) - 다른 내용처럼 단순하게 표시
     if (hasCareerFields) {
       const careerFieldsText = (profile as any).careerFields.trim()
-      enterFieldParts.push(`<p class="text-[15px] text-wiki-text leading-relaxed">${escapeHtml(careerFieldsText)}</p>`)
+      enterFieldParts.push(`<p class="text-base text-wiki-text leading-relaxed">${escapeHtml(careerFieldsText)}</p>`)
     }
     
     if (enterFieldParts.length > 0) {
@@ -1580,7 +1601,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       const html = `<ul class="space-y-2">${triviaItems
         .map(
           item =>
-            `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(
+            `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(
               item
             )}</span></li>`
         )
@@ -1824,11 +1845,13 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   
   // ETL에서 제공된 데이터가 없고 mainSubjects가 있으면 파싱 시도
   if (basicSubjects.length === 0 && advancedSubjects.length === 0 && profile.mainSubjects?.length) {
+    // mainSubjects 항목을 문자열로 안전하게 변환
+    const mainSubjectsStr = profile.mainSubjects.map((s: any) => extractDisplayText(s)).filter(Boolean)
     // ‡ 구분자가 있는 뭉텅이 데이터 파싱
-    const firstSubject = profile.mainSubjects[0]
+    const firstSubject = mainSubjectsStr[0]
     if (firstSubject && firstSubject.includes('‡')) {
       const sections = firstSubject.split('‡').filter(s => s.trim())
-      
+
       sections.forEach(section => {
         if (section.includes('기초과목')) {
           // "기초과목 : 심리학, 해부학, ..." 형식에서 과목들 추출
@@ -1847,9 +1870,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         }
       })
     } else {
-      // 기존 로직: 배열로 들어온 경우
-      basicSubjects = profile.mainSubjects.filter(s => s && (s.includes('기초') || s.includes('입문')))
-      advancedSubjects = profile.mainSubjects.filter(s => s && !(s.includes('기초') || s.includes('입문')))
+      // 기존 로직: 배열로 들어온 경우 (문자열로 변환 후 필터)
+      basicSubjects = mainSubjectsStr.filter(s => s && (s.includes('기초') || s.includes('입문')))
+      advancedSubjects = mainSubjectsStr.filter(s => s && !(s.includes('기초') || s.includes('입문')))
     }
   }
   
@@ -1910,7 +1933,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
                 <i class="fas fa-book-open text-wiki-primary text-xs"></i>
                 ${escapeHtml(name)}
               </h5>
-              ${desc ? `<p class="text-[15px] text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
+              ${desc ? `<p class="text-base text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
             </div>
           `
         })
@@ -1963,7 +1986,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
               <i class="fas fa-school text-wiki-secondary text-xs"></i>
               ${escapeHtml(title)}
             </h5>
-            ${desc ? `<p class="text-[15px] text-wiki-muted leading-relaxed">${formatRichText(desc)}</p>` : ''}
+            ${desc ? `<p class="text-base text-wiki-muted leading-relaxed">${formatRichText(desc)}</p>` : ''}
           </div>
         `
       })
@@ -2004,7 +2027,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
               <i class="fas fa-compass text-wiki-primary text-xs"></i>
               ${escapeHtml(name)}
             </h5>
-            ${desc ? `<p class="text-[15px] text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
+            ${desc ? `<p class="text-base text-wiki-muted leading-relaxed">${escapeHtml(desc)}</p>` : ''}
           </div>
         `
       })
@@ -2070,7 +2093,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       const html = `<ul class="space-y-2">${prospectItems
         .map(
           item =>
-            `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(
+            `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(
               item
             )}</span></li>`
         )
@@ -2390,9 +2413,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     return true
   }
   
-  allLicenses.forEach(license => {
-    if (!license || typeof license !== 'string' || !license.trim()) return
-    
+  allLicenses.forEach(rawLicense => {
+    // 객체 안전 처리: { name: "..." } 형태일 수 있음
+    const license = typeof rawLicense === 'string' ? rawLicense : extractDisplayText(rawLicense)
+    if (!license || !license.trim()) return
+
     let text = license.trim()
     
     // "국가자격 :", "민간자격 :" 등의 prefix 제거
@@ -2596,8 +2621,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   let heroTags: string[] = []
   
   if (etlHeroTags && Array.isArray(etlHeroTags) && etlHeroTags.length > 0) {
-    // ETL에서 미리 병합된 태그 사용 (제한 없음)
-    heroTags = etlHeroTags
+    // ETL에서 미리 병합된 태그 사용 (제한 없음) — 객체 안전 처리
+    heroTags = etlHeroTags.map((t: any) => extractDisplayText(t)).filter(Boolean)
   } else {
     // 폴백: 기존 로직으로 계산
     const careernetRelated = partials?.CAREERNET?.relatedMajors || []
@@ -2620,7 +2645,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     ]
     const uniqueRelatedMajors = Array.from(new Set(
       allRelatedMajors
-        .filter(m => m && typeof m === 'string' && m.trim().length > 0)
+        .map((m: any) => typeof m === 'string' ? m : extractDisplayText(m))
+        .filter(m => m && m.trim().length > 0)
         .map(m => m.trim())
     ))
     
@@ -3014,7 +3040,7 @@ export const createMajorJsonLd = (profile: UnifiedMajorDetail, canonicalUrl: str
     description: profile.summary,
     url: canonicalUrl,
     programType: profile.categoryName,
-    educationalCredentialAwarded: profile.licenses,
+    educationalCredentialAwarded: profile.licenses?.map((l: any) => extractDisplayText(l)).filter(Boolean),
     provider: profile.universities && profile.universities.length > 0
       ? {
           '@type': 'CollegeOrUniversity',
@@ -3022,7 +3048,7 @@ export const createMajorJsonLd = (profile: UnifiedMajorDetail, canonicalUrl: str
           url: profile.universities[0].url
         }
       : undefined,
-    occupationalCategory: profile.relatedJobs,
+    occupationalCategory: profile.relatedJobs?.map((j: any) => extractDisplayText(j)).filter(Boolean),
     numberOfCredits: undefined
   })
 
