@@ -812,21 +812,20 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
             </p>
           </div>
         </div>
-        <!-- 데스크톱: 세로 카드 -->
+        <!-- 데스크톱: 세로 카드 (컴팩트) -->
         <div class="hidden md:block">
-          <div class="aspect-video relative overflow-hidden">
+          <div class="relative overflow-hidden" style="height:120px;">
             <img src="${thumbUrl}" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
             <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition">
-              <div class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center shadow-lg shadow-red-600/30 group-hover:scale-110 transition-transform">
-                <i class="fas fa-play text-white text-base ml-0.5"></i>
+              <div class="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center shadow-lg shadow-red-600/30 group-hover:scale-110 transition-transform">
+                <i class="fas fa-play text-white text-xs ml-0.5"></i>
               </div>
             </div>
           </div>
-          <div class="p-4">
-            <p class="text-base font-semibold text-wiki-text line-clamp-2 group-hover:text-white transition leading-snug">${displayTitle}</p>
-            ${desc ? `<p class="text-sm text-wiki-muted mt-1.5 line-clamp-1">${escapeHtml(desc)}</p>` : ''}
-            <p class="text-xs text-wiki-muted mt-2 flex items-center gap-1.5">
-              <i class="fab fa-youtube text-red-500"></i><span>YouTube에서 보기</span>
+          <div class="px-3 py-2.5">
+            <p class="text-sm font-semibold text-wiki-text line-clamp-2 group-hover:text-white transition leading-snug">${displayTitle}</p>
+            <p class="text-[11px] text-wiki-muted mt-1.5 flex items-center gap-1">
+              <i class="fab fa-youtube text-red-500"></i><span>YouTube</span>
             </p>
           </div>
         </div>
@@ -845,7 +844,7 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
       >더보기 (${hiddenLinks.length}개)</button>`
     : ''
 
-  return `<div class="space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0">${visibleHtml}${hiddenHtml}</div>`
+  return `<div class="space-y-3 md:grid md:grid-cols-3 md:gap-3 md:space-y-0">${visibleHtml}${hiddenHtml}</div>`
 }
 
 // ────────── Comments Section ──────────
