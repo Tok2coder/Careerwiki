@@ -2238,7 +2238,10 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   // 사이드바 구성 (직업 템플릿과 동일한 구조)
   const normalizeNameSlug = (item: any, defaultType: 'job' | 'major' | 'howto'): { name: string; slug: string } => {
     if (!item) return { name: '', slug: '' }
-    if (typeof item === 'string') return { name: item, slug: item }
+    if (typeof item === 'string') {
+      if (item === '[object Object]' || item.includes('[object Object]')) return { name: '', slug: '' }
+      return { name: item, slug: item }
+    }
     const name = item.name || item.title || item.slug || item.id || ''
     let slug = item.slug || item.id || ''
     if (!slug && name) slug = name

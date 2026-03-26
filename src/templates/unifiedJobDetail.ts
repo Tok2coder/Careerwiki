@@ -96,13 +96,19 @@ const safeTrim = (value: any): string => {
 /**
  * 배열 항목에서 표시 텍스트 안전 추출
  * 객체인 경우 주요 키를 우선순위대로 시도하여 문자열 반환
+ * DB에 저장된 "[object Object]" 문자열도 필터링
  */
 const extractDisplayText = (item: any): string => {
   if (item === null || item === undefined) return ''
-  if (typeof item === 'string') return item
+  if (typeof item === 'string') {
+    if (item === '[object Object]' || item.includes('[object Object]')) return ''
+    return item
+  }
   if (typeof item === 'object') {
-    return item.name || item.title || item.label || item.envNm || item.actvNm ||
+    const text = item.name || item.title || item.label || item.envNm || item.actvNm ||
       item.aptitude || item.interest || ''
+    if (typeof text !== 'string') return ''
+    return text
   }
   return String(item)
 }
