@@ -3735,9 +3735,16 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     `
   }
   
+  // CareerNet 원본 데이터일 때만 출처 문구 표시
+  const prospectSources = getFieldSources(p => p?.overviewProspect?.main)
+  const isCareerNetProspect = prospectSources.includes('CAREERNET')
+  const prospectDisclaimer = isCareerNetProspect
+    ? `<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+    : ''
+
   if (prospectPrimary || prospectChartHtml || overviewProspect?.forecastList) {
     let prospectHtml = ''
-    
+
     if (Array.isArray(prospectPrimary) && prospectPrimary.length > 0) {
       // 배열인 경우 각 항목을 블록으로 만들고 첫 단어 들여쓰기
       const prospectBlocks = prospectPrimary
@@ -3751,7 +3758,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
         .join('')
       // Only show section if prospectBlocks has content
       if (prospectBlocks) {
-        prospectHtml = `<div class="space-y-2">${prospectBlocks}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+        prospectHtml = `<div class="space-y-2">${prospectBlocks}</div>${prospectDisclaimer}`
       }
     } else if (typeof prospectPrimary === 'string' && safeTrim(prospectPrimary)) {
       // 문자열인 경우 줄바꿈을 블록으로 변환 (실제 내용이 있을 때만)
@@ -3766,9 +3773,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleTxt}">[${globalNum}]</sup>`
           })
           return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${safeLine}</div>`
-        }).join('')}</div><p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+        }).join('')}</div>${prospectDisclaimer}`
       } else if (lines.length === 1) {
-        prospectHtml = `${formatRichText(prospectPrimary, 'overviewProspect.main', footnoteMap, sourceTextMap)}<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+        prospectHtml = `${formatRichText(prospectPrimary, 'overviewProspect.main', footnoteMap, sourceTextMap)}${prospectDisclaimer}`
       }
     }
     
