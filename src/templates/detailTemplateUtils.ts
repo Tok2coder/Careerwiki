@@ -792,23 +792,24 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
 
     return `
       <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer"
-         class="flex gap-3 p-3 rounded-xl bg-wiki-bg/60 border border-wiki-border/40
-                hover:border-wiki-primary/40 hover:bg-wiki-primary/5 transition group">
-        <div class="flex-shrink-0 w-[120px] sm:w-[140px] aspect-video rounded-lg overflow-hidden bg-wiki-card relative">
+         class="flex gap-4 p-4 rounded-xl border border-wiki-border/40
+                hover:border-red-500/30 hover:shadow-lg hover:shadow-red-500/5 transition-all duration-300 group"
+         style="background: linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));">
+        <div class="flex-shrink-0 w-[140px] sm:w-[180px] aspect-video rounded-xl overflow-hidden bg-wiki-card relative shadow-md">
           <img src="${thumbUrl}"
-               alt="" class="w-full h-full object-cover" loading="lazy">
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-8 h-8 rounded-full bg-red-600/90 flex items-center justify-center">
-              <i class="fas fa-play text-white text-xs ml-0.5"></i>
+               alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+          <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition">
+            <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center shadow-lg shadow-red-600/30 group-hover:scale-110 transition-transform">
+              <i class="fas fa-play text-white text-sm ml-0.5"></i>
             </div>
           </div>
         </div>
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-medium text-wiki-text line-clamp-2
-             group-hover:text-wiki-primary transition">${displayTitle}</p>
-          ${desc ? `<p class="text-xs text-wiki-muted mt-1 line-clamp-1">${escapeHtml(desc)}</p>` : ''}
-          <p class="text-xs text-wiki-muted mt-1.5">
-            <i class="fab fa-youtube text-red-500 mr-1"></i>YouTube
+        <div class="flex-1 min-w-0 flex flex-col justify-center">
+          <p class="text-base font-semibold text-wiki-text line-clamp-2
+             group-hover:text-white transition">${displayTitle}</p>
+          ${desc ? `<p class="text-sm text-wiki-muted mt-1.5 line-clamp-2">${escapeHtml(desc)}</p>` : ''}
+          <p class="text-xs text-wiki-muted mt-2 flex items-center gap-1.5">
+            <i class="fab fa-youtube text-red-500"></i><span>YouTube에서 보기</span>
           </p>
         </div>
       </a>`
