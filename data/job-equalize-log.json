@@ -1819,5 +1819,30 @@
     "careerTree": [
       "승효상 (이로재 건축사무소 대표, 초대 서울시 총괄건축가)"
     ]
+  },
+  {
+    "id": "1765283362349517",
+    "name": "작가",
+    "slug": "작가",
+    "productionUrl": "https://careerwiki.org/job/작가",
+    "completedAt": "2026-03-26T14:27:15.237Z",
+    "revision": 481,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb",
+      "detailReady",
+      "sidebarCerts",
+      "sidebarMajors",
+      "sidebarJobs",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "김영하 (소설가)",
+      "공지영 (소설가)"
+    ]
   }
 ]
