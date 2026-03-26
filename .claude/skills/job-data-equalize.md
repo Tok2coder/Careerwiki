@@ -214,6 +214,15 @@ FROM jobs WHERE name IN ('직업명1', '직업명2') AND is_active = 1
 - **DB 존재 필수** — `is_active=1`인 것만. 존재하지 않는 직업/전공은 절대 넣지 않음
 - 같은 산업/분야 + 유사 직무/역할 기준으로 선정
 - 노이즈 배제 (이름만 비슷하고 실제 관련 없는 직업 제외)
+- **⚠️ 기존 데이터도 반드시 검증·개선**: API 자동 매칭으로 들어간 관련 직업/전공이 이미 있더라도 그대로 두지 말고:
+  1. **수량 점검** — 15개 이상이면 관련성 낮은 것 제거하여 7~12개로 정리
+  2. **관련성 점검** — 이름만 비슷하고 실제 관련 없는 항목 제거 (예: 가정교사에 "수산업교사"는 관련성 낮음)
+  3. **누락 점검** — 해당 직업의 핵심 연관 직업/전공이 빠져 있으면 추가 (예: 가정교사에 "영양교사" 누락)
+  4. **DB 존재 재확인** — 직업/전공이 삭제되었거나 비활성화되었을 수 있음
+
+**heroTags도 기존 데이터 검증 필수:**
+- 기존 태그가 부실하거나 의미 없으면 개선 (예: "중등 교육기관" 같은 모호한 태그 → "가정과교사" 같은 구체적 별칭으로 교체)
+- 해당 직업의 **별칭/다른 이름**, **세부 분류**, **영문명** 등이 빠져 있으면 추가
 
 **DB 검증 쿼리 패턴:**
 ```sql
@@ -256,13 +265,15 @@ SELECT name FROM jobs WHERE is_active=1 AND name IN ('직업1','직업2','직업
 | 직업지표 | `detailIndicators` | `{chartType:"horizontalBar", items:[{label:string, value:number}], unit:"점"}` | 고용24 재직자 조사만 허용. 항목: 융합성/대인관계/창의성/일가정균형/소득수준/고용유지/사회공헌 (0~100점) |
 | 커스텀 차트 | `customCharts` | `[{title:string, chartType:string, items:[{label:string, value:number}], unit:string}]` | 해당 직업 특유의 시각화. 예: 연차별 연봉, 분야별 취업률 등. 공식 통계만 |
 
-**youtubeLinks 선정 기준:**
-- ✅ 해당 직업 소개 영상 (EBS 직업백과, 커리어넷 등 공식 채널)
-- ✅ 현직자 인터뷰/브이로그 (구독자 1만+ 채널)
-- ✅ 다큐/뉴스 리포트 (방송사 공식 채널)
-- ❌ 광고/홍보 영상, 비공식 re-upload, 저품질 채널
-- URL 형식: `https://www.youtube.com/watch?v=VIDEO_ID` 또는 `https://youtu.be/VIDEO_ID`
-- **반드시 영상이 실제로 존재하는지 curl로 HTTP 200 확인**
+**youtubeLinks 수집 방법 (YouTube Data API 사용):**
+```bash
+curl -s "https://www.googleapis.com/youtube/v3/search?part=snippet&q={직업명}+직업+소개&type=video&maxResults=5&relevanceLanguage=ko&key=YOUTUBE_API_KEY"
+```
+- `.dev.vars`의 `YOUTUBE_API_KEY` 사용
+- 결과에서 **공식 채널(EBS/KBS/MBC 등), 다큐, 현직자 인터뷰** 우선 선별 (1~3개)
+- URL 형식: `https://youtube.com/watch?v={videoId}`
+- ❌ 광고/홍보, 비공식 re-upload, 저품질 채널 제외
+- **웹 검색이나 기억으로 URL을 추측하지 않는다** — 반드시 API 결과만 사용
 
 ### 1-4. 구조화 데이터 전송 시 주의사항
 
@@ -331,17 +342,61 @@ SELECT name FROM jobs WHERE is_active=1 AND name IN ('직업1','직업2','직업
 | `way` | 줄바꿈(\n) 단락 구분 | 200-500자 | 학력→자격증→단계별 경로→실무 팁 |
 | `overviewSalary.sal` | 공식 형식이면 차트, 아니면 서술형 텍스트+각주 | 200-300자 | 공식 형식: "하위(25%) N만원, 평균(50%) N만원, 상위(25%) N만원" → 차트 렌더링. 비공식: 자유 텍스트 → 서술형+각주로 표시. 둘 다 출처 필수 |
 | `overviewProspect.main` | 단락 텍스트 | 200-400자 | "~전망됩니다" 객관적 톤 |
-| `trivia` | 순수 문자열 | **1개만** | 그 직업을 **실제로 하는 사람의 현실**에 대한 여담. 인물 이력 금지(커리어트리 영역), 학문적 역사/기원 금지. 예: ✅ "변호사 10명 중 3명은 개업 3년 내 폐업" ✅ "경찰 순경 공채 최근 미달 사태" ❌ "이태영은 최초 여성 변호사" ❌ "auteur 개념은 1950년대 프랑스에서 탄생" |
+| `trivia` | 순수 문자열 | **1개** | 아래 "trivia 작성 가이드" 참고 |
 
-### 2-2. 수치 데이터 최신성 원칙 (핵심!)
+#### trivia 작성 가이드 — "이 직업을 진지하게 생각하게 만드는 정보"
 
-**모든 수치 데이터는 공식 출처의 최신 통계를 사용한다.**
+trivia는 단순 잡학이 아니라, **이 직업에 관심 있는 사람이 읽고 "아, 이런 면도 있구나" 하고 진지하게 생각하게 되는 정보**를 넣는 곳이다. 기존 필드(way/salary/prospect/wlb)에 안 맞지만 알면 도움 되는 정보가 여기 들어간다.
 
+**좋은 trivia 예시:**
+- 업계 현실: "변호사 10명 중 3명은 개업 3년 내 폐업한다" (출처: 대한변호사협회)
+- 진입 전 알았으면 좋았을 것: "경찰 순경 공채가 최근 미달 사태를 겪고 있다" (출처: 경찰청 통계)
+- 이직률/번아웃: "간호사 신규 입직 1년 내 이직률은 45.5%이다" (출처: 병원간호사회)
+- 업계에서만 아는 현실: "수의사 중 반려동물 진료가 아닌 축산/검역 분야 종사자가 더 많다" (출처: 대한수의사회)
+- 의외의 통계/사실: "소방관 순직 원인 1위는 화재 현장이 아니라 심장질환이다" (출처: 소방청)
+
+**나쁜 trivia (금지):**
+- ❌ 인물 이력: "이태영은 최초 여성 변호사" → 커리어트리 영역
+- ❌ 학문적 기원: "auteur 개념은 1950년대 프랑스에서 탄생" → 직업 현실과 무관
+- ❌ 뻔한 정보: "간호사는 병원에서 일한다" → 누구나 아는 것
+- ❌ 출처 없는 주장: "이 직업은 스트레스가 매우 높다" → 수치/출처 필수
+
+**핵심: 출처가 명확한 검증된 사실이면서, 이 직업을 고려하는 사람에게 현실적 통찰을 주는 정보.**
+
+### 2-2. 기존 데이터 검증 및 최신화 절차 (고도화 핵심!)
+
+**새 필드를 채우는 것(평준화)만큼, 기존 데이터를 검증하고 최신화하는 것(고도화)도 중요하다.**
+
+#### Step 1: 기존 데이터 연도 파악
+```
+각 텍스트 필드(way, salary, prospect, wlb 등)에서:
+1. 본문에 명시된 연도 추출 (예: "2023년 기준", "2022년 조사")
+2. sources의 URL을 WebFetch로 열어서 출처 데이터의 기준 연도 확인
+3. 연도 미명시 + 출처도 연도 불분명 → 최신 데이터로 교체 대상
+```
+
+#### Step 2: 최신화 판단 기준
+| 상태 | 행동 |
+|------|------|
+| **2년 이상 된 수치** (현재 2026년 → 2024년 이전 데이터) | 최신 공식 통계로 교체. 없으면 연도 그대로 유지하되 "최신 데이터 미확인" 표시 불필요 |
+| **출처 URL이 404/접속 불가** | 같은 데이터의 최신 URL로 교체. URL만 변경된 경우 내용은 유지하고 URL만 갱신 |
+| **출처는 살아있지만 수치가 변경됨** | 최신 수치로 교체 + 출처 URL 갱신 + 연도 명시 |
+| **서술이 부실** (한두 줄, 구체성 부족) | 같은 출처에서 더 많은 팩트를 추출하거나 추가 출처로 보강 |
+| **내용은 정확하고 충분** | 건드리지 않음 |
+
+#### Step 3: 최신화 리서치
+```
+기존 데이터의 핵심 키워드로 재검색:
+- salary: "{직업명} 연봉 2025" "{직업명} 임금 통계 최신"
+- prospect: "{직업명} 전망 2025" "{직업명} 고용 동향"
+- way: "{직업명} 자격요건 변경" "{직업명} 시험 합격률 최신"
+→ 최신 공식 통계가 있으면 교체, 없으면 기존 유지
+```
+
+#### 수치 데이터 일반 원칙
 - 같은 지표에 여러 연도 데이터가 있으면 **가장 최신 것**을 사용
-- 본문에 연도를 명시한다 (예: "2024년 기준", "2023년 말 기준")
-- 2년 이상 된 수치는 최신 데이터가 없는지 반드시 재검색
+- 본문에 연도를 명시한다 (예: "2025년 기준", "2024년 말 기준")
 - 채용공고 급여 정보는 **최근 1년 이내** 것만 사용 (오래된 공고의 급여는 현재와 크게 다를 수 있음)
-- 기존에 입력된 데이터도 연도를 확인하여, 더 최신 공식 통계가 있으면 갱신
 
 ### 2-3. 리서치 범위
 
@@ -726,122 +781,120 @@ npx wrangler d1 execute careerwiki-kr --remote --command "INSERT INTO career_tre
 
 ### 단일 직업
 ```
-1. DB에서 해당 직업의 현재 데이터 전수 점검 (빈 필드 + 기존 데이터 최신성)
+[평준화] 빈 필드 채우기
+1. DB에서 해당 직업의 현재 데이터 전수 점검 (빈 필드 + 기존 데이터 연도/출처 상태)
 2. 원칙 4 매트릭스에 따라 채울 필드 결정
-3. 웹 리서치 (기존 데이터 검증 + 빈 필드 채우기)
+3. 웹 리서치 — 빈 필드 채우기 + 출처 수집
 4. 세부 출처 URL 수집 + curl 검증
-5. 출처 내용 대조 검증 (Section 4) — WebFetch로 모든 출처의 실제 내용 확인
-6. ⚠️ 각주 중복 검증 (Section 4-2) — 모든 텍스트 필드에서 [N] 중복 검사
-7. 편집 API 호출 — ⚠️ fields와 sources 반드시 함께! (changeSummary에 변경 사유 상세 기록)
-8. 커리어트리 인물 리서치 + DB 삽입 (Section 5-3) — 한국인만, 적합한 인물이 있는 경우만
-9. 프로덕션 확인 (Section 5) + QA 스크립트 실행
+
+[고도화] 기존 데이터 검증 + 최신화
+5. 기존 텍스트 필드의 연도 파악 (Section 2-2 Step 1)
+6. 2년 이상 된 수치 → 최신 공식 통계로 교체 리서치
+7. 기존 출처 URL 접속 검증 → 404면 최신 URL로 교체
+8. trivia 점검 — 현실적 통찰을 주는 내용인지 확인, 부실하면 더 나은 팩트로 교체
+
+[검증 + 저장]
+9. 출처 내용 대조 검증 (Section 4) — WebFetch로 모든 출처의 실제 내용 확인
+10. ⚠️ 각주 중복 검증 (Section 4-2) — 모든 텍스트 필드에서 [N] 중복 검사
+11. 편집 API 호출 — ⚠️ fields와 sources 반드시 함께! (changeSummary에 변경 사유 상세 기록)
+12. 커리어트리 인물 리서치 + DB 삽입 (Section 5-3) — 한국인만, 적합한 인물이 있는 경우만
+13. 프로덕션 확인 (Section 5) + QA 스크립트 실행
 ```
 
-### 대량 (10개 이상)
-```
-1. Analyst Agent → 전체 현황 분석 + 대상 선별
-2. Researcher Agent(들) → 병렬 리서치 (5개씩 배치)
-   - 각 Agent가 리서치 + 출처 내용 대조 검증(Section 4) + 편집 API 호출까지 직접 수행
-   - ⚠️ 아래 표준 프롬프트 템플릿 사용 필수
-3. QA Agent → 전체 프로덕션 확인 (Section 5) + QA 스크립트
-4. 결과 보고
-```
+### 대량 (10개 이상) — 2단계 분리 패턴
 
-### 6-1. 에이전트 표준 프롬프트 템플릿 (복사해서 사용)
-
-병렬 에이전트에게 넘길 때 아래 템플릿을 그대로 복사하고, `{변수}`만 교체한다:
+**핵심: Researcher는 리서치만, 팀 리더가 검증+API 호출.**
 
 ```
-직업 "{직업명}" (Job ID: {JOB_ID}) 데이터 전면 보강.
+Phase 1: 팀 리더 — 대상 선별
+  - DB 쿼리로 빈 필드 많은 직업 선별
+  - 직업별 현재 데이터 상태 요약 (빈 필드, 기존 데이터 연도)
 
-## 세션 토큰
-Cookie: session_token={SESSION_TOKEN}
+Phase 2: Researcher Agent (3개 병렬, 각 1~2개 직업)
+  - 역할: 리서치 + JSON 초안 반환 ONLY
+  - ⚠️ API 호출 금지 — JSON 결과만 반환
+  - 프롬프트: 아래 6-1 축소 템플릿 사용
 
-## 핵심 원칙
-1. 모든 필드를 전수 점검하고, 빈 것은 채우고, 오래된 것은 최신화
-2. fields와 sources는 **반드시 함께** 전송 (sources 누락 = 각주 깨짐)
-3. sources text는 반드시 "[N] 출처설명" 형식 (예: "[1] 커리어넷 직업정보")
-4. 커리어트리는 **한국인만**. 외국인 절대 금지. 없으면 추가하지 않음
+Phase 3: 팀 리더 — 검증 + API 호출
+  - validate-job-edit.cjs로 자동 검증:
+    node scripts/validate-job-edit.cjs < researcher_output.json
+  - FAIL → 수정 후 재검증
+  - PASS → 편집 API 호출 (Section 3)
+  - sidebarJobs/sidebarMajors DB 존재 확인 (SQL)
+  - 출처 URL curl 접속 검증
 
-## 반드시 채워야 할 필드 (건너뛰면 안 됨!)
-1. **way** — 되는 방법 구체적 서술 (자격요건, 시험, 진입경로). 200-500자. 각주+출처 필수
-2. **detailReady** — 통째로 객체 전송: curriculum(교과목), recruit(채용경로), training(양성과정)
-3. **sidebarCerts** — [{name, url}]. 관련 자격증
-4. **sidebarMajors** — string[]. DB 존재 확인 필수: SELECT name FROM majors WHERE is_active=1 AND name IN (...)
-5. **trivia** — 이미 있으면 유지, 없으면 흥미 사실 1개
-6. **detailWlb** — wlbDetail(워라밸 상세) + socialDetail(사회적 기여 상세)
-7. **커리어트리** — wrangler d1 execute로 career_trees + career_tree_job_links INSERT
+Phase 4: 프로덕션 확인
+  - curl로 각주 순서, 콘텐츠 렌더링 확인 (Section 5)
+  - QA 스크립트 실행 (Section 6-2)
+```
 
-## 추가 채울 필드 (찾을 수 있으면 채움)
-- **youtubeLinks** — [{url, title}]. 해당 직업 소개/인터뷰 유튜브 영상. 공식채널 우선. URL 실존 확인 필수
-- **detailIndicators** — 고용24 재직자 조사 직업지표 7항목(융합성/대인관계/창의성/일가정균형/소득수준/고용유지/사회공헌). 공식 통계만!
-- **customCharts** — 해당 직업 특유의 시각화 데이터 (연차별 연봉 등). 공식 통계만!
-- **sidebarJobs** — string[]. 관련 직업. DB 존재 확인 필수
+### 6-1. Researcher 에이전트 프롬프트 (축소판 — 이 템플릿만 복사)
 
-## 보강 가능 (이미 서술형이 있으면 건드리지 않음)
-- overviewSalary.sal — 맥락 서술 추가 (user_contributed에 이미 있으면 유지)
-- overviewProspect.main — 최신 트렌드 추가 (user_contributed에 이미 있으면 유지)
+병렬 에이전트에게 넘길 때 아래 템플릿을 그대로 복사하고, `{변수}`만 교체한다.
 
-## API 데이터 없으면 채울 수 있는 필드 (merged_profile_json 확인 필수!)
-마이너 직업은 아래 필드가 비어있을 수 있다:
-- overviewWork.main — 수행 직무 서술 (출처+각주 필수)
-- overviewAbilities.technKnow — 활용 기술 서술 (출처+각주 필수)
-- detailWlb.wlb / detailWlb.social — 등급 (출처 필수)
+**⚠️ 이 에이전트는 API 호출을 하지 않는다. JSON 결과만 반환한다.**
 
-**⚠️ 아래 필드는 공식 통계 없으면 절대 채우지 않음 (null 유지!):**
-- overviewAbilities.abilityList (점수) — 커리어넷 KNOW만 허용
-- overviewAptitude (적성/흥미/만족도) — 커리어넷 재직자 조사만 허용
-- detailEducation (학력/전공 분포 %) — 고용24 재직자 조사만 허용
-- **추정값/AI 생성 수치 절대 금지. 빈 칸 >> 거짓 정보.**
+```
+직업 "{직업명}" (Job ID: {JOB_ID}) 리서치 및 데이터 초안 작성.
 
-## 편집 API
-POST https://careerwiki.org/api/job/{JOB_ID}/edit
-Content-Type: application/json
-Cookie: session_token={SESSION_TOKEN}
+⚠️ 너는 편집 API를 호출하지 않는다. 리서치 결과를 JSON으로 반환만 한다.
 
-## sources 키 매핑 (절대 틀리면 안 됨!)
-way→"way", salary→"overviewSalary.sal", prospect→"overviewProspect.main",
-trivia→"trivia", wlbDetail→"detailWlb.wlbDetail", socialDetail→"detailWlb.socialDetail"
+## 현재 데이터 상태
+{팀 리더가 DB에서 조회한 현재 데이터 요약을 여기에 붙여넣기}
+
+## 작업 지시
+1. 빈 필드를 검증된 정보로 채워라. 출처 없으면 절대 넣지 마라
+2. 기존 데이터의 연도를 확인하고 2년+ 된 수치는 최신 통계로 교체
+3. sidebarJobs/sidebarMajors/sidebarCerts/heroTags — 기존 데이터도 검증하고 개선
+4. 커리어트리는 한국인만. 적합 인물 없으면 null
+
+## 채울 필드 목록
+- **way**: 되는 방법 200-500자. 각주 [N] 필수
+- **overviewSalary.sal**: 임금 서술. 각주 필수. 이미 user_contributed에 서술이 있으면 유지, 없거나 부실하면 작성
+- **overviewProspect.main**: 전망 서술. 각주 필수. 이미 user_contributed에 서술이 있으면 유지, 없거나 부실하면 작성
+- **trivia**: 이 직업을 진지하게 생각하게 만드는 검증된 팩트 1개
+- **detailWlb**: {wlb:"등급", social:"등급", wlbDetail:"서술[N]", socialDetail:"서술[N]"}
+- **detailReady**: {curriculum:[5개+], recruit:[채용경로], training:[양성과정]}
+- **sidebarCerts**: [{name, url}]. 자격증만(시험 아님). "~시험" 금지
+- **sidebarMajors**: string[]. DB 존재 확인: SELECT name FROM majors WHERE is_active=1 AND name IN (...)
+- **sidebarJobs**: 7~12개. DB 존재 확인. 관련성 낮은 것 제거, 핵심 연관 직업 추가
+- **heroTags**: 3~10개, 2~15자 명사구. 별칭/세부분류/영문명 포함. 기존 태그가 부실하면 교체
+- **overviewWork.main**: API 데이터 없으면 수행 직무 서술 (출처+각주 필수)
+- **overviewAbilities.technKnow**: API 데이터 없으면 활용 기술 서술 (출처+각주 필수)
+- **youtubeLinks**: [{url, title}]. YouTube Data API로 검색. 공식채널 우선 1~3개
+- **detailIndicators**: 고용24 재직자 조사 7항목. **공식 통계만!** 없으면 null
+- **customCharts**: 해당 직업 특유 시각화 (연차별 연봉 등). **공식 통계만!** 없으면 null
+- workStrong/workPlace/physicalAct: **짧은 라벨만** (20자 이하). 문장 금지
+
+## 절대 금지
+- abilityList/aptitude/education에 공식 통계 없이 수치 넣기 → null 유지
+- 출처 없는 데이터, 추정값, AI 생성 수치
+- 커리어트리에 외국인, 전직 스테이지
+
+## 커리어트리 상세 (null이 아닌 경우)
+- **진입 경로 중심 5단계**: 준비→진입→초기→성장→정점
+- **수상/기록은 description에만** (독립 스테이지 금지)
+- **정치적 균형**: 특정 성향 편중 금지. 가급적 비정치인
+- **person_title**: 해당 직업 내 정체성만 (전직 직함 제외)
 
 ## 각주 규칙
-- 각 [N]은 해당 필드 내에서 1부터 순차. 같은 번호 2회 등장 절대 금지
-- 마침표 뒤에: 합니다.[1] (O) / 합니다[1]. (X)
+- 필드별 [1]부터 순차. 같은 [N] 2회 등장 금지
+- 마침표 뒤에: 합니다.[1] (O)
 
-## sidebarCerts 규칙
-- ✅ 자격증/면허: "변호사 자격증", "간호사 면허" (O)
-- ❌ 시험 자체: "LEET", "사법시험", "TOEIC" (X) — 시험은 자격증이 아님
-- 명칭: "~시험" 아닌 "~자격증/~면허" 형태로
+## 출처 규칙
+- sources text: "[N] 출처설명" 형식. text에 URL 포함 금지
+- 각 출처를 개별 {text, url} 객체로. blob 금지
+- sources 키: way→"way", salary→"overviewSalary.sal", prospect→"overviewProspect.main", trivia→"trivia", wlbDetail→"detailWlb.wlbDetail", socialDetail→"detailWlb.socialDetail"
 
-## 커리어트리 규칙 (중요!)
-1. **진입 경로 중심 5단계**: 준비→진입→초기→성장→정점
-2. **전직 스테이지 절대 제외** (국회의원, 감독, CEO 등 해당 직업 이후 전직)
-3. **수상/기록은 description에만** (독립 스테이지 금지)
-4. **하이라이트(stage_index)는 해당 직업을 시작한 스테이지**
-5. **한국인만**. 적합 인물 없으면 추가하지 않음
-6. **정치적 균형**: 특정 정치 성향에 편중되지 않도록. 가급적 비정치인 선정
-7. **person_title**: 해당 직업 내 정체성만 (전직 직함 제외)
-8. 학과 언급 시 **major_slug** 포함하여 내부 링크 연결
-
-## 커리어트리 INSERT 방법
-cd C:/Users/PC/Careerwiki && npx wrangler d1 execute careerwiki-kr --remote --command "INSERT INTO career_trees (person_name, person_name_en, person_title, person_image_url, stages_json, display_priority, is_active, created_at, updated_at) VALUES ('인물명', 'English', '한줄소개', NULL, '[stages_json]', 100, 1, strftime('%s','now')*1000, strftime('%s','now')*1000)"
-→ ID 확인 → career_tree_job_links INSERT (같은 job_slug 1개만!)
-→ stage_index는 **해당 직업을 시작한 스테이지** (0-indexed)
-
-## API 응답 경고 확인 (필수!)
-편집 API 응답에 `warnings` 배열이 있으면 → **sources 누락 문제가 있다는 뜻!**
-즉시 sources를 추가하여 재편집해야 한다.
-예: {"success":true, "warnings":["⚠️ trivia: 본문에 [N] 각주가 있지만 해당 필드의 sources가 없습니다"]}
-
-## 출처 검증 (편집 API 호출 전 필수!)
-모든 출처 URL에 대해:
-1. `curl -s -o /dev/null -w "%{http_code}" "URL"` → 200/301 아니면 대체 URL 찾기
-2. `WebFetch(URL, "이 페이지에서 [넣으려는 수치/사실]을 찾아줘")` → 실제로 존재하는지 대조
-3. 유튜브 링크는 `curl -s -o /dev/null -w "%{http_code}" "https://www.youtube.com/oembed?url=URL"` → 200이면 존재
-
-## 프로덕션 확인
-curl -s "https://careerwiki.org/job/{slug}?nocache=1" | grep "확인 키워드"
-curl -s "https://careerwiki.org/job/{slug}?nocache=1" | grep -o 'data-source-id="[0-9]*"' | sed 's/data-source-id="//;s/"//' | tr '\n' ','
-→ 1,2,3,...,N 순차 확인. 빠진 번호 없어야 함. 1부터 시작해야 함.
+## 반환 형식 (이 JSON을 마지막에 출력)
+{
+  "jobName": "{직업명}",
+  "jobId": "{JOB_ID}",
+  "fields": { ... },
+  "sources": { ... },
+  "careerTree": { "person_name": "...", "stages_json": [...], ... } | null,
+  "changeSummary": "변경 사유 상세"
+}
 ```
 
 ### 6-2. QA 자동 검증 스크립트
@@ -908,7 +961,7 @@ done
 
 ---
 
-## 8. 세션 토큰 사용법
+## 9. 세션 토큰 사용법
 
 모든 API 호출에 인증 필요:
 ```
