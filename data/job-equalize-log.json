@@ -1723,5 +1723,77 @@
       "김경율",
       "서지희"
     ]
+  },
+  {
+    "id": "176528334984955",
+    "name": "웹디자이너",
+    "slug": "웹디자이너",
+    "productionUrl": "https://careerwiki.org/job/웹디자이너",
+    "completedAt": "2026-03-26T14:14:28.901Z",
+    "revision": 475,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb",
+      "detailReady",
+      "sidebarCerts",
+      "sidebarMajors",
+      "sidebarJobs",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "이노 (UI/UX 디자이너·스튜디오 대표)"
+    ]
+  },
+  {
+    "id": "1765283359273705",
+    "name": "임상심리사",
+    "slug": "임상심리사",
+    "productionUrl": "https://careerwiki.org/job/임상심리사",
+    "completedAt": "2026-03-26T14:14:28.901Z",
+    "revision": 477,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb",
+      "detailReady",
+      "sidebarCerts",
+      "sidebarMajors",
+      "sidebarJobs",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "이수정 (범죄심리학과 교수)"
+    ]
+  },
+  {
+    "id": "1765283456242935",
+    "name": "대학교수",
+    "slug": "대학교수",
+    "productionUrl": "https://careerwiki.org/job/대학교수",
+    "completedAt": "2026-03-26T14:14:28.901Z",
+    "revision": 479,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb",
+      "detailReady",
+      "sidebarCerts",
+      "sidebarMajors",
+      "sidebarJobs",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "최재천 (생명과학부 석좌교수)"
+    ]
   }
 ]
