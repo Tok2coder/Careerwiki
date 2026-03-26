@@ -2737,7 +2737,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
               </button>
             </div>
           </div>
-          ${heroDescription ? `<p class="text-[15px] sm:text-[16px] text-wiki-muted leading-relaxed">${escapeHtml(heroDescription)}</p>` : ''}
+          ${heroDescription ? `<p class="text-[16px] sm:text-[18px] text-wiki-muted leading-relaxed">${escapeHtml(heroDescription)}</p>` : ''}
           ${heroImage}
           ${heroTagsMarkup}
         </div>

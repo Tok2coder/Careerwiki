@@ -5061,7 +5061,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           </div>
           ${
             heroDescription
-              ? `<p class="text-[15px] sm:text-[16px] text-wiki-muted leading-relaxed" data-cw-telemetry-component="job-hero-summary">${escapeHtml(heroDescription)}</p>`
+              ? `<p class="text-[16px] sm:text-[18px] text-wiki-muted leading-relaxed" data-cw-telemetry-component="job-hero-summary">${escapeHtml(heroDescription)}</p>`
               : ''
           }
           ${heroImage}
