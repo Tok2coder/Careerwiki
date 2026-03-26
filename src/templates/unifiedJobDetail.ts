@@ -4068,7 +4068,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const social = detailWlb?.social
   const wlbDetail = (detailWlb as any)?.wlbDetail
   const socialDetail = (detailWlb as any)?.socialDetail
-  if (wlb || social) {
+  if (wlb || social || (typeof wlbDetail === 'string' && wlbDetail.trim()) || (typeof socialDetail === 'string' && socialDetail.trim())) {
     const wlbCards = []
 
     // 워라밸 카드 (짧은 등급만)
