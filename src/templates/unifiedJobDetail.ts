@@ -2335,7 +2335,11 @@ const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<stri
     const limit = 5
     // sidebarCerts는 { name, url } 객체 배열
     const certificates = sidebarCerts
-      .map((item: any) => safeTrim(item?.name || item))
+      .map((item: any) => {
+        if (typeof item === 'string') return safeTrim(item)
+        if (item && typeof item === 'object' && item.name) return safeTrim(item.name)
+        return ''
+      })
       .filter((item) => !!item)
     if (certificates.length) {
       const hasMore = certificates.length > limit
