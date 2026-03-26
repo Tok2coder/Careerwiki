@@ -3355,7 +3355,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     if (!cleaned) return ''
     const formatted = cleaned
       .split(/\n+/)
-      .map(line => `<span class="block text-sm text-wiki-text/90 leading-relaxed">${escapeHtml(line)}</span>`)
+      .map(line => `<span class="block text-base text-wiki-text/90 leading-relaxed">${escapeHtml(line)}</span>`)
       .join('')
     return `
       <article class="relative overflow-hidden rounded-2xl border border-wiki-border/50 bg-gradient-to-br from-wiki-primary/10 via-wiki-bg/60 to-wiki-secondary/10 p-4 shadow-sm transition hover:border-wiki-primary/60" data-job-meta-card="${escapeHtml(title)}">
@@ -3366,7 +3366,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             <i class="fas ${icon} text-base" aria-hidden="true"></i>
           </span>
           <div class="space-y-1">
-            <h4 class="text-[13px] font-semibold uppercase tracking-widest text-wiki-muted">${escapeHtml(title)}</h4>
+            <h4 class="text-sm font-semibold uppercase tracking-widest text-wiki-muted">${escapeHtml(title)}</h4>
             ${formatted}
           </div>
         </div>
