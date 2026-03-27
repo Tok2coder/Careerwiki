@@ -2732,5 +2732,35 @@
     "careerTreePerson": "김상곤",
     "batch": 27,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283381176636",
+    "name": "초등학교교사",
+    "slug": "초등학교교사",
+    "revisionId": 603,
+    "careerTreeId": 142,
+    "careerTreePerson": "나태주",
+    "batch": 28,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283382878797",
+    "name": "치과위생사",
+    "slug": "치과위생사",
+    "revisionId": 602,
+    "careerTreeId": 143,
+    "careerTreePerson": "문혁수",
+    "batch": 28,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765284154102933",
+    "name": "패션모델",
+    "slug": "패션모델",
+    "revisionId": 601,
+    "careerTreeId": 144,
+    "careerTreePerson": "장윤주",
+    "batch": 28,
+    "date": "2026-03-27"
   }
 ]
