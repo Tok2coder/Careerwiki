@@ -3728,5 +3728,32 @@
     "person": "박경원",
     "batch": 55,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "물리학연구원",
+    "jobId": "1765283308474424",
+    "revisionId": 765,
+    "careerTreeId": 227,
+    "person": "이휘소",
+    "batch": 56,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "문화재보존원",
+    "jobId": "1765283307206440",
+    "revisionId": 767,
+    "careerTreeId": 228,
+    "person": "신영훈",
+    "batch": 56,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "마케팅전문가",
+    "jobId": "176528330314020",
+    "revisionId": 769,
+    "careerTreeId": 229,
+    "person": "박웅현",
+    "batch": 56,
+    "date": "2026-03-27"
   }
 ]
