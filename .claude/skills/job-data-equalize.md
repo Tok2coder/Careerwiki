@@ -100,7 +100,7 @@ CareerWiki 직업에는 이미 커리어넷/고용24 API 데이터가 `merged_pr
 |------|-----------|-------------------|
 | `overviewWork.main` | 스킵 | 수행 직무 서술형 작성 (출처 필수) |
 | `overviewAbilities.technKnow` | 스킵 | 서술형 텍스트 작성 가능 (출처+각주 필수) |
-| `detailWlb.wlb` / `detailWlb.social` | 스킵 | 등급 + Detail 모두 작성 (출처 필수) |
+| `detailWlb.wlb` / `detailWlb.social` | 스킵 | **등급 + Detail 모두 작성 필수** (출처 필수) — `wlb`와 `social`은 페이지 상단 요약 카드에 크게 표시되므로 누락 시 공란으로 렌더링됨 |
 
 **⚠️ 아래 필드는 공식 통계만 허용 — 추정값/AI 생성 수치 절대 금지:**
 
@@ -135,11 +135,19 @@ CareerWiki 직업에는 이미 커리어넷/고용24 API 데이터가 `merged_pr
 
 ## 0. 사전 준비
 
-### 세션 토큰
-편집 API 호출에 필요. 유저에게 요청하거나 기존 대화에서 재사용.
+### 인증 방식 (둘 중 하나 선택)
+
+**방법 1: X-Admin-Secret 헤더 (권장 — 세션 만료 걱정 없음)**
+```
+X-Admin-Secret: careerwiki-admin-2026
+```
+`.dev.vars`의 `ADMIN_SECRET` 값 사용. curl 예시: `-H "X-Admin-Secret: careerwiki-admin-2026"`
+
+**방법 2: Cookie 세션 토큰 (기존 방식)**
 ```
 Cookie: session_token=SESSION_TOKEN
 ```
+토큰은 유저에게 요청하거나 기존 대화에서 재사용.
 
 ### 대상 직업 결정
 유저가 직업명을 지정하면 해당 직업만, 지정하지 않으면 아래 SQL로 빈 필드가 많은 직업 중 인지도 높은 것을 선별:
@@ -504,7 +512,9 @@ prospect 출처:
 ```
 POST https://careerwiki.org/api/job/{id}/edit
 Content-Type: application/json
-Cookie: session_token=SESSION_TOKEN
+X-Admin-Secret: careerwiki-admin-2026        ← 권장 (세션 만료 없음)
+# 또는
+Cookie: session_token=SESSION_TOKEN          ← 기존 방식
 ```
 
 ### 3-2. 요청 Body (인라인 각주 포함)
@@ -767,6 +777,9 @@ npx wrangler d1 execute careerwiki-kr --remote --command "INSERT INTO career_tre
 - `job_slug`는 jobs 테이블의 `slug` 컬럼 값 (보통 직업명과 동일)
 - stages 배열에서 CW에 존재하는 직업에만 `job_slug` 설정 → 해당 직업 페이지에서 하이라이트
 - 존재 여부 확인: `SELECT slug FROM jobs WHERE slug='슬러그' AND is_active=1`
+- **⚠️ `job_slug`는 해당 직업에 처음 진입하는 스테이지에만 설정** — 이전 스테이지(학생 시절, 타 직업 등)에는 반드시 `null`
+  - ❌ 잘못: 대학 재학 스테이지(order=0)에 job_slug 설정 → 프로덕션에서 엉뚱한 스테이지가 강조됨
+  - ✅ 올바름: "직업명 취업/입사/데뷔" 스테이지(order=N)에만 job_slug 설정
 
 ### 5-3e. 리서치 절차
 
@@ -870,6 +883,9 @@ Phase 4: 프로덕션 확인
 - abilityList/aptitude/education에 공식 통계 없이 수치 넣기 → null 유지
 - 출처 없는 데이터, 추정값, AI 생성 수치
 - 커리어트리에 외국인, 전직 스테이지
+- **커리어트리 job_slug를 이전 스테이지(학생/타직업)에 설정** — 해당 직업 첫 진입 스테이지에만 설정
+- **wlb/social 등급 누락** — detailWlb.wlb와 detailWlb.social은 페이지 요약 카드에 표시되므로 반드시 포함
+- **서술 필드에 sources 누락** — way/salary/prospect/trivia/wlbDetail/socialDetail에 각주가 있으면 반드시 sources도 함께 전송
 
 ## 커리어트리 상세 (null이 아닌 경우)
 - **진입 경로 중심 5단계**: 준비→진입→초기→성장→정점
@@ -961,9 +977,17 @@ done
 
 ---
 
-## 9. 세션 토큰 사용법
+## 9. API 인증 방법
 
-모든 API 호출에 인증 필요:
+모든 API 호출에 인증 필요. 둘 중 하나 선택:
+
+**X-Admin-Secret 헤더 (권장)** — 세션 만료 걱정 없음:
+```
+-H "X-Admin-Secret: careerwiki-admin-2026"
+```
+`.dev.vars`의 `ADMIN_SECRET=careerwiki-admin-2026` 값 사용.
+
+**Cookie 세션 토큰 (기존 방식)**:
 ```
 Cookie: session_token=SESSION_TOKEN
 ```
