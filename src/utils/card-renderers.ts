@@ -331,7 +331,7 @@ export const renderMajorCard = (entry: { profile: any; display?: any }): string 
   const majorSlug = composeDetailSlug('major', major.name, major.id)
   const majorUrl = `/major/${encodeURIComponent(majorSlug)}`
   const summary = escapeHtml(formatMajorSummaryText(display.summary))
-  // 계열 이름: classificationLarge 우선 → categoryName 폴백 (직업 카드와 동일 로직)
+  // 계열 이름: "~계열"로 끝나는 값만 사용, 없으면 전공명에서 추론
   const rawMajorCategoryName = display.categoryName || major.category?.name
   const normalizeMajorCategory = (value: any): string => {
     let cat =
@@ -343,10 +343,21 @@ export const renderMajorCard = (entry: { profile: any; display?: any }): string 
     return cat
   }
   const rawCategory = display.classificationLarge || normalizeMajorCategory(rawMajorCategoryName)
-  // 콤마가 2개 이상이면 관련학과 목록이므로 계열 아님 → 제외, 50자 초과도 제외
-  const categoryName = (rawCategory && rawCategory.split(',').length <= 2 && rawCategory.length <= 50)
-    ? rawCategory
-    : undefined
+  // "~계열"로 끝나는 값만 진짜 계열로 인정
+  const isRealCategory = rawCategory && rawCategory.endsWith('계열') && rawCategory.length <= 10
+  // 전공명에서 계열 추론
+  const inferCategory = (name: string): string | undefined => {
+    const n = name || ''
+    if (/공학|컴퓨터|전자|기계|건축|토목|화학공|산업공|정보통신|소프트웨어|AI|인공지능|로봇|자동차|항공|반도체|에너지|신소재|나노/.test(n)) return '공학계열'
+    if (/의학|의예|간호|약학|치의|한의|보건|임상|물리치료|작업치료|방사선|치위생|의료|재활/.test(n)) return '의약계열'
+    if (/교육|사범/.test(n)) return '교육계열'
+    if (/경영|경제|행정|법학|사회|정치|심리|사회복지|미디어|신문|광고|무역|금융|회계|세무|관광|호텔|부동산|물류|유통|국제/.test(n)) return '사회계열'
+    if (/문학|어문|철학|사학|역사|언어|국어|영어|일본|중국|불어|독어|한문|고고|인문/.test(n)) return '인문계열'
+    if (/수학|물리|화학|생물|생명|지구|천문|통계|환경|해양|식품|농업|동물|식물|산림|수산|원예|축산|자연/.test(n)) return '자연계열'
+    if (/미술|음악|디자인|연극|영화|무용|체육|스포츠|애니메이션|만화|공예|사진|패션|뮤지컬|실용음악|방송연예/.test(n)) return '예체능계열'
+    return undefined
+  }
+  const categoryName = isRealCategory ? rawCategory : inferCategory(major.name)
 
   const satisfactionGrade = getSatisfactionGrade(display.firstJobSatisfaction)
 
