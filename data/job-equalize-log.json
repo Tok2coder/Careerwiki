@@ -3566,5 +3566,32 @@
     "person": "승효상",
     "batch": 49,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "무용가",
+    "jobId": "1765283306411848",
+    "revisionId": 730,
+    "careerTreeId": 209,
+    "person": "김백봉",
+    "batch": 50,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "개그맨및코미디언",
+    "jobId": "1765283472936861",
+    "revisionId": 733,
+    "careerTreeId": 210,
+    "person": "이주일",
+    "batch": 50,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "대중가수",
+    "jobId": "1765284187813579",
+    "revisionId": 732,
+    "careerTreeId": 211,
+    "person": "조용필",
+    "batch": 50,
+    "date": "2026-03-27"
   }
 ]
