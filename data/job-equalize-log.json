@@ -3890,5 +3890,32 @@
     "person": "오성환",
     "batch": 61,
     "date": "2026-03-28"
+  },
+  {
+    "slug": "교장",
+    "jobId": "176528328956547",
+    "revisionId": 838,
+    "careerTreeId": 249,
+    "person": "이오덕",
+    "batch": 62,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "귀금속-및-보석세공원",
+    "jobId": "1765283291770112",
+    "revisionId": 840,
+    "careerTreeId": 250,
+    "person": "유리지",
+    "batch": 62,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "금속공학기술자",
+    "jobId": "1765283292548631",
+    "revisionId": 839,
+    "careerTreeId": 251,
+    "person": "박태준",
+    "batch": 62,
+    "date": "2026-03-28"
   }
 ]
