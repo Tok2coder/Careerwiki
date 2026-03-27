@@ -2852,5 +2852,35 @@
     "careerTreeId": 153,
     "careerTreePerson": "이한주",
     "processedAt": "2026-03-27T08:51:37.316Z"
+  },
+  {
+    "id": "1765284226427149",
+    "name": "헬스트레이너",
+    "slug": "헬스트레이너",
+    "batch": 32,
+    "revisionId": 617,
+    "careerTreeId": 154,
+    "careerTreePerson": "양치승",
+    "processedAt": "2026-03-27T08:56:35.324Z"
+  },
+  {
+    "id": "1765283382576331",
+    "name": "치과기공사",
+    "slug": "치과기공사",
+    "batch": 32,
+    "revisionId": 619,
+    "careerTreeId": 155,
+    "careerTreePerson": "박재병",
+    "processedAt": "2026-03-27T08:56:35.325Z"
+  },
+  {
+    "id": "1765283708487303",
+    "name": "블록체인개발자",
+    "slug": "블록체인개발자",
+    "batch": 32,
+    "revisionId": 615,
+    "careerTreeId": 156,
+    "careerTreePerson": "정재윤",
+    "processedAt": "2026-03-27T08:56:35.325Z"
   }
 ]

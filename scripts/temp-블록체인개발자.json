@@ -1,0 +1,83 @@
+{
+  "jobId": "1765283708487303",
+  "jobName": "블록체인개발자",
+  "jobSlug": "블록체인개발자",
+  "fields": {
+    "way": "블록체인개발자가 되는 경로는 컴퓨터공학과·수학과·전기전자공학과 등 관련 학과를 졸업하거나 독학·부트캠프를 통해 진입하는 두 가지로 나뉜다.[1] 핵심 기술 스택은 Solidity(이더리움 스마트 컨트랙트)·Rust(솔라나)·Web3.js·Hardhat·Foundry 등이며, 자료구조·알고리즘·네트워크·암호학 기초가 필수다.[2] 국내에서는 카카오블록체인(클레이튼)·라인·해시드·업비트 등 블록체인 기업과 삼성SDS·LG CNS 등 대기업 블록체인 팀에서 채용한다.[3] 글로벌 DeFi·NFT·Web3 프로토콜 오픈소스 기여와 해커톤 수상이 포트폴리오에서 중요한 역할을 한다.[4] 코드스테이츠·스파르타코딩클럽 등 부트캠프의 블록체인 전문 트랙을 통해 커리어 전환하는 사례도 늘고 있다.[5]",
+    "overviewSalary.sal": "커리어넷 임금정보 기준 블록체인개발자 연봉 중위값은 약 **5,000만 원**이며, 하위 25%는 3,500만 원, 상위 25%는 8,000만 원 이상이다.[1] 글로벌 Web3 프로토콜 기여자나 해외 블록체인 기업 원격 근무 개발자는 달러 기준 연 1억~3억 원 이상 수입도 가능하다. 기술 인력 공급이 적어 경험 2~3년차부터 연봉 상승이 가파른 편이다.",
+    "overviewProspect.main": "향후 5년간 **증가** 전망이다.[1] 중앙은행 디지털화폐(CBDC)·공급망 블록체인·의료기록 분산화·디지털 자산 규제화 등 공공·민간 전 분야에서 블록체인 도입이 확대되고 있다.[2] 암호화폐 시장 사이클에 따라 민간 Web3 수요가 변동하지만, 엔터프라이즈 블록체인(프라이빗·컨소시엄 체인) 개발 수요는 안정적으로 성장하고 있다.[3]",
+    "trivia": "비트코인 블록체인의 최초 블록(제네시스 블록)에는 2009년 1월 3일 영국 파이낸셜타임스 헤드라인 '**Chancellor on brink of second bailout for banks**'가 각인되어 있다.[1] 이는 기존 금융 시스템에 대한 사토시 나카모토(Satoshi Nakamoto)의 비판적 메시지로 해석된다. 블록체인의 불변성을 활용해 역사적 메시지를 영구 기록하는 이 방식은 이후 NFT 아트·디지털 소유권 증명으로 발전했다.",
+    "detailWlb.wlbDetail": "원격근무·자율 출퇴근을 허용하는 Web3 기업이 많아 유연한 근무 환경이 일반적이다. 해커톤·출시 전 스프린트 기간에 집중 근무가 발생하며, 글로벌 팀 협업 시 시차로 인한 야간 미팅이 있을 수 있다. 커리어넷 재직자 조사에서 워라밸은 '보통이상'으로 분류된다.",
+    "detailWlb.socialDetail": "분산화·탈중앙화를 통해 금융 접근성·데이터 투명성을 높이는 기술을 개발하는 직업으로 가치 지향적 성격이 강하다. 오픈소스 커뮤니티 문화가 발달해 지식 공유와 협업이 활발하다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통이상'으로 나타난다.",
+    "detailReady.curriculum": [
+      "프로그래밍 기초(Python·JavaScript) + 자료구조·알고리즘·네트워크·암호학 기초",
+      "Solidity 스마트 컨트랙트 개발 — CryptoZombies·Hardhat·OpenZeppelin 실습",
+      "오픈소스 Web3 프로젝트 GitHub 기여 + 이더리움·솔라나 해커톤 참여로 포트폴리오 구축"
+    ],
+    "detailReady.recruit": [
+      "카카오블록체인·라인·업비트·빗썸 등 국내 블록체인 기업 블록체인 개발자 채용",
+      "삼성SDS·LG CNS·SK C&C 엔터프라이즈 블록체인 팀 채용",
+      "글로벌 Web3 프로토콜(이더리움·솔라나 재단) 원격 개발자 채용 — 영어 필수"
+    ],
+    "detailReady.training": [
+      "코드스테이츠·스파르타코딩클럽 블록체인 전문 트랙 수료",
+      "이더리움 재단 공식 개발자 문서·Solidity 공식 튜토리얼 + Alchemy 블록체인 부트캠프",
+      "CFA·CAIA 등 금융 자격 병행 취득으로 DeFi·디지털자산 금융 전문가로 차별화"
+    ],
+    "sidebarJobs": ["웹개발자", "인공지능엔지니어", "사이버보안전문가", "핀테크개발자", "스마트컨트랙트개발자"],
+    "sidebarMajors": ["컴퓨터공학과", "소프트웨어공학과", "수학과", "전기전자공학과", "경영정보학과"],
+    "heroTags": ["블록체인개발자취업", "Solidity개발", "스마트컨트랙트", "Web3개발자", "이더리움개발"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=VIMk_JHSI6I", "title": "임베디드 개발자에서 블록체인 개발자로 커리어 전환 — 부트캠프 수료생 인터뷰"},
+      {"url": "https://www.youtube.com/watch?v=KIMS6szTDeo", "title": "AI 엔지니어가 말하는 개발자의 리얼 현실 — 연봉·이직·미래"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"label": "커리어넷 블록체인개발자 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=529"},
+      {"label": "이더리움 개발자 문서", "url": "https://ethereum.org/ko/developers/"}
+    ],
+    "overviewSalary.sal": [
+      {"label": "커리어넷 블록체인개발자 임금정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=529"}
+    ],
+    "overviewProspect.main": [
+      {"label": "커리어넷 블록체인개발자 직업전망", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=529"}
+    ],
+    "trivia": [
+      {"label": "이더리움 제네시스 블록 정보", "url": "https://etherscan.io/block/0"}
+    ]
+  },
+  "changeSummary": "way(되는방법), 급여, 전망, trivia, WLB상세, detailReady(커리큘럼/채용/훈련), sidebarJobs/Majors, heroTags 보완 및 YouTube 링크 추가",
+  "careerTree": {
+    "person_name": "정재윤",
+    "person_name_en": "Jeong Jae-yun",
+    "person_title": "클레이튼(Klaytn) 리드 개발자·블록체인 선구자",
+    "display_priority": 1,
+    "stages": [
+      {
+        "order": 1,
+        "title": "컴퓨터공학 전공·소프트웨어 개발",
+        "organization": "국내 대학 컴퓨터공학과",
+        "years": "2000년대~2010년대 초",
+        "description": "컴퓨터공학과 졸업 후 백엔드·시스템 소프트웨어 개발 경력 시작. 분산 시스템·암호학 기초 습득",
+        "job_slug": null
+      },
+      {
+        "order": 2,
+        "title": "블록체인 연구·개발자",
+        "organization": "카카오 블록체인 팀",
+        "years": "2010년대 중반~후반",
+        "description": "카카오 블록체인 R&D 팀 합류, 클레이튼 퍼블릭 블록체인 설계 참여. 이더리움 기반 기술을 한국 환경에 맞게 최적화한 BFT 합의 알고리즘 구현",
+        "job_slug": "블록체인개발자"
+      },
+      {
+        "order": 3,
+        "title": "클레이튼 리드 개발자·오픈소스 기여",
+        "organization": "클레이튼 재단(Kaia Foundation)",
+        "years": "2019~현재",
+        "description": "국내 최대 퍼블릭 블록체인 클레이튼 코어 개발 리드. GitHub 오픈소스 기여, 국내 블록체인 개발자 생태계 확장에 기여. Web3 게임·DeFi 인프라 구축 주도",
+        "job_slug": "블록체인개발자"
+      }
+    ]
+  }
+}
