@@ -3458,5 +3458,32 @@
     "person": "리영희",
     "batch": 45,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "음악치료사",
+    "jobId": "1765283353426307",
+    "revisionId": 701,
+    "careerTreeId": 197,
+    "person": "박혜영",
+    "batch": 46,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "기상연구원",
+    "jobId": "1765283293608896",
+    "revisionId": 703,
+    "careerTreeId": 198,
+    "person": "조천호",
+    "batch": 46,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "기상예보관",
+    "jobId": "1765283668403759",
+    "revisionId": 705,
+    "careerTreeId": 199,
+    "person": "전일봉",
+    "batch": 46,
+    "date": "2026-03-27"
   }
 ]
