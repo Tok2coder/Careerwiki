@@ -2222,5 +2222,35 @@
     "careerTreePerson": "최중경",
     "batch": 10,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283282842748",
+    "name": "건축사",
+    "slug": "건축사",
+    "revisionId": 528,
+    "careerTreeId": 91,
+    "careerTreePerson": "승효상",
+    "batch": 11,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283314686996",
+    "name": "변리사",
+    "slug": "변리사",
+    "revisionId": 530,
+    "careerTreeId": 92,
+    "careerTreePerson": "박원주",
+    "batch": 11,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283307925378",
+    "name": "물리치료사",
+    "slug": "물리치료사",
+    "revisionId": 531,
+    "careerTreeId": 93,
+    "careerTreePerson": "강태동",
+    "batch": 11,
+    "date": "2026-03-27"
   }
 ]
