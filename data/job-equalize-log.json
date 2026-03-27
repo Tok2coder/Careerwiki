@@ -1946,5 +1946,83 @@
     "careerTree": [
       "김상곤 (전 교육부장관·경기도교육감)"
     ]
+  },
+  {
+    "id": "1765283316406834",
+    "name": "보육교사",
+    "slug": "보육교사",
+    "productionUrl": "https://careerwiki.org/job/보육교사",
+    "completedAt": "2026-03-27T09:30:00.000Z",
+    "revision": 499,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "서영숙 (숙명여대 아동복지학부 명예교수·한국보육학회 전 회장)"
+    ]
+  },
+  {
+    "id": "1765283382878797",
+    "name": "치과위생사",
+    "slug": "치과위생사",
+    "productionUrl": "https://careerwiki.org/job/치과위생사",
+    "completedAt": "2026-03-27T10:00:00.000Z",
+    "revision": 501,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "문혁수 (연세대 치과대학병원 치과위생사·대한치과위생사협회 이사)"
+    ]
+  },
+  {
+    "id": "1765284149727470",
+    "name": "음반프로듀서",
+    "slug": "음반프로듀서",
+    "productionUrl": "https://careerwiki.org/job/음반프로듀서",
+    "completedAt": "2026-03-27T10:30:00.000Z",
+    "revision": 503,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "방시혁 (HYBE 의장·프로듀서)"
+    ]
   }
 ]
