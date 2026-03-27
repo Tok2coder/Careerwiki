@@ -2252,5 +2252,35 @@
     "careerTreePerson": "강태동",
     "batch": 11,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283465419996",
+    "name": "약사",
+    "slug": "약사",
+    "revisionId": 532,
+    "careerTreeId": 94,
+    "careerTreePerson": "김대업",
+    "batch": 12,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283397656116",
+    "name": "한의사",
+    "slug": "한의사",
+    "revisionId": 533,
+    "careerTreeId": 95,
+    "careerTreePerson": "최혁용",
+    "batch": 12,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283358528451",
+    "name": "일반의사",
+    "slug": "일반의사",
+    "revisionId": 535,
+    "careerTreeId": 96,
+    "careerTreePerson": "이필수",
+    "batch": 12,
+    "date": "2026-03-27"
   }
 ]
