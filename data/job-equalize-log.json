@@ -2432,5 +2432,35 @@
     "careerTreePerson": "이광수",
     "batch": 17,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283470121350",
+    "name": "UX·UI디자이너",
+    "slug": "uxui디자이너",
+    "revisionId": 557,
+    "careerTreeId": 112,
+    "careerTreePerson": "이승윤",
+    "batch": 18,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765284498834583",
+    "name": "보험설계사",
+    "slug": "보험설계사",
+    "revisionId": 559,
+    "careerTreeId": 113,
+    "careerTreePerson": "정문국",
+    "batch": 18,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283278043521",
+    "name": "가상현실전문가",
+    "slug": "가상현실전문가",
+    "revisionId": 560,
+    "careerTreeId": 114,
+    "careerTreePerson": "박기호",
+    "batch": 18,
+    "date": "2026-03-27"
   }
 ]
