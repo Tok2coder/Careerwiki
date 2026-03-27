@@ -41,12 +41,11 @@ const FIELD_LABELS: Record<string, string> = {
 
 function formatDate(iso: string): string {
   const d = new Date(iso)
-  return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-}
-
-function formatDateShort(iso: string): string {
-  const d = new Date(iso)
-  return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  const hh = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+  return `${mm}/${dd} ${hh}:${min}`
 }
 
 export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
@@ -69,8 +68,8 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
   })
   const dateEntries = Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b))
   const chartLabels = JSON.stringify(dateEntries.map(([d]) => {
-    const dt = new Date(d + 'T00:00:00')
-    return dt.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+    const [, mm, dd] = d.split('-')
+    return `${parseInt(mm)}/${parseInt(dd)}`
   }))
   const chartData = JSON.stringify(dateEntries.map(([, v]) => v))
 
