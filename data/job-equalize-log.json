@@ -2342,5 +2342,35 @@
     "careerTreePerson": "이재우",
     "batch": 14,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283472936861",
+    "name": "개그맨 및 코미디언",
+    "slug": "개그맨-및-코미디언",
+    "revisionId": 547,
+    "careerTreeId": 103,
+    "careerTreePerson": "유재석",
+    "batch": 15,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283287536467",
+    "name": "관세사",
+    "slug": "관세사",
+    "revisionId": 544,
+    "careerTreeId": 104,
+    "careerTreePerson": "엄택수",
+    "batch": 15,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283288102251",
+    "name": "광고기획자",
+    "slug": "광고기획자",
+    "revisionId": 545,
+    "careerTreeId": 105,
+    "careerTreePerson": "박재항",
+    "batch": 15,
+    "date": "2026-03-27"
   }
 ]
