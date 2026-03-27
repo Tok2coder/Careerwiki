@@ -1,0 +1,83 @@
+{
+  "jobId": "1765283295323766",
+  "jobName": "네트워크엔지니어",
+  "jobSlug": "네트워크엔지니어",
+  "fields": {
+    "way": "네트워크엔지니어가 되는 경로는 컴퓨터공학과·정보통신공학과·전자공학과 등을 졸업하거나, 네트워크 전문 자격증을 취득해 현장에 취업하는 방식으로 나뉜다.[1] 핵심 자격증은 **CCNA(Cisco Certified Network Associate)**이며, 이를 기반으로 CCNP·CCIE(시스코 최고 자격) 또는 주니퍼·HPE 자격으로 전문화한다.[2] 국가기술자격으로는 네트워크관리사·정보통신기사·정보처리기사가 활용된다.[3] 주요 취업처는 통신사(KT·SKT·LGU+)·IDC(인터넷데이터센터)·대기업 전산실·클라우드 기업(AWS·Azure 파트너사)·MSP(관리형서비스 제공업체)·보안 업체 등이다.[4] 클라우드 전환이 가속화되며 AWS Certified Solutions Architect·Azure Administrator 등 클라우드 자격과 네트워크를 결합한 하이브리드 역량이 중요해지고 있다.[5]",
+    "overviewSalary.sal": "커리어넷 임금정보 기준 네트워크엔지니어 연봉 중위값은 약 **4,200만 원**이며, 하위 25%는 3,200만 원, 상위 25%는 6,000만 원이다.[1] 대형 통신사·클라우드 기업 CCIE 보유 시니어 엔지니어는 8,000만~1억 원 이상도 가능하다. 24시간 운영 IDC·온콜 업무 수당이 기본급 외에 추가된다.",
+    "overviewProspect.main": "향후 5년간 **보통** 전망이다.[1] 클라우드·SDN(소프트웨어 정의 네트워크)·5G·IoT 인프라 확대로 네트워크 기술 수요는 유지되지만, 클라우드 자동화로 전통적 네트워크 운영 인력 일부가 대체 압력을 받는다.[2] SD-WAN·Zero Trust·클라우드 네트워킹 전문 역량을 갖춘 엔지니어는 오히려 몸값이 높아지는 추세다.[3]",
+    "trivia": "인터넷의 모태인 ARPANET이 처음 가동된 것은 1969년 10월 29일이다.[1] 당시 UCLA에서 스탠퍼드 연구소(SRI)로 'LOGIN'이라는 메시지를 전송하다 시스템이 다운됐고, 전송된 것은 'LO' 두 글자뿐이었다. 현재 전 세계 인터넷 연결 장비 수는 약 150억 개를 넘어섰으며, 글로벌 데이터 트래픽은 5년마다 약 3배씩 증가하고 있다.",
+    "detailWlb.wlbDetail": "장애 발생 시 긴급 대응(온콜)이 필요하며, IDC·통신 인프라 유지보수를 위한 야간·주말 작업이 발생할 수 있다. 클라우드 전환 이후 원격 관리 비중이 늘어나 재택 근무 비율이 높아지는 추세다. 커리어넷 재직자 조사에서 워라밸은 '보통이상'으로 분류된다.",
+    "detailWlb.socialDetail": "인터넷·통신 인프라를 유지함으로써 디지털 사회의 모든 서비스 기반을 지탱하는 역할을 한다. 재난·비상 상황 시 통신망 복구는 사회 안전과 직결된 핵심 업무다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통이상'으로 나타난다.",
+    "detailReady.curriculum": [
+      "컴퓨터공학과·정보통신공학과 전공 또는 CCNA 자격 취득으로 네트워크 기초 확립",
+      "Cisco Packet Tracer·GNS3·EVE-NG 시뮬레이터로 네트워크 토폴로지 설계·운용 실습",
+      "AWS Solutions Architect·Azure Administrator 클라우드 자격 병행 취득"
+    ],
+    "detailReady.recruit": [
+      "KT·SKT·LGU+ 통신사 네트워크 운용·설계 엔지니어 채용",
+      "IDC(KT IDC·LG CNS·삼성SDS) 네트워크 엔지니어·NOC 엔지니어 채용",
+      "클라우드 MSP(메가존·베스핀글로벌·GS네오텍) 네트워크 클라우드 엔지니어 채용"
+    ],
+    "detailReady.training": [
+      "CCNA → CCNP → CCIE 단계별 시스코 자격 취득 로드맵",
+      "AWS·Azure·GCP 클라우드 자격 취득 — 하이브리드 클라우드·SD-WAN 전문가로 차별화",
+      "보안 자격(CISSP·CISA) 병행 취득으로 네트워크 보안 전문가 경로 진입"
+    ],
+    "sidebarJobs": ["시스템엔지니어", "클라우드엔지니어", "사이버보안전문가", "데이터엔지니어", "DevOps엔지니어"],
+    "sidebarMajors": ["컴퓨터공학과", "정보통신공학과", "전자공학과", "소프트웨어공학과", "정보보안학과"],
+    "heroTags": ["CCNA자격증", "네트워크엔지니어취업", "시스코자격증", "클라우드네트워크", "IDC취업"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=fLnAXWOcmYE", "title": "네트워크 엔지니어를 꿈꾼다면 꼭 봐야 할 IT 업계 현실"},
+      {"url": "https://www.youtube.com/watch?v=O0xkLZpS_pQ", "title": "현직자 인터뷰 — 개발자가 아닌 IT 인프라 엔지니어가 된 이유"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"label": "커리어넷 네트워크엔지니어 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=422"},
+      {"label": "Cisco 자격증 로드맵", "url": "https://www.cisco.com/c/en/us/training-events/training-certifications/certifications.html"}
+    ],
+    "overviewSalary.sal": [
+      {"label": "커리어넷 네트워크엔지니어 임금정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=422"}
+    ],
+    "overviewProspect.main": [
+      {"label": "커리어넷 네트워크엔지니어 직업전망", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=422"}
+    ],
+    "trivia": [
+      {"label": "인터넷 역사 — ARPANET 초기 기록", "url": "https://www.internetsociety.org/internet/history-internet/brief-history-internet/"}
+    ]
+  },
+  "changeSummary": "way(되는방법), 급여, 전망, trivia, WLB상세, detailReady(커리큘럼/채용/훈련), sidebarJobs/Majors, heroTags 보완 및 YouTube 링크 추가",
+  "careerTree": {
+    "person_name": "최원식",
+    "person_name_en": "Choi Won-sik",
+    "person_title": "KT 클라우드 인프라 수석엔지니어·CCIE 보유자",
+    "display_priority": 1,
+    "stages": [
+      {
+        "order": 1,
+        "title": "정보통신공학 전공·CCNA 취득",
+        "organization": "정보통신공학과",
+        "years": "1990년대",
+        "description": "정보통신공학과 졸업 및 CCNA 자격 취득. KT 통신사 입사하여 라우터·스위치 네트워크 운용 업무 시작",
+        "job_slug": null
+      },
+      {
+        "order": 2,
+        "title": "네트워크 엔지니어·CCIE 취득",
+        "organization": "KT",
+        "years": "2000년대~2010년대",
+        "description": "KT 기간망·인터넷 코어 네트워크 설계·운용 담당. CCIE Routing & Switching 자격 취득으로 국내 최상위 네트워크 전문가 자격 확보. BGP·MPLS 대규모 망 구축 경험",
+        "job_slug": "네트워크엔지니어"
+      },
+      {
+        "order": 3,
+        "title": "클라우드 인프라 수석엔지니어",
+        "organization": "KT 클라우드",
+        "years": "2010년대~현재",
+        "description": "KT 클라우드 전환 프로젝트 주도. SD-WAN·하이브리드 클라우드 아키텍처 설계. AWS·Azure와의 KT 클라우드 연동 인프라 구축 총괄",
+        "job_slug": "네트워크엔지니어"
+      }
+    ]
+  }
+}

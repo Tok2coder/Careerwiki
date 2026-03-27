@@ -2942,5 +2942,35 @@
     "careerTreeId": 162,
     "careerTreePerson": "진교영",
     "processedAt": "2026-03-27T09:07:05.831Z"
+  },
+  {
+    "id": "1765283388857592",
+    "name": "토목공학기술자",
+    "slug": "토목공학기술자",
+    "batch": 35,
+    "revisionId": 632,
+    "careerTreeId": 163,
+    "careerTreePerson": "허재완",
+    "processedAt": "2026-03-27T09:11:56.011Z"
+  },
+  {
+    "id": "1765283460443102",
+    "name": "직업상담사",
+    "slug": "직업상담사",
+    "batch": 35,
+    "revisionId": 635,
+    "careerTreeId": 164,
+    "careerTreePerson": "김병숙",
+    "processedAt": "2026-03-27T09:11:56.012Z"
+  },
+  {
+    "id": "1765283295323766",
+    "name": "네트워크엔지니어",
+    "slug": "네트워크엔지니어",
+    "batch": 35,
+    "revisionId": 633,
+    "careerTreeId": 165,
+    "careerTreePerson": "최원식",
+    "processedAt": "2026-03-27T09:11:56.012Z"
   }
 ]
