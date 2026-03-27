@@ -2162,5 +2162,35 @@
     "careerTreePerson": "서상목",
     "batch": 8,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283329480426",
+    "name": "소방관",
+    "slug": "소방관",
+    "revisionId": 522,
+    "careerTreeId": 85,
+    "careerTreePerson": "이흥교",
+    "batch": 9,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283345192165",
+    "name": "영양사",
+    "slug": "영양사",
+    "revisionId": 523,
+    "careerTreeId": 86,
+    "careerTreePerson": "이경신",
+    "batch": 9,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283362349517",
+    "name": "작가",
+    "slug": "작가",
+    "revisionId": 524,
+    "careerTreeId": 87,
+    "careerTreePerson": "김영하",
+    "batch": 9,
+    "date": "2026-03-27"
   }
 ]
