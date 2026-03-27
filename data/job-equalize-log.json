@@ -3215,5 +3215,86 @@
       "id": 174,
       "personName": "장순흥"
     }
+  },
+  {
+    "id": "1765283328079234",
+    "name": "성우",
+    "slug": "성우",
+    "productionUrl": "https://careerwiki.org/job/성우",
+    "completedAt": "2026-03-27T09:46:18.693Z",
+    "revision": 656,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 176,
+      "personName": "배한성"
+    }
+  },
+  {
+    "id": "1765283339629658",
+    "name": "안무가",
+    "slug": "안무가",
+    "productionUrl": "https://careerwiki.org/job/안무가",
+    "completedAt": "2026-03-27T09:46:18.693Z",
+    "revision": 658,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 177,
+      "personName": "리아킴"
+    }
+  },
+  {
+    "id": "1765283475777136",
+    "name": "메이크업아티스트 및 뷰티매니저",
+    "slug": "메이크업아티스트-및-뷰티매니저",
+    "productionUrl": "https://careerwiki.org/job/메이크업아티스트-및-뷰티매니저",
+    "completedAt": "2026-03-27T09:46:18.693Z",
+    "revision": 659,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 178,
+      "personName": "정샘물"
+    }
   }
 ]
