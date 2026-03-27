@@ -2912,5 +2912,35 @@
     "careerTreeId": 159,
     "careerTreePerson": "이미소",
     "processedAt": "2026-03-27T09:02:22.402Z"
+  },
+  {
+    "id": "176528331355150",
+    "name": "번역가",
+    "slug": "번역가",
+    "batch": 34,
+    "revisionId": 627,
+    "careerTreeId": 160,
+    "careerTreePerson": "황석희",
+    "processedAt": "2026-03-27T09:07:05.830Z"
+  },
+  {
+    "id": "176528401511584",
+    "name": "운동처방사",
+    "slug": "운동처방사",
+    "batch": 34,
+    "revisionId": 628,
+    "careerTreeId": 161,
+    "careerTreePerson": "조대영",
+    "processedAt": "2026-03-27T09:07:05.831Z"
+  },
+  {
+    "id": "1765283367205194",
+    "name": "전자공학기술자",
+    "slug": "전자공학기술자",
+    "batch": 34,
+    "revisionId": 629,
+    "careerTreeId": 162,
+    "careerTreePerson": "진교영",
+    "processedAt": "2026-03-27T09:07:05.831Z"
   }
 ]
