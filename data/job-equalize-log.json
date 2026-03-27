@@ -2024,5 +2024,83 @@
     "careerTree": [
       "방시혁 (HYBE 의장·프로듀서)"
     ]
+  },
+  {
+    "id": "1765283339011562",
+    "name": "안경사",
+    "slug": "안경사",
+    "productionUrl": "https://careerwiki.org/job/안경사",
+    "completedAt": "2026-03-27T11:00:00.000Z",
+    "revision": 510,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "한천수 (대한안경사협회 전 회장·개업 안경사)"
+    ]
+  },
+  {
+    "id": "1765284154102933",
+    "name": "패션모델",
+    "slug": "패션모델",
+    "productionUrl": "https://careerwiki.org/job/패션모델",
+    "completedAt": "2026-03-27T11:01:00.000Z",
+    "revision": 511,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "장윤주 (패션모델·방송인·사업가)"
+    ]
+  },
+  {
+    "id": "1765283342062892",
+    "name": "언어치료사",
+    "slug": "언어치료사",
+    "productionUrl": "https://careerwiki.org/job/언어치료사",
+    "completedAt": "2026-03-27T11:02:00.000Z",
+    "revision": 512,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "김영태 (이화여대 언어병리학과 명예교수)"
+    ]
   }
 ]
