@@ -3053,5 +3053,86 @@
       "id": 168,
       "personName": "이승희"
     }
+  },
+  {
+    "id": "1765283285039613",
+    "name": "경호원",
+    "slug": "경호원",
+    "productionUrl": "https://careerwiki.org/job/경호원",
+    "completedAt": "2026-03-27T09:30:39.379Z",
+    "revision": 644,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 169,
+      "personName": "이만종"
+    }
+  },
+  {
+    "id": "1765283444085331",
+    "name": "로봇공학기술자",
+    "slug": "로봇공학기술자",
+    "productionUrl": "https://careerwiki.org/job/로봇공학기술자",
+    "completedAt": "2026-03-27T09:30:39.379Z",
+    "revision": 646,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 170,
+      "personName": "오준호"
+    }
+  },
+  {
+    "id": "1765283360062685",
+    "name": "자동차공학기술자",
+    "slug": "자동차공학기술자",
+    "productionUrl": "https://careerwiki.org/job/자동차공학기술자",
+    "completedAt": "2026-03-27T09:30:39.379Z",
+    "revision": 648,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 171,
+      "personName": "양웅철"
+    }
   }
 ]

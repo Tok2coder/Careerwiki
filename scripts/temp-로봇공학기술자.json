@@ -1,0 +1,83 @@
+{
+  "jobId": "1765283444085331",
+  "jobName": "로봇공학기술자",
+  "jobSlug": "로봇공학기술자",
+  "fields": {
+    "way": "로봇공학기술자가 되려면 기계공학과·전기전자공학과·컴퓨터공학과·로봇공학과(메카트로닉스) 등을 졸업하는 것이 일반적이다.[1] 로봇은 기계·전자·SW를 통합하는 융합 분야이므로 C/C++·Python·ROS(Robot Operating System) 프로그래밍, 제어공학, 컴퓨터비전, 하드웨어 설계 능력을 함께 갖춰야 한다.[2] 대학원 석·박사 과정(KAIST·서울대·POSTECH 로봇공학 전공)을 통해 연구 역량을 심화하는 경로가 많으며, 학부 졸업 후 현대로보틱스·두산로보틱스·레인보우로보틱스·NAVER LABS 등 로봇 기업에 취업하는 경로도 있다.[3] 제어로봇시스템공학기술자·자동화시스템엔지니어 등 관련 직무로 취업한 뒤 전문성을 쌓는 방법도 보편적이다.[4] 로봇 관련 공모전(KIRO·RoKAS)과 오픈소스 프로젝트 경험이 취업에 유리하다.[5]",
+    "overviewSalary.sal": "커리어넷 임금정보 기준 로봇공학기술자 연봉 중위값은 약 **4,800만 원**이며, 하위 25%는 3,500만 원, 상위 25%는 7,000만 원이다.[1] 삼성전자·현대차·LG 로봇 연구소 연구원 석사 초봉은 5,000만~6,500만 원, 박사는 7,000만~9,000만 원 이상이다. AI 로봇·협동 로봇 스타트업 시니어 엔지니어는 스톡옵션 포함 시 더 높은 보상이 가능하다.",
+    "overviewProspect.main": "향후 5년간 **증가** 전망이다.[1] 제조 자동화·스마트팩토리·물류 로봇(AGV·AMR) 수요가 급증하고 있으며, 협동 로봇(코봇)의 중소기업 도입이 가속화되고 있다.[2] AI·머신러닝과 로봇 제어의 융합(AI 로봇)으로 새로운 수요가 빠르게 생성되고 있다. 2024년 현대차 보스턴다이내믹스 투자·두산로보틱스 상장 등 국내 로봇 산업 규모가 급격히 성장하고 있다.[3]",
+    "trivia": "한국은 2023년 기준 제조업 로봇 밀도(근로자 1만 명당 로봇 수) **1,012대**로 세계 1위를 기록했다.[1] 싱가포르(730대)·독일(415대)·일본(397대)을 크게 앞서며 세계에서 가장 로봇화된 제조업 국가다. KAIST 오준호 교수팀이 개발한 휴보(HUBO)는 2015년 DARPA 로보틱스 챌린지에서 1위를 차지하며 세계 최고 수준의 이족보행 로봇 기술력을 입증했다.",
+    "detailWlb.wlbDetail": "연구소·기업 R&D 부서 근무가 일반적이며, 프로젝트 마감·시연 시점에 업무가 집중된다. 로봇 제어 실험·하드웨어 조립·소프트웨어 디버깅 등 다양한 업무가 혼합된다. 대기업 연구소는 유연근무제·재택근무 도입이 활발하다. 커리어넷 재직자 조사에서 워라밸은 '보통이상'으로 분류된다.",
+    "detailWlb.socialDetail": "제조 자동화·의료 로봇·재난 구조 로봇 등 다양한 분야에서 인간 생활 개선과 사회 문제 해결에 직접 기여한다. 인간이 하기 어려운 위험·반복 작업을 대체해 산업 안전성을 높이는 사회적 역할을 담당한다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '좋음'으로 나타난다.",
+    "detailReady.curriculum": [
+      "기계공학과·전기전자공학과·컴퓨터공학과 진학 — 제어공학·메카트로닉스·임베디드시스템 이수",
+      "ROS(Robot Operating System) + Python·C++ 실습 + 아두이노·라즈베리파이 프로토타입 제작",
+      "로봇 경진대회(한국로봇대회·국제로봇올림피아드) 참가 + 깃허브 오픈소스 로봇 프로젝트 기여"
+    ],
+    "detailReady.recruit": [
+      "현대로보틱스·두산로보틱스·레인보우로보틱스 로봇 엔지니어 채용",
+      "삼성전자·LG전자·NAVER LABS 로봇 연구소 연구원 채용 (인턴·신입·경력)",
+      "로봇 스타트업(에이로봇·티로보틱스·뉴로메카) R&D 엔지니어 수시 채용"
+    ],
+    "detailReady.training": [
+      "KAIST·서울대·POSTECH 로봇공학 대학원 진학 — 연구 역량과 취업 경쟁력 동시 확보",
+      "Coursera·Udemy 로보틱스 전문 과정 + ROS 공식 튜토리얼·시뮬레이션(Gazebo) 실습",
+      "제어로봇시스템공학기술자 자격·로봇소프트웨어개발기술자 자격 취득 — 큐넷 확인"
+    ],
+    "sidebarJobs": ["인공지능전문가","기계공학기술자","전자공학기술자","자동화시스템엔지니어","드론개발자"],
+    "sidebarMajors": ["기계공학과","전기전자공학과","컴퓨터공학과","로봇공학과","메카트로닉스공학과"],
+    "heroTags": ["로봇공학기술자취업","ROS로봇개발","협동로봇","AI로봇엔지니어","스마트팩토리"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=FQxp5crs2vU", "title": "EP.9 로봇공학기술자_제어로봇공학과"},
+      {"url": "https://www.youtube.com/watch?v=H89Az-iZZrc", "title": "회사에서 모셔가는 로봇개발자? 현직자가 말하는 현실적인 커리어 조언"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"label": "커리어넷 로봇공학기술자 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=448"},
+      {"label": "한국로봇산업협회 로봇 산업 현황", "url": "https://www.korearobot.or.kr"}
+    ],
+    "overviewSalary.sal": [
+      {"label": "커리어넷 로봇공학기술자 임금정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=448"}
+    ],
+    "overviewProspect.main": [
+      {"label": "커리어넷 로봇공학기술자 직업전망", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=448"}
+    ],
+    "trivia": [
+      {"label": "IFR 세계 로봇 통계 2023", "url": "https://ifr.org/ifr-press-releases/news/robot-density-doubles-globally"}
+    ]
+  },
+  "changeSummary": "way(되는방법), 급여, 전망, trivia, WLB상세, detailReady(커리큘럼/채용/훈련), sidebarJobs/Majors, heroTags 보완 및 YouTube 링크 추가",
+  "careerTree": {
+    "person_name": "오준호",
+    "person_name_en": "Oh Jun-ho",
+    "person_title": "KAIST 명예교수·휴보(HUBO) 로봇 개발자",
+    "display_priority": 1,
+    "stages": [
+      {
+        "order": 1,
+        "title": "기계공학 전공·로봇 연구 입문",
+        "organization": "서울대학교·KAIST",
+        "years": "1970년대~1980년대",
+        "description": "서울대 기계공학과 졸업 후 KAIST 기계공학 박사 취득. 이족보행 로봇과 메카트로닉스 분야 연구 시작",
+        "job_slug": null
+      },
+      {
+        "order": 2,
+        "title": "KAIST 교수·휴보 로봇 개발",
+        "organization": "KAIST 기계공학과",
+        "years": "1990년대~2010년대",
+        "description": "KAIST 기계공학과 교수로 임용 후 국내 최초 이족보행 로봇 KHR(한국형 휴머노이드 로봇) 개발. 2004년 '휴보(HUBO)' 공개로 국제 이족보행 로봇 기술 선두에 서다",
+        "job_slug": "로봇공학기술자"
+      },
+      {
+        "order": 3,
+        "title": "DARPA 로보틱스 챌린지 1위·KAIST 명예교수",
+        "organization": "KAIST·Team DRC-HUBO",
+        "years": "2015~현재",
+        "description": "2015년 미국 DARPA 로보틱스 챌린지(DRC) 결승에서 DRC-HUBO 팀 1위 달성. 총상금 200만 달러 수상. KAIST 명예교수로 추대. 한국 로봇공학의 세계적 위상 확립",
+        "job_slug": "로봇공학기술자"
+      }
+    ]
+  }
+}
