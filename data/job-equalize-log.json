@@ -2672,5 +2672,35 @@
     "careerTreePerson": "아이유",
     "batch": 25,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283339011562",
+    "name": "안경사",
+    "slug": "안경사",
+    "revisionId": 596,
+    "careerTreeId": 136,
+    "careerTreePerson": "한천수",
+    "batch": 26,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283342062892",
+    "name": "언어치료사",
+    "slug": "언어치료사",
+    "revisionId": 597,
+    "careerTreeId": 137,
+    "careerTreePerson": "김영태",
+    "batch": 26,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765284149727470",
+    "name": "음반프로듀서",
+    "slug": "음반프로듀서",
+    "revisionId": 595,
+    "careerTreeId": 138,
+    "careerTreePerson": "방시혁",
+    "batch": 26,
+    "date": "2026-03-27"
   }
 ]
