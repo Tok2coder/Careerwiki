@@ -3377,5 +3377,32 @@
     "person": "류효기",
     "batch": 42,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "방송기자",
+    "jobId": "1765283468460636",
+    "revisionId": 683,
+    "careerTreeId": 188,
+    "person": "손석희",
+    "batch": 43,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "광고디자이너",
+    "jobId": "1765283288362360",
+    "revisionId": 685,
+    "careerTreeId": 189,
+    "person": "박웅현",
+    "batch": 43,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "제품디자이너",
+    "jobId": "1765283371861129",
+    "revisionId": 687,
+    "careerTreeId": 190,
+    "person": "김영세",
+    "batch": 43,
+    "date": "2026-03-27"
   }
 ]
