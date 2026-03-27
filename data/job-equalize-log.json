@@ -3539,5 +3539,32 @@
     "person": "김광준",
     "batch": 48,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "국악인",
+    "jobId": "1765283290386996",
+    "revisionId": 725,
+    "careerTreeId": 206,
+    "person": "김덕수",
+    "batch": 49,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "각색작가",
+    "jobId": "1765284123626505",
+    "revisionId": 727,
+    "careerTreeId": 207,
+    "person": "노희경",
+    "batch": 49,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "건축가건축설계사",
+    "jobId": "176528344210340",
+    "revisionId": 728,
+    "careerTreeId": 208,
+    "person": "승효상",
+    "batch": 49,
+    "date": "2026-03-27"
   }
 ]
