@@ -2282,5 +2282,35 @@
     "careerTreePerson": "이필수",
     "batch": 12,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283383162619",
+    "name": "치과의사",
+    "slug": "치과의사",
+    "revisionId": 536,
+    "careerTreeId": 97,
+    "careerTreePerson": "박태근",
+    "batch": 13,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283393158842",
+    "name": "판사",
+    "slug": "판사",
+    "revisionId": 537,
+    "careerTreeId": 98,
+    "careerTreePerson": "조희대",
+    "batch": 13,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283294223537",
+    "name": "기자",
+    "slug": "기자",
+    "revisionId": 538,
+    "careerTreeId": 99,
+    "careerTreePerson": "손석희",
+    "batch": 13,
+    "date": "2026-03-27"
   }
 ]
