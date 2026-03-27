@@ -2552,5 +2552,35 @@
     "careerTreePerson": "이세영",
     "batch": 21,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283333034320",
+    "name": "스포츠트레이너",
+    "slug": "스포츠트레이너",
+    "revisionId": 575,
+    "careerTreeId": 124,
+    "careerTreePerson": "김원일",
+    "batch": 22,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283470661316",
+    "name": "의상디자이너",
+    "slug": "의상디자이너",
+    "revisionId": 577,
+    "careerTreeId": 125,
+    "careerTreePerson": "이상봉",
+    "batch": 22,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283397123567",
+    "name": "학원강사",
+    "slug": "학원강사",
+    "revisionId": 579,
+    "careerTreeId": 126,
+    "careerTreePerson": "현우진",
+    "batch": 22,
+    "date": "2026-03-27"
   }
 ]
