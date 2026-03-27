@@ -3296,5 +3296,32 @@
       "id": 178,
       "personName": "정샘물"
     }
+  },
+  {
+    "slug": "재료공학기술자",
+    "jobId": "1765283364145434",
+    "revisionId": 661,
+    "careerTreeId": 179,
+    "person": "박남규",
+    "batch": 40,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "드라마프로듀서",
+    "jobId": "1765284142048798",
+    "revisionId": 663,
+    "careerTreeId": 180,
+    "person": "신원호",
+    "batch": 40,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "게임프로그래머",
+    "jobId": "1765283437147760",
+    "revisionId": 665,
+    "careerTreeId": 181,
+    "person": "김대일",
+    "batch": 40,
+    "date": "2026-03-27"
   }
 ]

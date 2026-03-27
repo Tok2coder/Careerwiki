@@ -1,0 +1,84 @@
+{
+  "jobId": "1765284142048798",
+  "jobName": "드라마프로듀서",
+  "jobSlug": "드라마프로듀서",
+  "fields": {
+    "way": "드라마프로듀서(PD)가 되는 주요 경로는 KBS·MBC·SBS·EBS 등 지상파 방송사와 tvN·JTBC 등 종합편성채널의 **공채 PD 시험** 합격이다.[1] 신문방송학과·언론정보학과·영문학·국문학 등 다양한 전공에서 응시 가능하며, 실무 경험(단편영화·대학방송국 활동)과 논술·면접 역량이 중요하다.[2] 최근에는 넷플릭스·웨이브·티빙·쿠팡플레이 등 **OTT 오리지널 제작사** 증가로 CP(Content Producer) 직군 채용이 새로운 진입 경로로 부상했다.[3] 연출부 막내→조연출→연출 순서로 현장 경력을 쌓는 것이 일반적이며, 프리랜서 감독으로 독립하는 경우도 많다.[4] 영화연출 전공 후 드라마 연출로 전향하는 경로도 증가 추세다.[5]",
+    "overviewSalary.sal": "공채 PD 신입 연봉은 KBS·MBC·SBS 기준 약 **4,000~5,000만 원**이다.[1] 경력 PD는 직급·채널 인지도에 따라 7,000만~1억 원 수준이며, 히트작 연출 PD의 경우 프리랜서 전향 후 편당 계약금으로 훨씬 높은 수입을 올린다. OTT 플랫폼의 오리지널 드라마 투자 확대로 드라마 PD 몸값이 전반적으로 상승하는 추세다.",
+    "overviewProspect.main": "향후 5년간 **증가** 전망이다.[1] K-드라마의 글로벌 인기로 넷플릭스·Disney+·Apple TV+ 등 글로벌 OTT 플랫폼과의 공동제작이 급증하며, 드라마 연출 인력 수요가 지속 증가하고 있다.[2] 지상파 시청률 감소에도 불구하고 스트리밍 시장의 폭발적 성장이 드라마 제작 기회를 오히려 확대시키고 있다.[3] 영어 소통 능력과 글로벌 감각을 갖춘 PD 선호도가 높아지고 있다.",
+    "trivia": "한국 드라마 수출액은 2022년 기준 약 **3억 달러**로 역대 최대를 기록했다.[1] 넷플릭스 드라마 '오징어 게임'은 2021년 공개 후 넷플릭스 역대 최고 시청시간을 기록하며 K-드라마의 글로벌 위상을 끌어올렸다.[2] 응답하라 시리즈(2012~2015)는 케이블 TV 시청률 기록을 연속 경신하며 한국 드라마 산업의 새로운 장을 열었고, 신원호 PD는 이를 통해 '국민 PD'로 자리매김했다.",
+    "detailWlb.wlbDetail": "드라마 촬영 현장은 이른 새벽 콜타임·심야 촬영이 일상적이며, 방영 중에는 촬영·편집·방영이 동시에 진행되는 쪽대본 구조가 빈번하다. 체력적·정신적 부담이 크지만, 창작 만족감이 높은 직업이다. 최근 OTT 오리지널은 방영 전 전편 제작이 가능해 워라밸이 다소 개선되는 추세다. 커리어넷 재직자 조사에서 워라밸은 '보통'으로 분류된다.",
+    "detailWlb.socialDetail": "대중문화와 사회적 담론을 형성하는 영향력이 매우 큰 직업이다. K-드라마를 통해 한국 문화·언어·라이프스타일을 전 세계에 알리는 문화외교관 역할을 한다. 시청자의 감동·공감을 이끌어내는 콘텐츠 창작자로서 사회적 보람이 크다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '높음'으로 나타난다.",
+    "detailReady.curriculum": [
+      "신문방송학과·언론정보학과·영상학과·인문계 학과 진학 — 방송·미디어 기초 소양 습득",
+      "대학방송국(UBS)·영상동아리 활동 + 단편영화·웹드라마 연출 경험 포트폴리오 구축",
+      "방송사 공채 PD 시험 준비 — 논술·면접·창작 기획서 작성 훈련 (방송아카데미 활용)"
+    ],
+    "detailReady.recruit": [
+      "KBS·MBC·SBS·EBS 공채 PD 시험 응시 — 연간 1~2회 채용 공고 확인",
+      "tvN·JTBC·MBC 드라마국 연출부 조연출(AD) 채용 지원",
+      "넷플릭스·웨이브·티빙 오리지널 제작사(스튜디오드래곤·JTBC스튜디오 등) CP 채용"
+    ],
+    "detailReady.training": [
+      "영어 소통 능력 강화 — 글로벌 OTT 공동제작 협업·해외 피칭 대비",
+      "OTT 플랫폼 기획·피칭 역량 개발 — 작품 기획서 작성·국제 드라마 트렌드 분석",
+      "편집·촬영 기술 역량 — Final Cut Pro·DaVinci Resolve 기초 습득으로 현장 이해도 강화"
+    ],
+    "sidebarJobs": ["영화감독","방송작가","영상편집기사","촬영감독","콘텐츠기획자"],
+    "sidebarMajors": ["신문방송학과","영화영상학과","연극영화학과","언론정보학과","국어국문학과"],
+    "heroTags": ["드라마PD취업","방송사공채","K드라마","OTT제작","드라마연출"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=EYgL1oiUozM", "title": "직업의 세계 일인자 - 한국방송 드라마 PD"},
+      {"url": "https://www.youtube.com/watch?v=rQxFADtF4y4", "title": "막내들의 솔직한 MBC 취업 후기 — 드라마 PD 편"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"label": "커리어넷 드라마프로듀서 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=195"},
+      {"label": "KBS 인재채용 PD 공채 안내", "url": "https://recruit.kbs.co.kr"}
+    ],
+    "overviewSalary.sal": [
+      {"label": "커리어넷 드라마프로듀서 임금정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=195"}
+    ],
+    "overviewProspect.main": [
+      {"label": "커리어넷 드라마프로듀서 직업전망", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=195"}
+    ],
+    "trivia": [
+      {"label": "한국콘텐츠진흥원 방송영상 수출 통계", "url": "https://www.kocca.kr"},
+      {"label": "넷플릭스 오징어 게임 시청 데이터", "url": "https://ir.netflix.net"}
+    ]
+  },
+  "changeSummary": "way(되는방법), 급여, 전망, trivia, WLB상세, detailReady(커리큘럼/채용/훈련), sidebarJobs/Majors, heroTags 보완 및 YouTube 링크 추가",
+  "careerTree": {
+    "person_name": "신원호",
+    "person_name_en": "Shin Won-ho",
+    "person_title": "tvN 드라마PD·응답하라 시리즈·나의 아저씨 연출",
+    "display_priority": 1,
+    "stages": [
+      {
+        "order": 1,
+        "title": "tvN 공채 PD 입문·연출부 수련",
+        "organization": "tvN(CJ ENM)",
+        "years": "2000년대",
+        "description": "tvN에 공채 PD로 입사 후 예능·드라마 연출부에서 경력 쌓기 시작. 다양한 프로그램 현장 경험을 통해 연출 역량 심화",
+        "job_slug": null
+      },
+      {
+        "order": 2,
+        "title": "응답하라 시리즈 연출·케이블 드라마 신화",
+        "organization": "tvN",
+        "years": "2012~2016",
+        "description": "응답하라 1997(2012)·응답하라 1994(2013)·응답하라 1988(2015) 연출. 케이블 TV 역대 최고 시청률 기록 연속 경신. '국민 PD'로 부상하며 레트로 드라마 장르 개척",
+        "job_slug": "드라마프로듀서"
+      },
+      {
+        "order": 3,
+        "title": "나의 아저씨·슬기로운 의사생활 연출",
+        "organization": "tvN",
+        "years": "2018~현재",
+        "description": "나의 아저씨(2018)·슬기로운 의사생활 시즌1·2(2020~2021) 연출. 두 작품 모두 연간 최고 화제작으로 선정되며 한국 드라마 연출의 최정상으로 자리매김",
+        "job_slug": "드라마프로듀서"
+      }
+    ]
+  }
+}
