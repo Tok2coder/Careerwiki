@@ -3404,5 +3404,32 @@
     "person": "김영세",
     "batch": 43,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "지휘자",
+    "jobId": "1765283377647827",
+    "revisionId": 689,
+    "careerTreeId": 191,
+    "person": "정명훈",
+    "batch": 44,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "시각디자이너",
+    "jobId": "1765283333584615",
+    "revisionId": 691,
+    "careerTreeId": 192,
+    "person": "안상수",
+    "batch": 44,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "성악가",
+    "jobId": "1765283327753431",
+    "revisionId": 693,
+    "careerTreeId": 193,
+    "person": "조수미",
+    "batch": 44,
+    "date": "2026-03-27"
   }
 ]
