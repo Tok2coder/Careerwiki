@@ -3431,5 +3431,32 @@
     "person": "조수미",
     "batch": 44,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "소설가",
+    "jobId": "1765283329795669",
+    "revisionId": 695,
+    "careerTreeId": 194,
+    "person": "한강",
+    "batch": 45,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "연기자",
+    "jobId": "1765283344028161",
+    "revisionId": 697,
+    "careerTreeId": 195,
+    "person": "이병헌",
+    "batch": 45,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "신문기자",
+    "jobId": "1765283467902772",
+    "revisionId": 699,
+    "careerTreeId": 196,
+    "person": "리영희",
+    "batch": 45,
+    "date": "2026-03-27"
   }
 ]
