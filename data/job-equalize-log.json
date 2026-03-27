@@ -2612,5 +2612,35 @@
     "careerTreePerson": "정영선",
     "batch": 23,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283454596575",
+    "name": "식품공학기술자",
+    "slug": "식품공학기술자",
+    "revisionId": 587,
+    "careerTreeId": 130,
+    "careerTreePerson": "최낙언",
+    "batch": 24,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283365417879",
+    "name": "전기공학기술자",
+    "slug": "전기공학기술자",
+    "revisionId": 589,
+    "careerTreeId": 131,
+    "careerTreePerson": "정승일",
+    "batch": 24,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283768415144",
+    "name": "도시계획가",
+    "slug": "도시계획가",
+    "revisionId": 591,
+    "careerTreeId": 132,
+    "careerTreePerson": "김진애",
+    "batch": 24,
+    "date": "2026-03-27"
   }
 ]
