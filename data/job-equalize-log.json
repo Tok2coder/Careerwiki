@@ -2132,5 +2132,35 @@
     "careerTreePerson": "손혜원",
     "batch": 7,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283280202496",
+    "name": "간호사",
+    "slug": "간호사",
+    "revisionId": 519,
+    "careerTreeId": 82,
+    "careerTreePerson": "김조자",
+    "batch": 8,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283284733631",
+    "name": "경찰관",
+    "slug": "경찰관",
+    "revisionId": 520,
+    "careerTreeId": 83,
+    "careerTreePerson": "조현배",
+    "batch": 8,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283321394772",
+    "name": "사회복지사",
+    "slug": "사회복지사",
+    "revisionId": 521,
+    "careerTreeId": 84,
+    "careerTreePerson": "서상목",
+    "batch": 8,
+    "date": "2026-03-27"
   }
 ]
