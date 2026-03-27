@@ -3674,5 +3674,32 @@
     "person": "박종홍",
     "batch": 53,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "반도체공학기술자-및-연구원",
+    "jobId": "1765283447886900",
+    "revisionId": 753,
+    "careerTreeId": 221,
+    "person": "황창규",
+    "batch": 54,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "방송연출가",
+    "jobId": "1765283311944704",
+    "revisionId": 755,
+    "careerTreeId": 222,
+    "person": "나영석",
+    "batch": 54,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "드라마작가",
+    "jobId": "1765283301376889",
+    "revisionId": 757,
+    "careerTreeId": 223,
+    "person": "김은숙",
+    "batch": 54,
+    "date": "2026-03-27"
   }
 ]
