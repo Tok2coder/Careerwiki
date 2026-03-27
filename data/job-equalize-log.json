@@ -3134,5 +3134,86 @@
       "id": 171,
       "personName": "양웅철"
     }
+  },
+  {
+    "id": "1765283373933916",
+    "name": "조선공학기술자",
+    "slug": "조선공학기술자",
+    "productionUrl": "https://careerwiki.org/job/조선공학기술자",
+    "completedAt": "2026-03-27T09:36:50.581Z",
+    "revision": 651,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 172,
+      "personName": "가삼현"
+    }
+  },
+  {
+    "id": "1765283402753351",
+    "name": "화학공학기술자",
+    "slug": "화학공학기술자",
+    "productionUrl": "https://careerwiki.org/job/화학공학기술자",
+    "completedAt": "2026-03-27T09:36:50.581Z",
+    "revision": 653,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 173,
+      "personName": "신학철"
+    }
+  },
+  {
+    "id": "1765283451064287",
+    "name": "원자력공학기술자",
+    "slug": "원자력공학기술자",
+    "productionUrl": "https://careerwiki.org/job/원자력공학기술자",
+    "completedAt": "2026-03-27T09:36:50.581Z",
+    "revision": 655,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 174,
+      "personName": "장순흥"
+    }
   }
 ]
