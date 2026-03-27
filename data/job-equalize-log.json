@@ -2972,5 +2972,86 @@
     "careerTreeId": 165,
     "careerTreePerson": "최원식",
     "processedAt": "2026-03-27T09:11:56.012Z"
+  },
+  {
+    "id": "1765283334418364",
+    "name": "시스템엔지니어",
+    "slug": "시스템엔지니어",
+    "productionUrl": "https://careerwiki.org/job/시스템엔지니어",
+    "completedAt": "2026-03-27T09:19:55.669Z",
+    "revision": 641,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 166,
+      "personName": "장성호"
+    }
+  },
+  {
+    "id": "1765283301032565",
+    "name": "동물조련사",
+    "slug": "동물조련사",
+    "productionUrl": "https://careerwiki.org/job/동물조련사",
+    "completedAt": "2026-03-27T09:19:55.669Z",
+    "revision": 640,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 167,
+      "personName": "강형욱"
+    }
+  },
+  {
+    "id": "1765284106492773",
+    "name": "브랜드마케터",
+    "slug": "브랜드마케터",
+    "productionUrl": "https://careerwiki.org/job/브랜드마케터",
+    "completedAt": "2026-03-27T09:19:55.669Z",
+    "revision": 639,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": {
+      "id": 168,
+      "personName": "이승희"
+    }
   }
 ]
