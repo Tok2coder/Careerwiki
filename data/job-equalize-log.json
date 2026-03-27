@@ -3809,5 +3809,32 @@
     "person": "김수환",
     "batch": 58,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "개그맨-및-코미디언",
+    "jobId": "1765283472936861",
+    "revisionId": 789,
+    "careerTreeId": 236,
+    "person": "유재석",
+    "batch": 59,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "광고-및-홍보전문가",
+    "jobId": "176528328783061",
+    "revisionId": 786,
+    "careerTreeId": 237,
+    "person": "이제석",
+    "batch": 59,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "기업고위임원",
+    "jobId": "176528329390958",
+    "revisionId": 788,
+    "careerTreeId": 238,
+    "person": "정주영",
+    "batch": 59,
+    "date": "2026-03-27"
   }
 ]
