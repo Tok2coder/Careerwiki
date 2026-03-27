@@ -2462,5 +2462,35 @@
     "careerTreePerson": "박기호",
     "batch": 18,
     "date": "2026-03-27"
+  },
+  {
+    "id": "176528346734240",
+    "name": "방송작가",
+    "slug": "방송작가",
+    "revisionId": 562,
+    "careerTreeId": 115,
+    "careerTreePerson": "김은희",
+    "batch": 19,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765284127013890",
+    "name": "웹툰작가",
+    "slug": "웹툰작가",
+    "revisionId": 563,
+    "careerTreeId": 116,
+    "careerTreePerson": "이말년",
+    "batch": 19,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283469284852",
+    "name": "사진작가",
+    "slug": "사진작가",
+    "revisionId": 564,
+    "careerTreeId": 117,
+    "careerTreePerson": "배병우",
+    "batch": 19,
+    "date": "2026-03-27"
   }
 ]
