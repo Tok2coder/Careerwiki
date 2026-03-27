@@ -3701,5 +3701,32 @@
     "person": "김은숙",
     "batch": 54,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "극작가",
+    "jobId": "1765283292024544",
+    "revisionId": 759,
+    "careerTreeId": 224,
+    "person": "차범석",
+    "batch": 55,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "로봇연구원",
+    "jobId": "1765283302041684",
+    "revisionId": 761,
+    "careerTreeId": 225,
+    "person": "오준호",
+    "batch": 55,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "비행기조종사",
+    "jobId": "1765283318940526",
+    "revisionId": 763,
+    "careerTreeId": 226,
+    "person": "박경원",
+    "batch": 55,
+    "date": "2026-03-27"
   }
 ]
