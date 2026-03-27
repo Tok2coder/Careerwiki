@@ -3755,5 +3755,32 @@
     "person": "박웅현",
     "batch": 56,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "사회학연구원",
+    "jobId": "1765283321689634",
+    "revisionId": 771,
+    "careerTreeId": 230,
+    "person": "최재석",
+    "batch": 57,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "생물학연구원",
+    "jobId": "1765283323924984",
+    "revisionId": 773,
+    "careerTreeId": 231,
+    "person": "김빛내리",
+    "batch": 57,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "서예가",
+    "jobId": "1765283324729983",
+    "revisionId": 775,
+    "careerTreeId": 232,
+    "person": "김정희",
+    "batch": 57,
+    "date": "2026-03-27"
   }
 ]
