@@ -1,7 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node --check:*)"
+      "Bash(*)",
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Agent",
+      "TodoWrite",
+      "TodoRead"
     ]
   },
   "hooks": {
