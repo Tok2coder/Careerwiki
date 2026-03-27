@@ -3593,5 +3593,32 @@
     "person": "조용필",
     "batch": 50,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "만화가",
+    "jobId": "1765283303472167",
+    "revisionId": 735,
+    "careerTreeId": 212,
+    "person": "이현세",
+    "batch": 51,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "요리연구가",
+    "jobId": "1765284226711253",
+    "revisionId": 737,
+    "careerTreeId": 213,
+    "person": "황혜성",
+    "batch": 51,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "경제학연구원",
+    "jobId": "1765283284429271",
+    "revisionId": 739,
+    "careerTreeId": 214,
+    "person": "조순",
+    "batch": 51,
+    "date": "2026-03-27"
   }
 ]
