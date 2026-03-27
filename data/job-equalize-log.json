@@ -3512,5 +3512,32 @@
     "person": "이금주",
     "batch": 47,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "필라테스강사",
+    "jobId": "1765284226185840",
+    "revisionId": 716,
+    "careerTreeId": 203,
+    "person": "원정희",
+    "batch": 48,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "해양수산기술자",
+    "jobId": "1765283399551249",
+    "revisionId": 718,
+    "careerTreeId": 204,
+    "person": "민병서",
+    "batch": 48,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "손해사정사",
+    "jobId": "1765283330799690",
+    "revisionId": 720,
+    "careerTreeId": 205,
+    "person": "김광준",
+    "batch": 48,
+    "date": "2026-03-27"
   }
 ]
