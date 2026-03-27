@@ -1868,5 +1868,83 @@
     "careerTree": [
       "손정원 (목원대학교 응급구조학과 교수)"
     ]
+  },
+  {
+    "id": "1765283710457326",
+    "name": "인공지능엔지니어",
+    "slug": "인공지능엔지니어",
+    "productionUrl": "https://careerwiki.org/job/인공지능엔지니어",
+    "completedAt": "2026-03-27T08:00:00.000Z",
+    "revision": 493,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "김성훈 (홍콩과기대 교수·모두의연구소 설립자)"
+    ]
+  },
+  {
+    "id": "1765283352116306",
+    "name": "유치원교사",
+    "slug": "유치원교사",
+    "productionUrl": "https://careerwiki.org/job/유치원교사",
+    "completedAt": "2026-03-27T08:30:00.000Z",
+    "revision": 495,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "이기숙 (이화여대 유아교육학과 명예교수·한국유아교육학회 전 회장)"
+    ]
+  },
+  {
+    "id": "176528345711765",
+    "name": "중·고등학교교사",
+    "slug": "중고등학교교사",
+    "productionUrl": "https://careerwiki.org/job/중고등학교교사",
+    "completedAt": "2026-03-27T09:00:00.000Z",
+    "revision": 497,
+    "fieldsUpdated": [
+      "way",
+      "overviewSalary.sal",
+      "overviewProspect.main",
+      "trivia",
+      "detailWlb.wlbDetail",
+      "detailWlb.socialDetail",
+      "detailReady.curriculum",
+      "detailReady.recruit",
+      "detailReady.training",
+      "sidebarJobs",
+      "sidebarMajors",
+      "heroTags",
+      "youtubeLinks"
+    ],
+    "careerTree": [
+      "김상곤 (전 교육부장관·경기도교육감)"
+    ]
   }
 ]
