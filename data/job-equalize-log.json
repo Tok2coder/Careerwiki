@@ -3350,5 +3350,32 @@
     "person": "이계원",
     "batch": 41,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "청소년상담사",
+    "jobId": "1765284026919232",
+    "revisionId": 677,
+    "careerTreeId": 185,
+    "person": "오은영",
+    "batch": 42,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "푸드스타일리스트",
+    "jobId": "1765283394996325",
+    "revisionId": 679,
+    "careerTreeId": 186,
+    "person": "이하연",
+    "batch": 42,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "교도관",
+    "jobId": "1765283288900613",
+    "revisionId": 681,
+    "careerTreeId": 187,
+    "person": "류효기",
+    "batch": 42,
+    "date": "2026-03-27"
   }
 ]
