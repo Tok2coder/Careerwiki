@@ -3917,5 +3917,32 @@
     "person": "박태준",
     "batch": 62,
     "date": "2026-03-28"
+  },
+  {
+    "slug": "가축사육자",
+    "jobId": "1765283279267355",
+    "revisionId": 842,
+    "careerTreeId": 252,
+    "person": "홍창영",
+    "batch": 63,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "고객관리시스템crm전문가",
+    "jobId": "1765283285618176",
+    "revisionId": 844,
+    "careerTreeId": 253,
+    "person": "전배문",
+    "batch": 63,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "곡식작물재배자",
+    "jobId": "176528328586949",
+    "revisionId": 846,
+    "careerTreeId": 254,
+    "person": "장수용",
+    "batch": 63,
+    "date": "2026-03-27"
   }
 ]

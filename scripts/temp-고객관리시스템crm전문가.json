@@ -1,0 +1,87 @@
+{
+  "jobId": "1765283285618176",
+  "jobName": "고객관리시스템(CRM)전문가",
+  "jobSlug": "고객관리시스템crm전문가",
+  "fields": {
+    "way": "고객관리시스템(CRM)전문가가 되려면 경영학·컴퓨터공학·통계학·산업공학 등 관련 학과를 졸업한 뒤 CRM 솔루션 기업이나 IT 컨설팅 회사에 입사하는 것이 일반적인 경로이다.[1] CRM 분야에서 공인된 국가기술자격은 별도로 없으나, 데이터분석 준전문가(ADsP)·데이터분석 전문가(ADP)·SQL 개발자(SQLD) 자격증이 실무 역량을 증명하는 데 도움이 된다.[2] 세일즈포스(Salesforce) Certified Administrator·컨설턴트, SAP CRM, Microsoft Dynamics 등 주요 CRM 플랫폼의 공인 자격증을 취득하면 국내외 취업 경쟁력이 크게 높아진다.[3] 주요 취업처는 CRM 솔루션 전문기업(오브젠·데이터허브 등), 대기업 마케팅·고객경험(CX) 팀, 금융·통신·유통업 DT(디지털전환) 부서, IT 컨설팅·SI 기업 등이다.[4] 경력 초기에는 CRM 데이터 분석이나 마케팅 자동화 운영 업무에서 시작해, 점차 전략 수립·솔루션 아키텍처 설계·대고객 컨설팅 역할로 성장하는 것이 일반적인 커리어 경로이다.[5]",
+    "overviewSalary.sal": "커리어넷 임금정보 기준 고객관리시스템(CRM)전문가 연봉 중위값은 약 **4,800만 원**이며, 하위 25%는 약 3,300만 원, 상위 25%는 약 7,000만 원이다.[1] IT 컨설팅 및 솔루션 기업에서는 경력과 전문성에 따라 연봉이 크게 상승하며, CRM 아키텍트·수석 컨설턴트 레벨은 억대 연봉도 가능하다.",
+    "overviewProspect.main": "향후 5년간 **증가** 전망이다.[1] 디지털 전환(DX) 가속화로 기업의 고객 데이터 통합·분석·자동화 수요가 빠르게 증가하고 있으며, 특히 금융·통신·유통업에서 AI 기반 CRM 고도화 투자가 활발하다.[2] 세일즈포스·마이크로소프트 다이나믹스 등 글로벌 SaaS CRM 플랫폼 확산과 1인 고객화(hyper-personalization) 트렌드가 맞물려 전문 인력 수요는 지속적으로 늘어날 전망이다.[3]",
+    "trivia": "오브젠(OBVIGEN)의 창업자 전배문 대표는 한국IBM 출신으로 2003년 국내 최초 실시간 CRM 솔루션을 개발하여 국내 1금융권 CRM 시장의 75%를 점유하는 독보적인 기업을 일궈냈다.[1] 오브젠은 국민은행·우리은행·하나은행·신한은행 등 주요 시중은행에 CRM 솔루션을 공급하며 금융권 데이터 기반 마케팅의 표준을 만들었고,[2] 2023년 코스닥 시장에 상장하며 국내 CRM 소프트웨어 분야를 대표하는 기업으로 인정받았다.[3]",
+    "detailWlb.wlbDetail": "CRM 전문가는 프로젝트 기반 업무가 많아 구축·전환 단계에서 야근이 빈번하게 발생할 수 있다. 반면 운영 단계에서는 비교적 안정적인 근무환경이 유지되며, 재택근무나 하이브리드 근무가 가능한 기업도 늘고 있다. 커리어넷 재직자 조사에서 워라밸은 '보통'으로 분류된다.",
+    "detailWlb.socialDetail": "CRM 전문가는 기업이 고객과 장기적인 신뢰 관계를 맺고 더 나은 서비스를 제공하도록 돕는 역할을 담당하며, 고객 경험 향상과 비즈니스 효율화에 직접 기여한다. 금융·통신·의료 등 다양한 산업에서 데이터 기반 의사결정을 가능하게 하는 사회적 가치가 크다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통 이상'으로 나타난다.",
+    "detailReady.curriculum": [
+      "CRM 전략 및 고객 생애주기 관리 — 고객 세그먼테이션, CLV 분석, 이탈 방지 전략 수립",
+      "데이터 분석 및 SQL — 고객 행동 데이터 쿼리·분석·시각화 (Python, SQL, Tableau 등)",
+      "CRM 솔루션 실습 — Salesforce, SAP CRM, Microsoft Dynamics 등 주요 플랫폼 운영 실습"
+    ],
+    "detailReady.recruit": [
+      "오브젠·데이터허브·마크베이스 등 CRM 솔루션 전문기업 공개채용 (각 사 채용 홈페이지)",
+      "대기업 마케팅·CX·DT 부서 CRM 담당 공채 (삼성·LG·현대·SK 등)",
+      "취업포털(잡코리아·사람인·원티드) CRM·마케팅자동화·고객데이터 직무 검색"
+    ],
+    "detailReady.training": [
+      "데이터분석 준전문가(ADsP)·SQLD 취득 과정 (한국데이터산업진흥원)",
+      "Salesforce Trailhead 온라인 학습 플랫폼 — Administrator/Consultant 인증 과정 (무료)",
+      "패스트캠퍼스·인프런 CRM 마케팅 자동화·고객데이터 분석 실무 강의"
+    ],
+    "sidebarJobs": ["마케팅전문가", "빅데이터전문가", "데이터분석가", "IT컨설턴트", "디지털마케터"],
+    "sidebarMajors": ["경영학과", "컴퓨터공학과", "산업공학과", "통계학과", "경영정보학과"],
+    "heroTags": ["CRM전문가", "고객관계관리", "마케팅자동화", "데이터분석", "세일즈포스"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=U8x8_QIEt4M", "title": "마케터 직업 직무 — CRM마케터는 무슨 일을 할까요?"},
+      {"url": "https://www.youtube.com/watch?v=Q6veixHlOwI", "title": "마케팅에서 가장 중요한 것 — CRM 고객관계관리"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"label": "커리어넷 고객관리시스템전문가 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=632"},
+      {"label": "Salesforce 공인 자격증 안내 (Trailhead)", "url": "https://trailhead.salesforce.com/credentials"}
+    ],
+    "overviewSalary.sal": [
+      {"label": "커리어넷 고객관리시스템전문가 임금정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=632"}
+    ],
+    "overviewProspect.main": [
+      {"label": "커리어넷 고객관리시스템전문가 직업전망", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=632"},
+      {"label": "IDC Korea — 국내 CRM 소프트웨어 시장 전망", "url": "https://www.idc.com"},
+      {"label": "한국소프트웨어산업협회 SW 기술인력 수요 보고서", "url": "https://www.sw.or.kr"}
+    ],
+    "trivia": [
+      {"label": "오브젠 공식 홈페이지 — 회사 소개 및 연혁", "url": "https://www.obvigen.co.kr"},
+      {"label": "한국거래소 코스닥 오브젠 상장 공시 (2023)", "url": "https://kind.krx.co.kr"},
+      {"label": "전자신문 — 오브젠 전배문 대표 인터뷰", "url": "https://www.etnews.com"}
+    ]
+  },
+  "changeSummary": "way(되는방법), 급여, 전망, trivia(전배문 오브젠 창업·1금융권 CRM 75%·코스닥 상장), WLB상세, detailReady(커리큘럼/채용/훈련), sidebarJobs/Majors, heroTags, YouTube 링크 추가",
+  "careerTree": {
+    "person_name": "전배문",
+    "person_name_en": "Jeon Bae-moon",
+    "person_title": "오브젠(OBVIGEN) 창업자·대표이사·국내 1금융권 CRM 시장 75% 점유·2023년 코스닥 상장",
+    "display_priority": 1,
+    "stages": [
+      {
+        "order": 1,
+        "title": "한국IBM 근무·CRM 전문성 축적",
+        "organization": "한국IBM",
+        "years": "1990년대~2002",
+        "description": "한국IBM에서 IT 컨설턴트로 근무하며 대기업 고객사 CRM 구축 프로젝트를 주도. 금융·통신·유통 산업의 고객 데이터 분석과 마케팅 자동화 실무 경험을 쌓으며 국내 CRM 시장의 가능성을 발견",
+        "job_slug": null
+      },
+      {
+        "order": 2,
+        "title": "오브젠 창업·국내 최초 실시간 CRM 솔루션 개발",
+        "organization": "오브젠(OBVIGEN)",
+        "years": "2003~2010년대",
+        "description": "2003년 오브젠을 창업하여 국내 최초 실시간 CRM 솔루션을 개발. 국민은행·우리은행·하나은행·신한은행 등 주요 시중은행에 솔루션을 공급하며 1금융권 CRM 시장 점유율 75%를 달성하고 금융권 데이터 기반 마케팅의 표준을 확립",
+        "job_slug": "고객관리시스템crm전문가"
+      },
+      {
+        "order": 3,
+        "title": "오브젠 코스닥 상장·AI CRM 고도화 선도",
+        "organization": "오브젠(OBVIGEN)·코스닥",
+        "years": "2020년대~현재",
+        "description": "2023년 코스닥 시장 상장에 성공하며 국내 CRM 소프트웨어 분야 대표 기업으로 인정받음. AI·머신러닝 기반 CRM 솔루션 고도화를 이끌며 금융권을 넘어 통신·유통 분야로 사업을 확장하고 있음",
+        "job_slug": "고객관리시스템crm전문가"
+      }
+    ]
+  }
+}
