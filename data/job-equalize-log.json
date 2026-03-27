@@ -2762,5 +2762,35 @@
     "careerTreePerson": "장윤주",
     "batch": 28,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283352116306",
+    "name": "유치원교사",
+    "slug": "유치원교사",
+    "revisionId": 606,
+    "careerTreeId": 145,
+    "careerTreePerson": "이기숙",
+    "batch": 29,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "176528334984955",
+    "name": "웹디자이너",
+    "slug": "웹디자이너",
+    "revisionId": 604,
+    "careerTreeId": 146,
+    "careerTreePerson": "조수용",
+    "batch": 29,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283316406834",
+    "name": "보육교사",
+    "slug": "보육교사",
+    "revisionId": 605,
+    "careerTreeId": 147,
+    "careerTreePerson": "서영숙",
+    "batch": 29,
+    "date": "2026-03-27"
   }
 ]
