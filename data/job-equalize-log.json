@@ -2522,5 +2522,35 @@
     "careerTreePerson": "이충휘",
     "batch": 20,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283472411372",
+    "name": "뮤지컬배우",
+    "slug": "뮤지컬배우",
+    "revisionId": 572,
+    "careerTreeId": 121,
+    "careerTreePerson": "차지연",
+    "batch": 21,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283475777136",
+    "name": "메이크업아티스트",
+    "slug": "메이크업아티스트",
+    "revisionId": 573,
+    "careerTreeId": 122,
+    "careerTreePerson": "정샘물",
+    "batch": 21,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283374383202",
+    "name": "조향사",
+    "slug": "조향사",
+    "revisionId": 570,
+    "careerTreeId": 123,
+    "careerTreePerson": "이세영",
+    "batch": 21,
+    "date": "2026-03-27"
   }
 ]
