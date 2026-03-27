@@ -3485,5 +3485,32 @@
     "person": "전일봉",
     "batch": 46,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "외국어강사",
+    "jobId": "1765283457661183",
+    "revisionId": 708,
+    "careerTreeId": 200,
+    "person": "정철",
+    "batch": 47,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "행정사",
+    "jobId": "176528342553743",
+    "revisionId": 710,
+    "careerTreeId": 201,
+    "person": "고종원",
+    "batch": 47,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "항공교통관제사",
+    "jobId": "1765283397944643",
+    "revisionId": 712,
+    "careerTreeId": 202,
+    "person": "이금주",
+    "batch": 47,
+    "date": "2026-03-27"
   }
 ]
