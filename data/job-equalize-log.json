@@ -2492,5 +2492,35 @@
     "careerTreePerson": "배병우",
     "batch": 19,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283309704378",
+    "name": "바리스타",
+    "slug": "바리스타",
+    "revisionId": 565,
+    "careerTreeId": 118,
+    "careerTreePerson": "전주연",
+    "batch": 20,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283396081362",
+    "name": "플로리스트",
+    "slug": "플로리스트",
+    "revisionId": 566,
+    "careerTreeId": 119,
+    "careerTreePerson": "박계순",
+    "batch": 20,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283363066288",
+    "name": "작업치료사",
+    "slug": "작업치료사",
+    "revisionId": 568,
+    "careerTreeId": 120,
+    "careerTreePerson": "이충휘",
+    "batch": 20,
+    "date": "2026-03-27"
   }
 ]
