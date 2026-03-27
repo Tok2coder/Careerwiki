@@ -2702,5 +2702,35 @@
     "careerTreePerson": "방시혁",
     "batch": 26,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283710457326",
+    "name": "인공지능엔지니어",
+    "slug": "인공지능엔지니어",
+    "revisionId": 598,
+    "careerTreeId": 139,
+    "careerTreePerson": "김성훈",
+    "batch": 27,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283359273705",
+    "name": "임상심리사",
+    "slug": "임상심리사",
+    "revisionId": 599,
+    "careerTreeId": 140,
+    "careerTreePerson": "이수정",
+    "batch": 27,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "176528345711765",
+    "name": "중고등학교교사",
+    "slug": "중고등학교교사",
+    "revisionId": 600,
+    "careerTreeId": 141,
+    "careerTreePerson": "김상곤",
+    "batch": 27,
+    "date": "2026-03-27"
   }
 ]
