@@ -2372,5 +2372,35 @@
     "careerTreePerson": "박재항",
     "batch": 15,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283346646731",
+    "name": "외교관",
+    "slug": "외교관",
+    "revisionId": 549,
+    "careerTreeId": 106,
+    "careerTreePerson": "강경화",
+    "batch": 16,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283456242935",
+    "name": "대학교수",
+    "slug": "대학교수",
+    "revisionId": 550,
+    "careerTreeId": 107,
+    "careerTreePerson": "정재승",
+    "batch": 16,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283282556876",
+    "name": "건축공학기술자",
+    "slug": "건축공학기술자",
+    "revisionId": 551,
+    "careerTreeId": 108,
+    "careerTreePerson": "이재균",
+    "batch": 16,
+    "date": "2026-03-27"
   }
 ]
