@@ -22,6 +22,7 @@ export interface JobEqualizeEntry {
 export interface AdminJobEqualizeProps {
   totalJobs: number
   logEntries: JobEqualizeEntry[]
+  completedCount?: number
 }
 
 const FIELD_LABELS: Record<string, string> = {
@@ -49,9 +50,9 @@ function formatDate(iso: string): string {
 }
 
 export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
-  const { totalJobs, logEntries } = props
+  const { totalJobs, logEntries, completedCount: completedCountProp } = props
 
-  const completedCount = logEntries.length
+  const completedCount = completedCountProp ?? logEntries.length
   const progressPct = totalJobs > 0 ? ((completedCount / totalJobs) * 100).toFixed(1) : '0.0'
   const remainingCount = totalJobs - completedCount
 

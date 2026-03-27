@@ -16,7 +16,6 @@ import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
 import { renderAdminJobEqualize } from '../templates/admin/adminJobEqualize'
-import jobEqualizeLog from '../../data/job-equalize-log.json'
 import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution, getAiUsageDistribution, banIp, unbanIp } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
@@ -1010,16 +1009,38 @@ adminRoutes.get('/admin/api/reindex/status', async (c) => {
 adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
   try {
     const db = c.env.DB
-    const totalResult = await db.prepare('SELECT COUNT(*) as count FROM jobs WHERE is_active = 1').first<{ count: number }>()
+    // totalJobs: 전체 활성 직업 수
+    const totalResult = await db.prepare(
+      'SELECT COUNT(*) as count FROM jobs WHERE is_active = 1'
+    ).first<{ count: number }>()
     const totalJobs = totalResult?.count || 0
 
-    return c.html(renderAdminJobEqualize({
-      totalJobs,
-      logEntries: jobEqualizeLog as any[],
+    // completedCount: way 필드 있는 직업 수 (LIKE 패턴 — json_extract 메모리 한도 회피)
+    const countResult = await db.prepare(
+      `SELECT COUNT(*) as count FROM jobs WHERE is_active = 1 AND user_contributed_json LIKE '%"way":%'`
+    ).first<{ count: number }>()
+    const completedCount = countResult?.count || 0
+
+    // 최근 보완 직업 목록 (JSON blob 제외 — Worker 메모리 절약)
+    const listResult = await db.prepare(
+      `SELECT id, name, slug, user_last_updated_at FROM jobs WHERE is_active = 1 AND user_contributed_json LIKE '%"way":%' ORDER BY user_last_updated_at DESC LIMIT 200`
+    ).all<{ id: string; name: string; slug: string; user_last_updated_at: number }>()
+
+    const logEntries = (listResult.results || []).map(row => ({
+      id: row.id,
+      name: row.name,
+      slug: row.slug,
+      productionUrl: `https://careerwiki.org/job/${encodeURIComponent(row.slug)}`,
+      completedAt: (() => { const ts = Number(row.user_last_updated_at); return ts > 0 ? new Date(ts).toISOString() : new Date().toISOString() })(),
+      revision: 0,
+      fieldsUpdated: ['way'],
+      careerTree: [] as string[],
     }))
-  } catch (error) {
+
+    return c.html(renderAdminJobEqualize({ totalJobs, logEntries, completedCount }))
+  } catch (error: any) {
     console.error('Job equalize page error:', error)
-    return c.text('데이터 보완 현황을 불러오는데 실패했습니다.', 500)
+    return c.text(`데이터 보완 현황을 불러오는데 실패했습니다. Error: ${error?.message || String(error)}`, 500)
   }
 })
 
