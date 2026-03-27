@@ -135,11 +135,19 @@ CareerWiki 직업에는 이미 커리어넷/고용24 API 데이터가 `merged_pr
 
 ## 0. 사전 준비
 
-### 세션 토큰
-편집 API 호출에 필요. 유저에게 요청하거나 기존 대화에서 재사용.
+### 인증 방식 (둘 중 하나 선택)
+
+**방법 1: X-Admin-Secret 헤더 (권장 — 세션 만료 걱정 없음)**
+```
+X-Admin-Secret: careerwiki-admin-2026
+```
+`.dev.vars`의 `ADMIN_SECRET` 값 사용. curl 예시: `-H "X-Admin-Secret: careerwiki-admin-2026"`
+
+**방법 2: Cookie 세션 토큰 (기존 방식)**
 ```
 Cookie: session_token=SESSION_TOKEN
 ```
+토큰은 유저에게 요청하거나 기존 대화에서 재사용.
 
 ### 대상 직업 결정
 유저가 직업명을 지정하면 해당 직업만, 지정하지 않으면 아래 SQL로 빈 필드가 많은 직업 중 인지도 높은 것을 선별:
@@ -504,7 +512,9 @@ prospect 출처:
 ```
 POST https://careerwiki.org/api/job/{id}/edit
 Content-Type: application/json
-Cookie: session_token=SESSION_TOKEN
+X-Admin-Secret: careerwiki-admin-2026        ← 권장 (세션 만료 없음)
+# 또는
+Cookie: session_token=SESSION_TOKEN          ← 기존 방식
 ```
 
 ### 3-2. 요청 Body (인라인 각주 포함)
@@ -961,9 +971,17 @@ done
 
 ---
 
-## 9. 세션 토큰 사용법
+## 9. API 인증 방법
 
-모든 API 호출에 인증 필요:
+모든 API 호출에 인증 필요. 둘 중 하나 선택:
+
+**X-Admin-Secret 헤더 (권장)** — 세션 만료 걱정 없음:
+```
+-H "X-Admin-Secret: careerwiki-admin-2026"
+```
+`.dev.vars`의 `ADMIN_SECRET=careerwiki-admin-2026` 값 사용.
+
+**Cookie 세션 토큰 (기존 방식)**:
 ```
 Cookie: session_token=SESSION_TOKEN
 ```
