@@ -15,6 +15,7 @@ const navItems = [
   { path: '/admin/feedback', label: '피드백', icon: 'fa-comment-dots' },
   { path: '/admin/stats', label: '통계', icon: 'fa-chart-bar' },
   { path: '/admin/ai-analyzer', label: 'AI 추천', icon: 'fa-robot' },
+  { path: '/admin/job-equalize', label: '데이터 보완', icon: 'fa-database' },
 ]
 
 export function renderAdminLayout({ title, currentPath, children }: AdminLayoutProps): string {

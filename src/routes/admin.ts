@@ -15,6 +15,8 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
+import { renderAdminJobEqualize } from '../templates/admin/adminJobEqualize'
+import jobEqualizeLog from '../../data/job-equalize-log.json'
 import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution, getAiUsageDistribution, banIp, unbanIp } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
@@ -999,6 +1001,25 @@ adminRoutes.get('/admin/api/reindex/status', async (c) => {
     })
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500)
+  }
+})
+
+// ============================================
+// 직업 데이터 보완 현황 페이지
+// ============================================
+adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
+  try {
+    const db = c.env.DB
+    const totalResult = await db.prepare('SELECT COUNT(*) as count FROM jobs WHERE is_active = 1').first<{ count: number }>()
+    const totalJobs = totalResult?.count || 0
+
+    return c.html(renderAdminJobEqualize({
+      totalJobs,
+      logEntries: jobEqualizeLog as any[],
+    }))
+  } catch (error) {
+    console.error('Job equalize page error:', error)
+    return c.text('데이터 보완 현황을 불러오는데 실패했습니다.', 500)
   }
 })
 
