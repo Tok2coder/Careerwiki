@@ -3863,5 +3863,32 @@
     "person": "류왕식",
     "batch": 60,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "공예원",
+    "jobId": "1765283286731135",
+    "revisionId": 830,
+    "careerTreeId": 246,
+    "person": "심부길",
+    "batch": 61,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "도자기제조원",
+    "jobId": "1765283299787445",
+    "revisionId": 832,
+    "careerTreeId": 247,
+    "person": "윤광조",
+    "batch": 61,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "국제회의전문가",
+    "jobId": "176528329094064",
+    "revisionId": 834,
+    "careerTreeId": 248,
+    "person": "오성환",
+    "batch": 61,
+    "date": "2026-03-28"
   }
 ]

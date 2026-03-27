@@ -1,0 +1,87 @@
+{
+  "jobId": "176528329094064",
+  "jobName": "국제회의전문가",
+  "jobSlug": "국제회의전문가",
+  "fields": {
+    "way": "국제회의전문가(PCO)가 되기 위해서는 4년제 대학의 경영·경제·관광경영·외국어·광고홍보 관련 학과 졸업이 일반적인 출발점이다.[1] 무엇보다 영어를 비롯한 외국어 능력이 핵심 요건이며, PCO 업체나 컨벤션센터 인턴십을 통해 실무 경험을 쌓는 것이 취업 시 크게 유리하다.[2] 컨벤션기획사 2급·1급 자격증과 국제 자격증인 CMP(Certified Meeting Professional) 취득으로 전문성을 공식 인정받을 수 있다.[3] 취업 후에는 PCO 업체, 컨벤션센터(COEX·킨텍스 등), 정부·지자체 컨벤션 관련 부서에서 경력을 쌓으며 시니어 플래너·임원으로 성장하는 경로를 밟는다.[4] 한국MICE협회·한국PCO협회가 운영하는 교육 과정 이수도 업계 진입에 도움이 된다.[5]",
+    "overviewSalary.sal": "커리어넷 임금정보 기준 국제회의전문가 연봉 중위값은 약 **3,300만 원**이며, 하위 25%는 약 2,800만 원, 상위 25%는 약 4,400만 원이다.[1] 시니어 플래너·국제 자격증(CMP) 보유자·외국어 능통자는 상위권 연봉을 받으며, 대형 국제회의 성과에 따른 인센티브도 주어진다.",
+    "overviewProspect.main": "향후 5년간 **보통 이상** 전망이다.[1] 세계화·국제교류 심화에 따른 국제회의 수요 지속 증가, 정부의 MICE 산업 육성 정책(국제회의도시 지정, 전담기구 지원) 강화는 긍정 요인이다.[2] 다만 화상회의 기술 발달로 인한 대면 국제회의 일부 대체 가능성과 경기 침체 시 행사 예산 축소는 부정적 요인으로 거론된다.[3]",
+    "trivia": "오성환 대표는 1998년 국제회의 전문 기획사 **이오컨벡스**를 창업한 후 2003년 국제컨벤션협회(ICCA) PCO 부문에 국내 최초로 회원사로 등재시키는 쾌거를 이뤘다.[1] 이후 25년간 1,200건 이상의 국제회의를 기획·운영하여 국내 PCO 산업의 개척자로 불리며, 2020년 정부로부터 산업포장을 수훈했다.[2] 2023년 한국PCO협회 제9대 회장에 선출되어 2025년 제10대 회장으로 연임, AI를 활용한 MICE 산업 불공정 관행 개선과 글로벌 경쟁력 강화를 추진하고 있다.[3]",
+    "detailWlb.wlbDetail": "근무시간이 길고 불규칙하며, 국가 규모의 대형 행사는 준비기간이 6개월~1년에 달한다. 행사 당일에는 극도의 집중과 현장 대응이 요구된다. 정신적·육체적 스트레스가 심한 편이나, 세계적 행사를 직접 기획·운영한다는 성취감이 크다. 커리어넷 재직자 조사에서 워라밸은 '보통 이하'로 분류된다.",
+    "detailWlb.socialDetail": "국제회의 산업은 항공·호텔·식음료·인쇄·출판·디자인 등 연관 산업 발전을 견인하며, 세계 전문가들이 한국을 방문하게 하여 국가 홍보와 이미지 제고에 상당한 효과가 있다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통 이상'으로 나타난다.",
+    "detailReady.curriculum": [
+      "경영·관광경영·이벤트·컨벤션산업학과에서 행사기획, 예산관리, 국제의전 등 이론 이수",
+      "컨벤션기획사 2급·CMP 자격증 취득을 위한 실무 매뉴얼·의전 절차 학습",
+      "한국MICE협회·한국PCO협회 주관 MICE 전문인력 양성 교육 과정 이수"
+    ],
+    "detailReady.recruit": [
+      "PCO 전문업체(이오컨벡스 등)에 공개 채용·인턴십으로 입사하여 경력 시작",
+      "COEX·킨텍스·벡스코 등 컨벤션센터 공개 채용 또는 인턴을 통해 진입",
+      "정부·지자체 관광공사·컨벤션뷰로의 MICE 담당 부서 경력직 채용"
+    ],
+    "detailReady.training": [
+      "PCO 업체 인턴십을 통한 참가자 등록·행사 운영·예산 관리 실무 훈련",
+      "CMP(Certified Meeting Professional) 국제 자격증 준비 과정 학습",
+      "한국관광공사 코리아MICE뷰로 주관 MICE 전문인력 교육 프로그램 참가"
+    ],
+    "sidebarJobs": ["이벤트기획자", "컨벤션기획사", "관광통역안내원", "여행상품개발자", "마케팅전문가"],
+    "sidebarMajors": ["관광경영학과", "경영학과", "이벤트과", "컨벤션산업과", "국제학과"],
+    "heroTags": ["PCO", "MICE산업", "컨벤션기획사", "국제행사기획", "컨벤션기획자격증"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=CPlMqDMOST4", "title": "MICE PCO 국제회의 기획업이 궁금하다면? 대행사 10년 경력 송팀장의 진짜 그 세상 이야기"},
+      {"url": "https://www.youtube.com/watch?v=6_fIUeh40VE", "title": "국제회의가 한국에서 개최되는 과정은? PCO A to Z #PCO #국제회의기획"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"label": "커리어넷 국제회의전문가 직업정보", "url": "https://www.career.go.kr/cloud/m/job/view?seq=209"},
+      {"label": "한국PCO협회 공식 웹사이트", "url": "https://www.kapco.or.kr"}
+    ],
+    "overviewSalary.sal": [
+      {"label": "커리어넷 국제회의전문가 임금정보", "url": "https://www.career.go.kr/cloud/m/job/view?seq=209"}
+    ],
+    "overviewProspect.main": [
+      {"label": "커리어넷 국제회의전문가 직업전망", "url": "https://www.career.go.kr/cloud/m/job/view?seq=209"},
+      {"label": "한국관광공사 코리아MICE뷰로", "url": "https://k-mice.visitkorea.or.kr"},
+      {"label": "한국MICE협회 산업통계 보고서", "url": "https://www.micekorea.or.kr"}
+    ],
+    "trivia": [
+      {"label": "오성환 이오컨벡스 대표 한국PCO협회 9대 회장 선출", "url": "https://www.emice.co.kr/news/articleView.html?idxno=3918"},
+      {"label": "이오컨벡스 10대 한국PCO협회장 연임", "url": "https://www.micetoday.co.kr/article/view/mtd202501240001"},
+      {"label": "GMI 인터뷰 - 한국PCO협회 오성환 회장", "url": "https://miceinsight.co.kr"}
+    ]
+  },
+  "changeSummary": "way(되는방법), 급여, 전망, trivia(오성환 이오컨벡스 창업·ICCA 국내 최초·1200건 기획), WLB상세, detailReady(커리큘럼/채용/훈련), sidebarJobs/Majors, heroTags, YouTube 링크 추가",
+  "careerTree": {
+    "person_name": "오성환",
+    "person_name_en": "Oh Sung-hwan",
+    "person_title": "이오컨벡스 창업자·대표이사·한국PCO협회 9·10대 회장·산업포장 수훈",
+    "display_priority": 1,
+    "stages": [
+      {
+        "order": 1,
+        "title": "컨벤션·MICE 업계 입문 및 실무 경험 축적",
+        "organization": "국내 컨벤션·MICE 관련 업체",
+        "years": "~1997",
+        "description": "대학 졸업 후 국제회의·MICE(Meetings, Incentives, Conventions, Exhibitions) 산업에 관심을 갖고 컨벤션 관련 업무에 종사하며 국제행사 기획·운영 실무를 익힘. 초기 PCO 업계가 태동하던 시기 현장 경험을 바탕으로 독립 창업을 준비",
+        "job_slug": null
+      },
+      {
+        "order": 2,
+        "title": "이오컨벡스 창업·ICCA 국내 최초 PCO 부문 정회원사 등재",
+        "organization": "(주)이오컨벡스",
+        "years": "1998~2022",
+        "description": "1998년 국제회의 전문 기획사 이오컨벡스 설립. 2003년 국제컨벤션협회(ICCA) PCO 부문 국내 최초 정회원사 등재. 1,200건 이상의 국제회의를 성공적으로 기획·운영하며 국내 최대 PCO 업체 중 하나로 성장. 2020년 관광의 날 산업포장 수상",
+        "job_slug": "국제회의전문가"
+      },
+      {
+        "order": 3,
+        "title": "한국PCO협회 9·10대 회장 역임·AI 기반 MICE 혁신 주도",
+        "organization": "(사)한국PCO협회",
+        "years": "2023~현재",
+        "description": "한국MICE협회 제6대 회장, 한국전시주최자협회 부회장 역임. 2023년 한국PCO협회 제9대 회장에 선출. 2025년 제10대 회장으로 연임. AI를 활용한 MICE 산업 불공정 관행 개선, 글로벌 경쟁력 강화를 위한 정책 발굴과 협회 활동 주도",
+        "job_slug": "국제회의전문가"
+      }
+    ]
+  }
+}
