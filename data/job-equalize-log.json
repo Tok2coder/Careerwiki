@@ -2312,5 +2312,35 @@
     "careerTreePerson": "손석희",
     "batch": 13,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283280548221",
+    "name": "간호조무사",
+    "slug": "간호조무사",
+    "revisionId": 539,
+    "careerTreeId": 100,
+    "careerTreePerson": "홍옥녀",
+    "batch": 14,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283283500283",
+    "name": "게임기획자",
+    "slug": "게임기획자",
+    "revisionId": 540,
+    "careerTreeId": 101,
+    "careerTreePerson": "장현국",
+    "batch": 14,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283284144159",
+    "name": "경영컨설턴트",
+    "slug": "경영컨설턴트",
+    "revisionId": 542,
+    "careerTreeId": 102,
+    "careerTreePerson": "이재우",
+    "batch": 14,
+    "date": "2026-03-27"
   }
 ]
