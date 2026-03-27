@@ -16,7 +16,6 @@ import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
 import { renderAdminJobEqualize } from '../templates/admin/adminJobEqualize'
-import jobEqualizeLog from '../../data/job-equalize-log.json'
 import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution, getAiUsageDistribution, banIp, unbanIp } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
@@ -1013,9 +1012,50 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     const totalResult = await db.prepare('SELECT COUNT(*) as count FROM jobs WHERE is_active = 1').first<{ count: number }>()
     const totalJobs = totalResult?.count || 0
 
+    // DB에서 직접 보완 완료 직업 조회 (log.json 대신 실시간 데이터)
+    const equalizedResult = await db.prepare(`
+      SELECT j.id, j.name, j.slug, j.user_contributed_json, j.user_last_updated_at,
+        GROUP_CONCAT(DISTINCT ct.person_name || ' (' || ct.person_title || ')') as tree_persons
+      FROM jobs j
+      LEFT JOIN career_tree_job_links ctl ON ctl.job_slug = j.slug
+      LEFT JOIN career_trees ct ON ct.id = ctl.career_tree_id
+      WHERE j.is_active = 1
+        AND json_extract(j.user_contributed_json, '$.way') IS NOT NULL
+      GROUP BY j.id
+      ORDER BY j.user_last_updated_at DESC
+    `).all<{ id: string; name: string; slug: string; user_contributed_json: string; user_last_updated_at: number; tree_persons: string | null }>()
+
+    const logEntries = (equalizedResult.results || []).map(row => {
+      let ucj: Record<string, any> = {}
+      try { ucj = row.user_contributed_json ? JSON.parse(row.user_contributed_json) : {} } catch {}
+      const fieldsUpdated: string[] = []
+      if (ucj.way) fieldsUpdated.push('way')
+      if (ucj.overviewSalary?.sal) fieldsUpdated.push('overviewSalary.sal')
+      if (ucj.overviewProspect?.main) fieldsUpdated.push('overviewProspect.main')
+      if (ucj.trivia) fieldsUpdated.push('trivia')
+      if (ucj.detailWlb?.wlbDetail || ucj.detailWlb?.socialDetail) fieldsUpdated.push('detailWlb')
+      if (ucj.detailReady?.curriculum) fieldsUpdated.push('detailReady')
+      if (Array.isArray(ucj.sidebarCerts) && ucj.sidebarCerts.length) fieldsUpdated.push('sidebarCerts')
+      if (Array.isArray(ucj.sidebarMajors) && ucj.sidebarMajors.length) fieldsUpdated.push('sidebarMajors')
+      if (Array.isArray(ucj.sidebarJobs) && ucj.sidebarJobs.length) fieldsUpdated.push('sidebarJobs')
+      if (Array.isArray(ucj.heroTags) && ucj.heroTags.length) fieldsUpdated.push('heroTags')
+      if (Array.isArray(ucj.youtubeLinks) && ucj.youtubeLinks.length) fieldsUpdated.push('youtubeLinks')
+
+      return {
+        id: row.id,
+        name: row.name,
+        slug: row.slug,
+        productionUrl: `https://careerwiki.org/job/${row.slug}`,
+        completedAt: row.user_last_updated_at ? new Date(row.user_last_updated_at).toISOString() : new Date().toISOString(),
+        revision: 0,
+        fieldsUpdated,
+        careerTree: row.tree_persons ? row.tree_persons.split(',').filter(Boolean) : [],
+      }
+    })
+
     return c.html(renderAdminJobEqualize({
       totalJobs,
-      logEntries: jobEqualizeLog as any[],
+      logEntries,
     }))
   } catch (error) {
     console.error('Job equalize page error:', error)
