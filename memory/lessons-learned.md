@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-03-27] wlbDetail/socialDetail 필드: 길이 초과 + 내용 오류
+- **상황**: equalize 세션에서 보완한 직업들의 wlbDetail(최대 310자), socialDetail(최대 289자)이 기준(130~200 / 100~160)을 크게 초과. 일부는 내용도 잘못됨 — 웹개발자/패션디자이너/영화감독 socialDetail은 "협업 문화"를 서술하고, 미용사/장제사 socialDetail은 "사교·취업전망"을 서술함. 수의사 wlbDetail에는 임금 정보(1년차 월 300만원 등)가 포함됨
+- **원인**: 스킬 파일에 길이 기준과 내용 범위 규칙이 없었음. wlbDetail에 임금까지 쓰거나, socialDetail을 근무환경·협업·취업전망으로 혼용
+- **해결**: 14개 직업 wlb/social 필드를 wrangler d1 SQL UPDATE로 수정. 스킬 파일(equalize.md, create.md)에 길이 제한과 내용 규칙 추가
+- **교훈**: wlbDetail은 **근무 시간·강도·야근·교대 여부만** (130~200자). socialDetail은 **사회에 미치는 영향·공익적 역할만** (100~160자). 임금 정보는 wlbDetail에 절대 금지. 협업문화·취업전망은 socialDetail에 절대 금지
+
 ### [2026-03-19] D1 바인딩 타입 불일치: integer로 bind하면 text 컬럼 매칭 실패
 - **상황**: `/user/ai-results` 페이지에서 결과가 0개로 표시. DB에는 11개 결과 존재. `ai_analysis_requests.user_id`는 TEXT("1")로 저장, 쿼리는 `user.id`(integer 1)를 bind
 - **원인**: D1 API에서 `.bind(1)` (integer) → `WHERE user_id = ?`에서 TEXT "1"과 비교 시 0건 반환. wrangler d1 execute는 SQLite 네이티브 타입 변환으로 동작하지만, D1 API는 strict type comparison

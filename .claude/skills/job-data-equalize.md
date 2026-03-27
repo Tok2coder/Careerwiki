@@ -254,9 +254,9 @@ SELECT name FROM jobs WHERE is_active=1 AND name IN ('직업1','직업2','직업
 | 학력 분포 | `detailEducation.educationDistribution` | `{highSchool:string, college:string, ...}` | 고용24 재직자 조사 통계만 |
 | 전공 분포 | `detailEducation.majorDistribution` | `{natural:string, education:string, ...}` | 고용24 재직자 조사 통계만 |
 | 워라밸 등급 | `detailWlb.wlb` | `string` (짧은 등급: 보통미만/보통이상/좋음/매우좋음) | 고용24 재직자 조사 |
-| 워라밸 상세 | `detailWlb.wlbDetail` | `string` (인라인 각주 지원) | 검증된 출처 |
+| 워라밸 상세 | `detailWlb.wlbDetail` | `string` **130~200자** (인라인 각주 지원) — 근무 시간·강도·야근·교대 여부 서술. 임금 정보 절대 포함 금지 | 검증된 출처 |
 | 사회적 기여 등급 | `detailWlb.social` | `string` (짧은 등급) | 고용24 재직자 조사 |
-| 사회적 기여 상세 | `detailWlb.socialDetail` | `string` (인라인 각주 지원) | 검증된 출처 |
+| 사회적 기여 상세 | `detailWlb.socialDetail` | `string` **100~160자** (인라인 각주 지원) — **사회에 미치는 영향·공익적 역할**만. 근무환경·협업문화·취업전망 절대 금지 | 검증된 출처 |
 | 정규 교육과정 | `detailReady.curriculum` | `string[]` | 대학 교과과정, 양성기관 커리큘럼 공식 페이지 |
 | 채용 정보 | `detailReady.recruit` | `string[]` | 실제 채용 공고/채용 채널 |
 | 필요 훈련 | `detailReady.training` | `string[]` | 공식 양성과정, 교육기관 정보 |
@@ -309,8 +309,8 @@ curl -s "https://www.googleapis.com/youtube/v3/search?part=snippet&q={직업명}
 "detailWlb": {
   "wlb": "보통이상",
   "social": "좋음",
-  "wlbDetail": "주 5일, 일 8시간 근무가 기본이다.[1] 계절성 근무 구조이다.[2]",
-  "socialDetail": "산림교육 수혜자 1,782만 명으로 증가했다.[1] 다층적 역할을 수행한다.[2]"
+  "wlbDetail": "주 5일, 일 8시간 근무가 기본이다.[1] 계절성 근무 구조이다.[2]",  // ← 130~200자, 근무강도/야근/교대 서술. 임금 정보 절대 금지
+  "socialDetail": "산림교육 수혜자 1,782만 명으로 증가했다.[1] 다층적 역할을 수행한다.[2]"  // ← 100~160자, 사회적 영향/공익만. 근무환경·협업·취업전망 금지
 }
 ```
 
