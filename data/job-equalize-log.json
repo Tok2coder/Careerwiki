@@ -3620,5 +3620,32 @@
     "person": "조순",
     "batch": 51,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "사진기자",
+    "jobId": "1765283320032443",
+    "revisionId": 741,
+    "careerTreeId": 215,
+    "person": "김경훈",
+    "batch": 52,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "국어교사",
+    "jobId": "1765284034475600",
+    "revisionId": 743,
+    "careerTreeId": 216,
+    "person": "이오덕",
+    "batch": 52,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "교육학연구원",
+    "jobId": "1765283289215513",
+    "revisionId": 745,
+    "careerTreeId": 217,
+    "person": "오천석",
+    "batch": 52,
+    "date": "2026-03-27"
   }
 ]
