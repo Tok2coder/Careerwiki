@@ -2402,5 +2402,35 @@
     "careerTreePerson": "이재균",
     "batch": 16,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765284153577673",
+    "name": "배우",
+    "slug": "배우",
+    "revisionId": 552,
+    "careerTreeId": 109,
+    "careerTreePerson": "이병헌",
+    "batch": 17,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283491867444",
+    "name": "항공기조종사",
+    "slug": "항공기조종사",
+    "revisionId": 554,
+    "careerTreeId": 110,
+    "careerTreePerson": "조원태",
+    "batch": 17,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283427370160",
+    "name": "투자분석가",
+    "slug": "투자분석가",
+    "revisionId": 555,
+    "careerTreeId": 111,
+    "careerTreePerson": "이광수",
+    "batch": 17,
+    "date": "2026-03-27"
   }
 ]
