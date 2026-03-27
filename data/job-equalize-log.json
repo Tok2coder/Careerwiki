@@ -2822,5 +2822,35 @@
     "careerTreeId": 150,
     "careerTreePerson": "이동휘",
     "processedAt": "2026-03-27T08:46:38.626Z"
+  },
+  {
+    "id": "1765283311344239",
+    "name": "방사선사",
+    "slug": "방사선사",
+    "batch": 31,
+    "revisionId": 614,
+    "careerTreeId": 151,
+    "careerTreePerson": "김사만",
+    "processedAt": "2026-03-27T08:51:37.315Z"
+  },
+  {
+    "id": "1765283396344506",
+    "name": "피부관리사",
+    "slug": "피부관리사",
+    "batch": 31,
+    "revisionId": 610,
+    "careerTreeId": 152,
+    "careerTreePerson": "박선영",
+    "processedAt": "2026-03-27T08:51:37.316Z"
+  },
+  {
+    "id": "1765283401146574",
+    "name": "헤드헌터",
+    "slug": "헤드헌터",
+    "batch": 31,
+    "revisionId": 612,
+    "careerTreeId": 153,
+    "careerTreePerson": "이한주",
+    "processedAt": "2026-03-27T08:51:37.316Z"
   }
 ]
