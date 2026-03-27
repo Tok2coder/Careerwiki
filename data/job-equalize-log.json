@@ -2102,5 +2102,35 @@
     "careerTree": [
       "김영태 (이화여대 언어병리학과 명예교수)"
     ]
+  },
+  {
+    "id": "1765283481435437",
+    "name": "주방장",
+    "slug": "주방장",
+    "revisionId": 514,
+    "careerTreeId": 79,
+    "careerTreePerson": "최현석",
+    "batch": 7,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283358918831",
+    "name": "임상병리사",
+    "slug": "임상병리사",
+    "revisionId": 516,
+    "careerTreeId": 80,
+    "careerTreePerson": "이영숙",
+    "batch": 7,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283295005846",
+    "name": "네일아티스트",
+    "slug": "네일아티스트",
+    "revisionId": 518,
+    "careerTreeId": 81,
+    "careerTreePerson": "손혜원",
+    "batch": 7,
+    "date": "2026-03-27"
   }
 ]
