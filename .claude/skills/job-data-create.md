@@ -83,8 +83,8 @@ Cookie: session_token=SESSION_TOKEN
 ### 이름 중복 사전 확인 API
 ```bash
 curl -s "https://careerwiki.org/api/job/check-name?name={직업명}"
-# 응답: {"success":true,"available":true}
-# 또는: {"success":true,"available":false,"reason":"이미 같은 이름의 직업이 존재합니다: \"직업명\"","existingId":"..."}
+# 사용 가능: {"success":true,"available":true}
+# 중복:     {"success":true,"available":false,"reason":"이미 같은 이름의 직업이 존재합니다: \"직업명\"","existingId":"U_xxx","existingName":"직업명"}
 ```
 
 ---
@@ -219,13 +219,16 @@ curl -X POST https://careerwiki.org/api/job/create \
 }
 ```
 
-**자동으로 백그라운드 실행되는 작업 (1-3분 소요):**
-1. Gemini → 이미지 프롬프트 생성 → Evolink → 이미지 생성 → R2 업로드
-2. OpenAI → heroTags 자동 태깅 → job_attributes 업데이트
-3. OpenAI → MECE 대분류/중분류 자동 분류 → job_categories INSERT
-4. OpenAI embedding → Vectorize 인덱싱
+**이미지 생성은 동기 처리 (최대 60초 블록 — API 응답 전에 완료됨):**
+- Gemini → 이미지 프롬프트 생성 → Evolink → 이미지 생성 → R2 업로드 → DB 업데이트
+- 성공 시 응답에 `imageUrl` 포함. 60초 초과 또는 API 오류 시 `null`
 
-**응답에 `imageUrl`이 없거나 `null`이면** → 이미지 자동 생성 실패. Section 5에서 수동 처리.
+**백그라운드 처리 (waitUntil — API 응답 후 비동기, 1-3분 소요):**
+1. OpenAI → heroTags 자동 태깅 → job_attributes 업데이트
+2. OpenAI → MECE 대분류/중분류 자동 분류 → job_categories INSERT
+3. OpenAI embedding → Vectorize 인덱싱
+
+**응답에 `imageUrl`이 없거나 `null`이면** → 이미지 생성 실패. Section 5에서 수동 처리.
 
 ### 3-2. heroCategory 선택 가이드
 
@@ -294,6 +297,11 @@ FROM jobs WHERE name = '{직업명}' AND is_active = 1
 | 관련 전공 | `sidebarMajors` | `string[]` | `SELECT name FROM majors WHERE is_active=1 AND name IN (...)` |
 | 추천 자격증 | `sidebarCerts` | `[{name:string, url:string\|null}]` | 아래 기준 참고 |
 
+**sidebarJobs 수량 기준:**
+- **권장**: 7~12개 (핵심 연관 직업만)
+- **최대**: 15개 초과 금지 — 15개 이상이면 관련성 낮은 것 제거
+- **DB 존재 필수**: `is_active=1`인 직업만. 없는 직업 넣으면 broken link
+
 **sidebarCerts 선정 기준:**
 - ✅ **필수 자격증**: 이 직업을 하려면 반드시 필요
 - ✅ **추천 자격증**: 있으면 경쟁력 상승하는 관련 자격
@@ -350,22 +358,23 @@ curl -s -o /dev/null -w "%{http_code}" "{image_url 값}"
 ```
 
 **이미지 경로 패턴 (R2):**
-- **R2 키**: `jobs/{slug}-{timestamp}.{ext}`
+- **R2 키**: `jobs/job-{slug}.{ext}` (타임스탬프 없음, `job-` 접두사 있음)
+- **DB 저장 값**: `/uploads/jobs/job-{slug}.{ext}` (상대 경로)
 - **이미지 크기**: 1280×720 (16:9) — Evolink 고정
-- **포맷**: PNG 또는 JPEG
+- **포맷**: WebP (기본), PNG/JPEG (Evolink 응답 포맷에 따라)
 
 ### 5-2. 이미지 생성 실패 시 수동 업로드
 
 ```bash
-# 1. 이미지 파일 준비 (1280×720, JPEG 또는 PNG)
+# 1. 이미지 파일 준비 (1280×720, WebP 권장)
 
-# 2. R2에 업로드
-cd C:/Users/PC/Careerwiki && npx wrangler r2 object put careerwiki-uploads/jobs/{slug}-{timestamp}.jpg \
-  --file ./path/to/image.jpg --content-type image/jpeg
+# 2. R2에 업로드 — R2 키 형식: jobs/job-{slug}.webp
+cd C:/Users/PC/Careerwiki && npx wrangler r2 object put careerwiki-uploads/jobs/job-{slug}.webp \
+  --file ./path/to/image.webp --content-type image/webp
 
-# 3. DB의 image_url 업데이트 (CDN URL 형식으로)
+# 3. DB의 image_url 업데이트 — DB 저장값은 상대 경로
 npx wrangler d1 execute careerwiki-kr --remote --command \
-  "UPDATE jobs SET image_url='https://images.careerwiki.org/jobs/{slug}-{timestamp}.jpg' WHERE name='{직업명}'"
+  "UPDATE jobs SET image_url='/uploads/jobs/job-{slug}.webp' WHERE name='{직업명}'"
 ```
 
 ### 5-3. image_prompt만 있고 imageUrl이 없는 경우
@@ -580,10 +589,21 @@ Cookie: session_token=SESSION_TOKEN
 | `detailWlb.socialDetail` | 사회적 기여 상세 필드의 출처 |
 | `overviewAbilities.technKnow` | 활용 기술 필드의 출처 |
 
-> **⚠️ 절대 금지:**
-> - ❌ `way_sources` → ✅ `way`
+> **⚠️ sources 키 오류 패턴 — 절대 금지:**
+> - ❌ `way_sources` → ✅ `way` (접미사 `_sources` 금지)
 > - ❌ `overviewSalary_sources` → ✅ `overviewSalary.sal`
+> - ❌ `detailWlb_sources` → ✅ `detailWlb.wlbDetail`
+> - ❌ 숫자 키 `"1"`, `"2"`, `"3"` → ✅ 반드시 필드명 키 (`way`, `trivia` 등)
 > - sources 없이 fields만 전송 금지 (각주 깨짐)
+>
+> 서버에서 잘못된 키 형식을 일부 자동 보정하지만, 처음부터 올바른 키를 사용할 것.
+
+### 9-3b. Google Indexing 자동 알림
+
+편집 API로 저장이 성공하면 **자동으로** Google Indexing API에 URL 업데이트 알림이 전송된다.
+- 별도 작업 불필요 — 코드에서 `waitUntil`로 백그라운드 처리
+- 실패해도 편집 저장에 영향 없음
+- Google이 보통 수 시간~1일 내에 크롤링하여 인덱스 업데이트
 
 ### 9-4. 구조화 데이터 전송 시 주의사항
 
@@ -624,6 +644,17 @@ function validateFootnotes(text, fieldName) {
     throw new Error(`${fieldName}: 각주 중복! ${dupes.map(([n,c]) => `${n}이 ${c}회`).join(', ')}`);
   }
 }
+```
+
+### 10-2b. 각주 품질 체크리스트
+
+```
+[ ] 각 [N]이 본문에 1회만 등장하는가? (같은 번호 2번 이상 ✗)
+[ ] [N] 번호가 필드 내에서 1부터 순차 증가하는가? (빠진 번호 없음)
+[ ] 각주가 마침표 뒤에 있는가? (합니다.[1] ✓ / 합니다[1]. ✗)
+[ ] 모든 sources의 text가 [N]으로 시작하는가? ("[1] 출처명" 형식)
+[ ] sources의 text에 URL이 섞이지 않았는가? (text와 url은 분리)
+[ ] sources 키 이름이 올바른가? (숫자 키 "1","2" 금지, 필드명 키 사용)
 ```
 
 ### 10-3. URL 접속 검증
@@ -764,6 +795,8 @@ echo "$slug: ${count}개 $ok ($nums)"
 
 [Phase 4: 데이터 보완]
 12. 각주 중복 검증 (validateFootnotes)
+12b. validate-job-edit.cjs 자동 검증: node scripts/validate-job-edit.cjs < researcher_output.json
+    FAIL → 수정 후 재검증. PASS → 다음 단계
 13. 편집 API 호출 (fields + sources 함께)
 14. 이미지 없으면 수동 업로드 (Section 5)
 
@@ -782,7 +815,54 @@ echo "$slug: ${count}개 $ok ($nums)"
 
 ---
 
-## 14. 에이전트 프롬프트 템플릿
+## 14. 대량 생성 패턴 (5개 이상 동시 추가)
+
+5개 이상의 직업을 한 번에 추가할 때는 **3단계 분리 패턴**을 사용한다.
+
+### 핵심 원칙
+- **팀 리더(이 대화)**: 실존 검증, 스텁 생성, 검증+API 호출 담당
+- **Researcher Agent**: 리서치+JSON 초안 반환만. API 호출 절대 금지
+- 병렬 에이전트 최대 3개. 각 1~2개 직업 담당
+
+```
+Phase 1: 팀 리더 — 사전 검증 (전체 직업 일괄 처리)
+  - check-name API로 각 직업명 중복 확인
+  - DB LIKE 검색으로 유사 이름 확인
+  - 커리어넷/워크넷에서 실존 여부 일괄 확인
+  - 문제없는 직업만 Phase 2로 진행
+
+Phase 2: 팀 리더 — 스텁 일괄 생성
+  - 각 직업별 POST /api/job/create 순차 호출
+  - 이미지 생성이 동기(최대 60초)이므로 직업당 60-70초 소요
+  - 응답에서 id, slug, imageUrl 기록
+
+Phase 3: Researcher Agent (3개 병렬, 각 1~2개 직업)
+  - 역할: 리서치 + JSON 초안 반환 ONLY
+  - ⚠️ API 호출 금지 — JSON 결과만 반환
+  - 프롬프트: Section 15 템플릿 사용
+
+Phase 4: 팀 리더 — 검증 + API 호출 (직업별 순차)
+  - validate-job-edit.cjs로 자동 검증:
+    node scripts/validate-job-edit.cjs < researcher_output.json
+  - FAIL → 수정 후 재검증
+  - PASS → 편집 API 호출 (Section 9)
+  - sidebarJobs/sidebarMajors DB 존재 확인 (SQL)
+  - 출처 URL curl 접속 검증
+
+Phase 5: 프로덕션 확인 (전체 직업 일괄)
+  - curl로 각 직업 페이지 렌더링 확인
+  - QA 각주 순서 스크립트 일괄 실행 (Section 12-3)
+  - 분류/Vectorize 일괄 확인 (약 5분 후)
+```
+
+### 주의사항
+- 이미지 생성이 동기 처리라 스텁 생성 직렬 실행 불가 — 직업당 ~70초 예상
+- 스텁 5개 생성에 5-6분, 10개에 10-12분 소요
+- 병렬 에이전트 결과는 팀 리더가 하나씩 검증 후 API 호출 (병렬 API 호출 금지)
+
+---
+
+## 15. 에이전트 프롬프트 템플릿 (단일 직업용)
 
 병렬 에이전트에게 넘길 때 아래 템플릿을 그대로 복사하고, `{변수}`만 교체한다.
 
