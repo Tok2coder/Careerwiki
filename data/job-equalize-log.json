@@ -3323,5 +3323,32 @@
     "person": "김대일",
     "batch": 40,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "건축가건축설계사",
+    "jobId": "176528344210340",
+    "revisionId": 667,
+    "careerTreeId": 182,
+    "person": "승효상",
+    "batch": 41,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "스포츠에이전트",
+    "jobId": "176528333276057",
+    "revisionId": 669,
+    "careerTreeId": 183,
+    "person": "이현석",
+    "batch": 41,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "법무사-및-집행관",
+    "jobId": "1765283459587278",
+    "revisionId": 670,
+    "careerTreeId": 184,
+    "person": "이계원",
+    "batch": 41,
+    "date": "2026-03-27"
   }
 ]
