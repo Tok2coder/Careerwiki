@@ -2642,5 +2642,35 @@
     "careerTreePerson": "김진애",
     "batch": 24,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283353963190",
+    "name": "응급구조사",
+    "slug": "응급구조사",
+    "revisionId": 593,
+    "careerTreeId": 133,
+    "careerTreePerson": "손정원",
+    "batch": 25,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283357251884",
+    "name": "인테리어디자이너",
+    "slug": "인테리어디자이너",
+    "revisionId": 592,
+    "careerTreeId": 134,
+    "careerTreePerson": "양태오",
+    "batch": 25,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283278379444",
+    "name": "가수",
+    "slug": "가수",
+    "revisionId": 594,
+    "careerTreeId": 135,
+    "careerTreePerson": "아이유",
+    "batch": 25,
+    "date": "2026-03-27"
   }
 ]
