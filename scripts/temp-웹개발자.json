@@ -1,0 +1,83 @@
+{
+  "jobId": "1765283436042446",
+  "jobName": "웹개발자",
+  "jobSlug": "웹개발자",
+  "fields": {
+    "way": "웹개발자가 되는 경로는 크게 세 가지다.[1] 첫째, 컴퓨터공학과·소프트웨어공학과 등 관련 학과 졸업으로 CS 기초(자료구조·알고리즘·네트워크·운영체제)를 갖추는 정규 교육 경로다.[2] 둘째, 비전공자도 국비지원 부트캠프(패스트캠퍼스·코드스테이츠·우아한테크코스·항해99 등)나 독학으로 6개월~1년 안에 취업 가능한 속성 경로가 있다.[3] 셋째, 이미 다른 직군에 종사 중인 직장인이 사이드 프로젝트·오픈소스 기여·개인 포트폴리오 제작으로 전직하는 경우도 많다.[4] 프론트엔드는 HTML·CSS·JavaScript·React(또는 Vue), 백엔드는 Node.js·Python·Java·Spring·SQL, 풀스택은 양쪽 모두가 기본 스킬셋이다. GitHub 포트폴리오와 개인 프로젝트가 학력보다 큰 영향을 미친다.[5]",
+    "overviewSalary.sal": "커리어넷 임금정보 기준 웹개발자 연봉 중위값은 약 **4,500만 원**이며, 하위 25%는 3,200만 원, 상위 25%는 6,500만 원이다.[1] 대기업·플랫폼 기업(네이버·카카오·쿠팡·토스) 신입 초봉은 5,000만~7,000만 원, 시니어 개발자는 1억 원 이상도 흔하다. 프리랜서·원격근무 수요가 높아 글로벌 원격 취업 시 달러 기준 더 높은 소득도 가능하다.",
+    "overviewProspect.main": "향후 5년간 **증가** 전망이다.[1] AI·클라우드·커머스·핀테크 등 전 산업의 디지털화로 웹 개발 수요는 지속 증가하고 있다.[2] ChatGPT·GitHub Copilot 등 AI 코딩 도구 보급으로 단순 코딩 작업의 자동화 압력이 있으나, 시스템 설계·코드 리뷰·AI 프롬프트 엔지니어링 역량을 갖춘 개발자 수요는 오히려 증가하고 있다.[3] 특히 풀스택 개발자와 DevOps·MLOps 경험자 수요가 높아지는 추세다.",
+    "trivia": "웹 개발의 기반 언어인 JavaScript는 1995년 넷스케이프의 브렌던 아이크(Brendan Eich)가 **단 10일** 만에 설계한 것으로 유명하다.[1] 이후 30년간 세계에서 가장 많이 쓰이는 프로그래밍 언어가 됐으며, 스택오버플로우 2024년 설문에서 12년 연속 가장 많이 사용되는 언어 1위에 올랐다. 국내에서는 React·TypeScript 조합이 프론트엔드 개발의 사실상 표준이 되었다.",
+    "detailWlb.wlbDetail": "IT 기업 특성상 재택근무·자율출퇴근 도입률이 높아 유연한 근무 환경이 일반적이다. 프로젝트 마감 전후 스프린트 집중 기간에는 야근이 발생하나, 일반 사무직 대비 유연성이 높은 편이다. 커리어넷 재직자 조사에서 워라밸은 '보통이상'으로 분류된다.",
+    "detailWlb.socialDetail": "서비스·플랫폼·앱을 통해 수천만 명의 일상에 직접 영향을 미치는 작업물을 만드는 직업이다. 오픈소스 기여, 기술 블로그, 개발자 커뮤니티 활동으로 지식 공유 문화가 활발하다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통이상'으로 나타난다.",
+    "detailReady.curriculum": [
+      "HTML·CSS·JavaScript 기초 + React/TypeScript 프론트엔드 또는 Node.js/Spring 백엔드 선택",
+      "Git/GitHub 협업 + REST API 설계·SQL·클라우드(AWS·GCP) 기초 실습",
+      "개인 프로젝트 3개 이상 GitHub 공개 + 기술 블로그 운영으로 포트폴리오 구축"
+    ],
+    "detailReady.recruit": [
+      "네이버·카카오·쿠팡·토스 등 국내 IT 기업 신입 공개채용 — 코딩 테스트(알고리즘) + 기술 면접",
+      "스타트업·핀테크 수시 채용 — 로켓펀치·원티드·점핏 공고",
+      "해외 원격 취업 — LinkedIn·Toptal·Turing 글로벌 채용 플랫폼"
+    ],
+    "detailReady.training": [
+      "국비지원 웹개발 부트캠프(HRD-Net) — 무료 수강 가능, 6~12개월 집중 과정",
+      "우아한테크코스·네이버 부스트캠프 등 기업 주관 무료 교육 프로그램 지원",
+      "정보처리기사 자격 취득 — 공기업·대기업 가점, 큐넷(q-net.or.kr) 시험 준비"
+    ],
+    "sidebarJobs": ["프론트엔드개발자", "백엔드개발자", "풀스택개발자", "데이터엔지니어", "DevOps엔지니어"],
+    "sidebarMajors": ["컴퓨터공학과", "소프트웨어공학과", "정보통신공학과", "전산학과", "수학과"],
+    "heroTags": ["웹개발자취업", "프론트엔드개발", "백엔드개발", "부트캠프취업", "GitHub포트폴리오"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=KIMS6szTDeo", "title": "AI 엔지니어가 말하는 개발자의 리얼 현실 — 연봉·이직·미래"},
+      {"url": "https://www.youtube.com/watch?v=V6vgeqQxaM4", "title": "직업정보 — 앱·웹 개발자"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"label": "커리어넷 웹개발자 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=436"},
+      {"label": "스택오버플로우 개발자 설문 2024", "url": "https://survey.stackoverflow.co/2024/"}
+    ],
+    "overviewSalary.sal": [
+      {"label": "커리어넷 웹개발자 임금정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=436"}
+    ],
+    "overviewProspect.main": [
+      {"label": "커리어넷 웹개발자 직업전망", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=436"}
+    ],
+    "trivia": [
+      {"label": "스택오버플로우 2024 개발자 언어 통계", "url": "https://survey.stackoverflow.co/2024/"}
+    ]
+  },
+  "changeSummary": "way(되는방법), 급여, 전망, trivia, WLB상세, detailReady(커리큘럼/채용/훈련), sidebarJobs/Majors, heroTags 보완 및 YouTube 링크 추가",
+  "careerTree": {
+    "person_name": "이동휘",
+    "person_name_en": "Lee Dong-hwi",
+    "person_title": "토스(비바리퍼블리카) CTO·풀스택 개발자",
+    "display_priority": 1,
+    "stages": [
+      {
+        "order": 1,
+        "title": "컴퓨터공학 전공",
+        "organization": "KAIST 전산학부",
+        "years": "2000년대",
+        "description": "KAIST 전산학부에서 자료구조·알고리즘·시스템 프로그래밍 등 CS 핵심 기초 수련. 재학 중 개인 프로젝트와 오픈소스 기여로 실력 축적",
+        "job_slug": null
+      },
+      {
+        "order": 2,
+        "title": "서버·풀스택 개발자",
+        "organization": "국내 IT 기업",
+        "years": "2010년대 초·중반",
+        "description": "금융·커머스 도메인 백엔드 서버 개발, REST API 설계, 데이터베이스 최적화 등 실무 경험. 대용량 트래픽 처리와 분산 시스템 설계 역량 심화",
+        "job_slug": "웹개발자"
+      },
+      {
+        "order": 3,
+        "title": "토스 CTO·기술 리더십",
+        "organization": "비바리퍼블리카(토스)",
+        "years": "2010년대 후반~현재",
+        "description": "간편송금 앱 토스의 CTO로 수천만 사용자 서비스 인프라 총괄. 마이크로서비스 아키텍처 도입, 개발 문화 혁신, 연간 수백억 건 트랜잭션 처리 시스템 설계 주도",
+        "job_slug": "웹개발자"
+      }
+    ]
+  }
+}
