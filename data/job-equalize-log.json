@@ -3836,5 +3836,32 @@
     "person": "정주영",
     "batch": 59,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "구성작가",
+    "jobId": "1765283290090670",
+    "revisionId": 811,
+    "careerTreeId": 239,
+    "person": "김은희",
+    "batch": 60,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "금융자산운용가펀드매니저",
+    "jobId": "1765283292803601",
+    "revisionId": 812,
+    "careerTreeId": 240,
+    "person": "이채원",
+    "batch": 60,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "냉동기사",
+    "jobId": "1765283294483241",
+    "revisionId": 814,
+    "careerTreeId": 241,
+    "person": "류왕식",
+    "batch": 60,
+    "date": "2026-03-27"
   }
 ]
