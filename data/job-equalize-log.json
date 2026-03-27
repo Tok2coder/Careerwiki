@@ -3647,5 +3647,32 @@
     "person": "오천석",
     "batch": 52,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "역사학연구원",
+    "jobId": "17652833431652",
+    "revisionId": 747,
+    "careerTreeId": 218,
+    "person": "이기백",
+    "batch": 53,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "심리학연구원",
+    "jobId": "1765283337407450",
+    "revisionId": 749,
+    "careerTreeId": 219,
+    "person": "이수정",
+    "batch": 53,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "철학연구원",
+    "jobId": "1765283380041295",
+    "revisionId": 751,
+    "careerTreeId": 220,
+    "person": "박종홍",
+    "batch": 53,
+    "date": "2026-03-27"
   }
 ]
