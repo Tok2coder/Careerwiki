@@ -2582,5 +2582,35 @@
     "careerTreePerson": "현우진",
     "batch": 22,
     "date": "2026-03-27"
+  },
+  {
+    "id": "1765283406071706",
+    "name": "IT컨설턴트",
+    "slug": "it컨설턴트",
+    "revisionId": 581,
+    "careerTreeId": 127,
+    "careerTreePerson": "박재홍",
+    "batch": 23,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765283329218353",
+    "name": "소믈리에",
+    "slug": "소믈리에",
+    "revisionId": 583,
+    "careerTreeId": 128,
+    "careerTreePerson": "이충훈",
+    "batch": 23,
+    "date": "2026-03-27"
+  },
+  {
+    "id": "1765284540086169",
+    "name": "조경사",
+    "slug": "조경사",
+    "revisionId": 585,
+    "careerTreeId": 129,
+    "careerTreePerson": "정영선",
+    "batch": 23,
+    "date": "2026-03-27"
   }
 ]

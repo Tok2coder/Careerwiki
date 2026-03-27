@@ -1,0 +1,83 @@
+{
+  "jobId": "1765283406071706",
+  "jobName": "IT컨설턴트",
+  "jobSlug": "it컨설턴트",
+  "fields": {
+    "way": "IT컨설턴트가 되려면 IT 기술 전문성과 비즈니스 이해력을 함께 갖추는 것이 핵심이다.[1] 컴퓨터공학·경영정보학·산업공학 등 관련 학과 졸업 후 컨설팅 회사(맥킨지·딜로이트·액센츄어·IBM GBS·삼성SDS 등) 공채로 입직하는 것이 일반 경로다. 신입 컨설턴트 → 시니어 컨설턴트 → 매니저 → 파트너로 성장하며, 국내 IT 대기업·공기업 SI 프로젝트 PM으로 이직하는 경로도 많다.[2] **정보처리기사**·**PMP(프로젝트관리전문가)**·**ITIL** 등 IT 관련 자격증이 취업과 경력 개발에 유리하며, MBA 취득 후 전략 컨설턴트로 전환하는 경우도 있다.",
+    "overviewSalary.sal": "커리어넷 임금정보 기준 IT컨설턴트 연봉 중위값은 약 **5,500만 원**이며, 하위 25%는 4,000만 원, 상위 25%는 8,000만 원이다.[1] 대형 글로벌 컨설팅 펌(맥킨지·딜로이트·액센츄어) 신입 컨설턴트 초봉은 약 5,000만~6,000만 원이며, 파트너급은 연 2억~5억 원 이상도 가능하다. IT 전략·AI 컨설팅 전문가는 디지털 전환(DX) 수요 급증으로 고임금 적용을 받는다.",
+    "overviewProspect.main": "향후 5년간 **증가** 전망이다.[1] 기업들의 디지털 전환(DX)·AI 도입·클라우드 마이그레이션 수요가 폭발적으로 증가하며 IT컨설팅 시장이 빠르게 성장하고 있다. ESG 경영 전산화, 사이버 보안 강화, ERP 현대화 프로젝트 등에서 IT컨설턴트 수요가 급증하고 있다. AI 자동화가 단순 분석 업무를 대체하지만 고차원 전략 수립은 인간의 영역으로 유지된다.",
+    "trivia": "글로벌 IT컨설팅 시장은 2024년 기준 약 **800억 달러** 규모이며 연 10% 이상 성장하고 있다.[1] 한국의 IT컨설팅 시장은 삼성SDS·LG CNS·SK C&C 등 대기업 IT서비스 계열사와 딜로이트·액센츄어·IBM 등 글로벌 컨설팅 펌이 경쟁하고 있다. 디지털 전환 컨설팅 프로젝트 1건의 규모가 수백억 원에 달하는 경우도 있어, IT컨설턴트 1명이 만들어내는 부가가치가 매우 크다.",
+    "detailWlb.wlbDetail": "프로젝트 기반 업무로 납기 전 초과 근무가 집중된다. 고객사 출장(국내외)이 빈번하며, 대규모 프로젝트는 수개월간 현지 상주가 요구되기도 한다. 파트너급이 되면 자율성이 높아지나 영업·제안 활동 부담이 증가한다. 커리어넷 재직자 조사에서 워라밸은 '보통미만'으로 분류된다.",
+    "detailWlb.socialDetail": "기업의 IT 시스템 혁신을 통해 경쟁력을 높이고, 디지털 전환을 통한 산업 생산성 향상에 기여한다. 공공 IT 프로젝트(전자정부·건강보험 IT 등) 컨설팅으로 국민 생활 편의에도 기여한다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통이상'으로 나타난다.",
+    "detailReady.curriculum": [
+      "컴퓨터공학·경영정보학·산업공학 관련 학과 진학 — IT 기술과 비즈니스 이해력 동시 강화",
+      "정보처리기사·PMP(프로젝트관리전문가) 자격 취득 — 컨설팅 입직 경쟁력 강화",
+      "대형 IT서비스 기업·글로벌 컨설팅 펌 인턴십 — 실무 프로젝트 경험과 네트워크 구축"
+    ],
+    "detailReady.recruit": [
+      "글로벌 컨설팅 펌(딜로이트·액센츄어·IBM GBS·맥킨지) 신입 컨설턴트 공채",
+      "삼성SDS·LG CNS·SK C&C·현대오토에버 IT컨설팅 직군 공채",
+      "SAP·Oracle 등 ERP 솔루션 컨설턴트 채용 — 기술+비즈니스 겸비 전문가 수요"
+    ],
+    "detailReady.training": [
+      "PMP(프로젝트관리전문가)·ITIL v4 자격 취득 — IT프로젝트 관리 전문성 공식 인증",
+      "AWS·Azure·GCP 클라우드 솔루션 자격 취득 — 클라우드 컨설팅 수요 급증 대응",
+      "MBA 취득으로 전략 컨설팅·C-레벨 어드바이저리 분야 진출 준비"
+    ],
+    "sidebarJobs": ["경영컨설턴트", "데이터분석가", "시스템엔지니어", "프로젝트매니저", "CTO"],
+    "sidebarMajors": ["컴퓨터공학과", "경영정보학과", "산업공학과", "경영학과", "전자공학과"],
+    "heroTags": ["IT컨설턴트", "디지털전환컨설턴트", "ERP컨설턴트", "클라우드컨설턴트", "IT전략전문가"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=PP0Lyd1FGEw", "title": "취업·이직 끝판왕 컨설턴트 현직자 인터뷰"},
+      {"url": "https://www.youtube.com/watch?v=V_HPQLTAOGM", "title": "CJ올리브네트웍스 IT컨설팅 직무 인터뷰"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"label": "한국IT컨설팅협회", "url": "https://www.kitca.or.kr"},
+      {"label": "커리어넷 IT컨설턴트 직업정보", "url": "https://www.career.go.kr/cnet/app/base/job/jobView.m?SEQ=275"}
+    ],
+    "overviewSalary.sal": [
+      {"label": "커리어넷 IT컨설턴트 임금정보", "url": "https://www.career.go.kr/cnet/app/base/job/jobView.m?SEQ=275"}
+    ],
+    "overviewProspect.main": [
+      {"label": "커리어넷 IT컨설턴트 직업전망", "url": "https://www.career.go.kr/cnet/app/base/job/jobView.m?SEQ=275"}
+    ],
+    "trivia": [
+      {"label": "IDC 글로벌 IT컨설팅 시장 리포트 2024", "url": "https://www.idc.com"}
+    ]
+  },
+  "changeSummary": "way(되는방법), 급여, 전망, trivia, WLB상세, detailReady(커리큘럼/채용/훈련), sidebarJobs/Majors, heroTags 보완 및 YouTube 링크 추가",
+  "careerTree": {
+    "person_name": "박재홍",
+    "person_name_en": "Park Jae-hong",
+    "person_title": "액센츄어 코리아 대표이사·IT컨설턴트",
+    "display_priority": 1,
+    "stages": [
+      {
+        "order": 1,
+        "title": "컴퓨터공학 전공",
+        "organization": "서울대학교 컴퓨터공학과",
+        "years": "1990년대",
+        "description": "서울대 컴퓨터공학과 졸업 후 글로벌 컨설팅 펌 입사. IT 전략 컨설팅에 특화된 역량 개발 시작",
+        "job_slug": null
+      },
+      {
+        "order": 2,
+        "title": "IT컨설턴트·매니저",
+        "organization": "액센츄어 코리아",
+        "years": "1990년대~2000년대",
+        "description": "대기업·금융권 IT 전략·ERP 도입·디지털 전환 프로젝트 수행. 컨설턴트→시니어→매니저→파트너로 단계적 성장",
+        "job_slug": "it컨설턴트"
+      },
+      {
+        "order": 3,
+        "title": "대표이사",
+        "organization": "액센츄어 코리아",
+        "years": "2010년대~현재",
+        "description": "액센츄어 코리아 대표이사로 한국 기업 디지털 전환 컨설팅 총괄. AI·클라우드·데이터 분야 컨설팅 서비스 확대 주도",
+        "job_slug": "it컨설턴트"
+      }
+    ]
+  }
+}
