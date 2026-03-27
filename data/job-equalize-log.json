@@ -2882,5 +2882,35 @@
     "careerTreeId": 156,
     "careerTreePerson": "정재윤",
     "processedAt": "2026-03-27T08:56:35.325Z"
+  },
+  {
+    "id": "1765283304542341",
+    "name": "모델",
+    "slug": "모델",
+    "batch": 33,
+    "revisionId": 624,
+    "careerTreeId": 157,
+    "careerTreePerson": "한혜진",
+    "processedAt": "2026-03-27T09:02:22.401Z"
+  },
+  {
+    "id": "1765283337718596",
+    "name": "아나운서",
+    "slug": "아나운서",
+    "batch": 33,
+    "revisionId": 621,
+    "careerTreeId": 158,
+    "careerTreePerson": "오상진",
+    "processedAt": "2026-03-27T09:02:22.402Z"
+  },
+  {
+    "id": "1765283318691980",
+    "name": "비행기승무원",
+    "slug": "비행기승무원",
+    "batch": 33,
+    "revisionId": 622,
+    "careerTreeId": 159,
+    "careerTreePerson": "이미소",
+    "processedAt": "2026-03-27T09:02:22.402Z"
   }
 ]
