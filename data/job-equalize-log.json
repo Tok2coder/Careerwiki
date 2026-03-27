@@ -3782,5 +3782,32 @@
     "person": "김정희",
     "batch": 57,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "수학연구원",
+    "jobId": "1765283331947643",
+    "revisionId": 777,
+    "careerTreeId": 233,
+    "person": "허준이",
+    "batch": 58,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "시인",
+    "jobId": "1765283334995231",
+    "revisionId": 779,
+    "careerTreeId": 234,
+    "person": "윤동주",
+    "batch": 58,
+    "date": "2026-03-27"
+  },
+  {
+    "slug": "성직자",
+    "jobId": "1765283328409182",
+    "revisionId": 781,
+    "careerTreeId": 235,
+    "person": "김수환",
+    "batch": 58,
+    "date": "2026-03-27"
   }
 ]
