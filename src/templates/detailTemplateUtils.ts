@@ -112,6 +112,8 @@ export const formatRichText = (value?: string | null, fieldKey?: string, footnot
     .split(/\n{2,}/)
     .map((paragraph) => {
       let safe = escapeHtml(paragraph.trim()).replace(/\n/g, '<br>')
+      // 마크다운 볼드 **텍스트** → <strong>텍스트</strong>
+      safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       // 각주 위치 정규화: "했다[N]." → "했다.[N]" (마침표 뒤에 각주)
       safe = safe.replace(/(\[(\d+)\])([.。])/g, '$3$1')
       // 마크다운 링크 [텍스트](url) → 클릭 가능한 <a> 태그로 변환
