@@ -4025,5 +4025,32 @@
     "person": null,
     "batch": 66,
     "date": "2026-03-28"
+  },
+  {
+    "slug": "DP운항사",
+    "jobId": "1765283297541939",
+    "revisionId": 866,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 67,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "도배원",
+    "jobId": "1765283298779757",
+    "revisionId": 868,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 67,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "로봇기구개발자",
+    "jobId": "1765283932514990",
+    "revisionId": 870,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 67,
+    "date": "2026-03-28"
   }
 ]
