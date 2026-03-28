@@ -3971,5 +3971,32 @@
     "person": null,
     "batch": 64,
     "date": "2026-03-28"
+  },
+  {
+    "slug": "전문의사",
+    "jobId": "1765283366442139",
+    "revisionId": 854,
+    "careerTreeId": 257,
+    "person": "이국종",
+    "batch": 65,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "데이터베이스관리자",
+    "jobId": "1765283298035416",
+    "revisionId": 856,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 65,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "독서지도사",
+    "jobId": "176528330074422",
+    "revisionId": 858,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 65,
+    "date": "2026-03-28"
   }
 ]
