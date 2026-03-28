@@ -10478,6 +10478,15 @@ analyzerJobPage.get('/', async (c, next) => {
                             banner.innerHTML = '<p class="text-white font-semibold mb-2"><i class="fas fa-info-circle mr-2 text-indigo-400"></i>이것은 샘플 리포트입니다</p><p class="text-wiki-muted text-sm mb-3">"IT에 관심 있는 대학생" 페르소나의 분석 결과 예시입니다.</p><a href="/login?redirect=/analyzer/job" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg text-white font-semibold transition" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);"><i class="fas fa-rocket"></i> 나만의 맞춤 분석 받기</a>';
                             step3.insertBefore(banner, step3.firstChild);
                         }
+                        // 샘플 모드: 공유 버튼, 수정/추가 버튼 숨김
+                        const shareBtn = document.getElementById('share-report-btn');
+                        if (shareBtn) shareBtn.style.display = 'none';
+                        document.querySelectorAll('button').forEach(btn => {
+                            const txt = btn.textContent || '';
+                            if (txt.includes('입력한 내용 수정') || txt.includes('새로운 내용 추가')) {
+                                btn.style.display = 'none';
+                            }
+                        });
                     } else {
                         showErrorToast('샘플을 불러올 수 없습니다.');
                         goToStep(1);

@@ -9235,7 +9235,7 @@ analyzerRoutes.get('/sample-result', async (c) => {
           { label: '전문성', score: 80, insight: '전문성을 깊이 쌓아가는 것에 가치를 둡니다.' },
         ],
         constraints: [
-          { label: '반복적 업무', score: 70, insight: '반복적인 업무에서 에너지가 소모됩니다.' },
+          { label: '반복적 업무', score: 70, insight: '반복적인 업무에서 에너지가 소모됩니다.', meaning: '반복적이고 단조로운 업무가 계속되면 동기와 에너지가 크게 떨어집니다.' },
         ],
       },
       metaCognition: {
