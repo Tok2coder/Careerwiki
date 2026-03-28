@@ -968,6 +968,29 @@ Phase 5: 프로덕션 확인 (전체 직업 일괄)
 - abilityList/aptitude/education에 공식 통계 없이 수치 넣기 → null 유지
 - 출처 없는 데이터, 추정값, AI 생성 수치
 - 커리어트리에 외국인, 전직 스테이지, 수상 독립 스테이지
+- **마크다운 볼드(`**텍스트**`) 절대 사용 금지** — 프론트엔드에서 파싱 안 됨. `**` 기호가 그대로 노출됨
+- **재검토 없이 다음 직업으로 넘어가기 금지** — 편집 API 호출 후 반드시 아래 재검토 절차(validate-job-edit.cjs + full-quality-audit.cjs) 실행하여 PASS 확인
+- **sources 없이 각주 [N] 사용 금지** — 각주 최대 번호와 sources 배열 길이가 1:1 대응 필수 (예: [1][2] 사용 시 sources 2개 필수)
+
+## 재검토 (필수 — 스킵 금지)
+
+편집 API 호출 후, **다음 직업으로 넘어가기 전에 반드시** 아래 절차를 수행한다:
+
+```
+1. validate-job-edit.cjs 재검증
+   node scripts/validate-job-edit.cjs
+   FAIL → 수정 후 재실행 → PASS될 때까지 반복
+
+2. 프로덕션 curl 확인
+   curl -s "https://careerwiki.org/job/{slug}?nocache=1" | grep -E "data-source-id|\*\*"
+   [ ] 각주 superscript가 페이지에 보임 (data-source-id 속성)
+   [ ] **볼드** 텍스트 잔류 없음
+
+3. full-quality-audit.cjs 단건 실행
+   node scripts/full-quality-audit.cjs --slug={직업slug}
+   ✅ [PASS] → 다음 직업 진행 가능
+   ❌ [FAIL] → 이슈 수정 → Step 1부터 재시작
+```
 
 ## 각주 규칙
 - 필드별 [1]부터 순차. 같은 [N] 2회 등장 금지
