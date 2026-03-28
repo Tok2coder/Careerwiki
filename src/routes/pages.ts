@@ -474,9 +474,12 @@ pagesRoutes.get('/analyzer', (c) => {
             <p class="text-amber-400 font-semibold mb-1">
                 <i class="fas fa-lock mr-2"></i>AI 추천을 받으려면 로그인이 필요합니다
             </p>
-            <p class="text-wiki-muted text-sm">
+            <p class="text-wiki-muted text-sm mb-3">
                 로그인하시면 분석 결과 저장, 이력서 첨부, 맞춤 추천 등의 기능을 이용하실 수 있습니다.
             </p>
+            <a href="/analyzer/job?sample=1" class="inline-flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition" style="background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3);">
+                <i class="fas fa-eye"></i> 샘플 리포트 미리보기
+            </a>
         </div>`
 
   const content = `

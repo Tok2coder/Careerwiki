@@ -9038,6 +9038,275 @@ analyzerRoutes.get('/saved-result/:requestId', async (c) => {
   }
 })
 
+// GET /api/ai-analyzer/sample-result - 비로그인용 샘플 리포트 데이터
+analyzerRoutes.get('/sample-result', async (c) => {
+  const sampleResult = {
+    engine_state: 'phase2_stage_based',
+    engine_version: 'v3.22.3',
+    mini_module_result: {
+      interest_top: ['tech', 'problem_solving', 'creative'],
+      value_top: ['growth', 'autonomy', 'expertise'],
+      strength_top: ['analytical', 'fast_learning', 'persistence'],
+      workstyle: 'solo_deep',
+      constraint_top: ['routine_drain'],
+    },
+    versions: { recipe: 'recipe-v1.0.0', tagger: 'tagger-v1.0.0', scoring: 'scoring-v3.22.3' },
+    input_summary: {
+      profile_revision_id: 'sample-demo',
+      facts_applied: 8,
+      applied_rules: ['profile.interest.keywords', 'profile.strength.keywords', 'profile.value.keywords'],
+      stage: 'job_student',
+      universal_facts_count: 8,
+    },
+    fit_top3: [
+      {
+        job_id: 'sample-1', job_name: '소프트웨어개발자', slug: '소프트웨어개발자',
+        image_url: '/uploads/jobs/job-소프트웨어개발자.webp',
+        job_description: '소프트웨어를 설계하고 개발하는 전문가로, 다양한 프로그래밍 언어와 프레임워크를 활용하여 애플리케이션, 시스템, 웹 서비스 등을 구축합니다.',
+        rationale: '[좋아할 이유] 기술과 문제 해결에 대한 관심이 직접 연결되는 직업입니다. 창의적 사고와 논리적 분석이 결합된 업무 특성이 있습니다. [잘할 이유] 분석적 사고력과 빠른 학습 능력이 핵심 역량으로 요구되며, 혼자 깊이 집중하는 업무 스타일과 잘 맞습니다.',
+        like_reason: '기술과 문제 해결에 대한 관심이 직접 연결되는 직업입니다.',
+        can_reason: '분석적 사고력과 빠른 학습 능력이 이 직업의 핵심 역량과 정확히 일치합니다.',
+        fit_score: 92, like_score: 95, can_score: 90,
+        risk_details: [],
+        evidence_links: [
+          { user_fact: { key: 'profile.interest.keywords', value: 'tech,problem_solving,creative', label: '"기술, 문제 해결, 창의성" 관심사' }, job_attribute: { key: 'tech_relevance', value: '95', label: '기술 관련성: 95/100' }, match_type: 'positive' as const, score_contribution: 18, explanation: '기술과 문제 해결에 관심이 있으시다고 하셨는데, 소프트웨어개발자는 이 분야의 핵심 직업입니다.' },
+          { user_fact: { key: 'profile.strength.keywords', value: 'analytical,fast_learning', label: '"분석력, 빠른 학습" 강점' }, job_attribute: { key: 'analytical', value: '90', label: '분석력 요구: 90/100' }, match_type: 'positive' as const, score_contribution: 15, explanation: '분석적 사고력이 강점이시라고 하셨는데, 소프트웨어 개발은 복잡한 문제를 논리적으로 분해하는 능력이 핵심입니다.' },
+        ],
+        dislike_warnings: [],
+      },
+      {
+        job_id: 'sample-2', job_name: '데이터분석가', slug: '데이터분석가',
+        image_url: '/uploads/jobs/job-데이터분석가일반.webp',
+        job_description: '대규모 데이터를 수집, 분석하여 비즈니스 인사이트를 도출하고 의사결정을 지원하는 전문가입니다.',
+        rationale: '[좋아할 이유] 데이터 속에서 패턴을 찾고 문제를 해결하는 과정이 분석적 성향과 잘 맞습니다. [잘할 이유] 논리적 사고와 꼼꼼함이 데이터 분석의 핵심 역량입니다.',
+        like_reason: '데이터 속에서 패턴을 찾고 문제를 해결하는 과정이 분석적 성향과 잘 맞습니다.',
+        can_reason: '논리적 사고와 꼼꼼함이 데이터 분석의 핵심 역량입니다.',
+        fit_score: 88, like_score: 90, can_score: 87,
+        risk_details: [],
+        evidence_links: [
+          { user_fact: { key: 'profile.interest.keywords', value: 'problem_solving', label: '"문제 해결" 관심사' }, job_attribute: { key: 'problem_solving', value: '88', label: '문제 해결 역량: 88/100' }, match_type: 'positive' as const, score_contribution: 16, explanation: '문제 해결에 관심이 있으시다고 하셨는데, 데이터 분석가는 데이터 기반 문제 해결의 전문가입니다.' },
+        ],
+        dislike_warnings: [],
+      },
+      {
+        job_id: 'sample-3', job_name: 'UX디자이너', slug: 'UX디자이너',
+        image_url: '/uploads/jobs/job-UX디자이너.webp',
+        job_description: '사용자 경험을 연구하고 설계하여, 디지털 제품이 직관적이고 만족스럽게 사용될 수 있도록 하는 전문가입니다.',
+        rationale: '[좋아할 이유] 창의성과 기술이 결합된 분야로, 사용자 문제를 해결하는 과정에서 보람을 느낄 수 있습니다. [잘할 이유] 분석적 사고와 창의적 문제 해결 능력이 UX 디자인의 핵심입니다.',
+        like_reason: '창의성과 기술이 결합된 분야로, 사용자 문제를 해결하는 과정에서 보람을 느낄 수 있습니다.',
+        can_reason: '분석적 사고와 창의적 문제 해결 능력이 UX 디자인의 핵심입니다.',
+        fit_score: 85, like_score: 88, can_score: 83,
+        risk_details: [],
+        evidence_links: [
+          { user_fact: { key: 'profile.interest.keywords', value: 'creative,tech', label: '"창의성, 기술" 관심사' }, job_attribute: { key: 'creative', value: '85', label: '창의성 요구: 85/100' }, match_type: 'positive' as const, score_contribution: 14, explanation: '창의적인 일에 관심이 있으시다고 하셨는데, UX 디자인은 기술과 창의성이 결합된 분야입니다.' },
+        ],
+        dislike_warnings: [],
+      },
+      {
+        job_id: 'sample-4', job_name: '정보보안전문가', slug: '정보보안전문가',
+        image_url: '/uploads/jobs/job-정보보호전문가.webp',
+        job_description: '조직의 정보 자산을 보호하기 위해 보안 정책을 수립하고 시스템의 취약점을 분석·대응하는 전문가입니다.',
+        rationale: '[좋아할 이유] 기술적 문제 해결과 끈기가 필요한 분야입니다. [잘할 이유] 분석력과 집중력이 보안 분석의 핵심 역량입니다.',
+        like_reason: '기술적 문제 해결과 끈기가 필요한 분야입니다.',
+        can_reason: '분석력과 집중력이 보안 분석의 핵심 역량입니다.',
+        fit_score: 82, like_score: 84, can_score: 81,
+        risk_details: [],
+        evidence_links: [],
+        dislike_warnings: [],
+      },
+      {
+        job_id: 'sample-5', job_name: '게임프로그래머', slug: '게임프로그래머',
+        image_url: '/uploads/jobs/job-게임프로그래머.webp',
+        job_description: '게임의 핵심 시스템을 프로그래밍하고, 게임 엔진과 도구를 활용하여 인터랙티브 콘텐츠를 개발하는 전문가입니다.',
+        rationale: '[좋아할 이유] 기술과 창의성이 극대화되는 분야입니다. [잘할 이유] 프로그래밍 역량과 끈기가 핵심입니다.',
+        like_reason: '기술과 창의성이 극대화되는 분야입니다.',
+        can_reason: '프로그래밍 역량과 끈기가 핵심입니다.',
+        fit_score: 80, like_score: 86, can_score: 78,
+        risk_details: [],
+        evidence_links: [],
+        dislike_warnings: [],
+      },
+    ],
+    like_top10: [
+      { job_id: 's1', job_name: '소프트웨어개발자', like_score: 95 },
+      { job_id: 's2', job_name: '데이터분석가', like_score: 90 },
+      { job_id: 's3', job_name: 'UX디자이너', like_score: 88 },
+      { job_id: 's4', job_name: '게임프로그래머', like_score: 86 },
+      { job_id: 's5', job_name: '정보보안전문가', like_score: 84 },
+      { job_id: 's6', job_name: '웹개발자', like_score: 83 },
+      { job_id: 's7', job_name: '시스템엔지니어', like_score: 80 },
+      { job_id: 's8', job_name: '인공지능엔지니어', like_score: 79 },
+      { job_id: 's9', job_name: '데이터엔지니어', like_score: 78 },
+      { job_id: 's10', job_name: '클라우드엔지니어', like_score: 76 },
+    ],
+    can_top10: [
+      { job_id: 's1', job_name: '소프트웨어개발자', can_score: 90 },
+      { job_id: 's2', job_name: '데이터분석가', can_score: 87 },
+      { job_id: 's3', job_name: 'UX디자이너', can_score: 83 },
+      { job_id: 's4', job_name: '정보보안전문가', can_score: 81 },
+      { job_id: 's5', job_name: '웹개발자', can_score: 80 },
+      { job_id: 's6', job_name: '게임프로그래머', can_score: 78 },
+      { job_id: 's7', job_name: '시스템엔지니어', can_score: 76 },
+      { job_id: 's8', job_name: '데이터엔지니어', can_score: 75 },
+      { job_id: 's9', job_name: '인공지능엔지니어', can_score: 74 },
+      { job_id: 's10', job_name: '클라우드엔지니어', can_score: 72 },
+    ],
+    caution_jobs: [],
+    ux_flags: { show_risk_warning: false },
+    llm_explanation: '분석 완료',
+    generated_at: new Date().toISOString(),
+    total_candidates: 150,
+    analysis_stage: 'job_student',
+    confidence: { score: 0.85 },
+    premium_report: {
+      report_id: 'sample-report',
+      generated_at: new Date().toISOString(),
+      session_id: 'sample-session',
+      engine_version: 'v3.22.3',
+      overall_status: 'success',
+      sections_completed: 8,
+      sections_total: 8,
+      _confidence: 0.85,
+      _factsCount: 8,
+      _answeredQuestions: 9,
+      _candidatesScored: 150,
+      _appliedRules: 12,
+      executiveSummary: '기술과 논리에 강한 분석형 인재로, 소프트웨어 개발이나 데이터 분석 분야에서 높은 적합도를 보입니다. 혼자 깊이 집중하는 업무 스타일이 개발/분석 직군의 특성과 잘 맞으며, 성장과 자율성을 중시하는 가치관이 IT 업계의 문화와 부합합니다.',
+      workStyleNarrative: '당신은 복잡한 문제를 논리적으로 분해하고 체계적으로 해결하는 것을 즐기는 분석형 인재입니다. 혼자 깊이 집중하여 작업하는 환경에서 최고의 성과를 내며, 반복적이고 단조로운 업무보다는 새로운 도전과 학습 기회가 있는 환경을 선호합니다.',
+      workStyleMap: {
+        analytical_vs_creative: 70,
+        solo_vs_team: 80,
+        structured_vs_flexible: 45,
+        depth_vs_breadth: 75,
+        guided_vs_autonomous: 30,
+        socialStyle: 'solo_deep',
+        decisionStyle: 'analytical',
+      },
+      innerConflictAnalysis: '자율성과 안정성 사이에서 균형을 찾아야 할 수 있습니다. 자유로운 환경을 선호하지만, 너무 구조가 없으면 방향을 잃을 수 있으므로 적절한 프레임워크 안에서의 자율성이 이상적입니다.',
+      conflictPatterns: ['자유 vs 구조 사이의 균형 탐색'],
+      growthCurveType: 'exponential',
+      growthCurveDescription: '초기에는 학습 곡선이 가파르지만, 일정 수준 이상이 되면 빠르게 성장하는 지수형 성장 패턴을 보입니다.',
+      stressTriggers: ['반복적인 단순 업무', '창의성이 제한되는 환경'],
+      failurePattern: '완벽주의 경향으로 인해 작업 완료가 지연될 수 있습니다.',
+      lifeVersionStatement: {
+        oneLiner: '기술로 세상의 문제를 해결하는 분석적 창조자',
+        expanded: [
+          '기술과 문제 해결에 대한 깊은 관심이 커리어의 핵심 동력입니다.',
+          '분석적 사고력과 빠른 학습 능력이 IT 분야에서의 성공 가능성을 높입니다.',
+          '성장과 자율성을 중시하는 가치관이 스타트업이나 테크 기업과 잘 맞습니다.',
+          '혼자 깊이 집중하는 업무 스타일이 개발/분석 직군의 특성과 부합합니다.',
+          '반복적인 업무를 피하고 싶은 성향은 커리어 선택 시 중요한 고려 요소입니다.',
+        ],
+      },
+      expertGuidance: {
+        doNow: [
+          '관심 있는 프로그래밍 언어(Python, JavaScript 등)로 개인 프로젝트를 시작하세요.',
+          'GitHub에 포트폴리오를 만들어 학습 과정을 기록하세요.',
+          'IT 관련 커뮤니티(개발자 포럼, 오픈소스 프로젝트)에 참여해보세요.',
+        ],
+        stopDoing: [
+          '완벽한 준비를 기다리지 마세요 — 실전 경험이 가장 중요합니다.',
+          '너무 넓은 범위를 한꺼번에 학습하려 하지 마세요 — 하나에 집중하세요.',
+        ],
+        learnNext: [
+          '자료구조와 알고리즘 기초 (코딩 테스트 대비)',
+          'Git과 버전 관리 시스템 사용법',
+          '클라우드 서비스 기초 (AWS, GCP 등)',
+        ],
+        avoidPaths: [
+          '단순 반복 작업 위주의 직무 (데이터 입력, 단순 관리 등)',
+          '창의성이 제한되는 고도로 관료적인 조직',
+        ],
+      },
+      profileInterpretation: {
+        interests: [
+          { label: 'tech', score: 95, insight: '기술 분야에 대한 관심이 매우 높습니다.' },
+          { label: 'problem_solving', score: 90, insight: '문제 해결 과정 자체에서 동기를 얻습니다.' },
+          { label: 'creative', score: 80, insight: '창의적 표현에 대한 욕구가 있습니다.' },
+        ],
+        strengths: [
+          { label: 'analytical', score: 92, insight: '복잡한 정보를 분석하고 패턴을 찾는 데 탁월합니다.' },
+          { label: 'fast_learning', score: 88, insight: '새로운 기술과 개념을 빠르게 습득합니다.' },
+          { label: 'persistence', score: 82, insight: '어려운 문제에 끈기 있게 도전합니다.' },
+        ],
+        values: [
+          { label: 'growth', score: 90, insight: '지속적인 성장과 발전을 가장 중요하게 여깁니다.' },
+          { label: 'autonomy', score: 85, insight: '자율적으로 일하는 환경을 선호합니다.' },
+          { label: 'expertise', score: 80, insight: '전문성을 깊이 쌓아가는 것에 가치를 둡니다.' },
+        ],
+        constraints: [
+          { label: 'routine_drain', score: 70, insight: '반복적인 업무에서 에너지가 소모됩니다.' },
+        ],
+      },
+      metaCognition: {
+        myArsenal: {
+          strengths: [
+            { trait: 'analytical', confidence: 0.92, evidence: '복잡한 문제를 체계적으로 분석하는 능력' },
+            { trait: 'fast_learning', confidence: 0.88, evidence: '새로운 기술을 빠르게 습득하는 학습력' },
+            { trait: 'persistence', confidence: 0.82, evidence: '어려운 과제에 끈기 있게 도전하는 자세' },
+          ],
+          hiddenStrengths: [
+            { trait: '패턴 인식', confidence: 0.75, evidence: '데이터나 코드에서 규칙성을 빠르게 발견하는 능력이 잠재되어 있습니다.' },
+          ],
+        },
+        stressRecovery: {
+          stressFactors: [
+            { factor: '반복적 업무', severity: 'high', copingStrategy: '자동화 도구를 만들어 반복 작업을 줄이세요.' },
+            { factor: '자율성 부족', severity: 'medium', copingStrategy: '업무 범위 내에서 자신만의 방법론을 개발하세요.' },
+          ],
+          recoveryMethods: ['개인 프로젝트 개발', '새로운 기술 학습', '자연 속 산책'],
+        },
+        selfAwareness: {
+          knownStrengths: ['분석력', '학습력', '끈기'],
+          blindSpots: ['팀 커뮤니케이션 능력이 과소평가되고 있을 수 있습니다.'],
+          growthEdge: '기술적 깊이와 비즈니스 시각을 결합하면 더 큰 가치를 만들 수 있습니다.',
+        },
+      },
+      summary_one_page: {
+        headline: '기술 분석형 인재 — 개발·데이터 분야 최적합',
+        top_takeaways: [
+          '기술과 문제 해결에 대한 강한 관심 → IT 직군 핵심 적합',
+          '분석적 사고력 + 빠른 학습 → 소프트웨어 개발/데이터 분석 최적',
+          '성장과 자율성 중시 → 스타트업/테크 기업 문화 적합',
+          '혼자 집중하는 스타일 → 개발/분석 업무 적합',
+          '반복 업무 기피 → 창의적 문제 해결이 있는 직무 권장',
+        ],
+        recommended_next_step: '관심 분야(웹/앱/데이터/보안)를 하나 선택하고, 관련 프로젝트를 시작하세요.',
+      },
+      transitionTiming: {
+        day30: {
+          goal: '방향 설정',
+          actions: ['관심 있는 프로그래밍 언어 선택하고 기초 학습 시작', '개발자 커뮤니티 가입 및 멘토 찾기'],
+          milestone: '첫 번째 개인 프로젝트 아이디어 확정',
+        },
+        day60: {
+          goal: '역량 구축',
+          actions: ['선택한 언어로 개인 프로젝트 개발', 'GitHub 포트폴리오 구축 시작'],
+          milestone: '동작하는 프로토타입 완성',
+        },
+        day90: {
+          goal: '실전 경험',
+          actions: ['오픈소스 프로젝트 기여 시작', '인턴십 또는 프리랜서 프로젝트 지원'],
+          milestone: '실전 프로젝트 경험 1건 이상 확보',
+        },
+      },
+    },
+    user_insight: {
+      primary_type: 'analytical_builder',
+      type_label: '분석적 빌더',
+      description: '논리와 기술로 체계적인 솔루션을 만드는 유형',
+    },
+  }
+
+  return c.json({
+    success: true,
+    request_id: 'sample',
+    analysis_type: 'job',
+    result: sampleResult,
+    is_sample: true,
+  })
+})
+
 // POST /api/ai-analyzer/result/delete - AI 추천 결과 삭제
 analyzerRoutes.post('/result/delete', async (c) => {
   const db = c.env.DB

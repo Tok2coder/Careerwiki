@@ -17,10 +17,15 @@ import {
 
 const analyzerJobPage = new Hono<AppEnv>()
 
-// AI Job Analyzer v2.0.0 (Stage-based Universal Intake + Follow-up) - 로그인 필수
-analyzerJobPage.get('/', requireAuth, (c) => {
+// AI Job Analyzer v2.0.0 (Stage-based Universal Intake + Follow-up) - 로그인 필수 (sample=1은 예외)
+analyzerJobPage.get('/', async (c, next) => {
+  // sample 모드는 인증 없이 허용
+  if (c.req.query('sample') === '1') return next()
+  return (requireAuth as any)(c, next)
+}, (c) => {
   const user = c.get('user')
-  const debugMode = c.req.query('debug') === 'true' || isAdminRole(user?.role)
+  const isSampleMode = c.req.query('sample') === '1'
+  const debugMode = !isSampleMode && (c.req.query('debug') === 'true' || isAdminRole(user?.role))
   
   // ============================================
   // 통합 질문 데이터 (3단계 구조: 프로필 → 심층 → 결과)
@@ -10452,8 +10457,39 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                 }
             }
 
+            // 샘플 모드 확인 (?sample=1)
+            const isSampleMode = new URLSearchParams(window.location.search).get('sample') === '1';
+            if (isSampleMode) {
+                showLoading('샘플 리포트 불러오는 중...', '잠시만 기다려주세요');
+                try {
+                    const res = await fetch('/api/ai-analyzer/sample-result');
+                    const data = await res.json();
+                    hideLoading();
+                    if (data.success && data.result) {
+                        window.miniModuleResult = data.result.mini_module_result;
+                        displayResults({ result: data.result, request_id: 'sample' });
+                        goToStep(3);
+                        // 샘플 배너 표시
+                        const step3 = document.getElementById('step3');
+                        if (step3) {
+                            const banner = document.createElement('div');
+                            banner.className = 'mb-6 p-4 rounded-xl text-center';
+                            banner.style.cssText = 'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid rgba(99,102,241,0.3);';
+                            banner.innerHTML = '<p class="text-white font-semibold mb-2"><i class="fas fa-info-circle mr-2 text-indigo-400"></i>이것은 샘플 리포트입니다</p><p class="text-wiki-muted text-sm mb-3">"IT에 관심 있는 대학생" 페르소나의 분석 결과 예시입니다.</p><a href="/login?redirect=/analyzer/job" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg text-white font-semibold transition" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);"><i class="fas fa-rocket"></i> 나만의 맞춤 분석 받기</a>';
+                            step3.insertBefore(banner, step3.firstChild);
+                        }
+                    } else {
+                        showErrorToast('샘플을 불러올 수 없습니다.');
+                        goToStep(1);
+                    }
+                } catch (e) {
+                    hideLoading();
+                    showErrorToast('샘플을 불러오는데 실패했습니다.');
+                    goToStep(1);
+                }
+            }
             // 저장된 리포트 뷰 모드 확인 (?view=requestId)
-            const viewResultId = new URLSearchParams(window.location.search).get('view');
+            const viewResultId = !isSampleMode ? new URLSearchParams(window.location.search).get('view') : null;
             if (viewResultId) {
                 showLoading('리포트 불러오는 중...', '잠시만 기다려주세요');
                 try {
@@ -10473,7 +10509,7 @@ analyzerJobPage.get('/', requireAuth, (c) => {
                     showErrorToast('결과를 불러오는데 실패했습니다.');
                     goToStep(1);
                 }
-            } else {
+            } else if (!isSampleMode) {
             // URL에 session_id가 없으면 서버/로컬에서 복원 시도
             const restoredStep = await autoRestoreDraft();
             if (restoredStep === 'modal') {
