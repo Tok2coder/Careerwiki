@@ -3998,5 +3998,32 @@
     "person": null,
     "batch": 65,
     "date": "2026-03-28"
+  },
+  {
+    "slug": "도금원",
+    "jobId": "1765283298441456",
+    "revisionId": 860,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 66,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "도장원",
+    "jobId": "1765283300096129",
+    "revisionId": 862,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 66,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "고위직공무원일반",
+    "jobId": "1765283533411243",
+    "revisionId": 864,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 66,
+    "date": "2026-03-28"
   }
 ]
