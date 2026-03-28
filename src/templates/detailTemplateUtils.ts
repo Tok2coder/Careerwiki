@@ -229,8 +229,7 @@ export const renderHeroImage = (
 
   return `
     <figure
-      class="relative overflow-hidden rounded-3xl border border-wiki-border/60 bg-wiki-bg/60 shadow-lg"
-      style="height: clamp(220px, 30vw, 380px);"
+      class="relative overflow-hidden rounded-3xl border border-wiki-border/60 bg-wiki-bg/60 shadow-lg h-[280px] sm:h-[340px] md:h-[420px] lg:h-[500px] xl:h-[560px]"
       ${dataAttributeSnippet}
       data-hero-context="${escapeHtml(context)}"
       data-hero-url="${escapeHtml(imageUrl)}"
