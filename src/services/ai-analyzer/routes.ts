@@ -9184,7 +9184,7 @@ analyzerRoutes.get('/sample-result', async (c) => {
       },
       innerConflictAnalysis: '자율성과 안정성 사이에서 균형을 찾아야 할 수 있습니다. 자유로운 환경을 선호하지만, 너무 구조가 없으면 방향을 잃을 수 있으므로 적절한 프레임워크 안에서의 자율성이 이상적입니다.',
       conflictPatterns: ['자유 vs 구조 사이의 균형 탐색'],
-      growthCurveType: 'exponential',
+      growthCurveType: '지수형 성장 (Exponential)',
       growthCurveDescription: '초기에는 학습 곡선이 가파르지만, 일정 수준 이상이 되면 빠르게 성장하는 지수형 성장 패턴을 보입니다.',
       stressTriggers: ['반복적인 단순 업무', '창의성이 제한되는 환경'],
       failurePattern: '완벽주의 경향으로 인해 작업 완료가 지연될 수 있습니다.',
@@ -9254,12 +9254,31 @@ analyzerRoutes.get('/sample-result', async (c) => {
             { factor: '반복적 업무', severity: 'high', copingStrategy: '자동화 도구를 만들어 반복 작업을 줄이세요.' },
             { factor: '자율성 부족', severity: 'medium', copingStrategy: '업무 범위 내에서 자신만의 방법론을 개발하세요.' },
           ],
-          recoveryMethods: ['개인 프로젝트 개발', '새로운 기술 학습', '자연 속 산책'],
+          recoveryMethods: [
+            { factor: '개인 프로젝트', why: '자기만의 프로젝트를 만들 때 자율성과 창의성을 회복하고 동기를 재충전할 수 있습니다.' },
+            { factor: '새로운 기술 학습', why: '새로운 것을 배우는 과정에서 성장감을 느끼며 스트레스가 해소됩니다.' },
+            { factor: '자연 속 산책', why: '화면에서 벗어나 자연 속에서 걸으면 사고가 정리되고 에너지가 회복됩니다.' },
+          ],
         },
         selfAwareness: {
           knownStrengths: ['분석력', '학습력', '끈기'],
           blindSpots: ['팀 커뮤니케이션 능력이 과소평가되고 있을 수 있습니다.'],
           growthEdge: '기술적 깊이와 비즈니스 시각을 결합하면 더 큰 가치를 만들 수 있습니다.',
+        },
+        preferenceMap: {
+          likes: [
+            { item: '기술/IT', why: '새로운 기술을 탐구하고 직접 구현해보는 과정에서 큰 즐거움을 느낍니다.' },
+            { item: '문제해결', why: '복잡한 퍼즐을 풀듯이 문제를 분석하고 해결하는 과정이 가장 몰입하는 순간입니다.' },
+            { item: '자율적 환경', why: '스스로 계획하고 실행하는 환경에서 최고의 성과를 발휘합니다.' },
+          ],
+          dislikes: [
+            { item: '반복적 업무', why: '같은 작업을 반복하면 동기가 급격히 떨어지고 집중력이 흐려집니다.' },
+            { item: '자율성 부족', why: '세세하게 지시받는 환경에서는 창의성이 억제되어 답답함을 느낍니다.' },
+          ],
+          fits: [
+            { item: '깊이 있는 전문성', why: '하나의 분야를 깊이 파고들어 전문가가 되는 경로가 가장 잘 맞습니다.' },
+            { item: '성장 가능한 조직', why: '배움과 도전이 지속되는 환경에서 장기적으로 동기를 유지할 수 있습니다.' },
+          ],
         },
       },
       summary_one_page: {

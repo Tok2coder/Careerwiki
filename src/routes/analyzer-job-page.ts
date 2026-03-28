@@ -6148,8 +6148,10 @@ analyzerJobPage.get('/', async (c, next) => {
             }
 
             // URL을 ?view={request_id}로 업데이트 (새로고침 시 바로 결과 표시)
+            // 샘플 모드에서는 URL 변경하지 않음 (?sample=1 유지)
             const reqId = data.request_id || currentRequestId;
-            if (reqId && !new URLSearchParams(window.location.search).get('view')) {
+            const isSampleUrl = new URLSearchParams(window.location.search).get('sample') === '1';
+            if (reqId && !isSampleUrl && !new URLSearchParams(window.location.search).get('view')) {
                 const newUrl = window.location.pathname + '?view=' + reqId;
                 window.history.replaceState(null, '', newUrl);
             }
