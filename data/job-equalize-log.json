@@ -3944,5 +3944,32 @@
     "person": "장수용",
     "batch": 63,
     "date": "2026-03-27"
+  },
+  {
+    "slug": "도선사",
+    "jobId": "1765283468744946",
+    "revisionId": 848,
+    "careerTreeId": 255,
+    "person": "한기철",
+    "batch": 64,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "카피라이터",
+    "jobId": "1765283468700289",
+    "revisionId": 850,
+    "careerTreeId": 256,
+    "person": "정철",
+    "batch": 64,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "학예사",
+    "jobId": "1765283468738131",
+    "revisionId": 852,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 64,
+    "date": "2026-03-28"
   }
 ]
