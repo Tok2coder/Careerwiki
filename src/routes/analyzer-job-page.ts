@@ -6736,7 +6736,7 @@ analyzerJobPage.get('/', async (c, next) => {
                                             <h5 class="font-bold text-base" style="color:#e2e8f0;">주의점</h5>
                                             <span class="relative group cursor-help">
                                                 <i class="fas fa-question-circle text-wiki-muted text-sm"></i>
-                                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-sm text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(30,30,40,0.95); border: 1px solid rgba(255,255,255,0.1);">이 항목들은 에너지가 소모되거나 스트레스를 유발할 수 있는 요인입니다.<br/>커리어 선택 시 이 요인들을 고려하면 번아웃을 예방할 수 있습니다.</span>
+                                                <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-2 rounded-lg text-sm text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50" style="background: rgba(30,30,40,0.95); border: 1px solid rgba(255,255,255,0.1); min-width: 280px; white-space: normal;">이 항목들은 에너지가 소모되거나 스트레스를 유발할 수 있는 요인입니다. 커리어 선택 시 이 요인들을 고려하면 번아웃을 예방할 수 있습니다.</span>
                                             </span>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5">
