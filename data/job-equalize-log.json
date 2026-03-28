@@ -4079,5 +4079,32 @@
     "person": null,
     "batch": 68,
     "date": "2026-03-28"
+  },
+  {
+    "slug": "산업용로봇제어조작원",
+    "jobId": "1765285285304447",
+    "revisionId": 882,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 69,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "산업용세척기조립원",
+    "jobId": "1765285389395593",
+    "revisionId": 884,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 69,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "산업응용기술학원강사",
+    "jobId": "176528404743498",
+    "revisionId": 886,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 69,
+    "date": "2026-03-28"
   }
 ]
