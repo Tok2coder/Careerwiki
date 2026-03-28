@@ -4052,5 +4052,32 @@
     "person": null,
     "batch": 67,
     "date": "2026-03-28"
+  },
+  {
+    "slug": "산업용로봇자동화설비설계기술자",
+    "jobId": "1765283934220208",
+    "revisionId": 876,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 68,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "산업용로봇자동화설비제작기술자",
+    "jobId": "1765283934461739",
+    "revisionId": 878,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 68,
+    "date": "2026-03-28"
+  },
+  {
+    "slug": "산업용로봇자동화통합시스템제어기술자",
+    "jobId": "1765283934703558",
+    "revisionId": 880,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 68,
+    "date": "2026-03-28"
   }
 ]
