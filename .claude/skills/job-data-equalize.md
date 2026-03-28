@@ -809,9 +809,17 @@ npx wrangler d1 execute careerwiki-kr --remote --command "INSERT INTO career_tre
 [검증 + 저장]
 9. 출처 내용 대조 검증 (Section 4) — WebFetch로 모든 출처의 실제 내용 확인
 10. ⚠️ 각주 중복 검증 (Section 4-2) — 모든 텍스트 필드에서 [N] 중복 검사
-11. 편집 API 호출 — ⚠️ fields와 sources 반드시 함께! (changeSummary에 변경 사유 상세 기록)
-12. 커리어트리 인물 리서치 + DB 삽입 (Section 5-3) — 한국인만, 적합한 인물이 있는 경우만
-13. 프로덕션 확인 (Section 5) + QA 스크립트 실행
+11. validate-job-edit.cjs로 자동 검증 — PASS 확인 후에만 API 호출:
+    node scripts/validate-job-edit.cjs < draft.json  → FAIL이면 수정 후 재실행
+12. 편집 API 호출 — ⚠️ fields와 sources 반드시 함께! (changeSummary에 변경 사유 상세 기록)
+13. 커리어트리 인물 리서치 + DB 삽입 (Section 5-3) — 한국인만, 적합한 인물이 있는 경우만
+
+[재검토 — 이 단계 없이 다음 직업으로 넘어가면 안 됨]
+14. validate-job-edit.cjs 재검증 — 편집 API 호출 후에도 한 번 더 (DB에서 직접 읽어서)
+15. 프로덕션 curl 확인 (Section 5) — 각주 순서, 마크다운 잔류, sources 대응 확인
+16. ⚠️ full-quality-audit.cjs 단건 실행 → PASS 확인:
+    node scripts/full-quality-audit.cjs --slug={직업slug}
+    → FAIL이면 수정 후 재실행 → PASS될 때까지 반복
 ```
 
 ### 대량 (10개 이상) — 2단계 분리 패턴
@@ -831,14 +839,17 @@ Phase 2: Researcher Agent (3개 병렬, 각 1~2개 직업)
 Phase 3: 팀 리더 — 검증 + API 호출
   - validate-job-edit.cjs로 자동 검증:
     node scripts/validate-job-edit.cjs < researcher_output.json
-  - FAIL → 수정 후 재검증
+  - FAIL → 수정 후 재검증 → PASS될 때까지 반복
   - PASS → 편집 API 호출 (Section 3)
   - sidebarJobs/sidebarMajors DB 존재 확인 (SQL)
   - 출처 URL curl 접속 검증
 
-Phase 4: 프로덕션 확인
-  - curl로 각주 순서, 콘텐츠 렌더링 확인 (Section 5)
-  - QA 스크립트 실행 (Section 6-2)
+Phase 4: 프로덕션 확인 + 단건 재검토 ← 이 단계 없이 다음 직업으로 넘어가면 안 됨
+  - curl로 각주 순서, 마크다운 잔류, sources 대응 확인 (Section 5)
+  - ⚠️ 직업별 단건 full-quality-audit 실행 → PASS 확인:
+    node scripts/full-quality-audit.cjs --slug={직업slug}
+  - FAIL이면 즉시 수정 후 재실행 → PASS될 때까지 반복
+  - 전체 배치 완료 후 QA 스크립트 실행 (Section 6-2)
 ```
 
 ### 6-1. Researcher 에이전트 프롬프트 (축소판 — 이 템플릿만 복사)
@@ -886,6 +897,9 @@ Phase 4: 프로덕션 확인
 - **커리어트리 job_slug를 이전 스테이지(학생/타직업)에 설정** — 해당 직업 첫 진입 스테이지에만 설정
 - **wlb/social 등급 누락** — detailWlb.wlb와 detailWlb.social은 페이지 요약 카드에 표시되므로 반드시 포함
 - **서술 필드에 sources 누락** — way/salary/prospect/trivia/wlbDetail/socialDetail에 각주가 있으면 반드시 sources도 함께 전송
+- **마크다운 볼드(\*\*text\*\*) 서술 필드 사용** — 텍스트 필드에 \*\*...\*\* 절대 금지. 렌더링 시 별표가 그대로 노출됨
+- **같은 [N] 번호 한 필드에 2회 이상 사용** — 반드시 1회만
+- **sources 배열 길이 < 본문 최대 [N]** — 반드시 일치시킬 것
 
 ## 커리어트리 상세 (null이 아닌 경우)
 - **진입 경로 중심 5단계**: 준비→진입→초기→성장→정점
@@ -894,8 +908,10 @@ Phase 4: 프로덕션 확인
 - **person_title**: 해당 직업 내 정체성만 (전직 직함 제외)
 
 ## 각주 규칙
-- 필드별 [1]부터 순차. 같은 [N] 2회 등장 금지
-- 마침표 뒤에: 합니다.[1] (O)
+- 필드별 [1]부터 순차 (1, 2, 3...). 건너뛰기 금지 ([1][3] ← 금지)
+- 같은 [N] 번호 한 필드에 **정확히 1회만** (2회 이상 = 치명적 오류)
+- sources 배열 길이 = 본문 최대 [N] 번호 (반드시 일치)
+- 마침표 뒤에: 합니다.[1] (O) / 합니다[1]. (X)
 
 ## 출처 규칙
 - sources text: "[N] 출처설명" 형식. text에 URL 포함 금지
@@ -911,6 +927,36 @@ Phase 4: 프로덕션 확인
   "careerTree": { "person_name": "...", "stages_json": [...], ... } | null,
   "changeSummary": "변경 사유 상세"
 }
+```
+
+### 6-3. 단건 재검토 절차 (편집 API 호출 후 필수 — 다음 직업 전 반드시 완료)
+
+편집 API 호출 후, **다음 직업으로 넘어가기 전에 반드시** 아래 4단계를 수행한다.
+
+```
+Step 1: validate-job-edit.cjs 재검증
+  - DB에서 직접 직업 데이터를 읽어 validate:
+    npx wrangler d1 execute careerwiki-kr --remote --json \
+      --command "SELECT user_contributed_json FROM jobs WHERE slug='{slug}'" \
+      | node -e "..." | node scripts/validate-job-edit.cjs
+  - FAIL이면 해당 직업 데이터 수정 후 재호출 → 다시 Step 1부터
+
+Step 2: 프로덕션 curl 확인
+  curl -s "https://careerwiki.org/job/{slug}?nocache=1" | grep -E "data-source-id|마크다운체크"
+  확인 항목:
+  [ ] 각주 superscript가 페이지에 보임 (data-source-id 속성)
+  [ ] **볼드** 텍스트가 렌더링에 없음 (** 잔류 = 텍스트 버그)
+  [ ] way/salary/prospect에 각주 링크 있음
+
+Step 3: full-quality-audit.cjs 단건 실행
+  node scripts/full-quality-audit.cjs --slug={직업slug}
+
+  결과:
+  ✅ [PASS] 직업명 → 다음 직업으로 넘어가도 됨
+  ❌ [FAIL] → 이슈 확인 후 수정 → Step 1부터 재시작
+
+Step 4: PASS 확인 후에만 다음 직업으로 진행
+  - PASS 없이 다음 직업으로 넘어가는 것은 절대 금지
 ```
 
 ### 6-2. QA 자동 검증 스크립트
@@ -973,6 +1019,12 @@ done
 - salary에 추정치 입력 (출처 있는 데이터만)
 - trivia 2개 이상 작성 (유저 기여용 공간이므로 1개만)
 - 각주를 마침표 앞에 배치 (`합니다[1].` ← 금지. `합니다.[1]`이 올바른 형식)
+- **마크다운 볼드(\*\*text\*\*) 서술 필드에 사용** — way/wlbDetail/socialDetail 등 텍스트 필드에 \*\*...\*\* 금지. 렌더링 시 볼드 처리 안 되고 별표가 그대로 노출됨
+- **같은 [N] 각주 번호를 한 필드에 2회 이상 사용** — 같은 출처의 여러 사실은 한 문장으로 합쳐서 [N] 1회만 사용
+- **[N] 번호가 1부터 순차적이지 않은 것 사용** — 각 필드 내에서 반드시 [1][2][3]... 순서. [2][3]으로 시작하거나 [1][3] 건너뛰기 금지
+- **sources 개수 < 본문 최대 [N] 번호** — sources 배열 길이와 본문 최대 각주 번호가 반드시 일치해야 함
+- **재검토 없이 다음 직업으로 넘어가기** — 편집 API 호출 후 full-quality-audit.cjs --slug 단건 실행하여 PASS 확인 없이 다음 직업으로 넘어가면 안 됨 (Section 6-3 참고)
+- **validate-job-edit.cjs PASS 없이 편집 API 호출** — 반드시 PASS 후 API 호출
 - `.dev.vars` 커밋, `DROP TABLE`, `DELETE FROM` (WHERE 없이)
 
 ---

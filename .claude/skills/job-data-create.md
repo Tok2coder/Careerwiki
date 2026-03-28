@@ -871,6 +871,14 @@ echo "$slug: ${count}개 $ok ($nums)"
 [Phase 7: 프로덕션 검증]
 19. curl로 페이지 렌더링 확인
 20. QA 각주 순서 스크립트 실행
+
+[Phase 8: 단건 재검토 — 이 단계 없이 다음 직업으로 넘어가면 안 됨]
+21. validate-job-edit.cjs 재검증 (DB에서 직접 읽어서 한 번 더)
+22. 프로덕션 curl — 각주 순서, 마크다운 잔류(**) 확인, sources 대응 확인
+23. ⚠️ full-quality-audit.cjs 단건 실행 → PASS 확인:
+    node scripts/full-quality-audit.cjs --slug={직업slug}
+    → FAIL이면 즉시 수정 후 재실행 → PASS될 때까지 반복
+24. PASS 확인 후에만 다음 직업으로 진행
 ```
 
 ---
@@ -968,10 +976,18 @@ Phase 5: 프로덕션 확인 (전체 직업 일괄)
 - abilityList/aptitude/education에 공식 통계 없이 수치 넣기 → null 유지
 - 출처 없는 데이터, 추정값, AI 생성 수치
 - 커리어트리에 외국인, 전직 스테이지, 수상 독립 스테이지
+- **마크다운 볼드(\*\*text\*\*) 서술 필드에 사용** — 텍스트 필드에 \*\*...\*\* 절대 금지. 별표가 그대로 노출됨
+- **같은 [N] 번호 한 필드에 2회 이상 사용** — 같은 출처의 여러 사실은 한 문장으로 합쳐서 [N] 1회만
+- **sources 배열 길이 < 본문 최대 [N]** — 반드시 일치시킬 것
+- **wlb/social 등급 누락** — detailWlb.wlb와 detailWlb.social 반드시 포함
+- **validate-job-edit.cjs PASS 없이 편집 API 호출**
+- **재검토(full-quality-audit.cjs --slug PASS) 없이 다음 직업으로 넘어가기**
 
 ## 각주 규칙
-- 필드별 [1]부터 순차. 같은 [N] 2회 등장 금지
-- 마침표 뒤에: 합니다.[1] (O)
+- 필드별 [1]부터 순차 (1, 2, 3...). 건너뛰기 금지
+- 같은 [N] 번호 한 필드에 **정확히 1회만** (2회 이상 = 치명적 오류)
+- sources 배열 길이 = 본문 최대 [N] 번호 (반드시 일치)
+- 마침표 뒤에: 합니다.[1] (O) / 합니다[1]. (X)
 
 ## 출처 규칙
 - sources text: "[N] 출처설명" 형식. text에 URL 포함 금지
