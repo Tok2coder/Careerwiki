@@ -834,19 +834,22 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
       </a>`
   }
 
-  const visibleHtml = visibleLinks.map(renderCard).join('')
-  const hiddenHtml = hiddenLinks.length > 0
-    ? `
-      <div class="hidden" data-cw-youtube-more>
-        ${hiddenLinks.map(renderCard).join('')}
-      </div>
-      <button type="button"
-        class="w-full mt-2 py-2 text-sm text-wiki-muted hover:text-wiki-primary transition text-center"
-        onclick="const more=this.previousElementSibling;if(more){more.classList.toggle('hidden');this.textContent=more.classList.contains('hidden')?'더보기 (${hiddenLinks.length}개)':'접기'}"
-      >더보기 (${hiddenLinks.length}개)</button>`
-    : ''
+  const allHtml = validLinks.map(renderCard).join('')
 
-  return `<div class="space-y-3 md:space-y-0 md:grid md:grid-cols-${Math.min(visibleLinks.length, 3)} md:gap-3">${visibleHtml}${hiddenHtml}</div>`
+  // 모바일: 세로 스택, 데스크톱: 가로 스크롤 (3개 초과 시) 또는 고정 그리드
+  const cols = Math.min(validLinks.length, 3)
+  // 3개 이하 → 고정 그리드 (최소 2열), 4개 이상 → 가로 스크롤
+  if (validLinks.length <= 3) {
+    const gridCols = Math.max(cols, 2)
+    return `<div class="space-y-3 md:space-y-0 md:grid md:grid-cols-${gridCols} md:gap-3">${allHtml}</div>`
+  }
+
+  // 4개 이상: 모바일은 세로, 데스크톱은 가로 스크롤
+  return `
+    <div class="space-y-3 md:hidden">${allHtml}</div>
+    <div class="hidden md:flex md:gap-3 md:overflow-x-auto md:pb-2" style="scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;">
+      ${validLinks.map(link => `<div class="flex-shrink-0" style="width:calc(33.333% - 8px);scroll-snap-align:start;">${renderCard(link)}</div>`).join('')}
+    </div>`
 }
 
 // ────────── Comments Section ──────────
