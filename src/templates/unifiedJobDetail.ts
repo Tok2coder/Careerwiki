@@ -2422,7 +2422,21 @@ const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<stri
 
 // 사용자 추가 출처를 평탄화하여 공통으로 활용 (페이지 표시 순서대로 정렬, 1부터 번호 부여)
 const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; text: string; url?: string }> => {
-  if (!src || typeof src !== 'object') return []
+  if (!src) return []
+
+  // 단순 문자열 배열 포맷: ["출처1", "출처2", ...]
+  if (Array.isArray(src) && src.every((item: any) => typeof item === 'string')) {
+    return src
+      .filter((s: string) => s && s.trim())
+      .map((s: string, idx: number) => ({
+        id: idx + 1,
+        fieldKey: 'general',
+        text: s.trim(),
+        url: undefined
+      }))
+  }
+
+  if (typeof src !== 'object') return []
 
   // 필드 표시 순서 (소개 탭 → 과정 탭)
   const fieldOrder: string[] = [
@@ -2538,7 +2552,8 @@ const renderSourcesCollapsible = (
     'way': '되는 방법', 'overviewSalary.sal': '임금 정보',
     'overviewProspect.main': '전망 정보', 'sidebarMajors': '관련 학과', 'sidebarCerts': '추천 자격증',
     'detailWlb.wlbDetail': '워라밸 지수 상세', 'detailWlb.socialDetail': '사회적 평가 상세',
-    'overviewWork.mentalAct': '정신활동'
+    'overviewWork.mentalAct': '정신활동',
+    'general': '참고 자료'
   }
   const fieldSectionMap: Record<string, { tab: string; section: string }> = {
     'summary': { tab: 'overview', section: 'overview' },
