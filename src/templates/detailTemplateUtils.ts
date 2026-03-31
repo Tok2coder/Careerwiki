@@ -41,9 +41,16 @@ const stripHtmlTags = (html: string): string => {
  */
 export type FootnoteMap = Record<string, Record<string, number>>
 
-export const formatRichText = (value?: string | null, fieldKey?: string, footnoteMap?: FootnoteMap, sourceTextMap?: Record<number, string>): string => {
-  if (!value || !value.trim()) {
+export const formatRichText = (value?: string | null | string[], fieldKey?: string, footnoteMap?: FootnoteMap, sourceTextMap?: Record<number, string>): string => {
+  // Handle array input (e.g., user_contributed_json way field stored as array)
+  if (Array.isArray(value)) {
+    value = value.join('\n')
+  }
+  if (!value || (typeof value === 'string' && !value.trim())) {
     return '<p class="content-text text-wiki-muted">정보가 제공되지 않았습니다.</p>'
+  }
+  if (typeof value !== 'string') {
+    value = String(value)
   }
 
   // HTML 태그가 포함되어 있으면 제거

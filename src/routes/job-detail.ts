@@ -429,6 +429,7 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
     }
 
     // 500 for other errors
+    console.error('[JOB-DETAIL-500]', slug, error?.message)
     const fallbackHtml = renderDetailFallback({
       icon: 'fa-exclamation-circle',
       iconColor: 'text-red-500',
