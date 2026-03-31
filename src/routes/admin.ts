@@ -15,7 +15,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { renderAdminJobEqualize } from '../templates/admin/adminJobEqualize'
+import { renderAdminJobEqualize, hasField, EQUALIZE_FIELDS, type JobEqualizeItem } from '../templates/admin/adminJobEqualize'
 import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution, getAiUsageDistribution, banIp, unbanIp } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
@@ -1009,35 +1009,70 @@ adminRoutes.get('/admin/api/reindex/status', async (c) => {
 adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
   try {
     const db = c.env.DB
-    // totalJobs: 전체 활성 직업 수
+
+    // 1. 전체 활성 직업 수
     const totalResult = await db.prepare(
       'SELECT COUNT(*) as count FROM jobs WHERE is_active = 1'
     ).first<{ count: number }>()
     const totalJobs = totalResult?.count || 0
 
-    // completedCount: way 필드 있는 직업 수 (LIKE 패턴 — json_extract 메모리 한도 회피)
-    const countResult = await db.prepare(
-      `SELECT COUNT(*) as count FROM jobs WHERE is_active = 1 AND user_contributed_json LIKE '%"way":%'`
-    ).first<{ count: number }>()
-    const completedCount = countResult?.count || 0
+    // 2. 보완된 직업 목록 (user_contributed_json IS NOT NULL) — 배치로 조회
+    const allRows: { name: string; slug: string; user_contributed_json: string }[] = []
+    let offset = 0
+    while (true) {
+      const batch = await db.prepare(
+        `SELECT name, slug, user_contributed_json FROM jobs
+         WHERE is_active = 1 AND user_contributed_json IS NOT NULL
+         ORDER BY name LIMIT 500 OFFSET ?`
+      ).bind(offset).all<{ name: string; slug: string; user_contributed_json: string }>()
+      const rows = batch.results || []
+      allRows.push(...rows)
+      if (rows.length < 500) break
+      offset += 500
+    }
 
-    // 최근 보완 직업 목록 (JSON blob 제외 — Worker 메모리 절약)
-    const listResult = await db.prepare(
-      `SELECT id, name, slug, user_last_updated_at FROM jobs WHERE is_active = 1 AND user_contributed_json LIKE '%"way":%' ORDER BY user_last_updated_at DESC LIMIT 200`
-    ).all<{ id: string; name: string; slug: string; user_last_updated_at: number }>()
+    // 3. 각 직업의 필드 완성도 파싱
+    let perfectCount = 0
+    let poorCount = 0
+    let totalJsonSize = 0
 
-    const logEntries = (listResult.results || []).map(row => ({
-      id: row.id,
-      name: row.name,
-      slug: row.slug,
-      productionUrl: `https://careerwiki.org/job/${encodeURIComponent(row.slug)}`,
-      completedAt: (() => { const ts = Number(row.user_last_updated_at); return ts > 0 ? new Date(ts).toISOString() : new Date().toISOString() })(),
-      revision: 0,
-      fieldsUpdated: ['way'],
-      careerTree: [] as string[],
+    const items: JobEqualizeItem[] = allRows.map(row => {
+      const jsonSize = row.user_contributed_json ? row.user_contributed_json.length : 0
+      totalJsonSize += jsonSize
+
+      let parsed: any = {}
+      try { parsed = JSON.parse(row.user_contributed_json) } catch {}
+
+      const fields = EQUALIZE_FIELDS.map(f => hasField(parsed, f))
+      const fieldCount = fields.filter(Boolean).length
+
+      // 출처 분석
+      const sources = parsed._sources
+      let sourceCount = 0
+      let hasSourceUrls = false
+      if (Array.isArray(sources)) {
+        sourceCount = sources.length
+        hasSourceUrls = sources.some((s: any) =>
+          typeof s === 'object' && s !== null && typeof s.url === 'string' && s.url.startsWith('http')
+        )
+      }
+
+      // YouTube 링크 수
+      const yt = parsed.youtubeLinks
+      const youtubeCount = Array.isArray(yt) ? yt.length : 0
+
+      if (fieldCount === 12) perfectCount++
+      if (fieldCount < 6) poorCount++
+
+      return { name: row.name, slug: row.slug, fields, fieldCount, jsonSize, sourceCount, hasSourceUrls, youtubeCount }
+    })
+
+    const contributedCount = items.length
+    const avgJsonSize = contributedCount > 0 ? Math.round(totalJsonSize / contributedCount) : 0
+
+    return c.html(renderAdminJobEqualize({
+      totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items,
     }))
-
-    return c.html(renderAdminJobEqualize({ totalJobs, logEntries, completedCount }))
   } catch (error: any) {
     console.error('Job equalize page error:', error)
     return c.text(`데이터 보완 현황을 불러오는데 실패했습니다. Error: ${error?.message || String(error)}`, 500)

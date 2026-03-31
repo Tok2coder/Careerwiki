@@ -1,295 +1,333 @@
 /**
- * 관리자 직업 데이터 보완 현황 페이지
- * - 전체 직업 수 vs 보완 완료 수 (진행률)
- * - 최근 보완 목록
- * - 일별 보완 추이 차트
- * - 필드별 완성도 통계
+ * 관리자 직업 데이터 보완 현황 대시보드
+ * - DB 실시간 조회 (user_contributed_json 파싱)
+ * - 12개 필드별 완성도
+ * - 클라이언트 사이드 필터/정렬/검색/페이지네이션
  */
 
 import { renderAdminLayout } from './adminLayout'
 
-export interface JobEqualizeEntry {
-  id: string
+export const EQUALIZE_FIELDS = [
+  'way', 'overviewSalary', 'overviewProspect', 'trivia',
+  'detailWlb', 'detailReady', 'sidebarJobs', 'sidebarMajors',
+  'sidebarCerts', 'heroTags', 'youtubeLinks', '_sources',
+] as const
+
+export const EQUALIZE_FIELD_LABELS: Record<string, string> = {
+  way: '진입방법',
+  overviewSalary: '임금',
+  overviewProspect: '전망',
+  trivia: '여담',
+  detailWlb: '워라밸',
+  detailReady: '준비방법',
+  sidebarJobs: '관련직업',
+  sidebarMajors: '관련전공',
+  sidebarCerts: '자격증',
+  heroTags: '태그',
+  youtubeLinks: 'YouTube',
+  _sources: '출처',
+}
+
+export interface JobEqualizeItem {
   name: string
   slug: string
-  productionUrl: string
-  completedAt: string
-  revision: number
-  fieldsUpdated: string[]
-  careerTree: string[]
+  fields: boolean[]   // 12 fields in EQUALIZE_FIELDS order
+  fieldCount: number   // X/12
+  jsonSize: number     // bytes
+  sourceCount: number
+  hasSourceUrls: boolean
+  youtubeCount: number
 }
 
 export interface AdminJobEqualizeProps {
   totalJobs: number
-  logEntries: JobEqualizeEntry[]
-  completedCount?: number
+  contributedCount: number
+  perfectCount: number    // 12/12
+  poorCount: number       // <6
+  avgJsonSize: number
+  items: JobEqualizeItem[]
 }
 
-const FIELD_LABELS: Record<string, string> = {
-  way: '진입방법',
-  'overviewSalary.sal': '임금정보',
-  'overviewProspect.main': '전망',
-  trivia: '특이사항',
-  'detailWlb.wlbDetail': '워라밸',
-  'detailWlb.socialDetail': '사회적 인식',
-  detailReady: '준비방법',
-  sidebarCerts: '자격증',
-  sidebarMajors: '관련 전공',
-  sidebarJobs: '관련 직업',
-  heroTags: '태그',
-  youtubeLinks: 'YouTube 링크',
-}
-
-function formatDate(iso: string): string {
-  const d = new Date(iso)
-  const mm = String(d.getMonth() + 1).padStart(2, '0')
-  const dd = String(d.getDate()).padStart(2, '0')
-  const hh = String(d.getHours()).padStart(2, '0')
-  const min = String(d.getMinutes()).padStart(2, '0')
-  return `${mm}/${dd} ${hh}:${min}`
+/** Check if a field has meaningful content */
+export function hasField(json: any, key: string): boolean {
+  const val = json[key]
+  if (val === null || val === undefined) return false
+  if (typeof val === 'string') return val.trim().length > 0
+  if (Array.isArray(val)) return val.length > 0
+  if (typeof val === 'object') return Object.keys(val).length > 0
+  return true
 }
 
 export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
-  const { totalJobs, logEntries, completedCount: completedCountProp } = props
+  const { totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items } = props
+  const uncontributed = totalJobs - contributedCount
+  const progressPct = totalJobs > 0 ? ((contributedCount / totalJobs) * 100).toFixed(1) : '0.0'
 
-  const completedCount = completedCountProp ?? logEntries.length
-  const progressPct = totalJobs > 0 ? ((completedCount / totalJobs) * 100).toFixed(1) : '0.0'
-  const remainingCount = totalJobs - completedCount
-
-  // 최근 보완 10건 (날짜 내림차순)
-  const recent = [...logEntries]
-    .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime())
-    .slice(0, 15)
-
-  // 일별 보완 통계 (최근 30일)
-  const byDate: Record<string, number> = {}
-  logEntries.forEach(e => {
-    const date = e.completedAt.slice(0, 10)
-    byDate[date] = (byDate[date] || 0) + 1
-  })
-  const dateEntries = Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b))
-  const chartLabels = JSON.stringify(dateEntries.map(([d]) => {
-    const [, mm, dd] = d.split('-')
-    return `${parseInt(mm)}/${parseInt(dd)}`
-  }))
-  const chartData = JSON.stringify(dateEntries.map(([, v]) => v))
-
-  // 필드별 등장 횟수
-  const fieldCount: Record<string, number> = {}
-  logEntries.forEach(e => {
-    e.fieldsUpdated.forEach(f => {
-      fieldCount[f] = (fieldCount[f] || 0) + 1
-    })
-  })
-  const topFields = Object.entries(fieldCount)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 12)
-
-  // 커리어트리 있는 직업 수
-  const withCareerTree = logEntries.filter(e => e.careerTree && e.careerTree.length > 0).length
+  const fieldLabelsJson = JSON.stringify(EQUALIZE_FIELDS.map(f => EQUALIZE_FIELD_LABELS[f]))
+  const fieldKeysJson = JSON.stringify(EQUALIZE_FIELDS)
+  const itemsJson = JSON.stringify(items)
 
   const content = `
-    <!-- KPI 카드 -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
-      <div class="glass-card rounded-xl p-4">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-9 h-9 bg-blue-500/20 rounded-lg flex items-center justify-center shrink-0">
-            <i class="fas fa-briefcase text-blue-400 text-sm"></i>
+    <!-- 요약 통계 KPI -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+      <div class="glass-card rounded-xl p-4 stat-card">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-briefcase text-blue-400 text-xs"></i>
           </div>
-          <span class="text-xs text-slate-400">전체 직업</span>
+          <span class="text-[11px] text-slate-400">전체 직업</span>
         </div>
-        <div class="text-2xl font-bold text-white">${totalJobs.toLocaleString()}</div>
-        <div class="text-xs text-slate-500 mt-1">활성 직업 총계</div>
+        <div class="text-xl font-bold text-white">${totalJobs.toLocaleString()}</div>
       </div>
-
-      <div class="glass-card rounded-xl p-4">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-9 h-9 bg-emerald-500/20 rounded-lg flex items-center justify-center shrink-0">
-            <i class="fas fa-check-circle text-emerald-400 text-sm"></i>
+      <div class="glass-card rounded-xl p-4 stat-card">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-check-circle text-emerald-400 text-xs"></i>
           </div>
-          <span class="text-xs text-slate-400">보완 완료</span>
+          <span class="text-[11px] text-slate-400">보완 완료</span>
         </div>
-        <div class="text-2xl font-bold text-emerald-400">${completedCount}</div>
-        <div class="text-xs text-slate-500 mt-1">${progressPct}% 진행</div>
+        <div class="text-xl font-bold text-emerald-400">${contributedCount}</div>
+        <div class="text-[10px] text-slate-500">${progressPct}%</div>
       </div>
-
-      <div class="glass-card rounded-xl p-4">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-9 h-9 bg-amber-500/20 rounded-lg flex items-center justify-center shrink-0">
-            <i class="fas fa-clock text-amber-400 text-sm"></i>
+      <div class="glass-card rounded-xl p-4 stat-card">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-star text-green-400 text-xs"></i>
           </div>
-          <span class="text-xs text-slate-400">잔여</span>
+          <span class="text-[11px] text-slate-400">완벽 (12/12)</span>
         </div>
-        <div class="text-2xl font-bold text-amber-400">${remainingCount.toLocaleString()}</div>
-        <div class="text-xs text-slate-500 mt-1">미완료 직업</div>
+        <div class="text-xl font-bold text-green-400">${perfectCount}</div>
       </div>
-
-      <div class="glass-card rounded-xl p-4">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-9 h-9 bg-purple-500/20 rounded-lg flex items-center justify-center shrink-0">
-            <i class="fas fa-sitemap text-purple-400 text-sm"></i>
+      <div class="glass-card rounded-xl p-4 stat-card">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-red-400 text-xs"></i>
           </div>
-          <span class="text-xs text-slate-400">커리어트리</span>
+          <span class="text-[11px] text-slate-400">부실 (&lt;6)</span>
         </div>
-        <div class="text-2xl font-bold text-purple-400">${withCareerTree}</div>
-        <div class="text-xs text-slate-500 mt-1">인물 등록 직업</div>
+        <div class="text-xl font-bold text-red-400">${poorCount}</div>
+      </div>
+      <div class="glass-card rounded-xl p-4 stat-card">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-slate-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-minus-circle text-slate-400 text-xs"></i>
+          </div>
+          <span class="text-[11px] text-slate-400">미보완</span>
+        </div>
+        <div class="text-xl font-bold text-slate-400">${uncontributed.toLocaleString()}</div>
+      </div>
+      <div class="glass-card rounded-xl p-4 stat-card">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-database text-purple-400 text-xs"></i>
+          </div>
+          <span class="text-[11px] text-slate-400">평균 JSON</span>
+        </div>
+        <div class="text-xl font-bold text-purple-400">${avgJsonSize > 1024 ? (avgJsonSize / 1024).toFixed(1) + 'KB' : avgJsonSize + 'B'}</div>
       </div>
     </div>
 
     <!-- 진행률 바 -->
-    <div class="glass-card rounded-xl p-5 mb-6">
-      <div class="flex items-center justify-between mb-3">
+    <div class="glass-card rounded-xl p-4 mb-6">
+      <div class="flex items-center justify-between mb-2">
         <h3 class="text-sm font-semibold text-white">전체 진행률</h3>
-        <span class="text-sm font-bold text-emerald-400">${completedCount} / ${totalJobs.toLocaleString()} (${progressPct}%)</span>
+        <span class="text-sm font-bold text-emerald-400">${contributedCount} / ${totalJobs.toLocaleString()}</span>
       </div>
-      <div class="w-full bg-slate-700/60 rounded-full h-3 overflow-hidden">
-        <div class="h-3 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all"
-             style="width: ${progressPct}%"></div>
-      </div>
-      <div class="flex justify-between text-xs text-slate-500 mt-2">
-        <span>0</span>
-        <span>${Math.round(totalJobs * 0.25).toLocaleString()}</span>
-        <span>${Math.round(totalJobs * 0.5).toLocaleString()}</span>
-        <span>${Math.round(totalJobs * 0.75).toLocaleString()}</span>
-        <span>${totalJobs.toLocaleString()}</span>
+      <div class="w-full bg-slate-700/60 rounded-full h-2.5 overflow-hidden">
+        <div class="h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400" style="width: ${progressPct}%"></div>
       </div>
     </div>
 
-    <!-- 차트 + 필드 통계 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-      <!-- 일별 보완 추이 차트 -->
-      <div class="glass-card rounded-xl p-5">
-        <h3 class="text-sm font-semibold text-white mb-4">
-          <i class="fas fa-chart-bar text-blue-400 mr-2"></i>일별 보완 현황
-        </h3>
-        <div class="relative h-48">
-          <canvas id="dailyChart"></canvas>
+    <!-- 필터/검색 바 -->
+    <div class="glass-card rounded-xl p-4 mb-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- 검색 -->
+        <div class="relative flex-1 min-w-[200px]">
+          <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+          <input id="searchInput" type="text" placeholder="직업명 검색..."
+            class="w-full pl-9 pr-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50" />
         </div>
+        <!-- 필터 -->
+        <select id="filterSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50">
+          <option value="all">전체 (${contributedCount})</option>
+          <option value="perfect">완벽 12/12 (${perfectCount})</option>
+          <option value="good">양호 6~11 (${contributedCount - perfectCount - poorCount})</option>
+          <option value="poor">부실 &lt;6 (${poorCount})</option>
+        </select>
+        <!-- 정렬 -->
+        <select id="sortSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50">
+          <option value="name-asc">이름순 ↑</option>
+          <option value="name-desc">이름순 ↓</option>
+          <option value="field-desc">완성도 높은순</option>
+          <option value="field-asc">완성도 낮은순</option>
+          <option value="size-desc">JSON 큰순</option>
+          <option value="size-asc">JSON 작은순</option>
+        </select>
       </div>
-
-      <!-- 필드별 완성도 -->
-      <div class="glass-card rounded-xl p-5">
-        <h3 class="text-sm font-semibold text-white mb-4">
-          <i class="fas fa-list-check text-purple-400 mr-2"></i>보완된 필드 현황
-        </h3>
-        <div class="space-y-2 overflow-y-auto admin-mini-scroll" style="max-height: 192px">
-          ${topFields.map(([field, count]) => {
-            const label = FIELD_LABELS[field] || field
-            const pct = completedCount > 0 ? Math.round((count / completedCount) * 100) : 0
-            return `
-            <div>
-              <div class="flex justify-between text-xs mb-1">
-                <span class="text-slate-300">${label}</span>
-                <span class="text-slate-400">${count}건 (${pct}%)</span>
-              </div>
-              <div class="w-full bg-slate-700/50 rounded-full h-1.5">
-                <div class="h-1.5 rounded-full bg-purple-500/70" style="width: ${pct}%"></div>
-              </div>
-            </div>`
-          }).join('')}
-        </div>
+      <div class="mt-2 text-xs text-slate-500">
+        <span id="resultCount">${contributedCount}</span>개 직업 표시 중
       </div>
     </div>
 
-    <!-- 최근 보완 직업 목록 -->
-    <div class="glass-card rounded-xl p-5">
-      <h3 class="text-sm font-semibold text-white mb-4">
-        <i class="fas fa-history text-emerald-400 mr-2"></i>최근 보완 직업 (최신 15건)
-      </h3>
+    <!-- 직업 목록 테이블 -->
+    <div class="glass-card rounded-xl overflow-hidden">
       <div class="overflow-x-auto admin-mini-scroll">
         <table class="w-full text-sm">
           <thead>
-            <tr class="text-left border-b border-slate-700/50">
-              <th class="pb-3 text-xs text-slate-400 font-medium pr-4">직업명</th>
-              <th class="pb-3 text-xs text-slate-400 font-medium pr-4 hidden sm:table-cell">완료 일시</th>
-              <th class="pb-3 text-xs text-slate-400 font-medium pr-4 hidden md:table-cell">보완 필드</th>
-              <th class="pb-3 text-xs text-slate-400 font-medium pr-4 hidden lg:table-cell">커리어트리</th>
-              <th class="pb-3 text-xs text-slate-400 font-medium">revision</th>
-              <th class="pb-3 text-xs text-slate-400 font-medium text-right">링크</th>
+            <tr class="text-left border-b border-slate-700/50 bg-slate-800/40">
+              <th class="px-4 py-3 text-xs text-slate-400 font-medium sticky left-0 bg-slate-800/90 z-10 min-w-[140px]">직업명</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px]">완성도</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="진입방법">방법</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="임금">임금</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="전망">전망</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="여담">여담</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="워라밸">WLB</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="준비방법">준비</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="관련직업">직업</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="관련전공">전공</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="자격증">자격</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="태그">태그</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="YouTube">YT</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="출처">출처</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px]">JSON</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]">출처수</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center" title="출처에 URL 포함">URL</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]">YT수</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-700/30">
-            ${recent.map(entry => `
-            <tr class="hover:bg-slate-700/20 transition-colors">
-              <td class="py-2.5 pr-4">
-                <span class="text-white font-medium">${entry.name}</span>
-              </td>
-              <td class="py-2.5 pr-4 hidden sm:table-cell">
-                <span class="text-slate-400 text-xs">${formatDate(entry.completedAt)}</span>
-              </td>
-              <td class="py-2.5 pr-4 hidden md:table-cell">
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs bg-emerald-500/15 text-emerald-400">
-                  ${entry.fieldsUpdated.length}개 필드
-                </span>
-              </td>
-              <td class="py-2.5 pr-4 hidden lg:table-cell">
-                ${entry.careerTree && entry.careerTree.length > 0
-                  ? `<span class="text-xs text-purple-400">${entry.careerTree.slice(0, 2).join(', ')}${entry.careerTree.length > 2 ? ` 외 ${entry.careerTree.length - 2}명` : ''}</span>`
-                  : `<span class="text-xs text-slate-600">-</span>`
-                }
-              </td>
-              <td class="py-2.5 pr-4">
-                <span class="text-xs text-slate-500">r${entry.revision}</span>
-              </td>
-              <td class="py-2.5 text-right">
-                <a href="${entry.productionUrl}" target="_blank" rel="noopener"
-                   class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-blue-500/15 text-blue-400 hover:bg-blue-500/25 transition-colors">
-                  <i class="fas fa-external-link-alt text-[10px]"></i>
-                  <span class="hidden sm:inline">보기</span>
-                </a>
-              </td>
-            </tr>
-            `).join('')}
+          <tbody id="tableBody" class="divide-y divide-slate-700/30">
           </tbody>
         </table>
+      </div>
+      <!-- 페이지네이션 -->
+      <div class="flex items-center justify-between px-4 py-3 border-t border-slate-700/50">
+        <span class="text-xs text-slate-500">페이지 <span id="pageInfo">1/1</span></span>
+        <div class="flex gap-2">
+          <button id="prevBtn" class="px-3 py-1.5 bg-slate-700/50 rounded text-xs text-slate-400 hover:bg-slate-600/50 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+            <i class="fas fa-chevron-left mr-1"></i>이전
+          </button>
+          <button id="nextBtn" class="px-3 py-1.5 bg-slate-700/50 rounded text-xs text-slate-400 hover:bg-slate-600/50 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+            다음<i class="fas fa-chevron-right ml-1"></i>
+          </button>
+        </div>
       </div>
     </div>
 
     <script>
     (function() {
-      const labels = ${chartLabels};
-      const data = ${chartData};
+      var ITEMS = ${itemsJson};
+      var PAGE_SIZE = 50;
+      var currentPage = 1;
+      var filtered = ITEMS;
 
-      const ctx = document.getElementById('dailyChart');
-      if (!ctx) return;
+      var searchInput = document.getElementById('searchInput');
+      var filterSelect = document.getElementById('filterSelect');
+      var sortSelect = document.getElementById('sortSelect');
+      var tableBody = document.getElementById('tableBody');
+      var resultCount = document.getElementById('resultCount');
+      var pageInfo = document.getElementById('pageInfo');
+      var prevBtn = document.getElementById('prevBtn');
+      var nextBtn = document.getElementById('nextBtn');
 
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [{
-            label: '보완 완료 직업 수',
-            data,
-            backgroundColor: 'rgba(52, 211, 153, 0.4)',
-            borderColor: 'rgba(52, 211, 153, 0.8)',
-            borderWidth: 1,
-            borderRadius: 4,
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: ctx => ctx.parsed.y + '개 직업 보완'
-              }
-            }
-          },
-          scales: {
-            x: {
-              ticks: { color: '#94a3b8', font: { size: 11 } },
-              grid: { color: 'rgba(148,163,184,0.1)' }
-            },
-            y: {
-              beginAtZero: true,
-              ticks: { color: '#94a3b8', font: { size: 11 }, stepSize: 5 },
-              grid: { color: 'rgba(148,163,184,0.1)' }
-            }
+      function applyFilters() {
+        var query = searchInput.value.trim().toLowerCase();
+        var filter = filterSelect.value;
+        var sort = sortSelect.value;
+
+        filtered = ITEMS.filter(function(item) {
+          if (query && item.name.toLowerCase().indexOf(query) === -1) return false;
+          if (filter === 'perfect' && item.fieldCount !== 12) return false;
+          if (filter === 'good' && (item.fieldCount < 6 || item.fieldCount >= 12)) return false;
+          if (filter === 'poor' && item.fieldCount >= 6) return false;
+          return true;
+        });
+
+        var parts = sort.split('-');
+        var key = parts[0], dir = parts[1];
+        filtered.sort(function(a, b) {
+          var va, vb;
+          if (key === 'name') { va = a.name; vb = b.name; }
+          else if (key === 'field') { va = a.fieldCount; vb = b.fieldCount; }
+          else if (key === 'size') { va = a.jsonSize; vb = b.jsonSize; }
+          if (typeof va === 'string') {
+            var cmp = va.localeCompare(vb, 'ko');
+            return dir === 'asc' ? cmp : -cmp;
           }
+          return dir === 'asc' ? va - vb : vb - va;
+        });
+
+        currentPage = 1;
+        render();
+      }
+
+      function formatSize(bytes) {
+        if (bytes > 1024) return (bytes / 1024).toFixed(1) + 'K';
+        return bytes + 'B';
+      }
+
+      function render() {
+        var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+        if (currentPage > totalPages) currentPage = totalPages;
+        var start = (currentPage - 1) * PAGE_SIZE;
+        var page = filtered.slice(start, start + PAGE_SIZE);
+
+        resultCount.textContent = filtered.length;
+        pageInfo.textContent = currentPage + '/' + totalPages;
+        prevBtn.disabled = currentPage <= 1;
+        nextBtn.disabled = currentPage >= totalPages;
+
+        var html = '';
+        for (var i = 0; i < page.length; i++) {
+          var item = page[i];
+          var pct = Math.round((item.fieldCount / 12) * 100);
+          var barColor = pct === 100 ? 'bg-green-500' : pct >= 50 ? 'bg-emerald-500' : 'bg-red-500';
+          var countColor = item.fieldCount === 12 ? 'text-green-400' : item.fieldCount >= 6 ? 'text-emerald-400' : 'text-red-400';
+
+          html += '<tr class="hover:bg-slate-700/20 transition-colors">';
+          html += '<td class="px-4 py-2 sticky left-0 bg-slate-900/80 z-10">';
+          html += '<a href="https://careerwiki.org/job/' + encodeURIComponent(item.slug) + '" target="_blank" class="text-blue-400 hover:text-blue-300 font-medium text-xs">' + item.name + '</a>';
+          html += '</td>';
+          html += '<td class="px-3 py-2 text-center">';
+          html += '<div class="flex items-center gap-1.5 justify-center">';
+          html += '<div class="w-12 bg-slate-700/50 rounded-full h-1.5"><div class="h-1.5 rounded-full ' + barColor + '" style="width:' + pct + '%"></div></div>';
+          html += '<span class="text-[11px] font-mono ' + countColor + '">' + item.fieldCount + '</span>';
+          html += '</div></td>';
+
+          for (var f = 0; f < 12; f++) {
+            var has = item.fields[f];
+            html += '<td class="px-2 py-2 text-center">';
+            if (has) {
+              html += '<i class="fas fa-check text-emerald-400 text-[10px]"></i>';
+            } else {
+              html += '<i class="fas fa-times text-slate-600 text-[10px]"></i>';
+            }
+            html += '</td>';
+          }
+
+          html += '<td class="px-3 py-2 text-center text-[11px] text-slate-400 font-mono">' + formatSize(item.jsonSize) + '</td>';
+          html += '<td class="px-3 py-2 text-center text-[11px] text-slate-400">' + item.sourceCount + '</td>';
+          html += '<td class="px-3 py-2 text-center">';
+          if (item.hasSourceUrls) {
+            html += '<i class="fas fa-link text-blue-400 text-[10px]"></i>';
+          } else if (item.sourceCount > 0) {
+            html += '<i class="fas fa-font text-amber-500 text-[10px]" title="URL 없음"></i>';
+          } else {
+            html += '<span class="text-slate-600">-</span>';
+          }
+          html += '</td>';
+          html += '<td class="px-3 py-2 text-center text-[11px] text-slate-400">' + item.youtubeCount + '</td>';
+          html += '</tr>';
         }
-      });
+        tableBody.innerHTML = html;
+      }
+
+      searchInput.addEventListener('input', applyFilters);
+      filterSelect.addEventListener('change', applyFilters);
+      sortSelect.addEventListener('change', applyFilters);
+      prevBtn.addEventListener('click', function() { if (currentPage > 1) { currentPage--; render(); } });
+      nextBtn.addEventListener('click', function() { currentPage++; render(); });
+
+      applyFilters();
     })();
     </script>
   `
