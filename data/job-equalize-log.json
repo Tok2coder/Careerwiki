@@ -4106,5 +4106,32 @@
     "person": null,
     "batch": 69,
     "date": "2026-03-28"
+  },
+  {
+    "slug": "공작기계조작원",
+    "jobId": "1765283287014422",
+    "revisionId": 888,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 71,
+    "date": "2026-03-31"
+  },
+  {
+    "slug": "과수작물재배자",
+    "jobId": "1765283287269728",
+    "revisionId": 890,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 71,
+    "date": "2026-03-31"
+  },
+  {
+    "slug": "광원 및 채석원",
+    "jobId": "1765283288630323",
+    "revisionId": 892,
+    "careerTreeId": null,
+    "person": null,
+    "batch": 71,
+    "date": "2026-03-31"
   }
 ]
