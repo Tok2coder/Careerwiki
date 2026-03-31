@@ -127,6 +127,36 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
   const itemsJson = JSON.stringify(items)
 
   const content = `
+    <!-- 커스텀 툴팁 스타일 -->
+    <style>
+      th[data-tooltip] {
+        position: relative;
+        cursor: help;
+      }
+      th[data-tooltip]::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        background: #111827;
+        color: #f1f5f9;
+        font-size: 11px;
+        font-weight: 400;
+        padding: 6px 10px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        z-index: 50;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+      }
+      th[data-tooltip]:hover::after {
+        opacity: 1;
+      }
+    </style>
+
     <!-- 요약 통계 KPI -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
       <div class="glass-card rounded-xl p-4 stat-card">
@@ -234,24 +264,24 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         <table class="w-full text-sm">
           <thead>
             <tr class="text-left border-b border-slate-700/50 bg-slate-800/40">
-              <th class="px-4 py-3 text-xs text-slate-400 font-medium sticky left-0 bg-slate-800/90 z-10 min-w-[140px]" title="직업명 (클릭하면 프로덕션 페이지로 이동)">직업명</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px]" title="12개 필드 중 채워진 필드 수 (n/12)">완성도</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="way 필드 — 직업 진입 경로/방법 정보">방법</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="overviewSalary 필드 — 급여/임금 정보">임금</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="overviewProspect 필드 — 직업 전망 정보">전망</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="trivia 필드 — 여담/재미있는 사실">여담</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="detailWlb 필드 — 워라밸 상세 정보">WLB</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="detailReady 필드 — 준비 방법 상세">준비</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="sidebarJobs 필드 — 관련 직업 목록">직업</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="sidebarMajors 필드 — 관련 전공 목록">전공</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="sidebarCerts 필드 — 관련 자격증 목록">자격</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="heroTags 필드 — 직업 태그 배열">태그</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="youtubeLinks 필드 — YouTube 관련 영상 링크 존재 여부">YT</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" title="_sources 필드 — 출처 정보 존재 여부">출처</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px]" title="user_contributed_json 총 바이트 수">JSON</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" title="_sources 내 총 출처 항목 수 (Object인 경우 모든 섹션 합산, Array인 경우 배열 길이)">출처수</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" title="출처 중 URL(http로 시작)이 포함된 항목 수">URL</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" title="youtubeLinks 배열 내 YouTube 링크 수">YT수</th>
+              <th class="px-4 py-3 text-xs text-slate-400 font-medium sticky left-0 bg-slate-800/90 z-10 min-w-[140px]" data-tooltip="직업명 (클릭하면 프로덕션 페이지로 이동)">직업명</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px]" data-tooltip="12개 필드 중 채워진 필드 수 (n/12)">완성도</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="way 필드 — 직업 진입 경로/방법 정보">방법</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="overviewSalary 필드 — 급여/임금 정보">임금</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="overviewProspect 필드 — 직업 전망 정보">전망</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="trivia 필드 — 여담/재미있는 사실">여담</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="detailWlb 필드 — 워라밸 상세 정보">WLB</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="detailReady 필드 — 준비 방법 상세">준비</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="sidebarJobs 필드 — 관련 직업 목록">직업</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="sidebarMajors 필드 — 관련 전공 목록">전공</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="sidebarCerts 필드 — 관련 자격증 목록">자격</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="heroTags 필드 — 직업 태그 배열">태그</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="youtubeLinks 필드 — YouTube 링크 존재 여부">YT</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="_sources 필드 — 출처 정보 존재 여부">출처</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px]" data-tooltip="user_contributed_json 총 바이트 수">JSON</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" data-tooltip="출처 항목 수 (Object: 섹션 합산, Array: 배열 길이)">출처수</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" data-tooltip="URL(http)이 포함된 출처 수">URL</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" data-tooltip="youtubeLinks 배열 내 YouTube 링크 수">YT수</th>
             </tr>
           </thead>
           <tbody id="tableBody" class="divide-y divide-slate-700/30">
