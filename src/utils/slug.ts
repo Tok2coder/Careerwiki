@@ -13,14 +13,14 @@ const slugifyName = (value?: string | null): string => {
   if (!value) return ''
   const normalized = typeof value.normalize === 'function' ? value.normalize('NFKC') : value
   
-  // Remove all separators and spaces for clean URLs
-  // This makes URLs cleaner and matching easier
   const slug = normalized
     .trim()
     .toLowerCase()
-    .replace(/[-,·ㆍ/\s]/g, '')  // Remove all common separators and spaces
-    .replace(SLUG_INVALID_REGEX, '')  // Remove any other invalid characters
-    .replace(/^-+|-+$/g, '')
+    .replace(/\s+/g, '-')              // Convert spaces to hyphens
+    .replace(/[,·ㆍ/]+/g, '')          // Remove other separators (comma, middle dot, slash)
+    .replace(SLUG_INVALID_REGEX, '')   // Remove any other invalid characters
+    .replace(/-+/g, '-')               // Collapse multiple consecutive hyphens
+    .replace(/^-+|-+$/g, '')           // Trim leading/trailing hyphens
 
   return truncateSlug(slug)
 }
