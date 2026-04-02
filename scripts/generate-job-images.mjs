@@ -17,8 +17,18 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const CWD = join(__dirname, '..');
 const MAX_BUFFER = 10 * 1024 * 1024;
 
-// .dev.vars에서 API 키 읽기 (메인 프로젝트 루트)
-const devVarsPath = join(CWD, '.dev.vars');
+// .dev.vars 위치 탐색: 워크트리 루트 → 메인 프로젝트 루트
+function findDevVars() {
+  const candidates = [
+    join(CWD, '.dev.vars'),                // 워크트리 루트
+    'C:\\Users\\PC\\Careerwiki\\.dev.vars' // 메인 프로젝트 루트
+  ];
+  for (const p of candidates) {
+    if (existsSync(p)) return p;
+  }
+  throw new Error('.dev.vars를 찾을 수 없습니다. 경로: ' + candidates.join(', '));
+}
+const devVarsPath = findDevVars();
 const devVars = readFileSync(devVarsPath, 'utf-8');
 const GEMINI_KEY = devVars.match(/GEMINI_API_KEY=(.+)/)?.[1]?.trim();
 const EVOLINK_KEY = devVars.match(/EVOLINK_API_KEY=(.+)/)?.[1]?.trim();
@@ -120,31 +130,42 @@ function runSqlFile(sql) {
   }
 }
 
-// Gemini 2.0 flash로 이미지 프롬프트 생성 (JOB_PROMPT_TEMPLATE 사용)
-async function generatePrompt(jobName) {
+// Gemini 2.0 flash로 이미지 프롬프트 생성 (JOB_PROMPT_TEMPLATE 사용, 재시도 포함)
+async function generatePrompt(jobName, retries = 4) {
   const systemPrompt = JOB_PROMPT_TEMPLATE.replace(/\{jobName\}/g, jobName);
   const body = {
     contents: [{ parts: [{ text: systemPrompt }] }],
     generationConfig: { temperature: 0.7, maxOutputTokens: 1000, topP: 0.9 }
   };
 
-  try {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
-      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
-    );
-    if (!resp.ok) {
-      console.error(`   Gemini 오류: HTTP ${resp.status}`);
-      return null;
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+      );
+      if (resp.status === 429) {
+        const wait = 60 + attempt * 30; // 60s, 90s, 120s, 150s
+        console.log(`\n   ⚠️  Gemini 429 레이트 리밋. ${wait}초 대기 후 재시도 (${attempt + 1}/${retries})...`);
+        await new Promise(r => setTimeout(r, wait * 1000));
+        continue;
+      }
+      if (!resp.ok) {
+        console.error(`   Gemini 오류: HTTP ${resp.status}`);
+        return null;
+      }
+      const data = await resp.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+      if (!text) return null;
+      return text.replace(/^["']|["']$/g, '').trim();
+    } catch (e) {
+      console.error(`   Gemini 예외: ${e.message}`);
+      if (attempt < retries - 1) {
+        await new Promise(r => setTimeout(r, 10000));
+      }
     }
-    const data = await resp.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-    if (!text) return null;
-    return text.replace(/^["']|["']$/g, '').trim();
-  } catch (e) {
-    console.error(`   Gemini 예외: ${e.message}`);
-    return null;
   }
+  return null;
 }
 
 // Evolink 이미지 생성 요청
@@ -303,8 +324,8 @@ async function main() {
       failed++; failedJobs.push(job.name);
     }
 
-    // API 레이트 리밋 방지
-    if (i < jobs.length - 1) await new Promise(r => setTimeout(r, 3000));
+    // Gemini 레이트 리밋 방지 (15 RPM 기준 = 4초/요청, 여유있게 8초)
+    if (i < jobs.length - 1) await new Promise(r => setTimeout(r, 8000));
   }
 
   console.log('\n' + '='.repeat(60));
