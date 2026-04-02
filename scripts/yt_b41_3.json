@@ -1,0 +1,114 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "E8UHYB58vwUUzhibsnVZLXtncss",
+  "nextPageToken": "CAUQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 102661,
+    "resultsPerPage": 3
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "nmjogFhzzwlpUhJNiGjWnL8mERM",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "Q76QY-fkcLE"
+      },
+      "snippet": {
+        "publishedAt": "2021-03-28T09:59:12Z",
+        "channelId": "UC4FGp2G46qPvWdPrN4b8H_w",
+        "title": "법무사를 직업으로 추천하나요? 달라지는 의뢰인의 태도.. 어떤경우에?",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Q76QY-fkcLE/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Q76QY-fkcLE/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Q76QY-fkcLE/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Korea lawyer 김법무사",
+        "liveBroadcastContent": "none",
+        "publishTime": "2021-03-28T09:59:12Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "jXxwlpJ2lnDUw2bWCzgLy8AxPEs",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "wTQE3PWIDsU"
+      },
+      "snippet": {
+        "publishedAt": "2025-11-19T10:15:08Z",
+        "channelId": "UCr73q8E-QyR73zG-SSvs2jQ",
+        "title": "33년 공무원 생활 그만두고 법무사가 된 59년생 법무사 이야기",
+        "description": "변호사 #전문직 #인터뷰 #법무사.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/wTQE3PWIDsU/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/wTQE3PWIDsU/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/wTQE3PWIDsU/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "꾼즈",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-11-19T10:15:08Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "11D3rqNpqch3RqbeU3WeiDWuZAA",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "4BacRsAQvJI"
+      },
+      "snippet": {
+        "publishedAt": "2023-11-03T11:15:00Z",
+        "channelId": "UCX5g2W_nJ-zc4_JDG-WxteA",
+        "title": "[무사 프렌즈] 직업 소개! 법무사가 하는 일! - 황배익 법무사",
+        "description": "법무사가 정확하게 무슨일을 하는 직업이지? 법무사란 직업을 처음 들어보는 사람 집중! 무사 프렌즈 '황배익 법무사'와 함께 법무사란 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/4BacRsAQvJI/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/4BacRsAQvJI/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/4BacRsAQvJI/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "무사 프렌즈",
+        "liveBroadcastContent": "none",
+        "publishTime": "2023-11-03T11:15:00Z"
+      }
+    }
+  ]
+}

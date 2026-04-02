@@ -1,0 +1,776 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "IELTS란 — 글로벌 영어 시험의 표준" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "IELTS(International English Language Testing System)는 " },
+        { "type": "text", "text": "영국 British Council, IDP, Cambridge 대학이 공동 개발·운영", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "하는 영어 능력 평가 시험이다. 전 세계 " },
+        { "type": "text", "text": "12,000개 이상의 기관", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이 IELTS 점수를 인정하고 있으며, 유학·이민·취업을 위한 글로벌 표준 영어 시험으로 자리 잡았다" },
+        { "type": "footnote", "attrs": { "id": 1, "text": "IELTS 공식 사이트 - 시험 형식 안내 (British Council)", "url": "https://takeielts.britishcouncil.org/take-ielts/test-format" } },
+        { "type": "text", "text": ". 특히 " },
+        { "type": "text", "text": "영국, 호주, 캐나다, 뉴질랜드", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 등 영연방 국가에서는 이민 비자 심사에 IELTS 점수가 필수이고, 미국 대학들도 대부분 TOEFL과 IELTS를 동시에 인정하고 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "한국에서는 " },
+        { "type": "text", "text": "TOEIC과 TOEFL", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이 오랫동안 주류였지만, 해외 유학·이민을 준비하는 사람이 늘면서 IELTS 응시자도 꾸준히 증가하고 있다. IELTS는 단순 객관식이 아니라 " },
+        { "type": "text", "text": "원어민 시험관과의 1:1 스피킹 인터뷰", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ", 에세이 작성, 다양한 문제 유형(빈칸 채우기, 매칭, 단답식 등)을 포함하기 때문에 실질적인 영어 구사 능력을 평가한다는 점에서 차별화된다" },
+        { "type": "footnote", "attrs": { "id": 2, "text": "TOEFL vs IELTS 비교 가이드 2025-2026 (TheWorldGrad)", "url": "https://theworldgrad.com/study-resources/toefl-vs-ielts-which-is-easier/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "IELTS vs TOEFL, 어떤 시험을 선택해야 하나?" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "두 시험 모두 해외 대학 입학용으로 널리 인정되지만, 시험 방식과 활용처에 차이가 있다. IELTS 6.5~7.0은 TOEFL 79~101점에 해당한다" },
+        { "type": "footnote", "attrs": { "id": 3, "text": "IELTS vs TOEFL 2026 선택 가이드 (Alfa IELTS)", "url": "https://alfaielts.com/blog/ielts-vs-toefl" } },
+        { "type": "text", "text": ". 아래 표에서 핵심 차이를 비교해 보자." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "항목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "IELTS" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "TOEFL iBT" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "운영 기관" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "British Council + IDP + Cambridge" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "ETS" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험 시간" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 2시간 45분 + Speaking 별도" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 67~85분 (2026년 적응형)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "점수 체계" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "0~9 밴드 (0.5 단위)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "0~120점" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Speaking 방식" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "원어민 시험관 1:1 대면 인터뷰" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "마이크 녹음 (2026년부터 인터뷰 도입)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "주요 활용처" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "영국·호주·캐나다 이민, 전 세계 유학" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "미국 중심, 유학" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문제 유형" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "빈칸, 매칭, 단답, T/F/NG, 에세이" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "주로 객관식 + 에세이" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료 (한국)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 321,000원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "US$220 (약 30만 원)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "성적 유효기간" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2년" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2년" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "결론적으로 " },
+        { "type": "text", "text": "대면 스피킹을 선호하거나, 영국·호주·캐나다 이민이 목적", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이라면 IELTS가 유리하다. 반면 짧은 시험 시간과 컴퓨터 기반 객관식에 강점이 있다면 TOEFL이 더 맞을 수 있다" },
+        { "type": "footnote", "attrs": { "id": 4, "text": "IELTS vs TOEFL 2026 선택 가이드 (Alfa IELTS)", "url": "https://alfaielts.com/blog/ielts-vs-toefl" } },
+        { "type": "text", "text": ". " },
+        { "type": "text", "text": "통역가", "marks": [{ "type": "link", "attrs": { "href": "/job/통역가" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "외국어교사", "marks": [{ "type": "link", "attrs": { "href": "/job/외국어교사" } }] },
+        { "type": "text", "text": "를 목표로 하는 경우, 두 시험 모두 높은 점수를 확보해 두면 커리어에 큰 도움이 된다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "Academic vs General Training — 어떤 유형을 봐야 하나" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "IELTS는 크게 " },
+        { "type": "text", "text": "Academic(학술용)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "과 " },
+        { "type": "text", "text": "General Training(일반용)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 두 가지 유형으로 나뉜다. Listening과 Speaking은 두 유형 모두 동일하지만, Reading과 Writing에서 출제 내용과 난이도가 다르다" },
+        { "type": "footnote", "attrs": { "id": 5, "text": "IELTS Academic vs General Training 비교 (테스트글라이더)", "url": "https://blog.testglider.com/%EC%95%84%EC%9D%B4%EC%97%98%EC%B8%A0-%EC%8B%9C%ED%97%98-%EC%A2%85%EB%A5%98-%EC%B4%9D%EC%A0%95%EB%A6%AC/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "구분" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Academic" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "General Training" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "목적" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "대학 진학, 전문직 취업" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "이민, 일반 취업, 직업 훈련" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Reading 지문" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과학·역사·사회학 등 학술 논문 3편" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "광고·안내문·매뉴얼 등 실용 텍스트" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Writing Task 1" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "그래프/차트/다이어그램 분석 리포트 (150단어)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "편지 작성 (150단어)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Writing Task 2" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학술적 주제 에세이 (250단어)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "일반적 주제 에세이 (250단어)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "난이도" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "상대적으로 높음" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "상대적으로 낮음" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Listening / Speaking" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "동일" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "동일" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "유학이 목적이라면 무조건 Academic을 선택해야 한다. 대부분의 대학과 대학원이 Academic 점수만 인정하기 때문이다. 캐나다·호주 이민이라면 General Training으로 충분하며, General Training이 Academic보다 전반적으로 체감 난이도가 낮아 같은 실력이라도 0.5~1.0밴드 정도 더 높은 점수를 받는 경우가 많다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "시험 구조 상세 — 4개 섹션 완전 분석" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "IELTS는 " },
+        { "type": "text", "text": "Listening(30분 + 전사 시간), Reading(60분), Writing(60분), Speaking(11~14분)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로 구성된다. Listening, Reading, Writing은 같은 날 연속으로 진행되며(총 약 2시간 45분), Speaking은 같은 날 또는 전후 7일 이내 별도로 실시한다" },
+        { "type": "footnote", "attrs": { "id": 6, "text": "IELTS 공식 사이트 - 시험 형식 안내 (British Council)", "url": "https://takeielts.britishcouncil.org/take-ielts/test-format" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Listening (약 30분, 40문항)" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "4개의 오디오 녹음을 듣고 문제를 푼다. 녹음은 한 번만 재생되며, 난이도가 Section 1에서 Section 4로 갈수록 올라간다" },
+        { "type": "footnote", "attrs": { "id": 7, "text": "IELTS 시험 패턴 2025-2026 (AECC Global)", "url": "https://www.aeccglobal.com/exams/ielts/pattern" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Section 1: 일상적 대화 (2명) — 예: 숙소 예약 전화" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Section 2: 일상적 독백 — 예: 지역 시설 안내" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Section 3: 학술적 대화 (2~4명) — 예: 과제 토론" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Section 4: 학술 강의 독백 — 예: 대학 강의" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "컴퓨터 기반 시험에서는 답안 전사 시간이 " },
+        { "type": "text", "text": "2분", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로 줄어든다(Paper 기반은 10분). 2026년 3월 이후 전면 컴퓨터 전환이 이루어지므로, 듣기와 동시에 타이핑하는 연습이 필수다" },
+        { "type": "footnote", "attrs": { "id": 8, "text": "Computer-delivered vs Paper-based IELTS 비교 (IDP)", "url": "https://ielts.idp.com/about/article-computer-delivered-paper-based-ielts-comparison" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Reading (60분, 40문항)" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "Academic은 학술 논문 3편, General Training은 실용 텍스트를 읽고 문제를 푼다. 문제 유형이 매우 다양하다는 것이 IELTS Reading의 특징이다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "True / False / Not Given (또는 Yes / No / Not Given)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "매칭 (Heading matching, Information matching)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문장 완성, 요약 완성" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "다지선다, 다이어그램 라벨링" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "지문 3개를 60분 안에 풀어야 하므로 " },
+        { "type": "text", "text": "지문당 20분", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "을 엄격히 지키는 시간 배분 연습이 매우 중요하다. 특히 Academic의 경우 패러프레이징(같은 내용을 다른 표현으로 바꾸어 놓는 것)이 핵심이라, 지문과 문제의 동의어 관계를 파악하는 능력이 점수를 크게 좌우한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Writing (60분, 2 Tasks)" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "Writing은 두 개의 Task로 구성된다. Task 1은 150단어 이상, Task 2는 250단어 이상을 작성해야 한다. 채점 기준은 " },
+        { "type": "text", "text": "Task Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 4가지이며, 각 25%씩 동일 비중이다" },
+        { "type": "footnote", "attrs": { "id": 9, "text": "IELTS 시험 패턴 2025-2026 (AECC Global)", "url": "https://www.aeccglobal.com/exams/ielts/pattern" } },
+        { "type": "text", "text": ". Task 2의 배점이 Task 1보다 크기 때문에, 시간 배분은 Task 1에 20분, Task 2에 40분을 할당하는 것이 정석이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Speaking (11~14분, 3 Parts)" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "원어민 시험관과 1:1로 진행하는 대면 인터뷰다. 채점 기준은 Writing과 마찬가지로 " },
+        { "type": "text", "text": "Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 4가지가 각 25%다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Part 1 (4~5분): 자기소개 및 일상 주제 질문 (가족, 취미, 직업 등)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Part 2 (3~4분): 토픽 카드를 받고 1분 준비 후 2분간 혼자 말하기 (Long Turn)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Part 3 (4~5분): Part 2 주제와 관련된 심화 토론 (시험관과 양방향 대화)" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "TOEFL의 마이크 녹음 방식과 달리, IELTS는 사람과 직접 대화하기 때문에 긴장감은 크지만 자연스러운 의사소통 능력을 발휘하기에 유리한 면도 있다. " },
+        { "type": "text", "text": "영어교육과", "marks": [{ "type": "link", "attrs": { "href": "/major/영어교육과" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "영어영문학과", "marks": [{ "type": "link", "attrs": { "href": "/major/영어영문학과" } }] },
+        { "type": "text", "text": " 전공자라면 스피킹에서 큰 강점을 발휘할 수 있다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-ielts-img1.webp",
+        "alt": "IELTS 4개 섹션별 시간·문항 구조 요약",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "밴드 점수 체계와 목표 점수 가이드" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "IELTS는 0~9점의 " },
+        { "type": "text", "text": "밴드 스코어(Band Score)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 체계를 사용한다. 0.5 단위로 채점되며, Overall Band Score는 4개 섹션 점수의 평균을 반올림한 값이다" },
+        { "type": "footnote", "attrs": { "id": 10, "text": "IELTS 밴드 점수 체계 및 국가별 요구 점수 (IDP)", "url": "https://ielts.idp.com/about/news-and-articles/article-ielts-score-requirements-for-different-countries" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Band 5.0~5.5: Modest/Competent User — 기본 의사소통 가능, 이민 최소 기준에 미달하는 경우가 많음" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Band 6.0: Competent User (CEFR B2) — 캐나다 Express Entry CLB7 요구, 호주 비자 최소선" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Band 6.5: 대부분의 영미권 대학 학부 입학 최소 요구" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Band 7.0: Good User (CEFR C1) — 상위권 대학원, 의학·법학 등 전문 프로그램 요구" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Band 8.0 이상: Very Good/Expert User — 원어민에 준하는 수준" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "성적 유효기간은 시험일로부터 " },
+        { "type": "text", "text": "2년", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 유학을 준비한다면 입학 시점 기준으로 2년 이내인지 반드시 확인해야 한다. 참고로 한국인 평균 Overall 점수는 약 " },
+        { "type": "text", "text": "5.9", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "로, 글로벌 평균인 6.0보다 약간 낮다" },
+        { "type": "footnote", "attrs": { "id": 11, "text": "IELTS 한국인 평균 점수 및 난이도 (나무위키)", "url": "https://namu.wiki/w/IELTS" } },
+        { "type": "text", "text": ". 응시료가 약 30만 원대로 비싸기 때문에 어느 정도 영어 실력이 있는 사람이 주로 응시하고, 그럼에도 평균이 5.9라는 것은 이 시험의 난이도를 보여준다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "파트별 공부 전략 — 효율적으로 점수를 올리는 법" }]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Listening 전략" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "Listening은 꾸준한 반복 훈련이 핵심이다. 매일 최소 1세트(40문항)를 풀고, 오답 분석과 트랜스크립트 대조를 반드시 병행해야 한다" },
+        { "type": "footnote", "attrs": { "id": 12, "text": "IELTS 파트별 공부법 2025 (LifeShineOn)", "url": "https://alpha.lifeshineon.com/entry/%F0%9F%93%8D2025%EB%85%84-%EC%95%84%EC%9D%B4%EC%97%98%EC%B8%A0IELTS-%EA%B3%B5%EB%B6%80%EB%B2%95-%EA%BF%80%ED%8C%81-%EB%AA%A8%EC%9D%8C-%ED%8C%8C%ED%8A%B8%EB%B3%84-%EC%A0%84%EB%9E%B5%EA%B3%BC-%EA%B3%A0%EB%93%9D%EC%A0%90-%EB%B9%84%EA%B2%B0" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문제를 풀기 전에 문제를 먼저 빠르게 읽어 키워드를 파악한다 (Pre-reading)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "오디오를 들으며 답을 적되, 놓친 문제는 과감히 넘기고 다음 문제에 집중한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "오답 노트를 작성하고, 틀린 문제의 트랜스크립트를 정독하며 들리지 않았던 부분을 표시한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "받아쓰기(딕테이션)를 병행하면 약한 발음 패턴을 잡아낼 수 있다" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Reading 전략" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "Reading은 한국인이 상대적으로 강점을 가지는 파트다. 문법과 어휘 기반이 탄탄하다면 비교적 빠르게 점수를 올릴 수 있다" },
+        { "type": "footnote", "attrs": { "id": 13, "text": "IELTS 독학 후기 - 1달 독학 6.5 달성 (디시인사이드)", "url": "https://m.dcinside.com/board/ielts/505" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "스키밍(전체 훑어보기)과 스캐닝(특정 정보 찾기) 기법을 체계적으로 훈련한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "지문당 20분을 타이머로 측정하며 실전 감각을 만든다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "패러프레이징 감각을 키운다 — 지문의 표현과 문제의 표현이 다른 단어로 바뀌어 있는 패턴에 익숙해져야 한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "True/False/Not Given은 '지문에 있는 내용만'으로 판단하는 연습을 한다 (배경지식으로 추론하지 않기)" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Writing 전략" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "Writing은 대부분의 한국인 응시자에게 가장 난이도가 높은 파트다. 특히 Task 2 에세이에서 논리 구조와 다양한 어휘·문법 사용이 동시에 요구되기 때문에 체계적인 준비가 필요하다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Task 1(Academic): 그래프 묘사에 필요한 핵심 표현(increased sharply, remained stable, fluctuated 등)을 암기한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Task 2: 서론 → 본론 2단락 → 결론의 4단 구조를 고정하고, 각 단락의 역할을 명확히 한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "매주 최소 2편의 에세이를 작성하고, 가능하면 원어민 첨삭을 받는다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Band 7.0 이상을 목표로 한다면 동의어 활용(paraphrasing)과 복합문(complex sentences) 사용이 필수다" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "Speaking 전략" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "Speaking은 혼자 준비하기 가장 까다로운 파트지만, 녹음과 자기 분석을 반복하면 충분히 독학이 가능하다" },
+        { "type": "footnote", "attrs": { "id": 14, "text": "IELTS 독학 후기 - Overall 8점 달성 (dmitory 스펙업)", "url": "https://www.dmitory.com/specup/14231669" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Part 2 Long Turn: 매일 1개 토픽 카드를 뽑아 1분 준비 → 2분 말하기 → 녹음 → 분석을 반복한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Part 3 토론: 찬반 의견을 미리 정리해두고, 이유와 예시를 2~3개씩 준비한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "'um', 'ah' 같은 필러(filler)를 줄이고, 대신 'Well', 'Actually', 'To be honest' 같은 자연스러운 전환 표현을 사용한다" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "발음보다 유창성(Fluency)이 더 중요하다 — 완벽한 발음보다 자연스러운 흐름을 우선시한다" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "추천 교재와 목표 점수별 학습 플랜" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "IELTS 준비에서 가장 중요한 교재는 단연 " },
+        { "type": "text", "text": "Cambridge IELTS 공식문제집(시리즈 13~19)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 실제 기출문제를 기반으로 만들어진 유일한 공식 교재이므로, 시험의 난이도와 유형을 가장 정확하게 반영한다" },
+        { "type": "footnote", "attrs": { "id": 15, "text": "IELTS 추천 교재 및 기본기 교재 (브런치)", "url": "https://brunch.co.kr/@julien/51" } },
+        { "type": "text", "text": ". 최신 권(19)부터 역순으로 풀어나가는 것이 좋고, 최소 4~5권 이상은 풀어야 실전 감각이 잡힌다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "추천 교재 목록" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Cambridge IELTS 13~19 (필수) — 실전 기출 기반 공식 문제집" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "The Official Cambridge Guide to IELTS — 초보자용 종합 가이드, 시험 구조부터 전략까지 포괄" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Cambridge Grammar for IELTS — 문법을 실전에 적용하는 훈련서" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Academic Vocabulary in Use — 유학 준비생 필독, Reading과 Writing 어휘력 강화" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "IELTS Advantage Writing Skills — Task 1·2 고득점 전략에 특화된 교재" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "목표 점수별 학습 플랜" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "기존 영어 실력(TOEIC 기준)과 목표 밴드에 따라 준비 기간과 전략이 달라진다" },
+        { "type": "footnote", "attrs": { "id": 16, "text": "IELTS 독학 후기 - Overall 8점 달성 (dmitory 스펙업)", "url": "https://www.dmitory.com/specup/14231669" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "목표 6.0 (TOEIC 700~800 기반)", "marks": [{ "type": "bold" }] },
+              { "type": "text", "text": ": 약 2~3개월. Cambridge 공식문제집 3~4권 반복 풀이 + Listening 매일 1세트 + Writing 주 1편 첨삭. Reading은 기본기가 있으므로 시간 배분 연습에 집중한다." }
+            ] }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "목표 6.5 (TOEIC 800~900 기반)", "marks": [{ "type": "bold" }] },
+              { "type": "text", "text": ": 약 2~4개월. 공식문제집 5권 이상 풀이 + Speaking 녹음 연습 매일 15분 + Writing Task 2 구조 완성. 패러프레이징 집중 훈련으로 Reading 7.0 확보가 관건이다." }
+            ] }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "목표 7.0+ (TOEIC 900+ 기반)", "marks": [{ "type": "bold" }] },
+              { "type": "text", "text": ": 약 3~6개월 집중 준비. 전 파트 7.0 이상이 필요하므로 약한 파트 집중 보강이 핵심이다. Writing·Speaking에서 복합문과 고급 어휘를 자연스럽게 구사해야 하며, 원어민 첨삭이나 스터디 그룹 참여를 강력히 권장한다." }
+            ] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "시험 접수와 응시 정보 — 비용, 시험장, 일정" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "한국에서 IELTS를 주관하는 기관은 " },
+        { "type": "text", "text": "British Council Korea", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "와 " },
+        { "type": "text", "text": "IDP Korea", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 두 곳이다. 두 기관 모두 동일한 시험을 출제하며, 난이도 차이는 없다" },
+        { "type": "footnote", "attrs": { "id": 17, "text": "IELTS 시험 일정·비용·시행 지역 (British Council Korea)", "url": "https://www.britishcouncil.kr/exam/ielts/dates-fees-locations" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료: 약 321,000원 (환율 변동에 따라 소폭 변동)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "접수 준비물: 유효한 여권 + 신용카드 (온라인 접수 24시간 가능)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험장: 서울, 인천, 대전, 대구, 광주, 부산 (British Council) + 제주 (IDP)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "컴퓨터 IELTS 일정: 월요일 제외 주 6일 운영, 하루 2~3회 세션" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "결과 확인: 컴퓨터 3~5일 후 / Paper 13일 후" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "가장 중요한 변화는 " },
+        { "type": "text", "text": "2026년 3월 21일부터 전 세계적으로 Paper-based IELTS가 완전히 종료", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "된다는 점이다" },
+        { "type": "footnote", "attrs": { "id": 18, "text": "IELTS 시험 일정·비용·시행 지역 (British Council Korea)", "url": "https://www.britishcouncil.kr/exam/ielts/dates-fees-locations" } },
+        { "type": "text", "text": ". 이후로는 컴퓨터 기반 시험만 운영되므로, 아직 Paper 시험에 익숙한 응시자도 컴퓨터 환경에 적응하는 연습이 필수다. 컴퓨터 IELTS의 장점은 결과가 빨리 나오고(3~5일 vs 13일), 일정이 유연하며, Writing 시 자동 워드 카운터와 Reading 시 화면 분할(지문+문제 동시 표시) 기능이 제공된다는 것이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "또한 컴퓨터 IELTS 응시자에 한해 " },
+        { "type": "text", "text": "One Skill Retake(OSR)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 제도를 활용할 수 있다. 시험 후 60일 이내에 4개 섹션 중 한 섹션만 다시 볼 수 있는 제도로, 한 파트에서만 아쉬운 점수가 나왔을 때 전체를 재응시하지 않아도 된다" },
+        { "type": "footnote", "attrs": { "id": 19, "text": "IELTS 시험 비용 한국 (IDP Korea)", "url": "https://ieltskorea.org/korea/about/ielts-test-fees" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "한국 응시자의 현실 — 평균 점수와 약점 분석" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "한국 응시자의 IELTS Overall 평균은 약 " },
+        { "type": "text", "text": "5.9", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 글로벌 평균인 6.0보다 약간 낮지만, 응시료가 비싸 상대적으로 영어 실력이 있는 층이 주로 응시한다는 점을 감안하면 체감 난이도는 높은 편이다" },
+        { "type": "footnote", "attrs": { "id": 20, "text": "IELTS 한국인 평균 점수 및 난이도 (나무위키)", "url": "https://namu.wiki/w/IELTS" } },
+        { "type": "text", "text": ". 참고로 중국 평균은 약 6.2, 인도 평균은 5.5~6.0 수준이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "한국인의 파트별 강약점은 비교적 뚜렷하다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "강점 — Reading", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": ": 한국 영어 교육이 문법·독해 중심이라 Reading에서 상대적으로 높은 점수가 나온다. Band 6.5~7.0을 받는 경우가 많다." }
+          ] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "약점 — Speaking, Writing", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": ": 표현력과 유창성이 필요한 영역에서 한국인 점수가 가장 낮다. Speaking은 대면 인터뷰 경험 부족, Writing은 논리적 에세이 작성 훈련 부족이 주요 원인이다." }
+          ] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "보통 — Listening", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": ": 영국식·호주식 발음에 익숙하지 않은 한국 응시자가 TOEFL 대비 어려움을 느끼는 경우가 많다. 다양한 영어 억양에 노출되는 연습이 필요하다." }
+          ] }]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "이런 강약점 패턴을 고려하면, 한국인 응시자는 " },
+        { "type": "text", "text": "Reading에서 최대한 높은 점수(7.0~8.0)를 확보", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "하고, Speaking과 Writing에서 목표 밴드에 도달하도록 집중 투자하는 전략이 효율적이다. " },
+        { "type": "text", "text": "번역가", "marks": [{ "type": "link", "attrs": { "href": "/job/번역가" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "관광통역안내원", "marks": [{ "type": "link", "attrs": { "href": "/job/관광통역안내원" } }] },
+        { "type": "text", "text": "처럼 영어를 직업적으로 활용하려는 사람이라면, Overall 7.0 이상을 목표로 전 파트 균형 잡힌 점수를 만들어야 한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "자주 묻는 질문" }]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "IELTS와 TOEIC은 어떻게 다른가?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "TOEIC은 비즈니스 영어 능력을 측정하는 한국·일본 중심의 시험이고, IELTS는 학술·이민·취업용 종합 영어 능력을 평가하는 글로벌 시험이다. TOEIC은 Listening과 Reading만(Speaking·Writing은 별도 시험), IELTS는 4개 영역을 한 번에 평가한다. 해외 유학이나 이민이 목적이라면 TOEIC 점수는 거의 인정되지 않으므로 IELTS 또는 TOEFL이 필요하다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "IELTS 독학이 가능한가? 학원을 다녀야 하나?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "충분히 가능하다. 실제로 1개월 독학으로 6.5를 달성하거나, 독학으로 8.0을 달성한 사례도 많다. Cambridge 공식문제집과 YouTube 무료 강의만으로도 6.0~6.5는 도달할 수 있다. 다만 목표가 7.0 이상이거나, Speaking·Writing에서 특히 약하다면 원어민 첨삭 서비스나 학원(edm아이엘츠, 해커스, 민선생IELTS 등)의 도움이 효율적이다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Computer IELTS와 Paper IELTS 중 어떤 것이 유리한가?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2026년 3월 이후로는 Paper가 완전히 종료되므로 Computer만 남는다. 시험 내용과 난이도는 동일하고 전달 방식만 다르다. Computer의 장점은 빠른 성적 발표(3~5일), 유연한 일정(주 6일), Writing 워드카운터 자동 표시 등이다. 타이핑 속도가 충분하다면 Computer가 전반적으로 유리하고, 현재로서는 사실상 유일한 선택지이기도 하다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "One Skill Retake(OSR)는 어떤 제도인가?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "컴퓨터 IELTS 응시 후 60일 이내에 4개 섹션 중 1개만 재시험 볼 수 있는 제도다. 예를 들어 Overall은 목표에 근접했는데 Writing만 0.5 부족한 경우, Writing만 다시 보면 된다. 재응시한 섹션의 새 점수와 나머지 3개 섹션의 기존 점수를 합산해 새로운 Overall을 받는다. 전체를 다시 볼 필요가 없으므로 시간과 비용을 크게 절약할 수 있다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "UKVI IELTS는 일반 IELTS와 무엇이 다른가?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "UKVI(UK Visas and Immigration) IELTS는 영국 비자 신청용으로 특별히 인정되는 시험이다. 시험 내용과 난이도는 일반 IELTS와 동일하지만, 보안이 강화된 지정 시험장에서만 응시할 수 있고 응시료가 더 비싸다. 영국 비자가 필요한 경우에만 UKVI를 선택하면 되고, 그 외 목적이라면 일반 IELTS로 충분하다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "IELTS 준비 체크리스트: 시험 전 반드시 확인하자" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "목적에 맞는 시험 유형(Academic vs General Training)을 선택했는가?" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Cambridge 공식문제집을 최소 4~5권 이상 풀어보았는가?" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Listening 전사 시간 2분(컴퓨터)에 맞춰 실전 연습을 했는가?" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Reading 지문당 20분 시간 배분을 지킬 수 있는가?" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Writing Task 2 에세이를 서론-본론2-결론 구조로 250단어 이상 작성할 수 있는가?" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Speaking Part 2에서 2분간 끊기지 않고 말할 수 있는가?" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "여권 유효기간이 시험일 이후에도 충분히 남아 있는가?" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "성적 유효기간(2년) 내에 입학/이민 지원 일정이 맞는가?" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "IELTS 준비 핵심 정리" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "유학이면 Academic, 이민이면 General Training을 선택한다. 대부분의 대학은 Overall 6.5~7.0을 요구하고, 이민은 6.0~6.5가 기준이다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Cambridge IELTS 공식문제집(13~19)은 실전과 가장 유사한 필수 교재다. 최신 권부터 역순으로 최소 4~5권 이상 반복 풀이한다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국인은 Reading에 강하고 Speaking·Writing에 약하다. Reading에서 고득점을 확보하고, 약한 파트에 집중 투자하는 전략이 효율적이다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2026년 3월부터 Paper 시험이 종료되어 컴퓨터 IELTS만 남는다. 타이핑 연습과 컴퓨터 환경 적응이 필수다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "One Skill Retake 제도를 활용하면 한 섹션만 재응시할 수 있으므로, 전략적으로 점수를 올릴 수 있다." }] }] }
+          ]
+        }
+      ]
+    }
+  ]
+}

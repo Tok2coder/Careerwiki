@@ -1,0 +1,373 @@
+{
+  "cert_name": "SMAT (서비스경영자격)",
+  "english_name": "Service Management Ability Test",
+  "research_date": "2026-03-26",
+  "sections": {
+    "overview": {
+      "title": "자격증 개요",
+      "content": {
+        "definition": "SMAT(Service Management Ability Test, 서비스경영자격)는 서비스 산업 분야의 전문 인력을 체계적으로 양성하기 위한 국가직무능력표준(NCS) 기반의 실무형 국가공인 자격시험이다.",
+        "governing_body": "한국생산성본부(KPC, Korea Productivity Center)",
+        "official_site": "https://license.kpc.or.kr",
+        "certification_type": "국가공인 민간자격",
+        "national_certification_since": "2015년부터 국가공인 자격시험으로 시행",
+        "purpose": "서비스 산업의 핵심 성공 요인(CBK: Common Body of Knowledge)을 추출하여 업종/직무별 경영역량을 객관적이고 신뢰성 있게 평가",
+        "grade_structure": {
+          "grade_1": {
+            "title": "1급 (컨설턴트)",
+            "requirement": "모듈 A + B + C 3개 모두 취득",
+            "level": "프로페셔널/전문가",
+            "credit_recognition": "학점은행제 10학점 인정"
+          },
+          "grade_2": {
+            "title": "2급 (관리자)",
+            "requirement": "모듈 A+B 또는 A+C 2개 취득",
+            "level": "직무별 특성화 인재",
+            "credit_recognition": "학점은행제 6학점 인정"
+          },
+          "grade_3": {
+            "title": "3급 (실무자)",
+            "requirement": "모듈 A 1개 취득",
+            "level": "서비스 산업 신입사원 수준",
+            "credit_recognition": "해당 없음"
+          }
+        },
+        "note": "B 또는 C모듈을 먼저 취득해도 A모듈을 취득해야 자격이 부여되므로 A모듈 우선 취득 권장",
+        "applicable_industries": [
+          "의료/보건",
+          "관광/항공",
+          "금융/은행",
+          "유통/물류",
+          "공공/행정",
+          "미용/뷰티",
+          "호텔/면세점",
+          "교육/훈련"
+        ]
+      },
+      "sources": [
+        "https://license.kpc.or.kr/nasec/qlfint/qlfint/selectMatmngmtty.do",
+        "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=7385",
+        "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9980"
+      ]
+    },
+    "exam_structure": {
+      "title": "시험 구조",
+      "content": {
+        "exam_format": "CBT(Computer Based Test) 방식",
+        "modules": {
+          "module_a": {
+            "name": "비즈니스 커뮤니케이션 (Business Communication)",
+            "subjects": [
+              "비즈니스 매너와 에티켓",
+              "이미지 메이킹",
+              "고객 심리의 이해",
+              "고객 커뮤니케이션",
+              "회의 기획 및 의전 실무"
+            ],
+            "questions": 50,
+            "duration_minutes": 70,
+            "passing_score": "100점 만점 중 70점 이상",
+            "difficulty": "가장 쉬움 (입문 수준)"
+          },
+          "module_b": {
+            "name": "서비스 마케팅/세일즈 (Service Marketing & Sales)",
+            "subjects": [
+              "서비스 세일즈 및 고객 상담",
+              "고객 관리(CRM)",
+              "VOC 분석 및 관리",
+              "컴플레인 처리",
+              "서비스 유통 관리",
+              "코칭/교육훈련 및 멘토링 동기부여"
+            ],
+            "questions": 50,
+            "duration_minutes": 70,
+            "passing_score": "100점 만점 중 70점 이상",
+            "difficulty": "가장 어려움 (탈락률 높음)"
+          },
+          "module_c": {
+            "name": "서비스 운영전략 (Service Operation Strategy)",
+            "subjects": [
+              "서비스 산업 개론",
+              "서비스 프로세스 설계 및 품질관리",
+              "서비스 공급 및 수요관리",
+              "서비스 인적자원관리(HRM)",
+              "고객만족경영(CSM) 전략"
+            ],
+            "questions": 50,
+            "duration_minutes": 70,
+            "passing_score": "100점 만점 중 70점 이상",
+            "difficulty": "중간"
+          }
+        },
+        "exam_method": "문제은행 방식 (기출 동일/유사 문제 출제)",
+        "simultaneous_exam": "같은 날 최대 3개 모듈 동시 응시 가능"
+      },
+      "sources": [
+        "https://license.kpc.or.kr/nasec/qlfint/qlfint/selectMatmngmtty.do",
+        "https://www.lecturernews.com/news/articleView.html?idxno=120208",
+        "https://wasabisenbe.com/smat-%EC%9E%90%EA%B2%A9%EC%A6%9D%EC%9D%98-%EB%AA%A8%EB%93%A0-%EA%B2%83-feat-%EC%93%B8%EB%AA%A8-%EB%82%9C%EC%9D%B4%EB%8F%84-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95-%EB%93%B1/"
+      ]
+    },
+    "schedule_and_registration": {
+      "title": "시험 일정 및 접수",
+      "content": {
+        "exam_frequency": "연 8회 (정기시험 6회 + 특별시험 2회)",
+        "regular_exam": "짝수달(2,4,6,8,10,12월) 2주차 토요일에 정기시험 실시",
+        "special_exam": "5월, 11월 4주차 토요일에 특별시험 실시",
+        "schedule_2026": [
+          {
+            "round": "제2회 정기시험",
+            "registration_period": "2026년 4월 2일 ~ 4월 8일",
+            "exam_date": "2026년 5월 9일"
+          },
+          {
+            "round": "제3회 정기시험",
+            "registration_period": "2026년 4월 23일 ~ 4월 29일",
+            "exam_date": "2026년 5월 30일"
+          }
+        ],
+        "registration_method": "KPC자격 홈페이지(license.kpc.or.kr)에서 온라인 원서접수",
+        "registration_fee_surcharge": "개인 온라인 원서접수 시 결제 대행 수수료 1,000원 별도",
+        "exam_fee": {
+          "per_module": "20,000원",
+          "all_3_modules": "50,000원 (동시 접수 시 할인)"
+        },
+        "result_announcement": "시험 종료 후 약 2주 내 KPC자격 홈페이지에서 확인",
+        "certificate_issuance": "합격 후 KPC자격 홈페이지에서 자격증 발급 신청"
+      },
+      "sources": [
+        "https://license.kpc.or.kr/nasec/rceptexmncnfirm/selectExprschdul.do",
+        "https://m.mainedu.co.kr/board/view.php?code=mainedu_exam_schedule&page=1&seq_no=61180",
+        "https://license.kpc.or.kr/nasec/cmm/board/kpcBoard.do?bbsId=BBSMSTR_000000000104"
+      ]
+    },
+    "pass_rate": {
+      "title": "합격률 및 난이도",
+      "content": {
+        "overall_pass_rate": "약 68.2% (전체 평균)",
+        "pass_rate_by_grade_2024": {
+          "grade_1": "48.24%",
+          "grade_2": "64.77%",
+          "grade_3": "67.14%"
+        },
+        "difficulty_analysis": {
+          "module_a": "가장 쉬움. 비전공자도 1~2주 독학으로 합격 가능. 비즈니스 매너 등 상식적 내용 많음",
+          "module_b": "가장 어려움. 탈락자 가장 많음. CRM, VOC, 컴플레인 등 전문 용어 다수. 교재 정독 필수",
+          "module_c": "중간 난이도. 경영학 배경지식 있으면 유리. 서비스 산업 이론 중심"
+        },
+        "general_assessment": "전체적으로 난이도 낮은 편. 문제은행 방식이라 기출문제 반복 출제. 1~2주 집중 학습 시 합격 가능"
+      },
+      "sources": [
+        "https://govad.co.kr/entry/smat-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%93%B8%EB%AA%A8-%EC%97%AC%EB%B6%80-%ED%95%A9%EA%B2%A9%EB%A5%A0-%EB%82%9C%EC%9D%B4%EB%8F%84-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95-%EA%B8%B0%EC%B6%9C%EB%AC%B8%EC%A0%9C/",
+        "https://wasabisenbe.com/smat-%EC%9E%90%EA%B2%A9%EC%A6%9D%EC%9D%98-%EB%AA%A8%EB%93%A0-%EA%B2%83-feat-%EC%93%B8%EB%AA%A8-%EB%82%9C%EC%9D%B4%EB%8F%84-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95-%EB%93%B1/",
+        "https://m.dcinside.com/board/acbs/154649"
+      ]
+    },
+    "study_method": {
+      "title": "공부법 및 교재",
+      "content": {
+        "recommended_study_period": {
+          "module_a_only": "1~2주 (하루 2~3시간)",
+          "all_modules_1급": "3~4주 (하루 3시간 기준)",
+          "intensive": "12시간 단기 암기로도 합격 사례 있음 (모듈 A 기준)"
+        },
+        "study_strategy": {
+          "step_1": "교재 1회 정독 (핵심 개념 파악)",
+          "step_2": "기출문제 반복 풀이 (문제은행 방식이므로 기출 숙지가 핵심)",
+          "step_3": "오답노트 정리 및 취약 과목 보완",
+          "step_4": "CBT 모의고사로 실전 감각 연습",
+          "tip": "모듈B는 전문 용어 많으므로 교재 + 개념서 병행 권장"
+        },
+        "recommended_textbooks": [
+          {
+            "name": "에듀윌 SMAT 1주끝장 시리즈 (모듈A/B/C 각 권)",
+            "publisher": "에듀윌",
+            "price": "각 17,000원 (할인가 약 15,300원)",
+            "features": "KPC 공식인증 교재(7년 연속), 저자 직강 무료, CBT 모의고사 성적분석",
+            "year": "2025~2026년판"
+          },
+          {
+            "name": "이기적 SMAT 모듈 A+B+C 올인원",
+            "publisher": "영진닷컴",
+            "price": "39,000원 (할인가 약 35,100원)",
+            "features": "동영상 강의 무료, 빈출 용어 정리 노트, 최신 기출문제 수록",
+            "year": "2026년판"
+          }
+        ],
+        "online_lectures": [
+          {
+            "name": "신지원에듀 SMAT 강좌",
+            "url": "https://smat.sinjiwonedu.co.kr/",
+            "note": "온라인 강좌 + 교재 패키지"
+          },
+          {
+            "name": "에듀윌 무료 해설 강의",
+            "note": "교재 구매 시 저자 직강 무료 제공"
+          },
+          {
+            "name": "이기적 무료 동영상 강의",
+            "note": "교재 구매 시 무료 동영상 강의 제공"
+          }
+        ],
+        "free_resources": [
+          "KPC자격 홈페이지 기출문제 공개",
+          "신지원에듀 무료 기출 유형 문제풀이",
+          "해피캠퍼스 등 단기 암기 요약본"
+        ]
+      },
+      "sources": [
+        "https://9sundrops.com/smat%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%8B%9C%ED%97%98-%EC%A4%80%EB%B9%84%EC%9D%98-%EB%AA%A8%EB%93%A0-%EA%B2%83/",
+        "https://m.dcinside.com/board/acbs/268013",
+        "https://m.dcinside.com/board/acbs/154649",
+        "https://book.eduwill.net/goods/select.action?goodsId=0100004239",
+        "https://shop.youngjin.com/goods/view?no=1157"
+      ]
+    },
+    "cost": {
+      "title": "총 비용",
+      "content": {
+        "exam_fees": {
+          "single_module": "20,000원 + 결제수수료 1,000원 = 21,000원",
+          "two_modules": "약 40,000원 + 결제수수료 1,000원 = 41,000원",
+          "three_modules_simultaneous": "50,000원 + 결제수수료 1,000원 = 51,000원 (동시 접수 할인)"
+        },
+        "textbook_costs": {
+          "eduwill_per_module": "약 15,300원 (정가 17,000원)",
+          "eduwill_3_modules": "약 45,900원",
+          "igijuk_all_in_one": "약 35,100원 (정가 39,000원)"
+        },
+        "online_lecture_costs": {
+          "free_with_textbook": "에듀윌/이기적 교재 구매 시 무료 강의 포함",
+          "paid_lecture_package": "신지원에듀 등 유료 패키지 약 50,000~150,000원"
+        },
+        "total_estimated_cost": {
+          "minimum_독학_3급": "약 36,300원 (응시료 21,000원 + 교재 15,300원)",
+          "standard_독학_1급": "약 86,100원 (응시료 51,000원 + 올인원교재 35,100원)",
+          "with_lecture_1급": "약 150,000~250,000원 (응시료 + 교재 + 인강)"
+        }
+      },
+      "sources": [
+        "https://m.mainedu.co.kr/board/view.php?code=mainedu_exam_schedule&page=1&seq_no=61180",
+        "https://book.eduwill.net/goods/list.action?ClassCode=100103131",
+        "https://shop.youngjin.com/goods/view?no=1157"
+      ]
+    },
+    "career_and_usage": {
+      "title": "취업 활용 및 경력 개발",
+      "content": {
+        "target_industries": [
+          "호텔/리조트 (프론트, 컨시어지, 객실관리)",
+          "항공사 (캐빈승무원, 지상직)",
+          "면세점/백화점 (판매서비스, 고객상담)",
+          "금융/은행 (창구서비스, 고객센터)",
+          "병원/의료기관 (의료서비스, 원무과)",
+          "유통/물류 (고객관리, CS부서)",
+          "공공기관/행정 (민원서비스)",
+          "미용/뷰티 (고객응대, 서비스관리)",
+          "콜센터/CS부서 (상담, 클레임 처리)"
+        ],
+        "credit_recognition": {
+          "grade_1_10_credits": {
+            "major_field": "전문학사(경영, 관광경영), 학사(경영학, 관광경영학, 호텔경영학)",
+            "recognition": "전공필수 학점"
+          },
+          "grade_2_6_credits": {
+            "major_field": "전문학사(경영, 관광경영)",
+            "recognition": "전공필수 학점"
+          }
+        },
+        "hr_utilization": "신규 인재 채용, 기존 직원 육성, 직원 전환배치 등 HR직무에 활용",
+        "corporate_benefits": "다수의 기업과 대학에서 구성원의 서비스 역량 강화를 위해 활용. 서비스 관련 직종 지원 시 가산점 또는 우대 요인으로 작용",
+        "limitations": "단독으로 취업을 보장하는 자격증은 아님. 서비스직 지원 시 추가 스펙으로 활용. 3급(A모듈 단독)만으로는 취업 효용이 제한적이며, 최소 2급 이상 권장"
+      },
+      "sources": [
+        "https://license.kpc.or.kr/nasec/qlfint/qlfint/selectMatmngmtty.do",
+        "https://edu.jobgo.ne.kr/_mobile/voucher/lectureView.php?seq=138",
+        "https://janet.co.kr/jnLics/licenseInfo?ld_id=181",
+        "https://seolhassam.co.kr/38"
+      ]
+    },
+    "similar_cert_comparison": {
+      "title": "유사 자격증 비교",
+      "content": {
+        "comparisons": [
+          {
+            "cert_name": "CS Leaders (CS리더스 관리사)",
+            "governing_body": "한국정보평가협회",
+            "cert_type": "국가등록 민간자격",
+            "difficulty_vs_smat": "SMAT 모듈A보다 어려움 (합격률 약 50% 전후)",
+            "key_differences": [
+              "CS리더스는 고객만족(CS) 전문 자격, SMAT는 서비스경영 전반 포괄",
+              "CS리더스 Part3가 SMAT 모듈A와 내용 겹침 (비즈니스 매너)",
+              "취업 관점에서는 CS리더스관리사가 더 인지도 높다는 평가도 있음",
+              "두 자격증 동시 취득 과정도 있어 함께 준비하면 효율적"
+            ],
+            "recommendation": "취업 목적이라면 CS리더스 우선 추천, 학점은행제 목적이라면 SMAT 추천"
+          },
+          {
+            "cert_name": "서비스마케팅자격증",
+            "governing_body": "한국마케팅협회 등",
+            "cert_type": "민간자격",
+            "key_differences": [
+              "마케팅 중심 vs SMAT는 서비스경영 전반",
+              "SMAT 모듈B(서비스마케팅/세일즈)와 일부 내용 겹침",
+              "국가공인 여부에서 SMAT가 우위"
+            ]
+          },
+          {
+            "cert_name": "NCS 직무능력평가",
+            "governing_body": "한국산업인력공단",
+            "cert_type": "국가직무능력표준 기반",
+            "key_differences": [
+              "NCS는 표준 체계, SMAT는 NCS 기반 자격시험",
+              "SMAT가 NCS 서비스 직무능력표준을 활용하여 개발됨",
+              "NCS 자체는 자격증이 아닌 직무능력 표준 프레임워크"
+            ]
+          },
+          {
+            "cert_name": "컨벤션기획사",
+            "governing_body": "한국산업인력공단",
+            "cert_type": "국가기술자격",
+            "key_differences": [
+              "MICE/컨벤션 분야 전문 자격 vs SMAT는 서비스 전반",
+              "컨벤션기획사가 특정 분야에서 더 전문적 인정",
+              "SMAT와 함께 취득하면 서비스+이벤트 분야에서 시너지"
+            ]
+          }
+        ],
+        "summary": "SMAT는 서비스업 전반의 기본 소양을 인증하는 국가공인 자격으로, CS리더스와 함께 서비스 분야 대표 자격증. 학점은행제 인정과 국가공인이라는 점에서 차별화"
+      },
+      "sources": [
+        "https://janet.co.kr/bbs/board.php?bo_table=bQna&wr_id=99107&sca=%ED%86%A0%EB%A1%A0%EB%B0%A9&ld_id=181",
+        "http://www.ashacs.com/academy/201602.php",
+        "https://namu.wiki/w/CS%20Leaders(%EA%B4%80%EB%A6%AC%EC%82%AC)%20/%20CS%EB%A6%AC%EB%8D%94%EC%8A%A4(%EA%B4%80%EB%A6%AC%EC%82%AC)",
+        "https://snowgotown.com/entry/CS%EB%A6%AC%EB%8D%94%EC%8A%A4-%EA%B4%80%EB%A6%AC%EC%82%AC-%EC%9A%94%EC%95%BD-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95-%EB%82%9C%EC%9D%B4%EB%8F%84-%EB%B0%8F-%EA%B3%B5%EB%B6%80%EB%B2%95"
+      ]
+    }
+  },
+  "all_sources": [
+    "https://license.kpc.or.kr/nasec/qlfint/qlfint/selectMatmngmtty.do",
+    "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=7385",
+    "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9980",
+    "https://m.mainedu.co.kr/board/view.php?code=mainedu_exam_schedule&page=1&seq_no=61180",
+    "https://license.kpc.or.kr/nasec/rceptexmncnfirm/selectExprschdul.do",
+    "https://license.kpc.or.kr/nasec/cmm/board/kpcBoard.do?bbsId=BBSMSTR_000000000104",
+    "https://govad.co.kr/entry/smat-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%93%B8%EB%AA%A8-%EC%97%AC%EB%B6%80-%ED%95%A9%EA%B2%A9%EB%A5%A0-%EB%82%9C%EC%9D%B4%EB%8F%84-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95-%EA%B8%B0%EC%B6%9C%EB%AC%B8%EC%A0%9C/",
+    "https://wasabisenbe.com/smat-%EC%9E%90%EA%B2%A9%EC%A6%9D%EC%9D%98-%EB%AA%A8%EB%93%A0-%EA%B2%83-feat-%EC%93%B8%EB%AA%A8-%EB%82%9C%EC%9D%B4%EB%8F%84-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95-%EB%93%B1/",
+    "https://www.lecturernews.com/news/articleView.html?idxno=120208",
+    "https://9sundrops.com/smat%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%8B%9C%ED%97%98-%EC%A4%80%EB%B9%84%EC%9D%98-%EB%AA%A8%EB%93%A0-%EA%B2%83/",
+    "https://m.dcinside.com/board/acbs/154649",
+    "https://m.dcinside.com/board/acbs/268013",
+    "https://janet.co.kr/jnLics/licenseInfo?ld_id=181",
+    "https://seolhassam.co.kr/38",
+    "https://edu.jobgo.ne.kr/_mobile/voucher/lectureView.php?seq=138",
+    "https://book.eduwill.net/goods/select.action?goodsId=0100004239",
+    "https://shop.youngjin.com/goods/view?no=1157",
+    "https://smat.sinjiwonedu.co.kr/",
+    "https://janet.co.kr/bbs/board.php?bo_table=bQna&wr_id=99107",
+    "http://www.ashacs.com/academy/201602.php",
+    "https://namu.wiki/w/CS%20Leaders(%EA%B4%80%EB%A6%AC%EC%82%AC)%20/%20CS%EB%A6%AC%EB%8D%94%EC%8A%A4(%EA%B4%80%EB%A6%AC%EC%82%AC)",
+    "https://snowgotown.com/entry/CS%EB%A6%AC%EB%8D%94%EC%8A%A4-%EA%B4%80%EB%A6%AC%EC%82%AC-%EC%9A%94%EC%95%BD-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95-%EB%82%9C%EC%9D%B4%EB%8F%84-%EB%B0%8F-%EA%B3%B5%EB%B6%80%EB%B2%95"
+  ],
+  "source_count": 22
+}

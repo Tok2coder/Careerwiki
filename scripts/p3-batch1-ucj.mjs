@@ -1,0 +1,763 @@
+/**
+ * P3 Batch 1 - UCJ 보완: 10개 직업
+ * SQL 파일 생성 후 wrangler --file 실행 방식
+ */
+
+import { execSync } from 'child_process';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
+
+const jobs = [
+  {
+    id: '176528346901264',
+    name: '기록물관리사',
+    ucj: {
+      way: "기록물관리사가 되는 가장 일반적인 경로는 기록관리학, 역사학, 문헌정보학 관련 학과를 졸업한 뒤 대학원에서 기록관리학 석사 학위를 취득하는 것이다.[1] 공공기관에서 기록연구사로 일하려면 기록물관리전문요원 자격이 필수이며, 기록관리학 석사 학위 소지자 또는 관련 학과 4년제 학사+일정 실습 이수자에게 부여된다.[2] 공무원 신분의 기록연구사 직렬은 공개경쟁채용 또는 경력경쟁채용을 통해 선발되며, 국가기록원·행정안전부 소속 기관이 주요 채용처다.[1] 대학, 병원, 대기업 등 민간 조직에서는 기록관리 담당자를 별도 채용하기도 하며, 이 경우 학사 학위 소지자도 지원할 수 있다.[3] 최근에는 전자기록관리시스템(RMS) 운용 역량과 디지털 아카이브 실무 경험이 중시된다.[3]",
+      overviewSalary: {
+        sal: "기록물관리사의 연평균 임금은 3,500만~4,500만 원 수준이다.[1] 공무원 신분의 기록연구사는 직급·호봉에 따라 4,000만~6,000만 원대를 받으며,[2] 민간 기업 기록관리 담당자는 경력에 따라 편차가 크다.",
+        source: "워크넷 임금정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "공공기록물관리법 강화와 전자기록 보존 수요 증가로 기록물관리 전문인력에 대한 수요는 꾸준히 유지되고 있다.[1] 다만 공공기관 기록연구사 직렬의 연간 신규 채용 규모가 제한적이어서 경쟁이 치열하고, 전반적인 고용 증가 속도는 보통 수준으로 전망된다.[2]",
+        source: "커리어넷 직업전망(2024)"
+      },
+      trivia: "한국의 기록물관리전문요원 제도는 2000년 공공기록물관리법 제정과 함께 도입된 비교적 신생 자격 체계로, 이후 빠르게 전문직화가 진행되었다.[1] 국가기록원은 조선왕조실록, 동의보감 등 유네스코 세계기록유산 16건을 포함해 역사적으로 중요한 수억 건의 기록물을 보존하고 있다.[2] 기록물관리사는 문서뿐 아니라 사진, 영상 필름, 지도, 건축 도면, 구술 기록까지 다양한 매체의 기록물을 다룬다.[3] 선진국에서는 기록관리(Archives)가 독립 학문 분야로 정착해 있어 해외 취업이나 국제 협력 업무로 이어지는 경우도 있다.[4]",
+      detailWlb: {
+        wlb: "보통이상",
+        social: "보통",
+        wlbDetail: "대부분 공공기관·대학·기업 내 기록관 또는 문서관리 부서에서 정해진 업무 시간에 근무하며 잦은 야근은 드물다.[1] 기록물 분류·정리 작업이 반복적이고 세밀한 집중력을 요하지만, 물리적으로 격무가 심한 직종은 아니다.[2]",
+        socialDetail: "공공 기록 보존의 역사적·사회적 가치가 점차 인정받으면서 전문직으로서의 위상이 높아지고 있다.[1] 다만 일반 대중에게는 직업 인지도가 낮아 사회적 주목도는 아직 제한적인 편이다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "기록관리학, 역사학, 문헌정보학 관련 학부 전공 이수",
+          "기록관리학 대학원 진학 (국내 10여 개 대학원 과정 운영 중)",
+          "전자기록관리시스템(RMS) 실습 및 디지털 아카이브 교육 수강",
+          "국가기록원 인턴십 또는 기관 현장실습으로 실무 경험 축적"
+        ],
+        recruit: [
+          "공무원 시험 기록연구사 직렬 응시 (기록물관리전문요원 자격 필수)",
+          "대학·연구기관·의료기관 기록관리 담당자 공개 채용",
+          "대기업·공공기관 문서관리 부서 경력 채용"
+        ],
+        training: [
+          "기록물관리전문요원 자격 취득 준비 (대학원 이수 또는 학사+실습)",
+          "국가기록원 교육원 디지털 아카이브 전문 교육 과정 수강",
+          "국제 기록관리 자격(CRM) 준비로 전문성 심화"
+        ]
+      },
+      sidebarJobs: ["사서", "학예사", "문화재보존원"],
+      sidebarMajors: ["문헌정보학과", "역사·고고학과", "행정학과", "문화관광과"],
+      sidebarCerts: ["기록물관리전문요원", "정보처리기사", "사서자격증(2급)", "데이터분석준전문가(ADsP)"],
+      heroTags: ["기록물관리", "아카이브", "기록연구사", "공무원", "문헌정보", "디지털기록", "국가기록원"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과 기록물관리사", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=194" },
+          { id: 2, text: "국가기록원 기록전문요원 제도", url: "https://www.archives.go.kr/next/recordsManagement/managementSystem.do" },
+          { id: 3, text: "워크넷 직업정보 기록연구사", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S8840&infoType=1" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=194" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "커리어넷 직업전망 2024", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=194" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S8840&infoType=1" }
+        ],
+        trivia: [
+          { id: 1, text: "행정안전부 공공기록물관리법", url: "https://www.law.go.kr/lsInfoP.do?lsiSeq=186427" },
+          { id: 2, text: "국가기록원 세계기록유산", url: "https://www.archives.go.kr/next/viewMain.do" },
+          { id: 3, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=194" },
+          { id: 4, text: "한국기록관리학회", url: "http://www.kaarms.or.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S8840&infoType=1" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=194" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "국가기록원", url: "https://www.archives.go.kr" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=194" }
+        ]
+      }
+    }
+  },
+  {
+    id: '1765283313849198',
+    name: '법률사무원',
+    ucj: {
+      way: "법률사무원이 되기 위한 별도의 국가자격증은 없으며, 법학 또는 행정학 관련 전공자나 법무사·변호사 사무소에서 실무 경험을 쌓은 사람이 취업한다.[1] 법학과, 법무행정학과 졸업자 또는 관련 전문대학 이수자가 우대를 받으며, 법률 서식 작성과 소송 서류 관리 능력이 중요하다.[2] 법무사보 시험이나 법원 행정직 공무원 시험을 준비하면서 법률 사무원으로 경력을 쌓는 경우도 많다.[1] 채용은 주로 변호사 사무소, 법무사 사무소, 대기업 법무팀, 법원, 검찰청 등을 통해 이루어지며, 경력직 우대 채용이 일반적이다.[3]",
+      overviewSalary: {
+        sal: "법률사무원의 평균 연봉은 약 2,400만~3,500만 원 수준이다.[1] 대형 로펌이나 대기업 법무팀 경력직은 4,000만 원 이상을 받기도 하며,[2] 경력과 담당 업무 범위에 따라 편차가 크다.",
+        source: "워크넷 임금정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "법률 서비스 수요는 지속적으로 증가하는 추세이나, 법률문서 자동화와 AI 기술 도입으로 단순 문서 작성 업무는 점차 대체될 가능성이 있다.[1] 고도의 법률 지식과 의뢰인 관리 능력을 갖춘 전문 법률사무원에 대한 수요는 꾸준히 유지될 전망이다.[2]",
+        source: "커리어넷 직업전망(2024)"
+      },
+      trivia: "법률사무원은 변호사, 법무사, 공증인 등 법조인을 직접 보조하는 역할로, 법원·검찰청 제출 서류 작성부터 소송 기일 관리까지 실질적인 법률 업무를 담당한다.[1] 미국에서는 이 직군을 파라리걸(Paralegal)이라 부르며 고유 자격증과 높은 전문성을 인정받는 직종이다.[2] 한국에서는 법무사보 시험을 통과하면 법무사 사무소에서 더 높은 권한과 처우를 받을 수 있다.[3] 최근 대형 로펌은 법률사무원 전담 팀을 구성해 소송관리 시스템을 운영하는 등 업무가 전문화·분업화되고 있다.[4]",
+      detailWlb: {
+        wlb: "보통",
+        social: "보통이상",
+        wlbDetail: "소규모 법률사무소는 소송 기일에 맞춰 야근이 발생하는 경우가 있으며, 대형 로펌이나 기업 법무팀은 비교적 정규 시간에 근무하는 편이다.[1] 소송 마감 기일이 몰리는 시기에는 업무 강도가 높아질 수 있다.[2]",
+        socialDetail: "법조인을 보조하는 전문 직무로 인식되어 사회적 인지도는 보통 이상이다.[1] 법률 지식을 겸비한 전문 인력으로 직업 안정성 면에서도 긍정적인 평가를 받는다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "법학과, 법무행정학과, 행정학과 등 관련 학과 이수",
+          "법률 서식 작성, 소송 문서 관리 실무 역량 습득",
+          "법원행정처 전자소송 시스템 사용법 습득",
+          "법무사보 시험 대비 민사집행법·부동산등기법 등 공부"
+        ],
+        recruit: [
+          "변호사·법무사 사무소 구인 공고(사람인, 잡코리아 등) 활용",
+          "대기업 법무팀, 금융기관 법무 부서 채용",
+          "법원·검찰청 행정직 공무원 시험"
+        ],
+        training: [
+          "법무사보 자격 취득으로 법률사무 처리 권한 확대",
+          "대한법무사협회 전문과정 이수",
+          "영문 계약서 검토 능력 향상을 위한 법률영어 학습"
+        ]
+      },
+      sidebarJobs: ["법무사", "변호사", "검사", "판사", "노무사", "세무사", "회계사"],
+      sidebarMajors: ["법학과", "행정학과", "경영학과"],
+      sidebarCerts: ["법무사보", "법무사", "행정사", "사무자동화산업기사"],
+      heroTags: ["법률사무", "변호사보조", "로펌", "파라리걸", "법무사", "법학"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과 법률사무원", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=531" },
+          { id: 2, text: "워크넷 직업정보 법률사무원", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2810&infoType=1" },
+          { id: 3, text: "대한법무사협회", url: "https://www.kjaa.or.kr" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=531" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "커리어넷 직업전망 2024", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=531" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2810&infoType=1" }
+        ],
+        trivia: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=531" },
+          { id: 2, text: "미국 파라리걸 협회 NALA", url: "https://www.nala.org" },
+          { id: 3, text: "대한법무사협회 법무사보 제도", url: "https://www.kjaa.or.kr" },
+          { id: 4, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2810&infoType=1" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=531" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2810&infoType=1" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=531" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2810&infoType=1" }
+        ]
+      }
+    }
+  },
+  {
+    id: '1765283468195818',
+    name: '잡지기자',
+    ucj: {
+      way: "잡지기자가 되려면 일반적으로 신문방송학과, 미디어학과, 관련 전공 대학을 졸업한 뒤 잡지사·미디어 기업의 공개 채용 또는 인턴십에 지원하는 경로가 일반적이다.[1] 취재·기고 포트폴리오를 준비하는 것이 중요하며, 재학 중 학보사, 교지, 대학 방송국 활동 경험이 유리하게 작용한다.[2] 프리랜서 기고문을 통해 경력을 쌓은 뒤 정규직으로 전환하는 경우도 많다.[1] 언론사 필기시험과 면접에서는 시사 상식, 논술, 취재 기획력을 평가하므로 꾸준한 미디어 리터러시 함양이 필요하다.[3] 최근에는 영상·SNS 콘텐츠 제작 능력을 갖춘 멀티미디어 기자 수요가 증가하고 있다.[2]",
+      overviewSalary: {
+        sal: "잡지기자의 평균 연봉은 약 3,000만~4,500만 원 수준이다.[1] 대형 매거진 그룹이나 패션·라이프스타일 전문 잡지사는 4,000만 원 이상을 제공하기도 하며,[2] 프리랜서 기고 위주로 활동하는 경우 수입 편차가 크다.",
+        source: "워크넷 임금정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "종이 잡지 구독자 감소로 전통적인 잡지 기자의 일자리는 줄어드는 추세지만,[1] 디지털 매거진·뉴스레터·유튜브 채널 등 새로운 플랫폼으로 이동하면서 콘텐츠 생산 전문가 수요는 다양화되고 있다.[2] 영상 편집·SNS 운영 역량을 갖춘 기자의 경쟁력이 높아지고 있다.",
+        source: "커리어넷 직업전망(2024)"
+      },
+      trivia: "한국에는 약 6,000여 종의 등록 정기간행물이 존재하며, 패션·여성·경제·스포츠 등 분야별로 전문 잡지 시장이 형성되어 있다.[1] 잡지기자는 신문기자와 달리 마감 주기가 월 1회로 길어 심층 취재와 기획 기사에 강점이 있다.[2] 세계적으로 유명한 잡지 편집장(에디터인치프)은 패션·문화 산업에서 강력한 영향력을 행사하는 직위로 꼽힌다.[3] 일부 잡지기자는 책 저술, 강연, 브랜드 컨설팅 등 부업을 통해 전문성을 활용하기도 한다.[4]",
+      detailWlb: {
+        wlb: "보통",
+        social: "보통이상",
+        wlbDetail: "마감 전날에는 야근이 집중되는 편이며, 인터뷰·촬영 등 외부 일정이 비정기적으로 발생한다.[1] 월간지의 경우 신문기자보다 업무 리듬이 규칙적이지만, 특집 호나 이벤트 시즌에는 강도가 높아진다.[2]",
+        socialDetail: "글쓰기와 취재 전문가로서 인정받는 직종이며, 특히 패션·문화·라이프스타일 잡지 기자는 업계 내 인지도와 네트워크가 강점이다.[1] 바이라인이 붙는 기사는 개인 브랜드 구축에도 도움이 된다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "신문방송학과, 미디어학과, 국어국문학과 등 관련 학과 이수",
+          "학보사·교지·대학 방송국 활동으로 취재·편집 실무 경험 쌓기",
+          "포트폴리오 기사 작성 (오마이뉴스, 브런치 등 기고 활동)",
+          "영상 편집·SNS 콘텐츠 제작 역량 습득"
+        ],
+        recruit: [
+          "잡지사·미디어 그룹 공개 채용 (연 1~2회, 서류·필기·면접)",
+          "인턴십 후 정규직 전환 경로 활용",
+          "프리랜서 기고 경력 축적 후 정규직 지원"
+        ],
+        training: [
+          "한국언론진흥재단 기자 교육 과정 수강",
+          "영상 촬영·편집(프리미어 프로, 파이널컷) 기술 습득",
+          "특정 분야(패션·경제·문화 등) 전문 지식 심화로 차별화"
+        ]
+      },
+      sidebarJobs: ["기자", "신문기자", "방송기자", "취재기자", "사진기자", "작가", "아나운서"],
+      sidebarMajors: ["신문방송학과", "경영학과"],
+      sidebarCerts: ["기자협회 정회원 등록", "영상편집기능사", "한국어능력시험(KBS)"],
+      heroTags: ["잡지기자", "매거진", "콘텐츠기자", "미디어", "취재", "디지털미디어", "언론"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과 잡지기자", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=391" },
+          { id: 2, text: "한국언론진흥재단", url: "https://www.kpf.or.kr" },
+          { id: 3, text: "워크넷 직업정보 잡지기자", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2610&infoType=1" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=391" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "한국언론진흥재단 언론산업 실태조사", url: "https://www.kpf.or.kr" },
+          { id: 2, text: "커리어넷 직업전망 2024", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=391" }
+        ],
+        trivia: [
+          { id: 1, text: "문화체육관광부 정기간행물 현황", url: "https://www.mcst.go.kr" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=391" },
+          { id: 3, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2610&infoType=1" },
+          { id: 4, text: "한국언론진흥재단", url: "https://www.kpf.or.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=391" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2610&infoType=1" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=391" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2610&infoType=1" }
+        ]
+      }
+    }
+  },
+  {
+    id: '176528347686481',
+    name: '자연 및 문화해설사',
+    ucj: {
+      way: "자연 및 문화해설사는 크게 두 가지 경로로 진출할 수 있다. 첫째, 각 지방자치단체·국립공원관리공단에서 운영하는 문화관광해설사 양성 교육(50~100시간)을 이수하고 선발 시험을 통과하는 방법이다.[1] 둘째, 환경부·산림청·문화재청 등에서 지원하는 숲해설가, 생태안내원, 문화재해설사 교육 과정을 이수하는 방법이다.[2] 학력 제한은 없으나, 관광학, 환경학, 역사학, 생태학 관련 전공자가 유리하며, 외국어(영어·중국어·일본어) 능력이 있으면 국제관광 해설사로 활동 범위가 넓어진다.[3] 자원봉사나 비상근 형태로 시작해 경력을 쌓은 뒤 전문 해설사로 성장하는 경우가 많다.[1]",
+      overviewSalary: {
+        sal: "자연 및 문화해설사의 평균 연봉은 약 2,000만~3,500만 원 수준이나,[1] 시간제·계약직이 많아 실수령액 편차가 크다. 정규직 채용이 이루어지는 국립공원·문화재청 소속 해설사는 3,000만~4,000만 원을 받기도 한다.[2]",
+        source: "워크넷 임금정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "생태관광·문화유산 관광 수요가 꾸준히 늘면서 전문 해설사에 대한 수요도 안정적으로 유지되고 있다.[1] 다만 비정규직·시간제 일자리 비중이 높아 고용의 질 개선이 과제로 남아 있으며, 외국어 능력과 디지털 미디어 활용 역량을 갖춘 전문 해설사에 대한 수요가 늘고 있다.[2]",
+        source: "커리어넷 직업전망(2024)"
+      },
+      trivia: "문화관광해설사는 2001년 문화체육관광부가 제도를 도입한 이후 전국 약 6,000여 명이 활동 중이며, 경복궁·창덕궁 등 주요 문화재에서 무료 해설 서비스를 제공한다.[1] 국립공원 자연해설사는 탐방객에게 생태 교육을 제공하는 동시에 환경 보전 캠페인에도 참여한다.[2] 해외에서는 생태관광(Eco-tourism) 가이드가 고부가가치 직업으로 자리잡고 있어 국내 전문 해설사의 해외 진출도 이루어지고 있다.[3] 일부 전문 해설사는 교육 기관이나 미디어에서 강사·출연자로 활동하며 수입을 다각화한다.[4]",
+      detailWlb: {
+        wlb: "보통이상",
+        social: "보통이상",
+        wlbDetail: "야외 활동이 많은 직종으로 계절·날씨에 따라 업무 강도가 달라지며, 주말·공휴일에 근무하는 경우가 많다.[1] 비정규직 형태가 많아 안정적인 근무 시간 보장이 어려운 경우도 있으나, 자연 속에서 일하는 직업 만족도는 높은 편이다.[2]",
+        socialDetail: "자연과 문화를 매개로 시민 교육에 기여하는 직업으로 사회적 인식이 긍정적이다.[1] 외국인 관광객 안내 등 국가 이미지 제고에도 기여하는 것으로 평가받는다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "관광학, 환경학, 생태학, 역사학 관련 학과 이수 (학력 제한 없음)",
+          "문화관광해설사 양성 교육 과정 이수 (지자체·문화재청 주관, 50~100시간)",
+          "숲해설가·생태안내원 교육 과정 이수 (산림청·환경부 인증)",
+          "외국어(영어·중국어·일본어) 학습으로 국제 해설사 역량 강화"
+        ],
+        recruit: [
+          "지방자치단체 문화관광해설사 공개 모집 (연 1~2회)",
+          "국립공원관리공단 자연해설사 채용",
+          "문화재청·한국관광공사 산하 해설사 프로그램 지원"
+        ],
+        training: [
+          "문화재 관련 자격증(문화관광해설사 등록) 취득",
+          "생태안내원 전문 교육 (환경부 인증 기관)",
+          "스토리텔링·퍼실리테이션 역량 개발 교육"
+        ]
+      },
+      sidebarJobs: ["여행안내원", "여행사무원", "학예사", "문화재보존원", "통역가"],
+      sidebarMajors: ["관광경영학과", "관광경영과", "문화관광과", "역사·고고학과"],
+      sidebarCerts: ["문화관광해설사 등록증", "숲해설가 자격증", "생태안내원 자격증", "관광통역안내사"],
+      heroTags: ["문화해설사", "자연해설", "생태가이드", "문화관광", "숲해설가", "관광안내"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "문화체육관광부 문화관광해설사 제도", url: "https://www.mcst.go.kr" },
+          { id: 2, text: "산림청 숲해설가 교육", url: "https://www.forest.go.kr" },
+          { id: 3, text: "커리어넷 직업백과 문화관광해설사", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=560" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=560" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "커리어넷 직업전망 2024", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=560" },
+          { id: 2, text: "한국관광공사", url: "https://www.visitkorea.or.kr" }
+        ],
+        trivia: [
+          { id: 1, text: "문화체육관광부 문화관광해설사 제도", url: "https://www.mcst.go.kr" },
+          { id: 2, text: "국립공원관리공단", url: "https://www.knps.or.kr" },
+          { id: 3, text: "한국관광공사 생태관광", url: "https://www.visitkorea.or.kr" },
+          { id: 4, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=560" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=560" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5120&infoType=1" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "문화체육관광부", url: "https://www.mcst.go.kr" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=560" }
+        ]
+      }
+    }
+  },
+  {
+    id: '1765283414045777',
+    name: '경영·진단전문가',
+    ucj: {
+      way: "경영·진단전문가(경영컨설턴트)가 되기 위해서는 일반적으로 경영학, 산업공학, 경제학 등 관련 학과 졸업 후 컨설팅 펌이나 기업 기획 부서에서 경력을 쌓는 경로가 일반적이다.[1] 국내에서 법적 자격증으로는 중소기업진흥공단 주관의 경영지도사(재무·마케팅·인사·생산 등 분야별) 자격증이 있으며, 국가공인 자격으로서 컨설팅 시장에서 신뢰도를 높여준다.[2] 해외에서는 MBA(경영학 석사) 학위나 CMC(Certified Management Consultant) 자격이 전문성을 인정받는 데 중요하다.[3] 대형 컨설팅 펌은 명문대 졸업자와 데이터 분석·전략 수립 역량을 갖춘 인재를 선호하며, 중소 컨설팅 펌은 특정 산업 분야 경력자를 채용하는 경우가 많다.[1]",
+      overviewSalary: {
+        sal: "경영·진단전문가의 연봉은 대형 컨설팅 펌 신입 기준 5,000만~7,000만 원이며,[1] 시니어 컨설턴트·파트너급으로 성장하면 1억 원 이상도 가능하다.[2] 독립 컨설턴트나 중소 펌은 수행 프로젝트 수에 따라 수입 편차가 크다.",
+        source: "워크넷 임금정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "기업 경영 환경의 불확실성 증가와 디지털 전환 수요로 경영 컨설팅 시장은 꾸준히 성장하고 있다.[1] 특히 디지털 전략, ESG 경영, 글로벌 진출 컨설팅 분야의 수요가 빠르게 늘고 있으며, 데이터 분석 역량을 갖춘 전문가에 대한 수요가 증가하고 있다.[2]",
+        source: "커리어넷 직업전망(2024)"
+      },
+      trivia: "경영컨설팅은 20세기 초 미국에서 F.W. Taylor의 과학적 경영 원리를 기업에 적용하면서 산업으로 발전했다.[1] 세계 3대 전략 컨설팅 펌(McKinsey, Boston Consulting Group, Bain)의 한국 사무소는 국내 대기업과 정부 기관의 주요 전략 프로젝트를 수행하고 있다.[2] 경영지도사 자격 소지자는 중소기업 컨설팅 시장에서 정부 지원 사업에 참여할 수 있어 안정적인 수요 기반을 갖는다.[3] 일부 컨설턴트는 스타트업 창업이나 사외이사 활동으로 경험을 확장한다.[4]",
+      detailWlb: {
+        wlb: "보통이하",
+        social: "높음",
+        wlbDetail: "프로젝트 마감 기한에 따라 야근이 빈번하게 발생하며, 출장이 잦아 생활 리듬이 불규칙할 수 있다.[1] 대형 컨설팅 펌은 특히 격무로 유명하며, 프로젝트 기간 중에는 주말 근무도 드물지 않다.[2]",
+        socialDetail: "기업의 의사결정에 영향을 주는 고부가가치 전문직으로 사회적 위상이 높다.[1] 대기업 임원, 정부 관료 등 고위 인사와 직접 협업하는 기회가 많아 네트워크 구축에도 유리하다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "경영학과, 산업공학과, 경제학과 관련 학과 이수 (또는 MBA 진학)",
+          "재무분석, 데이터 분석(Excel, Python, Tableau) 역량 습득",
+          "사례 연구(Case Study) 훈련 — 컨설팅 케이스 인터뷰 대비",
+          "교내 경영 컨설팅 동아리 참여 또는 대기업 인턴십 경험"
+        ],
+        recruit: [
+          "대형 컨설팅 펌(McKinsey, BCG, Deloitte, Accenture 등) 공개 채용",
+          "중소기업진흥공단 경영지도사 활용 컨설팅 프로젝트 수주",
+          "대기업 경영기획 부서 후 전략 컨설팅 분야 이직"
+        ],
+        training: [
+          "경영지도사 자격증 취득 (국가공인, 재무·마케팅·인사·생산 분야)",
+          "CMC(국제경영컨설턴트자격) 준비로 글로벌 역량 강화",
+          "데이터 기반 전략 컨설팅을 위한 SQL·파이썬 학습"
+        ]
+      },
+      sidebarJobs: ["노무사", "인적자원전문가", "회계사", "세무사"],
+      sidebarMajors: ["경영학과", "행정학과"],
+      sidebarCerts: ["경영지도사", "공인회계사(CPA)", "PMP(프로젝트관리전문가)", "데이터분석전문가(ADP)"],
+      heroTags: ["경영컨설팅", "경영진단", "컨설턴트", "전략기획", "경영지도사", "MBA", "비즈니스전략"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과 경영컨설턴트", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=481" },
+          { id: 2, text: "중소기업진흥공단 경영지도사 제도", url: "https://www.sbc.or.kr" },
+          { id: 3, text: "워크넷 직업정보 경영·진단전문가", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2411&infoType=1" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=481" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "커리어넷 직업전망 2024", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=481" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2411&infoType=1" }
+        ],
+        trivia: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=481" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2411&infoType=1" },
+          { id: 3, text: "중소기업진흥공단 경영지도사", url: "https://www.sbc.or.kr" },
+          { id: 4, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=481" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=481" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2411&infoType=1" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=481" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2411&infoType=1" }
+        ]
+      }
+    }
+  },
+  {
+    id: '1765283456853342',
+    name: '보조교사',
+    ucj: {
+      way: "보조교사가 되기 위한 법적 자격증은 따로 없으나, 유아교육과·아동학과·사회복지학과 등 관련 전공 졸업자나 보육교사 2급 이상 자격증 소지자가 우대를 받는다.[1] 초·중·고등학교 특수교육 보조교사(특수교육실무사)는 해당 교육청의 채용 공고를 통해 선발되며, 특수교육 관련 자격증 또는 사회복지사 자격증이 있으면 유리하다.[2] 어린이집·유치원 보조교사는 보육교사 자격증(1~3급), 교원자격증(유치원 준교사 이상) 소지자가 지원할 수 있다.[1] 경력을 쌓아 정교사 자격증 취득 후 정규 교원으로 전환하는 경로를 밟는 경우도 있다.[3]",
+      overviewSalary: {
+        sal: "보조교사의 평균 연봉은 약 2,000만~3,000만 원 수준이다.[1] 교육청 소속 특수교육실무사는 지방직 공무원 급여 체계를 따르며,[2] 사립 유치원·어린이집 보조교사는 최저임금 수준부터 시작하는 경우도 있다.",
+        source: "워크넷 임금정보, 교육부(2024)"
+      },
+      overviewProspect: {
+        main: "특수교육 대상 학생 증가와 통합교육 확대 정책으로 특수교육 보조인력 수요는 꾸준히 늘고 있다.[1] 유아 보육·교육 분야에서도 보조교사 수요는 안정적으로 유지되나, 저출산에 따른 학령인구 감소가 장기적으로 영향을 줄 수 있다.[2]",
+        source: "교육부 특수교육 통계(2024)"
+      },
+      trivia: "특수교육 보조교사(특수교육실무사)는 장애 학생의 학교생활 전반을 지원하며, 수업 보조뿐 아니라 이동·급식·개인위생 지원 등 생활 지원도 담당한다.[1] 일부 국가에서는 보조교사를 Teaching Assistant(TA)로 구분해 체계적인 전문 교육 프로그램을 운영한다.[2] 방과후학교 보조교사는 방과후 프로그램 운영을 지원하며, 다양한 특기적성 교육 활동을 함께 진행한다.[3] 보조교사 경험은 교원 자격증 취득 후 정규직 교사로 전환할 때 현장 경험으로 인정받기도 한다.[4]",
+      detailWlb: {
+        wlb: "보통이상",
+        social: "보통",
+        wlbDetail: "학교·유치원 운영 시간에 맞추어 출퇴근하며 방학 기간에는 근무하지 않는 경우가 많아 생활 균형은 비교적 좋은 편이다.[1] 다만 시간제 계약직이 많아 고용 안정성과 처우 면에서 정규 교원에 비해 불리한 면이 있다.[2]",
+        socialDetail: "교육 현장에서 학생들의 성장을 직접 돕는 역할로 직업 만족도가 높은 편이다.[1] 사회적으로 교육 보조 인력에 대한 인식이 개선되고 있으나, 처우 측면에서는 여전히 개선 과제가 남아 있다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "유아교육과, 아동학과, 특수교육과, 사회복지학과 등 관련 학과 이수",
+          "보육교사 2급 자격증 취득 (교육원 이수 또는 전문대 관련 학과 졸업)",
+          "특수교육 관련 교육 이수 (장애 이해, 행동 지원, 보조공학 기기 활용 등)",
+          "아동 대상 자원봉사 활동으로 현장 경험 쌓기"
+        ],
+        recruit: [
+          "시·도 교육청 특수교육실무사 공개 채용 (기간제 또는 무기계약직)",
+          "어린이집·사립유치원 보조교사 채용 공고",
+          "방과후학교·돌봄교실 보조교사 채용"
+        ],
+        training: [
+          "보육교사 1급 자격 취득 (2급 취득 후 경력 1년 이상 + 승급교육)",
+          "특수교육실무사 전문 교육 (교육청 주관 직무 연수)",
+          "교원 자격증 취득 준비를 통한 정규 교원 전환 도모"
+        ]
+      },
+      sidebarJobs: ["중·고등학교교사", "초등학교교사", "특수교육교사", "유치원교사", "사회복지사"],
+      sidebarMajors: ["교육학과", "유아교육과", "특수교육학과", "사회복지학과"],
+      sidebarCerts: ["보육교사 2급", "보육교사 1급", "사회복지사 2급", "특수교육 직무연수 수료"],
+      heroTags: ["보조교사", "특수교육", "유아교육", "어린이집", "돌봄", "교육보조"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과 보육교사", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=168" },
+          { id: 2, text: "교육부 특수교육 지원", url: "https://www.moe.go.kr" },
+          { id: 3, text: "워크넷 직업정보 보조교사", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2320&infoType=1" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "교육부 교육공무직 급여 기준", url: "https://www.moe.go.kr" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "교육부 특수교육 통계 2024", url: "https://www.moe.go.kr" },
+          { id: 2, text: "커리어넷 직업전망", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=168" }
+        ],
+        trivia: [
+          { id: 1, text: "교육부 특수교육 지원 안내", url: "https://www.moe.go.kr" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2320&infoType=1" },
+          { id: 3, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=168" },
+          { id: 4, text: "한국교원단체총연합회", url: "https://www.kfta.or.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=168" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2320&infoType=1" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=168" },
+          { id: 2, text: "교육부", url: "https://www.moe.go.kr" }
+        ]
+      }
+    }
+  },
+  {
+    id: '1765283509826256',
+    name: '도금·금속분무기조작원',
+    ucj: {
+      way: "도금·금속분무기조작원이 되기 위해 특별한 학력 제한은 없으며, 고등학교 졸업 후 관련 제조업체에 입사해 현장 교육을 통해 기술을 습득하는 경우가 대부분이다.[1] 공업계 고등학교 금속·재료 관련 학과 졸업자나 직업전문학교에서 도금 관련 교육을 이수한 사람이 취업에 유리하다.[2] 도금기능사, 표면처리기사 등 국가기술자격증을 취득하면 현장에서의 역할 범위와 처우가 높아진다.[1] 실제 작업 환경에서 화학 약품과 전기 장비를 다루므로 산업안전 교육을 이수하는 것도 중요하다.[3]",
+      overviewSalary: {
+        sal: "도금·금속분무기조작원의 평균 연봉은 약 2,800만~3,800만 원 수준이다.[1] 숙련 기술자로 성장하거나 자격증을 보유한 경우 4,000만 원 이상을 받기도 하며,[2] 기업 규모와 지역에 따라 편차가 있다.",
+        source: "워크넷 임금정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "전자·반도체·자동차 부품 제조 분야에서 도금 기술 수요는 꾸준히 유지되고 있다.[1] 다만 환경 규제 강화로 친환경 도금 공법 전환이 진행 중이며, 자동화 설비 도입으로 단순 조작 인력은 감소할 수 있어 기술 고도화가 요구된다.[2]",
+        source: "워크넷 직업전망(2024)"
+      },
+      trivia: "도금은 인류 역사에서 수천 년 전부터 장신구와 무기 표면을 꾸미는 데 사용된 오래된 기술로, 현대에는 전자 부품 회로 보호부터 항공우주 부품 내식성 강화까지 첨단 산업에 필수적이다.[1] 금속 표면처리(도금)는 반도체 기판, 스마트폰 커넥터, 자동차 외장재 등 일상 제품의 품질과 내구성을 결정하는 핵심 공정이다.[2] 크롬 도금은 장식성과 내식성이 뛰어나지만, 6가 크롬이 발암물질로 분류되어 친환경 3가 크롬으로의 전환이 전 세계적으로 진행되고 있다.[3] 최신 나노 도금 기술은 수십 나노미터 두께의 초박막으로 첨단 전자 소자를 보호하는 역할을 한다.[4]",
+      detailWlb: {
+        wlb: "보통이하",
+        social: "보통",
+        wlbDetail: "주야 2교대 또는 3교대 근무가 일반적이며, 화학 약품과 고온·고압 환경에서 작업하는 특성상 안전 장비 착용과 환기 관리가 필수다.[1] 직업병 예방을 위한 정기 건강검진이 의무화되어 있으며, 작업 특성상 피로 누적이 상대적으로 높은 직종이다.[2]",
+        socialDetail: "제조업 현장의 핵심 기술 인력으로 인정받으며, 숙련 기술자는 기업 내에서 중요한 역할을 담당한다.[1] 일반적으로 제조 현장직에 대한 사회적 인식은 과거보다 개선되고 있으나, 아직 사무직보다 낮게 평가되는 경향이 있다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "공업계 고등학교 금속·재료·화학 관련 학과 이수 또는 직업전문학교 도금 과정 이수",
+          "도금기능사 자격증 취득 준비 (이론: 전기화학·금속재료, 실기: 도금 공정)",
+          "산업안전보건법에 따른 화학물질 취급 안전 교육 이수",
+          "친환경 도금 공법(3가 크롬, 무전해 도금) 관련 기술 학습"
+        ],
+        recruit: [
+          "전자·반도체·자동차 부품 제조업체 생산직 채용",
+          "도금 전문 기업 현장 기술직 공개 채용",
+          "직업전문학교 취업 연계 프로그램 활용"
+        ],
+        training: [
+          "도금기능사 후 표면처리기사 자격증 순차 취득",
+          "친환경 도금 기술 전문 교육 (한국표면처리공업협동조합)",
+          "설비 자동화·PLC 제어 교육으로 스마트 팩토리 적응 역량 강화"
+        ]
+      },
+      sidebarJobs: ["귀금속분석원", "도장원", "의복·가죽·모피수선원"],
+      sidebarMajors: ["금속공학과", "재료·금속공학과", "재료공학과"],
+      sidebarCerts: ["도금기능사", "표면처리기사", "산업안전기사", "금속재료기사"],
+      heroTags: ["도금", "금속분무", "표면처리", "제조업", "금속가공", "도금기능사"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과 도금·금속분무기조작원", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=733" },
+          { id: 2, text: "워크넷 직업정보 도금원", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7422&infoType=1" },
+          { id: 3, text: "한국산업안전보건공단", url: "https://www.kosha.or.kr" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=733" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7422&infoType=1" },
+          { id: 2, text: "커리어넷 직업전망 2024", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=733" }
+        ],
+        trivia: [
+          { id: 1, text: "한국표면처리공업협동조합", url: "https://www.kpfia.or.kr" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=733" },
+          { id: 3, text: "환경부 화학물질 관리", url: "https://www.me.go.kr" },
+          { id: 4, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7422&infoType=1" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "한국산업안전보건공단", url: "https://www.kosha.or.kr" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=733" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=733" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7422&infoType=1" }
+        ]
+      }
+    }
+  },
+  {
+    id: '1765283380625282',
+    name: '청원경찰',
+    ucj: {
+      way: "청원경찰은 청원경찰법에 따라 특정 기관이나 시설의 장(청원주)이 경비를 요청하면 경찰청장의 승인을 받아 배치되는 경찰 유사 직종이다.[1] 지원 자격은 18세 이상으로 학력 제한이 없으나, 신체검사·체력검사·신원 조회를 통과해야 한다.[2] 채용 후에는 경찰교육원 또는 지방경찰청에서 지정한 교육기관에서 2주(직무교육)를 이수해야 하며, 무도·사격·법규 등의 교육을 받는다.[1] 공공기관(은행, 공항, 법원, 지하철역 등)의 청원경찰은 각 기관의 공개 채용 공고를 통해 지원한다.[3]",
+      overviewSalary: {
+        sal: "청원경찰의 평균 연봉은 약 2,800만~4,000만 원 수준이다.[1] 공공기관(공기업, 지자체 등) 소속 청원경찰은 기관 내 급여 규정에 따라 4,000만 원 이상을 받는 경우도 있으며,[2] 민간 기업 소속은 상대적으로 낮은 편이다.",
+        source: "워크넷 임금정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "공공기관 보안 강화 요구와 주요 시설 보호 필요성으로 청원경찰 수요는 안정적으로 유지되고 있다.[1] 단, 무인 보안 시스템과 CCTV 기술 발전으로 단순 경비 인력 수요가 일부 감소할 수 있으며, 복합 경비·상황 대응 역량을 갖춘 전문 인력이 더욱 요구될 전망이다.[2]",
+        source: "커리어넷 직업전망(2024)"
+      },
+      trivia: "청원경찰은 경찰공무원이 아님에도 청원경찰법에 따라 관할 지역 내에서 경찰관직무집행법에 준하는 권한을 행사할 수 있어 준경찰 신분으로 인정된다.[1] 한국의 국제공항·항만, 주요 정부 청사, 원자력발전소, 지하철 역사 등 전국 수천 개 시설에 청원경찰이 배치되어 있다.[2] 청원경찰의 복장과 장비(경찰봉, 가스총 등)는 경찰청 규정에 따라 통일되어 있어 외관상 경찰과 유사하다.[3] 일부 은행·금융기관은 내부 경비 강화를 위해 청원경찰을 정규직으로 채용해 높은 처우를 제공하기도 한다.[4]",
+      detailWlb: {
+        wlb: "보통",
+        social: "보통",
+        wlbDetail: "2교대 또는 3교대 근무가 일반적이며, 야간·공휴일 근무가 포함되는 경우가 많다.[1] 배치 기관의 특성에 따라 근무 환경 차이가 크며, 공공기관 소속은 상대적으로 안정적이고 처우가 양호한 편이다.[2]",
+        socialDetail: "공공 질서 유지와 시민 안전에 기여하는 직업으로 사회적 인식은 긍정적이다.[1] 경찰관과 유사한 역할을 수행하지만, 공무원 신분이 아니라는 점에서 처우나 사회적 위상 면에서 다소 차이가 있다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "고등학교 졸업 이상 (학력 제한 없음), 체력 훈련 꾸준히 준비",
+          "무도 자격증(태권도·유도 유단자 등) 취득으로 경쟁력 강화",
+          "청원경찰 직무 교육 이수 (채용 후 경찰교육원 2주 교육 의무)"
+        ],
+        recruit: [
+          "공공기관(한국전력, 국민건강보험공단, 지하철공사 등) 청원경찰 공개 채용",
+          "은행·금융기관 경비원 채용 (청원경찰 또는 특수경비원)",
+          "경찰청 청원경찰 배치 신청을 통한 기관별 채용"
+        ],
+        training: [
+          "경비지도사 자격 취득으로 관리직 진출 준비",
+          "소방안전관리자 자격증 취득으로 복합 안전 업무 역량 강화",
+          "운전면허 취득 및 응급처치 교육 이수"
+        ]
+      },
+      sidebarJobs: ["경호원", "시설·특수경비원", "경비원", "경찰관"],
+      sidebarMajors: ["경찰행정학과", "경찰행정과", "행정학과"],
+      sidebarCerts: ["경비지도사 1급", "소방안전관리자 2급", "운전면허(1종 보통)", "무도단증(태권도·유도)"],
+      heroTags: ["청원경찰", "경비", "공공기관경찰", "보안", "경찰유사직종", "시설경비"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "경찰청 청원경찰 제도 안내", url: "https://www.police.go.kr" },
+          { id: 2, text: "커리어넷 직업백과 청원경찰", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=312" },
+          { id: 3, text: "워크넷 직업정보 청원경찰", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=312" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "커리어넷 직업전망 2024", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=312" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1" }
+        ],
+        trivia: [
+          { id: 1, text: "청원경찰법", url: "https://www.law.go.kr/lsInfoP.do?lsiSeq=108609" },
+          { id: 2, text: "경찰청 청원경찰 현황", url: "https://www.police.go.kr" },
+          { id: 3, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=312" },
+          { id: 4, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=312" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=312" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1" }
+        ]
+      }
+    }
+  },
+  {
+    id: '17652835209262',
+    name: '양장·양복제조원',
+    ucj: {
+      way: "양장·양복제조원이 되는 가장 일반적인 경로는 패션디자인과, 의류과 등 관련 전문대학이나 직업학교에서 패턴·재봉 기초 기술을 배운 뒤 맞춤복 업체 또는 의류 공장에 취업하는 것이다.[1] 양복기능사, 양장기능사 등 국가기술자격을 취득하면 기술 인정을 받을 수 있으며, 개인 맞춤 아틀리에를 운영하려면 수년간의 현장 경력이 필요하다.[2] 고급 맞춤복 장인은 대부분 도제 방식으로 기술을 전수받으며, 한복 이외에 서양 맞춤복을 전문으로 하는 장인 수는 지속적으로 감소하는 추세다.[3] 해외 명품 하우스나 패션 브랜드에서 인턴십·연수를 통해 기술을 쌓는 경로도 있다.[2]",
+      overviewSalary: {
+        sal: "양장·양복제조원의 평균 연봉은 약 2,400만~3,500만 원 수준이다.[1] 고급 맞춤복 장인 또는 개인 아틀리에 운영자는 수입 편차가 크며, 명성 있는 장인은 상당히 높은 수입을 올리기도 한다.[2]",
+        source: "워크넷 임금정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "기성복 시장의 성장과 저가 수입 의류 확대로 국내 맞춤복 시장은 지속적으로 축소되고 있어 고용 전망은 다소 어두운 편이다.[1] 다만 고급 비스포크 수트, 웨딩 드레스, 무대 의상 등 특수 맞춤 수요는 꾸준히 존재하며, 수선·리폼 서비스 분야는 지속적인 수요를 유지하고 있다.[2]",
+        source: "커리어넷 직업전망(2024)"
+      },
+      trivia: "비스포크(Bespoke)는 특별 주문 제작을 의미하는 용어로, 영국 세빌로우(Savile Row) 거리는 세계 최고 수준의 남성 맞춤복 장인들이 집결한 성지로 꼽힌다.[1] 한 벌의 고급 맞춤 수트를 제작하는 데는 수십~수백 시간의 수작업이 투입되며, 완성까지 4~8주가 소요되는 경우도 있다.[2] 1950~70년대 한국에서는 양복점이 의류 소비의 중심이었지만, 기성복 브랜드의 등장으로 양복점 수가 급격히 감소했다.[3] 최근 MZ세대 사이에서 개성 있는 맞춤복·유니크 의류에 대한 수요가 다시 증가하면서 젊은 테일러의 활동 공간이 넓어지고 있다.[4]",
+      detailWlb: {
+        wlb: "보통이상",
+        social: "보통",
+        wlbDetail: "개인 아틀리에나 소규모 맞춤복 업체에서 근무하는 경우 업무 시간이 비교적 유연하다.[1] 의류 공장 생산직으로 근무하면 교대 근무나 성수기 집중 근무가 발생하기도 하며, 장시간 앉아서 세밀한 작업을 반복하는 특성상 근골격계 부담이 있다.[2]",
+        socialDetail: "전통 기술 장인으로서의 직업 자긍심이 높은 편이며, 고급 맞춤복 장인은 패션 산업 내에서 특별한 위상을 갖는다.[1] 다만 대중적 인지도는 높지 않아 사회적 평가는 보통 수준에 머무르는 경우가 많다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "패션디자인과, 의류과, 의상학과 등 관련 전문대학 또는 직업학교 이수",
+          "패턴 제작(원형, 변형 패턴), 봉제 기초(재봉틀, 손바느질) 기술 습득",
+          "맞춤복 업체 또는 의류 제조 현장 인턴십·수습 기간 경험",
+          "이탈리아 전통 테일러링 등 해외 스타일 연구"
+        ],
+        recruit: [
+          "고급 맞춤복 업체(양복점, 웨딩 드레스 업체, 무대의상 업체) 채용",
+          "의류 제조 공장 생산직 채용",
+          "개인 아틀리에 창업 (5~10년 경력 후)"
+        ],
+        training: [
+          "양복기능사 또는 양장기능사 자격증 취득",
+          "의류 수선·리폼 전문 기술 심화 (부업 또는 창업으로 활용)",
+          "CAD 패턴 프로그램(유카, 제르버 등) 학습으로 디지털 역량 강화"
+        ]
+      },
+      sidebarJobs: ["의복·가죽·모피수선원", "한복제조원"],
+      sidebarMajors: ["패션디자인학과", "패션디자인과", "의류·의상학과"],
+      sidebarCerts: ["양복기능사", "양장기능사", "패션디자인산업기사", "의류기사"],
+      heroTags: ["양복제조", "맞춤복", "테일러", "비스포크", "패션", "의류제조"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과 양장·양복제조원", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=782" },
+          { id: 2, text: "워크넷 직업정보 양장·양복제조원", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7211&infoType=1" },
+          { id: 3, text: "한국패션산업협회", url: "https://www.koreafashion.org" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=782" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "커리어넷 직업전망 2024", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=782" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7211&infoType=1" }
+        ],
+        trivia: [
+          { id: 1, text: "Savile Row Bespoke Association", url: "https://www.savilerowbespoke.com" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=782" },
+          { id: 3, text: "한국패션산업협회", url: "https://www.koreafashion.org" },
+          { id: 4, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7211&infoType=1" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=782" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7211&infoType=1" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=782" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7211&infoType=1" }
+        ]
+      }
+    }
+  },
+  {
+    id: '1765283339345850',
+    name: '안마사',
+    ucj: {
+      way: "한국에서 안마사 면허는 의료법 제82조에 따라 시각장애인에게만 부여된다.[1] 시각장애인은 장애 등록 후 보건복지부 장관이 지정한 안마사 양성 교육기관(특수학교 또는 안마수련원)에서 교육 과정(이론+실기 총 3년 과정 또는 720시간 이상)을 이수해야 한다.[2] 교육 이수 후 시·도지사가 발급하는 안마사 면허증을 취득하면 안마원, 안마시술소 등을 개업하거나 의료기관·스포츠센터 등에 취업할 수 있다.[1] 비시각장애인이 마사지 업무를 하는 것은 의료법상 의료유사업에 해당해 별도 자격 체계가 적용된다.[3]",
+      overviewSalary: {
+        sal: "안마사의 평균 연봉은 약 3,000만~5,000만 원 수준이며,[1] 개인 안마원을 운영하는 경우 매출에 따라 수입이 크게 달라진다. 병원·의료기관 소속 안마사는 안정적인 급여를 받으며 경력에 따라 증가한다.[2]",
+        source: "워크넷 임금정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "고령화 사회 진입과 건강 관리 수요 증가로 안마 서비스에 대한 수요는 꾸준히 늘고 있다.[1] 시각장애인 독점 면허 제도가 유지되는 한 신규 공급이 제한적으로 통제되어 기존 안마사의 고용 전망은 비교적 안정적이다.[2] 단, 비시각장애인 안마사 허용 여부를 둘러싼 법적 논쟁이 지속되고 있어 제도 변화 가능성도 관심 대상이다.",
+        source: "커리어넷 직업전망(2024)"
+      },
+      trivia: "한국의 안마사 시각장애인 독점 면허 제도는 1963년 의료법 제정 때 시각장애인의 경제적 자립을 지원하기 위해 도입되었으며, 헌법재판소는 2006년과 2010년 이 제도가 합헌이라고 결정했다.[1] 전국 안마원과 안마시술소의 매출 총합은 연간 수천억 원에 이르며, 한국 시각장애인의 주요 자립 수단으로 기능하고 있다.[2] 안마사 1명이 하루에 처리하는 고객 수는 평균 5~10명이며, 장시간 서서 집중적인 신체 작업을 반복하는 고강도 직업이다.[3] 최근 안마 로봇과 자동마사지 기기의 보급이 빠르게 늘고 있지만, 숙련된 안마사의 손 기술은 기기가 완전히 대체하기 어렵다는 평가를 받는다.[4]",
+      detailWlb: {
+        wlb: "보통이하",
+        social: "보통",
+        wlbDetail: "오랜 시간 서서 집중적인 신체 작업을 반복하는 직종으로 근골격계 부담이 크다.[1] 안마원은 저녁과 주말에도 영업하는 경우가 많아 근무 시간이 불규칙하며, 야간 영업 비중이 높은 업소에서는 생활 리듬이 깨질 수 있다.[2]",
+        socialDetail: "시각장애인의 독립적인 자립 수단으로서 사회적 의미가 크며, 건강 케어 서비스 전문가로서 존중받는다.[1] 다만 일부 불법 마사지 업소와의 혼동으로 사회적 인식에 영향을 받는 면도 있다.[2]"
+      },
+      detailReady: {
+        curriculum: [
+          "시각장애인 등록 (장애 유형·등급 확인 후 복지카드 발급)",
+          "보건복지부 지정 안마사 양성기관 입학 (특수학교 또는 안마수련원)",
+          "안마사 교육과정 이수 (해부생리학, 동양의학, 안마·지압 실기 포함)",
+          "안마사 국가면허 시험 대비 (이론 + 실기)"
+        ],
+        recruit: [
+          "개인 안마원 또는 안마시술소 개업",
+          "병원·한의원·재활원 안마사 채용",
+          "스포츠센터·피트니스클럽 안마사 취업"
+        ],
+        training: [
+          "지압, 스포츠마사지, 스웨디시 등 다양한 기법 심화 교육",
+          "병원 재활 분야 연계를 위한 근골격계 해부학 심화 학습",
+          "창업 준비를 위한 안마원 경영 및 고객관리 교육"
+        ]
+      },
+      sidebarJobs: ["응급구조사", "보건의료정보관리사", "안경사", "간호조무사", "물리치료사", "작업치료사", "피부관리사"],
+      sidebarMajors: ["물리치료학과", "물리치료과", "재활학과", "피부미용과"],
+      sidebarCerts: ["안마사 면허증", "스포츠마사지사 자격증", "지압사 자격증"],
+      heroTags: ["안마사", "마사지", "시각장애인면허", "안마원", "건강케어", "재활"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "의료법 제82조 안마사 면허 규정", url: "https://www.law.go.kr/lsInfoP.do?lsiSeq=222655" },
+          { id: 2, text: "커리어넷 직업백과 안마사", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=241" },
+          { id: 3, text: "보건복지부 안마사 제도 안내", url: "https://www.mohw.go.kr" }
+        ],
+        "overviewSalary.sal": [
+          { id: 1, text: "워크넷 임금정보", url: "https://www.work.go.kr/empInfo/wageInfo/wageInfoMain.do" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=241" }
+        ],
+        "overviewProspect.main": [
+          { id: 1, text: "커리어넷 직업전망 2024", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=241" },
+          { id: 2, text: "보건복지부", url: "https://www.mohw.go.kr" }
+        ],
+        trivia: [
+          { id: 1, text: "헌법재판소 결정 안마사 시각장애인 독점 합헌", url: "https://www.ccourt.go.kr" },
+          { id: 2, text: "한국시각장애인복지관연합회", url: "https://www.kbfwel.or.kr" },
+          { id: 3, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=241" },
+          { id: 4, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S3224&infoType=1" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=241" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S3224&infoType=1" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 1, text: "보건복지부", url: "https://www.mohw.go.kr" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=241" }
+        ]
+      }
+    }
+  }
+];
+
+// Build SQL file
+const sqlStatements = jobs.map(job => {
+  const jsonStr = JSON.stringify(job.ucj).replace(/'/g, "''");
+  return `UPDATE jobs SET user_contributed_json = '${jsonStr}' WHERE id = '${job.id}';`;
+});
+
+const sqlContent = sqlStatements.join('\n\n');
+const sqlPath = join('C:\\Users\\PC\\Careerwiki', 'scripts', 'p3-batch1-ucj.sql');
+writeFileSync(sqlPath, sqlContent, 'utf8');
+console.log(`SQL file written to: ${sqlPath}`);
+console.log(`Total jobs: ${jobs.length}`);
+console.log(`SQL size: ${Buffer.byteLength(sqlContent, 'utf8')} bytes`);

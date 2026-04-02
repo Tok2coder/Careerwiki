@@ -1,0 +1,516 @@
+{
+  "title": "반려동물행동교정사 자격증 및 직업 리서치",
+  "research_date": "2026-03-21",
+  "search_queries": [
+    "반려동물행동교정사 자격증 종류 취득방법 2025 2026",
+    "동물행동교정사 되는법 교육과정 비용",
+    "반려동물행동교정사 취업 연봉 현실",
+    "반려동물 시장 규모 2025 2026 성장률",
+    "CPDT-KA CAAB 동물행동 자격증 해외",
+    "반려동물행동교정사 현직자 후기 경험담",
+    "동물보호법 개정 반려동물행동지도사 국가자격 2024 2025",
+    "반려동물행동교정사 교육비용 수강료 온라인 교육기관 2025",
+    "동물매개심리상담사 자격증 반려동물관리사 자격증 종류 민간자격"
+  ],
+  "sections": {
+    "1_definition": {
+      "title": "반려동물행동교정사란?",
+      "definition": "반려동물이 보이는 문제 행동의 원인을 파악하고, 적절한 교육 방식을 찾아서 조언하는 전문가",
+      "main_tasks": [
+        "주인과의 상담을 통해 반려동물의 문제 파악",
+        "반려동물의 행동 관찰 및 원인 분석",
+        "행동교정 프로그램 설계 및 교정법 지도",
+        "훈련소 정규 프로그램 운영 또는 가정방문 일대일 교육",
+        "보호자 대상 교육 및 상담",
+        "문제행동 유형: 분리불안, 공격성, 과도한 짖음, 배변 문제, 사회화 부족 등"
+      ],
+      "required_aptitude": [
+        "강한 책임감",
+        "지속적인 학습 의지",
+        "깊은 동물 이해와 애정",
+        "문제 해결 능력",
+        "보호자 소통 능력"
+      ]
+    },
+    "2_certifications": {
+      "title": "자격증 종류",
+      "national_certifications": [
+        {
+          "name": "반려동물행동지도사",
+          "type": "국가자격",
+          "governing_body": "농림축산식품부",
+          "administering_body": "EPIS(농림수산식품교육문화정보원)",
+          "legal_basis": "동물보호법 시행령·시행규칙",
+          "first_exam_year": 2024,
+          "significance": "동물보건사에 이은 국내 두 번째 반려동물 관련 국가자격",
+          "grades": {
+            "2급": {
+              "eligibility": "만 18세 이상 누구나 응시 가능",
+              "level": "기본적인 행동지도 및 교육 능력"
+            },
+            "1급": {
+              "eligibility": "2급 자격 취득 후 관련 분야 3년 이상 실무경력, 또는 10년 이상 실무경력",
+              "level": "전문적 지식 요구",
+              "available_from": "2025년부터 응시 가능"
+            }
+          },
+          "exam": {
+            "written": {
+              "subjects": [
+                "반려동물 행동학",
+                "반려동물 관리학",
+                "반려동물 훈련학",
+                "직업윤리 및 법률",
+                "보호자 교육 및 상담"
+              ],
+              "fee": "50,000원",
+              "passing_criteria": "전 과목 평균 60점 이상, 각 과목 40점 이상"
+            },
+            "practical": {
+              "fee": "150,000원",
+              "passing_criteria": "60점 이상",
+              "evaluation_items": [
+                "견 리드", "앉기", "엎드리기", "서기", "부르기",
+                "물건 가져오기", "악수", "짖기", "지정장소 이동",
+                "대기(견줄 없이 3분)"
+              ]
+            },
+            "frequency": "연 1회 필기, 연 1회 실기"
+          }
+        },
+        {
+          "name": "동물보건사",
+          "type": "국가공인",
+          "governing_body": "한국동물보건복지교육원",
+          "note": "정규교육 이수 필수, 반려동물 분야 첫 국가자격"
+        }
+      ],
+      "private_certifications": [
+        {
+          "name": "반려동물행동교정사",
+          "type": "등록 민간자격",
+          "registration_number": "2022-004084호",
+          "governing_body": "사단법인 한국애견연맹(KKF)",
+          "grades": {
+            "3급": {
+              "eligibility": "KKF 홈페이지 회원가입, 만 16세 이상",
+              "exam_fee": "50,000원"
+            },
+            "2급": {
+              "eligibility": "3급 자격증 취득 후",
+              "exam_fee": "100,000원"
+            },
+            "1급": {
+              "eligibility": "2급 취득 후, 또는 KKF 훈련사 3급 이상 자격 보유",
+              "exam_fee": "100,000원"
+            }
+          },
+          "exam": {
+            "subjects": "반려동물의 행동, 훈련이론 및 각 종류, 생활관리, 질병예방, 반려동물 보호법",
+            "format": "필기시험 100점 만점 (시험시간 2시간)",
+            "passing_criteria": "60점 이상",
+            "schedule_2026": "연 6회 시험 예정"
+          }
+        },
+        {
+          "name": "반려동물종합관리사",
+          "type": "등록 민간자격",
+          "registration_number": "2017-004402호",
+          "governing_body": "한국애견연맹(KKF)",
+          "eligibility": "만 15세 이상",
+          "exam_subjects": ["총론·법률", "고객 서비스", "미용 기초", "훈련 기초", "번식 윤리"],
+          "passing_criteria": "과목별 40점 이상, 평균 60점 이상",
+          "pass_rate": "약 60~70%"
+        },
+        {
+          "name": "반려동물관리사 1급",
+          "type": "등록 민간자격",
+          "registration_number": "2018-005310",
+          "governing_ministry": "농림축산식품부",
+          "description": "반려동물 품종별 특성 이해, 영양 공급, 위생 및 질병 관리 전문가"
+        },
+        {
+          "name": "동물매개심리상담사",
+          "type": "민간자격",
+          "description": "동물을 매개로 심리상담 및 치료를 수행하는 전문가"
+        },
+        {
+          "name": "애견미용사",
+          "type": "민간자격",
+          "governing_body": "KKF, 한국동물보호협회",
+          "grades": "3급부터 1급까지 단계별 취득"
+        }
+      ],
+      "important_note": "민간 자격증은 자격기본법 규정에 따라 등록한 민간자격증으로, 국가로부터 인정받은 국가공인자격증이 아님"
+    },
+    "3_education": {
+      "title": "자격 취득 과정",
+      "education_institutions": [
+        {
+          "name": "한국자격검정평가진흥원(한검평)",
+          "type": "온라인 교육",
+          "duration": "4주 이내",
+          "curriculum": "총 40강 (기초이론 1-20강 + 실무응용 21-40강)",
+          "curriculum_detail": {
+            "basic_theory": "행동 정의, 발달 단계, 학습 원리, 신호 해석, 도구 활용, 상담, 교육, 훈련",
+            "practical": "문제 행동 관찰, 배변·공격성 교정, 둔감화 훈련, 사회화 훈련, 하우스 훈련, 산책 훈련, 리드줄 적응, 분리불안·짖음 완화"
+          },
+          "cost": {
+            "tuition_and_exam": "0원 (교육원 전액 지원)",
+            "certification_fee": "90,000원 (자격 인증 및 사후관리 통합 교육비, 부가세 면세)"
+          },
+          "passing_criteria": "온라인 출석률 60% 이상 + 시험 100점 만점 중 60점 이상",
+          "url": "https://www.korea-edu.net/home/curriculum/info.php?item=502"
+        },
+        {
+          "name": "EBS 펫에듀",
+          "type": "온라인 + 실습",
+          "description": "한국애견연맹과 협력하여 반려동물행동교정사 교육 제공",
+          "url": "https://ebspetedu.co.kr/"
+        },
+        {
+          "name": "한국평생학습진흥원",
+          "type": "온라인",
+          "cost": "무료수강 이벤트 운영 중 (온라인 강의 수강료 + 시험 응시료 전액 지원)",
+          "url": "https://www.lli.or.kr/license/license54.asp"
+        },
+        {
+          "name": "한국NCS자격개발원",
+          "type": "온라인",
+          "passing_criteria": "온라인 강의 진도율 60% 이상 달성 후 시험 응시, 60점 이상 합격",
+          "url": "https://www.ncs.or.kr/"
+        },
+        {
+          "name": "서울여성직업능력개발원",
+          "type": "오프라인 (서울)",
+          "description": "반려동물행동교정사 전문 교육과정",
+          "url": "https://petcoach3.mycafe24.com/"
+        },
+        {
+          "name": "대학교 관련 학과",
+          "type": "정규교육",
+          "examples": "부천대학교 반려동물과, 수원과학대학교 반려동물과 등",
+          "note": "전문 훈련소 입소하여 합숙 생활도 가능"
+        }
+      ],
+      "national_subsidy": "고용24를 통해 국비지원 신청 가능 (일부 반려동물 관련 교육과정)"
+    },
+    "4_exam_structure": {
+      "title": "시험 구조 및 합격 기준",
+      "kkf_private_exam": {
+        "name": "반려동물행동교정사 (KKF 민간)",
+        "format": "필기시험",
+        "duration": "2시간",
+        "total_score": 100,
+        "passing_score": 60,
+        "subjects": "반려동물 행동, 훈련이론 및 종류, 생활관리, 질병예방, 반려동물 보호법",
+        "exams_per_year": 6,
+        "grades": ["3급", "2급", "1급"]
+      },
+      "national_exam": {
+        "name": "반려동물행동지도사 (국가자격)",
+        "written_exam": {
+          "subjects_count": 5,
+          "subjects": ["반려동물 행동학", "반려동물 관리학", "반려동물 훈련학", "직업윤리 및 법률", "보호자 교육 및 상담"],
+          "passing": "전 과목 평균 60점 이상, 각 과목 40점 이상",
+          "fee": "50,000원"
+        },
+        "practical_exam": {
+          "passing": "60점 이상",
+          "fee": "150,000원",
+          "note": "본인의 반려견 동반 참여"
+        },
+        "frequency": "연 1회"
+      }
+    },
+    "5_employment": {
+      "title": "취업 현황",
+      "employment_sectors": [
+        {
+          "sector": "동물병원",
+          "description": "수의사와 협력하여 행동 문제 상담 및 교정"
+        },
+        {
+          "sector": "전문 훈련소",
+          "description": "정규 프로그램 운영, 합숙 훈련 진행",
+          "note": "신입 채용이 드물고, 열정페이 문제 존재"
+        },
+        {
+          "sector": "프리랜서/방문 훈련",
+          "description": "가정 방문 일대일 교육, 크몽 등 플랫폼 활용"
+        },
+        {
+          "sector": "창업",
+          "description": "개인 훈련소, 반려동물 유치원, 펫시팅 서비스 등"
+        },
+        {
+          "sector": "반려동물 관련 업체",
+          "description": "펫샵, 애견카페, 반려동물 유치원 등"
+        },
+        {
+          "sector": "교육/콘텐츠",
+          "description": "온라인 강의, 유튜브, 출판 등 교육 콘텐츠 제작"
+        }
+      ],
+      "reality_check": [
+        "민간 자격증만으로는 취업이 어렵고, 실무 경험이 필수",
+        "훈련소 취업 시 신입을 받아주는 경우가 드묾",
+        "열정페이 및 강압적 행동교정 등 업계 문제 존재",
+        "자격증이 필수는 아니지만 신뢰도 확보에 도움",
+        "이론이나 시험만으로는 부족하며, 다양한 견종/성격/환경의 개를 실제로 다루는 경험 필요",
+        "약 2년간 현장 경험으로 준전문가 수준 도달 가능"
+      ],
+      "job_search_platforms": [
+        "애완잡 (aewanjob.com) - 애완동물 전문 구인구직",
+        "크몽 - 프리랜서 방문 훈련 서비스"
+      ]
+    },
+    "6_salary": {
+      "title": "연봉 및 수입 현실",
+      "average_salary": {
+        "animal_trainer_average": "약 2,749만원 (워크넷 기준, 동물조련사 평균)",
+        "source": "워크넷(고용노동부)"
+      },
+      "salary_range": {
+        "entry_level": "약 2,000~2,400만원 (훈련소 소속 초급)",
+        "mid_career": "약 2,500~3,500만원 (경력 3~5년)",
+        "experienced_freelancer": "약 3,000~5,000만원+ (프리랜서/독립, 개인차 큼)",
+        "note": "경력, 지역, 근무 형태에 따라 큰 편차"
+      },
+      "freelancer_income": {
+        "description": "방문 훈련 1회당 5~15만원 수준, 월 고정 수입 불안정",
+        "note": "보호자가 원하는 서비스를 제공하는 것이 핵심"
+      }
+    },
+    "7_market_outlook": {
+      "title": "시장 전망",
+      "domestic_market": {
+        "market_size_2022": "8.5조원 (추산)",
+        "market_size_2032_forecast": "21조원",
+        "cagr_2020_2024": "5.2%",
+        "cagr_forecast": "9.5% (2022~2032 연평균)"
+      },
+      "global_market": {
+        "size_2022": "3,781억 달러",
+        "size_2032_forecast": "7,762억 달러",
+        "cagr": "7.6%"
+      },
+      "pet_population": {
+        "pet_owners_2024": "1,546만 명",
+        "household_ratio": "28.6% (4가구 중 1가구)",
+        "yoy_growth": "+5만 명 (전년 대비)"
+      },
+      "growth_drivers": [
+        "1인 가구 증가 및 핵가족화",
+        "반려동물 양육 가구 지속 증가",
+        "펫코노미(Petconomy) 확산",
+        "반려동물 복지 의식 향상",
+        "동물보호법 강화로 전문가 수요 증가",
+        "반려동물행동지도사 국가자격 신설로 직업 전문성 인정"
+      ],
+      "sources": [
+        "KB금융지주 '2023 한국 반려동물 보고서'",
+        "농림축산식품부",
+        "KPMG 반려동물 시장 리포트 2024"
+      ]
+    },
+    "8_regulations": {
+      "title": "관련 법규",
+      "laws": [
+        {
+          "name": "동물보호법",
+          "description": "반려동물행동지도사 국가자격의 법적 근거",
+          "key_amendments": [
+            "2022년 동물보호법 전면 개정 (2년 유예기간)",
+            "2024년 4월 27일 시행: 맹견 사육 허가제, 반려동물행동지도사 국가자격제 도입, 동물복지 인증제",
+            "반려동물행동지도사 시행령·시행규칙 제정 (2024년 2월 6일 입법예고)"
+          ]
+        },
+        {
+          "name": "자격기본법",
+          "description": "민간자격 등록 및 관리의 법적 근거",
+          "note": "민간자격은 국가공인이 아닌 등록 민간자격으로 운영"
+        }
+      ],
+      "policy_background": "대통령 공약 중 '반려동물 훈련사 국가자격제도'가 포함되어 있었으며, 이를 기반으로 법안 발의 및 시행"
+    },
+    "9_overseas_certifications": {
+      "title": "해외 자격증",
+      "certifications": [
+        {
+          "name": "CPDT-KA (Certified Professional Dog Trainer - Knowledge Assessed)",
+          "country": "미국 (국제 인정)",
+          "administering_body": "CCPDT (Certification Council for Professional Dog Trainers)",
+          "eligibility": [
+            "만 18세 이상, 고등학교 졸업 또는 GED",
+            "최근 3년 이내 최소 300시간의 도그 트레이닝 경험",
+            "CCPDT 인증자, 수의사 또는 승인된 전문가의 서명 증명서",
+            "윤리강령 및 실무표준 준수 확인"
+          ],
+          "exam": {
+            "format": "200문항 객관식",
+            "venue": "미국 내 컴퓨터 기반 시험 센터 + 국제 시험장 + 원격 감독",
+            "content": "동물행동학(ethology), 학습이론, 도그 트레이닝 기법, 교육 방법론",
+            "practice_exam_fee": "$105"
+          },
+          "renewal": "매 3년마다 갱신 (CEU 축적 또는 재시험)",
+          "url": "https://www.ccpdt.org/certification/dog-trainer-certification/"
+        },
+        {
+          "name": "CAAB (Certified Applied Animal Behaviorist)",
+          "country": "미국 (국제 인정)",
+          "administering_body": "ABS (Animal Behavior Society)",
+          "eligibility": "박사학위(PhD) 또는 석사학위(MSc) - 행동 관련 분야. 수의사도 가능",
+          "grades": {
+            "CAAB": "PhD 소지자",
+            "ACAAB": "MSc 소지자"
+          },
+          "note": "학술 기반의 고급 자격으로, 임상 행동 문제 전문"
+        },
+        {
+          "name": "IAABC (International Association of Animal Behavior Consultants)",
+          "country": "국제",
+          "description": "동물행동 컨설턴트 국제 인증",
+          "url": "https://iaabcfoundation.org/"
+        }
+      ],
+      "comparison_note": "국내 자격증(반려동물행동교정사 등)은 국내에서만 인정되며, CPDT-KA와 CAAB는 국제적으로 인정받는 자격증으로 해외 취업/활동 시 유리"
+    },
+    "10_reviews": {
+      "title": "합격자/현직자 후기",
+      "practitioner_insights": [
+        {
+          "topic": "직업 선택 계기",
+          "content": "어릴 때부터 강아지를 좋아했으며, 반려견 소유자들이 행동 문제로 어려움을 겪을 때 적절히 대처하지 못하는 모습을 보고 이 직업이 보람 있을 것이라 생각해 선택"
+        },
+        {
+          "topic": "자격증의 한계",
+          "content": "민간 자격증만으로는 직업을 가질 수 없으며, 다양한 견종과 각각 다른 성격·환경의 개들을 다루는 것은 이론이나 시험으로 불가능. 반드시 훈련소에 들어가 실무경험을 쌓아야 함"
+        },
+        {
+          "topic": "필수 자질",
+          "content": "책임감이 가장 중요하며, 교육을 마쳤다고 충분하다고 생각하지 말고 지속적으로 새로운 지식을 습득해야 유능한 행동교정사가 될 수 있음"
+        },
+        {
+          "topic": "업계 현실",
+          "content": "훈련소에서 열정페이, 강압적 행동교정 등의 문제가 있으며, 행동교정은 꿈꾸지 말고 오로지 보호자가 원하는 것을 해줘야 한다는 현실적 조언도 존재"
+        },
+        {
+          "topic": "성장 경로",
+          "content": "현장 경험 약 2년이면 준전문가 수준 도달 가능. 이후 프리랜서 독립 또는 개인 훈련소 창업을 목표로 하는 경우가 많음"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": 1,
+      "title": "한국애견연맹(KKF) - 반려동물행동교정사 자격증",
+      "url": "https://www.thekkf.or.kr/new_home/05_license/09.companion_animal.php",
+      "key_info": "KKF 주관 민간자격 시험 정보: 3급/2급/1급 등급, 응시료, 시험과목, 합격기준, 2026년 시험일정"
+    },
+    {
+      "id": 2,
+      "title": "나무위키 - 반려동물행동지도사",
+      "url": "https://namu.wiki/w/%EB%B0%98%EB%A0%A4%EB%8F%99%EB%AC%BC%ED%96%89%EB%8F%99%EC%A7%80%EB%8F%84%EC%82%AC",
+      "key_info": "국가자격 상세 정보: 1급/2급 구분, 필기 5과목, 실기시험 항목, 응시자격, 관련 법규"
+    },
+    {
+      "id": 3,
+      "title": "데일리벳 - 반려동물행동지도사 시험",
+      "url": "https://www.dailyvet.co.kr/news/policy/204437",
+      "key_info": "국가자격 시행 배경, 동물보호법 시행령·시행규칙, 두 번째 반려동물 국가자격 의의"
+    },
+    {
+      "id": 4,
+      "title": "데일리벳 - 훈련사 국가자격증 법안 발의",
+      "url": "https://www.dailyvet.co.kr/news/policy/136628",
+      "key_info": "대통령 공약 기반 반려동물 훈련사 국가자격제도 법안 발의 배경"
+    },
+    {
+      "id": 5,
+      "title": "비바쌤 - 반려동물행동교정사 직업정보",
+      "url": "https://v.vivasam.com/contents/create/job/job_141.html",
+      "key_info": "직업 정의, 주요 업무, 되는 방법, 연봉(2,749만원), 필요 적성, 전망"
+    },
+    {
+      "id": 6,
+      "title": "GetEduify - 반려동물 자격증 종류 및 취득방법 총정리",
+      "url": "https://geteduify.com/career-guidance/%EB%B0%98%EB%A0%A4-%EB%8F%99%EB%AC%BC-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%A2%85%EB%A5%98-%EB%B0%8F-%EC%B7%A8%EB%93%9D%EB%B0%A9%EB%B2%95-%EC%B4%9D%EC%A0%95%EB%A6%AC-%EC%96%B4%EB%96%A4-%EC%9E%90%EA%B2%A9/",
+      "key_info": "반려동물종합관리사, 동물보건사, 애견미용사, 반려동물행동지도사 등 자격증 종류 비교, 국비지원 정보"
+    },
+    {
+      "id": 7,
+      "title": "한국자격검정평가진흥원(한검평) - 반려동물행동교정사 교육과정",
+      "url": "https://www.korea-edu.net/home/curriculum/info.php?item=502",
+      "key_info": "온라인 40강 커리큘럼, 4주 과정, 수강료 0원 + 인증비 9만원, 합격기준"
+    },
+    {
+      "id": 8,
+      "title": "EBS 펫에듀",
+      "url": "https://ebspetedu.co.kr/",
+      "key_info": "한국애견연맹 협력 교육기관, 온라인+실습 교육 제공"
+    },
+    {
+      "id": 9,
+      "title": "CCPDT - CPDT-KA 자격증",
+      "url": "https://www.ccpdt.org/certification/dog-trainer-certification/",
+      "key_info": "해외 자격 CPDT-KA: 300시간 경험 요건, 200문항 시험, 3년 갱신, 국제 인정"
+    },
+    {
+      "id": 10,
+      "title": "KB금융지주 - 2023 한국 반려동물 보고서",
+      "url": "https://www.kbfg.com/kbresearch/report/reportView.do?reportId=2000396",
+      "key_info": "반려동물 양육 인구 1,546만명, 양육 가구 비중 28.6%, 시장 통계"
+    },
+    {
+      "id": 11,
+      "title": "데일리벳 - 국내 반려동물 시장규모 8.5조원, 2032년 21조원",
+      "url": "https://www.dailyvet.co.kr/news/industry/214784",
+      "key_info": "시장규모 8.5조원(2022) → 21조원(2032), 연평균 성장률"
+    },
+    {
+      "id": 12,
+      "title": "KPMG - 반려동물 시장 트렌드 2024",
+      "url": "https://assets.kpmg.com/content/dam/kpmg/kr/pdf/2024/issue-monitor/kpmg-korea-petmarket-trends-20240604.pdf",
+      "key_info": "CAGR 5.2%(2020-2024), 글로벌 시장 3,781→7,762억달러, 국내외 시장 성장 전망"
+    },
+    {
+      "id": 13,
+      "title": "대한민국 정책브리핑 - 2024년 달라지는 반려동물 관련 제도",
+      "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156627493",
+      "key_info": "2024년 4월 시행: 맹견 사육 허가제, 반려동물행동지도사 국가자격, 동물복지 인증제"
+    },
+    {
+      "id": 14,
+      "title": "한국평생학습진흥원 - 반려동물관리사 1급",
+      "url": "https://www.lli.or.kr/license/license54.asp",
+      "key_info": "무료수강 이벤트, 온라인 교육과정"
+    },
+    {
+      "id": 15,
+      "title": "잡코리아 - 반려동물행동교정사 Q&A",
+      "url": "https://www.jobkorea.co.kr/User/Qstn/AnswerWrite?qstnNo=15601",
+      "key_info": "현직자 경험담, 취업 현실, 실무 조언"
+    },
+    {
+      "id": 16,
+      "title": "국가법령정보센터 - 동물보호법",
+      "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=267325",
+      "key_info": "동물보호법 원문, 반려동물행동지도사 국가자격 법적 근거"
+    }
+  ],
+  "summary": {
+    "key_takeaways": [
+      "반려동물행동교정사는 반려동물의 문제 행동 원인을 파악하고 교정하는 전문가",
+      "자격증은 크게 국가자격(반려동물행동지도사, 2024년 신설)과 민간자격(KKF 반려동물행동교정사 등)으로 구분",
+      "민간자격은 온라인 교육 4주+시험으로 비교적 쉽게 취득 가능 (비용 약 9만원)",
+      "국가자격은 필기 5과목+실기시험, 응시료 총 20만원, 연 1회 시행",
+      "평균 연봉 약 2,749만원(워크넷 기준), 프리랜서는 개인차 큼",
+      "국내 반려동물 시장 8.5조원(2022) → 21조원(2032) 성장 전망",
+      "반려동물 양육 가구 28.6%(1,546만 명), 지속 증가 추세",
+      "해외 자격 CPDT-KA(300시간 경험+200문항), CAAB(박사급 학술 자격) 존재",
+      "동물보호법 개정으로 국가자격 도입, 직업 전문성 공식 인정 단계"
+    ]
+  }
+}

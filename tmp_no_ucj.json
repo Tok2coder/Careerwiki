@@ -1,0 +1,29 @@
+[
+  {
+    "results": [
+      {
+        "total_no_ucj": 6312,
+        "has_api": 0,
+        "has_views": 2292
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 65.513
+      },
+      "duration": 65.513,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 435331072,
+      "rows_read": 6959,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

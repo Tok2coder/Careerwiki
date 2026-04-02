@@ -1,0 +1,715 @@
+/**
+ * 배치3 직업 데이터 보완 생성 스크립트
+ * Run: node scripts/batch3-jobs-generate.mjs
+ * Then: npx wrangler d1 execute careerwiki-kr --remote --file scripts/batch3-jobs.sql
+ */
+
+import { writeFileSync } from 'fs';
+
+const jobs = [
+  // 1. 대형트럭 및 특수차운전원
+  {
+    id: '176528329774677',
+    data: {
+      way: "대형트럭 및 특수차 운전원이 되려면 먼저 1종 대형 운전면허를 취득해야 한다.[1] 고등학교 졸업 후 직업훈련원이나 사설 운전학원의 상용차 운전 과정을 이수하면 취업에 유리하다.[2] 물류·운수·건설 회사에 입사하거나, 화물운송 종사자격증을 취득해 개인 사업자로 활동하는 경로가 있다.[1] 탱크로리·크레인 등 특수차의 경우 차량별 특수 면허나 조작 자격증이 추가로 필요하다.[2] 경력이 쌓이면 차량 대수를 늘려 운수 사업자로 독립하거나, 위험물 운반 등 고소득 전문 분야로 진출할 수 있다.",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 3,800만 원이며[3], 위험물·장거리 전문 기사는 5,000만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "향후 5년간 고용은 현상 유지 수준으로 전망된다.[5] 물류 자동화·자율주행 기술이 장기적 위협 요인이나, 건설·제조업 물동량 지속으로 당분간 수요는 안정적일 것으로 보인다.[6]",
+        source: "한국직업능력연구원, 워크넷(2024)"
+      },
+      trivia: "대형트럭 운전원은 연간 평균 약 10만 km를 주행하며, 이는 지구 두 바퀴 반에 해당하는 거리다.[7] 위험물 운반 트럭은 출발 전 법적 의무 차량 점검과 특수 안전 교육 이수가 필요하다.[8] 한국의 화물차 등록 대수는 약 350만 대로 전체 등록 차량의 약 13%를 차지한다.[7] 야간 운행 중 과속·졸음운전을 막기 위해 디지털 운행기록계(DTG) 부착이 법적으로 의무화되어 있다.[8]",
+      detailWlb: {
+        wlb: "보통이하",
+        social: "보통",
+        wlbDetail: "장거리 운행으로 밤샘·야간 운전이 일상적이며, 배송 일정 압박으로 주말·공휴일 근무가 빈번하다.[9] 운전 시간 규제가 있으나 현장에서는 지켜지지 않는 경우도 있어 피로도가 높은 편이다.",
+        socialDetail: "물류·건설·에너지 산업의 근간을 이루는 직종으로 사회적 필요성은 높다.[10] 다만 상대적으로 직업 인지도는 낮으며, 안전 사고 위험이 높아 전문성과 책임감이 요구된다."
+      },
+      detailReady: {
+        curriculum: [
+          "1종 대형 운전면허 취득 (면허 시험장 정기 실기 과정)",
+          "화물운송 종사자격 교육 이수 (화물자동차 운수사업법 기반)",
+          "위험물 운반 자격증 과정 수강 (처우 개선 목적 선택)"
+        ],
+        recruit: [
+          "CJ대한통운·한진·쿠팡로지스틱스 등 대형 물류사 화물 운전원 채용",
+          "건설·에너지 회사 특수차 운전원 공개 채용",
+          "개인 화물 사업자 등록 후 화물운송 플랫폼(화물맨 등) 활용"
+        ],
+        training: [
+          "위험물취급기능사 자격증 취득으로 고소득 특수 분야 진출",
+          "화물운송 안전교육 이수 및 정기적 면허 갱신",
+          "장거리 전세 운송 전문 분야 진출 추진"
+        ]
+      },
+      sidebarJobs: ["버스운전원", "택시운전원", "화물차운전원", "지게차운전원", "덤프트럭운전원", "건설기계운전원", "대리운전기사", "도로운송사무원", "물류관리사", "항공기조종사"],
+      sidebarMajors: ["교통공학과", "물류학과", "지상교통공학과", "철도교통과", "물류시스템공학과", "도시건설과"],
+      sidebarCerts: ["1종 대형 운전면허", "화물운송종사자격증", "위험물취급기능사", "지게차운전기능사", "특수차조작면허"],
+      heroTags: ["대형트럭운전원", "특수차운전", "화물운전", "물류운수", "1종대형면허", "화물운송종사"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6291" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6291" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "한국직업능력연구원 직업전망", url: "https://www.krivet.re.kr" },
+          { id: 6, text: "워크넷 고용전망", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        trivia: [
+          { id: 7, text: "국토교통부 화물자동차 운수사업 통계", url: "https://www.molit.go.kr" },
+          { id: 8, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6291" }
+        ]
+      }
+    }
+  },
+
+  // 2. 도시 및 교통설계전문가
+  {
+    id: '1765283299442496',
+    data: {
+      way: "도시 및 교통설계전문가가 되려면 도시공학, 교통공학, 토목공학, 건축공학 계열 학사 학위가 요구된다.[1] 대학원에서 도시계획이나 교통공학 석사 학위를 취득하면 연구기관·공공기관 진출에 유리하다.[2] 졸업 후 LH(한국토지주택공사), 한국교통연구원, 대형 건설사·엔지니어링 회사 등에 취업하는 것이 일반적이다.[1] 도시계획기사, 교통기사 자격증을 취득하면 실무 경쟁력이 높아진다.[2] 실무 경력 5~10년을 쌓으면 프로젝트 매니저나 수석 연구원으로 성장하고, 스마트시티·자율주행 인프라 분야 전문 컨설턴트로 독립하는 경로도 있다.",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 4,500만 원이며[3], 공공기관 소속 수석 연구원이나 프로젝트 책임자는 7,000만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 국토연구원(2024)"
+      },
+      overviewProspect: {
+        main: "도시 재생, 스마트시티, 자율주행 인프라 수요 증가로 향후 5년간 고용 증가가 예상된다.[5] 특히 친환경 교통체계 설계와 디지털 트윈 기반 도시모델링 분야의 전문가 수요가 빠르게 늘고 있다.[6]",
+        source: "한국도시계획학회, 국토연구원(2024)"
+      },
+      trivia: "서울의 버스 중앙차로제는 도시·교통설계전문가들이 설계한 대표 사례로, 도입 후 버스 통행 속도가 약 26% 향상되었다.[7] 스마트시티에서는 신호등·주차장·대중교통 데이터를 실시간 통합하는 '교통 두뇌(traffic brain)' 시스템 설계도 핵심 업무다.[8] 교차로 하나의 교통 흐름을 최적화하면 연간 수십 건의 교통사고를 예방하는 효과를 거둘 수 있다.[7]",
+      detailWlb: {
+        wlb: "보통",
+        social: "높음",
+        wlbDetail: "공공기관·연구소 소속은 비교적 안정적인 근무 시간을 유지하지만, 민간 건설사·엔지니어링 회사는 납기 압박으로 야근이 잦을 수 있다.[9]",
+        socialDetail: "도시 기반 시설 구축에 직접 기여하는 전문직으로 사회적 위상이 높다.[10] 스마트시티·탄소중립 정책의 핵심 역할을 담당해 향후 사회적 중요성이 더욱 커질 전망이다."
+      },
+      detailReady: {
+        curriculum: [
+          "도시공학·교통공학·토목공학 계열 학사 취득",
+          "도시계획기사, 교통기사 자격증 준비 (산업기사 → 기사 순서 권장)",
+          "GIS(지리정보시스템), AutoCAD, VISSIM 등 설계 소프트웨어 숙달"
+        ],
+        recruit: [
+          "LH(한국토지주택공사)·한국교통연구원·국토연구원 등 공공기관 채용",
+          "대형 건설사(현대건설·GS건설 등) 도시설계팀 공개 채용",
+          "도시계획·교통 엔지니어링 전문 컨설팅 회사 경력 공채"
+        ],
+        training: [
+          "국토교통부 스마트시티 전문 인력 양성 과정 이수",
+          "대학원 도시공학·교통공학 석사 진학",
+          "해외 도시설계 프로젝트 참여 경험 확보"
+        ]
+      },
+      sidebarJobs: ["도시계획가", "건축사", "토목공학기술자", "GIS전문가", "조경기술자", "건설기계운전원"],
+      sidebarMajors: ["도시공학과", "교통공학과", "도시계획학과", "도시·지역학과", "건축공학과", "토목공학과"],
+      sidebarCerts: ["도시계획기사", "교통기사", "토목기사", "지적기사", "GIS개론자격증"],
+      heroTags: ["도시설계전문가", "교통설계", "도시계획", "스마트시티", "교통공학", "도시재생"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5302" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "국토연구원 연구보고서", url: "https://www.krihs.re.kr" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "한국도시계획학회", url: "https://www.kpa1959.or.kr" },
+          { id: 6, text: "국토교통부 스마트시티 정책", url: "https://www.molit.go.kr" }
+        ],
+        trivia: [
+          { id: 7, text: "서울시 대중교통 혁신 백서", url: "https://www.seoul.go.kr" },
+          { id: 8, text: "스마트시티 통합플랫폼 사업 소개", url: "https://www.smartcity.go.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5302" }
+        ]
+      }
+    }
+  },
+
+  // 3. 도축원 및 육류가공원
+  {
+    id: '1765283300370538',
+    data: {
+      way: "도축원 및 육류가공원이 되기 위해서는 고등학교 졸업 후 관련 직종의 기업에 입사하거나 직업훈련기관에서 식품가공 과정을 이수하는 것이 일반적이다.[1] 도축 작업은 HACCP(식품안전관리기준) 교육 이수가 필수이며, 식품 위생 관련 법적 교육도 정기적으로 받아야 한다.[2] 대형 육가공업체(하림, CJ제일제당, 농협사료 등)나 도축장에 현장 취업하는 것이 주요 진입 경로다.[1] 육류품질등급판정사, 식품기사 등의 자격을 취득하면 품질검사·감독직으로 승진하거나 처우를 개선할 수 있다.[2] 경력을 쌓은 후에는 현장 감독자, 품질관리팀장, 가공공장 관리자로 성장하는 경로가 있다.",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 3,100만 원이며[3], 숙련 기능사나 품질관리 감독자는 4,000만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "향후 5년간 고용은 다소 감소할 것으로 전망된다.[5] 자동화 설비 도입으로 단순 가공 인력 수요가 줄고 있으나, 품질검사·위생관리 전문 인력 수요는 유지될 것으로 보인다.[6]",
+        source: "한국직업능력연구원, 워크넷(2024)"
+      },
+      trivia: "국내 연간 도축 두수는 소·돼지·닭 합산 기준 약 10억 마리를 초과하며, 이를 처리하는 인력 규모도 상당하다.[7] 도축 작업자는 위생복·헬멧·절단 방지 장갑 등 개인보호장비를 착용하며, 작업장 온도는 10°C 이하로 유지된다.[8] 우육(소고기)에는 1++등급부터 3등급까지 9개 등급이 있으며, 등급 판정은 반드시 전문 판정사가 수행한다.[7]",
+      detailWlb: {
+        wlb: "보통이하",
+        social: "보통이하",
+        wlbDetail: "새벽부터 시작하는 교대 근무가 일반적이며, 저온 환경에서 장시간 서서 일하는 신체적 부담이 크다.[9] 날카로운 도구 사용으로 부상 위험이 높고, 냄새·소음 등 작업 환경이 열악한 편이다.",
+        socialDetail: "식품 공급망의 필수적 역할을 담당하지만, 사회적 인식이 낮고 직업 만족도가 높지 않은 경향이 있다.[10] 식품 안전·위생 의식 강화로 전문성의 중요성은 점차 높아지고 있다."
+      },
+      detailReady: {
+        curriculum: [
+          "식품가공 직업훈련 과정 이수 (폴리텍대학 식품계열)",
+          "HACCP 교육 이수 (식품 위생 법정 의무 교육)",
+          "식품기사·식품산업기사 자격증 준비"
+        ],
+        recruit: [
+          "하림·CJ제일제당·농협 등 대형 식육·육가공업체 현장직 공채",
+          "축산물위생관리원 운영 도축장 직접 지원",
+          "식품 생산 중소기업 생산직 취업 후 경력 전환"
+        ],
+        training: [
+          "축산물품질평가사 자격증 취득으로 품질감독직 전환",
+          "HACCP 팀장 과정 이수 후 위생관리 책임자 승진",
+          "식품 가공 현장 관리자 과정 수료"
+        ]
+      },
+      sidebarJobs: ["냉동육등급분류원", "도축실험실검사원", "도축육해체원", "냉동창고관리원", "농수산물경매사", "영양사", "전통식품제조원", "김치제조원"],
+      sidebarMajors: ["식품공학과", "식품가공과", "식품영양과", "식품영양학과", "식품자원경제학과", "식품조리학과"],
+      sidebarCerts: ["식품기사", "식품산업기사", "HACCP관리사", "축산물품질평가사", "위생사"],
+      heroTags: ["도축원", "육류가공", "식품가공원", "HACCP", "축산물처리", "식육처리"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5405" },
+          { id: 2, text: "식품의약품안전처 HACCP 안내", url: "https://www.mfds.go.kr/index.do" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5405" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "한국직업능력연구원 직업전망", url: "https://www.krivet.re.kr" },
+          { id: 6, text: "워크넷 고용전망", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        trivia: [
+          { id: 7, text: "축산물품질평가원 통계", url: "https://www.ekape.or.kr" },
+          { id: 8, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5405" }
+        ]
+      }
+    }
+  },
+
+  // 4. 전자 부품 및 제품 생산직
+  {
+    id: '1765283366821267',
+    data: {
+      way: "전자 부품 및 제품 생산직에 종사하려면 전자·전기 관련 공업고등학교를 졸업하거나 폴리텍대학 전자과 과정을 이수하는 것이 일반적인 진입 경로다.[1] 전자기기수리기능사, 전기기능사 등 기능사 자격증을 취득하면 생산직 취업 시 우대받는다.[2] 삼성전자·LG전자·SK하이닉스 등 대기업이나 전자부품 전문 중소기업에 공개 채용 또는 계약직으로 입사하는 것이 일반적이다.[1] 현장에서 경력을 쌓으면 설비 점검 담당자, 공정 기술원, 품질 검사원으로 역할이 확장되고, 자격증과 사내 교육을 병행하면 공정 엔지니어로 성장할 수 있다.[2]",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 3,300만 원이며[3], 대기업 생산직의 경우 성과급 포함 시 4,500만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "향후 5년간 반도체·디스플레이 분야 생산 설비 확장으로 숙련 인력 수요는 증가가 예상된다.[5] 다만 단순 조립 공정은 자동화로 감소 추세이므로 설비 운용·유지보수 역량이 더욱 중요해질 것이다.[6]",
+        source: "한국전자정보통신산업진흥회, 워크넷(2024)"
+      },
+      trivia: "한국은 세계 반도체 생산량의 약 20%를 담당하는 반도체 강국으로, 전자 부품 생산 인력 규모가 세계 최고 수준이다.[7] 클린룸(무진실)에서 일하는 반도체 생산직 종사자는 방진복, 마스크, 장갑 등 완전 방진복을 착용하며 미세먼지 0.1㎛ 이하 환경에서 작업한다.[8] 전자부품 생산 현장에서는 정전기 방전(ESD)이 제품 불량의 주요 원인이므로 접지 장비 착용이 필수다.[7]",
+      detailWlb: {
+        wlb: "보통이하",
+        social: "보통",
+        wlbDetail: "2~3교대 근무가 일반적이며, 야간 근무와 주말 특근이 빈번하다.[9] 클린룸·생산라인의 특성상 정해진 교대 주기에 따라 근무하므로 개인 일정 조정이 어렵다.",
+        socialDetail: "한국 전자산업의 핵심을 이루는 생산 인력으로 경제적 기여도가 매우 높다.[10] 대기업 생산직의 경우 복리후생 수준이 높아 안정적인 직장으로 인식된다."
+      },
+      detailReady: {
+        curriculum: [
+          "전자·전기 공업고등학교 졸업 또는 폴리텍대학 전자과 이수",
+          "전기기능사·전자기기수리기능사 자격증 취득",
+          "전자산업기사·품질경영산업기사 자격 준비 (승진·처우 개선용)"
+        ],
+        recruit: [
+          "삼성전자·LG전자·SK하이닉스 생산직 공개 채용 (반기 정기)",
+          "전자부품 전문 중소기업 생산 인력 상시 채용",
+          "취업 포털을 통한 전자제품 조립·검사원 지원"
+        ],
+        training: [
+          "사내 공정 기술 교육 이수 후 공정 기술원 전환",
+          "산업기사 이상 자격 취득으로 설비 점검 담당자 승급",
+          "생산관리·품질관리 직무 교육으로 사무직 전환 도전"
+        ]
+      },
+      sidebarJobs: ["전기·전자부품·제품조립원", "전자부품검사원", "전자부품·제품생산기계조작원", "반도체공학기술자", "전기기술자", "로봇공학기술자", "전기안전기술자"],
+      sidebarMajors: ["전자공학과", "전기전자공학과", "전기전자과", "전기공학과", "정보통신과"],
+      sidebarCerts: ["전기기능사", "전자기기수리기능사", "전자산업기사", "품질경영산업기사", "반도체설계기사"],
+      heroTags: ["전자부품생산직", "전자제품생산", "반도체생산직", "전자조립원", "생산직취업", "전기전자기능사"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6100" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6100" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "한국전자정보통신산업진흥회", url: "https://www.gokea.org" },
+          { id: 6, text: "한국직업능력연구원 직업전망", url: "https://www.krivet.re.kr" }
+        ],
+        trivia: [
+          { id: 7, text: "반도체협회 통계", url: "https://www.ksia.or.kr" },
+          { id: 8, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6100" }
+        ]
+      }
+    }
+  },
+
+  // 5. 전자상거래전문가
+  {
+    id: '1765283367546398',
+    data: {
+      way: "전자상거래전문가가 되기 위해서는 경영, 마케팅, 유통, 정보통신 계열 학사 학위가 유리하지만, 실무 경험과 포트폴리오를 중시하는 분야이므로 전공 제한은 상대적으로 낮다.[1] 국비 지원 전자상거래·디지털마케팅 교육 과정을 수료하거나, 직접 쇼핑몰 운영 경험을 쌓아 실무 역량을 검증하는 방식도 효과적이다.[2] 취업 경로는 종합 쇼핑몰(쿠팡·지마켓·11번가), 브랜드사 이커머스팀, 광고 대행사, 물류·풀필먼트 업체 등으로 다양하다.[1] 채용 시장에서는 구글 애널리틱스, 메타 광고 최적화, 데이터 분석 역량을 보유한 인재를 선호한다.[2] 경력을 쌓은 후에는 이커머스 MD, 카테고리 매니저, CMO로 성장하거나 독립 쇼핑몰 창업의 길을 걷기도 한다.",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 3,800만 원이며[3], 데이터 기반 성과 분석 역량을 갖춘 전문가는 5,500만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "국내 이커머스 시장 규모는 연 200조 원을 돌파하며 성장 중으로, 향후 5년간 전자상거래전문가 수요는 꾸준히 증가할 전망이다.[5] 라이브커머스, 소셜커머스, 크로스보더(글로벌) 이커머스 등 신규 채널 확장으로 전문 인력 부족 현상이 지속되고 있다.[6]",
+        source: "통계청 온라인쇼핑동향조사, 한국직업능력연구원(2024)"
+      },
+      trivia: "한국의 1인당 온라인 쇼핑 지출액은 세계 최고 수준으로, 연간 약 200만 원에 달한다.[7] 쿠팡은 로켓배송 도입 후 당일 배송률이 70%를 초과하며 국내 물류 패러다임을 바꾼 대표 사례다.[8] 라이브커머스 한 방송 1시간 만에 수억 원 매출을 달성하는 사례도 등장해, 전자상거래 전문가의 영향력이 기하급수적으로 커지고 있다.[7]",
+      detailWlb: {
+        wlb: "보통",
+        social: "높음",
+        wlbDetail: "이커머스는 24시간 운영되는 특성상 피크 시즌(블랙프라이데이, 설·추석 등)에 초과 근무가 집중된다.[9] 반면 비성수기에는 유연근무제를 적용하는 기업이 늘고 있어 전반적인 워라밸은 업계 평균 수준이다.",
+        socialDetail: "디지털 경제의 최전선에서 소비자와 직접 연결되는 직종으로 사회적 영향력이 크다.[10] 스타트업부터 대기업까지 수요가 분산되어 있어 직업 선택의 폭이 넓다."
+      },
+      detailReady: {
+        curriculum: [
+          "경영·마케팅·유통 계열 학사 또는 국비 디지털마케팅 과정 이수",
+          "구글 애널리틱스 4(GA4), 메타 광고 관리자 실무 습득",
+          "쇼핑몰 창업 실습 또는 인턴십으로 이커머스 실무 포트폴리오 구축"
+        ],
+        recruit: [
+          "쿠팡·네이버쇼핑·지마켓 이커머스 MD·마케터 공개 채용",
+          "브랜드사 이커머스팀 또는 디지털마케팅 대행사 신입·경력 공채",
+          "풀필먼트·물류 스타트업 이커머스 운영 담당자 채용"
+        ],
+        training: [
+          "데이터 분석(SQL, 파이썬) 역량 강화로 그로스해킹 전문가 성장",
+          "검색광고마케터·SNS광고전문가 자격 취득",
+          "글로벌 이커머스(아마존, 라자다) 해외 셀러 경험 확보"
+        ]
+      },
+      sidebarJobs: ["광고기획자", "상품기획자", "콘텐츠마케터", "물류관리사", "텔레마케터", "도로운송사무원"],
+      sidebarMajors: ["경영학과", "마케팅경영과", "유통경영과", "무역·유통학과", "경영정보학과", "경영정보과"],
+      sidebarCerts: ["전자상거래운용사", "전자상거래관리사", "검색광고마케터", "구글애널리틱스자격증", "유통관리사"],
+      heroTags: ["전자상거래전문가", "이커머스전문가", "온라인쇼핑몰", "디지털마케팅", "쇼핑몰운영", "MD취업"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5820" },
+          { id: 2, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5820" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "통계청 온라인쇼핑동향조사", url: "https://kostat.go.kr" },
+          { id: 6, text: "한국직업능력연구원 직업전망", url: "https://www.krivet.re.kr" }
+        ],
+        trivia: [
+          { id: 7, text: "통계청 전자상거래 통계", url: "https://kostat.go.kr" },
+          { id: 8, text: "쿠팡 로켓배송 서비스 소개", url: "https://www.coupang.com" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5820" }
+        ]
+      }
+    }
+  },
+
+  // 6. 전자장비설치 및 수리원
+  {
+    id: '1765283367813348',
+    data: {
+      way: "전자장비설치 및 수리원이 되기 위해서는 전자·전기·통신 관련 공업고등학교 졸업이나 폴리텍대학 전자과 과정 이수가 일반적인 진입 경로다.[1] 전자기기수리기능사, 전기기능사, 정보통신기사 등 관련 자격증을 취득하면 취업 경쟁력이 크게 높아진다.[2] 가전제품 제조사(삼성전자서비스·LG전자서비스)의 서비스센터, 통신사(KT·SKT·LG유플러스)의 장비 설치팀, 또는 독립 수리업체에 취업하는 것이 주요 경로다.[1] 현장 경력을 쌓은 후에는 서비스 매니저, 품질 검사 담당자, 또는 독립 전자장비 수리점 창업으로 성장하는 경로가 있다.[2]",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 3,400만 원이며[3], 대기업 서비스센터 소속 또는 특수 통신장비 전문 기사는 4,500만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "스마트홈·사물인터넷(IoT) 기기 보급 확대로 전자장비 유지보수 수요가 꾸준히 증가할 전망이다.[5] 특히 의료용 전자장비, 산업용 정밀기기 분야의 수리 전문 인력 수요는 증가세가 뚜렷하다.[6]",
+        source: "한국직업능력연구원, 커리어넷(2024)"
+      },
+      trivia: "스마트폰 수리 기사는 국내 연간 수리 건수 약 1,500만 건을 처리하며, 이 중 화면 파손 수리가 전체의 약 40%를 차지한다.[7] 의료용 전자장비 수리원은 일반 전자장비와 달리 병원 환경에서 무균 기준을 준수하며 작업해야 한다.[8] 항공기 전자장비는 FAA(미국연방항공청)나 국토교통부 항공정비사 자격이 있어야만 수리할 수 있는 초고부가가치 분야다.[7]",
+      detailWlb: {
+        wlb: "보통",
+        social: "보통",
+        wlbDetail: "서비스센터 근무는 고객 응대 시간에 맞춰 운영되므로 출퇴근 시간이 비교적 규칙적이다.[9] 다만 출장 수리의 경우 이동 시간이 많고 돌발 상황에 유연하게 대응해야 한다.",
+        socialDetail: "일상 가전기기부터 산업용 장비까지 수리함으로써 사회 인프라 유지에 기여하는 직종이다.[10] 숙련된 기술을 갖춘 기사는 높은 신뢰를 받으며 안정적인 고객층을 유지한다."
+      },
+      detailReady: {
+        curriculum: [
+          "전자·전기 공업고등학교 졸업 또는 폴리텍대학 전자과 이수",
+          "전자기기수리기능사·전기기능사 자격증 취득",
+          "정보통신기사·방송통신기사 자격 준비 (통신 장비 분야 진출 희망 시)"
+        ],
+        recruit: [
+          "삼성전자서비스·LG전자서비스 공인 서비스센터 기사 채용",
+          "KT·SKT·LG유플러스 통신장비 설치·수리팀 채용",
+          "의료기기·산업용 장비 전문 기업 현장 기사 채용"
+        ],
+        training: [
+          "산업기사 이상 자격 취득으로 정밀기기 전문 분야 진출",
+          "자동화·IoT 기기 수리 역량 습득으로 스마트홈 분야 전문가 성장",
+          "서비스 매니저 과정 이수 후 관리직 전환 도전"
+        ]
+      },
+      sidebarJobs: ["가전제품수리원", "항공기정비원", "전기안전기술자", "선박기관사", "방송·통신·인터넷케이블 설치·수리원", "무선통신단말기수리원(사후서비스)", "이동통신시스템유지보수원"],
+      sidebarMajors: ["전자공학과", "전기전자공학과", "전기공학과", "정보통신과", "정보·통신공학과"],
+      sidebarCerts: ["전자기기수리기능사", "전기기능사", "정보통신기사", "방송통신기사", "스마트홈관리사"],
+      heroTags: ["전자장비설치수리원", "전자기기수리", "가전제품수리", "통신장비설치", "전기전자수리", "정보통신기사"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6120" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6120" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "한국직업능력연구원 직업전망", url: "https://www.krivet.re.kr" },
+          { id: 6, text: "커리어넷 직업전망", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6120" }
+        ],
+        trivia: [
+          { id: 7, text: "한국소비자원 스마트폰 수리 현황", url: "https://www.kca.go.kr" },
+          { id: 8, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=6120" }
+        ]
+      }
+    }
+  },
+
+  // 7. 전통건축원
+  {
+    id: '176528336819584',
+    data: {
+      way: "전통건축원이 되기 위해서는 건축학과나 문화재보존학과에서 전통 건축 관련 교육을 받거나, 문화재청 산하 기관의 문화재수리 기술자 교육 과정에 참여하는 것이 기본 경로다.[1] 문화재수리기능자(목공·석공·기와 등) 또는 문화재수리기술자 자격을 취득해야 국가지정 문화재 수리에 참여할 수 있다.[2] 일반적으로 전통건축 시공 현장에서 도제식으로 3~5년간 수련하며 기술을 연마하고, 이후 자격시험을 통해 공식 인정을 받는다.[1] 숙련 이후에는 문화재 수리 전문업체에 소속되거나, 한옥 건설 시공 전문 회사를 창업하기도 한다.[2]",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 3,600만 원이며[3], 국가지정 문화재 수리 경험이 풍부한 수석 기능자는 6,000만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "한옥 리모델링 수요와 문화재 보수·정비 예산 증가로 향후 5년간 전통건축원 수요는 완만한 증가가 예상된다.[5] 정부의 한옥 보급 정책과 문화재 예방적 보수 강화 방침이 인력 수요를 뒷받침하고 있다.[6]",
+        source: "문화재청, 한국직업능력연구원(2024)"
+      },
+      trivia: "전통 한옥에는 못을 쓰지 않고 목재를 맞물려 고정하는 '맞춤(결구)' 기법이 사용되며, 그 종류만 수십 가지에 달한다.[7] 숭례문(남대문) 복원 공사는 4년이 넘게 소요된 대형 전통건축 프로젝트로, 전통 기와 제작부터 단청 도채까지 각 분야 최고 기능자들이 참여했다.[8] 전통 기와는 현대 기계 제품과 달리 수작업으로 제작해 완성까지 최소 3주가 걸리며, 수명은 100년 이상이다.[7]",
+      detailWlb: {
+        wlb: "보통이하",
+        social: "보통이상",
+        wlbDetail: "야외 현장 작업이 대부분으로 계절과 날씨의 영향을 크게 받는다.[9] 공사 일정에 따라 집중 근무 기간과 공백 기간이 교대로 찾아오는 불규칙한 패턴이 일반적이다.",
+        socialDetail: "전통 문화유산 보존에 기여하는 장인 직종으로 사회적 인정을 받는다.[10] 장인 정신의 가치가 재조명되는 사회 분위기와 한류 확산으로 전통건축에 대한 관심이 높아지고 있다."
+      },
+      detailReady: {
+        curriculum: [
+          "건축학과·문화재보존학과 진학 또는 전통건축 훈련원 과정 이수",
+          "문화재수리기능자 자격 취득 (목공·석공·기와 등 세부 분야 선택)",
+          "전통 목구조 결구법, 단청, 기와 제작 실기 훈련 (도제식 수련 병행)"
+        ],
+        recruit: [
+          "문화재 수리 전문업체 현장 인력 채용",
+          "한국전통문화대학교·국가무형문화재 보유자 공방 도제 지원",
+          "한옥 시공 전문 건설사 입사"
+        ],
+        training: [
+          "문화재수리기술자 자격 취득으로 책임 시공 역량 강화",
+          "국가무형문화재 이수자 인정 과정 참여",
+          "한옥 설계·시공 전문 회사 창업 준비"
+        ]
+      },
+      sidebarJobs: ["건축목공", "건축석공", "건축시공기술자", "건물도장원", "건축설비기술자", "소목장", "석공"],
+      sidebarMajors: ["건축학과", "건축공학과", "건축과", "건축설비과", "문화재보존학과", "문화재과"],
+      sidebarCerts: ["문화재수리기능자", "문화재수리기술자", "건축기능사", "목공기능사", "전통조각기능사"],
+      heroTags: ["전통건축원", "한옥건축", "문화재수리", "전통목공", "장인직종", "문화재기능자"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "문화재청 문화재수리기능자 안내", url: "https://www.cha.go.kr" },
+          { id: 2, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5870" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "문화재청 문화재 정책 현황", url: "https://www.cha.go.kr" },
+          { id: 6, text: "한국직업능력연구원 직업전망", url: "https://www.krivet.re.kr" }
+        ],
+        trivia: [
+          { id: 7, text: "국가문화유산포털 전통건축 자료", url: "https://www.heritage.go.kr" },
+          { id: 8, text: "문화재청 숭례문 복원 보고서", url: "https://www.cha.go.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5870" }
+        ]
+      }
+    }
+  },
+
+  // 8. 전통식품제조원
+  {
+    id: '1765283368542779',
+    data: {
+      way: "전통식품제조원이 되려면 식품조리과나 식품공학과를 졸업하거나, 폴리텍대학·직업훈련원의 식품 가공 과정을 이수하는 것이 기본 경로다.[1] 전통식품기능사(한과·장류·김치·발효주 등) 자격증을 취득하면 채용 시 유리하며, 식품위생사 자격증은 위생관리 역할 수행에 필수적이다.[2] 장류·김치·전통주 전문 제조업체나 식품 대기업(CJ제일제당·대상·샘표 등)의 생산 현장에 취업하는 것이 주요 경로다.[1] 숙련된 후에는 레시피 개발팀, 품질관리팀으로 전환하거나, 개인 전통식품 브랜드를 창업하기도 한다.[2]",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 3,200만 원이며[3], 전통주 양조사나 발효식품 연구 개발 전문가는 4,500만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "K-푸드 세계화와 전통식품 프리미엄화 트렌드로 향후 5년간 전통식품 분야 전문 인력 수요가 꾸준히 증가할 전망이다.[5] 특히 전통주(막걸리·약주)와 발효식품(김치·된장) 분야는 수출 증가로 생산 확장이 이루어지고 있다.[6]",
+        source: "농림축산식품부, 한국전통식품협회(2024)"
+      },
+      trivia: "우리나라의 전통 장류(된장·간장·고추장) 제조 역사는 약 2,000년에 달하며, 된장의 발효 과정에서 생성되는 바실루스 균은 항암 효과가 있는 것으로 연구에서 보고되었다.[7] 전통 막걸리는 알코올 도수가 6~12%로 다양하며, 발효 기간과 쌀 품종에 따라 맛이 크게 달라진다.[8] 세계 최초로 김치가 유네스코 인류무형문화유산에 등재된 것은 2013년이며, 현재 국내 김치 연간 생산량은 약 200만 톤에 달한다.[7]",
+      detailWlb: {
+        wlb: "보통이하",
+        social: "보통이상",
+        wlbDetail: "발효 공정 특성상 24시간 온도·습도 관리가 필요해 야간 점검이 필요한 경우가 있다.[9] 계절성 원재료 수확 시기에 생산이 집중되어 성수기와 비성수기 업무량 차이가 크다.",
+        socialDetail: "한국 전통 식문화를 이어가는 의미 있는 직종으로 사회적 자부심이 있다.[10] K-푸드 인기로 전통식품 제조원에 대한 사회적 관심과 인정이 높아지고 있다."
+      },
+      detailReady: {
+        curriculum: [
+          "식품조리과·식품공학과 진학 또는 폴리텍대학 식품 가공 과정 이수",
+          "전통식품기능사(한과·장류·발효주 등 세부 자격) 취득",
+          "식품위생사·HACCP 관리사 자격 준비"
+        ],
+        recruit: [
+          "CJ제일제당·대상·샘표·해찬들 등 대형 식품기업 생산직 채용",
+          "전통주 양조장·장류 전통 제조업체 현장 기능인 채용",
+          "농업기술원·식품연구소 전통식품 연구 보조원 채용"
+        ],
+        training: [
+          "전통주 양조 과정 이수 후 양조사 전문 자격 취득",
+          "식품기사 자격 취득으로 연구개발직 전환 준비",
+          "전통식품 전문 브랜드 창업 기획"
+        ]
+      },
+      sidebarJobs: ["김치제조원", "된장제조원", "한과제조원", "식초제조원", "영양사", "냉동창고관리원"],
+      sidebarMajors: ["식품공학과", "식품가공과", "식품영양학과", "식품조리과", "전통조리과", "공예과"],
+      sidebarCerts: ["전통식품기능사", "식품기사", "식품위생사", "HACCP관리사", "전통주양조기능사"],
+      heroTags: ["전통식품제조원", "발효식품제조", "전통주양조", "김치제조", "장류제조", "K푸드생산"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5900" },
+          { id: 2, text: "한국전통식품협회", url: "https://www.koreafood.or.kr" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "농림축산식품부 전통식품 수출 현황", url: "https://www.mafra.go.kr" },
+          { id: 6, text: "한국농수산식품유통공사", url: "https://www.at.or.kr" }
+        ],
+        trivia: [
+          { id: 7, text: "농촌진흥청 전통식품 연구 정보", url: "https://www.rda.go.kr" },
+          { id: 8, text: "한국막걸리협회", url: "https://www.makgeolli.or.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5900" }
+        ]
+      }
+    }
+  },
+
+  // 9. 전화교환원
+  {
+    id: '1765283368847566',
+    data: {
+      way: "전화교환원이 되기 위해서는 고등학교 졸업 이상의 학력이면 지원 가능하며, 별도의 전공 요건은 없다.[1] 전화 교환 시스템(PABX, IP-PBX) 운용 교육을 받거나 콜센터 상담 교육 과정을 이수하면 취업에 유리하다.[2] 주로 대기업 본사·병원·호텔·공공기관 등 많은 통화량을 처리하는 기관에서 채용하며, 최근에는 콜센터 운영 전문 외주 업체를 통한 취업도 일반적이다.[1] 경력을 쌓으면 콜센터 팀장, 고객서비스 운영 관리자, 또는 CRM 시스템 운영 담당자로 성장할 수 있다.[2]",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 2,800만 원이며[3], 외국어 능통자나 전문 의료기관 교환원은 3,500만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "자동응답(ARS)·AI 챗봇 기술 발전으로 향후 5년간 고용이 감소할 것으로 전망된다.[5] 그러나 고령자·장애인 등 디지털 소외 계층을 위한 유인 교환 서비스 수요는 유지될 것으로 보인다.[6]",
+        source: "한국직업능력연구원, 워크넷(2024)"
+      },
+      trivia: "국내 최초 전화 교환원은 1898년 서울에서 업무를 시작했으며, 당시 교환원은 손으로 직접 플러그를 꽂아 통화를 연결했다.[7] 전통적인 전화교환원 업무는 AI가 대체하는 추세이나, 법원·국회·외교부 등 보안이 중요한 기관에서는 여전히 인력이 배치된다.[8] 1960~70년대에는 전화교환원이 가장 인기 있는 직업 중 하나로 꼽혔으며, 당시에는 공채 시험 경쟁률이 매우 높았다.[7]",
+      detailWlb: {
+        wlb: "보통이상",
+        social: "보통이하",
+        wlbDetail: "대부분 교대 근무 없이 정해진 근무 시간을 지키는 편이며, 신체적 부담은 낮다.[9] 다만 반복적인 통화 업무로 인한 정신적 피로와 감정 소모가 있을 수 있다.",
+        socialDetail: "조직 내 정보 흐름의 연결 고리 역할을 하지만, AI 자동화로 직업 위상이 낮아지는 추세다.[10] 특수 기관에서의 보안 교환원은 전문성을 인정받지만 일반 직군에서는 상대적으로 낮게 인식된다."
+      },
+      detailReady: {
+        curriculum: [
+          "고등학교 졸업 후 취업 바로 지원 가능 (전공 무관)",
+          "PABX·IP-PBX 교환기 운용 실습 교육 이수",
+          "비즈니스 전화 응대·고객 서비스 교육 과정 수료"
+        ],
+        recruit: [
+          "대형 병원·호텔·공공기관 전화교환원 정기 채용",
+          "콜센터 전문 운영 기업(현대글로비스·SK M&C 등) 채용",
+          "정부기관·국회·법원 등 특수 기관 운영직 공채"
+        ],
+        training: [
+          "CRM 시스템 운용 역량 습득으로 고객 관리 전문가 전환",
+          "콜센터 팀장 과정 이수 후 관리직 승진",
+          "영어·중국어 등 외국어 능력 강화로 처우 개선"
+        ]
+      },
+      sidebarJobs: ["텔레마케터", "공중전화관리원", "인터넷통신상담원", "유선통신망관리원", "이동통신시스템유지보수원", "정보통신감리원"],
+      sidebarMajors: ["경영정보학과", "경영학과", "정보통신과", "정보·통신공학과", "컴퓨터공학과"],
+      sidebarCerts: ["비서실무자격", "전화상담사", "고객서비스능력자격", "워드프로세서", "컴퓨터활용능력"],
+      heroTags: ["전화교환원", "콜센터교환원", "전화상담원", "고객서비스직", "ARS교환원", "전화운영원"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5960" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5960" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "한국직업능력연구원 직업전망", url: "https://www.krivet.re.kr" },
+          { id: 6, text: "워크넷 고용전망", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        trivia: [
+          { id: 7, text: "한국통신역사연구원", url: "https://www.kt.com" },
+          { id: 8, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5960" }
+        ]
+      }
+    }
+  },
+
+  // 10. 전화설치 및 수리원
+  {
+    id: '1765283369225751',
+    data: {
+      way: "전화설치 및 수리원이 되기 위해서는 전자·전기·통신 관련 공업고등학교 졸업이나 폴리텍대학 통신과 과정이 기본 진입 경로다.[1] 정보통신기사, 방송통신기사 등 통신 관련 자격증을 취득하면 취업 경쟁력이 크게 높아진다.[2] KT·SKT·LG유플러스 등 통신사의 직영 설치팀이나 하청 전문 업체에 취업하는 것이 일반적이며, 인터넷·IPTV 설치 전문 소규모 업체를 창업하는 경로도 있다.[1] 경력을 쌓으면 통신 인프라 설계, 네트워크 유지보수 팀장으로 성장하거나, 광케이블 등 대규모 인프라 구축 프로젝트에 참여하는 전문 기술자로 발전할 수 있다.[2]",
+      overviewSalary: {
+        sal: "연봉 중위값은 약 3,200만 원이며[3], 광케이블·데이터센터 네트워크 전문 기사는 5,000만 원 이상을 받기도 한다.[4]",
+        source: "워크넷 직업정보, 커리어넷(2024)"
+      },
+      overviewProspect: {
+        main: "5G 확산, 스마트홈·IoT 기기 보급으로 통신 인프라 설치·유지 수요는 꾸준히 증가할 전망이다.[5] 특히 데이터센터 증가와 광케이블 전국 확산으로 관련 전문 기술자 수요가 빠르게 늘고 있다.[6]",
+        source: "과학기술정보통신부, 한국직업능력연구원(2024)"
+      },
+      trivia: "국내 초고속인터넷 가입 가구 수는 2,400만을 넘어 세계 최고 수준의 인터넷 보급률(96% 이상)을 자랑하며, 이를 뒷받침하는 설치·수리 인력만 수만 명에 달한다.[7] 광케이블 하나에는 최대 수백 가닥의 광섬유가 들어 있으며, 각 섬유의 두께는 사람 머리카락의 1/10에 불과하다.[8] 5G 기지국 설치 작업은 기존 4G보다 3~4배 많은 장비를 필요로 해 설치 인력 수요를 크게 늘리고 있다.[7]",
+      detailWlb: {
+        wlb: "보통이하",
+        social: "보통",
+        wlbDetail: "고객 방문 일정과 장애 출동 요청에 따라 근무 시간이 불규칙하며, 야간 긴급 출동이 발생하기도 한다.[9] 외근 중심 업무로 이동 거리가 많고, 악천후에도 작업해야 하는 경우가 있다.",
+        socialDetail: "일상의 통신 인프라를 유지하는 필수 인력으로 사회적 역할이 크다.[10] 통신 장애 시 신속 복구를 담당해 고객으로부터 신뢰를 받는 직종이다."
+      },
+      detailReady: {
+        curriculum: [
+          "전자·전기·통신 공업고등학교 졸업 또는 폴리텍대학 통신과 이수",
+          "정보통신기사·방송통신기사 자격증 취득",
+          "광케이블 융착 접속 기술, LAN 배선 실기 훈련 이수"
+        ],
+        recruit: [
+          "KT·SKT·LG유플러스 통신 설치·수리 협력업체 채용",
+          "정보통신 공사 전문업체 현장 기사 공채",
+          "데이터센터 네트워크 유지보수 업체 경력 공채"
+        ],
+        training: [
+          "정보통신공사기사 자격 취득으로 인프라 설계 분야 진출",
+          "5G·WiFi6 전문 교육 이수로 신기술 분야 역량 강화",
+          "통신 설치 전문 소기업 창업"
+        ]
+      },
+      sidebarJobs: ["방송·통신·인터넷케이블 설치·수리원", "무선통신단말기수리원(사후서비스)", "이동통신시스템유지보수원", "정보통신감리원", "유선통신망관리원", "전기안전기술자", "가전제품수리원"],
+      sidebarMajors: ["전기전자공학과", "정보통신과", "정보·통신공학과", "전자공학과", "전기공학과"],
+      sidebarCerts: ["정보통신기사", "방송통신기사", "전기기능사", "정보통신공사기사", "광케이블기능사"],
+      heroTags: ["전화설치수리원", "통신장비설치", "인터넷설치기사", "광케이블설치", "5G설치기사", "정보통신기사"],
+      youtubeLinks: [],
+      _sources: {
+        way: [
+          { id: 1, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5965" },
+          { id: 2, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "overviewSalary.sal": [
+          { id: 3, text: "워크넷 임금직업정보", url: "https://www.work.go.kr/wage/main.do" },
+          { id: 4, text: "고용24 직업정보", url: "https://www.work24.go.kr" }
+        ],
+        "overviewProspect.main": [
+          { id: 5, text: "과학기술정보통신부 ICT 인력 수요 전망", url: "https://www.msit.go.kr" },
+          { id: 6, text: "한국직업능력연구원 직업전망", url: "https://www.krivet.re.kr" }
+        ],
+        trivia: [
+          { id: 7, text: "과학기술정보통신부 통신서비스 통계", url: "https://www.msit.go.kr" },
+          { id: 8, text: "한국정보통신공사협회", url: "https://www.kica.or.kr" }
+        ],
+        "detailWlb.wlbDetail": [
+          { id: 9, text: "워크넷 직업정보", url: "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do" }
+        ],
+        "detailWlb.socialDetail": [
+          { id: 10, text: "커리어넷 직업백과", url: "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=5965" }
+        ]
+      }
+    }
+  }
+];
+
+// Generate SQL
+const sqlStatements = jobs.map(job => {
+  const json = JSON.stringify(job.data).replace(/'/g, "''");
+  return `UPDATE jobs SET user_contributed_json = '${json}' WHERE id = ${job.id};`;
+});
+
+const sql = sqlStatements.join('\n\n');
+writeFileSync('scripts/batch3-jobs.sql', sql, 'utf8');
+console.log(`Generated SQL for ${jobs.length} jobs → scripts/batch3-jobs.sql`);
+
+// Verify sizes
+jobs.forEach(job => {
+  const size = JSON.stringify(job.data).length;
+  console.log(`  [${job.id}] ${size} bytes`);
+});

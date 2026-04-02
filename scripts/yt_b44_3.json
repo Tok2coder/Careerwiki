@@ -1,0 +1,148 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "JwRnFaru8VTaKRTuVzy6J8KuQx0",
+  "nextPageToken": "CAQQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 82160,
+    "resultsPerPage": 4
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "zooYGdxYVX0kkYkS9o8CP-CqwBA",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "Dok2e1Hm7Bs"
+      },
+      "snippet": {
+        "publishedAt": "2025-11-22T02:15:01Z",
+        "channelId": "UCGlwwqE6HTkJBAIv4gl0O7w",
+        "title": "&#39;음악으로 먹고 살기 힘들어요&#39; 현직 성악가가 말해주는 지금의 현실",
+        "description": "마지막에 쿠키영상 준비했어요 재밌게 보셨다면 좋아요 댓글 구독 부탁드립니다. - 출연신청 및 제안: itvwonred@gmail.com - 출연자 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Dok2e1Hm7Bs/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Dok2e1Hm7Bs/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Dok2e1Hm7Bs/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "인터뷰온",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-11-22T02:15:01Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "Nr_BdH9sV2o-BTugpcqsqbK2ARs",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "l93xTFpL74k"
+      },
+      "snippet": {
+        "publishedAt": "2022-04-23T07:28:00Z",
+        "channelId": "UCTl2BcpFrRWbGB8ykUFv8mA",
+        "title": "[직업소개] 성악가",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/l93xTFpL74k/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/l93xTFpL74k/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/l93xTFpL74k/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "2022 의정부시 청소년 진로페스티벌",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-04-23T07:28:00Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "6horU2oK4_N4LQGeX7Jc-eYSzj8",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "DwDqk9H6BNY"
+      },
+      "snippet": {
+        "publishedAt": "2025-05-09T09:00:27Z",
+        "channelId": "UCekCucFs7NYg7fBKhty8fNA",
+        "title": "직업을 잘못 선택한 노래 장인의 가창력",
+        "description": "가창력 #노래 #고음.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/DwDqk9H6BNY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/DwDqk9H6BNY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/DwDqk9H6BNY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "메타클럽타운",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-05-09T09:00:27Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "SUqk31U21u1PhHvUtGGD4xami1E",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "Tjs_6PJ5dSA"
+      },
+      "snippet": {
+        "publishedAt": "2025-08-15T07:52:43Z",
+        "channelId": "UC_GaTrj4qMlqBwvnuhDPACA",
+        "title": "요즘 전문 성악가들의 현실",
+        "description": "성악가#유학#클래식#공연자 [테너원 & 소프라노 신선아 성악 아카데미] 장소 : 강남 양재역 도보 2분 전화 : 0507-1327-8074 메일 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Tjs_6PJ5dSA/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Tjs_6PJ5dSA/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Tjs_6PJ5dSA/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "테너원&소프라노 신선아",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-08-15T07:52:43Z"
+      }
+    }
+  ]
+}

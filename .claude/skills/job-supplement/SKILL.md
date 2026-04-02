@@ -14,6 +14,7 @@ description: "Careerwiki 직업 데이터 보완 스킬. Cloudflare D1 careerwik
 2. **출처가 곧 신뢰** — _sources 없는 데이터는 의미 없다
 3. **실행 전 검증, 실행 후 확인** — 반드시 프로덕션 HTTP 200 확인
 4. **같은 실수 반복 금지** — references/lessons.md 숙지 필수
+5. **기존 데이터 함부로 변경 금지** — 이미 잘 작동하는 데이터(특히 `overviewSalary.wage`)를 덮어쓰면 안 됨. 변경 시 반드시 기존보다 공신력 있는 출처 필요. `overviewSalary.wage` + 구조화 포맷이 있으면 바 차트가 표시되므로, 이를 서술형으로 바꾸면 차트가 사라짐
 
 ## DB 접근
 
@@ -88,8 +89,10 @@ npx wrangler d1 execute careerwiki-kr --remote --command "UPDATE jobs SET user_c
 각 직업 업데이트 후 반드시 프로덕션 URL을 확인:
 
 ```bash
-curl -s -o /dev/null -w "%{http_code}" "https://careerwiki.org/jobs/직업ID"
+curl -s -o /dev/null -w "%{http_code}" "https://careerwiki.org/job/직업슬러그"
 ```
+
+> ⚠️ URL 형식: `/job/슬러그` (careerwiki.**kr** 아님, `/jobs` 아님)
 
 - **200**: 정상
 - **302**: URL에 하이픈이 있으면 라우터가 공백으로 치환 → 리다이렉트 (기존 이슈, 데이터 문제 아님)
@@ -151,6 +154,8 @@ curl -s -o /dev/null -w "%{http_code}" "https://careerwiki.org/jobs/직업ID"
 ]
 ```
 
+> ⚠️ **`title` 필드 필수** — title 없으면 UI에 URL 문자열이 그대로 제목으로 노출됨. oembed 응답의 `title` 값을 사용하라.
+
 **필수 검증:** 모든 YouTube URL은 oembed API로 실존 확인:
 ```bash
 curl -s "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=VIDEO_ID&format=json"
@@ -160,7 +165,8 @@ curl -s "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=VIDE
 
 **영상 선택 기준:**
 - 최신 영상 우선 (1~2년 이내)
-- 해당 직업과 직접 관련된 콘텐츠
+- **진로 탐색 중인 사용자 관점** 우선: "이 직업이 뭔지", "어떻게 되는지", "전망은 어떤지" 영상
+- 단순 일과 vlog보다 **진로 가이드·인터뷰·전망 영상** 선호
 - 한국어 영상 우선
 
 ## 교훈 (Lessons Learned)
@@ -168,11 +174,14 @@ curl -s "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=VIDE
 과거 작업에서 발견된 실수와 해결법은 `references/lessons.md`에 정리되어 있다.
 작업 시작 전에 반드시 한번 읽고, 같은 실수를 반복하지 마라.
 
-핵심 교훈 4가지:
+핵심 교훈 7가지:
 1. **way 필드는 반드시 string** — 배열로 저장하면 formatRichText TypeError → 500 에러
 2. **Python 스크립트/SQL 파일 금지** — `--command`로 직접 실행이 가장 안정적
 3. **worktree에서 배포 금지** — 반드시 main 브랜치에서 작업 + 배포
 4. **_sources id 순서 = 본문 [N] 등장 순서** — 불일치 시 프론트엔드 참조번호 클릭이 엉뚱한 출처를 가리킴
+5. **기존 overviewSalary.wage 변경 금지** — wage + 구조화 포맷이 있으면 바 차트 렌더링됨. 이를 서술형으로 바꾸면 차트가 사라짐. 더 나은 출처 없으면 건드리지 마라
+6. **youtubeLinks title 필수** — title 없으면 URL이 제목으로 노출됨. oembed 응답 title 값 사용
+7. **way vs detailReady 구분** — `way`는 페이지에서 "되는 방법" 섹션으로 렌더링됨 (서술형 진로 경로). `detailReady`는 교육과정/채용/훈련 섹션으로 렌더링됨 (구조화된 준비 단계). 혼동 금지
 
 ## 체크리스트
 
@@ -186,9 +195,12 @@ curl -s "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=VIDE
 - [ ] way가 string인지 확인 (배열 아닌지)
 - [ ] _sources가 A등급 Object 포맷인지 확인
 - [ ] _sources id 순서가 본문 [N] 등장 순서와 일치하는지 확인 (본문 위→아래 스캔)
-- [ ] youtubeLinks oembed 검증 완료
+- [ ] youtubeLinks: title 포함 여부 확인 (없으면 URL이 제목으로 노출됨)
+- [ ] youtubeLinks: oembed 검증 완료
+- [ ] youtubeLinks: 진로 가이드/인터뷰/전망 영상인지 확인 (단순 vlog 지양)
+- [ ] 기존 overviewSalary.wage 있으면 덮어쓰지 않았는지 확인
 - [ ] SQL 실행 성공
-- [ ] 프로덕션 HTTP 200 확인
+- [ ] 프로덕션 HTTP 200 확인 (`https://careerwiki.org/job/슬러그`)
 
 ### 배치 완료 후
 - [ ] 처리 건수 보고

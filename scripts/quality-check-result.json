@@ -1,0 +1,720 @@
+[
+  {
+    "name": "푸드스타일리스트",
+    "slug": "푸드스타일리스트",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": true,
+      "note": "wlb:보통미만(미보완) social:보통이상(미보완)"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "5개<7"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "푸드스타일리스트취업, 음식스타일링, K푸드"
+    },
+    "markdown": {
+      "ok": false,
+      "note": "overviewProspect.main: **보통** / way: **조리사 자격증(한식·양식·제과)**"
+    },
+    "sources": {
+      "ok": true,
+      "note": "CAREERNET,WORK24_DJOB +인라인"
+    },
+    "youtube": {
+      "ok": true,
+      "note": "3개"
+    },
+    "_debug": {
+      "wlb": "보통미만",
+      "social": "보통이상",
+      "sidebarCount": 5
+    }
+  },
+  {
+    "name": "웹디자이너",
+    "slug": "웹디자이너",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": true,
+      "note": "wlb:보통이상(미보완) social:좋음(미보완)"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "5개<7"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "웹디자이너취업, UI디자이너, 피그마실무"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "CAREERNET,WORK24_JOB,WORK24_DJOB +인라인"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "wlb": "보통이상",
+      "social": "좋음",
+      "sidebarCount": 5
+    }
+  },
+  {
+    "name": "유치원교사",
+    "slug": "유치원교사",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": true,
+      "note": "wlb:좋음(미보완) social:좋음(미보완)"
+    },
+    "sidebarJobs": {
+      "ok": true,
+      "note": "7개"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "유아교사, 어린이집교사, 유치원정교사"
+    },
+    "markdown": {
+      "ok": false,
+      "note": "way: **유치원 2급 정교사 자격증**, **전문대·4년제 유아교육과 졸업**"
+    },
+    "sources": {
+      "ok": true,
+      "note": "CAREERNET,WORK24_JOB,WORK24_DJOB +인라인"
+    },
+    "youtube": {
+      "ok": true,
+      "note": "4개"
+    },
+    "_debug": {
+      "wlb": "좋음",
+      "social": "좋음",
+      "sidebarCount": 7
+    }
+  },
+  {
+    "name": "작가",
+    "slug": "작가",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": true,
+      "note": "wlb:보통이상(미보완) social:좋음(미보완)"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "6개<7"
+    },
+    "heroTags": {
+      "ok": false,
+      "note": "조사태그: \"소설가\", \"웹소설작가\", \"에세이작가\""
+    },
+    "markdown": {
+      "ok": false,
+      "note": "way: **지속적인 창작과 발표**, **등단(문단 등록)**"
+    },
+    "sources": {
+      "ok": true,
+      "note": "CAREERNET +인라인"
+    },
+    "youtube": {
+      "ok": true,
+      "note": "5개"
+    },
+    "_debug": {
+      "wlb": "보통이상",
+      "social": "좋음",
+      "sidebarCount": 6
+    }
+  },
+  {
+    "name": "방송송출장비기사",
+    "slug": "방송송출장비기사",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": true,
+      "note": "7개"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "방송송출장비기사, 방송송출장비, 기사"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 7
+    }
+  },
+  {
+    "name": "조향사",
+    "slug": "조향사",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": true,
+      "note": "wlb:보통미만(미보완) social:보통이상(미보완)"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "5개<7"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "조향사, 향수조향사, 퍼퓨머"
+    },
+    "markdown": {
+      "ok": false,
+      "note": "way: **화학·향료 전문 지식과 후각 훈련**"
+    },
+    "sources": {
+      "ok": true,
+      "note": "CAREERNET,WORK24_DJOB +인라인"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "wlb": "보통미만",
+      "social": "보통이상",
+      "sidebarCount": 5
+    }
+  },
+  {
+    "name": "자동차정비원",
+    "slug": "자동차정비원",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": true,
+      "note": "wlb:매우좋음(미보완) social:좋음(미보완)"
+    },
+    "sidebarJobs": {
+      "ok": true,
+      "note": "7개"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "자동차"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "CAREERNET,WORK24_JOB +인라인"
+    },
+    "youtube": {
+      "ok": true,
+      "note": "1개"
+    },
+    "_debug": {
+      "wlb": "매우좋음",
+      "social": "좋음",
+      "sidebarCount": 7
+    }
+  },
+  {
+    "name": "주입·포장·상표부착기계조작원",
+    "slug": "주입포장상표부착기계조작원",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "5개<7"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "주입·포장·상표부착기계조작원, 설치·정비·생산직, 주입·포장·상표부착기계"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 5
+    }
+  },
+  {
+    "name": "항공기정비원",
+    "slug": "항공기정비원",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": true,
+      "note": "wlb:보통미만(미보완) social:좋음(미보완)"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "13개>12"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "비행기"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "CAREERNET,WORK24_JOB +인라인"
+    },
+    "youtube": {
+      "ok": true,
+      "note": "1개"
+    },
+    "_debug": {
+      "wlb": "보통미만",
+      "social": "좋음",
+      "sidebarCount": 13
+    }
+  },
+  {
+    "name": "인력파견관리자",
+    "slug": "인력파견관리자",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "33개>12"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "인력공급부서관리자, 인재파견부서관리자"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB,WORK24_DJOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 33
+    }
+  },
+  {
+    "name": "패션소품디자이너",
+    "slug": "패션소품디자이너",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": true,
+      "note": "9개"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "패션소품디자이너, 패션소품, 디자이너"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 9
+    }
+  },
+  {
+    "name": "보건·의료관리자",
+    "slug": "보건의료관리자",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": true,
+      "note": "10개"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "보건·의료관리자, 보건·의료, 관리자"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 10
+    }
+  },
+  {
+    "name": "계기검침원 및 가스점검원",
+    "slug": "계기검침원-및-가스점검원",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "26개>12"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "가스ㆍ수도ㆍ전기 계기 검침원 및 안전점검원"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 26
+    }
+  },
+  {
+    "name": "바리스타",
+    "slug": "바리스타",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": true,
+      "note": "wlb:보통이상(미보완) social:보통미만(미보완)"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "5개<7"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "바리스타자격증, 스페셜티바리스타, 헤드바리스타"
+    },
+    "markdown": {
+      "ok": false,
+      "note": "way: **바리스타 자격증**, **바리스타 1급·2급**"
+    },
+    "sources": {
+      "ok": true,
+      "note": "CAREERNET,WORK24_DJOB +인라인"
+    },
+    "youtube": {
+      "ok": true,
+      "note": "6개"
+    },
+    "_debug": {
+      "wlb": "보통이상",
+      "social": "보통미만",
+      "sidebarCount": 5
+    }
+  },
+  {
+    "name": "여행상품개발자",
+    "slug": "여행상품개발자",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": true,
+      "note": "8개"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "여행상품개발원"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 8
+    }
+  },
+  {
+    "name": "행정부고위공무원",
+    "slug": "행정부고위공무원",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": true,
+      "note": "wlb:좋음(미보완) social:보통이상(미보완)"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "16개>12"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "시장, 도지사, 구청장"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "CAREERNET,WORK24_JOB +인라인"
+    },
+    "youtube": {
+      "ok": true,
+      "note": "1개"
+    },
+    "_debug": {
+      "wlb": "좋음",
+      "social": "보통이상",
+      "sidebarCount": 16
+    }
+  },
+  {
+    "name": "점토제품생산기계조작원",
+    "slug": "점토제품생산기계조작원",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "26개>12"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "점토제품생산기계조작원, 설치·정비·생산직, 점토제품생산기계"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 26
+    }
+  },
+  {
+    "name": "농업용 및 기타기계장비설치 및 정비원",
+    "slug": "농업용-및-기타기계장비설치-및-정비원",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "33개>12"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "설치·정비·생산직, 정비원"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 33
+    }
+  },
+  {
+    "name": "유리·유리제품생산기계조작원",
+    "slug": "유리유리제품생산기계조작원",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "23개>12"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "유리·유리제품생산기계조작원, 설치·정비·생산직, 유리·유리제품생산기계"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 23
+    }
+  },
+  {
+    "name": "철도·전동차기관사",
+    "slug": "철도전동차기관사",
+    "footnote": {
+      "ok": true,
+      "note": "순서OK"
+    },
+    "wlbSocial": {
+      "ok": false,
+      "note": "wlb등급없음|social등급없음"
+    },
+    "sidebarJobs": {
+      "ok": false,
+      "note": "42개>12"
+    },
+    "heroTags": {
+      "ok": true,
+      "note": "철도·전동차기관사"
+    },
+    "markdown": {
+      "ok": true,
+      "note": "없음"
+    },
+    "sources": {
+      "ok": true,
+      "note": "WORK24_JOB"
+    },
+    "youtube": {
+      "ok": "N/A",
+      "note": "YouTube없음"
+    },
+    "_debug": {
+      "sidebarCount": 42
+    }
+  }
+]

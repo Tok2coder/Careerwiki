@@ -1,0 +1,182 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "ysPdYEqRSJu7ceha0IC8q6zamtw",
+  "nextPageToken": "CAUQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 9232,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "7DhWos1UbVusQ248HJ_fibHsUmw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "45qju9yC-Vo"
+      },
+      "snippet": {
+        "publishedAt": "2024-02-22T07:00:02Z",
+        "channelId": "UC5YKCgA3WR9NBQNQTs7BTsA",
+        "title": "대기업 건설사 연봉 ㄷㄷ #shorts",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/45qju9yC-Vo/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/45qju9yC-Vo/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/45qju9yC-Vo/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "캐치TV",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-02-22T07:00:02Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "F10fr55FS0GzIw3WJSIs_EjL8VA",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "qm8Lxp1rzAE"
+      },
+      "snippet": {
+        "publishedAt": "2025-08-09T12:39:58Z",
+        "channelId": "UC4LL5muUiBgf62d5GmmUffQ",
+        "title": "건축사 자격증 사실 별거 아닌것 같음",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/qm8Lxp1rzAE/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/qm8Lxp1rzAE/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/qm8Lxp1rzAE/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "건축 라이노 | 모어매스",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-08-09T12:39:58Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "6nVfdsTlNYzhFRxYGGtkYXsVRe8",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "C7hgH1bv--E"
+      },
+      "snippet": {
+        "publishedAt": "2025-05-01T04:30:54Z",
+        "channelId": "UChoLhDdNhth2zsFuBShICcQ",
+        "title": "건축사가 돈을 못 버는 여섯 가지 이유",
+        "description": "오토캐드의 거의 모든 것 ▷ https://blog.naver.com/3d-metaverse/223833311745 라이노의 거의 모든 것 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/C7hgH1bv--E/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/C7hgH1bv--E/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/C7hgH1bv--E/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "디지트 TV : 건축콘텐츠연구소",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-05-01T04:30:54Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "0pQaswdEX5WQ1i8C5cuFICXlfjw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "j16CX2I8MGY"
+      },
+      "snippet": {
+        "publishedAt": "2019-10-07T09:11:47Z",
+        "channelId": "UCFCtZJTuJhE18k8IXwmXTYQ",
+        "title": "특집 다큐 - 직장탐구 팀 1부- 삶을 짓는 사람들, 건축설계사무소_#001",
+        "description": "공식 홈페이지 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/j16CX2I8MGY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/j16CX2I8MGY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/j16CX2I8MGY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "EBSDocumentary (EBS 다큐)",
+        "liveBroadcastContent": "none",
+        "publishTime": "2019-10-07T09:11:47Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "OvbU2fLqC2_IU6vYcDcMYbgu7Xs",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "trqyuclTplw"
+      },
+      "snippet": {
+        "publishedAt": "2025-10-03T10:01:43Z",
+        "channelId": "UChoLhDdNhth2zsFuBShICcQ",
+        "title": "건축사의 연봉, 전문직 중 최하위?",
+        "description": "오토캐드의 거의 모든 것 ▷ https://blog.naver.com/3d-metaverse/223833311745 라이노의 거의 모든 것 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/trqyuclTplw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/trqyuclTplw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/trqyuclTplw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "디지트 TV : 건축콘텐츠연구소",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-10-03T10:01:43Z"
+      }
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "2wmU6tXGWG3Cw_JPcGo2-n4rrEA",
+  "nextPageToken": "CAUQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 1000000,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "82DCnptQp7mHk-1UCvA5vnZCPVI",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "K6Z2AV-FkIY"
+      },
+      "snippet": {
+        "publishedAt": "2025-07-17T06:50:15Z",
+        "channelId": "UCMxjwKk3V-69a8mcnU_XKnQ",
+        "title": "PD뽑을 때 학벌을 보는 진짜 이유",
+        "description": "PD #학벌 #장항준.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/K6Z2AV-FkIY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/K6Z2AV-FkIY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/K6Z2AV-FkIY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "트렌드잼",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-07-17T06:50:15Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "uSL0Zm9EHhHlzevriC__7X55YgI",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "sOQQZBMJS70"
+      },
+      "snippet": {
+        "publishedAt": "2021-06-03T03:01:00Z",
+        "channelId": "UCRMA_Nb5VF-YoWApSVeXPVA",
+        "title": "[유퀴즈온더블럭] 연예인이랑 친구 될 줄 알았던 PD의 삶,, mbc 신입 PD님이 알려주는 현실 피디의 삶 | CJ ENM 191022 방송",
+        "description": "티비냥 #유퀴즈온더블럭 #EP40_06 유퀴즈 레전드 더 보러가기 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/sOQQZBMJS70/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/sOQQZBMJS70/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/sOQQZBMJS70/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "디글 클래식 :Diggle Classic",
+        "liveBroadcastContent": "none",
+        "publishTime": "2021-06-03T03:01:00Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "iq1yFBnu3GuWmPbwEDJpY9vBxQ0",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "rQxFADtF4y4"
+      },
+      "snippet": {
+        "publishedAt": "2022-08-04T01:31:16Z",
+        "channelId": "UCec08LbjJ84RbUw5Zq6nRsQ",
+        "title": "기껏 힘들게 공부해서 PD·엔지니어가 됐더니...🤮 막내들의 솔직한 MBC 취업 후기 2탄 (예능, 드라마, 콘텐츠전략 PD, 음향, 조명 미디어 엔지니어)",
+        "description": "2022 MBC 공개채용 특집 X 뉴스안하니 '0:00 인트로 '0:28 미디어 엔지니어(음향) '2:11 미디어 엔지니어(조명) '3:18 콘텐츠전략 PD ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/rQxFADtF4y4/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/rQxFADtF4y4/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/rQxFADtF4y4/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "뉴스안하니",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-08-04T01:31:16Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "6TUp2mM25WseL4PCkE5d7VEuRtI",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "EYgL1oiUozM"
+      },
+      "snippet": {
+        "publishedAt": "2013-04-17T18:05:28Z",
+        "channelId": "UCFCtZJTuJhE18k8IXwmXTYQ",
+        "title": "직업의 세계 일인자 - 한국방송 드라마 장형일 PD_#001",
+        "description": "공식홈페이지 : http://www.ebs.co.kr EBS, 직업의 세계 일인자, 2012-05-07, 한국방송 드라마의 증인 장형일 PD 한국방송 드라마의 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/EYgL1oiUozM/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/EYgL1oiUozM/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/EYgL1oiUozM/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "EBSDocumentary (EBS 다큐)",
+        "liveBroadcastContent": "none",
+        "publishTime": "2013-04-17T18:05:28Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "_ZDMZHcUNoQX4i5RzS4AGFKlKTk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "vpBgcakYKLQ"
+      },
+      "snippet": {
+        "publishedAt": "2020-05-15T09:00:27Z",
+        "channelId": "UCwx6n_4OcLgzAGdty0RWCoA",
+        "title": "[ENG] 🎉1주년 기념 JOB것들 소원 수리🎉PD 업무에 👋 맞는 것도 포함인가요;; 편집하다가 눈물 콧물 잡것 사랑 다 폭발한 워크맨 PD 리뷰 | 워크맨 ep.52",
+        "description": "JOB것들아~~~♥ 인력소장이다,,,,~~~ 벌써 워크맨이,,,,1주년을 맞이했다~~~,, 여기까지 함께 오느라 다들 수고 많았고,,,~~ 울 잡것덜, ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/vpBgcakYKLQ/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/vpBgcakYKLQ/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/vpBgcakYKLQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "워크맨-Workman",
+        "liveBroadcastContent": "none",
+        "publishTime": "2020-05-15T09:00:27Z"
+      }
+    }
+  ]
+}

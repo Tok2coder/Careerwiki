@@ -1,0 +1,592 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "HSK란 무엇인가 — 중국어 능력의 국제 표준" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "HSK(汉语水平考试, 한어수평고시)는 중국 교육부가 주관하는 국제 표준 중국어 능력 시험이다. 1992년에 처음 시행된 이래 전 세계 60개국 160개 지역에서 운영되고 있으며, 중국어가 모국어가 아닌 사람의 중국어 실력을 객관적으로 측정하는 가장 공신력 있는 시험으로 자리잡았다." },
+        { "type": "footnote", "attrs": { "id": 1, "text": "HSK - 나무위키, HSK 시험 구조 및 종합 정보", "url": "https://namu.wiki/w/HSK" } },
+        { "type": "text", "text": " 중국 유학, 취업, 비자 신청, 장학금 지원 등 거의 모든 중국 관련 공식 절차에서 HSK 성적이 요구되기 때문에, 중국어를 공부하는 사람이라면 사실상 피할 수 없는 시험이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "한국에서는 " },
+        { "type": "text", "text": "통역가", "marks": [{ "type": "link", "attrs": { "href": "/job/통역가" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "번역가", "marks": [{ "type": "link", "attrs": { "href": "/job/번역가" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "무역사무원", "marks": [{ "type": "link", "attrs": { "href": "/job/무역사무원" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "해외영업원", "marks": [{ "type": "link", "attrs": { "href": "/job/해외영업원" } }] },
+        { "type": "text", "text": " 등 중국어가 핵심 역량인 직업군에서 HSK 성적을 필수적으로 요구하며, 삼성, 현대차 등 주요 대기업에서도 채용 시 가산점을 부여한다." },
+        { "type": "footnote", "attrs": { "id": 2, "text": "한국경제TV — HSK로 취업의 문을 활짝 열어라", "url": "https://www.wowtv.co.kr/NewsCenter/News/Read?articleId=A201501160434" } },
+        { "type": "text", "text": " " },
+        { "type": "text", "text": "중어중문학과", "marks": [{ "type": "link", "attrs": { "href": "/major/중어중문학과" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "국제통상학과", "marks": [{ "type": "link", "attrs": { "href": "/major/국제통상학과" } }] },
+        { "type": "text", "text": " 전공자뿐 아니라, 비전공자도 HSK 성적 하나로 중국어 실력을 증명할 수 있다는 점이 이 시험의 가장 큰 매력이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "현행 HSK는 2010년에 개편된 '신HSK' 체계로, 1급(가장 쉬움)부터 6급(가장 어려움)까지 6단계로 구성되어 있다. 구HSK(1992~2010)가 최대 11급까지 있었던 것에 비해 크게 단순화되었으며, 이는 중국어를 국제적으로 보급하려는 중국 정부의 정책적 판단에 따른 것이다. 다만 2026년 7월부터 HSK 3.0이 정식 시행되면서 다시 9등급 체계로 확대될 예정이므로, 시험 준비 시 이 변화를 반드시 염두에 두어야 한다." },
+        { "type": "footnote", "attrs": { "id": 3, "text": "HSK 3.0 Changes Explained: 9 Levels, New Vocab & July 2026 Launch", "url": "https://hsklord.com/blog/hsk-3-0-changes-2026" } }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "등급별 구조와 합격 기준 — 나에게 맞는 급수 찾기" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "HSK를 처음 접하는 사람이 가장 먼저 해야 할 일은 자신에게 맞는 목표 급수를 정하는 것이다. 각 급수는 요구하는 어휘량, 시험 구성, 난이도가 확연히 다르기 때문에 무턱대고 높은 급수에 도전하면 시간과 비용만 낭비하게 된다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "등급" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필수 어휘" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험 영역" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "만점/합격점" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학습 시간" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "수준 설명" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "150개" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "듣기 + 독해" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "200/120점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "40~60시간" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기본 단어와 문장 이해" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "300개" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "듣기 + 독해" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "200/120점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "80~120시간" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "간단한 일상 교류 가능" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "600개" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "듣기 + 독해 + 쓰기" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "300/180점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "120~180시간" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "일상·업무 기본 교류" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "4급", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1,200개" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "듣기 + 독해 + 쓰기" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "300/180점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "190~400시간" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "광범위 토론, 유창한 교류" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5급", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2,500개" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "듣기 + 독해 + 쓰기" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "300/180점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "400시간 이상" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "신문·영화 이해, 연설 가능" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "6급", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5,000개" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "듣기 + 독해 + 쓰기" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "300/180점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "780시간 이상" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자유로운 청해·독해·표현" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "모든 등급에서 합격 기준은 총점의 60%이며, 영역별 과락은 없다." },
+        { "type": "footnote", "attrs": { "id": 4, "text": "HSK시험센터 — 급수별 합격률 및 평균성적", "url": "https://www.hsk-korea.co.kr/customer/chart_hsk.aspx" } },
+        { "type": "text", "text": " 이 점이 다른 어학 시험과 다른 HSK의 독특한 특성인데, 예를 들어 듣기에서 크게 실수하더라도 독해와 쓰기에서 만회하면 합격할 수 있다는 뜻이다. 다만 1~2급은 듣기와 독해만으로 구성되지만, 3급부터는 쓰기 영역이 추가되고 6급에서는 쓰기가 400자 이상의 요약문 작성으로 바뀌어 난이도가 급격히 올라간다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "시험 형식은 PBT(종이시험)와 IBT(컴퓨터시험) 두 가지가 있다. IBT는 한자를 직접 쓸 필요 없이 병음(pinyin)을 입력하면 한자 후보가 나타나는 방식이라 쓰기 부담이 크게 줄어든다. 실제로 IBT의 합격률이 PBT보다 전반적으로 높게 나타나는데, 4급 기준으로 PBT 63% 대비 IBT 73%로 10%포인트나 차이가 난다. 한자 필기에 자신 없다면 IBT를 강력히 추천한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "한 가지 반드시 기억해야 할 점은 HSK 성적의 유효기간이 취득일로부터 2년이라는 것이다. 취업이나 유학에 활용할 계획이라면 역산하여 응시 시기를 정해야 한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "등급별 합격률과 현실적 난이도 분석" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "공식 합격률 데이터를 보면 HSK의 실제 난이도를 보다 객관적으로 파악할 수 있다. 흥미로운 점은 최고 등급인 6급보다 4급의 합격률이 더 낮다는 것이다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "등급" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "PBT 합격률" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "IBT 합격률" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "PBT 평균" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "IBT 평균" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "체감 난이도" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "96%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "95%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "173/200" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "170/200" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "매우 쉬움" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "95%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "93%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "161/200" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "167/200" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "쉬움" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "78%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "86%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "223/300" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "236/300" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "보통" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "4급", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "63%", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "73%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "207/300" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "212/300" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "어려움 (관문)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "72%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "74%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "201/300" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "204/300" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "어려움" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "6급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "68%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "65%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "202/300" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "202/300" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "매우 어려움" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "4급의 합격률이 PBT 기준 63%로 가장 낮은 이유는 응시자 구성에 있다. 1~3급은 어느 정도 준비된 상태에서 응시하는 경우가 많고, 5~6급은 이미 상당한 실력을 갖춘 사람들이 도전하는 반면, 4급은 '이력서에 한 줄이라도 적으려고' 무리해서 응시하는 사람이 많기 때문이다. 4급은 어휘가 1,200개로 3급(600개)의 두 배로 뛰어오르는 구간이기도 해서, 체감 난이도가 급격히 상승한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "5~6급의 합격률이 4급보다 높아 보이는 것은 함정이다. 5급에 도전하는 사람은 이미 4급을 통과한 실력자이므로 모집단 자체가 다르다. 6급의 경우 PBT(68%)보다 IBT(65%)의 합격률이 오히려 낮은데, 이는 6급 쓰기 영역이 400자 요약문 작성이라 병음 입력으로는 오히려 시간이 부족할 수 있기 때문이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "독학 공부법 — 등급별 전략과 교재 추천" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "HSK는 독학으로 충분히 합격할 수 있는 시험이다. 실제로 비전공자가 독학으로 4급을 3개월, 5급을 5개월 만에 합격한 사례가 다수 보고되고 있다." },
+        { "type": "footnote", "attrs": { "id": 5, "text": "독학으로 가능할까 HSK 4급 — 브런치 합격 후기", "url": "https://brunch.co.kr/@cozyjjun/4" } },
+        { "type": "footnote", "attrs": { "id": 6, "text": "HSK 5급 비전공자 합격 후기 — 브런치", "url": "https://brunch.co.kr/@sanoni/29" } },
+        { "type": "text", "text": " 핵심은 효율적인 시간 배분과 올바른 교재 선택이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "먼저 등급별 현실적인 준비 기간을 정리하면 다음과 같다. 3급은 비전공자 기준 약 3개월(하루 1~2시간), 4급은 3급 합격 후 추가 2~3개월, 5급은 비전공자 기준 약 5개월(하루 3시간), 6급은 5급 합격 후 추가 6~12개월이 필요하다. 물론 이는 평균치이며, 개인의 언어 감각과 학습 강도에 따라 크게 달라질 수 있다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "모든 등급에 공통되는 핵심 원칙" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "어휘 암기가 전체의 70%", "marks": [{ "type": "bold" }] }, { "type": "text", "text": "를 차지한다. 해당 급수의 필수 어휘를 완벽히 외우는 것이 합격의 핵심이다. HSK는 출제 범위가 명확하게 공개되어 있기 때문에, 단어만 확실히 잡으면 독해와 듣기의 절반 이상은 자동으로 해결된다." }] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출문제를 최소 3회분 이상 반복 풀이", "marks": [{ "type": "bold" }] }, { "type": "text", "text": "해야 한다. HSK는 출제 패턴이 상당히 정형화되어 있어서 기출 분석만으로도 적중률을 크게 높일 수 있다." }] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "듣기는 반드시 1.2~1.3배속으로 훈련", "marks": [{ "type": "bold" }] }, { "type": "text", "text": "한다. 평소 빠른 속도에 익숙해지면 실제 시험장에서 음성이 느리게 들리면서 여유가 생긴다." }, { "type": "footnote", "attrs": { "id": 7, "text": "HSK 6급 합격 비법, 기출 분석 및 문제풀이 스킬 대공개", "url": "https://www.amazingtalker.co.kr/blog/ko/chinese/80785/" } }] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "오답노트를 작성하되, 틀린 문제의 해설을 정독하면서 모르는 단어를 추가로 수집한다. 독해 문제 하나에서 3~5개의 새로운 어휘를 뽑아낼 수 있다." }] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5~6급 응시자라도 4급 단어를 소홀히 하면 안 된다. 고급 시험에서도 기초 어휘가 반복 출제되기 때문이다." }, { "type": "footnote", "attrs": { "id": 8, "text": "고득점자의 HSK 5-6급 유형별 공부 꿀팁 — 링커리어", "url": "https://community.linkareer.com/honeytips/1872526" } }] }]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "추천 교재 조합" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "교재는 '단어장 1권 + 종합서 1권 + 모의고사 1권'의 3종 세트가 가장 효과적이다. 단어장으로는 '내가 찾던 신HSK 사전식 VOCA' 시리즈가 어원 분석과 예문이 풍부해 인기가 높고, 종합서는 '해커스 HSK'와 '파고다 HSK'가 대표적이다. 모의고사는 실전 감각을 키우는 데 필수이며, 시험 2주 전부터 매일 한 회분씩 실전과 동일한 시간을 재고 풀어야 한다." },
+        { "type": "footnote", "attrs": { "id": 9, "text": "추천 HSK 시험준비 교재 — chinaeducenter", "url": "https://www.chinaeducenter.com/kr/ch_hskbooks.php" } },
+        { "type": "text", "text": " 온라인 학습으로는 시원스쿨 중국어의 HSK 강좌가 체계적이며, '착붙딱붙 HSK 미니학습지'는 출퇴근 시간에 활용하기 좋다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-hsk-img1.webp",
+        "alt": "HSK 등급별 공부 전략과 추천 교재 구성을 정리한 인포그래픽",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "시험 접수부터 당일까지 — 실전 가이드" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "HSK 시험은 한국 전역 약 35개 공인 시험장에서 연간 12회(월 1회 수준) 시행된다." },
+        { "type": "footnote", "attrs": { "id": 10, "text": "HSK시험센터 공식 사이트 — 접수, 시험 일정, 시험장 정보", "url": "https://www.hsk-korea.co.kr/main/main.aspx" } },
+        { "type": "text", "text": " 서울, 부산, 인천, 대전, 대구, 광주, 수원, 천안, 전주, 제주 등 주요 도시에 시험장이 분포해 있어 접근성은 좋은 편이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "접수는 HSK시험센터(hsk-korea.co.kr)에서 온라인으로 진행하며, IBT는 시험일 10일 전까지, PBT는 시험일 27일 전까지 접수를 마감한다." },
+        { "type": "footnote", "attrs": { "id": 11, "text": "2026년도 국내 HSK 시험 일정 — 중국유학사", "url": "https://www.whychina.co.kr/hsk_hsktestdates.php" } },
+        { "type": "text", "text": " PBT의 접수 마감이 훨씬 이르므로 PBT를 선택할 경우 일정 관리에 주의해야 한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "응시료는 등급에 따라 차이가 크다. IBT 기준으로 1급 35,000원, 2급 50,000원, 3급 70,000원, 4급 90,000원, 5급 110,000원, 6급 130,000원이다. PBT는 IBT보다 약 10,000원 저렴하다(5급 100,000원, 6급 120,000원)." },
+        { "type": "footnote", "attrs": { "id": 12, "text": "2026년 HSK 시험 비용, 접수, 시험장 총정리 — mandarinzone", "url": "https://www.mandarinzone.com/2026-hsk-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95/" } },
+        { "type": "text", "text": " 결코 적은 비용이 아니므로 충분히 준비한 후에 응시하는 것이 경제적이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "시험 당일에는 신분증(주민등록증, 여권, 운전면허증)과 수험표를 반드시 지참해야 한다. IBT의 경우 컴퓨터 사용법이 익숙하지 않으면 당황할 수 있으므로, HSK시험센터 홈페이지에서 제공하는 모의시험 프로그램을 미리 체험해보는 것이 좋다. PBT 응시자는 2B 연필과 지우개를 준비해야 하며, 쓰기 영역에서는 볼펜을 사용한다." }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "HSK 응시 전 체크리스트" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "목표 급수의 필수 어휘를 80% 이상 암기했는가" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출문제를 3회분 이상 풀어보았는가" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "PBT/IBT 중 자신에게 유리한 형식을 선택했는가 (한자 필기 자신 없으면 IBT)" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "접수 마감일을 확인했는가 (IBT 10일 전, PBT 27일 전)" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "성적 유효기간(2년)을 고려하여 응시 시기를 정했는가" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험장 위치와 교통편을 사전에 확인했는가" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "신분증, 수험표, 필기도구(PBT: 2B 연필+지우개+볼펜)를 준비했는가" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "HSK 3.0 — 2026년 7월, 무엇이 달라지는가" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2026년 7월부터 정식 시행되는 HSK 3.0은 기존 체계를 상당히 바꾸는 대규모 개편이다." },
+        { "type": "footnote", "attrs": { "id": 13, "text": "New HSK 3.0 Changes Explained: 9 Levels & New Requirements — mandarinzone", "url": "https://www.mandarinzone.com/new-hsk-test/" } },
+        { "type": "text", "text": " 가장 큰 변화는 6등급 체계가 9등급으로 확대되는 것이다. 초급(1~3급), 중급(4~6급), 고급(7~9급) 세 단계로 나뉘며, 7~9급은 하나의 통합 시험을 치른 후 점수에 따라 등급이 결정되는 방식이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "어휘 요구량도 대폭 늘어난다. 기존 1급이 150개였던 것이 300개로 두 배 증가하고, 2급은 300개에서 500개, 3급은 600개에서 1,000개로 상향된다. 최상위인 7~9급은 누적 11,092개 이상의 어휘를 요구해서, 기존 6급(5,000개)의 두 배를 넘긴다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "더 중요한 변화는 시험 영역의 확대이다. 기존에는 별도 시험이었던 말하기(HSKK)가 3급부터 본시험에 통합되고, 4급부터는 번역(Translation) 영역이 추가된다. 번역은 중국어와 영어/한국어/일본어 등 중 선택하는 방식이며, 읽기와 쓰기만으로 합격할 수 있었던 시대는 끝나게 된다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "또한 현대 생활을 반영한 실용 어휘가 대거 추가되었다. 扫码(QR코드 스캔), 网购(온라인 쇼핑), 外卖(배달 음식) 같은 단어가 새로 포함되는 반면, 비실용적인 고유명사는 삭제되었다. 2026년 1월 31일에 글로벌 파일럿 시험이 이미 시행되었으며, 기존 HSK 2.0과 당분간 병행 운영될 예정이다. 현재 HSK 2.0으로 성적을 확보해야 하는 사람이라면 서둘러 응시하는 것이 현명하다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "취업과 유학, HSK로 열 수 있는 문" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "HSK가 실질적으로 활용되는 두 가지 큰 축은 취업과 유학이다. 취업 시장에서는 HSK 4급이 이력서에 기재할 수 있는 최소 등급이며, 실질적인 경쟁력을 갖추려면 5급 이상이 필요하다." },
+        { "type": "footnote", "attrs": { "id": 14, "text": "대기업 취업, HSK중국어 자격증으로 해결하자 — 국민일보", "url": "https://www.kukinews.com/article/view/kuk201403280177" } },
+        { "type": "text", "text": " " },
+        { "type": "text", "text": "통역가", "marks": [{ "type": "link", "attrs": { "href": "/job/통역가" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "외국어강사", "marks": [{ "type": "link", "attrs": { "href": "/job/외국어강사" } }] },
+        { "type": "text", "text": "를 목표로 한다면 6급 고득점(250점 이상)이 사실상 필수이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "국내 주요 기업의 HSK 우대 현황을 보면, 삼성그룹은 SSAT에서 최대 5% 가산점을 부여하고 있으며, 현대자동차그룹, 한화, CJ, LS, 롯데, 포스코, 현대중공업, 한국타이어 등도 중국어 능력자를 우대하거나 가산점을 제공한다. 항공사, 호텔, 면세점, 카지노 등 서비스업에서도 HSK 소지자에 대한 채용이 꾸준히 확대되고 있다. " },
+        { "type": "text", "text": "관광통역안내원", "marks": [{ "type": "link", "attrs": { "href": "/job/관광통역안내원" } }] },
+        { "type": "text", "text": "이나 " },
+        { "type": "text", "text": "해외영업원", "marks": [{ "type": "link", "attrs": { "href": "/job/해외영업원" } }] },
+        { "type": "text", "text": " 직군에서는 HSK 성적이 채용의 당락을 좌우하는 경우도 적지 않다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "유학 측면에서는 일반 학부 입학에 HSK 4급 이상이 기본 지원 자격이며, 985공정 명문대(베이징대, 칭화대 등)는 HSK 6급을 요구한다. 대학원은 HSK 5급 이상이 일반적이다." },
+        { "type": "footnote", "attrs": { "id": 15, "text": "HSK시험센터 — 중국정부장학금 안내", "url": "https://www.hsk-korea.co.kr/scholarship/china_government.aspx" } },
+        { "type": "text", "text": " 중국정부장학금의 경우 HSK 5급 이상이면 예과교육이 면제되어 바로 본과에 입학할 수 있다는 이점이 있다. " },
+        { "type": "text", "text": "국제학과", "marks": [{ "type": "link", "attrs": { "href": "/major/국제학과" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "국제통상학과", "marks": [{ "type": "link", "attrs": { "href": "/major/국제통상학과" } }] },
+        { "type": "text", "text": " 전공자가 교환학생이나 복수학위 프로그램을 활용할 때도 HSK 성적이 중요한 선발 기준이 된다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "HSKK와 유사 시험 비교 — HSK만으로 충분한가" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "HSK가 읽기와 듣기 중심의 시험이라면, HSKK(HSK Speaking Test)는 말하기 능력을 별도로 평가하는 시험이다." },
+        { "type": "footnote", "attrs": { "id": 16, "text": "HSK시험센터 — HSKK 소개", "url": "https://www.hsk-korea.co.kr/about/about_hskk.aspx" } },
+        { "type": "text", "text": " 초급(200어휘, 17분), 중급(900어휘, 21분), 고급(3,000어휘, 24분) 세 단계로 나뉘며, 따라 말하기, 그림 설명, 질문 응답 등의 과제가 출제된다. " },
+        { "type": "text", "text": "외교관", "marks": [{ "type": "link", "attrs": { "href": "/job/외교관" } }] },
+        { "type": "text", "text": "이나 " },
+        { "type": "text", "text": "국제회의전문가", "marks": [{ "type": "link", "attrs": { "href": "/job/국제회의전문가" } }] },
+        { "type": "text", "text": "처럼 구술 능력이 핵심인 직업을 목표로 한다면 HSK와 HSKK를 함께 취득하는 것이 유리하다." },
+        { "type": "footnote", "attrs": { "id": 17, "text": "HSKK 중국어회화시험 — 중국유학사", "url": "https://www.whychina.co.kr/test-hskk.php" } },
+        { "type": "text", "text": " 다만 앞서 언급했듯 HSK 3.0에서는 말하기가 본시험에 통합되므로, HSKK의 위상은 점차 변할 것이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "중국어 관련 시험은 HSK 외에도 TOCFL과 BCT가 있다." },
+        { "type": "footnote", "attrs": { "id": 18, "text": "중국어 시험 비교 — 중국유학사", "url": "https://www.whychina.co.kr/test-chinese.php" } },
+        { "type": "text", "text": " TOCFL(화어문능력측험)은 대만 교육부가 주관하며 번체자(繁體字)를 사용한다. 대만 유학이나 대만 취업을 목표로 하는 경우에만 필요하고, 중국 본토와 관련된 활동에는 인정되지 않는다." },
+        { "type": "footnote", "attrs": { "id": 19, "text": "HSK vs TOCFL: Which Chinese Language Test Should I Take?", "url": "https://ltl-school.com/hsk-vs-tocfl/" } },
+        { "type": "text", "text": " BCT(실용중국어시험)는 비즈니스 중국어에 특화된 시험으로, 기업 채용 시 실무 중국어 능력을 증명하는 데 활용된다. 다만 인지도 면에서 HSK가 압도적이므로, 첫 번째 중국어 자격증으로는 HSK를 선택하고 필요에 따라 BCT를 추가하는 전략이 효율적이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "자주 묻는 질문" }]
+    },
+    {
+      "type": "qna",
+      "attrs": {
+        "question": "HSK 몇 급부터 따는 게 의미가 있나요?"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "이력서에 기재하려면 최소 4급부터 의미가 있다. 1~3급은 기초 수준으로 인정되어 취업이나 유학에서 경쟁력이 되지 않는다. 취업을 목표로 한다면 5급 이상, " },
+            { "type": "text", "text": "통역가", "marks": [{ "type": "link", "attrs": { "href": "/job/통역가" } }] },
+            { "type": "text", "text": "나 " },
+            { "type": "text", "text": "번역가", "marks": [{ "type": "link", "attrs": { "href": "/job/번역가" } }] },
+            { "type": "text", "text": " 같은 전문직을 목표로 한다면 6급 고득점(250점 이상)이 필요하다. 다만 중국어를 처음 배우는 사람이라면 3급을 먼저 취득하여 기초를 다지고, 이후 4급 이상으로 올라가는 단계적 전략이 효과적이다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qna",
+      "attrs": {
+        "question": "PBT와 IBT 중 어떤 형식이 유리한가요?"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "대부분의 수험생에게는 IBT가 유리하다. IBT는 병음을 입력하면 한자 후보가 나타나는 방식이라 한자 필기 부담이 크게 줄어들며, 실제로 4급 기준 합격률이 PBT 63% 대비 IBT 73%로 10%포인트 높다. 다만 6급 쓰기처럼 긴 문장을 빠르게 작성해야 하는 경우, 타이핑 속도가 느리면 오히려 PBT가 유리할 수 있다. 또한 IBT는 듣기 영역에서 메모를 하기 어려운 환경일 수 있으므로, 사전에 모의시험 프로그램으로 연습해보고 결정하는 것이 좋다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qna",
+      "attrs": {
+        "question": "HSK 성적 유효기간이 2년인데, 만료되면 어떻게 되나요?"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "공식적으로 HSK 성적은 취득일로부터 2년간 유효하다. 유효기간이 지나면 중국 대학 입학이나 장학금 신청 등 공식 절차에서 인정되지 않으므로 다시 응시해야 한다. 다만 국내 기업 채용에서는 유효기간을 엄격히 적용하지 않는 경우도 있어, 만료된 성적도 중국어 학습 이력의 참고 자료로 활용되기도 한다. 그래도 가능하면 취업이나 유학 목표 시점에 맞춰 역산하여 응시 계획을 세우는 것이 안전하다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qna",
+      "attrs": {
+        "question": "HSK 3.0이 시행되면 기존 2.0 성적은 인정되지 않나요?"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "기존 HSK 2.0 성적은 유효기간(2년) 내라면 계속 인정된다. 다만 HSK 3.0이 정식 시행(2026년 7월)된 후에는 두 체계가 병행 운영될 예정이지만, 장기적으로는 3.0으로 통합될 가능성이 높다. 따라서 현재 2.0 체계에서 성적을 확보해야 하는 상황이라면 서둘러 응시하는 것이 현명하고, 시간 여유가 있다면 3.0의 확대된 어휘와 말하기 통합을 고려하여 준비 계획을 다시 세우는 것이 좋다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qna",
+      "attrs": {
+        "question": "비전공자도 독학으로 HSK 5급 합격이 가능한가요?"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "충분히 가능하다. 실제로 비전공자가 약 5개월간 하루 3시간씩 독학하여 5급에 합격한 사례가 다수 보고되어 있다. 핵심은 2,500개 필수 어휘를 체계적으로 암기하고, 기출문제를 반복 풀이하며, 듣기를 1.2배속으로 훈련하는 것이다. 학원에 다니지 않더라도 '단어장 + 종합서 + 모의고사' 3종 세트만 확보하면 독학으로 충분하다. 다만 6급은 5,000개 어휘와 장문 쓰기가 요구되어 독학 난이도가 크게 올라가므로, 5급까지 독학 후 6급은 인강이나 스터디그룹을 병행하는 것을 추천한다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "HSK, 결국 중요한 것은 목적에 맞는 전략이다" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "HSK는 중국어 능력을 객관적으로 증명할 수 있는 가장 범용적이고 공신력 있는 시험이다. 하지만 단순히 높은 급수를 따는 것이 목적이 되어서는 안 된다. 취업이 목표라면 최소 5급 이상을 확보하되 목표 기업이 실제로 어떤 수준을 요구하는지 확인해야 하고, 유학이 목표라면 희망 대학의 입학 요건에 맞춰야 한다. " },
+            { "type": "text", "text": "무역사무원", "marks": [{ "type": "link", "attrs": { "href": "/job/무역사무원" } }] },
+            { "type": "text", "text": "이나 " },
+            { "type": "text", "text": "해외영업원", "marks": [{ "type": "link", "attrs": { "href": "/job/해외영업원" } }] },
+            { "type": "text", "text": "을 꿈꾼다면 HSK와 함께 BCT를 병행하는 것도 좋고, " },
+            { "type": "text", "text": "통역가", "marks": [{ "type": "link", "attrs": { "href": "/job/통역가" } }] },
+            { "type": "text", "text": "를 목표로 한다면 HSK 6급 고득점과 HSKK 고급을 함께 준비해야 한다. 2026년 7월 HSK 3.0의 시행이라는 큰 변화도 눈앞에 다가왔다. 지금이 바로 자신의 목표를 명확히 하고, 그에 맞는 학습 전략을 세울 때이다." }
+          ]
+        }
+      ]
+    }
+  ]
+}

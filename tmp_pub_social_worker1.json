@@ -1,0 +1,724 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "사회복지사 1급, 왜 따야 하는가" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "사회복지사 2급만으로도 현장에서 일할 수는 있다. 하지만 " },
+        { "type": "text", "text": "시설장 자격, 7급 공무원 응시, 전문사회복지사 수련", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " — 사회복지 분야에서 한 단계 더 나아가려면 1급이 반드시 필요하다" },
+        { "type": "footnote", "attrs": { "id": 1, "text": "Q-Net, 사회복지사 1급 자격 안내", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=L&gId=52" } },
+        { "type": "text", "text": ". 사회복지사 1급은 보건복지부가 관할하고 한국산업인력공단이 시행하는 국가자격시험으로, 사회복지 분야의 최상위 자격증이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2급과 1급의 차이는 단순한 등급 차이가 아니다. 2급은 전문대 이상 학력에 17과목 이수와 현장실습 160시간만 채우면 " },
+        { "type": "text", "text": "시험 없이 취득", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "할 수 있다. 반면 1급은 2급을 기반으로 국가시험(객관식 필기)에 합격해야 한다. 이 시험 하나를 통과하느냐에 따라 급여, 승진, 진출 경로가 완전히 달라진다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비교 항목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사회복지사 2급" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사회복지사 1급" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "취득 방식" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교과목 이수 + 실습 (시험 없음)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급 취득 후 국가시험 합격" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시설장 자격" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "불가" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가능" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "공무원 응시" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "9급만 가능" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "7급 응시 가능" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전문사회복지사 수련" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "불가" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "의료·정신건강·학교 수련 가능" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "급여 차이" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기본급 기준" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "월 30만~50만 원 추가" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "특히 고령화 사회 진입과 정신건강 분야 수요 확대로 " },
+        { "type": "text", "text": "사회복지사", "marks": [{ "type": "link", "attrs": { "href": "/job/사회복지사" } }] },
+        { "type": "text", "text": "의 역할은 계속 커지고 있다. AI가 대체하기 어려운 대면 서비스 직종이라는 점에서 장기적 전망도 밝다. 사회복지 분야에서 전문성을 인정받고 싶다면, 1급은 선택이 아닌 필수다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "응시 자격과 사전 준비" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "사회복지사 1급 시험에 응시하려면 " },
+        { "type": "text", "text": "사회복지사 2급 자격증", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이 반드시 있어야 한다. 2급 없이 바로 1급에 도전하는 것은 불가능하다" },
+        { "type": "footnote", "attrs": { "id": 2, "text": "studygov, 사회복지사 자격증 취득 가이드", "url": "https://studygov.kr/blog/0178-social-worker-certification/" } },
+        { "type": "text", "text": ". 학력에 따라 응시까지의 경로가 달라진다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "4년제 대학 졸업자: 사회복지사 2급 취득 즉시 응시 가능" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전문대(2~3년제) 졸업자: 2급 취득 후 1년 이상 실무경력 필요" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "고졸: 2급 취득 후 3년 이상 실무경력 필요" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "아직 2급이 없는 경우라면 먼저 2급을 취득해야 한다. " },
+        { "type": "text", "text": "사회복지학과", "marks": [{ "type": "link", "attrs": { "href": "/major/사회복지학과" } }] },
+        { "type": "text", "text": " 또는 " },
+        { "type": "text", "text": "사회복지상담과", "marks": [{ "type": "link", "attrs": { "href": "/major/사회복지상담과" } }] },
+        { "type": "text", "text": "를 졸업하면 재학 중 과목 이수가 가능하다. 비전공자는 학점은행제를 통해 전문대 이상 학력 + 사회복지 관련 17과목 이수 + 현장실습 160시간(세미나 30시간 포함 총 190시간)을 충족해야 한다. 학점은행제로 2급을 취득하는 데 보통 1년~1년 6개월, 비용은 약 40만~80만 원이 소요된다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "이미 2급을 갖고 있고 4년제 졸업이라면 곧바로 시험 준비에 돌입하면 된다. 매년 12월 초에 접수가 시작되고 1월에 시험이 치러지므로, 시험 6개월 전인 7~8월부터 학습 계획을 세우는 것이 이상적이다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "시험 구조와 합격 기준" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "사회복지사 1급 시험은 " },
+        { "type": "text", "text": "객관식 5지 선다형 200문항", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로 구성된다. 3교시에 걸쳐 총 200분 동안 진행되며, 8개 과목을 한 번에 치르는 마라톤 시험이다" },
+        { "type": "footnote", "attrs": { "id": 3, "text": "welfarenote, 2026년 사회복지사 1급 시험 과목·난이도 분석", "url": "https://welfarenote.com/2026%EB%85%84-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95-%EA%B3%BC%EB%AA%A9-%EC%9D%91%EC%8B%9C-%EC%9E%90%EA%B2%A9-%EB%82%9C%EC%9D%B4%EB%8F%84/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교시" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "영역" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문항 수" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시간" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과락 기준" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1교시" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사회복지기초" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "인간행동과 사회환경, 사회복지조사론" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "50문항" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "50분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "20문항 미만 시 과락" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2교시" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사회복지실천" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실천론, 실천기술론, 지역사회복지론" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "75문항" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "75분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "30문항 미만 시 과락" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3교시" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사회복지정책과 제도" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "정책론, 행정론, 법제론" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "75문항" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "75분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "30문항 미만 시 과락" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "합격 기준은 " },
+        { "type": "text", "text": "총점 200점 중 120점 이상(60%)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이면서, 각 교시별로 40% 이상을 넘겨야 한다. 총점이 아무리 높아도 한 영역에서 과락이면 불합격이다. 특히 3교시 법제론·정책론은 매년 난이도 변동이 크고 개정 법률이 출제되기 때문에, 많은 수험생이 3교시에서 좌절한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "시험은 연 1회, 매년 1월 셋째 주 토요일에 실시된다. 2026년(제24회) 기준 시험일은 1월 17일이었고, 접수는 2025년 12월 8일~12일에 진행되었다" },
+        { "type": "footnote", "attrs": { "id": 4, "text": "보건복지부, 제24회 사회복지사 1급 시험 공고", "url": "https://www.mohw.go.kr/board.es?act=view&bid=0003&list_no=1483327&mid=a10501010000" } },
+        { "type": "text", "text": ". 접수는 Q-Net(한국산업인력공단)을 통해 온라인으로만 가능하며, 응시료는 20,000원이다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "최근 5년 합격률과 난이도 분석" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "사회복지사 1급의 합격률은 연도별로 큰 편차를 보인다. 2021년 60.4%에서 2024년 29.7%까지 떨어지기도 했다" },
+        { "type": "footnote", "attrs": { "id": 5, "text": "procred, 사회복지사 1급 합격률 39.44% — 2026 시험 합격기준", "url": "https://procred.zeronoa.com/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%ED%95%A9%EA%B2%A9%EB%A5%A0-39-44-2026-%EC%8B%9C%ED%97%98-%ED%95%A9%EA%B2%A9%EA%B8%B0%EC%A4%80%EC%9D%80/" } },
+        { "type": "text", "text": ". 평균적으로 35~40% 수준이며, 2~3명 중 1명이 합격하는 난이도다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연도" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "회차" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시자" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격자" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격률" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2021" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제19회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "28,391명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "17,158명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "60.4%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2022" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제20회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "24,248명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "8,753명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "36.1%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2023" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제21회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "24,119명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "9,673명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "40.1%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2024" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제22회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "25,458명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "7,554명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "29.7%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2025" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제23회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "25,305명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "9,830명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "38.8%" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "합격률을 좌우하는 핵심 변수는 " },
+        { "type": "text", "text": "3교시 난이도", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "다. 법제론과 정책론에서 개정 법률이 많이 출제된 해에는 합격률이 30% 초반까지 급락한다" },
+        { "type": "footnote", "attrs": { "id": 6, "text": "sgeedu, 사회복지사 1급 합격률과 최근 5년 통계 분석", "url": "https://sgeedu.kr/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%ED%95%A9%EA%B2%A9%EB%A5%A0%EA%B3%BC-%EC%B5%9C%EA%B7%BC-5%EB%85%84-%ED%86%B5%EA%B3%84-%EB%B6%84%EC%84%9D/" } },
+        { "type": "text", "text": ". 2024년 29.7%가 대표적이다. 반대로 법제론이 평이하게 출제되면 60%까지 올라가기도 한다. 이런 변동성이 수험생들에게 불안 요소인데, 결국 3교시를 얼마나 철저히 준비하느냐가 합격의 관건이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "난이도는 중상 수준으로 평가된다. 8과목 200문항이라는 방대한 범위, 과락 제도, 법률 개정 반영이 주요 난이도 요인이다. 하지만 절대평가(60% 이상)라는 점에서, 충분히 준비하면 합격은 어렵지 않다. 핵심은 꾸준한 기출 반복이다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "과목별 공부 전략과 학습 계획" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "합격을 위한 권장 학습 기간은 " },
+        { "type": "text", "text": "3~6개월", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 초시생이라면 6개월, 재시생이나 현직 사회복지사라면 1~2개월 단기 집중도 가능하다" },
+        { "type": "footnote", "attrs": { "id": 7, "text": "brunch, 사회복지사 1급 독학 합격 후기", "url": "https://brunch.co.kr/@daisyday/17" } },
+        { "type": "text", "text": ". 학습은 4단계로 나누어 접근하는 것이 효과적이다." }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "진단 (1주)", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 최근 기출문제 1회분을 풀어 현재 실력을 파악한다. 120점 이상이면 기출 중심 학습, 미만이면 이론 학습을 병행한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "이론 학습 (4~8주)", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 인강이나 기본서로 8과목 전체를 1회독한다. 깊게 파지 않고 핵심 개념 위주로 빠르게 훑는다. 인강은 1.5~2배속으로 듣는 것이 시간 효율적이다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "기출 회독 (4~6주)", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 최근 5개년 기출문제를 최소 3회 반복한다. 오답노트를 작성하며 취약 과목을 집중 보강한다. 기출 반복 출제율이 60% 이상이므로, 이 단계가 합격의 핵심이다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "파이널 정리 (2~3주)", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 요약집으로 전 과목 마무리하고, 모의고사로 시간 배분을 연습한다. 문항당 1분을 기준으로 풀어보는 훈련이 필요하다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "과목별 특성을 이해하면 전략을 더 정밀하게 세울 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "1교시 사회복지기초", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "(인간행동과 사회환경 + 조사론)는 이론 암기 비중이 높다. 인간행동은 발달이론·성격이론 중심으로 학습하고, 조사론은 연구방법론 용어를 정리하면 된다. 난이도는 중간 수준이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2교시 사회복지실천", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "(실천론 + 실천기술론 + 지역사회복지론)은 사례 적용 문제가 많다. 과제중심모델, 위기개입모델 등 실천모델 간 비교 정리가 중요하다. 기출 반복 출제율이 높아 기출만 잘 돌려도 안정적으로 점수를 확보할 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "3교시 사회복지정책과 제도", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "(정책론 + 행정론 + 법제론)는 " },
+        { "type": "text", "text": "가장 어려운 영역", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 법제론은 매년 개정 법률이 반영되므로 반드시 최신 교재를 사용해야 한다. 정책론은 이론가·모형 암기, 행정론은 조직이론 위주로 공부한다. 3교시만큼은 최신 법률 동향을 확인하는 것이 필수다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-social-worker1-img1.webp",
+        "alt": "사회복지사 1급 시험 과목별 공부 전략",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "공부의 핵심 원칙은 명확하다. 목표는 만점이 아니라 합격(120점)이므로 완벽주의를 버려야 한다. 과락만 피하겠다는 마인드로 접근하되, 기출 3회독을 반드시 완료하는 것이 합격의 정석이다" },
+        { "type": "footnote", "attrs": { "id": 8, "text": "impass, 사회복지사 1급 합격 수기", "url": "https://www.impass.co.kr/Exam_review_1/?bmode=view&idx=17593697" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "인강 추천과 비용 총정리" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "독학이 가능한 시험이지만, 인강을 활용하면 학습 효율이 크게 올라간다. 주요 인강 플랫폼을 비교하면 다음과 같다" },
+        { "type": "footnote", "attrs": { "id": 9, "text": "procred, 2026 사회복지사 1급 인강 추천 TOP 3", "url": "https://procred.zeronoa.com/2026-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%9D%B8%EA%B0%95-%EC%B6%94%EC%B2%9C%EB%AC%B4%EB%A3%8C-%ED%8F%AC%ED%95%A8-top-3/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "플랫폼" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "특징" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "추천 대상" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가격대" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "에듀윌" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "체계적 커리큘럼, 합격 환급제" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "초시생, 관리형 학습 선호" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "30만~50만 원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "박문각" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "핵심 압축, 빠른 회독 중심" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "재시생, 단기 합격 목표" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "20만~40만 원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "해커스" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가성비 우수, 실전 문풀 강점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가성비 중시, 기본 이수자" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "20만~35만 원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "EBS" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "저렴한 가격, 기본서 패키지" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비용 절약 원하는 수험생" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 20만~29만 원" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "무료 리소스도 활용할 수 있다. 해커스 무료 특강(시험 시즌 공개), EBS 일부 무료 강의, 유튜브 기출 해설 영상이 대표적이다. Q-Net에서는 기출문제를 무료로 다운로드할 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "비용을 시나리오별로 정리하면 이렇다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "최소 비용", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": ": 무료 인강 + 기출문제집 + 응시료 = 약 3.5만~5만 원" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "표준 비용", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": ": 인강 1개 + 기본서 + 기출문제집 + 응시료 = 약 25만~40만 원" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "프리미엄", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": ": 프리미엄 인강 + 기본서 세트 + 모의고사 + 응시료 = 약 40만~60만 원" }
+        ] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "국민내일배움카드를 활용하면 인강 비용을 대폭 줄일 수 있다" },
+        { "type": "footnote", "attrs": { "id": 10, "text": "silver.introvertsnail, 사회복지사 1급 인강 추천 — 핵심 전략 및 비용·국비지원", "url": "https://silver.introvertsnail.co.kr/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%9D%B8%EA%B0%95-%EC%B6%94%EC%B2%9C-%ED%95%B5%EC%8B%AC-%EC%A0%84%EB%9E%B5-%EB%B0%8F-%EB%B9%84%EC%9A%A9%EA%B5%AD%EB%B9%84%EC%A7%80%EC%9B%90/" } },
+        { "type": "text", "text": ". 합격 환급제가 있는 인강을 선택하면 실질 부담도 줄어든다. 단, 아직 2급이 없는 경우 학점은행제 비용(약 40만~80만 원)이 추가된다는 점을 감안해야 한다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "취업처·연봉과 1급의 실질적 가치" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "사회복지사 1급을 취득하면 진출할 수 있는 분야가 확연히 넓어진다. 2026년 기준 4급 1호봉 기본급은 월 2,281,800원이며, 제수당 포함 연봉으로 환산하면 약 3,200만~3,500만 원이다" },
+        { "type": "footnote", "attrs": { "id": 11, "text": "geteduify, 2026 사회복지사 월급 호봉표 및 복지수당 총정리", "url": "https://geteduify.com/career-guidance/2026-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-%EC%9B%94%EA%B8%89-%ED%98%B8%EB%B4%89%ED%91%9C-%EB%B0%8F-%EB%B3%B5%EC%A7%80%EC%88%98%EB%8B%B9-%EC%B4%9D%EC%A0%95%EB%A6%AC/" } },
+        { "type": "text", "text": ". 전년 대비 3.5% 인상되었다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "분야별 연봉 수준을 살펴보면, 공공기관·행정기관이 3,800만~4,500만 원으로 가장 높고, 정신건강기관(3,700만~4,300만 원), 병원·의료기관(3,500만~4,200만 원)이 뒤를 잇는다. 복지관·생활시설은 2,800만~3,400만 원, 민간·비영리단체는 2,500만~3,500만 원 수준이다" },
+        { "type": "footnote", "attrs": { "id": 12, "text": "samsungedu, 사회복지사 1급 취업처별 연봉 비교", "url": "https://samsungedu.kr/sge/bbs/board.php?bo_table=with&wr_id=256" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "1급이 제공하는 가장 큰 실익은 " },
+        { "type": "text", "text": "경력 경로의 확장", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 크게 네 가지 경로가 열린다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "임상 경로", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": ": 1급 취득 후 정신건강사회복지사 또는 의료사회복지사 수련(1년 1,000시간)을 거쳐 병원·정신건강기관에 취업한다. 의료사회복지사는 전문사회복지사 중 처우가 가장 높다(대형사립병원 4,000만 원 이상)." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "공직 경로", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": ": 사회복지직 공무원 7급에 응시할 수 있다. 2급은 9급만 가능하므로, 1급이 공직 진출의 실질적 관문이 된다. 공무원은 연금·복리후생 면에서 안정성이 높다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "관리 경로", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": ": 사회복지시설 시설장 자격이 부여된다. 복지관이나 시설 운영·관리직으로 승진할 때 1급은 필수 조건이다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "교육 경로", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": ": " },
+          { "type": "text", "text": "학교사회복지사", "marks": [{ "type": "link", "attrs": { "href": "/job/학교사회복지사" } }] },
+          { "type": "text", "text": " 수련을 통해 초·중·고등학교나 Wee센터에서 근무할 수 있다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "부가 수당도 참고할 만하다. 가족수당(첫째 5만 원, 둘째 8만 원, 셋째 이상 12만 원), 명절 상여금(기본급 60% x 연 2회), 야간근무 가산금 등이 있다" },
+        { "type": "footnote", "attrs": { "id": 13, "text": "보건복지부, 2026년 사회복지시설 종사자 처우 개선 기준", "url": "https://www.mohw.go.kr/board.es?mid=a10413000000&bid=0021&act=view&list_no=1484230" } },
+        { "type": "text", "text": ". 2026년에는 유급병가 제도가 공식화되었고, 5인 미만 소규모 시설에도 야간근무 가산금이 적용되는 등 처우 개선이 이루어지고 있다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "전문사회복지사 — 1급 이후의 선택지" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "사회복지사 1급은 그 자체로 완결이 아니다. 1급을 기반으로 전문사회복지사 자격에 도전할 수 있고, 이때 전문성과 처우가 한 단계 더 올라간다" },
+        { "type": "footnote", "attrs": { "id": 14, "text": "wean, 전문사회복지사(의료·정신건강·학교) 자격 취득 방법·연봉 비교", "url": "https://wean.co.kr/entry/%EC%A0%84%EB%AC%B8-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-%EC%9D%98%EB%A3%8C-%EC%A0%95%EC%8B%A0%EA%B1%B4%EA%B0%95-%ED%95%99%EA%B5%90-%EC%9E%90%EA%B2%A9-%EC%B7%A8%EB%93%9D-%EB%B0%A9%EB%B2%95-%EC%97%B0%EB%B4%89-%EB%B9%84%EA%B5%90" } },
+        { "type": "text", "text": ". 세 가지 전문 분야가 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "정신건강사회복지사", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "는 전문사회복지사 중 취업처가 가장 많다. 정신건강복지센터, 정신의료기관, 중독관리센터 등에서 일한다. 1급 취득 후 정신건강 관련 수련기관에서 1년 1,000시간 수련과 학습평가를 통과하면 취득할 수 있다" },
+        { "type": "footnote", "attrs": { "id": 15, "text": "한국정신건강사회복지사협회, 정신건강사회복지사 자격안내", "url": "https://kamhsw.or.kr/info1" } },
+        { "type": "text", "text": ". 초봉은 약 3,000만 원이며 경력에 따라 4,300만 원까지 올라간다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "의료사회복지사", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "는 대학병원·종합병원 사회사업팀에서 근무한다. 취업처가 가장 적지만 처우가 가장 높다. 대형 사립병원 기준 4,000만 원 이상을 기대할 수 있다. 1급 취득 후 병원 수련기관에서 1년 1,000시간 수련과 자격시험에 합격해야 한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "학교사회복지사", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "는 초·중·고등학교와 Wee센터에서 학생들의 복지를 지원한다. 1급 + 학교사회복지론 이수 + 1년 1,000시간 수련으로 취득하며, 시험 없이 자격증이 발급된다. 전문사회복지사 중 처우가 가장 낮은 편이지만, 교육 분야에 관심이 있다면 의미 있는 경로다. " },
+        { "type": "text", "text": "청소년상담사", "marks": [{ "type": "link", "attrs": { "href": "/job/청소년상담사" } }] },
+        { "type": "text", "text": "와 협업하는 경우도 많다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "어떤 전문 분야를 선택하든, 출발점은 사회복지사 1급이다. 임상 분야로 갈지, 공공 분야로 갈지, 관리직으로 갈지는 1급을 취득한 뒤에 결정해도 늦지 않다." }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "시험 당일 실수를 줄이는 체크리스트" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "신분증(주민등록증·운전면허증·여권)과 수험표를 반드시 지참한다. 학생증이나 공무원증은 인정되지 않는다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3교시까지 이어지는 장시간 시험이므로 간식과 음료를 챙긴다. 중간 휴식 시간은 짧다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "법제론에서 최신 개정 법률 문제가 나올 수 있다. 시험 직전까지 개정 사항을 확인한다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과락에 유의한다. 총점이 높아도 한 영역이라도 40% 미만이면 불합격이다. 어려운 문항에 지나치게 시간을 쏟지 않는다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "OMR 마킹 실수를 방지하기 위해 10문항 단위로 마킹하는 습관을 들인다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "의견진술 기간(시험 당일~1주일)에 이의 제기가 필요한 문항이 있으면 반드시 제출한다." }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "자주 묻는 질문" }]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자도 사회복지사 1급을 딸 수 있나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가능하다. 학점은행제를 통해 사회복지 관련 17과목을 이수하고 현장실습을 마치면 2급을 취득할 수 있고, 이후 1급 시험에 응시할 수 있다. 비전공자도 1년~1년 6개월이면 2급 취득이 가능하다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "독학만으로 합격할 수 있나요? 인강이 필수인가요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "독학 합격이 충분히 가능하다. 기출문제 3회독과 요약집 중심으로 공부하면 된다. 다만 초시생이라면 인강으로 전체 구조를 한 번 잡는 것이 효율적이다. 무료 특강과 유튜브 기출 해설도 좋은 대안이 된다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험에 떨어지면 바로 재응시가 가능한가요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험이 연 1회(매년 1월)이므로, 불합격 시 다음 해까지 기다려야 한다. 요양보호사처럼 매월 시험이 열리는 것이 아니라, 한 번의 기회를 놓치면 1년을 더 준비해야 한다는 점에서 부담이 크다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사회복지사 1급과 임상심리사, 어떤 것을 먼저 따야 하나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "목표에 따라 다르다. 사회복지 현장(복지관, 공무원, 시설)에서 일하고 싶다면 사회복지사 1급이 우선이다. 심리상담·치료 분야에 관심이 있다면 " },
+          { "type": "text", "text": "임상심리사", "marks": [{ "type": "link", "attrs": { "href": "/job/임상심리사" } }] },
+          { "type": "text", "text": "를 고려해볼 수 있다. 두 자격을 모두 갖추면 정신건강 분야에서 시너지가 크다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사회복지사 연봉이 낮다고 하던데, 1급을 따면 얼마나 달라지나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급 대비 월 30만~50만 원 정도 차이가 난다. 하지만 더 큰 차이는 진출 경로다. 1급이 있어야 시설장 자격, 7급 공무원 응시, 전문사회복지사 수련이 가능하다. 공공기관이나 병원으로 진출하면 연봉 4,000만 원 이상도 가능하므로, 단순 급여 차이보다 커리어 확장 측면에서 1급의 가치가 크다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3교시 법제론이 너무 어렵습니다. 포기해도 되나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "절대 포기하면 안 된다. 3교시에서 과락(75문항 중 30문항 미만)이면 총점에 관계없이 불합격이다. 법제론이 어렵게 느껴진다면 최신 개정 법률 위주로 공부 범위를 좁히고, 기출에서 반복 출제되는 핵심 법조문에 집중하는 것이 현실적인 전략이다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사회복지학과 졸업이 아닌데, 관련 전공은 어떤 것이 있나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "사회복지사 2급 취득이 가능한 관련 학과는 다양하다. " },
+          { "type": "text", "text": "아동복지학과", "marks": [{ "type": "link", "attrs": { "href": "/major/아동복지학과" } }] },
+          { "type": "text", "text": ", " },
+          { "type": "text", "text": "노인복지학과", "marks": [{ "type": "link", "attrs": { "href": "/major/노인복지학과" } }] },
+          { "type": "text", "text": ", " },
+          { "type": "text", "text": "심리학과", "marks": [{ "type": "link", "attrs": { "href": "/major/심리학과" } }] },
+          { "type": "text", "text": ", " },
+          { "type": "text", "text": "사회학과", "marks": [{ "type": "link", "attrs": { "href": "/major/사회학과" } }] },
+          { "type": "text", "text": " 등에서도 사회복지 관련 과목을 이수하면 2급을 취득할 수 있다. 핵심은 17과목 이수 + 현장실습 충족 여부다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "사회복지사 1급, 도전할 만한 가치가 있는가" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격률 35~40%의 국가시험이지만, 절대평가(60% 이상)이므로 기출 3회독으로 충분히 합격 가능하다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시설장 자격, 7급 공무원 응시, 전문사회복지사 수련 — 1급 없이는 열리지 않는 문이 많다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3~6개월 학습이면 합격 수준에 도달할 수 있으며, 비용은 최소 3.5만 원부터 가능하다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "고령화 사회 진입과 정신건강 수요 확대로 장기 전망이 밝고, AI 대체 위험이 낮은 직종이다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급만으로도 현장 진출은 가능하지만, 전문성과 처우를 모두 높이고 싶다면 1급은 반드시 거쳐야 할 관문이다." }] }] }
+          ]
+        }
+      ]
+    }
+  ]
+}

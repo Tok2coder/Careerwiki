@@ -1,0 +1,148 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "WXU7--91EVm1GI5umyNtHBi3oAw",
+  "nextPageToken": "CAQQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 94264,
+    "resultsPerPage": 4
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "xlWsFAqUZfWgtndzKi0HPWshXro",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "uWLh-JZSr0M"
+      },
+      "snippet": {
+        "publishedAt": "2023-12-07T09:15:02Z",
+        "channelId": "UCbAWONMYQEBeD-2YxRVdxjA",
+        "title": "청소년상담사 가장 쉽게 시작하는 방법  (+자격증 공부법)",
+        "description": "청소년 상담사의 인기는 갈수록 높아지고 있습니다. 국가공인 자격증인데다 학교, 병원, 상담센터 등에 취업할 수 있어 취업률이 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/uWLh-JZSr0M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/uWLh-JZSr0M/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/uWLh-JZSr0M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "진프로의 학점관리",
+        "liveBroadcastContent": "none",
+        "publishTime": "2023-12-07T09:15:02Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "ACA9UQa_yMe0u8vDUpQ1Bqc4DLM",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "SSLGy7quhv8"
+      },
+      "snippet": {
+        "publishedAt": "2023-09-29T10:00:32Z",
+        "channelId": "UC_eiybz8mHFwAPbISM_hDYw",
+        "title": "청소년상담사3급 취업률, 응시자격, 비전공자 준비 방법 총정리 (학점은행제)",
+        "description": "청소년상담사 학점은행제 관련 문의사항↓↓클릭↓↓     ▷https://forms.gle/Peowhpusz1EzPr4F6 취업률 82.1% 아니, 국가자격증 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/SSLGy7quhv8/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/SSLGy7quhv8/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/SSLGy7quhv8/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "가치있는 시간 l 가시TV",
+        "liveBroadcastContent": "none",
+        "publishTime": "2023-09-29T10:00:32Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "Jfrq2q8h5cCup6-Q67hgRWZ1gI8",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "rgIeDXdG24k"
+      },
+      "snippet": {
+        "publishedAt": "2022-01-11T08:54:09Z",
+        "channelId": "UCXiDRPxhL1i7rVJQrtziwCA",
+        "title": "직업상담사 이상 vs 현실 #Shorts",
+        "description": "직업상담사의 이상과 현실!! 재미로만 봐주세요:) #Shorts.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/rgIeDXdG24k/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/rgIeDXdG24k/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/rgIeDXdG24k/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "잡파인더",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-01-11T08:54:09Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "_84chjAHIpS-J25oeASJqMhDVbQ",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "msDaLXLDBAc"
+      },
+      "snippet": {
+        "publishedAt": "2021-06-23T06:26:14Z",
+        "channelId": "UCup4xX9m8LLVKVvIJU_B6UQ",
+        "title": "청소년상담사의 모든 것! 자격증? 취업? 궁금하다면~ [토크레인] ｜상담사, 위클래스, 청소년심리",
+        "description": "모든 자격증/시험 정보를 파헤친다! 토크레인   손광민 청소년상담사님과 함께 알아보는 청소년상담사의 A to Z 청소년상담사가 되는 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/msDaLXLDBAc/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/msDaLXLDBAc/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/msDaLXLDBAc/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "합격의 공식 - 시대에듀",
+        "liveBroadcastContent": "none",
+        "publishTime": "2021-06-23T06:26:14Z"
+      }
+    }
+  ]
+}

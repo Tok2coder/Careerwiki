@@ -1,0 +1,862 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "UemUbR5PVjdL1LsEHHp8tX1WvC8",
+  "nextPageToken": "CAQQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 1000000,
+    "resultsPerPage": 25
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "PCBJe2H-quan0L0XQRijmUEJcqo",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "bxtXF6k2iUA"
+      },
+      "snippet": {
+        "publishedAt": "2025-02-07T07:00:31Z",
+        "channelId": "UC5YKCgA3WR9NBQNQTs7BTsA",
+        "title": "현직 기자 피셜, 기자라는 직업은 #shorts",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/bxtXF6k2iUA/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/bxtXF6k2iUA/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/bxtXF6k2iUA/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "캐치TV",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-02-07T07:00:31Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "fc6j15esMQLLHQ7FxDMkyrLyVxM",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "gDnl8bYKmvI"
+      },
+      "snippet": {
+        "publishedAt": "2023-05-09T09:00:29Z",
+        "channelId": "UCWiS4vemV0wcxuxYPx9Z62g",
+        "title": "기..기레기? 충주맨의 기자 체험ㅣ동아일보 1편",
+        "description": "공무원계의 워크맨, 동아일보사와 함께합니다 ▷ 매주 화 오후 6시 공개 #충주시 #홍보맨 #동아일보.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/gDnl8bYKmvI/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/gDnl8bYKmvI/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/gDnl8bYKmvI/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "충주시",
+        "liveBroadcastContent": "none",
+        "publishTime": "2023-05-09T09:00:29Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "fcJQnSq7u7RB74dE2YzFMzXGClg",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "6W1mA7GoqTQ"
+      },
+      "snippet": {
+        "publishedAt": "2024-07-22T11:00:11Z",
+        "channelId": "UC5YKCgA3WR9NBQNQTs7BTsA",
+        "title": "퇴근길에 만난 언론사 기자 연봉 수준 #shorts",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/6W1mA7GoqTQ/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/6W1mA7GoqTQ/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/6W1mA7GoqTQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "캐치TV",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-07-22T11:00:11Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "G2NNu4dMzVb5p7kD6UM-zaqAQDE",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "_d0fpss8JVc"
+      },
+      "snippet": {
+        "publishedAt": "2022-01-14T01:00:03Z",
+        "channelId": "UCdp4_yTBhQmB8E339Lafzow",
+        "title": "기자 생활이 궁금해~? 이 영상 하나로 해결! 신문기자와 방송기자 생활 밀착 탐구",
+        "description": "조선닷컴 공식 홈페이지 http://www.chosun.com 조선일보 무료 구독 체험 http://bit.ly/2WnNAF7 조선비즈 공식 홈페이지 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/_d0fpss8JVc/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/_d0fpss8JVc/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/_d0fpss8JVc/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "조선일보",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-01-14T01:00:03Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "Ml7zykzLh5rWwXE90FKHowbbPKw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "G3uUK_T89v4"
+      },
+      "snippet": {
+        "publishedAt": "2022-04-08T11:15:01Z",
+        "channelId": "UCaSHsWmh1CK8ptMAqSzDFCA",
+        "title": "‘방송 기자’의 삶이 매력적인 이유 | 방송 기자가 되려면? | 방송 기자의 모든 것 | 직업 인터뷰 | 김우준 기자 | 진로,꿈 | 라이프코드 | 스터디코드 선배",
+        "description": "현직 방송 기자가 말하는 방송 기자의 삶. 엄청난 경쟁률을 뚫고 방송 기자가 되기까지의 과정부터 취재, 촬영 등 하나의 기사가 세상에 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/G3uUK_T89v4/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/G3uUK_T89v4/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/G3uUK_T89v4/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "라이프코드 LIFECODE",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-04-08T11:15:01Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "eF942LKePKedEUIPVOfbb3QAdmk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "lAIKlGSQm0g"
+      },
+      "snippet": {
+        "publishedAt": "2025-02-06T07:00:34Z",
+        "channelId": "UC5YKCgA3WR9NBQNQTs7BTsA",
+        "title": "언론고시 6개월 패스 기자의 합격 꿀팁 공개 #shorts",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/lAIKlGSQm0g/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/lAIKlGSQm0g/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/lAIKlGSQm0g/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "캐치TV",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-02-06T07:00:34Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "LnrM2FcmyG_B7PO1XWQEHs4HNlI",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "E46aCW5fIWI"
+      },
+      "snippet": {
+        "publishedAt": "2025-05-12T12:07:37Z",
+        "channelId": "UC4DQd04bg-36nfm-P_4uEbg",
+        "title": "검찰 송치되는 피의자에게 욕부터 박는 기자 ㅋㅋㅋㅋ 속시원",
+        "description": "기자회견 #인터뷰 #사이다 #속시원 #육투구 #스케치코미디 #SavageReporter #WhenReportersSnap.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/E46aCW5fIWI/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/E46aCW5fIWI/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/E46aCW5fIWI/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "육투구",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-05-12T12:07:37Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "I58gYf20SC38M3swM5vAz5TGoKw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "GfmSYrV4plc"
+      },
+      "snippet": {
+        "publishedAt": "2022-07-29T01:00:06Z",
+        "channelId": "UCec08LbjJ84RbUw5Zq6nRsQ",
+        "title": "방송국 취준생 필수 시청🔥 MBC 1년차 막내들의 직군별 취업 리얼 후기! (기자, 인사팀, 촬영감독)",
+        "description": "2022 MBC 공개채용 특집 X 뉴스안하니 '0:00 인트로 '0:40 경영지원(인사) '2:28 방송촬영 '5:34 취재기자&영상기자 안녕하세요 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/GfmSYrV4plc/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/GfmSYrV4plc/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/GfmSYrV4plc/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "뉴스안하니",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-07-29T01:00:06Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "Sqd08vQe9ZP7GEZeRUfxLxVPIDk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "NLqQxBrp_Rg"
+      },
+      "snippet": {
+        "publishedAt": "2026-03-26T09:24:59Z",
+        "channelId": "UCq4hrTYXG9NQUADOJdhYFSg",
+        "title": "여러 방송 출연하며 현타 온 민동기 기자 #최욱 #유시민 #김어준",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/NLqQxBrp_Rg/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/NLqQxBrp_Rg/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/NLqQxBrp_Rg/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "잼순신",
+        "liveBroadcastContent": "none",
+        "publishTime": "2026-03-26T09:24:59Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "5uIfP4y5pvYfySiGmTE1CBMNEyg",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "dZaCqvkcFpM"
+      },
+      "snippet": {
+        "publishedAt": "2022-01-28T09:02:42Z",
+        "channelId": "UCzs5LGntSWD6Tgp0RfSkInA",
+        "title": "기자는 무슨 일을 할까?/ 직업 인터뷰 - 기자 편",
+        "description": "직업의 모든 것을 파헤쳐 본다 기자란 무슨 일을 하는가? 술? 방송기자? 기레기? 술? 접대? #기자#방송기자#술#기레기#출입처# ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/dZaCqvkcFpM/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/dZaCqvkcFpM/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/dZaCqvkcFpM/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "관종기자 ESFP Reporter",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-01-28T09:02:42Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "bEH9NQVcra_qSYYll3xoHQUjO-8",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "Lotr4FHLp_E"
+      },
+      "snippet": {
+        "publishedAt": "2024-03-06T08:00:16Z",
+        "channelId": "UCtzQTFkq8UUfWO0lpFl-GvQ",
+        "title": "기자를 퇴사한 이유 l 연봉, 학력, 특종사건",
+        "description": "MBN 출신 기자에게 듣습니다 언론, 방송계에 몸담고 있거나 담았던 분들, 방송계 입사를 희망하시는 분들의 출연을 기다립니다 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Lotr4FHLp_E/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Lotr4FHLp_E/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Lotr4FHLp_E/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "방송국도비들",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-03-06T08:00:16Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "xZSBSK7zoMC2bSe-XBqcSn0Rmkc",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "sxOgh1NMKLM"
+      },
+      "snippet": {
+        "publishedAt": "2019-10-01T09:00:05Z",
+        "channelId": "UCtxgoIuaAaOowq0w-2MCaJg",
+        "title": "[직업탐구생활] KBS 기자가 알려주는 KBS 기자의 모든 것 by 플레이버튼",
+        "description": "KBS #방송국 #기자 KBS공채 취재기자들이 말하는 진짜 기자의 팩트 체크!! 엄청난 경쟁률을 뚫고 최종 합격해서 수습 뗀 지 얼마 안 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/sxOgh1NMKLM/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/sxOgh1NMKLM/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/sxOgh1NMKLM/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "901K",
+        "liveBroadcastContent": "none",
+        "publishTime": "2019-10-01T09:00:05Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "n-Rrn-5tNnytcAaD2zEBxPlTWII",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "1gcjKubSgJk"
+      },
+      "snippet": {
+        "publishedAt": "2024-07-01T04:20:35Z",
+        "channelId": "UC7veJl4E23uPDXoVu-0qYAA",
+        "title": "여의도 현실 취업 학벌 (feat. IT기업 부대표)",
+        "description": "구독+댓글+알림설정 #김민아의_잡으러갑니다 #잡으러갑니다 #잡플러스TV #한국산업인력공단 #취준생 #취준 #취업 #성공 #winner ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/1gcjKubSgJk/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/1gcjKubSgJk/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/1gcjKubSgJk/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "잡플러스TV",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-07-01T04:20:35Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "PvMVEPYzS23JQ6R9YRRwrKA8FMU",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "PpBFzP_ugEU"
+      },
+      "snippet": {
+        "publishedAt": "2020-10-11T06:15:01Z",
+        "channelId": "UCCwTQy5erJK34z9-VW1aMtQ",
+        "title": "방송기자의 하루 일과는_윤정식 기자[방송국 사람들 이야기 Q&amp;A]",
+        "description": "\"신문기자와 방송기자의 차이는 무엇인가요?\" \"방송기자의 하루 일과는 어떻게 되나요?\"   윤정식 기자님께 궁금한 것이 있다면?",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/PpBFzP_ugEU/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/PpBFzP_ugEU/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/PpBFzP_ugEU/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "SUBS 성균관대학교 방송국",
+        "liveBroadcastContent": "none",
+        "publishTime": "2020-10-11T06:15:01Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "d4uGfMaDShLVkGue5fHrnslBzmU",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "P7ls4zF0cP4"
+      },
+      "snippet": {
+        "publishedAt": "2025-09-08T11:05:52Z",
+        "channelId": "UCe2AvOyz8m5b0F52VdOFFrA",
+        "title": "극한직업이 아니라 ‘고발방송’이였던 편..",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/P7ls4zF0cP4/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/P7ls4zF0cP4/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/P7ls4zF0cP4/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "김세달",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-09-08T11:05:52Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "jUMXsMFkgIyIUoAzKgtsEQyuleA",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "Z1cmUoiHQx0"
+      },
+      "snippet": {
+        "publishedAt": "2023-03-14T12:37:25Z",
+        "channelId": "UC7Y_6b9EIzOjsQNnmFN7Kew",
+        "title": "연대생 방송기자 취준 시절 합격 스펙 | 대기업, 방송국 서류 합격률 100%",
+        "description": "instagram @lightofthewxrld 본 영상: https://www.youtube.com/watch?v=p1_aJAlCaqE&t=3s *이 영상은 유료광고 및 협찬을 포함 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Z1cmUoiHQx0/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Z1cmUoiHQx0/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Z1cmUoiHQx0/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "새니 SENI",
+        "liveBroadcastContent": "none",
+        "publishTime": "2023-03-14T12:37:25Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "UPQySkWeWsXEX286DTrpTbxceN0",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "ZzD2boHovd4"
+      },
+      "snippet": {
+        "publishedAt": "2026-03-25T16:01:00Z",
+        "channelId": "UCLbeGZqQdL-6iomO2-dWc6g",
+        "title": "[팩트광장] 매불쇼 최욱·유시민이 극찬한 유일한 기자! 이지선의 &#39;시청주의&#39; 찐반응 #매불쇼 #이지선기자 #시청주의 #최욱 #유시민 #팩트광장",
+        "description": "최고의 인기 방송 '매불쇼'에서 최욱과 유시민 작가가 인정한 언론인은 누구일까요? 바로 MBC 이지선 기자의 '시청주의'입니다!",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/ZzD2boHovd4/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/ZzD2boHovd4/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/ZzD2boHovd4/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "팩트광장",
+        "liveBroadcastContent": "none",
+        "publishTime": "2026-03-25T16:01:00Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "b0lYOfLlv9bEv0CgQoCON4EwDnk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "TL48PfH5Srk"
+      },
+      "snippet": {
+        "publishedAt": "2019-08-29T09:00:08Z",
+        "channelId": "UCan8A2nGlsi6C6kcewKHKzg",
+        "title": "기자들이 받아쓰기를 한다면?! 신문 기자와 방송 기자의 차이점ㅣ잡(Job)인정신",
+        "description": "신문기자 #방송기자 #잡인정신 잡(Job)인정신 (기자 편) 신문기자와 방송기자의 차이점은? 기자를 시작하게 된 계기 기자 생활, 가장 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/TL48PfH5Srk/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/TL48PfH5Srk/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/TL48PfH5Srk/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "일곱시",
+        "liveBroadcastContent": "none",
+        "publishTime": "2019-08-29T09:00:08Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "2MCpIwaU8l0WO5-PGdkjb-JeBYI",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "0vYT-rtYSDE"
+      },
+      "snippet": {
+        "publishedAt": "2015-09-03T00:06:07Z",
+        "channelId": "UCKWyj2i58-mE3xPi6aUe-hA",
+        "title": "[문화,예술,디자인,방송 관련] - 방송기자 직업소개 동영상",
+        "description": "본 동영상은 직업들을 효율적으로 알리기 위해 '한국교용정보원'이 2007년부터 2013년까지 제작한 직업동영상입니다. (1~2분) 본 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/0vYT-rtYSDE/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/0vYT-rtYSDE/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/0vYT-rtYSDE/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "노동부고용",
+        "liveBroadcastContent": "none",
+        "publishTime": "2015-09-03T00:06:07Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "HdL3hL8J0WGsz0xz9RDkW74t1sA",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "M6rOn_6d6Tw"
+      },
+      "snippet": {
+        "publishedAt": "2022-09-11T05:40:59Z",
+        "channelId": "UCSNpOBTEKDBjRUf05rqsoWw",
+        "title": "[특집 직업탐구] 기자에 대해 알아보자",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/M6rOn_6d6Tw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/M6rOn_6d6Tw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/M6rOn_6d6Tw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "알바트로스 신문 시사 위클리",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-09-11T05:40:59Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "LNH3pqZy10ipi_wqXywIli6zRpg",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "KRU2XvbQ3zE"
+      },
+      "snippet": {
+        "publishedAt": "2023-09-01T06:00:12Z",
+        "channelId": "UCFCtZJTuJhE18k8IXwmXTYQ",
+        "title": "기자는 어떻게 취재를 할까? 특종을 잡기 위해 몸을 불사르는 기자들의 24시│사회부 기자의 하루│언론│극한직업│#골라듄다큐",
+        "description": "이 영상은 2008년 11월 19일에 방송된 ＜극한직업 - 사회부 기자 1~2부＞의 일부입니다. 사건, 사고가 있는 곳이라면 낮밤을 가리지 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/KRU2XvbQ3zE/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/KRU2XvbQ3zE/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/KRU2XvbQ3zE/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "EBSDocumentary (EBS 다큐)",
+        "liveBroadcastContent": "none",
+        "publishTime": "2023-09-01T06:00:12Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "x4PTMixK6liAU0KI2VHfwk2ROsU",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "0N372VGu19c"
+      },
+      "snippet": {
+        "publishedAt": "2022-03-28T08:03:44Z",
+        "channelId": "UC36oq70zohxey-BrioDx8AA",
+        "title": "[NOW BOMON IS] TJB 대전방송 취재기자 공채 합격자의 &#39;방송기자 준비 봄온에서 준비해야하는 이유!&#39; &quot;면접에 &#39;카테&#39;, &#39;리포팅&#39;, &#39;뉴스 리딩&#39;을 시킨다고!?&quot;",
+        "description": "방송진행 무료 특강참석하기 https://www.bomon.co.kr/?p=guide/special 나의 방송진행자 가능성 알아보기 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/0N372VGu19c/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/0N372VGu19c/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/0N372VGu19c/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "봄온아카데미TV",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-03-28T08:03:44Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "_HVFENNJpncyiSGRvZNt0u5jX3k",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "YLQ6_Ozu34Y"
+      },
+      "snippet": {
+        "publishedAt": "2025-09-29T02:30:24Z",
+        "channelId": "UCi650EM1dO_c3rbmaVoajtg",
+        "title": "♣몰랐던♣“기자 연봉 현실 공개! 화려함 뒤의 진짜 월급”#기자연봉 #기자현실 #방송기자",
+        "description": "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다. ☆자격증 정보 바로 가기☆ ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/YLQ6_Ozu34Y/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/YLQ6_Ozu34Y/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/YLQ6_Ozu34Y/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "잡스러운정보통",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-09-29T02:30:24Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "wkyFo5DtM8EiKy36oijJwsEh5aA",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "fAJBDQ21pFw"
+      },
+      "snippet": {
+        "publishedAt": "2023-12-14T00:51:57Z",
+        "channelId": "UCEkm5LO_X5BNWYJOyqKpuIA",
+        "title": "겨울철 기자의 직업정신 방송사고 #방송사고 #기자 #직업정신 #유머",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/fAJBDQ21pFw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/fAJBDQ21pFw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/fAJBDQ21pFw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "유머전도사",
+        "liveBroadcastContent": "none",
+        "publishTime": "2023-12-14T00:51:57Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "tJoIIUbVw9TkI9hF60fjBaqnutw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "J5RZvzWFwJA"
+      },
+      "snippet": {
+        "publishedAt": "2016-07-12T02:33:52Z",
+        "channelId": "UCsU-I-vHLiaMfV_ceaYz5rQ",
+        "title": "[뉴스룸인사이드] #5 극한직업, 영상취재기자!",
+        "description": "뉴스룸의 극한직업 영상취재기자! 이번 '뉴스룸 인사이드'는 바로 JTBC 영상취재팀입니다.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/J5RZvzWFwJA/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/J5RZvzWFwJA/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/J5RZvzWFwJA/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "JTBC News",
+        "liveBroadcastContent": "none",
+        "publishTime": "2016-07-12T02:33:52Z"
+      }
+    }
+  ]
+}

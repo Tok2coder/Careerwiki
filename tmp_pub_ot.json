@@ -1,0 +1,659 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{"type": "text", "text": "작업치료사란 어떤 직업인가"}]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "작업치료사는 신체적·정신적 기능 장애로 일상생활 수행이 어려운 사람들에게 치료적 '작업(occupation)'을 통해 회복을 돕는 보건의료 전문가다. 여기서 '작업'이란 밥 먹기, 옷 입기, 글씨 쓰기 같은 일상 활동부터 직업·여가 활동까지 인간이 의미를 두고 수행하는 모든 행위를 포함한다."},
+        {"type": "footnote", "attrs": {"id": 1, "text": "위키백과 — 작업치료사", "url": "https://ko.wikipedia.org/wiki/%EC%9E%91%EC%97%85%EC%B9%98%EB%A3%8C%EC%82%AC"}}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "뇌졸중 후 손 기능 회복 훈련, 발달장애 아동의 감각통합 치료, 조현병 환자의 사회 적응 훈련, 치매 노인의 인지재활 프로그램 등 작업치료사가 개입하는 영역은 생애 전 주기에 걸쳐 광범위하다. "},
+        {
+          "type": "text",
+          "text": "작업치료사",
+          "marks": [{"type": "link", "attrs": {"href": "/job/작업치료사"}}]
+        },
+        {"type": "text", "text": "로 일하려면 반드시 "},
+        {
+          "type": "text",
+          "text": "작업치료학과",
+          "marks": [{"type": "link", "attrs": {"href": "/major/작업치료학과"}}]
+        },
+        {"type": "text", "text": " 또는 "},
+        {
+          "type": "text",
+          "text": "작업치료과",
+          "marks": [{"type": "link", "attrs": {"href": "/major/작업치료과"}}]
+        },
+        {"type": "text", "text": "를 졸업하고 한국보건의료인국가시험원(이하 국시원)이 시행하는 국가면허시험에 합격해야 한다. 면허를 취득하면 보건복지부 장관 명의의 면허증이 교부된다."}
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "INLINE_IMAGE_PLACEHOLDER",
+        "alt": "작업치료사가 환자와 손 기능 재활 훈련을 하는 모습",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "같은 재활 분야인 "},
+        {
+          "type": "text",
+          "text": "물리치료사",
+          "marks": [{"type": "link", "attrs": {"href": "/job/물리치료사"}}]
+        },
+        {"type": "text", "text": "가 주로 관절·근육의 신체 기능 회복에 초점을 맞춘다면, 작업치료사는 '기능 회복 → 일상생활 복귀'라는 최종 목표에 더욱 집중한다. 두 직종은 협력하는 경우가 많으며, "},
+        {
+          "type": "text",
+          "text": "언어재활사",
+          "marks": [{"type": "link", "attrs": {"href": "/job/언어재활사"}}]
+        },
+        {"type": "text", "text": "와 함께 재활팀을 이루는 것도 일반적이다."}
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{"type": "text", "text": "시험 구조와 합격 기준 완전 해부"}]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "작업치료사 국가시험은 매년 1회 시행되며, 필기(지필)시험만으로 구성된다. 200문항을 객관식 5지선다형으로 풀어야 하며, 총 시험 시간은 200분이다. 문항당 1분이 기준이므로 느리게 푸는 습관이 있다면 사전에 반드시 교정해야 한다."},
+        {"type": "footnote", "attrs": {"id": 2, "text": "한국보건의료인국가시험원 — 작업치료사 직종별 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2015/1/view.do?seq=7&itm_seq=13"}}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "과목 구성은 크게 세 영역으로 나뉜다. 기초의학 영역(작업치료기초)은 70문항이고, 작업치료학 영역은 110문항, 의료법규는 20문항이다. 합격 기준은 매 과목 만점의 40% 이상이면서 전 과목 평균 60% 이상이다. 즉 한 과목이라도 과락이 발생하면 평균이 60점을 넘더라도 불합격 처리된다."}
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "영역"}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "주요 과목"}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "문항 수"}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "과락 기준"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "작업치료기초", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "해부생리학, 신경학, 재활의학, 정신의학, 공중보건학"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "70문항"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "28점 미만 과락"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "작업치료학", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "작업치료학개론, 신경계·근골격계·아동·정신사회 작업치료, 감각통합치료, 보조기학, 직업재활"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "110문항"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "44점 미만 과락"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "의료법규", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "의료법, 장애인복지법, 관련 보건의료법령"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "20문항"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "8점 미만 과락"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "합계", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "전 과목"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "200문항"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "평균 60% 이상 + 각 과목 40% 이상"}]}]}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "응시수수료는 110,000원이며, 인터넷 원서 접수 기간에 국시원 홈페이지(kuksiwon.or.kr)에서 신청한다. 응시자격은 작업치료(학)과 졸업(예정)자로, 졸업예정자도 해당 연도 시험에 응시할 수 있다. 단, 졸업예정자는 소속 대학이 국시원에 명단을 사전 등록해야 접수가 가능하므로 학과 사무실과 사전에 확인해야 한다."}
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{"type": "text", "text": "연도별 합격률 추이와 시험 난이도 분석"}]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "작업치료사 국시는 보건의료인 면허시험 중 비교적 합격률이 높은 편에 속한다. 최근 10년간 합격률은 79~93% 사이를 유지하고 있으며, 2025년 제53회 시험에서는 응시자 1,628명 중 1,499명이 합격해 합격률 92.1%를 기록했다."},
+        {"type": "footnote", "attrs": {"id": 3, "text": "한국보건의료인국가시험원 — 연도별 합격률 통계", "url": "https://www.kuksiwon.or.kr/peryearPass/list.do?seq=13&srchWord=13"}}
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "회차"}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "연도"}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "응시자"}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "합격자"}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "합격률"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "제53회"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2025"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "1,628명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "1,499명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "92.1%", "marks": [{"type": "bold"}]}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "제52회"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2024"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "1,774명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "1,591명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "89.7%"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "제51회"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2023"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2,162명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "1,939명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "89.7%"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "제50회"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2022"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "1,995명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "1,577명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "79.0%"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "제49회"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2021"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2,142명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "1,950명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "91.0%"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "제48회"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2020"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2,073명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "1,935명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "93.3%"}]}]}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "2022년 제50회 시험에서 합격률이 79%로 크게 떨어진 것이 눈에 띈다. 이는 해당 연도에 출제 방식이 단순 암기 중심에서 사례 적용형 문제 비중을 높이는 방향으로 전환되었기 때문이다. 이 시험 이후로 '기출문제만 달달 외우면 된다'는 공식은 더 이상 통하지 않게 되었다."},
+        {"type": "footnote", "attrs": {"id": 4, "text": "충북보건과학대 작업치료학과 국시 100% 합격 보도", "url": "https://www.goodmorningcc.com/news/articleView.html?idxno=438135"}}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "최근의 출제 경향은 크게 두 가지 방향으로 요약된다. 첫째, 특정 평가 도구나 치료 기법을 단독으로 묻기보다 '이 환자에게 가장 적합한 접근은 무엇인가'처럼 임상 판단 능력을 묻는 사례형 문항이 늘었다. 둘째, 신경계 작업치료, 아동 작업치료, 정신사회 작업치료 간 경계를 넘나드는 통합적 문항이 증가했다. 이 두 경향 때문에 단순 암기식 벼락치기는 지양해야 한다."}
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {"level": 3},
+      "content": [{"type": "text", "text": "시험 일정과 원서 접수 절차"}]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "작업치료사 국시는 매년 12월 첫째 주 토요일에 시행된다. 2025년 제53회 시험을 기준으로 살펴보면, 원서 접수는 8월 26일~9월 2일 사이에 국시원 홈페이지에서 인터넷으로 신청하며, 시험장 공고는 11월 5일, 시험 당일은 12월 6일이었다. 합격자 발표는 12월 24일에 이루어졌다."},
+        {"type": "footnote", "attrs": {"id": 5, "text": "부산대학교 작업치료학과 2025 국시 시행 공고", "url": "https://community.bu.ac.kr/bbs/dot/908/50029/artclView.do"}}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "전체 일정을 정리하면 다음과 같다."}
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "8월 말~9월 초: 응시원서 접수 (국시원 홈페이지 인터넷 접수, 수수료 110,000원)"}]}]
+        },
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "11월 초: 시험장 공고 (본인 시험 장소 확인)"}]}]
+        },
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "12월 첫째 주 토요일: 시험 당일 (오전·오후 교시로 진행)"}]}]
+        },
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "12월 24일 전후: 최종 합격자 발표"}]}]
+        },
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "합격 후: 면허 신청 및 면허증 수령 (보건복지부)"}]}]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "졸업예정자의 경우 주의 사항이 있다. 원서 접수 전에 소속 학과가 국시원에 졸업예정자 명단을 등록해야 접수가 열린다. 이 절차를 학과에서 처리하므로, 접수 기간이 시작되기 전에 학과 사무실에 확인 여부를 반드시 점검해야 한다. 명단 미등록 상태에서 개인이 직접 접수를 시도해도 시스템에서 거부된다. 원서 접수 후에는 수험표를 반드시 출력해 두어야 한다. 시험 당일에는 수험표와 신분증을 동시에 지참해야 입실이 허용되며, 어느 하나라도 없으면 응시 자체가 불가능하다. 고사장별로 수용 인원에 한계가 있으므로 늦어도 30분 전에는 도착해 대기하는 것이 좋다."}
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{"type": "text", "text": "과목별 공부법과 학습 전략"}]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "국시 준비를 시작할 때 가장 먼저 해야 할 것은 각 과목의 출제 비중과 난이도를 파악하고, 시간 배분 계획을 세우는 것이다. 총 200문항 중 가장 큰 비중을 차지하는 작업치료학(110문항) 영역에서 고득점을 확보하되, 과락의 위험이 큰 해부생리학과 의료법규를 소홀히 하지 않는 균형 전략이 필요하다."},
+        {"type": "footnote", "attrs": {"id": 6, "text": "작업치료학과 나무위키", "url": "https://namu.wiki/w/%EC%9E%91%EC%97%85%EC%B9%98%EB%A3%8C%ED%95%99%EA%B3%BC"}}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "해부생리학은 수험생 대부분이 가장 어렵다고 꼽는 과목이다. 작업치료기초 70문항 중 약 30문항이 해부생리에서 출제되므로 절대로 포기할 수 없다. 출제 범위는 뼈·관절·근육·신경계 중심이며, 다행히 문제 자체는 꼬지 않고 개념을 그대로 묻는 편이다. 따라서 핵심 뇌 구조의 기능, 상지·하지 주요 근육의 기시와 정지, 척수 손상 레벨별 잔존 기능을 표로 정리해 반복 암기하는 방식이 효과적이다."}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "작업치료학 영역은 문항 수가 가장 많은 만큼 세부 분야가 다양하다. 신경계 작업치료(뇌졸중, 척수손상, 파킨슨병 등), 근골격계 작업치료(관절 ROM 측정, 부목 제작 등), 아동 작업치료(감각통합, 발달지연, 자폐스펙트럼 등), 정신사회 작업치료(정신건강, ADL 평가 등)로 나뉜다. 이 중 감각통합치료와 아동 발달 파트는 '점수밭'이라 불릴 만큼 작업치료 전공자에게 익숙한 내용이 많이 출제되므로, 충분한 점수를 확보해 두는 것이 좋다."}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "의료법규는 20문항에 불과하지만 과락 기준이 8점(40%)이라 4문항만 틀려도 과락 위기가 된다. 의료법, 장애인복지법, 노인장기요양보험법, 정신건강복지법 등 법령의 핵심 조항을 정리해 두어야 한다. 법 개정이 자주 이루어지므로 시험 직전 해에 개정된 내용을 반드시 확인해야 한다."},
+        {"type": "footnote", "attrs": {"id": 7, "text": "한국보건의료인국가시험원 기출문제 자료실", "url": "https://www.kuksiwon.or.kr/CollectOfQuestions/brd/m_116/view.do?seq=67"}}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "공중보건학은 12문항 정도 출제되며 난이도가 낮은 편이다. 전체 보건 지표, 역학, 감염병 관리, 환경 보건 등 기본 개념을 빠르게 훑는 것으로 충분하다. 단기간에 점수를 올리기 좋은 과목이므로 마지막 1~2주 마무리 학습에 배치하면 효율적이다."}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "학습 도구로는 기출문제집, 모의고사, 플래시카드, 그룹스터디를 함께 활용하는 것이 권장된다. 기출문제를 풀 때는 정답을 맞혔더라도 오답 보기가 왜 틀렸는지 분석하는 습관을 들이면 유사 변형 문제에 대한 적응력이 높아진다. 그룹스터디에서는 서로 문제를 내고 해설하는 방식이 개인 학습보다 기억 정착 효율이 높다."}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "정신사회 작업치료 파트는 직접적인 치료 기법보다 심리·사회적 이론을 기반으로 하는 문항이 많이 출제된다. 모델 오브 휴먼 오큐페이션(MOHO), 캐나다 작업수행 모델(CMOP), 역할 이론 등의 개념을 임상 사례와 연결해 이해하는 방식으로 공부해야 한다. 단순히 개념 정의만 외우면 사례형 문항에서 답을 고르기 어렵다. 감각통합 파트에서는 감각 처리 방식과 에어스(Ayres)의 감각통합 이론, 자세 조절과 양측 통합의 개념을 정확히 구분하는 것이 포인트다. 직업재활 영역은 출제 비중이 상대적으로 낮지만, 관련 법령이나 장애인 고용 지원 제도 개정이 있으면 반영되므로 최신 현황을 간략히 확인해 두는 것이 좋다."}
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{"type": "text", "text": "월별 학습 로드맵 — D-6개월 플랜"}]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "작업치료사 국시는 충분한 준비 기간을 확보하는 것이 중요하다. 일반적으로 최소 3~4개월을 권장하지만, 여유 있게 6개월 플랜으로 접근하면 심화 문제까지 대비할 수 있다. 아래 로드맵은 12월 초 시험을 기준으로 역산한 월별 학습 계획이다."}
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "시기"}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "목표"}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "주요 활동"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "D-180~150일 (6~5개월 전)", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "전체 범위 파악 및 약점 과목 식별"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "최신 출제 기준표 확인, 기출 유형 분석, 과목별 교재 구비"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "D-150~90일 (5~3개월 전)", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "이론 1회독 완성"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "해부생리 → 신경계OT → 근골격계OT → 아동OT → 정신사회OT → 의료법규 순서로 진행, 핵심 개념 노트 작성"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "D-90~60일 (3~2개월 전)", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "기출문제 집중 반복"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "최근 5개년 기출 2회 이상 풀기, 오답 원인 분석, 틀린 개념 재정리"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "D-60~30일 (2~1개월 전)", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "모의고사 및 약점 보완"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "실전 모의고사 2~3회, 과락 위험 과목 집중 보완, 의료법규 최신 개정 사항 확인"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "D-30~7일 (시험 4주~1주 전)", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "총정리 및 암기 강화"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "핵심 암기 표 반복 복습, 플래시카드 활용, 그룹스터디로 개념 재확인"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "D-7~1일 (시험 직전 1주)", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "컨디션 관리 + 마무리"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "공중보건학 속성 정리, 가장 자신 없는 단원 최종 점검, 수면 리듬 조정"}]}]}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "과목 학습 순서에서 해부생리학을 가장 먼저 공부하는 이유가 있다. 신경계 작업치료, 근골격계 작업치료 등 작업치료학 영역의 내용을 이해하려면 해부생리 지식이 기반이 되어야 하기 때문이다. 기초 없이 임상 내용부터 공부하면 맥락이 없어 기억 효율이 크게 떨어진다."}
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{"type": "text", "text": "추천 교재와 활용법"}]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "교재 선택은 수험 준비의 출발점이다. 매년 새 개정판이 출시되므로 반드시 시험 연도에 맞는 최신판을 구매해야 한다. 이전 연도 교재를 사용하면 출제 기준 변경이나 법 개정 사항을 놓칠 수 있다."},
+        {"type": "footnote", "attrs": {"id": 8, "text": "교보문고 — 2024 시대에듀 작업치료사 최종모의고사", "url": "https://product.kyobobook.co.kr/detail/S000214054463"}}
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "시대에듀 작업치료사 총정리 교재", "marks": [{"type": "bold"}]}, {"type": "text", "text": ": 전 과목을 한 권에 담은 종합 요약집. 첫 1회독용으로 적합하다. 분량이 방대하지만 국시 출제 범위를 폭넓게 커버한다."}]}]
+        },
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "시대에듀 작업치료사 최종모의고사", "marks": [{"type": "bold"}]}, {"type": "text", "text": ": 실전형 모의고사 교재. 학습 후반부(D-60일 이후)에 실전 감각을 키우는 데 사용한다. 시간 내에 200문항을 풀어 보는 연습이 핵심이다."}]}]
+        },
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "작업치료 문제집 시리즈(사례형 문제)", "marks": [{"type": "bold"}]}, {"type": "text", "text": ": 사례형 문항 비중이 높아진 최근 경향에 맞춰 임상 판단 능력을 키우는 데 특화된 문제집이다. 단순 암기형 교재와 병행하면 효과적이다."}]}]
+        },
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "국시원 공식 기출문제", "marks": [{"type": "bold"}]}, {"type": "text", "text": ": 국시원 홈페이지에서 최근 기출문제를 무료로 내려받을 수 있다. 어떤 교재보다 출제 경향을 직접적으로 반영하므로 반드시 5개년 이상 풀어야 한다."}]}]
+        },
+        {
+          "type": "listItem",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "온라인 강의(국시패스, 메가스터디 의학 등)", "marks": [{"type": "bold"}]}, {"type": "text", "text": ": 독학이 어려운 해부생리학과 신경계 작업치료는 강의를 활용하면 이해 속도가 빨라진다. 강의는 이론 전체를 들을 시간이 없다면 해부생리학 파트만 선택 수강하는 것도 전략이다."}]}]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "교재 외에 카카오오픈채팅이나 에브리타임의 작업치료 국시 준비 방 같은 온라인 커뮤니티를 적극 활용하면 최신 출제 경향에 대한 수험생 간 정보 공유가 빠르다. 단, 비공식 커뮤니티의 정보는 정확도가 낮을 수 있으므로 국시원 공식 공고와 대조 확인하는 습관이 필요하다."},
+        {"type": "footnote", "attrs": {"id": 9, "text": "교보문고 — 2024 작업치료 문제집 사례형 문제", "url": "https://product.kyobobook.co.kr/detail/S000213096781"}}
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {"level": 3},
+          "content": [{"type": "text", "text": "시험 당일 D-DAY 체크리스트"}]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "수험표 출력 완료 (국시원 홈페이지에서 출력 가능)"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "신분증 지참 (주민등록증, 운전면허증, 여권 중 1개)"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "컴퓨터용 사인펜 지참 (연필·볼펜 마킹은 무효 처리 위험)"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "고사장 위치 및 이동 경로 사전 확인 (입실 기준 시간 30분 전 도착 권장)"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "시험 전날 8시간 수면 확보 — 당일 컨디션이 점수를 좌우한다"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "답안지 마킹 시 OMR 번호 열 오류 주의 (한 칸 밀리면 전체 오답 처리)"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "점심 도시락 또는 식사 장소 미리 파악 (고사장에 따라 인근 식당이 혼잡할 수 있음)"}]}]}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{"type": "text", "text": "합격 후 진로 — 취업처와 연봉 현실"}]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "면허를 취득한 작업치료사의 90% 이상이 의료기관에 취업한다. 가장 많은 비중을 차지하는 것은 재활병원, 어린이재활병원, 요양병원, 정신건강의학과 병원이다. 최근에는 치매안심센터, 장애인복지관, 특수학교, 사회복귀시설 등 지역사회 기반 기관으로 취업처가 다양해지고 있다."},
+        {"type": "footnote", "attrs": {"id": 10, "text": "잡코리아 — 대한작업치료사협회 평균 연봉 정보", "url": "https://www.jobkorea.co.kr/Recruit/Salary/15873575"}}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "연봉은 솔직하게 말하면 같은 보건의료 면허직 중에서 높은 편은 아니다. 중위 연봉은 약 2,800만~3,300만원 수준이며, 협회 자료 기준 평균 연봉은 약 4,076만원(2019년 잡코리아·국민연금 기반 데이터)으로 집계되었다. 다만 이 수치에는 계약직과 임원이 포함되어 있어 신규 취업자의 실제 연봉과는 차이가 있다. 재활병원 초봉은 2,400만~2,800만원대가 일반적이며, 경력이 쌓이면서 수당이 늘어나는 구조다."},
+        {"type": "footnote", "attrs": {"id": 11, "text": "매일노동뉴스 — 10년차 작업치료사 월급 현실", "url": "https://www.labortoday.co.kr/news/articleView.html?idxno=213103"}}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "연봉 외 고려할 점은 노인 인구 증가에 따른 수요 확대다. 치매, 뇌졸중, 파킨슨병 등 신경계 질환 환자가 급증하면서 작업치료사에 대한 고용 수요는 연평균 2~3%씩 증가하는 추세다. 특히 발달장애 아동 치료 분야와 직업재활 분야에서 민간 센터가 빠르게 늘고 있어 개원 및 창업으로 이어지는 경우도 증가하고 있다."}
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {"type": "text", "text": "면허 취득 후 심화 전문성을 키우고 싶다면 대학원 진학이나 전문 자격증 취득을 고려할 수 있다. 감각통합전문가 자격, 인지재활 전문가 자격, 보조공학사 자격 등 관련 자격증을 보유하면 특화 치료 기관 취업 시 경쟁력이 높아진다. "},
+        {
+          "type": "text",
+          "text": "재활의학과전문의사",
+          "marks": [{"type": "link", "attrs": {"href": "/job/재활의학과전문의사"}}]
+        },
+        {"type": "text", "text": "나 "},
+        {
+          "type": "text",
+          "text": "장애인재활상담사",
+          "marks": [{"type": "link", "attrs": {"href": "/job/장애인재활상담사"}}]
+        },
+        {"type": "text", "text": "와 협력하는 팀 구성 속에서 작업치료사의 역할은 점점 중요해지고 있다."},
+        {"type": "footnote", "attrs": {"id": 12, "text": "한국직업정보시스템 — 작업치료사 직업 정보", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%9E%91%EC%97%85%EC%B9%98%EB%A3%8C%EC%82%AC"}}
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{"type": "text", "text": "자주 묻는 질문 (Q&A)"}]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "작업치료사 국시는 독학으로 합격할 수 있나요?"}]}]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "가능하다. 합격률이 90% 안팎으로 높은 이유는 4년제 교육과정에서 시험 범위를 상당 부분 다루기 때문이다. 다만 해부생리학처럼 암기량이 많고 어렵게 느껴지는 과목은 독학보다 온라인 강의를 활용하면 이해 속도가 빠르다. 국시원에서 제공하는 공식 기출문제와 시중 모의고사 교재를 병행하면 독학으로도 충분히 합격권에 진입할 수 있다."}]}]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "졸업 후 몇 년이 지나도 응시할 수 있나요?"}]}]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "응시 자격에 연도 제한은 없다. 작업치료(학)과 졸업자라면 졸업 후 몇 년이 지났든 원서 접수 기간에 신청하면 된다. 단, 졸업 후 오랜 시간이 지난 경우 출제 기준이 바뀌어 있을 수 있으므로 최신 출제 범위를 반드시 확인해야 한다. 또한 의료법 등 법령 개정 사항도 달라져 있을 가능성이 높다."}]}]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "한 과목 과락이면 정말 전체 불합격인가요?"}]}]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "그렇다. 합격 기준은 두 가지 조건을 동시에 충족해야 한다. 첫째, 매 과목 만점의 40% 이상 득점. 둘째, 전 과목 총점 평균 60% 이상 득점. 이 중 하나라도 충족하지 못하면 불합격이다. 예를 들어 해부생리 영역에서 28점 미만을 받으면 나머지 과목 점수가 아무리 좋아도 불합격 처리된다. 따라서 '버리는 과목'을 만들지 않는 것이 전략의 핵심이다."}]}]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "합격 후 면허 발급은 어떻게 하나요?"}]}]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "최종 합격자 발표 이후 보건복지부 면허 신청 절차를 진행한다. 국시원 홈페이지나 정부24에서 면허 신청서를 작성하고 수수료를 납부하면 된다. 면허증은 우편으로 수령하거나 해당 보건소에서 직접 수령할 수 있다. 면허 발급에는 통상 2~4주가 소요된다. 취업 시작 전에 면허증 또는 면허 발급 확인서를 준비해 두면 채용 서류 준비에 도움이 된다."}]}]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "물리치료사와 작업치료사의 취업 전망 차이는?"}]}]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{"type": "paragraph", "content": [
+            {"type": "text", "text": "두 직종 모두 재활 분야 수요 증가로 취업 전망은 밝다. "},
+            {
+              "type": "text",
+              "text": "물리치료학과",
+              "marks": [{"type": "link", "attrs": {"href": "/major/물리치료학과"}}]
+            },
+            {"type": "text", "text": " 출신 물리치료사는 정형외과·스포츠 재활 분야까지 영역이 넓고 근무 기관의 수가 많은 편이다. 반면 작업치료사는 아동 발달, 정신건강, 치매·인지 재활 분야에서 전문적 역할이 강하게 부각되고 있으며, 이 세 분야의 수요가 빠르게 늘고 있다. 초봉은 작업치료사가 물리치료사보다 다소 낮은 경우가 많지만, 분야를 전문화하면 격차가 줄어든다."},
+            {"type": "footnote", "attrs": {"id": 13, "text": "커리어넷 — 작업치료과 직업 세계 정보", "url": "https://www.career.go.kr/cnet/app/base/job/jobView.m"}}
+          ]}]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{"type": "paragraph", "content": [{"type": "text", "text": "전문대 작업치료과 졸업자도 4년제 졸업자와 동일한 면허를 받나요?"}]}]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{"type": "paragraph", "content": [
+            {"type": "text", "text": "그렇다. 국가면허시험 응시 자격과 합격 후 취득하는 면허는 동일하다. 3년제 "},
+            {
+              "type": "text",
+              "text": "작업치료과",
+              "marks": [{"type": "link", "attrs": {"href": "/major/작업치료과"}}]
+            },
+            {"type": "text", "text": " 졸업자와 4년제 "},
+            {
+              "type": "text",
+              "text": "작업치료학과",
+              "marks": [{"type": "link", "attrs": {"href": "/major/작업치료학과"}}]
+            },
+            {"type": "text", "text": " 졸업자 모두 같은 시험에 응시하고 같은 면허를 받는다. 취업 현장에서 대우 차이는 기관마다 다르지만, 면허 자체의 효력은 동일하다. 전문대 졸업 후 학점은행제나 4년제 편입을 통해 학사 학위를 취득하는 경우도 많다."}
+          ]}]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {"level": 3},
+          "content": [{"type": "text", "text": "작업치료사 국시 합격을 위한 핵심 정리"}]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "시험은 200문항 / 5지선다 / 응시료 110,000원 — 매년 12월 첫째 주 토요일 시행"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "합격 기준: 전 과목 40% 이상 + 평균 60% 이상 — 과락 한 과목이면 전체 불합격"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "최근 5년 합격률 79~93% — 2022년 이후 사례형 문항 증가로 단순 암기 전략은 위험"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "해부생리학은 가장 어렵지만 가장 많이 출제되므로 포기 금지 — 기출 위주 반복 학습"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "의료법규는 20문항이지만 과락 기준이 낮아 방심 금지 — 최신 법령 개정 사항 필수 확인"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "D-6개월 플랜: 이론 1회독 → 기출 반복 → 모의고사 → 약점 보완 → D-DAY 컨디션 관리"}]}]},
+            {"type": "listItem", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "합격 후 취업처는 재활병원·요양병원·복지관 등 다양하며, 노인·아동·정신 분야 수요 증가 중"}]}]}
+          ]
+        }
+      ]
+    }
+  ]
+}

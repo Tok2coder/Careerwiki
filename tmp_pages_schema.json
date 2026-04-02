@@ -1,0 +1,27 @@
+[
+  {
+    "results": [
+      {
+        "sql": "CREATE TABLE \"pages\" (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  slug TEXT UNIQUE NOT NULL,\n  title TEXT NOT NULL,\n  page_type TEXT NOT NULL CHECK(page_type IN ('job', 'major', 'guide')),\n  content TEXT NOT NULL,\n  summary TEXT,\n  meta_data TEXT,\n  view_count INTEGER DEFAULT 0,\n  status TEXT DEFAULT 'published' CHECK(status IN ('published', 'draft', 'deleted', 'draft_published')),\n  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,\n  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,\n  author_id INTEGER,\n  source TEXT DEFAULT 'system', indexed_at DATETIME DEFAULT NULL, embedding_version TEXT DEFAULT NULL,\n  FOREIGN KEY (author_id) REFERENCES users(id)\n)"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1427
+      },
+      "duration": 0.1427,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 372977664,
+      "rows_read": 331,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

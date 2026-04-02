@@ -1,0 +1,282 @@
+[
+  {
+    "source": "펀드매니저",
+    "target": "금융자산운용가(펀드매니저)",
+    "category": "A"
+  },
+  {
+    "source": "애니메이터",
+    "target": "만화영화작가(애니메이터)",
+    "category": "A"
+  },
+  {
+    "source": "캐드원",
+    "target": "제도사(캐드원)",
+    "category": "A"
+  },
+  {
+    "source": "가전제품설치·수리원",
+    "target": "가전제품 설치 및 수리원",
+    "category": "B"
+  },
+  {
+    "source": "귀금속·보석세공원",
+    "target": "귀금속 및 보석세공원",
+    "category": "B"
+  },
+  {
+    "source": "상ㆍ하수도처리장치조작원",
+    "target": "상·하수도 처리장치 조작원",
+    "category": "B"
+  },
+  {
+    "source": "자동조립라인·산업용 로봇조작원",
+    "target": "자동조립라인 및 산업용로봇조작원",
+    "category": "B"
+  },
+  {
+    "source": "크레인·호이스트운전원",
+    "target": "크레인 및 호이스트운전원",
+    "category": "B"
+  },
+  {
+    "source": "컴퓨터게임시나리오작가",
+    "target": "게임시나리오작가",
+    "category": "C"
+  },
+  {
+    "source": "컴퓨터속기사",
+    "target": "속기사",
+    "category": "C"
+  },
+  {
+    "source": "컴퓨터시스템엔지니어",
+    "target": "시스템엔지니어",
+    "category": "C"
+  },
+  {
+    "source": "곡식작물재배원",
+    "target": "곡식작물재배자",
+    "category": "D"
+  },
+  {
+    "source": "과수작물재배원",
+    "target": "과수작물재배자",
+    "category": "D"
+  },
+  {
+    "source": "여행상품개발원",
+    "target": "여행상품개발자",
+    "category": "D"
+  },
+  {
+    "source": "식물원관리원",
+    "target": "식물원관리자",
+    "category": "D"
+  },
+  {
+    "source": "골프장코스관리사",
+    "target": "골프장코스관리자",
+    "category": "D"
+  },
+  {
+    "source": "증권분석가",
+    "target": "증권분석사",
+    "category": "D"
+  },
+  {
+    "source": "특수효과기사",
+    "target": "특수효과기술자",
+    "category": "D"
+  },
+  {
+    "source": "정보보안전문가",
+    "target": "정보보호전문가",
+    "category": "D"
+  },
+  {
+    "source": "개그맨",
+    "target": "개그맨 및 코미디언",
+    "category": "E"
+  },
+  {
+    "source": "건축시공기술자",
+    "target": "건축시공기술자 및 견적원",
+    "category": "E"
+  },
+  {
+    "source": "구두미화원",
+    "target": "구두미화원 및 수선원",
+    "category": "E"
+  },
+  {
+    "source": "대기환경기술자",
+    "target": "대기환경기술자 및 연구원",
+    "category": "E"
+  },
+  {
+    "source": "대학교총장",
+    "target": "대학교 총장 및 대학학장",
+    "category": "E"
+  },
+  {
+    "source": "매표원",
+    "target": "매표원 및 복권판매원",
+    "category": "E"
+  },
+  {
+    "source": "메이크업아티스트",
+    "target": "메이크업아티스트 및 뷰티매니저",
+    "category": "E"
+  },
+  {
+    "source": "반도체공학기술자",
+    "target": "반도체공학기술자 및 연구원",
+    "category": "E"
+  },
+  {
+    "source": "법무사",
+    "target": "법무사 및 집행관",
+    "category": "E"
+  },
+  {
+    "source": "사진작가",
+    "target": "사진작가 및 사진사",
+    "category": "E"
+  },
+  {
+    "source": "사진사",
+    "target": "사진작가 및 사진사",
+    "category": "E"
+  },
+  {
+    "source": "위험관리원",
+    "target": "산업안전원 및 위험관리원",
+    "category": "E"
+  },
+  {
+    "source": "상품중개인",
+    "target": "상품중개인 및 경매사",
+    "category": "E"
+  },
+  {
+    "source": "열차객실승무원",
+    "target": "선박 및 열차객실승무원",
+    "category": "E"
+  },
+  {
+    "source": "항해사",
+    "target": "선장 및 항해사",
+    "category": "E"
+  },
+  {
+    "source": "소음진동기술자",
+    "target": "소음진동기술자 및 연구원",
+    "category": "E"
+  },
+  {
+    "source": "식품공학기술자",
+    "target": "식품공학기술자 및 연구원",
+    "category": "E"
+  },
+  {
+    "source": "악기수리원",
+    "target": "악기수리원 및 조율사",
+    "category": "E"
+  },
+  {
+    "source": "악기제조원",
+    "target": "악기제조원 및 조율사",
+    "category": "E"
+  },
+  {
+    "source": "양장사",
+    "target": "양장사 및 양복사",
+    "category": "E"
+  },
+  {
+    "source": "양복사",
+    "target": "양장사 및 양복사",
+    "category": "E"
+  },
+  {
+    "source": "뮤지컬배우",
+    "target": "연극 및 뮤지컬배우",
+    "category": "E"
+  },
+  {
+    "source": "편집기사",
+    "target": "영상·녹화 및 편집기사",
+    "category": "E"
+  },
+  {
+    "source": "요양보호사",
+    "target": "요양보호사 및 간병인",
+    "category": "E"
+  },
+  {
+    "source": "간병인",
+    "target": "요양보호사 및 간병인",
+    "category": "E"
+  },
+  {
+    "source": "유치원원장",
+    "target": "유치원 원장 및 원감",
+    "category": "E"
+  },
+  {
+    "source": "장례지도사",
+    "target": "장례지도사 및 장례상담원",
+    "category": "E"
+  },
+  {
+    "source": "사무보조원",
+    "target": "전산자료입력원 및 사무보조원",
+    "category": "E"
+  },
+  {
+    "source": "취업알선원",
+    "target": "직업상담 및 취업알선원",
+    "category": "E"
+  },
+  {
+    "source": "컴퓨터하드웨어기술자",
+    "target": "컴퓨터하드웨어 기술자 및 연구원",
+    "category": "E"
+  },
+  {
+    "source": "토목시공기술자",
+    "target": "토목시공기술자 및 견적원",
+    "category": "E"
+  },
+  {
+    "source": "토양환경기술자",
+    "target": "토양환경기술자 및 연구원",
+    "category": "E"
+  },
+  {
+    "source": "홍보도우미",
+    "target": "홍보도우미 및 판촉원",
+    "category": "E"
+  },
+  {
+    "source": "환경미화원",
+    "target": "환경미화원 및 재활용품수거원",
+    "category": "E"
+  },
+  {
+    "source": "어부 및 해녀",
+    "target": "연근해 어부 및 해녀",
+    "category": "F"
+  },
+  {
+    "source": "조림 영림 및 벌목원",
+    "target": "조림·산림경영인 및 벌목원",
+    "category": "F"
+  },
+  {
+    "source": "가스ㆍ수도ㆍ전기 계기 검침원 및 안전점검원",
+    "target": "계기검침원 및 가스점검원",
+    "category": "F"
+  }
+]

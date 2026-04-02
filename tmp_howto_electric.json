@@ -1,0 +1,832 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "전기기사, 왜 지금인가" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기기사는 한국산업인력공단이 시행하는 국가기술자격이다. 전기 설비의 설계, 시공, 감리, 유지보수 전반을 다루며, 전기 분야에서 가장 수요가 높은 자격증으로 꼽힌다. 2023년부터 CBT(컴퓨터 기반 시험)로 전환되면서 연 3회 이상 응시 기회가 생겼고" },
+        { "type": "footnote", "attrs": { "id": 1, "text": "한국산업인력공단, 국가기술자격 CBT 시행 안내", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q" } },
+        { "type": "text", "text": ", 체감 난이도도 과거 OMR 시절보다 낮아졌다는 평가가 지배적이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "지금 전기기사를 준비해야 하는 이유는 명확하다. 데이터센터, 신재생에너지, 전기차 충전 인프라 확대로 " },
+        { "type": "text", "text": "전기공학기술자", "marks": [{ "type": "link", "attrs": { "href": "/job/전기공학기술자" } }] },
+        { "type": "text", "text": " 수요가 폭증하고 있다. 한국전력 및 전기공사 업체 채용에서 전기기사는 사실상 필수 자격이며, 데이터센터 운영사(네이버, 카카오, AWS)에서도 전기기사 보유자를 우대한다" },
+        { "type": "footnote", "attrs": { "id": 2, "text": "고용노동부, 워크넷 전기기사 채용공고 분석", "url": "https://www.work24.go.kr/wk/a/a/b/1200/retrivePriEmpDtl.do" } },
+        { "type": "text", "text": ". 2025년 기준 전기기사 응시자 수는 연간 15만 명을 넘어섰고, 합격률은 22~28% 수준을 유지하고 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "비전공자라도 4개월 집중 학습이면 필기 합격이 충분히 가능하다. 이 가이드에서는 과목별 공략법, 교재 선택, 구체적인 4개월 플랜, 실전 전략까지 한 번에 정리한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "시험 구조와 과목별 특징" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기기사 필기시험은 5과목, 총 100문항으로 구성된다. 과목당 20문항이며, 4지선다 객관식이다. 시험 시간은 총 150분(2시간 30분)으로, CBT 방식에서는 과목 간 이동이 자유롭다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "시험 기본 정보" }]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "항목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "내용" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시행기관" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국산업인력공단 (Q-net)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험 방식" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CBT (컴퓨터 기반 시험, 2023년~)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목 수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5과목 (과목당 20문항, 총 100문항)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험 시간" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "150분 (2시간 30분)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격 기준" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전 과목 평균 60점 이상 + 과목당 40점 이상 (과락)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시행 횟수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연 3회 (1·2·3회 정기시험)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 19,400원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격률" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "22~28% (연도·회차별 상이)" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "핵심은 ", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "과락 관리", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "다. 평균 60점을 넘기더라도 한 과목이라도 40점 미만이면 불합격이다. 특히 전기자기학에서 과락이 나오는 사례가 많으므로, 최소 40점을 안정적으로 확보하는 전략이 필수다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "과목별 난이도와 특징" }]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "난이도" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "출제 성격" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자 체감" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기자기학" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★★★" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "계산 위주, 벡터·미적분 필요" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가장 어려움. 과락 위험 1순위" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전력공학" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★☆☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "이론+계산 혼합, 송배전 중심" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "암기와 이해 반반" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기기기" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★★☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "변압기·전동기 원리와 계산" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "공식 암기 부담 큼" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "회로이론 및 제어공학" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★★☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "회로 해석(키르히호프 등)+제어 블록선도" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "수학 기초 필요" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기설비기술기준" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★☆☆☆" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "법규·기준 암기, 계산 거의 없음" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가장 쉬움. 고득점 가능" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기자기학은 전기기사 필기의 최대 난관이다. 벡터 해석, 정전계, 전자계 개념이 기반이 되어야 하고, 순수 계산 문제 비율이 높다. 반면 전기설비기술기준은 암기 과목으로, 기출 반복만으로 80점 이상을 노릴 수 있다" },
+        { "type": "footnote", "attrs": { "id": 3, "text": "나무위키, 전기기사", "url": "https://namu.wiki/w/전기기사" } },
+        { "type": "text", "text": ". 이 격차를 이해하는 것이 전략 수립의 출발점이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "과목별 공략법 — 어디서부터 시작할까" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "비전공자의 학습 순서는 전공자와 달라야 한다. ", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "쉬운 과목에서 성취감을 얻고, 어려운 과목으로 확장하는 전략이 핵심이다. 추천 순서는 다음과 같다." }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기설비기술기준", "marks": [{ "type": "bold" }] }, { "type": "text", "text": " — 암기 과목. 기출 3회독으로 70점 이상 확보 가능. 자신감 형성에 최적." }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전력공학", "marks": [{ "type": "bold" }] }, { "type": "text", "text": " — 설비기술기준과 겹치는 내용이 있어 연계 학습이 효율적. 송배전, 배전선로, 보호계전기 중심." }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기기기", "marks": [{ "type": "bold" }] }, { "type": "text", "text": " — 변압기, 유도전동기, 동기기 3대 파트에서 80% 이상 출제. 공식을 '이해'하며 외워야 한다." }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "회로이론 및 제어공학", "marks": [{ "type": "bold" }] }, { "type": "text", "text": " — 회로이론(키르히호프, 테브난, 교류) 비중이 높다. 제어공학은 블록선도, 전달함수 위주로 출제." }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기자기학", "marks": [{ "type": "bold" }] }, { "type": "text", "text": " — 마지막에 배치. 40점(과락 회피)을 1차 목표로 삼고, 빈출 공식 15~20개를 집중 암기." }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "전기설비기술기준 — 고득점 보험 과목" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "계산 문제가 거의 없고, 전기 설비의 안전 기준과 시설 규정을 묻는 과목이다. 접지 공사 종류, 누전차단기 설치 기준, 전선의 허용전류 같은 항목이 반복 출제된다. 기출 10개년을 3회 반복하면 출제 패턴이 눈에 보인다. 비전공자 합격생 대부분이 이 과목에서 80점 이상을 확보해 평균을 끌어올린다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "전력공학 — 설비기술기준과 함께 공부하라" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "송전, 배전, 변전 시스템의 원리와 계산을 다룬다. %임피던스법, 전압강하, 전력손실 계산이 빈출이다. 전기설비기술기준과 내용이 겹치는 부분(접지, 과전류 보호 등)이 많아 두 과목을 병행하면 시너지가 크다. 계산 문제는 공식 5~6개로 대부분 커버된다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "전기기기 — 3대 기기를 잡으면 끝" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "변압기, 유도전동기, 동기기", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "가 출제의 80%를 차지한다. 각 기기의 등가회로, 효율, 전압변동률 공식을 확실히 이해해야 한다. 직류기와 특수 전동기는 1~2문제 수준이므로 기출 빈출 문제만 정리하면 충분하다. 공식을 단순 암기하면 응용 문제에서 무너지니, 반드시 '왜 이 공식이 나오는지'를 이해해야 한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "회로이론 및 제어공학 — 회로이론에 집중하라" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "회로이론과 제어공학이 하나의 과목으로 묶여 있다. 비중은 대략 회로이론 60%, 제어공학 40%다. 키르히호프 법칙, 테브난/노턴 정리, RLC 교류 회로 해석이 회로이론의 핵심이다. 제어공학은 블록선도 변환, 전달함수, 안정도 판별(라우스-후르비츠)이 반복 출제된다. " },
+        { "type": "text", "text": "전기공학과", "marks": [{ "type": "link", "attrs": { "href": "/major/전기공학과" } }] },
+        { "type": "text", "text": " 전공자에게는 익숙한 내용이지만, 비전공자는 기초 회로 개념부터 차근차근 쌓아야 한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "전기자기학 — 40점 사수 전략" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "비전공자에게 전기자기학은 벽처럼 느껴진다. 쿨롱의 법칙, 가우스 법칙, 비오-사바르 법칙, 앙페르 법칙 등 수학적 배경이 필요한 개념이 많다. 하지만 필기 합격에 80점이 필요한 것은 아니다. ", "marks": [] },
+        { "type": "text", "text": "40점(8문제)만 넘기면 과락을 피할 수 있다.", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 전략은 간단하다. 기출에서 반복 출제되는 공식 15~20개를 정리하고, 해당 유형만 집중 연습한다. 벡터 미적분이 필요한 심화 문제는 과감히 버린다." }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "✓ 과목별 목표 점수 전략" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "전체 평균 60점을 넘기되, 과목별로 차등 목표를 두는 것이 현실적이다. 전기설비기술기준 80점, 전력공학 65점, 전기기기 60점, 회로이론및제어공학 55점, 전기자기학 45점 — 이렇게 배분하면 평균 61점으로 합격권이다. 약점 과목에 매달리기보다 강점 과목에서 점수를 쌓는 전략이 효율적이다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "교재와 인강, 무엇을 선택할까" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기기사 필기 교재는 크게 3개 출판사가 시장을 주도한다. 인강과 함께 쓰는 경우가 대부분이므로, 교재-인강 조합으로 비교한다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "구분" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "다산에듀" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "에듀윌" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "성안당" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교재 특징" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "핵심이론+기출 세트, 이론 체계적" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "요약 중심, 빠른 회독에 적합" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "상세 이론, 분량 많음" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "인강" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자체 인강 (이론 깊이 있음)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자체 인강 (속도감 있음)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "별도 인강 없음" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가격대" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교재 5만원대 + 인강 20~30만원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교재 4만원대 + 인강 15~25만원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교재 5만원대 (인강 별도)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "추천 대상" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자, 이론부터 차근차근" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전공자, 빠르게 회독·정리" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "심화 학습, 참고서 용도" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "무료 대안" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "나합격(유튜브 무료 인강)" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "비전공자라면 다산에듀가 가장 무난하다. ", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이론 설명이 체계적이고, 인강 강사의 풀이 과정이 상세하다. 이미 기초가 있는 전공자는 에듀윌로 빠르게 회독하는 전략이 효과적이다. 예산이 부족하다면 나합격 유튜브 채널" },
+        { "type": "footnote", "attrs": { "id": 4, "text": "나합격 유튜브 채널", "url": "https://www.youtube.com/@nahapgyeok" } },
+        { "type": "text", "text": "의 무료 강의와 성안당 교재를 조합하는 방법도 있다. 핵심은 한 교재를 3회 이상 반복하는 것이지, 여러 교재를 섞는 것이 아니다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-HowTo-전기기사필기-img1.webp",
+        "alt": "전기기사 필기 공부 환경 - 전기기사 교재와 공학용 계산기가 놓인 책상",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "4개월 독학 플랜" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "비전공자 기준, 하루 2~3시간 학습을 전제로 한 4개월(16주) 플랜이다. 전공자는 2~3개월로 압축할 수 있다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "1개월 차 (1~4주): 기초 다지기" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1~2주: 전기설비기술기준 이론 1회독 + 기출 1회독" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3~4주: 전력공학 이론 1회독 (설비기준과 겹치는 내용 연계)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "매일 기출 10문제씩 풀기 시작 (설비기준 위주)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "목표: 설비기준 기출 정답률 60% 이상" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "2개월 차 (5~8주): 주력 과목 공략" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5~6주: 전기기기 이론 1회독 (변압기 → 유도전동기 → 동기기 순서)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "7~8주: 회로이론 및 제어공학 이론 1회독 (회로이론 먼저, 제어공학 후순위)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전력공학 기출 1회독 병행" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "목표: 4과목 이론 1회독 완료" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "3개월 차 (9~12주): 전기자기학 + 기출 회독" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "9~10주: 전기자기학 이론 1회독 (빈출 공식 15~20개 노트 정리)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "11~12주: 전 과목 기출 10개년 2회독 시작" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "오답노트 작성 (틀린 문제만 별도 정리)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "목표: 5과목 이론 전체 1회독 + 기출 2회독" }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "4개월 차 (13~16주): 실전 마무리" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "13~14주: 기출 10개년 3회독 (회차별 모의시험 형식으로 시간 재고 풀기)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "15주: 오답노트 집중 복습 + 약점 과목 보강" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "16주(시험 주): 공식 정리 노트 최종 회독 + CBT 환경 적응 연습" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "목표: 기출 모의 평균 65점 이상, 과락 과목 없음" }] }] }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "✓ 기출 3회독이 합격의 핵심이다" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "전기기사 합격생의 절대다수가 기출 10개년 3회독을 합격의 결정적 요인으로 꼽는다. 1회독은 출제 범위 파악, 2회독은 약점 발견, 3회독은 패턴 체화 — 이 과정을 건너뛰면 합격이 어렵다. 이론서 5번 읽는 것보다 기출 3회독이 점수 상승에 훨씬 효과적이다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "시험장에서의 실전 전략" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2023년부터 CBT 방식이 도입되면서 시험 환경이 크게 바뀌었다. 기존 OMR 시험과 달리 몇 가지 전략적 이점이 생겼다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "CBT 방식의 전략적 활용" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목 간 자유 이동", "marks": [{ "type": "bold" }] }, { "type": "text", "text": ": 자신 있는 과목부터 풀어 심리적 안정감을 확보한다. 전기설비기술기준을 먼저 풀고 시작하면 자신감이 올라간다." }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "내장 계산기", "marks": [{ "type": "bold" }] }, { "type": "text", "text": ": CBT 화면에 계산기가 내장되어 있다. 별도 계산기를 가져갈 수도 있지만, CBT 내장 계산기에 미리 익숙해지는 것이 유리하다." }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문제 북마크", "marks": [{ "type": "bold" }] }, { "type": "text", "text": ": 나중에 다시 볼 문제에 표시를 해둘 수 있다. 모르는 문제를 표시해두고 나머지를 먼저 푸는 전략이 가능하다." }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "즉시 결과 확인", "marks": [{ "type": "bold" }] }, { "type": "text", "text": ": 시험 종료 즉시 합격 여부를 확인할 수 있다. 불합격 시 다음 회차를 바로 준비할 수 있다." }] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "시간 배분 전략" }]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "권장 시간" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전략" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기설비기술기준" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "20분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "암기 과목, 빠르게 풀고 시간 절약" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전력공학" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "30분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "계산 문제 일부, 여유 있게 배분" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기기기" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "30분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "공식 대입 계산이 많으므로 시간 확보" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "회로이론및제어공학" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "35분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "회로 해석에 시간 소요, 넉넉히 배분" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기자기학" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "25분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "아는 문제만 빠르게, 모르면 찍기" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "검토", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "10분", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "북마크한 문제 재검토", "marks": [{ "type": "bold" }] }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "계산 문제 대응법" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기기사 필기의 40% 이상이 계산 문제다. 시간이 부족할 때는 계산 문제를 '선별적으로 버리는' 전략이 필요하다. 구체적으로, 한 문제에 3분 이상 걸리면 북마크하고 넘어간다. 나머지 문제를 다 풀고 시간이 남으면 돌아온다. 특히 전기자기학은 '아는 유형만 빠르게 풀고 나머지는 찍는다'는 전략이 과락 회피에 효과적이다" },
+        { "type": "footnote", "attrs": { "id": 5, "text": "전기기사 합격 수기 종합, 전기 커뮤니티", "url": "https://cafe.naver.com/electric0" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "2026년 시험 일정" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2026년 전기기사 필기시험 일정은 다음과 같다. CBT 도입 이후 접수 기간이 길어졌으므로 일정을 미리 확인하고 역산 계획을 세우는 것이 중요하다" },
+        { "type": "footnote", "attrs": { "id": 6, "text": "Q-net, 2026년 국가기술자격 시험일정", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=Q" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "회차" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 시험 기간" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격 발표" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비고" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2.1 ~ 2.14" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CBT 즉시 확인" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "겨울 준비자 대상" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "4.19 ~ 5.2" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CBT 즉시 확인" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "지금 시작하면 딱 맞는 시기" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "7.18 ~ 7.31" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CBT 즉시 확인" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "여유 있는 준비 가능" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "합격 후 진로와 연봉" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기기사 자격증은 취득 자체보다 취득 후 활용 범위가 넓다는 점에서 가치가 크다. 주요 진로와 예상 연봉을 정리하면 다음과 같다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "진로" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "초봉 (연)" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "특징" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국전력공사 (KEPCO)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "4,000~4,500만원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "안정적, 전기기사 필수 자격" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기공사 업체" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3,200~3,800만원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경력 쌓기 좋음, 현장 경험" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "데이터센터 (네이버, 카카오 등)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3,800~4,500만원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기 설비 운영·유지보수" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "건설사 전기감리" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3,500~4,200만원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기감리기술자로 진출 가능" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "신재생에너지 업체" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3,500~4,000만원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "태양광·풍력 설비, 성장 산업" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기안전공사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3,800~4,300만원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "공기업, 전기 안전 점검·검사" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기기사만으로도 취업 시장에서 경쟁력이 있지만, 실무 경력을 쌓은 뒤 ", "marks": [] },
+        { "type": "text", "text": "전기감리기술자", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "로 진출하면 연봉이 크게 올라간다. 또한 전기기사 + 소방설비기사(전기) 조합은 건설·건물관리 시장에서 매우 강력한 스펙이다" },
+        { "type": "footnote", "attrs": { "id": 7, "text": "워크넷, 전기공학기술자 직업정보", "url": "https://www.work24.go.kr/wk/a/b/1500/empDetailView.do" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "✓ 실기도 준비해야 한다" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "필기 합격 후 2년 이내에 실기에 합격해야 최종 자격을 취득한다. 실기는 필답형(서술·계산)으로 필기보다 난이도가 높다. 필기 합격 직후 바로 실기 준비에 돌입하는 것이 가장 효율적이다. 필기에서 쌓은 이론 지식이 살아 있을 때 실기 준비를 시작해야 학습 효율이 극대화된다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "💡 핵심 정리" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5과목 평균 60점 + 과락 40점 — 과락 관리가 합격의 핵심이다" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자 학습 순서: 설비기준 → 전력공학 → 전기기기 → 회로이론 → 전기자기학" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출 10개년 3회독이 합격의 결정적 요인이다" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기자기학은 40점 사수 전략 — 빈출 공식 15~20개만 집중" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CBT 방식으로 자유로운 과목 이동과 즉시 결과 확인이 가능하다" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자 4개월, 전공자 2~3개월이면 필기 합격이 충분히 가능하다" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "비전공자인데 전기기사 필기 독학이 정말 가능한가?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "가능하다. 다만 전공자보다 시간 투자가 더 필요할 뿐이다. 전공자가 2~3개월이면 비전공자는 4~6개월을 잡아야 한다. 핵심은 전기설비기술기준 같은 암기 과목에서 고득점을 확보하고, 전기자기학은 과락만 넘기는 차등 전략을 쓰는 것이다. 인강(다산에듀 등)을 활용하면 독학의 어려움을 상당 부분 줄일 수 있다." }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "CBT 시험은 OMR 시험보다 쉬운가?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "문제 난이도 자체가 낮아진 것은 아니다. 하지만 CBT에서는 과목 간 자유 이동, 문제 북마크, 내장 계산기 사용 등이 가능해서 시험 환경이 유리해졌다. 또한 시험 기간이 2주로 확대되어 원하는 날짜에 응시할 수 있고, 결과도 즉시 확인된다. 체감 난이도는 OMR 시절보다 확실히 낮아졌다는 평가가 많다." }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "전기기사와 전기산업기사, 어떤 걸 먼저 따야 하나?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "응시 자격이 되면 전기기사를 바로 도전하는 것이 낫다. 전기산업기사는 전기기사보다 난이도가 약간 낮지만, 취업 시장에서의 인정도 차이가 크다. 한전이나 대기업은 전기기사를 기준으로 우대하며, 전기산업기사는 제한적으로 인정된다. 만약 학력·경력 조건 때문에 기사 응시가 불가하다면 산업기사를 먼저 따고, 이후 경력을 채워 기사에 도전하면 된다." }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "전기기사 필기 합격 후 실기는 얼마나 더 걸리나?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "필기 합격 후 실기 준비 기간은 보통 2~3개월이다. 실기는 필답형(서술·계산)으로 필기와 범위가 겹치지만 난이도가 높다. 필기 합격 직후 바로 실기 준비를 시작하면 이론 지식이 살아 있어 효율적이다. 필기 합격일로부터 2년 이내에 실기에 합격해야 하므로, 첫 번째 실기 시험에 도전하는 것을 추천한다." }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "전기기사 자격증 유효기간이 있나?" }] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [{ "type": "text", "text": "전기기사 자격증에는 유효기간이 없다. 한 번 합격하면 평생 유효하다. 다만 전기안전관리자로 선임되려면 별도의 법정 교육(전기안전관리자 직무교육)을 이수해야 한다. 자격증 자체의 갱신이나 보수교육 의무는 없다." }] }
+          ]
+        }
+      ]
+    }
+  ]
+}

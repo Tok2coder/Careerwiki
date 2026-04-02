@@ -1,0 +1,148 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "0gtZWQBSofsc1_fZP5sMUPR-BYM",
+  "nextPageToken": "CAQQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 421629,
+    "resultsPerPage": 4
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "cdqoroJgfmp22sgKrGwpKbLi9X8",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "PYt-XP7Ap8I"
+      },
+      "snippet": {
+        "publishedAt": "2021-10-06T09:30:03Z",
+        "channelId": "UCiwQRG2sCcfjKkgxMEdJGPg",
+        "title": "[아무튼 출근] 수용자들의 협박과 난동, 자살시도까지... 한시도 긴장을 놓을 수 없는💦 교도관 류효기의 최강 난이도 밥벌이ㅣ#교도관 #교도소 #류효기MBC211005방송",
+        "description": "[아무튼 출근] 화요일 밤 9시 방송! MBC의 따끈따끈한 영상을 내 맘대로 편하게 즐기는 채널   엠뚜루마뚜루 구독 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/PYt-XP7Ap8I/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/PYt-XP7Ap8I/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/PYt-XP7Ap8I/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "엠뚜루마뚜루 : MBC 공식 종합 채널",
+        "liveBroadcastContent": "none",
+        "publishTime": "2021-10-06T09:30:03Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "HXFi-ZKPErcwx1pLh6ioZvgmrsc",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "KNQ2qma3Cfg"
+      },
+      "snippet": {
+        "publishedAt": "2025-08-02T23:45:03Z",
+        "channelId": "UCtS4B0zHnClfzeKdhsdHTDg",
+        "title": "교도관 (교정직 공무원) 계급별 기본급",
+        "description": "교도관 (교정직 공무원) 계급별 기본급 #교도관월급.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/KNQ2qma3Cfg/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/KNQ2qma3Cfg/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/KNQ2qma3Cfg/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "샘물요정",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-08-02T23:45:03Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "x5IffuY8g56IrU48PUDI0s6y2DM",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "L4OS5fmE-Vc"
+      },
+      "snippet": {
+        "publishedAt": "2019-05-24T03:00:02Z",
+        "channelId": "UCsLoTwOpElvEixfF1-O90rA",
+        "title": "[극한직업 레전드] 수감자들과 철창 안에서 같이 생활하는 사람들. 교도소로 출근하는 대한민국 교도관의 24시간 / EBS 극한직업",
+        "description": "수감자들과 하루를 같이 보내는 대한민국 교도관. 교도소의 긴 복도를 수도 없이 오가며 상황을 체크하고, 언제 터질지 모르는 사건 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/L4OS5fmE-Vc/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/L4OS5fmE-Vc/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/L4OS5fmE-Vc/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "EBS 컬렉션 - 라이프스타일",
+        "liveBroadcastContent": "none",
+        "publishTime": "2019-05-24T03:00:02Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "evFHwUayISBjD40eRsSdphSdJB0",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "1x4AL31dimM"
+      },
+      "snippet": {
+        "publishedAt": "2025-10-28T10:31:44Z",
+        "channelId": "UCsU-I-vHLiaMfV_ceaYz5rQ",
+        "title": "[단독] 2025년 한국 교도소 상황…&#39;폭력 난무&#39; 내부 영상 입수 / JTBC 뉴스룸",
+        "description": "오늘 JTBC는 2025년이라고는 믿을 수 없는 교도소의 폭력 실태를 전해드리려고 합니다. 저희 취재진이 어렵게 입수한 교도소 내부 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/1x4AL31dimM/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/1x4AL31dimM/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/1x4AL31dimM/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "JTBC News",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-10-28T10:31:44Z"
+      }
+    }
+  ]
+}

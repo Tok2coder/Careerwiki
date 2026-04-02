@@ -1,0 +1,182 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "RO4knW9Z8buyeCUBEj7p7Pm36lY",
+  "nextPageToken": "CAUQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 12965,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "8zxtXug_DKX8mJTHR-M0Ra2kLYQ",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "fXQHox5fAQU"
+      },
+      "snippet": {
+        "publishedAt": "2024-04-01T06:35:55Z",
+        "channelId": "UCa0fJK2ei8fl11P_zJwN-9w",
+        "title": "스포츠 에이전트 [ 직업 - 예체능계열 ]",
+        "description": "스포츠에이전트 #직업 #마이베스트 #교육 #진로 #진학 #진로진학 대표번호 1551-5874 ① 워크북&캠프 문의 ② 특강, 에듀마스터 ③ ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/fXQHox5fAQU/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/fXQHox5fAQU/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/fXQHox5fAQU/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "가르치는 사람들",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-04-01T06:35:55Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "9tP8L8BG5HO2WXQZNeVeMo24Fic",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "44BoJHzQNQ4"
+      },
+      "snippet": {
+        "publishedAt": "2024-05-30T23:46:29Z",
+        "channelId": "UCrREhltE9QEiXjQLdj9uxYw",
+        "title": "[비상교육] 직업정보_스포츠 에이전트",
+        "description": "스포츠 선수의 계약 및 업무를 대행하는 사람들! 스포츠 에이전트의 직업 세계로 떠나 볼까요? ☆ 선생님과 함께 만들어가는 즐거운 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/44BoJHzQNQ4/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/44BoJHzQNQ4/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/44BoJHzQNQ4/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "비상교육 비바샘",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-05-30T23:46:29Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "yauW97M5LgBgBHsc_1vV638Gix8",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "4hWJih93WgI"
+      },
+      "snippet": {
+        "publishedAt": "2021-09-30T06:31:04Z",
+        "channelId": "UCJVB5oBdNd-bVAUExECg4TQ",
+        "title": "[신직업 소개] 126억원까지 받는 직업이 있다...? | 스포츠 에이전트",
+        "description": "[투데이잡스 시즌2 20210930] 어서와 이런 직업은 처음이지? All about 신직업 시간 입니다. 오늘 만나볼 신직업은 스포츠를 좋아하는 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/4hWJih93WgI/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/4hWJih93WgI/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/4hWJih93WgI/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "잡플러스채용",
+        "liveBroadcastContent": "none",
+        "publishTime": "2021-09-30T06:31:04Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "5_Db6v15cFDwhMuDyC3Tv4EYWh4",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "6ZUS41MfHCM"
+      },
+      "snippet": {
+        "publishedAt": "2022-08-28T11:16:29Z",
+        "channelId": "UCDJXwSNww9gxAhQtoaM2dyA",
+        "title": "[스포츠에이전트] 선수의 성공이 성취감이 되는 스포츠에이전트 양명규│제8회 논산시 청소년 진로박람회 직업人 멘토",
+        "description": "[제8회 논산시 청소년 진로박람회] □기간 : 2022. 8.31.(수) ~ 9.02.(금) □홈페이지 : 논산시청소년진로박람회.kr 다양한 직업 분야의 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/6ZUS41MfHCM/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/6ZUS41MfHCM/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/6ZUS41MfHCM/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "논산시청소년상담복지센터",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-08-28T11:16:29Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "0TndL5KlkDDidrlZ-IUd4PaRabY",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "4kcrvQdpSkw"
+      },
+      "snippet": {
+        "publishedAt": "2023-01-20T11:00:03Z",
+        "channelId": "UCnnlw_lOYzaFw6Bl3t7M45A",
+        "title": "&quot;어떻게 축구 에이전트 됐어요?&quot; 독일 축구 에이전시 3년차, 질문 받습니다 | 입사 과정부터 업무 설명까지 | 유럽 이적, 스카우트, 빅클럽 | 홍현석 정우영 권창훈 구자철",
+        "description": "축구 #에이전트 #해외취업 홍현석 이적 1탄 (이적 과정): https://youtu.be/jxntGltH7EU 홍현석 이적 2탄 (데뷔골 현지 반응): ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/4kcrvQdpSkw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/4kcrvQdpSkw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/4kcrvQdpSkw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "B'90 (Behind 90 minutes)",
+        "liveBroadcastContent": "none",
+        "publishTime": "2023-01-20T11:00:03Z"
+      }
+    }
+  ]
+}

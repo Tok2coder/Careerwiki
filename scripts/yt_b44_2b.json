@@ -1,0 +1,114 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "zJTcmtp4yG-dIStkE4fgrCiERfY",
+  "nextPageToken": "CAQQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 14466,
+    "resultsPerPage": 3
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "HvN0qUS8j1lSc64kFyeTzOW6UUk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "kZ8zNoF5R_I"
+      },
+      "snippet": {
+        "publishedAt": "2025-10-21T21:51:55Z",
+        "channelId": "UC3H0jJbS8GT11MehBFVn5rw",
+        "title": "현직자도 잘 안알려주는 디자이너의 모든것 ㅣ 하는 일, 인하우스, 에이전시, 프리랜서, 스튜디오, 장단점, 전공, 포트폴리오",
+        "description": "브랜드디자인 #디자인포트폴리오 #취업 그래픽 디자이너가 앞으로 어떤 방향으로 커리어를 쌓아 나가야 할지와 좋은 포트폴리오에 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/kZ8zNoF5R_I/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/kZ8zNoF5R_I/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/kZ8zNoF5R_I/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "No More Design",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-10-21T21:51:55Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "Cx0mPK29Mw0qx_Shq8lgOpKapQw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "t9v8HkMd_go"
+      },
+      "snippet": {
+        "publishedAt": "2025-10-24T10:05:15Z",
+        "channelId": "UCjbE_DFLHbxfk0Y0xj36zag",
+        "title": "시각vs 산업 어디로 가야할까? | 디자인 전공 &amp; 진로 총정리",
+        "description": "박서윤 대표 1:1 취업 관리반 모집중 https://zrr.kr/A6FhNC ◼️ 윤빌리티 '포트폴리오 클래스' 수강하기 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/t9v8HkMd_go/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/t9v8HkMd_go/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/t9v8HkMd_go/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "윤빌리티",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-10-24T10:05:15Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "pP7W84XDHLL9vRITOJGTmLMFUeI",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "oDBI45DPHRg"
+      },
+      "snippet": {
+        "publishedAt": "2022-10-25T12:00:36Z",
+        "channelId": "UCvcGy6uMg0kwTyEab6hkSlQ",
+        "title": "디자인과 비교, 취업, 진로 총정리!",
+        "description": "고3 수험생, 디자인과로 전과를 생각하는 분 모두 주목!!! 시각디자인, 산업디자인, 패션디자인, 공간디자인, 영상디자인... 많은 디자인 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/oDBI45DPHRg/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/oDBI45DPHRg/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/oDBI45DPHRg/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "디고디원찬 DESIGN",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-10-25T12:00:36Z"
+      }
+    }
+  ]
+}

@@ -1,0 +1,747 @@
+{
+  "jobMatches": {
+    "변호사": {
+      "match": "job:변호사",
+      "candidates": [
+        "job:변호사",
+        "job:변호사사무원",
+        "job:외국변호사"
+      ],
+      "type": "contains"
+    },
+    "검사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "판사": {
+      "match": "job:판사",
+      "candidates": [
+        "job:판사",
+        "job:축전지극판사상원"
+      ],
+      "type": "contains"
+    },
+    "경찰관": {
+      "match": "job:경찰관",
+      "candidates": [
+        "job:경찰관",
+        "job:해양경찰관"
+      ],
+      "type": "contains"
+    },
+    "소프트웨어-개발자": {
+      "match": null,
+      "type": "no-match"
+    },
+    "간호사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "전문의사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "부동산중개인": {
+      "match": "job:부동산중개인",
+      "candidates": [
+        "job:부동산중개인"
+      ],
+      "type": "contains"
+    },
+    "약국약사": {
+      "match": "job:약국약사",
+      "candidates": [
+        "job:약국약사"
+      ],
+      "type": "contains"
+    },
+    "병원약사": {
+      "match": "job:병원약사",
+      "candidates": [
+        "job:병원약사"
+      ],
+      "type": "contains"
+    },
+    "전기기술자": {
+      "match": "job:무전기기술자",
+      "candidates": [
+        "job:무전기기술자",
+        "job:전기기술자"
+      ],
+      "type": "contains"
+    },
+    "공무원": {
+      "match": null,
+      "type": "no-match"
+    },
+    "학예연구사": {
+      "match": "job:학예연구사",
+      "candidates": [
+        "job:학예연구사"
+      ],
+      "type": "contains"
+    },
+    "역사학연구원": {
+      "match": null,
+      "type": "no-match"
+    },
+    "사회복지사": {
+      "match": "job:사회복지사일반",
+      "candidates": [
+        "job:사회복지사일반",
+        "job:학교사회복지사",
+        "job:사회복지사"
+      ],
+      "type": "contains"
+    },
+    "학교사회복지사": {
+      "match": "job:학교사회복지사",
+      "candidates": [
+        "job:학교사회복지사"
+      ],
+      "type": "contains"
+    },
+    "사회복지시설관리자": {
+      "match": "job:사회복지시설관리자",
+      "candidates": [
+        "job:사회복지시설관리자"
+      ],
+      "type": "contains"
+    },
+    "사회복지정책연구원": {
+      "match": null,
+      "type": "no-match"
+    },
+    "uxui디자이너": {
+      "match": "job:uxui디자이너",
+      "candidates": [
+        "job:uxui디자이너"
+      ],
+      "type": "contains"
+    },
+    "웹디자이너": {
+      "match": "job:웹디자이너",
+      "candidates": [
+        "job:웹디자이너"
+      ],
+      "type": "contains"
+    },
+    "회계사무원": {
+      "match": "job:회계사무원",
+      "candidates": [
+        "job:회계사무원",
+        "job:광고물제작회계사무원"
+      ],
+      "type": "contains"
+    },
+    "재무관리자": {
+      "match": "job:재무관리자",
+      "candidates": [
+        "job:재무관리자"
+      ],
+      "type": "contains"
+    },
+    "세무사": {
+      "match": "job:세무사무원",
+      "candidates": [
+        "job:세무사무원",
+        "job:세무사"
+      ],
+      "type": "contains"
+    },
+    "항공기객실승무원": {
+      "match": "job:항공기객실승무원",
+      "candidates": [
+        "job:항공기객실승무원"
+      ],
+      "type": "contains"
+    },
+    "전기공학기술자": {
+      "match": "job:전기공학기술자",
+      "candidates": [
+        "job:전기공학기술자"
+      ],
+      "type": "contains"
+    },
+    "데이터분석가일반": {
+      "match": "job:데이터분석가일반",
+      "candidates": [
+        "job:데이터분석가일반"
+      ],
+      "type": "contains"
+    },
+    "빅데이터전문가": {
+      "match": "job:빅데이터전문가",
+      "candidates": [
+        "job:빅데이터전문가"
+      ],
+      "type": "contains"
+    },
+    "임상심리사": {
+      "match": "job:임상심리사",
+      "candidates": [
+        "job:임상심리사"
+      ],
+      "type": "contains"
+    },
+    "심리상담전문가": {
+      "match": "job:심리상담전문가",
+      "candidates": [
+        "job:심리상담전문가"
+      ],
+      "type": "contains"
+    },
+    "응용소프트웨어개발자": {
+      "match": "job:휴대폰응용소프트웨어개발자",
+      "candidates": [
+        "job:휴대폰응용소프트웨어개발자",
+        "job:응용소프트웨어개발자"
+      ],
+      "type": "contains"
+    },
+    "시스템소프트웨어개발자": {
+      "match": "job:반도체장비시스템소프트웨어개발자",
+      "candidates": [
+        "job:반도체장비시스템소프트웨어개발자"
+      ],
+      "type": "contains"
+    },
+    "데이터베이스관리자": {
+      "match": "job:데이터베이스관리자",
+      "candidates": [
+        "job:데이터베이스관리자",
+        "job:공간정보데이터베이스관리자"
+      ],
+      "type": "contains"
+    },
+    "네트워크관리자": {
+      "match": "job:네트워크관리자",
+      "candidates": [
+        "job:네트워크관리자"
+      ],
+      "type": "contains"
+    },
+    "정보보안전문가": {
+      "match": "job:클라우드시스템정보보안전문가",
+      "candidates": [
+        "job:클라우드시스템정보보안전문가",
+        "job:정보보안전문가"
+      ],
+      "type": "contains"
+    },
+    "웹개발자": {
+      "match": "job:웹개발자",
+      "candidates": [
+        "job:웹개발자"
+      ],
+      "type": "contains"
+    },
+    "데이터분석가": {
+      "match": "job:데이터분석가일반",
+      "candidates": [
+        "job:데이터분석가일반",
+        "job:데이터분석가빅데이터분석가",
+        "job:미디어콘텐츠데이터분석가"
+      ],
+      "type": "contains"
+    },
+    "공인회계사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "단체급식조리사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "한식조리사": {
+      "match": "job:한식조리사",
+      "candidates": [
+        "job:한식조리사"
+      ],
+      "type": "contains"
+    },
+    "식품공학기술자": {
+      "match": "job:식품공학기술자및연구원",
+      "candidates": [
+        "job:식품공학기술자및연구원",
+        "job:식품공학기술자"
+      ],
+      "type": "contains"
+    },
+    "번역가": {
+      "match": "job:번역가",
+      "candidates": [
+        "job:번역가",
+        "job:영상물번역가",
+        "job:번역가일반",
+        "job:웹툰번역가",
+        "job:고전번역가"
+      ],
+      "type": "contains"
+    },
+    "관광통역안내원": {
+      "match": "job:관광통역안내원",
+      "candidates": [
+        "job:관광통역안내원"
+      ],
+      "type": "contains"
+    },
+    "회계사": {
+      "match": "job:회계사무원",
+      "candidates": [
+        "job:회계사무원",
+        "job:광고물제작회계사무원",
+        "job:회계사"
+      ],
+      "type": "contains"
+    },
+    "외교관": {
+      "match": "job:외교관",
+      "candidates": [
+        "job:외교관"
+      ],
+      "type": "contains"
+    },
+    "해외영업원": {
+      "match": "job:증권사해외영업원",
+      "candidates": [
+        "job:증권사해외영업원",
+        "job:해외영업원"
+      ],
+      "type": "contains"
+    },
+    "공인중개사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "노무사": {
+      "match": "job:노무사",
+      "candidates": [
+        "job:노무사",
+        "job:노무사무원"
+      ],
+      "type": "contains"
+    },
+    "인사담당자": {
+      "match": null,
+      "type": "no-match"
+    },
+    "바리스타": {
+      "match": "job:바리스타",
+      "candidates": [
+        "job:바리스타"
+      ],
+      "type": "contains"
+    },
+    "카페경영자": {
+      "match": null,
+      "type": "no-match"
+    },
+    "커피로스터": {
+      "match": null,
+      "type": "no-match"
+    },
+    "관광통역안내사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "여행사무원": {
+      "match": "job:여행사무원",
+      "candidates": [
+        "job:여행사무원"
+      ],
+      "type": "contains"
+    },
+    "관광상품개발자": {
+      "match": null,
+      "type": "no-match"
+    },
+    "통역사": {
+      "match": "job:수어통역사",
+      "candidates": [
+        "job:수어통역사"
+      ],
+      "type": "contains"
+    },
+    "사무원": {
+      "match": null,
+      "type": "no-match"
+    },
+    "경영지원 사무원": {
+      "match": null,
+      "type": "no-match"
+    },
+    "행정사무원": {
+      "match": null,
+      "type": "no-match"
+    },
+    "관세사": {
+      "match": "job:관세사",
+      "candidates": [
+        "job:관세사"
+      ],
+      "type": "contains"
+    },
+    "건축가": {
+      "match": "job:건축가",
+      "candidates": [
+        "job:건축가"
+      ],
+      "type": "contains"
+    },
+    "건설안전기술자": {
+      "match": null,
+      "type": "no-match"
+    },
+    "건축사": {
+      "match": "job:건축사",
+      "candidates": [
+        "job:건축사"
+      ],
+      "type": "contains"
+    },
+    "건설사 현장소장": {
+      "match": null,
+      "type": "no-match"
+    },
+    "변리사": {
+      "match": "job:변리사",
+      "candidates": [
+        "job:변리사"
+      ],
+      "type": "contains"
+    },
+    "주택관리사": {
+      "match": "job:주택관리사",
+      "candidates": [
+        "job:주택관리사",
+        "job:공동주택관리사무원",
+        "job:공동주택관리사무소장"
+      ],
+      "type": "contains"
+    },
+    "건설사무원": {
+      "match": null,
+      "type": "no-match"
+    },
+    "위생사": {
+      "match": "job:공중구강보건치과위생사",
+      "candidates": [
+        "job:공중구강보건치과위생사",
+        "job:치과위생사",
+        "job:위생사",
+        "job:관리치과위생사",
+        "job:임상치과위생사"
+      ],
+      "type": "contains"
+    },
+    "보건교육사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "영양사": {
+      "match": "job:급식영양사",
+      "candidates": [
+        "job:급식영양사",
+        "job:임상영양사",
+        "job:상담영양사"
+      ],
+      "type": "contains"
+    },
+    "환경공학기술자": {
+      "match": "job:환경공학기술자및연구원",
+      "candidates": [
+        "job:환경공학기술자및연구원"
+      ],
+      "type": "contains"
+    },
+    "데이터-분석가": {
+      "match": "job:데이터분석가일반",
+      "candidates": [
+        "job:데이터분석가일반",
+        "job:데이터분석가빅데이터분석가",
+        "job:미디어콘텐츠데이터분석가"
+      ],
+      "type": "contains"
+    },
+    "손해사정사": {
+      "match": "job:손해사정사",
+      "candidates": [
+        "job:손해사정사"
+      ],
+      "type": "contains"
+    },
+    "소방설비기사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "소방안전관리자": {
+      "match": "job:소방안전관리자",
+      "candidates": [
+        "job:소방안전관리자"
+      ],
+      "type": "contains"
+    },
+    "소방기술자": {
+      "match": null,
+      "type": "no-match"
+    },
+    "소방관": {
+      "match": "job:소방관",
+      "candidates": [
+        "job:소방관"
+      ],
+      "type": "contains"
+    },
+    "경호원": {
+      "match": "job:경호원",
+      "candidates": [
+        "job:경호원"
+      ],
+      "type": "contains"
+    },
+    "보안컨설턴트": {
+      "match": null,
+      "type": "no-match"
+    },
+    "머신러닝엔지니어": {
+      "match": null,
+      "type": "no-match"
+    },
+    "제과제빵사": {
+      "match": null,
+      "type": "no-match"
+    },
+    "파티시에": {
+      "match": null,
+      "type": "no-match"
+    }
+  },
+  "majorMatches": {
+    "컴퓨터공학과": {
+      "match": "major:컴퓨터공학과",
+      "candidates": [
+        "major:컴퓨터공학과"
+      ],
+      "type": "contains"
+    },
+    "간호학과": {
+      "match": "major:간호학과",
+      "candidates": [
+        "major:간호학과"
+      ],
+      "type": "contains"
+    },
+    "사학과": {
+      "match": "major:군사학과",
+      "candidates": [
+        "major:군사학과",
+        "major:사학과"
+      ],
+      "type": "contains"
+    },
+    "역사교육과": {
+      "match": "major:역사교육과",
+      "candidates": [
+        "major:역사교육과"
+      ],
+      "type": "contains"
+    },
+    "사회복지학과": {
+      "match": "major:사회복지학과",
+      "candidates": [
+        "major:사회복지학과"
+      ],
+      "type": "contains"
+    },
+    "시각디자인학과": {
+      "match": "major:시각디자인학과",
+      "candidates": [
+        "major:시각디자인학과"
+      ],
+      "type": "contains"
+    },
+    "산업디자인학과": {
+      "match": "major:산업디자인학과",
+      "candidates": [
+        "major:산업디자인학과"
+      ],
+      "type": "contains"
+    },
+    "항공서비스과": {
+      "match": "major:항공서비스과",
+      "candidates": [
+        "major:항공서비스과"
+      ],
+      "type": "contains"
+    },
+    "전기공학과": {
+      "match": "major:전기공학과",
+      "candidates": [
+        "major:전기공학과"
+      ],
+      "type": "contains"
+    },
+    "통계학과": {
+      "match": "major:통계학과",
+      "candidates": [
+        "major:통계학과"
+      ],
+      "type": "contains"
+    },
+    "심리학과": {
+      "match": "major:심리학과",
+      "candidates": [
+        "major:심리학과"
+      ],
+      "type": "contains"
+    },
+    "일어일문학과": {
+      "match": "major:일어일문학과",
+      "candidates": [
+        "major:일어일문학과"
+      ],
+      "type": "contains"
+    },
+    "회계학과": {
+      "match": "major:회계학과",
+      "candidates": [
+        "major:회계학과",
+        "major:세무회계학과"
+      ],
+      "type": "contains"
+    },
+    "경영학과": {
+      "match": "major:호텔경영학과",
+      "candidates": [
+        "major:호텔경영학과",
+        "major:관광경영학과",
+        "major:의료경영학과",
+        "major:경영학과",
+        "major:호텔관광경영학과"
+      ],
+      "type": "contains"
+    },
+    "영어영문학과": {
+      "match": "major:영어영문학과",
+      "candidates": [
+        "major:영어영문학과"
+      ],
+      "type": "contains"
+    },
+    "국제학과": {
+      "match": "major:국제학과",
+      "candidates": [
+        "major:국제학과"
+      ],
+      "type": "contains"
+    },
+    "무역학과": {
+      "match": "major:무역학과",
+      "candidates": [
+        "major:무역학과"
+      ],
+      "type": "contains"
+    },
+    "국제통상학과": {
+      "match": "major:국제통상학과",
+      "candidates": [
+        "major:국제통상학과"
+      ],
+      "type": "contains"
+    },
+    "토목공학과": {
+      "match": "major:토목공학과",
+      "candidates": [
+        "major:토목공학과"
+      ],
+      "type": "contains"
+    },
+    "건축공학과": {
+      "match": "major:건축공학과",
+      "candidates": [
+        "major:건축공학과"
+      ],
+      "type": "contains"
+    },
+    "건축학과": {
+      "match": "major:major건축학과",
+      "candidates": [
+        "major:major건축학과",
+        "major:건축학과"
+      ],
+      "type": "contains"
+    },
+    "전기전자공학과": {
+      "match": "major:전기전자공학과",
+      "candidates": [
+        "major:전기전자공학과"
+      ],
+      "type": "contains"
+    },
+    "화학공학과": {
+      "match": "major:화학공학과",
+      "candidates": [
+        "major:화학공학과"
+      ],
+      "type": "contains"
+    },
+    "기계공학과": {
+      "match": "major:기계공학과",
+      "candidates": [
+        "major:기계공학과",
+        "major:생물산업기계공학과"
+      ],
+      "type": "contains"
+    },
+    "부동산학과": {
+      "match": "major:부동산학과",
+      "candidates": [
+        "major:부동산학과"
+      ],
+      "type": "contains"
+    },
+    "법학과": {
+      "match": "major:법학과",
+      "candidates": [
+        "major:법학과"
+      ],
+      "type": "contains"
+    },
+    "건축설비공학과": {
+      "match": "major:건축설비공학과",
+      "candidates": [
+        "major:건축설비공학과"
+      ],
+      "type": "contains"
+    },
+    "환경보건학과": {
+      "match": "major:환경보건학과",
+      "candidates": [
+        "major:환경보건학과"
+      ],
+      "type": "contains"
+    },
+    "식품영양학과": {
+      "match": "major:식품영양학과",
+      "candidates": [
+        "major:식품영양학과"
+      ],
+      "type": "contains"
+    },
+    "식품공학과": {
+      "match": "major:식품공학과",
+      "candidates": [
+        "major:식품공학과"
+      ],
+      "type": "contains"
+    },
+    "환경공학과": {
+      "match": "major:환경공학과",
+      "candidates": [
+        "major:환경공학과"
+      ],
+      "type": "contains"
+    }
+  }
+}

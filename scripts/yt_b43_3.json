@@ -1,0 +1,148 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "lfSHutZHT4EHPoaMNhkVSO5NP_0",
+  "nextPageToken": "CAQQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 517658,
+    "resultsPerPage": 4
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "rafQ1pTew39m74sxeQEsjvch23o",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "cJOFZCh5TGY"
+      },
+      "snippet": {
+        "publishedAt": "2024-12-06T22:49:34Z",
+        "channelId": "UCaMB5WIox1kNomwzULq66XQ",
+        "title": "제품디자인과 취업은 어디로?",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/cJOFZCh5TGY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/cJOFZCh5TGY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/cJOFZCh5TGY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "슬기롭게",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-12-06T22:49:34Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "Cx0mPK29Mw0qx_Shq8lgOpKapQw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "t9v8HkMd_go"
+      },
+      "snippet": {
+        "publishedAt": "2025-10-24T10:05:15Z",
+        "channelId": "UCjbE_DFLHbxfk0Y0xj36zag",
+        "title": "시각vs 산업 어디로 가야할까? | 디자인 전공 &amp; 진로 총정리",
+        "description": "박서윤 대표 1:1 취업 관리반 모집중 https://zrr.kr/A6FhNC ◼️ 윤빌리티 '포트폴리오 클래스' 수강하기 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/t9v8HkMd_go/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/t9v8HkMd_go/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/t9v8HkMd_go/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "윤빌리티",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-10-24T10:05:15Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "mjt_WQ13u6S-4AbkVFY2TOqOIzs",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "5QeEfI6rPbg"
+      },
+      "snippet": {
+        "publishedAt": "2024-12-12T05:15:01Z",
+        "channelId": "UCHO2I92KuEGH6LD68LnPKyg",
+        "title": "(직업정보타파) 산업디자이너의 모든 것",
+        "description": "산업디자이너라는 직업에 대해 학생 여러분께 알려드립니다.~ 대한민국 모든 고등학생, 수험생 여러분 파이팅~~!!^^",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/5QeEfI6rPbg/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/5QeEfI6rPbg/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/5QeEfI6rPbg/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "쏭쌤의 교육 멘토링",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-12-12T05:15:01Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "yIw-2oYD2-B_JgpkUKfVwtAAgzs",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "yStvORC6z8A"
+      },
+      "snippet": {
+        "publishedAt": "2025-10-28T11:01:58Z",
+        "channelId": "UCRl7ChxXHt4fjn3P8runlkw",
+        "title": "산업디자인전문회사 신고｜한국디자인진흥원 인정·지원혜택·분야별 예시 총정리",
+        "description": "산업디자인전문회사 #한국디자인진흥원 #디자인전문회사신고 #지원사업혜택 #행정1번지 No.1 행정1번지 이인철행정사 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/yStvORC6z8A/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/yStvORC6z8A/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/yStvORC6z8A/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "행정1번지",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-10-28T11:01:58Z"
+      }
+    }
+  ]
+}

@@ -141,7 +141,7 @@ Phase 5: 프로덕션 확인 (전체 직업 일괄)
 - **sidebarJobs**: 7~12개. DB 존재 확인. 핵심 연관 직업만. 15개 초과 금지
 - **heroTags**: 3~10개, 2~15자 명사구. 별칭/세부분류/영문명 포함
 - **overviewAbilities.technKnow**: 활용 기술 서술 (출처+각주 필수)
-- **youtubeLinks**: [{url, title}]. YouTube Data API로 검색. 공식채널 우선 1~3개
+- **youtubeLinks**: `[{url, title}]`. **title 필수** (없으면 URL이 제목으로 노출됨. oembed 응답 title 값 사용). 진로 탐색 목적 영상 우선 (진로 가이드·현직자 인터뷰·전망 > 단순 vlog). 공식채널 우선 1~3개
 - **detailIndicators**: 고용24 재직자 조사 7항목. 없으면 null
 - **customCharts**: 해당 직업 특유 시각화. 공식 통계만. 없으면 null
 

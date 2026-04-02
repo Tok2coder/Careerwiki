@@ -1,0 +1,148 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "1AZj1P2Do7RZD-EA9ZO4LkvEKF0",
+  "nextPageToken": "CAQQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 15081,
+    "resultsPerPage": 4
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "J_dGUe_qVjkKAZ1HmugS_bKUoW8",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "P5S5PW4q31o"
+      },
+      "snippet": {
+        "publishedAt": "2025-04-29T01:51:41Z",
+        "channelId": "UCrREhltE9QEiXjQLdj9uxYw",
+        "title": "[비상교육] 직업정보_푸드스타일리스트",
+        "description": "요리를 예술로 승화시키는 요리의 예술가! 푸드스타일리스트의 직업 세계로 떠나 볼까요? ☆ 선생님과 함께 만들어가는 즐거운 수업 _ ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/P5S5PW4q31o/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/P5S5PW4q31o/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/P5S5PW4q31o/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "비상교육 비바샘",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-04-29T01:51:41Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "mQlpt2vRZrPy_1VlVPEXNx24CGQ",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "5zlo0UuBMZM"
+      },
+      "snippet": {
+        "publishedAt": "2022-03-20T03:50:00Z",
+        "channelId": "UCLW-7wUKMsFqdfDs7HSXAmw",
+        "title": "My Best 직업소개 (예체능) 푸드스타일리스트란 무엇일까?",
+        "description": "푸드스타일리스트 #mybest #직업소개.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/5zlo0UuBMZM/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/5zlo0UuBMZM/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/5zlo0UuBMZM/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "와투비에듀",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-03-20T03:50:00Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "dsOPdOR3sjI_jG8XbVCtsHH2-Pw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "BIHikhsje9Q"
+      },
+      "snippet": {
+        "publishedAt": "2023-09-07T01:00:04Z",
+        "channelId": "UChtCyvDGkkXCINefiRSLPTg",
+        "title": "푸드스타일리스트 자격증 3분 요약(푸드스타일리스트/진로 및 전망/주요활용처)",
+        "description": "푸드스타일리스트 자격증 온라인강의 무료수강 https://www.ili.or.kr/go/youtube 푸드스타일리스트 과정에 대해 궁금하셨다면? 3분만 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/BIHikhsje9Q/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/BIHikhsje9Q/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/BIHikhsje9Q/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "국제자격검정원",
+        "liveBroadcastContent": "none",
+        "publishTime": "2023-09-07T01:00:04Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "lADP2RJtBBx3xp2mNcKbh52IjOU",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "p-1c6E6BEHQ"
+      },
+      "snippet": {
+        "publishedAt": "2024-04-01T06:35:57Z",
+        "channelId": "UCa0fJK2ei8fl11P_zJwN-9w",
+        "title": "푸드스타일리스트 [ 직업 - 예체능계열 ]",
+        "description": "푸드스타일리스트 #직업 #마이베스트 #교육 #진로 #진학 #진로진학 대표번호 1551-5874 ① 워크북&캠프 문의 ② 특강, 에듀마스터 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/p-1c6E6BEHQ/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/p-1c6E6BEHQ/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/p-1c6E6BEHQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "가르치는 사람들",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-04-01T06:35:57Z"
+      }
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "x2ShshGgdEqp72vxIqg7ZV_aZMM",
+  "nextPageToken": "CAQQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 178268,
+    "resultsPerPage": 2
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "F3kh7WmLBuANDSgII4DtRNFOpBQ",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "D0Q3hEE-v0Q"
+      },
+      "snippet": {
+        "publishedAt": "2022-07-23T05:00:32Z",
+        "channelId": "UC7F6UDq3gykPZHWRhrj_BDw",
+        "title": "오케스트라에서 지휘자 없으면 안 될까?",
+        "description": "여러 악기를 다루는 연주자가 함께 연주하는 오케스트라를 보면 굉장히 웅장하면서도 아름다운 음악 소리를 들을 수 있습니다. 그런데 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/D0Q3hEE-v0Q/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/D0Q3hEE-v0Q/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/D0Q3hEE-v0Q/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "사물궁이 잡학지식",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-07-23T05:00:32Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "wFBJ_6bDTvj5wqEVDNUW5XcvFB4",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "WcEVKWwgGJg"
+      },
+      "snippet": {
+        "publishedAt": "2025-06-27T11:34:50Z",
+        "channelId": "UCK1sVuXaDvJeNwl9noN5nOA",
+        "title": "온 에너지를 쏟아 리허설을 하는 마에스트라 장한나 [크레이지 리치 코리안] | KBS 250622 방송",
+        "description": "온 에너지를 쏟아 리허설을 하는 마에스트라 장한나 Copyright c KBS. All rights reserved. 무단 전재, 재배포 및 이용(AI 학습 포함) ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/WcEVKWwgGJg/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/WcEVKWwgGJg/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/WcEVKWwgGJg/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "KBS Entertain",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-06-27T11:34:50Z"
+      }
+    }
+  ]
+}

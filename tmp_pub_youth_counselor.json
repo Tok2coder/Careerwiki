@@ -1,0 +1,818 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "청소년상담사 3급이란 — 위기 청소년 곁의 전문가" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "청소년상담사는 " },
+        { "type": "text", "text": "청소년기본법 제22조에 근거한 국가전문자격", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로, 여성가족부가 주관하고 한국산업인력공단이 검정업무를 시행한다" },
+        { "type": "footnote", "attrs": { "id": 1, "text": "Q-Net 청소년상담사 공식 홈페이지", "url": "https://www.q-net.or.kr/site/sangdamsa" } },
+        { "type": "text", "text": ". 청소년의 심리·진로·학교생활 문제를 전문적으로 상담하고, 가출·비행·자해 등 고위기 상황에 개입하는 역할을 한다. 1급, 2급, 3급의 3단계 등급 구조로 이루어져 있으며, 3급은 가장 진입 장벽이 낮아 " },
+        { "type": "text", "text": "상담 관련 학사학위 소지자", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "라면 바로 응시 가능하다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2003년 제도 시행 이후 2021년까지 3급 누적 배출 인원은 18,404명이다" },
+        { "type": "footnote", "attrs": { "id": 2, "text": "나무위키 — 청소년상담사", "url": "https://namu.wiki/w/%EC%B2%AD%EC%86%8C%EB%85%84%EC%83%81%EB%8B%B4%EC%82%AC" } },
+        { "type": "text", "text": ". 전국에 238개 청소년상담복지센터, 199개 Wee센터, 220개 학교밖청소년지원센터(꿈드림센터)가 운영되고 있어 수요는 꾸준하다" },
+        { "type": "footnote", "attrs": { "id": 3, "text": "구인잡 — 청소년상담사 취업 연봉, 시험 합격률, 하는일", "url": "https://gooinjob.com/youth-counselor/" } },
+        { "type": "text", "text": ". " },
+        { "type": "text", "text": "청소년상담사", "marks": [{ "type": "link", "attrs": { "href": "/job/청소년상담사" } }] },
+        { "type": "text", "text": "는 단순한 '대화 상대'가 아니라, 심리검사·사례관리·자원연계까지 수행하는 복합 전문가다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "이 글에서는 3급 응시자격부터 시험 구조, 과목별 공략법, 합격률 추이, 면접 대비, 자격연수, 취업처와 연봉, 유사 자격 비교까지 한 번에 다룬다. " },
+        { "type": "text", "text": "심리학과", "marks": [{ "type": "link", "attrs": { "href": "/major/심리학과" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "사회복지학과", "marks": [{ "type": "link", "attrs": { "href": "/major/사회복지학과" } }] },
+        { "type": "text", "text": " 전공자뿐 아니라, 비전공자가 진입하는 경로도 함께 정리했다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-youth-counselor-img1.webp",
+        "alt": "청소년상담사 3급 시험 준비 모습",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "응시자격과 시험 구조" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "3급 청소년상담사의 응시자격은 다음 중 하나를 충족하면 된다" },
+        { "type": "footnote", "attrs": { "id": 4, "text": "Q-Net 3급 청소년상담사 종목별 상세정보", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9755" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "대학 또는 평생교육법에 따른 학력 인정 평생교육시설에서 상담 관련분야 학사학위를 취득한 자" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전문대학 졸업 후 상담실무 경력 2년 이상인 자" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "대학원에서 상담 관련분야 석사학위 과정 중인 자" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기타 여성가족부령이 정하는 자격을 갖춘 자" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "'상담 관련분야'에는 " },
+        { "type": "text", "text": "청소년복지과", "marks": [{ "type": "link", "attrs": { "href": "/major/청소년복지과" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "사회복지상담과", "marks": [{ "type": "link", "attrs": { "href": "/major/사회복지상담과" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "아동·청소년복지학과", "marks": [{ "type": "link", "attrs": { "href": "/major/아동청소년복지학과" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "청소년지도학과", "marks": [{ "type": "link", "attrs": { "href": "/major/청소년지도학과" } }] },
+        { "type": "text", "text": " 등이 포함된다. 비전공자라도 학점은행제 등으로 상담 관련 학위를 취득하면 응시 가능하므로 진입 경로가 완전히 막혀 있지는 않다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "시험 체계: 필기 + 면접 + 자격연수" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "시험은 " },
+        { "type": "text", "text": "1차 필기시험", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "과 " },
+        { "type": "text", "text": "2차 면접시험", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로 나뉜다. 필기에 합격해야 면접에 응시할 수 있고, 두 단계를 모두 통과한 뒤 " },
+        { "type": "text", "text": "100시간 자격연수", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "까지 이수해야 최종 자격증이 발급된다" },
+        { "type": "footnote", "attrs": { "id": 5, "text": "한국청소년상담복지개발원 — 청소년상담사 자격연수", "url": "https://www.youthcounselor.or.kr:446/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "구분" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "내용" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비고" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기시험" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "6과목(필수5 + 선택1), 과목당 25문항, 5지선다 객관식" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목당 100점 만점" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 합격기준" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "각 과목 40점 이상 + 전 과목 평균 60점 이상" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과락 주의" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "면접시험" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "면접위원 3인, 가치관·전문지식·품행·표현력·판단력 평가" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "25점 만점 중 15점 이상" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자격연수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "100시간(e-러닝 45h + 집합연수 56h)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "미이수 시 자격증 미발급" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 26,000원 + 면접 16,000원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "총 42,000원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시행 횟수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연 1회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "접수: Q-Net" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "필수 5과목은 " },
+        { "type": "text", "text": "발달심리, 집단상담의 기초, 심리측정 및 평가, 상담이론, 학습이론", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 선택 1과목은 " },
+        { "type": "text", "text": "청소년이해론", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 또는 " },
+        { "type": "text", "text": "청소년수련활동론", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 중 택1한다. 대부분의 수험생은 암기 위주로 대비 가능한 청소년이해론을 선택한다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "시험 일정과 합격률 추이" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "시험은 매년 1회 시행된다. 2025년 시험일정은 다음과 같다" },
+        { "type": "footnote", "attrs": { "id": 6, "text": "윈스펙 — 청소년상담사3급 시험과목/2025년 시험일정 총정리", "url": "https://winspec.moneple.com/freeboard/89427346" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1차(필기) 원서접수: 2025년 7월 21일~25일" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1차 추가접수: 2025년 9월 4일~5일" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기시험일: 2025년 9월 13일(토)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 합격발표: 2025년 10월 22일(수)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2차(면접) 원서접수: 2025년 11월 3일~7일" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "면접시험일: 2025년 11월 24일~29일" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "최종 합격발표: 2025년 12월 24일(수)" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2026년 일정은 공식 미발표 상태이나, 2025년과 유사한 패턴(7~9월 필기, 11~12월 면접)이 예상된다. 원서접수는 Q-Net(큐넷) 홈페이지에서 온라인으로 진행하며, 응시자격 서류심사가 포함된다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "합격률: 필기가 실질적 관문" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "필기시험 합격률은 연도별로 편차가 있지만, 대체로 30~40% 수준을 유지한다" },
+        { "type": "footnote", "attrs": { "id": 7, "text": "스터디채널 — 청소년상담사3급 필기 합격률 추이", "url": "https://studych.co.kr/lecture/info_view/2504?table=infonews&category_cd03060000=" } },
+        { "type": "text", "text": ". 반면 면접은 60~80%대로 비교적 관대하다. 결국 필기를 넘기면 합격이 눈앞이다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연도" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 합격률" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "면접 합격률" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "최종 합격률" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2017" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "34.07%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2018" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "30.92%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2019" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "27.33%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2020" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "52.49%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2021" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "26.19%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2023" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "38.6%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "78.8%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "30.4%" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "최근 5개년 필기 평균 합격률은 약 35% 수준이다. 2020년에 52.49%로 유난히 높았던 것은 시험 난이도 하락 때문으로 분석되며, 그 외 해에는 대체로 27~39% 범위에 머문다. 2023년 기준 최종 합격률(필기→면접 모두 통과)은 " },
+        { "type": "text", "text": "30.4%", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "로, 체감 난이도는 '중상' 수준이다" },
+        { "type": "footnote", "attrs": { "id": 8, "text": "윈스펙 — 청소년상담사 합격률 공개", "url": "https://winspec.moneple.com/lecture/117182892" } },
+        { "type": "text", "text": ". 공식 연도별 상세 통계는 e-나라지표(지표코드 2774)에서 확인할 수 있다" },
+        { "type": "footnote", "attrs": { "id": 9, "text": "e-나라지표 — 청소년상담사 자격검정 현황", "url": "https://www.index.go.kr/unity/potal/main/EachDtlPageDetail.do?idx_cd=2774" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "과목별 공략법과 독학 로드맵" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "6과목을 효과적으로 공략하려면 과목 성격을 먼저 파악해야 한다. 크게 '이해형 과목'과 '암기형 과목'으로 나뉜다" },
+        { "type": "footnote", "attrs": { "id": 10, "text": "mindthos — 청소년상담사 3급 독학 한 달 합격 전략", "url": "https://mindthos.com/blog/youth-counselor-3-one-month-pass-strategy" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "발달심리", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (이해형, 1순위) — 피아제, 에릭슨, 비고츠키 등 발달이론가의 핵심 개념을 이해하는 것이 중요하다. 단순 암기보다는 각 단계의 특성과 이론 간 차이를 비교하며 학습하면 효과적이다. " },
+          { "type": "text", "text": "심리학과", "marks": [{ "type": "link", "attrs": { "href": "/major/심리학과" } }] },
+          { "type": "text", "text": " 전공자에게는 익숙한 내용이 많다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "상담이론", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (이해형, 1순위) — 인간중심 상담, 인지행동 상담, 정신분석, 현실치료 등 주요 상담 접근법을 다룬다. 이론가와 핵심 개념을 매칭하는 문제가 자주 출제된다. 로저스, 엘리스, 벡, 글래서 등 학자 이름과 기법을 연결하여 정리하는 것이 핵심이다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "학습이론", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (이해형) — 고전적 조건형성(파블로프), 조작적 조건형성(스키너), 사회학습이론(반두라) 등을 다룬다. 실험 설계와 결과를 이해하면 문제 풀이가 수월해진다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "심리측정 및 평가", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (방어과목) — 신뢰도, 타당도, 표준화 검사, 규준 해석 등 통계적 개념이 포함된다. 공식을 외우기보다는 개념의 의미를 이해하고, 기출문제에서 반복 출제되는 패턴을 파악하는 것이 과락 방지의 열쇠다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "집단상담의 기초", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (방어과목) — 집단상담의 단계(도입-전환-작업-종결), 집단역학, 리더십 유형 등을 학습한다. 범위가 넓지 않아 핵심만 잡으면 과락 회피가 충분하다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "청소년이해론(선택)", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 청소년 발달 특성, 비행, 문화, 정책 등을 다루는 암기형 과목이다. 시험 직전 1주일간 집중 암기로 대응하는 수험생이 많다. 청소년수련활동론보다 출제 범위가 예측 가능하여 대부분 이 과목을 선택한다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "4주 집중 로드맵" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "추천 준비기간은 최소 1~3개월이다. 아래는 집중 4주 코스로, 시간 여유가 있으면 2~3개월로 늘려 진행하면 된다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "1주차:", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " 발달심리·상담이론 정독. 이론가별 핵심 키워드를 A4 한 장에 정리한다. 이해가 안 되는 부분은 인강으로 보충한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "2주차:", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " 심리측정·학습이론·집단상담 학습. 공식보다 개념 이해에 집중하고, 과락 방지(40점)를 목표로 한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "3주차:", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " 최근 5개년 기출문제 집중 풀이. 오답노트를 만들고 취약 과목을 파악한다. comcbt.com에서 CBT 형식으로 무료 풀이가 가능하다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "4주차:", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " 약점 보완 + 청소년이해론 집중 암기 + 모의고사 2회 이상 실전 연습. 시간 배분 감각을 익힌다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "교재는 시대고시, 에듀윌, 탑에듀 등에서 출간하는 청소년상담사 3급 기본서와 기출문제집을 활용한다. 인강은 탑에듀(최대 50% 할인, 교재 제공), 에듀윌(브랜드만족도 1위), 와우패스(수강기간 180일), 에듀마켓, 자격동스쿨 등이 대표적이다. " },
+        { "type": "text", "text": "국민내일배움카드", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "를 사용하면 국비지원을 받아 자부담을 크게 줄일 수 있다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "면접 대비와 자격연수" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "면접시험은 필기 합격자를 대상으로 진행된다. 면접위원 3인이 상담자로서의 가치관, 전문지식, 예의·품행, 의사표현 능력, 판단력·적응력을 평가하며, 합계 " },
+        { "type": "text", "text": "15점 이상(25점 만점)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이면 합격이다. 면접 합격률이 60~80%대인 만큼 필기 대비보다 부담이 적지만, 준비 없이 가면 탈락할 수 있다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "면접 평가 비중과 답변 전략" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "면접 평가 비중은 " },
+        { "type": "text", "text": "태도·품성 40%, 전문성 30%, 윤리성 30%", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 전문 지식을 완벽히 대답하지 못해도, 상담자로서의 진정성과 윤리적 판단력을 보여주면 합격 가능하다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "답변 구조:", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " '결론 → 근거 → 구체적 계획' 두괄식으로 답한다. 장황하게 설명하기보다 핵심을 먼저 제시한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "자주 나오는 주제:", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " 위기 청소년(자해·자살 시도) 대처 방안, 비자발적 내담자 상담 전략, 비밀보장의 한계, 다문화 청소년 상담 시 유의점, 상담자로서의 소진 예방 방법." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "윤리 문제:", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " 비밀보장 예외(자타해 위험, 아동학대 신고 의무 등)에 대해 명확히 답할 수 있어야 한다. 법적 근거(아동학대범죄의 처벌 등에 관한 특례법)를 언급하면 가점 요소가 된다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "자격연수 100시간" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "필기와 면접을 모두 합격한 뒤에도 바로 자격증이 나오지 않는다. 한국청소년상담복지개발원에서 실시하는 " },
+        { "type": "text", "text": "100시간 자격연수", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "(e-러닝 45시간 + 집합연수 56시간)를 이수해야 최종 자격증이 발급된다" },
+        { "type": "footnote", "attrs": { "id": 11, "text": "한국청소년상담복지개발원 — 자격연수·보수교육 사업", "url": "https://www.kyci.or.kr/userSite/sub02_7.asp" } },
+        { "type": "text", "text": ". e-러닝은 온라인으로 진행되어 직장인도 병행 가능하고, 집합연수는 수일간 오프라인으로 진행된다. 연수 비용은 연도별·회차별 상이하며, 일반적으로 10~20만 원대로 추정된다(숙박비 별도)." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "자격증 취득 후에는 " },
+        { "type": "text", "text": "매년 보수교육 8시간", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "을 이수해야 한다. 보수교육은 상담 트렌드, 법률 변경 사항, 사례 슈퍼비전 등으로 구성되며, 미이수 시 자격 효력에 영향을 줄 수 있다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "비용 총정리와 준비물" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "청소년상담사 3급 취득까지 드는 비용을 단계별로 정리하면 다음과 같다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "항목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비용" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비고" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료(필기+면접)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "42,000원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 26,000 + 면접 16,000" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교재비(기본서+기출)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3~5만 원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "출판사별 상이" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "인강비" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "10~30만 원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "국민내일배움카드 사용 시 절감" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자격연수비" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "10~20만 원대" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "숙박비 별도, 연도별 상이" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "독학 총비용" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 7~10만 원", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교재+응시료만" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "인강 포함 총비용" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 20~40만 원", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "인강+교재+응시료" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연수까지 전체 비용" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 30~60만 원", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자격연수 포함" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "독학으로 최소한의 비용만 들이면 10만 원 이내로도 도전 가능하다. 다만 자격연수비는 합격 후 필수이므로 미리 예산에 포함해 두는 것이 좋다." }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "시험 전 반드시 체크할 사항" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시자격 서류(졸업증명서, 경력증명서 등) 미리 준비 — 접수 시 서류심사 있음" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Q-Net 회원가입 및 사진 업로드 — 접수 마감일에 몰리면 서버 지연 발생" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "선택과목(청소년이해론 vs 수련활동론) 미리 결정 — 교재 구입 전 확정" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출문제 최소 3개년 풀어보기 — 출제 경향과 본인 약점 파악" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "면접 대비는 필기 합격 발표 후 바로 시작 — 합격 발표~면접까지 약 한 달" }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자격연수 일정 확인 — 합격 후 연수 미이수 시 자격증 발급 불가" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "취업처와 연봉 현실" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "청소년상담사 3급을 취득하면 다양한 공공기관과 민간기관에서 일할 수 있다. 주요 취업처는 다음과 같다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "청소년상담복지센터", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (전국 238개) — 지방자치단체 산하로, 가장 대표적인 취업처다. 개인상담, 집단상담, 심리검사, 사례관리, 학교폭력 예방교육, 부모교육 등을 수행한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "Wee센터·Wee클래스", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (전국 199개) — 교육청 소속으로, 학교 내에서 학생 상담을 담당한다. " },
+          { "type": "text", "text": "전문상담교사", "marks": [{ "type": "link", "attrs": { "href": "/job/전문상담교사" } }] },
+          { "type": "text", "text": "와 함께 근무하는 경우가 많다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "학교밖청소년지원센터(꿈드림센터)", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (전국 220개) — 학업을 중단한 청소년의 복귀와 자립을 지원한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "기타:", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " 정신건강복지센터(260개), 청소년쉼터, 청소년자립지원관, 사회복지관, 건강가정지원센터, 사설 상담센터, 병원 부속 상담실 등." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "연봉 수준" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "공공기관 기준 2025년 연봉 수준은 다음과 같다" },
+        { "type": "footnote", "attrs": { "id": 12, "text": "wean.co.kr — 2025년 청소년상담사 월급·연봉 인상 및 수당", "url": "https://wean.co.kr/entry/2025%EB%85%84-%EC%B2%AD%EC%86%8C%EB%85%84%EC%83%81%EB%8B%B4%EC%82%AC-%EC%9B%94%EA%B8%89-%EC%97%B0%EB%B4%89-%EC%9D%B8%EC%83%81-%EC%88%98%EB%8B%B9-%EC%A2%85%EB%A5%98" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "공공기관 신입(1년 미만): 2,600~2,800만 원" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경력 1~3년: 2,800~3,200만 원" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경력 4~6년: 3,200~3,800만 원" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "팀장급(7년 이상): 3,800~4,500만 원" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Wee센터 신입: 2,700~3,000만 원" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "민간기관 신입: 2,400~2,800만 원" }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2025년 청소년상담복지센터 호봉표 기준, 팀원 1호봉 월 2,241,900원에서 30호봉 3,536,500원까지 책정되어 있다. 연봉제 하한은 팀원 기준 31,215,000원이며, 전년 대비 약 4% 인상되었다. 자격증 수당은 1급 10만 원, 2급 7만 원, " },
+        { "type": "text", "text": "3급 5만 원", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이 매월 지급된다. 이 외에 가족수당, 정액급식비 14만 원, 명절수당(호봉의 60% x 2회) 등이 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "프리랜서 위촉상담사로 활동할 경우 시간당 3~5만 원 수준이다. " },
+        { "type": "text", "text": "사회복지사", "marks": [{ "type": "link", "attrs": { "href": "/job/사회복지사" } }] },
+        { "type": "text", "text": "와 유사한 수준의 처우이며, " },
+        { "type": "text", "text": "학교사회복지사", "marks": [{ "type": "link", "attrs": { "href": "/job/학교사회복지사" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "임상심리사", "marks": [{ "type": "link", "attrs": { "href": "/job/임상심리사" } }] },
+        { "type": "text", "text": "와 겸직하여 경력을 쌓는 경우도 많다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "유사 자격 비교 — 나에게 맞는 자격은?" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "상담 분야에는 여러 국가자격과 민간자격이 존재한다. 청소년상담사와 자주 비교되는 자격을 정리했다" },
+        { "type": "footnote", "attrs": { "id": 13, "text": "mindthos — 청소년상담사 vs 전문상담교사 비교", "url": "https://mindthos.com/blog/youth-counselor-vs-school-counselor-career-guide" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자격명" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "주관" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "대상" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "근무처" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "특징" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "청소년상담사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "여성가족부" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "고위기 청소년" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "상담복지센터, 쉼터" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사례관리·자원연계 중심" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [
+              { "type": "text", "text": "전문상담교사", "marks": [{ "type": "link", "attrs": { "href": "/job/전문상담교사" } }] }
+            ] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교육부" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전교생" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학교 Wee클래스" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교육공무원, 임용고시 필요" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [
+              { "type": "text", "text": "심리상담전문가", "marks": [{ "type": "link", "attrs": { "href": "/job/심리상담전문가" } }] }
+            ] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국상담심리학회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "일반 성인" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "사설 상담센터" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "민간자격, 석사+수련 필요" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [
+              { "type": "text", "text": "임상심리사", "marks": [{ "type": "link", "attrs": { "href": "/job/임상심리사" } }] }
+            ] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국산업인력공단" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "정신질환 환자" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "병원, 정신건강센터" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "국가기술자격, 진단·치료 중심" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "핵심 차이를 요약하면, 청소년상담사는 '청소년 복지+상담' 융합 전문가이고, 전문상담교사는 '학교 내 교육적 상담' 전문가다. " },
+        { "type": "text", "text": "심리상담전문가", "marks": [{ "type": "link", "attrs": { "href": "/job/심리상담전문가" } }] },
+        { "type": "text", "text": "는 일반 성인 대상 적응·발달 상담에 특화되어 있고, " },
+        { "type": "text", "text": "임상심리사", "marks": [{ "type": "link", "attrs": { "href": "/job/임상심리사" } }] },
+        { "type": "text", "text": "는 임상 현장에서 심리검사·진단·치료를 수행한다. 청소년 특화 상담을 원한다면 청소년상담사가 가장 직접적인 경로이고, 학교 현장을 원한다면 전문상담교사가 적합하다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "또한 " },
+        { "type": "text", "text": "중독상담원", "marks": [{ "type": "link", "attrs": { "href": "/job/중독상담원" } }] },
+        { "type": "text", "text": "이나 " },
+        { "type": "text", "text": "학습상담원", "marks": [{ "type": "link", "attrs": { "href": "/job/학습상담원" } }] },
+        { "type": "text", "text": "처럼 특정 영역에 특화된 직종으로 확장하는 것도 가능하다. 청소년상담사 자격을 기반으로 경력을 쌓은 뒤 2급, 1급으로 승급하면 관리자 포지션이나 슈퍼바이저 역할을 맡을 수 있다." }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자도 응시할 수 있나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3급은 '상담 관련분야' 학사학위가 필요하므로, 비전공자는 바로 응시할 수 없다. 다만 학점은행제, 사이버대학 등을 통해 상담 관련 학위를 취득하면 응시자격을 갖출 수 있다. 전문대학 졸업자는 상담실무 경력 2년을 채우면 된다. 결국 진입 경로가 완전히 막혀 있지는 않지만, 일정 시간의 학력 보완이 필요하다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "독학만으로 합격 가능한가요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가능하다. 상담 관련 학과를 졸업했다면 교재+기출만으로 1~2개월 안에 충분히 합격할 수 있다. 비전공이라도 4주 집중 로드맵을 따르면 독학 합격 사례가 많다. 다만 기출문제 반복이 핵심이므로, comcbt.com의 무료 CBT 기출 풀이를 적극 활용하는 것을 추천한다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "면접에서 탈락하는 경우가 많나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "면접 합격률은 60~80%로 비교적 높다. 2023년 기준 3급 면접 합격률은 78.8%였다. 다만 준비 없이 가면 탈락할 수 있으므로, '결론-근거-계획' 구조의 두괄식 답변을 연습하고, 위기 청소년 대처·비밀보장 예외·상담 윤리 등 핵심 주제를 정리해 두는 것이 좋다. 태도와 진정성이 40%를 차지하므로, 상담자로서의 자세를 보여주는 것이 중요하다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자격연수를 안 받으면 어떻게 되나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기+면접에 합격해도 100시간 자격연수를 이수하지 않으면 자격증이 발급되지 않는다. 연수는 한국청소년상담복지개발원에서 주관하며, e-러닝 45시간과 집합연수 56시간으로 구성된다. 연수 일정은 합격 발표 후 개발원 홈페이지에서 공지되므로 미리 확인해 두는 것이 좋다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "취업이 잘 되는 편인가요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전국에 청소년상담복지센터 238개, Wee센터 199개, 꿈드림센터 220개 등 상당한 규모의 인프라가 갖춰져 있어 취업 기회 자체는 적지 않다. 다만 공공기관 특성상 계약직 비율이 높고, 정규직 전환까지 시간이 걸리는 경우가 많다. 경력을 쌓으면서 2급으로 승급하면 안정성이 높아진다. 민간 상담센터는 신입 연봉이 다소 낮지만, 다양한 상담 경험을 쌓기에 유리하다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3급에서 2급, 1급으로 올라가려면 어떻게 해야 하나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급 응시자격은 상담 관련 석사학위 취득자, 또는 학사학위 후 상담실무 3년 경력자, 또는 3급 취득 후 상담실무 2년 경력자다. 1급은 박사학위, 또는 석사+4년 경력, 또는 2급+3년 경력이 요구된다. 즉 3급 → 현장 경력 2년 → 2급 → 현장 경력 3년 → 1급의 경로가 일반적이다. 등급이 올라갈수록 슈퍼바이저, 기관장 등 관리직 역할이 가능해진다." }] }] }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "청소년상담사 3급, 도전할 만한가?" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "청소년의 심리·진로·위기 문제를 전문적으로 다루는 국가전문자격이다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "상담 관련 학사학위 소지자라면 바로 응시 가능하며, 비전공자도 학점은행제 등으로 진입 경로가 열려 있다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 합격률 약 35%, 최종 합격률 약 30%로 난이도는 중상이지만, 기출 반복 학습으로 독학 합격이 충분히 가능하다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전국 600개 이상의 청소년 관련 기관에서 수요가 있으며, 공공기관 신입 기준 연봉 2,600~2,800만 원에서 시작한다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3급 취득 후 현장 경력을 쌓아 2급, 1급으로 성장할 수 있는 명확한 경력 경로가 존재한다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "청소년 문제에 관심이 있고, 사람과 깊이 소통하는 일에 보람을 느끼는 사람이라면 충분히 도전할 가치가 있다." }] }] }
+          ]
+        }
+      ]
+    }
+  ]
+}

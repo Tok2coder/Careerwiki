@@ -1,0 +1,435 @@
+{
+  "cert_name": "전기공사기사",
+  "cert_name_en": "Engineer Electric Work",
+  "cert_code": "1160",
+  "last_updated": "2026-03-25",
+  "sources_count": 18,
+
+  "overview": {
+    "title": "자격증 개요",
+    "description": "전기공사기사는 한국산업인력공단에서 시행하는 국가기술자격으로, 1974년 신설되어 현재까지 운영되고 있다. 전기 시설의 설치·시공·감독 업무를 수행하기 위한 기사급 자격증으로, 전기공사업법에 의한 전기공사업 등록 시 필수 기술인력으로 인정된다.",
+    "governing_body": "한국산업인력공단 (Q-Net)",
+    "related_ministry": "산업통상자원부",
+    "established_year": 1974,
+    "customer_support": "1644-8000 (09:00~18:00, 유료)",
+    "eligibility": {
+      "summary": "기사 등급 공통 응시자격 적용. 학력·경력·자격 중 하나 이상 충족 필요.",
+      "by_education": [
+        "4년제 대학 관련학과 졸업자 또는 졸업예정자",
+        "3년제 전문대학 관련학과 졸업 후 동일(유사)분야 1년 이상 실무경력자",
+        "2년제 전문대학 관련학과 졸업 후 동일(유사)분야 2년 이상 실무경력자"
+      ],
+      "by_career": [
+        "동일(유사)분야에서 4년 이상 실무 종사자",
+        "산업기사 취득 후 동일(유사)분야 1년 이상 실무경력자",
+        "기능사 취득 후 동일(유사)분야 3년 이상 실무경력자"
+      ],
+      "by_qualification": [
+        "동일(유사)분야 다른 종목 기사 자격 취득자",
+        "산업기사 수준 기술훈련과정 이수 후 2년 이상 실무경력자"
+      ],
+      "related_departments": "전기전자공학과, 통신공학과, 기계공학과, 건축공학과, 토목공학과, 컴퓨터공학과, 재료공학과 등 공대 관련학과 폭넓게 인정",
+      "tip": "응시자격 판단이 복잡한 경우 Q-Net의 응시자격 자가진단 시스템 활용 가능"
+    },
+    "sources": [
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC",
+      "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1160",
+      "https://www.q-net.or.kr/crf006.do?id=crf00603&tabIdx=2&gradeType=30",
+      "http://daehan-e.co.kr/contents/02_license/sub03.html"
+    ]
+  },
+
+  "exam_structure": {
+    "title": "시험 구조",
+    "written_exam": {
+      "name": "필기시험",
+      "format": "객관식 4지선다 택일형 (2022년 4회차부터 CBT 방식)",
+      "total_questions": 100,
+      "time_limit": "150분 (과목당 30분)",
+      "subjects": [
+        {
+          "number": 1,
+          "name": "전기응용 및 공사재료",
+          "questions": 20,
+          "note": "전기기사와 차이나는 핵심 과목. 조명공학, 전동기·전열기, 전기철도, 공사 공구 및 재료. 제어공학 미포함. 실기와 연계성 높음."
+        },
+        {
+          "number": 2,
+          "name": "전력공학",
+          "questions": 20,
+          "note": "전기기사와 동일 과목"
+        },
+        {
+          "number": 3,
+          "name": "전기기기",
+          "questions": 20,
+          "note": "전기기사와 동일 과목"
+        },
+        {
+          "number": 4,
+          "name": "회로이론 및 제어공학",
+          "questions": 20,
+          "note": "전기기사와 동일 과목"
+        },
+        {
+          "number": 5,
+          "name": "전기설비기술기준",
+          "questions": 20,
+          "note": "전기기사와 동일 과목"
+        }
+      ],
+      "passing_criteria": {
+        "average": "과목 평균 60점 이상",
+        "per_subject_minimum": "과목당 40점 이상 (과락 기준)"
+      }
+    },
+    "practical_exam": {
+      "name": "실기시험",
+      "format": "주관식 필답형",
+      "total_questions": "17~20문항 (배점 상이)",
+      "time_limit": "2시간 30분 (150분)",
+      "passing_criteria": "100점 만점 중 60점 이상",
+      "pen_rule": "검은색 볼펜만 사용 (다른 색 사용 시 부정행위 처리)",
+      "main_topics": [
+        {
+          "topic": "변압기",
+          "detail": "결선도, 용량선정, 손실 및 효율 계산"
+        },
+        {
+          "topic": "접지·피뢰설비",
+          "detail": "KEC(한국전기설비규정) 개정 내용 반영"
+        },
+        {
+          "topic": "견적",
+          "detail": "가로등·내선·수변전설비 공사 비용 계산. 전기공사기사 실기의 고유 특징. 현재 약 10점 내외 배점."
+        },
+        {
+          "topic": "시퀀스(제어회로)",
+          "detail": "제어회로 도면 작성. 2021년 5년 만에 재출제되어 화제."
+        },
+        {
+          "topic": "단답형 암기",
+          "detail": "전기설비기술기준 관련 문제. 전기기사 대비 암기 비중 높음."
+        }
+      ],
+      "estimate_problem_history": {
+        "2016": "30점으로 대폭 상향 (과도한 배점으로 논란)",
+        "2021": "20점으로 축소",
+        "current": "10점 내외 (비교적 단순화)"
+      }
+    },
+    "sources": [
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC",
+      "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1160",
+      "https://canvasfriends.com/%EC%A0%84%EA%B8%B0%EA%B8%B0%EC%82%AC-vs-%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC-%EC%8B%9C%ED%97%98-%EA%B3%BC%EB%AA%A9-%EC%B0%A8%EC%9D%B4-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EC%95%8C%EC%95%84/"
+    ]
+  },
+
+  "schedule_and_registration": {
+    "title": "시험 일정 및 접수",
+    "frequency": "연 3회 (2024년부터 통일)",
+    "schedule_2026": {
+      "note": "전기공사기사는 전기기사와 시험일정이 다름. 전기기사는 1~3회 모두 시행하나, 전기공사기사는 주로 제3회에 시행. 정확한 일정은 Q-Net에서 반드시 확인.",
+      "round_3": {
+        "written_registration": "2026.07.20 ~ 07.23",
+        "written_exam": "2026.08.07 ~ 09.01",
+        "written_result": "2026.09.09",
+        "practical_registration": "2026.08.07 ~ 09.18",
+        "practical_exam": "2026.09.21 ~ 09.23, 09.28",
+        "final_result": "2026.12.18"
+      }
+    },
+    "registration_method": {
+      "online": "Q-Net (www.q-net.or.kr) 회원가입 후 원서접수",
+      "note": "CBT 시험으로 시험장소 및 일시 선택 가능 (필기)"
+    },
+    "fees": {
+      "written": "19,400원",
+      "practical": "22,600원",
+      "total": "42,000원 (필기+실기)"
+    },
+    "sources": [
+      "https://www.q-net.or.kr/crf021.do?id=crf02101&scheType=03",
+      "https://www.dsan.co.kr/offline/offcourse/exam_info.jsp?lid=3",
+      "https://elec.inup.co.kr/page/page.jsp?code=T001",
+      "https://electric.baeulhak.com/m/newpage.php?no=0109"
+    ]
+  },
+
+  "pass_rate": {
+    "title": "합격률 통계",
+    "yearly_stats": [
+      { "year": 2024, "written_applicants": 11578, "written_passed": 5938, "written_rate": "51.3%", "practical_applicants": 6943, "practical_passed": 3461, "practical_rate": "49.8%" },
+      { "year": 2023, "written_applicants": 14972, "written_passed": 6736, "written_rate": "45.0%", "practical_applicants": 8547, "practical_passed": 5315, "practical_rate": "62.2%" },
+      { "year": 2022, "written_applicants": 13583, "written_passed": 6475, "written_rate": "47.7%", "practical_applicants": 9161, "practical_passed": 6037, "practical_rate": "65.9%" },
+      { "year": 2021, "written_applicants": 17055, "written_passed": 8906, "written_rate": "52.2%", "practical_applicants": 10658, "practical_passed": 4508, "practical_rate": "42.3%" },
+      { "year": 2020, "written_applicants": 8869, "written_passed": 4904, "written_rate": "55.3%", "practical_applicants": 6666, "practical_passed": 3904, "practical_rate": "58.6%" },
+      { "year": 2019, "written_applicants": 12263, "written_passed": 5227, "written_rate": "42.6%", "practical_applicants": 6338, "practical_passed": 1852, "practical_rate": "29.2%" },
+      { "year": 2018, "written_applicants": 9430, "written_passed": 3462, "written_rate": "36.7%", "practical_applicants": 4655, "practical_passed": 2162, "practical_rate": "46.4%" },
+      { "year": 2017, "written_applicants": 10743, "written_passed": 4503, "written_rate": "41.9%", "practical_applicants": 5287, "practical_passed": 1974, "practical_rate": "37.3%" },
+      { "year": 2016, "written_applicants": 9407, "written_passed": 3383, "written_rate": "36.0%", "practical_applicants": 4357, "practical_passed": 1920, "practical_rate": "44.1%" },
+      { "year": 2015, "written_applicants": 8969, "written_passed": 2781, "written_rate": "31.0%", "practical_applicants": 4680, "practical_passed": 1505, "practical_rate": "32.2%" }
+    ],
+    "historical_total": {
+      "period": "1978~2000",
+      "written_applicants": 209403,
+      "written_passed": 68064,
+      "written_rate": "32.5%",
+      "practical_applicants": 136480,
+      "practical_passed": 38634,
+      "practical_rate": "28.3%"
+    },
+    "analysis": {
+      "written_average": "필기 합격률 평균 40~50% (최근 5년)",
+      "practical_average": "실기 합격률 평균 40~60% (연도별 변동 큼)",
+      "difficulty_note": "전기기사(필기 약 20%)보다 합격률이 높은 이유는 전기기사 취득자들이 응시자 대다수를 차지하기 때문. 필기 2~5과목 면제 혜택으로 제1과목만 집중하면 됨.",
+      "trend": "2020년 이후 응시자 수 증가 추세. 2021년 17,055명으로 역대 최고 기록 후 점차 감소."
+    },
+    "sources": [
+      "https://elec.inup.co.kr/page/page.jsp?code=T004",
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC",
+      "https://info-commonsense.com/15"
+    ]
+  },
+
+  "study_method": {
+    "title": "공부법 및 준비 전략",
+    "preparation_time": {
+      "with_electrical_engineer": "1~2개월 (제1과목 집중, 실기 견적 추가 학습)",
+      "major_with_basics": "2~3개월 (전공자, 기초 있는 경우)",
+      "non_major": "4~6개월 (비전공자, 인강 활용 시)",
+      "total_study_hours": "약 300~400시간 (전기 분야 자격증 공통)"
+    },
+    "written_exam_strategy": {
+      "for_electrical_engineer_holders": [
+        "제1과목(전기응용 및 공사재료)에만 집중",
+        "공사재료, 조명공학, 전기철도 부분 중점 학습",
+        "기출문제 10개년 이상 풀이로 출제 패턴 파악"
+      ],
+      "for_first_timers": [
+        "과목별 추천 학습 순서: 전기기기 → 전력공학 → 회로이론 → 전기설비 → 전기응용",
+        "인터넷 강의 1회독 후 기출문제 중심 반복 학습",
+        "과목별 난이도: 전기기기 > 전력공학 > 회로이론 > 전기설비 > 전기응용",
+        "동영상 2배속 1회 시청 → 문제풀이 중심 → 이해 안 되는 부분만 재시청"
+      ],
+      "for_non_major": [
+        "순수 독학은 거의 불가능 - 인강 또는 오프라인 학원 필수",
+        "기초 이론(회로이론, 전자기학)부터 탄탄히 쌓은 후 과년도 기출문제 풀이",
+        "최소 300시간 이상 투자 필요"
+      ]
+    },
+    "practical_exam_strategy": {
+      "general": [
+        "기출문제 최소 17개년 이상, 4회독 이상 반복 권장",
+        "최신 기출 → 과거 기출 역순 학습 → 다시 최신 기출로 마무리",
+        "계산문제는 최근 기출이 더 어려운 경향"
+      ],
+      "estimate_problem_tips": [
+        "견적 문제는 전기공사기사 고유 유형 - 별도 학습 필요",
+        "물량 산출(전선·케이블·전선관 길이), 인건비(터파기·포설·철거) 계산 연습",
+        "함정 주의: 할증률 적용 방식, 3상/1상 구분, 재사용 재료 구분"
+      ],
+      "sequence_tips": [
+        "시퀀스(제어회로) 문제 대비 필수 - 2021년 5년 만에 재출제",
+        "기본적인 제어회로 도면 작성 능력 갖추기"
+      ],
+      "kec_tips": [
+        "KEC(한국전기설비규정) 개정 내용 반드시 숙지",
+        "접지·피뢰 관련 최신 기준 학습"
+      ]
+    },
+    "recommended_resources": {
+      "online_lectures": [
+        { "name": "에듀윌", "note": "전기공사기사 대비 인강, CBT 모의고사 제공", "url": "https://energy.eduwill.net/" },
+        { "name": "다산에듀", "note": "유튜브 무료 강의 제공, 교재는 상대적으로 고가", "url": "https://www.e-dasan.net/" },
+        { "name": "배울학", "note": "전기기사 전문 온라인 강의 플랫폼", "url": "https://electric.baeulhak.com/" },
+        { "name": "한솔아카데미", "note": "전기 자격증 전문 교육기관", "url": "https://elec.inup.co.kr/" },
+        { "name": "EBS 자격증", "note": "저렴한 가격의 공인 강의", "url": "https://www.ebs.co.kr/pass/technic/inelectrician/" }
+      ],
+      "textbooks": [
+        "전기공사기사 실기 한권끝장 (에듀윌)",
+        "전기공사기사 실기 24개년 기출문제 (김상훈 저, 엔지니어LAB)",
+        "전기공사기사 필기 과목별 기본서 (성안당, 동일출판사 등)"
+      ],
+      "free_resources": [
+        "다산에듀 유튜브 채널 (무료 강의)",
+        "다산패스 앱 (최근 5개년 기출 무료)",
+        "CBT 온라인 문제풀이 (comcbt.com)"
+      ]
+    },
+    "sources": [
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC",
+      "https://gall.dcinside.com/mgallery/board/view/?id=electro&no=329132",
+      "https://www.machuda.kr/blog/article/10",
+      "https://m.cafe.daum.net/skilldadan/qPfZ/1762",
+      "https://brunch.co.kr/@khl9805/180"
+    ]
+  },
+
+  "cost": {
+    "title": "총 비용 분석",
+    "exam_fees": {
+      "written": 19400,
+      "practical": 22600,
+      "total_per_attempt": 42000,
+      "note": "불합격 시 재응시마다 해당 비용 추가"
+    },
+    "study_materials": {
+      "textbooks": {
+        "written_set": "40,000~60,000원 (5과목 기본서 세트)",
+        "practical_book": "25,000~35,000원",
+        "total": "65,000~95,000원"
+      },
+      "online_lectures": {
+        "basic_package": "100,000~200,000원 (필기 전 과목)",
+        "full_package": "200,000~400,000원 (필기+실기 종합반)",
+        "ebs_budget": "50,000~80,000원 (저가형)"
+      },
+      "offline_academy": {
+        "range": "500,000~1,500,000원",
+        "note": "대산전기학원, 대한전기학원 등 서울 소재 전문학원"
+      }
+    },
+    "total_estimated_cost": {
+      "minimum": "107,000원 (독학: 응시료 + 교재만)",
+      "typical_online": "300,000~500,000원 (인강 + 교재 + 응시료)",
+      "typical_offline": "700,000~1,600,000원 (학원 + 교재 + 응시료)",
+      "note": "전기기사 취득자의 경우 추가 교재비만 30,000~50,000원 수준"
+    },
+    "sources": [
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC",
+      "https://energy.eduwill.net/",
+      "https://www.e-dasan.net/",
+      "https://book.eduwill.net/goods/select.action?goodsId=0100004060"
+    ]
+  },
+
+  "career_and_usage": {
+    "title": "취업처 및 활용",
+    "qualification_benefits": [
+      "한국전기공사협회 기술자 경력수첩 발급",
+      "전력기술인 경력수첩 발급",
+      "2년 경력 후 전력시설물 설계사 면허 취득 가능",
+      "옥외광고사업 등록 시 필수 인력 (전기공사기사만 해당)"
+    ],
+    "employment_areas": [
+      {
+        "field": "전기공사업체",
+        "detail": "전기공사업법에 의한 필수 기술인력. 현장에서 가장 선호하는 자격."
+      },
+      {
+        "field": "건설사·플랜트",
+        "detail": "대형 건설현장, 플랜트 설비 전기공사 시공·감독"
+      },
+      {
+        "field": "공기업·공공기관",
+        "detail": "한전, 발전공사 등. 전기기사와 함께 '쌍기사' 보유 시 경쟁력 극대화"
+      },
+      {
+        "field": "전기설계사무소",
+        "detail": "2년 경력 후 설계사 면허 취득 가능"
+      },
+      {
+        "field": "옥외광고·사인물 업체",
+        "detail": "옥외광고사업 등록 시 전기공사기사 필수"
+      },
+      {
+        "field": "전기안전대행업체",
+        "detail": "전기안전관리 대행 업무 (전기기사 동시 보유 시)"
+      }
+    ],
+    "salary": {
+      "entry_level": "3,000~4,000만원 (초봉)",
+      "mid_career": "4,000~5,500만원 (경력 3~7년)",
+      "senior": "5,500~8,000만원 (경력 10년 이상, 대기업/공기업)",
+      "note": "전기기사 동시 보유('쌍기사')시 연봉 협상력 상승. 대기업·공기업 진출 시 6,000만원 이상 기대 가능."
+    },
+    "business_registration": {
+      "electrical_construction_business": {
+        "description": "전기공사업법에 따른 전기공사업 등록 시 필수 기술인력",
+        "requirements": [
+          "자본금 1.5억원 이상",
+          "전기공사기사 또는 전기기사(2017년 이후) 보유 기술인력",
+          "독립된 사무실 (건축법상 상업시설 또는 사무실)",
+          "사무실 임대차계약서, 도면, 내외부 사진 등 제출"
+        ],
+        "note": "2017년부터 전기기사도 등록 가능하게 완화되었으나, 현장에서는 여전히 전기공사기사를 선호"
+      }
+    },
+    "market_outlook": {
+      "positive_factors": [
+        "정부 그린뉴딜 및 스마트 전력망 투자 확대",
+        "신재생에너지(태양광, 풍력) 설비 수요 증가",
+        "4차 산업혁명 시대 건설·플랜트·설계·유지보수 분야 지속 수요",
+        "전기차 충전 인프라 확대에 따른 전기공사 수요 증가"
+      ],
+      "considerations": [
+        "무경력자는 전기공사업체·안전대행업체·아파트 전기실 등에서 경력 시작 필요",
+        "높은 연봉과 안정적 직장을 위해 현실적으로 4년 이상 경력 필요",
+        "전기기사와 함께 '쌍기사' 취득이 취업 경쟁력에서 사실상 필수"
+      ]
+    },
+    "sources": [
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC",
+      "https://leothought.com/electrical-engineer-certification-job/",
+      "https://gooinjob.com/%EC%A0%84%EA%B8%B0%EA%B8%B0%EC%82%AC-%EC%97%B0%EB%B4%89-%EC%B7%A8%EC%97%85-%ED%9B%84%EA%B8%B0-%ED%95%98%EB%8A%94%EC%9D%BC/",
+      "https://ehancnc.co.kr/sub/regist/reg31.html?cate1=3",
+      "https://www.help-me.kr/blog/article/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EC%97%85%EB%B2%95%EC%9D%B8%EC%84%A4%EB%A6%BD/"
+    ]
+  },
+
+  "similar_cert_comparison": {
+    "title": "유사 자격증 비교",
+    "comparisons": [
+      {
+        "cert_name": "전기기사",
+        "level": "기사",
+        "key_differences": {
+          "scope": "전기설비 설계·감리·안전관리 전반",
+          "written_diff": "제1과목이 '전기자기학'(전기공사기사는 '전기응용 및 공사재료'). 나머지 4과목 동일.",
+          "practical_diff": "테이블스펙(Table-Spec) 문제 중심 vs 전기공사기사는 견적 문제 중심",
+          "legal_status": "전기사업법에 의한 전기안전관리자 선임 가능 (전기공사기사는 불가)",
+          "pass_rate": "필기 약 20%, 실기 약 15~25% (전기공사기사보다 낮음)",
+          "recommendation": "전기안전관리자 선임이 필요하면 전기기사 필수. 가능하면 '쌍기사' 동시 취득 추천."
+        }
+      },
+      {
+        "cert_name": "전기산업기사",
+        "level": "산업기사",
+        "key_differences": {
+          "scope": "전기기사보다 좁지만 안전관리자 선임 가능",
+          "eligibility": "전문대 졸업자 또는 기능사+실무 1년 등 (기사보다 진입장벽 낮음)",
+          "legal_status": "전기안전관리자 선임 가능 (아파트·건물 전기안전 관리)",
+          "practical_use": "전기공사산업기사보다 활용 범위 넓음",
+          "recommendation": "4년제 대학 졸업자라면 전기기사를 바로 취득하는 것이 유리"
+        }
+      },
+      {
+        "cert_name": "전기공사산업기사",
+        "level": "산업기사",
+        "key_differences": {
+          "scope": "전기공사 분야에만 특화 (전기공사기사의 하위 등급)",
+          "eligibility": "전문대 관련학과 졸업자 등 (기사보다 응시자격 완화)",
+          "legal_status": "전기공사현장 기술인력으로만 선임 가능 (안전관리자 선임 불가)",
+          "practical_use": "활용도가 제한적이라는 평가 다수. 전기산업기사나 전기공사기사 취득이 더 유리.",
+          "pass_rate": "기사급과 유사한 이론/문제 구성이지만 난이도 약간 낮음",
+          "recommendation": "2026년부터 과정평가형 자격제도로 변경. 단독 취득보다 전기공사기사 또는 전기산업기사와 병행 추천."
+        }
+      }
+    ],
+    "dual_certification_strategy": {
+      "recommended_path": "전기기사 → 전기공사기사 순서로 '쌍기사' 취득",
+      "reason": "전기기사 취득 시 전기공사기사 필기 2~5과목 면제. 제1과목만 추가 학습하면 되므로 효율적.",
+      "benefit": "전기안전관리 + 전기공사업 양쪽 모두 가능. 취업·연봉 협상에서 최대 경쟁력."
+    },
+    "sources": [
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC",
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B8%B0%EC%82%AC",
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EC%82%B0%EC%97%85%EA%B8%B0%EC%82%AC",
+      "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EC%82%B0%EC%97%85%EA%B8%B0%EC%82%AC",
+      "http://www.esudo.co.kr/67/?bmode=view&idx=6319345",
+      "https://www.a-ha.io/questions/472a1bfe4184ad1faa030fbdb7e57b6d",
+      "https://www.machuda.kr/blog/article/6"
+    ]
+  }
+}

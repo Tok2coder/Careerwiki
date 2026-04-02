@@ -1,0 +1,39 @@
+{
+  "fields": {},
+  "sources": {
+    "way": [
+      {"text": "[1] 고용24 직업사전 유도마기수"},
+      {"text": "[2] 한국마사회 경마지원직 채용정보 (recruit.kra.co.kr)"},
+      {"text": "[3] 말산업 종합포털 호스피아 자격제도 안내 (horsepia.com)"}
+    ],
+    "trivia": [
+      {"text": "[1] 고용24 직업사전 유도마기수"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"text": "[1] 고용24 직업사전 유도마기수"},
+      {"text": "[2] 한국마사회 경마운영 안내 (kra.co.kr)"}
+    ],
+    "detailWlb.socialDetail": [
+      {"text": "[1] 고용24 직업사전 유도마기수"},
+      {"text": "[2] 말산업 종합포털 호스피아 (horsepia.com)"}
+    ],
+    "overviewSalary.sal": [
+      {"text": "[1] 한국마사회 채용정보 및 복리후생 안내 (recruit.kra.co.kr)"}
+    ],
+    "overviewProspect.main": [
+      {"text": "[1] 한국마사회 경마정보 (race.kra.co.kr)"},
+      {"text": "[2] 고용24 직업사전 유도마기수"},
+      {"text": "[3] 말산업육성법 및 호스피아 정책정보 (horsepia.com)"}
+    ],
+    "detailWlb.wlb": [
+      {"text": "[1] 고용24 직업사전 유도마기수 근무환경 정보 기반"}
+    ],
+    "detailWlb.social": [
+      {"text": "[1] 고용24 직업사전 유도마기수 직무 정보 기반"}
+    ],
+    "sidebarJobs": [
+      {"text": "[1] CareerWiki DB 직업 검색 (경마·승마·마필 관련 직업)"}
+    ]
+  },
+  "changeSummary": "각주 출처 blob 분리 — 중복/역전 수정"
+}

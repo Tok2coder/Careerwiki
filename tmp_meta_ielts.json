@@ -1,0 +1,17 @@
+{
+  "title": "IELTS, 유학과 이민의 관문을 여는 글로벌 영어 시험의 모든 것",
+  "summary": "IELTS Academic/General 차이, 파트별 공부 전략, TOEFL과의 비교, 한국 시험장 정보, 목표 점수별 학습 플랜 총정리.",
+  "tags": ["IELTS", "영어시험", "유학", "이민", "어학"],
+  "relatedJobs": [
+    {"slug": "통역가", "name": "통역가"},
+    {"slug": "외국어교사", "name": "외국어교사"},
+    {"slug": "관광통역안내원", "name": "관광통역안내원"},
+    {"slug": "번역가", "name": "번역가"}
+  ],
+  "relatedMajors": [
+    {"slug": "영어영문학과", "name": "영어영문학과"},
+    {"slug": "영어교육과", "name": "영어교육과"},
+    {"slug": "국제학과", "name": "국제학과"}
+  ],
+  "thumbnailUrl": "/uploads/jobs/job-HowTo-ielts.webp"
+}

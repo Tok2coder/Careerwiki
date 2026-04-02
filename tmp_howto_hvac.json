@@ -1,0 +1,425 @@
+{
+  "cert_name": "공조냉동기계기사",
+  "cert_name_en": "Air-Conditioning and Refrigerating Machinery Engineer",
+  "cert_code": "1730",
+  "research_date": "2026-03-26",
+  "sections": {
+    "overview": {
+      "title": "자격증 개요",
+      "content": {
+        "description": "공조냉동기계기사는 냉동·공조 설비의 설계, 시공, 감리, 유지보수를 수행하는 국가기술자격증이다. 건축물의 냉난방, 환기, 공기정화 시스템과 산업용 냉동·냉장 설비 전반을 다룬다.",
+        "governing_body": "한국산업인력공단 (Q-net)",
+        "legal_basis": "국가기술자격법",
+        "qualification_requirements": [
+          "관련학과 4년제 대학교 졸업(예정)자",
+          "3년제 전문대학 졸업자 + 실무경력 1년",
+          "2년제 전문대학 졸업자 + 실무경력 2년",
+          "산업기사 취득 후 실무경력 1년",
+          "기능사 취득 후 실무경력 3년",
+          "순수 실무경력 4년 이상 (동일·유사 분야)",
+          "학점은행제 106학점 이상 (전공 28학점 포함)"
+        ],
+        "related_departments": [
+          "기계공학과",
+          "냉동공조공학과",
+          "건축설비공학과",
+          "건축설비학과",
+          "건축설비자동화과",
+          "산업설비과",
+          "산업설비자동화과",
+          "에너지시스템공학과"
+        ],
+        "note": "관련 학과명 변경·교육인정 변경이 잦으므로 큐넷 응시자격 자가진단 또는 1644-8000 통해 확인 권장"
+      },
+      "sources": [
+        "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1730",
+        "https://namu.wiki/w/%EA%B3%B5%EC%A1%B0%EB%83%89%EB%8F%99%EA%B8%B0%EA%B3%84%EA%B8%B0%EC%82%AC",
+        "https://safeegac.moa-ba.com/htmlpage.php?no=271"
+      ]
+    },
+    "exam_structure": {
+      "title": "시험 구조",
+      "content": {
+        "note": "2022년 출제기준 개편으로 기존 5과목 100문제에서 4과목 80문제로 변경. 2025년부터 시험시간 축소 적용.",
+        "written_exam": {
+          "name": "필기시험",
+          "format": "객관식 4지택일",
+          "subjects": [
+            {
+              "name": "에너지관리",
+              "questions": 20,
+              "description": "기계열역학, 에너지 효율, 열전달 기초"
+            },
+            {
+              "name": "공조냉동설계",
+              "questions": 20,
+              "description": "냉동공학(P-H선도, 냉동사이클), 공기조화(습공기선도, 덕트설계, 냉난방 부하계산)"
+            },
+            {
+              "name": "시운전 및 안전관리",
+              "questions": 20,
+              "description": "냉동장치 운전, 고압가스 안전관리, 설비 안전"
+            },
+            {
+              "name": "유지보수 및 공사관리",
+              "questions": 20,
+              "description": "배관공학, 전기제어, 설비 유지보수, 공사관리"
+            }
+          ],
+          "total_questions": 80,
+          "time_limit": "80분 (2025년~, 문제당 1분)",
+          "passing_criteria": "과목당 40점 이상, 전과목 평균 60점 이상"
+        },
+        "practical_exam": {
+          "name": "실기시험",
+          "format": "필답형 (서술형·계산형)",
+          "questions": "약 12문제",
+          "time_limit": "90분 (1시간 30분)",
+          "total_score": 100,
+          "passing_criteria": "60점 이상",
+          "key_topics": [
+            "P-H선도를 이용한 냉동사이클 계산",
+            "습공기선도를 이용한 공조 시스템 설계",
+            "냉난방 부하 계산",
+            "덕트·배관 설계 및 용량 산정",
+            "냉동장치 구성 및 운전 조건 분석"
+          ],
+          "note": "기사급은 100% 필답형 (산업기사·기능사는 동관작업 포함 복합형). 계산문제가 주를 이루며 한 문제가 2~3페이지에 걸친 서술형이 대부분. 도면의 방위표 함정, 조건 변형 등 출제 트랩에 주의 필요."
+        }
+      },
+      "sources": [
+        "https://namu.wiki/w/%EA%B3%B5%EC%A1%B0%EB%83%89%EB%8F%99%EA%B8%B0%EA%B3%84%EA%B8%B0%EC%82%AC",
+        "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1730",
+        "https://www.epasskorea.com/public_html/Examinfo/info_freeze.asp?cate_idx=11100301&type=A&link_idx=9149"
+      ]
+    },
+    "schedule_and_registration": {
+      "title": "시험 일정 및 접수",
+      "content": {
+        "year": 2026,
+        "sessions": [
+          {
+            "session": "1회",
+            "written_registration": "2026.01.12 ~ 01.15",
+            "written_exam": "2026.01.30 ~ 03.03",
+            "written_result": "2026.03.11",
+            "practical_registration": "2026.03.23 ~ 03.26",
+            "practical_exam": "2026.04.18 ~ 05.06",
+            "final_result": "1차 2026.06.05 / 2차 2026.06.12"
+          },
+          {
+            "session": "2회",
+            "written_registration": "2026.04.20 ~ 04.23",
+            "written_exam": "2026.05.09 ~ 05.29",
+            "written_result": "2026.06.10",
+            "practical_registration": "2026.06.22 ~ 06.25",
+            "practical_exam": "2026.07.18 ~ 08.05",
+            "final_result": "1차 2026.09.04 / 2차 2026.09.11"
+          },
+          {
+            "session": "3회",
+            "written_registration": "2026.07.20 ~ 07.23",
+            "written_exam": "2026.08.07 ~ 09.01",
+            "written_result": "2026.09.09",
+            "practical_registration": "2026.09.21 ~ 09.28",
+            "practical_exam": "2026.10.24 ~ 11.13",
+            "final_result": "1차 2026.12.11 / 2차 2026.12.18"
+          }
+        ],
+        "registration_hours": "접수 첫날 10:00 ~ 마지막 날 18:00",
+        "registration_method": "큐넷(Q-net) 온라인 접수",
+        "fees": {
+          "written": "19,400원",
+          "practical": "22,600원",
+          "total": "42,000원"
+        },
+        "written_validity": "필기 합격일로부터 2년간 유효"
+      },
+      "sources": [
+        "https://www.q-net.or.kr/crf021.do?id=crf02101&scheType=03",
+        "https://www.honam.or.kr/p/?j=64&ej_code=notice&st=100&sv=&pno=15&sort=0&page=1&act=view&bbs_uid=13256",
+        "https://www.invione.com/board/lic/216"
+      ]
+    },
+    "pass_rate": {
+      "title": "합격률 통계",
+      "content": {
+        "written_exam": [
+          { "year": 2026, "session": "1회", "applicants": 4857, "passers": 2407, "rate": "49.6%" },
+          { "year": 2025, "session": "3회", "applicants": 3852, "passers": 1763, "rate": "45.8%" },
+          { "year": 2025, "session": "2회", "applicants": 3791, "passers": 1713, "rate": "45.2%" },
+          { "year": 2025, "session": "1회", "applicants": 4337, "passers": 2231, "rate": "51.4%" },
+          { "year": 2024, "session": "3회", "applicants": 2855, "passers": 1108, "rate": "38.8%" },
+          { "year": 2024, "session": "2회", "applicants": 3145, "passers": 1323, "rate": "42.1%" },
+          { "year": 2024, "session": "1회", "applicants": 3918, "passers": 1926, "rate": "49.2%" },
+          { "year": 2023, "session": "3회", "applicants": 2849, "passers": 891, "rate": "31.3%" },
+          { "year": 2023, "session": "2회", "applicants": 2619, "passers": 927, "rate": "35.4%" },
+          { "year": 2023, "session": "1회", "applicants": 3289, "passers": 1415, "rate": "43.0%" },
+          { "year": 2022, "session": "3회", "applicants": 2401, "passers": 760, "rate": "31.7%" },
+          { "year": 2022, "session": "2회", "applicants": 1536, "passers": 416, "rate": "27.1%" },
+          { "year": 2022, "session": "1회", "applicants": 2085, "passers": 881, "rate": "42.3%" },
+          { "year": 2021, "session": "3회", "applicants": 2705, "passers": 1362, "rate": "50.4%" },
+          { "year": 2021, "session": "2회", "applicants": 1924, "passers": 917, "rate": "47.7%" },
+          { "year": 2021, "session": "1회", "applicants": 2336, "passers": 1151, "rate": "49.3%" }
+        ],
+        "practical_exam": [
+          { "year": 2025, "session": "3회", "applicants": 3124, "passers": 173, "rate": "5.5%" },
+          { "year": 2025, "session": "2회", "applicants": 3271, "passers": 1315, "rate": "40.2%" },
+          { "year": 2025, "session": "1회", "applicants": 3063, "passers": 505, "rate": "16.5%" },
+          { "year": 2024, "session": "3회", "applicants": 2506, "passers": 771, "rate": "30.8%" },
+          { "year": 2024, "session": "2회", "applicants": 2363, "passers": 448, "rate": "19.0%" },
+          { "year": 2024, "session": "1회", "applicants": 2223, "passers": 688, "rate": "30.9%" },
+          { "year": 2023, "session": "3회", "applicants": 1458, "passers": 402, "rate": "27.6%" },
+          { "year": 2023, "session": "2회", "applicants": 1471, "passers": 680, "rate": "46.2%" },
+          { "year": 2023, "session": "1회", "applicants": 1699, "passers": 826, "rate": "48.6%" },
+          { "year": 2022, "session": "3회", "applicants": 1391, "passers": 476, "rate": "34.2%" },
+          { "year": 2022, "session": "2회", "applicants": 1328, "passers": 417, "rate": "31.4%" },
+          { "year": 2022, "session": "1회", "applicants": 1569, "passers": 610, "rate": "38.9%" },
+          { "year": 2021, "session": "3회", "applicants": 2169, "passers": 911, "rate": "42.0%" },
+          { "year": 2021, "session": "2회", "applicants": 1895, "passers": 492, "rate": "26.0%" },
+          { "year": 2021, "session": "1회", "applicants": 1891, "passers": 410, "rate": "21.7%" }
+        ],
+        "analysis": {
+          "written_average": "필기 평균 합격률 약 40~45% 수준. 1회차가 가장 높고 3회차로 갈수록 하락하는 경향.",
+          "practical_average": "실기 평균 합격률 약 25~30% 수준. 회차별 편차가 매우 크며 (5.5%~48.6%), 출제 난이도에 크게 좌우됨.",
+          "difficulty": "필기는 중급, 실기는 상급 난이도. 실기 100% 필답형이며 응시자가 적은 마이너 종목 특성상 기출문제 복원 정확도가 낮아 준비가 더 까다로움.",
+          "trend": "2025년 실기 3회차 5.5%로 역대 최저 기록. 응시자 수는 연간 증가 추세 (2022년 약 6,000명 → 2025년 약 12,000명)."
+        }
+      },
+      "sources": [
+        "https://youcerti.com/%EA%B3%B5%EC%A1%B0%EB%83%89%EB%8F%99%EA%B8%B0%EA%B3%84%EA%B8%B0%EC%82%AC-%ED%95%A9%EA%B2%A9%EB%A5%A0/",
+        "https://namu.wiki/w/%EA%B3%B5%EC%A1%B0%EB%83%89%EB%8F%99%EA%B8%B0%EA%B3%84%EA%B8%B0%EC%82%AC/%ED%9A%8C%EC%B0%A8%EB%B3%84%20%ED%95%A9%EA%B2%A9%EB%A5%A0",
+        "https://safeegac.moa-ba.com/htmlpage.php?no=271"
+      ]
+    },
+    "study_method": {
+      "title": "공부법 및 학습 전략",
+      "content": {
+        "total_study_period": {
+          "written": "4~8주 (비전공자 8주, 전공자 4주 권장)",
+          "practical": "4~8주 (필기 합격 후 바로 시작 권장)",
+          "total": "약 2~4개월"
+        },
+        "subject_strategy": {
+          "에너지관리": "기계열역학이 모든 과목의 기초. 열·일·에너지 개념, 상태량 변화, 카르노·냉동 사이클 원리를 먼저 확실히 이해해야 이후 과목이 수월함.",
+          "공조냉동설계": "핵심 과목. P-H선도(몰리에르 선도) 계산과 습공기선도 활용이 필기·실기 모두 핵심. 냉동사이클 계산, 냉난방 부하계산, 덕트 설계 집중 학습.",
+          "시운전_및_안전관리": "암기 비중이 높은 과목. 고압가스 안전관리법 관련 규정, 냉매별 특성, 안전장치 종류와 작동원리 위주로 정리.",
+          "유지보수_및_공사관리": "배관·전기제어 기초와 공사관리. 앞선 과목 학습 후 암기 위주로 접근하는 것이 효율적."
+        },
+        "written_exam_tips": [
+          "기출문제 6~10개년 4회독이 정석 (1회독: 풀기, 2회독: 오답노트, 3~4회독: 약점 집중)",
+          "이론을 빠르게 훑은 후 기출문제 풀면서 빈출 포인트 암기가 가장 효율적",
+          "과목 순서: 에너지관리(열역학) → 공조냉동설계 → 시운전/안전관리 → 유지보수/공사관리",
+          "시험시간 80분으로 단축되었으므로 시간 배분 연습 필수"
+        ],
+        "practical_exam_tips": [
+          "기출문제 10~20개년 3~5회독 필수",
+          "단순 암기가 아닌 개념·원리 이해 기반 학습 (함정 문제 대비)",
+          "P-H선도, 습공기선도 계산을 완벽하게 숙달",
+          "도면 방위표 함정, 조건 변형 트랩에 특히 주의",
+          "기출 복원 정확도가 낮으므로 공식 유도 능력과 응용력 배양 필요",
+          "계산기 사용법 숙달 (공학용 계산기 허용)"
+        ],
+        "recommended_textbooks": [
+          {
+            "name": "2026 공조냉동기계기사 필기 5주완성 (한솔아카데미)",
+            "description": "2025년 신출제기준 4과목 대응, 이론+예상문제+기출문제 구성",
+            "price": "약 35,000원"
+          },
+          {
+            "name": "2026 에듀윌 공조냉동기계기사 필기 한권끝장",
+            "description": "무료특강 포함, 이론 정리와 기출 분석",
+            "price": "정가 35,000원 (할인 31,500원)"
+          },
+          {
+            "name": "이패스코리아 공조냉동기계기사 필기교재",
+            "description": "이론+기출문제 통합",
+            "price": "정상가 37,000원 (회원가 33,300원)"
+          }
+        ],
+        "recommended_online_courses": [
+          {
+            "provider": "이패스코리아",
+            "url": "https://www.epasskorea.com",
+            "features": "필기 이론+기출 12개월 과정, 실기 과정 별도"
+          },
+          {
+            "provider": "한솔아카데미",
+            "url": "https://engineer.inup.co.kr",
+            "features": "필기·실기 온라인 강의, 5주완성 교재 연계"
+          },
+          {
+            "provider": "성안당 e러닝",
+            "url": "https://bm.cyber.co.kr/hub/air-conditioning_pro",
+            "features": "3회독 커리큘럼, 필기+실기 패키지"
+          },
+          {
+            "provider": "모아바",
+            "url": "https://www.moa-ba.com",
+            "features": "필기·실기·전과목 패스, 질문 게시판 운영"
+          },
+          {
+            "provider": "배울학",
+            "url": "https://airconditioning.baeulhak.com",
+            "features": "공조냉동기계기사 전문 온라인 학습"
+          }
+        ],
+        "success_case": "비전공 40대 직장인이 필기교재 1권으로 34일 독학 → 필기 89점 합격, 실기교재 1권으로 24일 독학 → 실기 70점 합격한 사례 있음. 핵심은 기출 반복과 원리 이해."
+      },
+      "sources": [
+        "https://3.boxtone1.com/entry/공조냉동기계기사-필기-실기-공부방법-및-책-추천-노하우-공유",
+        "https://m.dcinside.com/board/coq/1382898",
+        "https://www.studyon.co.kr/index.php?mid=h_b0008",
+        "https://m.dcinside.com/board/machinery/22231",
+        "https://www.kisa.co.kr/gnu/bbs/board.php?bo_table=pass_story&wr_id=8811"
+      ]
+    },
+    "cost": {
+      "title": "총 비용",
+      "content": {
+        "exam_fees": {
+          "written": "19,400원",
+          "practical": "22,600원",
+          "subtotal": "42,000원",
+          "note": "불합격 시 재응시마다 추가 비용 발생"
+        },
+        "textbooks": {
+          "written": "31,500~37,000원 (1권)",
+          "practical": "30,000~37,000원 (1권)",
+          "subtotal": "약 60,000~75,000원"
+        },
+        "online_courses": {
+          "written_only": "약 100,000~200,000원",
+          "practical_only": "약 100,000~200,000원",
+          "package": "약 150,000~350,000원 (필기+실기 패키지)",
+          "note": "기관별 가격 차이가 크므로 각 사이트에서 확인 필요"
+        },
+        "total_estimate": {
+          "minimum": "약 100,000원 (교재만 독학)",
+          "typical": "약 250,000~400,000원 (교재+인강)",
+          "maximum": "약 500,000원 이상 (프리미엄 인강+추가 교재)"
+        },
+        "credential_issuance_fee": "자격증 발급 수수료 별도 (약 6,800원)"
+      },
+      "sources": [
+        "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1730",
+        "https://bm.cyber.co.kr/lecture.php?action=package&uid=1012",
+        "https://book.eduwill.net/goods/select.action?goodsId=0100004405",
+        "https://www.epasskorea.com/main.asp?cate_idx=11100301&type=A&link_idx=9146"
+      ]
+    },
+    "career_and_usage": {
+      "title": "취업 및 활용",
+      "content": {
+        "job_areas": [
+          "건설회사 기계설비부서 (냉난방·공조 설계 및 시공)",
+          "플랜트·엔지니어링 회사",
+          "건물 시설관리 (빌딩관리, FM 업체)",
+          "냉동·냉장 창고 운영 업체",
+          "반도체·디스플레이 클린룸 설비",
+          "식품·제약·화학 공장 냉동설비",
+          "공조기기 제조업체 (삼성·LG·캐리어 등)",
+          "한국전력·한국가스공사 등 에너지 공기업",
+          "소방·안전관리 업체"
+        ],
+        "salary": {
+          "entry_level": "약 298만원/월 (기사급 초임 기준)",
+          "mid_career": "약 302만원/월 (35~54세 기준)",
+          "note": "시설관리 분야에서 기계설비유지관리자+냉동기 선임이 가능해 연봉 프리미엄 존재. 기술사 취득 시 대폭 상승."
+        },
+        "legal_appointments": {
+          "기계설비유지관리자": "기계설비법에 의거, 일정 규모 이상 건축물의 기계설비 유지관리자로 선임 가능.",
+          "냉동제조시설_안전관리자": "고압가스안전관리법에 따라 냉동능력에 따른 안전관리자 선임. 단, 기사급이 필수인 대형 설비는 드물고, 산업기사·기능사+경력으로 대체 가능한 경우가 대부분.",
+          "건설기술인": "건설기술진흥법에 따라 중급 건설기술인(기사 취득 후) 자격."
+        },
+        "career_path": [
+          "공조냉동기계기능사 → 산업기사 → 기사 → 기술사",
+          "기사 취득 후 4년 경력 → 기계설비유지관리업 등록 가능",
+          "기술사 취득 시 설계사무소 운영 가능"
+        ],
+        "outlook": "건축물 고도화·에너지 효율 규제 강화·데이터센터 냉각 수요 증가로 공조냉동 기술인력 수요가 꾸준히 증가 중. 특히 탄소중립·그린뉴딜 정책으로 에너지 효율 분야 전문가 수요 확대 전망."
+      },
+      "sources": [
+        "https://www.hvacrj.co.kr/news/articleView.html?idxno=30235",
+        "https://1.boxtone1.com/entry/공조냉동기계기사-자격증-취업-연봉-하는-일-전망",
+        "https://kr.indeed.com/q-공조-냉동-기계-기사-채용공고.html",
+        "https://namu.wiki/w/%EA%B3%B5%EC%A1%B0%EB%83%89%EB%8F%99%EA%B8%B0%EA%B3%84%EA%B8%B0%EC%82%AC"
+      ]
+    },
+    "similar_cert_comparison": {
+      "title": "유사 자격증 비교",
+      "content": {
+        "comparisons": [
+          {
+            "cert_name": "에너지관리기사",
+            "focus": "보일러·열설비·에너지 효율 관리",
+            "difficulty": "공조냉동기계기사보다 낮음",
+            "key_difference": "보일러 안전관리자 선임 가능이 최대 장점. 기계설비유지관리자 자격도 충족하면서 보일러관리자 선임까지 가능해 시설관리 분야에서 가치 급부상.",
+            "recommended_for": "시설관리(FM) 취업 희망자, 보일러 선임이 필요한 건물 관리"
+          },
+          {
+            "cert_name": "건축설비기사",
+            "focus": "건축물 급배수·위생·소방·공조 전반",
+            "difficulty": "공조냉동기계기사와 유사 (수학·엔지니어링 문제 다수)",
+            "key_difference": "건축설비 전반을 폭넓게 다루는 반면, 공조냉동은 냉동·공조에 특화. 건축설비기사는 급배수·위생설비까지 포함.",
+            "recommended_for": "건축 기계설비 설계·감리 직군 희망자"
+          },
+          {
+            "cert_name": "공조냉동기계산업기사",
+            "focus": "공조냉동기계기사와 동일 분야 (하위 등급)",
+            "difficulty": "기사 대비 확연히 낮음 (필기 쉽고 열역학 겉핥기 수준)",
+            "key_difference": "실기가 복합형(필답형 60점 + 동관작업 40점)이라 실습 능력도 필요. 기사는 100% 필답형. 산업기사는 응시자격 문턱이 낮음(2년제 졸업 등).",
+            "recommended_for": "비전공자·전문대졸 등 기사 응시자격이 안 되는 경우 먼저 취득 후 기사 도전"
+          }
+        ],
+        "difficulty_ranking": "에너지진단사(열/전기) > 공조냉동기계기사 > 에너지관리기사 > 건축설비기사 > 공조냉동기계산업기사",
+        "combo_recommendations": [
+          {
+            "combo": "공조냉동기계기사 + 에너지관리기사 (쌍기사)",
+            "benefit": "기계설비유지관리자 + 보일러관리자 + 냉동기 선임 = 시설관리 분야 최강 조합. 건물관리 취업 시 큰 가산점."
+          },
+          {
+            "combo": "공조냉동기계기사 + 소방설비기사(기계)",
+            "benefit": "건축 기계설비 + 소방 분야 이중 자격으로 취업 범위 확대."
+          },
+          {
+            "combo": "공조냉동기계기사 + 건축설비기사",
+            "benefit": "기계설비 설계·감리 분야에서 전문성 강화. 과목 겹침이 많아 동시 준비 효율적."
+          }
+        ]
+      },
+      "sources": [
+        "https://namu.wiki/w/%EC%97%90%EB%84%88%EC%A7%80%EA%B4%80%EB%A6%AC%EA%B8%B0%EC%82%AC",
+        "https://namu.wiki/w/%EC%8C%8D%EA%B8%B0%EC%82%AC",
+        "https://comento.kr/job-questions/모든회사/모든직무/건축설비기사_vs_공조냉동기계기사-492884",
+        "https://m.dcinside.com/board/siseol/217694",
+        "https://certificate.unips.co.kr/공조냉동기계-3단계-자격증-비교-가이드-2025-최신판/"
+      ]
+    }
+  },
+  "total_sources": 22,
+  "source_list": [
+    "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1730",
+    "https://namu.wiki/w/%EA%B3%B5%EC%A1%B0%EB%83%89%EB%8F%99%EA%B8%B0%EA%B3%84%EA%B8%B0%EC%82%AC",
+    "https://safeegac.moa-ba.com/htmlpage.php?no=271",
+    "https://www.epasskorea.com/public_html/Examinfo/info_freeze.asp?cate_idx=11100301&type=A&link_idx=9149",
+    "https://youcerti.com/%EA%B3%B5%EC%A1%B0%EB%83%89%EB%8F%99%EA%B8%B0%EA%B3%84%EA%B8%B0%EC%82%AC-%ED%95%A9%EA%B2%A9%EB%A5%A0/",
+    "https://namu.wiki/w/%EA%B3%B5%EC%A1%B0%EB%83%89%EB%8F%99%EA%B8%B0%EA%B3%84%EA%B8%B0%EC%82%AC/%ED%9A%8C%EC%B0%A8%EB%B3%84%20%ED%95%A9%EA%B2%A9%EB%A5%A0",
+    "https://www.q-net.or.kr/crf021.do?id=crf02101&scheType=03",
+    "https://www.honam.or.kr/p/?j=64&ej_code=notice&st=100&sv=&pno=15&sort=0&page=1&act=view&bbs_uid=13256",
+    "https://www.invione.com/board/lic/216",
+    "https://3.boxtone1.com/entry/공조냉동기계기사-필기-실기-공부방법-및-책-추천-노하우-공유",
+    "https://m.dcinside.com/board/coq/1382898",
+    "https://www.studyon.co.kr/index.php?mid=h_b0008",
+    "https://m.dcinside.com/board/machinery/22231",
+    "https://www.kisa.co.kr/gnu/bbs/board.php?bo_table=pass_story&wr_id=8811",
+    "https://bm.cyber.co.kr/hub/air-conditioning_pro",
+    "https://www.hvacrj.co.kr/news/articleView.html?idxno=30235",
+    "https://1.boxtone1.com/entry/공조냉동기계기사-자격증-취업-연봉-하는-일-전망",
+    "https://kr.indeed.com/q-공조-냉동-기계-기사-채용공고.html",
+    "https://namu.wiki/w/%EC%97%90%EB%84%88%EC%A7%80%EA%B4%80%EB%A6%AC%EA%B8%B0%EC%82%AC",
+    "https://namu.wiki/w/%EC%8C%8D%EA%B8%B0%EC%82%AC",
+    "https://comento.kr/job-questions/모든회사/모든직무/건축설비기사_vs_공조냉동기계기사-492884",
+    "https://certificate.unips.co.kr/공조냉동기계-3단계-자격증-비교-가이드-2025-최신판/"
+  ]
+}

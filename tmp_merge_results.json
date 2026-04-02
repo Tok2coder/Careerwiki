@@ -1,0 +1,14 @@
+{
+  "success": 55,
+  "fail": 1,
+  "errors": [
+    {
+      "pair": {
+        "source": "상ㆍ하수도처리장치조작원",
+        "target": "상·하수도 처리장치 조작원",
+        "category": "B"
+      },
+      "error": "Source job '상ㆍ하수도처리장치조작원' not found"
+    }
+  ]
+}

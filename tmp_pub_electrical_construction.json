@@ -1,0 +1,960 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "전기공사기사란 — 전기기사와 뭐가 다른가" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기공사기사는 한국산업인력공단이 시행하는 " },
+        { "type": "text", "text": "국가기술자격", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로, 1974년에 신설되어 현재까지 운영되고 있다" },
+        { "type": "footnote", "attrs": { "id": 1, "text": "Q-Net 전기공사기사 자격 정보", "url": "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1160" } },
+        { "type": "text", "text": ". 전기 시설의 설치·시공·감독 업무를 수행하기 위한 기사급 자격증으로, " },
+        { "type": "text", "text": "전기공사업법에 의한 전기공사업 등록 시 필수 기술인력", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로 인정된다. 산업통상자원부가 관할하며, 시험 접수부터 합격 발표까지 모든 과정은 Q-Net(큐넷)에서 관리한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기 분야 자격증 중에서 사람들이 가장 많이 혼동하는 것이 바로 전기기사와 전기공사기사의 차이다. 결론부터 말하면, " },
+        { "type": "text", "text": "전기기사는 전기사업법에 의한 '전기안전관리자' 선임이 가능", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "하고, 전기공사기사는 전기공사업법에 의한 " },
+        { "type": "text", "text": "'전기공사업 등록'에 필수", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "인 자격이다" },
+        { "type": "footnote", "attrs": { "id": 2, "text": "전기기사 vs 전기공사기사 시험 과목 차이", "url": "https://canvasfriends.com/%EC%A0%84%EA%B8%B0%EA%B8%B0%EC%82%AC-vs-%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC-%EC%8B%9C%ED%97%98-%EA%B3%BC%EB%AA%A9-%EC%B0%A8%EC%9D%B4-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EC%95%8C%EC%95%84/" } },
+        { "type": "text", "text": ". 즉, 전기안전관리자로 선임되려면 전기기사가 필요하고, 전기공사업을 등록하려면 전기공사기사가 필요하다. 현장에서는 이 두 자격을 모두 취득한 사람을 " },
+        { "type": "text", "text": "'쌍기사'", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "라고 부르며, 취업과 연봉 협상에서 가장 강력한 경쟁력을 갖는다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "관련 직업으로는 " },
+        { "type": "text", "text": "전기기술자", "marks": [{ "type": "link", "attrs": { "href": "/job/전기기술자" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "전기감리기술자", "marks": [{ "type": "link", "attrs": { "href": "/job/전기감리기술자" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "건축전기설비기술자", "marks": [{ "type": "link", "attrs": { "href": "/job/건축전기설비기술자" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "송배전설비기술자", "marks": [{ "type": "link", "attrs": { "href": "/job/송배전설비기술자" } }] },
+        { "type": "text", "text": " 등이 있으며, 대학에서는 " },
+        { "type": "text", "text": "전기공학과", "marks": [{ "type": "link", "attrs": { "href": "/major/전기공학과" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "전기전자공학과", "marks": [{ "type": "link", "attrs": { "href": "/major/전기전자공학과" } }] },
+        { "type": "text", "text": " 등에서 관련 교육을 받을 수 있다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "응시자격과 시험 구조 한눈에 보기" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기공사기사는 기사 등급 공통 응시자격이 적용된다. 학력, 경력, 자격 중 하나 이상을 충족하면 응시할 수 있다. 대표적인 응시자격 경로는 다음과 같다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "4년제 대학 관련학과 졸업자 또는 졸업예정자", "marks": [{ "type": "bold" }] }
+            ] }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "3년제 전문대학 관련학과 졸업 후 동일(유사)분야 1년 이상 실무경력자" }
+            ] }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "2년제 전문대학 관련학과 졸업 후 동일(유사)분야 2년 이상 실무경력자" }
+            ] }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "동일(유사)분야에서 4년 이상 실무 종사자 (학력 무관)" }
+            ] }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "산업기사 취득 후 동일(유사)분야 1년 이상 실무경력자" }
+            ] }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "동일(유사)분야 다른 종목 기사 자격 취득자 (예: 전기기사 보유자)" }
+            ] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "관련학과는 " },
+        { "type": "text", "text": "전기공학과", "marks": [{ "type": "link", "attrs": { "href": "/major/전기공학과" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "전기전자공학과", "marks": [{ "type": "link", "attrs": { "href": "/major/전기전자공학과" } }] },
+        { "type": "text", "text": " 외에도 통신공학과, 기계공학과, 건축공학과, 토목공학과, 컴퓨터공학과, 재료공학과 등 공대 관련학과가 폭넓게 인정된다" },
+        { "type": "footnote", "attrs": { "id": 3, "text": "Q-Net 기사 등급 응시자격 안내", "url": "https://www.q-net.or.kr/crf006.do?id=crf00603&tabIdx=2&gradeType=30" } },
+        { "type": "text", "text": ". 응시자격 판단이 복잡한 경우 Q-Net의 응시자격 자가진단 시스템을 활용하면 편리하다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "시험은 " },
+        { "type": "text", "text": "필기시험", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "과 " },
+        { "type": "text", "text": "실기시험", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 2단계로 구성된다. 필기는 2022년 4회차부터 CBT(컴퓨터 기반 시험) 방식으로 전환되었으며, 시험장소와 일시를 선택할 수 있다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "구분" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기시험" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기시험" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "형식" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "객관식 4지선다 (CBT)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "주관식 필답형" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문항 수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "100문항 (5과목 × 20문항)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "17~20문항 (배점 상이)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험 시간" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "150분 (과목당 30분)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "150분" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격 기준" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목 평균 60점 이상, 과목당 40점 이상" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "100점 만점에 60점 이상" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기구" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CBT (컴퓨터 입력)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "검은색 볼펜만 사용 (다른 색 시 부정행위)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "19,400원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "22,600원" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "필기시험 과목은 5개이며, 이 중 제1과목인 '전기응용 및 공사재료'가 전기기사와의 핵심적인 차이점이다. 전기기사의 제1과목은 '전기자기학'인데, 전기공사기사는 이 대신 조명공학, 전동기·전열기, 전기철도, 공사 공구 및 재료 등 " },
+        { "type": "text", "text": "시공 현장에 밀접한 과목", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이 들어간다. 나머지 4과목(전력공학, 전기기기, 회로이론 및 제어공학, 전기설비기술기준)은 전기기사와 동일하다. 이 때문에 전기기사 자격 보유자가 전기공사기사에 응시하면 " },
+        { "type": "text", "text": "2~5과목이 면제", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "되어, 제1과목만 추가 학습하면 된다" },
+        { "type": "footnote", "attrs": { "id": 4, "text": "전기공사기사 과목 면제 및 시험 정보", "url": "https://namu.wiki/w/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EA%B8%B0%EC%82%AC" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "2026년 시험 일정과 접수 방법" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기공사기사 시험은 현재 연 3회 시행되지만, 실질적으로 " },
+        { "type": "text", "text": "제3회 시험에 집중적으로 편성", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "되는 구조다. 전기기사와 시험 일정이 다르기 때문에, 반드시 Q-Net에서 정확한 일정을 확인해야 한다" },
+        { "type": "footnote", "attrs": { "id": 5, "text": "Q-Net 2026년 국가기술자격시험 일정", "url": "https://www.q-net.or.kr/crf021.do?id=crf02101&scheType=03" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2026년 제3회 전기공사기사 시험 일정은 다음과 같다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "항목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "일정" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 접수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2026.07.20 ~ 07.23" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 시험" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2026.08.07 ~ 09.01" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 합격 발표" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2026.09.09" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기 접수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2026.08.07 ~ 09.18" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기 시험" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2026.09.21 ~ 09.23, 09.28" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "최종 합격 발표" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2026.12.18" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "접수는 Q-Net 홈페이지에서 회원가입 후 온라인으로 진행한다. 필기시험은 CBT 방식이라 시험장소와 일시를 선택할 수 있다는 장점이 있다. 응시료는 필기 19,400원, 실기 22,600원으로 총 42,000원이다" },
+        { "type": "footnote", "attrs": { "id": 6, "text": "한솔아카데미 전기공사기사 시험 안내", "url": "https://elec.inup.co.kr/page/page.jsp?code=T001" } },
+        { "type": "text", "text": ". 불합격 시 재응시할 때마다 해당 비용이 추가로 발생하므로, 한 번에 합격하는 것이 가장 경제적이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "합격률 분석 — 전기기사보다 높은 이유" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기공사기사의 합격률은 전기기사에 비해 상당히 높다. 전기기사의 필기 합격률이 약 20% 수준인 데 반해, 전기공사기사의 필기 합격률은 최근 5년 평균 " },
+        { "type": "text", "text": "40~50%대", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "를 유지한다" },
+        { "type": "footnote", "attrs": { "id": 7, "text": "전기공사기사 연도별 합격률 통계", "url": "https://elec.inup.co.kr/page/page.jsp?code=T004" } },
+        { "type": "text", "text": ". 이렇게 합격률이 높은 이유는 명확하다. " },
+        { "type": "text", "text": "응시자의 대다수가 이미 전기기사를 보유한 사람들", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이기 때문이다. 필기 2~5과목 면제 혜택으로 제1과목(전기응용 및 공사재료)만 집중하면 되니, 당연히 합격률이 올라갈 수밖에 없다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연도" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 응시" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 합격률" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기 응시" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기 합격률" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2024" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "11,578명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "51.3%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "6,943명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "49.8%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2023" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "14,972명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "45.0%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "8,547명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "62.2%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2022" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "13,583명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "47.7%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "9,161명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "65.9%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2021" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "17,055명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "52.2%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "10,658명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "42.3%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2020" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "8,869명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "55.3%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "6,666명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "58.6%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2019" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "12,263명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "42.6%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "6,338명" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "29.2%" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "주목할 점은 실기 합격률의 변동폭이 매우 크다는 것이다. 2022년 65.9%에서 2019년 29.2%까지, 연도에 따라 크게 달라진다. 이는 실기시험의 출제 난이도가 해마다 상당히 달라지기 때문이다. 특히 " },
+        { "type": "text", "text": "견적 문제의 배점과 난이도가 실기 합격률에 결정적인 영향", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "을 미친다. 2016년에 견적 문제가 30점으로 대폭 상향되었을 때 큰 논란이 있었고, 이후 점차 축소되어 현재는 10점 내외로 안정화되었다" },
+        { "type": "footnote", "attrs": { "id": 8, "text": "전기공사기사 합격률 추이 분석", "url": "https://info-commonsense.com/15" } },
+        { "type": "text", "text": ". 2020년 이후 응시자 수가 크게 증가한 것은 그린뉴딜 정책과 신재생에너지 수요 확대에 따른 전기공사 시장 성장 기대감이 반영된 결과로 보인다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-electrical-construction-img1.webp",
+        "alt": "전기공사기사 연도별 합격률 추이 그래프 (2015~2024)",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "과목별 공부법과 실기 공략 포인트" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "필기시험 공부법은 " },
+        { "type": "text", "text": "전기기사 보유 여부에 따라 전략이 완전히 달라진다", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ". 이미 전기기사를 취득한 사람이라면 필기 2~5과목이 면제되기 때문에, 제1과목인 '전기응용 및 공사재료'에만 집중하면 된다. 이 과목은 조명공학, 전동기·전열기 응용, 전기철도, 공사 공구 및 재료로 구성되어 있으며, " },
+        { "type": "text", "text": "1~2개월 정도의 집중 학습", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이면 충분하다" },
+        { "type": "footnote", "attrs": { "id": 9, "text": "전기공사기사 공부법 (마추다)", "url": "https://www.machuda.kr/blog/article/10" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기기사 없이 처음부터 도전하는 전공자라면, 과목별 추천 학습 순서는 " },
+        { "type": "text", "text": "전기기기 → 전력공학 → 회로이론 → 전기설비기술기준 → 전기응용 및 공사재료", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 순이다. 전기기기가 가장 난이도가 높으면서도 다른 과목과의 연계성이 크기 때문에, 먼저 정복해두면 나머지 과목의 이해도가 높아진다. 전체 준비 기간은 2~3개월 정도가 적절하다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "비전공자의 경우, 순수 독학은 사실상 어렵다. 회로이론이나 전기자기학의 기초 개념 없이 문제를 풀려고 하면 용어 자체를 이해하지 못하는 벽에 부딪힌다. " },
+        { "type": "text", "text": "인터넷 강의 또는 오프라인 학원을 반드시 병행", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "하되, 기초 이론(회로이론, 전자기학)부터 탄탄히 다진 후에 과년도 기출문제 풀이로 넘어가야 한다. 최소 300시간 이상의 학습 시간을 확보해야 하며, 준비 기간은 4~6개월 정도로 잡는 것이 현실적이다" },
+        { "type": "footnote", "attrs": { "id": 10, "text": "전기 분야 자격증 공부법 후기 (브런치)", "url": "https://brunch.co.kr/@khl9805/180" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "학습 방법의 핵심은 " },
+        { "type": "text", "text": "기출문제 반복 풀이", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "다. 인강을 1회독 하면서 전체 범위를 훑은 후, 기출문제 10개년 이상을 반복적으로 풀며 출제 패턴을 파악하는 것이 가장 효율적이다. 동영상 강의는 2배속으로 1회 시청한 뒤, 문제풀이를 중심으로 공부하고, 이해가 안 되는 부분만 선택적으로 재시청하는 방식이 시간 대비 효과가 좋다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실기시험은 주관식 필답형으로 150분 동안 치러진다. " },
+        { "type": "text", "text": "검은색 볼펜만 사용", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "할 수 있으며, 다른 색 필기구를 사용하면 부정행위로 처리되니 반드시 주의해야 한다. 주요 출제 분야는 변압기(결선도, 용량선정, 손실 및 효율 계산), 접지·피뢰설비, 견적, 시퀀스(제어회로), 단답형 암기 등이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실기 준비의 핵심은 " },
+        { "type": "text", "text": "기출문제 최소 17개년 이상, 4회독 이상 반복", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다" },
+        { "type": "footnote", "attrs": { "id": 11, "text": "전기공사기사 실기 공부법 커뮤니티 토론", "url": "https://gall.dcinside.com/mgallery/board/view/?id=electro&no=329132" } },
+        { "type": "text", "text": ". 최신 기출부터 역순으로 풀어보고, 다시 최신 기출로 마무리하는 패턴이 효과적이다. 계산문제는 최근 기출이 과거보다 어려운 경향이 있으므로, 최신 문제에 집중해야 한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기공사기사 실기의 고유 특징은 " },
+        { "type": "text", "text": "견적 문제", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "다. 가로등, 내선, 수변전설비 공사의 비용을 계산하는 유형으로, 전기기사에는 없는 전기공사기사만의 독특한 문제이다. 물량 산출(전선·케이블·전선관 길이), 인건비(터파기·포설·철거) 계산이 출제되며, 할증률 적용 방식, 3상/1상 구분, 재사용 재료 구분 등의 함정이 빈번하게 출제된다. 현재 약 10점 내외의 배점이지만, 과거에는 30점까지 상향된 적도 있어 방심하면 안 된다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "또 하나 주의할 분야는 " },
+        { "type": "text", "text": "시퀀스(제어회로)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 문제다. 2021년에 5년 만에 재출제되면서 많은 수험생이 당황했다. 기본적인 제어회로 도면 작성 능력을 갖춰두는 것이 안전하다. KEC(한국전기설비규정) 개정 내용도 반드시 숙지해야 한다. 접지·피뢰 관련 최신 기준이 시험에 반영되고 있기 때문이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "총 비용은 얼마나 드는가" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기공사기사 취득에 드는 총 비용은 학습 방법에 따라 크게 달라진다. 가장 저렴한 독학의 경우 응시료와 교재비만으로 약 " },
+        { "type": "text", "text": "10만 7천 원", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이면 가능하다. 다만, 비전공자가 독학으로 합격하기란 거의 불가능에 가깝다는 점을 감안해야 한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "가장 보편적인 경로는 " },
+        { "type": "text", "text": "인터넷 강의 + 교재", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 조합이다. 필기 전 과목 인강 패키지가 10~20만 원, 필기+실기 종합반이 20~40만 원 수준이다. 여기에 교재비(필기 세트 4~6만 원, 실기 교재 2.5~3.5만 원)와 응시료를 합산하면 " },
+        { "type": "text", "text": "30~50만 원", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 정도가 일반적이다" },
+        { "type": "footnote", "attrs": { "id": 12, "text": "에듀윌 전기공사기사 교재 및 강의 안내", "url": "https://energy.eduwill.net/" } },
+        { "type": "text", "text": ". EBS 자격증 강의를 활용하면 5~8만 원대의 저가형 학습도 가능하다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "오프라인 학원(대산전기학원, 대한전기학원 등)을 이용하면 수강료만 50~150만 원이 추가된다. 교재비와 응시료를 포함하면 " },
+        { "type": "text", "text": "70~160만 원", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "까지 올라갈 수 있다" },
+        { "type": "footnote", "attrs": { "id": 13, "text": "다산에듀 전기공사기사 강의 안내", "url": "https://www.e-dasan.net/" } },
+        { "type": "text", "text": ". 다만, 이미 전기기사를 보유한 사람이 전기공사기사를 추가로 취득하는 경우에는 제1과목 교재와 실기 견적 교재만 추가하면 되므로, " },
+        { "type": "text", "text": "3~5만 원 수준의 교재비", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "만으로 충분하다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "추천 학습 자원으로는 에듀윌(CBT 모의고사 제공), 다산에듀(유튜브 무료 강의), 배울학(전기기사 전문 플랫폼), 한솔아카데미 등이 있다. 무료 자원으로는 다산에듀 유튜브 채널, 다산패스 앱(최근 5개년 기출 무료), CBT 온라인 문제풀이(comcbt.com) 등을 활용할 수 있다." }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "전기공사기사 합격 체크리스트" }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "응시자격을 확인했는가? 학력·경력·자격 중 하나 이상 충족해야 한다. Q-Net 자가진단 시스템으로 미리 확인하자." }
+                ] }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "전기기사를 먼저 취득했는가? 이미 보유하고 있다면 필기 2~5과목 면제이므로 제1과목에만 집중하면 된다." }
+                ] }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "실기 견적 문제를 별도로 학습했는가? 전기공사기사 고유 유형이므로 전기기사 실기와 다르게 준비해야 한다." }
+                ] }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "KEC(한국전기설비규정) 최신 개정 내용을 확인했는가? 접지·피뢰 관련 기준이 시험에 반영된다." }
+                ] }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "시퀀스(제어회로) 도면 작성을 연습했는가? 5년 만에 재출제된 전력이 있다." }
+                ] }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "검은색 볼펜을 준비했는가? 실기시험에서 다른 색 필기구를 사용하면 부정행위로 처리된다." }
+                ] }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "전기기사 vs 전기공사기사 vs 산업기사 — 무엇을 먼저 따야 하나" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기 분야 자격증은 종류가 많고, 이름도 비슷해서 혼란스럽다. 가장 많이 비교되는 전기기사, 전기공사기사, 전기산업기사, 전기공사산업기사의 핵심 차이를 정리하면 다음과 같다" },
+        { "type": "footnote", "attrs": { "id": 14, "text": "전기기사·전기공사기사·산업기사 비교 분석", "url": "https://www.machuda.kr/blog/article/6" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자격증" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "등급" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "법적 선임" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 합격률" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "핵심 용도" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기기사", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기안전관리자 선임 가능" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 20%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기설비 설계·감리·안전관리 전반" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기공사기사", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기공사업 등록 필수 기술인력" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 45~50%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기공사 시공·감독" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기산업기사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "산업기사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기안전관리자 선임 가능" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 30~40%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "아파트·건물 전기안전 관리" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기공사산업기사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "산업기사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전기공사현장 기술인력만 가능" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기사급과 유사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "활용도 제한적 (2026년 과정평가형 전환)" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "가장 권장되는 취득 경로는 " },
+        { "type": "text", "text": "전기기사 → 전기공사기사 순서의 '쌍기사' 취득", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다" },
+        { "type": "footnote", "attrs": { "id": 15, "text": "쌍기사 취득 전략 및 활용 방안", "url": "http://www.esudo.co.kr/67/?bmode=view&idx=6319345" } },
+        { "type": "text", "text": ". 전기기사를 먼저 취득하면 전기공사기사 필기 2~5과목이 면제되어 제1과목만 추가 학습하면 되니 효율적이다. 반대로 전기공사기사를 먼저 취득하면 전기기사에 대한 과목 면제가 거의 없어 비효율적이다. 쌍기사를 보유하면 전기안전관리 업무와 전기공사업 등록 양쪽 모두 가능해져, 취업 시장에서 사실상 최대 경쟁력을 갖추게 된다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "4년제 대학 졸업자라면 산업기사를 거치지 않고 " },
+        { "type": "text", "text": "기사급을 바로 취득하는 것이 시간과 비용 면에서 유리", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "하다. 전기공사산업기사는 활용도가 제한적이라는 평가가 많으므로, 단독 취득보다는 전기공사기사 또는 전기산업기사와 병행하는 것을 추천한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "취업처와 연봉 — 현실적인 커리어 로드맵" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "전기공사기사를 취득하면 다양한 분야로 진출할 수 있다. 가장 직접적인 취업처는 " },
+        { "type": "text", "text": "전기공사업체", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "다. 전기공사업법에 의한 필수 기술인력이기 때문에, 전기공사업체에서 가장 선호하는 자격이다. 대형 건설현장이나 플랜트 설비 전기공사의 시공·감독 업무를 담당하는 " },
+        { "type": "text", "text": "건축전기설비기술자", "marks": [{ "type": "link", "attrs": { "href": "/job/건축전기설비기술자" } }] },
+        { "type": "text", "text": "로의 진출도 일반적이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "한전, 발전공사 등 " },
+        { "type": "text", "text": "공기업·공공기관", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "에서도 전기공사기사를 우대한다. 특히 전기기사와 함께 쌍기사를 보유하면 경쟁력이 극대화된다. " },
+        { "type": "text", "text": "발전설비기술자", "marks": [{ "type": "link", "attrs": { "href": "/job/발전설비기술자" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "송배전설비기술자", "marks": [{ "type": "link", "attrs": { "href": "/job/송배전설비기술자" } }] },
+        { "type": "text", "text": " 같은 직종도 진출 가능하다. 전기설계사무소에서는 2년 경력 후 " },
+        { "type": "text", "text": "전력시설물 설계사 면허", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "를 취득할 수 있으며, 옥외광고사업 등록 시에도 전기공사기사가 필수 인력으로 요구된다" },
+        { "type": "footnote", "attrs": { "id": 16, "text": "전기기사 연봉 및 취업 후기", "url": "https://gooinjob.com/%EC%A0%84%EA%B8%B0%EA%B8%B0%EC%82%AC-%EC%97%B0%EB%B4%89-%EC%B7%A8%EC%97%85-%ED%9B%84%EA%B8%B0-%ED%95%98%EB%8A%94%EC%9D%BC/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "연봉은 경력과 근무처에 따라 차이가 크다. 신입은 연 3,000~4,000만 원 수준으로 시작하며, 경력 3~7년차에 4,000~5,500만 원, 경력 10년 이상의 대기업·공기업 근무자는 " },
+        { "type": "text", "text": "5,500~8,000만 원", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "까지 기대할 수 있다. 쌍기사 보유 시 연봉 협상력이 상승하며, 대기업·공기업 진출 시 6,000만 원 이상을 기대할 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "다만, 무경력자가 곧바로 고연봉을 받을 수 있는 것은 아니다. 현실적으로는 전기공사업체, 전기안전대행업체, 아파트 전기실 등에서 경력을 쌓은 후 더 나은 조건의 직장으로 이직하는 경로를 거치게 된다. " },
+        { "type": "text", "text": "안정적인 직장과 높은 연봉을 위해서는 최소 4년 이상의 경력이 필요하다", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "는 점을 인지해야 한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "창업 경로도 있다. 전기공사업을 등록하려면 자본금 1.5억 원 이상, 전기공사기사 또는 전기기사 보유 기술인력, 독립된 사무실이 필요하다" },
+        { "type": "footnote", "attrs": { "id": 17, "text": "전기공사업 법인 설립 요건 안내", "url": "https://www.help-me.kr/blog/article/%EC%A0%84%EA%B8%B0%EA%B3%B5%EC%82%AC%EC%97%85%EB%B2%95%EC%9D%B8%EC%84%A4%EB%A6%BD/" } },
+        { "type": "text", "text": ". 2017년부터 전기기사도 전기공사업 등록이 가능하게 완화되었지만, 현장에서는 여전히 전기공사기사를 더 선호하는 분위기다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "시장 전망도 밝다. 정부의 " },
+        { "type": "text", "text": "그린뉴딜 정책", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "과 스마트 전력망 투자 확대가 이어지고 있으며, " },
+        { "type": "text", "text": "신재생에너지", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "(태양광, 풍력) 설비 수요가 꾸준히 증가하고 있다. " },
+        { "type": "text", "text": "에너지공학과", "marks": [{ "type": "link", "attrs": { "href": "/major/에너지공학과" } }] },
+        { "type": "text", "text": " 졸업생들이 이 분야로 진출하는 사례도 늘고 있다. 4차 산업혁명 시대에 건설·플랜트·설계·유지보수 분야의 지속적인 수요가 있으며, " },
+        { "type": "text", "text": "전기차 충전 인프라 확대", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "에 따른 전기공사 수요도 새로운 성장 동력으로 떠오르고 있다" },
+        { "type": "footnote", "attrs": { "id": 18, "text": "전기기사 취업처 및 시장 전망", "url": "https://leothought.com/electrical-engineer-certification-job/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "현장에서 직접 시공을 담당하는 " },
+        { "type": "text", "text": "내선전기공", "marks": [{ "type": "link", "attrs": { "href": "/job/내선전기공" } }] },
+        { "type": "text", "text": "이나 " },
+        { "type": "text", "text": "외선전기공", "marks": [{ "type": "link", "attrs": { "href": "/job/외선전기공" } }] },
+        { "type": "text", "text": "뿐만 아니라, " },
+        { "type": "text", "text": "전기감리기술자", "marks": [{ "type": "link", "attrs": { "href": "/job/전기감리기술자" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "건축전기설비감리원", "marks": [{ "type": "link", "attrs": { "href": "/job/건축전기설비감리원" } }] },
+        { "type": "text", "text": " 같은 감리 직종으로의 성장 경로도 열려 있다. " },
+        { "type": "text", "text": "전기과", "marks": [{ "type": "link", "attrs": { "href": "/major/전기과" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "전기자동화과", "marks": [{ "type": "link", "attrs": { "href": "/major/전기자동화과" } }] },
+        { "type": "text", "text": " 출신의 전문대 졸업자들도 경력을 쌓으면서 전기공사기사에 도전하는 사례가 많아지고 있다. 결국 전기공사기사는 전기 분야에서 경력을 쌓아가기 위한 " },
+        { "type": "text", "text": "핵심적인 관문 자격증", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이라 할 수 있다." }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "전기기사 없이 전기공사기사만 따도 취업이 되나요?" }
+            ] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "된다. 전기공사업체에서는 전기공사기사만으로도 필수 기술인력으로 인정되기 때문에 취업 자체는 가능하다. 다만, 전기안전관리자 선임이 안 되므로 전기안전관리 대행 업무는 수행할 수 없고, 취업 범위가 전기공사 시공·감독 분야로 한정된다. 더 넓은 커리어를 원한다면 전기기사를 추가로 취득하여 쌍기사를 완성하는 것이 현실적으로 유리하다." }
+            ] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "비전공자도 전기공사기사에 도전할 수 있나요?" }
+            ] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "응시자격을 충족한다면 도전할 수 있다. 다만 두 가지를 고려해야 한다. 첫째, 비전공자는 동일(유사)분야 4년 이상 실무경력이 있거나, 산업기사를 먼저 취득한 후 1년 실무경력을 쌓아야 기사 응시자격이 생긴다. 둘째, 전기 분야의 기초 이론(회로이론, 전자기학) 없이는 독학이 거의 불가능하므로, 인강이나 학원을 반드시 병행해야 한다. 준비 기간은 최소 4~6개월, 학습 시간은 300시간 이상을 잡아야 한다." }
+            ] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "실기시험 견적 문제, 독학으로 대비할 수 있나요?" }
+            ] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "가능하지만 난이도가 있다. 견적 문제는 물량 산출(전선·케이블·전선관 길이)과 인건비(터파기·포설·철거) 계산이 핵심이다. 기출문제를 충분히 반복하면 패턴을 익힐 수 있지만, 할증률 적용 방식이나 3상/1상 구분 같은 함정이 빈번하게 출제되므로 주의해야 한다. 전기공사기사 실기 전문 교재(예: '전기공사기사 실기 한권끝장'이나 '24개년 기출문제')를 활용해 체계적으로 접근하는 것이 좋다. 해설이 이해되지 않으면 인강의 견적 파트만 선택 수강하는 것도 효율적이다." }
+            ] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "전기공사기사로 사업자 등록(전기공사업)을 하려면 어떤 조건이 필요한가요?" }
+            ] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "전기공사업법에 따라 자본금 1.5억 원 이상, 전기공사기사 또는 전기기사 보유 기술인력, 건축법상 상업시설 또는 사무실에 해당하는 독립된 사무실이 필요하다. 사무실 임대차계약서, 도면, 내외부 사진 등의 서류도 제출해야 한다. 2017년부터 전기기사도 전기공사업 등록이 가능하게 완화되었지만, 전기공사기사를 보유하고 있으면 업계에서 더 인정받는 분위기다. 초기 투자 비용이 상당하므로, 먼저 전기공사업체에서 충분한 실무 경험을 쌓은 후 창업하는 것이 현실적이다." }
+            ] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "전기공사기사 시험이 연 3회인데, 제3회에만 시행된다는 게 무슨 뜻인가요?" }
+            ] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "정확히 말하면, 국가기술자격시험은 연 3회(1회, 2회, 3회) 시행되지만, 전기공사기사는 모든 회차에 시행되는 것이 아니라 주로 제3회에 편성된다. 전기기사는 1~3회 모두 시행되지만, 전기공사기사는 일정이 다르다. 따라서 시험 접수 전에 반드시 Q-Net에서 해당 연도의 정확한 시행 일정을 확인해야 한다. 만약 3회 시험을 놓치면 다음 해까지 기다려야 할 수도 있으니, 일정 관리에 특히 신경 써야 한다." }
+            ] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "전기공사기사 취득 후 추가로 따면 좋은 자격증은 무엇인가요?" }
+            ] }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            { "type": "paragraph", "content": [
+              { "type": "text", "text": "가장 먼저 추천하는 것은 당연히 전기기사(쌍기사 완성)다. 이외에 커리어 방향에 따라 선택이 달라진다. 감리 분야로 진출하고 싶다면 건축전기설비기술사를, 안전 분야에 관심이 있다면 전기안전기술사를 목표로 할 수 있다. 신재생에너지 쪽으로 확장하고 싶다면 신재생에너지발전설비기사도 고려할 만하다. 소방설비기사(전기 분야)도 전기공사 현장에서 자주 요구되는 자격이므로, 현장 경쟁력을 높이는 데 도움이 된다." }
+            ] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "전기공사기사, 핵심 정리" }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "전기공사기사는 전기공사업 등록에 필수인 국가기술자격이며, 전기기사와는 법적 용도가 다르다. 전기안전관리자 선임이 필요하면 전기기사가, 전기공사업 등록이 필요하면 전기공사기사가 각각 필요하다." }
+                ] }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "전기기사 보유자는 필기 2~5과목 면제 혜택이 있으므로, '전기기사 → 전기공사기사' 순서의 쌍기사 취득이 가장 효율적인 경로다." }
+                ] }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "실기시험에서는 견적 문제와 시퀀스(제어회로)가 전기공사기사 고유의 출제 유형이므로, 전기기사 실기와 별도로 준비해야 한다." }
+                ] }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                { "type": "paragraph", "content": [
+                  { "type": "text", "text": "신입 연봉은 3,000~4,000만 원이지만, 경력 10년 이상 쌍기사 보유 시 5,500~8,000만 원까지 성장할 수 있다. 신재생에너지, 전기차 충전 인프라 등 성장 분야로의 확장 가능성도 크다." }
+                ] }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

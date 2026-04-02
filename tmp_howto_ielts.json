@@ -1,0 +1,160 @@
+{
+  "title": "IELTS",
+  "sources": [
+    {
+      "title": "IELTS 공식 사이트 - 시험 형식 안내 (British Council)",
+      "url": "https://takeielts.britishcouncil.org/take-ielts/test-format",
+      "keyFacts": [
+        "IELTS는 Listening(30분+10분 전사시간), Reading(60분), Writing(60분), Speaking(11-14분) 4개 섹션으로 구성",
+        "Listening/Reading/Writing은 같은 날 연속 진행 (총 2시간 45분), Speaking은 같은 날 또는 전후 7일 이내 별도 진행",
+        "Listening: 4개 오디오 녹음, 40문항 / Reading: 3개 지문, 40문항 / Writing: Task1(150단어+), Task2(250단어+)",
+        "Speaking Part1: 소개 및 인터뷰(4-5분), Part2: 개별 롱턴(3-4분), Part3: 양방향 토론(4-5분)",
+        "Academic과 General Training 모두 Listening/Speaking은 동일, Reading/Writing만 다름"
+      ]
+    },
+    {
+      "title": "IELTS Academic vs General Training 비교 (테스트글라이더)",
+      "url": "https://blog.testglider.com/%EC%95%84%EC%9D%B4%EC%97%98%EC%B8%A0-%EC%8B%9C%ED%97%98-%EC%A2%85%EB%A5%98-%EC%B4%9D%EC%A0%95%EB%A6%AC/",
+      "keyFacts": [
+        "Academic: 대학 진학/전문직 취업 목적, 학술적 영어 평가. General Training: 이민/일반 취업 목적, 일상 영어 평가",
+        "Academic Reading: 과학·역사·사회학 등 학술 논문 3개 긴 지문. General Training Reading: 광고·안내문·매뉴얼 등 짧은 실용 텍스트",
+        "Academic Writing Task1: 그래프/차트/다이어그램 분석 리포트(150단어). General Training Writing Task1: 편지 작성",
+        "Writing Task2는 둘 다 에세이(250단어)이나 Academic이 더 학술적 주제",
+        "General Training이 Academic보다 전반적으로 쉬운 편"
+      ]
+    },
+    {
+      "title": "IELTS 밴드 점수 체계 및 국가별 요구 점수 (IDP)",
+      "url": "https://ielts.idp.com/about/news-and-articles/article-ielts-score-requirements-for-different-countries",
+      "keyFacts": [
+        "0~9점 밴드 스코어 체계: 0(비응시), 1(비사용자)~9(전문가). 0.5 단위로 채점",
+        "Overall Band Score = Listening+Reading+Writing+Speaking 평균을 반올림",
+        "대학 입학 일반 요구: 6.5~7.5 (미국 학부 6.0, 대학원 6.5+ / 영국 6.0~7.0 / 호주 6.0~6.5)",
+        "이민 요구: 캐나다 Express Entry CLB7=IELTS 6.0~6.5 / 호주 비자 최소 6.0 / 영국 최소 6.0(각 섹션 5.5+)",
+        "성적 유효기간: 시험일로부터 2년",
+        "Band 6=Competent User(B2), Band 7=Good User(C1), Band 8=Very Good User(C2)"
+      ]
+    },
+    {
+      "title": "IELTS 시험 비용 한국 (IDP Korea)",
+      "url": "https://ieltskorea.org/korea/about/ielts-test-fees",
+      "keyFacts": [
+        "일반 IELTS 응시료: 약 321,000원 (환율에 따라 변동)",
+        "UKVI IELTS(영국 비자용): 일반 IELTS보다 높은 별도 요금",
+        "접수 방법: 온라인 접수(24시간) 또는 IDP 한국지사 방문 접수(Paper만 해당)",
+        "접수 준비물: 여권 + 신용카드",
+        "One Skill Retake(OSR): 컴퓨터 IELTS 응시자는 60일 이내 한 섹션만 재응시 가능"
+      ]
+    },
+    {
+      "title": "IELTS 시험 일정·비용·시행 지역 (British Council Korea)",
+      "url": "https://www.britishcouncil.kr/exam/ielts/dates-fees-locations",
+      "keyFacts": [
+        "한국 시험장: 서울, 인천, 대전, 대구, 광주, 부산 (British Council) + 제주 (IDP)",
+        "컴퓨터 IELTS: 월요일 제외 주 6일 운영, 하루 2~3회 세션",
+        "2026년 3월 21일 이후 전 세계적으로 Paper-based IELTS 운영 종료 → 컴퓨터만 운영",
+        "IDP와 British Council 두 기관 모두 한국에서 IELTS 주관",
+        "시험 결과: 컴퓨터 3~5일 후 / 페이퍼 13일 후 확인 가능"
+      ]
+    },
+    {
+      "title": "TOEFL vs IELTS 비교 가이드 2025-2026 (TheWorldGrad)",
+      "url": "https://theworldgrad.com/study-resources/toefl-vs-ielts-which-is-easier/",
+      "keyFacts": [
+        "IELTS Speaking: 원어민 시험관과 1:1 대면 인터뷰. TOEFL Speaking: 마이크에 녹음 (2026년 Listen&Repeat + 인터뷰로 변경)",
+        "TOEFL iBT 2026년부터 적응형 67~85분 시험으로 단축. IELTS는 기존 2시간45분+Speaking 유지",
+        "IELTS 6.5~7.0 ≒ TOEFL 79~101점",
+        "IELTS: 영국·호주·캐나다(이민) 선호. TOEFL: 미국 중심 but 현재 대부분 대학 둘 다 인정",
+        "IELTS: 12,000+ 기관 인정 / TOEFL: 13,000+ 기관 200개국 인정",
+        "IELTS는 다양한 문제 유형(빈칸, 매칭, 단답), TOEFL은 주로 객관식"
+      ]
+    },
+    {
+      "title": "IELTS vs TOEFL 2026 선택 가이드 (Alfa IELTS)",
+      "url": "https://alfaielts.com/blog/ielts-vs-toefl",
+      "keyFacts": [
+        "IELTS 선택 추천: 대면 스피킹 선호, 영국/호주/캐나다 이민 목적, 페이퍼/컴퓨터 선택 유연성 원할 때",
+        "TOEFL 선택 추천: 컴퓨터 시험 선호, 짧은 시험 시간 원할 때, 학술적 객관식 스타일 강점일 때",
+        "두 시험 모두 난이도는 비슷, 개인 강점과 목적 기관 요구에 따라 선택이 관건"
+      ]
+    },
+    {
+      "title": "IELTS 한국인 평균 점수 및 난이도 (나무위키)",
+      "url": "https://namu.wiki/w/IELTS",
+      "keyFacts": [
+        "한국 응시자 평균 IELTS Overall 점수: 약 5.9/9.0",
+        "글로벌 평균 점수: 약 6.0 (CEFR B2 레벨, Competent User)",
+        "영어 교포 수준 유창자도 7.5~8.0 수준, 원어민 평균 7.5~8.5",
+        "응시료 약 30만원+원어민 대면 스피킹이라 애초에 영어 실력 있는 사람이 주로 응시 → 평균이 높게 나오는 편",
+        "한국인은 TOEFL/TOEIC에 익숙하고 IELTS에 익숙하지 않아 상대적으로 낮은 점수 가능성",
+        "인도인 평균 5.5~6.0, 중국 평균 약 6.2"
+      ]
+    },
+    {
+      "title": "IELTS 독학 후기 - 1달 독학 6.5 달성 (디시인사이드)",
+      "url": "https://m.dcinside.com/board/ielts/505",
+      "keyFacts": [
+        "1개월 독학으로 Overall 6.5 달성 사례",
+        "한국인 강점: Reading (문법·어휘 기반), 약점: Speaking/Writing (표현력·유창성)",
+        "Cambridge 공식 문제집이 가장 표준적인 교재, 최신 판부터 역순으로 풀기 권장",
+        "Listening은 매일 1세트 이상 풀고 오답 분석 + 트랜스크립트 대조 필수"
+      ]
+    },
+    {
+      "title": "IELTS 독학 후기 - Overall 8점 달성 (dmitory 스펙업)",
+      "url": "https://www.dmitory.com/specup/14231669",
+      "keyFacts": [
+        "Overall 8.0 달성 후기 (고득점 사례)",
+        "체계적 파트별 전략이 핵심: Writing은 구조화된 에세이 틀 연습, Speaking은 녹음 후 자기 분석",
+        "일반적 준비 기간: 2~4개월 (기초 실력에 따라 상이)",
+        "목표 6.0~6.5: 2~3개월, 목표 7.0+: 3~6개월 집중 준비 권장"
+      ]
+    },
+    {
+      "title": "IELTS 파트별 공부법 2025 (LifeShineOn)",
+      "url": "https://alpha.lifeshineon.com/entry/%F0%9F%93%8D2025%EB%85%84-%EC%95%84%EC%9D%B4%EC%97%98%EC%B8%A0IELTS-%EA%B3%B5%EB%B6%80%EB%B2%95-%EA%BF%80%ED%8C%81-%EB%AA%A8%EC%9D%8C-%ED%8C%8C%ED%8A%B8%EB%B3%84-%EC%A0%84%EB%9E%B5%EA%B3%BC-%EA%B3%A0%EB%93%9D%EC%A0%90-%EB%B9%84%EA%B2%B0",
+      "keyFacts": [
+        "Listening: 매일 1세트 풀기, 오답노트 필수, 받아쓰기(딕테이션) 병행",
+        "Reading: 스키밍/스캐닝 기법 훈련, 시간 배분(20분/지문) 엄수, 패러프레이징 감각 키우기",
+        "Writing Task1: 그래프 묘사 표현(increased/decreased/remained stable 등) 암기, Task2: 서론-본론2단락-결론 구조 고정",
+        "Speaking: Part2 2분 스피치 매일 연습, 녹음 후 분석, 다양한 토픽 카드 준비",
+        "추천 교재: Cambridge IELTS 공식문제집(13~19), Cambridge Grammar for IELTS, Academic Vocabulary in Use"
+      ]
+    },
+    {
+      "title": "Computer-delivered vs Paper-based IELTS 비교 (IDP)",
+      "url": "https://ielts.idp.com/about/article-computer-delivered-paper-based-ielts-comparison",
+      "keyFacts": [
+        "시험 내용·난이도·문제 유형은 동일, 전달 방식만 다름",
+        "컴퓨터: 결과 3~5일 후 / 페이퍼: 결과 13일 후",
+        "컴퓨터: 주 6일 하루 2~3회 세션으로 일정 유연 / 페이퍼: 월 2~4회",
+        "컴퓨터 장점: Writing 워드카운터 자동, Reading 화면분할(지문+문제 동시), Listening 개인 헤드폰(볼륨 조절)",
+        "컴퓨터 단점: 타이핑 속도 필요, Listening 답안 전사 시간 2분(페이퍼는 10분)",
+        "페이퍼 장점: 손글씨 선호자 적합, 긴 지문 종이 읽기 편함, Listening 전사 10분",
+        "2026년 3월 이후 전 세계 Paper-based IELTS 운영 종료 예정 → 컴퓨터 전환 필수"
+      ]
+    },
+    {
+      "title": "IELTS 시험 패턴 2025-2026 (AECC Global)",
+      "url": "https://www.aeccglobal.com/exams/ielts/pattern",
+      "keyFacts": [
+        "Listening Section 1: 일상 대화(2명), Section 2: 일상 독백, Section 3: 학술 대화(2~4명), Section 4: 학술 강의 독백",
+        "Reading 문제 유형: True/False/Not Given, 매칭, 문장완성, 요약완성, 다지선다, 다이어그램 라벨링 등",
+        "Writing 채점 기준: Task Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy (각 25%)",
+        "Speaking 채점 기준: Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation (각 25%)",
+        "전체 시험은 하루에 완료, Speaking만 별도 일정 가능(전후 7일)"
+      ]
+    },
+    {
+      "title": "IELTS 추천 교재 및 기본기 교재 (브런치)",
+      "url": "https://brunch.co.kr/@julien/51",
+      "keyFacts": [
+        "Cambridge IELTS 공식문제집(시리즈 13~19): 실전과 가장 유사한 필수 교재",
+        "Cambridge Grammar for IELTS: 문법을 IELTS 실전에 적용하는 교재",
+        "Academic Vocabulary in Use: Reading 연계 어휘 훈련, 유학 준비생 필독",
+        "The Official Cambridge Guide to IELTS: 초보자용 종합 가이드",
+        "한국 IELTS 전문 학원: edm아이엘츠, 렉시스어학원, 해커스, 민선생IELTS, 시원스쿨랩 등"
+      ]
+    }
+  ]
+}

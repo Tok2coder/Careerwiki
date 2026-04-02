@@ -1,0 +1,446 @@
+{
+  "cert_name": "사회복지사 1급",
+  "cert_name_en": "Social Worker Level 1",
+  "research_date": "2026-03-25",
+  "total_sources": 18,
+
+  "overview": {
+    "title": "사회복지사 1급 자격증 개요",
+    "official_name": "사회복지사 1급 국가자격시험",
+    "governing_body": "보건복지부 (시행: 한국산업인력공단)",
+    "cert_type": "국가자격증",
+    "description": "사회복지사 1급은 사회복지 분야의 최상위 국가자격증으로, 사회복지시설 시설장 자격 부여, 사회복지직 공무원 7급 응시, 전문사회복지사(의료·정신건강·학교) 수련 자격의 기본 요건이 되는 핵심 자격증이다.",
+    "eligibility": {
+      "basic_requirement": "사회복지사 2급 자격증 소지자",
+      "by_education": [
+        {
+          "education": "4년제 대학 졸업",
+          "condition": "사회복지사 2급 취득 즉시 응시 가능"
+        },
+        {
+          "education": "전문대(2~3년제) 졸업",
+          "condition": "사회복지사 2급 취득 후 1년 이상 실무경력"
+        },
+        {
+          "education": "고졸",
+          "condition": "사회복지사 2급 취득 후 3년 이상 실무경력"
+        }
+      ],
+      "grade2_requirements": "전문대 이상 학력 + 사회복지 관련 17과목 이수 + 현장실습 160시간(세미나 30시간 포함 총 190시간)"
+    },
+    "grade1_vs_grade2_summary": {
+      "grade2": "교과목 이수 + 현장실습만으로 취득 (국가시험 없음)",
+      "grade1": "2급 취득 후 국가시험(필기) 합격 필수",
+      "key_differences": [
+        "1급은 시설장 자격 부여, 2급은 불가",
+        "공무원 7급 응시에 1급 필요 (2급은 9급만 가능)",
+        "1급 소지자가 월 30~50만원 더 높은 급여",
+        "전문사회복지사(의료/정신건강/학교) 수련에 1급 필수"
+      ]
+    },
+    "sources": [
+      "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=L&gId=52",
+      "https://studygov.kr/blog/0178-social-worker-certification/",
+      "https://welfarenote.com/2026%EB%85%84-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95-%EA%B3%BC%EB%AA%A9-%EC%9D%91%EC%8B%9C-%EC%9E%90%EA%B2%A9-%EB%82%9C%EC%9D%B4%EB%8F%84/"
+    ]
+  },
+
+  "exam_structure": {
+    "title": "시험 구조",
+    "format": "객관식 필기시험 (5지 선다형)",
+    "total_questions": 200,
+    "total_time_minutes": 200,
+    "subjects": [
+      {
+        "session": "1교시",
+        "subject_group": "사회복지기초",
+        "sub_subjects": ["인간행동과 사회환경", "사회복지조사론"],
+        "questions": 50,
+        "time_minutes": 50
+      },
+      {
+        "session": "2교시",
+        "subject_group": "사회복지실천",
+        "sub_subjects": ["사회복지실천론", "사회복지실천기술론", "지역사회복지론"],
+        "questions": 75,
+        "time_minutes": 75
+      },
+      {
+        "session": "3교시",
+        "subject_group": "사회복지정책과 제도",
+        "sub_subjects": ["사회복지정책론", "사회복지행정론", "사회복지법제론"],
+        "questions": 75,
+        "time_minutes": 75
+      }
+    ],
+    "passing_criteria": {
+      "overall": "전체 200점 중 120점 이상 (60%)",
+      "per_subject": "각 과목 40% 이상 (과락 기준)",
+      "per_subject_detail": {
+        "session1": "50문항 중 20문항 이상",
+        "session2": "75문항 중 30문항 이상",
+        "session3": "75문항 중 30문항 이상"
+      },
+      "note": "한 과목이라도 과락이면 총점에 관계없이 불합격"
+    },
+    "difficulty_notes": [
+      "3교시 법제론·정책론이 가장 어렵게 출제되는 경향",
+      "법제론에서 개정 법률 출제 비중 높음",
+      "2~3명 중 1명 합격하는 수준 (합격률 30~40%)"
+    ],
+    "sources": [
+      "https://welfarenote.com/2026%EB%85%84-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95-%EA%B3%BC%EB%AA%A9-%EC%9D%91%EC%8B%9C-%EC%9E%90%EA%B2%A9-%EB%82%9C%EC%9D%B4%EB%8F%84/",
+      "https://procred.zeronoa.com/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%ED%95%A9%EA%B2%A9%EB%A5%A0-39-44-2026-%EC%8B%9C%ED%97%98-%ED%95%A9%EA%B2%A9%EA%B8%B0%EC%A4%80%EC%9D%80/"
+    ]
+  },
+
+  "schedule_and_registration": {
+    "title": "시험 일정 및 접수",
+    "exam_year": 2026,
+    "exam_session": "제24회",
+    "schedule": {
+      "registration_period": "2025-12-08 ~ 2025-12-12",
+      "additional_registration": "2026-01-08 ~ 2026-01-09 (빈자리 추가접수)",
+      "exam_date": "2026-01-17 (토)",
+      "exam_time": "09:00 ~ 13:00 (240분)",
+      "opinion_period": "2026-01-17 ~ 2026-01-23",
+      "result_announcement": "2026-03-25"
+    },
+    "registration_method": {
+      "platform": "Q-Net (한국산업인력공단)",
+      "url": "https://www.q-net.or.kr/site/welfare",
+      "method": "온라인 접수만 가능",
+      "fee": "20,000원"
+    },
+    "exam_locations": "전국 17개 시·도 주요 시험장에서 동시 실시",
+    "annual_pattern": "매년 1월 셋째 주 토요일에 시행 (12월 초 접수)",
+    "sources": [
+      "https://amenlifework.com/entry/2026-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%B4%9D%EC%A0%95%EB%A6%AC-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95-%EC%A0%91%EC%88%98%EB%B0%A9%EB%B2%95-%ED%95%A9%EA%B2%A9%ED%8C%81",
+      "https://www.mohw.go.kr/board.es?act=view&bid=0003&list_no=1483327&mid=a10501010000",
+      "https://cc.hodoo1.kr/entry/2026-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95-%EC%9D%91%EC%8B%9C%EC%9E%90%EA%B2%A9-%EB%B0%8F-%ED%95%A9%EA%B2%A9%EB%A5%A0-%EC%99%84%EB%B2%BD-%EC%A0%95%EB%A6%AC"
+    ]
+  },
+
+  "pass_rate": {
+    "title": "합격률 통계 및 난이도",
+    "recent_stats": [
+      { "year": 2021, "session": "제19회", "applicants": 28391, "passers": 17158, "pass_rate_pct": 60.4 },
+      { "year": 2022, "session": "제20회", "applicants": 24248, "passers": 8753, "pass_rate_pct": 36.1 },
+      { "year": 2023, "session": "제21회", "applicants": 24119, "passers": 9673, "pass_rate_pct": 40.1 },
+      { "year": 2024, "session": "제22회", "applicants": 25458, "passers": 7554, "pass_rate_pct": 29.7 },
+      { "year": 2025, "session": "제23회", "applicants": 25305, "passers": 9830, "pass_rate_pct": 38.8 }
+    ],
+    "average_pass_rate": "35~40%",
+    "difficulty_analysis": {
+      "level": "중상",
+      "factors": [
+        "8과목 방대한 범위 (200문항)",
+        "과락 제도: 한 과목이라도 40% 미만이면 불합격",
+        "3교시 법제론·정책론 난이도에 따라 합격률 급변",
+        "매년 개정 법률 반영 문항 출제",
+        "2024년 29.7%로 최근 5년 중 최저 합격률 기록"
+      ],
+      "pass_rate_variation_note": "법제론·정책론 난이도가 높은 해에는 30% 초반까지 하락"
+    },
+    "sources": [
+      "https://welfarenote.com/2026%EB%85%84-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95-%EA%B3%BC%EB%AA%A9-%EC%9D%91%EC%8B%9C-%EC%9E%90%EA%B2%A9-%EB%82%9C%EC%9D%B4%EB%8F%84/",
+      "https://wollzi.com/socialworker-level1-passrate-subjects/",
+      "https://sgeedu.kr/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%ED%95%A9%EA%B2%A9%EB%A5%A0%EA%B3%BC-%EC%B5%9C%EA%B7%BC-5%EB%85%84-%ED%86%B5%EA%B3%84-%EB%B6%84%EC%84%9D/"
+    ]
+  },
+
+  "study_method": {
+    "title": "독학 공부법 및 전략",
+    "recommended_period": {
+      "standard": "3~6개월",
+      "intensive": "1~2개월 (벼락치기, 재시생/기본 지식 있는 경우)",
+      "safe": "6개월 이상 (초시생 권장)"
+    },
+    "study_phases": [
+      {
+        "phase": "1단계: 진단",
+        "duration": "1주",
+        "description": "최근 기출문제 1회분을 먼저 풀어보고 현재 수준 파악. 120점 이상이면 기출 중심, 미만이면 이론 학습 병행."
+      },
+      {
+        "phase": "2단계: 이론 학습",
+        "duration": "4~8주",
+        "description": "인강 또는 기본서로 8과목 전체 1회독. 깊게 파지 않고 핵심 개념 위주로 빠르게 훑기."
+      },
+      {
+        "phase": "3단계: 기출 회독",
+        "duration": "4~6주",
+        "description": "최근 5개년 기출문제 3회독 이상. 오답노트 작성하며 취약 과목 보완."
+      },
+      {
+        "phase": "4단계: 파이널 정리",
+        "duration": "2~3주",
+        "description": "요약집·핵심정리로 전 과목 마무리. 모의고사 풀며 시간 배분 연습."
+      }
+    ],
+    "subject_strategies": {
+      "session1_사회복지기초": {
+        "subjects": "인간행동과 사회환경 + 사회복지조사론",
+        "tip": "이론 암기 비중이 높음. 인간행동은 발달이론·성격이론 중심, 조사론은 연구방법론 용어 정리가 핵심.",
+        "difficulty": "중"
+      },
+      "session2_사회복지실천": {
+        "subjects": "실천론 + 실천기술론 + 지역사회복지론",
+        "tip": "사례 적용 문제가 많음. 실천모델(과제중심·위기개입 등) 비교 정리가 중요. 기출 반복 출제율 높음.",
+        "difficulty": "중"
+      },
+      "session3_사회복지정책과제도": {
+        "subjects": "정책론 + 행정론 + 법제론",
+        "tip": "가장 어려운 영역. 법제론은 매년 개정 법률 반영되므로 최신 교재 필수. 정책론은 이론가·모형 암기, 행정론은 조직이론 중심.",
+        "difficulty": "상"
+      }
+    },
+    "recommended_resources": {
+      "online_lectures": [
+        {
+          "name": "에듀윌",
+          "feature": "체계적 커리큘럼, 강의-교재 연계 우수, 합격 환급제",
+          "best_for": "초시생, 관리형 학습 선호자",
+          "price_range": "30~50만원"
+        },
+        {
+          "name": "박문각 (어대훈 교수)",
+          "feature": "핵심 압축 설명, 스토리텔링식, 빠른 회독 중심",
+          "best_for": "재시생, 단기 합격 목표자",
+          "price_range": "20~40만원"
+        },
+        {
+          "name": "해커스",
+          "feature": "가성비 우수, 실전 문제 풀이 강점, 무료 특강 제공",
+          "best_for": "가성비 중시자, 기본 이수자",
+          "price_range": "20~35만원"
+        },
+        {
+          "name": "EBS 자격증",
+          "feature": "저렴한 가격, 기본서 패키지 구성",
+          "best_for": "비용 절약 원하는 수험생",
+          "price_range": "기본서 패키지 199,000원 / 종합 290,000원"
+        }
+      ],
+      "free_resources": [
+        "해커스 무료 특강 (시험 시즌 공개)",
+        "EBS 일부 무료 강의",
+        "유튜브 사회복지사 1급 기출 해설 영상"
+      ],
+      "textbooks": [
+        "에듀윌 사회복지사 1급 기본서 세트",
+        "박문각 사회복지사 1급 핵심요약집",
+        "해커스 사회복지사 1급 기출문제집"
+      ]
+    },
+    "key_tips": [
+      "목표는 합격(120점)이므로 완벽주의 금지 — 과락만 피하면 된다는 마인드",
+      "기출 3회독이 합격의 핵심 — 기출 반복 출제율 60% 이상",
+      "3교시 법제론은 최신 개정 법률 반드시 체크",
+      "인강은 1.5~2배속으로 빠르게 듣고 기출에 시간 투자",
+      "과목별 시간 배분: 1교시 과목당 1분, 2·3교시도 1분 기준으로 연습"
+    ],
+    "sources": [
+      "https://brunch.co.kr/@daisyday/17",
+      "https://www.impass.co.kr/Exam_review_1/?bmode=view&idx=17593697",
+      "https://www.impass.co.kr/ccstorylst/?bmode=view&idx=18197550",
+      "https://procred.zeronoa.com/2026-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%9D%B8%EA%B0%95-%EC%B6%94%EC%B2%9C%EB%AC%B4%EB%A3%8C-%ED%8F%AC%ED%95%A8-top-3/"
+    ]
+  },
+
+  "cost": {
+    "title": "취득 비용 총정리",
+    "exam_fee": "20,000원",
+    "study_costs": {
+      "online_lecture": {
+        "range": "0원 ~ 500,000원",
+        "free_option": "EBS·해커스 무료 특강 활용 시 0원",
+        "budget_option": "EBS 기본서 패키지 약 199,000원",
+        "standard_option": "해커스/박문각 약 200,000~400,000원",
+        "premium_option": "에듀윌 종합반 약 300,000~500,000원"
+      },
+      "textbooks": {
+        "range": "30,000원 ~ 80,000원",
+        "basic_set": "기본서 세트 약 40,000~60,000원",
+        "additional": "기출문제집 약 15,000~25,000원"
+      }
+    },
+    "total_cost_scenarios": {
+      "minimum": {
+        "description": "무료 인강 + 기출문제집만",
+        "cost": "약 35,000~50,000원"
+      },
+      "standard": {
+        "description": "인강 1개 + 기본서 + 기출문제집",
+        "cost": "약 250,000~400,000원"
+      },
+      "premium": {
+        "description": "프리미엄 인강 + 기본서 세트 + 모의고사",
+        "cost": "약 400,000~600,000원"
+      }
+    },
+    "hidden_costs": [
+      "2급 취득 비용(학점은행제 등): 약 400,000~800,000원 (아직 2급이 없는 경우)",
+      "현장실습 관련 교통비·식비",
+      "시험장 교통비"
+    ],
+    "cost_saving_tips": [
+      "국비지원(내일배움카드) 활용 시 인강 비용 대폭 절감",
+      "무료 특강으로 강사 스타일 확인 후 결정",
+      "기출문제는 Q-Net에서 무료 다운로드 가능",
+      "합격 환급제 있는 인강 선택 시 실질 비용 절감"
+    ],
+    "sources": [
+      "https://procred.zeronoa.com/2026-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%9D%B8%EA%B0%95-%EC%B6%94%EC%B2%9C%EB%AC%B4%EB%A3%8C-%ED%8F%AC%ED%95%A8-top-3/",
+      "https://silver.introvertsnail.co.kr/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-1%EA%B8%89-%EC%9D%B8%EA%B0%95-%EC%B6%94%EC%B2%9C-%ED%95%B5%EC%8B%AC-%EC%A0%84%EB%9E%B5-%EB%B0%8F-%EB%B9%84%EC%9A%A9%EA%B5%AD%EB%B9%84%EC%A7%80%EC%9B%90/",
+      "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=L&gId=52"
+    ]
+  },
+
+  "career_and_usage": {
+    "title": "취업처, 연봉 및 활용",
+    "salary_info": {
+      "entry_level": {
+        "base_monthly": "2,281,800원 (4급 1호봉 기준, 2026년)",
+        "annual_total": "약 3,200만~3,500만원",
+        "net_monthly": "약 230만~250만원 (세후 실수령)"
+      },
+      "salary_increase": "전년 대비 3.5% 인상 (공무원 보수 연동)",
+      "grade1_premium": "2급 대비 월 30만~50만원 추가 (관리자 승진 시 더 큰 차이)"
+    },
+    "employment_by_sector": [
+      {
+        "sector": "공공기관/행정기관",
+        "annual_salary_range": "3,800만~4,500만원",
+        "description": "시·군·구청 사회복지과, 주민센터 등",
+        "grade1_advantage": "7급 공무원 응시 가능 (2급은 9급만)"
+      },
+      {
+        "sector": "정신건강기관",
+        "annual_salary_range": "3,700만~4,300만원",
+        "description": "정신건강복지센터, 정신의료기관",
+        "grade1_advantage": "정신건강사회복지사 수련 필수 요건"
+      },
+      {
+        "sector": "병원/의료기관",
+        "annual_salary_range": "3,500만~4,200만원 (대학병원 4,000만원+)",
+        "description": "대형병원·대학병원 사회사업팀",
+        "grade1_advantage": "의료사회복지사 수련 필수 요건"
+      },
+      {
+        "sector": "연구기관/대학교",
+        "annual_salary_range": "3,500만~4,500만원",
+        "description": "사회복지 연구소, 대학 교수·연구원",
+        "grade1_advantage": "연구직 채용 시 1급 우대/필수"
+      },
+      {
+        "sector": "학교/교육기관",
+        "annual_salary_range": "3,200만~3,700만원",
+        "description": "학교사회복지사, Wee센터",
+        "grade1_advantage": "학교사회복지사 자격 수련 요건"
+      },
+      {
+        "sector": "복지관/생활시설",
+        "annual_salary_range": "2,800만~3,400만원",
+        "description": "종합사회복지관, 노인·장애인 시설",
+        "grade1_advantage": "시설장 자격 부여"
+      },
+      {
+        "sector": "민간/비영리단체",
+        "annual_salary_range": "2,500만~3,500만원",
+        "description": "NGO, 사회적기업, 자원봉사센터",
+        "grade1_advantage": "프로젝트 관리자·팀장급 채용 우대"
+      }
+    ],
+    "benefits_of_grade1": [
+      "사회복지시설 시설장 자격",
+      "사회복지직 공무원 7급 응시 자격",
+      "전문사회복지사(의료/정신건강/학교) 수련 자격",
+      "승진·채용 시 우대 (관리자급 필수 조건)",
+      "월 30만~50만원 추가 급여"
+    ],
+    "job_outlook": {
+      "growth": "매우 긍정적",
+      "reasons": [
+        "고령화 사회 진입으로 사회복지 서비스 수요 급증",
+        "정신건강 분야 수요 확대",
+        "AI 대체 어려운 대인 서비스 직종",
+        "정부 복지 예산 지속 확대"
+      ]
+    },
+    "allowances": {
+      "family_allowance": "첫째 5만원, 둘째 8만원, 셋째 이상 12만원",
+      "holiday_bonus": "기본급 60% x 연 2회",
+      "night_work": "야간근무 가산분 (5인 미만 소규모 시설도 적용)",
+      "sick_leave": "유급병가 제도 공식화"
+    },
+    "sources": [
+      "https://samsungedu.kr/sge/bbs/board.php?bo_table=with&wr_id=256",
+      "https://geteduify.com/career-guidance/2026-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-%EC%9B%94%EA%B8%89-%ED%98%B8%EB%B4%89%ED%91%9C-%EB%B0%8F-%EB%B3%B5%EC%A7%80%EC%88%98%EB%8B%B9-%EC%B4%9D%EC%A0%95%EB%A6%AC/",
+      "https://winspec.moneple.com/freeboard/97986339",
+      "https://www.mohw.go.kr/board.es?mid=a10413000000&bid=0021&act=view&list_no=1484230"
+    ]
+  },
+
+  "similar_cert_comparison": {
+    "title": "유사 자격증 비교",
+    "comparisons": [
+      {
+        "cert_name": "사회복지사 2급",
+        "relationship": "사회복지사 1급의 전제 자격",
+        "acquisition": "전문대 이상 학력 + 17과목 이수 + 현장실습 160시간 (시험 없음)",
+        "difficulty": "하 (이수만 하면 취득)",
+        "salary_difference": "1급 대비 월 30만~50만원 낮음",
+        "key_difference": "시설장 불가, 7급 공무원 응시 불가, 전문사회복지사 수련 불가"
+      },
+      {
+        "cert_name": "정신건강사회복지사",
+        "relationship": "사회복지사 1급 기반 전문 자격",
+        "grades": "1급, 2급",
+        "acquisition": "사회복지사 1급 취득 후 정신건강 관련 수련기관에서 1년 1,000시간 수련 + 학습평가 통과",
+        "work_field": "정신건강복지센터, 정신의료기관, 중독관리센터",
+        "salary": "초봉 약 3,000만원, 경력자 3,700만~4,300만원",
+        "job_market_size": "전문사회복지사 중 취업처 가장 많음"
+      },
+      {
+        "cert_name": "의료사회복지사",
+        "relationship": "사회복지사 1급 기반 전문 자격",
+        "grades": "1급, 2급",
+        "acquisition": "사회복지사 1급 취득 후 병원 수련기관에서 1년 1,000시간 수련 + 자격시험 합격",
+        "work_field": "대학병원, 종합병원 사회사업팀",
+        "salary": "국립 3,000만원+, 대형사립병원 4,000만원 수준 (전문사회복지사 중 최고)",
+        "job_market_size": "취업처 가장 적지만 처우 가장 높음"
+      },
+      {
+        "cert_name": "학교사회복지사",
+        "relationship": "사회복지사 1급 기반 전문 자격",
+        "acquisition": "사회복지사 1급 + 학교사회복지론 이수 + 1년 1,000시간 수련 (시험 없이 자격증 발급)",
+        "work_field": "초·중·고등학교, Wee센터, 교육청",
+        "salary": "전문사회복지사 중 처우 가장 낮음",
+        "job_market_size": "정신건강사회복지사 다음으로 많음"
+      },
+      {
+        "cert_name": "사회복지직 공무원",
+        "relationship": "사회복지사 자격 기반 공무원 채용",
+        "grades_eligible": {
+          "9급": "사회복지사 2급 이상",
+          "7급": "사회복지사 1급 필수"
+        },
+        "salary": "공무원 봉급표 적용 (9급 초임 약 2,100만원, 7급 초임 약 2,500만원)",
+        "advantage": "안정성, 연금, 복리후생 우수"
+      }
+    ],
+    "recommendation_summary": {
+      "clinical_path": "사회복지사 1급 → 정신건강사회복지사 또는 의료사회복지사 (병원·정신건강기관 취업)",
+      "public_path": "사회복지사 1급 → 사회복지직 공무원 7급 (공공기관 안정적 취업)",
+      "management_path": "사회복지사 1급 → 시설장/관리자 (복지관·시설 운영)",
+      "education_path": "사회복지사 1급 → 학교사회복지사 (교육기관 취업)"
+    },
+    "sources": [
+      "https://wean.co.kr/entry/%EC%A0%84%EB%AC%B8-%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC-%EC%9D%98%EB%A3%8C-%EC%A0%95%EC%8B%A0%EA%B1%B4%EA%B0%95-%ED%95%99%EA%B5%90-%EC%9E%90%EA%B2%A9-%EC%B7%A8%EB%93%9D-%EB%B0%A9%EB%B2%95-%EC%97%B0%EB%B4%89-%EB%B9%84%EA%B5%90",
+      "https://namu.wiki/w/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%82%AC",
+      "https://studygov.kr/blog/0178-social-worker-certification/",
+      "https://kamhsw.or.kr/info1"
+    ]
+  }
+}

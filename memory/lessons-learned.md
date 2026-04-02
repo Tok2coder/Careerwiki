@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-03-31] user_contributed_json way 필드 배열→문자열 타입 불일치로 500 에러
+- **상황**: 배치 75 데이터 보완 후 6개 직업 페이지(IT기술지원전문가 등)가 500 에러. `formatRichText`에서 `value.trim()` 호출 시 `e.trim is not a function` TypeError 발생
+- **원인**: user_contributed_json의 `way` 필드가 문자열 대신 배열(`["항목1", "항목2"]`)로 저장됨. `deepMergeProfile`이 배열을 그대로 덮어써서 merged_profile_json의 문자열 `way`를 배열로 교체. `formatRichText`는 string만 기대하므로 `.trim()` 호출 시 크래시
+- **해결**: (1) `formatRichText`에 Array.isArray 방어 코드 추가 (join('\n')으로 변환), (2) DB에서 6개 직업의 way 배열을 문자열로 정규화
+- **교훈**: user_contributed_json 저장 시 `way` 등 텍스트 필드는 반드시 문자열로 저장. 배열이면 join('\n')으로 변환 후 저장. `deepMergeProfile`은 타입 검증 없이 덮어쓰기하므로 입력 데이터 타입이 중요
+
 ### [2026-03-27] wlbDetail/socialDetail 필드: 길이 초과 + 내용 오류
 - **상황**: equalize 세션에서 보완한 직업들의 wlbDetail(최대 310자), socialDetail(최대 289자)이 기준(130~200 / 100~160)을 크게 초과. 일부는 내용도 잘못됨 — 웹개발자/패션디자이너/영화감독 socialDetail은 "협업 문화"를 서술하고, 미용사/장제사 socialDetail은 "사교·취업전망"을 서술함. 수의사 wlbDetail에는 임금 정보(1년차 월 300만원 등)가 포함됨
 - **원인**: 스킬 파일에 길이 기준과 내용 범위 규칙이 없었음. wlbDetail에 임금까지 쓰거나, socialDetail을 근무환경·협업·취업전망으로 혼용

@@ -1,0 +1,33 @@
+const fs = require('fs');
+const data = JSON.parse(fs.readFileSync('tmp_pub_tax.json','utf-8'));
+const content = data.content;
+const h2 = content.filter(n => n.type==='heading' && n.attrs && n.attrs.level===2).length;
+const h1 = content.filter(n => n.type==='heading' && n.attrs && n.attrs.level===1).length;
+const checkpoint = content.filter(n => n.type==='checkpointBox').length;
+const conclusion = content.filter(n => n.type==='conclusionBox').length;
+const qna = content.filter(n => n.type==='qnaBlock').length;
+const tbl = content.filter(n => n.type==='table').length;
+const img = content.filter(n => n.type==='image').length;
+const cl = content.filter(n => n.type==='careerList').length;
+const text = JSON.stringify(data);
+const fn = (text.match(/"type":"footnote"/g) || []).length;
+const ids = [...text.matchAll(/"id":(\d+)/g)].map(m => parseInt(m[1])).sort((a,b)=>a-b);
+let allText = '';
+function walk(node) {
+  if (node == null) return;
+  if (node.type === 'text') allText += node.text || '';
+  if (Array.isArray(node.content)) node.content.forEach(walk);
+  if (Array.isArray(node)) node.forEach(walk);
+}
+walk(data);
+console.log('H1:', h1, '(want 0)');
+console.log('H2:', h2, '(want 5-7)');
+console.log('checkpointBox:', checkpoint, '(want 1)');
+console.log('conclusionBox:', conclusion, '(want 1)');
+console.log('qnaBlock:', qna, '(want >=4)');
+console.log('table:', tbl, '(want >=2)');
+console.log('image:', img, '(want 1)');
+console.log('careerList:', cl, '(want 0)');
+console.log('footnotes:', fn);
+console.log('footnote IDs:', ids);
+console.log('text chars:', allText.length, '(want >=8000)');

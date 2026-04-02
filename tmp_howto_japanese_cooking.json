@@ -1,0 +1,432 @@
+{
+  "cert_name": "일식조리기능사",
+  "cert_code": "7912",
+  "last_updated": "2026-03-25",
+  "sources_count": 16,
+  "sections": {
+    "overview": {
+      "title": "자격증 개요",
+      "content": {
+        "definition": "일식메뉴 계획에 따라 식재료를 선정, 구매, 검수, 보관 및 저장하며 맛과 영양을 고려하여 안전하고 위생적으로 음식을 조리하는 전문인력을 양성하기 위한 국가자격증",
+        "governing_body": "한국산업인력공단 (Q-net)",
+        "cert_type": "국가기술자격 기능사",
+        "eligibility": "제한 없음 (연령, 학력, 경력 무관 누구나 응시 가능)",
+        "legal_basis": "국가기술자격법",
+        "ncs_category": "음식서비스 > 조리 > 일식조리",
+        "mandatory_note": "집단급식소(병원, 학교, 정부기관 등), 복어조리업, 120㎡ 이상 식품접객업자는 조리사 자격증 소지자 채용 의무",
+        "is_mandatory_for_work": false,
+        "advantage": "일식업 종사 시 필수는 아니나, 취업 및 승진에 유리하고 자격증 수당을 받을 수 있는 곳이 있음"
+      },
+      "sources": [
+        "https://odinurse.com/entry/일식조리기능사-정보-시험-준비물-합격률-합격-공략-진로-및-전망",
+        "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7912",
+        "https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&jmCd=7912"
+      ]
+    },
+    "exam_structure": {
+      "title": "시험 구조",
+      "content": {
+        "written_exam": {
+          "name": "필기시험",
+          "format": "CBT(컴퓨터기반시험) 객관식 4지선다형",
+          "questions": 60,
+          "duration_minutes": 60,
+          "subjects": [
+            "일식 재료관리",
+            "음식조리 및 위생관리"
+          ],
+          "detailed_topics": [
+            "일식 위생관리",
+            "일식 안전관리",
+            "일식 재료관리",
+            "일식 구매관리",
+            "기초조리실무",
+            "일본 요리 관련 이론"
+          ],
+          "passing_score": "100점 만점 중 60점 이상",
+          "validity": "필기 합격 후 2년간 필기시험 면제"
+        },
+        "practical_exam": {
+          "name": "실기시험",
+          "format": "작업형",
+          "duration_minutes": 70,
+          "task_count": "19가지 과제 중 랜덤 2가지 수행",
+          "passing_score": "100점 만점 중 60점 이상",
+          "scoring_breakdown": {
+            "cooking_process": "30점 (조리기술)",
+            "completion": "15점 (작품의 평가/완성도)",
+            "hygiene_safety": "5점 (위생상태 및 안전관리)"
+          },
+          "per_task_score": "과제당 50점",
+          "practical_menu_list": {
+            "soup_dishes": ["된장국", "대합맑은국", "도미머리맑은국"],
+            "pot_dishes": ["전골냄비", "모둠냄비", "도미냄비", "꼬치냄비"],
+            "steamed_dishes": ["달걀찜", "대합술찜", "도미술찜"],
+            "grilled_dishes": ["삼치소금구이", "쇠고기간장구이", "전복버터구이"],
+            "sushi_dishes": ["김초밥", "참치김초밥", "생선초밥"],
+            "vinegar_dishes": ["문어초회", "해삼초회", "갑오징어명란무침"],
+            "simmered_and_rice": ["도미조림", "쇠고기덮밥"],
+            "other_dishes": ["달걀말이", "야끼우동", "메밀국수"]
+          },
+          "time_per_dish_examples": {
+            "문어초회": "20분",
+            "생선초밥": "40분",
+            "도미머리맑은국": "30분",
+            "달걀말이": "25분",
+            "메밀국수": "30분"
+          },
+          "required_attire": [
+            "흰색 위생복",
+            "위생모",
+            "앞치마",
+            "마스크"
+          ],
+          "attire_warning": "위생 복장 미착용 시 채점 대상 제외(실격)",
+          "equipment_note": "칼, 도마, 냄비, 후라이팬 등 약 35가지 조리기구 준비 (냄비, 도마, 후라이팬은 시험장에도 비치됨)",
+          "recent_changes": "2024년 이후 누금표시된 조리기구 사용 허용, 전복버터구이 소금 지급량 15g→40g 증량"
+        },
+        "exam_type": "상시검정 (연중 수시 시행)"
+      },
+      "sources": [
+        "https://miraclesetup.com/일식조리기능사/",
+        "https://odinurse.com/entry/일식조리기능사-정보-시험-준비물-합격률-합격-공략-진로-및-전망",
+        "http://www.hongseongyori.com/ab-1141-11?pc=p",
+        "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7912"
+      ]
+    },
+    "schedule_and_registration": {
+      "title": "시험 일정 및 접수",
+      "content": {
+        "exam_schedule_type": "상시검정 (연중 수시 시행, 2025~2026년 상시검정 시행종목에 포함)",
+        "registration_method": "Q-net(www.q-net.or.kr) 온라인 접수",
+        "written_exam_fee": "14,500원",
+        "practical_exam_fee": "30,500원",
+        "total_exam_fee": "45,000원 (필기+실기)",
+        "schedule_check": "Q-net 홈페이지 > 상시시험 일정에서 확인 가능",
+        "schedule_note": "상시검정은 매주 시행되며, 필기시험 후 합격 시 실기시험 별도 접수",
+        "helpline": "HRD고객센터 1644-8000",
+        "written_result": "시험 종료 후 즉시 확인 가능 (CBT 방식)",
+        "practical_result": "시험 후 약 2주 내 Q-net에서 확인"
+      },
+      "sources": [
+        "https://www.q-net.or.kr/crf021.do?gId=&gSite=Q&id=crf02101&tabGb=sang",
+        "http://jaeil-cook.com/notice/?bmode=view&idx=134464123",
+        "https://odinurse.com/entry/일식조리기능사-정보-시험-준비물-합격률-합격-공략-진로-및-전망",
+        "https://mods.go.kr/boardDownload.es?bid=1801&list_no=439530&seq=1"
+      ]
+    },
+    "pass_rate": {
+      "title": "합격률 및 난이도",
+      "content": {
+        "yearly_stats": {
+          "2022": {
+            "written_pass_rate": "57.6%",
+            "practical_pass_rate": "38.0%"
+          },
+          "2021": {
+            "written_pass_rate": "56.0%",
+            "practical_pass_rate": "34.7%"
+          },
+          "2020": {
+            "written_pass_rate": "57.2%",
+            "practical_pass_rate": "34.7%"
+          }
+        },
+        "general_written_pass_rate": "50~58%",
+        "general_practical_pass_rate": "25~38%",
+        "difficulty_ranking": "조리기능사 난이도: 양식(쉬움) < 중식 < 한식 < 일식 < 복어(어려움)",
+        "difficulty_analysis": {
+          "written": "필기는 기출문제 반복 학습으로 충분히 합격 가능. 합격률 50% 이상으로 비교적 쉬운 편",
+          "practical": "실기는 섬세한 칼질, 회 뜨기, 초밥 만들기 등 정밀한 기술 요구. 합격률 25~38%로 조리기능사 중 낮은 편",
+          "key_challenge": "다른 조리기능사에 비해 까다로운 기술 필요, 응시인원도 적고 합격률이 낮음"
+        },
+        "applicant_volume": "한식조리기능사 대비 응시인원이 현저히 적음 (조리자격증 중 취득 희망 인원이 가장 적은 종목)"
+      },
+      "sources": [
+        "https://odinurse.com/entry/일식조리기능사-정보-시험-준비물-합격률-합격-공략-진로-및-전망",
+        "https://miraclesetup.com/일식조리기능사/",
+        "https://brunch.co.kr/@mangbang0411/26",
+        "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7912"
+      ]
+    },
+    "study_method": {
+      "title": "공부법 및 준비 팁",
+      "content": {
+        "written_exam_tips": {
+          "study_period": "2~4주 (하루 1~2시간 기준)",
+          "recommended_method": [
+            "기본 이론 한 번 빠르게 훑기",
+            "기출문제 중심 반복 학습 (CBT 기출 무료 사이트 활용)",
+            "자주 출제되는 파트 집중 암기",
+            "틀린 문제 오답노트 정리",
+            "시험 전 최근 5회분 기출 모의고사 풀기"
+          ],
+          "key_tip": "단순 암기로 천천히 진도를 빼기보다 먼저 한 번 훑어본 뒤 기출문제를 통해 자주 나오는 파트를 집중 암기",
+          "free_resources": [
+            "Q-net CBT 기출문제 (무료)",
+            "맞추다(machuda.kr) 기출 CBT",
+            "큐즈(quz.co.kr) 기출문제 풀이"
+          ]
+        },
+        "practical_exam_tips": {
+          "preparation_period": "1~3개월 (주 2~3회 실습 기준)",
+          "recommended_method": [
+            "전문 요리학원 수강 강력 권장 (독학보다 합격률 높음)",
+            "유튜브 실기 영상 반복 시청",
+            "19가지 메뉴 전체 최소 2회 이상 연습",
+            "시간 내 완성 연습 (타이머 활용)",
+            "위생복장 및 준비물 사전 점검"
+          ],
+          "key_tips": [
+            "위생 관리와 디테일이 핵심 (일식 특성상 섬세함 요구)",
+            "시계를 꼭 확인하며 시간 관리",
+            "제출 전 요구사항 재확인",
+            "칼 기술 연마가 합격의 관건 (회 뜨기, 채 썰기)",
+            "초밥 쥐는 연습 반복",
+            "재료 손질부터 완성까지 순서 체계화"
+          ],
+          "critical_warning": "현직자라 할지라도 한 번 이상 전문 교육기관에서 교육받고 시험에 임하는 것을 추천"
+        },
+        "recommended_textbooks": [
+          "2025 일식조리기능사 필기+실기 (에듀윌 등 주요 출판사)",
+          "NCS 기반 일식조리기능사 실기 교재"
+        ],
+        "recommended_youtube": [
+          "각 요리학원 공식 채널 실기 시연 영상",
+          "조리기능사 실기 메뉴별 풀이 영상"
+        ]
+      },
+      "sources": [
+        "https://odinurse.com/entry/일식조리기능사-정보-시험-준비물-합격률-합격-공략-진로-및-전망",
+        "https://namu.wiki/w/일식조리기능사",
+        "https://miraclesetup.com/일식조리기능사/",
+        "https://brunch.co.kr/@mangbang0411/26"
+      ]
+    },
+    "cost": {
+      "title": "취득 총 비용",
+      "content": {
+        "exam_fees": {
+          "written": "14,500원",
+          "practical": "30,500원",
+          "total": "45,000원"
+        },
+        "academy_cost": {
+          "practical_only": "47만~60만원 (5~8주 과정)",
+          "theory_and_practical": "60만~80만원 (이론+실기 통합)",
+          "ncs_government_supported": "국비지원 가능 (내일배움카드 활용 시 자부담 대폭 감소)"
+        },
+        "material_cost": {
+          "practice_ingredients": "10만~20만원 (연습용 재료비, 학원 포함인 경우도 있음)",
+          "personal_equipment": "5만~15만원 (칼세트, 위생복, 앞치마, 위생모 등)"
+        },
+        "textbook_cost": "2만~3만원 (필기+실기 교재)",
+        "total_estimate": {
+          "with_academy": "70만~100만원 (학원+재료비+응시료+교재+장비)",
+          "self_study": "15만~30만원 (응시료+교재+재료비+장비, 독학 시)",
+          "government_support": "내일배움카드 사용 시 학원비 50~80% 지원 가능"
+        },
+        "retake_cost_note": "불합격 시 재응시료 추가 발생 (실기 재시험 30,500원)"
+      },
+      "sources": [
+        "https://odinurse.com/entry/일식조리기능사-정보-시험-준비물-합격률-합격-공략-진로-및-전망",
+        "https://www.firstcoffee.co.kr/m/front/lecture/?cs=17&li=2446",
+        "http://iljowon.com/m/sub/sub_34.php",
+        "https://www.gangmom.kr/tuition/66e62e00c8d978b07dfcd890"
+      ]
+    },
+    "career_and_usage": {
+      "title": "취업 및 활용",
+      "content": {
+        "salary": {
+          "entry_level": "약 2,400만~3,000만원 (초봉, 최저임금 수준에서 시작)",
+          "lower_25_percent": "3,191만원",
+          "median": "3,967만원",
+          "upper_25_percent": "4,731만원",
+          "experienced": "5,000만원 이상 (경력 10년 이상, 오마카세 셰프급)",
+          "note": "경력 5년 이상 시 대우가 상당히 좋아지는 직군"
+        },
+        "workplaces": [
+          "일식 전문 레스토랑 (스시, 이자카야, 라멘 등)",
+          "오마카세 전문점",
+          "호텔 내 일식 레스토랑",
+          "집단급식소 (학교, 병원, 기업)",
+          "전문 외식업체",
+          "식품가공업체",
+          "항공사/크루즈 기내식",
+          "자영업 (일식당 창업)"
+        ],
+        "career_path": [
+          "조리사 → 부주방장 → 주방장(헤드셰프)",
+          "일식조리기능사 → 조리산업기사 → 조리기사 (상위 자격 취득)",
+          "일식당 창업 및 운영",
+          "요리학원 강사",
+          "식품 컨설턴트"
+        ],
+        "job_outlook": "긍정적. 외식문화 발전, 맞벌이 가구 증가, 1인 가구/혼밥족 확대로 외식시장 성장 중. 오마카세 열풍으로 고급 일식 수요 증가",
+        "advantages": [
+          "대형 음식점 및 호텔에서 자격증 소지자 우대 채용",
+          "자격증 수당 지급 사업장 있음",
+          "집단급식소 취업 시 필수 자격",
+          "창업 시 신뢰도 향상",
+          "다른 조리기능사 대비 희소성 높음 (취득자 적음)"
+        ]
+      },
+      "sources": [
+        "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19286",
+        "https://www.career.go.kr/cnet/app/base/job/jobView.m?SEQ=173",
+        "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7912",
+        "https://www.jobkorea.co.kr/Search/?stext=일식조리사"
+      ]
+    },
+    "similar_cert_comparison": {
+      "title": "유사 자격증 비교",
+      "content": {
+        "comparison_table": [
+          {
+            "cert_name": "한식조리기능사",
+            "cert_code": "7911",
+            "practical_menu_count": 31,
+            "difficulty": "중",
+            "written_pass_rate": "약 55~65%",
+            "practical_pass_rate": "약 35~45%",
+            "key_skill": "한국 전통 조리법, 양념 배합",
+            "popularity": "가장 많은 응시자 (연간 수만 명)",
+            "best_for": "급식소, 한식당, 공공기관 조리직",
+            "difficulty_rank": 3
+          },
+          {
+            "cert_name": "양식조리기능사",
+            "cert_code": "7910",
+            "practical_menu_count": 27,
+            "difficulty": "하",
+            "written_pass_rate": "약 60~70%",
+            "practical_pass_rate": "약 40~50%",
+            "key_skill": "체계적 조리 프로세스, 소스 제조",
+            "popularity": "비교적 많은 응시자",
+            "best_for": "양식 레스토랑, 호텔, 브런치 카페",
+            "difficulty_rank": 1
+          },
+          {
+            "cert_name": "중식조리기능사",
+            "cert_code": "7913",
+            "practical_menu_count": 36,
+            "difficulty": "중",
+            "written_pass_rate": "약 55~60%",
+            "practical_pass_rate": "약 30~40%",
+            "key_skill": "불 조절, 빠른 손놀림, 웍 사용",
+            "popularity": "중간 수준",
+            "best_for": "중식당, 호텔, 프랜차이즈, 창업",
+            "difficulty_rank": 2
+          },
+          {
+            "cert_name": "일식조리기능사",
+            "cert_code": "7912",
+            "practical_menu_count": 19,
+            "difficulty": "상",
+            "written_pass_rate": "약 50~58%",
+            "practical_pass_rate": "약 25~38%",
+            "key_skill": "섬세한 칼질, 회 뜨기, 초밥, 디테일",
+            "popularity": "가장 적은 응시자",
+            "best_for": "일식 전문점, 오마카세, 고급 일식당",
+            "difficulty_rank": 4
+          },
+          {
+            "cert_name": "복어조리기능사",
+            "cert_code": "7914",
+            "practical_menu_count": "별도",
+            "difficulty": "최상",
+            "written_pass_rate": "약 40~50%",
+            "practical_pass_rate": "약 20~30%",
+            "key_skill": "독소 제거, 안전한 복어 처리",
+            "popularity": "매우 적은 응시자",
+            "best_for": "복어 전문점, 일식당",
+            "difficulty_rank": 5
+          }
+        ],
+        "difficulty_ranking_summary": "양식(쉬움) → 중식 → 한식 → 일식 → 복어(어려움)",
+        "common_written_subjects": "2020년 이후 각 조리기능사별 필기시험 과목이 개별화됨 (이전에는 공통 필기였으나 폐지)",
+        "cross_exemption": "2020년부터 조리기능사 필기시험 상호 면제 폐지 (각각 별도 필기 응시 필요)",
+        "practical_menu_reduction_2020": "2020년 실기 품목 대폭 축소 (한식 53→31, 일식도 축소되어 기능사 중 가장 적은 품목수)",
+        "recommendation": {
+          "beginner": "양식조리기능사 또는 한식조리기능사부터 시작 권장",
+          "japanese_food_career": "일식조리기능사는 섬세함과 디테일에 강한 사람에게 유리",
+          "multiple_certs": "여러 조리기능사를 복수 취득하면 취업 경쟁력 상승"
+        }
+      },
+      "sources": [
+        "https://brownrectangle.com/60",
+        "https://brunch.co.kr/@mangbang0411/26",
+        "https://namu.wiki/w/일식조리기능사",
+        "https://namu.wiki/w/한식조리기능사",
+        "https://namu.wiki/w/양식조리기능사"
+      ]
+    }
+  },
+  "all_sources": [
+    {
+      "url": "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7912",
+      "title": "일식조리기능사 - 국가자격 종목별 상세정보 (Q-net)"
+    },
+    {
+      "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&jmCd=7912",
+      "title": "일식조리기능사 출제기준 (Q-net)"
+    },
+    {
+      "url": "https://miraclesetup.com/%EC%9D%BC%EC%8B%9D%EC%A1%B0%EB%A6%AC%EA%B8%B0%EB%8A%A5%EC%82%AC/",
+      "title": "일식조리기능사 필기 실기 시험일정 및 준비물 - 모두의자격증"
+    },
+    {
+      "url": "https://odinurse.com/entry/%EC%9D%BC%EC%8B%9D%EC%A1%B0%EB%A6%AC%EA%B8%B0%EB%8A%A5%EC%82%AC-%EC%A0%95%EB%B3%B4-%EC%8B%9C%ED%97%98-%EC%A4%80%EB%B9%84%EB%AC%BC-%ED%95%A9%EA%B2%A9%EB%A5%A0-%ED%95%A9%EA%B2%A9-%EA%B3%B5%EB%9E%B5-%EC%A7%84%EB%A1%9C-%EB%B0%8F-%EC%A0%84%EB%A7%9D",
+      "title": "일식조리기능사 정보, 시험, 준비물, 합격률, 합격 공략, 진로 및 전망"
+    },
+    {
+      "url": "https://namu.wiki/w/%EC%9D%BC%EC%8B%9D%EC%A1%B0%EB%A6%AC%EA%B8%B0%EB%8A%A5%EC%82%AC",
+      "title": "일식조리기능사 - 나무위키"
+    },
+    {
+      "url": "https://brunch.co.kr/@mangbang0411/26",
+      "title": "조리기능사 자격증 정리해드립니다 - 브런치"
+    },
+    {
+      "url": "https://brownrectangle.com/60",
+      "title": "조리기능사 자격증 종류 총정리 - 한식/중식/양식/일식 차이 완벽 비교"
+    },
+    {
+      "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19286",
+      "title": "직업사전 일식조리사 - 업무, 연봉, 전망 (잡코리아)"
+    },
+    {
+      "url": "https://www.career.go.kr/cnet/app/base/job/jobView.m?SEQ=173",
+      "title": "조리사 및 주방장 직업정보 - 커리어넷"
+    },
+    {
+      "url": "http://www.hongseongyori.com/ab-1141-11?pc=p",
+      "title": "일식조리기능사 실기출제 메뉴 - 홍성요리학원"
+    },
+    {
+      "url": "https://www.q-net.or.kr/crf021.do?gId=&gSite=Q&id=crf02101&tabGb=sang",
+      "title": "국가기술자격 상시시험 일정 - Q-net"
+    },
+    {
+      "url": "http://jaeil-cook.com/notice/?bmode=view&idx=134464123",
+      "title": "2025년 국가기술자격 상시시험 일정 - 제일요리아카데미학원"
+    },
+    {
+      "url": "https://www.firstcoffee.co.kr/m/front/lecture/?cs=17&li=2446",
+      "title": "일식조리기능사 과정 - 퍼스트바리스타학원"
+    },
+    {
+      "url": "http://iljowon.com/m/sub/sub_34.php",
+      "title": "일식조리기능사 실기과정 - 일조원"
+    },
+    {
+      "url": "https://www.gangmom.kr/tuition/66e62e00c8d978b07dfcd890",
+      "title": "음식나라조리학원 학원비 안내"
+    },
+    {
+      "url": "https://mods.go.kr/boardDownload.es?bid=1801&list_no=439530&seq=1",
+      "title": "2026년도 국가기술자격검정 시행공고"
+    }
+  ]
+}

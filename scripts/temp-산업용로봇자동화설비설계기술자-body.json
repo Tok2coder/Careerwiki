@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "way": "기계공학, 메카트로닉스공학, 로봇공학 등 관련 학과에서 기계설계, CAD/CAM, 자동화시스템 등을 전공하는 것이 일반적인 진입 경로이다.[1] 한국폴리텍대학 로봇캠퍼스에서는 로봇기계과, 로봇자동화과 등 2년제 NCS 기반 학위과정을 운영하며, 실무 중심 교육으로 산업 현장 투입이 빠르다.[2] 국가기술자격으로는 기계설계기사, 생산자동화산업기사가 대표적이며, 2019년 신설된 로봇하드웨어개발기사가 직무 관련성이 가장 높다.[3]\n\nSolidWorks, AutoCAD 등 3D CAD 소프트웨어와 구조해석(FEA) 활용 능력이 필수적이다. 로봇 SI(System Integration) 업체나 로봇 제조사 설계팀에서 경력을 시작하는 것이 일반적이며, 자동차·전자·식품 등 다양한 제조 분야로 진출할 수 있다.",
+    "overviewProspect.main": "정부는 제4차 지능형 로봇 기본계획(2024~2028)을 통해 2030년까지 로봇산업 혁신 성장을 추진하고 있으며, 제조업 스마트공장 보급 확대에 따라 산업용 로봇 자동화설비 설계 인력 수요는 지속 증가할 전망이다.[1] IFR(국제로봇연맹)에 따르면 2025년 글로벌 산업용 로봇 설치 대수는 전년 대비 6% 증가한 57만 5천 대로 예상되며, 특히 협동로봇 분야가 가장 빠른 성장세를 보이고 있다.[2]",
+    "trivia": "한국은 제조업 근로자 1만 명당 산업용 로봇 1,012대를 운용하는 세계 1위 로봇밀도 국가이다. 2위 싱가포르(770대)와 큰 격차를 보이며, 세계 평균(162대)의 약 6배에 달한다.[1]",
+    "heroTags": ["산업용로봇설비설계", "자동화설비설계", "로봇SI설계", "Robot Automation Design Engineer"],
+    "sidebarJobs": ["산업용로봇자동화설비제작기술자", "산업용로봇자동화통합시스템제어기술자", "산업용로봇운영프로그램설치기술자", "산업용로봇제어조작원", "로봇하드웨어설계기술자", "로봇기구개발자", "자동화설비기술자", "스마트공장설비설계사", "로봇공학기술자", "산업용기계설계기술자", "공장자동화컨설턴트", "로봇공정시뮬레이션기술자"],
+    "sidebarMajors": ["기계공학과", "메카트로닉스공학과", "로봇공학과", "기계설계공학과", "전기제어공학과", "제어계측공학과", "산업설비자동화과", "전기전자공학과"],
+    "sidebarCerts": [{"name": "로봇하드웨어개발기사", "url": null}, {"name": "기계설계기사", "url": null}, {"name": "생산자동화산업기사", "url": null}, {"name": "기계기술사", "url": null}],
+    "detailWlb": {
+      "wlb": "보통이상",
+      "social": "좋음",
+      "wlbDetail": "주 5일, 일 8시간 근무가 기본이나 설비 설치·시운전 시기에는 야근과 주말 출근이 잦아진다.[1] 설계 업무 자체는 사무실 기반이지만, 현장 실측과 시운전 참여가 정기적으로 필요하다.[2]",
+      "socialDetail": "제조업 자동화를 통해 생산성 향상과 산업재해 감소에 기여하며, 스마트공장 확산의 핵심 인력으로서 국가 제조 경쟁력 강화에 직접적인 역할을 한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": ["기계요소설계 (CAD 기반 부품·조립 설계)", "로봇공학개론 (로봇 구조·운동학·동역학)", "자동화시스템설계 (PLC·센서·액추에이터 통합)", "재료역학 및 구조해석 (FEA 기반 안전성 검증)", "유공압회로설계 (공압·유압 시스템 설계)"],
+      "recruit": ["워크넷(work24.go.kr) '로봇설계' 키워드 검색", "한국로봇산업진흥원(KIRIA) 채용정보 게시판", "로봇 SI업체(현대로보틱스, 두산로보틱스 등) 채용 페이지", "잡코리아·사람인 '자동화설비 설계' 검색"],
+      "training": ["한국폴리텍대학 로봇캠퍼스 로봇기계과 (2년 NCS 학위과정)", "한국로봇산업진흥원 산업용 로봇 전문인력 양성과정", "고용노동부 HRD-net 국비지원 로봇자동화 훈련과정"]
+    }
+  },
+  "sources": {
+    "way": [
+      {"text": "[1] NCS 국가직무능력표준 산업용로봇 분류", "url": "https://www.ncs.go.kr"},
+      {"text": "[2] 한국폴리텍대학 로봇캠퍼스 학과 안내", "url": "https://www.kopo.ac.kr/robot/"},
+      {"text": "[3] Q-net 국가기술자격 정보 (로봇하드웨어개발기사)", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&gId="}
+    ],
+    "overviewProspect.main": [
+      {"text": "[1] 관계부처 합동 제4차 지능형 로봇 기본계획(2024~2028)", "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156610879"},
+      {"text": "[2] IFR World Robotics 2024 Report", "url": "https://ifr.org/img/worldrobotics/Executive_Summary_WR_Industrial_Robots_2024.pdf"}
+    ],
+    "trivia": [
+      {"text": "[1] IFR Robot Density 2024 (한국 로봇밀도 세계 1위)", "url": "https://ifr.org/img/worldrobotics/Executive_Summary_WR_Industrial_Robots_2024.pdf"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"text": "[1] 워크넷 산업용로봇자동화설비설계기술자 직업정보", "url": "https://www.work24.go.kr"},
+      {"text": "[2] NCS 산업용로봇 설비설계 능력단위 해설", "url": "https://www.ncs.go.kr"}
+    ],
+    "detailWlb.socialDetail": [
+      {"text": "[1] 관계부처 합동 제4차 지능형 로봇 기본계획(2024~2028)", "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156610879"}
+    ]
+  },
+  "changeSummary": "배치68-1: way·prospect·trivia·wlb·detailReady 신규 작성, heroTags·sidebarJobs·sidebarMajors·sidebarCerts 개선"
+}

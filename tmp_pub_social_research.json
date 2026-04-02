@@ -1,0 +1,2385 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "사회조사분석사 2급이란 — 통계와 조사의 '기본기'를 입증하는 국가자격"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "사회조사분석사는 다양한 사회정보의 수집·분석·활용을 담당하는 전문가 자격증이다. 기업, 정당, 지방자치단체, 중앙정부 등에서 시장조사나 여론조사를 계획하고, 조사를 수행한 뒤 결과를 통계적으로 분석해 보고서를 작성하는 역량을 검증한다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 1,
+            "text": "Q-net 국가자격 종목별 상세정보 - 사회조사분석사",
+            "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9521"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 소관부처는 "
+        },
+        {
+          "type": "text",
+          "text": "국가데이터처(구 통계청)",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이며, 시행기관은 한국산업인력공단이다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "등급은 1급과 2급으로 나뉜다. 1급은 관련 분야 실무경력이 필요하지만, "
+        },
+        {
+          "type": "text",
+          "text": "2급은 학력·경력·전공에 관계없이 누구나 응시할 수 있다",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 2,
+            "text": "통계청 - 사회조사분석사 검정자격기준",
+            "url": "https://kostat.go.kr/menu.es?mid=a10411010500"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 2000년부터 시행된 국가기술자격으로, 원서접수는 Q-net(www.q-net.or.kr) 인터넷 접수로만 가능하다. 최근에는 빅데이터 시장 확대와 데이터 기반 행정 수요 증가로 응시자가 연간 1만 명을 넘기며 꾸준히 성장하고 있다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "이 자격증은 "
+        },
+        {
+          "type": "text",
+          "text": "시장조사분석가",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/시장조사분석가"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "여론조사분석가",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/여론조사분석가"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 등 리서치 직군은 물론, "
+        },
+        {
+          "type": "text",
+          "text": "마케팅전문가",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/마케팅전문가"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "나 공공기관 통계 직렬 진출을 준비하는 사람에게 기본 스펙으로 자리 잡았다. "
+        },
+        {
+          "type": "text",
+          "text": "통계학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/통계학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "나 "
+        },
+        {
+          "type": "text",
+          "text": "사회학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/사회학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 전공자는 물론, "
+        },
+        {
+          "type": "text",
+          "text": "경제학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/경제학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "나 "
+        },
+        {
+          "type": "text",
+          "text": "심리학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/심리학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 출신도 관련 분야 취업을 위해 많이 취득한다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "시험 구조, 일정, 비용 총정리"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "사회조사분석사 2급 시험은 필기와 실기 두 단계로 구성된다. 필기시험을 합격해야 실기시험에 응시할 수 있으며, 필기 합격 유효기간은 2년이다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "필기시험"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "필기시험은 "
+        },
+        {
+          "type": "text",
+          "text": "객관식 4지 택일형 100문항",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "을 150분(2시간 30분) 안에 풀어야 한다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 3,
+            "text": "사회조사분석사 2급 필기 실기 난이도 정보",
+            "url": "https://deokeo.com/entry/%EC%82%AC%ED%9A%8C%EC%A1%B0%EC%82%AC%EB%B6%84%EC%84%9D%EC%82%AC-2%EA%B8%89-%ED%95%84%EA%B8%B0-%EC%8B%A4%EA%B8%B0-%EB%82%9C%EC%9D%B4%EB%8F%84"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 응시료는 19,400원이다. 과목 구성은 다음과 같다."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "과목명",
+                      "marks": [{"type": "bold"}]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "문항 수",
+                      "marks": [{"type": "bold"}]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "주요 내용",
+                      "marks": [{"type": "bold"}]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "체감 난이도",
+                      "marks": [{"type": "bold"}]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "조사방법론I (조사방법과 설계)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "30문항"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "표본설계, 척도구성, 조사유형(서베이·실험·관찰), 측정의 타당도와 신뢰도"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "★★☆"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "조사방법론II (조사관리와 자료처리)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "30문항"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "자료수집 관리, 코딩과 데이터 클리닝, 조사윤리, 보고서 작성법"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "★★☆"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "사회통계 (통계분석과 활용)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "40문항"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "기술통계, 확률분포, T검정, 분산분석(ANOVA), 회귀분석, 카이제곱검정"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "★★★ (과락 주의)"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "합격 기준은 "
+        },
+        {
+          "type": "text",
+          "text": "과목당 40점 이상 + 전체 평균 60점 이상",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이다. 사회통계 과목이 40문항으로 비중이 가장 크고 난이도도 높기 때문에, 이 과목에서 과락(40점 미만)을 받아 불합격하는 사례가 적지 않다. 조사방법론 I·II는 암기 위주여서 기출문제 반복으로 대비하면 안정적인 점수를 확보할 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "실기시험"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "실기시험은 "
+        },
+        {
+          "type": "text",
+          "text": "복합형(작업형 + 필답형)",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "으로, 두 유형이 각각 다른 날짜에 치러진다. 응시료는 33,900원이다."
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "작업형(40점, 2시간)",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": ": SPSS 등 통계 패키지를 이용해 데이터를 분석하는 실습 시험이다. T검정, 분산분석, 회귀분석, 교차분석 등의 분석 기법을 실제로 수행하고 결과를 해석해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "필답형(60점, 2시간)",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": ": 서술형 시험으로, 설문지 작성(약 20점)과 통계 개념 서술(약 40점)로 구성된다. 질문지 작성 파트는 비교적 정형화되어 있어 준비만 하면 안정적으로 득점할 수 있다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "합격 기준은 작업형과 필답형 합산 100점 만점 중 "
+        },
+        {
+          "type": "text",
+          "text": "60점 이상",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이다. 작업형에서 SPSS 조작에 익숙하지 않으면 시간 압박을 받을 수 있으므로, 사전에 충분한 실습이 필수적이다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "시험 일정과 비용"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "사회조사분석사 2급 시험은 "
+        },
+        {
+          "type": "text",
+          "text": "연 3회",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 실시된다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 4,
+            "text": "통계청 - 2025년 사회조사분석사 검정일정",
+            "url": "https://sri.kostat.go.kr/board.es?mid=a10411010100&bid=1801&act=view&list_no=434626"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 접수는 Q-net 웹사이트 또는 모바일 앱을 통해 인터넷으로만 가능하며, 접수 기간은 보통 4일(첫날 10:00 ~ 마지막 날 18:00)이다. 접수 마감일에는 서버가 혼잡해지므로 가능한 한 일찍 접수하는 것이 좋다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "2025년 기준 시험 일정은 아래와 같다."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "회차",
+                      "marks": [{"type": "bold"}]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "필기 접수",
+                      "marks": [{"type": "bold"}]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "필기 시험",
+                      "marks": [{"type": "bold"}]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "실기 접수",
+                      "marks": [{"type": "bold"}]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "실기 시험",
+                      "marks": [{"type": "bold"}]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "1회"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "1/13~16"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "2/7~3/4"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "3/24~27"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "4/19~5/9"}]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "2회"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "4/14~17"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "5/10~30"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "6/23~26"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "7/19~8/6"}]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "3회"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "7/21~24"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "8/9~9/1"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "9/22~25"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "11/1~21"}]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "비용은 필기 19,400원 + 실기 33,900원으로, 1회 응시 기준 총 "
+        },
+        {
+          "type": "text",
+          "text": "53,300원",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이 든다. 여기에 교재비(필기+실기 기본서 2권 약 43,000~60,000원)를 더하면, 독학 기준 총 준비 비용은 약 "
+        },
+        {
+          "type": "text",
+          "text": "10만~11만 원 수준",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 5,
+            "text": "사회조사분석사 2급 현실 취업 및 연봉 정보",
+            "url": "https://govad.co.kr/entry/%EC%82%AC%ED%9A%8C%EC%A1%B0%EC%82%AC%EB%B6%84%EC%84%9D%EC%82%AC2%EA%B8%89-%ED%98%84%EC%8B%A4-%EC%B7%A8%EC%97%85-%EC%97%B0%EB%B4%89-%EC%93%B8%EB%AA%A8-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 온라인 강의를 추가할 경우 단과 강의 기준 5만~10만 원, 종합반 패키지 기준 15만~30만 원이 추가된다. 다만 국민내일배움카드를 활용하면 자기부담금 20~50%만 내면 되므로 비용을 크게 줄일 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "합격률 추이와 난이도 분석"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "사회조사분석사 2급의 합격률은 다른 국가기술자격 기사 급에 비해 높은 편이지만, 최근 몇 년간 하락 추세를 보이고 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 6,
+            "text": "와우패스 - 사회조사분석사 수험정보",
+            "url": "https://www.wowpass.com/ExamInfo/240279"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "연도", "marks": [{"type": "bold"}]}]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "필기 응시자", "marks": [{"type": "bold"}]}]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "필기 합격률", "marks": [{"type": "bold"}]}]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "실기 응시자", "marks": [{"type": "bold"}]}]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "실기 합격률", "marks": [{"type": "bold"}]}]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2020"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "10,589명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "75.1%"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "8,595명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "70.6%"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2021"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "14,315명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "66.2%"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "9,334명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "66.7%"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2022"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "10,999명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "62.8%"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "7,867명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "62.4%"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "2023"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "11,310명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "57.1%"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "6,596명"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "64.6%"}]}]}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "필기 합격률은 2020년 75.1%에서 2023년 57.1%로 꾸준히 하락했다. 2021년 응시자가 14,000명을 넘기며 급증한 이후 난이도가 상향 조정된 것으로 보인다. 반면 실기 합격률은 62~71% 구간에서 비교적 안정적이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 7,
+            "text": "한국통계진흥원 - 사회조사분석사 연도별 통계",
+            "url": "http://sa.stat.or.kr/itd/sfcYelrStat.html?boardDiv=9"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 최근 5년 평균은 필기 약 65%, 실기 약 66% 수준으로, 충분한 준비를 하면 한 번에 합격할 수 있는 난이도이다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "체감 난이도를 기준으로 보면, 조사방법론 두 과목은 개념 암기 위주여서 기출문제를 반복하면 무난히 통과할 수 있다. 진짜 관건은 "
+        },
+        {
+          "type": "text",
+          "text": "사회통계",
+          "marks": [{"type": "bold"}]
+        },
+        {
+          "type": "text",
+          "text": "이다. 확률분포, 가설검정, 분산분석 같은 통계학 개념을 이해하지 못하면 과락의 위험이 크다. 비전공자라면 이 과목에 전체 학습 시간의 40~50%를 투자하는 전략이 필요하다."
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-social-research-img1.webp",
+        "alt": "사회조사분석사 2급 시험 공부 모습 — SPSS 통계 프로그램 화면과 교재",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "독학 공부법 — 8주 완성 로드맵"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "사회조사분석사 2급은 비전공자도 독학으로 충분히 합격 가능한 시험이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 8,
+            "text": "링커리어 - 사회조사분석사 방학 때 취득 가능할까",
+            "url": "https://community.linkareer.com/employment_data/5200993"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 전공자는 2~3개월, 비전공자는 3~6개월이 일반적인 준비 기간이다. 하루 3~5시간 투자할 수 있다면 약 8주 안에 필기와 실기를 모두 준비할 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "8주 로드맵"
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "1~2주차: 기초 개념 학습",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": " — 조사방법론과 통계 기초 개념을 교재 통독으로 익힌다. 이 단계에서는 완벽한 이해보다 전체 구조를 파악하는 데 집중한다. 사회통계는 공식을 외우기보다 '왜 이 분석을 쓰는지'를 이해하는 것이 중요하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "3~4주차: 기출문제 집중 풀이",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": " — 사회조사분석사는 문제은행식 출제 비중이 높아 기출문제 반복이 가장 효율적인 학습법이다. 최소 3년치(9회분) 기출을 풀어보아야 한다. CBT 기출문제 전자문제집(comcbt.com)을 활용하면 무료로 반복 풀이가 가능하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "5~6주차: SPSS 실습",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": " — 작업형 시험 대비로 SPSS 프로그램을 직접 조작하며 데이터 분석을 연습한다. T검정, 분산분석, 회귀분석, 교차분석을 언제 사용하는지 판별하는 능력이 핵심이다. 기출 작업형 문제를 4~9회분 반복 실습하면 충분하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "7~8주차: 실기 필답형 + 모의고사",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": " — 필답형은 통계 용어와 개념을 서술형으로 작성해야 하므로 통암기가 필요하다. 질문지 작성 파트(약 20점)는 패턴이 정형화되어 있어 몇 번만 연습하면 안정적으로 득점할 수 있다. 마지막 주에는 실전 모의고사로 시간 배분을 점검한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "과목별 공부 전략"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "조사방법론 I·II",
+          "marks": [{"type": "bold"}]
+        },
+        {
+          "type": "text",
+          "text": "는 반복 학습과 기출문제 풀이에 집중하면 된다. 암기 위주 과목이므로 개념 정리 후 기출을 반복하는 것이 가장 효과적이다. 특히 표본추출 방법(단순무작위, 층화, 군집, 체계적 추출)과 척도(명목, 서열, 등간, 비율)의 차이는 반드시 정리해 두어야 한다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "사회통계",
+          "marks": [{"type": "bold"}]
+        },
+        {
+          "type": "text",
+          "text": "는 가장 어려운 과목으로, 과락의 주범이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 9,
+            "text": "전북대 사회학과 - 사회조사분석사 2급 합격수기",
+            "url": "https://wz3.jbnu.ac.kr/bbs/socio/553/292191/artclView.do"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 기초통계학(평균, 분산, 표준편차)부터 차근차근 이해한 뒤 가설검정, T검정, 분산분석(ANOVA), 회귀분석, 카이제곱검정 순서로 학습하는 것이 좋다. 공식 자체보다 '이 상황에서 어떤 검정을 써야 하는가'를 판단하는 문제가 자주 출제된다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "실기 필답형",
+          "marks": [{"type": "bold"}]
+        },
+        {
+          "type": "text",
+          "text": "은 용어와 개념을 정확한 문장으로 서술해야 하기 때문에, 핵심 개념별로 2~3문장짜리 답안을 만들어 반복 암기하는 방법이 효율적이다. "
+        },
+        {
+          "type": "text",
+          "text": "실기 작업형",
+          "marks": [{"type": "bold"}]
+        },
+        {
+          "type": "text",
+          "text": "은 SPSS 기출 문제를 반복 실습하는 것이 핵심이다. 시험장에서는 시간이 충분히 주어지므로, 분석 기법별 SPSS 메뉴 경로만 확실히 알고 있으면 큰 어려움은 없다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "추천 교재와 학습 자료"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "필기 교재: ",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": "「2025 사회조사분석사 2급 필기 한방에 끝내기」(김대현 저) — 최신 출제 경향을 반영한 기본서로, 과목별 핵심 정리와 기출문제가 포함되어 있다"
+                },
+                {
+                  "type": "footnote",
+                  "attrs": {
+                    "id": 10,
+                    "text": "교보문고 - 2025 사회조사분석사 2급 필기 한방에 끝내기",
+                    "url": "https://product.kyobobook.co.kr/detail/S000214201775"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "실기 교재: ",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": "「에듀윌 사회조사분석사 2급 실기 한권끝장」 — 필답형 요약 정리와 작업형 SPSS 실습이 함께 구성되어 있다"
+                },
+                {
+                  "type": "footnote",
+                  "attrs": {
+                    "id": 11,
+                    "text": "에듀윌 - 사회조사분석사 2급 2차 실기 한권끝장",
+                    "url": "https://book.eduwill.net/goods/select.action?goodsId=0100004219"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "무료 온라인 강의: ",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": "G-Seek 경기도 평생학습포털에서 '통계분석과 활용' 40차시(33시간 30분) 강의를 무료로 수강할 수 있다"
+                },
+                {
+                  "type": "footnote",
+                  "attrs": {
+                    "id": 12,
+                    "text": "G-Seek 경기도 평생학습포털 - 사회조사분석사 2급 한방에 끝내기",
+                    "url": "https://www.gseek.kr/user/course/online/view?s_sbjct_sn=12391&s_sbjct_cycl_sn=1"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": ". 학습 기간은 60일이며, 비용 부담 없이 기초부터 체계적으로 학습하기에 좋다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "유료 인강: ",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": "시대에듀, 와우패스, 에듀윌 등에서 필기+실기 종합반을 운영한다. 독학이 어려운 경우 사회통계 과목만 선택적으로 수강하는 것도 효율적인 방법이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "무료 기출 풀이: ",
+                  "marks": [{"type": "bold"}]
+                },
+                {
+                  "type": "text",
+                  "text": "CBT 기출문제 전자문제집(comcbt.com)에서 사회조사분석사 2급 필기 기출문제를 무료로 반복 풀이할 수 있다. 실전 감각을 기르는 데 가장 유용한 도구이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "합격자 팁"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "기출문제는 최소 3년치(9회분)를 검토해야 한다. 출제 패턴이 반복되는 문항이 많아서 3회 이상 반복하면 합격선을 안정적으로 넘길 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "SPSS를 처음 접하는 사람은 작업형 준비 기간을 최소 2주는 확보해야 한다. 프로그램 인터페이스에 익숙해지는 데 시간이 걸린다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "작업형과 필답형 시험일이 다르므로, 가능하면 두 시험일 간격이 먼 회차를 선택해 준비 기간을 확보하는 것이 유리하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "사회통계 과락 방지에 집중하고, 조사방법론에서 고득점을 노리는 전략이 가장 안전하다. 조사방법론에서 80점 이상을 확보하면 사회통계에서 다소 점수가 낮아도 전체 평균 60점을 넘길 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "스터디 그룹을 통한 개념 확인과 상호 점검이 효과적이다. 특히 사회통계 과목은 혼자 공부하면 이해가 막히는 부분이 생기기 쉬운데, 함께 토론하면 해결 속도가 빨라진다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "취업과 활용 — 공공기관 가산점부터 마케팅 리서치까지"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "사회조사분석사 2급의 가장 큰 강점은 "
+        },
+        {
+          "type": "text",
+          "text": "공무원 시험 가산점",
+          "marks": [{"type": "bold"}]
+        },
+        {
+          "type": "text",
+          "text": "과 "
+        },
+        {
+          "type": "text",
+          "text": "공공기관 채용 우대",
+          "marks": [{"type": "bold"}]
+        },
+        {
+          "type": "text",
+          "text": "이다. 통계 직렬·직류 공무원 시험에서 7급은 3%, 9급은 5%의 가산점을 받을 수 있다. 공공기관에서도 이 자격증 보유자를 우대하거나 필수 조건으로 요구하는 곳이 많다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "대표적인 우대 기관으로는 국민건강보험공단, 한국소비자원, 한국방송광고공사, 한국우편사업진흥원, 근로복지공단 등이 있다. 한국관광공사의 경우 통계직렬 지원 시 필수 조건이며, 서울대병원 5급 사무직 채용에서도 우대 자격으로 인정된다. 통계청 경력경쟁채용에서도 자격 충족 요건으로 활용할 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "민간 부문에서는 "
+        },
+        {
+          "type": "text",
+          "text": "시장조사분석가",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/시장조사분석가"
+              }
+            },
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "여론조사분석가",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/여론조사분석가"
+              }
+            },
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", CRM 분석가 등 리서치 직군에서 필수 자격으로 요구하는 경우가 많다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 13,
+            "text": "잡코리아 - 사회조사분석사2급 채용공고 검색",
+            "url": "https://www.jobkorea.co.kr/Search/?stext=%EC%82%AC%ED%9A%8C%EC%A1%B0%EC%82%AC%EB%B6%84%EC%84%9D%EC%82%AC2%EA%B8%89"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". "
+        },
+        {
+          "type": "text",
+          "text": "마케팅사무원",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/마케팅사무원"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이나 기업 기획·전략 부서에서도 데이터 기반 의사결정 역량을 입증하는 자격증으로 인정받는다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "연봉 수준은 2021년 기준 하위 25%가 약 3,561만 원, 중위 50%가 약 4,375만 원, 상위 25%가 약 5,128만 원이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 14,
+            "text": "사회조사분석사 2급 정보 종합 - 연봉 데이터",
+            "url": "https://odinurse.com/entry/%EC%82%AC%ED%9A%8C%EC%A1%B0%EC%82%AC%EB%B6%84%EC%84%9D%EC%82%AC-2%EA%B8%89-%EC%A0%95%EB%B3%B4-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95-%EC%8B%9C%ED%97%98-%EB%82%B4%EC%9A%A9-%ED%95%A9%EA%B2%A9%EB%A5%A0-%ED%95%A9%EA%B2%A9-%EA%B3%B5%EB%9E%B5-%EA%B8%B0%EC%B6%9C-%EB%AC%B8%EC%A0%9C-%EC%A7%84%EB%A1%9C-%EB%B0%8F-%EC%A0%84%EB%A7%9D"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 신입 초봉은 약 2,200만 원 내외지만, 경력이 쌓이면 빠르게 상승하는 구조이다. 특히 공공기관에 취업할 경우 안정적인 처우와 복리후생을 기대할 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전망은 밝다. 빅데이터 시장이 2016년 대비 2020년 3배 이상 성장했고, 지방자치단체의 데이터 기반 행정이 확산되면서 통계 분석 역량을 갖춘 인력 수요는 계속 늘어나고 있다. "
+        },
+        {
+          "type": "text",
+          "text": "데이터분석가",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/데이터분석가일반"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "나 "
+        },
+        {
+          "type": "text",
+          "text": "산업조사분석원",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/산업조사분석원"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 같은 직종으로의 확장도 가능하다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "유사 자격증 비교 — ADsP, 빅데이터분석기사, SQLD"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "데이터 관련 자격증은 여러 종류가 있어 선택에 혼란을 겪는 경우가 많다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 15,
+            "text": "코드잇 블로그 - 제일 쓸모있는 데이터분석 자격증은?",
+            "url": "https://sprint.codeit.kr/blog/%EC%A0%9C%EC%9D%BC-%EC%93%B8%EB%AA%A8%EC%9E%88%EB%8A%94-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D-%EC%9E%90%EA%B2%A9%EC%A6%9D%EC%9D%80-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%A2%85%EB%A5%98-%EB%B0%8F-%EC%B6%94%EC%B2%9C"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 각 자격증의 특성을 비교해 본다."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "구분", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "사회조사분석사 2급", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "ADsP", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "빅데이터분석기사", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableHeader", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "SQLD", "marks": [{"type": "bold"}]}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "자격 유형", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "국가기술자격"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "국가공인 민간자격"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "국가기술자격"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "국가공인 민간자격"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "핵심 초점", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "사회과학 통계방법론, 설문조사 설계·분석"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "데이터 이해·분석 기획, 이론 중심"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "빅데이터 수집·분석, Python/R 프로그래밍"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "SQL, 데이터베이스 설계·쿼리"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "실기 도구", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "SPSS"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "없음 (이론만)"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "Python, R"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "SQL"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "난이도", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "중 (3~6개월)"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "중상"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "상 (IT 배경 필요)"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "중"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "합격률", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "필기 57~75%, 실기 62~71%"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "약 50~60%"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "필기 40~50%, 실기 30~40%"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "약 40~50%"}]}]}
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "추천 직군", "marks": [{"type": "bold"}]}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "리서치·조사·통계, 공공기관"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "마케터·기획직, 비개발 직군"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "데이터사이언티스트, IT 직군"}]}]},
+            {"type": "tableCell", "content": [{"type": "paragraph", "content": [{"type": "text", "text": "DB 관리자, 백엔드 개발자"}]}]}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "사회조사분석사와 ADsP의 가장 큰 차이는 실기 유무이다. 사회조사분석사는 SPSS를 이용한 실기 시험이 포함되어 있어 실무 능력을 직접 검증하는 반면, ADsP는 이론 위주의 필기시험만 있다. 사회조사분석사의 커리큘럼은 순수 사회과학 통계 과정(분산분석 중시)과 거의 일치하고, ADsP는 경영정보학과 프로그래밍 융합(모델링 중시) 방향이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 16,
+            "text": "나무위키 - 사회조사분석사",
+            "url": "https://namu.wiki/w/%EC%82%AC%ED%9A%8C%EC%A1%B0%EC%82%AC%EB%B6%84%EC%84%9D%EC%82%AC"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "빅데이터분석기사는 Python이나 R로 코딩하는 실기가 핵심이라 IT 직군에 적합하고, SQLD는 데이터베이스 쿼리 능력을 검증하는 자격증이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 17,
+            "text": "나무위키 - 빅데이터분석기사",
+            "url": "https://namu.wiki/w/%EB%B9%85%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B6%84%EC%84%9D%EA%B8%B0%EC%82%AC"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". "
+        },
+        {
+          "type": "text",
+          "text": "마케터·기획직·공공기관 지망생",
+          "marks": [{"type": "bold"}]
+        },
+        {
+          "type": "text",
+          "text": "이라면 사회조사분석사 2급 + ADsP 조합이 가장 효율적이다. "
+        },
+        {
+          "type": "text",
+          "text": "IT/데이터엔지니어 직군 지망생",
+          "marks": [{"type": "bold"}]
+        },
+        {
+          "type": "text",
+          "text": "이라면 빅데이터분석기사 + SQLD 조합을 추천한다. "
+        },
+        {
+          "type": "text",
+          "text": "행정학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/행정학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "나 "
+        },
+        {
+          "type": "text",
+          "text": "정치외교학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/정치외교학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 학생이 공공기관 취업을 노리는 경우, 사회조사분석사 2급은 가장 먼저 취득해야 할 자격증이다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "자주 묻는 질문"
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "비전공자인데 독학으로 합격할 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "충분히 가능하다. 사회조사분석사 2급은 응시 자격에 학력·전공 제한이 없으며, 비전공자도 3~6개월 독학으로 합격하는 사례가 많다. 다만 사회통계 과목은 통계학 기초 지식이 필요하므로, 이 과목에 학습 시간을 넉넉히 배분하는 전략이 필요하다. 무료 온라인 강의(G-Seek 등)와 기출문제 사이트를 적극 활용하면 교재 한두 권만으로도 합격할 수 있다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "사회조사분석사 2급과 ADsP 중 어느 것을 먼저 따야 하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "목표 직군에 따라 다르다. 공공기관·리서치 직군을 지향한다면 사회조사분석사 2급을 먼저 취득하는 것이 좋다. 공무원 가산점과 공공기관 채용 우대에서 직접적인 이점이 있기 때문이다. 반면 마케팅·기획직이나 IT 기업에서의 데이터 리터러시를 강조하고 싶다면 ADsP가 더 범용적이다. 시간 여유가 있다면 사회조사분석사 2급을 먼저 취득한 뒤 ADsP를 추가로 취득하면 두 영역 모두를 커버할 수 있다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "SPSS를 구매해야 하나요? 무료 대안이 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "시험장에서는 SPSS가 설치되어 있으므로 별도로 구매할 필요는 없다. 다만 실습을 위해서는 SPSS를 사용해야 하는데, 대학생이라면 학교 컴퓨터실에 설치된 SPSS를 활용할 수 있다. 졸업생이나 직장인은 IBM SPSS 무료 체험판(14일)을 이용하거나, 학원·인강 업체에서 제공하는 원격 실습 환경을 활용하는 방법이 있다. JASP나 jamovi 같은 무료 통계 소프트웨어로 개념을 익힌 뒤, 시험 직전에 SPSS 인터페이스에 적응하는 전략도 가능하다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "필기 합격 후 실기를 다음 회차에 봐도 되나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "가능하다. 필기시험 합격 유효기간은 2년이므로, 그 안에 실기시험에 합격하면 된다. 필기와 실기를 같은 회차에 한꺼번에 준비하는 것이 가장 효율적이지만, 시간이 부족하다면 필기를 먼저 합격한 뒤 다음 회차에 실기를 보는 것도 좋은 전략이다. 특히 SPSS 실습 시간이 부족한 경우, 필기 합격 후 2~3개월간 실기에만 집중하면 합격 확률을 높일 수 있다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "사회조사분석사 2급만으로 취업이 가능한가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "이 자격증 하나만으로 취업이 결정되는 것은 아니지만, 특정 직군에서는 강력한 가점 요소로 작용한다. 통계 직렬 공무원 시험에서 5~3%의 가산점을 받을 수 있고, 여러 공공기관에서 채용 시 우대하거나 필수 조건으로 요구한다. 민간 리서치 업체에서도 조사분석 업무 지원 시 사회조사분석사 2급 보유자를 우대하는 공고가 많다. 다만 이 자격증을 기반으로 ADsP나 컴퓨터활용능력 같은 관련 자격증을 추가 취득하면 경쟁력이 훨씬 높아진다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "사회조사분석사 1급과 2급의 차이는 무엇인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "가장 큰 차이는 응시 자격이다. 2급은 누구나 응시할 수 있지만, 1급은 관련 분야 실무경력이 필요하다(기사 취득 후 1년, 산업기사 취득 후 3년 등). 시험 난이도도 1급이 훨씬 높으며, 실무에서 조사를 설계하고 관리하는 관리자급 역량을 평가한다. 대부분의 채용 공고에서는 2급만으로도 충분한 경우가 많으므로, 먼저 2급을 취득한 뒤 경력을 쌓으면서 1급 취득을 고려하는 것이 현실적이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "사회조사분석사 2급 합격 체크리스트"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Q-net 회원가입과 원서접수 일정을 캘린더에 등록했는가? 접수 기간은 4일뿐이므로 놓치면 다음 회차까지 기다려야 한다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "교재를 선택했는가? 필기 기본서 1권과 실기 기본서 1권이면 충분하다. 여러 권을 펼쳐놓는 것보다 한 권을 여러 번 반복하는 것이 효과적이다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "사회통계 과목 학습 계획을 별도로 세웠는가? 전체 학습 시간의 40~50%를 이 과목에 투자해야 과락을 피할 수 있다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "SPSS 실습 환경을 확보했는가? 대학 컴퓨터실, 무료 체험판, 인강 원격 실습 등 방법을 미리 정해 두어야 한다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "기출문제 3년치(9회분)를 확보했는가? CBT 기출문제 사이트(comcbt.com)를 활용하면 무료로 풀 수 있다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "실기 필답형 요약 노트를 작성하기 시작했는가? 서술형 답안은 손으로 직접 써보며 연습해야 시험장에서 당황하지 않는다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "사회조사분석사 2급, 핵심 정리"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "국가기술자격으로, 학력·전공 제한 없이 누구나 응시할 수 있다. 연 3회 시행되며, 총 비용은 독학 기준 약 10만 원 수준이다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "필기(객관식 100문항)와 실기(작업형+필답형)로 구성된다. 사회통계 과목이 최대 난관이며, 과락 방지에 집중해야 한다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "비전공자도 8주(하루 3~5시간) 독학으로 합격 가능하다. 기출문제 반복과 SPSS 실습이 합격의 핵심이다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "통계 직렬 공무원 시험 가산점(7급 3%, 9급 5%)과 다수 공공기관 채용 우대가 가장 큰 실질적 혜택이다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "마케터·기획직·공공기관 지망생이라면 사회조사분석사 2급 + ADsP 조합이 가장 실용적인 자격증 포트폴리오이다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

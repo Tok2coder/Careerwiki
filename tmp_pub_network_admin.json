@@ -1,0 +1,786 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "네트워크관리사 2급이란 — IT 인프라의 첫 관문" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "네트워크관리사는 " },
+        { "type": "text", "text": "(사)한국정보통신자격협회(ICQA)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "가 시행하는 " },
+        { "type": "text", "text": "국가공인 민간자격증", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다" },
+        { "type": "footnote", "attrs": { "id": 1, "text": "ICQA 공식 - 네트워크관리사 2급 자격증 안내", "url": "https://www.icqa.or.kr/cn/page/network" } },
+        { "type": "text", "text": ". 2002년 1월 ICQA 자격증 중 최초로 국가공인 전환이 이루어졌으며, 등급은 1급과 2급으로 나뉜다. 다만 현재 국가공인 자격은 2급뿐이고, 1급은 민간자격 상태이다. 서버 구축, 보안 설정, 시스템 최적화 등 네트워크 인프라 전반의 구축·관리 능력을 검증하는 시험으로, 응시자격 제한이 전혀 없어 중·고등학생을 포함해 누구나 도전할 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "네트워크관리사 2급의 유효기간은 " },
+        { "type": "text", "text": "5년", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다" },
+        { "type": "footnote", "attrs": { "id": 2, "text": "민간자격정보서비스 - 네트워크관리사 기본정보", "url": "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=351" } },
+        { "type": "text", "text": ". 1급은 유효기간이 없지만, 2급은 5년마다 갱신이 필요하다는 점을 미리 알아두어야 한다. IT 업계에서 이 자격증은 입문 단계의 기초 역량을 증명하는 역할을 하며, " },
+        { "type": "text", "text": "네트워크엔지니어", "marks": [{ "type": "link", "attrs": { "href": "/job/네트워크엔지니어" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "정보보안전문가", "marks": [{ "type": "link", "attrs": { "href": "/job/정보보안전문가" } }] },
+        { "type": "text", "text": "를 목표로 하는 사람들이 첫 번째로 취득하는 자격증이기도 하다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "시험은 " },
+        { "type": "text", "text": "필기(이론)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "와 " },
+        { "type": "text", "text": "실기(작업형)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 2단계로 구성된다. 필기에 합격해야 실기에 응시할 수 있으며, 필기 합격 후 " },
+        { "type": "text", "text": "2년 이내", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "에 실기를 통과해야 한다. 전체 합격률은 약 30% 수준으로 알려져 있으나" },
+        { "type": "footnote", "attrs": { "id": 3, "text": "나무위키 - 네트워크관리사", "url": "https://namu.wiki/w/%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC%EA%B4%80%EB%A6%AC%EC%82%AC" } },
+        { "type": "text", "text": ", 문제은행 방식 출제라서 기출문제를 충분히 학습하면 필기 자체는 크게 어렵지 않다. 실기가 실질적인 승부처라고 보면 된다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "시험 구조와 일정 — 필기 4과목, 실기 5영역, 연 4회" }]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "필기시험" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "필기시험은 객관식 택일형으로, 총 " },
+        { "type": "text", "text": "50문항을 50분", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 안에 풀어야 한다. 4개 과목에서 고르게 출제되며, " },
+        { "type": "text", "text": "과락 제도가 없다", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ". 총점 100점 만점에서 60점 이상이면 합격이다" },
+        { "type": "footnote", "attrs": { "id": 4, "text": "ICQA 공식 - 네트워크관리사 2급 자격증 안내", "url": "https://www.icqa.or.kr/cn/page/network" } },
+        { "type": "text", "text": ". 즉, 특정 과목에서 0점을 받더라도 나머지 과목 합산이 60점을 넘기면 합격할 수 있다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "주요 내용" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "출제 비중" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "네트워크 일반" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "OSI 7계층, LAN/WAN 구조, 프로토콜 기초" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 25%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "TCP/IP" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "IP 주소 체계, 서브넷팅, TCP/UDP, 라우팅" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 25%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "NOS(Network OS)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "윈도우 서버, 리눅스 기본 명령어, 사용자 관리" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 25%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "네트워크 운용기기" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "라우터, 스위치, 허브 등 장비 운용 및 설정" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 25%" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "실기시험" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실기시험은 작업형으로, 총 " },
+        { "type": "text", "text": "18문항을 80분", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 안에 풀어야 한다" },
+        { "type": "footnote", "attrs": { "id": 5, "text": "velog - 네트워크관리사 2급 실기 준비과정 및 합격 후기", "url": "https://velog.io/@yesslee31/%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC%EA%B4%80%EB%A6%AC%EC%82%AC-2%EA%B8%89-%EC%8B%A4%EA%B8%B0-%EC%A4%80%EB%B9%84%EA%B3%BC%EC%A0%95-%EB%B0%8F-%ED%95%A9%EA%B2%A9-%ED%9B%84%EA%B8%B0" } },
+        { "type": "text", "text": ". 5개 영역에서 출제되며, 총점 100점 만점에서 60점 이상이면 합격이다. 문항당 배점이 다르기 때문에, 고배점 영역을 전략적으로 공략하는 것이 중요하다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "영역" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문항 수" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "배점" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제한시간" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비고" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "케이블링" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1문제" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "6.5점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "10분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "UTP 케이블 직접 제작" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "윈도우 서버" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "8문제" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "각 5.5점 (44점)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "DNS, DHCP, IIS 등 설정" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "리눅스 서버" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2문제" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "각 5.5점 (11점)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "ifconfig, route, chmod 등" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "네트워크 단답형" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "4문제" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "각 5.5점 (22점)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "이론 기반 서술/단답" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "라우터 설정" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3문제" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "각 5.5점 (16.5점)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "-" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "hostname, interface, routing" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실기에서 가장 비중이 큰 영역은 " },
+        { "type": "text", "text": "윈도우 서버(44점)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 8문제 중 7문제만 맞혀도 38.5점을 확보할 수 있으므로, 윈도우 서버를 확실히 준비하면 합격에 훨씬 유리해진다. 케이블링은 배점이 6.5점뿐이지만, 시간이 별도로 10분 주어지고 연습만 하면 거의 만점이 가능한 영역이라 절대 포기하면 안 된다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "시험 일정과 접수" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "네트워크관리사 2급 정기검정은 " },
+        { "type": "text", "text": "연 4회", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 시행된다" },
+        { "type": "footnote", "attrs": { "id": 6, "text": "정보통신신문 - 한국정보통신자격협회 2026년 자격검정 일정 공개", "url": "https://www.koit.co.kr/news/articleView.html?idxno=204616" } },
+        { "type": "text", "text": ". 시험 지역은 서울, 인천, 수원, 대전, 대구, 부산, 광주, 제주 총 8개 도시이며, 접수는 ICQA 공식 홈페이지(www.icqa.or.kr)에서 " },
+        { "type": "text", "text": "인터넷으로만", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 가능하다" },
+        { "type": "footnote", "attrs": { "id": 7, "text": "ICQA 공식 홈페이지", "url": "https://www.icqa.or.kr/cn/" } },
+        { "type": "text", "text": ". 결제는 무통장입금, 신용카드, 온라인이체가 가능하고, 환불은 시험일 3일 전까지 신청할 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "정기검정 외에 " },
+        { "type": "text", "text": "단체검정", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "도 별도로 운영된다. 단체검정은 대학교, 학원 등이 신청할 수 있고, 월 1회 시행되며 필기와 실기를 같은 날 응시할 수 있다는 장점이 있다. 군 검정도 별도로 시행되므로, 군 복무 중인 수험생도 응시가 가능하다. 응시료는 " },
+        { "type": "text", "text": "필기 43,000원, 실기 78,000원으로 합계 121,000원", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 접수 기간이 보통 3일 정도로 매우 짧으니, ICQA 홈페이지에서 일정을 미리 확인하고 접수일에 바로 신청하는 것이 좋다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-network-admin-img1.webp",
+        "alt": "네트워크관리사 2급 UTP 케이블링 실기 실습 장면",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "공부법과 합격 전략" }]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "필기 — 기출문제가 곧 교과서" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "네트워크관리사 필기는 " },
+        { "type": "text", "text": "문제은행 방식", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로 출제된다. 이 말은 기존에 출제된 문제가 그대로 또는 약간 변형되어 반복 출제된다는 뜻이다. 기출문제 3~4회분만 반복 풀이해도 실제 시험에서 절반 이상 유사한 문제를 만날 수 있다" },
+        { "type": "footnote", "attrs": { "id": 8, "text": "개발자 최솔이 - 네트워크 관리사 2급 필기 합격 수기", "url": "https://solyi.kr/229" } },
+        { "type": "text", "text": ". TCP/IP 과목에서 서브넷 마스크 계산 문제가 매회 거의 동일한 유형으로 출제되고, OSI 7계층 관련 문제도 선지만 바뀌는 경우가 많다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "공부 순서는 다음과 같이 진행하면 효율적이다. 먼저 교재나 인강으로 4개 과목의 이론을 한 번 훑는다. 이 단계에서 완벽히 이해하려고 시간을 쓸 필요는 없다. 그다음 무료 CBT 사이트에서 기출문제를 회차별로 풀면서 오답 노트를 정리한다. " },
+        { "type": "text", "text": "comcbt.com", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이나 " },
+        { "type": "text", "text": "gunsys.com", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 같은 무료 CBT 사이트를 활용하면 된다" },
+        { "type": "footnote", "attrs": { "id": 9, "text": "comcbt - 네트워크관리사 2급 필기 기출문제 CBT", "url": "https://www.comcbt.com/xe/jf" } },
+        { "type": "text", "text": ". 스마트폰 기출 앱도 출퇴근 시간이나 자투리 시간에 활용하기 좋다. IT 기초가 있는 사람이라면 3~5일, 비전공자라면 1~2주 정도면 필기 합격선에 도달할 수 있다." }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "1회독: ", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": "교재 또는 유튜브 무료 강의로 4과목 이론 빠르게 훑기 (2~3일)" }
+          ] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "기출 풀이: ", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": "CBT 기출문제 3~4회분 풀기 + 오답 정리 (2~3일)" }
+          ] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "반복 학습: ", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": "틀린 문제 재풀이 + 추가 회차 풀기로 약점 보완 (1~2일)" }
+          ] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "최종 점검: ", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": "시험 전날 오답 노트 최종 복습, 60점 이상 안정적으로 나오는지 확인" }
+          ] }]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "실기 — 영역별 각개격파 전략" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실기는 필기와 난이도 차이가 크다. 직접 장비를 만지고, 서버를 설정하고, 명령어를 입력해야 하기 때문에 " },
+        { "type": "text", "text": "손으로 익히는 연습", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이 필수이다. 실기 준비 기간은 비전공자 기준 2~3주, 관련 전공자 기준 1~2주 정도를 잡으면 된다. 영역별 준비 전략은 다음과 같다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "케이블링", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ": UTP 케이블을 직접 만드는 실습이다. 다이렉트 케이블(T568B 양쪽 동일)과 크로스 케이블(T568A-T568B) 두 가지를 연습해야 한다" },
+        { "type": "footnote", "attrs": { "id": 10, "text": "gigtalk - 네트워크관리사 2급 실기 다이렉트 랜 케이블 제작방법 및 팁", "url": "https://www.gigtalk.co.kr/post/814297" } },
+        { "type": "text", "text": ". T568B 배선 순서(백주-주-백녹-파-백파-녹-백갈-갈)는 반드시 외워야 한다. 피복은 약 3cm 정도 벗기고, 8가닥 선을 정확한 순서로 일렬 정렬한 뒤 RJ-45 커넥터에 꽉 밀어넣고 랜툴로 압착하면 된다. 시험장 비치 도구의 상태가 좋지 않을 수 있으므로, " },
+        { "type": "text", "text": "개인 랜툴과 스트리퍼를 지참하는 것을 강력히 권장", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "한다. 랜툴 키트는 중고로 15,000~20,000원이면 구할 수 있고, 구성은 보통 랜툴+스트리퍼+RJ-45 커넥터 90개+케이블타이+연습용 케이블+테스터기가 포함된다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "윈도우 서버", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ": 8문제로 배점이 가장 높은 영역(44점)이다. DNS 영역 생성, DHCP 범위 구성, IIS 웹 서버 사이트 설정, 로컬 사용자 및 그룹 관리, 공유 폴더 권한 설정 등이 출제된다. ICQA 자료실에서 제공하는 에뮬레이터 프로그램을 설치해 반복 연습하는 것이 가장 효과적이다. 실제 윈도우 서버가 없어도 에뮬레이터만으로 충분히 대비할 수 있다. 출제 패턴이 정형화되어 있어서, 기출 유형 5~6가지만 확실히 익히면 대부분 해결할 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "리눅스", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ": 2문제밖에 나오지 않지만 11점이므로 무시할 수 없다. ifconfig(IP 설정), route(라우팅 테이블 관리), chmod(파일 권한 변경), useradd(사용자 추가), cat/vi(파일 편집) 등 기본 명령어의 옵션과 문법을 암기하면 된다. 리눅스를 한 번도 써본 적 없는 사람이라면, WSL(Windows Subsystem for Linux)이나 VirtualBox에 Ubuntu를 설치해서 직접 터미널을 만져보는 것이 도움이 된다. " },
+        { "type": "text", "text": "컴퓨터공학과", "marks": [{ "type": "link", "attrs": { "href": "/major/컴퓨터공학과" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "정보통신과", "marks": [{ "type": "link", "attrs": { "href": "/major/정보통신과" } }] },
+        { "type": "text", "text": " 재학생이라면 수업에서 다룬 내용과 겹치는 부분이 많을 것이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "라우터 설정", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ": hostname 변경, enable password 설정, interface IP 할당, static/default routing 설정 등이 기출 패턴이다" },
+        { "type": "footnote", "attrs": { "id": 11, "text": "velog - 네트워크관리사 2급 실기 라우터 문제 모음", "url": "https://velog.io/@zlevn/%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC%EA%B4%80%EB%A6%AC%EC%82%AC-2%EA%B8%89-%EC%8B%A4%EA%B8%B0-%EB%9D%BC%EC%9A%B0%ED%84%B0-%EB%AC%B8%EC%A0%9C-%EB%AA%A8%EC%9D%8C" } },
+        { "type": "text", "text": ". Cisco IOS 명령어 체계를 기본으로 하지만, 실제로 물리 장비를 다루는 것은 아니고 에뮬레이터에서 CLI 명령을 입력하는 방식이다. enable → configure terminal → hostname ROUTER → interface fastethernet 0/0 → ip address 192.168.1.1 255.255.255.0 → no shutdown 같은 기본 흐름을 손에 익혀두면 된다. 명령어 하나하나를 암기하기보다 전체 흐름을 반복 연습하는 것이 효과적이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "네트워크 단답형", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ": 이론 기반 서술/단답 문제로, 필기에서 학습한 내용이 거의 그대로 나온다. OSI 계층별 프로토콜, 서브넷 마스크 계산, 네트워크 장비 역할 구분, IP 클래스 분류 등이 빈출 주제이다. 필기 공부를 충실히 했다면 별도 준비가 거의 필요 없는 영역이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "비용과 추천 교재" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "네트워크관리사 2급 취득에 드는 총비용은 생각보다 크지 않다. 한 번에 합격한다면 약 " },
+        { "type": "text", "text": "17만~19만 원", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 선에서 해결이 가능하다. 아래 표에서 항목별 비용을 정리했다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "항목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비용" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비고" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 응시료" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "43,000원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1회 기준" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기 응시료" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "78,000원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1회 기준" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교재" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "25,000~30,000원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "통합교재 1권 기준" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "랜툴 키트" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "15,000~30,000원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "중고 기준, 커넥터·케이블 포함" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CBT·유튜브 강의" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "무료" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "comcbt, gunsys, 유튜브" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합계", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 170,000~190,000원", "marks": [{ "type": "bold" }] }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1회 합격 기준 최소 비용" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "추천 교재는 크게 두 가지이다. 첫 번째는 성안당에서 출판한 " },
+        { "type": "text", "text": "「2025 최적합 네트워크관리사 1·2급 필기+실기」(허준 저)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "로, 2020~2024년 기출문제가 수록되어 있고 무료 동영상 강의와 CBT 모의고사를 함께 제공한다" },
+        { "type": "footnote", "attrs": { "id": 12, "text": "교보문고 - 2025 최적합 네트워크관리사 1·2급 필기+실기", "url": "https://product.kyobobook.co.kr/detail/S000213673627" } },
+        { "type": "text", "text": ". 두 번째는 영진닷컴의 " },
+        { "type": "text", "text": "「이기적 네트워크관리사 1·2급 필기+실기 올인원」", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로, 이론·기출·실기 실습이 한 권에 담겨 있다" },
+        { "type": "footnote", "attrs": { "id": 13, "text": "교보문고 - 이기적 네트워크관리사 1·2급 필기+실기 올인원", "url": "https://product.kyobobook.co.kr/detail/S000214158140" } },
+        { "type": "text", "text": ". 어떤 교재를 선택하든 한 권이면 필기와 실기를 모두 커버할 수 있다. 교재 없이 무료 자료만으로 합격하는 것도 충분히 가능하지만, 실기 부분은 교재의 캡처 화면과 단계별 설명이 도움이 되므로 한 권 정도는 구비하는 것을 추천한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "취업·진로 활용과 커리어 패스" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "네트워크관리사 2급은 IT 인프라 분야의 " },
+        { "type": "text", "text": "입문 자격증", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "으로 포지셔닝되어 있다. 이 자격증이 주로 활용되는 직무와 분야는 다음과 같다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "네트워크 엔지니어", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": " — 기업 네트워크 설계·구축·운영·장애 대응을 담당한다. 스위치, 라우터, 방화벽 등 장비를 직접 다루는 직무이다." }
+          ] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "서버/시스템 관리자", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": " — " },
+            { "type": "text", "text": "웹서버관리원", "marks": [{ "type": "link", "attrs": { "href": "/job/웹서버관리원" } }] },
+            { "type": "text", "text": " 등 사내 인프라를 운영하며, 윈도우/리눅스 서버 관리 역량이 필요하다." }
+          ] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "IDC 운영", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": " — " },
+            { "type": "text", "text": "인터넷데이터센터관리자", "marks": [{ "type": "link", "attrs": { "href": "/job/인터넷데이터센터관리자" } }] },
+            { "type": "text", "text": "로서 서버 모니터링, 장애 대응, 입출입 관리 등을 수행한다." }
+          ] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "보안관제", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": " — 보안관제센터(SOC)에서 네트워크 트래픽을 모니터링하고, 침입 탐지·대응 업무를 수행한다." }
+          ] }]
+        },
+        {
+          "type": "listItem",
+          "content": [{ "type": "paragraph", "content": [
+            { "type": "text", "text": "전산직 공무원", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": " — 정보통신·전산직 공무원 채용 시 가산점이 부여된다." }
+          ] }]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "잡코리아 등 채용 플랫폼에서 네트워크관리사 2급 우대 공고를 검색하면, 중소기업 IT부서, IT인프라 운영 대행사, 통신사 협력업체 등에서 다수의 공고를 확인할 수 있다" },
+        { "type": "footnote", "attrs": { "id": 14, "text": "잡코리아 - 네트워크관리사 2급 채용정보", "url": "https://www.jobkorea.co.kr/recruit/joblist?license=1301002" } },
+        { "type": "text", "text": ". 다만 솔직히 말해서, " },
+        { "type": "text", "text": "네트워크관리사 2급 단독으로는 취업 경쟁력이 제한적", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 정보처리기사나 리눅스마스터 같은 자격증을 함께 취득하거나, CCNA 같은 국제 자격증으로 확장해야 실질적인 경쟁력이 생긴다" },
+        { "type": "footnote", "attrs": { "id": 15, "text": "링커리어 - 네트워크관리사 1급·2급 2025년 시험일정, 쓸모, 현실 정리", "url": "https://community.linkareer.com/employment_data/4959061" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "커리어 패스를 그려보면, " },
+        { "type": "text", "text": "네트워크관리사 2급(입문) → 1급(실무) → CCNA/CCNP(글로벌) 또는 정보보안기사(보안 특화)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "로 확장하는 경로가 가장 일반적이다. " },
+        { "type": "text", "text": "클라우드시스템엔지니어", "marks": [{ "type": "link", "attrs": { "href": "/job/클라우드시스템엔지니어" } }] },
+        { "type": "text", "text": "로 진로를 잡는다면 AWS/Azure 자격증을 추가로 준비하는 것도 좋은 선택이다. " },
+        { "type": "text", "text": "정보보호학과", "marks": [{ "type": "link", "attrs": { "href": "/major/정보보호학과" } }] },
+        { "type": "text", "text": " 졸업생이라면 네트워크관리사를 발판으로 보안 분야에 특화하는 전략이 효과적이다. 신입 IT인프라 직무의 초봉은 업체 규모에 따라 2,500만~3,500만 원 수준이며, 경력 3~5년차에 네트워크 전문 직무로 자리를 잡으면 4,000만~5,500만 원 수준까지 상승이 기대된다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "유사 자격증 비교" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "네트워크관리사 2급을 준비하는 사람이라면, 비슷한 영역의 다른 자격증과 비교해보고 자신의 목표에 맞는 조합을 선택하는 것이 중요하다. 아래 표에서 주요 IT 자격증의 특성과 난이도를 비교했다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자격증" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시행기관" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "특징" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "난이도" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "네트워크관리사 2급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "ICQA" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "네트워크 구축·관리 입문" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "중하" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "121,000원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "정보처리기사" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국산업인력공단" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "SW 개발 전반 범용 자격" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "중" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 40,000원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CCNA" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Cisco" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "글로벌 네트워크 전문 자격" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "중상" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 330,000원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "리눅스마스터 2급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "KAIT" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "리눅스 서버/OS 관리" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "중하" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "무료(온라인)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "PC정비사 2급" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "ICQA" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "하드웨어/소프트웨어 정비" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "하" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "121,000원" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "IT 취업을 목표로 한다면, " },
+        { "type": "text", "text": "네트워크관리사 2급 + 정보처리기사", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 조합이 가장 범용적이다. 네트워크 전문 직무를 목표로 한다면 네트워크관리사 2급을 시작점으로 잡고, 이후 CCNA로 확장하는 것이 현실적인 로드맵이다. 리눅스마스터 2급은 네트워크관리사와 겹치는 영역이 많아서 동시에 준비하면 시너지가 좋고, " },
+        { "type": "text", "text": "컴퓨터시스템엔지니어", "marks": [{ "type": "link", "attrs": { "href": "/job/컴퓨터시스템엔지니어" } }] },
+        { "type": "text", "text": " 직무에서는 두 자격증을 모두 우대하는 경우가 많다. 난이도 순으로 보면 PC정비사 2급이 가장 쉽고, 그다음이 네트워크관리사 2급과 리눅스마스터 2급(비슷한 수준), 정보처리기사, CCNA 순으로 어려워진다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "자주 묻는 질문" }]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자인데 네트워크관리사 2급을 독학으로 딸 수 있나요?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "충분히 가능하다. 필기는 문제은행 방식이라 기출문제 반복 풀이만으로도 합격할 수 있고, 실기도 ICQA 에뮬레이터와 유튜브 강의를 활용하면 독학이 가능하다. 비전공자 기준으로 필기 1~2주, 실기 2~3주 정도 잡으면 된다. 다만 케이블링 실습은 반드시 실물 키트를 구매해서 손으로 직접 연습해야 한다. 화면으로만 보고 시험장에 가면 선 정렬이나 압착 감각이 없어서 당황할 수 있다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기와 실기를 같은 날 볼 수 있나요?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "정기검정에서는 불가능하다. 필기에 먼저 합격한 후 실기에 응시하는 구조이다. 다만 단체검정의 경우 필기와 실기를 같은 날 응시할 수 있다. 단체검정은 대학교나 학원 등이 신청하며, 월 1회 시행된다. 소속 학교나 학원에서 단체검정을 운영하는지 확인해보면 시간을 크게 절약할 수 있다. 군 검정도 별도로 운영되니, 군 복무 중이라면 부대 내 교육 담당 부서에 문의하면 된다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격률이 30%인데, 실기가 그렇게 어려운 건가요?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "30%는 필기+실기 통합 합격률이다. 필기만 놓고 보면 기출만 잘 풀면 합격률이 상당히 높은 편이지만, 실기에서 탈락하는 비율이 높아 전체 합격률이 내려간다. 실기가 어려운 이유는 다양한 영역(케이블링, 윈도우 서버, 리눅스, 라우터)을 한꺼번에 치러야 하고, 시간이 80분으로 빠듯하기 때문이다. 특히 케이블링에서 실패하면 6.5점이 날아가고, 윈도우 서버에서 2~3문제만 틀려도 합격이 어려워진다. 하지만 출제 패턴이 정형화되어 있으므로, 기출 유형을 충분히 연습하면 60점은 무난히 넘길 수 있다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "네트워크관리사 2급과 CCNA 중 어떤 것을 먼저 따야 하나요?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "입문자라면 네트워크관리사 2급을 먼저 취득하는 것을 권장한다. CCNA는 영어 시험이고 응시료가 약 33만 원으로 비싸며, 네트워크 기초 지식이 없으면 학습 효율이 크게 떨어진다. 네트워크관리사 2급으로 OSI 모델, TCP/IP, 라우팅 등의 기초를 잡은 뒤 CCNA에 도전하면 학습 곡선이 훨씬 완만해진다. 라우터 설정 실기에서 Cisco IOS 명령어를 다루기 때문에, CCNA 준비의 예습 효과도 있다. 이미 네트워크 기초가 탄탄한 사람이라면 CCNA를 바로 준비해도 무방하다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "유효기간이 5년인데, 갱신은 어떻게 하나요?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "네트워크관리사 2급의 유효기간은 합격일로부터 5년이다. 갱신을 위해서는 유효기간 만료 전에 ICQA에서 정하는 보수교육을 이수하거나, 상위 등급(1급) 취득 등의 방법이 있다. 다만 실무에서는 자격증 유효기간보다 실제 경력과 기술 역량이 더 중요하게 평가되므로, 갱신 자체에 지나치게 신경 쓸 필요는 없다. 취업 초기에 역량 증명 용도로 활용하고, 이후에는 경력과 상위 자격증으로 커리어를 확장하는 전략이 현실적이다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기 시험장에 개인 도구를 가져갈 수 있나요?" }] }]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "케이블링 영역에 한해서 개인 랜툴과 스트리퍼를 지참할 수 있다. 시험장에도 도구가 비치되어 있지만, 상태가 좋지 않거나 다른 응시자와 공유해야 하는 경우가 있으므로 개인 도구를 가져가는 것이 유리하다. 랜툴 키트를 미리 구매해서 연습용으로 쓰다가 시험 당일에도 그대로 가져가면 된다. 테스터기는 시험장에서 제공하므로 별도로 가져갈 필요는 없다. 참고로, 랜 케이블이나 RJ-45 커넥터는 시험장에서 지급하므로 별도 준비가 필요 없다." }] }]
+        }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "네트워크관리사 2급 합격 체크리스트" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "ICQA 홈페이지에서 다음 회차 접수일을 확인하고, 일정을 캘린더에 등록했는가?" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 기출문제를 최소 3회분 이상 풀어보고, 60점을 안정적으로 넘기는가?" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "UTP 케이블 제작 키트(랜툴, 스트리퍼, RJ-45 커넥터, 연습용 케이블)를 준비했는가?" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "T568B 배선 순서(백주-주-백녹-파-백파-녹-백갈-갈)를 외웠는가?" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "ICQA 자료실 에뮬레이터로 윈도우 서버 설정(DNS, DHCP, IIS)을 반복 실습했는가?" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "리눅스 기본 명령어(ifconfig, route, chmod, useradd)를 암기하고 실제로 입력해봤는가?" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "라우터 기출 패턴(hostname, enable password, interface, routing)을 에뮬레이터에서 연습했는가?" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험 당일 개인 랜툴·스트리퍼와 신분증을 챙겼는가?" }] }]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "네트워크관리사 2급, 핵심 정리" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "ICQA가 시행하는 국가공인 민간자격증으로, 응시 제한 없이 누구나 도전할 수 있다. 연 4회 시행되며, 필기·실기 모두 60점 이상이 합격 기준이다." }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기는 문제은행 방식이라 기출 3~4회분 반복 풀이가 핵심이다. 실기는 윈도우 서버(44점)에 가장 많은 비중을 두되, 케이블링은 개인 랜툴로 반복 연습하면 거의 만점이 가능하다." }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "총비용은 약 17만~19만 원(응시료 12.1만 + 교재 2.5~3만 + 랜툴 키트 1.5~3만)이며, 무료 CBT와 유튜브 강의를 활용하면 교재 없이도 합격이 가능하다." }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "네트워크관리사 2급 단독으로는 취업 경쟁력이 제한적이므로, 정보처리기사·리눅스마스터와 조합하거나 CCNA 등 국제 자격증으로 확장하는 것이 효과적이다." }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "네트워크엔지니어, IDC 관리, 보안관제, 전산직 공무원 등의 커리어 입문 자격증으로 활용되며, 유효기간은 5년이다." }] }]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

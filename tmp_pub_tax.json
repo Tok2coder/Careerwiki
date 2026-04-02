@@ -1,0 +1,3288 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "전산세무회계란 — 왜 이 자격증이 취업 시장의 '기본기'가 되었나"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전산세무회계는 한국세무사회가 주관하는 "
+        },
+        {
+          "type": "text",
+          "text": "국가공인 민간자격",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "으로, 회계 및 세무 실무 능력을 KcLep(케이렙) 프로그램을 통해 측정하는 시험이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 1,
+            "text": "한국세무사회 국가공인자격시험 - 시험개요",
+            "url": "https://license.kacpta.or.kr/web/info/info_outline.aspx"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 전산회계 2급·1급과 전산세무 2급·1급의 "
+        },
+        {
+          "type": "text",
+          "text": "4개 등급",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "으로 구성되어 있으며, 이론(30%)과 실기(70%)의 비율로 치러진다. 합격 기준은 100점 만점에 70점 이상이고, 절대평가이기 때문에 본인 실력만 충분하면 누구든 합격할 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "이 자격증이 취업 시장에서 갖는 위치는 독보적이다. 잡코리아나 사람인에서 '회계', '경리', '세무'로 검색하면 "
+        },
+        {
+          "type": "text",
+          "text": "거의 모든 공고에서 전산세무회계 자격증 보유자를 우대",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "한다. 세무사 사무소, 회계법인은 물론이고 중소·중견기업의 경리팀, 인사총무팀, 공공기관 행정직까지 — 숫자를 다루는 거의 모든 직무에서 이 자격증은 '최소한의 검증'으로 통한다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 2,
+            "text": "한국세무사회 국가공인자격시험 - 자격우대사항",
+            "url": "https://license.kacpta.or.kr/web/info/info_preference.aspx"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 특히 "
+        },
+        {
+          "type": "text",
+          "text": "전산회계 1급 + 전산세무 2급",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 조합은 취업 시장에서 가장 보편적이고 인정받는 세트이며, 비전공자도 독학으로 충분히 취득할 수 있다는 점이 이 자격증의 가장 큰 매력이다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "관련 직업으로는 "
+        },
+        {
+          "type": "text",
+          "text": "세무사",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/세무사"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "회계사",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/회계사"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "경리사무원",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/경리사무원"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "회계사무원",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/회계사무원"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "재무관리자",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/재무관리자"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 등이 있으며, "
+        },
+        {
+          "type": "text",
+          "text": "회계학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/회계학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "나 "
+        },
+        {
+          "type": "text",
+          "text": "세무학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/세무학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 전공자가 아니더라도 "
+        },
+        {
+          "type": "text",
+          "text": "경영학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/경영학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "경제학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/경제학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 등 인접 전공이면 기초 학습에 유리하다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "4개 등급, 어디서부터 시작해야 하는가"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전산세무회계는 전산회계 2급 → 전산회계 1급 → 전산세무 2급 → 전산세무 1급의 4단계로 구성된다. 각 등급은 시험 범위와 난이도가 명확하게 구분되어 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 3,
+            "text": "전산세무회계 - 나무위키",
+            "url": "https://namu.wiki/w/%EC%A0%84%EC%82%B0%EC%84%B8%EB%AC%B4%ED%9A%8C%EA%B3%84"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "등급"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "수준"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "시험 범위"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "평균 합격률"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "준비 기간"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산회계 2급",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "입문 (상고 졸업 수준)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "회계원리 기초"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "50~65%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "약 1개월"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산회계 1급",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "초급 (전문대 재학 수준)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "회계원리 + 원가회계 + 부가가치세법"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "40~55%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "1.5~2개월"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산세무 2급",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "중급 (전문대 졸업 수준)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "재무회계 + 원가회계 + 부가세 + 소득세 + 원천징수"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "25~40%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2~3개월"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산세무 1급",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "고급 (4년제 전공자 수준)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "재무회계 + 원가회계 + 부가세 + 소득세 + 법인세 전체"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "10~20%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "3~6개월"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전산회계와 전산세무의 가장 큰 차이는 "
+        },
+        {
+          "type": "text",
+          "text": "세무회계의 포함 여부",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이다. 전산회계는 회계원리와 원가회계가 중심이고, 전산세무는 여기에 부가가치세·소득세·법인세 등 세법이 추가된다. 전산세무 2급과 1급의 차이는 법인세의 포함 여부인데, 법인세 세무조정은 실무에서도 난이도가 높은 영역이기 때문에 전산세무 1급의 합격률은 연간 평균 10~20%에 불과하다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 4,
+            "text": "한국세무사회 국가공인자격시험 - 합격률",
+            "url": "https://license.kacpta.or.kr/web/info/info_ratio.aspx"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "그렇다면 어디서부터 시작해야 할까? 결론부터 말하면, "
+        },
+        {
+          "type": "text",
+          "text": "전산회계 2급은 건너뛰어도 무방하다",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ". 취업 시장에서 전산회계 2급만으로는 경쟁력이 약하고, 전산회계 1급부터가 실질적인 출발선이다. 가장 효율적인 루트는 "
+        },
+        {
+          "type": "text",
+          "text": "전산회계 1급 → 전산세무 2급 → (필요시) 전산세무 1급",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 순서다. 비전공자라면 전산회계 1급으로 기초를 다진 뒤 전산세무 2급에 도전하는 것이 안전하고, 회계학 전공자라면 곧바로 전산세무 2급부터 시작해도 된다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "시험 구조와 2026년 일정"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전산세무회계 시험은 모든 등급이 동일한 포맷으로 진행된다. 이론 30% + 실기 70% 구성이며, 시험 시간은 "
+        },
+        {
+          "type": "text",
+          "text": "90분",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이다. 이론은 객관식 4지선다형이고, 실기는 한국세무사회가 개발한 "
+        },
+        {
+          "type": "text",
+          "text": "KcLep(케이렙) 프로그램",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "에서 직접 전표를 입력하고 장부를 조회하며 신고서를 작성하는 방식이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 5,
+            "text": "KcLep 프로그램 설치부터 실전 활용까지 - 전산회계·세무 실기 완전 정복 가이드",
+            "url": "https://blue.tinybliss.co.kr/71"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 시험 중에는 인터넷, 메모장, 계산기 등 외부 프로그램 사용이 일절 금지되며, KcLep 내장 계산기만 사용할 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "등급별 실기 시험의 핵심 내용을 보면, 전산회계 1급은 전표 입력·결산 정리·부가가치세 신고서 작성이 주요 평가 항목이다. 전산세무 2급은 여기에 원천징수이행상황신고서 작성과 연말정산이 추가된다. 전산세무 1급은 법인세 세무조정까지 포함되어, 실무에서 다루는 거의 모든 세무 업무를 시험 범위로 삼고 있다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "2026년 시험은 총 6회 시행된다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 6,
+            "text": "2026년 국가공인 전산세무회계 자격시험 일정",
+            "url": "https://license.kacpta.or.kr/m/info/info_diary.aspx"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 시험 접수는 시험일 약 3~4주 전에 열리며, "
+        },
+        {
+          "type": "text",
+          "text": "접수 경쟁이 매우 치열하다",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ". 특히 수도권 시험장은 접수 개시 직후 마감되는 경우가 많으므로, 접수일 00:00에 즉시 접수하는 것을 권장한다."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "회차"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "시험일"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "비고"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "124회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2026. 1. 31"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "완료"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "125회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2026. 4. 4"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "예정"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "126회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2026. 6. 6"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "예정"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "127회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2026. 8. 1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "예정"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "128회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2026. 10. 3"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "예정"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "129회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2026. 12. 5"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "예정"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "시험 교시는 2교시(12:30)에 전산세무 2급·전산회계 2급, 3교시(15:00)에 전산세무 1급·전산회계 1급이 배정되어 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 7,
+            "text": "2026년 한국세무사회 전산세무, 전산회계, 세무회계, 기업회계 시험일정 공개 - ISSUE ON",
+            "url": "https://www.issueon.co.kr/news/articleView.html?idxno=10791"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 접수 후 시험일 5일 전까지는 100% 환불이 가능하고, 이후에는 50%만 환불된다. 응시료는 전 등급 공통 "
+        },
+        {
+          "type": "text",
+          "text": "30,000원",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이며, 합격 후 실물 자격증 발급비는 별도로 5,000~6,000원이 든다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "합격률 분석 — 회차별 편차가 크다는 것의 의미"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전산세무회계 시험의 가장 두드러진 특징 중 하나는 "
+        },
+        {
+          "type": "text",
+          "text": "회차별 합격률 편차가 매우 크다",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "는 점이다. 전산세무 2급을 예로 들면, 최근 10회차 합격률이 11.16%(118회)부터 61.69%(119회)까지 무려 50%포인트 이상 차이가 난다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 8,
+            "text": "한국세무사회 국가공인자격시험 - 합격률",
+            "url": "https://license.kacpta.or.kr/web/info/info_ratio.aspx"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 이는 상대평가가 아니라 절대평가(70점 이상)임에도 불구하고 난이도 조절이 일정하지 않기 때문이다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "최근 10회차(115회~124회) 합격률 데이터를 살펴보면 다음과 같다."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "회차"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산회계 2급"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산회계 1급"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산세무 2급"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산세무 1급"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "124회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "60.43%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "46.19%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "27.65%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "27.19%"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "122회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "47.87%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "57.45%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "46.38%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "11.53%"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "119회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "53.60%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "58.32%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "61.69%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "13.34%"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "118회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "64.86%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "37.37%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "11.16%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "12.86%"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "115회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "64.91%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "48.81%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "28.44%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "10.08%"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "이 편차가 시사하는 바는 명확하다. 어려운 회차에 걸리면 합격률이 10%대까지 떨어지므로, "
+        },
+        {
+          "type": "text",
+          "text": "한 번에 붙겠다는 전략보다는 '2~3회차 안에 합격한다'는 마인드",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "로 접근하는 것이 현실적이다. 또한 2021년 하반기부터 실무 문제 난이도가 전반적으로 상승하는 추세이므로"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 9,
+            "text": "전산세무 2급 난이도, 독학 준비 기간, 자격증 쓸모는?",
+            "url": "https://wackypedia.co.kr/%EC%A0%84%EC%82%B0%EC%84%B8%EB%AC%B4-2%EA%B8%89-%EB%82%9C%EC%9D%B4%EB%8F%84-%EB%8F%85%ED%95%99-%EC%A4%80%EB%B9%84-%EA%B8%B0%EA%B0%84-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%93%B8%EB%AA%A8/"
+          }
+        },
+        {
+          "type": "text",
+          "text": ", 과거 기출만으로는 부족하고 실무 응용 문제에 대한 대비도 필요하다. 전산세무 1급의 경우 연간 합격자가 100~300명 수준에 불과해 희소가치가 매우 높지만, 그만큼 법인세 세무조정이라는 난관을 넘어야 한다."
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-tax-accounting-img1.webp",
+        "alt": "전산세무회계 등급별 합격률 추이 및 준비 전략 요약",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "독학 공부법, 실기 공략, 그리고 교재 선택"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전산세무회계는 독학으로 충분히 합격할 수 있는 시험이다. 비전공자 기준 전산세무 2급은 약 3개월, 전산회계 1급은 약 2개월이면 준비할 수 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 10,
+            "text": "전산세무자격증 종류 및 1급 2급 난이도 합격률 취득 방법 - 모두의자격증",
+            "url": "https://miraclesetup.com/%EC%A0%84%EC%82%B0%EC%84%B8%EB%AC%B4%EC%9E%90%EA%B2%A9%EC%A6%9D/"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 핵심은 '실기 70%'라는 배점 구조를 제대로 이해하고 학습 시간을 배분하는 것이다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "1단계: 이론 1회독 (약 3~4주)",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "교재나 인강으로 전체 이론을 한 번 훑는다. 이 단계에서 완벽한 이해를 목표로 하면 안 된다. 회계원리의 차변·대변 개념, 계정과목의 분류 체계, 부가가치세의 기본 구조를 파악하는 것이 핵심이다. 세부 암기보다는 '큰 그림을 잡는 것'에 집중하자."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "2단계: KcLep 실기 연습 (약 3~4주)",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "한국세무사회 홈페이지에서 수험용 KcLep 프로그램을 무료로 다운로드할 수 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 11,
+            "text": "KcLep 프로그램 설치부터 실전 활용까지 - 전산회계·세무 실기 완전 정복 가이드",
+            "url": "https://blue.tinybliss.co.kr/71"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 사용기간 제한이 없으므로 충분히 연습할 수 있다. 연습 순서는 "
+        },
+        {
+          "type": "text",
+          "text": "전표 입력 → 계정과목 관리 → 장부 확인 → 부가가치세 신고서 작성",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 순서가 효율적이다. KcLep 단축키를 반드시 익혀두어야 한다. 시험 시간이 90분밖에 되지 않기 때문에 단축키 숙달 여부가 합격을 가른다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "3단계: 기출문제 반복 풀이 (약 2~3주)",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "최근 10회분 기출문제를 반복해서 풀어본다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 12,
+            "text": "전산세무2급 합격+독학비법 - 최대리전산세무회계 카페",
+            "url": "https://m.cafe.daum.net/winneo/K7M/338"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 기출문제는 전산세무회계 시험에서 가장 중요한 학습 자료이다. 같은 유형의 문제가 반복 출제되는 패턴이 있으므로, 틀린 문제를 정리한 오답노트를 만들어 취약 부분을 집중 보완해야 한다. comcbt.com에서 무료 CBT 형태로도 기출 문제를 풀어볼 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "4단계: 최종 정리 및 시간 배분 연습 (약 1주)",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "약한 파트를 집중 보완하면서, 90분 안에 이론 + 실기를 모두 완료하는 시간 배분 연습을 한다. 이론은 20~25분 안에 끝내고 실기에 65~70분을 투자하는 것이 이상적이다. 특히 부가가치세 부속서류 작성과 가산세 계산은 시간이 많이 소요되는 파트이므로 속도를 올려두어야 한다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "교재는 "
+        },
+        {
+          "type": "text",
+          "text": "에듀윌, 해커스금융, 최대리 전산세무회계",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 시리즈가 대표적이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 13,
+            "text": "전산회계/세무 교재 - 교보문고",
+            "url": "https://product.kyobobook.co.kr/category/KOR/332805"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 가격은 1권당 25,000~30,000원 수준이며, 유튜브에서 최대리, 셀파 등의 무료 강의도 병행하면 효과적이다. 유료 인강은 EBS(약 103,000원), 해커스금융, 에듀윌, 이패스코리아 등에서 제공하며, 가격은 60,000~200,000원 사이이다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "실기가 전체 배점의 70%를 차지하므로, 실기 실력이 곧 합격 여부를 결정한다. KcLep 프로그램에 익숙해지는 것이 합격의 핵심이며, 다음 팁들을 반드시 숙지해야 한다. 실기 시험에서 자주 출제되는 유형은 전표 입력, 결산 정리 분개, 부가가치세 신고서 작성, 원천징수이행상황신고서 작성이며, 전산세무 1급에서는 법인세 세무조정이 추가된다. 각 유형별로 KcLep 내에서 해당 메뉴를 찾아가는 경로를 손에 익히는 것이 중요하다."
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "KcLep 단축키 암기는 필수",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — F2(전표 입력), F3(전표 수정), F4(계정과목 도움), F6(장부 조회) 등 핵심 단축키를 손에 익을 때까지 반복한다. 마우스로 메뉴를 찾는 시간이 시험에서는 치명적이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "부가가치세 부속서류 작성에 시간을 가장 많이 투자하라",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 세금계산서합계표, 매입매출장, 영세율 첨부서류 등은 실수하기 쉽고 배점이 높다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "가산세 계산 공식을 반드시 암기하라",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 무신고가산세, 과소신고가산세, 납부지연가산세 등의 계산식은 매 회차 출제된다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "원천징수이행상황신고서 작성 패턴을 익혀라",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 전산세무 2급에서 원천제세 부분이 15점(전체의 15%)을 차지한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "전표 입력 시 적요를 정확하게 작성하라",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 문제에서 요구하는 계정과목과 적요가 일치하지 않으면 감점 대상이 된다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "시험장 KcLep 버전에 대비하라",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 시험장마다 설치된 KcLep 버전이 다를 수 있으므로, 반드시 최신 수험용 프로그램으로 연습해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "결산 분개를 패턴화하라",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 감가상각, 대손상각, 퇴직급여충당부채 등 결산 분개는 유형이 정해져 있다. 패턴을 외우면 빠르게 처리할 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "자신 있는 문제부터 풀어라",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 절대평가이므로, 확실히 맞힐 수 있는 문제에서 점수를 확보한 후 나머지에서 추가 득점하는 전략이 유효하다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "비용과 투자 수익률"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전산세무회계 자격증의 가장 큰 장점 중 하나는 "
+        },
+        {
+          "type": "text",
+          "text": "투자 비용이 매우 낮다",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "는 것이다. 독학으로 준비하면 총 비용이 55,000~60,000원 수준에 불과하고, 인강을 포함해도 13만~23만 원이면 충분하다."
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "응시료: 30,000원 (전 등급 동일)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "교재: 25,000~30,000원 (1권 기준)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "유료 인강: 60,000~200,000원 (선택사항)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "학원 수강: 300,000~500,000원 (선택사항)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "자격증 발급비: 5,000~6,000원 (합격 후)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "취업 후 투자 수익률을 계산해보면, 전산회계 보유 신입의 초봉은 2,500~3,000만 원, 전산세무 보유 신입은 3,000~3,500만 원 수준이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 14,
+            "text": "전산회계 vs 전산세무, 어떤 자격증이 유리할까?",
+            "url": "https://andyinfor.com/entry/%EC%A0%84%EC%82%B0%ED%9A%8C%EA%B3%84-vs-%EC%A0%84%EC%82%B0%EC%84%B8%EB%AC%B4-%EC%96%B4%EB%96%A4-%EC%9E%90%EA%B2%A9%EC%A6%9D%EC%9D%B4-%EC%9C%A0%EB%A6%AC%ED%95%A0%EA%B9%8C"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 즉, 전산세무 2급을 추가로 취득하면 초봉에서 약 500만 원의 차이가 발생할 수 있다. 6만 원 남짓한 투자로 연봉 500만 원의 격차를 만들어낼 수 있다면, 이보다 효율적인 투자를 찾기 어렵다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "경력 3~5년차가 되면 연봉은 3,500~4,500만 원까지 올라가며, 전산세무 2급에 재경관리사를 추가하면 대기업이나 공기업 재무·회계 부서로의 이직 경쟁력도 확보된다. 학점은행제에서 학점 인정도 가능하고, 군 복무 중 자기계발 자격증으로도 인정된다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "유사 자격증 비교 — 어떤 조합이 최적인가"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "회계·세무 분야의 자격증은 전산세무회계 외에도 여러 종류가 있다. 목표 직장과 커리어 방향에 따라 전략적으로 선택해야 한다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 15,
+            "text": "회계 자격증 비교해보기 (난도, 프로그램 사용, 응시료 등) - 링커리어",
+            "url": "https://community.linkareer.com/board_FJnt73/267021"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "자격증"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "주관"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "프로그램"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "합격률"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "최적 대상"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산세무 2급",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "한국세무사회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "KcLep"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "25~40%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "세무사 사무소, 중소기업 회계/경리"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "TAT 2급"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "한국공인회계사회"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "더존 Smart A"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "30~50%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "더존 ERP 사용 일반기업"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "재경관리사"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "삼일회계법인"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "없음 (이론만)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "30~40%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "대기업, 공기업 재무/회계"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산회계운용사"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "대한상공회의소"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "더존 프로그램"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "40~50%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "공무원 가산점 목적"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "핵심적인 차이는 "
+        },
+        {
+          "type": "text",
+          "text": "사용 프로그램",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이다. 전산세무회계는 KcLep(세무사랑 Pro)을, TAT/FAT은 더존 Smart A를 사용한다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 16,
+            "text": "AT 자격시험 - 나무위키",
+            "url": "https://namu.wiki/w/AT%20%EC%9E%90%EA%B2%A9%EC%8B%9C%ED%97%98"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 세무사 사무소는 대부분 세무사랑 Pro(KcLep 기반)를 쓰고, 일반 기업은 더존 ERP를 많이 사용한다. 따라서 "
+        },
+        {
+          "type": "text",
+          "text": "세무사 사무소 취업이 목표라면 전산세무회계, 일반 기업 취업이 목표라면 TAT/FAT도 고려",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "할 만하다. 다만 인지도와 범용성 면에서는 전산세무회계가 압도적이다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "목표별 추천 조합을 정리하면 다음과 같다."
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "취업 최우선",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": ": 전산회계 1급 + 전산세무 2급 (가장 보편적 조합)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "대기업·공기업 목표",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": ": 전산세무 2급 + 재경관리사"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "세무사 사무소·회계법인",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": ": 전산세무 1급"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "공무원 가산점",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": ": 전산회계운용사 (유일한 국가기술자격)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "장기 커리어",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": ": 전산세무 2급 → 재경관리사 → 세무사/공인회계사 진입"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전산세무회계 자격증은 세무사나 공인회계사 시험을 준비하는 과정에서 기초 학습용으로도 많이 활용된다. 실제로 세무사 시험의 회계학 1부(재무회계·원가관리회계)와 세법학 1부(국세기본법·소득세법·법인세법)의 기초 범위가 전산세무 1급의 시험 범위와 상당 부분 겹치기 때문이다. 장기적으로 전문자격사를 목표로 하는 경우, 전산세무 1급 취득 과정에서 쌓은 실무 지식과 세법 이해가 이후 시험 준비에 큰 도움이 된다."
+        }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "전산세무회계 합격을 위한 체크리스트"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "목표 등급을 정했는가? 취업이 목적이면 최소 전산회계 1급 + 전산세무 2급 조합을 추천한다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "KcLep 수험용 프로그램을 설치했는가? 한국세무사회 홈페이지에서 무료로 다운로드할 수 있다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "최근 10회분 기출문제를 확보했는가? 기출 반복이 합격의 가장 빠른 길이다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "실기 연습에 전체 학습 시간의 60% 이상을 배분하고 있는가?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "시험 접수일을 달력에 체크해두었는가? 수도권은 접수 경쟁이 매우 치열하다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "KcLep 핵심 단축키(F2, F3, F4, F6)를 외웠는가? 시험 시간이 90분밖에 되지 않는다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "비전공자인데 전산세무 2급부터 바로 도전해도 되나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "가능은 하지만 추천하지 않는다. 전산세무 2급은 회계원리를 이미 이해하고 있다는 전제 위에 세법이 추가되는 구조이다. 비전공자가 곧바로 전산세무 2급을 공부하면 회계 기초 개념에서 막혀 학습 효율이 크게 떨어진다. 전산회계 1급으로 약 2개월간 기초를 다진 뒤 전산세무 2급에 도전하는 것이 결과적으로 더 빠르다. 전산회계 1급 자체도 취업 시 기본 자격으로 인정되므로, 이 단계를 건너뛸 이유가 없다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "전산세무회계와 FAT/TAT 중 어느 쪽을 먼저 따야 하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "특별한 사유가 없다면 전산세무회계부터 따는 것을 권장한다. 전산세무회계가 인지도와 범용성에서 압도적이고, 대부분의 채용공고에서 우대하는 자격증도 전산세무회계이다. FAT/TAT은 더존 Smart A 프로그램을 사용하므로, 더존 ERP를 사용하는 특정 기업에 지원할 계획이 있을 때 추가로 취득하면 된다. 둘 다 동시에 준비하기보다는 전산세무회계를 먼저 합격한 후 FAT/TAT을 추가하는 순서가 효율적이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "전산세무 1급은 꼭 따야 하나요? 2급만으로 충분한가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "대부분의 취업 상황에서는 전산세무 2급이면 충분하다. 전산세무 1급은 법인세 세무조정까지 포함되어 난이도가 상당히 높고, 연간 합격자가 100~300명에 불과하다. 다만 세무사 사무소나 회계법인에서 근무하면서 법인세 업무를 담당하고 싶다면, 또는 세무사·공인회계사 시험을 준비하는 과정에서 기초를 다지고 싶다면 도전할 가치가 있다. 일반 기업 회계/경리 직무 취업이 목적이라면 전산세무 2급 + 재경관리사 조합이 전산세무 1급보다 더 효과적이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "합격률이 회차마다 크게 다른데, 쉬운 회차를 골라서 응시할 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "사전에 난이도를 예측하는 것은 불가능하다. 합격률 편차는 출제위원의 문제 구성에 따라 달라지며, 어떤 패턴도 발견되지 않는다. 따라서 특정 회차를 노리기보다는, 준비가 끝나면 가장 빠른 회차에 응시하고, 불합격하면 다음 회차에 재도전하는 전략이 현실적이다. 절대평가(70점 이상)이기 때문에 실력만 충분하면 어떤 회차든 합격할 수 있다. 다만 2~3회차 안에 합격하겠다는 마인드로 여유 있게 접근하는 것을 추천한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "전산세무회계 자격증만으로 취업이 되나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "세무사 사무소나 소규모 회계법인의 경우, 전산세무 2급만 있어도 신입 채용이 가능한 경우가 많다. 중소기업 경리/회계팀도 전산회계 1급 이상이면 서류전형을 통과할 수 있다. 다만 자격증은 '최소한의 검증'이지 '충분조건'은 아니다. 면접에서는 실무 이해도, 엑셀 활용 능력, 근무 태도 등이 함께 평가된다. 전산세무 2급 + 엑셀 중급 이상 + 기본적인 세무 실무 이해가 갖춰지면 취업 경쟁력은 충분하다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "전산세무회계, 핵심 정리"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전산회계 1급 + 전산세무 2급이 취업 시장에서 가장 인정받는 조합이다. 비전공자도 독학으로 약 5개월이면 둘 다 취득할 수 있다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "실기가 70%를 차지하므로, KcLep 프로그램 실습에 전체 학습 시간의 60% 이상을 투자해야 한다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "회차별 합격률 편차가 크므로, '2~3회차 안에 합격한다'는 마인드로 접근하자."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "총 투자 비용은 독학 기준 약 6만 원, 인강 포함해도 20만 원 이내이다. 취업 후 연봉 차이를 고려하면 가성비가 극히 높은 자격증이다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "대기업·공기업을 목표로 한다면 전산세무 2급에 재경관리사를 추가하는 것이 최적 전략이다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

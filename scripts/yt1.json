@@ -1,0 +1,182 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "mmDowW5rWXUBTGQ6BrMqCvUexdQ",
+  "nextPageToken": "CAUQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 5593,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "GB1wZFXB8U3P42vbCqWOjtrZovM",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "wM9UA19Zr5I"
+      },
+      "snippet": {
+        "publishedAt": "2025-03-17T09:01:16Z",
+        "channelId": "UCyNHdF4hMxHUFSsPbY24p6A",
+        "title": "신소재 취업 잘 돼요?",
+        "description": "채널 협업 문의: ad@overlaps.studio ❓ 채널 기타 문의: https://open.kakao.com/o/sB4cqoGc 방송 풀버전 채널: ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/wM9UA19Zr5I/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/wM9UA19Zr5I/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/wM9UA19Zr5I/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "미미미누",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-03-17T09:01:16Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "rGSNIPfhGlFWVKW27syS0VFuzSk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "Hr3q3XwPetc"
+      },
+      "snippet": {
+        "publishedAt": "2011-03-15T01:29:18Z",
+        "channelId": "UCgTM0c5N1Zg7TJZU4mNIUuA",
+        "title": "재료공학연구원",
+        "description": "[워크넷 온라인 진로상담 신청] https://www.work.go.kr/consltJobCarpa/jobConslt/getJobConsltList.do [자세한 직업정보 알아보기] ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Hr3q3XwPetc/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Hr3q3XwPetc/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Hr3q3XwPetc/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "직업진로동영상",
+        "liveBroadcastContent": "none",
+        "publishTime": "2011-03-15T01:29:18Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "7DhWos1UbVusQ248HJ_fibHsUmw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "45qju9yC-Vo"
+      },
+      "snippet": {
+        "publishedAt": "2024-02-22T07:00:02Z",
+        "channelId": "UC5YKCgA3WR9NBQNQTs7BTsA",
+        "title": "대기업 건설사 연봉 ㄷㄷ #shorts",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/45qju9yC-Vo/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/45qju9yC-Vo/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/45qju9yC-Vo/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "캐치TV",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-02-22T07:00:02Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "Ko-DNm6jjUulu7evATlg_omXaEo",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "LCdGtnGq9lg"
+      },
+      "snippet": {
+        "publishedAt": "2025-08-13T07:28:40Z",
+        "channelId": "UCMMwXoKB9aV5RKNnQ5jgknw",
+        "title": "요즘 공대에서 가장 인기있는 학과 근황?",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/LCdGtnGq9lg/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/LCdGtnGq9lg/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/LCdGtnGq9lg/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "콕콕콕",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-08-13T07:28:40Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "MNcBs-fjyuG9HdUQuHO2GhH1jIY",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "TxhHgZmzdgY"
+      },
+      "snippet": {
+        "publishedAt": "2022-04-26T06:16:51Z",
+        "channelId": "UCZdBJIbJz0P9xyFipgOj1fA",
+        "title": "[핫클립] 소재에 새로운 생명을 불어넣는 표면 공학 / YTN 사이언스",
+        "description": "김상섭 재료공학자는 신소재공학과 교수이다. 원재료를 바꾸지 않고 기존 수명을 획기적으로 늘리는 기술이 바로 표면 처리 기술이다.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/TxhHgZmzdgY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/TxhHgZmzdgY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/TxhHgZmzdgY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "YTN 사이언스",
+        "liveBroadcastContent": "none",
+        "publishTime": "2022-04-26T06:16:51Z"
+      }
+    }
+  ]
+}

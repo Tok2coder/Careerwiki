@@ -1,0 +1,685 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "직업상담사란 — 진로 탐색 시대의 전문가" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "직업상담사는 " },
+        { "type": "text", "text": "고용노동부 주관, 한국산업인력공단 시행", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "의 국가기술자격이다" },
+        { "type": "footnote", "attrs": { "id": 1, "text": "Q-Net 국가자격 종목별 상세정보 — 직업상담사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9511" } },
+        { "type": "text", "text": ". 구직자에게 적성에 맞는 직업 정보를 제공하고, 취업 전략을 함께 세우며, 직업훈련 프로그램을 안내하는 역할을 한다. 고용센터에서 만나는 '상담사 선생님'이 바로 이 자격을 갖춘 사람이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "베이비부머 은퇴, 청년 실업 증가, 기업 채용문화 다변화로 전문 상담인력의 필요성은 꾸준히 확대되고 있다" },
+        { "type": "footnote", "attrs": { "id": 2, "text": "JobKorea 직업사전 — 직업상담사 업무, 연봉, 전망", "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=18772" } },
+        { "type": "text", "text": ". 중장기 인력수급 전망에 따르면 직업상담원 수는 연평균 2.5% 증가하여 약 3만 9천 명에 이를 것으로 예측된다. 2급은 " },
+        { "type": "text", "text": "학력·경력 제한 없이 누구나 응시 가능", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "하므로, 진입 장벽이 낮은 국가자격 중 하나다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "직업상담사가 하는 일을 좀 더 구체적으로 살펴보면, 구직자의 직업 적성검사를 실시하고 결과를 해석하여 적합한 직업군을 제안한다. 이력서와 자기소개서 작성을 코칭하고, 모의면접을 진행하기도 한다. 또한 취업성공패키지, 국민취업지원제도 등 정부 고용지원 프로그램의 참여자를 관리하고, 직업훈련 과정을 안내하는 것도 주요 업무다. 이 글에서는 직업상담사 2급 시험의 구조, 과목별 공략법, 실기 대비 전략, 합격 후 취업 현실, 그리고 1급으로의 성장 경로까지 한 번에 정리한다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-career-counselor-img1.webp",
+        "alt": "직업상담사 2급 시험 준비 모습",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "시험 구조와 과목 한눈에 보기" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "직업상담사 2급 시험은 " },
+        { "type": "text", "text": "필기(1차)와 실기(2차)", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "로 나뉘며, 연 3회 시행된다" },
+        { "type": "footnote", "attrs": { "id": 3, "text": "Invione — 직업상담사 2026년 시험일정", "url": "https://www.invione.com/board/lic/214" } },
+        { "type": "text", "text": ". 1급은 연 1회뿐이므로, 2급의 응시 기회가 훨씬 넉넉하다. 필기에 합격하면 " },
+        { "type": "text", "text": "2년간 실기 면제 유효", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이므로 동차 합격에 실패해도 다음 회차에 실기만 다시 볼 수 있다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "구분" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "내용" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비고" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시자격" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제한 없음" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학력·경력 무관" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기시험" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "객관식 4지택일, 5과목 100문항" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험시간 2시간 30분" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기시험" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필답형 서술" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "직업상담 실무" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격기준" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 평균 60점 + 과목당 40점 이상, 실기 60점 이상" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과락 주의" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시행 횟수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연 3회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "원서접수 Q-Net" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 19,400원 / 실기 20,800원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "총 40,200원" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "필기 5과목은 다음과 같다: " },
+        { "type": "text", "text": "직업상담학, 직업심리학, 직업정보론, 노동시장론, 노동관계법규", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": ". 원래 직업상담학과 직업정보론 2과목이었으나, 2010년부터 각각 분리되어 현재 5과목 체제가 되었다" },
+        { "type": "footnote", "attrs": { "id": 4, "text": "amenlifework — 2026년 직업상담사 2급 시험 합격을 위한 완벽 가이드", "url": "https://amenlifework.com/entry/2026%EB%85%84-%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC-2%EA%B8%89-%EC%8B%9C%ED%97%98-%ED%95%A9%EA%B2%A9%EC%9D%84-%EC%9C%84%ED%95%9C-%EC%99%84%EB%B2%BD-%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%9D%BC%EC%A0%95-%ED%95%84%EC%88%98-%EC%B2%B4%ED%81%AC%EB%A6%AC%EC%8A%A4%ED%8A%B8" } },
+        { "type": "text", "text": ". 과목당 20문항씩, 총 100문항을 2시간 30분 안에 풀어야 한다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "과목별 공략법 — 쉬운 과목부터 잡아라" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "5과목의 난이도 차이는 상당하다. 수험생 사이에서 통용되는 난이도 순서는 다음과 같다" },
+        { "type": "footnote", "attrs": { "id": 5, "text": "procred — 직업상담사 2급 필기 공부방법 및 합격전략", "url": "https://procred.zeronoa.com/%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC-2%EA%B8%89-%ED%95%84%EA%B8%B0-%EA%B3%B5%EB%B6%80%EB%B0%A9%EB%B2%95-%EB%B0%8F-%ED%95%A9%EA%B2%A9%EC%A0%84%EB%9E%B5/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "직업정보론", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (가장 쉬움) — 한국직업분류(KSCO), 한국직업사전, 워크넷 등 직업정보 체계를 다룬다. 직업분류 코드, 직업사전의 구성 항목, 워크넷 검색 방법 등이 주로 출제된다. 암기량이 적고 직관적이라 빠르게 점수를 확보할 수 있으며, 실기에서도 직업정보론 관련 문제가 비교적 쉬운 편이다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "직업심리학", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 흥미검사(홀랜드 RIASEC), 적성검사, 성격유형이론(MBTI, Big Five) 등 심리측정 도구를 배운다. 검사 도구의 신뢰도·타당도 개념, 규준 해석 방법이 핵심이다. " },
+          { "type": "text", "text": "심리학과", "marks": [{ "type": "link", "attrs": { "href": "/major/심리학과" } }] },
+          { "type": "text", "text": " 전공자라면 익숙한 내용이 많지만, 비전공자도 반복 학습으로 충분히 소화 가능하다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "직업상담학", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 긴즈버그, 슈퍼, 홀랜드, 크룸볼츠, 로 등 진로발달이론과 상담기법(인지행동, 정신역동, 내담자 중심 등)을 다룬다. 이론가 이름과 핵심 개념을 매칭하는 문제가 자주 나오며, 특히 슈퍼의 생애진로발달단계와 홀랜드의 6각형 모형은 거의 매회 출제된다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "노동시장론", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 노동 수요·공급 곡선, 임금결정이론(한계생산력설, 교섭이론), 실업 유형(마찰적·구조적·경기적), 이중노동시장론 등 경제학 기반 과목이다. 그래프와 수식이 등장하지만, 기출 패턴이 일정하게 반복되므로 기출 집중이 유효하다. 실업률 계산 공식은 실기에서도 단골이다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "노동관계법규", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " (가장 어려움) — 근로기준법, 직업안정법, 고용보험법, 근로자직업능력개발법, 고용정책기본법 등 6개 이상 법령을 다룬다. 법 조문의 숫자, 기한, 벌칙 규정까지 정확히 외워야 해서 암기 부담이 가장 크다. 5과목 중 과락(40점 미만) 위험이 가장 높은 과목이며, 매년 개정되는 법률 내용까지 반영되므로 최신 기출 확인이 필수다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "핵심 전략: 쉬운 3과목에서 고득점, 어려운 2과목에서 과락 회피" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "합격기준이 '평균 60점 + 과목당 40점'이므로, 직업정보론·직업심리학·직업상담학에서 70~80점을 확보하고 노동시장론·노동관계법규에서 45~50점만 넘기면 합격이다. 필기시험은 문제은행 형식이라 " },
+        { "type": "text", "text": "기출 반복 출제 비율이 매우 높다", "marks": [{ "type": "bold" }] },
+        { "type": "footnote", "attrs": { "id": 6, "text": "직업상담사 2급 1차 합격 후기 — 준비기간, 교재, 합격꿀팁", "url": "https://spring-in-the-air.com/entry/%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC-2%EA%B8%89-1%EC%B0%A8-%ED%95%A9%EA%B2%A9-%ED%9B%84%EA%B8%B0-%EC%A4%80%EB%B9%84%EA%B8%B0%EA%B0%84-%EA%B5%90%EC%9E%AC-%ED%95%A9%EA%B2%A9%EA%BF%80%ED%8C%81" } },
+        { "type": "text", "text": ". 이론을 모르더라도 기출문제를 충분히 반복하면 합격 가능한 수준이다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "추천 교재와 2개월 공부 스케줄" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "독학 수험생에게 가장 많이 추천되는 교재는 " },
+        { "type": "text", "text": "에듀윌 직업상담사 2급 1·2차 한권끝장", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 19개월 연속 베스트셀러 1위를 기록한 교재로, 이론편과 기출편이 함께 구성되어 있다" },
+        { "type": "footnote", "attrs": { "id": 7, "text": "에듀윌 — 직업상담사 2급 1,2차 한권끝장 교재 정보", "url": "https://book.eduwill.net/goods/select.action?goodsId=0100004200" } },
+        { "type": "text", "text": ". 이 외에도 시대에듀, 에듀피디 등 여러 출판사에서 교재를 내놓고 있으나, 독학이라면 '한 권으로 끝내는' 통합본이 효율적이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실제 합격자들의 평균 준비 기간은 약 " },
+        { "type": "text", "text": "2개월", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다" },
+        { "type": "footnote", "attrs": { "id": 8, "text": "직업상담사 2급 실기 최종 합격 후기 — 준비기간, 교재, 합격꿀팁", "url": "https://spring-in-the-air.com/entry/%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC-2%EA%B8%89-%EC%8B%A4%EA%B8%B0-%EC%B5%9C%EC%A2%85-%ED%95%A9%EA%B2%A9-%ED%9B%84%EA%B8%B0-%EC%A4%80%EB%B9%84%EA%B8%B0%EA%B0%84-%EA%B5%90%EC%9E%AC-%ED%95%A9%EA%B2%A9%EA%BF%80%ED%8C%81" } },
+        { "type": "text", "text": ". 하루 2~3시간 투자 기준으로 아래 스케줄을 추천한다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "주차" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학습 내용" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "목표" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1~2주" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기본서 1회독 (5과목 전체)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "전체 구조 파악, 암기보다 이해" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3~4주" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기본서 2회독 + 기출문제 병행" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자주 출제되는 핵심 개념 정리" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5~6주" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기출문제 집중 + 오답노트" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "반복 출제 패턴 체화" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "7~8주" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기본서 3회독 + 모의고사 + 실기 서술 연습" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약점 과목 보강, 실기 답안 작성 훈련" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "가장 효율적인 공부법은 " },
+        { "type": "text", "text": "기본서 3회독 → 기출문제 병행", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 요점정리가 잘 된 기본서부터 시작하고, 2회독째부터 기출문제를 함께 풀면서 출제 포인트를 체크해 나간다. 국비지원(국민내일배움카드)을 활용하면 온라인 강의도 수강 가능하다" },
+        { "type": "footnote", "attrs": { "id": 9, "text": "e-freedom — 직업상담사 2급 자격증 취득 방법 & 연봉 총 정리", "url": "https://e-freedom.co.kr/entry/%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC-2%EA%B8%89-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%B7%A8%EB%93%9D-%EB%B0%A9%EB%B2%95-%EC%97%B0%EB%B4%89-%EC%B4%9D-%EC%A0%95%EB%A6%AC-2025%EB%85%84-%EC%B5%9C%EC%8B%A0" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "과목별 빈출 키워드 정리" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "5과목 모두를 완벽하게 이해할 필요는 없다. 시험에는 매회 반복 출제되는 핵심 키워드가 존재하며, 이를 집중적으로 외우는 것이 시간 대비 효율이 가장 높다. 직업상담학에서는 '슈퍼의 생애진로발달 5단계', '홀랜드 6각형 모형(RIASEC)', '긴즈버그의 직업선택 3기(환상기-잠정기-현실기)', '크룸볼츠 사회학습이론'이 단골이다. 직업심리학에서는 '신뢰도와 타당도의 차이', '검사-재검사 신뢰도', '구인타당도', '홀랜드 흥미유형'을 반드시 정리해야 한다. 직업정보론은 '한국표준직업분류(KSCO) 대분류', '한국직업사전 항목 구성', '워크넷 서비스'가 빈출이다. 노동시장론에서는 '실업률 계산 공식', '경제활동참가율', '한계생산력이론', '이중노동시장론'이 핵심이다. 노동관계법규는 범위가 넓지만, '근로기준법 해고예고 30일', '고용보험 실업급여 수급요건', '직업안정법 유료직업소개사업 허가'가 반복 출제된다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "실기시험 대비 — 서술형의 벽을 넘는 법" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실기시험은 '직업상담 실무'라는 과목명으로, " },
+        { "type": "text", "text": "필답형 서술", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": " 방식이다. 객관식이 아니라 직접 답안을 작성해야 한다. 여기서 많은 수험생이 벽에 부딪힌다. 필기는 기출만 외우면 되지만, 실기는 '키워드를 정확히 서술'해야 부분점수라도 받을 수 있기 때문이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "실기 출제 유형" }]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "이론/용어 정의형", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 예: \"긴즈버그 직업선택 현실기의 3가지 하위 단계를 쓰고 설명하시오\"" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "사례 적용형", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 예: \"상담 사례를 읽고, 적용된 상담기법 2가지를 쓰시오\"" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "계산형", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 예: \"실업률 계산 공식을 쓰고 주어진 자료로 산출하시오\"" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "법규 적용형", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 예: \"근로기준법상 해고예고 규정을 쓰시오\"" }
+        ] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실기 합격의 핵심은 " },
+        { "type": "text", "text": "기출문제집 모범답안을 반복 암기", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "하는 것이다. 회차마다 신규 문제는 1~2개 정도이고, 나머지는 기출에서 반복 출제된다" },
+        { "type": "footnote", "attrs": { "id": 10, "text": "모두CBT — 직업상담사 2급 실기 기출 과년도 암기장", "url": "https://www.moducbt.com/category/%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC2%EA%B8%89-%EC%8B%A4%EA%B8%B0-%EA%B8%B0%EC%B6%9C-%EA%B3%BC%EB%85%84%EB%8F%84-%EC%95%94%EA%B8%B0%EC%9E%A5" } },
+        { "type": "text", "text": ". 무료 CBT 서비스(모두CBT 등)를 활용해 과년도 문제를 손으로 직접 써보는 훈련이 가장 효과적이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "서술 답안 작성 팁:" }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "핵심 키워드를 먼저 쓰고, 이를 중심으로 문장을 전개한다." }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "번호를 매겨 항목별로 정리한다. (채점관이 보기 좋게)" }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "정확하지 않더라도 관련 키워드를 최대한 적는다. 부분점수가 있다." }] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "계산 문제는 공식을 먼저 쓰고 대입 과정을 보여준다." }] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실기 준비 시 가장 흔한 실수는 필기 합격 후 안심하고 공부를 미루는 것이다. 필기와 실기의 범위는 사실상 동일하지만, 답안 작성 방식이 완전히 다르다. 객관식에서는 '보기 중에서 고르면' 되지만, 서술형에서는 백지 상태에서 용어와 개념을 정확히 써야 한다. 필기 공부를 할 때부터 핵심 개념을 손으로 직접 써보는 습관을 들이면, 실기 준비 시간을 크게 단축할 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "와우패스, 에듀윌 등에서 제공하는 실기 모의고사를 활용하는 것도 좋다" },
+        { "type": "footnote", "attrs": { "id": 11, "text": "와우패스 — 직업상담사 2급 수험정보", "url": "https://www.wowpass.com/ExamInfo/235465" } },
+        { "type": "text", "text": ". 실전처럼 시간을 재고 답안을 작성해 보면, 시간 배분 감각이 생기고 부족한 부분이 명확해진다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "합격률과 현실적 전략" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "직업상담사 2급의 합격률은 어떨까? 최근 5년 평균 " },
+        { "type": "text", "text": "필기 약 50%, 실기 약 44.8%", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "다" },
+        { "type": "footnote", "attrs": { "id": 12, "text": "윈스펙 — 2025년 직업상담사 시험일정과 응시자격, 난이도, 합격률", "url": "https://winspec.moneple.com/freeboard/88617132" } },
+        { "type": "text", "text": ". 필기는 2명 중 1명이 합격하지만, 실기는 절반이 떨어지는 셈이다. 1급 실기 합격률은 약 20%로 훨씬 까다롭다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "합격률 50%라는 숫자에 주눅 들 필요는 없다. 응시자 중 상당수가 준비 부족 상태로 시험장에 오기 때문이다. 실제로 기출을 3회 이상 반복한 수험생의 합격률은 체감상 " },
+        { "type": "text", "text": "70~80%를 넘는다", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "는 것이 커뮤니티의 일반적인 평가다" },
+        { "type": "footnote", "attrs": { "id": 13, "text": "DCInside 직업상담사 마이너 갤러리 — 합격 후기 및 팁", "url": "https://m.dcinside.com/board/careercounselor/2161" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "시험 전 반드시 체크할 사항" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "노동관계법규 과락 위험 — 5과목 중 유일하게 과락률이 높다. 최소 45점을 목표로 기출 법규 문제를 집중 반복한다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기 시간 배분 — 서술형이므로 시간이 부족할 수 있다. 쉬운 문제부터 먼저 풀고, 어려운 문제는 키워드라도 적는다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 합격 유효기간 — 필기 합격 후 2년 이내에 실기에 합격해야 한다. 유효기간을 놓치면 필기부터 다시 봐야 한다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "원서접수 마감 — Q-Net 원서접수 첫날 10:00 ~ 마지막날 18:00. 접수 기간이 짧으므로 미리 일정을 확인한다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "동차 합격 전략 — 필기와 실기를 같은 회차에 모두 합격하는 것이 가장 효율적이다. 필기 공부할 때부터 서술 연습을 병행한다." }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "취업 분야와 연봉 현실" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "직업상담사 2급을 취득하면 어디에서 일할 수 있을까? 주요 취업처는 다음과 같다." }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "고용센터(고용노동부 산하)", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 가장 대표적인 취업처. 구직자 상담, 취업성공패키지 운영, 직업훈련 안내 등을 담당한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "지자체 일자리센터", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 시·군·구 단위의 취업지원기관. 지역 밀착형 구인·구직 매칭 업무를 한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "대학 취업지원센터", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 대학생·졸업생 대상 취업 상담, 이력서 클리닉, 모의면접 등을 운영한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "직업훈련기관", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 한국폴리텍, 직업전문학교 등에서 훈련생 상담 및 취업 연계를 담당한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "공공기관·사설상담소", "marks": [{ "type": "bold" }] },
+          { "type": "text", "text": " — 한국고용정보원, 여성인력개발센터, 사설 커리어 코칭 업체 등도 채용한다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "다만 현실적인 부분도 짚어야 한다. " },
+        { "type": "text", "text": "대부분의 채용이 계약직", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다. 취업성공패키지 상담사 초봉은 약 2,600~2,700만 원 수준이며, 전반적인 처우는 최저임금에 가까운 급여가 많다" },
+        { "type": "footnote", "attrs": { "id": 14, "text": "나무위키 — 직업상담사 (고용 현실과 처우)", "url": "https://namu.wiki/w/%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC" } },
+        { "type": "text", "text": ". 사회복지사 2급과 함께 계약직 구인이 많아 " },
+        { "type": "text", "text": "취업 자체는 용이하지만, 고용 안정성이 최대 단점", "marks": [{ "type": "bold" }] },
+        { "type": "text", "text": "이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "초임 연봉 평균은 2,400만~2,800만 원이며, 장기근속해도 비슷한 수준에 머무는 경우가 많다" },
+        { "type": "footnote", "attrs": { "id": 15, "text": "rich-income — 직업상담사 2급 취업 전망 및 연봉 현실적으로 알아보기", "url": "https://honey.rich-income.com/entry/%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC-2%EA%B8%89-%EC%B7%A8%EC%97%85-%EC%A0%84%EB%A7%9D-%EB%B0%8F-%EC%97%B0%EB%B4%89-%ED%98%84%EC%8B%A4%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0" } },
+        { "type": "text", "text": ". 그러나 공공기관 정규직 전환에 성공하거나, 1급을 취득하여 관리자급으로 올라가면 처우가 의미 있게 달라진다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 3 },
+      "content": [{ "type": "text", "text": "직업상담사의 하루는 어떨까" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "고용센터 기준으로, 직업상담사의 하루는 대략 이렇다. 오전 9시 출근 후 당일 예약된 상담 일정을 확인하고, 오전 중 3~4명의 구직자를 1:1로 상담한다. 상담 내용은 구직자의 경력, 희망 직종, 제약 조건을 파악한 뒤 적합한 일자리를 검색하여 추천하는 것이다. 오후에는 취업성공패키지 참여자의 진행 상황을 점검하고, 직업훈련 프로그램 연계 업무를 처리한다. 하루 평균 상담 건수는 6~10건 정도이며, 상담 기록은 전산 시스템에 입력한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "업무의 보람은 구직자가 실제로 취업에 성공했을 때 느끼는 성취감이다. 반면 어려운 점은 반복적인 행정 업무와 상담 건수 실적 압박, 그리고 계약 갱신에 대한 불안감이다. 사람과 대화하는 것을 좋아하고, 타인의 진로 고민에 공감할 수 있는 성향이라면 적합하다. 다만 감정노동의 비중이 적지 않다는 점도 미리 알아두는 것이 좋다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "1급과의 차이, 그리고 커리어 성장 경로" }]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "직업상담사 1급과 2급은 단순히 시험 난이도만 다른 것이 아니라, " },
+        { "type": "text", "text": "직무 범위 자체가 다르다", "marks": [{ "type": "bold" }] },
+        { "type": "footnote", "attrs": { "id": 16, "text": "mindthos — 직업상담사 1급 vs 2급 차이, 연봉 상승과 취업처 확대", "url": "https://mindthos.com/blog/job-counselor-level-1-game-changer-salary-career-truth" } },
+        { "type": "text", "text": ". 2급은 실무자 라인이고, 1급은 관리자·전문위원급으로 진입 가능하다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "구분" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1급" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시자격" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "제한 없음" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급 취득 후 2년 경력" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시행 횟수" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연 3회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연 1회" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 과목" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5과목 (기초)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "고급직업상담학, 고급직업심리학 등 (심화)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기 유형" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필답형 (서술)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "작업형" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기 합격률" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 44.8%" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "약 20%" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "직무 범위" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실무 상담, 정보 제공" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "관리·기획, 전문위원급" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "커리어 성장 경로를 정리하면 이렇다:" }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "2급 취득 → 고용센터/일자리센터 계약직으로 실무 경험 축적 (1~2년)" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "1급 취득 → 관리자급 지원 가능, 연봉 상승 효과" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "공공기관 정규직 전환 또는 대학 취업지원센터 전문위원 진입" }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "사설 커리어 코칭, 진로교육 강사 등 프리랜서 확장" }
+        ] }] }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "최근에는 직업상담사 자격을 기반으로 유튜브, 블로그, 온라인 강의 등을 통해 진로 콘텐츠를 제작하는 1인 사업 모델도 등장하고 있다. 특히 청년 취업, 중장년 재취업, 경력단절여성 복귀 등 특정 타깃에 특화된 상담 서비스는 차별화가 가능하다. 직업상담사 자격이 있으면 한국고용정보원, 한국직업능력연구원 등 연구기관의 프로젝트 연구원으로 참여할 수 있는 기회도 열린다. 자격 하나로 끝나는 것이 아니라, 어떤 방향으로 경력을 쌓느냐에 따라 성장 경로가 크게 달라지는 자격증이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "관련 직업으로는 " },
+        { "type": "text", "text": "직업상담사", "marks": [{ "type": "link", "attrs": { "href": "/job/직업상담사" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "취업컨설턴트", "marks": [{ "type": "link", "attrs": { "href": "/job/취업컨설턴트" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "취업알선원", "marks": [{ "type": "link", "attrs": { "href": "/job/취업알선원" } }] },
+        { "type": "text", "text": ", " },
+        { "type": "text", "text": "전문상담교사", "marks": [{ "type": "link", "attrs": { "href": "/job/전문상담교사" } }] },
+        { "type": "text", "text": " 등이 있으며, " },
+        { "type": "text", "text": "사회복지학과", "marks": [{ "type": "link", "attrs": { "href": "/major/사회복지학과" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "교육학과", "marks": [{ "type": "link", "attrs": { "href": "/major/교육학과" } }] },
+        { "type": "text", "text": " 출신이라면 전공 지식을 연계하여 차별화할 수 있다." }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [{ "type": "text", "text": "자주 묻는 질문" }]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비전공자인데 합격할 수 있나요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "충분히 가능하다. 응시자격 제한이 없고, 필기는 기출 반복 출제 비율이 높아 전공 지식 없이도 기출만 충실히 반복하면 합격할 수 있다. 실제 합격 후기의 상당수가 비전공 독학자이며, 전공과 무관하게 기본서 3회독과 기출문제 반복으로 2개월 안에 동차 합격한 사례가 많다. 직업심리학이나 직업상담학 과목에서 심리학 용어가 나오지만, 시험에 필요한 수준은 교재만으로도 충분히 소화할 수 있다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "독학만으로 동차 합격(필기+실기)이 가능한가요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "가능하다. 열심히 공부한 기간 약 2개월이면 동차 합격 사례가 많다. 필기 91점, 실기 77점으로 합격한 후기도 있다. 핵심은 기본서 3회독 + 기출 반복이며, 특히 필기 공부 때부터 주요 개념을 손으로 써보는 연습을 병행하면 실기 준비 시간을 크게 단축할 수 있다. 온라인 강의 없이 교재와 무료 CBT만으로 합격한 사례도 적지 않다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "국비지원으로 무료 수강이 가능한가요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "그렇다. 국민내일배움카드를 발급받으면 직업상담사 2급 관련 온라인·오프라인 강의를 국비지원으로 수강할 수 있다. HRD-Net(직업훈련포털)에서 '직업상담사'로 검색하면 다양한 과정이 나온다. 자비 부담금은 과정에 따라 다르지만 대체로 5만~15만 원 수준이며, 교재비는 별도인 경우가 많다." }] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "취업이 잘 되는 편인가요? 현실적으로 어떤가요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "취업 자체는 용이한 편이다. 고용센터, 일자리센터, 대학 취업지원센터 등에서 꾸준히 채용한다. 고용노동부 산하기관 채용 공고는 연중 꾸준히 올라오며, 자격증 소지가 필수 조건인 경우가 대부분이다. 그러나 대부분 계약직이고 초봉은 2,400만~2,800만 원 수준이다. 해마다 계약을 갱신하는 구조이므로, 장기적으로 1급을 취득하거나 공공기관 정규직 전환을 노리는 전략이 필요하다. 최근에는 민간 취업 플랫폼이나 사설 상담소에서의 채용도 늘어나는 추세다." }
+        ] }] }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        { "type": "qnaQuestion", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "노동관계법규가 너무 어렵습니다. 포기해도 될까요?" }] }] },
+        { "type": "qnaAnswer", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "포기하면 안 된다. 과목당 40점 미만이면 과락으로 불합격이므로, 아무리 다른 과목을 잘 봐도 한 과목에서 39점이면 탈락이다. 다만 45~50점만 넘기면 되므로, 기출에서 반복 출제되는 핵심 조문 위주로만 집중해도 충분하다. 근로기준법의 해고예고, 연차유급휴가, 고용보험법의 실업급여 수급요건 등 빈출 조문 20~30개를 확실히 외우면 과락을 피할 수 있다. 완벽하게 이해하려 하지 말고, 자주 나오는 패턴만 외우는 것이 현실적 전략이다." }] }] }
+      ]
+    },
+    {
+      "type": "horizontalRule"
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [{ "type": "text", "text": "직업상담사 2급, 도전할 만한가?" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학력·경력 제한 없이 누구나 응시 가능한 국가기술자격이다. 진입 장벽이 낮다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기는 기출 반복 출제 비율이 높아 2개월 독학으로 충분히 합격 가능하다. 실기도 기출 모범답안 암기가 핵심이다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "취업처는 고용센터, 대학, 직업훈련기관 등 다양하나, 대부분 계약직이고 초봉은 2,400만~2,800만 원 수준이다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "장기적으로 1급 취득 → 관리자·전문위원급 진입이 연봉 상승과 고용 안정의 열쇠다." }] }] },
+            { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "진로·취업 상담에 관심 있고, 사람을 돕는 일에 보람을 느낀다면 의미 있는 첫걸음이 될 수 있다. 다만 계약직 중심의 고용 환경은 각오해야 하며, 1급 취득과 경력 축적을 통한 장기 전략이 중요하다." }] }] }
+          ]
+        }
+      ]
+    }
+  ]
+}

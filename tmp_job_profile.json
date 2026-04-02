@@ -1,0 +1,28 @@
+🚣 Executed 1 command in 0.18ms
+[
+  {
+    "results": [
+      {
+        "merged_profile_json": "{\"name\":\"경륜선수\",\"heroCategory\":{\"type\":\"single\",\"value\":\"스포츠 서비스업\"},\"heroTitle\":\"경륜선수\",\"heroIntro\":\"경주용 자전거를 타고 우승을 가리는 경륜에 출주한다.\",\"overviewWork\":{\"main\":\"경륜의 규정 및 기술을 습득하기 위해 개인 또는 단체로 훈련한다. 경주용 자전거의 정비기술을 습득하고, 이상이 없는지 정비한다. 출발 및 경기과정을 익힐 수 있도록 훈련한다. 우승전략을 수립하고, 경륜경주에 출주한다. 녹화된 경주결과를 분석하여 문제점을 파악하고 자세를 교정하거나 훈련 시 문제점이 개선되도록 적용한다. 새로운 기술을 습득하고 체력을 관리한다.\",\"workStrong\":\"보통 작업\",\"workPlace\":\"실내\",\"physicalAct\":\"균형감각|웅크림|\",\"workEnv\":\"위험내재|\"},\"overviewProspect\":{\"main\":null,\"forecastList\":null,\"jobProspect\":null,\"jobSumProspect\":null},\"overviewAbilities\":{\"abilityList\":null,\"technKnow\":null,\"eduLevel\":\"9년 초과 ~ 12년 이하(고졸 정도)\",\"skillYear\":\"2년 초과 ~ 4년 이하\"},\"overviewAptitude\":{\"aptitudeList\":null,\"interestList\":null,\"satisfaction\":null},\"detailEducation\":{\"majorDistribution\":null,\"educationDistribution\":null},\"detailReady\":{\"recruit\":null,\"certificate\":null,\"training\":null,\"curriculum\":null,\"researchList\":null},\"detailClassification\":{\"kecoList\":null,\"empJobNm\":null,\"stdJobNm\":null,\"dJobECdNm\":\"직업 운동선수\"},\"detailWlb\":{\"wlb\":null,\"social\":null},\"summary\":\"경주용 자전거를 타고 우승을 가리는 경륜에 출주한다.\",\"eduLevel\":\"9년 초과 ~ 12년 이하(고졸 정도)\",\"skillYear\":\"2년 초과 ~ 4년 이하\",\"sidebarCerts\":[{\"name\":\"경주선수\",\"url\":null}],\"doWork\":\"경륜의 규정 및 기술을 습득하기 위해 개인 또는 단체로 훈련한다. 경주용 자전거의 정비기술을 습득하고, 이상이 없는지 정비한다. 출발 및 경기과정을 익힐 수 있도록 훈련한다. 우승전략을 수립하고, 경륜경주에 출주한다. 녹화된 경주결과를 분석하여 문제점을 파악하고 자세를 교정하거나 훈련 시 문제점이 개선되도록 적용한다. 새로운 기술을 습득하고 체력을 관리한다.\",\"workStrong\":\"보통 작업\",\"workPlace\":\"실내\",\"physicalAct\":\"균형감각|웅크림|\",\"dJobICdNm\":\"스포츠 서비스업\",\"workEnv\":\"위험내재|\",\"certLic\":\"경주선수\",\"work\":{\"simple\":[],\"summary\":\"경주용 자전거를 타고 우승을 가리는 경륜에 출주한다.\",\"detailed\":null},\"abilitiesDetail\":{\"simple\":[],\"summary\":null},\"knowledgeDetail\":{\"simple\":null},\"educationDetail\":{\"simple\":null},\"majorDetail\":{\"simple\":[]},\"careernetOnly\":{\"wlb\":null,\"social\":null,\"researchList\":null,\"tagList\":null,\"jobReadyList\":null,\"licenseAdv\":null,\"videos\":null,\"performList\":null},\"goyong24Only\":{\"prospectDetail\":null,\"prospectChart\":null,\"personality\":null,\"interest\":null,\"values\":null,\"activity\":null,\"workEnvironment\":null,\"entryStatistics\":null},\"sources\":[\"WORK24_DJOB\"],\"sourceIds\":{\"careernet\":null,\"goyong24\":\"1\"},\"id\":\"1765284215921949\",\"sidebarJobs\":[\"경륜선수관리원\",\"경마선수\",\"선두유도원\",\"유도마기수\",\"자동차경주선수\",\"직업경주선수(일반)\",\"직업운동선수\",\"프로게이머\",\"프로바둑기사\"],\"relatedJobs\":[\"경륜선수관리원\",\"경마선수\",\"선두유도원\",\"유도마기수\",\"자동차경주선수\",\"직업경주선수(일반)\",\"직업운동선수(일반)\",\"프로게이머\",\"프로바둑기사\"]}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.184
+      },
+      "duration": 0.184,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 395878400,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

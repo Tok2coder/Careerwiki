@@ -1,0 +1,35 @@
+
+ ⛅️ wrangler 4.57.0 (update available 4.70.0)
+─────────────────────────────────────────────
+Resource location: remote 
+
+🌀 Executing on remote database careerwiki-kr (1dbc57d6-0ce3-4a7e-8d2e-3159b0df1315):
+🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+🚣 Executed 1 command in 0.19ms
+[
+  {
+    "results": [
+      {
+        "content": "# Synthetic placeholder\n\nThis placeholder record enables comments for SSR pages."
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1869
+      },
+      "duration": 0.1869,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 334352384,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

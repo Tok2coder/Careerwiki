@@ -1,0 +1,319 @@
+{
+  "type": "doc",
+  "content": [
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "반려동물행동교정사, 어떤 직업인가" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "반려동물행동교정사는 반려동물이 보이는 다양한 문제 행동의 원인을 분석하고, 과학적 근거에 기반한 교정 프로그램을 설계하여 보호자에게 지도하는 전문가다. 단순히 '앉아', '기다려'를 가르치는 기본 훈련사와는 결이 다르다. " },
+      { "type": "text", "text": "분리불안, 공격성, 과도한 짖음, 배변 실수, 사회화 부족", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": " 등 보호자가 일상에서 겪는 구체적인 문제를 진단하고, 행동 수정 계획을 세워 실행까지 함께하는 역할이다" },
+      { "type": "footnote", "attrs": { "id": 1, "text": "비바쌤 — 반려동물행동교정사 직업정보", "url": "https://v.vivasam.com/contents/create/job/job_141.html" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "구체적인 업무는 보호자 상담으로 시작한다. 반려동물의 생활 환경, 식습관, 산책 패턴, 가족 구성 등을 꼼꼼히 파악한 뒤, 동물의 행동을 직접 관찰하며 원인을 분석한다. 예를 들어 분리불안의 경우, 단순히 '혼자 두면 짖는다'는 표면 증상이 아니라, 보호자의 외출 루틴, 귀가 시 반응 패턴, 생활 공간의 구조, 다른 가족 구성원과의 관계까지 종합적으로 살핀다. 이후 둔감화 훈련, 역조건 형성, 사회화 프로그램 등 과학적 방법론을 적용해 행동 교정을 진행한다. 훈련소에서 정규 프로그램을 운영하기도 하고, 가정을 방문해 일대일로 지도하기도 한다. 교정 기간은 문제의 심각도에 따라 2주에서 수개월까지 다양하며, 보호자가 교정 방법을 체화할 때까지 지속적으로 팔로업하는 것이 일반적이다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "이 직업에는 동물에 대한 애정만으로는 부족하다. " },
+      { "type": "text", "text": "동물행동학(ethology)에 대한 이해, 보호자와의 소통 능력, 문제 해결을 위한 분석적 사고", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "가 함께 필요하다. 현장에서는 '문제 행동의 80%는 보호자의 잘못된 습관에서 비롯된다'는 말이 있을 정도로, 교정 과정에서 보호자의 행동 변화가 핵심이다. 따라서 사람을 설득하고 교육하는 역량이 실제 현장에서는 동물 다루는 기술보다 더 중요할 때가 많다. 강아지가 좋다는 열정만으로는 버티기 어렵고, 끈기 있게 보호자를 코칭하는 상담 능력이 이 직업의 진짜 핵심 역량이다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "유사 직업으로는 " },
+      { "type": "text", "text": "동물조련사", "marks": [{ "type": "link", "attrs": { "href": "/job/동물조련사" } }] },
+      { "type": "text", "text": "가 있지만, 조련사가 공연·촬영용 동물의 특수 행동을 훈련시키는 데 집중한다면, 행동교정사는 반려동물의 일상 문제 행동 해결에 특화된 직업이다. " },
+      { "type": "text", "text": "수의사", "marks": [{ "type": "link", "attrs": { "href": "/job/수의사" } }] },
+      { "type": "text", "text": "와 협력하여 행동 문제의 의학적 원인(통증, 호르몬 이상 등)을 배제하는 과정도 업무에 포함된다." }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "자격증 종류: 국가자격 vs 민간자격" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "반려동물행동교정 분야의 자격증은 크게 " },
+      { "type": "text", "text": "국가자격인 '반려동물행동지도사'와 민간자격인 '반려동물행동교정사'", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "로 나뉜다. 2024년 동물보호법 개정으로 국가자격이 신설되면서 이 분야의 전문성이 공식적으로 인정받게 되었다" },
+      { "type": "footnote", "attrs": { "id": 2, "text": "데일리벳 — 반려동물행동지도사 국가자격 시행", "url": "https://www.dailyvet.co.kr/news/policy/204437" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "반려동물행동지도사 (국가자격)" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "농림축산식품부 소관, EPIS(농림수산식품교육문화정보원)가 시행하는 국가자격이다. 동물보건사에 이어 국내 두 번째 반려동물 관련 국가자격으로, 동물보호법 시행령 및 시행규칙에 법적 근거를 두고 있다" },
+      { "type": "footnote", "attrs": { "id": 3, "text": "대한민국 정책브리핑 — 2024년 달라지는 반려동물 관련 제도", "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156627493" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "table", "content": [
+      { "type": "tableRow", "content": [
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "구분" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1급" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시 자격" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "만 18세 이상 누구나" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급 취득 후 실무 3년, 또는 실무 10년" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기시험" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "5과목 (행동학, 관리학, 훈련학, 법률, 상담)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "동일 5과목 (심화)" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "실기시험" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "본인 반려견 동반, 10개 항목 평가" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "본인 반려견 동반 (심화 항목)" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합격 기준" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기: 평균 60점+, 과목별 40점+ / 실기: 60점+" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "동일" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "필기 5만원 + 실기 15만원 = 총 20만원" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "동일" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시행 횟수" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연 1회" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "연 1회 (2025년부터)" }] }] }
+      ] }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "실기시험은 본인의 반려견을 직접 데리고 가서 치르는 독특한 방식이다. 평가 항목은 견 리드, 앉기, 엎드리기, 서기, 부르기, 물건 가져오기, 악수, 짖기, 지정장소 이동, 대기(견줄 없이 3분)의 10개 항목으로 구성된다" },
+      { "type": "footnote", "attrs": { "id": 4, "text": "나무위키 — 반려동물행동지도사 시험 상세", "url": "https://namu.wiki/w/%EB%B0%98%EB%A0%A4%EB%8F%99%EB%AC%BC%ED%96%89%EB%8F%99%EC%A7%80%EB%8F%84%EC%82%AC" } },
+      { "type": "text", "text": ". 반려견이 없으면 실기시험 응시 자체가 불가능하다는 점을 유의해야 한다. 실기시험에서는 단순히 명령어에 반응하는 것을 넘어, 핸들러(보호자)와 반려견 간의 소통과 신뢰 관계가 종합적으로 평가된다. 특히 '대기(견줄 없이 3분)' 항목은 반려견의 자제력과 보호자와의 유대감을 동시에 검증하는 항목으로, 단기간 벼락치기로는 통과하기 어렵다." }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "반려동물행동교정사 (KKF 민간자격)" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "사단법인 한국애견연맹(KKF)이 주관하는 등록 민간자격(2022-004084호)이다. 3급부터 1급까지 단계별로 취득할 수 있으며, 필기시험만으로 합격 여부가 결정된다" },
+      { "type": "footnote", "attrs": { "id": 5, "text": "한국애견연맹(KKF) — 반려동물행동교정사 자격증", "url": "https://www.thekkf.or.kr/new_home/05_license/09.companion_animal.php" } },
+      { "type": "text", "text": ". 시험은 반려동물 행동, 훈련이론 및 종류, 생활관리, 질병예방, 반려동물 보호법을 다루며, 100점 만점에 60점 이상이면 합격이다. 시험 시간은 2시간으로 충분한 편이며, 2026년 기준 연 6회 시험이 예정되어 있어 응시 기회가 많다. 국가자격에 비해 진입 장벽이 낮고 시험 일정이 유연하다는 것이 가장 큰 장점이다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "3급은 만 16세 이상이면 KKF 홈페이지 회원가입 후 바로 응시할 수 있고, 응시료는 5만 원이다. 2급은 3급 취득 후, 1급은 2급 취득 후 응시 가능하며, 각각 응시료 10만 원이다. " },
+      { "type": "text", "text": "다만 민간자격은 국가공인자격이 아니라는 점", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "을 반드시 인지해야 한다. 자격기본법에 따라 등록된 민간자격증이므로, 자격 자체의 법적 효력은 제한적이다. 간혹 민간자격을 국가공인자격으로 혼동하는 경우가 있는데, 민간자격은 해당 민간기관이 자체 기준으로 발급하는 것이며 국가가 그 능력을 보증하지 않는다는 점을 명확히 알고 있어야 한다." }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "기타 관련 민간자격" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "반려동물종합관리사(KKF, 등록번호 2017-004402호)는 훈련뿐 아니라 미용, 번식 윤리 등 반려동물 관리 전반을 아우르는 자격이다. 반려동물관리사 1급(등록번호 2018-005310)은 품종별 특성 이해와 영양, 위생, 질병 관리를 다루며, 동물매개심리상담사는 동물을 매개로 심리 상담과 치료를 수행하는 별도의 전문 영역이다" },
+      { "type": "footnote", "attrs": { "id": 6, "text": "GetEduify — 반려동물 자격증 종류 및 취득방법 총정리", "url": "https://geteduify.com/career-guidance/%EB%B0%98%EB%A0%A4-%EB%8F%99%EB%AC%BC-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%A2%85%EB%A5%98-%EB%B0%8F-%EC%B7%A8%EB%93%9D%EB%B0%A9%EB%B2%95-%EC%B4%9D%EC%A0%95%EB%A6%AC-%EC%96%B4%EB%96%A4-%EC%9E%90%EA%B2%A9/" } },
+      { "type": "text", "text": "." }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "교육과정과 취득 비용" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "자격 취득 경로는 크게 온라인 교육, 오프라인 교육, 정규 대학 과정의 세 가지로 나뉜다. 비용은 무료부터 수백만 원까지, 기간은 4주부터 2~3년까지 천차만별이므로, 자신의 예산과 시간, 목표 수준에 맞는 경로를 전략적으로 선택해야 한다." }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "온라인 교육 (최소 비용 경로)" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "한국자격검정평가진흥원(한검평)은 총 40강(기초이론 20강 + 실무응용 20강)의 온라인 과정을 운영한다. 수강 기간은 4주 이내이며, " },
+      { "type": "text", "text": "수강료와 시험 응시료가 전액 무료", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "다. 자격 인증비 9만 원만 부담하면 된다" },
+      { "type": "footnote", "attrs": { "id": 7, "text": "한국자격검정평가진흥원(한검평) — 반려동물행동교정사 교육과정", "url": "https://www.korea-edu.net/home/curriculum/info.php?item=502" } },
+      { "type": "text", "text": ". 커리큘럼은 행동 정의, 발달 단계, 학습 원리, 신호 해석 등 기초이론과 배변 교정, 공격성 교정, 둔감화 훈련, 사회화 훈련, 분리불안 완화 등 실무응용으로 구성된다. 출석률 60% 이상을 채우고 시험에서 60점 이상을 받으면 합격이다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "한국평생학습진흥원도 무료수강 이벤트를 운영 중이며" },
+      { "type": "footnote", "attrs": { "id": 8, "text": "한국평생학습진흥원 — 반려동물관리사 1급 교육과정", "url": "https://www.lli.or.kr/license/license54.asp" } },
+      { "type": "text", "text": ", EBS 펫에듀는 한국애견연맹과 협력하여 온라인과 실습을 병행하는 교육을 제공한다" },
+      { "type": "footnote", "attrs": { "id": 9, "text": "EBS 펫에듀 — 반려동물 교육과정", "url": "https://ebspetedu.co.kr/" } },
+      { "type": "text", "text": ". 온라인 과정은 비용 부담이 적지만, 실제 동물을 다루는 경험을 쌓기 어렵다는 한계가 있다." }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "오프라인 교육 및 대학 과정" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "서울여성직업능력개발원 등에서는 오프라인 전문 교육과정을 운영하고 있다. 오프라인 교육의 최대 장점은 실제 반려동물을 대상으로 실습할 수 있다는 점이다. 교과서에서 배운 '둔감화 훈련'을 실제 공격성 있는 개에게 적용해보는 것과 글로만 읽는 것은 차원이 다른 경험이다. 전문 훈련소에 입소하여 합숙 생활을 하면서 배우는 방법도 있는데, 이 경우 비용은 높지만 매일 다양한 견종과 다양한 문제 행동을 접하며 가장 밀도 있는 학습이 가능하다. 현직자들 사이에서는 훈련소 합숙 경험이 가장 효과적인 학습 방법으로 평가받고 있다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "부천대학교 " },
+      { "type": "text", "text": "반려동물과", "marks": [{ "type": "link", "attrs": { "href": "/major/반려동물과" } }] },
+      { "type": "text", "text": ", 수원과학대학교 반려동물과 등 전문대학에서 정규 과정으로 학습하는 경로도 있다. " },
+      { "type": "text", "text": "수의학과", "marks": [{ "type": "link", "attrs": { "href": "/major/수의학과" } }] },
+      { "type": "text", "text": "나 " },
+      { "type": "text", "text": "동물자원학과", "marks": [{ "type": "link", "attrs": { "href": "/major/동물자원학과" } }] },
+      { "type": "text", "text": " 출신이라면 동물행동학 기초가 탄탄해 진입이 수월하다. 고용24를 통해 일부 반려동물 관련 교육과정에 대해 국비지원을 신청할 수도 있으므로, 비용이 부담되는 경우 국비지원 가능 여부를 먼저 확인해보는 것이 좋다." }
+    ] },
+
+    { "type": "image", "attrs": { "src": "/uploads/jobs/job-howto-pet-behavior-img1.webp", "alt": "반려동물행동교정사가 보호자와 반려견을 대상으로 행동교정 상담을 진행하는 모습", "width": 720, "align": "center" } },
+
+    { "type": "checkpointBox", "content": [
+      { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "자격증 선택, 이것만 기억하자" }] },
+      { "type": "bulletList", "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "국가자격(반려동물행동지도사)은 필기+실기, 연 1회 시행, 응시료 총 20만 원. 법적 효력이 있는 유일한 자격이다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "민간자격(KKF 반려동물행동교정사)은 필기만, 연 6회 시행, 응시료 5~10만 원. 진입 장벽이 낮지만 국가공인이 아니다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "온라인 교육은 수강료 무료~9만 원으로 비용 부담이 적지만, 실무 경험은 별도로 쌓아야 한다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "궁극적으로 자격증보다 실무 경험이 핵심이다. 자격증은 신뢰도 확보의 시작점일 뿐이다." }
+        ] }] }
+      ] }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "취업 현실과 연봉" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "반려동물행동교정사의 취업처는 동물병원, 전문 훈련소, 프리랜서 방문 훈련, 반려동물 유치원, 펫샵, 애견카페 등 다양하다. 하지만 업계의 현실을 솔직하게 알고 진입해야 한다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "워크넷(고용노동부) 기준 " },
+      { "type": "text", "text": "동물조련사", "marks": [{ "type": "link", "attrs": { "href": "/job/동물조련사" } }] },
+      { "type": "text", "text": " 분류의 평균 연봉은 약 2,749만 원이다" },
+      { "type": "footnote", "attrs": { "id": 10, "text": "비바쌤 — 반려동물행동교정사 연봉 및 전망", "url": "https://v.vivasam.com/contents/create/job/job_141.html" } },
+      { "type": "text", "text": ". 이를 세분화하면 다음과 같다." }
+    ] },
+    { "type": "table", "content": [
+      { "type": "tableRow", "content": [
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경력 단계" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "예상 연봉" }] }] },
+        { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비고" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "신입 (훈련소 소속)" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2,000~2,400만 원" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "열정페이 수준인 경우도 존재" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "경력 3~5년" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2,500~3,500만 원" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "훈련소 정규 직원 기준" }] }] }
+      ] },
+      { "type": "tableRow", "content": [
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "프리랜서/독립" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3,000~5,000만 원+" }] }] },
+        { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "개인차 큼, 방문 1회 5~15만 원" }] }] }
+      ] }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "프리랜서의 경우 방문 훈련 1회당 5~15만 원 수준의 수입을 기대할 수 있지만, 월 고정 수입이 불안정하다는 단점이 있다. 크몽 같은 프리랜서 플랫폼을 활용해 고객을 확보하는 경우도 늘고 있다. 동물병원과 제휴하여 행동 문제 상담을 의뢰받는 방식도 점차 확산되고 있는데, 수의사가 의학적 원인을 배제한 뒤 행동교정사에게 연결해주는 협업 모델이 대표적이다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "현직자들이 공통적으로 지적하는 현실은 다음과 같다" },
+      { "type": "footnote", "attrs": { "id": 11, "text": "잡코리아 — 반려동물행동교정사 현직자 Q&A", "url": "https://www.jobkorea.co.kr/User/Qstn/AnswerWrite?qstnNo=15601" } },
+      { "type": "text", "text": ". 첫째, " },
+      { "type": "text", "text": "민간 자격증만으로는 취업이 어렵고 실무 경험이 필수", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "다. 둘째, 훈련소에서 신입을 받아주는 경우가 드물어 진입 장벽이 높다. 셋째, 이론이나 시험만으로는 부족하며 다양한 견종, 성격, 환경의 개를 실제로 다루는 경험이 없으면 현장에서 통하지 않는다. 약 2년간 현장 경험을 쌓으면 준전문가 수준에 도달할 수 있다고 한다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "취업 정보는 애완잡(aewanjob.com) 같은 반려동물 전문 구인구직 사이트에서 확인할 수 있다. " },
+      { "type": "text", "text": "반려동물행동교정사", "marks": [{ "type": "link", "attrs": { "href": "/job/반려동물행동교정사" } }] },
+      { "type": "text", "text": " 외에도 교육 콘텐츠 제작, 유튜브, 출판 등으로 수입원을 다각화하는 방법도 있다. 최근에는 반려동물 유치원이나 펫시팅 서비스와 결합하여 행동교정 프로그램을 패키지로 제공하는 사업 모델도 등장하고 있어, 창업을 고려하는 이들에게 새로운 가능성을 열어주고 있다." }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "시장 전망: 반려인구 1,500만 시대" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "2024년 기준 국내 반려동물 양육 인구는 " },
+      { "type": "text", "text": "1,546만 명으로 전체 가구의 28.6%(4가구 중 1가구)", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "가 반려동물을 키우고 있다" },
+      { "type": "footnote", "attrs": { "id": 12, "text": "KB금융지주 — 2023 한국 반려동물 보고서", "url": "https://www.kbfg.com/kbresearch/report/reportView.do?reportId=2000396" } },
+      { "type": "text", "text": ". 전년 대비 5만 명이 증가했으며, 1인 가구 증가와 핵가족화로 이 추세는 계속될 전망이다." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "국내 반려동물 시장 규모는 2022년 약 8.5조 원에서 2032년 21조 원으로 성장할 것으로 추산된다" },
+      { "type": "footnote", "attrs": { "id": 13, "text": "데일리벳 — 국내 반려동물 시장규모 8.5조원, 2032년 21조원 전망", "url": "https://www.dailyvet.co.kr/news/industry/214784" } },
+      { "type": "text", "text": ". 연평균 성장률(CAGR)은 9.5%로, 글로벌 반려동물 시장(2022년 3,781억 달러 → 2032년 7,762억 달러, CAGR 7.6%)보다 빠른 성장세를 보이고 있다" },
+      { "type": "footnote", "attrs": { "id": 14, "text": "KPMG — 반려동물 시장 트렌드 2024", "url": "https://assets.kpmg.com/content/dam/kpmg/kr/pdf/2024/issue-monitor/kpmg-korea-petmarket-trends-20240604.pdf" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "이 성장의 핵심 동력은 '펫코노미(Petconomy)'다. 반려동물을 가족 구성원으로 인식하는 문화가 확산되면서, 행동 교정이라는 전문 서비스에 대한 수요도 함께 커지고 있다. 2024년 동물보호법 개정으로 맹견 사육 허가제가 도입되고, 반려동물행동지도사 국가자격이 신설된 것은 이 직업의 사회적 필요성이 법적으로도 인정받았음을 의미한다" },
+      { "type": "footnote", "attrs": { "id": 15, "text": "데일리벳 — 훈련사 국가자격증 법안 발의 배경", "url": "https://www.dailyvet.co.kr/news/policy/136628" } },
+      { "type": "text", "text": "." }
+    ] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "다만, 시장 성장이 곧 개인의 소득 증가를 보장하지는 않는다. 진입 장벽이 낮은 민간자격 보유자가 늘어나면서 경쟁이 심해지는 면도 있으므로, 실력과 경험으로 차별화하는 것이 무엇보다 중요하다. 특히 맹견 사육 허가제 도입으로 핏불테리어, 로트와일러 등 맹견 보유자는 행동교정 교육 이수가 사실상 의무화되는 추세여서, 맹견 전문 행동교정 분야는 새로운 수요처로 떠오르고 있다. 또한 반려묘(고양이) 행동 교정 수요도 빠르게 증가하고 있어, 견(犬) 중심에서 다종(多種) 반려동물로 영역을 확장하는 전문가도 늘어나는 추세다." }
+    ] },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "해외 자격증과 국제 커리어" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "국내 자격증(반려동물행동지도사, KKF 민간자격 등)은 국내에서만 인정되므로, 해외 활동이나 국제적 신뢰도 확보를 원한다면 해외 자격증 취득을 적극적으로 고려해볼 필요가 있다." }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "CPDT-KA (미국, 국제 인정)" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "CCPDT(Certification Council for Professional Dog Trainers)가 관리하는 CPDT-KA는 도그 트레이너 분야에서 국제적으로 가장 널리 인정받는 자격이다" },
+      { "type": "footnote", "attrs": { "id": 16, "text": "CCPDT — CPDT-KA 자격증 안내", "url": "https://www.ccpdt.org/certification/dog-trainer-certification/" } },
+      { "type": "text", "text": ". 응시 조건으로 최근 3년 이내 " },
+      { "type": "text", "text": "최소 300시간의 도그 트레이닝 경험", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "이 필요하며, CCPDT 인증자 또는 수의사의 서명 증명서를 제출해야 한다. 시험은 200문항 객관식으로, 동물행동학(ethology), 학습이론, 트레이닝 기법, 교육 방법론을 다룬다. 매 3년마다 CEU(지속교육학점)를 축적하거나 재시험을 통해 갱신해야 한다. 원격 감독 방식으로 한국에서도 응시가 가능하므로, 해외 체류 없이도 취득할 수 있다. 다만 300시간 경험 증명 과정에서 한국 내 CCPDT 인증자를 찾기 어려울 수 있으므로, 수의사의 서명으로 대체하는 방법을 사전에 알아두는 것이 좋다." }
+    ] },
+    { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "CAAB (미국, 학술 기반)" }] },
+    { "type": "paragraph", "content": [
+      { "type": "text", "text": "ABS(Animal Behavior Society)가 인증하는 CAAB는 행동 관련 분야의 " },
+      { "type": "text", "text": "박사학위(PhD) 소지자만 응시할 수 있는 최상위 자격", "marks": [{ "type": "bold" }] },
+      { "type": "text", "text": "이다. 석사학위 소지자는 ACAAB(Associate CAAB)에 응시할 수 있다. 임상 행동 문제를 학술적으로 접근하는 전문가를 위한 자격으로, 한국에서는 " },
+      { "type": "text", "text": "수의학과", "marks": [{ "type": "link", "attrs": { "href": "/major/수의학과" } }] },
+      { "type": "text", "text": " 출신이 도전하는 경우가 간혹 있다. IAABC(International Association of Animal Behavior Consultants)도 국제적으로 인정받는 동물행동 컨설턴트 인증을 제공하고 있다." }
+    ] },
+
+    { "type": "horizontalRule" },
+
+    { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "자주 묻는 질문" }] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "반려동물행동교정사 자격증, 민간이랑 국가자격 중 뭘 먼저 따야 하나요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "커리어 관점에서 보면 국가자격인 반려동물행동지도사가 법적 효력이 있어 우선순위가 높다. 하지만 연 1회만 시행되고 실기시험에 본인 반려견 동반이 필요하므로, 반려견이 없거나 시험 일정이 맞지 않으면 KKF 민간자격(연 6회 시행)으로 먼저 기초를 다지고 국가자격에 도전하는 전략이 현실적이다." }] }
+      ] }
+    ] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "온라인 교육만으로 충분한가요? 꼭 훈련소에 가야 하나요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "자격증 취득 자체는 온라인 교육만으로 충분히 가능하다. 하지만 현직자들이 한 목소리로 하는 말은 '자격증만으로는 직업을 가질 수 없다'는 것이다. 온라인에서 배운 분리불안 교정법을 실제로 적용하려면, 개체마다 전혀 다른 반응을 보이는 상황에 유연하게 대처할 수 있는 현장 감각이 필수적이다. 다양한 견종과 각기 다른 성격, 환경의 개를 실제로 다루는 경험 없이는 현장에서 통하지 않는다. 자격증 취득 후 훈련소에 들어가 최소 1~2년간 실무 경험을 쌓는 것을 강력히 권장한다." }] }
+      ] }
+    ] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "반려견이 없어도 이 직업을 시작할 수 있나요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "민간자격(KKF)은 반려견 없이도 취득할 수 있다. 다만 국가자격 실기시험에서는 본인의 반려견을 동반해야 하므로, 국가자격을 목표로 한다면 반려견이 필요하다. 직업 활동 측면에서도 직접 반려견을 키워본 경험은 보호자와의 공감대 형성에 큰 도움이 된다. 반려견이 없다면 훈련소 보조, 동물보호소 봉사활동 등으로 경험을 대체할 수 있다." }] }
+      ] }
+    ] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "이 직업으로 프리랜서 독립이 가능한가요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "가능하다. 실제로 많은 행동교정사가 프리랜서로 독립하거나 개인 훈련소를 창업한다. 현장 경험 약 2년이면 준전문가 수준에 도달할 수 있고, 이후 크몽 같은 플랫폼을 통해 방문 훈련 서비스를 제공하거나 반려동물 유치원을 운영하는 방식이 일반적이다. 다만 방문 훈련 1회당 5~15만 원 수준이므로, 초기에는 월 고정 수입이 불안정할 수 있다. 온라인 강의, 유튜브, 출판 등 콘텐츠 수입원을 병행하면 안정성을 높일 수 있다." }] }
+      ] }
+    ] },
+
+    { "type": "qnaBlock", "content": [
+      { "type": "qnaQuestion", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "해외 자격증(CPDT-KA)을 따면 국내에서도 인정받나요?" }] }
+      ] },
+      { "type": "qnaAnswer", "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "법적으로 국내에서 CPDT-KA가 공식 인정되지는 않는다. 하지만 업계에서는 CPDT-KA 보유자의 전문성을 높이 평가하는 분위기가 있다. 300시간 실무 경험 요건과 학습이론 기반의 200문항 시험은 국내 민간자격보다 까다롭기 때문이다. 해외 취업이나 국제적 활동을 계획한다면 취득할 가치가 있고, 국내에서도 차별화 요소가 될 수 있다." }] }
+      ] }
+    ] },
+
+    { "type": "conclusionBox", "content": [
+      { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "반려동물행동교정사, 핵심 정리" }] },
+      { "type": "bulletList", "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "국가자격(반려동물행동지도사)은 2024년 신설, 필기+실기, 연 1회, 응시료 20만 원. 법적 효력이 있는 유일한 자격이다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "민간자격(KKF 반려동물행동교정사)은 필기만, 연 6회, 5~10만 원. 진입이 쉽지만 국가공인이 아니다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "평균 연봉은 약 2,749만 원이며, 프리랜서는 3,000~5,000만 원 이상도 가능하지만 개인차가 크다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "반려동물 시장은 2032년 21조 원 규모로 성장 전망. 동물보호법 강화로 전문가 수요도 증가 중이다." }
+        ] }] },
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [
+          { "type": "text", "text": "자격증보다 실무 경험이 핵심이다. 최소 1~2년 현장 경험 후 프리랜서 독립 또는 창업을 목표로 하자." }
+        ] }] }
+      ] }
+    ] }
+  ]
+}

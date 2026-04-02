@@ -1,0 +1,182 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "9Brawjxl4UrfBmQ84Ae7-Eur4Sc",
+  "nextPageToken": "CAUQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 793973,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "talyJqpav5IAtr1eTSnB1k9g0DU",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "1T3H5NBJjmA"
+      },
+      "snippet": {
+        "publishedAt": "2025-02-04T20:09:28Z",
+        "channelId": "UCa389qFPU2thtulj2uKo3oQ",
+        "title": "게임 개발의 이상과 현실",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/1T3H5NBJjmA/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/1T3H5NBJjmA/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/1T3H5NBJjmA/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "히오으",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-02-04T20:09:28Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "vzvfSIiszKUdjYJZlBDpYFvks3o",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "hoDxDHYcNiM"
+      },
+      "snippet": {
+        "publishedAt": "2025-08-01T06:00:37Z",
+        "channelId": "UC_KJX2cvVtsd7noKYCs2LoQ",
+        "title": "게임이 너무 잘 팔려서 ‘현타 온’ 개발자..ㅋㅋ",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/hoDxDHYcNiM/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/hoDxDHYcNiM/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/hoDxDHYcNiM/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "겜있슈",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-08-01T06:00:37Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "whrfTwfmfRibtXn2-XLwt-1qxx4",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "mu8WudcdqgY"
+      },
+      "snippet": {
+        "publishedAt": "2025-12-24T03:01:03Z",
+        "channelId": "UCcjnSXl1EPumPS9d3AoG4cg",
+        "title": "&#39;무조건&#39; 실패하는 게임 특징 (개발자 필수 시청)",
+        "description": "게임개발 #게임디자인 #게임심리학 [게임 디자인 연구소] ui/ux는 게임과 뗄레야 뗄 수 없는 관계입니다 '자연스럽게, 유저가 '잘 한다고 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/mu8WudcdqgY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/mu8WudcdqgY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/mu8WudcdqgY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "콤므의 게임연구소",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-12-24T03:01:03Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "NHzexSP3JA9nXhQr0kpp-G-Ut6I",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "K8G2SNdvbAQ"
+      },
+      "snippet": {
+        "publishedAt": "2024-12-05T03:13:45Z",
+        "channelId": "UC4XErI-lNL6HuJl6q9NLS0A",
+        "title": "1인 게임 개발 극복해야될 문제점 #게임#개발",
+        "description": "1인 개발로 100만원 벌기 목표로 영상 꾸준히 제작해보겠습니다. 게임 개발에 관심 있으신 분들 댓글 많이 달아주세요. 게임 개발 관련 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/K8G2SNdvbAQ/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/K8G2SNdvbAQ/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/K8G2SNdvbAQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "바코",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-12-05T03:13:45Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "pGgMhzFddbJeRK4CgcBLmriABrk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "BWobVtG5Xv4"
+      },
+      "snippet": {
+        "publishedAt": "2026-03-01T23:45:00Z",
+        "channelId": "UCM8wz_L_QCXQs5sad_82ImQ",
+        "title": "게임회사 취업. 일자리가 없다…",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/BWobVtG5Xv4/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/BWobVtG5Xv4/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/BWobVtG5Xv4/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "월급쟁이송씨",
+        "liveBroadcastContent": "none",
+        "publishTime": "2026-03-01T23:45:00Z"
+      }
+    }
+  ]
+}

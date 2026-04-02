@@ -1,0 +1,2633 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "드론 시대가 왔다 — 왜 지금 자격증인가"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "국내 드론 시장 규모가 "
+        },
+        {
+          "type": "text",
+          "text": "2026년까지 4조 4,000억 원",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "에 도달할 것으로 전망된다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 1,
+            "text": "드론자격증 종류 및 국비지원 취득방법(2026 최신)",
+            "url": "https://geteduify.com/career-guidance/%EB%93%9C%EB%A1%A0%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%A2%85%EB%A5%98-%EB%B0%8F-%EA%B5%AD%EB%B9%84%EC%A7%80%EC%9B%90-%EC%B7%A8%EB%93%9D%EB%B0%A9%EB%B2%952026-%EC%B5%9C%EC%8B%A0/"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 글로벌 시장은 2030년까지 연평균 20% 이상 성장이 예측되고 있으며, 농업 방제, 항공촬영, 건설측량, 재난감시, 물류배송 등 활용 분야가 매년 확장되고 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 2,
+            "text": "드론 산업 전망 및 생태계 분석 - 보안뉴스",
+            "url": "https://m.boannews.com/html/detail.html?idx=138965"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 경찰, 소방, 해양경찰 등 공공기관에서도 드론 전문 인력 수요가 꾸준히 늘어나고 있고, '드론 활용의 촉진 및 기반조성에 관한 법률' 시행령이 2026년 1월부터 본격 시행되면서 제도적 기반도 갖추어진 상황이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 3,
+            "text": "KDI 경제교육·정보센터 - 항공안전법 시행규칙 입법예고",
+            "url": "https://eiec.kdi.re.kr/policy/materialView.do?num=175472"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "이런 성장세 속에서 드론 자격증은 단순한 스펙이 아니라 "
+        },
+        {
+          "type": "text",
+          "text": "산업 진입의 필수 관문",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이 되었다. 2021년 항공안전법 개정 이후 "
+        },
+        {
+          "type": "text",
+          "text": "250g을 초과하는 드론을 비행하려면 반드시 자격증이 필요",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "하고, 2kg 초과 기체는 기체 신고까지 해야 한다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 4,
+            "text": "찾기쉬운 생활법령정보 - 드론 조종자 증명 시험",
+            "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1814&ccfNo=2&cciNo=3&cnpClsNo=1"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 잡코리아 기준 드론 관련 채용공고만 90건 이상이 올라와 있고, 초경량비행장치 조종자 자격증 소지자 우대가 사실상 기본 요건이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 5,
+            "text": "잡코리아 - 드론 조종 채용공고",
+            "url": "https://www.jobkorea.co.kr/Search/?stext=%EB%93%9C%EB%A1%A0+%EC%A1%B0%EC%A2%85"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 지금이 자격증을 따기에 가장 좋은 타이밍인 이유는 분명하다 — 시장은 커지고 있고, 자격 보유 인력은 아직 부족하다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "한국시설안전공단, 한국철도공사, 한국환경공단, 한국도로공사 등 19개 공공기관이 항공안전법 적용특례 기관으로 추가되면서, 이들 기관의 시설물 점검·환경 모니터링·인프라 관리에 드론 활용이 본격화되고 있다. 이런 제도적 변화는 곧 안정적인 공공 영역 일자리의 확대를 의미한다. 민간 시장과 공공 시장이 동시에 열리고 있는 지금, 자격증 취득은 단순한 개인 스펙 쌓기가 아니라 빠르게 성장하는 산업에 초기 진입하는 전략적 투자라고 할 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "자격증 종류와 등급 — 1종부터 4종까지"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "드론 자격증의 정식 명칭은 '초경량비행장치 무인멀티콥터 조종자 증명'이다. 한국교통안전공단(TS)에서 관리하며, 최대이륙중량(MTOW) 기준으로 1종~4종까지 나뉜다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 6,
+            "text": "나무위키 - 초경량비행장치조종자",
+            "url": "https://namu.wiki/w/%EC%B4%88%EA%B2%BD%EB%9F%89%EB%B9%84%ED%96%89%EC%9E%A5%EC%B9%98%EC%A1%B0%EC%A2%85%EC%9E%90"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 핵심 원칙은 간단하다 — "
+        },
+        {
+          "type": "text",
+          "text": "상위 종을 취득하면 하위 종 기체를 모두 조종할 수 있다",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ". 즉, 1종 자격증 하나면 2·3·4종 기체 전부 조종이 가능하다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 7,
+            "text": "드론 자격증(1종, 2종, 3종, 4종) 차이점 및 기체 무게",
+            "url": "https://servertrix.com/1670"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "구분"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "최대이륙중량"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "비행경력"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "시험 방식"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "나이 요건"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "1종",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "25kg 초과 ~ 150kg 이하"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "20시간"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "학과 + 실기"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "만 14세 이상"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2종",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "7kg 초과 ~ 25kg 이하"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "10시간"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "학과 + 실기"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "만 14세 이상"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "3종",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2kg 초과 ~ 7kg 이하"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "6시간"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "학과만 (실기 면제)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "만 14세 이상"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "4종",
+                      "marks": [
+                        {
+                          "type": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "250g 초과 ~ 2kg 이하"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "없음"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "온라인 교육 6시간 이수"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "만 10세 이상"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "250g 이하 드론은 자격증이 불필요하다. 참고로 드론 기체 유형에는 무인멀티콥터, 무인헬리콥터, 무인비행기, 그리고 2025년 5월에 신설된 무인수직이착륙기(eVTOL)가 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 8,
+            "text": "나무위키 - 초경량비행장치조종자",
+            "url": "https://namu.wiki/w/%EC%B4%88%EA%B2%BD%EB%9F%89%EB%B9%84%ED%96%89%EC%9E%A5%EC%B9%98%EC%A1%B0%EC%A2%85%EC%9E%90"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 취업이나 창업 목적이라면 "
+        },
+        {
+          "type": "text",
+          "text": "최소 1종을 목표로 하는 것이 현실적",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이다. 산업용 드론은 대부분 25kg을 초과하는 대형 기체이고, 1종이 있어야 상위호환으로 현장에서 어떤 기체든 조종할 수 있기 때문이다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "취득 과정 — 교육기관 선택부터 시험까지"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "드론 자격증은 "
+        },
+        {
+          "type": "text",
+          "text": "완전 독학이 불가능",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "하다. 비행경력이 교육기관 소속 상태에서만 인정되기 때문에, 교육기관 등록이 첫 번째 단계다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 9,
+            "text": "나무위키 - 초경량비행장치조종자",
+            "url": "https://namu.wiki/w/%EC%B4%88%EA%B2%BD%EB%9F%89%EB%B9%84%ED%96%89%EC%9E%A5%EC%B9%98%EC%A1%B0%EC%A2%85%EC%9E%90"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 전체 과정은 대략 이렇게 흘러간다."
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "교육기관 선택 및 등록",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 전문교육기관(국토부 지정)과 사설 교육원 두 가지 선택지가 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "비행경력 충족",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 1종 20시간, 2종 10시간, 3종 6시간의 비행 시간을 채운다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "학과시험 응시",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — TS국가자격시험 홈페이지(lic.kotsa.or.kr)에서 접수. 40문항, 50분, 70점 이상 합격."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "실기시험 응시",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 1·2종만 해당. 신체검사증명서 제출 후 실기 비행 + 구술시험 진행."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "자격증명 발급",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 모든 시험 합격 후 한국교통안전공단에서 발급."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "교육기관은 크게 두 종류다. "
+        },
+        {
+          "type": "text",
+          "text": "전문교육기관",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "(대한상공회의소, 한서대학교 등 국토부 지정)은 약 120시간(3주) 과정으로 학과이론 20시간, 모의비행 20시간, 실기비행 80시간으로 구성된다. 이곳을 수료하면 "
+        },
+        {
+          "type": "text",
+          "text": "학과시험(필기)이 면제",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "되는 큰 이점이 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 10,
+            "text": "대한상공회의소 무인항공 교육센터",
+            "url": "https://drone.korchamhrd.net/cms/cmsDetail.do?rootMenuId=1738&menuId=1776&cms_id=10"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". "
+        },
+        {
+          "type": "text",
+          "text": "사설 교육원",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "은 비용이 상대적으로 저렴하지만, 학과시험 면제 혜택이 없어 별도로 필기를 봐야 한다. 비행경력 인정은 동일하게 된다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "4종은 예외다. 한국교통안전공단 배움터(온라인)에서 "
+        },
+        {
+          "type": "text",
+          "text": "6시간 이러닝 이수만으로 취득",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "할 수 있으며, 만 10세 이상이면 누구나 가능하다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 11,
+            "text": "한국교통안전공단 배움터 - 온라인 드론자격증(4종)",
+            "url": "https://www.kaa.atims.kr/pubs/atims/index.do?check=1"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 입문 단계로는 최적이지만, 업무용으로 쓰려면 곧바로 상위 종을 준비해야 한다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "전문교육기관과 사설 교육원을 고를 때 가장 중요한 기준은 세 가지다. 첫째, 비행장(훈련장)의 위치와 시설 수준. 넓은 훈련 공간과 실제 시험장과 비슷한 환경을 갖춘 곳이 유리하다. 둘째, 교관 1인당 수강생 비율. 3~5명 이하를 유지하는 곳이 실기 합격률이 높다. 셋째, 국비지원 과정 운영 여부. 내일배움카드 사용이 가능한 전문교육기관인지 반드시 확인해야 한다. 비용이 크게 다르기 때문이다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "학과시험 공부법 — 40문항, 50분 공략"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "학과시험은 통합 1과목으로 "
+        },
+        {
+          "type": "text",
+          "text": "40문항, 제한시간 50분, 70점 이상",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이면 합격이다. 응시료는 48,400원(부가세 포함)이며, TS국가자격시험 홈페이지에서 시험 시행 2일 전까지 상시 접수할 수 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 12,
+            "text": "TS한국교통안전공단 - 초경량비행장치(드론) 조종자 증명 시험",
+            "url": "https://main.kotsa.or.kr/portal/contents.do?menuCode=02020200"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 매월 다수의 시험일이 제공되므로 일정 선택의 여유가 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 13,
+            "text": "TS국가자격시험 항공자격 - 시험일정",
+            "url": "https://lic.kotsa.or.kr/airtest/html.do?menu_idx=102"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "시험 범위는 4개 과목이 통합 출제된다."
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "항공안전법",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 비행금지구역, 비행승인 절차, 조종자 준수사항 등. 가장 출제 비중이 높다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "항공기상",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 바람, 기온, 기압, 시정 등 비행에 영향을 주는 기상 요소. 안개·돌풍 등 위험 기상 판단이 핵심."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "항공역학",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 양력, 항력, 추력, 중력의 관계. 멀티콥터의 비행 원리(로터 회전 방향, 자세 제어)."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "비행운용이론",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 비행 전 점검, 배터리 관리, GPS 모드와 ATTI 모드의 차이, 비상 착륙 절차."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "과목별 학습 전략"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "가장 효율적인 준비 방법은 "
+        },
+        {
+          "type": "text",
+          "text": "기출문제 반복 학습",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이다. 드론라이프(dronelife.co.kr) 등 커뮤니티에서 무료 기출문제를 제공하고 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 14,
+            "text": "드론라이프 - 드론 기출문제 및 정보포털",
+            "url": "https://dronelife.co.kr/"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 항공안전법은 단순 암기 비중이 높으니 기출 3회독이면 충분하다. 항공역학은 개념 이해가 필요한 과목이라 유튜브 강의를 병행하면 효과적이다. 비행운용이론은 실제 비행 교육을 받으면서 자연스럽게 익혀지는 부분이 많다. 대부분의 수험자가 "
+        },
+        {
+          "type": "text",
+          "text": "2~3주 준비로 합격",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "하고 있으며, 전문교육기관 수료자는 학과시험이 면제되므로 실기에만 집중하면 된다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "한 가지 팁을 덧붙이면, 항공안전법 문제는 숫자(고도, 거리, 벌금 금액 등)를 정확히 외워야 하는 유형이 많다. 예를 들어 '사람·건축물 밀집지역에서 수평거리 600m 범위 내 가장 높은 장애물 상단 기준 300m까지' 같은 구체적 수치가 출제된다. 이런 숫자 문제는 기출문제에서 반복 출제되는 패턴이 있으니, 기출을 풀면서 자연스럽게 외워지도록 반복하는 것이 가장 효과적이다. 항공기상과 항공역학은 서로 연관된 개념이 많아서, 두 과목을 연결해서 공부하면 이해가 빨라진다."
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-drone-pilot-img1.webp",
+        "alt": "드론 자격증 1~4종 등급별 비교 및 취득 경로 요약",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "실기시험 완전 정복 — 비행 실습과 구술시험"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "1종과 2종은 학과시험 합격 후 실기시험을 별도로 봐야 한다(3종은 실기 면제). 실기시험 응시료는 72,600원(부가세 포함)이고, 시험 전까지 유효한 "
+        },
+        {
+          "type": "text",
+          "text": "신체검사증명서",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "를 제출해야 한다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 15,
+            "text": "찾기쉬운 생활법령정보 - 드론 조종자 증명 시험",
+            "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1814&ccfNo=2&cciNo=3&cnpClsNo=1"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 제한시간은 30분 이내 또는 배터리 용량만큼이며, 모든 항목에서 '만족(S)' 판정을 받아야 합격이다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 16,
+            "text": "무인멀티콥터 1종 조종자 구술 및 실기시험 출제 범위",
+            "url": "https://dailyinformation.co.kr/70"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "실기시험 평가 항목"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "비행 전 절차",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 기체 점검, 프로펠러 상태 확인, GPS 수신 상태 확인, 배터리 잔량 체크"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "이륙 및 공중동작",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 수직 이·착륙, 전후좌우 이동, 제자리 호버링, 정사각형/원형 비행 등"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "착륙 조작",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 지정 위치 정밀 착륙, 안정적 하강 속도 유지"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "비행 후 점검",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 기체 이상 유무 확인, 비행일지 작성"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "종합능력 평가",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 안전거리 유지, 계획성, 판단력, 규칙 준수, 조작 원활성을 종합 평가"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "구술시험 대비"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "실기시험에는 구술시험이 포함된다. 사용 기체의 제원, 항공법규, 조종자 준수사항, 비행금지구역 등에 대한 질의응답 형식이다. 비행 기량이 우수하면 구술 질문이 2개 정도로 축소되기도 한다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 17,
+            "text": "무인멀티콥터 1종 조종자 구술 및 실기시험 출제 범위",
+            "url": "https://dailyinformation.co.kr/70"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 합격률은 과거에 5~6% 수준으로 극히 낮았으나, 김천 시험장 신설 이후 50% 이상으로 크게 개선되었다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 18,
+            "text": "나무위키 - 초경량비행장치조종자",
+            "url": "https://namu.wiki/w/%EC%B4%88%EA%B2%BD%EB%9F%89%EB%B9%84%ED%96%89%EC%9E%A5%EC%B9%98%EC%A1%B0%EC%A2%85%EC%9E%90"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 핵심은 교육기관에서의 충분한 비행 연습이다 — 최소 비행경력(1종 20시간) 외에 추가로 10~20시간 더 연습하면 합격 확률이 크게 높아진다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "실기시험에서 가장 많이 떨어지는 항목은 '호버링 안정성'과 '정밀 착륙'이다. 바람이 부는 상황에서 기체를 일정 고도와 위치에 30초 이상 유지하는 것이 생각보다 어렵다. 교육기관에서 배울 때 ATTI 모드(GPS 보조 없이 수동 조종하는 모드)에서의 호버링 연습을 충분히 해두면, 시험 당일 돌발 상황에도 대처할 수 있다. 또한 시험 당일에는 바람 세기와 방향이 합격에 큰 영향을 미치므로, 가능하면 바람이 약한 이른 아침 시간대의 시험 일정을 잡는 것이 좋다."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "비용과 국비지원 — 교육비, 시험비, 내일배움카드"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "드론 자격증 취득의 가장 큰 부담은 교육비다. 종류별 비용을 정리하면 다음과 같다."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "항목"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전문교육기관"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "사설 교육원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "비고"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "1종 교육비"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "약 250만~350만 원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "약 200만 원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전문교육기관은 필기 면제"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "학과시험 응시료"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "면제"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "48,400원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "부가세 포함"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "실기시험 응시료"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "72,600원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "72,600원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "1·2종만 해당"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "4종 취득"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "—"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "무료"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "온라인 교육만 이수"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "총 예상 비용 (1종)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "약 320만~420만 원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "약 320만 원"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "재시험 비용 별도"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "비용 부담을 줄이는 방법은 두 가지다. 첫째, "
+        },
+        {
+          "type": "text",
+          "text": "국민내일배움카드",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "를 활용하면 최대 80~100% 국비지원이 가능하다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 19,
+            "text": "드론자격증 종류 및 국비지원 취득방법(2026 최신)",
+            "url": "https://geteduify.com/career-guidance/%EB%93%9C%EB%A1%A0%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%A2%85%EB%A5%98-%EB%B0%8F-%EA%B5%AD%EB%B9%84%EC%A7%80%EC%9B%90-%EC%B7%A8%EB%93%9D%EB%B0%A9%EB%B2%952026-%EC%B5%9C%EC%8B%A0/"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 둘째, "
+        },
+        {
+          "type": "text",
+          "text": "지자체 지원사업",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "을 확인해볼 것. 충남 서천군 등에서는 드론 자격증 취득 지원사업을 운영하며, 1인당 최대 180만 원까지 지원한다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 20,
+            "text": "드론자격증 종류 및 국비지원 취득방법(2026 최신)",
+            "url": "https://geteduify.com/career-guidance/%EB%93%9C%EB%A1%A0%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%A2%85%EB%A5%98-%EB%B0%8F-%EA%B5%AD%EB%B9%84%EC%A7%80%EC%9B%90-%EC%B7%A8%EB%93%9D%EB%B0%A9%EB%B2%952026-%EC%B5%9C%EC%8B%A0/"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 내일배움카드와 지자체 지원을 잘 조합하면 본인 부담 0원도 현실적으로 가능하다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "비용을 아끼겠다고 무조건 사설 교육원을 선택하는 것은 추천하지 않는다. 전문교육기관은 학과시험 면제라는 혜택이 크고, 120시간 집중 과정이라 단기간에 끝낼 수 있다. 사설 교육원은 교육비는 저렴하지만, 비행경력만 채워주고 학과시험은 개인이 따로 준비해야 해서 총 소요 기간이 길어진다. 직장인이나 시간이 제한된 사람이라면 전문교육기관 3주 집중 코스가 오히려 총비용(기회비용 포함)이 낮을 수 있다. 또한 교육기관 선택 시 실기시험장과 가까운 곳을 고르면, 시험 당일 환경 적응에 유리하다는 점도 고려하자."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "취업 현실과 커리어 전망"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "자격증을 땄으면 어디서 일할 수 있을까? 현재 "
+        },
+        {
+          "type": "text",
+          "text": "드론조종사",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/드론조종사"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "의 주요 활동 영역은 크게 다섯 가지로 나뉜다."
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "농업 방제·살포",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 가장 수요가 많은 분야. "
+                },
+                {
+                  "type": "text",
+                  "text": "농업드론방제사",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/job/농업드론방제사"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": "로 창업하면 지자체별 교육비 지원까지 받을 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "항공촬영·영상",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 방송사, 영화제작사, 부동산, 관광 콘텐츠 등에서 항공촬영 수요가 계속 증가하고 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "건설측량·공간정보",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — "
+                },
+                {
+                  "type": "text",
+                  "text": "항공사진측량기술자",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/job/항공사진측량기술자"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": "와 연계되는 분야. BIM과 3D 모델링 역량까지 갖추면 경쟁력이 높아진다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "공공안전·재난감시",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 경찰, 소방, 해양경찰에서 드론 전문 인력을 확충하고 있다. 공무원 채용 연계 가능."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "물류배송·UAM",
+                  "marks": [
+                    {
+                      "type": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " — 아직 초기 단계이지만, 도심항공교통(UAM)과 드론 택배가 상용화되면 폭발적으로 성장할 분야다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "현실적인 연봉 수준은 초급 기준 약 2,600만 원부터 시작하며, 경력을 쌓으면 월 300만 원 이상(연봉 3,600만 원 이상)의 수준으로 올라간다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 21,
+            "text": "잡코리아 - 드론 조종 채용공고",
+            "url": "https://www.jobkorea.co.kr/Search/?stext=%EB%93%9C%EB%A1%A0+%EC%A1%B0%EC%A2%85"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 단순 조종만으로는 고소득을 기대하기 어렵지만, 측량·촬영·방제 등 "
+        },
+        {
+          "type": "text",
+          "text": "특수 분야와 결합",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "하면 가치가 크게 올라간다. "
+        },
+        {
+          "type": "text",
+          "text": "드론교관",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/드론교관"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "이나 "
+        },
+        {
+          "type": "text",
+          "text": "드론개발자",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/드론개발자"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "로 확장하는 것도 유력한 커리어 경로다. 특히 드론 수리·정비 분야의 "
+        },
+        {
+          "type": "text",
+          "text": "드론수리원",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/job/드론수리원"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "은 기체 수가 늘어나면서 수요가 함께 증가하고 있는 직종이다. 드론은 정기적인 정비와 부품 교체가 필수적이기 때문에, 조종 능력과 정비 능력을 동시에 갖추면 프리랜서 시장에서 높은 단가를 받을 수 있다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "특히 주목할 만한 것은 "
+        },
+        {
+          "type": "text",
+          "text": "BVLOS(가시권 밖 비행)",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 역량이다. 2025년 1분기 특별비행승인 신청 건수가 299건으로 전년 대비 30% 증가했을 정도로, 배송·측량·감시 분야에서 BVLOS 수요가 급증하고 있다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 22,
+            "text": "항공안전기술원 - 특별비행승인 제도",
+            "url": "https://www.kiast.or.kr/kr/sub06_06_01_01.do"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 야간비행이나 가시권 밖 비행 승인 검토 기간도 90일에서 30일로 단축되었다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 23,
+            "text": "KDI 경제교육·정보센터 - 항공안전법 시행규칙 입법예고",
+            "url": "https://eiec.kdi.re.kr/policy/materialView.do?num=175472"
+          }
+        },
+        {
+          "type": "text",
+          "text": ". 1종 자격증에 BVLOS 비행 경험까지 더하면, 향후 5년 안에 핵심 인력으로 자리잡을 가능성이 높다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "드론 산업에서 커리어를 성공적으로 구축한 사람들의 공통점이 있다. 단순히 '드론을 잘 날리는 사람'에 머물지 않고, 특정 산업 도메인의 전문성을 함께 갖추었다는 것이다. 농업 방제 쪽으로 간다면 농약·비료에 대한 기초 지식과 작물별 방제 시기를 알아야 하고, 건설측량 쪽으로 간다면 GIS(지리정보시스템), 포인트 클라우드 데이터 처리, BIM 모델링 같은 후처리 기술이 필수다. 항공촬영 분야는 드론 조종 실력 외에 영상 편집, 색보정, 구도 설계 역량이 수익을 좌우한다. 자격증은 출발선에 서는 것이고, 어떤 산업과 결합하느냐가 최종 수입과 커리어 안정성을 결정한다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "관련 학과로는 "
+        },
+        {
+          "type": "text",
+          "text": "무인항공드론과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/무인항공드론과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "항공우주공학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/항공우주공학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "전자공학과",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/major/전자공학과"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " 등이 있으며, 대학에서 드론 관련 전공을 이수하면 교육기관 비행경력 인정과 취업 양쪽에서 유리하다"
+        },
+        {
+          "type": "footnote",
+          "attrs": {
+            "id": 24,
+            "text": "커리어넷 - 드론 전문가 직업 소개",
+            "url": "https://www.career.go.kr/cloud/m/job/view?seq=10039"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "드론 자격증 취득 전 체크리스트"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "목표 종(1종~4종)을 정했는가? 취업 목적이면 1종을 추천한다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "국민내일배움카드를 발급받았는가? 미발급이면 HRD-Net에서 먼저 신청하자."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "거주 지역 지자체 드론 자격증 지원사업이 있는지 확인했는가?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "교육기관을 전문교육기관과 사설 교육원 중 비교 검토했는가?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "1·2종 실기시험 응시자라면 신체검사증명서를 준비했는가?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "드론라이프 등에서 기출문제를 최소 3회독 이상 풀어봤는가?"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "자격증 취득 후 진출할 분야(방제, 촬영, 측량, 교관 등)를 정했는가?"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "자주 묻는 질문"
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "드론 자격증, 독학으로 딸 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "4종만 가능하다. 온라인으로 6시간 교육을 이수하면 된다. 1~3종은 교육기관 소속 상태에서만 비행경력이 인정되므로, 반드시 교육기관에 등록해야 한다. 학과시험 필기 공부 자체는 기출문제를 독학으로 풀 수 있지만, 비행경력 시간은 교육기관에서 기록해줘야 유효하다. 개인 드론을 사서 혼자 날린 시간은 비행경력으로 인정되지 않으니 주의가 필요하다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "몇 종부터 따는 게 좋나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "취미 목적이면 4종으로 충분하다. 취업이나 창업이 목표라면 처음부터 1종을 목표로 하는 것이 효율적이다. 2종을 따고 나중에 1종으로 업그레이드하는 경로도 있지만, 교육비와 시간이 이중으로 드는 비효율이 있다. 1종은 상위호환이므로 한 번에 취득하면 2·3·4종 기체를 전부 조종할 수 있다. 다만 교육비(300만 원 내외)가 부담된다면, 3종(학과시험만)으로 먼저 드론 세계에 발을 들여놓고, 이후 1종을 취득하는 단계적 접근도 합리적인 선택이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "자격증 취득까지 얼마나 걸리나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "전문교육기관 기준 약 3주(120시간)가 소요된다. 학과이론 20시간, 모의비행 20시간, 실기비행 80시간으로 구성되어 있고, 대부분 월~금 풀타임 교육이다. 사설 교육원을 이용하면 비행경력만 채우고 별도로 학과시험을 준비해야 하므로 총 1~2개월 정도 걸린다. 주말반을 운영하는 사설 교육원도 있어서 직장인도 수강이 가능하다. 4종은 온라인 교육 6시간이면 당일 취득 가능하다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "드론 자격증만으로 바로 취업이 되나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "자격증은 필수 조건이지만 충분 조건은 아니다. 현장에서는 자격증 + 특수 분야 역량의 조합을 원한다. 예를 들어 드론 측량이면 GIS 소프트웨어 활용 능력, 항공촬영이면 영상 편집·색보정 능력, 농업 방제면 농약 안전관리 지식과 작물별 방제 시기에 대한 이해가 필요하다. 채용공고를 보면 '드론 조종 + ○○ 가능자 우대'라는 문구가 대부분이다. 자격증 취득과 동시에 특화 분야를 하나 정해서 포트폴리오를 쌓아가는 것이 취업 전략의 핵심이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "qnaQuestion",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "실기시험 합격률이 낮다고 하던데, 어떻게 준비해야 하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "qnaAnswer",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "과거에는 5~6% 수준이었지만, 현재는 김천 시험장 신설 등 시험 인프라 확충으로 50% 이상으로 크게 올랐다. 핵심은 비행 연습 시간이다. 최소 비행경력(1종 기준 20시간) 외에 추가 10~20시간을 더 연습하면 합격 확률이 크게 높아진다. 특히 호버링 안정성과 정밀 착륙을 집중적으로 연습하는 것이 좋다. 시험 당일에는 긴장 때문에 평소 실력의 70~80%밖에 나오지 않으므로, 여유 있게 준비하는 것이 좋다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "드론 자격증, 핵심 정리"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "250g 초과 드론을 비행하려면 자격증 필수 — 취업이나 창업이 목적이면 1종을 목표로 하자"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "전문교육기관 수료 시 학과시험 면제 + 비행경력 인정, 사설은 비용이 저렴하지만 필기를 별도로 봐야 한다"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "국민내일배움카드 + 지자체 지원사업을 조합하면 교육비 부담을 크게 줄일 수 있다"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "자격증 단독보다 '자격증 + 특수 분야(방제·측량·촬영)'의 조합이 취업·소득 양쪽에서 경쟁력을 만든다"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "BVLOS(가시권 밖 비행) 역량은 향후 5년간 드론 산업에서 가장 수요가 높을 것으로 예상되는 핵심 스킬이다"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

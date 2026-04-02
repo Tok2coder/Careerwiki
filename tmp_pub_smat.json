@@ -1,0 +1,709 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "SMAT 서비스경영자격이란? 등급 구조부터 국가공인 의미까지" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "SMAT(Service Management Ability Test)는 서비스 산업 분야의 전문 인력을 체계적으로 양성하기 위해 한국생산성본부(KPC)가 시행하는 국가공인 민간자격시험이다" },
+        { "type": "footnote", "attrs": { "id": 1, "text": "KPC자격 – SMAT 서비스경영자격 시험안내", "url": "https://license.kpc.or.kr/nasec/qlfint/qlfint/selectMatmngmtty.do" } },
+        { "type": "text", "text": ". 국가직무능력표준(NCS)을 기반으로 설계되었으며, 2015년부터 국가공인 자격시험으로 시행되고 있다. '국가공인'이라는 표현은 민간자격이지만 주무부처 장관이 공인한 자격이라는 뜻으로, 공공기관이나 기업에서 신뢰도 높은 스펙으로 인정받을 수 있다는 의미이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "SMAT의 핵심 목적은 서비스 산업의 핵심 성공 요인(CBK: Common Body of Knowledge)을 추출하여, 업종별·직무별 서비스경영 역량을 객관적으로 평가하는 것이다. 의료·관광·금융·유통·공공·미용·호텔 등 폭넓은 서비스 업종에 적용할 수 있다는 점이 특징이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "등급은 모듈 조합 방식으로 결정된다. 모듈 A(비즈니스 커뮤니케이션) 1개만 취득하면 3급(실무자), 모듈 A와 B 또는 A와 C를 함께 취득하면 2급(관리자), 세 모듈(A+B+C)을 모두 취득하면 1급(컨설턴트)이 된다" },
+        { "type": "footnote", "attrs": { "id": 2, "text": "민간자격정보서비스(PQI) – SMAT 자격 상세", "url": "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=7385" } },
+        { "type": "text", "text": ". 주의할 점은 모듈 B나 C를 먼저 취득하더라도 A모듈이 없으면 자격이 부여되지 않는다는 것이다. 따라서 반드시 A모듈부터 취득하거나, 같은 날 동시에 응시하는 전략이 효율적이다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "등급" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "요건" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "수준" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학점은행제" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1급 (컨설턴트)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "모듈 A + B + C 전부 취득" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "프로페셔널/전문가" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "10학점 인정" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "2급 (관리자)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "모듈 A+B 또는 A+C 2개 취득" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "직무별 특성화 인재" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "6학점 인정" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3급 (실무자)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "모듈 A 1개 취득" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "서비스업 신입사원 수준" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "해당 없음" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "1급은 학점은행제에서 경영학·관광경영학·호텔경영학 전공필수 10학점으로 인정받을 수 있어, 학위 취득과 자격증을 동시에 노리는 수험생에게 실질적인 메리트가 된다" },
+        { "type": "footnote", "attrs": { "id": 3, "text": "Q-net 국가자격 종목 정보 – SMAT", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9980" } },
+        { "type": "text", "text": ". " },
+        { "type": "text", "text": "호텔경영학과", "marks": [{ "type": "link", "attrs": { "href": "/major/호텔경영학과" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "관광경영학과", "marks": [{ "type": "link", "attrs": { "href": "/major/관광경영학과" } }] },
+        { "type": "text", "text": "를 학점은행제로 준비 중인 사람이라면 SMAT 1급 취득을 적극 고려해볼 만하다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "모듈별 시험 구조: A·B·C 과목 상세 분석" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "SMAT 시험은 CBT(Computer Based Test) 방식으로 진행된다. 시험장 컴퓨터에서 문제를 풀고 바로 제출하는 형태이며, 문제은행 방식이라 기출과 동일하거나 유사한 문제가 반복 출제되는 것이 특징이다" },
+        { "type": "footnote", "attrs": { "id": 4, "text": "한국강사신문 – SMAT 서비스경영자격 시험 안내", "url": "https://www.lecturernews.com/news/articleView.html?idxno=120208" } },
+        { "type": "text", "text": ". 각 모듈은 50문항, 70분이며 100점 만점 기준 70점 이상이면 합격이다. 같은 날 최대 3개 모듈을 동시에 응시할 수 있으므로, 하루에 1급 요건을 모두 충족하는 것도 이론적으로 가능하다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "모듈" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "과목명" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "주요 내용" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "문항/시간" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "체감 난이도" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "A" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비즈니스 커뮤니케이션" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비즈니스 매너·에티켓, 이미지메이킹, 고객심리, 고객 커뮤니케이션, 회의기획·의전" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "50문항 / 70분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★☆☆☆☆ (가장 쉬움)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "B" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "서비스 마케팅/세일즈" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "서비스 세일즈·상담, CRM, VOC 분석, 컴플레인 처리, 유통관리, 코칭·멘토링" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "50문항 / 70분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★★☆ (가장 어려움)" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "C" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "서비스 운영전략" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "서비스산업 개론, 프로세스 설계·품질관리, 수요·공급관리, HRM, CSM 전략" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "50문항 / 70분" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "★★★☆☆ (중간)" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "모듈 A는 비전공자도 상식 수준으로 접근할 수 있는 내용이 많아 합격 난이도가 가장 낮다. 비즈니스 매너, 인사 예절, 복장 코드 같은 주제가 출제되므로 직장 경험이 있다면 체감 난이도가 더 떨어진다. 반면 모듈 B는 CRM(고객관계관리), VOC(고객의 소리), 컴플레인 처리 절차 등 전문 용어와 프로세스가 많아 탈락률이 가장 높다. 모듈 C는 경영학 기본 이론이 바탕이 되기 때문에, " },
+        { "type": "text", "text": "경영학과", "marks": [{ "type": "link", "attrs": { "href": "/major/경영학과" } }] },
+        { "type": "text", "text": " 전공자라면 상대적으로 수월하게 느낄 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "세 모듈 모두 문제은행 방식이라는 점이 가장 중요한 수험 포인트이다. 기출문제를 충분히 풀어보면 동일한 문제나 선지만 바뀐 유사 문제를 만날 확률이 매우 높다. 이 때문에 기출 반복 풀이가 가장 효율적인 학습법으로 통한다" },
+        { "type": "footnote", "attrs": { "id": 5, "text": "SMAT 자격증 시험 준비의 모든 것 – 공부법 상세", "url": "https://9sundrops.com/smat%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%8B%9C%ED%97%98-%EC%A4%80%EB%B9%84%EC%9D%98-%EB%AA%A8%EB%93%A0-%EA%B2%83/" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "2026년 시험 일정·접수 방법·응시료 총정리" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "SMAT는 연 8회(정기시험 6회 + 특별시험 2회) 시험이 실시된다. 정기시험은 짝수 달(2·4·6·8·10·12월) 2주차 토요일에, 특별시험은 5월과 11월 4주차 토요일에 치러진다" },
+        { "type": "footnote", "attrs": { "id": 6, "text": "KPC자격 – SMAT 시험일정 안내", "url": "https://license.kpc.or.kr/nasec/rceptexmncnfirm/selectExprschdul.do" } },
+        { "type": "text", "text": ". 시험 주기가 약 2개월로 짧기 때문에, 한 회차를 놓쳐도 빠르게 다음 기회를 잡을 수 있다는 장점이 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "2026년 기준으로 가장 가까운 일정을 확인하면 다음과 같다. 제2회 정기시험은 2026년 4월 2일~8일에 접수하여 5월 9일에 시험을 치르고, 제3회 정기시험은 4월 23일~29일에 접수하여 5월 30일에 시험이 예정되어 있다" },
+        { "type": "footnote", "attrs": { "id": 7, "text": "메인에듀 – SMAT 서비스경영자격 시험일정", "url": "https://m.mainedu.co.kr/board/view.php?code=mainedu_exam_schedule&page=1&seq_no=61180" } },
+        { "type": "text", "text": ". 접수는 KPC자격 홈페이지(license.kpc.or.kr)에서 온라인으로만 진행된다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "응시료는 모듈 1개당 20,000원이다. 3개 모듈을 동시에 접수하면 50,000원으로 할인되며, 모든 접수에 결제 대행 수수료 1,000원이 별도로 추가된다. 따라서 3급(A모듈만) 응시 시 21,000원, 1급(3개 모듈 동시) 응시 시 51,000원이 실제 결제 금액이다. 합격 여부는 시험 종료 후 약 2주 내에 KPC자격 홈페이지에서 확인할 수 있으며, 합격 시 같은 사이트에서 자격증 발급을 신청하면 된다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "합격률과 난이도: 정말 쉬운 시험일까?" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "SMAT의 전체 평균 합격률은 약 68.2%로, 자격시험 중에서는 비교적 높은 편에 속한다" },
+        { "type": "footnote", "attrs": { "id": 8, "text": "SMAT 자격증 쓸모·합격률·난이도·시험일정·기출문제", "url": "https://govad.co.kr/entry/smat-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%93%B8%EB%AA%A8-%EC%97%AC%EB%B6%80-%ED%95%A9%EA%B2%A9%EB%A5%A0-%EB%82%9C%EC%9D%B4%EB%8F%84-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95-%EA%B8%B0%EC%B6%9C%EB%AC%B8%EC%A0%9C/" } },
+        { "type": "text", "text": ". 다만 등급별로 차이가 상당한데, 2024년 기준 3급 합격률은 67.14%, 2급은 64.77%, 1급은 48.24%였다. 3급은 세 명 중 두 명이 합격하는 수준이지만, 1급은 절반 가까이 탈락한다는 뜻이므로 방심은 금물이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "모듈별 체감 난이도에서 가장 큰 변수는 모듈 B이다. CRM, VOC, 서비스 유통관리, 컴플레인 처리 절차 등 전문 용어가 대량 출제되어 교재를 정독하지 않으면 기출문제만으로는 커버하기 어렵다. 실제로 모듈 B에서 탈락해 1급 취득에 실패하는 사례가 가장 많다" },
+        { "type": "footnote", "attrs": { "id": 9, "text": "SMAT 자격증의 모든 것 – 난이도·쓸모·시험일정", "url": "https://wasabisenbe.com/smat-%EC%9E%90%EA%B2%A9%EC%A6%9D%EC%9D%98-%EB%AA%A8%EB%93%A0-%EA%B2%83-feat-%EC%93%B8%EB%AA%A8-%EB%82%9C%EC%9D%B4%EB%8F%84-%EC%8B%9C%ED%97%98-%EC%9D%BC%EC%A0%95-%EB%93%B1/" } },
+        { "type": "text", "text": ". 반면 모듈 A는 비전공자가 1~2주만 공부해도 충분히 합격할 수 있고, 극단적으로는 12시간 단기 암기로 합격한 후기도 존재한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "모듈 C는 서비스 산업 개론, 프로세스 설계, 인적자원관리(HRM), 고객만족경영(CSM) 등 경영학 기반 이론이 중심이다. 경영학 전공자에게는 익숙한 개념들이 많지만, 비전공자라면 용어 자체가 생소할 수 있으므로 교재 1회독은 반드시 해야 한다. 전반적으로 SMAT는 문제은행 방식 덕분에 기출 반복 학습의 효율이 높은 시험이며, 체계적으로 준비하면 3~4주 안에 1급까지 합격할 수 있는 난이도이다." }
+      ]
+    },
+    {
+      "type": "image",
+      "attrs": {
+        "src": "/uploads/jobs/job-howto-smat-img1.webp",
+        "alt": "SMAT 서비스경영자격 모듈 구조 – 모듈 A 비즈니스 커뮤니케이션, 모듈 B 서비스 마케팅, 모듈 C 서비스 운영전략",
+        "width": 720,
+        "align": "center"
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "모듈별 공부법과 추천 교재: 독학 합격 전략" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "SMAT 독학의 핵심 원칙은 단순하다. 교재 1회 정독 → 기출문제 반복 풀이 → 오답노트 정리 → CBT 모의고사 실전 연습, 이 네 단계를 충실히 따르면 된다. 문제은행 방식이라는 시험 특성상 기출문제 숙지가 합격의 70% 이상을 결정한다고 봐도 과언이 아니다" },
+        { "type": "footnote", "attrs": { "id": 10, "text": "디시인사이드 자격증 갤러리 – SMAT 합격 후기", "url": "https://m.dcinside.com/board/acbs/154649" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "모듈별 공부 전략을 구체적으로 살펴보면 다음과 같다. 모듈 A(비즈니스 커뮤니케이션)는 비즈니스 매너, 인사 예절, 복장 코드, 이미지메이킹, 고객 심리 등 상식에 가까운 내용이 주를 이룬다. 교재를 빠르게 훑고 기출문제를 2~3회 반복하면 충분하다. 하루 2~3시간 투자 시 1~2주면 합격권에 진입할 수 있다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "모듈 B(서비스 마케팅/세일즈)는 가장 많은 시간을 투자해야 하는 과목이다. CRM(고객관계관리), VOC(Voice of Customer), 컴플레인 처리 5단계, 서비스 유통관리, 코칭·멘토링 기법 등 전문 용어와 프로세스를 정확히 암기해야 한다. 단순히 기출만 풀어서는 변형 문제에 대응하기 어려우므로, 교재 정독과 개념 정리를 병행하는 것을 강력히 권장한다. " },
+        { "type": "text", "text": "고객상담원", "marks": [{ "type": "link", "attrs": { "href": "/job/고객상담원" } }] },
+        { "type": "text", "text": "이나 " },
+        { "type": "text", "text": "마케팅전문가", "marks": [{ "type": "link", "attrs": { "href": "/job/마케팅전문가" } }] },
+        { "type": "text", "text": " 직무 경험이 있다면 모듈 B의 내용이 비교적 친숙하게 다가올 것이다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "모듈 C(서비스 운영전략)는 서비스 산업 개론, 서비스 프로세스 설계·품질관리, 수요·공급 관리, HRM, CSM 전략을 다룬다. 경영학 배경지식이 있으면 유리하지만, 없더라도 교재의 핵심 요약을 중심으로 학습하면 기출에서 크게 벗어나지 않는다. 모듈 A와 C를 먼저 합격한 뒤 B에 집중하는 순서가 시간 배분 측면에서 효율적이라는 합격자 의견이 많다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "추천 교재로는 에듀윌의 'SMAT 1주끝장' 시리즈(모듈A·B·C 각 권, 정가 17,000원)가 KPC 공식인증 교재로 7년 연속 선정되어 신뢰도가 높다. 저자 직강 무료 동영상과 CBT 모의고사를 제공하므로 독학에 최적화되어 있다. 올인원 교재를 원한다면 영진닷컴의 '이기적 SMAT 모듈 A+B+C 올인원'(정가 39,000원)이 합리적인 선택이다. 역시 무료 동영상 강의가 포함되며, 빈출 용어 정리 노트가 별도로 제공된다" },
+        { "type": "footnote", "attrs": { "id": 11, "text": "에듀윌 – SMAT 교재 상세정보", "url": "https://book.eduwill.net/goods/select.action?goodsId=0100004239" } },
+        { "type": "footnote", "attrs": { "id": 12, "text": "영진닷컴 – 이기적 SMAT 올인원 교재", "url": "https://shop.youngjin.com/goods/view?no=1157" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "무료 학습 자원도 활용할 수 있다. KPC자격 홈페이지에서 기출문제를 공개하고 있으며, 신지원에듀 사이트에서도 무료 기출 유형 문제풀이를 제공한다. 1급 목표 기준 하루 3시간씩 3~4주, 3급 목표라면 1~2주면 충분하다." }
+      ]
+    },
+    {
+      "type": "checkpointBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "SMAT 독학 합격 체크리스트" }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "기본 교재 1회독 완료 (모듈 B는 개념 정리 노트 병행)" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "KPC 홈페이지 기출문제 최소 3세트 반복 풀이" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "오답노트 작성 → 틀린 문제의 키워드와 개념 재정리" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CBT 모의고사로 실전 타이밍 연습 (70분 안에 50문항)" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "모듈 B에 전체 학습 시간의 40% 이상 배분" }] }]
+            },
+            {
+              "type": "listItem",
+              "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시험 전날 약한 모듈의 핵심 용어 빠르게 복습" }] }]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "총 비용 분석: 최소 3만 원대부터 1급까지" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "SMAT는 자격시험 치고 비용 부담이 적은 편이다. 3급(모듈 A만) 독학 기준이면 응시료 21,000원에 교재 1권(약 15,300원)만 있으면 되므로, 총 36,300원이면 시작할 수 있다. 1급(3개 모듈)을 목표로 하더라도 동시 접수 할인 덕분에 응시료 51,000원에 올인원 교재(약 35,100원)를 더하면 86,100원 수준이다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "항목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3급(모듈A) 독학" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1급(A+B+C) 독학" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1급 + 인강 병행" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "응시료" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "21,000원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "51,000원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "51,000원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "교재비" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "~15,300원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "~35,100원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "~35,100원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "인강 비용" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "0원 (교재 무료강의)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "0원 (교재 무료강의)" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "50,000~150,000원" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "합계" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "marks": [{ "type": "bold" }], "text": "약 36,300원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "marks": [{ "type": "bold" }], "text": "약 86,100원" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "marks": [{ "type": "bold" }], "text": "약 150,000~250,000원" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "에듀윌이나 이기적 교재를 구매하면 저자 직강 동영상이 무료로 포함되어 있어 별도 인터넷 강의 비용이 들지 않는다. 다만 체계적인 커리큘럼이 필요하거나 독학이 어려운 사람은 신지원에듀 등의 유료 패키지(약 5만~15만 원)를 고려할 수 있다. 결론적으로 SMAT는 10만 원 이내로 1급까지 취득 가능한 가성비 높은 자격증이다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "취업·경력에서 SMAT는 어떻게 활용되는가?" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "SMAT의 활용 범위는 서비스 산업 전반에 걸쳐 있다. 호텔·리조트의 프론트·컨시어지, 항공사 객실승무원·지상직, 면세점·백화점 판매서비스, 금융기관 창구·고객센터, 병원·의료기관 원무과, 공공기관 민원서비스, 미용·뷰티 고객응대, 콜센터·CS부서 등 서비스 접점이 있는 거의 모든 업종에서 가산점 또는 우대 요인으로 작용할 수 있다" },
+        { "type": "footnote", "attrs": { "id": 13, "text": "자넷(janet) – SMAT 자격 정보", "url": "https://janet.co.kr/jnLics/licenseInfo?ld_id=181" } },
+        { "type": "text", "text": "." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "구체적으로 " },
+        { "type": "text", "text": "호텔지배인", "marks": [{ "type": "link", "attrs": { "href": "/job/호텔지배인" } }] },
+        { "type": "text", "text": "이나 " },
+        { "type": "text", "text": "항공기객실승무원", "marks": [{ "type": "link", "attrs": { "href": "/job/항공기객실승무원" } }] },
+        { "type": "text", "text": "을 목표로 하는 사람에게 SMAT는 서비스경영 역량을 공식적으로 증명하는 수단이 된다. " },
+        { "type": "text", "text": "백화점매장관리원", "marks": [{ "type": "link", "attrs": { "href": "/job/백화점매장관리원" } }] },
+        { "type": "text", "text": "이나 " },
+        { "type": "text", "text": "의료코디네이터", "marks": [{ "type": "link", "attrs": { "href": "/job/의료코디네이터" } }] },
+        { "type": "text", "text": " 직무에서도 고객 응대·컴플레인 처리 역량을 보여주는 근거로 활용할 수 있다. " },
+        { "type": "text", "text": "은행사무원", "marks": [{ "type": "link", "attrs": { "href": "/job/은행사무원" } }] },
+        { "type": "text", "text": "이나 " },
+        { "type": "text", "text": "병원행정사무원", "marks": [{ "type": "link", "attrs": { "href": "/job/병원행정사무원" } }] },
+        { "type": "text", "text": " 같은 사무직에서도 서비스 마인드를 어필할 수 있는 자격증으로 기능한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "기업 인사(HR) 측면에서는 신규 인재 채용, 기존 직원 역량 강화, 직원 전환배치 등의 목적으로 SMAT를 활용하는 곳이 늘고 있다" },
+        { "type": "footnote", "attrs": { "id": 14, "text": "설하쌤 블로그 – SMAT 자격증 취업 활용", "url": "https://seolhassam.co.kr/38" } },
+        { "type": "text", "text": ". 다만 솔직히 말하면, SMAT 단독으로 취업을 보장하기는 어렵다. 서비스직 지원 시 기본 자격을 증명하는 '플러스 알파' 스펙으로 보는 것이 현실적이다. 특히 3급(A모듈만)은 취업 효용이 제한적이며, 최소 2급 이상을 취득해야 실질적인 경쟁력이 생긴다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "학점은행제 활용도 주요한 장점이다. 1급은 경영학·관광경영학·호텔경영학 전공필수 10학점, 2급은 경영·관광경영 전공필수 6학점으로 인정받을 수 있다" },
+        { "type": "footnote", "attrs": { "id": 15, "text": "일자리고 교육 바우처 – SMAT 과정 안내", "url": "https://edu.jobgo.ne.kr/_mobile/voucher/lectureView.php?seq=138" } },
+        { "type": "text", "text": ". 학점은행제로 학위를 준비 중인 직장인이나 재수생에게는 자격증 하나로 상당한 학점을 확보할 수 있어 실질적인 메리트가 크다. " },
+        { "type": "text", "text": "호텔관광경영학과", "marks": [{ "type": "link", "attrs": { "href": "/major/호텔관광경영학과" } }] },
+        { "type": "text", "text": "나 " },
+        { "type": "text", "text": "경영정보학과", "marks": [{ "type": "link", "attrs": { "href": "/major/경영정보학과" } }] },
+        { "type": "text", "text": " 등 관련 전공에서 학점 인정을 받을 수 있으므로, 학위 계획을 세울 때 SMAT를 전략적으로 활용하는 것을 추천한다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "CS리더스 vs SMAT: 유사 자격증 비교" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "서비스 분야 자격증을 준비하는 사람이라면 CS리더스 관리사와 SMAT 중 어떤 것을 먼저 따야 할지 고민하기 마련이다. 두 자격증은 다루는 범위와 성격이 다르므로, 목적에 따라 선택이 달라져야 한다." }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "CS리더스 관리사는 한국정보평가협회가 시행하는 국가등록 민간자격으로, 고객만족(CS) 전문 역량을 평가하는 데 초점이 맞춰져 있다. SMAT보다 난이도가 높아 합격률이 약 50% 전후로 형성되며, 특히 CS 전문 직무를 목표로 할 때 인지도가 높다는 평가를 받는다" },
+        { "type": "footnote", "attrs": { "id": 16, "text": "CS리더스 관리사 요약 – 시험일정·난이도·공부법", "url": "https://snowgotown.com/entry/CS%EB%A6%AC%EB%8D%94%EC%8A%A4-%EA%B4%80%EB%A6%AC%EC%82%AC-%EC%9A%94%EC%95%BD-%EC%8B%9C%ED%97%98%EC%9D%BC%EC%A0%95-%EB%82%9C%EC%9D%B4%EB%8F%84-%EB%B0%8F-%EA%B3%B5%EB%B6%80%EB%B2%95" } },
+        { "type": "text", "text": ". 반면 SMAT는 CS뿐 아니라 서비스경영 전반(마케팅, 운영전략, HRM까지)을 포괄하며, 국가공인 자격이라는 점과 학점은행제 인정이 차별화 포인트이다." }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "비교 항목" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "SMAT" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CS리더스 관리사" }] }] },
+            { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "컨벤션기획사" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "시행기관" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국생산성본부" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국정보평가협회" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "한국산업인력공단" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "자격 유형" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "국가공인 민간자격" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "국가등록 민간자격" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "국가기술자격" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "범위" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "서비스경영 전반" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "고객만족(CS) 전문" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "MICE/컨벤션 전문" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "난이도" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "3급 쉬움, 1급 보통" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "보통~어려움" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "어려움" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "학점은행제" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "1급 10학점, 2급 6학점" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "해당 없음" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "별도 확인 필요" }] }] }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "추천 대상" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "서비스업 전반 + 학점은행" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "CS/고객센터 취업 목표" }] }] },
+            { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "MICE/이벤트업계 목표" }] }] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "실무 취업이 최우선 목표라면 CS리더스 관리사를 먼저 추천하는 의견도 있다. 고객센터·콜센터·CS부서에서의 인지도가 SMAT보다 높다는 평가가 있기 때문이다" },
+        { "type": "footnote", "attrs": { "id": 17, "text": "자넷 토론방 – SMAT vs CS리더스 비교 질문", "url": "https://janet.co.kr/bbs/board.php?bo_table=bQna&wr_id=99107" } },
+        { "type": "text", "text": ". 반면 학점은행제 학점 확보가 목적이라면 SMAT가 훨씬 유리하다. CS리더스의 Part 3(비즈니스 매너)과 SMAT 모듈 A의 내용이 상당 부분 겹치기 때문에, 두 자격증을 함께 준비하면 학습 시간을 절약할 수 있다는 점도 참고할 만하다." }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": { "level": 2 },
+      "content": [
+        { "type": "text", "text": "자주 묻는 질문" }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "SMAT는 국가자격증인가, 민간자격증인가?" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "SMAT는 '국가공인 민간자격'이다. 민간 기관(한국생산성본부)이 시행하지만 주무부처 장관이 공인한 자격으로, 일반 민간자격보다 공신력이 높다. 국가기술자격은 아니지만, 국가공인 민간자격이라는 별도 카테고리로 학점은행제 학점 인정 등의 혜택을 받을 수 있다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "응시자격 제한이 있나?" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "없다. SMAT는 모든 등급(1·2·3급)에 학력·경력 등 응시자격 제한이 전혀 없다. 고등학생, 대학생, 직장인, 경력 단절자 누구나 응시할 수 있다. 단, A모듈 없이 B나 C만 합격하면 자격이 부여되지 않으므로 A모듈은 반드시 취득해야 한다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "하루에 3개 모듈을 동시에 볼 수 있나?" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "가능하다. 같은 시험일에 최대 3개 모듈을 동시에 접수하고 응시할 수 있다. 3개 동시 접수 시 응시료도 60,000원이 아닌 50,000원으로 할인된다. 다만 모듈당 70분이므로 3개 모듈을 연속 응시하면 총 210분(3시간 30분) 동안 집중해야 한다는 점을 감안해야 한다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "비전공자도 독학으로 1급 합격이 가능한가?" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "충분히 가능하다. SMAT는 문제은행 방식이라 기출문제 반복 학습의 효과가 매우 크다. 비전공자 기준으로 하루 3시간씩 3~4주 정도 투자하면 1급 합격이 가능하다는 것이 다수 합격자의 공통된 의견이다. 다만 모듈 B는 전문 용어가 많으므로 교재 정독을 반드시 병행해야 한다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "SMAT를 따면 취업에 직접적인 도움이 되나?" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "단독으로 취업을 보장하는 자격증은 아니다. 다만 서비스직 지원 시 서비스경영 역량을 공식적으로 증명하는 '추가 스펙'으로 기능한다. 호텔, 항공, 면세점, 금융, 의료 등 서비스 접점이 있는 업종에서 가산점이나 우대 요인으로 활용되며, 특히 학점은행제 학점 인정(1급 10학점)이라는 실질적인 이점이 있다. 3급만으로는 효용이 제한적이며, 최소 2급 이상을 추천한다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "CS리더스 관리사와 SMAT 중 어떤 것을 먼저 따야 하나?" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "목적에 따라 다르다. CS/고객센터 직무에 바로 취업하는 것이 목표라면 CS리더스 관리사의 인지도가 더 높으므로 먼저 추천한다. 학점은행제 학점 확보가 목적이라면 SMAT가 유리하다. 두 자격증의 출제 범위가 일부 겹치므로, 여유가 된다면 함께 준비하는 것이 가장 효율적이다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "qnaBlock",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "시험 결과는 언제 확인할 수 있나?" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "시험 종료 후 약 2주 내에 KPC자격 홈페이지(license.kpc.or.kr)에서 확인할 수 있다. 합격 시 같은 사이트에서 자격증 발급을 신청하면 된다. 모듈별로 개별 합격 여부가 결정되므로, 일부 모듈만 합격하고 나머지를 다음 회차에 재응시하는 것도 가능하다." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "conclusionBox",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 3 },
+          "content": [
+            { "type": "text", "text": "정리하면" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "SMAT 서비스경영자격은 응시자격 제한 없이 누구나 도전할 수 있는 국가공인 민간자격시험이다. 모듈 조합 방식으로 3급(A모듈)부터 1급(A+B+C)까지 단계적으로 취득할 수 있으며, 문제은행 방식 덕분에 기출문제 반복 학습이 합격의 핵심 전략이다. 1급 기준 3~4주 독학이면 충분하고, 비용도 10만 원 이내로 가성비가 뛰어나다." }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "취업 시장에서 SMAT 단독으로 결정적인 스펙이 되기는 어렵지만, 서비스업 전반에서 기본 역량을 증명하는 플러스 알파 자격증으로 충분히 활용 가능하다. 특히 학점은행제에서 1급 10학점이라는 파격적인 학점 인정을 받을 수 있어, " },
+            { "type": "text", "text": "경영학과", "marks": [{ "type": "link", "attrs": { "href": "/major/경영학과" } }] },
+            { "type": "text", "text": "나 " },
+            { "type": "text", "text": "관광경영학과", "marks": [{ "type": "link", "attrs": { "href": "/major/관광경영학과" } }] },
+            { "type": "text", "text": " 학위를 학점은행제로 준비하는 사람에게는 전략적 자산이 된다. " },
+            { "type": "text", "text": "경영컨설턴트", "marks": [{ "type": "link", "attrs": { "href": "/job/경영컨설턴트" } }] },
+            { "type": "text", "text": ", " },
+            { "type": "text", "text": "품질관리사무원", "marks": [{ "type": "link", "attrs": { "href": "/job/품질관리사무원" } }] },
+            { "type": "text", "text": ", " },
+            { "type": "text", "text": "여행상품개발자", "marks": [{ "type": "link", "attrs": { "href": "/job/여행상품개발자" } }] },
+            { "type": "text", "text": " 등 서비스 접점이 있는 직무를 목표로 한다면, SMAT를 서비스 역량의 첫 번째 공식 증명으로 활용해보길 권한다." }
+          ]
+        }
+      ]
+    }
+  ]
+}

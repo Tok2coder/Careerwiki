@@ -1,0 +1,148 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "ZUlIwpCMLLwuLIrb3pftm8wdLoU",
+  "nextPageToken": "CAQQAA",
+  "regionCode": "KR",
+  "pageInfo": {
+    "totalResults": 386067,
+    "resultsPerPage": 4
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "0VvcynBuGgWG4CfnzK9w_TL-jIw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "vZQInQAaO0Q"
+      },
+      "snippet": {
+        "publishedAt": "2025-04-07T01:40:50Z",
+        "channelId": "UCrREhltE9QEiXjQLdj9uxYw",
+        "title": "[비상교육] 직업정보_광고 디자이너",
+        "description": "빛나는 아이디어로 광고를 만드는 사람들! 광고 디자이너의 직업 세계로 떠나 볼까요? ☆ 선생님과 함께 만들어가는 즐거운 수업 _ ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/vZQInQAaO0Q/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/vZQInQAaO0Q/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/vZQInQAaO0Q/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "비상교육 비바샘",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-04-07T01:40:50Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "ximsPVvXulQFPQoFcKGALoBLS0g",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "oQxS0XPEy-k"
+      },
+      "snippet": {
+        "publishedAt": "2021-12-03T09:00:32Z",
+        "channelId": "UCwx6n_4OcLgzAGdty0RWCoA",
+        "title": "[EN] 진짜최종_최종_워크맨_EP128_수정제발요_그만😭😭 | LG전자 | 광고대행사 | 워크맨 ep.128",
+        "description": "본 영상은 LG전자의 유료광고를 포함하고 있습니다* JOB것들아~~~♥ 인력소장이다,,,,~~~ 울 성규,, 오늘은 광고,,,,주님,,과 함께 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/oQxS0XPEy-k/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/oQxS0XPEy-k/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/oQxS0XPEy-k/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "워크맨-Workman",
+        "liveBroadcastContent": "none",
+        "publishTime": "2021-12-03T09:00:32Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "RTkAs2gfdFLthvOBg5duOJng55g",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "OelqX016M4U"
+      },
+      "snippet": {
+        "publishedAt": "2024-05-01T08:00:12Z",
+        "channelId": "UCLIeozXI2p9ky26ssYl5EKw",
+        "title": "[초가집 Ep. 03] 마감 촉박한 디자이너가 과업 해내는 법👊｜편집 디자인 광고물 메이킹 영상｜초아커뮤니케이션 CHOA Communication",
+        "description": "와... 내가 오늘부터 ??이라니 감사합니다 열심히 회사 다니겠습니다   구독 좋아요 버튼을 눌러주세요! · 초아커뮤니케이션 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/OelqX016M4U/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/OelqX016M4U/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/OelqX016M4U/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "초아커뮤니케이션 CHOA Communication",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-05-01T08:00:12Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "xgqgewlRJ8kt5nWuwOLode8SpzM",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "kWzD_Du2Fgs"
+      },
+      "snippet": {
+        "publishedAt": "2026-03-09T15:22:21Z",
+        "channelId": "UC3H0jJbS8GT11MehBFVn5rw",
+        "title": "디자이너 취업 시장 현실 | 디자인 업계 근황, 대기업, 취업, 포트폴리오",
+        "description": "디자인취업 #디자인이직 #디자인포트폴리오 2026년 현재 디자인 취업 시장 현실은 어떤 상황일까요? 이 영상에서는 대기업 디자인팀 ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/kWzD_Du2Fgs/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/kWzD_Du2Fgs/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/kWzD_Du2Fgs/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "No More Design",
+        "liveBroadcastContent": "none",
+        "publishTime": "2026-03-09T15:22:21Z"
+      }
+    }
+  ]
+}

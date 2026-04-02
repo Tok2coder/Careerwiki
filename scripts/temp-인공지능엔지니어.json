@@ -1,0 +1,84 @@
+{
+  "jobId": "1765283710457326",
+  "jobName": "인공지능엔지니어",
+  "jobSlug": "인공지능엔지니어",
+  "fields": {
+    "way": "인공지능엔지니어가 되는 대표 경로는 두 가지다. **학위 중심 경로**: 컴퓨터공학과, 소프트웨어공학과, 전자공학과, 수학과, 통계학과 등 이공계 학과를 졸업한 후 취업하는 방식이 가장 일반적이다. 최근 여러 대학에서 AI전공·데이터사이언스학과를 신설하고 있어 관련 학과 진학도 유리하다. **자격증 취득**: 국가공인 AI 전용 자격증은 없으나 **빅데이터분석기사**(한국데이터산업진흥원, 관련학과 졸업 또는 실무 2년 이상)와 **ADsP(데이터분석준전문가)**가 실질적인 역량 증명 수단으로 활용된다.[1] 비전공자는 부트캠프·온라인 강좌(Coursera, Fast.ai 등)로 Python·딥러닝 기초를 쌓고 포트폴리오를 구성해 채용에 도전하는 경로도 점차 일반화되고 있다. 대기업·빅테크 채용 시 AI 관련 논문 실적이나 Kaggle 상위 입상 경력이 강점으로 작용한다.[2]",
+    "overviewSalary.sal": "커리어넷 임금정보 기준 인공지능엔지니어 연봉 중위값은 약 **5,386만 원**이며, 하위 25%는 3,700만 원, 상위 25%는 7,500만 원 이상이다.[1] 신입은 4,000만~5,000만 원 수준이나 네이버·카카오·삼성 등 대기업의 경우 초봉 5,000만 원을 상회한다. 경력 5년 이상 시니어 엔지니어는 1억 원 이상을 받는 경우도 적지 않다.",
+    "overviewProspect.main": "향후 5년간 **증가** 전망이다.[1] 생성형 AI 확산, 자율주행·의료 AI·산업 자동화 수요가 급성장하면서 전 산업에서 AI 인력 수요가 빠르게 늘고 있다. 정부의 AI 국가 전략과 기업 디지털 전환 투자 확대가 긍정 요인이다. 반면 ChatGPT 등 생성형 AI 도구가 일부 단순 AI 작업을 대체할 가능성도 있어, 연구 역량과 도메인 전문성을 갖춘 엔지니어 수요가 더욱 부각될 전망이다. AI 분야 인력 부족은 단기간 해소되기 어려운 구조적 문제로 평가된다.",
+    "trivia": "2023년 미국 AI 스타트업 투자액은 약 **470억 달러(약 62조 원)**로 전체 VC 투자의 30%를 차지했다.[1] 한국도 AI 분야 채용 공고가 2020년 대비 3배 이상 증가했으며, 주요 대기업들이 AI 연구소를 설립하거나 확대하는 추세다. 글로벌 AI 엔지니어 중위 연봉은 미국 실리콘밸리 기준 약 18만 달러(약 2억 4천만 원)로 소프트웨어 엔지니어 중에서도 최상위 수준이다.",
+    "detailWlb.wlbDetail": "대기업·빅테크 AI팀 기준 자율 출퇴근(선택적 근로시간제)이 일반적이며, 재택근무 병행 비율이 높다. 연구·개발 집중 기간에는 야근이 발생하지만 성과 중심 문화가 형성되어 있다. 스타트업의 경우 빠른 개발 사이클로 업무 강도가 높을 수 있다. 전반적으로 IT 직군 중에서도 워라밸이 양호한 편으로 평가된다.",
+    "detailWlb.socialDetail": "AI 기술은 의료 진단 보조, 장애인 접근성 향상, 기후 변화 예측, 언어 장벽 해소 등 사회 문제 해결에 폭넓게 적용된다. 사회 기여도에 대한 인식이 높은 편이나, AI 편향·개인정보 침해 등 윤리적 논란과 함께 책임감 있는 개발의 중요성도 커지고 있다.",
+    "detailReady.curriculum": [
+      "컴퓨터공학·소프트웨어공학·수학·통계학 등 이공계 학과 이수 — 선형대수, 확률통계, 알고리즘 필수",
+      "Python 프로그래밍 + 딥러닝 프레임워크(PyTorch, TensorFlow) + 머신러닝 기초 학습",
+      "빅데이터분석기사, ADsP(데이터분석준전문가) 자격증 취득 권장"
+    ],
+    "detailReady.recruit": [
+      "네이버·카카오·삼성·LG·SKT 등 대기업 AI 연구소 및 개발팀 공채/수시 채용",
+      "AI 스타트업(뤼튼, 업스테이지, 코난테크놀로지 등) 경력/신입 채용",
+      "정부 출연 연구기관(ETRI, KAIST, NAVER AI Lab 등) 연구원 채용",
+      "AI 전문 채용 플랫폼(원티드, 링크드인, 로켓펀치)을 통한 수시 지원"
+    ],
+    "detailReady.training": [
+      "빅데이터분석기사 취득 — 데이터산업진흥원(kdata.or.kr) 시험 일정 확인",
+      "Kaggle, Dacon 등 AI 경진대회 참가로 실전 포트폴리오 구성",
+      "딥러닝·LLM 관련 논문 구현 경험 축적 (arXiv, Papers With Code 활용)"
+    ],
+    "sidebarJobs": ["빅데이터전문가", "웹개발자", "블록체인개발자", "로봇공학기술자", "가상현실전문가"],
+    "sidebarMajors": ["컴퓨터공학과", "소프트웨어공학과", "전자공학과", "통계학과", "수학과"],
+    "heroTags": ["AI엔지니어", "머신러닝엔지니어", "딥러닝엔지니어", "ML엔지니어", "인공지능개발자", "AI연구원"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=KIMS6szTDeo", "title": "AI 엔지니어가 말하는 개발자의 리얼 현실 (연봉·이직·미래)"},
+      {"url": "https://www.youtube.com/watch?v=T1Yggs0hS70", "title": "14년차 리드 개발자의 하루 | 직업탐구 영역"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"label": "한국데이터산업진흥원 빅데이터분석기사 자격정보", "url": "https://www.kdata.or.kr/kr/board/notice_01/boardView.do"},
+      {"label": "커리어넷 인공지능엔지니어 직업정보", "url": "https://www.career.go.kr/cnet/app/base/job/jobView.m?SEQ=20001"}
+    ],
+    "overviewSalary.sal": [
+      {"label": "커리어넷 인공지능엔지니어 임금정보", "url": "https://www.career.go.kr/cnet/app/base/job/jobView.m?SEQ=20001"}
+    ],
+    "overviewProspect.main": [
+      {"label": "커리어넷 인공지능엔지니어 직업전망", "url": "https://www.career.go.kr/cnet/app/base/job/jobView.m?SEQ=20001"}
+    ],
+    "trivia": [
+      {"label": "Stanford AI Index Report 2024", "url": "https://aiindex.stanford.edu/report/"}
+    ]
+  },
+  "changeSummary": "way(되는방법), 급여, 전망, trivia, WLB상세, detailReady(커리큘럼/채용/훈련), sidebarJobs/Majors, heroTags 보완 및 YouTube 링크 추가",
+  "careerTree": {
+    "person_name": "김성훈",
+    "person_name_en": "Sung Kim",
+    "person_title": "홍콩과기대 교수·모두의연구소 설립자",
+    "display_priority": 1,
+    "stages": [
+      {
+        "order": 1,
+        "title": "컴퓨터공학 전공",
+        "organization": "포항공과대학교(POSTECH)·UIUC 대학원",
+        "years": "1990년대",
+        "description": "POSTECH에서 컴퓨터공학 학부 졸업 후 UIUC(일리노이 어바나-샴페인)에서 박사 취득",
+        "job_slug": null
+      },
+      {
+        "order": 2,
+        "title": "소프트웨어엔지니어",
+        "organization": "Microsoft Research",
+        "years": "2000년대",
+        "description": "마이크로소프트 리서치에서 머신러닝 연구 수행",
+        "job_slug": "인공지능엔지니어"
+      },
+      {
+        "order": 3,
+        "title": "교수·AI 연구자",
+        "organization": "홍콩과학기술대학교(HKUST)",
+        "years": "2010년대~현재",
+        "description": "딥러닝 강의(모두의딥러닝) 무료 공개로 국내 AI 교육 대중화에 기여. 모두의연구소 설립으로 AI 연구 커뮤니티 형성",
+        "job_slug": "인공지능엔지니어"
+      }
+    ]
+  }
+}
