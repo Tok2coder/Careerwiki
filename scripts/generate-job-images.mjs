@@ -130,42 +130,59 @@ function runSqlFile(sql) {
   }
 }
 
+// Gemini 레이트 리밋 발생 여부 추적
+let geminiRateLimited = false;
+
 // Gemini 2.0 flash로 이미지 프롬프트 생성 (JOB_PROMPT_TEMPLATE 사용, 재시도 포함)
-async function generatePrompt(jobName, retries = 4) {
+async function generatePromptViaGemini(jobName) {
+  if (geminiRateLimited) return null; // 이미 레이트 리밋이면 바로 스킵
   const systemPrompt = JOB_PROMPT_TEMPLATE.replace(/\{jobName\}/g, jobName);
   const body = {
     contents: [{ parts: [{ text: systemPrompt }] }],
     generationConfig: { temperature: 0.7, maxOutputTokens: 1000, topP: 0.9 }
   };
 
-  for (let attempt = 0; attempt < retries; attempt++) {
+  for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const resp = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
         { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
       );
       if (resp.status === 429) {
-        const wait = 60 + attempt * 30; // 60s, 90s, 120s, 150s
-        console.log(`\n   ⚠️  Gemini 429 레이트 리밋. ${wait}초 대기 후 재시도 (${attempt + 1}/${retries})...`);
-        await new Promise(r => setTimeout(r, wait * 1000));
-        continue;
-      }
-      if (!resp.ok) {
-        console.error(`   Gemini 오류: HTTP ${resp.status}`);
+        if (attempt === 0) {
+          console.log(`\n   ⚠️  Gemini 429. 60초 대기 후 재시도...`);
+          await new Promise(r => setTimeout(r, 60000));
+          continue;
+        }
+        console.log(`\n   ⚠️  Gemini 레이트 리밋 지속 → 폴백 모드로 전환`);
+        geminiRateLimited = true;
         return null;
       }
+      if (!resp.ok) return null;
       const data = await resp.json();
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
       if (!text) return null;
       return text.replace(/^["']|["']$/g, '').trim();
     } catch (e) {
-      console.error(`   Gemini 예외: ${e.message}`);
-      if (attempt < retries - 1) {
-        await new Promise(r => setTimeout(r, 10000));
-      }
+      return null;
     }
   }
   return null;
+}
+
+// 폴백: Gemini 없이 직접 스타일-일관 프롬프트 구성
+// 기존 정상 이미지들의 프롬프트 패턴을 그대로 따름
+function buildFallbackPrompt(jobName) {
+  return `A small cute baby beaver with tiny teeth, big round glossy eyes, soft rounded cheeks, short limbs, light-brown fluffy fur and a creamy belly, drawn in simple 2D cartoon style, wearing professional ${jobName} work attire with appropriate tools and safety equipment, actively performing specialized ${jobName} tasks using professional instruments and machinery in a detailed ${jobName} workplace environment filled with industry-specific equipment, materials, and professional tools, the beaver appearing very small at about 12% of the frame, positioned naturally in the foreground, rendered in 2D stylized realism with soft painterly shading, gentle gradients, atmospheric haze, cinematic rim light using a dark-mode palette of deep navy, muted violet, soft teal glow accents with rich background depth.`;
+}
+
+// 프롬프트 생성: Gemini 우선, 실패 시 폴백
+async function generatePrompt(jobName) {
+  const geminiResult = await generatePromptViaGemini(jobName);
+  if (geminiResult) return geminiResult;
+  const fallback = buildFallbackPrompt(jobName);
+  console.log(`   → 폴백 프롬프트 사용 (${fallback.length}자)`);
+  return fallback;
 }
 
 // Evolink 이미지 생성 요청
