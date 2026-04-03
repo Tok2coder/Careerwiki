@@ -52,6 +52,20 @@ export interface JobEqualizeItem {
   sourceCount: number  // 출처 총 항목 수
   urlSourceCount: number // URL이 포함된 출처 수
   youtubeCount: number
+  // 품질 플래그
+  wayIsArray: boolean     // way가 배열 형식 (위험)
+  imageUrlBad: boolean    // image_url 포맷 오류 (경고)
+  wayTrunc: boolean       // way 잘린 텍스트 의심 (주의)
+  srcOrderBad: boolean    // _sources 첫 항목이 커리어넷 아님 (주의)
+  ytLow: boolean          // youtubeLinks 3개 미만 (주의)
+}
+
+export interface QualityAlerts {
+  wayIsArray: number
+  imageUrlBad: number
+  wayTrunc: number
+  srcOrderBad: number
+  ytLow: number
 }
 
 export interface AdminJobEqualizeProps {
@@ -61,6 +75,7 @@ export interface AdminJobEqualizeProps {
   poorCount: number       // <6
   avgJsonSize: number
   items: JobEqualizeItem[]
+  qualityAlerts: QualityAlerts
 }
 
 /** Check if a field has meaningful content */
@@ -120,11 +135,32 @@ export function parseSources(sources: any): { sourceCount: number; urlSourceCoun
 }
 
 export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
-  const { totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items } = props
+  const { totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts } = props
   const uncontributed = totalJobs - contributedCount
   const progressPct = totalJobs > 0 ? ((contributedCount / totalJobs) * 100).toFixed(1) : '0.0'
 
   const itemsJson = JSON.stringify(items)
+
+  function alertCard(filterKey: string, label: string, count: number, level: 'danger' | 'warning' | 'caution'): string {
+    const colors = {
+      danger:  { dot: 'bg-red-500',    num: 'text-red-400',    border: 'border-red-500/30',  badge: '위험' },
+      warning: { dot: 'bg-orange-500', num: 'text-orange-400', border: 'border-orange-500/30', badge: '경고' },
+      caution: { dot: 'bg-yellow-500', num: 'text-yellow-400', border: 'border-yellow-500/30', badge: '주의' },
+    }
+    const c = colors[level]
+    if (count === 0) {
+      return `<div class="glass-card rounded-xl p-3 border border-green-500/20">
+        <div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-green-500"></span><span class="text-[11px] text-slate-300">${label}</span></div>
+        <div class="text-xl font-bold text-green-400">0</div>
+        <div class="text-[10px] text-green-500">정상 ✓</div>
+      </div>`
+    }
+    return `<button onclick="setQualityFilter('${filterKey}')" class="glass-card rounded-xl p-3 border ${c.border} text-left hover:brightness-110 transition-all cursor-pointer">
+      <div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full ${c.dot}"></span><span class="text-[11px] text-slate-300">${label}</span></div>
+      <div class="text-xl font-bold ${c.num}">${count.toLocaleString()}</div>
+      <div class="text-[10px] text-slate-500">${c.badge} · 클릭 필터</div>
+    </button>`
+  }
 
   const content = `
     <!-- 커스텀 툴팁 스타일 -->
@@ -227,6 +263,22 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       </div>
     </div>
 
+    <!-- 품질 경보 섹션 -->
+    <div class="glass-card rounded-xl p-4 mb-6">
+      <div class="flex items-center gap-2 mb-3">
+        <i class="fas fa-shield-alt text-amber-400 text-sm"></i>
+        <h3 class="text-sm font-semibold text-white">품질 경보</h3>
+        <span class="text-xs text-slate-500">카드 클릭 시 해당 직업만 필터링</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        ${alertCard('wayIsArray', 'way 배열 오류', qualityAlerts.wayIsArray, 'danger')}
+        ${alertCard('imageUrlBad', '이미지 URL 오류', qualityAlerts.imageUrlBad, 'warning')}
+        ${alertCard('wayTrunc', 'way 잘린 텍스트', qualityAlerts.wayTrunc, 'caution')}
+        ${alertCard('srcOrderBad', '_sources 순서 오류', qualityAlerts.srcOrderBad, 'caution')}
+        ${alertCard('ytLow', 'YT 3개 미만', qualityAlerts.ytLow, 'caution')}
+      </div>
+    </div>
+
     <!-- 필터/검색 바 -->
     <div class="glass-card rounded-xl p-4 mb-4">
       <div class="flex flex-wrap items-center gap-3">
@@ -242,6 +294,14 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           <option value="perfect">완벽 12/12 (${perfectCount})</option>
           <option value="good">양호 6~11 (${contributedCount - perfectCount - poorCount})</option>
           <option value="poor">부실 &lt;6 (${poorCount})</option>
+          <optgroup label="── 품질 이슈 ──">
+            <option value="quality">품질 이슈 있음</option>
+            <option value="wayIsArray">way 배열 오류</option>
+            <option value="imageUrlBad">이미지 URL 오류</option>
+            <option value="wayTrunc">way 잘린 텍스트</option>
+            <option value="srcOrderBad">_sources 순서 오류</option>
+            <option value="ytLow">YT 3개 미만</option>
+          </optgroup>
         </select>
         <!-- 정렬 -->
         <select id="sortSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50">
@@ -251,6 +311,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           <option value="field-asc">완성도 낮은순</option>
           <option value="size-desc">JSON 큰순</option>
           <option value="size-asc">JSON 작은순</option>
+          <option value="yt-asc">YT수 낮은순</option>
         </select>
       </div>
       <div class="mt-2 text-xs text-slate-500">
@@ -318,6 +379,12 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       var prevBtn = document.getElementById('prevBtn');
       var nextBtn = document.getElementById('nextBtn');
 
+      function setQualityFilter(key) {
+        filterSelect.value = key;
+        applyFilters();
+      }
+      window.setQualityFilter = setQualityFilter;
+
       function applyFilters() {
         var query = searchInput.value.trim().toLowerCase();
         var filter = filterSelect.value;
@@ -328,6 +395,12 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           if (filter === 'perfect' && item.fieldCount !== 12) return false;
           if (filter === 'good' && (item.fieldCount < 6 || item.fieldCount >= 12)) return false;
           if (filter === 'poor' && item.fieldCount >= 6) return false;
+          if (filter === 'quality' && !(item.wayIsArray || item.imageUrlBad || item.wayTrunc || item.srcOrderBad || item.ytLow)) return false;
+          if (filter === 'wayIsArray' && !item.wayIsArray) return false;
+          if (filter === 'imageUrlBad' && !item.imageUrlBad) return false;
+          if (filter === 'wayTrunc' && !item.wayTrunc) return false;
+          if (filter === 'srcOrderBad' && !item.srcOrderBad) return false;
+          if (filter === 'ytLow' && !item.ytLow) return false;
           return true;
         });
 
@@ -338,6 +411,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           if (key === 'name') { va = a.name; vb = b.name; }
           else if (key === 'field') { va = a.fieldCount; vb = b.fieldCount; }
           else if (key === 'size') { va = a.jsonSize; vb = b.jsonSize; }
+          else if (key === 'yt') { va = a.youtubeCount; vb = b.youtubeCount; }
           if (typeof va === 'string') {
             var cmp = va.localeCompare(vb, 'ko');
             return dir === 'asc' ? cmp : -cmp;
@@ -372,9 +446,19 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           var barColor = pct === 100 ? 'bg-green-500' : pct >= 50 ? 'bg-emerald-500' : 'bg-red-500';
           var countColor = item.fieldCount === 12 ? 'text-green-400' : item.fieldCount >= 6 ? 'text-emerald-400' : 'text-red-400';
 
-          html += '<tr class="hover:bg-slate-700/20 transition-colors">';
+          // 품질 이슈 행 강조
+          var hasDanger  = item.wayIsArray;
+          var hasWarning = item.imageUrlBad;
+          var hasCaution = item.wayTrunc || item.srcOrderBad || item.ytLow;
+          var rowBorder  = hasDanger  ? 'border-left:3px solid #ef4444;'
+                         : hasWarning ? 'border-left:3px solid #f97316;'
+                         : hasCaution ? 'border-left:3px solid #eab308;'
+                         : '';
+
+          html += '<tr class="hover:bg-slate-700/20 transition-colors" style="' + rowBorder + '">';
           html += '<td class="px-4 py-2 sticky left-0 bg-slate-900/80 z-10">';
           html += '<a href="https://careerwiki.org/job/' + encodeURIComponent(item.slug) + '" target="_blank" class="text-blue-400 hover:text-blue-300 font-medium text-xs">' + item.name + '</a>';
+          if (item.imageUrlBad) html += '<span class="ml-1 text-orange-400 text-[10px]" title="이미지 URL 포맷 오류">⚠</span>';
           html += '</td>';
           html += '<td class="px-3 py-2 text-center">';
           html += '<div class="flex items-center gap-1.5 justify-center">';
@@ -385,7 +469,18 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           for (var f = 0; f < 12; f++) {
             var has = item.fields[f];
             html += '<td class="px-2 py-2 text-center">';
-            if (has) {
+            // way 필드(f=0): wayIsArray 또는 wayTrunc 경고
+            if (f === 0 && has && (item.wayIsArray || item.wayTrunc)) {
+              var wayTitle = item.wayIsArray ? 'way가 배열 형식(오류)' : 'way 잘린 텍스트 의심';
+              var wayIcon  = item.wayIsArray ? 'text-red-400' : 'text-yellow-400';
+              html += '<i class="fas fa-check ' + wayIcon + ' text-[10px]" title="' + wayTitle + '"></i>';
+              html += '<span class="' + wayIcon + ' text-[10px]" title="' + wayTitle + '"> ⚠</span>';
+            }
+            // _sources 필드(f=11): srcOrderBad 경고
+            else if (f === 11 && has && item.srcOrderBad) {
+              html += '<i class="fas fa-check text-yellow-400 text-[10px]" title="_sources 첫 항목이 커리어넷이 아님"></i>';
+              html += '<span class="text-yellow-400 text-[10px]" title="_sources 순서 오류"> ⚠</span>';
+            } else if (has) {
               html += '<i class="fas fa-check text-emerald-400 text-[10px]"></i>';
             } else {
               html += '<i class="fas fa-times text-slate-600 text-[10px]"></i>';
@@ -404,7 +499,8 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
             html += '<span class="text-slate-600">-</span>';
           }
           html += '</td>';
-          html += '<td class="px-3 py-2 text-center text-[11px] text-slate-400">' + item.youtubeCount + '</td>';
+          var ytColor = item.ytLow ? 'text-amber-400' : 'text-slate-400';
+          html += '<td class="px-3 py-2 text-center text-[11px] ' + ytColor + '">' + item.youtubeCount + (item.ytLow && item.youtubeCount > 0 ? ' ⚠' : '') + '</td>';
           html += '</tr>';
         }
         tableBody.innerHTML = html;

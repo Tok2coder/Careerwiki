@@ -1,7 +1,9 @@
 ---
 name: job-supplement
-description: "Careerwiki 직업 데이터 보완 스킬. Cloudflare D1 careerwiki-kr DB의 user_contributed_json 필드를 12개 필수 항목으로 채워 넣는 전체 워크플로우를 안내한다. '데이터 보완', '직업 보완', '부실 직업', 'user_contributed_json', 'NULL 직업', '데이터 채워줘', '직업 데이터 업데이트', '배치 처리', '품질 고도화' 등의 키워드가 나오면 반드시 이 스킬을 사용할 것. 직업 하나를 보완하든, 수백 개를 배치로 처리하든 이 스킬이 필요하다."
+description: "⚠️ DEPRECATED — job-data-enhance로 통합되었습니다. 이 스킬은 더 이상 사용하지 않습니다. 직업 데이터 보완 작업은 job-data-enhance 스킬을 사용하세요."
 ---
+
+> ⚠️ DEPRECATED: 이 스킬은 `job-data-enhance`로 통합되었습니다. job-data-enhance를 사용하세요.
 
 # Careerwiki 직업 데이터 보완 스킬
 

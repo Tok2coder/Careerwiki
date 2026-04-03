@@ -203,6 +203,145 @@ function validate(data) {
     warnings.push(`[기타] changeSummary가 없거나 너무 짧음`);
   }
 
+  // ── 7. way 타입 검사 (배열이면 즉시 500 에러 — 최상위 치명 오류) ──
+
+  if (fields.way !== undefined && fields.way !== null) {
+    if (Array.isArray(fields.way)) {
+      errors.push(`[치명] way가 배열(Array)임 — 반드시 string이어야 함. 배포 시 500 에러 발생!`);
+    } else if (typeof fields.way !== 'string') {
+      errors.push(`[치명] way 타입이 "${typeof fields.way}" — string이어야 함`);
+    }
+  }
+
+  // ── 8. 잘린 문장 검사 ──
+
+  const TRUNCATED_PATTERNS = [
+    /부상\s*시$/,
+    /으로\s*인해$/,
+    /경우에는$/,
+    /에\s*따르면$/,
+    /가능하$/,
+    /필요하$/,
+    /이루어지$/,
+    /\d{4}년$/,
+    /억\s*원$/,
+    /%\s*이상$/,
+    /%\s*이하$/,
+    /하여$/,
+    /이며$/,
+    /위해$/,
+    /있으며$/,
+    /있고$/,
+    /하고$/,
+  ];
+
+  const COMPLETE_ENDINGS = [
+    /[.다요]\s*(\[\d+\])*\s*$/,
+    /습니다\s*(\[\d+\])*\s*$/,
+    /입니다\s*(\[\d+\])*\s*$/,
+    /됩니다\s*(\[\d+\])*\s*$/,
+    /합니다\s*(\[\d+\])*\s*$/,
+    /있습니다\s*(\[\d+\])*\s*$/,
+    /없습니다\s*(\[\d+\])*\s*$/,
+    /받습니다\s*(\[\d+\])*\s*$/,
+    /\)\s*(\[\d+\])*\s*$/,
+  ];
+
+  const sentenceFields = ['way', 'overviewSalary.sal', 'overviewProspect.main', 'trivia',
+    'detailWlb.wlbDetail', 'detailWlb.socialDetail'];
+
+  for (const fieldPath of sentenceFields) {
+    const text = getNestedField(fields, fieldPath);
+    if (!text || typeof text !== 'string') continue;
+
+    const trimmed = text.trim();
+    const cleanEnd = trimmed.replace(/(\s*\[\d+\])+\s*$/, '').trim();
+
+    let truncated = false;
+    for (const pattern of TRUNCATED_PATTERNS) {
+      if (pattern.test(cleanEnd)) {
+        errors.push(`[잘린문장] ${fieldPath}: 미완성 문장 — "...${cleanEnd.slice(-25)}"`);
+        truncated = true;
+        break;
+      }
+    }
+
+    if (!truncated) {
+      const isComplete = COMPLETE_ENDINGS.some(p => p.test(trimmed));
+      if (!isComplete) {
+        warnings.push(`[잘린문장] ${fieldPath}: 완성형 어미 미확인 — "...${trimmed.slice(-30)}"`);
+      }
+    }
+  }
+
+  // ── 9. YouTube URL 포맷 검사 ──
+
+  if (fields.youtubeLinks) {
+    const links = Array.isArray(fields.youtubeLinks)
+      ? fields.youtubeLinks
+      : (typeof fields.youtubeLinks === 'string' ? JSON.parse(fields.youtubeLinks) : []);
+
+    const YOUTUBE_PATTERNS = [
+      /^https?:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]+/,
+      /^https?:\/\/youtu\.be\/[\w-]+/,
+      /^https?:\/\/(www\.)?youtube\.com\/shorts\/[\w-]+/,
+      /^https?:\/\/(www\.)?youtube\.com\/embed\/[\w-]+/,
+    ];
+
+    for (const link of links) {
+      const url = typeof link === 'string' ? link : (link?.url || String(link));
+      if (!url || typeof url !== 'string') {
+        errors.push(`[YouTube] 잘못된 링크 형식: ${JSON.stringify(link)}`);
+        continue;
+      }
+      const isValid = YOUTUBE_PATTERNS.some(p => p.test(url));
+      if (!isValid) {
+        errors.push(`[YouTube] 유효하지 않은 URL: "${url}" — youtube.com/watch?v= 또는 youtu.be/ 형식이어야 함`);
+      }
+    }
+  }
+
+  // ── 10. _sources 포맷 검사 ──
+
+  for (const [sourceKey, srcVal] of Object.entries(sources)) {
+    if (!Array.isArray(srcVal)) {
+      errors.push(`[출처포맷] sources["${sourceKey}"]가 배열이 아님 — Array여야 함`);
+      continue;
+    }
+
+    for (let i = 0; i < srcVal.length; i++) {
+      const src = srcVal[i];
+      if (typeof src === 'string') {
+        // 구형 string 포맷이면 경고
+        warnings.push(`[출처포맷] sources["${sourceKey}"][${i}]: string 형식 — {text, url} 객체로 변환 필요`);
+        continue;
+      }
+      if (typeof src !== 'object' || src === null) {
+        errors.push(`[출처포맷] sources["${sourceKey}"][${i}]: null 또는 비객체`);
+        continue;
+      }
+      // url 유효 도메인 검사
+      if (src.url) {
+        let validUrl = false;
+        try {
+          const parsed = new URL(src.url);
+          validUrl = ['http:', 'https:'].includes(parsed.protocol);
+        } catch {
+          validUrl = false;
+        }
+        if (!validUrl) {
+          errors.push(`[출처포맷] sources["${sourceKey}"][${i}].url 유효하지 않은 URL: "${src.url}"`);
+        }
+        // text에 URL이 포함된 경우 (이미 Gate 4에서 잡히지만 이중 확인)
+        if (src.text && src.text.includes('http')) {
+          errors.push(`[출처포맷] sources["${sourceKey}"][${i}].text에 URL 포함 — text와 url 필드를 분리해야 함`);
+        }
+      } else if (!src.text) {
+        warnings.push(`[출처포맷] sources["${sourceKey}"][${i}]: text와 url 모두 없음`);
+      }
+    }
+  }
+
   return { errors, warnings };
 }
 

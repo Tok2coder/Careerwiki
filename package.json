@@ -11,7 +11,7 @@
     "build:editor": "vite build --config vite.editor.config.ts",
     "build:all": "npm run build:editor && npm run build",
     "preview": "wrangler pages dev dist",
-    "deploy": "npm run build && wrangler pages deploy dist",
+    "deploy": "node scripts/safe-deploy.cjs",
     "dev:sandbox": "wrangler pages dev dist --d1=careerwiki-kr --local --ip 0.0.0.0 --port 3000",
     "db:migrate:local": "wrangler d1 migrations apply careerwiki-kr --local",
     "db:migrate:prod": "wrangler d1 migrations apply careerwiki-kr --remote",

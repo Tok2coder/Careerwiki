@@ -185,6 +185,39 @@ npx tsc --noEmit
 - **프로덕션 확인은 `curl`/`WebFetch`로** — HTML 가져와서 grep/확인. 간단하고 빠름
 - **MCP 도구 전체 사용 금지** — `mcp__playwright__*`, `mcp__Claude_in_Chrome__*`, `preview_*` 등 모든 MCP 도구 사용하지 않음. curl/WebFetch로 충분함
 
+## 품질 하네스 (Quality Harness)
+
+배포 전·후 데이터 품질을 자동으로 검증하는 스크립트 세트.
+
+### 스크립트
+
+| 스크립트 | 역할 | 사용 시점 |
+|----------|------|-----------|
+| `scripts/safe-deploy.cjs` | tsc → build → deploy 안전 래퍼 | `npm run deploy` 시 자동 호출 |
+| `scripts/validate-job-edit.cjs` | 편집 API 호출 전 JSON 10개 규칙 검증 | job-data-enhance 스킬 Phase 2 |
+| `scripts/full-quality-audit.cjs` | 배포 후 직업 페이지 전체 품질 감사 | job-data-enhance 스킬 Phase 4 |
+| `scripts/data-health-report.cjs` | 전체 DB 데이터 건강 보고서 | 정기 모니터링, 배치 작업 전 |
+
+### 사용법
+
+```bash
+# 직업 편집 전 검증
+node scripts/validate-job-edit.cjs data.json
+
+# 배포 후 품질 감사
+node scripts/full-quality-audit.cjs --slug=소프트웨어개발자
+
+# 데이터 건강 보고
+node scripts/data-health-report.cjs --top-missing=20
+
+# 안전 배포 (tsc + build + deploy 한번에)
+npm run deploy
+```
+
+### Git Hooks
+
+- `.git/hooks/pre-commit` — `src/` 변경 시 `npx tsc --noEmit` 자동 실행 (커밋 차단)
+
 ## Critical Rules
 
 - **절대 금지**: `git stash`, `git reset --hard`, `DROP TABLE`, `DELETE FROM` (WHERE 없이), `.dev.vars` 커밋
@@ -207,3 +240,39 @@ npx tsc --noEmit
 - `KV` → KV namespace
 - `VECTORIZE` → Vectorize index (careerwiki-embeddings)
 - `AI` → Workers AI
+
+## 스킬 시스템 (Claude Harness)
+
+### 스킬 통합 현황
+
+| 스킬 | 상태 | 용도 |
+|------|------|------|
+| `job-data-enhance` | **메인 (사용)** | 직업 데이터 보완·균등화·고도화 통합 스킬 |
+| `job-supplement` | ⚠️ DEPRECATED | → job-data-enhance로 통합됨 |
+| `job-data-equalize` | ⚠️ DEPRECATED | → job-data-enhance로 통합됨 |
+| `job-data-create` | 사용 | 완전히 새로운 직업 추가 전용 |
+| `howto-publish` | 사용 | HowTo 가이드 기획·작성·발행 전체 워크플로우 |
+
+직업 데이터 보완 관련 키워드 ("데이터 보완", "균등화", "부실 직업", "NULL 직업", "직업 데이터 업데이트" 등)는 **반드시 job-data-enhance 스킬**로 처리한다.
+
+### 안전장치 목록
+
+| 도구 | 경로 | 역할 |
+|------|------|------|
+| `full-quality-audit.cjs` | `scripts/full-quality-audit.cjs` | 저장 후 품질 감사 — PASS 없이 다음 직업 진행 금지 |
+| `validate-job-edit.cjs` | `scripts/validate-job-edit.cjs` | 편집 API 호출 전 draft JSON 검증 — PASS 확인 후에만 API 호출 |
+
+### 핵심 기술 규칙 (직업 데이터 작업 시 항상 적용)
+
+| 규칙 | 내용 |
+|------|------|
+| `way` 타입 | **반드시 string** — 배열이면 즉시 500 에러 |
+| R2 이미지 키 | `jobs/job-{slug}.webp` — `uploads/` prefix 절대 금지 |
+| DB image_url | `/uploads/jobs/job-{slug}.webp?v={timestamp}` |
+| 직업 페이지 URL | `https://careerwiki.org/job/슬러그` — `.kr` 또는 `/jobs` 절대 금지 |
+| 편집 API URL | `POST https://careerwiki.org/api/job/{id}/edit` |
+| 인증 헤더 | `X-Admin-Secret: careerwiki-admin-2026` |
+| sources 전송 | fields + sources 반드시 함께 전송 — sources 누락 시 각주 깨짐 |
+| sources 키 | `way`, `overviewSalary.sal`, `detailWlb.wlbDetail` 등 필드명 키 사용 — `way_sources` 등 금지 |
+| overviewSalary.wage | **절대 덮어쓰기 금지** — 바 차트 렌더링 데이터 |
+| 배포 브랜치 | **반드시 main 브랜치** — worktree에서 배포 시 다음 main 배포에서 롤백됨 |

@@ -1010,21 +1010,41 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
   try {
     const db = c.env.DB
 
-    // 1. 전체 활성 직업 수
-    const totalResult = await db.prepare(
-      'SELECT COUNT(*) as count FROM jobs WHERE is_active = 1'
-    ).first<{ count: number }>()
+    // 1. 전체 활성 직업 수 + 품질 경보 카운트 — 병렬 조회
+    const [
+      totalResult,
+      alertWayIsArrayResult,
+      alertImageUrlBadResult,
+      alertWayTruncResult,
+      alertSrcOrderBadResult,
+      alertYtLowResult,
+    ] = await Promise.all([
+      db.prepare('SELECT COUNT(*) as count FROM jobs WHERE is_active = 1').first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_type(user_contributed_json,'$.way')='array'`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND image_url IS NOT NULL AND image_url != '' AND image_url NOT LIKE '/uploads/%' AND image_url NOT LIKE 'https://%' AND image_url NOT LIKE 'http://%'`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$.way') IS NOT NULL AND length(json_extract(user_contributed_json,'$.way')) > 20 AND json_extract(user_contributed_json,'$.way') NOT GLOB '*[.다요죠음임됨니까세]'`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(user_contributed_json,'$._sources')) > 0 AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND user_contributed_json IS NOT NULL AND (json_extract(user_contributed_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(user_contributed_json,'$.youtubeLinks')) < 3)`).first<{ count: number }>(),
+    ])
+
     const totalJobs = totalResult?.count || 0
+    const qualityAlerts = {
+      wayIsArray: alertWayIsArrayResult?.count || 0,
+      imageUrlBad: alertImageUrlBadResult?.count || 0,
+      wayTrunc: alertWayTruncResult?.count || 0,
+      srcOrderBad: alertSrcOrderBadResult?.count || 0,
+      ytLow: alertYtLowResult?.count || 0,
+    }
 
     // 2. 보완된 직업 목록 (user_contributed_json IS NOT NULL) — 배치로 조회
-    const allRows: { name: string; slug: string; user_contributed_json: string }[] = []
+    const allRows: { name: string; slug: string; user_contributed_json: string; image_url: string | null }[] = []
     let offset = 0
     while (true) {
       const batch = await db.prepare(
-        `SELECT name, slug, user_contributed_json FROM jobs
+        `SELECT name, slug, user_contributed_json, image_url FROM jobs
          WHERE is_active = 1 AND user_contributed_json IS NOT NULL
          ORDER BY name LIMIT 500 OFFSET ?`
-      ).bind(offset).all<{ name: string; slug: string; user_contributed_json: string }>()
+      ).bind(offset).all<{ name: string; slug: string; user_contributed_json: string; image_url: string | null }>()
       const rows = batch.results || []
       allRows.push(...rows)
       if (rows.length < 500) break
@@ -1053,17 +1073,41 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       const yt = parsed.youtubeLinks
       const youtubeCount = Array.isArray(yt) ? yt.length : 0
 
+      // 품질 플래그
+      const wayVal = parsed.way
+      const wayIsArray = Array.isArray(wayVal)
+
+      const imgUrl = row.image_url || ''
+      const imageUrlBad = imgUrl.length > 0 && !imgUrl.startsWith('/uploads/') && !imgUrl.startsWith('https://') && !imgUrl.startsWith('http://')
+
+      const wayStr = typeof wayVal === 'string' ? wayVal : ''
+      const truncChars = ['.', '다', '요', '죠', '음', '임', '됨', '니', '까', '세']
+      const wayTrunc = wayStr.length > 20 && !truncChars.some(ch => wayStr.endsWith(ch))
+
+      let srcOrderBad = false
+      if (Array.isArray(parsed._sources) && parsed._sources.length > 0) {
+        const firstSrc = parsed._sources[0]
+        const firstText: string = typeof firstSrc === 'string' ? firstSrc : (firstSrc?.text || '')
+        srcOrderBad = !firstText.includes('커리어넷') && !firstText.toLowerCase().includes('career')
+      }
+
+      const ytLow = youtubeCount < 3
+
       if (fieldCount === 12) perfectCount++
       if (fieldCount < 6) poorCount++
 
-      return { name: row.name, slug: row.slug, fields, fieldCount, jsonSize, sourceCount, urlSourceCount, youtubeCount }
+      return {
+        name: row.name, slug: row.slug, fields, fieldCount, jsonSize,
+        sourceCount, urlSourceCount, youtubeCount,
+        wayIsArray, imageUrlBad, wayTrunc, srcOrderBad, ytLow,
+      }
     })
 
     const contributedCount = items.length
     const avgJsonSize = contributedCount > 0 ? Math.round(totalJsonSize / contributedCount) : 0
 
     return c.html(renderAdminJobEqualize({
-      totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items,
+      totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts,
     }))
   } catch (error: any) {
     console.error('Job equalize page error:', error)

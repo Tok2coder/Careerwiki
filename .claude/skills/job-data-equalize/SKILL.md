@@ -1,11 +1,11 @@
 ---
 name: job-data-equalize
 description: >
-  직업/전공 정보보완(데이터 균등화·고도화) 스킬. 유저가 "데이터 균등화", "equalize", "정보보완",
-  "기존 직업 품질 개선", "직업 데이터 고도화", "데이터 보완", "빈 필드 채워", "직업 데이터 업데이트",
-  "부실 직업", "배치 처리", "user_contributed_json", "NULL 직업", "way/prospect/salary/trivia 비어있어",
-  "job data equalize" 등을 말하거나 특정 직업 데이터가 부족하다고 언급할 때 반드시 이 스킬을 사용한다.
+  ⚠️ DEPRECATED — job-data-enhance로 통합되었습니다. 이 스킬은 더 이상 사용하지 않습니다.
+  직업 데이터 보완/균등화 작업은 job-data-enhance 스킬을 사용하세요.
 ---
+
+> ⚠️ DEPRECATED: 이 스킬은 `job-data-enhance`로 통합되었습니다. job-data-enhance를 사용하세요.
 
 # 직업 정보 수준 평준화 스킬
 
