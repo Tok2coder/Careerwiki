@@ -45,6 +45,17 @@
 
 ## 🟡 각주/출처 오류
 
+### [출처-0] 각주 번호는 필드별 독립 [1]부터 시작 (전역 번호 금지!)
+**원인**: SKILL.md Gate 4 예시에 전역 id 순서(예: sal=[{id:3}], trivia=[{id:4},{id:5}])가 나와 있지만, 실제 `full-quality-audit.cjs`는 각 필드 내 [N]이 [1]부터 순차 증가하는지 독립 검사한다. 전역 번호(예: sal에 [3]) 쓰면 Gate 1 FAIL.
+**해결**: 각 필드마다 독립적으로 [1], [2]... 번호 사용. sources 배열도 {id:1}, {id:2}...로 per-field 지정.
+**시스템 동작**: editService가 저장 시 렌더링 순서에 따라 자동으로 전역 ID를 재할당 → 페이지에서는 [3],[4] 등 전역 번호로 표시됨.
+```
+✅ way: "[1]...[2]"  sources.way: [{id:1},{id:2}]
+✅ sal: "[1]"        sources["overviewSalary.sal"]: [{id:1}]
+✅ trivia: "[1]...[2]"  sources.trivia: [{id:1},{id:2}]
+❌ sal: "[3]"        sources["overviewSalary.sal"]: [{id:3}]  ← full-quality-audit FAIL
+```
+
 ### [출처-1] _sources id 순서가 본문 [N] 등장 순서와 불일치
 **원인**: 섹션별로 id를 매기다 보니 본문 위→아래 등장 순서와 달라짐
 **결과**: 참조번호 클릭 시 엉뚱한 출처가 표시됨
