@@ -2282,8 +2282,8 @@ userRoutes.get('/user/settings', requireAuth, async (c) => {
                   id="username"
                   name="username"
                   value="${userData.username || ''}"
-                  placeholder="user_abc123"
-                  pattern="[a-z0-9_]{3,20}"
+                  placeholder="홍길동 또는 user_abc123"
+                  pattern="[A-Za-z0-9가-힣._\-]{2,16}"
                   class="flex-1 px-4 py-3 min-h-[48px] bg-wiki-card border border-wiki-border rounded-lg text-wiki-text focus:outline-none focus:border-wiki-primary focus:ring-1 focus:ring-wiki-primary"
                   style="font-size: 16px;"
                   required
@@ -2296,7 +2296,7 @@ userRoutes.get('/user/settings', requireAuth, async (c) => {
                 </button>
               </form>
               <p class="text-xs text-wiki-muted mt-2">
-                3-20자, 영문 소문자, 숫자, 언더스코어(_)만 사용 가능합니다.
+                2~16자, 한글·영문·숫자·마침표·하이픈 사용 가능합니다.
               </p>
               <div id="username-message" class="mt-2 text-sm hidden"></div>
             </div>
@@ -2335,12 +2335,12 @@ userRoutes.get('/user/settings', requireAuth, async (c) => {
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
           
-          const newUsername = input.value.trim().toLowerCase();
-          
+          const newUsername = input.value.trim();
+
           // 클라이언트 측 유효성 검사
-          if (!/^[a-z0-9_]{3,20}$/.test(newUsername)) {
+          if (!/^(?!.*\s{2,})(?!\s)[A-Za-z0-9가-힣._\-]{2,16}(?<!\s)$/.test(newUsername)) {
             message.className = 'mt-2 text-sm text-red-400';
-            message.textContent = '사용자 아이디는 3-20자의 영문 소문자, 숫자, 언더스코어만 사용할 수 있습니다.';
+            message.textContent = '닉네임은 2~16자의 한글, 영문, 숫자만 사용할 수 있습니다.';
             message.classList.remove('hidden');
             return;
           }
