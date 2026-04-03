@@ -189,10 +189,13 @@ function validateFootnotes(text, fieldName) {
 
 체크리스트:
 - [ ] 각 `[N]`이 해당 필드에서 1회만 등장하는가?
-- [ ] `[N]` 번호가 1부터 순차 증가하는가? (건너뛰기 금지: `[1][3]` ← 불가)
+- [ ] `[N]` 번호가 **필드별** 1부터 순차 증가하는가? (건너뛰기 금지: `[1][3]` ← 불가)
+  - ⚠️ **주의**: 번호는 필드 간 공유 안 함. way=[1][2], sal=[1], trivia=[1][2] 각각 독립 번호 사용
+  - editService가 저장 시 자동으로 전역 ID를 재할당 → 페이지에 [3],[4] 등으로 표시됨
 - [ ] 각주 위치: `합니다.[1]` (O) / `합니다[1].` (X) — 마침표 **뒤**에
-- [ ] sources 배열 길이 = 본문 최대 `[N]` 번호와 일치하는가?
-- [ ] `_sources` id 순서 = 본문 위→아래 스캔 시 `[N]`이 **처음 등장하는 순서**
+- [ ] sources[필드키] 배열 길이 = 해당 필드 최대 `[N]` 번호와 일치하는가?
+  - 예: sal에 `[1]` → sources["overviewSalary.sal"] = 1개 / trivia에 `[1][2]` → sources["trivia"] = 2개
+- [ ] sources 내 `id` 값도 per-field [1]부터 시작 (`{"id":1,...}`, `{"id":2,...}`)
 
 ### Gate 2: 텍스트 완결성 검증 (절단 문장 감지)
 
@@ -223,16 +226,23 @@ curl -s "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=VIDE
 
 ### Gate 4: 출처 ID 순서 검증
 
-본문 텍스트를 위→아래 스캔하며 새 `[N]`이 처음 등장하는 순서 = `_sources` 배열의 id 순서.
+각 필드의 sources 배열 내 id가 해당 필드의 [N] 등장 순서와 일치하는지 확인.
 
-**검증 절차:**
-1. 서술 필드를 렌더링 순서(way → salary → prospect → trivia → wlbDetail → socialDetail)로 스캔
-2. 새로운 `[N]`이 처음 나올 때마다 기록 → 그 순서 == sources 각 배열의 id 순서인지 대조
+**검증 절차 (per-field 방식):**
+각 필드별로 독립 검증:
+- way에 `[1]`, `[2]` → sources["way"] = [{id:1,...}, {id:2,...}] ✅
+- sal에 `[1]` → sources["overviewSalary.sal"] = [{id:1,...}] ✅
+- trivia에 `[1]`, `[2]` → sources["trivia"] = [{id:1,...}, {id:2,...}] ✅
 
 ```
-본문 스캔: [1]@way → [2]@way → [3]@sal → [4]@prospect → [5]@trivia
-_sources: way=[{id:1},{id:2}], overviewSalary.sal=[{id:3}], ... ✅
+❌ 구버전 (전역 번호 — full-quality-audit FAIL):
+sal: "[3]" sources["overviewSalary.sal"]: [{id:3}]  ← FAIL
+
+✅ 현행 (per-field 번호):
+sal: "[1]" sources["overviewSalary.sal"]: [{id:1}]  ← PASS
 ```
+
+> 💡 editService가 저장 시 자동으로 전역 ID를 재할당하므로, 페이지에서는 [3],[4] 등 전역 번호가 표시되는 것이 정상.
 
 ---
 
