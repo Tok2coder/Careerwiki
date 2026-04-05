@@ -56,7 +56,16 @@ description: >
 ⚠️ 마이너 직업은 API 데이터가 대부분 비어있을 수 있다. "스킵" 판단 전 실제 데이터 유무 확인.
 ```
 
-→ 전체 판단 매트릭스: `references/field-decision-matrix.md`
+**4카테고리 판단 매트릭스** (상세: `references/field-decision-matrix.md`):
+
+| 카테고리 | 대상 필드 | 행동 |
+|----------|----------|------|
+| **항상 새로 작성** | way, detailReady, trivia, wlbDetail, socialDetail, 커리어트리 | API 데이터와 무관하게 반드시 작성 |
+| **보강 가능** | sidebarCerts, sidebarMajors, sal, prospect | API 충분→스킵, 부족→보강 |
+| **API 있으면 스킵** | overviewWork.main, technKnow, wlb/social 등급 | API null이면 리서치+출처 필수로 채움 |
+| **공식 통계만** | abilityList, aptitude, educationDistribution, detailIndicators | 출처 없으면 **null 유지** — 추정값 절대 금지 |
+
+> **빈 칸이 거짓 정보보다 100배 낫다** — 공식 통계 전용 필드에 AI 추정값 넣으면 사용자에게 거짓 수치 제공.
 
 ---
 
@@ -69,12 +78,14 @@ description: >
 유저가 직업을 지정하면 해당 직업 조회, 아니면 아래 SQL로 선별:
 
 ```sql
-SELECT id, name, slug,
-  (CASE WHEN json_extract(merged_profile_json,'$.way') IS NULL OR json_extract(merged_profile_json,'$.way')='' THEN 1 ELSE 0 END) +
-  (CASE WHEN json_extract(merged_profile_json,'$.overviewSalary.sal') IS NULL THEN 1 ELSE 0 END) +
-  (CASE WHEN json_extract(merged_profile_json,'$.overviewProspect.main') IS NULL THEN 1 ELSE 0 END) +
-  (CASE WHEN json_extract(merged_profile_json,'$.trivia') IS NULL THEN 1 ELSE 0 END) as missing_count
-FROM jobs WHERE is_active=1 HAVING missing_count>=2 ORDER BY missing_count DESC LIMIT 30;
+SELECT * FROM (
+  SELECT id, name, slug,
+    (CASE WHEN json_extract(merged_profile_json,'$.way') IS NULL OR json_extract(merged_profile_json,'$.way')='' THEN 1 ELSE 0 END) +
+    (CASE WHEN json_extract(merged_profile_json,'$.overviewSalary.sal') IS NULL THEN 1 ELSE 0 END) +
+    (CASE WHEN json_extract(merged_profile_json,'$.overviewProspect.main') IS NULL THEN 1 ELSE 0 END) +
+    (CASE WHEN json_extract(merged_profile_json,'$.trivia') IS NULL THEN 1 ELSE 0 END) as missing_count
+  FROM jobs WHERE is_active=1
+) WHERE missing_count>=2 ORDER BY missing_count DESC LIMIT 30;
 ```
 
 ### 0-B. 현황 분석 쿼리
@@ -134,7 +145,7 @@ FROM jobs WHERE name IN ('직업명') AND is_active=1;
 | `overviewAbilities.technKnow` | API 데이터 없을 때(null)만 — 활용 기술 서술형 (출처+각주 필수) |
 | `sidebarJobs` | 7~12개, **반드시 DB 실존 확인** |
 | `sidebarMajors` | 3~5개, **반드시 DB 실존 확인** |
-| `sidebarCerts` | 2~4개, `[{name, url}]` 형식, "~시험" 금지, 자격증명만 |
+| `sidebarCerts` | 2~4개, `[{name, url}]` 형식. **"~시험" 금지** — LEET·사법시험·TOEIC 등은 시험이지 자격증이 아님. Q-net URL 사용. |
 | `heroTags` | 4~8개, 별칭/세부분류/영문명 포함 |
 | `youtubeLinks` | 1~3개, oembed 검증 필수 |
 
@@ -196,7 +207,8 @@ function validateFootnotes(text, fieldName) {
   - editService가 저장 시 자동으로 전역 ID를 재할당 → 페이지에 [3],[4] 등으로 표시됨
 - [ ] 각주 위치: `합니다.[1]` (O) / `합니다[1].` (X) — 마침표 **뒤**에
 - [ ] sources[필드키] 배열 길이 = 해당 필드 최대 `[N]` 번호와 일치하는가?
-  - 예: sal에 `[1]` → sources["overviewSalary.sal"] = 1개 / trivia에 `[1][2]` → sources["trivia"] = 2개
+  - [N]이 [1]부터 순차이므로, 최대 번호 = 종류 수. 예: `[1][2]` → sources 2개
+  - 순차 위반([1][3])은 이 검사 전에 위 규칙에서 먼저 FAIL → 여기까지 안 옴
 - [ ] sources 내 `id` 값도 per-field [1]부터 시작 (`{"id":1,...}`, `{"id":2,...}`)
 
 ### Gate 2: 텍스트 완결성 검증 (절단 문장 감지)
@@ -257,6 +269,18 @@ sal: "[1]" sources["overviewSalary.sal"]: [{id:1}]  ← PASS
 node scripts/validate-job-edit.cjs < draft.json
 ```
 
+**이 스크립트가 검사하는 10가지** (하나라도 FAIL이면 API 호출 차단):
+1. way 최소 100자 + string 타입 (배열이면 즉시 FAIL)
+2. detailReady.curriculum 3개+
+3. sidebarJobs 15개 이하
+4. sidebarCerts에 "시험" 단어 금지
+5. heroTags 3~10개, 조사로 끝나면 FAIL, 15자 초과 FAIL
+6. 짧은 라벨 필드(workStrong/workPlace/physicalAct) 20자 이하
+7. 공식 통계 전용 필드에 출처 없이 값 넣으면 FAIL
+8. 각주 [N] 중복 + sources 대응 확인 + blob 검출
+9. 서술 필드 잘린 문장 감지
+10. YouTube URL 포맷 + sources {text,url} 분리 검증
+
 ### 3-B. 편집 API 호출
 
 **fields + sources는 반드시 함께 전송.** sources 없이 fields만 보내면 각주가 깨진다.
@@ -285,11 +309,28 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
 # 응답: {"success": true} 확인. false이면 오류 메시지 확인 후 수정
 ```
 
-**sources 키 오류 주의** (→ 전체: `../shared/source-key-mapping.md`):
-- ❌ `way_sources` → ✅ `way`
+**sources 키 전체 매핑표** (출처: `../shared/source-key-mapping.md`):
+
+| sources 키 | 대상 필드 |
+|------------|----------|
+| `way` | 되는 방법 |
+| `overviewSalary.sal` | 임금 설명 |
+| `overviewProspect.main` | 전망 |
+| `trivia` | 여담 |
+| `summary` | 직업 설명 |
+| `detailWlb.wlbDetail` | 워라밸 상세 |
+| `detailWlb.socialDetail` | 사회적 기여 상세 |
+| `overviewAbilities.technKnow` | 활용 기술 |
+
+**흔한 키 실수:**
+- ❌ `way_sources` → ✅ `way` (접미사 `_sources` 금지)
 - ❌ `overviewSalary_sources` → ✅ `overviewSalary.sal`
-- ❌ `detailWlb_sources` → ✅ `detailWlb.wlbDetail`
 - ❌ 숫자 키 `"1"`, `"2"` → ✅ 필드명 키
+
+**각주 [N] 렌더링 지원 필드** (formatRichText 적용 — 이 필드들만 인라인 각주 사용 가능):
+`way`, `overviewSalary.sal`, `overviewProspect.main`, `trivia`, `summary`,
+`detailWlb.wlbDetail`, `detailWlb.socialDetail`, `overviewAbilities.technKnow`
+— curriculum/recruit/training은 배열이므로 각주 없이 항목만 나열
 
 **구조화 데이터는 통째로 전송** (점 표기법 불가):
 ```json
@@ -397,6 +438,8 @@ way → overviewSalary.sal → overviewProspect.main → trivia
   OM: max(markers) > src_len          → 🔴 고아 마커
   OS: src_len > 0 AND markers 비어있음 → 🔴 고아 출처
 ```
+
+> ⚠️ **GN과 OM이 동시에 뜨는 것은 정상**. 예: trivia [4][5][6][7] / source 4개 → max(7)>4=OM이지만, 실제론 GN. R-2에서 SK→GN 수선 후 [1][2][3][4]가 되면 max(4)=4=OM 해소. **따라서 R-1 진단의 OM은 "잠정"이며, GN 수선 후 재판정해야 최종 확정된다.**
 
 **Step 4 — 진단 보고**:
 ```
