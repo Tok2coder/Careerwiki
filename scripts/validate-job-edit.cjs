@@ -203,6 +203,19 @@ function validate(data) {
     warnings.push(`[기타] changeSummary가 없거나 너무 짧음`);
   }
 
+  // ── 7. detailWlb 등급 띄어쓰기 검사 ──
+  if (fields.detailWlb) {
+    const wlbGrade = fields.detailWlb?.wlb;
+    const socialGrade = fields.detailWlb?.social;
+    const stuckForms = ['보통이상', '보통이하', '다소높음', '다소낮음'];
+    if (wlbGrade && stuckForms.includes(wlbGrade)) {
+      warnings.push(`[detailWlb.wlb] 붙여쓰기 금지: "${wlbGrade}" → "보통 이상" 또는 "보통 이하" 형식 사용`);
+    }
+    if (socialGrade && stuckForms.includes(socialGrade)) {
+      warnings.push(`[detailWlb.social] 붙여쓰기 금지: "${socialGrade}" → "보통 이상" 또는 "보통 이하" 형식 사용`);
+    }
+  }
+
   // ── 7. way 타입 검사 (배열이면 즉시 500 에러 — 최상위 치명 오류) ──
 
   if (fields.way !== undefined && fields.way !== null) {
