@@ -289,11 +289,16 @@ function validate(data) {
     ];
 
     for (const link of links) {
-      const url = typeof link === 'string' ? link : (link?.url || String(link));
-      if (!url || typeof url !== 'string') {
-        errors.push(`[YouTube] 잘못된 링크 형식: ${JSON.stringify(link)}`);
+      // 문자열 배열 금지: {url, title} 객체여야 함
+      if (typeof link === 'string') {
+        errors.push(`[YouTube] 잘못된 형식: "${link}" — 문자열 배열 금지. {url, title} 객체 배열 사용: [{url: "https://...", title: "영상 제목"}]`);
         continue;
       }
+      if (!link || typeof link !== 'object' || !link.url) {
+        errors.push(`[YouTube] 잘못된 링크 형식: ${JSON.stringify(link)} — {url, title} 객체여야 함`);
+        continue;
+      }
+      const url = link.url;
       const isValid = YOUTUBE_PATTERNS.some(p => p.test(url));
       if (!isValid) {
         errors.push(`[YouTube] 유효하지 않은 URL: "${url}" — youtube.com/watch?v= 또는 youtu.be/ 형식이어야 함`);

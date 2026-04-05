@@ -93,7 +93,7 @@ function queryD1(sql) {
   try {
     const raw = execSync(
       `npx wrangler d1 execute ${DB_NAME} --remote --command "${escaped}"`,
-      { encoding: 'utf8', timeout: 60000, cwd: ROOT_DIR }
+      { encoding: 'utf8', timeout: 60000, maxBuffer: 50 * 1024 * 1024, cwd: ROOT_DIR }
     );
     // wrangler가 progress 텍스트를 stdout에 섞는 경우 JSON 부분만 추출
     const jsonStart = raw.indexOf('[');

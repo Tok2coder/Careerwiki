@@ -31,7 +31,7 @@ description: >
 | 인증 헤더 | `-H "X-Admin-Secret: careerwiki-admin-2026"` |
 | 배포 | **반드시 main 브랜치** — worktree에서 배포하면 다음 main 배포 시 롤백됨 |
 | DB 명령 | `npx wrangler d1 execute careerwiki-kr --remote --command "SQL문"` |
-| 프로젝트 경로 | `C:\Users\PC\Careerwiki` |
+| 프로젝트 경로 | `C:\Users\user\Careerwiki` |
 
 ---
 
@@ -147,7 +147,7 @@ FROM jobs WHERE name IN ('직업명') AND is_active=1;
 | `sidebarMajors` | 3~5개, **반드시 DB 실존 확인** |
 | `sidebarCerts` | 2~4개, `[{name, url}]` 형식. **"~시험" 금지** — LEET·사법시험·TOEIC 등은 시험이지 자격증이 아님. Q-net URL 사용. |
 | `heroTags` | 4~8개, 별칭/세부분류/영문명 포함 |
-| `youtubeLinks` | 1~3개, oembed 검증 필수 |
+| `youtubeLinks` | 1~3개, oembed 검증 필수. **형식: `[{url: "https://youtube.com/watch?v=...", title: "영상 제목"}]` 객체 배열** — 문자열 배열(`["url"]`) 절대 금지. 문자열 배열이면 UI에 썸네일 안 뜨고 영상 제목 노출 불가. |
 
 **DB 실존 확인 쿼리:**
 ```sql
@@ -360,7 +360,11 @@ npx wrangler d1 execute careerwiki-kr --remote --command \
 
 ```bash
 # 1. 기본 접속 확인
-curl -s -o /dev/null -w "%{http_code}" "https://careerwiki.org/job/{slug}"
+# ⚠️ 한국어 slug는 반드시 UTF-8 퍼센트 인코딩 사용 (EUC-KR 인코딩 시 500 에러)
+curl -s -o /dev/null -w "%{http_code}" \
+  "https://careerwiki.org/job/$(python3 -c "import urllib.parse; print(urllib.parse.quote('{slug}'))")"
+# 또는 직접 인코딩된 URL 사용:
+# curl -s -o /dev/null -w "%{http_code}" "https://careerwiki.org/job/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90"
 # 200 = 정상 / 500 = JSON 파싱 에러 (way 배열 여부, 따옴표 이스케이프 확인)
 
 # 2. 캐시 우회 후 내용 확인
@@ -406,6 +410,18 @@ node scripts/full-quality-audit.cjs --slug={직업slug}
 node scripts/full-quality-audit.cjs --all --limit=200
 # Gate1 FAIL(각주 비순차/중복/sources 불일치) 직업만 수선 대상으로 등록
 ```
+
+> ⚠️ `--all`이 ENOBUFS 에러로 실패할 경우 (전체 JSON blob 크기 초과): 아래 SQL로 GN/FP 후보를 먼저 추출 → `--slug`로 개별 감사.
+>
+> ```sql
+> -- GN/FP 후보: sources 내 id가 1보다 큰 직업 (전역 번호 잔재 가능성)
+> SELECT slug, name FROM jobs
+> WHERE user_contributed_json IS NOT NULL
+>   AND (user_contributed_json LIKE '%"id":2%'
+>     OR user_contributed_json LIKE '%"id":3%')
+>   AND is_active=1 LIMIT 50;
+> ```
+> 추출된 slug 목록을 `node scripts/full-quality-audit.cjs --slug={slug}` 로 순차 확인.
 
 특정 직업 지정 시:
 ```sql
