@@ -144,7 +144,7 @@ FROM jobs WHERE name IN ('직업명') AND is_active=1;
 
 | 필드 | 판단 기준 |
 |------|----------|
-| `overviewSalary.sal` | 기존 서술 있으면 유지. 없거나 2년+ 됐으면 최신화. wage는 절대 덮어쓰지 않음 |
+| `overviewSalary.sal` | 기존 서술 있으면 유지. 없거나 2년+ 됐으면 최신화. **wage는 절대 덮어쓰지 않음** — wage(그래프 데이터)가 있는 직업은 wage 절대 건드리지 않음. sal 텍스트만 보강. 렌더링: sal 텍스트는 wage 차트 밑에 보충 설명으로 표시됨. wage 없으면 sal 텍스트만 표시. |
 | `overviewProspect.main` | 기존 서술 있으면 유지. 없거나 부실하면 보강 |
 
 ### 최신 데이터 우선 규칙
@@ -160,11 +160,11 @@ FROM jobs WHERE name IN ('직업명') AND is_active=1;
 - 단, 커리어넷·워크넷의 기본 직업 소개 텍스트는 연도 무관하게 사용 가능 (정적 정보)
 | `overviewWork.main` | API 데이터 없을 때(null)만 — 수행 직무 서술형 (출처+각주 필수) |
 | `overviewAbilities.technKnow` | API 데이터 없을 때(null)만 — 활용 기술 서술형 (출처+각주 필수) |
-| `sidebarJobs` | 7~12개, **반드시 DB 실존 확인** |
+| `sidebarJobs` | 7~12개, **반드시 DB 실존 확인**. DB에 없는 항목은 제거하되, 해당 키워드가 heroTags에 없으면 heroTags에 태그로 추가 (정보 손실 방지) |
 | `sidebarMajors` | 3~5개, **반드시 DB 실존 확인** |
 | `sidebarCerts` | 2~4개, `[{name, url}]` 형식. **"~시험" 금지** — LEET·사법시험·TOEIC 등은 시험이지 자격증이 아님. Q-net URL 사용. |
 | `heroTags` | 4~8개, 별칭/세부분류/영문명 포함 |
-| `youtubeLinks` | 1~3개, oembed 검증 필수. **형식: `[{url: "https://youtube.com/watch?v=...", title: "영상 제목"}]` 객체 배열** — 문자열 배열(`["url"]`) 절대 금지. 문자열 배열이면 UI에 썸네일 안 뜨고 영상 제목 노출 불가. |
+| `youtubeLinks` | 1~3개, oembed 검증 필수. **형식: `[{url: "https://youtube.com/watch?v=...", title: "영상 제목"}]` 객체 배열** — 문자열 배열(`["url"]`) 절대 금지. 문자열 배열이면 UI에 썸네일 안 뜨고 영상 제목 노출 불가. **한국어 영상만 허용** — 제목이 한국어인 한국 영상만 사용. 영어/외국어 영상 금지. 한국어 영상이 없으면 youtubeLinks 비워둠 (영어 영상 절대 넣지 않음). |
 
 > ⚠️ **youtubeLinks title 인코딩 주의**: title은 원본 그대로 저장하며 이모지 포함 가능. WebSearch/oembed에서 가져온 title이 깨져 있으면 직접 YouTube 페이지에서 확인 후 수동 입력. curl 명령에 한국어·이모지 포함 제목을 직접 입력하면 EUC-KR로 오염될 수 있으니 반드시 `--data-binary @파일명` 방식으로 JSON 파일을 전송할 것.
 
@@ -188,7 +188,10 @@ SELECT name FROM majors WHERE is_active=1 AND name IN ('전공A', '전공B');
 **우선순위:**
 1등급: 커리어넷(career.go.kr) · 워크넷(work.go.kr) · 한국고용정보원(keis.or.kr) · KOSIS · Q-net
 2등급: 직업백과(job.asamaru.net) · 협회·학회 공식 사이트 · 대학 학과 소개
+3등급 (적극 활용 권장): 업계 보고서 · 통계청 · 전문 미디어(한경, 매경, IT조선 등) · 학술논문 — 커리어넷/고용24/워크넷은 이미 API로 가져온 데이터와 중복될 수 있으므로, **더 최신이고 고급인 출처를 적극 발굴하여 차별화된 정보를 제공**
 ❌ 금지: 블라인드, 디시인사이드, 블로그 단독 출처
+
+**출처 다양화 원칙**: 커리어넷/고용24/워크넷은 API로 이미 가져온 데이터와 중복될 수 있음. 업계 보고서, 학회 자료, 전문 미디어(신문/뉴스), 통계청, 직업 관련 전문 사이트 등 고급 출처를 적극 활용. 동일 내용이면 더 최신이고 신뢰도 높은 출처 우선 선택.
 
 **커리어넷 URL (신형만 사용):**
 ```
@@ -264,6 +267,7 @@ curl -s "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=VIDE
   - ✅ "간호사 되는 법", "간호사 현직자 인터뷰", "간호 국시 준비 방법"
   - ❌ "내 하루 브이로그", "2024 맛집 추천" (직업명/관련 키워드 없음)
 - [ ] 진로 탐색 목적 영상인가? (진로 가이드 > 현직자 인터뷰 > 전망 > vlog)
+- [ ] **한국어 영상인가?** — 제목이 한국어로 표시되는 한국 영상만. 영어/외국어 영상 발견 시 제거. 한국어 영상이 없으면 youtubeLinks를 빈 배열 `[]`로 설정 (영어 영상 유지 금지)
 
 ### Gate 4: 출처 ID 순서 검증
 
@@ -365,6 +369,11 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
 ```
 
 ### 3-C. 커리어트리 연결 (선택 — 한국인 공인만)
+
+**인물 선정 기준:**
+- **살아있거나 최소 2000년 이후까지 경력이 이어진 사람만** — 역사적 위인(세종대왕, 이순신 등)이나 너무 오래된 인물은 제외
+- 현실적으로 직업을 고민하는 사람들에게 참고가 되는 인물이어야 함
+- 해당 직업 분야에서 실제로 활동한 한국인 공인
 
 → 인물 선정 기준·스테이지 작성·DB 삽입 상세: `../shared/career-tree.md`
 
@@ -548,115 +557,3 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
     "sources": {
       "trivia": [
         {"text": "[1] 출처명", "url": "https://..."},
-        {"text": "[2] 출처명", "url": "https://..."}
-      ],
-      "overviewSalary.sal": [
-        {"text": "[1] 출처명", "url": "https://..."}
-      ]
-    },
-    "changeSummary": "Phase 5: trivia·sal GN 재번호"
-  }'
-```
-
-> ⚠️ overviewSalary를 보낼 때 **wage 기존값 반드시 포함** — 통째 전송이므로 wage 빠지면 바 차트 소실.
-> 변경 안 한 필드(way 등)는 fields에 넣지 않는다.
-
-### 5-4: 수선 검증
-
-1. `node scripts/validate-job-edit.cjs < draft.json` — PASS
-2. `curl -s -o /dev/null -w "%{http_code}" "https://careerwiki.org/job/{slug}"` — 200
-3. `node scripts/full-quality-audit.cjs --slug={slug}` — **Gate1 PASS 필수**
-4. 수선 전후 diff: 마커·출처·id 외에 **본문 텍스트 내용 변경 없음** 확인
-
-### 5-5: 배치 수선
-
-1. `full-quality-audit.cjs --all` → Gate1 FAIL 직업 목록 수집
-2. **A그룹** (자동): GN·FP·SK만 있는 직업 → 배치 처리 가능
-3. **B그룹** (수동): OM·OS가 하나라도 있는 직업 → 개별 확인
-4. A그룹 배치 → 각 직업 audit PASS 확인 → B그룹 순차
-
----
-
-## 배치 처리 (10개+ 직업)
-
-대량 처리는 **3단계 분리** 패턴을 사용한다.
-
-### 단계 1: 팀 리더 — 대상 선별 + 현황 요약
-Phase 0 쿼리로 대상 목록 생성. 각 직업의 현재 데이터 상태 요약.
-
-### 단계 2: Researcher Agent × 3 병렬 (리서치만, API 호출 금지)
-→ 에이전트 프롬프트 템플릿: `references/researcher-agent-prompt.md`
-
-```
-병렬 에이전트 분배 예시 (30개 배치):
-- Agent A: 직업 1~10
-- Agent B: 직업 11~20
-- Agent C: 직업 21~30
-⚠️ 각 에이전트는 JSON + qualityGates 결과만 반환. 편집 API 호출 금지.
-```
-
-### 단계 3: 팀 리더 — 검증 + API 호출 + 프로덕션 확인
-1. 에이전트 결과 JSON 수집
-2. **Phase 2 품질 게이트 4개** 전부 PASS 확인 (FAIL 직업은 수동 수정 후 재처리)
-3. sidebarJobs/sidebarMajors DB 실존 확인
-4. validate-job-edit.cjs PASS 후 편집 API 호출
-5. full-quality-audit.cjs PASS 확인
-
-### 배치 완료 보고 형식
-
-```
-처리 완료: X개 (성공 Y개 / 실패 Z개)
-성공: [직업명1, 직업명2, ...]
-실패: [직업명A (원인), 직업명B (원인)]
-커버리지: N → M / 6,945
-```
-
----
-
-## 체크리스트
-
-### 작업 전
-- [ ] Phase 0 진단 완료 (각 직업 현황 파악)
-- [ ] `references/lessons.md` 확인 (과거 실수 반복 방지)
-
-### 각 직업 완료 후 (신규 보완)
-- [ ] Gate 1: 각주 중복 없음, 1부터 순차, 마침표 뒤 위치
-- [ ] Gate 2: 모든 서술 필드가 완성된 문장으로 끝남
-- [ ] Gate 3: YouTube oembed 200 + title 포함 + 직업 관련 키워드 포함
-- [ ] Gate 4: _sources id 순서 = 본문 [N] 첫 등장 순서
-- [ ] way는 string 타입 (배열 아님)
-- [ ] detailWlb.wlb + .social 등급 포함 (높음/보통 이상/보통/보통 이하/낮음 중 하나)
-- [ ] sidebarCerts `[{name, url}]` 포맷 사용
-- [ ] fields + sources 함께 전송
-- [ ] 기존 overviewSalary.wage 건드리지 않음
-- [ ] validate-job-edit.cjs PASS
-- [ ] HTTP 200 + full-quality-audit.cjs PASS
-
-### Phase 5 완료 후
-- [ ] 5-1 진단 완료 (문제 유형별 분류)
-- [ ] 마커와 _sources 1:1 매칭
-- [ ] 각 필드 [N]이 [1]부터 순차
-- [ ] 본문 텍스트 내용 무변경 확인 (마커 외)
-- [ ] wage/prospect/구조화 데이터 보존 확인
-- [ ] validate-job-edit.cjs PASS
-- [ ] full-quality-audit.cjs PASS
-
-### 배치 완료 후
-- [ ] 처리 건수 보고
-- [ ] 실패 건 원인 분석
-- [ ] 커버리지 변화 보고
-
----
-
-## 참조 파일
-
-| 파일 | 내용 |
-|------|------|
-| `references/fields.md` | 12개 필드 타입·길이·포맷 상세 스펙 |
-| `references/sources.md` | 출처 등급 분류 + A등급 포맷 예시 |
-| `references/field-decision-matrix.md` | API 데이터 있을 때 필드별 처리 판단 매트릭스 |
-| `references/researcher-agent-prompt.md` | 병렬 리서치 에이전트 프롬프트 템플릿 |
-| `references/lessons.md` | 과거 실수 교훈 모음 (새 작업 전 필독) |
-| `../shared/career-tree.md` | 커리어트리 인물 선정·스테이지 작성·DB 삽입 상세 |
-| `../shared/footnote-validation.md` | 각주 검증 시스템 상세 |
-| `../shared/source-key-mapping.md` | sources 소스 키 전체 매핑표 |
