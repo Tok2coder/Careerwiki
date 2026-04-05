@@ -1572,7 +1572,7 @@ const renderDistributionList = (distribution?: Record<string, string | undefined
 
 const formatSalaryValue = (value: number): string => `${value.toLocaleString('ko-KR')}만원`
 
-const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions, footnoteMap?: Record<string, Record<string, number>>, sourceTextMap?: Record<number, string>): string => {
+const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions, footnoteMap?: Record<string, Record<string, number>>, sourceTextMap?: Record<number, string>, wageNumber?: string | null): string => {
   if (!salary || !safeTrim(salary)) {
     return ''
   }
@@ -1621,8 +1621,25 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions, fo
       const formatted = parsed.toLocaleString('ko-KR')
       dataset = [{ label: '평균', value: parsed }]
     } else {
-      // 공식 형식이 아닌 사용자 기여 텍스트 → 각주 지원하는 텍스트로 렌더링 (차트 X)
+      // 공식 형식이 아닌 사용자 기여 텍스트 → 각주 지원하는 텍스트로 렌더링
       const textHtml = formatRichText(raw, 'overviewSalary.sal', footnoteMap, sourceTextMap)
+      // wage 숫자가 별도로 있으면 bar 차트 + 텍스트 함께 표시
+      if (wageNumber) {
+        const wageNum = Number.parseInt(safeTrim(wageNumber).replace(/[,\s만원]/g, ''), 10)
+        if (Number.isFinite(wageNum) && wageNum > 0) {
+          const wageBar = `
+            <div class="space-y-1" data-cw-telemetry-component="job-salary-bar">
+              <div class="flex justify-between text-base text-white font-bold">
+                <span>평균</span>
+                <span>${wageNum.toLocaleString('ko-KR')}만원</span>
+              </div>
+              <div class="h-3 rounded-full bg-wiki-border/40 overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-wiki-primary to-wiki-secondary" style="width:100%"></div>
+              </div>
+            </div>`
+          return buildCard('임금 정보', 'fa-coins', `<div class="space-y-4" data-cw-telemetry-component="job-salary-card"><div class="space-y-2">${wageBar}</div>${textHtml}</div>`, { ...(options ?? {}) })
+        }
+      }
       return buildCard('임금 정보', 'fa-coins', `<div data-cw-telemetry-component="job-salary-card">${textHtml}</div>`, { ...(options ?? {}) })
     }
   }
@@ -4070,7 +4087,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     telemetryScope: 'job-overview-card',
     telemetryComponent: 'job-overview-salary-card',
     dataSources: salarySources
-  }, footnoteMap, sourceTextMap)
+  }, footnoteMap, sourceTextMap, overviewSalary?.wage)
   if (salaryCard) {
     overviewCards.push({ id: salaryAnchor, label: '임금 정보', icon: 'fa-coins', markup: salaryCard })
   }

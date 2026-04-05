@@ -25,7 +25,7 @@ export const TEMPLATE_VERSIONS = {
    * Used for: /job/:slug pages
    * Current features: ETL 개선 완료, 배열 필드 타입 체크 추가
    */
-  JOB: 216,  // 히어로 분류/태그/출처 번호 흰색 처리
+  JOB: 217,  // sal 텍스트 + wage bar 차트 동시 표시
 
   /**
    * Guide page template version
