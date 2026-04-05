@@ -345,68 +345,146 @@ node scripts/full-quality-audit.cjs --slug={직업slug}
 기존 Phase 0-4가 "신규 보완"이라면, Phase R은 "기존 보완 직업의 각주·출처 문제 수정" 전용.
 트리거: "각주 정리", "출처 마커 수정", "품질 수선", "trivia 마커 정리", "고아 마커" 등
 
-### 진단 코드 (6종)
+### 진단 코드 (5종)
 
-| 코드 | 문제 | 탐지 방법 | 자동/수동 |
-|------|------|----------|----------|
-| OM | 고아 마커 | 본문에 [N] 있지만 _sources에 대응 없음 | 마커 제거 (자동) |
-| OS | 고아 출처 | _sources에 항목 있지만 본문에 [N] 없음 | 수동 판단 |
-| GN | 전역 번호 | 필드 내 첫 [N]이 [1]이 아님 (예: trivia에 [4]부터) | 재번호 (자동) |
-| SM | 섹션 제목 마커 | "여담[2]", "되는 방법[1]" — 섹션명 뒤 마커 | 마커 제거 (자동) |
-| FP | 마침표 앞 마커 | "[N]." 패턴 → 올바른 건 ".[N]" | 위치 교정 (자동) |
-| SK | sources 키 오류 | 필드명 매핑 틀림 (way_sources, 숫자 키 등) | 키 교정 (자동) |
+| 코드 | 문제 | 수선 방식 |
+|------|------|----------|
+| GN | 전역 번호: 필드 내 첫 [N]이 [1]이 아님 | **자동** — 재번호 |
+| FP | 마침표 앞 마커: `[N].` → `.[N]` | **자동** — 위치 교정 |
+| SK | sources 키 오류: `way_sources`, 숫자 키 등 | **자동** — 키 매핑 |
+| OM | 고아 마커: 본문 [N]에 대응 source 없음 | **수동** — 출처 추가 or 마커 제거 |
+| OS | 고아 출처: source 있지만 본문에 [N] 없음 | **수동** — 마커 삽입 or 출처 제거 |
+
+> ⚠️ OM은 **절대 자동 삭제 금지**. SK(키 오류) 때문에 source를 못 찾는 것일 수 있다. SK 수선 후 재진단.
+> "여담[2]" 같은 현상은 별도 코드가 아니라 **GN의 증상** — trivia 텍스트가 [2]부터 시작한 것. (섹션 헤더 "여담"은 프론트엔드가 렌더링하는 것이지 데이터에 없음)
 
 ### R-0: 수선 대상 선별
 
+```bash
+# FAIL/WARN 직업을 자동 필터 — 전체 스캔 불필요
+node scripts/full-quality-audit.cjs --all --limit=200
+# Gate1 FAIL(각주 비순차/중복/sources 불일치) 직업만 수선 대상으로 등록
+```
+
+특정 직업 지정 시:
 ```sql
-SELECT id, name, slug,
-  json_extract(user_contributed_json, '$._sources') IS NOT NULL as has_sources,
-  LENGTH(user_contributed_json) as ucj_len
-FROM jobs
-WHERE is_active=1 AND user_contributed_json IS NOT NULL AND LENGTH(user_contributed_json) > 50
-ORDER BY user_last_updated_at DESC;
+SELECT id, name, slug, merged_profile_json, user_contributed_json
+FROM jobs WHERE slug='대상슬러그' AND is_active=1;
 ```
 
-### R-1: 자동 진단 (per-job)
+### R-1: 개별 진단 절차 (per-job)
 
-각 직업의 merged_profile_json을 파싱하여 6가지 문제 탐지. 보고 형식:
+**Step 1 — 데이터 읽기**:
+- `merged_profile_json` → 텍스트 필드 원본 (way, sal, trivia 등)
+- `user_contributed_json._sources` → 현재 출처 매핑
+
+**Step 2 — 필드별 마커 추출** (스캔 순서 고정):
 ```
-[직업명] R-1 진단:
-🔴 OM: trivia에 [2][4][5] — _sources 대응 없음
-🔴 GN: trivia [4][5][6][7] → [1][2][3][4] 재번호 필요
-🟡 FP: way "[1]." → ".[1]"
-🟢 way: 정상 (마커 2, 출처 2 일치)
+way → overviewSalary.sal → overviewProspect.main → trivia
+→ detailWlb.wlbDetail → detailWlb.socialDetail
+각 필드: regex /\[(\d+)\]/g → 마커 번호 set 추출
+```
+
+**Step 3 — 교차 대조** (필드별 독립 판정):
+```
+필드마다:
+  markers = 본문 [N] 번호들           (예: {4, 5, 6, 7})
+  src_len = _sources[필드키] 배열 길이  (예: 4)
+
+  GN: min(markers) ≠ 1               → 🔴 전역번호
+  FP: 텍스트에 /\[\d+\]\./ 존재       → 🟡 마침표 위치
+  SK: _sources에 비표준 키 존재        → 🔴 키 오류
+  OM: max(markers) > src_len          → 🔴 고아 마커
+  OS: src_len > 0 AND markers 비어있음 → 🔴 고아 출처
+```
+
+**Step 4 — 진단 보고**:
+```
+[가스설비공사관리자] R-1 진단:
+  way:     [1][2] / sources.way 2개          → 🟢 정상
+  sal:     [3]    / sources["overviewSalary.sal"] [{id:3}] → 🔴 GN
+  trivia:  [4][5][6][7] / sources.trivia 0개 → 🔴 GN + OM
 ```
 
 ### R-2: 수선 실행
 
-| 문제 | 자동 수선 | 수동 판단 |
-|------|----------|----------|
-| OM 고아 마커 | 마커 제거 + 잔여 마커 재번호 | 출처 찾아 추가 가능하면 추가 |
-| OS 고아 출처 | — | 마커 삽입 or 출처 제거 판단 |
-| GN 전역→필드별 | [4][5]→[1][2] 변환 + sources id 갱신 | — |
-| SM 섹션 마커 | 마커만 제거 | — |
-| FP 마침표 위치 | "[N]."→".[N]" | — |
-| SK 키 오류 | 올바른 키로 매핑 | — |
+**⚠️ 수선 순서 엄수: SK → GN → FP → OM → OS**
+(키 오류를 먼저 고쳐야 고아 마커가 줄어들고, GN을 고쳐야 OM 판정이 정확해짐)
 
-**철칙**: 마커·출처 매핑만 수정. 본문 텍스트 내용, wage, prospect 등 구조화 데이터는 절대 불변.
+#### SK 수선 (sources 키 교정)
+```json
+// Before                           After
+"way_sources": [{...}]           → "way": [{...}]
+"1": [{...}]                     → (본문 [N] 위치 기준으로 필드키 추론)
+"overviewSalary_sources": [{...}] → "overviewSalary.sal": [{...}]
+```
+**추론 불가 시 수동 판단** — 숫자 키 "1"이 어떤 필드인지 모르면 본문 [N] 분포로 역추적.
 
-### R-3: 수선 검증
+#### GN 수선 (전역→필드별 재번호)
+```
+예: trivia에 [4][5][6][7], sources.trivia = [{id:4,...},{id:5,...},{id:6,...},{id:7,...}]
 
-1. 수정 전후 diff: 마커·출처 외 변경 없는지 확인
-2. `node scripts/validate-job-edit.cjs` PASS
-3. `node scripts/full-quality-audit.cjs --slug={slug}` PASS
+1. 매핑 생성: {4→1, 5→2, 6→3, 7→4}
+2. 텍스트 치환 (큰 번호부터 → 충돌 방지):
+   "[7]"→"[4]" → "[6]"→"[3]" → "[5]"→"[2]" → "[4]"→"[1]"
+3. sources id 갱신: {id:4}→{id:1}, {id:5}→{id:2}, ...
+4. sources text 갱신: "[4] 출처명"→"[1] 출처명", ...
+```
 
-### R-4: 저장 + 프로덕션 검증
+#### FP 수선 (마침표 위치)
+```
+text.replace(/\[(\d+)\]\./g, '.[$1]')
+"증가했다[1]." → "증가했다.[1]"
+```
 
-Phase 3-4와 동일. fields + sources 함께 전송, HTTP 200 확인.
+#### OM 수선 (고아 마커 — 반드시 수동)
+```
+SK→GN→FP 수선 후에도 source 매칭 안 되는 마커가 남으면:
+  1순위: 출처 찾기 — WebFetch로 관련 페이지 확인 → source 추가
+  2순위: 마커 제거 — 출처 불명이면 [N] 삭제 + 잔여 마커 재번호
+```
+
+### R-3: 수선 저장 (**변경 필드만 전송**)
+
+```bash
+# 예: trivia GN + sal GN만 수선한 경우 — way는 정상이므 보내지 않음
+curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
+  -H "Content-Type: application/json" \
+  -H "X-Admin-Secret: careerwiki-admin-2026" \
+  -d '{
+    "fields": {
+      "trivia": "수선된 텍스트...[1] ...[2]",
+      "overviewSalary": {"sal": "수선된 텍스트...[1]", "wage": (기존값 그대로)}
+    },
+    "sources": {
+      "trivia": [
+        {"text": "[1] 출처명", "url": "https://..."},
+        {"text": "[2] 출처명", "url": "https://..."}
+      ],
+      "overviewSalary.sal": [
+        {"text": "[1] 출처명", "url": "https://..."}
+      ]
+    },
+    "changeSummary": "Phase R: trivia·sal GN 재번호"
+  }'
+```
+
+> ⚠️ overviewSalary를 보낼 때 **wage 기존값 반드시 포함** — 통째 전송이므로 wage 빠지면 바 차트 소실.
+> 변경 안 한 필드(way 등)는 fields에 넣지 않는다.
+
+### R-4: 수선 검증
+
+1. `node scripts/validate-job-edit.cjs < draft.json` — PASS
+2. `curl -s -o /dev/null -w "%{http_code}" "https://careerwiki.org/job/{slug}"` — 200
+3. `node scripts/full-quality-audit.cjs --slug={slug}` — **Gate1 PASS 필수**
+4. 수선 전후 diff: 마커·출처·id 외에 **본문 텍스트 내용 변경 없음** 확인
 
 ### R-5: 배치 수선
 
-1. R-0으로 전체 스캔 → 문제 직업 목록
-2. **A그룹** (자동): GN, SM, FP, SK → 배치 처리
-3. **B그룹** (수동): OM, OS → 개별 확인
-4. A그룹 배치 완료 → B그룹 순차 처리
+1. `full-quality-audit.cjs --all` → Gate1 FAIL 직업 목록 수집
+2. **A그룹** (자동): GN·FP·SK만 있는 직업 → 배치 처리 가능
+3. **B그룹** (수동): OM·OS가 하나라도 있는 직업 → 개별 확인
+4. A그룹 배치 → 각 직업 audit PASS 확인 → B그룹 순차
 
 ---
 
