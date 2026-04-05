@@ -52,7 +52,13 @@ export interface SampleSearchItem {
 
 const createSyntheticSourceStatus = (): SourceStatusRecord => ({
   CAREERNET: { attempted: false, count: 0, skippedReason: 'synthetic-fallback' },
-  GOYONG24: { attempted: false, count: 0, skippedReason: 'synthetic-fallback' }
+  GOYONG24: { attempted: false, count: 0, skippedReason: 'synthetic-fallback' },
+  WORK24_JOB: { attempted: false, count: 0, skippedReason: 'synthetic-fallback' },
+  WORK24_DJOB: { attempted: false, count: 0, skippedReason: 'synthetic-fallback' },
+  WORK24_MAJOR: { attempted: false, count: 0, skippedReason: 'synthetic-fallback' },
+  AI: { attempted: false, count: 0, skippedReason: 'synthetic-fallback' },
+  USER_CONTRIBUTED: { attempted: false, count: 0, skippedReason: 'synthetic-fallback' },
+  ADMIN_OVERRIDE: { attempted: false, count: 0, skippedReason: 'synthetic-fallback' }
 })
 
 const jobSampleSeed: Record<string, SampleJobEntry> = {

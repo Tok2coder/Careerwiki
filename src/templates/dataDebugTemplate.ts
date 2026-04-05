@@ -2656,7 +2656,7 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
               API 호출 상태
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              ${Object.entries(sources).map(([source, status]) => `
+              ${Object.entries(sources).map(([source, status]: [string, any]) => `
                 <div class="border-2 rounded-xl p-5 ${
                   status.attempted 
                     ? (status.error ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300')
@@ -2783,10 +2783,10 @@ export const renderDataDebugPage = (params: DataDebugTemplateParams): string => 
                 관련 직업 (${profile.relatedJobs.length}개)
               </h3>
               <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                ${profile.relatedJobs.map((job: string) => `
+                ${profile.relatedJobs.map((job: any) => `
                   <li class="flex items-start">
                     <i class="fas fa-arrow-right text-purple-500 mr-2 mt-1"></i>
-                    <span class="text-gray-800">${escapeHtml(job)}</span>
+                    <span class="text-gray-800">${escapeHtml(typeof job === 'string' ? job : job?.name ?? String(job))}</span>
                   </li>
                 `).join('')}
               </ul>

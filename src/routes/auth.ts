@@ -18,7 +18,7 @@ import { createSession, destroySession, SESSION_COOKIE_MAX_AGE } from '../utils/
 
 const auth = new Hono<{ Bindings: CloudflareBindings }>()
 
-const isHttpsRequest = (req: Request) =>
+const isHttpsRequest = (req: { header(name: string): string | null | undefined; url: string }) =>
   req.header('x-forwarded-proto') === 'https' || req.url.startsWith('https://')
 
 // Open redirect 방지: 상대 경로만 허용, 외부 URL 차단
@@ -102,7 +102,7 @@ auth.get('/google/callback', async (c) => {
         <body>
           <h1>로그인 실패</h1>
           <p>보안 검증에 실패했습니다. 다시 시도해주세요.</p>
-          <a href="/login?redirect=${encodeURIComponent(c.req.path + c.req.search || '/')}">다시 로그인</a>
+          <a href="/login?redirect=${encodeURIComponent(c.req.path + new URL(c.req.url).search || '/')}">다시 로그인</a>
         </body>
       </html>
     `, 400)
@@ -115,7 +115,7 @@ auth.get('/google/callback', async (c) => {
         <body>
           <h1>로그인 실패</h1>
           <p>인증 코드를 받지 못했습니다. 다시 시도해주세요.</p>
-          <a href="/login?redirect=${encodeURIComponent(c.req.path + c.req.search || '/')}">다시 로그인</a>
+          <a href="/login?redirect=${encodeURIComponent(c.req.path + new URL(c.req.url).search || '/')}">다시 로그인</a>
         </body>
       </html>
     `, 400)
@@ -225,7 +225,7 @@ auth.get('/google/callback', async (c) => {
           <h1>로그인 실패</h1>
           <p>Google 로그인 중 오류가 발생했습니다.</p>
           <p style="color: #ef4444; font-family: monospace;">${error instanceof Error ? error.message : '알 수 없는 오류'}</p>
-          <a href="/login?redirect=${encodeURIComponent(c.req.path + c.req.search || '/')}">다시 로그인</a>
+          <a href="/login?redirect=${encodeURIComponent(c.req.path + new URL(c.req.url).search || '/')}">다시 로그인</a>
         </body>
       </html>
     `, 500)

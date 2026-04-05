@@ -369,7 +369,17 @@ export interface Job {
   jobdicSeq: string;       // 직업 코드 (seq)
   jobName: string;         // 직업명
   summary: string;         // 직업 소개
-  
+  jobCategoryName?: string // 직업 카테고리명 (검색 결과)
+  profession?: string      // 직군 (검색 결과 fallback)
+  aptdType?: string        // 적성유형 (mock 데이터)
+  relatedMajor?: string    // 관련 전공 (mock 데이터)
+  avgSalary?: string       // 평균 연봉 (mock 데이터)
+  salaryRange?: string     // 연봉 범위 (mock 데이터)
+  jobOutlook?: string      // 직업 전망 (mock 데이터)
+  requiredEducation?: string       // 학력 요건 (mock 데이터)
+  requiredCertification?: string   // 필요 자격증 (mock 데이터)
+  employmentTrend?: string         // 취업 트렌드 (mock 데이터)
+
   // 직업백과 API 전체 응답 (job.json)
   encyclopedia?: JobEncyclopediaResponse
 }
@@ -506,7 +516,7 @@ export async function getMajorDetail(majorSeq: string, env?: any): Promise<Major
                 majorName: u.majorName || undefined,
                 totalCount: u.totalCount || undefined
               }))
-              .filter(u => u.schoolName);
+              .filter((u: any) => u.schoolName);
           } else if (typeof firstItem === 'string') {
             // 문자열 배열인 경우 (대학명만)
             universityString = major.university.join(', ');

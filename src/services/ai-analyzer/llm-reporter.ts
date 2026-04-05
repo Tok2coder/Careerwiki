@@ -546,7 +546,7 @@ export async function generatePremiumReportV3(
       _candidatesScored: judgeResults.length,
     }
     // 전체 리포트에 한국어 조사 교정 적용 (LLM + fallback 텍스트 모두)
-    return fixParticlesDeep(report) as typeof report
+    return fixParticlesDeep(report) as PremiumReportV3
 
   } catch (error) {
     return fixParticlesDeep(

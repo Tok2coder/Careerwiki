@@ -226,7 +226,7 @@ draftRoutes.post('/save', async (c) => {
             const updatedMemory = await updateMemory(
               c.env.AI || null,
               aggregatedProfile,
-              { type: 'narrative_facts', data: narrativeFacts },
+              { type: 'narrative_facts', data: narrativeFacts as any },
               c.env.OPENAI_API_KEY
             )
             aggregatedProfile.memory = updatedMemory

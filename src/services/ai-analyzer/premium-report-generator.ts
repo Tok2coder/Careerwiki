@@ -1194,7 +1194,7 @@ export function generatePremiumReport(input: PremiumReportInput): PremiumReport 
     recommendations_hold: holdRecsResult.result,
     plan_b_paths: planBResult.result,
     next_questions: questionsResult.result,
-  }
+  } as unknown as PremiumReport
 }
 
 // ============================================
@@ -1644,7 +1644,7 @@ function generateMetaCognition(mm?: MiniModuleResult): MetaCognitionResult {
   // 정체성 인사이트 - 더 완성도 있는 문장
   const strengthLabels = (mm.strength_top || []).map(t => TOKEN_TO_KOREAN[t] || t)
   const interestLabels = (mm.interest_top || []).map(t => TOKEN_TO_KOREAN[t] || t)
-  const workStyleLabels = (mm.work_style_flags || []).map(t => TOKEN_TO_KOREAN[t] || t)
+  const workStyleLabels = (mm.workstyle_top || []).map(t => TOKEN_TO_KOREAN[t] || t)
 
   let identityInsight = '자기 이해를 위해 더 많은 질문에 답변해주세요.'
   if (strengthLabels.length && interestLabels.length && valueLabels.length) {

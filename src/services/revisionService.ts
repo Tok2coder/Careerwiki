@@ -59,7 +59,7 @@ export interface RevisionRecord {
  * Revision 생성 페이로드
  */
 export interface CreateRevisionPayload {
-  entityType: 'job' | 'major' | 'howto'
+  entityType: 'job' | 'major' | 'howto' | 'guide'
   entityId: string
   dataSnapshot: any  // 병합된 전체 데이터 객체 또는 변경사항만 (최적화)
   previousValues?: Record<string, any>  // 변경 전 값들 (변경사항만 저장 시)
@@ -129,7 +129,7 @@ function mapRowToRevision(row: any): RevisionRecord {
  */
 export async function getNextRevisionNumber(
   db: D1Database,
-  entityType: 'job' | 'major' | 'howto',
+  entityType: 'job' | 'major' | 'howto' | 'guide',
   entityId: string
 ): Promise<number> {
   const result = await db
@@ -155,7 +155,7 @@ export async function getNextRevisionNumber(
  */
 export async function getCurrentRevision(
   db: D1Database,
-  entityType: 'job' | 'major' | 'howto',
+  entityType: 'job' | 'major' | 'howto' | 'guide',
   entityId: string
 ): Promise<RevisionRecord | null> {
   const row = await db
@@ -191,7 +191,7 @@ export async function getCurrentRevision(
  */
 export async function reconstructFullData(
   db: D1Database,
-  entityType: 'job' | 'major' | 'howto',
+  entityType: 'job' | 'major' | 'howto' | 'guide',
   entityId: string,
   targetRevisionNumber: number
 ): Promise<any> {

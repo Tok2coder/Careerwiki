@@ -18,6 +18,7 @@ import {
   type AnalysisStage,
   type FollowupResponsePayload,
   type FollowupResult,
+  type FollowupQuestionV2,
   type DeepIntakeInput,
   type UserInsight,
   type DebugInfo,
@@ -217,7 +218,7 @@ import {
 // ============================================
 // Error Handling (V3 표준화)
 // ============================================
-type ErrorCode = 
+type ErrorCode =
   | 'VALIDATION_ERROR'     // 400: 입력 검증 실패
   | 'INVALID_STAGE'        // 400: 잘못된 Stage
   | 'INVALID_PAYLOAD'      // 400: 잘못된 페이로드 형식
@@ -227,6 +228,11 @@ type ErrorCode =
   | 'DB_ERROR'             // 500: 데이터베이스 오류
   | 'ANALYSIS_FAILED'      // 500: 분석 처리 실패
   | 'INTERNAL_ERROR'       // 500: 내부 오류
+  | 'AUTH_REQUIRED'        // 401: 인증 필요
+  | 'FORBIDDEN'            // 403: 권한 없음
+  | 'NOT_FOUND'            // 404: 리소스 없음
+  | 'LLM_JUDGE_FAILED'     // 500: LLM Judge 실패
+  | 'REPORT_FAILED'        // 500: 리포트 생성 실패
 
 interface ApiError {
   error: string
@@ -1301,7 +1307,7 @@ analyzerRoutes.post('/followup', async (c) => {
         answer_raw: answerStr,
         answer_type: payload.answer_text ? 'text' : 'single_choice',
         extracted_signals: signals,
-        affected_dimensions: payload.affects_attributes,
+        affected_dimensions: (payload as any).affects_attributes,
       })
     } catch (turnError) {
       // 대화 턴 저장 실패해도 followup 처리는 계속 진행
@@ -1447,6 +1453,7 @@ analyzerRoutes.post('/followup', async (c) => {
           
           // Phase 4 결과 반환
           return c.json({
+            ...safeResult,
             success: true,
             phase4_applied: true,
             fact_saved: {
@@ -1454,7 +1461,6 @@ analyzerRoutes.post('/followup', async (c) => {
               value: payload.answer,
               fact_level: factLevel,
             },
-            ...safeResult,
           })
           
         } catch (error) {
@@ -1812,11 +1818,11 @@ async function runAnalysis(
   // 5. Follow-up 질문 생성 (Deep Intake 여부 반영)
   const existingFactKeys = facts.map(f => ({ fact_key: f.fact_key }))
   const followupQuestions = generateFollowupQuestions({
-    candidates: scoredJobs,
-    topK: top10,
+    candidates: scoredJobs as any,
+    topK: top10 as any,
     existingFacts: existingFactKeys,
     hasDeepIntake: !!deepIntake,  // Phase 1C: Deep Intake 여부 전달
-  }, 3)
+  }, 3) as any as FollowupQuestionV2[]
   
   // 6. Phase 1C: User Insight 생성
   const userInsight = generateUserInsight(facts, deepIntake, factBoosts.applied_rules)
@@ -1841,7 +1847,7 @@ async function runAnalysis(
   const result: AnalysisResultJSON = {
     engine_state: deepIntake ? 'phase1a_mve' : (facts.length > 0 ? 'phase1a_mve' : 'phase1a_initial'),
     engine_version: RECOMMENDATION_ENGINE_VERSION,
-    mini_module_result: miniModuleForFilter || null,
+    mini_module_result: v2MiniModule || null,
 
     versions: {
       recipe: VERSIONS.recipe,
@@ -2768,8 +2774,8 @@ async function runAnalysisV3(
   // ============================================
   // V3 Enhancement: TAG Pre-Filter 설정
   // ============================================
-  const universalAnswers = payload.universal_answers || {}
-  const userConstraints = extractUserConstraints(universalAnswers, payload.career_state)
+  const universalAnswers = (payload as any).universal_answers || {}
+  const userConstraints = extractUserConstraints(universalAnswers, (payload as any).career_state)
   const enableTagPreFilter = Object.values(userConstraints).some(v => v === true)
   
   if (enableTagPreFilter) {
@@ -3082,8 +3088,8 @@ async function runAnalysisV3(
     const tempScoredJob: ScoredJob = {
       job_id: job.job_id,
       job_name: job.job_name,
-      slug: job.slug,
-      image_url: job.image_url || undefined,
+      slug: (job as any).slug,
+      image_url: (job as any).image_url || undefined,
       job_description: (job as any).job_description,
       scores: {
         fit: Math.max(0, fit),
@@ -3121,7 +3127,7 @@ async function runAnalysisV3(
   // 5. Follow-up 질문 생성 (Stage-aware)
   const existingFactKeys = facts.map(f => ({ fact_key: f.fact_key }))
 
-  let followupQuestions: FollowupQuestion[]
+  let followupQuestions: FollowupQuestionV2[]
   if (stage) {
     // V3: Stage 기반 질문 생성
     followupQuestions = generateStageBasedFollowups(
@@ -3138,7 +3144,7 @@ async function runAnalysisV3(
       topK: top10,
       existingFacts: existingFactKeys,
       hasDeepIntake: !!deepIntake,
-    }, 3)
+    }, 3) as any as FollowupQuestionV2[]
   }
 
   // 5.5 P0: Can 검증 질문 추가 (자기평가 강점 경험 확인)
@@ -3164,7 +3170,7 @@ async function runAnalysisV3(
 
       followupQuestions.push({
         id: cvq.id,
-        type: 'can_validation',
+        type: 'can_validation' as any,
         question: cvq.question,
         context: cvq.why_asked,
         options: cvq.options?.map(opt => ({
@@ -3187,7 +3193,7 @@ async function runAnalysisV3(
   // 6.5. Premium Report 생성 (V3 - LLM 기반 활성화!)
   // mini_module_result 추출 (payload에서)
   const miniModuleResult = 'mini_module_result' in payload ? (payload as any).mini_module_result : undefined
-  const openaiKey = env.OPENAI_API_KEY  // Bindings 타입에 정의됨
+  const openaiKey = (env as any)?.OPENAI_API_KEY as string | undefined
   const sessionId = `session-${requestId}`
   
   // ★ 디버그: 환경 변수 확인
@@ -3224,7 +3230,7 @@ async function runAnalysisV3(
   }
   
   // roundAnswers 구성 (deep_intake에서 추출)
-  const roundAnswers = deepIntake?.questions?.map((q, i) => ({
+  const roundAnswers = (deepIntake as any)?.questions?.map((q: any, i: number) => ({
     round: Math.min(3, Math.floor(i / 3) + 1) as 1 | 2 | 3,
     questionId: `q${i + 1}`,
     question: q.question,
@@ -3233,17 +3239,18 @@ async function runAnalysisV3(
   })) || []
   
   // 디버그 로그: LLM 조건 확인
-  
+  let additionalContextText: string | undefined
+
   // LLM Judge: OpenAI API 키가 있을 때만 시도 (없으면 스킵)
   if (openaiKey && candidatesForJudge.length > 0) {
     try {
       // v3.13: V2 path에서도 배경 데이터 전달
       let v2CareerState: { role_identity: string; career_stage_years: string } | undefined
       let v2CareerBackground: string | undefined
-      if (payload.career_state) {
+      if ((payload as any).career_state) {
         v2CareerState = {
-          role_identity: payload.career_state.role_identity || '',
-          career_stage_years: payload.career_state.career_stage_years || '',
+          role_identity: (payload as any).career_state.role_identity || '',
+          career_stage_years: (payload as any).career_state.career_stage_years || '',
         }
       }
       try {
@@ -3256,8 +3263,8 @@ async function runAnalysisV3(
       } catch { /* non-critical */ }
 
       const judgeInput: JudgeInput = {
-        candidates: candidatesForJudge,
-        searchProfile,
+        candidates: candidatesForJudge as any,
+        searchProfile: searchProfile as any,
         roundAnswers,
         universalAnswers: universalAnswers,
         miniModuleResult: miniModuleResult,
@@ -3296,7 +3303,7 @@ async function runAnalysisV3(
       job_name: j.job_name,
       scores: j.scores,
       attributes: j.attributes as Record<string, number>,
-    })),
+    })) as any,
     facts.map(f => ({ fact_key: f.fact_key, value_json: f.value_json }))
   )
   
@@ -3312,7 +3319,7 @@ async function runAnalysisV3(
   
   const keyDecisionVars = extractKeyDecisionVariables(
     scoringTrace,
-    facts.map(f => ({ fact_key: f.fact_key, value_json: f.value_json }))
+    facts.map(f => ({ fact_key: f.fact_key, value_json: f.value_json })) as any
   )
   
   // ============================================
@@ -3321,7 +3328,7 @@ async function runAnalysisV3(
   let premiumReport
   
   // Hard Cut 리스트 구성 (필터링된 직업들)
-  const hardCutList = miniModuleFilterResult?.excluded?.map(j => ({
+  const hardCutList = (miniModuleFilterResult as any)?.excluded?.map((j: any) => ({
     job_id: j.job_id,
     job_name: j.job_name,
     rule_id: j.rule_id || 'mini_module_filter',
@@ -3384,7 +3391,6 @@ async function runAnalysisV3(
   }
 
   // Additional Context 조회 (사용자가 추가한 텍스트)
-  let additionalContextText: string | undefined
   try {
     const acRows = await db.prepare(`
       SELECT value_text FROM analyzer_facts
@@ -3409,7 +3415,7 @@ async function runAnalysisV3(
       const reporterInput: ReporterInput = {
         sessionId,
         judgeResults: llmJudgeResults?.results || [],
-        searchProfile,
+        searchProfile: searchProfile as any,
         narrativeFacts,
         roundAnswers: finalRoundAnswers,
         universalAnswers: universalAnswers,
@@ -3644,7 +3650,7 @@ async function runAnalysisV3(
       env_check: {
         openai_key_exists: !!openaiKey,
         openai_key_prefix: openaiKey ? String(openaiKey).substring(0, 7) : null,
-        ai_binding_exists: !!env.AI,
+        ai_binding_exists: !!(env as any)?.AI,
         candidates_count: candidatesForJudge.length,
       },
     },
@@ -3663,8 +3669,8 @@ async function runAnalysisV3(
       candidateCount,
       sampleJobs.length,
       top3,
-      sampleJobs,
-      factBoosts,
+      sampleJobs as any,
+      factBoosts as any,
       facts,
       followupQuestions[0],
       diversityResult
@@ -3729,7 +3735,7 @@ function generateDebugInfo(
   sampleJobs: SampleJobWithBase[],
   factBoosts: { like_boost: number; can_boost: number; risk_boost: number; applied_rules: string[] },
   facts: Fact[],
-  firstFollowup: FollowupQuestion | undefined,
+  firstFollowup: FollowupQuestionV2 | undefined,
   diversityResult: { diversityApplied: boolean; changes: string[] }
 ): DebugInfo {
   // Score breakdown for TOP3
@@ -3786,14 +3792,15 @@ function generateDebugInfo(
   
   // Followup rationale
   const followupRationale = firstFollowup ? {
-    split_attribute: firstFollowup.affects_attributes?.[0] || firstFollowup.constraint || 'unknown',
+    split_attribute: firstFollowup.affects_attributes?.[0] || 'unknown',
     split_gain: 0.5, // Placeholder - actual splitGain calculation is complex
     reason: firstFollowup.context || 'TOP3 직업 간 분별력 향상',
   } : undefined
   
   return {
-    candidate_source: candidateSource,
+    candidate_source: candidateSource as any,
     candidate_count: candidateCount,
+    tagged_count: candidateCount,
     total_in_db: totalInDb,
     score_breakdown: scoreBreakdown,
     followup_rationale: followupRationale,
@@ -3848,7 +3855,7 @@ function generateStageBasedFollowups(
   existingFacts: { fact_key: string }[],
   stage: AnalysisStage,
   hasDeepIntake: boolean
-): FollowupQuestion[] {
+): FollowupQuestionV2[] {
   // Stage에 맞는 질문 풀 가져오기
   const stageQuestions = getQuestionsForStage(stage)
   
@@ -3863,7 +3870,7 @@ function generateStageBasedFollowups(
       topK,
       existingFacts,
       hasDeepIntake,
-    }, 3)
+    }, 3) as any as FollowupQuestionV2[]
   }
   
   // 정보이득 점수 계산 (간단 버전)
@@ -4544,7 +4551,7 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
             round: round_number,
             questions: cachedQuestions,
             generatedBy: 'llm' as const,
-            metadata: meta,
+            metadata: meta as any,
           }
         } else {
           // 캐시 미스 → LLM 호출 후 저장
@@ -4629,12 +4636,12 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
       // 생성된 질문 로그 기록
       for (const q of filteredQuestions) {
         logAskedQuestion(cagState, {
-          questionId: q.questionId,
+          questionId: (q as any).questionId,
           questionText: q.questionText,
           round: round_number,
           askedAt: new Date().toISOString(),
           answered: false,
-        })
+        } as any)
       }
       
       // CAG 상태 저장
@@ -5284,7 +5291,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
   const authUser = c.get('user') as { id: number } | undefined
   const userId = authUser?.id?.toString() || null
 
-  const { session_id, draft_id, topK = 800, judgeTopN = 20, debug = false, skipReport = false } = payload
+  const { session_id, draft_id, topK = 800, judgeTopN = 20, debug = false, skipReport = false } = payload as any
   
   if (!session_id) {
     return c.json(createErrorResponse(
@@ -5339,7 +5346,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           v: payload.mini_module_result.value_top?.sort(),
           s: payload.mini_module_result.strength_top?.sort(),
           c: payload.mini_module_result.constraint_flags?.sort(),
-          w: payload.mini_module_result.workstyle_top?.sort(),
+          w: (payload.mini_module_result as any).workstyle_top?.sort(),
           h: nfRow?.high_alive_moment?.slice(0, 80),
           l: nfRow?.lost_moment?.slice(0, 80),
           a: raRows?.results?.map(r => r.answer?.slice(0, 60)) || [],
@@ -5480,7 +5487,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         if (c.includes('degree') || c.includes('학위')) acc.degree_impossible = true
         if (c.includes('license') || c.includes('자격')) acc.license_impossible = true
         return acc
-      }, {} as { [key: string]: boolean }),
+      }, {} as any),
       {}
     )
 
@@ -5542,9 +5549,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         }
       })
       // v3.9.4: 정치직/임명직 필터링 (차관, 법원장 등 추천 부적합 직업 제거)
-      scoredJobs = filterUnrealisticJobs(scoredJobs)
+      scoredJobs = filterUnrealisticJobs(scoredJobs as any) as any
       // v3.9.9: 니치 소재/분야 직업 조건부 필터링 (배경이 받쳐줄 때는 통과)
-      scoredJobs = filterNicheMaterialJobs(scoredJobs, payload.mini_module_result)
+      scoredJobs = filterNicheMaterialJobs(scoredJobs as any, payload.mini_module_result) as any
       // 🔍 DEBUG: 첫 번째 직업의 image_url, job_description 확인
       if (scoredJobs.length > 0) {
         const sample = scoredJobs[0]
@@ -5555,7 +5562,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
 
     // 3-3. MiniModule Hard Filter (분석형 강점 → 현장직 제외 등)
 
-    let filteredJobs, mmFilterResult
+    let filteredJobs: any[], mmFilterResult
     try {
       const mmResult = applyMiniModuleHardFilter(scoredJobs, payload.mini_module_result)
       filteredJobs = mmResult.filtered
@@ -6228,7 +6235,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           job_id: jobId,
           job_name: `Excluded Job ${idx + 1}`,
           rule_id: mmFilterResult.appliedRules[0]?.ruleId || 'mini_module_filter',
-          reason: mmFilterResult.appliedRules[0]?.description || '미니모듈 기반 제외',
+          reason: (mmFilterResult.appliedRules[0] as any)?.description || '미니모듈 기반 제외',
         })).slice(0, 10)
 
         // Reporter에는 fit_score 상위 20개만 전달 (프롬프트 길이 제한)
@@ -6247,12 +6254,12 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
             fit_verdict: job.like_score && job.like_score >= 70 ? 'STRONG_FIT' : 'MODERATE_FIT',
             fit_summary: job.job_description || `${job.job_name}${은는(job.job_name)} 당신의 관심사와 잘 맞습니다.`,
             risk_note: job.risk_penalty && job.risk_penalty > 0 ? '일부 제약 조건 고려 필요' : undefined,
-          })),
-          searchProfile,
+          })) as any,
+          searchProfile: searchProfile as any,
           narrativeFacts,
-          roundAnswers,
+          roundAnswers: roundAnswers as any,
           universalAnswers: {},
-          hardCutList,
+          hardCutList: hardCutList as any,
           miniModuleResult: payload.mini_module_result,
           additionalContext: additionalContextForRecommend,
         }
@@ -6495,7 +6502,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         topScores
       )
       if (premiumReport) {
-        premiumReport._confidence = confidenceResult.score
+        (premiumReport as any)._confidence = confidenceResult.score
       }
     } catch (e) {
     }
@@ -6705,7 +6712,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         const draftOwner = await db.prepare(`
           SELECT user_id FROM analyzer_drafts WHERE session_id = ?
         `).bind(session_id).first<{ user_id: number | null }>()
-        effectiveUserId = draftOwner?.user_id || null
+        effectiveUserId = draftOwner?.user_id?.toString() || null
       }
 
       // 기존 request 확인
@@ -6810,7 +6817,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       debug_info: debug ? {
         vectorize_topK: topK,
         judge_topN: judgeTopN,
-        cache_hit: expansionResult.cacheHit,
+        cache_hit: (expansionResult as any).cacheHit,
         fallback_used: expansionResult.fallback_used,
         has_narrative_facts: !!narrativeFacts,
         round_answers_count: roundAnswers.length,
@@ -6937,7 +6944,7 @@ analyzerRoutes.post('/v3/recommend/report', async (c) => {
       })),
       searchProfile: searchProfile || { desiredThemes: [], dislikedThemes: [], strengthsHypothesis: [], environmentPreferences: [], hardConstraints: [], riskSignals: [], keywords: [] },
       narrativeFacts,
-      roundAnswers,
+      roundAnswers: roundAnswers as any,
       universalAnswers: {},
       hardCutList: [],
       miniModuleResult,
@@ -6974,7 +6981,7 @@ analyzerRoutes.post('/v3/recommend/report', async (c) => {
         topScores
       )
       if (premiumReport) {
-        premiumReport._confidence = confidenceResult.score
+        (premiumReport as any)._confidence = confidenceResult.score
       }
     } catch (e) {
     }
@@ -7105,7 +7112,7 @@ analyzerRoutes.post('/v3/interview/qsp', async (c) => {
       prompt_hints: qspToPromptHints(qsp),
       vectorize_stats: {
         total_candidates: expansionResult.candidates.length,
-        cache_hit: expansionResult.cacheHit,
+        cache_hit: (expansionResult as any).cacheHit,
       },
     })
     
@@ -7165,7 +7172,7 @@ analyzerRoutes.post('/admin/incremental-upsert', async (c) => {
   }
   
   const payload = await c.req.json<{ max_jobs?: number }>().catch(() => ({}))
-  const maxJobs = payload.max_jobs || 100
+  const maxJobs = (payload as { max_jobs?: number }).max_jobs || 100
   
   try {
     const result = await incrementalUpsertToVectorize(
@@ -7208,7 +7215,7 @@ analyzerRoutes.post('/admin/incremental-upsert-majors', async (c) => {
   }
 
   const payload = await c.req.json<{ max_items?: number }>().catch(() => ({}))
-  const maxItems = payload.max_items || 100
+  const maxItems = (payload as { max_items?: number }).max_items || 100
 
   try {
     const result = await incrementalUpsertMajorsToVectorize(
@@ -7238,7 +7245,7 @@ analyzerRoutes.post('/admin/incremental-upsert-howtos', async (c) => {
   }
 
   const payload = await c.req.json<{ max_items?: number }>().catch(() => ({}))
-  const maxItems = payload.max_items || 100
+  const maxItems = (payload as { max_items?: number }).max_items || 100
 
   try {
     const result = await incrementalUpsertHowtosToVectorize(
@@ -7603,9 +7610,9 @@ analyzerRoutes.post('/test/run-scenario', async (c) => {
       creative: '창의성', communication: '소통', structured_execution: '체계적 실행',
     }
 
-    const interestStr = (mm.interest_top || []).map(i => interestLabels[i] || i).join(', ')
-    const valueStr = (mm.value_top || []).map(v => valueLabels[v] || v).join(', ')
-    const strengthStr = (mm.strength_top || []).map(s => strengthLabels[s] || s).join(', ')
+    const interestStr = (mm.interest_top || []).map((i: string) => (interestLabels as Record<string, string>)[i] || i).join(', ')
+    const valueStr = (mm.value_top || []).map((v: string) => (valueLabels as Record<string, string>)[v] || v).join(', ')
+    const strengthStr = (mm.strength_top || []).map((s: string) => (strengthLabels as Record<string, string>)[s] || s).join(', ')
 
     const resultToSave = {
       engine_version: 'v3-test',
@@ -7650,20 +7657,20 @@ analyzerRoutes.post('/test/run-scenario', async (c) => {
         profileInterpretation: {
           interests: (mm.interest_top || []).map((t: string) => ({
             token: t,
-            label: interestLabels[t] || t,
-            meaning: `${interestLabels[t] || t}에 관심이 있습니다.`
+            label: (interestLabels as Record<string, string>)[t] || t,
+            meaning: `${(interestLabels as Record<string, string>)[t] || t}에 관심이 있습니다.`
           })),
           interests_summary: interestStr ? `당신은 ${interestStr}에 관심이 있습니다.` : '',
           strengths: (mm.strength_top || []).map((t: string) => ({
             token: t,
-            label: strengthLabels[t] || t,
-            meaning: (() => { const l = strengthLabels[t] || t; return `${l}${이가(l)} 강점입니다.` })()
+            label: (strengthLabels as Record<string, string>)[t] || t,
+            meaning: (() => { const l = (strengthLabels as Record<string, string>)[t] || t; return `${l}${이가(l)} 강점입니다.` })()
           })),
           strengths_summary: strengthStr ? `당신은 ${strengthStr}에 강점을 가지고 있습니다.` : '',
           values: (mm.value_top || []).map((t: string) => ({
             token: t,
-            label: valueLabels[t] || t,
-            meaning: (() => { const l = valueLabels[t] || t; return `${l}${을를(l)} 중요하게 생각합니다.` })()
+            label: (valueLabels as Record<string, string>)[t] || t,
+            meaning: (() => { const l = (valueLabels as Record<string, string>)[t] || t; return `${l}${을를(l)} 중요하게 생각합니다.` })()
           })),
           values_summary: valueStr ? `당신에게 ${valueStr}는 중요한 가치입니다.` : '',
           constraints: (mm.constraint_flags || []).map((t: string) => ({
@@ -8145,7 +8152,7 @@ analyzerRoutes.post('/share/revoke', async (c) => {
   }
 
   const userId = String(authUser.id)
-  const body = await c.req.json<{ request_id?: number; token?: string }>().catch(() => ({}))
+  const body = await c.req.json<{ request_id?: number; token?: string }>().catch(() => ({})) as { request_id?: number; token?: string }
 
   try {
     let result
@@ -8484,7 +8491,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
           candidates: candidatesForJudge,
           searchProfile,
           narrativeFacts: narrativeFactsForJudge,
-          roundAnswers: roundAnswersForJudge,
+          roundAnswers: roundAnswersForJudge as any,
           universalAnswers: universalAnswersForJudge,
           miniModuleResult: payload.mini_module_result,
           academicState: payload.academic_state,
@@ -8860,7 +8867,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
       if (!effectiveUserId) {
         const draftOwner = await db.prepare(`SELECT user_id FROM analyzer_drafts WHERE session_id = ?`)
           .bind(session_id).first<{ user_id: number | null }>()
-        effectiveUserId = draftOwner?.user_id || null
+        effectiveUserId = draftOwner?.user_id?.toString() || null
       }
 
       const existingRequest = await db.prepare(`SELECT id FROM ai_analysis_requests WHERE session_id = ? AND analysis_type = 'major'`)
@@ -9344,7 +9351,7 @@ analyzerRoutes.post('/result/delete', async (c) => {
   if (!requestId) {
     try {
       const body = await c.req.json<{ request_id?: number | string }>()
-      requestId = body.request_id ? String(body.request_id) : null
+      requestId = body.request_id ? String(body.request_id) : undefined
     } catch { /* ignore */ }
   }
   if (!requestId) {

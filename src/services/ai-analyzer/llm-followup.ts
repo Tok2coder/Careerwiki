@@ -125,8 +125,8 @@ export async function generateLLMFollowups(
 ): Promise<FollowupQuestionV3[]> {
   // 1. Rule-based로 질문 유형/목적 결정 (기존 3종)
   const ruleBasedQuestions = generatePurposeBasedFollowups({
-    candidates: input.top_candidates || [],
-    topK: input.top_candidates?.slice(0, 10) || [],
+    candidates: (input.top_candidates || []) as any,
+    topK: (input.top_candidates?.slice(0, 10) || []) as any,
     facts: input.facts,
     maxQuestions: config.max_questions - 1, // identity_anchor용 1개 확보!
   })
@@ -214,7 +214,7 @@ export async function preScoreForFollowup(
     let adjustedScore = job.final_score || 0
 
     // Career state 기반 간단한 조정
-    if (input.career_state.transition_status === 'changer') {
+    if ((input.career_state.transition_status as any[]).includes('changer')) {
       // 전환자는 entry-level 직업 선호
       if (job.entry_level_friendly) {
         adjustedScore += 5

@@ -1,3 +1,4 @@
+import type { R2Bucket } from '@cloudflare/workers-types'
 /**
  * 자동 이미지 생성 통합 서비스
  * Gemini 프롬프트 생성 + Evolink 이미지 생성 + R2 업로드를 하나로 통합

@@ -259,7 +259,7 @@ export function generateQSP(input: GenerateQSPInput): QSP {
   // 3. 이전 QSP 대비 변화량 계산
   let volatility = vis.metrics.volatility
   if (!previousQSP && !previousVIS) {
-    const prevClusters = previousQSP ? new Set(previousQSP.retrieval_summary.top_clusters) : new Set()
+    const prevClusters = previousQSP ? new Set((previousQSP as any).retrieval_summary?.top_clusters) : new Set()
     const currClusters = new Set(clusterAnalysis.topClusters.map(c => c.label))
     
     const intersection = [...currClusters].filter(c => prevClusters.has(c)).length

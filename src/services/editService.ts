@@ -303,10 +303,10 @@ export async function editJob(
   }
   
   // 현재 데이터 조회 및 병합
-  let apiData = {}
-  let userData = {}
-  let adminData = {}
-  
+  let apiData: Record<string, unknown> = {}
+  let userData: Record<string, unknown> = {}
+  let adminData: Record<string, unknown> = {}
+
   try {
     apiData = job.api_data_json ? JSON.parse(job.api_data_json as string) : {}
   } catch (error) {
@@ -479,10 +479,10 @@ export async function editMajor(
   }
   
   // 현재 데이터 조회 및 병합
-  let apiData = {}
-  let userData = {}
-  let adminData = {}
-  
+  let apiData: Record<string, unknown> = {}
+  let userData: Record<string, unknown> = {}
+  let adminData: Record<string, unknown> = {}
+
   try {
     apiData = major.api_data_json ? JSON.parse(major.api_data_json as string) : {}
   } catch (error) {

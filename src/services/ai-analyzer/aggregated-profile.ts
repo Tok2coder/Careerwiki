@@ -301,7 +301,7 @@ export function buildAggregatedProfile(
       
       // Step 1의 제약조건을 미니모듈 토큰으로 변환하여 병합
       if (cs.constraints) {
-        const step1ConstraintFlags = extractConstraintFlagsFromCareerState(cs.constraints)
+        const step1ConstraintFlags = extractConstraintFlagsFromCareerState(cs.constraints as any)
         
         // 기존 constraint_flags와 병합 (중복 제거)
         const existingFlags = new Set(profile.anchors.constraint_flags)
@@ -430,7 +430,8 @@ export function buildAggregatedProfile(
   // [3단계 구조] 전이 신호는 Step 1의 5축에 통합됨. 레거시 데이터 호환용으로 유지
   if (draft.step3_answers_json) {
     try {
-      const step3: TransitionSignal = JSON.parse(draft.step3_answers_json)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const step3 = JSON.parse(draft.step3_answers_json) as any // legacy flat fields
       profile.transition = {
         intent: step3.trans_intent,
         timeline: step3.trans_timeline,
@@ -439,7 +440,7 @@ export function buildAggregatedProfile(
         role_change: step3.trans_role_change,
         priorities: step3.trans_priority,
       }
-      
+
       // evidence 추가
       if (step3.trans_intent) {
         profile.evidence_index['transition.intent'] = {

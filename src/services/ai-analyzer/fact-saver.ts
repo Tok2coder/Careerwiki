@@ -189,7 +189,7 @@ export function careerStateToFacts(
     createScalarFact({
       ...params,
       fact_key: 'state.transition_status',
-      value: state.transition_status,
+      value: state.transition_status as any,
     })
   )
 

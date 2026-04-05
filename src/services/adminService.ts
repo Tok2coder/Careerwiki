@@ -523,14 +523,14 @@ export async function getStats(db: D1Database, params: StatsParams): Promise<Sta
   `).bind(startDate, endDate, topLimit).all()
   
   return {
-    serpInteractions: (serpResult.results || []) as DailyStats[],
-    searchPatterns: (searchResult.results || []) as SearchPattern[],
+    serpInteractions: (serpResult.results || []) as unknown as DailyStats[],
+    searchPatterns: (searchResult.results || []) as unknown as SearchPattern[],
     cacheStats: (cacheResult.results || []).map((r: any) => ({
       date: r.date,
       count: r.total,
       value: r.total > 0 ? (r.hits / r.total) * 100 : 0
     })) as DailyStats[],
-    topPages: (topPagesResult.results || []) as TopPage[]
+    topPages: (topPagesResult.results || []) as unknown as TopPage[]
   }
 }
 

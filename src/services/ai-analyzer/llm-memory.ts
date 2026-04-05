@@ -235,7 +235,7 @@ ${inputContext}
         temperature: 0.3,  // 일관성 중요
         max_tokens: 2000,
       })
-      responseText = response
+      responseText = (response as any)?.response ?? (response as any)
     } else if (ai) {
       // Cloudflare AI 사용
       const response = await ai.run('@cf/meta/llama-3.1-8b-instruct' as any, {

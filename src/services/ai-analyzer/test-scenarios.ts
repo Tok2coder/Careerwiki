@@ -876,7 +876,7 @@ export const TEST_SCENARIOS: TestScenario[] = [
       featuresApplied: { growthCurveMatching: true, internalConflictRisk: false, canBasedFilter: true, balanceCap: true },
     },
 
-    careerState: 'freelancer',
+    careerState: 'career_changer' as any,
     narrativeAnswers: {
       motivation: '글쓰기와 영상 제작이 제 삶의 중심입니다. 스토리텔링을 통해 사람들에게 감동과 영감을 주고 싶습니다. 창작으로 먹고살 수 있는 직업을 찾고 있어요.',
       avoidance: '정해진 틀 안에서 반복적으로 일하는 건 정말 싫습니다. 창의성이 필요 없는 업무나 관료적인 조직은 피하고 싶어요.',

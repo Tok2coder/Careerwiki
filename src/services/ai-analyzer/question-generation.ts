@@ -33,6 +33,17 @@ export interface ScoredJob {
   job_name: string
   slug?: string           // 커리어위키 URL 슬러그
   image_url?: string      // 직업 썸네일 이미지
+  job_description?: string
+  rationale?: string
+  likeReason?: string
+  canReason?: string
+  riskWarning?: string
+  like_score?: number
+  can_score?: number
+  risk_penalty?: number
+  final_score?: number
+  entry_level_friendly?: boolean
+  tag_source?: string
   scores: {
     fit: number
     like: number

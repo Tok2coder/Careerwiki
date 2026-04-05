@@ -1,3 +1,4 @@
+import type { D1Database } from '@cloudflare/workers-types'
 import type {
   SerpInteractionLogInput,
   SerpInteractionLogRecord,
@@ -38,8 +39,20 @@ export async function recordSerpInteraction(
     )
     .run()
 
-  const id = Number(result.lastRowId)
-  const row = await db.prepare('SELECT * FROM serp_interaction_logs WHERE id = ?').bind(id).first()
+  const id = Number(result.meta.last_row_id)
+  const row = await db.prepare('SELECT * FROM serp_interaction_logs WHERE id = ?').bind(id).first<{
+    page_type: 'job' | 'major'
+    action: string
+    keyword_length: number | null
+    category: string | null
+    per_page: number | null
+    results: number | null
+    cache_status: string | null
+    duration_ms: number | null
+    sampled: number | null
+    source: string | null
+    recorded_at: string
+  }>()
   if (!row) {
     throw new Error('failed to record serp interaction')
   }
@@ -98,7 +111,15 @@ export async function getDailySerpSummary(
     LIMIT ?
   `
 
-  const rows = await db.prepare(query).bind(...bindings, limit).all()
+  const rows = await db.prepare(query).bind(...bindings, limit).all<{
+    log_date: string
+    page_type: 'job' | 'major'
+    action: string
+    samples: number
+    avg_duration_ms: number | null
+    avg_results: number | null
+    cache_hit_ratio: number | null
+  }>()
   return (rows.results ?? []).map((row) => ({
     logDate: row.log_date,
     pageType: row.page_type,
@@ -117,7 +138,20 @@ export async function listRecentSerpInteractions(
   const rows = await db
     .prepare('SELECT * FROM serp_interaction_logs ORDER BY recorded_at DESC LIMIT ?')
     .bind(limit)
-    .all()
+    .all<{
+      id: number
+      page_type: 'job' | 'major'
+      action: string
+      keyword_length: number | null
+      category: string | null
+      per_page: number | null
+      results: number | null
+      cache_status: string | null
+      duration_ms: number | null
+      sampled: number | null
+      source: string | null
+      recorded_at: string
+    }>()
 
   return (rows.results ?? []).map((row) => ({
     id: row.id,

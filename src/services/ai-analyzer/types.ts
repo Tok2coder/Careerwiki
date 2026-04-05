@@ -404,6 +404,7 @@ export interface FollowupNoResult {
 export interface AnalysisResultJSON {
   // Phase 상태 표시 (QA 혼동 방지)
   engine_state: EngineStateV3
+  engine_version?: string
 
   // 미니모듈 결과 (프론트엔드 복원용)
   mini_module_result?: any
@@ -482,6 +483,23 @@ export interface AnalysisResultJSON {
     }>
   }
   
+  // V3: Premium Report
+  premium_report?: any
+
+  // Scored candidates count
+  scored_candidates?: number
+
+  // Filtered out candidates count
+  filtered_out_candidates?: number
+
+  // LLM module info
+  llm_modules?: any
+
+  // Confidence + decision variables
+  confidence?: any
+  key_decision_variables?: any[]
+  scoring_trace_summary?: any
+
   // Debug info (only included when debug=true)
   debug_info?: DebugInfo
 }
@@ -492,6 +510,7 @@ export interface DebugInfo {
   candidate_source: 'random' | 'tagged' | 'vector' | 'sample_fallback'
   tagged_count: number
   total_in_db: number
+  candidate_count?: number
   
   // 2. Score breakdown for TOP3
   score_breakdown: Array<{
@@ -847,7 +866,7 @@ export type SectionGenerationStatus =
 export interface SectionMeta {
   status: SectionGenerationStatus
   confidence?: number           // 0~1, 해당 섹션 신뢰도
-  generated_by?: 'rule' | 'llm' | 'hybrid'
+  generated_by?: 'rule' | 'llm' | 'hybrid' | 'rule_enhanced'
   error_message?: string        // 실패 시 원인
 }
 
@@ -950,6 +969,7 @@ export interface PremiumReport {
   sections_total: number
   
   // 분석 상세 메타데이터 (UI에서 사용)
+  engine_version?: string        // 엔진 버전 (예: 'v3-rule')
   _confidence?: number          // 신뢰도 (0~1)
   _factsCount?: number          // 수집된 팩트 수
   _answeredQuestions?: number   // 답변한 질문 수
@@ -1265,7 +1285,7 @@ export interface MetaCognitionResult {
 
   // 메타 정보
   _meta?: {
-    generated_by: 'llm' | 'rule' | 'hybrid'
+    generated_by: 'llm' | 'rule' | 'hybrid' | 'rule_enhanced'
     confidence?: number
   }
 }

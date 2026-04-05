@@ -1,3 +1,4 @@
+import type { D1Database } from '@cloudflare/workers-types'
 /**
  * HowTo 초안 서비스
  * - CRUD 작업
@@ -156,12 +157,12 @@ export async function getDraft(
     
     // 관련 HowTo 조회 (JOIN 실패 시에도 howto_id는 반환)
     const howtosResult = await db.prepare(`
-      SELECT drh.howto_id as id, COALESCE(p.title, CAST(drh.howto_id AS TEXT)) as name, COALESCE(p.slug, CAST(drh.howto_id AS TEXT)) as slug
+      SELECT drh.howto_id as id, COALESCE(p.title, CAST(drh.howto_id AS TEXT)) as title, COALESCE(p.slug, CAST(drh.howto_id AS TEXT)) as slug
       FROM draft_related_howtos drh
       LEFT JOIN pages p ON drh.howto_id = p.id AND p.page_type = 'guide'
       WHERE drh.draft_id = ?
       ORDER BY drh.display_order
-    `).bind(draftId).all<{ id: number; name: string; slug: string }>()
+    `).bind(draftId).all<{ id: number; title: string; slug: string }>()
     
     const draft: DraftData & DraftRelations = {
       id: draftRow.id,
@@ -368,7 +369,8 @@ export async function listMyDrafts(
       stage: row.stage,
       lastSavedAt: row.last_saved_at,
       createdAt: row.created_at,
-      updatedAt: row.updated_at
+      updatedAt: row.updated_at,
+      publishedPageId: null
     }))
     
     return { success: true, drafts, total: countResult?.total ?? 0 }

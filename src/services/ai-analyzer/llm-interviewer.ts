@@ -640,7 +640,7 @@ export async function generateRoundQuestions(
           round: roundNumber,
           questions,
           generatedBy: 'llm',
-          metadata: { ...roundMeta, degraded: true, originalCount: questions.length },
+          metadata: { ...roundMeta, degraded: true, originalCount: questions.length } as any,
         }
       }
 

@@ -102,7 +102,7 @@ export const CustomBlockquote = Node.create({
         e.stopPropagation()
 
         const action = button.getAttribute('data-action')
-        const pos = typeof getPos === 'function' ? getPos() : 0
+        const pos = (typeof getPos === 'function' ? getPos() : undefined) ?? 0
 
         if (action?.startsWith('align-')) {
           const align = action.replace('align-', '') as 'left' | 'center' | 'right'

@@ -1,3 +1,4 @@
+import type { D1Database } from '@cloudflare/workers-types'
 /**
  * 통합 검색 서비스
  * - 직업, 전공, HowTo 자동완성 검색 (DB에서만 검색)

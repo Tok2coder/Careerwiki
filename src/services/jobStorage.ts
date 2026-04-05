@@ -1,3 +1,4 @@
+import type { D1Database } from '@cloudflare/workers-types'
 /**
  * Job Storage Service
  * D1 데이터베이스를 사용한 직업 데이터 영구 저장 및 관리

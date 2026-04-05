@@ -1,3 +1,4 @@
+import type { D1Database } from '@cloudflare/workers-types'
 /**
  * 슬러그 서비스
  * - 한글 제목 → 영문 슬러그 변환
