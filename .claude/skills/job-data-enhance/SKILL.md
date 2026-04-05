@@ -557,3 +557,115 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
     "sources": {
       "trivia": [
         {"text": "[1] 출처명", "url": "https://..."},
+        {"text": "[2] 출처명", "url": "https://..."}
+      ],
+      "overviewSalary.sal": [
+        {"text": "[1] 출처명", "url": "https://..."}
+      ]
+    },
+    "changeSummary": "Phase 5: trivia·sal GN 재번호"
+  }'
+```
+
+> ⚠️ overviewSalary를 보낼 때 **wage 기존값 반드시 포함** — 통째 전송이므로 wage 빠지면 바 차트 소실.
+> 변경 안 한 필드(way 등)는 fields에 넣지 않는다.
+
+### 5-4: 수선 검증
+
+1. `node scripts/validate-job-edit.cjs < draft.json` — PASS
+2. `curl -s -o /dev/null -w "%{http_code}" "https://careerwiki.org/job/{slug}"` — 200
+3. `node scripts/full-quality-audit.cjs --slug={slug}` — **Gate1 PASS 필수**
+4. 수선 전후 diff: 마커·출처·id 외에 **본문 텍스트 내용 변경 없음** 확인
+
+### 5-5: 배치 수선
+
+1. `full-quality-audit.cjs --all` → Gate1 FAIL 직업 목록 수집
+2. **A그룹** (자동): GN·FP·SK만 있는 직업 → 배치 처리 가능
+3. **B그룹** (수동): OM·OS가 하나라도 있는 직업 → 개별 확인
+4. A그룹 배치 → 각 직업 audit PASS 확인 → B그룹 순차
+
+---
+
+## 배치 처리 (10개+ 직업)
+
+대량 처리는 **3단계 분리** 패턴을 사용한다.
+
+### 단계 1: 팀 리더 — 대상 선별 + 현황 요약
+Phase 0 쿼리로 대상 목록 생성. 각 직업의 현재 데이터 상태 요약.
+
+### 단계 2: Researcher Agent × 3 병렬 (리서치만, API 호출 금지)
+→ 에이전트 프롬프트 템플릿: `references/researcher-agent-prompt.md`
+
+```
+병렬 에이전트 분배 예시 (30개 배치):
+- Agent A: 직업 1~10
+- Agent B: 직업 11~20
+- Agent C: 직업 21~30
+⚠️ 각 에이전트는 JSON + qualityGates 결과만 반환. 편집 API 호출 금지.
+```
+
+### 단계 3: 팀 리더 — 검증 + API 호출 + 프로덕션 확인
+1. 에이전트 결과 JSON 수집
+2. **Phase 2 품질 게이트 4개** 전부 PASS 확인 (FAIL 직업은 수동 수정 후 재처리)
+3. sidebarJobs/sidebarMajors DB 실존 확인
+4. validate-job-edit.cjs PASS 후 편집 API 호출
+5. full-quality-audit.cjs PASS 확인
+
+### 배치 완료 보고 형식
+
+```
+처리 완료: X개 (성공 Y개 / 실패 Z개)
+성공: [직업명1, 직업명2, ...]
+실패: [직업명A (원인), 직업명B (원인)]
+커버리지: N → M / 6,945
+```
+
+---
+
+## 체크리스트
+
+### 작업 전
+- [ ] Phase 0 진단 완료 (각 직업 현황 파악)
+- [ ] `references/lessons.md` 확인 (과거 실수 반복 방지)
+
+### 각 직업 완료 후 (신규 보완)
+- [ ] Gate 1: 각주 중복 없음, 1부터 순차, 마침표 뒤 위치
+- [ ] Gate 2: 모든 서술 필드가 완성된 문장으로 끝남
+- [ ] Gate 3: YouTube oembed 200 + title 포함 + 직업 관련 키워드 포함
+- [ ] Gate 4: _sources id 순서 = 본문 [N] 첫 등장 순서
+- [ ] way는 string 타입 (배열 아님)
+- [ ] detailWlb.wlb + .social 등급 포함 (높음/보통 이상/보통/보통 이하/낮음 중 하나)
+- [ ] sidebarCerts `[{name, url}]` 포맷 사용
+- [ ] fields + sources 함께 전송
+- [ ] 기존 overviewSalary.wage 건드리지 않음
+- [ ] validate-job-edit.cjs PASS
+- [ ] HTTP 200 + full-quality-audit.cjs PASS
+
+### Phase 5 완료 후
+- [ ] 5-1 진단 완료 (문제 유형별 분류)
+- [ ] 마커와 _sources 1:1 매칭
+- [ ] 각 필드 [N]이 [1]부터 순차
+- [ ] 본문 텍스트 내용 무변경 확인 (마커 외)
+- [ ] wage/prospect/구조화 데이터 보존 확인
+- [ ] validate-job-edit.cjs PASS
+- [ ] full-quality-audit.cjs PASS
+
+### 배치 완료 후
+- [ ] 처리 건수 보고
+- [ ] 실패 건 원인 분석
+- [ ] 커버리지 변화 보고
+
+---
+
+## 참조 파일
+
+| 파일 | 내용 |
+|------|------|
+| `references/fields.md` | 12개 필드 타입·길이·포맷 상세 스펙 |
+| `references/sources.md` | 출처 등급 분류 + A등급 포맷 예시 |
+| `references/field-decision-matrix.md` | API 데이터 있을 때 필드별 처리 판단 매트릭스 |
+| `references/researcher-agent-prompt.md` | 병렬 리서치 에이전트 프롬프트 템플릿 |
+| `references/lessons.md` | 과거 실수 교훈 모음 (새 작업 전 필독) |
+| `../shared/career-tree.md` | 커리어트리 인물 선정·스테이지 작성·DB 삽입 상세 |
+| `../shared/footnote-validation.md` | 각주 검증 시스템 상세 |
+| `../shared/source-key-mapping.md` | sources 소스 키 전체 매핑표 |
