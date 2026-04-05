@@ -63,16 +63,16 @@ export interface MergedJobData {
     simple: any
     summary: string | null
     detailedComparison: {
-      withinJob: any
-      betweenJobs: any
+      importance: { withinJob: any; betweenJobs: any }
+      level: { withinJob: any; betweenJobs: any }
     }
   }
   knowledge: {
     simple: any
     summary: string | null
     detailedComparison: {
-      withinJob: any
-      betweenJobs: any
+      importance: { withinJob: any; betweenJobs: any }
+      level: { withinJob: any; betweenJobs: any }
     }
   }
   education: {
@@ -123,8 +123,8 @@ export interface MergedJobData {
       }
     }
     workEnvironment: {
-      physical: any
-      conditions: any
+      comparison: any
+      details: any
     }
     entryStatistics: any
   }
@@ -320,12 +320,12 @@ const createEmptyMergedData = (): MergedJobData => {
     abilities: {
       simple: null,
       summary: null,
-      detailedComparison: { withinJob: null, betweenJobs: null }
+      detailedComparison: { importance: { withinJob: null, betweenJobs: null }, level: { withinJob: null, betweenJobs: null } }
     },
     knowledge: {
       simple: null,
       summary: null,
-      detailedComparison: { withinJob: null, betweenJobs: null }
+      detailedComparison: { importance: { withinJob: null, betweenJobs: null }, level: { withinJob: null, betweenJobs: null } }
     },
     education: { simple: null, summary: null, detailedDistribution: null },
     major: { simple: null, summary: null, detailedDistribution: null },
@@ -349,7 +349,7 @@ const createEmptyMergedData = (): MergedJobData => {
         importance: { withinJob: null, betweenJobs: null },
         level: { withinJob: null, betweenJobs: null }
       },
-      workEnvironment: { physical: null, conditions: null },
+      workEnvironment: { comparison: null, details: null },
       entryStatistics: null
     }
   }

@@ -403,17 +403,16 @@ ${tensionPoints.map(t => `- ${t.tension}: ${t.why}`).join('\n')}
 JSON 형식으로 답변: {"summary": "...", "suggested_angle": "..."}`
 
   try {
-    const response = await callOpenAI(openaiApiKey, {
+    const response = await callOpenAI(openaiApiKey, [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ], {
       model: OPENAI_MODEL,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
       temperature: 0.3,
       max_tokens: 200,
     })
-    
-    const content = response.choices[0]?.message?.content || '{}'
+
+    const content = response.response || '{}'
     
     // JSON 추출
     const jsonMatch = content.match(/\{[\s\S]*\}/)

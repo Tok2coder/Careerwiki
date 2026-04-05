@@ -1659,9 +1659,12 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions, fo
   // 조사년도 추출
   const yearMatch = raw.match(/조사년도\s*[:：]?\s*(\d{4})\s*년?/)
   const yearInfo = yearMatch ? `※ 조사년도: ${yearMatch[1]}년` : ''
-  
-  // 주석 내용
-  const disclaimer = '※ 위의 임금정보는 직업당 평균 30명의 재직자를 대상으로 실시한 설문조사 결과로, 재직자의 자기보고에 근거한 통계치입니다. 재직자의 경력, 근무업체의 규모 등에 따라 실제 임금과 차이가 있을 수 있으니, 직업간 비교를 위한 참고 자료로만 활용하여 주시길 바랍니다.'
+
+  // 공식 설문 포맷(Goyong24/CareerNet)일 때만 설문조사 방법론 면책조항 표시
+  const isOfficialSurveyFormat = !!(goyong24Match || careernetMatch)
+  const disclaimer = isOfficialSurveyFormat
+    ? '※ 위의 임금정보는 직업당 평균 30명의 재직자를 대상으로 실시한 설문조사 결과로, 재직자의 자기보고에 근거한 통계치입니다. 재직자의 경력, 근무업체의 규모 등에 따라 실제 임금과 차이가 있을 수 있으니, 직업간 비교를 위한 참고 자료로만 활용하여 주시길 바랍니다.'
+    : ''
 
   return buildCard(
     '임금 정보',
@@ -1671,7 +1674,7 @@ const renderSalaryCard = (salary?: string | null, options?: BuildCardOptions, fo
         <div class="space-y-2">${barMarkup}</div>
         <div class="space-y-1.5">
           ${yearInfo ? `<p class="text-xs text-wiki-muted leading-relaxed">${escapeHtml(yearInfo)}</p>` : ''}
-          <p class="text-xs text-wiki-muted leading-relaxed">${escapeHtml(disclaimer)}</p>
+          ${disclaimer ? `<p class="text-xs text-wiki-muted leading-relaxed">${escapeHtml(disclaimer)}</p>` : ''}
         </div>
       </div>
     `,
@@ -3758,12 +3761,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     `
   }
   
-  // CareerNet 원본 데이터일 때만 출처 문구 표시
+  // CareerNet 원본 데이터일 때만 출처 문구 표시 (chart/구조화된 forecastList가 있을 때만)
   const prospectSources = getFieldSources(p => p?.overviewProspect?.main)
   const isCareerNetProspect = prospectSources.includes('CAREERNET')
-  const prospectDisclaimer = isCareerNetProspect
-    ? `<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
-    : ''
 
   if (prospectPrimary || prospectChartHtml || overviewProspect?.forecastList) {
     let prospectHtml = ''
@@ -3781,7 +3781,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
         .join('')
       // Only show section if prospectBlocks has content
       if (prospectBlocks) {
-        prospectHtml = `<div class="space-y-2">${prospectBlocks}</div>${prospectDisclaimer}`
+        prospectHtml = `<div class="space-y-2">${prospectBlocks}</div>`
       }
     } else if (typeof prospectPrimary === 'string' && safeTrim(prospectPrimary)) {
       // 문자열인 경우 줄바꿈을 블록으로 변환 (실제 내용이 있을 때만)
@@ -3791,17 +3791,17 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
         prospectHtml = `<div class="space-y-2">${lines.map(line => {
           const safeLine = escapeHtml(line).replace(/\[(\d+)\]/g, (_m: string, localNum: string) => {
             const globalNum = prospectFieldMap ? (prospectFieldMap[localNum] ?? localNum) : localNum
-            const srcDesc = sourceTextMap?.[globalNum] || ''
+            const srcDesc = sourceTextMap?.[Number(globalNum)] || ''
             const titleTxt = srcDesc ? srcDesc.replace(/"/g, '&quot;') : `출처 [${globalNum}]`
             return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleTxt}">[${globalNum}]</sup>`
           })
           return `<div class="mb-3 content-text"><span class="inline-block w-4"></span>${safeLine}</div>`
-        }).join('')}</div>${prospectDisclaimer}`
+        }).join('')}</div>`
       } else if (lines.length === 1) {
-        prospectHtml = `${formatRichText(prospectPrimary, 'overviewProspect.main', footnoteMap, sourceTextMap)}${prospectDisclaimer}`
+        prospectHtml = formatRichText(prospectPrimary, 'overviewProspect.main', footnoteMap, sourceTextMap)
       }
     }
-    
+
     const structuredForecastItems = Array.isArray(overviewProspect?.forecastList)
       ? overviewProspect.forecastList.filter((item) => hasStructuredForecastData(item))
       : []
@@ -3822,12 +3822,18 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
         forecastDetailHtml = `<div class="mt-6"><h4 class="text-base font-bold text-wiki-secondary mb-3">기간별 전망</h4>${forecastItems}</div>`
       }
     }
-    
+
+    // 면책조항: CareerNet 데이터이면서 차트 또는 구조화된 forecastList가 있을 때만 표시
+    const prospectDisclaimer = isCareerNetProspect && (prospectChartHtml !== '' || structuredForecastItems.length > 0)
+      ? `<p class="text-xs text-wiki-muted mt-4 leading-relaxed">※ 위의 일자리 전망은 직업전문가들이 「중장기인력수급전망」, 「정성적 직업전망조사」, 「KNOW 재직자조사」 등 각종 연구와 조사를 기초로 작성하였습니다.</p>`
+      : ''
+
     // 텍스트가 있으면 먼저 표시, 기간별 전망, 그래프는 뒤에 표시
     const combinedHtml = [
       prospectHtml?.trim() || '',
       forecastDetailHtml?.trim() || '',
-      prospectChartHtml?.trim() || ''
+      prospectChartHtml?.trim() || '',
+      prospectDisclaimer
     ].filter(Boolean).join('<div class="mt-6"></div>')
     
     // Only add card if combinedHtml has content
@@ -4171,7 +4177,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     }
 
     // 워라밸/사회적 평가는 주로 고용24에서 제공
-    const wlbSources = getFieldSources(p => p?.detailWorkLifeBalance?.wlb || p?.detailWorkLifeBalance?.social)
+    const wlbSources = getFieldSources(p => p?.detailWlb?.wlb || p?.detailWlb?.social)
     pushOverviewCard('워라밸 & 사회적 평가', 'fa-heart', gridLayout, wlbSources.length > 0 ? wlbSources : ['GOYONG24'])
   }
 

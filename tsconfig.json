@@ -18,6 +18,7 @@
     "evidence",
     "dist",
     "scripts",
+    "src/scripts",
     "tests"
   ]
 }

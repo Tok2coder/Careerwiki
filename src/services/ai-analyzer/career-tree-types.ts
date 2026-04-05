@@ -7,7 +7,7 @@
 // ============================================
 // 축 1: 역할 정체성 (Role Identity) - 직업 추천용
 // ============================================
-export type RoleIdentity = 'student' | 'worker' | 'manager' | 'entrepreneur' | 'job_seeker'
+export type RoleIdentity = 'student' | 'worker' | 'manager' | 'entrepreneur' | 'job_seeker' | 'inactive'
 
 export const ROLE_IDENTITY_OPTIONS: Array<{
   value: RoleIdentity
@@ -109,13 +109,17 @@ export const CAREER_STAGE_OPTIONS: Array<{
 // ============================================
 // 축 3: 현재 목표 (Transition Status) - 다중 선택 가능!
 // ============================================
-export type TransitionStatus = 
+export type TransitionStatus =
   | 'growth_current' // 현 분야 성장
   | 'field_change' // 분야/업종 전환
   | 'return_work' // 경력 복귀
   | 'second_career' // 세컨드 커리어
   | 'first_job' // 첫 취업
   | 'explore' // 탐색 중
+  // Legacy values (resume-parser compatibility)
+  | 'none'
+  | 'changer'
+  | 'returner'
 
 export const TRANSITION_STATUS_OPTIONS: Array<{
   value: TransitionStatus
@@ -363,6 +367,12 @@ export const ROLE_DISABLED_RULES: Record<RoleIdentity, {
   },
   // 취업/창업 준비생: 특별 제한 없음 (은퇴자, 복귀자 등 다양)
   job_seeker: {
+    career_stage: [],
+    transition_status: [],
+    skill_level: [],
+  },
+  // 비활성: 특별 제한 없음
+  inactive: {
     career_stage: [],
     transition_status: [],
     skill_level: [],

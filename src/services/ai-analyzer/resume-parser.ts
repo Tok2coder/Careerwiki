@@ -342,7 +342,7 @@ export function parsedResumeToCareerState(parsed: ParsedResumeData): Partial<Car
   return {
     role_identity: parsed.inferred_state.role_identity || undefined,
     career_stage_years: parsed.inferred_state.career_stage_years || undefined,
-    transition_status: parsed.inferred_state.transition_status || undefined,
+    transition_status: (parsed.inferred_state.transition_status as any) || undefined,
     skill_level: parsed.inferred_state.skill_level ?? undefined,
     constraints: {
       time: { has_constraint: false },

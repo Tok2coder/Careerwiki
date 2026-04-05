@@ -239,7 +239,7 @@ jobListRoutes.get('/job', async (c) => {
         <div class="mb-6 md:hidden relative" id="job-cat-dropdown">
           <button type="button" onclick="document.getElementById('job-cat-menu').classList.toggle('hidden')"
                   class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-base bg-wiki-card/60 text-white border border-white/[0.08] focus:outline-none focus:ring-1 focus:ring-wiki-primary/30">
-            <span>${category ? escapeHtml(JOB_LARGE_SHORT_LABELS[category] || category) : '전체'}</span>
+            <span>${category ? escapeHtml(JOB_LARGE_SHORT_LABELS[category as JobLargeCategory] || category) : '전체'}</span>
             <svg class="w-5 h-5 text-gray-400 transition-transform" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
           </button>
           <div id="job-cat-menu" class="hidden absolute left-0 right-0 top-full mt-1 z-50 rounded-xl bg-wiki-card border border-white/[0.08] shadow-xl shadow-black/20 overflow-hidden max-h-[70vh] overflow-y-auto">

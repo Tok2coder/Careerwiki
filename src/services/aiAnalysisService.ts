@@ -149,7 +149,7 @@ export async function createAnalysisRequest(db: D1Database, input: CreateAnalysi
     .bind(input.sessionId, input.analysisType, pricingTier, promptPayloadJson, status)
     .run()
 
-  const requestId = Number(result.lastRowId)
+  const requestId = Number(result.meta.last_row_id)
   const row = await db
     .prepare('SELECT * FROM ai_analysis_requests WHERE id = ?')
     .bind(requestId)
@@ -213,7 +213,7 @@ export async function createAnalysisResult(
     )
     .run()
 
-  const resultId = Number(insert.lastRowId)
+  const resultId = Number(insert.meta.last_row_id)
   const resultRow = await db
     .prepare('SELECT * FROM ai_analysis_results WHERE id = ?')
     .bind(resultId)

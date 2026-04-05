@@ -281,7 +281,7 @@ export const EVIDENCE_MAPPING_RULES: EvidenceMappingRule[] = [
   {
     userFactPattern: /^boundary$/,
     jobAttributes: ['wlb', 'work_hours', 'shift_work', 'travel'],
-    matchLogic: { type: 'inverse', positive: 40, negative: 70 },
+    matchLogic: { type: 'inverse', positive: 40, negative: 70 } as any,
     explanationTemplate: '"{userValue}" 상황은 피하고 싶다고 하셨는데, 이 직업은 관련 지표가 {jobValue}점입니다',
     userLabelTemplate: '경계 조건: "{userValue}"',
     jobLabelTemplate: '{attrName}: {jobValue}/100',

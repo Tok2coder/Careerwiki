@@ -149,6 +149,8 @@ export interface PerformEnvironmentItem {
   code?: string
   name?: string
   importance?: number
+  environment?: string
+  inform?: string
 }
 
 export interface PerformItem {
@@ -263,11 +265,11 @@ export interface CareernetOnlyData {
 export interface Goyong24OnlyData {
   prospectDetail?: unknown
   prospectChart?: unknown
-  personality?: unknown
-  interest?: unknown
-  values?: unknown
-  activity?: unknown
-  workEnvironment?: unknown
+  personality?: ChrIntrValsData
+  interest?: ChrIntrValsData
+  values?: ChrIntrValsData
+  activity?: ActvData
+  workEnvironment?: AblKnwEnvData
   entryStatistics?: unknown
 }
 
@@ -556,7 +558,7 @@ export interface UnifiedJobDetail extends UnifiedJobSummary {
     educationDistribution?: EducationDistribution | Record<string, string> | null
   }
   detailReady?: {
-    recruit?: string[] | null
+    recruit?: (string | { text: string; url?: string })[] | null
     certificate?: string[] | null
     training?: string[] | null
     curriculum?: string[] | null

@@ -302,7 +302,7 @@ const toThreads = (records: CommentRecord[], bestSet: Set<number>): CommentThrea
 
 const recalcCommentVotes = async (db: D1Database, commentId: number): Promise<void> => {
   const counts = await db
-    .prepare<{ likes: number; dislikes: number }>(
+    .prepare(
       `SELECT
          SUM(CASE WHEN vote = 1 THEN 1 ELSE 0 END) AS likes,
          SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END) AS dislikes
@@ -310,7 +310,7 @@ const recalcCommentVotes = async (db: D1Database, commentId: number): Promise<vo
        WHERE comment_id = ?`
     )
     .bind(commentId)
-    .first()
+    .first<{ likes: number; dislikes: number }>()
 
   const likeCount = Number(counts?.likes ?? 0)
   const dislikeCount = Number(counts?.dislikes ?? 0)
@@ -327,9 +327,9 @@ const recalcCommentVotes = async (db: D1Database, commentId: number): Promise<vo
 
 const recalcCommentReports = async (db: D1Database, commentId: number): Promise<void> => {
   const countRow = await db
-    .prepare<{ reports: number }>('SELECT COUNT(*) AS reports FROM comment_reports WHERE comment_id = ?')
+    .prepare('SELECT COUNT(*) AS reports FROM comment_reports WHERE comment_id = ?')
     .bind(commentId)
-    .first()
+    .first<{ reports: number }>()
 
   const reportCount = Number(countRow?.reports ?? 0)
   let status: CommentStatus | null = null
@@ -357,9 +357,9 @@ export const ensurePageRecord = async (
   page: { slug: string; title: string; pageType: PageType; summary?: string | null; meta?: Record<string, unknown> | null }
 ): Promise<PageRecord> => {
   const existing = await db
-    .prepare<PageRecordRow>('SELECT id, slug, title, page_type, summary, meta_data FROM pages WHERE slug = ? LIMIT 1')
+    .prepare('SELECT id, slug, title, page_type, summary, meta_data FROM pages WHERE slug = ? LIMIT 1')
     .bind(page.slug)
-    .first()
+    .first<PageRecordRow>()
 
   if (existing) {
     return existing
@@ -390,7 +390,7 @@ export const ensurePageRecord = async (
 export const getCommentsForPage = async (
   db: D1Database,
   options: { pageId: number; limit?: number; viewerId?: string | null; viewerRole?: UserRole; includeModerated?: boolean }
-): Promise<{ comments: CommentThread[]; totalCount: number }> => {
+): Promise<{ comments: CommentThread[]; totalCount: number; policy: CommentListResult['policy'] }> => {
   const limit = Math.min(Math.max(options.limit ?? 50, 1), 200)
   const viewerId = options.viewerId && options.viewerId.trim().length ? options.viewerId.trim() : null
   const viewerRole = options.viewerRole ?? 'user'
@@ -451,13 +451,13 @@ export const getCommentsForPage = async (
   const orderedThreads = [...bestThreads, ...otherThreads]
 
   const countRow = await db
-    .prepare<{ total: number }>(
+    .prepare(
       includeModerated
         ? 'SELECT COUNT(*) AS total FROM comments WHERE page_id = ?'
         : "SELECT COUNT(*) AS total FROM comments WHERE page_id = ? AND status = 'visible'"
     )
     .bind(options.pageId)
-    .first()
+    .first<{ total: number }>()
 
   return {
     comments: orderedThreads,
@@ -805,9 +805,9 @@ export const setCommentVote = async (db: D1Database, payload: VotePayload): Prom
   const voteValue: VoteValue = payload.direction === 'up' ? 1 : payload.direction === 'down' ? -1 : 0
 
   const target = await db
-    .prepare<{ author_id: string | null; status: string }>('SELECT author_id, status FROM comments WHERE id = ? LIMIT 1')
+    .prepare('SELECT author_id, status FROM comments WHERE id = ? LIMIT 1')
     .bind(payload.commentId)
-    .first()
+    .first<{ author_id: string | null; status: string }>()
 
   if (!target || target.status === 'deleted') {
     throw new Error('COMMENT_NOT_FOUND')
@@ -818,9 +818,9 @@ export const setCommentVote = async (db: D1Database, payload: VotePayload): Prom
   }
 
   const existing = await db
-    .prepare<{ id: number; vote: number }>('SELECT id, vote FROM comment_votes WHERE comment_id = ? AND user_id = ? LIMIT 1')
+    .prepare('SELECT id, vote FROM comment_votes WHERE comment_id = ? AND user_id = ? LIMIT 1')
     .bind(payload.commentId, payload.userId)
-    .first()
+    .first<{ id: number; vote: number }>()
 
   // 일일 투표 제한 제거 - 여러 댓글에 공감/싫어요는 제한 없음 (한 댓글에만 제한)
   // 제한 로직 제거됨
@@ -913,7 +913,7 @@ export interface UpdateCommentPayload {
   content: string
   userId: string | null  // 로그인 사용자 ID 또는 null
   password?: string | null  // 익명 댓글 수정 시 비밀번호
-  userRole?: 'user' | 'expert' | 'admin' | null  // 사용자 역할 (admin은 모든 댓글 수정 가능)
+  userRole?: 'user' | 'expert' | 'admin' | 'super-admin' | 'operator' | null  // 사용자 역할 (admin은 모든 댓글 수정 가능)
 }
 
 export interface DeleteCommentPayload {
@@ -1169,9 +1169,9 @@ export const deleteOrphanReplies = async (db: D1Database): Promise<number> => {
 export const isIpBlocked = async (db: D1Database, ipHash: string | null | undefined): Promise<boolean> => {
   if (!ipHash) return false
   const row = await db
-    .prepare<{ count: number }>('SELECT COUNT(*) AS count FROM ip_blocks WHERE ip_hash = ? AND status = "active"')
+    .prepare('SELECT COUNT(*) AS count FROM ip_blocks WHERE ip_hash = ? AND status = "active"')
     .bind(ipHash)
-    .first()
+    .first<{ count: number }>()
   return Number(row?.count ?? 0) > 0
 }
 
@@ -1203,9 +1203,9 @@ export const blockIpAddress = async (
   const reason = sanitizeReason(payload.reason)
 
   const existing = await db
-    .prepare<{ id: number; status: string }>('SELECT id, status FROM ip_blocks WHERE ip_hash = ? LIMIT 1')
+    .prepare('SELECT id, status FROM ip_blocks WHERE ip_hash = ? LIMIT 1')
     .bind(ipHash)
-    .first()
+    .first<{ id: number; status: string }>()
 
   if (existing) {
     if (existing.status === 'active') {
@@ -1247,9 +1247,9 @@ export const releaseIpAddress = async (
   }
 
   const record = await db
-    .prepare<{ id: number; status: string }>('SELECT id, status FROM ip_blocks WHERE ip_hash = ? LIMIT 1')
+    .prepare('SELECT id, status FROM ip_blocks WHERE ip_hash = ? LIMIT 1')
     .bind(ipHash)
-    .first()
+    .first<{ id: number; status: string }>()
 
   if (!record) {
     return null

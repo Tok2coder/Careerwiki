@@ -110,7 +110,7 @@ export class HowToEditorManager {
           // 이미지 붙여넣기 처리
           const items = event.clipboardData?.items
           if (items) {
-            for (const item of items) {
+            for (const item of Array.from(items)) {
               if (item.type.startsWith('image/')) {
                 event.preventDefault()
                 const file = item.getAsFile()
@@ -290,7 +290,7 @@ export class HowToEditorManager {
           // 에디터가 비어있을 때만 메인 placeholder 표시
           if (node.type.name === 'paragraph') {
             // 문서가 비어있고 첫 번째 노드일 때
-            const { isEmpty } = editor.state.doc
+            const isEmpty = editor.isEmpty
             if (isEmpty) {
               return '내용을 입력하세요... "/" 를 입력하면 블록 삽입 메뉴가 나타납니다.'
             }

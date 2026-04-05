@@ -14,7 +14,7 @@ import type {
 // ============================================
 
 export type ScoreType = 'like' | 'can' | 'risk'
-export type JobAttribute = 'wlb' | 'growth' | 'stability' | 'income' | 'remote' | 'solo_work' | 'creative' | 'analytical' | 'people_facing' | 'teamwork' | 'execution'
+export type JobAttribute = 'wlb' | 'growth' | 'stability' | 'income' | 'remote' | 'solo_work' | 'creative' | 'analytical' | 'people_facing' | 'teamwork' | 'execution' | 'autonomy' | 'remote_possible'
 
 export interface FactScoreEffect {
   score_type: ScoreType

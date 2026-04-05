@@ -1519,6 +1519,8 @@ async function getJobInfos(
       certifications: string | null
       suitablePersonality: string | null
       growthPotential: string | null
+      way: string | null
+      prospect: string | null
     }> = []
 
     for (let i = 0; i < jobIds.length; i += BATCH_SIZE) {

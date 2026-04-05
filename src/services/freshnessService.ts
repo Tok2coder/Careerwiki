@@ -1,3 +1,4 @@
+import type { KVNamespace } from '@cloudflare/workers-types'
 import { withKvCache, buildListCacheKey, type CacheState } from './cacheService'
 import {
   searchUnifiedJobs,

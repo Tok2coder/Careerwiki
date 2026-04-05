@@ -1864,8 +1864,8 @@ export const getUnifiedMajorDetail = async (
           if (isUserCreatedMajor) {
             const overviewSummary = (merged as any)?.overview?.summary
             if (!overviewSummary && merged.summary) {
-              merged.overview = merged.overview || {}
-              merged.overview.summary = merged.summary
+              ;(merged as any).overview = (merged as any).overview || {}
+              ;(merged as any).overview.summary = merged.summary
             }
             
             // 태그형 교과목 데이터를 템플릿에서 호환되도록 객체 배열로 변환

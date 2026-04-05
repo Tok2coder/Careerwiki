@@ -511,7 +511,7 @@ export const evaluatePerfAlerts = (
   if (vitals) {
     (['fp', 'fcp', 'lcp', 'cls', 'fid'] as Array<keyof typeof PERF_VITAL_THRESHOLDS>).forEach((metricKey) => {
       const threshold = PERF_VITAL_THRESHOLDS[metricKey]
-      const entry = vitals[metricKey]
+      const entry = (vitals as any)[metricKey]
       const value = typeof entry?.value === 'number' ? entry.value : undefined
       if (value !== undefined && value > threshold) {
         alerts.push({

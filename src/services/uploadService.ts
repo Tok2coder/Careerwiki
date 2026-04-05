@@ -179,7 +179,7 @@ export async function uploadToR2(
   metadata?: Record<string, string>
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    await bucket.put(fileKey, body, {
+    await bucket.put(fileKey, body as ArrayBuffer, {
       httpMetadata: {
         contentType,
         cacheControl: 'public, max-age=31536000', // 1년 캐시

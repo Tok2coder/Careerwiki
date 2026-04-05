@@ -571,7 +571,7 @@ export const PRIVACY_WARNING_TEXT = '⚠️ 민감한 개인정보(주소/학교
 // V3: 서술형 필수 질문 (2026-01 리팩토링)
 // 깊은 내러티브 확보를 위한 2문항
 // ============================================
-export interface NarrativeQuestion {
+export interface NarrativeQuestionLegacy {
   question_id: string
   order: number
   text: string
@@ -585,7 +585,7 @@ export interface NarrativeQuestion {
 }
 
 // 레거시 - 새로운 동적 질문 시스템(NARRATIVE_QUESTIONS_BY_CONTEXT)으로 대체됨
-export const NARRATIVE_QUESTIONS_LEGACY: NarrativeQuestion[] = [
+export const NARRATIVE_QUESTIONS_LEGACY: NarrativeQuestionLegacy[] = [
   {
     question_id: 'narrative_high_alive',
     order: 1,

@@ -1,3 +1,4 @@
+import type { D1Database } from '@cloudflare/workers-types'
 /**
  * HowTo 게시/검수 서비스
  * - DRAFT → REVIEW → PUBLISHED 워크플로우
