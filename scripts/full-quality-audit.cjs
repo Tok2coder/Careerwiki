@@ -228,8 +228,21 @@ function checkGate1(data, jobName) {
 
 // ── Gate 2: 텍스트 완결성 ──────────────────────────────────────────────────────
 
-function checkGate2(data) {
+function checkGate2(data, originalData) {
   const issues = [];
+
+  // wage 존재 여부 체크 — API 원본에 wage가 있었는데 저장 후 사라지면 FAIL
+  // originalData = api_data_json 기반 원본 (auditJob에서 전달)
+  if (originalData) {
+    const apiWage = getNestedValue(originalData, 'overviewSalary.wage');
+    const mergedWage = getNestedValue(data, 'overviewSalary.wage');
+    if (apiWage !== undefined && apiWage !== null && (mergedWage === undefined || mergedWage === null)) {
+      issues.push({
+        level: 'FAIL',
+        msg: '[Gate2] overviewSalary.wage 소실 — API 원본에 wage 데이터가 있었으나 현재 merged_profile에 없음. 바 차트 렌더링 불가',
+      });
+    }
+  }
 
   for (const fieldPath of ['way', 'overviewSalary.sal', 'overviewProspect.main', 'trivia',
     'detailWlb.wlbDetail', 'detailWlb.socialDetail']) {
@@ -470,6 +483,7 @@ function auditJob(job) {
 
   let mergedData = {};
   let ucjData = {};
+  let apiData = {};
 
   try {
     mergedData = job.merged_profile_json ? JSON.parse(job.merged_profile_json) : {};
@@ -481,6 +495,11 @@ function auditJob(job) {
   } catch {
     ucjData = {};
   }
+  try {
+    apiData = job.api_data_json ? JSON.parse(job.api_data_json) : {};
+  } catch {
+    apiData = {};
+  }
 
   // _sources는 user_contributed_json에서 가져옴, mergedData에 주입
   if (ucjData._sources && !mergedData._sources) {
@@ -489,7 +508,7 @@ function auditJob(job) {
 
   const allIssues = [
     ...checkGate1(mergedData, name),
-    ...checkGate2(mergedData),
+    ...checkGate2(mergedData, apiData),
     ...checkGate3(mergedData),
     ...checkGate4(mergedData),
     ...checkGate5(job, mergedData),
@@ -545,14 +564,14 @@ function main() {
   if (slugArg) {
     const slug = slugArg.split('=')[1].trim();
     console.log(`\n🔍 감사 시작: ${slug}\n${'─'.repeat(60)}`);
-    jobs = queryD1(`SELECT id, name, slug, image_url, merged_profile_json, user_contributed_json FROM jobs WHERE slug = '${sqlStr(slug)}' AND is_active = 1 LIMIT 1`);
+    jobs = queryD1(`SELECT id, name, slug, image_url, merged_profile_json, user_contributed_json, api_data_json FROM jobs WHERE slug = '${sqlStr(slug)}' AND is_active = 1 LIMIT 1`);
     if (jobs.length === 0) {
       console.error(`오류: slug="${slug}" 직업을 찾을 수 없음`);
       process.exit(1);
     }
   } else {
     console.log(`\n🔍 전체 감사 시작 (최대 ${limit}개)\n${'─'.repeat(60)}`);
-    jobs = queryD1(`SELECT id, name, slug, image_url, merged_profile_json, user_contributed_json FROM jobs WHERE is_active = 1 AND user_contributed_json IS NOT NULL AND LENGTH(user_contributed_json) > 20 ORDER BY user_last_updated_at DESC LIMIT ${limit}`);
+    jobs = queryD1(`SELECT id, name, slug, image_url, merged_profile_json, user_contributed_json, api_data_json FROM jobs WHERE is_active = 1 AND user_contributed_json IS NOT NULL AND LENGTH(user_contributed_json) > 20 ORDER BY user_last_updated_at DESC LIMIT ${limit}`);
   }
 
   console.log(`총 ${jobs.length}개 직업 감사 중...\n`);

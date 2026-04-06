@@ -1,0 +1,90 @@
+{
+  "fields": {
+    "way": "클라우드 서비스 기획자는 컴퓨터공학·경영정보학·경영학 등 다양한 전공에서 진입하며, 전공보다 클라우드 서비스 이해와 기획 역량을 더 중시하는 편이다.[1] 관련 자격으로는 AWS Certified Cloud Practitioner·Azure Fundamentals 등 클라우드 자격증과 PMP(프로젝트관리전문가)가 실무에서 인정받는다.[2] 주요 취업처는 네이버클라우드플랫폼·KT클라우드·AWS코리아·SK C&C·LG CNS 등 클라우드 사업 부문과, IT 스타트업의 PM(Product Manager) 직군이다.[3]",
+    "overviewSalary": {
+      "sal": "신입 기준 연봉 약 4,000만원, 경력 5년 이상은 6,000만원 이상으로 IT 기획 직군 평균보다 높다."
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 증가 전망이다.[1] 국내 클라우드 서비스 시장이 연평균 20% 이상 성장하면서 기획·운영 인력 수요도 동반 증가하고 있으며, AI 서비스와 클라우드 플랫폼 융합이 가속화되어 복합 역량을 갖춘 기획자에 대한 수요는 더욱 높아질 전망이다.[2]"
+    },
+    "trivia": "전 세계 클라우드 서비스 시장 규모는 2025년 약 6,750억 달러로, 2020년 대비 약 3배 성장하였다.[1] 국내 클라우드 지출도 2024년 약 5조 원을 돌파하며 공공·금융·헬스케어 분야의 전환이 빠르게 진행되고 있다.",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "주로 사무직 환경에서 근무하며, 서비스 출시 전후 스프린트 기간에는 집중 근무가 필요하다.[1] 클라우드 기업의 경우 재택·하이브리드 근무 비율이 높아 유연한 근무 환경이 마련되어 있는 편이다.[2]",
+      "socialDetail": "기업의 디지털 전환을 이끄는 핵심 역할로, 기업 경쟁력 강화와 비즈니스 효율화에 직접 기여한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "컴퓨터공학·경영정보학·소프트웨어공학 등 관련 전공 이수 — 데이터베이스, 소프트웨어공학 기초 학습",
+        "AWS·Azure·GCP 클라우드 기초 자격증 취득 및 실습 프로젝트 경험 쌓기",
+        "서비스 기획 사이드 프로젝트·인턴십을 통해 스토리보드·기능 명세서 작성 경험 확보"
+      ],
+      "recruit": [
+        "네이버클라우드플랫폼·KT클라우드·AWS코리아·SK C&C 등 클라우드 서비스 기획 직군 수시 채용",
+        "IT 스타트업 PM(Product Manager)·PO(Product Owner) 직군으로 진입 후 클라우드 서비스 기업으로 이직",
+        "대기업 IT 계열 자회사(삼성SDS·LG CNS·롯데정보통신 등) 서비스 기획 공채"
+      ],
+      "training": [
+        "AWS·Azure 솔루션 아키텍트 자격 취득 — 기획자가 기술 언어로 개발팀과 소통하는 역량 강화",
+        "PMP(Project Management Professional) 취득으로 클라우드 마이그레이션 프로젝트 관리 역량 확보",
+        "데이터 분석(SQL, GA4, Amplitude) 역량 추가로 데이터 기반 서비스 개선 기획자로 커리어 확장"
+      ]
+    },
+    "sidebarJobs": [
+      "클라우드 아키텍트",
+      "클라우드 플랫폼 엔지니어",
+      "클라우드시스템정보보안전문가",
+      "인공지능서비스기획자",
+      "제품개발관리자(Product Owner)"
+    ],
+    "sidebarMajors": [
+      "컴퓨터공학과",
+      "경영정보학과",
+      "소프트웨어공학과",
+      "경영학과",
+      "산업공학과"
+    ],
+    "sidebarCerts": [
+      "AWS Certified Cloud Practitioner",
+      "Azure Fundamentals (AZ-900)",
+      "PMP(Project Management Professional)",
+      "정보처리기사",
+      "SQLD(SQL 개발자)"
+    ],
+    "heroTags": [
+      "클라우드기획자",
+      "IT서비스기획자",
+      "PM취업",
+      "AWS자격증",
+      "클라우드전환",
+      "프로덕트매니저"
+    ],
+    "youtubeLinks": []
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "IT 기획자·PM 취업 현황, 이랜서 블로그", "url": "https://www.elancer.co.kr/blog/detail/34"},
+      {"id": 2, "text": "AWS 공식 자격증 안내", "url": "https://aws.amazon.com/ko/certification/"},
+      {"id": 3, "text": "IT 기획자·PM 취업 현황, 이랜서 블로그", "url": "https://www.elancer.co.kr/blog/detail/34"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "2025년 대한민국 IT 직군 연봉 순위, 플랜김", "url": "https://plankim.com/it-salary-korea-2025/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "가트너 클라우드 시장 전망 2024", "url": "https://www.gartner.com/en/newsroom/press-releases/2024-05-20-gartner-forecasts-worldwide-public-cloud-end-user-spending-to-reach-679-billion-in-2024"},
+      {"id": 2, "text": "2025년 대한민국 IT 직군 연봉 순위, 플랜김", "url": "https://plankim.com/it-salary-korea-2025/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "가트너 클라우드 서비스 시장 전망 2024", "url": "https://www.gartner.com/en/newsroom/press-releases/2024-05-20-gartner-forecasts-worldwide-public-cloud-end-user-spending-to-reach-679-billion-in-2024"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "IT 서비스 기획자 업무 특성, 이랜서 블로그", "url": "https://www.elancer.co.kr/blog/detail/34"},
+      {"id": 2, "text": "대기업 IT 서비스 기획자 업무 환경, Brunch", "url": "https://brunch.co.kr/@herbeauty/1"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "PM(서비스 기획자) 직무 알아보기, Zero-base", "url": "https://zero-base.co.kr/event/media_insight_contents_11"}
+    ]
+  },
+  "changeSummary": "Phase 1-3 신규 데이터 보완: way, sal, prospect, trivia, detailWlb(wlb/social 보통 이상), detailReady, sidebarJobs/Majors/Certs, heroTags 전체 작성"
+}

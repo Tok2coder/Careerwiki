@@ -296,6 +296,32 @@ function validate(data) {
     }
   }
 
+  // ── 9a. overviewSalary.wage 덮어쓰기 방지 ──
+
+  if (fields.overviewSalary && fields.overviewSalary.wage !== undefined) {
+    errors.push('[FAIL] overviewSalary.wage 필드 변경 금지 — 바 차트 데이터 보존 필수. wage는 API 데이터이므로 절대 덮어쓰지 말 것');
+  }
+
+  // ── 9b. youtubeLinks 개수 검증 ──
+
+  if (!fields.youtubeLinks || (Array.isArray(fields.youtubeLinks) && fields.youtubeLinks.length < 1) ||
+      (typeof fields.youtubeLinks === 'string' && JSON.parse(fields.youtubeLinks).length < 1)) {
+    // youtubeLinks 누락은 WARN (없는 경우도 허용 — 빈 배열은 OK)
+    // 단, 빈 배열이 아닌 undefined/null이면 경고
+    if (fields.youtubeLinks === undefined || fields.youtubeLinks === null) {
+      warnings.push('[YouTube] youtubeLinks 없음 — 가능하면 1~3개 추가 권장');
+    }
+  }
+
+  if (fields.youtubeLinks) {
+    const ytLinks = Array.isArray(fields.youtubeLinks)
+      ? fields.youtubeLinks
+      : (typeof fields.youtubeLinks === 'string' ? JSON.parse(fields.youtubeLinks) : []);
+    if (ytLinks.length > 3) {
+      errors.push(`[YouTube] youtubeLinks 최대 3개 초과 (현재 ${ytLinks.length}개) — 3개 이하로 줄일 것`);
+    }
+  }
+
   // ── 9. YouTube URL 포맷 검사 ──
 
   if (fields.youtubeLinks) {
@@ -338,6 +364,21 @@ function validate(data) {
   }
 
   // ── 10. _sources 포맷 검사 ──
+
+  // 동일 필드 내 같은 URL 중복 등록 검출
+  for (const [sourceKey, srcVal] of Object.entries(sources)) {
+    if (!Array.isArray(srcVal)) continue;
+    const urlsInField = {};
+    for (const src of srcVal) {
+      if (src && typeof src === 'object' && src.url) {
+        urlsInField[src.url] = (urlsInField[src.url] || 0) + 1;
+      }
+    }
+    const dupUrls = Object.entries(urlsInField).filter(([_, c]) => c > 1);
+    for (const [url, count] of dupUrls) {
+      errors.push(`[출처중복] sources["${sourceKey}"]에 동일 URL이 ${count}번 등록: "${url}" — 같은 필드에 같은 URL 중복 금지`);
+    }
+  }
 
   for (const [sourceKey, srcVal] of Object.entries(sources)) {
     if (!Array.isArray(srcVal)) {
