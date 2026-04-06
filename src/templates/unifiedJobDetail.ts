@@ -5170,6 +5170,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           'trivia': ['여담', 'h3:contains("여담")', '[data-field="trivia"]'],
           'detailReady.curriculum': ['정규 교육과정', 'h3:contains("정규 교육과정")', '[data-field="detailReady.curriculum"]'],
           'detailReady.recruit': ['채용 정보', 'h3:contains("채용 정보")', '[data-field="detailReady.recruit"]'],
+          'detailReady.training': ['필요 교육/훈련', 'h3:contains("필요 교육/훈련")', '[data-field="detailReady.training"]'],
+          'detailReady.researchList': ['진로 탐색 활동', 'h3:contains("진로 탐색 활동")', '[data-field="detailReady.researchList"]'],
+          'detailReady.certificate': ['추천 자격증', 'h3:contains("추천 자격증")', '[data-field="detailReady.certificate"]'],
           'sidebarJobs': ['관련 직업', 'h3:contains("관련 직업")', '[data-field="sidebarJobs"]'],
           'sidebarMajors': ['관련 학과', 'h3:contains("관련 전공")', '[data-field="sidebarMajors"]']
         };
