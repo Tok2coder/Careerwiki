@@ -88,6 +88,8 @@ function validate(data) {
   }
 
   // heroTags 점검
+  const NOUN_EXCEPTIONS = ['강의', '설비', '기여', '처리', '관리', '설계', '분석', '개발', '운의', '합의', '회의', '정의', '위의'];
+
   if (fields.heroTags) {
     const tags = Array.isArray(fields.heroTags) ? fields.heroTags : JSON.parse(fields.heroTags);
     if (tags.length < 3) warnings.push(`[태그] heroTags가 ${tags.length}개 (최소 3개)`);
@@ -96,7 +98,10 @@ function validate(data) {
       if (tag.length > 15) warnings.push(`[태그] "${tag}" — 15자 초과`);
       if (tag.length < 2) warnings.push(`[태그] "${tag}" — 2자 미만`);
       if (/[을를이은는에서도의]$/.test(tag)) {
-        errors.push(`[태그] "${tag}" — 조사로 끝남, 명사구여야 함`);
+        const isNounException = NOUN_EXCEPTIONS.some(noun => tag.endsWith(noun));
+        if (!isNounException) {
+          errors.push(`[태그] "${tag}" — 조사로 끝남, 명사구여야 함`);
+        }
       }
     }
   }
@@ -162,6 +167,10 @@ function validate(data) {
           if (typeof src === 'object' && src.text && src.text.includes('http')) {
             errors.push(`[출처형식] sources["${sourceKey}"]의 text에 URL이 포함됨 — text와 url을 분리해야 함`);
           }
+          // text가 URL로 시작하면 FAIL (기관명이어야 함)
+          if (typeof src === 'object' && src.text && /^https?:\/\//.test(src.text.replace(/^\[\d+\]\s*/, ''))) {
+            errors.push(`[출처형식] sources["${sourceKey}"]의 text가 URL로 시작 — "[N] 기관명" 형식 사용 필요`);
+          }
         }
       }
     }
@@ -209,10 +218,10 @@ function validate(data) {
     const socialGrade = fields.detailWlb?.social;
     const stuckForms = ['보통이상', '보통이하', '다소높음', '다소낮음'];
     if (wlbGrade && stuckForms.includes(wlbGrade)) {
-      warnings.push(`[detailWlb.wlb] 붙여쓰기 금지: "${wlbGrade}" → "보통 이상" 또는 "보통 이하" 형식 사용`);
+      errors.push(`[detailWlb.wlb] 붙여쓰기 금지: "${wlbGrade}" → "보통 이상" 또는 "보통 이하" 형식 사용`);
     }
     if (socialGrade && stuckForms.includes(socialGrade)) {
-      warnings.push(`[detailWlb.social] 붙여쓰기 금지: "${socialGrade}" → "보통 이상" 또는 "보통 이하" 형식 사용`);
+      errors.push(`[detailWlb.social] 붙여쓰기 금지: "${socialGrade}" → "보통 이상" 또는 "보통 이하" 형식 사용`);
     }
   }
 
@@ -315,6 +324,15 @@ function validate(data) {
       const isValid = YOUTUBE_PATTERNS.some(p => p.test(url));
       if (!isValid) {
         errors.push(`[YouTube] 유효하지 않은 URL: "${url}" — youtube.com/watch?v= 또는 youtu.be/ 형식이어야 함`);
+      }
+      // title 인코딩 깨짐 감지
+      if (link.title) {
+        if (/&#\d+;|&amp;|&lt;|&gt;|&quot;/.test(link.title)) {
+          errors.push(`[유튜브] 제목에 HTML entity 잔류: "${link.title.substring(0, 40)}..." — 디코딩 필요`);
+        }
+        if (/%[0-9A-F]{2}/i.test(link.title)) {
+          errors.push(`[유튜브] 제목에 퍼센트 인코딩 잔류: "${link.title.substring(0, 40)}..." — 디코딩 필요`);
+        }
       }
     }
   }
