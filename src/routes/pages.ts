@@ -296,7 +296,7 @@ pagesRoutes.get('/releases', async (c) => {
   let sectionsHtml = ''
   if (fetchError || notes.length === 0) {
     sectionsHtml = `
-      <div class="glass-card rounded-xl p-8 text-center" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.22);backdrop-filter:blur(14px);">
+      <div class="glass-card rounded-xl p-8 text-center" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.22);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);">
         <i class="fas fa-box-open text-3xl text-slate-400 mb-4 block"></i>
         <p class="text-white font-semibold mb-2">${fetchError ? '업데이트 내역을 불러올 수 없습니다' : '아직 업데이트 내역이 없습니다'}</p>
         <p class="text-sm text-slate-400">잠시 후 다시 시도해 주세요.</p>
@@ -322,7 +322,7 @@ pagesRoutes.get('/releases', async (c) => {
 
       sectionsHtml += `
         <div class="rl-month" data-month="${dateKey}" data-feat="${fc}" data-fix="${xc}" data-improve="${ic}" style="${isFirst ? '' : 'display:none;'}">
-          <div class="glass-card rounded-xl px-4 sm:px-5" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.15);backdrop-filter:blur(14px);">
+          <div class="glass-card rounded-xl px-4 sm:px-5" style="background:rgba(26,26,46,0.82);border:1px solid rgba(148,163,184,0.15);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);">
             ${itemsHtml}
           </div>
         </div>`

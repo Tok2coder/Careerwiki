@@ -728,8 +728,8 @@ export function renderJobMergeDesigner(
       overflow: hidden;
     }
     
-    .container { display: flex; height: 100vh; }
-    
+    .container { display: flex; height: 100vh; height: 100dvh; }
+
     /* 왼쪽 패널 */
     .fields-panel {
       width: 40%;

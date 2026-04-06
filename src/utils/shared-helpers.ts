@@ -54,7 +54,7 @@ export const renderUserMenu = (
         id="user-menu-dropdown"
         class="hidden absolute right-0 top-full mt-1 w-56 glass-card rounded-lg border border-wiki-border/50 shadow-xl py-1 z-50"
         role="menu"
-        style="background: rgba(17, 24, 39, 0.98); backdrop-filter: blur(16px);"
+        style="background: rgba(17, 24, 39, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);"
       >
         <!-- 드롭다운 내용은 클라이언트에서 nav.ts의 hydrateUserMenu()가 렌더링 -->
         <div class="px-4 py-3 text-center text-wiki-muted text-sm">
@@ -364,6 +364,7 @@ export const renderLayout = (
             cursor: pointer;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
           }
@@ -389,6 +390,7 @@ export const renderLayout = (
             pointer-events: none;
             transition: opacity 0.3s ease;
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
           }
           .floating-nav-btn:hover .label {
@@ -456,6 +458,7 @@ export const renderLayout = (
           .glass-card {
             background: linear-gradient(145deg, rgba(17, 24, 39, 0.8), rgba(15, 20, 35, 0.65));
             backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border: 1px solid rgba(148, 163, 184, 0.08);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.03);
             transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
@@ -889,6 +892,7 @@ export const renderLayout = (
           }
           .hero-shell {
             min-height: calc(100vh - 260px);
+            min-height: calc(100dvh - 260px);
             display: flex;
             align-items: center;
             justify-content: center;

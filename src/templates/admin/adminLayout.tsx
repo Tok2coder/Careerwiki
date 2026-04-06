@@ -31,11 +31,13 @@ export function renderAdminLayout({ title, currentPath, children }: AdminLayoutP
   <style>
     body { 
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
-      min-height: 100vh; 
+      min-height: 100vh;
+      min-height: 100dvh;
     }
     .glass-card {
       background: rgba(30, 41, 59, 0.8);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(148, 163, 184, 0.1);
     }
     .sidebar-link {
@@ -64,6 +66,7 @@ export function renderAdminLayout({ title, currentPath, children }: AdminLayoutP
     .sidebar-overlay {
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
     @media (max-width: 1023px) {
       .sidebar {

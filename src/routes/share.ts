@@ -239,6 +239,7 @@ function renderShareCard(data: any, token: string): string {
         radial-gradient(ellipse 60% 40% at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
         radial-gradient(ellipse 50% 30% at 20% 60%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -289,6 +290,7 @@ function renderShareCard(data: any, token: string): string {
       max-width: 480px;
       background: rgba(26, 26, 46, 0.88);
       backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(99, 102, 241, 0.25);
       border-radius: 24px;
       overflow: hidden;

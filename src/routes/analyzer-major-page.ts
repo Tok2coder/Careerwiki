@@ -4560,7 +4560,7 @@ function renderMajorCardsV3(majors, setId, profileInterp) {
         if (imageUrl && imageUrl.trim()) {
             cardHtml += '<div class="flex-shrink-0 w-28 sm:w-32 relative overflow-hidden">';
             cardHtml += '<img src="' + escapeHtmlMajor(imageUrl) + '" alt="' + escapeHtmlMajor(majorName) + '" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML=\\'<div class=\\\\\\'w-full h-full flex items-center justify-center\\\\\\' style=\\\\\\'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));\\\\\\' ><i class=\\\\\\'fas fa-graduation-cap text-2xl text-wiki-muted\\\\\\'></i></div>\\';" />';
-            cardHtml += '<div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);"><span class="' + (idx < 3 ? 'text-base' : 'text-sm font-bold text-wiki-muted') + '">' + rankBadge + '</span></div>';
+            cardHtml += '<div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);"><span class="' + (idx < 3 ? 'text-base' : 'text-sm font-bold text-wiki-muted') + '">' + rankBadge + '</span></div>';
             cardHtml += '</div>';
         } else {
             cardHtml += '<div class="flex-shrink-0 w-28 sm:w-32 relative flex items-center justify-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));">';

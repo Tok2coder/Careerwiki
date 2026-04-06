@@ -445,8 +445,8 @@ export function renderMajorMergeDesigner(
       overflow: hidden;
     }
     
-    .container { display: flex; height: 100vh; }
-    
+    .container { display: flex; height: 100vh; height: 100dvh; }
+
     .fields-panel {
       width: 35%;
       background: white;

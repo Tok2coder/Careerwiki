@@ -1195,7 +1195,7 @@ export const renderCommentsPlaceholder = ({
             <p class="text-sm text-wiki-muted">이 댓글을 삭제하시겠습니까? 삭제된 댓글은 복구할 수 없습니다.</p>
             <div class="hidden" data-cw-comment-delete-pw-wrap>
               <label class="text-sm font-semibold text-white">비밀번호 (숫자 4자리)</label>
-              <input type="password" inputmode="numeric" maxlength="4" pattern="\\d{4}" class="mt-1 w-full rounded-lg border border-wiki-border bg-wiki-bg px-3 py-2 text-sm text-white focus:border-wiki-primary focus:outline-none" placeholder="비밀번호 입력" data-cw-comment-delete-password>
+              <input type="password" inputmode="numeric" maxlength="4" pattern="\\d{4}" class="mt-1 w-full rounded-lg border border-wiki-border bg-wiki-bg px-3 py-2 text-white focus:border-wiki-primary focus:outline-none" style="font-size: 16px;" placeholder="비밀번호 입력" data-cw-comment-delete-password>
             </div>
             <div class="text-sm text-red-400 hidden" data-cw-comment-delete-error role="alert" aria-live="polite"></div>
             <div class="flex items-center justify-between gap-3 pt-2">
@@ -1236,7 +1236,7 @@ export const renderCommentsPlaceholder = ({
             </div>
             <div class="space-y-2">
               <label class="text-sm font-semibold text-white">상세 사유 (선택)</label>
-              <textarea class="w-full rounded-lg border border-wiki-border bg-wiki-bg px-3 py-2 text-sm text-white min-h-[96px] resize-none focus:border-wiki-primary focus:outline-none" maxlength="300" placeholder="추가 설명이 있다면 작성해주세요 (최대 300자)" data-cw-comment-report-detail></textarea>
+              <textarea class="w-full rounded-lg border border-wiki-border bg-wiki-bg px-3 py-2 text-white min-h-[96px] resize-none focus:border-wiki-primary focus:outline-none" style="font-size: 16px;" maxlength="300" placeholder="추가 설명이 있다면 작성해주세요 (최대 300자)" data-cw-comment-report-detail></textarea>
             </div>
             <div class="flex items-center justify-between gap-3 pt-2">
               <button type="button" class="flex-1 px-4 py-2 rounded-lg border border-wiki-border text-sm text-wiki-muted hover:text-white hover:border-wiki-primary transition" data-cw-comment-report-close>

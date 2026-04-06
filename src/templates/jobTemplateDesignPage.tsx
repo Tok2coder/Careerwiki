@@ -1076,6 +1076,7 @@ let work24DjobData: any = {}
     .glass-card {
       background: rgba(26, 31, 58, 0.5);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     
     .tab-button {

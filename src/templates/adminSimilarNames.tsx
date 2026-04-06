@@ -20,10 +20,11 @@ export function renderAdminSimilarNamesPage({ type }: AdminSimilarNamesProps): s
   <link rel="stylesheet" href="/static/tailwind.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; }
+    body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; min-height: 100dvh; }
     .glass-card {
       background: rgba(30, 41, 59, 0.8);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(148, 163, 184, 0.1);
     }
     .highlight-row:hover { background: rgba(59, 130, 246, 0.1); }

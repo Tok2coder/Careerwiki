@@ -39,10 +39,12 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
     body {
       background: #0f0f23;
       min-height: 100vh;
+      min-height: 100dvh;
     }
     .glass-card {
       background: rgba(26, 26, 46, 0.82);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(148, 163, 184, 0.22);
     }
     .step-indicator {

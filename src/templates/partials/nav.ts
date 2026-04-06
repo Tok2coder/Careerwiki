@@ -87,7 +87,7 @@ export function renderNav(userMenuHtml: string): string {
   </nav>
   
   <!-- Mobile Menu (햄버거 클릭 시 표시) -->
-  <div id="mobile-menu" class="fixed top-[57px] left-0 right-0 bottom-0 z-40 overflow-y-auto" style="display: none; background: rgba(11, 18, 32, 0.98); backdrop-filter: blur(20px);">
+  <div id="mobile-menu" class="fixed top-[57px] left-0 right-0 bottom-0 z-40 overflow-y-auto" style="display: none; background: rgba(11, 18, 32, 0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
     <div class="mx-auto w-full max-w-[1400px] py-4 px-4">
       
       <!-- 1) 사용자 정보 (IP 또는 사용자 ID) -->
@@ -141,7 +141,7 @@ export function renderNavStyles(): string {
     .text-wiki-text { color: #e0e0e0; }
     .text-wiki-muted { color: #9ca3af; }
     .border-wiki-border { border-color: rgba(148, 163, 184, 0.25); }
-    .glass-card { background: rgba(26, 26, 46, 0.82); border: 1px solid rgba(148, 163, 184, 0.22); backdrop-filter: blur(14px); }
+    .glass-card { background: rgba(26, 26, 46, 0.82); border: 1px solid rgba(148, 163, 184, 0.22); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
     .header-icon-button { width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; color: rgba(200, 210, 255, 0.7); transition: all 0.2s ease; }
     .header-icon-button:hover { color: #ffffff; background: rgba(100, 181, 246, 0.15); }
     .header-icon-button:focus-visible { outline: 2px solid #64b5f6; outline-offset: 2px; }
@@ -174,9 +174,9 @@ export function renderNavStyles(): string {
     #user-menu-dropdown .border-wiki-border\\/30 { border-color: rgba(100, 116, 139, 0.18) !important; }
     #user-menu-dropdown .border-wiki-border\\/50 { border-color: rgba(100, 116, 139, 0.18) !important; }
     .nav-search-shell { width: 100%; }
-    .nav-search-bar { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 18px; border-radius: 14px; background: rgba(15, 20, 35, 0.5); border: 1px solid rgba(148, 163, 184, 0.12); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); }
+    .nav-search-bar { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 18px; border-radius: 14px; background: rgba(15, 20, 35, 0.5); border: 1px solid rgba(148, 163, 184, 0.12); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     .nav-search-bar:focus-within { border-color: rgba(99, 102, 241, 0.4); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.06), 0 4px 20px rgba(99, 102, 241, 0.1); background: rgba(15, 20, 35, 0.7); }
-    .nav-search-input { flex: 1; background: transparent; border: none; color: #e2e8f0; font-size: 13.5px; line-height: 1.4; letter-spacing: -0.01em; }
+    .nav-search-input { flex: 1; background: transparent; border: none; color: #e2e8f0; font-size: 16px; line-height: 1.4; letter-spacing: -0.01em; }
     .nav-search-input::placeholder { color: rgba(148, 163, 184, 0.5); font-size: 13px; }
     .nav-search-input:focus { outline: none; }
     .nav-search-button { width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; border: none; background: linear-gradient(135deg, #4361ee 0%, #5a7cf7 100%); color: #ffffff; font-size: 13px; box-shadow: 0 2px 8px rgba(67, 97, 238, 0.25); transition: all 0.2s ease; cursor: pointer; }

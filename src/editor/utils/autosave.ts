@@ -115,6 +115,6 @@ export function recoverFromLocalStorage(draftId: number): {
  * localStorage 초안 삭제
  */
 export function clearLocalStorage(draftId: number) {
-  localStorage.removeItem(`howto-draft-${draftId}`)
+  try { localStorage.removeItem(`howto-draft-${draftId}`) } catch(e) {}
 }
 

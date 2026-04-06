@@ -4547,8 +4547,7 @@ analyzerJobPage.get('/', async (c, next) => {
                         method: 'DELETE', credentials: 'same-origin'
                     }).catch(() => {});
                 }
-                localStorage.removeItem('analyzer_draft');
-                localStorage.removeItem('analyzer_draft_timestamp');
+                try { localStorage.removeItem('analyzer_draft'); localStorage.removeItem('analyzer_draft_timestamp'); } catch(e) {}
 
             } catch (error) {
                 hideLoading();
@@ -8368,9 +8367,8 @@ analyzerJobPage.get('/', async (c, next) => {
             }
             
             // 로컬 스토리지의 draft 데이터 삭제
-            localStorage.removeItem('analyzer_draft');
-            localStorage.removeItem('analyzer_draft_timestamp');
-            
+            try { localStorage.removeItem('analyzer_draft'); localStorage.removeItem('analyzer_draft_timestamp'); } catch(e) {}
+
             // 서버의 draft도 삭제 시도 (옵션)
             fetch('/api/ai-analyzer/draft', {
                 method: 'DELETE',
@@ -8571,7 +8569,7 @@ analyzerJobPage.get('/', async (c, next) => {
                                 <img src="\${escapeHtmlJob(imageUrl)}" alt="\${escapeHtmlJob(jobName)}"
                                      class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                      onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center\\' style=\\'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));\\' ><i class=\\'fas fa-briefcase text-2xl text-wiki-muted\\'></i></div>';" />
-                                <div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
+                                <div class="absolute top-2 left-2 w-7 h-7 flex items-center justify-center rounded-full" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">
                                     <span class="\${idx < 3 ? 'text-base' : 'text-sm font-bold text-wiki-muted'}">\${rankBadge}</span>
                                 </div>
                             </div>
@@ -8904,7 +8902,7 @@ analyzerJobPage.get('/', async (c, next) => {
             const modal = document.createElement('div');
             modal.id = 'evidence-modal';
             modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
-            modal.style.cssText = 'background-color: rgba(0,0,0,0.7); backdrop-filter: blur(4px);';
+            modal.style.cssText = 'background-color: rgba(0,0,0,0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);';
             modal.onclick = (e) => { if (e.target === modal) closeEvidenceModal(); };
             
             // 매칭 타입별 보더 색상
@@ -9709,22 +9707,20 @@ analyzerJobPage.get('/', async (c, next) => {
                 // 서버에 draft가 없으면 로컬 스토리지도 정리 (서버가 source of truth)
                 // 이전에 유저 메뉴에서 삭제했거나, 다른 기기에서 삭제한 경우
                 if (serverResponse.ok && !serverData.found) {
-                    localStorage.removeItem('analyzer_draft');
-                    localStorage.removeItem('analyzer_draft_timestamp');
+                    try { localStorage.removeItem('analyzer_draft'); localStorage.removeItem('analyzer_draft_timestamp'); } catch(e) {}
                     return false;
                 }
-                
+
                 // 2. 로컬 스토리지에서 확인 (서버 오류 시 폴백)
-                const draftStr = localStorage.getItem('analyzer_draft');
-                const timestamp = localStorage.getItem('analyzer_draft_timestamp');
-                
+                let draftStr, timestamp;
+                try { draftStr = localStorage.getItem('analyzer_draft'); timestamp = localStorage.getItem('analyzer_draft_timestamp'); } catch(e) {}
+
                 if (!draftStr) return false;
-                
+
                 // 24시간 이내의 드래프트만 복원
                 const savedTime = parseInt(timestamp, 10);
                 if (Date.now() - savedTime > 24 * 60 * 60 * 1000) {
-                    localStorage.removeItem('analyzer_draft');
-                    localStorage.removeItem('analyzer_draft_timestamp');
+                    try { localStorage.removeItem('analyzer_draft'); localStorage.removeItem('analyzer_draft_timestamp'); } catch(e) {}
                     return false;
                 }
                 
@@ -9897,9 +9893,8 @@ analyzerJobPage.get('/', async (c, next) => {
         async function confirmRestart() {
             
             // 1. 로컬 스토리지 삭제
-            localStorage.removeItem('analyzer_draft');
-            localStorage.removeItem('analyzer_draft_timestamp');
-            
+            try { localStorage.removeItem('analyzer_draft'); localStorage.removeItem('analyzer_draft_timestamp'); } catch(e) {}
+
             // 2. 서버의 모든 job 타입 draft 삭제 (다른 세션 포함)
             try {
                 const response = await fetch('/api/ai-analyzer/draft/delete-all', {
@@ -9945,12 +9940,10 @@ analyzerJobPage.get('/', async (c, next) => {
             } else if (step === 3) {
                 // 결과 도달 시 서버에 완료 상태 저장 후 localStorage 정리
                 saveDraftAsCompleted().then(() => {
-                    localStorage.removeItem('analyzer_draft');
-                    localStorage.removeItem('analyzer_draft_timestamp');
+                    try { localStorage.removeItem('analyzer_draft'); localStorage.removeItem('analyzer_draft_timestamp'); } catch(e) {}
                     window.analyzerUnsavedChanges = false;
                 }).catch(err => {
-                    localStorage.removeItem('analyzer_draft');
-                    localStorage.removeItem('analyzer_draft_timestamp');
+                    try { localStorage.removeItem('analyzer_draft'); localStorage.removeItem('analyzer_draft_timestamp'); } catch(e) {}
                 });
             }
         };
