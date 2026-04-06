@@ -96,9 +96,9 @@ export function renderNav(userMenuHtml: string): string {
           <div id="mobile-user-avatar" class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
             <i class="fas fa-user"></i>
           </div>
-          <div class="flex-1 min-w-0">
+          <div class="flex-1 min-w-0 overflow-hidden">
             <span class="text-sm font-medium text-white block truncate" id="mobile-user-id-display">로딩 중...</span>
-            <span class="text-xs text-wiki-muted" id="mobile-user-role-label">아이피</span>
+            <span class="text-xs text-wiki-muted block" id="mobile-user-role-label">아이피</span>
           </div>
         </div>
       </div>
