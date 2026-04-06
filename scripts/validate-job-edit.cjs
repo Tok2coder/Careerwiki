@@ -53,6 +53,12 @@ function validate(data) {
     if (!dr.curriculum || dr.curriculum.length < 3) {
       warnings.push(`[필드] detailReady.curriculum이 ${dr.curriculum?.length || 0}개 (최소 5개 권장)`);
     }
+    // detailReady 출처 누락 검사 (F2)
+    for (const sub of ['curriculum', 'recruit', 'training']) {
+      if (dr[sub] && dr[sub].length > 0 && !sources[`detailReady.${sub}`]) {
+        warnings.push(`[출처] detailReady.${sub}에 내용이 있지만 sources["detailReady.${sub}"]가 없음 — 반드시 출처 등록 필요`);
+      }
+    }
   } else {
     warnings.push(`[필드] detailReady가 없음`);
   }

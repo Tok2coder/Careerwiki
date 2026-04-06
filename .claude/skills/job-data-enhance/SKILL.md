@@ -192,13 +192,21 @@ SELECT name FROM majors WHERE is_active=1 AND name IN ('전공A', '전공B');
 
 ### 주석 위치 규칙 (필수 — 가장 빈번한 오류)
 
+**모든 텍스트 필드(way, sal, prospect, trivia, wlbDetail, socialDetail)에 동일하게 적용.**
+
 같은 출처에서 가져온 **연속 문장 블록**의 **마지막 문장 마침표 뒤**에만 [N]을 1회 붙인다.
 다른 출처가 시작되면 새 번호 [N+1].
 
+> ⚠️ **핵심 규칙**: 같은 출처에서 가져온 연속 문장이 2개 이상이면, **[N]은 반드시 마지막 문장의 마침표 뒤에만 1회 삽입. 첫 문장이나 중간 문장에 [N]을 넣지 않는다.**
+
 ✅ GOOD:
 "A 사실이다. B 현상이 있다.[1] C 통계에 따르면 D이다.[2]"
-→ 문장1~2는 출처1에서 가져옴 → 문장2 끝에만 [1]
-→ 문장3~4는 출처2에서 가져옴 → 문장4 끝에만 [2]
+→ 문장1~2는 출처1에서 가져옴 → 문장2(마지막) 끝에만 [1]
+→ 문장3~4는 출처2에서 가져옴 → 문장4(마지막) 끝에만 [2]
+
+✅ GOOD (3문장 모두 같은 출처):
+"A 사실이다. B 현상이다. C 현황이다.[1]"
+→ 세 문장 모두 출처1 → 마지막 문장3 끝에만 [1]
 
 ❌ BAD (중복):
 "A 사실이다.[1] B 현상이 있다.[1]"
@@ -206,13 +214,46 @@ SELECT name FROM majors WHERE is_active=1 AND name IN ('전공A', '전공B');
 
 ❌ BAD (첫 문장에만):
 "A 사실이다.[1] B 현상이 있다."
-→ 두 번째 문장에 출처 없음. 같은 출처면 마지막 문장 뒤에 [1]이어야 함
+→ B 문장이 같은 출처면 [1]은 B 끝으로 이동해야 함
+
+❌ BAD (중간 문장에만):
+"A 사실이다.[1] B 현상이다. C 현황이다."
+→ B, C가 같은 출처1이면 [1]은 C(마지막) 끝에 있어야 함
 
 ❌ BAD (누락):
 "A 사실이다. B 현상이 있다."
 → 출처 각주 자체가 없음
 
 핵심: [N]은 필드 내에서 각각 정확히 1회만 등장해야 함. validate가 중복 감지하므로 위반 시 FAIL.
+
+### detailReady 출처 등록 규칙
+
+detailReady.curriculum / detailReady.recruit / detailReady.training 섹션에 내용을 추가할 때:
+- 해당 내용의 출처를 반드시 `_sources`에 등록해야 한다.
+- sources 키: `"detailReady.curriculum"`, `"detailReady.recruit"`, `"detailReady.training"`
+- curriculum/recruit/training은 **배열** 필드이므로 인라인 [N] 마커는 사용하지 않음.
+  출처는 sources에만 등록하며, id:1부터 시작하는 객체 배열 형식 사용.
+- validate-job-edit.cjs가 텍스트가 있는데 sources가 없으면 WARN 처리.
+
+```json
+"sources": {
+  "detailReady.curriculum": [{"id":1, "text":"[1] 커리어넷 직업정보", "url":"https://..."}],
+  "detailReady.recruit": [{"id":1, "text":"[1] 직업백과 채용정보", "url":"https://..."}],
+  "detailReady.training": [{"id":1, "text":"[1] 훈련기관 공식 사이트", "url":"https://..."}]
+}
+```
+
+### 기존 콘텐츠 보존 규칙 (F3)
+
+**새 내용을 추가하거나 수정할 때, 기존 UCJ에 있던 내용이 새 내용과 겹치지 않으면 기존 내용을 유지하면서 새 내용을 append해야 한다. 기존 내용을 새 내용으로 통째로 대체하지 않는다.**
+
+| 상황 | 행동 |
+|------|------|
+| 기존 UCJ 필드가 있고 새 내용과 겹침 | 최신 내용 우선, 중복 제거 |
+| 기존 UCJ 필드가 있고 새 내용과 겹치지 않음 | **기존 내용 유지 + 새 내용 append** |
+| 기존 UCJ 필드가 없음 | 새 내용으로 채움 |
+
+이 규칙은 **모든 필드**에 적용 (way, trivia, detailReady 배열 등 포함).
 
 ### 출처 수집 규칙
 
@@ -403,6 +444,9 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
 | `detailWlb.wlbDetail` | 워라밸 상세 |
 | `detailWlb.socialDetail` | 사회적 기여 상세 |
 | `overviewAbilities.technKnow` | 활용 기술 |
+| `detailReady.curriculum` | 교육과정 배열 출처 |
+| `detailReady.recruit` | 채용 배열 출처 |
+| `detailReady.training` | 훈련 배열 출처 |
 
 **흔한 키 실수:**
 - ❌ `way_sources` → ✅ `way` (접미사 `_sources` 금지)
