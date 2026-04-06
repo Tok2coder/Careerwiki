@@ -150,6 +150,62 @@ export const formatRichText = (value?: string | null | string[], fieldKey?: stri
     .join('')
 }
 
+/**
+ * 배열 항목 텍스트에 인라인 각주 [N] → <sup> 변환을 적용한다.
+ * formatRichText와 동일한 각주 처리 로직이지만 <p> 래핑 없이 반환한다.
+ * detailReady 배열 항목(curriculum, recruit, training) 전용.
+ */
+export const applyInlineFootnotes = (
+  text: string,
+  fieldKey: string,
+  footnoteMap?: FootnoteMap,
+  sourceTextMap?: Record<number, string>
+): string => {
+  if (!text || !text.trim()) return escapeHtml(text)
+  let working = text
+  const fieldMap = (footnoteMap && fieldKey) ? footnoteMap[fieldKey] : null
+
+  // Phase 1: 중복 [N] 제거 (첫 번째 유지, 나머지 제거)
+  const fnScan = /\[(\d+)\](?!\()/g
+  const fnOccurrences = new Map<string, number[]>()
+  let scanMatch: RegExpExecArray | null
+  while ((scanMatch = fnScan.exec(working)) !== null) {
+    const num = scanMatch[1]
+    if (!fnOccurrences.has(num)) fnOccurrences.set(num, [])
+    fnOccurrences.get(num)!.push(scanMatch.index)
+  }
+  const toRemove: Array<{ pos: number; len: number }> = []
+  for (const [num, positions] of fnOccurrences) {
+    for (let i = 1; i < positions.length; i++) {
+      toRemove.push({ pos: positions[i], len: `[${num}]`.length })
+    }
+  }
+  toRemove.sort((a, b) => b.pos - a.pos)
+  for (const { pos, len } of toRemove) {
+    working = working.substring(0, pos) + working.substring(pos + len)
+  }
+
+  // Phase 2: 로컬번호 → 전역번호 치환
+  if (fieldMap) {
+    working = working.replace(/\[(\d+)\](?!\()/g, (_match, localNum) => {
+      const globalNum = fieldMap[localNum] ?? parseInt(localNum)
+      return `[__GN${globalNum}__]`
+    })
+    working = working.replace(/\[__GN(\d+)__\]/g, '[$1]')
+  }
+
+  // HTML escape + 각주 위치 정규화 ([N]. → .[N]) + <sup> 변환
+  let safe = escapeHtml(working)
+  safe = safe.replace(/(\[(\d+)\])([.。])/g, '$3$1')
+  safe = safe.replace(/\[(\d+)\]/g, (_match, numStr) => {
+    const globalNum = parseInt(numStr)
+    const sourceDesc = sourceTextMap?.[globalNum] || ''
+    const titleText = sourceDesc ? sourceDesc.replace(/"/g, '&quot;') : `출처 [${globalNum}]`
+    return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleText}">[${globalNum}]</sup>`
+  })
+  return safe
+}
+
 export const renderChips = (items?: string[] | null, emptyText = '정보 없음'): string => {
   if (!items || items.length === 0) {
     return `<p class="content-text text-wiki-muted">${escapeHtml(emptyText)}</p>`
