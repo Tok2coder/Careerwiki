@@ -2338,9 +2338,9 @@ userRoutes.get('/user/settings', requireAuth, async (c) => {
           const newUsername = input.value.trim();
 
           // 클라이언트 측 유효성 검사
-          if (!/^(?!.*\s{2,})(?!\s)[A-Za-z0-9가-힣._\-]{2,16}(?<!\s)$/.test(newUsername)) {
+          if (!/^[A-Za-z0-9가-힣._-]{2,16}$/.test(newUsername)) {
             message.className = 'mt-2 text-sm text-red-400';
-            message.textContent = '닉네임은 2~16자의 한글, 영문, 숫자만 사용할 수 있습니다.';
+            message.textContent = '닉네임은 2~16자, 한글/영문/숫자/._-만 사용할 수 있습니다.';
             message.classList.remove('hidden');
             return;
           }

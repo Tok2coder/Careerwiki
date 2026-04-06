@@ -31,6 +31,13 @@ contentEditorRoutes.patch('/api/user/username', requireAuth, async (c) => {
       return c.json({ success: false, error: 'Username is required' }, 400)
     }
 
+    // 온보딩과 동일한 검증: 패턴 + 예약어 + 금칙어 + 중복
+    const { checkNicknameAvailability } = await import('../services/onboardingService')
+    const check = await checkNicknameAvailability(c.env.DB, body.username, user.id)
+    if (!check.ok) {
+      return c.json({ success: false, error: check.message || '사용할 수 없는 닉네임입니다.' }, 400)
+    }
+
     const { updateUsername } = await import('../utils/auth-helpers')
     await updateUsername(c.env.DB, user.id, body.username)
 

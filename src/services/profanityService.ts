@@ -50,7 +50,7 @@ export interface ProfanityFilterResult {
  * - 연속 공백 불허
  * - 선두/말미 공백 불허
  */
-const NICKNAME_PATTERN = /^(?!.*\s{2,})(?!\s)[A-Za-z0-9가-힣._-]{2,16}(?<!\s)$/
+const NICKNAME_PATTERN = /^[A-Za-z0-9가-힣._-]{2,16}$/
 
 /**
  * 예약어 목록 (닉네임 사용 불가)
@@ -100,7 +100,7 @@ export async function validateNickname(
     return {
       ok: false,
       reason: 'invalid',
-      message: '닉네임은 2~16자의 한글, 영문, 숫자만 사용할 수 있습니다.'
+      message: '닉네임은 2~16자, 한글/영문/숫자/._-만 사용할 수 있습니다.'
     }
   }
   
