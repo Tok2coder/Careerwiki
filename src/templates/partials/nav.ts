@@ -407,7 +407,7 @@ export function renderNavScripts(): string {
           '<div class="px-4 py-2.5 border-b border-wiki-border/30">' +
             '<div class="flex items-center justify-between">' +
               '<span class="text-xs text-wiki-muted">아이피</span>' +
-              '<span id="user-ip-display" class="text-xs font-mono text-wiki-text font-medium">' + (ip || '로딩 중...') + '</span>' +
+              '<span id="user-ip-display" class="text-xs font-mono text-wiki-text font-medium truncate max-w-[140px] text-right">' + (ip || '로딩 중...') + '</span>' +
             '</div>' +
           '</div>' +
           '<a href="/login" data-login-link class="block px-4 py-2.5 text-sm text-wiki-text hover:bg-wiki-primary/10 transition-colors" role="menuitem">' +
