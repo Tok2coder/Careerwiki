@@ -101,6 +101,14 @@ SELECT id, name, slug,
 FROM jobs WHERE name IN ('직업명') AND is_active=1;
 ```
 
+**기존 데이터 보존 체크리스트 (Phase 0 완료 후 작성):**
+UCJ에 아래 필드가 이미 있으면 Phase 1 draft에 반드시 기존값 그대로 포함:
+- overviewSalary.wage (바 차트 데이터) — 절대 덮어쓰기 금지
+- overviewProspect (그래프 데이터) — 절대 덮어쓰기 금지
+- detailWlb.wlb / detailWlb.social (등급) — 교정만 허용, 삭제 금지
+- detailIndicators (지표 데이터) — 공식 통계, 임의 변경 금지
+merged_profile_json에만 있는 필드도 draft 전송 시 누락되면 null로 덮어씌워지므로 주의.
+
 ### 0-C. 진단 결과 보고 형식
 
 ```
@@ -163,8 +171,15 @@ FROM jobs WHERE name IN ('직업명') AND is_active=1;
 | `sidebarJobs` | 7~12개, **반드시 DB 실존 확인**. DB에 없는 항목은 제거하되, 해당 키워드가 heroTags에 없으면 heroTags에 태그로 추가 (정보 손실 방지) |
 | `sidebarMajors` | 3~5개, **반드시 DB 실존 확인** |
 | `sidebarCerts` | 2~4개, `[{name, url}]` 형식. **"~시험" 금지** — LEET·사법시험·TOEIC 등은 시험이지 자격증이 아님. Q-net URL 사용. |
-| `heroTags` | 4~8개, 별칭/세부분류/영문명 포함 |
+| `heroTags` | 4~8개, 별칭/세부분류/영문명 포함. **조사 어미 판정 예외**: validate가 "~의", "~이" 등으로 끝나는 태그를 조사로 판정하지만, "강의", "설비", "기여", "관리" 등은 명사임. validate에 예외 리스트가 있으므로 이런 경우 PASS됨. 그 외 실제 조사(~에서의, ~으로의)로 끝나면 수정 필요. |
 | `youtubeLinks` | 1~3개, oembed 검증 필수. **형식: `[{url: "https://youtube.com/watch?v=...", title: "영상 제목"}]` 객체 배열** — 문자열 배열(`["url"]`) 절대 금지. 문자열 배열이면 UI에 썸네일 안 뜨고 영상 제목 노출 불가. **한국어 영상만 허용** — 제목이 한국어인 한국 영상만 사용. 영어/외국어 영상 금지. 한국어 영상이 없으면 youtubeLinks 비워둠 (영어 영상 절대 넣지 않음). |
+
+**YouTube 검색 우선순위:**
+1. KEIS 직업진로동영상(@KEISwork2011) 채널에서 해당 직업 영상 검색
+2. "직업명 현직자 인터뷰" 한국어 검색
+3. "직업명 진로 탐색" 한국어 검색
+
+**title 인코딩 주의:** oembed에서 가져온 title에 HTML entity(&#39; &amp; 등)가 포함되면 반드시 디코딩 후 저장. 디코딩 불가 시 YouTube 페이지에서 제목 직접 복사. validate가 HTML entity/퍼센트 인코딩 잔류 시 FAIL 처리함.
 
 > ⚠️ **youtubeLinks title 인코딩 주의**: title은 원본 그대로 저장하며 이모지 포함 가능. WebSearch/oembed에서 가져온 title이 깨져 있으면 직접 YouTube 페이지에서 확인 후 수동 입력. curl 명령에 한국어·이모지 포함 제목을 직접 입력하면 EUC-KR로 오염될 수 있으니 반드시 `--data-binary @파일명` 방식으로 JSON 파일을 전송할 것.
 
@@ -175,13 +190,29 @@ SELECT name FROM majors WHERE is_active=1 AND name IN ('전공A', '전공B');
 ```
 > ⚠️ 사이드바에 DB에 없는 직업/전공을 넣으면 404 링크가 생성됨
 
-### 주석 위치 규칙 (필수)
+### 주석 위치 규칙 (필수 — 가장 빈번한 오류)
 
-한 필드에 여러 문장이 있으면 **모든 문장의 마침표 뒤에 출처 주석 [N]을 붙여야 한다.** 마지막 문장에만 달고 앞 문장에 생략하는 것은 금지.
+같은 출처에서 가져온 **연속 문장 블록**의 **마지막 문장 마침표 뒤**에만 [N]을 1회 붙인다.
+다른 출처가 시작되면 새 번호 [N+1].
 
-- 같은 출처면 같은 번호, 다른 출처면 새 번호
-- ✅ `재무관리자는 기업의 자금을 운용한다.[1] ESG 경영 확산으로 수요가 증가하고 있다.[2]`
-- ❌ `재무관리자는 기업의 자금을 운용한다. ESG 경영 확산으로 수요가 증가하고 있다.[1]` (첫 문장 주석 누락)
+✅ GOOD:
+"A 사실이다. B 현상이 있다.[1] C 통계에 따르면 D이다.[2]"
+→ 문장1~2는 출처1에서 가져옴 → 문장2 끝에만 [1]
+→ 문장3~4는 출처2에서 가져옴 → 문장4 끝에만 [2]
+
+❌ BAD (중복):
+"A 사실이다.[1] B 현상이 있다.[1]"
+→ 같은 [1]이 2회 등장 — validate FAIL (각주 중복)
+
+❌ BAD (첫 문장에만):
+"A 사실이다.[1] B 현상이 있다."
+→ 두 번째 문장에 출처 없음. 같은 출처면 마지막 문장 뒤에 [1]이어야 함
+
+❌ BAD (누락):
+"A 사실이다. B 현상이 있다."
+→ 출처 각주 자체가 없음
+
+핵심: [N]은 필드 내에서 각각 정확히 1회만 등장해야 함. validate가 중복 감지하므로 위반 시 FAIL.
 
 ### 출처 수집 규칙
 
@@ -390,6 +421,12 @@ npx wrangler d1 execute careerwiki-kr --remote --command \
 
 > ⚠️ `job_slug`는 해당 직업에 **처음 진입하는 스테이지에만** 설정. 이전 스테이지(학생, 타직업)는 반드시 null.
 
+**강조 스테이지(stage_index) 설정 규칙:**
+`career_tree_job_links.stage_index`는 현재 직업 페이지에서 강조(하이라이트)될 스테이지의 인덱스(0-based).
+- 해당 직업에 **처음 진입하여 본업으로 활동한 스테이지**를 지정
+- 마지막 스테이지가 전직(회장, 교수, 정치인, CEO 등)이면 → 그 직전의 본업 스테이지 인덱스 지정
+- 예: 약사 페이지 → stages: [0:약학대학, 1:약사·약국운영, 2:대한약사회회장] → stage_index=1 (본업)
+
 ---
 
 ## Phase 4: 프로덕션 검증
@@ -425,6 +462,12 @@ node scripts/full-quality-audit.cjs --slug={직업slug}
 
 Phase 4 검증 완료 직후 바로 실행. 방금 보완한 직업의 각주 번호·출처 키 상태를 점검하고 문제가 있으면 수리한다.
 Phase 4에서 `full-quality-audit.cjs` PASS가 나왔더라도 GN·FP·SK 잔재가 있을 수 있으므로 항상 실행.
+
+> 💡 **editService 전역 renumber 동작 이해:**
+> 편집 API로 저장하면 editService가 모든 sources의 id를 전역 순서로 자동 재할당한다.
+> 예: way sources [{id:1},{id:2}], sal sources [{id:1}] → 저장 후 way [{id:1},{id:2}], sal [{id:3}]
+> 따라서 저장 직후 full-quality-audit의 Gate4에서 "id 역전/비순차" WARN이 나오는 것은 정상.
+> Phase 5 진단 시 이 WARN은 무시하고, Gate1(각주 중복/순차) FAIL만 수선 대상으로 취급.
 
 ### 진단 코드 (5종)
 
@@ -470,6 +513,11 @@ FROM jobs WHERE slug='대상슬러그' AND is_active=1;
 
 ### 5-1: 개별 진단 절차 (per-job)
 
+**Step 0 — 등급 띄어쓰기 자동교정 (Phase 5 시작 시 항상 실행):**
+기존 UCJ의 `detailWlb.wlb`와 `detailWlb.social` 값이 "보통이상", "보통이하", "다소높음", "다소낮음" 등 붙여쓰기면:
+→ "보통 이상", "보통 이하", "다소 높음", "다소 낮음"으로 자동 교정하여 수선 필드에 포함.
+validate가 이제 붙여쓰기를 FAIL 처리하므로, Phase 5에서 선제적으로 교정해야 저장 가능.
+
 **Step 1 — 데이터 읽기**:
 - `merged_profile_json` → 텍스트 필드 원본 (way, sal, trivia 등)
 - `user_contributed_json._sources` → 현재 출처 매핑
@@ -503,6 +551,11 @@ way → overviewSalary.sal → overviewProspect.main → trivia
   sal:     [3]    / sources["overviewSalary.sal"] [{id:3}] → 🔴 GN
   trivia:  [4][5][6][7] / sources.trivia 0개 → 🔴 GN + OM
 ```
+
+**Phase 5 추가 체크 — 문장 각주 누락 감지:**
+- 필드에 마침표로 구분된 문장이 2개 이상인데 [N]이 하나도 없는 문장이 끝에 있으면 → 누락 의심
+- 예: "A이다.[1] B이다. C이다." → 마지막 문장 뒤에 [N] 없음 → 수선 대상
+- 같은 출처인 경우 마지막 문장에만 [N]을 붙이면 됨 (다른 출처면 새 번호)
 
 ### 5-2: 수선 실행
 
