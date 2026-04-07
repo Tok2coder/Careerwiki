@@ -1342,7 +1342,7 @@ export const renderLayout = (
       <div class="flex justify-center gap-5 px-5 py-4">
         <button type="button" data-share-kakao class="flex flex-col items-center gap-1.5 group">
           <div class="w-12 h-12 rounded-full bg-[#FEE500] flex items-center justify-center group-hover:scale-105 transition-transform">
-            <img src="/images/kakao-icon.svg" class="w-6 h-6" alt="카카오톡">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#3C1E1E"><path d="M12 3C6.48 3 2 6.36 2 10.5c0 2.67 1.76 5.02 4.4 6.4-.14.52-.9 3.34-.93 3.56 0 0-.02.16.08.22.1.06.22.02.22.02.29-.04 3.37-2.2 3.9-2.57.73.1 1.49.17 2.33.17 5.52 0 10-3.36 10-7.5S17.52 3 12 3z"/></svg>
           </div>
           <span class="text-xs text-wiki-muted">카카오톡</span>
         </button>
