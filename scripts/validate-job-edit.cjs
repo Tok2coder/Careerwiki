@@ -434,6 +434,12 @@ function validate(data) {
   //
   // ※ detailReady.* (curriculum/recruit/training/pathExplore)는 대상 제외
   //    → "== 제목 [N] ==" 헤딩 각주 체계 사용 — 산문 [N] 패턴과 다름
+  //
+  // ⚠️ 무출처 문장 발견 시 처리 절차 (바로 제거 금지):
+  //   1. 바로 앞 [N] 출처 URL을 WebFetch로 방문 → 해당 내용이 있으면 [N]을 문장 끝으로 이동
+  //   2. 같은 출처가 아니면 → merged_profile_json 원문·공식 사이트에서 다른 출처 탐색
+  //   3. 새 출처 확인되면 → [N+1] 추가 후 _sources 등록
+  //   4. 어디서도 확인 불가일 때만 → 제거
 
   // Tier A: 항상 출처 표기 필수 (통계·사실 중심 필드)
   const FULL_CHECK_FIELDS = [
