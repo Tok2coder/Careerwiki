@@ -3606,7 +3606,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
         const validItems = workMainDesc.filter((item: any) => typeof item === 'string' && safeTrim(item))
         if (validItems.length > 0) {
           workMainContent = `<ul class="space-y-2">${validItems.map((item: string) => 
-            `<li class="flex items-start gap-2 text-[15px] text-wiki-text">
+            `<li class="flex items-start gap-2 text-base text-wiki-text">
               <span class="text-wiki-secondary mt-1">▶</span>
               <span>${escapeHtml(safeTrim(item))}</span>
             </li>`
@@ -4073,7 +4073,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     const triviaList = triviaItems
       .map(item => {
         const rendered = formatRichText(item, 'trivia', footnoteMap, sourceTextMap)
-        return `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${rendered}</span></li>`
+        return `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${rendered}</span></li>`
       })
       .join('')
     pushOverviewCard('여담', 'fa-comment-dots', `<ul class="space-y-2">${triviaList}</ul>`)
@@ -4329,7 +4329,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const currList = detailReady.curriculum
         .map(item => extractReadyItem(item, 'curriculum'))
         .filter(text => !!safeTrim(text))
-        .map(text => `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.curriculum', footnoteMap, sourceTextMap)}</span></li>`)
+        .map(text => `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.curriculum', footnoteMap, sourceTextMap)}</span></li>`)
         .join('')
       if (currList) {
         readyBlocks.push(`<div><h3 class="content-heading">정규 교육과정</h3><ul class="space-y-2">${currList}</ul></div>`)
@@ -4351,9 +4351,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
               let domain = ''
               try { domain = new URL(url).hostname.replace('www.', '') } catch {}
               const domainHtml = domain ? ` <span class="text-wiki-muted text-xs">(${escapeHtml(domain)})</span>` : ''
-              return `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary hover:underline">${applyInlineFootnotes(text, 'detailReady.recruit', footnoteMap, sourceTextMap)}</a>${domainHtml}</span></li>`
+              return `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary hover:underline">${applyInlineFootnotes(text, 'detailReady.recruit', footnoteMap, sourceTextMap)}</a>${domainHtml}</span></li>`
             }
-            return `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.recruit', footnoteMap, sourceTextMap)}</span></li>`
+            return `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.recruit', footnoteMap, sourceTextMap)}</span></li>`
           }
           // string인 경우 — 레거시: 소스 URL 도메인 매칭
           const text = extractReadyItem(item, 'recruit')
@@ -4366,10 +4366,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             })
             if (matchedSource?.url) {
               const displayText = text.replace(/\s*\([a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\)\s*$/, '')
-              return `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span><a href="${escapeHtml(matchedSource.url)}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary hover:underline">${applyInlineFootnotes(displayText, 'detailReady.recruit', footnoteMap, sourceTextMap)}</a> <span class="text-wiki-muted text-xs">(${escapeHtml(domain)})</span></span></li>`
+              return `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span><a href="${escapeHtml(matchedSource.url)}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary hover:underline">${applyInlineFootnotes(displayText, 'detailReady.recruit', footnoteMap, sourceTextMap)}</a> <span class="text-wiki-muted text-xs">(${escapeHtml(domain)})</span></span></li>`
             }
           }
-          return `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.recruit', footnoteMap, sourceTextMap)}</span></li>`
+          return `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.recruit', footnoteMap, sourceTextMap)}</span></li>`
         })
         .filter(html => !!html)
         .join('')
@@ -4383,7 +4383,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const certList = detailReady.certificate
         .map(item => extractReadyItem(item, 'certificate'))
         .filter(text => !!safeTrim(text))
-        .map(text => `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(text)}</span></li>`)
+        .map(text => `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(text)}</span></li>`)
         .join('')
       if (certList) {
         readyBlocks.push(`<div class="${readyBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">추천 자격증</h3><ul class="space-y-2">${certList}</ul></div>`)
@@ -4395,7 +4395,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const trainingList = detailReady.training
         .map(item => extractReadyItem(item, 'training'))
         .filter(text => !!safeTrim(text))
-        .map(text => `<li class="flex items-start gap-2 text-[15px] text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.training', footnoteMap, sourceTextMap)}</span></li>`)
+        .map(text => `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.training', footnoteMap, sourceTextMap)}</span></li>`)
         .join('')
       if (trainingList) {
         readyBlocks.push(`<div class="${readyBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">필요 교육/훈련</h3><ul class="space-y-2">${trainingList}</ul></div>`)
@@ -4560,8 +4560,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           
           return `
             <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
-              <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.importance}</td>
-              <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.name)}</td>
+              <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 16px;">${item.importance}</td>
+              <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 16px;">${escapeHtml(item.name)}</td>
             </tr>
           `
         }).join('')
@@ -4585,8 +4585,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
               <table class="w-full" id="${tableId}">
                 <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
                   <tr>
-                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">중요도</th>
-                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">지식</th>
+                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 16px;">중요도</th>
+                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 16px;">지식</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4655,8 +4655,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           
           return `
             <tr class="${hideClass} border-b border-wiki-border/30 hover:bg-wiki-card/30 transition-colors" ${expandableAttr}>
-              <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">${item.importance}</td>
-              <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 15px;">${escapeHtml(item.name)}</td>
+              <td class="px-4 py-3 text-center font-semibold text-wiki-text" style="font-size: 16px;">${item.importance}</td>
+              <td class="px-4 py-3 font-medium text-wiki-text" style="font-size: 16px;">${escapeHtml(item.name)}</td>
             </tr>
           `
         }).join('')
@@ -4680,8 +4680,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
               <table class="w-full" id="${tableId}">
                 <thead class="bg-wiki-card/50 border-b-2 border-wiki-primary/30">
                   <tr>
-                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 15px;">중요도</th>
-                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 15px;">업무환경</th>
+                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="width: 120px; font-size: 16px;">중요도</th>
+                    <th class="px-2 py-2 md:px-4 md:py-3 text-center font-semibold text-wiki-text" style="font-size: 16px;">업무환경</th>
                   </tr>
                 </thead>
                 <tbody>
