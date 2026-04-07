@@ -1072,7 +1072,7 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
   return `
     <div class="space-y-6">
       <!-- 차트 컨테이너 -->
-      <div class="w-full bg-white/5 rounded-2xl px-6 py-6 border border-wiki-border/50">
+      <div class="w-full bg-white/5 rounded-2xl px-2 py-4 sm:px-6 sm:py-6 border border-wiki-border/50">
         <canvas id="${chartId}" style="max-height: 400px;"></canvas>
       </div>
       
@@ -1096,6 +1096,7 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
       (function() {
         const ctx = document.getElementById('${chartId}');
         if (ctx && typeof Chart !== 'undefined') {
+          var isMobile = window.innerWidth < 640;
           new Chart(ctx, {
             type: 'bar',
             data: {
@@ -1104,9 +1105,9 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
                 data: ${JSON.stringify(sortedValues)},
                 backgroundColor: ${JSON.stringify(sortedColors)},
                 borderWidth: 0,
-                borderRadius: 8,
+                borderRadius: isMobile ? 4 : 8,
                 barThickness: 'flex',
-                maxBarThickness: 60
+                maxBarThickness: isMobile ? 36 : 60
               }]
             },
             options: {
@@ -1120,7 +1121,7 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
                   ticks: {
                     color: 'rgba(255, 255, 255, 0.6)',
                     font: {
-                      size: 11
+                      size: isMobile ? 10 : 11
                     },
                     callback: function(value) {
                       return value + '%';
@@ -1135,7 +1136,7 @@ const renderIndicatorChart = (indicatorData: any[]): string => {
                   ticks: {
                     color: 'rgba(255, 255, 255, 0.7)',
                     font: {
-                      size: 11,
+                      size: isMobile ? 10 : 11,
                       weight: '500'
                     },
                     maxRotation: 45,
