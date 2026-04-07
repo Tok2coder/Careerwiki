@@ -1,0 +1,634 @@
+[
+  {
+    "slug": "it-컨설턴트",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 88,
+        "before": "PMP(프로젝트관리전문가)·ITIL 등 IT 관련 자격증이 취업과 경력 개발에 유리하며, MBA 취득 후 전략 컨설턴트로 전환하는 경우도 있다.",
+        "after": "로 성장하며, 국내 IT 대기업·공기업 SI 프로젝트 PM으로 이직하는 경로도 많다.[2]"
+      },
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 73,
+        "before": "준이다.[1] 경력과 소속 기업 규모에 따라 편차가 크며, 신입 컨설턴트는 이보다 낮고 대형 글로벌 컨설팅 펌의 파트너급은 이를 크게 상회한다.",
+        "after": "5만 원(연환산 약 1억 1,900만 원)으로 SW 12개 직종 중 최상위 수준이다.[1]"
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "it기술지원전문가",
+    "changes": [
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 43,
+        "before": "204만 원, 상위 25% 약 5,340만 원)으로 나타난다.[1] IT서비스 기업이나 대기업 내 IT 지원 부서 소속 시 임금이 높은 편이다.",
+        "after": "원(하위 25% 약 3,204만 원, 상위 25% 약 5,340만 원)으로 나타난다.[1]"
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "it테스터-및-it-qa전문가",
+    "changes": [
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 72,
+        "before": " 원이다.[1] 하위 25%는 4,000만 원, 상위 25%는 8,000만 원 수준이며, 자동화 QA 역량과 도메인 전문성에 따라 격차가 크다.",
+        "after": "기준 IT테스터 및 IT QA전문가의 평균 연봉(중위 50%)은 5,550만 원이다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "mlops-엔지니어",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 83,
+        "before": " 공고에서 요구하는 기술 스택(Kubernetes, Docker, MLflow, Airflow)을 직접 구현한 포트폴리오가 핵심 평가 기준이다.",
+        "after": "WS·GCP·Azure의 ML 플랫폼 자격증 취득이 취업 경쟁력 강화에 도움이 된다.[2]"
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [
+      "저장 실패: JOB_NOT_FOUND"
+    ]
+  },
+  {
+    "slug": "sns-마케터",
+    "changes": [],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)",
+      "변경할 내용 없음"
+    ],
+    "errors": []
+  },
+  {
+    "slug": "ux-디자인-컨설턴트",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 65,
+        "before": "격증 취득을 권장하며,[2] 석사 과정을 희망하는 경우 홍익대 IDAS, 고려대 산업디자인전공 등 UX 특화 대학원 진학도 고려할 수 있습니다.",
+        "after": "성 강화를 위해 한국디자인진흥원 주관의 서비스·경험디자인기사 자격증 취득을 권장하며,[2]"
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [
+      "저장 실패: JOB_NOT_FOUND"
+    ]
+  },
+  {
+    "slug": "가구-디자이너",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 92,
+        "before": "쿨(이탈리아 Domus Academy, 덴마크 코펜하겐 등) 수학 후 귀국하여 프리미엄 브랜드나 독립 스튜디오를 운영하는 경로도 주목받고 있다.",
+        "after": "공예기능사·가구제작기능사 등이 있으며, 취득 시 취업과 실무 신뢰도 향상에 유리하다.[3]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가구조립-및-검사원",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 117,
+        "before": "손작업 능력과 꼼꼼한 품질 확인 습관이 중요하다. 경력이 쌓이면 품질 검사 반장, 생산 관리직, 또는 가구 디자인 관련 업무로 전환할 수 있다.",
+        "after": " 일반적이며, 폴리텍대학이나 직업훈련기관에서 목공·가구제작 과정을 이수하면 유리하다.[2]"
+      },
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 40,
+        "before": "및 검사원의 평균 임금은 연 2,400만~2,800만 원 수준이다.[1] 숙련 기술자나 품질 반장으로 승진하면 3,000만 원 이상도 가능하다.",
+        "after": "년 기준 가구조립 및 검사원의 평균 임금은 연 2,400만~2,800만 원 수준이다.[1]"
+      },
+      {
+        "field": "overviewProspect.main",
+        "action": "TRUNCATE",
+        "removedChars": 98,
+        "before": "(OEM) 전환, 가구 수입 증가로 국내 가구 제조 인력 수요가 줄어드는 추세이며, 건설업 경기와 혼인 건수 감소도 부정적 영향을 미치고 있다.",
+        "after": "향후 가구조립 및 검사원의 일자리는 다소 감소할 전망이다.[1]"
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가구조립원",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 59,
+        "before": "검사원으로 성장하는 경우가 많다.[3] 가구 디자인에 관심이 있다면 산업기사 이상의 가구 관련 자격을 취득해 설계 부서로 이동하는 경로도 있다.",
+        "after": "각 공정을 순환하며 숙련도를 높이고, 반장이나 품질 검사원으로 성장하는 경우가 많다.[3]"
+      },
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 40,
+        "before": "가구조립원의 평균 임금은 연 2,600만~3,200만 원 수준이다.[1] 숙련 기술자나 품질 반장으로 승진하면 3,500만 원 이상도 가능하다.",
+        "after": " 2023년 기준 가구조립원의 평균 임금은 연 2,600만~3,200만 원 수준이다.[1]"
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가사관리사",
+    "changes": [
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 43,
+        "before": "조사 기준 파트타임 월 소득은 150만~280만 원 수준이다.[1] 복수의 고객 가정을 담당하거나 돌봄 서비스를 병행하면 수입을 늘릴 수 있다.",
+        "after": "023년 가사근로자 실태조사 기준 파트타임 월 소득은 150만~280만 원 수준이다.[1]"
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가사도우미",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 85,
+        "before": "사 민간자격증이나 정리수납전문가 과정을 이수하면 전문성을 높일 수 있다. 성실함과 친절한 서비스 태도, 기본 위생 관념이 가장 중요한 역량이다.",
+        "after": "스를 시작할 수 있으며, 요리·세탁·청소 등 생활 기술이 실질적인 역량 기준이 된다.[2]"
+      },
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 37,
+        "before": "은 약 200만~250만 원(연 2,400만~3,000만 원) 수준이다.[1] 입주 도우미는 월 300만~450만 원 이상을 받는 경우도 있다.",
+        "after": "평균 월 소득은 약 200만~250만 원(연 2,400만~3,000만 원) 수준이다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가상현실전문가",
+    "changes": [
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 37,
+        "before": "%)은 약 4,800만 원, 상위 25%는 약 7,000만 원 수준이다.[1] 경력과 전문 분야(의료·교육·게임 등)에 따라 임금 편차가 크다.",
+        "after": "균(중위 50%)은 약 4,800만 원, 상위 25%는 약 7,000만 원 수준이다.[1]"
+      },
+      {
+        "field": "overviewProspect.main",
+        "action": "TRUNCATE",
+        "removedChars": 68,
+        "before": "증가할 전망이다.[1] 세계 AR·VR 시장이 지속 성장하고 있으며, 4차산업혁명 핵심 기술로 의료·교육·제조 분야에서 활용이 확대될 전망이다.",
+        "after": "향후 5년간 가상현실전문가의 고용은 증가할 전망이다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가수",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 146,
+        "before": "으로 팬덤을 구축한 후 레이블 계약 또는 독립 발매로 활동한다. 예술고등학교(음악과)는 세 경로 모두에 유리한 조기 전문 훈련 기반을 제공한다.",
+        "after": " 평균 2~5년간 보컬·댄스·연기 집중 트레이닝을 받고 아이돌 또는 솔로로 데뷔한다.[2]"
+      },
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 46,
+        "before": "20만 원, 상위 25%는 약 4,650만 원 수준이다.[1] 소속사 규모, 인지도, 활동 형태(음반·공연·방송 등)에 따라 편차가 매우 크다.",
+        "after": "균(중위 50%)은 약 3,220만 원, 상위 25%는 약 4,650만 원 수준이다.[1]"
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가정교사",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 283,
+        "before": " 고등학교에서는 선택 과목으로 편성됩니다. 가정교사는 기술·가정 교과를 함께 담당하는 경우가 많아, 기술 영역에 대한 연수를 이수하기도 합니다.",
+        "after": "학교에 임용되려면 각 시·도교육청에서 실시하는 중등교원임용경쟁시험에 합격해야 합니다.[2]"
+      },
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 21,
+        "before": " 기준 초봉은 교육공무원 봉급표 9호봉 기준 연 약 3,400만 원 수준이며, 경력에 따라 증가한다.[1] 사립학교는 학교법인별로 차이가 있다.",
+        "after": "육공무원 봉급표 9호봉 기준 연 약 3,400만 원 수준이며, 경력에 따라 증가한다.[1]"
+      },
+      {
+        "field": "overviewProspect.main",
+        "action": "ADD_MARKER",
+        "detail": "[1] 추가 (source: [1] 한국경제 - 초·중등 신규 교사, 2027년까지 30% 줄인다 ()",
+        "before": "저출산에 따른 학령인구 감소로 중등교사 신규 채용 규모가 축소되는 추세입니다. 2023년 중등교사 4,898명에서 2026~2027학년도에는 3",
+        "after": "저출산에 따른 학령인구 감소로 중등교사 신규 채용 규모가 축소되는 추세입니다. 2023년 중등교사 4,898명에서 2026~2027학년도에는 3"
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가축사육자",
+    "changes": [
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 29,
+        "before": "평균(중위 50%)은 약 3,200만 원, 상위 25%는 약 4,800만 원 수준이다.[1] 사육 규모, 축종, 경영 형태에 따라 차이가 크다.",
+        "after": "균(중위 50%)은 약 3,200만 원, 상위 25%는 약 4,800만 원 수준이다.[1]"
+      },
+      {
+        "field": "overviewProspect.main",
+        "action": "ADD_MARKER",
+        "detail": "[1] 추가 (source: https://www.career.go.kr/cloud/w/job/vie)",
+        "before": "향후 5년간 보통 수준의 전망이다. 고령화로 인한 농가 수 감소와 수입 육류와의 경쟁이 지속되는 반면, 국내산 한우·흑돼지 등 프리미엄 가축에 ",
+        "after": "향후 5년간 보통 수준의 전망이다. 고령화로 인한 농가 수 감소와 수입 육류와의 경쟁이 지속되는 반면, 국내산 한우·흑돼지 등 프리미엄 가축에 "
+      }
+    ],
+    "skipped": [
+      "trivia: 텍스트 없음 또는 비문자열 (type=object)"
+    ],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가축사육종사원",
+    "changes": [
+      {
+        "field": "way",
+        "action": "REMOVE",
+        "detail": "소스 없는 무출처 필드 제거",
+        "before": "가축사육종사원이 되려면 축산학, 동물자원학 관련 전공을 졸업하거나 농가 현장 실습을 통해 진입할 수 있다. 농림축산식품부의 청년 농업인 육성 프",
+        "after": "(null — 제거)"
+      },
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 34,
+        "before": "직업정보 2024년 기준 평균 연봉은 약 2,600~4,000만 원 수준이다.[1] 고용 형태(상용직·임시직)와 사육 규모에 따라 차이가 있다.",
+        "after": "리어넷 직업정보 2024년 기준 평균 연봉은 약 2,600~4,000만 원 수준이다.[1]"
+      },
+      {
+        "field": "overviewProspect.main",
+        "action": "TRUNCATE",
+        "removedChars": 41,
+        "before": "준히 증가하나 자동화·규모화로 종사자 수는 완만히 감소 추세이다.[1] 동물 복지 농장, 친환경 축산 등 고부가가치 분야는 성장 가능성이 있다.",
+        "after": "국내 육류 소비는 꾸준히 증가하나 자동화·규모화로 종사자 수는 완만히 감소 추세이다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "게임-그래픽-디자이너",
+    "changes": [
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 64,
+        "before": ",800만 원 수준이다.[1] 대형 게임사와 중소 개발사 간 임금 격차가 크며, 전문 분야(3D 모델링, 컨셉 아트 등) 역량에 따라 달라진다.",
+        "after": "보 2024년 기준 게임 그래픽 디자이너의 평균 연봉은 약 3,800만 원 수준이다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "게임-기획자",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 162,
+        "before": "형 게임사와 인디 게임 개발사다. 직접 게임을 기획·출시하는 인디 개발자 경로도 있으며, 게임잼 참가나 개인 게임 제작 경험이 취업에 유리하다.",
+        "after": "과 등 관련 학과가 있으나 전공보다 포트폴리오와 실력을 우선 평가하는 경향이 강하다.[2]"
+      },
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 25,
+        "before": " 원, 평균(중위 50%)은 약 4,800만 원, 상위 25%는 약 7,000만 원 수준이다.[1] 경력과 소속 기업 규모에 따라 차이가 크다.",
+        "after": "균(중위 50%)은 약 4,800만 원, 상위 25%는 약 7,000만 원 수준이다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "노년-플래너",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 103,
+        "before": "·심리 등 복합적 영역에 대한 전문 지식을 갖출수록 경쟁력이 높아지며, 노후 준비 컨설팅 수요 증가로 민간 전문가로 활동하는 사례도 늘고 있다.",
+        "after": "사 자격을 취득해 경력을 쌓은 후 노후 전문 상담 분야로 진출하는 경로가 일반적이다.[2]"
+      }
+    ],
+    "skipped": [],
+    "errors": [
+      "저장 실패: JOB_NOT_FOUND"
+    ]
+  },
+  {
+    "slug": "노무사",
+    "changes": [
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 38,
+        "before": "준이며, 개업 후에는 수임 규모와 전문 분야에 따라 수입 편차가 크다.[1] 중대재해처벌법 등 전문 분야 특화 시 연 1억 원 이상도 가능하다.",
+        "after": "350만 원 수준이며, 개업 후에는 수임 규모와 전문 분야에 따라 수입 편차가 크다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "노점-및-이동판매원",
+    "changes": [
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 59,
+        "before": "~250만 원 수준으로 추정된다.[1] 성수기 마켓·축제 참가 시 단기 고수익이 가능하지만, 날씨·계절·상권 변화에 수입이 크게 영향을 받는다.",
+        "after": "품목·입지·운영 시간에 따라 편차가 크며, 월 150~250만 원 수준으로 추정된다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "농업교사",
+    "changes": [
+      {
+        "field": "overviewSalary.sal",
+        "action": "TRUNCATE",
+        "removedChars": 21,
+        "before": "년 교원봉급표 기준 신규 임용 시 연봉 약 3,400만 원 수준이며, 경력 및 직급에 따라 증가한다.[1] 사립학교는 학교법인별로 차이가 있다.",
+        "after": "준 신규 임용 시 연봉 약 3,400만 원 수준이며, 경력 및 직급에 따라 증가한다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "mlops-엔지니어",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 83,
+        "before": "... 공고에서 요구하는 기술 스택(Kubernetes, Docker, MLflow, Airflow)을 직접 구현한 포트폴리오가 핵심 평가 기준이다.",
+        "after": "...WS·GCP·Azure의 ML 플랫폼 자격증 취득이 취업 경쟁력 강화에 도움이 된다.[2]"
+      },
+      {
+        "field": "trivia",
+        "action": "TRUNCATE",
+        "removedChars": 65,
+        "before": "...채용 공고가 올라왔다.[1] 반면 커리어넷·워크넷 공식 직업 분류에는 아직 미등재 상태로, 지원자가 스스로 직무를 설계해야 하는 신흥 직업이다.",
+        "after": "...르게 성장했으며, 국내 잡코리아 기준 2024년 약 228건의 채용 공고가 올라왔다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "ux-디자인-컨설턴트",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 65,
+        "before": "...격증 취득을 권장하며,[2] 석사 과정을 희망하는 경우 홍익대 IDAS, 고려대 산업디자인전공 등 UX 특화 대학원 진학도 고려할 수 있습니다.",
+        "after": "...성 강화를 위해 한국디자인진흥원 주관의 서비스·경험디자인기사 자격증 취득을 권장하며,[2]"
+      },
+      {
+        "field": "trivia",
+        "action": "TRUNCATE",
+        "removedChars": 85,
+        "before": "...단순 반복 업무를 대체하는 흐름 속에서도 사용자 심리 분석과 전략 설계 역량을 갖춘 UX 전문가는 AI로 대체되기 어려운 직군으로 평가받습니다.",
+        "after": "...전략적으로 활용하는 기업은 그렇지 않은 기업보다 23% 높은 수익 성장을 기록합니다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "노년-플래너",
+    "changes": [
+      {
+        "field": "way",
+        "action": "TRUNCATE",
+        "removedChars": 103,
+        "before": "...·심리 등 복합적 영역에 대한 전문 지식을 갖출수록 경쟁력이 높아지며, 노후 준비 컨설팅 수요 증가로 민간 전문가로 활동하는 사례도 늘고 있다.",
+        "after": "...사 자격을 취득해 경력을 쌓은 후 노후 전문 상담 분야로 진출하는 경로가 일반적이다.[2]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "it-컨설턴트",
+    "changes": [
+      {
+        "field": "trivia",
+        "action": "TRUNCATE",
+        "removedChars": 160,
+        "before": "...쟁하고 있다. 디지털 전환 컨설팅 프로젝트 1건의 규모가 수백억 원에 달하는 경우도 있어, IT컨설턴트 1명이 만들어내는 부가가치가 매우 크다.",
+        "after": "... 약 780억 달러(약 112조 원) 규모로 연평균 6% 이상 성장이 지속되고 있다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "it기술지원전문가",
+    "changes": [
+      {
+        "field": "trivia",
+        "action": "TRUNCATE",
+        "removedChars": 74,
+        "before": "...된다.[1] 2019년 발표된 ITIL 4는 애자일·DevOps와의 통합을 강화하여 디지털 전환 시대의 IT서비스 관리 역량 지표로 자리잡았다.",
+        "after": "...서비스수준계약)에 따라 인시던트를 체계적으로 처리하는 데 핵심 프레임워크로 활용된다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "sns-마케터",
+    "changes": [
+      {
+        "field": "trivia",
+        "action": "TRUNCATE",
+        "removedChars": 102,
+        "before": "...or economy) 시장 규모는 약 2,500억 달러에 달하는 것으로 추산되며, SNS 마케터는 이 성장세의 핵심 직군으로 부상하고 있습니다.",
+        "after": "...25개의 SNS를 동시에 사용하며 인스타그램 이용률은 전년 대비 96% 증가했습니다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가구조립-및-검사원",
+    "changes": [
+      {
+        "field": "trivia",
+        "action": "TRUNCATE",
+        "removedChars": 118,
+        "before": "... 가구 수요가 꾸준히 증가하고 있다. 가구 조립 검사원은 수백 개 부품의 결합 상태를 확인하며, 불량률 1% 이하 유지가 일반적인 품질 목표다.",
+        "after": "...억 5천만 개의 가구 부품을 생산하며, 이를 조립·검사하는 인력이 수만 명에 달한다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가구조립원",
+    "changes": [
+      {
+        "field": "trivia",
+        "action": "TRUNCATE",
+        "removedChars": 136,
+        "before": "...Y 가구 트렌드에도 영향을 미쳤다. 숙련된 가구 조립원은 초보자보다 3~5배 빠르게 작업하며, 대형 책장 한 조를 10분 내에 완성하기도 한다.",
+        "after": "...시장 규모는 연간 약 6조 원으로, 코로나19 이후 홈퍼니싱 열풍으로 크게 성장했다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가사관리사",
+    "changes": [
+      {
+        "field": "trivia",
+        "action": "TRUNCATE",
+        "removedChars": 69,
+        "before": "... 성장 중이다.[2] 일부 선진국에서는 가사관리사를 국가 자격으로 관리하며, 전문화된 청소 기술과 수납 정리 역량이 중요한 경쟁력이 되고 있다.",
+        "after": "...장 규모는 2023년 기준 약 1조 원을 넘어섰으며 연평균 20% 이상 성장 중이다.[2]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가수",
+    "changes": [
+      {
+        "field": "trivia",
+        "action": "TRUNCATE",
+        "removedChars": 126,
+        "before": "...실질적 수익 발생까지 상당한 시간이 걸린다. K-pop 한류 효과로 한국 대중음악은 2024년 기준 전 세계 180개국 이상에서 소비되고 있다.",
+        "after": "...은 2022년 기준 약 65%이며, 2016년 약 80% 대비 15%포인트 하락했다.[1]"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가정교사",
+    "changes": [
+      {
+        "field": "trivia",
+        "action": "REMOVE",
+        "detail": "소스 없음 — 필드 제거",
+        "before": "기술·가정 통합 교과에서 기술 교사가 가정 영역까지 연수받아 가르치는 경우는 있지만, 가정 교사가 기술 영역 연수를 받아 가르치는 경우가 훨씬 ",
+        "after": "(null)"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  },
+  {
+    "slug": "가축사육자",
+    "changes": [
+      {
+        "field": "trivia",
+        "action": "ADD_MARKER",
+        "detail": "[1] 추가 (source: https://www.hanwoo.or.kr)",
+        "before": "2024년 전국한우능력평가대회에서 경북 영천 풍산농장의 홍창영 대표가 출품한 한우가 대통령상을 수상하며 역대 최고 경락가인 9,300만 원을 기",
+        "after": "2024년 전국한우능력평가대회에서 경북 영천 풍산농장의 홍창영 대표가 출품한 한우가 대통령상을 수상하며 역대 최고 경락가인 9,300만 원을 기"
+      }
+    ],
+    "skipped": [],
+    "errors": [],
+    "saved": true
+  }
+]
