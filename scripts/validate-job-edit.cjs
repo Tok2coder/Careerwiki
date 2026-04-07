@@ -276,6 +276,7 @@ function validate(data) {
   ];
 
   const sentenceFields = ['way', 'overviewSalary.sal', 'overviewProspect.main', 'trivia',
+    'summary', 'overviewAbilities.technKnow',
     'detailWlb.wlbDetail', 'detailWlb.socialDetail'];
 
   for (const fieldPath of sentenceFields) {
@@ -426,39 +427,68 @@ function validate(data) {
   }
 
   // ── 11. 무출처 문장 감지 ──
-  // Case 1: [N] 마커가 전혀 없는데 30자 이상의 서술 텍스트 → WARN
-  // Case 2: 마지막 [N] 이후 10자 이상의 완성 문장 존재 → WARN
+  //
+  // 2-티어 검사:
+  //   Tier A (FULL):    [N] 마커 없음 → WARN  +  마지막 [N] 이후 문장 → WARN
+  //   Tier B (TRAIL):   마지막 [N] 이후 문장만 → WARN  (마커 없음은 허용)
+  //
+  // ※ detailReady.* (curriculum/recruit/training/pathExplore)는 대상 제외
+  //    → "== 제목 [N] ==" 헤딩 각주 체계 사용 — 산문 [N] 패턴과 다름
 
-  const UNSOURCED_FIELDS = ['way', 'overviewSalary.sal', 'overviewProspect.main', 'trivia'];
+  // Tier A: 항상 출처 표기 필수 (통계·사실 중심 필드)
+  const FULL_CHECK_FIELDS = [
+    'way',
+    'overviewSalary.sal',
+    'overviewProspect.main',
+    'trivia',
+  ];
 
-  for (const fieldPath of UNSOURCED_FIELDS) {
+  // Tier B: [N]이 하나라도 있으면 trailing만 검사 (일반 서술도 허용)
+  const TRAILING_CHECK_FIELDS = [
+    'summary',
+    'overviewAbilities.technKnow',
+    'detailWlb.wlbDetail',
+    'detailWlb.socialDetail',
+  ];
+
+  function checkTrailingSentence(text, fieldPath) {
+    const allMarkers = [...text.matchAll(/\[\d+\]/g)];
+    if (allMarkers.length === 0) return; // Tier B는 마커 없으면 패스
+    const lastMarker = allMarkers[allMarkers.length - 1];
+    const afterLast = text.substring(lastMarker.index + lastMarker[0].length).trim();
+    if (afterLast.length >= 10) {
+      const hasFinalEnding = /[다요]\.|습니다\.|입니다\.|됩니다\.|합니다\./.test(afterLast);
+      const isSubstantial = afterLast.length >= 20;
+      if (hasFinalEnding || isSubstantial) {
+        warnings.push(`[무출처] ${fieldPath}: 마지막 ${lastMarker[0]} 이후 미출처 문장 (${afterLast.length}자) — "${afterLast.substring(0, 60)}"`);
+      }
+    }
+  }
+
+  for (const fieldPath of FULL_CHECK_FIELDS) {
     const text = getNestedField(fields, fieldPath);
     if (!text || typeof text !== 'string') continue;
-
     const trimmed = text.trim();
     if (trimmed.length < 10) continue;
 
     const allMarkers = [...trimmed.matchAll(/\[\d+\]/g)];
 
     if (allMarkers.length === 0) {
-      // 한국어 완성 문장 패턴 확인
       const hasSentence = /[가-힣]{3,}[다요]./.test(trimmed);
       if (hasSentence && trimmed.length >= 30) {
         warnings.push(`[무출처] ${fieldPath}: [N] 각주 마커 없음 (${trimmed.length}자) — 모든 서술에 출처 표기 필수`);
       }
     } else {
-      const lastMarker = allMarkers[allMarkers.length - 1];
-      const afterLast = trimmed.substring(lastMarker.index + lastMarker[0].length).trim();
-
-      if (afterLast.length >= 10) {
-        const hasFinalEnding = /[다요]\.|습니다\.|입니다\.|됩니다\.|합니다\./.test(afterLast);
-        const isSubstantial = afterLast.length >= 20;
-
-        if (hasFinalEnding || isSubstantial) {
-          warnings.push(`[무출처] ${fieldPath}: 마지막 ${lastMarker[0]} 이후 미출처 문장 (${afterLast.length}자) — "${afterLast.substring(0, 60)}"`);
-        }
-      }
+      checkTrailingSentence(trimmed, fieldPath);
     }
+  }
+
+  for (const fieldPath of TRAILING_CHECK_FIELDS) {
+    const text = getNestedField(fields, fieldPath);
+    if (!text || typeof text !== 'string') continue;
+    const trimmed = text.trim();
+    if (trimmed.length < 10) continue;
+    checkTrailingSentence(trimmed, fieldPath);
   }
 
   return { errors, warnings };
