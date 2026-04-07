@@ -426,6 +426,26 @@ function validate(data) {
     }
   }
 
+  // ── 12. detailReady 배열 항목 타입 검사 ──
+  // 각 항목은 반드시 plain string — {text:"..."} 등 객체 형태이면 렌더링 버그 발생
+
+  if (fields.detailReady) {
+    const dr = typeof fields.detailReady === 'string' ? JSON.parse(fields.detailReady) : fields.detailReady;
+    for (const sub of ['curriculum', 'recruit', 'training', 'certificate', 'researchList']) {
+      const arr = dr[sub];
+      if (!Array.isArray(arr)) continue;
+      for (let i = 0; i < arr.length; i++) {
+        const item = arr[i];
+        if (item !== null && typeof item !== 'string') {
+          errors.push(
+            `[치명] detailReady.${sub}[${i}] 타입이 "${typeof item}" (${JSON.stringify(item).substring(0, 60)}) — ` +
+            `반드시 plain string이어야 함. 객체 저장 시 각주 렌더링 버그 발생!`
+          );
+        }
+      }
+    }
+  }
+
   // ── 11. 무출처 문장 감지 ──
   //
   // 2-티어 검사:

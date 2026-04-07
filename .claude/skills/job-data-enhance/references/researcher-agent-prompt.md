@@ -24,7 +24,7 @@
 
 ### 항상 새로 작성 (건너뛰면 안 됨)
 - **way**: 되는 방법 200~500자, string 타입. 각주 [N] 필수. 자격요건·시험·진입경로·실무팁. 교육과정 목록 나열 금지 (→ detailReady)
-- **detailReady**: {curriculum:[5개+구체적교육과정], recruit:[3+채용경로], training:[2+심화과정]}
+- **detailReady**: {curriculum:[5개+구체적교육과정], recruit:[3+채용경로], training:[2+심화과정]} — **각 배열 항목은 반드시 plain string** (`"컴퓨터공학과"` 형식). `{text:"..."}` 또는 `{title:"...", text:"...", link:null}` 등 객체 형태 절대 금지. 객체 저장 시 각주 렌더링 버그 발생 이력 있음.
 - **trivia**: 이 직업을 진지하게 생각하게 만드는 검증된 팩트 1개. 출처 없으면 금지
 - **detailWlb.wlbDetail**: 130~200자, 근무강도·야근·교대 중심. **임금 정보 절대 금지**
 - **detailWlb.socialDetail**: 100~160자, 사회적 영향·공익만. **근무환경·취업전망 금지**
@@ -69,6 +69,7 @@ youtubeLinks의 각 영상에 대해:
 - **같은 [N] 번호 한 필드에 2회 이상 사용**
 - **sources 배열 길이 < 본문 최대 [N]**
 - **way를 배열로 작성** — 반드시 string
+- **detailReady 항목을 객체로 작성** — `{text:"..."}` 등 객체 형태 절대 금지, 반드시 `"문자열"` plain string
 - **직업 관련성 없는 YouTube 영상** (직업명/키워드 없는 제목)
 
 ## 반환 형식 (이 JSON을 마지막에 출력)

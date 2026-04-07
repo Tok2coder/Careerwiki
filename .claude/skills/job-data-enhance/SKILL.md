@@ -189,7 +189,7 @@ Phase 0 진단 직후, Phase 1 리서치 시작 전에 실행.
 | 필드 | 분량 | 핵심 주의 |
 |------|------|----------|
 | `way` | 200~500자, string | **배열 절대 금지**. 서술형 진로 경로 (자격요건·시험·진입경로). 교육과정 목록 나열 금지 → detailReady |
-| `detailReady` | curriculum 5개+, recruit 3+, training 2+ | 교육과정/채용/훈련 **배열** (way와 혼동 금지) |
+| `detailReady` | curriculum 5개+, recruit 3+, training 2+ | 교육과정/채용/훈련 **배열** (way와 혼동 금지). **각 항목은 반드시 plain string** — `{text:"..."}`, `{title:"...",text:"...",link:null}` 객체 형태 절대 금지. 객체 저장 시 렌더링 버그 발생 이력 있음. |
 | `trivia` | 출처 있는 팩트 1개 | 뻔한 직업 설명 금지. 의외의 통계/현실 |
 | `detailWlb.wlbDetail` | 130~200자 | 근무시간·야근·교대. **임금 정보 절대 금지** |
 | `detailWlb.socialDetail` | 100~160자 | 사회적 영향·공익만. 근무환경·취업전망 금지 |
