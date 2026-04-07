@@ -302,7 +302,7 @@ export const renderLayout = (
               font-size: 19px;
             }
             .content-heading {
-              font-size: 16px;
+              font-size: 18px;
             }
             /* 모바일 네비게이션 로고 크기 조정 */
             nav img[alt*="로고"] {
