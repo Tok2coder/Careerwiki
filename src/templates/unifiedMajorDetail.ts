@@ -1245,7 +1245,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       
       // 진학률 (after_graduation) - 도넛 차트
       if (isUnifiedChartData(chartData?.after_graduation)) {
-        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.after_graduation, 'graduation')}</div>`)
+        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-3 sm:p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.after_graduation, 'graduation')}</div>`)
       } else if (chartData?.after_graduation && chartData.after_graduation.length > 0) {
         const chartId = generateChartId('graduation-chart')
         const labels = chartData.after_graduation.map((item: { item?: string; data?: string }) => item.item || '')
@@ -1261,7 +1261,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         ).join('')
         
         chartCards.push(`
-          <div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">
+          <div class="bg-wiki-bg/40 rounded-2xl p-3 sm:p-5 border border-wiki-border/40">
             <h5 class="text-[16px] font-bold text-wiki-secondary mb-4 flex items-center gap-2">
               <i class="fas fa-graduation-cap text-sm"></i>
               진학률
@@ -1305,7 +1305,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       
       // 취업률 (employment_rate) - 바 차트 + 진학률과 동일한 범례 스타일
       if (isUnifiedChartData(chartData?.employment_rate)) {
-        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.employment_rate, 'emprate')}</div>`)
+        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-3 sm:p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.employment_rate, 'emprate')}</div>`)
       } else if (chartData?.employment_rate && chartData.employment_rate.length > 0) {
         const chartId = generateChartId('emprate-chart')
         const labels = chartData.employment_rate.map((item: { item?: string; data?: string }) => item.item || '')
@@ -1322,7 +1322,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         ).join('')
         
         chartCards.push(`
-          <div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">
+          <div class="bg-wiki-bg/40 rounded-2xl p-3 sm:p-5 border border-wiki-border/40">
             <h5 class="text-[16px] font-bold text-wiki-secondary mb-4 flex items-center gap-2">
               <i class="fas fa-briefcase text-sm"></i>
               취업률
@@ -1369,7 +1369,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       
       // 월평균 임금 분포 (avg_salary) - 도넛 차트
       if (isUnifiedChartData(chartData?.avg_salary)) {
-        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.avg_salary, 'salary')}</div>`)
+        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-3 sm:p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.avg_salary, 'salary')}</div>`)
       } else if (chartData?.avg_salary && chartData.avg_salary.length > 0) {
         const chartId = generateChartId('salary-chart')
         const labels = chartData.avg_salary.map((item: { item?: string; data?: string }) => item.item || '')
@@ -1385,7 +1385,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         ).join('')
         
         chartCards.push(`
-          <div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">
+          <div class="bg-wiki-bg/40 rounded-2xl p-3 sm:p-5 border border-wiki-border/40">
             <h5 class="text-[16px] font-bold text-wiki-secondary mb-4 flex items-center gap-2">
               <i class="fas fa-won-sign text-sm"></i>
               월평균 임금 분포
@@ -1429,7 +1429,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       
       // 첫 직장 만족도 (satisfaction) - 도넛 차트
       if (isUnifiedChartData(chartData?.satisfaction)) {
-        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.satisfaction, 'satisfaction')}</div>`)
+        chartCards.push(`<div class="bg-wiki-bg/40 rounded-2xl p-3 sm:p-5 border border-wiki-border/40">${renderUnifiedChart(chartData.satisfaction, 'satisfaction')}</div>`)
       } else if (chartData?.satisfaction && chartData.satisfaction.length > 0) {
         const chartId = generateChartId('satisfaction-chart')
         const labels = chartData.satisfaction.map((item: { item?: string; data?: string }) => item.item || '')
@@ -1446,7 +1446,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         ).join('')
         
         chartCards.push(`
-          <div class="bg-wiki-bg/40 rounded-2xl p-5 border border-wiki-border/40">
+          <div class="bg-wiki-bg/40 rounded-2xl p-3 sm:p-5 border border-wiki-border/40">
             <h5 class="text-[16px] font-bold text-wiki-secondary mb-4 flex items-center gap-2">
               <i class="fas fa-face-smile text-sm"></i>
               첫 직장 만족도
@@ -1490,7 +1490,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       
       if (chartCards.length > 0) {
         metricsContent.push(`
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div class="grid grid-cols-2 gap-2 sm:gap-3 mb-4">
             ${chartCards.join('')}
           </div>
           <p class="text-xs text-wiki-muted/70 italic text-right mb-4">자료: 한국고용정보원, 대졸자 직업이동 경로조사(2020)</p>
@@ -1553,7 +1553,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       
       if (textMetrics.length > 0) {
         metricsContent.push(`
-          <div class="grid md:grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-2 sm:gap-3">
             ${textMetrics.join('')}
           </div>
         `)
