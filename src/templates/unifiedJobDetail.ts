@@ -2349,10 +2349,15 @@ const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<stri
 
   // 관련 가이드 (이 직업을 참조하는 HowTo)
   if (relatedHowtos?.length) {
-    const howtoList = relatedHowtos.map(howto => {
+    const guideLimit = 5
+    const visibleHowtos = relatedHowtos.slice(0, guideLimit)
+    const hiddenHowtos = relatedHowtos.slice(guideLimit)
+    const hasMoreGuides = relatedHowtos.length > guideLimit
+
+    const renderHowtoItem = (howto: any, isHidden: boolean) => {
       const summary = howto.summary ? escapeHtml(howto.summary.length > 60 ? howto.summary.slice(0, 60) + '…' : howto.summary) : ''
       return `
-        <li>
+        <li${isHidden ? ' class="hidden-item" style="display: none;"' : ''}>
           <a href="/howto/${encodeURIComponent(howto.slug)}" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
             <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
               <i class="fas fa-book-open text-xs" aria-hidden="true"></i>
@@ -2365,12 +2370,31 @@ const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<stri
           </a>
         </li>
       `
-    }).join('')
+    }
+
+    const howtoList = [
+      ...visibleHowtos.map(h => renderHowtoItem(h, false)),
+      ...hiddenHowtos.map(h => renderHowtoItem(h, true))
+    ].join('')
+
+    const toggleButton = hasMoreGuides ? `
+      <button class="expand-toggle mt-3 w-full px-3 py-2 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200 flex items-center justify-center gap-2 text-sm text-wiki-muted hover:text-wiki-primary" data-expanded="false">
+        <span class="toggle-text">더보기</span>
+        <span class="toggle-count text-xs opacity-75">(+${hiddenHowtos.length})</span>
+        <i class="fas fa-chevron-down text-xs toggle-icon transition-transform"></i>
+      </button>
+    ` : ''
+
     sections.push(
       renderSidebarSection(
         '관련 가이드',
         'fa-book-open',
-        `<ul class="space-y-2" role="list">${howtoList}</ul>`
+        `
+          <div class="expandable-list">
+            <ul class="space-y-2" role="list">${howtoList}</ul>
+            ${toggleButton}
+          </div>
+        `
       )
     )
   }
