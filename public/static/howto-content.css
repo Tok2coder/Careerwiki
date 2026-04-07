@@ -754,12 +754,11 @@
 
 /* 목차(TOC) */
 .howto-toc {
-  background: rgba(15, 23, 42, 0.3);
-  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(15, 20, 35, 0.85);
+  border: none;
   border-radius: 1rem;
   margin: 1.5rem 0 2.5rem;
   overflow: hidden;
-  backdrop-filter: blur(12px);
 }
 .howto-toc summary {
   padding: 1rem 1.5rem;
@@ -772,7 +771,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: none;
   transition: color 0.2s;
 }
 .howto-toc summary .toc-icon {
@@ -786,7 +785,7 @@
   font-size: 16px;
 }
 .howto-toc[open] summary {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: none;
 }
 .howto-toc summary:hover {
   color: #e2e8f0;
