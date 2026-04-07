@@ -2355,17 +2355,13 @@ const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<stri
     const hasMoreGuides = relatedHowtos.length > guideLimit
 
     const renderHowtoItem = (howto: any, isHidden: boolean) => {
-      const summary = howto.summary ? escapeHtml(howto.summary.length > 60 ? howto.summary.slice(0, 60) + '…' : howto.summary) : ''
       return `
         <li${isHidden ? ' class="hidden-item" style="display: none;"' : ''}>
           <a href="/howto/${encodeURIComponent(howto.slug)}" class="group flex items-center gap-3 px-3 py-2.5 rounded-lg border border-wiki-border/40 bg-wiki-bg/40 hover:border-wiki-primary/60 hover:bg-wiki-primary/5 transition-all duration-200">
             <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/10 text-wiki-primary group-hover:bg-wiki-primary/20 transition-colors">
               <i class="fas fa-book-open text-xs" aria-hidden="true"></i>
             </span>
-            <div class="min-w-0 flex-1">
-              <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors block truncate">${escapeHtml(howto.title)}</span>
-              ${summary ? `<p class="text-xs text-wiki-muted truncate mt-0.5">${summary}</p>` : ''}
-            </div>
+            <span class="text-sm text-wiki-text group-hover:text-white font-medium transition-colors truncate">${escapeHtml(howto.title)}</span>
             <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all shrink-0" aria-hidden="true"></i>
           </a>
         </li>
@@ -2423,9 +2419,9 @@ const renderJobSidebar = (profile: UnifiedJobDetail, existingJobSlugs?: Map<stri
 
       const renderCertificate = (label: string, isHidden: boolean = false) => `
         <li${isHidden ? ' class="hidden-item" style="display: none;"' : ''}>
-          <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-wiki-bg/40 border border-wiki-border/40 hover:border-wiki-primary/40 hover:bg-wiki-primary/5 transition-all duration-200">
-            <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-wiki-primary/15 text-wiki-primary">
-              <i class="fas fa-certificate text-[9px]" aria-hidden="true"></i>
+          <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-wiki-bg/40 border border-wiki-border/40 hover:border-wiki-primary/40 hover:bg-wiki-primary/5 transition-all duration-200">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/15 text-wiki-primary">
+              <i class="fas fa-certificate text-xs" aria-hidden="true"></i>
             </span>
             <span class="text-sm text-wiki-text font-medium">${escapeHtml(label)}</span>
           </div>
