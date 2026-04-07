@@ -4280,11 +4280,13 @@ const DetailTabs = (() => {
         
         let nextSwipeIndex
         if (diffX > 0) {
-          // 오른쪽으로 스와이프 → 이전 탭
-          nextSwipeIndex = (currentSwipeIndex - 1 + swipeableTriggers.length) % swipeableTriggers.length
+          // 오른쪽으로 스와이프 → 이전 탭 (첫 탭이면 무시)
+          if (currentSwipeIndex === 0) return
+          nextSwipeIndex = currentSwipeIndex - 1
         } else {
-          // 왼쪽으로 스와이프 → 다음 탭
-          nextSwipeIndex = (currentSwipeIndex + 1) % swipeableTriggers.length
+          // 왼쪽으로 스와이프 → 다음 탭 (마지막 탭이면 무시)
+          if (currentSwipeIndex === swipeableTriggers.length - 1) return
+          nextSwipeIndex = currentSwipeIndex + 1
         }
         
         const nextTrigger = swipeableTriggers[nextSwipeIndex]
