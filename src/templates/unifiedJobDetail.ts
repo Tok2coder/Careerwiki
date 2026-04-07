@@ -1908,22 +1908,22 @@ const renderCombinedDistributionCharts = (
     const chartData = data.map(e => e.numeric)
 
     return `
-      <div class="flex-1 flex flex-col items-center">
-        <h3 class="text-lg font-bold text-wiki-secondary mb-4 text-center">${title}</h3>
-        <div class="w-full max-w-xs mx-auto mb-4">
+      <div class="flex flex-col items-center min-w-0">
+        <h3 class="text-base sm:text-lg font-bold text-wiki-secondary mb-3 sm:mb-4 text-center">${title}</h3>
+        <div class="w-full max-w-[160px] sm:max-w-xs mx-auto mb-3 sm:mb-4">
           <canvas id="${chartId}"></canvas>
         </div>
-        <div class="w-full max-w-xs space-y-2.5">
+        <div class="w-full space-y-1.5 sm:space-y-2.5">
           ${sortedData.map((entry, idx) => {
             // 원본 데이터에서 인덱스 찾기 (색상 매칭용)
             const originalIdx = data.findIndex(d => d.label === entry.label)
             return `
-            <div class="flex items-center justify-between content-text py-1">
-              <div class="flex items-center gap-2.5">
-                <div class="w-4 h-4 rounded-full flex-shrink-0" style="background-color: ${chartColors[originalIdx % chartColors.length]}"></div>
-                <span class="text-wiki-text font-medium">${escapeHtml(entry.label)}</span>
+            <div class="flex items-center justify-between py-0.5 sm:py-1" style="font-size:14px;">
+              <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0" style="background-color: ${chartColors[originalIdx % chartColors.length]}"></div>
+                <span class="text-wiki-text font-medium truncate">${escapeHtml(entry.label)}</span>
               </div>
-              <span class="font-bold text-wiki-primary">${entry.raw.includes('%') ? entry.raw : entry.raw + '%'}</span>
+              <span class="font-bold text-wiki-primary shrink-0 ml-1">${entry.raw.includes('%') ? entry.raw : entry.raw + '%'}</span>
             </div>
           `}).join('')}
         </div>
@@ -1979,7 +1979,7 @@ const renderCombinedDistributionCharts = (
     const majorChartId = `chart-major-${timestamp}`
     
     chartsHtml = `
-      <div class="flex flex-col lg:flex-row gap-8">
+      <div class="grid grid-cols-2 gap-4 sm:gap-8">
         ${renderSingleChart(educationData, '학력 분포', educationChartId, false)}
         ${renderSingleChart(majorData, '전공 분포', majorChartId, true)}
       </div>
