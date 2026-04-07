@@ -2502,9 +2502,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       const hasMoreSubs = hiddenSubs.length > 0
       
       const mainItem = `
-        <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-wiki-bg/40 border border-wiki-border/40 hover:border-wiki-primary/40 hover:bg-wiki-primary/5 transition-all duration-200">
-          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-wiki-primary/15 text-wiki-primary">
-            <i class="fas fa-certificate text-[9px]" aria-hidden="true"></i>
+        <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-wiki-bg/40 border border-wiki-border/40 hover:border-wiki-primary/40 hover:bg-wiki-primary/5 transition-all duration-200">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-wiki-primary/15 text-wiki-primary">
+            <i class="fas fa-certificate text-xs" aria-hidden="true"></i>
           </span>
           <span class="text-sm text-wiki-text font-medium">${escapeHtml(licenseItem.name)}</span>
         </div>
