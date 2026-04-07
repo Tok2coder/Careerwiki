@@ -2134,7 +2134,8 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
 
   return `
     <nav
-      class="glass-card border px-4 py-6 md:px-6 rounded-2xl border-wiki-border/60 bg-wiki-bg/70"
+      class="px-4 py-6 md:px-6 rounded-2xl"
+      style="background: rgba(15, 20, 35, 0.85);"
       data-section-toc="${sectionKey}"
       data-cw-telemetry-scope="${sectionKey}-toc"
       data-cw-telemetry-component="section-toc"
