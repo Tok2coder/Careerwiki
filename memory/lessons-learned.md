@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-04-07] detailReady 배열 항목 객체 저장 → 각주 렌더링 버그
+- **상황**: detailReady.curriculum/training 항목이 `{text:"..."}`, `{curriculum:"..."}`, `{title:"...",text:"...",link:null}` 객체로 저장되어 각주가 렌더링 안 됨
+- **원인**: researcher 에이전트가 항목을 객체 형태로 draft 작성. `job-editor.ts`의 `deepMerge`가 변환 없이 그대로 저장. `extractReadyItem`이 string만 처리해서 객체면 빈 문자열 반환
+- **해결**: (1) `extractReadyItem`에 `item[key] || item.name || item.value || item.text || ''` 폴백 추가 (이미 배포), (2) SKILL.md + researcher-agent-prompt.md에 plain string 필수 규칙 추가, (3) validate-job-edit.cjs Rule 12 추가, (4) DB 181개 직업 일괄 수정 완료
+- **교훈**: detailReady 배열 항목은 **반드시 plain string**. 어떤 객체 형태도 금지. API가 타입 변환 없이 저장하므로 에이전트 출력 단계에서 강제해야 함
+
 ### [2026-03-31] user_contributed_json way 필드 배열→문자열 타입 불일치로 500 에러
 - **상황**: 배치 75 데이터 보완 후 6개 직업 페이지(IT기술지원전문가 등)가 500 에러. `formatRichText`에서 `value.trim()` 호출 시 `e.trim is not a function` TypeError 발생
 - **원인**: user_contributed_json의 `way` 필드가 문자열 대신 배열(`["항목1", "항목2"]`)로 저장됨. `deepMergeProfile`이 배열을 그대로 덮어써서 merged_profile_json의 문자열 `way`를 배열로 교체. `formatRichText`는 string만 기대하므로 `.trim()` 호출 시 크래시
