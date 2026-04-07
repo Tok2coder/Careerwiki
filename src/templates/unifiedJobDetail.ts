@@ -4340,7 +4340,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     // 헬퍼: 객체 또는 문자열에서 텍스트 추출
     const extractReadyItem = (item: any, key: string): string => {
       if (typeof item === 'string') return item
-      if (item && typeof item === 'object') return item[key] || item.name || item.value || ''
+      if (item && typeof item === 'object') return item[key] || item.name || item.value || item.text || ''
       return ''
     }
 
