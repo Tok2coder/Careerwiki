@@ -37,6 +37,7 @@ description: >
 | 규칙 | 내용 |
 |------|------|
 | `way` 타입 | **반드시 string** — 배열이면 즉시 500 에러 |
+| `detailReady` 배열 항목 타입 | `curriculum`/`training` 항목은 **반드시 plain string** — `{text:"..."}` 객체이면 각주 렌더링 깨짐 (Rule 12로 FAIL 차단). `recruit`만 `{text, url}` 객체 허용 |
 | 편집 API URL | `POST https://careerwiki.org/api/job/{id}/edit` |
 | 직업 페이지 URL | `https://careerwiki.org/job/슬러그` (`.kr` 또는 `/jobs` 절대 금지) |
 | R2 이미지 키 | `jobs/job-{slug}.webp` — `uploads/` prefix 절대 금지 |

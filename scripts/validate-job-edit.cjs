@@ -53,14 +53,27 @@ function validate(data) {
     if (!dr.curriculum || dr.curriculum.length < 3) {
       warnings.push(`[필드] detailReady.curriculum이 ${dr.curriculum?.length || 0}개 (최소 5개 권장)`);
     }
-    // Rule 12: detailReady 배열 항목 타입 검사 (recruit 제외)
-    // curriculum/training 항목은 반드시 plain string — {text:...} 객체이면 렌더링 버그 발생
+    // Rule 12: detailReady 배열 항목 타입 검사
+    // curriculum/training: 반드시 plain string — {text:...} 객체이면 렌더링 버그 이력
+    // recruit: {text, url} 객체 허용 (linkList). {text} 단독 객체는 WARN (url 없으면 string 권장)
     for (const sub of ['curriculum', 'training']) {
       if (dr[sub] && Array.isArray(dr[sub])) {
         for (let i = 0; i < dr[sub].length; i++) {
           const item = dr[sub][i];
           if (item !== null && typeof item === 'object') {
             errors.push(`[FAIL] Rule 12: detailReady.${sub}[${i}]가 객체(${JSON.stringify(item).slice(0,60)}...) — 반드시 plain string이어야 함. 렌더링 버그 이력 있음`);
+          }
+        }
+      }
+    }
+    if (dr.recruit && Array.isArray(dr.recruit)) {
+      for (let i = 0; i < dr.recruit.length; i++) {
+        const item = dr.recruit[i];
+        if (item !== null && typeof item === 'object') {
+          if (!item.text) {
+            errors.push(`[FAIL] Rule 12: detailReady.recruit[${i}]가 text 없는 객체 — string 또는 {text,url} 형식이어야 함`);
+          } else if (!item.url) {
+            warnings.push(`[WARN] Rule 12: detailReady.recruit[${i}]가 url 없는 {text} 객체 — URL 없으면 plain string 권장`);
           }
         }
       }
@@ -507,6 +520,33 @@ function validate(data) {
     const trimmed = text.trim();
     if (trimmed.length < 10) continue;
     checkTrailingSentence(trimmed, fieldPath);
+  }
+
+  // ── 12. detailReady 배열 항목 타입 검사 ──
+  // curriculum/training 항목은 반드시 plain string
+  // {text:"..."} 객체이면 applyInlineFootnotes가 적용되지 않아 각주 렌더링이 깨짐
+
+  if (fields.detailReady) {
+    const dr12 = typeof fields.detailReady === 'string' ? JSON.parse(fields.detailReady) : fields.detailReady;
+    for (const sub of ['curriculum', 'training']) {
+      if (dr12[sub] && Array.isArray(dr12[sub])) {
+        for (let i = 0; i < dr12[sub].length; i++) {
+          const item = dr12[sub][i];
+          if (item !== null && typeof item === 'object') {
+            errors.push(`[치명] detailReady.${sub}[${i}]가 객체(object)임 — 반드시 plain string이어야 함. 예: "경영학과 이수" ✅ / {"text":"경영학과 이수"} ❌ (현재: ${JSON.stringify(item).substring(0, 60)})`);
+          }
+        }
+      }
+    }
+    // recruit는 {text, url} 객체 허용이지만 text 없는 객체는 금지
+    if (dr12.recruit && Array.isArray(dr12.recruit)) {
+      for (let i = 0; i < dr12.recruit.length; i++) {
+        const item = dr12.recruit[i];
+        if (item !== null && typeof item === 'object' && !item.text) {
+          errors.push(`[치명] detailReady.recruit[${i}]가 text 없는 객체 — {text:"채용경로명", url:"..."} 또는 plain string이어야 함 (현재: ${JSON.stringify(item).substring(0, 60)})`);
+        }
+      }
+    }
   }
 
   return { errors, warnings };
