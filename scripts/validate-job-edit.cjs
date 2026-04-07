@@ -53,6 +53,18 @@ function validate(data) {
     if (!dr.curriculum || dr.curriculum.length < 3) {
       warnings.push(`[필드] detailReady.curriculum이 ${dr.curriculum?.length || 0}개 (최소 5개 권장)`);
     }
+    // Rule 12: detailReady 배열 항목 타입 검사 (recruit 제외)
+    // curriculum/training 항목은 반드시 plain string — {text:...} 객체이면 렌더링 버그 발생
+    for (const sub of ['curriculum', 'training']) {
+      if (dr[sub] && Array.isArray(dr[sub])) {
+        for (let i = 0; i < dr[sub].length; i++) {
+          const item = dr[sub][i];
+          if (item !== null && typeof item === 'object') {
+            errors.push(`[FAIL] Rule 12: detailReady.${sub}[${i}]가 객체(${JSON.stringify(item).slice(0,60)}...) — 반드시 plain string이어야 함. 렌더링 버그 이력 있음`);
+          }
+        }
+      }
+    }
     // detailReady 출처 누락 검사 (F2)
     for (const sub of ['curriculum', 'recruit', 'training']) {
       if (dr[sub] && dr[sub].length > 0 && !sources[`detailReady.${sub}`]) {

@@ -6,6 +6,17 @@
 
 ## 🔴 치명적 오류 (즉시 500 에러 또는 데이터 손실)
 
+### [치명-5] detailReady.curriculum / training 항목을 객체로 저장하면 각주 렌더링 불가
+**원인**: `extractReadyItem()` 함수가 처음엔 `typeof item === 'string'`만 처리했음. `{title, text, link}` 객체를 넣으면 항목 텍스트가 공백이 되어 각주 마커([N])가 사라짐.
+**해결**: extractReadyItem에 객체 처리 추가로 fix됨 (2026-04-07). 하지만 **저장 자체를 막는 것이 최선**. curriculum/training은 반드시 plain string 배열.
+```json
+// 금지
+"curriculum": [{"title":"교육기관","text":"설명","link":null}]
+// 올바름
+"curriculum": ["교육기관에서 설명한다.[1]"]
+```
+**재발 방지**: validate-job-edit.cjs Rule 12에서 객체 항목 FAIL 처리. SKILL.md detailReady 설명에 명시.
+
 ### [치명-1] way 필드를 배열로 저장하면 즉시 500 에러
 **원인**: `formatRichText()` 함수가 way를 string으로 기대하는데 배열이 오면 TypeError
 **해결**: way는 반드시 string. 단계별 내용은 줄바꿈(`\n`)이나 번호로 구분

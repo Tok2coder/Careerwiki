@@ -189,7 +189,7 @@ Phase 0 진단 직후, Phase 1 리서치 시작 전에 실행.
 | 필드 | 분량 | 핵심 주의 |
 |------|------|----------|
 | `way` | 200~500자, string | **배열 절대 금지**. 서술형 진로 경로 (자격요건·시험·진입경로). 교육과정 목록 나열 금지 → detailReady |
-| `detailReady` | curriculum 5개+, recruit 3+, training 2+ | 교육과정/채용/훈련 **배열** (way와 혼동 금지) |
+| `detailReady` | curriculum 5개+, recruit 3+, training 2+ | 교육과정/채용/훈련 **배열** (way와 혼동 금지). **curriculum/training 항목 타입**: 반드시 **plain string** — `"아로마테라피 교육과정"` 형식. `{text:"..."}` 객체 절대 금지 (렌더링 버그 이력). **recruit 항목 타입**: URL 있으면 `{text:"채용경로명", url:"https://..."}`, URL 모르면 plain string. |
 | `trivia` | 출처 있는 팩트 1개 | 뻔한 직업 설명 금지. 의외의 통계/현실 |
 | `detailWlb.wlbDetail` | 130~200자 | 근무시간·야근·교대. **임금 정보 절대 금지** |
 | `detailWlb.socialDetail` | 100~160자 | 사회적 영향·공익만. 근무환경·취업전망 금지 |
@@ -628,7 +628,7 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
 **각주 [N] 렌더링 지원 필드** (formatRichText 적용 — 이 필드들만 인라인 각주 클릭 링크 사용 가능):
 `way`, `overviewSalary.sal`, `overviewProspect.main`, `trivia`, `summary`,
 `detailWlb.wlbDetail`, `detailWlb.socialDetail`, `overviewAbilities.technKnow`
-— curriculum/recruit/training/pathExplore는 배열 필드이므로 현재 formatRichText가 적용되지 않음. 단, **외부 출처 데이터가 있으면 기존·신규 불문** 마지막 항목 text 끝 마침표 뒤에 [N] 마커를 붙인다 (sources 등록은 필수).
+— curriculum/recruit/training/pathExplore는 배열 필드이므로 현재 formatRichText가 적용되지 않음. 단, **외부 출처 데이터가 있으면 기존·신규 불문** 마지막 항목 문자열 끝 마침표 뒤에 [N] 마커를 붙인다 (sources 등록은 필수). 항목이 string이면 문자열 끝에 직접 붙이고, recruit의 `{text, url}` 객체면 text 문자열 끝에 붙인다.
 
 > ✅ **완료**: `detailTemplateUtils.ts`에 `applyInlineFootnotes` 헬퍼 추가, `unifiedJobDetail.ts`의 curriculum·recruit·training 렌더링에 적용 완료 (2026-04-06). 배열 항목 text의 [N] 마커가 `<sup>` 각주 링크로 렌더링됨.
 
