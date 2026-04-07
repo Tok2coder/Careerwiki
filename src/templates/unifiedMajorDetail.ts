@@ -2345,6 +2345,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
             <i class="fas fa-graduation-cap text-xs" aria-hidden="true"></i>
           </span>
           <span class="text-sm text-wiki-text font-medium group-hover:text-wiki-primary transition-colors">${escapeHtml(name)}</span>
+          <i class="fas fa-chevron-right ml-auto text-[10px] text-wiki-muted/50 group-hover:text-wiki-primary group-hover:translate-x-0.5 transition-all" aria-hidden="true"></i>
         </a>
       </li>
     `
