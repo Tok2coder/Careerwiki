@@ -53,36 +53,15 @@ function validate(data) {
     if (!dr.curriculum || dr.curriculum.length < 3) {
       warnings.push(`[필드] detailReady.curriculum이 ${dr.curriculum?.length || 0}개 (최소 5개 권장)`);
     }
-    // Rule 12: detailReady 배열 항목 타입 검사
-    // curriculum/training: 반드시 plain string — {text:...} 객체이면 렌더링 버그 이력
-    // recruit: {text, url} 객체 허용 (linkList). {text} 단독 객체는 WARN (url 없으면 string 권장)
-    for (const sub of ['curriculum', 'training']) {
-      if (dr[sub] && Array.isArray(dr[sub])) {
-        for (let i = 0; i < dr[sub].length; i++) {
-          const item = dr[sub][i];
-          if (item !== null && typeof item === 'object') {
-            errors.push(`[FAIL] Rule 12: detailReady.${sub}[${i}]가 객체(${JSON.stringify(item).slice(0,60)}...) — 반드시 plain string이어야 함. 렌더링 버그 이력 있음`);
-          }
-        }
-      }
-    }
-    if (dr.recruit && Array.isArray(dr.recruit)) {
-      for (let i = 0; i < dr.recruit.length; i++) {
-        const item = dr.recruit[i];
-        if (item !== null && typeof item === 'object') {
-          if (!item.text) {
-            errors.push(`[FAIL] Rule 12: detailReady.recruit[${i}]가 text 없는 객체 — string 또는 {text,url} 형식이어야 함`);
-          } else if (!item.url) {
-            warnings.push(`[WARN] Rule 12: detailReady.recruit[${i}]가 url 없는 {text} 객체 — URL 없으면 plain string 권장`);
-          }
-        }
-      }
-    }
-    // detailReady 출처 누락 검사 (F2)
+    // detailReady 출처 누락 검사 (F2) — Rule 12 타입 검사는 아래 ── 12 ── 섹션에서 처리
     for (const sub of ['curriculum', 'recruit', 'training']) {
       if (dr[sub] && dr[sub].length > 0 && !sources[`detailReady.${sub}`]) {
         warnings.push(`[출처] detailReady.${sub}에 내용이 있지만 sources["detailReady.${sub}"]가 없음 — 반드시 출처 등록 필요`);
       }
+    }
+    // detailReady.researchList 수정 금지 — CareerNet 원본 필드
+    if (dr.researchList && dr.researchList.length > 0) {
+      warnings.push(`[detailReady.researchList] CareerNet 원본 필드입니다. 스킬에서 수정/추가하지 마세요. 이 필드가 포함된 경우 제거 후 재전송 필요.`);
     }
   } else {
     warnings.push(`[필드] detailReady가 없음`);
@@ -105,7 +84,7 @@ function validate(data) {
     }
   }
 
-  // sidebarCerts — 시험 여부 체크
+  // sidebarCerts — 시험 여부 체크 + [N] 마커 금지
   if (fields.sidebarCerts) {
     const certs = Array.isArray(fields.sidebarCerts) ? fields.sidebarCerts : JSON.parse(fields.sidebarCerts);
     for (const cert of certs) {
@@ -114,6 +93,10 @@ function validate(data) {
         if (name && name.includes(kw) && !name.includes('자격') && !name.includes('면허')) {
           errors.push(`[자격증] "${name}"은 시험이지 자격증이 아님 — 제거 또는 "~자격증" 형태로`);
         }
+      }
+      // sidebarCerts 항목 텍스트에 [N] 마커 금지
+      if (name && /\[\d+\]/.test(name)) {
+        warnings.push(`[sidebarCerts] "${name}" — sidebarCerts 항목 텍스트에 [N] 마커가 포함되어 있습니다. sidebarCerts는 자격증명만 저장하세요. 출처는 sources["sidebarCerts"]에만 등록.`);
       }
     }
   }
@@ -538,12 +521,16 @@ function validate(data) {
         }
       }
     }
-    // recruit는 {text, url} 객체 허용이지만 text 없는 객체는 금지
+    // recruit: {text,url} 객체 허용. text 없는 객체=FAIL. url 없는 {text}=WARN(plain string 권장)
     if (dr12.recruit && Array.isArray(dr12.recruit)) {
       for (let i = 0; i < dr12.recruit.length; i++) {
         const item = dr12.recruit[i];
-        if (item !== null && typeof item === 'object' && !item.text) {
-          errors.push(`[치명] detailReady.recruit[${i}]가 text 없는 객체 — {text:"채용경로명", url:"..."} 또는 plain string이어야 함 (현재: ${JSON.stringify(item).substring(0, 60)})`);
+        if (item !== null && typeof item === 'object') {
+          if (!item.text) {
+            errors.push(`[치명] detailReady.recruit[${i}]가 text 없는 객체 — {text:"채용경로명", url:"..."} 또는 plain string이어야 함 (현재: ${JSON.stringify(item).substring(0, 60)})`);
+          } else if (!item.url) {
+            warnings.push(`[WARN] Rule 12: detailReady.recruit[${i}]가 url 없는 {text} 객체 — URL 없으면 plain string 권장`);
+          }
         }
       }
     }

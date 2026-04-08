@@ -38,6 +38,10 @@ description: >
 |------|------|
 | `way` 타입 | **반드시 string** — 배열이면 즉시 500 에러 |
 | `detailReady` 배열 항목 타입 | `curriculum`/`training` 항목은 **반드시 plain string** — `{text:"..."}` 객체이면 각주 렌더링 깨짐 (Rule 12로 FAIL 차단). `recruit`만 `{text, url}` 객체 허용 |
+| `sidebarCerts` 텍스트 내 [N] 금지 | sidebarCerts 항목(자격증명)은 텍스트에 `[1]` 등 인라인 각주 마커를 **절대 넣지 않음**. 출처가 필요하면 `_sources.sidebarCerts`에만 등록. 텍스트에 마커 넣으면 자격증 이름에 `[숫자]`가 그대로 노출됨 |
+| `detailReady.researchList` 수정 금지 | CareerNet 원본 데이터 필드. **스킬이 추가/수정/삭제 금지**. 출처 각주도 달지 않음. 해당 필드가 UCJ에 있으면 validate-job-edit.cjs가 WARN 출력 |
+| `detailReady.certificate` 텍스트 내 [N] | certificate 항목도 `curriculum`/`training`처럼 `applyInlineFootnotes`로 처리됨. `[1]` 마커를 넣으면 반드시 `_sources["detailReady.certificate"]` 등록 필수 — 미등록 시 다른 필드 출처로 잘못 연결됨 |
+| 출처 배지 카운트 | 배지 숫자 = API 출처(커리어넷 1개) + 사용자 추가 출처. 스킬은 배지 카운트에 신경 쓸 필요 없음 (렌더러가 자동 계산) |
 | 편집 API URL | `POST https://careerwiki.org/api/job/{id}/edit` |
 | 직업 페이지 URL | `https://careerwiki.org/job/슬러그` (`.kr` 또는 `/jobs` 절대 금지) |
 | R2 이미지 키 | `jobs/job-{slug}.webp` — `uploads/` prefix 절대 금지 |
