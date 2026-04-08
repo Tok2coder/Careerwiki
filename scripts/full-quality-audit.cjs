@@ -29,16 +29,23 @@ const DB_NAME = 'careerwiki-kr';
 const ROOT_DIR = path.resolve(__dirname, '..');
 
 // 서술 필드 렌더링 순서 (Gate 4 스캔 순서)
+// 페이지 표시 순서 — unifiedJobDetail.ts normalizeUserSources fieldOrder,
+// job-editor.ts SOURCE_FIELD_ORDER와 반드시 동일하게 유지.
 const TEXT_FIELDS_ORDER = [
-  'way',
-  'overviewSalary.sal',
+  'summary',
+  'overviewWork.main',
   'overviewProspect.main',
-  'trivia',
   'detailWlb.wlbDetail',
   'detailWlb.socialDetail',
+  'overviewSalary.sal',
+  'trivia',
   'overviewAbilities.technKnow',
-  'overviewWork.main',
-  'summary',
+  'way',
+  'detailReady.curriculum',
+  'detailReady.recruit',
+  'detailReady.certificate',
+  'detailReady.training',
+  'sidebarCerts',
 ];
 
 // Gate 2: 잘린 문장 패턴

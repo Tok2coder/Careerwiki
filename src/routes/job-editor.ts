@@ -11,6 +11,59 @@ import { getOptionalUser, hashIpAddress, escapeHtml } from '../utils/shared-help
 import type { R2Bucket } from '@cloudflare/workers-types'
 import { notifyGoogleIndexing } from '../utils/google-indexing'
 
+// ── 출처 필드 표시 순서 ─────────────────────────────────────────────────────
+// unifiedJobDetail.ts의 normalizeUserSources fieldOrder와 반드시 동일하게 유지.
+// full-quality-audit.cjs TEXT_FIELDS_ORDER도 이 순서를 따름.
+const SOURCE_FIELD_ORDER = [
+  'summary',
+  'overviewWork.main',
+  'overviewProspect.main',
+  'detailWlb.wlbDetail',
+  'detailWlb.socialDetail',
+  'overviewSalary.sal',
+  'trivia',
+  'overviewAbilities.technKnow',
+  'way',
+  'detailReady.curriculum',
+  'detailReady.recruit',
+  'detailReady.certificate',
+  'detailReady.training',
+  'sidebarCerts',
+]
+
+/**
+ * _sources 전역 ID를 SOURCE_FIELD_ORDER(페이지 표시 순서)로 재정렬 후 1부터 재발급.
+ * 같은 필드 내 항목 순서는 기존 id(originalId) 기준 유지.
+ * 저장 시 항상 호출 → 어느 필드를 먼저 편집해도 ID가 항상 페이지 순서로 정렬됨.
+ */
+function renumberSourceIds(sources: Record<string, any>): Record<string, any> {
+  const entries: Array<{ fieldKey: string; item: any; displayOrder: number; originalId: number }> = []
+  for (const [fieldKey, val] of Object.entries(sources)) {
+    const arr = Array.isArray(val) ? val : [val]
+    const displayOrder = SOURCE_FIELD_ORDER.indexOf(fieldKey)
+    arr.forEach((item: any) => {
+      if (item && (item.text || item.url)) {
+        entries.push({
+          fieldKey,
+          item,
+          displayOrder: displayOrder >= 0 ? displayOrder : 999,
+          originalId: item.id ?? 0,
+        })
+      }
+    })
+  }
+  entries.sort((a, b) => {
+    if (a.displayOrder !== b.displayOrder) return a.displayOrder - b.displayOrder
+    return a.originalId - b.originalId
+  })
+  const result: Record<string, any[]> = {}
+  entries.forEach((entry, idx) => {
+    if (!result[entry.fieldKey]) result[entry.fieldKey] = []
+    result[entry.fieldKey].push({ ...entry.item, id: idx + 1 })
+  })
+  return result
+}
+
 const jobEditorRoutes = new Hono<AppEnv>()
 
 // ============================================================================
@@ -508,6 +561,12 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
           if (normalized.length > 0) {
             updatedUserData._sources[key] = normalized
           }
+        }
+
+        // ── _sources ID 재발급: SOURCE_FIELD_ORDER 기준 1~N 순차 ──────────────
+        // 어느 필드를 나중에 편집해도 항상 페이지 표시 순서로 ID가 정렬됨.
+        if (updatedUserData._sources && Object.keys(updatedUserData._sources).length > 0) {
+          updatedUserData._sources = renumberSourceIds(updatedUserData._sources)
         }
       }
 
