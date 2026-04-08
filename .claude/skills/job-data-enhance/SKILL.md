@@ -354,6 +354,10 @@ SELECT name FROM majors WHERE is_active=1 AND name IN ('전공A', '전공B');
 
 핵심: [N]은 필드 내에서 각각 정확히 1회만 등장해야 함. validate가 중복 감지하므로 위반 시 FAIL.
 
+> 🚫 **같은 [N] 마커를 한 필드 내에서 2회 이상 사용 금지 — validate Rule 5 차단됨.**
+> 동일 출처를 비연속 문장에 재인용해야 할 경우: [N]을 마지막 해당 문장 끝으로 이동하거나,
+> 다른 URL의 새 [N+1] 출처를 추가해 커버한다. 같은 [N]을 두 번 쓰는 것은 불가.
+
 ### detailReady 출처 등록 규칙
 
 detailReady.curriculum / detailReady.recruit / detailReady.training / detailReady.pathExplore 섹션에 내용을 추가할 때:
@@ -397,6 +401,8 @@ detailReady.curriculum / detailReady.recruit / detailReady.training / detailRead
 ❌ 금지: 블라인드, 디시인사이드, 블로그 단독 출처
 
 **출처 다양화 원칙**: 커리어넷/고용24/워크넷은 API로 이미 가져온 데이터와 중복될 수 있음. 업계 보고서, 학회 자료, 전문 미디어(신문/뉴스), 통계청, 직업 관련 전문 사이트 등 고급 출처를 적극 활용. 동일 내용이면 더 최신이고 신뢰도 높은 출처 우선 선택.
+
+**필드 간 출처 재사용 지양 원칙**: 동일 출처(같은 URL)를 여러 필드에 걸쳐 반복 사용하는 것을 최대한 지양한다. 가능하면 각 필드(way, trivia, overviewSalary.sal 등)마다 해당 내용에 더 적합한 별도 출처를 찾아서 사용한다. 부득이하게 동일 URL을 여러 필드에 쓰는 것은 허용되지만, 같은 필드 내 sources 배열에 동일 URL을 2번 이상 등록하는 것은 validate FAIL이므로 절대 금지.
 
 **리서치 탐색 범위**: 커리어넷·워크넷 외에도 아래를 적극 탐색:
 - 해당 직업 관련 **협회·단체 공식 사이트** (예: 한국간호협회, 한국건축사협회)
