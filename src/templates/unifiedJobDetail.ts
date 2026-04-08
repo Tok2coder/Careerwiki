@@ -2687,12 +2687,8 @@ const renderSourcesCollapsible = (
 
   const activeSourceCountFromSources = normalizedSources.length
   const fallbackSourceCount = Object.values(normalizedPartials || {}).filter((value) => Boolean(value)).length
-  // 배지 숫자 = 인라인 [N] 마커와 1:1 대응하는 사용자 출처만 계산.
-  // API 출처(CAREERNET 등)는 패널에 표시되지만 인라인 마커가 없으므로 배지에서 제외해
-  // 사용자가 [N]을 클릭했을 때 해당 번호의 출처를 찾지 못하는 혼란을 방지한다.
-  const activeSourceCount = hasUserSources
-    ? userSourceCount
-    : (activeSourceCountFromSources || fallbackSourceCount)
+  // 배지 숫자 = API 출처 + 사용자 출처 합산 (패널에 실제 표시되는 전체 출처 수)
+  const activeSourceCount = (activeSourceCountFromSources || fallbackSourceCount) + userSourceCount
   const badgeLabel = `${activeSourceCount}개`
 
   const toggleId = `source-toggle-${normalizedId}`
@@ -4409,7 +4405,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const certList = detailReady.certificate
         .map(item => extractReadyItem(item, 'certificate'))
         .filter(text => !!safeTrim(text))
-        .map(text => `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(text)}</span></li>`)
+        .map(text => `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.certificate', footnoteMap, sourceTextMap)}</span></li>`)
         .join('')
       if (certList) {
         readyBlocks.push(`<div class="${readyBlocks.length > 0 ? 'mt-8' : ''}"><h3 class="content-heading">추천 자격증</h3><ul class="space-y-2">${certList}</ul></div>`)
