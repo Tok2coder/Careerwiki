@@ -2497,7 +2497,7 @@ const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; t
     // 과정 탭 (되는 방법)
     'way',
     // 상세정보 탭 (직업 준비하기)
-    'detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList',
+    'detailReady.curriculum', 'detailReady.recruit', 'detailReady.certificate', 'detailReady.training', 'detailReady.researchList',
     // 사이드바
     'sidebarMajors', 'sidebarCerts'
   ]
@@ -2687,7 +2687,12 @@ const renderSourcesCollapsible = (
 
   const activeSourceCountFromSources = normalizedSources.length
   const fallbackSourceCount = Object.values(normalizedPartials || {}).filter((value) => Boolean(value)).length
-  const activeSourceCount = (activeSourceCountFromSources || fallbackSourceCount) + userSourceCount
+  // 배지 숫자 = 인라인 [N] 마커와 1:1 대응하는 사용자 출처만 계산.
+  // API 출처(CAREERNET 등)는 패널에 표시되지만 인라인 마커가 없으므로 배지에서 제외해
+  // 사용자가 [N]을 클릭했을 때 해당 번호의 출처를 찾지 못하는 혼란을 방지한다.
+  const activeSourceCount = hasUserSources
+    ? userSourceCount
+    : (activeSourceCountFromSources || fallbackSourceCount)
   const badgeLabel = `${activeSourceCount}개`
 
   const toggleId = `source-toggle-${normalizedId}`
