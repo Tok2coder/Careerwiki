@@ -51,10 +51,10 @@
 
 | 카테고리 | 대상 필드 | 행동 |
 |----------|----------|------|
-| 항상 새로 작성 | way, detailReady, trivia, wlbDetail, socialDetail | API 데이터와 무관하게 작성 |
+| 항상 새로 작성 | way, detailReady, trivia, wlbDetail, socialDetail, 커리어트리 | API 데이터와 무관하게 작성 |
 | 보강 가능 | sidebarCerts, sidebarMajors, sal, prospect | API 충분→스킵, 부족→보강 |
 | API 있으면 스킵 | overviewWork.main, technKnow, wlb/social 등급 | API null이면 리서치+출처 필수로 채움 |
-| 공식 통계만 | abilityList, aptitude, educationDistribution, detailIndicators | 출처 없으면 null 유지 |
+| 공식 통계만 | abilityList, aptitude, satisfaction, educationDistribution, detailIndicators | 출처 없으면 null 유지 |
 
 ---
 
@@ -109,16 +109,18 @@ summary → heroCategory → heroTags
 | detailReady.curriculum/training 객체 타입 | ERROR (치명) |
 | sidebarCerts 텍스트에 `[N]` 패턴 | WARN |
 | detailReady.researchList 수정 시도 | WARN |
-| curriculum < 5개 | WARN |
+| curriculum < 3개 | WARN |
 | youtubeLinks 없음 | WARN |
 
 ### 4-2. full-quality-audit.cjs (사후 감사 — 배포 후 실행)
 
-- Gate 1: 각주 정합성 (인라인 마커 ↔ _sources 대응)
-- Gate 2: wage 보존 (바 차트 데이터 유실 감지)
-- Gate 3: 출처 누락 (서술 필드 무출처 문장)
-- Gate 4: 데이터 무결성 (필수 필드 완성도)
-- Gate 5: 렌더링 크로스체크 (각주 번호 순서, 배지 카운트 정합성)
+| Gate | 검사 내용 | 주요 체크 |
+|------|----------|----------|
+| Gate 1 | **각주 정합성** | `[N]` 중복, 비순차(1부터 연속), 마침표 앞 위치(`[N].` 패턴), `_sources` 불일치 |
+| Gate 2 | **텍스트 완결성** | `overviewSalary.wage` 소실 감지 + way/sal/prospect/trivia/wlbDetail/socialDetail 잘린 문장·완성형 어미 검사 |
+| Gate 3 | **YouTube 링크 검증** | URL 포맷(youtube.com/watch, youtu.be, shorts 등) + oembed API로 영상 재생 가능 여부 확인 |
+| Gate 4 | **_sources ID 순서** | 전역 ID 오름차순 여부, 각 필드 내 `text`의 `[N]` 번호와 배열 인덱스 일치 여부 |
+| Gate 5 | **추가 무결성** | heroCategory 존재, sidebarJobs 비어있지 않음, image_url 포맷(`/uploads/jobs/job-{slug}.webp`), way 타입(배열이면 FAIL), detailWlb.wlb/social 등급 존재 |
 
 ---
 
