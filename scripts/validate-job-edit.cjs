@@ -56,7 +56,7 @@ function validate(data) {
     // detailReady 출처 누락 검사 (F2) — Rule 12 타입 검사는 아래 ── 12 ── 섹션에서 처리
     for (const sub of ['curriculum', 'recruit', 'training']) {
       if (dr[sub] && dr[sub].length > 0 && !sources[`detailReady.${sub}`]) {
-        warnings.push(`[출처] detailReady.${sub}에 내용이 있지만 sources["detailReady.${sub}"]가 없음 — 반드시 출처 등록 필요`);
+        errors.push(`[curriculum-출처누락] detailReady.${sub}에 내용이 있지만 sources["detailReady.${sub}"]가 없음 — 반드시 출처 등록 필요`);
       }
     }
 
@@ -71,7 +71,7 @@ function validate(data) {
           return /\[\d+\]/.test(text);
         });
         if (!hasMarker) {
-          warnings.push(`[OS-Orphan] detailReady.${sub}: sources["${srcKey}"]가 등록되어 있지만 배열 항목에 [N] 마커가 없음 — 마지막 항목 끝에 [1] 추가 필요`);
+          errors.push(`[OS-Orphan] detailReady.${sub}: sources["${srcKey}"]가 등록되어 있지만 배열 항목에 [N] 마커가 없음 — 마지막 항목 끝에 [1] 추가 필요`);
         }
       }
     }
@@ -87,14 +87,14 @@ function validate(data) {
       });
       const dupes = Object.entries(markerCounts).filter(([_, c]) => c > 1);
       if (dupes.length > 0) {
-        warnings.push(`[각주중복] detailReady.${sub}: ${dupes.map(([n, c]) => `${n}이 ${c}회`).join(', ')} — 마지막 항목에만 1회 표기`);
+        errors.push(`[각주중복] detailReady.${sub}: ${dupes.map(([n, c]) => `${n}이 ${c}회`).join(', ')} — 마지막 항목에만 1회 표기`);
       }
     }
     // recruit 항목이 {text, url} 객체이면 UI에 URL 도메인이 그대로 노출되는 버그 발생 — WARN
     if (dr.recruit && Array.isArray(dr.recruit)) {
       const objItems = dr.recruit.filter(item => item !== null && typeof item === 'object' && !Array.isArray(item));
       if (objItems.length > 0) {
-        warnings.push(`[recruit-객체] detailReady.recruit에 {text, url} 객체 항목 ${objItems.length}개 — 반드시 plain string으로 변환. URL은 _sources["detailReady.recruit"]에만 등록`);
+        errors.push(`[recruit-객체] detailReady.recruit에 {text, url} 객체 항목 ${objItems.length}개 — 반드시 plain string으로 변환. URL은 _sources["detailReady.recruit"]에만 등록`);
       }
     }
 
@@ -106,7 +106,7 @@ function validate(data) {
       dr[sub].forEach((item, idx) => {
         const text = typeof item === 'string' ? item : (item?.text || '');
         if (INLINE_DOMAIN_PAT.test(text)) {
-          warnings.push(`[인라인도메인] detailReady.${sub}[${idx}]에 괄호 안 도메인 표기 — 텍스트에서 제거 필요. 출처는 [N]+_sources로만: "${text.substring(0, 60)}..."`);
+          errors.push(`[인라인도메인] detailReady.${sub}[${idx}]에 괄호 안 도메인 표기 — 텍스트에서 제거 필요. 출처는 [N]+_sources로만: "${text.substring(0, 60)}..."`);
         }
       });
     }
@@ -136,9 +136,12 @@ function validate(data) {
     }
   }
 
-  // sidebarCerts — 시험 여부 체크 + [N] 마커 금지
+  // sidebarCerts — 최소 수량 + 시험 여부 체크 + [N] 마커 금지
   if (fields.sidebarCerts) {
     const certs = Array.isArray(fields.sidebarCerts) ? fields.sidebarCerts : JSON.parse(fields.sidebarCerts);
+    if (certs.length < 2) {
+      warnings.push(`[sidebarCerts] 자격증이 ${certs.length}개 — 2개 이상 권장. 기존 DB 값보다 적어졌을 수 있음 — 직접 확인 필요`);
+    }
     for (const cert of certs) {
       const name = typeof cert === 'string' ? cert : cert.name;
       // 국가기술자격 등급 접미사가 있으면 "시험" 포함해도 자격증으로 허용
@@ -284,9 +287,30 @@ function validate(data) {
       if (tree.stages_json) {
         const stages = typeof tree.stages_json === 'string' ? JSON.parse(tree.stages_json) : tree.stages_json;
 
+        // order 기준 정렬 (DB 저장 순서와 동일하게)
+        const sorted = [...stages].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+        // [careerTree-자기강조] job_slug 설정 확인
+        // 반드시 하나 이상의 스테이지에 job_slug가 있어야 함
+        const slugStages = sorted.filter(s => s.job_slug);
+        if (slugStages.length === 0) {
+          errors.push(`[careerTree-자기강조] "${tree.person_name || '?'}" — stages_json에 job_slug가 설정된 스테이지 없음. 해당 직업 입직 스테이지(보통 두 번째)에 job_slug 필수`);
+        } else if (sorted.length >= 2) {
+          // job_slug 스테이지가 마지막이면 FAIL (거장·전직 강조 금지)
+          const lastStage = sorted[sorted.length - 1];
+          if (slugStages.some(s => s === lastStage || s.order === lastStage.order)) {
+            errors.push(`[careerTree-자기강조] "${tree.person_name || '?'}" — job_slug가 마지막 스테이지("${lastStage.title || '마지막'}") 에 설정됨. 거장·전직 스테이지 강조 금지 — 입직 스테이지에 job_slug 설정 필요`);
+          }
+          // data.slug와 불일치 감지 (draft에 slug 있을 때만)
+          const jobSlug = data.slug;
+          if (jobSlug && slugStages.length > 0 && !slugStages.some(s => s.job_slug === jobSlug)) {
+            warnings.push(`[careerTree-자기강조] job_slug="${slugStages[0].job_slug}" 이 현재 직업 slug="${jobSlug}" 와 불일치`);
+          }
+        }
+
         // 전직 스테이지 체크 (마지막 스테이지가 다른 직업이면 의심)
-        if (stages.length > 0) {
-          const lastStage = stages[stages.length - 1];
+        if (sorted.length > 0) {
+          const lastStage = sorted[sorted.length - 1];
           const suspiciousRoles = ['국회의원', '장관', '대통령', '감독', 'CEO', '회장', '사장', '교수'];
           for (const role of suspiciousRoles) {
             if (lastStage.title && lastStage.title.includes(role)) {
@@ -295,6 +319,25 @@ function validate(data) {
           }
         }
       }
+    }
+  }
+
+  // ── 5-B. 커리어트리 DB 중복 링크 검사 (slug 있을 때 선택 실행) ──
+  // career_tree_job_links에서 같은 직업에 대한 중복 링크 감지
+  if (data.slug) {
+    try {
+      const { execSync } = require('child_process');
+      const result = execSync(
+        `npx wrangler d1 execute careerwiki-kr --remote --json --command "SELECT career_tree_id, COUNT(*) as cnt FROM career_tree_job_links WHERE job_slug='${data.slug.replace(/'/g, "''")}' GROUP BY career_tree_id HAVING cnt > 1"`,
+        { encoding: 'utf8', cwd: require('path').join(__dirname, '..'), stdio: ['pipe', 'pipe', 'pipe'], timeout: 15000 }
+      );
+      const parsed = JSON.parse(result);
+      const dupes = parsed?.[0]?.results || [];
+      for (const dup of dupes) {
+        errors.push(`[careerTree-자기강조] career_tree_id=${dup.career_tree_id}에 job_slug="${data.slug}" 중복 링크 ${dup.cnt}개 — career_tree_job_links 중복 제거 필요`);
+      }
+    } catch {
+      // wrangler 미연결 또는 오류 시 조용히 스킵
     }
   }
 
@@ -388,10 +431,12 @@ function validate(data) {
     }
   }
 
-  // ── 9a. overviewSalary.wage 덮어쓰기 방지 ──
+  // ── 9a. overviewSalary 전체 수정 금지 ──
+  // 스킬은 임금 데이터를 절대 건드리지 않는다.
+  // wage(바 차트), wageSource(바 차트 툴팁), sal(임금 서술 텍스트) 모두 포함.
 
-  if (fields.overviewSalary && fields.overviewSalary.wage !== undefined) {
-    errors.push('[FAIL] overviewSalary.wage 필드 변경 금지 — 바 차트 데이터 보존 필수. wage는 API 데이터이므로 절대 덮어쓰지 말 것');
+  if (fields.overviewSalary !== undefined) {
+    errors.push('[sal-수정금지] overviewSalary 필드 수정 금지 — sal/wage/wageSource 모두 스킬에서 건드리지 않음. 임금 데이터는 API·기존 데이터 그대로 유지');
   }
 
   // ── 9b. youtubeLinks 개수 검증 ──
@@ -471,18 +516,21 @@ function validate(data) {
       errors.push(`[출처중복] sources["${sourceKey}"]에 동일 URL이 ${count}번 등록: "${url}" — 같은 필드에 같은 URL 중복 금지`);
     }
 
-    // 검색결과 페이지 URL — 동적 검색결과는 출처로 부적합, WARN
+    // 검색결과 페이지 URL — 동적 검색결과는 출처로 부적합, FAIL
     const SEARCH_RESULT_PATTERNS = [
       /work24\.go\.kr\/wk\/a\/b\/\d+\//,
       /worker\.co\.kr\/job\/list/,
       /work\.go\.kr\/.*[?&](query|searchKeyword|keyword)=/,
       /career\.go\.kr\/.*[?&](query|keyword|searchKeyword)=/,
+      // saramin/jobkorea 카테고리 검색 URL (cat_kewd 등 분류 파라미터 포함)
+      /saramin\.co\.kr\/.*[?&]cat_kewd=/,
+      /jobkorea\.co\.kr\/.*[?&](cat_cd|cat_kewd|occupation)=/,
     ];
     for (const src of srcVal) {
       if (src && src.url) {
         for (const pat of SEARCH_RESULT_PATTERNS) {
           if (pat.test(src.url)) {
-            warnings.push(`[검색결과URL] sources["${sourceKey}"]에 동적 검색결과 페이지 URL: "${src.url}" — 기관 메인 또는 구체적 직업 상세 페이지로 교체 권장`);
+            errors.push(`[검색결과URL] sources["${sourceKey}"]에 동적 검색결과 페이지 URL: "${src.url}" — 기관 메인 또는 구체적 직업 상세 페이지로 교체 필요`);
             break;
           }
         }
@@ -538,7 +586,7 @@ function validate(data) {
     for (const fp of allTextFields) {
       const val = fp.includes('.') ? fp.split('.').reduce((o,k)=>o?.[k], fields) : fields[fp];
       if (val && typeof val === 'string' && INLINE_DOM.test(val)) {
-        warnings.push(`[인라인도메인] ${fp}에 괄호 안 도메인 표기 — 텍스트에서 제거 필요. 출처는 [N]+_sources로만: "${val.substring(0, 60)}..."`);
+        errors.push(`[인라인도메인] ${fp}에 괄호 안 도메인 표기 — 텍스트에서 제거 필요. 출처는 [N]+_sources로만: "${val.substring(0, 60)}..."`);
       }
     }
   }

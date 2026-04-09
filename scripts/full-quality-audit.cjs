@@ -482,6 +482,92 @@ function checkGate5(job, data) {
   return issues;
 }
 
+// ── Gate 6: diff-snapshot 데이터 손실 감지 ──────────────────────────────────
+// .skill-cache/snapshot-{slug}.json 이 있으면 배열 항목 수 비교
+
+const SKILL_CACHE_DIR = path.join(__dirname, '..', '.skill-cache');
+
+const ARRAY_FIELDS_G6 = ['sidebarCerts', 'sidebarMajors', 'sidebarOrgs', 'sidebarJobs', 'youtubeLinks'];
+const DR_SUBS_G6 = ['curriculum', 'recruit', 'training'];
+
+function checkGate6(slug, ucjNow, mergedNow) {
+  const issues = [];
+  mergedNow = mergedNow || {};
+  const snapshotPath = path.join(SKILL_CACHE_DIR, `snapshot-${slug}.json`);
+
+  if (!require('fs').existsSync(snapshotPath)) {
+    // 스냅샷 없으면 검사 스킵 (이전 Phase 0에서 save 안 했으면 정상)
+    return issues;
+  }
+
+  let snapshot;
+  try {
+    snapshot = JSON.parse(require('fs').readFileSync(snapshotPath, 'utf8'));
+  } catch {
+    return issues;
+  }
+
+  const before = snapshot.summary;
+  if (!before) return issues;
+
+  // 배열 필드 항목 수 비교
+  for (const f of ARRAY_FIELDS_G6) {
+    const beforeCount = before.arrays?.[f];
+    if (typeof beforeCount !== 'number') continue;
+    const afterArr = ucjNow[f];
+    const afterCount = Array.isArray(afterArr) ? afterArr.length : 0;
+    if (afterCount < beforeCount) {
+      issues.push({ level: 'FAIL', msg: `[Gate6/LOSS] ${f}: ${beforeCount}개 → ${afterCount}개 (${beforeCount - afterCount}개 손실) — diff-snapshot 스냅샷 기준` });
+    }
+  }
+
+  // detailReady 배열 비교
+  const drNow = ucjNow.detailReady || {};
+  for (const sub of DR_SUBS_G6) {
+    const key = `detailReady.${sub}`;
+    const beforeCount = before.arrays?.[key];
+    if (typeof beforeCount !== 'number') continue;
+    const afterArr = drNow[sub];
+    const afterCount = Array.isArray(afterArr) ? afterArr.length : 0;
+    if (afterCount < beforeCount) {
+      issues.push({ level: 'FAIL', msg: `[Gate6/LOSS] ${key}: ${beforeCount}개 → ${afterCount}개 (${beforeCount - afterCount}개 손실)` });
+    }
+  }
+
+  // prospect 방향 비교
+  const beforeDir = before.prospectDirection;
+  const prospectNow = (ucjNow.overviewProspect?.main) || '';
+  const NEGATIVE_KW = ['감소', '줄어', '어렵', '경쟁 심화', '하락', '위축'];
+  const POSITIVE_KW = ['증가', '성장', '확대', '늘어', '상승'];
+  const nowNeg = NEGATIVE_KW.some(k => prospectNow.includes(k));
+  const nowPos = POSITIVE_KW.some(k => prospectNow.includes(k));
+  let nowDir = 'neutral';
+  if (nowNeg && !nowPos) nowDir = 'negative';
+  else if (nowPos && !nowNeg) nowDir = 'positive';
+  else if (nowNeg && nowPos) nowDir = 'mixed';
+
+  if (beforeDir === 'negative' && nowDir === 'positive') {
+    issues.push({ level: 'FAIL', msg: `[Gate6/DIRECTION] prospect 방향 반전: ${beforeDir} → ${nowDir} — 원문 방향 복원 필요` });
+  } else if (beforeDir !== nowDir && beforeDir !== 'unknown' && nowDir !== 'neutral') {
+    issues.push({ level: 'WARN', msg: `[Gate6/DIRECTION] prospect 방향 변경: ${beforeDir} → ${nowDir} — 확인 필요` });
+  }
+
+  // wage 손실 감지 — 스냅샷에 wage 있었으나 현재 merged에 없으면 FAIL
+  const snapshotWage = snapshot.ucj?.overviewSalary?.wage || snapshot.summary?.wage;
+  const mergedWage = mergedNow?.overviewSalary?.wage;
+  if (snapshotWage && typeof snapshotWage === 'string' && /^\d{1,3}(,\d{3})*$/.test(snapshotWage.trim())) {
+    if (!mergedWage) {
+      issues.push({ level: 'FAIL', msg: `[Gate6/WAGE] overviewSalary.wage 손실: 스냅샷에 wage="${snapshotWage}" 있었으나 현재 merged에 없음 — 바 차트 렌더링 불가` });
+    }
+  }
+
+  if (issues.length === 0 && (before.arrays || before.prospectDirection)) {
+    issues.push({ level: 'PASS', msg: `[Gate6] diff-snapshot 비교 이상 없음 (스냅샷: ${snapshot.savedAt})` });
+  }
+
+  return issues;
+}
+
 // ── 단일 직업 감사 ────────────────────────────────────────────────────────────
 
 function auditJob(job) {
@@ -519,6 +605,7 @@ function auditJob(job) {
     ...checkGate3(mergedData),
     ...checkGate4(mergedData),
     ...checkGate5(job, mergedData),
+    ...checkGate6(slug, ucjData, mergedData),
   ];
 
   const fails = allIssues.filter(i => i.level === 'FAIL');
