@@ -98,6 +98,19 @@ function validate(data) {
       }
     }
 
+    // 인라인 도메인 표기 감지 — 텍스트 본문에 (도메인) 패턴 금지
+    // 출처 정보는 각주 [N] + _sources로만 표기해야 함
+    const INLINE_DOMAIN_PAT = /\([a-z0-9.-]+\.(co\.kr|go\.kr|re\.kr|or\.kr|com|net)\)/i;
+    for (const sub of ['curriculum', 'recruit', 'training', 'certificate']) {
+      if (!dr[sub] || !Array.isArray(dr[sub])) continue;
+      dr[sub].forEach((item, idx) => {
+        const text = typeof item === 'string' ? item : (item?.text || '');
+        if (INLINE_DOMAIN_PAT.test(text)) {
+          warnings.push(`[인라인도메인] detailReady.${sub}[${idx}]에 괄호 안 도메인 표기 — 텍스트에서 제거 필요. 출처는 [N]+_sources로만: "${text.substring(0, 60)}..."`);
+        }
+      });
+    }
+
     // detailReady.researchList 수정 금지 — CareerNet 원본 필드
     if (dr.researchList && dr.researchList.length > 0) {
       warnings.push(`[detailReady.researchList] CareerNet 원본 필드입니다. 스킬에서 수정/추가하지 마세요. 이 필드가 포함된 경우 제거 후 재전송 필요.`);
@@ -512,6 +525,20 @@ function validate(data) {
         }
       } else if (!src.text) {
         warnings.push(`[출처포맷] sources["${sourceKey}"][${i}]: text와 url 모두 없음`);
+      }
+    }
+  }
+
+  // ── 10-B. 인라인 도메인 표기 감지 (서술형 필드) ──
+  // 텍스트 본문에 (도메인) 패턴 금지 — 출처는 [N]+_sources로만 표기
+  {
+    const INLINE_DOM = /\([a-z0-9.-]+\.(co\.kr|go\.kr|re\.kr|or\.kr|com|net)\)/i;
+    const allTextFields = ['way', 'overviewSalary.sal', 'overviewProspect.main', 'trivia',
+      'summary', 'overviewAbilities.technKnow', 'detailWlb.wlbDetail', 'detailWlb.socialDetail'];
+    for (const fp of allTextFields) {
+      const val = fp.includes('.') ? fp.split('.').reduce((o,k)=>o?.[k], fields) : fields[fp];
+      if (val && typeof val === 'string' && INLINE_DOM.test(val)) {
+        warnings.push(`[인라인도메인] ${fp}에 괄호 안 도메인 표기 — 텍스트에서 제거 필요. 출처는 [N]+_sources로만: "${val.substring(0, 60)}..."`);
       }
     }
   }

@@ -38,7 +38,7 @@ description: >
 |------|------|
 | `way` 타입 | **반드시 string** — 배열이면 즉시 500 에러 |
 | `detailReady` 배열 항목 타입 | `curriculum`/`training`/`recruit` 항목 모두 **반드시 plain string** — `{text:"...", url:"..."}` 객체이면 UI에 URL 도메인이 텍스트에 직접 노출되는 버그 발생. 채용처 URL은 `_sources["detailReady.recruit"]`에만 등록 |
-| 인라인 URL 직접 노출 금지 | 모든 텍스트 필드(way, trivia, wlbDetail 등)와 배열 항목에서 URL을 문자열에 직접 삽입 금지 — `"(worker.co.kr)"` 형태로 노출됨. 모든 외부 출처는 반드시 각주 [N] + `_sources`로만 표기 |
+| 인라인 URL·도메인 표기 금지 | 모든 텍스트 필드(way, trivia, wlbDetail 등)와 배열 항목에서 URL/도메인을 문자열에 직접 삽입 금지. `"(worker.co.kr)"`, `"(work24.go.kr)"` 등 괄호 안 도메인 표기 포함 금지. 모든 외부 출처는 반드시 각주 [N] + `_sources`로만 표기. **사이트명 자체는 허용** — `"건설워커를 통해 검색"` ✅, `"건설워커(worker.co.kr)를 통해 검색"` ❌ |
 | 검색결과 페이지 URL 금지 | `_sources` URL로 동적 검색결과 페이지(예: `work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do`, `worker.co.kr/job/list.asp`) 사용 금지 — 검색 조건에 따라 결과가 달라지는 페이지는 출처로 부적합. 기관 메인 페이지(`https://www.work24.go.kr/`) 또는 구체적인 직업 상세 페이지 URL 사용 |
 | `sidebarCerts` 텍스트 내 [N] 금지 | sidebarCerts 항목(자격증명)은 텍스트에 `[1]` 등 인라인 각주 마커를 **절대 넣지 않음**. 출처가 필요하면 `_sources.sidebarCerts`에만 등록. 텍스트에 마커 넣으면 자격증 이름에 `[숫자]`가 그대로 노출됨 |
 | `detailReady.researchList` 수정 금지 | CareerNet 원본 데이터 필드. **스킬이 추가/수정/삭제 금지**. 출처 각주도 달지 않음. 해당 필드가 UCJ에 있으면 validate-job-edit.cjs가 WARN 출력 |
