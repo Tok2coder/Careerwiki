@@ -37,7 +37,9 @@ description: >
 | 규칙 | 내용 |
 |------|------|
 | `way` 타입 | **반드시 string** — 배열이면 즉시 500 에러 |
-| `detailReady` 배열 항목 타입 | `curriculum`/`training` 항목은 **반드시 plain string** — `{text:"..."}` 객체이면 각주 렌더링 깨짐 (Rule 12로 FAIL 차단). `recruit`만 `{text, url}` 객체 허용 |
+| `detailReady` 배열 항목 타입 | `curriculum`/`training`/`recruit` 항목 모두 **반드시 plain string** — `{text:"...", url:"..."}` 객체이면 UI에 URL 도메인이 텍스트에 직접 노출되는 버그 발생. 채용처 URL은 `_sources["detailReady.recruit"]`에만 등록 |
+| 인라인 URL 직접 노출 금지 | 모든 텍스트 필드(way, trivia, wlbDetail 등)와 배열 항목에서 URL을 문자열에 직접 삽입 금지 — `"(worker.co.kr)"` 형태로 노출됨. 모든 외부 출처는 반드시 각주 [N] + `_sources`로만 표기 |
+| 검색결과 페이지 URL 금지 | `_sources` URL로 동적 검색결과 페이지(예: `work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do`, `worker.co.kr/job/list.asp`) 사용 금지 — 검색 조건에 따라 결과가 달라지는 페이지는 출처로 부적합. 기관 메인 페이지(`https://www.work24.go.kr/`) 또는 구체적인 직업 상세 페이지 URL 사용 |
 | `sidebarCerts` 텍스트 내 [N] 금지 | sidebarCerts 항목(자격증명)은 텍스트에 `[1]` 등 인라인 각주 마커를 **절대 넣지 않음**. 출처가 필요하면 `_sources.sidebarCerts`에만 등록. 텍스트에 마커 넣으면 자격증 이름에 `[숫자]`가 그대로 노출됨 |
 | `detailReady.researchList` 수정 금지 | CareerNet 원본 데이터 필드. **스킬이 추가/수정/삭제 금지**. 출처 각주도 달지 않음. 해당 필드가 UCJ에 있으면 validate-job-edit.cjs가 WARN 출력 |
 | `detailReady.certificate` 텍스트 내 [N] | certificate 항목도 `curriculum`/`training`처럼 `applyInlineFootnotes`로 처리됨. `[1]` 마커를 넣으면 반드시 `_sources["detailReady.certificate"]` 등록 필수 — 미등록 시 다른 필드 출처로 잘못 연결됨 |
@@ -239,7 +241,7 @@ FROM jobs WHERE slug='슬러그';
 | 필드 | 분량 | 핵심 주의 |
 |------|------|----------|
 | `way` | 200~500자, string | **배열 절대 금지**. 서술형 진로 경로 (자격요건·시험·진입경로). 교육과정 목록 나열 금지 → detailReady |
-| `detailReady` | curriculum 5개+, recruit 3+, training 2+ | 교육과정/채용/훈련 **배열** (way와 혼동 금지). **curriculum/training 항목 타입**: 반드시 **plain string** — `"아로마테라피 교육과정"` 형식. `{text:"..."}` 객체 절대 금지 (렌더링 버그 이력). **recruit 항목 타입**: URL 있으면 `{text:"채용경로명", url:"https://..."}`, URL 모르면 plain string. |
+| `detailReady` | curriculum 5개+, recruit 3+, training 2+ | 교육과정/채용/훈련 **배열** (way와 혼동 금지). **모든 항목 타입**: 반드시 **plain string** — `{text:"..."}` 또는 `{text:"...", url:"..."}` 객체 절대 금지. curriculum/training은 렌더링 깨짐(Rule 12 FAIL). recruit는 UI에 URL 도메인이 그대로 노출되는 버그 발생. 채용처 URL은 `_sources["detailReady.recruit"]`에만 등록. |
 | `trivia` | 출처 있는 팩트 1개 | 뻔한 직업 설명 금지. 의외의 통계/현실 |
 | `detailWlb.wlbDetail` | 130~200자 | 근무시간·야근·교대. **임금 정보 절대 금지** |
 | `detailWlb.socialDetail` | 100~160자 | 사회적 영향·공익만. 근무환경·취업전망 금지 |
@@ -720,7 +722,7 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
 **각주 [N] 렌더링 지원 필드** (formatRichText 적용 — 이 필드들만 인라인 각주 클릭 링크 사용 가능):
 `way`, `overviewSalary.sal`, `overviewProspect.main`, `trivia`, `summary`,
 `detailWlb.wlbDetail`, `detailWlb.socialDetail`, `overviewAbilities.technKnow`
-— curriculum/recruit/training/pathExplore는 배열 필드이므로 현재 formatRichText가 적용되지 않음. 단, **외부 출처 데이터가 있으면 기존·신규 불문** 마지막 항목 문자열 끝 마침표 뒤에 [N] 마커를 붙인다 (sources 등록은 필수). 항목이 string이면 문자열 끝에 직접 붙이고, recruit의 `{text, url}` 객체면 text 문자열 끝에 붙인다.
+— curriculum/recruit/training/pathExplore는 배열 필드이므로 현재 formatRichText가 적용되지 않음. 단, **외부 출처 데이터가 있으면 기존·신규 불문** 마지막 항목 문자열 끝 마침표 뒤에 [N] 마커를 붙인다 (sources 등록은 필수). 모든 항목은 plain string이므로 문자열 끝에 직접 붙인다.
 
 > ✅ **완료**: `detailTemplateUtils.ts`에 `applyInlineFootnotes` 헬퍼 추가, `unifiedJobDetail.ts`의 curriculum·recruit·training 렌더링에 적용 완료 (2026-04-06). 배열 항목 text의 [N] 마커가 `<sup>` 각주 링크로 렌더링됨.
 

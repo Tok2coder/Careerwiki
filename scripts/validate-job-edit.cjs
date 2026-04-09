@@ -90,6 +90,14 @@ function validate(data) {
         warnings.push(`[각주중복] detailReady.${sub}: ${dupes.map(([n, c]) => `${n}이 ${c}회`).join(', ')} — 마지막 항목에만 1회 표기`);
       }
     }
+    // recruit 항목이 {text, url} 객체이면 UI에 URL 도메인이 그대로 노출되는 버그 발생 — WARN
+    if (dr.recruit && Array.isArray(dr.recruit)) {
+      const objItems = dr.recruit.filter(item => item !== null && typeof item === 'object' && !Array.isArray(item));
+      if (objItems.length > 0) {
+        warnings.push(`[recruit-객체] detailReady.recruit에 {text, url} 객체 항목 ${objItems.length}개 — 반드시 plain string으로 변환. URL은 _sources["detailReady.recruit"]에만 등록`);
+      }
+    }
+
     // detailReady.researchList 수정 금지 — CareerNet 원본 필드
     if (dr.researchList && dr.researchList.length > 0) {
       warnings.push(`[detailReady.researchList] CareerNet 원본 필드입니다. 스킬에서 수정/추가하지 마세요. 이 필드가 포함된 경우 제거 후 재전송 필요.`);
@@ -448,6 +456,24 @@ function validate(data) {
     const dupUrls = Object.entries(urlsInField).filter(([_, c]) => c > 1);
     for (const [url, count] of dupUrls) {
       errors.push(`[출처중복] sources["${sourceKey}"]에 동일 URL이 ${count}번 등록: "${url}" — 같은 필드에 같은 URL 중복 금지`);
+    }
+
+    // 검색결과 페이지 URL — 동적 검색결과는 출처로 부적합, WARN
+    const SEARCH_RESULT_PATTERNS = [
+      /work24\.go\.kr\/wk\/a\/b\/\d+\//,
+      /worker\.co\.kr\/job\/list/,
+      /work\.go\.kr\/.*[?&](query|searchKeyword|keyword)=/,
+      /career\.go\.kr\/.*[?&](query|keyword|searchKeyword)=/,
+    ];
+    for (const src of srcVal) {
+      if (src && src.url) {
+        for (const pat of SEARCH_RESULT_PATTERNS) {
+          if (pat.test(src.url)) {
+            warnings.push(`[검색결과URL] sources["${sourceKey}"]에 동적 검색결과 페이지 URL: "${src.url}" — 기관 메인 또는 구체적 직업 상세 페이지로 교체 권장`);
+            break;
+          }
+        }
+      }
     }
   }
 
