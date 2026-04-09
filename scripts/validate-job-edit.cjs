@@ -120,8 +120,11 @@ function validate(data) {
     const certs = Array.isArray(fields.sidebarCerts) ? fields.sidebarCerts : JSON.parse(fields.sidebarCerts);
     for (const cert of certs) {
       const name = typeof cert === 'string' ? cert : cert.name;
+      // 국가기술자격 등급 접미사가 있으면 "시험" 포함해도 자격증으로 허용
+      // 예: "건설재료시험기사", "토목시험기능사" 등
+      const isNationalQual = name && /기사$|기능사$|기술사$|산업기사$|지도사$|기능장$/.test(name);
       for (const kw of FORBIDDEN_EXAM_KEYWORDS) {
-        if (name && name.includes(kw) && !name.includes('자격') && !name.includes('면허')) {
+        if (name && name.includes(kw) && !name.includes('자격') && !name.includes('면허') && !isNationalQual) {
           errors.push(`[자격증] "${name}"은 시험이지 자격증이 아님 — 제거 또는 "~자격증" 형태로`);
         }
       }
