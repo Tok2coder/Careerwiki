@@ -138,6 +138,9 @@ merged_profile_json에만 있는 필드도 draft 전송 시 누락되면 null로
 ❌ detailWlb: wlb/social 등급 없음 → 요약 카드 공란 렌더링 중
 ✅ youtubeLinks: 2개 (oembed 검증 필요)
 ⚠️  _sources: 구형 포맷 → A등급으로 업그레이드 필요
+⚠️  sidebarMajors: 없음 / ✅ sidebarMajors: 5개 → Phase 0-E 참조
+⚠️  sidebarOrgs: 없음 / ✅ sidebarOrgs: 1개 → Phase 0-E 참조
+⚠️  sidebarCerts: 1개 → 부족 / ✅ sidebarCerts: 3개 → Phase 0-E 참조
 ```
 
 **기존 데이터 변경 금지 원칙 (중요):**
@@ -180,6 +183,48 @@ Phase 0 진단 직후, Phase 1 리서치 시작 전에 실행.
 ✅ way: 각주 정상 (1~3 순차, 마침표 뒤)
 ⚠️  trivia: [1] 누락 — 출처 탐색 필요
 ❌ wlbDetail: [2]. 패턴 (마침표 앞) → 교정 필요
+```
+
+---
+
+### 0-E. 사이드바 현황 점검
+
+Phase 0-D 직후, Phase 1 시작 전에 사이드바 3개 필드의 현황을 확인한다.
+
+#### 점검 기준
+
+| 필드 | 충분 기준 | 보강 필요 기준 |
+|------|----------|--------------|
+| `sidebarMajors` | 3개 이상 | 없거나 2개 이하 |
+| `sidebarOrgs` | 1개 이상 | 없음 (현재 대부분 직업에 없음) |
+| `sidebarCerts` | 2개 이상 | 없거나 1개 이하 |
+
+#### 데이터 우선순위
+
+사이드바 3개 필드 모두 **`merged_profile_json`에 이미 있는 값을 먼저 확인**한다.
+UCJ에 없더라도 merged_profile에 값이 있으면 그 값에서 출발하여 부족한 부분만 보강.
+
+```sql
+SELECT
+  json_extract(merged_profile_json,'$.sidebarMajors') as majors,
+  json_extract(merged_profile_json,'$.sidebarOrgs') as orgs,
+  json_extract(merged_profile_json,'$.sidebarCerts') as certs
+FROM jobs WHERE slug='슬러그';
+```
+
+#### 사이드바 공통 원칙
+
+- **기존 항목 절대 삭제 금지** — 부족한 것만 추가
+- **모든 사이드바 항목에 `[N]` 각주 마커 금지** — 항목명/기관명/자격증명에 `[1]` 등 삽입 시 UI에 숫자가 그대로 노출됨
+- `sidebarOrgs` URL이 없으면 `"url": null`로 저장
+
+#### 진단 결과 보고 형식
+
+```
+[직업명] 사이드바 점검:
+✅ sidebarMajors: 6개 (merged_profile 있음) → 충분
+❌ sidebarOrgs: 없음 → 보강 필요 (관련 협회 검색)
+⚠️  sidebarCerts: 1개 → 부족 (2개+ 목표, Q-net 검색)
 ```
 
 ---
@@ -285,8 +330,9 @@ Phase 0 진단 직후, Phase 1 리서치 시작 전에 실행.
 | `overviewWork.main` | API 데이터 없을 때(null)만 — 수행 직무 서술형 (출처+각주 필수) |
 | `overviewAbilities.technKnow` | API 데이터 없을 때(null)만 — 활용 기술 서술형 (출처+각주 필수) |
 | `sidebarJobs` | 7~12개, **반드시 DB 실존 확인**. DB에 없는 항목은 제거하되, 해당 키워드가 heroTags에 없으면 heroTags에 태그로 추가 (정보 손실 방지) |
-| `sidebarMajors` | 3~5개, **반드시 DB 실존 확인** |
-| `sidebarCerts` | 2~4개, `[{name, url}]` 형식. **"~시험" 금지** — LEET·사법시험·TOEIC 등은 시험이지 자격증이 아님. Q-net URL 사용. |
+| `sidebarMajors` | 3~8개, **plain string 배열** `["전공명1", "전공명2"]`. **반드시 DB 실존 확인**(`SELECT name FROM majors WHERE ...`). `merged_profile_json.sidebarMajors`에 있으면 우선 활용하고 부족하면 커리어넷·워크넷 관련 학과 검색으로 보강. **[N] 마커 금지** |
+| `sidebarOrgs` | 1~3개, **object 배열** `[{"name":"기관명","url":"https://..."}]`. 관련 협회·학회·정부기관. `merged_profile_json.sidebarOrgs`에 있으면 우선 활용. 없으면 해당 직업 주관 협회 공식 사이트 검색(WebSearch: "직업명 협회" 등). URL 모르면 `"url": null`. **[N] 마커 금지** |
+| `sidebarCerts` | 2~5개, **object 배열** `[{"name":"자격증명","url":"https://www.q-net.or.kr/..."}]`. `merged_profile_json.sidebarCerts`에 있으면 우선 활용하고 부족하면 Q-net에서 해당 직업 관련 자격증 검색으로 보강. **"~시험" 금지** — LEET·사법시험·TOEIC 등은 시험이지 자격증이 아님. **[N] 마커 금지** |
 | `heroTags` | 4~8개, 별칭/세부분류/영문명 포함. **조사 어미 판정 예외**: validate가 "~의", "~이" 등으로 끝나는 태그를 조사로 판정하지만, "강의", "설비", "기여", "관리" 등은 명사임. validate에 예외 리스트가 있으므로 이런 경우 PASS됨. 그 외 실제 조사(~에서의, ~으로의)로 끝나면 수정 필요. |
 | `youtubeLinks` | 1~3개, oembed 검증 필수. **형식: `[{url: "https://youtube.com/watch?v=...", title: "영상 제목"}]` 객체 배열** — 문자열 배열(`["url"]`) 절대 금지. 문자열 배열이면 UI에 썸네일 안 뜨고 영상 제목 노출 불가. **한국어 영상만 허용** — 제목이 한국어인 한국 영상만 사용. 영어/외국어 영상 금지. 한국어 영상이 없으면 youtubeLinks 비워둠 (영어 영상 절대 넣지 않음). |
 
@@ -301,10 +347,13 @@ Phase 0 진단 직후, Phase 1 리서치 시작 전에 실행.
 
 **DB 실존 확인 쿼리:**
 ```sql
+-- 관련 직업 실존 확인
 SELECT name FROM jobs WHERE is_active=1 AND name IN ('직업A', '직업B', '직업C');
+-- 관련 전공 실존 확인 (sidebarMajors용)
 SELECT name FROM majors WHERE is_active=1 AND name IN ('전공A', '전공B');
 ```
-> ⚠️ 사이드바에 DB에 없는 직업/전공을 넣으면 404 링크가 생성됨
+> ⚠️ sidebarJobs·sidebarMajors에 DB에 없는 항목을 넣으면 404 링크가 생성됨
+> ⚠️ sidebarOrgs는 외부 기관이므로 DB 확인 불필요 — URL 직접 WebFetch로 생존 여부 확인
 
 ### 주석 위치 규칙 (⚠️ CRITICAL — 가장 빈번한 오류)
 

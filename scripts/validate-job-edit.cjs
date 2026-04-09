@@ -59,6 +59,37 @@ function validate(data) {
         warnings.push(`[출처] detailReady.${sub}에 내용이 있지만 sources["detailReady.${sub}"]가 없음 — 반드시 출처 등록 필요`);
       }
     }
+
+    // OS(Orphan Source) 탐지: sources["detailReady.X"]가 있는데 해당 배열의 어느 항목에도 [N] 마커가 없으면 WARN
+    // 원칙: 출처를 등록했으면 마지막 항목 끝에 [1] 마커가 있어야 함
+    for (const sub of ['curriculum', 'recruit', 'training', 'certificate']) {
+      const srcKey = `detailReady.${sub}`;
+      if (sources[srcKey] && sources[srcKey].length > 0 && dr[sub] && dr[sub].length > 0) {
+        const items = dr[sub];
+        const hasMarker = items.some(item => {
+          const text = typeof item === 'string' ? item : (item?.text || '');
+          return /\[\d+\]/.test(text);
+        });
+        if (!hasMarker) {
+          warnings.push(`[OS-Orphan] detailReady.${sub}: sources["${srcKey}"]가 등록되어 있지만 배열 항목에 [N] 마커가 없음 — 마지막 항목 끝에 [1] 추가 필요`);
+        }
+      }
+    }
+
+    // 중복 [N] 탐지: detailReady 배열의 같은 필드에서 동일한 [N] 마커가 2회 이상 등장하면 WARN
+    for (const sub of ['curriculum', 'recruit', 'training', 'certificate']) {
+      if (!dr[sub] || !Array.isArray(dr[sub])) continue;
+      const markerCounts = {};
+      dr[sub].forEach(item => {
+        const text = typeof item === 'string' ? item : (item?.text || '');
+        const markers = text.match(/\[\d+\]/g) || [];
+        markers.forEach(m => { markerCounts[m] = (markerCounts[m] || 0) + 1; });
+      });
+      const dupes = Object.entries(markerCounts).filter(([_, c]) => c > 1);
+      if (dupes.length > 0) {
+        warnings.push(`[각주중복] detailReady.${sub}: ${dupes.map(([n, c]) => `${n}이 ${c}회`).join(', ')} — 마지막 항목에만 1회 표기`);
+      }
+    }
     // detailReady.researchList 수정 금지 — CareerNet 원본 필드
     if (dr.researchList && dr.researchList.length > 0) {
       warnings.push(`[detailReady.researchList] CareerNet 원본 필드입니다. 스킬에서 수정/추가하지 마세요. 이 필드가 포함된 경우 제거 후 재전송 필요.`);
@@ -97,6 +128,28 @@ function validate(data) {
       // sidebarCerts 항목 텍스트에 [N] 마커 금지
       if (name && /\[\d+\]/.test(name)) {
         warnings.push(`[sidebarCerts] "${name}" — sidebarCerts 항목 텍스트에 [N] 마커가 포함되어 있습니다. sidebarCerts는 자격증명만 저장하세요. 출처는 sources["sidebarCerts"]에만 등록.`);
+      }
+    }
+  }
+
+  // sidebarMajors — [N] 마커 금지
+  if (fields.sidebarMajors) {
+    const majors = Array.isArray(fields.sidebarMajors) ? fields.sidebarMajors : JSON.parse(fields.sidebarMajors);
+    for (const major of majors) {
+      const name = typeof major === 'string' ? major : major.name;
+      if (name && /\[\d+\]/.test(name)) {
+        warnings.push(`[sidebarMajors] "${name}" — sidebarMajors 항목 텍스트에 [N] 마커가 포함되어 있습니다. 전공명만 저장하세요.`);
+      }
+    }
+  }
+
+  // sidebarOrgs — [N] 마커 금지
+  if (fields.sidebarOrgs) {
+    const orgs = Array.isArray(fields.sidebarOrgs) ? fields.sidebarOrgs : JSON.parse(fields.sidebarOrgs);
+    for (const org of orgs) {
+      const name = typeof org === 'string' ? org : org.name;
+      if (name && /\[\d+\]/.test(name)) {
+        warnings.push(`[sidebarOrgs] "${name}" — sidebarOrgs 항목 텍스트에 [N] 마커가 포함되어 있습니다. 기관명만 저장하세요.`);
       }
     }
   }
