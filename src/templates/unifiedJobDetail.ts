@@ -4360,8 +4360,6 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     
     // 채용 정보 — linkList {text, url} 객체 또는 string 지원
     if (detailReady.recruit && Array.isArray(detailReady.recruit) && detailReady.recruit.length > 0) {
-      // recruit 소스의 URL→hostname 매핑 (레거시 string 호환용)
-      const recruitSources = userSourcesFlat.filter(s => s.fieldKey === 'detailReady.recruit' && s.url)
       const recruitList = detailReady.recruit
         .map(item => {
           // {text, url} 객체인 경우 — 직접 링크 렌더링
@@ -4377,20 +4375,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             }
             return `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.recruit', footnoteMap, sourceTextMap)}</span></li>`
           }
-          // string인 경우 — 레거시: 소스 URL 도메인 매칭
+          // string인 경우 — plain text + 인라인 각주 [N] 렌더링
           const text = extractReadyItem(item, 'recruit')
           if (!safeTrim(text)) return ''
-          const domainMatch = text.match(/\(([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\)/)
-          if (domainMatch) {
-            const domain = domainMatch[1].toLowerCase()
-            const matchedSource = recruitSources.find(s => {
-              try { return new URL(s.url!).hostname.replace('www.', '').includes(domain.replace('www.', '')) } catch { return false }
-            })
-            if (matchedSource?.url) {
-              const displayText = text.replace(/\s*\([a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\)\s*$/, '')
-              return `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span><a href="${escapeHtml(matchedSource.url)}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary hover:underline">${applyInlineFootnotes(displayText, 'detailReady.recruit', footnoteMap, sourceTextMap)}</a> <span class="text-wiki-muted text-xs">(${escapeHtml(domain)})</span></span></li>`
-            }
-          }
           return `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(text, 'detailReady.recruit', footnoteMap, sourceTextMap)}</span></li>`
         })
         .filter(html => !!html)
