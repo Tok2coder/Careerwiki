@@ -411,50 +411,40 @@ function buildComfyWorkflow(prompt, useLora) {
   return workflow;
 }
 
-async function generatePrompt(systemPrompt, devVars) {
+// 브리지는 **Ollama gemma4:26b 단일 경로**로만 프롬프트를 생성한다.
+// 설계 의도: 로컬 비용 0원 + Cloudflare 의존 0개. Gemini 호출은 서버측 폴백
+// 경로(`/api/admin/image/regenerate` → autoImageService.ts)에만 존재하며,
+// 그쪽은 Cloudflare Pages env의 GEMINI_API_KEY를 쓴다. 브리지가 Gemini로
+// 폴백하면 키 유효성·요금·할당량 책임이 두 계층에 분산되어 디버깅이 어렵고,
+// "왜 로컬에서 클라우드 키를 쓰지?"라는 의문이 반복 발생한다.
+// → Ollama가 죽으면 브리지 job FAIL → 위젯이 서버 폴백 시도 → 거기서 Gemini.
+//
+// devVars 인자는 호출 호환성만 유지. 더 이상 사용하지 않음.
+async function generatePrompt(systemPrompt, _devVars) {
   await ensureOllamaRunning();
-  try {
-    const res = await fetch(`${OLLAMA_URL}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        messages: [
-          { role: 'system', content: 'You are an expert image prompt writer. Output only the final paragraph.' },
-          { role: 'user', content: systemPrompt },
-        ],
-        stream: false,
-        think: false,
-        options: { temperature: 0.7, top_p: 0.9, num_predict: 2048 },
-      }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const prompt = (data.message?.content || data.message?.thinking || '').trim();
-      if (prompt) return { prompt, source: 'ollama' };
-    }
-  } catch {}
-
-  if (!devVars.GEMINI_API_KEY) {
-    throw new Error('Ollama failed and GEMINI_API_KEY is missing');
+  const res = await fetch(`${OLLAMA_URL}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: OLLAMA_MODEL,
+      messages: [
+        { role: 'system', content: 'You are an expert image prompt writer. Output only the final paragraph.' },
+        { role: 'user', content: systemPrompt },
+      ],
+      stream: false,
+      think: false,
+      options: { temperature: 0.7, top_p: 0.9, num_predict: 2048 },
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    const snippet = body && body.length > 200 ? body.slice(0, 200) + '…' : body || '(no body)';
+    throw new Error(`Ollama HTTP ${res.status} — ${snippet}`);
   }
-
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${devVars.GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: systemPrompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1000, topP: 0.9 },
-      }),
-    }
-  );
-  if (!res.ok) throw new Error(`Gemini HTTP ${res.status}`);
   const data = await res.json();
-  const prompt = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-  if (!prompt) throw new Error('Gemini prompt generation failed');
-  return { prompt, source: 'gemini' };
+  const prompt = (data.message?.content || data.message?.thinking || '').trim();
+  if (!prompt) throw new Error('Ollama returned empty prompt content');
+  return { prompt, source: 'ollama' };
 }
 
 async function generateComfyImage(prompt, useLora) {
