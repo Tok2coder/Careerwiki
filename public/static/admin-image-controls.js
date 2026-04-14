@@ -1,11 +1,11 @@
 (function () {
-  const BRIDGE_BASE = 'http://127.0.0.1:3210';
+  const BRIDGE_BASE = 'https://bridge.careerwiki.org';
   const HEALTH_URL = `${BRIDGE_BASE}/api/health`;
   const BRIDGE_GENERATE_URL = `${BRIDGE_BASE}/api/generate-image`;
   const SERVER_SAVE_URL = '/api/admin/image/save';
   const REMOTE_FALLBACK_URL = '/api/admin/image/regenerate';
 
-  const HEALTH_TIMEOUT_MS = 500;
+  const HEALTH_TIMEOUT_MS = 3000;
   const BRIDGE_TIMEOUT_MS = 300000; // 5분
   const REMOTE_TIMEOUT_MS = 180000; // 3분 (Evolink 폴백)
   const HEALTH_CACHE_MS = 60000;    // 60초
@@ -111,9 +111,6 @@
         {
           method: 'GET',
           mode: 'cors',
-          // Chrome Local Network Access: public origin → private IP 호출 허용
-          // 미지원 브라우저(Firefox/Safari)는 이 옵션을 무시
-          targetAddressSpace: 'private',
         },
         HEALTH_TIMEOUT_MS
       );
@@ -132,8 +129,6 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, slug }),
         mode: 'cors',
-        // Chrome LNA: 브리지 호출에만 'private' (서버 폴백/저장은 same-origin이라 불필요)
-        targetAddressSpace: 'private',
       },
       BRIDGE_TIMEOUT_MS
     );
