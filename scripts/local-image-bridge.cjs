@@ -182,7 +182,13 @@ async function ensureComfyUiRunning() {
         '--disable-auto-launch',
         '--log-stdout',
       ],
-      { cwd: COMFYUI_APP_DIR }
+      {
+        cwd: COMFYUI_APP_DIR,
+        // Windows 한글 로캘(CP949)에서 ComfyUI/커스텀 노드 로그에 이모지(🎉 등)가
+        // 포함되면 stdout encode 단계에서 UnicodeEncodeError → 기동 중단.
+        // PYTHONIOENCODING=utf-8로 강제해 이 경로를 차단한다.
+        env: { ...process.env, PYTHONIOENCODING: 'utf-8', PYTHONUTF8: '1' },
+      }
     );
     if (child && child.pid) {
       comfyuiSpawnedPids.add(child.pid);
