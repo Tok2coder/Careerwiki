@@ -703,6 +703,134 @@ uploadRoutes.post('/webhooks/image-completed', async (c) => {
   }
 })
 
+// 로컬 브리지가 생성한 이미지 바이트를 받아 R2 + D1에 저장하는 엔드포인트
+// (브리지는 순수 컴퓨트만 담당, 모든 영구 쓰기는 서버에서 수행)
+uploadRoutes.post('/api/admin/image/save', requireAuth, async (c) => {
+  try {
+    const user = c.get('user')!
+    if (!hasImageAdminRole(user.role)) {
+      return c.json({ success: false, error: '관리자 권한이 필요합니다.' }, 403)
+    }
+
+    const body = await c.req.json() as {
+      targetType?: 'job' | 'major'
+      type?: 'jobs' | 'majors'
+      slug?: string
+      imageBase64?: string
+      mimeType?: string
+      prompt?: string
+      source?: { prompt?: string; image?: string }
+      loraApplied?: boolean
+    }
+
+    // targetType('job'/'major') 또는 type('jobs'/'majors') 둘 다 수용
+    const tableType: 'jobs' | 'majors' =
+      body.type === 'jobs' || body.targetType === 'job' ? 'jobs'
+      : body.type === 'majors' || body.targetType === 'major' ? 'majors'
+      : (() => { throw new Error('targetType 또는 type이 필요합니다.') })()
+
+    const slug = body.slug
+    const imageBase64 = body.imageBase64
+    const mimeType = body.mimeType || 'image/webp'
+
+    if (!slug || !imageBase64) {
+      return c.json({ success: false, error: 'slug와 imageBase64가 필요합니다.' }, 400)
+    }
+
+    if (!['image/webp', 'image/png', 'image/jpeg'].includes(mimeType)) {
+      return c.json({ success: false, error: '허용되지 않은 mimeType 입니다.' }, 400)
+    }
+
+    // 대상 레코드 존재 확인
+    const table = tableType
+    const record = await c.env.DB.prepare(
+      `SELECT name FROM ${table} WHERE slug = ? LIMIT 1`
+    ).bind(slug).first<{ name: string }>()
+    if (!record?.name) {
+      return c.json({ success: false, error: '대상 항목을 찾을 수 없습니다.' }, 404)
+    }
+
+    // base64 → ArrayBuffer
+    let buffer: ArrayBuffer
+    try {
+      const bin = atob(imageBase64)
+      const bytes = new Uint8Array(bin.length)
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i)
+      buffer = bytes.buffer
+    } catch {
+      return c.json({ success: false, error: 'imageBase64 디코딩 실패' }, 400)
+    }
+
+    // 사이즈 가드 (10MB)
+    if (buffer.byteLength > 10 * 1024 * 1024) {
+      return c.json({ success: false, error: '이미지 크기 한도(10MB) 초과' }, 413)
+    }
+
+    const { generateImageFileKey, getImagePublicUrl } = await import('../services/imageGenerationService')
+    const { uploadToR2 } = await import('../services/uploadService')
+
+    const fileKey = generateImageFileKey(tableType, slug, mimeType)
+    const uploadResult = await uploadToR2(c.env.UPLOADS, fileKey, buffer, mimeType, {
+      source: 'local-bridge',
+      adminId: String(user.id),
+      promptSource: body.source?.prompt || 'unknown',
+      imageSource: body.source?.image || 'unknown',
+    })
+    if (!uploadResult.success) {
+      return c.json({ success: false, error: uploadResult.error || 'R2 업로드 실패' }, 500)
+    }
+
+    const baseUrl = new URL(c.req.url).origin
+    const publicUrl = getImagePublicUrl(fileKey, baseUrl)
+    const cacheBustedUrl = `${publicUrl}?v=${Date.now()}`
+
+    const generationMeta = {
+      generatedAt: new Date().toISOString(),
+      generatedBy: 'local-bridge',
+      promptSource: body.source?.prompt || null,
+      imageSource: body.source?.image || null,
+      loraApplied: !!body.loraApplied,
+    }
+
+    await c.env.DB.prepare(`
+      UPDATE ${table}
+      SET image_url = ?,
+          image_prompt = ?,
+          merged_profile_json = json_set(
+            COALESCE(merged_profile_json, '{}'),
+            '$.image_url', ?,
+            '$.image_generation_meta', json(?)
+          )
+      WHERE slug = ?
+    `).bind(
+      cacheBustedUrl,
+      body.prompt || null,
+      cacheBustedUrl,
+      JSON.stringify(generationMeta),
+      slug
+    ).run()
+
+    if (c.env.KV) {
+      const { invalidateListCache } = await import('../services/cacheService')
+      await invalidateListCache(c.env.KV, tableType === 'jobs' ? 'job' : 'major')
+    }
+
+    return c.json({
+      success: true,
+      imageUrl: cacheBustedUrl,
+      r2Key: fileKey,
+      source: { prompt: body.source?.prompt || null, image: body.source?.image || null, mode: 'local-bridge' },
+      loraApplied: !!body.loraApplied,
+      generationMeta,
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '이미지 저장 중 오류가 발생했습니다.'
+    }, 500)
+  }
+})
+
 uploadRoutes.post('/api/admin/image/regenerate', requireAuth, async (c) => {
   try {
     const user = c.get('user')!
