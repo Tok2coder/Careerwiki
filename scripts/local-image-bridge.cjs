@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
@@ -9,12 +8,6 @@ const { getJobPromptTemplate, getMajorPromptTemplate } = require('./prompt-templ
 
 const HOST = process.env.CW_LOCAL_BRIDGE_HOST || '127.0.0.1';
 const PORT = Number(process.env.CW_LOCAL_BRIDGE_PORT || 3210);
-// HTTP 폴백 포트 — mkcert 인증서가 발급된 환경에서는 3210을 HTTPS로 쓰고
-// 과도기 호환을 위해 3211에 HTTP도 열어둔다. 인증서 없으면 3210을 HTTP로 사용.
-const HTTP_FALLBACK_PORT = Number(process.env.CW_LOCAL_BRIDGE_HTTP_PORT || 3211);
-const CERT_DIR = path.join(__dirname, 'certs');
-const CERT_KEY_PATH = path.join(CERT_DIR, 'bridge-key.pem');
-const CERT_CRT_PATH = path.join(CERT_DIR, 'bridge-cert.pem');
 const ROOT = path.join(__dirname, '..');
 const PROD_URL = process.env.CW_LOCAL_BRIDGE_SITE || 'https://careerwiki.org';
 const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
@@ -572,7 +565,7 @@ async function getBridgeHealth() {
   };
 }
 
-async function requestHandler(req, res) {
+const server = http.createServer(async (req, res) => {
   const origin = req.headers.origin || '';
 
   if (req.method === 'OPTIONS') {
@@ -613,40 +606,10 @@ async function requestHandler(req, res) {
   }
 
   sendJson(res, 404, { success: false, error: 'not found' }, origin);
-}
+});
 
-// 인증서 로드 시도. mkcert로 발급한 파일이 있으면 HTTPS 서버를 띄우고,
-// 없으면 HTTP 하나만 띄우는 레거시 동작으로 폴백한다.
-function loadTlsOptions() {
-  try {
-    if (fs.existsSync(CERT_KEY_PATH) && fs.existsSync(CERT_CRT_PATH)) {
-      return {
-        key: fs.readFileSync(CERT_KEY_PATH),
-        cert: fs.readFileSync(CERT_CRT_PATH),
-      };
-    }
-  } catch (err) {
-    console.warn(`[CW-BRIDGE] TLS cert read failed: ${err.message}`);
-  }
-  return null;
-}
-
-const tlsOptions = loadTlsOptions();
-
-if (tlsOptions) {
-  // HTTPS 기본 — Chrome LNA를 우회하려면 public origin → Secure Context만 가능
-  https.createServer(tlsOptions, requestHandler).listen(PORT, HOST, () => {
-    console.log(`[CW-BRIDGE] listening on https://${HOST}:${PORT} (mkcert TLS)`);
-  });
-  // HTTP 폴백 포트 — curl/테스트 및 과도기 호환용
-  http.createServer(requestHandler).listen(HTTP_FALLBACK_PORT, HOST, () => {
-    console.log(`[CW-BRIDGE] legacy HTTP fallback on http://${HOST}:${HTTP_FALLBACK_PORT}`);
-  });
-} else {
-  console.warn('[CW-BRIDGE] TLS cert not found in scripts/certs/. Run mkcert per docs — falling back to HTTP only.');
-  http.createServer(requestHandler).listen(PORT, HOST, () => {
-    console.log(`[CW-BRIDGE] listening on http://${HOST}:${PORT} (HTTP-only fallback)`);
-  });
-}
-console.log(`[CW-BRIDGE] ComfyUI on-demand mode; idle timeout=${Math.round(COMFY_IDLE_TIMEOUT_MS / 60000)}m (env CW_COMFY_IDLE_MINUTES)`);
+server.listen(PORT, HOST, () => {
+  console.log(`[CW-BRIDGE] listening on http://${HOST}:${PORT}`);
+  console.log(`[CW-BRIDGE] ComfyUI on-demand mode; idle timeout=${Math.round(COMFY_IDLE_TIMEOUT_MS / 60000)}m (env CW_COMFY_IDLE_MINUTES)`);
+});
 

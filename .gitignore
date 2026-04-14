@@ -1,12 +1,6 @@
 # prod
 dist/
 
-# local HTTPS bridge certs (mkcert-issued, machine-local)
-scripts/certs/
-
-# skill cache (diff-snapshot.cjs 스냅샷)
-.skill-cache/
-
 # dev
 .yarn/
 !.yarn/releases
