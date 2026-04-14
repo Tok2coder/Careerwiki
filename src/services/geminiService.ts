@@ -4,7 +4,11 @@
  */
 
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models'
-const MODEL = 'gemini-2.0-flash'
+// 'gemini-flash-latest' = Google가 alias로 관리하는 최신 stable flash 모델.
+// 이전 'gemini-2.0-flash'는 free-tier 분당 입력 토큰 한도가 타이트해 429(quota)
+// 발생 시 admin UI에서 500으로 래핑돼 원인 파악이 어려움. latest alias는 할당량
+// 여유가 크고 Google가 back-end를 교체해도 코드 변경 없이 따라감.
+const MODEL = 'gemini-flash-latest'
 
 // 직업용 프롬프트 템플릿
 const JOB_PROMPT_TEMPLATE = `You will create ONE paragraph describing an image prompt based on the job "{jobName}".
@@ -124,9 +128,14 @@ async function callGeminiAPI(
 
     if (!response.ok) {
       const errorText = await response.text()
+      // 실제 원인(quota/safety/model-not-found 등)을 admin에서 볼 수 있도록
+      // 상태 코드 + 응답 본문 앞부분을 함께 노출. 본문은 너무 길면 잘라냄.
+      const snippet = errorText && errorText.length > 300
+        ? errorText.slice(0, 300) + '…'
+        : errorText || '(no body)'
       return {
         success: false,
-        error: `Gemini API 오류: HTTP ${response.status}`
+        error: `Gemini API 오류: HTTP ${response.status} — ${snippet}`
       }
     }
 
