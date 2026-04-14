@@ -96,8 +96,17 @@ const errorLoggingMiddleware = async (c: any, next: any) => {
 const app = new Hono<AppEnv>()
 
 // Global error handler — 스택 트레이스를 클라이언트에 노출하지 않음
+// /api/* 경로는 JSON으로 반환해 프론트 fetch().json() 이 SyntaxError를 던지지 않게 한다.
 app.onError((err, c) => {
   console.error('[GlobalError]', err?.message, err?.stack)
+  try {
+    const pathname = new URL(c.req.url).pathname
+    if (pathname.startsWith('/api/')) {
+      return c.json({ success: false, error: err?.message || 'Internal Server Error' }, 500)
+    }
+  } catch {
+    // URL parse 실패 시에는 기본 텍스트 응답
+  }
   return c.text('Internal Server Error', 500)
 })
 
