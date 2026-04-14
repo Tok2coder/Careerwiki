@@ -1,43 +1,43 @@
-/**
+﻿/**
  * CareerWiki API Client
- * 프론트엔드에서 API 호출을 위한 클라이언트
+ * ?꾨줎?몄뿏?쒖뿉??API ?몄텧???꾪븳 ?대씪?댁뼵??
  */
 
-// API Base URL (현재 도메인 사용)
+// API Base URL (?꾩옱 ?꾨찓???ъ슜)
 const API_BASE = window.location.origin + '/api';
 const TELEMETRY_VERSION = 'phase1-task3';
 
-// Phase 4: 편집 시스템 클라이언트
+// Phase 4: ?몄쭛 ?쒖뒪???대씪?댁뼵??
 const EditSystem = {
   currentModal: null,
   currentEntity: null,
   currentHistoryModal: null,
-  currentHistoryEntity: null, // 현재 열린 역사 모달의 엔티티 정보 { entityType, entityId }
+  currentHistoryEntity: null, // ?꾩옱 ?대┛ ??궗 紐⑤떖???뷀떚???뺣낫 { entityType, entityId }
   editMode: false,
   editData: {},
-  tempEdits: {}, // 임시 저장된 편집 내용 { fieldKey: { content, editType, sources } }
+  tempEdits: {}, // ?꾩떆 ??λ맂 ?몄쭛 ?댁슜 { fieldKey: { content, editType, sources } }
 
   /**
-   * 편집 시스템 초기화
-   * 편집 모드 UI는 edit-mode.js에서 처리 (api-client.js는 역사/일반 모드만 담당)
+   * ?몄쭛 ?쒖뒪??珥덇린??
+   * ?몄쭛 紐⑤뱶 UI??edit-mode.js?먯꽌 泥섎━ (api-client.js????궗/?쇰컲 紐⑤뱶留??대떦)
    */
   init() {
-    // 편집 모드는 edit-mode.js에서 처리하므로 여기서는 스킵
+    // ?몄쭛 紐⑤뱶??edit-mode.js?먯꽌 泥섎━?섎?濡??ш린?쒕뒗 ?ㅽ궢
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('edit') === 'true') {
-      // edit-mode.js가 처리함 - 여기서는 아무것도 안 함
+      // edit-mode.js媛 泥섎━??- ?ш린?쒕뒗 ?꾨Т寃껊룄 ????
       return;
     }
 
-    // 일반 모드 이벤트 리스너 등록 (역사 버튼, 편집 버튼 트리거 등)
+    // ?쇰컲 紐⑤뱶 ?대깽??由ъ뒪???깅줉 (??궗 踰꾪듉, ?몄쭛 踰꾪듉 ?몃━嫄???
     this.initNormalModeEventListeners();
   },
 
   /**
-   * 일반 모드 이벤트 리스너 등록
+   * ?쇰컲 紐⑤뱶 ?대깽??由ъ뒪???깅줉
    */
   initNormalModeEventListeners() {
-    // 편집 모드 트리거 버튼 (히어로 섹션)
+    // ?몄쭛 紐⑤뱶 ?몃━嫄?踰꾪듉 (?덉뼱濡??뱀뀡)
     document.addEventListener('click', (e) => {
       const editModeTrigger = e.target.closest('[data-edit-mode-trigger]');
       if (editModeTrigger) {
@@ -45,35 +45,35 @@ const EditSystem = {
         this.handleEditModeClick(editModeTrigger);
       }
       
-      // 문서 역사 트리거 버튼
+      // 臾몄꽌 ??궗 ?몃━嫄?踰꾪듉
       const historyTrigger = e.target.closest('[data-history-trigger]');
       if (historyTrigger) {
         e.preventDefault();
         this.handleHistoryClick(historyTrigger);
       }
       
-      // 섹션별 편집 버튼 (기존)
+      // ?뱀뀡蹂??몄쭛 踰꾪듉 (湲곗〈)
       const editButton = e.target.closest('[data-edit-button]');
       if (editButton) {
         e.preventDefault();
         this.handleEditClick(editButton);
       }
 
-      // 모달 닫기 버튼
+      // 紐⑤떖 ?リ린 踰꾪듉
       const closeBtn = e.target.closest('[data-edit-modal-close]');
       if (closeBtn) {
         e.preventDefault();
         this.closeModal();
       }
 
-      // 문서 역사 모달 닫기 버튼
+      // 臾몄꽌 ??궗 紐⑤떖 ?リ린 踰꾪듉
       const historyCloseBtn = e.target.closest('[data-history-modal-close]');
       if (historyCloseBtn) {
         e.preventDefault();
         this.closeHistoryModal();
       }
 
-      // 백드롭 클릭으로 닫기
+      // 諛깅뱶濡??대┃?쇰줈 ?リ린
       const backdrop = e.target.closest('[data-edit-modal-backdrop]');
       if (backdrop && e.target === backdrop) {
         this.closeModal();
@@ -84,7 +84,7 @@ const EditSystem = {
         this.closeHistoryModal();
       }
 
-      // 되돌리기 버튼
+      // ?섎룎由ш린 踰꾪듉
       const restoreBtn = e.target.closest('[data-restore-revision]');
       if (restoreBtn) {
         e.preventDefault();
@@ -92,7 +92,7 @@ const EditSystem = {
         this.handleRestoreRevision(revisionId);
       }
 
-      // 비교 버튼
+      // 鍮꾧탳 踰꾪듉
       const compareBtn = e.target.closest('[data-compare-revision]');
       if (compareBtn) {
         e.preventDefault();
@@ -100,7 +100,7 @@ const EditSystem = {
         this.handleCompareRevision(revisionId);
       }
       
-      // 페이지네이션 버튼
+      // ?섏씠吏?ㅼ씠??踰꾪듉
       const pageBtn = e.target.closest('[data-history-page]');
       if (pageBtn) {
         e.preventDefault();
@@ -114,14 +114,14 @@ const EditSystem = {
   },
 
   /**
-   * 편집 모드 이벤트 리스너 등록
+   * ?몄쭛 紐⑤뱶 ?대깽??由ъ뒪???깅줉
    */
   initEditModeEventListeners() {
-    // 중복 등록 방지
+    // 以묐났 ?깅줉 諛⑹?
     if (this._editListenersAttached) return;
     this._editListenersAttached = true;
 
-    // 편집 모드 저장/취소 버튼
+    // ?몄쭛 紐⑤뱶 ???痍⑥냼 踰꾪듉
     document.addEventListener('click', (e) => {
       const saveBtn = e.target.closest('[data-edit-save]');
       if (saveBtn) {
@@ -136,7 +136,7 @@ const EditSystem = {
       }
     });
 
-    // ESC 키로 편집 모드 종료
+    // ESC ?ㅻ줈 ?몄쭛 紐⑤뱶 醫낅즺
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.editMode) {
         this.exitEditMode();
@@ -145,12 +145,12 @@ const EditSystem = {
   },
 
   /**
-   * 편집 모드 진입
+   * ?몄쭛 紐⑤뱶 吏꾩엯
    */
   async enterEditMode() {
     this.editMode = true;
     
-    // 현재 페이지에서 엔티티 정보 추출
+    // ?꾩옱 ?섏씠吏?먯꽌 ?뷀떚???뺣낫 異붿텧
     const pathname = window.location.pathname;
     let entityType = null;
     let entityId = null;
@@ -158,35 +158,35 @@ const EditSystem = {
     if (pathname.startsWith('/job/')) {
       entityType = 'job';
       let slug = pathname.replace('/job/', '');
-      // URL 인코딩된 slug 디코딩
+      // URL ?몄퐫?⑸맂 slug ?붿퐫??
       try {
         slug = decodeURIComponent(slug);
       } catch (e) {
-        // 디코딩 실패 시 원본 사용
+        // ?붿퐫???ㅽ뙣 ???먮낯 ?ъ슜
       }
       const jobIdElement = document.querySelector('[data-job-id]');
       entityId = jobIdElement?.getAttribute('data-job-id') || slug;
     } else if (pathname.startsWith('/major/')) {
       entityType = 'major';
       let slug = pathname.replace('/major/', '');
-      // URL 인코딩된 slug 디코딩
+      // URL ?몄퐫?⑸맂 slug ?붿퐫??
       try {
         slug = decodeURIComponent(slug);
       } catch (e) {
-        // 디코딩 실패 시 원본 사용
+        // ?붿퐫???ㅽ뙣 ???먮낯 ?ъ슜
       }
-      // URL slug를 우선 사용 (data-major-id는 fallback)
-      // URL slug가 실제 페이지의 전공을 정확히 나타내므로 우선순위가 높음
+      // URL slug瑜??곗꽑 ?ъ슜 (data-major-id??fallback)
+      // URL slug媛 ?ㅼ젣 ?섏씠吏???꾧났???뺥솗???섑??대?濡??곗꽑?쒖쐞媛 ?믪쓬
       const majorIdElement = document.querySelector('[data-major-id]');
       entityId = slug || majorIdElement?.getAttribute('data-major-id');
     } else if (pathname.startsWith('/howto/') || pathname.startsWith('/guide/')) {
       entityType = 'howto';
       let slug = pathname.replace(/^\/(howto|guide)\//, '');
-      // URL 인코딩된 slug 디코딩
+      // URL ?몄퐫?⑸맂 slug ?붿퐫??
       try {
         slug = decodeURIComponent(slug);
       } catch (e) {
-        // 디코딩 실패 시 원본 사용
+        // ?붿퐫???ㅽ뙣 ???먮낯 ?ъ슜
       }
       entityId = slug;
     }
@@ -197,38 +197,38 @@ const EditSystem = {
 
     this.currentEntity = { entityType, entityId };
 
-    // 서버에서 편집 데이터 로드
+    // ?쒕쾭?먯꽌 ?몄쭛 ?곗씠??濡쒕뱶
     await this.loadEditData();
     
-    // 편집 모드 UI 생성
+    // ?몄쭛 紐⑤뱶 UI ?앹꽦
     this.renderEditMode();
     
-    // 필드별 편집 이벤트 리스너 초기화
+    // ?꾨뱶蹂??몄쭛 ?대깽??由ъ뒪??珥덇린??
     setTimeout(() => {
       this.initFieldEditListeners();
     }, 200);
   },
 
   /**
-   * 서버에서 편집 데이터 로드
+   * ?쒕쾭?먯꽌 ?몄쭛 ?곗씠??濡쒕뱶
    */
   async loadEditData() {
     const { entityType, entityId } = this.currentEntity;
     
     try {
       let endpoint;
-      // entityId가 이미 URL 인코딩되어 있을 수 있으므로, 
-      // decodeURIComponent로 디코딩한 후 다시 인코딩하여 일관성 유지
+      // entityId媛 ?대? URL ?몄퐫?⑸릺???덉쓣 ???덉쑝誘濡? 
+      // decodeURIComponent濡??붿퐫?⑺븳 ???ㅼ떆 ?몄퐫?⑺븯???쇨????좎?
       let normalizedEntityId = entityId;
       try {
-        // 이미 인코딩된 경우 디코딩 시도
+        // ?대? ?몄퐫?⑸맂 寃쎌슦 ?붿퐫???쒕룄
         const decoded = decodeURIComponent(entityId);
-        // 디코딩이 성공하고 결과가 다르면 인코딩된 것이었음
+        // ?붿퐫?⑹씠 ?깃났?섍퀬 寃곌낵媛 ?ㅻⅤ硫??몄퐫?⑸맂 寃껋씠?덉쓬
         if (decoded !== entityId) {
           normalizedEntityId = decoded;
         }
       } catch (e) {
-        // 디코딩 실패 시 원본 사용 (이미 디코딩된 상태)
+        // ?붿퐫???ㅽ뙣 ???먮낯 ?ъ슜 (?대? ?붿퐫?⑸맂 ?곹깭)
         normalizedEntityId = entityId;
       }
       
@@ -244,10 +244,10 @@ const EditSystem = {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(result.error || '편집 데이터 로드 실패');
+        throw new Error(result.error || '?몄쭛 ?곗씠??濡쒕뱶 ?ㅽ뙣');
       }
 
-      // 데이터 검증
+      // ?곗씠??寃利?
       if (!result.data) {
         this.editData = {};
       } else {
@@ -259,48 +259,48 @@ const EditSystem = {
         });
       }
       
-      // entityId 업데이트 (edit-data API에서 반환하는 실제 ID 사용)
+      // entityId ?낅뜲?댄듃 (edit-data API?먯꽌 諛섑솚?섎뒗 ?ㅼ젣 ID ?ъ슜)
       if (result.entityId) {
         this.currentEntity.entityId = result.entityId;
       } else {
       }
     } catch (error) {
-      alert('편집 데이터를 불러오는데 실패했습니다: ' + (error.message || '알 수 없는 오류'));
-      // 에러 발생 시 편집 모드 종료
+      alert('?몄쭛 ?곗씠?곕? 遺덈윭?ㅻ뒗???ㅽ뙣?덉뒿?덈떎: ' + (error.message || '?????녿뒗 ?ㅻ쪟'));
+      // ?먮윭 諛쒖깮 ???몄쭛 紐⑤뱶 醫낅즺
       this.exitEditMode();
     }
   },
 
   /**
-   * 편집 모드 UI 렌더링
+   * ?몄쭛 紐⑤뱶 UI ?뚮뜑留?
    */
   renderEditMode() {
-    // 기존 페이지 전체 숨기기
+    // 湲곗〈 ?섏씠吏 ?꾩껜 ?④린湲?
     const body = document.body;
     
-    // 원본 페이지를 숨김
+    // ?먮낯 ?섏씠吏瑜??④?
     body.style.display = 'none';
     body.setAttribute('data-original-page-hidden', 'true');
 
-    // 편집 모드 UI 생성
+    // ?몄쭛 紐⑤뱶 UI ?앹꽦
     const editModeHtml = this.createEditModeHtml();
     
-    // body 내용을 편집 모드로 교체
+    // body ?댁슜???몄쭛 紐⑤뱶濡?援먯껜
     body.style.display = '';
     body.innerHTML = editModeHtml;
     body.setAttribute('data-edit-mode', 'true');
 
-    // 편집 모드 이벤트 리스너 등록 (body 교체 후)
+    // ?몄쭛 紐⑤뱶 ?대깽??由ъ뒪???깅줉 (body 援먯껜 ??
     this.initEditModeEventListeners();
   },
 
   /**
-   * 편집 모드 HTML 생성 (섹션별로 나눔)
+   * ?몄쭛 紐⑤뱶 HTML ?앹꽦 (?뱀뀡蹂꾨줈 ?섎닎)
    */
   createEditModeHtml() {
     const { entityType } = this.currentEntity;
     
-    // 섹션별 필드 그룹화
+    // ?뱀뀡蹂??꾨뱶 洹몃９??
     const sections = this.groupFieldsBySection(entityType);
 
     const sectionsHtml = sections.map(section => {
@@ -320,16 +320,16 @@ const EditSystem = {
                 data-field-edit-btn="${field.key}"
                 class="px-3 py-1.5 text-xs rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
               >
-                <i class="fas fa-edit mr-1"></i>편집
+                <i class="fas fa-edit mr-1"></i>?몄쭛
               </button>
             </div>
             
-            <!-- 읽기 전용 표시 영역 -->
+            <!-- ?쎄린 ?꾩슜 ?쒖떆 ?곸뿭 -->
             <div id="display-${field.key}" class="min-h-[60px] px-4 py-3 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white whitespace-pre-wrap">
-              ${value ? this.escapeHtml(value) : '<span class="text-wiki-muted">내용 없음</span>'}
+              ${value ? this.escapeHtml(value) : '<span class="text-wiki-muted">?댁슜 ?놁쓬</span>'}
             </div>
             
-            <!-- 편집 영역 (초기에는 숨김) -->
+            <!-- ?몄쭛 ?곸뿭 (珥덇린?먮뒗 ?④?) -->
             <div id="edit-${field.key}" class="hidden space-y-3">
               ${isTextarea ? `
                 <textarea
@@ -348,20 +348,20 @@ const EditSystem = {
                 />
               `}
               
-              <!-- 수정 유형 선택 -->
+              <!-- ?섏젙 ?좏삎 ?좏깮 -->
               <div class="space-y-2">
                 <div class="flex items-center gap-4">
                   <label class="flex items-center gap-2 text-sm text-white cursor-pointer">
                     <input type="radio" name="edit-type-${field.key}" value="simple" checked class="text-wiki-primary">
-                    <span>단순 수정</span>
+                    <span>?⑥닚 ?섏젙</span>
                   </label>
                   <label class="flex items-center gap-2 text-sm text-white cursor-pointer">
                     <input type="radio" name="edit-type-${field.key}" value="source" class="text-wiki-primary">
-                    <span>출처 입력</span>
+                    <span>異쒖쿂 ?낅젰</span>
                   </label>
                 </div>
                 
-                <!-- 출처 입력 영역 (출처 입력 선택 시 표시) -->
+                <!-- 異쒖쿂 ?낅젰 ?곸뿭 (異쒖쿂 ?낅젰 ?좏깮 ???쒖떆) -->
                 <div id="sources-${field.key}" class="hidden space-y-2">
                   <div class="sources-list-${field.key} space-y-2"></div>
                   <button
@@ -369,26 +369,26 @@ const EditSystem = {
                     data-add-source="${field.key}"
                     class="px-3 py-1.5 text-xs rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
                   >
-                    <i class="fas fa-plus mr-1"></i>출처 추가
+                    <i class="fas fa-plus mr-1"></i>異쒖쿂 異붽?
                   </button>
                 </div>
               </div>
               
-              <!-- 임시 저장/취소 버튼 -->
+              <!-- ?꾩떆 ???痍⑥냼 踰꾪듉 -->
               <div class="flex items-center gap-2">
                 <button
                   type="button"
                   data-field-temp-save="${field.key}"
                   class="px-4 py-2 text-sm rounded-lg bg-wiki-primary/70 text-white hover:bg-wiki-primary transition"
                 >
-                  임시 저장
+                  ?꾩떆 ???
                 </button>
                 <button
                   type="button"
                   data-field-cancel="${field.key}"
                   class="px-4 py-2 text-sm rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
                 >
-                  취소
+                  痍⑥냼
                 </button>
               </div>
             </div>
@@ -412,58 +412,58 @@ const EditSystem = {
     const isJob = this.currentEntity.entityType === 'job';
     const gradientFrom = isJob ? 'wiki-primary' : 'wiki-secondary';
     const gradientTo = isJob ? 'blue-500' : 'purple-500';
-    const entityLabel = isJob ? '직업' : '전공';
+    const entityLabel = isJob ? '吏곸뾽' : '?꾧났';
     
     return `
       <div class="h-screen flex flex-col bg-wiki-bg overflow-hidden">
-        <!-- 편집 모드 헤더 -->
+        <!-- ?몄쭛 紐⑤뱶 ?ㅻ뜑 -->
         <div class="flex-shrink-0 bg-gradient-to-b from-wiki-card to-wiki-card/95 backdrop-blur-md border-b border-${gradientFrom}/20 shadow-lg shadow-black/20">
           <div class="max-w-[1600px] mx-auto">
-            <!-- 상단: 편집 상태 표시 바 -->
+            <!-- ?곷떒: ?몄쭛 ?곹깭 ?쒖떆 諛?-->
             <div class="px-4 sm:px-6 py-1.5 bg-gradient-to-r from-${gradientFrom}/10 to-${gradientTo}/10 border-b border-${gradientFrom}/10">
               <div class="flex items-center gap-2 text-xs text-${gradientFrom}">
                 <i class="fas fa-edit"></i>
-                <span class="font-medium">${entityLabel} 편집 중</span>
+                <span class="font-medium">${entityLabel} ?몄쭛 以?/span>
               </div>
             </div>
             
-            <!-- 메인: 제목 + 액션 버튼 -->
+            <!-- 硫붿씤: ?쒕ぉ + ?≪뀡 踰꾪듉 -->
             <div class="px-4 sm:px-6 py-3 sm:py-4">
               <div class="flex items-center justify-between gap-4">
-                <!-- 왼쪽: 뒤로가기 + 제목 -->
+                <!-- ?쇱そ: ?ㅻ줈媛湲?+ ?쒕ぉ -->
                 <div class="flex items-center gap-3 min-w-0 flex-1">
                   <button
                     type="button"
                     data-edit-cancel
                     class="shrink-0 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center text-wiki-muted hover:text-white hover:bg-wiki-border/30 rounded-xl transition"
-                    title="편집 취소"
+                    title="?몄쭛 痍⑥냼"
                   >
                     <i class="fas fa-arrow-left text-lg"></i>
                   </button>
                   <div class="min-w-0 flex-1">
-                    <h1 class="text-xl sm:text-2xl font-bold text-white leading-tight">편집 모드</h1>
-                    <p class="text-xs sm:text-sm text-wiki-muted mt-0.5 hidden sm:block">필드를 수정하고 저장하세요</p>
+                    <h1 class="text-xl sm:text-2xl font-bold text-white leading-tight">?몄쭛 紐⑤뱶</h1>
+                    <p class="text-xs sm:text-sm text-wiki-muted mt-0.5 hidden sm:block">?꾨뱶瑜??섏젙?섍퀬 ??ν븯?몄슂</p>
                   </div>
                 </div>
                 
-                <!-- 오른쪽: 저장 버튼 -->
+                <!-- ?ㅻⅨ履? ???踰꾪듉 -->
                 <button
                   type="button"
                   data-edit-save-all
                   class="shrink-0 px-5 sm:px-6 py-2.5 sm:py-3 min-h-[44px] bg-gradient-to-r from-${gradientFrom} to-${gradientTo} text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-${gradientFrom}/30 active:scale-[0.98] transition-all duration-200 text-sm sm:text-base"
                 >
                   <i class="fas fa-check mr-2 hidden sm:inline"></i>
-                  <span>저장</span>
+                  <span>???/span>
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 편집 모드 본문 (단일 컬럼) -->
+        <!-- ?몄쭛 紐⑤뱶 蹂몃Ц (?⑥씪 而щ읆) -->
         <div class="flex-1 overflow-hidden max-w-[1200px] mx-auto w-full px-6 py-6">
           <div class="bg-wiki-bg/50 border border-wiki-border/60 rounded-xl p-6 flex flex-col h-full">
-            <h2 class="text-lg font-semibold text-white mb-4 flex-shrink-0">편집창</h2>
+            <h2 class="text-lg font-semibold text-white mb-4 flex-shrink-0">?몄쭛李?/h2>
             <div class="flex-1 overflow-y-auto space-y-6 pr-2">
               ${sectionsHtml}
             </div>
@@ -474,75 +474,75 @@ const EditSystem = {
   },
 
   /**
-   * 필드를 섹션별로 그룹화
+   * ?꾨뱶瑜??뱀뀡蹂꾨줈 洹몃９??
    */
   groupFieldsBySection(entityType) {
     if (entityType === 'major') {
       return [
         {
-          title: '히어로 섹션',
+          title: '기본 정보',
           icon: 'fa-star',
           fields: [
             { key: 'name', label: '전공명', type: 'text' },
-            { key: 'summary', label: '전공 소개', type: 'textarea' }
+            { key: 'summary', label: '전공 요약', type: 'textarea' }
           ]
         },
         {
-          title: '개요 탭',
+          title: '개요',
           icon: 'fa-circle-info',
           fields: [
             { key: 'overview.summary', label: '전공 개요', type: 'textarea' },
             { key: 'property', label: '전공 특성', type: 'textarea' },
-            { key: 'aptitude', label: '이 전공에 어울리는 사람', type: 'textarea' }
+            { key: 'aptitude', label: '적성과 흥미', type: 'textarea' }
           ]
         },
         {
-          title: '상세정보 탭',
+          title: '학습과 진로',
           icon: 'fa-layer-group',
           fields: [
-            { key: 'whatStudy', label: '무엇을 배우나', type: 'textarea' },
-            { key: 'howPrepare', label: '어떻게 준비하나', type: 'textarea' },
-            { key: 'enterField', label: '졸업 후 진출 분야', type: 'textarea' }
+            { key: 'whatStudy', label: '무엇을 배우나요', type: 'textarea' },
+            { key: 'howPrepare', label: '어떻게 준비하나요', type: 'textarea' },
+            { key: 'enterField', label: '관련 진출 분야', type: 'textarea' }
           ]
         }
-      ]
+      ];
     } else if (entityType === 'job') {
       return [
         {
-          title: '히어로 섹션',
+          title: '기본 정보',
           icon: 'fa-star',
           fields: [
             { key: 'name', label: '직업명', type: 'text' },
-            { key: 'summary', label: '직업 소개 (히어로 설명)', type: 'textarea' },
+            { key: 'summary', label: '직업 요약', type: 'textarea' },
             { key: 'tags', label: '태그', type: 'textarea' }
           ]
         },
         {
-          title: '개요 탭',
+          title: '직업 개요',
           icon: 'fa-circle-info',
           fields: [
             { key: 'duties', label: '주요 업무', type: 'textarea' },
-            { key: 'way', label: '되는 방법', type: 'textarea' },
-            { key: 'salary', label: '임금 정보', type: 'textarea' },
+            { key: 'way', label: '진입 경로', type: 'textarea' },
+            { key: 'salary', label: '임금 수준', type: 'textarea' },
             { key: 'prospect', label: '전망', type: 'textarea' },
             { key: 'satisfaction', label: '만족도', type: 'textarea' },
-            { key: 'status', label: '고용 형태', type: 'textarea' }
+            { key: 'status', label: '현황', type: 'textarea' }
           ]
         },
         {
-          title: '상세정보 탭',
+          title: '요구 역량',
           icon: 'fa-layer-group',
           fields: [
-            { key: 'knowledge', label: '지식', type: 'textarea' },
-            { key: 'environment', label: '환경', type: 'textarea' },
-            { key: 'technKnow', label: '기술/지식', type: 'textarea' },
+            { key: 'knowledge', label: '필요 지식', type: 'textarea' },
+            { key: 'environment', label: '근무 환경', type: 'textarea' },
+            { key: 'technKnow', label: '기술·지식', type: 'textarea' },
             { key: 'aptitude', label: '적성', type: 'textarea' },
             { key: 'educationDistribution', label: '학력 분포', type: 'textarea' },
             { key: 'majorDistribution', label: '전공 분포', type: 'textarea' }
           ]
         },
         {
-          title: '업무특성 탭',
+          title: '직무 특성',
           icon: 'fa-chart-pie',
           fields: [
             { key: 'abilities', label: '능력', type: 'textarea' },
@@ -559,46 +559,42 @@ const EditSystem = {
   },
 
   /**
-   * 편집 가능한 필드 목록 가져오기
+   * ?몄쭛 媛?ν븳 ?꾨뱶 紐⑸줉 媛?몄삤湲?
    */
   getEditableFields(entityType) {
     if (entityType === 'job') {
       return [
         { key: 'name', label: '직업명', type: 'text' },
-        { key: 'summary', label: '직업 소개', type: 'textarea' },
+        { key: 'summary', label: '직업 요약', type: 'textarea' },
         { key: 'duties', label: '주요 업무', type: 'textarea' },
-        { key: 'salary', label: '임금 정보', type: 'textarea' },
+        { key: 'salary', label: '임금 수준', type: 'textarea' },
         { key: 'prospect', label: '전망', type: 'textarea' },
-        { key: 'way', label: '되는 방법', type: 'textarea' },
+        { key: 'way', label: '진입 경로', type: 'textarea' },
         { key: 'abilities', label: '능력', type: 'textarea' },
-        { key: 'knowledge', label: '지식', type: 'textarea' },
-        { key: 'environment', label: '환경', type: 'textarea' },
+        { key: 'knowledge', label: '필요 지식', type: 'textarea' },
+        { key: 'environment', label: '근무 환경', type: 'textarea' },
         { key: 'personality', label: '성격', type: 'textarea' },
         { key: 'interests', label: '흥미', type: 'textarea' },
         { key: 'values', label: '가치관', type: 'textarea' }
       ];
     } else if (entityType === 'major') {
       return [
-        // 히어로 섹션
         { key: 'name', label: '전공명', type: 'text' },
         { key: 'heroSummary', label: '전공 설명', type: 'textarea' },
-        { key: 'heroTags', label: '관련 학과 태그', type: 'tags' },
+        { key: 'heroTags', label: '관련 태그', type: 'tags' },
         { key: 'categoryName', label: '계열', type: 'text' },
-        // 개요
         { key: 'overview.summary', label: '전공 개요', type: 'textarea' },
         { key: 'property', label: '전공 특성', type: 'textarea' },
-        { key: 'aptitude', label: '이 전공에 어울리는 사람', type: 'textarea' },
-        { key: 'enterField', label: '졸업 후 진출 분야', type: 'pairList' },
+        { key: 'aptitude', label: '적성과 흥미', type: 'textarea' },
+        { key: 'enterField', label: '관련 진출 분야', type: 'pairList' },
         { key: 'trivia', label: '여담', type: 'list' },
-        // 상세정보
         { key: 'whatStudy', label: '배우는 내용', type: 'textarea' },
         { key: 'mainSubject', label: '주요 교과목', type: 'tags' },
-        { key: 'relateSubject', label: '고교 추천 교과목', type: 'tags' },
-        { key: 'careerAct', label: '진로 탐색 활동', type: 'pairList' },
-        // 사이드바
-        { key: 'sidebarJobs', label: '관련 직업', type: 'autocomplete' },
-        { key: 'sidebarMajors', label: '관련 전공', type: 'autocomplete' },
-        { key: 'sidebarHowtos', label: '관련 HowTo', type: 'autocomplete' }
+        { key: 'relateSubject', label: '관련 과목', type: 'tags' },
+        { key: 'careerAct', label: '관련 활동', type: 'pairList' },
+        { key: 'sidebarJobs', label: '연관 직업', type: 'autocomplete' },
+        { key: 'sidebarMajors', label: '연관 전공', type: 'autocomplete' },
+        { key: 'sidebarHowtos', label: '연관 HowTo', type: 'autocomplete' }
       ];
     } else if (entityType === 'howto') {
       return [
@@ -610,10 +606,10 @@ const EditSystem = {
   },
 
   /**
-   * 필드별 편집 이벤트 리스너 초기화
+   * ?꾨뱶蹂??몄쭛 ?대깽??由ъ뒪??珥덇린??
    */
   initFieldEditListeners() {
-    // 편집 버튼 클릭
+    // ?몄쭛 踰꾪듉 ?대┃
     document.addEventListener('click', (e) => {
       const editBtn = e.target.closest('[data-field-edit-btn]');
       if (editBtn) {
@@ -621,28 +617,28 @@ const EditSystem = {
         this.enterFieldEditMode(fieldKey);
       }
 
-      // 출처 추가 버튼
+      // 異쒖쿂 異붽? 踰꾪듉
       const addSourceBtn = e.target.closest('[data-add-source]');
       if (addSourceBtn) {
         const fieldKey = addSourceBtn.getAttribute('data-add-source');
         this.addSourceInput(fieldKey);
       }
 
-      // 필드 임시 저장 버튼
+      // ?꾨뱶 ?꾩떆 ???踰꾪듉
       const tempSaveBtn = e.target.closest('[data-field-temp-save]');
       if (tempSaveBtn) {
         const fieldKey = tempSaveBtn.getAttribute('data-field-temp-save');
         this.tempSaveField(fieldKey);
       }
 
-      // 최종 저장 버튼
+      // 理쒖쥌 ???踰꾪듉
       const saveAllBtn = e.target.closest('[data-edit-save-all]');
       if (saveAllBtn) {
         e.preventDefault();
         this.saveAllEdits();
       }
 
-      // 필드 취소 버튼
+      // ?꾨뱶 痍⑥냼 踰꾪듉
       const cancelBtn = e.target.closest('[data-field-cancel]');
       if (cancelBtn) {
         const fieldKey = cancelBtn.getAttribute('data-field-cancel');
@@ -650,7 +646,7 @@ const EditSystem = {
       }
     });
 
-    // 수정 유형 라디오 버튼 변경
+    // ?섏젙 ?좏삎 ?쇰뵒??踰꾪듉 蹂寃?
     document.addEventListener('change', (e) => {
       if (e.target.matches('input[name^="edit-type-"]')) {
         const fieldKey = e.target.name.replace('edit-type-', '');
@@ -662,8 +658,8 @@ const EditSystem = {
       }
     });
 
-    // 실시간 미리보기 업데이트 (편집 중인 필드만)
-    // 실시간 미리보기 업데이트 제거 - 임시 저장 시에만 업데이트
+    // ?ㅼ떆媛?誘몃━蹂닿린 ?낅뜲?댄듃 (?몄쭛 以묒씤 ?꾨뱶留?
+    // ?ㅼ떆媛?誘몃━蹂닿린 ?낅뜲?댄듃 ?쒓굅 - ?꾩떆 ????쒖뿉留??낅뜲?댄듃
     // document.addEventListener('input', (e) => {
     //   if (e.target.matches('[data-edit-field]')) {
     //     this.updatePreviewDebounced();
@@ -672,7 +668,7 @@ const EditSystem = {
   },
 
   /**
-   * 필드 편집 모드 진입
+   * ?꾨뱶 ?몄쭛 紐⑤뱶 吏꾩엯
    */
   enterFieldEditMode(fieldKey) {
     const displayDiv = document.getElementById(`display-${fieldKey}`);
@@ -684,27 +680,27 @@ const EditSystem = {
       editDiv.classList.remove('hidden');
       editBtn.classList.add('hidden');
       
-      // 입력 필드에 포커스 및 임시 저장된 내용 복원
+      // ?낅젰 ?꾨뱶???ъ빱??諛??꾩떆 ??λ맂 ?댁슜 蹂듭썝
       const input = document.getElementById(`input-${fieldKey}`);
       if (input) {
-        // 임시 저장된 내용이 있으면 복원
+        // ?꾩떆 ??λ맂 ?댁슜???덉쑝硫?蹂듭썝
         if (this.tempEdits[fieldKey]) {
           input.value = this.tempEdits[fieldKey].content;
           
-          // 수정 유형 복원
+          // ?섏젙 ?좏삎 蹂듭썝
           const editType = this.tempEdits[fieldKey].editType;
           const editTypeRadio = document.querySelector(`input[name="edit-type-${fieldKey}"][value="${editType}"]`);
           if (editTypeRadio) {
             editTypeRadio.checked = true;
             
-            // 출처 입력 선택 시 출처 복원
+            // 異쒖쿂 ?낅젰 ?좏깮 ??異쒖쿂 蹂듭썝
             if (editType === 'source' && this.tempEdits[fieldKey].sources.length > 0) {
               const sourcesDiv = document.getElementById(`sources-${fieldKey}`);
               if (sourcesDiv) {
                 sourcesDiv.classList.remove('hidden');
                 const sourcesList = document.querySelector(`.sources-list-${fieldKey}`);
                 if (sourcesList) {
-                  // 기존 출처 입력 필드 제거 후 재생성
+                  // 湲곗〈 異쒖쿂 ?낅젰 ?꾨뱶 ?쒓굅 ???ъ깮??
                   sourcesList.innerHTML = '';
                   this.tempEdits[fieldKey].sources.forEach((source) => {
                     this.addSourceInput(fieldKey);
@@ -724,7 +720,7 @@ const EditSystem = {
   },
 
   /**
-   * 필드 편집 취소
+   * ?꾨뱶 ?몄쭛 痍⑥냼
    */
   cancelFieldEdit(fieldKey) {
     const displayDiv = document.getElementById(`display-${fieldKey}`);
@@ -733,19 +729,19 @@ const EditSystem = {
     const input = document.getElementById(`input-${fieldKey}`);
     
     if (displayDiv && editDiv && editBtn && input) {
-      // 임시 저장된 값이 있으면 그것을 사용, 없으면 원래 값 사용
+      // ?꾩떆 ??λ맂 媛믪씠 ?덉쑝硫?洹멸쾬???ъ슜, ?놁쑝硫??먮옒 媛??ъ슜
       const valueToShow = this.tempEdits[fieldKey] 
         ? this.tempEdits[fieldKey].content 
         : (this.editData[fieldKey] || '');
       
-      // 입력 필드는 임시 저장된 값으로 설정 (다시 편집할 때를 위해)
+      // ?낅젰 ?꾨뱶???꾩떆 ??λ맂 媛믪쑝濡??ㅼ젙 (?ㅼ떆 ?몄쭛???뚮? ?꾪빐)
       if (this.tempEdits[fieldKey]) {
         input.value = this.tempEdits[fieldKey].content;
       } else {
         input.value = this.editData[fieldKey] || '';
       }
       
-      // 출처 입력 영역 초기화
+      // 異쒖쿂 ?낅젰 ?곸뿭 珥덇린??
       const sourcesList = document.querySelector(`.sources-list-${fieldKey}`);
       if (sourcesList) {
         sourcesList.innerHTML = '';
@@ -755,18 +751,18 @@ const EditSystem = {
         sourcesDiv.classList.add('hidden');
       }
       
-      // 라디오 버튼 초기화
+      // ?쇰뵒??踰꾪듉 珥덇린??
       const simpleRadio = document.querySelector(`input[name="edit-type-${fieldKey}"][value="simple"]`);
       if (simpleRadio) {
         simpleRadio.checked = true;
       }
       
-      // 표시 영역 업데이트
+      // ?쒖떆 ?곸뿭 ?낅뜲?댄듃
       displayDiv.innerHTML = valueToShow 
         ? this.escapeHtml(valueToShow) 
-        : '<span class="text-wiki-muted">내용 없음</span>';
+        : '<span class="text-wiki-muted">?댁슜 ?놁쓬</span>';
       
-      // 임시 저장된 필드는 표시
+      // ?꾩떆 ??λ맂 ?꾨뱶???쒖떆
       if (this.tempEdits[fieldKey]) {
         displayDiv.classList.add('border-wiki-primary/50');
       } else {
@@ -780,7 +776,7 @@ const EditSystem = {
   },
 
   /**
-   * 출처 입력 필드 추가
+   * 異쒖쿂 ?낅젰 ?꾨뱶 異붽?
    */
   addSourceInput(fieldKey) {
     const sourcesList = document.querySelector(`.sources-list-${fieldKey}`);
@@ -807,7 +803,7 @@ const EditSystem = {
     
     sourcesList.insertAdjacentHTML('beforeend', sourceHtml);
     
-    // 삭제 버튼 이벤트
+    // ??젣 踰꾪듉 ?대깽??
     const removeBtn = sourcesList.querySelector(`[data-remove-source="${fieldKey}-${sourceIndex}"]`);
     if (removeBtn) {
       removeBtn.addEventListener('click', () => {
@@ -818,7 +814,7 @@ const EditSystem = {
   },
 
   /**
-   * 필드 임시 저장 (로컬에만 저장)
+   * ?꾨뱶 ?꾩떆 ???(濡쒖뺄?먮쭔 ???
    */
   tempSaveField(fieldKey) {
     const input = document.getElementById(`input-${fieldKey}`);
@@ -826,7 +822,7 @@ const EditSystem = {
     
     const content = input.value.trim();
     if (!content) {
-      alert('내용을 입력해주세요.');
+      alert('?댁슜???낅젰?댁＜?몄슂.');
       return;
     }
     
@@ -834,13 +830,13 @@ const EditSystem = {
     const sourcesList = document.querySelectorAll(`input[data-source-url="${fieldKey}"]`);
     const sources = Array.from(sourcesList).map(input => input.value.trim()).filter(Boolean);
     
-    // 출처 입력 선택 시 출처 필수
+    // 異쒖쿂 ?낅젰 ?좏깮 ??異쒖쿂 ?꾩닔
     if (editType === 'source' && sources.length === 0) {
-      alert('출처를 최소 1개 이상 입력해주세요.');
+      alert('異쒖쿂瑜?理쒖냼 1媛??댁긽 ?낅젰?댁＜?몄슂.');
       return;
     }
     
-    // 임시 저장 (로컬 상태에만 저장)
+    // ?꾩떆 ???(濡쒖뺄 ?곹깭?먮쭔 ???
     this.tempEdits[fieldKey] = {
       content,
       editType,
@@ -848,25 +844,25 @@ const EditSystem = {
     };
     
     
-    // UI 업데이트
+    // UI ?낅뜲?댄듃
     this.editData[fieldKey] = content;
     const displayDiv = document.getElementById(`display-${fieldKey}`);
     if (displayDiv) {
-      displayDiv.innerHTML = content ? this.escapeHtml(content) : '<span class="text-wiki-muted">내용 없음</span>';
-      displayDiv.classList.add('border-wiki-primary/50'); // 임시 저장 표시
+      displayDiv.innerHTML = content ? this.escapeHtml(content) : '<span class="text-wiki-muted">?댁슜 ?놁쓬</span>';
+      displayDiv.classList.add('border-wiki-primary/50'); // ?꾩떆 ????쒖떆
     }
     
-    // 편집 모드 종료 (읽기 모드로 전환)
+    // ?몄쭛 紐⑤뱶 醫낅즺 (?쎄린 紐⑤뱶濡??꾪솚)
     this.cancelFieldEdit(fieldKey);
     
-    // 미리보기 업데이트
+    // 誘몃━蹂닿린 ?낅뜲?댄듃
     this.updatePreview();
     
-    // 성공 메시지
+    // ?깃났 硫붿떆吏
     const tempSaveBtn = document.querySelector(`[data-field-temp-save="${fieldKey}"]`);
     if (tempSaveBtn) {
       const originalText = tempSaveBtn.innerHTML;
-      tempSaveBtn.innerHTML = '<i class="fas fa-check mr-1"></i>임시 저장됨';
+      tempSaveBtn.innerHTML = '<i class="fas fa-check mr-1"></i>?꾩떆 ??λ맖';
       tempSaveBtn.classList.add('bg-green-600');
       setTimeout(() => {
         tempSaveBtn.innerHTML = originalText;
@@ -876,20 +872,20 @@ const EditSystem = {
   },
 
   /**
-   * 모든 편집 내용 최종 저장 (서버에 저장)
+   * 紐⑤뱺 ?몄쭛 ?댁슜 理쒖쥌 ???(?쒕쾭?????
    */
   async saveAllEdits() {
     const editKeys = Object.keys(this.tempEdits);
     
     if (editKeys.length === 0) {
-      alert('저장할 편집 내용이 없습니다.');
+      alert('??ν븷 ?몄쭛 ?댁슜???놁뒿?덈떎.');
       return;
     }
     
     const { entityType, entityId } = this.currentEntity;
     
     try {
-      // 모든 필드에 대해 서버에 저장
+      // 紐⑤뱺 ?꾨뱶??????쒕쾭?????
       const savePromises = editKeys.map(fieldKey => {
         const edit = this.tempEdits[fieldKey];
         const sourceToSend = edit.editType === 'source' ? edit.sources[0] : '';
@@ -902,7 +898,7 @@ const EditSystem = {
         } else if (entityType === 'howto') {
           endpoint = `${API_BASE}/howto/${entityId}/edit`;
         } else {
-          throw new Error('지원하지 않는 엔티티 타입입니다.');
+          throw new Error('吏?먰븯吏 ?딅뒗 ?뷀떚????낆엯?덈떎.');
         }
         
         return fetch(endpoint, {
@@ -920,43 +916,43 @@ const EditSystem = {
       
       const results = await Promise.all(savePromises);
       
-      // 에러 확인
+      // ?먮윭 ?뺤씤
       const errors = results.filter(r => !r.success);
       if (errors.length > 0) {
-        throw new Error(errors[0].error || '저장 중 오류가 발생했습니다.');
+        throw new Error(errors[0].error || '???以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.');
       }
       
-      // 성공 시 임시 저장 내용 초기화
+      // ?깃났 ???꾩떆 ????댁슜 珥덇린??
       this.tempEdits = {};
       
-      // 편집 모드 종료 (저장 후이므로 캐시 우회 필요)
-      alert('모든 편집 내용이 저장되었습니다.');
+      // ?몄쭛 紐⑤뱶 醫낅즺 (????꾩씠誘濡?罹먯떆 ?고쉶 ?꾩슂)
+      alert('紐⑤뱺 ?몄쭛 ?댁슜????λ릺?덉뒿?덈떎.');
       this.exitEditMode(true); // forceRefresh = true
     } catch (error) {
-      alert(error.message || '저장 중 오류가 발생했습니다.');
+      alert(error.message || '???以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.');
     }
   },
 
   /**
-   * 편집 모드 종료
+   * ?몄쭛 紐⑤뱶 醫낅즺
    */
   exitEditMode(forceRefresh = false) {
     const url = new URL(window.location.href);
     url.searchParams.delete('edit');
     
     if (forceRefresh) {
-      // 저장 후: 캐시 우회를 위해 _t 파라미터 추가 후 새로고침
+      // ????? 罹먯떆 ?고쉶瑜??꾪빐 _t ?뚮씪誘명꽣 異붽? ???덈줈怨좎묠
       url.searchParams.set('_t', Date.now().toString());
       window.location.href = url.toString();
     } else {
-      // 취소: URL 파라미터만 제거
+      // 痍⑥냼: URL ?뚮씪誘명꽣留??쒓굅
       url.searchParams.delete('_t');
       window.location.replace(url.toString());
     }
   },
 
   /**
-   * 저장 처리
+   * ???泥섎━
    */
   async handleSave() {
     const form = document.getElementById('edit-form');
@@ -966,9 +962,9 @@ const EditSystem = {
     const editType = formData.get('edit-type') || 'source';
     const source = formData.get('source')?.trim() || '';
 
-    // 수정 유형 검증: 출처 입력 선택 시 출처 URL 필수
+    // ?섏젙 ?좏삎 寃利? 異쒖쿂 ?낅젰 ?좏깮 ??異쒖쿂 URL ?꾩닔
     if (editType === 'source' && !source) {
-      alert('출처 URL을 입력해주세요.');
+      alert('異쒖쿂 URL???낅젰?댁＜?몄슂.');
       return;
     }
 
@@ -976,25 +972,25 @@ const EditSystem = {
     const edits = {};
     const originalData = this.editData || {};
 
-    // 편집된 필드 수집 (편집 필드는 document에서 찾아야 함)
+    // ?몄쭛???꾨뱶 ?섏쭛 (?몄쭛 ?꾨뱶??document?먯꽌 李얠븘????
     document.querySelectorAll('[data-edit-field]').forEach(input => {
       const key = input.getAttribute('data-edit-field');
       const currentValue = input.value.trim();
       const originalValue = originalData[key] || '';
       
-      // 값이 변경된 경우에만 추가 (빈 값이 아니거나 원래 값과 다른 경우)
+      // 媛믪씠 蹂寃쎈맂 寃쎌슦?먮쭔 異붽? (鍮?媛믪씠 ?꾨땲嫄곕굹 ?먮옒 媛믨낵 ?ㅻⅨ 寃쎌슦)
       if (currentValue && currentValue !== originalValue) {
         edits[key] = currentValue;
       }
     });
 
     if (Object.keys(edits).length === 0) {
-      alert('편집할 내용이 없습니다. 내용을 입력하거나 변경해주세요.');
+      alert('?몄쭛???댁슜???놁뒿?덈떎. ?댁슜???낅젰?섍굅??蹂寃쏀빐二쇱꽭??');
       return;
     }
 
     try {
-      // 각 필드별로 편집 API 호출
+      // 媛??꾨뱶蹂꾨줈 ?몄쭛 API ?몄텧
       const editPromises = Object.entries(edits).map(([field, content]) => {
         let endpoint;
         if (entityType === 'job') {
@@ -1004,10 +1000,10 @@ const EditSystem = {
         } else if (entityType === 'howto') {
           endpoint = `${API_BASE}/howto/${entityId}/edit`;
         } else {
-          throw new Error('지원하지 않는 엔티티 타입입니다.');
+          throw new Error('吏?먰븯吏 ?딅뒗 ?뷀떚????낆엯?덈떎.');
         }
 
-        // 단순 수정일 때는 source를 빈 문자열로 전송
+        // ?⑥닚 ?섏젙???뚮뒗 source瑜?鍮?臾몄옄?대줈 ?꾩넚
         const sourceToSend = editType === 'simple' ? '' : source;
         
         return fetch(endpoint, {
@@ -1026,23 +1022,23 @@ const EditSystem = {
       const responses = await Promise.all(editPromises);
       const results = await Promise.all(responses.map(r => r.json()));
 
-      // 에러 확인
+      // ?먮윭 ?뺤씤
       const errors = results.filter(r => !r.success);
       if (errors.length > 0) {
-        throw new Error(errors[0].error || '저장 중 오류가 발생했습니다.');
+        throw new Error(errors[0].error || '???以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.');
       }
 
-      // 성공 시 편집 모드 종료 (저장 후이므로 캐시 우회 필요)
-      alert('저장되었습니다.');
+      // ?깃났 ???몄쭛 紐⑤뱶 醫낅즺 (????꾩씠誘濡?罹먯떆 ?고쉶 ?꾩슂)
+      alert('??λ릺?덉뒿?덈떎.');
       this.exitEditMode(true); // forceRefresh = true
 
     } catch (error) {
-      alert(error.message || '저장 중 오류가 발생했습니다.');
+      alert(error.message || '???以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.');
     }
   },
 
   /**
-   * 편집 모드 트리거 클릭 핸들러 (히어로 섹션)
+   * ?몄쭛 紐⑤뱶 ?몃━嫄??대┃ ?몃뱾??(?덉뼱濡??뱀뀡)
    */
   handleEditModeClick(button) {
     const entityType = button.dataset.entityType;
@@ -1052,14 +1048,14 @@ const EditSystem = {
       return;
     }
 
-    // 편집 모드 진입 (URL 파라미터 추가)
+    // ?몄쭛 紐⑤뱶 吏꾩엯 (URL ?뚮씪誘명꽣 異붽?)
     const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set('edit', 'true');
     window.location.href = currentUrl.toString();
   },
 
   /**
-   * 섹션별 편집 버튼 클릭 핸들러
+   * ?뱀뀡蹂??몄쭛 踰꾪듉 ?대┃ ?몃뱾??
    */
   handleEditClick(button) {
     const entityType = button.dataset.entityType;
@@ -1070,22 +1066,22 @@ const EditSystem = {
       return;
     }
 
-    // 특정 필드 편집 모달 열기
+    // ?뱀젙 ?꾨뱶 ?몄쭛 紐⑤떖 ?닿린
     this.openEditModal({ entityType, entityId, field });
   },
 
   /**
-   * 편집 모달 열기
+   * ?몄쭛 紐⑤떖 ?닿린
    */
   async openEditModal({ entityType, entityId, field = null }) {
-    // 기존 모달이 있으면 닫기
+    // 湲곗〈 紐⑤떖???덉쑝硫??リ린
     if (this.currentModal) {
       this.closeModal();
     }
 
     this.currentEntity = { entityType, entityId, field };
 
-    // 편집 데이터 + 타임스탬프 조회 (충돌 감지용)
+    // ?몄쭛 ?곗씠??+ ??꾩뒪?ы봽 議고쉶 (異⑸룎 媛먯???
     try {
       const endpoint = `${API_BASE}/${entityType}/${encodeURIComponent(entityId)}/edit-data`;
       const response = await fetch(endpoint);
@@ -1098,25 +1094,25 @@ const EditSystem = {
         }
       }
     } catch (e) {
-      // 실패 시 빈 기본값으로 진행
+      // ?ㅽ뙣 ??鍮?湲곕낯媛믪쑝濡?吏꾪뻾
       this.editData = {};
       this.editDataTimestamp = null;
     }
 
-    // 모달 HTML 생성
+    // 紐⑤떖 HTML ?앹꽦
     const modalHtml = this.createModalHtml({ entityType, entityId: this.currentEntity.entityId, field });
 
-    // 모달을 body에 추가
+    // 紐⑤떖??body??異붽?
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = modalHtml;
     const modal = modalContainer.firstElementChild;
     document.body.appendChild(modal);
     this.currentModal = modal;
 
-    // 모달 초기화
+    // 紐⑤떖 珥덇린??
     this.initModal(modal);
 
-    // 애니메이션을 위해 약간의 지연 후 표시
+    // ?좊땲硫붿씠?섏쓣 ?꾪빐 ?쎄컙??吏?????쒖떆
     requestAnimationFrame(() => {
       modal.classList.remove('opacity-0');
       modal.classList.add('opacity-100');
@@ -1127,7 +1123,7 @@ const EditSystem = {
       }
     });
 
-    // 첫 번째 입력 필드에 포커스
+    // 泥?踰덉㎏ ?낅젰 ?꾨뱶???ъ빱??
     const firstInput = modal.querySelector('textarea, input[type="text"], input[type="url"]');
     if (firstInput) {
       setTimeout(() => firstInput.focus(), 100);
@@ -1135,10 +1131,10 @@ const EditSystem = {
   },
 
   /**
-   * 편집 모달 HTML 생성
+   * ?몄쭛 紐⑤떖 HTML ?앹꽦
    */
   createModalHtml({ entityType, entityId, field }) {
-    const fieldLabel = field ? this.getFieldLabel(entityType, field) : '전체 편집';
+    const fieldLabel = field ? this.getFieldLabel(entityType, field) : '?꾩껜 ?몄쭛';
     const isAnonymous = !this.isLoggedIn();
 
     return `
@@ -1153,42 +1149,42 @@ const EditSystem = {
           data-edit-modal-dialog
           class="w-full max-w-2xl max-h-[90vh] bg-wiki-bg/95 border border-wiki-border/60 rounded-2xl shadow-2xl scale-95 transition-transform duration-200 overflow-hidden flex flex-col"
         >
-          <!-- 헤더 -->
+          <!-- ?ㅻ뜑 -->
           <div class="flex items-center justify-between px-6 py-4 border-b border-wiki-border/60">
             <h2 id="edit-modal-title" class="text-lg font-semibold text-white">
-              ${this.escapeHtml(fieldLabel)} 편집
+              ${this.escapeHtml(fieldLabel)} ?몄쭛
             </h2>
             <button 
               type="button"
               data-edit-modal-close
               class="text-wiki-muted hover:text-white transition p-1 rounded-lg hover:bg-wiki-border/30"
-              aria-label="닫기"
+              aria-label="?リ린"
             >
               <i class="fas fa-times text-lg" aria-hidden="true"></i>
             </button>
           </div>
 
-          <!-- 본문 -->
+          <!-- 蹂몃Ц -->
           <form data-edit-form class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-            <!-- 내용 입력 -->
+            <!-- ?댁슜 ?낅젰 -->
             <div>
               <label for="edit-content" class="block text-sm font-medium text-white mb-2">
-                내용 <span class="text-wiki-muted">(필수)</span>
+                ?댁슜 <span class="text-wiki-muted">(?꾩닔)</span>
               </label>
               <textarea
                 id="edit-content"
                 name="content"
                 rows="8"
                 class="w-full px-4 py-3 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-wiki-primary focus:border-transparent resize-y"
-                placeholder="편집할 내용을 입력하세요..."
+                placeholder="?몄쭛???댁슜???낅젰?섏꽭??.."
                 required
               ></textarea>
             </div>
 
-            <!-- 출처 입력 -->
+            <!-- 異쒖쿂 ?낅젰 -->
             <div>
               <label for="edit-source" class="block text-sm font-medium text-white mb-2">
-                출처 URL <span class="text-wiki-muted">(필수)</span>
+                異쒖쿂 URL <span class="text-wiki-muted">(?꾩닔)</span>
               </label>
               <input
                 type="url"
@@ -1198,10 +1194,10 @@ const EditSystem = {
                 placeholder="https://example.com/article"
                 required
               />
-              <p class="mt-1 text-xs text-wiki-muted">편집 내용의 출처를 명시해주세요.</p>
+              <p class="mt-1 text-xs text-wiki-muted">?몄쭛 ?댁슜??異쒖쿂瑜?紐낆떆?댁＜?몄슂.</p>
             </div>
 
-            <!-- 익명 편집 옵션 (로그인하지 않은 경우) -->
+            <!-- ?듬챸 ?몄쭛 ?듭뀡 (濡쒓렇?명븯吏 ?딆? 寃쎌슦) -->
             ${isAnonymous ? `
               <div class="space-y-3 p-4 rounded-lg bg-wiki-bg/50 border border-wiki-border/40">
                 <label class="flex items-center gap-2 cursor-pointer">
@@ -1211,11 +1207,11 @@ const EditSystem = {
                     name="anonymous"
                     class="w-4 h-4 rounded border-wiki-border/60 bg-wiki-bg/70 text-wiki-primary focus:ring-wiki-primary"
                   />
-                  <span class="text-sm text-white">익명으로 편집</span>
+                  <span class="text-sm text-white">?듬챸?쇰줈 ?몄쭛</span>
                 </label>
                 <div id="edit-password-section" class="hidden space-y-2">
                   <label for="edit-password" class="block text-sm font-medium text-white">
-                    비밀번호 <span class="text-wiki-muted">(4자리 숫자)</span>
+                    鍮꾨?踰덊샇 <span class="text-wiki-muted">(4?먮━ ?レ옄)</span>
                   </label>
                   <input
                     type="password"
@@ -1227,37 +1223,37 @@ const EditSystem = {
                     pattern="[0-9]{4}"
                     inputmode="numeric"
                   />
-                  <p class="text-xs text-wiki-muted">나중에 수정하거나 되돌리기 위해 필요합니다.</p>
+                  <p class="text-xs text-wiki-muted">?섏쨷???섏젙?섍굅???섎룎由ш린 ?꾪빐 ?꾩슂?⑸땲??</p>
                 </div>
               </div>
             ` : ''}
 
-            <!-- 에러 메시지 -->
+            <!-- ?먮윭 硫붿떆吏 -->
             <div id="edit-error" class="hidden p-3 rounded-lg bg-red-500/20 border border-red-500/40">
               <p class="text-sm text-red-300"></p>
             </div>
 
-            <!-- 성공 메시지 -->
+            <!-- ?깃났 硫붿떆吏 -->
             <div id="edit-success" class="hidden p-3 rounded-lg bg-green-500/20 border border-green-500/40">
               <p class="text-sm text-green-300"></p>
             </div>
           </form>
 
-          <!-- 푸터 -->
+          <!-- ?명꽣 -->
           <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-wiki-border/60">
             <button
               type="button"
               data-edit-modal-close
               class="px-4 py-2 rounded-lg border border-wiki-border/60 bg-transparent text-wiki-muted hover:text-white hover:bg-wiki-border/30 transition"
             >
-              취소
+              痍⑥냼
             </button>
             <button
               type="submit"
               data-edit-submit
               class="px-4 py-2 rounded-lg bg-wiki-primary text-white hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              저장
+              ???
             </button>
           </div>
         </div>
@@ -1266,40 +1262,40 @@ const EditSystem = {
   },
 
   /**
-   * 필드 라벨 가져오기
+   * ?꾨뱶 ?쇰꺼 媛?몄삤湲?
    */
   getFieldLabel(entityType, field) {
     const labels = {
       job: {
-        summary: '직업 소개',
-        duties: '주요 업무',
-        salary: '임금 정보',
-        prospect: '전망',
-        education: '학력',
-        experience: '경력'
+        summary: '吏곸뾽 ?뚭컻',
+        duties: '二쇱슂 ?낅Т',
+        salary: '?꾧툑 ?뺣낫',
+        prospect: '?꾨쭩',
+        education: '?숇젰',
+        experience: '寃쎈젰'
       },
       major: {
-        summary: '전공 소개',
-        career: '진로',
-        curriculum: '교과과정'
+        summary: '?꾧났 ?뚭컻',
+        career: '吏꾨줈',
+        curriculum: '援먭낵怨쇱젙'
       },
       howto: {
-        content: '내용'
+        content: '?댁슜'
       }
     };
     return labels[entityType]?.[field] || field;
   },
 
   /**
-   * 로그인 여부 확인
+   * 濡쒓렇???щ? ?뺤씤
    */
   isLoggedIn() {
-    // window.__USER__는 shared-helpers.ts의 /api/me 호출로 설정됨
+    // window.__USER__??shared-helpers.ts??/api/me ?몄텧濡??ㅼ젙??
     return !!(window.__USER__ && window.__USER__.id);
   },
 
   /**
-   * 모달 초기화
+   * 紐⑤떖 珥덇린??
    */
   initModal(modal) {
     const form = modal.querySelector('[data-edit-form]');
@@ -1307,7 +1303,7 @@ const EditSystem = {
     const passwordSection = modal.querySelector('#edit-password-section');
     const submitBtn = modal.querySelector('[data-edit-submit]');
 
-    // 익명 편집 체크박스 토글
+    // ?듬챸 ?몄쭛 泥댄겕諛뺤뒪 ?좉?
     if (anonymousCheckbox && passwordSection) {
       anonymousCheckbox.addEventListener('change', (e) => {
         if (e.target.checked) {
@@ -1328,7 +1324,7 @@ const EditSystem = {
       });
     }
 
-    // 폼 제출
+    // ???쒖텧
     if (form) {
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1338,7 +1334,7 @@ const EditSystem = {
   },
 
   /**
-   * 폼 제출 처리
+   * ???쒖텧 泥섎━
    */
   async handleSubmit(form) {
     const submitBtn = form.querySelector('[data-edit-submit]');
@@ -1346,43 +1342,43 @@ const EditSystem = {
     const successDiv = form.querySelector('#edit-success');
     const { entityType, entityId, field } = this.currentEntity;
 
-    // 에러/성공 메시지 숨기기
+    // ?먮윭/?깃났 硫붿떆吏 ?④린湲?
     if (errorDiv) errorDiv.classList.add('hidden');
     if (successDiv) successDiv.classList.add('hidden');
 
-    // 폼 데이터 수집
+    // ???곗씠???섏쭛
     const formData = new FormData(form);
     const content = formData.get('content')?.trim() || '';
     const source = formData.get('source')?.trim() || '';
     const anonymous = formData.get('anonymous') === 'on';
     const password = formData.get('password')?.trim() || '';
 
-    // 유효성 검사
+    // ?좏슚??寃??
     if (!content) {
-      this.showError(form, '내용을 입력해주세요.');
+      this.showError(form, '?댁슜???낅젰?댁＜?몄슂.');
       return;
     }
     if (!source) {
-      this.showError(form, '출처 URL을 입력해주세요.');
+      this.showError(form, '異쒖쿂 URL???낅젰?댁＜?몄슂.');
       return;
     }
     if (anonymous && !password) {
-      this.showError(form, '비밀번호를 입력해주세요.');
+      this.showError(form, '鍮꾨?踰덊샇瑜??낅젰?댁＜?몄슂.');
       return;
     }
     if (password && !/^\d{4}$/.test(password)) {
-      this.showError(form, '비밀번호는 4자리 숫자여야 합니다.');
+      this.showError(form, '鍮꾨?踰덊샇??4?먮━ ?レ옄?ъ빞 ?⑸땲??');
       return;
     }
 
-    // 제출 버튼 비활성화
+    // ?쒖텧 踰꾪듉 鍮꾪솢?깊솕
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = '저장 중...';
+      submitBtn.textContent = '???以?..';
     }
 
     try {
-      // API 엔드포인트 결정
+      // API ?붾뱶?ъ씤??寃곗젙
       let endpoint;
       if (entityType === 'job') {
         endpoint = `${API_BASE}/job/${entityId}/edit`;
@@ -1391,10 +1387,10 @@ const EditSystem = {
       } else if (entityType === 'howto') {
         endpoint = `${API_BASE}/howto/${entityId}/edit`;
       } else {
-        throw new Error('지원하지 않는 엔티티 타입입니다.');
+        throw new Error('吏?먰븯吏 ?딅뒗 ?뷀떚????낆엯?덈떎.');
       }
 
-      // 요청 본문 구성 (다중 필드 형식 + 충돌 감지용 타임스탬프)
+      // ?붿껌 蹂몃Ц 援ъ꽦 (?ㅼ쨷 ?꾨뱶 ?뺤떇 + 異⑸룎 媛먯?????꾩뒪?ы봽)
       const payload = {
         fields: { [field]: content },
         sources: source ? { [field]: [{ text: source }] } : undefined,
@@ -1405,7 +1401,7 @@ const EditSystem = {
         payload.password = password;
       }
 
-      // API 호출
+      // API ?몄텧
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -1416,7 +1412,7 @@ const EditSystem = {
 
       const result = await response.json();
 
-      // 편집 충돌 감지 → 충돌 해결 UI 표시
+      // ?몄쭛 異⑸룎 媛먯? ??異⑸룎 ?닿껐 UI ?쒖떆
       if (response.status === 409 && result.error === 'CONFLICT') {
         this.showConflictResolution({
           field,
@@ -1431,18 +1427,18 @@ const EditSystem = {
       }
 
       if (!response.ok) {
-        throw new Error(result.error || result.message || '편집 저장에 실패했습니다.');
+        throw new Error(result.error || result.message || '?몄쭛 ??μ뿉 ?ㅽ뙣?덉뒿?덈떎.');
       }
 
-      // 타임스탬프 업데이트 (후속 편집용)
+      // ??꾩뒪?ы봽 ?낅뜲?댄듃 (?꾩냽 ?몄쭛??
       if (result.newTimestamp) {
         this.editDataTimestamp = result.newTimestamp;
       }
 
-      // 성공 메시지 표시
-      this.showSuccess(form, '편집이 저장되었습니다. 페이지를 새로고침합니다...');
+      // ?깃났 硫붿떆吏 ?쒖떆
+      this.showSuccess(form, '?몄쭛????λ릺?덉뒿?덈떎. ?섏씠吏瑜??덈줈怨좎묠?⑸땲??..');
 
-      // 페이지 새로고침 (캐시 우회)
+      // ?섏씠吏 ?덈줈怨좎묠 (罹먯떆 ?고쉶)
       setTimeout(() => {
         const url = new URL(window.location.href);
         url.searchParams.set('_t', Date.now().toString());
@@ -1450,9 +1446,9 @@ const EditSystem = {
       }, 1500);
 
     } catch (error) {
-      this.showError(form, error.message || '편집 저장 중 오류가 발생했습니다.');
+      this.showError(form, error.message || '?몄쭛 ???以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.');
 
-      // 제출 버튼 다시 활성화
+      // ?쒖텧 踰꾪듉 ?ㅼ떆 ?쒖꽦??
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = '저장';
@@ -1461,17 +1457,17 @@ const EditSystem = {
   },
 
   /**
-   * 편집 충돌 해결 모달 표시 (위키피디아 스타일)
+   * ?몄쭛 異⑸룎 ?닿껐 紐⑤떖 ?쒖떆 (?꾪궎?쇰뵒???ㅽ???
    */
   showConflictResolution({ field, myContent, mySource, serverData, serverTimestamp, entityType, entityId }) {
-    // 기존 편집 모달 닫기
+    // 湲곗〈 ?몄쭛 紐⑤떖 ?リ린
     if (this.currentModal) {
       this.currentModal.remove();
       this.currentModal = null;
     }
 
-    const fieldLabel = field ? this.getFieldLabel(entityType, field) : '필드';
-    const serverValue = serverData?.[field] ?? '(내용 없음)';
+    const fieldLabel = field ? this.getFieldLabel(entityType, field) : '?꾨뱶';
+    const serverValue = serverData?.[field] ?? '(?댁슜 ?놁쓬)';
     const serverValueDisplay = typeof serverValue === 'string' ? serverValue : JSON.stringify(serverValue, null, 2);
 
     const escHtml = (str) => {
@@ -1492,10 +1488,10 @@ const EditSystem = {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
               </svg>
               <div>
-                <h2 class="text-lg font-semibold text-white">편집 충돌 발생</h2>
+                <h2 class="text-lg font-semibold text-white">?몄쭛 異⑸룎 諛쒖깮</h2>
                 <p class="text-sm text-gray-400 mt-1">
-                  다른 사용자가 <strong class="text-white">${escHtml(fieldLabel)}</strong> 필드를 먼저 수정했습니다.
-                  아래에서 두 버전을 비교하고 선택하세요.
+                  ?ㅻⅨ ?ъ슜?먭? <strong class="text-white">${escHtml(fieldLabel)}</strong> ?꾨뱶瑜?癒쇱? ?섏젙?덉뒿?덈떎.
+                  ?꾨옒?먯꽌 ??踰꾩쟾??鍮꾧탳?섍퀬 ?좏깮?섏꽭??
                 </p>
               </div>
             </div>
@@ -1508,7 +1504,7 @@ const EditSystem = {
                 <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
                 </svg>
-                <h3 class="text-sm font-semibold text-blue-300">현재 저장된 버전 (다른 사용자의 편집)</h3>
+                <h3 class="text-sm font-semibold text-blue-300">?꾩옱 ??λ맂 踰꾩쟾 (?ㅻⅨ ?ъ슜?먯쓽 ?몄쭛)</h3>
               </div>
               <div class="p-3 rounded-lg bg-[#0d1017] border border-gray-700/40 text-gray-300 text-sm whitespace-pre-wrap max-h-48 overflow-y-auto">${escHtml(serverValueDisplay)}</div>
             </div>
@@ -1518,7 +1514,7 @@ const EditSystem = {
                 <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                 </svg>
-                <h3 class="text-sm font-semibold text-amber-300">내가 작성한 버전</h3>
+                <h3 class="text-sm font-semibold text-amber-300">?닿? ?묒꽦??踰꾩쟾</h3>
               </div>
               <div class="p-3 rounded-lg bg-[#0d1017] border border-gray-700/40 text-gray-300 text-sm whitespace-pre-wrap max-h-48 overflow-y-auto">${escHtml(myContent)}</div>
             </div>
@@ -1528,31 +1524,31 @@ const EditSystem = {
                 <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
                 </svg>
-                <h3 class="text-sm font-semibold text-green-300">직접 병합</h3>
-                <span class="text-xs text-gray-500">(두 버전을 조합하여 직접 작성)</span>
+                <h3 class="text-sm font-semibold text-green-300">吏곸젒 蹂묓빀</h3>
+                <span class="text-xs text-gray-500">(??踰꾩쟾??議고빀?섏뿬 吏곸젒 ?묒꽦)</span>
               </div>
               <textarea data-merge-content rows="8"
                 class="w-full px-4 py-3 rounded-lg bg-[#0d1017] border border-gray-700/60 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-y text-sm"
-                placeholder="위 두 버전을 참고하여 최종 내용을 작성하세요...">${escHtml(myContent)}</textarea>
+                placeholder="????踰꾩쟾??李멸퀬?섏뿬 理쒖쥌 ?댁슜???묒꽦?섏꽭??..">${escHtml(myContent)}</textarea>
             </div>
           </div>
 
           <div class="flex flex-wrap items-center gap-3 px-6 py-4 border-t border-gray-700/60">
             <button type="button" data-conflict-use-server
               class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition text-sm font-medium">
-              상대방 버전 유지
+              ?곷?諛?踰꾩쟾 ?좎?
             </button>
             <button type="button" data-conflict-use-mine
               class="px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 transition text-sm font-medium">
-              내 버전으로 덮어쓰기
+              ??踰꾩쟾?쇰줈 ??뼱?곌린
             </button>
             <button type="button" data-conflict-use-merged
               class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition text-sm font-medium">
-              병합 내용 저장
+              蹂묓빀 ?댁슜 ???
             </button>
             <button type="button" data-conflict-cancel
               class="ml-auto px-4 py-2 rounded-lg border border-gray-700/60 text-gray-400 hover:text-white transition text-sm">
-              취소
+              痍⑥냼
             </button>
           </div>
         </div>
@@ -1564,10 +1560,10 @@ const EditSystem = {
     const modal = container.firstElementChild;
     document.body.appendChild(modal);
 
-    // 충돌 해결 후 재저장 함수
+    // 異⑸룎 ?닿껐 ???ъ????⑥닔
     const handleConflictSave = async (chosenContent) => {
       const saveBtn = modal.querySelector('[data-conflict-use-mine]');
-      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '저장 중...'; }
+      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '???以?..'; }
 
       const payload = {
         fields: { [field]: chosenContent },
@@ -1584,19 +1580,19 @@ const EditSystem = {
         });
         const result = await response.json();
         if (!response.ok || !result.success) {
-          throw new Error(result.error || '저장 실패');
+          throw new Error(result.error || '????ㅽ뙣');
         }
         modal.remove();
         const url = new URL(window.location.href);
         url.searchParams.set('_t', Date.now().toString());
         window.location.replace(url.toString());
       } catch (err) {
-        alert('저장 중 오류: ' + err.message);
-        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '재시도'; }
+        alert('???以??ㅻ쪟: ' + err.message);
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '저장'; }
       }
     };
 
-    // 이벤트 핸들러
+    // ?대깽???몃뱾??
     modal.querySelector('[data-conflict-use-server]').onclick = () => {
       modal.remove();
       const url = new URL(window.location.href);
@@ -1611,7 +1607,7 @@ const EditSystem = {
     modal.querySelector('[data-conflict-use-merged]').onclick = () => {
       const mergedContent = modal.querySelector('[data-merge-content]').value.trim();
       if (!mergedContent) {
-        alert('병합 내용을 입력해주세요.');
+        alert('蹂묓빀 ?댁슜???낅젰?댁＜?몄슂.');
         return;
       }
       handleConflictSave(mergedContent);
@@ -1621,14 +1617,14 @@ const EditSystem = {
       modal.remove();
     };
 
-    // 배경 클릭으로 닫기
+    // 諛곌꼍 ?대┃?쇰줈 ?リ린
     modal.addEventListener('click', (e) => {
       if (e.target === modal) modal.remove();
     });
   },
 
   /**
-   * 에러 메시지 표시
+   * ?먮윭 硫붿떆吏 ?쒖떆
    */
   showError(form, message) {
     const errorDiv = form.querySelector('#edit-error');
@@ -1643,7 +1639,7 @@ const EditSystem = {
   },
 
   /**
-   * 성공 메시지 표시
+   * ?깃났 硫붿떆吏 ?쒖떆
    */
   showSuccess(form, message) {
     const successDiv = form.querySelector('#edit-success');
@@ -1658,10 +1654,10 @@ const EditSystem = {
   },
 
   /**
-   * 모달 닫기
+   * 紐⑤떖 ?リ린
    */
   /**
-   * 문서 역사 클릭 핸들러
+   * 臾몄꽌 ??궗 ?대┃ ?몃뱾??
    */
   async handleHistoryClick(button) {
     const entityType = button.dataset.entityType;
@@ -1676,13 +1672,13 @@ const EditSystem = {
   },
 
   /**
-   * 문서 역사 모달 열기
+   * 臾몄꽌 ??궗 紐⑤떖 ?닿린
    */
   async openHistoryModal({ entityType, entityId }) {
-    // 모달 HTML 생성
+    // 紐⑤떖 HTML ?앹꽦
     const modalHtml = this.createHistoryModalHtml({ entityType, entityId });
     
-    // 모달을 body에 추가
+    // 紐⑤떖??body??異붽?
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = modalHtml;
     const modal = modalContainer.firstElementChild;
@@ -1690,24 +1686,24 @@ const EditSystem = {
     
     this.currentHistoryModal = modal;
 
-    // 애니메이션
+    // ?좊땲硫붿씠??
     setTimeout(() => {
       modal.classList.remove('opacity-0');
       modal.classList.add('opacity-100');
     }, 10);
 
-    // 현재 엔티티 정보 저장
+    // ?꾩옱 ?뷀떚???뺣낫 ???
     this.currentHistoryEntity = { entityType, entityId };
     
-    // Revision 목록 로드 (첫 페이지, 10개씩)
+    // Revision 紐⑸줉 濡쒕뱶 (泥??섏씠吏, 10媛쒖뵫)
     await this.loadRevisions({ entityType, entityId, page: 1, limit: 10 });
   },
 
   /**
-   * 문서 역사 모달 HTML 생성
+   * 臾몄꽌 ??궗 紐⑤떖 HTML ?앹꽦
    */
   createHistoryModalHtml({ entityType, entityId }) {
-    const entityTypeLabel = entityType === 'job' ? '직업' : entityType === 'major' ? '전공' : '가이드';
+    const entityTypeLabel = entityType === 'job' ? '직업' : entityType === 'major' ? '전공' : 'HowTo';
     
     return `
       <div 
@@ -1716,33 +1712,33 @@ const EditSystem = {
       >
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" data-history-modal-backdrop></div>
         <div class="relative w-full max-w-4xl max-h-[90vh] bg-wiki-bg/95 border border-wiki-border/60 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-          <!-- 헤더 -->
+          <!-- ?ㅻ뜑 -->
           <div class="flex items-center justify-between px-6 py-4 border-b border-wiki-border/60">
             <h2 class="text-xl font-bold text-white flex items-center gap-2">
               <i class="fas fa-history" aria-hidden="true"></i>
-              역사
+              ??궗
             </h2>
             <button 
               type="button" 
               class="text-wiki-muted hover:text-white transition p-2"
               data-history-modal-close
-              aria-label="닫기"
+              aria-label="?リ린"
             >
               <i class="fas fa-times text-lg" aria-hidden="true"></i>
             </button>
           </div>
           
-          <!-- 내용 -->
+          <!-- ?댁슜 -->
           <div class="flex-1 overflow-y-auto px-6 py-4">
             <div id="history-loading" class="text-center py-8">
               <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-wiki-primary"></div>
-              <p class="mt-4 text-wiki-muted">편집 이력을 불러오는 중...</p>
+              <p class="mt-4 text-wiki-muted">?몄쭛 ?대젰??遺덈윭?ㅻ뒗 以?..</p>
             </div>
             <div id="history-content" class="hidden">
-              <!-- Revision 목록이 여기에 동적으로 추가됨 -->
+              <!-- Revision 紐⑸줉???ш린???숈쟻?쇰줈 異붽???-->
             </div>
             <div id="history-error" class="hidden text-center py-8">
-              <p class="text-red-400">편집 이력을 불러올 수 없습니다.</p>
+              <p class="text-red-400">?몄쭛 ?대젰??遺덈윭?????놁뒿?덈떎.</p>
             </div>
           </div>
         </div>
@@ -1751,7 +1747,7 @@ const EditSystem = {
   },
 
   /**
-   * Revision 목록 로드
+   * Revision 紐⑸줉 濡쒕뱶
    */
   async loadRevisions({ entityType, entityId, page = 1, limit = 10 }) {
     const loadingEl = document.getElementById('history-loading');
@@ -1765,28 +1761,28 @@ const EditSystem = {
       } else if (entityType === 'major') {
         endpoint = `${API_BASE}/major/${entityId}/revisions?limit=${limit}&offset=${(page - 1) * limit}`;
       } else {
-        throw new Error('지원하지 않는 엔티티 타입입니다.');
+        throw new Error('吏?먰븯吏 ?딅뒗 ?뷀떚????낆엯?덈떎.');
       }
 
       const response = await fetch(endpoint);
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(result.error || '편집 이력을 불러올 수 없습니다.');
+        throw new Error(result.error || '?몄쭛 ?대젰??遺덈윭?????놁뒿?덈떎.');
       }
 
       const { revisions, total } = result.data || { revisions: [], total: 0 };
       const totalPages = Math.ceil(total / limit);
 
-      // 🆕 DB에서 이미 is_current = 1인 revision이 있으므로 가상의 현재 버전을 추가하지 않음
-      // is_current = 1인 revision이 없으면 가상의 현재 버전 추가
+      // ?넅 DB?먯꽌 ?대? is_current = 1??revision???덉쑝誘濡?媛?곸쓽 ?꾩옱 踰꾩쟾??異붽??섏? ?딆쓬
+      // is_current = 1??revision???놁쑝硫?媛?곸쓽 ?꾩옱 踰꾩쟾 異붽?
       const hasCurrentRevision = revisions.some(r => r.isCurrent === true);
       let allRevisions = revisions;
       
-      // revision이 없거나 현재 버전이 없으면 가상의 현재 버전 추가 (첫 페이지에서만)
-      // revision이 없으면 항상 r1로 표시
+      // revision???녾굅???꾩옱 踰꾩쟾???놁쑝硫?媛?곸쓽 ?꾩옱 踰꾩쟾 異붽? (泥??섏씠吏?먯꽌留?
+      // revision???놁쑝硫???긽 r1濡??쒖떆
       if ((revisions.length === 0 || !hasCurrentRevision) && page === 1) {
-        // revision이 없으면 r1로 시작, 있으면 최대값 + 1
+        // revision???놁쑝硫?r1濡??쒖옉, ?덉쑝硫?理쒕?媛?+ 1
         const maxRevisionNumber = revisions.length > 0 
           ? Math.max(...revisions.map(r => r.revisionNumber || 0))
           : 0;
@@ -1796,9 +1792,9 @@ const EditSystem = {
           id: 'current',
           revisionNumber: currentRevisionNumber,
           isCurrent: true,
-          editorName: '운영자',
+          editorName: '현재 데이터',
           editorType: 'admin',
-          changeSummary: '현재 버전',
+          changeSummary: '현재 저장된 내용',
           changedFields: [],
           createdAt: new Date().toISOString(),
           dataSnapshot: '{}'
@@ -1806,15 +1802,15 @@ const EditSystem = {
         allRevisions = [currentRevision, ...revisions];
       }
 
-      // 캐시에 저장 (비교 기능에서 사용)
+      // 罹먯떆?????(鍮꾧탳 湲곕뒫?먯꽌 ?ъ슜)
       this.cachedRevisions = allRevisions;
       
-      // 로딩 숨기기
+      // 濡쒕뵫 ?④린湲?
       if (loadingEl) loadingEl.classList.add('hidden');
       if (errorEl) errorEl.classList.add('hidden');
       if (contentEl) {
         contentEl.classList.remove('hidden');
-        // 실제 편집 이력 수 계산 (현재 버전 제외)
+        // ?ㅼ젣 ?몄쭛 ?대젰 ??怨꾩궛 (?꾩옱 踰꾩쟾 ?쒖쇅)
         const actualRevisionCount = revisions.filter(r => r.id !== 'current').length
         const displayTotal = actualRevisionCount > 0 ? total : 0
         contentEl.innerHTML = this.renderRevisionsList(allRevisions, displayTotal, page, totalPages, limit);
@@ -1824,29 +1820,29 @@ const EditSystem = {
       if (contentEl) contentEl.classList.add('hidden');
       if (errorEl) {
         errorEl.classList.remove('hidden');
-        errorEl.querySelector('p').textContent = error.message || '편집 이력을 불러올 수 없습니다.';
+        errorEl.querySelector('p').textContent = error.message || '?몄쭛 ?대젰??遺덈윭?????놁뒿?덈떎.';
       }
     }
   },
 
   /**
-   * Revision 목록 렌더링 (페이지네이션 포함)
+   * Revision 紐⑸줉 ?뚮뜑留?(?섏씠吏?ㅼ씠???ы븿)
    */
   renderRevisionsList(revisions, total, currentPage = 1, totalPages = 1, limit = 10) {
-    // 실제 편집 이력이 없는 경우 (현재 버전만 있고 실제 revision이 없는 경우)
+    // ?ㅼ젣 ?몄쭛 ?대젰???녿뒗 寃쎌슦 (?꾩옱 踰꾩쟾留??덇퀬 ?ㅼ젣 revision???녿뒗 寃쎌슦)
     const actualRevisions = revisions.filter(r => r.id !== 'current')
     const hasVirtualCurrent = revisions.some(r => r.id === 'current')
     
-    // revision이 하나도 없고 가상의 현재 버전도 없을 때만 "아직 편집 이력이 없습니다" 표시
+    // revision???섎굹???녾퀬 媛?곸쓽 ?꾩옱 踰꾩쟾???놁쓣 ?뚮쭔 "?꾩쭅 ?몄쭛 ?대젰???놁뒿?덈떎" ?쒖떆
     if (!revisions || revisions.length === 0) {
       return `
         <div class="text-center py-8">
-          <p class="text-wiki-muted">아직 편집 이력이 없습니다.</p>
+          <p class="text-wiki-muted">?꾩쭅 ?몄쭛 ?대젰???놁뒿?덈떎.</p>
         </div>
       `;
     }
     
-    // 가상의 현재 버전이 있으면 표시 (r1로 표시됨)
+    // 媛?곸쓽 ?꾩옱 踰꾩쟾???덉쑝硫??쒖떆 (r1濡??쒖떆??
 
     const revisionsHtml = revisions.map((rev, index) => {
       const date = new Date(rev.createdAt);
@@ -1858,10 +1854,10 @@ const EditSystem = {
         minute: '2-digit'
       });
 
-      const editorName = rev.editorName || '알 수 없음';
+      const editorName = rev.editorName || '이름 없음';
       const isCurrent = rev.isCurrent;
       
-      // 편집자 프로필 이미지
+      // ?몄쭛???꾨줈???대?吏
       const editorPictureHtml = rev.editorPictureUrl
         ? `<img src="${this.escapeHtml(rev.editorPictureUrl)}" alt="${this.escapeHtml(editorName)}" class="w-5 h-5 rounded-full object-cover flex-shrink-0" />`
         : `<div class="w-5 h-5 rounded-full bg-wiki-card flex items-center justify-center flex-shrink-0"><i class="fas fa-user-circle text-xs text-wiki-muted"></i></div>`;
@@ -1869,18 +1865,18 @@ const EditSystem = {
       return `
         <div class="border-b border-wiki-border/40 py-3 ${isCurrent ? 'bg-wiki-primary/5' : ''}">
           <div class="flex items-center gap-4">
-            <!-- 왼쪽: r번호 + 현재버전 배지 (고정 너비로 배지 유무 상관없이 동일) -->
+            <!-- ?쇱そ: r踰덊샇 + ?꾩옱踰꾩쟾 諛곗? (怨좎젙 ?덈퉬濡?諛곗? ?좊Т ?곴??놁씠 ?숈씪) -->
             <div class="flex items-center gap-2 w-36 shrink-0">
               <span class="text-sm font-mono text-wiki-primary w-6">r${rev.revisionNumber}</span>
-              ${isCurrent ? '<span class="px-2 py-0.5 text-xs font-semibold rounded bg-wiki-primary/20 text-wiki-primary border border-wiki-primary/30">현재 버전</span>' : ''}
+              ${isCurrent ? '<span class="px-2 py-0.5 text-xs font-semibold rounded bg-wiki-primary/20 text-wiki-primary border border-wiki-primary/30">?꾩옱 踰꾩쟾</span>' : ''}
             </div>
-            <!-- 중앙: 날짜 + 프로필 + 유저명 -->
+            <!-- 以묒븰: ?좎쭨 + ?꾨줈??+ ?좎?紐?-->
             <div class="flex items-center gap-3 flex-1 min-w-0">
               <span class="text-sm text-wiki-muted shrink-0">${dateStr}</span>
               ${editorPictureHtml}
               <span class="text-sm text-white font-medium truncate">${this.escapeHtml(editorName)}</span>
             </div>
-            <!-- 오른쪽: 버튼들 (grid로 고정 위치) -->
+            <!-- ?ㅻⅨ履? 踰꾪듉??(grid濡?怨좎젙 ?꾩튂) -->
             <div class="grid gap-2 shrink-0 grid-cols-[64px_80px]">
               <div class="flex justify-end">
                 ${rev.revisionNumber > 1 ? `
@@ -1888,10 +1884,10 @@ const EditSystem = {
                     type="button"
                     class="px-3 py-1.5 text-xs rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition whitespace-nowrap"
                     data-compare-revision="${rev.id}"
-                    title="이전 버전과 비교"
+                    title="?댁쟾 踰꾩쟾怨?鍮꾧탳"
                   >
                     <i class="fas fa-code-compare" aria-hidden="true"></i>
-                    비교
+                    鍮꾧탳
                   </button>
                 ` : ''}
               </div>
@@ -1901,10 +1897,10 @@ const EditSystem = {
                     type="button"
                     class="px-3 py-1.5 text-xs rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition whitespace-nowrap"
                     data-restore-revision="${rev.id}"
-                    title="이 버전으로 되돌리기"
+                    title="??踰꾩쟾?쇰줈 ?섎룎由ш린"
                   >
                     <i class="fas fa-undo" aria-hidden="true"></i>
-                    되돌리기
+                    ?섎룎由ш린
                   </button>
                 ` : ''}
               </div>
@@ -1914,26 +1910,26 @@ const EditSystem = {
       `;
     }).join('');
 
-    // 페이지네이션 HTML 생성
+    // ?섏씠吏?ㅼ씠??HTML ?앹꽦
     let paginationHtml = '';
     if (totalPages > 1) {
       const paginationButtons = [];
       
-      // 이전 페이지 버튼
+      // ?댁쟾 ?섏씠吏 踰꾪듉
       if (currentPage > 1) {
         paginationButtons.push(`
           <button
             type="button"
             class="px-3 py-1.5 text-sm rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition"
             data-history-page="${currentPage - 1}"
-            title="이전 페이지"
+            title="?댁쟾 ?섏씠吏"
           >
             <i class="fas fa-chevron-left" aria-hidden="true"></i>
           </button>
         `);
       }
       
-      // 페이지 번호 버튼들
+      // ?섏씠吏 踰덊샇 踰꾪듉??
       const startPage = Math.max(1, currentPage - 2);
       const endPage = Math.min(totalPages, currentPage + 2);
       
@@ -1984,14 +1980,14 @@ const EditSystem = {
         `);
       }
       
-      // 다음 페이지 버튼
+      // ?ㅼ쓬 ?섏씠吏 踰꾪듉
       if (currentPage < totalPages) {
         paginationButtons.push(`
           <button
             type="button"
             class="px-3 py-1.5 text-sm rounded-lg border border-wiki-border/60 bg-wiki-bg/40 hover:bg-wiki-bg/60 text-white transition"
             data-history-page="${currentPage + 1}"
-            title="다음 페이지"
+            title="?ㅼ쓬 ?섏씠吏"
           >
             <i class="fas fa-chevron-right" aria-hidden="true"></i>
           </button>
@@ -2001,7 +1997,7 @@ const EditSystem = {
       paginationHtml = `
         <div class="flex items-center justify-between px-6 py-4 border-t border-wiki-border/60">
           <div class="text-sm text-wiki-muted">
-            총 ${total}개 중 ${(currentPage - 1) * limit + 1}-${Math.min(currentPage * limit, total)}개 표시
+            珥?${total}媛?以?${(currentPage - 1) * limit + 1}-${Math.min(currentPage * limit, total)}媛??쒖떆
           </div>
           <div class="flex items-center gap-2">
             ${paginationButtons.join('')}
@@ -2013,7 +2009,7 @@ const EditSystem = {
     return `
       <div class="space-y-0">
         <div class="mb-4 pb-2 border-b border-wiki-border/60">
-          <p class="text-sm text-wiki-muted">총 ${total}개의 편집 이력</p>
+          <p class="text-sm text-wiki-muted">珥?${total}媛쒖쓽 ?몄쭛 ?대젰</p>
         </div>
         ${revisionsHtml}
       </div>
@@ -2022,17 +2018,17 @@ const EditSystem = {
   },
 
   /**
-   * 변경량 계산 (간단한 추정)
+   * 蹂寃쎈웾 怨꾩궛 (媛꾨떒??異붿젙)
    */
   calculateChangeSize(revision) {
-    // dataSnapshot의 크기를 기반으로 변경량 추정
+    // dataSnapshot???ш린瑜?湲곕컲?쇰줈 蹂寃쎈웾 異붿젙
     try {
       const snapshot = JSON.parse(revision.dataSnapshot || '{}');
       const snapshotSize = JSON.stringify(snapshot).length;
       
-      // 이전 revision과 비교하여 변경량 계산 (간단한 추정)
-      // 실제로는 이전 revision의 snapshot과 비교해야 하지만,
-      // 여기서는 snapshot 크기만으로 추정
+      // ?댁쟾 revision怨?鍮꾧탳?섏뿬 蹂寃쎈웾 怨꾩궛 (媛꾨떒??異붿젙)
+      // ?ㅼ젣濡쒕뒗 ?댁쟾 revision??snapshot怨?鍮꾧탳?댁빞 ?섏?留?
+      // ?ш린?쒕뒗 snapshot ?ш린留뚯쑝濡?異붿젙
       return snapshotSize > 1000 ? snapshotSize - 1000 : 0;
     } catch {
       return null;
@@ -2040,7 +2036,7 @@ const EditSystem = {
   },
 
   /**
-   * 편집자 타입 라벨
+   * ?몄쭛??????쇰꺼
    */
   getEditorTypeLabel(type) {
     const labels = {
@@ -2054,12 +2050,12 @@ const EditSystem = {
   },
 
   /**
-   * 문서 역사 모달 닫기
+   * 臾몄꽌 ??궗 紐⑤떖 ?リ린
    */
   closeHistoryModal() {
     if (!this.currentHistoryModal) return;
 
-    // 애니메이션
+    // ?좊땲硫붿씠??
     this.currentHistoryModal.classList.remove('opacity-100');
     this.currentHistoryModal.classList.add('opacity-0');
 
@@ -2068,30 +2064,30 @@ const EditSystem = {
         this.currentHistoryModal.parentNode.removeChild(this.currentHistoryModal);
       }
       this.currentHistoryModal = null;
-      this.currentHistoryEntity = null; // 엔티티 정보도 초기화
+      this.currentHistoryEntity = null; // ?뷀떚???뺣낫??珥덇린??
     }, 200);
   },
 
   /**
-   * 되돌리기 처리
+   * ?섎룎由ш린 泥섎━
    */
   async handleRestoreRevision(revisionId) {
     if (!revisionId) return;
     
-    // revisionId가 'current'인 경우 처리하지 않음
+    // revisionId媛 'current'??寃쎌슦 泥섎━?섏? ?딆쓬
     if (revisionId === 'current') {
-      alert('현재 버전으로는 되돌릴 수 없습니다.');
+      alert('?꾩옱 踰꾩쟾?쇰줈???섎룎由????놁뒿?덈떎.');
       return;
     }
 
-    const confirmed = confirm('이 버전으로 되돌리시겠습니까? 현재 버전도 이력에 저장됩니다.');
+    const confirmed = confirm('??踰꾩쟾?쇰줈 ?섎룎由ъ떆寃좎뒿?덇퉴? ?꾩옱 踰꾩쟾???대젰????λ맗?덈떎.');
     if (!confirmed) return;
 
     try {
-      // revisionId가 숫자가 아닌 경우 처리
+      // revisionId媛 ?レ옄媛 ?꾨땶 寃쎌슦 泥섎━
       const numericRevisionId = parseInt(revisionId, 10);
       if (isNaN(numericRevisionId) || numericRevisionId <= 0) {
-        throw new Error('유효하지 않은 revision ID입니다.');
+        throw new Error('?좏슚?섏? ?딆? revision ID?낅땲??');
       }
       
       const response = await fetch(`${API_BASE}/revision/${numericRevisionId}/restore`, {
@@ -2105,12 +2101,12 @@ const EditSystem = {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        // 에러 메시지 처리
-        let errorMessage = result.error || '되돌리기에 실패했습니다.';
+        // ?먮윭 硫붿떆吏 泥섎━
+        let errorMessage = result.error || '?섎룎由ш린???ㅽ뙣?덉뒿?덈떎.';
         if (result.error === 'PASSWORD_REQUIRED') {
-          const password = prompt('이 편집은 비밀번호가 필요합니다. 비밀번호를 입력하세요:');
+          const password = prompt('???몄쭛? 鍮꾨?踰덊샇媛 ?꾩슂?⑸땲?? 鍮꾨?踰덊샇瑜??낅젰?섏꽭??');
           if (password) {
-            // 비밀번호와 함께 다시 시도
+            // 鍮꾨?踰덊샇? ?④퍡 ?ㅼ떆 ?쒕룄
             const retryResponse = await fetch(`${API_BASE}/revision/${numericRevisionId}/restore`, {
               method: 'POST',
               headers: {
@@ -2120,50 +2116,50 @@ const EditSystem = {
             });
             const retryResult = await retryResponse.json();
             if (!retryResponse.ok || !retryResult.success) {
-              throw new Error(retryResult.error || '비밀번호가 올바르지 않습니다.');
+              throw new Error(retryResult.error || '鍮꾨?踰덊샇媛 ?щ컮瑜댁? ?딆뒿?덈떎.');
             }
-            // 성공 시 아래 코드로 진행
+            // ?깃났 ???꾨옒 肄붾뱶濡?吏꾪뻾
           } else {
-            throw new Error('비밀번호가 필요합니다.');
+            throw new Error('鍮꾨?踰덊샇媛 ?꾩슂?⑸땲??');
           }
         } else {
           throw new Error(errorMessage);
         }
       }
 
-      alert('되돌리기가 완료되었습니다.');
+      alert('?섎룎由ш린媛 ?꾨즺?섏뿀?듬땲??');
       this.closeHistoryModal();
       
-      // 페이지 전체 새로고침하여 변경사항 반영 (캐시 우회)
+      // ?섏씠吏 ?꾩껜 ?덈줈怨좎묠?섏뿬 蹂寃쎌궗??諛섏쁺 (罹먯떆 ?고쉶)
       window.location.reload();
     } catch (error) {
-      alert(error.message || '되돌리기에 실패했습니다.');
+      alert(error.message || '?섎룎由ш린???ㅽ뙣?덉뒿?덈떎.');
     }
   },
 
   /**
-   * 비교 처리 (선택한 버전과 바로 이전 버전 비교)
+   * 鍮꾧탳 泥섎━ (?좏깮??踰꾩쟾怨?諛붾줈 ?댁쟾 踰꾩쟾 鍮꾧탳)
    */
   async handleCompareRevision(revisionId) {
     if (!revisionId) return;
 
     const { entityType, entityId } = this.currentHistoryEntity || {};
     if (!entityType || !entityId) {
-      alert('엔티티 정보를 찾을 수 없습니다.');
+      alert('?뷀떚???뺣낫瑜?李얠쓣 ???놁뒿?덈떎.');
       return;
     }
 
     try {
-      // 로딩 표시
+      // 濡쒕뵫 ?쒖떆
       const loadingModal = this.createCompareModalHtml({ loading: true });
       const loadingContainer = document.createElement('div');
       loadingContainer.innerHTML = loadingModal;
       const loadingElement = loadingContainer.firstElementChild;
       document.body.appendChild(loadingElement);
       
-      // 'current' (현재 버전)인 경우 특별 처리
+      // 'current' (?꾩옱 踰꾩쟾)??寃쎌슦 ?밸퀎 泥섎━
       if (revisionId === 'current') {
-        // 현재 edit-data 가져오기
+        // ?꾩옱 edit-data 媛?몄삤湲?
         const currentEndpoint = entityType === 'job' 
           ? `${API_BASE}/job/${entityId}/edit-data`
           : `${API_BASE}/major/${entityId}/edit-data`;
@@ -2172,27 +2168,27 @@ const EditSystem = {
         const currentResult = await currentResponse.json();
         
         if (!currentResponse.ok || !currentResult.success) {
-          throw new Error('현재 데이터를 불러올 수 없습니다.');
+          throw new Error('?꾩옱 ?곗씠?곕? 遺덈윭?????놁뒿?덈떎.');
         }
         
-        // 이전 버전 (가장 최근 DB revision) 찾기
+        // ?댁쟾 踰꾩쟾 (媛??理쒓렐 DB revision) 李얘린
         const cachedDbRevisions = (this.cachedRevisions || []).filter(r => r.id !== 'current');
         if (cachedDbRevisions.length === 0) {
           if (loadingElement && loadingElement.parentNode) {
             loadingElement.parentNode.removeChild(loadingElement);
           }
-          alert('이전 버전이 없습니다.');
+          alert('?댁쟾 踰꾩쟾???놁뒿?덈떎.');
           return;
         }
         
-        const previousRevision = cachedDbRevisions[0]; // 가장 최근 DB revision
+        const previousRevision = cachedDbRevisions[0]; // 媛??理쒓렐 DB revision
         
-        // 이전 버전 데이터 가져오기
+        // ?댁쟾 踰꾩쟾 ?곗씠??媛?몄삤湲?
         const prevResponse = await fetch(`${API_BASE}/revision/${previousRevision.id}?fullData=true&formatForEdit=true`);
         const prevResult = await prevResponse.json();
         
         if (!prevResponse.ok || !prevResult.success) {
-          throw new Error('이전 버전 데이터를 불러올 수 없습니다.');
+          throw new Error('?댁쟾 踰꾩쟾 ?곗씠?곕? 遺덈윭?????놁뒿?덈떎.');
         }
         
         const prevRevisionFull = prevResult.data;
@@ -2210,20 +2206,20 @@ const EditSystem = {
           }
         }
         
-        // 로딩 모달 제거
+        // 濡쒕뵫 紐⑤떖 ?쒓굅
         if (loadingElement && loadingElement.parentNode) {
           loadingElement.parentNode.removeChild(loadingElement);
         }
         
-        // 현재 버전의 가상 revision 객체 생성
+        // ?꾩옱 踰꾩쟾??媛??revision 媛앹껜 ?앹꽦
         const currentRevisionInfo = this.cachedRevisions?.find(r => r.id === 'current') || {
           revisionNumber: (previousRevision.revisionNumber || 0) + 1,
-          editorName: '현재 상태',
+          editorName: '?꾩옱 ?곹깭',
           createdAt: new Date().toISOString(),
           changedFields: []
         };
         
-        // 비교 모달 표시
+        // 鍮꾧탳 紐⑤떖 ?쒖떆
         const compareModal = this.createCompareModalHtml({
           currentData: currentResult.data,
           revisionData: previousRevisionData,
@@ -2254,31 +2250,31 @@ const EditSystem = {
         return;
       }
       
-      // 일반 revision 처리
+      // ?쇰컲 revision 泥섎━
       const numericRevisionId = parseInt(revisionId, 10);
       if (isNaN(numericRevisionId) || numericRevisionId <= 0) {
-        throw new Error('유효하지 않은 revision ID입니다.');
+        throw new Error('?좏슚?섏? ?딆? revision ID?낅땲??');
       }
       
       const revisionResponse = await fetch(`${API_BASE}/revision/${numericRevisionId}?fullData=true&formatForEdit=true`);
       const revisionResult = await revisionResponse.json();
       
       if (!revisionResponse.ok || !revisionResult.success) {
-        throw new Error('Revision 데이터를 불러올 수 없습니다.');
+        throw new Error('Revision ?곗씠?곕? 遺덈윭?????놁뒿?덈떎.');
       }
       
       const revision = revisionResult.data;
       
-      // r1 (첫 번째 버전)인 경우 비교 불가
+      // r1 (泥?踰덉㎏ 踰꾩쟾)??寃쎌슦 鍮꾧탳 遺덇?
       if (revision.revisionNumber === 1) {
         if (loadingElement && loadingElement.parentNode) {
           loadingElement.parentNode.removeChild(loadingElement);
         }
-        alert('첫 번째 버전은 이전 버전이 없어 비교할 수 없습니다.');
+        alert('泥?踰덉㎏ 踰꾩쟾? ?댁쟾 踰꾩쟾???놁뼱 鍮꾧탳?????놁뒿?덈떎.');
         return;
       }
       
-      // dataSnapshot에서 changes와 previousValues 추출 시도
+      // dataSnapshot?먯꽌 changes? previousValues 異붿텧 ?쒕룄
       let currentRevisionData = null;
       let previousRevisionData = null;
       let useDeltaComparison = false;
@@ -2286,36 +2282,36 @@ const EditSystem = {
       try {
         const snapshot = JSON.parse(revision.dataSnapshot);
         
-        // 변경사항만 저장된 경우 (changes + previousValues)
+        // 蹂寃쎌궗??쭔 ??λ맂 寃쎌슦 (changes + previousValues)
         if (snapshot.changedFields !== undefined && snapshot.changes) {
-          currentRevisionData = snapshot.changes;  // 새 값
-          previousRevisionData = snapshot.previousValues || {};  // 이전 값
+          currentRevisionData = snapshot.changes;  // ??媛?
+          previousRevisionData = snapshot.previousValues || {};  // ?댁쟾 媛?
           useDeltaComparison = true;
         } else {
-          // 전체 스냅샷인 경우
+          // ?꾩껜 ?ㅻ깄?룹씤 寃쎌슦
           currentRevisionData = snapshot;
         }
       } catch (error) {
       }
       
-      // editFormattedData나 fullData가 있으면 우선 사용 (전체 데이터 비교)
+      // editFormattedData??fullData媛 ?덉쑝硫??곗꽑 ?ъ슜 (?꾩껜 ?곗씠??鍮꾧탳)
       if (!useDeltaComparison && (revision.editFormattedData || revision.fullData)) {
         currentRevisionData = revision.editFormattedData || revision.fullData;
       }
       
-      // delta 비교가 가능하면 이전 버전 조회 불필요
+      // delta 鍮꾧탳媛 媛?ν븯硫??댁쟾 踰꾩쟾 議고쉶 遺덊븘??
       let previousRevision = null;
       if (useDeltaComparison) {
-        // previousValues가 있으므로 이전 revision 조회 불필요
-        // 가상의 previousRevision 객체 생성
+        // previousValues媛 ?덉쑝誘濡??댁쟾 revision 議고쉶 遺덊븘??
+        // 媛?곸쓽 previousRevision 媛앹껜 ?앹꽦
         previousRevision = {
           revisionNumber: revision.revisionNumber - 1,
-          editorName: '이전 버전',
+          editorName: '?댁쟾 踰꾩쟾',
           createdAt: revision.createdAt
         };
       } else {
-        // 전체 데이터 비교가 필요한 경우 이전 버전 조회
-        // 현재 로드된 revisions에서 이전 버전 찾기
+        // ?꾩껜 ?곗씠??鍮꾧탳媛 ?꾩슂??寃쎌슦 ?댁쟾 踰꾩쟾 議고쉶
+        // ?꾩옱 濡쒕뱶??revisions?먯꽌 ?댁쟾 踰꾩쟾 李얘린
         if (this.cachedRevisions && this.cachedRevisions.length > 0) {
           const currentIdx = this.cachedRevisions.findIndex(r => r.id === numericRevisionId);
           if (currentIdx >= 0 && currentIdx < this.cachedRevisions.length - 1) {
@@ -2324,12 +2320,12 @@ const EditSystem = {
         }
       }
       
-      // delta 비교 모드가 아니면 이전 버전 데이터 조회 필요
+      // delta 鍮꾧탳 紐⑤뱶媛 ?꾨땲硫??댁쟾 踰꾩쟾 ?곗씠??議고쉶 ?꾩슂
       if (!useDeltaComparison) {
-        // 이전 버전이 없으면 API로 조회 (revisionNumber - 1)
+        // ?댁쟾 踰꾩쟾???놁쑝硫?API濡?議고쉶 (revisionNumber - 1)
         if (!previousRevision) {
           const prevRevisionNumber = revision.revisionNumber - 1;
-          // revision 목록에서 해당 revisionNumber 찾기
+          // revision 紐⑸줉?먯꽌 ?대떦 revisionNumber 李얘린
           const revisionsEndpoint = entityType === 'job' 
             ? `${API_BASE}/job/${entityId}/revisions`
             : `${API_BASE}/major/${entityId}/revisions`;
@@ -2346,16 +2342,16 @@ const EditSystem = {
           if (loadingElement && loadingElement.parentNode) {
             loadingElement.parentNode.removeChild(loadingElement);
           }
-          alert('이전 버전을 찾을 수 없습니다.');
+          alert('?댁쟾 踰꾩쟾??李얠쓣 ???놁뒿?덈떎.');
           return;
         }
         
-        // 이전 버전 데이터 가져오기
+        // ?댁쟾 踰꾩쟾 ?곗씠??媛?몄삤湲?
         const prevResponse = await fetch(`${API_BASE}/revision/${previousRevision.id}?fullData=true&formatForEdit=true`);
         const prevResult = await prevResponse.json();
         
         if (!prevResponse.ok || !prevResult.success) {
-          throw new Error('이전 버전 데이터를 불러올 수 없습니다.');
+          throw new Error('?댁쟾 踰꾩쟾 ?곗씠?곕? 遺덈윭?????놁뒿?덈떎.');
         }
         
         const prevRevisionFull = prevResult.data;
@@ -2376,31 +2372,31 @@ const EditSystem = {
         }
       }
       
-      // 로딩 모달 제거
+      // 濡쒕뵫 紐⑤떖 ?쒓굅
       if (loadingElement && loadingElement.parentNode) {
         loadingElement.parentNode.removeChild(loadingElement);
       }
       
-      // 비교 모달 표시 (이전 버전 vs 선택한 버전)
+      // 鍮꾧탳 紐⑤떖 ?쒖떆 (?댁쟾 踰꾩쟾 vs ?좏깮??踰꾩쟾)
       const compareModal = this.createCompareModalHtml({
-        currentData: currentRevisionData,  // 선택한 버전 (새 버전)
-        revisionData: previousRevisionData, // 이전 버전 (구 버전)
+        currentData: currentRevisionData,  // ?좏깮??踰꾩쟾 (??踰꾩쟾)
+        revisionData: previousRevisionData, // ?댁쟾 踰꾩쟾 (援?踰꾩쟾)
         revision: revision,
         previousRevision: previousRevision,
-        comparePrevious: true  // 이전 버전과 비교 플래그
+        comparePrevious: true  // ?댁쟾 踰꾩쟾怨?鍮꾧탳 ?뚮옒洹?
       });
       const modalContainer = document.createElement('div');
       modalContainer.innerHTML = compareModal;
       const modalElement = modalContainer.firstElementChild;
       document.body.appendChild(modalElement);
       
-      // 애니메이션
+      // ?좊땲硫붿씠??
       setTimeout(() => {
         modalElement.classList.remove('opacity-0');
         modalElement.classList.add('opacity-100');
       }, 10);
       
-      // 모달 닫기 이벤트 리스너
+      // 紐⑤떖 ?リ린 ?대깽??由ъ뒪??
       const closeBtn = modalElement.querySelector('[data-compare-modal-close]');
       const backdrop = modalElement.querySelector('[data-compare-modal-backdrop]');
       
@@ -2419,9 +2415,9 @@ const EditSystem = {
       }
       
     } catch (error) {
-      alert(error.message || '비교 중 오류가 발생했습니다.');
+      alert(error.message || '鍮꾧탳 以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.');
       
-      // 로딩 모달 제거
+      // 濡쒕뵫 紐⑤떖 ?쒓굅
       const loadingModal = document.querySelector('[data-compare-modal-backdrop]');
       if (loadingModal && loadingModal.parentNode) {
         loadingModal.parentNode.removeChild(loadingModal);
@@ -2430,7 +2426,7 @@ const EditSystem = {
   },
   
   /**
-   * 비교 모달 HTML 생성
+   * 鍮꾧탳 紐⑤떖 HTML ?앹꽦
    */
   createCompareModalHtml({ loading = false, currentData = null, revisionData = null, revision = null, previousRevision = null, comparePrevious = false }) {
     if (loading) {
@@ -2444,7 +2440,7 @@ const EditSystem = {
             <div class="flex items-center justify-center py-20">
               <div class="text-center">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-wiki-primary mx-auto mb-4"></div>
-                <p class="text-wiki-muted">비교 데이터를 불러오는 중...</p>
+                <p class="text-wiki-muted">鍮꾧탳 ?곗씠?곕? 遺덈윭?ㅻ뒗 以?..</p>
               </div>
             </div>
           </div>
@@ -2456,10 +2452,10 @@ const EditSystem = {
       return '';
     }
     
-    // 필드 비교 - 모든 필드를 비교하여 실제 차이가 있는 것만 표시
+    // ?꾨뱶 鍮꾧탳 - 紐⑤뱺 ?꾨뱶瑜?鍮꾧탳?섏뿬 ?ㅼ젣 李⑥씠媛 ?덈뒗 寃껊쭔 ?쒖떆
     const fields = this.getEditableFields(this.currentHistoryEntity?.entityType || 'job');
     
-    // 값을 배열로 변환하는 함수
+    // 媛믪쓣 諛곗뿴濡?蹂?섑븯???⑥닔
     const toArray = (val) => {
       if (val === null || val === undefined) return [];
       if (typeof val === 'function') return [];
@@ -2467,14 +2463,14 @@ const EditSystem = {
         return val.filter(v => v !== null && v !== undefined && typeof v !== 'function').map(v => {
           if (typeof v === 'object') return v.name || v.title || JSON.stringify(v);
           return String(v).trim();
-        }).filter(s => s.length > 0); // 빈 문자열만 필터링, 한 글자는 OK
+        }).filter(s => s.length > 0); // 鍮?臾몄옄?대쭔 ?꾪꽣留? ??湲?먮뒗 OK
       }
       if (typeof val === 'object') {
         if (val.name) return [val.name];
         if (val.title) return [val.title];
         return [];
       }
-      // 문자열인 경우 줄바꿈 또는 쉼표로 분리
+      // 臾몄옄?댁씤 寃쎌슦 以꾨컮轅??먮뒗 ?쇳몴濡?遺꾨━
       const str = String(val).trim();
       if (!str) return [];
       if (str.includes('\n')) return str.split('\n').map(s => s.trim()).filter(s => s.length > 0);
@@ -2482,19 +2478,19 @@ const EditSystem = {
       return [str];
     };
     
-    // 값을 보기 좋게 변환하는 함수
+    // 媛믪쓣 蹂닿린 醫뗪쾶 蹂?섑븯???⑥닔
     const formatValue = (val) => {
       const arr = toArray(val);
       return arr.join(', ');
     };
     
-    // 비교용 정규화 함수
+    // 鍮꾧탳???뺢퇋???⑥닔
     const normalizeForCompare = (val) => {
       const arr = toArray(val);
       return arr.map(s => s.toLowerCase().replace(/\s+/g, ' ').trim()).sort().join('|');
     };
     
-    // diff 계산 함수 (추가/삭제/유지 구분)
+    // diff 怨꾩궛 ?⑥닔 (異붽?/??젣/?좎? 援щ텇)
     const calculateDiff = (newVal, oldVal) => {
       const newArr = toArray(newVal);
       const oldArr = toArray(oldVal);
@@ -2511,11 +2507,11 @@ const EditSystem = {
     
     
     const comparisons = fields.map(field => {
-      // 둘 다 동일한 방식으로 값 추출
+      // ?????숈씪??諛⑹떇?쇰줈 媛?異붿텧
       let currentValue = this.getFieldValue(currentData, field.key);
       let revisionValue = this.getFieldValue(revisionData, field.key);
       
-      // 디버그 로그 (overview.summary 등 주요 필드만)
+      // ?붾쾭洹?濡쒓렇 (overview.summary ??二쇱슂 ?꾨뱶留?
       if (field.key.includes('overview') || field.key === 'property' || field.key === 'aptitude') {
       }
       
@@ -2523,7 +2519,7 @@ const EditSystem = {
       const revisionStr = normalizeForCompare(revisionValue);
       const isChanged = currentStr !== revisionStr;
       
-      // diff 계산
+      // diff 怨꾩궛
       const diff = calculateDiff(currentValue, revisionValue);
       
       return {
@@ -2534,11 +2530,11 @@ const EditSystem = {
         isChanged
       };
     }).filter(comp => {
-      // 변경된 필드만 표시
+      // 蹂寃쎈맂 ?꾨뱶留??쒖떆
       return comp.isChanged && (comp.diff.newArr.length > 0 || comp.diff.oldArr.length > 0);
     });
     
-    // 변경된 필드가 있는지 확인
+    // 蹂寃쎈맂 ?꾨뱶媛 ?덈뒗吏 ?뺤씤
     const hasChanges = comparisons.some(comp => comp.isChanged);
     
     const revisionDate = new Date(revision.createdAt);
@@ -2550,7 +2546,7 @@ const EditSystem = {
       minute: '2-digit'
     });
     
-    // 이전 버전 날짜 (comparePrevious 모드일 때)
+    // ?댁쟾 踰꾩쟾 ?좎쭨 (comparePrevious 紐⑤뱶????
     let prevRevisionDateStr = '';
     if (previousRevision) {
       const prevDate = new Date(previousRevision.createdAt);
@@ -2563,13 +2559,13 @@ const EditSystem = {
       });
     }
     
-    // 헤더 레이블 설정
+    // ?ㅻ뜑 ?덉씠釉??ㅼ젙
     const leftHeader = comparePrevious 
-      ? { title: `r${revision.revisionNumber} (선택한 버전)`, subtitle: `${revisionDateStr} · ${this.escapeHtml(revision.editorName || '알 수 없음')}`, color: 'text-wiki-primary' }
+      ? { title: `r${revision.revisionNumber} (?좏깮??踰꾩쟾)`, subtitle: `${revisionDateStr} 쨌 ${this.escapeHtml(revision.editorName || '?????놁쓬')}`, color: 'text-wiki-primary' }
       : { title: '현재 버전', subtitle: '최신 데이터', color: 'text-wiki-primary' };
     const rightHeader = comparePrevious && previousRevision
-      ? { title: `r${previousRevision.revisionNumber} (이전 버전)`, subtitle: `${prevRevisionDateStr} · ${this.escapeHtml(previousRevision.editorName || '알 수 없음')}`, color: 'text-wiki-muted' }
-      : { title: `r${revision.revisionNumber}`, subtitle: `${revisionDateStr} · ${this.escapeHtml(revision.editorName || '알 수 없음')}`, color: 'text-wiki-muted' };
+      ? { title: `r${previousRevision.revisionNumber} (?댁쟾 踰꾩쟾)`, subtitle: `${prevRevisionDateStr} 쨌 ${this.escapeHtml(previousRevision.editorName || '?????놁쓬')}`, color: 'text-wiki-muted' }
+      : { title: `r${revision.revisionNumber}`, subtitle: `${revisionDateStr} 쨌 ${this.escapeHtml(revision.editorName || '?????놁쓬')}`, color: 'text-wiki-muted' };
     
     return `
       <div 
@@ -2578,23 +2574,23 @@ const EditSystem = {
       >
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" data-compare-modal-backdrop></div>
         <div class="relative w-full max-w-6xl max-h-[90vh] bg-wiki-bg/95 border border-wiki-border/60 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-          <!-- 헤더 -->
+          <!-- ?ㅻ뜑 -->
           <div class="flex items-center justify-between px-6 py-4 border-b border-wiki-border/60 flex-shrink-0">
             <h2 class="text-xl font-bold text-white flex items-center gap-2">
               <i class="fas fa-code-compare" aria-hidden="true"></i>
-              버전 비교 ${comparePrevious ? `(r${previousRevision?.revisionNumber || '?'} → r${revision.revisionNumber})` : ''}
+              踰꾩쟾 鍮꾧탳 ${comparePrevious ? `(r${previousRevision?.revisionNumber || '?'} ??r${revision.revisionNumber})` : ''}
             </h2>
             <button 
               type="button" 
               class="text-wiki-muted hover:text-white transition p-2"
               data-compare-modal-close
-              aria-label="닫기"
+              aria-label="?リ린"
             >
               <i class="fas fa-times text-lg" aria-hidden="true"></i>
             </button>
           </div>
           
-          <!-- 비교 헤더 -->
+          <!-- 鍮꾧탳 ?ㅻ뜑 -->
           <div class="px-6 py-3 border-b border-wiki-border/60 bg-wiki-bg/50 flex-shrink-0">
             <div class="grid grid-cols-2 gap-4">
               <div>
@@ -2608,28 +2604,28 @@ const EditSystem = {
             </div>
           </div>
           
-          <!-- 비교 내용 -->
+          <!-- 鍮꾧탳 ?댁슜 -->
           <div class="flex-1 overflow-y-auto px-6 py-4">
             ${!hasChanges ? `
               <div class="text-center py-12">
                 <div class="mb-4">
                   <i class="fas fa-check-circle text-green-400 text-4xl mb-3"></i>
                 </div>
-                <p class="text-white text-lg font-semibold mb-2">${comparePrevious ? '이전 버전과 동일합니다' : '현재 버전과 동일합니다'}</p>
-                <p class="text-wiki-muted text-sm">${comparePrevious ? '선택한 버전과 이전 버전 사이에 변경사항이 없습니다.' : '이 revision과 현재 버전 사이에는 변경사항이 없습니다.'}</p>
+                <p class="text-white text-lg font-semibold mb-2">${comparePrevious ? '이전 버전과 동일합니다.' : '현재 버전과 동일합니다.'}</p>
+                <p class="text-wiki-muted text-sm">${comparePrevious ? '선택한 버전과 이전 버전 사이에 변경사항이 없습니다.' : '선택한 revision과 현재 버전 사이에는 변경사항이 없습니다.'}</p>
               </div>
             ` : comparisons.length === 0 ? `
               <div class="text-center py-12">
-                <p class="text-wiki-muted">변경된 필드가 없습니다.</p>
+                <p class="text-wiki-muted">蹂寃쎈맂 ?꾨뱶媛 ?놁뒿?덈떎.</p>
               </div>
             ` : `
               <div class="space-y-6">
                 ${comparisons.filter(comp => comp.isChanged).map(comp => {
                   const diff = comp.diff;
                   
-                  // 변경 후 표시 (추가된 것은 녹색 하이라이트)
+                  // 蹂寃????쒖떆 (異붽???寃껋? ?뱀깋 ?섏씠?쇱씠??
                   const renderNewValue = () => {
-                    if (diff.newArr.length === 0) return '<span class="text-wiki-muted italic">내용 없음</span>';
+                    if (diff.newArr.length === 0) return '<span class="text-wiki-muted italic">?댁슜 ?놁쓬</span>';
                     return diff.newArr.map(item => {
                       const isAdded = diff.added.some(a => a.toLowerCase().trim() === item.toLowerCase().trim());
                       if (isAdded) {
@@ -2639,9 +2635,9 @@ const EditSystem = {
                     }).join('');
                   };
                   
-                  // 변경 전 표시 (삭제된 것은 취소선 + 빨간색)
+                  // 蹂寃????쒖떆 (??젣??寃껋? 痍⑥냼??+ 鍮④컙??
                   const renderOldValue = () => {
-                    if (diff.oldArr.length === 0) return '<span class="text-wiki-muted italic">내용 없음</span>';
+                    if (diff.oldArr.length === 0) return '<span class="text-wiki-muted italic">?댁슜 ?놁쓬</span>';
                     return diff.oldArr.map(item => {
                       const isRemoved = diff.removed.some(r => r.toLowerCase().trim() === item.toLowerCase().trim());
                       if (isRemoved) {
@@ -2651,26 +2647,26 @@ const EditSystem = {
                     }).join('');
                   };
                   
-                  // 변경 요약
+                  // 蹂寃??붿빟
                   const summaryParts = [];
-                  if (diff.added.length > 0) summaryParts.push('<span class="text-green-400"><i class="fas fa-plus mr-1"></i>' + diff.added.length + '개 추가</span>');
-                  if (diff.removed.length > 0) summaryParts.push('<span class="text-red-400"><i class="fas fa-minus mr-1"></i>' + diff.removed.length + '개 삭제</span>');
-                  if (diff.kept.length > 0) summaryParts.push('<span class="text-wiki-muted">' + diff.kept.length + '개 유지</span>');
-                  const summary = summaryParts.join(' · ');
+                  if (diff.added.length > 0) summaryParts.push('<span class="text-green-400"><i class="fas fa-plus mr-1"></i>' + diff.added.length + '媛?異붽?</span>');
+                  if (diff.removed.length > 0) summaryParts.push('<span class="text-red-400"><i class="fas fa-minus mr-1"></i>' + diff.removed.length + '媛???젣</span>');
+                  if (diff.kept.length > 0) summaryParts.push('<span class="text-wiki-muted">' + diff.kept.length + '媛??좎?</span>');
+                  const summary = summaryParts.join(' 쨌 ');
                   
                   return `
                   <div class="border border-wiki-border/40 rounded-xl overflow-hidden">
-                    <!-- 필드명 헤더 -->
+                    <!-- ?꾨뱶紐??ㅻ뜑 -->
                     <div class="bg-wiki-primary/10 px-4 py-2 border-b border-wiki-border/40 flex items-center justify-between">
                       <h4 class="text-sm font-bold text-wiki-primary">${this.escapeHtml(comp.label)}</h4>
                       <div class="text-xs">${summary}</div>
                     </div>
                     
                     <div class="p-4 space-y-4">
-                      <!-- 변경 후 (새 값) -->
+                      <!-- 蹂寃???(??媛? -->
                       <div>
                         <div class="flex items-center gap-2 mb-2">
-                          <span class="px-2 py-0.5 text-xs font-semibold rounded bg-green-500/20 text-green-400 border border-green-500/30">변경 후</span>
+                          <span class="px-2 py-0.5 text-xs font-semibold rounded bg-green-500/20 text-green-400 border border-green-500/30">蹂寃???/span>
                           <span class="text-xs text-wiki-muted">r${revision.revisionNumber}</span>
                         </div>
                         <div class="px-4 py-3 rounded-lg bg-green-500/5 border border-green-500/30 text-sm leading-relaxed flex flex-wrap">
@@ -2678,15 +2674,15 @@ const EditSystem = {
                         </div>
                       </div>
                       
-                      <!-- 화살표 -->
+                      <!-- ?붿궡??-->
                       <div class="flex justify-center">
                         <i class="fas fa-arrow-up text-wiki-muted"></i>
                       </div>
                       
-                      <!-- 변경 전 (이전 값) -->
+                      <!-- 蹂寃???(?댁쟾 媛? -->
                       <div>
                         <div class="flex items-center gap-2 mb-2">
-                          <span class="px-2 py-0.5 text-xs font-semibold rounded bg-red-500/20 text-red-400 border border-red-500/30">변경 전</span>
+                          <span class="px-2 py-0.5 text-xs font-semibold rounded bg-red-500/20 text-red-400 border border-red-500/30">蹂寃???/span>
                           <span class="text-xs text-wiki-muted">r${(revision.revisionNumber || 1) - 1}</span>
                         </div>
                         <div class="px-4 py-3 rounded-lg bg-red-500/5 border border-red-500/30 text-sm leading-relaxed flex flex-wrap">
@@ -2706,7 +2702,7 @@ const EditSystem = {
   },
   
   /**
-   * 비교 모달 닫기
+   * 鍮꾧탳 紐⑤떖 ?リ린
    */
   closeCompareModal(modalElement) {
     if (!modalElement) return;
@@ -2722,35 +2718,30 @@ const EditSystem = {
   },
   
   /**
-   * 편집 가능한 필드 목록 가져오기
+   * ?몄쭛 媛?ν븳 ?꾨뱶 紐⑸줉 媛?몄삤湲?
    */
   getEditableFields(entityType) {
     if (entityType === 'job') {
       return [
-        // 히어로 섹션
         { key: 'name', label: '직업명', type: 'text' },
         { key: 'summary', label: '직업 설명', type: 'textarea' },
         { key: 'heroTags', label: '태그', type: 'tags' },
         { key: 'heroCategory', label: '직업 분류', type: 'text' },
-        // 개요
         { key: 'overviewWork.main', label: '수행 직무', type: 'textarea' },
-        { key: 'overviewAbilities.abilityList', label: '핵심 역량', type: 'tags' },
-        { key: 'overviewAbilities.technKnow', label: '활용 기술', type: 'textarea' },
+        { key: 'overviewAbilities.abilityList', label: '요구 능력', type: 'tags' },
+        { key: 'overviewAbilities.technKnow', label: '사용 기술', type: 'textarea' },
         { key: 'overviewAptitude.aptitudeList', label: '적성', type: 'tags' },
         { key: 'overviewAptitude.interestList', label: '흥미', type: 'tags' },
         { key: 'trivia', label: '여담', type: 'textarea' },
-        // 상세정보 - 직업 준비하기
         { key: 'detailReady.curriculum', label: '정규 교육과정', type: 'list' },
         { key: 'detailReady.recruit', label: '채용 정보', type: 'list' },
         { key: 'detailReady.training', label: '필요 교육/훈련', type: 'list' },
         { key: 'detailReady.researchList', label: '진로 탐색 활동', type: 'list' },
-        // 사이드바
-        { key: 'sidebarJobs', label: '관련 직업', type: 'autocomplete' },
-        { key: 'sidebarMajors', label: '관련 학과', type: 'autocomplete' },
+        { key: 'sidebarJobs', label: '연관 직업', type: 'autocomplete' },
+        { key: 'sidebarMajors', label: '연관 학과', type: 'autocomplete' },
         { key: 'sidebarCerts', label: '추천 자격증', type: 'tags' },
-        // 기존 필드 (호환성)
         { key: 'duties', label: '주요 업무 (기존)', type: 'textarea' },
-        { key: 'way', label: '되는 방법', type: 'textarea' },
+        { key: 'way', label: '진입 경로', type: 'textarea' },
         { key: 'salary', label: '임금 정보', type: 'text' },
         { key: 'prospect', label: '직업 전망', type: 'textarea' },
         { key: 'satisfaction', label: '직업 만족도', type: 'textarea' },
@@ -2765,41 +2756,37 @@ const EditSystem = {
       ];
     } else if (entityType === 'major') {
       return [
-        // 히어로 섹션
         { key: 'name', label: '전공명', type: 'text' },
         { key: 'summary', label: '전공 설명', type: 'textarea' },
-        { key: 'heroTags', label: '관련 학과 태그', type: 'tags' },
+        { key: 'heroTags', label: '관련 태그', type: 'tags' },
         { key: 'categoryName', label: '계열', type: 'text' },
-        // 개요
         { key: 'overview.summary', label: '전공 개요', type: 'textarea' },
         { key: 'property', label: '전공 특성', type: 'textarea' },
-        { key: 'aptitude', label: '이 전공에 어울리는 사람', type: 'textarea' },
-        { key: 'enterField', label: '졸업 후 진출 분야', type: 'pairList' },
+        { key: 'aptitude', label: '적성과 흥미', type: 'textarea' },
+        { key: 'enterField', label: '관련 진출 분야', type: 'pairList' },
         { key: 'jobProspect', label: '여담', type: 'list' },
-        // 상세정보
         { key: 'whatStudy', label: '배우는 내용', type: 'textarea' },
         { key: 'mainSubject', label: '주요 교과목', type: 'tags' },
-        { key: 'relateSubject', label: '고교 추천 교과목', type: 'tags' },
+        { key: 'relateSubject', label: '관련 과목', type: 'tags' },
         { key: 'careerAct', label: '진로 탐색 활동', type: 'pairList' },
-        // 사이드바
-        { key: 'sidebarJobs', label: '관련 직업', type: 'autocomplete' },
-        { key: 'sidebarMajors', label: '관련 전공', type: 'autocomplete' },
-        { key: 'sidebarHowtos', label: '관련 HowTo', type: 'autocomplete' }
+        { key: 'sidebarJobs', label: '연관 직업', type: 'autocomplete' },
+        { key: 'sidebarMajors', label: '연관 전공', type: 'autocomplete' },
+        { key: 'sidebarHowtos', label: '연관 HowTo', type: 'autocomplete' }
       ];
     }
     return [];
   },
   
   /**
-   * Revision 데이터에서 필드 값 추출
-   * 배열은 그대로 반환, null/undefined는 빈 값으로 변환
+   * Revision ?곗씠?곗뿉???꾨뱶 媛?異붿텧
+   * 諛곗뿴? 洹몃?濡?諛섑솚, null/undefined??鍮?媛믪쑝濡?蹂??
    */
   getFieldValue(revisionData, fieldKey) {
     if (!revisionData || typeof revisionData !== 'object') {
       return '';
     }
     
-    // 1. flat 키로 직접 접근 (예: 'overview.summary' 문자열 키)
+    // 1. flat ?ㅻ줈 吏곸젒 ?묎렐 (?? 'overview.summary' 臾몄옄????
     if (revisionData[fieldKey] !== undefined) {
       const value = revisionData[fieldKey];
       if (value === null || value === undefined) return '';
@@ -2807,7 +2794,7 @@ const EditSystem = {
       return value;
     }
     
-    // 2. nested 경로로 접근 (예: overview.summary → revisionData.overview.summary)
+    // 2. nested 寃쎈줈濡??묎렐 (?? overview.summary ??revisionData.overview.summary)
     if (fieldKey.includes('.')) {
       const parts = fieldKey.split('.');
       let current = revisionData;
@@ -2826,7 +2813,7 @@ const EditSystem = {
       }
     }
     
-    // 3. 중첩된 객체 내부에서 찾기 (원본 구조인 경우를 위한 fallback)
+    // 3. 以묒꺽??媛앹껜 ?대??먯꽌 李얘린 (?먮낯 援ъ“??寃쎌슦瑜??꾪븳 fallback)
     for (const key in revisionData) {
       if (typeof revisionData[key] === 'object' && revisionData[key] !== null) {
         if (revisionData[key][fieldKey] !== undefined) {
@@ -2844,7 +2831,7 @@ const EditSystem = {
   closeModal() {
     if (!this.currentModal) return;
 
-    // 애니메이션
+    // ?좊땲硫붿씠??
     this.currentModal.classList.remove('opacity-100');
     this.currentModal.classList.add('opacity-0');
     const dialog = this.currentModal.querySelector('[data-edit-modal-dialog]');
@@ -2853,7 +2840,7 @@ const EditSystem = {
       dialog.classList.add('scale-95');
     }
 
-    // DOM에서 제거
+    // DOM?먯꽌 ?쒓굅
     setTimeout(() => {
       if (this.currentModal && this.currentModal.parentNode) {
         this.currentModal.parentNode.removeChild(this.currentModal);
@@ -2864,7 +2851,7 @@ const EditSystem = {
   },
 
   /**
-   * HTML 이스케이프
+   * HTML ?댁뒪耳?댄봽
    */
   escapeHtml(text) {
     const div = document.createElement('div');
@@ -2873,16 +2860,16 @@ const EditSystem = {
   }
 };
 
-// 페이지 로드 시 편집 시스템 초기화
+// ?섏씠吏 濡쒕뱶 ???몄쭛 ?쒖뒪??珥덇린??
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => EditSystem.init());
 } else {
   EditSystem.init();
 }
 
-// API 호출 함수들
+// API ?몄텧 ?⑥닔??
 const CareerAPI = {
-  // 학과 검색
+  // ?숆낵 寃??
   async searchMajors(keyword = '', page = 1, perPage = 20, options = {}) {
     try {
       const params = new URLSearchParams({
@@ -2899,7 +2886,7 @@ const CareerAPI = {
       const payload = await response.json();
 
       if (!payload.success) {
-        throw new Error(payload.error || '학과 검색 실패');
+        throw new Error(payload.error || '?숆낵 寃???ㅽ뙣');
       }
 
       return {
@@ -2910,17 +2897,17 @@ const CareerAPI = {
       return {
         items: [],
         meta: {
-          error: error instanceof Error ? error.message : '학과 검색 실패'
+          error: error instanceof Error ? error.message : '?숆낵 寃???ㅽ뙣'
         }
       };
     }
   },
 
-  // 학과 상세 정보
+  // ?숆낵 ?곸꽭 ?뺣낫
   async getMajorDetail(id, options = {}) {
     try {
       if (!id) {
-        throw new Error('학과 식별자가 필요합니다.');
+        throw new Error('?숆낵 ?앸퀎?먭? ?꾩슂?⑸땲??');
       }
 
       const params = new URLSearchParams();
@@ -2947,7 +2934,7 @@ const CareerAPI = {
       const payload = await response.json();
 
       if (!payload.success) {
-        throw new Error(payload.error || '학과 정보 조회 실패');
+        throw new Error(payload.error || '?숆낵 ?뺣낫 議고쉶 ?ㅽ뙣');
       }
 
       return {
@@ -2960,7 +2947,7 @@ const CareerAPI = {
     }
   },
 
-  // 직업 검색
+  // 吏곸뾽 寃??
   async searchJobs(keyword = '', category = '', page = 1, perPage = 20, options = {}) {
     try {
       const params = new URLSearchParams({
@@ -2982,7 +2969,7 @@ const CareerAPI = {
       const payload = await response.json();
 
       if (!payload.success) {
-        throw new Error(payload.error || '직업 검색 실패');
+        throw new Error(payload.error || '吏곸뾽 寃???ㅽ뙣');
       }
 
       return {
@@ -2994,18 +2981,18 @@ const CareerAPI = {
       return {
         items: [],
         meta: {
-          error: error instanceof Error ? error.message : '직업 검색 실패'
+          error: error instanceof Error ? error.message : '吏곸뾽 寃???ㅽ뙣'
         },
         categories: {}
       };
     }
   },
 
-  // 직업 상세 정보
+  // 吏곸뾽 ?곸꽭 ?뺣낫
   async getJobDetail(id, options = {}) {
     try {
       if (!id) {
-        throw new Error('직업 식별자가 필요합니다.');
+        throw new Error('吏곸뾽 ?앸퀎?먭? ?꾩슂?⑸땲??');
       }
 
       const params = new URLSearchParams();
@@ -3027,7 +3014,7 @@ const CareerAPI = {
       const payload = await response.json();
 
       if (!payload.success) {
-        throw new Error(payload.error || '직업 정보 조회 실패');
+        throw new Error(payload.error || '吏곸뾽 ?뺣낫 議고쉶 ?ㅽ뙣');
       }
 
       return {
@@ -3040,14 +3027,14 @@ const CareerAPI = {
     }
   },
 
-  // 카테고리 정보
+  // 移댄뀒怨좊━ ?뺣낫
   async getCategories() {
     try {
       const response = await fetch(`${API_BASE}/categories`);
       const payload = await response.json();
 
       if (!payload.success) {
-        throw new Error(payload.error || '카테고리 정보 조회 실패');
+        throw new Error(payload.error || '移댄뀒怨좊━ ?뺣낫 議고쉶 ?ㅽ뙣');
       }
 
       return payload;
@@ -3055,15 +3042,15 @@ const CareerAPI = {
       return {
         jobCategories: {},
         aptitudeTypes: {},
-        error: error instanceof Error ? error.message : '카테고리 조회 실패'
+        error: error instanceof Error ? error.message : '移댄뀒怨좊━ 議고쉶 ?ㅽ뙣'
       };
     }
   }
 };
 
 const SOURCE_LABEL_MAP = {
-  CAREERNET: '커리어넷',
-  GOYONG24: '고용24'
+  CAREERNET: '而ㅻ━?대꽬',
+  GOYONG24: '怨좎슜24'
 };
 
 const JOB_SORT_LABELS = {
@@ -3075,18 +3062,18 @@ const JOB_SORT_LABELS = {
 const MAJOR_SORT_LABELS = {
   relevance: '기본 순',
   'employment-desc': '취업률 높은 순',
-  'salary-desc': '월급 높은 순'
+  'salary-desc': '초봉 높은 순'
 };
 
 const OUTLOOK_SCORE_MAP = {
-  '매우 좋음': 5,
-  '아주 좋음': 5,
-  '좋음': 4,
-  '보통': 3,
-  '보통 이상': 3,
-  '보통 이하': 2,
-  '나쁨': 1,
-  '불명': 0
+  '留ㅼ슦 醫뗭쓬': 5,
+  '?꾩＜ 醫뗭쓬': 5,
+  '醫뗭쓬': 4,
+  '蹂댄넻': 3,
+  '蹂댄넻 ?댁긽': 3,
+  '蹂댄넻 ?댄븯': 2,
+  '?섏겏': 1,
+  '遺덈챸': 0
 };
 
 const parseJsonScript = (id) => {
@@ -3107,17 +3094,17 @@ const parseNumberFromText = (value) => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
-// 취업률 포맷 함수: "70% 이상" 같은 텍스트에서 숫자 추출 후 소수점 1자리까지 반올림
+// 痍⑥뾽瑜??щ㎎ ?⑥닔: "70% ?댁긽" 媛숈? ?띿뒪?몄뿉???レ옄 異붿텧 ???뚯닔??1?먮━源뚯? 諛섏삱由?
 const formatEmploymentRate = (rate) => {
   if (!rate) return null;
-  // HTML 태그 제거 및 공백 정리
+  // HTML ?쒓렇 ?쒓굅 諛?怨듬갚 ?뺣━
   const cleaned = String(rate).replace(/<[^>]*>/g, '').trim();
-  // 숫자 추출 (정수 또는 소수)
+  // ?レ옄 異붿텧 (?뺤닔 ?먮뒗 ?뚯닔)
   const match = cleaned.match(/([\d.]+)/);
   if (!match) return cleaned;
   const num = parseFloat(match[1]);
   if (isNaN(num)) return cleaned;
-  // 소수점 1자리까지 반올림, 정수면 정수로 표시
+  // ?뚯닔??1?먮━源뚯? 諛섏삱由? ?뺤닔硫??뺤닔濡??쒖떆
   const rounded = Math.round(num * 10) / 10;
   return Number.isInteger(rounded) ? `${rounded}%` : `${rounded.toFixed(1)}%`;
 };
@@ -3256,15 +3243,15 @@ const buildSourceSummaryContent = (sources) => {
   const items = entries
     .map(([source, status]) => {
       const label = SOURCE_LABEL_MAP[source] || source;
-      let message = '데이터 없음';
+      let message = '?곗씠???놁쓬';
       if (status?.error) {
-        message = `오류: ${status.error}`;
+        message = `?ㅻ쪟: ${status.error}`;
       } else if (typeof status?.count === 'number' && status.count > 0) {
-        message = `데이터 ${status.count}건 수신`;
+        message = `?곗씠??${status.count}嫄??섏떊`;
       } else if (status?.attempted) {
-        message = '호출되었으나 제공 가능한 데이터가 없습니다.';
+        message = '?몄텧?섏뿀?쇰굹 ?쒓났 媛?ν븳 ?곗씠?곌? ?놁뒿?덈떎.';
       } else if (status?.skippedReason) {
-        message = `생략: ${status.skippedReason}`;
+        message = `?앸왂: ${status.skippedReason}`;
       }
       return `
         <li class="flex items-start justify-between gap-4">
@@ -3276,7 +3263,7 @@ const buildSourceSummaryContent = (sources) => {
     .join('');
   if (!items) return '';
   return `
-    <h2 class="text-lg font-semibold text-wiki-text mb-3">데이터 수집 상태</h2>
+    <h2 class="text-lg font-semibold text-wiki-text mb-3">?곗씠???섏쭛 ?곹깭</h2>
     <ul class="space-y-2">${items}</ul>
   `;
 };
@@ -3298,12 +3285,12 @@ const updateSourceFilterStatus = (elementId, sources) => {
   const container = document.getElementById(elementId);
   if (!container) return;
   if (!sources) {
-    container.innerHTML = '<span class="text-wiki-muted">데이터 소스 정보 없음</span>';
+    container.innerHTML = '<span class="text-wiki-muted">?곗씠???뚯뒪 ?뺣낫 ?놁쓬</span>';
     return;
   }
   const entries = Object.entries(sources);
   if (!entries.length) {
-    container.innerHTML = '<span class="text-wiki-muted">데이터 소스 정보 없음</span>';
+    container.innerHTML = '<span class="text-wiki-muted">?곗씠???뚯뒪 ?뺣낫 ?놁쓬</span>';
     return;
   }
   container.innerHTML = entries
@@ -3317,7 +3304,7 @@ const updateSourceFilterStatus = (elementId, sources) => {
           : 'text-wiki-muted';
       return `<span class="inline-flex items-center gap-1 ${stateClass}"><i class="fas fa-database"></i>${label}${countBadge}</span>`;
     })
-    .join('<span class="text-wiki-border">·</span>');
+    .join('<span class="text-wiki-border">쨌</span>');
 };
 
 const updateHydrationStatus = (elementId, meta, sortKey, sortLabels) => {
@@ -3328,15 +3315,15 @@ const updateHydrationStatus = (elementId, meta, sortKey, sortLabels) => {
     parts.push(`총 ${meta.total}건`);
   }
   if (sortKey && sortLabels[sortKey]) {
-    parts.push(`정렬: ${sortLabels[sortKey]}`);
+    parts.push(`?뺣젹: ${sortLabels[sortKey]}`);
   }
   if (meta?.cacheState?.status) {
-    parts.push(`SSR 캐시: ${meta.cacheState.status}`);
+    parts.push(`SSR 罹먯떆: ${meta.cacheState.status}`);
   }
   if (meta?.cacheState?.cachedAt) {
-    parts.push(`캐시 시각: ${formatDateTime(meta.cacheState.cachedAt)}`);
+    parts.push(`罹먯떆 ?쒓컖: ${formatDateTime(meta.cacheState.cachedAt)}`);
   }
-  el.textContent = parts.length ? parts.join(' · ') : '';
+  el.textContent = parts.length ? parts.join(' 쨌 ') : '';
 };
 
 const Hydration = (() => {
@@ -3404,31 +3391,31 @@ const Hydration = (() => {
     includeSources: meta?.includeSources || null,
     sources: meta?.sources || null,
     cacheState: meta?.cacheState || null,
-    sort: meta?.sort || 'relevance' // 정렬 기준 유지
+    sort: meta?.sort || 'relevance' // ?뺣젹 湲곗? ?좎?
   });
 
   const emptyJobMessage = `
     <div class="glass-card p-12 rounded-2xl text-center">
       <i class="fas fa-circle-info text-4xl text-wiki-secondary mb-4"></i>
-      <h2 class="text-2xl font-semibold text-white mb-2">검색 결과가 없습니다</h2>
-      <p class="text-sm text-wiki-muted">검색어 또는 필터를 변경하여 다시 시도해 주세요. CareerWiki는 매일 새로운 직업 데이터를 수집하고 있습니다.</p>
+      <h2 class="text-2xl font-semibold text-white mb-2">寃??寃곌낵媛 ?놁뒿?덈떎</h2>
+      <p class="text-sm text-wiki-muted">寃?됱뼱 ?먮뒗 ?꾪꽣瑜?蹂寃쏀븯???ㅼ떆 ?쒕룄??二쇱꽭?? CareerWiki??留ㅼ씪 ?덈줈??吏곸뾽 ?곗씠?곕? ?섏쭛?섍퀬 ?덉뒿?덈떎.</p>
     </div>
   `;
 
   const emptyMajorMessage = `
     <div class="glass-card p-12 rounded-2xl text-center">
       <i class="fas fa-circle-info text-4xl text-wiki-secondary mb-4"></i>
-      <h2 class="text-2xl font-semibold text-white mb-2">검색 결과가 없습니다</h2>
-      <p class="text-sm text-wiki-muted">검색어를 변경하여 다시 시도해 주세요. CareerWiki는 지속적으로 새로운 전공 데이터를 수집하고 있습니다.</p>
+      <h2 class="text-2xl font-semibold text-white mb-2">寃??寃곌낵媛 ?놁뒿?덈떎</h2>
+      <p class="text-sm text-wiki-muted">寃?됱뼱瑜?蹂寃쏀븯???ㅼ떆 ?쒕룄??二쇱꽭?? CareerWiki??吏?띿쟻?쇰줈 ?덈줈???꾧났 ?곗씠?곕? ?섏쭛?섍퀬 ?덉뒿?덈떎.</p>
     </div>
   `;
 
-  // 데이터 풍부도 계산 함수 (display 객체의 유효한 필드 개수)
+  // ?곗씠???띾???怨꾩궛 ?⑥닔 (display 媛앹껜???좏슚???꾨뱶 媛쒖닔)
   const calculateJobDataRichness = (item) => {
     if (!item?.display) return 0;
     const d = item.display;
     let score = 0;
-    // 중요 필드에 가중치 부여
+    // 以묒슂 ?꾨뱶??媛以묒튂 遺??
     if (d.salary) score += 3;
     if (d.satisfaction) score += 2;
     if (d.wlb) score += 2;
@@ -3444,7 +3431,7 @@ const Hydration = (() => {
     if (!item?.display) return 0;
     const d = item.display;
     let score = 0;
-    // 중요 필드에 가중치 부여
+    // 以묒슂 ?꾨뱶??媛以묒튂 遺??
     if (d.employmentRate) score += 3;
     if (d.firstJobSalary || d.salaryAfterGraduation) score += 3;
     if (d.firstJobSatisfaction) score += 2;
@@ -3462,7 +3449,7 @@ const Hydration = (() => {
       case 'name-asc':
         return cloned.sort((a, b) => (a?.profile?.name || '').localeCompare(b?.profile?.name || ''));
       default:
-        // 기본 순: 데이터 풍부도 기준 정렬 (데이터 많은 순)
+        // 湲곕낯 ?? ?곗씠???띾???湲곗? ?뺣젹 (?곗씠??留롮? ??
         return cloned.sort((a, b) => calculateJobDataRichness(b) - calculateJobDataRichness(a));
     }
   };
@@ -3478,21 +3465,21 @@ const Hydration = (() => {
       case 'name-asc':
         return cloned.sort((a, b) => (a?.profile?.name || '').localeCompare(b?.profile?.name || ''));
       default:
-        // 기본 순: 데이터 풍부도 기준 정렬 (데이터 많은 순)
+        // 湲곕낯 ?? ?곗씠???띾???湲곗? ?뺣젹 (?곗씠??留롮? ??
         return cloned.sort((a, b) => calculateMajorDataRichness(b) - calculateMajorDataRichness(a));
     }
   };
 
-  // 페이지네이션 업데이트 함수
+  // ?섏씠吏?ㅼ씠???낅뜲?댄듃 ?⑥닔
   const updatePagination = (containerId, total, currentPage, perPage, baseUrl, keyword) => {
-    // 결과 섹션과 페이지네이션 요소 찾기
+    // 寃곌낵 ?뱀뀡怨??섏씠吏?ㅼ씠???붿냼 李얘린
     const resultsSection = document.getElementById(containerId);
     if (!resultsSection) return;
     
-    // aria-label로 페이지네이션 nav 찾기 (SSR에서 렌더링된 요소)
-    let nav = document.querySelector('nav[aria-label="페이지네이션"]');
+    // aria-label濡??섏씠吏?ㅼ씠??nav 李얘린 (SSR?먯꽌 ?뚮뜑留곷맂 ?붿냼)
+    let nav = document.querySelector('nav[aria-label="?섏씠吏?ㅼ씠??]');
     
-    // 페이지네이션 정보 텍스트 요소 찾기 (nav 다음의 p.text-center)
+    // ?섏씠吏?ㅼ씠???뺣낫 ?띿뒪???붿냼 李얘린 (nav ?ㅼ쓬??p.text-center)
     let paginationInfo = nav ? nav.nextElementSibling : null;
     if (paginationInfo && paginationInfo.tagName !== 'P') {
       paginationInfo = null;
@@ -3500,14 +3487,14 @@ const Hydration = (() => {
     
     const totalPages = Math.ceil(total / perPage);
     
-    // 페이지가 1개 이하면 페이지네이션 숨기기
+    // ?섏씠吏媛 1媛??댄븯硫??섏씠吏?ㅼ씠???④린湲?
     if (totalPages <= 1) {
       if (nav) nav.style.display = 'none';
       if (paginationInfo) paginationInfo.style.display = 'none';
       return;
     }
     
-    // nav 요소가 없으면 생성
+    // nav ?붿냼媛 ?놁쑝硫??앹꽦
     if (!nav) {
       nav = document.createElement('nav');
       nav.className = 'mt-8 flex justify-center items-center gap-2 flex-wrap';
@@ -3516,7 +3503,7 @@ const Hydration = (() => {
     }
     nav.style.display = '';
     
-    // 페이지 URL 생성 함수
+    // ?섏씠吏 URL ?앹꽦 ?⑥닔
     const buildPageUrl = (pageNum) => {
       const params = new URLSearchParams();
       if (keyword) params.set('q', keyword);
@@ -3524,7 +3511,7 @@ const Hydration = (() => {
       return `${baseUrl}${params.toString() ? `?${params.toString()}` : ''}`;
     };
     
-    // 페이지 버튼 생성
+    // ?섏씠吏 踰꾪듉 ?앹꽦
     const maxPageButtons = 7;
     let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
     let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
@@ -3535,12 +3522,12 @@ const Hydration = (() => {
     
     const pageButtons = [];
     
-    // 이전 페이지 버튼
+    // ?댁쟾 ?섏씠吏 踰꾪듉
     if (currentPage > 1) {
       pageButtons.push(`<a href="${buildPageUrl(currentPage - 1)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition"><i class="fas fa-chevron-left"></i></a>`);
     }
     
-    // 첫 페이지
+    // 泥??섏씠吏
     if (startPage > 1) {
       pageButtons.push(`<a href="${buildPageUrl(1)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">1</a>`);
       if (startPage > 2) {
@@ -3548,13 +3535,13 @@ const Hydration = (() => {
       }
     }
     
-    // 페이지 번호들
+    // ?섏씠吏 踰덊샇??
     for (let i = startPage; i <= endPage; i++) {
       const isActive = i === currentPage;
       pageButtons.push(`<a href="${buildPageUrl(i)}" class="px-4 py-2 rounded-lg transition ${isActive ? 'bg-gradient-to-r from-wiki-primary to-wiki-secondary text-white font-bold' : 'bg-wiki-bg border border-wiki-border hover:border-wiki-primary'}">${i}</a>`);
     }
     
-    // 마지막 페이지
+    // 留덉?留??섏씠吏
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
         pageButtons.push(`<span class="px-2 text-wiki-muted">...</span>`);
@@ -3562,21 +3549,21 @@ const Hydration = (() => {
       pageButtons.push(`<a href="${buildPageUrl(totalPages)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition">${totalPages}</a>`);
     }
     
-    // 다음 페이지 버튼
+    // ?ㅼ쓬 ?섏씠吏 踰꾪듉
     if (currentPage < totalPages) {
       pageButtons.push(`<a href="${buildPageUrl(currentPage + 1)}" class="px-4 py-2 bg-wiki-bg border border-wiki-border rounded-lg hover:border-wiki-primary transition"><i class="fas fa-chevron-right"></i></a>`);
     }
     
     nav.innerHTML = pageButtons.join('');
     
-    // 페이지네이션 정보 업데이트
+    // ?섏씠吏?ㅼ씠???뺣낫 ?낅뜲?댄듃
     if (!paginationInfo) {
       paginationInfo = document.createElement('p');
       paginationInfo.className = 'text-center text-xs text-wiki-muted mt-4';
       nav.parentNode.insertBefore(paginationInfo, nav.nextSibling);
     }
     paginationInfo.style.display = '';
-    paginationInfo.textContent = `${currentPage}페이지 / 총 ${totalPages}페이지 (${total}개 항목)`;
+    paginationInfo.textContent = `${currentPage}?섏씠吏 / 珥?${totalPages}?섏씠吏 (${total}媛???ぉ)`;
   };
 
   const hydrateJobSerp = () => {
@@ -3588,22 +3575,22 @@ const Hydration = (() => {
     const json = parseJsonScript('job-hydration-data');
     const state = createState(json?.items || [], ensureMetaDefaults(json?.meta || {}, (json?.items || []).length));
     
-    // 원본 SSR 데이터 보존 (기본 순 복원용)
+    // ?먮낯 SSR ?곗씠??蹂댁〈 (湲곕낯 ??蹂듭썝??
     state.originalItems = state.baseItems.slice();
 
-    // 전체 DB 정렬 + 즉각 반응 (AJAX)
+    // ?꾩껜 DB ?뺣젹 + 利됯컖 諛섏쓳 (AJAX)
     const render = async (skipFetch = false) => {
-      // skipFetch가 true면 현재 데이터만 렌더링 (첫 로드용)
+      // skipFetch媛 true硫??꾩옱 ?곗씠?곕쭔 ?뚮뜑留?(泥?濡쒕뱶??
       if (!skipFetch && state.sort !== 'relevance') {
-        // 로딩 표시
+        // 濡쒕뵫 ?쒖떆
         container.innerHTML = '<div class="flex justify-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-wiki-primary"></i></div>';
         
         try {
-          // 서버에서 정렬된 데이터 가져오기
+          // ?쒕쾭?먯꽌 ?뺣젹???곗씠??媛?몄삤湲?
           const params = new URLSearchParams();
           if (state.meta.keyword) params.set('q', state.meta.keyword);
           params.set('sort', state.sort);
-          params.set('perPage', '20'); // 성능 최적화: 50 → 20
+          params.set('perPage', '20'); // ?깅뒫 理쒖쟻?? 50 ??20
           
           const response = await fetch(`/api/jobs/search?${params.toString()}`);
           const result = await response.json();
@@ -3618,11 +3605,11 @@ const Hydration = (() => {
         }
       }
       
-      // 기본 순: 원본 SSR 데이터 그대로 사용 (재정렬 없음)
-      // 다른 정렬: 서버 API 결과 사용
+      // 湲곕낯 ?? ?먮낯 SSR ?곗씠??洹몃?濡??ъ슜 (?ъ젙???놁쓬)
+      // ?ㅻⅨ ?뺣젹: ?쒕쾭 API 寃곌낵 ?ъ슜
       const items = state.sort === 'relevance' 
-        ? state.originalItems  // 원본 그대로 (서버에서 이미 기본 순 정렬됨)
-        : state.baseItems;     // 서버 API 결과
+        ? state.originalItems  // ?먮낯 洹몃?濡?(?쒕쾭?먯꽌 ?대? 湲곕낯 ???뺣젹??
+        : state.baseItems;     // ?쒕쾭 API 寃곌낵
       
       if (items.length) {
         container.innerHTML = items.map(item => DOMUtils.createJobCard(item)).join('');
@@ -3660,7 +3647,7 @@ const Hydration = (() => {
     const form = document.getElementById('job-filter-form');
     const sortSelect = document.getElementById('job-sort-select');
     
-    // 커스텀 드롭다운 초기화
+    // 而ㅼ뒪? ?쒕∼?ㅼ슫 珥덇린??
     const initCustomDropdown = () => {
       const trigger = document.getElementById('job-sort-trigger');
       const menu = document.getElementById('job-sort-menu');
@@ -3670,7 +3657,7 @@ const Hydration = (() => {
       
       if (!trigger || !menu || !label || !options) return;
       
-      // 현재 값 표시
+      // ?꾩옱 媛??쒖떆
       const updateLabel = (value) => {
         const labels = { relevance: '기본 순', 'salary-desc': '연봉 높은 순', 'name-asc': '가나다 순' };
         label.textContent = labels[value] || '기본 순';
@@ -3680,7 +3667,7 @@ const Hydration = (() => {
       };
       updateLabel(state.sort);
       
-      // 토글
+      // ?좉?
       const toggleMenu = (show) => {
         if (show) {
           menu.classList.remove('opacity-0', 'invisible', 'translate-y-1');
@@ -3706,11 +3693,11 @@ const Hydration = (() => {
           if (sortSelect) sortSelect.value = value;
           updateLabel(value);
           toggleMenu(false);
-          render(); // 즉각 정렬
+          render(); // 利됯컖 ?뺣젹
         });
       });
       
-      // 외부 클릭 시 닫기
+      // ?몃? ?대┃ ???リ린
       document.addEventListener('click', () => toggleMenu(false));
     };
     initCustomDropdown();
@@ -3719,11 +3706,11 @@ const Hydration = (() => {
       sortSelect.value = state.sort;
       sortSelect.addEventListener('change', () => {
         state.sort = sortSelect.value;
-        render(); // 즉각 정렬
+        render(); // 利됯컖 ?뺣젹
       });
     }
 
-    // 검색 폼은 기본 동작(페이지 새로고침)으로 SSR 결과를 받음
+    // 寃???쇱? 湲곕낯 ?숈옉(?섏씠吏 ?덈줈怨좎묠)?쇰줈 SSR 寃곌낵瑜?諛쏆쓬
   };
 
   const hydrateMajorSerp = () => {
@@ -3735,22 +3722,22 @@ const Hydration = (() => {
     const json = parseJsonScript('major-hydration-data');
     const state = createState(json?.items || [], ensureMetaDefaults(json?.meta || {}, (json?.items || []).length));
     
-    // 원본 SSR 데이터 보존 (기본 순 복원용)
+    // ?먮낯 SSR ?곗씠??蹂댁〈 (湲곕낯 ??蹂듭썝??
     state.originalItems = state.baseItems.slice();
 
-    // 전체 DB 정렬 + 즉각 반응 (AJAX)
+    // ?꾩껜 DB ?뺣젹 + 利됯컖 諛섏쓳 (AJAX)
     const render = async (skipFetch = false) => {
-      // skipFetch가 true면 현재 데이터만 렌더링 (첫 로드용)
+      // skipFetch媛 true硫??꾩옱 ?곗씠?곕쭔 ?뚮뜑留?(泥?濡쒕뱶??
       if (!skipFetch && state.sort !== 'relevance') {
-        // 로딩 표시
+        // 濡쒕뵫 ?쒖떆
         container.innerHTML = '<div class="flex justify-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-wiki-primary"></i></div>';
         
         try {
-          // 서버에서 정렬된 데이터 가져오기
+          // ?쒕쾭?먯꽌 ?뺣젹???곗씠??媛?몄삤湲?
           const params = new URLSearchParams();
           if (state.meta.keyword) params.set('q', state.meta.keyword);
           params.set('sort', state.sort);
-          params.set('perPage', '20'); // 성능 최적화: 50 → 20
+          params.set('perPage', '20'); // ?깅뒫 理쒖쟻?? 50 ??20
           
           const response = await fetch(`/api/majors/search?${params.toString()}`);
           const result = await response.json();
@@ -3765,11 +3752,11 @@ const Hydration = (() => {
         }
       }
       
-      // 기본 순: 원본 SSR 데이터 그대로 사용 (재정렬 없음)
-      // 다른 정렬: 서버 API 결과 사용
+      // 湲곕낯 ?? ?먮낯 SSR ?곗씠??洹몃?濡??ъ슜 (?ъ젙???놁쓬)
+      // ?ㅻⅨ ?뺣젹: ?쒕쾭 API 寃곌낵 ?ъ슜
       const items = state.sort === 'relevance' 
-        ? state.originalItems  // 원본 그대로 (서버에서 이미 기본 순 정렬됨)
-        : state.baseItems;     // 서버 API 결과
+        ? state.originalItems  // ?먮낯 洹몃?濡?(?쒕쾭?먯꽌 ?대? 湲곕낯 ???뺣젹??
+        : state.baseItems;     // ?쒕쾭 API 寃곌낵
       
       if (items.length) {
         container.innerHTML = items.map(item => DOMUtils.createMajorCard(item)).join('');
@@ -3806,7 +3793,7 @@ const Hydration = (() => {
     const form = document.getElementById('major-filter-form');
     const sortSelect = document.getElementById('major-sort-select');
     
-    // 커스텀 드롭다운 초기화
+    // 而ㅼ뒪? ?쒕∼?ㅼ슫 珥덇린??
     const initCustomDropdown = () => {
       const trigger = document.getElementById('major-sort-trigger');
       const menu = document.getElementById('major-sort-menu');
@@ -3816,9 +3803,9 @@ const Hydration = (() => {
       
       if (!trigger || !menu || !label || !options) return;
       
-      // 현재 값 표시
+      // ?꾩옱 媛??쒖떆
       const updateLabel = (value) => {
-        const labels = { relevance: '기본 순', 'employment-desc': '취업률 높은 순', 'salary-desc': '연봉 높은 순', 'name-asc': '가나다 순' };
+        const labels = { relevance: '기본 순', 'employment-desc': '취업률 높은 순', 'salary-desc': '초봉 높은 순', 'name-asc': '가나다 순' };
         label.textContent = labels[value] || '기본 순';
         options.forEach(opt => {
           opt.classList.toggle('active', opt.dataset.sort === value);
@@ -3826,7 +3813,7 @@ const Hydration = (() => {
       };
       updateLabel(state.sort);
       
-      // 토글
+      // ?좉?
       const toggleMenu = (show) => {
         if (show) {
           menu.classList.remove('opacity-0', 'invisible', 'translate-y-1');
@@ -3852,11 +3839,11 @@ const Hydration = (() => {
           if (sortSelect) sortSelect.value = value;
           updateLabel(value);
           toggleMenu(false);
-          render(); // 즉각 정렬
+          render(); // 利됯컖 ?뺣젹
         });
       });
       
-      // 외부 클릭 시 닫기
+      // ?몃? ?대┃ ???リ린
       document.addEventListener('click', () => toggleMenu(false));
     };
     initCustomDropdown();
@@ -3865,11 +3852,11 @@ const Hydration = (() => {
       sortSelect.value = state.sort;
       sortSelect.addEventListener('change', () => {
         state.sort = sortSelect.value;
-        render(); // 즉각 정렬
+        render(); // 利됯컖 ?뺣젹
       });
     }
 
-    // 검색 폼은 기본 동작(페이지 새로고침)으로 SSR 결과를 받음
+    // 寃???쇱? 湲곕낯 ?숈옉(?섏씠吏 ?덈줈怨좎묠)?쇰줈 SSR 寃곌낵瑜?諛쏆쓬
   };
 
   return {
@@ -4100,7 +4087,7 @@ const DetailTelemetry = (() => {
 })()
 
 const DetailTabs = (() => {
-  // md: 접두사가 있는 클래스도 토글해야 함
+  // md: ?묐몢?ш? ?덈뒗 ?대옒?ㅻ룄 ?좉??댁빞 ??
   const ACTIVE_CLASSES = ['text-white', 'border-wiki-primary', 'md:bg-wiki-border/30']
   const INACTIVE_CLASSES = ['text-wiki-muted', 'border-transparent', 'bg-transparent']
 
@@ -4233,15 +4220,15 @@ const DetailTabs = (() => {
       })
     })
 
-    // 📱 모바일 스와이프로 탭 전환
+    // ?벑 紐⑤컮???ㅼ??댄봽濡????꾪솚
     const panelsContainer = tabset.querySelector('[data-cw-tab-panels]')
     if (panelsContainer && triggers.length > 1) {
       let touchStartX = 0
       let touchStartY = 0
       let touchEndX = 0
       let touchEndY = 0
-      const SWIPE_THRESHOLD = 50  // 최소 스와이프 거리
-      const SWIPE_ANGLE_THRESHOLD = 30  // 수평 스와이프 판정 각도
+      const SWIPE_THRESHOLD = 50  // 理쒖냼 ?ㅼ??댄봽 嫄곕━
+      const SWIPE_ANGLE_THRESHOLD = 30  // ?섑룊 ?ㅼ??댄봽 ?먯젙 媛곷룄
 
       panelsContainer.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX
@@ -4257,7 +4244,7 @@ const DetailTabs = (() => {
         const absDiffX = Math.abs(diffX)
         const absDiffY = Math.abs(diffY)
         
-        // 수평 스와이프인지 확인 (각도 체크)
+        // ?섑룊 ?ㅼ??댄봽?몄? ?뺤씤 (媛곷룄 泥댄겕)
         if (absDiffX < SWIPE_THRESHOLD || absDiffY > absDiffX * Math.tan(SWIPE_ANGLE_THRESHOLD * Math.PI / 180)) {
           return
         }
@@ -4265,12 +4252,12 @@ const DetailTabs = (() => {
         const currentId = tabset.dataset.activeTab
         const currentTrigger = triggers.find(t => t.getAttribute('data-tab-id') === currentId)
         
-        // iconOnly 탭에서는 스와이프 비활성화
+        // iconOnly ??뿉?쒕뒗 ?ㅼ??댄봽 鍮꾪솢?깊솕
         if (currentTrigger?.hasAttribute('data-icon-only')) {
           return
         }
         
-        // 스와이프 가능한 탭들만 필터링 (iconOnly 제외)
+        // ?ㅼ??댄봽 媛?ν븳 ??뱾留??꾪꽣留?(iconOnly ?쒖쇅)
         const swipeableTriggers = triggers.filter(t => !t.hasAttribute('data-icon-only'))
         const currentSwipeIndex = swipeableTriggers.findIndex(t => t.getAttribute('data-tab-id') === currentId)
         
@@ -4280,11 +4267,11 @@ const DetailTabs = (() => {
         
         let nextSwipeIndex
         if (diffX > 0) {
-          // 오른쪽으로 스와이프 → 이전 탭 (첫 탭이면 무시)
+          // ?ㅻⅨ履쎌쑝濡??ㅼ??댄봽 ???댁쟾 ??(泥???씠硫?臾댁떆)
           if (currentSwipeIndex === 0) return
           nextSwipeIndex = currentSwipeIndex - 1
         } else {
-          // 왼쪽으로 스와이프 → 다음 탭 (마지막 탭이면 무시)
+          // ?쇱そ?쇰줈 ?ㅼ??댄봽 ???ㅼ쓬 ??(留덉?留???씠硫?臾댁떆)
           if (currentSwipeIndex === swipeableTriggers.length - 1) return
           nextSwipeIndex = currentSwipeIndex + 1
         }
@@ -4293,7 +4280,7 @@ const DetailTabs = (() => {
         const nextId = nextTrigger?.getAttribute('data-tab-id')
         if (nextId) {
           activate(nextId, 'user')
-          // 탭 버튼을 화면에 보이게 스크롤
+          // ??踰꾪듉???붾㈃??蹂댁씠寃??ㅽ겕濡?
           nextTrigger.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
         }
       }, { passive: true })
@@ -4334,9 +4321,9 @@ const DetailComments = (() => {
     moderatorRoles: [...DEFAULT_MODERATOR_ROLES]
   }
 
-  // 토스트 알림 함수
+  // ?좎뒪???뚮┝ ?⑥닔
   const showToast = (message, type = 'info', duration = 3000) => {
-    // 기존 토스트 컨테이너가 없으면 생성
+    // 湲곗〈 ?좎뒪??而⑦뀒?대꼫媛 ?놁쑝硫??앹꽦
     let container = document.getElementById('cw-toast-container')
     if (!container) {
       container = document.createElement('div')
@@ -4355,12 +4342,12 @@ const DetailComments = (() => {
     toast.appendChild(msgSpan)
     container.appendChild(toast)
     
-    // 애니메이션으로 표시
+    // ?좊땲硫붿씠?섏쑝濡??쒖떆
     requestAnimationFrame(() => {
       toast.classList.remove('translate-x-full', 'opacity-0')
     })
     
-    // 자동 제거
+    // ?먮룞 ?쒓굅
     setTimeout(() => {
       toast.classList.add('translate-x-full', 'opacity-0')
       setTimeout(() => toast.remove(), 300)
@@ -4454,7 +4441,7 @@ const DetailComments = (() => {
 
   const formatContent = (value = '') => {
     if (!value) return ''
-    // 내부 링크 파싱: [[job:slug]], [[major:slug]], [[howto:slug]] 형식 지원
+    // ?대? 留곹겕 ?뚯떛: [[job:slug]], [[major:slug]], [[howto:slug]] ?뺤떇 吏??
     let formatted = escapeHtml(value)
       .replace(/\[\[job:([^\]]+)\]\]/g, '<a href="/job/$1" class="text-wiki-primary hover:text-wiki-secondary underline">$1</a>')
       .replace(/\[\[major:([^\]]+)\]\]/g, '<a href="/major/$1" class="text-wiki-primary hover:text-wiki-secondary underline">$1</a>')
@@ -4559,7 +4546,7 @@ const DetailComments = (() => {
       if (state.viewer?.id) {
         identity.textContent = state.viewer?.username || state.viewer?.id
       } else {
-        identity.textContent = state.viewerIp ? `익명 (${state.viewerIp})` : '익명'
+        identity.textContent = state.viewerIp ? `?듬챸 (${state.viewerIp})` : '?듬챸'
       }
     }
     if (warning) {
@@ -4568,7 +4555,7 @@ const DetailComments = (() => {
     }
     if (password instanceof HTMLInputElement) {
       password.value = ''
-      // 비로그인 시 표시, 로그인 시 숨김
+      // 鍮꾨줈洹몄씤 ???쒖떆, 濡쒓렇?????④?
       if (state.viewer?.id) {
         password.classList.add('hidden')
         password.setAttribute('aria-hidden', 'true')
@@ -4620,17 +4607,17 @@ const DetailComments = (() => {
     const password = passwordInput instanceof HTMLInputElement ? passwordInput.value.trim() : ''
 
     if (!content) {
-      setReplyWarning(box, '답글 내용을 입력해주세요.')
+      setReplyWarning(box, '?듦? ?댁슜???낅젰?댁＜?몄슂.')
       return
     }
 
     if (!state.viewer?.id) {
       if (!password) {
-        setReplyWarning(box, '익명 답글은 숫자 4자리 비밀번호가 필요합니다.')
+        setReplyWarning(box, '?듬챸 ?듦?? ?レ옄 4?먮━ 鍮꾨?踰덊샇媛 ?꾩슂?⑸땲??')
         return
       }
       if (!/^\d{4}$/.test(password)) {
-        setReplyWarning(box, '비밀번호는 숫자 4자리로 입력해주세요.')
+        setReplyWarning(box, '鍮꾨?踰덊샇???レ옄 4?먮━濡??낅젰?댁＜?몄슂.')
         return
       }
     }
@@ -4657,10 +4644,10 @@ const DetailComments = (() => {
         throw new Error((payload && payload.error) || `HTTP ${response.status}`)
       }
       closeReplyBoxes(section, state)
-      setStatus(section, '답글이 등록되었습니다.', 'success')
+      setStatus(section, '?듦????깅줉?섏뿀?듬땲??', 'success')
       await loadComments(section, state, { silent: true })
     } catch (error) {
-      setReplyWarning(box, '답글 등록에 실패했습니다. 잠시 후 다시 시도해주세요.')
+      setReplyWarning(box, '?듦? ?깅줉???ㅽ뙣?덉뒿?덈떎. ?좎떆 ???ㅼ떆 ?쒕룄?댁＜?몄슂.')
     } finally {
       button.disabled = false
     }
@@ -4689,7 +4676,7 @@ const DetailComments = (() => {
     closeMenus(section, state)
     if (isOpen) return
     
-    // 해당 댓글 카드의 z-index를 높여서 메뉴가 다른 카드에 가려지지 않도록 함
+    // ?대떦 ?볤? 移대뱶??z-index瑜??믪뿬??硫붾돱媛 ?ㅻⅨ 移대뱶??媛?ㅼ?吏 ?딅룄濡???
     const commentCard = button.closest('[data-comment-id]')
     if (commentCard) {
       commentCard.style.position = 'relative'
@@ -4705,7 +4692,7 @@ const DetailComments = (() => {
   const toggleLoading = (section, isLoading) => {
     const loader = section.querySelector('[data-cw-comments-loading]')
     if (loader) {
-      // hidden 속성과 style.display 모두 설정하여 확실히 숨김/표시
+      // hidden ?띿꽦怨?style.display 紐⑤몢 ?ㅼ젙?섏뿬 ?뺤떎???④?/?쒖떆
       if (isLoading) {
         loader.hidden = false
         loader.style.display = 'flex'
@@ -4740,7 +4727,7 @@ const DetailComments = (() => {
     }
     section.querySelectorAll('[data-comment-empty]').forEach((el) => {
       const type = el.getAttribute('data-comment-empty')
-      // BEST 비어있음 상태는 전체 댓글 존재 여부와 무관하게 표시 제어
+      // BEST 鍮꾩뼱?덉쓬 ?곹깭???꾩껜 ?볤? 議댁옱 ?щ?? 臾닿??섍쾶 ?쒖떆 ?쒖뼱
       if (type === 'best') {
         return
       }
@@ -4827,16 +4814,16 @@ const DetailComments = (() => {
       const target = button.getAttribute('data-comment-sort') === 'likes' ? 'likes' : 'latest'
       const isActive = target === activeKey
       button.setAttribute('aria-pressed', isActive ? 'true' : 'false')
-      // 활성 상태: 파란 배경 + 흰 텍스트
+      // ?쒖꽦 ?곹깭: ?뚮? 諛곌꼍 + ???띿뒪??
       button.classList.toggle('bg-wiki-primary', isActive)
       button.classList.toggle('text-white', isActive)
       button.classList.toggle('shadow-sm', isActive)
       button.classList.toggle('border-wiki-primary/60', isActive)
-      // 비활성 상태: 투명 배경 + 회색 텍스트 (배경과 대비되도록)
+      // 鍮꾪솢???곹깭: ?щ챸 諛곌꼍 + ?뚯깋 ?띿뒪??(諛곌꼍怨??鍮꾨릺?꾨줉)
       button.classList.toggle('bg-transparent', !isActive)
       button.classList.toggle('text-gray-300', !isActive)
       button.classList.toggle('border-transparent', !isActive)
-      // 기존 text-wiki-muted 제거 (배경과 비슷해서 안 보임)
+      // 湲곗〈 text-wiki-muted ?쒓굅 (諛곌꼍怨?鍮꾩듂?댁꽌 ??蹂댁엫)
       button.classList.remove('text-wiki-muted')
       button.classList.remove('text-wiki-primary')
     })
@@ -4852,15 +4839,15 @@ const DetailComments = (() => {
       const target = trigger.getAttribute('data-comment-tab') === 'best' ? 'best' : 'all'
       const isActive = target === activeTab
       trigger.setAttribute('aria-selected', isActive ? 'true' : 'false')
-      // 활성 상태: 파란 배경 + 흰 텍스트
+      // ?쒖꽦 ?곹깭: ?뚮? 諛곌꼍 + ???띿뒪??
       trigger.classList.toggle('bg-wiki-primary', isActive)
       trigger.classList.toggle('text-white', isActive)
       trigger.classList.toggle('shadow-sm', isActive)
       trigger.classList.toggle('border-wiki-primary/50', isActive)
-      // 비활성 상태: 밝은 회색 텍스트 (배경과 대비)
+      // 鍮꾪솢???곹깭: 諛앹? ?뚯깋 ?띿뒪??(諛곌꼍怨??鍮?
       trigger.classList.toggle('text-gray-300', !isActive)
       trigger.classList.toggle('border-transparent', !isActive)
-      // 기존 스타일 제거
+      // 湲곗〈 ?ㅽ????쒓굅
       trigger.classList.remove('text-wiki-muted')
     })
     const panels = section.querySelectorAll('[data-comment-panel]')
@@ -4873,7 +4860,7 @@ const DetailComments = (() => {
   }
 
   const refreshScoreboardCopy = (section, state) => {
-    // scoreboard 제거 - 사용자 요청에 따라 정보 박스 제거
+    // scoreboard ?쒓굅 - ?ъ슜???붿껌???곕씪 ?뺣낫 諛뺤뒪 ?쒓굅
     const scoreboard = section.querySelector('[data-cw-comment-scoreboard]')
     if (scoreboard) {
       scoreboard.hidden = true
@@ -4908,7 +4895,7 @@ const DetailComments = (() => {
   }
 
   const updateScoreboard = (section, state, stats) => {
-    // scoreboard 제거 - 사용자 요청에 따라 정보 박스 제거
+    // scoreboard ?쒓굅 - ?ъ슜???붿껌???곕씪 ?뺣낫 諛뺤뒪 ?쒓굅
     const scoreboard = section.querySelector('[data-cw-comment-scoreboard]')
     if (scoreboard) {
       scoreboard.hidden = true
@@ -4916,7 +4903,7 @@ const DetailComments = (() => {
   }
 
   const updateAuthCta = (section, state) => {
-    // 익명 사용자도 댓글 작성 가능하므로 CTA 항상 숨김
+    // ?듬챸 ?ъ슜?먮룄 ?볤? ?묒꽦 媛?ν븯誘濡?CTA ??긽 ?④?
     const cta = section.querySelector('[data-cw-comment-auth-cta]')
     if (cta) {
       cta.hidden = true
@@ -4927,7 +4914,7 @@ const DetailComments = (() => {
     const guidanceEl = section.querySelector('[data-cw-comment-guidance]')
     if (!guidanceEl) return
 
-    // 정책 안내 문구 제거 - 사용자 요청에 따라 모든 안내 문구 제거
+    // ?뺤콉 ?덈궡 臾멸뎄 ?쒓굅 - ?ъ슜???붿껌???곕씪 紐⑤뱺 ?덈궡 臾멸뎄 ?쒓굅
     guidanceEl.hidden = true
     guidanceEl.textContent = ''
   }
@@ -4935,7 +4922,7 @@ const DetailComments = (() => {
   const updatePolicySummary = (section, policy) => {
     const el = section.querySelector('[data-cw-comment-policy]')
     if (!el) return
-    // 정책 안내 문구 제거 - 사용자 요청에 따라 모든 안내 문구 제거
+    // ?뺤콉 ?덈궡 臾멸뎄 ?쒓굅 - ?ъ슜???붿껌???곕씪 紐⑤뱺 ?덈궡 臾멸뎄 ?쒓굅
     el.hidden = true
     el.textContent = ''
   }
@@ -4959,13 +4946,13 @@ const DetailComments = (() => {
     const effectiveRole = effectiveViewer?.role || state.viewerRole || 'user'
     const hasViewer = Boolean(effectiveViewer?.id) || effectiveRole === 'admin'
 
-    // 로그인 CTA 숨기기 (익명 사용자도 댓글 작성 가능)
+    // 濡쒓렇??CTA ?④린湲?(?듬챸 ?ъ슜?먮룄 ?볤? ?묒꽦 媛??
     if (authCta) {
       authCta.hidden = true
     }
 
     if (form) {
-      // 폼은 항상 활성화 (익명 사용자도 작성 가능)
+      // ?쇱? ??긽 ?쒖꽦??(?듬챸 ?ъ슜?먮룄 ?묒꽦 媛??
       const controls = form.querySelectorAll('input, textarea, button')
       controls.forEach((control) => {
         if (control instanceof HTMLButtonElement || control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement) {
@@ -4985,12 +4972,12 @@ const DetailComments = (() => {
       const charCountEl = form.querySelector('[data-cw-comment-char-count]')
 
       const nicknamePrefill = nicknameInput instanceof HTMLInputElement ? (nicknameInput.value || '').trim() : ''
-      const derivedHasViewer = hasViewer || Boolean(nicknamePrefill && nicknamePrefill !== '익명')
+      const derivedHasViewer = hasViewer || Boolean(nicknamePrefill && nicknamePrefill !== '?듬챸')
 
-      // 익명 사용자: 닉네임 입력 필드 숨김, 익명 번호 표시
-      // 로그인 사용자: 닉네임 표시, 비밀번호 숨김
+      // ?듬챸 ?ъ슜?? ?됰꽕???낅젰 ?꾨뱶 ?④?, ?듬챸 踰덊샇 ?쒖떆
+      // 濡쒓렇???ъ슜?? ?됰꽕???쒖떆, 鍮꾨?踰덊샇 ?④?
       if (!derivedHasViewer) {
-        // 익명 사용자 - 닉네임 입력 필드 숨김, 익명 번호 표시
+        // ?듬챸 ?ъ슜??- ?됰꽕???낅젰 ?꾨뱶 ?④?, ?듬챸 踰덊샇 ?쒖떆
         if (nicknameWrapper instanceof HTMLElement) {
           nicknameWrapper.hidden = true
         }
@@ -5002,13 +4989,13 @@ const DetailComments = (() => {
           anonymousLabel.hidden = false
           anonymousLabel.style.display = ''
           if (anonymousNumberEl) {
-            anonymousNumberEl.textContent = '익명'
+            anonymousNumberEl.textContent = '?듬챸'
           }
           if (anonIpEl instanceof HTMLElement) {
             anonIpEl.textContent = state.viewerIp ? `(${state.viewerIp})` : ''
             anonIpEl.hidden = !state.viewerIp
           }
-          // 비밀번호 입력칸을 익명 번호와 같은 컨테이너에 있으므로 자동으로 표시됨
+          // 鍮꾨?踰덊샇 ?낅젰移몄쓣 ?듬챸 踰덊샇? 媛숈? 而⑦뀒?대꼫???덉쑝誘濡??먮룞?쇰줈 ?쒖떆??
           if (passwordInput instanceof HTMLInputElement) {
             passwordInput.required = true
             passwordInput.setAttribute('aria-required', 'true')
@@ -5024,7 +5011,7 @@ const DetailComments = (() => {
           }
         }
       } else {
-        // 로그인/관리자 사용자
+        // 濡쒓렇??愿由ъ옄 ?ъ슜??
         if (nicknameWrapper instanceof HTMLElement) {
           nicknameWrapper.hidden = false
         }
@@ -5034,7 +5021,7 @@ const DetailComments = (() => {
           nicknameInput.removeAttribute('aria-required')
           nicknameInput.placeholder = ''
           nicknameInput.value = ''
-          // 닉네임 소스가 없다면 입력 허용
+          // ?됰꽕???뚯뒪媛 ?녿떎硫??낅젰 ?덉슜
           const hasViewerNickname = Boolean(effectiveViewer?.username)
           if (!hasViewerNickname && !nicknamePrefill) {
             nicknameInput.hidden = false
@@ -5047,13 +5034,13 @@ const DetailComments = (() => {
             nicknamePrefill ||
             effectiveViewer?.username ||
             (effectiveRole === 'admin'
-              ? '관리자'
+              ? '愿由ъ옄'
               : (effectiveViewer?.id ? `user_${effectiveViewer.id}` : ''))
           nicknameDisplay.textContent = fallbackName
           nicknameDisplay.hidden = false
           nicknameDisplay.classList.remove('hidden')
         }
-        // 프로필 이미지 표시
+        // ?꾨줈???대?吏 ?쒖떆
         const avatarEl = form.querySelector('[data-cw-comment-author-avatar]')
         if (avatarEl instanceof HTMLElement) {
           const pictureUrl = effectiveViewer?.pictureUrl
@@ -5102,7 +5089,7 @@ const DetailComments = (() => {
 
       setPasswordWarning(section, '')
 
-      // 글자 수 카운터
+      // 湲????移댁슫??
       if (contentTextarea instanceof HTMLTextAreaElement && charCountEl) {
         const updateCharCount = () => {
           const length = contentTextarea.value.length
@@ -5140,13 +5127,13 @@ const DetailComments = (() => {
     const containerClasses = comment.isBest ? `${baseClasses} ring-1 ring-wiki-secondary/50` : baseClasses
     const badges = []
     if (comment.isBest) {
-      badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-wiki-secondary bg-wiki-secondary/10 rounded-full">BEST<span class="sr-only"> · 추천 많은 댓글</span></span>')
+      badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-wiki-secondary bg-wiki-secondary/10 rounded-full">BEST<span class="sr-only"> 쨌 異붿쿇 留롮? ?볤?</span></span>')
     }
     if (comment.status !== 'visible') {
-      badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-amber-300 bg-amber-500/10 rounded-full">블라인드<span class="sr-only"> · 신고 누적으로 숨겨진 댓글</span></span>')
+      badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-amber-300 bg-amber-500/10 rounded-full">釉붾씪?몃뱶<span class="sr-only"> 쨌 ?좉퀬 ?꾩쟻?쇰줈 ?④꺼吏??볤?</span></span>')
     }
     if (comment.isEdited) {
-      badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-wiki-muted bg-wiki-border/40 rounded-full">수정됨</span>')
+      badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-wiki-muted bg-wiki-border/40 rounded-full">?섏젙??/span>')
     }
 
     const statusLabels = []
@@ -5174,7 +5161,7 @@ const DetailComments = (() => {
     const canEditOrDelete = isAdmin || isOwner || isAnonymousOwner
 
     const contentHtml = comment.status === 'blinded'
-      ? `<div class="text-sm text-wiki-muted leading-relaxed italic" data-cw-comment-body>일시적으로 블라인드 처리 되었습니다.</div>`
+      ? `<div class="text-sm text-wiki-muted leading-relaxed italic" data-cw-comment-body>?쇱떆?곸쑝濡?釉붾씪?몃뱶 泥섎━ ?섏뿀?듬땲??</div>`
       : (comment.status === 'visible'
         ? `<div class="text-sm text-wiki-text leading-relaxed" data-cw-comment-body>${formatContent(comment.content || '')}</div>`
         : `<div class="text-sm text-wiki-muted leading-relaxed italic" data-cw-comment-body>${formatContent(comment.content || '')}</div>`)
@@ -5190,25 +5177,25 @@ const DetailComments = (() => {
     const dislikeActive = comment.viewerVote === -1
     const editedAt = comment.editedAt ? formatDate(comment.editedAt) : null
     const isAuthorOperator = comment.authorRole === 'admin' || comment.authorRole === 'super-admin' || comment.authorRole === 'operator'
-    const displayNickname = comment.nickname || (comment.isAnonymous && comment.anonymousNumber ? `익명 ${comment.anonymousNumber}` : '익명')
+    const displayNickname = comment.nickname || (comment.isAnonymous && comment.anonymousNumber ? `?듬챸 ${comment.anonymousNumber}` : '?듬챸')
     const adminBadge = isAuthorOperator
-      ? '<span class="px-2 py-0.5 text-[11px] font-semibold text-white bg-red-500/20 rounded-full">운영자</span>'
+      ? '<span class="px-2 py-0.5 text-[11px] font-semibold text-white bg-red-500/20 rounded-full">?댁쁺??/span>'
       : ''
     const commentLabelParts = [
-      `${displayNickname}님의 댓글`,
-      createdAt ? `작성 ${createdAt}` : null,
-      editedAt && comment.isEdited ? `수정 ${editedAt}` : null,
+      `${displayNickname}?섏쓽 ?볤?`,
+      createdAt ? `?묒꽦 ${createdAt}` : null,
+      editedAt && comment.isEdited ? `?섏젙 ${editedAt}` : null,
       statusLabels.length ? statusLabels.join(', ') : null
     ].filter(Boolean)
     const commentAriaLabel = escapeHtml(commentLabelParts.join(', '))
 
     const menuId = `comment-menu-${comment.id}`
-    // 익명 댓글에만 IP 표시 (괄호 형식)
+    // ?듬챸 ?볤??먮쭔 IP ?쒖떆 (愿꾪샇 ?뺤떇)
     const displayIpTag = comment.isAnonymous && comment.displayIp
       ? `<span class="text-[11px] text-wiki-muted">(${escapeHtml(comment.displayIp)})</span>`
       : ''
 
-    // 프로필 이미지: 로그인 유저의 경우 authorPictureUrl, 익명은 기본 아이콘
+    // ?꾨줈???대?吏: 濡쒓렇???좎???寃쎌슦 authorPictureUrl, ?듬챸? 湲곕낯 ?꾩씠肄?
     const profileImageHtml = comment.authorPictureUrl && !comment.isAnonymous
       ? `<img src="${escapeHtml(comment.authorPictureUrl)}" alt="${escapeHtml(displayNickname)}" class="w-6 h-6 rounded-full object-cover flex-shrink-0" />`
       : `<div class="w-6 h-6 rounded-full bg-wiki-card flex items-center justify-center flex-shrink-0"><i class="fas fa-user-circle text-sm text-wiki-muted"></i></div>`
@@ -5223,7 +5210,7 @@ const DetailComments = (() => {
                 <span class="font-bold text-wiki-text text-sm">${escapeHtml(displayNickname)}</span>
                 ${adminBadge}
                 ${displayIpTag}
-                ${createdAt ? `<span class="text-wiki-muted select-none mx-1" aria-hidden="true">·</span><time class="text-wiki-muted text-[11px]" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
+                ${createdAt ? `<span class="text-wiki-muted select-none mx-1" aria-hidden="true">쨌</span><time class="text-wiki-muted text-[11px]" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
                 ${srStatusText}
               </div>
               ${badges.length ? `<div class="flex flex-wrap gap-1 mt-1">${badges.join('')}</div>` : ''}
@@ -5235,19 +5222,19 @@ const DetailComments = (() => {
               </button>
               <div class="rounded-lg border border-wiki-border bg-wiki-bg shadow-lg hidden absolute right-0 top-full mt-1 w-36 z-[9000] whitespace-nowrap" data-cw-comment-menu-panel data-menu-id="${menuId}" role="menu">
                 <button type="button" class="w-full text-left px-3 py-2 text-sm hover:bg-wiki-border/30 flex items-center gap-2" data-cw-comment-flag data-comment-id="${comment.id}" data-requires-auth="1" role="menuitem">
-                  <i class="fas fa-flag"></i>신고
+                  <i class="fas fa-flag"></i>?좉퀬
                 </button>
                 ${isModeratorRole(state.viewerRole, state) ? `
                   <button type="button" class="w-full text-left px-3 py-2 text-sm hover:bg-wiki-border/30 flex items-center gap-2" data-cw-comment-admin-blind data-admin-blind-action="${comment.status === 'blinded' ? 'unblind' : 'blind'}" data-comment-id="${comment.id}" role="menuitem">
-                    <i class="fas fa-eye-slash"></i>${comment.status === 'blinded' ? '블라인드 해제' : '블라인드'}
+                    <i class="fas fa-eye-slash"></i>${comment.status === 'blinded' ? '釉붾씪?몃뱶 ?댁젣' : '釉붾씪?몃뱶'}
                   </button>
                 ` : ''}
                 ${canEditOrDelete ? `
                   <button type="button" class="w-full text-left px-3 py-2 text-sm hover:bg-wiki-border/30 flex items-center gap-2" data-cw-comment-edit data-comment-id="${comment.id}" role="menuitem">
-                    <i class="fas fa-pen"></i>수정
+                    <i class="fas fa-pen"></i>?섏젙
                   </button>
                   <button type="button" class="w-full text-left px-3 py-2 text-sm hover:bg-wiki-border/30 flex items-center gap-2 text-red-400" data-cw-comment-delete data-comment-id="${comment.id}" role="menuitem">
-                    <i class="fas fa-trash"></i>삭제
+                    <i class="fas fa-trash"></i>??젣
                   </button>
                 ` : ''}
               </div>
@@ -5262,7 +5249,7 @@ const DetailComments = (() => {
               <i class="fas fa-thumbs-down"></i><span data-cw-comment-dislike-count>${comment.dislikes ?? comment.dislikeCount ?? 0}</span>
             </button>
             <button type="button" class="inline-flex items-center gap-1 text-wiki-muted hover:text-wiki-text transition" data-cw-comment-reply data-comment-id="${comment.id}" data-comment-label="${escapeHtml(displayNickname)}">
-              <i class="fas fa-reply"></i>답글
+              <i class="fas fa-reply"></i>?듦?
             </button>
             <span class="text-xs text-red-400" data-cw-like-error data-comment-id="${comment.id}" hidden></span>
           </footer>
@@ -5270,16 +5257,16 @@ const DetailComments = (() => {
         <div class="mt-3 space-y-2 hidden" data-cw-reply-box data-parent-id="${comment.id}">
           <form data-cw-reply-form class="space-y-2">
             <input type="text" name="username" autocomplete="username" aria-hidden="true" tabindex="-1" class="sr-only pointer-events-none absolute -left-[9999px] w-px h-px opacity-0">
-            <textarea rows="3" maxlength="500" class="w-full px-3 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm" data-cw-reply-content aria-label="답글 입력"></textarea>
+            <textarea rows="3" maxlength="500" class="w-full px-3 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm" data-cw-reply-content aria-label="?듦? ?낅젰"></textarea>
             <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-wiki-muted">
               <div class="flex items-center gap-2 flex-1 min-w-[240px]">
-                <span class="text-sm text-wiki-text" data-cw-reply-identity>익명</span>
-                <input type="password" maxlength="4" pattern="[0-9]{4}" autocomplete="new-password" placeholder="비밀번호(익명 4자리)" class="px-3 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm" data-cw-reply-password aria-label="비밀번호">
+                <span class="text-sm text-wiki-text" data-cw-reply-identity>?듬챸</span>
+                <input type="password" maxlength="4" pattern="[0-9]{4}" autocomplete="new-password" placeholder="鍮꾨?踰덊샇(?듬챸 4?먮━)" class="px-3 py-2 bg-wiki-bg border border-wiki-border rounded-lg focus:border-wiki-primary focus:outline-none text-sm" data-cw-reply-password aria-label="鍮꾨?踰덊샇">
                 <span class="text-red-400 text-xs" data-cw-reply-warning hidden></span>
               </div>
               <div class="flex items-center gap-2">
-                <button type="button" class="px-3 py-1 rounded-md border border-wiki-border text-wiki-text hover:border-wiki-primary" data-cw-reply-cancel>취소</button>
-                <button type="submit" class="px-3 py-1 rounded-md bg-wiki-primary text-white hover:bg-blue-600" data-cw-reply-submit data-comment-id="${comment.id}">등록</button>
+                <button type="button" class="px-3 py-1 rounded-md border border-wiki-border text-wiki-text hover:border-wiki-primary" data-cw-reply-cancel>痍⑥냼</button>
+                <button type="submit" class="px-3 py-1 rounded-md bg-wiki-primary text-white hover:bg-blue-600" data-cw-reply-submit data-comment-id="${comment.id}">?깅줉</button>
               </div>
             </div>
           </form>
@@ -5339,7 +5326,7 @@ const DetailComments = (() => {
 
     container.innerHTML = `
       <div class="flex items-center justify-between px-4 py-3 border-t border-wiki-border/60">
-        <div class="text-xs text-wiki-muted">총 ${total}개 · ${currentPage}/${totalPages}페이지</div>
+        <div class="text-xs text-wiki-muted">珥?${total}媛?쨌 ${currentPage}/${totalPages}?섏씠吏</div>
         <div class="flex items-center gap-2">${buttons.join('')}</div>
       </div>
     `
@@ -5429,10 +5416,10 @@ const DetailComments = (() => {
 
     updateTabButtons(section, state)
 
-    // 헤더에 댓글 수 표시
+    // ?ㅻ뜑???볤? ???쒖떆
     const headerEl = section.querySelector('[data-cw-comments-header] h2')
     if (headerEl) {
-      headerEl.textContent = `커뮤니티 댓글 (${sortedAll.length})`
+      headerEl.textContent = `而ㅻ??덊떚 ?볤? (${sortedAll.length})`
     }
 
     const visibleCount = state?.activeTab === 'best' ? sortedBest.length : sortedAll.length
@@ -5638,7 +5625,7 @@ const DetailComments = (() => {
         state.policySignature = computePolicySignature(state.policy)
       }
 
-      // Best 탭 기본값 설정: Best 댓글이 있으면 'best' 탭이 기본, 없으면 'all' 탭이 기본
+      // Best ??湲곕낯媛??ㅼ젙: Best ?볤????덉쑝硫?'best' ??씠 湲곕낯, ?놁쑝硫?'all' ??씠 湲곕낯
       const bestComments = state.comments.filter((comment) => comment.isBest === true)
       if (bestComments.length > 0 && state.activeTab === 'all') {
         state.activeTab = 'best'
@@ -5650,17 +5637,17 @@ const DetailComments = (() => {
       refreshScoreboardCopy(section, state)
       applyAuthState(section, state)
       
-      // URL hash에 해당하는 댓글이 있으면 해당 페이지로 먼저 이동
+      // URL hash???대떦?섎뒗 ?볤????덉쑝硫??대떦 ?섏씠吏濡?癒쇱? ?대룞
       let targetCommentId = null
       if (window.location.hash && window.location.hash.startsWith('#comment-')) {
         targetCommentId = parseInt(window.location.hash.replace('#comment-', ''), 10)
         if (Number.isFinite(targetCommentId) && state.comments && state.comments.length > 0) {
-          // 정렬된 댓글 목록에서 해당 댓글의 인덱스 찾기
+          // ?뺣젹???볤? 紐⑸줉?먯꽌 ?대떦 ?볤????몃뜳??李얘린
           const PAGE_SIZE = 20
           const { sortedAll } = summarizeCommentCollections(state)
           const commentIndex = sortedAll.findIndex(c => c.id === targetCommentId)
           if (commentIndex >= 0) {
-            // 해당 댓글이 있는 페이지 계산 (1-indexed)
+            // ?대떦 ?볤????덈뒗 ?섏씠吏 怨꾩궛 (1-indexed)
             const targetPage = Math.floor(commentIndex / PAGE_SIZE) + 1
             state.page = targetPage
           }
@@ -5670,18 +5657,18 @@ const DetailComments = (() => {
       renderComments(section, state)
       section.dataset.commentsStatus = 'ready'
       
-      // 로딩 상태 명시적으로 해제
+      // 濡쒕뵫 ?곹깭 紐낆떆?곸쑝濡??댁젣
       if (!silent) {
       toggleLoading(section, false)
       }
       
-      // URL hash에 해당하는 댓글로 스크롤
+      // URL hash???대떦?섎뒗 ?볤?濡??ㅽ겕濡?
       if (targetCommentId) {
         setTimeout(() => {
           const targetEl = document.getElementById('comment-' + targetCommentId)
           if (targetEl) {
             targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
-            // 하이라이트 효과
+            // ?섏씠?쇱씠???④낵
             targetEl.classList.add('ring-2', 'ring-wiki-primary', 'ring-offset-2', 'ring-offset-wiki-bg')
             setTimeout(() => {
               targetEl.classList.remove('ring-2', 'ring-wiki-primary', 'ring-offset-2', 'ring-offset-wiki-bg')
@@ -5720,11 +5707,11 @@ const DetailComments = (() => {
     } catch (error) {
       section.dataset.commentsStatus = 'error'
       const message = error && error.name === 'AbortError'
-        ? '댓글 응답이 지연되어 연결을 종료했습니다. 네트워크 상태를 확인한 후 다시 시도해주세요.'
-        : '댓글을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.'
+        ? '?볤? ?묐떟??吏?곕릺???곌껐??醫낅즺?덉뒿?덈떎. ?ㅽ듃?뚰겕 ?곹깭瑜??뺤씤?????ㅼ떆 ?쒕룄?댁＜?몄슂.'
+        : '?볤???遺덈윭?ㅼ? 紐삵뻽?듬땲?? ?좎떆 ???ㅼ떆 ?쒕룄?댁＜?몄슂.'
       setStatus(section, message, 'error')
       
-      // 에러 발생 시에도 빈 댓글 목록 표시
+      // ?먮윭 諛쒖깮 ?쒖뿉??鍮??볤? 紐⑸줉 ?쒖떆
       state.comments = []
       renderComments(section, state)
       
@@ -5749,7 +5736,7 @@ const DetailComments = (() => {
         hideAllEmptyStates(section)
       }
       
-      // 로딩 요소가 확실히 숨겨지도록
+      // 濡쒕뵫 ?붿냼媛 ?뺤떎???④꺼吏?꾨줉
       const loader = section.querySelector('[data-cw-comments-loading]')
       if (loader) {
         loader.hidden = true
@@ -5771,7 +5758,7 @@ const DetailComments = (() => {
           policySignature: state.policySignature ?? null,
           governance: getGovernanceFromState(state)
         })
-        setStatus(section, '우선 적용 의견 접수 기능은 준비 중입니다.', 'info')
+        setStatus(section, '?곗꽑 ?곸슜 ?섍껄 ?묒닔 湲곕뒫? 以鍮?以묒엯?덈떎.', 'info')
       })
     })
 
@@ -5788,7 +5775,7 @@ const DetailComments = (() => {
           policySignature: state.policySignature ?? null,
           governance: getGovernanceFromState(state)
         })
-        setStatus(section, '알림 기능은 Phase 2에서 제공될 예정입니다.', 'info')
+        setStatus(section, '?뚮┝ 湲곕뒫? Phase 2?먯꽌 ?쒓났???덉젙?낅땲??', 'info')
       })
     })
 
@@ -5843,7 +5830,7 @@ const DetailComments = (() => {
     form.dataset.commentFormBound = '1'
     const submitButton = form.querySelector('[data-cw-comment-submit]')
 
-    // 태그 프롬프트 버튼 핸들러
+    // ?쒓렇 ?꾨＼?꾪듃 踰꾪듉 ?몃뱾??
     const promptsContainer = form.querySelector('[data-cw-comment-prompts]')
     if (promptsContainer) {
       const textarea = form.querySelector('[data-cw-comment-content]')
@@ -5860,16 +5847,16 @@ const DetailComments = (() => {
         if (!btn || !textarea) return
         const promptKey = btn.dataset.commentPrompt
         const isActive = btn.classList.contains('border-wiki-primary/50')
-        // 다른 버튼 비활성화
+        // ?ㅻⅨ 踰꾪듉 鍮꾪솢?깊솕
         promptsContainer.querySelectorAll('[data-comment-prompt]').forEach(b => {
           b.classList.remove('border-wiki-primary/50', 'text-wiki-primary', 'bg-wiki-primary/10')
           b.classList.add('border-wiki-border', 'text-wiki-muted', 'bg-wiki-bg')
         })
         if (isActive) {
-          // 토글 off → 기본 placeholder 복원
+          // ?좉? off ??湲곕낯 placeholder 蹂듭썝
           textarea.setAttribute('placeholder', defaultPlaceholder)
         } else {
-          // 토글 on → 선택된 placeholder 적용
+          // ?좉? on ???좏깮??placeholder ?곸슜
           btn.classList.remove('border-wiki-border', 'text-wiki-muted', 'bg-wiki-bg')
           btn.classList.add('border-wiki-primary/50', 'text-wiki-primary', 'bg-wiki-primary/10')
           textarea.setAttribute('placeholder', PROMPT_PLACEHOLDERS[promptKey] || defaultPlaceholder)
@@ -5884,9 +5871,9 @@ const DetailComments = (() => {
         return
       }
 
-      // Phase 3 Day 3: requiresAuth가 false이면 익명 사용자도 댓글 작성 가능
+      // Phase 3 Day 3: requiresAuth媛 false?대㈃ ?듬챸 ?ъ슜?먮룄 ?볤? ?묒꽦 媛??
       if (state.policy?.requiresAuth && !state.viewer?.id) {
-        setStatus(section, '로그인 후 댓글을 남길 수 있습니다.', 'error')
+        setStatus(section, '濡쒓렇?????볤????④만 ???덉뒿?덈떎.', 'error')
         setPasswordWarning(section, '')
         return
       }
@@ -5894,24 +5881,24 @@ const DetailComments = (() => {
       const formData = new FormData(form)
       const rawContent = (formData.get('content') || '').toString().trim()
       if (!rawContent) {
-        setStatus(section, '댓글 내용을 입력해주세요.', 'error')
+        setStatus(section, '?볤? ?댁슜???낅젰?댁＜?몄슂.', 'error')
         setPasswordWarning(section, '')
         return
       }
       
-      // 익명 사용자는 닉네임 입력하지 않음 (익명 번호는 서버에서 자동 배정)
+      // ?듬챸 ?ъ슜?먮뒗 ?됰꽕???낅젰?섏? ?딆쓬 (?듬챸 踰덊샇???쒕쾭?먯꽌 ?먮룞 諛곗젙)
       const isAnonymous = !state.viewer?.id
       const nickname = isAnonymous ? null : ((formData.get('nickname') || '').toString().trim().slice(0, MAX_NICKNAME_LENGTH) || null)
       const password = isAnonymous ? (formData.get('password') || '').toString().trim() : ''
       if (isAnonymous) {
         if (!password) {
-          const msg = '익명 댓글은 숫자 4자리 비밀번호를 입력해야 등록됩니다.'
+          const msg = '?듬챸 ?볤?? ?レ옄 4?먮━ 鍮꾨?踰덊샇瑜??낅젰?댁빞 ?깅줉?⑸땲??'
           setStatus(section, '')
           setPasswordWarning(section, msg, 'error')
           return
         }
         if (!/^\d{4}$/.test(password)) {
-          const msg = '비밀번호는 숫자 4자리로 입력해주세요.'
+          const msg = '鍮꾨?踰덊샇???レ옄 4?먮━濡??낅젰?댁＜?몄슂.'
           setStatus(section, '')
           setPasswordWarning(section, msg, 'error')
           return
@@ -5920,12 +5907,12 @@ const DetailComments = (() => {
         setPasswordWarning(section, '')
       }
       
-      // 멘션 추출: @댓글ID 또는 @익명번호 형식
-      const mentionMatches = rawContent.match(/@(\d+)|@익명\s*(\d+)/g) || []
+      // 硫섏뀡 異붿텧: @?볤?ID ?먮뒗 @?듬챸踰덊샇 ?뺤떇
+      const mentionMatches = rawContent.match(/@(\d+)|@?듬챸\s*(\d+)/g) || []
       const mentions = mentionMatches.map((match) => {
         const idMatch = match.match(/\d+/)
         return idMatch ? idMatch[0] : null
-      }).filter(Boolean).slice(0, 10)  // 최대 10개 멘션
+      }).filter(Boolean).slice(0, 10)  // 理쒕? 10媛?硫섏뀡
       
       const content = rawContent.slice(0, MAX_CONTENT_LENGTH)
 
@@ -5938,7 +5925,7 @@ const DetailComments = (() => {
       if (submitButton) {
         submitButton.disabled = true
       }
-      setStatus(section, '댓글을 등록하는 중입니다...', 'info')
+      setStatus(section, '?볤????깅줉?섎뒗 以묒엯?덈떎...', 'info')
       DetailTelemetry.emit('comment-submit', {
         component: 'comment-form',
         entityType: state.entityType,
@@ -5959,7 +5946,7 @@ const DetailComments = (() => {
             slug: state.entitySlug,
             title: state.entityName || state.entitySlug,
             summary: state.entitySummary || null,
-            nickname: nickname || undefined,  // 익명 사용자는 nickname 없음 (익명 번호는 서버에서 자동 배정)
+            nickname: nickname || undefined,  // ?듬챸 ?ъ슜?먮뒗 nickname ?놁쓬 (?듬챸 踰덊샇???쒕쾭?먯꽌 ?먮룞 諛곗젙)
             content,
             mentions: mentions.length > 0 ? mentions : undefined,
             password: isAnonymous ? password : undefined,
@@ -5974,7 +5961,7 @@ const DetailComments = (() => {
         form.reset()
         setPasswordWarning(section, '')
         clearReplyTarget(section, state)
-        showToast('댓글이 등록되었습니다.', 'success')
+        showToast('?볤????깅줉?섏뿀?듬땲??', 'success')
         DetailTelemetry.emit('comment-submit', {
           component: 'comment-form',
           entityType: state.entityType,
@@ -5990,18 +5977,18 @@ const DetailComments = (() => {
         const rawMessage = error instanceof Error ? error.message : String(error || '')
         const normalized = rawMessage.toUpperCase()
         if (normalized.includes('PASSWORD_REQUIRED') || normalized.includes('PASSWORD IS REQUIRED')) {
-          const msg = '익명 댓글은 숫자 4자리 비밀번호를 입력해야 등록됩니다.'
+          const msg = '?듬챸 ?볤?? ?レ옄 4?먮━ 鍮꾨?踰덊샇瑜??낅젰?댁빞 ?깅줉?⑸땲??'
           setStatus(section, '')
           setPasswordWarning(section, msg, 'error')
         } else if (normalized.includes('INVALID_PASSWORD') || normalized.includes('INVALID PASSWORD')) {
-          const msg = '비밀번호는 숫자 4자리로 입력해주세요.'
+          const msg = '鍮꾨?踰덊샇???レ옄 4?먮━濡??낅젰?댁＜?몄슂.'
           setStatus(section, '')
           setPasswordWarning(section, msg, 'error')
         } else if (normalized.includes('DAILY_LIMIT_REACHED')) {
-          setStatus(section, '오늘 댓글 작성 한도에 도달했습니다.', 'error')
+          setStatus(section, '?ㅻ뒛 ?볤? ?묒꽦 ?쒕룄???꾨떖?덉뒿?덈떎.', 'error')
           setPasswordWarning(section, '')
         } else {
-          setStatus(section, '댓글 등록에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error')
+          setStatus(section, '?볤? ?깅줉???ㅽ뙣?덉뒿?덈떎. ?좎떆 ???ㅼ떆 ?쒕룄?댁＜?몄슂.', 'error')
           setPasswordWarning(section, '')
         }
         DetailTelemetry.emit('comment-submit', {
@@ -6043,15 +6030,15 @@ const DetailComments = (() => {
     }
     const target = Array.isArray(state.comments) ? state.comments.find((c) => Number(c.id) === commentId) : null
     if (target) {
-      // 로그인 사용자 자기 글 차단
+      // 濡쒓렇???ъ슜???먭린 湲 李⑤떒
       if (state.viewer?.id && target.authorId && String(target.authorId) === String(state.viewer.id)) {
-        const msg = '내 댓글에는 공감할 수 없습니다.'
+        const msg = '???볤??먮뒗 怨듦컧?????놁뒿?덈떎.'
         setInlineActionError(section, commentId, msg, 5000)
         return
       }
-      // 익명 작성자 자기 글 차단 (표시용 IP 비교)
+      // ?듬챸 ?묒꽦???먭린 湲 李⑤떒 (?쒖떆??IP 鍮꾧탳)
       if (!state.viewer?.id && target.isAnonymous && !target.authorId && target.displayIp && state.viewerIp && target.displayIp === state.viewerIp) {
-        const msg = '내 댓글에는 공감할 수 없습니다.'
+        const msg = '???볤??먮뒗 怨듦컧?????놁뒿?덈떎.'
         setInlineActionError(section, commentId, msg, 5000)
         return
       }
@@ -6102,22 +6089,22 @@ const DetailComments = (() => {
       await loadComments(section, state, { silent: true })
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
-      let uiMessage = '공감 처리에 실패했습니다. 잠시 후 다시 시도해주세요.'
+      let uiMessage = '怨듦컧 泥섎━???ㅽ뙣?덉뒿?덈떎. ?좎떆 ???ㅼ떆 ?쒕룄?댁＜?몄슂.'
       if (typeof message === 'string') {
         const upper = message.toUpperCase()
         if (upper.includes('SELF_VOTE_NOT_ALLOWED')) {
-          uiMessage = '내 댓글에는 공감할 수 없습니다.'
+          uiMessage = '???볤??먮뒗 怨듦컧?????놁뒿?덈떎.'
         } else if (upper.includes('VOTE_LIMIT_REACHED')) {
-          uiMessage = '하루 공감 한도를 초과했습니다. 내일 다시 시도해주세요.'
+          uiMessage = '?섎（ 怨듦컧 ?쒕룄瑜?珥덇낵?덉뒿?덈떎. ?댁씪 ?ㅼ떆 ?쒕룄?댁＜?몄슂.'
         } else if (upper.includes('COMMENT_NOT_FOUND')) {
-          uiMessage = '댓글을 찾지 못했습니다.'
+          uiMessage = '?볤???李얠? 紐삵뻽?듬땲??'
         } else if (upper.includes('AUTHENTICATION')) {
-          uiMessage = '로그인이 필요합니다.'
+          uiMessage = '濡쒓렇?몄씠 ?꾩슂?⑸땲??'
         } else if (upper.startsWith('HTTP ')) {
-          uiMessage = `공감 처리 오류: ${message}`
+          uiMessage = `怨듦컧 泥섎━ ?ㅻ쪟: ${message}`
         }
       }
-      // 글로벌 메시지는 중복 노출을 피하기 위해 사용하지 않음
+      // 湲濡쒕쾶 硫붿떆吏??以묐났 ?몄텧???쇳븯湲??꾪빐 ?ъ슜?섏? ?딆쓬
       setInlineActionError(section, commentId, uiMessage, 5000)
       DetailTelemetry.emit('comment-like', {
         component: 'comment-engagement',
@@ -6133,7 +6120,7 @@ const DetailComments = (() => {
       })
     } finally {
       delete button.dataset.commentBusy
-      // 실패 시에도 기존 댓글 목록 유지, 메시지만 표시
+      // ?ㅽ뙣 ?쒖뿉??湲곗〈 ?볤? 紐⑸줉 ?좎?, 硫붿떆吏留??쒖떆
     }
   }
 
@@ -6148,15 +6135,15 @@ const DetailComments = (() => {
     }
     const target = Array.isArray(state.comments) ? state.comments.find((c) => Number(c.id) === commentId) : null
     if (target) {
-      // 로그인 사용자 자기 글 차단
+      // 濡쒓렇???ъ슜???먭린 湲 李⑤떒
       if (state.viewer?.id && target.authorId && String(target.authorId) === String(state.viewer.id)) {
-        const msg = '내 댓글에는 비공감을 할 수 없습니다.'
+        const msg = '???볤??먮뒗 鍮꾧났媛먯쓣 ?????놁뒿?덈떎.'
         setInlineActionError(section, commentId, msg, 5000)
         return
       }
-      // 익명 작성자 자기 글 차단 (표시용 IP 비교)
+      // ?듬챸 ?묒꽦???먭린 湲 李⑤떒 (?쒖떆??IP 鍮꾧탳)
       if (!state.viewer?.id && target.isAnonymous && !target.authorId && target.displayIp && state.viewerIp && target.displayIp === state.viewerIp) {
-        const msg = '내 댓글에는 비공감을 할 수 없습니다.'
+        const msg = '???볤??먮뒗 鍮꾧났媛먯쓣 ?????놁뒿?덈떎.'
         setInlineActionError(section, commentId, msg, 5000)
         return
       }
@@ -6207,22 +6194,22 @@ const DetailComments = (() => {
       await loadComments(section, state)
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
-      let uiMessage = '비공감 처리에 실패했습니다. 잠시 후 다시 시도해주세요.'
+      let uiMessage = '鍮꾧났媛?泥섎━???ㅽ뙣?덉뒿?덈떎. ?좎떆 ???ㅼ떆 ?쒕룄?댁＜?몄슂.'
       if (typeof message === 'string') {
         const upper = message.toUpperCase()
         if (upper.includes('SELF_VOTE_NOT_ALLOWED')) {
-          uiMessage = '내 댓글에는 비공감을 할 수 없습니다.'
+          uiMessage = '???볤??먮뒗 鍮꾧났媛먯쓣 ?????놁뒿?덈떎.'
         } else if (upper.includes('VOTE_LIMIT_REACHED')) {
-          uiMessage = '하루 비공감 한도를 초과했습니다. 내일 다시 시도해주세요.'
+          uiMessage = '?섎（ 鍮꾧났媛??쒕룄瑜?珥덇낵?덉뒿?덈떎. ?댁씪 ?ㅼ떆 ?쒕룄?댁＜?몄슂.'
         } else if (upper.includes('COMMENT_NOT_FOUND')) {
-          uiMessage = '댓글을 찾지 못했습니다.'
+          uiMessage = '?볤???李얠? 紐삵뻽?듬땲??'
         } else if (upper.includes('AUTHENTICATION')) {
-          uiMessage = '로그인이 필요합니다.'
+          uiMessage = '濡쒓렇?몄씠 ?꾩슂?⑸땲??'
         } else if (upper.startsWith('HTTP ')) {
-          uiMessage = `비공감 처리 오류: ${message}`
+          uiMessage = `鍮꾧났媛?泥섎━ ?ㅻ쪟: ${message}`
         }
       }
-      // 글로벌 메시지는 중복 노출을 피하기 위해 사용하지 않음
+      // 湲濡쒕쾶 硫붿떆吏??以묐났 ?몄텧???쇳븯湲??꾪빐 ?ъ슜?섏? ?딆쓬
       setInlineActionError(section, commentId, uiMessage, 5000)
       DetailTelemetry.emit('comment-dislike', {
         component: 'comment-engagement',
@@ -6266,7 +6253,7 @@ const DetailComments = (() => {
       }
       await loadComments(section, state, { silent: true })
     } catch (error) {
-      setInlineActionError(section, commentId, '블라인드 처리에 실패했습니다.', 5000)
+      setInlineActionError(section, commentId, '釉붾씪?몃뱶 泥섎━???ㅽ뙣?덉뒿?덈떎.', 5000)
     } finally {
       delete button.dataset.commentBusy
       button.textContent = originalLabel
@@ -6318,12 +6305,12 @@ const DetailComments = (() => {
       event.preventDefault()
       const commentId = Number(modal.dataset.commentId)
       if (!Number.isFinite(commentId) || commentId <= 0) {
-        setMessage('신고 대상을 찾을 수 없습니다.', 'error')
+        setMessage('?좉퀬 ??곸쓣 李얠쓣 ???놁뒿?덈떎.', 'error')
         return
       }
       const reasonValue = reason.value
       if (!reasonValue) {
-        setMessage('신고 사유를 선택해주세요.', 'error')
+        setMessage('?좉퀬 ?ъ쑀瑜??좏깮?댁＜?몄슂.', 'error')
         return
       }
       const detailText = (detail?.value || '').trim().slice(0, 300)
@@ -6373,19 +6360,19 @@ const DetailComments = (() => {
           governance: getGovernanceFromState(state)
         })
 
-        setMessage('신고 요청이 접수되었습니다.', 'success')
-        setStatus(section, '신고 요청이 접수되었습니다.', 'success')
-        // 잠시 메시지를 보여준 뒤 닫기 (3초)
+        setMessage('?좉퀬 ?붿껌???묒닔?섏뿀?듬땲??', 'success')
+        setStatus(section, '?좉퀬 ?붿껌???묒닔?섏뿀?듬땲??', 'success')
+        // ?좎떆 硫붿떆吏瑜?蹂댁뿬以 ???リ린 (3珥?
         setTimeout(() => close(), 3000)
         await loadComments(section, state, { silent: true })
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
         if (typeof message === 'string' && message.toLowerCase().includes('duplicate')) {
-          setMessage('이미 신고한 댓글입니다.', 'error')
+          setMessage('?대? ?좉퀬???볤??낅땲??', 'error')
         } else if (typeof message === 'string' && message.toLowerCase().includes('authentication')) {
-          setMessage('로그인 후 신고할 수 있습니다.', 'error')
+          setMessage('濡쒓렇?????좉퀬?????덉뒿?덈떎.', 'error')
         } else {
-          setMessage('신고 처리에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error')
+          setMessage('?좉퀬 泥섎━???ㅽ뙣?덉뒿?덈떎. ?좎떆 ???ㅼ떆 ?쒕룄?댁＜?몄슂.', 'error')
         }
         DetailTelemetry.emit('comment-flag', {
           component: 'comment-engagement',
@@ -6401,7 +6388,7 @@ const DetailComments = (() => {
         })
       } finally {
         submit.disabled = false
-        submit.textContent = '신고하기'
+        submit.textContent = '?좉퀬?섍린'
       }
     })
 
@@ -6413,7 +6400,7 @@ const DetailComments = (() => {
   const openReportModal = (section, state, commentId) => {
     const controls = ensureReportModal(section, state)
     if (!controls) {
-      setStatus(section, '신고 창을 불러오지 못했습니다.', 'error')
+      setStatus(section, '?좉퀬 李쎌쓣 遺덈윭?ㅼ? 紐삵뻽?듬땲??', 'error')
       return
     }
     controls.reason.value = ''
@@ -6430,7 +6417,7 @@ const DetailComments = (() => {
       return
     }
     if (!state.viewer?.id) {
-      setStatus(section, '로그인 후 신고할 수 있습니다.', 'info')
+      setStatus(section, '濡쒓렇?????좉퀬?????덉뒿?덈떎.', 'info')
       return
     }
     openReportModal(section, state, commentId)
@@ -6459,23 +6446,23 @@ const DetailComments = (() => {
     const box = document.createElement('div')
     box.dataset.cwEditBox = '1'
     const needsPw = needsPasswordForComment(comment)
-    const identityLabel = comment.nickname || (comment.isAnonymous && comment.anonymousNumber ? `익명 ${comment.anonymousNumber}` : '익명')
+    const identityLabel = comment.nickname || (comment.isAnonymous && comment.anonymousNumber ? `?듬챸 ${comment.anonymousNumber}` : '?듬챸')
     box.innerHTML = `
       <div class="mt-2 space-y-2 border border-wiki-border rounded-lg p-3 bg-wiki-bg/80">
         <div class="flex items-center justify-between text-xs text-wiki-muted">
-          <span>${escapeHtml(identityLabel)} · 수정하기</span>
+          <span>${escapeHtml(identityLabel)} 쨌 ?섏젙?섍린</span>
         </div>
         <div class="text-xs min-h-[18px]" data-cw-edit-status></div>
         <textarea class="w-full px-3 py-2 rounded border border-wiki-border bg-wiki-bg text-sm focus:border-wiki-primary focus:outline-none" rows="3" data-cw-edit-textarea>${escapeHtml(comment.content || '')}</textarea>
         ${needsPw ? `
           <div class="flex items-center gap-2 text-sm">
-            <input type="password" maxlength="4" pattern="[0-9]{4}" placeholder="비밀번호 (4자리 숫자)" class="px-3 py-2 rounded border border-wiki-border bg-wiki-bg text-sm focus:border-wiki-primary focus:outline-none" data-cw-edit-password />
-            <span class="text-xs text-wiki-muted">익명 댓글은 비밀번호가 필요합니다.</span>
+            <input type="password" maxlength="4" pattern="[0-9]{4}" placeholder="鍮꾨?踰덊샇 (4?먮━ ?レ옄)" class="px-3 py-2 rounded border border-wiki-border bg-wiki-bg text-sm focus:border-wiki-primary focus:outline-none" data-cw-edit-password />
+            <span class="text-xs text-wiki-muted">?듬챸 ?볤?? 鍮꾨?踰덊샇媛 ?꾩슂?⑸땲??</span>
           </div>
         ` : ''}
         <div class="flex items-center gap-2 text-xs">
-          <button type="button" class="px-3 py-2 rounded bg-wiki-primary text-white hover:bg-wiki-secondary transition" data-cw-edit-submit>수정</button>
-          <button type="button" class="px-3 py-2 rounded border border-wiki-border text-wiki-muted hover:text-wiki-text transition" data-cw-edit-cancel>취소</button>
+          <button type="button" class="px-3 py-2 rounded bg-wiki-primary text-white hover:bg-wiki-secondary transition" data-cw-edit-submit>?섏젙</button>
+          <button type="button" class="px-3 py-2 rounded border border-wiki-border text-wiki-muted hover:text-wiki-text transition" data-cw-edit-cancel>痍⑥냼</button>
         </div>
       </div>
     `
@@ -6504,7 +6491,7 @@ const DetailComments = (() => {
       if (!needsPw) return true
       const val = passwordInput?.value?.trim() || ''
       if (!/^\d{4}$/.test(val)) {
-        setEditStatus('비밀번호는 숫자 4자리로 입력해주세요.', 'error')
+        setEditStatus('鍮꾨?踰덊샇???レ옄 4?먮━濡??낅젰?댁＜?몄슂.', 'error')
         return false
       }
       return true
@@ -6513,7 +6500,7 @@ const DetailComments = (() => {
     const doSubmit = async () => {
       const value = textarea?.value?.trim() || ''
       if (!value) {
-        setEditStatus('수정할 내용을 입력해주세요.', 'error')
+        setEditStatus('?섏젙???댁슜???낅젰?댁＜?몄슂.', 'error')
         return
       }
       if (!validatePasswordInput()) {
@@ -6533,28 +6520,28 @@ const DetailComments = (() => {
         if (!response.ok || !payload?.success) {
           const msg = (payload && payload.error) || `HTTP ${response.status}`
           if (typeof msg === 'string' && msg.toUpperCase().includes('INVALID_PASSWORD')) {
-            setEditStatus('비밀번호가 올바르지 않습니다.', 'error')
+            setEditStatus('鍮꾨?踰덊샇媛 ?щ컮瑜댁? ?딆뒿?덈떎.', 'error')
             return
           }
           if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_REQUIRED')) {
-            setEditStatus('익명 댓글은 비밀번호가 필요합니다.', 'error')
+            setEditStatus('?듬챸 ?볤?? 鍮꾨?踰덊샇媛 ?꾩슂?⑸땲??', 'error')
             return
           }
           if (typeof msg === 'string' && msg.toUpperCase().includes('AUTHOR_REQUIRED')) {
-            setEditStatus('본인 댓글만 수정할 수 있습니다.', 'error')
+            setEditStatus('蹂몄씤 ?볤?留??섏젙?????덉뒿?덈떎.', 'error')
             return
           }
           if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_ATTEMPTS_EXCEEDED')) {
-            setEditStatus('비밀번호 시도 횟수를 초과했습니다. 내일 다시 시도해주세요.', 'error')
+            setEditStatus('鍮꾨?踰덊샇 ?쒕룄 ?잛닔瑜?珥덇낵?덉뒿?덈떎. ?댁씪 ?ㅼ떆 ?쒕룄?댁＜?몄슂.', 'error')
             return
           }
           throw new Error(msg)
         }
-        setEditStatus('댓글이 수정되었습니다.', 'success')
+        setEditStatus('?볤????섏젙?섏뿀?듬땲??', 'success')
         closeEditBoxes(section)
         await loadComments(section, state)
       } catch (error) {
-        setEditStatus('댓글 수정에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error')
+        setEditStatus('?볤? ?섏젙???ㅽ뙣?덉뒿?덈떎. ?좎떆 ???ㅼ떆 ?쒕룄?댁＜?몄슂.', 'error')
       } finally {
         delete submitBtn.dataset.commentBusy
       }
@@ -6581,20 +6568,20 @@ const DetailComments = (() => {
     }
     const commentId = Number(button.getAttribute('data-comment-id'))
     if (!Number.isFinite(commentId) || commentId <= 0) {
-      setStatus(section, '잘못된 댓글 ID입니다.', 'error')
+      setStatus(section, '?섎せ???볤? ID?낅땲??', 'error')
       return
     }
 
     const target = (state.comments || []).find((c) => Number(c.id) === commentId)
     if (!target) {
-      setStatus(section, '댓글을 찾지 못했습니다.', 'error')
+      setStatus(section, '?볤???李얠? 紐삵뻽?듬땲??', 'error')
       return
     }
 
     openEditBox(section, state, target)
   }
 
-  // 삭제 모달 컨트롤러 캐시
+  // ??젣 紐⑤떖 而⑦듃濡ㅻ윭 罹먯떆
   const DELETE_MODAL_CACHE = new WeakMap()
 
   const ensureDeleteModal = (section) => {
@@ -6650,7 +6637,7 @@ const DetailComments = (() => {
       return new Promise((resolve) => { _resolve = resolve })
     }
 
-    // 이벤트 바인딩
+    // ?대깽??諛붿씤??
     if (backdrop) backdrop.addEventListener('click', () => close(null))
     closeButtons.forEach((btn) => btn.addEventListener('click', () => close(null)))
     if (confirmBtn) {
@@ -6659,11 +6646,11 @@ const DetailComments = (() => {
         if (needsPw) {
           const val = (pwInput?.value || '').trim()
           if (!val) {
-            showError('비밀번호를 입력해주세요.')
+            showError('鍮꾨?踰덊샇瑜??낅젰?댁＜?몄슂.')
             return
           }
           if (!/^\d{4}$/.test(val)) {
-            showError('비밀번호는 숫자 4자리로 입력해주세요.')
+            showError('鍮꾨?踰덊샇???レ옄 4?먮━濡??낅젰?댁＜?몄슂.')
             return
           }
           close(val)
@@ -6684,13 +6671,13 @@ const DetailComments = (() => {
     }
     const commentId = Number(button.getAttribute('data-comment-id'))
     if (!Number.isFinite(commentId) || commentId <= 0) {
-      setStatus(section, '잘못된 댓글 ID입니다.', 'error')
+      setStatus(section, '?섎せ???볤? ID?낅땲??', 'error')
       return
     }
 
     const target = (state.comments || []).find((c) => Number(c.id) === commentId)
     if (!target) {
-      setStatus(section, '댓글을 찾지 못했습니다.', 'error')
+      setStatus(section, '?볤???李얠? 紐삵뻽?듬땲??', 'error')
       return
     }
 
@@ -6699,11 +6686,11 @@ const DetailComments = (() => {
 
     const deleteModal = ensureDeleteModal(section)
     if (!deleteModal) {
-      setStatus(section, '삭제 기능을 사용할 수 없습니다.', 'error')
+      setStatus(section, '??젣 湲곕뒫???ъ슜?????놁뒿?덈떎.', 'error')
       return
     }
 
-    // 비밀번호 재시도를 위한 루프
+    // 鍮꾨?踰덊샇 ?ъ떆?꾨? ?꾪븳 猷⑦봽
     while (true) {
       const password = await deleteModal.open(needsPassword)
       if (password === null) {
@@ -6721,26 +6708,26 @@ const DetailComments = (() => {
         if (!response.ok || !payload?.success) {
           const msg = (payload && payload.error) || `HTTP ${response.status}`
           if (typeof msg === 'string' && msg.toUpperCase().includes('INVALID_PASSWORD')) {
-            deleteModal.showError('비밀번호가 올바르지 않습니다.')
+            deleteModal.showError('鍮꾨?踰덊샇媛 ?щ컮瑜댁? ?딆뒿?덈떎.')
             delete button.dataset.commentBusy
             continue
           }
           if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_REQUIRED')) {
-            deleteModal.showError('익명 댓글은 비밀번호가 필요합니다.')
+            deleteModal.showError('?듬챸 ?볤?? 鍮꾨?踰덊샇媛 ?꾩슂?⑸땲??')
             delete button.dataset.commentBusy
             continue
           }
           if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_ATTEMPTS_EXCEEDED')) {
-            setStatus(section, '비밀번호 시도 횟수를 초과했습니다. 내일 다시 시도해주세요.', 'error')
+            setStatus(section, '鍮꾨?踰덊샇 ?쒕룄 ?잛닔瑜?珥덇낵?덉뒿?덈떎. ?댁씪 ?ㅼ떆 ?쒕룄?댁＜?몄슂.', 'error')
             return
           }
           throw new Error(msg)
         }
         await loadComments(section, state)
-        showToast('댓글이 삭제되었습니다.', 'success')
+        showToast('?볤?????젣?섏뿀?듬땲??', 'success')
         return
       } catch (error) {
-        setStatus(section, '댓글 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error')
+        setStatus(section, '?볤? ??젣???ㅽ뙣?덉뒿?덈떎. ?좎떆 ???ㅼ떆 ?쒕룄?댁＜?몄슂.', 'error')
         return
       } finally {
         delete button.dataset.commentBusy
@@ -6777,7 +6764,7 @@ const DetailComments = (() => {
       const replyBtn = target.closest('[data-cw-comment-reply]')
       if (replyBtn instanceof HTMLElement) {
         const commentId = Number(replyBtn.getAttribute('data-comment-id'))
-        const label = replyBtn.getAttribute('data-comment-label') || '댓글'
+        const label = replyBtn.getAttribute('data-comment-label') || '?볤?'
         if (Number.isFinite(commentId) && commentId > 0) {
           openReplyBox(section, state, commentId, label)
         }
@@ -6873,7 +6860,7 @@ const DetailComments = (() => {
       openMenuId: null
     }
 
-    // 전역 __USER__로 viewer/role 초기 보정 (관리자 역할 인식)
+    // ?꾩뿭 __USER__濡?viewer/role 珥덇린 蹂댁젙 (愿由ъ옄 ??븷 ?몄떇)
     const globalUser = (typeof window !== 'undefined' && window.__USER__) ? window.__USER__ : null
     if (globalUser) {
       state.viewer = {
@@ -6940,13 +6927,13 @@ const DetailComments = (() => {
       })
   }
   
-  // 사용자 인증 상태 변경 시 댓글 폼 업데이트
+  // ?ъ슜???몄쬆 ?곹깭 蹂寃????볤? ???낅뜲?댄듃
   const refreshAuthState = (user) => {
     document.querySelectorAll('[data-cw-comments]').forEach(section => {
       const state = SECTION_STATE.get(section)
       if (!state) return
       
-      // state.viewer 업데이트
+      // state.viewer ?낅뜲?댄듃
       if (user && user.id) {
         state.viewer = {
           id: user.id,
@@ -6960,12 +6947,12 @@ const DetailComments = (() => {
         state.viewerRole = 'user'
       }
       
-      // 폼 UI 업데이트
+      // ??UI ?낅뜲?댄듃
       applyAuthState(section, state)
     })
   }
   
-  // cw-refresh-auth-state 이벤트 수신
+  // cw-refresh-auth-state ?대깽???섏떊
   window.addEventListener('cw-refresh-auth-state', (event) => {
     refreshAuthState(event.detail)
   })
@@ -7105,19 +7092,19 @@ const DetailPage = (() => {
   return { init }
 })()
 
-// DOM 조작 유틸리티
+// DOM 議곗옉 ?좏떥由ы떚
 const DOMUtils = {
   buildMajorUrl(entry) {
     if (!entry) return '#';
     const profile = entry.profile || entry;
     
-    // ✅ 한글 이름이 있으면 한글 슬러그 사용, 없으면 ID 사용
+    // ???쒓? ?대쫫???덉쑝硫??쒓? ?щ윭洹??ъ슜, ?놁쑝硫?ID ?ъ슜
     const nameSlug = this.slugifyName(profile.name);
     const slug = nameSlug || profile.id || profile.sourceIds?.careernet;
     
     if (!slug) return '#';
 
-    // 🔄 쿼리 파라미터 제거: 병합된 데이터는 전공명으로만 접근
+    // ?봽 荑쇰━ ?뚮씪誘명꽣 ?쒓굅: 蹂묓빀???곗씠?곕뒗 ?꾧났紐낆쑝濡쒕쭔 ?묎렐
     return `/major/${encodeURIComponent(slug)}`;
   },
   
@@ -7141,7 +7128,7 @@ const DOMUtils = {
       }
     }
 
-    // ✅ 한글 이름이 있으면 한글 슬러그 사용, 없으면 ID 사용
+    // ???쒓? ?대쫫???덉쑝硫??쒓? ?щ윭洹??ъ슜, ?놁쑝硫?ID ?ъ슜
     const nameSlug = this.slugifyName(profile.name);
     const slug = nameSlug || profile.id || sourceIds.careernet;
     
@@ -7151,7 +7138,7 @@ const DOMUtils = {
     return `/major/${encodeURIComponent(slug)}${query ? `?${query}` : ''}`;
   },
 
-  // 한글 슬러그 생성 함수 (서버의 composeDetailSlug와 동일한 로직)
+  // ?쒓? ?щ윭洹??앹꽦 ?⑥닔 (?쒕쾭??composeDetailSlug? ?숈씪??濡쒖쭅)
   slugifyName(value) {
     if (!value) return '';
     const HANGUL_SEPARATOR_REGEX = /[·•]/g;
@@ -7167,7 +7154,7 @@ const DOMUtils = {
       .replace(/-+/g, '-')
       .replace(/^-+|-+$/g, '');
     
-    // 최대 길이 140자로 제한
+    // 理쒕? 湲몄씠 140?먮줈 ?쒗븳
     return slug.length <= 140 ? slug : slug.slice(0, 140).replace(/-+$/g, '');
   },
 
@@ -7175,13 +7162,13 @@ const DOMUtils = {
     if (!entry) return '#';
     const profile = entry.profile || entry;
     
-    // ✅ 한글 이름이 있으면 한글 슬러그 사용, 없으면 ID 사용
+    // ???쒓? ?대쫫???덉쑝硫??쒓? ?щ윭洹??ъ슜, ?놁쑝硫?ID ?ъ슜
     const nameSlug = this.slugifyName(profile.name);
     const slug = nameSlug || profile.id || profile.sourceIds?.careernet;
     
     if (!slug) return '#';
 
-    // 🔄 쿼리 파라미터 제거: 병합된 데이터는 직업명으로만 접근
+    // ?봽 荑쇰━ ?뚮씪誘명꽣 ?쒓굅: 蹂묓빀???곗씠?곕뒗 吏곸뾽紐낆쑝濡쒕쭔 ?묎렐
     return `/job/${encodeURIComponent(slug)}`;
   },
 
@@ -7201,7 +7188,7 @@ const DOMUtils = {
 
     const profile = {
       id: item.id || (item.majorSeq ? `major:C_${item.majorSeq}` : undefined),
-      name: item.name || item.major || '학과명 없음',
+      name: item.name || item.major || '?숆낵紐??놁쓬',
       sourceIds: {
         careernet: item.sourceIds?.careernet || item.majorSeq
       },
@@ -7243,7 +7230,7 @@ const DOMUtils = {
 
     const profile = {
       id: item.id || (item.jobdicSeq ? `job:C_${item.jobdicSeq}` : undefined),
-      name: item.name || item.jobName || '직업명 없음',
+      name: item.name || item.jobName || '吏곸뾽紐??놁쓬',
       sourceIds: {
         careernet: item.sourceIds?.careernet || item.jobdicSeq
       },
@@ -7269,20 +7256,20 @@ const DOMUtils = {
     return normalized;
   },
 
-  // 로딩 표시
+  // 濡쒕뵫 ?쒖떆
   showLoading(elementId) {
     const element = document.getElementById(elementId);
     if (element) {
       element.innerHTML = `
         <div class="text-center py-8">
           <i class="fas fa-spinner fa-spin text-3xl text-wiki-secondary"></i>
-          <p class="mt-4 text-wiki-muted">데이터를 불러오는 중...</p>
+          <p class="mt-4 text-wiki-muted">?곗씠?곕? 遺덈윭?ㅻ뒗 以?..</p>
         </div>
       `;
     }
   },
 
-  // 오류 표시
+  // ?ㅻ쪟 ?쒖떆
   showError(elementId, message) {
     const element = document.getElementById(elementId);
     if (element) {
@@ -7295,155 +7282,155 @@ const DOMUtils = {
     }
   },
 
-  // 학과 카드 생성 (클라이언트 정렬용)
+  // ?숆낵 移대뱶 ?앹꽦 (?대씪?댁뼵???뺣젹??
   createMajorCard(major) {
     const normalized = this.normalizeMajorItem(major);
     if (!normalized) return '';
     const { profile, display, url } = normalized;
-    const summary = display.summary || '설명 없음';
+    const summary = display.summary || '?ㅻ챸 ?놁쓬';
     const categoryName = display.categoryName && display.categoryName.split(',').length <= 2 ? display.categoryName : undefined;
     
     const satisfactionGrade = (() => {
       if (!display.firstJobSatisfaction) return null;
       const score = parseFloat(display.firstJobSatisfaction) || 0;
-      if (score >= 80) return { level: '매우 좋음', bg: 'bg-green-500/10', border: 'border-green-500/20', iconColor: 'text-green-400', textColor: 'text-green-300', textMuted: 'text-green-300/80' };
-      if (score >= 60) return { level: '좋음', bg: 'bg-sky-500/10', border: 'border-sky-500/20', iconColor: 'text-sky-400', textColor: 'text-sky-300', textMuted: 'text-sky-300/80' };
-      if (score >= 40) return { level: '보통', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', iconColor: 'text-yellow-400', textColor: 'text-yellow-300', textMuted: 'text-yellow-300/80' };
-      if (score >= 20) return { level: '별로', bg: 'bg-orange-500/10', border: 'border-orange-500/20', iconColor: 'text-orange-400', textColor: 'text-orange-300', textMuted: 'text-orange-300/80' };
-      return { level: '매우 별로', bg: 'bg-red-500/10', border: 'border-red-500/20', iconColor: 'text-red-400', textColor: 'text-red-300', textMuted: 'text-red-300/80' };
+      if (score >= 80) return { level: '留ㅼ슦 醫뗭쓬', bg: 'bg-green-500/10', border: 'border-green-500/20', iconColor: 'text-green-400', textColor: 'text-green-300', textMuted: 'text-green-300/80' };
+      if (score >= 60) return { level: '醫뗭쓬', bg: 'bg-sky-500/10', border: 'border-sky-500/20', iconColor: 'text-sky-400', textColor: 'text-sky-300', textMuted: 'text-sky-300/80' };
+      if (score >= 40) return { level: '蹂댄넻', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', iconColor: 'text-yellow-400', textColor: 'text-yellow-300', textMuted: 'text-yellow-300/80' };
+      if (score >= 20) return { level: '蹂꾨줈', bg: 'bg-orange-500/10', border: 'border-orange-500/20', iconColor: 'text-orange-400', textColor: 'text-orange-300', textMuted: 'text-orange-300/80' };
+      return { level: '留ㅼ슦 蹂꾨줈', bg: 'bg-red-500/10', border: 'border-red-500/20', iconColor: 'text-red-400', textColor: 'text-red-300', textMuted: 'text-red-300/80' };
     })();
     
     const metricBoxes = [];
     if (display.employmentRate) {
       const rateText = formatEmploymentRate(display.employmentRate) || '';
-      metricBoxes.push({ priority: 1, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-chart-line text-blue-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-blue-300/70">취업률</span><span class="text-[11px] sm:text-[13px] font-bold text-blue-300 text-center leading-tight px-1">${rateText}</span></div>` });
+      metricBoxes.push({ priority: 1, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-chart-line text-blue-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-blue-300/70">痍⑥뾽瑜?/span><span class="text-[11px] sm:text-[13px] font-bold text-blue-300 text-center leading-tight px-1">${rateText}</span></div>` });
     }
     if (display.firstJobSalary) {
-      const salaryText = display.firstJobSalary.includes('만원') ? display.firstJobSalary : `${display.firstJobSalary}만원`;
-      metricBoxes.push({ priority: 2, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70">평균 월급</span><span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${salaryText}</span></div>` });
+      const salaryText = display.firstJobSalary.includes('留뚯썝') ? display.firstJobSalary : `${display.firstJobSalary}留뚯썝`;
+      metricBoxes.push({ priority: 2, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70">?됯퇏 ?붽툒</span><span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${salaryText}</span></div>` });
     }
     if (display.firstJobSatisfaction && satisfactionGrade) {
-      metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">만족도</span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
+      metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">留뚯”??/span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
     }
     if (categoryName) {
-      metricBoxes.push({ priority: 4, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-graduation-cap text-purple-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70">계열</span><span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight px-1">${categoryName.length > 10 ? categoryName.substring(0, 10) + '...' : categoryName}</span></div>` });
+      metricBoxes.push({ priority: 4, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-graduation-cap text-purple-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70">怨꾩뿴</span><span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight px-1">${categoryName.length > 10 ? categoryName.substring(0, 10) + '...' : categoryName}</span></div>` });
     }
     const sortedBoxes = metricBoxes.sort((a, b) => a.priority - b.priority).slice(0, 3);
     const metrics = sortedBoxes.map((box, i) => i === 2 ? `<div class="hidden sm:flex">${box.html}</div>` : box.html).join('');
     
-    // 썸네일 HTML 생성 (메트릭 박스와 같거나 큰 크기, 수직 중앙 정렬)
+    // ?몃꽕??HTML ?앹꽦 (硫뷀듃由?諛뺤뒪? 媛숆굅?????ш린, ?섏쭅 以묒븰 ?뺣젹)
     const imageUrl = display.imageUrl;
     const thumbnailHtml = imageUrl 
       ? `<div class="flex-shrink-0 self-center w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] rounded-xl overflow-hidden bg-wiki-card/60 border border-wiki-border/30"><img src="${imageUrl}" alt="${profile.name || ''}" class="w-full h-full object-cover" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-full text-wiki-muted\\' aria-hidden=\\'true\\'><i class=\\'fas fa-graduation-cap text-3xl\\'></i></div>'" /></div>`
       : `<div class="flex-shrink-0 self-center w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] rounded-xl bg-gradient-to-br from-wiki-secondary/10 to-wiki-primary/10 border border-wiki-border/30 flex items-center justify-center"><i class="fas fa-graduation-cap text-3xl text-wiki-muted" aria-hidden="true"></i></div>`;
 
-    return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4">${thumbnailHtml}<div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2"><h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || '학과명 없음'}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics ? `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
+    return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4">${thumbnailHtml}<div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2"><h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || '?숆낵紐??놁쓬'}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics ? `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
   },
 
-  // 숙련기간 포맷팅: 단위가 같을 때 앞 단위 제거 (예: "1년~2년" → "1~2년")
+  // ?숇젴湲곌컙 ?щ㎎?? ?⑥쐞媛 媛숈쓣 ?????⑥쐞 ?쒓굅 (?? "1??2?? ??"1~2??)
   formatSkillYear(value) {
     if (!value) return '';
     let trimmed = String(value).trim();
     if (!trimmed) return '';
     
-    // "초과", "이하" 제거
+    // "珥덇낵", "?댄븯" ?쒓굅
     trimmed = trimmed
-      .replace(/\s*초과\s*/g, ' ')
-      .replace(/\s*이하\s*/g, '')
+      .replace(/\s*珥덇낵\s*/g, ' ')
+      .replace(/\s*?댄븯\s*/g, '')
       .replace(/\s+/g, ' ')
       .trim();
     
-    // "~" 또는 "-"로 구분된 범위 형식인지 확인 (공백 무시)
+    // "~" ?먮뒗 "-"濡?援щ텇??踰붿쐞 ?뺤떇?몄? ?뺤씤 (怨듬갚 臾댁떆)
     const rangeMatch = trimmed.match(/^(.+?)\s*([~-])\s*(.+)$/);
-    if (!rangeMatch) return trimmed; // 범위 형식이 아니면 그대로 반환
+    if (!rangeMatch) return trimmed; // 踰붿쐞 ?뺤떇???꾨땲硫?洹몃?濡?諛섑솚
     
     const [, start, separator, end] = rangeMatch;
     
-    // 단위 추출 (년, 개월 등) - 앞뒤 공백 제거
+    // ?⑥쐞 異붿텧 (?? 媛쒖썡 ?? - ?욌뮘 怨듬갚 ?쒓굅
     const startTrimmed = start.trim();
     const unitMatch = startTrimmed.match(/(\d+)\s*(년|개월|월)$/);
-    if (!unitMatch) return trimmed; // 단위가 없으면 그대로 반환
+    if (!unitMatch) return trimmed; // ?⑥쐞媛 ?놁쑝硫?洹몃?濡?諛섑솚
     
     const [, startNum, unit] = unitMatch;
     
-    // 끝 부분에서 같은 단위가 있는지 확인 - 앞뒤 공백 제거
+    // ??遺遺꾩뿉??媛숈? ?⑥쐞媛 ?덈뒗吏 ?뺤씤 - ?욌뮘 怨듬갚 ?쒓굅
     const endTrimmed = end.trim();
     const endMatch = endTrimmed.match(/^(\d+)\s*(년|개월|월)$/);
-    if (!endMatch) return trimmed; // 끝 부분에 단위가 없으면 그대로 반환
+    if (!endMatch) return trimmed; // ??遺遺꾩뿉 ?⑥쐞媛 ?놁쑝硫?洹몃?濡?諛섑솚
     
     const [, endNum, endUnit] = endMatch;
     
-    // 단위가 같으면 앞 단위 제거
+    // ?⑥쐞媛 媛숈쑝硫????⑥쐞 ?쒓굅
     if (unit === endUnit) {
       return `${startNum}${separator}${endNum}${unit}`;
     }
     
-    // 단위가 다르면 그대로 반환
+    // ?⑥쐞媛 ?ㅻⅤ硫?洹몃?濡?諛섑솚
     return trimmed;
   },
 
-  // 직업 카드 생성 (클라이언트 정렬용)
+  // 吏곸뾽 移대뱶 ?앹꽦 (?대씪?댁뼵???뺣젹??
   createJobCard(job) {
     const normalized = this.normalizeJobItem(job);
     if (!normalized) return '';
     const { profile, display, url } = normalized;
-    const summary = display.summary || '설명 없음';
+    const summary = display.summary || '?ㅻ챸 ?놁쓬';
     
     const satisfactionGrade = (() => {
       if (!display.satisfaction) return null;
       const score = parseFloat(display.satisfaction) || 0;
-      if (score >= 80) return { level: '매우 좋음', bg: 'bg-green-500/10', border: 'border-green-500/20', iconColor: 'text-green-400', textColor: 'text-green-300', textMuted: 'text-green-300/80' };
-      if (score >= 60) return { level: '좋음', bg: 'bg-sky-500/10', border: 'border-sky-500/20', iconColor: 'text-sky-400', textColor: 'text-sky-300', textMuted: 'text-sky-300/80' };
-      if (score >= 40) return { level: '보통', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', iconColor: 'text-yellow-400', textColor: 'text-yellow-300', textMuted: 'text-yellow-300/80' };
-      if (score >= 20) return { level: '별로', bg: 'bg-orange-500/10', border: 'border-orange-500/20', iconColor: 'text-orange-400', textColor: 'text-orange-300', textMuted: 'text-orange-300/80' };
-      return { level: '매우 별로', bg: 'bg-red-500/10', border: 'border-red-500/20', iconColor: 'text-red-400', textColor: 'text-red-300', textMuted: 'text-red-300/80' };
+      if (score >= 80) return { level: '留ㅼ슦 醫뗭쓬', bg: 'bg-green-500/10', border: 'border-green-500/20', iconColor: 'text-green-400', textColor: 'text-green-300', textMuted: 'text-green-300/80' };
+      if (score >= 60) return { level: '醫뗭쓬', bg: 'bg-sky-500/10', border: 'border-sky-500/20', iconColor: 'text-sky-400', textColor: 'text-sky-300', textMuted: 'text-sky-300/80' };
+      if (score >= 40) return { level: '蹂댄넻', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', iconColor: 'text-yellow-400', textColor: 'text-yellow-300', textMuted: 'text-yellow-300/80' };
+      if (score >= 20) return { level: '蹂꾨줈', bg: 'bg-orange-500/10', border: 'border-orange-500/20', iconColor: 'text-orange-400', textColor: 'text-orange-300', textMuted: 'text-orange-300/80' };
+      return { level: '留ㅼ슦 蹂꾨줈', bg: 'bg-red-500/10', border: 'border-red-500/20', iconColor: 'text-red-400', textColor: 'text-red-300', textMuted: 'text-red-300/80' };
     })();
     
     const metricBoxes = [];
     if (display.salary) {
       const salaryText = (display.salary || '').replace(/평균\s*/g, '');
-      metricBoxes.push({ priority: 1, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70">평균 연봉</span><span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${salaryText}</span></div>` });
+      metricBoxes.push({ priority: 1, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70">?됯퇏 ?곕큺</span><span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${salaryText}</span></div>` });
     }
     if (display.satisfaction && satisfactionGrade) {
-      metricBoxes.push({ priority: 2, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">만족도</span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
+      metricBoxes.push({ priority: 2, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">留뚯”??/span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
     }
     if (display.wlb) {
-      metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-balance-scale text-purple-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70">워라벨</span><span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight">${display.wlb}</span></div>` });
+      metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-balance-scale text-purple-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70">?뚮씪踰?/span><span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight">${display.wlb}</span></div>` });
     }
     if (display.workStrong) {
-      metricBoxes.push({ priority: 4, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-dumbbell text-amber-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-amber-300/70">작업 강도</span><span class="text-[11px] sm:text-[13px] font-bold text-amber-300 text-center leading-tight">${display.workStrong}</span></div>` });
+      metricBoxes.push({ priority: 4, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-dumbbell text-amber-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-amber-300/70">?묒뾽 媛뺣룄</span><span class="text-[11px] sm:text-[13px] font-bold text-amber-300 text-center leading-tight">${display.workStrong}</span></div>` });
     }
     if (display.skillYear) {
       const formattedSkillYear = this.formatSkillYear(display.skillYear);
-      metricBoxes.push({ priority: 5, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-cyan-500/10 backdrop-blur-sm border border-cyan-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-clock text-cyan-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-cyan-300/70">숙련기간</span><span class="text-[11px] sm:text-[13px] font-bold text-cyan-300 text-center leading-tight">${formattedSkillYear}</span></div>` });
+      metricBoxes.push({ priority: 5, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-cyan-500/10 backdrop-blur-sm border border-cyan-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-clock text-cyan-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-cyan-300/70">?숇젴湲곌컙</span><span class="text-[11px] sm:text-[13px] font-bold text-cyan-300 text-center leading-tight">${formattedSkillYear}</span></div>` });
     }
     const sortedBoxes = metricBoxes.sort((a, b) => a.priority - b.priority).slice(0, 3);
     const metrics = sortedBoxes.map((box, i) => i === 2 ? `<div class="hidden sm:flex">${box.html}</div>` : box.html).join('');
     
-    // 썸네일 HTML 생성 (메트릭 박스와 같거나 큰 크기, 수직 중앙 정렬)
+    // ?몃꽕??HTML ?앹꽦 (硫뷀듃由?諛뺤뒪? 媛숆굅?????ш린, ?섏쭅 以묒븰 ?뺣젹)
     const imageUrl = display.imageUrl;
     const thumbnailHtml = imageUrl 
       ? `<div class="flex-shrink-0 self-center w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] rounded-xl overflow-hidden bg-wiki-card/60 border border-wiki-border/30"><img src="${imageUrl}" alt="${profile.name || ''}" class="w-full h-full object-cover" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-full text-wiki-muted\\' aria-hidden=\\'true\\'><i class=\\'fas fa-briefcase text-3xl\\'></i></div>'" /></div>`
       : `<div class="flex-shrink-0 self-center w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] rounded-xl bg-gradient-to-br from-wiki-primary/10 to-wiki-secondary/10 border border-wiki-border/30 flex items-center justify-center"><i class="fas fa-briefcase text-3xl text-wiki-muted" aria-hidden="true"></i></div>`;
 
-    return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4">${thumbnailHtml}<div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2">${display.categoryName ? `<div class="flex items-center gap-2"><span class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20"><i class="fas fa-folder text-[7px] sm:text-[8px]"></i>${display.categoryName}</span></div>` : ''}<h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || '직업명 없음'}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics ? `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
+    return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4">${thumbnailHtml}<div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2">${display.categoryName ? `<div class="flex items-center gap-2"><span class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20"><i class="fas fa-folder text-[7px] sm:text-[8px]"></i>${display.categoryName}</span></div>` : ''}<h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || '吏곸뾽紐??놁쓬'}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics ? `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
   }
 };
 
-// 페이지별 초기화 함수
+// ?섏씠吏蹂?珥덇린???⑥닔
 const PageInit = {
-  // 홈페이지 초기화
+  // ?덊럹?댁? 珥덇린??
   async initHome() {
   },
 
-  // 검색 결과 페이지
+  // 寃??寃곌낵 ?섏씠吏
   async initSearchResults() {
     const urlParams = new URLSearchParams(window.location.search);
     const keyword = urlParams.get('q') || '';
     
     if (!keyword) return;
     
-    // 직업 검색 결과
+    // 吏곸뾽 寃??寃곌낵
     const jobResults = document.getElementById('job-search-results');
     if (jobResults) {
       DOMUtils.showLoading('job-search-results');
@@ -7452,18 +7439,18 @@ const PageInit = {
       
       if (jobs.length > 0) {
         jobResults.innerHTML = `
-          <h2 class="text-2xl font-bold mb-4 gradient-text">직업 검색 결과</h2>
+          <h2 class="text-2xl font-bold mb-4 gradient-text">吏곸뾽 寃??寃곌낵</h2>
           <div class="grid gap-4">
             ${jobs.map(job => DOMUtils.createJobCard(job)).join('')}
           </div>
-          ${jobs.length >= 5 ? `<a href="/job?q=${encodeURIComponent(keyword)}" class="text-wiki-primary hover:underline mt-4 inline-block">더 보기 →</a>` : ''}
+          ${jobs.length >= 5 ? `<a href="/job?q=${encodeURIComponent(keyword)}" class="text-wiki-primary hover:underline mt-4 inline-block">??蹂닿린 ??/a>` : ''}
         `;
       } else {
         jobResults.innerHTML = '';
       }
     }
     
-    // 학과 검색 결과
+    // ?숆낵 寃??寃곌낵
     const majorResults = document.getElementById('major-search-results');
     if (majorResults) {
       DOMUtils.showLoading('major-search-results');
@@ -7472,11 +7459,11 @@ const PageInit = {
       
       if (majors.length > 0) {
         majorResults.innerHTML = `
-          <h2 class="text-2xl font-bold mb-4 gradient-text">학과 검색 결과</h2>
+          <h2 class="text-2xl font-bold mb-4 gradient-text">?숆낵 寃??寃곌낵</h2>
           <div class="grid gap-4">
             ${majors.map(major => DOMUtils.createMajorCard(major)).join('')}
           </div>
-          ${majors.length >= 5 ? `<a href="/major?q=${encodeURIComponent(keyword)}" class="text-wiki-primary hover:underline mt-4 inline-block">더 보기 →</a>` : ''}
+          ${majors.length >= 5 ? `<a href="/major?q=${encodeURIComponent(keyword)}" class="text-wiki-primary hover:underline mt-4 inline-block">??蹂닿린 ??/a>` : ''}
         `;
       } else {
         majorResults.innerHTML = '';
@@ -7485,7 +7472,7 @@ const PageInit = {
   }
 };
 
-// 직업 상세 공유 & 데모 인터랙션 모듈
+// 吏곸뾽 ?곸꽭 怨듭쑀 & ?곕え ?명꽣?숈뀡 紐⑤뱢
 const DemoDetailEnhancements = (() => {
   const escapeHtml = (value = '') =>
     String(value)
@@ -7518,7 +7505,7 @@ const DemoDetailEnhancements = (() => {
     const likes = Number.isFinite(comment.likes) ? comment.likes : 0
     const dislikes = Number.isFinite(comment.dislikes) ? comment.dislikes : 0
     const badge = comment.badge ? `<span class="px-2 py-1 bg-wiki-secondary/20 text-wiki-secondary text-[11px] rounded-full">${escapeHtml(comment.badge)}</span>` : ''
-    const roles = comment.role === 'expert' ? '<span class="px-2 py-1 bg-green-500/15 text-green-300 text-[11px] rounded-full">전문가</span>' : ''
+    const roles = comment.role === 'expert' ? '<span class="px-2 py-1 bg-green-500/15 text-green-300 text-[11px] rounded-full">?꾨Ц媛</span>' : ''
     const statusLabel = highlightBest
       ? '<span class="px-2 py-1 bg-wiki-primary/20 text-wiki-primary text-[11px] rounded-full">BEST</span>'
       : ''
@@ -7597,15 +7584,15 @@ const DemoDetailEnhancements = (() => {
       const target = trigger.getAttribute('data-comment-tab')
       const isActive = target === tabId
       trigger.setAttribute('aria-selected', isActive ? 'true' : 'false')
-      // 활성 상태: 파란 배경 + 흰 텍스트
+      // ?쒖꽦 ?곹깭: ?뚮? 諛곌꼍 + ???띿뒪??
       trigger.classList.toggle('bg-wiki-primary', isActive)
       trigger.classList.toggle('text-white', isActive)
       trigger.classList.toggle('shadow-sm', isActive)
       trigger.classList.toggle('border-wiki-primary/50', isActive)
-      // 비활성 상태: 밝은 회색 텍스트
+      // 鍮꾪솢???곹깭: 諛앹? ?뚯깋 ?띿뒪??
       trigger.classList.toggle('text-gray-300', !isActive)
       trigger.classList.toggle('border-transparent', !isActive)
-      // 기존 스타일 제거
+      // 湲곗〈 ?ㅽ????쒓굅
       trigger.classList.remove('text-wiki-muted')
     })
     panels.forEach((panel) => {
@@ -7631,16 +7618,16 @@ const DemoDetailEnhancements = (() => {
         section.querySelectorAll('[data-comment-sort]').forEach((other) => {
           const isActive = other === button
           other.setAttribute('aria-pressed', isActive ? 'true' : 'false')
-          // 활성 상태: 파란 배경 + 흰 텍스트
+          // ?쒖꽦 ?곹깭: ?뚮? 諛곌꼍 + ???띿뒪??
           other.classList.toggle('bg-wiki-primary', isActive)
           other.classList.toggle('text-white', isActive)
           other.classList.toggle('shadow-sm', isActive)
           other.classList.toggle('border-wiki-primary/60', isActive)
-          // 비활성 상태: 투명 배경 + 밝은 회색 텍스트
+          // 鍮꾪솢???곹깭: ?щ챸 諛곌꼍 + 諛앹? ?뚯깋 ?띿뒪??
           other.classList.toggle('bg-transparent', !isActive)
           other.classList.toggle('text-gray-300', !isActive)
           other.classList.toggle('border-transparent', !isActive)
-          // 기존 스타일 제거
+          // 湲곗〈 ?ㅽ????쒓굅
           other.classList.remove('text-wiki-muted')
           other.classList.remove('text-wiki-primary')
           other.classList.remove('border-wiki-border')
@@ -7681,7 +7668,7 @@ const DemoDetailEnhancements = (() => {
       bindTabs(section, state)
       bindSortButtons(section, state)
 
-      // 숨겨둔 기본 플레이스홀더 비활성화
+      // ?④꺼??湲곕낯 ?뚮젅?댁뒪???鍮꾪솢?깊솕
       const legacyEmpty = section.querySelector('[data-cw-comments-empty]')
       if (legacyEmpty) {
         legacyEmpty.hidden = true
@@ -7729,7 +7716,7 @@ const DemoDetailEnhancements = (() => {
       document.body.style.overflow = 'hidden'
     }
 
-    // AI 결과 등 외부에서 글로벌 공유 모달을 열 수 있도록 노출
+    // AI 寃곌낵 ???몃??먯꽌 湲濡쒕쾶 怨듭쑀 紐⑤떖???????덈룄濡??몄텧
     window.__openShareModal = openModal
 
     const closeModal = () => {
@@ -7738,17 +7725,17 @@ const DemoDetailEnhancements = (() => {
       document.body.style.overflow = ''
     }
 
-    // 닫기: 오버레이 + X 버튼
+    // ?リ린: ?ㅻ쾭?덉씠 + X 踰꾪듉
     document.querySelectorAll('[data-share-modal-close]').forEach(function (el) {
       el.addEventListener('click', closeModal)
     })
 
-    // ESC 키
+    // ESC ??
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal()
     })
 
-    // 트리거 버튼들 (data-share-root 패턴)
+    // ?몃━嫄?踰꾪듉??(data-share-root ?⑦꽩)
     document.querySelectorAll('[data-share-root]').forEach(function (root) {
       var trigger = root.querySelector('[data-share-trigger]')
       if (!trigger) return
@@ -7767,17 +7754,17 @@ const DemoDetailEnhancements = (() => {
       })
     })
 
-    // 복사 버튼
+    // 蹂듭궗 踰꾪듉
     var copyBtn = document.querySelector('[data-share-modal-copy]')
     if (copyBtn) {
       copyBtn.addEventListener('click', async function () {
         try {
           await navigator.clipboard.writeText(currentUrl)
-          copyBtn.textContent = '복사됨!'
+          copyBtn.textContent = '蹂듭궗??'
           copyBtn.classList.add('bg-green-600')
           copyBtn.classList.remove('bg-wiki-primary')
           setTimeout(function () {
-            copyBtn.textContent = '복사'
+            copyBtn.textContent = '蹂듭궗'
             copyBtn.classList.remove('bg-green-600')
             copyBtn.classList.add('bg-wiki-primary')
           }, 1500)
@@ -7811,7 +7798,7 @@ const DemoDetailEnhancements = (() => {
       })
     }
 
-    // SNS: 카카오톡
+    // SNS: 移댁뭅?ㅽ넚
     var kakaoBtn = document.querySelector('[data-share-kakao]')
     if (kakaoBtn) {
       kakaoBtn.addEventListener('click', function () {
@@ -7824,28 +7811,28 @@ const DemoDetailEnhancements = (() => {
             objectType: 'feed',
             content: {
               title: currentTitle,
-              description: 'Careerwiki에서 자세히 보기',
+              description: 'Careerwiki?먯꽌 ?먯꽭??蹂닿린',
               imageUrl: imgUrl || 'https://careerwiki.org/images/og-default.png',
               link: { mobileWebUrl: currentUrl, webUrl: currentUrl }
             },
             buttons: [{
-              title: '자세히 보기',
+              title: '?먯꽭??蹂닿린',
               link: { mobileWebUrl: currentUrl, webUrl: currentUrl }
             }]
           })
         } else {
-          // SDK 미로드 시 fallback
+          // SDK 誘몃줈????fallback
           if (navigator.share) {
             navigator.share({ title: currentTitle, url: currentUrl }).catch(function(){})
           } else {
-            alert('링크가 클립보드에 복사되었습니다.')
+            alert('留곹겕媛 ?대┰蹂대뱶??蹂듭궗?섏뿀?듬땲??')
             navigator.clipboard.writeText(currentUrl).catch(function(){})
           }
         }
       })
     }
 
-    // 모바일 네이티브 공유 (더보기)
+    // 紐⑤컮???ㅼ씠?곕툕 怨듭쑀 (?붾낫湲?
     var nativeBtn = document.querySelector('[data-share-native]')
     if (nativeBtn) {
       nativeBtn.addEventListener('click', async function () {
@@ -7896,15 +7883,15 @@ const DemoDetailEnhancements = (() => {
 })()
 
 // ============================================
-// 관리자용 이미지 관리 모듈
+// 愿由ъ옄???대?吏 愿由?紐⑤뱢
 // ============================================
 const AdminImageManager = (() => {
   let isAdmin = false;
 
-  // XSS 방지용 HTML 이스케이프
+  // XSS 諛⑹???HTML ?댁뒪耳?댄봽
   const esc = (v = '') => String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
-  // 관리자 여부 확인
+  // 愿由ъ옄 ?щ? ?뺤씤
   const checkAdminStatus = async () => {
     try {
       const resp = await fetch('/api/me');
@@ -7916,9 +7903,9 @@ const AdminImageManager = (() => {
     }
   };
 
-  // 이미지 재생성 모달 표시
+  // ?대?吏 ?ъ깮??紐⑤떖 ?쒖떆
   const showRegenerateModal = (type, slug, title) => {
-    // 기존 모달 제거
+    // 湲곗〈 紐⑤떖 ?쒓굅
     const existingModal = document.getElementById('cw-image-regen-modal');
     if (existingModal) existingModal.remove();
 
@@ -7927,38 +7914,38 @@ const AdminImageManager = (() => {
         <div class="bg-wiki-card border border-wiki-border rounded-2xl p-6 max-w-lg w-full shadow-2xl">
           <h3 class="text-xl font-bold text-white mb-4">
             <i class="fas fa-image mr-2 text-wiki-primary"></i>
-            이미지 재생성
+            ?대?吏 ?ъ깮??
           </h3>
           <p class="text-wiki-muted text-sm mb-4">
-            "${title}" 이미지를 새로 생성합니다.
+            "${title}" ?대?吏瑜??덈줈 ?앹꽦?⑸땲??
           </p>
           <div class="mb-4">
             <details class="group">
               <summary class="cursor-pointer text-sm text-wiki-muted hover:text-wiki-text transition-colors flex items-center gap-1">
                 <i class="fas fa-chevron-right text-xs transition-transform group-open:rotate-90"></i>
-                직접 프롬프트 입력 (선택사항)
+                吏곸젒 ?꾨＼?꾪듃 ?낅젰 (?좏깮?ы빆)
               </summary>
               <textarea
                 id="image-prompt-input"
                 class="w-full mt-2 px-4 py-3 bg-wiki-bg border border-wiki-border rounded-xl text-white placeholder-wiki-muted focus:outline-none focus:border-wiki-primary resize-none"
                 rows="3"
-                placeholder="비워두면 AI가 자동으로 프롬프트를 생성합니다"
+                placeholder="鍮꾩썙?먮㈃ AI媛 ?먮룞?쇰줈 ?꾨＼?꾪듃瑜??앹꽦?⑸땲??
               ></textarea>
             </details>
           </div>
           <div class="flex gap-3 justify-end">
             <button type="button" class="px-4 py-2 rounded-lg border border-wiki-border text-wiki-muted hover:text-white hover:border-wiki-text transition-colors" data-action="cancel">
-              취소
+              痍⑥냼
             </button>
             <button type="button" class="px-4 py-2 rounded-lg bg-wiki-primary text-white hover:bg-wiki-primary/80 transition-colors flex items-center gap-2" data-action="generate">
               <i class="fas fa-magic"></i>
-              자동 생성
+              ?먮룞 ?앹꽦
             </button>
           </div>
           <div id="image-regen-status" class="mt-4 hidden">
             <div class="flex items-center gap-3 p-3 rounded-lg bg-wiki-bg border border-wiki-border">
               <i class="fas fa-spinner fa-spin text-wiki-primary"></i>
-              <span class="text-sm text-wiki-muted">이미지 생성 중... (약 10-30초 소요)</span>
+              <span class="text-sm text-wiki-muted">?대?吏 ?앹꽦 以?.. (??10-30珥??뚯슂)</span>
             </div>
           </div>
         </div>
@@ -7971,26 +7958,26 @@ const AdminImageManager = (() => {
     const promptInput = document.getElementById('image-prompt-input');
     const statusDiv = document.getElementById('image-regen-status');
 
-    // 취소 버튼
+    // 痍⑥냼 踰꾪듉
     modal.querySelector('[data-action="cancel"]').addEventListener('click', () => {
       modal.remove();
     });
 
-    // 배경 클릭 시 닫기
+    // 諛곌꼍 ?대┃ ???リ린
     modal.addEventListener('click', (e) => {
       if (e.target === modal) modal.remove();
     });
 
-    // 폴링으로 이미지 생성 상태 확인 후 저장
+    // ?대쭅?쇰줈 ?대?吏 ?앹꽦 ?곹깭 ?뺤씤 ?????
     const pollAndSaveImage = async (taskId, type, slug) => {
-      const maxAttempts = 120; // 최대 120회 (약 2분)
-      const pollInterval = 1000; // 1초 간격 (더 빠른 응답)
+      const maxAttempts = 120; // 理쒕? 120??(??2遺?
+      const pollInterval = 1000; // 1珥?媛꾧꺽 (??鍮좊Ⅸ ?묐떟)
       
       for (let i = 0; i < maxAttempts; i++) {
         statusDiv.innerHTML = `
           <div class="flex items-center gap-3 p-3 rounded-lg bg-wiki-bg border border-wiki-border">
             <i class="fas fa-spinner fa-spin text-wiki-primary"></i>
-            <span class="text-sm text-wiki-muted">이미지 생성 중... (${i}초 경과)</span>
+            <span class="text-sm text-wiki-muted">?대?吏 ?앹꽦 以?.. (${i}珥?寃쎄낵)</span>
           </div>
         `;
         
@@ -7999,19 +7986,19 @@ const AdminImageManager = (() => {
           const statusData = await statusResp.json();
           
           if (!statusData.success) {
-            throw new Error(statusData.error || '상태 조회 실패');
+            throw new Error(statusData.error || '?곹깭 議고쉶 ?ㅽ뙣');
           }
           
           if (statusData.status === 'failed') {
-            throw new Error('이미지 생성 실패');
+            throw new Error('?대?吏 ?앹꽦 ?ㅽ뙣');
           }
           
           if (statusData.status === 'completed' && statusData.imageUrl) {
-            // 이미지 저장 API 호출
+            // ?대?吏 ???API ?몄텧
             statusDiv.innerHTML = `
               <div class="flex items-center gap-3 p-3 rounded-lg bg-wiki-bg border border-wiki-border">
                 <i class="fas fa-spinner fa-spin text-wiki-primary"></i>
-                <span class="text-sm text-wiki-muted">이미지 저장 중...</span>
+                <span class="text-sm text-wiki-muted">?대?吏 ???以?..</span>
               </div>
             `;
             
@@ -8029,35 +8016,35 @@ const AdminImageManager = (() => {
             const saveData = await saveResp.json();
             
             if (!saveData.success) {
-              throw new Error(saveData.error || '이미지 저장 실패');
+              throw new Error(saveData.error || '?대?吏 ????ㅽ뙣');
             }
             
-            // 성공!
+            // ?깃났!
             return saveData;
           }
         } catch (pollError) {
           throw pollError;
         }
         
-        // 대기
+        // ?湲?
         await new Promise(resolve => setTimeout(resolve, pollInterval));
       }
       
-      throw new Error('이미지 생성 시간 초과 (2분)');
+      throw new Error('?대?吏 ?앹꽦 ?쒓컙 珥덇낵 (2遺?');
     };
 
-    // 생성 버튼
+    // ?앹꽦 踰꾪듉
     modal.querySelector('[data-action="generate"]').addEventListener('click', async () => {
       const prompt = promptInput ? promptInput.value.trim() : '';
 
-      // 버튼 비활성화 및 상태 표시
+      // 踰꾪듉 鍮꾪솢?깊솕 諛??곹깭 ?쒖떆
       const generateBtn = modal.querySelector('[data-action="generate"]');
       generateBtn.disabled = true;
-      generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 요청 중...';
+      generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ?붿껌 以?..';
       statusDiv.classList.remove('hidden');
 
       try {
-        // 1. 이미지 생성 요청
+        // 1. ?대?吏 ?앹꽦 ?붿껌
         const resp = await fetch('/api/image/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -8071,13 +8058,13 @@ const AdminImageManager = (() => {
         const result = await resp.json();
 
         if (!result.success) {
-          throw new Error(result.error || '이미지 생성 요청 실패');
+          throw new Error(result.error || '?대?吏 ?앹꽦 ?붿껌 ?ㅽ뙣');
         }
 
-        // 2. 폴링으로 완료 대기 후 저장
+        // 2. ?대쭅?쇰줈 ?꾨즺 ?湲??????
         const saveResult = await pollAndSaveImage(result.taskId, type, slug);
 
-        // 성공 메시지
+        // ?깃났 硫붿떆吏
         console.log('[ImageRegen] Save result:', JSON.stringify(saveResult));
         const dbg = saveResult.debug || {};
         const debugInfo = saveResult.debug ? `
@@ -8092,9 +8079,9 @@ const AdminImageManager = (() => {
             <div class="flex items-center gap-3">
               <i class="fas fa-check-circle text-emerald-400"></i>
               <div>
-                <p class="text-sm text-emerald-300 font-medium">이미지가 성공적으로 교체되었습니다!</p>
+                <p class="text-sm text-emerald-300 font-medium">?대?吏媛 ?깃났?곸쑝濡?援먯껜?섏뿀?듬땲??</p>
                 <p class="text-xs text-emerald-400/70 mt-1">
-                  <span id="regen-countdown">8</span>초 후 새로고침됩니다...
+                  <span id="regen-countdown">8</span>珥????덈줈怨좎묠?⑸땲??..
                 </p>
               </div>
             </div>
@@ -8102,7 +8089,7 @@ const AdminImageManager = (() => {
           </div>
         `;
 
-        // 8초 카운트다운 후 새로고침 (디버그 확인 가능)
+        // 8珥?移댁슫?몃떎?????덈줈怨좎묠 (?붾쾭洹??뺤씤 媛??
         let countdown = 8;
         const countdownEl = document.getElementById('regen-countdown');
         const countdownInterval = setInterval(() => {
@@ -8124,17 +8111,17 @@ const AdminImageManager = (() => {
           </div>
         `;
         generateBtn.disabled = false;
-        generateBtn.innerHTML = '<i class="fas fa-magic"></i> 다시 시도';
+        generateBtn.innerHTML = '<i class="fas fa-magic"></i> ?ㅼ떆 ?쒕룄';
       }
     });
   };
 
-  // 관리자 컨트롤 초기화
+  // 愿由ъ옄 而⑦듃濡?珥덇린??
   const init = async () => {
     isAdmin = await checkAdminStatus();
     if (!isAdmin) return;
 
-    // 관리자용 이미지 컨트롤 표시
+    // 愿由ъ옄???대?吏 而⑦듃濡??쒖떆
     document.querySelectorAll('[data-admin-image-controls]').forEach((controls) => {
       controls.classList.remove('hidden');
       
@@ -8156,7 +8143,7 @@ const AdminImageManager = (() => {
   return { init, showRegenerateModal };
 })();
 
-// 페이지 로드 시 초기화
+// ?섏씠吏 濡쒕뱶 ??珥덇린??
 document.addEventListener('DOMContentLoaded', () => {
   const { pathname } = window.location;
   const normalizedPath = pathname.replace(/\/+$/, '') || '/';
@@ -8176,13 +8163,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (/^\/job\//.test(normalizedPath)) {
     DetailPage.init('job');
     DemoDetailEnhancements.init();
-    AdminImageManager.init(); // 관리자 이미지 관리 초기화
+    AdminImageManager.init(); // 愿由ъ옄 ?대?吏 愿由?珥덇린??
   }
 
   if (/^\/major\//.test(normalizedPath)) {
     DetailPage.init('major');
     DemoDetailEnhancements.init();
-    AdminImageManager.init(); // 관리자 이미지 관리 초기화
+    AdminImageManager.init(); // 愿由ъ옄 ?대?吏 愿由?珥덇린??
   }
 
   if (/^\/howto\//.test(normalizedPath)) {
@@ -8190,7 +8177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     DemoDetailEnhancements.init();
   }
 
-  // AI 추천 결과 페이지: 글로벌 공유 모달 초기화
+  // AI 異붿쿇 寃곌낵 ?섏씠吏: 湲濡쒕쾶 怨듭쑀 紐⑤떖 珥덇린??
   if (/^\/analyzer\/(job|major)/.test(normalizedPath)) {
     DemoDetailEnhancements.initShare();
   }
@@ -8200,10 +8187,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// bfcache 복원 시 인증 상태 재확인
+// bfcache 蹂듭썝 ???몄쬆 ?곹깭 ?ы솗??
 window.addEventListener('pageshow', (event) => {
   if (event.persisted) {
-    // bfcache에서 복원됨 - 인증 상태 재확인
+    // bfcache?먯꽌 蹂듭썝??- ?몄쬆 ?곹깭 ?ы솗??
     fetch('/api/me', { credentials: 'same-origin', cache: 'no-store', headers: { 'Cache-Control': 'no-store' } })
       .then(r => r.json())
       .then(data => {
@@ -8211,11 +8198,11 @@ window.addEventListener('pageshow', (event) => {
         window.__USER__ = data.user;
         window.__USER_LOADED__ = true;
         
-        // 로그인 상태가 변경되었으면 페이지 새로고침
+        // 濡쒓렇???곹깭媛 蹂寃쎈릺?덉쑝硫??섏씠吏 ?덈줈怨좎묠
         const prevId = prevUser?.id;
         const newId = data.user?.id;
         if (prevId !== newId) {
-          // 로그인/로그아웃 상태 변경됨 - 페이지 새로고침
+          // 濡쒓렇??濡쒓렇?꾩썐 ?곹깭 蹂寃쎈맖 - ?섏씠吏 ?덈줈怨좎묠
           window.location.reload();
         }
       })
@@ -8223,14 +8210,14 @@ window.addEventListener('pageshow', (event) => {
   }
 });
 
-// 헤더 유저 아이콘 업데이트 함수
+// ?ㅻ뜑 ?좎? ?꾩씠肄??낅뜲?댄듃 ?⑥닔
 const updateHeaderUserIcon = (user) => {
   const userMenuBtns = document.querySelectorAll('#user-menu-btn');
   userMenuBtns.forEach(btn => {
     if (user && user.id) {
       const pictureUrl = user.pictureUrl || user.picture_url || user.custom_picture_url;
       if (pictureUrl) {
-        btn.innerHTML = `<img src="${pictureUrl}" alt="사용자" class="w-full h-full object-cover rounded-full">`;
+        btn.innerHTML = `<img src="${pictureUrl}" alt="?ъ슜?? class="w-full h-full object-cover rounded-full">`;
       } else {
         btn.innerHTML = `<i class="fas fa-user-circle text-base"></i>`;
       }
@@ -8240,15 +8227,15 @@ const updateHeaderUserIcon = (user) => {
   });
 };
 
-// 사용자 로드 이벤트 수신 - 헤더 및 UI 업데이트
+// ?ъ슜??濡쒕뱶 ?대깽???섏떊 - ?ㅻ뜑 諛?UI ?낅뜲?댄듃
 window.addEventListener('userLoaded', (event) => {
   const user = event.detail;
   updateHeaderUserIcon(user);
-  // 댓글 섹션은 DetailComments.refreshAuthState 이벤트로 처리
+  // ?볤? ?뱀뀡? DetailComments.refreshAuthState ?대깽?몃줈 泥섎━
   window.dispatchEvent(new CustomEvent('cw-refresh-auth-state', { detail: user }));
 });
 
-// 페이지 로드 시 이미 사용자 정보가 로드되었으면 헤더 아이콘 업데이트
+// ?섏씠吏 濡쒕뱶 ???대? ?ъ슜???뺣낫媛 濡쒕뱶?섏뿀?쇰㈃ ?ㅻ뜑 ?꾩씠肄??낅뜲?댄듃
 if (typeof window !== 'undefined' && window.__USER_LOADED__ && window.__USER__) {
   updateHeaderUserIcon(window.__USER__);
 }
