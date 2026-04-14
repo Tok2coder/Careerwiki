@@ -108,7 +108,13 @@
     try {
       const body = await fetchJSON(
         HEALTH_URL,
-        { method: 'GET', mode: 'cors' },
+        {
+          method: 'GET',
+          mode: 'cors',
+          // Chrome Local Network Access: public origin → private IP 호출 허용
+          // 미지원 브라우저(Firefox/Safari)는 이 옵션을 무시
+          targetAddressSpace: 'private',
+        },
         HEALTH_TIMEOUT_MS
       );
       healthCache = { ts: now, ok: body && body.success === true, body };
@@ -126,6 +132,8 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, slug }),
         mode: 'cors',
+        // Chrome LNA: 브리지 호출에만 'private' (서버 폴백/저장은 same-origin이라 불필요)
+        targetAddressSpace: 'private',
       },
       BRIDGE_TIMEOUT_MS
     );

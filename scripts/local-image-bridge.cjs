@@ -565,6 +565,13 @@ const server = http.createServer(async (req, res) => {
   const origin = req.headers.origin || '';
 
   if (req.method === 'OPTIONS') {
+    // Chrome Local Network Access preflight (public origin → private IP) 처리.
+    // 요청 헤더 `Access-Control-Request-Private-Network: true`가 오면 로그에 남기고,
+    // 응답은 sendJson이 이미 `Access-Control-Allow-Private-Network: true`를 항상 포함하므로 그대로 204 반환.
+    const reqPrivateNet = (req.headers['access-control-request-private-network'] || '').toLowerCase();
+    if (reqPrivateNet === 'true') {
+      console.log(`[CW-BRIDGE] LNA preflight (${req.url}) from origin=${origin || '(none)'} → allow-private-network`);
+    }
     sendJson(res, 204, {}, origin);
     return;
   }
