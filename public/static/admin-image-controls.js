@@ -71,20 +71,47 @@
     return Promise.race([promise.finally(() => clearTimeout(timer)), timeoutP]);
   }
 
+  // 통합 JSON fetch 래퍼.
+  // 빈 본문, 비JSON 본문(예: "Internal Server Error"), 504 타임아웃 등에서도
+  // JSON.parse("") 로 SyntaxError를 던지지 않고 { success, error } 형태로 일관화한다.
+  async function fetchJSON(url, opts, timeoutMs) {
+    const ctrl = new AbortController();
+    const finalOpts = Object.assign({}, opts || {}, { signal: ctrl.signal });
+    const resp = await withTimeout(fetch(url, finalOpts), timeoutMs, ctrl);
+    const text = await resp.text().catch(() => '');
+    let body;
+    if (!text) {
+      body = { success: false, error: `HTTP ${resp.status}${resp.statusText ? ' ' + resp.statusText : ''}` };
+    } else {
+      try {
+        body = JSON.parse(text);
+      } catch {
+        // 비JSON(HTML 에러 페이지, plain text 등) — 텍스트 앞부분을 에러로 노출
+        const snippet = text.length > 200 ? text.slice(0, 200) + '…' : text;
+        body = { success: false, error: snippet || `HTTP ${resp.status}` };
+      }
+    }
+    if (!resp.ok) {
+      throw new Error((body && body.error) || `HTTP ${resp.status}`);
+    }
+    if (body && body.success === false) {
+      throw new Error(body.error || `HTTP ${resp.status}`);
+    }
+    return body;
+  }
+
   async function checkBridgeHealth() {
     const now = Date.now();
     if (healthCache && now - healthCache.ts < HEALTH_CACHE_MS) {
       return healthCache;
     }
-    const ctrl = new AbortController();
     try {
-      const resp = await withTimeout(
-        fetch(HEALTH_URL, { method: 'GET', signal: ctrl.signal, mode: 'cors' }),
-        HEALTH_TIMEOUT_MS,
-        ctrl
+      const body = await fetchJSON(
+        HEALTH_URL,
+        { method: 'GET', mode: 'cors' },
+        HEALTH_TIMEOUT_MS
       );
-      const body = await resp.json().catch(() => ({}));
-      healthCache = { ts: now, ok: resp.ok && body && body.success === true, body };
+      healthCache = { ts: now, ok: body && body.success === true, body };
     } catch {
       healthCache = { ts: now, ok: false, body: null };
     }
@@ -92,63 +119,42 @@
   }
 
   async function callBridge(type, slug) {
-    const ctrl = new AbortController();
-    const resp = await withTimeout(
-      fetch(BRIDGE_GENERATE_URL, {
+    return fetchJSON(
+      BRIDGE_GENERATE_URL,
+      {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, slug }),
-        signal: ctrl.signal,
         mode: 'cors',
-      }),
-      BRIDGE_TIMEOUT_MS,
-      ctrl
+      },
+      BRIDGE_TIMEOUT_MS
     );
-    const data = await resp.json().catch(() => ({}));
-    if (!resp.ok || !data.success) {
-      throw new Error(data.error || `bridge HTTP ${resp.status}`);
-    }
-    return data;
   }
 
   async function callServerSave(payload) {
-    const ctrl = new AbortController();
-    const resp = await withTimeout(
-      fetch(SERVER_SAVE_URL, {
+    return fetchJSON(
+      SERVER_SAVE_URL,
+      {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(payload),
-        signal: ctrl.signal,
-      }),
-      60000,
-      ctrl
+      },
+      60000
     );
-    const data = await resp.json().catch(() => ({}));
-    if (!resp.ok || !data.success) {
-      throw new Error(data.error || `save HTTP ${resp.status}`);
-    }
-    return data;
   }
 
   async function callRemoteFallback(type, slug) {
-    const ctrl = new AbortController();
-    const resp = await withTimeout(
-      fetch(REMOTE_FALLBACK_URL, {
+    return fetchJSON(
+      REMOTE_FALLBACK_URL,
+      {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ type, slug }),
-        signal: ctrl.signal,
-      }),
-      REMOTE_TIMEOUT_MS,
-      ctrl
+      },
+      REMOTE_TIMEOUT_MS
     );
-    const data = await resp.json().catch(() => ({}));
-    if (!resp.ok || !data.success) {
-      throw new Error(data.error || `remote HTTP ${resp.status}`);
-    }
-    return data;
   }
 
   async function handleRegenerate(container) {
