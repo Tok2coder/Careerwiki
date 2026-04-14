@@ -8,6 +8,8 @@ import type { AppEnv } from '../types/app'
 import { requireAuth } from '../middleware/auth'
 
 const uploadRoutes = new Hono<AppEnv>()
+const hasImageAdminRole = (role?: string) =>
+  role === 'admin' || role === 'super-admin' || role === 'operator'
 
 // =====================================================
 // 파일 업로드 API
@@ -21,7 +23,7 @@ uploadRoutes.post('/api/upload', requireAuth, async (c) => {
     const file = formData['file'] as File
 
     if (!file || !(file instanceof File)) {
-      return c.json({ success: false, error: '파일이 필요합니다' }, 400)
+      return c.json({ success: false, error: '파일이 없습니다.' }, 400)
     }
 
     const { validateContentType, validateFileSize, validateMagicNumber, uploadToR2, generateFileKey } = await import('../services/uploadService')
@@ -43,7 +45,7 @@ uploadRoutes.post('/api/upload', requireAuth, async (c) => {
 
     // 매직 넘버 검증
     if (!validateMagicNumber(body, file.type)) {
-      return c.json({ success: false, error: '파일 형식이 올바르지 않습니다' }, 400)
+      return c.json({ success: false, error: '파일 형식이 올바르지 않습니다.' }, 400)
     }
 
     // 파일 키 생성 (howto/YYYY/MM/DD/{파일명}-{shortId}.ext 형식)
@@ -66,7 +68,7 @@ uploadRoutes.post('/api/upload', requireAuth, async (c) => {
 
     return c.json({ success: true, url: publicUrl })
   } catch (error) {
-    return c.json({ success: false, error: '업로드 중 오류가 발생했습니다' }, 500)
+    return c.json({ success: false, error: '업로드 처리 중 오류가 발생했습니다.' }, 500)
   }
 })
 
@@ -78,7 +80,7 @@ uploadRoutes.post('/api/upload/prepare', requireAuth, async (c) => {
     const { filename, contentType, contentLength } = body
 
     if (!filename || !contentType || !contentLength) {
-      return c.json({ success: false, error: '필수 정보가 누락되었습니다' }, 400)
+      return c.json({ success: false, error: '필수 입력값이 없습니다.' }, 400)
     }
 
     const { createUploadInfo, validateContentType, validateFileSize } = await import('../services/uploadService')
@@ -108,10 +110,10 @@ uploadRoutes.post('/api/upload/prepare', requireAuth, async (c) => {
       fileKey: uploadInfo.data!.fileKey,
       uploadUrl: `${baseUrl}/api/upload/file`,
       publicUrl: `${baseUrl}/uploads/${uploadInfo.data!.fileKey}`,
-      expiresIn: 300 // 5분
+      expiresIn: 300 // 5??
     })
   } catch (error) {
-    return c.json({ success: false, error: '업로드 준비 중 오류가 발생했습니다' }, 500)
+    return c.json({ success: false, error: '업로드 준비 중 오류가 발생했습니다.' }, 500)
   }
 })
 
@@ -123,7 +125,7 @@ uploadRoutes.post('/api/upload/file', requireAuth, async (c) => {
     const contentType = c.req.header('Content-Type') || ''
 
     if (!fileKey) {
-      return c.json({ success: false, error: '파일 키가 필요합니다' }, 400)
+      return c.json({ success: false, error: '파일 키가 없습니다.' }, 400)
     }
 
     const { validateContentType, validateMagicNumber, uploadToR2, getPublicUrl } = await import('../services/uploadService')
@@ -139,7 +141,7 @@ uploadRoutes.post('/api/upload/file', requireAuth, async (c) => {
 
     // 매직 넘버 검증
     if (!validateMagicNumber(body, contentType)) {
-      return c.json({ success: false, error: '파일 형식이 올바르지 않습니다 (파일 시그니처 불일치)' }, 400)
+      return c.json({ success: false, error: '파일 형식이 올바르지 않습니다.' }, 400)
     }
 
     // R2에 업로드
@@ -167,7 +169,7 @@ uploadRoutes.post('/api/upload/file', requireAuth, async (c) => {
       size: body.byteLength
     })
   } catch (error) {
-    return c.json({ success: false, error: '파일 업로드 중 오류가 발생했습니다' }, 500)
+    return c.json({ success: false, error: '파일 업로드 중 오류가 발생했습니다.' }, 500)
   }
 })
 
@@ -281,12 +283,12 @@ uploadRoutes.post('/api/image/generate', requireAuth, async (c) => {
 
     // 관리자 권한 확인
     if (user.role !== 'admin') {
-      return c.json({ success: false, error: '관리자 권한이 필요합니다' }, 403)
+      return c.json({ success: false, error: '관리자 권한이 필요합니다.' }, 403)
     }
 
     const apiKey = c.env.EVOLINK_API_KEY
     if (!apiKey) {
-      return c.json({ success: false, error: 'EVOLINK_API_KEY가 설정되지 않았습니다' }, 500)
+      return c.json({ success: false, error: 'EVOLINK_API_KEY가 설정되지 않았습니다.' }, 500)
     }
 
     const body = await c.req.json()
@@ -297,7 +299,7 @@ uploadRoutes.post('/api/image/generate', requireAuth, async (c) => {
     }
 
     if (!type || !slug) {
-      return c.json({ success: false, error: 'type과 slug가 필요합니다' }, 400)
+      return c.json({ success: false, error: 'type과 slug가 필요합니다.' }, 400)
     }
 
     // 프롬프트 결정: promptOverride → DB image_prompt → Gemini 자동 생성
@@ -324,10 +326,10 @@ uploadRoutes.post('/api/image/generate', requireAuth, async (c) => {
           await c.env.DB.prepare(`UPDATE ${table} SET image_prompt = ? WHERE slug = ?`)
             .bind(imagePrompt, slug).run()
         } else {
-          return c.json({ success: false, error: '이미지 프롬프트 자동 생성 실패' }, 500)
+          return c.json({ success: false, error: '이미지 프롬프트 생성에 실패했습니다.' }, 500)
         }
       } else {
-        return c.json({ success: false, error: '해당 항목을 찾을 수 없습니다' }, 404)
+        return c.json({ success: false, error: '대상 항목을 찾을 수 없습니다.' }, 404)
       }
     }
 
@@ -347,7 +349,7 @@ uploadRoutes.post('/api/image/generate', requireAuth, async (c) => {
     })
 
     if (!result.success || !result.data) {
-      return c.json({ success: false, error: result.error || '이미지 생성 요청 실패' }, 500)
+      return c.json({ success: false, error: result.error || '이미지 생성 요청에 실패했습니다.' }, 500)
     }
 
     // 태스크 정보를 KV에 저장 (콜백 시 사용)
@@ -374,7 +376,7 @@ uploadRoutes.post('/api/image/generate', requireAuth, async (c) => {
       estimatedTime: result.data.task_info?.estimated_time || 10
     })
   } catch (error) {
-    return c.json({ success: false, error: '이미지 생성 요청 중 오류 발생' }, 500)
+    return c.json({ success: false, error: '이미지 생성 요청 중 오류가 발생했습니다.' }, 500)
   }
 })
 
@@ -385,17 +387,17 @@ uploadRoutes.get('/api/image/status/:taskId', requireAuth, async (c) => {
     const apiKey = c.env.EVOLINK_API_KEY
 
     if (!apiKey) {
-      return c.json({ success: false, error: 'EVOLINK_API_KEY가 설정되지 않았습니다' }, 500)
+      return c.json({ success: false, error: 'EVOLINK_API_KEY가 설정되지 않았습니다.' }, 500)
     }
 
     const { queryTaskStatus } = await import('../services/imageGenerationService')
     const result = await queryTaskStatus(apiKey, taskId)
 
-    // 🔍 디버그: API 응답 로깅
+
     console.log(`[ImageStatus] taskId=${taskId}, raw response:`, JSON.stringify(result.data).substring(0, 500))
 
     if (!result.success || !result.data) {
-      return c.json({ success: false, error: result.error || '상태 조회 실패' }, 500)
+      return c.json({ success: false, error: result.error || '상태 조회에 실패했습니다.' }, 500)
     }
 
     // 상태 정규화 (다양한 API 응답 형식 처리)
@@ -417,7 +419,7 @@ uploadRoutes.get('/api/image/status/:taskId', requireAuth, async (c) => {
       imageUrl
     })
   } catch (error) {
-    return c.json({ success: false, error: '상태 조회 중 오류 발생' }, 500)
+    return c.json({ success: false, error: '상태 조회 중 오류가 발생했습니다.' }, 500)
   }
 })
 
@@ -428,7 +430,7 @@ uploadRoutes.post('/api/image/save', requireAuth, async (c) => {
 
     // 관리자 권한 확인
     if (user.role !== 'admin') {
-      return c.json({ success: false, error: '관리자 권한이 필요합니다' }, 403)
+      return c.json({ success: false, error: '관리자 권한이 필요합니다.' }, 403)
     }
 
     const body = await c.req.json()
@@ -440,7 +442,7 @@ uploadRoutes.post('/api/image/save', requireAuth, async (c) => {
     }
 
     if (!taskId || !type || !slug || !imageUrl) {
-      return c.json({ success: false, error: 'taskId, type, slug, imageUrl가 필요합니다' }, 400)
+      return c.json({ success: false, error: 'taskId, type, slug, imageUrl이 필요합니다.' }, 400)
     }
 
     const { downloadImage, generateImageFileKey, getImagePublicUrl } =
@@ -452,7 +454,7 @@ uploadRoutes.post('/api/image/save', requireAuth, async (c) => {
     const downloadResult = await downloadImage(imageUrl)
     if (!downloadResult.success || !downloadResult.data) {
       console.log(`[ImageSave] Download FAILED: ${downloadResult.error}`)
-      return c.json({ success: false, error: downloadResult.error || '이미지 다운로드 실패', debug: { imageUrl, downloadError: downloadResult.error } }, 500)
+      return c.json({ success: false, error: downloadResult.error || '이미지 다운로드에 실패했습니다.', debug: { imageUrl, downloadError: downloadResult.error } }, 500)
     }
 
     const downloadSize = downloadResult.data.byteLength
@@ -462,8 +464,8 @@ uploadRoutes.post('/api/image/save', requireAuth, async (c) => {
     const actualContentType = downloadResult.contentType || 'image/png'
     const fileKey = generateImageFileKey(type, slug, actualContentType)
 
+
     // 기존 이미지가 다른 확장자 또는 다른 인코딩으로 저장되어 있을 수 있으므로
-    // 모든 변형(인코딩/디코딩 + 확장자)을 삭제
     const extensions = ['webp', 'png', 'jpg']
     const prefix = type === 'jobs' ? 'job' : 'major'
     const safeSlug = slug.replace(/\//g, '_')
@@ -498,7 +500,7 @@ uploadRoutes.post('/api/image/save', requireAuth, async (c) => {
 
     if (!uploadResult.success) {
       console.log(`[ImageSave] R2 upload FAILED: ${uploadResult.error}`)
-      return c.json({ success: false, error: uploadResult.error || 'R2 업로드 실패' }, 500)
+      return c.json({ success: false, error: uploadResult.error || 'R2 업로드에 실패했습니다.' }, 500)
     }
     console.log(`[ImageSave] R2 upload OK: key=${fileKey}`)
 
@@ -533,7 +535,7 @@ uploadRoutes.post('/api/image/save', requireAuth, async (c) => {
       const baseUrl = new URL(c.req.url).origin
       const pageType = type === 'jobs' ? 'job' : 'major'
       const pageUrl = `${baseUrl}/${pageType}/${encodeURIComponent(slug)}`
-      const imageUrlFull = `${baseUrl}${publicUrl}`  // /uploads/... 절대 URL
+      const imageUrlFull = `${baseUrl}${publicUrl}`  // /uploads/... ??? URL
 
       // 1) Workers Cache API — 페이지와 이미지 모두 퍼지
       const cache = (caches as any).default
@@ -580,11 +582,11 @@ uploadRoutes.post('/api/image/save', requireAuth, async (c) => {
     return c.json({
       success: true,
       imageUrl: publicUrlWithCache,
-      message: '이미지가 성공적으로 저장되었습니다. 페이지를 새로고침해주세요.',
+      message: '이미지가 성공적으로 저장되었습니다. 새로고침하면 확인할 수 있습니다.',
       debug: { fileKey, downloadSize, actualContentType, sourceUrl: imageUrl, dbChanges: updateResult.meta.changes }
     })
   } catch (error) {
-    return c.json({ success: false, error: '이미지 저장 중 오류 발생' }, 500)
+    return c.json({ success: false, error: '이미지 저장 중 오류가 발생했습니다.' }, 500)
   }
 })
 
@@ -627,7 +629,7 @@ uploadRoutes.post('/webhooks/image-completed', async (c) => {
         ...taskMeta,
         error: taskData.error,
         failedAt: Date.now()
-      }), { expirationTtl: 604800 }) // 7일
+      }), { expirationTtl: 604800 }) // 7??
       return c.json({ success: true, status: 'failed' })
     }
 
@@ -693,7 +695,7 @@ uploadRoutes.post('/webhooks/image-completed', async (c) => {
       ...taskMeta,
       imageUrl: publicUrl,
       completedAt: Date.now()
-    }), { expirationTtl: 604800 }) // 7일
+    }), { expirationTtl: 604800 }) // 7??
 
     return c.json({ success: true, status: 'completed', imageUrl: publicUrl })
   } catch (error) {
@@ -701,4 +703,111 @@ uploadRoutes.post('/webhooks/image-completed', async (c) => {
   }
 })
 
+uploadRoutes.post('/api/admin/image/regenerate', requireAuth, async (c) => {
+  try {
+    const user = c.get('user')!
+    if (!hasImageAdminRole(user.role)) {
+      return c.json({ success: false, error: '관리자 권한이 필요합니다.' }, 403)
+    }
+
+    const body = await c.req.json()
+    const { type, slug } = body as { type: 'jobs' | 'majors'; slug: string }
+
+    if (!type || !slug || !['jobs', 'majors'].includes(type)) {
+      return c.json({ success: false, error: 'type과 slug가 필요합니다.' }, 400)
+    }
+
+    const table = type === 'jobs' ? 'jobs' : 'majors'
+    const record = await c.env.DB.prepare(
+      `SELECT name FROM ${table} WHERE slug = ? LIMIT 1`
+    ).bind(slug).first<{ name: string }>()
+
+    if (!record?.name) {
+      return c.json({ success: false, error: '대상 항목을 찾을 수 없습니다.' }, 404)
+    }
+
+    const baseUrl = new URL(c.req.url).origin
+    const source = { prompt: 'gemini', image: 'evolink', mode: 'remote-fallback' }
+    const autoImageService = await import('../services/autoImageService')
+    const imageResult = type === 'jobs'
+      ? await autoImageService.generateJobImage(
+          {
+            GEMINI_API_KEY: c.env.GEMINI_API_KEY || '',
+            EVOLINK_API_KEY: c.env.EVOLINK_API_KEY || '',
+            UPLOADS: c.env.UPLOADS
+          },
+          record.name,
+          slug,
+          baseUrl
+        )
+      : await autoImageService.generateMajorImage(
+          {
+            GEMINI_API_KEY: c.env.GEMINI_API_KEY || '',
+            EVOLINK_API_KEY: c.env.EVOLINK_API_KEY || '',
+            UPLOADS: c.env.UPLOADS
+          },
+          record.name,
+          slug,
+          baseUrl
+        )
+
+    if (!imageResult.success || !imageResult.imageUrl) {
+      return c.json({
+        success: false,
+        error: imageResult.error || '이미지 생성에 실패했습니다.',
+        imagePrompt: imageResult.imagePrompt || null,
+        source
+      }, 500)
+    }
+
+    const generationMeta = {
+      generatedAt: new Date().toISOString(),
+      generatedBy: 'remote-admin-regenerate',
+      promptSource: source.prompt,
+      imageSource: source.image,
+      loraApplied: false,
+    }
+    const cacheBustedUrl = `${imageResult.imageUrl}${imageResult.imageUrl.includes('?') ? '&' : '?'}v=${Date.now()}`
+
+    await c.env.DB.prepare(`
+      UPDATE ${table}
+      SET image_url = ?,
+          image_prompt = ?,
+          merged_profile_json = json_set(
+            COALESCE(merged_profile_json, '{}'),
+            '$.image_url', ?,
+            '$.image_generation_meta', json(?)
+          )
+      WHERE slug = ?
+    `).bind(
+      cacheBustedUrl,
+      imageResult.imagePrompt || null,
+      cacheBustedUrl,
+      JSON.stringify(generationMeta),
+      slug
+    ).run()
+
+    if (c.env.KV) {
+      const { invalidateListCache } = await import('../services/cacheService')
+      await invalidateListCache(c.env.KV, type === 'jobs' ? 'job' : 'major')
+    }
+
+    return c.json({
+      success: true,
+      imageUrl: cacheBustedUrl,
+      imagePrompt: imageResult.imagePrompt || null,
+      source,
+      generationMeta,
+      details: imageResult.details || null,
+    })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '이미지 재생성 중 오류가 발생했습니다.'
+    }, 500)
+  }
+})
+
 export { uploadRoutes }
+
+
