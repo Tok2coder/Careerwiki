@@ -40,8 +40,17 @@ const POLL_MS = 5000;
 const MAX_POLLS = 60;
 const SERVICE_BOOT_TIMEOUT_MS = 180000;
 
+// ComfyUI 온디맨드 기동 + 유휴 자동 종료 설정
+const COMFY_IDLE_TIMEOUT_MS = (Number(process.env.CW_COMFY_IDLE_MINUTES) || 15) * 60 * 1000;
+const COMFY_IDLE_CHECK_MS = 60 * 1000; // 1분마다 유휴 체크
+const COMFY_STARTUP_MAX_MS = 3 * 60 * 1000; // 3분
+
 let ollamaBootPromise = null;
 let comfyBootPromise = null;
+// 마지막으로 ComfyUI를 "사용한" 시각 (generateComfyImage 진입 시 갱신)
+let comfyuiLastUsed = 0;
+// 우리 브리지가 직접 spawn한 ComfyUI 자식 프로세스 PID 집합
+const comfyuiSpawnedPids = new Set();
 
 function sendJson(res, status, body, origin = '') {
   res.writeHead(status, {
@@ -107,6 +116,7 @@ function spawnDetached(command, args, options = {}) {
     ...options,
   });
   child.unref();
+  return child;
 }
 
 async function ensureOllamaRunning() {
@@ -155,7 +165,8 @@ async function ensureComfyUiRunning() {
     const port = primary.port || '8001';
     const host = primary.hostname || '127.0.0.1';
 
-    spawnDetached(
+    console.log(`[CW-BRIDGE] ComfyUI on-demand start at ${COMFYUI_PRIMARY_URL} (idle timeout ${Math.round(COMFY_IDLE_TIMEOUT_MS / 60000)}m)`);
+    const child = spawnDetached(
       COMFYUI_PYTHON,
       [
         COMFYUI_MAIN,
@@ -172,12 +183,17 @@ async function ensureComfyUiRunning() {
       ],
       { cwd: COMFYUI_APP_DIR }
     );
+    if (child && child.pid) {
+      comfyuiSpawnedPids.add(child.pid);
+      child.on('exit', () => comfyuiSpawnedPids.delete(child.pid));
+    }
 
     await waitForService(
       () => fetchOk(`${COMFYUI_PRIMARY_URL}/system_stats`),
-      SERVICE_BOOT_TIMEOUT_MS,
+      COMFY_STARTUP_MAX_MS,
       'ComfyUI'
     );
+    console.log(`[CW-BRIDGE] ComfyUI ready`);
     return COMFYUI_PRIMARY_URL;
   })();
 
@@ -187,6 +203,42 @@ async function ensureComfyUiRunning() {
     comfyBootPromise = null;
   }
 }
+
+// Windows taskkill로 ComfyUI 프로세스 강제 종료
+function killComfyProcesses() {
+  if (comfyuiSpawnedPids.size === 0) return;
+  for (const pid of comfyuiSpawnedPids) {
+    try {
+      // /T = 자식 프로세스까지 / /F = 강제
+      spawn('taskkill', ['/PID', String(pid), '/T', '/F'], {
+        stdio: 'ignore',
+        windowsHide: true,
+      });
+      console.log(`[CW-BRIDGE] ComfyUI idle shutdown: taskkill PID ${pid}`);
+    } catch (err) {
+      console.error(`[CW-BRIDGE] taskkill failed for PID ${pid}:`, err?.message);
+    }
+  }
+  comfyuiSpawnedPids.clear();
+}
+
+// 1분마다 유휴 체크 — 기동 중이 아니고, 인스턴스가 살아있고,
+// 마지막 사용 이후 COMFY_IDLE_TIMEOUT_MS가 지났으면 종료
+setInterval(async () => {
+  if (comfyBootPromise) return; // 기동 중에는 스킵
+  if (comfyuiLastUsed === 0) return; // 한 번도 사용 안 함
+  const idleMs = Date.now() - comfyuiLastUsed;
+  if (idleMs < COMFY_IDLE_TIMEOUT_MS) return;
+  // 현재 ready인 인스턴스가 있는지 확인 (없으면 이미 죽은 상태 → 스킵)
+  let anyReady = false;
+  for (const url of COMFYUI_URLS) {
+    if (await fetchOk(`${url}/system_stats`)) { anyReady = true; break; }
+  }
+  if (!anyReady) return;
+  console.log(`[CW-BRIDGE] ComfyUI idle ${Math.round(idleMs / 60000)}m > ${Math.round(COMFY_IDLE_TIMEOUT_MS / 60000)}m — shutting down`);
+  killComfyProcesses();
+  comfyuiLastUsed = 0;
+}, COMFY_IDLE_CHECK_MS).unref();
 
 function loadDevVars() {
   const vars = {};
@@ -406,6 +458,8 @@ async function generatePrompt(systemPrompt, devVars) {
 
 async function generateComfyImage(prompt, useLora) {
   await ensureComfyUiRunning();
+  // 유휴 타이머 리셋: 생성 시작 시점을 "마지막 사용"으로 기록
+  comfyuiLastUsed = Date.now();
   for (const comfyUrl of COMFYUI_URLS) {
     try {
       const stats = await fetch(`${comfyUrl}/system_stats`);
@@ -436,6 +490,7 @@ async function generateComfyImage(prompt, useLora) {
               const imgRes = await fetch(viewUrl);
               if (!imgRes.ok) throw new Error(`ComfyUI image download failed: HTTP ${imgRes.status}`);
               const buffer = Buffer.from(await imgRes.arrayBuffer());
+              comfyuiLastUsed = Date.now();
               return { buffer, source: 'comfyui' };
             }
           }
@@ -485,6 +540,7 @@ async function getBridgeHealth() {
     });
   }
 
+  const warming = !!comfyBootPromise;
   return {
     success: true,
     service: 'careerwiki-local-image-bridge',
@@ -493,6 +549,9 @@ async function getBridgeHealth() {
       workflowPath: COMFYUI_WORKFLOW_PATH,
       workflowLoaded,
       instances: comfyReachable,
+      warming,
+      idleTimeoutMinutes: Math.round(COMFY_IDLE_TIMEOUT_MS / 60000),
+      lastUsedAt: comfyuiLastUsed ? new Date(comfyuiLastUsed).toISOString() : null,
     },
     lora: {
       ready: lora,
@@ -540,5 +599,6 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`[CW-BRIDGE] listening on http://${HOST}:${PORT}`);
+  console.log(`[CW-BRIDGE] ComfyUI on-demand mode; idle timeout=${Math.round(COMFY_IDLE_TIMEOUT_MS / 60000)}m (env CW_COMFY_IDLE_MINUTES)`);
 });
 
