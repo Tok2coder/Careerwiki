@@ -2603,8 +2603,10 @@ const renderSourcesCollapsible = (
     'overviewWork.main': { tab: 'overview', section: 'overview-주요-업무' },
     'overviewSalary.sal': { tab: 'overview', section: 'overview-임금-정보' },
     'overviewProspect.main': { tab: 'overview', section: 'overview-커리어-전망' },
-    'overviewAbilities.abilityList': { tab: 'overview', section: 'overview-적성-및-흥미' },
-    'overviewAbilities.technKnow': { tab: 'overview', section: 'overview-적성-및-흥미' },
+    // overviewAbilities.* 는 '핵심 능력·자격' 카드(pushDetailCard, L3948)로 details 탭에 렌더링됨.
+    // DOM anchor id = anchorIdFactory('details', '핵심 능력·자격') → 'details-핵심-능력자격' (· 글자는 normalize 시 제거).
+    'overviewAbilities.abilityList': { tab: 'details', section: 'details-핵심-능력자격' },
+    'overviewAbilities.technKnow': { tab: 'details', section: 'details-핵심-능력자격' },
     'detailWlb.wlbDetail': { tab: 'overview', section: 'overview-워라밸-지수' },
     'detailWlb.socialDetail': { tab: 'overview', section: 'overview-워라밸-지수' },
     'way': { tab: 'details', section: 'details-직업-준비하기' },
@@ -4326,7 +4328,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   // 직업 준비하기 (ETL 구조화 필드 detailReady 사용)
   const detailReady = profile.detailReady
   
-  // 필요기술 및 지식은 overviewAbilities.technKnow로 이동됨 (개요 탭에서 표시)
+  // 필요기술 및 지식은 overviewAbilities.technKnow로 이동됨 — 실제 렌더 위치는 details 탭의 '핵심 능력·자격' 카드(L3948 pushDetailCard)
   
   // 5.5. 직업 준비하기
   {
