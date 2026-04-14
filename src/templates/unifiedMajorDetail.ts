@@ -871,16 +871,25 @@ const renderMajorSourcesCollapsible = (
             if (backTo) {
               const targetEl = document.getElementById(backTo);
               if (targetEl) {
-                // 탭 전환이 필요한지 확인
-                let targetTabId = 'overview';
-                if (fieldKey && (fieldKey.startsWith('what') || fieldKey.startsWith('main') || fieldKey.startsWith('relate') || fieldKey.startsWith('career'))) {
-                  targetTabId = 'details';
+                // 탭 결정: targetEl이 실제로 들어 있는 panel 신뢰 (DOM-first)
+                let targetTabId = null;
+                const panel = targetEl.closest('[data-cw-tab-panel]') || targetEl.closest('[id^="cw-tab-panel-"]') || targetEl.closest('[data-major-tab-panel]');
+                if (panel && panel.id) {
+                  const m = /^cw-tab-panel-(.+)$|^major-tab-panel-(.+)$/.exec(panel.id);
+                  if (m) targetTabId = m[1] || m[2];
                 }
-                
+                // DOM 추론 실패 시 fieldKey prefix로 fallback
+                if (!targetTabId) {
+                  targetTabId = 'overview';
+                  if (fieldKey && (fieldKey.startsWith('what') || fieldKey.startsWith('main') || fieldKey.startsWith('relate') || fieldKey.startsWith('career'))) {
+                    targetTabId = 'details';
+                  }
+                }
+
                 // 현재 활성 탭 확인
                 const activeTab = document.querySelector('[data-major-tab-btn][aria-selected="true"]');
                 const currentTabId = activeTab?.getAttribute('data-target');
-                
+
                 if (currentTabId !== targetTabId) {
                   // 탭 전환
                   const targetTabBtn = document.querySelector('[data-major-tab-btn][data-target="' + targetTabId + '"]');
@@ -888,7 +897,7 @@ const renderMajorSourcesCollapsible = (
                     targetTabBtn.click();
                   }
                 }
-                
+
                 // 스크롤 이동
                 setTimeout(function() {
                   targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2888,15 +2897,27 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
               const fieldKey = this.getAttribute('data-field-key');
               const mapping = fieldMap[fieldKey || ''];
               if (!mapping) return;
-              
-              // 상세정보 탭 필드 목록
-              const detailFields = [
-                'whatStudy', 'mainSubject', 'relateSubject', 'careerAct', 'jobProspect',
-                'detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList'
-              ];
-              let targetTabId = 'overview';
-              if (fieldKey && (fieldKey.startsWith('detail') || detailFields.some(function(f) { return fieldKey.startsWith(f) || fieldKey === f; }))) {
-                targetTabId = 'details';
+
+              // 탭 결정: 인라인 ref (user-fnref-N) 가 실제로 들어 있는 panel 신뢰 (DOM-first)
+              let targetTabId = null;
+              const refEl0 = document.getElementById('user-fnref-' + sourceId);
+              if (refEl0) {
+                const panel = refEl0.closest('[data-cw-tab-panel]') || refEl0.closest('[id^="cw-tab-panel-"]');
+                if (panel && panel.id) {
+                  const m = /^cw-tab-panel-(.+)$/.exec(panel.id);
+                  if (m) targetTabId = m[1];
+                }
+              }
+              // DOM 추론 실패 시 prefix 기반 fallback
+              if (!targetTabId) {
+                const detailFields = [
+                  'whatStudy', 'mainSubject', 'relateSubject', 'careerAct', 'jobProspect',
+                  'detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList'
+                ];
+                targetTabId = 'overview';
+                if (fieldKey && (fieldKey.startsWith('detail') || detailFields.some(function(f) { return fieldKey.startsWith(f) || fieldKey === f; }))) {
+                  targetTabId = 'details';
+                }
               }
               
               // 탭 전환 함수 (job 템플릿과 동일한 cw-tabset 스펙)

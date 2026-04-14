@@ -2798,17 +2798,25 @@ const renderSourcesCollapsible = (
               targetEl = document.getElementById(navSection);
             }
 
-            // 필드 키에 따라 필요한 탭 결정 (data-nav-tab 우선)
-            var targetTabId = navTab || null;
+            // 탭 결정: targetEl이 실제로 들어 있는 cw-tab-panel-* 을 신뢰 (DOM-first)
+            // — fieldSectionMap/data-nav-tab 메타데이터와 실제 렌더 위치가 어긋나도 동작
+            var targetTabId = null;
+            if (targetEl) {
+              var panel = targetEl.closest('[data-cw-tab-panel]') || targetEl.closest('[id^="cw-tab-panel-"]');
+              if (panel && panel.id) {
+                var m = /^cw-tab-panel-(.+)$/.exec(panel.id);
+                if (m) targetTabId = m[1];
+              }
+            }
+            // DOM 추론 실패 시 메타데이터로 fallback
+            if (!targetTabId) targetTabId = navTab || null;
             if (!targetTabId && fieldKey) {
-              // 상세정보 필드
               var detailFields = ['detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList'];
               if (fieldKey.startsWith('detail') || fieldKey === 'way' || detailFields.some(function(f) { return fieldKey.startsWith(f) || fieldKey === f; })) {
-                targetTabId = 'details';  // 탭 ID는 'details' (복수형)
+                targetTabId = 'details';
               } else if (fieldKey.startsWith('overview') || fieldKey === 'summary' || fieldKey === 'heroCategory' || fieldKey === 'heroTags' || fieldKey === 'trivia') {
                 targetTabId = 'overview';
               }
-              // sidebar 필드는 탭 전환 불필요 (항상 표시)
             }
             
             // 탭 전환 함수 (api-client.js의 DetailTabs 로직과 일치)
