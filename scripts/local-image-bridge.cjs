@@ -3,6 +3,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { getJobPromptTemplate, getMajorPromptTemplate } = require('./prompt-templates.cjs');
 
@@ -501,31 +502,88 @@ async function generateComfyImage(prompt, useLora) {
   return null;
 }
 
-async function generateLocal(type, slug) {
-  // 로컬 전용. Evolink/외부 이미지 폴백 없음 (서버 폴백이 담당).
-  const devVars = loadDevVars();
-  const useLora = hasLoraFile();
-  const systemPrompt = type === 'majors'
-    ? getMajorPromptTemplate(slug, { useLora })
-    : getJobPromptTemplate(slug, { useLora });
-  const promptResult = await generatePrompt(systemPrompt, devVars);
-  const imageResult = await generateComfyImage(promptResult.prompt, useLora);
-  if (!imageResult) {
-    throw new Error('ComfyUI image generation returned no image (cold-start failed or LoRA missing)');
+// ───────────────────────────────────────────────────────────────────────────
+// 비동기 job 패턴.
+// Cloudflare Tunnel/Workers의 edge-level 100s timeout을 우회하기 위해
+// 브리지는 즉시 jobId를 반환하고 백그라운드에서 생성을 실행. 클라는 폴링.
+// 메모리 Map이라 프로세스 재시작 시 소실되지만 단일 세션 내 작업에는 충분.
+// ───────────────────────────────────────────────────────────────────────────
+const jobs = new Map();
+const JOB_TTL_MS = 60 * 60 * 1000;          // 완료/실패 job을 1시간 보존
+const JOB_CLEANUP_INTERVAL_MS = 10 * 60 * 1000;
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [id, job] of jobs) {
+    if (now - job.updatedAt > JOB_TTL_MS) jobs.delete(id);
   }
-  const isPng = imageResult.buffer[0] === 0x89 && imageResult.buffer[1] === 0x50;
-  const mimeType = isPng ? 'image/png' : 'image/webp';
-  const settings = loadWorkflowSettings();
-  return {
-    success: true,
-    imageBase64: imageResult.buffer.toString('base64'),
-    mimeType,
-    prompt: promptResult.prompt,
-    source: { prompt: promptResult.source, image: imageResult.source },
-    loraApplied: useLora,
-    width: settings.width,
-    height: settings.height,
+}, JOB_CLEANUP_INTERVAL_MS).unref();
+
+function createJob(type, slug) {
+  const id = crypto.randomUUID();
+  const job = {
+    id,
+    type,
+    slug,
+    status: 'queued',
+    progress: '대기 중',
+    startedAt: Date.now(),
+    updatedAt: Date.now(),
+    result: null,
+    error: null,
   };
+  jobs.set(id, job);
+  return job;
+}
+
+function updateJob(id, patch) {
+  const job = jobs.get(id);
+  if (!job) return;
+  Object.assign(job, patch);
+  job.updatedAt = Date.now();
+}
+
+async function runJob(job) {
+  try {
+    updateJob(job.id, { status: 'running', progress: '프롬프트 템플릿 준비 중' });
+    const devVars = loadDevVars();
+    const useLora = hasLoraFile();
+    const systemPrompt = job.type === 'majors'
+      ? getMajorPromptTemplate(job.slug, { useLora })
+      : getJobPromptTemplate(job.slug, { useLora });
+
+    updateJob(job.id, { progress: 'Ollama 기동 및 프롬프트 생성 중' });
+    const promptResult = await generatePrompt(systemPrompt, devVars);
+
+    updateJob(job.id, { progress: 'ComfyUI 기동 및 이미지 렌더링 중' });
+    const imageResult = await generateComfyImage(promptResult.prompt, useLora);
+    if (!imageResult) {
+      throw new Error('ComfyUI image generation returned no image (cold-start failed or LoRA missing)');
+    }
+    const isPng = imageResult.buffer[0] === 0x89 && imageResult.buffer[1] === 0x50;
+    const mimeType = isPng ? 'image/png' : 'image/webp';
+    const settings = loadWorkflowSettings();
+    updateJob(job.id, {
+      status: 'done',
+      progress: '완료',
+      result: {
+        success: true,
+        imageBase64: imageResult.buffer.toString('base64'),
+        mimeType,
+        prompt: promptResult.prompt,
+        source: { prompt: promptResult.source, image: imageResult.source },
+        loraApplied: useLora,
+        width: settings.width,
+        height: settings.height,
+      },
+    });
+  } catch (error) {
+    updateJob(job.id, {
+      status: 'failed',
+      progress: '실패',
+      error: error instanceof Error ? error.message : '로컬 이미지 생성에 실패했습니다.',
+    });
+  }
 }
 
 async function getBridgeHealth() {
@@ -564,6 +622,16 @@ async function getBridgeHealth() {
 const server = http.createServer(async (req, res) => {
   const origin = req.headers.origin || '';
 
+  // 추적용 per-request 로그: 요청이 브리지까지 도달했는지, 어디서 왔는지 확인용.
+  // Chrome LNA 차단 시에는 preflight조차 도달하지 않으므로 이 줄 부재 == 브라우저 차단 증거.
+  const reqId = Math.random().toString(36).slice(2, 8);
+  const ua = (req.headers['user-agent'] || '').slice(0, 60);
+  console.log(`[req ${reqId}] ${new Date().toISOString()} ${req.method} ${req.url} origin=${origin || '(none)'} ua="${ua}"`);
+  const reqStart = Date.now();
+  res.on('finish', () => {
+    console.log(`[req ${reqId}] → ${res.statusCode} (${Date.now() - reqStart}ms)`);
+  });
+
   if (req.method === 'OPTIONS') {
     // Chrome Local Network Access preflight (public origin → private IP) 처리.
     // 요청 헤더 `Access-Control-Request-Private-Network: true`가 오면 로그에 남기고,
@@ -589,16 +657,49 @@ const server = http.createServer(async (req, res) => {
         sendJson(res, 400, { success: false, error: 'type 또는 slug가 유효하지 않습니다.' }, origin);
         return;
       }
-      const result = await generateLocal(type, slug);
-      sendJson(res, 200, result, origin);
+      // 즉시 jobId 반환 + 백그라운드 실행. Cloudflare 100s edge timeout 회피.
+      const job = createJob(type, slug);
+      setImmediate(() => runJob(job));
+      sendJson(res, 202, {
+        success: true,
+        jobId: job.id,
+        status: job.status,
+        progress: job.progress,
+      }, origin);
       return;
     } catch (error) {
       sendJson(res, 500, {
         success: false,
-        error: error instanceof Error ? error.message : '로컬 이미지 생성에 실패했습니다.',
+        error: error instanceof Error ? error.message : '작업 생성에 실패했습니다.',
       }, origin);
       return;
     }
+  }
+
+  // GET /api/job/:jobId — 비동기 job 상태 조회 (클라이언트 폴링용)
+  if (req.method === 'GET' && typeof req.url === 'string' && req.url.startsWith('/api/job/')) {
+    const jobId = req.url.slice('/api/job/'.length);
+    if (!/^[a-zA-Z0-9-]+$/.test(jobId)) {
+      sendJson(res, 400, { success: false, error: 'invalid jobId' }, origin);
+      return;
+    }
+    const job = jobs.get(jobId);
+    if (!job) {
+      sendJson(res, 404, { success: false, error: 'job not found' }, origin);
+      return;
+    }
+    sendJson(res, 200, {
+      success: true,
+      id: job.id,
+      status: job.status,
+      progress: job.progress,
+      startedAt: job.startedAt,
+      updatedAt: job.updatedAt,
+      // result는 done 상태에서만 포함(용량 큰 base64)
+      result: job.status === 'done' ? job.result : null,
+      error: job.error,
+    }, origin);
+    return;
   }
 
   sendJson(res, 404, { success: false, error: 'not found' }, origin);

@@ -6,9 +6,12 @@
   const REMOTE_FALLBACK_URL = '/api/admin/image/regenerate';
 
   const HEALTH_TIMEOUT_MS = 3000;
-  const BRIDGE_TIMEOUT_MS = 300000; // 5분
-  const REMOTE_TIMEOUT_MS = 180000; // 3분 (Evolink 폴백)
-  const HEALTH_CACHE_MS = 60000;    // 60초
+  const BRIDGE_START_TIMEOUT_MS = 15000; // POST /api/generate-image (즉시 jobId 반환용)
+  const BRIDGE_POLL_TIMEOUT_MS = 10000;  // 개별 폴링 호출 timeout
+  const BRIDGE_POLL_INTERVAL_MS = 1500;  // 폴링 간격
+  const BRIDGE_TOTAL_MAX_MS = 300000;    // 5분 전체 한도
+  const REMOTE_TIMEOUT_MS = 180000;      // 3분 (Evolink 폴백)
+  const HEALTH_CACHE_MS = 60000;         // 60초
 
   // 헬스 결과 캐시
   let healthCache = null; // { ts, ok, body }
@@ -121,8 +124,10 @@
     return healthCache;
   }
 
-  async function callBridge(type, slug) {
-    return fetchJSON(
+  // 비동기 job 패턴: 브리지는 즉시 jobId 반환 → 클라가 상태 폴링.
+  // Cloudflare Tunnel/Workers의 100s edge timeout을 우회.
+  async function callBridge(type, slug, onProgress) {
+    const startResp = await fetchJSON(
       BRIDGE_GENERATE_URL,
       {
         method: 'POST',
@@ -130,8 +135,34 @@
         body: JSON.stringify({ type, slug }),
         mode: 'cors',
       },
-      BRIDGE_TIMEOUT_MS
+      BRIDGE_START_TIMEOUT_MS
     );
+    const jobId = startResp && startResp.jobId;
+    if (!jobId) throw new Error('브리지가 jobId를 반환하지 않았습니다.');
+
+    const startedAt = Date.now();
+    let lastProgress = '';
+    while (Date.now() - startedAt < BRIDGE_TOTAL_MAX_MS) {
+      await new Promise((r) => setTimeout(r, BRIDGE_POLL_INTERVAL_MS));
+      let st;
+      try {
+        st = await fetchJSON(
+          `${BRIDGE_BASE}/api/job/${encodeURIComponent(jobId)}`,
+          { method: 'GET', mode: 'cors' },
+          BRIDGE_POLL_TIMEOUT_MS
+        );
+      } catch {
+        // 일시적 폴링 실패(엣지/터널 glitch)는 계속 재시도
+        continue;
+      }
+      if (st.status === 'done' && st.result) return st.result;
+      if (st.status === 'failed') throw new Error(st.error || '브리지 작업 실패');
+      if (onProgress && st.progress && st.progress !== lastProgress) {
+        onProgress(st.progress);
+        lastProgress = st.progress;
+      }
+    }
+    throw new Error('브리지 작업이 5분 내에 완료되지 않았습니다.');
   }
 
   async function callServerSave(payload) {
@@ -194,7 +225,10 @@
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>로컬 생성 중...</span>';
 
         try {
-          const bridgeResult = await callBridge(type, slug);
+          const bridgeResult = await callBridge(type, slug, (progressText) => {
+            setStatus(container, `로컬 생성 중: ${progressText}`, 'warn');
+            button.innerHTML = `<i class="fas fa-spinner fa-spin"></i><span>${progressText}</span>`;
+          });
           // 3단계: 서버에 저장
           setStatus(container, '서버에 저장 중...', 'warn');
           button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>저장 중...</span>';
