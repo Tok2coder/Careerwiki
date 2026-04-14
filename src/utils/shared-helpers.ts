@@ -247,6 +247,7 @@ export const renderLayout = (
           })();
         </script>
         <script src="/static/perf-metrics.js" defer></script>
+        <script src="/static/admin-image-controls.js" defer></script>
         <!-- Google Analytics 4 -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-H9R83SJRRY"></script>
         <script>
