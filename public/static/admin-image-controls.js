@@ -1,7 +1,13 @@
 (function () {
-  const BRIDGE_BASE = 'http://127.0.0.1:3210';
-  const HEALTH_URL = `${BRIDGE_BASE}/api/health`;
-  const BRIDGE_GENERATE_URL = `${BRIDGE_BASE}/api/generate-image`;
+  // HTTPS(mkcert 발급) 우선, HTTP(레거시 3210 또는 3211 폴백) 순으로 프로브.
+  // Secure Context에서 HTTPS loopback 호출은 Chrome LNA preflight가 요구되지 않아
+  // 가장 안정적이다. HTTP는 과도기 호환 + mkcert 미설치 환경 안전망.
+  const BRIDGE_CANDIDATES = [
+    'https://127.0.0.1:3210',
+    'http://127.0.0.1:3211', // HTTPS 서버가 사용 중인 경우의 HTTP 레거시 포트
+    'http://127.0.0.1:3210', // HTTPS 미설정 환경의 HTTP 기본 포트
+  ];
+  let bridgeBase = null; // 최초 성공한 base를 캐시 (프로세스 수명 동안 재사용)
   const SERVER_SAVE_URL = '/api/admin/image/save';
   const REMOTE_FALLBACK_URL = '/api/admin/image/regenerate';
 
@@ -144,33 +150,42 @@
     if (healthCache && now - healthCache.ts < HEALTH_CACHE_MS) {
       return healthCache;
     }
-    try {
-      const body = await fetchJSONWithLNA(
-        HEALTH_URL,
-        {
-          method: 'GET',
-          mode: 'cors',
-          // Chrome Local Network Access: public origin → 127.0.0.1 호출 허용
-          // 미지원 브라우저(Firefox/Safari)는 이 옵션을 무시
-        },
-        HEALTH_TIMEOUT_MS
-      );
-      healthCache = { ts: now, ok: body && body.success === true, body };
-    } catch {
-      healthCache = { ts: now, ok: false, body: null };
+    // 이미 base가 캐시돼 있으면 그 base만 확인, 아니면 후보 순회
+    const bases = bridgeBase ? [bridgeBase] : BRIDGE_CANDIDATES;
+    for (const base of bases) {
+      try {
+        const body = await fetchJSONWithLNA(
+          `${base}/api/health`,
+          {
+            method: 'GET',
+            mode: 'cors',
+            // Chrome LNA: HTTPS(Secure Context) + loopback은 preflight 불필요하지만
+            // HTTP 폴백 시 필요할 수 있어 fetchJSONWithLNA가 힌트를 순회 주입한다.
+          },
+          HEALTH_TIMEOUT_MS
+        );
+        if (body && body.success === true) {
+          bridgeBase = base;
+          healthCache = { ts: now, ok: true, body };
+          return healthCache;
+        }
+      } catch {
+        // 이 base 실패 → 다음 후보
+      }
     }
+    healthCache = { ts: now, ok: false, body: null };
     return healthCache;
   }
 
   async function callBridge(type, slug) {
+    const base = bridgeBase || BRIDGE_CANDIDATES[0];
     return fetchJSONWithLNA(
-      BRIDGE_GENERATE_URL,
+      `${base}/api/generate-image`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, slug }),
         mode: 'cors',
-        // Chrome LNA 주소공간 힌트는 fetchJSONWithLNA가 후보 순회하며 주입
       },
       BRIDGE_TIMEOUT_MS
     );
