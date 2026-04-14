@@ -46,6 +46,16 @@ console.log('✅ TypeScript 타입 체크 통과');
 
 // 3. 빌드 + 배포
 run('npm run build', 'npm run build');
-run('wrangler pages deploy dist', 'wrangler pages deploy dist');
+
+// Windows 환경에서 git log의 한글 커밋 메시지가 CP949로 읽혀 wrangler가
+// UTF-8 검증에 실패하는 경우가 있음 (code: 8000111).
+// ASCII 전용 커밋 메시지를 명시적으로 넘겨 우회한다.
+// 실제 commit SHA는 Cloudflare Pages 대시보드에서 확인 가능.
+let sha = '';
+try {
+  sha = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
+} catch {}
+const commitMsg = sha ? `deploy ${sha}` : 'deploy';
+run(`wrangler pages deploy dist --commit-message "${commitMsg}"`, 'wrangler pages deploy dist');
 
 console.log('\n✅ 배포 완료');
