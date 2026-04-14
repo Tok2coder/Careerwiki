@@ -14,6 +14,13 @@
   let healthCache = null; // { ts, ok, body }
   // 인플라이트 가드 — 동일 컨테이너 동시 호출 방지
   const inFlight = new WeakSet();
+  // Chrome Local Network Access 스펙이 공개 origin → 사설 IP 호출에 대해
+  // 주소 공간 선언(targetAddressSpace)을 요구한다. 스펙 진화 과정에서
+  // 127.0.0.1이 'private' → 'local' → 'loopback'으로 분류가 달라져,
+  // 브라우저마다 받아들이는 값이 다르다. 성공했던 값을 캐시해 재사용한다.
+  // 순서: 최신 spec인 'loopback' 먼저 → 'local' → 'private' → hint 없음
+  const LNA_CANDIDATES = ['loopback', 'local', 'private', null];
+  let lnaPreferred = null; // 최초 성공한 값을 여기 캐시
 
   function isAdminUser(user) {
     return !!user && ['admin', 'super-admin', 'operator'].includes(user.role);
@@ -100,20 +107,51 @@
     return body;
   }
 
+  // Chrome LNA 대응: targetAddressSpace 값을 순회하며 fetchJSON 재시도.
+  // 성공한 값은 lnaPreferred에 캐시해 다음 호출에서 바로 사용한다.
+  // LNA TypeError 이외의 에러(HTTP/timeout 등)는 즉시 상위로 전파한다.
+  function isLnaError(err) {
+    if (!err) return false;
+    const msg = String(err.message || err);
+    // Chrome: "Failed to fetch" / "target IP address space" / "Private Network Access"
+    return err.name === 'TypeError' || /address space|Private Network|Local Network|Failed to fetch/i.test(msg);
+  }
+
+  async function fetchJSONWithLNA(url, baseOpts, timeoutMs) {
+    const candidates = lnaPreferred !== null
+      ? [lnaPreferred, ...LNA_CANDIDATES.filter(v => v !== lnaPreferred)]
+      : LNA_CANDIDATES.slice();
+
+    let lastErr;
+    for (const hint of candidates) {
+      const opts = Object.assign({}, baseOpts);
+      if (hint) opts.targetAddressSpace = hint;
+      try {
+        const result = await fetchJSON(url, opts, timeoutMs);
+        lnaPreferred = hint; // null도 유효 — hint 없이 성공하면 그대로 캐시
+        return result;
+      } catch (err) {
+        lastErr = err;
+        if (!isLnaError(err)) throw err; // 명백히 LNA 문제 아니면 즉시 탈출
+        // LNA 의심 → 다음 후보로
+      }
+    }
+    throw lastErr || new Error('LNA candidates exhausted');
+  }
+
   async function checkBridgeHealth() {
     const now = Date.now();
     if (healthCache && now - healthCache.ts < HEALTH_CACHE_MS) {
       return healthCache;
     }
     try {
-      const body = await fetchJSON(
+      const body = await fetchJSONWithLNA(
         HEALTH_URL,
         {
           method: 'GET',
           mode: 'cors',
-          // Chrome Local Network Access: public origin → private IP 호출 허용
+          // Chrome Local Network Access: public origin → 127.0.0.1 호출 허용
           // 미지원 브라우저(Firefox/Safari)는 이 옵션을 무시
-          targetAddressSpace: 'private',
         },
         HEALTH_TIMEOUT_MS
       );
@@ -125,15 +163,14 @@
   }
 
   async function callBridge(type, slug) {
-    return fetchJSON(
+    return fetchJSONWithLNA(
       BRIDGE_GENERATE_URL,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, slug }),
         mode: 'cors',
-        // Chrome LNA: 브리지 호출에만 'private' (서버 폴백/저장은 same-origin이라 불필요)
-        targetAddressSpace: 'private',
+        // Chrome LNA 주소공간 힌트는 fetchJSONWithLNA가 후보 순회하며 주입
       },
       BRIDGE_TIMEOUT_MS
     );

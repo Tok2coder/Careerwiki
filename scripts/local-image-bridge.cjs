@@ -58,7 +58,11 @@ function sendJson(res, status, body, origin = '') {
     'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : 'https://careerwiki.org',
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    // Chrome LNA: 'private' (RFC1918) / 'local' (link-local) / 'loopback' (127.0.0.1)
+    // 스펙 진화 과정에서 127.0.0.1이 private → local → loopback 으로 재분류됨.
+    // 세 값을 모두 allow 해 두면 어떤 Chrome 버전이든 preflight 통과한다.
     'Access-Control-Allow-Private-Network': 'true',
+    'Access-Control-Allow-Local-Network': 'true',
     'Access-Control-Max-Age': '86400',
     'Vary': 'Origin',
   });
