@@ -600,11 +600,11 @@ export class HowToEditorManager {
         </div>
         <div class="footnote-modal-body">
           <div class="footnote-field">
-            <label>출처 설명 *</label>
+            <label for="footnote-text">출처 설명 *</label>
             <input type="text" id="footnote-text" placeholder="출처에 대한 설명을 입력하세요" value="${editText || ''}" />
           </div>
           <div class="footnote-field">
-            <label>URL (선택)</label>
+            <label for="footnote-url">URL (선택)</label>
             <input type="url" id="footnote-url" placeholder="https://example.com/..." value="${editUrl || ''}" />
           </div>
         </div>

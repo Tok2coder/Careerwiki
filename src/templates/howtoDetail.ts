@@ -1040,8 +1040,8 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
             </div>
             <form id="report-form" class="p-6 space-y-4">
               <div>
-                <label class="block text-sm font-medium text-wiki-text mb-2">신고 사유 *</label>
-                <select name="reasonType" required class="w-full px-4 py-2.5 bg-wiki-card/50 border border-wiki-border/60 rounded-lg text-white focus:border-wiki-primary outline-none">
+                <label for="howto-report-reason" class="block text-sm font-medium text-wiki-text mb-2">신고 사유 *</label>
+                <select id="howto-report-reason" name="reasonType" required class="w-full px-4 py-2.5 bg-wiki-card/50 border border-wiki-border/60 rounded-lg text-white focus:border-wiki-primary outline-none">
                   <option value="">선택해주세요</option>
                   <option value="defamation">명예훼손</option>
                   <option value="obscene">음란물</option>
@@ -1052,8 +1052,8 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-wiki-text mb-2">상세 사유 (선택)</label>
-                <textarea name="reasonDetail" rows="3" maxlength="500"
+                <label for="howto-report-detail" class="block text-sm font-medium text-wiki-text mb-2">상세 사유 (선택)</label>
+                <textarea id="howto-report-detail" name="reasonDetail" rows="3" maxlength="500"
                           class="w-full px-4 py-2.5 bg-wiki-card/50 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:border-wiki-primary outline-none resize-none"
                           placeholder="추가 설명이 있으면 작성해주세요"></textarea>
               </div>
@@ -1087,8 +1087,8 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
             </div>
             <form id="blind-form" class="p-6 space-y-4">
               <div>
-                <label class="block text-sm font-medium text-wiki-text mb-2">블라인드 사유 *</label>
-                <textarea name="reason" rows="3" required
+                <label for="howto-blind-reason" class="block text-sm font-medium text-wiki-text mb-2">블라인드 사유 *</label>
+                <textarea id="howto-blind-reason" name="reason" rows="3" required
                           class="w-full px-4 py-2.5 bg-wiki-card/50 border border-wiki-border/60 rounded-lg text-white placeholder-wiki-muted focus:border-wiki-primary outline-none resize-none"
                           placeholder="블라인드 사유를 입력해주세요"></textarea>
               </div>

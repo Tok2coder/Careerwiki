@@ -154,7 +154,7 @@ export function renderAdminFeedbackDetail(props: AdminFeedbackDetailProps): stri
           </h3>
           <div class="space-y-4">
             <div class="space-y-2">
-              <label class="block text-sm text-slate-300">상태 변경</label>
+              <label for="status-select" class="block text-sm text-slate-300">상태 변경</label>
               <div class="flex items-center gap-3">
                 <select
                   id="status-select"
