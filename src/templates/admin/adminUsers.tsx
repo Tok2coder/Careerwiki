@@ -877,7 +877,7 @@ export function renderAdminUsers(props: AdminUsersProps): string {
         <input type="hidden" id="banUserId">
         
         <div class="mb-4">
-          <label class="block text-sm text-slate-400 mb-2">차단 기간</label>
+          <label for="banDuration" class="block text-sm text-slate-400 mb-2">차단 기간</label>
           <select id="banDuration" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
             <option value="1d">1일</option>
             <option value="7d">7일</option>
@@ -887,9 +887,9 @@ export function renderAdminUsers(props: AdminUsersProps): string {
         </div>
         
         <div class="mb-6">
-          <label class="block text-sm text-slate-400 mb-2">차단 사유 (선택)</label>
-          <textarea 
-            id="banReason" 
+          <label for="banReason" class="block text-sm text-slate-400 mb-2">차단 사유 (선택)</label>
+          <textarea
+            id="banReason"
             rows="3"
             placeholder="차단 사유를 입력하세요..."
             class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 resize-none"

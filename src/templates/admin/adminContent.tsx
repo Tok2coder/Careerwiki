@@ -566,9 +566,9 @@ function renderRevisionsTab(
         <input type="hidden" id="restoreRevisionId">
         
         <div class="mb-6">
-          <label class="block text-sm text-slate-400 mb-2">복원 사유 (선택)</label>
-          <textarea 
-            id="restoreReason" 
+          <label for="restoreReason" class="block text-sm text-slate-400 mb-2">복원 사유 (선택)</label>
+          <textarea
+            id="restoreReason"
             rows="3"
             placeholder="복원 사유를 입력하세요..."
             class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 resize-none"

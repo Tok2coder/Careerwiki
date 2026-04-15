@@ -36,11 +36,12 @@ export function renderNav(userMenuHtml: string): string {
               <i class="fas fa-times text-lg"></i>
             </button>
             <form action="/search" method="get" class="flex items-center gap-1 flex-1 min-w-0">
-              <input 
-                type="text" 
-                name="q" 
+              <input
+                type="text"
+                name="q"
                 id="mobile-search-input"
-                placeholder="검색..." 
+                aria-label="검색어 입력"
+                placeholder="검색..."
                 class="flex-1 min-w-0 px-3 py-2 bg-wiki-card/60 border border-wiki-border/50 rounded-xl text-white placeholder:text-wiki-muted focus:outline-none focus:border-wiki-primary/50 transition-all"
                 style="font-size: 16px;"
               >
@@ -62,7 +63,7 @@ export function renderNav(userMenuHtml: string): string {
         </a>
         <form action="/search" method="get" class="nav-search-shell min-w-[240px] max-w-md">
           <div class="nav-search-bar">
-            <input type="text" name="q" placeholder="직업, 전공, 진로를 검색하세요..." class="nav-search-input">
+            <input type="text" name="q" id="desktop-search-input" aria-label="검색어 입력" placeholder="직업, 전공, 진로를 검색하세요..." class="nav-search-input">
             <button type="submit" class="nav-search-button" aria-label="검색">
               <i class="fas fa-search"></i>
             </button>
