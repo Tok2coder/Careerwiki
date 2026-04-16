@@ -56,6 +56,7 @@ description: >
 | `career_tree_job_links` 중복 금지 | 같은 career_tree_id + job_slug 조합이 2개 이상이면 `[careerTree-자기강조]` FAIL — 반드시 하나만 존재 |
 | `_youtubeSearchNote` | youtubeLinks를 빈 배열 `[]`로 제출할 때 **필수** — `"KEIS '직업명' 검색 0건, '직업명 현직자인터뷰' 검색 0건 (날짜)"` 형식으로 탐색 증거 명시. 누락 시 validate FAIL |
 | `_careerTreeNote` | careerTree를 `null`로 제출할 때 **필수** — `"조사한 인물: 인물A(이유), 인물B(이유). 적합 인물 없음"` 형식으로 탐색 증거 명시. 누락 시 validate FAIL |
+| **한글 인코딩 — Mojibake 금지** | API 전송 시 **Node.js `fetch()` 필수** — Windows `curl -d`로 한글 JSON 전송 시 CP949 인코딩 오류로 한글이 아랍·키릴·라틴확장 문자로 깨짐. validate `[Mojibake]` FAIL, audit `[Gate5/Mojibake]` FAIL. 사고사례: 준법감시인 `overviewAbilities.technKnow` 전체 깨짐 (rev 11598/11599, 2026-04-16) |
 
 ---
 

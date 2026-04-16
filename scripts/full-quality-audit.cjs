@@ -94,7 +94,7 @@ const YOUTUBE_PATTERNS = [
 
 // ── 공유 패턴 모듈 (M3: detect-patterns.cjs) ──────────────────────────────────
 // 출처 병합 탐지 함수와 잘린 문장 패턴을 단일 모듈에서 관리.
-const { detectMultipleUrlsInSourceText, detectMergedOrgLabel } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
+const { detectMultipleUrlsInSourceText, detectMergedOrgLabel, detectMojibake } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── D1 쿼리 헬퍼 ──────────────────────────────────────────────────────────────
 
@@ -557,6 +557,33 @@ function checkGate5(job, data) {
   if (!careerTreeNote) {
     issues.push({ level: 'WARN', msg: '[Gate5] _careerTreeNote 없음 — 커리어트리 탐색 근거 미제출. 탐색 완료 여부를 _careerTreeNote에 기재할 것 (SKILL.md Self-Report 17번)' });
   }
+
+  // (l) Mojibake 탐지 — FAIL (2026-04-16 추가)
+  // Windows curl CP949 인코딩 오류로 한글이 아랍·키릴·라틴확장 문자로 깨진 경우 즉시 차단.
+  const TEXT_FIELDS_MOJI = [
+    'overviewAbilities.technKnow', 'way', 'overviewProspect.main',
+    'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'trivia', 'summary',
+  ];
+  for (const fieldPath of TEXT_FIELDS_MOJI) {
+    const val = getNestedValue(data, fieldPath);
+    if (val && typeof val === 'string' && detectMojibake(val)) {
+      issues.push({ level: 'FAIL', msg: `[Gate5/Mojibake] ${fieldPath} — 한글이 깨진 문자(아랍·키릴·라틴확장 등)로 저장됨. 인코딩 확인 후 재저장 필수 (Windows curl -d 사용 금지)` });
+    }
+  }
+  // _sources 내 text 값도 검사
+  const srcObj = data._sources;
+  if (srcObj && typeof srcObj === 'object') {
+    for (const [srcKey, srcArr] of Object.entries(srcObj)) {
+      if (Array.isArray(srcArr)) {
+        srcArr.forEach((src, i) => {
+          if (src && src.text && detectMojibake(src.text)) {
+            issues.push({ level: 'FAIL', msg: `[Gate5/Mojibake] _sources["${srcKey}"][${i}].text — 각주 텍스트가 깨진 문자로 저장됨` });
+          }
+        });
+      }
+    }
+  }
+
   return issues;
 }
 

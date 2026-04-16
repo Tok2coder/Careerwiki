@@ -23,7 +23,7 @@ const path = require('path');
 
 // ── 공유 패턴 모듈 (M3: detect-patterns.cjs) ──────────────────────────────────
 // 출처 병합 탐지 함수와 잘린 문장 패턴을 단일 모듈에서 관리.
-const { detectMultipleUrlsInSourceText, detectMergedOrgLabel } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
+const { detectMultipleUrlsInSourceText, detectMergedOrgLabel, detectMojibake } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 검증 규칙 ──────────────────────────────────────────
 
@@ -46,6 +46,40 @@ function validate(data) {
   const warnings = []; // 경고 — 수동 확인 필요
 
   const { fields = {}, sources = {}, careerTree, changeSummary } = data;
+
+  // ── 0. Mojibake (인코딩 깨짐) 사전 탐지 ──
+  // Windows curl CP949 오류 등으로 한글이 아랍/키릴/라틴확장 문자로 깨진 경우를 즉시 차단.
+  // fields 내 모든 문자열 필드 + sources 내 text 값을 검사한다.
+  const checkMojibake = (value, label) => {
+    if (!value) return;
+    if (typeof value === 'string') {
+      if (detectMojibake(value)) {
+        errors.push(`[Mojibake] ${label} — 한글이 깨진 문자(아랍·키릴·라틴확장 등)로 저장됨. 인코딩 확인 필수 (Windows curl -d 사용 금지)`);
+      }
+    } else if (Array.isArray(value)) {
+      value.forEach((item, i) => {
+        if (typeof item === 'string' && detectMojibake(item)) {
+          errors.push(`[Mojibake] ${label}[${i}] — 배열 항목이 깨진 문자로 저장됨`);
+        }
+      });
+    } else if (typeof value === 'object') {
+      for (const [k, v] of Object.entries(value)) {
+        checkMojibake(v, `${label}.${k}`);
+      }
+    }
+  };
+  // fields 전체 재귀 검사
+  checkMojibake(fields, 'fields');
+  // sources 내 text 값 검사
+  for (const [srcKey, srcArr] of Object.entries(sources)) {
+    if (Array.isArray(srcArr)) {
+      srcArr.forEach((src, i) => {
+        if (src && src.text && detectMojibake(src.text)) {
+          errors.push(`[Mojibake] sources["${srcKey}"][${i}].text — 각주 텍스트가 깨진 문자로 저장됨`);
+        }
+      });
+    }
+  }
 
   // ── 1. 필드 완성도 ──
 
