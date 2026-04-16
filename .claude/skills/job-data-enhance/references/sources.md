@@ -113,6 +113,45 @@ _sources.way: [{"id":1, ...}, {"id":2, ...}]  // [3]이 없음!
 
 ---
 
+## 🔴 한 source = 한 기관 = 한 URL 원칙 (병합 source 금지)
+
+**하나의 `_sources` 항목에 여러 기관을 묶는 것은 절대 금지입니다.**
+
+한 source 항목은 반드시 **하나의 기관**과 **하나의 URL**만 가리켜야 합니다.
+"및/또는/와/과"로 여러 기관을 묶어 등록하면, 한 기관의 URL만 출처로 연결되어
+나머지 기관은 사실상 미확인 출처가 됩니다.
+
+### ❌ 금지 예시 (병합 source)
+
+```json
+// 여러 기관을 "및"으로 묶고 URL은 한 기관만 가리키는 경우 — 금지!
+{"id": 1, "text": "[1] HRD-Net 직업훈련포털 및 한국카지노업관광협회", "url": "https://www.hrd.go.kr/..."}
+```
+
+→ URL이 HRD-Net만 가리키므로 한국카지노업관광협회는 출처 미확인 상태.
+
+### ✅ 올바른 예시 (기관별 분리)
+
+```json
+{"id": 1, "text": "[1] HRD-Net 직업훈련포털", "url": "https://www.hrd.go.kr/hrdp/co/pcobo/PCOBO0100P.do?..."},
+{"id": 2, "text": "[2] 한국카지노업관광협회 교육기관 안내", "url": "https://koreacasino.or.kr/kcasino/info/infoEduAgency.do"}
+```
+
+→ 각 기관에 고유한 URL이 연결됨.
+
+### 위반 시 자동 감지
+
+| 도구 | 타이밍 | 레벨 | 코드 |
+|------|--------|------|------|
+| `validate-job-edit.cjs` | 저장 **전** | WARN | `[출처병합경고]` |
+| `full-quality-audit.cjs` | 저장 **후** | WARN | `[Gate5/출처병합]` |
+| `scripts/detect-merged-sources.cjs` | 정기 점검 (bulk) | — | 별도 실행용 |
+
+> `detect-merged-sources.cjs`는 validate/audit과 동일한 v3 탐지 로직을 사용하며,
+> DB 전체 직업 대상 정기 점검 시 실행한다. 저장 전·후 검증은 위 두 도구가 담당.
+
+---
+
 ## Phase별 출처 요구사항
 
 | Phase | 요구사항 |

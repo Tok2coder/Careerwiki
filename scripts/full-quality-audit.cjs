@@ -92,6 +92,42 @@ const YOUTUBE_PATTERNS = [
   /^https?:\/\/(www\.)?youtube\.com\/embed\/[\w-]+/,
 ];
 
+// ── 출처 병합 탐지 헬퍼 (detect-merged-sources.cjs v3 동일 로직) ──────────────
+// 하나의 source 항목에 여러 기관이 묶인 패턴을 탐지한다.
+// @returns {string|null} 병합 의심 시 "orgA + orgB" 설명 문자열, 아니면 null
+function detectMergedSourceText(src) {
+  if (!src || typeof src !== 'object') return null;
+  const text = (src.text || '').trim();
+  const url  = (src.url  || '').trim();
+  if (!text || !url) return null;
+
+  const label = text.replace(/^\[\d+\]\s*/, '');
+  const SEPARATOR = /\s[—\-–:]\s/;
+  const sepMatch = label.match(SEPARATOR);
+  let orgPart = label;
+  if (sepMatch) {
+    const sepIdx = label.indexOf(sepMatch[0]);
+    orgPart = label.substring(0, sepIdx).trim();
+  }
+
+  const ORG_MERGE_PAT = /([가-힣A-Za-z0-9\-\.]+)\s+(및|또는|와|과)\s+([가-힣A-Za-z0-9\-\.]+)/;
+  const m = ORG_MERGE_PAT.exec(orgPart);
+  if (!m) return null;
+
+  const left = m[1].trim(), right = m[3].trim();
+  if (left.length < 2 || right.length < 2) return null;
+
+  const FP_SUFFIXES = /^(현황|전망|안내|운영|구성|기사|정보|내용|일정|과정|분석|결과|현황과|주요현황|지원|활동|방법|기준|규정|조직법|월급|조직|구성원|법령|데이터|서비스|제도|관리|방안|역할|교육|훈련|채용|공고|자격|사항|영향|현황및|전망및)/.test(right);
+  if (FP_SUFFIXES) return null;
+
+  const ORG_NAME_PAT = /넷|Net|관|원|사|청|부|처|협회|재단|연구원|센터|포럼|클럽|학회|공단|공사|진흥|기관|회사|법인|서비스|시스템|플랫폼|아카데미|클리닉|인스티튜트|커뮤니티|랩|Lab|Hub/;
+  const leftIsOrg  = ORG_NAME_PAT.test(left)  || /[A-Z]/.test(left[0]);
+  const rightIsOrg = ORG_NAME_PAT.test(right) || /[A-Z]/.test(right[0]);
+  if (!leftIsOrg && !rightIsOrg) return null;
+
+  return `"${left}" + "${right}"`;
+}
+
 // ── D1 쿼리 헬퍼 ──────────────────────────────────────────────────────────────
 
 function queryD1(sql) {
@@ -477,6 +513,23 @@ function checkGate5(job, data) {
   }
   if (!social) {
     issues.push({ level: 'WARN', msg: '[Gate5] detailWlb.social 없음 — 요약 카드 공란' });
+  }
+
+  // (f) 출처 병합 패턴 감지 [출처병합] — 한 source = 한 기관 = 한 URL 원칙
+  const sourcesObj = data._sources;
+  if (sourcesObj && typeof sourcesObj === 'object') {
+    for (const [fieldKey, srcArr] of Object.entries(sourcesObj)) {
+      if (!Array.isArray(srcArr)) continue;
+      for (let i = 0; i < srcArr.length; i++) {
+        const hint = detectMergedSourceText(srcArr[i]);
+        if (hint) {
+          issues.push({
+            level: 'WARN',
+            msg: `[Gate5/출처병합] _sources["${fieldKey}"][${i}]: 여러 기관이 한 source에 묶인 것 같습니다 — ${hint}. 각 기관을 별도 항목으로 분리하세요 (한 source = 한 기관 = 한 URL 원칙)`,
+          });
+        }
+      }
+    }
   }
 
   return issues;
