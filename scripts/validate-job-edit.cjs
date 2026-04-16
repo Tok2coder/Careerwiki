@@ -23,7 +23,14 @@ const path = require('path');
 
 // ── 공유 패턴 모듈 (M3: detect-patterns.cjs) ──────────────────────────────────
 // 출처 병합 탐지 함수와 잘린 문장 패턴을 단일 모듈에서 관리.
-const { detectMultipleUrlsInSourceText, detectMergedOrgLabel, detectMojibake } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
+const {
+  detectMultipleUrlsInSourceText,
+  detectMergedOrgLabel,
+  detectMojibake,
+  detectMissingFootnoteInArrayItems,
+  analyzeYoutubeSearchNote,
+  analyzeCareerTreeNote,
+} = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 검증 규칙 ──────────────────────────────────────────
 
@@ -154,6 +161,24 @@ function validate(data) {
           errors.push(`[인라인도메인] detailReady.${sub}[${idx}]에 괄호 안 도메인 표기 — 텍스트에서 제거 필요. 출처는 [N]+_sources로만: "${text.substring(0, 60)}..."`);
         }
       });
+    }
+
+    // ── 룰 A: UCJ detailReady 배열 항목별 [N] 필수 ──────────────────────────────
+    // curriculum / recruit / training 각 항목에 [N] 마커 필수.
+    // researchList는 CareerNet 원본이므로 제외.
+    for (const sub of ['curriculum', 'recruit', 'training']) {
+      if (!dr[sub] || !Array.isArray(dr[sub])) continue;
+      const missingIdxs = detectMissingFootnoteInArrayItems(dr[sub]);
+      if (missingIdxs.length > 0) {
+        const previews = missingIdxs.map(i => {
+          const t = typeof dr[sub][i] === 'string' ? dr[sub][i] : (dr[sub][i]?.text || '');
+          return `[${i}]"${t.substring(0, 35)}..."`;
+        });
+        errors.push(
+          `[UCJ각주항목누락] detailReady.${sub} ${previews.join(', ')} — 모든 UCJ 배열 항목에 [N] 각주 필수. ` +
+          `항목별 출처가 같으면 같은 [N] 공유 금지 — 항목마다 각각 [N] 부여`
+        );
+      }
     }
 
     // detailReady.researchList 수정 금지 — CareerNet 원본 필드
@@ -531,6 +556,18 @@ function validate(data) {
       // 빈 배열 제출 시: _youtubeSearchNote 필수 (무언 스킵 금지)
       if (!fields._youtubeSearchNote || typeof fields._youtubeSearchNote !== 'string' || fields._youtubeSearchNote.trim().length < 10) {
         errors.push('[YouTube-증거없음] youtubeLinks를 빈 배열로 제출할 때는 _youtubeSearchNote 필드 필수. 형식: "KEIS \'직업명\' 0개, \'직업명 현직자인터뷰\' 0개 (날짜)". 검색 없이 빈 배열 저장 금지.');
+      } else {
+        // ── 룰 B: _youtubeSearchNote 탐색 깊이 검사 ──────────────────────────────
+        // 탐색어 ≥6개 OR 4개 카테고리 중 ≥3개 커버해야 통과.
+        const ytNoteAnalysis = analyzeYoutubeSearchNote(fields._youtubeSearchNote);
+        if (!ytNoteAnalysis.pass) {
+          errors.push(
+            `[YouTubeNote얕음] _youtubeSearchNote 탐색이 충분하지 않음 ` +
+            `(탐색어 ${ytNoteAnalysis.termCount}개 / 카테고리 ${ytNoteAnalysis.categoryCount}/4개 커버). ` +
+            `조건: 탐색어 ≥6개 OR 카테고리 ≥3개(현직자·인터뷰/직무·실무/강의·교육/진로·면접). ` +
+            `미커버 카테고리: ${ytNoteAnalysis.missingCategories.join(', ')}`
+          );
+        }
       }
     }
   }
@@ -540,6 +577,17 @@ function validate(data) {
   if ('careerTree' in data && (data.careerTree === null)) {
     if (!data._careerTreeNote || typeof data._careerTreeNote !== 'string' || data._careerTreeNote.trim().length < 10) {
       errors.push('[careerTree-증거없음] careerTree를 null로 제출할 때는 _careerTreeNote 필드 필수. 형식: "직업명 관련 한국인 공인 탐색: 인물A(이유), 인물B(이유). 적합 인물 없음." 탐색 없이 null 저장 금지.');
+    } else {
+      // ── 룰 C: _careerTreeNote 탐색 깊이 검사 ────────────────────────────────
+      // 후보 인물 ≥5명 OR 5개 카테고리 중 ≥3개 커버해야 통과.
+      const ctNoteAnalysis = analyzeCareerTreeNote(data._careerTreeNote);
+      if (!ctNoteAnalysis.pass) {
+        errors.push(
+          `[CareerTreeNote얕음] _careerTreeNote 탐색이 충분하지 않음 ` +
+          `(후보 인물 ${ctNoteAnalysis.candidateCount}명 / 카테고리 ${ctNoteAnalysis.categoryCount}/5개 커버). ` +
+          `조건: 후보 ≥5명(이름(이유) 형식) OR 카테고리 ≥3개(재벌·대기업/컨설팅/공공·정부/학계·연구/스타트업·CxO)`
+        );
+      }
     }
   }
 

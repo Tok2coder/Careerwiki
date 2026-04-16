@@ -54,8 +54,9 @@ description: >
 | 프로젝트 경로 | `C:\Users\user\Careerwiki` |
 | `career_tree_job_links.stage_index` | **입직 스테이지에만 설정** — `order` 기준 sorted 배열의 마지막 스테이지(거장·회장·전직) 금지. `job_slug`는 해당 직업에 처음 진입하는 스테이지에만 설정. 마지막 스테이지에 설정 시 validate `[careerTree-자기강조]` FAIL |
 | `career_tree_job_links` 중복 금지 | 같은 career_tree_id + job_slug 조합이 2개 이상이면 `[careerTree-자기강조]` FAIL — 반드시 하나만 존재 |
-| `_youtubeSearchNote` | youtubeLinks를 빈 배열 `[]`로 제출할 때 **필수** — `"KEIS '직업명' 검색 0건, '직업명 현직자인터뷰' 검색 0건 (날짜)"` 형식으로 탐색 증거 명시. 누락 시 validate FAIL |
-| `_careerTreeNote` | careerTree를 `null`로 제출할 때 **필수** — `"조사한 인물: 인물A(이유), 인물B(이유). 적합 인물 없음"` 형식으로 탐색 증거 명시. 누락 시 validate FAIL |
+| `_youtubeSearchNote` | youtubeLinks를 빈 배열 `[]`로 제출할 때 **필수** — 탐색어 ≥6개 OR 카테고리(현직자·인터뷰/직무·실무/강의·교육/진로·면접) ≥3개 커버 필수. 미달 시 `[YouTubeNote얕음]` FAIL |
+| `_careerTreeNote` | careerTree를 `null`로 제출할 때 **필수** — 후보 ≥5명(이름(이유) 형식) OR 카테고리(재벌·대기업/컨설팅/공공·정부/학계·연구/스타트업·CxO) ≥3개 커버. 미달 시 `[CareerTreeNote얕음]` FAIL |
+| **UCJ 배열 각주 필수** | `detailReady.{curriculum,recruit,training}` 각 항목에 `[N]` 필수. 누락 시 `[UCJ각주항목누락]` FAIL. **`detailReady.researchList`는 CareerNet 원본 — 각주 면제** |
 | **한글 인코딩 — Mojibake 금지** | API 전송 시 **Node.js `fetch()` 필수** — Windows `curl -d`로 한글 JSON 전송 시 CP949 인코딩 오류로 한글이 아랍·키릴·라틴확장 문자로 깨짐. validate `[Mojibake]` FAIL, audit `[Gate5/Mojibake]` FAIL. 사고사례: 준법감시인 `overviewAbilities.technKnow` 전체 깨짐 (rev 11598/11599, 2026-04-16) |
 
 ---
@@ -919,6 +920,25 @@ draft의 `detailReady.curriculum` 배열을 항목별로 확인:
 - **전체 배열 중 하나의 항목에만 [N]이 있으면 → 반드시 재검토** (블록 오판 의심)
 
 recruit, training도 동일 방식으로 확인 (각 항목이 별도 출처면 각각 [N]).
+
+> ⚠️ **validate [UCJ각주항목누락] FAIL**: curriculum/recruit/training 항목에 [N]이 없으면 저장이 차단됩니다.
+> 어떤 항목도 출처 없이 넣지 마세요.
+
+### youtubeLinks 탐색 깊이 확인 (빈 배열 제출 시)
+
+`_youtubeSearchNote`에 다음 중 하나 충족 확인:
+- 작은따옴표 탐색어 `'...'` ≥6개 기재됨
+- 카테고리 ≥3개 커버: `현직자·인터뷰` / `직무·실무` / `강의·교육` / `진로·면접`
+
+미달이면 → **추가 탐색 후 재기재** (`[YouTubeNote얕음]` FAIL 차단됨)
+
+### careerTree 탐색 깊이 확인 (null 제출 시)
+
+`_careerTreeNote`에 다음 중 하나 충족 확인:
+- 이름(이유) 형식으로 후보 ≥5명 기재됨
+- 카테고리 ≥3개 커버: `재벌·대기업` / `컨설팅` / `공공·정부` / `학계·연구` / `스타트업·CxO`
+
+미달이면 → **추가 탐색 후 재기재** (`[CareerTreeNote얕음]` FAIL 차단됨)
 
 ### sources URL 품질 확인
 

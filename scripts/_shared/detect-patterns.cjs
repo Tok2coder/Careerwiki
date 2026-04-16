@@ -161,4 +161,110 @@ function detectMojibake(text) {
   return false;
 }
 
-module.exports = { detectMultipleUrlsInSourceText, detectMergedOrgLabel, detectMergedSourceText, TRUNCATED_PATTERNS, COMPLETE_ENDINGS, FP_SUFFIXES, ORG_NAME_PAT, detectMojibake, MOJI_RANGES };
+// ── 룰 A: UCJ detailReady 배열 항목별 [N] 필수 검사 ──────────────────────────
+//
+// user_contributed_json.detailReady.{curriculum,recruit,training} 배열의 각 항목이
+// [N] 각주 마커를 포함하는지 검사한다.
+// researchList는 CareerNet 원본 데이터이므로 이 검사에서 **제외**.
+//
+// @param {Array} items - detailReady.{curriculum|recruit|training} 배열
+// @returns {number[]} [N] 마커가 없는 항목의 인덱스 배열
+function detectMissingFootnoteInArrayItems(items) {
+  if (!Array.isArray(items)) return [];
+  const missing = [];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const text = typeof item === 'string' ? item : (item?.text || '');
+    if (text.trim() && !/\[\d+\]/.test(text)) {
+      missing.push(i);
+    }
+  }
+  return missing;
+}
+
+// ── 룰 B: _youtubeSearchNote 탐색 깊이 검사 ────────────────────────────────────
+//
+// youtubeLinks가 빈 배열일 때, _youtubeSearchNote가 충분한 탐색 증거를 담고 있는지 검사.
+// 다음 두 조건 중 하나를 충족해야 통과:
+//   (a) 작은따옴표로 감싼 탐색어 ≥6개
+//   (b) 4개 카테고리 중 ≥3개 커버 (현직자·인터뷰 / 직무·실무 / 강의·교육 / 진로·면접)
+//
+// @param {string} note - _youtubeSearchNote 문자열
+// @returns {{ pass: boolean, termCount: number, categoryCount: number, missingCategories: string[] }}
+const YOUTUBE_SEARCH_CATEGORIES = [
+  { name: '현직자·인터뷰', pattern: /현직자|인터뷰/ },
+  { name: '직무·실무',     pattern: /직무|실무/ },
+  { name: '강의·교육',     pattern: /강의|교육/ },
+  { name: '진로·면접',     pattern: /진로|면접/ },
+];
+
+function analyzeYoutubeSearchNote(note) {
+  if (!note || typeof note !== 'string') {
+    return { pass: false, termCount: 0, categoryCount: 0, missingCategories: YOUTUBE_SEARCH_CATEGORIES.map(c => c.name) };
+  }
+  // 탐색어 카운트: 작은따옴표 '' 쌍 또는 큰따옴표 "" 쌍으로 감싸인 검색어
+  const singleQuoteTerms = note.match(/'[^']{2,}'/g) || [];
+  const doubleQuoteTerms = note.match(/"[^"]{2,}"/g) || [];
+  const termCount = singleQuoteTerms.length + doubleQuoteTerms.length;
+
+  const covered = YOUTUBE_SEARCH_CATEGORIES.filter(c => c.pattern.test(note));
+  const categoryCount = covered.length;
+  const missingCategories = YOUTUBE_SEARCH_CATEGORIES.filter(c => !c.pattern.test(note)).map(c => c.name);
+
+  const pass = termCount >= 6 || categoryCount >= 3;
+  return { pass, termCount, categoryCount, missingCategories };
+}
+
+// ── 룰 C: _careerTreeNote 탐색 깊이 검사 ──────────────────────────────────────
+//
+// careerTree가 null일 때, _careerTreeNote가 충분한 탐색 증거를 담고 있는지 검사.
+// 다음 두 조건 중 하나를 충족해야 통과:
+//   (a) 후보 인물 ≥5명 검토됨 — "이름(이유)" 패턴으로 감지
+//   (b) 5개 카테고리 중 ≥3개 커버 (재벌·대기업 / 컨설팅 / 공공·정부 / 학계·연구 / 스타트업·CxO)
+//
+// @param {string} note - _careerTreeNote 문자열
+// @returns {{ pass: boolean, candidateCount: number, categoryCount: number }}
+const CAREER_TREE_SEARCH_CATEGORIES = [
+  { name: '재벌·대기업', pattern: /재벌|대기업|그룹\s*회장|[가-힣]+그룹|대기업\s*출신/ },
+  { name: '컨설팅',      pattern: /컨설팅|컨설턴트|McKinsey|BCG|Bain|McKinsey|A\.T\. Kearney/ },
+  { name: '공공·정부',   pattern: /공공|정부|장관|청장|공기업|공무원|국책/ },
+  { name: '학계·연구',   pattern: /학계|교수|연구원|박사|학자|연구소/ },
+  { name: '스타트업·CxO', pattern: /스타트업|창업|CEO|CTO|CFO|CMO|COO|유니콘/ },
+];
+
+// 한국어 이름(2-4자) + "(" 패턴으로 후보 인물 카운트
+// 예: "이재용(적합 없음)", "박지성(전직 축구선수, 직종 불일치)"
+const CANDIDATE_PAT = /[가-힣]{2,4}\s*\(/g;
+
+function analyzeCareerTreeNote(note) {
+  if (!note || typeof note !== 'string') {
+    return { pass: false, candidateCount: 0, categoryCount: 0 };
+  }
+  const candidates = note.match(CANDIDATE_PAT) || [];
+  const candidateCount = candidates.length;
+
+  const covered = CAREER_TREE_SEARCH_CATEGORIES.filter(c => c.pattern.test(note));
+  const categoryCount = covered.length;
+  const missingCategories = CAREER_TREE_SEARCH_CATEGORIES.filter(c => !c.pattern.test(note)).map(c => c.name);
+
+  const pass = candidateCount >= 5 || categoryCount >= 3;
+  return { pass, candidateCount, categoryCount, missingCategories };
+}
+
+module.exports = {
+  detectMultipleUrlsInSourceText,
+  detectMergedOrgLabel,
+  detectMergedSourceText,
+  TRUNCATED_PATTERNS,
+  COMPLETE_ENDINGS,
+  FP_SUFFIXES,
+  ORG_NAME_PAT,
+  detectMojibake,
+  MOJI_RANGES,
+  // 룰 A/B/C
+  detectMissingFootnoteInArrayItems,
+  analyzeYoutubeSearchNote,
+  analyzeCareerTreeNote,
+  YOUTUBE_SEARCH_CATEGORIES,
+  CAREER_TREE_SEARCH_CATEGORIES,
+};

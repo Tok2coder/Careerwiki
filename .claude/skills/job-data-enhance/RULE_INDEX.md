@@ -3,7 +3,7 @@
 각 규칙의 **정규(canonical) 위치**와 반복 참조 위치를 한눈에 보여주는 인덱스.
 규칙 충돌 시 **정규 위치가 우선**한다.
 
-업데이트: 2026-04-16 (Mojibake 탐지 규칙 추가)
+업데이트: 2026-04-16 (룰 A/B/C 탐색 깊이 강화 추가)
 
 ---
 
@@ -330,6 +330,77 @@ Windows 환경에서 `curl -d`로 한글 텍스트를 전송할 때 CP949 인코
 
 - **Windows curl -d 금지** — 한글이 포함된 JSON은 Node.js `fetch()`로만 전송  
 - `node scripts/validate-job-edit.cjs <draft>` → PASS 확인 후에만 API 호출
+
+---
+
+---
+
+## 13-B. UCJ detailReady 배열 항목별 [N] 필수 — 룰 A (2026-04-16 추가)
+
+### 원인
+
+오늘 기획관리자 작업에서 `detailReady.recruit[0]` 항목에 [N]이 없어 출처 없는 데이터가 저장됨.
+배열 항목도 출처 의무 대상임에도 self-check가 배열 항목 단위 검사를 하지 않았음.
+
+### 검사 로직
+
+`user_contributed_json.detailReady.{curriculum, recruit, training}` 각 항목 문자열이 `/\[\d+\]/` 패턴을 포함하는지 검사.
+`detailReady.researchList`는 CareerNet 원본 필드이므로 **제외**.
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| scripts/_shared/detect-patterns.cjs — `detectMissingFootnoteInArrayItems()` | ✅ 정규 (코드) | |
+| scripts/validate-job-edit.cjs — `[UCJ각주항목누락]` | 🔒 코드 | **FAIL** (저장 차단) |
+| scripts/full-quality-audit.cjs — `[Gate5/UCJ각주항목누락]` | 🔒 코드 | **FAIL** |
+| scripts/selfcheck/rule-regression-tests.cjs | 🔒 코드 | 회귀 테스트 |
+
+**소급 적용**: 신규 저장 시점부터 FAIL. 기존 DB 데이터는 그대로 유지 (재enhance 시 점진적 정리).
+
+---
+
+## 13-C. _youtubeSearchNote 탐색 깊이 강제 — 룰 B (2026-04-16 추가)
+
+### 원인
+
+기획관리자 유튜브 탐색 시 4개 탐색어만 사용했고, 재탐색 결과 3개 영상이 발견됨.
+얕은 탐색으로 "없음"으로 잘못 결론 내리는 패턴 방지.
+
+### 검사 로직
+
+`youtubeLinks = []`이고 `_youtubeSearchNote`가 존재할 때:
+- **(a)** 작은따옴표 쌍 `'...'` 탐색어 ≥6개, 또는
+- **(b)** 4개 카테고리 중 ≥3개 커버: `현직자·인터뷰` / `직무·실무` / `강의·교육` / `진로·면접`
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| scripts/_shared/detect-patterns.cjs — `analyzeYoutubeSearchNote()` | ✅ 정규 (코드) | |
+| scripts/validate-job-edit.cjs — `[YouTubeNote얕음]` | 🔒 코드 | **FAIL** |
+| scripts/full-quality-audit.cjs — `[Gate5/YouTubeNote얕음]` | 🔒 코드 | **FAIL** |
+
+**기존 데이터**: Gate5에서 FAIL 감지됨 — 8개 직업 위반 확인. 재enhance 시 정리.
+
+---
+
+## 13-D. _careerTreeNote 탐색 깊이 강제 — 룰 C (2026-04-16 추가)
+
+### 원인
+
+기획관리자 careerTree "없음"으로 결론 냈으나, 재탐색 시 정기선(HD현대 회장) 발견.
+후보 탐색이 얕아 실제 적합 인물을 놓치는 패턴 방지.
+
+### 검사 로직
+
+`careerTree = null`일 때:
+- **(a)** `이름(이유)` 패턴으로 후보 ≥5명 탐색됨, 또는
+- **(b)** 5개 카테고리 중 ≥3개 커버: `재벌·대기업` / `컨설팅` / `공공·정부` / `학계·연구` / `스타트업·CxO`
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| scripts/_shared/detect-patterns.cjs — `analyzeCareerTreeNote()` | ✅ 정규 (코드) | |
+| scripts/validate-job-edit.cjs — `[CareerTreeNote얕음]` | 🔒 코드 | **FAIL** |
+| scripts/full-quality-audit.cjs — `[Gate5/CareerTreeNote얕음]` | 🔒 코드 | **FAIL** |
+
+**기존 데이터**: 2개 직업 위반 확인 (준법감시인, 바이오화학제품연구기획자). 재enhance 시 정리.
 
 ---
 

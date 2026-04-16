@@ -94,7 +94,14 @@ const YOUTUBE_PATTERNS = [
 
 // ── 공유 패턴 모듈 (M3: detect-patterns.cjs) ──────────────────────────────────
 // 출처 병합 탐지 함수와 잘린 문장 패턴을 단일 모듈에서 관리.
-const { detectMultipleUrlsInSourceText, detectMergedOrgLabel, detectMojibake } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
+const {
+  detectMultipleUrlsInSourceText,
+  detectMergedOrgLabel,
+  detectMojibake,
+  detectMissingFootnoteInArrayItems,
+  analyzeYoutubeSearchNote,
+  analyzeCareerTreeNote,
+} = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── D1 쿼리 헬퍼 ──────────────────────────────────────────────────────────────
 
@@ -579,6 +586,80 @@ function checkGate5(job, data) {
           if (src && src.text && detectMojibake(src.text)) {
             issues.push({ level: 'FAIL', msg: `[Gate5/Mojibake] _sources["${srcKey}"][${i}].text — 각주 텍스트가 깨진 문자로 저장됨` });
           }
+        });
+      }
+    }
+  }
+
+  // ── 룰 A: UCJ detailReady 배열 항목별 [N] 필수 (Gate5/UCJ각주항목누락) ────────
+  // job.user_contributed_json에서 UCJ detailReady를 직접 파싱하여 검사.
+  // merged_profile이 아닌 UCJ 기준 검사이므로 API 원본 데이터(researchList 등)는 포함되지 않음.
+  {
+    let ucjDr = null;
+    try {
+      const ucjRaw = typeof job.user_contributed_json === 'string'
+        ? JSON.parse(job.user_contributed_json)
+        : (job.user_contributed_json || {});
+      ucjDr = ucjRaw.detailReady || null;
+    } catch { /* skip */ }
+
+    if (ucjDr) {
+      for (const sub of ['curriculum', 'recruit', 'training']) {
+        if (!ucjDr[sub] || !Array.isArray(ucjDr[sub])) continue;
+        const missingIdxs = detectMissingFootnoteInArrayItems(ucjDr[sub]);
+        if (missingIdxs.length > 0) {
+          const previews = missingIdxs.map(i => {
+            const t = typeof ucjDr[sub][i] === 'string' ? ucjDr[sub][i] : (ucjDr[sub][i]?.text || '');
+            return `[${i}]"${t.substring(0, 35)}..."`;
+          });
+          issues.push({
+            level: 'FAIL',
+            msg: `[Gate5/UCJ각주항목누락] detailReady.${sub} ${previews.join(', ')} — UCJ 배열 항목에 [N] 각주 없음. 재enhance 시 각주 추가 필요`,
+          });
+        }
+      }
+    }
+  }
+
+  // ── 룰 B: _youtubeSearchNote 탐색 깊이 (Gate5/YouTubeNote얕음) ─────────────
+  // youtubeLinks가 없거나 빈 배열이고, _youtubeSearchNote가 얕은 경우 FAIL.
+  {
+    const ytLinks = data.youtubeLinks;
+    const ytEmpty = !ytLinks || (Array.isArray(ytLinks) && ytLinks.length === 0);
+    if (ytEmpty) {
+      const ytNote = data._youtubeSearchNote;
+      if (ytNote && typeof ytNote === 'string' && ytNote.trim().length >= 10) {
+        const analysis = analyzeYoutubeSearchNote(ytNote);
+        if (!analysis.pass) {
+          issues.push({
+            level: 'FAIL',
+            msg: `[Gate5/YouTubeNote얕음] _youtubeSearchNote 탐색 부족 (탐색어 ${analysis.termCount}개 / 카테고리 ${analysis.categoryCount}/4개). ` +
+              `조건: 탐색어 ≥6개 OR 카테고리 ≥3개. 미커버: ${analysis.missingCategories.join(', ')}. ` +
+              `재enhance 시 더 광범위한 탐색 필요`,
+          });
+        }
+      }
+      // _youtubeSearchNote 자체가 없으면 이미 기존 Gate3/Gate5 WARN으로 처리됨
+    }
+  }
+
+  // ── 룰 C: _careerTreeNote 탐색 깊이 (Gate5/CareerTreeNote얕음) ───────────────
+  // careerTree가 없고(career_tree_job_links 미등록), _careerTreeNote가 얕은 경우 FAIL.
+  // audit 시점에서 careerTree 유무는 job.career_tree_count 또는 별도 컬럼으로 확인.
+  // 여기서는 data._careerTreeNote가 있지만 "적합 인물 없음" 패턴이 있으면 null 판단으로 간주.
+  {
+    const ctNote = data._careerTreeNote;
+    const careerTreeLinked = job.career_tree_linked; // audit에서 주입하는 플래그 (없으면 null)
+    const isCareerTreeNull = careerTreeLinked === false || careerTreeLinked === 0 ||
+      (ctNote && /적합 인물 없음|해당 없음|없음$/.test(ctNote) && !/(등록|선정|추가|INSERT)/.test(ctNote));
+
+    if (isCareerTreeNull && ctNote && typeof ctNote === 'string' && ctNote.trim().length >= 10) {
+      const analysis = analyzeCareerTreeNote(ctNote);
+      if (!analysis.pass) {
+        issues.push({
+          level: 'FAIL',
+          msg: `[Gate5/CareerTreeNote얕음] _careerTreeNote 탐색 부족 (후보 ${analysis.candidateCount}명 / 카테고리 ${analysis.categoryCount}/5개). ` +
+            `조건: 후보 ≥5명 OR 카테고리 ≥3개. 재enhance 시 더 광범위한 인물 탐색 필요`,
         });
       }
     }

@@ -4,6 +4,33 @@
 
 ---
 
+## 🔴 2026-04-16 하네스 근본 강화 — 반복 실수 3건 차단
+
+### [강화-1] youtubeLinks "없음" 결론 전 탐색 깊이 부족 → 룰 B 신설
+**원인**: 기획관리자 enhance 시 탐색어 4개로 "영상 없음" 결론 → 재탐색 시 3개 발견.
+**강화**: `_youtubeSearchNote` 탐색어 ≥6개 OR 카테고리(현직자·인터뷰/직무·실무/강의·교육/진로·면접) ≥3개 커버 필수.
+`[YouTubeNote얕음]` FAIL로 차단 (validate + audit Gate5).
+**실행**: 재탐색 시 최소 3개 카테고리를 명시적으로 커버하는 검색어 사용.
+
+### [강화-2] careerTree "없음" 결론 전 후보 탐색 깊이 부족 → 룰 C 신설
+**원인**: 기획관리자 careerTree "적합 없음" 결론 → 재탐색 시 정기선(HD현대) 발견.
+**강화**: `_careerTreeNote` 후보 ≥5명 탐색됨(이름(이유) 형식) OR 카테고리(재벌·대기업/컨설팅/공공·정부/학계·연구/스타트업·CxO) ≥3개 커버 필수.
+`[CareerTreeNote얕음]` FAIL로 차단.
+**실행**: 최소 5명 + 소속/역할 + 판정 이유를 `_careerTreeNote`에 기재.
+
+### [강화-3] UCJ detailReady 배열 항목에 [N] 누락 → 룰 A 신설
+**원인**: 기획관리자 `detailReady.recruit[0]` 항목이 각주 없이 저장됨. self-check가 배열 항목 단위 검사 미수행.
+**강화**: `detailReady.{curriculum,recruit,training}` 각 항목에 `[N]` 필수. `[UCJ각주항목누락]` FAIL로 차단.
+**제외**: `detailReady.researchList` (CareerNet 원본, 각주 면제).
+
+### 전수 감사 결과 (오늘 enhance 9개 직업)
+- 룰 A 위반: 최고기술책임자(recruit 0,1), 자재구매관리자(recruit 2), 준법감시인(curriculum 0,3), 경찰서장(recruit 0,1)
+- 룰 B 위반: 카지노딜러·캐스팅디렉터·최고기술책임자·자재구매관리자·준법감시인·광고홍보관리자·사설학원원장·경찰서장 (8개 — 노트 탐색어 5개가 많은 직업에서 카테고리 커버 부족)
+- 룰 C 위반: 준법감시인, 바이오화학제품연구기획자
+- **기존 데이터 자동 수정 금지** — 재enhance 시 FAIL로 걸리며 점진적 정리.
+
+---
+
 ## 🔴 치명적 오류 (즉시 500 에러 또는 데이터 손실)
 
 ### [치명-5] detailReady.curriculum / training 항목을 객체로 저장하면 각주 렌더링 불가
