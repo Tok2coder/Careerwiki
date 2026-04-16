@@ -19,42 +19,11 @@
  */
 
 const fs = require('fs');
+const path = require('path');
 
-// ── 출처 병합 탐지 헬퍼 (detect-merged-sources.cjs v3 동일 로직) ──────────────
-// 하나의 source 항목에 여러 기관이 묶인 패턴을 탐지한다.
-// @returns {string|null} 병합 의심 시 "orgA + orgB" 설명 문자열, 아니면 null
-function detectMergedSourceText(src) {
-  if (!src || typeof src !== 'object') return null;
-  const text = (src.text || '').trim();
-  const url  = (src.url  || '').trim();
-  if (!text || !url) return null;
-
-  const label = text.replace(/^\[\d+\]\s*/, '');
-  const SEPARATOR = /\s[—\-–:]\s/;
-  const sepMatch = label.match(SEPARATOR);
-  let orgPart = label;
-  if (sepMatch) {
-    const sepIdx = label.indexOf(sepMatch[0]);
-    orgPart = label.substring(0, sepIdx).trim();
-  }
-
-  const ORG_MERGE_PAT = /([가-힣A-Za-z0-9\-\.]+)\s+(및|또는|와|과)\s+([가-힣A-Za-z0-9\-\.]+)/;
-  const m = ORG_MERGE_PAT.exec(orgPart);
-  if (!m) return null;
-
-  const left = m[1].trim(), right = m[3].trim();
-  if (left.length < 2 || right.length < 2) return null;
-
-  const FP_SUFFIXES = /^(현황|전망|안내|운영|구성|기사|정보|내용|일정|과정|분석|결과|현황과|주요현황|지원|활동|방법|기준|규정|조직법|월급|조직|구성원|법령|데이터|서비스|제도|관리|방안|역할|교육|훈련|채용|공고|자격|사항|영향|현황및|전망및)/.test(right);
-  if (FP_SUFFIXES) return null;
-
-  const ORG_NAME_PAT = /넷|Net|관|원|사|청|부|처|협회|재단|연구원|센터|포럼|클럽|학회|공단|공사|진흥|기관|회사|법인|서비스|시스템|플랫폼|아카데미|클리닉|인스티튜트|커뮤니티|랩|Lab|Hub/;
-  const leftIsOrg  = ORG_NAME_PAT.test(left)  || /[A-Z]/.test(left[0]);
-  const rightIsOrg = ORG_NAME_PAT.test(right) || /[A-Z]/.test(right[0]);
-  if (!leftIsOrg && !rightIsOrg) return null;
-
-  return `"${left}" + "${right}"`;
-}
+// ── 공유 패턴 모듈 (M3: detect-patterns.cjs) ──────────────────────────────────
+// 출처 병합 탐지 함수와 잘린 문장 패턴을 단일 모듈에서 관리.
+const { detectMergedSourceText } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 검증 규칙 ──────────────────────────────────────────
 
@@ -64,6 +33,12 @@ const STATS_ONLY_FIELDS = ['overviewAbilities.abilityList', 'overviewAptitude', 
 const FOREIGN_NAME_PATTERNS = [
   /^[A-Z][a-z]+ [A-Z][a-z]+/, // "James Herriot"
   /[가-힣]+ [가-힣]+/, // OK - Korean
+];
+
+// 역대 대통령 — careerTree에 절대 금지 (is_active=0 인물)
+const FORBIDDEN_PRESIDENTS = [
+  '이승만', '윤보선', '박정희', '최규하', '전두환', '노태우',
+  '김영삼', '김대중', '노무현', '이명박', '박근혜', '문재인', '윤석열',
 ];
 
 function validate(data) {
@@ -341,6 +316,14 @@ function validate(data) {
         errors.push(`[커리어트리] "${tree.person_name}" — 외국인은 절대 금지`);
       }
 
+      // 역대 대통령 체크 — is_active=0 인물 절대 금지 (H3)
+      if (tree.person_name) {
+        const matchedPresident = FORBIDDEN_PRESIDENTS.find(p => tree.person_name.includes(p));
+        if (matchedPresident) {
+          errors.push(`[careerTree-대통령금지] "${tree.person_name}" — 역대 대통령은 careerTree에 절대 금지 (is_active=0 인물). SKILL.md Phase 3.6 인물 선정 기준 참조`);
+        }
+      }
+
       // stages 점검
       if (tree.stages_json) {
         const stages = typeof tree.stages_json === 'string' ? JSON.parse(tree.stages_json) : tree.stages_json;
@@ -447,6 +430,7 @@ function validate(data) {
     /있으며$/,
     /있고$/,
     /하고$/,
+    /[가-힣]{1}에$/, // M4: audit과 동기화 — "~에" 로 끝나는 잘린 문장
   ];
 
   const COMPLETE_ENDINGS = [
@@ -514,6 +498,14 @@ function validate(data) {
       if (!fields._youtubeSearchNote || typeof fields._youtubeSearchNote !== 'string' || fields._youtubeSearchNote.trim().length < 10) {
         errors.push('[YouTube-증거없음] youtubeLinks를 빈 배열로 제출할 때는 _youtubeSearchNote 필드 필수. 형식: "KEIS \'직업명\' 0개, \'직업명 현직자인터뷰\' 0개 (날짜)". 검색 없이 빈 배열 저장 금지.');
       }
+    }
+  }
+
+  // ── 9c. careerTree null 제출 시 _careerTreeNote 필수 (H5) ──
+  // careerTree가 명시적으로 null인 경우 (적합 인물 없음 판단) → 탐색 근거 필수
+  if ('careerTree' in data && (data.careerTree === null)) {
+    if (!data._careerTreeNote || typeof data._careerTreeNote !== 'string' || data._careerTreeNote.trim().length < 10) {
+      errors.push('[careerTree-증거없음] careerTree를 null로 제출할 때는 _careerTreeNote 필드 필수. 형식: "직업명 관련 한국인 공인 탐색: 인물A(이유), 인물B(이유). 적합 인물 없음." 탐색 없이 null 저장 금지.');
     }
   }
 
