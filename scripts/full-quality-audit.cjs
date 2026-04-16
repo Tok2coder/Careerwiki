@@ -332,7 +332,14 @@ function checkGate3(data) {
   const youtubeLinks = data.youtubeLinks;
 
   if (!youtubeLinks || !Array.isArray(youtubeLinks) || youtubeLinks.length === 0) {
-    issues.push({ level: 'WARN', msg: '[Gate3] youtubeLinks 없음 또는 빈 배열' });
+    // _youtubeSearchNote 있으면 탐색 완료 인정 (WARN 유지)
+    // 없으면 무언 스킵 → WARN + 재저장 시 FAIL 예고 (2026-04-15 강화)
+    const searchNote = data._youtubeSearchNote;
+    if (searchNote && typeof searchNote === 'string' && searchNote.trim().length >= 10) {
+      issues.push({ level: 'WARN', msg: `[Gate3] youtubeLinks 없음 — 검색 증거 확인됨: "${searchNote.substring(0, 80)}"` });
+    } else {
+      issues.push({ level: 'WARN', msg: '[Gate3] youtubeLinks 없음 + _youtubeSearchNote 없음 — 재저장 시 validate FAIL. 검색 실행 후 _youtubeSearchNote에 검색어·결과수 기재 필요' });
+    }
     return issues;
   }
 
@@ -532,6 +539,47 @@ function checkGate5(job, data) {
     }
   }
 
+  // (g) detailReady.certificate — 본문 추천 자격증은 스킬 관리 대상이 아님.
+  // 남아 있다면 반드시 출처와 함께만 유지되어야 하며, 출처가 없으면 cleanup 대상이다.
+  const certificateList = getNestedValue(data, 'detailReady.certificate');
+  const certificateSources = data._sources?.['detailReady.certificate'];
+  if (Array.isArray(certificateList) && certificateList.length > 0) {
+    if (!Array.isArray(certificateSources) || certificateSources.length === 0) {
+      issues.push({ level: 'FAIL', msg: '[Gate5] detailReady.certificate 본문 추천 자격증이 출처 없이 남아 있음 — source 없는 기존 항목은 제거 대상' });
+    } else {
+      issues.push({ level: 'WARN', msg: '[Gate5] detailReady.certificate 본문 추천 자격증이 존재함 — job-data-enhance에서는 신규 추가/수정하지 말고 유지 여부만 신중히 판단' });
+    }
+  }
+
+  // (h) sidebarOrgs 없음 — FAIL (2026-04-15 추가)
+  const sidebarOrgs = data.sidebarOrgs;
+  if (!sidebarOrgs || !Array.isArray(sidebarOrgs) || sidebarOrgs.length === 0) {
+    issues.push({ level: 'FAIL', msg: '[Gate5] sidebarOrgs 없음 — 관련 협회·기관 1개 이상 등록 필요 (SKILL.md Phase 1 보강 필드)' });
+  }
+
+  // (i) detailReady.curriculum/recruit/training 모두 null — FAIL (2026-04-15 추가)
+  const curriculumItems = getNestedValue(data, 'detailReady.curriculum');
+  const recruitItems = getNestedValue(data, 'detailReady.recruit');
+  const trainingItems = getNestedValue(data, 'detailReady.training');
+  const drAllEmpty =
+    (!curriculumItems || (Array.isArray(curriculumItems) && curriculumItems.length === 0)) &&
+    (!recruitItems   || (Array.isArray(recruitItems)   && recruitItems.length === 0)) &&
+    (!trainingItems  || (Array.isArray(trainingItems)  && trainingItems.length === 0));
+  if (drAllEmpty) {
+    issues.push({ level: 'FAIL', msg: '[Gate5] detailReady.curriculum/recruit/training 모두 없음 — "항상 새로 작성" 필드 누락 (SKILL.md Phase 1)' });
+  }
+
+  // (j) overviewAbilities.technKnow null — WARN (2026-04-15 추가)
+  const technKnow = getNestedValue(data, 'overviewAbilities.technKnow');
+  if (!technKnow) {
+    issues.push({ level: 'WARN', msg: '[Gate5] overviewAbilities.technKnow 없음 — API null이면 리서치 후 채울 것 (SKILL.md Phase 1)' });
+  }
+
+  // (k) careerTree 탐색 근거 없음 — WARN (2026-04-15 추가)
+  const careerTreeNote = data._careerTreeNote || data._careerTreeStatus;
+  if (!careerTreeNote) {
+    issues.push({ level: 'WARN', msg: '[Gate5] _careerTreeNote 없음 — 커리어트리 탐색 근거 미제출. 탐색 완료 여부를 _careerTreeNote에 기재할 것 (SKILL.md Self-Report 17번)' });
+  }
   return issues;
 }
 
@@ -541,7 +589,7 @@ function checkGate5(job, data) {
 const SKILL_CACHE_DIR = path.join(__dirname, '..', '.skill-cache');
 
 const ARRAY_FIELDS_G6 = ['sidebarCerts', 'sidebarMajors', 'sidebarOrgs', 'sidebarJobs', 'youtubeLinks'];
-const DR_SUBS_G6 = ['curriculum', 'recruit', 'training'];
+const DR_SUBS_G6 = ['curriculum', 'recruit', 'training', 'certificate'];
 
 function checkGate6(slug, ucjNow, mergedNow) {
   const issues = [];

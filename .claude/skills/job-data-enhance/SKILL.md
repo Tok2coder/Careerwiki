@@ -466,7 +466,10 @@ detailReady.curriculum / detailReady.recruit / detailReady.training / detailRead
 - 해당 내용의 출처를 반드시 `_sources`에 등록해야 한다.
 - sources 키: `"detailReady.curriculum"`, `"detailReady.recruit"`, `"detailReady.training"`, `"detailReady.pathExplore"`
 - curriculum/recruit/training/pathExplore는 **배열** 필드이다.
-  - **외부 출처 데이터가 있으면 무조건 인라인 [N] 필수** — 기존 데이터든 신규 추가든 관계없이, sources에 등록된 출처가 있으면 해당 섹션 마지막 항목의 text 끝에 인라인 [N] 마커를 붙인다. 마침표가 있으면 마침표 뒤(`이수한다.[1]`), 없는 명사구/동사구면 항목 끝(`안전보건교육 이수[1]`) — **억지로 마침표를 추가하지 않아도 됨**.
+  - **외부 출처 데이터가 있으면 무조건 인라인 [N] 필수** — 기존 데이터든 신규 추가든 관계없이, sources에 등록된 출처가 있으면 각 항목의 text 끝에 인라인 [N] 마커를 붙인다. 마침표가 있으면 마침표 뒤(`이수한다.[1]`), 없는 명사구/동사구면 항목 끝(`안전보건교육 이수[1]`) — **억지로 마침표를 추가하지 않아도 됨**.
+  - **항목별 출처가 다르면 → 항목마다 각각 [N] 부여** (curriculum, recruit, training 모두 동일). 이는 산문 필드의 블록 패턴(마지막 문장에만)과 다르게 적용된다. 배열 각 항목은 독립 출처를 가질 수 있기 때문이다.
+  - **연속된 항목이 동일 출처일 때만 → 블록 마지막 항목에 [N] 1회** — validate [각주중복] 규칙(같은 [N]이 동일 필드에 2회 이상 금지)에 따라, 같은 [N]을 두 항목 모두에 붙이는 것은 FAIL이다.
+  - **⚠️ 흔한 실수 — 배열 전체를 하나의 블록으로 오판**: curriculum 5개 항목이 모두 다른 출처인데 "섹션 마지막 항목에만 [1]" 적용 → 앞 4개 항목에 각주 없는 상태 발생. 각 항목에 해당 출처의 [N]을 부여해야 한다.
   - sources가 없으면 [N] 불필요. `sidebarCerts`는 각주 불필요.
   출처는 sources에 반드시 등록하며, id:1부터 시작하는 객체 배열 형식 사용.
 - validate-job-edit.cjs가 텍스트가 있는데 sources가 없으면 WARN 처리.
@@ -784,7 +787,7 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
 **각주 [N] 렌더링 지원 필드** (formatRichText 적용 — 이 필드들만 인라인 각주 클릭 링크 사용 가능):
 `way`, `overviewSalary.sal`(레거시/수동 수선용), `overviewProspect.main`, `trivia`, `summary`,
 `detailWlb.wlbDetail`, `detailWlb.socialDetail`, `overviewAbilities.technKnow`
-— curriculum/recruit/training/pathExplore는 배열 필드이므로 현재 formatRichText가 적용되지 않음. 단, **외부 출처 데이터가 있으면 기존·신규 불문** 마지막 항목 문자열 끝 마침표 뒤에 [N] 마커를 붙인다 (sources 등록은 필수). 모든 항목은 plain string이므로 문자열 끝에 직접 붙인다.
+— curriculum/recruit/training/pathExplore는 배열 필드이므로 현재 formatRichText가 적용되지 않음. 단, **외부 출처 데이터가 있으면 기존·신규 불문** 각 항목의 문자열 끝에 [N] 마커를 붙인다 (sources 등록은 필수). 항목별 출처가 다르면 각 항목에 별도 [N] 부여. 연속 항목이 동일 출처일 때만 마지막 항목에만 [N]. 모든 항목은 plain string이므로 문자열 끝에 직접 붙인다.
 
 > ✅ **완료**: `detailTemplateUtils.ts`에 `applyInlineFootnotes` 헬퍼 추가, `unifiedJobDetail.ts`의 curriculum·recruit·training 렌더링에 적용 완료 (2026-04-06). 배열 항목 text의 [N] 마커가 `<sup>` 각주 링크로 렌더링됨.
 
@@ -998,6 +1001,24 @@ M < N이면 → **즉시 중단, 기존 항목 복원 후 재검증**
 
 기존 trivia가 있었다면 → draft에서 내용이 교체되지 않았는지 확인.
 내용이 다르면 → 교체 이유가 명확한지 확인 (각주 오류 수정 등 최소 교정만 허용)
+
+### curriculum 각주 점검 (필수)
+
+draft의 `detailReady.curriculum` 배열을 항목별로 확인:
+
+```
+[항목1] "...취득한다"      → [N] 있음? ✅/❌
+[항목2] "...유리하다[2]"   → [N] 있음? ✅
+[항목3] "...높아진다[3]"   → [N] 있음? ✅
+[항목4] "...쌓을 수 있다"  → [N] 있음? ✅/❌
+[항목5] "...갖춘다[1]"     → [N] 있음? ✅
+```
+
+- 항목별로 다른 출처가 있는데 [N]이 없으면 → 출처 추가 후 [N] 부여
+- 연속된 항목이 동일 출처인 경우 → 마지막 항목에만 [N] (블록 패턴 허용)
+- **전체 배열 중 하나의 항목에만 [N]이 있으면 → 반드시 재검토** (블록 오판 의심)
+
+recruit, training도 동일 방식으로 확인 (각 항목이 별도 출처면 각각 [N]).
 
 ### sources URL 품질 확인
 

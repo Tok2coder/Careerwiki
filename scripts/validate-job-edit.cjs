@@ -149,7 +149,20 @@ function validate(data) {
 
     // detailReady.researchList 수정 금지 — CareerNet 원본 필드
     if (dr.researchList && dr.researchList.length > 0) {
-      warnings.push(`[detailReady.researchList] CareerNet 원본 필드입니다. 스킬에서 수정/추가하지 마세요. 이 필드가 포함된 경우 제거 후 재전송 필요.`);
+      errors.push(`[detailReady.researchList] CareerNet canonical field. Do not add, edit, or delete it in job-data-enhance drafts.`);
+    }
+
+    // detailReady.certificate body content is out of scope for job-data-enhance.
+    // Cleanup-only emptying is allowed, but sending sources with it is blocked.
+    // Adding or editing body certificate content is blocked.
+    if (Array.isArray(dr.certificate)) {
+      if (dr.certificate.length > 0) {
+        errors.push(`[detailReady.certificate] Body certificate content is out of scope. Update sidebarCerts instead.`);
+      } else if (sources['detailReady.certificate'] && sources['detailReady.certificate'].length > 0) {
+        errors.push(`[detailReady.certificate] certificate was emptied but sources["detailReady.certificate"] was still sent. Remove those sources for cleanup-only drafts.`);
+      }
+    } else if (sources['detailReady.certificate'] && sources['detailReady.certificate'].length > 0) {
+      errors.push(`[detailReady.certificate] Body certificate sources are not allowed. Use sidebarCerts sources only.`);
     }
   } else {
     warnings.push(`[필드] detailReady가 없음`);
@@ -303,6 +316,15 @@ function validate(data) {
           }
         }
       }
+    }
+    // Reject multi-sentence prose that collapses multiple footnotes at the paragraph tail.
+    // Bad: sentence A. sentence B.[1][2]  Good: sentence A.[1] sentence B.[2]
+    const sentenceCount = (text.match(/[.!?](?:\s|$)/g) || []).length;
+    const collapsedTailFootnotes = text.match(/([.!?])\s*(\[\d+\]\s*){2,}$/);
+    const textBeforeTailFootnotes = text.replace(/([.!?])\s*(\[\d+\]\s*){2,}$/, "");
+    const hasEarlierFootnote = /\[\d+\]/.test(textBeforeTailFootnotes);
+    if (sentenceCount >= 2 && collapsedTailFootnotes && !hasEarlierFootnote) {
+      errors.push(`[footnote-split] ${fieldPath}: multiple footnotes are stacked only at the paragraph end. Split them by sentence, e.g. sentence A.[1] sentence B.[2]`);
     }
   }
 
@@ -474,15 +496,24 @@ function validate(data) {
   if (fields.overviewSalary !== undefined) {
     errors.push('[sal-수정금지] overviewSalary 필드 수정 금지 — sal/wage/wageSource 모두 스킬에서 건드리지 않음. 임금 데이터는 API·기존 데이터 그대로 유지');
   }
+  if (sources['overviewSalary.sal']) {
+    errors.push('[sal-readonly] sources["overviewSalary.sal"] must not be sent by job-data-enhance. Salary annotations and salary sources are read-only here.');
+  }
 
-  // ── 9b. youtubeLinks 개수 검증 ──
+  // ── 9b. youtubeLinks 개수 검증 + 무언 스킵 금지 (2026-04-15 강화) ──
 
-  if (!fields.youtubeLinks || (Array.isArray(fields.youtubeLinks) && fields.youtubeLinks.length < 1) ||
-      (typeof fields.youtubeLinks === 'string' && JSON.parse(fields.youtubeLinks).length < 1)) {
-    // youtubeLinks 누락은 WARN (없는 경우도 허용 — 빈 배열은 OK)
-    // 단, 빈 배열이 아닌 undefined/null이면 경고
-    if (fields.youtubeLinks === undefined || fields.youtubeLinks === null) {
-      warnings.push('[YouTube] youtubeLinks 없음 — 가능하면 1~3개 추가 권장');
+  // youtubeLinks가 draft에 포함된 경우에만 검사 (미포함 시 이번 저장에서 변경 없음 → 검사 생략)
+  if ('youtubeLinks' in fields) {
+    const ytLinks = Array.isArray(fields.youtubeLinks)
+      ? fields.youtubeLinks
+      : (fields.youtubeLinks === null || fields.youtubeLinks === undefined ? [] :
+         (typeof fields.youtubeLinks === 'string' ? JSON.parse(fields.youtubeLinks) : []));
+
+    if (ytLinks.length === 0) {
+      // 빈 배열 제출 시: _youtubeSearchNote 필수 (무언 스킵 금지)
+      if (!fields._youtubeSearchNote || typeof fields._youtubeSearchNote !== 'string' || fields._youtubeSearchNote.trim().length < 10) {
+        errors.push('[YouTube-증거없음] youtubeLinks를 빈 배열로 제출할 때는 _youtubeSearchNote 필드 필수. 형식: "KEIS \'직업명\' 0개, \'직업명 현직자인터뷰\' 0개 (날짜)". 검색 없이 빈 배열 저장 금지.');
+      }
     }
   }
 

@@ -121,3 +121,4 @@ restore-*.mjs
 .claude/settings.local.json
 .claude/launch.json
 .claude/worktrees/
+scripts/bridge.log

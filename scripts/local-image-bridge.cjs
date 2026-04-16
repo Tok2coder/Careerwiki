@@ -7,6 +7,17 @@ const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { getJobPromptTemplate, getMajorPromptTemplate } = require('./prompt-templates.cjs');
 
+// ── 자체 파일 로깅: CMD redirect 없이 node가 bridge.log에 직접 씀 ──────────
+{
+  const logPath = path.join(__dirname, 'bridge.log');
+  const logStream = fs.createWriteStream(logPath, { flags: 'a', encoding: 'utf8' });
+  logStream.on('error', () => {}); // 로그 에러는 무시 (bridge 크래시 방지)
+  const origOut = process.stdout.write.bind(process.stdout);
+  const origErr = process.stderr.write.bind(process.stderr);
+  process.stdout.write = (buf, enc, cb) => { logStream.write(buf, enc); return origOut(buf, enc, cb); };
+  process.stderr.write = (buf, enc, cb) => { logStream.write(buf, enc); return origErr(buf, enc, cb); };
+}
+
 const HOST = process.env.CW_LOCAL_BRIDGE_HOST || '127.0.0.1';
 const PORT = Number(process.env.CW_LOCAL_BRIDGE_PORT || 3210);
 const ROOT = path.join(__dirname, '..');
@@ -24,7 +35,7 @@ const COMFYUI_APP_DIR = process.env.COMFYUI_APP_DIR || path.join(process.env.USE
 const COMFYUI_WORKFLOW_PATH = process.env.COMFYUI_WORKFLOW_PATH
   || path.join(COMFYUI_USER_DIR, 'default', 'workflows', 'Careerwiki-ZIT-workflow .json');
 const COMFYUI_PYTHON = process.env.COMFYUI_PYTHON
-  || path.join(COMFYUI_BASE_DIR, '.venv', 'Scripts', 'python.exe');
+  || path.join(COMFYUI_BASE_DIR, '.venv', 'Scripts', 'pythonw.exe');
 const COMFYUI_MAIN = process.env.COMFYUI_MAIN || path.join(COMFYUI_APP_DIR, 'main.py');
 const LORA_DIR = path.join(COMFYUI_BASE_DIR, 'models', 'loras');
 const LORA_NAME = 'cwbeaver.safetensors';
@@ -439,6 +450,7 @@ async function generatePrompt(systemPrompt, _devVars) {
       ],
       stream: false,
       think: false,
+      keep_alive: 0,
       options: { temperature: 0.7, top_p: 0.9, num_predict: 2048 },
     }),
   });

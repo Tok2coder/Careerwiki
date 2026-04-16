@@ -31,7 +31,8 @@
     "etl:merge-all": "npm run etl:merge-jobs && npm run etl:merge-majors && npm run etl:related-jobs",
     "images:generate-jobs": "tsx scripts/generate_images.ts job",
     "images:generate-majors": "tsx scripts/generate_images.ts major",
-    "images:generate-batch": "tsx scripts/generate_images.ts"
+    "images:generate-batch": "tsx scripts/generate_images.ts",
+    "image-bridge": "node scripts/local-image-bridge.cjs"
   },
   "dependencies": {
     "@resvg/resvg-wasm": "^2.6.2",
