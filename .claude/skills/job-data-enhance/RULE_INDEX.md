@@ -215,18 +215,32 @@ draft에 포함하면 validate FAIL.
 
 ---
 
-## 10. 출처 병합 탐지 (detectMergedSourceText)
+## 10. 출처 병합 탐지 — 두 규칙으로 분리 (2026-04-16)
 
-**현재 상태**: WARN (Gate5). L3 dedup 결정 보류 중.
+두 가지 위반 유형이 서로 다른 함수·심각도로 처리됩니다.
+
+### 10-A. `[출처URL복수]` / `[Gate5/URL복수]` — text 내 복수 URL (FAIL)
+
+source text에 `http://` 또는 `https://`가 2개 이상 포함된 경우. 구조적 위반이므로 즉시 FAIL.
 
 | 위치 | 유형 | 참조 |
 |------|------|------|
-| scripts/_shared/detect-patterns.cjs | ✅ 정규 (코드) | 함수 + FP_SUFFIXES + ORG_NAME_PAT |
-| scripts/validate-job-edit.cjs | 🔒 코드 | M3: 공유 모듈 import로 교체 |
-| scripts/full-quality-audit.cjs | 🔒 코드 | M3: 공유 모듈 import로 교체 |
+| scripts/_shared/detect-patterns.cjs — `detectMultipleUrlsInSourceText()` | ✅ 정규 (코드) | URL 2개+ 패턴 탐지 |
+| scripts/validate-job-edit.cjs — `[출처URL복수]` | 🔒 코드 | **FAIL** (errors 배열) |
+| scripts/full-quality-audit.cjs — `[Gate5/URL복수]` | 🔒 코드 | **FAIL** |
 
-> **L3 보류 사유**: WARN→FAIL 격상 시 기존 DB 직업들의 합성 출처 패턴에 FP(False Positive) 발생 가능성이 높음.
-> 기존 직업 전수 감사(`node scripts/full-quality-audit.cjs --all`) 실행 후 FP율 파악 뒤 재검토 필요.
+### 10-B. `[출처라벨병합]` / `[Gate5/라벨병합]` — 라벨 기관 병합 (INFO/WARN)
+
+"기관A 및 기관B" 라벨 패턴. URL이 모든 언급 기관을 커버하는지는 사람 판단 영역 → FAIL 아님.
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| scripts/_shared/detect-patterns.cjs — `detectMergedOrgLabel()` | ✅ 정규 (코드) | FP_SUFFIXES + ORG_NAME_PAT 필터 포함 |
+| scripts/validate-job-edit.cjs — `[출처라벨병합]` | 🔒 코드 | WARN (warnings 배열) |
+| scripts/full-quality-audit.cjs — `[Gate5/라벨병합]` | 🔒 코드 | WARN |
+
+> **분리 근거**: 라벨에 여러 기관명이 있어도 URL이 그 기관 전부를 커버하는 경우(복합 기관명 등)는
+> 정상이며 자동 FAIL이 FP가 됨. text에 URL을 직접 삽입하는 것은 구조적 문제이므로 항상 FAIL.
 
 ---
 

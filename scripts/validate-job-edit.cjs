@@ -23,7 +23,7 @@ const path = require('path');
 
 // ── 공유 패턴 모듈 (M3: detect-patterns.cjs) ──────────────────────────────────
 // 출처 병합 탐지 함수와 잘린 문장 패턴을 단일 모듈에서 관리.
-const { detectMergedSourceText } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
+const { detectMultipleUrlsInSourceText, detectMergedOrgLabel } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 검증 규칙 ──────────────────────────────────────────
 
@@ -575,12 +575,17 @@ function validate(data) {
       errors.push(`[출처중복] sources["${sourceKey}"]에 동일 URL이 ${count}번 등록: "${url}" — 같은 필드에 같은 URL 중복 금지`);
     }
 
-    // ── [출처병합경고] 여러 기관이 한 source에 묶인 패턴 감지 (WARN) ──
-    // 한 source = 한 기관 = 한 URL 원칙 위반 여부를 탐지한다.
+    // ── [출처URL복수] source text 내 복수 URL 탐지 — FAIL ──────────────────────
+    // source text에 URL을 2개 이상 인라인으로 박으면 구조적 위반 (한 source = 한 URL 원칙).
+    // ── [출처라벨병합] source 라벨에 여러 기관 병합 표기 탐지 — INFO ──────────
+    // "기관A 및 기관B" 형태. URL이 언급된 기관 모두를 실제 커버하는지는 사람 판단 영역.
     for (let i = 0; i < srcVal.length; i++) {
-      const hint = detectMergedSourceText(srcVal[i]);
-      if (hint) {
-        warnings.push(`[출처병합경고] sources["${sourceKey}"][${i}]: 출처 텍스트에 여러 기관이 묶인 것 같습니다 — ${hint}. 각 기관을 별도 source 항목으로 분리하세요 (한 source = 한 기관 = 한 URL 원칙)`);
+      if (detectMultipleUrlsInSourceText(srcVal[i])) {
+        errors.push(`[출처URL복수] sources["${sourceKey}"][${i}]: source text에 URL이 2개 이상 포함됨 — text/url 분리 원칙 위반. URL은 url 필드에만 1개, text는 기관명만 기재하세요`);
+      }
+      const orgHint = detectMergedOrgLabel(srcVal[i]);
+      if (orgHint) {
+        warnings.push(`[출처라벨병합] sources["${sourceKey}"][${i}]: ${orgHint} — URL이 언급된 모든 기관을 실제로 커버하는지 확인. 한 기관이 빠진 경우 별도 source 항목으로 분리하세요 (한 source = 한 기관 = 한 URL 원칙)`);
       }
     }
 
