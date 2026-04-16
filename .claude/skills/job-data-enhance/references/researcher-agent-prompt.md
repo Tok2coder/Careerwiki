@@ -20,23 +20,30 @@
 3. sidebarJobs/sidebarMajors/sidebarCerts/heroTags — 기존 데이터도 검증하고 개선
 4. 커리어트리는 한국인만. 적합 인물 없으면 null
 
-## 채울 필드 목록
+## 채울 필드 목록 (총 17개 — 모두 처리하거나 _*Note로 스킵 근거 제시)
 
-### 항상 새로 작성 (건너뛰면 안 됨)
-- **way**: 되는 방법 200~500자, string 타입. 각주 [N] 필수. 자격요건·시험·진입경로·실무팁. 교육과정 목록 나열 금지 (→ detailReady)
-- **detailReady**: {curriculum:[5개+구체적교육과정], recruit:[3+채용경로], training:[2+심화과정]} — ⚠️ **각 항목 반드시 plain string**: `"경영학과 이수"` ✅ / `{"text":"경영학과 이수"}` ❌ / `{"title":"...","text":"...","link":null}` ❌
-- **trivia**: 이 직업을 진지하게 생각하게 만드는 검증된 팩트 1개. 출처 없으면 금지
-- **detailWlb.wlbDetail**: 130~200자, 근무강도·야근·교대 중심. **임금 정보 절대 금지**
-- **detailWlb.socialDetail**: 100~160자, 사회적 영향·공익만. **근무환경·취업전망 금지**
+### 항상 새로 작성 (건너뛰면 안 됨) — 필드 1~9
+- **[1] way**: 되는 방법 200~500자, string 타입. 각주 [N] 필수. 자격요건·시험·진입경로·실무팁. 교육과정 목록 나열 금지 (→ detailReady)
+- **[2] detailReady.curriculum**: 5개+ plain string 배열. 교육과정·학과·수료 정보. ⚠️ `"경영학과 이수"` ✅ / `{"text":"..."}` ❌
+- **[3] detailReady.recruit**: 3개+ plain string 배열. 채용 경로·전형. URL은 `_sources["detailReady.recruit"]`에만
+- **[4] detailReady.training**: 2개+ plain string 배열. 심화·전문화 경로
+- **[5] trivia**: 이 직업을 진지하게 생각하게 만드는 검증된 팩트 1개. 출처 없으면 금지
+- **[6] detailWlb.wlbDetail**: 130~200자, 근무강도·야근·교대 중심. **임금 정보 절대 금지**
+- **[7] detailWlb.socialDetail**: 100~160자, 사회적 영향·공익만. **근무환경·취업전망 금지**
+- **[8] detailWlb.wlb (등급)**: 반드시 포함. 유효값: `"높음"` / `"보통 이상"` / `"보통"` / `"보통 이하"` / `"낮음"` (띄어쓰기 포함)
+- **[9] detailWlb.social (등급)**: 동일 5등급 중 하나
 
-### 보강 가능 (기존 있으면 유지, 부실하면 보강)
-- **overviewSalary.sal**: 임금 서술 200~300자. 기존 user_contributed에 서술 있으면 유지. 기존 wage가 있으면 덮어쓰지 않음
-- **overviewProspect.main**: 전망 서술 200~400자. "~전망됩니다" 톤. 기존 있으면 유지
-- **sidebarJobs**: 7~12개. SELECT name FROM jobs WHERE is_active=1 AND name IN (...) 로 DB 검증 필수
-- **sidebarMajors**: 3~5개. SELECT name FROM majors WHERE is_active=1 AND name IN (...) 로 DB 검증 필수
-- **sidebarCerts**: [{name, url}] 형식. 자격증만 (시험 아님). "~시험" 금지
-- **heroTags**: 3~10개, 2~15자 명사구. 별칭/세부분류/영문명 포함
-- **youtubeLinks**: [{url, title}]. oembed 실존 확인 필수. 직업명/관련키워드 포함 영상만
+### 보강 가능 (기존 있으면 유지, 부실하면 보강) — 필드 10~15
+- **[10] overviewProspect.main**: 전망 서술 200~400자. "~전망됩니다" 톤. 기존 있으면 유지. **원문 방향 반전 금지**
+- **[11] sidebarJobs**: 7~12개. SELECT name FROM jobs WHERE is_active=1 AND name IN (...) 로 DB 검증 필수
+- **[12] sidebarMajors**: 3~5개. SELECT name FROM majors WHERE is_active=1 AND name IN (...) 로 DB 검증 필수
+- **[13] sidebarCerts**: [{name, url}] 형식. 자격증만 (시험 아님). "~시험" 금지
+- **[14] sidebarOrgs**: [{name, url}] 형식. 관련 협회·기관 1~3개. URL 없으면 null
+- **[15] heroTags**: 3~10개, 2~15자 명사구. 별칭/세부분류/영문명 포함
+
+### 탐색 증거 필수 — 필드 16~17
+- **[16] youtubeLinks**: [{url, title}]. oembed 실존 확인 필수. 직업명/관련키워드 포함 영상만. 한국어 영상만. **없으면 `[]` + `_youtubeSearchNote` 필수** (탐색 증거 없이 빈 배열 금지)
+- **[17] careerTree**: 한국인 공인만, wrangler d1으로 DB INSERT. **없으면 `null` + `_careerTreeNote` 필수** (탐색 증거 없이 null 금지)
 
 ## 4개 품질 게이트 — 반드시 자가 검증 후 결과 보고
 

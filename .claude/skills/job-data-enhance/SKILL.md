@@ -54,6 +54,8 @@ description: >
 | 프로젝트 경로 | `C:\Users\user\Careerwiki` |
 | `career_tree_job_links.stage_index` | **입직 스테이지에만 설정** — `order` 기준 sorted 배열의 마지막 스테이지(거장·회장·전직) 금지. `job_slug`는 해당 직업에 처음 진입하는 스테이지에만 설정. 마지막 스테이지에 설정 시 validate `[careerTree-자기강조]` FAIL |
 | `career_tree_job_links` 중복 금지 | 같은 career_tree_id + job_slug 조합이 2개 이상이면 `[careerTree-자기강조]` FAIL — 반드시 하나만 존재 |
+| `_youtubeSearchNote` | youtubeLinks를 빈 배열 `[]`로 제출할 때 **필수** — `"KEIS '직업명' 검색 0건, '직업명 현직자인터뷰' 검색 0건 (날짜)"` 형식으로 탐색 증거 명시. 누락 시 validate FAIL |
+| `_careerTreeNote` | careerTree를 `null`로 제출할 때 **필수** — `"조사한 인물: 인물A(이유), 인물B(이유). 적합 인물 없음"` 형식으로 탐색 증거 명시. 누락 시 validate FAIL |
 
 ---
 
@@ -94,6 +96,29 @@ description: >
 
 ---
 
+## ⚡ Resume Safety Check (이전 세션에서 이어받을 때)
+
+> **신규 작업이면 바로 Phase 0으로. 이전 세션을 재개하는 경우에만 이 섹션을 먼저 확인.**
+
+draft 파일이 존재해도 아래를 반드시 먼저 확인한다. **draft 존재 ≠ Phase 0-1 완료.**
+
+```
+[ ] 이전 세션의 Self-Report 17필드 체크리스트가 완성돼 있는가?
+    → 없으면: Phase 1 처음부터 재시작
+[ ] DB에서 현재 직업 데이터를 다시 조회해서 draft와 비교했는가?
+    → 다른 세션이 중간에 저장했을 수 있음 — 반드시 최신 상태 확인
+[ ] validate-job-edit.cjs를 실행 없이 API 호출하지 않았는가?
+    → 이전 세션에서 draft가 validate를 통과했더라도 재확인 필수
+```
+
+**중단 지점별 재개 방법:**
+- Phase 0 미완료 → Phase 0-A부터 재시작
+- Phase 1 진행 중 → Self-Report에서 미완료 필드부터 이어서
+- Phase 2 통과 전 → validate 재실행
+- Phase 3 직전 → Phase 3.5 Self-check부터
+
+---
+
 ## Phase 0: 현황 진단 (항상 먼저 실행)
 
 작업 전 대상 직업의 현재 상태를 자동 진단한다. 기존 데이터를 덮어쓰는 사고를 막는다.
@@ -126,7 +151,7 @@ FROM jobs WHERE name IN ('직업명') AND is_active=1;
 
 **기존 데이터 보존 체크리스트 (Phase 0 완료 후 작성):**
 UCJ 또는 merged_profile_json에 아래 필드가 이미 있으면 Phase 1 draft에 반드시 기존값 그대로 포함:
-- **overviewSalary 전체 (sal/wage/wageSource) — 스킬에서 절대 건드리지 않음** ← wage 소실 시 임금 바 차트 전체가 사라짐. validate-job-edit.cjs가 draft에 overviewSalary 포함 시 [sal-수정금지] FAIL 처리.
+- **overviewSalary** — → 필드별 판단 원칙 🔒 절대 수정 금지 참조
 - overviewProspect (그래프 데이터) — 절대 덮어쓰기 금지
 - detailWlb.wlb / detailWlb.social (등급) — 교정만 허용, 삭제 금지
 - detailIndicators (지표 데이터) — 공식 통계, 임의 변경 금지
@@ -152,7 +177,7 @@ merged_profile_json에만 있는 필드도 draft 전송 시 누락되면 null로
 
 | 상황 | 행동 |
 |------|------|
-| `overviewSalary` (sal/wage/wageSource 전체) | **스킬에서 절대 건드리지 않음** — draft에 포함 시 validate [sal-수정금지] FAIL. 임금 데이터는 API·기존 데이터 그대로 유지 |
+| `overviewSalary` (sal/wage/wageSource 전체) | **→ 필드별 판단 원칙 🔒 절대 수정 금지 참조** |
 | `merged_profile_json`에 해당 필드 값이 이미 존재 | **보완 우선**: 기존 서술 필드는 최대한 유지하고 부족한 내용만 보강. 완전 교체는 기존 값이 깨졌거나 검증 가능한 더 나은 출처가 있는 경우에만 예외적으로 수행 |
 | `api_data_json = null` + `job_sources` 행 없음 | API에 존재하지 않는 직업 → 모든 정보를 공개 출처에서 직접 리서치해야 함 |
 
@@ -281,8 +306,6 @@ FROM jobs WHERE slug='슬러그';
 
 ### 보강 가능 필드
 
-> 🔒 **overviewSalary (sal/wage/wageSource)는 스킬에서 절대 건드리지 않음** — draft에 포함하면 validate [sal-수정금지] FAIL 처리.
-
 | 필드 | 판단 기준 |
 |------|----------|
 | `overviewProspect.main` | 기존 서술 있으면 유지. 없거나 부실하면 보강 |
@@ -357,6 +380,11 @@ FROM jobs WHERE slug='슬러그';
 | `sidebarCerts` | 2~5개, **object 배열** `[{"name":"자격증명","url":"https://www.q-net.or.kr/..."}]`. `merged_profile_json.sidebarCerts`에 있으면 우선 활용하고 부족하면 Q-net에서 해당 직업 관련 자격증 검색으로 보강. **"~시험" 금지** — LEET·사법시험·TOEIC 등은 시험이지 자격증이 아님. **[N] 마커 금지** |
 | `heroTags` | 4~8개, 별칭/세부분류/영문명 포함. **조사 어미 판정 예외**: validate가 "~의", "~이" 등으로 끝나는 태그를 조사로 판정하지만, "강의", "설비", "기여", "관리" 등은 명사임. validate에 예외 리스트가 있으므로 이런 경우 PASS됨. 그 외 실제 조사(~에서의, ~으로의)로 끝나면 수정 필요. |
 | `youtubeLinks` | 1~3개, oembed 검증 필수. **형식: `[{url: "https://youtube.com/watch?v=...", title: "영상 제목"}]` 객체 배열** — 문자열 배열(`["url"]`) 절대 금지. 문자열 배열이면 UI에 썸네일 안 뜨고 영상 제목 노출 불가. **한국어 영상만 허용** — 제목이 한국어인 한국 영상만 사용. 영어/외국어 영상 금지. 한국어 영상이 없으면 youtubeLinks 비워둠 (영어 영상 절대 넣지 않음). |
+
+**⚠️ youtubeLinks 탐색 근거 필수**:
+- youtubeLinks를 빈 배열 `[]`로 제출할 때는 반드시 draft JSON에 `_youtubeSearchNote` 필드를 포함해야 한다.
+- 형식: `"_youtubeSearchNote": "KEIS '직업명' 검색 0건, '직업명 현직자인터뷰' 검색 0건 (2026-04-16)"`
+- 검색 없이 빈 배열을 저장하는 것은 **절대 금지** — validate [YouTube-증거없음] FAIL 처리됨.
 
 **YouTube 검색 우선순위:**
 1. KEIS 직업진로동영상(@KEISwork2011) 채널에서 해당 직업 영상 검색
@@ -466,10 +494,10 @@ detailReady.curriculum / detailReady.recruit / detailReady.training / detailRead
 - 해당 내용의 출처를 반드시 `_sources`에 등록해야 한다.
 - sources 키: `"detailReady.curriculum"`, `"detailReady.recruit"`, `"detailReady.training"`, `"detailReady.pathExplore"`
 - curriculum/recruit/training/pathExplore는 **배열** 필드이다.
-  - **외부 출처 데이터가 있으면 무조건 인라인 [N] 필수** — 기존 데이터든 신규 추가든 관계없이, sources에 등록된 출처가 있으면 각 항목의 text 끝에 인라인 [N] 마커를 붙인다. 마침표가 있으면 마침표 뒤(`이수한다.[1]`), 없는 명사구/동사구면 항목 끝(`안전보건교육 이수[1]`) — **억지로 마침표를 추가하지 않아도 됨**.
-  - **항목별 출처가 다르면 → 항목마다 각각 [N] 부여** (curriculum, recruit, training 모두 동일). 이는 산문 필드의 블록 패턴(마지막 문장에만)과 다르게 적용된다. 배열 각 항목은 독립 출처를 가질 수 있기 때문이다.
-  - **연속된 항목이 동일 출처일 때만 → 블록 마지막 항목에 [N] 1회** — validate [각주중복] 규칙(같은 [N]이 동일 필드에 2회 이상 금지)에 따라, 같은 [N]을 두 항목 모두에 붙이는 것은 FAIL이다.
-  - **⚠️ 흔한 실수 — 배열 전체를 하나의 블록으로 오판**: curriculum 5개 항목이 모두 다른 출처인데 "섹션 마지막 항목에만 [1]" 적용 → 앞 4개 항목에 각주 없는 상태 발생. 각 항목에 해당 출처의 [N]을 부여해야 한다.
+  - **🔑 기본 원칙: 항목별 출처가 다르면 → 항목마다 각각 [N] 부여** (curriculum, recruit, training 모두 동일). 배열 각 항목은 독립 출처를 가질 수 있기 때문이다. curriculum 5개 항목이 각각 다른 출처라면, 각 항목 끝에 [1], [2], [3]... 을 붙이고 sources에 각각 등록.
+  - **예외: 연속된 항목이 동일 출처일 때만 → 블록 마지막 항목에 [N] 1회** — validate [각주중복] 규칙에 따라, 같은 [N]을 두 항목 모두에 붙이는 것은 FAIL이다. 연속 3개가 모두 같은 출처면 마지막 항목에만 [3] 1회.
+  - **외부 출처 데이터가 있으면 무조건 인라인 [N] 필수** — sources에 등록된 출처가 있으면 각 항목의 text 끝에 인라인 [N] 마커를 붙인다. 마침표가 있으면 마침표 뒤(`이수한다.[1]`), 없는 명사구/동사구면 항목 끝(`안전보건교육 이수[1]`) — **억지로 마침표를 추가하지 않아도 됨**.
+  - **⚠️ 흔한 실수 절대 금지**: "섹션 마지막 항목 하나에만 [1]" → 앞 항목들에 각주 없는 상태 발생. 각 항목의 출처가 다른지 먼저 확인하고, 다르면 각각 [N].
   - sources가 없으면 [N] 불필요. `sidebarCerts`는 각주 불필요.
   출처는 sources에 반드시 등록하며, id:1부터 시작하는 객체 배열 형식 사용.
 - validate-job-edit.cjs가 텍스트가 있는데 sources가 없으면 WARN 처리.
@@ -713,6 +741,37 @@ curl -s "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=VIDE
 
 ---
 
+## Self-Report: 17필드 완료 체크리스트
+
+**Phase 1-2 완료 후, Phase 3 진행 전에 아래 17개 필드 상태를 직접 보고한다.**
+서브에이전트는 이 체크리스트를 qualityGates와 함께 반환한다.
+
+```
+필드 | 상태 (✅완료/⚠️부분/❌미작업/🔒스킵) | 비고
+-----|------|----
+1. way | | 200자+ string
+2. detailReady.curriculum | | 5개+ plain string
+3. detailReady.recruit | | 3개+ plain string
+4. detailReady.training | | 2개+ plain string
+5. trivia | | 출처 있는 팩트
+6. detailWlb.wlbDetail | | 130~200자
+7. detailWlb.socialDetail | | 100~160자
+8. detailWlb.wlb (등급) | | 높음/보통이상/보통/보통이하/낮음
+9. detailWlb.social (등급) | | 동일
+10. overviewProspect.main | | 기존 있으면 유지, 없으면 보강
+11. sidebarJobs | | 7~12개, DB 실존 확인
+12. sidebarMajors | | 3~8개, DB 실존 확인
+13. sidebarCerts | | 2~5개
+14. sidebarOrgs | | 1~3개 (협회/기관)
+15. heroTags | | 4~8개
+16. youtubeLinks | | oembed 확인. 없으면 ✅ + _youtubeSearchNote 필수
+17. careerTree | | 한국인 공인. 없으면 ✅ + _careerTreeNote 필수
+```
+
+> ⚠️ **audit Gate 5(k)**는 _careerTreeNote 미기재 시 WARN을 발생시킨다 — 17번 필드 처리 증거 없이 제출 금지.
+
+---
+
 ## Phase 3: 저장 (편집 API 호출)
 
 ### 3-A. 사전 검증 스크립트 실행
@@ -721,6 +780,8 @@ curl -s "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=VIDE
 # PASS 확인 후에만 API 호출 (FAIL이면 수정 후 재실행)
 node scripts/validate-job-edit.cjs < draft.json
 ```
+
+> ⚠️ **일회성 스크립트 작성 시 절대 규칙**: 수동 수정 스크립트나 one-off 스크립트를 작성할 때도 validate를 우회하면 안 된다. 스크립트 내에서 반드시 `const { validate } = require('./validate-job-edit.cjs')` 로 직접 호출하여 FAIL 0개를 확인 후 API를 호출해야 한다. 하네스 없이 wrangler나 curl로 직접 저장하는 것은 금지 — 과거 사례: validate 미통과 데이터가 프로덕션에 저장되어 각주 깨짐 발생.
 
 **이 스크립트가 검사하는 10가지** (하나라도 FAIL이면 API 호출 차단):
 1. way 최소 100자 + string 타입 (배열이면 즉시 FAIL)
@@ -796,27 +857,9 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
 "detailWlb": {"wlb":"보통 이하","social":"높음","wlbDetail":"...","socialDetail":"..."}
 ```
 
-### 3-C. 커리어트리 연결 (선택 — 한국인 공인만)
+### 3-C. 커리어트리 연결
 
-**인물 선정 기준:**
-- **살아있거나 최소 2000년 이후까지 경력이 이어진 사람만** — 역사적 위인(세종대왕, 이순신 등)이나 너무 오래된 인물은 제외
-- 현실적으로 직업을 고민하는 사람들에게 참고가 되는 인물이어야 함
-- 해당 직업 분야에서 실제로 활동한 한국인 공인
-
-→ 인물 선정 기준·스테이지 작성·DB 삽입 상세: `../shared/career-tree.md`
-
-삽입 방법 요약 (직접 wrangler d1 사용 — Admin API 미지원):
-```bash
-# 1. 인물 삽입
-npx wrangler d1 execute careerwiki-kr --remote --command \
-  "INSERT INTO career_trees (person_name, person_name_en, person_title, person_image_url, stages_json, display_priority, is_active, created_at, updated_at) VALUES ('인물명', '영문명', '한 줄 소개', NULL, '[{\"order\":0,\"title\":\"직함\",\"job_slug\":null}]', 100, 1, unixepoch()*1000, unixepoch()*1000)"
-
-# 2. 삽입된 ID 확인 후 직업 연결
-npx wrangler d1 execute careerwiki-kr --remote --command \
-  "INSERT INTO career_tree_job_links (career_tree_id, job_slug, stage_index) VALUES ({ID}, '{slug}', {해당직업스테이지인덱스})"
-```
-
-> ⚠️ `job_slug`는 해당 직업에 **처음 진입하는 스테이지에만** 설정. 이전 스테이지(학생, 타직업)는 반드시 null.
+→ 상세: **Phase 3.6** 참조. 저장 직후 또는 Phase 3과 병행하여 실행.
 
 **강조 스테이지(stage_index) 설정 규칙:**
 `career_tree_job_links.stage_index`는 현재 직업 페이지에서 강조(하이라이트)될 스테이지의 인덱스(0-based).
@@ -826,7 +869,67 @@ npx wrangler d1 execute careerwiki-kr --remote --command \
 
 ---
 
-## Phase 3.5: 커리어트리 생성 (한국인 공인 대상)
+## Phase 3.5: Save Self-check (API 호출 직전 필수 점검)
+
+**Phase 3 API 호출 직전, validate PASS 확인 후 추가로 아래를 반드시 점검한다.**
+
+### 배열 필드 항목 수 확인
+
+Phase 0에서 기록한 기존 배열 항목 수와 draft 배열 항목 수를 직접 비교:
+
+```
+[sidebarCerts]  기존: N개 → draft: M개  (M >= N이어야 함)
+[sidebarMajors] 기존: N개 → draft: M개  (M >= N이어야 함)
+[detailReady.curriculum] 기존: N개 → draft: M개  (M >= N이어야 함)
+```
+
+M < N이면 → **즉시 중단, 기존 항목 복원 후 재검증**
+
+### prospect 방향 일치 확인
+
+기존 UCJ의 prospect.main 원문을 다시 꺼내서 draft와 나란히 비교:
+
+```
+[기존] "...소폭 감소할 것으로..."
+[draft] "...안정적으로 유지될 것으로..."
+```
+
+방향이 다르면 → **즉시 기존 텍스트 방향으로 복원**
+
+### trivia 변경 여부 확인
+
+기존 trivia가 있었다면 → draft에서 내용이 교체되지 않았는지 확인.
+내용이 다르면 → 교체 이유가 명확한지 확인 (각주 오류 수정 등 최소 교정만 허용)
+
+### curriculum 각주 점검 (필수)
+
+draft의 `detailReady.curriculum` 배열을 항목별로 확인:
+
+```
+[항목1] "...취득한다"      → [N] 있음? ✅/❌
+[항목2] "...유리하다[2]"   → [N] 있음? ✅
+[항목3] "...높아진다[3]"   → [N] 있음? ✅
+[항목4] "...쌓을 수 있다"  → [N] 있음? ✅/❌
+[항목5] "...갖춘다[1]"     → [N] 있음? ✅
+```
+
+- 항목별로 다른 출처가 있는데 [N]이 없으면 → 출처 추가 후 [N] 부여
+- 연속된 항목이 동일 출처인 경우 → 마지막 항목에만 [N] (블록 패턴 허용)
+- **전체 배열 중 하나의 항목에만 [N]이 있으면 → 반드시 재검토** (블록 오판 의심)
+
+recruit, training도 동일 방식으로 확인 (각 항목이 별도 출처면 각각 [N]).
+
+### sources URL 품질 확인
+
+draft의 모든 sources URL을 한 번 훑어서:
+- 검색결과 URL (cat_kewd, searchKeyword 등 파라미터 포함) → 제거 또는 교체
+- 해당 직업과 관련 없는 카테고리 페이지 → 제거 또는 교체
+
+**Self-check 항목이 모두 ✅ 이어야 API 호출 가능.**
+
+---
+
+## Phase 3.6: 커리어트리 생성 (한국인 공인 대상)
 
 > 💡 Phase 3 저장 직후 또는 Phase 3과 병행하여 실행. 적합한 인물이 없으면 건너뛰기.
 
@@ -838,7 +941,8 @@ npx wrangler d1 execute careerwiki-kr --remote --command \
 - **다양성** — 같은 직업에 2~3명, 시대·분야·성별 다양하게
 - **적합한 인물 없으면 건너뛰기** — 지어내거나 억지로 넣지 않음
 - **살아있거나 최소 2000년 이후까지 경력이 이어진 인물** — 역사적 위인 제외
-- **정치적 중립** — 정치인 출신은 가급적 피하고, 해당 직업으로 유명한 인물 우선
+- **역대 대통령 절대 금지** — 이승만, 윤보선, 박정희, 최규하, 전두환, 노태우, 김영삼, 김대중, 노무현, 이명박, 박근혜, 문재인, 윤석열 등 역대 대통령은 `is_active=0` 처리된 인물이므로 careerTree에 절대 포함 금지. validate가 이름 패턴으로 FAIL 처리함.
+- **정치인 일반** — 대통령이 아닌 정치인(국회의원, 장관 등)은 포함 가능하나, 해당 직업으로 알려진 인물(예: 변호사 출신 국회의원)을 우선으로 선정. 정치 활동이 주된 경력이면 가급적 제외.
 
 ### 스테이지 작성 규칙
 
@@ -878,6 +982,11 @@ npx wrangler d1 execute careerwiki-kr --remote --command \
 - 본업이 여러 스테이지에 걸치면 **처음 입직한 스테이지**
 - 마지막 스테이지가 전직이면 → 그 **직전의 본업 스테이지** 인덱스 지정
   - 예: stages[0:학교, 1:입직, 2:성장, 3:회장(전직)] → stage_index = 1 (입직)
+
+**⚠️ careerTree 탐색 근거 필수**:
+- careerTree를 `null` (적합 인물 없음)으로 제출할 때는 반드시 draft JSON에 `_careerTreeNote` 필드를 포함해야 한다.
+- 형식: `"_careerTreeNote": "조사한 인물: 홍길동(현직 작가, 해당 직업 직접 경력 없음), 김영희(2000년 이전 경력 종료). 적합 인물 없음."`
+- 탐색 없이 null을 저장하는 것은 **절대 금지** — audit Gate 5(k) WARN 처리됨.
 
 ### DB 저장 방법
 
@@ -967,66 +1076,11 @@ node scripts/full-quality-audit.cjs --slug={직업slug}
 - [ ] youtubeLinks 영상 제목이 올바르게 표시되는가? (URL 문자열 노출 아닌지)
 - [ ] `**볼드 잔류 없음**` — 서술 필드에 마크다운 `**...**` 텍스트가 남아있지 않은가?
 - [ ] 기존에 있던 데이터가 사라지지 않았는가?
+- [ ] **Gate 6 diff-snapshot 검증** — `node scripts/full-quality-audit.cjs --slug={slug}` 실행 시 Gate 6 결과 확인. `.skill-cache/snapshot-{slug}.json` 이 있으면 저장 전·후 배열 항목 수 및 prospect 방향을 자동 비교함. Phase 0에서 스냅샷이 저장된 경우에만 활성화됨. Gate 6 FAIL 시 → 손실된 배열 항목 복원 또는 prospect 방향 수정.
 
 ---
 
-## Phase 5.5: API 호출 직전 Self-check (Preservation Gate)
-
-**Phase 3 API 호출 직전, validate PASS 확인 후 추가로 아래를 반드시 점검한다.**
-
-### 배열 필드 항목 수 확인
-
-Phase 0에서 기록한 기존 배열 항목 수와 draft 배열 항목 수를 직접 비교:
-
-```
-[sidebarCerts]  기존: N개 → draft: M개  (M >= N이어야 함)
-[sidebarMajors] 기존: N개 → draft: M개  (M >= N이어야 함)
-[detailReady.curriculum] 기존: N개 → draft: M개  (M >= N이어야 함)
-```
-
-M < N이면 → **즉시 중단, 기존 항목 복원 후 재검증**
-
-### prospect 방향 일치 확인
-
-기존 UCJ의 prospect.main 원문을 다시 꺼내서 draft와 나란히 비교:
-
-```
-[기존] "...소폭 감소할 것으로..."
-[draft] "...안정적으로 유지될 것으로..."
-```
-
-방향이 다르면 → **즉시 기존 텍스트 방향으로 복원**
-
-### trivia 변경 여부 확인
-
-기존 trivia가 있었다면 → draft에서 내용이 교체되지 않았는지 확인.
-내용이 다르면 → 교체 이유가 명확한지 확인 (각주 오류 수정 등 최소 교정만 허용)
-
-### curriculum 각주 점검 (필수)
-
-draft의 `detailReady.curriculum` 배열을 항목별로 확인:
-
-```
-[항목1] "...취득한다"      → [N] 있음? ✅/❌
-[항목2] "...유리하다[2]"   → [N] 있음? ✅
-[항목3] "...높아진다[3]"   → [N] 있음? ✅
-[항목4] "...쌓을 수 있다"  → [N] 있음? ✅/❌
-[항목5] "...갖춘다[1]"     → [N] 있음? ✅
-```
-
-- 항목별로 다른 출처가 있는데 [N]이 없으면 → 출처 추가 후 [N] 부여
-- 연속된 항목이 동일 출처인 경우 → 마지막 항목에만 [N] (블록 패턴 허용)
-- **전체 배열 중 하나의 항목에만 [N]이 있으면 → 반드시 재검토** (블록 오판 의심)
-
-recruit, training도 동일 방식으로 확인 (각 항목이 별도 출처면 각각 [N]).
-
-### sources URL 품질 확인
-
-draft의 모든 sources URL을 한 번 훑어서:
-- 검색결과 URL (cat_kewd, searchKeyword 등 파라미터 포함) → 제거 또는 교체
-- 해당 직업과 관련 없는 카테고리 페이지 → 제거 또는 교체
-
-**Self-check 항목이 모두 ✅ 이어야 API 호출 가능.**
+→ **Phase 5.5 내용은 Phase 3.5로 이동됨.** API 호출 직전 Self-check은 Phase 3.5를 참조.
 
 ---
 
