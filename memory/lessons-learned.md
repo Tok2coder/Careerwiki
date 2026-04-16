@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-04-16] Windows CP949 인코딩 오류로 한글 Mojibake 저장 (준법감시인 technKnow)
+- **상황**: 준법감시인 직업의 `overviewAbilities.technKnow` 필드 전체가 아랍·키릴·라틴확장 문자 뭉치로 깨져 저장됨 (사용자 직접 발견). `_sources.overviewAbilities.technKnow[0].text` 각주 텍스트도 동시 깨짐. rev 11598/11599에서 발생
+- **원인**: Windows 환경에서 한글 JSON을 curl 또는 shell 파이프로 전송 시 CP949 인코딩 오류 발생. 하네스(validate-job-edit.cjs, full-quality-audit.cjs)에 Mojibake 탐지 로직이 없어 그대로 통과
+- **해결**: (1) `scripts/_shared/detect-patterns.cjs`에 `detectMojibake()` 함수 추가 (아랍·시리아·라틴확장·키릴·아르메니아 문자 밀도 검사). (2) validate-job-edit.cjs Rule 0 [Mojibake] FAIL 추가. (3) full-quality-audit.cjs Gate5(l) [Gate5/Mojibake] FAIL 추가. (4) 준법감시인 technKnow + 각주 텍스트 올바른 한국어로 복구 (rev 11600)
+- **교훈**: **한글이 포함된 JSON은 반드시 Node.js `fetch()`로 전송**. Windows `curl -d`로 한글 전송 시 Mojibake 발생 (CP949 인코딩 혼용). 하네스를 통과한 데이터도 인코딩 오류 가능 → 모든 서술 필드에 Mojibake 검사 추가 완료
+
 ### [2026-03-31] user_contributed_json way 필드 배열→문자열 타입 불일치로 500 에러
 - **상황**: 배치 75 데이터 보완 후 6개 직업 페이지(IT기술지원전문가 등)가 500 에러. `formatRichText`에서 `value.trim()` 호출 시 `e.trim is not a function` TypeError 발생
 - **원인**: user_contributed_json의 `way` 필드가 문자열 대신 배열(`["항목1", "항목2"]`)로 저장됨. `deepMergeProfile`이 배열을 그대로 덮어써서 merged_profile_json의 문자열 `way`를 배열로 교체. `formatRichText`는 string만 기대하므로 `.trim()` 호출 시 크래시
