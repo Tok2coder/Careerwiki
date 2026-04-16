@@ -122,3 +122,6 @@ restore-*.mjs
 .claude/launch.json
 .claude/worktrees/
 scripts/bridge.log
+
+# 자동 생성 백업 파일
+*.backup-*
