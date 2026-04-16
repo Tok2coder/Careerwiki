@@ -94,7 +94,7 @@ const YOUTUBE_PATTERNS = [
 
 // ── 공유 패턴 모듈 (M3: detect-patterns.cjs) ──────────────────────────────────
 // 출처 병합 탐지 함수와 잘린 문장 패턴을 단일 모듈에서 관리.
-const { detectMergedSourceText } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
+const { detectMultipleUrlsInSourceText, detectMergedOrgLabel } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── D1 쿼리 헬퍼 ──────────────────────────────────────────────────────────────
 
@@ -490,17 +490,26 @@ function checkGate5(job, data) {
     issues.push({ level: 'WARN', msg: '[Gate5] detailWlb.social 없음 — 요약 카드 공란' });
   }
 
-  // (f) 출처 병합 패턴 감지 [출처병합] — 한 source = 한 기관 = 한 URL 원칙
+  // (f-1) [Gate5/URL복수] source text 내 복수 URL → FAIL
+  //       source text에 URL 2개 이상 인라인 박힘 = 구조적 위반
+  // (f-2) [Gate5/라벨병합] "기관A 및 기관B" 라벨 패턴 → WARN (INFO 수준)
+  //       URL이 모든 언급 기관을 커버하는지는 사람 판단 — 자동 FAIL 아님
   const sourcesObj = data._sources;
   if (sourcesObj && typeof sourcesObj === 'object') {
     for (const [fieldKey, srcArr] of Object.entries(sourcesObj)) {
       if (!Array.isArray(srcArr)) continue;
       for (let i = 0; i < srcArr.length; i++) {
-        const hint = detectMergedSourceText(srcArr[i]);
-        if (hint) {
+        if (detectMultipleUrlsInSourceText(srcArr[i])) {
+          issues.push({
+            level: 'FAIL',
+            msg: `[Gate5/URL복수] _sources["${fieldKey}"][${i}]: source text에 URL이 2개 이상 포함됨 — text/url 분리 원칙 위반. URL은 url 필드에만 1개, text는 기관명만 기재하세요`,
+          });
+        }
+        const orgHint = detectMergedOrgLabel(srcArr[i]);
+        if (orgHint) {
           issues.push({
             level: 'WARN',
-            msg: `[Gate5/출처병합] _sources["${fieldKey}"][${i}]: 여러 기관이 한 source에 묶인 것 같습니다 — ${hint}. 각 기관을 별도 항목으로 분리하세요 (한 source = 한 기관 = 한 URL 원칙)`,
+            msg: `[Gate5/라벨병합] _sources["${fieldKey}"][${i}]: ${orgHint} — URL이 언급된 모든 기관을 실제로 커버하는지 확인. 한 기관이 빠진 경우 별도 항목으로 분리하세요 (한 source = 한 기관 = 한 URL 원칙)`,
           });
         }
       }

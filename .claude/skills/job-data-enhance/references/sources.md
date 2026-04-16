@@ -113,42 +113,59 @@ _sources.way: [{"id":1, ...}, {"id":2, ...}]  // [3]이 없음!
 
 ---
 
-## 🔴 한 source = 한 기관 = 한 URL 원칙 (병합 source 금지)
+## 🔴 한 source = 한 기관 = 한 URL 원칙
 
-**하나의 `_sources` 항목에 여러 기관을 묶는 것은 절대 금지입니다.**
+이 원칙은 두 가지 서로 다른 수준의 위반으로 나뉩니다.
 
-한 source 항목은 반드시 **하나의 기관**과 **하나의 URL**만 가리켜야 합니다.
-"및/또는/와/과"로 여러 기관을 묶어 등록하면, 한 기관의 URL만 출처로 연결되어
-나머지 기관은 사실상 미확인 출처가 됩니다.
+### 위반 유형 1 — text에 복수 URL 인라인 삽입 (절대 금지 / FAIL)
 
-### ❌ 금지 예시 (병합 source)
-
-```json
-// 여러 기관을 "및"으로 묶고 URL은 한 기관만 가리키는 경우 — 금지!
-{"id": 1, "text": "[1] HRD-Net 직업훈련포털 및 한국카지노업관광협회", "url": "https://www.hrd.go.kr/..."}
-```
-
-→ URL이 HRD-Net만 가리키므로 한국카지노업관광협회는 출처 미확인 상태.
-
-### ✅ 올바른 예시 (기관별 분리)
+`source.text` 필드 안에 `http://` 또는 `https://` URL을 2개 이상 직접 쓰는 것은
+**구조적 위반**입니다. source 항목 자체가 `{text, url}` 구조이며 URL은 `url` 필드에만
+1개 존재해야 합니다. text에 URL을 인라인으로 박으면 렌더링·각주 시스템이 의도대로
+작동하지 않습니다.
 
 ```json
-{"id": 1, "text": "[1] HRD-Net 직업훈련포털", "url": "https://www.hrd.go.kr/hrdp/co/pcobo/PCOBO0100P.do?..."},
-{"id": 2, "text": "[2] 한국카지노업관광협회 교육기관 안내", "url": "https://koreacasino.or.kr/kcasino/info/infoEduAgency.do"}
+// ❌ 절대 금지 — text에 URL 2개 이상
+{"text": "[1] https://www.hrd.go.kr/... 와 https://koreacasino.or.kr/... 참고", "url": "..."}
+
+// ✅ 올바름 — URL은 url 필드에만 1개
+{"text": "[1] HRD-Net 직업훈련포털", "url": "https://www.hrd.go.kr/..."}
 ```
 
-→ 각 기관에 고유한 URL이 연결됨.
+→ `validate` `[출처URL복수]` **FAIL**, `audit` `[Gate5/URL복수]` **FAIL** 으로 차단됨.
 
-### 위반 시 자동 감지
+### 위반 유형 2 — 라벨에 여러 기관 병합 (확인 필요 / INFO)
 
-| 도구 | 타이밍 | 레벨 | 코드 |
-|------|--------|------|------|
-| `validate-job-edit.cjs` | 저장 **전** | WARN | `[출처병합경고]` |
-| `full-quality-audit.cjs` | 저장 **후** | WARN | `[Gate5/출처병합]` |
-| `scripts/detect-merged-sources.cjs` | 정기 점검 (bulk) | — | 별도 실행용 |
+`source.text`에 "기관A 및 기관B" 형태로 여러 기관을 병렬 표기하되 URL이 하나인 경우.
+URL이 언급된 모든 기관의 내용을 실제로 커버하면 문제없지만,
+그렇지 않으면 한 기관의 URL만 연결되고 나머지는 미확인 출처가 됩니다.
 
-> `detect-merged-sources.cjs`는 validate/audit과 동일한 v3 탐지 로직을 사용하며,
-> DB 전체 직업 대상 정기 점검 시 실행한다. 저장 전·후 검증은 위 두 도구가 담당.
+**자동 감지는 INFO 수준** — 사람 판단이 필요한 영역이므로 FAIL로 차단하지 않습니다.
+
+```json
+// ⚠️ INFO — URL이 두 기관 모두를 커버하면 허용, 그렇지 않으면 분리 필요
+{"text": "[1] HRD-Net 직업훈련포털 및 한국카지노업관광협회", "url": "https://www.hrd.go.kr/..."}
+```
+
+→ URL(hrd.go.kr)이 한국카지노업관광협회 내용을 커버하지 못하면 → 분리 필요:
+
+```json
+// ✅ 기관별로 분리한 올바른 예시
+{"text": "[1] HRD-Net 직업훈련포털", "url": "https://www.hrd.go.kr/hrdp/co/pcobo/PCOBO0100P.do?..."},
+{"text": "[2] 한국카지노업관광협회 교육기관 안내", "url": "https://koreacasino.or.kr/kcasino/info/infoEduAgency.do"}
+```
+
+**"한국건축가협회 및 설계사무소"처럼 단일 URL이 복합 기관명을 실제 커버하는 경우**는
+INFO 알림만 뜨고 저장은 허용됩니다. URL을 WebFetch로 확인 후 적절히 판단하세요.
+
+### 자동 감지 요약
+
+| 유형 | 도구 | 타이밍 | 레벨 | 코드 |
+|------|------|--------|------|------|
+| text 내 복수 URL | `validate-job-edit.cjs` | 저장 **전** | **FAIL** | `[출처URL복수]` |
+| text 내 복수 URL | `full-quality-audit.cjs` | 저장 **후** | **FAIL** | `[Gate5/URL복수]` |
+| 라벨에 여러 기관 병합 | `validate-job-edit.cjs` | 저장 **전** | WARN | `[출처라벨병합]` |
+| 라벨에 여러 기관 병합 | `full-quality-audit.cjs` | 저장 **후** | WARN | `[Gate5/라벨병합]` |
 
 ---
 
