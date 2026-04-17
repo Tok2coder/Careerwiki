@@ -7,11 +7,12 @@
 ## 🔴 2026-04-17 trivia 각주 중간 배치 — 룰 D 신설
 
 ### [강화-4] trivia 중간 [N] 배치 → 마지막 문장 끝에만 → 룰 D 신설
-**원인**: 임상심리사 enhance 시 `trivia = "..세 가지 병존한다.[1] 이후 두 문장이 이어짐."` 패턴으로 저장됨. 전수 스캔 결과 873개 UCJ trivia 중 130개(15%)가 동일 패턴 위반.
-**강화**: `detectTriviaInlineFootnote(trivia)` — 마지막 [N] 이후 한글·영문·숫자 등 실질 텍스트가 있으면 FAIL. `[Trivia/각주중간배치]` FAIL로 차단 (validate + audit Gate5).
-**실행**: trivia는 반드시 모든 문장을 쓴 뒤 맨 마지막에 [N]을 한 번만 배치. 각 문장이 다른 출처인 경우에만 문장별 [N] 허용하되 마지막 [N] 뒤 추가 문장 금지.
-**수정**: 임상심리사 trivia [1] 마지막 문장 끝으로 이동 → rev 11961.
-**전수 스캔**: 기존 DB 130건 위반 — 신규 저장부터 차단, 기존 데이터는 재enhance 시 점진적 정리.
+**원인**: 임상심리사 enhance 시 `trivia = "..세 가지 병존한다.[1] 이후 두 문장이 이어짐."` 패턴으로 저장됨. `checkTrailingSentence()` 함수가 WARN만 발생(FAIL 아님)해서 API 차단 없이 저장됨.
+**전수 스캔**: UCJ trivia에 [N] 있는 직업 767개 중 **128개(17%)** 동일 패턴 위반. `scripts/trivia-footnote-scan-report.json` 참조.
+**강화**: `detectMidFootnote(text)` — 마지막 [N] 이후 실질 텍스트(>5자) 잔존 시 null 아닌 값 반환 → `[trivia-각주중간]` FAIL로 차단 (validate + audit Gate5/trivia-각주중간). 회귀 테스트 FAIL×2 + PASS×2 추가.
+**실행**: trivia는 반드시 모든 문장을 쓴 뒤 맨 마지막에 [N]을 배치. 각 문장이 다른 출처인 경우 문장별 [N] 허용하되 마지막 [N] 뒤 추가 문장 금지.
+**수정**: 임상심리사 trivia [1] 마지막 문장 끝으로 이동 (HTTP 200 저장 성공).
+**기존 위반**: 127개 직업 미수정 — 신규 저장부터 차단, 기존 데이터는 재enhance 시 점진적 정리.
 
 ---
 

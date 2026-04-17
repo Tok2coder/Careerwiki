@@ -122,6 +122,26 @@ draft에 포함하면 validate FAIL.
 | SKILL.md — Phase 1 detailReady curriculum 각주 규칙 (M2 수정 후) | ✅ 정규 | — |
 | validate-job-edit.cjs — [각주중복] + [OS-Orphan] 규칙 | 🔒 코드 | — |
 
+### 4-D. `trivia` 각주 — 마지막 문장 끝에만 위치 (중간 위치 금지) — 룰 D (2026-04-17)
+
+**규칙**: trivia는 string 타입이므로 [N]은 반드시 **마지막 문장 끝**에만 위치해야 한다.
+마지막 `[N]` 뒤에 실질 텍스트(>5자)가 남아 있으면 FAIL.
+
+- ✅ 올바름: `"문장A. 문장B. 문장C.[1]"`
+- ❌ 잘못됨: `"문장A.[1] 문장B. 문장C."`
+- ✅ 허용(다중): `"문장A.[1] 문장B.[2] 문장C.[3]"` — 마지막 [3] 뒤 텍스트 없음
+
+**인시던트**: 임상심리사(2026-04-17) — [1]이 첫 문장 뒤, 뒤 2문장 무출처.
+**root cause**: `checkTrailingSentence()`가 WARN만 발생 → 스킬이 무시.
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| scripts/_shared/detect-patterns.cjs — `detectMidFootnote()` | ✅ 정규 (코드) | |
+| scripts/validate-job-edit.cjs — `[trivia-각주중간]` | 🔒 코드 | **FAIL** |
+| scripts/full-quality-audit.cjs — `[Gate5/trivia-각주중간]` | 🔒 코드 | **FAIL** |
+| scripts/selfcheck/rule-regression-tests.cjs — 룰 D | 🔒 코드 | FAIL×2 + PASS×2 |
+| SKILL.md — Phase 2 trivia 섹션 | 📎 참조 | → 이 규칙 |
+
 ---
 
 ## 5. sidebarCerts/Majors/Orgs 규칙
