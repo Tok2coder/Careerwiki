@@ -272,6 +272,18 @@ export const renderLayout = (
             word-break: keep-all;
           }
 
+          /* 핵심 역량 아이콘 반응형 사이즈 */
+          .ability-icon-box i[data-lucide] {
+            width: 20px;
+            height: 20px;
+          }
+          @media (min-width: 640px) {
+            .ability-icon-box i[data-lucide] {
+              width: 28px;
+              height: 28px;
+            }
+          }
+
           /* 소제목 스타일 */
           .content-heading {
             font-size: 18px;

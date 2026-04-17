@@ -3911,15 +3911,15 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
         const label = resolveAbilityLabel(item)
         const text = label || (typeof item === 'string' ? item : JSON.stringify(item))
         const { icon, color } = getAbilityIcon(text)
-        return `<div class="flex items-center gap-3">
-          <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-wiki-card border border-wiki-border flex items-center justify-center">
-            <i data-lucide="${icon}" class="${color}" style="width: 28px; height: 28px;"></i>
+        return `<div class="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div class="flex-shrink-0 w-10 h-10 sm:w-14 sm:h-14 rounded-xl bg-wiki-card border border-wiki-border flex items-center justify-center ability-icon-box">
+            <i data-lucide="${icon}" class="${color}"></i>
           </div>
-          <span class="text-wiki-text">${escapeHtml(text)}</span>
+          <span class="text-wiki-text text-sm sm:text-base min-w-0 break-keep">${escapeHtml(text)}</span>
         </div>`
       })
       .join('')
-    abilityBlocks.push(`<div><h3 class="content-heading">핵심 역량</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${abilityList}</div></div>`)
+    abilityBlocks.push(`<div><h3 class="content-heading">핵심 역량</h3><div class="grid grid-cols-2 gap-2 sm:gap-4">${abilityList}</div></div>`)
   }
   
   // 정규교육과정 - 상세정보 탭의 직업 준비하기 섹션으로 이동 (중복 제거)
