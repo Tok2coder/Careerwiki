@@ -30,6 +30,7 @@ const {
   detectMissingFootnoteInArrayItems,
   analyzeYoutubeSearchNote,
   analyzeCareerTreeNote,
+  detectMidFootnote,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 검증 규칙 ──────────────────────────────────────────
@@ -206,6 +207,17 @@ function validate(data) {
   if (fields.trivia) {
     if (fields.trivia.length < 20) {
       warnings.push(`[필드] trivia가 너무 짧음 (${fields.trivia.length}자)`);
+    }
+
+    // ── 룰 D: trivia-각주중간 — 마지막 [N] 뒤에 실질 텍스트 잔존 시 FAIL ──
+    // 올바른 패턴: "문장A. 문장B.[1]"  잘못된 패턴: "문장A.[1] 문장B."
+    const midRemnant = detectMidFootnote(fields.trivia);
+    if (midRemnant !== null) {
+      errors.push(
+        `[trivia-각주중간] trivia: 마지막 [N] 뒤에 실질 텍스트(${midRemnant.length}자) 잔존 — ` +
+        `각주는 반드시 마지막 문장 끝에만 위치해야 함. ` +
+        `"...${midRemnant.substring(0, 50)}" 부분을 [N] 앞으로 이동하거나 별도 출처로 분리`
+      );
     }
   }
 

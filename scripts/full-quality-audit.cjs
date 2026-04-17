@@ -101,6 +101,7 @@ const {
   detectMissingFootnoteInArrayItems,
   analyzeYoutubeSearchNote,
   analyzeCareerTreeNote,
+  detectMidFootnote,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── D1 쿼리 헬퍼 ──────────────────────────────────────────────────────────────
@@ -660,6 +661,31 @@ function checkGate5(job, data) {
           level: 'FAIL',
           msg: `[Gate5/CareerTreeNote얕음] _careerTreeNote 탐색 부족 (후보 ${analysis.candidateCount}명 / 카테고리 ${analysis.categoryCount}/5개). ` +
             `조건: 후보 ≥5명 OR 카테고리 ≥3개. 재enhance 시 더 광범위한 인물 탐색 필요`,
+        });
+      }
+    }
+  }
+
+  // ── 룰 D: trivia 각주 중간 위치 탐지 (Gate5/trivia-각주중간) ──────────────────
+  // trivia는 string 타입이므로 각 문장에 개별 각주를 부여하는 대신
+  // 마지막 문장 끝에만 [N]이 위치해야 한다.
+  // 마지막 [N] 뒤에 실질 텍스트(>5자)가 남아 있으면 각주가 중간에 박혀 있는 것 → FAIL.
+  //
+  // 올바른 패턴: "문장A. 문장B. 문장C.[1]"
+  // 잘못된 패턴: "문장A.[1] 문장B. 문장C."
+  //
+  // 다중 각주(문장마다 고유 [N])는 허용: "문장A.[1] 문장B.[2] 문장C.[3]"
+  //   — 마지막 [3] 뒤에 텍스트 없으므로 PASS.
+  {
+    const triviaText = getNestedValue(data, 'trivia');
+    if (triviaText && typeof triviaText === 'string') {
+      const remnant = detectMidFootnote(triviaText);
+      if (remnant !== null) {
+        issues.push({
+          level: 'FAIL',
+          msg: `[Gate5/trivia-각주중간] trivia: 마지막 [N] 뒤에 실질 텍스트(${remnant.length}자) 잔존 — ` +
+            `각주는 반드시 마지막 문장 끝에만 위치. ` +
+            `"...${remnant.substring(0, 60)}" 를 [N] 앞으로 이동 또는 별도 출처 분리 필요`,
         });
       }
     }

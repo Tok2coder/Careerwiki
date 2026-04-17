@@ -251,6 +251,37 @@ function analyzeCareerTreeNote(note) {
   return { pass, candidateCount, categoryCount, missingCategories };
 }
 
+// ── 룰 D: string 필드 내 각주 중간 위치 탐지 ─────────────────────────────────
+//
+// trivia 등 string 타입 필드에서 마지막 \[\d+\] 뒤에 실질 텍스트(>5자, 공백·마침표 제외)가
+// 남아 있으면 각주가 문단 중간에 박혀 있는 것 → FAIL 신호.
+//
+// 올바른 패턴: "문장A. 문장B. 문장C.[1]"
+// 잘못된 패턴: "문장A.[1] 문장B. 문장C."  ← [1] 뒤에 실질 텍스트 잔존
+//
+// 단, 다중 [N] 패턴(각 문장마다 고유 각주)은 허용:
+//   "문장A.[1] 문장B.[2] 문장C.[3]" — 마지막 [3] 뒤에 텍스트 없으므로 PASS
+//
+// @param {string} text - 검사할 문자열
+// @returns {string|null} 문제 있으면 마지막 [N] 뒤 잔존 텍스트 반환, 없으면 null
+function detectMidFootnote(text) {
+  if (!text || typeof text !== 'string') return null;
+  const allMatches = [...text.matchAll(/\[\d+\]/g)];
+  if (allMatches.length === 0) return null;
+
+  // 마지막 각주 마커 기준으로 뒤에 남은 텍스트 추출
+  const lastMatch = allMatches[allMatches.length - 1];
+  const afterLast = text.substring(lastMatch.index + lastMatch[0].length).trim();
+
+  // 공백·마침표만 있으면 정상 (각주가 끝에 위치)
+  if (/^[.\s]*$/.test(afterLast)) return null;
+
+  // 5자 초과 실질 텍스트가 남아 있으면 문제
+  if (afterLast.length > 5) return afterLast;
+
+  return null;
+}
+
 module.exports = {
   detectMultipleUrlsInSourceText,
   detectMergedOrgLabel,
@@ -261,10 +292,11 @@ module.exports = {
   ORG_NAME_PAT,
   detectMojibake,
   MOJI_RANGES,
-  // 룰 A/B/C
+  // 룰 A/B/C/D
   detectMissingFootnoteInArrayItems,
   analyzeYoutubeSearchNote,
   analyzeCareerTreeNote,
   YOUTUBE_SEARCH_CATEGORIES,
   CAREER_TREE_SEARCH_CATEGORIES,
+  detectMidFootnote,
 };
