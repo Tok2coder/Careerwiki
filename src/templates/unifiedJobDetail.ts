@@ -3485,41 +3485,26 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
       const smallPart = profile.heroCategory.small ? escapeHtml(profile.heroCategory.small) : ''
       const totalLevels = (largePart ? 1 : 0) + (mediumPart ? 1 : 0) + (smallPart ? 1 : 0)
       
-      // 3개 레벨이 있을 때만 모바일 확장 기능 적용
+      // 2개 이상 레벨: 데스크톱 가로, 모바일 세로
       if (totalLevels >= 2) {
+        const bcLevels = [largePart, mediumPart, smallPart].filter(Boolean)
+        const mobileVerticalItems = bcLevels.map((part, idx) => `
+          <span class="flex items-center gap-1.5">
+            <i class="fas fa-sitemap text-[11px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>
+            <span>${part}</span>
+          </span>
+          ${idx < bcLevels.length - 1 ? '<i class="fas fa-chevron-down text-[9px]" style="color:rgba(129,140,248,0.5); margin-left: 6px;" aria-hidden="true"></i>' : ''}
+        `).join('')
+
         categoryHtml = `
-          <style>
-            @media (min-width: 768px) {
-              .job-bc-mobile { display: none !important; }
-              .job-bc-desktop { display: inline-flex !important; }
-            }
-            @media (max-width: 767px) {
-              .job-bc-mobile { display: inline-flex !important; }
-              .job-bc-desktop { display: none !important; }
-              .job-bc-mobile .bc-m, .job-bc-mobile .bc-s,
-              .job-bc-mobile .bc-sep-m, .job-bc-mobile .bc-sep-s { display: none; }
-              .job-bc-mobile[data-lv="2"] .bc-m,
-              .job-bc-mobile[data-lv="2"] .bc-sep-m { display: inline; }
-              .job-bc-mobile[data-lv="3"] .bc-m,
-              .job-bc-mobile[data-lv="3"] .bc-s,
-              .job-bc-mobile[data-lv="3"] .bc-sep-m,
-              .job-bc-mobile[data-lv="3"] .bc-sep-s { display: inline; }
-              .job-bc-mobile .bc-expand { transition: opacity 0.2s; }
-              .job-bc-mobile[data-lv="3"] .bc-expand { opacity: 0; pointer-events: none; }
-            }
-          </style>
-          <!-- 데스크톱: 전체 표시 -->
-          <span class="job-bc-desktop hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[14px] font-medium" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
+          <!-- 데스크톱: 가로 한 줄 -->
+          <span class="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[14px] font-medium" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
             <i class="fas fa-sitemap text-[11px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>
             ${largePart}${mediumPart ? ` <span style="color:rgba(129,140,248,0.4);">›</span> ${mediumPart}` : ''}${smallPart ? ` <span style="color:rgba(129,140,248,0.4);">›</span> ${smallPart}` : ''}
           </span>
-          <!-- 모바일: 클릭하여 단계적 확장 -->
-          <span class="job-bc-mobile inline-flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-full text-[14px] font-medium cursor-pointer select-none" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);" data-lv="1" data-max="${totalLevels}" onclick="(function(e){var el=e.currentTarget;if(!el)return;var lv=parseInt(el.getAttribute('data-lv')||'1',10);var mx=parseInt(el.getAttribute('data-max')||'1',10);var nxt=lv>=mx?1:lv+1;el.setAttribute('data-lv',String(nxt));})(event)">
-            <i class="fas fa-sitemap text-[11px]" style="color:rgba(129,140,248,0.7);" aria-hidden="true"></i>
-            <span class="bc-l">${largePart}</span>
-            ${mediumPart ? `<span class="bc-sep-m" style="color:rgba(129,140,248,0.4);">›</span><span class="bc-m">${mediumPart}</span>` : ''}
-            ${smallPart ? `<span class="bc-sep-s" style="color:rgba(129,140,248,0.4);">›</span><span class="bc-s">${smallPart}</span>` : ''}
-            <i class="fas fa-chevron-right bc-expand text-[9px] text-wiki-muted/70 ml-0.5" aria-hidden="true"></i>
+          <!-- 모바일: 세로 계층 -->
+          <span class="inline-flex md:hidden flex-col items-start gap-1 px-3 py-2 rounded-2xl text-[14px] font-medium" style="background:rgba(99,102,241,0.08);color:rgba(203,213,225,0.85);border:1px solid rgba(99,102,241,0.2);">
+            ${mobileVerticalItems}
           </span>
         `
       } else {
