@@ -1048,19 +1048,21 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     }
     const skillAppliedCount = skillAppliedResult?.count || 0
 
-    // 2. 스킬 적용된 entity_id 집합 조회 (각 item.skillApplied 판정용)
-    const skillAppliedIds = new Set<string>()
+    // 2. 스킬 적용된 entity_id → 최근 적용 시각 맵 조회 (skillApplied + 정렬용)
+    //    created_at은 'YYYY-MM-DD HH:MM:SS' 포맷이라 문자열 비교로 시간순 정렬 가능
+    const skillAppliedMap = new Map<string, string>()
     {
       let offset = 0
       while (true) {
         const batch = await db.prepare(
-          `SELECT DISTINCT entity_id FROM page_revisions
+          `SELECT entity_id, MAX(created_at) as last_at FROM page_revisions
            WHERE entity_type = ? AND change_summary LIKE ?
+           GROUP BY entity_id
            ORDER BY entity_id LIMIT 500 OFFSET ?`
-        ).bind(entityType, skillMarkerLike, offset).all<{ entity_id: string }>()
+        ).bind(entityType, skillMarkerLike, offset).all<{ entity_id: string; last_at: string }>()
         const rows = batch.results || []
         for (const r of rows) {
-          if (r.entity_id) skillAppliedIds.add(r.entity_id)
+          if (r.entity_id) skillAppliedMap.set(r.entity_id, r.last_at ?? '')
         }
         if (rows.length < 500) break
         offset += 500
@@ -1126,14 +1128,15 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       }
 
       const ytLow = youtubeCount < 3
-      const skillApplied = skillAppliedIds.has(row.id)
+      const skillLastAppliedAt = skillAppliedMap.get(row.id) ?? null
+      const skillApplied = skillLastAppliedAt !== null
 
       if (fieldCount === 12) perfectCount++
       if (fieldCount < 6) poorCount++
 
       return {
         name: row.name, slug: row.slug, fields, fieldCount, jsonSize,
-        sourceCount, urlSourceCount, youtubeCount, skillApplied,
+        sourceCount, urlSourceCount, youtubeCount, skillApplied, skillLastAppliedAt,
         wayIsArray, imageUrlBad, wayTrunc, srcOrderBad, ytLow,
       }
     })

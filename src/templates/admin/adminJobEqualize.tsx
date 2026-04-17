@@ -57,6 +57,7 @@ export interface JobEqualizeItem {
   urlSourceCount: number // URL이 포함된 출처 수
   youtubeCount: number
   skillApplied: boolean // page_revisions.change_summary에 스킬 마커 존재 여부
+  skillLastAppliedAt: string | null // 최근 스킬 적용 시각 ('YYYY-MM-DD HH:MM:SS' or null)
   // 품질 플래그
   wayIsArray: boolean     // way가 배열 형식 (위험)
   imageUrlBad: boolean    // image_url 포맷 오류 (경고)
@@ -287,14 +288,18 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       </div>
     </div>
 
-    <!-- 진행률 바 -->
+    <!-- 진행률 바 (스킬 적용률 기준) -->
     <div class="glass-card rounded-xl p-4 mb-6">
       <div class="flex items-center justify-between mb-2">
-        <h3 class="text-sm font-semibold text-white">전체 진행률</h3>
-        <span class="text-sm font-bold text-emerald-400">${contributedCount} / ${totalJobs.toLocaleString()}</span>
+        <div class="flex items-center gap-2">
+          <i class="fas fa-wand-magic-sparkles text-cyan-400 text-xs"></i>
+          <h3 class="text-sm font-semibold text-white">스킬 적용률</h3>
+          <span class="text-[10px] text-slate-500">[${skillName}] 마커 기준 · 보완율 ${progressPct}% (${contributedCount})</span>
+        </div>
+        <span class="text-sm font-bold text-cyan-400">${skillAppliedCount.toLocaleString()} / ${totalJobs.toLocaleString()} · ${skillAppliedPct}%</span>
       </div>
       <div class="w-full bg-slate-700/60 rounded-full h-2.5 overflow-hidden">
-        <div class="h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400" style="width: ${progressPct}%"></div>
+        <div class="h-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-400" style="width: ${skillAppliedPct}%"></div>
       </div>
     </div>
 
@@ -344,6 +349,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         </select>
         <!-- 정렬 -->
         <select id="sortSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50">
+          <option value="skill-desc" selected>스킬 적용순 (최근)</option>
           <option value="name-asc">이름순 ↑</option>
           <option value="name-desc">이름순 ↓</option>
           <option value="field-desc">완성도 높은순</option>
@@ -450,6 +456,16 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         var parts = sort.split('-');
         var key = parts[0], dir = parts[1];
         filtered.sort(function(a, b) {
+          // 스킬 적용순: 적용된 것 먼저, 그 안에서 최근 적용일시 desc. 미적용끼리는 이름 asc.
+          if (key === 'skill') {
+            if (a.skillApplied !== b.skillApplied) return a.skillApplied ? -1 : 1;
+            if (a.skillApplied) {
+              var at = a.skillLastAppliedAt || '';
+              var bt = b.skillLastAppliedAt || '';
+              if (at !== bt) return bt.localeCompare(at); // desc
+            }
+            return a.name.localeCompare(b.name, 'ko');
+          }
           var va, vb;
           if (key === 'name') { va = a.name; vb = b.name; }
           else if (key === 'field') { va = a.fieldCount; vb = b.fieldCount; }
@@ -505,7 +521,8 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           html += '</td>';
           html += '<td class="px-2 py-2 text-center">';
           if (item.skillApplied) {
-            html += '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-400 text-[10px]" title="스킬 적용됨"><i class="fas fa-wand-magic-sparkles text-[9px]"></i>적용</span>';
+            var tipAt = item.skillLastAppliedAt ? ' · 최근 ' + item.skillLastAppliedAt : '';
+            html += '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-400 text-[10px]" title="스킬 적용됨' + tipAt + '"><i class="fas fa-wand-magic-sparkles text-[9px]"></i>적용</span>';
           } else {
             html += '<span class="text-slate-600 text-[10px]" title="스킬 미적용">—</span>';
           }
