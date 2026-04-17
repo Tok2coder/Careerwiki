@@ -209,15 +209,17 @@ function validate(data) {
       warnings.push(`[필드] trivia가 너무 짧음 (${fields.trivia.length}자)`);
     }
 
-    // ── 룰 D: trivia 각주 중간 배치 검사 ──────────────────────────────────────
-    // 마지막 [N] 이후에 실질 텍스트가 이어지면 FAIL.
-    // [N]은 trivia의 마지막 문장 끝(마침표 뒤)에만 위치해야 한다.
-    if (detectTriviaInlineFootnote(fields.trivia)) {
+    // ── 룰 D: trivia 각주 배치 검사 ──────────────────────────────────────────
+    // (a) 마지막 [N] 뒤에 실질 텍스트가 이어지거나
+    // (b) 각주 2개 이상이 맨 끝에 연속 몰려 있으면 FAIL.
+    // 각주는 해당 출처가 커버하는 내용의 마지막 문장 뒤에 위치해야 한다.
+    const triviaViolation = detectTriviaInlineFootnote(fields.trivia);
+    if (triviaViolation) {
       const preview = fields.trivia.replace(/^(.{0,80}).*$/, '$1');
       errors.push(
-        `[Trivia/각주중간배치] trivia의 마지막 [N] 이후에 문장이 이어짐 — ` +
-        `[N]은 trivia 전체의 마지막 문장 끝에만 1회 배치. ` +
-        `같은 출처이면 [N]을 마지막 문장으로 이동, 다른 출처이면 새 출처 [N+1] 추가. ` +
+        `[Trivia/각주배치] ${triviaViolation} — ` +
+        `각주는 해당 출처가 커버하는 마지막 문장 뒤에 위치해야 함. ` +
+        `각주가 1개면 위치 무관, 여러 개면 각 출처가 커버하는 구간 끝에 분산 배치. ` +
         `미리보기: "${preview}..."`
       );
     }

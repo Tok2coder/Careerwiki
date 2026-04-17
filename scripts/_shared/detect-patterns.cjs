@@ -251,28 +251,50 @@ function analyzeCareerTreeNote(note) {
   return { pass, candidateCount, categoryCount, missingCategories };
 }
 
-// ── 룰 D: trivia 중간 각주 위치 검사 ─────────────────────────────────────────
+// ── 룰 D: trivia 각주 위치 검사 ───────────────────────────────────────────────
 //
-// trivia string에서 마지막 [N] 이후에 의미 있는 텍스트(한글·영문·숫자)가
-// 이어지면 위반이다. [N]은 반드시 trivia의 마지막 문장 끝(마침표 뒤)에만 와야 한다.
+// 원칙: 각주 [N]은 해당 출처가 커버하는 내용의 마지막 문장 뒤에 위치해야 한다.
 //
-// OK  : "첫문장. 둘째문장.[1]"         — 마지막 [N] 뒤 텍스트 없음
-// OK  : "문장A.[1] 문장B.[2]"          — 각 문장이 다른 출처, 마지막 [N]=[2] 뒤 없음
-// FAIL: "첫문장.[1] 둘째문장."         — 마지막 [N] 뒤에 "둘째문장." 이어짐
-// FAIL: "문장A.[1] 문장B.[2] 문장C."   — 마지막 [N]=[2] 뒤에 "문장C." 이어짐
+// 정상:
+//   - 각주가 0~1개면 위치 무관 (1개면 trivia 전체를 해당 출처가 커버한다고 간주)
+//   - 각주가 2개 이상이고 본문 중간중간에 분산 배치되어 있으면 PASS
+//     (예: "문장1.[1] 문장2. 문장3.[2]" — [1]은 문장1, [2]는 문장2-3 커버)
+//
+// 위반:
+//   (a) 마지막 [N] 뒤에 실질 텍스트가 이어짐 — trailing 텍스트가 어느 출처 범위인지 불명확
+//       예: "문장1.[1] 문장2. 문장3."  (마지막 [N]=[1] 뒤에 문장2-3이 이어짐)
+//   (b) 각주 2개 이상이 맨 끝에 연속으로 몰려있음 — 각주별 커버 범위 불명확
+//       예: "문장1. 문장2. 문장3.[1][2]"  (어느 문장이 어느 출처인지 알 수 없음)
 //
 // @param {string} trivia - trivia 필드 문자열
-// @returns {boolean} true면 위반 (마지막 [N] 이후에 실질 텍스트 존재)
+// @returns {string|null} 위반 시 사유 문자열, 정상이면 null
 function detectTriviaInlineFootnote(trivia) {
-  if (!trivia || typeof trivia !== 'string') return false;
+  if (!trivia || typeof trivia !== 'string') return null;
   const trimmed = trivia.trim();
   const all = [...trimmed.matchAll(/\[\d+\]/g)];
-  if (all.length === 0) return false; // [N] 없음 — 별도 문제
+  if (all.length <= 1) return null; // 각주 0~1개면 위치 무관 PASS
 
+  // 조건 (a): 마지막 [N] 뒤에 실질 텍스트가 이어지면 위반
   const last = all[all.length - 1];
-  const after = trimmed.slice(last.index + last[0].length).trim();
-  // 마지막 [N] 이후에 한글·영문·숫자 등 실질 텍스트가 있으면 위반
-  return /[가-힣a-zA-Z0-9]/.test(after);
+  const afterLast = trimmed.slice(last.index + last[0].length).trim();
+  if (/[가-힣a-zA-Z0-9]/.test(afterLast)) {
+    return '마지막 [N] 이후에 출처 귀속이 불명확한 문장이 이어짐';
+  }
+
+  // 조건 (b): 모든 [N]이 맨 끝에 연속 배치되었는지 확인
+  // first [N]부터 last [N] 끝까지 구간에서 [N] 태그들을 제거했을 때 실질 텍스트가 없으면
+  // → 각주들이 연속으로 몰려있음. 단, first [N] 이전에 실질 텍스트가 있어야 위반 (커버할 본문 존재)
+  const first = all[0];
+  const between = trimmed.slice(first.index, last.index + last[0].length);
+  const betweenCleaned = between.replace(/\[\d+\]/g, '').trim();
+  if (betweenCleaned.length === 0) {
+    const beforeFirst = trimmed.slice(0, first.index).trim();
+    if (/[가-힣a-zA-Z0-9]/.test(beforeFirst)) {
+      return `각주 ${all.length}개가 맨 끝에 연속 몰려있음 — 각주별 출처 범위 불명확`;
+    }
+  }
+
+  return null;
 }
 
 module.exports = {

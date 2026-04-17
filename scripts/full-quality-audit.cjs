@@ -592,8 +592,9 @@ function checkGate5(job, data) {
     }
   }
 
-  // ── 룰 D: UCJ trivia 각주 중간 배치 검사 (Gate5/Trivia각주중간배치) ──────────────
-  // trivia의 마지막 [N] 이후에 실질 텍스트가 이어지면 FAIL.
+  // ── 룰 D: UCJ trivia 각주 배치 검사 (Gate5/Trivia각주배치) ──────────────────
+  // (a) 마지막 [N] 뒤 실질 텍스트 이어짐, 또는
+  // (b) 각주 2개 이상이 맨 끝 연속 몰림 → FAIL.
   {
     let ucjTrivia = null;
     try {
@@ -603,11 +604,12 @@ function checkGate5(job, data) {
       ucjTrivia = ucjRaw.trivia || null;
     } catch { /* skip */ }
 
-    if (ucjTrivia && detectTriviaInlineFootnote(ucjTrivia)) {
+    const triviaReason = ucjTrivia ? detectTriviaInlineFootnote(ucjTrivia) : null;
+    if (triviaReason) {
       const preview = ucjTrivia.length > 100 ? ucjTrivia.slice(0, 100) + '...' : ucjTrivia;
       issues.push({
         level: 'FAIL',
-        msg: `[Gate5/Trivia각주중간배치] trivia의 마지막 [N] 이후에 문장이 이어짐 — [N]은 trivia 마지막 문장 끝에만 배치. 재enhance 시 [N] 위치 교정 필요. 미리보기: "${preview}"`,
+        msg: `[Gate5/Trivia각주배치] ${triviaReason} — 각주는 해당 출처 커버 구간 끝에 배치. 재enhance 시 [N] 위치 교정 필요. 미리보기: "${preview}"`,
       });
     }
   }

@@ -2,8 +2,9 @@
 /**
  * scan-trivia-inline-footnotes.cjs
  *
- * UCJ trivia 필드에서 "마지막 [N] 이후에 문장이 이어지는" 위반을 전수 탐지.
- * 룰 D: detectTriviaInlineFootnote
+ * UCJ trivia 필드에서 룰 D 위반을 전수 탐지.
+ *   (a) 마지막 [N] 뒤에 실질 텍스트가 이어짐
+ *   (b) 각주 2개 이상이 맨 끝에 연속 몰려 있음
  *
  * Usage: node scripts/selfcheck/scan-trivia-inline-footnotes.cjs
  */
@@ -12,20 +13,9 @@
 
 const { execSync } = require('child_process');
 const path = require('path');
+const { detectTriviaInlineFootnote } = require(path.join(__dirname, '..', '_shared', 'detect-patterns.cjs'));
 
 const ROOT = path.resolve(__dirname, '../..');
-
-function detectTriviaInlineFootnote(trivia) {
-  if (!trivia || typeof trivia !== 'string') return false;
-  const trimmed = trivia.trim();
-  const all = [...trimmed.matchAll(/\[\d+\]/g)];
-  if (all.length === 0) return false; // [N] 없음 — 별도 문제
-
-  const last = all[all.length - 1];
-  const after = trimmed.slice(last.index + last[0].length).trim();
-  // 마지막 [N] 이후에 한글·영문·숫자 등 실질 텍스트가 있으면 위반
-  return /[가-힣a-zA-Z0-9]/.test(after);
-}
 
 // DB에서 UCJ trivia 전체 조회
 function fetchAll() {
@@ -44,8 +34,9 @@ const noFootnote = [];
 
 for (const row of rows) {
   if (!row.trivia) continue;
-  if (detectTriviaInlineFootnote(row.trivia)) {
-    violations.push(row);
+  const reason = detectTriviaInlineFootnote(row.trivia);
+  if (reason) {
+    violations.push({ ...row, reason });
   } else if (!/\[\d+\]/.test(row.trivia)) {
     noFootnote.push(row);
   }
@@ -53,11 +44,11 @@ for (const row of rows) {
 
 console.log(`\n전체 UCJ trivia: ${rows.length}개`);
 console.log(`[N] 없음 (별도 검토): ${noFootnote.length}개`);
-console.log(`\n═══ [Trivia/각주중간배치] 위반 — ${violations.length}개 ═══\n`);
+console.log(`\n═══ [Trivia/각주배치] 위반 — ${violations.length}개 ═══\n`);
 
 for (const v of violations) {
   const preview = v.trivia.length > 200 ? v.trivia.slice(0, 200) + '...' : v.trivia;
-  console.log(`❌ ${v.name} (${v.slug})`);
+  console.log(`❌ ${v.name} (${v.slug}) — ${v.reason}`);
   console.log(`   ${preview}`);
   console.log();
 }
