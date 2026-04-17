@@ -801,6 +801,13 @@ node scripts/validate-job-edit.cjs < draft.json
 
 **fields + sources는 반드시 함께 전송.** sources 없이 fields만 보내면 각주가 깨진다.
 
+> 🔖 **changeSummary 마커 규칙 (필수)**: `changeSummary`는 반드시 `[job-data-enhance]` prefix로 시작한다. 이 마커는 `page_revisions.change_summary`에 저장되어 스킬 적용 여부를 쿼리로 추적하는 데 사용된다 (admin/job-equalize 대시보드의 "스킬 적용" 컬럼). prefix 누락 시 스킬 미적용으로 집계되므로 절대 빠뜨리지 말 것.
+>
+> - ✅ `"[job-data-enhance] 17필드 보완 (way, trivia, detailWlb...)"`
+> - ✅ `"[job-data-enhance] way·trivia·detailWlb 최신 정보로 보완"`
+> - ❌ `"17필드 보완"` (prefix 누락)
+> - ❌ `"job-data-enhance: 17필드 보완"` (대괄호 누락)
+
 ```bash
 curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
   -H "Content-Type: application/json" \
@@ -820,7 +827,7 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
       "detailWlb.wlbDetail": [{"text": "[1] 직업백과", "url": "https://job.asamaru.net/..."}],
       "detailWlb.socialDetail": [{"text": "[2] 워크넷", "url": "https://www.work.go.kr/..."}]
     },
-    "changeSummary": "way·trivia·detailWlb 최신 정보로 보완"
+    "changeSummary": "[job-data-enhance] way·trivia·detailWlb 최신 정보로 보완"
   }'
 # 응답: {"success": true} 확인. false이면 오류 메시지 확인 후 수정
 ```
@@ -1260,7 +1267,7 @@ curl -s -X POST "https://careerwiki.org/api/job/{id}/edit" \
         {"text": "[2] 출처명", "url": "https://..."}
       ]
     },
-    "changeSummary": "Phase 5: trivia GN 재번호"
+    "changeSummary": "[job-data-enhance] Phase 5: trivia GN 재번호"
   }'
 ```
 
