@@ -101,6 +101,7 @@ const {
   detectMissingFootnoteInArrayItems,
   analyzeYoutubeSearchNote,
   analyzeCareerTreeNote,
+  detectTriviaInlineFootnote,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── D1 쿼리 헬퍼 ──────────────────────────────────────────────────────────────
@@ -588,6 +589,26 @@ function checkGate5(job, data) {
           }
         });
       }
+    }
+  }
+
+  // ── 룰 D: UCJ trivia 각주 중간 배치 검사 (Gate5/Trivia각주중간배치) ──────────────
+  // trivia의 마지막 [N] 이후에 실질 텍스트가 이어지면 FAIL.
+  {
+    let ucjTrivia = null;
+    try {
+      const ucjRaw = typeof job.user_contributed_json === 'string'
+        ? JSON.parse(job.user_contributed_json)
+        : (job.user_contributed_json || {});
+      ucjTrivia = ucjRaw.trivia || null;
+    } catch { /* skip */ }
+
+    if (ucjTrivia && detectTriviaInlineFootnote(ucjTrivia)) {
+      const preview = ucjTrivia.length > 100 ? ucjTrivia.slice(0, 100) + '...' : ucjTrivia;
+      issues.push({
+        level: 'FAIL',
+        msg: `[Gate5/Trivia각주중간배치] trivia의 마지막 [N] 이후에 문장이 이어짐 — [N]은 trivia 마지막 문장 끝에만 배치. 재enhance 시 [N] 위치 교정 필요. 미리보기: "${preview}"`,
+      });
     }
   }
 

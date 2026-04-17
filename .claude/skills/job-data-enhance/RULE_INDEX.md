@@ -3,7 +3,7 @@
 각 규칙의 **정규(canonical) 위치**와 반복 참조 위치를 한눈에 보여주는 인덱스.
 규칙 충돌 시 **정규 위치가 우선**한다.
 
-업데이트: 2026-04-16 (룰 A/B/C 탐색 깊이 강화 추가)
+업데이트: 2026-04-17 (룰 D trivia 각주 중간 배치 탐지 추가)
 
 ---
 
@@ -401,6 +401,32 @@ Windows 환경에서 `curl -d`로 한글 텍스트를 전송할 때 CP949 인코
 | scripts/full-quality-audit.cjs — `[Gate5/CareerTreeNote얕음]` | 🔒 코드 | **FAIL** |
 
 **기존 데이터**: 2개 직업 위반 확인 (준법감시인, 바이오화학제품연구기획자). 재enhance 시 정리.
+
+---
+
+## 13-E. trivia 각주 중간 배치 금지 — 룰 D (2026-04-17 추가)
+
+### 원인
+
+임상심리사 enhance 작업에서 `trivia` 필드의 `[1]`이 첫 번째 문장 뒤에 배치되고 이후 2문장이 이어지는 패턴이 저장됨. 전수 스캔 결과 873개 UCJ trivia 중 130개(15%)가 같은 패턴으로 위반.
+
+### 검사 로직
+
+`trivia` 문자열에서 **마지막 [N] 이후**에 한글·영문·숫자 등 실질 텍스트가 이어지면 위반.
+
+- OK: `"첫문장. 둘째문장.[1]"` — 마지막 [N] 뒤 텍스트 없음
+- OK: `"문장A.[1] 문장B.[2]"` — 각 문장이 다른 출처, 마지막 [2] 뒤 없음
+- FAIL: `"첫문장.[1] 둘째문장."` — 마지막 [N] 뒤에 "둘째문장." 이어짐
+- FAIL: `"문장A.[1] 문장B.[2] 문장C."` — 마지막 [2] 뒤에 "문장C." 이어짐
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| scripts/_shared/detect-patterns.cjs — `detectTriviaInlineFootnote()` | ✅ 정규 (코드) | |
+| scripts/validate-job-edit.cjs — `[Trivia/각주중간배치]` | 🔒 코드 | **FAIL** (저장 차단) |
+| scripts/full-quality-audit.cjs — `[Gate5/Trivia각주중간배치]` | 🔒 코드 | **FAIL** |
+| scripts/selfcheck/rule-regression-tests.cjs — 룰 D fixture | 🔒 코드 | 회귀 테스트 (FAIL 2 + PASS 2) |
+
+**소급 적용**: 전수 스캔 130건 발견 — 신규 저장부터 차단. 기존 데이터는 재enhance 시 점진적 정리.
 
 ---
 

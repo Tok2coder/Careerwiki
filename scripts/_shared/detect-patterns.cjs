@@ -251,6 +251,30 @@ function analyzeCareerTreeNote(note) {
   return { pass, candidateCount, categoryCount, missingCategories };
 }
 
+// ── 룰 D: trivia 중간 각주 위치 검사 ─────────────────────────────────────────
+//
+// trivia string에서 마지막 [N] 이후에 의미 있는 텍스트(한글·영문·숫자)가
+// 이어지면 위반이다. [N]은 반드시 trivia의 마지막 문장 끝(마침표 뒤)에만 와야 한다.
+//
+// OK  : "첫문장. 둘째문장.[1]"         — 마지막 [N] 뒤 텍스트 없음
+// OK  : "문장A.[1] 문장B.[2]"          — 각 문장이 다른 출처, 마지막 [N]=[2] 뒤 없음
+// FAIL: "첫문장.[1] 둘째문장."         — 마지막 [N] 뒤에 "둘째문장." 이어짐
+// FAIL: "문장A.[1] 문장B.[2] 문장C."   — 마지막 [N]=[2] 뒤에 "문장C." 이어짐
+//
+// @param {string} trivia - trivia 필드 문자열
+// @returns {boolean} true면 위반 (마지막 [N] 이후에 실질 텍스트 존재)
+function detectTriviaInlineFootnote(trivia) {
+  if (!trivia || typeof trivia !== 'string') return false;
+  const trimmed = trivia.trim();
+  const all = [...trimmed.matchAll(/\[\d+\]/g)];
+  if (all.length === 0) return false; // [N] 없음 — 별도 문제
+
+  const last = all[all.length - 1];
+  const after = trimmed.slice(last.index + last[0].length).trim();
+  // 마지막 [N] 이후에 한글·영문·숫자 등 실질 텍스트가 있으면 위반
+  return /[가-힣a-zA-Z0-9]/.test(after);
+}
+
 module.exports = {
   detectMultipleUrlsInSourceText,
   detectMergedOrgLabel,
@@ -267,4 +291,6 @@ module.exports = {
   analyzeCareerTreeNote,
   YOUTUBE_SEARCH_CATEGORIES,
   CAREER_TREE_SEARCH_CATEGORIES,
+  // 룰 D
+  detectTriviaInlineFootnote,
 };
