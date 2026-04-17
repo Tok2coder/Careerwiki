@@ -1,11 +1,15 @@
 /**
- * 관리자 직업 데이터 보완 현황 대시보드
+ * 관리자 직업/전공 데이터 보완 현황 대시보드
  * - DB 실시간 조회 (user_contributed_json 파싱)
  * - 12개 필드별 완성도
+ * - 스킬 적용 여부 (page_revisions.change_summary 마커 기반)
+ * - 직업/전공 탭 전환
  * - 클라이언트 사이드 필터/정렬/검색/페이지네이션
  */
 
 import { renderAdminLayout } from './adminLayout'
+
+export type EqualizeTab = 'job' | 'major'
 
 export const EQUALIZE_FIELDS = [
   'way', 'overviewSalary', 'overviewProspect', 'trivia',
@@ -52,6 +56,7 @@ export interface JobEqualizeItem {
   sourceCount: number  // 출처 총 항목 수
   urlSourceCount: number // URL이 포함된 출처 수
   youtubeCount: number
+  skillApplied: boolean // page_revisions.change_summary에 스킬 마커 존재 여부
   // 품질 플래그
   wayIsArray: boolean     // way가 배열 형식 (위험)
   imageUrlBad: boolean    // image_url 포맷 오류 (경고)
@@ -69,13 +74,15 @@ export interface QualityAlerts {
 }
 
 export interface AdminJobEqualizeProps {
-  totalJobs: number
-  contributedCount: number
-  perfectCount: number    // 12/12
-  poorCount: number       // <6
+  tab: EqualizeTab             // 'job' | 'major'
+  totalJobs: number            // tab 엔티티 총 수 (전체 활성)
+  contributedCount: number     // user_contributed_json 존재 수
+  perfectCount: number         // 12/12
+  poorCount: number            // <6
   avgJsonSize: number
   items: JobEqualizeItem[]
   qualityAlerts: QualityAlerts
+  skillAppliedCount: number    // 스킬 적용된 엔티티 수
 }
 
 /** Check if a field has meaningful content */
@@ -135,9 +142,15 @@ export function parseSources(sources: any): { sourceCount: number; urlSourceCoun
 }
 
 export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
-  const { totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts } = props
+  const { tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts, skillAppliedCount } = props
   const uncontributed = totalJobs - contributedCount
   const progressPct = totalJobs > 0 ? ((contributedCount / totalJobs) * 100).toFixed(1) : '0.0'
+  const skillAppliedPct = totalJobs > 0 ? ((skillAppliedCount / totalJobs) * 100).toFixed(1) : '0.0'
+
+  const isJob = tab === 'job'
+  const entityLabel = isJob ? '직업' : '전공'
+  const entityUrlPrefix = isJob ? '/job/' : '/major/'
+  const skillName = isJob ? 'job-data-enhance' : 'major-data-enhance'
 
   const itemsJson = JSON.stringify(items)
 
@@ -193,14 +206,26 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       }
     </style>
 
+    <!-- 탭 네비게이션 -->
+    <div class="glass-card rounded-xl p-1 mb-4 inline-flex gap-1">
+      <a href="/admin/job-equalize?tab=job"
+         class="px-4 py-2 rounded-lg text-sm font-medium transition-all ${isJob ? 'bg-blue-500/20 text-blue-300' : 'text-slate-400 hover:text-white'}">
+        <i class="fas fa-briefcase mr-1.5 text-xs"></i>직업
+      </a>
+      <a href="/admin/job-equalize?tab=major"
+         class="px-4 py-2 rounded-lg text-sm font-medium transition-all ${!isJob ? 'bg-purple-500/20 text-purple-300' : 'text-slate-400 hover:text-white'}">
+        <i class="fas fa-graduation-cap mr-1.5 text-xs"></i>전공
+      </a>
+    </div>
+
     <!-- 요약 통계 KPI -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
       <div class="glass-card rounded-xl p-4 stat-card">
         <div class="flex items-center gap-2 mb-2">
-          <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
-            <i class="fas fa-briefcase text-blue-400 text-xs"></i>
+          <div class="w-8 h-8 ${isJob ? 'bg-blue-500/20' : 'bg-purple-500/20'} rounded-lg flex items-center justify-center">
+            <i class="fas ${isJob ? 'fa-briefcase text-blue-400' : 'fa-graduation-cap text-purple-400'} text-xs"></i>
           </div>
-          <span class="text-[11px] text-slate-400">전체 직업</span>
+          <span class="text-[11px] text-slate-400">전체 ${entityLabel}</span>
         </div>
         <div class="text-xl font-bold text-white">${totalJobs.toLocaleString()}</div>
       </div>
@@ -240,6 +265,16 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           <span class="text-[11px] text-slate-400">미보완</span>
         </div>
         <div class="text-xl font-bold text-slate-400">${uncontributed.toLocaleString()}</div>
+      </div>
+      <div class="glass-card rounded-xl p-4 stat-card" title="change_summary에 [${skillName}] 마커가 있는 ${entityLabel}">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-wand-magic-sparkles text-cyan-400 text-xs"></i>
+          </div>
+          <span class="text-[11px] text-slate-400">스킬 적용</span>
+        </div>
+        <div class="text-xl font-bold text-cyan-400">${skillAppliedCount.toLocaleString()}</div>
+        <div class="text-[10px] text-slate-500">${skillAppliedPct}%</div>
       </div>
       <div class="glass-card rounded-xl p-4 stat-card">
         <div class="flex items-center gap-2 mb-2">
@@ -285,7 +320,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         <!-- 검색 -->
         <div class="relative flex-1 min-w-[200px]">
           <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-          <input id="searchInput" type="text" placeholder="직업명 검색..."
+          <input id="searchInput" type="text" placeholder="${entityLabel}명 검색..."
             class="w-full pl-9 pr-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50" />
         </div>
         <!-- 필터 -->
@@ -294,6 +329,10 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           <option value="perfect">완벽 12/12 (${perfectCount})</option>
           <option value="good">양호 6~11 (${contributedCount - perfectCount - poorCount})</option>
           <option value="poor">부실 &lt;6 (${poorCount})</option>
+          <optgroup label="── 스킬 적용 ──">
+            <option value="skillApplied">스킬 적용됨</option>
+            <option value="skillNotApplied">스킬 미적용</option>
+          </optgroup>
           <optgroup label="── 품질 이슈 ──">
             <option value="quality">품질 이슈 있음</option>
             <option value="wayIsArray">way 배열 오류</option>
@@ -315,17 +354,18 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         </select>
       </div>
       <div class="mt-2 text-xs text-slate-500">
-        <span id="resultCount">${contributedCount}</span>개 직업 표시 중
+        <span id="resultCount">${contributedCount}</span>개 ${entityLabel} 표시 중
       </div>
     </div>
 
-    <!-- 직업 목록 테이블 -->
+    <!-- 목록 테이블 -->
     <div class="glass-card rounded-xl overflow-hidden">
       <div class="overflow-x-auto admin-mini-scroll">
         <table class="w-full text-sm">
           <thead>
             <tr class="text-left border-b border-slate-700/50 bg-slate-800/40">
-              <th class="px-4 py-3 text-xs text-slate-400 font-medium sticky left-0 bg-slate-800/90 z-10 min-w-[140px]" data-tooltip="직업명 (클릭하면 프로덕션 페이지로 이동)">직업명</th>
+              <th class="px-4 py-3 text-xs text-slate-400 font-medium sticky left-0 bg-slate-800/90 z-10 min-w-[140px]" data-tooltip="${entityLabel}명 (클릭하면 프로덕션 페이지로 이동)">${entityLabel}명</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center min-w-[56px]" data-tooltip="change_summary에 [${skillName}] 마커가 있는지">스킬</th>
               <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px]" data-tooltip="12개 필드 중 채워진 필드 수 (n/12)">완성도</th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="way 필드 — 직업 진입 경로/방법 정보">방법</th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="overviewSalary 필드 — 급여/임금 정보">임금</th>
@@ -366,6 +406,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
     <script>
     (function() {
       var ITEMS = ${itemsJson};
+      var URL_PREFIX = ${JSON.stringify(entityUrlPrefix)};
       var PAGE_SIZE = 50;
       var currentPage = 1;
       var filtered = ITEMS;
@@ -395,6 +436,8 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           if (filter === 'perfect' && item.fieldCount !== 12) return false;
           if (filter === 'good' && (item.fieldCount < 6 || item.fieldCount >= 12)) return false;
           if (filter === 'poor' && item.fieldCount >= 6) return false;
+          if (filter === 'skillApplied' && !item.skillApplied) return false;
+          if (filter === 'skillNotApplied' && item.skillApplied) return false;
           if (filter === 'quality' && !(item.wayIsArray || item.imageUrlBad || item.wayTrunc || item.srcOrderBad || item.ytLow)) return false;
           if (filter === 'wayIsArray' && !item.wayIsArray) return false;
           if (filter === 'imageUrlBad' && !item.imageUrlBad) return false;
@@ -457,8 +500,15 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
 
           html += '<tr class="hover:bg-slate-700/20 transition-colors" style="' + rowBorder + '">';
           html += '<td class="px-4 py-2 sticky left-0 bg-slate-900/80 z-10">';
-          html += '<a href="https://careerwiki.org/job/' + encodeURIComponent(item.slug) + '" target="_blank" class="text-blue-400 hover:text-blue-300 font-medium text-xs">' + item.name + '</a>';
+          html += '<a href="https://careerwiki.org' + URL_PREFIX + encodeURIComponent(item.slug) + '" target="_blank" class="text-blue-400 hover:text-blue-300 font-medium text-xs">' + item.name + '</a>';
           if (item.imageUrlBad) html += '<span class="ml-1 text-orange-400 text-[10px]" title="이미지 URL 포맷 오류">⚠</span>';
+          html += '</td>';
+          html += '<td class="px-2 py-2 text-center">';
+          if (item.skillApplied) {
+            html += '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-400 text-[10px]" title="스킬 적용됨"><i class="fas fa-wand-magic-sparkles text-[9px]"></i>적용</span>';
+          } else {
+            html += '<span class="text-slate-600 text-[10px]" title="스킬 미적용">—</span>';
+          }
           html += '</td>';
           html += '<td class="px-3 py-2 text-center">';
           html += '<div class="flex items-center gap-1.5 justify-center">';
@@ -518,7 +568,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
   `
 
   return renderAdminLayout({
-    title: '데이터 보완 현황',
+    title: `데이터 보완 현황 (${entityLabel})`,
     currentPath: '/admin/job-equalize',
     children: content,
   })

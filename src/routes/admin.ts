@@ -15,7 +15,7 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderAdminStats } from '../templates/admin/adminStats'
-import { renderAdminJobEqualize, hasField, parseSources, EQUALIZE_FIELDS, type JobEqualizeItem } from '../templates/admin/adminJobEqualize'
+import { renderAdminJobEqualize, hasField, parseSources, EQUALIZE_FIELDS, type JobEqualizeItem, type EqualizeTab } from '../templates/admin/adminJobEqualize'
 import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution, getAiUsageDistribution, banIp, unbanIp } from '../services/adminService'
 import { listFeedbackWithCommentCount, listComments, getFeedbackById } from '../services/feedbackService'
 import { listFlaggedComments, setCommentStatus, resetCommentReports, deleteComment, deleteOrphanReplies } from '../services/commentService'
@@ -1004,13 +1004,22 @@ adminRoutes.get('/admin/api/reindex/status', async (c) => {
 })
 
 // ============================================
-// 직업 데이터 보완 현황 페이지
+// 직업/전공 데이터 보완 현황 페이지
 // ============================================
 adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
   try {
     const db = c.env.DB
 
-    // 1. 전체 활성 직업 수 + 품질 경보 카운트 — 병렬 조회
+    // 탭 선택 (기본: 직업)
+    const rawTab = c.req.query('tab')
+    const tab: EqualizeTab = rawTab === 'major' ? 'major' : 'job'
+    const isJob = tab === 'job'
+    const tableName = isJob ? 'jobs' : 'majors'
+    const entityType = isJob ? 'job' : 'major'
+    const skillMarker = isJob ? '[job-data-enhance]' : '[major-data-enhance]'
+    const skillMarkerLike = `%${skillMarker}%`
+
+    // 1. 전체 활성 수 + 품질 경보 카운트 + 스킬 적용 수 — 병렬 조회
     const [
       totalResult,
       alertWayIsArrayResult,
@@ -1018,13 +1027,15 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       alertWayTruncResult,
       alertSrcOrderBadResult,
       alertYtLowResult,
+      skillAppliedResult,
     ] = await Promise.all([
-      db.prepare('SELECT COUNT(*) as count FROM jobs WHERE is_active = 1').first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_type(user_contributed_json,'$.way')='array'`).first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND image_url IS NOT NULL AND image_url != '' AND image_url NOT LIKE '/uploads/%' AND image_url NOT LIKE 'https://%' AND image_url NOT LIKE 'http://%'`).first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$.way') IS NOT NULL AND length(json_extract(user_contributed_json,'$.way')) > 20 AND json_extract(user_contributed_json,'$.way') NOT GLOB '*[.다요죠음임됨니까세]'`).first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(user_contributed_json,'$._sources')) > 0 AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE is_active=1 AND user_contributed_json IS NOT NULL AND (json_extract(user_contributed_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(user_contributed_json,'$.youtubeLinks')) < 3)`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active = 1`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_type(user_contributed_json,'$.way')='array'`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND image_url IS NOT NULL AND image_url != '' AND image_url NOT LIKE '/uploads/%' AND image_url NOT LIKE 'https://%' AND image_url NOT LIKE 'http://%'`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$.way') IS NOT NULL AND length(json_extract(user_contributed_json,'$.way')) > 20 AND json_extract(user_contributed_json,'$.way') NOT GLOB '*[.다요죠음임됨니까세]'`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(user_contributed_json,'$._sources')) > 0 AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND (json_extract(user_contributed_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(user_contributed_json,'$.youtubeLinks')) < 3)`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(DISTINCT entity_id) as count FROM page_revisions WHERE entity_type = ? AND change_summary LIKE ?`).bind(entityType, skillMarkerLike).first<{ count: number }>(),
     ])
 
     const totalJobs = totalResult?.count || 0
@@ -1035,23 +1046,46 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       srcOrderBad: alertSrcOrderBadResult?.count || 0,
       ytLow: alertYtLowResult?.count || 0,
     }
+    const skillAppliedCount = skillAppliedResult?.count || 0
 
-    // 2. 보완된 직업 목록 (user_contributed_json IS NOT NULL) — 배치로 조회
-    const allRows: { name: string; slug: string; user_contributed_json: string; image_url: string | null }[] = []
-    let offset = 0
-    while (true) {
-      const batch = await db.prepare(
-        `SELECT name, slug, user_contributed_json, image_url FROM jobs
-         WHERE is_active = 1 AND user_contributed_json IS NOT NULL
-         ORDER BY name LIMIT 500 OFFSET ?`
-      ).bind(offset).all<{ name: string; slug: string; user_contributed_json: string; image_url: string | null }>()
-      const rows = batch.results || []
-      allRows.push(...rows)
-      if (rows.length < 500) break
-      offset += 500
+    // 2. 스킬 적용된 entity_id 집합 조회 (각 item.skillApplied 판정용)
+    const skillAppliedIds = new Set<string>()
+    {
+      let offset = 0
+      while (true) {
+        const batch = await db.prepare(
+          `SELECT DISTINCT entity_id FROM page_revisions
+           WHERE entity_type = ? AND change_summary LIKE ?
+           ORDER BY entity_id LIMIT 500 OFFSET ?`
+        ).bind(entityType, skillMarkerLike, offset).all<{ entity_id: string }>()
+        const rows = batch.results || []
+        for (const r of rows) {
+          if (r.entity_id) skillAppliedIds.add(r.entity_id)
+        }
+        if (rows.length < 500) break
+        offset += 500
+      }
     }
 
-    // 3. 각 직업의 필드 완성도 파싱
+    // 3. 보완된 엔티티 목록 (user_contributed_json IS NOT NULL) — 배치로 조회
+    type Row = { id: string; name: string; slug: string; user_contributed_json: string; image_url: string | null }
+    const allRows: Row[] = []
+    {
+      let offset = 0
+      while (true) {
+        const batch = await db.prepare(
+          `SELECT id, name, slug, user_contributed_json, image_url FROM ${tableName}
+           WHERE is_active = 1 AND user_contributed_json IS NOT NULL
+           ORDER BY name LIMIT 500 OFFSET ?`
+        ).bind(offset).all<Row>()
+        const rows = batch.results || []
+        allRows.push(...rows)
+        if (rows.length < 500) break
+        offset += 500
+      }
+    }
+
+    // 4. 각 엔티티의 필드 완성도 파싱
     let perfectCount = 0
     let poorCount = 0
     let totalJsonSize = 0
@@ -1092,13 +1126,14 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       }
 
       const ytLow = youtubeCount < 3
+      const skillApplied = skillAppliedIds.has(row.id)
 
       if (fieldCount === 12) perfectCount++
       if (fieldCount < 6) poorCount++
 
       return {
         name: row.name, slug: row.slug, fields, fieldCount, jsonSize,
-        sourceCount, urlSourceCount, youtubeCount,
+        sourceCount, urlSourceCount, youtubeCount, skillApplied,
         wayIsArray, imageUrlBad, wayTrunc, srcOrderBad, ytLow,
       }
     })
@@ -1107,7 +1142,8 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     const avgJsonSize = contributedCount > 0 ? Math.round(totalJsonSize / contributedCount) : 0
 
     return c.html(renderAdminJobEqualize({
-      totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts,
+      tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize,
+      items, qualityAlerts, skillAppliedCount,
     }))
   } catch (error: any) {
     console.error('Job equalize page error:', error)
