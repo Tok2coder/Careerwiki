@@ -26,6 +26,9 @@ export interface CloudflareBindings {
   
   // Admin
   ADMIN_SECRET?: string
+
+  // Metrics (read-only aggregate endpoint for wikicomu-site — separate from ADMIN_SECRET)
+  METRICS_SECRET?: string
   
   // Environment
   ENVIRONMENT?: string

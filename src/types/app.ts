@@ -19,6 +19,7 @@ export type Bindings = {
   GOYONG24_JOB_API_KEY?: string;
   PERF_ALERT_WEBHOOK?: string;
   ADMIN_SECRET?: string;
+  METRICS_SECRET?: string;  // wikicomu-site 용 read-only metrics 엔드포인트 인증
   ENVIRONMENT?: string;
   // Z-Image Turbo API (이미지 생성)
   EVOLINK_API_KEY?: string;

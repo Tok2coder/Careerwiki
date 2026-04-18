@@ -17,6 +17,7 @@ import { shareRoutes } from './routes/share'
 import { commentRoutes } from './routes/comments'
 import { feedbackRoutes } from './routes/feedback'
 import { adminRoutes } from './routes/admin'
+import { metricsRoutes } from './routes/metrics'
 import { uploadRoutes } from './routes/upload'
 import { contentEditorRoutes } from './routes/content-editor'
 import { howtoEditorRoutes } from './routes/howto-editor'
@@ -175,6 +176,7 @@ app.route('/api/ai-analyzer', analyzerRoutes)
 app.route('', shareRoutes)
 app.route('', commentRoutes)
 app.route('', feedbackRoutes)
+app.route('', metricsRoutes) // /api/admin/metrics/v1 — 전용 라우터, admin.ts 격리
 app.route('', adminRoutes)
 app.route('', uploadRoutes)
 app.route('', contentEditorRoutes)
