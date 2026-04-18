@@ -57,6 +57,10 @@
 
   // Environment variables (secrets should be set via wrangler secret)
   // For production: wrangler pages secret put CAREER_NET_API_KEY
+  //
+  // Read-only metrics endpoint (/api/admin/metrics/v1, docs/api-metrics-spec.md):
+  //   wrangler pages secret put METRICS_SECRET --project-name careerwiki
+  // 반드시 ADMIN_SECRET 와 다른 값 사용 (blast radius 격리, RISKS §f3).
   "vars": {
     // Public variables (non-sensitive)
     "ENVIRONMENT": "production"

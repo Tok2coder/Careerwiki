@@ -29,4 +29,10 @@ JWT_SECRET=your_random_secret_key_here_minimum_32_characters
 # GOYONG24_JOB_API_KEY=your_goyong24_job_api_key
 # ADMIN_SECRET=your_admin_secret
 
+# Metrics Secret — /api/admin/metrics/v1 전용, ADMIN_SECRET 과 반드시 분리
+# 프로덕션 등록: npx wrangler pages secret put METRICS_SECRET --project-name careerwiki
+# 생성: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+# 스펙: docs/api-metrics-spec.md
+# METRICS_SECRET=your_metrics_secret_here
+
 
