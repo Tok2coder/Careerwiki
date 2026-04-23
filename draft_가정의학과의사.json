@@ -1,0 +1,86 @@
+{
+  "jobName": "가정의학과의사",
+  "jobId": "1765283463233607",
+  "fields": {
+    "way": "가정의학과의사가 되려면 의과대학 또는 의학전문대학원을 졸업해 의사 국가시험에 합격한 후 의사면허를 취득해야 한다.[1] 이후 가정의학과 전공의(레지던트) 과정 3년을 이수하고 전문의 자격시험에 합격하면 가정의학과 전문의가 된다.[2] 전문의 취득 후 병원 봉직의로 근무하거나 개인 의원을 개업하며, 일차의료 전문가로서 건강검진센터, 종합병원 가정의학과 등에서 활동한다.[3]",
+    "trivia": "가정의학과 레지던트 수련 기간은 3년으로, 내과·외과·산부인과 등 대부분의 임상 전문과(4~6년)에 비해 수련 기간이 짧아 인턴 포함 최단 4년에 전문의 자격을 취득할 수 있다.[1] 2023년 가정의학과 전공의 모집에서는 257명 정원에 128명이 지원해 지원율 49.8%를 기록하며 필수의료 공백 우려가 제기됐다.[2]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "개원의의 경우 진료 시간을 비교적 자유롭게 조정할 수 있어 다른 전문과보다 워라밸이 나은 편이다. 봉직의는 정해진 근무 시간이 있어 규칙적인 생활이 가능하나, 야간 당직 근무가 발생하기도 한다.[1]",
+      "socialDetail": "환자와의 지속적인 관계를 유지하며 신뢰를 쌓는 직업으로 사회적 신뢰도와 존경도가 매우 높다. 지역사회 건강 주치의로서 주민들과 긴밀한 관계를 형성하는 경우가 많다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학(6년) 또는 의학전문대학원(4년) 입학 및 졸업[1]",
+        "의사 국가시험(의사 국시) 합격[2]",
+        "인턴(1년) 후 가정의학과 레지던트(3년) 수련 과정 이수[3]",
+        "가정의학과 전문의 자격시험 합격[4]",
+        "노인의학·비만의학 등 세부 전문 분야 심화 교육(선택)[5]"
+      ],
+      "recruit": [
+        "대학병원·종합병원 가정의학과 전문의 채용[1]",
+        "건강검진센터·검진 전문 병원 봉직의 채용[2]",
+        "개인 의원 개원(창업형 진로)[3]",
+        "공중보건의사, 군의관 등 공공의료 분야 진출[4]"
+      ],
+      "training": [
+        "가정의학과 세부 전문의(노인의학·비만의학 등) 취득[1]",
+        "WONCA(세계가정의학회) 국제 학술 연수 참여[2]",
+        "금연 치료·비만 관리 클리닉 운영 특화 교육[3]",
+        "가정의학과 연수강좌 및 학술대회 참여[4]"
+      ]
+    },
+    "sidebarOrgs": [
+      {"name": "대한의사협회", "url": "https://www.kma.org"},
+      {"name": "대한가정의학회", "url": "https://www.kafm.or.kr"},
+      {"name": "대한병원협회", "url": "https://www.kha.or.kr"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr"}
+    ],
+    "overviewProspect": {
+      "main": "고령화 사회 진입으로 만성질환 관리 수요가 급증하며 일차의료 역할이 강화되고 있다.[1] 국가 주치의 제도 확대 논의, 건강검진 의무화 등의 정책 방향이 가정의학과 전문의 수요를 뒷받침하며 향후 고용 전망은 양호하다.[2]",
+      "source": "보건복지부, 대한가정의학회(2024)"
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "한국보건의료인국가시험원 의사 시험 안내", "url": "https://www.kuksiwon.or.kr/subcnt/c_2/1/view.do?seq=7&itm_seq=01"},
+      {"id": 2, "text": "전문의의 수련 및 자격 인정 등에 관한 규정 (법제처)", "url": "https://www.law.go.kr/LSW//lsLinkCommonInfo.do?lspttninfSeq=61758&chrClsCd="},
+      {"id": 3, "text": "대한가정의학회 공식 사이트", "url": "https://www.kafm.or.kr"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "전문의의 수련 및 자격 인정 등에 관한 규정 (법제처)", "url": "https://www.law.go.kr/LSW//lsLinkCommonInfo.do?lspttninfSeq=61758&chrClsCd="},
+      {"id": 2, "text": "핵의학·소청과 지원율 10%대 불명예…가정의학 40%대 추락 (메디컬타임스, 2023)", "url": "https://www.medicaltimes.com/Main/News/NewsView.html?ID=1151126"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "대한가정의학회 공식 사이트", "url": "https://www.kafm.or.kr"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "대한가정의학회 공식 사이트", "url": "https://www.kafm.or.kr"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 직업백과", "url": "https://www.career.go.kr"},
+      {"id": 2, "text": "한국고용정보원 직업 전망", "url": "https://www.keis.or.kr"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "보건복지부 의사 면허 안내", "url": "https://www.mohw.go.kr"},
+      {"id": 2, "text": "한국보건의료인국가시험원 의사 시험 안내", "url": "https://www.kuksiwon.or.kr/subcnt/c_2/1/view.do?seq=7&itm_seq=01"},
+      {"id": 3, "text": "전문의의 수련 및 자격 인정 등에 관한 규정 (법제처)", "url": "https://www.law.go.kr/LSW//lsLinkCommonInfo.do?lspttninfSeq=61758&chrClsCd="},
+      {"id": 4, "text": "대한의사협회 전문의 정보", "url": "https://www.kma.org"},
+      {"id": 5, "text": "대한가정의학회 공식 사이트", "url": "https://www.kafm.or.kr"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "서울대학교병원 채용 안내", "url": "https://www.snuh.org"},
+      {"id": 2, "text": "대한가정의학회 공식 사이트", "url": "https://www.kafm.or.kr"},
+      {"id": 3, "text": "대한의사협회 개원의 안내", "url": "https://www.kma.org"},
+      {"id": 4, "text": "보건복지부 공중보건의 안내", "url": "https://www.mohw.go.kr"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "대한가정의학회 공식 사이트", "url": "https://www.kafm.or.kr"},
+      {"id": 2, "text": "대한의사협회 의사 평생교육 안내", "url": "https://www.kma.org"},
+      {"id": 3, "text": "한국건강증진개발원 공식 사이트", "url": "https://www.khealth.or.kr"},
+      {"id": 4, "text": "커리어넷 직업백과", "url": "https://www.career.go.kr"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 가정의학과의사: way [3] 중간 각주→문장 끝 이동 및 레지던트 '4년'→'3년' 오류 수정, way·trivia·wlb·prospect 금지 출처(kafm/khealth 검색페이지) 교체, trivia 완전 재작성(레지던트 3년 특이사항[1]+2023 전공의 지원율 49.8%[2]), wlbDetail·socialDetail 각주 추가, prospect.main 각주 추가, detailReady 전 항목 [N] 각주 추가(curriculum 5항목, recruit·training 4항목 재작성), sidebarOrgs https:// 추가+대한가정의학회 추가"
+}
