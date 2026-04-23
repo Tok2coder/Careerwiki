@@ -1,0 +1,92 @@
+{
+  "fields": {
+    "way": "피부과의사가 되려면 의과대학(6년) 졸업 후 의사 국가고시에 합격하여 의사 면허를 취득하고, 인턴 1년·피부과 레지던트 4년을 이수한 뒤 피부과 전문의 자격시험에 합격해야 한다. 전문의 취득 후에는 대학병원 피부과 교수·봉직의 또는 피부과 의원 개원으로 진출하며, 피부알레르기·피부병리 등 세부전문의 과정으로 더욱 전문화하는 경우도 있다.[1] 미용 피부과 분야에서는 레이저·보톡스·필러 등 비수술 시술 역량이 주요 경쟁력이 되고, 대한피부과학회 교육수련센터의 지속 교육을 통해 최신 술기를 습득한다.[2]",
+    "overviewProspect": {
+      "main": "외모에 대한 관심 증가와 아토피·여드름·탈모 등 피부 질환 수요가 맞물려 피부과 방문이 꾸준히 늘고 있으며, 전문가 고용 전망 조사(2023년)에서 응답자의 46%가 고용 증가를 전망해 전반적으로 긍정적 흐름이 유지되고 있다.[1]"
+    },
+    "trivia": "보툴리눔 독소(보톡스)는 1980년 안과의사 스콧(Scott) 박사가 사시·안검경련 환자에게 처음 시술하여 1989년 FDA 승인을 받은 치료제였으나, 현재는 피부과 주름 개선 시술의 대명사가 되었다.[1] 성인의 피부는 표면적 약 2㎡로 인체에서 가장 큰 기관이며, 무게도 약 5kg 이상에 달한다.[2]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "피부과는 의과 전문과 중 비교적 응급 상황이 적어 규칙적인 근무가 가능한 편이다. 개원 피부과의 경우 진료 시간 조율이 비교적 자유롭고, 수술 부담도 타 외과계에 비해 낮은 편이다. 다만 전공의 수련 기간(인턴 1년·레지던트 4년)에는 야간 당직 등 장시간 근무가 이어진다.[1]",
+      "socialDetail": "의사로서 사회적 신뢰와 존경을 받으며, 미용·건강 양면에서 환자의 삶의 질을 높이는 역할을 한다. 피부과는 환자와 지속적 관계를 맺는 경우가 많아 신뢰 기반의 커뮤니티 의료인으로 인정받는다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학 6년 과정 이수(기초의학·임상 실습 중심)[1]",
+        "의사 국가고시 합격 및 의사 면허 취득[2]",
+        "인턴 1년 후 피부과 레지던트 4년 지원·수련[3]",
+        "피부과 전문의 자격시험 합격[4]",
+        "대한피부과학회 연수교육 이수 및 세부전문의 과정 진입[5]"
+      ],
+      "recruit": [
+        "대학병원 피부과 전공의 모집 지원(연 1회)[1]",
+        "전문의 취득 후 대학병원 피부과 봉직의·교원 지원[2]",
+        "피부과 의원 개원(강남, 수도권 중심)[3]",
+        "미용 피부과 클리닉 취업 또는 개원[4]"
+      ],
+      "training": [
+        "피부알레르기·피부병리 세부전문의 취득[1]",
+        "레이저·보톡스·필러 등 비수술 시술 심화 교육[2]",
+        "대한피부과학회 국내외 학술 연수 참여[3]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "의사 면허증", "url": "https://www.kuksiwon.or.kr/"},
+      {"name": "피부과 전문의", "url": "https://www.akd.or.kr/dermatologist"},
+      {"name": "피부과 세부전문의(피부병리·알레르기)", "url": "https://www.derma.or.kr/"},
+      {"name": "전문심폐소생술(ACLS)", "url": "https://www.kacpr.org/"}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한피부과학회", "url": "https://www.derma.or.kr/"},
+      {"name": "대한피부과의사회", "url": "https://www.akd.or.kr/"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"}
+    ],
+    "sidebarJobs": ["가정의학과의사","내과의사","성형외과의사","안과의사","외과의사","이비인후과의사","일반의사","전문의사","피부과전문의사","한의사"],
+    "sidebarMajors": ["의학과", "의료경영학과", "간호학과"],
+    "heroTags": ["피부과의사", "피부과개원", "피부과되는법", "레이저시술", "미용피부과", "의과대학"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=JBU8vbTXnt0", "title": "[비상교육] 직업정보_피부과 의사"},
+      {"url": "https://www.youtube.com/watch?v=rSI2wTCcPD4", "title": "이렇게 피부과 의사가 된다🧑‍⚕️- 피부과 의사가 된 이유, 유튜브 를 하는이유 l 피부과 전문의 , 인터뷰 l"}
+    ],
+    "_careerTreeNote": "탐색 후보(5명): 함익병(연세대의대, 세브란스병원 전공의, 이지함피부과 설립, 방송 출연, 공개자료 풍부), 김영구(연세대의대, 대한의학레이저학회 회장, 연세스타피부과 대표원장), 방동식(베체트병 세계 권위자, 미국피부과학회 최우수 논문상), 리더스피부과 창립자(서울대의대, 서울아산병원 전임의), 조광현(피부암·피부림프종 권위자). 함익병이 위키백과 등 공개자료 가장 풍부. Phase 3.6에서 D1 직접 삽입 예정."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 대한피부과의사회 피부과 전문의란", "url": "https://www.akd.or.kr/dermatologist"},
+      {"id": 2, "text": "[2] 대한피부과학회 교육수련센터", "url": "https://eduderma.or.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 한국고용정보원", "url": "https://www.keis.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 바이오타임즈 보툴리눔독소 기작", "url": "https://www.biotimes.co.kr/news/articleView.html?idxno=4571"},
+      {"id": 2, "text": "[2] 대한피부과학회 피부의 구조와 기능", "url": "https://www.derma.or.kr/new/general/story.php?uid=3259&mod=document"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 대한피부과의사회 피부과 전문의란", "url": "https://www.akd.or.kr/dermatologist"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 대한피부과의사회", "url": "https://www.akd.or.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 의학과 학과정보", "url": "https://www.career.go.kr/cloud/w/major/uView?seq=413"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"},
+      {"id": 3, "text": "[3] 대한피부과의사회 피부과 전문의란", "url": "https://www.akd.or.kr/dermatologist"},
+      {"id": 4, "text": "[4] 대한피부과학회 교육수련센터", "url": "https://eduderma.or.kr/"},
+      {"id": 5, "text": "[5] 대한피부과학회", "url": "https://www.derma.or.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 서울대학교병원 채용", "url": "https://recruit.snuh.org/joining/recruit/list.do"},
+      {"id": 2, "text": "[2] 세브란스병원 채용", "url": "https://yuhs.severance.healthcare/recruit/recruit.do"},
+      {"id": 3, "text": "[3] 대한피부과학회", "url": "https://www.derma.or.kr/"},
+      {"id": 4, "text": "[4] 대한피부과의사회", "url": "https://www.akd.or.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한피부과학회 교육수련센터", "url": "https://eduderma.or.kr/"},
+      {"id": 2, "text": "[2] 대한피부과의사회", "url": "https://www.akd.or.kr/"},
+      {"id": 3, "text": "[3] 대한피부과학회", "url": "https://www.derma.or.kr/"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 피부과의사 17필드 보완 (way 재작성·각주 교정, trivia 중복각주 수정·출처 교체, prospect sources 교체, wlb 각주 재정규화, detailReady 각주 추가, sidebarCerts {name,url} 변환, sidebarOrgs 추가, youtubeLinks 추가)"
+}

@@ -1,0 +1,94 @@
+{
+  "fields": {
+    "way": "성형외과의사가 되려면 의과대학(6년) 졸업 및 의사 국가고시 합격 후 인턴 1년·성형외과 레지던트 4년 수련을 완료하고 성형외과 전문의 시험에 합격해야 한다. 전문의 취득 후 대학병원 성형외과 교수직, 대형 성형외과 봉직의, 개원 등 다양한 경로로 진출한다.[1] 안면 성형, 가슴 성형, 재건 성형 등 세부 분야로 전문화하거나, 화상·선천성 기형 치료 등 재건의학 분야로 진출하는 경우도 있다. 국내 성형외과는 의료 한류로 인한 외국인 환자 유치가 활발하며, 아시아 시장을 겨냥한 해외 진출 기회도 있다.[2]",
+    "overviewProspect": {
+      "main": "K-뷰티 트렌드와 의료 한류를 배경으로, 2024년 한국을 방문한 외국인 환자 중 성형외과 이용자는 전체 진료과 중 2위(11.4%)를 기록하며 꾸준한 성장세를 보인다. 고령화에 따른 기능적 성형(눈꺼풀 처짐 교정 등) 수요 증가도 국내 성형외과 시장의 지속 성장을 뒷받침한다.[1]"
+    },
+    "trivia": "한국은 인구 1,000명당 성형수술 건수가 세계 1위(약 8.9건, ISAPS 기준)로, 서울 강남구 압구정동 일대는 세계적으로 알려진 성형외과 클러스터이다.[1] 2024년 기준 외국인 환자 유치 성형외과는 피부과에 이어 전체 2위(11.4%)를 차지하며, K-뷰티 열풍이 의료 관광으로 확대되고 있음을 보여준다.[2]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "전공의 수련 기간(인턴 1년·레지던트 4년)에는 수술 보조, 야간 당직 등 장시간 근무가 이어진다. 전문의 취득 후 대학병원·봉직의는 수술 일정에 따라 근무가 불규칙하며, 미용 성형 개원의는 응급 상황이 드물어 상대적으로 스케줄 자율 조율이 가능하다. 수술 건수가 많을수록 체력적 부담도 크다.[1]",
+      "socialDetail": "환자의 외모 개선과 삶의 질 향상에 기여하는 역할로 환자 만족도가 높은 분야이다. 재건 성형은 암 수술 후 재건, 사고 피해 복원 등 사회적으로 높이 평가받으며, K-뷰티 열풍으로 한국 성형외과의 글로벌 위상이 높아지고 있다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학 6년 과정 수학(해부학, 외과 임상 실습 중심)[1]",
+        "의사 국가고시 합격[2]",
+        "인턴 1년 후 성형외과 레지던트 지원[3]",
+        "레지던트 4년 수련 완료 후 성형외과 전문의 시험 응시[4]",
+        "대한성형외과학회 정회원 가입 및 지속 교육 이수[5]"
+      ],
+      "recruit": [
+        "대학병원 성형외과 전공의 모집 지원(연 1회, 경쟁률 높음)[1]",
+        "전문의 취득 후 대학병원 성형외과 봉직의·교원 지원[2]",
+        "성형외과 의원 개원(강남, 수도권 중심)[3]",
+        "재건 성형·화상 전문 병원 채용[4]"
+      ],
+      "training": [
+        "미세수술(Microsurgery) 세부 전문 교육[1]",
+        "비수술 시술(보톡스·필러·레이저) 심화 교육[2]",
+        "해외 성형외과 학회(ISAPS 등) 연수[3]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "의사 면허증", "url": "https://www.kuksiwon.or.kr/"},
+      {"name": "성형외과 전문의", "url": "https://www.plasticsurgery.or.kr/major/exam.php"},
+      {"name": "미세수술 세부전문의", "url": "https://www.plasticsurgery.or.kr/"},
+      {"name": "레이저 의학 관련 학회 자격", "url": null},
+      {"name": "전문심폐소생술(ACLS)", "url": "https://www.kacpr.org/"},
+      {"name": "메디컬 에스테틱 관련 자격", "url": null}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한성형외과학회", "url": "https://www.plasticsurgery.or.kr/"},
+      {"name": "대한성형외과의사회", "url": "https://www.prskorea.co.kr/"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"}
+    ],
+    "sidebarJobs": ["가정의학과의사", "내과의사", "외과의사", "피부과의사", "안과의사", "이비인후과의사", "정형외과전문의사", "방사선과의사", "전문의사", "한의사"],
+    "sidebarMajors": ["의학과", "간호학과", "치의학과", "한의학과", "예술치료학과", "심리학과"],
+    "heroTags": ["성형외과의사", "미용성형", "성형외과개원", "의사직업", "전문의수련", "K뷰티의료", "재건성형"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=k2PfD50Sojo", "title": "SKY 출신 성형외과 의사가 말하는 현실! 월수입? 모두 알려드려요 | 아티뉴성형외과원장님 ep.1"},
+      {"url": "https://www.youtube.com/watch?v=IDMkymf4RSE", "title": "성형외과 피부과 전성시대가 이제 끝의 이유. 닥 때문에 의사하지 마세요"}
+    ],
+    "_careerTreeNote": "탐색: 반재상(바노바기 성형외과 원장, 서울대의대 출신, banobagi.com 공식 프로필 확인). Phase 3.6에서 D1 직접 삽입 예정."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 대한성형외과학회 전문의시험", "url": "https://www.plasticsurgery.or.kr/major/exam.php"},
+      {"id": 2, "text": "[2] 보건복지부 외국인환자유치 통계(2024)", "url": "https://www.mohw.go.kr/board.es?mid=a10503000000&bid=0027&act=view&list_no=1485191"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 보건복지부 외국인환자유치 통계(2024)", "url": "https://www.mohw.go.kr/board.es?mid=a10503000000&bid=0027&act=view&list_no=1485191"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 아시아경제 한국 성형수술 세계 1위", "url": "https://www.asiae.co.kr/article/2024012216462192521"},
+      {"id": 2, "text": "[2] 보건복지부 외국인환자유치 통계(2024)", "url": "https://www.mohw.go.kr/board.es?mid=a10503000000&bid=0027&act=view&list_no=1485191"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 위키백과 전공의", "url": "https://ko.wikipedia.org/wiki/%EC%A0%84%EA%B3%B5%EC%9D%98"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 보건복지부 외국인환자유치 통계(2024)", "url": "https://www.mohw.go.kr/board.es?mid=a10503000000&bid=0027&act=view&list_no=1485191"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 의학과 학과정보", "url": "https://www.career.go.kr/cloud/w/major/uView?seq=413"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"},
+      {"id": 3, "text": "[3] 대한성형외과학회 전문의시험", "url": "https://www.plasticsurgery.or.kr/major/exam.php"},
+      {"id": 4, "text": "[4] 대한성형외과학회", "url": "https://www.plasticsurgery.or.kr/"},
+      {"id": 5, "text": "[5] 대한미용성형외과학회", "url": "https://www.ksaps.or.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 서울대학교병원 채용", "url": "https://recruit.snuh.org/joining/recruit/list.do"},
+      {"id": 2, "text": "[2] 세브란스병원 채용", "url": "https://yuhs.severance.healthcare/recruit/recruit.do"},
+      {"id": 3, "text": "[3] 대한성형외과학회", "url": "https://www.plasticsurgery.or.kr/"},
+      {"id": 4, "text": "[4] 대한미용성형외과학회", "url": "https://www.ksaps.or.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한성형외과학회 전문의시험", "url": "https://www.plasticsurgery.or.kr/major/exam.php"},
+      {"id": 2, "text": "[2] 대한미용성형외과학회", "url": "https://www.ksaps.or.kr/"},
+      {"id": 3, "text": "[3] 대한성형외과학회", "url": "https://www.plasticsurgery.or.kr/"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 17필드 보완 (way 각주 정리, trivia 수정, wlb 등급 교정, wlbDetail·socialDetail 각주 추가, detailReady 각주 추가, sidebarCerts {name,url} 변환, sidebarOrgs 추가, youtubeLinks 추가)"
+}

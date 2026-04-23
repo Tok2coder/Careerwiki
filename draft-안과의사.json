@@ -1,0 +1,91 @@
+{
+  "fields": {
+    "way": "안과의사가 되려면 의과대학(6년) 졸업 후 의사 국가고시에 합격하여 의사 면허를 취득하고, 인턴 1년·안과 레지던트 4년 과정을 이수한 뒤 안과 전문의 자격시험에 합격해야 한다. 전문의 취득 후에는 대학병원·종합병원 또는 안과의원 개원으로 진출하며, 망막·녹내장·소아안과 등 세부전문의 과정으로 더욱 전문화하는 경로도 있다.[1] 라식·라섹 등 굴절교정수술 분야에서는 수술 기술과 최신 장비 활용 역량이 경쟁력이 되며, 대한안과학회를 통해 지속적인 학술 연수와 자격 유지가 요구된다.[2]",
+    "overviewProspect": {
+      "main": "스마트폰·디스플레이 사용 증가로 안질환 환자가 늘고, 고령화로 백내장·황반변성 등 노인성 안질환 수요도 지속적으로 증가하고 있다. 전문가 고용 전망 조사(2023년)에서 응답자의 43%가 고용 증가를 전망했으나, 27%는 감소를 예측해 전망은 혼재된 양상이다.[1]"
+    },
+    "trivia": "한국 청소년(고교 1학년 기준)의 74.8%가 시력 이상 판정을 받으며, 전체 청소년 근시 유병률이 40년 전 약 9%에서 2024년 57%로 약 6배 급증해 안과 방문 수요를 지속적으로 늘리고 있다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "전공의 수련 기간에는 야간 당직이 잦고 응급안과 수술이 발생할 수 있어 워라밸이 낮다. 개원 후에는 수술 일정 조율이 비교적 자유로운 편이지만 개원 초기에는 진료·경영을 병행하며 바쁜 생활을 하게 된다.[1]",
+      "socialDetail": "의사는 한국 사회에서 높은 신뢰와 사회적 지위를 누리는 직업이다. 안과의사는 시력 개선과 안질환 치료로 환자의 일상을 회복시켜 주는 역할을 통해 높은 사회적 인정을 받는다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학 6년 과정 이수(기초의학·임상 실습 중심)[1]",
+        "의사 국가고시 합격 및 의사 면허 취득[2]",
+        "인턴 1년 후 안과 레지던트 4년 지원·수련[3]",
+        "안과 전문의 자격시험 합격(논문 발표·수술 실적 기준 충족)[4]",
+        "대한안과학회 연수교육 이수 및 세부전문의 과정 진입[5]"
+      ],
+      "recruit": [
+        "대학병원 안과 전공의 모집 지원(연 1회)[1]",
+        "전문의 취득 후 대학병원 안과 봉직의·교원 지원[2]",
+        "안과의원 개원(강남, 수도권 중심)[3]",
+        "안과 전문병원(누네안과·비앤빛 등) 취업[4]"
+      ],
+      "training": [
+        "망막·녹내장·소아안과 세부전문의 취득[1]",
+        "라식·라섹·스마일라식 굴절수술 술기 교육[2]",
+        "대한안과학회 국내외 학술 연수 참여[3]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "의사 면허증", "url": "https://www.kuksiwon.or.kr/"},
+      {"name": "안과 전문의", "url": "https://www.ophthalmology.org/"},
+      {"name": "안과 세부전문의(망막·녹내장 등)", "url": "https://www.ophthalmology.org/content/resident/list.html?txt=6"},
+      {"name": "전문심폐소생술(ACLS)", "url": "https://www.kacpr.org/"}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한안과학회", "url": "https://www.ophthalmology.org/"},
+      {"name": "대한안과의사회", "url": "https://www.eyedoctor.or.kr/"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"}
+    ],
+    "sidebarJobs": ["안과전문의사","가정의학과의사","내과의사","성형외과의사","소아청소년과의사","이비인후과의사","일반의사","전문의사","피부과의사","한의사"],
+    "sidebarMajors": ["의학과", "의료경영학과", "간호학과"],
+    "heroTags": ["안과의사", "안과개원", "안과되는법", "라식라섹", "시력교정", "의과대학"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=DjkE6P3Ck8E", "title": "안과의사 김무연 42인터뷰!"},
+      {"url": "https://www.youtube.com/watch?v=R5SVsVoImFA", "title": "일반의와 전문의 차이? 의료6년? 레지던트4년? 전문의가 되는 과정 알려드립니다. (feat. 안과박사)"}
+    ],
+    "_careerTreeNote": "탐색 후보(5명): 윤영희(서울대의대·석박사, 서울대병원 전공의, 미국 스탠포드의대 연구전임의, 서울아산병원 안과 교수·과장, amc.seoul.kr 프로필 공개), 권오웅(누네안과병원 원장, 안과 베스트닥터), 김준현(압구정안과 대표원장, 가톨릭대 외래교수), 박형직(강남서울밝은안과 원장, 20년 이상 경력), 김무연(안과의사 유튜버, 현직 안과전문의). 윤영희 교수가 공개 프로필 가장 상세하여 우선 추천. Phase 3.6에서 D1 직접 삽입 예정."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 대한안과학회 레지던트 수련프로그램", "url": "https://www.ophthalmology.org/content/resident/list.html?txt=6"},
+      {"id": 2, "text": "[2] 대한안과학회", "url": "https://www.ophthalmology.org/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 한국고용정보원", "url": "https://www.keis.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 메디컬월드뉴스 한국 청소년 근시 유병률 57%", "url": "https://medicalworldnews.co.kr/m/view.php?idx=1510971084&mcode=m60udxd"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 대한안과학회 레지던트 수련프로그램", "url": "https://www.ophthalmology.org/content/resident/list.html?txt=6"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 대한안과학회", "url": "https://www.ophthalmology.org/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 의학과 학과정보", "url": "https://www.career.go.kr/cloud/w/major/uView?seq=413"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"},
+      {"id": 3, "text": "[3] 대한안과학회 레지던트 수련프로그램", "url": "https://www.ophthalmology.org/content/resident/list.html?txt=6"},
+      {"id": 4, "text": "[4] 대한의학회 전문의자격시험", "url": "https://exam.kams.or.kr/"},
+      {"id": 5, "text": "[5] 대한안과학회", "url": "https://www.ophthalmology.org/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 서울대학교병원 채용", "url": "https://recruit.snuh.org/joining/recruit/list.do"},
+      {"id": 2, "text": "[2] 세브란스병원 채용", "url": "https://yuhs.severance.healthcare/recruit/recruit.do"},
+      {"id": 3, "text": "[3] 대한안과의사회", "url": "https://www.eyedoctor.or.kr/"},
+      {"id": 4, "text": "[4] 대한의사협회", "url": "https://www.kma.org/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한안과학회 레지던트 수련프로그램", "url": "https://www.ophthalmology.org/content/resident/list.html?txt=6"},
+      {"id": 2, "text": "[2] 대한안과학회", "url": "https://www.ophthalmology.org/"},
+      {"id": 3, "text": "[3] 대한의학회 전문의자격시험", "url": "https://exam.kams.or.kr/"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 안과의사 17필드 보완 (way 재작성·중복[1] 제거, trivia 중복각주 수정·청소년근시 통계, wlb 띄어쓰기 교정, detailWlb 각주 재정규화, detailReady 각주 추가, sidebarCerts {name,url} 변환, sidebarOrgs 추가, sidebarJobs 17→10개, youtubeLinks 추가)"
+}
