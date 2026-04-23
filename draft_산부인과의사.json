@@ -1,0 +1,95 @@
+{
+  "jobName": "산부인과의사",
+  "jobId": "1765283465152866",
+  "fields": {
+    "way": "산부인과의사가 되려면 의과대학(6년) 졸업 후 의사 국가고시에 합격하여 의사 면허를 취득하고, 인턴 1년·산부인과 레지던트 4년을 이수해야 한다.[1] 산부인과 전문의 자격시험 합격 후 모체태아의학·부인종양·생식내분비·비뇨부인과 등 세부 전문 영역을 심화 수련하는 경로가 있으며, 대학병원·종합병원 또는 산부인과의원 개업의 경로로 진출한다.[2]",
+    "trivia": "한국에서 분만 서비스를 제공하는 병원은 2003년 1,373곳에서 2019년 541곳으로 16년간 약 60% 감소했으며, 기초자치단체의 약 26%에서는 분만이 어려운 실정이다.[1] 2022년 국내 체외수정 시술 건수는 16만 6,870건에 달했으며, 체외수정 임신율은 평균 36.9%로 집계됐다.[2]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "분만은 시간을 예측할 수 없어 야간 및 주말 호출이 매우 잦다.[1] 산부인과는 의과 전문과 중 워라밸이 가장 낮은 과 중 하나로 꼽히며, 이로 인해 전공의 지원이 줄고 있는 추세이다.[2]",
+      "socialDetail": "생명의 탄생을 직접 책임지는 직업으로 사회적 신뢰와 존경이 매우 높다. 임신·출산·부인과 건강을 담당하는 전문가로서 여성 건강 향상에 핵심적으로 기여하는 직업이다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학 6년 과정 이수(기초의학, 임상의학, 산부인과 실습)[1]",
+        "의사 국가고시(필기·실기) 합격[2]",
+        "인턴 1년 수련 후 산부인과 레지던트 지원[3]",
+        "산부인과 레지던트 4년 수련 완료 후 전문의 자격시험 응시[4]",
+        "모체태아의학·부인종양학 등 세부전문의 취득을 위한 펠로우십 수련(선택)[5]"
+      ],
+      "recruit": [
+        "대학병원·상급종합병원 산부인과 전공의 모집(연 1회)[1]",
+        "전문의 취득 후 대학병원 봉직의 또는 산부인과 세부 펠로우십 지원[2]",
+        "산부인과의원 취업 또는 개원[3]",
+        "보건소, 공중보건의사, 군의관 등 공공의료 분야 진출[4]"
+      ],
+      "training": [
+        "모체태아의학·부인종양 세부전문의 취득(1~2년 펠로우십)[1]",
+        "난임 시술(IVF) 전문 교육 및 보조생식술 연수[2]",
+        "대한산부인과학회 학술 연수 및 세부전문 학회 활동[3]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "의사 면허증", "url": null},
+      {"name": "산부인과 전문의", "url": "https://www.kma.org"},
+      {"name": "모체태아의학 세부전문의", "url": "https://www.ksog.or.kr"},
+      {"name": "생식내분비학 세부전문의", "url": "https://www.ksog.or.kr"},
+      {"name": "ACLS(전문심폐소생술)", "url": "https://www.kacpr.org"}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한의사협회", "url": "https://www.kma.org"},
+      {"name": "대한산부인과학회", "url": "https://www.ksog.or.kr"},
+      {"name": "대한병원협회", "url": "https://www.kha.or.kr"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr"}
+    ],
+    "overviewProspect": {
+      "main": "저출산 추세로 분만 건수가 감소하고 있으나, 임신·출산 관련 고난도 의료 수요와 부인암·갱년기 진료 수요는 유지되고 있다.[1] 난임 시술·부인과 수술 분야에서 전문 인력 수요는 지속될 전망이다.[2]",
+      "source": "커리어넷 직업백과(2024)"
+    },
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=lm-7EGb3eeE", "title": "산부인과 수술실은 이게(?) 달라! - 나는의사다 822회"},
+      {"url": "https://www.youtube.com/watch?v=QUO2O9z29kA", "title": "산부인과 의사를 놀라게 만드는 환자들 (별게 다 나옴 ㅋㅋㅋ)"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "전문의의 수련 및 자격 인정 등에 관한 규정 (법제처)", "url": "https://www.law.go.kr/LSW//lsLinkCommonInfo.do?lspttninfSeq=61758&chrClsCd="},
+      {"id": 2, "text": "대한산부인과학회 공식 사이트", "url": "https://www.ksog.or.kr"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "심각한 분만 인프라 붕괴…16년간 분만병원 60% 사라지고 지자체의 26%는 분만 어려워 (메디게이트뉴스)", "url": "https://m.medigatenews.com/news/1007037316"},
+      {"id": 2, "text": "한 해 난임시술 20만건 넘어…체외수정 성공률 36.9% (코리아헬스로그, 2025)", "url": "https://www.koreahealthlog.com/news/articleView.html?idxno=51073"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "심각한 분만 인프라 붕괴…분만병원 60% 사라지고 지자체 26%는 분만 어려워 (메디게이트뉴스)", "url": "https://m.medigatenews.com/news/1007037316"},
+      {"id": 2, "text": "60%대로 떨어진 산부인과 전공의 지원율 (청년의사, 2024)", "url": "http://www.docdocdoc.co.kr/news/articleView.html?idxno=3011982"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "대한산부인과학회 공식 사이트", "url": "https://www.ksog.or.kr"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 직업백과", "url": "https://www.career.go.kr"},
+      {"id": 2, "text": "대한산부인과학회 공식 사이트", "url": "https://www.ksog.or.kr"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "보건복지부 의사 면허 안내", "url": "https://www.mohw.go.kr"},
+      {"id": 2, "text": "한국보건의료인국가시험원 의사 시험 안내", "url": "https://www.kuksiwon.or.kr/subcnt/c_2/1/view.do?seq=7&itm_seq=01"},
+      {"id": 3, "text": "전문의의 수련 및 자격 인정 등에 관한 규정 (법제처)", "url": "https://www.law.go.kr/LSW//lsLinkCommonInfo.do?lspttninfSeq=61758&chrClsCd="},
+      {"id": 4, "text": "대한의사협회 전문의 정보", "url": "https://www.kma.org"},
+      {"id": 5, "text": "대한산부인과학회 공식 사이트", "url": "https://www.ksog.or.kr"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "서울대학교병원 채용 안내", "url": "https://www.snuh.org"},
+      {"id": 2, "text": "대한산부인과학회 공식 사이트", "url": "https://www.ksog.or.kr"},
+      {"id": 3, "text": "대한의사협회 개원의 안내", "url": "https://www.kma.org"},
+      {"id": 4, "text": "보건복지부 공중보건의 안내", "url": "https://www.mohw.go.kr"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "대한산부인과학회 공식 사이트", "url": "https://www.ksog.or.kr"},
+      {"id": 2, "text": "대한의사협회 의사 평생교육 안내", "url": "https://www.kma.org"},
+      {"id": 3, "text": "대한산부인과학회 E-learning 교육 서비스", "url": "https://elearning.ksog.org"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 산부인과의사: way 중복 [1] 수정(마지막 문장 [2] 블록에 통합), trivia 전면 재작성(분만병원 60% 감소 통계[1]+난임시술 성공률 통계[2] / Mojibake·중복 각주 제거), wlb '보통이하'→'보통 이하' 띄어쓰기 수정, wlbDetail·socialDetail 전역번호([9][10][11][12])→필드별 재번호([1][2]/[1]) 및 wagework·career 검색페이지 출처 교체, prospect.main 금지 출처(동적 검색페이지) 교체, detailReady 전 항목 [N] 각주 추가(curriculum 5번째 펠로우십 항목 추가, recruit 4번째 공공의료 항목 추가), sidebarCerts string→object 변환+ACLS 추가, sidebarOrgs URL https 추가+대한산부인과학회 추가, youtubeLinks 2개 추가"
+}
