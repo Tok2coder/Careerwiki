@@ -1,0 +1,85 @@
+{
+  "fields": {
+    "way": "스포츠 애널리스트가 되려면 통계학·컴퓨터공학·체육학 등 관련 학과를 전공하고 데이터 분석 역량을 갖추는 것이 핵심이다. 비선수 출신은 스포츠산업경영·스포츠과학 관련 대학원 과정으로 전문성을 보완하고, 선수 출신은 은퇴 후 데이터사이언스 역량을 추가해 입직하는 경우도 있다. K리그·KBO·KBL 등 프로스포츠 구단 데이터분석팀·R&D팀, 국가대표팀 지원기관, 스포츠 데이터 회사를 통해 채용이 이루어진다. 사설 야구 아카데미·스포츠 클럽의 데이터 장비 도입 확대로 민간 영역의 수요도 꾸준히 늘고 있다.[1]",
+    "detailReady": {
+      "curriculum": [
+        "통계학·컴퓨터공학·체육학 등 관련 학과에서 데이터 분석 기초 역량을 쌓는다[1]",
+        "국민대학교 스포츠애널리틱스 대학원 등 스포츠·데이터과학 융합 전문 대학원 과정을 이수한다[2]",
+        "R·Python 등 프로그래밍 언어와 통계기법, 영상분석 소프트웨어 활용 능력을 습득한다[3]",
+        "GPS·가속도계 등 웨어러블 장비와 스포츠 추적 시스템 활용 실습 경험을 쌓는다[4]",
+        "프로구단 인턴십, 스포츠팀 분석 프로젝트, 데이터 공모전 참여를 통해 포트폴리오를 구축한다[5]"
+      ],
+      "recruit": [
+        "K리그·KBO·KBL 등 프로스포츠 구단 데이터분석팀·R&D팀 공채 또는 수시채용에 지원한다[1]",
+        "스포츠 전문 채용 플랫폼(스포츠잡알리오 등)을 통해 스포츠 기관·단체 채용공고에 지원한다[2]",
+        "스포츠 데이터 회사, 사설 아카데미·스포츠클럽의 분석 포지션에 지원하여 경력을 쌓는다[3]"
+      ],
+      "training": [
+        "스포츠 기록분석연구원 관련 학위 과정(스포츠과학·통계학·컴퓨터공학 학사 이상)을 이수한다[1]",
+        "스포츠 애널리틱스 분석 도구(웨어러블·비디오 플랫폼 등) 실습 교육과정을 수료하고 역량을 인증받는다[2]"
+      ]
+    },
+    "trivia": "LG 트윈스 데이터분석팀 김진희 책임연구원은 이 직업을 '데이터를 판매하는 일'로 표현하며, 통계·프로그래밍 지식은 입직 전에 반드시 갖춰야 하지만 스포츠 지식은 채용 후에도 교육이 가능하다고 강조한다. LG 트윈스 1군·2군·R&D 데이터분석팀은 합계 약 11명 규모로 운영된다.[1]",
+    "overviewProspect": {
+      "main": "스포츠 애널리스트의 고용은 증가할 것으로 기대된다. 국내 프로구단 수가 제한적이어 팀 내 포지션은 경쟁이 치열하지만, 사설 스포츠 아카데미와 클럽의 데이터 장비 도입 확대로 민간 영역의 수요가 꾸준히 늘어나는 추세다.[1] 웨어러블 기술·추적 시스템의 발전과 스포츠 빅데이터 산업 성장으로 분석 직무가 단순 영상 리뷰에서 R&D 기반 데이터사이언스 업무로 고도화되고 있어 전문인력 수요도 함께 증가하고 있다.[2]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "경기 시즌 중에는 홈·원정 경기가 이어지며 주말·야간 근무가 빈번하다. 경기 당일에는 정오부터 출전 데이터를 준비하고, 훈련 시간 중 트래킹 장비를 운용하며, 경기 후 심야까지 분석 업무가 이어진다. 비시즌에는 비교적 여유롭지만 신시즌 전략 수립과 선수 스카우팅 분석 시기에 집중적인 업무가 발생한다.[1]",
+      "socialDetail": "경기력 데이터를 코칭스태프와 선수에게 제공해 팀 성과 향상에 기여한다. 팬과 언론을 위한 공공 통계를 생성하며, 데이터 기반 스포츠 환경을 구축해 부상 예방과 더 안전한 경기를 가능하게 한다.[1]"
+    },
+    "heroTags": ["스포츠기록분석관", "기록분석연구원", "경기분석관", "전력분석관", "데이터분석가", "Sports Analyst"],
+    "sidebarJobs": ["비디오분석관", "경기기록분석원", "운동경기기록원", "스포츠감독 및 코치", "스포츠마케터", "스포츠해설가", "애널리스트", "스포츠심리상담사", "스포츠에이전트"],
+    "sidebarMajors": ["체육학과", "통계학과", "컴퓨터공학과", "수학과", "스포츠건강관리학과"],
+    "sidebarCerts": [
+      {"name": "스포츠경영관리사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9546"},
+      {"name": "2급 전문스포츠지도사", "url": "https://sqms.kspo.or.kr/"}
+    ],
+    "sidebarOrgs": [
+      {"name": "한국스포츠과학원", "url": "https://www.sports.re.kr/"},
+      {"name": "대한체육회", "url": "https://www.sports.or.kr/"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=yQwzUxxEZyE", "title": "축구는 좋은데 선수는 아닐 때, 이 직업을 추천합니다. 축구 국가대표님 전력분석관이 알려주는 축구 전력분석가의 세계⚽️ㅣ전력분석관 되는 방법ㅣEPL 분석관 출신ㅣ#EBS직업탐구"},
+      {"url": "https://www.youtube.com/watch?v=qVoOuoHQKhM", "title": "\"통합우승 프로야구단 데이터분석원!\"ㅣ'LG트윈스' 데이터분석팀 김진희 책임 인터뷰"}
+    ],
+    "careerTree": null,
+    "_careerTreeNote": "탐색 인물: 김진희(LG트윈스 데이터분석팀 책임연구원, sportsq·YouTube 인터뷰 - 공인 아님), 이정근(비프로일레븐 축구 데이터분석관, YouTube - 공인 아님), EBS직업탐구 출연 축구 국가대표팀 전력분석관(이름 미공개 - 공인 아님), LG트윈스 최초 여성 전력분석관(이름 미공개 - 공인 아님), KBO 기록원 출신 데이터분석가(익명). 카테고리: 야구(KBO, 김진희·LG최초여성분석관), 축구(K리그·국가대표, 이정근·EBS출연), 플랫폼·기업(비프로일레븐). 스포츠 애널리스트 전문직으로 위키백과 등재된 한국인 공인 확인 불가."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 스포츠Q LG트윈스 데이터분석가 김진희 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=464352"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 스포츠Q LG트윈스 데이터분석가 김진희 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=464352"},
+      {"id": 2, "text": "[2] Catapult 스포츠 애널리틱스란", "url": "https://www.catapult.com/ko/blog/what-is-sports-analytics"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 스포츠Q LG트윈스 데이터분석가 김진희 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=464352"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 스포츠Q LG트윈스 데이터분석가 김진희 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=464352"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] Catapult 스포츠 애널리틱스란", "url": "https://www.catapult.com/ko/blog/what-is-sports-analytics"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 스포츠Q LG트윈스 데이터분석가 김진희 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=464352"},
+      {"id": 2, "text": "[2] 국민대학교 스포츠애널리틱스 대학원 소개", "url": "https://cms.kookmin.ac.kr/sportsanalytics/intro/Introduction.do"},
+      {"id": 3, "text": "[3] 에듀진 스포츠기록분석연구원 직업 정보", "url": "http://www.edujin.co.kr/news/articleView.html?idxno=12486"},
+      {"id": 4, "text": "[4] Catapult 스포츠 애널리틱스 도구 소개", "url": "https://www.catapult.com/ko/blog/what-is-sports-analytics"},
+      {"id": 5, "text": "[5] 위키백과 스포츠전력분석관", "url": "https://ko.wikipedia.org/wiki/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%A0%84%EB%A0%A5%EB%B6%84%EC%84%9D%EA%B4%80"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 스포츠Q LG트윈스 데이터분석가 김진희 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=464352"},
+      {"id": 2, "text": "[2] 스포츠잡알리오 스포츠 전문 채용 플랫폼", "url": "https://sportsjobalio.com/"},
+      {"id": 3, "text": "[3] 에듀진 스포츠기록분석연구원 직업 정보", "url": "http://www.edujin.co.kr/news/articleView.html?idxno=12486"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 에듀진 스포츠기록분석연구원 직업 정보", "url": "http://www.edujin.co.kr/news/articleView.html?idxno=12486"},
+      {"id": 2, "text": "[2] Catapult 스포츠 애널리틱스 도구 소개", "url": "https://www.catapult.com/ko/blog/what-is-sports-analytics"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 스포츠 애널리스트 17필드 보완 (way, detailReady, trivia, prospect, detailWlb, sidebarJobs, sidebarMajors, sidebarCerts, sidebarOrgs, heroTags, youtubeLinks)"
+}
