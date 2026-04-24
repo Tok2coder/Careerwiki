@@ -1,0 +1,13 @@
+{
+  "jobName": "물리치료사",
+  "jobId": "1765283307925378",
+  "slug": "물리치료사",
+  "fields": {
+    "detailReady": {
+      "certificate": []
+    },
+    "_careerTreeNote": "기존 커리어트리 확인 완료: 이태식(id:46, 고신대의학과→동의의료원 물리치료실장→동의과학대 교수→협회회장, stage_index:1), 강태동(id:93, 연세대 물리치료학과→대학병원 물리치료사, stage_index:2). 강태동 중복 링크(stage_index:3 → 협회회장) 삭제 완료. 외국인 연결(id:19 메리 맥밀런, id:20 플로렌스 켄들)은 기존 데이터로 유지."
+  },
+  "sources": {},
+  "changeSummary": "[job-data-enhance] 물리치료사 Phase5 — certificate 미출처 항목 정리, careerTree 탐색 근거 기재"
+}
