@@ -1,0 +1,88 @@
+{
+  "jobName": "치과기공사",
+  "jobId": "1765283382576331",
+  "fields": {
+    "way": "치과기공사가 되려면 치기공학과(3~4년제)를 졸업하고 치과기공사 국가면허를 취득해야 한다.[1] 한국보건의료인국가시험원(국시원)에서 매년 시행하는 필기·실기 시험에 합격하면 취업이 가능하다.[2] 주요 취업처는 치과 기공소(외부 전문 기공소)와 치과의원·종합병원 내 기공실이며, 금속관·도자기관·틀니·임플란트 보철물·교정 장치 등을 제작한다. 디지털 치과기공(CAD/CAM)이 급속히 보급되면서 3D 스캐닝·밀링·3D 프린팅 기술 역량이 필수 스킬이 되었다. 경력 후 1인 기공소 창업, 디지털 치과 기공 전문 기업 취업, 의료기기 기업 기술지원(애플리케이션 엔지니어) 등으로 전환하는 경로도 있다.[3]",
+    "trivia": "치과기공사는 전 세계적으로 마스터 디지털 테크니션(MDT) 이라는 새로운 직함이 등장할 정도로 디지털 전환이 빠른 직업군이다. 국내 치과 보철물 제작의 70% 이상이 이미 CAD/CAM 방식으로 전환됐으며, 세라믹·지르코니아 크라운 1개 제작 시간이 기존 수작업 4~6시간에서 CAD/CAM 1~2시간으로 단축됐다. 해외 치과기공 강국인 독일·일본과 달리 한국은 저비용 고품질 기공 수준으로 글로벌 수출도 이루어진다.[1]",
+    "overviewProspect": {
+      "main": "향후 5년간 보통 전망이다. 고령화로 보철·임플란트 수요는 증가하지만, CAD/CAM·3D 프린팅 자동화로 단순 수작업 기공 일자리는 감소 압력을 받는다. 디지털 치과기공 전문 역량(3D 설계·CAM 밀링·디지털 교합 분석)을 갖춘 기공사는 오히려 취업 기회가 늘어나고 있으며, 글로벌 디지털 기공소의 리모트 근무 기회도 생기는 추세다.[1]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이하",
+      "wlbDetail": "납기 기한(due date)에 맞춘 작업으로 마감 시 야근이 발생하며, 정밀 작업으로 집중력이 많이 요구된다. 환기가 중요하고 소음·분진 환경 관리가 필요하다. 1인 기공소 창업 시 운영 전반을 담당하는 부담이 있다. 커리어넷 재직자 조사에서 워라밸은 '보통 이상'으로 분류된다.[1]",
+      "socialDetail": "환자의 삶의 질(저작 기능·심미)에 직접 영향을 미치는 보철물을 제작하는 직업으로 사회적 기여도가 높다. 치과의사·치과위생사와 긴밀히 협력하는 의료 팀 일원이다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통 이상'으로 나타난다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "치기공학과 3~4년 이수 — 치과재료학·치과해부학·보철기공학·교정기공학 수료[1]",
+        "한국보건의료인국가시험원 치과기공사 면허시험 준비 — 필기(6과목)·실기(보철물 제작) 과정[2]",
+        "CAD/CAM 디지털 치과기공 실습 — 3Shape·exocad 소프트웨어 활용 + 밀링·3D 프린팅 운용[3]",
+        "치과기공사 보수교육 이수 및 면허신고 — 보건복지부 지정 연수기관을 통한 정기 교육 의무 이행[4]",
+        "해외 치과기공사 면허 전환(IQE) 준비 — 호주·캐나다 등 영어권 취업 위한 언어 능력 강화[5]"
+      ],
+      "recruit": [
+        "치과 기공소·대형 디지털 기공소 채용 — 사람인·잡코리아 등 구인구직 플랫폼 또는 대한치과기공사협회 구인구직에서 공고 확인[1]",
+        "치과의원·종합병원 기공실 채용 — 각 병원 공식 채용 홈페이지에서 치과기공사 채용 공고 직접 확인[2]",
+        "의료기기 기업(오스템임플란트·덴티움 등) 기술지원 엔지니어(AE) 채용 — 해당 기업 공식 채용 홈페이지 지원[3]"
+      ],
+      "training": [
+        "한국보건의료인국가시험원 치과기공사 국가시험 응시 준비 — 매년 필기·실기 시행[1]",
+        "CAD/CAM·디지털 치과기공 전문 교육 이수 — 3Shape 공인 교육과정, 밀링 자격 과정 취득[2]",
+        "해외 치과기공사 면허 전환(IQE) 준비 — 호주·캐나다 등 영어권 취업 위한 영어 능력 강화[3]"
+      ]
+    },
+    "sidebarJobs": ["치과위생사", "치과의사", "영업원", "3D프린팅모델러", "임상병리사", "방사선사", "보건의료정보관리사"],
+    "sidebarMajors": ["치기공학과", "치위생학과", "보건관리학과", "산업디자인학과"],
+    "sidebarCerts": [
+      {"name": "치과기공사(국가전문)", "url": "https://www.kuksiwon.or.kr/subcnt/c_2016/1/view.do?seq=7&itm_seq=10"}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한치과기공사협회", "url": "http://www.kdtech.or.kr"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr"},
+      {"name": "보건복지부", "url": "https://www.mohw.go.kr"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=YwtVzZ947Bg", "title": "치과기공사 Q&A 1탄 | 치기공사 직업 장점, 업무의 종류, 치기공의 전망"},
+      {"url": "https://www.youtube.com/watch?v=SolPswFr86k", "title": "치과기공사가 말하는 졸업부터 취업까지의 현실조언, 기공소 선택, 꿀팁 Q&A | 치투스"}
+    ],
+    "_careerTreeNote": "기존 careerTree: ID 155. order:2(치과기공사, 입직) link id:271 OK. order:3(CAM 소프트웨어 개발자·창업, 전직) job_slug 오류 → link id:272 삭제 예정, stages order:3 job_slug null 수정 예정."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "커리어넷 치과기공사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=33"},
+      {"id": 2, "text": "한국보건의료인국가시험원 치과기공사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2016/1/view.do?seq=7&itm_seq=10"},
+      {"id": 3, "text": "대한치과기공사협회", "url": "http://www.kdtech.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "대한치과기공사협회", "url": "http://www.kdtech.or.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 치과기공사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=33"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "커리어넷 치과기공사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=33"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "커리어넷 치과기공사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=33"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "커리어넷 치과기공사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=33"},
+      {"id": 2, "text": "한국보건의료인국가시험원 치과기공사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2016/1/view.do?seq=7&itm_seq=10"},
+      {"id": 3, "text": "대한치과기공사협회", "url": "http://www.kdtech.or.kr/"},
+      {"id": 4, "text": "보건복지부", "url": "https://www.mohw.go.kr/"},
+      {"id": 5, "text": "고용노동부", "url": "https://www.moel.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "대한치과기공사협회 구인구직", "url": "http://www.kdtech.or.kr/"},
+      {"id": 2, "text": "커리어넷 치과기공사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=33"},
+      {"id": 3, "text": "보건복지부", "url": "https://www.mohw.go.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "한국보건의료인국가시험원 치과기공사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2016/1/view.do?seq=7&itm_seq=10"},
+      {"id": 2, "text": "대한치과기공사협회", "url": "http://www.kdtech.or.kr/"},
+      {"id": 3, "text": "커리어넷 치과기공사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=33"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 치과기공사 17필드 보완: way [1][2][3] 재정비+GN수선, prospect [1] 맨끝 이동+무출처 수선, trivia source URL 수정(검색결과→협회), wlbDetail/socialDetail '보통 이상/이하'+각주, curriculum 5개+각주, recruit/training 각주 추가, sidebarJobs 4→7개 보강, sidebarMajors 의공학과 제거, sidebarCerts URL 추가, sidebarOrgs 중복제거+URL 수정, youtubeLinks 제목 업데이트"
+}

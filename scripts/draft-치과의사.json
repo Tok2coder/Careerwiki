@@ -1,0 +1,89 @@
+{
+  "jobName": "치과의사",
+  "jobId": "1765283383162619",
+  "fields": {
+    "way": "치과의사가 되려면 치과의사 국가면허 취득이 필수다. 6년제 치과대학 졸업 후 한국보건의료인국가시험원(국시원) 주관 국가시험에 합격해야 한다.[1] 치과대학은 전국 11개 대학에 개설되어 있으며, 의대와 함께 수능 최상위권이 요구된다. 시험은 필기(구강해부학, 구강생리학, 구강병리학, 치과보존학, 보철학, 치주과학, 소아치과학 등)와 실기로 구성된다.[2] 면허 취득 후 치과 전문의 자격을 원하면 인턴 1년 + 레지던트 3년 수련을 거쳐 전문과목(교정과, 구강악안면외과, 보철과, 치주과 등 11개) 자격을 취득한다. 주요 활동처는 치과 개원(동네 치과의원), 종합병원 치과, 치과 전문병원, 공중보건의(공보의) 등이다.[3]",
+    "trivia": "한국의 치과의원 수는 2024년 기준 약 2만 개로 세계 인구 대비 치과의원 밀도가 높은 나라다. 한국의 치과 임플란트 수술 건수는 연간 약 100만 건이며, 세계에서 임플란트 시술이 가장 활발한 나라 중 하나다. 치과 교정(브레이스)은 한국 10~20대 청소년 중 약 40%가 경험할 정도로 일반화되어 있다.[1]",
+    "overviewProspect": {
+      "main": "향후 5년간 현상태 유지 전망이다. 인구 고령화에 따른 틀니·임플란트 수요 증가, 심미 치료(교정·화이트닝) 관심 증가가 긍정 요인이다. 반면 전국 치과의원 수 포화(약 2만 개)로 경쟁이 치열하며, 건강보험 틀니·임플란트 급여 확대로 수익 구조가 변화하고 있다.[1]"
+    },
+    "detailWlb": {
+      "wlb": "높음",
+      "social": "높음",
+      "wlbDetail": "치과의원은 오전 9시~오후 6~7시 운영이 일반적이며, 예약제로 운영되어 응급 상황이 비교적 적다. 환자 구강 내 시술 시 집중력과 정밀한 손 작업이 요구되며, 장시간 시술 자세로 인한 목·허리 통증이 직업병으로 알려져 있다.[1]",
+      "socialDetail": "치과의사는 구강 건강을 통해 삶의 질과 전신 건강에 기여하는 역할을 수행한다. 노인 틀니·임플란트, 장애인 치과 치료 등 취약계층 구강 보건 서비스에서 사회적 기여도가 높다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "6년제 치과대학 입학 — 수능 이과 최상위권, 생물·화학 심화 학습[1]",
+        "치과대학 기초의학·임상치의학 교육 이수 — 구강해부학, 구강생리학, 치과보존학 등 6년 과정[2]",
+        "치과의사 국가시험 합격 — 한국보건의료인국가시험원 주관 필기·실기, 매년 1~2월 시행[3]",
+        "수련병원 인턴 1년 수료 — 각 진료과 임상 실습, 보건복지부 지정 수련병원에서 이수[4]",
+        "치과 전문의 레지던트 3년 수련 — 교정·보철·치주·소아치과 등 11개 전공과목 중 선택[5]"
+      ],
+      "recruit": [
+        "대학병원·치과전문병원 봉직의 채용 지원 — 대한치과의사협회 구인구직 게시판에서 공고 확인[1]",
+        "네트워크 치과(유디치과, 에스플란트 등) 페이닥터 채용 — 해당 그룹 공식 채용 페이지 및 커리어넷 채용공고 확인[2]",
+        "공중보건의(치과의사 공보의) 지원 — 병무청 공중보건의사 배치 신청, 병역 이행과 임상 경험 병행[3]"
+      ],
+      "training": [
+        "한국보건의료인국가시험원(국시원) 치과의사 국가시험 응시 준비 — 매년 1~2월 필기·실기 시행[1]",
+        "치과 전문의 수련 프로그램 이수 — 대한치과의사협회 인정 수련병원 레지던트 3년 과정[2]",
+        "디지털 치의학(CAD/CAM, 구강스캐너) 보수교육 이수 — 최신 치료 기술 습득 및 개원 경쟁력 강화[3]"
+      ]
+    },
+    "sidebarJobs": ["약사", "치과위생사", "한의사", "치과기공사", "간호사", "공중보건의사", "보건의료정보관리사", "대학교수"],
+    "sidebarCerts": [
+      {"name": "치과의사(국가전문)", "url": "https://www.kuksiwon.or.kr/subcnt/c_2003/1/view.do?seq=7&itm_seq=02"},
+      {"name": "치과의사전문의", "url": "https://www.kda.or.kr/"}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한치과의사협회", "url": "https://www.kda.or.kr"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr"},
+      {"name": "보건복지부", "url": "https://www.mohw.go.kr"},
+      {"name": "건강사회를 위한 치과의사회", "url": "https://www.gunchi.org"},
+      {"name": "대한구강보건협회", "url": "http://www.dental.or.kr"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=_MsM8yb9CoQ", "title": "\"솔직히 세후 XXXX만 원 정도 가져갑니다\" 개업 치과의사의 삶은 어떨까? 서울대 14년 서준석 원장님 밀착취재 | 직업탐구 영역 ep.1"},
+      {"url": "https://www.youtube.com/watch?v=UIHwq0Lgjm0", "title": "20201213 과학과 직업 인터뷰 치과 의사"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷 치과의사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=34"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원 치과의사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2003/1/view.do?seq=7&itm_seq=02"},
+      {"id": 3, "text": "[3] 대한치과의사협회", "url": "https://www.kda.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 건강보험심사평가원 건강보험통계연보", "url": "https://www.hira.or.kr/bbsDummy.do?pgmid=HIRAA020045020000"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 커리어넷 치과의사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=34"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 치과의사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=34"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷 치과의사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=34"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 치과의사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=34"},
+      {"id": 2, "text": "[2] 대한치과의사협회", "url": "https://www.kda.or.kr/"},
+      {"id": 3, "text": "[3] 한국보건의료인국가시험원 치과의사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2003/1/view.do?seq=7&itm_seq=02"},
+      {"id": 4, "text": "[4] 보건복지부", "url": "https://www.mohw.go.kr/"},
+      {"id": 5, "text": "[5] 서울대학교 치과병원", "url": "https://www.snudh.org/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 대한치과의사협회 구인구직", "url": "https://www.kda.or.kr/"},
+      {"id": 2, "text": "[2] 커리어넷 치과의사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=34"},
+      {"id": 3, "text": "[3] 병무청 공중보건의사", "url": "https://www.mma.go.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국보건의료인국가시험원 치과의사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2003/1/view.do?seq=7&itm_seq=02"},
+      {"id": 2, "text": "[2] 대한치과의사협회", "url": "https://www.kda.or.kr/"},
+      {"id": 3, "text": "[3] 커리어넷 치과의사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=34"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 치과의사 17필드 보완: curriculum 5개 확장+각주, recruit/training 각주, sidebarJobs 보강, GN/출처형식 수선, wlbDetail/socialDetail 각주 추가"
+}
