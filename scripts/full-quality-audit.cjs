@@ -777,6 +777,91 @@ function checkGate6(slug, ucjNow, mergedNow) {
   return issues;
 }
 
+// ── 경어체 WARN (Gate7) ───────────────────────────────────────────────────────
+// 기존 audit 로직 변경 없이 append. WARN만 발생 (FAIL 아님).
+
+const TONE_NARRATIVE_FIELDS = [
+  { path: 'way', type: 'string' },
+  { path: 'trivia', type: 'string' },
+  { path: 'overviewProspect.main', type: 'string' },
+  { path: 'detailWlb.wlbDetail', type: 'string' },
+  { path: 'detailWlb.socialDetail', type: 'string' },
+  { path: 'overviewSalary.sal', type: 'string' },
+  { path: 'summary', type: 'string' },
+  { path: 'overviewWork.main', type: 'string' },
+  { path: 'overviewAbilities.technKnow', type: 'string' },
+  { path: 'detailReady.curriculum', type: 'array' },
+  { path: 'detailReady.recruit', type: 'array' },
+  { path: 'detailReady.training', type: 'array' },
+  { path: '_careerTreeNote', type: 'string' },
+  { path: '_youtubeSearchNote', type: 'string' },
+];
+
+// 경어체 종결어미 감지 패턴 (문장 경계 앞에서만)
+const TONE_DETECT_RE = /(?:하였었습니다|하였습니다|됐습니다|했습니다|줬습니다|왔습니다|갔습니다|었습니다|았습니다|였습니다|드립니다|있습니다|없습니다|됩니다|합니다|입니다)(?=[.!\s\[\n]|$)/g;
+
+function getNestedValueAudit(obj, fieldPath) {
+  const parts = fieldPath.split('.');
+  let cur = obj;
+  for (const p of parts) {
+    if (cur == null || typeof cur !== 'object') return undefined;
+    cur = cur[p];
+  }
+  return cur;
+}
+
+function detectToneInText(text) {
+  if (typeof text !== 'string' || !text.trim()) return [];
+  const lines = text.split(/\n/);
+  const hits = [];
+  lines.forEach((line, lineIdx) => {
+    TONE_DETECT_RE.lastIndex = 0;
+    let m;
+    while ((m = TONE_DETECT_RE.exec(line)) !== null) {
+      hits.push({ lineNo: lineIdx + 1, match: m[0], preview: line.trim().substring(0, 60) });
+    }
+  });
+  return hits;
+}
+
+function checkToneWarnings(ucjData) {
+  const issues = [];
+  if (!ucjData || typeof ucjData !== 'object') return issues;
+
+  for (const { path: fieldPath, type } of TONE_NARRATIVE_FIELDS) {
+    const value = getNestedValueAudit(ucjData, fieldPath);
+    if (value == null) continue;
+
+    const hitsForField = [];
+
+    if (type === 'array' && Array.isArray(value)) {
+      value.forEach((item, idx) => {
+        if (typeof item !== 'string') return;
+        const hits = detectToneInText(item);
+        hits.forEach(h => hitsForField.push({ ...h, itemIdx: idx }));
+      });
+    } else if (type === 'string' && typeof value === 'string') {
+      detectToneInText(value).forEach(h => hitsForField.push(h));
+    }
+
+    if (hitsForField.length > 0) {
+      // 필드당 최대 3건만 리포트 (노이즈 억제)
+      const shown = hitsForField.slice(0, 3);
+      const extra = hitsForField.length - shown.length;
+      const detail = shown
+        .map(h => `L${h.lineNo}${h.itemIdx != null ? `[${h.itemIdx}]` : ''} "${h.match}" — ${h.preview}`)
+        .join('; ');
+      const suffix = extra > 0 ? ` (+${extra}건 더)` : '';
+      issues.push({
+        level: 'WARN',
+        msg: `[경어체-WARN] ${fieldPath}: 경어체 ${hitsForField.length}건 — ${detail}${suffix}`,
+      });
+    }
+  }
+
+  return issues;
+}
+
 // ── 단일 직업 감사 ────────────────────────────────────────────────────────────
 
 function auditJob(job) {
@@ -815,6 +900,7 @@ function auditJob(job) {
     ...checkGate4(mergedData),
     ...checkGate5(job, mergedData),
     ...checkGate6(slug, ucjData, mergedData),
+    ...checkToneWarnings(ucjData),
   ];
 
   const fails = allIssues.filter(i => i.level === 'FAIL');

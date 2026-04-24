@@ -169,7 +169,7 @@ const renderDutyListItems = (items: string[]): string => {
 }
 
 const stripDutyListPrefix = (value: string): string => {
-  return safeTrim(value).replace(/^(?:[-*•]+|\d+[.)])\s+/, '')
+  return safeTrim(value).replace(/^(?:[-*•]+|\d+[.)])\s*/, '')
 }
 
 const splitDutySentences = (value: string): string[] => {
