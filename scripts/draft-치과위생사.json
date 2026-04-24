@@ -1,0 +1,87 @@
+{
+  "jobName": "치과위생사",
+  "jobId": "1765283382878797",
+  "fields": {
+    "way": "치과위생사가 되려면 치과위생사 국가면허 취득이 필수다. 취득 경로는 전문대(3년)·4년제 대학의 치위생학과(치위생과) 졸업 후 한국보건의료인국가시험원(국시원) 주관 국가시험에 합격하는 것이다.[1] 시험은 필기(치위생학 개론, 구강해부학, 구강생리학, 치과재료학, 임상치과학, 치과방사선학 등 7과목)와 실기로 구성된다. 2024년 기준 합격률은 필기 약 83%, 실기 약 91%로 비교적 높은 편이다.[2] 전문대 치위생과 3년 과정이 가장 일반적이며, 4년제 치위생학과 졸업자는 치과위생사 외에 보건교사 자격이나 보건직 공무원 응시 등 더 넓은 진로 선택이 가능하다. 면허 취득 후에는 치과 병·의원, 종합병원 치과, 학교 구강보건실, 보건소 등에서 근무한다.[3]",
+    "trivia": "한국의 치과 의원 수는 약 1만 8천 개로 편의점(약 1만 6천 개)보다 많다. 인구 10만 명당 치과의사 수는 OECD 평균(65명)을 훨씬 상회하는 약 80명이며, 이에 따라 치과위생사 고용 규모도 세계 최고 수준이다. 치과위생사 자격은 1975년 도입된 이래 지금까지 면허 보유자가 누적 약 8만 명에 달한다.[1]",
+    "overviewProspect": {
+      "main": "향후 5년간 현상태 유지 전망이다. 인구 고령화로 임플란트·치주 치료 수요가 꾸준히 증가하는 긍정 요인이 있다. 치과 병원 수가 지속적으로 늘어나는 추세이며, 1인당 치과 방문 횟수도 증가하고 있다. 반면 치위생과 졸업자 공급이 수요를 웃돌고 있어 취업 경쟁이 치열하다. 디지털 치과 기술(구강 스캐너, CAD/CAM) 확산으로 업무 방식 변화에 적응하는 역량이 중요해지고 있다.[1]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "치과 병·의원 기준 정규 근무시간 준수 비율이 높은 편이며, 오전·오후 진료 시간에 맞춰 근무한다. 환자 내원이 많은 시간대는 집중도가 높고, 서서 진료를 보조하는 업무 특성상 신체적 피로도가 있다. 커리어넷 재직자 조사에서 워라밸은 '보통 이상'으로 분류된다.[1]",
+      "socialDetail": "구강 건강은 전신 건강과 직결되며, 환자의 치아·잇몸 건강 유지에 직접 기여하는 역할을 한다. 치석 제거, 불소 도포, 구강보건 교육 등을 통해 환자 삶의 질 향상에 기여한다는 직업적 보람이 높다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통 이상'으로 나타난다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "전문대(3년) 또는 4년제 치위생과·치위생학과 진학 — 구강해부학, 치주학, 예방치과학, 치과방사선학 등 이수[1]",
+        "치과위생사 국가시험 필기(치위생학 개론·구강해부학·구강생리학·치과재료학·임상치과학·치과방사선학 등 7과목) + 실기 준비[2]",
+        "한국보건의료인국가시험원 주관 시험 합격 — 매년 1~2월 시행, 2024년 기준 필기 약 83%·실기 약 91% 합격률[3]",
+        "4년제 치위생학과 교직과정 이수 시 보건교사 2급 자격 추가 취득 가능 — 학교 구강보건실·보건직 공무원 진출 확대[4]",
+        "치과 병·의원 임상실습 이수 — 학부 과정 중 필수 이수, 대학병원·치과전문병원 등 다양한 임상 환경 경험 확보[5]"
+      ],
+      "recruit": [
+        "치과 병·의원 신입 채용 — 사람인·잡코리아 등 구인구직 플랫폼 또는 대한치과위생사협회 구인구직 게시판에서 공고 확인[1]",
+        "종합병원·대학병원 치과 채용 — 각 병원 공식 채용 홈페이지에서 치과위생사·보건직 공개채용 공고 직접 확인[2]",
+        "보건소·학교 구강보건실 보건직 공무원 응시 — 지방자치단체·교육청 공채 공고 확인, 4년제 학위 우대[3]"
+      ],
+      "training": [
+        "한국보건의료인국가시험원 치과위생사 국가시험 응시 준비 — 매년 1~2월 필기·실기 시행[1]",
+        "대한치과위생사협회 보수교육 이수 및 면허신고 — 구강 스캐너·디지털 치과 기술 등 최신 임상 교육 참여[2]",
+        "치과 병원 인턴십·현장실습 참여 — 졸업 전후 임상 경험 조기 확보로 취업 경쟁력 강화[3]"
+      ]
+    },
+    "sidebarJobs": ["치과의사", "치과기공사", "간호사", "임상병리사", "방사선사", "안경사", "물리치료사"],
+    "sidebarCerts": [
+      {"name": "치과위생사(국가전문)", "url": "https://www.kuksiwon.or.kr/subcnt/c_2017/1/view.do?seq=7&itm_seq=12"}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한치과위생사협회", "url": "https://www.kdha.or.kr"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr"},
+      {"name": "보건복지부", "url": "https://www.mohw.go.kr"},
+      {"name": "대한구강보건협회", "url": "http://www.dental.or.kr"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=l50JydGUyAE", "title": "★최신★치위생사 연봉 현실｜초봉부터 실장급 수입까지 전부 공개#치위생사연봉 #스케일링 #치과위생사연봉"},
+      {"url": "https://www.youtube.com/watch?v=Cdl6L3E_wlw", "title": "🦷사를 고민하는 치위생사들에게 한마디를 하자면? 🦷사이유, 🦷사고민, 저년차 시절. 고년차 치과위생사 쌤들의 솔직인터뷰 Q&A"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "커리어넷 치과위생사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=411"},
+      {"id": 2, "text": "한국보건의료인국가시험원 치과위생사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2017/1/view.do?seq=7&itm_seq=12"},
+      {"id": 3, "text": "대한치과위생사협회", "url": "https://www.kdha.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "건강보험심사평가원 건강보험통계연보", "url": "https://www.hira.or.kr/bbsDummy.do?pgmid=HIRAA020045020000"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 치과위생사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=411"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "커리어넷 치과위생사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=411"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "커리어넷 치과위생사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=411"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "커리어넷 치과위생사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=411"},
+      {"id": 2, "text": "대한치과위생사협회", "url": "https://www.kdha.or.kr/"},
+      {"id": 3, "text": "한국보건의료인국가시험원 치과위생사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2017/1/view.do?seq=7&itm_seq=12"},
+      {"id": 4, "text": "교육부", "url": "https://www.moe.go.kr/"},
+      {"id": 5, "text": "보건복지부", "url": "https://www.mohw.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "대한치과위생사협회 구인구직", "url": "https://www.kdha.or.kr/"},
+      {"id": 2, "text": "커리어넷 치과위생사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=411"},
+      {"id": 3, "text": "인사혁신처", "url": "https://www.mpm.go.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "한국보건의료인국가시험원 치과위생사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2017/1/view.do?seq=7&itm_seq=12"},
+      {"id": 2, "text": "대한치과위생사협회", "url": "https://www.kdha.or.kr/"},
+      {"id": 3, "text": "커리어넷 치과위생사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=411"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 치과위생사 17필드 보완: way [3] 각주 추가+GN 수정, prospect [1] 맨끝 이동, wlbDetail/socialDetail 공백+'보통 이상'+각주, curriculum 5개 재작성+각주, recruit/training 각주+인라인URL 제거, sidebarCerts URL 추가, sidebarOrgs 중복제거+URL 수정, youtubeLinks 제목 업데이트"
+}
