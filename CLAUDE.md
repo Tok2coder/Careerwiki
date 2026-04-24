@@ -220,7 +220,8 @@ npm run deploy
 
 ## Critical Rules
 
-- **절대 금지**: `git stash`, `git reset --hard`, `DROP TABLE`, `DELETE FROM` (WHERE 없이), `.dev.vars` 커밋
+- **절대 금지**: `git stash`, `git reset --hard`, `DROP TABLE`, `DELETE FROM` (WHERE 없이), `.dev.vars`/`dev.vars`/`.env*` 등 비밀키 파일 커밋 (pre-commit hook이 차단하지만 `git add` 시점부터 주의)
+- **커밋 전 필수**: `git diff --cached --name-only`로 staged 파일 목록 확인 — 비밀키 파일 포함 여부 수동 검증. `scripts/check-secrets.cjs`가 자동 차단하나 우회 방법(`--no-verify`) 절대 금지
 - **D1 주의**: topK 쿼리 시 Vectorize 상한 100개 제한 → Multi-Query 배치로 우회
 - **빌드 전 확인**: `npx tsc --noEmit`으로 타입 에러 확인
 - **배포 전 확인**: `npm run build` 성공 확인 후 `npm run deploy`

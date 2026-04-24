@@ -15,11 +15,21 @@ dist/
 node_modules/
 .wrangler
 
-# env
-.env
-.env.local
-.env.production
+# env / secrets — never commit these
+dev.vars
 .dev.vars
+.env
+.env.*
+!.env.example
+*.secret
+*.secret.*
+secrets.json
+credentials.json
+serviceAccountKey.json
+*.pem
+*.key
+*_token.txt
+*_secret.txt
 
 # logs
 logs/
